@@ -152,20 +152,28 @@ define('js!SBIS3.CONTROLS.Data.Source.ISource', [
       },
 
       /**
-       * Выполняет запрос на выборку
-       * @param {SBIS3.CONTROLS.Data.Query.Query} query Запрос
-       * @returns {$ws.proto.Deferred} Асинхронный результат выполнения. В колбэке придет SBIS3.CONTROLS.Data.Source.DataSet.
+       * @typedef {Object} OrderDetails
+       * @property {Boolean} [after=false] Вставить после модели, указанной в {@link to}
+       * @property {String} [column] Название столбца, по которому осуществляется сортировка
        */
-      query: function (query) {
+
+      /**
+       * Перемещает модель
+       * @param {SBIS3.CONTROLS.Data.Model} model Перемещаемая модель
+       * @param {String} to Значение поля, в позицию которого перемещаем (по умолчанию - значение первичного ключа)
+       * @param {OrderDetails} [details] Дополнительная информация о перемещении
+       * @returns {$ws.proto.Deferred} Асинхронный результат выполнения
+       */
+      move: function (model, to, details) {
          throw new Error('Method must be implemented');
       },
 
       /**
-       * Меняет порядковый номер модели
-       * @param {SBIS3.CONTROLS.Data.Model} model Перемещаемая модель
-       * @param {Object} orderDetails Детали смены порядковых номеров. Объект со свойствами after и before: после или перед какой записью нужно вставить перемещаемую.
+       * Выполняет запрос на выборку
+       * @param {SBIS3.CONTROLS.Data.Query.Query} [query] Запрос
+       * @returns {$ws.proto.Deferred} Асинхронный результат выполнения. В колбэке придет SBIS3.CONTROLS.Data.Source.DataSet.
        */
-      move: function (model, orderDetails) {
+      query: function (query) {
          throw new Error('Method must be implemented');
       },
 

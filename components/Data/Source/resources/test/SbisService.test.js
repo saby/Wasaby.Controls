@@ -24,85 +24,100 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService/resources/SbisServiceBLO', [],
                error = '',
                data;
 
-            if (this._cfg.name !== 'Товар') {
-               error = 'Service is not found';
-            }
+            switch (this._cfg.name) {
+               case 'Товар':
+                  switch (method) {
+                     case 'Создать':
+                        data = {
+                           d: [
+                              0,
+                              '',
+                              '',
+                              '',
+                              '',
+                              false
+                           ],
+                           s: meta
+                        };
+                        break;
 
-            switch (method) {
-               case 'Создать':
-                  data = {
-                     d: [
-                        0,
-                        '',
-                        '',
-                        '',
-                        '',
-                        false
-                     ],
-                     s: meta
-                  };
-                  break;
+                     case 'Прочитать':
+                        if (args['ИдО'] === existsId) {
+                           data = {
+                              d: [
+                                 existsId,
+                                 'Иванов',
+                                 'Иван',
+                                 'Иванович',
+                                 'Инженер',
+                                 true
+                              ],
+                              s: meta
+                           };
+                        } else {
+                           error = 'Model is not found';
+                        }
+                        break;
 
-               case 'Прочитать':
-                  if (args['ИдО'] === existsId) {
-                     data = {
-                        d: [
-                           existsId,
-                           'Иванов',
-                           'Иван',
-                           'Иванович',
-                           'Инженер',
-                           true
-                        ],
-                        s: meta
-                     };
-                  } else {
-                     error = 'Model is not found';
+                     case 'Записать':
+                        if (args['Запись'].d && args['Запись'].d[0]) {
+                           data = args['Запись'].d[0];
+                        } else {
+                           data = 99;
+                        }
+                        break;
+
+                     case 'Удалить':
+                        if (args['ИдО'] === existsId) {
+                           data = existsId;
+                        } else {
+                           error = 'Model is not found';
+                        }
+                        break;
+
+                     case 'Список':
+                        data = {
+                           d: [
+                              [
+                                 existsId,
+                                 'Иванов',
+                                 'Иван',
+                                 'Иванович',
+                                 'Инженер',
+                                 true
+                              ],
+                              [
+                                 1 + existsId,
+                                 'Петров',
+                                 'Петр',
+                                 'Петрович',
+                                 'Специалист',
+                                 true
+                              ]
+                           ],
+                           s: meta
+                        };
+                        break;
+
+                     case 'Вставить':
+                        data = args;
+                        break;
+
+                     default:
+                        throw new Error('Method is undefined');
                   }
                   break;
 
-               case 'Записать':
-                  if (args['Запись'].d && args['Запись'].d[0]) {
-                     data = args['Запись'].d[0];
-                  } else {
-                     data = 99;
+               case 'ПорядковыйНомер':
+                  switch (method) {
+                     case 'Вставить':
+                        data = args;
+                        break;
                   }
-                  break;
-
-               case 'Удалить':
-                  if (args['ИдО'] === existsId) {
-                     data = existsId;
-                  } else {
-                     error = 'Model is not found';
-                  }
-                  break;
-
-               case 'Список':
-                  data = {
-                     d: [
-                        [
-                           existsId,
-                           'Иванов',
-                           'Иван',
-                           'Иванович',
-                           'Инженер',
-                           true
-                        ],
-                        [
-                           1 + existsId,
-                           'Петров',
-                           'Петр',
-                           'Петрович',
-                           'Специалист',
-                           true
-                        ]
-                     ],
-                     s: meta
-                  };
                   break;
 
                default:
-                  throw new Error('Method is undefined');
+                  error = 'Service is not found';
             }
 
             setTimeout(function () {
@@ -444,6 +459,27 @@ define([
                      done(err);
                   });
                });
+
+               it('should work with no query', function (done) {
+                  var service = new SbisService({
+                     resource: 'Товар'
+                  });
+                  service.query().addCallbacks(function (ds) {
+                     try {
+                        if (!(ds instanceof DataSet)) {
+                           throw new Error('That\'s no dataset');
+                        }
+                        if (ds.getAll().getCount() !== 2) {
+                           throw new Error('Wrong models count');
+                        }
+                        done();
+                     } catch (err) {
+                        done(err);
+                     }
+                  }, function (err) {
+                     done(err);
+                  });
+               });
             });
 
             context('when the service isn\'t exists', function () {
@@ -457,6 +493,105 @@ define([
                      } else {
                         done(new Error('That\'s no Error'));
                      }
+                  });
+               });
+            });
+         });
+
+         describe('.move()', function () {
+            it('should move ' + SbisServiceBLO.existsId + ' before ' + 56, function (done) {
+               var service = new SbisService({
+                  resource: 'Товар'
+               });
+               service.read(SbisServiceBLO.existsId).addCallback(function (model) {
+                  service.move(model, 56).addCallbacks(function(data) {
+                     if (data['ИдО'] === SbisServiceBLO.existsId &&
+                        data['ИдОДо'] === 56 &&
+                        data['ПорядковыйНомер'] === 'ПорНомер'
+                     ) {
+                        done();
+                     } else {
+                        done(new Error('Unexpected value'));
+                     }
+                  }, function(err){
+                     done(err);
+                  });
+               });
+            });
+
+            it('should move ' + SbisServiceBLO.existsId + ' before ' + 0, function (done) {
+               var service = new SbisService({
+                  resource: 'Товар'
+               });
+               service.read(SbisServiceBLO.existsId).addCallback(function (model) {
+                  service.move(model, 0).addCallbacks(function(data) {
+                     if (data['ИдО'] === SbisServiceBLO.existsId &&
+                        data['ИдОДо'] === 0 &&
+                        data['ПорядковыйНомер'] === 'ПорНомер'
+                     ) {
+                        done();
+                     } else {
+                        done(new Error('Unexpected value'));
+                     }
+                  }, function(err){
+                     done(err);
+                  });
+               });
+            });
+
+            it('should move ' + SbisServiceBLO.existsId + ' after ' + 77, function (done) {
+               var service = new SbisService({
+                  resource: 'Товар'
+               });
+               service.read(SbisServiceBLO.existsId).addCallback(function (model) {
+                  service.move(model, 77, {after: true}).addCallbacks(function(data) {
+                     if (data['ИдО'] === SbisServiceBLO.existsId &&
+                        data['ИдОПосле'] === 77 &&
+                        data['ПорядковыйНомер'] === 'ПорНомер'
+                     ) {
+                        done();
+                     } else {
+                        done(new Error('Unexpected value'));
+                     }
+                  }, function(err){
+                     done(err);
+                  });
+               });
+            });
+
+            it('should move ' + SbisServiceBLO.existsId + ' after ' + 0, function (done) {
+               var service = new SbisService({
+                  resource: 'Товар'
+               });
+               service.read(SbisServiceBLO.existsId).addCallback(function (model) {
+                  service.move(model, 0, {after: true}).addCallbacks(function(data) {
+                     if (data['ИдО'] === SbisServiceBLO.existsId &&
+                        data['ИдОПосле'] === 0 &&
+                        data['ПорядковыйНомер'] === 'ПорНомер'
+                     ) {
+                        done();
+                     } else {
+                        done(new Error('Unexpected value'));
+                     }
+                  }, function(err){
+                     done(err);
+                  });
+               });
+            });
+
+            it('should move by given column', function (done) {
+               var service = new SbisService({
+                  resource: 'Товар'
+               });
+               service.read(SbisServiceBLO.existsId).addCallback(function (model) {
+                  service.move(model, 56, {column: 'Название'}).addCallbacks(function(data) {
+                     if (data['ПорядковыйНомер'] === 'Название') {
+                        done();
+                     } else {
+                        done(new Error('Unexpected value'));
+                     }
+                  }, function(err){
+                     done(err);
                   });
                });
             });

@@ -33,9 +33,6 @@ define('js!SBIS3.CONTROLS.Data.Source.Base', [
             if (!this._options.adapter) {
                throw new Error('Data adapter is undefined');
             }
-            if (!this._options.idProperty) {
-               throw new Error('Model id property is undefined');
-            }
          }
       },
 
@@ -70,16 +67,29 @@ define('js!SBIS3.CONTROLS.Data.Source.Base', [
       //region Protected methods
 
       /**
+       * Определяет название свойства с первичным ключем, если оно не было задано
+       * @param {*} data Сырые данные
+       * @private
+       */
+      _detectIdProperty: function(data) {
+         if (!this._options.idProperty) {
+            this._options.idProperty = this.getAdapter().getKeyField(data);
+         }
+      },
+
+      /**
        * Создает новый экзепляр модели
        * @param {*} model Данные модели
        * @returns {SBIS3.CONTROLS.Data.Model}
        * @private
        */
       _getModelInstance: function (data) {
+         this._detectIdProperty(data);
+
          return new this._options.model({
             data: data,
             source: this,
-            idProperty: this._options.idProperty || this.getAdapter().getKeyField(data)
+            idProperty: this._options.idProperty
          });
       },
 

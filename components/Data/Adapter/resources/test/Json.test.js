@@ -409,6 +409,50 @@ define(
                checkInvalid(adapterInstance, 'replace');
             });
          });
+
+         describe('.move()', function () {
+            it('should move Иванов instead Сидоров', function () {
+               adapterInstance.move(data, 0, 2);
+               assert.strictEqual(
+                  'Петров',
+                  data[0]['Фамилия']
+               );
+               assert.strictEqual(
+                  'Сидоров',
+                  data[1]['Фамилия']
+               );
+               assert.strictEqual(
+                  'Иванов',
+                  data[2]['Фамилия']
+               );
+            });
+            it('should move Сидоров instead Иванов', function () {
+               adapterInstance.move(data, 2, 0);
+               assert.strictEqual(
+                  'Сидоров',
+                  data[0]['Фамилия']
+               );
+               assert.strictEqual(
+                  'Иванов',
+                  data[1]['Фамилия']
+               );
+               assert.strictEqual(
+                  'Петров',
+                  data[2]['Фамилия']
+               );
+            });
+            it('should move Петров to the end', function () {
+               adapterInstance.move(data, 1, 6);
+               assert.strictEqual(
+                  'Петров',
+                  data[6]['Фамилия']
+               );
+               assert.strictEqual(
+                  'Арбузнов',
+                  data[5]['Фамилия']
+               );
+            });
+         });
       });
 
       describe('SBIS3.CONTROLS.Data.Adapter.Json::forRecord()', function () {
