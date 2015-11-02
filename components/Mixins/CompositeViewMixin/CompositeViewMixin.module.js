@@ -10,6 +10,10 @@ define('js!SBIS3.CONTROLS.CompositeViewMixin', ['html!SBIS3.CONTROLS.CompositeVi
       $protected: {
          _tileWidth: null,
          _folderWidth: null,
+         _itemActionsAlign:{
+            horizontal: function () { this.removeClass('controls-ItemActions-verAlign') },
+            vertical: function() { this.addClass('controls-ItemActions-verAlign') }
+         },
          _options: {
             /**
              * @cfg {Object} Режим отображения
@@ -174,25 +178,26 @@ define('js!SBIS3.CONTROLS.CompositeViewMixin', ['html!SBIS3.CONTROLS.CompositeVi
                parentFunc.call(this, key);
             }
          },
+         _getItemActionsAlign: function(viewMode) {
+            /* Для режима 'table' отображаем опции горизонтально, для других режимов вертикально */
+            return viewMode === 'table' ? 'horizontal' : 'vertical';
+         },
 
          _getItemActionsPosition: function(parentFunc, hoveredItem) {
             var itemActions = this.getItemsActions().getContainer(),
-               viewMode = this.getViewMode(),
-            //FIXME в версии 3.7.3.20 будет приходить рекорд, надо это использовать
-               isTableView = viewMode === 'table',
-               horAlign = isTableView || (this.getHierField && !this.getDataSet().getRecordByKey(hoveredItem.key).get(this.getHierField() + '@') && viewMode === 'list'),
-               height;
+                viewMode = this.getViewMode(),
+                actionsAlign = this._getItemActionsAlign(viewMode, hoveredItem),
+                isTableView = viewMode === 'table',
+                height;
 
-            /* В режиме список(list) для листьев нужно опции отображать горизонтально,
-             как и для режима таблица(table) */
-            itemActions[horAlign ? 'removeClass' : 'addClass']('controls-ItemActions-verAlign');
+            this._itemActionsAlign[actionsAlign].call(itemActions);
             if(isTableView) return parentFunc.call(this, hoveredItem);
 
             height = itemActions[0].offsetHeight || itemActions.height();
 
             return {
-               top: horAlign ?
-               hoveredItem.position.top + ((hoveredItem.size.height > height) ? hoveredItem.size.height - height : 0 ) :
+               top: actionsAlign === 'horizontal' ?
+                  hoveredItem.position.top + ((hoveredItem.size.height > height) ? hoveredItem.size.height - height : 0 ) :
                   hoveredItem.position.top,
                right: isTableView ? 5 : this._container[0].offsetWidth - (hoveredItem.position.left + hoveredItem.size.width)
             };
