@@ -185,19 +185,22 @@ define('js!SBIS3.CONTROLS.CompositeViewMixin', ['html!SBIS3.CONTROLS.CompositeVi
 
          _getItemActionsPosition: function(parentFunc, hoveredItem) {
             var itemActions = this.getItemsActions().getContainer(),
-                viewMode = this.getViewMode(),
-                actionsAlign = this._getItemActionsAlign(viewMode, hoveredItem),
-                isTableView = viewMode === 'table',
-                height;
+               viewMode = this.getViewMode(),
+            //FIXME в версии 3.7.3.20 будет приходить рекорд, надо это использовать
+               isTableView = viewMode === 'table',
+               horAlign = isTableView || (this.getHierField && !this.getDataSet().getRecordByKey(hoveredItem.key).get(this.getHierField() + '@') && viewMode === 'list'),
+               height;
 
-            this._itemActionsAlign[actionsAlign].call(itemActions);
+            /* В режиме список(list) для листьев нужно опции отображать горизонтально,
+             как и для режима таблица(table) */
+            itemActions[horAlign ? 'removeClass' : 'addClass']('controls-ItemActions-verAlign');
             if(isTableView) return parentFunc.call(this, hoveredItem);
 
             height = itemActions[0].offsetHeight || itemActions.height();
 
             return {
-               top: actionsAlign === 'horizontal' ?
-                  hoveredItem.position.top + ((hoveredItem.size.height > height) ? hoveredItem.size.height - height : 0 ) :
+               top: horAlign ?
+               hoveredItem.position.top + ((hoveredItem.size.height > height) ? hoveredItem.size.height - height : 0 ) :
                   hoveredItem.position.top,
                right: isTableView ? 5 : this._container[0].offsetWidth - (hoveredItem.position.left + hoveredItem.size.width)
             };

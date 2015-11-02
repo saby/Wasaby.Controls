@@ -77,7 +77,7 @@ define('js!SBIS3.CONTROLS.ItemActionsGroup',
           */
          _createItemActionMenu: function() {
             var self = this;
-            var menuCont = $('> .controls-ItemActions__menu-container', this._container[0]);
+            var menuCont = $('.controls-ItemActions__menu-container', this._container[0]);
             var verticalAlign = {
                   side: 'top',
                   offset: VERTICAL_OFFSET
@@ -214,6 +214,10 @@ define('js!SBIS3.CONTROLS.ItemActionsGroup',
          _itemActivatedHandler: function(item) {
             this.hideItemActions();
             this._itemActionsButtons[item]['handler'].apply(this.getParent(), [this._activeItem.container, this._activeItem.key, this._activeItem.record]);
+         },
+
+         _getItemsContainer: function(){
+            return $('.controls-ItemActions__itemsContainer', this._container[0]);
          },
 
          canAcceptFocus: function() {
