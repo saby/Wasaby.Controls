@@ -12,9 +12,9 @@ define('js!SBIS3.CONTROLS.Demo.MyBrowser', [
    /**
     * Базовый класс для реестра
     *
-    * @class SBIS3.CONTROLS.MyBrowser
+    * @class SBIS3.CONTROLS.Demo.MyBrowser
     * @extends $ws.proto.CompoundControl
-    * @public
+    * @control
     */
 
    var MyBrowser = CompoundControl.extend( /** @lends SBIS3.CONTROLS.MyBrowser.prototype */{
