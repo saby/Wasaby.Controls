@@ -52,11 +52,8 @@
                            <opt name="keyField" value="Ид"></opt>
                         </opts>
                      </opts>
-                     <opts name="filterBindings" type="array">
-                        <opts>
-                           <opt name="itemField" value="text"/>
-                           <opt name="contextField" value="text1"/>
-                        </opts>
+                     <opts name="listFilter">
+                        <opt name="itemField" bind="text1" oneWay="true"/>
                      </opts>
                      <opts name="handlers">
                         <opt name="onInit" type="function">js!SBIS3.CONTROLS.Demo.FieldLinkWithEditInPlace:prototype.initFiledLink1</opt>
@@ -84,9 +81,8 @@
                         </opts>
                         <opt name="keyField" value="Ид"></opt>
                      </opts>
-                     <opts>
-                        <opt name="itemField" value="text"/>
-                        <opt name="contextField" value="text2"/>
+                     <opts name="listFilter">
+                        <opt name="itemField" bind="text2" oneWay="true"/>
                      </opts>
                      <opts name="handlers">
                         <opt name="onInit" type="function">js!SBIS3.CONTROLS.Demo.FieldLinkWithEditInPlace:prototype.initFiledLink2</opt>
