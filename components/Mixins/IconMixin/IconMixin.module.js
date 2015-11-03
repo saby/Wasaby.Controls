@@ -46,7 +46,6 @@ define('js!SBIS3.CONTROLS.IconMixin', ['html!SBIS3.CONTROLS.IconMixin/IconTempla
        * @see getIcon
        */
       setIcon: function(iconPath) {
-         this._options.icon = iconPath;
          if (iconPath) {
             if (iconPath.indexOf('sprite:') >= 0) {
                this._iconClass = iconPath.substr(7);
@@ -55,6 +54,7 @@ define('js!SBIS3.CONTROLS.IconMixin', ['html!SBIS3.CONTROLS.IconMixin/IconTempla
             }
          }
          this._drawIcon(iconPath);
+         this._options.icon = iconPath;
       },
 
       /**
