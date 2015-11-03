@@ -277,6 +277,8 @@ define('js!SBIS3.CONTROLS.ListView',
                   $(window).bind('scroll.wsInfiniteScroll', this._onWindowScroll.bind(this));
                }
             }
+            $ws.single.CommandDispatcher.declareCommand(this, 'ActivateItem', this._activateItem);
+            $ws.single.CommandDispatcher.declareCommand(this, 'AddItem', this._addItem);
          },
 
          init: function () {
@@ -497,7 +499,7 @@ define('js!SBIS3.CONTROLS.ListView',
          },
 
          _elemClickHandlerInternal: function (data, id, target) {
-
+            this._notify('onItemActivate', id, item);
          },
 
          _drawSelectedItems: function (idArray) {
@@ -1042,6 +1044,17 @@ define('js!SBIS3.CONTROLS.ListView',
             }
             ListView.superclass.setDataSource.apply(this, arguments);
          },
+
+         _activateItem : function(id) {
+            var
+               item = this._dataSet.getRecordByKey(id);
+            this._notify('onItemActivate', id, item);
+         },
+         _addItem : function() {
+           //TODO если есть редактирование по месту запусть его
+            this._notify('onAddItem');
+         },
+
          destroy: function () {
             if (this.isInfiniteScroll()) {
                if (this._infiniteScrollContainer.length) {
