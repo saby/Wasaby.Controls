@@ -175,26 +175,13 @@ define('js!SBIS3.CONTROLS.CompositeViewMixin', ['html!SBIS3.CONTROLS.CompositeVi
             }
          },
 
-         _getItemActionsPosition: function(parentFunc, hoveredItem) {
-            var itemActions = this.getItemsActions().getContainer(),
-               viewMode = this.getViewMode(),
-            //FIXME в версии 3.7.3.20 будет приходить рекорд, надо это использовать
-               isTableView = viewMode === 'table',
-               horAlign = isTableView || (this.getHierField && !this.getDataSet().getRecordByKey(hoveredItem.key).get(this.getHierField() + '@') && viewMode === 'list'),
-               height;
-
-            /* В режиме список(list) для листьев нужно опции отображать горизонтально,
-             как и для режима таблица(table) */
-            itemActions[horAlign ? 'removeClass' : 'addClass']('controls-ItemActions-verAlign');
-            if(isTableView) return parentFunc.call(this, hoveredItem);
-
-            height = itemActions[0].offsetHeight || itemActions.height();
-
+         _getItemActionsPosition: function(parentFunc, item) {
+            if (this._options.viewMode == 'table') {
+               return parentFunc.call(this, item);
+            } else
             return {
-               top: horAlign ?
-               hoveredItem.position.top + ((hoveredItem.size.height > height) ? hoveredItem.size.height - height : 0 ) :
-                  hoveredItem.position.top,
-               right: isTableView ? 5 : this._container[0].offsetWidth - (hoveredItem.position.left + hoveredItem.size.width)
+               top: item.position.top,
+               right: this._container[0].offsetWidth - (item.position.left + item.size.width)
             };
          },
 
