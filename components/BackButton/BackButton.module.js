@@ -68,8 +68,11 @@ define('js!SBIS3.CONTROLS.BackButton', ['js!SBIS3.CORE.CompoundControl', 'html!S
          BackButton.superclass.init.call(this);
          var self = this;
          this._link = this.getChildControlByName('BackButton-caption');
-         this._container.bind('mouseup', function(e){
-            if (e.which == 1) self._notify('onActivated');
+         this._container.bind('click', function(){
+            self._notify('onActivated');
+         });
+         this._link.subscribe('onActivated', function(){
+            self._notify('onActivated');
          });
       },
 
