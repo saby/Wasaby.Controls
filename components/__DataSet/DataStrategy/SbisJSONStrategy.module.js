@@ -163,6 +163,7 @@ define('js!SBIS3.CONTROLS.SbisJSONStrategy', [
        */
       type: function (data, field) {
          var s = data.s,
+            t,
             index;
          for (var i = 0, l = s.length; i < l; i++) {
             if (s[i]['n'] == field) {
@@ -170,7 +171,8 @@ define('js!SBIS3.CONTROLS.SbisJSONStrategy', [
                break;
             }
          }
-         return s[index].t;
+         t = s[index].t;
+         return t && typeof t === 'object' ? t.n : t;
       },
         /**
          *
