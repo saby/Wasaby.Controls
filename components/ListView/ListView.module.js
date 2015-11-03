@@ -185,7 +185,7 @@ define('js!SBIS3.CONTROLS.ListView',
                   name: 'delete',
                   icon: 'sprite:icon-16 icon-Erase icon-error',
                   tooltip: 'Удалить',
-                  title: 'Удалить',
+                  caption: 'Удалить',
                   isMainAction: true,
                   onActivated: function (item) {
                      this.deleteRecords(item.data('id'));
@@ -194,7 +194,7 @@ define('js!SBIS3.CONTROLS.ListView',
                   name: 'move',
                   icon: 'sprite:icon-16 icon-Move icon-primary action-hover',
                   tooltip: 'Перенести',
-                  title: 'Перенести',
+                  caption: 'Перенести',
                   isMainAction: false,
                   onActivated: function (item) {
                      this.selectedMoveTo(item.data('id'));
@@ -287,10 +287,10 @@ define('js!SBIS3.CONTROLS.ListView',
 
          $constructor: function () {
             var self = this;
-            this._publish('onChangeHoveredItem', 'onItemActions', 'onItemClick');
-            this._container
-               .mousemove(this._mouseMoveHandler.bind(this))
-               .mouseleave(this._mouseLeaveHandler.bind(this));
+            this._publish('onChangeHoveredItem', 'onItemClick');
+            this._container.on('mousemove', this._mouseMoveHandler.bind(this))
+                           .on('mouseleave', this._mouseLeaveHandler.bind(this));
+
             if (this.isInfiniteScroll()) {
                this._infiniteScrollContainer = this._container.closest('.controls-ListView__infiniteScroll');
                if (this._infiniteScrollContainer.length) {
@@ -348,19 +348,16 @@ define('js!SBIS3.CONTROLS.ListView',
             }
             return false;
          },
-         //todo Герасимов: спилить этот метод, переведя на подписку через $.on(...)
-         _checkTargetContainer: function (target) {
-            return this._options.showPaging && this._pager && $.contains(this._pager.getContainer()[0], target[0]) ||
-                this._addInPlaceButton && $.contains(this._addInPlaceButton.getContainer().parent()[0], target[0]);
-         },
+
          _isViewElement: function (elem) {
-            return $.contains(this._getItemsContainer()[0], elem[0]);
+            return  $ws.helpers.contains(this._getItemsContainer()[0], elem[0]);
          },
+
          _onClickHandler: function(e) {
             ListView.superclass._onClickHandler.apply(this, arguments);
             var $target = $(e.target),
-               target = this._findItemByElement($target),
-               id;
+                target = this._findItemByElement($target),
+                id;
 
             if (target.length && this._isViewElement(target)) {
                id = target.data('id');
@@ -378,23 +375,14 @@ define('js!SBIS3.CONTROLS.ListView',
           */
          _mouseMoveHandler: function (e) {
             var $target = $(e.target),
-               containerCords,
-               targetCords,
-               target,
-               targetKey;
+                target,
+                targetKey;
 
-
-            //TODO Переписать без костыльных проверок
-            if (this._checkTargetContainer($target)) {
-               this._mouseLeaveHandler();
-               return;
-            }
             target = this._findItemByElement($target);
-            if (target.length && this._isViewElement(target) && !this._touchSupport) {
+
+            if (target.length && !this._touchSupport) {
                targetKey = target.data('id');
                if (targetKey !== undefined && this._hoveredItem.key !== targetKey) {
-                  containerCords = this._container[0].getBoundingClientRect();
-                  targetCords = target[0].getBoundingClientRect();
                   this._hoveredItem.container && this._hoveredItem.container.removeClass('controls-ListView__hoveredItem');
                   target.addClass('controls-ListView__hoveredItem');
                   this._hoveredItem = this._getElementData(target);
@@ -408,12 +396,13 @@ define('js!SBIS3.CONTROLS.ListView',
 
          _getElementData: function(target) {
             if (target.length){
-   				target = this._findItemByElement(target);
            		var containerCords = this._container[0].getBoundingClientRect(),
-                  targetCords = target[0].getBoundingClientRect();
+                   targetCords = target[0].getBoundingClientRect(),
+                   targetKey = target.data('id');
 
                return {
-                   key: target.data('id'),
+                   key: targetKey,
+                   record: this.getDataSet().getRecordByKey(targetKey),
                    container: target,
                    position: {
                        top: targetCords.top - containerCords.top,
@@ -436,12 +425,7 @@ define('js!SBIS3.CONTROLS.ListView',
           */
          _isHoverControl: function ($target) {
             var itemActionsContainer = this._itemActionsGroup && this._itemActionsGroup.getContainer();
-            return itemActionsContainer &&
-               ( itemActionsContainer[0] === $target[0] ||
-                  $.contains(itemActionsContainer[0], $target[0]) ||
-                  this._itemActionsGroup.isItemActionsMenuVisible() ) ||
-                  //todo Сухоручкин: this._editInPlace._container в DOM больше не существует! Проверка неправильная! Hover-режим однажды сломается!
-                  this._editInPlace && $.contains(this._editInPlace.getContainer()[0], $target[0]);
+            return itemActionsContainer && (itemActionsContainer[0] === $target[0] || $.contains(itemActionsContainer[0], $target[0]) || this._itemActionsGroup.isItemActionsMenuVisible());
          },
          /**
           * Обрабатывает уведение мышки с элемента представления
@@ -452,12 +436,14 @@ define('js!SBIS3.CONTROLS.ListView',
                return;
             }
             this._hoveredItem.container && this._hoveredItem.container.removeClass('controls-ListView__hoveredItem');
-            this._hoveredItem = {
-               container: null,
-               key: null,
-               position: null,
-               size: null
-            };
+
+            /* Затрём всю информацию о выделенном элементе */
+            for(var key in this._hoveredItem) {
+               if(this._hoveredItem.hasOwnProperty(key)) {
+                  this._hoveredItem[key] = null;
+               }
+            }
+
             this._notify('onChangeHoveredItem', this._hoveredItem);
             this._onChangeHoveredItem(this._hoveredItem);
          },
@@ -499,6 +485,11 @@ define('js!SBIS3.CONTROLS.ListView',
 
          _getItemsContainer: function () {
             return $(".controls-ListView__itemsContainer", this._container.get(0))
+         },
+
+         _addItemAttributes: function(container) {
+            container.addClass('js-controls-ListView__item');
+            ListView.superclass._addItemAttributes.apply(this, arguments);
          },
 
          /* +++++++++++++++++++++++++++ */
@@ -676,7 +667,7 @@ define('js!SBIS3.CONTROLS.ListView',
          _swipeHandler: function(e){
             if (e.direction == 'left'){
                var target = this._findItemByElement($(e.target)),
-                  item = this._getElementData(target);
+                   item = this._getElementData(target);
                this._onChangeHoveredItem(item);
                this._hoveredItem = item;
             }
@@ -694,7 +685,7 @@ define('js!SBIS3.CONTROLS.ListView',
          },
 
          _findItemByElement: function(target){
-            return target.hasClass('controls-ListView__item') ? target : target.closest('.controls-ListView__item');
+            return target.hasClass('js-controls-ListView__item') ? target : target.closest('.js-controls-ListView__item');
          },
          /**
           * Показывает оперцаии над записью для элемента
@@ -799,7 +790,7 @@ define('js!SBIS3.CONTROLS.ListView',
           *     DataGridView.setItemsActions([{
           *        name: 'delete',
           *        icon: 'sprite:icon-16 icon-Erase icon-error',
-          *        title: 'Удалить',
+          *        caption: 'Удалить',
           *        isMainAction: true,
           *        onActivated: function(item) {
           *           this.deleteRecords(item.data('id'));
@@ -808,7 +799,7 @@ define('js!SBIS3.CONTROLS.ListView',
           *     {
           *        name: 'addRecord',
           *        icon: 'sprite:icon-16 icon-Add icon-error',
-          *        title: 'Добавить',
+          *        caption: 'Добавить',
           *        isMainAction: true,
           *        onActivated: function(item) {
           *           this.showRecordDialog();
