@@ -15,14 +15,15 @@ define('js!SBIS3.CONTROLS.Browser', [
     * @demo SBIS3.CONTROLS.Demo.MyBrowser
     */
 
-   var checkViewType = function(view) {
-      if (view && $ws.helpers.instanceOfModule(view, 'SBIS3.CONTROLS.ListView')) {
-         return $ws.helpers.instanceOfMixin(view, 'SBIS3.CONTROLS.TreeMixinDS');
-      }
-      else {
-         throw new Error('Browser: Can\'t define linkedView');
-      }
-   };
+   var
+      checkViewType = function(view) {
+         if (view && $ws.helpers.instanceOfModule(view, 'SBIS3.CONTROLS.ListView')) {
+            return $ws.helpers.instanceOfMixin(view, 'SBIS3.CONTROLS.TreeMixinDS');
+         }
+         else {
+            throw new Error('Browser: Can\'t define linkedView');
+         }
+      };
 
    var Browser = CompoundControl.extend( /** @lends SBIS3.CONTROLS.Browser.prototype */{
       _dotTplFn : dotTplFn,
@@ -54,7 +55,9 @@ define('js!SBIS3.CONTROLS.Browser', [
 
       init: function() {
          Browser.superclass.init.apply(this, arguments);
+
          this._view = this._getView();
+
          this._hierMode = checkViewType(this._view);
 
 
@@ -121,8 +124,6 @@ define('js!SBIS3.CONTROLS.Browser', [
       _getOperationsPanel: function() {
          return this._getLinkedControl('browserOperationsPanel');
       }
-
-
 
    });
 

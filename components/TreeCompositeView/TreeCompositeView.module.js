@@ -47,6 +47,9 @@ define('js!SBIS3.CONTROLS.TreeCompositeView', ['js!SBIS3.CONTROLS.TreeDataGridVi
                    this.setCurrentRoot(nodeID);
                    this.reload();
                 }
+                else {
+                   this._notify('onItemActivate', id, data);
+                }
              }.bind(this);
 
          if (this._options.viewMode == 'table') {
