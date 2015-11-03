@@ -102,7 +102,7 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', ['js!SBIS3.CORE.Control'], function (Con
          var self = this;
          this._folderOffsets[key || 'null'] = 0;
          this._toggleIndicator(true);
-         return this._dataSource.query(this._createTreeFilter(key), this._sorting, 0, this._limit).addCallback(function (dataSet) {
+         return this._callQuery(this._createTreeFilter(key), this._sorting, 0, this._limit).addCallback(function (dataSet) {
             // TODO: Отдельное событие при загрузке данных узла. Сделано так как тут нельзя нотифаить onDataLoad,
             // так как на него много всего завязано. (пользуется Янис)
             self._notify('onNodeDataLoad', key, dataSet);
@@ -127,11 +127,11 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', ['js!SBIS3.CORE.Control'], function (Con
             if (targetContainer) {
                if (self._options.displayType == 'folders') {
                   if (record.get(self._options.hierField + '@')) {
-                     self._drawItem(record, targetContainer);
+                     self._drawAndAppendItem(record, targetContainer);
                   }
                }
                else {
-                  self._drawItem(record, targetContainer);
+                  self._drawAndAppendItem(record, targetContainer);
                }
 
             }
