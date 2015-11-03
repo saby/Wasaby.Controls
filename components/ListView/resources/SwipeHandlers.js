@@ -169,6 +169,7 @@
                }
             });
          };
+
          $this.bind('touchstart', context.start);
       },
 
