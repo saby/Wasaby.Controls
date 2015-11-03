@@ -155,6 +155,7 @@ define('js!SBIS3.CONTROLS.Data.Source.ISource', [
        * @typedef {Object} OrderDetails
        * @property {Boolean} [after=false] Вставить после модели, указанной в {@link to}
        * @property {String} [column] Название столбца, по которому осуществляется сортировка
+       * @property {String} [hierColumn] Название столбца, по которому строится иерархия
        */
 
       /**
