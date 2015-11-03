@@ -206,7 +206,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
 
          /* Нужно поле делать невидимым, а не скрывать, чтобы можно было посчитать размеры */
          if(!this._options.multiselect) {
-            this._inputWrapper.toggleClass('ws-invisible', !!keysArrLen)
+            this._inputWrapper.toggleClass('ws-invisible', Boolean(keysArrLen))
          }
 
          if(keysArrLen) {
@@ -229,26 +229,22 @@ define('js!SBIS3.CONTROLS.FieldLink',
 
       _drawFieldLinkItemsCollection: function() {
          var self = this;
-
          return new FieldLinkItemsCollection({
             element: this._linksWrapper.find('.controls-FieldLink__linksContainer'),
             displayField: this._options.displayField,
             keyField: this._options.keyField,
             itemCheckFunc: this._checkItemBeforeDraw.bind(this),
             handlers: {
-               onDrawItems: function() {
-                  self._inputField[0].style.width = (self._container[0].offsetWidth - self._getWrappersWidth() - INPUT_WRAPPER_PADDING) + 'px';
-               },
-               onCrossClick: function(e, id) {
-                  self.removeItemsSelection([id]);
-               }
+               onDrawItems: this._updateInputWidth.bind(this),
+               onCrossClick: function(e, key){ self.removeItemsSelection([key]); }
             }
          });
       },
 
       /* Проверяет, нужно ли отрисовывать элемент или надо показать троеточие */
       _checkItemBeforeDraw: function(item) {
-         var needDrawItem;
+         var needDrawItem = false,
+             inputWidth;
 
          /* Если элементы рисуются в пикере то ничего считать не надо */
          if(this._isPickerVisible()) {
@@ -256,8 +252,17 @@ define('js!SBIS3.CONTROLS.FieldLink',
          }
 
          /* Тут считается ширина добавляемого элемента, и если он не влезает,
-            то отрисовываться он не будет и покажется троеточие */
-         needDrawItem = $ws.helpers.getTextWidth(item) < this._container[0].offsetWidth - (this._getWrappersWidth() + SHOW_ALL_LINK_WIDTH + INPUT_MIN_WIDTH);
+            то отрисовываться он не будет и покажется троеточие, однако хотя бы один элемент в поле связи должен поместиться */
+         if(this._checkWidth) {
+            inputWidth = this._getInputWidth();
+            needDrawItem = $ws.helpers.getTextWidth(item[0].outerHTML) + INPUT_MIN_WIDTH < inputWidth + SHOW_ALL_LINK_WIDTH;
+
+            if(!needDrawItem && !this._linkCollection.getContainer().find('.controls-FieldLink__linkItem').length) {
+               item[0].style.width = inputWidth - INPUT_MIN_WIDTH + 'px';
+               needDrawItem = true;
+               this._checkWidth = false;
+            }
+         }
          this._toggleShowAllLink(!needDrawItem);
          return needDrawItem
       },
@@ -343,10 +348,6 @@ define('js!SBIS3.CONTROLS.FieldLink',
                   this.removeItemsSelection([selectedKeys[selectedKeys.length - 1]]);
                }
                break;
-            case $ws._const.key.down:
-            case $ws._const.key.up:
-               this._list && this._list._keyboardHover(e);
-               break;
          }
 
          return true;
@@ -365,16 +366,27 @@ define('js!SBIS3.CONTROLS.FieldLink',
        * Скрывает/показывает кнопку показа всех записей
        */
       _toggleShowAllLink: function(show) {
-         this._showAllLink && this._showAllLink.toggleClass('ws-hidden', !show);
+         this._options.multiselect && this._showAllLink && this._showAllLink.toggleClass('ws-hidden', !show);
       },
 
       /**
-       * Считает ширину элементов поля связи, кроме инпута
+       * Расщитывает ширину поля ввода, учитывая всевозможные wrapper'ы и отступы
        * @returns {number}
        * @private
        */
-      _getWrappersWidth: function() {
-         return this._container.find('.controls-TextBox__afterFieldWrapper')[0].offsetWidth + this._container.find('.controls-TextBox__beforeFieldWrapper')[0].offsetWidth;
+      _getInputWidth: function() {
+         return this._container[0].offsetWidth  -
+            (this._container.find('.controls-TextBox__afterFieldWrapper')[0].offsetWidth +
+             this._container.find('.controls-TextBox__beforeFieldWrapper')[0].offsetWidth +
+            INPUT_WRAPPER_PADDING);
+      },
+      /**
+       * Обновляет ширину поле ввода, после того как отрисовались выбренные элементы
+       * @private
+       */
+      _updateInputWidth: function() {
+         this._checkWidth = true;
+         this._inputField[0].style.width = this._getInputWidth() + 'px';
       },
 
       /* Заглушка, само поле связи не занимается отрисовкой */
@@ -383,10 +395,14 @@ define('js!SBIS3.CONTROLS.FieldLink',
 
       destroy: function() {
          this._linksWrapper = undefined;
+         this._inputWrapper = undefined;
 
          if(this._options.multiselect) {
             this._showAllLink.unbind('click');
             this._showAllLink = undefined;
+
+            this._dropAllLink.unbind('click');
+            this._dropAllLink = undefined;
          }
          FieldLink.superclass.destroy.apply(this, arguments);
       }
