@@ -114,11 +114,6 @@ define('js!SBIS3.CONTROLS.DataGridView',
          }
       },
 
-      _checkTargetContainer: function(target) {
-         return this._options.showHead && this._thead.length && $.contains(this._thead[0], target[0]) ||
-                DataGridView.superclass._checkTargetContainer.apply(this, arguments);
-      },
-
       _getItemsContainer: function(){
          return $('.controls-DataGridView__tbody', this._container);
       },
