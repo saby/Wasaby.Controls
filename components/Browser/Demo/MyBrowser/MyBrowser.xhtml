@@ -1,11 +1,23 @@
 <div>
-   <component data-component="SBIS3.CONTROLS.Browser">
+   <component data-component="SBIS3.CONTROLS.Browser" name="brows">
       <option name="searchParam" value="title"></option>
+      <option name="itemDialog" value="js!SBIS3.CONTROLS.SearchForm"></option>
       <option name="content">
          <component data-component="SBIS3.CONTROLS.SearchForm" name="browserSearch"></component>
          <component data-component="SBIS3.CONTROLS.BreadCrumbs" name="browserBreadCrumbs"></component>
          <component data-component="SBIS3.CONTROLS.BackButton" name="browserBackButton"></component>
          <component data-component="SBIS3.CONTROLS.TreeDataGridView" name="browserView">
+            <options name="itemsActions" type="Array">
+               <options>
+                  <option name="name" value="edit"></option>
+                  <option name="icon" value="sprite:icon-16 icon-Edit icon-error"></option>
+                  <option name="title" value="edit"></option>
+                  <option name="isMainAction" value="true" type="boolean"></option>
+                  <option name="onActivated" value="js!SBIS3.CONTROLS.CommonHandlers:editItems" type="function"></option>
+               </options>
+            </options>
+
+            <option name="arrowActivatedHandler" type="function" value="js!SBIS3.CONTROLS.CommonHandlers:editItems"></option>
             <option name="keyField" value="id"></option>
             <option name="hierField" value="parent"></option>
             <option name="displayField" value="title"></option>
