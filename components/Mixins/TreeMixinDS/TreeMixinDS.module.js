@@ -110,7 +110,12 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', ['js!SBIS3.CORE.Control'], function (Con
             self._nodeDataLoaded(key, dataSet);
          });
       },
-
+      /**
+       * Получить текущий набор открытых элементов иерархии
+       */
+      getOpenedPath: function(){
+         return this._options.openedPath;
+      },
       _nodeDataLoaded : function(key, dataSet) {
          var
             self = this,
