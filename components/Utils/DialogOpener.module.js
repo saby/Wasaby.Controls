@@ -39,6 +39,9 @@ define('js!SBIS3.CONTROLS.Utils.DialogOpener',[
                handlers: handlers
             });
          }
+      },
+      convertRecord: function(record) {
+         return convertRecord(record);
       }
    };
 });
