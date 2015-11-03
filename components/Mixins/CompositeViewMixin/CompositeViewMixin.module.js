@@ -195,13 +195,11 @@ define('js!SBIS3.CONTROLS.CompositeViewMixin', ['html!SBIS3.CONTROLS.CompositeVi
 
             height = itemActions[0].offsetHeight || itemActions.height();
 
-         _getItemActionsPosition: function(parentFunc, item) {
-            if (this._options.viewMode == 'table') {
-               return parentFunc.call(this, item);
-            } else
             return {
-               top: item.position.top,
-               right: this._container[0].offsetWidth - (item.position.left + item.size.width)
+               top: actionsAlign === 'horizontal' ?
+                  hoveredItem.position.top + ((hoveredItem.size.height > height) ? hoveredItem.size.height - height : 0 ) :
+                  hoveredItem.position.top,
+               right: isTableView ? 5 : this._container[0].offsetWidth - (hoveredItem.position.left + hoveredItem.size.width)
             };
          },
 

@@ -151,23 +151,6 @@ define('js!SBIS3.CONTROLS.TreeCompositeView', ['js!SBIS3.CONTROLS.TreeDataGridVi
          }
          return this._getItemsContainer();
       },
-      _getItemActionsPosition: function(hoveredItem) {
-         var itemActions = this.getItemsActions().getContainer(),
-             viewMode = this.getViewMode(),
-             //FIXME в версии 3.7.3.20 будет приходить рекорд, надо это использовать
-             horAlign = viewMode === 'table' || (!this.getDataSet().getRecordByKey(hoveredItem.key).get(this._options.hierField + '@') && viewMode === 'list'),
-             height;
-
-         itemActions[horAlign ? 'removeClass' : 'addClass']('controls-ItemActions-verAlign');
-         height = itemActions[0].offsetHeight || itemActions.height();
-
-         return {
-            top: horAlign ?
-                   hoveredItem.position.top + ((hoveredItem.size.height > height) ? hoveredItem.size.height - height : 0 ) :
-                   hoveredItem.position.top,
-            right: viewMode === 'table' ? 5 : this._container[0].offsetWidth - (hoveredItem.position.left + hoveredItem.size.width)
-         };
-      },
       _processPaging: function() {
          TreeCompositeView.superclass._processPaging.call(this);
          this._processPagingStandart();
