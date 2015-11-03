@@ -84,7 +84,7 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
                      if (allContainers[i] == parentContainer.get(0)) {
                         startRow = i + 1;
                      } else {
-                        if (childKeys.indexOf($(allContainers[i]).data('id')) >= 0) {
+                        if (childKeys.indexOf('' + $(allContainers[i]).data('id')) >= 0) {
                            startRow++;
                         }
                      }
@@ -243,11 +243,16 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
                   this.setCurrentRoot(nodeID);
                   this.reload();
                }
-            } else {
+            }
+            else {
                if (data.get(this._options.hierField + '@')) {
                   this.toggleNode(nodeID);
                }
+               else {
+                  this._notify('onItemActivate', id, data);
+               }
             }
+
          }
       },
       /*DRAG_AND_DROP START*/
