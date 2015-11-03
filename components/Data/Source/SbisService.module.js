@@ -91,7 +91,7 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
             mergeMethodName: 'Объединить',
 
             /**
-             * @cfg {String|ResourceConfig} Имя объекта бизнес-логики, реализующиего перемещение записей. По умолчанию 'ПорядковыйНомер'.
+             * @cfg {String|ResourceConfig} Имя объекта бизнес-логики, реализующего перемещение записей. По умолчанию 'ПорядковыйНомер'.
              * @example
              * <pre>
              *    <option name="moveResource">ПорядковыйНомер</option>
@@ -105,12 +105,6 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
              * @see move
              */
             moveMethodPrefix: 'Вставить',
-
-            /**
-             * @cfg {String} Название поля с иерархией для перемещения записей
-             * @see move
-             */
-            moveHierField: '',
 
             /**
              * @cfg {String} Имя поля, по которому по умолчанию сортируются записи выборки. По умолчанию 'ПорНомер'.
@@ -156,11 +150,7 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
          }
          this._provider = new SbisServiceBLO(this._options.resource);
 
-         if (this._options.moveResource && typeof this._options.moveResource !== 'object') {
-            this._options.moveResource = {
-               name: this._options.moveResource
-            };
-         }
+         this.setMoveResource(this._options.moveResource);
       },
 
 
@@ -465,6 +455,59 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
          this._options.destroyMethodName = method;
       },
 
+      /**
+       * Возвращает имя объекта бизнес-логики, реализующего перемещение записей
+       * @returns {String}
+       */
+      getMoveResource: function () {
+         return this._options.moveResource;
+      },
+
+      /**
+       * Устанавливает имя объекта бизнес-логики, реализующего перемещение записей
+       * @param {String} name
+       */
+      setMoveResource: function (name) {
+         if (name && typeof name !== 'object') {
+            name = {
+               name: name
+            };
+         }
+         this._options.moveResource = name;
+      },
+
+      /**
+       * Возвращает префикс имени метода, который используется для перемещения записи
+       * @returns {String}
+       */
+      getMoveMethodPrefix: function () {
+         return this._options.moveMethodPrefix;
+      },
+
+      /**
+       * Устанавливает префикс имени метода, который используется для перемещения записи
+       * @param {String} name
+       */
+      setMoveMethodPrefix: function (name) {
+         this._options.moveMethodPrefix = name;
+      },
+
+      /**
+       * Возвращает имя поля, по которому по умолчанию сортируются записи выборки
+       * @returns {String}
+       */
+      getMoveDefaultColumn: function () {
+         return this._options.moveDefaultColumn;
+      },
+
+      /**
+       * Устанавливает имя поля, по которому по умолчанию сортируются записи выборки
+       * @param {String} name
+       */
+      setMoveDefaultColumn: function (name) {
+         this._options.moveDefaultColumn = name;
+      },
+
       //endregion Public methods
 
       //region Protected methods
@@ -523,7 +566,7 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
        * Возвращает параметры перемещения записей
        * @param {SBIS3.CONTROLS.Data.Model} model Перемещаемая запись
        * @param {String} to Значение поля, в позицию которого перемещаем (по умолчанию - значение первичного ключа)
-       * @param {OrderDetails} [details] Дополнительная информация о перемещении
+       * @param {SBIS3.CONTROLS.Data.Source.ISource#OrderDetails} [details] Дополнительная информация о перемещении
        * @returns {Object}
        * @private
        */
@@ -533,8 +576,8 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
             'ИдО': model.get(this._options.idProperty),
             'ПорядковыйНомер': details.column || this._options.moveDefaultColumn
          };
-         if (this._options.moveHierField) {
-            params['Иерархия'] = this._options.moveHierField;
+         if (details.hierColumn) {
+            params['Иерархия'] = details.hierColumn;
          }
          if (this._options.moveResource.name && this._options.moveResource.name !== this._options.resource.name) {
             params['Объект'] = this._options.resource.name;

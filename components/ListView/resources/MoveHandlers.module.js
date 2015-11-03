@@ -45,7 +45,9 @@ define('js!SBIS3.CONTROLS.MoveHandlers', ['js!SBIS3.CONTROLS.MoveDialog'], funct
                   deferred.push(this._dataSource.update(record));
                } else {
                   if ($ws.helpers.instanceOfMixin(this._dataSource, 'SBIS3.CONTROLS.Data.Source.ISource')) {
-                     deferred.push(this._dataSource.move(record, moveTo));
+                     deferred.push(this._dataSource.move(record, moveTo, {
+                        hierColumn: this._options.hierField
+                     }));
                   } else {
                      deferred.push(this._dataSource.move(record, undefined, undefined, {before: moveTo}));
                   }
