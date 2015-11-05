@@ -524,7 +524,7 @@ define('js!SBIS3.CONTROLS.ListView',
             if (this._options.editInPlace.enabled && !this._options.editInPlace.hoverMode) {
                this._initEditInPlace();
                if (this._editInPlace) {
-                  this._editInPlace.showEditing($(target).closest('.controls-ListView__item'), data);
+                  this._editInPlace.showEditing($(target).closest('.js-controls-ListView__item'), data);
                }
             }
             else {
@@ -636,9 +636,9 @@ define('js!SBIS3.CONTROLS.ListView',
             if (!this._editInPlace) {
                this._createEditInPlace();
                this._dataSet.subscribe('onRecordChange', function(event, record) {
-                  var item = this._getItemsContainer().find('.controls-ListView__item[data-id="' + record.getKey() + '"]');
+                  var item = this._getItemsContainer().find('.js-controls-ListView__item[data-id="' + record.getKey() + '"]');
                   if (item.length) {
-                     item.empty().append(this._drawItem(record).children());
+                     item.slice(0, 1).empty().append(this._drawItem(record).children());
                   }
                }.bind(this));
             }
