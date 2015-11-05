@@ -83,8 +83,12 @@ define('js!SBIS3.CONTROLS.FilterButton',
          showButtonEl.click(showPicker);
 
          this.subscribe('onDestroy' , function() {
+            //FIXME убрать как переведут на новое поле связи
             this._forEachFieldLinks(function(fieldLink) {
-               ControlHierarchyManager.removeNode(fieldLink.getSuggest());
+               var suggest = fieldLink.getSuggest();
+               if(suggest) {
+                  ControlHierarchyManager.removeNode(suggest);
+               }
             });
          });
 
@@ -217,19 +221,24 @@ define('js!SBIS3.CONTROLS.FilterButton',
       }),
 
       _forEachFieldLinks: function(fn) {
-         var children = this._picker.getChildControls();
-         $ws.helpers.forEach(children, function(child) {
-            if (child instanceof FieldLink) {
-               fn.call(this, child);
-            }
-         });
+         if(this._picker) {
+            $ws.helpers.forEach(this._picker.getChildControls(), function (child) {
+               if (child instanceof FieldLink) {
+                  fn.call(this, child);
+               }
+            });
+         }
       },
 
       _setPickerContent: function() {
          this._picker.getContainer().addClass('controls__filterButton-' + this._options.filterAlign);
 
+         //FIXME убрать как переведут на новое поле связи
          this._forEachFieldLinks(function(fieldLink) {
-            ControlHierarchyManager.addNode(fieldLink.getSuggest());
+            var suggest = fieldLink.getSuggest();
+            if(suggest) {
+               ControlHierarchyManager.addNode(suggest);
+            }
          });
       },
 
