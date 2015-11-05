@@ -33,6 +33,9 @@ define('js!SBIS3.CONTROLS.MenuButtonMixin', ['js!SBIS3.CONTROLS.ContextMenu'], f
 
       $constructor: function () {
          this._publish('onMenuItemActivate');
+         if (this._container.hasClass('controls-Menu__hide-menu-header')){
+            this._options.pickerClassName += ' controls-Menu__hide-menu-header';
+         }
       },
 
       _createPicker: function(targetElement){
