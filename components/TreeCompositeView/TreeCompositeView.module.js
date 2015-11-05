@@ -1,4 +1,7 @@
-define('js!SBIS3.CONTROLS.TreeCompositeView', ['js!SBIS3.CONTROLS.TreeDataGridView', 'js!SBIS3.CONTROLS.CompositeViewMixin', 'html!SBIS3.CONTROLS.TreeCompositeView/resources/CompositeView__folderTpl'], function(TreeDataGridView, CompositeViewMixin, folderTpl) {
+/*TreeCompositeView*/
+define('js!SBIS3.CONTROLS.TreeCompositeView', ['js!SBIS3.CONTROLS.TreeDataGridView', 'js!SBIS3.CONTROLS.CompositeViewMixin',
+   'html!SBIS3.CONTROLS.TreeCompositeView/resources/CompositeView__folderTpl','js!SBIS3.CONTROLS.CommonHandlers'],
+   function(TreeDataGridView, CompositeViewMixin, folderTpl, CommonHandlers) {
    'use strict';
 
    var TreeCompositeView = TreeDataGridView.extend([CompositeViewMixin],/** @lends SBIS3.CONTROLS.TreeCompositeView.prototype*/ {
@@ -33,9 +36,28 @@ define('js!SBIS3.CONTROLS.TreeCompositeView', ['js!SBIS3.CONTROLS.TreeDataGridVi
              * Шаблон, используемый при отрисовке папки
              */
             folderTemplate: undefined
+
          }
       },
+      init:function(){
+         this._options.itemsActions = [{
+            name: 'moveDown',
+            icon: 'sprite:icon-16 icon-ArrowDown icon-primary action-hover',
+            tooltip: 'Перенести',
+            caption: 'Перенести',
+            isMainAction: true,
+            onActivated: CommonHandlers.moveRecordDown
+         }, {
+            name: 'moveUp',
+            icon: 'sprite:icon-16 icon-ArrowUp icon-primary action-hover',
+            tooltip: 'Перенести',
+            caption: 'Перенести',
+            isMainAction: true,
+            onActivated: CommonHandlers.moveRecordUp
+         }];
+         TreeCompositeView.superclass.init.call(this);
 
+      },
       _elemClickHandler: function (id, data, target) {
          var $target = $(target),
              nodeID,

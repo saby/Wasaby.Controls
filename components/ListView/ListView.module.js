@@ -281,7 +281,7 @@ define('js!SBIS3.CONTROLS.ListView',
                   hoverMode: false, //todo EIP Сухоручкин: Переделать на mode: String, т.к. могут быть и другие виды
                   template: undefined,
                   onFieldChange: undefined
-               }
+               },
             }
          },
 
@@ -326,29 +326,61 @@ define('js!SBIS3.CONTROLS.ListView',
             }
          },
          _keyboardHover: function (e) {
-            var items = $('.controls-ListView__item', this._getItemsContainer()).not('.ws-hidden'),
-               selectedKey = this.getSelectedKey(),
-               selectedItem = $('[data-id="' + selectedKey + '"]', this._getItemsContainer()),
-               nextItem = (selectedKey) ? items.eq(items.index(selectedItem) + 1) : items.eq(0),
-               previousItem = (selectedKey) ? items.eq(items.index(selectedItem) - 1) : items.last();
 
+            var selectedKey = this.getSelectedKey();
 
             switch (e.which) {
                case $ws._const.key.up:
+                  var previousItem = this.getPrevItemById(selectedKey);
                   previousItem.length ? this.setSelectedKey(previousItem.data('id')) : this.setSelectedKey(selectedKey);
                   break;
                case $ws._const.key.down:
+                  var nextItem = this.getNextItemById(selectedKey);
                   nextItem.length ? this.setSelectedKey(nextItem.data('id')) : this.setSelectedKey(selectedKey);
                   break;
                case $ws._const.key.enter:
                   this._elemClickHandler(selectedKey, this._dataSet.getRecordByKey(selectedKey), selectedItem);
                   break;
                case $ws._const.key.space:
+                  var nextItem = this.getNextItemById(selectedKey);
                   this.toggleItemsSelection([selectedKey]);
                   nextItem.length ? this.setSelectedKey(nextItem.data('id')) : this.setSelectedKey(selectedKey);
                   break;
             }
             return false;
+         },
+         /**
+          * Возвращает следующий элемент
+          * @param id
+          * @returns {*}
+          */
+         getNextItemById: function (id) {
+            return this._getHtmlItem(id, true);
+         },
+         /**
+          * Возвращает предыдущий элемент
+          * @param id
+          * @returns {jQuery}
+          */
+         getPrevItemById: function (id) {
+            return this._getHtmlItem (id, false);
+         },
+         /**
+          *
+          * @param id - идентификатор элемента
+          * @param isNext - если true вернет следующий элемент, пердыдущий
+          * @returns {jQuery}
+          * @private
+          */
+         _getHtmlItem: function (id, isNext) {
+            var items = $('.controls-ListView__item', this._getItemsContainer()).not('.ws-hidden'),
+               selectedItem = $('[data-id="' + id + '"]', this._getItemsContainer());
+            if (isNext) {
+               return (id) ? items.eq(items.index(selectedItem) + 1) : items.eq(0)
+            } else {
+               return (id) ? items.eq(items.index(selectedItem) - 1) : items.last();
+            }
+
          },
 
          _isViewElement: function (elem) {
@@ -1179,6 +1211,13 @@ define('js!SBIS3.CONTROLS.ListView',
                this._pager.destroy();
             }
             ListView.superclass.destroy.call(this);
+         },
+         /**
+          * Возвращает источник данных представления.
+          * @returns {*}
+          */
+         getDataSource: function(){
+            return this._dataSource;
          }
       });
 

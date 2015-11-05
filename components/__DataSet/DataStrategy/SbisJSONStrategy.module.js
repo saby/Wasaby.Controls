@@ -276,7 +276,7 @@ define('js!SBIS3.CONTROLS.SbisJSONStrategy', [
             var numPage = Math.floor(offset / limit);
             pagingParam = {
                'd': [
-                  numPage,
+                  0,
                   limit,
                   offset >= 0 //Если offset отрицательный, то грузится последняя страница
                ],
@@ -311,21 +311,23 @@ define('js!SBIS3.CONTROLS.SbisJSONStrategy', [
          return {d: [], s: []};
       },
 
-       preprareOrderParams: function(object, record, hierField, orderDetails){
+       prepareOrderParams: function(object, record, hierField, orderDetails){
           var params = {
              'Объект': object,
-             'ИдО': record.getKey(),
+             'ИдО': [parseInt(record.getKey(), 10), object],
              'ПорядковыйНомер': orderDetails.column || 'ПорНомер',
-             'Иерархия': hierField
+             'Иерархия': typeof hierField === 'undefined' ? null : hierField
           };
           if(orderDetails.after){
-             params['ИдОПосле'] = orderDetails.after;
-          } else {
-             params['ИдОДо'] = orderDetails.before;
+             params['ИдОДо'] = [parseInt(orderDetails.after,10), object];
+          } else if(orderDetails.before) {
+             params['ИдОПосле'] = [parseInt(orderDetails.before,10), object];
           }
           return params;
        },
-       
+
+
+
        setParentKey: function(record, hierField, parent) {
           record.set(hierField, [parent]);
        },
