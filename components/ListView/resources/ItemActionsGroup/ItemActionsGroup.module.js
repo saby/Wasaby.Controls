@@ -77,7 +77,7 @@ define('js!SBIS3.CONTROLS.ItemActionsGroup',
           */
          _createItemActionMenu: function() {
             var self = this;
-            var menuCont = $('.controls-ItemActions__menu-container', this._container[0]);
+            var menuCont = $('> .controls-ItemActions__menu-container', this._getItemsContainer()[0]);
             var verticalAlign = {
                   side: 'top',
                   offset: VERTICAL_OFFSET
@@ -174,12 +174,10 @@ define('js!SBIS3.CONTROLS.ItemActionsGroup',
             if (this._touchActions){
                var width = this._container.width(),
                   height = $(hoveredItem.container).height(),
-                  padding = height / 2 - 10,// получено опытным путем для шрифта 16px;
                   itemsContainer = this._getItemsContainer();
 
                itemsContainer[0].style.right = - width + 'px';
                this._container.height(height);
-               itemsContainer.css('padding-top', padding);
             	itemsContainer.animate({right : position.right}, 350);
             }
         	},
