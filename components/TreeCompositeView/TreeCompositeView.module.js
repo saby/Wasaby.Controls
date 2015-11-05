@@ -137,28 +137,19 @@ define('js!SBIS3.CONTROLS.TreeCompositeView', ['js!SBIS3.CONTROLS.TreeDataGridVi
             TreeCompositeView.superclass._updateEditInPlaceDisplay.apply(this, arguments);
          }
       },
+      _getItemActionsAlign: function(viewMode, hoveredItem) {
+         /* В режиме список(list) для листьев нужно опции отображать горизонтально,
+          как и для режима таблица(table) */
+         return viewMode === 'table' || (!this.getDataSet().getRecordByKey(hoveredItem.key).get(this.getHierField() + '@') && viewMode === 'list') ?
+               'horizontal' : 'vertical';
+
+      },
+
       _getTargetContainer: function (item) {
          if (this.getViewMode() != 'table' && item.get(this._options.hierField + '@')) {
             return  $('.controls-CompositeView__foldersContainer',this._container);
          }
          return this._getItemsContainer();
-      },
-      _getItemActionsPosition: function(hoveredItem) {
-         var itemActions = this.getItemsActions().getContainer(),
-             viewMode = this.getViewMode(),
-             //FIXME в версии 3.7.3.20 будет приходить рекорд, надо это использовать
-             horAlign = viewMode === 'table' || (!this.getDataSet().getRecordByKey(hoveredItem.key).get(this._options.hierField + '@') && viewMode === 'list'),
-             height;
-
-         itemActions[horAlign ? 'removeClass' : 'addClass']('controls-ItemActions-verAlign');
-         height = itemActions[0].offsetHeight || itemActions.height();
-
-         return {
-            top: horAlign ?
-                   hoveredItem.position.top + ((hoveredItem.size.height > height) ? hoveredItem.size.height - height : 0 ) :
-                   hoveredItem.position.top,
-            right: viewMode === 'table' ? 5 : this._container[0].offsetWidth - (hoveredItem.position.left + hoveredItem.size.width)
-         };
       },
       _processPaging: function() {
          TreeCompositeView.superclass._processPaging.call(this);
@@ -262,7 +253,7 @@ define('js!SBIS3.CONTROLS.TreeCompositeView', ['js!SBIS3.CONTROLS.TreeDataGridVi
                   } else if (self._limit !== undefined) {
                      limit = (self._folderOffsets.hasOwnProperty(branchId) ? self._folderOffsets[branchId] : 0) + self._limit;
                   }
-                  return self._dataSource.query(filter, self._sorting, self._offset, limit)
+                  return self._callQuery(filter, self._sorting, self._offset, limit)
                      .addCallback(function(dataSet) {
                         branchesData[branchId] = dataSet;
                         return dataSet;
