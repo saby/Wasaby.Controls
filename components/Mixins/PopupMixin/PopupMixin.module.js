@@ -362,7 +362,7 @@ define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManag
          //Таймаут для того что бы не пересчитывать размеры пока меняется размер окна,
          //а перестчитать только один раз, когда размер меняться перестанет.
          this._resizeTimeout = setTimeout(function() {
-            if (this.isVisible()) {
+            if (self.isVisible()) {
                self.recalcPosition(false);
             } else {
                self._initSizes();
