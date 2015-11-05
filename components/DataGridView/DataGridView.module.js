@@ -3,13 +3,14 @@ define('js!SBIS3.CONTROLS.DataGridView',
       'js!SBIS3.CONTROLS.ListView',
       'html!SBIS3.CONTROLS.DataGridView',
       'html!SBIS3.CONTROLS.DataGridView/resources/rowTpl',
+      'html!SBIS3.CONTROLS.DataGridView/resources/colgroupTpl',
       'html!SBIS3.CONTROLS.DataGridView/resources/headTpl',
       'js!SBIS3.CORE.MarkupTransformer',
       'js!SBIS3.CONTROLS.DragAndDropMixin',
       'is!browser?html!SBIS3.CONTROLS.DataGridView/resources/DataGridViewGroupBy',
       'js!SBIS3.CONTROLS.Utils.HtmlDecorators/LadderDecorator'
    ],
-   function(ListView, dotTplFn, rowTpl, headTpl, MarkupTransformer, DragAndDropMixin, groupByTpl, LadderDecorator) {
+   function(ListView, dotTplFn, rowTpl, colgroupTpl, headTpl, MarkupTransformer, DragAndDropMixin, groupByTpl, LadderDecorator) {
    'use strict';
       /* TODO: Надо считать высоту один раз, а не делать константой */
       var
@@ -100,8 +101,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
       $constructor: function() {
          this._publish('onDrawHead');
          this._checkColumns();
-         this._decorators.add(new LadderDecorator({
-         }));
+         this._decorators.add(new LadderDecorator());
       },
 
       init: function() {
@@ -112,11 +112,6 @@ define('js!SBIS3.CONTROLS.DataGridView',
          if(this._options.startScrollColumn !== undefined) {
             this._initPartScroll();
          }
-      },
-
-      _checkTargetContainer: function(target) {
-         return this._options.showHead && this._thead.length && $.contains(this._thead[0], target[0]) ||
-                DataGridView.superclass._checkTargetContainer.apply(this, arguments);
       },
 
       _getItemsContainer: function(){
@@ -513,12 +508,9 @@ define('js!SBIS3.CONTROLS.DataGridView',
        setColumns : function(columns) {
           this._options.columns = columns;
           this._checkColumns();
-
-          if(this._options.showHead) {
-             /* Перестроим шапку только после загрузки данных,
-                чтобы таблица не прыгала, из-за того что изменилось количество и ширина колонок */
-             this.once('onDataLoad', this._buildHead.bind(this));
-          }
+          /* Перестроим шапку только после загрузки данных,
+           чтобы таблица не прыгала, из-за того что изменилось количество и ширина колонок */
+          this.once('onDataLoad', this._buildHead.bind(this));
        },
       /**
        * Проверяет настройки колонок, заданных опцией {@link columns}.
@@ -531,14 +523,25 @@ define('js!SBIS3.CONTROLS.DataGridView',
             }
          }
       },
+      _getColgroupTemplate: function() {
+         return $(colgroupTpl({
+               columns: this._options.columns,
+               multiselect: this._options.multiselect
+            }));
+      },
+
       _buildHead: function() {
-         var head = this._getHeadTemplate();
-         this._isPartScrollVisible = false;
-         this._thead && this._thead.remove();
+         var body = this._getItemsContainer();
+
+         if(this._options.showHead) {
+            this._thead && this._thead.remove();
+            this._thead = $(this._getHeadTemplate()).insertBefore(body);
+            this._isPartScrollVisible = false;
+         }
+
          this._colgroup && this._colgroup.remove();
-         $('.controls-DataGridView__tbody', this._container).before(head);
-         this._thead = $('.controls-DataGridView__thead', this._container.get(0));
-         this._colgroup = $('.controls-DataGridView__colgroup', this._container.get(0));
+         this._colgroup = $(this._getColgroupTemplate()).insertBefore(this._thead || body);
+
          if(this._options.startScrollColumn !== undefined) {
             this._initPartScroll();
             this.updateDragAndDrop();
@@ -580,16 +583,9 @@ define('js!SBIS3.CONTROLS.DataGridView',
          return this._headTpl(rowData);
       },
 
-
-      _getItemActionsPosition: function(item) {
-         return {
-            top: item.position.top + ((item.size.height > ITEMS_ACTIONS_HEIGHT) ? item.size.height - ITEMS_ACTIONS_HEIGHT : 0 ),
-            right: 0
-         };
-      },
-      _showItemActions: function() {
+      _showItemActions: function(item) {
          if(!this.isNowScrollingPartScroll()) {
-            DataGridView.superclass._showItemActions.call(this);
+            DataGridView.superclass._showItemActions.call(this, item);
          }
       },
 

@@ -23,6 +23,9 @@ define('js!SBIS3.CONTROLS.CommonHandlers',[],
                   });
                }
             });
+         },
+         editItems: function(tr, id) {
+            this.sendCommand('ActivateItem', id);
          }
       };
       return CommonHandlers;

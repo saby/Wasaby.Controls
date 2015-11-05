@@ -5,7 +5,6 @@ define('js!SBIS3.CONTROLS.Data.Collection.IIndexedCollection', [], function () {
    /**
     * Интерфейс коллеции c индексированным поиском элементов
     * @mixin SBIS3.CONTROLS.Data.Collection.IIndexedCollection
-    * @public
     * @author Мальцев Алексей
     * @state mutable
     * @remark

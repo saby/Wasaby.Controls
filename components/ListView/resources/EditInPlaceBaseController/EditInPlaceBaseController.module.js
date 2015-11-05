@@ -188,8 +188,8 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                this.finishEditing(true);
             },
             destroy: function() {
-               if (this._editInPlace.isEditing()) {
-                  this._editInPlace.finishEditing();
+               if (this.isEditing()) {
+                  this.finishEditing();
                }
                EditInPlaceBaseController.superclass.destroy.apply(this, arguments);
             }
