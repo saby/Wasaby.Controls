@@ -383,7 +383,7 @@ define('js!SBIS3.CONTROLS.ListView',
             target = this._findItemByElement($target);
 
             if (target.length && !this._touchSupport) {
-               targetKey = target.data('id');
+               targetKey = target[0].getAttribute('id');
                if (targetKey !== undefined && this._hoveredItem.key !== targetKey) {
                   this._hoveredItem.container && this._hoveredItem.container.removeClass('controls-ListView__hoveredItem');
                   target.addClass('controls-ListView__hoveredItem');
@@ -400,7 +400,7 @@ define('js!SBIS3.CONTROLS.ListView',
             if (target.length){
            		var containerCords = this._container[0].getBoundingClientRect(),
                    targetCords = target[0].getBoundingClientRect(),
-                   targetKey = target.data('id');
+                   targetKey = target[0].getAttribute('id');
 
                return {
                    key: targetKey,
