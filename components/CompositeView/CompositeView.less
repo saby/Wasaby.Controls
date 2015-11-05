@@ -54,32 +54,34 @@
   &.controls-CompositeView-tile {
     .controls-CompositeView__itemsContainer {
       padding: @multiView-tile-itemsContainer-padding;
-      //Скорее всего не нужно 14.09.2015
-      /* min-height: 40px; */
     }
   }
-   .controls-CompositeView__listItem{
-      &.controls-ListView__item__selected{
-         &:not(.controls-ListView__folder), &.controls-ListView__folder .controls-CompositeView__tileTitle{
-            background-image: url('img/rowSelect.png');
-            background-position: left top;
-            background-repeat: repeat-y;
+
+   .controls-ListView__item__selected {
+      &.controls-CompositeView__listItem,
+      &.controls-CompositeView__tileItem {
+         background-color: @default-itemHover-color;
+      }
+
+      &.controls-CompositeView__listItem.controls-ListView__folder,
+      &.controls-CompositeView__tileItem {
+         &:before {
+            top: 0;
+            position: absolute;
+            bottom: 0;
+            border: @multiView-tile-selected-item-border;
+            left: 0;
+            right: 0;
+            display: block;
+            content: '';
          }
       }
-   }
-
-   .controls-CompositeView__tileItem{
-      &.controls-ListView__item__selected{
-         .controls-CompositeView__tileTitle{
-            background-image: url('img/rowSelect.png');
-            background-position: left top;
-            background-repeat: repeat-y;
+      &.controls-CompositeView__tileItem.controls-ListView__folder {
+         &:before {
+            bottom: 1px;
          }
       }
-   }
-
-   .controls-ListView__item__selected{
-      .controls-ListView__item-title{
+      &.controls-CompositeView__listItem:not(.controls-ListView__folder) {
          background-image: url('img/rowSelect.png');
          background-position: left top;
          background-repeat: repeat-y;
