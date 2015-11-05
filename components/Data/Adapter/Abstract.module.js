@@ -28,6 +28,9 @@ define('js!SBIS3.CONTROLS.Data.Adapter.Abstract', [
       },
 
       setProperty: function (data, property, value) {
+         if (!data || typeof data !== 'object') {
+            return;
+         }
          property = property || '';
          var parts = property.split('.'),
             current = data;
