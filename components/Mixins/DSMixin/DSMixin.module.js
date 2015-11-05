@@ -1,8 +1,13 @@
 define('js!SBIS3.CONTROLS.DSMixin', [
    'js!SBIS3.CONTROLS.StaticSource',
    'js!SBIS3.CONTROLS.ArrayStrategy',
+   'js!SBIS3.CONTROLS.SbisJSONStrategy',
+   'js!SBIS3.CONTROLS.DataFactory',
+   'js!SBIS3.CONTROLS.DataSet',
+   'js!SBIS3.CONTROLS.Data.Collection.RecordSet',
+   'js!SBIS3.CONTROLS.Data.Query.Query',
    'js!SBIS3.CORE.MarkupTransformer'
-], function (StaticSource, ArrayStrategy, MarkupTransformer) {
+], function (StaticSource, ArrayStrategy, SbisJSONStrategy, DataFactory, DataSet, RecordSet, Query, MarkupTransformer) {
 
    /**
     * Миксин, задающий любому контролу поведение работы с набором однотипных элементов.
@@ -312,7 +317,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
          this._limit = limitChanged ? limit : this._limit;
 
          this._toggleIndicator(true);
-         this._loader = this._dataSource.query(this._filter, this._sorting, this._offset, this._limit).addCallback(function (dataSet) {
+         this._loader = this._callQuery(this._filter, this._sorting, this._offset, this._limit).addCallback(function (dataSet) {
             self._toggleIndicator(false);
             self._loader = null;//Обнулили без проверки. И так знаем, что есть и загрузили
             if (self._dataSet) {
@@ -335,6 +340,37 @@ define('js!SBIS3.CONTROLS.DSMixin', [
 
          return def;
       }),
+
+      _callQuery: function (filter, sorting, offset, limit) {
+         if (!this._dataSource) {
+            return;
+         }
+
+         //TODO: remove switch after migration to SBIS3.CONTROLS.Data.Source.ISource
+         if ($ws.helpers.instanceOfMixin(this._dataSource, 'SBIS3.CONTROLS.Data.Source.ISource')) {
+            var query = new Query();
+            query.where(filter)
+               .offset(offset)
+               .limit(limit)
+               .orderBy(sorting);
+
+            return this._dataSource.query(query).addCallback((function(newDataSet) {
+               return new RecordSet({
+                  compatibleMode: true,
+                  strategy: this._dataSource.getAdapter(),
+                  data: newDataSet.getRawData(),
+                  meta: {
+                     results: newDataSet.getProperty('r'),
+                     more: newDataSet.getTotal(),
+                     path: newDataSet.getProperty('p')
+                  },
+                  keyField: this._options.keyField || this._dataSource.getAdapter().getKeyField(newDataSet.getRawData())
+               });
+            }).bind(this));
+         } else {
+            return this._dataSource.query(filter, sorting, offset, limit);
+         }
+      },
 
       _toggleIndicator:function(){
          /*Method must be implemented*/
@@ -453,6 +489,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
          else {
             items = [];
          }
+
          this._dataSource = new StaticSource({
             data: items,
             strategy: new ArrayStrategy(),
@@ -483,12 +520,10 @@ define('js!SBIS3.CONTROLS.DSMixin', [
 
       _drawItems: function (records, at) {
          var
-            self = this,
             curAt = at;
          if (records && records.length > 0) {
             for (var i = 0; i < records.length; i++) {
-               this._drawItem(records[i], curAt, i === records.length - 1);
-
+               this._drawAndAppendItem(records[i], curAt, i === records.length - 1);
                if (curAt && curAt.at) {
                   curAt.at++;
                }
@@ -548,16 +583,23 @@ define('js!SBIS3.CONTROLS.DSMixin', [
 
       _drawItem: function (item, at, last) {
          var
-            targetContainer,
             itemInstance;
          //Запускаем группировку если она есть. Иногда результат попадает в группровку и тогда отрисовывать item не надо
          if (this._group(item, at, last) !== false) {
-            targetContainer = this._getTargetContainer(item);
-            itemInstance = this._createItemInstance(item, targetContainer, at);
+            itemInstance = this._createItemInstance(item, this._getTargetContainer(item), at);
             this._addItemAttributes(itemInstance, item);
-            this._appendItemTemplate(item, targetContainer, itemInstance, at);
+         }
+         return itemInstance;
+      },
+
+      _drawAndAppendItem: function(item, at, last) {
+         var
+            itemInstance = this._drawItem(item, at, last);
+         if (itemInstance) {
+            this._appendItemTemplate(item, this._getTargetContainer(item), itemInstance, at);
          }
       },
+
       /**
        *
        * Из метода группировки можно вернуть Boolean - рисовать ли группировку
