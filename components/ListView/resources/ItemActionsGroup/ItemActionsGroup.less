@@ -32,23 +32,24 @@
       padding-left: 6px;
       overflow: hidden;
       .controls-ItemActions__itemsContainer{
+         > * {
+            line-height: 30px;
+            &.controls-IconButton{
+               top: 2px;
+            }
+         }
       	height: 100%;
       	background: @list-view-actions-bg;
       	position: relative;
-         .controls-ListView__item{
-            &.icon-16{
-               margin-top: -1px;
-            }
-         }
          .controls-Link{
             font-size: 16px;
          }
-         .controls-ItemActions__menu-button, .controls-ItemActions__menu-button:hover{
-            background: url('img/items-actions-touch-menu.png') no-repeat;
-            height: 19px;
-            background-size: 4px 18px;
+         .controls-ItemActions__menu-button{
+            background: @list-view-actions-menu-touch-icon;
+            height: @list-view-actions-menu-touch-height;
+            width: @list-view-actions-menu-touch-width;
+            background-size: @list-view-actions-menu-touch-size;
             vertical-align: middle;
-            width: 44px;
             background-position: center;
          }
       }
@@ -66,6 +67,24 @@
          background: #F3F8FC;
       }
    }
+   
+   .controls-ItemActions__menu-container {
+      .controls-PopupMixin__closeButton {
+         position: absolute;
+         top: @controls-Popup-closeButton-top;
+         right: @controls-Popup-closeButton-right;
+         width: @controls-Popup-closeButton-width;
+         height: @controls-Popup-closeButton-height;
+         cursor: pointer;
+         background: @closeButtonImage;
+         &:hover {
+            background: @closeButtonImageHover;
+         }
+         &:active {
+            background: @closeButtonImageHover;
+         }
+      }
+   }
 }
 
 .controls-ItemActions {
@@ -74,58 +93,44 @@
    z-index: @list-view-actions-zindex;
    display: none;
    .controls-ItemActions__itemsContainer{
-     &.controls-ItemActions-verAlign {
-       height: auto;
-       width: 20px;
-       margin: @list-view-actions-verAlign-margin;
+      &.controls-ItemActions-verAlign {
+         height: auto;
+         width: 20px;
+         margin: @list-view-actions-verAlign-margin;
 
-       & > * {
-         margin: @list-view-actions-margin-action-multiView;
-       }
-       .controls-ItemActions__menu-button {
-         float: @list-view-actions-float-multiView;
-         margin-left: @list-view-actions-marginLeft-menu-multiView;
-       }
-     }
-
-     > * {
-       display: inline-block;
-       cursor: @list-view-actions-cursor;
-       margin: @list-view-actions-margin;
-       vertical-align: baseline;
-       width: 16px;
-       height: 16px;
-       padding: 0;
-
-  > * {
-    display: inline-block;
-    cursor: @list-view-actions-cursor;
-    margin: @list-view-actions-margin;
-    vertical-align: baseline;
-    height: @list-view-actions-item-height;
-    padding: 0;
-
-       &.controls-ItemActions__menu-button {
-         display: inline-block;
-         z-index: 11;
-         background: @list-view-actions-menu-icon;
-         float: right;
-
-    &.controls-ItemActions__menu-button {
-      display: inline-block;
-      z-index: 11;
-      background: @list-view-actions-menu-icon;
-      width: @list-view-actions-menu-icon-width;
-      float: right;
-
-      &:hover {
-        background: @list-view-actions-menu-icon-hover;
+         & > * {
+            margin: @list-view-actions-margin-action-multiView;
+         }
+         .controls-ItemActions__menu-button {
+            float: @list-view-actions-float-multiView;
+            margin-left: @list-view-actions-marginLeft-menu-multiView;
+         }
       }
-    }
-  }
-  > .controls-Link {
-    display: inline;
-  }
+
+      > * {
+         display: inline-block;
+         cursor: @list-view-actions-cursor;
+         margin: @list-view-actions-margin;
+         vertical-align: baseline;
+         height: @list-view-actions-item-height;
+         padding: 0;
+
+         &.controls-ItemActions__menu-button {
+            display: inline-block;
+            z-index: 11;
+            background: @list-view-actions-menu-icon;
+            width: @list-view-actions-menu-icon-width;
+            float: right;
+
+            &:hover {
+              background: @list-view-actions-menu-icon-hover;
+            }
+         }
+      }
+      > .controls-Link {
+         display: inline;
+      }
+   }
 }
 
 .controls-ItemActions__menu-container {

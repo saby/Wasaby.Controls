@@ -582,7 +582,7 @@ define('js!SBIS3.CONTROLS.ListView',
          },
 
          _findItemByElement: function(target){
-            return target.hasClass('controls-ListView__item') ? target : target.closest('.controls-ListView__item');
+            return target.closest('.controls-ListView__item', this._container[0]);
          },
          /**
           * Показывает оперцаии над записью для элемента
