@@ -499,7 +499,7 @@ define('js!SBIS3.CONTROLS.ListView',
          },
 
          _elemClickHandlerInternal: function (data, id, target) {
-            this._notify('onItemActivate', id, item);
+            this._activateItem(id);
          },
 
          _drawSelectedItems: function (idArray) {
