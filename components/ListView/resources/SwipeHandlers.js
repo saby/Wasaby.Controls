@@ -85,10 +85,7 @@
                      $.event.special.swipe.eventInProgress = false;
                   }
                }
-               // prevent scrolling
-               if (Math.abs(start.coords[0] - stop.coords[0]) > $.event.special.swipe.scrollTreshold) {
-                  event.preventDefault();
-               }
+
             };
 
             context.stop = function() {

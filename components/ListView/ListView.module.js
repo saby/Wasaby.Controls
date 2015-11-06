@@ -102,6 +102,7 @@ define('js!SBIS3.CONTROLS.ListView',
             _pageChangeDeferred : undefined,
             _pager : undefined,
             _previousGroupBy : undefined,
+            _taphold: false,
             _keysWeHandle: [
                $ws._const.key.up,
                $ws._const.key.down,
@@ -297,6 +298,7 @@ define('js!SBIS3.CONTROLS.ListView',
             	this._container.bind('swipe', this._swipeHandler.bind(this));
                this._container.bind('taphold', this._longTapHandler.bind(this));
                this._container.bind('tap', this._tapHandler.bind(this));
+               this._container.bind('touchmove',this._mouseMoveHandler.bind(this))
             }
          },
          _keyboardHover: function (e) {
@@ -331,6 +333,10 @@ define('js!SBIS3.CONTROLS.ListView',
             return $.contains(this._getItemsContainer()[0], elem[0]);
          },
          _onClickHandler: function(e) {
+         	if (this._taphold){
+         		this._taphold = false;
+         		return false;
+         	}
             ListView.superclass._onClickHandler.apply(this, arguments);
             var $target = $(e.target),
                target = this._findItemByElement($target),
@@ -364,7 +370,7 @@ define('js!SBIS3.CONTROLS.ListView',
                return;
             }
             target = this._findItemByElement($target);
-            if (target.length && this._isViewElement(target) && !this._touchSupport) {
+            if (target.length && this._isViewElement(target)) {
                targetKey = target.data('id');
                if (targetKey !== undefined && this._hoveredItem.key !== targetKey) {
                   containerCords = this._container[0].getBoundingClientRect();
@@ -438,7 +444,7 @@ define('js!SBIS3.CONTROLS.ListView',
           * @private
           */
          _onChangeHoveredItem: function (target) {
-            if (this._options.itemsActions.length) {
+            if (this._options.itemsActions.length && !this._touchSupport) {
          		target.container ? this._showItemActions(target) : this._hideItemActions();
             }
          },
@@ -566,11 +572,15 @@ define('js!SBIS3.CONTROLS.ListView',
                var target = this._findItemByElement($(e.target)),
                   item = this._getElementData(target);
                this._onChangeHoveredItem(item);
+               if (this._options.itemsActions.length) {
+         			item.container ? this._showItemActions(item) : this._hideItemActions();
+            	}
                this._hoveredItem = item;
             }
          },
 
          _longTapHandler: function(e){
+         	this._taphold = true;
             var target = this._findItemByElement($(e.target));
             var id = target.data('id');
             this.toggleItemsSelection([id]);
