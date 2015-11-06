@@ -7,7 +7,7 @@
   overflow: visible;
 }
 
-.controls-DataGridView .controls-DataGridView__table .controls-DataGridView__tr {
+.controls-DataGridView .controls-ListView__item {
   &.controls-editInPlace__editing {
     background: @data-grid-row-selected-bg;
 
@@ -17,7 +17,7 @@
     }
     .controls-DataGridView__td {
       color: @data-grid-row-hover-cell-text-color;
-      background-color: @data-grid-row-hover-cell-bg;
+      background-color: @data-grid-row-selected-bg;
     }
   }
 }
