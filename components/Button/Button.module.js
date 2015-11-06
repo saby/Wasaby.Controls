@@ -198,17 +198,6 @@ define('js!SBIS3.CONTROLS.Button', ['js!SBIS3.CONTROLS.ButtonBase', 'html!SBIS3.
 
          if(isDefault) this._registerDefaultButton();
          else this._unregisterDefaultButton();
-      },
-
-      _keyboardHover: function(event){
-         if (this.isEnabled()) {
-            if (event.which == $ws._const.key.enter) {
-               this._notify('onActivated');
-               event.stopImmediatePropagation();
-               return false;
-            }
-         }
-         return true;
       }
       /*TODO конец*/
    });
