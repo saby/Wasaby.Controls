@@ -32,7 +32,11 @@ define('js!SBIS3.CONTROLS.TreeCompositeView', ['js!SBIS3.CONTROLS.TreeDataGridVi
             /**
              * Шаблон, используемый при отрисовке папки
              */
-            folderTemplate: undefined
+            folderTemplate: undefined,
+            /**
+             * Шаблон, используемый при отрисовке папки в режиме списка
+             */
+            listFolderTemplate: undefined
          }
       },
 
@@ -75,7 +79,7 @@ define('js!SBIS3.CONTROLS.TreeCompositeView', ['js!SBIS3.CONTROLS.TreeDataGridVi
                case 'table': resultTpl = TreeCompositeView.superclass._getItemTemplate.call(this, item); break;
                case 'list': {
                   if (item.get(this._options.hierField + '@')) {
-                     dotTpl = this._options.folderTemplate ? this._options.folderTemplate : folderTpl;
+                     dotTpl = this._options.listFolderTemplate || this._options.folderTemplate || folderTpl;
                   } else {
                      if (this._options.listTemplate) {
                         if (this._options.listTemplate instanceof Function) {
