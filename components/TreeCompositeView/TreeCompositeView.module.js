@@ -39,28 +39,6 @@ define('js!SBIS3.CONTROLS.TreeCompositeView', ['js!SBIS3.CONTROLS.TreeDataGridVi
 
          }
       },
-      _redraw: function(){
-         TreeCompositeView.superclass._redraw.call(this);
-      },
-      init:function(){
-         this._options.itemsActions = [{
-            name: 'moveDown',
-            icon: 'sprite:icon-16 icon-ArrowDown icon-primary action-hover',
-            tooltip: 'Перенести',
-            caption: 'Перенести',
-            isMainAction: true,
-            onActivated: CommonHandlers.moveRecordDown
-         }, {
-            name: 'moveUp',
-            icon: 'sprite:icon-16 icon-ArrowUp icon-primary action-hover',
-            tooltip: 'Перенести',
-            caption: 'Перенести',
-            isMainAction: true,
-            onActivated: CommonHandlers.moveRecordUp
-         }];
-         TreeCompositeView.superclass.init.call(this);
-
-      },
       _elemClickHandler: function (id, data, target) {
          var $target = $(target),
              nodeID,
