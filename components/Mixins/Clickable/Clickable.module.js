@@ -50,7 +50,6 @@ define('js!SBIS3.CONTROLS.Clickable', [], function() {
       },
 
       _keyboardHover: function(event){
-         event.stopImmediatePropagation();
          if (this.isEnabled()) {
             this._clickHandler(event);
             this._notifyOnActivated(event);
