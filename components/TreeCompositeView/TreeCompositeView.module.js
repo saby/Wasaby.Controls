@@ -1,7 +1,4 @@
-/*TreeCompositeView*/
-define('js!SBIS3.CONTROLS.TreeCompositeView', ['js!SBIS3.CONTROLS.TreeDataGridView', 'js!SBIS3.CONTROLS.CompositeViewMixin',
-   'html!SBIS3.CONTROLS.TreeCompositeView/resources/CompositeView__folderTpl','js!SBIS3.CONTROLS.CommonHandlers'],
-   function(TreeDataGridView, CompositeViewMixin, folderTpl, CommonHandlers) {
+define('js!SBIS3.CONTROLS.TreeCompositeView', ['js!SBIS3.CONTROLS.TreeDataGridView', 'js!SBIS3.CONTROLS.CompositeViewMixin', 'html!SBIS3.CONTROLS.TreeCompositeView/resources/CompositeView__folderTpl'], function(TreeDataGridView, CompositeViewMixin, folderTpl) {
    'use strict';
 
    var TreeCompositeView = TreeDataGridView.extend([CompositeViewMixin],/** @lends SBIS3.CONTROLS.TreeCompositeView.prototype*/ {
@@ -36,9 +33,9 @@ define('js!SBIS3.CONTROLS.TreeCompositeView', ['js!SBIS3.CONTROLS.TreeDataGridVi
              * Шаблон, используемый при отрисовке папки
              */
             folderTemplate: undefined
-
          }
       },
+
       _elemClickHandler: function (id, data, target) {
          var $target = $(target),
              nodeID,
