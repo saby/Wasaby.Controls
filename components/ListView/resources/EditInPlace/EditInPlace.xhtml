@@ -1,5 +1,5 @@
 {{?it.columns}}
-   <tr class="controls-editInPlace controls-ListView__item">
+   <tr class="controls-editInPlace js-controls-ListView__item">
    {{?it.template}}
       {{var colspan = it.columns.length;}}
       {{if (it.ignoreFirstColumn) { colspan++; } }}
@@ -21,7 +21,7 @@
    {{?}}
    </tr>
 {{??}}
-   <div class="controls-editInPlace controls-ListView__item">
+   <div class="controls-editInPlace js-controls-ListView__item">
    {{?it.template}}
       {{=it.template}}
    {{?}}

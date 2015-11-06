@@ -4,16 +4,21 @@
 }
 
 .controls-PopupMixin__closeButton {
-  position: absolute;
-  top: 0;
-  right: 0;
-  width: @edit-at-place-cancel-button-width;
-  height: @edit-at-place-cancel-button-height;
-  background: @edit-at-place-cancel-button-bg;
-  &:hover {
-    background: @edit-at-place-cancel-button-hover-bg;
-  }
+   position: absolute;
+   top: @controls-Popup-closeButton-top;
+   right: @controls-Popup-closeButton-right;
+   width: @controls-Popup-closeButton-width;
+   height: @controls-Popup-closeButton-height;
+   cursor: pointer;
+   background: @closeButtonImage;
+   &:hover {
+      background: @closeButtonImageHover;
+   }
+   &:active {
+      background: @closeButtonImageHover;
+   }
 }
+
 
 .controls-ListView__item__selected {
    .controls-DataGridView__td:first-child {

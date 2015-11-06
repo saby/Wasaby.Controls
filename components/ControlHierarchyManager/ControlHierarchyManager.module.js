@@ -58,6 +58,35 @@ define('js!SBIS3.CONTROLS.ControlHierarchyManager', [], function () {
 
       //Проверить является ли target jQuery элементом component или его детей
       checkInclusion: function (component, target) {
+         var inclusion = this._checkIndexInclusion(component, target);
+         if (!inclusion) {
+            inclusion = this._checkParentInclusion(component, target);
+         }
+         return inclusion;
+      },
+
+      // Старые контролы не регистрируются в индексе
+      // поэтому проверяем не лежит ли родитель контрола на нашем окне
+      // TODO: Нужно рассмотреть возможность объеденить иерархии старых и новых контролов в едином механизме.
+      _checkParentInclusion: function(component, target){
+         var control = $(target).wsControl();
+         if (control){
+            var parent = control.getOpener instanceof Function ? control.getOpener() || control.getParent() : control.getParent(),
+               parentContainer = parent ? parent.getContainer() : null;
+            if (parentContainer && this._findContainer(component, parentContainer)){
+               return true;
+            } else {
+               return this._checkParentInclusion(component, parentContainer);
+            }
+         }
+         return false;
+      },
+
+      _findContainer: function(control, container){
+         return control._container.find($(container)).length || $(control._container).get(0) == container;
+      },
+
+      _checkIndexInclusion: function(component, target){
          var node;
          node = this._index[component.getId()];
          if (node) {
@@ -71,7 +100,7 @@ define('js!SBIS3.CONTROLS.ControlHierarchyManager', [], function () {
                }
             }
          }
-         return (component._container.find($(target)).length || $(component._container).get(0) == target);
+         return this._findContainer(component, target);
       },
 
       _wasAdded: function (node) {

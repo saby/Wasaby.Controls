@@ -32,7 +32,11 @@ define('js!SBIS3.CONTROLS.TreeCompositeView', ['js!SBIS3.CONTROLS.TreeDataGridVi
             /**
              * Шаблон, используемый при отрисовке папки
              */
-            folderTemplate: undefined
+            folderTemplate: undefined,
+            /**
+             * Шаблон, используемый при отрисовке папки в режиме списка
+             */
+            listFolderTemplate: undefined
          }
       },
 
@@ -48,7 +52,7 @@ define('js!SBIS3.CONTROLS.TreeCompositeView', ['js!SBIS3.CONTROLS.TreeDataGridVi
                    this.reload();
                 }
                 else {
-                   this._notify('onItemActivate', id, data);
+                   this._activateItem(id);
                 }
              }.bind(this);
 
@@ -75,7 +79,7 @@ define('js!SBIS3.CONTROLS.TreeCompositeView', ['js!SBIS3.CONTROLS.TreeDataGridVi
                case 'table': resultTpl = TreeCompositeView.superclass._getItemTemplate.call(this, item); break;
                case 'list': {
                   if (item.get(this._options.hierField + '@')) {
-                     dotTpl = this._options.folderTemplate ? this._options.folderTemplate : folderTpl;
+                     dotTpl = this._options.listFolderTemplate || this._options.folderTemplate || folderTpl;
                   } else {
                      if (this._options.listTemplate) {
                         if (this._options.listTemplate instanceof Function) {
@@ -202,7 +206,7 @@ define('js!SBIS3.CONTROLS.TreeCompositeView', ['js!SBIS3.CONTROLS.TreeDataGridVi
                //Если запись найдена в обновленном DataSet, то перерисовываем её
                if (record) {
                   currentDataSet.getRecordByKey(row.key).merge(record);
-                  self.redrawItem(record);
+                  self.redrawRow(record);
                } else { //Иначе - удаляем запись
                   currentDataSet.removeRecord(row.key);
                   self.destroyFolderToolbar(row.key);

@@ -293,6 +293,9 @@ define('js!SBIS3.CONTROLS.ComponentBinder', [], function () {
                self._currentRoot = hier[0];
                self._path = hier.reverse();
             } else {
+               if (id === null){
+                   self._currentRoot = null;
+               }
                for (i = hier.length - 1; i >= 0; i--) {
                   var rec = hier[i];
                   if (rec){

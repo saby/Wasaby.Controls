@@ -58,18 +58,6 @@
          height: 44px;
          background: #F3F8FC;
       }
-      .controls-PopupMixin__closeButton {
-         background: @closeButtonImage;
-         top: @controls-filterButton-picker-closeButton-top;
-         width: @controls-filterButton-picker-closeButton-width;
-         height: @controls-filterButton-button-height;
-         position: absolute;
-         right: @controls-filterButton-picker-closeButton-right;
-         cursor: pointer;
-
-         &:hover { background: @closeButtonImageHover; }
-         &:active { background: @closeButtonImageHover; }
-      }
    }
 }
 
@@ -81,7 +69,7 @@
 
   &.controls-ItemActions-verAlign {
     height: auto;
-    width: 20px;
+    width: @list-view-actions-verAlign-width;
     margin: @list-view-actions-verAlign-margin;
 
     & > * {
@@ -98,8 +86,7 @@
     cursor: @list-view-actions-cursor;
     margin: @list-view-actions-margin;
     vertical-align: baseline;
-    width: 16px;
-    height: 16px;
+    height: @list-view-actions-item-height;
     padding: 0;
 
     &.controls-ItemActions__hiddenAction {
@@ -110,6 +97,7 @@
       display: inline-block;
       z-index: 11;
       background: @list-view-actions-menu-icon;
+      width: @list-view-actions-menu-icon-width;
       float: right;
 
       &:hover {
