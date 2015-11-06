@@ -455,7 +455,7 @@ define('js!SBIS3.CONTROLS.ListView',
           */
          _onChangeHoveredItem: function (target) {
             this._updateEditInPlaceDisplay(target);
-            if (this._options.itemsActions.length) {
+            if (this._options.itemsActions.length && !this._touchSupport) {
          		target.container ? this._showItemActions(target) : this._hideItemActions();
             }
          },
