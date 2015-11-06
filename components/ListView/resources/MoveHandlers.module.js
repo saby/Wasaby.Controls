@@ -31,11 +31,17 @@ define('js!SBIS3.CONTROLS.MoveHandlers', ['js!SBIS3.CONTROLS.MoveDialog'], funct
             /*TODO переделать не на ParallelDeferred*/
             deferred = new $ws.proto.ParallelDeferred();
 
-         recordTo = this._dataSet.getRecordByKey(moveTo);
-         if (!recordTo) {
-            return;
+         if (moveTo === null) {
+            //Is root
+            isNodeTo = true;
+         } else {
+            recordTo = this._dataSet.getRecordByKey(moveTo);
+            if (!recordTo) {
+               $ws.helpers.alert('Не удалось найти запись для перемещения!', {}, this);
+               return;
+            }
+            isNodeTo = recordTo.get(this._options.hierField + '@');
          }
-         isNodeTo = recordTo.get(this._options.hierField + '@');
 
          if (this._checkRecordsForMove(records, moveTo)) {
             for (var i = 0; i < records.length; i++) {
