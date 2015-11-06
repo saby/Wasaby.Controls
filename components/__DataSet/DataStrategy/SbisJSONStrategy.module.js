@@ -293,7 +293,7 @@ define('js!SBIS3.CONTROLS.SbisJSONStrategy', [
             var numPage = Math.floor(offset / limit);
             pagingParam = {
                'd': [
-                  0,
+                  numPage,
                   limit,
                   offset >= 0 //Если offset отрицательный, то грузится последняя страница
                ],
