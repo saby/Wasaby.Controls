@@ -162,18 +162,22 @@ define('js!SBIS3.CONTROLS.ItemActionsGroup',
           */
          showItemActions: function(hoveredItem, position) {
             this._activeItem = hoveredItem.container;
-            this._container[0].style.top = position.top + 'px';
             this._container[0].style.right = position.right + 'px';
             this._container[0].style.display = 'block';
             if (this._touchActions){
                var width = this._container.width(),
+                  contHeight = this._container.height(),
                   height = $(hoveredItem.container).height(),
                   itemsContainer = this._getItemsContainer();
 
                itemsContainer[0].style.right = - width + 'px';
+               if (contHeight < height){
+                  position.top -=  height - contHeight;
+               }
                this._container.height(height);
             	itemsContainer.animate({right : position.right}, 350);
             }
+            this._container[0].style.top = position.top + 'px';
         	},
          /***
           * Задаёт новые операции над записью
