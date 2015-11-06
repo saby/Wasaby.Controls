@@ -37,7 +37,7 @@ define('js!SBIS3.CONTROLS.Utils.DataProcessor', [
             });
          });
       },
-      unload: function (fileType, methodName, fileName) {
+      unload: function (fileType, methodName, fileName, useGET) {
          var self = this,
              uniqueToken = ('' + Math.random()).substr(2)* 10;
          //fileName = idReport ? idReport : (isSaveColumns ? 'Выбранные столбцы' : 'Как на экране'), ??
@@ -46,7 +46,7 @@ define('js!SBIS3.CONTROLS.Utils.DataProcessor', [
                'html': reportText,
                'Название': fileName,//idReport || Standart
                'fileDownloadToken': uniqueToken
-            }).addErrback(function(error){
+            }, undefined, useGET).addErrback(function(error){
                return error;
             }).addBoth(function(){
                self._destroyLoadIndicator();
