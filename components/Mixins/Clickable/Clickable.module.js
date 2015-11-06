@@ -27,7 +27,11 @@ define('js!SBIS3.CONTROLS.Clickable', [], function() {
       $protected: {
          _options: {
 
-         }
+         },
+         _keysWeHandle: [
+            $ws._const.key.enter,
+            $ws._const.key.space
+         ]
       },
 
       $constructor: function() {
