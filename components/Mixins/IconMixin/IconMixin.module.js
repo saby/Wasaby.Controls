@@ -13,6 +13,7 @@ define('js!SBIS3.CONTROLS.IconMixin', ['html!SBIS3.CONTROLS.IconMixin/IconTempla
    var IconMixin = /**@lends SBIS3.CONTROLS.IconMixin.prototype  */{
       $protected: {
          _iconClass: '',
+         _oldIcon: '',
          _options: {
             iconTemplate: IconTemplate,
             /**
@@ -31,6 +32,7 @@ define('js!SBIS3.CONTROLS.IconMixin', ['html!SBIS3.CONTROLS.IconMixin/IconTempla
       },
 
       $constructor: function() {
+         if (this._options.icon) this._iconClass = this._getIconClass(this._options.icon);
       },
 
       /**
@@ -45,18 +47,12 @@ define('js!SBIS3.CONTROLS.IconMixin', ['html!SBIS3.CONTROLS.IconMixin/IconTempla
        * @see icon
        * @see getIcon
        */
-      setIcon: function(iconPath) {
-         if (iconPath) {
-            if (iconPath.indexOf('sprite:') >= 0) {
-               this._iconClass = iconPath.substr(7);
-            } else {
-               this._iconClass = iconPath;
-            }
-         }
-         this._drawIcon(iconPath);
-         this._options.icon = iconPath;
+      setIcon: function(icon) {
+         this._options.icon = icon;
+         this._oldIcon = this._iconClass;
+         this._iconClass = this._getIconClass(icon);
+         this._drawIcon(icon);
       },
-
       /**
        * Получить изображение на кнопке.
        * Метод получения изображения, заданного опцией {@link icon}, либо методом {@link setIcon}.
@@ -75,6 +71,16 @@ define('js!SBIS3.CONTROLS.IconMixin', ['html!SBIS3.CONTROLS.IconMixin/IconTempla
       },
       _drawIcon: function(icon) {
 
+      },
+
+      _getIconClass: function(icon){
+         if (icon) {
+            if (icon.indexOf('sprite:') >= 0) {
+               return icon.substr(7);
+            } else {
+               return icon;
+            }
+         }
       }
    };
 

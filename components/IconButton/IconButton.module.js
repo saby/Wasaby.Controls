@@ -54,8 +54,8 @@ define('js!SBIS3.CONTROLS.IconButton', ['js!SBIS3.CONTROLS.ButtonBase', 'js!SBIS
       },
 
       _drawIcon: function(icon){
-      	if (this._options.icon){
-      		this._container.removeClass(this._options.icon)
+      	if (this._oldIcon){
+      		this._container.removeClass(this._oldIcon);
       	}
          this._container.addClass('controls-IconButton ' + this._iconClass);
       },
