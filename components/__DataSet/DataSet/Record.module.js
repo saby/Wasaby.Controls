@@ -87,6 +87,15 @@ define('js!SBIS3.CONTROLS.Record', [
       },
 
       /**
+       * Возвращает признак наличия поля записи
+       * @param {String} field Название поля
+       * @returns {Boolean}
+       */
+      has: function (field) {
+         return this._strategy.value(this._raw, field) !== undefined;
+      },
+
+      /**
        * Возвращает значение поля записи
        * @param {String} field Название поля
        * @returns {*}
