@@ -28,7 +28,7 @@ define('js!SBIS3.CONTROLS.Image',
           * <component data-component='SBIS3.CONTROLS.Image' style='width: 100px; height: 100px'>
           * </component>
           */
-         Image = CompoundControl.extend({
+         Image = CompoundControl.extend({/** @lends SBIS3.CONTROLS.Image.prototype */
             _dotTplFn : dotTplFn,
             $protected: {
                _options: {
@@ -82,12 +82,13 @@ define('js!SBIS3.CONTROLS.Image',
                   onError: undefined,
                   /**
                    * @cfg {Function} Функция, выполняемая при обновлении изображения в компоненте
+                   * @deprecated Будет удалено с 3.7.3.20. Используйте подписку на изменение полей контекста.
                    * @example
                    * onImageUpdated: function(newImageURL) {
                    *    $ws.helpers.reloadImage(image, newImageURL);
                    * }
                    */
-                  onImageUpdated: undefined,
+                  onImageUpdated: undefined, //todo Убрать в 3.7.3.20 и поправить в прикладном коде.
                   /**
                    * @cfg {Object} Опции обрезки изображения
                    */
@@ -112,6 +113,15 @@ define('js!SBIS3.CONTROLS.Image',
                       * }
                       */
                      onBeforeShowCrop: undefined,
+                     /**
+                      * @cfg {Function} Функция, выполняемая после завершения закрытия диалога обрезки изображения и выполнения самой обрезки.
+                      * Позволяет динамически определять адрес, по которому будет хранится обрезанное (итоговое) изображение
+                      * @example
+                      * onAfterPerformCrop: function(imageUrl) {
+                      *    return /service/?id=0&method=DraftCompanyLogo.Read&protocol=3&params=eyLQmNC00J4iOjF9;
+                      * }
+                      */
+                     onAfterPerformCrop: undefined,
                      /**
                       * @cfg {Function} Функция, вызываемая перед началом обрезки изображения.
                       * Позволяет динамически формировать объект, передаваемый в метод бизнес-логики для обрезки изображения
@@ -211,12 +221,14 @@ define('js!SBIS3.CONTROLS.Image',
                   onImageMouseEnter: this._onImageMouseEnter.bind(this),
                   onImageMouseLeave: this._onImageMouseLeave.bind(this),
                   onImageBarMouseLeave: this._onImageBarMouseLeave.bind(this),
-                  onImageLoad: this._onImageLoad.bind(this)
+                  onImageLoad: this._onImageLoad.bind(this),
+                  onImageLoadError: this._onImageLoadError.bind(this)
                };
                this._image.mouseenter(this._boundEvents.onImageMouseEnter);
                this._image.mouseleave(this._boundEvents.onImageMouseLeave);
                this._imageBar.mouseleave(this._boundEvents.onImageBarMouseLeave);
                this._image.load(this._boundEvents.onImageLoad);
+               this._image.error(this._boundEvents.onImageLoadError);
             },
 
             _onChangeFile: function(event, fileName) {
@@ -231,9 +243,7 @@ define('js!SBIS3.CONTROLS.Image',
                var imageInstance = this.getParent();
                if (response.hasOwnProperty('error')) {
                   $ws.helpers.toggleLocalIndicator(imageInstance._container, false);
-                  if (typeof imageInstance._options.onError === 'function') {
-                     imageInstance._options.onError(response.error);
-                  }
+                  this._boundEvents.onImageLoadError(response.error);
                } else {
                   if (imageInstance._options.cropOptions.enabled) {
                      $ws.helpers.toggleLocalIndicator(imageInstance._container, false);
@@ -256,7 +266,16 @@ define('js!SBIS3.CONTROLS.Image',
                if (!this._firstLoaded) {
                   this._firstLoaded = true;
                } else if (typeof this._options.onImageUpdated === 'function') {
-                  this._options.onImageUpdated(this._options.image);
+                  this._options.onImageUpdated.call(this, this._options.image);
+               }
+            },
+
+            _onImageLoadError: function(error) {
+               if (typeof this._options.onError === 'function') {
+                  this._options.onError(error);
+               }
+               if (this.getImage() !== this._options.defaultImage) {
+                  this.setImage(this._options.defaultImage);
                }
             },
 
@@ -283,6 +302,14 @@ define('js!SBIS3.CONTROLS.Image',
             },
 
             /**
+             * Метод возвращает текущее изображение
+             * @returns {String} Текущее изображение
+             */
+            getImage: function() {
+               return this._options.image;
+            },
+
+            /**
              * Метод устанавливает текущее изображение
              * @param url {String} Путь до устанавливаемого изображения
              */
@@ -298,7 +325,7 @@ define('js!SBIS3.CONTROLS.Image',
                }
                this._options.image = url;
                //Из-за проблем, связанных с кэшированием - перезагружаем картинку специальным хелпером
-               $ws.helpers.reloadImage(this._image, url);
+               $ws.helpers.reloadImage(this._image, url, this._boundEvents.onImageLoadError);
             },
 
             _recalculateImageBar: function(){
@@ -314,9 +341,8 @@ define('js!SBIS3.CONTROLS.Image',
 
             _showCropDialog: function(image) {
                var
-                  imagePath = image || this._options.image,
                   cropOptions = {
-                     image: imagePath,
+                     imageUrl: image,
                      cropMethodName: this._options.cropOptions.cropMethodName,
                      linkedObjectName: this._options.cropOptions.linkedObjectName,
                      cropAspectRatio: this._options.cropOptions.cropAspectRatio,
@@ -339,7 +365,11 @@ define('js!SBIS3.CONTROLS.Image',
                            sendObject;
                      }.bind(this),
                      onCropFinished: function (result) {
-                        this.setImage(imagePath);
+                        var imageUrl = cropOptions.imageUrl;
+                        if (typeof this._options.cropOptions.onAfterPerformCrop === 'function') {
+                           imageUrl = this._options.cropOptions.onAfterPerformCrop(imageUrl);
+                        }
+                        this.setImage(imageUrl);
                         if (typeof this._options.cropOptions.onCropFinished === 'function') {
                            this._options.cropOptions.onCropFinished(result);
                         }
@@ -349,7 +379,7 @@ define('js!SBIS3.CONTROLS.Image',
             },
 
             _cropButtonClick: function() {
-               this.getParent()._showCropDialog();
+               this.getParent()._showCropDialog(this._options.image);
             },
 
             _uploadButtonClick: function(event, originalEvent) {
