@@ -304,7 +304,7 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
          });
       },
 
-      move: function (model, to, hierField, details) {
+      move: function (model, to, details) {
          details = details || {};
          this._detectIdProperty(model.getRawData());
 
