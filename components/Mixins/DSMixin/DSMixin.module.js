@@ -401,15 +401,22 @@ define('js!SBIS3.CONTROLS.DSMixin', [
          this._dropPageSave();
          this.reload(this._filter, this._sorting, 0, pageSize);
       },
-
+      /**
+       * Получить текущий фильтр в наборе данных
+       * @returns {Object|*|DSMixin._filter}
+       */
       getFilter: function() {
          return this._filter;
       },
-
-      setFilter: function(filter){
+      /**
+       * Установить фильтр на набор данных
+       * @param {Object} filter
+       * @param {Boolean} noLoad установить фильтр без запроса на БЛ
+       */
+      setFilter: function(filter, noLoad){
          this._filter = filter;
          this._dropPageSave();
-         if (this._dataSource) {
+         if (this._dataSource && !noLoad) {
             this.reload(this._filter, this._sorting, 0, this.getProperty('pageSize'));
          }
       },
