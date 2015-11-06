@@ -202,7 +202,7 @@ define('js!SBIS3.CONTROLS.Button', ['js!SBIS3.CONTROLS.ButtonBase', 'html!SBIS3.
 
       _keyboardHover: function(event){
          if (this.isEnabled()) {
-            if (event.which == $ws._const.key.enter || event.which == $ws._const.key.space) {
+            if (event.which == $ws._const.key.enter) {
                this._notify('onActivated');
                event.stopImmediatePropagation();
                return false;
