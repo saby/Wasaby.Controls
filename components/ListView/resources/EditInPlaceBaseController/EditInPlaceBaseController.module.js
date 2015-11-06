@@ -77,9 +77,9 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                   result,
                   self = this,
                   area = this._getEditingArea(),
-                  newTarget = area.target[editNextRow ? 'next' : 'prev']('.controls-ListView__item');
+                  newTarget = area.target[editNextRow ? 'next' : 'prev']('.js-controls-ListView__item');
                while (newTarget.hasClass('controls-editInPlace')) {
-                  newTarget = newTarget[editNextRow ? 'next' : 'prev']('.controls-ListView__item');
+                  newTarget = newTarget[editNextRow ? 'next' : 'prev']('.js-controls-ListView__item');
                }
                if (newTarget.length && !newTarget.hasClass('controls-ListView__folder')) {
                   result = this.finishEditing(true, true);
@@ -97,10 +97,11 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
             _showArea: function (area, target, record, activateControl) {
                area.target = target;
                area.record = record || this._options.dataSet.getRecordByKey(target.data('id'));
-               area.editInPlace.getContainer().bind('keyup', this._areaHandlers.onKeyDown);
-               area.editInPlace.getContainer().insertBefore(target);
-               area.target.hide();
+               area.editInPlace.getContainer().attr('data-id', area.record.getKey())
+                   .bind('keyup', this._areaHandlers.onKeyDown)
+                   .insertAfter(target);
                area.editInPlace.show();
+               area.target.hide();
                area.editInPlace.updateFields(area.record);
                if (activateControl !== undefined) {
                   area.editInPlace.activateFirstControl();

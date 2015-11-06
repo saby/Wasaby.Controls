@@ -389,7 +389,7 @@ define('js!SBIS3.CONTROLS.ListView',
             target = this._findItemByElement($target);
 
             if (target.length) {
-               targetKey = target.data('id');
+               targetKey = target[0].getAttribute('data-id');
                if (targetKey !== undefined && this._hoveredItem.key !== targetKey) {
                   this._hoveredItem.container && this._hoveredItem.container.removeClass('controls-ListView__hoveredItem');
                   target.addClass('controls-ListView__hoveredItem');
@@ -406,7 +406,7 @@ define('js!SBIS3.CONTROLS.ListView',
             if (target.length){
            		var containerCords = this._container[0].getBoundingClientRect(),
                    targetCords = target[0].getBoundingClientRect(),
-                   targetKey = target.data('id');
+                   targetKey = target[0].getAttribute('data-id');
 
                return {
                    key: targetKey,
@@ -530,11 +530,11 @@ define('js!SBIS3.CONTROLS.ListView',
             if (this._options.editInPlace.enabled && !this._options.editInPlace.hoverMode) {
                this._initEditInPlace();
                if (this._editInPlace) {
-                  this._editInPlace.showEditing($(target).closest('.controls-ListView__item'), data);
+                  this._editInPlace.showEditing($(target).closest('.js-controls-ListView__item'), data);
                }
             }
             else {
-               this._notify('onItemActivate', id, item);
+               this._activateItem(id);
             }
          },
          _drawSelectedItems: function (idArray) {
@@ -642,9 +642,9 @@ define('js!SBIS3.CONTROLS.ListView',
             if (!this._editInPlace) {
                this._createEditInPlace();
                this._dataSet.subscribe('onRecordChange', function(event, record) {
-                  var item = this._getItemsContainer().find('.controls-ListView__item[data-id="' + record.getKey() + '"]');
+                  var item = this._getItemsContainer().find('.js-controls-ListView__item[data-id="' + record.getKey() + '"]');
                   if (item.length) {
-                     item.empty().append(this._drawItem(record).children());
+                     item.slice(0, 1).empty().append(this._drawItem(record).children());
                   }
                }.bind(this));
             }

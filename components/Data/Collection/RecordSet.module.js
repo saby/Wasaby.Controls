@@ -1,7 +1,8 @@
 /* global define, $ws */
 define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
    'js!SBIS3.CONTROLS.Data.Collection.List',
-   'js!SBIS3.CONTROLS.DataSet'
+   'js!SBIS3.CONTROLS.DataSet',
+   'js!SBIS3.CONTROLS.Data.Model'
 ], function (List, DataSet) {
    'use strict';
 
@@ -24,6 +25,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
             meta: {},
             keyField: ''
          },
+         _model: undefined,
          _rawData: undefined,
          _indexTree: {}
       },
@@ -32,6 +34,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
          if (!('compatibleMode' in cfg)) {
             $ws.single.ioc.resolve('ILogger').log('SBIS3.CONTROLS.Data.RecordSet', 'module SBIS3.CONTROLS.Data.Collection.RecordSet is deprecated and will be removed in 3.8.0. Use SBIS3.CONTROLS.Data.Collection.LoadableList instead.');
          }
+         this._model = 'model' in cfg ? cfg.model : $ws.single.ioc.resolve('SBIS3.CONTROLS.Data.ModelConstructor');
          if ('data' in cfg) {
             this.setRawData(cfg.data);
          }
@@ -90,7 +93,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
 
       push: function (record) {
          if (!$ws.helpers.instanceOfModule(record, 'SBIS3.CONTROLS.Data.Model')) {
-            record = $ws.single.ioc.resolve('SBIS3.CONTROLS.Data.Model', {
+            record = new this._model({
                compatibleMode: true,
                adapter: this.getStrategy(),
                data: record,
@@ -112,7 +115,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
          var adapter = this.getStrategy().forTable(),
             count = adapter.getCount(data);
          for (var i = 0; i < count; i++) {
-            this.add($ws.single.ioc.resolve('SBIS3.CONTROLS.Data.Model', {
+            this.add(new this._model({
                compatibleMode: true,
                adapter: this.getStrategy(),
                data: adapter.at(data, i),

@@ -26,16 +26,17 @@ define('js!SBIS3.CONTROLS.MoveHandlers', ['js!SBIS3.CONTROLS.MoveDialog'], funct
          var
             record,
             recordTo,
-            isNodeTo,
+            isNodeTo = true,
             self = this,
             /*TODO переделать не на ParallelDeferred*/
             deferred = new $ws.proto.ParallelDeferred();
 
-         recordTo = this._dataSet.getRecordByKey(moveTo);
-         if (!recordTo) {
-            return;
+         if (moveTo !== null) {
+            recordTo = this._dataSet.getRecordByKey(moveTo);
+            if (recordTo) {
+               isNodeTo = recordTo.get(this._options.hierField + '@');
+            }
          }
-         isNodeTo = recordTo.get(this._options.hierField + '@');
 
          if (this._checkRecordsForMove(records, moveTo)) {
             for (var i = 0; i < records.length; i++) {
