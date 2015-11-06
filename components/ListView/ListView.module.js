@@ -528,7 +528,7 @@ define('js!SBIS3.CONTROLS.ListView',
                }
             }
             else {
-               this._notify('onItemActivate', id, item);
+               this._activateItem(id);
             }
          },
          _drawSelectedItems: function (idArray) {
