@@ -1218,6 +1218,24 @@ define('js!SBIS3.CONTROLS.ListView',
           */
          getDataSource: function(){
             return this._dataSource;
+         },
+         /**
+          * двигает элемент
+          * Метод будет удален после того как перерисовка научится сохранять раскрытые узлы в дереве
+          * @param {String} item1  - идентифкатор первого элемента
+          * @param {String} anchor - идентифкатор второго элемента
+          * @param {Boolean} before - если true то вставит перед anchor иначе после него
+          */
+         moveItemTo: function(item, anchor, before){
+            //TODO метод сделан специально для перемещения элементов, этот костыль надо удалить и переписать через _redraw
+            var itemsContainer = this._getItemsContainer(),
+               itemContainer = itemsContainer.find('tr[data-id="'+item+'"]'),
+               anchor = itemsContainer.find('tr[data-id="'+anchor+'"]');
+            if(before){
+               itemContainer.insertBefore(anchor);
+            } else {
+               itemContainer.insertAfter(anchor);
+            }
          }
       });
 

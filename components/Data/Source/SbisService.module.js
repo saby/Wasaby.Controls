@@ -196,7 +196,7 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
             return model;
          }).bind(this), function (error) {
             $ws.single.ioc.resolve('ILogger').log('SBIS3.CONTROLS.Data.Source.SbisService::read()', error);
-            return new Error('Cannot invoke read method');
+            return error;
          });
       },
 
@@ -222,7 +222,7 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
             return key;
          }).bind(this), function (error) {
             $ws.single.ioc.resolve('ILogger').log('SBIS3.CONTROLS.Data.Source.SbisService::update()', error);
-            return new Error('Cannot invoke update method');
+            return error;
          });
       },
 
@@ -241,7 +241,7 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
             return res;
          }, function (error) {
             $ws.single.ioc.resolve('ILogger').log('SBIS3.CONTROLS.Data.Source.SbisService::destroy()', error);
-            return new Error('Cannot invoke destroy method');
+            return error;
          });
       },
 
@@ -255,7 +255,7 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
                return res;
             }, function (error) {
                $ws.single.ioc.resolve('ILogger').log('SBIS3.CONTROLS.Data.Source.SbisService::merge()', error);
-               return new Error('Cannot invoke merge method');
+               return error;
             });
       },
 
@@ -275,7 +275,7 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
                return res;
             }, function (error) {
                $ws.single.ioc.resolve('ILogger').log('SBIS3.CONTROLS.Data.Source.SbisService::copy()', error);
-               return new Error('Cannot invoke copy method');
+               return error;
             });
       },
 
@@ -295,11 +295,11 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
             });
          }).bind(this), function (error) {
             $ws.single.ioc.resolve('ILogger').log('SBIS3.CONTROLS.Data.Source.SbisService::query()', error);
-            return new Error('Cannot invoke query method');
+            return error;
          });
       },
 
-      move: function (model, to, hierField, details) {
+      move: function (model, to, details) {
          details = details || {};
          this._detectIdProperty(model.getRawData());
 
@@ -335,7 +335,7 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
             });
          }).bind(this), function (error) {
             $ws.single.ioc.resolve('ILogger').log('SBIS3.CONTROLS.Data.Source.SbisService::call()', error);
-            return new Error('Cannot invoke call method');
+            return error;
          });
       },
 

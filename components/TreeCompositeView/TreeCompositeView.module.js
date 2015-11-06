@@ -39,6 +39,9 @@ define('js!SBIS3.CONTROLS.TreeCompositeView', ['js!SBIS3.CONTROLS.TreeDataGridVi
 
          }
       },
+      _redraw: function(){
+         TreeCompositeView.superclass._redraw.call(this);
+      },
       init:function(){
          this._options.itemsActions = [{
             name: 'moveDown',

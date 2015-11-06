@@ -328,20 +328,21 @@ define('js!SBIS3.CONTROLS.SbisJSONStrategy', [
          return {d: [], s: []};
       },
 
-       prepareOrderParams: function(object, record, hierField, orderDetails){
-          var params = {
-             'Объект': object,
-             'ИдО': [parseInt(record.getKey(), 10), object],
-             'ПорядковыйНомер': orderDetails.column || 'ПорНомер',
-             'Иерархия': typeof hierField === 'undefined' ? null : hierField
-          };
-          if(orderDetails.after){
-             params['ИдОДо'] = [parseInt(orderDetails.after,10), object];
-          } else if(orderDetails.before) {
-             params['ИдОПосле'] = [parseInt(orderDetails.before,10), object];
-          }
-          return params;
-       },
+      prepareOrderParams: function (object, record, hierField, orderDetails) {
+         var params = {
+            'Объект': object,
+            'ИдО': [parseInt(record.getKey(), 10), object],
+            'ПорядковыйНомер': orderDetails.column || 'ПорНомер',
+            'Иерархия': typeof hierField === 'undefined' ? null : hierField
+         };
+         if (orderDetails.after) {
+            params['ИдОДо'] = [parseInt(orderDetails.after, 10), object];
+         }
+         else if (orderDetails.before) {
+            params['ИдОПосле'] = [parseInt(orderDetails.before, 10), object];
+         }
+         return params;
+      },
 
 
 

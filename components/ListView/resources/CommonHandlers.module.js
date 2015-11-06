@@ -58,7 +58,7 @@ define('js!SBIS3.CONTROLS.CommonHandlers',[],
             );
          }
          deferred.addCallback(function(){
-            self.partialyReload([current, moveTo]);
+            self.moveItemTo(current, moveTo, config.before ? true : false);
          }).addErrback(function(e){
             $ws.core.alert(e.message);
          });
