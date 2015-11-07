@@ -144,7 +144,36 @@ define('js!SBIS3.CONTROLS.Menu', [
       },
       _drawItems : function() {
          this.destroySubObjects();
+         this._checkIcons();
          Menu.superclass._drawItems.apply(this, arguments);
+      },
+      //TODO: Придрот для выпуска 3.7.3
+      //Обходим все дерево для пунктов и проверяем наличие иконки у хотя бы одного в каждом меню
+      //При наличии таковой делаем всем пунктам в этом меню фэйковую иконку для их сдвига.
+      //По нормальному можно было бы сделать через css, но имеются три различных отступа слева у пунктов
+      //для разных меню и совершенно не ясно как это делать.
+      _checkIcons: function(){
+      	console.log(this._dataSet);
+      	var tree = this._dataSet._indexTree;
+      	for (var i in tree){
+      		var hasIcon = false,
+      			childs = tree[i];
+      		if (tree.hasOwnProperty(i)){
+      			for (var j = 0; j < childs.length; j++){
+      				if (this._dataSet.getRecordByKey(childs[j]).get('icon')){
+      					hasIcon = true;
+      					break;
+      				}
+      			}
+      			if (hasIcon) {
+      				for (var j = 0; j < childs.length; j++){
+	      				if (!this._dataSet.getRecordByKey(childs[j]).get('icon')){
+	      					this._dataSet.getRecordByKey(childs[j]).set('icon', 'empty');
+	      				}
+	      			}
+      			}
+      		}
+      	}
       },
       _drawItemsCallback : function() {
          var
