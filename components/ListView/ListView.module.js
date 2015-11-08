@@ -364,7 +364,7 @@ define('js!SBIS3.CONTROLS.ListView',
                return;
             }
             target = this._findItemByElement($target);
-            if (target.length && this._isViewElement(target) && !this._touchSupport) {
+            if (target.length && this._isViewElement(target)) {
                targetKey = target.data('id');
                if (targetKey !== undefined && this._hoveredItem.key !== targetKey) {
                   containerCords = this._container[0].getBoundingClientRect();
@@ -438,7 +438,7 @@ define('js!SBIS3.CONTROLS.ListView',
           * @private
           */
          _onChangeHoveredItem: function (target) {
-            if (this._options.itemsActions.length) {
+            if (this._options.itemsActions.length && !this._touchSupport) {
          		target.container ? this._showItemActions(target) : this._hideItemActions();
             }
          },
