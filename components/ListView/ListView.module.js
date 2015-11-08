@@ -382,7 +382,7 @@ define('js!SBIS3.CONTROLS.ListView',
 
             target = this._findItemByElement($target);
 
-            if (target.length && !this._touchSupport) {
+            if (target.length) {
                targetKey = target[0].getAttribute('data-id');
                if (targetKey !== undefined && this._hoveredItem.key !== targetKey) {
                   this._hoveredItem.container && this._hoveredItem.container.removeClass('controls-ListView__hoveredItem');
@@ -455,7 +455,7 @@ define('js!SBIS3.CONTROLS.ListView',
           */
          _onChangeHoveredItem: function (target) {
             this._updateEditInPlaceDisplay(target);
-            if (this._options.itemsActions.length) {
+            if (this._options.itemsActions.length && !this._touchSupport) {
          		target.container ? this._showItemActions(target) : this._hideItemActions();
             }
          },
