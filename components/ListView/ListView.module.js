@@ -117,6 +117,7 @@ define('js!SBIS3.CONTROLS.ListView',
             _addInPlaceButton: null,
             _itemActionsGroup: null,
             _emptyData: undefined,
+            _scrollWidth: $ws.helpers.getScrollWidth(),
             _options: {
                /**
                 * @faq Почему нет флажков при включенной опции {@link SBIS3.CONTROLS.ListView#multiselect multiselect}?
@@ -286,7 +287,6 @@ define('js!SBIS3.CONTROLS.ListView',
          },
 
          $constructor: function () {
-            var self = this;
             this._publish('onChangeHoveredItem', 'onItemClick');
             this._container.on('mousemove', this._mouseMoveHandler.bind(this))
                            .on('mouseleave', this._mouseLeaveHandler.bind(this));
@@ -398,22 +398,25 @@ define('js!SBIS3.CONTROLS.ListView',
 
          _getElementData: function(target) {
             if (target.length){
-           		var containerCords = this._container[0].getBoundingClientRect(),
+               var cont = this._container[0],
+                   containerCords = cont.getBoundingClientRect(),
                    targetCords = target[0].getBoundingClientRect(),
                    targetKey = target[0].getAttribute('data-id');
 
                return {
-                   key: targetKey,
-                   record: this.getDataSet().getRecordByKey(targetKey),
-                   container: target,
-                   position: {
-                       top: targetCords.top - containerCords.top,
-                       left: targetCords.left - containerCords.left
-                   },
-                   size: {
-                       height: target[0].offsetHeight,
-                       width: target[0].offsetWidth
-                   }
+                  key: targetKey,
+                  record: this.getDataSet().getRecordByKey(targetKey),
+                  container: target,
+                  position: {
+                     /* При расчётах координат по вертикали учитываем прокрутку */
+                     top: targetCords.top - containerCords.top + + cont.scrollTop,
+                     /* При расчётах координат по горизонтали учитываем ширину скрооллбара */
+                     left: targetCords.left - containerCords.left + (cont.scrollHeight !== cont.clientHeight ? this._scrollWidth : 0)
+                  },
+                  size: {
+                     height: target[0].offsetHeight,
+                     width: target[0].offsetWidth
+                  }
                }
             }
          },
@@ -713,14 +716,10 @@ define('js!SBIS3.CONTROLS.ListView',
             }
          },
          _getItemActionsPosition: function (item) {
-         	var cfg = {
-         		top : item.position.top + ((item.size.height > ITEMS_ACTIONS_HEIGHT) ? item.size.height - ITEMS_ACTIONS_HEIGHT : 0 ),
-               right : this._container[0].offsetWidth - (item.position.left + item.size.width)
-         	};
-         	if (this._touchSupport){
-               cfg.top = item.position.top;
-            }
-            return cfg;
+            return {
+               top : item.position.top + ((item.size.height > ITEMS_ACTIONS_HEIGHT) ? item.size.height - ITEMS_ACTIONS_HEIGHT : 0 ),
+               right : this._touchSupport ? item.position.top : this._container[0].offsetWidth - (item.position.left + item.size.width)
+            };
          },
          /**
           * Создаёт операции над записью
