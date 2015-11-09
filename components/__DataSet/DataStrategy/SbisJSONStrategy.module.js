@@ -270,7 +270,7 @@ define('js!SBIS3.CONTROLS.SbisJSONStrategy', [
         * @param limit
         * @returns {*}
         */
-      preparePagingParam: function (offset, limit) {
+      preparePagingParam: function (offset, limit, hasMore) {
          var pagingParam = null;
          if (typeof(offset) != 'undefined' && offset != null && typeof(limit) != 'undefined' && limit != null) {
             var numPage = Math.floor(offset / limit);
@@ -278,7 +278,7 @@ define('js!SBIS3.CONTROLS.SbisJSONStrategy', [
                'd': [
                   numPage,
                   limit,
-                  offset >= 0 //Если offset отрицательный, то грузится последняя страница
+                  hasMore !== undefined ? hasMore : offset >= 0 //Если offset отрицательный, то грузится последняя страница
                ],
                's': [
                   {'n': 'Страница', 't': 'Число целое'},
