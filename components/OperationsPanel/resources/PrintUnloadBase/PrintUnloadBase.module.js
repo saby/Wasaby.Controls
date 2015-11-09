@@ -70,7 +70,6 @@ define('js!SBIS3.CONTROLS.PrintUnloadBase', [
       },
       _processMassOperations:function(title){
          var numOfRecords = this._getView()._dataSet.getCount(),
-            num = 0,
             self = this,
             ds = this._getView()._dataSet;
          if (this._getView()._hasNextPage(this._getView()._dataSet.getMetaData().more)) {
@@ -86,31 +85,14 @@ define('js!SBIS3.CONTROLS.PrintUnloadBase', [
                      this.getChildControlByName('controls-MassAmountSelector').getContext().setValue('NumOfRecords', numOfRecords);
                   },
                   onChange: function(event, selectedNumRecords){
-                     if(selectedNumRecords > numOfRecords){
-                        $ws.helpers.question('Операция займет продолжительное время. Провести операцию?', {}, self).addCallback(function(answer){
-                           if (answer) {
-                              self._getView()._callQuery(self._getView()._filter, self._getView()._sorting, 0, selectedNumRecords).addCallback(function (dataSet) {
-                                 self._applyOperation(dataSet);
-                              });
-                           }
-                        });
-                     } else {
-                        if (selectedNumRecords < numOfRecords) {
-                           num = 0;
-                           //TODO здесь должен быть не filter, а что-то типа .range - получение первых N записей
-                           //Выберем selectedNumRecords записей из dataSet
-                           ds = self._getView()._dataSet.filter(function(){
-                              return num++ < selectedNumRecords;
-                           });
-                        }
-                        self._applyOperation(ds);
-                     }
+                     self.processSelectedOperation(selectedNumRecords);
                   }
                }
             });
          }
          else {
-            self._applyOperation(ds);
+            //self._applyOperation(ds);
+            self._applyMassOperation(ds);
          }
 
       },
@@ -122,13 +104,12 @@ define('js!SBIS3.CONTROLS.PrintUnloadBase', [
       _notifyOnApply : function(columns){
 
       },
+      _applyMassOperation : function(ds){
+         this._applyOperation(ds);
+      },
       _applyOperation : function(dataSet){
-         var columns = this._getView().getColumns(),
-               cfg, result;
-         result = this._notifyOnApply(columns);
-         if (result instanceof Array) {
-            columns = result;
-         }
+         var columns = this._prepareOperationColumns(),
+             cfg;
          cfg = {
             dataSet : dataSet || this._getView()._dataSet,
             columns: columns
@@ -139,6 +120,45 @@ define('js!SBIS3.CONTROLS.PrintUnloadBase', [
          //Снимем выделение
          this._getView().removeItemsSelectionAll();
          this.applyOperation(dataSet, cfg);
+      },
+      _prepareOperationColumns: function(){
+         var columns = this._getView().getColumns(),
+             result;
+         result = this._notifyOnApply(columns);
+         if (result instanceof Array) {
+            columns = result;
+         }
+         return columns;
+      },
+      /**
+       * Обрабатываем выбранные пользователем записи. Здесь подготавливаем dataSet либо подготавливаем
+       * фильтр для выгрузки данных полностью на сервере
+       * @param selectedNumRecords
+       */
+      processSelectedOperation: function(selectedNumRecords){
+         var ds = this._getView()._dataSet,
+            numOfRecords = ds.getCount(),
+            num = 0,
+            self = this;
+         if(selectedNumRecords > numOfRecords){
+            $ws.helpers.question('Операция займет продолжительное время. Провести операцию?', {}, self).addCallback(function(answer){
+               if (answer) {
+                  self._getView()._callQuery(self._getView()._filter, self._getView()._sorting, 0, selectedNumRecords).addCallback(function (dataSet) {
+                     self._applyOperation(dataSet);
+                  });
+               }
+            });
+         } else {
+            if (selectedNumRecords < numOfRecords) {
+               num = 0;
+               //TODO здесь должен быть не filter, а что-то типа .range - получение первых N записей
+               //Выберем selectedNumRecords записей из dataSet
+               ds = self._getView()._dataSet.filter(function(){
+                  return num++ < selectedNumRecords;
+               });
+            }
+            self._applyOperation(ds);
+         }
       },
       /**
        * Must be implemented
