@@ -249,7 +249,7 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
                   this.toggleNode(nodeID);
                }
                else {
-                  this._notify('onItemActivate', id, data);
+                  this._activateItem(id);
                }
             }
 

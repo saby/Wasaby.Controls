@@ -1,4 +1,5 @@
 .controls-DataGridView {
+   overflow: auto;
    .controls-ListView__item {
       &:extend(.controls-ListView .controls-ListView__item all);
    }
@@ -53,6 +54,12 @@
                color: @data-grid-row-selected-cell-text-color;
             }
          }
+
+         &.controls-ListView__item__selected,
+         &.controls-ListView__item__selected .controls-DataGridView__notScrolledCell {
+            background-color: @default-itemHover-color;
+         }
+
          &.controls-ListView__hoveredItem {
             background: @data-grid-row-hover-bg;
 
