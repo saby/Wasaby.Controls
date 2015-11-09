@@ -26,9 +26,25 @@ define('js!SBIS3.CONTROLS.ActionBase', ['js!SBIS3.CONTROLS.Control'], function(C
     * @ignoreEvents onFocusIn onFocusOut onKeyPressed onReady onResize onStateChanged onTooltipContentRequest
     */
    //TODO наследуемся от контрола, чтоб можно было размещать в xhtml
-   var ActionBase = Control.Control.extend({
+   var ActionBase = Control.Control.extend(/** @lends SBIS3.CONTROLS.ActionBase.prototype */{
+      /**
+       * @event onExecuted После выполнения действия(клик мышкой, кнопки клавиатуры)
+       * @param {$ws.proto.EventObject} eventObject Дескриптор события.
+       * @example
+       * <pre>
+       *    onActivated: function(event){
+       *       $ws.helpers.question('Продолжить?');
+       *    }
+       * </pre>
+       */
+      /**
+       * Метод запускающий выполнение Action
+       */
       execute: function() {
-
+         this._notifyOnExecuted();
+      },
+      _notifyOnExecuted: function() {
+         this._notify('onExecuted')
       }
    });
    return ActionBase;
