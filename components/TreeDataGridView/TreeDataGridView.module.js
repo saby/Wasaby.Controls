@@ -243,6 +243,9 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
                   this.setCurrentRoot(nodeID);
                   this.reload();
                }
+               else {
+                  this._activateItem(id);
+               }
             }
             else {
                if (data.get(this._options.hierField + '@')) {

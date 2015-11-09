@@ -1,11 +1,11 @@
-define('js!SBIS3.CONTROLS.ActionBase', ['js!SBIS3.CONTROLS.Control'], function(Control){
+define('js!SBIS3.CONTROLS.ActionBase', ['js!SBIS3.CONTROLS.OpenDialogAction'], function(OpenDialogAction){
    'use strict';
 
    /**
     * Класс базовый для всех стандартных действий, которые можно использовать в интерфейсе
-    * @class SBIS3.CONTROLS.ActionBase
+    * @class SBIS3.CONTROLS.OpenDialogAction
     * @public
-    * @extends $ws.proto.Control
+    * @extends SBIS3.CONTROLS.ActionBase
     * @author Крайнов Дмитрий Олегович
     *
     * @ignoreOptions validators independentContext contextRestriction extendedTooltip
@@ -25,22 +25,8 @@ define('js!SBIS3.CONTROLS.ActionBase', ['js!SBIS3.CONTROLS.Control'], function(C
     * @ignoreEvents onActivate onAfterLoad onAfterShow onBeforeControlsLoad onBeforeLoad onBeforeShow onChange onClick
     * @ignoreEvents onFocusIn onFocusOut onKeyPressed onReady onResize onStateChanged onTooltipContentRequest
     */
-   //TODO наследуемся от контрола, чтоб можно было размещать в xhtml
-   var ActionBase = Control.Control.extend(/** @lends SBIS3.CONTROLS.ActionBase.prototype */{
-      /**
-       * @event onExecuted После завершения работы действия
-       * @param {$ws.proto.EventObject} eventObject Дескриптор события.
-       * @example
-       */
-      /**
-       * Метод запускающий выполнение Action
-       */
-      execute: function() {
-         this._notifyOnExecuted();
-      },
-      _notifyOnExecuted: function() {
-         this._notify('onExecuted')
-      }
+   var OpenDialogAction = OpenDialogAction.extend(/** @lends SBIS3.CONTROLS.ActionBase.prototype */{
+
    });
-   return ActionBase;
+   return OpenDialogAction;
 });
