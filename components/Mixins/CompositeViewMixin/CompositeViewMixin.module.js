@@ -78,7 +78,7 @@ define('js!SBIS3.CONTROLS.CompositeViewMixin', ['html!SBIS3.CONTROLS.CompositeVi
          var allow = this._options.viewMode === 'table' || !this._options.showPaging;
          //TODO сделать красивее. тут отключать индикатор - это костыль
          if (!allow){
-            this._removeLoadingIndicator();
+            this._hideLoadingIndicator();
          }
          return allow;
       },
