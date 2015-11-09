@@ -409,7 +409,7 @@ define('js!SBIS3.CONTROLS.ListView',
                   container: target,
                   position: {
                      /* При расчётах координат по вертикали учитываем прокрутку */
-                     top: targetCords.top - containerCords.top + + cont.scrollTop,
+                     top: targetCords.top - containerCords.top + cont.scrollTop,
                      /* При расчётах координат по горизонтали учитываем ширину скрооллбара */
                      left: targetCords.left - containerCords.left + (cont.scrollHeight !== cont.clientHeight ? this._scrollWidth : 0)
                   },
