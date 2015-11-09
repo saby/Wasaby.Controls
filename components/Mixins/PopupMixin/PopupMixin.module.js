@@ -703,6 +703,7 @@ define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManag
       _close: function(){
          this.hide();
          this.destroy();
+         return true;
       },
 
       _addOffset: function (offset1, offset2) {
