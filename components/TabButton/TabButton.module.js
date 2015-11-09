@@ -35,14 +35,6 @@ define('js!SBIS3.CONTROLS.TabButton',
              */
             largeFont: false,
             /**
-             * @cfg {Boolean} Редактируемая вкладка
-             * @example
-             * <pre>
-             *     <option name="editable">false</option>
-             * </pre>
-             */
-            editable: false,
-            /**
              * @cfg {HTML} Шаблон, отображаемый внутри вкладки
              * @example
              * <pre>

@@ -21,25 +21,6 @@ define(
     */
 
    var TabButtons = RadioGroupBase.extend(/** @lends SBIS3.CONTROLS.TabButtons.prototype */ {
-      /**
-       * @event onBeforeShowFirstItem Выбор активной закладки
-       * Происходит перед показом закладок, может быть использовано для смены закладки, открытой по умолчанию.
-       * @param {$ws.proto.EventObject} event Дескриптор события.
-       * @param {String} id Идентификатор текущей закладки по умолчанию.
-       * @return {String} Результат рассматривается как заголовок закладки, которую нужно показать текущей открытой.
-       * Если вернуть '', то активной будет закладка, либо указанная в опции {@link selectedItem}, либо первая при незаполненной опции.
-       * @example
-       * <pre>
-       *     var doc = this.getDocument();
-       *     tabs.subscribe('onBeforeShowFirstItem', function(event) {
-       *        if (doc.hasRecords()) {
-       *           event.setResult('recordList');
-       *        } else {
-       *           event.setResult('people');
-       *        }
-       *     });
-       * </pre>
-       */
       $protected: {
          _options: {
             /**
@@ -59,31 +40,24 @@ define(
              *     </div>
              * </pre>
              */
-            itemTemplate: itemTpl,
-            /**
-             * @cfg {String} Ключ первоначального активного элемента
-             */
-            defaultKey: undefined
-         }
+            itemTemplate: itemTpl
+         },
+         /**
+          * {String} Ключ первоначального активного элемента
+          */
+         defaultKey: undefined
       },
       _dotTplFn: TabButtonsTpl,
 
       $constructor: function () {
-         this._publish('onBeforeShowFirstItem');
-
-         this._options.defaultKey = this._options.selectedKey;
-
-         this.subscribe('onInit', function(){
-            this.toggleMarker(this._options.hasMarker);
-         }.bind(this));
-         this.subscribe('onDrawItems', this._findSideItems);
+         this.defaultKey = this._options.selectedKey;
       },
       /**
        * <wiTag group="Управление">
-       * Применение пустого состояния. Восстанавливает первоначальную активную вкладку.
+       * Применение первоначального состояния. Восстанавливает первоначальную активную вкладку.
        */
       resetToDefaultState: function () {
-         this.setSelectedKey(this._options.defaultKey);
+         this.setSelectedKey(this.defaultKey);
       },
       /**
        * <wiTag group="Управление">
@@ -95,6 +69,10 @@ define(
       },
       _findSideItems: function(){
          this.getContainer().find('.controls-TabButton__left-align:first, .controls-TabButton__right-align:first').addClass('controls-TabButton__side-item');
+      },
+      _drawItemsCallback: function(){
+         TabButtons.superclass._drawItemsCallback.call(this);
+         this._findSideItems();
       },
       _getItemTemplate: function (item) {
          var displayField = this._options.displayField;
