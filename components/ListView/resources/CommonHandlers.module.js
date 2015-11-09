@@ -27,19 +27,15 @@ define('js!SBIS3.CONTROLS.CommonHandlers',[],
          editItems: function(tr, id) {
             this.sendCommand('ActivateItem', id);
          },
-         moveRecordDown: function(item) {
-            var id = item.data('id'),
-               nextItem = this.getNextItemById(id),
-               itemRecord = this.getDataSet().getRecordByKey(id),
+         moveRecordDown: function(tr, id, record) {
+            var nextItem = this.getNextItemById(id),
                nextId = nextItem.data('id');
-            moveRecord.call(this, itemRecord, nextId, id, {after: nextId});
+            moveRecord.call(this, record, nextId, id, {after: nextId});
          },
-         moveRecordUp: function(item) {
-            var id = item.data('id'),
-               prevItem = this.getPrevItemById(id),
-               itemRecord = this.getDataSet().getRecordByKey(id),
+         moveRecordUp: function(tr, id, record) {
+            var prevItem = this.getPrevItemById(id),
                prevId = prevItem.data('id');
-            moveRecord.call(this,itemRecord, prevId, id, {before: prevId});
+            moveRecord.call(this, record, prevId, id, {before: prevId});
          }
       };
       function moveRecord(itemRecord, moveTo, current, config){
