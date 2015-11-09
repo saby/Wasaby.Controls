@@ -91,6 +91,7 @@ define('js!SBIS3.CONTROLS.ListView',
             _actsContainer: null,
             _hoveredItem: {
                target: null,
+               container: null,
                key: null,
                position: null,
                size: null
