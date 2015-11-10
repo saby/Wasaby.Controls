@@ -677,11 +677,10 @@ define(
       },
       /**
        * Обновляяет значение this._options.text
-       * null если есть хотя бы одно незаполненное место (плэйсхолдер)
        * @protected
        */
       _updateText:function() {
-         this._options.text = this.formatModel.getStrMask(this._maskReplacer);
+         this._options.text = this.formatModel.getText(this._maskReplacer);
       },
 
       /**
