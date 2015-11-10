@@ -106,7 +106,7 @@ define('js!SBIS3.CONTROLS.ListView',
             _pageChangeDeferred : undefined,
             _pager : undefined,
             _previousGroupBy : undefined,
-            _taphold: false,
+
             _keysWeHandle: [
                $ws._const.key.up,
                $ws._const.key.down,
@@ -322,9 +322,8 @@ define('js!SBIS3.CONTROLS.ListView',
             if (this._touchSupport){
             	this._getItemActionsContainer().addClass('controls-ItemsActions__touch-actions');
             	this._container.bind('swipe', this._swipeHandler.bind(this));
-               this._container.bind('taphold', this._longTapHandler.bind(this));
                this._container.bind('tap', this._tapHandler.bind(this));
-               this._container.bind('touchmove',this._mouseMoveHandler.bind(this))
+               this._container.bind('touchmove',this._mouseMoveHandler.bind(this));
             }
          },
          _keyboardHover: function (e) {
@@ -356,12 +355,7 @@ define('js!SBIS3.CONTROLS.ListView',
          _isViewElement: function (elem) {
             return  $ws.helpers.contains(this._getItemsContainer()[0], elem[0]);
          },
-
-         _onClickHandler: function(e) {
-         	if (this._taphold){
-         		this._taphold = false;
-         		return false;
-         	}
+         _onClickHandler: function(e) {         	
             ListView.superclass._onClickHandler.apply(this, arguments);
             var $target = $(e.target),
                 target = this._findItemByElement($target),
@@ -682,16 +676,9 @@ define('js!SBIS3.CONTROLS.ListView',
                this._onChangeHoveredItem(item);
                if (this._options.itemsActions.length) {
          			item.container ? this._showItemActions(item) : this._hideItemActions();
-            	}
+               }
                this._hoveredItem = item;
             }
-         },
-
-         _longTapHandler: function(e){
-         	this._taphold = true;
-            var target = this._findItemByElement($(e.target));
-            var id = target.data('id');
-            this.toggleItemsSelection([id]);
          },
 
          _tapHandler: function(e){
