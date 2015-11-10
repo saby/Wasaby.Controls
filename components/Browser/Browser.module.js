@@ -65,8 +65,8 @@ define('js!SBIS3.CONTROLS.Browser', [
          Browser.superclass.init.apply(this, arguments);
 
          this._view = this._getView();
-         this._view.subscribe('onItemActivate', function(e, id, item) {
-            self._notifyOnEditByActivate(id, item, {});
+         this._view.subscribe('onItemActivate', function(e, id, item, itemMeta) {
+            self._notifyOnEditByActivate(id, item, itemMeta);
          });
 
 
@@ -140,8 +140,8 @@ define('js!SBIS3.CONTROLS.Browser', [
          return this._getLinkedControl('browserOperationsPanel');
       },
 
-      _notifyOnEditByActivate: function(id, item) {
-         this._notify('onEdit', id, item)
+      _notifyOnEditByActivate: function(id, item, itemMeta) {
+         this._notify('onEdit', id, item, itemMeta)
       }
 
    });
