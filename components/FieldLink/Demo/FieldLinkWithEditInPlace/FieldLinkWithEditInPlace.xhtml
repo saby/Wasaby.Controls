@@ -29,8 +29,8 @@
             <opt name="width" type="string">450</opt>
             <opt name="field">МестоРаботы</opt>
             <opt name="editor">
-               <div style="height: 80px;">
-                  <component data-component="SBIS3.CONTROLS.FieldLink" style="width: 100%; margin-top: 8px;">
+               <div style="height: 67px; width: 100%; padding-top: 12px;">
+                  <component data-component="SBIS3.CONTROLS.FieldLink" style="width: 100%; display: block;">
                      <opt name="text" bind="text1"></opt>
                      <opt name="placeholder" value="Компания"></opt>
                      <opt name="displayField" value="Название"></opt>
@@ -62,7 +62,7 @@
                         <opt name="onInit" type="function">js!SBIS3.CONTROLS.Demo.FieldLinkWithEditInPlace:prototype.initFiledLink1</opt>
                      </opts>
                   </component>
-                  <component data-component="SBIS3.CONTROLS.FieldLink" style="width: 100%; margin-top: 8px;">
+                  <component data-component="SBIS3.CONTROLS.FieldLink" style="width: 100%; margin-top: 8px; display: block;">
                      <opt name="text" bind="text2"></opt>
                      <opt name='selectedItems' type='array' bind='МестоРаботы/Должность'/>
                      <opt name="placeholder" value="Должность"></opt>
@@ -103,5 +103,10 @@
       </opts>
       <opt name="emptyHTML">Нет записей</opt>
       <opt name="multiselect">true</opt>
+   </component>
+   <component data-component="SBIS3.CONTROLS.Link" class="controls-demo-FieldLinkWithEditInPlace__newItem" name="newItem-button">
+      <opt name="caption" value="Новая запись"/>
+      <opt name="icon" value="sprite:icon-16 icon-NewCategory"/>
+      <opt name="command">newItem</opt>
    </component>
 </div>

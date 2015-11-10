@@ -23,15 +23,22 @@ define('js!SBIS3.CONTROLS.Demo.FieldLinkWithEditInPlace', [
    var moduleClass = CompoundControl.extend(/** @lends SBIS3.CONTROLS.Demo.FieldLinkWithEditInPlace.prototype */{
       _dotTplFn: dotTplFn,
       $protected: {
-         _options: {}
+         _dataGrid: null
+      },
+
+      $constructor: function() {
+         $ws.single.CommandDispatcher.declareCommand(this, 'newItem', this._newItem.bind(this));
       },
 
       init: function () {
-         var
-            dataGrid;
          moduleClass.superclass.init.call(this);
-         dataGrid = this.getChildControlByName('DemoDataGrid');
-         dataGrid.setDataSource(this._createDataGridSource());
+         this._dataGrid = this.getChildControlByName('DemoDataGrid');
+         this._dataGrid.setDataSource(this._createDataGridSource());
+         this._dataGrid.sendCommand('newItem');
+      },
+
+      _newItem: function() {
+         return this._dataGrid.sendCommand('newItem');
       },
 
       _createDataGridSource: function () {
