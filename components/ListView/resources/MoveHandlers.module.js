@@ -50,8 +50,8 @@ define('js!SBIS3.CONTROLS.MoveHandlers', ['js!SBIS3.CONTROLS.MoveDialog'], funct
             return false;
          }
          for (var i = 0; i < records.length; i++) {
-            if (typeof records[i] === 'number' && $.inArray(records[i], toMap) !== -1 ||
-                typeof records[i] === 'object' && $.inArray(records[i].getKey(), toMap) !== -1) {
+            if ($ws.helpers.instanceOfModule(records[i], 'SBIS3.CONTROLS.Record') && $.inArray(records[i].getKey(), toMap) !== -1 ||
+                $.inArray('' + records[i], toMap) !== -1) {
                $ws.helpers.alert('Вы не можете переместить запись саму в себя!', {}, this);
                return false;
             }
