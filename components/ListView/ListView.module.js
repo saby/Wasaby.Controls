@@ -360,6 +360,7 @@ define('js!SBIS3.CONTROLS.ListView',
                this._container.bind('tap', this._tapHandler.bind(this));
                this._container.bind('touchmove',this._mouseMoveHandler.bind(this));
             }
+
          },
          _keyboardHover: function (e) {
             var selectedKey = this.getSelectedKey();
