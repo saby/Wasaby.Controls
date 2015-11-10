@@ -4,11 +4,11 @@
 define('js!SBIS3.CONTROLS.Demo.FieldLinkDemoTemplate', [
    'js!SBIS3.CORE.CompoundControl',
    'html!SBIS3.CONTROLS.Demo.FieldLinkDemoTemplate',
-   'js!SBIS3.CONTROLS.ArrayStrategy',
+   'js!SBIS3.CONTROLS.SbisJSONStrategy',
    'js!SBIS3.CONTROLS.StaticSource',
    'js!SBIS3.CONTROLS.DataGridView',
    'js!SBIS3.CONTROLS.Button'
-], function (CompoundControl, dotTplFn, ArrayStrategy, StaticSource) {
+], function (CompoundControl, dotTplFn, SbisJSONStrategy, StaticSource) {
    /**
     * SBIS3.CONTROLS.Demo.MySuggestTextBoxDS
     * @class SBIS3.CONTROLS.Demo.MySuggestTextBoxDS
@@ -30,87 +30,23 @@ define('js!SBIS3.CONTROLS.Demo.FieldLinkDemoTemplate', [
          var self = this;
          var dataGrid = this.getChildControlByName('Таблица');
          var dataSource = new StaticSource({
-            data: [{
-               'Ид': 1,
-               'Фамилия': 'Иванов',
-               'Имя': 'Иваныч',
-               'Отчество': 'Иванович',
-               'Должность': 'Инженер'
-            }, {
-               'Ид': 2,
-               'Фамилия': 'Иванов',
-               'Имя': 'Федор',
-               'Отчество': 'Иванович',
-               'Должность': 'Директор'
-            }, {
-               'Ид': 3,
-               'Фамилия': 'Иванова',
-               'Имя': 'Федора',
-               'Отчество': 'Сергеевна',
-               'Должность': 'Инженер'
-            }, {
-               'Ид': 4,
-               'Фамилия': 'Петров',
-               'Имя': 'Ваня',
-               'Отчество': 'Андреевич',
-               'Должность': 'Директор'
-            }, {
-               'Ид': 5,
-               'Фамилия': 'Сидоров',
-               'Имя': 'Михаил',
-               'Отчество': 'Петрович',
-               'Должность': 'Карапуз'
-            }, {
-               'Ид': 6,
-               'Фамилия': 'Яковлев',
-               'Имя': 'Иван',
-               'Отчество': 'Викторович',
-               'Должность': 'Директор'
-            }, {
-               'Ид': 7,
-               'Фамилия': 'Арбузнов',
-               'Имя': 'Иванко',
-               'Отчество': 'Яковлевич',
-               'Должность': 'Маркетолог'
+            data: {
+               _type: 'recordset',
+               d: [
+                  [0, 'Инженер-программист'],
+                  [1, 'Руководитель группы'],
+                  [2, 'Менеджер'],
+                  [3, 'Генерал армии'],
+                  [4, 'Министр обороны'],
+                  [5, 'Бухгалтер']
+               ],
+               s: [
+                  {n: 'Ид', t: 'ЧислоЦелое'},
+                  {n: 'Название', t: 'Текст'}
+               ]
             },
-               {
-                  'Ид': 8,
-                  'Фамилия': 'Она',
-                  'Имя': 'Онаа',
-                  'Отчество': 'Онановна',
-                  'Должность': 'Фрезеровщик'
-               },
-               {
-                  'Ид': 9,
-                  'Фамилия': 'Он',
-                  'Имя': 'Онн',
-                  'Отчество': 'Онович',
-                  'Должность': 'Сантехник'
-               },
-               {
-                  'Ид': 10,
-                  'Фамилия': 'Кто-то',
-                  'Имя': 'Кто-тото',
-                  'Отчество': 'Кто-тович',
-                  'Должность': 'Уборщик'
-               },
-               {
-                  'Ид': 11,
-                  'Фамилия': 'Новиков',
-                  'Имя': 'Дмитрий',
-                  'Отчество': 'Александрович',
-                  'Должность': 'Программист'
-               },
-               {
-                  'Ид': 12,
-                  'Фамилия': 'Александров',
-                  'Имя': 'Александр',
-                  'Отчество': 'Александрович',
-                  'Должность': 'Программист'
-               }
-            ],
-            keyField: 'Имя',
-            strategy: new ArrayStrategy()
+            keyField: 'Ид',
+            strategy: new SbisJSONStrategy()
          });
 
          dataGrid.setDataSource(dataSource);

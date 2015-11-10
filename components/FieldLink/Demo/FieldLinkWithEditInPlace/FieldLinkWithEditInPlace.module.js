@@ -193,6 +193,29 @@ define('js!SBIS3.CONTROLS.Demo.FieldLinkWithEditInPlace', [
             strategy: new SbisStrategy()
          }));
          this.setDataSourceFilter(retTrue);
+      },
+      initFiledLink3: function () {
+         this.setDataSource(new StaticSource({
+            data: {
+               _type: 'recordset',
+               d: [
+                  [0, 'Инженер-программист'],
+                  [1, 'Руководитель группы'],
+                  [2, 'Менеджер'],
+                  [3, 'Генерал армии'],
+                  [4, 'Министр обороны'],
+                  [5, 'Бухгалтер']
+               ],
+               s: [
+                  {n: 'Ид', t: 'ЧислоЦелое'},
+                  {n: 'Название', t: 'Текст'}
+               ]
+            },
+            keyField: 'Ид',
+            strategy: new SbisStrategy()
+         }));
+         this.setDataSourceFilter(retTrue);
+         this.setSelectedKeys([1,2,3]);
       }
    });
    return moduleClass;
