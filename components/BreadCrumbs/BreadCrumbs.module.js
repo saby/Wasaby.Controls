@@ -149,27 +149,34 @@ define('js!SBIS3.CONTROLS.BreadCrumbs', [
          }
       },
 
-      _redraw: function() {
-         BreadCrumbs.superclass._redraw.call(this);
-         $('.controls-BreadCrumbs__dots', this._container).remove();
+      _onResizeHandler: function(){
+         this._redraw();
+      },
+
+      _calculateSizes: function() {
+         var dots = $('.controls-BreadCrumbs__dots', this._container).detach();
          var targetContainer = this._getTargetContainer(),
             containerWidth = this._container.width(),
             points = $('.controls-BreadCrumbs__crumb', targetContainer),
             i = points.length - 1;
-         
-         if (points.length){
+
+         if (!dots.length)
+            dots = $(pointTpl({
+               item: {
+                  title: '...',
+                  dots: true,
+                  get: function(field) {
+                     return this[field];
+                  }
+               },
+               decorators: this._decorators,
+               displayField: this._options.displayField
+            }));
+
+         if (points.length) {
             //20px - ширина блока с домиком
             //Добавляем троеточие если пункты не убираются в контейнер
             if ((targetContainer.width() + 20 >= containerWidth) && points.length > 2) {
-               var dots = $(pointTpl({
-                  item: {
-                     title: '...',
-                     dots: true,
-                     get: function(field) {return this[field];}
-                  },
-                  decorators: this._decorators,
-                  displayField: this._options.displayField
-               }));
                $(points[i - 1]).before(dots);
                //скрываем пункты левее троеточия пока не уберемся в контейнер
                for (i; i > 1; i--) {
@@ -179,7 +186,7 @@ define('js!SBIS3.CONTROLS.BreadCrumbs', [
                   points[i - 1].className += ' ws-hidden';
                }
             }
-            
+
             //Если после всех манипуляций все еще не убираемся в контейнер, будем обрезать текст
             points = $('.controls-BreadCrumbs__crumb:not(.ws-hidden)', targetContainer);
 
@@ -195,10 +202,11 @@ define('js!SBIS3.CONTROLS.BreadCrumbs', [
                }
             }
          }
+      },
 
-         if (this._picker) {
-            this.hidePicker();
-         }
+      _redraw: function() {
+         BreadCrumbs.superclass._redraw.call(this);
+         this._calculateSizes();
       },
 
       _getItemTemplate: function() {

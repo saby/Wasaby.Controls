@@ -40,6 +40,27 @@ define('js!SBIS3.CONTROLS.Utils.DialogOpener',[
             });
          }
       },
+      openFloatArea: function(dialogComponent, record, handlers, options){
+         var oldRecord = convertRecord(record);
+         if (!options){
+            options = {};
+         }
+         var attachOptions = $ws.core.merge({
+               template: dialogComponent,
+               record: oldRecord,
+               handlers: handlers,
+               side:  'right',
+               autoHide: false,
+               isStack: true,
+               isModal: false,
+               parent: null,
+               animationLength: 300,
+               showDelay: 300,
+               doNotLossFocus: true
+            }, options);
+
+         $ws.core.attachInstance('SBIS3.CORE.RecordFloatArea', attachOptions);
+      },
       convertRecord: function(record) {
          return convertRecord(record);
       }
