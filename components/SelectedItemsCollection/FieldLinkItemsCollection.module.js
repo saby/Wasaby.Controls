@@ -60,14 +60,8 @@ define('js!SBIS3.CONTROLS.FieldLinkItemsCollection', [
          },
 
          _appendItemTemplate:function(item, targetContainer, itemInstance) {
-            var parentFunc = FieldLinkItemsCollection.superclass._appendItemTemplate;;
-
-            if(typeof this._options.itemCheckFunc === 'function') {
-               if(this._options.itemCheckFunc(itemInstance)) {
-                  parentFunc.apply(this, arguments);
-               }
-            } else {
-               parentFunc.apply(this, arguments)
+            if(this._options.itemCheckFunc(itemInstance)) {
+               FieldLinkItemsCollection.superclass._appendItemTemplate.apply(this, arguments);
             }
          },
          /**
