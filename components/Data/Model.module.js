@@ -178,7 +178,7 @@ define('js!SBIS3.CONTROLS.Data.Model', [
             this._setOriginalPropertyValue(name, value);
          }
          if (property.get) {
-            value = this._getCalculatedValue(value, property, true);
+            value = this._getCalculatedValue(name, value, property, true);
          }
 
          //Инстансы объектов кэшируем
@@ -200,7 +200,7 @@ define('js!SBIS3.CONTROLS.Data.Model', [
 
          var property = this._options.properties[name];
          if (property && property.set) {
-            value = this._getCalculatedValue(value, property, false);
+            value = this._getCalculatedValue(name, value, property, false);
          }
 
          if (this._getOriginalPropertyValue(name) !== value) {
@@ -513,22 +513,23 @@ define('js!SBIS3.CONTROLS.Data.Model', [
 
       /**
        * Возвращает вычисленное значение свойства
-       * @param {*} value Модель изменена
+       * @param {String} name Ися свойства
+       * @param {*} value Значение свойства
        * @param {Property} property Описание свойства
        * @param {Boolean} isReading Вычисление при чтении
        * @returns {*}
        * @private
        */
-      _getCalculatedValue: function (value, property, isReading) {
+      _getCalculatedValue: function (name, value, property, isReading) {
          //TODO: отследить зависимости от других свойств (например, отлеживая вызов get() внутри _getCalculatedValue), и сбрасывать кэш для зависимых полей при set()
-         if (this._nowCalculatingProperties[property.name]) {
-            throw new Error('Recursive value calculate detected for property ' + property.name);
+         if (this._nowCalculatingProperties[name]) {
+            throw new Error('Recursive value calculate detected for property ' + name);
          }
-         this._nowCalculatingProperties[property.name] = true;
+         this._nowCalculatingProperties[name] = true;
          value = isReading ?
             property.get.call(this, value) :
             property.set.call(this, value);
-         this._nowCalculatingProperties[property.name] = false;
+         this._nowCalculatingProperties[name] = false;
 
          return value;
       },

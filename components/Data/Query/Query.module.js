@@ -124,11 +124,11 @@ define('js!SBIS3.CONTROLS.Data.Query.Query', [
        * @example
        * <pre>
        *    var query = new Query()
-       *       .select({
+       *       .select([
        *          'id',
        *          'date',
        *          'customerId'
-       *       })
+       *       ])
        *       .from('Orders');
        *
        *    var query = new Query()
@@ -298,8 +298,8 @@ define('js!SBIS3.CONTROLS.Data.Query.Query', [
        *       .select('*')
        *       .from('Orders')
        *       .orderBy({
-       *          'customerId': true,
-       *          'date': false
+       *          customerId: true,
+       *          date: false
        *       });
        * </pre>
        */
