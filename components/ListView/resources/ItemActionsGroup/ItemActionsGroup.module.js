@@ -77,7 +77,7 @@ define('js!SBIS3.CONTROLS.ItemActionsGroup',
           */
          _createItemActionMenu: function() {
             var self = this;
-            var menuCont = $('> .controls-ItemActions__menu-container', this._container[0]);
+            var menuCont = $('> .controls-ItemActions__menu-container', this._getItemsContainer()[0]);
             var verticalAlign = {
                   side: 'top',
                   offset: VERTICAL_OFFSET
@@ -168,19 +168,22 @@ define('js!SBIS3.CONTROLS.ItemActionsGroup',
           */
          showItemActions: function(hoveredItem, position) {
             this._activeItem = hoveredItem;
-            this._container[0].style.top = position.top + 'px';
             this._container[0].style.right = position.right + 'px';
             this._container[0].style.display = 'block';
             if (this._touchActions){
-               this._container.width('auto');
                var width = this._container.width(),
+                  contHeight = this._container.height(),
                   height = $(hoveredItem.container).height(),
-                  padding = height / 2 - 10;// получено опытным путем для шрифта 16px;
-               this._container.width(0);
-            	this._container.height(height / 2 + 10);
-               this._container.css('padding-top', padding);
-            	this._container.animate({width : width}, 350);
+                  itemsContainer = this._getItemsContainer();
+
+               itemsContainer[0].style.right = - width + 'px';
+               if (contHeight < height){
+                  position.top -=  height - contHeight;
+               }
+               this._container.height(height);
+            	itemsContainer.animate({right : position.right}, 350);
             }
+            this._container[0].style.top = position.top + 'px';
         	},
          /***
           * Задаёт новые операции над записью
@@ -214,6 +217,10 @@ define('js!SBIS3.CONTROLS.ItemActionsGroup',
          _itemActivatedHandler: function(item) {
             this.hideItemActions();
             this._itemActionsButtons[item]['handler'].apply(this.getParent(), [this._activeItem.container, this._activeItem.key, this._activeItem.record]);
+         },
+
+         _getItemsContainer: function(){
+            return $('.controls-ItemActions__itemsContainer', this._container[0]);
          },
 
          canAcceptFocus: function() {
