@@ -360,21 +360,6 @@ define('js!SBIS3.CONTROLS.ListView',
                this._container.bind('tap', this._tapHandler.bind(this));
                this._container.bind('touchmove',this._mouseMoveHandler.bind(this));
             }
-            this._options.itemsActions = [{
-               name: 'moveUp',
-                  icon: 'sprite:icon-16 icon-ArrowUp icon-error',
-                  tooltip: 'Удалить',
-                  caption: 'Удалить',
-                  isMainAction: true,
-                  onActivated: this.moveRecordUp
-               },{
-               name: 'moveDown',
-               icon: 'sprite:icon-16 icon-ArrowDown icon-error',
-               tooltip: 'Удалить',
-               caption: 'Удалить',
-               isMainAction: true,
-               onActivated:  this.moveRecordDown
-            }]
          },
          _keyboardHover: function (e) {
             var selectedKey = this.getSelectedKey();
