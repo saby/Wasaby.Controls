@@ -23,7 +23,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.ISourceLoadable', [
        * @event onAfterCollectionLoad После загрузки коллекции
        * @param {$ws.proto.EventObject} event Дескриптор события.
        * @param {String} [mode=SBIS3.CONTROLS.Data.Collection.ISourceLoadable.MODE_REPLACE] Режим загрузки
-       * @param {SBIS3.CONTROLS.Data.Source.DataSet} [dataSet] Набор данных
+       * @param {SBIS3.CONTROLS.Data.Source.DataSet} dataSet Набор данных
        * @param {Object} target Объект, в который производится загрузка
        */
 
