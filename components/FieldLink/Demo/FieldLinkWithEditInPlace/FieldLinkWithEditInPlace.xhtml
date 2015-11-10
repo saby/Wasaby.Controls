@@ -37,7 +37,7 @@
                      <opt name="keyField" value="Ид"></opt>
                      <opt name='selectedItems' type='array' bind='МестоРаботы/Компания'/>
                      <opts name="list">
-                        <opt name="className" value="js!SBIS3.CONTROLS.DataGridView"/>
+                        <opt name="component" value="js!SBIS3.CONTROLS.DataGridView"/>
                         <opts name="options">
                            <opts name="columns" type="array">
                               <opts>
@@ -52,11 +52,8 @@
                            <opt name="keyField" value="Ид"></opt>
                         </opts>
                      </opts>
-                     <opts name="filterBindings" type="array">
-                        <opts>
-                           <opt name="itemField" value="text"/>
-                           <opt name="contextField" value="text1"/>
-                        </opts>
+                     <opts name="listFilter">
+                        <opt name="itemField" bind="text1" oneWay="true"/>
                      </opts>
                      <opts name="handlers">
                         <opt name="onInit" type="function">js!SBIS3.CONTROLS.Demo.FieldLinkWithEditInPlace:prototype.initFiledLink1</opt>
@@ -69,7 +66,7 @@
                      <opt name="displayField" value="Название"></opt>
                      <opt name="keyField" value="Ид"></opt>
                      <opts name="list">
-                        <opt name="className" value="js!SBIS3.CONTROLS.DataGridView"/>
+                        <opt name="component" value="js!SBIS3.CONTROLS.DataGridView"/>
                         <opts name="options">
                            <opts name="columns" type="array">
                               <opts>
@@ -84,9 +81,8 @@
                         </opts>
                         <opt name="keyField" value="Ид"></opt>
                      </opts>
-                     <opts>
-                        <opt name="itemField" value="text"/>
-                        <opt name="contextField" value="text2"/>
+                     <opts name="listFilter">
+                        <opt name="itemField" bind="text2" oneWay="true"/>
                      </opts>
                      <opts name="handlers">
                         <opt name="onInit" type="function">js!SBIS3.CONTROLS.Demo.FieldLinkWithEditInPlace:prototype.initFiledLink2</opt>
