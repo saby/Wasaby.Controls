@@ -12,9 +12,9 @@ define('js!SBIS3.CONTROLS.CommonHandlers',[],
 
             return $ws.helpers.question(message).addCallback(function(res) {
                if(res) {
-                  self.getDataSet().removeRecord(idArray);
+                  self._dataSet.removeRecord(idArray);
                   self.removeItemsSelection(isArray ? idArray : [idArray]);
-                  return self.getDataSource().sync(self.getDataSet()).addCallback(function () {
+                  return self._dataSource.sync(self._dataSet).addCallback(function () {
                      if ($ws.helpers.instanceOfModule(self, 'SBIS3.CONTROLS.TreeCompositeView') && self.getViewMode() === 'table') {
                         self.partialyReload(isArray ? idArray : [idArray]);
                      } else {
@@ -28,12 +28,12 @@ define('js!SBIS3.CONTROLS.CommonHandlers',[],
             this.sendCommand('ActivateItem', id);
          },
          moveRecordDown: function(tr, id, record) {
-            var nextItem = this.getNextItemById(id),
+            var nextItem = this._getNextItemById(id),
                nextId = nextItem.data('id');
             moveRecord.call(this, record, nextId, id, {after: nextId});
          },
          moveRecordUp: function(tr, id, record) {
-            var prevItem = this.getPrevItemById(id),
+            var prevItem = this._getPrevItemById(id),
                prevId = prevItem.data('id');
             moveRecord.call(this, record, prevId, id, {before: prevId});
          }
@@ -54,7 +54,7 @@ define('js!SBIS3.CONTROLS.CommonHandlers',[],
             );
          }
          deferred.addCallback(function(){
-            self.moveItemTo(current, moveTo, config.before ? true : false);
+            self._moveItemTo(current, moveTo, config.before ? true : false);
          }).addErrback(function(e){
             $ws.core.alert(e.message);
          });

@@ -331,18 +331,18 @@ define('js!SBIS3.CONTROLS.ListView',
 
             switch (e.which) {
                case $ws._const.key.up:
-                  var previousItem = this.getPrevItemById(selectedKey);
+                  var previousItem = this._getPrevItemById(selectedKey);
                   previousItem.length ? this.setSelectedKey(previousItem.data('id')) : this.setSelectedKey(selectedKey);
                   break;
                case $ws._const.key.down:
-                  var nextItem = this.getNextItemById(selectedKey);
+                  var nextItem = this._getNextItemById(selectedKey);
                   nextItem.length ? this.setSelectedKey(nextItem.data('id')) : this.setSelectedKey(selectedKey);
                   break;
                case $ws._const.key.enter:
                   this._elemClickHandler(selectedKey, this._dataSet.getRecordByKey(selectedKey), selectedItem);
                   break;
                case $ws._const.key.space:
-                  var nextItem = this.getNextItemById(selectedKey);
+                  var nextItem = this._getNextItemById(selectedKey);
                   this.toggleItemsSelection([selectedKey]);
                   nextItem.length ? this.setSelectedKey(nextItem.data('id')) : this.setSelectedKey(selectedKey);
                   break;
@@ -353,17 +353,19 @@ define('js!SBIS3.CONTROLS.ListView',
           * Возвращает следующий элемент
           * @param id
           * @returns {*}
+          * @private
           */
-         getNextItemById: function (id) {
+         _getNextItemById: function (id) {
             return this._getHtmlItem(id, true);
          },
          /**
           * Возвращает предыдущий элемент
           * @param id
           * @returns {jQuery}
+          * @private
           */
-         getPrevItemById: function (id) {
-            return this._getHtmlItem (id, false);
+         _getPrevItemById: function (id) {
+            return this._getHtmlItem(id, false);
          },
          /**
           *
@@ -1213,20 +1215,14 @@ define('js!SBIS3.CONTROLS.ListView',
             ListView.superclass.destroy.call(this);
          },
          /**
-          * Возвращает источник данных представления.
-          * @returns {*}
-          */
-         getDataSource: function(){
-            return this._dataSource;
-         },
-         /**
           * двигает элемент
           * Метод будет удален после того как перерисовка научится сохранять раскрытые узлы в дереве
           * @param {String} item1  - идентифкатор первого элемента
           * @param {String} anchor - идентифкатор второго элемента
           * @param {Boolean} before - если true то вставит перед anchor иначе после него
+          * @private
           */
-         moveItemTo: function(item, anchor, before){
+         _moveItemTo: function(item, anchor, before){
             //TODO метод сделан специально для перемещения элементов, этот костыль надо удалить и переписать через _redraw
             var itemsContainer = this._getItemsContainer(),
                itemContainer = itemsContainer.find('tr[data-id="'+item+'"]'),
