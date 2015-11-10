@@ -324,9 +324,9 @@ define('js!SBIS3.CONTROLS.ListView',
                this._container.bind('taphold', this._longTapHandler.bind(this));
                this._container.bind('tap', this._tapHandler.bind(this));
             }
+
          },
          _keyboardHover: function (e) {
-
             var selectedKey = this.getSelectedKey();
 
             switch (e.which) {
@@ -339,6 +339,7 @@ define('js!SBIS3.CONTROLS.ListView',
                   nextItem.length ? this.setSelectedKey(nextItem.data('id')) : this.setSelectedKey(selectedKey);
                   break;
                case $ws._const.key.enter:
+                  var selectedItem = $('[data-id="' + selectedKey + '"]', this._getItemsContainer());
                   this._elemClickHandler(selectedKey, this._dataSet.getRecordByKey(selectedKey), selectedItem);
                   break;
                case $ws._const.key.space:
