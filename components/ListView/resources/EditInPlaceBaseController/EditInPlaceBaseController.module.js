@@ -182,7 +182,7 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
             showAdd: function() {
                var
                    area = this._getEditingArea(),
-                   target = $('<div class="controls-ListView__item controls-EditInPlace__add"></div>');
+                   target = $('<div class="js-controls-ListView__item controls-EditInPlace__add"></div>');
                if (!area || area.editInPlace.validate()) {
                   target.appendTo(this._options.itemsContainer);
                   this._options.dataSource.create().addCallback(function (rec) {
@@ -231,8 +231,16 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                   this._editNextTarget(!event.shiftKey, true);
                }
             },
-            _onChildFocusOut: function () {
-               this.finishEditing(true);
+            _onChildFocusOut: function (event, control) {
+               if (!this._isChildControl(control)) {
+                  this.finishEditing(true);
+               }
+            },
+            _isChildControl: function(control) {
+               while (control && control !== this) {
+                  control = control.getParent() || control.getOpener();
+               }
+               return control === this;
             },
             destroy: function() {
                if (this.isEditing()) {
