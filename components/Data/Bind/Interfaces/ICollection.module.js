@@ -15,7 +15,7 @@ define('js!SBIS3.CONTROLS.Data.Bind.ICollection', [], function () {
        * @param {$ws.proto.EventObject} event Дескриптор события.
        * @param {String} action Действие, приведшее к изменению.
        * @param {Array} newItems Новые элементы коллеции.
-       * @param {Integer} newItemsIndex Индекс, в котором появились новые элементы.
+       * @param {Number} newItemsIndex Индекс, в котором появились новые элементы.
        * @param {Array} oldItems Удаленные элементы коллекции.
        * @param {Integer} oldItemsIndex Индекс, в котором удалены элементы.
        * @example
@@ -31,8 +31,8 @@ define('js!SBIS3.CONTROLS.Data.Bind.ICollection', [], function () {
       /**
        * @event onCollectionItemChange После изменения элемента коллекции
        * @param {$ws.proto.EventObject} event Дескриптор события.
-       * @param {*} item Измененный элемент коллеции.
-       * @param {Integer} index Индекс измененного элемента.
+       * @param {*} item Измененный элемент коллекции.
+       * @param {Number} index Индекс измененного элемента.
        * @param {String} [property] Измененное свойство элемента
        * @example
        * <pre>

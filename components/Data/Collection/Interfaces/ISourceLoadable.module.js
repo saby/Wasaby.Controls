@@ -13,26 +13,26 @@ define('js!SBIS3.CONTROLS.Data.Collection.ISourceLoadable', [
 
    var ISourceLoadable = /** @lends SBIS3.CONTROLS.Data.Collection.ISourceLoadable.prototype */{
       /**
-       * @event onBeforeCollectionLoad Перед загрузкой коллекции
+       * @event onBeforeCollectionLoad Перед загрузкой данных из источника
        * @param {$ws.proto.EventObject} event Дескриптор события.
        * @param {String} mode=SBIS3.CONTROLS.Data.Collection.ISourceLoadable.MODE_REPLACE Режим загрузки
-       * @param {Object} target Объект, в который производится загрузка
+       * @param {SBIS3.CONTROLS.Data.Collection.IEnumerable} target Объект, в который производится загрузка
        */
 
       /**
-       * @event onAfterCollectionLoad После загрузки коллекции
+       * @event onAfterCollectionLoad После загрузки данных из источника
        * @param {$ws.proto.EventObject} event Дескриптор события.
        * @param {String} [mode=SBIS3.CONTROLS.Data.Collection.ISourceLoadable.MODE_REPLACE] Режим загрузки
        * @param {SBIS3.CONTROLS.Data.Source.DataSet} dataSet Набор данных
-       * @param {Object} target Объект, в который производится загрузка
+       * @param {SBIS3.CONTROLS.Data.Collection.IEnumerable} target Объект, в который производится загрузка
        */
 
       /**
        * @event onBeforeLoadedApply Перед вставкой загруженных данных в коллекцию
        * @param {$ws.proto.EventObject} event Дескриптор события.
        * @param {String} [mode=SBIS3.CONTROLS.Data.Collection.ISourceLoadable.MODE_REPLACE] Режим загрузки
-       * @param {*} collection Коллекция, полученная из источника
-       * @param {Object} target Объект, в который производится загрузка
+       * @param {SBIS3.CONTROLS.Data.Collection.IEnumerable} collection Коллекция, полученная из источника
+       * @param {SBIS3.CONTROLS.Data.Collection.IEnumerable} target Объект, в который производится загрузка
        * @example
        * <pre>
        *    grid.subscribe('onBeforeLoadedApply', function(eventObject, mode, collection){
@@ -45,8 +45,8 @@ define('js!SBIS3.CONTROLS.Data.Collection.ISourceLoadable', [
        * @event onAfterLoadedApply После вставки загруженных данных в коллекцию
        * @param {$ws.proto.EventObject} event Дескриптор события.
        * @param {String} [mode=SBIS3.CONTROLS.Data.Collection.ISourceLoadable.MODE_REPLACE] Режим загрузки
-       * @param {*} collection Коллекция, полученная из источника
-       * @param {Object} target Объект, в который производится загрузка
+       * @param {SBIS3.CONTROLS.Data.Collection.IEnumerable} collection Коллекция, полученная из источника
+       * @param {SBIS3.CONTROLS.Data.Collection.IEnumerable} target Объект, в который производится загрузка
        * @example
        * <pre>
        *    grid.subscribe('onAfterLoadedApply', function(eventObject, mode, collection){
@@ -98,7 +98,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.ISourceLoadable', [
       },
       
       /**
-       * Возвращает общее кол-во записей выборки или признак, что еще есть записи (если общее кол-во записей неопределено)
+       * Возвращает общее кол-во записей выборки или признак, что еще есть записи (если общее кол-во записей не определено)
        * @returns {Number|Boolean}
        */
       getQueryTotal: function() {
