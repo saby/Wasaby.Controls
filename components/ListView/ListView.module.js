@@ -281,7 +281,7 @@ define('js!SBIS3.CONTROLS.ListView',
                   hoverMode: false, //todo EIP Сухоручкин: Переделать на mode: String, т.к. могут быть и другие виды
                   template: undefined,
                   onFieldChange: undefined
-               },
+               }
             }
          },
 
@@ -324,21 +324,6 @@ define('js!SBIS3.CONTROLS.ListView',
                this._container.bind('taphold', this._longTapHandler.bind(this));
                this._container.bind('tap', this._tapHandler.bind(this));
             }
-            this._options.itemsActions = [{
-               name: 'moveUp',
-                  icon: 'sprite:icon-16 icon-ArrowUp icon-error',
-                  tooltip: 'Удалить',
-                  caption: 'Удалить',
-                  isMainAction: true,
-                  onActivated: this.moveRecordUp
-               },{
-               name: 'moveDown',
-               icon: 'sprite:icon-16 icon-ArrowDown icon-error',
-               tooltip: 'Удалить',
-               caption: 'Удалить',
-               isMainAction: true,
-               onActivated:  this.moveRecordDown
-            }]
          },
          _keyboardHover: function (e) {
             var selectedKey = this.getSelectedKey();
