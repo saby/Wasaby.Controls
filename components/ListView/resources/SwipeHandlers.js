@@ -85,10 +85,7 @@
                      $.event.special.swipe.eventInProgress = false;
                   }
                }
-               // prevent scrolling
-               if (Math.abs(start.coords[0] - stop.coords[0]) > $.event.special.swipe.scrollTreshold) {
-                  event.preventDefault();
-               }
+
             };
 
             context.stop = function() {
@@ -130,6 +127,7 @@
    $.event.special.tap = {
       tapholdThreshold: 750,
       tapThreshold: 100,
+      xyThreshold: 10,
       setup: function() {
          var $this = $(this),
             self = this,
@@ -146,17 +144,27 @@
             isTaphold = false;
             var timer,
                target = event.target,
-               startTime = new Date().getTime();
-
+               startTime = new Date().getTime(), 
+               start = $.event.special.swipe.getLocation(event.originalEvent.touches[0]),
+               stop = start;
             function clearTapTimer() {
                clearTimeout(timer);
             }
+            
+            context.move = function(e){
+               stop = $.event.special.swipe.getLocation(e.originalEvent.touches[0]);
+            };
+
+            $(document).on('touchmove', context.move);
 
             timer = setTimeout(function() {
                isTaphold = true;
-               $.event.trigger($.Event('taphold', {
-                  target: target
-               }), undefined, self);
+               if (Math.abs(start.x - stop.x) + Math.abs(start.y - stop.y) < $.event.special.tap.xyThreshold){
+                  $.event.trigger($.Event('taphold', {
+                     target: target
+                  }), undefined, self);
+                  event.stopPropagation();
+               }
             }, $.event.special.tap.tapholdThreshold);
 
             $(document).one('touchend', function(event) {
@@ -167,6 +175,7 @@
                      target: target
                   }), undefined, self);
                }
+               $(document).off('touchmove', context.move);
             });
          };
 
@@ -181,7 +190,14 @@
             delete data.tap;
             $.removeData(this, 'tap-event');
          }
-         $(this).unbind('touchstart', context.strat);
+         if (context){
+            if (context.start){
+               $(this).unbind('touchstart', context.strat);
+            }
+            if (context.move){
+               $(this).unbind('touchmove', context.move);
+            }
+         }
       }
 
    };
