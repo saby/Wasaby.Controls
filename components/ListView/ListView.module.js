@@ -476,8 +476,10 @@ define('js!SBIS3.CONTROLS.ListView',
          /* +++++++++++++++++++++++++++ */
 
          _elemClickHandler: function (id, data, target) {
-            var $target = $(target),
-               elClickHandler = this._options.elemClickHandler;
+            var
+               $target = $(target),
+               elClickHandler = this._options.elemClickHandler,
+               res;
 
             this.setSelectedKey(id);
             if (this._options.multiselect) {
@@ -486,16 +488,20 @@ define('js!SBIS3.CONTROLS.ListView',
                   this.toggleItemsSelection([$target.closest('.controls-ListView__item').attr('data-id')]);
                }
                else {
-                  this._notify('onItemClick', id, data, target);
-                  this._elemClickHandlerInternal(data, id, target);
-                  elClickHandler && elClickHandler.call(this, id, data, target);
+                  res = this._notify('onItemClick', id, data, target);
+                  if (res !== false) {
+                     this._elemClickHandlerInternal(data, id, target);
+                     elClickHandler && elClickHandler.call(this, id, data, target);
+                  }
                }
             }
             else {
                this.setSelectedKeys([id]);
-               this._notify('onItemClick', id, data, target);
-               this._elemClickHandlerInternal(data, id, target);
-               elClickHandler && elClickHandler.call(this, id, data, target);
+               res = this._notify('onItemClick', id, data, target);
+               if (res !== false) {
+                  this._elemClickHandlerInternal(data, id, target);
+                  elClickHandler && elClickHandler.call(this, id, data, target);
+               }
             }
          },
 

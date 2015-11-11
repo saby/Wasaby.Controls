@@ -44,15 +44,17 @@ define('js!SBIS3.CONTROLS.TreeCompositeView', ['js!SBIS3.CONTROLS.TreeDataGridVi
          var $target = $(target),
              nodeID,
              handler = function() {
-                this._notify('onItemClick', id, data, target);
-                this._options.elemClickHandler && this._options.elemClickHandler.call(this, id, data, target);
-                nodeID = $target.closest('.controls-ListView__item').data('id');
-                if (this._dataSet.getRecordByKey(nodeID).get(this._options.hierField + '@')) {
-                   this.setCurrentRoot(nodeID);
-                   this.reload();
-                }
-                else {
-                   this._activateItem(id);
+                var res = this._notify('onItemClick', id, data, target);
+                if (res !== false) {
+                   this._options.elemClickHandler && this._options.elemClickHandler.call(this, id, data, target);
+                   nodeID = $target.closest('.controls-ListView__item').data('id');
+                   if (this._dataSet.getRecordByKey(nodeID).get(this._options.hierField + '@')) {
+                      this.setCurrentRoot(nodeID);
+                      this.reload();
+                   }
+                   else {
+                      this._activateItem(id);
+                   }
                 }
              }.bind(this);
 
