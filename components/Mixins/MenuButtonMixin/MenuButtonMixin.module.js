@@ -62,6 +62,7 @@ define('js!SBIS3.CONTROLS.MenuButtonMixin', ['js!SBIS3.CONTROLS.ContextMenu'], f
             closeByExternalClick: true,
             targetPart: true
          };
+         menuconfig = this._modifyPickerOptions(menuconfig);
          if (this._dataSource) {
             menuconfig.dataSource = this._dataSource;
          }
@@ -69,6 +70,10 @@ define('js!SBIS3.CONTROLS.MenuButtonMixin', ['js!SBIS3.CONTROLS.ContextMenu'], f
             menuconfig.items = this._options.items;
          }
          return new ContextMenu(menuconfig);
+      },
+
+      _modifyPickerOptions: function(opts) {
+         return opts;
       },
 
       _setPickerContent: function(){
