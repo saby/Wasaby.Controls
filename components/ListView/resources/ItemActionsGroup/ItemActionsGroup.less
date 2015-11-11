@@ -1,4 +1,4 @@
-/* Цветовая схема для опций записи */
+/* пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ */
 .controls-ListView {
   .controls-ItemActions {
     background-color: transparent;
@@ -67,7 +67,7 @@
          background: #F3F8FC;
       }
    }
-   
+
    .controls-ItemActions__menu-container {
       .controls-PopupMixin__closeButton{
          position: absolute;
@@ -92,12 +92,13 @@
    height: @list-view-actions-height;
    z-index: @list-view-actions-zindex;
    display: none;
-   .controls-ItemActions__itemsContainer{
-     &.controls-ItemActions-verAlign {
-       height: auto;
-       width: @list-view-actions-verAlign-width;
-       margin: @list-view-actions-verAlign-margin;
 
+   &.controls-ItemActions-verAlign {
+      height: auto;
+      width: @list-view-actions-verAlign-width;
+      margin: @list-view-actions-verAlign-margin;
+
+      .controls-ItemActions__itemsContainer {
          & > * {
             margin: @list-view-actions-margin-action-multiView;
          }
@@ -106,6 +107,9 @@
             margin-left: @list-view-actions-marginLeft-menu-multiView;
          }
       }
+   }
+
+   .controls-ItemActions__itemsContainer{
 
       > * {
          display: inline-block;
