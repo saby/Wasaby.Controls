@@ -139,6 +139,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
                   currentSelectedKeys: self.getSelectedKeys(),
                   target: self.getContainer(),
                   parent: this,
+                  opener: self,
                   multiselect: self._options.multiselect,
                   closeCallback: function (result) {
                      result && self.setSelectedKeys(result);

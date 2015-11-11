@@ -173,7 +173,6 @@ define('js!SBIS3.CONTROLS.DataGridView',
          else {
             return this._options.itemTemplate(item);
          }
-
       },
 
       _drawItemsCallback: function () {
@@ -214,22 +213,6 @@ define('js!SBIS3.CONTROLS.DataGridView',
          if (!this.isNowScrollingPartScroll()) {
             DataGridView.superclass._updateEditInPlaceDisplay.apply(this, arguments);
          }
-      },
-      /**
-       * todo EIP Сухоручкин: отказаться от метода и вообще создания кнопки добавления по месту В ПОЛЬЗУ КОМАНДЫ
-       * @returns {*}
-       * @private
-       */
-      _getElementForAddInPlaceButton: function() {
-         return this._container.find('.controls-DataGridView__addInPlace-container');
-      },
-      /**todo EIP Сухоручкин: отказаться от метода в сторону EditInPlaceController.getEditInPlaceContainer().appendTo(tableContainer)
-       *
-       * @returns {string}
-       * @private
-       */
-      _getAddInPlaceItem: function() {
-         return '<tr class="controls-DataGridView__tr controls-ListView__item">';
       },
       //********************************//
       // <editor-fold desc="PartScrollBlock">

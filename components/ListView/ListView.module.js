@@ -116,7 +116,6 @@ define('js!SBIS3.CONTROLS.ListView',
                $ws._const.key.right,
                $ws._const.key.left
             ],
-            _addInPlaceButton: null,
             _itemActionsGroup: null,
             _emptyData: undefined,
             _scrollWidth: $ws.helpers.getScrollWidth(),
@@ -270,7 +269,6 @@ define('js!SBIS3.CONTROLS.ListView',
                /**
                 * @typedef {Object} editInPlaceConfig
                 * @property {Boolean} enabled Включить редактирование по месту
-                * @property {Boolean} addInPlace Включить добавление по месту
                 * @property {Boolean} hoverMode Включить режим редактирования по наведению мыши
                 * @property {String} template Шаблон строки редактирования по месту
                 * @property {Function} onFieldChange Метод, вызываемый при смене значения в одном из полей редактирования по месту и потере фокуса этим полем
@@ -280,7 +278,6 @@ define('js!SBIS3.CONTROLS.ListView',
                 */
                editInPlace: {
                   enabled: false,
-                  addInPlace: false,
                   hoverMode: false, //todo EIP Сухоручкин: Переделать на mode: String, т.к. могут быть и другие виды
                   template: undefined,
                   onFieldChange: undefined
@@ -290,6 +287,7 @@ define('js!SBIS3.CONTROLS.ListView',
 
          $constructor: function () {
             this._publish('onChangeHoveredItem', 'onItemClick');
+            $ws.single.CommandDispatcher.declareCommand(this, 'newItem', this._newItem.bind(this));
             this._container.on('mousemove', this._mouseMoveHandler.bind(this))
                            .on('mouseleave', this._mouseLeaveHandler.bind(this));
             this._onWindowScrollHandler = this._onWindowScroll.bind(this);
@@ -314,9 +312,6 @@ define('js!SBIS3.CONTROLS.ListView',
             }
             this.setGroupBy(this._options.groupBy, false);
             this._drawEmptyData();
-            if (this._options.editInPlace.enabled && this._options.editInPlace.addInPlace && !this._editInPlace) {
-               this._initAddInPlace();
-            }
             ListView.superclass.init.call(this);
             this.reload();
             this._touchSupport = $ws._const.compatibility.touch;
@@ -569,7 +564,7 @@ define('js!SBIS3.CONTROLS.ListView',
                this._editInPlace = null;
                // Пересоздаем EditInPlace
                // todo EIP Сухоручкин: уберется когда выполним "этот метод надо завернуть в get'тер"
-               this.once('onDataLoaded', function() {
+               this.once('onDataLoad', function() {
                   this._initEditInPlace();
                }.bind(this));
             }
@@ -583,6 +578,11 @@ define('js!SBIS3.CONTROLS.ListView',
                //После релоада придется заново догружать данные до появлени скролла
                this._isLoadBeforeScrollAppears = true;
             }
+         },
+         _newItem: function() {
+            this._initEditInPlace();
+            this._editInPlace.showAdd();
+            return true;
          },
          /**
           * Метод установки/замены обработчика клика по строке.
@@ -611,27 +611,6 @@ define('js!SBIS3.CONTROLS.ListView',
             }
          },
 
-         _initAddInPlace: function() {
-            var
-                self = this,
-                itemsContainer = this._getItemsContainer();
-            this._addInPlaceButton = new Link({
-               name: 'controls-ListView__addInPlace-button',
-               icon: 'sprite:icon-16 icon-NewCategory',
-               caption: 'Новая запись',
-               element: $('<div>').appendTo(this._getElementForAddInPlaceButton())
-            });
-            this._addInPlaceButton.subscribe('onActivated', function() {
-               self._initEditInPlace();
-               self._editInPlace.showAdd($(self._getAddInPlaceItem()).appendTo(itemsContainer));
-            });
-         },
-         _getElementForAddInPlaceButton: function() {
-            return this._container.find('.controls-ListView__addInPlace-container');
-         },
-         _getAddInPlaceItem: function() {
-            return '<div class="controls-ListView__item"></div>'
-         },
          /**
           * todo EIP Сухоручкин: этот метод надо завернуть в get'тер
           * @private
@@ -640,9 +619,10 @@ define('js!SBIS3.CONTROLS.ListView',
             if (!this._editInPlace) {
                this._createEditInPlace();
                this._dataSet.subscribe('onRecordChange', function(event, record) {
-                  var item = this._getItemsContainer().find('.js-controls-ListView__item[data-id="' + record.getKey() + '"]');
+                  var item = this._getItemsContainer().find('.js-controls-ListView__item[data-id="' + record.getKey() + '"]').slice(0, 1);
                   if (item.length) {
-                     item.slice(0, 1).empty().append(this._drawItem(record).children());
+                     this._drawItem(record).insertAfter(item);
+                     item.remove();
                   }
                }.bind(this));
             }
@@ -652,12 +632,12 @@ define('js!SBIS3.CONTROLS.ListView',
             var
                controller = this._options.editInPlace.hoverMode ? EditInPlaceHoverController : EditInPlaceClickController,
                options = {
-                  addInPlaceButton: this._addInPlaceButton,
                   dataSet: this._dataSet,
                   ignoreFirstColumn: this._options.multiselect,
                   columns: this._options.columns,
                   dataSource: this._dataSource,
                   template: this._options.editInPlace.template,
+                  itemsContainer: this._getItemsContainer(),
                   element: $('<div>'),
                   handlers: {
                      onFieldChange: this._options.editInPlace.onFieldChange

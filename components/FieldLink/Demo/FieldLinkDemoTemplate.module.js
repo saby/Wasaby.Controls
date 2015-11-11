@@ -7,7 +7,8 @@ define('js!SBIS3.CONTROLS.Demo.FieldLinkDemoTemplate', [
    'js!SBIS3.CONTROLS.SbisJSONStrategy',
    'js!SBIS3.CONTROLS.StaticSource',
    'js!SBIS3.CONTROLS.DataGridView',
-   'js!SBIS3.CONTROLS.Button'
+   'js!SBIS3.CONTROLS.Button',
+   'css!SBIS3.CONTROLS.Demo.FieldLinkDemoTemplate'
 ], function (CompoundControl, dotTplFn, SbisJSONStrategy, StaticSource) {
    /**
     * SBIS3.CONTROLS.Demo.MySuggestTextBoxDS
@@ -19,7 +20,7 @@ define('js!SBIS3.CONTROLS.Demo.FieldLinkDemoTemplate', [
       _dotTplFn: dotTplFn,
       $protected: {
          _options: {
-
+            resizable: false
          }
       },
       $constructor: function() {

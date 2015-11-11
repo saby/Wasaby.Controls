@@ -24,36 +24,28 @@ define('js!SBIS3.CONTROLS.EditInPlaceHoverController',
          EditInPlaceHoverController = EditInPlaceBaseController.extend( /** @lends SBIS3.CONTROLS.EditInPlaceHoverController.prototype */ {
             $protected: {
                _options: {
-                  columns: [],
-                  ignoreFirstColumn: false,
-                  editFieldFocusHandler: undefined
                },
-               //Редактируемая область
-               _editing: null,
-               _areas: {
-                  first: null,
-                  second: null
-               }
+               _secondArea: undefined
             },
             $constructor: function() {
-               this._areas.first = this._initArea('first');
                if (!isMobileBrowser) {
-                  this._areas.second = this._initArea('second');
+                  this._secondArea = this._initArea('second');
+                  this._secondArea.editInPlace.getContainer().bind('keyup', this._areaHandlers.onKeyDown);
                }
             },
             _getEditingArea: function() {
-               return this._areas[this._editing];
+               return this._editing === 'first' ? this._area : this._editing === 'second' ? this._secondArea : null;
             },
             _getHoveredArea: function() {
-               return this._areas.first.hovered ? this._areas.first : this._areas.second.hovered ? this._areas.second : null;
+               return this._area.hovered ? this._area : this._secondArea.hovered ? this._secondArea : null;
             },
-            _initArea: function(id) {
+            _initArea: function() {
                var self = this;
                return {
                   editInPlace: new EditInPlace({
                      template: this._options.template,
                      columns: this._options.columns,
-                     element: $('<div id="' + id + '"></div>'),
+                     element: $('<div></div>'),
                      ignoreFirstColumn: this._options.ignoreFirstColumn,
                      focusCatch: this._focusCatch.bind(this),
                      context: this._getContextForArea(),
@@ -73,73 +65,48 @@ define('js!SBIS3.CONTROLS.EditInPlaceHoverController',
                   hovered: false
                };
             },
-            showEditing: function(target) {
-               var hoveredArea = this._getHoveredArea(),
-                   validate,
-                   area;
-               if (this._editing) {
-                  validate = this.finishEditing(true);
+            _showEditing: function(target) {
+               var hoveredArea = this._getHoveredArea();
+               if (target.hasClass('controls-editInPlace') || hoveredArea && hoveredArea.target.get(0) === target.get(0)) {
+                  //TODO: отказаться от first и second
+                  this._editing = this._area.hovered ? 'first' : 'second';
+                  hoveredArea.hovered = false;
+                  hoveredArea.editInPlace.activateFirstControl();
+               } else {
+                  this._editing = this._area.hovered ? 'second' : 'first';
+                  EditInPlaceHoverController.superclass._showEditing.apply(this, arguments);
                }
-
-               if (validate !== false) {
-                  if (target.hasClass('controls-editInPlace') || hoveredArea && hoveredArea.target.attr('data-id') === target.attr('data-id')) {
-                     this._editing = this._areas.second.hovered ? 'second' : 'first';
-                  } else {
-                     this._editing = this._areas.first.hovered ? 'second' : 'first';
-                  }
-                  area = this._getEditingArea();
-                  if (!target.hasClass('controls-editInPlace')) {
-                     this._showArea(area, target, null, true);
-                  }
-                  area.hovered = false;
-                  area.target.addClass('controls-editInPlace__editing');
-                  area.editInPlace.getContainer().mousemove(this._onMouseMove.bind(this));
-               }
+               this._getEditingArea().editInPlace.getContainer().mousemove(this._onMouseMove.bind(this));
             },
             /**
              * Завершить редактирование по месту
              * @param {Boolean} saveFields Сохранить изменения в dataSet
-             * @param {Boolean} notHide Не скрывать область editInPlace
              * @private
              */
             finishEditing: function(saveFields) {
                this._getEditingArea().editInPlace.getContainer().unbind('mousemove');
-               EditInPlaceHoverController.superclass.finishEditing.apply(this, arguments);
+               return EditInPlaceHoverController.superclass.finishEditing.apply(this, arguments);
             },
             /**
              * Обновить отображение редактирования по месту
              * @param {Object} target Элемент, для которого отображается редактирование по месту
-             * @param {Boolean} recalcPos Выполнять принудительный пересчёт позиции редактирования по месту
              * @private
              */
             updateHoveredArea: function(target) {
-               var hoveredArea,
-                   record;
-               if (target) {
-                  hoveredArea = this._getHoveredArea();
-                  if (hoveredArea && hoveredArea.target instanceof $) {
-                     hoveredArea.target.show();
-                  }
-                  if (!target.container) {
-                     this._hideHoveredArea();
-                  } else {
-                     record = this._options.dataSet.getRecordByKey(target.key);
-                     if (!record || record.get('Раздел@')) {
-                        this._hideHoveredArea();
-                     } else if (!this._editing || this._areas[this._editing].record.getKey() !== target.key) {
-                        hoveredArea = this._areas[this._editing == 'first' ? 'second' : 'first'];
-                        if (isMobileBrowser) {
-                           if (this._editing) {
-                              this.finishEditing(true, true);
-                           } else {
-                              this._editing = 'first';
-                           }
-                           this._getEditingArea.editInPlace.getContainer().bind('keyup', this._areaHandlers.onKeyDown);
-                        }
-                        hoveredArea.hovered = true;
-                        this._showArea(hoveredArea, target.container);
+               var hoveredArea = this._editing == 'first' ? this._secondArea : this._area;
+               this._hideHoveredArea();
+               if (target.container && !target.container.hasClass('controls-ListView__folder')) {
+                  if (isMobileBrowser) {
+                     if (this._editing) {
+                        this.finishEditing(true, true);
+                     } else {
+                        this._editing = 'first';
                      }
                   }
+                  hoveredArea.hovered = true;
+                  hoveredArea.target = target.container;
+                  hoveredArea.record = this._options.dataSet.getRecordByKey(target.key);
+                  this._showArea(hoveredArea, true);
                }
             },
             /**
@@ -148,7 +115,11 @@ define('js!SBIS3.CONTROLS.EditInPlaceHoverController',
              */
             _hideHoveredArea: function() {
                var area  = this._getHoveredArea();
-               area && area.editInPlace.hide();
+               if (area) {
+                  area.hovered = false;
+                  area.editInPlace.hide();
+                  area.target.show();
+               }
             },
             _onChildControlFocusIn: function(event, control) {
                this._options.editFieldFocusHandler && this._options.editFieldFocusHandler(control);
@@ -160,8 +131,8 @@ define('js!SBIS3.CONTROLS.EditInPlaceHoverController',
              * @private
              */
             _onChildFocusIn: function(e, control) {
-               var target = control ? control.getContainer().closest('.controls-editInPlace') : e._target.getContainer();
-               if (!this._editing || target.attr('id') !== this._getEditingArea().editInPlace.getContainer().attr('id')) {
+               var target = control.getContainer().closest('.controls-editInPlace');
+               if (!this._editing || target.get(0) !== this._getEditingArea().editInPlace.getContainer().get(0)) {
                   this.showEditing(target);
                }
             },
@@ -171,28 +142,19 @@ define('js!SBIS3.CONTROLS.EditInPlaceHoverController',
             },
             /**
              * Обработчик по наведению мыши на область editInPlace
-             * @param e
              * @private
              */
-            _onMouseMove: function(e) {
+            _onMouseMove: function() {
                var hoveredArea = this._getHoveredArea();
-               //Если имеется отображаемая область, а мышь уведена на редактируемую, то скрываем отображаемую область
-               if (hoveredArea && this._editing && e.currentTarget.id === this._getEditingArea().editInPlace.getContainer().attr('id')) {
-                  hoveredArea.target.mouseleave();
-               }
+               hoveredArea && hoveredArea.target.mouseleave();
             },
             destroy: function() {
                EditInPlaceHoverController.superclass.destroy.apply(this, arguments);
-               if (this._editing) {
-                  this._getEditingArea().editInPlace.getContainer().unbind('keyup', this._areaHandlers.onKeyDown);
-                  this._editing = null;
-               }
                if (!isMobileBrowser) {
-                  this._areas.second.editInPlace.destroy();
-                  this._areas.second = null;
+                  this._secondArea.editInPlace.getContainer().unbind('keyup', this._areaHandlers.onKeyDown);
+                  this._secondArea.editInPlace.destroy();
+                  this._secondArea = null;
                }
-               this._areas.first.editInPlace.destroy();
-               this._areas.first = null;
             }
          });
 
