@@ -26,6 +26,12 @@ define('js!SBIS3.CONTROLS.SuggestTextBox', [
          this._options.observableControls.unshift(this);
 
          this.getContainer().addClass('controls-SuggestTextBox');
+      },
+      init: function(){
+         var ccb = new $ws.proto.ControlContextBinder();
+         ccb.defineBinding('text', this.getName(), false, undefined, undefined, true);
+         ccb.bindControl(this, this.getLinkedContext(), true);
+         SuggestTextBox.superclass.init.call(this);
       }
    });
 

@@ -143,7 +143,7 @@ define('js!SBIS3.CONTROLS.PrintUnloadBase', [
          if(selectedNumRecords > numOfRecords){
             $ws.helpers.question('Операция займет продолжительное время. Провести операцию?', {}, self).addCallback(function(answer){
                if (answer) {
-                  self._getView()._dataSource.query(self._getView()._filter, self._getView()._sorting, 0, selectedNumRecords).addCallback(function (dataSet) {
+                  self._getView()._callQuery(self._getView()._filter, self._getView()._sorting, 0, selectedNumRecords).addCallback(function (dataSet) {
                      self._applyOperation(dataSet);
                   });
                }

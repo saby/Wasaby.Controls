@@ -82,7 +82,7 @@ Server.prototype.clear = function (callback) {
       port: config.params.port,
       shutdown: true
    });
-   exec(this.executable + '' + params.join(' '), {
+   exec(this.executable + ' ' + params.join(' '), {
       cwd: this.docRoot
    }, callback);
 };
