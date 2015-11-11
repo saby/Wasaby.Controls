@@ -73,7 +73,6 @@ define('js!SBIS3.CONTROLS.MenuIcon', ['js!SBIS3.CONTROLS.IconButton', 'js!SBIS3.
       setItems: function(items) {
          MenuIcon.superclass.setItems.call(this, items);
          var displayValue = (this.getItems().length > 1) ? 'inline-block' : 'none';
-         $('.controls-MenuButton__arrowDown',this._container).css('display', displayValue);
       },
 
       _clickHandler: function () {
