@@ -139,8 +139,9 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                this._showArea(area, notActivate);
             },
             _showArea: function(area, notActivate) {
-               area.editInPlace.getContainer().insertBefore(area.target);
-               area.target.hide();
+               area.editInPlace.getContainer()
+                  .insertAfter(area.target)
+                  .attr('data-id', area.record.getKey());
                area.editInPlace.show();
                area.target.hide();
                area.editInPlace.updateFields(area.record);
