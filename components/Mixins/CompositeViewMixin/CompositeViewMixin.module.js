@@ -179,7 +179,7 @@ define('js!SBIS3.CONTROLS.CompositeViewMixin', ['html!SBIS3.CONTROLS.CompositeVi
             }
          },
          _getItemActionsAlign: function(viewMode, hoveredItem) {
-            if (hoveredItem.container.hasClass('js-controls-CompositeView__squareItem')){
+            if (hoveredItem.container.hasClass('js-controls-CompositeView__verticalItemActions')){
                return 'vertical'; 
             } else {
                return 'horizontal';
