@@ -191,10 +191,12 @@ define('js!SBIS3.CONTROLS.hierarchyMixin', [], function () {
          var
             item = this._dataSet.getRecordByKey(id),
             meta = {
+               id: id,
+               item: item,
                hierField : this._options.hierField
             };
 
-         this._notify('onItemActivate', id, item, meta);
+         this._notify('onItemActivate', meta);
       }
 
    };

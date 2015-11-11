@@ -1081,7 +1081,7 @@ define('js!SBIS3.CONTROLS.ListView',
          _activateItem : function(id) {
             var
                item = this._dataSet.getRecordByKey(id);
-            this._notify('onItemActivate', id, item, {});
+            this._notify('onItemActivate', {id: id, item: item});
          },
          _addItem : function() {
            //TODO если есть редактирование по месту запусть его

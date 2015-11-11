@@ -65,8 +65,8 @@ define('js!SBIS3.CONTROLS.Browser', [
          Browser.superclass.init.apply(this, arguments);
 
          this._view = this._getView();
-         this._view.subscribe('onItemActivate', function(e, id, item, itemMeta) {
-            self._notifyOnEditByActivate(id, item, itemMeta);
+         this._view.subscribe('onItemActivate', function(e, itemMeta) {
+            self._notifyOnEditByActivate(itemMeta);
          });
 
 
@@ -112,7 +112,7 @@ define('js!SBIS3.CONTROLS.Browser', [
 
       addItem: function(metaData) {
          //При создании записи в простом случае просто зовем onEdit с пустыми параметрами
-         this._notify('onEdit', null, null);
+         this._notify('onEdit', {id: null, item: null});
       },
 
       _getLinkedControl: function(name) {
@@ -140,8 +140,8 @@ define('js!SBIS3.CONTROLS.Browser', [
          return this._getLinkedControl('browserOperationsPanel');
       },
 
-      _notifyOnEditByActivate: function(id, item, itemMeta) {
-         this._notify('onEdit', id, item, itemMeta)
+      _notifyOnEditByActivate: function(itemMeta) {
+         this._notify('onEdit', itemMeta)
       }
 
    });
