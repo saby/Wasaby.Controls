@@ -145,8 +145,6 @@ define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManag
             $ws.single.EventBus.channel('WindowChangeChannel').subscribe('onDocumentClick', this._clickHandler, this);
          }
          
-         $ws.single.CommandDispatcher.declareCommand(this, 'close', this._close);
-
          var trg = $ws.helpers.trackElement(this._options.target, true);
          //перемещаем вслед за таргетом
          trg.subscribe('onMove', function () {
@@ -700,10 +698,9 @@ define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManag
          return spaces;
       },
 
-      _close: function(){
+      close: function(){
          this.hide();
          this.destroy();
-         return true;
       },
 
       _addOffset: function (offset1, offset2) {
