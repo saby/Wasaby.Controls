@@ -257,7 +257,7 @@ define('js!SBIS3.CONTROLS.TreeCompositeView', ['js!SBIS3.CONTROLS.TreeDataGridVi
                   } else if (self._limit !== undefined) {
                      limit = (self._folderOffsets.hasOwnProperty(branchId) ? self._folderOffsets[branchId] : 0) + self._limit;
                   }
-                  return self._dataSource.query(filter, self._sorting, self._offset, limit)
+                  return self._callQuery(filter, self._sorting, self._offset, limit)
                      .addCallback(function(dataSet) {
                         branchesData[branchId] = dataSet;
                         return dataSet;
