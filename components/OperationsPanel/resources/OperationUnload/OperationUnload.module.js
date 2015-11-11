@@ -98,25 +98,58 @@ define('js!SBIS3.CONTROLS.OperationUnload', [
          }
          this.processSelectedOperation(ds.getCount());
       },
+      /**
+       * Обработка результатов выбора пользователя (после показа диалога выбора количества выгружаемых записей)
+       * Если есть возможность, формируем фильтры и выполняем выгрузку на сервере через GET-запрос
+       * Если у нас возможно
+       * @param selectedNumRecords сколько записей нужно выгружать
+       */
       processSelectedOperation: function(selectedNumRecords){
-         var view =  this._getView(),
-             dataSource = view._dataSource,
-             columns,
-             fields = [],
-             titles = [],
-             filter,
-             queryParams,
-             cfg = {},
-             record,
+         var record,
              objectArr = [],
-             openedPath,
-             hierField;
+             cfg = {};
          //TODO когда появится воможность выгружать в PDF надо убрать проверку на Excel
          //Для Excel всегда выгружаем на сервере
          if (this._isClientUnload()) {
             OperationUnload.superclass.processSelectedOperation.apply(this, arguments);
             return;
          }
+         cfg = this.prepareGETOperationFilter(selectedNumRecords);
+
+         record = this._dataSet.getRecordByKey(this._currentItem).getRaw();
+         if (record.unloadMethod) {
+            objectArr = record.unloadMethod.split('.');
+            $ws.helpers.saveToFile(objectArr[0], objectArr[1], cfg, undefined, true);
+         }
+      },
+      /**
+       * Метод для формирования параметров фильтрации выгружаемого на сервере файла.
+       * Чтобы сформировать свои параметры этот метод можно переопределить
+       * @example
+       * <pre>
+       *    //В своем прикладном модуле (myModule), отнаследованном от OperationUnload
+       *    prepareGETOperationFilter: function(selectedNumRecords){
+       *       var cfg = myModule.superclass.processSelectedOperation.apply(this, arguments);
+       *       //Сформируем свой набор колонок для выгрузки
+       *       cfg['Поля'] = this.getUserFields();
+       *       cfg['Заголовки'] = this.getUserTitles();
+       *       return cfg;
+       *    }
+       * </pre>
+       * @param selectedNumRecords сколько записей нужно выгружать
+       * @returns {{}}
+       */
+      prepareGETOperationFilter: function(selectedNumRecords){
+         var view =  this._getView(),
+               dataSource = view._dataSource,
+               columns,
+               fields = [],
+               titles = [],
+               filter,
+               queryParams,
+               cfg = {},
+               openedPath,
+               hierField;
          /**
           * Здесь обрабатываем выгрузку в Excel на сервере
           */
@@ -131,7 +164,7 @@ define('js!SBIS3.CONTROLS.OperationUnload', [
             hierField = view.getHierField();
             cfg['Иерархия'] = view._options.hierField;
             openedPath = view.getOpenedPath();
-           // - getOpenedPath - 'это работает только у дерева!!
+            // - getOpenedPath - 'это работает только у дерева!!
             if (openedPath && !Object.isEmpty(openedPath)) {
 
                filter[hierField] = filter[hierField] === undefined ? [view.getCurrentRoot()] : filter[hierField];
@@ -156,13 +189,7 @@ define('js!SBIS3.CONTROLS.OperationUnload', [
             'Название' : this._getUnloadFileName(),
             'fileDownloadToken' : ('' + Math.random()).substr(2)* 1
          });
-         record = this._dataSet.getRecordByKey(this._currentItem).getRaw();
-         if (record.unloadMethod) {
-            objectArr = record.unloadMethod.split('.');
-            $ws.helpers.saveToFile(objectArr[0], objectArr[1], cfg, undefined, true);
-         }
-
-
+         return cfg;
       },
       applyOperation: function(dataSet, cfg){
          var p = new Unloader(cfg);
