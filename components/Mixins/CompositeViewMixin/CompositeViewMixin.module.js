@@ -187,11 +187,10 @@ define('js!SBIS3.CONTROLS.CompositeViewMixin', ['html!SBIS3.CONTROLS.CompositeVi
             var itemActions = this.getItemsActions().getContainer(),
                 viewMode = this.getViewMode(),
                 actionsAlign = this._getItemActionsAlign(viewMode, hoveredItem),
-                isTableView = viewMode === 'table',
                 height;
 
             this._itemActionsAlign[actionsAlign].call(itemActions);
-            if(isTableView) return parentFunc.call(this, hoveredItem);
+            if(viewMode === 'table') return parentFunc.call(this, hoveredItem);
 
             height = itemActions[0].offsetHeight || itemActions.height();
 
@@ -199,7 +198,7 @@ define('js!SBIS3.CONTROLS.CompositeViewMixin', ['html!SBIS3.CONTROLS.CompositeVi
                top: actionsAlign === 'horizontal' ?
                   hoveredItem.position.top + ((hoveredItem.size.height > height) ? hoveredItem.size.height - height : 0 ) :
                   hoveredItem.position.top,
-               right: isTableView ? 5 : this._container[0].offsetWidth - (hoveredItem.position.left + hoveredItem.size.width)
+               right: this._container[0].offsetWidth - (hoveredItem.position.left + hoveredItem.size.width)
             };
          },
 
