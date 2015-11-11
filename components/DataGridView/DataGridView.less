@@ -1,5 +1,5 @@
 .controls-DataGridView {
-   overflow: auto;
+   overflow-y: auto;
    .controls-ListView__item {
       &:extend(.controls-ListView .controls-ListView__item all);
    }
@@ -17,10 +17,6 @@
       .controls-DataGridView__scrolledCell {
          .transition(left 0.5s);
       }
-   }
-
-   &.controls-DataGridView__with-partScroll {
-      overflow-x: hidden;
    }
 
    .controls-DataGridView__table {
