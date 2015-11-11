@@ -155,23 +155,25 @@ define('js!SBIS3.CONTROLS.Menu', [
       _checkIcons: function(){
       	var tree = this._dataSet._indexTree;
       	for (var i in tree){
-      		var hasIcon = false,
-      			childs = tree[i];
-      		if (tree.hasOwnProperty(i)){
-      			for (var j = 0; j < childs.length; j++){
-      				if (this._dataSet.getRecordByKey(childs[j]).get('icon')){
-      					hasIcon = true;
-      					break;
-      				}
-      			}
-      			if (hasIcon) {
-      				for (var j = 0; j < childs.length; j++){
-	      				if (!this._dataSet.getRecordByKey(childs[j]).get('icon')){
-	      					this._dataSet.getRecordByKey(childs[j]).set('icon', 'empty');
-	      				}
-	      			}
-      			}
-      		}
+            if (tree.hasOwnProperty(i)) {
+         		var hasIcon = false,
+         			childs = tree[i];
+         		if (tree.hasOwnProperty(i)){
+         			for (var j = 0; j < childs.length; j++){
+         				if (this._dataSet.getRecordByKey(childs[j]).get('icon')){
+         					hasIcon = true;
+         					break;
+         				}
+         			}
+         			if (hasIcon) {
+         				for (var j = 0; j < childs.length; j++){
+   	      				if (!this._dataSet.getRecordByKey(childs[j]).get('icon')){
+   	      					this._dataSet.getRecordByKey(childs[j]).set('icon', 'empty');
+   	      				}
+   	      			}
+         			}
+         		}
+            }
       	}
       },
       _drawItemsCallback : function() {
