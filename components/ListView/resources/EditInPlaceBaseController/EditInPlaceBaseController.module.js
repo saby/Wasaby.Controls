@@ -4,9 +4,10 @@
 
 define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
    [
-      'js!SBIS3.CORE.CompoundControl'
+      'js!SBIS3.CORE.CompoundControl',
+      'js!SBIS3.CONTROLS.EditInPlace'
    ],
-   function (CompoundControl) {
+   function (CompoundControl, EditInPlace) {
 
       'use strict';
 
@@ -22,17 +23,46 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
          EditInPlaceBaseController = CompoundControl.extend(/** @lends SBIS3.CONTROLS.EditInPlaceBaseController.prototype */ {
             $protected: {
                _options: {
+                  template: undefined,
+                  columns: [],
+                  ignoreFirstColumn: false,
+                  editFieldFocusHandler: undefined,
                   dataSource: undefined,
                   dataSet: undefined,
-                  addInPlaceButton: undefined
+                  itemsContainer: undefined
                },
                _area: undefined,
+               _editing: false,
                _areaHandlers: null
             },
             $constructor: function () {
                this._publish('onFieldChange');
                this._areaHandlers = {
                   onKeyDown: this._onKeyDown.bind(this)
+               };
+               this._area = this._initArea();
+               this._area.editInPlace.getContainer().bind('keyup', this._areaHandlers.onKeyDown);
+            },
+            _initArea: function() {
+               var self = this;
+               return {
+                  editInPlace: new EditInPlace({
+                     template: this._options.template,
+                     columns: this._options.columns,
+                     element: $('<div>'),
+                     ignoreFirstColumn: this._options.ignoreFirstColumn,
+                     context: this._getContextForArea(),
+                     focusCatch: this._focusCatch.bind(this),
+                     parent: this,
+                     handlers: {
+                        onChildFocusOut: this._onChildFocusOut.bind(this),
+                        onFieldChange: function(event, fieldName, record) {
+                           event.setResult(self._notify('onFieldChange', fieldName, record));
+                        }
+                     }
+                  }),
+                  record: null,
+                  target: null
                };
             },
             _getContextForArea: function () {
@@ -69,94 +99,111 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                } else if (key === $ws._const.key.enter || key === $ws._const.key.down || key === $ws._const.key.up) {
                   e.stopImmediatePropagation();
                   e.preventDefault();
-                  this._editNextTarget(key === $ws._const.key.down || key === $ws._const.key.enter, key === $ws._const.key.enter);
+                  this._editNextTarget(key === $ws._const.key.down || key === $ws._const.key.enter);
                }
             },
-            _editNextTarget: function (editNextRow, closeIfLast) {
-               var
-                  result,
-                  self = this,
-                  area = this._getEditingArea(),
-                  newTarget = area.target[editNextRow ? 'next' : 'prev']('.js-controls-ListView__item');
-               while (newTarget.hasClass('controls-editInPlace')) {
-                  newTarget = newTarget[editNextRow ? 'next' : 'prev']('.js-controls-ListView__item');
-               }
+            _editNextTarget: function (editNextRow) {
+               var area = this._getEditingArea(),
+                  //TODO: в ie8 работать не будет из за :not()
+                  newTarget = area.target[editNextRow ? 'nextAll' : 'prevAll']('.js-controls-ListView__item:not(".controls-editInPlace")').slice(0, 1);
                if (newTarget.length && !newTarget.hasClass('controls-ListView__folder')) {
-                  result = this.finishEditing(true, true);
-                  if (result instanceof $ws.proto.Deferred) {
-                     result.addCallback(function () {
-                        self.showEditing(newTarget);
-                     });
-                  } else {
-                     this.showEditing(newTarget);
-                  }
-               } else if (closeIfLast) {
-                  this.finishEditing(true);
+                  this.showEditing(newTarget);
+               } else if (!newTarget.length && editNextRow) {
+                  this.showAdd();
                }
             },
-            _showArea: function (area, target, record, activateControl) {
+            showEditing: function (target, record) {
+               var result,
+                   self = this;
+               if (this._editing) {
+                  result = this.finishEditing(true);
+               }
+               if (result instanceof $ws.proto.Deferred) {
+                  result.addCallback(function() {
+                     self._showEditing(target, record);
+                  });
+               } else if (result !== false) {
+                  this._showEditing(target, record);
+               }
+            },
+            _showEditing: function(target, record, notActivate) {
+               var area,
+                   isAdd = target.hasClass('controls-EditInPlace__add');
+               if (!this._editing) {
+                  this._editing = true;
+               }
+               area = this._getEditingArea();
+               area.addInPlace = isAdd;
                area.target = target;
                area.record = record || this._options.dataSet.getRecordByKey(target.data('id'));
-               area.editInPlace.getContainer().attr('data-id', area.record.getKey())
-                   .bind('keyup', this._areaHandlers.onKeyDown)
-                   .insertAfter(target);
+               this._showArea(area, notActivate);
+            },
+            _showArea: function(area, notActivate) {
+               area.editInPlace.getContainer()
+                  .insertAfter(area.target)
+                  .attr('data-id', area.record.getKey());
                area.editInPlace.show();
                area.target.hide();
                area.editInPlace.updateFields(area.record);
-               if (activateControl !== undefined) {
+               if (notActivate !== true) {
                   area.editInPlace.activateFirstControl();
                }
             },
             finishEditing: function(saveFields) {
                var
-                   self = this,
-                   result,
-                   validate = this.validate(),
-                   area = this._getEditingArea();
+                  self = this,
+                  result,
+                  area = this._getEditingArea(),
+                  validate = area.editInPlace.validate();
                if (validate || !saveFields) {
                   this._editing = null;
                   area.editInPlace.hide();
-                  area.editInPlace.getContainer().unbind('keyup', this._areaHandlers.onKeyDown);
-                  area.target.removeClass('controls-editInPlace__editing');
                   area.target.show();
                   if (saveFields) {
                      result = area.editInPlace.applyChanges();
                      if (result instanceof $ws.proto.Deferred) {
                         result.addCallback(function () {
-                           self._syncDataSource(area);
+                           self._finishEditing(area, saveFields);
                         });
                         return result;
                      }
-                     this._syncDataSource(area);
-                  } else if (this._options.addInPlaceButton) {
-                     this._options.addInPlaceButton.show();
                   }
-                  //TODO: переписать это место
-                  if (area.addInPlace) {
-                     if (!saveFields) {
-                        area.target.remove();
-                     }
-                     area.addInPlace = false;
-                  }
+                  this._finishEditing(area, saveFields);
                }
                return validate;
             },
-            showAdd: function(target) {
-               this._options.dataSource.create().addCallback(function (rec) {
-                  rec = this._options.dataSet._prepareRecordForAdd(rec);
-                  target.attr('data-id', rec.getKey());
-                  this.showEditing(target, rec, true);
-               }.bind(this));
+            _finishEditing: function(area, saveFields) {
+               if (saveFields) {
+                  this._syncDataSource(area);
+               }
+               if (area.addInPlace) {
+                  this._removeAddInPlace(area, saveFields);
+               }
+            },
+            showAdd: function() {
+               var
+                   area = this._getEditingArea(),
+                   target = $('<div class="js-controls-ListView__item controls-EditInPlace__add"></div>');
+               if (!area || area.editInPlace.validate()) {
+                  target.appendTo(this._options.itemsContainer);
+                  this._options.dataSource.create().addCallback(function (rec) {
+                     rec = this._options.dataSet._prepareRecordForAdd(rec);
+                     target.attr('data-id', rec.getKey());
+                     this.showEditing(target, rec);
+                  }.bind(this));
+               }
+            },
+            _removeAddInPlace: function(area, saveFields) {
+               area.target.removeClass('.controls-EditInPlace__add');
+               area.addInPlace = false;
+               if (!saveFields) {
+                  area.target.remove();
+               }
             },
             _syncDataSource: function(area) {
                var self = this;
                if (area.addInPlace) {
                   self._options.dataSet.push(area.record);
-               }
-               if (self._options.addInPlaceButton) {
-                  self._options.dataSource.once('onDataSync', function () {
-                     self._options.addInPlaceButton.show();
-                  }.bind(self));
                }
                self._options.dataSource.sync(self._options.dataSet);
             },
@@ -185,13 +232,24 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                   this._editNextTarget(!event.shiftKey, true);
                }
             },
-            _onChildFocusOut: function () {
-               this.finishEditing(true);
+            _onChildFocusOut: function (event, control) {
+               if (!this._isChildControl(control)) {
+                  this.finishEditing(true);
+               }
+            },
+            _isChildControl: function(control) {
+               while (control && control !== this) {
+                  control = control.getParent() || control.getOpener();
+               }
+               return control === this;
             },
             destroy: function() {
                if (this.isEditing()) {
                   this.finishEditing();
                }
+               this._area.editInPlace.getContainer().unbind('keyup', this._areaHandlers.onKeyDown);
+               this._area.editInPlace.destroy();
+               this._area = null;
                EditInPlaceBaseController.superclass.destroy.apply(this, arguments);
             }
          });
