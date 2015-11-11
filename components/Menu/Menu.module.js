@@ -153,7 +153,6 @@ define('js!SBIS3.CONTROLS.Menu', [
       //По нормальному можно было бы сделать через css, но имеются три различных отступа слева у пунктов
       //для разных меню и совершенно не ясно как это делать.
       _checkIcons: function(){
-      	console.log(this._dataSet);
       	var tree = this._dataSet._indexTree;
       	for (var i in tree){
       		var hasIcon = false,
