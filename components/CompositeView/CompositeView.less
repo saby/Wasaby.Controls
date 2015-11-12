@@ -1,4 +1,6 @@
 .controls-CompositeView {
+
+   /* Стили для режима 'Список' */
   .controls-CompositeView__listItem {
     height: @data-grid-cell-height;
     line-height: @data-grid-cell-height;
@@ -10,9 +12,10 @@
     &.controls-ListView__folder {
       padding: 0;
       display: inline-block;
-      width: 229px;
+      width: 228px;
       height: 190px;
-      border: none;
+      border: @multiView-default-folder-border;
+
       .controls-CompositeView__tileImg-container {
         display: block;
         width: 120px;
@@ -51,35 +54,18 @@
     background: @multiView-default-item-bg;
   }
 
-  &.controls-CompositeView-tile {
-    .controls-CompositeView__itemsContainer {
-      padding: @multiView-tile-itemsContainer-padding;
-    }
-  }
-
+   /* Стили для выделенных элементов */
    .controls-ListView__item__selected {
+
       &.controls-CompositeView__listItem,
       &.controls-CompositeView__tileItem {
          background-color: @default-itemHover-color;
       }
 
       &.controls-CompositeView__verticalItemActions {
-         &:before {
-            top: 0;
-            position: absolute;
-            bottom: 0;
-            border: @multiView-tile-selected-item-border;
-            left: 0;
-            right: 0;
-            display: block;
-            content: '';
-         }
+         border-color: @multiView-tile-selected-item-border-color;
       }
-      &.controls-CompositeView__tileItem.controls-ListView__folder {
-         &:before {
-            bottom: 1px;
-         }
-      }
+
       &.controls-CompositeView__listItem:not(.controls-ListView__folder) {
          background-image: url('img/rowSelect.png');
          background-position: left top;
@@ -90,25 +76,27 @@
       height: 27px;
       line-height: 27px;
    }
+
+   /* Стили для режима 'Плитки' */
   .controls-CompositeView__tileItem {
     display: inline-block;
     vertical-align: top;
     cursor: pointer;
     text-align: left;
-    border: @multiView-tile-item-border;
+    border: @multiView-default-folder-border;
     min-width: @multiView-tile-item-min-width;
     min-height: @multiView-tile-item-min-height;
-    margin: @multiView-tile-item-margin;
-    &.controls-ListView__hoveredItem {
+
+     &.controls-ListView__hoveredItem {
       background: @data-grid-row-hover-bg;
       .controls-CompositeView__tileImg {
         box-shadow: @multiView-tile-item-image-box-shadow;
       }
     }
-    &.controls-ListView__folder {
-      width: 229px;
+
+     &.controls-ListView__folder {
+      width: 228px;
       height: 190px;
-      border: none;
       .controls-CompositeView__tileImg-container {
         display: block;
         width: 120px;
