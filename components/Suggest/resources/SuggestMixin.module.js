@@ -136,21 +136,6 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
          },
 
          /**
-          * @var {Object} Сформированный фильтр, передаваемый в контрол списка сущностей
-          */
-         _filter: {},
-
-         /**
-          * @var {Boolean} Признак изменения какого-либо значения в фильтре
-          */
-         _filterChanged: false,
-
-         /**
-          * @var {Object} Соответствие полей для подстановки в фильтр
-          */
-         _filterBindings: {},
-
-         /**
           * @var {Object} Соответствие полей для подстановки в контекст
           */
          _resultBindings: {},

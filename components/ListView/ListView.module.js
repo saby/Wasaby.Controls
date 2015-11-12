@@ -868,7 +868,7 @@ define('js!SBIS3.CONTROLS.ListView',
             //Если в догруженных данных в датасете пришел n = false, то больше не грузим.
             if (loadAllowed && this._hasNextPage(this._dataSet.getMetaData().more, this._infiniteScrollOffset) && this._hasScrollMore && !this._isLoading()) {
                this._showLoadingIndicator();
-               this._loader = this._callQuery(this._filter, this._sorting, this._infiniteScrollOffset + this._limit, this._limit).addCallback(function (dataSet) {
+               this._loader = this._callQuery(this.getFilter(), this._sorting, this._infiniteScrollOffset + this._limit, this._limit).addCallback(function (dataSet) {
                   //ВНИМАНИЕ! Здесь стрелять onDataLoad нельзя! Либо нужно определить событие, которое будет
                   //стрелять только в reload, ибо между полной перезагрузкой и догрузкой данных есть разница!
                   self._loader = null;
