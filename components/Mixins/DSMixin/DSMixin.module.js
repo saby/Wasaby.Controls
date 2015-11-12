@@ -53,7 +53,6 @@ define('js!SBIS3.CONTROLS.DSMixin', [
         */
       $protected: {
          _itemsInstances: {},
-         _filter: undefined,
          _sorting: undefined,
          _offset: 0,
          _limit: undefined,
@@ -194,7 +193,18 @@ define('js!SBIS3.CONTROLS.DSMixin', [
              * @see setDataSource
              * @see groupBy* @cfg {Function} Пользовательский метод добавления атрибутов на элементы коллекции
              */
-            emptyHTML: ''
+            emptyHTML: '',
+            /**
+             * @var {Object} Фильтр данных
+             * @example
+             * <pre class="brush:xml">
+             *     <options name="filter">
+             *        <option name="creatingDate" bind="selectedDocumentDate"></option>
+             *        <option name="documentType" bind="selectedDocumentType"></option>
+             *     </options>
+             * </pre>
+             */
+            filter: {}
          },
          _loader: null
       },
@@ -311,13 +321,15 @@ define('js!SBIS3.CONTROLS.DSMixin', [
             limitChanged = typeof(limit) !== 'undefined';
 
          this._cancelLoading();
-         this._filter = filterChanged ? filter : this._filter;
+         if (filterChanged) {
+            this.setFilter(filter, true);
+         }
          this._sorting = sortingChanged ? sorting : this._sorting;
          this._offset = offsetChanged ? offset : this._offset;
          this._limit = limitChanged ? limit : this._limit;
 
          this._toggleIndicator(true);
-         this._loader = this._callQuery(this._filter, this._sorting, this._offset, this._limit).addCallback(function (dataSet) {
+         this._loader = this._callQuery(this._options.filter, this._sorting, this._offset, this._limit).addCallback(function (dataSet) {
             self._toggleIndicator(false);
             self._loader = null;//Обнулили без проверки. И так знаем, что есть и загрузили
             if (self._dataSet) {
@@ -399,14 +411,14 @@ define('js!SBIS3.CONTROLS.DSMixin', [
       setPageSize: function(pageSize){
          this._options.pageSize = pageSize;
          this._dropPageSave();
-         this.reload(this._filter, this._sorting, 0, pageSize);
+         this.reload(this._options.filter, this._sorting, 0, pageSize);
       },
       /**
        * Получить текущий фильтр в наборе данных
        * @returns {Object|*|DSMixin._filter}
        */
       getFilter: function() {
-         return this._filter;
+         return this._options.filter;
       },
       /**
        * Установить фильтр на набор данных
@@ -414,10 +426,10 @@ define('js!SBIS3.CONTROLS.DSMixin', [
        * @param {Boolean} noLoad установить фильтр без запроса на БЛ
        */
       setFilter: function(filter, noLoad){
-         this._filter = filter;
+         this._options.filter = filter;
          this._dropPageSave();
          if (this._dataSource && !noLoad) {
-            this.reload(this._filter, this._sorting, 0, this.getProperty('pageSize'));
+            this.reload(this._options.filter, this._sorting, 0, this.getProperty('pageSize'));
          }
       },
 
