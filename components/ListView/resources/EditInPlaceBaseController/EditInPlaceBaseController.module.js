@@ -25,49 +25,53 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                _options: {
                   template: undefined,
                   columns: [],
+                  readRecordBeforeEdit: false,
                   ignoreFirstColumn: false,
                   editFieldFocusHandler: undefined,
                   dataSource: undefined,
                   dataSet: undefined,
-                  itemsContainer: undefined
+                  itemsContainer: undefined,
+                  onFieldChange: undefined
                },
                _area: undefined,
-               _editing: false,
+               _savingDeferred: undefined,
+               _editingRecord: undefined,
                _areaHandlers: null
             },
             $constructor: function () {
-               this._publish('onFieldChange');
                this._areaHandlers = {
                   onKeyDown: this._onKeyDown.bind(this)
                };
-               this._area = this._initArea();
+               this._area = this._createArea();
                this._area.editInPlace.getContainer().bind('keyup', this._areaHandlers.onKeyDown);
+               this._savingDeferred = $ws.proto.Deferred.success();
             },
-            _initArea: function() {
-               var self = this;
+            _createArea: function() {
                return {
-                  editInPlace: new EditInPlace({
-                     template: this._options.template,
-                     columns: this._options.columns,
-                     element: $('<div>'),
-                     ignoreFirstColumn: this._options.ignoreFirstColumn,
-                     context: this._getContextForArea(),
-                     focusCatch: this._focusCatch.bind(this),
-                     parent: this,
-                     handlers: {
-                        onChildFocusOut: this._onChildFocusOut.bind(this),
-                        onFieldChange: function(event, fieldName, record) {
-                           event.setResult(self._notify('onFieldChange', fieldName, record));
-                        }
-                     }
-                  }),
+                  editInPlace: new EditInPlace(this._getEditInPlaceConfig()),
                   record: null,
-                  target: null
+                  target: null,
+                  editing: false
+               };
+            },
+            _getEditInPlaceConfig: function() {
+               return {
+                  template: this._options.template,
+                  columns: this._options.columns,
+                  element: $('<div>'),
+                  ignoreFirstColumn: this._options.ignoreFirstColumn,
+                  context: this._getContextForArea(),
+                  focusCatch: this._focusCatch.bind(this),
+                  onFieldChange: this._options.onFieldChange,
+                  parent: this,
+                  handlers: {
+                     onChildFocusOut: this._onChildFocusOut.bind(this)
+                  }
                };
             },
             _getContextForArea: function () {
-               var ctx = new $ws.proto.Context({restriction: 'set'});
-
+               var
+                  ctx = new $ws.proto.Context({restriction: 'set'});
                ctx.subscribe('onFieldNameResolution', function (event, fieldName) {
                   var
                      record,
@@ -81,21 +85,16 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                });
                return ctx;
             },
-            canAcceptFocus: function () {
-               return false;
-            },
             /**
-             * Обработчик глобального хука клавиатуры
-             * @param {Object} e jQuery event
+             * Обработчик клавиатуры
              * @private
              */
             _onKeyDown: function (e) {
-               var
-                  key = e.which;
+               var key = e.which;
                if (key === $ws._const.key.esc) {
                   e.stopImmediatePropagation();
                   e.preventDefault();
-                  this.finishEditing();
+                  this.endEdit();
                } else if (key === $ws._const.key.enter || key === $ws._const.key.down || key === $ws._const.key.up) {
                   e.stopImmediatePropagation();
                   e.preventDefault();
@@ -103,124 +102,104 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                }
             },
             _editNextTarget: function (editNextRow) {
-               var area = this._getEditingArea(),
-                  //TODO: в ie8 работать не будет из за :not()
-                  newTarget = area.target[editNextRow ? 'nextAll' : 'prevAll']('.js-controls-ListView__item:not(".controls-editInPlace")').slice(0, 1);
-               if (newTarget.length && !newTarget.hasClass('controls-ListView__folder')) {
-                  this.showEditing(newTarget);
-               } else if (!newTarget.length && editNextRow) {
-                  this.showAdd();
+               var
+                  newTarget = this._getNextTarget(editNextRow);
+               if (newTarget.length) {
+                  this.edit(newTarget, this._options.dataSet.getRecordByKey(newTarget.attr('data-id')));
+               } else if (editNextRow) {
+                  this.add();
                }
             },
-            showEditing: function (target, record) {
-               var result,
-                   self = this;
-               if (this._editing) {
-                  result = this.finishEditing(true);
-               }
-               if (result instanceof $ws.proto.Deferred) {
-                  result.addCallback(function() {
-                     self._showEditing(target, record);
-                  });
-               } else if (result !== false) {
-                  this._showEditing(target, record);
-               }
+            _getNextTarget: function(editNextRow) {
+               return this._area.target[editNextRow ? 'nextAll' : 'prevAll']('.js-controls-ListView__item:not(".controls-editInPlace")').slice(0, 1);
             },
-            _showEditing: function(target, record, notActivate) {
-               var area,
-                   isAdd = target.hasClass('controls-EditInPlace__add');
-               if (!this._editing) {
-                  this._editing = true;
-               }
-               area = this._getEditingArea();
-               area.addInPlace = isAdd;
-               area.target = target;
-               area.record = record || this._options.dataSet.getRecordByKey(target.data('id'));
-               this._showArea(area, notActivate);
+            edit: function (target, record) {
+               var
+                  self = this;
+               return this.endEdit(true).addCallback(function() {
+                  var
+                     loadingIndicator,
+                     result = new $ws.proto.Deferred();
+                  //Если необходимо перечитывать запись перед редактированием, то делаем это
+                  if (self._options.readRecordBeforeEdit) {
+                     loadingIndicator = setTimeout(function () {
+                        $ws.helpers.toggleIndicator(true);
+                     }, 100);
+                     result
+                        .addCallback(function() {
+                           return self._options.dataSource.read(record.getKey());
+                        })
+                        .addCallback(function(readRecord) {
+                           //Запоминаем запись, которую редактируем для того, чтобы по завершению редактирования подмержить в неё измененные данные
+                           self._editingRecord = record;
+                           record = readRecord;
+                        })
+                        .addBoth(function() {
+                           clearTimeout(loadingIndicator);
+                           $ws.helpers.toggleIndicator(false);
+                        });
+                  }
+                  return result.addCallback(function() {
+                     self._edit(target, record);
+                  }).callback();
+               });
             },
-            _showArea: function(area, notActivate) {
+            _edit: function(target, record) {
+               this._area.editing = true;
+               this._area.target = target;
+               this._area.record = record;
+               this._showEditArea(this._area);
+            },
+            _showEditArea: function(area) {
                area.editInPlace.getContainer()
                   .insertAfter(area.target)
                   .attr('data-id', area.record.getKey());
                area.editInPlace.show();
                area.target.hide();
                area.editInPlace.updateFields(area.record);
-               if (notActivate !== true) {
-                  area.editInPlace.activateFirstControl();
-               }
-            },
-            finishEditing: function(saveFields) {
-               var
-                  self = this,
-                  result,
-                  area = this._getEditingArea(),
-                  validate = area.editInPlace.validate();
-               if (validate || !saveFields) {
-                  this._editing = null;
-                  area.editInPlace.hide();
-                  area.target.show();
-                  if (saveFields) {
-                     result = area.editInPlace.applyChanges();
-                     if (result instanceof $ws.proto.Deferred) {
-                        result.addCallback(function () {
-                           self._finishEditing(area, saveFields);
-                        });
-                        return result;
-                     }
-                  }
-                  this._finishEditing(area, saveFields);
-               }
-               return validate;
-            },
-            _finishEditing: function(area, saveFields) {
-               if (saveFields) {
-                  this._syncDataSource(area);
-               }
-               if (area.addInPlace) {
-                  this._removeAddInPlace(area, saveFields);
-               }
-            },
-            showAdd: function() {
-               var
-                   area = this._getEditingArea(),
-                   target = $('<div class="js-controls-ListView__item controls-EditInPlace__add"></div>');
-               if (!area || area.editInPlace.validate()) {
-                  target.appendTo(this._options.itemsContainer);
-                  this._options.dataSource.create().addCallback(function (rec) {
-                     rec = this._options.dataSet._prepareRecordForAdd(rec);
-                     target.attr('data-id', rec.getKey());
-                     this.showEditing(target, rec);
-                  }.bind(this));
-               }
-            },
-            _removeAddInPlace: function(area, saveFields) {
-               area.target.removeClass('.controls-EditInPlace__add');
-               area.addInPlace = false;
-               if (!saveFields) {
-                  area.target.remove();
-               }
-            },
-            _syncDataSource: function(area) {
-               var self = this;
-               if (area.addInPlace) {
-                  self._options.dataSet.push(area.record);
-               }
-               self._options.dataSource.sync(self._options.dataSet);
+               area.editInPlace.activateFirstControl();
             },
             /**
-             * todo Переписать этот метод. Надо переделать объект _areas на две отдельные переменные: _area и _secondArea
-             * @returns {SBIS3.CONTROLS.EditInPlaceClickController.$protected._area|*|SBIS3.CONTROLS.EditInPlaceClickController._area}
+             * Завершить редактирование по месту
+             * @param {Boolean} saveFields Сохранить изменения в dataSet
              * @private
              */
-            _getEditingArea: function() {
-               return this._editing ? this._area : null;
+            endEdit: function(saveFields) {
+               var area = this._area;
+               if (area.editing) {
+                  if (area.editInPlace.validate() || !saveFields) {
+                     area.editing = false;
+                     this._savingDeferred = saveFields ? area.editInPlace.applyChanges() : $ws.proto.Deferred.success();
+                     return this._savingDeferred.addCallback(function() {
+                        this._endEdit(area, saveFields);
+                     }.bind(this));
+                  }
+                  return $ws.proto.Deferred.fail();
+               }
+               return this._savingDeferred;
             },
-            /**
-             * Функция позволяет узнать, выполняется ли сейчас редактирование по месту
-             * @returns {boolean} Выполняется редактирование по месту, или нет
-             */
-            isEditing: function () {
-               return !!this._editing;
+            _endEdit: function(area, saveFields) {
+               if (this._editingRecord) {
+                  this._editingRecord.merge(area.record);
+                  this._editingRecord = undefined;
+               }
+               area.editInPlace.hide();
+               area.target.show();
+               if (!this._options.dataSet.getRecordByKey(area.record.getKey())) {
+                  saveFields ? this._options.dataSet.push(area.record) : area.target.remove();
+               }
+               if (saveFields) {
+                  this._options.dataSource.sync(this._options.dataSet);
+               }
+            },
+            add: function() {
+               var self = this;
+               return this.endEdit(true).addCallback(function() {
+                  return self._options.dataSource.create().addCallback(function (rec) {
+                     var target = $('<div class="js-controls-ListView__item"></div>').attr('data-id', rec.getKey()).appendTo(self._options.itemsContainer);
+                     self._edit(target, rec);
+                  });
+               });
             },
             /**
              * Обработчик потери фокуса областью редактирования по месту
@@ -229,12 +208,12 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
              */
             _focusCatch: function (event) {
                if (event.which === $ws._const.key.tab) {
-                  this._editNextTarget(!event.shiftKey, true);
+                  this._editNextTarget(!event.shiftKey);
                }
             },
             _onChildFocusOut: function (event, control) {
                if (!this._isChildControl(control)) {
-                  this.finishEditing(true);
+                  this.endEdit(true);
                }
             },
             _isChildControl: function(control) {
@@ -244,9 +223,7 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                return control === this;
             },
             destroy: function() {
-               if (this.isEditing()) {
-                  this.finishEditing();
-               }
+               this.endEdit();
                this._area.editInPlace.getContainer().unbind('keyup', this._areaHandlers.onKeyDown);
                this._area.editInPlace.destroy();
                this._area = null;
