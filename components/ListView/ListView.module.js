@@ -118,7 +118,7 @@ define('js!SBIS3.CONTROLS.ListView',
             ],
             _itemActionsGroup: null,
             _emptyData: undefined,
-            _scrollWidth: $ws.helpers.getScrollWidth(),
+            _scrollWidth: undefined,
             _options: {
                /**
                 * @faq Почему нет флажков при включенной опции {@link SBIS3.CONTROLS.ListView#multiselect multiselect}?
@@ -290,7 +290,10 @@ define('js!SBIS3.CONTROLS.ListView',
             $ws.single.CommandDispatcher.declareCommand(this, 'newItem', this._newItem.bind(this));
             this._container.on('mousemove', this._mouseMoveHandler.bind(this))
                            .on('mouseleave', this._mouseLeaveHandler.bind(this));
+
             this._onWindowScrollHandler = this._onWindowScroll.bind(this);
+            this._scrollWidth = $ws.helpers.getScrollWidth();
+
             if (this.isInfiniteScroll()) {
                this._createLoadingIndicator();
                //В зависимости от настроек высоты подписываемся либо на скролл у окна, либо у контейнера
@@ -351,7 +354,7 @@ define('js!SBIS3.CONTROLS.ListView',
          _isViewElement: function (elem) {
             return  $ws.helpers.contains(this._getItemsContainer()[0], elem[0]);
          },
-         _onClickHandler: function(e) {         	
+         _onClickHandler: function(e) {
             ListView.superclass._onClickHandler.apply(this, arguments);
             var $target = $(e.target),
                 target = this._findItemByElement($target),
