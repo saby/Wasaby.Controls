@@ -36,6 +36,10 @@ define('js!SBIS3.CONTROLS.ItemActionsGroup',
          $constructor: function() {
             var self = this;
 
+            if(this._options.items[0].title) {
+               $ws.single.ioc.resolve('ILogger').log('title', 'C 3.8.0 свойство операции над записью title перестанет работать. Используйте свойство caption');
+            }
+
             this._itemActionsMenuButton = this._container
                .find('.controls-ItemActions__menu-button')
                .click(function() {
@@ -73,7 +77,7 @@ define('js!SBIS3.CONTROLS.ItemActionsGroup',
           */
          _createItemActionMenu: function() {
             var self = this;
-            var menuCont = $('> .controls-ItemActions__menu-container', this._container[0]);
+            var menuCont = $('> .controls-ItemActions__menu-container', this._getItemsContainer()[0]);
             var verticalAlign = {
                   side: 'top',
                   offset: VERTICAL_OFFSET
@@ -97,6 +101,8 @@ define('js!SBIS3.CONTROLS.ItemActionsGroup',
                element: menuCont.show(),
                items: this._options.items,
                keyField: this._options.keyField,
+               //FIXME для обратной совместимости
+               displayField: this._options.items[0].title ? 'title' : 'caption',
                parent: this,
                opener: this,
                target:  target,
@@ -107,9 +113,9 @@ define('js!SBIS3.CONTROLS.ItemActionsGroup',
                closeByExternalClick: true,
                handlers: {
                   onClose: function() {
-                     var hoveredItem = self.getParent().getHoveredItem().container;                     
+                     var hoveredItem = self.getParent().getHoveredItem().container;
                      self._itemActionsMenuVisible = false;
-                     self._activeItem.removeClass('controls-ItemActions__activeItem');
+                     this._activeItem.container.removeClass('controls-ItemActions__activeItem');
                      self[hoveredItem ? 'showItemActions' : 'hideItemActions'](hoveredItem);
                   },
                   onMenuItemActivate: function(e, id) {
@@ -129,7 +135,7 @@ define('js!SBIS3.CONTROLS.ItemActionsGroup',
 
             this._onBeforeMenuShowHandler();
             this._itemActionsMenu.show();
-            this._activeItem.addClass('controls-ItemActions__activeItem');
+            this._activeItem.container.addClass('controls-ItemActions__activeItem');
             this._itemActionsMenuVisible = true;
             this._itemActionsMenu.recalcPosition(true);
          },
@@ -142,7 +148,7 @@ define('js!SBIS3.CONTROLS.ItemActionsGroup',
             var menuInstances = this._itemActionsMenu.getItemsInstances(),
                 itemActionsInstances = this.getItemsInstances();
             if (this._touchActions){
-               //Нельзя сделать hide так как display:none ломает позиционирование меню 
+               //Нельзя сделать hide так как display:none ломает позиционирование меню
                var cont = this._container[0],
                   self = this;
                cont.style.visibility = 'hidden';
@@ -161,20 +167,23 @@ define('js!SBIS3.CONTROLS.ItemActionsGroup',
           * Показывает операции над записью
           */
          showItemActions: function(hoveredItem, position) {
-            this._activeItem = hoveredItem.container;
-            this._container[0].style.top = position.top + 'px';
+            this._activeItem = hoveredItem;
             this._container[0].style.right = position.right + 'px';
             this._container[0].style.display = 'block';
             if (this._touchActions){
-               this._container.width('auto');
                var width = this._container.width(),
+                  contHeight = this._container.height(),
                   height = $(hoveredItem.container).height(),
-                  padding = height / 2 - 10;// получено опытным путем для шрифта 16px;
-               this._container.width(0);
-            	this._container.height(height / 2 + 10);
-               this._container.css('padding-top', padding);
-            	this._container.animate({width : width}, 350);
+                  itemsContainer = this._getItemsContainer();
+
+               itemsContainer[0].style.right = - width + 'px';
+               if (contHeight < height){
+                  position.top -=  height - contHeight;
+               }
+               this._container.height(height);
+            	itemsContainer.animate({right : position.right}, 350);
             }
+            this._container[0].style.top = position.top + 'px';
         	},
          /***
           * Задаёт новые операции над записью
@@ -207,7 +216,11 @@ define('js!SBIS3.CONTROLS.ItemActionsGroup',
           */
          _itemActivatedHandler: function(item) {
             this.hideItemActions();
-            this._itemActionsButtons[item]['handler'].apply(this.getParent(), [this._activeItem, this._activeItem.data('id')]);
+            this._itemActionsButtons[item]['handler'].apply(this.getParent(), [this._activeItem.container, this._activeItem.key, this._activeItem.record]);
+         },
+
+         _getItemsContainer: function(){
+            return $('.controls-ItemActions__itemsContainer', this._container[0]);
          },
 
          canAcceptFocus: function() {

@@ -3,7 +3,7 @@
  */
 define('js!SBIS3.CONTROLS.MenuButtonMixin', ['js!SBIS3.CONTROLS.ContextMenu'], function(ContextMenu) {
    /**
-    * Миксин, добавляющий поведение хранения одного или нескольких выбранных элементов
+    * Миксин, добавляющий поведение работы с выподающим меню
     * @mixin SBIS3.CONTROLS.MenuButtonMixin
     * @public
     * @author Крайнов Дмитрий Олегович
@@ -62,6 +62,7 @@ define('js!SBIS3.CONTROLS.MenuButtonMixin', ['js!SBIS3.CONTROLS.ContextMenu'], f
             closeByExternalClick: true,
             targetPart: true
          };
+         menuconfig = this._modifyPickerOptions(menuconfig);
          if (this._dataSource) {
             menuconfig.dataSource = this._dataSource;
          }
@@ -69,6 +70,10 @@ define('js!SBIS3.CONTROLS.MenuButtonMixin', ['js!SBIS3.CONTROLS.ContextMenu'], f
             menuconfig.items = this._options.items;
          }
          return new ContextMenu(menuconfig);
+      },
+
+      _modifyPickerOptions: function(opts) {
+         return opts;
       },
 
       _setPickerContent: function(){
@@ -100,13 +105,32 @@ define('js!SBIS3.CONTROLS.MenuButtonMixin', ['js!SBIS3.CONTROLS.ContextMenu'], f
          }
          return this._picker.getItemsInstances.apply(this._picker, arguments);
       },
+      
+      _clickHandler: function () {
+         if (this._dataSet.getCount() > 1) {
+            this.togglePicker();
+         } else {
+            if (this._dataSet.getCount() == 1) {
+               var id = this._dataSet.at(0).getKey();
+               this._notify('onMenuItemActivate', id);
+            }
+         }  
+      },
 
+      _dataLoadedCallback : function() {
+         if (this._picker) this.hidePicker();
+      },
+
+      _setWidth: function(){
+         //Установить ширину меню
+      },
       after : {
          _initializePicker : function() {
             var self = this;
             this._picker.subscribe('onMenuItemActivate', function(e, id) {
                self._notify('onMenuItemActivate', id);
             });
+            this._setWidth();
          },
 
          //TODO в 3.7.3 ждать починки от Вити

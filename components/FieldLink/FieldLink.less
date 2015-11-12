@@ -1,0 +1,79 @@
+.controls-FieldLink__picker {
+   max-height: @controls-FieldLink-picker-max-height;
+   min-height: @controls-FieldLink-picker-min-height;
+   border: @controls-FieldLink-picker-border;
+   border-top: none;
+   background: @controls-FieldLink-picker-background;
+
+   .controls-FieldLink__linksContainer {
+      padding: @controls-FieldLink-linkContainer-padding;
+   }
+}
+
+.controls-FieldLink__picker,
+.controls-FieldLink {
+   .controls-FieldLink__linkItem {
+      display: inline-block;
+      margin: @controls-FieldLink-linkItem-margin;
+      position: @controls-FieldLink-linkItem-position;
+      padding: @controls-FieldLink-linkItem-padding;
+      .text-overflow();
+   }
+
+   .controls-FieldLink__linkItem-caption {
+      position: relative;
+      height: @controls-FieldLink-linkItem-caption-height;
+   }
+
+   .controls-FieldLink__linkItem-cross {
+      height: @controls-FieldLink-linkItem-cross-heigth;
+      width: @controls-FieldLink-linkItem-cross-width;
+      display: inline-block;
+      position: absolute;
+      right: @controls-FieldLink-linkItem-cross-right;
+      cursor: @link-cursor;
+      background: @edit-at-place-cancel-button-bg;
+
+      &:hover {
+         background: @edit-at-place-cancel-button-hover-bg;
+      }
+   }
+}
+
+.controls-FieldLink {
+   display: inline-block;
+
+   &.controls-Picker__show {
+      border: @controls-FieldLink-picker-show-border;
+      border-color: @controls-FieldLink-picker-show-border-color;
+      background: @controls-FieldLink-picker-show-color;
+   }
+
+   .controls-TextBox__fieldWrapper {
+      float: left;
+      margin: @controls-FieldLink-fieldWrapper-margin;
+   }
+
+   .controls-TextBox__beforeFieldWrapper {
+
+      .controls-FieldLink__showAllLinks,
+      .controls-FieldLink__dropAllLinks {
+         position: relative;
+         float: left;
+         top: @controls-FieldLink-showAllLinks-top;
+         padding: @controls-FieldLink-showAllLinks-padding;
+      }
+
+      .controls-FieldLink__linksWrapper {
+         height: 100%;
+         display: inline-block;
+      }
+   }
+
+   .controls-TextBox__afterFieldWrapper {
+      padding: 0 4px;
+      > *{
+         vertical-align: middle;
+      }
+   }
+}

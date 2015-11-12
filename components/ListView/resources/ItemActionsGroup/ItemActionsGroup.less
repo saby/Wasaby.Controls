@@ -1,4 +1,4 @@
-/* Цветовая схема для опций записи */
+/* пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ */
 .controls-ListView {
   .controls-ItemActions {
     background-color: transparent;
@@ -7,7 +7,9 @@
   &.controls-DataGridView {
 
     .controls-ItemActions {
-      background-color: @list-view-actions-bg;
+      .controls-ItemActions__itemsContainer {
+			background-color: @list-view-actions-bg;
+      }
       box-shadow: @list-view-actions-box-shadow;
     }
     .controls-ItemActions__activeItem {
@@ -27,23 +29,29 @@
       }
    }
    .controls-ItemActions{
-      background: @list-view-actions-bg;
       padding-left: 6px;
-      .controls-ListView__item{
-         &.icon-16{
-            margin-top: -1px;
+      overflow: hidden;
+      .controls-ItemActions__itemsContainer{
+         > * {
+            line-height: 30px;
+            &.controls-IconButton{
+               top: 2px;
+            }
          }
-      }
-      .controls-Link{
-         font-size: 16px;
-      }
-      .controls-ItemActions__menu-button, .controls-ItemActions__menu-button:hover{
-         background: url('img/items-actions-touch-menu.png') no-repeat;
-         height: 19px;
-         background-size: 4px 18px;
-         vertical-align: middle;
-         width: 44px;
-         background-position: center;
+      	height: 100%;
+      	background: @list-view-actions-bg;
+      	position: relative;
+         .controls-Link{
+            font-size: 16px;
+         }
+         .controls-ItemActions__menu-button, .controls-ItemActions__menu-button:hover{
+            background: @list-view-actions-menu-touch-icon;
+            height: @list-view-actions-menu-touch-height;
+            width: @list-view-actions-menu-touch-width;
+            background-size: @list-view-actions-menu-touch-size;
+            vertical-align: middle;
+            background-position: center;
+         }
       }
    }
    .controls-ItemActions__menu-container{
@@ -59,60 +67,78 @@
          background: #F3F8FC;
       }
    }
+
+   .controls-ItemActions__menu-container {
+      .controls-PopupMixin__closeButton{
+         position: absolute;
+         top: @controls-Popup-closeButton-top;
+         right: @controls-Popup-closeButton-right;
+         width: @controls-Popup-closeButton-width;
+         height: @controls-Popup-closeButton-height;
+         cursor: pointer;
+         background: @closeButtonImage;
+         &:hover {
+            background: @closeButtonImageHover;
+         }
+         &:active {
+            background: @closeButtonImageHover;
+         }
+      }
+   }
 }
 
 .controls-ItemActions {
-  position: absolute;
-  height: @list-view-actions-height;
-  z-index: @list-view-actions-zindex;
-  display: none;
+   position: absolute;
+   height: @list-view-actions-height;
+   z-index: @list-view-actions-zindex;
+   display: none;
+   margin-right: @list-view-actions-margin-right;
 
-  &.controls-ItemActions-verAlign {
-    height: auto;
-    width: @list-view-actions-verAlign-width;
-    margin: @list-view-actions-verAlign-margin;
+   &.controls-ItemActions-verAlign {
+      height: auto;
+      width: @list-view-actions-verAlign-width;
+      margin: @list-view-actions-verAlign-margin;
 
-    & > * {
-      margin: @list-view-actions-margin-action-multiView;
-    }
-    .controls-ItemActions__menu-button {
-      float: @list-view-actions-float-multiView;
-      margin-left: @list-view-actions-marginLeft-menu-multiView;
-    }
-  }
-
-  > * {
-    display: inline-block;
-    cursor: @list-view-actions-cursor;
-    margin: @list-view-actions-margin;
-    vertical-align: baseline;
-    height: @list-view-actions-item-height;
-    padding: 0;
-
-    &.controls-ItemActions__hiddenAction {
-      display: none !important;
-    }
-
-    &.controls-ItemActions__menu-button {
-      display: inline-block;
-      z-index: 11;
-      background: @list-view-actions-menu-icon;
-      width: @list-view-actions-menu-icon-width;
-      float: right;
-
-      &:hover {
-        background: @list-view-actions-menu-icon-hover;
+      .controls-ItemActions__itemsContainer {
+         & > * {
+            margin: @list-view-actions-margin-action-multiView;
+         }
+         .controls-ItemActions__menu-button {
+            float: @list-view-actions-float-multiView;
+            margin-left: @list-view-actions-marginLeft-menu-multiView;
+         }
       }
-    }
-  }
-  > .controls-Link {
-    display: inline;
-  }
+   }
+
+   .controls-ItemActions__itemsContainer{
+
+      > * {
+         display: inline-block;
+         cursor: @list-view-actions-cursor;
+         margin: @list-view-actions-margin;
+         vertical-align: baseline;
+         height: @list-view-actions-item-height;
+         padding: 0;
+
+         &.controls-ItemActions__menu-button {
+            display: inline-block;
+            z-index: 11;
+            background: @list-view-actions-menu-icon;
+            width: @list-view-actions-menu-icon-width;
+            float: right;
+
+            &:hover {
+              background: @list-view-actions-menu-icon-hover;
+            }
+         }
+      }
+      > .controls-Link {
+         display: inline;
+      }
+   }
 }
 
 .controls-ItemActions__menu-container {
-  display: none;
-
   .controls-MenuItem {
     padding-right: 24px;
   }

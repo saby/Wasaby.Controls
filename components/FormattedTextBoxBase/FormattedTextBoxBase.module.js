@@ -439,6 +439,9 @@ define(
        * @returns {boolean} true - если строка установлена
        */
       setText: function(text, clearChar) {
+         if (text == '') {
+            text = this.getStrMask(clearChar);
+         }
          /*массив со значениями, нужен чтобы не записывать значения до полной проверки соответствия текста маске */
          var tempModelValues = this.textIsFitToModel(text, clearChar),
              group;
@@ -677,11 +680,10 @@ define(
       },
       /**
        * Обновляяет значение this._options.text
-       * null если есть хотя бы одно незаполненное место (плэйсхолдер)
        * @protected
        */
       _updateText:function() {
-         this._options.text = this.formatModel.getStrMask(this._maskReplacer);
+         this._options.text = this.formatModel.getText(this._maskReplacer);
       },
 
       /**
@@ -858,6 +860,7 @@ define(
        */
       setText: function(text) {
          this.formatModel.setText(text, this._maskReplacer);
+         this._options.text = this.formatModel.getText(this._maskReplacer);
          //обновить html
          this._inputField.html(this._getHtmlMask());
       },
