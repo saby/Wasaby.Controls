@@ -141,13 +141,6 @@ define('js!SBIS3.CONTROLS.TreeCompositeView', ['js!SBIS3.CONTROLS.TreeDataGridVi
             TreeCompositeView.superclass._updateEditInPlaceDisplay.apply(this, arguments);
          }
       },
-      _getItemActionsAlign: function(viewMode, hoveredItem) {
-         /* В режиме список(list) для листьев нужно опции отображать горизонтально,
-          как и для режима таблица(table) */
-         return viewMode === 'table' || (!this.getDataSet().getRecordByKey(hoveredItem.key).get(this.getHierField() + '@') && viewMode === 'list') ?
-               'horizontal' : 'vertical';
-
-      },
 
       _getTargetContainer: function (item) {
          if (this.getViewMode() != 'table' && item.get(this._options.hierField + '@')) {
