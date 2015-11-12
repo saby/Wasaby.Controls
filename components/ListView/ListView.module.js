@@ -417,8 +417,7 @@ define('js!SBIS3.CONTROLS.ListView',
           */
          _mouseMoveHandler: function (e) {
             var $target = $(e.target),
-                target,
-                targetKey;
+                target, targetKey, hoveredItemClone;
 
             target = this._findItemByElement($target);
 
@@ -428,8 +427,12 @@ define('js!SBIS3.CONTROLS.ListView',
                   this._hoveredItem.container && this._hoveredItem.container.removeClass('controls-ListView__hoveredItem');
                   target.addClass('controls-ListView__hoveredItem');
                   this._hoveredItem = this._getElementData(target);
-                  this._notify('onChangeHoveredItem', this._hoveredItem);
-                  this._onChangeHoveredItem(this._hoveredItem);
+
+                  /* Надо делать клон и отдавать наружу только клон объекта, иначе,
+                     если его кто-то испортит, испортится он у всех, в том числе и у нас */
+                  hoveredItemClone = $ws.core.clone(this._hoveredItem);
+                  this._notify('onChangeHoveredItem', hoveredItemClone);
+                  this._onChangeHoveredItem(hoveredItemClone);
                }
             } else if (!this._isHoverControl($target)) {
                this._mouseLeaveHandler();
