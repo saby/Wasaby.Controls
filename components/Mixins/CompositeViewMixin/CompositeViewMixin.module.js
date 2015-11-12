@@ -178,9 +178,12 @@ define('js!SBIS3.CONTROLS.CompositeViewMixin', ['html!SBIS3.CONTROLS.CompositeVi
                parentFunc.call(this, key);
             }
          },
-         _getItemActionsAlign: function(viewMode) {
-            /* Для режима 'table' отображаем опции горизонтально, для других режимов вертикально */
-            return viewMode === 'table' ? 'horizontal' : 'vertical';
+         _getItemActionsAlign: function(viewMode, hoveredItem) {
+            if (hoveredItem.container.hasClass('js-controls-CompositeView__verticalItemActions')){
+               return 'vertical'; 
+            } else {
+               return 'horizontal';
+            }
          },
 
          _getItemActionsPosition: function(parentFunc, hoveredItem) {
