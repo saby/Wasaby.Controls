@@ -1,5 +1,5 @@
 .controls-DataGridView {
-   overflow: auto;
+   overflow-y: auto;
    .controls-ListView__item {
       &:extend(.controls-ListView .controls-ListView__item all);
    }
@@ -18,6 +18,7 @@
          .transition(left 0.5s);
       }
    }
+
    .controls-DataGridView__table {
       width: 100%;
       position: relative;
@@ -28,7 +29,7 @@
       border-color: @data-grid-border-color;
       background: @data-grid-bg;
       table-layout: @data-grid-table-layot;
-      
+
       .controls-DataGridView__tr {
          &.controls-ListView__item__multiSelected {
             .controls-DataGridView__notScrolledCell {

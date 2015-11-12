@@ -1,4 +1,6 @@
-<div class="controls-DataGridView controls-ListView{{?it.multiselect !== false}} controls-ListView__multiselect{{?}}">
+<div class="controls-DataGridView controls-ListView
+            {{?it.multiselect !== false}} controls-ListView__multiselect{{?}}
+            {{?it.startScrollColumn !== undefined}} controls-DataGridView__with-partScroll{{?}}">
    <div class="controls-AjaxLoader ws-hidden">
       <div class="controls-AjaxLoader__outer">
          <div class="controls-AjaxLoader__block">
