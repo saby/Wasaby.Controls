@@ -250,7 +250,7 @@ define('js!SBIS3.CONTROLS.TreeCompositeView', ['js!SBIS3.CONTROLS.TreeDataGridVi
                   } else if (self._limit !== undefined) {
                      limit = (self._folderOffsets.hasOwnProperty(branchId) ? self._folderOffsets[branchId] : 0) + self._limit;
                   }
-                  return self._dataSource.query(filter, self._sorting, self._offset, limit)
+                  return self._callQuery(filter, self._sorting, self._offset, limit)
                      .addCallback(function(dataSet) {
                         branchesData[branchId] = dataSet;
                         return dataSet;
@@ -260,7 +260,7 @@ define('js!SBIS3.CONTROLS.TreeCompositeView', ['js!SBIS3.CONTROLS.TreeDataGridVi
          $ws.helpers.toggleIndicator(true);
          if (items) {
             currentDataSet = this.getDataSet();
-            filter = $ws.core.clone(this._filter);
+            filter = $ws.core.clone(this.getFilter());
             //Группируем записи по веткам (чтобы как можно меньше запросов делать)
             $ws.helpers.forEach(items, function(item) {
                //todo Сделать опредение родительского ключа через DataSet

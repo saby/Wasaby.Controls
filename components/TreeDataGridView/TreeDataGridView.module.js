@@ -95,12 +95,12 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
                   /**/
                   if (self._options.displayType == 'folders') {
                      if (record.get(self._options.hierField + '@')) {
-                        self._drawItem(record, {at : startRow});
+                        self._drawAndAppendItem(record, {at : startRow});
                      }
 
                   }
                   else {
-                     self._drawItem(record, {at : startRow});
+                     self._drawAndAppendItem(record, {at : startRow});
                   }
                }
             }
