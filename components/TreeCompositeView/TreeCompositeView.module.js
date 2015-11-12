@@ -267,7 +267,7 @@ define('js!SBIS3.CONTROLS.TreeCompositeView', ['js!SBIS3.CONTROLS.TreeDataGridVi
          $ws.helpers.toggleIndicator(true);
          if (items) {
             currentDataSet = this.getDataSet();
-            filter = $ws.core.clone(this._filter);
+            filter = $ws.core.clone(this.getFilter());
             //Группируем записи по веткам (чтобы как можно меньше запросов делать)
             $ws.helpers.forEach(items, function(item) {
                //todo Сделать опредение родительского ключа через DataSet
