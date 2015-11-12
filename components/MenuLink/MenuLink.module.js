@@ -95,7 +95,19 @@ define('js!SBIS3.CONTROLS.MenuLink', ['js!SBIS3.CONTROLS.Link', 'html!SBIS3.CONT
       },
 
       _dataLoadedCallback : function() {
-         if (this._picker) this.hidePicker();
+         //TODO в 3.7.3.20 надо это убрать потому что стелки у всех кнопок пропадают
+         if (this._dataSet.getCount() > 1) {
+            $('.controls-MenuButton__arrowDown', this._container).show();
+            this._container.removeClass('controls-MenuLink__withoutMenu');
+         } else {
+            $('.controls-MenuButton__arrowDown', this._container).hide();
+            this._container.addClass('controls-MenuLink__withoutMenu');
+            this._container.removeClass('controls-Picker__show');
+            $('.controls-MenuButton__header', this._container).remove();
+         }
+         if (this._picker){
+            this.hidePicker();
+         }
       },
 
       _drawIcon: function(icon) {
