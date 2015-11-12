@@ -564,7 +564,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
          }
          this._itemsInstances = {};
          if (container.length){
-            var itemsContainers = $('.controls-ListView__item', container.get(0));
+            var itemsContainers = $('.controls-ListView__item, .controls-GroupBy', container.get(0));
             /*Удаляем вложенные компоненты*/
             $('[data-component]', itemsContainers).each(function (i, item) {
                var inst = $(item).wsControl();
@@ -652,11 +652,15 @@ define('js!SBIS3.CONTROLS.DSMixin', [
          if (groupBy.render && typeof groupBy.render === 'function') {
             groupBy.render.apply(this, [item, itemInstance, last]);
          }
+         //Навесим класс группировки и удалим лишний класс на item, если он вдруг добавился
+         itemInstance.addClass('controls-GroupBy')
+               .removeClass('controls-ListView__item');
 
       },
       /**
        * Установка группировки элементов. Если нужно, чтобы стандартаная группировка для этого элемента не вызывалась -
        * нужно обязательно переопределить(передать) все опции (field, method, template, render) иначе в группировку запишутся стандартные параметры.
+       * @remark Всем элементам группы добавляется css-класс controls-GroupBy
        * @param group
        * @param redraw
        */
