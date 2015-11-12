@@ -10,14 +10,32 @@
    padding: @menu-icon-menu-padding;
    margin: @menu-icon-menu-margin;
    background: @menu-icon-menu-bg;
-
    &.controls-Menu__hide-menu-header{
       &.controls-IconButton__round-border .controls-MenuItem, .controls-MenuItem{
          padding: @menu-item-default-padding;
       }
    }
+   &.controls-Menu__big-header {
+      margin: -6px 0 0 -10px;
+      .controls-Menu__header{
+         padding: 4px 8px;
+         .controls-Menu__header-caption{
+            position: relative;
+            top: 4px;
+         }
+      }
+   }
    &.controls-IconButton__round-border{
-      margin: -6px 0 0 -8px;
+      margin: -4px 0 0 -4px;
+      &.controls-Menu__big-header{
+         margin: -4px 0 0 -8px;
+         .controls-Menu__header{
+            .controls-Menu__header-caption{
+               position: relative;
+               top: 3px;
+            }
+         }
+      }
       .controls-MenuItem{
          &.controls-Menu__hasChild{
             padding-right: @menu-item-expand-padding-right
