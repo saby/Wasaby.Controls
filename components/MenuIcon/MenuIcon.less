@@ -10,15 +10,6 @@
    padding: @menu-icon-menu-padding;
    margin: @menu-icon-menu-margin;
    background: @menu-icon-menu-bg;
-   .controls-MenuItem {
-      padding-left: @menu-item-small-padding-left;
-   }
-   &.controls-Menu__big-header{
-      .controls-Menu__header-caption{
-         top: 3px;
-         position: relative;
-      }
-   }
 
    &.controls-Menu__hide-menu-header{
       &.controls-IconButton__round-border .controls-MenuItem, .controls-MenuItem{
@@ -26,22 +17,8 @@
       }
    }
    &.controls-IconButton__round-border{
-      margin: -5px 0 0 -6px;
-      .controls-Menu__header{
-         .icon-16, .icon-24{
-            .round-button-mixin(@default-color);
-            padding-right: 0;
-            position: relative;
-            top: -3px;
-            left: -2px;
-         }
-         .controls-Menu__header-caption{
-            top: 3px;
-            position: relative;
-         }
-      }
+      margin: -6px 0 0 -8px;
       .controls-MenuItem{
-         padding-left: @menu-item-big-padding-left;
          &.controls-Menu__hasChild{
             padding-right: @menu-item-expand-padding-right
          }
