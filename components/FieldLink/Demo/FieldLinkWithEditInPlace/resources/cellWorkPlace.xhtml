@@ -1,0 +1,17 @@
+<div class="controls-demo-FieldLinkWithEditInPlace__cell">
+   {{var workPlace = it.item.get('МестоРаботы'),
+         workPlaceData = workPlace.getRaw().s;}}
+   {{~ workPlaceData :item :itemIndex}}
+      <p><span style="font-weight: bold;">{{= item.n}}:</span>
+         {{
+            var
+               itemData = workPlace.get(item.n),
+               result = [];
+            itemData.each(function(rec) {
+               result.push(rec.get('Название'));
+            });
+         }}
+         {{=result.join(', ')}}
+      </p>
+   {{~}}
+</div>

@@ -200,14 +200,14 @@ define('js!SBIS3.CONTROLS.HierarchyDataGridView', [
                if (self._notify('onSearchPathClick', id) !== false ) {
                   //TODO в будущем нужно отдать уже dataSet крошек, ведь здесь уже все построено
                   /*TODO для Алены. Временный фикс, потому что так удалось починить*/
-                  var filter = $ws.core.merge(self._filter, {
+                  var filter = $ws.core.merge(self.getFilter(), {
                      'Разворот' : 'Без разворота',
                      'СтрокаПоиска': undefined
                   });
                   self.setInfiniteScroll(false, true);
                   self.setGroupBy({});
                   self.setHighlightText('', false);
-                  self._filter = filter;
+                  self.setFilter(filter, true);
                   self.setCurrentRoot(id);
                   self.reload();
                }
