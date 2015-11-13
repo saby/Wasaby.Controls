@@ -153,26 +153,27 @@ define('js!SBIS3.CONTROLS.Menu', [
       //По нормальному можно было бы сделать через css, но имеются три различных отступа слева у пунктов
       //для разных меню и совершенно не ясно как это делать.
       _checkIcons: function(){
-      	console.log(this._dataSet);
       	var tree = this._dataSet._indexTree;
       	for (var i in tree){
-      		var hasIcon = false,
-      			childs = tree[i];
-      		if (tree.hasOwnProperty(i)){
-      			for (var j = 0; j < childs.length; j++){
-      				if (this._dataSet.getRecordByKey(childs[j]).get('icon')){
-      					hasIcon = true;
-      					break;
-      				}
-      			}
-      			if (hasIcon) {
-      				for (var j = 0; j < childs.length; j++){
-	      				if (!this._dataSet.getRecordByKey(childs[j]).get('icon')){
-	      					this._dataSet.getRecordByKey(childs[j]).set('icon', 'empty');
-	      				}
-	      			}
-      			}
-      		}
+            if (tree.hasOwnProperty(i)) {
+         		var hasIcon = false,
+         			childs = tree[i];
+         		if (tree.hasOwnProperty(i)){
+         			for (var j = 0; j < childs.length; j++){
+         				if (this._dataSet.getRecordByKey(childs[j]).get('icon')){
+         					hasIcon = true;
+         					break;
+         				}
+         			}
+         			if (hasIcon) {
+         				for (var j = 0; j < childs.length; j++){
+   	      				if (!this._dataSet.getRecordByKey(childs[j]).get('icon')){
+   	      					this._dataSet.getRecordByKey(childs[j]).set('icon', 'empty');
+   	      				}
+   	      			}
+         			}
+         		}
+            }
       	}
       },
       _drawItemsCallback : function() {

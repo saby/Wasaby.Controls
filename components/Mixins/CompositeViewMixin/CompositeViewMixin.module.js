@@ -10,6 +10,10 @@ define('js!SBIS3.CONTROLS.CompositeViewMixin', ['html!SBIS3.CONTROLS.CompositeVi
       $protected: {
          _tileWidth: null,
          _folderWidth: null,
+         _itemActionsAlign:{
+            horizontal: function () { this.removeClass('controls-ItemActions-verAlign') },
+            vertical: function() { this.addClass('controls-ItemActions-verAlign') }
+         },
          _options: {
             /**
              * @cfg {Object} Режим отображения
@@ -146,7 +150,7 @@ define('js!SBIS3.CONTROLS.CompositeViewMixin', ['html!SBIS3.CONTROLS.CompositeVi
                         } else {
                            src = '{{=it.item.get(it.image)}}';
                         }
-                        dotTpl = doT.template('<div><div class="controls-ListView__itemCheckBox js-controls-ListView__itemCheckBox"></div><img class="controls-CompositeView__tileImg" src="' + src + '"/><div class="controls-CompositeView__tileTitle" style="{{=it.decorators.apply(it.color, \'color\')}}">{{=it.decorators.apply(it.item.get(it.description))}}</div></div>');
+                        dotTpl = doT.template('<div class="controls-CompositeView__verticalItemActions js-controls-CompositeView__verticalItemActions"><div class="controls-ListView__itemCheckBox js-controls-ListView__itemCheckBox"></div><img class="controls-CompositeView__tileImg" src="' + src + '"/><div class="controls-CompositeView__tileTitle" style="{{=it.decorators.apply(it.color, \'color\')}}">{{=it.decorators.apply(it.item.get(it.description))}}</div></div>');
                      }
                      resultTpl = dotTpl({
                         item: item,
@@ -174,14 +178,30 @@ define('js!SBIS3.CONTROLS.CompositeViewMixin', ['html!SBIS3.CONTROLS.CompositeVi
                parentFunc.call(this, key);
             }
          },
+         _getItemActionsAlign: function(viewMode, hoveredItem) {
+            if (hoveredItem.container.hasClass('js-controls-CompositeView__verticalItemActions')){
+               return 'vertical'; 
+            } else {
+               return 'horizontal';
+            }
+         },
 
-         _getItemActionsPosition: function(parentFunc, item) {
-            if (this._options.viewMode == 'table') {
-               return parentFunc.call(this, item);
-            } else
+         _getItemActionsPosition: function(parentFunc, hoveredItem) {
+            var itemActions = this.getItemsActions().getContainer(),
+                viewMode = this.getViewMode(),
+                actionsAlign = this._getItemActionsAlign(viewMode, hoveredItem),
+                height;
+
+            this._itemActionsAlign[actionsAlign].call(itemActions);
+            if(viewMode === 'table') return parentFunc.call(this, hoveredItem);
+
+            height = itemActions[0].offsetHeight || itemActions.height();
+
             return {
-               top: item.position.top,
-               right: this._container[0].offsetWidth - (item.position.left + item.size.width)
+               top: actionsAlign === 'horizontal' ?
+                  hoveredItem.position.top + ((hoveredItem.size.height > height) ? hoveredItem.size.height - height : 0 ) :
+                  hoveredItem.position.top,
+               right: this._container[0].offsetWidth - (hoveredItem.position.left + hoveredItem.size.width)
             };
          },
 

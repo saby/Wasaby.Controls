@@ -121,7 +121,7 @@ define('js!SBIS3.CONTROLS.TreeCompositeView', ['js!SBIS3.CONTROLS.TreeDataGridVi
                         } else {
                            src = '{{=it.item.get(it.image)}}';
                         }
-                        dotTpl = doT.template('<div><div class="controls-ListView__itemCheckBox js-controls-ListView__itemCheckBox"></div><img class="controls-CompositeView__tileImg" src="' + src + '"/><div class="controls-CompositeView__tileTitle" style="{{=it.decorators.apply(it.color, \'color\')}}">{{=it.decorators.apply($ws.helpers.escapeHtml(it.item.get(it.description)))}}</div></div>');
+                        dotTpl = doT.template('<div class="controls-CompositeView__verticalItemActions js-controls-CompositeView__verticalItemActions"><div class="controls-ListView__itemCheckBox js-controls-ListView__itemCheckBox"></div><img class="controls-CompositeView__tileImg" src="' + src + '"/><div class="controls-CompositeView__tileTitle" style="{{=it.decorators.apply(it.color, \'color\')}}">{{=it.decorators.apply($ws.helpers.escapeHtml(it.item.get(it.description)))}}</div></div>');
                      }
                   }
                   resultTpl = dotTpl({
@@ -143,28 +143,12 @@ define('js!SBIS3.CONTROLS.TreeCompositeView', ['js!SBIS3.CONTROLS.TreeDataGridVi
             TreeCompositeView.superclass._updateEditInPlaceDisplay.apply(this, arguments);
          }
       },
+
       _getTargetContainer: function (item) {
          if (this.getViewMode() != 'table' && item.get(this._options.hierField + '@')) {
             return  $('.controls-CompositeView__foldersContainer',this._container);
          }
          return this._getItemsContainer();
-      },
-      _getItemActionsPosition: function(hoveredItem) {
-         var itemActions = this.getItemsActions().getContainer(),
-             viewMode = this.getViewMode(),
-             //FIXME в версии 3.7.3.20 будет приходить рекорд, надо это использовать
-             horAlign = viewMode === 'table' || (!this.getDataSet().getRecordByKey(hoveredItem.key).get(this._options.hierField + '@') && viewMode === 'list'),
-             height;
-
-         itemActions[horAlign ? 'removeClass' : 'addClass']('controls-ItemActions-verAlign');
-         height = itemActions[0].offsetHeight || itemActions.height();
-
-         return {
-            top: horAlign ?
-                   hoveredItem.position.top + ((hoveredItem.size.height > height) ? hoveredItem.size.height - height : 0 ) :
-                   hoveredItem.position.top,
-            right: viewMode === 'table' ? 5 : this._container[0].offsetWidth - (hoveredItem.position.left + hoveredItem.size.width)
-         };
       },
       _processPaging: function() {
          TreeCompositeView.superclass._processPaging.call(this);

@@ -178,8 +178,9 @@ define('js!SBIS3.CONTROLS.HierarchyDataGridView', [
             var self = this,
                   elem,
                   groupBy = this._options.groupBy,
-                  cfg;
-            container.find('td').append(elem = $('<div style="width:'+ this._container.width() +'px"></div>'));
+                  cfg,
+                  td = container.find('td');
+                  td.append(elem = $('<div style="width:'+ td.width() +'px"></div>'));
             cfg = {
                element : elem,
                items: this._createPathItemsDS(path),
