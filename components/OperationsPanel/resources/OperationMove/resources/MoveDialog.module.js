@@ -47,7 +47,9 @@ define('js!SBIS3.CONTROLS.MoveDialog', [
       _onMoveButtonActivated: function() {
          var
             moveTo = this._treeView.getSelectedKey();
-         this._options.linkedView._move(this._options.records, moveTo);
+         if (this._treeView._checkRecordsForMove(this._options.records, moveTo)) {
+            this._options.linkedView._move(this._options.records, moveTo);
+         }
          this.close();
       },
       /*TODO тут добавить корень в дерево*/
