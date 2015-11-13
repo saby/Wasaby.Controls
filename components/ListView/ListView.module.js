@@ -264,6 +264,7 @@ define('js!SBIS3.CONTROLS.ListView',
          },
 
          $constructor: function () {
+            //TODO временно смотрим на TopParent, чтобы понять, где скролл. С внедрением ScrallWatcher этот функционал уберем
             var topParent = this.getTopParent(),
                   self = this;
             this._publish('onChangeHoveredItem', 'onItemActions', 'onItemClick');
