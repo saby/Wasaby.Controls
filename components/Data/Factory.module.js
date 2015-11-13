@@ -62,11 +62,10 @@ define('js!SBIS3.CONTROLS.Data.Factory', [
             case 'Double':
                return (typeof(value) === 'number') ? value : (isNaN(parseFloat(value)) ? null : parseFloat(value));
             case 'Money':
-               if (meta && meta.precision) {
+               if (meta && meta.precision > 3) {
                   return $ws.helpers.bigNum(value).toString(meta.precision);
                }
-               return value;
-
+               return value === undefined ? null : value;
             case 'Enum':
                return new $ws.proto.Enum({
                   availableValues: meta.source, //список вида {0:'one',1:'two'...}
@@ -79,11 +78,13 @@ define('js!SBIS3.CONTROLS.Data.Factory', [
                   return value.toString();
                }
                return $ws.proto.TimeInterval.toString(value);
-
             case 'Text':
             case 'String':
                return value + '';
             case 'Boolean':
+               if (value === null) {
+                  return value;
+               }
                return !!value;
             default:
                return value;
@@ -141,7 +142,7 @@ define('js!SBIS3.CONTROLS.Data.Factory', [
                return value === null ? null : parseInt(value, 10);
 
             case 'Money':
-               if (meta.precision) {
+               if (meta && meta.precision > 3) {
                   return $ws.helpers.bigNum(value).toString(meta.precision);
                }
                return value;
