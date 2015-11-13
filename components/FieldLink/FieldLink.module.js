@@ -391,7 +391,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
       },
 
       /* Заглушка, само поле связи не занимается отрисовкой */
-      _redraw: nop,
+      _redraw: $ws.helpers.nop,
 
 
       destroy: function() {
