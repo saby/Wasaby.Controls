@@ -242,8 +242,18 @@ define('js!SBIS3.CONTROLS.SbisServiceSource', [
        */
       destroy: function (id) {
          var self = this,
-            def = new $ws.proto.Deferred();
-
+            def = new $ws.proto.Deferred(),
+            cast = function(id){ //метод удалить по умолчанию не умеет принимать сложные идентификаторы
+               if (String(id).indexOf(',')) {
+                  id = parseInt(id);
+               }
+               return id;
+            };
+         if (id instanceof Array) {
+            id = $ws.helpers.map(id, cast)
+         } else {
+            id = cast(id);
+         }
          self._BL.call(self._options.destroyMethodName, {'ИдО': id}, $ws.proto.BLObject.RETURN_TYPE_ASIS).addCallbacks(function (res) {
             def.callback(true);
          }, function (error) {
