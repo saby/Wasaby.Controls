@@ -191,14 +191,14 @@ define('js!SBIS3.CONTROLS.BreadCrumbs', [
             points = $('.controls-BreadCrumbs__crumb:not(.ws-hidden)', targetContainer);
 
             //Минимум остается первая и последняя хлебная крошка
-            //20px - ширина блока с домиком
-            //78px - блок с домиком + стрелка + троеточие
+            //18px - ширина блока с домиком
+            //18 + 27 + 32 = 77 - блок с домиком + троеточие + стрелки 
             if ((targetContainer.width() + 20 >= containerWidth)) {
-               var halfWidth = (containerWidth - 78) / 2;
-               if (points.length >= 2) {
+               var halfWidth = (containerWidth - 77) / 2;
+               if (points.length >= 2){
                   $('.controls-BreadCrumbs__title', points).css('max-width', halfWidth);
                } else {
-                  $('.controls-BreadCrumbs__title', points).css('max-width', containerWidth - 60);
+                  $('.controls-BreadCrumbs__title', points).css('max-width', containerWidth - 77);
                }
             }
          }
