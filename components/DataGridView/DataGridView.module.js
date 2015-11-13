@@ -35,8 +35,8 @@ define('js!SBIS3.CONTROLS.DataGridView',
     *       </options>
     *    </options>
     * </component>
+    * @cssModifier controls-DataGridView__hasSeparator Включает линии разделители между строками
     */
-
    var DataGridView = ListView.extend([DragAndDropMixin],/** @lends SBIS3.CONTROLS.DataGridView.prototype*/ {
       _dotTplFn : dotTplFn,
       $protected: {
