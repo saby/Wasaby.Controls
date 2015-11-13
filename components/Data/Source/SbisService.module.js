@@ -285,6 +285,9 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
        * @returns {$ws.proto.Deferred} Асинхронный результат выполнения
        */
       destroy: function(key, meta) {
+         if (String(key).indexOf(',')) {//метод удалить по умолчанию не умеет принимать сложные идентификаторы
+            key = parseInt(key);
+         }
          var args = {
             'ИдО': key
          };
