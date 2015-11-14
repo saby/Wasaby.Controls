@@ -24,14 +24,6 @@ define(
       $protected: {
          _options: {
             /**
-             * @cfg {Boolean} Включить выделение активной вкладки
-             * @example
-             * <pre>
-             *     <option name="hasMarker">true</option>
-             * </pre>
-             */
-            hasMarker: false,
-            /**
              * @cfg {String} Шаблон отображения каждого элемента коллекции
              * @example
              * <pre>
@@ -41,38 +33,11 @@ define(
              * </pre>
              */
             itemTemplate: itemTpl
-         },
-         /**
-          * {String} Ключ первоначального активного элемента
-          */
-         defaultKey: undefined
+         }
       },
       _dotTplFn: TabButtonsTpl,
 
       $constructor: function () {
-         this.defaultKey = this._options.selectedKey;
-      },
-      /**
-       * <wiTag group="Управление">
-       * Применение первоначального состояния. Восстанавливает первоначальную активную вкладку.
-       */
-      resetToDefaultState: function () {
-         this.setSelectedKey(this.defaultKey);
-      },
-      /**
-       * <wiTag group="Управление">
-       * Включает или выключает выделение активного элемента.
-       * @param {Boolean} toggle Состояние
-       */
-      toggleMarker: function(toggle){
-         this.getContainer().toggleClass('controls-TabButton__has-marker', toggle)
-      },
-      _findSideItems: function(){
-         this.getContainer().find('.controls-TabButton__left-align:first, .controls-TabButton__right-align:first').addClass('controls-TabButton__side-item');
-      },
-      _drawItemsCallback: function(){
-         TabButtons.superclass._drawItemsCallback.call(this);
-         this._findSideItems();
       },
       _getItemTemplate: function (item) {
          var displayField = this._options.displayField;

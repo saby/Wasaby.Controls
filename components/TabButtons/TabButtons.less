@@ -1,39 +1,4 @@
 .controls-TabButtons {
+   border-bottom: @tab-buttons-border-bottom;
    height: @tab-buttons-height;
-   overflow: @tab-buttons-overflow;
-   &.controls-TabButton__has-marker {
-      .controls-Checked__checked {
-         .controls-TabButton__selected-border {
-            display: @tab-button-checked-selected-border-display;
-         }
-      }
-
-      .controls-TabButton__left-align {
-         .controls-TabButton__selected-border {
-            left: @tab-button-left-selected-border-left;
-         }
-      }
-
-      .controls-TabButton__right-align {
-         .controls-TabButton__selected-border {
-            right: @tab-button-right-selected-border-right;
-         }
-      }
-
-      .ws-disabled, &.ws-disabled:hover, &.ws-disabled.controls-Checked__checked {
-         .controls-TabButton__selected-border {
-            display: @tab-button-disabled-selected-border-display;
-         }
-      }
-   }
-   .controls-TabButton__selected-border {
-      position: @tab-button-selected-border-position;
-      right: @tab-button-selected-border-right;
-      top: @tab-button-selected-border-top;
-      width: @tab-button-selected-border-width;
-      height: @tab-button-selected-border-height;
-      background: @tab-button-selected-border-bg;
-      display: @tab-button-selected-border-display;
-      z-index: @tab-button-selected-border-z-index;
-   }
 }

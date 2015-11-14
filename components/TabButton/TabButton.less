@@ -1,138 +1,95 @@
 .controls-TabButton {
    display: @tab-button-display;
+   vertical-align: @tab-button-vertical-align;
    cursor: @tab-button-cursor;
    height: @tab-button-height;
    position: @tab-button-position;
-   overflow: @tab-button-overflow;
+   color: @tab-button-color;
+   font: @tab-button-font;
+   margin-top: @tab-button-margin-top;
+   border: @tab-button-border;
    &:hover {
+      background: @tab-button-hover-background;
+      border: @tab-button-hover-border;
       .controls-TabButton__inner {
-         background: @tab-button-hover-inner-bg;
-         .controls-TabButton__caption {
-            color: @tab-button-hover-inner-caption-color;
+         &:after {
+            display: @tab-button-hover-inner-after-display;
          }
       }
    }
-
    &.controls-Checked__checked {
-      z-index: @tab-button-checked-zindex;
+      border-top: @tab-button-checked-border-top;
+      border-bottom: @tab-button-checked-border-bottom;
+      border-left: @tab-button-checked-border-left;
+      border-right: @tab-button-checked-border-right;
+      &:hover {
+         background: @tab-button-checked-hover-bg;
+      }
       .controls-TabButton__inner {
-         background: @tab-button-checked-inner-bg;
+         font-weight: @tab-button-checked-inner-font-weight;
+         font-size: @tab-button-checked-inner-font-size;
          color: @tab-button-checked-inner-color;
+         &:after{
+            display: @tab-button-checked-inner-after-display;
+         }
+      }
+
+   }
+   &.controls-TabButton__large-font {
+      border-left: @tab-button-large-border-left;
+      .controls-TabButton__inner {
+         font-size: @tab-button-large-inner-font-size;
+         font-weight: @tab-button-large-inner-font-weight;
+         padding-top: @tab-button-large-inner-padding-top;
       }
    }
-
-   &.controls-TabButton__left-align {
-      float: @tab-button-left-float;
-      margin-left: @tab-button-items-margin;
-      &.controls-TabButton__side-item{
-         margin-left: @tab-button-left-side-item-margin-left;
+   .controls-TabButton__inner {
+      padding: @tab-button-inner-padding;
+      &:after {
+         content: @tab-button-inner-after-content;
+         display: @tab-button-inner-after-display;
+         width: @tab-button-inner-after-width;
+         height: @tab-button-inner-after-height;
+         background-color: @tab-button-inner-after-bg-color;
+         position: @tab-button-inner-after-position;
+         bottom: @tab-button-inner-after-bottom;
+         left: @tab-button-inner-after-left;
       }
-      &:hover {
-         .controls-TabButton__corner {
-            background: @tab-button-hover-left-corner-bg;
-         }
-      }
-      &.controls-Checked__checked {
-         .controls-TabButton__corner {
-            background: @tab-button-checked-left-corner-bg;
-         }
-      }
-      .controls-TabButton__inner {
-         border-left: @tab-button-left-inner-border-left;
-         padding-left: @tab-button-left-inner-padding-left;
-         border-top-left-radius: @tab-button-left-inner-border-top-left-radius;
-      }
-      .controls-TabButton__corner {
-         float: @tab-button-left-corner-float;
-         background: @tab-button-left-corner-bg;
+      .controls-TabButton__icon {
+         margin-right: @tab-button-inner-icon-margin-left;
       }
    }
 
    &.controls-TabButton__right-align {
       float: @tab-button-right-float;
-      margin-right: @tab-button-items-margin;
-      &.controls-TabButton__side-item{
-         margin-right: @tab-button-right-side-item-margin-right;
-      }
+   }
+
+   &.controls-TabButton__left-align {
+      float: @tab-button-left-float;
+   }
+
+   /*Нужно чтобы вкладка переключалась даже если в неё положили компонент*/
+   .controls-tabButton__overlay {
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: 0;
+      bottom: 0;
+      background: white;
+      -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)"; /*IE8*/
+      opacity: 0;
+   }
+
+   &.ws-disabled, &.ws-disabled:hover, &.ws-disabled.controls-Checked__checked {
       &:hover {
-         .controls-TabButton__corner {
-            background: @tab-button-hover-right-corner-bg;
-         }
-      }
-      &.controls-Checked__checked {
-         .controls-TabButton__corner {
-            background: @tab-button-checked-right-corner-bg;
-         }
+         border-color: @tab-button-disabled-hover-border-color;
+         background: @tab-button-disabled-hover-bg;
       }
       .controls-TabButton__inner {
-         border-right: @tab-button-right-inner-border-right;
-         padding-right: @tab-button-right-inner-padding-right;
-         border-top-right-radius: @tab-button-right-inner-border-top-right-radius;
-      }
-      .controls-TabButton__corner {
-         float: @tab-button-right-corner-float;
-         background: @tab-button-right-corner-bg;
-      }
-   }
-
-   .controls-TabButton__corner {
-      z-index: @tab-button-corner-z-index;
-      width: @tab-button-corner-width;
-      height: @tab-button-corner-height;
-      line-height: @tab-button-corner-line-height;
-      display: @tab-button-corner-display;
-   }
-
-   .controls-TabButton__inner {
-      border-top: @tab-button-inner-border-top;
-      color: @tab-button-inner-color;
-      display: @tab-button-inner-display;
-      height: @tab-button-inner-height;
-      background: @tab-button-inner-bg;
-      position: @tab-button-inner-position;
-      z-index: @tab-button-inner-z-index;
-      line-height: @tab-button-inner-line-height;
-
-      .controls-TabButton__caption {
-         font-family: @tab-button-inner-caption-font-family;
-         font-size: @tab-button-inner-caption-font-size;
-         font-weight: @tab-button-inner-caption-font-weight;
-         font-style: @tab-button-inner-caption-font-style;
-         display: @tab-button-inner-caption-display;
-         height: @tab-button-inner-caption-height;
-         vertical-align: @tab-button-inner-caption-vertical-align;
-      }
-
-      .controls-TabButton__icon{
-         line-height: @tab-button-inner-icon-line-height;
-      }
-   }
-
-   &.controls-TabButton__large-font{
-      .controls-TabButton__inner {
-         .controls-TabButton__caption {
-            font-size: @tab-button-big-inner-caption-font-size;
-         }
-
-         .controls-TabButton__additional-text{
-            font-family: @tab-button-big-inner-additional-font-family;
-            font-weight: @tab-button-big-inner-additional-font-weight;
-            font-size: @tab-button-big-inner-additional-font-size;
+         color: @tab-button-disabled-inner-color;
+         &:after {
+            display: @tab-button-disabled-inner-after-display;
          }
       }
    }
-
-  &.ws-disabled, &.ws-disabled:hover, &.ws-disabled.controls-Checked__checked{
-    .controls-TabButton__inner {
-      background: @tab-button-disabled-inner-bg;
-      border: @tab-button-disabled-inner-border;
-      color: @tab-button-disabled-inner-color;
-      .controls-TabButton__caption {
-        color: @tab-button-disabled-inner-caption-color;
-      }
-    }
-    .controls-TabButton__corner,{
-      background: @tab-button-disabled-corner-bg;
-    }
-  }
 }

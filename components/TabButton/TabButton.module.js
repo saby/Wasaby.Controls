@@ -35,6 +35,14 @@ define('js!SBIS3.CONTROLS.TabButton',
              */
             largeFont: false,
             /**
+             * @cfg {String} css класс иконки
+             * @example
+             * <pre>
+             *     <option name="icon">icon-16 icon-Archive icon-primary action-hover</option>
+             * </pre>
+             */
+            icon: '',
+            /**
              * @cfg {HTML} Шаблон, отображаемый внутри вкладки
              * @example
              * <pre>
