@@ -286,6 +286,9 @@ define('js!SBIS3.CONTROLS.ListView',
          },
 
          $constructor: function () {
+            //TODO временно смотрим на TopParent, чтобы понять, где скролл. С внедрением ScrallWatcher этот функционал уберем
+            var topParent = this.getTopParent(),
+                  self = this;
             this._publish('onChangeHoveredItem', 'onItemClick');
             $ws.single.CommandDispatcher.declareCommand(this, 'newItem', this._newItem.bind(this));
             this._container.on('mousemove', this._mouseMoveHandler.bind(this))
@@ -301,6 +304,10 @@ define('js!SBIS3.CONTROLS.ListView',
                   this.getContainer().bind('scroll.wsInfiniteScroll', this._onContainerScroll.bind(this));
                } else {
                   $(window).bind('scroll.wsInfiniteScroll', this._onWindowScrollHandler);
+               }
+               if ($ws.helpers.instanceOfModule(topParent, 'SBIS3.CORE.FloatArea')) {
+                  //Если браузер лежит на всплывающей панели и имеет автовысоту, то скролл появляется у контейнера всплывашки (.parent())
+                  topParent.subscribe('onScroll', this._onFAScroll.bind(this));
                }
             }
             $ws.single.CommandDispatcher.declareCommand(this, 'ActivateItem', this._activateItem);
@@ -852,6 +859,9 @@ define('js!SBIS3.CONTROLS.ListView',
          _onWindowScroll: function (event) {
             this._loadChecked(this._isBottomOfPage());
          },
+         _onFAScroll: function(event, scrollOptions) {
+            this._loadChecked(scrollOptions.clientHeight + scrollOptions.scrollTop >= scrollOptions.scrollHeight - $ws._const.Browser.minHeight);
+         },
          _onContainerScroll: function () {
             this._loadChecked(this._loadingIndicator.offset().top - this.getContainer().offset().top < this.getContainer().height());
          },
@@ -925,9 +935,10 @@ define('js!SBIS3.CONTROLS.ListView',
              * т.е. пока не появится скролл внутри контейнера
              */
             var  windowHeight = $(window).height(),
-                  checkHeights = this._isHeightGrowable() ?
-                     (!($('body').get(0).scrollHeight > windowHeight + this._scrollIndicatorHeight)) || (this._container.height() < windowHeight) :
-                     this._container.height() >= this._container.find('.js-controls-View__scrollable').height();
+                isOnFloatArea = $ws.helpers.instanceOfModule(this.getTopParent(), 'SBIS3.CORE.FloatArea'),
+                checkHeights = this._isHeightGrowable() ?
+                  (!($('body').get(0).scrollHeight > windowHeight + this._scrollIndicatorHeight) && !isOnFloatArea) || (this._container.height() < windowHeight) :
+                  this._container.height() >= this._container.find('.js-controls-View__scrollable').height();
             //Если на странице появился скролл и мы достигли дна скролла
             if (this._isLoadBeforeScrollAppears && checkHeights){
                this._nextLoad();
