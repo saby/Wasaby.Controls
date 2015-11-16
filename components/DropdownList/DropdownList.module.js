@@ -54,11 +54,6 @@ define('js!SBIS3.CONTROLS.DropdownList',
                 * @cfg {String} Текст заголовка
                 */
                text : '',
-               /**
-                * @cfg {String} Имя фильтра, который отображает данный контрол
-                * Опция для пробрасывания имени фильтра обратно в FastDataFilter
-                */
-               filterName : '',
                pickerClassName: 'controls-DropdownList__picker',
                allowEmptySelection: false
             },

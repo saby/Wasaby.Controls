@@ -39,7 +39,6 @@ define('js!SBIS3.CONTROLS.FastDataFilter',
                keyField: item.get('keyField'),
                mode: this._options.mode,
                multiselect : !!item.get('multiselect'),
-               filterName : item.get(this._options.keyField),
                displayField: item.get('displayField')
             };
             return '<component data-component="SBIS3.CONTROLS.DropdownList" config="' + $ws.helpers.encodeCfgAttr(cfg) + '">' +
@@ -64,12 +63,11 @@ define('js!SBIS3.CONTROLS.FastDataFilter',
                self._notify('onClickMore', item);
             });
             item.subscribe('onSelectedItemsChange', function(event, idArray){
-               var idx = self._getFilterSctructureItemIndex(this._options.filterName),
+               var idx = self._getFilterSctructureItemIndex(this.getContainer().data('id')),
                //Если выбрали дефолтное значение, то нужно взять из resetValue
                //TODO может быть всегда отдавать массивом?
                    filterValue =  idArray.length === 1 && idArray[0] === this.getDefaultId() ? self._filterStructure[idx].resetValue :
                          (this._options.multiselect ?  idArray : idArray[0]);
-
                //TODO Непонятно как это сделать в обратную сторону (когда из контекста кришло значение его нужно поставить в dropdownList)
                //В контексте текуший DropdownList, у него задавали поле с фильтром
                //Если не нашли, значит искать мне это надо как-то по-другому....
