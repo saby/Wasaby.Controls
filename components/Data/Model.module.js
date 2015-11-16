@@ -318,9 +318,8 @@ define('js!SBIS3.CONTROLS.Data.Model', [
          model.each(function(field, value) {
             this.set(field, value);
          }, this);
-         this._isStored = model._isStored;
-         this._isChanged = model._isChanged;
-         this._isDeleted = model._isDeleted;
+         this._isStored = this._isStored || model._isStored;
+         this._isDeleted = this._isDeleted || model._isDeleted;
          this._initProperties();
       },
 

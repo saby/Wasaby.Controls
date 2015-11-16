@@ -256,7 +256,7 @@ define([
 
          });
          describe('.merge()', function () {
-            it('should merging models', function () {
+            it('should merge models', function () {
                var newModel = new Model({
                   idProperty: 'id',
                   data: {
@@ -266,6 +266,90 @@ define([
                });
                newModel.merge(model);
                assert.strictEqual(newModel.getId(), modelData['id']);
+            });
+            it('should merge models with various adapter types', function () {
+               var data = {
+                     d: [
+                        48,
+                        27,
+                        'sdsd'
+                     ],
+                     s: [
+                        {n: 'max'},
+                        {n: 'calc'},
+                        {n: 'etc'}]
+                  },
+                  anotherModel = new Model({
+                     data: data,
+                     adapter: new SbisAdapter()
+                  });
+               model.merge(anotherModel);
+               anotherModel.each(function(field, value) {
+                  assert.strictEqual(model.get(field), value);
+               });
+            });
+            it('should stay unchanged with empty donor', function () {
+               assert.isFalse(model.isChanged());
+               var anotherModel = new Model();
+               model.merge(anotherModel);
+               assert.isFalse(model.isChanged());
+            });
+            it('should stay unchanged with same donor', function () {
+               assert.isFalse(model.isChanged());
+               var anotherModel = new Model({
+                  data: {
+                     max: modelData.max
+                  }
+               });
+               model.merge(anotherModel);
+               assert.isFalse(model.isChanged());
+            });
+            it('should stay changed', function () {
+               model.set('max', 2);
+               assert.isTrue(model.isChanged());
+               var anotherModel = new Model({
+                  data: {
+                     max: 157
+                  }
+               });
+               model.merge(anotherModel);
+               assert.isTrue(model.isChanged());
+            });
+            it('should become changed with different donor', function () {
+               assert.isFalse(model.isChanged());
+               var anotherModel = new Model({
+                  data: {
+                     max: 157
+                  }
+               });
+               model.merge(anotherModel);
+               assert.isTrue(model.isChanged());
+            });
+            it('should stay unstored', function () {
+               assert.isFalse(model.isStored());
+               var anotherModel = new Model();
+               model.merge(anotherModel);
+               assert.isFalse(model.isStored());
+            });
+            it('should become stored', function () {
+               assert.isFalse(model.isStored());
+               var anotherModel = new Model();
+               anotherModel._isStored = true;
+               model.merge(anotherModel);
+               assert.isTrue(model.isStored());
+            });
+            it('should stay undeleted', function () {
+               assert.isFalse(model.isDeleted());
+               var anotherModel = new Model();
+               model.merge(anotherModel);
+               assert.isFalse(model.isDeleted());
+            });
+            it('should become deleted', function () {
+               assert.isFalse(model.isDeleted());
+               var anotherModel = new Model();
+               anotherModel._isDeleted = true;
+               model.merge(anotherModel);
+               assert.isTrue(model.isDeleted());
             });
          });
       });
