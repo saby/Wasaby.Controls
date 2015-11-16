@@ -236,32 +236,34 @@ define('js!SBIS3.CONTROLS.SbisServiceSource', [
 
       /**
        * Вызов удаления записи из БЛ методом, указанным в опции {@link destroyMethodName}.
-       * @param {Array | Number} id Идентификатор записи или массив идентификаторов.
+       * @param {Number} id Идентификатор записи или массив идентификаторов.
        * @returns {$ws.proto.Deferred} Асинхронный результат выполнения. В колбэке придёт Boolean - результат успешности выполнения операции.
        * @see destroyMethodName
        */
       destroy: function (id) {
-         var self = this,
-            def = new $ws.proto.Deferred(),
-            cast = function(id){ //метод удалить по умолчанию не умеет принимать сложные идентификаторы
-               if (String(id).indexOf(',')) {
-                  id = parseInt(id);
+         var self = this;
+         if ($ws.helpers.type(id) == 'array') {
+            var BL = [],
+               ids = [];
+            $ws.helpers.forEach(id, function(key) {
+               //группируем идентификаторы по объекту
+               var obj = self._getBlObjName(key),
+                  index = Array.indexOf(BL, obj);
+               if (index !== -1) {
+                  ids[index].push(parseInt(key, 10));
+               } else {
+                  BL.push(obj);
+                  ids.push([parseInt(key, 10)]);
                }
-               return id;
-            };
-         if (id instanceof Array) {
-            id = $ws.helpers.map(id, cast)
+            });
+            var pd = new $ws.proto.ParallelDeferred();
+            $ws.helpers.forEach(BL, function(obj, index) {
+               pd.push(self._destroy(ids[index], obj));
+            });
+            return pd.done().getResult();
          } else {
-            id = cast(id);
+            return this._destroy(this._getBlById(id), parseInt(id, 10));
          }
-         self._BL.call(self._options.destroyMethodName, {'ИдО': id}, $ws.proto.BLObject.RETURN_TYPE_ASIS).addCallbacks(function (res) {
-            def.callback(true);
-         }, function (error) {
-            $ws.single.ioc.resolve('ILogger').log('SbisServiceSource', error);
-            def.errback('Не удалось выполнить метод destroy');
-         });
-
-         return def;
       },
 
       /**
@@ -355,7 +357,29 @@ define('js!SBIS3.CONTROLS.SbisServiceSource', [
             def.errback('Не удалось выполнить метод _changeOrder');
          });
          return def;
-      }
+      },
+      /**
+       * Возвращает BL источника, a для сложных идентификторов создает новый
+       */
+      _getBlObjName: function (id) {
+         if (String(id).indexOf(',')) {
+            var ido = String(id).split(',');
+            return ido[1];
+         }
+         return this._object;
+      },
 
+      _destroy: function (id, blName) {
+         var BL = this._BL;
+         if(blName && blName !== this._object ) {
+            BL = new SbisServiceBLO(blName);
+         }
+         return BL.call(this._options.destroyMethodName, {'ИдО': id}, $ws.proto.BLObject.RETURN_TYPE_ASIS).addCallbacks(function (res) {
+            return res;
+         }, function (error) {
+            $ws.single.ioc.resolve('ILogger').log('SbisServiceSource', error);
+            return error;
+         });
+      }
    });
 });
