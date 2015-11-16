@@ -36,6 +36,10 @@ define('js!SBIS3.CONTROLS.BreadCrumbs', [
          _resizeTimeout: null,
          _dropdownWidth: null,
          _homeIcon: undefined,
+         _sizesInited: false,
+         _arrowWidth: 0,
+         _homeIconWidth: 0,
+         _dotsWidth: 0,
          _options: {
             keyField: 'id',
             displayField: 'title',
@@ -151,12 +155,12 @@ define('js!SBIS3.CONTROLS.BreadCrumbs', [
 
       _redraw: function() {
          BreadCrumbs.superclass._redraw.call(this);
+         this._initNonTextElementSizes();
          $('.controls-BreadCrumbs__dots', this._container).remove();
          var targetContainer = this._getTargetContainer(),
             containerWidth = this._container.width(),
             points = $('.controls-BreadCrumbs__crumb', targetContainer),
             i = points.length - 1;
-         
          if (points.length){
             //20px - ширина блока с домиком
             //Добавляем троеточие если пункты не убираются в контейнер
@@ -184,20 +188,30 @@ define('js!SBIS3.CONTROLS.BreadCrumbs', [
             points = $('.controls-BreadCrumbs__crumb:not(.ws-hidden)', targetContainer);
 
             //Минимум остается первая и последняя хлебная крошка
-            //20px - ширина блока с домиком
-            //60px - блок с домиком + стрелка + троеточие
-            if ((targetContainer.width() + 20 >= containerWidth)) {
-               var halfWidth = (containerWidth - 60) / 2;
+            if ((targetContainer.width() + this._arrowWidth >= containerWidth)) {
+               //ширина декоротивных элементов -  блок с домиком, троеточие, стрелки 
+               var width = this._homeIconWidth + this._dotsWidth + this._arrowWidth * 2;
+               var halfWidth = (containerWidth - width) / 2;
                if (points.length >= 2){
                   $('.controls-BreadCrumbs__title', points).css('max-width', halfWidth);
                } else {
-                  $('.controls-BreadCrumbs__title', points).css('max-width', containerWidth - 60);
+                  $('.controls-BreadCrumbs__title', points).css('max-width', containerWidth - width);
                }
             }
          }
 
          if (this._picker) {
             this.hidePicker();
+         }
+      },
+
+      _initNonTextElementSizes: function(){
+         if (!this._dotsWidth && !this._arrowWidth){
+            this._homeIconWidth = $('.controls-BreadCrumbs__crumb-home', this._container).width();
+            this._arrowWidth = $('.controls-BreadCrumbs__arrow', this._container).width();
+         } 
+         if (!this._dotsWidth){
+            this._dotsWidth = $('.controls-BreadCrumbs__dots', this._container).width();
          }
       },
 

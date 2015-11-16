@@ -49,10 +49,10 @@ define('js!SBIS3.CONTROLS.DataFactory', [
                case 'DateTime':
                   return Date.fromSQL(value);
                case 'Money':
-                  if(meta && meta.precision) {
+                  if (meta && meta.precision > 3) {
                      return $ws.helpers.bigNum(value).toString(meta.precision);
                   }
-                  return value;
+                  return value === undefined ? null : value;
                case 'Enum':
                   return new $ws.proto.Enum({
                      availableValues: meta.source, //список вида {0:'one',1:'two'...}
