@@ -70,12 +70,12 @@ define('js!SBIS3.CONTROLS.FastDataFilter',
                    filterValue =  idArray.length === 1 && idArray[0] === this.getDefaultId() ? self._filterStructure[idx].resetValue :
                          (this._options.multiselect ?  idArray : idArray[0]);
 
-               //TODO Непонятно как это сделать в обратную сторону (когда из контеста кришло значение его нужно поставить в dropdownList)
+               //TODO Непонятно как это сделать в обратную сторону (когда из контекста кришло значение его нужно поставить в dropdownList)
                //В контексте текуший DropdownList, у него задавали поле с фильтром
                //Если не нашли, значит искать мне это надо как-то по-другому....
                if (idx >= 0) {
                   self._filterStructure[idx].value = filterValue;
-                  self._filterStructure[idx].caption = this.getCaption();
+                  self._filterStructure[idx].caption = this.getText();
                   self.applyFilter();
                }
             });
