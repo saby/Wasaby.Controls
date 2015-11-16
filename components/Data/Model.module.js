@@ -156,6 +156,9 @@ define('js!SBIS3.CONTROLS.Data.Model', [
 
          this._options.idProperty = this._options.idProperty || '';
          this._initAdapter();
+         if (!this._options.idProperty) {
+            this._options.idProperty = this.getAdapter().getKeyField(this._options.data);
+         }
          this.setRawData(this._options.data);
          this._publish('onPropertyChange');
       },
