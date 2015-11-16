@@ -1,0 +1,20 @@
+<div class="controls-DropdownList__header"></div>
+<div class="controls-DropdownList__body">
+   <div class="controls-DropdownList__list"></div>
+   {{?it.multiselect}}
+   <div class="controls-DropdownList__footer">
+      <div class="controls-DropdownListFooter {{?it.className}} {{=it.className}}{{?}}">
+         <component data-component="SBIS3.CONTROLS.Button">
+            <opt name="name">DropdownList_buttonChoose</opt>
+            <opt name="caption">Отобрать</opt>
+            <opt name="primary">true</opt>
+            <opt name="className">ws-invisible</opt>
+         </component>
+         <component class="controls-DropdownListFooter_hasMore" data-component="SBIS3.CONTROLS.Link">
+            <opt name="caption">Еще...</opt>
+            <opt name="name">DropdownList_buttonHasMore</opt>
+         </component>
+      </div>
+   </div>
+   {{?}}
+</div>

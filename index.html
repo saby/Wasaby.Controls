@@ -112,6 +112,9 @@
                <li>
                   <div id="DataBinding"></div>
                </li>
+                <li>
+                    <div id="DropdownList"></div>
+                </li>
                <li>
                   <div id="ButtonContent"></div>
                </li>
@@ -322,9 +325,16 @@
             new r({
                element: "DataBinding",
                caption: 'Data binding',
-               href: '/pages/data-bind.html'
+               href: '/pages/DataBindingPage.html'
             })
          });
+          require(["js!SBIS3.CONTROLS.Link"], function (r) {
+              new r({
+                  element: "DropdownList",
+                  caption: 'DropdownList',
+                  href: '/pages/DropdownList.html'
+              })
+          });
 
          require(["js!SBIS3.CONTROLS.Link"], function (r) {
             new r({
