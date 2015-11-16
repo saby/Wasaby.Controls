@@ -424,26 +424,6 @@ define('js!SBIS3.CONTROLS.Data.Source.Memory', [
       _getIndexByKey: function (key) {
          var index = this._index[key];
          return index === undefined ? -1 : index;
-      },
-
-      /**
-       * выполняет удаление записи
-       * @param key - идентификатор записи
-       * @returns {boolean}
-       * @private
-       */
-      _destroy: function (key) {
-         var index = this._getIndexByKey(key);
-         if(index !== -1) {
-            key._options.adapter.forTable().remove(
-               key._options.data,
-               index
-            );
-            this._reIndex();
-            return true;
-         } else {
-            return false;
-         }
       }
 
       //endregion Protected methods
