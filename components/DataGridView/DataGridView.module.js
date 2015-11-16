@@ -177,6 +177,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
             row.empty()
                .append($(this._getItemTemplate(record)).children());
             this._addItemAttributes(row, record);
+            this.reviveComponents();
             if (this._isPartScrollVisible) {
                this.updateScrollAndColumns();
             }
