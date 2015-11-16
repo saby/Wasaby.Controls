@@ -233,7 +233,6 @@
 // ---------- //
 // Tab button //
 // ---------- //
-
 @tab-buttons-height:                            30px;
 @tab-buttons-border-bottom:                     1px solid #CCCCCC;
 
@@ -259,15 +258,18 @@
 
 @tab-button-checked-border-top:                 1px solid #313E78;
 @tab-button-checked-border-bottom:              1px solid #FFF;
-@tab-button-checked-border-left:                1px solid @tab-button-checked-border-color;
-@tab-button-checked-border-right:               1px solid @tab-button-checked-border-color;
+@tab-button-checked-border-left:                transparent;
+@tab-button-checked-border-right:               transparent;
 @tab-button-checked-bg:                         #FFFFFF;
-@tab-button-checked-zindex:                     50;
+@tab-button-checked-z-index:                     50;
 @tab-button-checked-cursor:                     default;
 @tab-button-checked-font-size:                  15px;
 @tab-button-checked-inner-font-weight:          bold;
 @tab-button-checked-inner-font-size:            15px;
 @tab-button-checked-inner-color:                #D94700;
+@tab-button-checked-inner-bg:                   #FFFFFF;
+@tab-button-checked-inner-border-left:          1px solid @tab-button-checked-border-color;
+@tab-button-checked-inner-border-right:         1px solid @tab-button-checked-border-color;
 @tab-button-checked-inner-after-display:        none;
 @tab-button-checked-overlay-display:            none;
 
@@ -289,7 +291,8 @@
 @tab-button-inner-padding:                      0px 8px 0 8px;
 @tab-button-inner-line-height:                  30px;
 @tab-button-inner-overflow:                     hidden;
-@tab-button-inner-max-height:                   28px;
+@tab-button-inner-height:                       29px;
+@tab-button-inner-max-height:                   29px;
 @tab-button-inner-after-content:                '';
 @tab-button-inner-after-display:                block;
 @tab-button-inner-after-width:                  1px;

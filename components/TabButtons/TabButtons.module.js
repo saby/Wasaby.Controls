@@ -20,6 +20,7 @@ define(
     * @author Крайнов Дмитрий Олегович
     *
     * @cssModifier controls-TabButton__counter Для оформления вкладок-счётчиков с иконками
+    * @cssModifier controls-TabButton__main-item Для оформления главной вкладки
     * @cssModifier controls-TabButton__additionalText1 Для оформления дополнительного текста 1 внутри вкладки
     * @cssModifier controls-TabButton__additionalText2 Для оформления дополнительного текста 2 внутри вкладки
     */
