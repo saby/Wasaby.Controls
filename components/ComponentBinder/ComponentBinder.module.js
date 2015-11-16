@@ -10,7 +10,7 @@ define('js!SBIS3.CONTROLS.ComponentBinder', [], function () {
    /*методы для поиска*/
    function startHierSearch(text, searchParamName, searchCrumbsTpl) {
       if (text) {
-         var filter = $ws.core.merge(this._options.view._filter, {
+         var filter = $ws.core.merge(this._options.view.getFilter(), {
                'Разворот': 'С разворотом',
                'usePages': 'full'
             }),
@@ -49,7 +49,7 @@ define('js!SBIS3.CONTROLS.ComponentBinder', [], function () {
    function startSearch(text, searchParamName){
       if (text){
          var view = this._options.view,
-            filter = $ws.core.merge(view._filter, {
+            filter = $ws.core.merge(view.getFilter(), {
                'usePages': 'full'
             });
          filter[searchParamName] = text;
@@ -60,10 +60,12 @@ define('js!SBIS3.CONTROLS.ComponentBinder', [], function () {
    }
 
    function resetSearch(searchParamName){
-      var view = this._options.view;
-      delete (view._filter[searchParamName]);
+      var
+         view = this._options.view,
+         filter = view.getFilter();
+      delete (filter[searchParamName]);
       view.setHighlightText('', false);
-      view.reload(view._filter, view._sorting, 0);
+      view.reload(filter, view._sorting, 0);
    }
 
    function resetGroup(searchParamName) {
@@ -72,7 +74,7 @@ define('js!SBIS3.CONTROLS.ComponentBinder', [], function () {
          return;
       }
       var view = this._options.view,
-         filter = $ws.core.merge(view._filter, {
+         filter = $ws.core.merge(view.getFilter(), {
             'Разворот' : 'Без разворота'
          });
       delete (filter[searchParamName]);
@@ -98,7 +100,7 @@ define('js!SBIS3.CONTROLS.ComponentBinder', [], function () {
          }
       } else {
          //Очищаем крошки. TODO переделать, когда появятся привзяки по контексту
-         view._filter = filter;
+         view.setFilter(filter, true);
       }
       //При любом релоаде из режима поиска нужно снять класс
       view.once('onDataLoad', function(){

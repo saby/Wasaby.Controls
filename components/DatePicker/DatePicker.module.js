@@ -204,6 +204,10 @@ define(
             this._setDate( this._options.date );
          }
 
+         if (this._options.text  &&  !this._options.date) {
+            this.setText(this._options.text);
+         }
+
          this._calendarInit();
 
       },
@@ -363,6 +367,7 @@ define(
          else {
             throw new Error('Аргументом должна являться строка или дата');
          }
+         $ws.single.ioc.resolve('ILogger').log('DatePicker', 'метод "setValue" будет удален в 3.7.3.20. Используйте "setDate" или "setText".');
       },
 
       /**

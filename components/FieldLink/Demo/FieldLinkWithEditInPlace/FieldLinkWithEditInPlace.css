@@ -1,0 +1,11 @@
+.controls-demo-FieldLinkWithEditInPlace__cell {
+   padding-left: 5px;
+}
+
+.controls-demo-FieldLinkWithEditInPlace__cell > p {
+   margin: 13px 0;
+}
+
+.controls-demo-FieldLinkWithEditInPlace__newItem {
+   padding-top: 8px;
+}

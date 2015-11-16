@@ -528,9 +528,6 @@
 @menu-big-item-height:                    32px;
 @menu-item-line-height:                   @menu-item-height;
 @menu-item-default-padding:               0 8px;
-@menu-item-small-padding-left:            8px;
-@menu-item-average-padding-left:          8px;
-@menu-item-big-padding-left:              8px;
 @menu-item-padding:                       0 32px 0 16px;
 @menu-item-expand-padding-right:          16px;
 
@@ -1457,7 +1454,9 @@
 @multiView-tile-item-image-margin:                  10px 40px;
 @multiView-tile-item-text-margin:                   7px;
 @multiView-tile-selected-item-bg:                   #E7F0F9;
-@multiView-tile-selected-item-border:               1px solid #FF9C6C;
+@multiView-tile-selected-item-border:               1px solid @multiView-tile-selected-item-border-color;
+@multiView-tile-selected-item-border-color:         #FF9C6C;
+@multiView-default-folder-border:                   1px solid transparent;
 @multiView-default-folder-bg:                       url("img/defaultFolder.png");
 @multiView-default-item-bg:                         url("img/defaultItem.png");
 
@@ -1549,3 +1548,27 @@
 @drag-and-drop-count-margin:                       20px 0 0 11px;
 @drag-and-drop-count-font-size:                    10px;
 @drag-and-drop-hover-bg:                           #9fd3fe !important;
+
+//FieldLink
+@controls-FieldLink-picker-show-border:            1px solid;
+@controls-FieldLink-picker-show-border-color:      #eaeaea #eaeaea #e4e4e4;
+@controls-FieldLink-picker-show-color:             @white-color;
+
+@controls-FieldLink-fieldWrapper-margin:           0 !important;
+@controls-FieldLink-showAllLinks-top:              2px;
+@controls-FieldLink-showAllLinks-padding:          0 4px;
+@controls-FieldLink-linkContainer-padding:         4px 0;
+
+@controls-FieldLink-picker-max-height:             500px;
+@controls-FieldLink-picker-min-height:             16px;
+@controls-FieldLink-picker-border:                 1px solid #eaeaea;
+@controls-FieldLink-picker-background:             @white-color;
+
+@controls-FieldLink-linkItem-margin:               2px 0;
+@controls-FieldLink-linkItem-position:             relative;
+@controls-FieldLink-linkItem-padding:              0 16px 0 4px;
+@controls-FieldLink-linkItem-caption-height:       16px;
+@controls-FieldLink-linkItem-cross-heigth:         @controls-FieldLink-linkItem-caption-height;
+@controls-FieldLink-linkItem-cross-width:          16px;
+@controls-FieldLink-linkItem-cross-right:          0;
+

@@ -7,7 +7,12 @@
   &.controls-ButtonGroup__vertical {
     .controls-ListView__item {
       display: block;
-      margin: @radio-group-vertical-item-margin;
+      height: auto;
+      margin: @button-group-vertical-item-margin;
+      padding-left: @radio-button-icon-width + 12px;
+       .controls-RadioButton__icon{
+         margin-left: -16px;
+       }
     }
   }
 }
