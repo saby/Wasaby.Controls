@@ -27,14 +27,6 @@ define('js!SBIS3.CONTROLS.TabButton',
              */
             align: 'right',
             /**
-             * @cfg {Boolean} Увеличенный шрифт для текста
-             * @example
-             * <pre>
-             *     <option name="largeFont">false</option>
-             * </pre>
-             */
-            largeFont: false,
-            /**
              * @cfg {String} css класс иконки
              * @example
              * <pre>

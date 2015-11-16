@@ -8,11 +8,13 @@
    font: @tab-button-font;
    margin-top: @tab-button-margin-top;
    border: @tab-button-border;
+   z-index: @tab-button-z-index;
+   border-bottom: @tab-button-border-bottom;
    &:hover {
       background: @tab-button-hover-background;
       border: @tab-button-hover-border;
       .controls-TabButton__inner {
-         &:after {
+         &:before {
             display: @tab-button-hover-inner-after-display;
          }
       }
@@ -22,30 +24,52 @@
       border-bottom: @tab-button-checked-border-bottom;
       border-left: @tab-button-checked-border-left;
       border-right: @tab-button-checked-border-right;
-      &:hover {
-         background: @tab-button-checked-hover-bg;
-      }
+      background: @tab-button-checked-bg;
+      z-index: @tab-button-checked-bg;
+      cursor: @tab-button-checked-zindex;
+      font-size: @tab-button-checked-cursor;
       .controls-TabButton__inner {
          font-weight: @tab-button-checked-inner-font-weight;
          font-size: @tab-button-checked-inner-font-size;
          color: @tab-button-checked-inner-color;
-         &:after{
+         &:before{
             display: @tab-button-checked-inner-after-display;
          }
       }
-
+      .controls-tabButton__overlay{
+         display: @tab-button-checked-overlay-display;
+      }
    }
    &.controls-TabButton__large-font {
       border-left: @tab-button-large-border-left;
       .controls-TabButton__inner {
          font-size: @tab-button-large-inner-font-size;
          font-weight: @tab-button-large-inner-font-weight;
-         padding-top: @tab-button-large-inner-padding-top;
+         line-height: @tab-button-large-inner-line-height;
+      }
+      .controls-TabButton__additionalText1 {
+         color: @tab-button-large-firstAddText-color;
+         font-size: @tab-button-large-firstAddText-font-size;
+         font-weight: @tab-button-large-firstAddText-font-weight;
+         &:hover {
+            color: @tab-button-large-firstAddText-hover-color;
+         }
+      }
+      .controls-TabButton__additionalText2 {
+         color: @tab-button-large-secondAddText-color;
+         font-size: @tab-button-large-secondAddText-font-size;
+         font-weight: @tab-button-large-secondAddText-font-weight;
+         &:hover {
+            color: @tab-button-large-secondAddText-hover-color;
+         }
       }
    }
    .controls-TabButton__inner {
       padding: @tab-button-inner-padding;
-      &:after {
+      line-height: @tab-button-inner-line-height;
+      overflow: @tab-button-inner-overflow;
+      max-height: @tab-button-inner-max-height;
+      &:before {
          content: @tab-button-inner-after-content;
          display: @tab-button-inner-after-display;
          width: @tab-button-inner-after-width;
@@ -53,31 +77,47 @@
          background-color: @tab-button-inner-after-bg-color;
          position: @tab-button-inner-after-position;
          bottom: @tab-button-inner-after-bottom;
-         left: @tab-button-inner-after-left;
+         z-index: @tab-button-inner-after-z-index;
       }
       .controls-TabButton__icon {
          margin-right: @tab-button-inner-icon-margin-left;
       }
    }
 
+   &.controls-TabButton__counter{
+      &.controls-Checked__checked {
+         .controls-TabButton__inner {
+            font-weight: @tab-button-counter-font-weight;
+            font-size: @tab-button-counter-font-size;
+         }
+      }
+   }
+
    &.controls-TabButton__right-align {
+      margin-right: @tab-button-right-margin-right;
       float: @tab-button-right-float;
+      .controls-TabButton__inner:before{
+         left: @tab-button-right-separator-left
+      }
    }
 
    &.controls-TabButton__left-align {
+      margin-left: @tab-button-left-margin-left;
       float: @tab-button-left-float;
+      .controls-TabButton__inner:before{
+         right: @tab-button-left-separator-right;
+      }
    }
 
-   /*Нужно чтобы вкладка переключалась даже если в неё положили компонент*/
    .controls-tabButton__overlay {
-      position: absolute;
-      left: 0;
-      right: 0;
-      top: 0;
-      bottom: 0;
-      background: white;
-      -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)"; /*IE8*/
-      opacity: 0;
+      position: @tab-button-overlay-position;
+      left: @tab-button-overlay-left;
+      right: @tab-button-overlay-right;
+      top: @tab-button-overlay-top;
+      bottom: @tab-button-overlay-bottom;
+      background: @tab-button-overlay-background;
+      -ms-filter: @tab-button-overlay-ms-filter;
+      opacity: @tab-button-overlay-opacity;
    }
 
    &.ws-disabled, &.ws-disabled:hover, &.ws-disabled.controls-Checked__checked {
@@ -87,7 +127,7 @@
       }
       .controls-TabButton__inner {
          color: @tab-button-disabled-inner-color;
-         &:after {
+         &:before {
             display: @tab-button-disabled-inner-after-display;
          }
       }

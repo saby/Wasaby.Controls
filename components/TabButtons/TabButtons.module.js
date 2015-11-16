@@ -18,6 +18,10 @@ define(
     * @class SBIS3.CONTROLS.TabButtons
     * @extends SBIS3.CONTROLS.RadioGroupBase
     * @author Крайнов Дмитрий Олегович
+    *
+    * @cssModifier controls-TabButton__counter Для оформления вкладок-счётчиков с иконками
+    * @cssModifier controls-TabButton__additionalText1 Для оформления дополнительного текста 1 внутри вкладки
+    * @cssModifier controls-TabButton__additionalText2 Для оформления дополнительного текста 2 внутри вкладки
     */
 
    var TabButtons = RadioGroupBase.extend(/** @lends SBIS3.CONTROLS.TabButtons.prototype */ {

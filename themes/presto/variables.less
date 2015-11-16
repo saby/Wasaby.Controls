@@ -235,9 +235,10 @@
 // ---------- //
 
 @tab-buttons-height:                            30px;
-@tab-buttons-border-bottom:                     1px solid #ccc;
+@tab-buttons-border-bottom:                     1px solid #CCCCCC;
 
 @tab-button-border-color:                       #E4E4E4;
+@tab-button-checked-border-color:               #CCCCCC;
 
 @tab-button-display:                            table-cell;
 @tab-button-vertical-align:                     middle;
@@ -249,6 +250,8 @@
 @tab-button-font:                               14px 'TensorFont Regular', 'TensorFont';
 @tab-button-margin-top:                         1px;
 @tab-button-border:                             1px solid transparent;
+@tab-button-z-index:                            10;
+@tab-button-border-bottom:                      1px solid #CCCCCC;
 
 @tab-button-hover-background:                   #F0F5FB;
 @tab-button-hover-border:                       1px solid @tab-button-border-color;
@@ -256,20 +259,37 @@
 
 @tab-button-checked-border-top:                 1px solid #313E78;
 @tab-button-checked-border-bottom:              1px solid #FFF;
-@tab-button-checked-border-left:                1px solid @tab-button-border-color;
-@tab-button-checked-border-right:               1px solid @tab-button-border-color;
-@tab-button-checked-hover-bg:                   transparent;
+@tab-button-checked-border-left:                1px solid @tab-button-checked-border-color;
+@tab-button-checked-border-right:               1px solid @tab-button-checked-border-color;
+@tab-button-checked-bg:                         #FFFFFF;
+@tab-button-checked-zindex:                     50;
+@tab-button-checked-cursor:                     default;
+@tab-button-checked-font-size:                  15px;
 @tab-button-checked-inner-font-weight:          bold;
 @tab-button-checked-inner-font-size:            15px;
 @tab-button-checked-inner-color:                #D94700;
 @tab-button-checked-inner-after-display:        none;
+@tab-button-checked-overlay-display:            none;
 
 @tab-button-large-border-left:                  none;
 @tab-button-large-inner-font-size:              18px;
 @tab-button-large-inner-font-weight:            bold;
-@tab-button-large-inner-padding-top:            3px;
+@tab-button-large-inner-line-height:            29px;
 
-@tab-button-inner-padding:                      6px 8px 0 8px;
+@tab-button-large-firstAddText-color:           #0055BB;
+@tab-button-large-firstAddText-font-size:       15px;
+@tab-button-large-firstAddText-font-weight:     normal;
+@tab-button-large-firstAddText-hover-color:     #FF7030;
+
+@tab-button-large-secondAddText-color:          #999999;
+@tab-button-large-secondAddText-font-size:      13px;
+@tab-button-large-secondAddText-font-weight:    normal;
+@tab-button-large-secondAddText-hover-color:    #FF7030;
+
+@tab-button-inner-padding:                      0px 8px 0 8px;
+@tab-button-inner-line-height:                  30px;
+@tab-button-inner-overflow:                     hidden;
+@tab-button-inner-max-height:                   28px;
 @tab-button-inner-after-content:                '';
 @tab-button-inner-after-display:                block;
 @tab-button-inner-after-width:                  1px;
@@ -277,11 +297,28 @@
 @tab-button-inner-after-bg-color:               @tab-button-border-color;
 @tab-button-inner-after-position:               absolute;
 @tab-button-inner-after-bottom:                 7px;
+@tab-button-inner-after-z-index:                10;
 @tab-button-inner-after-left:                   0;
 @tab-button-inner-icon-margin-left:             2px;
 
+@tab-button-counter-font-weight:                normal;
+@tab-button-counter-font-size:                  14px;
+
 @tab-button-right-float:                        right;
+@tab-button-right-margin-right:                 -1px;
+@tab-button-right-separator-left:               -1px;
 @tab-button-left-float:                         left;
+@tab-button-left-margin-left:                   -1px;
+@tab-button-left-separator-right:               -1px;
+
+@tab-button-overlay-position:                   absolute;
+@tab-button-overlay-left:                       0;
+@tab-button-overlay-right:                      0;
+@tab-button-overlay-top:                        0;
+@tab-button-overlay-bottom:                     0;
+@tab-button-overlay-background:                 #FFFFFF;
+@tab-button-overlay-ms-filter:                  "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";
+@tab-button-overlay-opacity:                    0;
 
 @tab-button-disabled-hover-border-color:        transparent;
 @tab-button-disabled-hover-bg:                  transparent;
