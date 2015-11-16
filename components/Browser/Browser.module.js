@@ -1,8 +1,9 @@
 define('js!SBIS3.CONTROLS.Browser', [
    'js!SBIS3.CORE.CompoundControl',
    'html!SBIS3.CONTROLS.Browser',
-   'js!SBIS3.CONTROLS.ComponentBinder'
-], function(CompoundControl, dotTplFn, ComponentBinder){
+   'js!SBIS3.CONTROLS.ComponentBinder',
+   'html!SBIS3.CONTROLS.Browser/resources/contentTpl'
+], function(CompoundControl, dotTplFn, ComponentBinder, contentTpl){
    'use strict';
 
    /**
@@ -52,7 +53,8 @@ define('js!SBIS3.CONTROLS.Browser', [
             /**
              * @cfg {String} Имя параметр фильтрации для поиска
              */
-            searchParam : 'СтрокаПоиска'
+            searchParam : 'СтрокаПоиска',
+            contentTpl : contentTpl
          }
       },
 
