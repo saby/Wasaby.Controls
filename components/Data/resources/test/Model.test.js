@@ -2,8 +2,9 @@
 define([
       'js!SBIS3.CONTROLS.Data.Model',
       'js!SBIS3.CONTROLS.Data.Adapter.Json',
+      'js!SBIS3.CONTROLS.Data.Adapter.Sbis',
       'js!SBIS3.CONTROLS.Data.Source.Memory'
-   ], function (Model, JsonAdapter, MemorySource) {
+   ], function (Model, JsonAdapter, SbisAdapter, MemorySource) {
       'use strict';
       describe('SBIS3.CONTROLS.Data.Model', function () {
          var adapter, model, modelData, modelProperties, source;
@@ -201,6 +202,25 @@ define([
          describe('.getId()', function () {
             it('should return id', function () {
                assert.strictEqual(model.getId(), modelData['id']);
+            });
+
+            it('should detect idProperty automatically', function () {
+               var data = {
+                     d: [
+                        1,
+                        'a',
+                        'test'
+                     ],
+                     s: [
+                        {n: 'Num'},
+                        {n: '@Key'},
+                        {n: 'Name'}]
+                  },
+                  model = new Model({
+                     data: data,
+                     adapter: new SbisAdapter()
+                  });
+               assert.strictEqual(model.getId(), data.d[1]);
             });
 
             it('should throw error for empty key property', function () {

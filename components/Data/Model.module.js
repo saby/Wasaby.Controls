@@ -358,6 +358,7 @@ define('js!SBIS3.CONTROLS.Data.Model', [
       getIdProperty: function () {
          return this._options.idProperty;
       },
+
       /**
        * Устанавливает свойство, в котором хранится первичный ключ модели
        * @param {String} idProperty Первичный ключ модели.
@@ -365,6 +366,7 @@ define('js!SBIS3.CONTROLS.Data.Model', [
       setIdProperty: function (idProperty) {
          this._options.idProperty = idProperty;
       },
+
       /**
        * Возвращает данные модели в "сыром" виде
        * @returns {Object}
