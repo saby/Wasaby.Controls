@@ -315,8 +315,9 @@ define('js!SBIS3.CONTROLS.Data.Model', [
        * @param {SBIS3.CONTROLS.Data.Model} model Модель, с которой будет произведено объединение
        */
       merge: function (model) {
-         //FIXME: подразумевается, что адаптеры моделей должны быть одинаковы. Сделать объединение data через адаптеры.
-         $ws.core.merge(this._options.data, model._options.data);
+         model.each(function(field, value) {
+            this.set(field, value);
+         }, this);
          this._isStored = model._isStored;
          this._isChanged = model._isChanged;
          this._isDeleted = model._isDeleted;
