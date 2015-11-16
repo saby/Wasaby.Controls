@@ -31,6 +31,8 @@ define('js!SBIS3.CONTROLS.DropdownList',
        * @mixes SBIS3.CONTROLS.Selectable
        * @mixes SBIS3.CONTROLS.DropdownListMixin
        * @mixes SBIS3.CONTROLS.PickerMixin
+       * @demo SBIS3.CONTROLS.Demo.MyDropdownList Простой пример работы контрола
+       * @demo SBIS3.CONTROLS.Demo.MyDropdownListFilter Выпадающий список с фильтрацией
        * @control
        * @public
        * @cssModifier controls-DropdownList__withoutArrow Убрать стрелочку слева от выбранного текста.

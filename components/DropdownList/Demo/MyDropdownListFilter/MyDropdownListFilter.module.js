@@ -1,14 +1,14 @@
 /**
  * Created by ad.chistyakova on 11.09.2015.
  */
-define('js!SBIS3.CONTROLS.Demo.MyDropdownList',
+define('js!SBIS3.CONTROLS.Demo.MyDropdownListFilter',
    [
       'js!SBIS3.CORE.CompoundControl',
       'js!SBIS3.CONTROLS.DropdownList',
       'js!SBIS3.CONTROLS.Demo.FilterButtonMain',
-      'html!SBIS3.CONTROLS.Demo.MyDropdownList',
+      'html!SBIS3.CONTROLS.Demo.MyDropdownListFilter',
       'js!SBIS3.CONTROLS.DataGridView',
-      'css!SBIS3.CONTROLS.Demo.MyDropdownList'
+      'css!SBIS3.CONTROLS.Demo.MyDropdownListFilter'
    ],
 
    function(CompoundControl, DropdownList, FilterButtonMainDemo, dotTplFn) {
