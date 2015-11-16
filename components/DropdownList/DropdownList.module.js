@@ -51,7 +51,7 @@ define('js!SBIS3.CONTROLS.DropdownList',
                /**
                 * @cfg {String} Текст заголовка
                 */
-               caption : '',
+               text : '',
                /**
                 * @cfg {String} Имя фильтра, который отображает данный контрол
                 * Опция для пробрасывания имени фильтра обратно в FastDataFilter
@@ -61,8 +61,8 @@ define('js!SBIS3.CONTROLS.DropdownList',
                allowEmptySelection: false
             },
             _dotTplFn: dotTplFn,
-            _caption: null,
-            _pickerCaption: null,
+            _text: null,
+            _pickerText: null,
             _pickerListContainer: null,
             _pickerHeadContainer: null,
             _pickerFooterContainer: null,
@@ -237,9 +237,9 @@ define('js!SBIS3.CONTROLS.DropdownList',
             var pickerContainer = this._getPickerContainer(),
                   self = this;
 
-            this._caption = this._container.find('.controls-DropdownList__caption');
+            this._text = this._container.find('.controls-DropdownList__text');
             this._resetButton = this._container.find('.controls-DropdownList__crossIcon');
-            this._pickerCaption  = pickerContainer.find('.controls-DropdownList__caption');
+            this._pickerText  = pickerContainer.find('.controls-DropdownList__text');
             this._pickerResetButton = pickerContainer.find('.controls-DropdownList__crossIcon');
             this._pickerListContainer = pickerContainer.find('.controls-DropdownList__list');
             this._pickerBodyContainer = pickerContainer.find('.controls-DropdownList__body');
@@ -298,7 +298,7 @@ define('js!SBIS3.CONTROLS.DropdownList',
                      pickerContainer.find('.controls-DropdownList__item__selected').removeClass('controls-DropdownList__item__selected');
                      pickerContainer.find('[data-id="' + id[0] + '"]').addClass('controls-DropdownList__item__selected');
                   }
-                  self.setCaption(textValue.join(', '));
+                  self.setText(textValue.join(', '));
                });
                self._setResetButtonVisibility(id[0] === this._defaultId);
             }
@@ -314,20 +314,20 @@ define('js!SBIS3.CONTROLS.DropdownList',
           * Установить текст в заголовок
           * @param text
           */
-         setCaption: function(text) {
+         setText: function(text) {
             if(typeof text === 'string') {
-               this._options.caption = text;
-               this._caption.text(text);
-               this._pickerCaption.text(text);
-               this._notifyOnPropertyChanged('caption');
+               this._options.text = text;
+               this._text.text(text);
+               this._pickerText.text(text);
+               this._notifyOnPropertyChanged('text');
             }
          },
          /**
-          * Получить значение переменной caption
+          * Получить значение переменной text
           * @returns {String}
           */
-         getCaption: function() {
-            return this._options.caption;
+         getText: function() {
+            return this._options.text;
          },
          _setResetButtonVisibility: function(show) {
             this._resetButton.toggleClass('ws-hidden', show);

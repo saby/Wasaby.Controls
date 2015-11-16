@@ -7,6 +7,7 @@ define('js!SBIS3.CONTROLS.Demo.MyDropdownList',
       'js!SBIS3.CONTROLS.DropdownList',
       'js!SBIS3.CONTROLS.Demo.FilterButtonMain',
       'html!SBIS3.CONTROLS.Demo.MyDropdownList',
+      'js!SBIS3.CONTROLS.DataGridView',
       'css!SBIS3.CONTROLS.Demo.MyDropdownList'
    ],
 
