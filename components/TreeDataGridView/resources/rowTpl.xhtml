@@ -9,7 +9,7 @@
       {{isBranch = column.item.get(it.hierField);}}
       <td class="controls-DataGridView__td{{?column.className}} {{=column.className}}{{?}}{{?it.startScrollColumn!== undefined}}{{?it.startScrollColumn <= index}} controls-DataGridView__scrolledCell{{??}} controls-DataGridView__notScrolledCell{{?}}{{?}}">
          {{?index == 0}}
-            <div class="controls-TreeView__expand js-controls-TreeView__expand{{?!isBranch}} controls-TreeView__expand__leaf{{??}} has-child{{?}}"></div>
+            <div class="controls-TreeView__expand js-controls-TreeView__expand{{?isBranch == null}} controls-TreeView__expand__leaf{{??}} has-child{{?}}"></div>
             {{?isBranch}}
                {{?it.arrowActivatedHandler}}
                <div class="controls-TreeView__ellipsis-wrapper">
