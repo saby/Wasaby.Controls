@@ -228,25 +228,31 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
       },
 
       destroy: function(key, meta) {
-         if (String(key).indexOf(',')) {//метод удалить по умолчанию не умеет принимать сложные идентификаторы
-            key = parseInt(key);
-         }
-         var args = {
-            'ИдО': key
-         };
-         if (!Object.isEmpty(meta)) {
-            args['ДопПоля'] = this._options.adapter.serialize(meta);
-         }
+         var self = this;
+         if ($ws.helpers.type(keys) == 'array') {
+            var providers = [],
+               ids = [];
+            $ws.helpers.forEach(keys, function(key) {
+               //группируем идентификаторы по объекту
+               var obj = self._getProviderNameById(key),
+                  index = Array.indexOf(providers, obj);
+               if (index !== -1) {
+                  ids[index].push(parseInt(key, 10));
+               } else {
+                  providers.push(obj);
+                  ids.push([parseInt(key, 10)]);
+               }
+            });
+            var pd = new $ws.proto.ParallelDeferred();
+            $ws.helpers.forEach(providers, function(provider, index) {
+               pd.push(self._destroy(ids[index], provider));
+            });
+            return pd.done().getResult();
+         } else {
+            var provider = self._getProviderNameById(keys);
+            return self._destroy(parsetInt(keys, 10), provider);
 
-         return this._provider.callMethod(
-            this._options.destroyMethodName,
-            args
-         ).addCallbacks(function (res) {
-            return res;
-         }, function (error) {
-            $ws.single.ioc.resolve('ILogger').log('SBIS3.CONTROLS.Data.Source.SbisService::destroy()', error);
-            return error;
-         });
+         }
       },
 
       merge: function(first, second) {
@@ -596,6 +602,46 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
             params['ИдОДо'] = [parseInt(to,10), objectName];
          }
          return params;
+      },
+      /**
+       * Возвращает имя источника или имя объекта из сложного идентификатора
+       * @private
+       * @ret
+       */
+      _getProviderNameById: function (id) {
+         if (String(id).indexOf(',')) {
+            var ido = String(id).split(',');
+            return ido[1];
+         }
+         return this._options.resource;
+      },
+      /**
+       * вызвает метод удаления
+       * @param {String|Array} id идентификатор объекта
+       * @param {String} resource  название объекта бл у которго будет вызвано удаление
+       * @returns {$ws.proto.Deferred}
+       * @private
+       */
+      _destroy: function(id, resource) {
+         var args = {
+            'ИдО': id
+         };
+         if (!Object.isEmpty(meta)) {
+            args['ДопПоля'] = meta;
+         }
+         var provider = this._provider;
+         if (resource && this._options.resource !== resource) {
+            provider = new SbisServiceBLO(resource);
+         }
+         return provider.callMethod(
+            this._options.destroyMethodName,
+            args
+         ).addCallbacks(function(res) {
+            return res;
+         }, function (error) {
+            $ws.single.ioc.resolve('ILogger').log('SBIS3.CONTROLS.Data.Source.SbisService::destroy()', error);
+            return error;
+         });
       }
 
       //endregion Protected methods
