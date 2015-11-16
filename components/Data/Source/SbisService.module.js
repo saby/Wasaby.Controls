@@ -759,16 +759,16 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
       /**
        * Возвращает имя объекта бл из сложного идентификатора или имя объекта из источника, для простых идентификаторов
        * @private
-       * @param id - Идентификатор записи
-       * @returns {String}
+       * @ret
        */
       _getProviderNameById: function (id) {
-         if (String(id).indexOf(',') !== -1) {
+         if (String(id).indexOf(',')) {
             var ido = String(id).split(',');
             return ido[1];
          }
+         return this._options.resource;
          return this._options.resource.name;
-      },
+      /**
       /**
        * вызвает метод удаления
        * @param {String|Array} id Идентификатор объекта
