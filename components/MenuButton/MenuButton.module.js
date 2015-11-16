@@ -6,6 +6,9 @@ define('js!SBIS3.CONTROLS.MenuButton', ['js!SBIS3.CONTROLS.Button', 'js!SBIS3.CO
     * Кнопка с выпадающим меню
     * @class SBIS3.CONTROLS.MenuButton
     * @extends SBIS3.CONTROLS.Button
+    * @remark
+    * !Важно: Если в меню задан только один пункт, то меню НЕ будет показано, а при нажатии на кнопку будет выполнено действие соответствующее этому пункту.
+    * Кнопка с меню - это кнопка с выбором варинта действия, и если возможно только одно действие, то оно и будет выполнено по нажатию.
     * @demo SBIS3.CONTROLS.Demo.MyMenuButton Пример кнопки с выпадающим меню
     * @control
     * @initial
