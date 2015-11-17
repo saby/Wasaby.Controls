@@ -48,8 +48,14 @@ define('js!SBIS3.CONTROLS.OperationUnload', [
             ]
          },
          _controlsId: {
-            'PDF' : 'Сохранить',
-            'Excel'  : 'СохранитьПоHTML'
+            'PDF' : {
+               objectName : 'PDF',
+               method: 'Сохранить'
+            },
+            'Excel'  : {
+               objectName : 'Excel',
+               method: 'СохранитьПоHTML'
+            }
          },
          _currentItem: undefined
       },
@@ -70,7 +76,7 @@ define('js!SBIS3.CONTROLS.OperationUnload', [
             itemId = items[i].id;
             //Меняем текст только у платформенных пунктов меню
             if (this._controlsId[itemId]) {
-               items[i].title = 'Список'  + extraText + 'в ' + itemId;
+               items[i].title = 'Список'  + extraText + 'в ' + this._controlsId[itemId].objectName;
                //TODO Возможно, когда-нибудь будет правильный метод для перерисовки внутренностей меню и внизу можно будет вызывать полную перерисовку picker без его уничтожения
                this._picker._container.find('>[data-id="' + itemId + '"]').find('.controls-MenuItem__text').text( items[i].title );
             }
@@ -79,7 +85,7 @@ define('js!SBIS3.CONTROLS.OperationUnload', [
       },
       _menuItemActivated: function(event, itemId){
          this._currentItem = itemId;
-         this._prepareOperation('Что сохранить в ' + itemId);
+         this._prepareOperation('Что сохранить в ' + this._controlsId[itemId]);
       },
       _isSelectedState: function(){
          return this._getView().getSelectedKeys().length > 0;
@@ -194,7 +200,7 @@ define('js!SBIS3.CONTROLS.OperationUnload', [
       applyOperation: function(dataSet, cfg){
          var p = new Unloader(cfg);
          //TODO Если не задали имя файла в опции, то возьмем из 1ой колонки, а в 1ой пусто, Вставим текст
-         p.unload(this._currentItem, this._controlsId[this._currentItem], this._getUnloadFileName() );
+         p.unload(this._controlsId[this._currentItem].objectName, this._controlsId[this._currentItem].method, this._getUnloadFileName() );
       },
       _getUnloadFileName: function(){
          return  this._options.fileName || this._getView().getColumns()[0].title || 'Как на экране';
