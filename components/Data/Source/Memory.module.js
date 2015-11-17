@@ -105,9 +105,7 @@ define('js!SBIS3.CONTROLS.Data.Source.Memory', [
             }
          }
          else {
-            if (!this._destroy(keys)) {
-               return $ws.proto.Deferred.fail('Model with key "' + keys + '" isn\'t found');
-            }
+            return this.destroy([keys]);
          }
          return $ws.proto.Deferred.success(true);
       },
