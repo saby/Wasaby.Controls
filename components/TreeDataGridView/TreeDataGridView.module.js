@@ -84,7 +84,8 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
                      if (allContainers[i] == parentContainer.get(0)) {
                         startRow = i + 1;
                      } else {
-                        if (childKeys.indexOf($(allContainers[i]).attr('data-id')) >= 0) {
+                        //TODO двойная проверка из-за того, что ключи могут быть числом, а могут текстом добиться одного варианта и выпилить
+                        if ((childKeys.indexOf($(allContainers[i]).attr('data-id')) >= 0) || ((childKeys.indexOf($(allContainers[i]).data('id')) >= 0))){
                            startRow++;
                         }
                      }
@@ -95,12 +96,12 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
                   /**/
                   if (self._options.displayType == 'folders') {
                      if (record.get(self._options.hierField + '@')) {
-                        self._drawItem(record, {at : startRow});
+                        self._drawAndAppendItem(record, {at : startRow});
                      }
 
                   }
                   else {
-                     self._drawItem(record, {at : startRow});
+                     self._drawAndAppendItem(record, {at : startRow});
                   }
                }
             }

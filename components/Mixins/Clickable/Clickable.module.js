@@ -27,7 +27,11 @@ define('js!SBIS3.CONTROLS.Clickable', [], function() {
       $protected: {
          _options: {
 
-         }
+         },
+         _keysWeHandle: [
+            $ws._const.key.enter,
+            $ws._const.key.space
+         ]
       },
 
       $constructor: function() {
@@ -47,6 +51,13 @@ define('js!SBIS3.CONTROLS.Clickable', [], function() {
 
       _notifyOnActivated : function(originalEvent) {
          this._notify('onActivated', originalEvent);
+      },
+
+      _keyboardHover: function(event){
+         if (this.isEnabled()) {
+            this._clickHandler(event);
+            this._notifyOnActivated(event);
+         }
       },
 
       instead : {
