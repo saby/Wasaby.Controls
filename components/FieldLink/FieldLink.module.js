@@ -272,6 +272,10 @@ define('js!SBIS3.CONTROLS.FieldLink',
          var self = this,
              keysArrLen = keysArr.length;
 
+         /* Этот код для кнопки фильтров,
+            когда хотят забиндить не массив а первое значение из selectedKeys */
+         if(keysArrLen && (keysArr[0] === null || keysArr[0] === undefined)) return;
+
          /* Если удалили в пикере все записи, и он был открыт, то скроем его */
          if (!keysArrLen) {
             this._toggleShowAllLink(false);
