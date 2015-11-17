@@ -81,12 +81,12 @@ define('js!SBIS3.CONTROLS.FieldLink',
                }
             }
          },
-         _inputWrapper: undefined,
-         _linksWrapper: undefined,
-         _dropAllButton: undefined,
-         _showAllLink: undefined,
-         _pickerLinkList: undefined,
-         _linkCollection: undefined,
+         _inputWrapper: undefined,     /* Обертка инпута */
+         _linksWrapper: undefined,     /* Контейнер для контрола выбранных элементов */
+         _dropAllButton: undefined,    /* Кнопка очитски всех выбранных записей */
+         _showAllLink: undefined,      /* Кнопка показа всех записей в пикере */
+         _pickerLinkList: undefined,   /* Контейнер для контрола выбранных элементов в пикере */
+         _linkCollection: undefined,   /* Контрол отображающий выбранные элементы */
          _options: {
             afterFieldWrapper: afterFieldWrapper,
             beforeFieldWrapper: beforeFieldWrapper,
@@ -116,7 +116,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
              */
             dictionaries: [],
             /**
-             * Поддерживать старые представления данных
+             * @cfg {Boolean} Поддерживать старые представления данных
              */
             oldViews: false
          }
@@ -207,6 +207,10 @@ define('js!SBIS3.CONTROLS.FieldLink',
          });
       },
 
+	   /**
+	    * Возвращает выбранные элементы в виде текста
+	    * @returns {string}
+	    */
       getCaption: function() {
          var displayFields = [],
              self = this;
@@ -267,10 +271,6 @@ define('js!SBIS3.CONTROLS.FieldLink',
       _drawSelectedItems: function(keysArr) {
          var self = this,
              keysArrLen = keysArr.length;
-
-         /* Этот код для кнопки фильтров,
-            когда хотят забиндить не массив а первое значение из selectedKeys */
-         if(keysArrLen && (keysArr[0] === null || keysArr[0] === undefined)) return;
 
          /* Если удалили в пикере все записи, и он был открыт, то скроем его */
          if (!keysArrLen) {
@@ -335,7 +335,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
             needDrawItem = $ws.helpers.getTextWidth(item[0].outerHTML) + INPUT_MIN_WIDTH < inputWidth + SHOW_ALL_LINK_WIDTH;
 
             if(!needDrawItem && !this._linkCollection.getContainer().find('.controls-FieldLink__linkItem').length) {
-               item[0].style.width = inputWidth - INPUT_MIN_WIDTH + 'px';
+               item[0].style.width = inputWidth - (this._options.multiselect ? INPUT_MIN_WIDTH : 0) + 'px';
                needDrawItem = true;
                this._checkWidth = false;
             }
