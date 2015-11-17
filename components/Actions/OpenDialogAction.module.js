@@ -2,7 +2,7 @@ define('js!SBIS3.CONTROLS.OpenDialogAction', ['js!SBIS3.CONTROLS.ActionBase', 'j
    'use strict';
 
    /**
-    * Класс базовый для всех стандартных действий, которые можно использовать в интерфейсе
+    * Действие открытия окна редактирования записи
     * @class SBIS3.CONTROLS.OpenDialogAction
     * @public
     * @extends SBIS3.CONTROLS.ActionBase
@@ -25,7 +25,7 @@ define('js!SBIS3.CONTROLS.OpenDialogAction', ['js!SBIS3.CONTROLS.ActionBase', 'j
     * @ignoreEvents onActivate onAfterLoad onAfterShow onBeforeControlsLoad onBeforeLoad onBeforeShow onChange onClick
     * @ignoreEvents onFocusIn onFocusOut onKeyPressed onReady onResize onStateChanged onTooltipContentRequest
     */
-   var OpenDialogAction = ActionBase.extend(/** @lends SBIS3.CONTROLS.ActionBase.prototype */{
+   var OpenDialogAction = ActionBase.extend(/** @lends SBIS3.CONTROLS.OpenDialogAction.prototype */{
       $protected : {
          _options : {
             dialogComponent : ''
