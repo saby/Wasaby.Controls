@@ -1,4 +1,4 @@
-define('js!SBIS3.CONTROLS.ActionBase', ['js!SBIS3.CONTROLS.Control'], function(Control){
+define('js!SBIS3.CONTROLS.ActionBase', ['js!SBIS3.CORE.Control'], function(Control){
    'use strict';
 
    /**
