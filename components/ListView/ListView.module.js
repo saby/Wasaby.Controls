@@ -446,8 +446,12 @@ define('js!SBIS3.CONTROLS.ListView',
           * @private
           */
          _onChangeHoveredItem: function (target) {
-            if (this._options.itemsActions.length && !this._touchSupport) {
-         		target.container ? this._showItemActions(target) : this._hideItemActions();
+            if (this._options.itemsActions.length) {
+         		if (target.container && !this._touchSupport){
+                  this._showItemActions(target);
+               } else {
+                  this._hideItemActions();
+               }
             }
          },
 
