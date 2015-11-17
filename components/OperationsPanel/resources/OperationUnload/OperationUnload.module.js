@@ -5,6 +5,7 @@ define('js!SBIS3.CONTROLS.OperationUnload', [
    'js!SBIS3.CONTROLS.PrintUnloadBase',
    'js!SBIS3.CONTROLS.Utils.DataProcessor'
 ], function(PrintUnloadBase, Unloader) {
+   //TODO Идея! нужно просто вызвать у view.unload, он в свою очередь поднимает событие onUnload, а событие подхыватит выгрузчик. тогда в кнопке вообще только визуализация будет
 
    var OperationUnload = PrintUnloadBase.extend({
       /**
@@ -85,7 +86,7 @@ define('js!SBIS3.CONTROLS.OperationUnload', [
       },
       _menuItemActivated: function(event, itemId){
          this._currentItem = itemId;
-         this._prepareOperation('Что сохранить в ' + this._controlsId[itemId]);
+         this._prepareOperation('Что сохранить в ' + this._controlsId[itemId].objectName);
       },
       _isSelectedState: function(){
          return this._getView().getSelectedKeys().length > 0;
@@ -111,91 +112,24 @@ define('js!SBIS3.CONTROLS.OperationUnload', [
        * @param selectedNumRecords сколько записей нужно выгружать
        */
       processSelectedOperation: function(selectedNumRecords){
-         var record,
-             objectArr = [],
-             cfg = {};
+         var record = this._dataSet.getRecordByKey(this._currentItem).getRaw(),
+             objectArr,
+             cfg;
          //TODO когда появится воможность выгружать в PDF надо убрать проверку на Excel
          //Для Excel всегда выгружаем на сервере
-         if (this._isClientUnload()) {
+         if (this._isClientUnload() || !record.unloadMethod) {
             OperationUnload.superclass.processSelectedOperation.apply(this, arguments);
             return;
          }
-         cfg = this.prepareGETOperationFilter(selectedNumRecords);
-
-         record = this._dataSet.getRecordByKey(this._currentItem).getRaw();
-         if (record.unloadMethod) {
-            objectArr = record.unloadMethod.split('.');
-            $ws.helpers.saveToFile(objectArr[0], objectArr[1], cfg, undefined, true);
-         }
-      },
-      /**
-       * Метод для формирования параметров фильтрации выгружаемого на сервере файла.
-       * Чтобы сформировать свои параметры этот метод можно переопределить
-       * @example
-       * <pre>
-       *    //В своем прикладном модуле (myModule), отнаследованном от OperationUnload
-       *    prepareGETOperationFilter: function(selectedNumRecords){
-       *       var cfg = myModule.superclass.processSelectedOperation.apply(this, arguments);
-       *       //Сформируем свой набор колонок для выгрузки
-       *       cfg['Поля'] = this.getUserFields();
-       *       cfg['Заголовки'] = this.getUserTitles();
-       *       return cfg;
-       *    }
-       * </pre>
-       * @param selectedNumRecords сколько записей нужно выгружать
-       * @returns {{}}
-       */
-      prepareGETOperationFilter: function(selectedNumRecords){
-         var view =  this._getView(),
-               dataSource = view._dataSource,
-               columns,
-               fields = [],
-               titles = [],
-               filter,
-               queryParams,
-               cfg = {},
-               openedPath,
-               hierField;
-         /**
-          * Здесь обрабатываем выгрузку в Excel на сервере
-          */
-         columns = this._prepareOperationColumns();
-         for (var i = 0; i < columns.length; i++) {
-            fields.push(columns[i].field);
-            titles.push(columns[i].title || columns[i].field);
-         }
-         //openedPath[key] = true;
-         filter = $ws.core.clone(view.getFilter());
-         if (view._options.hierField){
-            hierField = view.getHierField();
-            cfg['Иерархия'] = view._options.hierField;
-            openedPath = view.getOpenedPath();
-            // - getOpenedPath - 'это работает только у дерева!!
-            if (openedPath && !Object.isEmpty(openedPath)) {
-
-               filter[hierField] = filter[hierField] === undefined ? [view.getCurrentRoot()] : filter[hierField];
-               filter[hierField] = filter[hierField] instanceof Array ? $ws.core.clone(filter[hierField]) : [filter[hierField]];
-               for (i in openedPath) {
-                  if (openedPath.hasOwnProperty(i) && Array.indexOf( filter[hierField], i) < 0) {
-                     filter[hierField].push(i);
-                  }
-               }
-            }
-         }
-         queryParams =  dataSource.prepareQueryParams(filter, null, view._offset , selectedNumRecords || view.getDataSet().getCount(), false);
-         cfg = $ws.core.merge(cfg, {
-            //TODO дать настройку ?
-            'ИмяМетода' : dataSource._options.service + '.' + dataSource._options.queryMethodName,
-            'Фильтр': queryParams['Фильтр'],
-            'Сортировка' : queryParams['Сортировка'],
-            'Навигация' : queryParams['Навигация'],
-            'Поля': fields,
-            //TODO возможно стоит тоже дать настройку ?
-            'Заголовки' : titles,
-            'Название' : this._getUnloadFileName(),
-            'fileDownloadToken' : ('' + Math.random()).substr(2)* 1
+         var p = new Unloader({
+            view : this._getView(),
+            columns: this._prepareOperationColumns()
          });
-         return cfg;
+         cfg = p.getFullFilter(selectedNumRecords);
+         cfg['Название'] = this._getUnloadFileName();
+
+         objectArr = record.unloadMethod.split('.');
+         p.unload(objectArr[0], objectArr[1], this._getUnloadFileName(), cfg, true );
       },
       applyOperation: function(dataSet, cfg){
          var p = new Unloader(cfg);
