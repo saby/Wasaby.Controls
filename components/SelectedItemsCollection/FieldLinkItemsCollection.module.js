@@ -59,6 +59,21 @@ define('js!SBIS3.CONTROLS.FieldLinkItemsCollection', [
             return this._options.itemTemplate;
          },
 
+         setItems: function(list) {
+            var self = this,
+                items = [];
+
+            list.each(function(rec) {
+               var itemObject = {};
+
+               itemObject[self._options.keyField] = rec.getId();
+               itemObject[self._options.displayField] = rec.get(self._options.displayField);
+               items.push(itemObject);
+            });
+
+            FieldLinkItemsCollection.superclass.setItems.call(this, items);
+         },
+
          _appendItemTemplate:function(item, targetContainer, itemInstance) {
             if(this._options.itemCheckFunc(itemInstance)) {
                FieldLinkItemsCollection.superclass._appendItemTemplate.apply(this, arguments);

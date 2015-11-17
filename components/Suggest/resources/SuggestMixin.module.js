@@ -219,8 +219,8 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
          this._resultBindings = convertToObject(this._options.resultBindings);
       },
 
-	   setListFilter: function(filter) {
-		   var self = this,
+      setListFilter: function(filter) {
+         var self = this,
              changedFields = [];
 
          $ws.helpers.forEach(filter, function(value, key) {
@@ -230,19 +230,19 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
          });
 
          if(changedFields.length) {
-			   this._options.listFilter = filter;
-				for(var i = 0, len = changedFields.length; i < len; i++) {
-					if(String(this._options.listFilter[changedFields[i]]).length >= this._options.startChar) {
-						this._reloadList().addCallback(function() {
+            this._options.listFilter = filter;
+            for(var i = 0, len = changedFields.length; i < len; i++) {
+               if(String(this._options.listFilter[changedFields[i]]).length >= this._options.startChar) {
+                  this._reloadList().addCallback(function() {
                      if(self._checkPickerState()) {
                         self._showList();
                      }
                   });
                   break;
-					}
-				}
-			}
-	   },
+               }
+            }
+         }
+      },
 
       /**
        * Устанавливает связи между компонентами

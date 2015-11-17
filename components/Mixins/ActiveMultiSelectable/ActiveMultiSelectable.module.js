@@ -1,7 +1,7 @@
 /**
  * Created by am.gerasimov on 26.10.2015.
  */
-define('js!SBIS3.CONTROLS.ActiveMultiSelectable', ['js!SBIS3.CONTROLS.DataSet', 'js!SBIS3.CONTROLS.SbisJSONStrategy'], function(DataSet, SbisJSONStrategy) {
+define('js!SBIS3.CONTROLS.ActiveMultiSelectable', ['js!SBIS3.CONTROLS.Data.Collection.List'], function(List) {
 
    function propertyUpdateWrapper(func) {
       return function() {
@@ -22,7 +22,7 @@ define('js!SBIS3.CONTROLS.ActiveMultiSelectable', ['js!SBIS3.CONTROLS.DataSet', 
             /**
              * @cfg {String[]} Массив выбранных записей
              */
-            selectedItems : []
+            selectedItems : undefined
          }
       },
 
@@ -30,112 +30,112 @@ define('js!SBIS3.CONTROLS.ActiveMultiSelectable', ['js!SBIS3.CONTROLS.DataSet', 
          if(!$ws.helpers.instanceOfMixin(this, 'SBIS3.CONTROLS.MultiSelectable')) {
             throw new Error('MultiSelectable mixin is required');
          }
+
+         this._options.selectedItems = this._options.selectedItems || new List({items: []});
       },
       /**
-       * Устанавливает массив выбранных записей, по переданному датасету
+       * Устанавливает массив выбранных записей
        */
-      setSelectedItems: propertyUpdateWrapper(function(dataSet) {
-         var self = this,
-             isDataSet = $ws.helpers.instanceOfModule(dataSet, 'SBIS3.CONTROLS.DataSet'),
-             iterator = isDataSet ? dataSet.each : $ws.helpers.forEach;
+      setSelectedItems: propertyUpdateWrapper(function(list) {
+         var self = this;
 
-         function iteratorCallback(rec) {
-            self._options.selectedItems.push(rec);
-            self._options.selectedKeys.push(rec.getKey());
+         if($ws.helpers.instanceOfModule(list, 'SBIS3.CONTROLS.Data.Collection.List')) {
+            this._options.selectedItems = list;
+            this._options.selectedKeys = [];
+
+            list.each(function(rec) {
+               self._options.selectedKeys.push(rec.getId());
+            });
+
+            if (this._checkEmptySelection()) {
+               this._setFirstItemAsSelected();
+            }
+
+            this._notifySelectedItems(this._options.selectedKeys);
+            this._drawSelectedItems(this._options.selectedKeys);
          }
-
-         this._options.selectedKeys = [];
-         this._options.selectedItems = [];
-
-         iterator.apply(dataSet, (isDataSet ? [iteratorCallback] : [dataSet, iteratorCallback]));
-
-         if (this._checkEmptySelection()) {
-            this._setFirstItemAsSelected();
-         }
-
-         this._notifySelectedItems(this._options.selectedKeys);
-         this._drawSelectedItems(this._options.selectedKeys);
       }),
 
       /**
-       * Возвращает deferred, рузельтатом которого будет DataSet выделенных элементов
+       * Возвращает deferred, рузельтатом которого будет коллекция выделенных элементов
        */
       getSelectedItems: function() {
-         var self = this,
-            selKeys = this._options.selectedKeys,
-            loadKeysArr = [],
-            itemKeysArr = [],
-            dResult = new $ws.proto.Deferred(),
-            newDsOptions = {
-               keyField: self._options.keyField,
-               strategy: new SbisJSONStrategy()
-            },
-            dMultiResult, item, dataSetItems;
+         var selKeys = this.getSelectedKeys(),
+             selItems = this._getSelectedItems(),
+             loadKeysArr = [],
+             itemKeysArr = [],
+             dResult = new $ws.proto.Deferred(),
+             dMultiResult, item;
 
          this._syncSelectedItems();
 
          /* Сфоримруем из массива выбранных записей, массив ключей этих записей */
-         for(var i = 0, items = this._options.selectedItems.length; i < items; i++) {
-            itemKeysArr.push(this._options.selectedItems[i].getKey());
-         }
+         selItems.each(function(rec){
+            itemKeysArr.push(rec.getId());
+         });
 
          /* Сфоримруем массив ключей записей, которые требуется вычитать с бл или взять из dataSet'a*/
-         for(var j = 0, keys = selKeys.length; j < keys; j++) {
-            if(Array.indexOf(itemKeysArr, selKeys[j]) === -1) {
-               loadKeysArr.push(selKeys[j]);
+         for(var i = 0, keys = selKeys.length; i < keys; i++) {
+            if(Array.indexOf(itemKeysArr, selKeys[i]) === -1) {
+               loadKeysArr.push(selKeys[i]);
             }
          }
 
          if(loadKeysArr.length) {
             dMultiResult = new $ws.proto.ParallelDeferred({stopOnFirstError: false});
-            dataSetItems = [];
 
-            for (var g = 0; loadKeysArr.length > g; g++) {
-               item = this._dataSet && this._dataSet.getRecordByKey(loadKeysArr[g]);
+            for (var j = 0; loadKeysArr.length > j; j++) {
+               item = this._dataSet && this._dataSet.getRecordByKey(loadKeysArr[j]);
 
                /* если запись есть в датасете, то ничего не будем вычитывать */
                if(item) {
-                  dataSetItems.push(item);
+                  selItems.add(item);
                   continue;
                }
 
-               dMultiResult.push(this._dataSource.read(loadKeysArr[g]).addCallback(function (record) {
-                  self._options.selectedItems.push(record);
+               dMultiResult.push(this._dataSource.read(loadKeysArr[j]).addCallback(function (record) {
+                  selItems.add(record);
                }));
             }
 
             dMultiResult.done().getResult().addCallback(function() {
-               var dataSet = new DataSet(newDsOptions);
-               self._options.selectedItems = self._options.selectedItems.concat(dataSetItems);
-               dataSet.insert(self._options.selectedItems);
-               dResult.callback(dataSet);
+               dResult.callback(selItems);
             });
 
          } else {
-            var dataSet = new DataSet(newDsOptions);
-            dataSet.insert(self._options.selectedItems);
-            dResult.callback(dataSet);
+            dResult.callback(selItems);
          }
          return dResult;
       },
 
+      _getSelectedItems: function() {
+         return this._options.selectedItems;
+      },
+
       /* Синхронизирует выбранные ключи и выбранные записи */
       _syncSelectedItems: function() {
-         var count = 0,
-            selItems = this._options.selectedItems,
-            index;
+         var self = this,
+             selItems = this._getSelectedItems(),
+             delItems = [],
+             id;
 
+         /* Выбранных ключей нет - очистим IList */
          if(!this.getSelectedKeys().length) {
-           //FIXME Это сделано специально для демки, по делу если нет выбранных ключей, то и выбранных элементов быть не должно, обязательно это вернуть
-           // this._options.selectedItems = [];
+            selItems.fill();
             return;
          }
 
-         for(var i = 0, len = selItems.length; i < len; i ++) {
-            index = i - count;
-            if(selItems[index] && Array.indexOf(this._options.selectedKeys, selItems[index].getKey()) === -1) {
-               selItems.splice(index, 1);
-               count++;
+         /* Соберём элементы для удаления, т.к. в методе each не отслеживаются изменения IList'а */
+         selItems.each(function(rec) {
+            id = rec.getId();
+            if(Array.indexOf(self._options.selectedKeys, id) === -1) {
+               delItems.push(rec);
+            }
+         });
+
+         if(delItems.length) {
+            for(var i = 0, len = delItems.length; i < len; i++) {
+               selItems.remove(delItems[i]);
             }
          }
       }

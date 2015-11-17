@@ -8,16 +8,26 @@ define('js!SBIS3.CONTROLS.FieldLink',
       'js!SBIS3.CONTROLS.FieldLinkItemsCollection',
       'html!SBIS3.CONTROLS.FieldLink/afterFieldWrapper',
       'html!SBIS3.CONTROLS.FieldLink/beforeFieldWrapper',
+      'js!SBIS3.CONTROLS.Data.Model',
+      'js!SBIS3.CONTROLS.Data.Adapter.Sbis',
       'js!SBIS3.CONTROLS.MenuIcon'
 
    ],
-   function(SuggestTextBox, DSMixin, FormWidgetMixin, MultiSelectable, ActiveMultiSelectable, FieldLinkItemsCollection, afterFieldWrapper, beforeFieldWrapper) {
+   function(SuggestTextBox, DSMixin, FormWidgetMixin, MultiSelectable, ActiveMultiSelectable, FieldLinkItemsCollection, afterFieldWrapper, beforeFieldWrapper, Model, SbisAdapter) {
 
       'use strict';
 
       var INPUT_WRAPPER_PADDING = 11;
       var SHOW_ALL_LINK_WIDTH = 11;
       var INPUT_MIN_WIDTH = 100;
+
+      //FIXME для поддержки старых справочников, удалить как откажемся
+      function recordConverter(rec) {
+         return new Model({
+            data: rec.toJSON(),
+            adapter: new SbisAdapter()
+         })
+      }
 
       function propertyUpdateWrapper(func) {
          return function() {
@@ -60,8 +70,15 @@ define('js!SBIS3.CONTROLS.FieldLink',
                showDelay: 300
             },
             type: {
-               newDialog: 'js!SBIS3.CONTROLS.DialogSelector',
-               newFloatArea: 'js!SBIS3.CONTROLS.FloatAreaSelector'
+               old: {
+                  newDialog: 'js!SBIS3.CORE.DialogSelector',
+                  newFloatArea: 'js!SBIS3.CORE.FloatAreaSelector'
+               },
+            //FIXME для поддержки старых справочников, удалить как откажемся
+               new: {
+                  newDialog: 'js!SBIS3.CONTROLS.DialogSelector',
+                  newFloatArea: 'js!SBIS3.CONTROLS.FloatAreaSelector'
+               }
             }
          },
          _inputWrapper: undefined,
@@ -97,7 +114,11 @@ define('js!SBIS3.CONTROLS.FieldLink',
              * @remark
              * Если передать всего один элемент, то дилог выбора откроется при клике на иконку меню.
              */
-            dictionaries: []
+            dictionaries: [],
+            /**
+             * Поддерживать старые представления данных
+             */
+            oldViews: false
          }
       },
 
@@ -110,6 +131,10 @@ define('js!SBIS3.CONTROLS.FieldLink',
 
          /* Создём контрол, который рисует элементы в ввиде текста с крестиком удаления */
          this._linkCollection = this._drawFieldLinkItemsCollection();
+
+         if(this._options.oldViews) {
+            $ws.single.ioc.resolve('ILogger').log('FieldLink', 'В 3.8.0 будет удалена опция oldViews, а так же поддержка старых представлений данных на диалогах выбора.');
+         }
       },
 
       init: function() {
@@ -122,31 +147,75 @@ define('js!SBIS3.CONTROLS.FieldLink',
        * @private
        */
       _menuItemActivatedHandler: function(e, item) {
-         this.getParent().showSelector(this.getDataSet().getRecordByKey(item).get('template'));
+         var rec = this.getDataSet().getRecordByKey(item);
+         this.getParent().showSelector(rec.get('template'), rec.get('selectionType'));
       },
 
       /**
        * Показывает диалог выбора, в качестве аргумента принимает имя шаблона в виде 'js!SBIS3.CONTROLS.MyTemplate'
        * @param template
+       * @param type
        */
-      showSelector: function(template) {
-         var self = this;
+      showSelector: function(template, type) {
+         var self = this,
+             version = this._options.oldViews ? 'old' : 'new',
+             selectorConfig = {
+                //FIXME для поддержки старых справочников, удалить как откажемся
+                old: {
+                   currentValue: self.getSelectedKeys(),
+                   selectionType: type,
+                   selectorFieldLink: true,
+                   handlers: {
+                      onChange: function(event, selectedRecords) {
+                         var keys = [],
+                             rec;
 
-         requirejs([this._selector.type[this._options.selectRecordsMode]], function(ctrl) {
+                         if(selectedRecords[0] !== null) {
+                            self._options.selectedItems.fill();
+                            for (var i = 0, len = selectedRecords.length; i < len; i++) {
+                               rec = recordConverter(selectedRecords[i]);
+                               self._options.selectedItems.add(rec);
+                               keys.push(rec.getId());
+                            }
+                            self.setSelectedKeys(keys);
+                            self._notifyOnPropertyChanged('selectedKeys');
+                            this.close();
+                         }
+                      }
+                   }
+                },
+                new: {
+                   currentSelectedKeys: self.getSelectedKeys(),
+                   closeCallback: function (result) {
+                      result && self.setSelectedKeys(result);
+                   }
+                }
+             },
+             commonConfig = {
+                template: template,
+                opener: this,
+                parent: this,
+                target: self.getContainer(),
+                multiSelect: self._options.multiselect
+             };
+
+
+
+         requirejs([this._selector.type[version][this._options.selectRecordsMode]], function(ctrl) {
             /* Необходимо клонировать конфигурацию селектора, иначе кто-то может её испортить, если передавать по ссылке */
-            new ctrl($ws.core.merge($ws.core.clone(self._selector.config), {
-                  template: template,
-                  currentSelectedKeys: self.getSelectedKeys(),
-                  target: self.getContainer(),
-                  parent: this,
-                  opener: self,
-                  multiselect: self._options.multiselect,
-                  closeCallback: function (result) {
-                     result && self.setSelectedKeys(result);
-                  }
-               })
-            );
+            new ctrl($ws.core.merge($ws.core.clone(self._selector.config), $ws.core.merge(selectorConfig[version], commonConfig)));
          });
+      },
+
+      getCaption: function() {
+         var displayFields = [],
+             self = this;
+
+         this._getSelectedItems().each(function(rec) {
+            displayFields.push(rec.get(self._options.displayField));
+         });
+
+         return displayFields.join(', ');
       },
 
       /**
@@ -199,10 +268,17 @@ define('js!SBIS3.CONTROLS.FieldLink',
          var self = this,
              keysArrLen = keysArr.length;
 
+         /* Этот код для кнопки фильтров,
+            когда хотят забиндить не массив а первое значение из selectedKeys */
+         if(keysArrLen && (keysArr[0] === null || keysArr[0] === undefined)) return;
+
          /* Если удалили в пикере все записи, и он был открыт, то скроем его */
-         if (this._isPickerVisible() && !keysArrLen) {
-            this.hidePicker();
+         if (!keysArrLen) {
             this._toggleShowAllLink(false);
+
+            if(this._isPickerVisible()) {
+               this.hidePicker();
+            }
          }
 
          /* Нужно поле делать невидимым, а не скрывать, чтобы можно было посчитать размеры */
@@ -211,11 +287,11 @@ define('js!SBIS3.CONTROLS.FieldLink',
          }
 
          if(keysArrLen) {
-            this.getSelectedItems().addCallback(function(dataSet){
-               self._setLinkCollectionData(dataSet._getRecords());
+            this.getSelectedItems().addCallback(function(list){
+               self._linkCollection.setItems(list);
             });
          } else {
-            this._setLinkCollectionData([]);
+            self._linkCollection.setItems(this._getSelectedItems());
          }
       },
 
@@ -266,31 +342,6 @@ define('js!SBIS3.CONTROLS.FieldLink',
          }
          this._toggleShowAllLink(!needDrawItem);
          return needDrawItem
-      },
-      /**
-       * Устанавливает данные в контрол
-       * @param records
-       * @private
-       */
-      _setLinkCollectionData: function(records) {
-         var self = this;
-
-         //FIXMe это костыль, надо выпилить, нужно научить DSMixin работать с датасетом без датасорса
-         function convertToItemObject(records) {
-            var items = [];
-
-            $ws.helpers.forEach(records, function(record) {
-               var itemObject = {};
-
-               itemObject[self._options.keyField] = record.getKey();
-               itemObject[self._options.displayField] = record.get(self._options.displayField);
-               items.push(itemObject);
-            });
-
-            return items;
-         }
-
-         records.length ? this._linkCollection.setItems(convertToItemObject(records)) : this._linkCollection.setItems([]);
       },
 
       _pickerChangeStateHandler: function(open) {
