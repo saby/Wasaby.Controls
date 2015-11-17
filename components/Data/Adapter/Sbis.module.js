@@ -38,6 +38,9 @@ define('js!SBIS3.CONTROLS.Data.Adapter.Sbis', [
       },
 
       getKeyField: function (data) {
+         if (!data) {
+            return undefined;
+         }
          var s = data.s,
             index;
          if (s) {
