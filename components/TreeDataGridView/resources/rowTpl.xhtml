@@ -14,11 +14,8 @@
                {{?it.arrowActivatedHandler}}
                <div class="controls-TreeView__ellipsis-wrapper">
                   <div class="controls-TreeView__ellipsis-container">
-               {{?}}
-                     <span>{{=it.decorators.applyIf(column.value, {
-                        'highlight': column.highlight,
-                        'ladder': column.field})
-                     }}</span>
+                     {{?}}
+                     <span>{{=column.value}}</span>
                      {{?it.arrowActivatedHandler}}
                         <div class="js-controls-TreeView__editArrow controls-TreeView__editArrow icon-16 icon-View icon-primary action-hover"></div>
                   </div>
@@ -31,16 +28,10 @@
                </div>
                {{?}}
             {{??}}
-               <span>{{=it.decorators.applyIf(column.value, {
-                        'highlight': column.highlight,
-                        'ladder': column.field})
-                     }}</span>
+               <span>{{=column.value}}</span>
             {{?}}
          {{??}}
-            <span>{{=it.decorators.applyIf(column.value, {
-                        'highlight': column.highlight,
-                        'ladder': column.field})
-                  }}</span>
+            <span>{{=column.value}}</span>
          {{?}}
       </td>
    {{~}}
