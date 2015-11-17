@@ -1,4 +1,4 @@
-define('js!SBIS3.CONTROLS.ActionBase', ['js!SBIS3.CONTROLS.OpenDialogAction'], function(OpenDialogAction){
+define('js!SBIS3.CONTROLS.OpenDialogAction', ['js!SBIS3.CONTROLS.ActionBase', 'js!SBIS3.CORE.Dialog'], function(ActionBase, Dialog){
    'use strict';
 
    /**
@@ -25,8 +25,24 @@ define('js!SBIS3.CONTROLS.ActionBase', ['js!SBIS3.CONTROLS.OpenDialogAction'], f
     * @ignoreEvents onActivate onAfterLoad onAfterShow onBeforeControlsLoad onBeforeLoad onBeforeShow onChange onClick
     * @ignoreEvents onFocusIn onFocusOut onKeyPressed onReady onResize onStateChanged onTooltipContentRequest
     */
-   var OpenDialogAction = OpenDialogAction.extend(/** @lends SBIS3.CONTROLS.ActionBase.prototype */{
+   var OpenDialogAction = ActionBase.extend(/** @lends SBIS3.CONTROLS.ActionBase.prototype */{
+      $protected : {
+         _options : {
+            dialogComponent : ''
+         }
+      },
+      execute : function(meta) {
+         this._openDialog(meta, this._options.dialogComponent)
+      },
 
+      _openDialog: function(meta, dialogComponent) {
+         new Dialog({
+            template: dialogComponent,
+            componentOptions : {
+               id : meta.id
+            }
+         });
+      }
    });
    return OpenDialogAction;
 });

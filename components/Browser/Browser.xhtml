@@ -1,3 +1,3 @@
 <div class="controls-Browser">
-   {{=it.contentTpl(it)}}
+   {{=it.contentTpl.apply(this, [it])}}
 </div>
