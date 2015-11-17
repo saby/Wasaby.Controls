@@ -158,7 +158,6 @@ define('js!SBIS3.CONTROLS.BreadCrumbs', [
       },
 
       _calculateSizes: function() {
-         BreadCrumbs.superclass._redraw.call(this);
          this._initNonTextElementSizes();
          $('.controls-BreadCrumbs__dots', this._container).remove();
          var targetContainer = this._getTargetContainer(),
