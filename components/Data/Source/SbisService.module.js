@@ -229,30 +229,28 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
       destroy: function(keys, meta) {
          var self = this;
          if ($ws.helpers.type(keys) == 'array') {
-            var providers = [],
-               ids = [];
-            $ws.helpers.forEach(keys, function(key) {
-               //группируем идентификаторы по объекту
-               var obj = self._getProviderNameById(key),
-                  index = Array.indexOf(providers, obj);
-               if (index !== -1) {
-                  ids[index].push(parseInt(key, 10));
-               } else {
-                  providers.push(obj);
-                  ids.push([parseInt(key, 10)]);
+            var groups = {};
+            $ws.helpers.forEach(keys, function (key) {
+               /*В ключе может содержаться ссылка на объект бл
+                 сгруппируем ключи по соответсвующим им объектам*/
+               var name = self._getProviderNameById(key);
+               if (groups.hasOwnProperty(name)) {
+                  groups[name].push(parseInt(key, 10));
+               }
+               else {
+                  groups[name] = [parseInt(key, 10)];
                }
             });
             var pd = new $ws.proto.ParallelDeferred();
-            $ws.helpers.forEach(providers, function(provider, index) {
-               pd.push(self._destroy(ids[index], provider));
+            $ws.helpers.forEach(groups, function (group, name) {
+               pd.push(self._destroy(group, name, meta));
             });
             return pd.done().getResult();
-         } else {
-            var provider = self._getProviderNameById(keys);
-            return self._destroy(parsetInt(keys, 10), provider);
-
          }
-
+         else {
+            var name = self._getProviderNameById(keys);
+            return self._destroy(parsetInt(keys, 10), name, meta);
+         }
       },
 
       merge: function(first, second) {
@@ -601,9 +599,10 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
          return params;
       },
       /**
-       * Возвращает имя источника или имя объекта из сложного идентификатора
+       * Возвращает имя объекта из сложного идентификатора или имя объекта из источника, для простых идентификаторов
        * @private
-       * @ret
+       * @param id - Идентификатор записи
+       * @returns {String}
        */
       _getProviderNameById: function (id) {
          if (String(id).indexOf(',')) {
@@ -614,12 +613,13 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
       },
       /**
        * вызвает метод удаления
-       * @param {String|Array} id идентификатор объекта
-       * @param {String} resource  название объекта бл у которго будет вызвано удаление
+       * @param {String|Array} id Идентификатор объекта
+       * @param {String} resource  Название объекта бл у которго будет вызвано удаление
+       * @param {Object} meta  Дополнительные мета данные
        * @returns {$ws.proto.Deferred}
        * @private
        */
-      _destroy: function(id, resource) {
+      _destroy: function(id, resource, meta) {
          var args = {
             'ИдО': id
          };
@@ -633,7 +633,7 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
          return provider.callMethod(
             this._options.destroyMethodName,
             args
-         ).addCallbacks(function(res) {
+         ).addCallbacks(function (res) {
             return res;
          }, function (error) {
             $ws.single.ioc.resolve('ILogger').log('SBIS3.CONTROLS.Data.Source.SbisService::destroy()', error);
