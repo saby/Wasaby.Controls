@@ -294,6 +294,9 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
                var name = self._getProviderNameById(key);
                groups[name] = groups[name]||[];
                groups[name].push(parseInt(key, 10));
+               else {
+                  groups[name] = [parseInt(key, 10)];
+               }
             });
             var pd = new $ws.proto.ParallelDeferred();
             $ws.helpers.forEach(groups, function (group, name) {
@@ -301,10 +304,7 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
             });
             return pd.done().getResult();
          }
-         else {
-            var name = self._getProviderNameById(keys);
-            return self._destroy(parseInt(keys, 10), name, meta);
-         }
+
       },
 
       merge: function(first, second) {
@@ -759,7 +759,8 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
       /**
        * Возвращает имя объекта бл из сложного идентификатора или имя объекта из источника, для простых идентификаторов
        * @private
-       * @ret
+       * @param id - Идентификатор записи
+       * @returns {String}
        */
       _getProviderNameById: function (id) {
          if (String(id).indexOf(',')) {
