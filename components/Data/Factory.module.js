@@ -17,7 +17,7 @@ define('js!SBIS3.CONTROLS.Data.Factory', [
 
    var Factory = /** @lends SBIS3.CONTROLS.Data.Factory.prototype */{
       /**
-       * Приводит сырые данныые к переданному типу.
+       * Приводит сырые данные к переданному типу.
        * Возможные типы:
        * DataSet - набор записей
        * Model - одна запись из выборки
@@ -43,52 +43,52 @@ define('js!SBIS3.CONTROLS.Data.Factory', [
        * @returns {*} Приведенные к нужному типу сырые данные
        */
       cast: function (value, type, adapter, meta) {
-         if ((value !== null && typeof value !== 'undefined') || type === 'Enum') {
-            switch (type) {
-               case 'DataSet':
-                  return this._makeDataSet(value, adapter);
-               case 'Model':
-                  return this._makeModel(value, adapter);
-               case 'Time':
-               case 'Date':
-               case 'DateTime':
-                  return Date.fromSQL(value);
-               case 'Link':
-               case 'Integer':
-                  return (typeof(value) === 'number') ? value : (isNaN(parseInt(value, 10)) ? null : parseInt(value, 10));
-               case 'Double':
-                  return (typeof(value) === 'number') ? value : (isNaN(parseFloat(value)) ? null : parseFloat(value));
-               case 'Money':
-                  if (meta && meta.precision) {
-                     return $ws.helpers.bigNum(value).toString(meta.precision);
-                  }
+         switch (type) {
+            case 'Identity':
+               return meta.isArray ?
+                  value[0] === null ? null : value.join(meta.separator, value) :
+                  value;
+            case 'DataSet':
+               return this._makeDataSet(value, adapter);
+            case 'Model':
+               return this._makeModel(value, adapter);
+            case 'Time':
+            case 'Date':
+            case 'DateTime':
+               return Date.fromSQL('' + value);
+            case 'Link':
+            case 'Integer':
+               return (typeof(value) === 'number') ? value : (isNaN(parseInt(value, 10)) ? null : parseInt(value, 10));
+            case 'Double':
+               return (typeof(value) === 'number') ? value : (isNaN(parseFloat(value)) ? null : parseFloat(value));
+            case 'Money':
+               if (meta && meta.precision > 3) {
+                  return $ws.helpers.bigNum(value).toString(meta.precision);
+               }
+               return value === undefined ? null : value;
+            case 'Enum':
+               return new $ws.proto.Enum({
+                  availableValues: meta.source, //список вида {0:'one',1:'two'...}
+                  currentValue: value //число
+               });
+            case 'Flags':
+               return this._makeFlags(value, meta);
+            case 'TimeInterval':
+               if (value instanceof $ws.proto.TimeInterval) {
+                  return value.toString();
+               }
+               return $ws.proto.TimeInterval.toString(value);
+            case 'Text':
+            case 'String':
+               return value + '';
+            case 'Boolean':
+               if (value === null) {
                   return value;
-
-               case 'Enum':
-                  return new $ws.proto.Enum({
-                     availableValues: meta.source, //список вида {0:'one',1:'two'...}
-                     currentValue: value //число
-                  });
-               case 'Flags':
-                  return this._makeFlags(value, meta);
-               case 'Identity':
-                  return $ws.helpers.parseIdentity(value);
-               case 'TimeInterval':
-                  if (value instanceof $ws.proto.TimeInterval) {
-                     return value.toString();
-                  }
-                  return $ws.proto.TimeInterval.toString(value);
-
-               case 'Text':
-               case 'String':
-                  return value + '';
-               case 'Boolean':
-                  return !!value;
-               default:
-                  return value;
-            }
+               }
+               return !!value;
+            default:
+               return value;
          }
-         return value;
       },
 
       /**
@@ -100,10 +100,16 @@ define('js!SBIS3.CONTROLS.Data.Factory', [
        * @returns {*}
        */
       serialize: function (value, type, adapter, meta) {
-         if ((value === null || typeof value === 'undefined') && type !== '') {
-            return value;
-         }
          switch (type) {
+            case 'Identity':
+               return meta.isArray ?
+                  value === null ?
+                     [null] :
+                     typeof value === 'string' ?
+                        value.split(meta.separator) :
+                        [value]:
+                  value;
+
             case 'DataSet':
                return this._serializeDataSet(value, adapter);
             case 'Model':
@@ -136,7 +142,7 @@ define('js!SBIS3.CONTROLS.Data.Factory', [
                return value === null ? null : parseInt(value, 10);
 
             case 'Money':
-               if (meta.precision) {
+               if (meta && meta.precision > 3) {
                   return $ws.helpers.bigNum(value).toString(meta.precision);
                }
                return value;

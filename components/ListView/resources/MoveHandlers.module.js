@@ -26,16 +26,17 @@ define('js!SBIS3.CONTROLS.MoveHandlers', ['js!SBIS3.CONTROLS.MoveDialog'], funct
          var
             record,
             recordTo,
-            isNodeTo,
+            isNodeTo = true,
             self = this,
             /*TODO переделать не на ParallelDeferred*/
             deferred = new $ws.proto.ParallelDeferred();
 
-         recordTo = this._dataSet.getRecordByKey(moveTo);
-         if (!recordTo) {
-            return;
+         if (moveTo !== null) {
+            recordTo = this._dataSet.getRecordByKey(moveTo);
+            if (recordTo) {
+               isNodeTo = recordTo.get(this._options.hierField + '@');
+            }
          }
-         isNodeTo = recordTo.get(this._options.hierField + '@');
 
          if (this._checkRecordsForMove(records, moveTo)) {
             for (var i = 0; i < records.length; i++) {
@@ -70,8 +71,8 @@ define('js!SBIS3.CONTROLS.MoveHandlers', ['js!SBIS3.CONTROLS.MoveDialog'], funct
             return false;
          }
          for (var i = 0; i < records.length; i++) {
-            if (typeof records[i] === 'number' && $.inArray(records[i], toMap) !== -1 ||
-                typeof records[i] === 'object' && $.inArray(records[i].getKey(), toMap) !== -1) {
+            if ($ws.helpers.instanceOfModule(records[i], 'SBIS3.CONTROLS.Record') && $.inArray(records[i].getKey(), toMap) !== -1 ||
+                $.inArray('' + records[i], toMap) !== -1) {
                $ws.helpers.alert('Вы не можете переместить запись саму в себя!', {}, this);
                return false;
             }

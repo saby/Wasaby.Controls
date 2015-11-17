@@ -82,12 +82,13 @@ define('js!SBIS3.CONTROLS.Image',
                   onError: undefined,
                   /**
                    * @cfg {Function} Функция, выполняемая при обновлении изображения в компоненте
+                   * @deprecated Будет удалено с 3.7.3.20. Используйте подписку на изменение полей контекста.
                    * @example
                    * onImageUpdated: function(newImageURL) {
                    *    $ws.helpers.reloadImage(image, newImageURL);
                    * }
                    */
-                  onImageUpdated: undefined,
+                  onImageUpdated: undefined, //todo Убрать в 3.7.3.20 и поправить в прикладном коде.
                   /**
                    * @cfg {Object} Опции обрезки изображения
                    */

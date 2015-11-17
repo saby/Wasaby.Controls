@@ -127,8 +127,8 @@ define(
        * @protected
        */
       _getCursor = function(position) {
-         var selection = window.getSelection();
-         if (selection.type !== "None"){
+         var selection = $ws._const.browser.isIE8 ? window.getSelectionForIE() : window.getSelection();
+         if (selection.type !== 'None') {
             selection = selection.getRangeAt(0);
             this._lastSelection = selection;
          } else {
@@ -209,7 +209,7 @@ define(
             //заменяем символы маски на внутренние, например HH:MM на dd:dd
             innerChar = maskChar;
             if (innerChar in this._options.controlCharactersSet) {
-               innerChar = this._options.controlCharactersSet[maskChar]
+               innerChar = this._options.controlCharactersSet[maskChar];
             }
             if (groupCharactersRegExp.test(innerChar)) {
                if (separator.length) {
@@ -283,9 +283,8 @@ define(
        * @returns {boolean} true если курсор установлен
        */
       setCursor: function(groupNum, position) {
-         var group,
-             insertInfo;
-         if ( !this.model  ||  this.model.length == 0) {
+         var insertInfo;
+         if ( !this.model  ||  this.model.length === 0) {
             throw new Error('setCursor. Не задана модель');
          }
          insertInfo = this._calcPosition(groupNum, position);
@@ -357,7 +356,7 @@ define(
             group: group,
             groupNum: groupNum,
             position: position
-         }
+         };
       },
       /**
        * Вставляет символ в заданную группу и позицию, если это возможно
@@ -371,7 +370,7 @@ define(
          var group,
              insertInfo;
 
-         if ( !this.model  ||  this.model.length == 0) {
+         if ( !this.model  ||  this.model.length === 0) {
             throw new Error('insertCharacter. Не задана модель');
          }
          insertInfo = this._calcPosition(groupNum, position);
@@ -417,7 +416,7 @@ define(
             for (var j = 0; j < group.innerMask.length; j++) {
                character = text.charAt(curIndex);
                character = (character == clearChar) ? undefined : this.charIsFitToGroup(group, j, character);
-               if (character || (typeof character === "undefined")) {
+               if (character || (typeof character === 'undefined')) {
                   value.push(character);
                } else {
                   return false;
@@ -471,7 +470,7 @@ define(
             group = this.model[i];
             if (group.isGroup) {
                for (var j = 0; j < group.mask.length; j++) {
-                  text += (typeof group.value[j] === "undefined") ? clearChar : group.value[j];
+                  text += (typeof group.value[j] === 'undefined') ? clearChar : group.value[j];
                }
             } else {
                text += group.innerMask;
@@ -680,11 +679,10 @@ define(
       },
       /**
        * Обновляяет значение this._options.text
-       * null если есть хотя бы одно незаполненное место (плэйсхолдер)
        * @protected
        */
       _updateText:function() {
-         this._options.text = this.formatModel.getStrMask(this._maskReplacer);
+         this._options.text = this.formatModel.getText(this._maskReplacer);
       },
 
       /**
@@ -716,7 +714,7 @@ define(
          for (var i = 0; i < model.length; i++) {
             value = '';
             for (var j = 0; j < model[i].mask.length; j++) {
-               value += (typeof model[i].value[j] === "undefined") ? this._maskReplacer : model[i].value[j];
+               value += (typeof model[i].value[j] === 'undefined') ? this._maskReplacer : model[i].value[j];
             }
             items.push({isGroup: model[i].isGroup, text: value});
          }

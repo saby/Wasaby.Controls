@@ -1,20 +1,23 @@
 <div>
-    <component data-component="SBIS3.CONTROLS.Button" name="SelectButton">
-        <option name="caption">Выбрать</option>
-    </component>
+    <div class="ws-window-titlebar-custom">
+        <component data-component="SBIS3.CONTROLS.Button" name="SelectButton" class="controls-demo-FieldLinkDemoTemplate__SelectButton">
+            <option name="caption">Выбрать</option>
+        </component>
+    </div>
     <component data-component="SBIS3.CONTROLS.DataGridView" name="Таблица">
         <options name="columns" type="array">
             <options>
-                <option name="title">Имя</option>
-                <option name="width" type="string">200</option>
-                <option name="field">Имя</option>
+                <option name="title">Ид</option>
+                <option name="width" type="string">20</option>
+                <option name="field">Ид</option>
             </options>
             <options>
-                <option name="title">Фамилия</option>
-                <option name="width" type="string">300</option>
-                <option name="field">Фамилия</option>
+                <option name="title">Название</option>
+                <option name="width" type="string">100</option>
+                <option name="field">Название</option>
             </options>
         </options>
+        <options name="itemsActions" type="array"></options>
         <option name="emptyHTML">Нет записей</option>
         <option name="multiselect">true</option>
     </component>

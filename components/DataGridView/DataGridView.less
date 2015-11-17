@@ -1,4 +1,5 @@
 .controls-DataGridView {
+   overflow-y: auto;
    .controls-ListView__item {
       &:extend(.controls-ListView .controls-ListView__item all);
    }
@@ -17,6 +18,7 @@
          .transition(left 0.5s);
       }
    }
+
    .controls-DataGridView__table {
       width: 100%;
       position: relative;
@@ -27,6 +29,14 @@
       border-color: @data-grid-border-color;
       background: @data-grid-bg;
       table-layout: @data-grid-table-layot;
+
+      .controls-DataGridView__tr {
+         &.controls-ListView__item__multiSelected {
+            .controls-DataGridView__notScrolledCell {
+               background-color: @data-grid-row-selected-bg;
+            }
+         }
+      }
 
       .controls-DataGridView__td, .controls-DataGridView__thead .controls-DataGridView__th {
          &.controls-DataGridView__notScrolledCell {
@@ -53,6 +63,12 @@
                color: @data-grid-row-selected-cell-text-color;
             }
          }
+
+         &.controls-ListView__item__selected,
+         &.controls-ListView__item__selected .controls-DataGridView__notScrolledCell {
+            background-color: @default-itemHover-color;
+         }
+
          &.controls-ListView__hoveredItem {
             background: @data-grid-row-hover-bg;
 

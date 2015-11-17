@@ -157,15 +157,16 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
       //region SBIS3.CONTROLS.Data.Source.ISource
 
       create: function(meta) {
+         var filter = {
+            'ВызовИзБраузера': true
+         };
+         if (!Object.isEmpty(meta)) {
+            $ws.core.merge(filter, meta);
+         }
          var args = this._options.adapter.serialize({
-            'Фильтр': {
-               'ВызовИзБраузера': true
-            },
+            'Фильтр': filter,
             'ИмяМетода': this._options.formatForRead
          });
-         if (!Object.isEmpty(meta)) {
-            args['ДопПоля'] = meta;
-         }
 
          return this._provider.callMethod(
             this._options.createMethodName,
@@ -184,7 +185,7 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
             'ИмяМетода': this._options.formatForRead
          };
          if (!Object.isEmpty(meta)) {
-            args['ДопПоля'] = meta;
+            args['ДопПоля'] = this._options.adapter.serialize(meta);
          }
 
          return this._provider.callMethod(
@@ -207,7 +208,7 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
             }, model.getRawData())
          };
          if (!Object.isEmpty(meta)) {
-            args['ДопПоля'] = meta;
+            args['ДопПоля'] = this._options.adapter.serialize(meta);
          }
          this._detectIdProperty(model.getRawData());
 
@@ -273,7 +274,7 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
             'ИмяМетода': this._options.formatForRead
          };
          if (!Object.isEmpty(meta)) {
-            args['ДопПоля'] = meta;
+            args['ДопПоля'] = this._options.adapter.serialize(meta);
          }
 
          return this._provider.callMethod(
@@ -624,7 +625,7 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
             'ИдО': id
          };
          if (!Object.isEmpty(meta)) {
-            args['ДопПоля'] = meta;
+            args['ДопПоля'] = this._options.adapter.serialize(meta);
          }
          var provider = this._provider;
          if (resource && this._options.resource !== resource) {

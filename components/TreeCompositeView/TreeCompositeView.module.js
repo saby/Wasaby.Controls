@@ -32,7 +32,11 @@ define('js!SBIS3.CONTROLS.TreeCompositeView', ['js!SBIS3.CONTROLS.TreeDataGridVi
             /**
              * Шаблон, используемый при отрисовке папки
              */
-            folderTemplate: undefined
+            folderTemplate: undefined,
+            /**
+             * Шаблон, используемый при отрисовке папки в режиме списка
+             */
+            listFolderTemplate: undefined
          }
       },
 
@@ -48,7 +52,7 @@ define('js!SBIS3.CONTROLS.TreeCompositeView', ['js!SBIS3.CONTROLS.TreeDataGridVi
                    this.reload();
                 }
                 else {
-                   this._notify('onItemActivate', id, data);
+                   this._activateItem(id);
                 }
              }.bind(this);
 
@@ -75,7 +79,7 @@ define('js!SBIS3.CONTROLS.TreeCompositeView', ['js!SBIS3.CONTROLS.TreeDataGridVi
                case 'table': resultTpl = TreeCompositeView.superclass._getItemTemplate.call(this, item); break;
                case 'list': {
                   if (item.get(this._options.hierField + '@')) {
-                     dotTpl = this._options.folderTemplate ? this._options.folderTemplate : folderTpl;
+                     dotTpl = this._options.listFolderTemplate || this._options.folderTemplate || folderTpl;
                   } else {
                      if (this._options.listTemplate) {
                         if (this._options.listTemplate instanceof Function) {
@@ -115,7 +119,7 @@ define('js!SBIS3.CONTROLS.TreeCompositeView', ['js!SBIS3.CONTROLS.TreeDataGridVi
                         } else {
                            src = '{{=it.item.get(it.image)}}';
                         }
-                        dotTpl = doT.template('<div><div class="controls-ListView__itemCheckBox js-controls-ListView__itemCheckBox"></div><img class="controls-CompositeView__tileImg" src="' + src + '"/><div class="controls-CompositeView__tileTitle" style="{{=it.decorators.apply(it.color, \'color\')}}">{{=it.decorators.apply($ws.helpers.escapeHtml(it.item.get(it.description)))}}</div></div>');
+                        dotTpl = doT.template('<div class="controls-CompositeView__verticalItemActions js-controls-CompositeView__verticalItemActions"><div class="controls-ListView__itemCheckBox js-controls-ListView__itemCheckBox"></div><img class="controls-CompositeView__tileImg" src="' + src + '"/><div class="controls-CompositeView__tileTitle" style="{{=it.decorators.apply(it.color, \'color\')}}">{{=it.decorators.apply($ws.helpers.escapeHtml(it.item.get(it.description)))}}</div></div>');
                      }
                   }
                   resultTpl = dotTpl({
@@ -136,13 +140,6 @@ define('js!SBIS3.CONTROLS.TreeCompositeView', ['js!SBIS3.CONTROLS.TreeDataGridVi
          if(this.getViewMode() === 'table') {
             TreeCompositeView.superclass._updateEditInPlaceDisplay.apply(this, arguments);
          }
-      },
-      _getItemActionsAlign: function(viewMode, hoveredItem) {
-         /* В режиме список(list) для листьев нужно опции отображать горизонтально,
-          как и для режима таблица(table) */
-         return viewMode === 'table' || (!this.getDataSet().getRecordByKey(hoveredItem.key).get(this.getHierField() + '@') && viewMode === 'list') ?
-               'horizontal' : 'vertical';
-
       },
 
       _getTargetContainer: function (item) {
@@ -263,7 +260,7 @@ define('js!SBIS3.CONTROLS.TreeCompositeView', ['js!SBIS3.CONTROLS.TreeDataGridVi
          $ws.helpers.toggleIndicator(true);
          if (items) {
             currentDataSet = this.getDataSet();
-            filter = $ws.core.clone(this._filter);
+            filter = $ws.core.clone(this.getFilter());
             //Группируем записи по веткам (чтобы как можно меньше запросов делать)
             $ws.helpers.forEach(items, function(item) {
                //todo Сделать опредение родительского ключа через DataSet

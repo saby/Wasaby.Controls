@@ -207,7 +207,7 @@ define('js!SBIS3.CONTROLS.NumberTextBox', ['js!SBIS3.CONTROLS.TextBox', 'html!SB
       /**
        * Получить количество знаков после запятой
        */
-      getDecimals: function(decimals) {
+      getDecimals: function() {
          return this._options.decimals;
       },
 

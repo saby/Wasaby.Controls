@@ -322,19 +322,19 @@ define('js!SBIS3.CONTROLS.Data.Adapter.Sbis', [
             meta = index >= 0 ? data.s[index] : undefined,
             fieldData = {meta: undefined, type: undefined};
          if (meta) {
-            var type = this._getType(meta);
+            var type = this._getType(meta, data.d[index]);
             fieldData.meta = type.meta;
             fieldData.type = type.name;
          }
          return fieldData;
       },
 
-      _getType: function (meta, key) {
+      _getType: function (meta, value, key) {
          key = key || 't';
          var typeSbis = meta[key],
             type;
          if (typeof typeSbis === 'object') {
-            return this._getType(typeSbis, 'n');
+            return this._getType(typeSbis, value, 'n');
          }
          for (var fieldType in Sbis.FIELD_TYPE) {
             if (typeSbis === Sbis.FIELD_TYPE[fieldType]) {
@@ -342,15 +342,19 @@ define('js!SBIS3.CONTROLS.Data.Adapter.Sbis', [
                break;
             }
          }
-         var prepareMeta = this._prepareMetaInfo(type, $ws.core.clone(meta));
+         var prepareMeta = this._prepareMetaInfo(type, $ws.core.clone(meta), value);
          return {
             name: type,
             meta: prepareMeta
          };
       },
 
-      _prepareMetaInfo: function (type, meta) {
+      _prepareMetaInfo: function (type, meta, value) {
          switch (type) {
+            case 'Identity':
+               meta.separator = ',';
+               meta.isArray = value instanceof Array;
+               break;
             case 'Enum':
                meta.source = meta.s;
                break;
@@ -359,6 +363,7 @@ define('js!SBIS3.CONTROLS.Data.Adapter.Sbis', [
                break;
             case 'Flags':
                meta.makeData = function (value) {
+                  value = value || {};
                   var st = [],
                      pairs = Object.sortedPairs(meta.s),
                      fData = [];

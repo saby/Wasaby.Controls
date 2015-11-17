@@ -60,9 +60,6 @@ define('js!SBIS3.CONTROLS.MenuIcon', ['js!SBIS3.CONTROLS.IconButton', 'js!SBIS3.
 
       init: function(){
          this._container.addClass('controls-MenuIcon');
-         if (this._container.hasClass('controls-Menu__hide-menu-header')){
-            this._options.pickerClassName += ' controls-Menu__hide-menu-header';
-         }
          if (this._container.hasClass('controls-IconButton__round-border')){
             this._options.pickerClassName += ' controls-IconButton__round-border';
          }
@@ -71,6 +68,11 @@ define('js!SBIS3.CONTROLS.MenuIcon', ['js!SBIS3.CONTROLS.IconButton', 'js!SBIS3.
          }
          this.reload();
          MenuIcon.superclass.init.call(this);
+      },
+
+      setItems: function(items) {
+         MenuIcon.superclass.setItems.call(this, items);
+         var displayValue = (this.getItems().length > 1) ? 'inline-block' : 'none';
       }
    });
 

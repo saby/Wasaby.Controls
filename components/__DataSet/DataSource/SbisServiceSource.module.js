@@ -291,22 +291,11 @@ define('js!SBIS3.CONTROLS.SbisServiceSource', [
        * @see queryMethodName
        */
       query: function (filter, sorting, offset, limit) {
-         filter = filter || {};
          var
             self = this,
             strategy = this.getStrategy(),
-            def = new $ws.proto.Deferred(),
-            filterParam = strategy.prepareFilterParam(filter),
-            sortingParam = strategy.prepareSortingParam(sorting),
-            pagingParam = strategy.preparePagingParam(offset, limit);
-
-         self._BL.call(self._options.queryMethodName, {
-            'ДопПоля': [],
-            'Фильтр': filterParam,
-            'Сортировка': sortingParam,
-            'Навигация': pagingParam
-         }, $ws.proto.BLObject.RETURN_TYPE_ASIS).addCallbacks(function (res) {
-
+            def = new $ws.proto.Deferred();
+         self._BL.call(self._options.queryMethodName, this.prepareQueryParams(filter, sorting, offset, limit) , $ws.proto.BLObject.RETURN_TYPE_ASIS).addCallbacks(function (res) {
             var DS = new DataSet({
                strategy: strategy,
                data: res,
@@ -320,6 +309,28 @@ define('js!SBIS3.CONTROLS.SbisServiceSource', [
 
          return def;
 
+      },
+      /**
+       * Подготовка параметров списочного метода.
+       * @param {Object} filter Параметры фильтрации вида - {property1: value, property2: value}.
+       * @param {Array} sorting Параметры сортировки вида - [{property1: 'ASC'}, {property2: 'DESC'}].
+       * @param {Number} offset Смещение начала выборки.
+       * @param {Number} limit Количество возвращаемых записей.
+       * @param {Boolean} [hasMore] параметр для навигации "ЕстьЕще".
+       * @returns {{ДопПоля: Array, Фильтр: Object, Сортировка: Object || null, Навигация: Object }}
+       */
+      prepareQueryParams : function(filter, sorting, offset, limit, hasMore){
+         filter = filter || {};
+         var strategy = this.getStrategy(),
+               filterParam = strategy.prepareFilterParam(filter),
+               sortingParam = strategy.prepareSortingParam(sorting),
+               pagingParam = strategy.preparePagingParam(offset, limit, hasMore);
+         return {
+            'ДопПоля': [],
+            'Фильтр': filterParam,
+            'Сортировка': sortingParam,
+            'Навигация': pagingParam
+         }
       },
       /**
        * Метод перемещения записи к другому родителю и смены порядковых номеров

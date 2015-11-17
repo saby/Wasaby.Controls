@@ -28,13 +28,15 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', ['js!SBIS3.CORE.Control'], function (Con
       },
 
       $constructor : function() {
+         var
+            filter = this.getFilter() || {};
          this._publish('onNodeDataLoad');
-         this._filter = this._filter || {};
-         delete (this._filter[this._options.hierField]);
+         delete (filter[this._options.hierField]);
          if (this._options.expand) {
-            this._filter['Разворот'] = 'С разворотом';
-            this._filter['ВидДерева'] = 'Узлы и листья';
+            filter['Разворот'] = 'С разворотом';
+            filter['ВидДерева'] = 'Узлы и листья';
          }
+         this.setFilter(filter, true);
       },
 
       _getRecordsForRedraw: function() {
@@ -100,13 +102,14 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', ['js!SBIS3.CORE.Control'], function (Con
       },
 
       _createTreeFilter: function(key) {
-         var filter = $ws.core.clone(this._filter) || {};
+         var
+            filter = $ws.core.clone(this.getFilter()) || {};
          if (this._options.expand) {
-            this._filter = this._filter || {};
             filter['Разворот'] = 'С разворотом';
             filter['ВидДерева'] = 'Узлы и листья';
          }
          filter[this._options.hierField] = key;
+         this.setFilter(filter, true);
          return filter;
       },
 
@@ -122,7 +125,12 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', ['js!SBIS3.CORE.Control'], function (Con
             self._nodeDataLoaded(key, dataSet);
          });
       },
-
+      /**
+       * Получить текущий набор открытых элементов иерархии
+       */
+      getOpenedPath: function(){
+         return this._options.openedPath;
+      },
       _nodeDataLoaded : function(key, dataSet) {
          var
             self = this,
@@ -186,13 +194,7 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', ['js!SBIS3.CORE.Control'], function (Con
       _folderLoad: function(id) {
          var
             self = this,
-            filter;
-         if (id) {
-            filter = this._createTreeFilter(id);
-         }
-         else {
-            filter = this._filter;
-         }
+            filter = id ? this._createTreeFilter(id) : this.getFilter();
          this._loader = this._dataSource.query(filter, this._sorting, (id ? this._folderOffsets[id] : this._folderOffsets['null']) + this._limit, this._limit).addCallback(function (dataSet) {
             //ВНИМАНИЕ! Здесь стрелять onDataLoad нельзя! Либо нужно определить событие, которое будет
             //стрелять только в reload, ибо между полной перезагрузкой и догрузкой данных есть разница!
@@ -211,7 +213,7 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', ['js!SBIS3.CORE.Control'], function (Con
                else {
                   self._treePager.setHasMore(false)
                }
-               self._removeLoadingIndicator();
+               self._hideLoadingIndicator();
             }
             //Если данные пришли, нарисуем
             if (dataSet.getCount()) {

@@ -49,7 +49,7 @@
 @link-icon-margin:                        -3px 0 0;
 
 @link-field-margin:                       0;
-@link-icon-field-margin:                  0 0 0 4px;
+@link-icon-field-margin:                  0 0 0 6px;
 
 
 
@@ -84,7 +84,7 @@
 @button-border-width:                     1px;
 @button-border:                           @button-border-width solid @default-color;
 @button-shadow:                           none;
-@button-bg:                               @white-color;
+@button-bg:                               transparent;
 
 @button-hover-text-color:                 @button-text-color;
 @button-hover-border:                     @button-border;
@@ -100,7 +100,7 @@
 @button-primary-text-color:               @button-text-color;
 @button-primary-border:                   1px solid @link-hover-text-color;
 @button-primary-shadow:                   @button-shadow;
-@button-primary-bg:                       #fff;
+@button-primary-bg:                       @button-bg;
 
 @button-primary-hover-text-color:         @button-primary-text-color;
 @button-primary-hover-border:             @button-primary-border;
@@ -116,7 +116,7 @@
 @button-disabled-text-color:              @gray-light-color;
 @button-disabled-border:                  1px solid @button-disabled-text-color;
 @button-disabled-shadow:                  @button-shadow;
-@button-disabled-bg:                      @white-color !important;
+@button-disabled-bg:                      @button-bg;
 
 
 
@@ -547,7 +547,7 @@
 
 @menu-expand-width:                       16px;
 @menu-expand-height:                      16px;
-@menu-expand-top-offset:                  5px;
+@menu-expand-top-offset:                  8px;
 @menu-expand-right-offset:                1px;
 @menu-expand-spritesheet:                'img/MenuExpand.png';
 
@@ -563,7 +563,7 @@
 
 @menu-header-height:                      32px;
 @menu-header-box-sizing:                  border-box;
-@menu-header-padding:                     6px;
+@menu-header-padding:                     8px;
 
 
 // --------- //
@@ -571,12 +571,9 @@
 // --------- //
 @menu-item-cursor:                        pointer;
 @menu-item-width:                         auto;
-@menu-item-height:                        26px;
+@menu-item-height:                        32px;
 @menu-item-line-height:                   @menu-item-height;
 @menu-item-default-padding:               0 8px;
-@menu-item-small-padding-left:            24px;
-@menu-item-average-padding-left:          32px;
-@menu-item-big-padding-left:              35px;
 @menu-item-expand-padding-right:          16px;
 
 @menu-item-text-color:                    @black-color;
@@ -586,15 +583,15 @@
 @menu-item-hover-bg:                      @default-itemHover-color;
 @menu-item-hover-icon-color:              @primary-color!important;
 
-@menu-item-icon-top-offset:               0px;
+@menu-item-icon-top-offset:               -1px;
 @menu-item-icon-top-offset-big:           0px;
 @menu-item-icon-left-offset:              0px;
 @menu-item-icon-left-offset-big:          0px;
 
-@menu-item-icon24-top-offset:             -4px;
+@menu-item-icon24-top-offset:             -3px;
 @menu-item-icon24-top-offset-big:         -4px;
 
-@menu-item-icon24-left-offset:            -3px;
+@menu-item-icon24-left-offset:            0;
 @menu-item-icon24-left-offset-big:        -3px;
 
 @menu-item-text-margin:                   0 0 0 22px;
@@ -733,7 +730,7 @@
 @menu-link-checked-hover-text-decoration: @menu-link-checked-text-decoration;
 
 // Menu
-@menu-link-menu-margin:                   -5px 0 0 -8px;
+@menu-link-menu-margin:                   -6px 0 0 -10px;
 @menu-link-menu-padding:                  0 0 4px 0;
 @menu-link-menu-bg:                       @menu-button-menu-bg;
 
@@ -744,7 +741,7 @@
 // --------- //
 
 // Menu
-@menu-icon-menu-margin:                   -8px 0 0 -8px;
+@menu-icon-menu-margin:                   -10px 0 0 -10px;
 @menu-icon-menu-padding:                  0 0 4px 0;
 @menu-icon-menu-bg:                       @menu-button-menu-bg;
 
@@ -1255,6 +1252,7 @@
 // --------- //
 
 @list-view-actions-cursor:                      pointer;
+@list-view-actions-margin-right:                3px;
 @list-view-actions-height:                      20px;
 @list-view-actions-width:                       20px;
 @list-view-actions-item-height:                 16px;
@@ -1277,6 +1275,12 @@
 @list-view-actions-menu-icon-close:             @list-view-actions-menu-icon 0 -40px;
 @list-view-actions-menu-icon-close-hover:       @list-view-actions-menu-icon 0 -60px;
 @list-view-actions-menu-icon-width:             16px;
+
+@list-view-actions-menu-touch-icon:             url('img/items-actions-touch-menu.png') no-repeat;
+@list-view-actions-menu-touch-height:           30px;
+@list-view-actions-menu-touch-width:            44px;
+@list-view-actions-menu-touch-size:             4px 18px;
+@list-view-actions-touch-padding:               5px 0 0 0;
 
 @list-view-scroll-spritesheet :                 'img/ajax-loader-indicator.gif';
 @list-view-scroll-bg:                           url(@list-view-scroll-spritesheet) 0 0 no-repeat;
@@ -1492,7 +1496,10 @@
 @multiView-tile-item-image-box-shadow:              1px 2px 4px #aaa;
 @multiView-tile-item-image-margin:                  4px auto 0 auto;
 @multiView-tile-item-text-margin:                   8px;
-@multiView-tile-selected-item-bg:                   #E7F0F9;
+@multiView-tile-selected-item-bg:                   @default-itemSelected-color;
+@multiView-tile-selected-item-border:               1px solid @multiView-tile-selected-item-border-color;
+@multiView-tile-selected-item-border-color:         #FF9C6C;
+@multiView-default-folder-border:                   1px solid transparent;
 @multiView-default-folder-bg:                       url("img/defaultFolder.png");
 @multiView-default-item-bg:                         url("img/defaultItem.png");
 // --------------- //
@@ -1583,3 +1590,27 @@
 @drag-and-drop-count-margin:                       20px 0 0 11px;
 @drag-and-drop-count-font-size:                    10px;
 @drag-and-drop-hover-bg:                           #9fd3fe !important;
+
+//FieldLink
+@controls-FieldLink-picker-show-border:            1px solid;
+@controls-FieldLink-picker-show-border-color:      #eaeaea #eaeaea #e4e4e4;
+@controls-FieldLink-picker-show-color:             @white-color;
+
+@controls-FieldLink-fieldWrapper-margin:           0 !important;
+@controls-FieldLink-showAllLinks-top:              2px;
+@controls-FieldLink-showAllLinks-padding:          0 4px;
+@controls-FieldLink-linkContainer-padding:         4px 0;
+
+@controls-FieldLink-picker-max-height:             500px;
+@controls-FieldLink-picker-min-height:             16px;
+@controls-FieldLink-picker-border:                 1px solid #eaeaea;
+@controls-FieldLink-picker-background:             @white-color;
+
+@controls-FieldLink-linkItem-margin:               2px 0;
+@controls-FieldLink-linkItem-position:             relative;
+@controls-FieldLink-linkItem-padding:              0 16px 0 4px;
+@controls-FieldLink-linkItem-caption-height:       16px;
+@controls-FieldLink-linkItem-cross-heigth:         @controls-FieldLink-linkItem-caption-height;
+@controls-FieldLink-linkItem-cross-width:          16px;
+@controls-FieldLink-linkItem-cross-right:          0;
+

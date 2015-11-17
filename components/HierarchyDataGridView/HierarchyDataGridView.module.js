@@ -178,8 +178,9 @@ define('js!SBIS3.CONTROLS.HierarchyDataGridView', [
             var self = this,
                   elem,
                   groupBy = this._options.groupBy,
-                  cfg;
-            container.find('td').append(elem = $('<div style="width:'+ this._container.width() +'px"></div>'));
+                  cfg,
+                  td = container.find('td');
+                  td.append(elem = $('<div style="width:'+ td.width() +'px"></div>'));
             cfg = {
                element : elem,
                items: this._createPathItemsDS(path),
@@ -199,14 +200,14 @@ define('js!SBIS3.CONTROLS.HierarchyDataGridView', [
                if (self._notify('onSearchPathClick', id) !== false ) {
                   //TODO в будущем нужно отдать уже dataSet крошек, ведь здесь уже все построено
                   /*TODO для Алены. Временный фикс, потому что так удалось починить*/
-                  var filter = $ws.core.merge(self._filter, {
+                  var filter = $ws.core.merge(self.getFilter(), {
                      'Разворот' : 'Без разворота',
                      'СтрокаПоиска': undefined
                   });
                   self.setInfiniteScroll(false, true);
                   self.setGroupBy({});
                   self.setHighlightText('', false);
-                  self._filter = filter;
+                  self.setFilter(filter, true);
                   self.setCurrentRoot(id);
                   self.reload();
                }
