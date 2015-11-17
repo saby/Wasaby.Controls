@@ -84,7 +84,8 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
                      if (allContainers[i] == parentContainer.get(0)) {
                         startRow = i + 1;
                      } else {
-                        if (childKeys.indexOf($(allContainers[i]).attr('data-id')) >= 0) {
+                        //TODO двойная проверка из-за того, что ключи могут быть числом, а могут текстом добиться одного варианта и выпилить
+                        if ((childKeys.indexOf($(allContainers[i]).attr('data-id')) >= 0) || ((childKeys.indexOf($(allContainers[i]).data('id')) >= 0))){
                            startRow++;
                         }
                      }

@@ -1,22 +1,22 @@
 /* global define, $ws */
 define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
-   'js!SBIS3.CONTROLS.Data.Collection.List',
+   'js!SBIS3.CONTROLS.Data.Collection.ObservableList',
    'js!SBIS3.CONTROLS.DataSet',
    'js!SBIS3.CONTROLS.Data.Model'
-], function (List, DataSet) {
+], function (ObservableList, DataSet) {
    'use strict';
 
    /**
-    * Список, работающий с записями
+    * Список записей
     * @class SBIS3.CONTROLS.Data.Collection.RecordSet
-    * @extends SBIS3.CONTROLS.Data.Collection.List
+    * @extends SBIS3.CONTROLS.Data.Collection.ObservableList
     * @author Мальцев Алексей
     * @state mutable
     * @remark
     * Этот модуль временный. Обеспечивает совместимость c  SBIS3.CONTROLS.DataSet по API.
     */
 
-   var RecordSet = List.extend(/** @lends SBIS3.CONTROLS.Data.Collection.RecordSet.prototype */{
+   var RecordSet = ObservableList.extend(/** @lends SBIS3.CONTROLS.Data.Collection.RecordSet.prototype */{
       _moduleName: 'SBIS3.CONTROLS.Data.Collection.RecordSet',
       $protected: {
          _options: {
