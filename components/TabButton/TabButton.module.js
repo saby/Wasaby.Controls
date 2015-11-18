@@ -4,7 +4,7 @@
  * @description
  */
 define('js!SBIS3.CONTROLS.TabButton',
-   ['js!SBIS3.CONTROLS.RadioButtonBase', 'html!SBIS3.CONTROLS.TabButton', 'html!SBIS3.CONTROLS.TabButton/TabContentTpl'], function (RadioButtonBase, dotTplFn, tabContentTpl) {
+   ['js!SBIS3.CONTROLS.RadioButtonBase', 'html!SBIS3.CONTROLS.TabButton','js!SBIS3.CONTROLS.IconMixin'], function (RadioButtonBase, dotTplFn,IconMixin) {
 
    'use strict';
    /**
@@ -13,7 +13,7 @@ define('js!SBIS3.CONTROLS.TabButton',
     * @extends SBIS3.CONTROLS.RadioButtonBase
     * @author Крайнов Дмитрий Олегович
     */
-   var TabButton = RadioButtonBase.extend(/** @lends SBIS3.CONTROLS.TabButton.prototype */ {
+   var TabButton = RadioButtonBase.extend([IconMixin],/** @lends SBIS3.CONTROLS.TabButton.prototype */ {
       $protected: {
          _options: {
             /**
@@ -33,25 +33,19 @@ define('js!SBIS3.CONTROLS.TabButton',
              *     <option name="icon">icon-16 icon-Archive icon-primary action-hover</option>
              * </pre>
              */
-            icon: '',
-            /**
-             * @cfg {HTML} Шаблон, отображаемый внутри вкладки
-             * @example
-             * <pre>
-             *    <option name="template">
-             *       <component data-component="SBIS3.CONTROLS.Link" class="controls-BackButton__caption" name="BackButton-caption">\
-             *          <option name="caption">Ссылка</option>\
-             *          <option name="name">lk</option>\
-             *       </component>
-             *    </option>
-             * </pre>
-             */
-            template: tabContentTpl
+            icon: ''
          }
       },
       _dotTplFn: dotTplFn,
 
       $constructor: function () {
+         if (this._options.icon){
+            this.setIcon(this._options.icon);
+         }
+      },
+      _drawIcon: function(icon) {
+         var newIcon = $('<span></span>').addClass(this._iconClass);
+         this.getContainer().find('.controls-TabButton__icon').html(newIcon);
       }
    });
 

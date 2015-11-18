@@ -1,13 +1,9 @@
 <div class="controls-TabButton controls-TabButton__{{=it.align}}-align{{?it.checked}} controls-Checked__checked{{?}}">
     <div class="controls-TabButton__inner">
-        {{? typeof it.template == 'function'}}
-           {{=it.template({
-               caption: it.caption,
-               icon: it.icon
-           })}}
-        {{??}}
-           {{=it.template}}
-        {{?}}
+        <div>
+            <span class="controls-TabButton__icon"></span>
+            <span class="controls-TabButton__caption">{{=it.caption}}</span>
+        </div>
     </div>
     <div class="controls-tabButton__overlay"></div>
 </div>
