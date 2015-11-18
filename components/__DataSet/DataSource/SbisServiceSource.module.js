@@ -262,7 +262,7 @@ define('js!SBIS3.CONTROLS.SbisServiceSource', [
             });
             return pd.done().getResult();
          } else {
-            return this._destroy(this._getBlById(id), parseInt(id, 10));
+            return this._destroy(parseInt(id, 10), this._getBlObjName(id));
          }
       },
 
@@ -373,7 +373,7 @@ define('js!SBIS3.CONTROLS.SbisServiceSource', [
        * Возвращает имя объекта бл из сложного идентификатора или имя объекта из источника, для простых идентификаторов
        */
       _getBlObjName: function (id) {
-         if (String(id).indexOf(',')) {
+         if (String(id).indexOf(',') !== -1) {
             var ido = String(id).split(',');
             return ido[1];
          }
