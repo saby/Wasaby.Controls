@@ -14,6 +14,7 @@ define(['js!SBIS3.CONTROLS.Utils.HtmlDecorators/AbstractDecorator'], function (A
     */
    var ColorMarkDecorator = AbstractDecorator.extend(/** @lends SBIS3.CONTROLS.Utils.HtmlDecorators/ColorMarkDecorator.prototype */{
       $protected: {
+         _name: 'colorMark',
          _options: {
          }
       },
