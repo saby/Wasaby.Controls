@@ -32,6 +32,22 @@ define('js!SBIS3.CONTROLS.SuggestTextBox', [
          ccb.defineBinding('text', this.getName(), false, undefined, undefined, true);
          ccb.bindControl(this, this.getLinkedContext(), true);
          SuggestTextBox.superclass.init.call(this);
+      },
+
+      _keyDownBind: function(e) {
+         switch (e.which) {
+            case $ws._const.key.down:
+            case $ws._const.key.up:
+            case $ws._const.key.enter:
+               if(this.isPickerVisible()) {
+                  this._list && this._list._keyboardHover(e);
+               }
+               break;
+            case $ws._const.key.esc:
+               this.hidePicker();
+               break;
+         }
+         SuggestTextBox.superclass._keyDownBind.apply(this, arguments);
       }
    });
 

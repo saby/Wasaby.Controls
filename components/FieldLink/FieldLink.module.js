@@ -51,14 +51,6 @@ define('js!SBIS3.CONTROLS.FieldLink',
 
    var FieldLink = SuggestTextBox.extend([FormWidgetMixin, MultiSelectable, DSMixin, ActiveMultiSelectable],/** @lends SBIS3.CONTROLS.FieldLink.prototype */{
       $protected: {
-         /* КЛАВИШИ ОБРАБАТЫВАЕМЫЕ FieldLink'ом */
-         _keysWeHandle: [
-            $ws._const.key.del,
-            $ws._const.key.backspace,
-            $ws._const.key.esc,
-            $ws._const.key.down,
-            $ws._const.key.up
-         ],
          /* КОНФИГУРАЦИЯ SELECTOR'а */
          _selector: {
             config: {
@@ -242,8 +234,8 @@ define('js!SBIS3.CONTROLS.FieldLink',
          if(this._options.multiselect) {
             /* Когда показываем пикер со всеми выбранными записями, скроем автодополнение и покажем выбранные записи*/
             this._showAllLink.click(function() {
-               self.showPicker();
-               self._pickerChangeStateHandler(true);
+               self.togglePicker();
+               self._pickerChangeStateHandler(self.isPickerVisible());
                return false;
             });
             this._dropAllLink.click(this.removeItemsSelectionAll.bind(this));
@@ -276,7 +268,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
          if (!keysArrLen) {
             this._toggleShowAllLink(false);
 
-            if(this._isPickerVisible()) {
+            if(this.isPickerVisible()) {
                this.hidePicker();
             }
          }
@@ -324,7 +316,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
              inputWidth;
 
          /* Если элементы рисуются в пикере то ничего считать не надо */
-         if(this._isPickerVisible()) {
+         if(this.isPickerVisible()) {
             return true;
          }
 
@@ -384,15 +376,10 @@ define('js!SBIS3.CONTROLS.FieldLink',
          FieldLink.superclass._setPickerContent.apply(this, arguments);
       },
 
-      _keyboardHover: function (e) {
-         FieldLink.superclass._keyboardHover.apply(this, arguments);
-
+      _keyDownBind: function (e) {
          switch (e.which) {
             case $ws._const.key.del:
                this.removeItemsSelectionAll();
-               break;
-            case $ws._const.key.esc:
-               this.hidePicker();
                break;
             case $ws._const.key.backspace:
                var selectedKeys = this.getSelectedKeys();
@@ -401,17 +388,21 @@ define('js!SBIS3.CONTROLS.FieldLink',
                }
                break;
          }
-
-         return true;
+         FieldLink.superclass._keyDownBind.apply(this, arguments);
       },
 
-      /**
-       * Возвращает, отображается ли сейчас пикер
-       * @returns {*|Boolean}
-       * @private
-       */
-      _isPickerVisible: function() {
-         return this._picker && this._picker.isVisible();
+      _keyUpBind: function(e) {
+         FieldLink.superclass._keyUpBind.apply(this, arguments);
+         switch (e.which) {
+            case $ws._const.key.up:
+            case $ws._const.key.down:
+                /* Чтобы нормально работала навигация стрелками и не случалось ничего лишнего,
+                   то запретим вспылтие события */
+               if(this.isPickerVisible()) {
+                  e.stopPropagation();
+               }
+               break;
+         }
       },
 
       /**

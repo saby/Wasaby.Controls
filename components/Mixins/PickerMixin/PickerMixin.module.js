@@ -148,6 +148,22 @@ define('js!SBIS3.CONTROLS.PickerMixin', ['js!SBIS3.CONTROLS.FloatArea'], functio
          }
       },
 
+      /**
+       * Возвращает, отображается ли сейчас пикер
+       * @returns {*|Boolean}
+       * @example
+       * <pre>
+       *    button.bind('click', function(){
+       *        if(self.isPickerVisible()) {
+       *           self.hidePicker();
+       *        }
+       *      })
+       * </pre>
+       */
+      isPickerVisible: function() {
+         return Boolean(this._picker && this._picker.isVisible());
+      },
+
       _setPickerContent: function () {
          /*Method must be implemented*/
       },
