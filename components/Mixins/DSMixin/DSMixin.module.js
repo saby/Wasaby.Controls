@@ -365,6 +365,13 @@ define('js!SBIS3.CONTROLS.DSMixin', [
          this.reload(this._filter, this._sorting, 0, pageSize);
       },
       /**
+       * Метод получения количества элементов на одной странице.
+       * @see pageSize
+       */
+      getPageSize: function() {
+         return this._options.pageSize
+      },
+      /**
        * Получить текущий фильтр в наборе данных
        * @returns {Object|*|DSMixin._filter}
        */
@@ -380,7 +387,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
          this._filter = filter;
          this._dropPageSave();
          if (this._dataSource && !noLoad) {
-            this.reload(this._filter, this._sorting, 0, this.getProperty('pageSize'));
+            this.reload(this._filter, this._sorting, 0, this.getPageSize());
          }
       },
 
