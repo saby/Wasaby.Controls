@@ -64,6 +64,7 @@ define('js!SBIS3.CONTROLS.FastDataFilter',
             });
             item.subscribe('onSelectedItemsChange', function(event, idArray){
                var idx = self._getFilterSctructureItemIndex(this.getContainer().data('id')),
+                  text = [], ds,
                //Если выбрали дефолтное значение, то нужно взять из resetValue
                //TODO может быть всегда отдавать массивом?
                    filterValue =  idArray.length === 1 && idArray[0] === this.getDefaultId() ? self._filterStructure[idx].resetValue :
@@ -73,7 +74,15 @@ define('js!SBIS3.CONTROLS.FastDataFilter',
                //Если не нашли, значит искать мне это надо как-то по-другому....
                if (idx >= 0) {
                   self._filterStructure[idx].value = filterValue;
-                  self._filterStructure[idx].caption = this.getText();
+
+                  //TODO из-за того, что ТЕПЕРЬ в multiselectable происходит сначала оповещение, а
+                  //только потом перерисовка, то пользоваться здесь getText нельзя, смотрим в dataSet
+                  ds = this.getDataSet();
+                  for (var i = 0; i < idArray.length; i++) {
+                     text.push(ds.getRecordByKey(idArray[i]).get(this._options.displayField))
+                  }
+
+                  self._filterStructure[idx].caption = text.join(', ');
                   self.applyFilter();
                }
             });
