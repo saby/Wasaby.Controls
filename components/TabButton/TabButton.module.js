@@ -25,15 +25,7 @@ define('js!SBIS3.CONTROLS.TabButton',
              *     <option name="align">left</option>
              * </pre>
              */
-            align: 'right',
-            /**
-             * @cfg {String} css класс иконки
-             * @example
-             * <pre>
-             *     <option name="icon">icon-16 icon-Archive icon-primary action-hover</option>
-             * </pre>
-             */
-            icon: ''
+            align: 'right'
          }
       },
       _dotTplFn: dotTplFn,
