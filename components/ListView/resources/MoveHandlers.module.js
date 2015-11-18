@@ -87,7 +87,7 @@ define('js!SBIS3.CONTROLS.MoveHandlers', ['js!SBIS3.CONTROLS.MoveDialog'], funct
          var record = dataSet.getRecordByKey(parentKey);
          while (record) {
             parentKey = '' + record.getKey();
-            if (toMap.indexOf(parentKey) < 0) {
+            if ($.inArray(parentKey, toMap) === -1) {
                toMap.push(parentKey);
             }
             parentKey = dataSet.getParentKey(record, hierField);
