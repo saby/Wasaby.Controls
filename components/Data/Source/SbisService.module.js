@@ -246,7 +246,7 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
          }
          else {
             var name = self._getProviderNameById(keys);
-            return self._destroy(parsetInt(keys, 10), name, meta);
+            return self._destroy(parseInt(keys, 10), name, meta);
          }
       },
 
