@@ -292,11 +292,10 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
                /*В ключе может содержаться ссылка на объект бл
                  сгруппируем ключи по соответсвующим им объектам*/
                var name = self._getProviderNameById(key);
+
                groups[name] = groups[name]||[];
                groups[name].push(parseInt(key, 10));
-               else {
-                  groups[name] = [parseInt(key, 10)];
-               }
+  
             });
             var pd = new $ws.proto.ParallelDeferred();
             $ws.helpers.forEach(groups, function (group, name) {
