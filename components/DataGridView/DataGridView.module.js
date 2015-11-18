@@ -135,7 +135,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
                color: this._options.colorField ? item.get(this._options.colorField) : '',
                multiselect : this._options.multiselect,
                arrowActivatedHandler: this._options.arrowActivatedHandler,
-               hierField: this._options.hierField + '@',
+               hierField: this._options.hierField,
                startScrollColumn: this._options.startScrollColumn
             };
 
@@ -152,10 +152,11 @@ define('js!SBIS3.CONTROLS.DataGridView',
                   }
                   var tplOptions = {
                      item: item,
+                     hierField: this._options.hierField,
+                     isNode: item.get(rowData.hierField + '@') ? true : false,
                      decorators: this._decorators,
                      field: column.field,
                      value: value,
-                     isNode: item.get(rowData.hierField) ? true : false,
                      highlight: column.highlight
                   };
                   if (column.templateBinding) {
@@ -175,7 +176,10 @@ define('js!SBIS3.CONTROLS.DataGridView',
                   value = this._decorators.applyIf(
                      value === undefined || value === null ? '' : $ws.helpers.escapeHtml(value), {
                         highlight: column.highlight,
-                        ladder: column.field
+                        ladder: {
+                           column: column.field,
+                           parentId: item.get(this._options.hierField)
+                        }
                      }
                   );
                }
