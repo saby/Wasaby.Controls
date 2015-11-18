@@ -227,7 +227,7 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
          });
       },
 
-      destroy: function(key, meta) {
+      destroy: function(keys, meta) {
          var self = this;
          if ($ws.helpers.type(keys) == 'array') {
             var groups = {};
@@ -624,7 +624,7 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
             'ИдО': id
          };
          if (!Object.isEmpty(meta)) {
-            args['ДопПоля'] = meta;
+            args['ДопПоля'] = this._options.adapter.serialize(meta);
          }
          var provider = this._provider;
          if (BLObjName && this._options.resource.name !== BLObjName) {
