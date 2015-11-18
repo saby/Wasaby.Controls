@@ -332,21 +332,24 @@ define('js!SBIS3.CONTROLS.SbisJSONStrategy', [
          return {d: [], s: []};
       },
 
-       preprareOrderParams: function(object, record, hierField, orderDetails){
-          var params = {
-             'Объект': object,
-             'ИдО': record.getKey(),
-             'ПорядковыйНомер': orderDetails.column || 'ПорНомер',
-             'Иерархия': hierField
-          };
-          if(orderDetails.after){
-             params['ИдОПосле'] = orderDetails.after;
-          } else {
-             params['ИдОДо'] = orderDetails.before;
-          }
-          return params;
-       },
-       
+      prepareOrderParams: function (object, record, hierField, orderDetails) {
+         var params = {
+            'Объект': object,
+            'ИдО': [parseInt(record.getKey(), 10), object],
+            'ПорядковыйНомер': orderDetails.column || 'ПорНомер',
+            'Иерархия': typeof hierField === 'undefined' ? null : hierField
+         };
+         if (orderDetails.after) {
+            params['ИдОДо'] = [parseInt(orderDetails.after, 10), object];
+         }
+         else if (orderDetails.before) {
+            params['ИдОПосле'] = [parseInt(orderDetails.before, 10), object];
+         }
+         return params;
+      },
+
+
+
        setParentKey: function(record, hierField, parent) {
           record.set(hierField, [parent]);
        },
