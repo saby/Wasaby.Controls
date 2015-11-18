@@ -66,13 +66,15 @@ define('js!SBIS3.CONTROLS.MoveHandlers', ['js!SBIS3.CONTROLS.MoveDialog'], funct
          }
       },
       _checkRecordsForMove: function(records, moveTo) {
-         var toMap = this._getParentsMap(moveTo);
+         var
+            key,
+            toMap = this._getParentsMap(moveTo);
          if (moveTo === undefined) {
             return false;
          }
          for (var i = 0; i < records.length; i++) {
-            if ($ws.helpers.instanceOfModule(records[i], 'SBIS3.CONTROLS.Record') && $.inArray(records[i].getKey(), toMap) !== -1 ||
-                $.inArray('' + records[i], toMap) !== -1) {
+            key = '' + $ws.helpers.instanceOfModule(records[i], 'SBIS3.CONTROLS.Record') ? records[i].getKey() : records[i];
+            if ($.inArray(key, toMap) !== -1) {
                $ws.helpers.alert('Вы не можете переместить запись саму в себя!', {}, this);
                return false;
             }
@@ -94,10 +96,12 @@ define('js!SBIS3.CONTROLS.MoveHandlers', ['js!SBIS3.CONTROLS.MoveDialog'], funct
                3. это не исключает ситуации, когда БЛ не возвращает иерархию до корня, либо пользователь самостоятельно пытается что-то переместить с помощью интерфейса IDataSource.move. В таком случае мы считаем, что БЛ вне зависимости от возможности проверки на клиенте, всегда должна проверять входные значения при перемещении. В противном случае это приводит к зависанию запроса.
             */
             path = dataSet.getMetaData().path,
-            toMap = path ? Array.clone(path.getChildItems()) : [];
+            toMap = path ? $.map(path.getChildItems(), function(elem) {
+               return '' + elem;
+            }) : [];
          var record = dataSet.getRecordByKey(parentKey);
          while (record) {
-            parentKey = record.getKey();
+            parentKey = '' + record.getKey();
             if (toMap.indexOf(parentKey) < 0) {
                toMap.push(parentKey);
             }
