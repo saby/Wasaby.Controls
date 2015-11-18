@@ -11,6 +11,7 @@ define('js!SBIS3.CONTROLS.SearchForm', [
     * Cтрока поиска, поле ввода + кнопка поиска.
     * @class SBIS3.CONTROLS.SearchForm
     * @extends SBIS3.CONTROLS.TextBox
+    * @mixes SBIS3.CONTROLS.SearchMixin
     * @public
     * @control
     * @author Крайнов Дмитрий Олегович

@@ -5,12 +5,12 @@ define('js!SBIS3.CONTROLS.SearchMixin', [], function() {
 
    /**
     * Миксин, добавляющий иконку
-    * @mixin SBIS3.CONTROLS.IconMixin
+    * @mixin SBIS3.CONTROLS.SearchMixin
     * @public
     * @author Крайнов Дмитрий Олегович
     */
 
-   var SearchMixin = /**@lends SBIS3.CONTROLS.IconMixin.prototype  */{
+   var SearchMixin = /**@lends SBIS3.CONTROLS.SearchMixin.prototype  */{
       /**
        * @event onSearch При поиске
        * @param {$ws.proto.EventObject} eventObject Дескриптор события.
