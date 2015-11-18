@@ -829,6 +829,14 @@ define('js!SBIS3.CONTROLS.DSMixin', [
          this._options.emptyHTML = html;
       },
 
+      /**
+       * Возвращает источник данных.
+       * @returns {*}
+       */
+      getDataSource: function(){
+         return this._dataSource;
+      },
+
       _dataLoadedCallback: function () {
 
       }
