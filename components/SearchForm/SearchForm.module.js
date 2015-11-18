@@ -1,8 +1,9 @@
 define('js!SBIS3.CONTROLS.SearchForm', [
    'js!SBIS3.CONTROLS.TextBox',
+   'js!SBIS3.CONTROLS.SearchMixin',
    'html!SBIS3.CONTROLS.SearchForm',
    'html!SBIS3.CONTROLS.SearchForm/resources/SearchFormButtons'
-], function (TextBox, dotTplFn, buttonsTpl) {
+], function (TextBox, SearchMixin, dotTplFn, buttonsTpl) {
 
    'use strict';
 
@@ -15,7 +16,7 @@ define('js!SBIS3.CONTROLS.SearchForm', [
     * @author Крайнов Дмитрий Олегович
     */
 
-   var SearchForm = TextBox.extend(/** @lends SBIS3.CONTROLS.SearchForm.prototype */ {
+   var SearchForm = TextBox.extend([SearchMixin],/** @lends SBIS3.CONTROLS.SearchForm.prototype */ {
       /**
        * @event onSearchStart При нажатии кнопки поиска
        * @param {$ws.proto.EventObject} eventObject Дескриптор события.
@@ -99,7 +100,6 @@ define('js!SBIS3.CONTROLS.SearchForm', [
       resetSearch: function(){
          $('.js-controls-SearchForm__reset', this.getContainer().get(0)).hide();
          this.setText('');
-         this._notify('onReset');
       }
    });
 
