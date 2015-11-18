@@ -762,11 +762,11 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
        * @returns {String}
        */
       _getProviderNameById: function (id) {
-         if (String(id).indexOf(',')) {
+         if (String(id).indexOf(',') !== -1) {
             var ido = String(id).split(',');
             return ido[1];
          }
-         return this._options.resource;
+         return this._options.resource.name;
          return this._options.resource.name;
       /**
       /**
