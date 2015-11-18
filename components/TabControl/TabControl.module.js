@@ -31,6 +31,7 @@ define('js!SBIS3.CONTROLS.TabControl', [
       },
 
       $constructor: function() {
+         //Задаём items в контекст, чтобы потом TabButtons и SwitchableArea их использовали (в TabControl.xhtml)
          this._context.setValueSelf(contextName+'/items',this._options.items);
       },
 
