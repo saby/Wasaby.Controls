@@ -82,6 +82,8 @@ define('js!SBIS3.CONTROLS.SearchForm', [
       _keyUp:function(event) {
          if (event.which == 13) {
             this.applySearch();
+            //TODO в 3.7.3.20 перейти на общие с миксином события. в 10 страшно пока отпиливать
+            this._applySearch(this.getText());
          }
       },
 
