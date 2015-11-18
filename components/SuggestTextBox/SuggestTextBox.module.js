@@ -41,6 +41,7 @@ define('js!SBIS3.CONTROLS.SuggestTextBox', [
             case $ws._const.key.enter:
                if(this.isPickerVisible()) {
                   this._list && this._list._keyboardHover(e);
+                  e.preventDefault();
                }
                break;
             case $ws._const.key.esc:

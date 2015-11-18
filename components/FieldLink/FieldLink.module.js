@@ -283,6 +283,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
                self._linkCollection.setItems(list);
             });
          } else {
+            self._syncSelectedItems();
             self._linkCollection.setItems(this._getSelectedItems());
          }
       },
@@ -396,6 +397,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
          switch (e.which) {
             case $ws._const.key.up:
             case $ws._const.key.down:
+            case $ws._const.key.enter:
                 /* Чтобы нормально работала навигация стрелками и не случалось ничего лишнего,
                    то запретим вспылтие события */
                if(this.isPickerVisible()) {
