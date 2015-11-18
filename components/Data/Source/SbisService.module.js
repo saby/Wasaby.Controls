@@ -763,21 +763,21 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
        * @returns {String}
        */
       _getProviderNameById: function (id) {
-         if (String(id).indexOf(',')) {
+         if (String(id).indexOf(',') !== -1) {
             var ido = String(id).split(',');
             return ido[1];
          }
-         return this._options.resource;
+         return this._options.resource.name;
       },
       /**
        * вызвает метод удаления
        * @param {String|Array} id Идентификатор объекта
-       * @param {String} resource  Название объекта бл у которго будет вызвано удаление
+       * @param {String} BLObjName  Название объекта бл у которго будет вызвано удаление
        * @param {Object} meta  Дополнительные мета данные
        * @returns {$ws.proto.Deferred}
        * @private
        */
-      _destroy: function(id, resource, meta) {
+      _destroy: function(id, BLObjName, meta) {
          var args = {
             'ИдО': id
          };
@@ -785,8 +785,8 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
             args['ДопПоля'] = meta;
          }
          var provider = this._provider;
-         if (resource && this._options.resource !== resource) {
-            provider = new SbisServiceBLO(resource);
+         if (BLObjName && this._options.resource.name !== BLObjName) {
+            provider = new SbisServiceBLO({name: BLObjName});
          }
          return provider.callMethod(
             this._options.destroyMethodName,
