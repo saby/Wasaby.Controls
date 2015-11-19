@@ -426,7 +426,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
             INPUT_WRAPPER_PADDING);
       },
       /**
-       * Обновляет ширину поле ввода, после того как отрисовались выбренные элементы
+       * Обновляет ширину поле ввода, после того как отрисовались выбранные элементы
        * @private
        */
       _updateInputWidth: function() {
