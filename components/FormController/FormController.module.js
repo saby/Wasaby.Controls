@@ -1,4 +1,4 @@
-define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'html!SBIS3.CONTROLS.FormController'], 
+define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl'], 
    function(CompoundControl, dotTpl) {
    /**
     * 
@@ -6,43 +6,65 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'ht
    'use strict';
 
    var FormController = CompoundControl.extend([], {
+      _dotTplFn: dotTpl,
       $protected: {
-         _dotTplFn: dotTpl,
          _record: null,
          _options: {
             dataSource: null,
-            id: null,
-            record: null,
-            content: null
+            key: null,
+            record: null
          }
       },
       
       $constructor: function() {
          this._publish('onSubmit');
-         var context = this.getContext(),
-            self = this;
-
+         $ws.single.CommandDispatcher.declareCommand(this, 'submit', this.submit);
          if (this._options.dataSource){
-            this._record = this._options.dataSource.read(this._options.id).addCallback(function(record){
-               self._record = record;
-               context.setValue('record', self._record);               
-            });
+            this._runQuery();
          } else {
-            this._record = this._options.record;
-            context.setValue('record', this._record);
+            this._setContextRecord(this._options.record);
          }
       },
 
       submit: function(){
+         var self = this;
+         this._options.dataSource.update(this._options.record).addCallback(function(){
+            self.getTopParent().ok();
+         });
+      },
 
+      _readRecord: function(key){
+         return this._options.dataSource.read(key);
+      },
+
+      _setContextRecord: function(record){
+         this.getLinkedContext().setValue('record', record);               
       },
 
       setDataSource: function(source){
          this._options.dataSource = source;
+         this._runQuery();
       },
 
       setRecord: function(record){
          this._options.record = record;
+         this._setContextRecord(record);
+      },
+
+      _runQuery: function() {
+         var self = this,
+            hdl;
+         if (this._options.key) {
+            hdl = this._readRecord(this._options.key);
+         }
+         else {
+            hdl = this._options.dataSource.create(); 
+         }
+         hdl.addCallback(function(record){
+            self._options.record = record;
+            self._setContextRecord(record);   
+         });
+         
       }
    });
 

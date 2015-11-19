@@ -32,14 +32,21 @@ define('js!SBIS3.CONTROLS.OpenDialogAction', ['js!SBIS3.CONTROLS.ActionBase', 'j
          }
       },
       execute : function(meta) {
-         this._openDialog(meta, this._options.dialogComponent)
+         this._openDialog(meta, this._options.dialogComponent);
       },
 
       _openDialog: function(meta, dialogComponent) {
-         new Dialog({
-            template: dialogComponent,
-            componentOptions : {
-               id : meta.id
+         var
+            self = this,
+            dlg = new Dialog({
+               template: dialogComponent,
+               componentOptions : {
+                  key : meta.id
+               }
+            });
+         dlg.subscribe('onAfterClose', function(e, flag){
+            if (flag === true) {
+               self._notifyOnExecuted();
             }
          });
       }
