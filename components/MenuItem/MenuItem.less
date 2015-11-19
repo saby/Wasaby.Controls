@@ -10,6 +10,9 @@
   padding: @menu-item-default-padding;
   color: @menu-item-text-color;
   background: @menu-item-bg;
+   &.ws-disabled {
+      color: @menu-item-disabled-text-color;
+   }
 
   &:hover {
     color: @menu-item-hover-text-color;
@@ -41,4 +44,8 @@
        display: block;
     }
   }
+}
+
+.ws-disabled .controls-MenuItem__text {
+   color: @menu-item-disabled-text-color;
 }
