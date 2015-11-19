@@ -49,33 +49,25 @@ define('js!SBIS3.CONTROLS.OperationsPanel', [
     */
    var OperationsPanel = Control.extend([CollectionMixin],/** @lends SBIS3.CONTROLS.OperationsPanel.prototype */{
       _dotTplFn: dotTplFn,
-       /**
-        * @typedef {Object} Type
-        * @property {Boolean} mass Массовые операции.
-        * @property {Boolean} mark Операции отметки.
-        * @property {Boolean} selection Операции над выбранными записями.
-        */
-       /**
-        * @typedef {Object} Items
-        * @property {String} name Имя кнопки панели массовых операций.
-        * @property {String} componentType Тип компонента, определяющий формат.
-        * @property {Type} type Тип операций.
-        * @property {Object} options Настройки компонента, переданного в componentType.
-        *
-        */
-       /**
-        * @cfg {Items[]} Набор исходных данных, по которому строится отображение
-        * @name SBIS3.CONTROLS.OperationsPanel#items
-        * @example
-        * <pre>
-        *
-        * </pre>
-        */
       $protected: {
          _options: {
-             /**
-              * @cfg  Набор элементов панели массовых операций
-              */
+            /**
+             * @typedef {Object} Type
+             * @property {Boolean} mass Массовые операции.
+             * @property {Boolean} mark Операции отметки.
+             * @property {Boolean} selection Операции над выбранными записями.
+             */
+            /**
+             * @typedef {Object} Items
+             * @property {String} name Имя кнопки панели массовых операций.
+             * @property {String} componentType Тип компонента, определяющий формат.
+             * @property {Type} type Тип операций.
+             * @property {Object} options Настройки компонента, переданного в componentType.
+             *
+             */
+            /**
+             * @cfg {Items[]} Набор исходных данных, по которому строится отображение
+             */
             items: [
                {
                    name: 'delete',
