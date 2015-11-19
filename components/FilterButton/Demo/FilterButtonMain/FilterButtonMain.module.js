@@ -2,7 +2,7 @@ define('js!SBIS3.CONTROLS.Demo.FilterButtonMain', [
       'js!SBIS3.CORE.CompoundControl',
       'js!SBIS3.CONTROLS.FilterButton',
       'html!SBIS3.CONTROLS.Demo.FilterButtonMain',
-      'js!SBIS3.CONTROLS.DataGrid',
+      'js!SBIS3.CONTROLS.DataGridView',
       'css!SBIS3.CONTROLS.Demo.FilterButtonMain',
       'js!SBIS3.CONTROLS.Demo.FilterButtonFilterContent',
       'js!SBIS3.CONTROLS.Demo.FilterButtonMocks'

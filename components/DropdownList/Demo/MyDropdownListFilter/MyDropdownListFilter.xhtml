@@ -1,0 +1,119 @@
+<div>
+   <component id="dropdownList" data-component="SBIS3.CONTROLS.DropdownList" class="DropdownList controls-DropdownList__withoutArrow controls-DropdownList__linkStyle">
+      <opt name="name" value="DropdownList"></opt>
+      <opt name="keyField" value="key"></opt>
+      <opt name="displayField" value="title"></opt>
+      <opt name="mode" value="hover"></opt>
+      <opt name="multiselect" >false</opt>
+      <opts name="selectedKeys"  type="array" bind="filter/title" direction="fromProperty" oneWay="true" nonexistent="none"></opts>
+   </component>
+
+   <div data-bind="{html: 'filterJSON'}"></div>
+
+   <component data-component="SBIS3.CONTROLS.DataGridView" style="width: 800px; position: relative;">
+      <opt name="filter" bind="filter"></opt>
+      <opt name="name" bind="MyDataGrid"></opt>
+      <options name="columns" type="array">
+         <options>
+            <option name="title">Заголовок</option>
+            <option name="width" type="string">100</option>
+            <option name="field">title</option>
+         </options>
+         <options>
+            <option name="title">NDS</option>
+            <option name="width" type="string">100</option>
+            <option name="field">NDSText</option>
+         </options>
+         <options>
+            <option name="title">selling</option>
+            <option name="width" type="string">250</option>
+            <option name="field">sellingText</option>
+         </options>
+         <options>
+            <option name="title">using</option>
+            <option name="width" type="string">150</option>
+            <option name="field">usingText</option>
+         </options>
+         <options>
+            <option name="title">Пользователь</option>
+            <option name="width" type="string">150</option>
+            <option name="field">user</option>
+         </options>
+      </options>
+      <option name="emptyHTML">Нет записей</option>
+      <options name="items" type="array">
+
+         <options>
+            <option name="title" type="number">1</option>
+
+            <option name="NDSText" type="string">Без НДС</option>
+            <option name="sellingText">Все (для продажи и нет)</option>
+            <option name="usingText">Используемые</option>
+
+            <option name="NDS" type="string">1</option>
+            <option name="selling">1</option>
+            <option name="using">1</option>
+
+            <option name="user" type="string">Пушкин</option>
+         </options>
+
+         <options>
+            <option name="title" type="number">2</option>
+            <option name="NDSText" type="string">Без НДС</option>
+            <option name="sellingText">Все (для продажи и нет)</option>
+            <option name="usingText">Используемые</option>
+
+            <option name="NDS" type="string">1</option>
+            <option name="selling">1</option>
+            <option name="using">1</option>
+
+            <option name="user" type="string">Лермонтов</option>
+         </options>
+
+         <options>
+            <option name="title" type="number">3</option>
+
+            <option name="NDSText" type="string">Без НДС</option>
+            <option name="sellingText">Все (для продажи и нет)</option>
+            <option name="usingText">Используемые</option>
+
+            <option name="NDS" type="string">1</option>
+            <option name="selling">1</option>
+            <option name="using">1</option>
+
+            <option name="user" type="string">Толстой</option>
+         </options>
+         <options>
+            <option name="title" type="number">4</option>
+
+            <option name="NDSText" type="string">С НДС</option>
+            <option name="sellingText">Все (для продажи и нет)</option>
+            <option name="usingText">Используемые</option>
+
+            <option name="NDS" type="string">2</option>
+            <option name="selling">2</option>
+            <option name="using">1</option>
+
+            <option name="user" type="string">Бродский</option>
+         </options>
+         <options>
+            <option name="title" type="number">5</option>
+
+            <option name="NDSText" type="string">С НДС</option>
+            <option name="sellingText">Все (для продажи и нет)</option>
+            <option name="usingText">Неиспользуемые</option>
+
+            <option name="NDS" type="string">2</option>
+            <option name="selling">2</option>
+            <option name="using">1</option>
+            <option name="user" type="string">Пушкин</option>
+         </options>
+      </options>
+      <options name="selectedKeys" type="array">
+         <option type="string">1</option>
+         <option type="string">2</option>
+         <option type="string">5</option>
+      </options>
+      <option name="multiselect">true</option>
+   </component>
+</div>
