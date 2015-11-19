@@ -1183,8 +1183,10 @@ define('js!SBIS3.CONTROLS.ListView',
           * @param {Number} [offset] - если передать, то номер страницы рассчитается от него
           */
          getPage: function (offset) {
-            var offset = offset || this._offset;
-            return Math.ceil(offset / this._options.pageSize);
+            var offset = offset || this._offset,
+                more = this._dataSet.getMetaData().more;
+            //Если offset отрицательный, значит запросили последнюю страницу.
+            return Math.ceil((offset < 0 ? more + offset : offset) / this._options.pageSize);
          },
          _updateOffset: function () {
             var more = this._dataSet.getMetaData().more,
