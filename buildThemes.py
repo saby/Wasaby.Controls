@@ -14,7 +14,7 @@ def process_file(name):
       util = "lessc"
    subprocess.call([util, name, css_name])
 
-def main(): 
+def main():
    for root, dirs, files in os.walk(r'themes'):
       for dirname in dirs:
          fname = os.path.join(root, dirname, os.path.basename(dirname) + ".less")
