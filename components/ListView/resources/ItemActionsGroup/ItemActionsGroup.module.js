@@ -64,12 +64,12 @@ define('js!SBIS3.CONTROLS.ItemActionsGroup',
                   }
                   //Если видимость кнопки не изменилась, то делать ничего не будем
                   if(this._itemActionsButtons[i]['isVisible'] !== show) {
-                     itemsInstances[i].getContainer()[0].style.display = show ? 'inline-block' : 'none';
+                     itemsInstances[i].getContainer()[0].style.display = show ? 'inline' : 'none';
                      this._itemActionsButtons[i]['isVisible'] = show;
                   }
                }
             }
-            this._itemActionsMenuButton[0].style.display = (!onlyMain ? 'inline-block' : 'none');
+            this._itemActionsMenuButton[0].style.display = (!onlyMain ? 'inline' : 'none');
          },
          /**
           * Создаёт меню для операций над записью
@@ -172,16 +172,12 @@ define('js!SBIS3.CONTROLS.ItemActionsGroup',
             this._container[0].style.display = 'block';
             if (this._touchActions){
                var width = this._container.width(),
-                  contHeight = this._container.height(),
-                  height = $(hoveredItem.container).height(),
+                  height = $(hoveredItem.container).outerHeight(),
                   itemsContainer = this._getItemsContainer();
 
                itemsContainer[0].style.right = - width + 'px';
-               if (contHeight < height){
-                  position.top -=  height - contHeight;
-               }
                this._container.height(height);
-            	itemsContainer.animate({right : position.right}, 350);
+            	itemsContainer.animate({right : 0}, 350);
             }
             this._container[0].style.top = position.top + 'px';
         	},

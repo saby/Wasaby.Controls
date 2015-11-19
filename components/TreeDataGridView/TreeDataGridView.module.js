@@ -165,6 +165,24 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
          return parentResult;
       },
 
+      collapseNode: function (key) {
+         this._clearLadderData(key);
+         TreeDataGridView.superclass.collapseNode.apply(this, arguments);
+      },
+
+      expandNode: function (key) {
+         this._clearLadderData(key);
+         TreeDataGridView.superclass.expandNode.apply(this, arguments);
+      },
+
+
+      _clearLadderData: function(key){
+         var ladderDecorator = this._decorators.getByName('ladder');
+         if (ladderDecorator){
+            ladderDecorator.removeNodeData(key);
+         }
+      },
+
       _drawItemsFolderLoad: function(records, id) {
          if (!id) {
             this._drawItems(records);

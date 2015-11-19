@@ -156,6 +156,9 @@ define('js!SBIS3.CONTROLS.Data.Model', [
 
          this._options.idProperty = this._options.idProperty || '';
          this._initAdapter();
+         if (!this._options.idProperty) {
+            this._options.idProperty = this.getAdapter().getKeyField(this._options.data);
+         }
          this.setRawData(this._options.data);
          this._publish('onPropertyChange');
       },
@@ -312,11 +315,11 @@ define('js!SBIS3.CONTROLS.Data.Model', [
        * @param {SBIS3.CONTROLS.Data.Model} model Модель, с которой будет произведено объединение
        */
       merge: function (model) {
-         //FIXME: подразумевается, что адаптеры моделей должны быть одинаковы. Сделать объединение data через адаптеры.
-         $ws.core.merge(this._options.data, model._options.data);
-         this._isStored = model._isStored;
-         this._isChanged = model._isChanged;
-         this._isDeleted = model._isDeleted;
+         model.each(function(field, value) {
+            this.set(field, value);
+         }, this);
+         this._isStored = this._isStored || model._isStored;
+         this._isDeleted = this._isDeleted || model._isDeleted;
          this._initProperties();
       },
 
@@ -354,6 +357,7 @@ define('js!SBIS3.CONTROLS.Data.Model', [
       getIdProperty: function () {
          return this._options.idProperty;
       },
+
       /**
        * Устанавливает свойство, в котором хранится первичный ключ модели
        * @param {String} idProperty Первичный ключ модели.
@@ -361,6 +365,7 @@ define('js!SBIS3.CONTROLS.Data.Model', [
       setIdProperty: function (idProperty) {
          this._options.idProperty = idProperty;
       },
+
       /**
        * Возвращает данные модели в "сыром" виде
        * @returns {Object}

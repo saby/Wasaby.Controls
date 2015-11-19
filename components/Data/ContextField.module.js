@@ -64,7 +64,7 @@ define('js!SBIS3.CONTROLS.Data.ContextField', [
                   }
                } else {
                   //TODO: неточная вторая проверка
-                  result = !ControlsFieldTypeRecord.is(value) || !$ws.helpers.isEqualObject(oldValue, value);
+                  result = !ContextField.is(value) || !$ws.helpers.isEqualObject(oldValue, value);
                }
 
                return result;

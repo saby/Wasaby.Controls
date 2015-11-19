@@ -345,7 +345,7 @@ define('js!SBIS3.CONTROLS.SbisServiceSource', [
             strategy = this.getStrategy(),
             def = new $ws.proto.Deferred(),
             params = strategy.prepareOrderParams(this._object, record, hierField, orderDetails),
-            suffix = orderDetails.after ? 'После' : 'До';
+            suffix = orderDetails.after ? 'До' : 'После';
          if(!this._orderBL){
             this._orderBL = new $ws.proto.BLObject('ПорядковыйНомер');
          }
@@ -353,7 +353,7 @@ define('js!SBIS3.CONTROLS.SbisServiceSource', [
             def.callback(true);
          }, function (error) {
             $ws.single.ioc.resolve('ILogger').log('SbisServiceSource', error);
-            def.errback('Не удалось выполнить метод _changeOrder');
+            def.errback(error);
          });
          return def;
       }
