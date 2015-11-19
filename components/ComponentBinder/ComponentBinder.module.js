@@ -88,7 +88,7 @@ define('js!SBIS3.CONTROLS.ComponentBinder', [], function () {
          //DataGridView._filter = filter;
          //DataGridView.setCurrentRoot(self._lastRoot); - плохо, потому что ВСЕ крошки на странице получат изменения
          view.reload(filter, view._sorting, 0);
-         this._path = this._pathDSRawData;
+         this._path = this._pathDSRawData || [];
          if (this._options.breadCrumbs){
             this._options.breadCrumbs.getDataSet().setRawData(this._pathDSRawData);
             this._options.breadCrumbs._redraw();
@@ -139,7 +139,7 @@ define('js!SBIS3.CONTROLS.ComponentBinder', [], function () {
          _searchForm : undefined,
          _lastRoot : undefined,
          _currentRoot: null,
-         _pathDSRawData : undefined,
+         _pathDSRawData : [],
          _firstSearch: true,
          _lastViewMode: null,
          _path: [],
@@ -188,11 +188,11 @@ define('js!SBIS3.CONTROLS.ComponentBinder', [], function () {
             this._lastRoot = view.getCurrentRoot();
             //searchForm.subscribe('onReset', resetGroup);
             view.subscribe('onSetRoot', function(){
-               breakSearch(searchForm);
+               breakSearch.call(self, searchForm);
             });
             //Перед переключением в крошках в режиме поиска сбросим фильтр поиска
             view.subscribe('onSearchPathClick', function(){
-               breakSearch(searchForm);
+               breakSearch.call(self, searchForm);
             });
          }
 
