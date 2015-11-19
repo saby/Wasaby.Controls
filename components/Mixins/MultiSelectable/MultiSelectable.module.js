@@ -387,16 +387,18 @@ define('js!SBIS3.CONTROLS.MultiSelectable', [], function() {
       },
 
       _setSelectedRecords: function() {
-         var
-            self = this,
-            record;
-         this._selectedRecords = [];
-         $.each(this._options.selectedKeys, function(id, key) {
-            record = self._dataSet.getRecordByKey(key);
-            if (record) {
-               self._selectedRecords.push(record);
-            }
-         });
+         if (this._dataSet) {
+            var
+               self = this,
+               record;
+            this._selectedRecords = [];
+            $.each(this._options.selectedKeys, function (id, key) {
+               record = self._dataSet.getRecordByKey(key);
+               if (record) {
+                  self._selectedRecords.push(record);
+               }
+            });
+         }
       }
    };
 
