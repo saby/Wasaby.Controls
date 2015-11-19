@@ -108,20 +108,19 @@ define('js!SBIS3.CONTROLS.Data.Types.Flags', [
        * returns {Boolean}
        */
       equals: function (value) {
-         if (!(value instanceof Flags)) {
-            throw new Error("Value isn't a flags");
-         }
-         var result = true,
-            self = this,
-            len = 0;
-         value.each(function (value, key) {
-            if (result && self.get(key) === value)
-               len++;
-            else
-               result = false;
-         });
-         if (result && this._length === len) {
-            return true;
+         if (value instanceof Flags) {
+            var result = true,
+               self = this,
+               len = 0;
+            value.each(function (key) {
+               if (result && self.get(key) === value.get(key))
+                  len++;
+               else
+                  result = false;
+            });
+            if (result && this._length === len) {
+               return true;
+            }
          }
          return false;
       },
