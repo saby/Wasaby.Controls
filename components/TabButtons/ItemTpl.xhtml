@@ -1,11 +1,10 @@
 <component data-component="SBIS3.CONTROLS.TabButton">
     <option name="caption" value="{{=it.caption}}"></option>
-    {{var itemRaws = it.item.getRaw();}}
-    {{for (var i in itemRaws) {}}
-    {{?itemRaws.hasOwnProperty(i)}}
-        <option name="{{=i}}">
-            {{=itemRaws[i]}}
-        </option>
-    {{?}}
-    {{}}}
+    <option name="id" value="{{=it.item.get('id')}}"></option>
+    <option name="align" value="{{=it.item.get('align') || 'right'}}"></option>
+    <option name="name" value="{{=it.item.get('name')}}"></option>
+    <option name="className" value="{{=it.item.get('className')}}"></option>
+    <option name="icon" value="{{=it.item.get('icon')}}"></option>
+    <option name="enabled" value="{{=it.item.get('enabled') !== false}}"></option>
+    <option name="visible" value="{{=it.item.get('visible') !== false}}"></option>
 </component>
