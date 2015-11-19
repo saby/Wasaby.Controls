@@ -544,26 +544,31 @@ define('js!SBIS3.CONTROLS.ListView',
          /* +++++++++++++++++++++++++++ */
 
          _elemClickHandler: function (id, data, target) {
-            var $target = $(target),
+            var
+               res,
+               $target = $(target),
                elClickHandler = this._options.elemClickHandler;
 
             this.setSelectedKey(id);
+            var handler = function() {
+               res = this._notify('onItemClick', id, data, target);
+               if (res !== false) {
+                  this._elemClickHandlerInternal(data, id, target);
+                  elClickHandler && elClickHandler.call(this, id, data, target);
+               }
+            }.bind(this);
             if (this._options.multiselect) {
                //TODO: оставить только js класс
                if ($target.hasClass('js-controls-ListView__itemCheckBox') || $target.hasClass('controls-ListView__itemCheckBox')) {
                   this.toggleItemsSelection([$target.closest('.controls-ListView__item').attr('data-id')]);
                }
                else {
-                  this._notify('onItemClick', id, data, target);
-                  this._elemClickHandlerInternal(data, id, target);
-                  elClickHandler && elClickHandler.call(this, id, data, target);
+                  handler();
                }
             }
             else {
                this.setSelectedKeys([id]);
-               this._notify('onItemClick', id, data, target);
-               this._elemClickHandlerInternal(data, id, target);
-               elClickHandler && elClickHandler.call(this, id, data, target);
+               handler();
             }
          },
 
