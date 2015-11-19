@@ -379,12 +379,14 @@
 
 @check-box-icon-border:                         none;
 @check-box-icon-bg:                             url(@check-box-icon-spritesheet) 0 1px;
+@check-box-icon-bg-pathFilter:                  url(@check-box-icon-spritesheet) 0 2px;
 
 @check-box-icon-hover-border:                   @check-box-icon-border;
 @check-box-icon-hover-bg:                       url(@check-box-icon-spritesheet) 0 17px;
 
 @check-box-icon-checked-border:                 @check-box-icon-border;
 @check-box-icon-checked-bg:                     url(@check-box-icon-spritesheet) 0 49px;
+@check-box-icon-checked-bg-pathFilter:          url(@check-box-icon-spritesheet) 0 50px;
 
 @check-box-icon-checked-hover-border:           @check-box-icon-border;
 @check-box-icon-checked-hover-bg:               @check-box-icon-checked-bg;
@@ -1508,38 +1510,40 @@
 // --------------- //
 @fastDataFilter-border:                           0;
 // --------------- //
-// CustomFilterMenu//
+// DropdownList//
 // --------------- //
-@customFilterMenu-cursor:                         pointer;
-@customFilterMenu-border-color:                   @gray-light-color;
+@DropdownList-cursor:                         pointer;
+@DropdownList-border-color:                   @gray-light-color;
 
-@customFilterMenu-iconWidth:                      16px;
-@customFilterMenu-iconHeight:                     16px;
-@customFilterMenu-box-sizing:                     border-box;
+@DropdownList-iconWidth:                      16px;
+@DropdownList-iconHeight:                     16px;
+@DropdownList-box-sizing:                     border-box;
 
-@customFilterMenu-cross:                          url('img/cancelIcon-sprite.png');
-@customFilterMenu-cross-bg:                       @customFilterMenu-cross 0 -35px no-repeat;
-@customFilterMenu-cross-bg-hover:                 @customFilterMenu-cross 0 -19px no-repeat;
+@DropdownList-cross:                          url('img/cancelIcon-sprite.png');
+@DropdownList-cross-bg:                       @DropdownList-cross 0 -35px no-repeat;
+@DropdownList-cross-bg-hover:                 @DropdownList-cross 0 -19px no-repeat;
 
-@customFilterMenu-arrow:                          url('img/select-arrow.png');
-@pathFilter-ComboBox-arrowBg:                     @customFilterMenu-arrow 0 -52px no-repeat;
-@pathFilter-ComboBox-arrowBg-hover:               @customFilterMenu-arrow 0 -26px no-repeat;
+@DropdownList-arrow:                          url('img/select-arrow.png');
+@pathFilter-ComboBox-arrowBg:                     @DropdownList-arrow 0 -52px no-repeat;
+@pathFilter-ComboBox-arrowBg-hover:               @DropdownList-arrow 0 -26px no-repeat;
 
-@customFilterMenu-captionWrapper-margin:          0 19px 0 19px;
-@customFilterMenu-min-height:                     24px;
-@customFilterMenu-shadow-hover:                   0 0 0 1px @customFilterMenu-border-color;
+@DropdownList-captionWrapper-margin:          0 19px 0 19px;
+@DropdownList-min-height:                     24px;
+@DropdownList-shadow-hover:                   0 0 0 1px @DropdownList-border-color;
 
-@customFilterMenu-picker-bg:                      @white-color;
-@customFilterMenu-picker-border:                  2px solid @customFilterMenu-border-color;
-@customFilterMenu-picker-head-border-radius:      5px 5px 0 0;
-@customFilterMenu-picker-list-border-radius:      0 0 5px 5px;
-@customFilterMenu-picker-list-right-border-radius:0 5px 5px 5px;
-@customFilterMenu-picker-list-left-border-radius: 5px 0 5px 5px;
-@customFilterMenu-picker-menu-item-padding:       4px 8px;
-@customFilterMenu-picker-menu-item-margin:        0;
-@customFilterMenu-picker-menu-item-color:         @white-color;
-@customFilterMenu-picker-menu-item-hover:         #E9FAFE;
-@customFilterMenu-picker-list-padding:            8px 0;//ProgressBar
+@DropdownList-picker-bg:                      @white-color;
+@DropdownList-picker-border:                  2px solid @DropdownList-border-color;
+@DropdownList-picker-head-border-radius:      5px 5px 0 0;
+@DropdownList-picker-list-border-radius:      0 0 5px 5px;
+@DropdownList-picker-list-right-border-radius:0 0 5px 5px;
+@DropdownList-picker-list-left-border-radius: 0 0 5px 5px;
+@DropdownList-picker-menu-item-padding:       4px 8px;
+@DropdownList-picker-menu-item-margin:        0;
+@DropdownList-picker-menu-item-color:         @white-color;
+@DropdownList-picker-menu-item-hover:         #E9FAFE;
+@DropdownList-picker-list-padding:            8px 0;
+@DropdownList-linkStyleColor:                 #0055bb;
+@DropdownList-linkStyleHoverColor:            #ff7033;
 //ProgressBar
 @controls-ProgressBar-height:                     17px;
 @controls-ProgressBar-empty-bg:                   #F3F3F3;
