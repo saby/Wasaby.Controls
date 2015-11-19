@@ -32,6 +32,18 @@
    .controls-ItemActions{
       padding-left: 6px;
       overflow: hidden;
+      &.controls-ItemActions-verAlign {
+         margin: 2px 3px 0 0;
+         .controls-ItemActions__menu-button {
+            margin-right: -10px;
+         }
+      }
+      &:not(.controls-ItemActions-verAlign){
+         .controls-ItemActions__itemsContainer{
+            top: 50%;
+            margin-top: -@list-view-actions-menu-touch-height / 2;
+         }
+      }
       .controls-ItemActions__itemsContainer{
          > * {
             line-height: @list-view-actions-menu-touch-height!important;
@@ -40,8 +52,6 @@
                height: 24px;
             }
          }
-         top: 50%;
-         margin-top: -@list-view-actions-menu-touch-height / 2;
       	background: @list-view-actions-bg;
       	position: relative;
          .controls-Link{
@@ -69,6 +79,7 @@
          height: 44px;
          background: #F3F8FC;
          padding-right: 37px;
+         white-space: nowrap;
       }
    }
 
@@ -107,10 +118,11 @@
          & > * {
             margin: @list-view-actions-margin-action-multiView;
          }
-         .controls-ItemActions__menu-button {
-            float: @list-view-actions-float-multiView;
-            margin-left: @list-view-actions-marginLeft-menu-multiView;
-         }
+      }
+
+      .controls-ItemActions__menu-button {
+         float: @list-view-actions-float-multiView;
+         margin-left: @list-view-actions-marginLeft-menu-multiView;
       }
    }
 

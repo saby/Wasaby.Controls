@@ -153,8 +153,11 @@ define('js!SBIS3.CONTROLS.BreadCrumbs', [
          }
       },
 
-      _redraw: function() {
-         BreadCrumbs.superclass._redraw.call(this);
+      _onResizeHandler: function(){
+         this._redraw();
+      },
+
+      _calculateSizes: function() {
          this._initNonTextElementSizes();
          $('.controls-BreadCrumbs__dots', this._container).remove();
          var targetContainer = this._getTargetContainer(),
@@ -205,13 +208,18 @@ define('js!SBIS3.CONTROLS.BreadCrumbs', [
          }
       },
 
+      _redraw: function(){
+         BreadCrumbs.superclass._redraw.call(this);
+         this._calculateSizes();
+      },
+
       _initNonTextElementSizes: function(){
-         if (!this._dotsWidth && !this._arrowWidth){
-            this._homeIconWidth = $('.controls-BreadCrumbs__crumb-home', this._container).width();
-            this._arrowWidth = $('.controls-BreadCrumbs__arrow', this._container).width();
+         if (!this._homeIconWidth || !this._arrowWidth){
+            this._homeIconWidth = $('.controls-BreadCrumbs__crumb-home', this._container).outerWidth();
+            this._arrowWidth = $('.controls-BreadCrumbs__arrow', this._container).outerWidth();
          } 
          if (!this._dotsWidth){
-            this._dotsWidth = $('.controls-BreadCrumbs__dots', this._container).width();
+            this._dotsWidth = $('.controls-BreadCrumbs__dots', this._container).outerWidth();
          }
       },
 

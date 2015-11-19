@@ -1,8 +1,9 @@
 define('js!SBIS3.CONTROLS.SearchForm', [
    'js!SBIS3.CONTROLS.TextBox',
+   'js!SBIS3.CONTROLS.SearchMixin',
    'html!SBIS3.CONTROLS.SearchForm',
    'html!SBIS3.CONTROLS.SearchForm/resources/SearchFormButtons'
-], function (TextBox, dotTplFn, buttonsTpl) {
+], function (TextBox, SearchMixin, dotTplFn, buttonsTpl) {
 
    'use strict';
 
@@ -10,12 +11,13 @@ define('js!SBIS3.CONTROLS.SearchForm', [
     * Cтрока поиска, поле ввода + кнопка поиска.
     * @class SBIS3.CONTROLS.SearchForm
     * @extends SBIS3.CONTROLS.TextBox
+    * @mixes SBIS3.CONTROLS.SearchMixin
     * @public
     * @control
     * @author Крайнов Дмитрий Олегович
     */
 
-   var SearchForm = TextBox.extend(/** @lends SBIS3.CONTROLS.SearchForm.prototype */ {
+   var SearchForm = TextBox.extend([SearchMixin],/** @lends SBIS3.CONTROLS.SearchForm.prototype */ {
       /**
        * @event onSearchStart При нажатии кнопки поиска
        * @param {$ws.proto.EventObject} eventObject Дескриптор события.
@@ -81,6 +83,8 @@ define('js!SBIS3.CONTROLS.SearchForm', [
       _keyUp:function(event) {
          if (event.which == 13) {
             this.applySearch();
+            //TODO в 3.7.3.20 перейти на общие с миксином события. в 10 страшно пока отпиливать
+            this._applySearch(this.getText());
          }
       },
 
@@ -99,7 +103,6 @@ define('js!SBIS3.CONTROLS.SearchForm', [
       resetSearch: function(){
          $('.js-controls-SearchForm__reset', this.getContainer().get(0)).hide();
          this.setText('');
-         this._notify('onReset');
       }
    });
 

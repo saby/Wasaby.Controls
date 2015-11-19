@@ -34,11 +34,11 @@ define('js!SBIS3.CONTROLS.SbisJSONStrategy', [
                break;
             }
          }
-         if (index === undefined) {
+         if (index === undefined && s.length) {
             index = 0;
          }
-         
-         return s[index]['n'];
+
+         return index === undefined ? undefined : s[index]['n'];
       },
 
       /**
@@ -180,6 +180,7 @@ define('js!SBIS3.CONTROLS.SbisJSONStrategy', [
          * @returns {{more: *}}
          */
       getMetaData: function (data) {
+         data = data || {};
          return {
             results: data.r,
             more: data.n,

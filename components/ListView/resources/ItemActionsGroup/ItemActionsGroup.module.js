@@ -171,7 +171,7 @@ define('js!SBIS3.CONTROLS.ItemActionsGroup',
 
                itemsContainer[0].style.right = - width + 'px';
                this._container.height(height);
-            	itemsContainer.animate({right : position.right}, 350);
+            	itemsContainer.animate({right : 0}, 350);
             }
             this._container[0].style.top = position.top + 'px';
         	},
