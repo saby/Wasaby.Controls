@@ -36,7 +36,7 @@ define('js!SBIS3.CONTROLS.ItemActionsGroup',
          $constructor: function() {
             var self = this;
 
-            if(this._options.items[0].title) {
+            if(this._options.items.length && this._options.items[0].title) {
                $ws.single.ioc.resolve('ILogger').log('title', 'C 3.8.0 свойство операции над записью title перестанет работать. Используйте свойство caption');
             }
 
