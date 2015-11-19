@@ -4,8 +4,9 @@ define([
    'js!SBIS3.CONTROLS.Data.Model',
    'js!SBIS3.CONTROLS.Data.Collection.List',
    'js!SBIS3.CONTROLS.Data.Source.DataSet',
-   'js!SBIS3.CONTROLS.Data.Factory'
-], function (AdapterSbis, Model, List, DataSet, Factory) {
+   'js!SBIS3.CONTROLS.Data.Factory',
+   'js!SBIS3.CONTROLS.Data.Types.Enum'
+], function (AdapterSbis, Model, List, DataSet, Factory, Enum) {
    'use strict';
 
    var dataScheme,
@@ -117,7 +118,7 @@ define([
 
          });
          it('should cast value to enum', function () {
-            assert.instanceOf(sbisModel.get('enum'), $ws.proto.Enum);
+            assert.instanceOf(sbisModel.get('enum'), Enum);
          });
          it('should cast value to model', function () {
             assert.instanceOf(sbisModel.get('record'), Model);
