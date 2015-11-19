@@ -189,6 +189,9 @@ define('js!SBIS3.CONTROLS.ComponentBinder', [], function () {
             //searchForm.subscribe('onReset', resetGroup);
             view.subscribe('onSetRoot', function(){
                breakSearch.call(self, searchForm);
+               //Это может все сломать, но тут точно нужно сбросить группировку
+               this.setGroupBy({});
+               this.setHighlightText('', false);
             });
             //Перед переключением в крошках в режиме поиска сбросим фильтр поиска
             view.subscribe('onSearchPathClick', function(){
