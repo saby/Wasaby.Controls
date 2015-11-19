@@ -60,12 +60,12 @@ define('js!SBIS3.CONTROLS.ItemActionsGroup',
                   }
                   //Если видимость кнопки не изменилась, то делать ничего не будем
                   if(this._itemActionsButtons[i]['isVisible'] !== show) {
-                     itemsInstances[i].getContainer()[0].style.display = show ? 'inline' : 'none';
+                     itemsInstances[i].getContainer()[0].style.display = show ? '' : 'none';
                      this._itemActionsButtons[i]['isVisible'] = show;
                   }
                }
             }
-            this._itemActionsMenuButton[0].style.display = (!onlyMain ? 'inline' : 'none');
+            this._itemActionsMenuButton[0].style.display = (!onlyMain ? '' : 'none');
          },
          /**
           * Создаёт меню для операций над записью
