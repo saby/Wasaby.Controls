@@ -14,7 +14,11 @@ define('js!SBIS3.CONTROLS.Utils.DataProcessor', [
             report: undefined,
             xsl : 'default-list-transform.xsl', //что делать с item  ?
             columns: [],
-            view : undefined
+            hierField: undefined,
+            openedPath : {},
+            root : undefined,
+            filter: {},
+            offset: 0
          },
          _reportPrinter : null,
          _loadIndicator: undefined
@@ -70,7 +74,7 @@ define('js!SBIS3.CONTROLS.Utils.DataProcessor', [
       /**
        * Метод для формирования параметров фильтрации выгружаемого на сервере файла.
        * Чтобы сформировать свои параметры этот метод можно переопределить
-       * @remark Обязательно должны быть заданы в опциях view и columns. Так же самостоятельно придется добавить имя файла
+       * @remark Обязательно должны быть заданы в опциях this._options и columns. Так же самостоятельно придется добавить имя файла
        * @example
        * <pre>
        *    //В своем прикладном модуле (myModule), отнаследованном от OperationUnload
@@ -86,31 +90,30 @@ define('js!SBIS3.CONTROLS.Utils.DataProcessor', [
        * @returns {{}}
        */
       getFullFilter : function(selectedNumRecords){
-         var view =  this._options.view,
-               dataSource = view._dataSource,
-               columns = $ws.core.clone(this._options.columns),
-               fields = [],
-               titles = [],
-               filter,
-               queryParams,
-               cfg = {},
-               openedPath,
-               hierField;
+         var dataSource = this._options.dataSource,
+            columns = $ws.core.clone(this._options.columns),
+            fields = [],
+            titles = [],
+            filter,
+            queryParams,
+            cfg = {},
+            openedPath,
+            hierField;
 
          for (var i = 0; i < columns.length; i++) {
             fields.push(columns[i].field);
             titles.push(columns[i].title || columns[i].field);
          }
          //openedPath[key] = true;
-         filter = $ws.core.clone(view.getFilter());
-         if (view._options.hierField){
-            hierField = view.getHierField();
-            cfg['Иерархия'] = view._options.hierField;
-            openedPath = view.getOpenedPath();
+         filter = $ws.core.clone(this._options.filter || {});
+         if (this._options.hierField !== undefined){
+            hierField = this._options.hierField;
+            cfg['Иерархия'] = hierField;
+            openedPath = this._options.openedPath;
             // - getOpenedPath - 'это работает только у дерева!!
             if (openedPath && !Object.isEmpty(openedPath)) {
 
-               filter[hierField] = filter[hierField] === undefined ? [view.getCurrentRoot()] : filter[hierField];
+               filter[hierField] = filter[hierField] === undefined ? [this._options.root] : filter[hierField];
                filter[hierField] = filter[hierField] instanceof Array ? $ws.core.clone(filter[hierField]) : [filter[hierField]];
                for (i in openedPath) {
                   if (openedPath.hasOwnProperty(i) && Array.indexOf( filter[hierField], i) < 0) {
@@ -119,7 +122,7 @@ define('js!SBIS3.CONTROLS.Utils.DataProcessor', [
                }
             }
          }
-         queryParams =  dataSource.prepareQueryParams(filter, null, view._offset , selectedNumRecords || view.getDataSet().getCount(), false);
+         queryParams =  dataSource.prepareQueryParams(filter, null, this._options.offset , selectedNumRecords || this._options.dataSet.getCount(), false);
          cfg = $ws.core.merge(cfg, {
             //TODO дать настройку ?
             'ИмяМетода' : dataSource._options.service + '.' + dataSource._options.queryMethodName,

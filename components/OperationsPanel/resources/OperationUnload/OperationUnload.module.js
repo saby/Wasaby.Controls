@@ -109,27 +109,40 @@ define('js!SBIS3.CONTROLS.OperationUnload', [
        * Обработка результатов выбора пользователя (после показа диалога выбора количества выгружаемых записей)
        * Если есть возможность, формируем фильтры и выполняем выгрузку на сервере через GET-запрос
        * Если у нас возможно
-       * @param selectedNumRecords сколько записей нужно выгружать
+       * @param {number} [pageSize] сколько записей нужно выгружать()
        */
-      processSelectedOperation: function(selectedNumRecords){
+      processSelectedOperation: function(pageSize){
          var record = this._dataSet.getRecordByKey(this._currentItem).getRaw(),
              objectArr,
-             cfg;
+             fullFilter,
+             unloader;
          //TODO когда появится воможность выгружать в PDF надо убрать проверку на Excel
          //Для Excel всегда выгружаем на сервере
          if (this._isClientUnload() || !record.unloadMethod) {
             OperationUnload.superclass.processSelectedOperation.apply(this, arguments);
             return;
          }
-         var p = new Unloader({
-            view : this._getView(),
-            columns: this._prepareOperationColumns()
-         });
-         cfg = p.getFullFilter(selectedNumRecords);
-         cfg['Название'] = this._getUnloadFileName();
-
+         unloader = new Unloader(this._prepareUnloaderConfig());
+         fullFilter = unloader.getFullFilter(pageSize);
+         fullFilter['Название'] = this._getUnloadFileName();
          objectArr = record.unloadMethod.split('.');
-         p.unload(objectArr[0], objectArr[1], this._getUnloadFileName(), cfg, true );
+         unloader.unload(objectArr[0], objectArr[1], this._getUnloadFileName(), fullFilter, true );
+      },
+      _prepareUnloaderConfig : function(selectedNumRecords) {
+         var  view = this._getView(),
+            cfg = {
+               dataSet: view.getDataSet(),
+               columns: this._prepareOperationColumns(),
+               dataSource : view._options.dataSource,
+               filter : view._filter,
+               offset: view._offset
+            };
+         if (view._options.hasOwnProperty('hierField')) {
+            cfg.hierField = view._options.hierField;
+            cfg.openedPath = view.getOpenedPath();
+            cfg.root = view.getCurrentRoot();
+         }
+         return cfg;
       },
       applyOperation: function(dataSet, cfg){
          var p = new Unloader(cfg);
