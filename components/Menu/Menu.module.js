@@ -103,7 +103,7 @@ define('js!SBIS3.CONTROLS.Menu', [
             caption = item.get(this._options.displayField),
             icon = item.get('icon') ? '<option name="icon">' + item.get('icon') + '</option>' : '',
             className = item.get('className') ? '<option name="className">' + item.get('className') + '</option>' : '',
-            tooltip = item.get('tooltip') ? '<option name="tooltip">' + item.get('tooltip') + '</option>' : ''; 
+            tooltip = item.get('tooltip') ? '<option name="tooltip">' + item.get('tooltip') + '</option>' : '';
 
          return '<component data-component="SBIS3.CONTROLS.MenuItem">' +
             '<option name="caption">' + caption + '</option>' +
