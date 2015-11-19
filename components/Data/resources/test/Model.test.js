@@ -2,8 +2,9 @@
 define([
       'js!SBIS3.CONTROLS.Data.Model',
       'js!SBIS3.CONTROLS.Data.Adapter.Json',
+      'js!SBIS3.CONTROLS.Data.Adapter.Sbis',
       'js!SBIS3.CONTROLS.Data.Source.Memory'
-   ], function (Model, JsonAdapter, MemorySource) {
+   ], function (Model, JsonAdapter, SbisAdapter, MemorySource) {
       'use strict';
       describe('SBIS3.CONTROLS.Data.Model', function () {
          var adapter, model, modelData, modelProperties, source;
@@ -203,6 +204,25 @@ define([
                assert.strictEqual(model.getId(), modelData['id']);
             });
 
+            it('should detect idProperty automatically', function () {
+               var data = {
+                     d: [
+                        1,
+                        'a',
+                        'test'
+                     ],
+                     s: [
+                        {n: 'Num'},
+                        {n: '@Key'},
+                        {n: 'Name'}]
+                  },
+                  model = new Model({
+                     data: data,
+                     adapter: new SbisAdapter()
+                  });
+               assert.strictEqual(model.getId(), data.d[1]);
+            });
+
             it('should throw error for empty key property', function () {
                var newModel = new Model({
                   data: modelData
@@ -236,7 +256,7 @@ define([
 
          });
          describe('.merge()', function () {
-            it('should merging models', function () {
+            it('should merge models', function () {
                var newModel = new Model({
                   idProperty: 'id',
                   data: {
@@ -246,6 +266,90 @@ define([
                });
                newModel.merge(model);
                assert.strictEqual(newModel.getId(), modelData['id']);
+            });
+            it('should merge models with various adapter types', function () {
+               var data = {
+                     d: [
+                        48,
+                        27,
+                        'sdsd'
+                     ],
+                     s: [
+                        {n: 'max'},
+                        {n: 'calc'},
+                        {n: 'etc'}]
+                  },
+                  anotherModel = new Model({
+                     data: data,
+                     adapter: new SbisAdapter()
+                  });
+               model.merge(anotherModel);
+               anotherModel.each(function(field, value) {
+                  assert.strictEqual(model.get(field), value);
+               });
+            });
+            it('should stay unchanged with empty donor', function () {
+               assert.isFalse(model.isChanged());
+               var anotherModel = new Model();
+               model.merge(anotherModel);
+               assert.isFalse(model.isChanged());
+            });
+            it('should stay unchanged with same donor', function () {
+               assert.isFalse(model.isChanged());
+               var anotherModel = new Model({
+                  data: {
+                     max: modelData.max
+                  }
+               });
+               model.merge(anotherModel);
+               assert.isFalse(model.isChanged());
+            });
+            it('should stay changed', function () {
+               model.set('max', 2);
+               assert.isTrue(model.isChanged());
+               var anotherModel = new Model({
+                  data: {
+                     max: 157
+                  }
+               });
+               model.merge(anotherModel);
+               assert.isTrue(model.isChanged());
+            });
+            it('should become changed with different donor', function () {
+               assert.isFalse(model.isChanged());
+               var anotherModel = new Model({
+                  data: {
+                     max: 157
+                  }
+               });
+               model.merge(anotherModel);
+               assert.isTrue(model.isChanged());
+            });
+            it('should stay unstored', function () {
+               assert.isFalse(model.isStored());
+               var anotherModel = new Model();
+               model.merge(anotherModel);
+               assert.isFalse(model.isStored());
+            });
+            it('should become stored', function () {
+               assert.isFalse(model.isStored());
+               var anotherModel = new Model();
+               anotherModel._isStored = true;
+               model.merge(anotherModel);
+               assert.isTrue(model.isStored());
+            });
+            it('should stay undeleted', function () {
+               assert.isFalse(model.isDeleted());
+               var anotherModel = new Model();
+               model.merge(anotherModel);
+               assert.isFalse(model.isDeleted());
+            });
+            it('should become deleted', function () {
+               assert.isFalse(model.isDeleted());
+               var anotherModel = new Model();
+               anotherModel._isDeleted = true;
+               model.merge(anotherModel);
+               assert.isTrue(model.isDeleted());
             });
          });
       });

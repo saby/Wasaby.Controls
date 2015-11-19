@@ -197,7 +197,7 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
             return model;
          }).bind(this), function (error) {
             $ws.single.ioc.resolve('ILogger').log('SBIS3.CONTROLS.Data.Source.SbisService::read()', error);
-            return new Error('Cannot invoke read method');
+            return error;
          });
       },
 
@@ -223,7 +223,7 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
             return key;
          }).bind(this), function (error) {
             $ws.single.ioc.resolve('ILogger').log('SBIS3.CONTROLS.Data.Source.SbisService::update()', error);
-            return new Error('Cannot invoke update method');
+            return error;
          });
       },
 
@@ -242,7 +242,7 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
             return res;
          }, function (error) {
             $ws.single.ioc.resolve('ILogger').log('SBIS3.CONTROLS.Data.Source.SbisService::destroy()', error);
-            return new Error('Cannot invoke destroy method');
+            return error;
          });
       },
 
@@ -256,7 +256,7 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
                return res;
             }, function (error) {
                $ws.single.ioc.resolve('ILogger').log('SBIS3.CONTROLS.Data.Source.SbisService::merge()', error);
-               return new Error('Cannot invoke merge method');
+               return error;
             });
       },
 
@@ -276,7 +276,7 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
                return res;
             }, function (error) {
                $ws.single.ioc.resolve('ILogger').log('SBIS3.CONTROLS.Data.Source.SbisService::copy()', error);
-               return new Error('Cannot invoke copy method');
+               return error;
             });
       },
 
@@ -296,7 +296,7 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
             });
          }).bind(this), function (error) {
             $ws.single.ioc.resolve('ILogger').log('SBIS3.CONTROLS.Data.Source.SbisService::query()', error);
-            return new Error('Cannot invoke query method');
+            return error;
          });
       },
 
@@ -307,7 +307,7 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
          var self = this,
             def = new $ws.proto.Deferred(),
             params = this._getMoveParams(model, to, details),
-            suffix = details.after ? 'После' : 'До';
+            suffix = details.after ? 'До' : 'После';
          if (this._options.moveResource) {
             if (!this._orderProvider) {
                this._orderProvider = new SbisServiceBLO(this._options.moveResource);
@@ -320,7 +320,7 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
             def.callback(res);
          }, function (error) {
             $ws.single.ioc.resolve('ILogger').log('SBIS3.CONTROLS.Data.Source.SbisService::move()', error);
-            def.errback('Method move was failed');
+            def.errback(error);
          });
          return def;
       },
@@ -336,7 +336,7 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
             });
          }).bind(this), function (error) {
             $ws.single.ioc.resolve('ILogger').log('SBIS3.CONTROLS.Data.Source.SbisService::call()', error);
-            return new Error('Cannot invoke call method');
+            return error;
          });
       },
 
@@ -573,21 +573,24 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
        */
       _getMoveParams: function(model, to, details) {
          details = details || {};
-         var params = {
-            'ИдО': model.get(this._options.idProperty),
+         var objectName = this._options.resource.name,
+            params = {
+            'ИдО': [model.get(this._options.idProperty), objectName],
             'ПорядковыйНомер': details.column || this._options.moveDefaultColumn
          };
          if (details.hierColumn) {
             params['Иерархия'] = details.hierColumn;
+         } else {
+            params['Иерархия'] = null;
          }
-         if (this._options.moveResource.name && this._options.moveResource.name !== this._options.resource.name) {
-            params['Объект'] = this._options.resource.name;
+         if (this._options.moveResource.name && this._options.moveResource.name !== objectName) {
+            params['Объект'] = objectName;
          }
 
          if(details.after){
-            params['ИдОПосле'] = to;
+            params['ИдОПосле'] = [parseInt(to,10), objectName];
          } else {
-            params['ИдОДо'] = to;
+            params['ИдОДо'] = [parseInt(to,10), objectName];
          }
          return params;
       }

@@ -35,8 +35,8 @@ define('js!SBIS3.CONTROLS.DataGridView',
     *       </options>
     *    </options>
     * </component>
+    * @cssModifier controls-DataGridView__hasSeparator Включает линии разделители между строками
     */
-
    var DataGridView = ListView.extend([DragAndDropMixin],/** @lends SBIS3.CONTROLS.DataGridView.prototype*/ {
       _dotTplFn : dotTplFn,
       $protected: {
@@ -69,6 +69,14 @@ define('js!SBIS3.CONTROLS.DataGridView',
              * @property {String} headTemplate Шаблон отображения шапки колонки
              * @property {String} headTooltip Всплывающая подсказка шапки колонки
              * @property {String} cellTemplate Шаблон отображения ячейки
+             * Необходимо указать настройки декораторов разметки, если требуется
+             * @example
+             * <pre>
+             *    {{=it.decorators.applyIf(it.value, {
+             *      highlight: it.highlight,
+             *      ladder: it.field
+             *    })}}
+             * </pre>
              * @property {<String,String>} templateBinding соответствие опций шаблона полям в рекорде
              * @property {<String,String>} includedTemplates подключаемые внешние шаблоны, ключу соответствует поле it.included.<...> которое будет функцией в шаблоне ячейки
              */
@@ -127,13 +135,13 @@ define('js!SBIS3.CONTROLS.DataGridView',
                color: this._options.colorField ? item.get(this._options.colorField) : '',
                multiselect : this._options.multiselect,
                arrowActivatedHandler: this._options.arrowActivatedHandler,
-               hierField: this._options.hierField + '@',
+               hierField: this._options.hierField,
                startScrollColumn: this._options.startScrollColumn
             };
 
             for (var i = 0; i < rowData.columns.length; i++) {
-               var value,
-                   column = rowData.columns[i];
+               var column = rowData.columns[i],
+                   value = item.get(column.field);
                if (column.cellTemplate) {
                   var cellTpl;
                   if ((typeof column.cellTemplate == 'string') && (column.cellTemplate.indexOf('html!') == 0)) {
@@ -144,8 +152,11 @@ define('js!SBIS3.CONTROLS.DataGridView',
                   }
                   var tplOptions = {
                      item: item,
-                     isNode: item.get(rowData.hierField) ? true : false,
+                     hierField: this._options.hierField,
+                     isNode: item.get(rowData.hierField + '@') ? true : false,
+                     decorators: this._decorators,
                      field: column.field,
+                     value: value,
                      highlight: column.highlight
                   };
                   if (column.templateBinding) {
@@ -162,8 +173,15 @@ define('js!SBIS3.CONTROLS.DataGridView',
                   }
                   value = MarkupTransformer((cellTpl)(tplOptions));
                } else {
-                  value = $ws.helpers.escapeHtml(item.get(column.field));
-                  value = ((value !== undefined) && (value !== null)) ? value : '';
+                  value = this._decorators.applyIf(
+                     value === undefined || value === null ? '' : $ws.helpers.escapeHtml(value), {
+                        highlight: column.highlight,
+                        ladder: {
+                           column: column.field,
+                           parentId: item.get(this._options.hierField)
+                        }
+                     }
+                  );
                }
                column.value = value;
                column.item = item;

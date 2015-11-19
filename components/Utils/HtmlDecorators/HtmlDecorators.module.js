@@ -57,6 +57,18 @@ define('js!SBIS3.CONTROLS.Utils.HtmlDecorators', ['js!SBIS3.CONTROLS.Utils.HtmlD
          this._decorators[area].push(decorator);
       },
 
+      getByName: function (decoratorName) {
+         for (var area in this._decorators) {
+            if (this._decorators.hasOwnProperty(area)) {
+               for (var i = 0; i < this._decorators[area].length; i++) {
+                  if (this._decorators[area][i].getName() == decoratorName){
+                     return this._decorators[area][i];
+                  }
+               }
+            }
+         }
+      },
+
       /**
        * Обновляет настройки декораторов контрола
        * @param {Object} control Контрол-владелец декораторов

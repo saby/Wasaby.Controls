@@ -333,29 +333,63 @@ define('js!SBIS3.CONTROLS.ListView',
             }
          },
          _keyboardHover: function (e) {
-            var items = $('.controls-ListView__item', this._getItemsContainer()).not('.ws-hidden'),
-               selectedKey = this.getSelectedKey(),
-               selectedItem = $('[data-id="' + selectedKey + '"]', this._getItemsContainer()),
-               nextItem = (selectedKey) ? items.eq(items.index(selectedItem) + 1) : items.eq(0),
-               previousItem = (selectedKey) ? items.eq(items.index(selectedItem) - 1) : items.last();
-
+            var selectedKey = this.getSelectedKey();
 
             switch (e.which) {
                case $ws._const.key.up:
+                  var previousItem = this._getPrevItemById(selectedKey);
                   previousItem.length ? this.setSelectedKey(previousItem.data('id')) : this.setSelectedKey(selectedKey);
                   break;
                case $ws._const.key.down:
+                  var nextItem = this._getNextItemById(selectedKey);
                   nextItem.length ? this.setSelectedKey(nextItem.data('id')) : this.setSelectedKey(selectedKey);
                   break;
                case $ws._const.key.enter:
+                  var selectedItem = $('[data-id="' + selectedKey + '"]', this._getItemsContainer());
                   this._elemClickHandler(selectedKey, this._dataSet.getRecordByKey(selectedKey), selectedItem);
                   break;
                case $ws._const.key.space:
+                  var nextItem = this._getNextItemById(selectedKey);
                   this.toggleItemsSelection([selectedKey]);
                   nextItem.length ? this.setSelectedKey(nextItem.data('id')) : this.setSelectedKey(selectedKey);
                   break;
             }
             return false;
+         },
+         /**
+          * Возвращает следующий элемент
+          * @param id
+          * @returns {*}
+          * @private
+          */
+         _getNextItemById: function (id) {
+            return this._getHtmlItem(id, true);
+         },
+         /**
+          * Возвращает предыдущий элемент
+          * @param id
+          * @returns {jQuery}
+          * @private
+          */
+         _getPrevItemById: function (id) {
+            return this._getHtmlItem(id, false);
+         },
+         /**
+          *
+          * @param id - идентификатор элемента
+          * @param isNext - если true вернет следующий элемент, пердыдущий
+          * @returns {jQuery}
+          * @private
+          */
+         _getHtmlItem: function (id, isNext) {
+            var items = $('.controls-ListView__item', this._getItemsContainer()).not('.ws-hidden'),
+               selectedItem = $('[data-id="' + id + '"]', this._getItemsContainer());
+            if (isNext) {
+               return (id) ? items.eq(items.index(selectedItem) + 1) : items.eq(0)
+            } else {
+               return (id) ? items.eq(items.index(selectedItem) - 1) : items.last();
+            }
+
          },
 
          _isViewElement: function (elem) {
@@ -463,9 +497,13 @@ define('js!SBIS3.CONTROLS.ListView',
           * @private
           */
          _onChangeHoveredItem: function (target) {
-            this._updateEditInPlaceDisplay(target);
-            if (this._options.itemsActions.length && !this._touchSupport) {
-         		target.container ? this._showItemActions(target) : this._hideItemActions();
+			   this._updateEditInPlaceDisplay(target);
+            if (this._options.itemsActions.length) {
+         		if (target.container && !this._touchSupport){
+                  this._showItemActions(target);
+               } else {
+                  this._hideItemActions();
+               }
             }
          },
 
@@ -495,7 +533,7 @@ define('js!SBIS3.CONTROLS.ListView',
          },
 
          _getItemsContainer: function () {
-            return $(".controls-ListView__itemsContainer", this._container.get(0))
+            return $(".controls-ListView__itemsContainer", this._container.get(0));
          },
 
          _addItemAttributes: function(container) {
@@ -1145,8 +1183,10 @@ define('js!SBIS3.CONTROLS.ListView',
           * @param {Number} [offset] - если передать, то номер страницы рассчитается от него
           */
          getPage: function (offset) {
-            var offset = offset || this._offset;
-            return Math.ceil(offset / this._options.pageSize);
+            var offset = offset || this._offset,
+                more = this._dataSet.getMetaData().more;
+            //Если offset отрицательный, значит запросили последнюю страницу.
+            return Math.ceil((offset < 0 ? more + offset : offset) / this._options.pageSize);
          },
          _updateOffset: function () {
             var more = this._dataSet.getMetaData().more,
@@ -1202,6 +1242,25 @@ define('js!SBIS3.CONTROLS.ListView',
                this._pager.destroy();
             }
             ListView.superclass.destroy.call(this);
+         },
+         /**
+          * двигает элемент
+          * Метод будет удален после того как перерисовка научится сохранять раскрытые узлы в дереве
+          * @param {String} item1  - идентифкатор первого элемента
+          * @param {String} anchor - идентифкатор второго элемента
+          * @param {Boolean} before - если true то вставит перед anchor иначе после него
+          * @private
+          */
+         _moveItemTo: function(item, anchor, before){
+            //TODO метод сделан специально для перемещения элементов, этот костыль надо удалить и переписать через _redraw
+            var itemsContainer = this._getItemsContainer(),
+               itemContainer = itemsContainer.find('tr[data-id="'+item+'"]'),
+               anchor = itemsContainer.find('tr[data-id="'+anchor+'"]');
+            if(before){
+               itemContainer.insertBefore(anchor);
+            } else {
+               itemContainer.insertAfter(anchor);
+            }
          }
       });
 

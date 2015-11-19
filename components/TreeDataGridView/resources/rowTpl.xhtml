@@ -2,11 +2,11 @@
 <tr class="controls-DataGridView__tr" style="{{=it.decorators.apply(it.color, 'color')}}">
    {{?it.multiselect}}
    <td class="controls-DataGridView__td controls-DataGridView__td__checkBox js-controls-ListView__itemCheckBox{{?it.startScrollColumn!== undefined}}{{?it.startScrollColumn === 0}} controls-DataGridView__scrolledCell{{??}} controls-DataGridView__notScrolledCell{{?}}{{?}}">
-         <span class="controls-ListView__itemCheckBox js-controls-ListView__itemCheckBox"></span>
+        <span class="controls-ListView__itemCheckBox js-controls-ListView__itemCheckBox"></span>
    </td>
    {{?}}
    {{~it.columns :column:index}}
-      {{isBranch = column.item.get(it.hierField);}}
+      {{isBranch = column.item.get(it.hierField + '@');}}
       <td class="controls-DataGridView__td{{?column.className}} {{=column.className}}{{?}}{{?it.startScrollColumn!== undefined}}{{?it.startScrollColumn <= index}} controls-DataGridView__scrolledCell{{??}} controls-DataGridView__notScrolledCell{{?}}{{?}}">
          {{?index == 0}}
             <div class="controls-TreeView__expand js-controls-TreeView__expand{{?isBranch == null}} controls-TreeView__expand__leaf{{??}} has-child{{?}}"></div>
@@ -14,11 +14,8 @@
                {{?it.arrowActivatedHandler}}
                <div class="controls-TreeView__ellipsis-wrapper">
                   <div class="controls-TreeView__ellipsis-container">
-               {{?}}
-                     <span>{{=it.decorators.applyIf(column.value, {
-                        'highlight': column.highlight,
-                        'ladder': column.field})
-                     }}</span>
+                     {{?}}
+                     <span>{{=column.value}}</span>
                      {{?it.arrowActivatedHandler}}
                         <div class="js-controls-TreeView__editArrow controls-TreeView__editArrow icon-16 icon-View icon-primary action-hover"></div>
                   </div>
@@ -31,16 +28,10 @@
                </div>
                {{?}}
             {{??}}
-               <span>{{=it.decorators.applyIf(column.value, {
-                        'highlight': column.highlight,
-                        'ladder': column.field})
-                     }}</span>
+               <span>{{=column.value}}</span>
             {{?}}
          {{??}}
-            <span>{{=it.decorators.applyIf(column.value, {
-                        'highlight': column.highlight,
-                        'ladder': column.field})
-                  }}</span>
+            <span>{{=column.value}}</span>
          {{?}}
       </td>
    {{~}}

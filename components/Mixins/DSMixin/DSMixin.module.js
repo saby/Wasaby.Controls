@@ -414,6 +414,13 @@ define('js!SBIS3.CONTROLS.DSMixin', [
          this.reload(this._options.filter, this._sorting, 0, pageSize);
       },
       /**
+       * Метод получения количества элементов на одной странице.
+       * @see pageSize
+       */
+      getPageSize: function() {
+         return this._options.pageSize
+      },
+      /**
        * Получить текущий фильтр в наборе данных
        * @returns {Object|*|DSMixin._filter}
        */
@@ -429,7 +436,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
          this._options.filter = filter;
          this._dropPageSave();
          if (this._dataSource && !noLoad) {
-            this.reload(this._options.filter, this._sorting, 0, this.getProperty('pageSize'));
+            this.reload(this._filter, this._sorting, 0, this.getPageSize());
          }
       },
 
@@ -814,7 +821,8 @@ define('js!SBIS3.CONTROLS.DSMixin', [
       _hasNextPage: function (hasMore, offset) {
          offset = offset === undefined ? this._offset : offset;
          //n - приходит true, false || общее количество записей в списочном методе
-         return typeof (hasMore) !== 'boolean' ? hasMore > (offset + this._options.pageSize) : !!hasMore;
+         //Если offset отрицательный, значит запрашивали последнюю страницу
+         return offset < 0 ? false : (typeof (hasMore) !== 'boolean' ? hasMore > (offset + this._options.pageSize) : !!hasMore);
       },
       /**
        * Установить что отображается при отсутствии записей.
@@ -827,6 +835,14 @@ define('js!SBIS3.CONTROLS.DSMixin', [
        */
       setEmptyHTML: function (html) {
          this._options.emptyHTML = html;
+      },
+
+      /**
+       * Возвращает источник данных.
+       * @returns {*}
+       */
+      getDataSource: function(){
+         return this._dataSource;
       },
 
       _dataLoadedCallback: function () {
