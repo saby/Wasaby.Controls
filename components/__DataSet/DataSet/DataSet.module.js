@@ -491,6 +491,13 @@ define('js!SBIS3.CONTROLS.DataSet', [
       getParentKey: function (record, field) {
          return this.getStrategy().getParentKey(record, field);
       },
+      
+      getTreeIndex: function(field, reindex){
+         if (reindex || (Object.isEmpty(this._indexTree) && field)){
+            this._reindexTree(field);
+         }
+         return this._indexTree;
+      },
 
       /*Делаем индекс по полю иерархии*/
       _reindexTree : function(field) {
