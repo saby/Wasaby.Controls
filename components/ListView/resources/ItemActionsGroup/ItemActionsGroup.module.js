@@ -62,10 +62,11 @@ define('js!SBIS3.CONTROLS.ItemActionsGroup',
                   //Если видимость кнопки не изменилась, то делать ничего не будем
                   if(this._itemActionsButtons[i]['isVisible'] !== show) {
                      this._itemActionsButtons[i]['isVisible'] = show;
+                     itemsInstances[i].getContainer().toggleClass('ws-hidden', !show);
                   }
                }
             }
-            this._itemActionsMenuButton.toggleClass('ws-hidden', !onlyMain);
+            this._itemActionsMenuButton.toggleClass('ws-hidden', onlyMain);
          },
          /**
           * Создаёт меню для операций над записью
@@ -107,7 +108,7 @@ define('js!SBIS3.CONTROLS.ItemActionsGroup',
                closeByExternalClick: true,
                handlers: {
                   onClose: function() {
-                     var hoveredItem = self.getParent().getHoveredItem().container;                     
+                     var hoveredItem = self.getParent().getHoveredItem().container;
                      self._itemActionsMenuVisible = false;
                      self._activeItem.removeClass('controls-ItemActions__activeItem');
                      self[hoveredItem ? 'showItemActions' : 'hideItemActions'](hoveredItem);
@@ -142,7 +143,7 @@ define('js!SBIS3.CONTROLS.ItemActionsGroup',
             var menuInstances = this._itemActionsMenu.getItemsInstances(),
                 itemActionsInstances = this.getItemsInstances();
             if (this._touchActions){
-               //Нельзя сделать hide так как display:none ломает позиционирование меню 
+               //Нельзя сделать hide так как display:none ломает позиционирование меню
                var cont = this._container[0],
                   self = this;
                cont.style.visibility = 'hidden';
