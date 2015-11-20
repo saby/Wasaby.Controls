@@ -249,7 +249,7 @@ define('js!SBIS3.CONTROLS.DataSet', [
                this._prepareRecordForAdd(toAdd[i]);
                this.getStrategy().addRecord(this._rawData, toAdd[i], at);
 
-               if (at) {
+               if (at !== undefined && at >= 0) {
                   this._indexId.splice(at + i, 0, toAdd[i].getKey() || toAdd[i]._cid);
                } else {
                   this._indexId.push(toAdd[i].getKey() || toAdd[i]._cid);
