@@ -72,8 +72,8 @@ define('js!SBIS3.CONTROLS.Data.ContextField', [
 
             set: function(oldValue, keyPath, value) {
                var
-                   Context = $ws.proto.Context,
-                   result, subValue, key, subType;
+                  Context = $ws.proto.Context,
+                  result, subValue, key, subType;
 
                if (keyPath.length !== 0) {
                   key = keyPath[0];
