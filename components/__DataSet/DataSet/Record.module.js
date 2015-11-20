@@ -2,18 +2,23 @@
  * Created by as.manuylov on 10.11.14.
  */
 define('js!SBIS3.CONTROLS.Record', [
+   'js!SBIS3.CONTROLS.Data.SerializableMixin',
+   'js!SBIS3.CONTROLS.ArrayStrategy',
    'js!SBIS3.CONTROLS.DataFactory'
-], function (DataFactory) {
+], function (SerializableMixin, ArrayStrategy, DataFactory) {
    'use strict';
 
    /**
     * Класс для работы с одной записью
     * @class SBIS3.CONTROLS.Record
+    * @extends $ws.proto.Abstract
+    * @mixes SBIS3.CONTROLS.Data.SerializableMixin
     * @public
     * @author Крайнов Дмитрий Олегович
     */
 
-   var Record =  $ws.proto.Abstract.extend( /** @lends SBIS3.CONTROLS.Record.prototype */{
+   var Record =  $ws.proto.Abstract.extend([SerializableMixin], /** @lends SBIS3.CONTROLS.Record.prototype */{
+      _moduleName: 'SBIS3.CONTROLS.Record',
       $protected: {
          /**
           * @var {String|null} Клиентский идентификатор
@@ -57,13 +62,31 @@ define('js!SBIS3.CONTROLS.Record', [
       },
 
       $constructor: function (cfg) {
+         cfg = cfg || {};
          this._publish('onChange');
-         this._strategy = cfg.strategy;
+         this._strategy = cfg.strategy || new ArrayStrategy();
          this._raw = cfg.raw || {};
          this._isCreated = 'isCreated' in cfg ? cfg.isCreated : false;
          this._keyField = cfg.keyField || null;
          this._cid = $ws.helpers.randomId('c');
       },
+
+      // region SBIS3.CONTROLS.Data.SerializableMixin
+
+      _getSerializableState: function() {
+         return $ws.core.merge(
+            Record.superclass._getSerializableState.call(this), {
+               _cid: this._cid,
+               _isCreated: this._isCreated,
+               _isDeleted: this._isDeleted,
+               _isChanged: this._isChanged,
+               _keyField: this._keyField,
+               _raw: this._raw
+            }
+         );
+      },
+
+      // endregion SBIS3.CONTROLS.Data.SerializableMixin
 
       clone: function() {
          return new Record($ws.core.clone(this._options));
