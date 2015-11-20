@@ -133,7 +133,7 @@ define('js!SBIS3.CONTROLS.OperationUnload', [
             cfg = {
                dataSet: view.getDataSet(),
                columns: this._prepareOperationColumns(),
-               dataSource : view._dataSource,
+               dataSource : view.getDataSource(),
                filter : view._filter,
                offset: view._offset
             };
