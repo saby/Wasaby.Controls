@@ -80,6 +80,24 @@ define('js!SBIS3.CONTROLS.ListView',
           * @see setItemsActions
           * @see getItemsActions
           */
+         /**
+          * @event onDataMerge Перед добавлением загруженных записей в основной dataSet
+          * @remark
+          * Событие срабатывает при подгрузке по скроллу, при подгрузке в ветку дерева.
+          * Т.е. при любой вспеомогательной загрузке данных.
+          * @param {$ws.proto.EventObject} eventObject Дескриптор события.
+          * @param {Object} dataSet - dataSet с загруженными данными
+          * @example
+          * <pre>
+          *     DataGridView.subscribe('onDataMerge', function(event, dataSet) {
+          *        //Если в загруженном датасете есть данные, отрисуем их количество
+          *        var count = dataSet.getCount();
+          *        if (count){
+          *           self.drawItemsCounter(count);
+          *        }
+          *     });
+          * </pre>
+          */
 
          $protected: {
             _floatCheckBox: null,
@@ -267,7 +285,7 @@ define('js!SBIS3.CONTROLS.ListView',
             //TODO временно смотрим на TopParent, чтобы понять, где скролл. С внедрением ScrallWatcher этот функционал уберем
             var topParent = this.getTopParent(),
                   self = this;
-            this._publish('onChangeHoveredItem', 'onItemActions', 'onItemClick');
+            this._publish('onChangeHoveredItem', 'onItemActions', 'onItemClick', 'onDataMerge');
             this._container
                .mousemove(this._mouseMoveHandler.bind(this))
                .mouseleave(this._mouseLeaveHandler.bind(this));
@@ -812,6 +830,7 @@ define('js!SBIS3.CONTROLS.ListView',
                      self._hasScrollMore = false;
                      self._hideLoadingIndicator();
                   }
+                  self._notify('onDataMerge', dataSet);
                   //Если данные пришли, нарисуем
                   if (dataSet.getCount()) {
                      records = dataSet._getRecords();
