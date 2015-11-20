@@ -43,7 +43,8 @@ define('js!SBIS3.CONTROLS.FieldLink',
     * @mixes SBIS3.CONTROLS.MultiSelectable
     * @mixes SBIS3.CONTROLS.CollectionMixin
     * @mixes SBIS3.CONTROLS.FormWidgetMixin
-    * @demo SBIS3.CONTROLS.Demo.FieldLinkWithEditInPlace
+    * @demo SBIS3.CONTROLS.Demo.FieldLinkWithEditInPlace Поле связи с редактированием по месту
+    * @demo SBIS3.CONTROLS.Demo.FieldLinkDemo
     * @control
     * @public
     * @author Крайнов Дмитрий Олегович
@@ -239,11 +240,21 @@ define('js!SBIS3.CONTROLS.FieldLink',
             /* Когда показываем пикер со всеми выбранными записями, скроем автодополнение и покажем выбранные записи*/
             this._showAllLink.click(function() {
                self.hidePicker();
-               self._dropAllLink.toggleClass('ws-hidden');
+               self._pickerStateChangeHandler(true);
                self._linkCollection.togglePicker();
             });
             this._dropAllLink.click(this.removeItemsSelectionAll.bind(this));
          }
+      },
+
+      /**
+       * Обрабатывает скрытие/открытие пикера
+       * @param open
+       * @private
+       */
+      _pickerStateChangeHandler: function(open) {
+         this._dropAllLink.toggleClass('ws-hidden', !open);
+         this._inputWrapper.toggleClass('ws-invisible', open);
       },
 
       /**
@@ -301,7 +312,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
                onCrossClick: function(e, key){ self.removeItemsSelection([key]); },
 
                /* При закрытии пикера надо скрыть кнопку удаления всех выбранных */
-               onClose: function() { self._dropAllLink.addClass('ws-hidden'); }
+               onClose: function() { self._pickerStateChangeHandler(false); }
             }
          });
       },

@@ -28,7 +28,8 @@ define('js!SBIS3.CONTROLS.SuggestTextBox', [
          this.getContainer().addClass('controls-SuggestTextBox');
       },
 
-      _keyDownBind: function(e) {
+      _keyUpBind: function(e) {
+         SuggestTextBox.superclass._keyUpBind.apply(this, arguments);
          switch (e.which) {
             case $ws._const.key.down:
             case $ws._const.key.up:
@@ -42,7 +43,6 @@ define('js!SBIS3.CONTROLS.SuggestTextBox', [
                this.hidePicker();
                break;
          }
-         SuggestTextBox.superclass._keyDownBind.apply(this, arguments);
       }
    });
 

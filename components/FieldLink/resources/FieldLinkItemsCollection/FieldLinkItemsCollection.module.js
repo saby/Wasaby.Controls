@@ -142,8 +142,12 @@ define('js!SBIS3.CONTROLS.FieldLinkItemsCollection', [
                   side: 'left'
                },
                handlers: {
-                  /* Надо сообщить о закрытии пикера полю связи */
-                  onClose: function() { self._options.handlers.onClose() }
+                  /* Надо сообщить о закрытии пикера полю связи, а так же перерисовать элементы, но только после закрытия */
+                  onClose: function() {
+                     self._options.handlers.onClose();
+                     self._clearItems();
+                     setTimeout(self.reload.bind(self), 0);
+                  }
                }
             };
          }
