@@ -239,8 +239,8 @@ define('js!SBIS3.CONTROLS.FieldLink',
          if(this._options.multiselect) {
             /* Когда показываем пикер со всеми выбранными записями, скроем автодополнение и покажем выбранные записи*/
             this._showAllLink.click(function() {
-               self.hidePicker();
-               self._pickerStateChangeHandler(true);
+               self.isPickerVisible() && self.hidePicker();
+              !self._linkCollection.isPickerVisible() && self._pickerStateChangeHandler(true);
                self._linkCollection.togglePicker();
             });
             this._dropAllLink.click(this.removeItemsSelectionAll.bind(this));
