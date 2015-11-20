@@ -194,7 +194,7 @@ define('js!SBIS3.CONTROLS.BreadCrumbs', [
             if ((targetContainer.width() + this._arrowWidth >= containerWidth)) {
                //ширина декоротивных элементов -  блок с домиком, троеточие, стрелки 
                var width = this._homeIconWidth + this._dotsWidth + this._arrowWidth * 2;
-               var halfWidth = (containerWidth - width) / 2;
+               var halfWidth = Math.floor((containerWidth - width) / 2);
                if (points.length >= 2){
                   $('.controls-BreadCrumbs__title', points).css('max-width', halfWidth);
                } else {
