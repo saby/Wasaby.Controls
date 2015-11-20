@@ -154,7 +154,7 @@ define('js!SBIS3.CONTROLS.OperationUnload', [
       },
       _isClientUnload : function(){
          //Смотрим на наличие выбранных потому, что у нас есть ограничение по передаче количества символов в GET и это будет бесполезно выгружать на сервере.
-         return !this._options.serverSideUnload && this._currentItem !== 'Excel' && !this._isSelectedState();
+         return !this._options.serverSideUnload && this._controlsId[this._currentItem].objectName !== 'Excel' && !this._isSelectedState();
       }
    });
 
