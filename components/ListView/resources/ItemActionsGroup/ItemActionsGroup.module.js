@@ -58,11 +58,11 @@ define('js!SBIS3.CONTROLS.ItemActionsGroup',
                   if (onlyMain && itemsInstances[i].isVisible() && !this._itemActionsButtons[i]['isMainAction']) {
                      onlyMain = false;
                   }
+                  //TODO ВРЕМЕННЫЙ КОСТЫЛЬ ВЫПИЛИТЬ В 3.7.3.20, ВИДИМОСТЬЮ УПРАВЛЯЮТ ПРИКЛАДНЫЕ РАЗРАБОТЧИКИ
                   itemsInstances[i].getContainer().toggleClass('ws-hidden', !show);
                   //Если видимость кнопки не изменилась, то делать ничего не будем
                   if(this._itemActionsButtons[i]['isVisible'] !== show) {
                      this._itemActionsButtons[i]['isVisible'] = show;
-                     itemsInstances[i].getContainer().toggleClass('ws-hidden', !show);
                   }
                }
             }
