@@ -289,35 +289,30 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
        * @see list
        */
       getList: function () {
-         var def = new $ws.proto.Deferred(),
-             self = this;
+         var options, component;
 
          if (!this._list) {
             if ($ws.helpers.instanceOfMixin(this._options.list, 'SBIS3.CONTROLS.DSMixin')) {
                /* Если передали в опции готовый инстанс, то ничего создавать не надо */
                this._list = this._options.list;
                this._initList();
-               def.callback(this._list);
+               return this._list;
             } else {
                //Набор "Сделай сам"
-               this._list = require([this._options.list.component], function (ListControl) {
-                  var options = $ws.core.clone(self._options.list.options);
-                  if (!options.element) {
-                     options.element = self._getListContainer();
-                  }
-                  options.parent = self._picker;
-                  self._list = new ListControl(options);
+               options = $ws.core.clone(this._options.list.options);
+               component = require(this._options.list.component);
+               if (!options.element) {
+                  options.element = this._getListContainer();
+               }
+               options.parent = this._picker;
+               this._list = new component(options);
+               this._initList();
 
-                  self._initList();
-
-                  def.callback(self._list);
-               });
+               return this._list;
             }
          } else {
-            def.callback(this._list);
+            return this._list;
          }
-
-         return def;
       },
 
       /**
@@ -344,15 +339,12 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
        * @private
        */
       _reloadList: function () {
-         var self = this,
-             result = new $ws.proto.Deferred();
+         var result = new $ws.proto.Deferred();
 
          this._showLoadingIndicator();
-         this.getList().addCallback(function (list) {
-            list.reload(self._options.listFilter).addCallback(function() {
-               result.callback();
-            })
-         });
+         this.getList().reload(this._options.listFilter).addCallback(function() {
+            result.callback();
+         })
 
          return result;
       },
