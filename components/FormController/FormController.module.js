@@ -12,7 +12,8 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl'],
          _options: {
             dataSource: null,
             key: null,
-            record: null
+            record: null,
+            initValues: null
          }
       },
       
@@ -58,7 +59,16 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl'],
             hdl = this._readRecord(this._options.key);
          }
          else {
-            hdl = this._options.dataSource.create(); 
+            //TODO ждем от Лехи доработки, чтоб вызвать "создать с фильтром", пока пишем инициализацию у себя задача есть
+            hdl = this._options.dataSource.create().addCallback(function(record){
+               var initValues = self._options.initValues;
+               for (var i in initValues) {
+                  if (initValues.hasOwnProperty(i)) {
+                     record.set(i, initValues[i])
+                  }
+               }
+               return record;
+            });
          }
          hdl.addCallback(function(record){
             self._options.record = record;

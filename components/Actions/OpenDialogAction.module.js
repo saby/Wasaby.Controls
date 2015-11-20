@@ -41,7 +41,8 @@ define('js!SBIS3.CONTROLS.OpenDialogAction', ['js!SBIS3.CONTROLS.ActionBase', 'j
             dlg = new Dialog({
                template: dialogComponent,
                componentOptions : {
-                  key : meta.id
+                  key : meta.id,
+                  initValues : meta.filter
                }
             });
          dlg.subscribe('onAfterClose', function(e, flag){
