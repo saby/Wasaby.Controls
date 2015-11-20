@@ -128,7 +128,7 @@ define('js!SBIS3.CONTROLS.OperationUnload', [
          objectArr = record.unloadMethod.split('.');
          unloader.unload(objectArr[0], objectArr[1], this._getUnloadFileName(), fullFilter, true );
       },
-      _prepareUnloaderConfig : function(selectedNumRecords) {
+      _prepareUnloaderConfig : function() {
          var  view = this._getView(),
             cfg = {
                dataSet: view.getDataSet(),
