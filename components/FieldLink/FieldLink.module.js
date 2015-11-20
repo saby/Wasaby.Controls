@@ -370,19 +370,6 @@ define('js!SBIS3.CONTROLS.FieldLink',
       _keyUpBind: function(e) {
          FieldLink.superclass._keyUpBind.apply(this, arguments);
          switch (e.which) {
-
-            /* Чтобы нормально работала навигация стрелками и не случалось ничего лишнего,
-             то запретим вспылтие события */
-            case $ws._const.key.up:
-            case $ws._const.key.down:
-               if(this.isPickerVisible()) {
-                  e.stopPropagation();
-               }
-               break;
-            case $ws._const.key.enter:
-               e.stopPropagation();
-               break;
-
             /* Нажатие на клавишу delete удаляет все выбранные элементы в поле связи */
             case $ws._const.key.del:
                this.removeItemsSelectionAll();
