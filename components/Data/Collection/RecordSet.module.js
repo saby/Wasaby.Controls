@@ -31,6 +31,8 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
       },
 
       $constructor: function (cfg) {
+         cfg = cfg || {};
+
          if (!('compatibleMode' in cfg)) {
             $ws.single.ioc.resolve('ILogger').log('SBIS3.CONTROLS.Data.RecordSet', 'module SBIS3.CONTROLS.Data.Collection.RecordSet is deprecated and will be removed in 3.8.0. Use SBIS3.CONTROLS.Data.Collection.LoadableList instead.');
          }
