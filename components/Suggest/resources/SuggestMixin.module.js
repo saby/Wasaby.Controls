@@ -344,7 +344,7 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
          this._showLoadingIndicator();
          this.getList().reload(this._options.listFilter).addCallback(function() {
             result.callback();
-         })
+         });
 
          return result;
       },

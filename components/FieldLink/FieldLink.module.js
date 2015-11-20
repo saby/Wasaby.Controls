@@ -112,6 +112,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
             dictionaries: [],
             /**
              * @cfg {Boolean} Поддерживать старые представления данных
+             * Данная опция требуется, если на диалоге выбора лежат старое представление данных.
              */
             oldViews: false
          }
@@ -124,7 +125,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
          this._setVariables();
          this._initEvents();
 
-         /* Создём контрол, который рисует элементы в ввиде текста с крестиком удаления */
+         /* Создём контрол, который рисует выбранные элементы  */
          this._linkCollection = this._drawFieldLinkItemsCollection();
 
          if(this._options.oldViews) {
@@ -358,10 +359,11 @@ define('js!SBIS3.CONTROLS.FieldLink',
       _keyUpBind: function(e) {
          FieldLink.superclass._keyUpBind.apply(this, arguments);
          switch (e.which) {
+
+            /* Чтобы нормально работала навигация стрелками и не случалось ничего лишнего,
+             то запретим вспылтие события */
             case $ws._const.key.up:
             case $ws._const.key.down:
-                /* Чтобы нормально работала навигация стрелками и не случалось ничего лишнего,
-                   то запретим вспылтие события */
                if(this.isPickerVisible()) {
                   e.stopPropagation();
                }
@@ -369,9 +371,13 @@ define('js!SBIS3.CONTROLS.FieldLink',
             case $ws._const.key.enter:
                e.stopPropagation();
                break;
+
+            /* Нажатие на клавишу delete удаляет все выбранные элементы в поле связи */
             case $ws._const.key.del:
                this.removeItemsSelectionAll();
                break;
+
+            /* ESC закрывает все пикеры у поля связи(если они открыты) */
             case $ws._const.key.esc:
                if(this.isPickerVisible() || this._linkCollection.isPickerVisible()) {
                   this.hidePicker();
@@ -379,8 +385,9 @@ define('js!SBIS3.CONTROLS.FieldLink',
                   e.stopPropagation();
                }
                break;
+
+            /* Нажатие на backspace должно удалять последние значение, если нет набранного текста */
             case $ws._const.key.backspace:
-               /* Нажатие на backspace должно удалять последние значение, если нет набранного текста */
                var selectedKeys = this.getSelectedKeys();
                if(!this.getText()) {
                   this.removeItemsSelection([selectedKeys[selectedKeys.length - 1]]);
