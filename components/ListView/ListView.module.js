@@ -82,6 +82,23 @@ define('js!SBIS3.CONTROLS.ListView',
           * @see itemsActions
           * @see setItemsActions
           * @see getItemsActions
+          *
+          * @event onItemClick При клике на запись
+          * @remark
+          * Событие срабатывает при любом клике под курсором мыши.
+          * @param {$ws.proto.EventObject} eventObject Дескриптор события.
+          * @param {String} id Ключ записи
+          * @param {SBIS3.CONTROLS.Record} data запись
+          * @param {jQuery} target html элемент на который кликнули
+
+          *
+          * @event onItemActivate При активации записи (клик с целью например редактирования или выбора)
+          * @remark
+          * Событие срабатывает при смене записи под курсором мыши.
+          * @param {$ws.proto.EventObject} eventObject Дескриптор события.
+          * @param {Object} meta Объект
+          * @param {String} meta.id ключ элемента представления данных
+          * @param {SBIS3.CONTROLS.Record} meta.item запись
           */
 
          $protected: {
@@ -210,12 +227,6 @@ define('js!SBIS3.CONTROLS.ListView',
                 * </pre>
                 */
                itemsDragNDrop: false,
-               /**
-                * @cfg {Function} Обработчик клика на элемент
-                * @example
-                * <option name="elemClickHandler">MyElemClickHandler</option>
-                * @see setElemClickHandler
-                */
                elemClickHandler: null,
                /**
                 * @cfg {Boolean} Разрешить выбор нескольких строк
@@ -289,7 +300,7 @@ define('js!SBIS3.CONTROLS.ListView',
             //TODO временно смотрим на TopParent, чтобы понять, где скролл. С внедрением ScrallWatcher этот функционал уберем
             var topParent = this.getTopParent(),
                   self = this;
-            this._publish('onChangeHoveredItem', 'onItemClick');
+            this._publish('onChangeHoveredItem', 'onItemClick', 'onItemActivate');
             $ws.single.CommandDispatcher.declareCommand(this, 'newItem', this._newItem.bind(this));
             this._container.on('mousemove', this._mouseMoveHandler.bind(this))
                            .on('mouseleave', this._mouseLeaveHandler.bind(this));
