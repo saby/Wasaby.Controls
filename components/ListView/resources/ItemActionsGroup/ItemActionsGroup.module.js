@@ -58,14 +58,14 @@ define('js!SBIS3.CONTROLS.ItemActionsGroup',
                   if (onlyMain && itemsInstances[i].isVisible() && !this._itemActionsButtons[i]['isMainAction']) {
                      onlyMain = false;
                   }
+                  itemsInstances[i].getContainer().toggleClass('ws-hidden', !show);
                   //Если видимость кнопки не изменилась, то делать ничего не будем
                   if(this._itemActionsButtons[i]['isVisible'] !== show) {
-                     itemsInstances[i].getContainer()[0].style.display = show ? '' : 'none';
                      this._itemActionsButtons[i]['isVisible'] = show;
                   }
                }
             }
-            this._itemActionsMenuButton[0].style.display = (!onlyMain ? '' : 'none');
+            this._itemActionsMenuButton.toggleClass('ws-hidden', !onlyMain);
          },
          /**
           * Создаёт меню для операций над записью
