@@ -126,6 +126,7 @@ define('js!SBIS3.CONTROLS.DataSet', [
          this._isLoaded = true;
          length = this.getCount();
          this._byId = {};
+         this._indexTree = {};
          for (var i = 0; i < length; i++) {
             data = this.getStrategy().at(this._rawData, i);
             this._byId[this.getRecordKeyByIndex(i)] = $ws.single.ioc.resolve('SBIS3.CONTROLS.Record', {
@@ -364,7 +365,7 @@ define('js!SBIS3.CONTROLS.DataSet', [
 
          this._byId[record._cid] = record;
          this._byId[key] = record;
-
+         this._indexTree = {};
       },
 
       /**
