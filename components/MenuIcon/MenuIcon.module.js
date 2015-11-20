@@ -73,23 +73,7 @@ define('js!SBIS3.CONTROLS.MenuIcon', ['js!SBIS3.CONTROLS.IconButton', 'js!SBIS3.
       setItems: function(items) {
          MenuIcon.superclass.setItems.call(this, items);
          var displayValue = (this.getItems().length > 1) ? 'inline-block' : 'none';
-      },
-
-      _clickHandler: function () {
-         if (this._dataSet.getCount() > 1) {
-            $('.controls-MenuIcon__header', this._container).toggleClass('controls-MenuIcon__header-hidden', this._container.hasClass('controls-Picker__show'));
-            this.togglePicker();
-         } else {
-            if (this._dataSet.getCount() == 1) {
-               var id = this._dataSet.at(0).getKey();
-               this._notify('onMenuItemActivate', id);
-            }
-         }
-      },
-      _dataLoadedCallback : function() {
-         if (this._picker) this.hidePicker();
       }
-
    });
 
    return MenuIcon;

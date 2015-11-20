@@ -9,6 +9,7 @@ define(['js!SBIS3.CONTROLS.Utils.HtmlDecorators/AbstractDecorator'], function (A
     */
    var HighlightDecorator = AbstractDecorator.extend(/** @lends SBIS3.CONTROLS.Utils.HtmlDecorators/HighlightDecorator.prototype */{
       $protected: {
+         _name: 'highlight',
          _options: {
             /**
              * @cfg {String} CSS класс для подсветки
