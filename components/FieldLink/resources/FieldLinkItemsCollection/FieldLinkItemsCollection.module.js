@@ -88,7 +88,7 @@ define('js!SBIS3.CONTROLS.FieldLinkItemsCollection', [
           */
          _clickHandler: function(e) {
             var $target = $(e.target),
-               itemContainer;
+                itemContainer;
 
             if ($target.hasClass('controls-FieldLink__linkItem-cross')) {
                itemContainer = $(e.target).closest('.controls-ListView__item');

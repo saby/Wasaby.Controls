@@ -72,28 +72,19 @@ define('js!SBIS3.CONTROLS.Data.ContextField', [
 
             set: function(oldValue, keyPath, value) {
                var
-                  Context = $ws.proto.Context,
-                  result, subValue, key, subType;
-
-               function setValue(val) {
-                  if (keyPath.length === 1) {
-                     oldValue.set(key, val);
-                  } else {
-                     subType = Context.getValueType(subValue);
-                     subType.set(subValue, keyPath.slice(1), val);
-                  }
-               }
+                   Context = $ws.proto.Context,
+                   result, subValue, key, subType;
 
                if (keyPath.length !== 0) {
                   key = keyPath[0];
                   subValue = oldValue.get(key);
                   if (subValue !== undefined) {
-                     if(value instanceof $ws.proto.Deferred) {
-                        value.addCallback(function(defValue) {
-                           setValue(defValue);
-                        })
-                     } else {
-                        setValue(value);
+                     if (keyPath.length === 1) {
+                        oldValue.set(key, value);
+                     }
+                     else {
+                        subType = Context.getValueType(subValue);
+                        subType.set(subValue, keyPath.slice(1), value);
                      }
                   }
                   result = oldValue;
