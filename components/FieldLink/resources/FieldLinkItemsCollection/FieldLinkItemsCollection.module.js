@@ -5,48 +5,47 @@ define('js!SBIS3.CONTROLS.FieldLinkItemsCollection', [
       'js!SBIS3.CORE.CompoundControl',
       'js!SBIS3.CONTROLS.DSMixin',
       'js!SBIS3.CONTROLS.Clickable',
+      'js!SBIS3.CONTROLS.PickerMixin',
       'html!SBIS3.CONTROLS.FieldLinkItemsCollection/itemTpl'
    ],
-   function(CompoundControl, DSMixin, Clickable, itemTpl) {
+   function(CompoundControl, DSMixin, Clickable, PickerMixin, itemTpl) {
+
+      var PICKER_BORDER_WIDTH = 2;
 
       'use strict';
 
       /**
-       * Контрол, отображающий набор элементов с крестиком удаления.
+       * Контрол, отображающий набор элементов поля связи.
        * @class SBIS3.CONTROLS.FieldLinkItemsCollection
        * @extends SBIS3.CORE.CompoundControl
        */
 
-      var FieldLinkItemsCollection =  CompoundControl.extend([DSMixin, Clickable], {
+      var FieldLinkItemsCollection =  CompoundControl.extend([DSMixin, Clickable, PickerMixin], {
          $protected: {
             _options: {
-               /**
-                * Шаблон отображения элемента
-                */
-               itemTemplate: itemTpl,
                /**
                 * Метод, который проверяет, нужно ли отрисовывать элемент коллекции
                 */
                itemCheckFunc: undefined
-            }
+            },
+            flContainer: undefined
          },
 
          $constructor: function() {
-            this._publish('onCrossClick', 'onDrawItem')
+            this._publish('onCrossClick');
+            /* Запомним контейнер поля связи */
+            this._flContainer = this.getParent().getContainer();
          },
-
 
          init: function() {
             FieldLinkItemsCollection.superclass.init.apply(this, arguments);
             /* Проинициализируем DataSet */
             this.reload();
          },
-         /**
-          * Отрисовывает элемент коллекции
-          * @param item
-          * @private
-          */
 
+         /**
+          * Аргументы для шаблона
+          */
          _buildTplArgs: function(item) {
             return {
                item: item,
@@ -54,9 +53,12 @@ define('js!SBIS3.CONTROLS.FieldLinkItemsCollection', [
             }
          },
 
-
          _getItemTemplate: function() {
-            return this._options.itemTemplate;
+            return itemTpl;
+         },
+
+         _getItemsContainer: function() {
+            return this.isPickerVisible() ? this._picker.getContainer() : this._container;
          },
 
          setItems: function(list) {
@@ -95,6 +97,55 @@ define('js!SBIS3.CONTROLS.FieldLinkItemsCollection', [
                   this._notify('onCrossClick', itemContainer.data('id'));
                }
             }
+         },
+
+         _drawItemsCallback: function() {
+            if(this.isPickerVisible() && !this.getDataSet().getCount()) {
+               this.hidePicker()
+            }
+         },
+
+         showPicker: function() {
+            this._clearItems();
+            FieldLinkItemsCollection.superclass.showPicker.apply(this, arguments);
+            this.reload();
+         },
+
+         hidePicker: function() {
+            this._clearItems();
+            FieldLinkItemsCollection.superclass.hidePicker.apply(this, arguments);
+            this.reload();
+         },
+
+         _setPickerContent: function () {
+            var pickerContainer = this._picker.getContainer(),
+                flWidth = this._flContainer[0].offsetWidth - PICKER_BORDER_WIDTH;
+            pickerContainer.on('click', '.controls-ListView__item', this._clickHandler.bind(this));
+            /* Не очень правильное решение, пикер может сам менять ширину, поэтому устанавливаю минимальну и максимальную */
+            pickerContainer[0].style.maxWidth = flWidth + 'px';
+            pickerContainer[0].style.minWidth = flWidth + 'px';
+         },
+
+         _setPickerConfig: function () {
+            var self = this;
+            return {
+               corner: 'bl',
+               target: this._flContainer,
+               opener: this.getParent(),
+               closeByExternalClick: true,
+               targetPart: true,
+               className: 'controls-FieldLink__picker',
+               verticalAlign: {
+                  side: 'top'
+               },
+               horizontalAlign: {
+                  side: 'left'
+               },
+               handlers: {
+                  /* Надо сообщить о закрытии пикера полю связи */
+                  onClose: function() { self._options.handlers.onClose() }
+               }
+            };
          }
       });
 

@@ -27,12 +27,6 @@ define('js!SBIS3.CONTROLS.SuggestTextBox', [
 
          this.getContainer().addClass('controls-SuggestTextBox');
       },
-      init: function(){
-         var ccb = new $ws.proto.ControlContextBinder();
-         ccb.defineBinding('text', this.getName(), false, undefined, undefined, true);
-         ccb.bindControl(this, this.getLinkedContext(), true);
-         SuggestTextBox.superclass.init.call(this);
-      },
 
       _keyDownBind: function(e) {
          switch (e.which) {

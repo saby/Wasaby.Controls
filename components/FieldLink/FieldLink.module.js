@@ -80,8 +80,11 @@ define('js!SBIS3.CONTROLS.FieldLink',
          _pickerLinkList: undefined,   /* Контейнер для контрола выбранных элементов в пикере */
          _linkCollection: undefined,   /* Контрол отображающий выбранные элементы */
          _options: {
+            /* Служебные шаблоны поля связи (иконка открытия справочника, контейнер для выбранных записей */
             afterFieldWrapper: afterFieldWrapper,
             beforeFieldWrapper: beforeFieldWrapper,
+            /**********************************************************************************************/
+
             list: {
                className: 'js!SBIS3.CONTROLS.DataGridView',
                options: {
@@ -207,7 +210,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
          var displayFields = [],
              self = this;
 
-         this._getSelectedItems().each(function(rec) {
+         this.getSelectedItems().each(function(rec) {
             displayFields.push(rec.get(self._options.displayField));
          });
 
@@ -224,7 +227,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
 
          if(this._options.multiselect) {
             this._dropAllLink = this._container.find('.controls-FieldLink__dropAllLinks');
-            this._showAllLink = this._container.find('.controls-FieldLink__showAllLinks')
+            this._showAllLink = this._container.find('.controls-FieldLink__showAllLinks');
          }
       },
 
@@ -234,9 +237,9 @@ define('js!SBIS3.CONTROLS.FieldLink',
          if(this._options.multiselect) {
             /* Когда показываем пикер со всеми выбранными записями, скроем автодополнение и покажем выбранные записи*/
             this._showAllLink.click(function() {
-               self.togglePicker();
-               self._pickerChangeStateHandler(self.isPickerVisible());
-               return false;
+               self.hidePicker();
+               self._dropAllLink.toggleClass('ws-hidden');
+               self._linkCollection.togglePicker();
             });
             this._dropAllLink.click(this.removeItemsSelectionAll.bind(this));
          }
@@ -267,10 +270,6 @@ define('js!SBIS3.CONTROLS.FieldLink',
          /* Если удалили в пикере все записи, и он был открыт, то скроем его */
          if (!keysArrLen) {
             this._toggleShowAllLink(false);
-
-            if(this.isPickerVisible()) {
-               this.hidePicker();
-            }
          }
 
          /* Нужно поле делать невидимым, а не скрывать, чтобы можно было посчитать размеры */
@@ -279,22 +278,12 @@ define('js!SBIS3.CONTROLS.FieldLink',
          }
 
          if(keysArrLen) {
-            this.getSelectedItems().addCallback(function(list){
+            this.getSelectedItems(true).addCallback(function(list){
                self._linkCollection.setItems(list);
             });
          } else {
-            self._syncSelectedItems();
-            self._linkCollection.setItems(this._getSelectedItems());
+            self._linkCollection.setItems(this.getSelectedItems());
          }
-      },
-
-      /**
-       * Занимается перемещением контрола из пикера в поле и обратно.
-       * @param toPicker
-       * @private
-       */
-      _moveLinkCollection: function(toPicker) {
-         this._linkCollection.getContainer().detach().appendTo(toPicker ? this._pickerLinkList : this._linksWrapper);
       },
 
       _drawFieldLinkItemsCollection: function() {
@@ -303,21 +292,30 @@ define('js!SBIS3.CONTROLS.FieldLink',
             element: this._linksWrapper.find('.controls-FieldLink__linksContainer'),
             displayField: this._options.displayField,
             keyField: this._options.keyField,
+            parent: this,
             itemCheckFunc: this._checkItemBeforeDraw.bind(this),
             handlers: {
-               onDrawItems: this._updateInputWidth.bind(this),
-               onCrossClick: function(e, key){ self.removeItemsSelection([key]); }
+               /* После окончания отрисовки, обновим размеры поля ввода */
+               onDrawItems: this.updateInputWidth.bind(this),
+
+               /* При клике на крест, удалим ключ из выбранных */
+               onCrossClick: function(e, key){ self.removeItemsSelection([key]); },
+
+               /* При закрытии пикера надо скрыть кнопку удаления всех выбранных */
+               onClose: function() { self._dropAllLink.addClass('ws-hidden'); }
             }
          });
       },
 
-      /* Проверяет, нужно ли отрисовывать элемент или надо показать троеточие */
+      /**
+       * Проверяет, нужно ли отрисовывать элемент или надо показать троеточие
+       */
       _checkItemBeforeDraw: function(item) {
          var needDrawItem = false,
              inputWidth;
 
          /* Если элементы рисуются в пикере то ничего считать не надо */
-         if(this.isPickerVisible()) {
+         if(this._linkCollection.isPickerVisible()) {
             return true;
          }
 
@@ -337,20 +335,10 @@ define('js!SBIS3.CONTROLS.FieldLink',
          return needDrawItem
       },
 
-      _pickerChangeStateHandler: function(open) {
-         this._listContainer && this._listContainer.toggleClass('ws-hidden', open);
-         this._dropAllLink && this._dropAllLink.toggleClass('ws-hidden', !open);
-         this._pickerLinkList.toggleClass('ws-hidden', !open);
-         this._moveLinkCollection(open);
-         this._linkCollection.reload();
-      },
-
       /**
        * Конфигурация пикера
        */
       _setPickerConfig: function () {
-         var self = this;
-
          return {
             corner: 'bl',
             target: this._container,
@@ -363,45 +351,41 @@ define('js!SBIS3.CONTROLS.FieldLink',
             },
             horizontalAlign: {
                side: 'left'
-            },
-            handlers: {
-               onClose: function() {
-                  setTimeout(self._pickerChangeStateHandler.bind(self, false), 0);
-               }
             }
          };
       },
-
-      _setPickerContent: function () {
-         this._pickerLinkList = $('<div class="controls-FieldLink__picker-list"/>').appendTo(this._picker.getContainer().css('maxWidth', this._container[0].offsetWidth));
-         FieldLink.superclass._setPickerContent.apply(this, arguments);
-      },
-
-      _keyDownBind: function (e) {
-         switch (e.which) {
-            case $ws._const.key.del:
-               this.removeItemsSelectionAll();
-               break;
-            case $ws._const.key.backspace:
-               var selectedKeys = this.getSelectedKeys();
-               if(!this.getText()) {
-                  this.removeItemsSelection([selectedKeys[selectedKeys.length - 1]]);
-               }
-               break;
-         }
-         FieldLink.superclass._keyDownBind.apply(this, arguments);
-      },
-
+      /**
+       * Обрабатывает нажатие клавиш, специфичных для поля связи
+       */
       _keyUpBind: function(e) {
          FieldLink.superclass._keyUpBind.apply(this, arguments);
          switch (e.which) {
             case $ws._const.key.up:
             case $ws._const.key.down:
-            case $ws._const.key.enter:
                 /* Чтобы нормально работала навигация стрелками и не случалось ничего лишнего,
                    то запретим вспылтие события */
                if(this.isPickerVisible()) {
                   e.stopPropagation();
+               }
+               break;
+            case $ws._const.key.enter:
+               e.stopPropagation();
+               break;
+            case $ws._const.key.del:
+               this.removeItemsSelectionAll();
+               break;
+            case $ws._const.key.esc:
+               if(this.isPickerVisible() || this._linkCollection.isPickerVisible()) {
+                  this.hidePicker();
+                  this._linkCollection.hidePicker();
+                  e.stopPropagation();
+               }
+               break;
+            case $ws._const.key.backspace:
+               /* Нажатие на backspace должно удалять последние значение, если нет набранного текста */
+               var selectedKeys = this.getSelectedKeys();
+               if(!this.getText()) {
+                  this.removeItemsSelection([selectedKeys[selectedKeys.length - 1]]);
                }
                break;
          }
@@ -426,10 +410,9 @@ define('js!SBIS3.CONTROLS.FieldLink',
             INPUT_WRAPPER_PADDING);
       },
       /**
-       * Обновляет ширину поле ввода, после того как отрисовались выбранные элементы
-       * @private
+       * Обновляет ширину поля ввода
        */
-      _updateInputWidth: function() {
+      updateInputWidth: function() {
          this._checkWidth = true;
          this._inputField[0].style.width = this._getInputWidth() + 'px';
       },

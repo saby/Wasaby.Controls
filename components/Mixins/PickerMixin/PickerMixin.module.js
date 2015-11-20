@@ -116,11 +116,10 @@ define('js!SBIS3.CONTROLS.PickerMixin', ['js!SBIS3.CONTROLS.FloatArea'], functio
        * @see togglePicker
        */
       hidePicker: function() {
-         if (!this._picker) {
-            this._initializePicker();
+         if(this._picker) {
+            this._container.removeClass('controls-Picker__show');
+            this._picker.hide();
          }
-         this._container.removeClass('controls-Picker__show');
-         this._picker.hide();
       },
      /**
       * Метод изменяет состояние выпадающего блока на противоположное (скрывает/показывает).

@@ -3,6 +3,8 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
 ], function (PickerMixin) {
    'use strict';
 
+   var SUGGEST_PICKER_MIN_WIDTH = 150;
+
    /**
     * Миксин автодополнения. Позволяет навесить функционал автодополнения на любой контрол или набор контролов.
     * Управляет {@link list контролом списка сущностей}, реализующим определенный интерфейс.
@@ -233,9 +235,11 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
                   this._reloadList().addCallback(function() {
                      self._checkPickerState() ? self._showList() : self._hideList();
                   });
-                  break;
+                  return;
                }
             }
+            /* Если введено меньше символов чем указано в startChar, то скроем автодополнение */
+            self._hideList();
          }
       },
 
@@ -290,13 +294,13 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
 
          if (!this._list) {
             if ($ws.helpers.instanceOfMixin(this._options.list, 'SBIS3.CONTROLS.DSMixin')) {
-               //Готовый инстанс
+               /* Если передали в опции готовый инстанс, то ничего создавать не надо */
                this._list = this._options.list;
                this._initList();
                def.callback(this._list);
             } else {
                //Набор "Сделай сам"
-               require([this._options.list.component], function (ListControl) {
+               this._list = require([this._options.list.component], function (ListControl) {
                   var options = $ws.core.clone(self._options.list.options);
                   if (!options.element) {
                      options.element = self._getListContainer();
@@ -464,7 +468,7 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
        * @private
        */
       _checkPickerState: function () {
-         return !!(this._list && this._list.getDataSet().getCount());
+         return Boolean(this._options.usePicker && this._list && this._list.getDataSet().getCount());
       },
 
       _setPickerContent: function () {
@@ -474,15 +478,6 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
       showPicker: function () {
          if (this._options.usePicker) {
             PickerMixin.showPicker.apply(this, arguments);
-            this._setWidth();
-         }
-      },
-
-      _setWidth: function () {
-         if (this._picker._options.target) {
-            this._picker.getContainer().css({
-               'min-width': this._picker._options.target.outerWidth() - this._border
-            });
          }
       }
    };

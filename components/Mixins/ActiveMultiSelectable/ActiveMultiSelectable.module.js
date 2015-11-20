@@ -20,7 +20,7 @@ define('js!SBIS3.CONTROLS.ActiveMultiSelectable', ['js!SBIS3.CONTROLS.Data.Colle
       $protected: {
          _options: {
             /**
-             * @cfg {String[]} Массив выбранных записей
+             * @cfg {String[]} Набор выбранных записей
              */
             selectedItems : undefined
          }
@@ -57,9 +57,11 @@ define('js!SBIS3.CONTROLS.ActiveMultiSelectable', ['js!SBIS3.CONTROLS.Data.Colle
       }),
 
       /**
-       * Возвращает deferred, рузельтатом которого будет коллекция выделенных элементов
+       * Возвращает набор выбранных элементов
+       * @param loadItems загружать ли записи
+       * @returns {*}
        */
-      getSelectedItems: function() {
+      getSelectedItems: function(loadItems) {
          var selKeys = this.getSelectedKeys(),
              selItems = this._getSelectedItems(),
              loadKeysArr = [],
@@ -68,6 +70,10 @@ define('js!SBIS3.CONTROLS.ActiveMultiSelectable', ['js!SBIS3.CONTROLS.Data.Colle
              dMultiResult, item;
 
          this._syncSelectedItems();
+
+         if(!loadItems) {
+            return selItems;
+         }
 
          /* Сфоримруем из массива выбранных записей, массив ключей этих записей */
          selItems.each(function(rec){
