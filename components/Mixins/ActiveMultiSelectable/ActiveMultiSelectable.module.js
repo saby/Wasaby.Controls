@@ -47,15 +47,9 @@ define('js!SBIS3.CONTROLS.ActiveMultiSelectable', ['js!SBIS3.CONTROLS.Data.Colle
                self._options.selectedKeys.push(rec.getId());
             });
 
-            if (this._checkEmptySelection()) {
-               this._setFirstItemAsSelected();
-            }
-
-            this._notifySelectedItems(this._options.selectedKeys);
-            this._drawSelectedItems(this._options.selectedKeys);
+	         this._afterSelectionHandler();
          }
       }),
-
       /**
        * Возвращает набор выбранных элементов
        * @param loadItems загружать ли записи

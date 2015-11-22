@@ -165,19 +165,19 @@ define('js!SBIS3.CONTROLS.FieldLink',
                    handlers: {
                       onChange: function(event, selectedRecords) {
                          var keys = [],
+	                          selItems = this.getSelectedItems(),
                              rec;
 
                          if(selectedRecords[0] !== null) {
-                            self._options.selectedItems.fill();
+	                         selItems.fill();
                             for (var i = 0, len = selectedRecords.length; i < len; i++) {
                                rec = recordConverter(selectedRecords[i]);
-                               self._options.selectedItems.add(rec);
+	                            selItems.add(rec);
                                keys.push(rec.getId());
                             }
                             self.setSelectedKeys(keys);
-                            self._notifyOnPropertyChanged('selectedKeys');
-                            this.close();
                          }
+	                      this.close();
                       }
                    }
                 },
@@ -261,9 +261,10 @@ define('js!SBIS3.CONTROLS.FieldLink',
        * Обработчик на выбор записи в автодополнении
        * @private
        */
-      _onListItemSelect: propertyUpdateWrapper(function(id) {
+      _onListItemSelect: propertyUpdateWrapper(function(id, item) {
          this.hidePicker();
          this.setText('');
+	      this._options.selectedItems.add(item);
          this.addItemsSelection([id]);
       }),
 
@@ -383,16 +384,20 @@ define('js!SBIS3.CONTROLS.FieldLink',
                   e.stopPropagation();
                }
                break;
-
-            /* Нажатие на backspace должно удалять последние значение, если нет набранного текста */
-            case $ws._const.key.backspace:
-               var selectedKeys = this.getSelectedKeys();
-               if(!this.getText()) {
-                  this.removeItemsSelection([selectedKeys[selectedKeys.length - 1]]);
-               }
-               break;
          }
       },
+	   _keyDownBind: function(e) {
+		   FieldLink.superclass._keyDownBind.apply(this, arguments);
+		   switch (e.which) {
+			   /* Нажатие на backspace должно удалять последние значение, если нет набранного текста */
+			   case $ws._const.key.backspace:
+				   var selectedKeys = this.getSelectedKeys();
+				   if(!this.getText()) {
+					   this.removeItemsSelection([selectedKeys[selectedKeys.length - 1]]);
+				   }
+				   break;
+		   }
+	   },
 
       /**
        * Скрывает/показывает кнопку показа всех записей
