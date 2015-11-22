@@ -153,6 +153,7 @@ define('js!SBIS3.CONTROLS.NumberTextBox', ['js!SBIS3.CONTROLS.TextBox', 'html!SB
          if (this._options.numericValue) {
             this._options.text = this._options.numericValue + '';
          }
+         console.log('test');
          this._options.text = this._formatText(this._options.text);
          this._inputField.val(this._options.text);
       },
@@ -307,7 +308,7 @@ define('js!SBIS3.CONTROLS.NumberTextBox', ['js!SBIS3.CONTROLS.TextBox', 'html!SB
                if (dotPosition == this._options.integers + spaceCount || (dotPosition == -1 && currentVal.length - spaceCount == this._options.integers)){
                   return;
                }
-               (this._options.delimiters && this._getIntegersCount(currentVal) % 3 == 0) ? newCaretPosition+=2 : newCaretPosition++;
+               (this._options.delimiters && this._getIntegersCount(currentVal) % 3 == 0 && currentVal.length) ? newCaretPosition+=2 : newCaretPosition++;
                currentVal = currentVal.substr(0, b) + symbol + currentVal.substr(e);
             } else {
                currentVal = currentVal.substr(0, b) + symbol + currentVal.substr(e);
