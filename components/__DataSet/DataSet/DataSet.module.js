@@ -251,7 +251,7 @@ define('js!SBIS3.CONTROLS.DataSet', [
                this._prepareRecordForAdd(toAdd[i]);
                this.getStrategy().addRecord(this._rawData, toAdd[i], at);
 
-               if (at) {
+               if (at !== undefined && at >= 0) {
                   this._indexId.splice(at + i, 0, toAdd[i].getKey() || toAdd[i]._cid);
                } else {
                   this._indexId.push(toAdd[i].getKey() || toAdd[i]._cid);
@@ -268,7 +268,16 @@ define('js!SBIS3.CONTROLS.DataSet', [
       // рекорд будет пропущен, только если не передана опция {merge: true}, в этом случае атрибуты
       // будут совмещены в существующий рекорд
       _addRecords: function (records, options) {
-         this._setRecords(records, $ws.core.merge($ws.core.merge({merge: false}, options), addOptions));
+         this._setRecords(
+            records,
+            $ws.core.merge(
+               $ws.core.merge(
+                  {merge: false},
+                  options
+               ),
+               addOptions
+            )
+         );
       },
 
       /**
@@ -316,7 +325,10 @@ define('js!SBIS3.CONTROLS.DataSet', [
        * @param at - позиция на которую нужно установить новый рекорд, если не задана то добавит в конец
        */
       insert: function (record, at) {
-         this._addRecords(record, {at: at});
+         this._addRecords(record, {
+            at: at,
+            merge: true
+         });
       },
       /**
        * Устанавливает данные в DataSet.
