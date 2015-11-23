@@ -102,8 +102,8 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', ['js!SBIS3.CORE.Control'], function (Con
       },
 
       _createTreeFilter: function(key) {
-         var 
-            filter = $ws.core.clone(this._filter) || {};
+         var
+            filter = $ws.core.clone(this.getFilter()) || {};
          if (this._options.expand) {
             filter['Разворот'] = 'С разворотом';
             filter['ВидДерева'] = 'Узлы и листья';
