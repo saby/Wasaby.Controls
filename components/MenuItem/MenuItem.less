@@ -10,9 +10,6 @@
   padding: @menu-item-default-padding;
   color: @menu-item-text-color;
   background: @menu-item-bg;
-   &.ws-disabled {
-      color: @menu-item-disabled-text-color;
-   }
 
   &:hover {
     color: @menu-item-hover-text-color;
@@ -46,6 +43,12 @@
   }
 }
 
-.ws-disabled .controls-MenuItem__text {
-   color: @menu-item-disabled-text-color;
+.ws-disabled {
+   &.controls-MenuItem {
+      color: @menu-item-disabled-text-color;
+      background: transparent;
+   }
+   &.controls-MenuItem:hover .controls-MenuItem__icon {
+      color: @menu-item-disabled-text-color !important;
+   }
 }
