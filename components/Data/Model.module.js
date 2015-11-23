@@ -168,7 +168,7 @@ define('js!SBIS3.CONTROLS.Data.Model', [
          this.setRawData(this._options.data, true);
       },
 
-      // region SBIS3.CONTROLS.Data.SerializableMixin
+      // region SBIS3.CONTROLS.Data.ISerializable
 
       _getSerializableState: function() {
          return $ws.core.merge(
@@ -182,7 +182,7 @@ define('js!SBIS3.CONTROLS.Data.Model', [
          );
       },
 
-      // endregion SBIS3.CONTROLS.Data.SerializableMixin
+      // endregion SBIS3.CONTROLS.Data.ISerializable
 
       // region SBIS3.CONTROLS.Data.IPropertyAccess
 

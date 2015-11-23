@@ -73,7 +73,7 @@ define('js!SBIS3.CONTROLS.Record', [
          this._cid = $ws.helpers.randomId('c');
       },
 
-      // region SBIS3.CONTROLS.Data.SerializableMixin
+      // region SBIS3.CONTROLS.Data.ISerializable
 
       _getSerializableState: function() {
          return $ws.core.merge(
@@ -88,7 +88,7 @@ define('js!SBIS3.CONTROLS.Record', [
          );
       },
 
-      // endregion SBIS3.CONTROLS.Data.SerializableMixin
+      // endregion SBIS3.CONTROLS.Data.ISerializable
 
       clone: function() {
          return new Record($ws.core.clone(this._options));

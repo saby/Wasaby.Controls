@@ -80,7 +80,7 @@ define('js!SBIS3.CONTROLS.DataSet', [
          this.setMetaData(this._options.meta);
       },
 
-      // region SBIS3.CONTROLS.Data.SerializableMixin
+      // region SBIS3.CONTROLS.Data.ISerializable
 
       _getSerializableState: function() {
          return $ws.core.merge(
@@ -93,7 +93,7 @@ define('js!SBIS3.CONTROLS.DataSet', [
          );
       },
 
-      // endregion SBIS3.CONTROLS.Data.SerializableMixin
+      // endregion SBIS3.CONTROLS.Data.ISerializable
 
       /**
        * Метод удаления записи. Помечает запись как удаленную. Реальное удаление записи из источника будет выполнено только после вызова метода sync на датасорсе.
