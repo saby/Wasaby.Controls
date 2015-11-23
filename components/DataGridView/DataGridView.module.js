@@ -711,6 +711,12 @@ define('js!SBIS3.CONTROLS.DataGridView',
          return this._headTpl(rowData);
       },
 
+      _getItemActionsPosition: function(hoveredItem){
+         var position = DataGridView.superclass._getItemActionsPosition.call(this, hoveredItem);
+         position.right = 0;
+         return position;
+      },
+
       _showItemActions: function(item) {
          if(!this.isNowScrollingPartScroll()) {
             DataGridView.superclass._showItemActions.call(this, item);
