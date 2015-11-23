@@ -2,22 +2,24 @@
  * Created by as.manuylov on 10.11.14.
  */
 define('js!SBIS3.CONTROLS.Record', [
+   'js!SBIS3.CONTROLS.Data.ISerializable',
    'js!SBIS3.CONTROLS.Data.SerializableMixin',
    'js!SBIS3.CONTROLS.ArrayStrategy',
    'js!SBIS3.CONTROLS.DataFactory'
-], function (SerializableMixin, ArrayStrategy, DataFactory) {
+], function (ISerializable, SerializableMixin, ArrayStrategy, DataFactory) {
    'use strict';
 
    /**
     * Класс для работы с одной записью
     * @class SBIS3.CONTROLS.Record
     * @extends $ws.proto.Abstract
+    * @mixes SBIS3.CONTROLS.Data.ISerializable
     * @mixes SBIS3.CONTROLS.Data.SerializableMixin
     * @public
     * @author Крайнов Дмитрий Олегович
     */
 
-   var Record =  $ws.proto.Abstract.extend([SerializableMixin], /** @lends SBIS3.CONTROLS.Record.prototype */{
+   var Record =  $ws.proto.Abstract.extend([ISerializable, SerializableMixin], /** @lends SBIS3.CONTROLS.Record.prototype */{
       _moduleName: 'SBIS3.CONTROLS.Record',
       $protected: {
          /**

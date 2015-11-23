@@ -1,14 +1,16 @@
 define('js!SBIS3.CONTROLS.DataSet', [
+   'js!SBIS3.CONTROLS.Data.ISerializable',
    'js!SBIS3.CONTROLS.Data.SerializableMixin',
    'js!SBIS3.CONTROLS.ArrayStrategy',
    'js!SBIS3.CONTROLS.DataFactory'
-], function (SerializableMixin, ArrayStrategy) {
+], function (ISerializable, SerializableMixin, ArrayStrategy) {
    'use strict';
 
    /**
     * Класс для работы с набором записей.
     * @class SBIS3.CONTROLS.DataSet
     * @extends $ws.proto.Abstract
+    * @mixes SBIS3.CONTROLS.Data.ISerializable
     * @mixes SBIS3.CONTROLS.Data.SerializableMixin
     * @public
     * @author Крайнов Дмитрий Олегович
@@ -29,7 +31,7 @@ define('js!SBIS3.CONTROLS.DataSet', [
     */
    var addOptions = {add: true, remove: false};
 
-   var DataSet = $ws.proto.Abstract.extend([SerializableMixin], /** @lends SBIS3.CONTROLS.DataSet.prototype */{
+   var DataSet = $ws.proto.Abstract.extend([ISerializable, SerializableMixin], /** @lends SBIS3.CONTROLS.DataSet.prototype */{
       _moduleName: 'SBIS3.CONTROLS.DataSet',
       $protected: {
          _indexTree: {},
