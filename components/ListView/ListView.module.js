@@ -417,8 +417,7 @@ define('js!SBIS3.CONTROLS.ListView',
           */
          _mouseMoveHandler: function (e) {
             var $target = $(e.target),
-                target,
-                targetKey;
+                target, targetKey, hoveredItemClone;
 
             target = this._findItemByElement($target);
 
@@ -428,8 +427,12 @@ define('js!SBIS3.CONTROLS.ListView',
                   this._hoveredItem.container && this._hoveredItem.container.removeClass('controls-ListView__hoveredItem');
                   target.addClass('controls-ListView__hoveredItem');
                   this._hoveredItem = this._getElementData(target);
-                  this._notify('onChangeHoveredItem', this._hoveredItem);
-                  this._onChangeHoveredItem(this._hoveredItem);
+
+                  /* Надо делать клон и отдавать наружу только клон объекта, иначе,
+                     если его кто-то испортит, испортится он у всех, в том числе и у нас */
+                  hoveredItemClone = $ws.core.clone(this._hoveredItem);
+                  this._notify('onChangeHoveredItem', hoveredItemClone);
+                  this._onChangeHoveredItem(hoveredItemClone);
                }
             } else if (!this._isHoverControl($target)) {
                this._mouseLeaveHandler();
@@ -544,26 +547,31 @@ define('js!SBIS3.CONTROLS.ListView',
          /* +++++++++++++++++++++++++++ */
 
          _elemClickHandler: function (id, data, target) {
-            var $target = $(target),
+            var
+               res,
+               $target = $(target),
                elClickHandler = this._options.elemClickHandler;
 
             this.setSelectedKey(id);
+            var handler = function() {
+               res = this._notify('onItemClick', id, data, target);
+               if (res !== false) {
+                  this._elemClickHandlerInternal(data, id, target);
+                  elClickHandler && elClickHandler.call(this, id, data, target);
+               }
+            }.bind(this);
             if (this._options.multiselect) {
                //TODO: оставить только js класс
                if ($target.hasClass('js-controls-ListView__itemCheckBox') || $target.hasClass('controls-ListView__itemCheckBox')) {
                   this.toggleItemsSelection([$target.closest('.controls-ListView__item').attr('data-id')]);
                }
                else {
-                  this._notify('onItemClick', id, data, target);
-                  this._elemClickHandlerInternal(data, id, target);
-                  elClickHandler && elClickHandler.call(this, id, data, target);
+                  handler();
                }
             }
             else {
                this.setSelectedKeys([id]);
-               this._notify('onItemClick', id, data, target);
-               this._elemClickHandlerInternal(data, id, target);
-               elClickHandler && elClickHandler.call(this, id, data, target);
+               handler();
             }
          },
 
@@ -1183,8 +1191,10 @@ define('js!SBIS3.CONTROLS.ListView',
           * @param {Number} [offset] - если передать, то номер страницы рассчитается от него
           */
          getPage: function (offset) {
-            var offset = offset || this._offset;
-            return Math.ceil(offset / this._options.pageSize);
+            var offset = offset || this._offset,
+                more = this._dataSet.getMetaData().more;
+            //Если offset отрицательный, значит запросили последнюю страницу.
+            return Math.ceil((offset < 0 ? more + offset : offset) / this._options.pageSize);
          },
          _updateOffset: function () {
             var more = this._dataSet.getMetaData().more,
