@@ -28,7 +28,7 @@ define('js!SBIS3.CONTROLS.Image',
           * <component data-component='SBIS3.CONTROLS.Image' style='width: 100px; height: 100px'>
           * </component>
           */
-         Image = CompoundControl.extend({/** @lends SBIS3.CONTROLS.Image.prototype */
+         Image = CompoundControl.extend(/** @lends SBIS3.CONTROLS.Image.prototype */{
             _dotTplFn : dotTplFn,
             $protected: {
                _options: {
