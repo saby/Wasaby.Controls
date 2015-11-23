@@ -114,10 +114,16 @@ define('js!SBIS3.CONTROLS.ItemActionsGroup',
                closeByExternalClick: true,
                handlers: {
                   onClose: function() {
-                     var hoveredItem = self.getParent().getHoveredItem().container;
+                     var hoveredItem = self.getParent().getHoveredItem();
                      self._itemActionsMenuVisible = false;
-                     this._activeItem.container.removeClass('controls-ItemActions__activeItem');
-                     self[hoveredItem ? 'showItemActions' : 'hideItemActions'](hoveredItem);
+                     self._activeItem.container.removeClass('controls-ItemActions__activeItem');
+
+                     if (self._touchActions) {
+                        self._container[0].style.visibility = 'visible';
+                        self.hideItemActions();
+                     } else {
+                        self[hoveredItem.container ? 'showItemActions' : 'hideItemActions'](hoveredItem);
+                     }
                   },
                   onMenuItemActivate: function(e, id) {
                      self._itemActivatedHandler(id);
@@ -148,16 +154,12 @@ define('js!SBIS3.CONTROLS.ItemActionsGroup',
          _onBeforeMenuShowHandler: function() {
             var menuInstances = this._itemActionsMenu.getItemsInstances(),
                 itemActionsInstances = this.getItemsInstances();
+
             if (this._touchActions){
                //Нельзя сделать hide так как display:none ломает позиционирование меню
-               var cont = this._container[0],
-                  self = this;
-               cont.style.visibility = 'hidden';
-               this._itemActionsMenu.subscribe('onClose', function(){
-                  cont.style.visibility = 'visible';
-                  self.hideItemActions();
-               });
+               this._container[0].style.visibility = 'hidden';
             }
+
             for(var i in menuInstances) {
                if(menuInstances.hasOwnProperty(i)) {
                   menuInstances[i].getContainer()[itemActionsInstances.hasOwnProperty(i) && itemActionsInstances[i].isVisible() ? 'show' : 'hide']();
@@ -168,20 +170,28 @@ define('js!SBIS3.CONTROLS.ItemActionsGroup',
           * Показывает операции над записью
           */
          showItemActions: function(hoveredItem, position) {
-            this._activeItem = hoveredItem;
-            this._container[0].style.right = position.right + 'px';
-            this._container[0].style.display = 'block';
-            if (this._touchActions){
-               var width = this._container.width(),
-                  height = $(hoveredItem.container).outerHeight(),
-                  itemsContainer = this._getItemsContainer();
+            var cont = this._container[0];
 
-               itemsContainer[0].style.right = - width + 'px';
-               this._container.height(height);
-            	itemsContainer.animate({right : 0}, 350);
+            this._activeItem = hoveredItem;
+            cont.style.right = position.right + 'px';
+            cont.style.display = 'block';
+
+            if (this._touchActions){
+               var contHeight = cont.offsetHeight,
+                   itemHeight = hoveredItem.size.height,
+                   itemsContainer = this._getItemsContainer();
+
+               if (contHeight < itemHeight){
+                  position.top -=  itemHeight - contHeight;
+               }
+
+               itemsContainer[0].style.right = - cont.offsetWidth + 'px';
+               cont.style.height = itemHeight + 'px';
+               itemsContainer.animate({right : position.right}, 350);
             }
-            this._container[0].style.top = position.top + 'px';
-        	},
+
+            cont.style.top = position.top + 'px';
+         },
          /***
           * Задаёт новые операции над записью
           * Как в меню, так и на строке
