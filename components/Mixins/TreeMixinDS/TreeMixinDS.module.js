@@ -28,13 +28,15 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', ['js!SBIS3.CORE.Control'], function (Con
       },
 
       $constructor : function() {
+         var 
+            filter = this.getFilter() || {};
          this._publish('onNodeDataLoad');
-         this._filter = this._filter || {};
-         delete (this._filter[this._options.hierField]);
+         delete (filter[this._options.hierField]);
          if (this._options.expand) {
-            this._filter['Разворот'] = 'С разворотом';
-            this._filter['ВидДерева'] = 'Узлы и листья';
+            filter['Разворот'] = 'С разворотом';
+            filter['ВидДерева'] = 'Узлы и листья';
          }
+         this.setFilter(filter, true);
       },
 
       _getRecordsForRedraw: function() {
@@ -72,7 +74,7 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', ['js!SBIS3.CORE.Control'], function (Con
          delete(this._options.openedPath[key]);
          this._nodeClosed(key);
       },
-      
+
       //Рекурсивно удаляем из индекса открытых узлов все дочерние узлы закрываемого узла
       _collapseChilds: function(key){
          var tree = this._dataSet._indexTree;
@@ -100,13 +102,14 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', ['js!SBIS3.CORE.Control'], function (Con
       },
 
       _createTreeFilter: function(key) {
-         var filter = $ws.core.clone(this._filter) || {};
+         var 
+            filter = $ws.core.clone(this._filter) || {};
          if (this._options.expand) {
-            this._filter = this._filter || {};
             filter['Разворот'] = 'С разворотом';
             filter['ВидДерева'] = 'Узлы и листья';
          }
          filter[this._options.hierField] = key;
+         this.setFilter(filter, true);
          return filter;
       },
 
@@ -197,13 +200,7 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', ['js!SBIS3.CORE.Control'], function (Con
       _folderLoad: function(id) {
          var
             self = this,
-            filter;
-         if (id) {
-            filter = this._createTreeFilter(id);
-         }
-         else {
-            filter = this._filter;
-         }
+            filter = id ? this._createTreeFilter(id) : this.getFilter();
          this._loader = this._dataSource.query(filter, this._sorting, (id ? this._folderOffsets[id] : this._folderOffsets['null']) + this._limit, this._limit).addCallback(function (dataSet) {
             //ВНИМАНИЕ! Здесь стрелять onDataLoad нельзя! Либо нужно определить событие, которое будет
             //стрелять только в reload, ибо между полной перезагрузкой и догрузкой данных есть разница!
