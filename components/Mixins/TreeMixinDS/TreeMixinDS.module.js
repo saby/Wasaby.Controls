@@ -28,7 +28,7 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', ['js!SBIS3.CORE.Control'], function (Con
       },
 
       $constructor : function() {
-         var 
+         var
             filter = this.getFilter() || {};
          this._publish('onNodeDataLoad');
          delete (filter[this._options.hierField]);
