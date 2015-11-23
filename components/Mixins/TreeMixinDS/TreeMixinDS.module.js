@@ -260,7 +260,7 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', ['js!SBIS3.CORE.Control'], function (Con
             this._folderOffsets['null'] = 0;
          },
          _dataLoadedCallback: function () {
-            this._options.openedPath = {};
+            //this._options.openedPath = {};
             this._dataSet._reindexTree(this._options.hierField);
             if (this._options.expand) {
                var tree = this._dataSet._indexTree;
@@ -298,9 +298,6 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', ['js!SBIS3.CORE.Control'], function (Con
             }
          }
       }
-
-
-
    };
     
    var TreePagingLoader = Control.Control.extend({
