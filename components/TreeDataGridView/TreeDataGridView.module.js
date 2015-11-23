@@ -289,7 +289,14 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
          if (this._options.allowEnterToFolder){
             if ($(target).hasClass('js-controls-TreeView__editArrow')) {
                if (this._options.arrowActivatedHandler) {
-                  this._options.arrowActivatedHandler.apply(this, arguments);
+
+                  //TODO оставляем для совеместимости с номенклатурой
+                  if (this._options.arrowActivatedHandler instanceof Function) {
+                     this._options.arrowActivatedHandler.apply(this, arguments);
+                  }
+                  else {
+                     this._activateItem(id);
+                  }
                }
             } else if (data.get(this._options.hierField + '@')) {
                this.setCurrentRoot(nodeID);

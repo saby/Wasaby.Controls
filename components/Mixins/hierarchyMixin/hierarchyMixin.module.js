@@ -186,6 +186,19 @@ define('js!SBIS3.CONTROLS.hierarchyMixin', [], function () {
          var root = this._options.root;
          this._pageSaver = {};
          this._pageSaver[root] = 0;
+      },
+
+      //Переопределяем метод, чтоб передать тип записи
+      _activateItem : function(id) {
+         var
+            item = this._dataSet.getRecordByKey(id),
+            meta = {
+               id: id,
+               item: item,
+               hierField : this._options.hierField
+            };
+
+         this._notify('onItemActivate', meta);
       }
 
    };
