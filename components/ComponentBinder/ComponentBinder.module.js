@@ -78,7 +78,7 @@ define('js!SBIS3.CONTROLS.ComponentBinder', [], function () {
       delete (filter[searchParamName]);
 
       view.setInfiniteScroll(false, true);
-      view.setGroupBy({});
+      view.setGroupBy(this._lastGroup);
       view.setHighlightText('', false);
       this._firstSearch = true;
       if (this._searchReload ) {
@@ -138,6 +138,7 @@ define('js!SBIS3.CONTROLS.ComponentBinder', [], function () {
          _searchReload : true,
          _searchForm : undefined,
          _lastRoot : undefined,
+         _lastGroup: {},
          _currentRoot: null,
          _pathDSRawData : [],
          _firstSearch: true,
@@ -198,6 +199,7 @@ define('js!SBIS3.CONTROLS.ComponentBinder', [], function () {
             });
          }
 
+         this._lastGroup = view._options.groupBy;
          searchForm.subscribe('onTextChange', function(event, text){
             var checkedText = isSearchValid(text, 3);
             if (checkedText[1]) {
