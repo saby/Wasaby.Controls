@@ -33,9 +33,11 @@ define('js!SBIS3.CONTROLS.hierarchyMixin', [], function () {
          }
       },
       $constructor: function () {
+         var
+            filter = this.getFilter() || {};
          this._curRoot = this._options.root;
-         this._filter = this._filter || {};
-         this._filter[this._options.hierField] = this._options.root;
+         filter[this._options.hierField] = this._options.root;
+         this.setFilter(filter, true);
       },
 
       setHierField: function (hierField) {
@@ -127,9 +129,10 @@ define('js!SBIS3.CONTROLS.hierarchyMixin', [], function () {
        * @param {String} key Идентификатор раскрываемого узла
        */
       setCurrentRoot: function(key) {
-         var filter = this._filter || {};
+         var
+            filter = this.getFilter() || {};
          filter[this._options.hierField] = key;
-         this._filter = filter;
+         this.setFilter(filter, true);
          this._hier = this._getHierarchy(this._dataSet, key);
          //узел грузим с 0-ой страницы
          this._offset = 0;
