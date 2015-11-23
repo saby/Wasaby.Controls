@@ -115,7 +115,13 @@ define('js!SBIS3.CONTROLS.FieldLink',
              * @cfg {Boolean} Поддерживать старые представления данных
              * Данная опция требуется, если на диалоге выбора лежат старое представление данных.
              */
-            oldViews: false
+            oldViews: false,
+            /**
+             * @cfg {Boolean} Не скрывать поле ввода после выбора
+             * @remark
+             * Актуально для поля связи с единичным выбором (Например чтобы записать что-то в поле контекста)
+             */
+            alwaysShowTextBox: true
          }
       },
 
@@ -286,7 +292,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
          }
 
          /* Нужно поле делать невидимым, а не скрывать, чтобы можно было посчитать размеры */
-         if(!this._options.multiselect) {
+         if(!this._options.multiselect && !this._options.alwaysShowTextBox) {
             this._inputWrapper.toggleClass('ws-invisible', Boolean(keysArrLen))
          }
 
@@ -297,6 +303,14 @@ define('js!SBIS3.CONTROLS.FieldLink',
          } else {
             self._linkCollection.setItems(this.getSelectedItems());
          }
+      },
+
+      setListFilter: function() {
+         /* Если единичный выбор в поле связи, но textBox всё равно показывается(включена опция), запрещаем работу suggest'a */
+         if(!this._options.multiselect && this.getSelectedItems().getCount() && this._options.alwaysShowTextBox) {
+            return;
+         }
+         FieldLink.superclass.setListFilter.apply(this, arguments);
       },
 
       _drawFieldLinkItemsCollection: function() {

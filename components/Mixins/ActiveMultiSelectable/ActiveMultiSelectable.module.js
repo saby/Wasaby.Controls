@@ -40,10 +40,10 @@ define('js!SBIS3.CONTROLS.ActiveMultiSelectable', ['js!SBIS3.CONTROLS.Data.Colle
          var self = this;
 
          if($ws.helpers.instanceOfModule(list, 'SBIS3.CONTROLS.Data.Collection.List')) {
-            this._options.selectedItems = list;
+            this._options.selectedItems = this._options.multiselect ? list : list.getCount() > 1 ? new List({items: [list.at(0)]}) : list;
             this._options.selectedKeys = [];
 
-            list.each(function(rec) {
+            this._options.selectedItems.each(function(rec) {
                self._options.selectedKeys.push(rec.getId());
             });
 
