@@ -13,7 +13,17 @@ define('js!SBIS3.CONTROLS.FastDataFilter',
    function(CompoundControl, DSMixin, FilterMixin, DropdownList, dotTplFn) {
 
       'use strict';
-
+      /**
+       * Контрол, отображающий набор выпадающих списков SBIS3.CONTROLS.DropdownList и работающий с фильтром в контексте
+       * @class SBIS3.CONTROLS.FastDataFilter
+       * @extends $ws.proto.Control
+       * @author Крайнов Дмитрий Олегович
+       * @mixes SBIS3.CONTROLS.DSMixin
+       * @mixes SBIS3.CONTROLS.FilterMixin
+       * @demo SBIS3.CONTROLS.Demo.MyFastDataFilter Работа с данными
+       * @control
+       * @public
+       */
       var FastDataFilter = CompoundControl.extend([FilterMixin, DSMixin],{
          $protected: {
             _dotTplFn: dotTplFn,
