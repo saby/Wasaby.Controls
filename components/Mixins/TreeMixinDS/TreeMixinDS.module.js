@@ -122,17 +122,15 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', ['js!SBIS3.CORE.Control'], function (Con
          return this._options.openedPath;
       },
 
-      _drawItemsFolder: function(record){
-         var targetContainer = this._getTargetContainer(record);
-         if (targetContainer) {
-            if (this._options.displayType == 'folders') {
-               if (record.get(this._options.hierField + '@')) {
-                  this._drawItem(record, targetContainer);
-               }
+      _drawLoadedNode: function(key){
+         var child = this._dataSet.getTreeIndex(this._options.hierField)[key];
+         this._drawExpandedNode(key);
+         if (child){
+            var records = []; 
+            for (var i = 0; i < child.length; i++){
+               records.push(this._dataSet.getRecordByKey(child[i]));
             }
-            else {
-               this._drawItem(record, targetContainer);
-            }
+            this._drawItemsFolder(records);
          }
       },
 
