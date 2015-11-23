@@ -1,4 +1,4 @@
-define('js!SBIS3.CONTROLS.OpenDialogAction', ['js!SBIS3.CONTROLS.ActionBase', 'js!SBIS3.CORE.Dialog'], function(ActionBase, Dialog){
+define('js!SBIS3.CONTROLS.OpenDialogAction', ['js!SBIS3.CONTROLS.ActionBase', 'js!SBIS3.CORE.Dialog', 'js!SBIS3.CORE.FloatArea'], function(ActionBase, Dialog, FloatArea){
    'use strict';
 
    /**
@@ -28,24 +28,45 @@ define('js!SBIS3.CONTROLS.OpenDialogAction', ['js!SBIS3.CONTROLS.ActionBase', 'j
    var OpenDialogAction = ActionBase.extend(/** @lends SBIS3.CONTROLS.OpenDialogAction.prototype */{
       $protected : {
          _options : {
-            dialogComponent : ''
+            /**
+             * @cfg {String}
+             * Компонент который будет отображен для редактирования
+             */
+            dialogComponent : '',
+            /**
+             * @cfg {String}
+             * @variant dialog в новом диалоге
+             * @variant floatArea во всплывающей панели
+             * Режим отображения компонента редактирования - в диалоге или панели
+             */
+            mode: 'dialog'
          }
       },
+
       execute : function(meta) {
-         this._openDialog(meta, this._options.dialogComponent);
+         this._opendEditComponent(meta, this._options.dialogComponent);
       },
 
-      _openDialog: function(meta, dialogComponent) {
-         var
-            self = this,
-            dlg = new Dialog({
+      _opendEditComponent: function(meta, dialogComponent, mode){
+         var self = this,
+            config = {
                template: dialogComponent,
                componentOptions : {
                   key : meta.id,
                   initValues : meta.filter
                }
-            });
-         dlg.subscribe('onAfterClose', function(e, flag){
+            }, 
+            Component;
+
+         mode = mode || this._options.mode;
+         if (mode == 'dialog'){
+            Component = Dialog;
+         } else {
+            Component = FloatArea;
+            config.isStack = true;
+         }
+         
+         new Component(config).subscribe('onAfterClose', function(e, flag){
             if (flag === true) {
                self._notifyOnExecuted();
             }
