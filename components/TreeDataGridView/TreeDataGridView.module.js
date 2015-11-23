@@ -330,7 +330,6 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
             this.setSelectedKey(id);
             this.setCurrentElement(e, this._getDragItems(id));
          }
-         e.preventDefault();
       },
       _callMoveOutHandler: function() {
       },
