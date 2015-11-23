@@ -3,7 +3,7 @@ define('js!SBIS3.CONTROLS.Data.ISerializable', [], function () {
    'use strict';
 
    /**
-    * Интерфейс сериализуемых экземпляров классов
+    * Интерфейс сериализуемых объектов
     * @mixin SBIS3.CONTROLS.Data.ISerializable
     * @public
     * @author Мальцев Алексей

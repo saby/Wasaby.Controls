@@ -473,6 +473,20 @@ define(
                assert.strictEqual(3, list.getCount());
             });
          });
+
+         describe('.toJSON()', function () {
+            it('should serialize a list', function () {
+               var list = new List({
+                     items: items
+                  }),
+                  json = list.toJSON();
+               assert.strictEqual(json.module, 'SBIS3.CONTROLS.Data.Collection.List');
+               assert.isNumber(json.instance);
+               assert.isTrue(json.instance > 0);
+               assert.deepEqual(json.state._options, list._options);
+               assert.deepEqual(json.state._items, list._items);
+            });
+         });
       });
    }
 );

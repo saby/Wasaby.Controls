@@ -4,7 +4,7 @@ define('js!SBIS3.CONTROLS.Data.SerializableMixin', [
    'use strict';
 
    /**
-    * Миксин, позволяющий сериализовать экземпляры классов
+    * Миксин, позволяющий сериализовать объекты
     * @mixin SBIS3.CONTROLS.Data.SerializableMixin
     * @public
     * @author Мальцев Алексей
