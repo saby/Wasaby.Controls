@@ -40,11 +40,19 @@ define('js!SBIS3.CONTROLS.OpenDialogAction', ['js!SBIS3.CONTROLS.ActionBase', 'j
              * Режим отображения компонента редактирования - в диалоге или панели
              */
             mode: 'dialog'
-         }
+         } 
       },
 
       execute : function(meta) {
          this._opendEditComponent(meta, this._options.dialogComponent);
+      },
+
+      _openDialog: function(meta, dialogComponent){
+         this._opendEditComponent(meta, dialogComponent, 'dialog');
+      },
+
+      _openFloatArea: function(meta, dialogComponent){
+         this._opendEditComponent(meta, dialogComponent, 'floatArea');
       },
 
       _opendEditComponent: function(meta, dialogComponent, mode){
@@ -59,11 +67,11 @@ define('js!SBIS3.CONTROLS.OpenDialogAction', ['js!SBIS3.CONTROLS.ActionBase', 'j
             Component;
 
          mode = mode || this._options.mode;
-         if (mode == 'dialog'){
-            Component = Dialog;
-         } else {
+         if (mode == 'floatArea'){
             Component = FloatArea;
             config.isStack = true;
+         } else if (mode == 'dialog'){
+            Component = Dialog;
          }
          
          new Component(config).subscribe('onAfterClose', function(e, flag){
