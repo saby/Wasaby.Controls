@@ -134,7 +134,7 @@ define('js!SBIS3.CONTROLS.OperationUnload', [
                dataSet: view.getDataSet(),
                columns: this._prepareOperationColumns(),
                dataSource : view.getDataSource(),
-               filter : view._filter,
+               filter : view.getFilter(),
                offset: view._offset
             };
          if (view._options.hasOwnProperty('hierField')) {
