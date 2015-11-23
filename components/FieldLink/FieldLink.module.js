@@ -192,6 +192,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
                 template: template,
                 opener: this,
                 parent: this,
+                context: new $ws.proto.Context().setPrevious(this.getLinkedContext()),
                 target: self.getContainer(),
                 multiSelect: self._options.multiselect
              };
