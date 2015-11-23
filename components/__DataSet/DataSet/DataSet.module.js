@@ -505,6 +505,8 @@ define('js!SBIS3.CONTROLS.DataSet', [
          return this.getStrategy().getParentKey(record, field);
       },
       
+      // Придрот для выпуска 3.7.3.10. Возвращаент полностью indexTree 
+      // TODO: Избавиться в 3.7.3.20! Нужен метод который только возвращает детей по ключу
       getTreeIndex: function(field, reindex){
          if (reindex || (Object.isEmpty(this._indexTree) && field)){
             this._reindexTree(field);
