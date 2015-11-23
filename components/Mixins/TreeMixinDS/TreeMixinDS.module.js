@@ -114,50 +114,56 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', ['js!SBIS3.CORE.Control'], function (Con
       },
 
       expandNode: function (key) {
-         var self = this;
+         var self = this,
+         tree = this._dataSet.getTreeIndex(this._options.hierField, true);
          this._folderOffsets[key || 'null'] = 0;
-         this._toggleIndicator(true);
-         return this._callQuery(this._createTreeFilter(key), this._sorting, 0, this._limit).addCallback(function (dataSet) {
-            // TODO: Отдельное событие при загрузке данных узла. Сделано так как тут нельзя нотифаить onDataLoad,
-            // так как на него много всего завязано. (пользуется Янис)
-            self._notify('onNodeDataLoad', key, dataSet);
-            self._toggleIndicator(false);
-            self._nodeDataLoaded(key, dataSet);
-         });
+         if (!tree[key]){
+            this._toggleIndicator(true);
+            return this._dataSource.query(this._createTreeFilter(key), this._sorting, 0, this._limit).addCallback(function (dataSet) {
+               // TODO: Отдельное событие при загрузке данных узла. Сделано так как тут нельзя нотифаить onDataLoad,
+               // так как на него много всего завязано. (пользуется Янис)
+               self._notify('onNodeDataLoad', key, dataSet);
+               self._toggleIndicator(false);
+               self._nodeDataLoaded(key, dataSet);
+            });
+         } else {
+            this._drawLoadedNode(key);
+         }
       },
       /**
        * Получить текущий набор открытых элементов иерархии
        */
       getOpenedPath: function(){
          return this._options.openedPath;
-      },
-      _nodeDataLoaded : function(key, dataSet) {
-         var
-            self = this,
-            itemCont = $('.controls-ListView__item[data-id="' + key + '"]', this.getContainer().get(0));
+      }, 
 
+      _drawLoadedNode: function(key){
+         var child = this._dataSet.getTreeIndex(this._options.hierField)[key];
+         this._drawExpandedNode(key);
+         if (child){
+            var records = []; 
+            for (var i = 0; i < child.length; i++){
+               records.push(this._dataSet.getRecordByKey(child[i]));
+            }
+            this._drawItemsFolder(records);
+         }
+      },
+
+      _drawExpandedNode: function(key){
+         var itemCont = $('.controls-ListView__item[data-id="' + key + '"]', this.getContainer().get(0));
          $('.js-controls-TreeView__expand', itemCont).first().addClass('controls-TreeView__expand__open');
          this._options.openedPath[key] = true;
-         this._dataSet.merge(dataSet, {remove: false});
-         this._dataSet._reindexTree(this._options.hierField);
+      },
 
+      _nodeDataLoaded : function(key, dataSet) {
+         var self = this;
+         this._drawExpandedNode(key);
+         this._dataSet.merge(dataSet, {remove: false});
+         this._dataSet.getTreeIndex(this._options.hierField, true);
 
          dataSet.each(function (record) {
-            var targetContainer = self._getTargetContainer(record);
-            if (targetContainer) {
-               if (self._options.displayType == 'folders') {
-                  if (record.get(self._options.hierField + '@')) {
-                     self._drawAndAppendItem(record, targetContainer);
-                  }
-               }
-               else {
-                  self._drawAndAppendItem(record, targetContainer);
-               }
-
-            }
+            self._drawLoadedNode(record);
          });
-
-
       },
 
       _nodeClosed : function(key) {
@@ -270,9 +276,8 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', ['js!SBIS3.CORE.Control'], function (Con
          },
          _dataLoadedCallback: function () {
             //this._options.openedPath = {};
-            this._dataSet._reindexTree(this._options.hierField);
             if (this._options.expand) {
-               var tree = this._dataSet._indexTree;
+               var tree = this._dataSet.getTreeIndex(this._options.hierField);
                for (var i in tree) {
                   if (tree.hasOwnProperty(i) && i != 'null' && i != this._curRoot) {
                      this._options.openedPath[i] = true;

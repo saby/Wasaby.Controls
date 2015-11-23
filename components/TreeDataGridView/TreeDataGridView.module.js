@@ -120,7 +120,7 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
          //при раскрытии узла по стрелке приходит новый датасет, в котором только содержимое узла
          //поэтому удалять из текущего датасета ничего не нужно, только добавить новое.
          this._dataSet.merge(dataSet, {remove: false});
-         this._dataSet._reindexTree(this._options.hierField);
+         this._dataSet.getTreeIndex(this._options.hierField);
 
          var
             records = dataSet._getRecords();
