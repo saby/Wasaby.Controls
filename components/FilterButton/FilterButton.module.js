@@ -13,6 +13,19 @@ define('js!SBIS3.CONTROLS.FilterButton',
    ],
    function(CompoundControl, dotTplFn, dotTplForPicker, FilterMixin, PickerMixin, FieldLink, ControlHierarchyManager) {
 
+   'use strict';
+   /**
+    * Кнопка фильтров. Функционал и внешний вид аналогичен $ws.proto.FilterButton, но работа с
+    * фильтрами осуществляется только через контекст
+    * @class SBIS3.CONTROLS.FilterButton
+    * @extends $ws.proto.Control
+    * @author Крайнов Дмитрий Олегович
+    * @mixes SBIS3.CONTROLS.FilterMixin
+    * @mixes SBIS3.CONTROLS.PickerMixin
+    * @demo SBIS3.CONTROLS.Demo.FilterButtonMain Полный функционал кнопки фильтров
+    * @control
+    * @public
+    */
    var
       linkTextDef = 'Нужно отобрать?',
       filterStructureElementDef = {
