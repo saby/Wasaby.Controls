@@ -50,7 +50,7 @@ define('js!SBIS3.CONTROLS.DataFactory', [
             case 'Time':
             case 'Date':
             case 'DateTime':
-               return Date.fromSQL('' + value);
+               return value === undefined || value === null ? value : Date.fromSQL('' + value);
             case 'Money':
                if (meta && meta.precision > 3) {
                   return $ws.helpers.bigNum(value).toString(meta.precision);
@@ -121,7 +121,7 @@ define('js!SBIS3.CONTROLS.DataFactory', [
                      serializeMode = false;
                      break;
                }
-               return value instanceof Date ? value.toSQL(serializeMode) : null;
+               return value instanceof Date ? value.toSQL(serializeMode) : value;
 
             case 'Flags':
                if (strategy && strategy.serializeFlags) {
