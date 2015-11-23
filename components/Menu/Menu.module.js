@@ -154,32 +154,30 @@ define('js!SBIS3.CONTROLS.Menu', [
       //При наличии таковой делаем всем пунктам в этом меню фэйковую иконку для их сдвига.
       //По нормальному можно было бы сделать через css, но имеются три различных отступа слева у пунктов
       //для разных меню и совершенно не ясно как это делать.
-      _checkIcons: function(){
-      	var tree = this._dataSet._indexTree;
-      	for (var i in tree){
+      _checkIcons: function() {
+         var tree = this._dataSet.getTreeIndex(this._options.hierField);
+         for (var i in tree) {
             if (tree.hasOwnProperty(i)) {
-         		var hasIcon = false,
+               var hasIcon = false,
                   icon = '',
-         			childs = tree[i];
-         		if (tree.hasOwnProperty(i)){
-         			for (var j = 0; j < childs.length; j++){
-                     icon = this._dataSet.getRecordByKey(childs[j]).get('icon');
-         				if (icon){
-         					if (icon.indexOf('icon-16') !== -1) { icon = 'sprite:icon-16'; } else { icon = 'sprite:icon-24'; }
-                        hasIcon = true;
-         					break;
-         				}
-         			}
-         			if (hasIcon) {
-         				for (var j = 0; j < childs.length; j++){
-   	      				if (!this._dataSet.getRecordByKey(childs[j]).get('icon')){
-   	      					this._dataSet.getRecordByKey(childs[j]).set('icon', icon);
-   	      				}
-   	      			}
-         			}
-         		}
+                  childs = tree[i];
+               for (var j = 0; j < childs.length; j++) {
+                  icon = this._dataSet.getRecordByKey(childs[j]).get('icon');
+                  if (icon) {
+                     if (icon.indexOf('icon-16') !== -1) { icon = 'sprite:icon-16'; } else { icon = 'sprite:icon-24'; }
+                     hasIcon = true;
+                     break;
+                  }
+               }
+               if (hasIcon) {
+                  for (var j = 0; j < childs.length; j++) {
+                     if (!this._dataSet.getRecordByKey(childs[j]).get('icon')) {
+                        this._dataSet.getRecordByKey(childs[j]).set('icon', icon);
+                     }
+                  }
+               }
             }
-      	}
+         }
       },
       _drawItemsCallback : function() {
          var
