@@ -52,11 +52,8 @@ define('js!SBIS3.CONTROLS.hierarchyMixin', [], function () {
 
       // обход происходит в том порядке что и пришли
       hierIterate: function (DataSet, iterateCallback, status) {
-         if (Object.isEmpty(DataSet._indexTree)) {
-            DataSet._reindexTree(this._options.hierField);
-         }
          var
-            indexTree = DataSet._indexTree,
+            indexTree = DataSet.getTreeIndex(this._options.hierField, true),
             self = this,
             curParentId = (typeof this._curRoot != 'undefined') ? this._curRoot : null,
             curLvl = 0;
