@@ -49,3 +49,14 @@
 .ws-disabled .controls-MenuItem__text {
    color: @menu-item-disabled-text-color;
 }
+
+@-moz-document url-prefix() {
+   .controls-MenuItem .controls-MenuItem__content .controls-MenuItem__icon {
+      &.icon-24{
+         top: 19px;
+      }
+      &.icon-16{
+         top: 24px;
+      }
+   }
+}
