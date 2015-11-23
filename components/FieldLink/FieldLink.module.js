@@ -165,14 +165,14 @@ define('js!SBIS3.CONTROLS.FieldLink',
                    handlers: {
                       onChange: function(event, selectedRecords) {
                          var keys = [],
-	                          selItems = this.getSelectedItems(),
+	                         selItems = this.getSelectedItems(),
                              rec;
 
                          if(selectedRecords[0] !== null) {
 	                         selItems.fill();
                             for (var i = 0, len = selectedRecords.length; i < len; i++) {
                                rec = recordConverter(selectedRecords[i]);
-	                            selItems.add(rec);
+	                           selItems.add(rec);
                                keys.push(rec.getId());
                             }
                             self.setSelectedKeys(keys);
@@ -264,7 +264,8 @@ define('js!SBIS3.CONTROLS.FieldLink',
       _onListItemSelect: propertyUpdateWrapper(function(id, item) {
          this.hidePicker();
          this.setText('');
-	      this._options.selectedItems.add(item);
+         /* Чтобы не было лишнего запроса на БЛ, добавим рекорд в набор выбранных */
+         this.getSelectedItems().add(item);
          this.addItemsSelection([id]);
       }),
 
