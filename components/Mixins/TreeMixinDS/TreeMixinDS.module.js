@@ -9,6 +9,7 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', ['js!SBIS3.CORE.Control'], function (Con
    var TreeMixinDS = /** @lends SBIS3.CONTROLS.TreeMixinDS.prototype */{
       $protected: {
          _folderOffsets : {},
+         _folderHasMore : {},
          _treePagers : {},
          _treePager: null,
          _options: {
@@ -122,6 +123,7 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', ['js!SBIS3.CORE.Control'], function (Con
             return this._dataSource.query(this._createTreeFilter(key), this._sorting, 0, this._limit).addCallback(function (dataSet) {
                // TODO: Отдельное событие при загрузке данных узла. Сделано так как тут нельзя нотифаить onDataLoad,
                // так как на него много всего завязано. (пользуется Янис)
+               self._folderHasMore[key] = dataSet.getMetaData().more;
                self._notify('onNodeDataLoad', key, dataSet);
                self._toggleIndicator(false);
                self._nodeDataLoaded(key, dataSet);
@@ -133,9 +135,8 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', ['js!SBIS3.CORE.Control'], function (Con
                for (var i = 0; i < child.length; i++){
                   records.push(this._dataSet.getRecordByKey(child[i]));
                }
-               this._drawItemsFolder(records);
+               this._drawLoadedNode(key, records, this._folderHasMore[key]);
             }
-            this._drawLoadedNode(key, records);
          }
       },
       /**
@@ -177,7 +178,7 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', ['js!SBIS3.CORE.Control'], function (Con
          dataSet.each(function (record) {
             records.push(record);
          });
-         self._drawLoadedNode(key, records);
+         self._drawLoadedNode(key, records, self._folderHasMore[key]);
       },
 
       _nodeClosed : function(key) {
@@ -226,6 +227,7 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', ['js!SBIS3.CORE.Control'], function (Con
             else {
                self._folderOffsets['null'] += self._limit;
             }
+            self._folderHasMore[id] = dataSet.getMetaData().more;
             if (!self._hasNextPageInFolder(dataSet.getMetaData().more, id)) {
                if (typeof id != 'undefined') {
                   self._treePagers[id].setHasMore(false)
@@ -239,6 +241,7 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', ['js!SBIS3.CORE.Control'], function (Con
             if (dataSet.getCount()) {
                var records = dataSet._getRecords();
                self._dataSet.merge(dataSet, {remove: false});
+               self._dataSet.getTreeIndex(self._options.hierField, true);
                self._drawItemsFolderLoad(records, id);
                self._dataLoadedCallback();
             }
@@ -251,11 +254,6 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', ['js!SBIS3.CORE.Control'], function (Con
 
       _drawItemsFolderLoad: function(records) {
          this._drawItems(records);
-      },
-
-
-      _drawItemsFolder: function() {
-
       },
 
       _createFolderPager: function(key, container, more) {
