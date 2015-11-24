@@ -206,7 +206,7 @@ define('js!SBIS3.CONTROLS.Data.Model', [
          }
 
          //Инстансы объектов кэшируем
-         if (value && typeof value === 'object') {
+         if (this._isPropertyValueCacheable(value)) {
             this._propertiesCache[name] = value;
          }
 
@@ -230,8 +230,8 @@ define('js!SBIS3.CONTROLS.Data.Model', [
          if (this._getOriginalPropertyValue(name) !== value) {
             this._setOriginalPropertyValue(name, value);
             this._setChanged(true);
-            if (value && typeof value === 'object') {
-               this._propertiesCache[name] = value;
+            if (this._isPropertyValueCacheable(value)) {
+               delete this._propertiesCache[name];
             }
             this._notify('onPropertyChange', name, value);
          }
@@ -475,6 +475,14 @@ define('js!SBIS3.CONTROLS.Data.Model', [
        */
       _addProperty: function(name) {
          this._options.properties[name] = {};
+      },
+
+      /**
+       * Возвращает признак, что значение свойства кэшируемое
+       * @private
+       */
+      _isPropertyValueCacheable: function(value) {
+         return value && typeof value === 'object' && !(value instanceof Date);
       },
 
       /**
