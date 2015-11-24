@@ -162,7 +162,7 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', ['js!SBIS3.CORE.Control'], function (Con
          dataSet.each(function (record) {
             records.push(record);
          });
-         self._drawLoadedNode(key, records);
+         self._drawLoadedNode(key, records, dataSet);
       },
 
       _nodeClosed : function(key) {

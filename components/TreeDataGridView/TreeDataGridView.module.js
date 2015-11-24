@@ -109,18 +109,21 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
          self._drawItemsCallback();
       },
 
-      _drawLoadedNode : function(key, records) {
+      _drawLoadedNode : function(key, records, dataSet) {
          this._drawExpandArrow(key);
          this._drawItemsFolder(records);
-         /*TODO пока не очень общо создаем внутренние пэйджинги*/
-         var allContainers = $('.controls-ListView__item[data-parent="'+key+'"]', this._getItemsContainer().get(0));
-         var row = $('<tr class="controls-TreeDataGridView__folderToolbar">' +
-            '<td colspan="'+(this._options.columns.length+(this._options.multiselect ? 1 : 0))+'"><div style="overflow:hidden" class="controls-TreeDataGridView__folderToolbarContainer"><div class="controls-TreePager-container"></div></div></td>' +
-            '</tr>').attr('data-parent',key);
-         $(allContainers.last()).after(row);
-         this._resizeFolderToolbars();
-         var elem = $('.controls-TreePager-container', row.get(0));
-         this._createFolderPager(key, elem, dataSet.getMetaData().more);
+
+            var allContainers = $('.controls-ListView__item[data-parent="' + key + '"]', this._getItemsContainer().get(0));
+            var row = $('<tr class="controls-TreeDataGridView__folderToolbar">' +
+               '<td colspan="' + (this._options.columns.length + (this._options.multiselect ? 1 : 0)) + '"><div style="overflow:hidden" class="controls-TreeDataGridView__folderToolbarContainer"><div class="controls-TreePager-container"></div></div></td>' +
+               '</tr>').attr('data-parent', key);
+            $(allContainers.last()).after(row);
+            this._resizeFolderToolbars();
+            var elem = $('.controls-TreePager-container', row.get(0));
+         /*TODO фикс для 3.7.3.10. В будущем надо предусмотреть ситуацию, чтоб есть еще отрисовывалось и когда данные уже загружены*/
+         if (dataSet) {
+            this._createFolderPager(key, elem, dataSet.getMetaData().more);
+         }
       },
 
       _onResizeHandler: function() {
