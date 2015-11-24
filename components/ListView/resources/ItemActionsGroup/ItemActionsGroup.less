@@ -55,6 +55,16 @@
          top: 0;
       }
    }
+   .controls-ItemActions .controls-ItemActions__itemsContainer {
+      height: @bottomStyle-item-actions-height - 1;
+      & > * {
+         top: 8px;
+         &.controls-ItemActions__menu-button {
+            margin-top: 7px;
+         }
+      }
+
+   }
    &.controls-DataGridView .controls-ItemActions .controls-ItemActions__itemsContainer {
       background-color: transparent;
    }
