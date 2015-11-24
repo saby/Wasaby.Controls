@@ -16,6 +16,7 @@ define('js!SBIS3.CONTROLS.Record', [
     * @mixes SBIS3.CONTROLS.Data.ISerializable
     * @mixes SBIS3.CONTROLS.Data.SerializableMixin
     * @public
+    * @deprecated Будет удалено с 3.7.3.20 используйте {@link SBIS3.CONTROLS.Data.Model}
     * @author Крайнов Дмитрий Олегович
     */
 

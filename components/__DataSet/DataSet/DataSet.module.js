@@ -13,6 +13,7 @@ define('js!SBIS3.CONTROLS.DataSet', [
     * @mixes SBIS3.CONTROLS.Data.ISerializable
     * @mixes SBIS3.CONTROLS.Data.SerializableMixin
     * @public
+    * @deprecated Будет удалено с 3.7.3.20 используйте {@link SBIS3.CONTROLS.Data.Source.DataSet}
     * @author Крайнов Дмитрий Олегович
     */
 
@@ -68,6 +69,9 @@ define('js!SBIS3.CONTROLS.DataSet', [
          }
       },
       $constructor: function () {
+         if(!cfg.compatibilityMode) {
+            $ws.single.ioc.resolve('ILogger').log('$constructor', 'С 3.7.3.20 класс SBIS3.CONTROLS.DataSet будет удален, используйте SBIS3.CONTROLS.Data.Source.DataSet');
+         }
          this._publish('onRecordChange');
          this._prepareData(this._options.data);
 
@@ -155,6 +159,7 @@ define('js!SBIS3.CONTROLS.DataSet', [
                raw: data,
                isCreated: true,//считаем, что сырые данные пришли из реального источника
                keyField: this._keyField,
+               compatibilityMode: true,
                handlers: {
                   onChange: function() {
                      self._notify('onRecordChange', this);
@@ -334,7 +339,8 @@ define('js!SBIS3.CONTROLS.DataSet', [
           record = $ws.single.ioc.resolve('SBIS3.CONTROLS.Record', {
             strategy: this.getStrategy(),
             raw: record,
-            keyField: this._options.keyField
+            keyField: this._options.keyField,
+            compatibilityMode: true
           })
         }
         this._addRecords(record);
@@ -461,7 +467,8 @@ define('js!SBIS3.CONTROLS.DataSet', [
             this._options.meta.results = $ws.single.ioc.resolve('SBIS3.CONTROLS.Record', {
                strategy: this.getStrategy(),
                raw: $ws.helpers.instanceOfModule(this._options.meta.results, 'SBIS3.CONTROLS.Record') ? this._options.meta.results.getRaw() : this._options.meta.results,
-               keyField: this._keyField
+               keyField: this._keyField,
+               compatibilityMode: true
             });
          }
 
@@ -469,7 +476,8 @@ define('js!SBIS3.CONTROLS.DataSet', [
             this._options.meta.path = new DataSet({
                strategy: this._options.strategy,
                keyField: this._keyField,
-               data: $ws.helpers.instanceOfModule(this._options.meta.path, 'SBIS3.CONTROLS.DataSet') ? this._options.meta.path.getRawData() : this._options.meta.path
+               data: $ws.helpers.instanceOfModule(this._options.meta.path, 'SBIS3.CONTROLS.DataSet') ? this._options.meta.path.getRawData() : this._options.meta.path,
+               compatibilityMode: true
             });
          }
       },
@@ -559,7 +567,8 @@ define('js!SBIS3.CONTROLS.DataSet', [
       filter: function (filterCallback) {
          var filterDataSet = new DataSet({
             strategy: this._options.strategy,
-            keyField: this._keyField
+            keyField: this._keyField,
+            compatibilityMode: true
          });
 
          this.each(function (record) {
