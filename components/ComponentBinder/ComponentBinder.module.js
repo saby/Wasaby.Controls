@@ -78,7 +78,7 @@ define('js!SBIS3.CONTROLS.ComponentBinder', [], function () {
       delete (filter[searchParamName]);
 
       view.setInfiniteScroll(false, true);
-      view.setGroupBy({});
+      view.setGroupBy(this._lastGroup);
       view.setHighlightText('', false);
       this._firstSearch = true;
       if (this._searchReload ) {
@@ -106,8 +106,8 @@ define('js!SBIS3.CONTROLS.ComponentBinder', [], function () {
       });
    }
 
-   function breakSearch(searchForm){
-      this._searchReload = false;
+   function breakSearch(searchForm, withReload){
+      this._searchReload = !!withReload;
       this._firstSearch = true;
       //Если в строке поиска что-то есть, очистим и сбросим Фильтр
       if (searchForm.getText()) {
@@ -138,6 +138,7 @@ define('js!SBIS3.CONTROLS.ComponentBinder', [], function () {
          _searchReload : true,
          _searchForm : undefined,
          _lastRoot : undefined,
+         _lastGroup: {},
          _currentRoot: null,
          _pathDSRawData : [],
          _firstSearch: true,
@@ -188,17 +189,17 @@ define('js!SBIS3.CONTROLS.ComponentBinder', [], function () {
             this._lastRoot = view.getCurrentRoot();
             //searchForm.subscribe('onReset', resetGroup);
             view.subscribe('onSetRoot', function(){
-               breakSearch.call(self, searchForm);
-               //Это может все сломать, но тут точно нужно сбросить группировку
-               this.setGroupBy({});
-               this.setHighlightText('', false);
+               if (self._options.backButton) {
+                  self._options.backButton.getContainer().css({'visibility': 'visible'});
+               }
             });
             //Перед переключением в крошках в режиме поиска сбросим фильтр поиска
             view.subscribe('onSearchPathClick', function(){
-               breakSearch.call(self, searchForm);
+               breakSearch.call(self, searchForm, true);
             });
          }
 
+         this._lastGroup = view._options.groupBy;
          searchForm.subscribe('onTextChange', function(event, text){
             var checkedText = isSearchValid(text, 3);
             if (checkedText[1]) {
