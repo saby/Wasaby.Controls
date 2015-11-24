@@ -112,7 +112,15 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', ['js!SBIS3.CORE.Control'], function (Con
                self._nodeDataLoaded(key, dataSet);
             });
          } else {
-            this._drawLoadedNode(key);
+            var child = tree[key];
+            var records = [];
+            if (child){
+               for (var i = 0; i < child.length; i++){
+                  records.push(this._dataSet.getRecordByKey(child[i]));
+               }
+               this._drawItemsFolder(records);
+            }
+            this._drawLoadedNode(key, records);
          }
       },
       /**
@@ -122,19 +130,25 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', ['js!SBIS3.CORE.Control'], function (Con
          return this._options.openedPath;
       },
 
-      _drawLoadedNode: function(key){
-         var child = this._dataSet.getTreeIndex(this._options.hierField)[key];
-         this._drawExpandedNode(key);
-         if (child){
-            var records = []; 
-            for (var i = 0; i < child.length; i++){
-               records.push(this._dataSet.getRecordByKey(child[i]));
+      _drawLoadedNode: function(key, records){
+         this._drawExpandArrow(key);
+         for (var i = 0; i < records.length; i++) {
+            var record = records[i];
+            var targetContainer = this._getTargetContainer(record);
+            if (targetContainer) {
+               if (this._options.displayType == 'folders') {
+                  if (record.get(this._options.hierField + '@')) {
+                     this._drawItem(record, targetContainer);
+                  }
+               }
+               else {
+                  this._drawItem(record, targetContainer);
+               }
             }
-            this._drawItemsFolder(records);
          }
       },
 
-      _drawExpandedNode: function(key){
+      _drawExpandArrow: function(key){
          var itemCont = $('.controls-ListView__item[data-id="' + key + '"]', this.getContainer().get(0));
          $('.js-controls-TreeView__expand', itemCont).first().addClass('controls-TreeView__expand__open');
          this._options.openedPath[key] = true;
@@ -142,13 +156,13 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', ['js!SBIS3.CORE.Control'], function (Con
 
       _nodeDataLoaded : function(key, dataSet) {
          var self = this;
-         this._drawExpandedNode(key);
          this._dataSet.merge(dataSet, {remove: false});
          this._dataSet.getTreeIndex(this._options.hierField, true);
-
+         var records = [];
          dataSet.each(function (record) {
-            self._drawLoadedNode(record);
+            records.push(record);
          });
+         self._drawLoadedNode(key, records);
       },
 
       _nodeClosed : function(key) {
@@ -228,6 +242,11 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', ['js!SBIS3.CORE.Control'], function (Con
 
       _drawItemsFolderLoad: function(records) {
          this._drawItems(records);
+      },
+
+
+      _drawItemsFolder: function() {
+
       },
 
       _createFolderPager: function(key, container, more) {
