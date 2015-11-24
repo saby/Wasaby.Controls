@@ -198,6 +198,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
          this._options.meta = meta;
       },
 
+      // TODO: В контролах избавиться от вызова этого метода - должно быть достаточно "выбрать по индексу".
       getTreeIndex: function(field, reindex){
          return DataSet.prototype.getTreeIndex.call(this, field, reindex);
       },
