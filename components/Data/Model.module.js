@@ -1,18 +1,22 @@
 /* global define, $ws */
 define('js!SBIS3.CONTROLS.Data.Model', [
+   'js!SBIS3.CONTROLS.Data.ISerializable',
+   'js!SBIS3.CONTROLS.Data.SerializableMixin',
    'js!SBIS3.CONTROLS.Data.IPropertyAccess',
    'js!SBIS3.CONTROLS.Data.IHashable',
    'js!SBIS3.CONTROLS.Data.HashableMixin',
    'js!SBIS3.CONTROLS.Data.ContextField',
    'js!SBIS3.CONTROLS.Data.Factory',
    'js!SBIS3.CONTROLS.Data.Adapter.Json'
-], function (IPropertyAccess, IHashable, HashableMixin, ContextField, Factory, JsonAdapter) {
+], function (ISerializable, SerializableMixin, IPropertyAccess, IHashable, HashableMixin, ContextField, Factory, JsonAdapter) {
    'use strict';
 
    /**
     * Модель - обеспечивает доступ к данным субъекта предметной области
     * @class SBIS3.CONTROLS.Data.Model
     * @extends $ws.proto.Abstract
+    * @mixes SBIS3.CONTROLS.Data.ISerializable
+    * @mixes SBIS3.CONTROLS.Data.SerializableMixin
     * @mixes SBIS3.CONTROLS.Data.IPropertyAccess
     * @mixes SBIS3.CONTROLS.Data.IHashable
     * @mixes SBIS3.CONTROLS.Data.HashableMixin
@@ -20,7 +24,7 @@ define('js!SBIS3.CONTROLS.Data.Model', [
     * @author Мальцев Алексей
     */
 
-   var Model = $ws.proto.Abstract.extend([IPropertyAccess, IHashable, HashableMixin], /** @lends SBIS3.CONTROLS.Data.Model.prototype */{
+   var Model = $ws.proto.Abstract.extend([ISerializable, SerializableMixin, IPropertyAccess, IHashable, HashableMixin], /** @lends SBIS3.CONTROLS.Data.Model.prototype */{
       _moduleName: 'SBIS3.CONTROLS.Data.Model',
       $protected: {
          _options: {
@@ -151,6 +155,8 @@ define('js!SBIS3.CONTROLS.Data.Model', [
 
       $constructor: function (cfg) {
          cfg = cfg || {};
+         this._publish('onPropertyChange');
+
          //TODO: убрать после перехода на ISource
          this._compatibleMode = cfg.compatibleMode;
 
@@ -159,9 +165,24 @@ define('js!SBIS3.CONTROLS.Data.Model', [
          if (!this._options.idProperty) {
             this._options.idProperty = this.getAdapter().getKeyField(this._options.data);
          }
-         this.setRawData(this._options.data);
-         this._publish('onPropertyChange');
+         this.setRawData(this._options.data, true);
       },
+
+      // region SBIS3.CONTROLS.Data.ISerializable
+
+      _getSerializableState: function() {
+         return $ws.core.merge(
+            Model.superclass._getSerializableState.call(this), {
+               _hash: this.getHash(),
+               _isStored: this._isStored,
+               _isDeleted: this._isDeleted,
+               _isChanged: this._isChanged,
+               _compatibleMode: this._compatibleMode
+            }
+         );
+      },
+
+      // endregion SBIS3.CONTROLS.Data.ISerializable
 
       // region SBIS3.CONTROLS.Data.IPropertyAccess
 
@@ -378,11 +399,13 @@ define('js!SBIS3.CONTROLS.Data.Model', [
        * Устанавливает данные модели в "сыром" виде
        * @param {Object} data Данные модели
        */
-      setRawData: function (data) {
+      setRawData: function (data, silent) {
          this._options.data = data || {};
          this._propertiesCache = {};
          this._initProperties();
-         this._notify('onPropertyChange');
+         if (!silent) {
+            this._notify('onPropertyChange');
+         }
       },
 
       /**
