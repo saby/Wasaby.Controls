@@ -109,25 +109,11 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
          self._drawItemsCallback();
       },
 
-      _nodeDataLoaded : function(key, dataSet) {
-         /*TODO Копипаст с TreeView*/
-         var
-            self = this,
-            itemCont = $('.controls-ListView__item[data-id="' + key + '"]', this.getContainer().get(0));
-         $('.js-controls-TreeView__expand', itemCont).first().addClass('controls-TreeView__expand__open');
-         this._options.openedPath[key] = true;
-
-         //при раскрытии узла по стрелке приходит новый датасет, в котором только содержимое узла
-         //поэтому удалять из текущего датасета ничего не нужно, только добавить новое.
-         this._dataSet.merge(dataSet, {remove: false});
-         this._dataSet.getTreeIndex(this._options.hierField);
-
-         var
-            records = dataSet._getRecords();
-
+      _drawLoadedNode : function(key, records) {
+         this._drawExpandArrow(key);
          this._drawItemsFolder(records);
          /*TODO пока не очень общо создаем внутренние пэйджинги*/
-         var allContainers = $('.controls-ListView__item[data-parent="'+key+'"]', self._getItemsContainer().get(0));
+         var allContainers = $('.controls-ListView__item[data-parent="'+key+'"]', this._getItemsContainer().get(0));
          var row = $('<tr class="controls-TreeDataGridView__folderToolbar">' +
             '<td colspan="'+(this._options.columns.length+(this._options.multiselect ? 1 : 0))+'"><div style="overflow:hidden" class="controls-TreeDataGridView__folderToolbarContainer"><div class="controls-TreePager-container"></div></div></td>' +
             '</tr>').attr('data-parent',key);
