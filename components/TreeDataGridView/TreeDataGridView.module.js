@@ -267,7 +267,7 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
             this.setCurrentElement(e, this._getDragItems(id));
          }
          //Предотвращаем нативное выделение текста на странице
-         if (e.type !== "touchstart") {
+         if (!$ws._const.compatibility.touch) {
             e.preventDefault();
          }
       },
