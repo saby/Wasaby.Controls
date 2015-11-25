@@ -348,21 +348,21 @@ define('js!SBIS3.CONTROLS.ListView',
 
             switch (e.which) {
                case $ws._const.key.up:
-                  var previousItem = this._getPrevItemById(selectedKey);
-                  previousItem.length ? this.setSelectedKey(previousItem.data('id')) : this.setSelectedKey(selectedKey);
+                  var previousItem = this.getPrevItemById(selectedKey);
+                  previousItem ? this.setSelectedKey(previousItem.data('id')) : this.setSelectedKey(selectedKey);
                   break;
                case $ws._const.key.down:
-                  var nextItem = this._getNextItemById(selectedKey);
-                  nextItem.length ? this.setSelectedKey(nextItem.data('id')) : this.setSelectedKey(selectedKey);
+                  var nextItem = this.getNextItemById(selectedKey);
+                  nextItem ? this.setSelectedKey(nextItem.data('id')) : this.setSelectedKey(selectedKey);
                   break;
                case $ws._const.key.enter:
                   var selectedItem = $('[data-id="' + selectedKey + '"]', this._getItemsContainer());
                   this._elemClickHandler(selectedKey, this._dataSet.getRecordByKey(selectedKey), selectedItem);
                   break;
                case $ws._const.key.space:
-                  var nextItem = this._getNextItemById(selectedKey);
+                  var nextItem = this.getNextItemById(selectedKey);
                   this.toggleItemsSelection([selectedKey]);
-                  nextItem.length ? this.setSelectedKey(nextItem.data('id')) : this.setSelectedKey(selectedKey);
+                  nextItem ? this.setSelectedKey(nextItem.data('id')) : this.setSelectedKey(selectedKey);
                   break;
             }
             return false;
@@ -371,18 +371,16 @@ define('js!SBIS3.CONTROLS.ListView',
           * Возвращает следующий элемент
           * @param id
           * @returns {*}
-          * @private
           */
-         _getNextItemById: function (id) {
+         getNextItemById: function (id) {
             return this._getHtmlItem(id, true);
          },
          /**
           * Возвращает предыдущий элемент
           * @param id
           * @returns {jQuery}
-          * @private
           */
-         _getPrevItemById: function (id) {
+         getPrevItemById: function (id) {
             return this._getHtmlItem(id, false);
          },
          /**
@@ -394,13 +392,19 @@ define('js!SBIS3.CONTROLS.ListView',
           */
          _getHtmlItem: function (id, isNext) {
             var items = $('.controls-ListView__item', this._getItemsContainer()).not('.ws-hidden'),
-               selectedItem = $('[data-id="' + id + '"]', this._getItemsContainer());
-            if (isNext) {
-               return (id) ? items.eq(items.index(selectedItem) + 1) : items.eq(0)
-            } else {
-               return (id) ? items.eq(items.index(selectedItem) - 1) : items.last();
+               selectedItem = $('[data-id="' + id + '"]', this._getItemsContainer()),
+               index = items.index(selectedItem);
+            if(!id){
+               return isNext ? items.eq(0) : items.last()
             }
-
+            if (isNext) {
+               if(index +1 < items.length )
+                  return items.eq(index + 1);
+            } else {
+               if(index > 0)
+                  return items.eq(index - 1);
+            }
+            return undefined;
          },
 
          _isViewElement: function (elem) {
