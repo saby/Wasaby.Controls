@@ -57,7 +57,9 @@ define('js!SBIS3.CONTROLS.Demo.MyTreeCompositeView',
             breadCrumbs = this.getChildControlByName('MyBreadCrumbs'),
             backButton = this.getChildControlByName('MyBackButton'),
             radioGroup = this.getChildControlByName('RadioGroup'),
-            componentBinder = new ComponentBinder();
+            componentBinder = new ComponentBinder({
+                  view: treeCompositeView
+            });
 
          treeCompositeView._options.tileTemplate = tileTpl;
          treeCompositeView._options.listTemplate = listTpl;
