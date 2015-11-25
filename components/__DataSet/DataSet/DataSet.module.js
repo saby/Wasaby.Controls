@@ -68,7 +68,8 @@ define('js!SBIS3.CONTROLS.DataSet', [
             keyField: ''
          }
       },
-      $constructor: function () {
+      $constructor: function (cfg) {
+         cfg = cfg || {};
          if(!cfg.compatibilityMode) {
             $ws.single.ioc.resolve('ILogger').log('$constructor', 'С 3.7.3.20 класс SBIS3.CONTROLS.DataSet будет удален, используйте SBIS3.CONTROLS.Data.Source.DataSet');
          }
