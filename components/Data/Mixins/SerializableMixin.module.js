@@ -10,7 +10,7 @@ define('js!SBIS3.CONTROLS.Data.SerializableMixin', [
     * @author Мальцев Алексей
     */
 
-   var SerializableMixin = /**@lends SBIS3.CONTROLS.Data.SerializableMixin.prototype  */{
+   var SerializableMixin = /**@lends SBIS3.CONTROLS.Data.SerializableMixin.prototype */{
       $protected: {
          /**
           * @var {Number} Уникальный номер инстанса

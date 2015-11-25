@@ -12,7 +12,7 @@ define('js!SBIS3.CONTROLS.Data.Model', [
    'use strict';
 
    /**
-    * Модель - обеспечивает доступ к данным субъекта предметной области
+    * Модель - обеспечивает доступ к данным объекта предметной области
     * @class SBIS3.CONTROLS.Data.Model
     * @extends $ws.proto.Abstract
     * @mixes SBIS3.CONTROLS.Data.ISerializable
