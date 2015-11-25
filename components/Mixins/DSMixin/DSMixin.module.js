@@ -1,9 +1,9 @@
 define('js!SBIS3.CONTROLS.DSMixin', [
-   'js!SBIS3.CONTROLS.StaticSource',
-   'js!SBIS3.CONTROLS.ArrayStrategy',
+   'js!SBIS3.CONTROLS.Data.Source.Memory',
+   'js!SBIS3.CONTROLS.Data.Adapter.Json',
    'js!SBIS3.CONTROLS.SbisJSONStrategy',
    'js!SBIS3.CONTROLS.DataFactory',
-   'js!SBIS3.CONTROLS.DataSet',
+   'js!SBIS3.CONTROLS.Data.Source.DataSet',
    'js!SBIS3.CONTROLS.Data.Collection.RecordSet',
    'js!SBIS3.CONTROLS.Data.Query.Query',
    'js!SBIS3.CORE.MarkupTransformer'

@@ -40,7 +40,8 @@ define('js!SBIS3.CONTROLS.MoveHandlers', ['js!SBIS3.CONTROLS.MoveDialog'], funct
 
          if (this._checkRecordsForMove(records, moveTo)) {
             for (var i = 0; i < records.length; i++) {
-               record = $ws.helpers.instanceOfModule(records[i], 'SBIS3.CONTROLS.Record') ? records[i] : this._dataSet.getRecordByKey(records[i]);
+               record = ($ws.helpers.instanceOfModule(records[i], 'SBIS3.CONTROLS.Record') || $ws.helpers.instanceOfModule(records[i], 'SBIS3.CONTROLS.Data.Model'))
+                  ? records[i]  : this._dataSet.getRecordByKey(records[i]);
                if (isNodeTo) {
                   record.set(this._options.hierField, moveTo);
                   deferred.push(this._dataSource.update(record));
@@ -73,7 +74,8 @@ define('js!SBIS3.CONTROLS.MoveHandlers', ['js!SBIS3.CONTROLS.MoveDialog'], funct
             return false;
          }
          for (var i = 0; i < records.length; i++) {
-            key = '' + ($ws.helpers.instanceOfModule(records[i], 'SBIS3.CONTROLS.Record') ? records[i].getKey() : records[i]);
+            key = '' + (($ws.helpers.instanceOfModule(records[i], 'SBIS3.CONTROLS.Record')|| $ws.helpers.instanceOfModule(records[i], 'SBIS3.CONTROLS.Data.Model'))
+               ? records[i].getKey() : records[i]);
             if ($.inArray(key, toMap) !== -1) {
                $ws.helpers.alert('Вы не можете переместить запись саму в себя!', {}, this);
                return false;
