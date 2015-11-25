@@ -34,8 +34,13 @@
       .controls-DataGridView__td:first-child,
       .controls-CompositeView__tileTitle,
       .controls-ListView__item-title,
+      &:not(.controls-CompositeView__verticalItemActions),
       &:not(.controls-ListView__folder) {
          background-image: none !important;
+      }
+      &.controls-ListView__item {
+         border-color: transparent;
+         background-color: transparent !important;
       }
    }
 }

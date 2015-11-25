@@ -84,7 +84,8 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
                      if (allContainers[i] == parentContainer.get(0)) {
                         startRow = i + 1;
                      } else {
-                        if (childKeys.indexOf($(allContainers[i]).attr('data-id')) >= 0) {
+                        //TODO сейчас ключи могут оказаться строками, а могут целыми числами, в 20 все должно быть строками и это можно выпилить
+                        if ((childKeys.indexOf($(allContainers[i]).attr('data-id')) >= 0) || ((childKeys.indexOf($(allContainers[i]).data('id')) >= 0))) {
                            startRow++;
                         }
                      }
@@ -108,32 +109,20 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
          self._drawItemsCallback();
       },
 
-      _nodeDataLoaded : function(key, dataSet) {
-         /*TODO Копипаст с TreeView*/
-         var
-            self = this,
-            itemCont = $('.controls-ListView__item[data-id="' + key + '"]', this.getContainer().get(0));
-         $('.js-controls-TreeView__expand', itemCont).first().addClass('controls-TreeView__expand__open');
-         this._options.openedPath[key] = true;
-
-         //при раскрытии узла по стрелке приходит новый датасет, в котором только содержимое узла
-         //поэтому удалять из текущего датасета ничего не нужно, только добавить новое.
-         this._dataSet.merge(dataSet, {remove: false});
-         this._dataSet._reindexTree(this._options.hierField);
-
-         var
-            records = dataSet._getRecords();
-
+      _drawLoadedNode : function(key, records, more) {
+         this._drawExpandArrow(key);
          this._drawItemsFolder(records);
-         /*TODO пока не очень общо создаем внутренние пэйджинги*/
-         var allContainers = $('.controls-ListView__item[data-parent="'+key+'"]', self._getItemsContainer().get(0));
+
+         //TODO пока не очень общо создаем внутренние пэйджинги
+         var allContainers = $('.controls-ListView__item[data-parent="' + key + '"]', this._getItemsContainer().get(0));
          var row = $('<tr class="controls-TreeDataGridView__folderToolbar">' +
-            '<td colspan="'+(this._options.columns.length+(this._options.multiselect ? 1 : 0))+'"><div style="overflow:hidden" class="controls-TreeDataGridView__folderToolbarContainer"><div class="controls-TreePager-container"></div></div></td>' +
-            '</tr>').attr('data-parent',key);
+            '<td colspan="' + (this._options.columns.length + (this._options.multiselect ? 1 : 0)) + '"><div style="overflow:hidden" class="controls-TreeDataGridView__folderToolbarContainer"><div class="controls-TreePager-container"></div></div></td>' +
+            '</tr>').attr('data-parent', key);
          $(allContainers.last()).after(row);
          this._resizeFolderToolbars();
          var elem = $('.controls-TreePager-container', row.get(0));
-         this._createFolderPager(key, elem, dataSet.getMetaData().more);
+
+         this._createFolderPager(key, elem, more);
       },
 
       _onResizeHandler: function() {
@@ -277,7 +266,6 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
             this.setSelectedKey(id);
             this.setCurrentElement(e, this._getDragItems(id));
          }
-         e.preventDefault();
       },
       _callMoveOutHandler: function() {
       },
@@ -293,6 +281,8 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
             left: e.pageX - this._containerCoords.x
          });
          this._hideItemActions();
+         //Предотвращаем нативное выделение текста на странице
+         e.preventDefault();
       },
       _createAvatar: function(e){
          var count = this.getCurrentElement().length;

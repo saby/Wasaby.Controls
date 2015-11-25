@@ -50,11 +50,8 @@ define('js!SBIS3.CONTROLS.hierarchyMixin', [], function () {
 
       // обход происходит в том порядке что и пришли
       hierIterate: function (DataSet, iterateCallback, status) {
-         if (Object.isEmpty(DataSet._indexTree)) {
-            DataSet._reindexTree(this._options.hierField);
-         }
          var
-            indexTree = DataSet._indexTree,
+            indexTree = DataSet.getTreeIndex(this._options.hierField, true),
             self = this,
             curParentId = (typeof this._curRoot != 'undefined') ? this._curRoot : null,
             curLvl = 0;
@@ -88,14 +85,16 @@ define('js!SBIS3.CONTROLS.hierarchyMixin', [], function () {
          if (!Object.isEmpty(this._options.groupBy)) {
             return this._dataSet._getRecords();
          }
-         this._dataSet.each(function (record) {
-            if (self._dataSet.getParentKey(record, self._options.hierField) == self._curRoot) {
+         var path = this._options.openedPath;
+         this.hierIterate(this._dataSet , function(record) {
+            //Рисуем рекорд если он принадлежит текущей папке или если его родитель есть в openedPath
+            var parentKey = self._dataSet.getParentKey(record, self._options.hierField);
+            if (parentKey == self._curRoot || path[parentKey]) {
                if (self._options.displayType == 'folders') {
                   if (record.get(self._options.hierField + '@')) {
                      records.push(record);
                   }
-               }
-               else {
+               } else {
                   records.push(record);
                }
             }
