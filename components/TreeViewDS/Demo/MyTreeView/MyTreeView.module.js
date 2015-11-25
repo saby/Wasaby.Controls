@@ -51,7 +51,9 @@ define('js!SBIS3.CONTROLS.Demo.MyTreeView',
          var treeView = this.getChildControlByName('MyTreeView'),
             breadCrumbs = this.getChildControlByName('MyBreadCrumbs'),
             backButton = this.getChildControlByName('MyBackButton'),
-            componentBinder = new ComponentBinder();
+            componentBinder = new ComponentBinder({
+               view: treeView
+            });
 
          treeView._options.itemTemplate = listTpl;
          componentBinder.bindBreadCrumbs(breadCrumbs, backButton, treeView);
