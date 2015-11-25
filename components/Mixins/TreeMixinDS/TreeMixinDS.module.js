@@ -106,6 +106,7 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', ['js!SBIS3.CORE.Control'], function (Con
             // TODO: Отдельное событие при загрузке данных узла. Сделано так как тут нельзя нотифаить onDataLoad,
             // так как на него много всего завязано. (пользуется Янис)
             self._notify('onNodeDataLoad', key, dataSet);
+            self._notify('onDataMerge', dataSet);
             self._toggleIndicator(false);
             self._nodeDataLoaded(key, dataSet);
          });
@@ -189,6 +190,8 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', ['js!SBIS3.CORE.Control'], function (Con
          this._loader = this._dataSource.query(filter, this._sorting, (id ? this._folderOffsets[id] : this._folderOffsets['null']) + this._limit, this._limit).addCallback(function (dataSet) {
             //ВНИМАНИЕ! Здесь стрелять onDataLoad нельзя! Либо нужно определить событие, которое будет
             //стрелять только в reload, ибо между полной перезагрузкой и догрузкой данных есть разница!
+            self._notify('onNodeDataLoad', key, dataSet);
+            self._notify('onDataMerge', dataSet);
             self._loader = null;
             //нам до отрисовки для пейджинга уже нужно знать, остались еще записи или нет
             if (id) {
