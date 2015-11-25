@@ -19,6 +19,13 @@
          }
       }
    }
+   //стиль для встраиваемых компонентов, чтобы текст был по стандарту
+   .controls-TabButton__mainText {
+      color: @tab-button-color;
+      font: @tab-button-font;
+      font-size: @tab-button-large-inner-font-size;
+      font-weight: @tab-button-large-inner-font-weight;
+   }
    &.controls-Checked__checked {
       border-top: @tab-button-checked-border-top;
       border-left: @tab-button-checked-border-left;
@@ -40,6 +47,12 @@
       }
       .controls-tabButton__overlay{
          display: @tab-button-checked-overlay-display;
+      }
+      //стиль для встраиваемых компонентов, чтобы текст был по стандарту
+      .controls-TabButton__mainText {
+         color: @tab-button-checked-inner-color;
+         font-size: @tab-button-large-inner-font-size;
+         font-weight: @tab-button-large-inner-font-weight;
       }
    }
    &.controls-TabButton__main-item {
