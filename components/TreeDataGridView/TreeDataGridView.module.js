@@ -225,7 +225,10 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
          container.attr('data-parent', parentKey);
 
          if (this._options.openedPath[key]) {
-            $('.js-controls-TreeView__expand', container).addClass('controls-TreeView__expand__open');
+            var tree = this._dataSet.getTreeIndex(this._options.hierField);
+            if (tree[key]) {
+               $('.js-controls-TreeView__expand', container).addClass('controls-TreeView__expand__open');
+            }
          }
          /*TODO пока придрот*/
          if (typeof parentKey != 'undefined' && parentKey !== null && parentContainer) {
