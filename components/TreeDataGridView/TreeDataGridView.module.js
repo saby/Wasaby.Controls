@@ -266,6 +266,10 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
             this.setSelectedKey(id);
             this.setCurrentElement(e, this._getDragItems(id));
          }
+         //Предотвращаем нативное выделение текста на странице
+         if (e.type !== "touchstart") {
+            e.preventDefault();
+         }
       },
       _callMoveOutHandler: function() {
       },
@@ -281,8 +285,6 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
             left: e.pageX - this._containerCoords.x
          });
          this._hideItemActions();
-         //Предотвращаем нативное выделение текста на странице
-         e.preventDefault();
       },
       _createAvatar: function(e){
          var count = this.getCurrentElement().length;
