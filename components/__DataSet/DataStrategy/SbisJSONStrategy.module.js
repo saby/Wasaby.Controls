@@ -1,5 +1,5 @@
 /**
- * Created by as.manuylov on 10.11.14.
+ * Created by as.manuylov on 10.11.14
  */
 define('js!SBIS3.CONTROLS.SbisJSONStrategy', [
    'js!SBIS3.CONTROLS.IDataStrategy',
@@ -218,6 +218,23 @@ define('js!SBIS3.CONTROLS.SbisJSONStrategy', [
                      n: index,
                      t: {n: 'Массив', t: 'Строка'}
                   });
+               } else if(value instanceof Object && value._type) {
+                  switch(value._type){
+                     case "recordset":
+                        filterParam.s.push({
+                           n: index,
+                           t: SbisJSONStrategy.FIELD_TYPE.DataSet
+                        });
+                        break;
+                     case "record":
+                        filterParam.s.push({
+                           n: index,
+                           t: SbisJSONStrategy.FIELD_TYPE.Record
+                        });
+                        break;
+                     default :
+                        throw new Error("Object type "+value._type+" isn't supported.")
+                  }
                } else {
                   filterParam.s.push({
                      n: index,
