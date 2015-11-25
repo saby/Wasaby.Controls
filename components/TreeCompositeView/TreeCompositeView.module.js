@@ -44,15 +44,17 @@ define('js!SBIS3.CONTROLS.TreeCompositeView', ['js!SBIS3.CONTROLS.TreeDataGridVi
          var $target = $(target),
              nodeID,
              handler = function() {
-                this._notify('onItemClick', id, data, target);
-                this._options.elemClickHandler && this._options.elemClickHandler.call(this, id, data, target);
-                nodeID = $target.closest('.controls-ListView__item').data('id');
-                if (this._dataSet.getRecordByKey(nodeID).get(this._options.hierField + '@')) {
-                   this.setCurrentRoot(nodeID);
-                   this.reload();
-                }
-                else {
-                   this._activateItem(id);
+                var res = this._notify('onItemClick', id, data, target);
+                if (res !== false) {
+                   this._options.elemClickHandler && this._options.elemClickHandler.call(this, id, data, target);
+                   nodeID = $target.closest('.controls-ListView__item').data('id');
+                   if (this._dataSet.getRecordByKey(nodeID).get(this._options.hierField + '@')) {
+                      this.setCurrentRoot(nodeID);
+                      this.reload();
+                   }
+                   else {
+                      this._activateItem(id);
+                   }
                 }
              }.bind(this);
 
@@ -250,7 +252,7 @@ define('js!SBIS3.CONTROLS.TreeCompositeView', ['js!SBIS3.CONTROLS.TreeDataGridVi
                   } else if (self._limit !== undefined) {
                      limit = (self._folderOffsets.hasOwnProperty(branchId) ? self._folderOffsets[branchId] : 0) + self._limit;
                   }
-                  return self._dataSource.query(filter, self._sorting, self._offset, limit)
+                  return self._callQuery(filter, self._sorting, self._offset, limit)
                      .addCallback(function(dataSet) {
                         branchesData[branchId] = dataSet;
                         return dataSet;
@@ -260,7 +262,7 @@ define('js!SBIS3.CONTROLS.TreeCompositeView', ['js!SBIS3.CONTROLS.TreeDataGridVi
          $ws.helpers.toggleIndicator(true);
          if (items) {
             currentDataSet = this.getDataSet();
-            filter = $ws.core.clone(this._filter);
+            filter = $ws.core.clone(this.getFilter());
             //Группируем записи по веткам (чтобы как можно меньше запросов делать)
             $ws.helpers.forEach(items, function(item) {
                //todo Сделать опредение родительского ключа через DataSet

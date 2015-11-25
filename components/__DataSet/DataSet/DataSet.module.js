@@ -1,12 +1,17 @@
 define('js!SBIS3.CONTROLS.DataSet', [
+   'js!SBIS3.CONTROLS.Data.ISerializable',
+   'js!SBIS3.CONTROLS.Data.SerializableMixin',
+   'js!SBIS3.CONTROLS.ArrayStrategy',
    'js!SBIS3.CONTROLS.DataFactory'
-], function () {
+], function (ISerializable, SerializableMixin, ArrayStrategy) {
    'use strict';
 
    /**
     * Класс для работы с набором записей.
     * @class SBIS3.CONTROLS.DataSet
     * @extends $ws.proto.Abstract
+    * @mixes SBIS3.CONTROLS.Data.ISerializable
+    * @mixes SBIS3.CONTROLS.Data.SerializableMixin
     * @public
     * @author Крайнов Дмитрий Олегович
     */
@@ -26,7 +31,8 @@ define('js!SBIS3.CONTROLS.DataSet', [
     */
    var addOptions = {add: true, remove: false};
 
-   var DataSet = $ws.proto.Abstract.extend(/** @lends SBIS3.CONTROLS.DataSet.prototype */{
+   var DataSet = $ws.proto.Abstract.extend([ISerializable, SerializableMixin], /** @lends SBIS3.CONTROLS.DataSet.prototype */{
+      _moduleName: 'SBIS3.CONTROLS.DataSet',
       $protected: {
          _indexTree: {},
          _isLoaded: false,
@@ -62,6 +68,7 @@ define('js!SBIS3.CONTROLS.DataSet', [
          }
       },
       $constructor: function () {
+         this._publish('onRecordChange');
          this._prepareData(this._options.data);
 
          if (this._options.keyField) {
@@ -72,6 +79,21 @@ define('js!SBIS3.CONTROLS.DataSet', [
 
          this.setMetaData(this._options.meta);
       },
+
+      // region SBIS3.CONTROLS.Data.ISerializable
+
+      _getSerializableState: function() {
+         return $ws.core.merge(
+            DataSet.superclass._getSerializableState.call(this), {
+               _indexTree: this._indexTree,
+               _isLoaded: this._isLoaded,
+               _byId: this._byId,
+               _indexId: this._indexId
+            }
+         );
+      },
+
+      // endregion SBIS3.CONTROLS.Data.ISerializable
 
       /**
        * Метод удаления записи. Помечает запись как удаленную. Реальное удаление записи из источника будет выполнено только после вызова метода sync на датасорсе.
@@ -180,7 +202,7 @@ define('js!SBIS3.CONTROLS.DataSet', [
        * @see strategy
        */
       getStrategy: function () {
-         return this._options.strategy;
+         return this._options.strategy || (this._options.strategy = new ArrayStrategy());
       },
 
       // полная установка рекордов в DataSet
