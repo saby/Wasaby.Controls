@@ -16,6 +16,16 @@ define('js!SBIS3.CONTROLS.Data.ISerializable', [], function () {
        */
       toJSON: function () {
          throw new Error('Method must be implemented');
+      },
+
+      /**
+       * Создает экземпляр из сериализованного вида
+       * @param {Object} data Сериализованный объект
+       * @returns {Object}
+       * @static
+       */
+      fromJSON: function (data) {
+         throw new Error('Method must be implemented');
       }
    };
 });

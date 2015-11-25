@@ -98,7 +98,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
             record = new this._model({
                compatibleMode: true,
                adapter: this.getStrategy(),
-               data: record,
+               rawData: record,
                idProperty: this._options.keyField
             });
          }
@@ -120,7 +120,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
             this.add(new this._model({
                compatibleMode: true,
                adapter: this.getStrategy(),
-               data: adapter.at(data, i),
+               rawData: adapter.at(data, i),
                idProperty: this._options.keyField
             }));
          }
@@ -181,7 +181,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
             this._options.meta.results = $ws.single.ioc.resolve('SBIS3.CONTROLS.Data.Model', {
                compatibleMode: true,
                adapter: this.getStrategy(),
-               data: this._options.meta.results,
+               rawData: this._options.meta.results,
                idProperty: this._options.keyField
             });
          }

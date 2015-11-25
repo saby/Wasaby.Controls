@@ -209,6 +209,22 @@ define('js!SBIS3.CONTROLS.Data.Source.DataSet', [
          return this._getDataProperty(property);
       },
 
+      /**
+       * Устанавливает сырые данные
+       * @param data {Object} Сырые данные
+       */
+      setRawData: function(data) {
+         this._options.data = data;
+      },
+
+      /**
+       * Возвращает сырые данные
+       * @returns {Object}
+       */
+      getRawData: function() {
+         return this._options.data;
+      },
+
       //endregion Public methods
 
       //region Protected methods
@@ -233,28 +249,13 @@ define('js!SBIS3.CONTROLS.Data.Source.DataSet', [
        */
       _getModelInstance: function (data) {
          return new this._options.model({
-            data: data,
+            rawData: data,
             adapter: this.getAdapter(),
             source: this.getSource(),
             compatibleMode: true
          });
-      },
-
-      /**
-       * Устанавливает данные в DataSet.
-       * @param data {Object} Объект содержащий набор записе, формат объекта
-       * должен соответсвовать текущей стратегии работы с данными.
-       */
-      setRawData: function(data) {
-         this._options.data = data;
-      },
-      /**
-       * Возвращает данные "как есть", в том виде в каком они были установлены.
-       * @returns {Object}
-       */
-      getRawData: function() {
-         return this._options.data;
       }
+
       //endregion Protected methods
 
    });

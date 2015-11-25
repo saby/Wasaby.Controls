@@ -33,7 +33,7 @@ define('js!SBIS3.CONTROLS.Data.Model', [
              * @example
              * <pre>
              *    var user = new Model({
-             *       data: {
+             *       rawData: {
              *          id: 1,
              *          firstName: 'John',
              *          lastName: 'Smith'
@@ -45,7 +45,7 @@ define('js!SBIS3.CONTROLS.Data.Model', [
              * @see getRawData
              * @see setRawData
              */
-            data: {},
+            rawData: {},
 
             /**
              * @cfg {SBIS3.CONTROLS.Data.Adapter.IAdapter} Адаптер для работы с данными
@@ -90,7 +90,7 @@ define('js!SBIS3.CONTROLS.Data.Model', [
              *       }
              *    });
              *    var user = new User({
-             *       data: {
+             *       rawData: {
              *          id: 5,
              *          login: 'Keanu',
              *          firstName: 'Johnny',
@@ -160,12 +160,16 @@ define('js!SBIS3.CONTROLS.Data.Model', [
          //TODO: убрать после перехода на ISource
          this._compatibleMode = cfg.compatibleMode;
 
+         if ('data' in cfg && !('rawData' in cfg)) {
+            this._options.rawData = this._options.data;
+            $ws.single.ioc.resolve('ILogger').log('SBIS3.CONTROLS.Data.Model', 'option "data" is deprecated and will be removed in 3.7.20. "rawData" instead.');
+         }
          this._options.idProperty = this._options.idProperty || '';
          this._initAdapter();
          if (!this._options.idProperty) {
-            this._options.idProperty = this.getAdapter().getKeyField(this._options.data);
+            this._options.idProperty = this.getAdapter().getKeyField(this._options.rawData);
          }
-         this.setRawData(this._options.data, true);
+         this.setRawData(this._options.rawData, true);
       },
 
       // region SBIS3.CONTROLS.Data.ISerializable
@@ -205,7 +209,6 @@ define('js!SBIS3.CONTROLS.Data.Model', [
             value = this._getCalculatedValue(name, value, property, true);
          }
 
-         //Инстансы объектов кэшируем
          if (this._isPropertyValueCacheable(value)) {
             this._propertiesCache[name] = value;
          }
@@ -230,7 +233,9 @@ define('js!SBIS3.CONTROLS.Data.Model', [
          if (this._getOriginalPropertyValue(name) !== value) {
             this._setOriginalPropertyValue(name, value);
             this._setChanged(true);
-            if (this._isPropertyValueCacheable(value)) {
+            if (name in this._propertiesCache &&
+               value !== this._propertiesCache[name]
+            ) {
                delete this._propertiesCache[name];
             }
             this._notify('onPropertyChange', name, value);
@@ -249,7 +254,7 @@ define('js!SBIS3.CONTROLS.Data.Model', [
       /**
        * Перебирает все свойства модели
        * @param {Function(*, Number)} callback Ф-я обратного вызова для каждого свойства. Первым аргументом придет название свойства, вторым - его значение.
-       * @param {Object} [context] Конекст вызова callback.
+       * @param {Object} [context] Контекст вызова callback.
        */
       each: function (callback, context) {
          for (var  name in this._options.properties) {
@@ -392,7 +397,7 @@ define('js!SBIS3.CONTROLS.Data.Model', [
        * @returns {Object}
        */
       getRawData: function () {
-         return this._options.data;
+         return this._options.rawData;
       },
 
       /**
@@ -400,7 +405,7 @@ define('js!SBIS3.CONTROLS.Data.Model', [
        * @param {Object} data Данные модели
        */
       setRawData: function (data, silent) {
-         this._options.data = data || {};
+         this._options.rawData = data || {};
          this._propertiesCache = {};
          this._initProperties();
          if (!silent) {
@@ -459,7 +464,7 @@ define('js!SBIS3.CONTROLS.Data.Model', [
        */
       _initProperties: function() {
          var adapter = this._options.adapter.forRecord(),
-            fields = adapter.getFields(this._options.data),
+            fields = adapter.getFields(this._options.rawData),
             i,
             length;
          for (i = 0, length = fields.length; i < length; i++) {
@@ -482,7 +487,7 @@ define('js!SBIS3.CONTROLS.Data.Model', [
        * @private
        */
       _isPropertyValueCacheable: function(value) {
-         return value && typeof value === 'object' && !(value instanceof Date);
+         return value && typeof value === 'object';
       },
 
       /**
@@ -492,8 +497,8 @@ define('js!SBIS3.CONTROLS.Data.Model', [
        */
       _getOriginalPropertyValue: function(name) {
          var adapter = this._options.adapter.forRecord(),
-            rawValue = adapter.get(this._options.data, name),
-            fieldData = adapter.getFullFieldData(this._options.data, name),
+            rawValue = adapter.get(this._options.rawData, name),
+            fieldData = adapter.getFullFieldData(this._options.rawData, name),
             value = Factory.cast(
                rawValue,
                fieldData.type,
@@ -514,10 +519,10 @@ define('js!SBIS3.CONTROLS.Data.Model', [
        */
       _setOriginalPropertyValue: function(name, value) {
          var adapter = this._options.adapter.forRecord(),
-            fieldData = adapter.getFullFieldData(this._options.data, name);
+            fieldData = adapter.getFullFieldData(this._options.rawData, name);
 
          adapter.set(
-            this._options.data,
+            this._options.rawData,
             name,
             Factory.serialize(
                value,

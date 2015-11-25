@@ -20,15 +20,32 @@ define('js!SBIS3.CONTROLS.Data.SerializableMixin', [
 
       toJSON: function() {
          return {
+            $serialized: true,
             module: this._moduleName,
-            instance: this._getInstanceId(),
+            id: this._getInstanceId(),
             state: this._getSerializableState()
          };
+      },
+
+      fromJSON: function (data) {
+         var Module = require('js!' + data.module),
+            instance,
+            initializer = Module._setSerializableState(data.state);
+         instance = new Module(data.state._options);
+         initializer.call(instance, data.id);
+         return instance;
       },
 
       _getSerializableState: function() {
          return {
             _options: this._options
+         };
+      },
+
+      _setSerializableState: function(state) {
+         state._options = state._options || {};
+         return function(instanceId) {
+            this._instanceId = instanceId;
          };
       },
 

@@ -356,8 +356,8 @@ define([
             it('should serialize a model', function () {
                var json = model.toJSON();
                assert.strictEqual(json.module, 'SBIS3.CONTROLS.Data.Model');
-               assert.isNumber(json.instance);
-               assert.isTrue(json.instance > 0);
+               assert.isNumber(json.id);
+               assert.isTrue(json.id > 0);
                assert.deepEqual(json.state._options, model._options);
                assert.strictEqual(json.state._hash, model.getHash());
                assert.strictEqual(json.state._isStored, model.isStored());
