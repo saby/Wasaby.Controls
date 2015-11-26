@@ -305,6 +305,7 @@ define('js!SBIS3.CONTROLS.ListView',
             }
             $ws.single.CommandDispatcher.declareCommand(this, 'ActivateItem', this._activateItem);
             $ws.single.CommandDispatcher.declareCommand(this, 'AddItem', this._addItem);
+            $ws.single.CommandDispatcher.declareCommand(this, 'editItem', this._editItem);
          },
 
          init: function () {
@@ -1127,7 +1128,9 @@ define('js!SBIS3.CONTROLS.ListView',
            //TODO если есть редактирование по месту запусть его
             this._notify('onAddItem');
          },
-
+         _editItem: function(key) {
+            this.setSelectedKey(key);
+         },
          destroy: function () {
             if (this.isInfiniteScroll()) {
                if (this._isHeightGrowable()) {
