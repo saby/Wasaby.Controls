@@ -47,7 +47,7 @@ define('js!SBIS3.CONTROLS.Demo.MyTreeCompositeView',
 
          var source = new StaticSource({
                data: items,
-               keyField: 'id'
+               idProperty: 'id'
             }
          );
 

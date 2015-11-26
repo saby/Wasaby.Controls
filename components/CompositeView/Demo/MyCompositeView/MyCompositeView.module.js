@@ -51,7 +51,7 @@ define('js!SBIS3.CONTROLS.Demo.MyCompositeView',
          
          var source = new StaticSource({
                data: items,
-               keyField: 'id'
+               idProperty: 'id'
             }
          );
 

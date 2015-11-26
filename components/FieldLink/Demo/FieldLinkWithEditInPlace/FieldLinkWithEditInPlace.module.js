@@ -173,7 +173,7 @@ define('js!SBIS3.CONTROLS.Demo.FieldLinkWithEditInPlace', [
                   {n: 'Название', t: 'Текст'}
                ]
             },
-            keyField: 'Ид',
+            idProperty: 'Ид',
             adapter: new AdapterSbis()
          }));
          this.setDataSourceFilter(retTrue);
@@ -196,7 +196,7 @@ define('js!SBIS3.CONTROLS.Demo.FieldLinkWithEditInPlace', [
                   {n: 'Название', t: 'Текст'}
                ]
             },
-            keyField: 'Ид',
+            idProperty: 'Ид',
             adapter: new AdapterSbis()
          }));
          this.setDataSourceFilter(retTrue);
@@ -218,7 +218,7 @@ define('js!SBIS3.CONTROLS.Demo.FieldLinkWithEditInPlace', [
                   {n: 'Название', t: 'Текст'}
                ]
             },
-            keyField: 'Ид',
+            idProperty: 'Ид',
             adapter: new AdapterSbis()
          }));
          this.setDataSourceFilter(retTrue);

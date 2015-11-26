@@ -67,7 +67,7 @@ define('js!SBIS3.CONTROLS.Demo.MySuggestTextBoxDS', [
                   'Отчество': 'Яковлевич',
                   'Должность': 'Маркетолог'
                }],
-               keyField: 'Ид'
+               idProperty: 'Ид'
             });
 
             list.setDataSource(dataSource);

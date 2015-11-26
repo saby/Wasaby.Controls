@@ -238,7 +238,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
             }
             this._dataSource = new StaticSource({
                data: items,
-               keyField: this._options.keyField
+               idProperty: this._options.keyField
             });
          }
       },
@@ -516,7 +516,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
 
          this._dataSource = new StaticSource({
             data: items,
-            keyField: keyField
+            idProperty: keyField
          });
          this.reload();
       },

@@ -188,6 +188,14 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
 
          return this._options.meta;
       },
+      getTreeIndex: function(field, reindex){
+         if (reindex || (Object.isEmpty(this._indexTree) && field)){
+            this._reindexTree(field);
+         }
+         return this._indexTree;
+      },
+
+
 
       setMetaData: function (meta) {
          this._options.meta = meta;

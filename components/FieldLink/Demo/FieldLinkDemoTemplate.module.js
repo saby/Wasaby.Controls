@@ -46,7 +46,7 @@ define('js!SBIS3.CONTROLS.Demo.FieldLinkDemoTemplate', [
                   {n: 'Название', t: 'Текст'}
                ]
             },
-            keyField: 'Ид',
+            idProperty: 'Ид',
             adapter: new AdapterSbis()
          });
 

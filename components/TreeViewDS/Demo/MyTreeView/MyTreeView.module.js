@@ -42,7 +42,7 @@ define('js!SBIS3.CONTROLS.Demo.MyTreeView',
 
          var source = new StaticSource({
                data: items,
-               keyField: 'id'
+               idProperty: 'id'
             }
          );
 
