@@ -659,7 +659,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
       },
 
       _buildHead: function() {
-         var body = this._getItemsContainer();
+         var body = $('.controls-DataGridView__tbody', this._container);
 
          if(this._options.showHead) {
             this._thead && this._thead.remove();
