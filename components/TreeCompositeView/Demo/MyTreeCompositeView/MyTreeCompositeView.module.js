@@ -1,8 +1,7 @@
 define('js!SBIS3.CONTROLS.Demo.MyTreeCompositeView',
     [
         'js!SBIS3.CORE.CompoundControl',
-        'js!SBIS3.CONTROLS.StaticSource',
-        'js!SBIS3.CONTROLS.ArrayStrategy',
+        'js!SBIS3.CONTROLS.Data.Source.Memory',
         'js!SBIS3.CONTROLS.ComponentBinder',
         'html!SBIS3.CONTROLS.Demo.MyTreeCompositeView/resources/tileTpl',
         'html!SBIS3.CONTROLS.Demo.MyTreeCompositeView/resources/listTpl',
@@ -13,7 +12,7 @@ define('js!SBIS3.CONTROLS.Demo.MyTreeCompositeView',
         'js!SBIS3.CONTROLS.BreadCrumbs',
         'js!SBIS3.CONTROLS.BackButton',
         'js!SBIS3.CONTROLS.RadioGroup'
-    ], function(CompoundControl, StaticSource, ArrayStrategy, ComponentBinder, tileTpl, listTpl, folderTpl, dotTplFn) {
+    ], function(CompoundControl, StaticSource, ComponentBinder, tileTpl, listTpl, folderTpl, dotTplFn) {
    /**
     * SBIS3.CONTROLS.Demo.MyTreeCompositeView
     * @class SBIS3.CONTROLS.Demo.MyTreeCompositeView
@@ -48,8 +47,7 @@ define('js!SBIS3.CONTROLS.Demo.MyTreeCompositeView',
 
          var source = new StaticSource({
                data: items,
-               keyField: 'id',
-               strategy: new ArrayStrategy()
+               keyField: 'id'
             }
          );
 

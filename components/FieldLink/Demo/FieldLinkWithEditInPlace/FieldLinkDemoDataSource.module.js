@@ -1,5 +1,5 @@
 define('js!SBIS3.CONTROLS.Demo.FieldLinkDataSource', [
-   'js!SBIS3.CONTROLS.StaticSource'
+   'js!SBIS3.CONTROLS.Data.Source.Memory'
 ], function (StaticSource) {
    /**
     * SBIS3.CONTROLS.Demo.FieldLinkDataSource

@@ -3,9 +3,8 @@ define('js!SBIS3.CONTROLS.Demo.MySuggestTextBoxDS', [
    'html!SBIS3.CONTROLS.Demo.MySuggestTextBox',
    'css!SBIS3.CONTROLS.Demo.MySuggestTextBox',
    'js!SBIS3.CONTROLS.SuggestTextBox',
-   'js!SBIS3.CONTROLS.ArrayStrategy',
-   'js!SBIS3.CONTROLS.StaticSource'
-], function (CompoundControl, dotTplFn, cssFn, SuggestTextBox, ArrayStrategy, StaticSource) {
+   'js!SBIS3.CONTROLS.Data.Source.Memory'
+], function (CompoundControl, dotTplFn, cssFn, SuggestTextBox, StaticSource) {
    /**
     * SBIS3.CONTROLS.Demo.MySuggestTextBoxDS
     * @class SBIS3.CONTROLS.Demo.MySuggestTextBoxDS
@@ -68,8 +67,7 @@ define('js!SBIS3.CONTROLS.Demo.MySuggestTextBoxDS', [
                   'Отчество': 'Яковлевич',
                   'Должность': 'Маркетолог'
                }],
-               keyField: 'Ид',
-               strategy: new ArrayStrategy()
+               keyField: 'Ид'
             });
 
             list.setDataSource(dataSource);

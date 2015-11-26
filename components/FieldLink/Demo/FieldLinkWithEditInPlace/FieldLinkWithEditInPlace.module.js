@@ -2,10 +2,10 @@ define('js!SBIS3.CONTROLS.Demo.FieldLinkWithEditInPlace', [
    'js!SBIS3.CORE.CompoundControl',
    'html!SBIS3.CONTROLS.Demo.FieldLinkWithEditInPlace',
    'js!SBIS3.CONTROLS.DataGridView',
-   'js!SBIS3.CONTROLS.StaticSource',
+   'js!SBIS3.CONTROLS.Data.Source.Memory',
    'js!SBIS3.CONTROLS.Demo.FieldLinkDataSource',
    'js!SBIS3.CONTROLS.DataSet',
-   'js!SBIS3.CONTROLS.SbisJSONStrategy',
+   'js!SBIS3.CONTROLS.Data.Adapter.Sbis',
    'css!SBIS3.CONTROLS.Demo.FieldLinkWithEditInPlace',
    'js!SBIS3.CONTROLS.TextBox',
    'js!SBIS3.CONTROLS.FieldLink',
@@ -13,7 +13,7 @@ define('js!SBIS3.CONTROLS.Demo.FieldLinkWithEditInPlace', [
    'html!SBIS3.CONTROLS.Demo.FieldLinkWithEditInPlace/resources/cellWorkPlace',
    'html!SBIS3.CONTROLS.Demo.FieldLinkWithEditInPlace/resources/cellFIO',
    'html!SBIS3.CONTROLS.Demo.FieldLinkWithEditInPlace/resources/cellID'
-], function (CompoundControl, dotTplFn, DataGridView, StaticSource, FieldLinkDataSource, DataSet, SbisStrategy) {
+], function (CompoundControl, dotTplFn, DataGridView, StaticSource, FieldLinkDataSource, DataSet, AdapterSbis) {
    /**
     * SBIS3.CONTROLS.Demo.FieldLinkWithEditInPlace
     * @class SBIS3.CONTROLS.Demo.FieldLinkWithEditInPlace
@@ -154,7 +154,7 @@ define('js!SBIS3.CONTROLS.Demo.FieldLinkWithEditInPlace', [
                   {n: 'МестоРаботы', t: 'Запись'}]
             },
             keyField: 'Ид',
-            strategy: new SbisStrategy()
+            adapter: new AdapterSbis()
          });
       },
 
@@ -174,7 +174,7 @@ define('js!SBIS3.CONTROLS.Demo.FieldLinkWithEditInPlace', [
                ]
             },
             keyField: 'Ид',
-            strategy: new SbisStrategy()
+            adapter: new AdapterSbis()
          }));
          this.setDataSourceFilter(retTrue);
       },
@@ -197,7 +197,7 @@ define('js!SBIS3.CONTROLS.Demo.FieldLinkWithEditInPlace', [
                ]
             },
             keyField: 'Ид',
-            strategy: new SbisStrategy()
+            adapter: new AdapterSbis()
          }));
          this.setDataSourceFilter(retTrue);
       },
@@ -219,7 +219,7 @@ define('js!SBIS3.CONTROLS.Demo.FieldLinkWithEditInPlace', [
                ]
             },
             keyField: 'Ид',
-            strategy: new SbisStrategy()
+            adapter: new AdapterSbis()
          }));
          this.setDataSourceFilter(retTrue);
          this.setSelectedKeys([1,2,3]);

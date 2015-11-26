@@ -1,11 +1,11 @@
 define('js!SBIS3.CONTROLS.Demo.MyMenuButton',
     ['js!SBIS3.CORE.CompoundControl',
-     'html!SBIS3.CONTROLS.Demo.MyMenuButton','js!SBIS3.CONTROLS.ArrayStrategy', 'js!SBIS3.CONTROLS.StaticSource',
+     'html!SBIS3.CONTROLS.Demo.MyMenuButton', 'js!SBIS3.CONTROLS.Data.Source.Memory',
      'css!SBIS3.CONTROLS.Demo.MyMenuButton',
      'js!SBIS3.CONTROLS.MenuButton',
      'js!SBIS3.CONTROLS.MenuLink',
       'js!SBIS3.CONTROLS.Button'],
-    function(CompoundControl, dotTplFn, ArrayStrategy, StaticSource) {
+    function(CompoundControl, dotTplFn, StaticSource) {
    /**
     * SBIS3.CONTROLS.Demo.MyMenuButton
     * @class SBIS3.CONTROLS.Demo.MyMenuButton
@@ -42,7 +42,6 @@ define('js!SBIS3.CONTROLS.Demo.MyMenuButton',
                   'title' : 'Третий'
 
                }],
-               strategy: new ArrayStrategy(),
                keyField : 'id'
             });
             self._myMenu.setDataSource(ds);
