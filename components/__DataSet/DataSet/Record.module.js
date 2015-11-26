@@ -2,24 +2,22 @@
  * Created by as.manuylov on 10.11.14.
  */
 define('js!SBIS3.CONTROLS.Record', [
-   'js!SBIS3.CONTROLS.Data.ISerializable',
    'js!SBIS3.CONTROLS.Data.SerializableMixin',
    'js!SBIS3.CONTROLS.ArrayStrategy',
    'js!SBIS3.CONTROLS.DataFactory'
-], function (ISerializable, SerializableMixin, ArrayStrategy, DataFactory) {
+], function (SerializableMixin, ArrayStrategy, DataFactory) {
    'use strict';
 
    /**
     * Класс для работы с одной записью
     * @class SBIS3.CONTROLS.Record
     * @extends $ws.proto.Abstract
-    * @mixes SBIS3.CONTROLS.Data.ISerializable
     * @mixes SBIS3.CONTROLS.Data.SerializableMixin
     * @public
     * @author Крайнов Дмитрий Олегович
     */
 
-   var Record =  $ws.proto.Abstract.extend([ISerializable, SerializableMixin], /** @lends SBIS3.CONTROLS.Record.prototype */{
+   var Record =  $ws.proto.Abstract.extend([SerializableMixin], /** @lends SBIS3.CONTROLS.Record.prototype */{
       _moduleName: 'SBIS3.CONTROLS.Record',
       $protected: {
          /**
@@ -73,7 +71,7 @@ define('js!SBIS3.CONTROLS.Record', [
          this._cid = $ws.helpers.randomId('c');
       },
 
-      // region SBIS3.CONTROLS.Data.ISerializable
+      // region SBIS3.CONTROLS.Data.SerializableMixin
 
       _getSerializableState: function() {
          return $ws.core.merge(
@@ -88,7 +86,7 @@ define('js!SBIS3.CONTROLS.Record', [
          );
       },
 
-      // endregion SBIS3.CONTROLS.Data.ISerializable
+      // endregion SBIS3.CONTROLS.Data.SerializableMixin
 
       clone: function() {
          return new Record($ws.core.clone(this._options));

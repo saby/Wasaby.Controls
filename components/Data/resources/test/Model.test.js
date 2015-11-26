@@ -50,7 +50,7 @@ define([
             },
             model = new Model({
                idProperty: 'id',
-               data: modelData,
+               rawData: modelData,
                properties: modelProperties,
                adapter: adapter
             }),
@@ -178,7 +178,7 @@ define([
             it('should set data', function () {
                var newModel = new Model({
                   idProperty: 'id',
-                  data: {}
+                  rawData: {}
                });
                newModel.setRawData(modelData);
                assert.strictEqual(newModel.getId(), modelData['id']);
@@ -193,7 +193,7 @@ define([
             it('should set adapter', function () {
                var myModel = new Model({
                   idProperty: 'id',
-                  data: modelData
+                  rawData: modelData
                });
                myModel.setAdapter(adapter);
                assert.deepEqual(myModel.getAdapter(), adapter);
@@ -217,7 +217,7 @@ define([
                         {n: 'Name'}]
                   },
                   model = new Model({
-                     data: data,
+                     rawData: data,
                      adapter: new SbisAdapter()
                   });
                assert.strictEqual(model.getId(), data.d[1]);
@@ -225,7 +225,7 @@ define([
 
             it('should throw error for empty key property', function () {
                var newModel = new Model({
-                  data: modelData
+                  rawData: modelData
                });
                assert.throw(function () {
                   newModel.getId();
@@ -240,7 +240,7 @@ define([
          describe('.setIdProperty()', function () {
             it('should set id property', function () {
                var newModel = new Model({
-                  data: modelData
+                  rawData: modelData
                });
                newModel.setIdProperty('id');
                assert.strictEqual(newModel.getId(), modelData['id']);
@@ -249,9 +249,53 @@ define([
          describe('.clone()', function () {
             it('should clone a model', function () {
                var clone = model.clone();
-               assert.deepEqual(clone, model);
+               assert.notEqual(clone, model);
+            });
+            it('should clone rawData', function () {
+               var clone = model.clone();
+               assert.notEqual(model.getRawData(), clone.getRawData());
+               assert.deepEqual(model.getRawData(), clone.getRawData());
+            });
+            it('should clone properties defintion', function () {
+               var clone = model.clone();
+               assert.notEqual(model.getProperties(), clone.getProperties());
+               assert.deepEqual(model.getProperties(), clone.getProperties());
+            });
+            it('should clone state markers', function () {
+               var clone = model.clone();
+               assert.strictEqual(model.isDeleted(), clone.isDeleted());
+               assert.strictEqual(model.isChanged(), clone.isChanged());
+               assert.strictEqual(model.isStored(), clone.isStored());
+            });
+            it('should clone id property', function () {
+               var clone = model.clone();
+               assert.strictEqual(model.getId(), clone.getId());
+               assert.strictEqual(model.getIdProperty(), clone.getIdProperty());
+            });
+            it('should give equal toObject', function () {
+               var clone = model.clone();
+               assert.notEqual(model.toObject(), clone.toObject());
+               assert.deepEqual(model.toObject(), clone.toObject());
+            });
+            it('should give equal fields', function () {
+               var clone = model.clone();
+               model.each(function(name, value) {
+                  assert.strictEqual(value, clone.get(name));
+               });
+               clone.each(function(name, value) {
+                  assert.strictEqual(value, model.get(name));
+               });
+            });
+            it('should make clone\'s data independed', function () {
+               var clone = model.clone();
+               assert.equal(clone.get('max'), model.get('max'));
                clone.set('max', 1);
                assert.notEqual(clone.get('max'), model.get('max'));
+
+               var clone1 = model.clone();
+               assert.equal(clone1.get('max'), model.get('max'));
+               model.set('max', 12);
+               assert.notEqual(clone1.get('max'), model.get('max'));
             });
 
          });
@@ -259,7 +303,7 @@ define([
             it('should merge models', function () {
                var newModel = new Model({
                   idProperty: 'id',
-                  data: {
+                  rawData: {
                      'title': 'new',
                      'link': '123'
                   }
@@ -280,7 +324,7 @@ define([
                         {n: 'etc'}]
                   },
                   anotherModel = new Model({
-                     data: data,
+                     rawData: data,
                      adapter: new SbisAdapter()
                   });
                model.merge(anotherModel);
@@ -297,7 +341,7 @@ define([
             it('should stay unchanged with same donor', function () {
                assert.isFalse(model.isChanged());
                var anotherModel = new Model({
-                  data: {
+                  rawData: {
                      max: modelData.max
                   }
                });
@@ -308,7 +352,7 @@ define([
                model.set('max', 2);
                assert.isTrue(model.isChanged());
                var anotherModel = new Model({
-                  data: {
+                  rawData: {
                      max: 157
                   }
                });
@@ -318,7 +362,7 @@ define([
             it('should become changed with different donor', function () {
                assert.isFalse(model.isChanged());
                var anotherModel = new Model({
-                  data: {
+                  rawData: {
                      max: 157
                   }
                });

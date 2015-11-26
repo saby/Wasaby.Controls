@@ -28,7 +28,7 @@ define('js!SBIS3.CONTROLS.Data.Source.DataSet', [
             /**
              * @cfg {String} Данные, выданные источником
              */
-            data: '',
+            rawData: '',
 
             /**
              * @cfg {Function} Конструктор модели
@@ -211,10 +211,10 @@ define('js!SBIS3.CONTROLS.Data.Source.DataSet', [
 
       /**
        * Устанавливает сырые данные
-       * @param data {Object} Сырые данные
+       * @param rawData {Object} Сырые данные
        */
-      setRawData: function(data) {
-         this._options.data = data;
+      setRawData: function(rawData) {
+         this._options.rawData = rawData;
       },
 
       /**
@@ -222,7 +222,7 @@ define('js!SBIS3.CONTROLS.Data.Source.DataSet', [
        * @returns {Object}
        */
       getRawData: function() {
-         return this._options.data;
+         return this._options.rawData;
       },
 
       //endregion Public methods
@@ -237,19 +237,19 @@ define('js!SBIS3.CONTROLS.Data.Source.DataSet', [
        */
       _getDataProperty: function (property) {
          return property ?
-            this.getAdapter().getProperty(this._options.data, property) :
-            this._options.data;
+            this.getAdapter().getProperty(this._options.rawData, property) :
+            this._options.rawData;
       },
 
       /**
        * Возвращает инстанс модели
-       * @param {*} data Данные модели
+       * @param {*} rawData Данные модели
        * @returns {Function}
        * @private
        */
-      _getModelInstance: function (data) {
+      _getModelInstance: function (rawData) {
          return new this._options.model({
-            rawData: data,
+            rawData: rawData,
             adapter: this.getAdapter(),
             source: this.getSource(),
             compatibleMode: true

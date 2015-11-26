@@ -423,7 +423,7 @@ define([
                         }),
                         model = new Model({
                            adapter: new SbisAdapter(),
-                           data: {
+                           rawData: {
                               d: [
                                  0,
                                  ''
