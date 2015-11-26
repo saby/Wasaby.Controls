@@ -121,6 +121,7 @@ define('js!SBIS3.CONTROLS.EditInPlaceController',
                this._areas[this._editing].editInPlace.getContainer().mousemove(this._onMouseMove.bind(this));
                this._areas[this._editing].editInPlace.getContainer().bind('keyup', this._areaHandlers.onKeyDown);
                $ws._const.$win.bind(isMobileBrowser ? 'touchend' : 'mouseup', this._areaHandlers.onMouseDown);
+               this.sendCommand('editItem', this._areas[this._editing].record.getKey());
             },
             /**
              * Обновить область editInPlace (позицию, размеры, содержимое)
