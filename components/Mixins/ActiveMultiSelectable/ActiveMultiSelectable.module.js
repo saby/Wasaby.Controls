@@ -1,7 +1,7 @@
 /**
  * Created by am.gerasimov on 26.10.2015.
  */
-define('js!SBIS3.CONTROLS.ActiveMultiSelectable', ['js!SBIS3.CONTROLS.Data.Source.DataSet', 'js!SBIS3.CONTROLS.SbisJSONStrategy'], function(DataSet, SbisJSONStrategy) {
+define('js!SBIS3.CONTROLS.ActiveMultiSelectable', ['js!SBIS3.CONTROLS.DataSet', 'js!SBIS3.CONTROLS.SbisJSONStrategy'], function(DataSet, SbisJSONStrategy) {
 
    function propertyUpdateWrapper(func) {
       return function() {
@@ -36,7 +36,7 @@ define('js!SBIS3.CONTROLS.ActiveMultiSelectable', ['js!SBIS3.CONTROLS.Data.Sourc
        */
       setSelectedItems: propertyUpdateWrapper(function(dataSet) {
          var self = this,
-             isDataSet = $ws.helpers.instanceOfModule(dataSet, 'SBIS3.CONTROLS.DataSet') || $ws.helpers.instanceOfModule(dataSet, 'SBIS3.CONTROLS.Data.Source.DataSet'),
+             isDataSet = $ws.helpers.instanceOfModule(dataSet, 'SBIS3.CONTROLS.DataSet'),
              iterator = isDataSet ? dataSet.each : $ws.helpers.forEach;
 
          function iteratorCallback(rec) {

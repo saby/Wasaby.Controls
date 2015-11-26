@@ -575,7 +575,7 @@ define('js!SBIS3.CONTROLS.SbisJSONStrategy', [
     * @returns {*}
     */
    SbisJSONStrategy.serializeRecord = function (data) {
-      if ($ws.helpers.instanceOfModule(data, 'SBIS3.CONTROLS.Record') || $ws.helpers.instanceOfModule(data, 'SBIS3.CONTROLS.Data.Model')) {
+      if ($ws.helpers.instanceOfModule(data, 'SBIS3.CONTROLS.Record')) {
          return $ws.core.clone(data.getRaw());
       } else if (data instanceof $ws.proto.Record) {
          return data.toJSON();
@@ -602,7 +602,7 @@ define('js!SBIS3.CONTROLS.SbisJSONStrategy', [
             dt.push(rO[sorted.values[y]]);
          }
          return dt;
-      } else if ($ws.helpers.instanceOfModule(data, 'SBIS3.CONTROLS.Record') || $ws.helpers.instanceOfModule(data, 'SBIS3.CONTROLS.Data.Model')) {
+      } else if ($ws.helpers.instanceOfModule(data, 'SBIS3.CONTROLS.Record')) {
          data.each(function (value) {
             dt.push(value);
          });

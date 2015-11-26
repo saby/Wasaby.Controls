@@ -4,7 +4,7 @@ define('js!SBIS3.CONTROLS.Demo.FieldLinkWithEditInPlace', [
    'js!SBIS3.CONTROLS.DataGridView',
    'js!SBIS3.CONTROLS.StaticSource',
    'js!SBIS3.CONTROLS.Demo.FieldLinkDataSource',
-   'js!SBIS3.CONTROLS.Data.Source.DataSet',
+   'js!SBIS3.CONTROLS.DataSet',
    'js!SBIS3.CONTROLS.SbisJSONStrategy',
    'css!SBIS3.CONTROLS.Demo.FieldLinkWithEditInPlace',
    'js!SBIS3.CONTROLS.TextBox',
