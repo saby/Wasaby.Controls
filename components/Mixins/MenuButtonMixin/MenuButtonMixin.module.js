@@ -36,17 +36,19 @@ define('js!SBIS3.CONTROLS.MenuButtonMixin', ['js!SBIS3.CONTROLS.ContextMenu'], f
          if (this._container.hasClass('controls-Menu__hide-menu-header')){
             this._options.pickerClassName += ' controls-Menu__hide-menu-header';
          }
+         this._checkItemsIcons();
+      },
 
-         //TODO: Можно будет выпилить когда меню будет сделано через таблицу
-         //3.7.3.10: придрот для отсупа в пунктах меню, если ни в одном пункте нет иконки а у кнопки есть
+      //TODO: Можно будет выпилить когда меню будет сделано через таблицу
+      //3.7.3.10: придрот для отсупа в пунктах меню, если ни в одном пункте нет иконки а у кнопки есть
+      _checkItemsIcons: function(items){
          var icon = 'sprite:';
-         if (this._options.icon){
+         if (this._options.icon && items){
             if (this._options.icon.indexOf('icon-16') !== -1){
                icon += 'icon-16';
             } else if (this._options.icon.indexOf('icon-24')){
                icon += 'icon-24';
             }
-            var items = this._options.items;
             for (var i = 0; i < items.length; i++){
                if (!items[i].icon) { items[i].icon = icon;} 
             }
@@ -153,6 +155,9 @@ define('js!SBIS3.CONTROLS.MenuButtonMixin', ['js!SBIS3.CONTROLS.ContextMenu'], f
             if (this._picker) {
                this._picker.setEnabled(enabled);
             }
+         },
+         setItems: function(items){
+            this._checkItemsIcons(items);
          }
       },
 
