@@ -756,7 +756,16 @@ define('js!SBIS3.CONTROLS.ListView',
          },
 
          _findItemByElement: function(target){
-            return target.closest('.js-controls-ListView__item', this._container[0]);
+            if(!target.length) {
+               return [];
+            }
+
+            var elem = target.closest('.js-controls-ListView__item', this._container[0]),
+                /* Ищем элемент только среди дочерних */
+                itemElem = $($ws.helpers.find(this._getItemsContainer()[0].children, function(childElem) { return elem[0] === childElem;} ));
+
+            /* Если элемент не нашли, то поднимемся на уровень выше и опять поищем */
+            return itemElem.length ? elem : this._findItemByElement(elem.parent());
          },
          /**
           * Показывает оперцаии над записью для элемента
