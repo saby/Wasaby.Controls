@@ -356,7 +356,7 @@ define('js!SBIS3.CONTROLS.ListView',
          _isViewElement: function (elem) {
             return $.contains(this._getItemsContainer()[0], elem[0]);
          },
-         _onClickHandler: function(e) {         	
+         _onClickHandler: function(e) {
             ListView.superclass._onClickHandler.apply(this, arguments);
             var $target = $(e.target),
                target = this._findItemByElement($target),
@@ -609,7 +609,16 @@ define('js!SBIS3.CONTROLS.ListView',
          },
 
          _findItemByElement: function(target){
-            return target.closest('.controls-ListView__item', this._container[0]);
+            if(!target.length) {
+               return [];
+            }
+
+            var elem = target.closest('.controls-ListView__item', this._container[0]),
+                /* Ищем элемент только среди дочерних */
+                itemElem = $($ws.helpers.find(this._getItemsContainer()[0].children, function(childElem) { return elem[0] === childElem;} ));
+
+            /* Если элемент не нашли, то поднимемся на уровень выше и опять поищем */
+            return itemElem.length ? elem : this._findItemByElement(elem.parent());
          },
          /**
           * Показывает оперцаии над записью для элемента
