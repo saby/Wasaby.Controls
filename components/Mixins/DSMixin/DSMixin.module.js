@@ -436,7 +436,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
          this._options.filter = filter;
          this._dropPageSave();
          if (this._dataSource && !noLoad) {
-            this.reload(this._filter, this._sorting, 0, this.getPageSize());
+            this.reload(this._options.filter, this._sorting, 0, this.getPageSize());
          }
       },
 
