@@ -31,7 +31,7 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', ['js!SBIS3.CORE.Control'], function (Con
       $constructor : function() {
          var
             filter = this.getFilter() || {};
-         this._publish('onNodeDataLoad');
+         this._filter = this._filter || {};
          delete (filter[this._options.hierField]);
          if (this._options.expand) {
             filter['Разворот'] = 'С разворотом';
@@ -69,8 +69,7 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', ['js!SBIS3.CORE.Control'], function (Con
        * @param {String} key Идентификатор раскрываемого узла
        */
       collapseNode: function (key) {
-         var itemCont = $('.controls-ListView__item[data-id="' + key + '"]', this.getContainer().get(0));
-         $('.js-controls-TreeView__expand', itemCont).removeClass('controls-TreeView__expand__open');
+         this._drawExpandArrow(key, false);
          this._collapseChilds(key);
          delete(this._options.openedPath[key]);
          this._nodeClosed(key);
@@ -124,7 +123,7 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', ['js!SBIS3.CORE.Control'], function (Con
                // TODO: Отдельное событие при загрузке данных узла. Сделано так как тут нельзя нотифаить onDataLoad,
                // так как на него много всего завязано. (пользуется Янис)
                self._folderHasMore[key] = dataSet.getMetaData().more;
-               self._notify('onNodeDataLoad', key, dataSet);
+               self._notify('onDataMerge', dataSet);
                self._toggleIndicator(false);
                self._nodeDataLoaded(key, dataSet);
             });
@@ -135,6 +134,7 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', ['js!SBIS3.CORE.Control'], function (Con
                for (var i = 0; i < child.length; i++){
                   records.push(this._dataSet.getRecordByKey(child[i]));
                }
+               this._options.openedPath[key] = true;
                this._drawLoadedNode(key, records, this._folderHasMore[key]);
             }
          }
@@ -164,10 +164,9 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', ['js!SBIS3.CORE.Control'], function (Con
          }
       },
 
-      _drawExpandArrow: function(key){
+      _drawExpandArrow: function(key, flag){
          var itemCont = $('.controls-ListView__item[data-id="' + key + '"]', this.getContainer().get(0));
-         $('.js-controls-TreeView__expand', itemCont).first().addClass('controls-TreeView__expand__open');
-         this._options.openedPath[key] = true;
+         $('.js-controls-TreeView__expand', itemCont).first().toggleClass('controls-TreeView__expand__open', flag);
       },
 
       _nodeDataLoaded : function(key, dataSet) {
@@ -178,6 +177,7 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', ['js!SBIS3.CORE.Control'], function (Con
          dataSet.each(function (record) {
             records.push(record);
          });
+         this._options.openedPath[key] = true;
          self._drawLoadedNode(key, records, self._folderHasMore[key]);
       },
 
@@ -219,6 +219,7 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', ['js!SBIS3.CORE.Control'], function (Con
          this._loader = this._dataSource.query(filter, this._sorting, (id ? this._folderOffsets[id] : this._folderOffsets['null']) + this._limit, this._limit).addCallback(function (dataSet) {
             //ВНИМАНИЕ! Здесь стрелять onDataLoad нельзя! Либо нужно определить событие, которое будет
             //стрелять только в reload, ибо между полной перезагрузкой и догрузкой данных есть разница!
+            self._notify('onDataMerge', dataSet);
             self._loader = null;
             //нам до отрисовки для пейджинга уже нужно знать, остались еще записи или нет
             if (id) {

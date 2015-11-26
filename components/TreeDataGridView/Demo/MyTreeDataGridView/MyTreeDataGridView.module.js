@@ -50,7 +50,9 @@ define('js!SBIS3.CONTROLS.Demo.MyTreeDataGridView',
          var treeDataGridView = this.getChildControlByName('MyTreeDataGridView'),
             breadCrumbs = this.getChildControlByName('MyBreadCrumbs'),
             backButton = this.getChildControlByName('MyBackButton'),
-            componentBinder = new ComponentBinder();
+            componentBinder = new ComponentBinder({
+               view: treeDataGridView
+            });
 
          componentBinder.bindBreadCrumbs(breadCrumbs, backButton, treeDataGridView);
 
