@@ -180,6 +180,11 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
          }
       },
 
+      _drawExpandArrow: function(key, flag){
+         var itemCont = $('.controls-ListView__item[data-id="' + key + '"]', this.getContainer().get(0));
+         $('.js-controls-TreeView__expand', itemCont).toggleClass('controls-TreeView__expand__open', flag);
+      },
+
       destroyFolderToolbar: function(id) {
          var
             container = $('.controls-TreeDataGridView__folderToolbar' + (id ? '[data-parent="' + id + '"]' : ''), this._container.get(0));
