@@ -28,12 +28,14 @@ define('js!SBIS3.CONTROLS.Data.SerializableMixin', [
          if (!this._moduleName) {
             throw new Error('Module name is undefined');
          }
-         return {
+         var result = {
             $serialized$: 'inst',
             module: this._moduleName,
             id: this._getInstanceId(),
             state: this._getSerializableState()
          };
+         _instanceStorage[result.id] = this;
+         return result;
       },
 
       /**
@@ -113,11 +115,11 @@ define('js!SBIS3.CONTROLS.Data.SerializableMixin', [
             }
          }
 
-         if (name === '') {
+         /*if (name === '') {
             _instanceCounter = 0;
             _functionStorage = [];
             _instanceStorage = [];
-         }
+         }*/
 
          return result;
       },

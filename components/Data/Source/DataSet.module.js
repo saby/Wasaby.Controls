@@ -26,7 +26,7 @@ define('js!SBIS3.CONTROLS.Data.Source.DataSet', [
             adapter: undefined,
 
             /**
-             * @cfg {String} Данные, выданные источником
+             * @cfg {String} Сырые данные, выданные источником
              */
             rawData: '',
 
@@ -52,7 +52,11 @@ define('js!SBIS3.CONTROLS.Data.Source.DataSet', [
          }
       },
 
-      $constructor: function () {
+      $constructor: function (cfg) {
+         if ('data' in cfg && !('rawData' in cfg)) {
+            this._options.rawData = cfg.data;
+            $ws.single.ioc.resolve('ILogger').log('SBIS3.CONTROLS.Data.Source.DataSet', 'option "data" is deprecated and will be removed in 3.7.20. Use "rawData" instead.');
+         }
          if (!this._options.adapter && this._options.source) {
             this._options.adapter = this._options.source.getAdapter();
          }

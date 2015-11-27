@@ -325,8 +325,10 @@ define('js!SBIS3.CONTROLS.Data.Model', [
        * @returns {SBIS3.CONTROLS.Data.Model}
        */
       clone: function() {
+         var str = JSON.stringify(this, this.jsonReplacer);
+         console.log(str);
          return JSON.parse(
-            JSON.stringify(this, this.jsonReplacer),
+            str,
             this.jsonReviver
          );
       },

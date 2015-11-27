@@ -247,9 +247,11 @@ define([
             });
          });
          describe('.clone()', function () {
-            it('should clone a model', function () {
-               var clone = model.clone();
-               assert.notEqual(clone, model);
+            it('should not be same as original', function () {
+               assert.notEqual(model.clone(), model);
+            });
+            it('should not be same as previous clone', function () {
+               assert.notEqual(model.clone(), model.clone());
             });
             it('should clone rawData', function () {
                var clone = model.clone();
@@ -286,18 +288,24 @@ define([
                   assert.strictEqual(value, model.get(name));
                });
             });
-            it('should make clone\'s data independed', function () {
-               var clone = model.clone();
-               assert.equal(clone.get('max'), model.get('max'));
-               clone.set('max', 1);
-               assert.notEqual(clone.get('max'), model.get('max'));
+            it('should make data unlinked from original', function () {
+               var cloneA = model.clone();
+               assert.equal(cloneA.get('max'), model.get('max'));
+               cloneA.set('max', 1);
+               assert.notEqual(cloneA.get('max'), model.get('max'));
 
-               var clone1 = model.clone();
-               assert.equal(clone1.get('max'), model.get('max'));
+               var cloneB = model.clone();
+               assert.equal(cloneB.get('max'), model.get('max'));
                model.set('max', 12);
-               assert.notEqual(clone1.get('max'), model.get('max'));
+               assert.notEqual(cloneB.get('max'), model.get('max'));
             });
-
+            it('should make data unlinked between several clones', function () {
+               var cloneA = model.clone();
+               var cloneB = model.clone();
+               assert.equal(cloneA.get('max'), cloneB.get('max'));
+               cloneA.set('max', 1);
+               assert.notEqual(cloneA.get('max'), cloneB.get('max'));
+            });
          });
          describe('.merge()', function () {
             it('should merge models', function () {
