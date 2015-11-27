@@ -1,13 +1,14 @@
 /* global define, $ws */
 define('js!SBIS3.CONTROLS.Data.Model', [
    'js!SBIS3.CONTROLS.Data.SerializableMixin',
+   'js!SBIS3.CONTROLS.Data.Serializer',
    'js!SBIS3.CONTROLS.Data.IPropertyAccess',
    'js!SBIS3.CONTROLS.Data.IHashable',
    'js!SBIS3.CONTROLS.Data.HashableMixin',
    'js!SBIS3.CONTROLS.Data.ContextField',
    'js!SBIS3.CONTROLS.Data.Factory',
    'js!SBIS3.CONTROLS.Data.Adapter.Json'
-], function (SerializableMixin, IPropertyAccess, IHashable, HashableMixin, ContextField, Factory, JsonAdapter) {
+], function (SerializableMixin, Serializer, IPropertyAccess, IHashable, HashableMixin, ContextField, Factory, JsonAdapter) {
    'use strict';
 
    /**
@@ -184,6 +185,16 @@ define('js!SBIS3.CONTROLS.Data.Model', [
          );
       },
 
+      _setSerializableState: function(state) {
+         return Model.superclass._setSerializableState(state).callNext(function() {
+            this._hash = state._hash;
+            this._isStored = state._isStored;
+            this._isDeleted = state._isDeleted;
+            this._isChanged = state._isChanged;
+            this._compatibleMode = state._compatibleMode;
+         });
+      },
+
       // endregion SBIS3.CONTROLS.Data.SerializableMixin
 
       // region SBIS3.CONTROLS.Data.IPropertyAccess
@@ -325,11 +336,10 @@ define('js!SBIS3.CONTROLS.Data.Model', [
        * @returns {SBIS3.CONTROLS.Data.Model}
        */
       clone: function() {
-         var str = JSON.stringify(this, this.jsonReplacer);
-         console.log(str);
+         var serializer = new Serializer();
          return JSON.parse(
-            str,
-            this.jsonReviver
+            JSON.stringify(this, serializer.serialize),
+            serializer.deserialize
          );
       },
 

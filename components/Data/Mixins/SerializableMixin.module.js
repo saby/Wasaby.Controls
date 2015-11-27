@@ -21,7 +21,7 @@ define('js!SBIS3.CONTROLS.Data.SerializableMixin', [
       //region Public methods
 
       /**
-       * Возвращает экземпляр в сериализованном виде
+       * Возвращает сериализованный экземпляр
        * @returns {Object}
        */
       toJSON: function() {
@@ -34,94 +34,21 @@ define('js!SBIS3.CONTROLS.Data.SerializableMixin', [
             id: this._getInstanceId(),
             state: this._getSerializableState()
          };
-         _instanceStorage[result.id] = this;
          return result;
       },
 
       /**
-       * Replacer для использования в JSON.stringify(value[, replacer]). Метод вызывается статически.
-       * @param {String} name Название сериализуемого свойства
-       * @param {Object} value Значение сериализуемого свойства
-       * @returns {*}
+       * Конструирует экземпляр из сериализованного состояния
+       * @param {Object} data Сериализованный экземпляр
+       * @returns {Object}
        * @static
        */
-      jsonReplacer: function(name, value) {
-         if (typeof value == 'function') {
-            _functionStorage.push(value);
-            return {
-               $serialized$: 'func',
-               id: _functionStorage.length - 1
-            };
-         } else if (value === Infinity) {
-            return {
-               $serialized$: '+inf'
-            };
-         } else if (value === -Infinity) {
-            return {
-               $serialized$: '-inf'
-            };
-         } else if (!isNaN(Number(name)) && Number(name) >= 0 && value === undefined) {
-            // В массивах позволяем передавать undefined
-            return {
-               $serialized$: 'undef'
-            };
-         } else {
-            return value;
-         }
-      },
-
-      /**
-       * Reviver для использования в JSON.parse(text[, reviver]). Метод вызывается статически.
-       * @param {String} name Название десериализуемого свойства
-       * @param {Object} value Значение десериализуемого свойства
-       * @returns {*}
-       * @static
-       */
-      jsonReviver: function (name, value) {
-         var result = value;
-
-         if ((value instanceof Object) &&
-            value.hasOwnProperty('$serialized$')
-         ) {
-            switch (value.$serialized$) {
-               case 'inst':
-                  if (_instanceStorage[value.id]) {
-                     result = _instanceStorage[value.id];
-                  } else {
-                     var Module = require('js!' + value.module),
-                        instance,
-                        initializer = Module.prototype._setSerializableState(value.state);
-                     instance = new Module(value.state._options);
-                     initializer.call(instance, value.id);
-
-                     _instanceStorage[value.id] = instance;
-                     result = instance;
-                  }
-                  break;
-               case 'func':
-                  result = _functionStorage[value.id];
-                  break;
-               case '+inf':
-                  result = Infinity;
-                  break;
-               case '-inf':
-                  result = -Infinity;
-                  break;
-               case 'undef':
-                  result = undefined;
-                  break;
-               default:
-                  throw new Error('Unknown serialized type "' + value.$type + '" detected');
-            }
-         }
-
-         /*if (name === '') {
-            _instanceCounter = 0;
-            _functionStorage = [];
-            _instanceStorage = [];
-         }*/
-
-         return result;
+      fromJSON: function(data) {
+         var instance,
+            initializer = this.prototype._setSerializableState(data.state);
+         instance = new this(data.state._options);
+         initializer && initializer.call(instance);
+         return instance;
       },
 
       //endregion Public methods
@@ -141,13 +68,12 @@ define('js!SBIS3.CONTROLS.Data.SerializableMixin', [
 
       /**
        * Проверяет сериализованное состояние перед созданием инстанса. Возвращает метод, востанавливающий состояние объекта после создания инстанса.
-       * @returns {Function}
+       * @returns {Function|undefined}
        * @private
        */
       _setSerializableState: function(state) {
          state._options = state._options || {};
-         return function initializer(instanceId) {
-            this._instanceId = instanceId;
+         return function() {
          };
       },
 
@@ -163,16 +89,7 @@ define('js!SBIS3.CONTROLS.Data.SerializableMixin', [
       //endregion Protected methods
    };
 
-   var _instanceCounter = 0,
-      _functionStorage = [],
-      _instanceStorage = [],
-      _typeSignature = '!~type~:',
-      _typeToSign = {
-         'function': _typeSignature + 'f:',
-         '+Infinity': _typeSignature + '+inf',
-         '-Infinity': _typeSignature + '-inf',
-         'undefined': _typeSignature + 'undef'
-      };
+   var _instanceCounter = 0;
 
    return SerializableMixin;
 });

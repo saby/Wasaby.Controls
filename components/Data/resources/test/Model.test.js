@@ -264,17 +264,25 @@ define([
                assert.deepEqual(model.getProperties(), clone.getProperties());
             });
             it('should clone state markers', function () {
-               var clone = model.clone();
-               assert.strictEqual(model.isDeleted(), clone.isDeleted());
-               assert.strictEqual(model.isChanged(), clone.isChanged());
-               assert.strictEqual(model.isStored(), clone.isStored());
+               var cloneA = model.clone();
+               assert.strictEqual(model.isDeleted(), cloneA.isDeleted());
+               assert.strictEqual(model.isChanged(), cloneA.isChanged());
+               assert.strictEqual(model.isStored(), cloneA.isStored());
+
+               model._isDeleted = true;
+               model.set('a', 1);
+               model.setStored(true);
+               var cloneB = model.clone();
+               assert.strictEqual(model.isDeleted(), cloneB.isDeleted());
+               assert.strictEqual(model.isChanged(), cloneB.isChanged());
+               assert.strictEqual(model.isStored(), cloneB.isStored());
             });
             it('should clone id property', function () {
                var clone = model.clone();
                assert.strictEqual(model.getId(), clone.getId());
                assert.strictEqual(model.getIdProperty(), clone.getIdProperty());
             });
-            it('should give equal toObject', function () {
+            it('should give equal result of toObject', function () {
                var clone = model.clone();
                assert.notEqual(model.toObject(), clone.toObject());
                assert.deepEqual(model.toObject(), clone.toObject());
