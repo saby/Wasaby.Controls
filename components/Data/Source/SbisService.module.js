@@ -369,7 +369,7 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
       call: function (command, data) {
          return this._provider.callMethod(
             command,
-            this._options.adapter.serialize(data)
+            this._buildRequestField(data)
          ).addCallbacks((function (res) {
             return new DataSet({
                source: this,
@@ -627,8 +627,12 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
          var result = {};
          if ($ws.helpers.instanceOfModule(data, 'SBIS3.CONTROLS.Data.Model')) {
             result = data.getRawData();
+         } else if ($ws.helpers.instanceOfModule(data, 'SBIS3.CONTROLS.Data.Source.DataSet')) {
+            result = data.getRawData();
          } else if (data && $ws.helpers.instanceOfModule(data, 'SBIS3.CONTROLS.Record')) {
             result = data.getRaw();
+         } else if (data && $ws.helpers.instanceOfModule(data, 'SBIS3.CONTROLS.DataSet')) {
+            result = data.getRawData();
          } else {
             $ws.core.merge(result, defaults);
             $ws.core.merge(result, data);
