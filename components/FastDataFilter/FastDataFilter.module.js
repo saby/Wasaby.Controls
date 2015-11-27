@@ -1,4 +1,4 @@
-/**]
+/**
  * Created by am.gerasimov on 15.04.2015.
  */
 define('js!SBIS3.CONTROLS.FastDataFilter',
