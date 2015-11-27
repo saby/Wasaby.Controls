@@ -43,7 +43,7 @@ define('js!SBIS3.CONTROLS.MenuButtonMixin', ['js!SBIS3.CONTROLS.ContextMenu'], f
       //3.7.3.10: придрот для отсупа в пунктах меню, если ни в одном пункте нет иконки а у кнопки есть
       _checkItemsIcons: function(items){
          var icon = 'sprite:';
-         if (this._options.icon && items && items.length){
+         if (this._options.icon && items){
             if (this._options.icon.indexOf('icon-16') !== -1){
                icon += 'icon-16';
             } else if (this._options.icon.indexOf('icon-24') !== -1){
