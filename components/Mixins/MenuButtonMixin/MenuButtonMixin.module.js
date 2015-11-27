@@ -46,11 +46,12 @@ define('js!SBIS3.CONTROLS.MenuButtonMixin', ['js!SBIS3.CONTROLS.ContextMenu'], f
          if (this._options.icon && items){
             if (this._options.icon.indexOf('icon-16') !== -1){
                icon += 'icon-16';
-            } else if (this._options.icon.indexOf('icon-24')){
+            } else if (this._options.icon.indexOf('icon-24') !== -1){
                icon += 'icon-24';
             }
             for (var i = 0; i < items.length; i++){
-               if (!items[i].icon) { items[i].icon = icon;} 
+               //отступы нужны только в основном меню, но не в сабменю
+               if (!items[i].icon && !items[i][this._options.hierField]) { items[i].icon = icon;} 
             }
          }
       },
