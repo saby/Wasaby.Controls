@@ -760,12 +760,12 @@ define('js!SBIS3.CONTROLS.ListView',
                return [];
             }
 
-            var elem = target.closest('.js-controls-ListView__item', this._container[0]),
-                /* Ищем элемент только среди дочерних */
-                itemElem = $($ws.helpers.find(this._getItemsContainer()[0].children, function(childElem) { return elem[0] === childElem;} ));
+            var elem = target.closest('.js-controls-ListView__item', this._getItemsContainer());
 
-            /* Если элемент не нашли, то поднимемся на уровень выше и опять поищем */
-            return itemElem.length ? elem : this._findItemByElement(elem.parent());
+            /* Поиск элемента коллекции с учётом вложенных контролов,
+               обязательно проверяем, что мы нашли, возможно это элемент вложенного контрола,
+               тогда поднимемся на уровень выше и опять поищем */
+            return elem[0] && this.getDataSet().getRecordByKey(elem[0].getAttribute('data-id')) ? elem : this._findItemByElement(elem.parent());
          },
          /**
           * Показывает оперцаии над записью для элемента
