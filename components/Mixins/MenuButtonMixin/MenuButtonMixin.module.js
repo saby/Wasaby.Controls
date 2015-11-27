@@ -50,7 +50,7 @@ define('js!SBIS3.CONTROLS.MenuButtonMixin', ['js!SBIS3.CONTROLS.ContextMenu'], f
                icon += 'icon-24';
             }
             for (var i = 0; i < items.length; i++){
-               if (!items[i].icon) { items[i].icon = icon;} 
+               if (!items[i].icon && !items[i][this._options.hierField]) { items[i].icon = icon;} 
             }
          }
       },
