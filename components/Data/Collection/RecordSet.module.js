@@ -31,6 +31,8 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
       },
 
       $constructor: function (cfg) {
+         cfg = cfg || {};
+
          if (!('compatibleMode' in cfg)) {
             $ws.single.ioc.resolve('ILogger').log('SBIS3.CONTROLS.Data.RecordSet', 'module SBIS3.CONTROLS.Data.Collection.RecordSet is deprecated and will be removed in 3.8.0. Use SBIS3.CONTROLS.Data.Collection.LoadableList instead.');
          }
@@ -104,7 +106,12 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
       },
 
       insert: function (record, at) {
-         this.add(record, at);
+         var existsAt = this.getIndex(record);
+         if (existsAt == -1) {
+            this.add(record, at);
+         } else {
+            this.replace(record, existsAt);
+         }
       },
 
       setRawData: function(data) {
@@ -189,6 +196,11 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
 
       setMetaData: function (meta) {
          this._options.meta = meta;
+      },
+
+      // TODO: В контролах избавиться от вызова этого метода - должно быть достаточно "выбрать по индексу".
+      getTreeIndex: function(field, reindex){
+         return DataSet.prototype.getTreeIndex.call(this, field, reindex);
       },
 
       getChildItems: function (parentId, getFullBranch, field) {

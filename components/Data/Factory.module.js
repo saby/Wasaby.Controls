@@ -55,7 +55,7 @@ define('js!SBIS3.CONTROLS.Data.Factory', [
             case 'Time':
             case 'Date':
             case 'DateTime':
-               return Date.fromSQL('' + value);
+               return value === undefined || value === null ? value : Date.fromSQL('' + value);
             case 'Link':
             case 'Integer':
                return (typeof(value) === 'number') ? value : (isNaN(parseInt(value, 10)) ? null : parseInt(value, 10));
@@ -127,7 +127,7 @@ define('js!SBIS3.CONTROLS.Data.Factory', [
                      serializeMode = false;
                      break;
                }
-               return value instanceof Date ? value.toSQL(serializeMode) : null;
+               return value instanceof Date ? value.toSQL(serializeMode) : value;
 
             case 'Flags':
                return this._serializeFlags(value);

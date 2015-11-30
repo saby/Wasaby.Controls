@@ -109,32 +109,20 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
          self._drawItemsCallback();
       },
 
-      _nodeDataLoaded : function(key, dataSet) {
-         /*TODO Копипаст с TreeView*/
-         var
-            self = this,
-            itemCont = $('.controls-ListView__item[data-id="' + key + '"]', this.getContainer().get(0));
-         $('.js-controls-TreeView__expand', itemCont).first().addClass('controls-TreeView__expand__open');
-         this._options.openedPath[key] = true;
-
-         //при раскрытии узла по стрелке приходит новый датасет, в котором только содержимое узла
-         //поэтому удалять из текущего датасета ничего не нужно, только добавить новое.
-         this._dataSet.merge(dataSet, {remove: false});
-         this._dataSet.getTreeIndex(this._options.hierField);
-
-         var
-            records = dataSet._getRecords();
-
+      _drawLoadedNode : function(key, records, more) {
+         this._drawExpandArrow(key);
          this._drawItemsFolder(records);
-         /*TODO пока не очень общо создаем внутренние пэйджинги*/
-         var allContainers = $('.controls-ListView__item[data-parent="'+key+'"]', self._getItemsContainer().get(0));
+
+         //TODO пока не очень общо создаем внутренние пэйджинги
+         var allContainers = $('.controls-ListView__item[data-parent="' + key + '"]', this._getItemsContainer().get(0));
          var row = $('<tr class="controls-TreeDataGridView__folderToolbar">' +
-            '<td colspan="'+(this._options.columns.length+(this._options.multiselect ? 1 : 0))+'"><div style="overflow:hidden" class="controls-TreeDataGridView__folderToolbarContainer"><div class="controls-TreePager-container"></div></div></td>' +
-            '</tr>').attr('data-parent',key);
+            '<td colspan="' + (this._options.columns.length + (this._options.multiselect ? 1 : 0)) + '"><div style="overflow:hidden" class="controls-TreeDataGridView__folderToolbarContainer"><div class="controls-TreePager-container"></div></div></td>' +
+            '</tr>').attr('data-parent', key);
          $(allContainers.last()).after(row);
          this._resizeFolderToolbars();
          var elem = $('.controls-TreePager-container', row.get(0));
-         this._createFolderPager(key, elem, dataSet.getMetaData().more);
+
+         this._createFolderPager(key, elem, more);
       },
 
       _onResizeHandler: function() {
@@ -192,6 +180,11 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
          }
       },
 
+      _drawExpandArrow: function(key, flag){
+         var itemCont = $('.controls-ListView__item[data-id="' + key + '"]', this.getContainer().get(0));
+         $('.js-controls-TreeView__expand', itemCont).toggleClass('controls-TreeView__expand__open', flag);
+      },
+
       destroyFolderToolbar: function(id) {
          var
             container = $('.controls-TreeDataGridView__folderToolbar' + (id ? '[data-parent="' + id + '"]' : ''), this._container.get(0));
@@ -237,7 +230,10 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
          container.attr('data-parent', parentKey);
 
          if (this._options.openedPath[key]) {
-            $('.js-controls-TreeView__expand', container).addClass('controls-TreeView__expand__open');
+            var tree = this._dataSet.getTreeIndex(this._options.hierField);
+            if (tree[key]) {
+               $('.js-controls-TreeView__expand', container).addClass('controls-TreeView__expand__open');
+            }
          }
          /*TODO пока придрот*/
          if (typeof parentKey != 'undefined' && parentKey !== null && parentContainer) {
@@ -337,6 +333,10 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
             this.setSelectedKey(id);
             this.setCurrentElement(e, this._getDragItems(id));
          }
+         //Предотвращаем нативное выделение текста на странице
+         if (!$ws._const.compatibility.touch) {
+            e.preventDefault();
+         }
       },
       _callMoveOutHandler: function() {
       },
@@ -363,13 +363,15 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
       },
       _callDropHandler: function(e) {
          var
+            clickHandler,
             target = $(e.target),
             keys = this.getCurrentElement(),
             moveTo = target.closest('.controls-ListView__item').data('id');
          //TODO придрот для того, чтобы если перетащить элемент сам на себя не отработал его обработчик клика
          if (this.getSelectedKey() === moveTo) {
+            clickHandler = this._elemClickHandler;
             this._elemClickHandler = function() {
-               this._elemClickHandler = TreeDataGridView.superclass._elemClickHandler;
+               this._elemClickHandler = clickHandler;
             }
          }
          this._move(keys, moveTo);

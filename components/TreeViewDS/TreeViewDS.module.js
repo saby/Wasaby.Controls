@@ -57,8 +57,8 @@ define('js!SBIS3.CONTROLS.TreeViewDS', [
          }
       },
 
-      _nodeDataLoaded : function(key, ds) {
-         TreeViewDS.superclass._nodeDataLoaded.apply(this, arguments);
+      _drawLoadedNode : function(key) {
+         TreeViewDS.superclass._drawLoadedNode.apply(this, arguments);
          var itemCont = $('.controls-ListView__item[data-id="' + key + '"]', this.getContainer().get(0));
          $('.controls-TreeView__childContainer', itemCont).first().css('display', 'block');
       },

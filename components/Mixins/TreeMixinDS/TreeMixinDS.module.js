@@ -9,6 +9,7 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', ['js!SBIS3.CORE.Control'], function (Con
    var TreeMixinDS = /** @lends SBIS3.CONTROLS.TreeMixinDS.prototype */{
       $protected: {
          _folderOffsets : {},
+         _folderHasMore : {},
          _treePagers : {},
          _treePager: null,
          _options: {
@@ -30,7 +31,7 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', ['js!SBIS3.CORE.Control'], function (Con
       $constructor : function() {
          var
             filter = this.getFilter() || {};
-         this._publish('onNodeDataLoad');
+         this._filter = this._filter || {};
          delete (filter[this._options.hierField]);
          if (this._options.expand) {
             filter['Разворот'] = 'С разворотом';
@@ -68,8 +69,7 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', ['js!SBIS3.CORE.Control'], function (Con
        * @param {String} key Идентификатор раскрываемого узла
        */
       collapseNode: function (key) {
-         var itemCont = $('.controls-ListView__item[data-id="' + key + '"]', this.getContainer().get(0));
-         $('.js-controls-TreeView__expand', itemCont).removeClass('controls-TreeView__expand__open');
+         this._drawExpandArrow(key, false);
          this._collapseChilds(key);
          delete(this._options.openedPath[key]);
          this._nodeClosed(key);
@@ -122,12 +122,21 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', ['js!SBIS3.CORE.Control'], function (Con
             return this._dataSource.query(this._createTreeFilter(key), this._sorting, 0, this._limit).addCallback(function (dataSet) {
                // TODO: Отдельное событие при загрузке данных узла. Сделано так как тут нельзя нотифаить onDataLoad,
                // так как на него много всего завязано. (пользуется Янис)
-               self._notify('onNodeDataLoad', key, dataSet);
+               self._folderHasMore[key] = dataSet.getMetaData().more;
+               self._notify('onDataMerge', dataSet);
                self._toggleIndicator(false);
                self._nodeDataLoaded(key, dataSet);
             });
          } else {
-            this._drawLoadedNode(key);
+            var child = tree[key];
+            var records = [];
+            if (child){
+               for (var i = 0; i < child.length; i++){
+                  records.push(this._dataSet.getRecordByKey(child[i]));
+               }
+               this._options.openedPath[key] = true;
+               this._drawLoadedNode(key, records, this._folderHasMore[key]);
+            }
          }
       },
       /**
@@ -137,33 +146,39 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', ['js!SBIS3.CORE.Control'], function (Con
          return this._options.openedPath;
       }, 
 
-      _drawLoadedNode: function(key){
-         var child = this._dataSet.getTreeIndex(this._options.hierField)[key];
-         this._drawExpandedNode(key);
-         if (child){
-            var records = []; 
-            for (var i = 0; i < child.length; i++){
-               records.push(this._dataSet.getRecordByKey(child[i]));
+      _drawLoadedNode: function(key, records){
+         this._drawExpandArrow(key);
+         for (var i = 0; i < records.length; i++) {
+            var record = records[i];
+            var targetContainer = this._getTargetContainer(record);
+            if (targetContainer) {
+               if (this._options.displayType == 'folders') {
+                  if (record.get(this._options.hierField + '@')) {
+                     this._drawAndAppendItem(record, targetContainer);
+                  }
+               }
+               else {
+                  this._drawAndAppendItem(record, targetContainer);
+               }
             }
-            this._drawItemsFolder(records);
          }
       },
 
-      _drawExpandedNode: function(key){
+      _drawExpandArrow: function(key, flag){
          var itemCont = $('.controls-ListView__item[data-id="' + key + '"]', this.getContainer().get(0));
-         $('.js-controls-TreeView__expand', itemCont).first().addClass('controls-TreeView__expand__open');
-         this._options.openedPath[key] = true;
+         $('.js-controls-TreeView__expand', itemCont).first().toggleClass('controls-TreeView__expand__open', flag);
       },
 
       _nodeDataLoaded : function(key, dataSet) {
          var self = this;
-         this._drawExpandedNode(key);
          this._dataSet.merge(dataSet, {remove: false});
          this._dataSet.getTreeIndex(this._options.hierField, true);
-
+         var records = [];
          dataSet.each(function (record) {
-            self._drawLoadedNode(record);
+            records.push(record);
          });
+         this._options.openedPath[key] = true;
+         self._drawLoadedNode(key, records, self._folderHasMore[key]);
       },
 
       _nodeClosed : function(key) {
@@ -204,6 +219,7 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', ['js!SBIS3.CORE.Control'], function (Con
          this._loader = this._dataSource.query(filter, this._sorting, (id ? this._folderOffsets[id] : this._folderOffsets['null']) + this._limit, this._limit).addCallback(function (dataSet) {
             //ВНИМАНИЕ! Здесь стрелять onDataLoad нельзя! Либо нужно определить событие, которое будет
             //стрелять только в reload, ибо между полной перезагрузкой и догрузкой данных есть разница!
+            self._notify('onDataMerge', dataSet);
             self._loader = null;
             //нам до отрисовки для пейджинга уже нужно знать, остались еще записи или нет
             if (id) {
@@ -212,6 +228,7 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', ['js!SBIS3.CORE.Control'], function (Con
             else {
                self._folderOffsets['null'] += self._limit;
             }
+            self._folderHasMore[id] = dataSet.getMetaData().more;
             if (!self._hasNextPageInFolder(dataSet.getMetaData().more, id)) {
                if (typeof id != 'undefined') {
                   self._treePagers[id].setHasMore(false)
@@ -225,6 +242,7 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', ['js!SBIS3.CORE.Control'], function (Con
             if (dataSet.getCount()) {
                var records = dataSet._getRecords();
                self._dataSet.merge(dataSet, {remove: false});
+               self._dataSet.getTreeIndex(self._options.hierField, true);
                self._drawItemsFolderLoad(records, id);
                self._dataLoadedCallback();
             }

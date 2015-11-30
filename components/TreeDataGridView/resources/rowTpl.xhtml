@@ -1,16 +1,14 @@
-{{var isBranch;}}
-<tr class="controls-DataGridView__tr" style="{{=it.decorators.apply(it.color, 'color')}}">
+<tr class="controls-DataGridView__tr controls-DataGridView__tr__type-{{?it.isNode == null}}null{{??}}{{=it.isNode}}{{?}}" style="{{=it.decorators.apply(it.color, 'color')}}">
    {{?it.multiselect}}
    <td class="controls-DataGridView__td controls-DataGridView__td__checkBox js-controls-ListView__itemCheckBox{{?it.startScrollColumn!== undefined}}{{?it.startScrollColumn === 0}} controls-DataGridView__scrolledCell{{??}} controls-DataGridView__notScrolledCell{{?}}{{?}}">
         <span class="controls-ListView__itemCheckBox js-controls-ListView__itemCheckBox"></span>
    </td>
    {{?}}
    {{~it.columns :column:index}}
-      {{isBranch = column.item.get(it.hierField + '@');}}
       <td class="controls-DataGridView__td{{?column.className}} {{=column.className}}{{?}}{{?it.startScrollColumn!== undefined}}{{?it.startScrollColumn <= index}} controls-DataGridView__scrolledCell{{??}} controls-DataGridView__notScrolledCell{{?}}{{?}}">
          {{?index == 0}}
-            <div class="controls-TreeView__expand js-controls-TreeView__expand{{?isBranch == null}} controls-TreeView__expand__leaf{{??}} has-child{{?}}"></div>
-            {{?isBranch}}
+            <div class="controls-TreeView__expand js-controls-TreeView__expand{{?it.isNode == null}} controls-TreeView__expand__leaf{{??}} has-child{{?}}"></div>
+            {{?it.isNode}}
                {{?it.arrowActivatedHandler}}
                <div class="controls-TreeView__ellipsis-wrapper">
                   <div class="controls-TreeView__ellipsis-container">

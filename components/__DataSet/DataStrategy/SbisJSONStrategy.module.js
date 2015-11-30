@@ -562,7 +562,7 @@ define('js!SBIS3.CONTROLS.SbisJSONStrategy', [
     */
    SbisJSONStrategy.serializeDataSet = function (data) {
       if ($ws.helpers.instanceOfModule(data, 'SBIS3.CONTROLS.DataSet')) {
-            return $ws.core.clone(data.getRawData());
+            return data.getRawData();
       } else if (data instanceof $ws.proto.RecordSet || data instanceof $ws.proto.RecordSetStatic) {
          return data.toJSON();
       } else {
@@ -576,7 +576,7 @@ define('js!SBIS3.CONTROLS.SbisJSONStrategy', [
     */
    SbisJSONStrategy.serializeRecord = function (data) {
       if ($ws.helpers.instanceOfModule(data, 'SBIS3.CONTROLS.Record')) {
-         return $ws.core.clone(data.getRaw());
+         return data.getRaw();
       } else if (data instanceof $ws.proto.Record) {
          return data.toJSON();
       } else {
