@@ -20,16 +20,22 @@ define('js!SBIS3.CONTROLS.Data.Source.ISource', [
 
             /**
              * @cfg {SBIS3.CONTROLS.Data.Adapter.IAdapter} Адаптер для работы с данными
+             * @see getAdapter
+             * @see setAdapter
              */
             adapter: undefined,
 
             /**
              * @cfg {Function} Конструктор модели
+             * @see getModel
+             * @see setModel
              */
             model: undefined,
 
             /**
              * @cfg {String} Свойство модели, содержащее первичный ключ
+             * @see getIdProperty
+             * @see setIdProperty
              */
             idProperty: ''
          }
@@ -38,6 +44,8 @@ define('js!SBIS3.CONTROLS.Data.Source.ISource', [
       /**
        * Возвращает адаптер для работы с данными
        * @returns {SBIS3.CONTROLS.Data.Adapter.IAdapter}
+       * @see setAdapter
+       * @see adapter
        */
       getAdapter: function () {
          throw new Error('Method must be implemented');
@@ -46,6 +54,8 @@ define('js!SBIS3.CONTROLS.Data.Source.ISource', [
       /**
        * Устанавливает адаптер для работы с данными
        * @param {SBIS3.CONTROLS.Data.Adapter.IAdapter} adapter
+       * @see getAdapter
+       * @see adapter
        */
       setAdapter: function (adapter) {
          throw new Error('Method must be implemented');
@@ -54,6 +64,8 @@ define('js!SBIS3.CONTROLS.Data.Source.ISource', [
       /**
        * Возвращает конструктор модели
        * @returns {Function}
+       * @see setModel
+       * @see model
        */
       getModel: function () {
          throw new Error('Method must be implemented');
@@ -62,6 +74,8 @@ define('js!SBIS3.CONTROLS.Data.Source.ISource', [
       /**
        * Устанавливает конструктор модели
        * @param {Function} model
+       * @see getModel
+       * @see model
        */
       setModel: function (model) {
          throw new Error('Method must be implemented');
@@ -70,6 +84,8 @@ define('js!SBIS3.CONTROLS.Data.Source.ISource', [
       /**
        * Возвращает свойство модели, содержащее первичный ключ
        * @returns {String}
+       * @see setIdProperty
+       * @see idProperty
        */
       getIdProperty: function () {
          throw new Error('Method must be implemented');
@@ -78,6 +94,8 @@ define('js!SBIS3.CONTROLS.Data.Source.ISource', [
       /**
        * Устанавливает свойство модели, содержащее первичный ключ
        * @param {String} name
+       * @see getIdProperty
+       * @see idProperty
        */
       setIdProperty: function (name) {
          throw new Error('Method must be implemented');
@@ -86,7 +104,7 @@ define('js!SBIS3.CONTROLS.Data.Source.ISource', [
       /**
        * Создает пустую модель через источник данных
        * @param {Object} [meta] Дополнительные мета данные
-       * @returns {$ws.proto.Deferred} Асинхронный результат выполнения. В колбэке придет SBIS3.CONTROLS.Data.Model.
+       * @returns {$ws.proto.Deferred} Асинхронный результат выполнения. В колбэке придет {@link SBIS3.CONTROLS.Data.Model}.
        * @example
        * <pre>
        *     var dataSource = new SbisService({
@@ -105,7 +123,7 @@ define('js!SBIS3.CONTROLS.Data.Source.ISource', [
        * Читает модель из источника данных
        * @param {String} key Первичный ключ модели
        * @param {Object} [meta] Дополнительные мета данные
-       * @returns {$ws.proto.Deferred} Асинхронный результат выполнения. В колбэке придет SBIS3.CONTROLS.Data.Model.
+       * @returns {$ws.proto.Deferred} Асинхронный результат выполнения. В колбэке придет {@link SBIS3.CONTROLS.Data.Model}.
        */
       read: function (key, meta) {
          throw new Error('Method must be implemented');
@@ -172,7 +190,7 @@ define('js!SBIS3.CONTROLS.Data.Source.ISource', [
       /**
        * Выполняет запрос на выборку
        * @param {SBIS3.CONTROLS.Data.Query.Query} [query] Запрос
-       * @returns {$ws.proto.Deferred} Асинхронный результат выполнения. В колбэке придет SBIS3.CONTROLS.Data.Source.DataSet.
+       * @returns {$ws.proto.Deferred} Асинхронный результат выполнения. В колбэке придет {@link SBIS3.CONTROLS.Data.Source.DataSet}.
        */
       query: function (query) {
          throw new Error('Method must be implemented');
@@ -182,7 +200,7 @@ define('js!SBIS3.CONTROLS.Data.Source.ISource', [
        * Выполняет команду
        * @param {String} command Команда
        * @param {Object} [data] Данные
-       * @returns {$ws.proto.Deferred} Асинхронный результат выполнения. В колбэке придет SBIS3.CONTROLS.Data.Source.DataSet.
+       * @returns {$ws.proto.Deferred} Асинхронный результат выполнения. В колбэке придет {@link SBIS3.CONTROLS.Data.Source.DataSet}.
        */
       call: function (command, data) {
          throw new Error('Method must be implemented');
