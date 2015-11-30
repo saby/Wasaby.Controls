@@ -756,7 +756,18 @@ define('js!SBIS3.CONTROLS.ListView',
          },
 
          _findItemByElement: function(target){
-            return target.closest('.js-controls-ListView__item', this._container[0]);
+            if(!target.length) {
+               return [];
+            }
+
+            var elem = target.closest('.js-controls-ListView__item', this._getItemsContainer());
+
+            // TODO Подумать, как решить данную проблему. Не надёжно хранить информацию в доме
+            // TODO  В качестве возможного решения: сохранять ссылку на дом элемент
+            /* Поиск элемента коллекции с учётом вложенных контролов,
+               обязательно проверяем, что мы нашли, возможно это элемент вложенного контрола,
+               тогда поднимемся на уровень выше и опять поищем */
+            return elem[0] && this.getDataSet().getRecordByKey(elem[0].getAttribute('data-id')) ? elem : this._findItemByElement(elem.parent());
          },
          /**
           * Показывает оперцаии над записью для элемента

@@ -363,13 +363,15 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
       },
       _callDropHandler: function(e) {
          var
+            clickHandler,
             target = $(e.target),
             keys = this.getCurrentElement(),
             moveTo = target.closest('.controls-ListView__item').data('id');
          //TODO придрот для того, чтобы если перетащить элемент сам на себя не отработал его обработчик клика
          if (this.getSelectedKey() === moveTo) {
+            clickHandler = this._elemClickHandler;
             this._elemClickHandler = function() {
-               this._elemClickHandler = TreeDataGridView.superclass._elemClickHandler;
+               this._elemClickHandler = clickHandler;
             }
          }
          this._move(keys, moveTo);
