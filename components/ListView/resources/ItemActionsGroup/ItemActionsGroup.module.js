@@ -42,7 +42,7 @@ define('js!SBIS3.CONTROLS.ItemActionsGroup',
                   self.showItemActionsMenu();
                });
 
-            this._touchActions = $ws._const.compatibility.touch;
+            this._touchActions = $ws._const.browser.isMobilePlatform;
          },
          /**
           * Изменяет операции над строкой до нужного состояния - скрывает / показывает кнопки
