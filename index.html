@@ -130,6 +130,9 @@
                <li>
                   <div id="Browser"></div>
                </li>
+                <li>
+                    <div id="BrowserEngine"></div>
+                </li>
 			   <li>
                   <div id="FieldLink"></div>
                </li>
@@ -375,6 +378,13 @@
                href: '/pages/browser.html'
             })
          });
+          require(["js!SBIS3.CONTROLS.Link"], function (r) {
+              new r({
+                  element: "BrowserEngine",
+                  caption: 'BrowserEngine',
+                  href: '/pages/browserEngine.html'
+              })
+          });
 		 require(["js!SBIS3.CONTROLS.Link"], function (r) {
             new r({
                element: "FieldLink",
