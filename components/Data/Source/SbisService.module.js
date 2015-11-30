@@ -17,9 +17,14 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
     * <pre>
     *     var dataSource = new SbisService({
     *         resource: 'СообщениеОтКлиента',
+    *     });
+    * </pre>
+    * <pre>
+    *     var dataSource = new SbisService({
+    *         resource: 'СообщениеОтКлиента',
     *         idProperty: '@СообщениеОтКлиента',
     *         queryMethodName: 'СписокОбщий',
-    *         formatForRead: 'СообщениеОтКлиента.Список'
+    *         formatMethodName: 'Список'
     *         readMethodName: 'Прочитать'
     *     });
     * </pre>
@@ -52,41 +57,57 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
 
             /**
              * @cfg {String} Имя метода, который используется для получения выборки. По умолчанию 'Список'.
+             * @see getQueryMethodName
+             * @see setQueryMethodName
              * @see query
              */
             queryMethodName: 'Список',
 
             /**
              * @cfg {String} Имя метода, который используется для создания записи. По умолчанию 'Создать'.
+             * @see getCreateMethodName
+             * @see setCreateMethodName
              * @see create
              */
             createMethodName: 'Создать',
 
             /**
              * @cfg {String} Имя метода, который используется для чтения записи. По умолчанию 'Прочитать'.
+             * @see getReadMethodName
+             * @see setReadMethodName
              * @see read
              */
             readMethodName: 'Прочитать',
 
             /**
              * @cfg {String} Имя метода, который используется для обновления записи. По умолчанию 'Записать'.
+             * @see getUpdateMethodName
+             * @see setUpdateMethodName
              * @see update
              */
             updateMethodName: 'Записать',
 
             /**
              * @cfg {String} Имя метода, который используется для удаления записи . По умолчанию 'Удалить'.
+             * @see getDestroyMethodName
+             * @see setDestroyMethodName
              * @see destroy
              */
             destroyMethodName: 'Удалить',
 
             /**
              * @cfg {String} Имя метода, который будет вызываться для копирования записей. По умолчанию 'Копировать'.
+             * @see getCopyMethodName
+             * @see setCopyMethodName
+             * @see copy
              */
             copyMethodName: 'Копировать',
 
             /**
              * @cfg {String} Имя метода, который будет вызываться для объединения записей. По умолчанию 'Объединить'.
+             * @see getMergeMethodName
+             * @see setMergeMethodName
+             * @see merge
              */
             mergeMethodName: 'Объединить',
 
@@ -96,31 +117,41 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
              * <pre>
              *    <option name="moveResource">ПорядковыйНомер</option>
              * </pre>
+             * @see getMoveResource
+             * @see setMoveResource
              * @see move
              */
             moveResource: 'ПорядковыйНомер',
 
             /**
              * @cfg {String} Префикс имени метода, который используется для перемещения записи. По умолчанию 'Вставить'.
+             * @see getMoveMethodPrefix
+             * @see setMoveMethodPrefix
              * @see move
              */
             moveMethodPrefix: 'Вставить',
 
             /**
              * @cfg {String} Имя поля, по которому по умолчанию сортируются записи выборки. По умолчанию 'ПорНомер'.
+             * @see getMoveDefaultColumn
+             * @see setMoveDefaultColumn
              * @see move
              */
             moveDefaultColumn: 'ПорНомер',
 
             /**
-             * @cfg {String} Имя метода, который будет использоваться для получения формата записи в методе прочитать. Метод должен быть декларативным.
+             * @cfg {String} Имя метода, который будет использоваться для получения формата записи в методах {@link create}, {@link read} и {@link copy}. Метод должен быть декларативным.
              * @example
              * <pre>
-             *    <option name="formatForRead">МойОбъект.СписокДляПрочитать</option>
+             *    <option name="formatMethodName">СписокДляПрочитать</option>
              * </pre>
-             * @see destroy
+             * @see getFormatMethodName
+             * @see setFormatMethodName
+             * @see create
+             * @see read
+             * @see copy
              */
-            formatForRead: undefined
+            formatMethodName: undefined
          },
 
          /**
@@ -153,20 +184,30 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
          this.setMoveResource(this._options.moveResource);
       },
 
-
       //region SBIS3.CONTROLS.Data.Source.ISource
 
+      /**
+       * Создает пустую модель через источник данных
+       * @param {Object|SBIS3.CONTROLS.Data.Model} [meta] Дополнительные мета данные
+       * @returns {$ws.proto.Deferred} Асинхронный результат выполнения. В колбэке придет {@link SBIS3.CONTROLS.Data.Model}.
+       * @example
+       * <pre>
+       *     var dataSource = new SbisService({
+       *         resource: 'Сотрудник'
+       *         formatMethodName: 'СписокДляСоздать'
+       *     });
+       *     dataSource.create().addCallback(function(model) {
+       *         var name = model.get('Имя');
+       *     });
+       * </pre>
+       */
       create: function(meta) {
-         var filter = {
-            'ВызовИзБраузера': true
+         var args = {
+            'Фильтр': this._buildRequestField(meta, {
+               'ВызовИзБраузера': true
+            }),
+            'ИмяМетода': this._options.formatMethodName
          };
-         if (!Object.isEmpty(meta)) {
-            $ws.core.merge(filter, meta);
-         }
-         var args = this._options.adapter.serialize({
-            'Фильтр': filter,
-            'ИмяМетода': this._options.formatForRead
-         });
 
          return this._provider.callMethod(
             this._options.createMethodName,
@@ -179,13 +220,19 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
          });
       },
 
+      /**
+       * Читает модель из источника данных
+       * @param {String} key Первичный ключ модели
+       * @param {Object|SBIS3.CONTROLS.Data.Model} [meta] Дополнительные мета данные
+       * @returns {$ws.proto.Deferred} Асинхронный результат выполнения. В колбэке придет {@link SBIS3.CONTROLS.Data.Model}.
+       */
       read: function(key, meta) {
          var args = {
             'ИдО': key,
-            'ИмяМетода': this._options.formatForRead
+            'ИмяМетода': this._options.formatMethodName
          };
          if (!Object.isEmpty(meta)) {
-            args['ДопПоля'] = this._options.adapter.serialize(meta);
+            args['ДопПоля'] = this._buildRequestField(meta);
          }
 
          return this._provider.callMethod(
@@ -201,14 +248,18 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
          });
       },
 
+      /**
+       * Обновляет модель в источнике данных
+       * @param {SBIS3.CONTROLS.Data.Model} model Обновляемая модель
+       * @param {Object|SBIS3.CONTROLS.Data.Model} [meta] Дополнительные мета данные
+       * @returns {$ws.proto.Deferred} Асинхронный результат выполнения
+       */
       update: function(model, meta) {
          var args = {
-            'Запись': $ws.core.merge({
-               _type: 'record'
-            }, model.getRawData())
+            'Запись': this._buildRequestField(model)
          };
          if (!Object.isEmpty(meta)) {
-            args['ДопПоля'] = this._options.adapter.serialize(meta);
+            args['ДопПоля'] = this._buildRequestField(meta);
          }
          this._detectIdProperty(model.getRawData());
 
@@ -227,12 +278,18 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
          });
       },
 
+      /**
+       * Удаляет модель из источника данных
+       * @param {String} key Первичный ключ модели
+       * @param {Object|SBIS3.CONTROLS.Data.Model} [meta] Дополнительные мета данные
+       * @returns {$ws.proto.Deferred} Асинхронный результат выполнения
+       */
       destroy: function(key, meta) {
          var args = {
             'ИдО': key
          };
          if (!Object.isEmpty(meta)) {
-            args['ДопПоля'] = this._options.adapter.serialize(meta);
+            args['ДопПоля'] = this._buildRequestField(meta);
          }
 
          return this._provider.callMethod(
@@ -263,10 +320,10 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
       copy: function(key, meta) {
          var args = {
             'ИдО': key,
-            'ИмяМетода': this._options.formatForRead
+            'ИмяМетода': this._options.formatMethodName
          };
          if (!Object.isEmpty(meta)) {
-            args['ДопПоля'] = this._options.adapter.serialize(meta);
+            args['ДопПоля'] = this._buildRequestField(meta);
          }
 
          return this._provider.callMethod(
@@ -325,10 +382,16 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
          return def;
       },
 
+      /**
+       * Выполняет команду
+       * @param {String} command Команда
+       * @param {Object|SBIS3.CONTROLS.Data.Model|SBIS3.CONTROLS.Data.Source.DataSet} [data] Данные
+       * @returns {$ws.proto.Deferred} Асинхронный результат выполнения. В колбэке придет {@link SBIS3.CONTROLS.Data.Source.DataSet}.
+       */
       call: function (command, data) {
          return this._provider.callMethod(
             command,
-            this._options.adapter.serialize(data)
+            this._buildRequestField(data)
          ).addCallbacks((function (res) {
             return new DataSet({
                source: this,
@@ -347,6 +410,8 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
       /**
        * Возвращает имя метода, который используется для получения выборки
        * @returns {String}
+       * @see setQueryMethodName
+       * @see queryMethodName
        */
       getQueryMethodName: function () {
          return this._options.queryMethodName;
@@ -355,6 +420,8 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
       /**
        * Устанавливает имя метода, который используется для получения выборки
        * @param {String} method
+       * @see getQueryMethodName
+       * @see queryMethodName
        */
       setQueryMethodName: function (method) {
          this._options.queryMethodName = method;
@@ -363,6 +430,8 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
       /**
        * Возвращает имя метода, который используется для создания записи
        * @returns {String}
+       * @see setCreateMethodName
+       * @see createMethodName
        */
       getCreateMethodName: function () {
          return this._options.createMethodName;
@@ -371,6 +440,8 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
       /**
        * Устанавливает имя метода, который используется для создания записи
        * @param {String} method
+       * @see getCreateMethodName
+       * @see createMethodName
        */
       setCreateMethodName: function (method) {
          this._options.createMethodName = method;
@@ -379,6 +450,8 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
       /**
        * Возвращает имя метода, который используется для получения записи
        * @returns {String}
+       * @see setReadMethodName
+       * @see readMethodName
        */
       getReadMethodName: function () {
          return this._options.readMethodName;
@@ -387,6 +460,8 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
       /**
        * Устанавливает имя метода, который используется для получения записи
        * @param {String} method
+       * @see getReadMethodName
+       * @see readMethodName
        */
       setReadMethodName: function (method) {
          this._options.readMethodName = method;
@@ -395,6 +470,8 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
       /**
        * Возвращает имя метода, который используется для обновления записи
        * @returns {String}
+       * @see setUpdateMethodName
+       * @see updateMethodName
        */
       getUpdateMethodName: function () {
          return this._options.updateMethodName;
@@ -403,6 +480,8 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
       /**
        * Устанавливает имя метода, который используется для обновления записи
        * @param {String} method
+       * @see getUpdateMethodName
+       * @see updateMethodName
        */
       setUpdateMethodName: function (method) {
          this._options.updateMethodName = method;
@@ -411,6 +490,8 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
       /**
        * Возвращает имя метода, который используется для удаления записи
        * @returns {String}
+       * @see setDestroyMethodName
+       * @see destroyMethodName
        */
       getDestroyMethodName: function () {
          return this._options.destroyMethodName;
@@ -419,6 +500,8 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
       /**
        * Устанавливает имя метода, который используется для удаления записи
        * @param {String} method
+       * @see getDestroyMethodName
+       * @see destroyMethodName
        */
       setDestroyMethodName: function (method) {
          this._options.destroyMethodName = method;
@@ -427,38 +510,48 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
       /**
        * Возвращает имя метода, который используется для копирования записи
        * @returns {String}
+       * @see setCopyMethodName
+       * @see copyMethodName
        */
       getCopyMethodName: function () {
-         return this._options.destroyMethodName;
+         return this._options.copyMethodName;
       },
 
       /**
        * Устанавливает имя метода, который используется для копирования записи
        * @param {String} method
+       * @see getCopyMethodName
+       * @see copyMethodName
        */
       setCopyMethodName: function (method) {
-         this._options.destroyMethodName = method;
+         this._options.copyMethodName = method;
       },
 
       /**
        * Возвращает имя метода, который используется для объединения записей
        * @returns {String}
+       * @see setMergeMethodName
+       * @see mergeMethodName
        */
       getMergeMethodName: function () {
-         return this._options.destroyMethodName;
+         return this._options.mergeMethodName;
       },
 
       /**
        * Устанавливает имя метода, который используется для объединения записей
        * @param {String} method
+       * @see getMergeMethodName
+       * @see mergeMethodName
        */
       setMergeMethodName: function (method) {
-         this._options.destroyMethodName = method;
+         this._options.mergeMethodName = method;
       },
 
       /**
        * Возвращает имя объекта бизнес-логики, реализующего перемещение записей
        * @returns {String}
+       * @see setMoveResource
+       * @see moveResource
        */
       getMoveResource: function () {
          return this._options.moveResource;
@@ -467,6 +560,8 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
       /**
        * Устанавливает имя объекта бизнес-логики, реализующего перемещение записей
        * @param {String} name
+       * @see getMoveResource
+       * @see moveResource
        */
       setMoveResource: function (name) {
          if (name && typeof name !== 'object') {
@@ -480,6 +575,8 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
       /**
        * Возвращает префикс имени метода, который используется для перемещения записи
        * @returns {String}
+       * @see setMoveMethodPrefix
+       * @see moveMethodPrefix
        */
       getMoveMethodPrefix: function () {
          return this._options.moveMethodPrefix;
@@ -488,6 +585,8 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
       /**
        * Устанавливает префикс имени метода, который используется для перемещения записи
        * @param {String} name
+       * @see getMoveMethodPrefix
+       * @see moveMethodPrefix
        */
       setMoveMethodPrefix: function (name) {
          this._options.moveMethodPrefix = name;
@@ -496,6 +595,8 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
       /**
        * Возвращает имя поля, по которому по умолчанию сортируются записи выборки
        * @returns {String}
+       * @see setMoveDefaultColumn
+       * @see moveDefaultColumn
        */
       getMoveDefaultColumn: function () {
          return this._options.moveDefaultColumn;
@@ -504,14 +605,71 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
       /**
        * Устанавливает имя поля, по которому по умолчанию сортируются записи выборки
        * @param {String} name
+       * @see getMoveDefaultColumn
+       * @see moveDefaultColumn
        */
       setMoveDefaultColumn: function (name) {
          this._options.moveDefaultColumn = name;
       },
 
+      /**
+       * Возвращает имя метода, который будет использоваться для получения формата записи
+       * @returns {String}
+       * @see setFormatMethodName
+       * @see formatMethodName
+       */
+      getFormatMethodName: function () {
+         return this._options.formatMethodName;
+      },
+
+      /**
+       * Устанавливает имя метода, который будет использоваться для получения формата записи
+       * @param {String} method
+       * @see getFormatMethodName
+       * @see formatMethodName
+       */
+      setFormatMethodName: function (method) {
+         this._options.formatMethodName = method;
+      },
+
       //endregion Public methods
 
       //region Protected methods
+
+      /**
+       * Возвращает сериализованные данные для установки в поле запроса
+       * @param {Object|SBIS3.CONTROLS.Data.Model|SBIS3.CONTROLS.Data.Source.DataSet} data Данные для установки
+       * @param {Object} defaults Значения по умолчанию
+       * @returns {Object}
+       * @private
+       */
+      _buildRequestField: function(data, defaults) {
+         data = data || {};
+         defaults = defaults || {};
+         var result = {};
+         if ($ws.helpers.instanceOfModule(data, 'SBIS3.CONTROLS.Data.Model')) {
+            result = $ws.core.merge({
+               _type: 'record'
+            }, data.getRawData());
+         } else if ($ws.helpers.instanceOfModule(data, 'SBIS3.CONTROLS.Data.Source.DataSet')) {
+            result = $ws.core.merge({
+               _type: 'recordset'
+            }, data.getRawData());
+         } else if (data && $ws.helpers.instanceOfModule(data, 'SBIS3.CONTROLS.Record')) {
+            result = $ws.core.merge({
+               _type: 'record'
+            }, data.getRaw());
+         } else if (data && $ws.helpers.instanceOfModule(data, 'SBIS3.CONTROLS.DataSet')) {
+            result = $ws.core.merge({
+               _type: 'recordset'
+            }, data.getRawData());
+         } else {
+            $ws.core.merge(result, defaults);
+            $ws.core.merge(result, data);
+            result = this._options.adapter.serialize(result);
+         }
+         return result;
+      },
 
       /**
        * Возвращает параметры сортировки
