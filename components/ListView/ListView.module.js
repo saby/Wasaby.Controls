@@ -100,6 +100,24 @@ define('js!SBIS3.CONTROLS.ListView',
           * @param {String} meta.id ключ элемента представления данных
           * @param {SBIS3.CONTROLS.Record} meta.item запись
           */
+         /**
+          * @event onDataMerge Перед добавлением загруженных записей в основной dataSet
+          * @remark
+          * Событие срабатывает при подгрузке по скроллу, при подгрузке в ветку дерева.
+          * Т.е. при любой вспеомогательной загрузке данных.
+          * @param {$ws.proto.EventObject} eventObject Дескриптор события.
+          * @param {Object} dataSet - dataSet с загруженными данными
+          * @example
+          * <pre>
+          *     DataGridView.subscribe('onDataMerge', function(event, dataSet) {
+          *        //Если в загруженном датасете есть данные, отрисуем их количество
+          *        var count = dataSet.getCount();
+          *        if (count){
+          *           self.drawItemsCounter(count);
+          *        }
+          *     });
+          * </pre>
+          */
 
          $protected: {
             _floatCheckBox: null,
@@ -300,7 +318,7 @@ define('js!SBIS3.CONTROLS.ListView',
             //TODO временно смотрим на TopParent, чтобы понять, где скролл. С внедрением ScrallWatcher этот функционал уберем
             var topParent = this.getTopParent(),
                   self = this;
-            this._publish('onChangeHoveredItem', 'onItemClick', 'onItemActivate');
+            this._publish('onChangeHoveredItem', 'onItemClick', 'onItemActivate', 'onDataMerge');
             $ws.single.CommandDispatcher.declareCommand(this, 'newItem', this._newItem.bind(this));
             this._container.on('mousemove', this._mouseMoveHandler.bind(this))
                            .on('mouseleave', this._mouseLeaveHandler.bind(this));
@@ -348,21 +366,21 @@ define('js!SBIS3.CONTROLS.ListView',
 
             switch (e.which) {
                case $ws._const.key.up:
-                  var previousItem = this._getPrevItemById(selectedKey);
-                  previousItem.length ? this.setSelectedKey(previousItem.data('id')) : this.setSelectedKey(selectedKey);
+                  var previousItem = this.getPrevItemById(selectedKey);
+                  previousItem ? this.setSelectedKey(previousItem.data('id')) : this.setSelectedKey(selectedKey);
                   break;
                case $ws._const.key.down:
-                  var nextItem = this._getNextItemById(selectedKey);
-                  nextItem.length ? this.setSelectedKey(nextItem.data('id')) : this.setSelectedKey(selectedKey);
+                  var nextItem = this.getNextItemById(selectedKey);
+                  nextItem ? this.setSelectedKey(nextItem.data('id')) : this.setSelectedKey(selectedKey);
                   break;
                case $ws._const.key.enter:
                   var selectedItem = $('[data-id="' + selectedKey + '"]', this._getItemsContainer());
                   this._elemClickHandler(selectedKey, this._dataSet.getRecordByKey(selectedKey), selectedItem);
                   break;
                case $ws._const.key.space:
-                  var nextItem = this._getNextItemById(selectedKey);
+                  var nextItem = this.getNextItemById(selectedKey);
                   this.toggleItemsSelection([selectedKey]);
-                  nextItem.length ? this.setSelectedKey(nextItem.data('id')) : this.setSelectedKey(selectedKey);
+                  nextItem ? this.setSelectedKey(nextItem.data('id')) : this.setSelectedKey(selectedKey);
                   break;
             }
             return false;
@@ -371,18 +389,16 @@ define('js!SBIS3.CONTROLS.ListView',
           * Возвращает следующий элемент
           * @param id
           * @returns {*}
-          * @private
           */
-         _getNextItemById: function (id) {
+         getNextItemById: function (id) {
             return this._getHtmlItem(id, true);
          },
          /**
           * Возвращает предыдущий элемент
           * @param id
           * @returns {jQuery}
-          * @private
           */
-         _getPrevItemById: function (id) {
+         getPrevItemById: function (id) {
             return this._getHtmlItem(id, false);
          },
          /**
@@ -394,13 +410,19 @@ define('js!SBIS3.CONTROLS.ListView',
           */
          _getHtmlItem: function (id, isNext) {
             var items = $('.controls-ListView__item', this._getItemsContainer()).not('.ws-hidden'),
-               selectedItem = $('[data-id="' + id + '"]', this._getItemsContainer());
-            if (isNext) {
-               return (id) ? items.eq(items.index(selectedItem) + 1) : items.eq(0)
-            } else {
-               return (id) ? items.eq(items.index(selectedItem) - 1) : items.last();
+               selectedItem = $('[data-id="' + id + '"]', this._getItemsContainer()),
+               index = items.index(selectedItem);
+            if(!id){
+               return isNext ? items.eq(0) : items.last()
             }
-
+            if (isNext) {
+               if(index +1 < items.length )
+                  return items.eq(index + 1);
+            } else {
+               if(index > 0)
+                  return items.eq(index - 1);
+            }
+            return undefined;
          },
 
          _isViewElement: function (elem) {
@@ -738,7 +760,18 @@ define('js!SBIS3.CONTROLS.ListView',
          },
 
          _findItemByElement: function(target){
-            return target.closest('.js-controls-ListView__item', this._container[0]);
+            if(!target.length) {
+               return [];
+            }
+
+            var elem = target.closest('.js-controls-ListView__item', this._getItemsContainer());
+
+            // TODO Подумать, как решить данную проблему. Не надёжно хранить информацию в доме
+            // TODO  В качестве возможного решения: сохранять ссылку на дом элемент
+            /* Поиск элемента коллекции с учётом вложенных контролов,
+               обязательно проверяем, что мы нашли, возможно это элемент вложенного контрола,
+               тогда поднимемся на уровень выше и опять поищем */
+            return elem[0] && this.getDataSet().getRecordByKey(elem[0].getAttribute('data-id')) ? elem : this._findItemByElement(elem.parent());
          },
          /**
           * Показывает оперцаии над записью для элемента
@@ -955,6 +988,7 @@ define('js!SBIS3.CONTROLS.ListView',
                      self._hasScrollMore = false;
                      self._hideLoadingIndicator();
                   }
+                  self._notify('onDataMerge', dataSet);
                   //Если данные пришли, нарисуем
                   if (dataSet.getCount()) {
                      records = dataSet._getRecords();

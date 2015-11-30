@@ -106,7 +106,12 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
       },
 
       insert: function (record, at) {
-         this.add(record, at);
+         var existsAt = this.getIndex(record);
+         if (existsAt == -1) {
+            this.add(record, at);
+         } else {
+            this.replace(record, existsAt);
+         }
       },
 
       setRawData: function(data) {
@@ -191,6 +196,11 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
 
       setMetaData: function (meta) {
          this._options.meta = meta;
+      },
+
+      // TODO: В контролах избавиться от вызова этого метода - должно быть достаточно "выбрать по индексу".
+      getTreeIndex: function(field, reindex){
+         return DataSet.prototype.getTreeIndex.call(this, field, reindex);
       },
 
       getChildItems: function (parentId, getFullBranch, field) {

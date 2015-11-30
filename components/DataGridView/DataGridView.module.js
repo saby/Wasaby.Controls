@@ -134,6 +134,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
                decorators: this._decorators,
                color: this._options.colorField ? item.get(this._options.colorField) : '',
                multiselect : this._options.multiselect,
+               isNode: item.get(this._options.hierField + '@'),
                arrowActivatedHandler: this._options.arrowActivatedHandler,
                hierField: this._options.hierField,
                startScrollColumn: this._options.startScrollColumn
@@ -153,7 +154,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
                   var tplOptions = {
                      item: item,
                      hierField: this._options.hierField,
-                     isNode: item.get(rowData.hierField + '@') ? true : false,
+                     isNode: item.get(rowData.hierField + '@'),
                      decorators: this._decorators,
                      field: column.field,
                      value: value,
@@ -557,7 +558,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
       },
 
       _buildHead: function() {
-         var body = this._getItemsContainer();
+         var body = $('.controls-DataGridView__tbody', this._container);
 
          if(this._options.showHead) {
             this._thead && this._thead.remove();

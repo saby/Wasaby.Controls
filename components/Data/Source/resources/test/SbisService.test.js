@@ -101,10 +101,11 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService/resources/SbisServiceBLO', [],
 
                      case 'ВставитьДо':
                      case 'ВставитьПосле':
+                     case 'Произвольный':
                         break;
 
                      default:
-                        throw new Error('Method is undefined');
+                        error = 'Method ' + this._cfg.name + ' is undefined';
                   }
                   break;
 
@@ -156,6 +157,45 @@ define([
       'use strict';
 
       describe('SBIS3.CONTROLS.Data.Source.SbisService', function () {
+         var getSampleModel = function() {
+               return new Model({
+                  adapter: new SbisAdapter(),
+                  data: {
+                     d: [
+                        0,
+                        ''
+                     ],
+                     s: [
+                        {'n': 'Ид', 't': 'Число целое'},
+                        {'n': 'Фамилия', 't': 'Строка'}
+                     ]
+                  },
+                  idProperty: 'Ид'
+               });
+            },
+            testArgIsModel = function(arg, model) {
+               if (arg._type !== 'record') {
+                  throw new Error('Wrong value for argument ДопПоля._type');
+               }
+               if (arg.d !== model.getRawData().d) {
+                  throw new Error('Wrong argument value ДопПоля.d');
+               }
+               if (arg.s !== model.getRawData().s) {
+                  throw new Error('Wrong argument value ДопПоля.s');
+               }
+            },
+            testArgIsDataSet = function(arg, dataSet) {
+               if (arg._type !== 'recordset') {
+                  throw new Error('Wrong value for argument _type');
+               }
+               if (arg.d !== dataSet.getRawData().d) {
+                  throw new Error('Wrong value for argument d');
+               }
+               if (arg.s !== dataSet.getRawData().s) {
+                  throw new Error('Wrong value for argument s');
+               }
+            };
+
          describe('.create()', function () {
             context('when the service is exists', function () {
                it('should return an empty model', function (done) {
@@ -187,14 +227,13 @@ define([
 
                it('should generate a valid request', function (done) {
                   var service = new SbisService({
-                     resource: 'Товар',
-                     formatForRead: 'ПрочитатьФормат'
+                     resource: 'Товар'
                   });
                   service.create({myParam: 'myValue'}).addCallbacks(function () {
                      try {
                         var args = SbisServiceBLO.lastRequest.args;
 
-                        if (args['ИмяМетода'] !== 'ПрочитатьФормат') {
+                        if (args['ИмяМетода'] !== undefined) {
                            throw new Error('Wrong argument ИмяМетода');
                         }
 
@@ -217,6 +256,53 @@ define([
                         if (args['Фильтр'].s[1].t !== 'Строка') {
                            throw new Error('Wrong type for argument Фильтр.myParam');
                         }
+                        done();
+                     } catch (err) {
+                        done(err);
+                     }
+                  }, function (err) {
+                     done(err);
+                  });
+               });
+
+               it('should generate a request with custom method name in the filter', function (done) {
+                  var service = new SbisService({
+                     resource: 'Товар',
+                     formatMethodName: 'ПрочитатьФормат'
+                  });
+                  service.create({myParam: 'myValue'}).addCallbacks(function () {
+                     try {
+                        var args = SbisServiceBLO.lastRequest.args;
+
+                        if (args['ИмяМетода'] !== 'ПрочитатьФормат') {
+                           throw new Error('Wrong argument ИмяМетода');
+                        }
+                        done();
+                     } catch (err) {
+                        done(err);
+                     }
+                  }, function (err) {
+                     done(err);
+                  });
+               });
+
+               it('should accept a model', function (done) {
+                  var service = new SbisService({
+                        resource: 'Товар'
+                     }),
+                     model = getSampleModel();
+
+                  service.create(model).addCallbacks(function () {
+                     try {
+                        var args = SbisServiceBLO.lastRequest.args;
+
+                        if (args['Фильтр'].d !== model.getRawData().d) {
+                           throw new Error('Wrong value for argument Фильтр.d');
+                        }
+                        if (args['Фильтр'].s !== model.getRawData().s) {
+                           throw new Error('Wrong value for argument Фильтр.s');
+                        }
+
                         done();
                      } catch (err) {
                         done(err);
@@ -279,7 +365,7 @@ define([
                   it('should generate a valid request', function (done) {
                      var service = new SbisService({
                         resource: 'Товар',
-                        formatForRead: 'Формат'
+                        formatMethodName: 'Формат'
                      });
                      service.read(
                         SbisServiceBLO.existsId,
@@ -304,6 +390,28 @@ define([
                            if (args['ДопПоля'].s[0].t !== 'Число целое') {
                               throw new Error('Wrong argument type Навигация.ПолеОдин');
                            }
+
+                           done();
+                        } catch (err) {
+                           done(err);
+                        }
+                     }, function (err) {
+                        done(err);
+                     });
+                  });
+
+                  it('should accept a model in meta argument', function (done) {
+                     var service = new SbisService({
+                           resource: 'Товар'
+                        }),
+                        model = getSampleModel();
+                     service.read(
+                        SbisServiceBLO.existsId,
+                        model
+                     ).addCallbacks(function () {
+                        try {
+                           var args = SbisServiceBLO.lastRequest.args;
+                           testArgIsModel(args['ДопПоля'], model);
 
                            done();
                         } catch (err) {
@@ -421,20 +529,7 @@ define([
                      var service = new SbisService({
                            resource: 'Товар'
                         }),
-                        model = new Model({
-                           adapter: new SbisAdapter(),
-                           rawData: {
-                              d: [
-                                 0,
-                                 ''
-                              ],
-                              s: [
-                                 {'n': 'Ид', 't': 'Число целое'},
-                                 {'n': 'Фамилия', 't': 'Строка'}
-                              ]
-                           },
-                           idProperty: 'Ид'
-                        });
+                        model = getSampleModel();
 
                      service.update(model).addCallbacks(function (success) {
                         testModel(success, model, done);
@@ -447,7 +542,7 @@ define([
                it('should generate a valid request', function (done) {
                   var service = new SbisService({
                      resource: 'Товар',
-                     formatForRead: 'Формат'
+                     formatMethodName: 'Формат'
                   });
                   service.read(SbisServiceBLO.existsId).addCallbacks(function (model) {
                      var raw = model.getRaw();
@@ -458,15 +553,7 @@ define([
                         try {
                            var args = SbisServiceBLO.lastRequest.args;
 
-                           if (args['Запись']._type !== 'record') {
-                              throw new Error('Wrong argument Запись._type');
-                           }
-                           if (args['Запись'].d !== raw.d) {
-                              throw new Error('Wrong argument Запись.d');
-                           }
-                           if (args['Запись'].s !== raw.s) {
-                              throw new Error('Wrong argument Запись.s');
-                           }
+                           testArgIsModel(args['Запись'], model);
 
                            if (args['ДопПоля'].d[0] !== '2') {
                               throw new Error('Wrong argument value ДопПоля.ПолеОдин');
@@ -477,6 +564,7 @@ define([
                            if (args['ДопПоля'].s[0].t !== 'Строка') {
                               throw new Error('Wrong argument type Навигация.ПолеОдин');
                            }
+
                            done();
                         } catch (err) {
                            done(err);
@@ -484,6 +572,29 @@ define([
                      }, function (err) {
                         done(err);
                      });
+                  }, function (err) {
+                     done(err);
+                  });
+               });
+
+               it('should accept a model in meta argument', function (done) {
+                  var service = new SbisService({
+                        resource: 'Товар'
+                     }),
+                     modelA = getSampleModel(),
+                     modelB = getSampleModel();
+                  service.update(
+                     modelA,
+                     modelB
+                  ).addCallbacks(function () {
+                     try {
+                        var args = SbisServiceBLO.lastRequest.args;
+                        testArgIsModel(args['ДопПоля'], modelB);
+
+                        done();
+                     } catch (err) {
+                        done(err);
+                     }
                   }, function (err) {
                      done(err);
                   });
@@ -574,6 +685,28 @@ define([
                         if (args['ДопПоля'].s[0].t !== 'Логическое') {
                            throw new Error('Wrong argument type Навигация.ПолеОдин');
                         }
+                        done();
+                     } catch (err) {
+                        done(err);
+                     }
+                  }, function (err) {
+                     done(err);
+                  });
+               });
+
+               it('should accept a model in meta argument', function (done) {
+                  var service = new SbisService({
+                        resource: 'Товар'
+                     }),
+                     model = getSampleModel();
+                  service.destroy(
+                     SbisServiceBLO.existsId,
+                     model
+                  ).addCallbacks(function () {
+                     try {
+                        var args = SbisServiceBLO.lastRequest.args;
+                        testArgIsModel(args['ДопПоля'], model);
+
                         done();
                      } catch (err) {
                         done(err);
@@ -887,6 +1020,85 @@ define([
                      }
                   }, function(err){
                      done(err);
+                  });
+               });
+            });
+         });
+
+         describe('.call()', function () {
+            context('when the method is exists', function () {
+               it('should accept a model', function (done) {
+                  var service = new SbisService({
+                        resource: 'Товар'
+                     }),
+                     model = getSampleModel();
+
+                  service.call('Произвольный', model).addCallbacks(function () {
+                     try {
+                        if (SbisServiceBLO.lastRequest.method !== 'Произвольный') {
+                           throw new Error('Method name "' + SbisServiceBLO.lastRequest.method + '" expected to be "Произвольный"');
+                        }
+
+                        var args = SbisServiceBLO.lastRequest.args;
+                        testArgIsModel(args, model);
+
+                        done();
+                     } catch (err) {
+                        done(err);
+                     }
+                  }, function (err) {
+                     done(err);
+                  });
+               });
+               it('should accept a dataset', function (done) {
+                  var service = new SbisService({
+                        resource: 'Товар'
+                     }),
+                     dataSet = new DataSet({
+                        adapter: new SbisAdapter(),
+                        data: {
+                           d: [
+                              [1, true],
+                              [2, false],
+                              [5, true]
+                           ],
+                           s: [
+                              {'n': 'Ид', 't': 'Идентификатор'},
+                              {'n': 'Флаг', 't': 'Логическое'}
+                           ]
+                        }
+                     });
+
+                  service.call('Произвольный', dataSet).addCallbacks(function () {
+                     try {
+                        if (SbisServiceBLO.lastRequest.method !== 'Произвольный') {
+                           throw new Error('Method name "' + SbisServiceBLO.lastRequest.method + '" expected to be "Произвольный"');
+                        }
+
+                        var args = SbisServiceBLO.lastRequest.args;
+                        testArgIsDataSet(args, dataSet);
+
+                        done();
+                     } catch (err) {
+                        done(err);
+                     }
+                  }, function (err) {
+                     done(err);
+                  });
+               });
+            });
+
+            context('when the method isn\'t exists', function () {
+               it('should return an error', function (done) {
+                  var service = new SbisService({
+                     resource: 'Товар'
+                  });
+                  service.call('МойМетод').addBoth(function (err) {
+                     if (err instanceof Error) {
+                        done();
+                     } else {
+                        done(new Error('That\'s no Error'));
+                     }
                   });
                });
             });
