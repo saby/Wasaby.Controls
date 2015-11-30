@@ -437,7 +437,7 @@ define('js!SBIS3.CONTROLS.Data.Model', [
       },
 
       /**
-       * Возвращает данные в виде hash map
+       * Возвращает данные в виде hash map свойство-значение
        * @returns {Object}
        */
       toObject: function() {
