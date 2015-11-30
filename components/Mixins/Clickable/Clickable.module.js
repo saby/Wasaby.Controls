@@ -52,12 +52,12 @@ define('js!SBIS3.CONTROLS.Clickable', [], function() {
       instead : {
          //TODO сделано через onClickHandler WS в базовом контроле
          _onClickHandler: function(e) {
-            e.stopImmediatePropagation();
             if (this.isEnabled()) {
                this._container.removeClass('controls-Click__active');
                this._clickHandler(e);
                this._notifyOnActivated(e);
             }
+            e.stopImmediatePropagation();
          }
       }
    };
