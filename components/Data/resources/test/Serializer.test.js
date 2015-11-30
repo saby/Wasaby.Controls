@@ -204,6 +204,25 @@ define([
                   assert.notEqual(expectObj, obj);
                   assert.deepEqual(expectObj, obj);
                });
+
+               it('should create same instances for equail serialized objects of Model', function () {
+                  var modelA = new Model(),
+                     modelB = new Model(),
+                     obj = JSON.parse(
+                        JSON.stringify({
+                              a: modelA,
+                              b: modelB,
+                              c: modelA,
+                              d: {
+                                 e: [modelB]
+                              }
+                           },
+                           serializer.serialize),
+                        serializer.deserialize
+                     );
+                  assert.strictEqual(obj.a, obj.c);
+                  assert.strictEqual(obj.b, obj.d.e[0]);
+               });
             });
          });
       });
