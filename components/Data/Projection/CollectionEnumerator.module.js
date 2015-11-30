@@ -13,8 +13,17 @@ define('js!SBIS3.CONTROLS.Data.Projection.CollectionEnumerator', [
     * @public
     * @author Мальцев Алексей
     */
+   var moveStrategy = IStrategy.extend({
+      move: function() {
+         ....
+      }
+      hmove: function() {
+         ....
+      }
+   });
+   myTCV.setMoveStrategy(new moveStrategy());
 
-   return $ws.core.extend({}, [IEnumerator, IndexedEnumeratorMixin], /** @lends SBIS3.CONTROLS.Data.Projection.CollectionEnumerator.prototype */{
+   var CollectionEnumerator = $ws.core.extend({}, [IEnumerator, IndexedEnumeratorMixin], /** @lends SBIS3.CONTROLS.Data.Projection.CollectionEnumerator.prototype */{
       _moduleName: 'SBIS3.CONTROLS.Data.Projection.CollectionEnumerator',
       $protected: {
          _options: {
@@ -200,6 +209,13 @@ define('js!SBIS3.CONTROLS.Data.Projection.CollectionEnumerator', [
 
       //region Protected methods
 
+      _createIndex: function (property) {
+         var savedPosition = this._currentPosition;
+         var result = CollectionEnumerator.superclass._createIndex.call(this, property);
+         this._currentPosition = savedPosition;
+         return result;
+      },
+
       /**
        * Строит соответствие позиций проекции и исходной коллекции
        * @private
@@ -261,4 +277,6 @@ define('js!SBIS3.CONTROLS.Data.Projection.CollectionEnumerator', [
 
       //endregion Protected methods
    });
+
+   return CollectionEnumerator;
 });

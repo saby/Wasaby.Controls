@@ -127,6 +127,9 @@ define('js!SBIS3.CONTROLS.Data.Collection.IndexedEnumeratorMixin', [
          this.reset();
          while ((item = this.getNext())) {
             value = Utils.getItemPropertyValue(item, property);
+            if (value === undefined) {
+               value = Utils.getItemPropertyValue(item.getContents(), property);
+            }
             if (index[value] === undefined) {
                index[value] = [];
             }
