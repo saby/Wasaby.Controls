@@ -171,32 +171,6 @@ define('js!SBIS3.CONTROLS.Data.Model', [
          this.setRawData(this._options.rawData, true);
       },
 
-      // region SBIS3.CONTROLS.Data.SerializableMixin
-
-      _getSerializableState: function() {
-         return $ws.core.merge(
-            Model.superclass._getSerializableState.call(this), {
-               _hash: this.getHash(),
-               _isStored: this._isStored,
-               _isDeleted: this._isDeleted,
-               _isChanged: this._isChanged,
-               _compatibleMode: this._compatibleMode
-            }
-         );
-      },
-
-      _setSerializableState: function(state) {
-         return Model.superclass._setSerializableState(state).callNext(function() {
-            this._hash = state._hash;
-            this._isStored = state._isStored;
-            this._isDeleted = state._isDeleted;
-            this._isChanged = state._isChanged;
-            this._compatibleMode = state._compatibleMode;
-         });
-      },
-
-      // endregion SBIS3.CONTROLS.Data.SerializableMixin
-
       // region SBIS3.CONTROLS.Data.IPropertyAccess
 
       get: function (name) {
@@ -278,6 +252,32 @@ define('js!SBIS3.CONTROLS.Data.Model', [
       },
 
       // endregion SBIS3.CONTROLS.Data.Collection.IEnumerable
+
+      // region SBIS3.CONTROLS.Data.SerializableMixin
+
+      _getSerializableState: function() {
+         return $ws.core.merge(
+            Model.superclass._getSerializableState.call(this), {
+               _hash: this.getHash(),
+               _isStored: this._isStored,
+               _isDeleted: this._isDeleted,
+               _isChanged: this._isChanged,
+               _compatibleMode: this._compatibleMode
+            }
+         );
+      },
+
+      _setSerializableState: function(state) {
+         return Model.superclass._setSerializableState(state).callNext(function() {
+            this._hash = state._hash;
+            this._isStored = state._isStored;
+            this._isDeleted = state._isDeleted;
+            this._isChanged = state._isChanged;
+            this._compatibleMode = state._compatibleMode;
+         });
+      },
+
+      // endregion SBIS3.CONTROLS.Data.SerializableMixin
 
       // region Public methods
 

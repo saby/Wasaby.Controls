@@ -39,7 +39,7 @@ define('js!SBIS3.CONTROLS.Data.SerializableMixin', [
 
       /**
        * Конструирует экземпляр из сериализованного состояния
-       * @param {Object} data Сериализованный экземпляр
+       * @param {Object} data Сериализованное состояние
        * @returns {Object}
        * @static
        */
@@ -47,7 +47,9 @@ define('js!SBIS3.CONTROLS.Data.SerializableMixin', [
          var instance,
             initializer = this.prototype._setSerializableState(data.state);
          instance = new this(data.state._options);
-         initializer && initializer.call(instance);
+         if (initializer) {
+            initializer.call(instance);
+         }
          return instance;
       },
 
@@ -73,8 +75,7 @@ define('js!SBIS3.CONTROLS.Data.SerializableMixin', [
        */
       _setSerializableState: function(state) {
          state._options = state._options || {};
-         return function() {
-         };
+         return function() {};
       },
 
       /**

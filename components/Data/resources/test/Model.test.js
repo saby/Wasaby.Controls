@@ -63,6 +63,7 @@ define([
                ]
             });
          });
+
          describe('.get()', function () {
             it('should return a data value', function () {
                assert.strictEqual(model.get('max'), modelData.max);
@@ -75,6 +76,7 @@ define([
                assert.strictEqual(model.get('sqMax'), modelData.max * modelData.max);
             });
          });
+
          describe('.set()', function () {
             it('should set value', function () {
                model.set('max', 13);
@@ -104,6 +106,7 @@ define([
                assert.strictEqual(model.get('title'), 'test B');
             });
          });
+
          describe('.has()', function () {
             it('should return true for raw-defined property', function () {
                for (var key in modelData) {
@@ -123,6 +126,7 @@ define([
                assert.isFalse(model.has('blah'));
             });
          });
+
          describe('.each()', function () {
             it('should return equivalent values', function () {
                model.each(function(name, value) {
@@ -160,6 +164,7 @@ define([
                assert.strictEqual(allProps.length, count);
             });
          });
+
          describe('.getProperties()', function () {
             it('should return a model properties', function () {
                for (var name in modelProperties) {
@@ -169,11 +174,13 @@ define([
                }
             });
          });
+
          describe('.getRawData()', function () {
             it('should return a model data', function () {
                assert.deepEqual(modelData, model.getRawData());
             });
          });
+
          describe('.setRawData()', function () {
             it('should set data', function () {
                var newModel = new Model({
@@ -184,11 +191,13 @@ define([
                assert.strictEqual(newModel.getId(), modelData['id']);
             });
          });
+
          describe('.getAdapter()', function () {
             it('should return an adapter', function () {
                assert.deepEqual(model.getAdapter(), adapter);
             });
          });
+
          describe('.setAdapter()', function () {
             it('should set adapter', function () {
                var myModel = new Model({
@@ -199,6 +208,7 @@ define([
                assert.deepEqual(myModel.getAdapter(), adapter);
             });
          });
+
          describe('.getId()', function () {
             it('should return id', function () {
                assert.strictEqual(model.getId(), modelData['id']);
@@ -232,11 +242,13 @@ define([
                });
             });
          });
+
          describe('.getIdProperty()', function () {
             it('should return id property', function () {
                assert.strictEqual(model.getIdProperty(), 'id');
             });
          });
+
          describe('.setIdProperty()', function () {
             it('should set id property', function () {
                var newModel = new Model({
@@ -246,6 +258,7 @@ define([
                assert.strictEqual(newModel.getId(), modelData['id']);
             });
          });
+
          describe('.clone()', function () {
             it('should not be same as original', function () {
                assert.notEqual(model.clone(), model);
@@ -315,6 +328,7 @@ define([
                assert.notEqual(cloneA.get('max'), cloneB.get('max'));
             });
          });
+
          describe('.merge()', function () {
             it('should merge models', function () {
                var newModel = new Model({
@@ -412,6 +426,7 @@ define([
                assert.isTrue(model.isDeleted());
             });
          });
+
          describe('.toJSON()', function () {
             it('should serialize a model', function () {
                var json = model.toJSON();

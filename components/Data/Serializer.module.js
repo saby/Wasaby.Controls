@@ -4,7 +4,7 @@ define('js!SBIS3.CONTROLS.Data.Serializer', [
    'use strict';
 
    /**
-    * Сериалайзер - обеспечивает возможность сериализовать и десериализовать объекты
+    * Сериалайзер - обеспечивает возможность сериализовать и десериализовать специальные типы
     * @class SBIS3.CONTROLS.Data.Serializer
     * @public
     * @author Мальцев Алексей
@@ -47,6 +47,7 @@ define('js!SBIS3.CONTROLS.Data.Serializer', [
             return {
                $serialized$: 'func',
                id: this._functionStorage.length - 1
+               //TODO: При сериализации на сервере надо сохранять и код функций-"не членов класса"?
                //code: $ws.single.base64.encode(value.toString())
             };
          } else if (value === Infinity) {
@@ -88,6 +89,7 @@ define('js!SBIS3.CONTROLS.Data.Serializer', [
                   if (this._instanceStorage[value.id]) {
                      result = this._instanceStorage[value.id];
                   } else {
+                     //Используем SerializableMixin для инстанциирования
                      var Module = require('js!' + value.module),
                         instance = Module.prototype.fromJSON.call(Module, value);
                      this._instanceStorage[value.id] = instance;
