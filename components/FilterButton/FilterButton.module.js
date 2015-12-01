@@ -144,7 +144,8 @@ define('js!SBIS3.CONTROLS.FilterButton',
                   filter: this.getFilter(),
                   caption: this._mapFilterStructureByProp('caption')
                });
-            }.bind(this);
+            }.bind(this),
+            isRightAlign = this._options.filterAlign === 'right';
 
          this._pickerContext = ctx;
 
@@ -178,10 +179,10 @@ define('js!SBIS3.CONTROLS.FilterButton',
          }.bind(this));
 
          return {
-            corner: this._options.filterAlign === 'right' ? 'tr' : 'tl',
+            corner: isRightAlign ? 'tl' : 'tr',
             parent: this,
             horizontalAlign: {
-               side: this._options.filterAlign
+               side: isRightAlign ? 'left' : 'right'
             },
             verticalAlign: {
                side: 'top'
