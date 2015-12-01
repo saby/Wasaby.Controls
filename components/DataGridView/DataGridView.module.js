@@ -77,8 +77,8 @@ define('js!SBIS3.CONTROLS.DataGridView',
              *      ladder: it.field
              *    })}}
              * </pre>
-             * @property {<String,String>} templateBinding соответствие опций шаблона полям в рекорде
-             * @property {<String,String>} includedTemplates подключаемые внешние шаблоны, ключу соответствует поле it.included.<...> которое будет функцией в шаблоне ячейки
+             * @property {Object.<String,String>} templateBinding соответствие опций шаблона полям в рекорде
+             * @property {Object.<String,String>} includedTemplates подключаемые внешние шаблоны, ключу соответствует поле it.included.<...> которое будет функцией в шаблоне ячейки
              */
             /**
              * @cfg {Columns[]} Набор колонок
