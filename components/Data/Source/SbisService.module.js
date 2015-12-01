@@ -278,13 +278,7 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
          });
       },
 
-      /**
-       * Удаляет модель из источника данных
-       * @param {String} key Первичный ключ модели
-       * @param {Object|SBIS3.CONTROLS.Data.Model} [meta] Дополнительные мета данные
-       * @returns {$ws.proto.Deferred} Асинхронный результат выполнения
-       */
-      destroy: function(key, meta) {
+      destroy: function(keys, meta) {
          var self = this;
          if ($ws.helpers.type(keys) == 'array') {
             var groups = {};
@@ -292,10 +286,8 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
                /*В ключе может содержаться ссылка на объект бл
                  сгруппируем ключи по соответсвующим им объектам*/
                var name = self._getProviderNameById(key);
-
                groups[name] = groups[name]||[];
                groups[name].push(parseInt(key, 10));
-  
             });
             var pd = new $ws.proto.ParallelDeferred();
             $ws.helpers.forEach(groups, function (group, name) {
@@ -303,7 +295,10 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
             });
             return pd.done().getResult();
          }
-
+         else {
+            var name = self._getProviderNameById(keys);
+            return self._destroy(parseInt(keys, 10), name, meta);
+         }
       },
 
       merge: function(first, second) {
@@ -767,8 +762,7 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
             return ido[1];
          }
          return this._options.resource.name;
-         return this._options.resource.name;
-      /**
+      },
       /**
        * вызвает метод удаления
        * @param {String|Array} id Идентификатор объекта
@@ -782,7 +776,7 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
             'ИдО': id
          };
          if (!Object.isEmpty(meta)) {
-            args['ДопПоля'] = meta;
+            args['ДопПоля'] = this._options.adapter.serialize(meta);
          }
          var provider = this._provider;
          if (BLObjName && this._options.resource.name !== BLObjName) {
