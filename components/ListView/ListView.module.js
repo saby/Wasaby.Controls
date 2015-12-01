@@ -408,6 +408,8 @@ define('js!SBIS3.CONTROLS.ListView',
           * @returns {jQuery}
           * @private
           */
+         // TODO Подумать, как решить данную проблему. Не надёжно хранить информацию в доме
+         // Поиск следующего или предыдущего элемента коллекции с учётом вложенных контролов
          _getHtmlItem: function (id, isNext) {
             var items = $('.controls-ListView__item', this._getItemsContainer()).not('.ws-hidden'),
                selectedItem = $('[data-id="' + id + '"]', this._getItemsContainer()),
