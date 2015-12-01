@@ -327,12 +327,10 @@ define('js!SBIS3.CONTROLS.ListView',
             }
          },
          _keyboardHover: function (e) {
-            var items = $('.controls-ListView__item', this._getItemsContainer()).not('.ws-hidden'),
-               selectedKey = this.getSelectedKey(),
+            var selectedKey = this.getSelectedKey(),
                selectedItem = $('[data-id="' + selectedKey + '"]', this._getItemsContainer()),
-               nextItem = (selectedKey) ? items.eq(items.index(selectedItem) + 1) : items.eq(0),
-               previousItem = (selectedKey) ? items.eq(items.index(selectedItem) - 1) : items.last();
-
+               nextItem = this._getSiblingItem(selectedItem, 'next'),
+               previousItem = this._getSiblingItem(selectedItem, 'previous');
 
             switch (e.which) {
                case $ws._const.key.up:
@@ -350,6 +348,15 @@ define('js!SBIS3.CONTROLS.ListView',
                   break;
             }
             return false;
+         },
+         // TODO Подумать, как решить данную проблему. Не надёжно хранить информацию в доме
+         // Поиск следующего или предыдущего элемента коллекции с учётом вложенных контролов
+         _getSiblingItem: function(item, order){
+            if (!item.length) return;
+            var sq = order == 'next' ? 1 : -1;
+            var items = $('.controls-ListView__item', this._getItemsContainer()).not('.ws-hidden'),
+               siblingItem = items.eq(items.index(item) + sq);
+            return this._dataSet.getRecordByKey(siblingItem.data('id')) ? siblingItem : this._getSiblingItem(siblingItem, order);
          },
          _checkTargetContainer: function (target) {
             return this._options.showPaging && this._pager && $.contains(this._pager.getContainer()[0], target[0]);
