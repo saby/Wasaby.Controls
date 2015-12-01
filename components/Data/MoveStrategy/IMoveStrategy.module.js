@@ -13,21 +13,21 @@ define('js!SBIS3.CONTROLS.Data.IMoveStrategy', [], function () {
 
       /**
        * Перемещение, смена порядка.
-       * @param {SBIS3.CONTROLS.Data.Model} move
-       * @param {SBIS3.CONTROLS.Data.Model} to
-       * @param {SBIS3.CONTROLS.Data.Model} up
+       * @param {SBIS3.CONTROLS.Data.Model} from - Перемещаемая запись
+       * @param {SBIS3.CONTROLS.Data.Model} to - запись к которой надо преместить
+       * @param {Boolean} after - Если true - вставить после записи, указанной в to. Если false - перед записью, указанной в to.
        * @returns {$ws.proto.Deferred}
        */
-      move: function (move, to, up) {
+      move: function (from, to, after) {
          throw new Error('Method must be implemented');
       },
       /**
        * Перемещние по иерархии, смена родителя.
-       * @param {SBIS3.CONTROLS.Data.Model} move
-       * @param {SBIS3.CONTROLS.Data.Model} to
+       * @param {SBIS3.CONTROLS.Data.Model} from - Перемещаемая запись
+       * @param {SBIS3.CONTROLS.Data.Model} to - запись в которую надо преместить
        * @returns {$ws.proto.Deferred}
        */
-      hierarhyMove: function (move, to) {
+      hierarhyMove: function (from, to) {
          throw new Error('Method must be implemented');
       }
    };

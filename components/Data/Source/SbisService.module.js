@@ -492,7 +492,7 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
        * @returns {String}
        * @see resource
        */
-      getResourceName: function (){
+      getResource: function () {
          return this._options.resource.name;
       },
       //endregion Public methods

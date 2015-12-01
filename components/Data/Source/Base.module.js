@@ -62,6 +62,9 @@ define('js!SBIS3.CONTROLS.Data.Source.Base', [
          this._options.idProperty = name;
       },
 
+      getResource: function () {
+         return this._options.resource;
+      },
       //endregion SBIS3.CONTROLS.Data.Source.ISource
 
       //region Protected methods

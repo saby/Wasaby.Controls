@@ -193,6 +193,10 @@ define('js!SBIS3.CONTROLS.Data.Source.ISource', [
        */
       call: function (command, data) {
          throw new Error('Method must be implemented');
+      },
+
+      getResource:function (){
+         throw new Error('Method must be implemented');
       }
    };
 });

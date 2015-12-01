@@ -344,7 +344,7 @@ define('js!SBIS3.CONTROLS.SbisServiceSource', [
        * Возвращает имя объекта бизнес логики по которому построен источник
        * @returns {String}
        */
-      getResourceName: function () {
+      getResource: function () {
          return this._object;
       },
 

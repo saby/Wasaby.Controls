@@ -52,7 +52,7 @@ define('js!SBIS3.CONTROLS.Data.SbisMoveStrategy', [
             /**
              * @cfg {SBIS3.CONTROLS.Data.Source.SbisService} Источник данных.
              */
-            dataSource:null,
+            dataSource:null
 
          },
          _orderProvider: undefined
@@ -62,14 +62,14 @@ define('js!SBIS3.CONTROLS.Data.SbisMoveStrategy', [
             throw new Error('The Resource and the Data Source are not defined.');
          }
          if (!cfg.resource) {
-            this._options.resource = cfg.dataSource.getResourceName();
+            this._options.resource = cfg.dataSource.getResource();
          }
       },
 
-      move: function (move, to, up) {
+      move: function (from, to, after) {
          var self = this,
-            params = this._getMoveParams(move, to, up),
-            suffix = up ? 'После':'До';
+            params = this._getMoveParams(from, to, after),
+            suffix = after ? 'До':'После';
          if (!this._orderProvider) {
             this._orderProvider = new SbisServiceBLO(this._options.moveResource);
          }
@@ -80,38 +80,38 @@ define('js!SBIS3.CONTROLS.Data.SbisMoveStrategy', [
          });
       },
 
-      hierarhyMove: function (move, to) {
+      hierarhyMove: function (from, to) {
          if (!this._options.dataSource) {
             throw new Error('DataSource is not defined.');
          }
          if (!this._options.hierField) {
             throw new Error('Hierrarhy Field is not defined.');
          }
-         move.set(this._options.hierField, to);
-         return this._dataSource.update(move);
+         from.set(this._options.hierField, this._getId(to));
+         return this._options.dataSource.update(from);
       },
 
       /**
        * Возвращает параметры перемещения записей
-       * @param {SBIS3.CONTROLS.Data.Model} model Перемещаемая запись
+       * @param {SBIS3.CONTROLS.Data.Model} from Перемещаемая запись
        * @param {String} to Значение поля, в позицию которого перемещаем (по умолчанию - значение первичного ключа)
-       * @param {Boolean} up Дополнительная информация о перемещении
+       * @param {Boolean} after Дополнительная информация о перемещении
        * @returns {Object}
        * @private
        */
-      _getMoveParams: function(model, to, up) {
+      _getMoveParams: function(from, to, after) {
          var objectName = this._options.resource,
             params = {
-               'ИдО': [parseInt(this._getId(model)), objectName],
+               'ИдО': [parseInt(this._getId(from)), objectName],
                'ПорядковыйНомер': this._options.moveDefaultColumn,
                'Иерархия': null,
                'Объект': this._options.resource
             };
 
-         if (up) {
-            params['ИдОПосле'] = [parseInt(this._getId(to), 10), objectName];
-         } else {
+         if (after) {
             params['ИдОДо'] = [parseInt(this._getId(to), 10), objectName];
+         } else {
+            params['ИдОПосле'] = [parseInt(this._getId(to), 10), objectName];
          }
          return params;
       },
