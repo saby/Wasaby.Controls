@@ -325,6 +325,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
          if(keysArrLen) {
             this.getSelectedItems(true).addCallback(function(list){
                self._linkCollection.setItems(list);
+               return list;
             });
          } else {
             self._linkCollection.setItems(this.getSelectedItems());
@@ -348,6 +349,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
             self._options.selectedItem = item ? item : new Model();
             self._options.selectedKey = item ? item.getId() : null;
             self._notifyOnPropertyChanged('selectedItem');
+            return list;
          });
          FieldLink.superclass._afterSelectionHandler.apply(this, arguments);
       },

@@ -92,7 +92,7 @@ define('js!SBIS3.CONTROLS.ActiveMultiSelectable', ['js!SBIS3.CONTROLS.Data.Colle
 
          /* Сфоримруем массив ключей записей, которые требуется вычитать с бл или взять из dataSet'a*/
          for(var i = 0, keys = selKeys.length; i < keys; i++) {
-            if(Array.indexOf(itemKeysArr, selKeys[i]) === -1) {
+            if(Array.indexOf(itemKeysArr, selKeys[i]) === -1 && Array.indexOf(itemKeysArr, parseInt(selKeys[i], 10)) === -1) {
                loadKeysArr.push(selKeys[i]);
             }
          }
