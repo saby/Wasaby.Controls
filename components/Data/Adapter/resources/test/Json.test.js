@@ -168,6 +168,13 @@ define(
                );
             });
          });
+
+         describe('.destroy()', function(){
+            it('should destroy without error', function() {
+               var adapterDestroyInstance = new JsonAdapter();
+               adapterDestroyInstance.destroy();
+            });
+         });
       });
 
       describe('SBIS3.CONTROLS.Data.Adapter.Json::forTable()', function () {
@@ -207,7 +214,8 @@ define(
          });
 
          describe('.getEmpty()', function () {
-            it('should return empty data', function () {
+            it('should return an empty array', function () {
+               assert.instanceOf(adapterInstance.getEmpty(), Array);
                assert.strictEqual(
                   0,
                   adapterInstance.getEmpty().length
@@ -548,10 +556,10 @@ define(
             });
          });
 
-         describe('.destroy()', function(){
-            it('should destroy without error', function() {
-               var adapterDestroyInstance = new JsonAdapter();
-               adapterDestroyInstance.destroy();
+         describe('.getEmpty()', function () {
+            it('should return an empty object', function () {
+               assert.instanceOf(adapterInstance.getEmpty(), Object);
+               assert.isTrue(Object.isEmpty(adapterInstance.getEmpty()));
             });
          });
       });

@@ -49,9 +49,9 @@ define('js!SBIS3.CONTROLS.Data.Source.Memory', [
 
       //region SBIS3.CONTROLS.Data.Source.ISource
 
-      create: function () {
+      create: function (meta) {
          return $ws.proto.Deferred.success(this._getModelInstance(
-            this._options.adapter.forRecord().getEmpty()
+            meta || this._options.adapter.forRecord().getEmpty()
          ));
       },
 

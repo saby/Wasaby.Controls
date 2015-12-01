@@ -158,7 +158,7 @@ define('js!SBIS3.CONTROLS.Data.Adapter.Json', [
       },
 
       getEmpty: function () {
-         return [];
+         return {};
       },
 
       getFullFieldData: function(data, name) {
