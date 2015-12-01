@@ -5,7 +5,10 @@ define('js!SBIS3.CONTROLS.MenuLink', ['js!SBIS3.CONTROLS.Link', 'html!SBIS3.CONT
    /**
     * Контрол, отображающий кнопку в виде ссылки и выпадающее из нее меню
     * @class SBIS3.CONTROLS.MenuLink
-	* @demo SBIS3.CONTROLS.Demo.MyMenuLink
+	 * @demo SBIS3.CONTROLS.Demo.MyMenuLink
+    * @remark
+    * !Важно: Если в меню задан только один пункт, то меню НЕ будет показано, а при нажатии на кнопку будет выполнено действие соответствующее этому пункту.
+    * Кнопка с меню - это кнопка с выбором варинта действия, и если возможно только одно действие, то оно и будет выполнено по нажатию.
     * @extends SBIS3.CONTROLS.ButtonBase
     * @control
     * @author Крайнов Дмитрий Олегович
@@ -71,11 +74,6 @@ define('js!SBIS3.CONTROLS.MenuLink', ['js!SBIS3.CONTROLS.Link', 'html!SBIS3.CONT
          }
       },
 
-      _initializePicker: function(){
-         MenuLink.superclass._initializePicker.call(this);
-         this._setWidth();
-      },
-
       _setWidth: function(){
          var self = this;
          this._picker.getContainer().css({
@@ -83,18 +81,7 @@ define('js!SBIS3.CONTROLS.MenuLink', ['js!SBIS3.CONTROLS.Link', 'html!SBIS3.CONT
          });
       },
 
-      _clickHandler: function(){
-         if (this._dataSet.getCount() > 1) {
-            this.togglePicker();
-         } else {
-            if (this._dataSet.getCount() == 1) {
-               var id = this._dataSet.at(0).getKey();
-               this._notify('onMenuItemActivate', id);
-            }
-         }
-      },
-
-      _dataLoadedCallback : function() {
+      _dataLoadedCallback: function () {
          //TODO в 3.7.3.20 надо это убрать потому что стелки у всех кнопок пропадают
          if (this._dataSet.getCount() > 1) {
             $('.controls-MenuButton__arrowDown', this._container).show();
@@ -105,12 +92,12 @@ define('js!SBIS3.CONTROLS.MenuLink', ['js!SBIS3.CONTROLS.Link', 'html!SBIS3.CONT
             this._container.removeClass('controls-Picker__show');
             $('.controls-MenuButton__header', this._container).remove();
          }
-         if (this._picker){
+         if (this._picker) {
             this.hidePicker();
          }
       },
-
-      _drawIcon: function(icon) {
+      
+      _drawIcon: function (icon) {
          var
             $icon = $('.controls-Link__icon', this._container.get(0)),
             $caption = $('.controls-Link__field', this._container.get(0));

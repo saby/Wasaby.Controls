@@ -96,12 +96,12 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
                   /**/
                   if (self._options.displayType == 'folders') {
                      if (record.get(self._options.hierField + '@')) {
-                        self._drawItem(record, {at : startRow});
+                        self._drawAndAppendItem(record, {at : startRow});
                      }
 
                   }
                   else {
-                     self._drawItem(record, {at : startRow});
+                     self._drawAndAppendItem(record, {at : startRow});
                   }
                }
             }
@@ -153,6 +153,24 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
          return parentResult;
       },
 
+      collapseNode: function (key) {
+         this._clearLadderData(key);
+         TreeDataGridView.superclass.collapseNode.apply(this, arguments);
+      },
+
+      expandNode: function (key) {
+         this._clearLadderData(key);
+         return TreeDataGridView.superclass.expandNode.apply(this, arguments);
+      },
+
+
+      _clearLadderData: function(key){
+         var ladderDecorator = this._decorators.getByName('ladder');
+         if (ladderDecorator){
+            ladderDecorator.removeNodeData(key);
+         }
+      },
+
       _drawItemsFolderLoad: function(records, id) {
          if (!id) {
             this._drawItems(records);
@@ -160,6 +178,11 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
          else {
             this._drawItemsFolder(records);
          }
+      },
+
+      _drawExpandArrow: function(key, flag){
+         var itemCont = $('.controls-ListView__item[data-id="' + key + '"]', this.getContainer().get(0));
+         $('.js-controls-TreeView__expand', itemCont).toggleClass('controls-TreeView__expand__open', flag);
       },
 
       destroyFolderToolbar: function(id) {
@@ -221,30 +244,71 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
          }
       },
 
-      _elemClickHandlerInternal: function(data, id, target) {
-         var nodeID = $(target).closest('.controls-ListView__item').data('id');
-         if ($(target).hasClass('js-controls-TreeView__expand') && $(target).hasClass('has-child')) {
-            this.toggleNode(nodeID);
-         } else {
-            if (this._options.allowEnterToFolder){
-               if ($(target).hasClass('js-controls-TreeView__editArrow')) {
-                  if (this._options.arrowActivatedHandler) {
-                     this._options.arrowActivatedHandler.apply(this, arguments);
-                  }
-               } else if (data.get(this._options.hierField + '@')) {
-                  this.setCurrentRoot(nodeID);
-                  this.reload();
-               }
+      _elemClickHandler: function (id, data, target) {
+         var
+            res,
+            $target = $(target),
+            elClickHandler = this._options.elemClickHandler;
+
+         this.setSelectedKey(id);
+         var handler = function() {
+            var nodeID = $(target).closest('.controls-ListView__item').data('id');
+            if ($(target).hasClass('js-controls-TreeView__expand') && $(target).hasClass('has-child')) {
+               this.toggleNode(nodeID);
             }
             else {
-               if (data.get(this._options.hierField + '@')) {
-                  this.toggleNode(nodeID);
-               }
-               else {
-                  this._activateItem(id);
+               res = this._notify('onItemClick', id, data, target);
+               if (res !== false) {
+                  this._elemClickHandlerInternal(data, id, target);
+                  elClickHandler && elClickHandler.call(this, id, data, target);
                }
             }
+         }.bind(this);
 
+         if (this._options.multiselect) {
+            //TODO: оставить только js класс
+            if ($target.hasClass('js-controls-ListView__itemCheckBox') || $target.hasClass('controls-ListView__itemCheckBox')) {
+               this.toggleItemsSelection([$target.closest('.controls-ListView__item').attr('data-id')]);
+            }
+            else {
+               handler(target);
+            }
+         }
+         else {
+            this.setSelectedKeys([id]);
+            handler(target);
+         }
+      },
+
+      _elemClickHandlerInternal: function(data, id, target) {
+         var nodeID = $(target).closest('.controls-ListView__item').data('id');
+         if (this._options.allowEnterToFolder){
+            if ($(target).hasClass('js-controls-TreeView__editArrow')) {
+               if (this._options.arrowActivatedHandler) {
+
+                  //TODO оставляем для совеместимости с номенклатурой
+                  if (this._options.arrowActivatedHandler instanceof Function) {
+                     this._options.arrowActivatedHandler.apply(this, arguments);
+                  }
+                  else {
+                     this._activateItem(id);
+                  }
+               }
+            } else if (data.get(this._options.hierField + '@')) {
+               this.setCurrentRoot(nodeID);
+               this.reload();
+            }
+            else {
+               this._activateItem(id);
+            }
+         }
+         else {
+            if (data.get(this._options.hierField + '@')) {
+               this.toggleNode(nodeID);
+            }
+            else {
+               this._activateItem(id);
+            }
          }
       },
       /*DRAG_AND_DROP START*/
@@ -299,13 +363,15 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
       },
       _callDropHandler: function(e) {
          var
+            clickHandler,
             target = $(e.target),
             keys = this.getCurrentElement(),
             moveTo = target.closest('.controls-ListView__item').data('id');
          //TODO придрот для того, чтобы если перетащить элемент сам на себя не отработал его обработчик клика
          if (this.getSelectedKey() === moveTo) {
+            clickHandler = this._elemClickHandler;
             this._elemClickHandler = function() {
-               this._elemClickHandler = TreeDataGridView.superclass._elemClickHandler;
+               this._elemClickHandler = clickHandler;
             }
          }
          this._move(keys, moveTo);
