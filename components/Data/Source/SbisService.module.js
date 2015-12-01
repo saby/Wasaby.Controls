@@ -153,7 +153,6 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
          }
          this._provider = new SbisServiceBLO(this._options.resource);
 
-         this.setMoveResource(this._options.moveResource);
       },
 
       //region SBIS3.CONTROLS.Data.Source.ISource
