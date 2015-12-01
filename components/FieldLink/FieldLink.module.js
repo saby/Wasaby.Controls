@@ -12,7 +12,6 @@ define('js!SBIS3.CONTROLS.FieldLink',
       'html!SBIS3.CONTROLS.FieldLink/beforeFieldWrapper',
       'js!SBIS3.CONTROLS.Data.Model',
       'js!SBIS3.CONTROLS.Data.Adapter.Sbis',
-      'js!SBIS3.CONTROLS.Data.Collection.List',
       'js!SBIS3.CONTROLS.MenuIcon'
 
    ],
@@ -35,8 +34,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
        afterFieldWrapper,
        beforeFieldWrapper,
        Model,
-       SbisAdapter,
-       List
+       SbisAdapter
    ) {
 
       'use strict';
@@ -336,8 +334,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
 
       setSelectedItem: function(item) {
          /* Когда передали selectedItem, то надо сделать коллекцию selectedItems из этого item'a */
-         var isEmptyItem = Object.isEmpty(item.getProperties());
-         this.setSelectedItems(new List({items: isEmptyItem ? [] : [item]}));
+         Object.isEmpty(item.getProperties()) ? this.removeSelectedItems() : this.setSelectedItems([item]);
          FieldLink.superclass.setSelectedItem.apply(this, arguments);
       },
 

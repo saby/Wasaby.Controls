@@ -53,12 +53,36 @@ define('js!SBIS3.CONTROLS.ActiveMultiSelectable', ['js!SBIS3.CONTROLS.Data.Colle
          }
       }),
 
+      /**
+       * Очищает набор выбранных элементов
+       */
+      clearSelectedItems: function() {
+         this.setSelectedItems(new List());
+      },
+
+
+      /**
+       * Добавляет переданные элементы к набору выбранных
+       * @param {Array | SBIS3.CONTROLS.Data.Collection.List} items
+       */
+      addSelectedItems: function(items) {
+         var selKeys = [],
+             selItems = this._options.selectedItems;
+
+         selItems.concat(items);
+         selItems.each(function(rec) {
+            selKeys.push(rec.getId());
+         });
+         this.setSelectedKeys(selKeys);
+         this._notifyOnPropertyChanged('selectedItems');
+      },
+
       _makeList: function(listItems) {
          return new List({items: listItems});
       },
 
       _getSelItemsClone: function() {
-         /* надо обязательно делать клон массива, чтобы порвать ссылку и не портить значения в контексте */
+         /* надо обязательно делать клон массива, чтобы порвать ссылку и не портить при изменении значения в контексте */
          return this._makeList(this._options.selectedItems.toArray().slice());
       },
       /**
@@ -144,7 +168,7 @@ define('js!SBIS3.CONTROLS.ActiveMultiSelectable', ['js!SBIS3.CONTROLS.Data.Colle
          /* Соберём элементы для удаления, т.к. в методе each не отслеживаются изменения IList'а */
          selItems.each(function(rec) {
             id = rec.getId();
-            /* т.к. ключи могут быть и строкой, то надо проверить и на строку */
+            /* ключи могут быть и строкой, поэтому надо проверить и на строку */
             if(Array.indexOf(selKeys, id) === -1 && Array.indexOf(selKeys, String(id)) === -1) {
                delItems.push(rec);
             }
