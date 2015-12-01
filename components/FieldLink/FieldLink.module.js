@@ -5,15 +5,39 @@ define('js!SBIS3.CONTROLS.FieldLink',
       'js!SBIS3.CONTROLS.FormWidgetMixin',
       'js!SBIS3.CONTROLS.MultiSelectable',
       'js!SBIS3.CONTROLS.ActiveMultiSelectable',
+      'js!SBIS3.CONTROLS.Selectable',
+      'js!SBIS3.CONTROLS.ActiveSelectable',
       'js!SBIS3.CONTROLS.FieldLinkItemsCollection',
       'html!SBIS3.CONTROLS.FieldLink/afterFieldWrapper',
       'html!SBIS3.CONTROLS.FieldLink/beforeFieldWrapper',
       'js!SBIS3.CONTROLS.Data.Model',
       'js!SBIS3.CONTROLS.Data.Adapter.Sbis',
+      'js!SBIS3.CONTROLS.Data.Collection.List',
       'js!SBIS3.CONTROLS.MenuIcon'
 
    ],
-   function(SuggestTextBox, DSMixin, FormWidgetMixin, MultiSelectable, ActiveMultiSelectable, FieldLinkItemsCollection, afterFieldWrapper, beforeFieldWrapper, Model, SbisAdapter) {
+   function (
+       SuggestTextBox,
+       DSMixin,
+       FormWidgetMixin,
+
+       /* Интерфейс для работы с набором выбранных записей */
+       MultiSelectable,
+       ActiveMultiSelectable,
+       /****************************************************/
+
+       /* Интерфейс для работы с выбранной записью */
+       Selectable,
+       ActiveSelectable,
+       /********************************************/
+
+       FieldLinkItemsCollection,
+       afterFieldWrapper,
+       beforeFieldWrapper,
+       Model,
+       SbisAdapter,
+       List
+   ) {
 
       'use strict';
 
@@ -40,8 +64,10 @@ define('js!SBIS3.CONTROLS.FieldLink',
     * @class SBIS3.CONTROLS.FieldLink
     * @extends SBIS3.CONTROLS.SuggestTextBox
     * @category Inputs
+    * @mixes SBIS3.CONTROLS.Selectable
     * @mixes SBIS3.CONTROLS.MultiSelectable
-    * @mixes SBIS3.CONTROLS.CollectionMixin
+    * @mixes SBIS3.CONTROLS.ActiveSelectable
+    * @mixes SBIS3.CONTROLS.ActiveMultiSelectable
     * @mixes SBIS3.CONTROLS.FormWidgetMixin
     * @demo SBIS3.CONTROLS.Demo.FieldLinkWithEditInPlace Поле связи с редактированием по месту
     * @demo SBIS3.CONTROLS.Demo.FieldLinkDemo
@@ -50,7 +76,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
     * @author Крайнов Дмитрий Олегович
     */
 
-   var FieldLink = SuggestTextBox.extend([FormWidgetMixin, MultiSelectable, DSMixin, ActiveMultiSelectable],/** @lends SBIS3.CONTROLS.FieldLink.prototype */{
+   var FieldLink = SuggestTextBox.extend([FormWidgetMixin, MultiSelectable, ActiveMultiSelectable, Selectable, ActiveSelectable, DSMixin],/** @lends SBIS3.CONTROLS.FieldLink.prototype */{
       $protected: {
          /* КОНФИГУРАЦИЯ SELECTOR'а */
          _selector: {
@@ -304,6 +330,32 @@ define('js!SBIS3.CONTROLS.FieldLink',
             self._linkCollection.setItems(this.getSelectedItems());
          }
       },
+
+      /* Для синхронизации selectedItem и selectedItems */
+
+      setSelectedItem: function(item) {
+         /* Когда передали selectedItem, то надо сделать коллекцию selectedItems из этого item'a */
+         var isEmptyItem = Object.isEmpty(item.getProperties());
+         this.setSelectedItems(new List({items: isEmptyItem ? [] : [item]}));
+         FieldLink.superclass.setSelectedItem.apply(this, arguments);
+      },
+
+      _afterSelectionHandler: function() {
+         var self = this;
+         /* selectedItem всегда смотрит на первый элемент набора selectedItems */
+         this.getSelectedItems(true).addCallback(function(list) {
+            var item = list.at(0);
+            self._options.selectedItem = item ? item : new Model();
+            self._options.selectedKey = item ? item.getId() : null;
+            self._notifyOnPropertyChanged('selectedItem');
+         });
+         FieldLink.superclass._afterSelectionHandler.apply(this, arguments);
+      },
+
+      _drawSelectedItem: function(key) {
+         this._drawSelectedItems(key === null ? [] : [key]);
+      },
+      /******************************************************/
 
       setListFilter: function() {
          /* Если единичный выбор в поле связи, но textBox всё равно показывается(включена опция), запрещаем работу suggest'a */
