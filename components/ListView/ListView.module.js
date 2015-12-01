@@ -411,20 +411,11 @@ define('js!SBIS3.CONTROLS.ListView',
          _getHtmlItem: function (id, isNext) {
             var items = $('.controls-ListView__item', this._getItemsContainer()).not('.ws-hidden'),
                selectedItem = $('[data-id="' + id + '"]', this._getItemsContainer()),
-               index = items.index(selectedItem);
-            if(!id){
-               return isNext ? items.eq(0) : items.last()
-            }
-            if (isNext) {
-               if(index +1 < items.length )
-                  return items.eq(index + 1);
-            } else {
-               if(index > 0)
-                  return items.eq(index - 1);
-            }
-            return undefined;
-         },
+               order = isNext ? 1 : -1,
+               siblingItem = items.eq(items.index(selectedItem) + order);
 
+            return this._dataSet.getRecordByKey(siblingItem.data('id')) ? siblingItem : this._getHtmlItem(siblingItem.get('id'), isNext);
+         },
          _isViewElement: function (elem) {
             return  $ws.helpers.contains(this._getItemsContainer()[0], elem[0]);
          },
