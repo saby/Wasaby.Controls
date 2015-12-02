@@ -661,7 +661,7 @@ define('js!SBIS3.CONTROLS.Data.Model', [
       return Model;
    });
 
-   ContextField.register('ControlsFieldTypeModel', Model, 'onPropertyChange');
+   ContextField.registerRecord('ControlsFieldTypeModel', Model, 'onPropertyChange');
 
    return Model;
 });

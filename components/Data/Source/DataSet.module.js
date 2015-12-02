@@ -1,7 +1,7 @@
 /* global define, $ws */
 define('js!SBIS3.CONTROLS.Data.Source.DataSet', [
-   'js!SBIS3.CONTROLS.Data.Collection.List'
-], function (List) {
+   'js!SBIS3.CONTROLS.Data.Collection.ObservableList'
+], function (ObservableList) {
    'use strict';
 
    /**
@@ -139,7 +139,7 @@ define('js!SBIS3.CONTROLS.Data.Source.DataSet', [
             );
          }
 
-         return new List({
+         return new ObservableList({
             items: items
          });
       },

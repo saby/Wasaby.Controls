@@ -206,11 +206,11 @@ define('js!SBIS3.CONTROLS.DSMixin', [
              */
             filter: {},
             /**
-             * @cfg {<String,String>} соответствие опций шаблона полям в рекорде
+             * @cfg {Object.<String,String>} соответствие опций шаблона полям в рекорде
              */
             templateBinding: {},
             /**
-             * @cfg {<String,String>} подключаемые внешние шаблоны, ключу соответствует поле it.included.<...> которое будет функцией в шаблоне
+             * @cfg {Object.<String,String>} подключаемые внешние шаблоны, ключу соответствует поле it.included.<...> которое будет функцией в шаблоне
              */
             includedTemplates: {}
          },

@@ -173,7 +173,7 @@ define('js!SBIS3.CONTROLS.TextBox', ['js!SBIS3.CONTROLS.TextBoxBase','html!SBIS3
        * @see placeholder
        */
       setPlaceholder: function(text){
-         if ($ws._const.compatibility.placeholder) {
+         if (!$ws._const.compatibility.placeholder) {
             this._compatPlaceholder.text(text || '');
          }
          else {

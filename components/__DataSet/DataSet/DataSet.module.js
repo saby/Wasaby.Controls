@@ -1,6 +1,7 @@
 define('js!SBIS3.CONTROLS.DataSet', [
    'js!SBIS3.CONTROLS.Data.SerializableMixin',
    'js!SBIS3.CONTROLS.ArrayStrategy',
+   'js!SBIS3.CONTROLS.Data.ContextField',
    'js!SBIS3.CONTROLS.DataFactory'
 ], function (SerializableMixin, ArrayStrategy) {
    'use strict';
@@ -569,6 +570,8 @@ define('js!SBIS3.CONTROLS.DataSet', [
          return filterDataSet;
       }
    });
+
+   ContextField.registerDataSet('ControlsFieldTypeDataSet', DataSet, 'onRecordChange');
 
    $ws.single.ioc.bind('SBIS3.CONTROLS.DataSet', function(config) {
       return new DataSet(config);
