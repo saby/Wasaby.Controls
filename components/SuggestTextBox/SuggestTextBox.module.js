@@ -27,11 +27,25 @@ define('js!SBIS3.CONTROLS.SuggestTextBox', [
 
          this.getContainer().addClass('controls-SuggestTextBox');
       },
-      init: function(){
-         var ccb = new $ws.proto.ControlContextBinder();
-         ccb.defineBinding('text', this.getName(), false, undefined, undefined, true);
-         ccb.bindControl(this, this.getLinkedContext(), true);
-         SuggestTextBox.superclass.init.call(this);
+
+      _keyUpBind: function(e) {
+         SuggestTextBox.superclass._keyUpBind.apply(this, arguments);
+         switch (e.which) {
+            /* Чтобы нормально работала навигация стрелками и не случалось ничего лишнего,
+             то запретим всплытие события */
+            case $ws._const.key.down:
+            case $ws._const.key.up:
+            case $ws._const.key.enter:
+               if(this.isPickerVisible()) {
+                  this._list && this._list._keyboardHover(e);
+                  e.stopPropagation();
+                  e.preventDefault();
+               }
+               break;
+            case $ws._const.key.esc:
+               this.hidePicker();
+               break;
+         }
       }
    });
 

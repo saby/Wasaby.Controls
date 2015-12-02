@@ -28,42 +28,54 @@ define('js!SBIS3.CONTROLS.EditInPlace',
                _options: {
                   columns: [],
                   focusCatch: undefined,
+                  onFieldChange: undefined,
                   template: undefined,
-                  applyOnFieldChange: true
+                  applyOnFieldChange: true,
+                  visible: false
                },
-               _firstField: undefined
+               _record: undefined,
+               _target: null,
+               _editing: false,
+               _editingRecord: undefined,
+               _previousRecordState: undefined,
+               _editingDeferred: undefined
             },
-            $constructor: function() {
-               this._publish('onFieldChange');
+            init: function() {
+               EditInPlace.superclass.init.apply(this, arguments);
                this._container.bind('keypress keydown', this._onKeyDown);
-               this.subscribe('onChildControlFocusOut', this._onChildControlFocusOut);
+               if (this._options.onFieldChange) {
+                  this.subscribe('onChildControlFocusOut', this._onChildControlFocusOut);
+               }
             },
             _onChildControlFocusOut: function() {
                var
                   result,
-                  difference = this._getRecordsDifference();
+                  difference = this._getRecordsDifference(),
+                  loadingIndicator;
                if (difference.length) {
-                  for (var idx = 0; idx < difference.length; idx++) {
-                     result = this._notify('onFieldChange', difference[idx], this._editingRecord);
-                     if (result instanceof $ws.proto.Deferred) {
-                        setTimeout(function () {
-                           $ws.helpers.toggleIndicator(true);
-                        }, 100);
-                        result.addCallback(function () {
-                           $ws.helpers.toggleIndicator(false);
-                        });
-                     }
+                  result = this._options.onFieldChange(difference, this._editingRecord);
+                  if (result instanceof $ws.proto.Deferred) {
+                     loadingIndicator = setTimeout(function () {
+                        $ws.helpers.toggleIndicator(true);
+                     }, 100);
+                     this._editingDeferred = result.addBoth(function () {
+                        clearTimeout(loadingIndicator);
+                        this._previousRecordState = this._editingRecord.clone();
+                        $ws.helpers.toggleIndicator(false);
+                     }.bind(this));
+                  } else {
+                     this._previousRecordState = this._editingRecord.clone()
                   }
                }
             },
             /**
-             * TODO Функция используется для определения изменившихся полей, скорее всего она тут не нужна (это метод рекорда)
+             * TODO Сухоручкин, Авраменко, Мальцев. Функция используется для определения изменившихся полей, скорее всего она тут не нужна (это метод рекорда)
              * @private
              */
             _getRecordsDifference: function() {
                var
-                  raw1 = this._record.getRaw(),
-                  raw2 = this._editingRecord.getRaw(),
+                  raw1 = this._editingRecord.getRaw(),
+                  raw2 = this._previousRecordState.getRaw(),
                   result = [];
                for (var field in raw1) {
                   if (raw1.hasOwnProperty(field)) {
@@ -73,6 +85,9 @@ define('js!SBIS3.CONTROLS.EditInPlace',
                   }
                }
                return result;
+            },
+            _getElementToFocus: function() {
+              return this._container; //Переопределяю метод getElementToFocus для того, чтобы не создавался fake focus div
             },
             _onKeyDown: function(e) {
                e.stopPropagation();
@@ -84,6 +99,7 @@ define('js!SBIS3.CONTROLS.EditInPlace',
             updateFields: function(record) {
                var ctx = this.getContext();
                this._record = record;
+               this._previousRecordState = record.clone();
                this._editingRecord = record.clone();
                ctx.setValue(CONTEXT_RECORD_FIELD, this._editingRecord)
             },
@@ -95,13 +111,45 @@ define('js!SBIS3.CONTROLS.EditInPlace',
              */
             applyChanges: function() {
                this._deactivateActiveChildControl();
-               this._record.setRaw(this._editingRecord.getRaw());
+               return (this._editingDeferred || $ws.proto.Deferred.success()).addCallback(function() {
+                  this._record.merge(this._editingRecord);
+               }.bind(this))
+            },
+            show: function(target, record) {
+               //set record
+               this._record = record;
+               this.getContainer().attr('data-id', record.getKey());
+               this.updateFields(record);
+               //set target
+               this._target = target;
+               this.getContainer().insertAfter(target);
+               this._target.hide();
+               EditInPlace.superclass.show.apply(this, arguments);
             },
             hide: function() {
-               EditInPlace.superclass.hide.apply(this, arguments);
                this._deactivateActiveChildControl();
-               //todo куда уходит фокус?
                this.setActive(false);
+               EditInPlace.superclass.hide.apply(this, arguments);
+               if (this._target) {
+                  this._target.show();
+               }
+            },
+            edit: function(target, record) {
+               this.show(target, record);
+               this._editing = true;
+               this.activateFirstControl();
+            },
+            isEdit: function() {
+               return this._editing;
+            },
+            endEdit: function() {
+               this._editing = false;
+            },
+            getRecord: function() {
+               return this._record;
+            },
+            getTarget: function() {
+               return this._target;
             },
             _deactivateActiveChildControl: function() {
                var activeChild = this.getActiveChildControl();
