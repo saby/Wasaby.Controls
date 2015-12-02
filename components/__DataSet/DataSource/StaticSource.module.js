@@ -353,7 +353,24 @@ define('js!SBIS3.CONTROLS.StaticSource', [
             throw new Error('Не передано достаточно информации для перемещения');
          }
          return new $ws.proto.Deferred().callback(true);
-      }
+      },
 
+      call: function (command, data) {
+         data = data||{};
+         switch(command) {
+            case 'move':
+               var to = data.to,
+                  details = data.details ||{};
+               if(to) {
+                  if(details.after){
+                     details['after'] = to.getKey();
+                  } else {
+                     details['before'] = to.getKey();
+                  }
+               }
+               details['column'] = details.column || this._options.keyField;
+               return this.move(data.from, undefined, undefined, details);
+         }
+      }
    });
 });

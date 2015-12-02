@@ -1,29 +1,21 @@
 /* global define */
 define('js!SBIS3.CONTROLS.Data.SbisMoveStrategy', [
-   'js!SBIS3.CONTROLS.Data.IMoveStrategy',
+   'js!SBIS3.CONTROLS.Data.BaseMoveStrategy',
    'js!SBIS3.CONTROLS.Data.Source.SbisService/resources/SbisServiceBLO'
-], function (IMoveStrategy, SbisServiceBLO) {
+], function (BaseMoveStrategy, SbisServiceBLO) {
    'use strict';
    /**
     * Стандартная стратегия перемещения записей
     * @class SBIS3.CONTROLS.Data.SbisMoveStrategy
-    * @implements SBIS3.CONTROLS.Data.IMoveStrategy
+    * @extends SBIS3.CONTROLS.Data.BaseMoveStrategy
     * @public
     * @author Ганшин Ярослав
     */
 
-   return $ws.proto.Abstract.extend([IMoveStrategy],/** @lends SBIS3.CONTROLS.Data.MoveStrategy.prototype */{
+   return $ws.proto.Abstract.extend(BaseMoveStrategy,[],/** @lends SBIS3.CONTROLS.Data.MoveStrategy.prototype */{
       $protected: {
          _options:{
-            /**
-             * @cfg {String} Имя объекта бизнес-логики, у которго происходит перемещение записей.
-             * @example
-             * <pre>
-             *    <option name="moveResource">СвязьПапок</option>
-             * </pre>
-             * @see move
-             */
-            resource: undefined,
+
             /**
              * @cfg {String} Имя объекта бизнес-логики, реализующего перемещение записей. По умолчанию 'ПорядковыйНомер'.
              * @example
@@ -43,16 +35,7 @@ define('js!SBIS3.CONTROLS.Data.SbisMoveStrategy', [
              * @cfg {String} Имя поля, по которому по умолчанию сортируются записи выборки. По умолчанию 'ПорНомер'.
              * @see move
              */
-            moveDefaultColumn: 'ПорНомер',
-            /**
-             * @cfg {String} Имя поля, по которому строится иерархия.
-             * @see hierarhyMove
-             */
-            hierField: undefined,
-            /**
-             * @cfg {SBIS3.CONTROLS.Data.Source.SbisService} Источник данных.
-             */
-            dataSource:null
+            moveDefaultColumn: 'ПорНомер'
 
          },
          _orderProvider: undefined
@@ -78,17 +61,6 @@ define('js!SBIS3.CONTROLS.Data.SbisMoveStrategy', [
             $ws.single.ioc.resolve('ILogger').log('SBIS3.CONTROLS.Data.SbisMoveStrategy::move()', error);
             return error;
          });
-      },
-
-      hierarhyMove: function (from, to) {
-         if (!this._options.dataSource) {
-            throw new Error('DataSource is not defined.');
-         }
-         if (!this._options.hierField) {
-            throw new Error('Hierrarhy Field is not defined.');
-         }
-         from.set(this._options.hierField, this._getId(to));
-         return this._options.dataSource.update(from);
       },
 
       /**

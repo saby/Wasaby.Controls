@@ -1,7 +1,7 @@
 /**
  * Created by as.suhoruchkin on 21.07.2015.
  */
-define('js!SBIS3.CONTROLS.MoveHandlers', ['js!SBIS3.CONTROLS.MoveDialog','js!SBIS3.CONTROLS.Data.SbisMoveStrategy'], function(MoveDialog, SbisMoveStrategy) {
+define('js!SBIS3.CONTROLS.MoveHandlers', ['js!SBIS3.CONTROLS.MoveDialog','js!SBIS3.CONTROLS.Data.SbisMoveStrategy', 'js!SBIS3.CONTROLS.Data.BaseMoveStrategy'], function(MoveDialog, SbisMoveStrategy, BaseMoveStrategy) {
    var MoveHandlers = {
       $protected: {
         _moveStrategy: undefined
@@ -115,11 +115,27 @@ define('js!SBIS3.CONTROLS.MoveHandlers', ['js!SBIS3.CONTROLS.MoveDialog','js!SBI
        * @returns {SBIS3.CONTROLS.Data.IMoveStrategy}
        */
       getMoveStrategy: function () {
-         return this._moveStrategy || (this._moveStrategy = new SbisMoveStrategy({
+         return this._moveStrategy || (this._moveStrategy = this._makeMoveStrategy());
+      },
+      /**
+       * Создает стратегию перемещения в зависимости от источника данных
+       * @returns {SBIS3.CONTROLS.Data.IMoveStrategy}
+       * @private
+       */
+      _makeMoveStrategy: function () {
+         if($ws.helpers.instanceOfModule(this._dataSource,'SBIS3.CONTROLS.Data.Source.SbisService') ||
+            $ws.helpers.instanceOfModule(this._dataSource,'SBIS3.CONTROLS.SbisServiceSource')
+         ) {
+            return new SbisMoveStrategy({
                dataSource: this._dataSource,
-               hierField: this._options.hierField,
-               idProperty: this._options.keyField || this._options.idProperty,
-            }));
+               hierField: this._options.hierField
+            });
+         } else {
+            return new BaseMoveStrategy({
+               dataSource: this._dataSource,
+               hierField: this._options.hierField
+            });
+         }
       },
       /**
        * Устанавливает стратегию перемещения
@@ -134,12 +150,12 @@ define('js!SBIS3.CONTROLS.MoveHandlers', ['js!SBIS3.CONTROLS.MoveDialog','js!SBI
       },
 
       moveRecordDown: function(tr, id, record) {
-         var nextItem = this._getNextItemById(id),
+         var nextItem = this.getNextItemById(id),
             nextId = nextItem.data('id');
          moveRecord.call(this, record, nextId, id, false);
       },
       moveRecordUp: function(tr, id, record) {
-         var prevItem = this._getPrevItemById(id),
+         var prevItem = this.getPrevItemById(id),
             prevId = prevItem.data('id');
          moveRecord.call(this, record, prevId, id, true);
       }

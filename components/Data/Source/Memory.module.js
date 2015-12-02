@@ -160,18 +160,19 @@ define('js!SBIS3.CONTROLS.Data.Source.Memory', [
          }));
       },
 
-      move: function (model, to, details) {
+      _move: function (from, to, details) {
          details = details || {};
-         var sourceKey =  model.get(this._options.idProperty),
+         var sourceKey =  from.get(this._options.idProperty),
             sourcePosition = this._getIndexByKey(sourceKey),
             targetPosition = -1;
          if (to) {
+            var toKey = to.get(this._options.idProperty);
             if (details.column && details.column !== this._options.idProperty) {
                var tableAdapter = this._options.adapter.forTable(),
                   recordAdapter = this._options.adapter.forRecord();
                //TODO: indexed search
                for (var index = 0, count = tableAdapter.getCount(this._options.data); index < count; index++) {
-                  if (to === recordAdapter.get(
+                  if (toKey === recordAdapter.get(
                         tableAdapter.at(this._options.data, index),
                         details.column
                   )) {
@@ -181,7 +182,7 @@ define('js!SBIS3.CONTROLS.Data.Source.Memory', [
 
                }
             } else {
-               targetPosition = this._getIndexByKey(to);
+               targetPosition = this._getIndexByKey(toKey);
             }
             if (targetPosition === -1) {
                return $ws.proto.Deferred().fail('Can\'t find target position');
@@ -196,8 +197,12 @@ define('js!SBIS3.CONTROLS.Data.Source.Memory', [
          return new $ws.proto.Deferred().callback(true);
       },
 
-      call: function () {
-         throw new Error('Not supported');
+      call: function (command, data) {
+         data = data||{};
+         switch(command) {
+            case 'move':
+               return this._move(data.from, data.to, data.details);
+         }
       },
 
       //endregion SBIS3.CONTROLS.Data.Source.ISource
