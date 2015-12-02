@@ -230,9 +230,7 @@ define('js!SBIS3.CONTROLS.Data.Model', [
          if (this._getOriginalPropertyValue(name) !== value) {
             this._setOriginalPropertyValue(name, value);
             this._setChanged(true);
-            if (value && typeof value === 'object') {
-               this._propertiesCache[name] = value;
-            }
+            delete this._propertiesCache[name];
             this._notify('onPropertyChange', name, value);
          }
       },
@@ -327,6 +325,8 @@ define('js!SBIS3.CONTROLS.Data.Model', [
          clone._isStored = this._isStored;
          clone._isChanged = this._isChanged;
          clone._isDeleted = this._isDeleted;
+         /* todo: Мальцев. Работает по ссылке. Переделывать на клонирование опасно, т.к. при больших объемах данных можно получить нехилые тормоза*/
+         clone._propertiesCache = this._propertiesCache;
          clone._initProperties();
          return clone;
       },
@@ -633,7 +633,7 @@ define('js!SBIS3.CONTROLS.Data.Model', [
       return Model;
    });
 
-   ContextField.register('ControlsFieldTypeModel', Model, 'onPropertyChange');
+   ContextField.registerRecord('ControlsFieldTypeModel', Model, 'onPropertyChange');
 
    return Model;
 });
