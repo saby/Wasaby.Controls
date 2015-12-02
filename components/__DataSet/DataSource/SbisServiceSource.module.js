@@ -147,7 +147,7 @@ define('js!SBIS3.CONTROLS.SbisServiceSource', [
             def.callback(record);
          }, function (error) {
             $ws.single.ioc.resolve('ILogger').log('SbisServiceSource', error);
-            def.errback('Не удалось выполнить метод create');
+            def.errback(error.message);
          });
          return def;
       },
@@ -186,7 +186,7 @@ define('js!SBIS3.CONTROLS.SbisServiceSource', [
             def.callback(record);
          }, function (error) {
             $ws.single.ioc.resolve('ILogger').log('SbisServiceSource', error);
-            def.errback('Не удалось выполнить метод read');
+            def.errback(error.message);
          });
          return def;
       },
@@ -228,7 +228,7 @@ define('js!SBIS3.CONTROLS.SbisServiceSource', [
             def.callback(true);
          }, function (error) {
             $ws.single.ioc.resolve('ILogger').log('SbisServiceSource', error);
-            def.errback('Не удалось выполнить метод update');
+            def.errback(error.message);
          });
 
          return def;
@@ -248,7 +248,7 @@ define('js!SBIS3.CONTROLS.SbisServiceSource', [
             def.callback(true);
          }, function (error) {
             $ws.single.ioc.resolve('ILogger').log('SbisServiceSource', error);
-            def.errback('Не удалось выполнить метод destroy');
+            def.errback(error.message);
          });
 
          return def;
@@ -292,7 +292,7 @@ define('js!SBIS3.CONTROLS.SbisServiceSource', [
             def.callback(DS);
          }, function (error) {
             $ws.single.ioc.resolve('ILogger').log('SbisServiceSource', error);
-            def.errback('Не удалось выполнить метод query');
+            def.errback(error.message);
          });
 
          return def;
@@ -353,7 +353,7 @@ define('js!SBIS3.CONTROLS.SbisServiceSource', [
             def.callback(true);
          }, function (error) {
             $ws.single.ioc.resolve('ILogger').log('SbisServiceSource', error);
-            def.errback('Не удалось выполнить метод _changeOrder');
+            def.errback(error.message);
          });
          return def;
       }
