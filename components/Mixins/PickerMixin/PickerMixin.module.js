@@ -116,11 +116,10 @@ define('js!SBIS3.CONTROLS.PickerMixin', ['js!SBIS3.CONTROLS.FloatArea'], functio
        * @see togglePicker
        */
       hidePicker: function() {
-         if (!this._picker) {
-            this._initializePicker();
+         if(this._picker) {
+            this._container.removeClass('controls-Picker__show');
+            this._picker.hide();
          }
-         this._container.removeClass('controls-Picker__show');
-         this._picker.hide();
       },
      /**
       * Метод изменяет состояние выпадающего блока на противоположное (скрывает/показывает).
@@ -146,6 +145,22 @@ define('js!SBIS3.CONTROLS.PickerMixin', ['js!SBIS3.CONTROLS.FloatArea'], functio
                this.showPicker();
             }
          }
+      },
+
+      /**
+       * Возвращает, отображается ли сейчас пикер
+       * @returns {*|Boolean}
+       * @example
+       * <pre>
+       *    button.bind('click', function(){
+       *        if(self.isPickerVisible()) {
+       *           self.hidePicker();
+       *        }
+       *      })
+       * </pre>
+       */
+      isPickerVisible: function() {
+         return Boolean(this._picker && this._picker.isVisible());
       },
 
       _setPickerContent: function () {

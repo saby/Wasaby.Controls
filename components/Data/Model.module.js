@@ -230,9 +230,7 @@ define('js!SBIS3.CONTROLS.Data.Model', [
          if (this._getOriginalPropertyValue(name) !== value) {
             this._setOriginalPropertyValue(name, value);
             this._setChanged(true);
-            if (value && typeof value === 'object') {
-               this._propertiesCache[name] = value;
-            }
+            delete this._propertiesCache[name];
             this._notify('onPropertyChange', name, value);
          }
       },
