@@ -26,7 +26,39 @@ define('js!SBIS3.CONTROLS.CommonHandlers',[],
          },
          editItems: function(tr, id) {
             this.sendCommand('ActivateItem', id);
+         },
+         moveRecordDown: function(tr, id, record) {
+            var nextItem = this._getNextItemById(id),
+               nextId = nextItem.data('id');
+            moveRecord.call(this, record, nextId, id, {after: nextId});
+         },
+         moveRecordUp: function(tr, id, record) {
+            var prevItem = this._getPrevItemById(id),
+               prevId = prevItem.data('id');
+            moveRecord.call(this, record, prevId, id, {before: prevId});
          }
       };
+      function moveRecord(itemRecord, moveTo, current, config){
+         var self = this,
+            deferred;
+         if ($ws.helpers.instanceOfMixin(this.getDataSource(), 'SBIS3.CONTROLS.Data.Source.ISource')) {
+            deferred =  this.getDataSource().move(itemRecord,
+               moveTo,
+               config
+            );
+         } else {
+            deferred = this.getDataSource().move(itemRecord,
+               undefined,
+               undefined,
+               config
+            );
+         }
+         deferred.addCallback(function(){
+            self._moveItemTo(current, moveTo, config.before ? true : false);
+         }).addErrback(function(e){
+            $ws.core.alert(e.message);
+         });
+
+      }
       return CommonHandlers;
    });

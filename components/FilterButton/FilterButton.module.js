@@ -3,6 +3,7 @@ define('js!SBIS3.CONTROLS.FilterButton',
    'js!SBIS3.CORE.CompoundControl',
    'html!SBIS3.CONTROLS.FilterButton',
    'html!SBIS3.CONTROLS.FilterButton/FilterAreaTemplate',
+   'js!SBIS3.CONTROLS.FilterMixin',
    'js!SBIS3.CONTROLS.PickerMixin',
    'js!SBIS3.CORE.FieldLink',
    'js!SBIS3.CONTROLS.ControlHierarchyManager',
@@ -10,11 +11,23 @@ define('js!SBIS3.CONTROLS.FilterButton',
    'js!SBIS3.CONTROLS.Button',
    'js!SBIS3.CONTROLS.FilterButton.FilterLine'
    ],
-   function(CompoundControl, dotTplFn, dotTplForPicker, PickerMixin, FieldLink, ControlHierarchyManager) {
+   function(CompoundControl, dotTplFn, dotTplForPicker, FilterMixin, PickerMixin, FieldLink, ControlHierarchyManager) {
 
+   'use strict';
+   /**
+    * Кнопка фильтров. Функционал и внешний вид аналогичен $ws.proto.FilterButton, но работа с
+    * фильтрами осуществляется только через контекст
+    * @class SBIS3.CONTROLS.FilterButton
+    * @extends $ws.proto.Control
+    * @author Крайнов Дмитрий Олегович
+    * @mixes SBIS3.CONTROLS.FilterMixin
+    * @mixes SBIS3.CONTROLS.PickerMixin
+    * @demo SBIS3.CONTROLS.Demo.FilterButtonMain Полный функционал кнопки фильтров
+    * @control
+    * @public
+    */
    var
       linkTextDef = 'Нужно отобрать?',
-      pickerContextRootName = 'sbis3-controls-filter-button',
       filterStructureElementDef = {
          internalValueField: null,
          internalCaptionField: null
@@ -40,7 +53,7 @@ define('js!SBIS3.CONTROLS.FilterButton',
       return result;
    }
 
-   var FilterButton = CompoundControl.extend([PickerMixin],{
+   var FilterButton = CompoundControl.extend([FilterMixin, PickerMixin],{
       _dotTplFn: dotTplFn,
       _dotTplPicker: dotTplForPicker,
       $protected: {
@@ -54,12 +67,8 @@ define('js!SBIS3.CONTROLS.FilterButton',
 
             resetLinkText: linkTextDef,
 
-            /***
-             * при установке структуры меняется значение св-ва filter (строится по полям value у структуры)
-             */
-            filterStructure: [ /*filterStructureElementDef*/ ],
-
-            independentContext: true
+            independentContext: true,
+            internalContextFilterName : 'sbis3-controls-filter-button'
          },
 
          _pickerContext: null,
@@ -92,133 +101,14 @@ define('js!SBIS3.CONTROLS.FilterButton',
             });
          });
 
-         this._updateFilterStructure(this._options.filterStructure || {});
       },
 
-      _updateFilterStructure: function(filterStructure, filter, captions) {
-         if (filterStructure) {
-            this._filterStructure = $ws.helpers.map(filterStructure, function(element) {
-               var
-                  newEl = $ws.core.clone(filterStructureElementDef);
-               $ws.core.merge(newEl, element);
-
-               if (!newEl.internalValueField || typeof newEl.internalValueField !== 'string') {
-                  throw new Error('У элемента структуры должно быть поле internalValueField');
-               }
-
-               if (!newEl.internalCaptionField) {
-                  newEl.internalCaptionField = newEl.internalValueField;
-               }
-
-               return newEl;
-            });
-         }
-         if (filter) {
-            this._filterStructure = $ws.helpers.map(this._filterStructure, function(element) {
-               var
-                  newElement = $ws.core.clone(element),
-                  field = newElement.internalValueField;
-
-               function setDescrWithReset(descr, deleteDescr) {
-                  if (('resetValue' in element && field in filter && element.resetValue === filter[field]) ||
-                      (!('resetValue' in element) && !(field in filter)))
-                  {
-                     if ('resetCaption' in element) {
-                        newElement.caption = element.resetCaption;
-                     } else {
-                        delete newElement.caption;
-                     }
-                  } else if (deleteDescr) {
-                     delete newElement.caption;
-                  } else {
-                     newElement.caption = descr;
-                  }
-               }
-
-               if (field in filter) {
-                  newElement.value = filter[field];
-               } else {
-                  delete newElement.value;
-               }
-
-               if (captions && (field in captions)) {
-                  setDescrWithReset(captions[field]);
-               } else if (field in filter) {
-                  setDescrWithReset(filter[field]);
-               } else {
-                  setDescrWithReset(undefined, true);
-               }
-
-               return newElement;
-            });
-         }
-         this._recalcInternalContext();
-      },
-
-      _findFilterStructureElement: function(func) {
-         return $ws.helpers.find(this._filterStructure, function(element) {
-            return func(element);
-         });
-      },
-
-      _recalcInternalContext: function() {
-         var
-            changed = $ws.helpers.reduce(this._filterStructure, function(result, element) {
-               return result || element.resetValue !== element.value;
-            }, false);
-
-         this.getLinkedContext().setValueSelf({
-            filterChanged: changed,
-            filterStructure: this._filterStructure,
-            filterResetLinkText: this.getProperty('resetLinkText')
-         });
-      },
-
-      _syncContext: function(fromContext) {
-         var
-            context = this._pickerContext,
-            pickerVisible = this._picker && this._picker.isVisible(),
-            descrPath = pickerContextRootName + '/caption',
-            filterPath = pickerContextRootName + '/filter',
-            toSet;
-
-         if (fromContext) {
-            this._updateFilterStructure(undefined, context.getValue(filterPath), context.getValue(descrPath));
-         } else if (pickerVisible) {
-            toSet = {};
-            toSet[filterPath] = this.getFilter();
-            toSet[descrPath] = this._mapFilterStructureByProp('caption');
-
-            context.setValueSelf(toSet);
+      applyFilter: function() {
+         if(this._picker.validate()) {
+            this.hidePicker();
+            FilterButton.superclass.applyFilter.call(this);
          }
       },
-
-      _notifyFilterUpdate: function() {
-         this._notifyOnPropertyChanged('filter');
-         this._notifyOnPropertyChanged('filterStructure');
-      },
-
-      _resetFilter: propertyUpdateWrapper(function(internalOnly) {
-         var resetFilter = this.getResetFilter();
-
-         if (this._pickerContext) {
-            this._pickerContext.setValueSelf(pickerContextRootName + '/filter', resetFilter);
-         }
-
-         if (!internalOnly) {
-            this._updateFilterStructure(undefined, resetFilter);
-            this._notifyFilterUpdate();
-         }
-      }),
-
-      applyFilter: propertyUpdateWrapper(function() {
-         this.hidePicker();
-
-         this._syncContext(true);
-
-         this._notify('onApplyFilter');
-         this._notifyFilterUpdate();
-      }),
 
       _forEachFieldLinks: function(fn) {
          if(this._picker) {
@@ -246,7 +136,7 @@ define('js!SBIS3.CONTROLS.FilterButton',
          var
             ctx = new $ws.proto.Context({restriction: 'set'}),
             btnCtx = this.getLinkedContext(),
-            rootName = pickerContextRootName,
+            rootName = this._options.internalContextFilterName,
             firstTime = true,
             updatePickerContext = function () {
                ctx.setValue(rootName, {
@@ -254,7 +144,8 @@ define('js!SBIS3.CONTROLS.FilterButton',
                   filter: this.getFilter(),
                   caption: this._mapFilterStructureByProp('caption')
                });
-            }.bind(this);
+            }.bind(this),
+            isRightAlign = this._options.filterAlign === 'right';
 
          this._pickerContext = ctx;
 
@@ -288,10 +179,10 @@ define('js!SBIS3.CONTROLS.FilterButton',
          }.bind(this));
 
          return {
-            corner: this._options.filterAlign === 'right' ? 'tr' : 'tl',
+            corner: isRightAlign ? 'tl' : 'tr',
             parent: this,
             horizontalAlign: {
-               side: this._options.filterAlign
+               side: isRightAlign ? 'left' : 'right'
             },
             verticalAlign: {
                side: 'top'
@@ -317,41 +208,26 @@ define('js!SBIS3.CONTROLS.FilterButton',
          };
       },
 
-      setFilter: function() {
-         throw new Error('Свойство "filter" работает только на чтение. Менять его надо через метод setFilterStructure');
+      _getCurrentContext : function(){
+         return this._pickerContext;
       },
+      _syncContext: function(fromContext) {
+         var
+               context = this._getCurrentContext(),
+               pickerVisible = this._picker && this._picker.isVisible(),
+               descrPath = this._options.internalContextFilterName + '/caption',
+               filterPath = this._options.internalContextFilterName + '/filter',
+               toSet;
 
-      setFilterStructure: propertyUpdateWrapper(function(filterStructure) {
-         this._options.filterStructure = filterStructure;
-
-         this._updateFilterStructure(filterStructure);
-
-         this._syncContext(false);
-
-         this._notifyFilterUpdate();
-      }),
-
-      _mapFilterStructureByProp: function(prop) {
-         return $ws.helpers.reduce(this._filterStructure, function(result, element) {
-            if (prop in element) {
-               result[element.internalValueField] = element[prop];
-            }
-            return result;
-         }, {});
+         if (fromContext) {
+            this._updateFilterStructure(undefined, context.getValue(filterPath), context.getValue(descrPath));
+         } else if (pickerVisible) {
+            toSet = {};
+            toSet[filterPath] = this.getFilter();
+            toSet[descrPath] = this._mapFilterStructureByProp('caption');
+            context.setValueSelf(toSet);
+         }
       },
-
-      getFilter: function() {
-         return this._mapFilterStructureByProp('value');
-      },
-
-      getFilterStructure: function() {
-         return this._filterStructure;
-      },
-
-      getResetFilter: function() {
-         return this._mapFilterStructureByProp('resetValue');
-      },
-
       setResetLinkText: function(text) {
          if (this._options.resetLinkText !== text) {
             this._options.resetLinkText = text;

@@ -107,9 +107,9 @@ define('js!SBIS3.CONTROLS.HierarchyDataGridView', [
          }
          key = record.getKey();
          curRecRoot = record.get(this._options.hierField);
-         //TODO для SBISServiceSource в ключе находится массив
+         //TODO для SBISServiceSource в ключе находится массив, а теперь он еще и к строке приводится...
          curRecRoot = curRecRoot instanceof Array ? curRecRoot[0] : curRecRoot;
-         if (curRecRoot === this._lastParent){
+         if (curRecRoot == this._lastParent){
             //Лист
             if (record.get(this._options.hierField + '@') !== true){
                //Нарисуем путь до листа, если пришли из папки
@@ -133,7 +133,7 @@ define('js!SBIS3.CONTROLS.HierarchyDataGridView', [
             //Если текущий раздел у записи есть в lastPath, то возьмем все элементы до этого ключа
             kInd = -1;
             for (var k = 0; k < this._lastPath.length; k++) {
-               if (this._lastPath[k].getKey() === curRecRoot){
+               if (this._lastPath[k].getKey() == curRecRoot){
                   kInd = k;
                   break;
                }
@@ -200,14 +200,14 @@ define('js!SBIS3.CONTROLS.HierarchyDataGridView', [
                if (self._notify('onSearchPathClick', id) !== false ) {
                   //TODO в будущем нужно отдать уже dataSet крошек, ведь здесь уже все построено
                   /*TODO для Алены. Временный фикс, потому что так удалось починить*/
-                  var filter = $ws.core.merge(self._filter, {
+                  var filter = $ws.core.merge(self.getFilter(), {
                      'Разворот' : 'Без разворота',
                      'СтрокаПоиска': undefined
                   });
                   self.setInfiniteScroll(false, true);
                   self.setGroupBy({});
                   self.setHighlightText('', false);
-                  self._filter = filter;
+                  self.setFilter(filter, true);
                   self.setCurrentRoot(id);
                   self.reload();
                }

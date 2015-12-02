@@ -25,18 +25,41 @@ define('js!SBIS3.CONTROLS.MoveHandlers', ['js!SBIS3.CONTROLS.MoveDialog'], funct
       _move: function(records, moveTo) {
          var
             record,
+            recordTo,
+            isNodeTo = true,
             self = this,
             /*TODO переделать не на ParallelDeferred*/
             deferred = new $ws.proto.ParallelDeferred();
+
+         if (moveTo !== null) {
+            recordTo = this._dataSet.getRecordByKey(moveTo);
+            if (recordTo) {
+               isNodeTo = recordTo.get(this._options.hierField + '@');
+            }
+         }
+
          if (this._checkRecordsForMove(records, moveTo)) {
             for (var i = 0; i < records.length; i++) {
                record = $ws.helpers.instanceOfModule(records[i], 'SBIS3.CONTROLS.Record') ? records[i] : this._dataSet.getRecordByKey(records[i]);
-               deferred.push(this._dataSource.move(record, this._options.hierField, moveTo));
+               if (isNodeTo) {
+                  record.set(this._options.hierField, moveTo);
+                  deferred.push(this._dataSource.update(record));
+               } else {
+                  if ($ws.helpers.instanceOfMixin(this._dataSource, 'SBIS3.CONTROLS.Data.Source.ISource')) {
+                     deferred.push(this._dataSource.move(record, moveTo, {
+                        hierColumn: this._options.hierField
+                     }));
+                  } else {
+                     deferred.push(this._dataSource.move(record, undefined, undefined, {before: moveTo}));
+                  }
+               }
             }
             deferred.done().getResult().addCallback(function() {
                if (deferred.getResult().isSuccessful()) {
                   self.removeItemsSelectionAll();
-                  self.setCurrentRoot(moveTo);
+                  if (isNodeTo) {
+                     self.setCurrentRoot(moveTo);
+                  }
                   self.reload();
                }
             });
@@ -45,7 +68,6 @@ define('js!SBIS3.CONTROLS.MoveHandlers', ['js!SBIS3.CONTROLS.MoveDialog'], funct
       _checkRecordsForMove: function(records, moveTo) {
          var
             key,
-            record,
             toMap = this._getParentsMap(moveTo);
          if (moveTo === undefined) {
             return false;
@@ -58,13 +80,6 @@ define('js!SBIS3.CONTROLS.MoveHandlers', ['js!SBIS3.CONTROLS.MoveDialog'], funct
             }
          }
 
-         if (moveTo !== null) {
-            record = this._dataSet.getRecordByKey(moveTo);
-            if (record && !record.get(this._options.hierField + '@')) {
-               $ws.helpers.alert('Вы не можете перемещать в лист! Выберите другую запись для перемещения!', {}, this);
-               return false;
-            }
-         }
          return true;
       },
       _getParentsMap: function(parentKey) {

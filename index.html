@@ -104,11 +104,17 @@
                     <div id="ViewsGroup"></div>
                 </li>
                <li>
+                  <div id="ViewsEditInPlace"></div>
+               </li>
+               <li>
                   <div id="Popup"></div>
                </li>
                <li>
                   <div id="DataBinding"></div>
                </li>
+                <li>
+                    <div id="DropdownList"></div>
+                </li>
                <li>
                   <div id="ButtonContent"></div>
                </li>
@@ -123,6 +129,12 @@
                </li>
                <li>
                   <div id="Browser"></div>
+               </li>
+                <li>
+                    <div id="BrowserEngine"></div>
+                </li>
+			   <li>
+                  <div id="FieldLink"></div>
                </li>
             </ul>
          </td>
@@ -296,7 +308,13 @@
                   href: '/pages/ViewsGroup.html'
               })
           });
-
+         require(["js!SBIS3.CONTROLS.Link"], function (r) {
+            new r({
+               element: "ViewsEditInPlace",
+               caption: 'Views Edit In Place',
+               href: '/pages/ViewsEditInPlace.html'
+            })
+         });
 
          require(["js!SBIS3.CONTROLS.Link"], function (r) {
             new r({
@@ -310,9 +328,16 @@
             new r({
                element: "DataBinding",
                caption: 'Data binding',
-               href: '/pages/data-bind.html'
+               href: '/pages/DataBindingPage.html'
             })
          });
+          require(["js!SBIS3.CONTROLS.Link"], function (r) {
+              new r({
+                  element: "DropdownList",
+                  caption: 'DropdownList',
+                  href: '/pages/DropdownList.html'
+              })
+          });
 
          require(["js!SBIS3.CONTROLS.Link"], function (r) {
             new r({
@@ -351,6 +376,20 @@
                element: "Browser",
                caption: 'Browser',
                href: '/pages/browser.html'
+            })
+         });
+          require(["js!SBIS3.CONTROLS.Link"], function (r) {
+              new r({
+                  element: "BrowserEngine",
+                  caption: 'BrowserEngine',
+                  href: '/pages/browserEngine.html'
+              })
+          });
+		 require(["js!SBIS3.CONTROLS.Link"], function (r) {
+            new r({
+               element: "FieldLink",
+               caption: 'FieldLink',
+               href: '/pages/FieldLink.html'
             })
          });
       })

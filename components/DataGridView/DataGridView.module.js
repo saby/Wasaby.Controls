@@ -6,13 +6,11 @@ define('js!SBIS3.CONTROLS.DataGridView',
       'html!SBIS3.CONTROLS.DataGridView/resources/colgroupTpl',
       'html!SBIS3.CONTROLS.DataGridView/resources/headTpl',
       'js!SBIS3.CORE.MarkupTransformer',
-      'js!SBIS3.CONTROLS.EditInPlaceController',
-      'js!SBIS3.CONTROLS.Link',
       'js!SBIS3.CONTROLS.DragAndDropMixin',
       'is!browser?html!SBIS3.CONTROLS.DataGridView/resources/DataGridViewGroupBy',
       'js!SBIS3.CONTROLS.Utils.HtmlDecorators/LadderDecorator'
    ],
-   function(ListView, dotTplFn, rowTpl, colgroupTpl, headTpl, MarkupTransformer, EditInPlaceController, Link, DragAndDropMixin, groupByTpl, LadderDecorator) {
+   function(ListView, dotTplFn, rowTpl, colgroupTpl, headTpl, MarkupTransformer, DragAndDropMixin, groupByTpl, LadderDecorator) {
    'use strict';
       /* TODO: Надо считать высоту один раз, а не делать константой */
       var
@@ -37,16 +35,14 @@ define('js!SBIS3.CONTROLS.DataGridView',
     *       </options>
     *    </options>
     * </component>
+    * @cssModifier controls-DataGridView__hasSeparator Включает линии разделители между строками
     */
-
    var DataGridView = ListView.extend([DragAndDropMixin],/** @lends SBIS3.CONTROLS.DataGridView.prototype*/ {
       _dotTplFn : dotTplFn,
       $protected: {
          _rowTpl : rowTpl,
          _headTpl : headTpl,
          _rowData : [],
-         _editInPlace: null,
-         _addInPlaceButton: null,
          _isPartScrollVisible: false,                 //Видимость скроллбара
          _movableElements: undefined,                 //Скролируемые элементы
          _arrowLeft: undefined,                       //Контейнер для левой стрелки
@@ -74,15 +70,8 @@ define('js!SBIS3.CONTROLS.DataGridView',
              * @property {String} headTooltip Всплывающая подсказка шапки колонки
              * @property {String} cellTemplate Шаблон отображения ячейки
              * Необходимо указать настройки декораторов разметки, если требуется
-             * @example
-             * <pre>
-             *    {{=it.decorators.applyIf(it.value, {
-             *      highlight: it.highlight,
-             *      ladder: it.field
-             *    })}}
-             * </pre>
-             * @property {<String,String>} templateBinding соответствие опций шаблона полям в рекорде
-             * @property {<String,String>} includedTemplates подключаемые внешние шаблоны, ключу соответствует поле it.included.<...> которое будет функцией в шаблоне ячейки
+             * @property {Object.<String,String>} templateBinding соответствие опций шаблона полям в рекорде
+             * @property {Object.<String,String>} includedTemplates подключаемые внешние шаблоны, ключу соответствует поле it.included.<...> которое будет функцией в шаблоне ячейки
              */
             /**
              * @cfg {Columns[]} Набор колонок
@@ -98,14 +87,6 @@ define('js!SBIS3.CONTROLS.DataGridView',
              * </pre>
              */
             showHead : true,
-            /**
-             * @cfg {Object} Редактирование по месту
-             */
-            editInPlace: {
-               enabled: false,
-               addInPlace: false,
-               onValueChange: undefined
-            },
             /**
              * @cfg {Number} Частичный скролл
              */
@@ -129,105 +110,9 @@ define('js!SBIS3.CONTROLS.DataGridView',
 
          this._buildHead();
 
-         if (this._options.editInPlace.enabled && this._options.editInPlace.addInPlace && !this._editInPlace) {
-            this._initAddInPlace();
-         }
-
          if(this._options.startScrollColumn !== undefined) {
             this._initPartScroll();
          }
-      },
-      _initAddInPlace: function() {
-         var
-            self = this,
-            itemsContainer = this._getItemsContainer(),
-            tr = '';
-         this._addInPlaceButton = new Link({
-            name: 'controls-ListView__addInPlace-button',
-            icon: 'sprite:icon-16 icon-NewCategory',
-            caption: 'Новая запись',
-            element: $('<div>').appendTo(this._container.find('.controls-DataGridView__addInPlace-container'))
-         });
-         if (this._options.multiselect) {
-            tr += '<td class="controls-DataGridView__td"></td>';
-         }
-         for (var i = 0; i < this._options.columns.length; i++) {
-            tr += '<td class="controls-DataGridView__td"></td>';
-         }
-         tr += '</tr>';
-         this._addInPlaceButton.subscribe('onActivated', function() {
-            self._initEditInPlace();
-            self._editInPlace.showEditing(
-               $('<tr class="controls-DataGridView__tr controls-ListView__item">' + tr)
-                  .appendTo(itemsContainer));
-         });
-      },
-
-      _initEditInPlace: function() {
-         var
-            self = this,
-            debounceInterval = 10;
-         if (!this._editInPlace) {
-            this._dataSet.subscribe('onRecordChange', function(event, record) {
-               self.redrawRow(record);
-            }.debounce(debounceInterval));
-            this._createEditInPlace();
-         }
-      },
-
-      /**
-       * Метод для перерисовки указанной записи
-       * @param record Запись, перерисовка которой осуществляется
-       */
-      redrawRow: function(record) {
-         var row = this._getItemsContainer().find('.controls-ListView__item[data-id="' + record.getKey() + '"]');
-         if (row.length) {
-            row.empty()
-               .append($(this._getItemTemplate(record)).children());
-            this._addItemAttributes(row, record);
-            this.reviveComponents();
-            if (this._isPartScrollVisible) {
-               this.updateScrollAndColumns();
-            }
-         }
-      },
-
-
-      setDataSource: function(ds) {
-         DataGridView.superclass.setDataSource.apply(this, arguments);
-      },
-      _createEditInPlace: function() {
-         this._editInPlace = new EditInPlaceController({
-            columns: this._options.columns,
-            addInPlaceButton: this._addInPlaceButton,
-            element: $('<div>').insertBefore(this._container.find('.controls-DataGridView__table')),
-            parent: this,
-            dataSet: this._dataSet,
-            ignoreFirstColumn: this._options.multiselect,
-            dataSource: this._dataSource,
-            editFieldFocusHandler: this._editFieldFocusHandler.bind(this),
-            handlers: {
-               onValueChange: this._options.editInPlace.onValueChange
-            }
-         });
-      },
-
-      _onChangeHoveredItem: function(hoveredItem) {
-         if(!this.isNowScrollingPartScroll()) {
-            this._updateEditInPlaceDisplay(hoveredItem);
-         }
-         DataGridView.superclass._onChangeHoveredItem.apply(this, arguments);
-      },
-      _updateEditInPlaceDisplay: function(hoveredItem, recalcPos) {
-         if (this._options.editInPlace.enabled && this._options.columns && this._options.columns.length) {
-            this._initEditInPlace();
-            this._editInPlace.updateDisplay(hoveredItem, recalcPos);
-         }
-      },
-      _checkTargetContainer: function(target) {
-         return this._options.showHead && this._thead.length && $.contains(this._thead[0], target[0]) ||
-                this._addInPlaceButton && $.contains(this._addInPlaceButton.getContainer().parent()[0], target[0]) ||
-                DataGridView.superclass._checkTargetContainer.apply(this, arguments);
       },
 
       _getItemsContainer: function(){
@@ -242,8 +127,9 @@ define('js!SBIS3.CONTROLS.DataGridView',
                decorators: this._decorators,
                color: this._options.colorField ? item.get(this._options.colorField) : '',
                multiselect : this._options.multiselect,
+               isNode: item.get(this._options.hierField + '@'),
                arrowActivatedHandler: this._options.arrowActivatedHandler,
-               hierField: this._options.hierField + '@',
+               hierField: this._options.hierField,
                startScrollColumn: this._options.startScrollColumn
             };
 
@@ -260,10 +146,11 @@ define('js!SBIS3.CONTROLS.DataGridView',
                   }
                   var tplOptions = {
                      item: item,
+                     hierField: this._options.hierField,
+                     isNode: item.get(rowData.hierField + '@'),
                      decorators: this._decorators,
                      field: column.field,
                      value: value,
-                     isNode: item.get(rowData.hierField) ? true : false,
                      highlight: column.highlight
                   };
                   if (column.templateBinding) {
@@ -283,7 +170,10 @@ define('js!SBIS3.CONTROLS.DataGridView',
                   value = this._decorators.applyIf(
                      value === undefined || value === null ? '' : $ws.helpers.escapeHtml(value), {
                         highlight: column.highlight,
-                        ladder: column.field
+                        ladder: {
+                           column: column.field,
+                           parentId: item.get(this._options.hierField)
+                        }
                      }
                   );
                }
@@ -295,12 +185,6 @@ define('js!SBIS3.CONTROLS.DataGridView',
          else {
             return this._options.itemTemplate(item);
          }
-
-      },
-
-      _isHoverControl: function($target) {
-         return DataGridView.superclass._isHoverControl.apply(this, arguments) ||
-                this._editInPlace && $.contains(this._editInPlace.getContainer()[0], $target[0]);
       },
 
       _drawItemsCallback: function () {
@@ -327,7 +211,6 @@ define('js!SBIS3.CONTROLS.DataGridView',
             this._scrollToEditControl(focusedCtrl)
          }
       },
-
       _onResizeHandler: function() {
          DataGridView.superclass._onResizeHandler.apply(this, arguments);
 
@@ -335,6 +218,15 @@ define('js!SBIS3.CONTROLS.DataGridView',
             this._updatePartScrollWidth();
          }
       },
+      //********************************//
+      //   БЛОК РЕДАКТИРОВАНИЯ ПО МЕСТУ //
+      //*******************************//
+      _updateEditInPlaceDisplay: function() {
+         if (!this.isNowScrollingPartScroll()) {
+            DataGridView.superclass._updateEditInPlaceDisplay.apply(this, arguments);
+         }
+      },
+      //********************************//
       // <editor-fold desc="PartScrollBlock">
 
       //TODO Нужно вынести в отдельный класс(контроллер?), чтобы не смешивать все drag-and-drop'ы в кучу
@@ -721,26 +613,6 @@ define('js!SBIS3.CONTROLS.DataGridView',
          if(!this.isNowScrollingPartScroll()) {
             DataGridView.superclass._showItemActions.call(this, item);
          }
-      },
-
-      _dataLoadedCallback: function() {
-         // Пересоздаем EditInPlace, если оно используется
-         if (this._options.editInPlace.enabled) {
-            this._initEditInPlace();
-         }
-         DataGridView.superclass._dataLoadedCallback.apply(this, arguments);
-      },
-
-      reload: function() {
-         // Если используется редактирование по месту, то уничтожаем его
-         if (this._editInPlace) {
-            if (this._editInPlace.isEditing()) {
-               this._editInPlace.finishEditing();
-            }
-            this._editInPlace.destroy();
-            this._editInPlace = null;
-         }
-         return DataGridView.superclass.reload.apply(this, arguments);
       },
 
       _getLeftOfItemContainer : function(container) {

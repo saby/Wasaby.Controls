@@ -86,14 +86,14 @@ define('js!SBIS3.CONTROLS.SbisJSONStrategy', [
         */
       rebuild: function (data, keyField) {
          var _indexId = [],
+            fieldIndex = keyField ? this._getFieldIndex(data, keyField) : 0,
             d = data.d,
             length = d.length;
          for (var i = 0; i < length; i++) {
-            //FixMe: допущение что ключ на первой позиции + там массив приходит
-            if (d[i][0] instanceof  Array)
-               _indexId[i] = d[i][0].length > 1 ? d[i][0].join(',') : d[i][0][0];
-            else {
-               _indexId[i] = d[i][0]
+            if (d[i][fieldIndex] instanceof Array) {
+               _indexId[i] = d[i][fieldIndex].length > 1 ? d[i][fieldIndex].join(',') : d[i][fieldIndex][0];
+            } else {
+               _indexId[i] = d[i][fieldIndex];
             }
          }
          return _indexId;
@@ -135,9 +135,12 @@ define('js!SBIS3.CONTROLS.SbisJSONStrategy', [
        * @returns {Object} новый объект "сырых" данных
        */
       setValue: function (data, field, value) {
-         var index = this._getFieldIndex(data, field),
-            meta = data.s[index],
-            type = this._getType(meta);
+         var index = this._getFieldIndex(data, field);
+         if (index === -1) {
+            return data;
+         }
+         var meta = data.s[index],
+            type = this._getType(meta, data.d[index]);
          data.d[index] = Factory.serialize(value, type.name, SbisJSONStrategy, type.meta);
 
          return data;
@@ -329,21 +332,24 @@ define('js!SBIS3.CONTROLS.SbisJSONStrategy', [
          return {d: [], s: []};
       },
 
-       preprareOrderParams: function(object, record, hierField, orderDetails){
-          var params = {
-             'Объект': object,
-             'ИдО': record.getKey(),
-             'ПорядковыйНомер': orderDetails.column || 'ПорНомер',
-             'Иерархия': hierField
-          };
-          if(orderDetails.after){
-             params['ИдОПосле'] = orderDetails.after;
-          } else {
-             params['ИдОДо'] = orderDetails.before;
-          }
-          return params;
-       },
-       
+      prepareOrderParams: function (object, record, hierField, orderDetails) {
+         var params = {
+            'Объект': object,
+            'ИдО': [parseInt(record.getKey(), 10), object],
+            'ПорядковыйНомер': orderDetails.column || 'ПорНомер',
+            'Иерархия': typeof hierField === 'undefined' ? null : hierField
+         };
+         if (orderDetails.after) {
+            params['ИдОДо'] = [parseInt(orderDetails.after, 10), object];
+         }
+         else if (orderDetails.before) {
+            params['ИдОПосле'] = [parseInt(orderDetails.before, 10), object];
+         }
+         return params;
+      },
+
+
+
        setParentKey: function(record, hierField, parent) {
           record.set(hierField, [parent]);
        },
@@ -351,22 +357,21 @@ define('js!SBIS3.CONTROLS.SbisJSONStrategy', [
        getFullFieldData: function (data, name) {
           var index = this._getFieldIndex(data, name),
              meta = index >= 0 ? data.s[index] : undefined,
-             value = index >= 0 ? data.d[index] : undefined,
-             data = {meta: undefined, type: undefined};
+             result = {meta: undefined, type: undefined};
           if (meta) {
-             var type = this._getType(meta);
-             data.meta = type.meta;
-             data.type = type.name;
+             var type = this._getType(meta, data.d[index]);
+             result.meta = type.meta;
+             result.type = type.name;
           }
-          return data;
+          return result;
        },
        
-       _getType: function (meta, key) {
+       _getType: function (meta, value, key) {
           key = key || 't';
           var typeSbis = meta[key],
              type;
           if (typeof typeSbis === 'object') {
-             return this._getType(typeSbis, 'n');
+             return this._getType(typeSbis, value, 'n');
           }
           for (var fieldType in SbisJSONStrategy.FIELD_TYPE) {
              if (typeSbis === SbisJSONStrategy.FIELD_TYPE[fieldType]) {
@@ -374,12 +379,16 @@ define('js!SBIS3.CONTROLS.SbisJSONStrategy', [
                 break;
              }
           }
-          var prepareMeta = this._prepareMetaInfo(type, $ws.core.clone(meta));
+          var prepareMeta = this._prepareMetaInfo(type, $ws.core.clone(meta), value);
           return {'name': type, 'meta': prepareMeta};
        },
        
-       _prepareMetaInfo: function (type, meta) {
+       _prepareMetaInfo: function (type, meta, value) {
           switch (type) {
+             case 'Identity':
+                meta.separator = ',';
+                meta.isArray = value instanceof Array;
+                break;
              case 'Enum':
                 meta.source = meta.s;
                 break;
@@ -553,7 +562,7 @@ define('js!SBIS3.CONTROLS.SbisJSONStrategy', [
     */
    SbisJSONStrategy.serializeDataSet = function (data) {
       if ($ws.helpers.instanceOfModule(data, 'SBIS3.CONTROLS.DataSet')) {
-            return $ws.core.clone(data.getRawData());
+            return data.getRawData();
       } else if (data instanceof $ws.proto.RecordSet || data instanceof $ws.proto.RecordSetStatic) {
          return data.toJSON();
       } else {
@@ -567,7 +576,7 @@ define('js!SBIS3.CONTROLS.SbisJSONStrategy', [
     */
    SbisJSONStrategy.serializeRecord = function (data) {
       if ($ws.helpers.instanceOfModule(data, 'SBIS3.CONTROLS.Record')) {
-         return $ws.core.clone(data.getRaw());
+         return data.getRaw();
       } else if (data instanceof $ws.proto.Record) {
          return data.toJSON();
       } else {

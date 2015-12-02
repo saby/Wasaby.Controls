@@ -3,7 +3,7 @@
  */
 define('js!SBIS3.CONTROLS.MenuButtonMixin', ['js!SBIS3.CONTROLS.ContextMenu'], function(ContextMenu) {
    /**
-    * Миксин, добавляющий поведение хранения одного или нескольких выбранных элементов
+    * Миксин, добавляющий поведение работы с выподающим меню
     * @mixin SBIS3.CONTROLS.MenuButtonMixin
     * @public
     * @author Крайнов Дмитрий Олегович
@@ -106,7 +106,7 @@ define('js!SBIS3.CONTROLS.MenuButtonMixin', ['js!SBIS3.CONTROLS.ContextMenu'], f
       _getHeader: function(){
          var header = $('<div class="controls-Menu__header">');
          if (this._options.icon) {
-            header.append('<i class="' + this._options.iconTemplate(this._options) + '"></i>');
+            header.append('<i class="controls-Menu__header-icon ' + this._options.iconTemplate(this._options) + '"></i>');
          }
          header.append('<span class="controls-Menu__header-caption">' + (this._options.caption || '')  + '</span>');
          return header;
@@ -123,13 +123,32 @@ define('js!SBIS3.CONTROLS.MenuButtonMixin', ['js!SBIS3.CONTROLS.ContextMenu'], f
          }
          return this._picker.getItemsInstances.apply(this._picker, arguments);
       },
+      
+      _clickHandler: function () {
+         if (this._dataSet.getCount() > 1) {
+            this.togglePicker();
+         } else {
+            if (this._dataSet.getCount() == 1) {
+               var id = this._dataSet.at(0).getKey();
+               this._notify('onMenuItemActivate', id);
+            }
+         }  
+      },
 
+      _dataLoadedCallback : function() {
+         if (this._picker) this.hidePicker();
+      },
+
+      _setWidth: function(){
+         //Установить ширину меню
+      },
       after : {
          _initializePicker : function() {
             var self = this;
             this._picker.subscribe('onMenuItemActivate', function(e, id) {
                self._notify('onMenuItemActivate', id);
             });
+            this._setWidth();
          },
 
          //TODO в 3.7.3 ждать починки от Вити

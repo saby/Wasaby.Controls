@@ -233,65 +233,100 @@
 // ---------- //
 // Tab button //
 // ---------- //
+@tab-buttons-height:                            30px;
+@tab-buttons-border-bottom:                     1px solid #CCCCCC;
 
+@tab-button-border-color:                       #E4E4E4;
+@tab-button-checked-border-color:               #CCCCCC;
+
+@tab-button-display:                            table-cell;
+@tab-button-vertical-align:                     middle;
 @tab-button-cursor:                             pointer;
-@tab-button-disabled-cursor:                    default;
+@tab-button-height:                             28px;
+@tab-button-position:                           relative;
+@tab-button-overflow:                           hidden;
+@tab-button-color:                              #313E78;
+@tab-button-font:                               14px 'TensorFont Regular', 'TensorFont';
+@tab-button-margin-top:                         1px;
+@tab-button-border:                             1px solid transparent;
+@tab-button-z-index:                            10;
+@tab-button-border-bottom:                      1px solid #CCCCCC;
 
-@tab-button-font:                               inherit;
-@tab-button-height:                             21px;
-@tab-button-side-display:                       none;
-@tab-button-side-width:                         0;
-@tab-button-side-height:                        @tab-button-height;
-@tab-button-inner-height:                       @tab-button-height;
-@tab-button-text-padding:                       0 16px;
-@tab-button-border-radius:                      0;
+@tab-button-hover-background:                   #F0F5FB;
+@tab-button-hover-border:                       1px solid @tab-button-border-color;
+@tab-button-hover-inner-after-display:          none;
 
-@tab-button-text-color:                         @black-color;
-@tab-button-border-width:                       0 0 3px 0;
-@tab-button-border-style:                       solid;
-@tab-button-border-color:                       transparent;
-@tab-button-bg:                                 transparent;
+@tab-button-checked-border-top:                 1px solid #313E78;
+@tab-button-checked-border-bottom:              1px solid #FFF;
+@tab-button-checked-border-left:                transparent;
+@tab-button-checked-border-right:               transparent;
+@tab-button-checked-bg:                         #FFFFFF;
+@tab-button-checked-z-index:                    50;
+@tab-button-checked-cursor:                     default;
+@tab-button-checked-font-size:                  15px;
+@tab-button-checked-inner-font-weight:          bold;
+@tab-button-checked-inner-font-size:            15px;
+@tab-button-checked-inner-color:                #D94700;
+@tab-button-checked-inner-bg:                   #FFFFFF;
+@tab-button-checked-inner-border-left:          1px solid @tab-button-checked-border-color;
+@tab-button-checked-inner-border-right:         1px solid @tab-button-checked-border-color;
+@tab-button-checked-inner-after-display:        none;
+@tab-button-checked-overlay-display:            none;
 
-@tab-button-hover-text-color:                   @primary-color;
-@tab-button-hover-border-width:                 @tab-button-border-width;
-@tab-button-hover-border-style:                 @tab-button-border-style;
-@tab-button-hover-border-color:                 @tab-button-border-color;
-@tab-button-hover-bg:                           @tab-button-bg;
+@tab-button-large-border-left:                  none;
+@tab-button-large-inner-font-size:              18px;
+@tab-button-large-inner-font-weight:            bold;
+@tab-button-large-inner-line-height:            29px;
 
-@tab-button-checked-text-color:                 @tab-button-text-color;
-@tab-button-checked-border-width:               @tab-button-border-width;
-@tab-button-checked-border-style:               @tab-button-border-style;
-@tab-button-checked-border-color:               @primary-color;
-@tab-button-checked-bg:                         @tab-button-bg;
+@tab-button-large-firstAddText-color:           #0055BB;
+@tab-button-large-firstAddText-font-size:       15px;
+@tab-button-large-firstAddText-font-weight:     normal;
+@tab-button-large-firstAddText-hover-color:     #FF7030;
 
-@tab-button-checked-hover-text-color:           @tab-button-hover-text-color;
-@tab-button-checked-hover-border-width:         @tab-button-checked-border-width;
-@tab-button-checked-hover-border-style:         @tab-button-checked-border-style;
-@tab-button-checked-hover-border-color:         @tab-button-checked-border-color;
-@tab-button-checked-hover-bg:                   @tab-button-bg;
+@tab-button-large-secondAddText-color:          #999999;
+@tab-button-large-secondAddText-font-size:      13px;
+@tab-button-large-secondAddText-font-weight:    normal;
+@tab-button-large-secondAddText-hover-color:    #FF7030;
 
-@tab-button-disabled-text-color:                @gray-color;
-@tab-button-disabled-border-width:              @tab-button-border-width;
-@tab-button-disabled-border-style:              @tab-button-border-style;
-@tab-button-disabled-border-color:              @tab-button-border-color;
-@tab-button-disabled-bg:                        @tab-button-bg;
+@tab-button-inner-padding:                      0px 8px 0 8px;
+@tab-button-inner-line-height:                  30px;
+@tab-button-inner-overflow:                     hidden;
+@tab-button-inner-height:                       29px;
+@tab-button-inner-max-height:                   29px;
+@tab-button-inner-after-content:                '';
+@tab-button-inner-after-display:                block;
+@tab-button-inner-after-width:                  1px;
+@tab-button-inner-after-height:                 12px;
+@tab-button-inner-after-bg-color:               @tab-button-border-color;
+@tab-button-inner-after-position:               absolute;
+@tab-button-inner-after-bottom:                 7px;
+@tab-button-inner-after-z-index:                10;
+@tab-button-inner-after-left:                   0;
+@tab-button-inner-icon-margin-left:             2px;
 
-@tab-button-disabled-checked-text-color:        @tab-button-disabled-text-color;
-@tab-button-disabled-checked-border-width:      @tab-button-disabled-border-width;
-@tab-button-disabled-checked-border-style:      @tab-button-disabled-border-style;
-@tab-button-disabled-checked-border-color:      @gray-color;
-@tab-button-disabled-checked-bg:                @tab-button-bg;
+@tab-button-counter-font-weight:                normal;
+@tab-button-counter-font-size:                  14px;
 
-@tab-button-left-side-margin:                   0;
-@tab-button-left-side-bg:                       none;
+@tab-button-right-float:                        right;
+@tab-button-right-margin-right:                 -1px;
+@tab-button-right-separator-left:               -1px;
+@tab-button-left-float:                         left;
+@tab-button-left-margin-left:                   -1px;
+@tab-button-left-separator-right:               -1px;
 
-@tab-button-right-side-margin:                  0;
-@tab-button-right-side-bg:                      none;
+@tab-button-overlay-position:                   absolute;
+@tab-button-overlay-left:                       0;
+@tab-button-overlay-right:                      0;
+@tab-button-overlay-top:                        0;
+@tab-button-overlay-bottom:                     0;
+@tab-button-overlay-background:                 #FFFFFF;
+@tab-button-overlay-ms-filter:                  "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";
+@tab-button-overlay-opacity:                    0;
 
-@tab-button-inner-bg:                           @white-color;
-
-
-
+@tab-button-disabled-hover-border-color:        transparent;
+@tab-button-disabled-hover-bg:                  transparent;
+@tab-button-disabled-inner-color:               #CCCCCC;
+@tab-button-disabled-inner-after-display:       none;
 // ------------ //
 // Radio button //
 // ------------ //
@@ -376,13 +411,14 @@
 
 @check-box-icon-border:                         none;
 @check-box-icon-bg:                             url(@check-box-icon-spritesheet) 0 0px;
+@check-box-icon-bg-pathFilter:                  url(@check-box-icon-spritesheet) 0 2px;
 
 @check-box-icon-hover-border:                   @check-box-icon-border;
 @check-box-icon-hover-bg:                       url(@check-box-icon-spritesheet) 0 -16px;
 
 @check-box-icon-checked-border:                 @check-box-icon-border;
 @check-box-icon-checked-bg:                     url(@check-box-icon-spritesheet) 0 -32px;
-
+@check-box-icon-checked-bg-pathFilter:          url(@check-box-icon-spritesheet) 0 50px;
 @check-box-icon-checked-hover-border:           @check-box-icon-border;
 @check-box-icon-checked-hover-bg:               url(@check-box-icon-spritesheet) 0 -32px;
 
@@ -577,7 +613,7 @@
 @menu-item-hover-bg:                      @primary-color;
 @menu-item-hover-icon-color:              @white-color;
 
-@menu-item-icon-top-offset:               -2px;
+@menu-item-icon-top-offset:               2px;
 @menu-item-icon-top-offset-big:           0px;
 @menu-item-icon-left-offset:              -2px;
 @menu-item-icon-left-offset-big:           0px;
@@ -1382,8 +1418,9 @@
 @data-grid-cell-vertical-align: 						middle;
 
 @data-grid-cell-border-width:                   1px 0 0;
+@data-grid-cell-separator-color:                #F5F5F5;
 @data-grid-cell-border-style:                   solid;
-@data-grid-cell-border-color:                   @gray-light-color;
+@data-grid-cell-border-color:                   transparent;
 
 @data-grid-cell-text-color:                     inherit;
 @data-grid-cell-bg:                             transparent;
@@ -1501,38 +1538,40 @@
 // --------------- //
 @fastDataFilter-border:                           0;
 // --------------- //
-// CustomFilterMenu//
+// DropdownList//
 // --------------- //
-@customFilterMenu-cursor:                         pointer;
-@customFilterMenu-border-color:                   #e4e4e4;
+@DropdownList-cursor:                         pointer;
+@DropdownList-border-color:                   #e4e4e4;
 
-@customFilterMenu-iconWidth:                      16px;
-@customFilterMenu-iconHeight:                     16px;
-@customFilterMenu-box-sizing:                     border-box;
+@DropdownList-iconWidth:                      16px;
+@DropdownList-iconHeight:                     16px;
+@DropdownList-box-sizing:                     border-box;
 
-@customFilterMenu-cross:                          url('img/cancelIcon-sprite.png');
-@customFilterMenu-cross-bg:                       @customFilterMenu-cross 0 -35px no-repeat;
-@customFilterMenu-cross-bg-hover:                 @customFilterMenu-cross 0 -19px no-repeat;
+@DropdownList-cross:                          url('img/cancelIcon-sprite.png');
+@DropdownList-cross-bg:                       @DropdownList-cross 0 -35px no-repeat;
+@DropdownList-cross-bg-hover:                 @DropdownList-cross 0 -19px no-repeat;
 
-@customFilterMenu-arrow:                          url('img/select-arrow.png');
-@pathFilter-ComboBox-arrowBg:                     @customFilterMenu-arrow 0 -52px no-repeat;
-@pathFilter-ComboBox-arrowBg-hover:               @customFilterMenu-arrow 0 -26px no-repeat;
+@DropdownList-arrow:                          url('img/select-arrow.png');
+@pathFilter-ComboBox-arrowBg:                     @DropdownList-arrow 0 -52px no-repeat;
+@pathFilter-ComboBox-arrowBg-hover:               @DropdownList-arrow 0 -26px no-repeat;
 
-@customFilterMenu-captionWrapper-margin:          0 19px 0 19px;
-@customFilterMenu-min-height:                     24px;
-@customFilterMenu-shadow-hover:                   0 0 0 1px @customFilterMenu-border-color;
+@DropdownList-captionWrapper-margin:          0 19px 0 19px;
+@DropdownList-min-height:                     24px;
+@DropdownList-shadow-hover:                   0 0 0 1px @DropdownList-border-color;
 
-@customFilterMenu-picker-bg:                      @white-color;
-@customFilterMenu-picker-border:                  2px solid @customFilterMenu-border-color;
-@customFilterMenu-picker-head-border-radius:      5px 5px 0 0;
-@customFilterMenu-picker-list-border-radius:      0 0 5px 5px;
-@customFilterMenu-picker-list-right-border-radius:0 5px 5px 5px;
-@customFilterMenu-picker-list-left-border-radius: 5px 0 5px 5px;
-@customFilterMenu-picker-menu-item-padding:       4px 8px;
-@customFilterMenu-picker-menu-item-margin:        0;
-@customFilterMenu-picker-menu-item-color:         @white-color;
-@customFilterMenu-picker-menu-item-hover:         #E9FAFE;
-@customFilterMenu-picker-list-padding:            8px 0;//ProgressBar
+@DropdownList-picker-bg:                      @white-color;
+@DropdownList-picker-border:                  2px solid @DropdownList-border-color;
+@DropdownList-picker-head-border-radius:      5px 5px 0 0;
+@DropdownList-picker-list-border-radius:      0 0 5px 5px;
+@DropdownList-picker-list-right-border-radius:0 0 5px 5px;
+@DropdownList-picker-list-left-border-radius: 0 0 5px 5px;
+@DropdownList-picker-menu-item-padding:       4px 8px;
+@DropdownList-picker-menu-item-margin:        0;
+@DropdownList-picker-menu-item-color:         @white-color;
+@DropdownList-picker-menu-item-hover:         #E9FAFE;
+@DropdownList-picker-list-padding:            8px 0;
+@DropdownList-linkStyleColor:                 #0055bb;
+@DropdownList-linkStyleHoverColor:            #ff7033;
 //ProgressBar
 @controls-ProgressBar-height:                     17px;
 @controls-ProgressBar-empty-bg:                   #F3F3F3;
@@ -1585,3 +1624,27 @@
 @drag-and-drop-count-margin:                       20px 0 0 11px;
 @drag-and-drop-count-font-size:                    10px;
 @drag-and-drop-hover-bg:                           #9fd3fe !important;
+
+//FieldLink
+@controls-FieldLink-picker-show-border:            1px solid;
+@controls-FieldLink-picker-show-border-color:      #eaeaea #eaeaea #e4e4e4;
+@controls-FieldLink-picker-show-color:             @white-color;
+
+@controls-FieldLink-fieldWrapper-margin:           0 !important;
+@controls-FieldLink-showAllLinks-top:              2px;
+@controls-FieldLink-showAllLinks-padding:          0 4px;
+@controls-FieldLink-linkContainer-padding:         4px 0;
+
+@controls-FieldLink-picker-max-height:             500px;
+@controls-FieldLink-picker-min-height:             16px;
+@controls-FieldLink-picker-border:                 1px solid #eaeaea;
+@controls-FieldLink-picker-background:             @white-color;
+
+@controls-FieldLink-linkItem-margin:               2px 0;
+@controls-FieldLink-linkItem-position:             relative;
+@controls-FieldLink-linkItem-padding:              0 16px 0 4px;
+@controls-FieldLink-linkItem-caption-height:       16px;
+@controls-FieldLink-linkItem-cross-heigth:         @controls-FieldLink-linkItem-caption-height;
+@controls-FieldLink-linkItem-cross-width:          16px;
+@controls-FieldLink-linkItem-cross-right:          0;
+

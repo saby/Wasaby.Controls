@@ -153,7 +153,7 @@ define('js!SBIS3.CONTROLS.OperationsMark', [
        * Снять выделение со всех элементов.
        */
       removeSelection: function() {
-         this._options.linkedView.setSelectedItems([]);
+         this._options.linkedView.setSelectedKeys([]);
       },
       /**
        * Инвертировать выделение всех элементов.

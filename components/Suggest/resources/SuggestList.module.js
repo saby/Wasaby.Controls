@@ -97,10 +97,12 @@ define('js!SBIS3.CONTROLS.SuggestList', [
       },
 
       _getItemTemplate: function (item) {
+         var
+            filter = this.getFilter();
          if (this._options.itemTemplate) {
             return doT.template(this._options.itemTemplate)({
                item: item,
-               filter: this._filter
+               filter: filter
             });
          } else {
             var filterValues = [];
@@ -111,8 +113,8 @@ define('js!SBIS3.CONTROLS.SuggestList', [
                   );
                }
             } else {
-               for (var field in this._filter) {
-                  if (this._filter.hasOwnProperty(field)) {
+               for (var field in filter) {
+                  if (filter.hasOwnProperty(field)) {
                      filterValues.push(
                         item.get(field)
                      );
