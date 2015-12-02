@@ -326,9 +326,9 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
 
          this.subscribeTo(this._list, 'onDrawItems', this._onListDrawItems.bind(this));
 
-         this.subscribeTo(this._list, 'onItemActivate', (function (eventObject, id, item) {
+         this.subscribeTo(this._list, 'onItemActivate', (function (eventObject, itemObj) {
             self.hidePicker();
-            self._onListItemSelect(id, item);
+            self._onListItemSelect(itemObj.id, itemObj.item);
          }));
 
          this._notify('onListReady', this._list);
