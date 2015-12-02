@@ -203,6 +203,7 @@ define('js!SBIS3.CONTROLS.Data.Source.Memory', [
             case 'move':
                return this._move(data.from, data.to, data.details);
          }
+         throw new Error('Not supported');
       },
 
       //endregion SBIS3.CONTROLS.Data.Source.ISource

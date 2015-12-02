@@ -56,30 +56,7 @@ define('js!SBIS3.CONTROLS.Data.BaseMoveStrategy', [
          return this._options.dataSource.update(from);
       },
 
-      /**
-       * Возвращает параметры перемещения записей
-       * @param {SBIS3.CONTROLS.Data.Model} from Перемещаемая запись
-       * @param {String} to Значение поля, в позицию которого перемещаем (по умолчанию - значение первичного ключа)
-       * @param {Boolean} after Дополнительная информация о перемещении
-       * @returns {Object}
-       * @private
-       */
-      _getMoveParams: function(from, to, after) {
-         var objectName = this._options.resource,
-            params = {
-               'ИдО': [parseInt(this._getId(from)), objectName],
-               'ПорядковыйНомер': this._options.moveDefaultColumn,
-               'Иерархия': null,
-               'Объект': this._options.resource
-            };
 
-         if (after) {
-            params['ИдОДо'] = [parseInt(this._getId(to), 10), objectName];
-         } else {
-            params['ИдОПосле'] = [parseInt(this._getId(to), 10), objectName];
-         }
-         return params;
-      },
       //TODO убрать метод когда не станет SBIS3.CONTROLS.Record
       _getId: function(model){
          if ($ws.helpers.instanceOfModule(model, 'SBIS3.CONTROLS.Data.Model')) {
