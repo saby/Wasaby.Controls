@@ -33,6 +33,8 @@ define('js!SBIS3.CONTROLS.EditInPlace',
                   applyOnFieldChange: true
                },
                _record: undefined,
+               _target: null,
+               _editing: false,
                _editingRecord: undefined,
                _previousRecordState: undefined,
                _editingDeferred: undefined
@@ -112,11 +114,18 @@ define('js!SBIS3.CONTROLS.EditInPlace',
                   this._record.merge(this._editingRecord);
                }.bind(this))
             },
+            show: function(target, record) {
+               this.setTarget(target);
+               this.setRecord(record);
+               this._target.hide();
+               EditInPlace.superclass.show.apply(this, arguments);
+            },
             hide: function() {
                EditInPlace.superclass.hide.apply(this, arguments);
                this._deactivateActiveChildControl();
                //todo куда уходит фокус?
                this.setActive(false);
+               this._target.show();
             },
             _deactivateActiveChildControl: function() {
                var activeChild = this.getActiveChildControl();
@@ -126,6 +135,21 @@ define('js!SBIS3.CONTROLS.EditInPlace',
                if (typeof this._options.focusCatch === 'function') {
                   this._options.focusCatch(event);
                }
+            },
+            setRecord: function(record) {
+               this._record = record;
+               this.getContainer().attr('data-id', record.getKey());
+               this.updateFields(record);
+            },
+            getRecord: function() {
+               return this._record;
+            },
+            setTarget: function(target) {
+               this._target = target;
+               this.getContainer().insertAfter(target);
+            },
+            getTarget: function() {
+               return this._target;
             },
             destroy: function() {
                this._container.unbind('keypress keydown');

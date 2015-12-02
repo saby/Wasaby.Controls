@@ -35,11 +35,6 @@ define('js!SBIS3.CONTROLS.EditInPlaceHoverController',
             _getHoveredArea: function() {
                return this._area.hovered ? this._area : this._secondArea.hovered ? this._secondArea : null;
             },
-            _createArea: function() {
-               return $ws.core.merge(EditInPlaceHoverController.superclass._createArea.apply(this), {
-                  hovered: false
-               });
-            },
             _getEditInPlaceConfig: function() {
                return $ws.core.merge(EditInPlaceHoverController.superclass._getEditInPlaceConfig.apply(this), {
                   handlers: {

@@ -33,7 +33,7 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                   itemsContainer: undefined,
                   onFieldChange: undefined
                },
-               _area: undefined,
+               _eip: undefined,
                _savingDeferred: undefined,
                _editingRecord: undefined,
                _areaHandlers: null
@@ -42,17 +42,10 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                this._areaHandlers = {
                   onKeyDown: this._onKeyDown.bind(this)
                };
-               this._area = this._createArea();
-               this._area.editInPlace.getContainer().bind('keyup', this._areaHandlers.onKeyDown);
+               this._area = new EditInPlace(this._getEditInPlaceConfig());
+               //TODO: EIP Сухоручкин переделать на события
+               this._area.getContainer().bind('keyup', this._areaHandlers.onKeyDown);
                this._savingDeferred = $ws.proto.Deferred.success();
-            },
-            _createArea: function() {
-               return {
-                  editInPlace: new EditInPlace(this._getEditInPlaceConfig()),
-                  record: null,
-                  target: null,
-                  editing: false
-               };
             },
             _getEditInPlaceConfig: function() {
                return {
@@ -103,15 +96,16 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
             },
             _editNextTarget: function (editNextRow) {
                var
-                  newTarget = this._getNextTarget(editNextRow);
-               if (newTarget.length) {
-                  this.edit(newTarget, this._options.dataSet.getRecordByKey(newTarget.attr('data-id')));
+                  nextTarget = this._getNextTarget(editNextRow);
+               if (nextTarget.length) {
+                  this.edit(nextTarget, this._options.dataSet.getRecordByKey(nextTarget.attr('data-id')));
                } else if (editNextRow) {
                   this.add();
                }
             },
             _getNextTarget: function(editNextRow) {
-               return this._area.target[editNextRow ? 'nextAll' : 'prevAll']('.js-controls-ListView__item:not(".controls-editInPlace")').slice(0, 1);
+               var currentTarget = this._area.getTarget();
+               return currentTarget[editNextRow ? 'nextAll' : 'prevAll']('.js-controls-ListView__item:not(".controls-editInPlace")').slice(0, 1);
             },
             edit: function (target, record) {
                var
@@ -146,18 +140,8 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
             },
             _edit: function(target, record) {
                this._area.editing = true;
-               this._area.target = target;
-               this._area.record = record;
-               this._showEditArea(this._area);
-               this._area.editInPlace.activateFirstControl();
-            },
-            _showEditArea: function(area) {
-               area.editInPlace.getContainer()
-                  .insertAfter(area.target)
-                  .attr('data-id', area.record.getKey());
-               area.editInPlace.show();
-               area.target.hide();
-               area.editInPlace.updateFields(area.record);
+               this._area.show(target, record);
+               this._area.activateFirstControl();
             },
             /**
              * Завершить редактирование по месту
@@ -167,9 +151,9 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
             endEdit: function(saveFields) {
                var area = this._area;
                if (area.editing) {
-                  if (area.editInPlace.validate() || !saveFields) {
+                  if (area.validate() || !saveFields) {
                      area.editing = false;
-                     this._savingDeferred = saveFields ? area.editInPlace.applyChanges() : $ws.proto.Deferred.success();
+                     this._savingDeferred = saveFields ? area.applyChanges() : $ws.proto.Deferred.success();
                      return this._savingDeferred.addCallback(function() {
                         this._endEdit(area, saveFields);
                      }.bind(this));
@@ -180,13 +164,12 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
             },
             _endEdit: function(area, saveFields) {
                if (this._editingRecord) {
-                  this._editingRecord.merge(area.record);
+                  this._editingRecord.merge(area.getRecord());
                   this._editingRecord = undefined;
                }
-               area.editInPlace.hide();
-               area.target.show();
-               if (!this._options.dataSet.getRecordByKey(area.record.getKey())) {
-                  saveFields ? this._options.dataSet.push(area.record) : area.target.remove();
+               area.hide();
+               if (!this._options.dataSet.getRecordByKey(area.getRecord().getKey())) {
+                  saveFields ? this._options.dataSet.push(area.getRecord()) : area.getTarget().remove();
                }
                if (saveFields) {
                   this._options.dataSource.sync(this._options.dataSet);
@@ -224,9 +207,7 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
             },
             destroy: function() {
                this.endEdit();
-               this._area.editInPlace.getContainer().unbind('keyup', this._areaHandlers.onKeyDown);
-               this._area.editInPlace.destroy();
-               this._area = null;
+               this._area.getContainer().unbind('keyup', this._areaHandlers.onKeyDown);
                EditInPlaceBaseController.superclass.destroy.apply(this, arguments);
             }
          });
