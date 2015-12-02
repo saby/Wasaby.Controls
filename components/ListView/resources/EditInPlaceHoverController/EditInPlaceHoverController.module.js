@@ -52,7 +52,7 @@ define('js!SBIS3.CONTROLS.EditInPlaceHoverController',
                return this._getEditingArea().target[editNextRow ? 'nextAll' : 'prevAll']('.js-controls-ListView__item:not(".controls-editInPlace")').slice(0, 1);
             },
             //TODO: Сухоручкин, Авраменко. переписать этот метод!
-            _edit: function(target) {
+            _edit: function(target, record) {
                /*
                * здесь мы определяем, какую область нужно начинать редактировать
                * */
@@ -60,10 +60,7 @@ define('js!SBIS3.CONTROLS.EditInPlaceHoverController',
                if (target.hasClass('controls-editInPlace') || hoveredArea && (hoveredArea.target.get(0) === target.get(0))) {
                   hoveredArea.hovered = false;
                   hoveredArea.editing = true;
-                  //Показываем, потому что во время сохранения мог появиться overlay, который скроет hovered-area
-                  if (target.hasClass('controls-editInPlace')) {
-                     target.show();
-                  } else {
+                  if (!target.hasClass('controls-editInPlace')) {
                      hoveredArea.editInPlace.activateFirstControl();
                   }
                } else {
