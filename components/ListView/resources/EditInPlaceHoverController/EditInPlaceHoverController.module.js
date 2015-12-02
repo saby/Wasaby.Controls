@@ -50,13 +50,9 @@ define('js!SBIS3.CONTROLS.EditInPlaceHoverController',
              * @private
              */
             show: function(target, record) {
-               var currentTarget;
                this._hoveredEip = this._eip.isEdit() ? this._secondEip : this._eip;
                if (this._hoveredEip.isVisible()) {
-                  currentTarget = this._hoveredEip.getTarget();
-                  if (currentTarget) {
-                     this._hoveredEip.getTarget().show();
-                  }
+                  this._hoveredEip.getTarget().show();
                }
                this._hoveredEip.show(target, record);
             },
@@ -65,11 +61,8 @@ define('js!SBIS3.CONTROLS.EditInPlaceHoverController',
             },
             edit: function (target, record) {
                var hoveredEip = this._hoveredEip;
-               if (target.hasClass('controls-editInPlace') || hoveredEip.isVisible() && (hoveredEip.getTarget().get(0) === target.get(0))) {
+               if (hoveredEip.isVisible() && (hoveredEip.getTarget().get(0) === target.get(0))) {
                   this._hoveredEip.edit(target, record);
-                  if (!target.hasClass('controls-editInPlace')) {
-                     hoveredEip.activateFirstControl();
-                  }
                } else {
                   EditInPlaceHoverController.superclass.edit.apply(this, arguments);
                }
@@ -84,7 +77,7 @@ define('js!SBIS3.CONTROLS.EditInPlaceHoverController',
                var target = control.getContainer().closest('.controls-editInPlace');
                //TODO: EIP Сухоручкин вторая проверка зачем?
                if (!this.isEditing() || this._getEditingEip().getContainer().get(0) !== target.get(0)) {
-                     this.edit(target, this._hoveredEip.getRecord());
+                  this.edit(target.prev(), this._hoveredEip.getRecord());
                }
             },
             isEditing: function() {

@@ -30,7 +30,8 @@ define('js!SBIS3.CONTROLS.EditInPlace',
                   focusCatch: undefined,
                   onFieldChange: undefined,
                   template: undefined,
-                  applyOnFieldChange: true
+                  applyOnFieldChange: true,
+                  visible: false
                },
                _record: undefined,
                _target: null,
@@ -129,7 +130,9 @@ define('js!SBIS3.CONTROLS.EditInPlace',
                this._deactivateActiveChildControl();
                this.setActive(false);
                EditInPlace.superclass.hide.apply(this, arguments);
-               this._target.show();
+               if (this._target) {
+                  this._target.show();
+               }
             },
             edit: function(target, record) {
                this.show(target, record);
