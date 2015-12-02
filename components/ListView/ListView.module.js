@@ -720,8 +720,12 @@ define('js!SBIS3.CONTROLS.ListView',
          //*******************************//
 
          _updateEditInPlaceDisplay: function(hoveredItem) {
+            var target;
             if (this._options.editInPlaceEnabled && this._options.editInPlaceMode === 'hover') {
-               this._getEditInPlace().updateHoveredArea(hoveredItem);
+               target = hoveredItem.container;
+               if (target && !target.hasClass('controls-editInPlace')) {
+                  this._getEditInPlace().show(target, this._dataSet.getRecordByKey(hoveredItem.key));
+               }
             }
          },
 

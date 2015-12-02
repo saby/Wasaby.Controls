@@ -23,17 +23,15 @@ define('js!SBIS3.CONTROLS.EditInPlaceHoverController',
             $protected: {
                _options: {
                },
-               _secondArea: undefined
+               _hoveredEip: null,
+               _secondEip: undefined
             },
             $constructor: function() {
-               this._secondArea = this._createArea();
-               this._secondArea.editInPlace.getContainer().bind('keyup', this._areaHandlers.onKeyDown);
+               this._secondEip = new EditInPlace(this._getEditInPlaceConfig());
+               this._secondEip.getContainer().bind('keyup', this._eipHandlers.onKeyDown);
             },
-            _getEditingArea: function() {
-               return this._area.editing ? this._area : this._secondArea.editing ? this._secondArea : null;
-            },
-            _getHoveredArea: function() {
-               return this._area.hovered ? this._area : this._secondArea.hovered ? this._secondArea : null;
+            _getEditingEip: function() {
+               return this._eip.isEdit() ? this._eip : this._secondEip.isEdit() ? this._secondEip : null;
             },
             _getEditInPlaceConfig: function() {
                return $ws.core.merge(EditInPlaceHoverController.superclass._getEditInPlaceConfig.apply(this), {
@@ -44,53 +42,37 @@ define('js!SBIS3.CONTROLS.EditInPlaceHoverController',
                })
             },
             _getNextTarget: function(editNextRow) {
-               return this._getEditingArea().target[editNextRow ? 'nextAll' : 'prevAll']('.js-controls-ListView__item:not(".controls-editInPlace")').slice(0, 1);
-            },
-            //TODO: Сухоручкин, Авраменко. переписать этот метод!
-            _edit: function(target, record) {
-               /*
-               * здесь мы определяем, какую область нужно начинать редактировать
-               * */
-               var hoveredArea = this._getHoveredArea();
-               if (target.hasClass('controls-editInPlace') || hoveredArea && (hoveredArea.target.get(0) === target.get(0))) {
-                  hoveredArea.hovered = false;
-                  hoveredArea.editing = true;
-                  if (!target.hasClass('controls-editInPlace')) {
-                     hoveredArea.editInPlace.activateFirstControl();
-                  }
-               } else {
-                  EditInPlaceHoverController.superclass._edit.apply(this, arguments);
-               }
+               return this._getEditingEip().getTarget()[editNextRow ? 'nextAll' : 'prevAll']('.js-controls-ListView__item:not(".controls-editInPlace")').slice(0, 1);
             },
             /**
              * Обновить область отображаемую по ховеру
              * @param {Object} target Элемент, для которого отобразить область по ховеру
              * @private
              */
-            updateHoveredArea: function(target) {
-               var hoveredArea = this._area.editing ? this._secondArea : this._area;
-               this._hideHoveredArea();
-               if (target.container && !target.container.hasClass('controls-editInPlace')) {
-                  hoveredArea.hovered = true;
-                  hoveredArea.target = target.container;
-                  hoveredArea.record = this._options.dataSet.getRecordByKey(target.key);
-                  this._showEditArea(hoveredArea);
+            show: function(target, record) {
+               var currentTarget;
+               this._hoveredEip = this._eip.isEdit() ? this._secondEip : this._eip;
+               if (this._hoveredEip.isVisible()) {
+                  currentTarget = this._hoveredEip.getTarget();
+                  if (currentTarget) {
+                     this._hoveredEip.getTarget().show();
+                  }
                }
-            },
-            /**
-             * Метод для скрытия областей редактирования по месту
-             * @private
-             */
-            _hideHoveredArea: function() {
-               var area  = this._getHoveredArea();
-               if (area) {
-                  area.hovered = false;
-                  area.editInPlace.hide();
-                  area.target.show();
-               }
+               this._hoveredEip.show(target, record);
             },
             _onChildControlFocusIn: function(event, control) {
                this._options.editFieldFocusHandler && this._options.editFieldFocusHandler(control);
+            },
+            edit: function (target, record) {
+               var hoveredEip = this._hoveredEip;
+               if (target.hasClass('controls-editInPlace') || hoveredEip.isVisible() && (hoveredEip.getTarget().get(0) === target.get(0))) {
+                  this._hoveredEip.edit(target, record);
+                  if (!target.hasClass('controls-editInPlace')) {
+                     hoveredEip.activateFirstControl();
+                  }
+               } else {
+                  EditInPlaceHoverController.superclass.edit.apply(this, arguments);
+               }
             },
             /**
              * Обработчик события по приходу фокуса на контрол в области редактирования по месту
@@ -101,18 +83,16 @@ define('js!SBIS3.CONTROLS.EditInPlaceHoverController',
             _onChildFocusIn: function(e, control) {
                var target = control.getContainer().closest('.controls-editInPlace');
                //TODO: EIP Сухоручкин вторая проверка зачем?
-               if (!this.isEditing() || this._getEditingArea().editInPlace.getContainer().get(0) !== target.get(0)) {
-                     this.edit(target, this._getHoveredArea().record);
+               if (!this.isEditing() || this._getEditingEip().getContainer().get(0) !== target.get(0)) {
+                     this.edit(target, this._hoveredEip.getRecord());
                }
             },
             isEditing: function() {
-               return this._area.editing || this._secondArea.editing;
+               return this._eip.isEdit() || this._secondEip.isEdit();
             },
             destroy: function() {
+               this._secondEip.editInPlace.unbind('keyup', this._eipHandlers.onKeyDown);
                EditInPlaceHoverController.superclass.destroy.apply(this, arguments);
-               this._secondArea.editInPlace.getContainer().unbind('keyup', this._areaHandlers.onKeyDown);
-               this._secondArea.editInPlace.destroy();
-               this._secondArea = null;
             }
          });
 

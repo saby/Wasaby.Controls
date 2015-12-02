@@ -115,17 +115,38 @@ define('js!SBIS3.CONTROLS.EditInPlace',
                }.bind(this))
             },
             show: function(target, record) {
-               this.setTarget(target);
-               this.setRecord(record);
+               //set record
+               this._record = record;
+               this.getContainer().attr('data-id', record.getKey());
+               this.updateFields(record);
+               //set target
+               this._target = target;
+               this.getContainer().insertAfter(target);
                this._target.hide();
                EditInPlace.superclass.show.apply(this, arguments);
             },
             hide: function() {
-               EditInPlace.superclass.hide.apply(this, arguments);
                this._deactivateActiveChildControl();
-               //todo куда уходит фокус?
                this.setActive(false);
+               EditInPlace.superclass.hide.apply(this, arguments);
                this._target.show();
+            },
+            edit: function(target, record) {
+               this.show(target, record);
+               this._editing = true;
+               this.activateFirstControl();
+            },
+            isEdit: function() {
+               return this._editing;
+            },
+            endEdit: function() {
+               this._editing = false;
+            },
+            getRecord: function() {
+               return this._record;
+            },
+            getTarget: function() {
+               return this._target;
             },
             _deactivateActiveChildControl: function() {
                var activeChild = this.getActiveChildControl();
@@ -135,21 +156,6 @@ define('js!SBIS3.CONTROLS.EditInPlace',
                if (typeof this._options.focusCatch === 'function') {
                   this._options.focusCatch(event);
                }
-            },
-            setRecord: function(record) {
-               this._record = record;
-               this.getContainer().attr('data-id', record.getKey());
-               this.updateFields(record);
-            },
-            getRecord: function() {
-               return this._record;
-            },
-            setTarget: function(target) {
-               this._target = target;
-               this.getContainer().insertAfter(target);
-            },
-            getTarget: function() {
-               return this._target;
             },
             destroy: function() {
                this._container.unbind('keypress keydown');
