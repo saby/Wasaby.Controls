@@ -340,6 +340,14 @@ define('js!SBIS3.CONTROLS.SbisServiceSource', [
             throw new Error('Не передано достаточно информации для перемещения');
          }
       },
+      /**
+       * Возвращает имя объекта бизнес логики по которому построен источник
+       * @returns {String}
+       */
+      getResourceName: function () {
+         return this._object;
+      },
+
       _changeOrder: function(record, hierField, parentKey, orderDetails){
          var self = this,
             strategy = this.getStrategy(),
