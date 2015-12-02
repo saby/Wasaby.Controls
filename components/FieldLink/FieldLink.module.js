@@ -104,7 +104,6 @@ define('js!SBIS3.CONTROLS.FieldLink',
          _linksWrapper: undefined,     /* Контейнер для контрола выбранных элементов */
          _dropAllButton: undefined,    /* Кнопка очитски всех выбранных записей */
          _showAllLink: undefined,      /* Кнопка показа всех записей в пикере */
-         _pickerLinkList: undefined,   /* Контейнер для контрола выбранных элементов в пикере */
          _linkCollection: undefined,   /* Контрол отображающий выбранные элементы */
          _options: {
             /* Служебные шаблоны поля связи (иконка открытия справочника, контейнер для выбранных записей */
@@ -147,7 +146,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
              * @remark
              * Актуально для поля связи с единичным выбором (Например чтобы записать что-то в поле контекста)
              */
-            alwaysShowTextBox: true
+            alwaysShowTextBox: false
          }
       },
 
@@ -500,6 +499,11 @@ define('js!SBIS3.CONTROLS.FieldLink',
       destroy: function() {
          this._linksWrapper = undefined;
          this._inputWrapper = undefined;
+
+         if(this._linkCollection) {
+            this._linkCollection.destroy();
+            this._linkCollection = undefined;
+         }
 
          if(this._options.multiselect) {
             this._showAllLink.unbind('click');
