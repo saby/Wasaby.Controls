@@ -40,17 +40,23 @@ define('js!SBIS3.CONTROLS.ActiveMultiSelectable', ['js!SBIS3.CONTROLS.Data.Colle
        * Устанавливает массив выбранных записей
        */
       setSelectedItems: propertyUpdateWrapper(function(list) {
-         if($ws.helpers.instanceOfModule(list, 'SBIS3.CONTROLS.Data.Collection.List')) {
-            var selKeys = [];
-
-            /* надо обязательно делать клон массива, чтобы порвать ссылку и не портить значения в контексте */
-            this._options.selectedItems = this._makeList((this._options.multiselect ? list.toArray() : list.getCount() > 1 ? [list.at(0)] : list.toArray()).slice());
-            this._options.selectedItems.each(function(rec) {
-               selKeys.push(rec.getId());
-            });
-            this.setSelectedKeys(selKeys);
-            this._notifyOnPropertyChanged('selectedItems');
+         if(list instanceof Array) {
+            list = this._makeList(list);
          }
+
+         if(!$ws.helpers.instanceOfModule(list, 'SBIS3.CONTROLS.Data.Collection.List')) {
+            throw new Error('setSelectedItems called with invalid argument');
+         }
+
+         var selKeys = [];
+
+         /* надо обязательно делать клон массива, чтобы порвать ссылку и не портить значения в контексте */
+         this._options.selectedItems = this._makeList((this._options.multiselect ? list.toArray() : list.getCount() > 1 ? [list.at(0)] : list.toArray()).slice());
+         this._options.selectedItems.each(function(rec) {
+            selKeys.push(rec.getId());
+         });
+         this.setSelectedKeys(selKeys);
+         this._notifyOnPropertyChanged('selectedItems');
       }),
 
       /**

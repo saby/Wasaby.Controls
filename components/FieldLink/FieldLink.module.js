@@ -335,7 +335,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
 
       setSelectedItem: propertyUpdateWrapper(function(item) {
          /* Когда передали selectedItem, то надо сделать коллекцию selectedItems из этого item'a */
-         Object.isEmpty(item.getProperties()) ? this.removeSelectedItems() : this.setSelectedItems([item]);
+         Object.isEmpty(item.getProperties()) ? this.clearSelectedItems() : this.setSelectedItems([item]);
          FieldLink.superclass.setSelectedItem.apply(this, arguments);
       }),
 
