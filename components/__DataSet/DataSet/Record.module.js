@@ -4,8 +4,9 @@
 define('js!SBIS3.CONTROLS.Record', [
    'js!SBIS3.CONTROLS.Data.SerializableMixin',
    'js!SBIS3.CONTROLS.ArrayStrategy',
-   'js!SBIS3.CONTROLS.DataFactory'
-], function (SerializableMixin, ArrayStrategy, DataFactory) {
+   'js!SBIS3.CONTROLS.DataFactory',
+   'js!SBIS3.CONTROLS.Data.ContextField'
+], function (SerializableMixin, ArrayStrategy, DataFactory, ContextField) {
    'use strict';
 
    /**
