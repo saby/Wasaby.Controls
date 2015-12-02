@@ -1,21 +1,20 @@
 /* global define, $ws */
 define('js!SBIS3.CONTROLS.Data.Model', [
-   'js!SBIS3.CONTROLS.Data.ISerializable',
    'js!SBIS3.CONTROLS.Data.SerializableMixin',
+   'js!SBIS3.CONTROLS.Data.Serializer',
    'js!SBIS3.CONTROLS.Data.IPropertyAccess',
    'js!SBIS3.CONTROLS.Data.IHashable',
    'js!SBIS3.CONTROLS.Data.HashableMixin',
    'js!SBIS3.CONTROLS.Data.ContextField',
    'js!SBIS3.CONTROLS.Data.Factory',
    'js!SBIS3.CONTROLS.Data.Adapter.Json'
-], function (ISerializable, SerializableMixin, IPropertyAccess, IHashable, HashableMixin, ContextField, Factory, JsonAdapter) {
+], function (SerializableMixin, Serializer, IPropertyAccess, IHashable, HashableMixin, ContextField, Factory, JsonAdapter) {
    'use strict';
 
    /**
-    * Модель - обеспечивает доступ к данным субъекта предметной области
+    * Модель - обеспечивает доступ к данным объекта предметной области
     * @class SBIS3.CONTROLS.Data.Model
     * @extends $ws.proto.Abstract
-    * @mixes SBIS3.CONTROLS.Data.ISerializable
     * @mixes SBIS3.CONTROLS.Data.SerializableMixin
     * @mixes SBIS3.CONTROLS.Data.IPropertyAccess
     * @mixes SBIS3.CONTROLS.Data.IHashable
@@ -24,7 +23,7 @@ define('js!SBIS3.CONTROLS.Data.Model', [
     * @author Мальцев Алексей
     */
 
-   var Model = $ws.proto.Abstract.extend([ISerializable, SerializableMixin, IPropertyAccess, IHashable, HashableMixin], /** @lends SBIS3.CONTROLS.Data.Model.prototype */{
+   var Model = $ws.proto.Abstract.extend([SerializableMixin, IPropertyAccess, IHashable, HashableMixin], /** @lends SBIS3.CONTROLS.Data.Model.prototype */{
       _moduleName: 'SBIS3.CONTROLS.Data.Model',
       $protected: {
          _options: {
@@ -33,7 +32,7 @@ define('js!SBIS3.CONTROLS.Data.Model', [
              * @example
              * <pre>
              *    var user = new Model({
-             *       data: {
+             *       rawData: {
              *          id: 1,
              *          firstName: 'John',
              *          lastName: 'Smith'
@@ -45,7 +44,7 @@ define('js!SBIS3.CONTROLS.Data.Model', [
              * @see getRawData
              * @see setRawData
              */
-            data: {},
+            rawData: null,
 
             /**
              * @cfg {SBIS3.CONTROLS.Data.Adapter.IAdapter} Адаптер для работы с данными
@@ -90,7 +89,7 @@ define('js!SBIS3.CONTROLS.Data.Model', [
              *       }
              *    });
              *    var user = new User({
-             *       data: {
+             *       rawData: {
              *          id: 5,
              *          login: 'Keanu',
              *          firstName: 'Johnny',
@@ -160,29 +159,17 @@ define('js!SBIS3.CONTROLS.Data.Model', [
          //TODO: убрать после перехода на ISource
          this._compatibleMode = cfg.compatibleMode;
 
+         if ('data' in cfg && !('rawData' in cfg)) {
+            this._options.rawData = cfg.data;
+            $ws.single.ioc.resolve('ILogger').log('SBIS3.CONTROLS.Data.Model', 'option "data" is deprecated and will be removed in 3.7.20. Use "rawData" instead.');
+         }
          this._options.idProperty = this._options.idProperty || '';
          this._initAdapter();
          if (!this._options.idProperty) {
-            this._options.idProperty = this.getAdapter().getKeyField(this._options.data);
+            this._options.idProperty = this.getAdapter().getKeyField(this._options.rawData);
          }
-         this.setRawData(this._options.data, true);
+         this.setRawData(this._options.rawData, true);
       },
-
-      // region SBIS3.CONTROLS.Data.ISerializable
-
-      _getSerializableState: function() {
-         return $ws.core.merge(
-            Model.superclass._getSerializableState.call(this), {
-               _hash: this.getHash(),
-               _isStored: this._isStored,
-               _isDeleted: this._isDeleted,
-               _isChanged: this._isChanged,
-               _compatibleMode: this._compatibleMode
-            }
-         );
-      },
-
-      // endregion SBIS3.CONTROLS.Data.ISerializable
 
       // region SBIS3.CONTROLS.Data.IPropertyAccess
 
@@ -205,8 +192,7 @@ define('js!SBIS3.CONTROLS.Data.Model', [
             value = this._getCalculatedValue(name, value, property, true);
          }
 
-         //Инстансы объектов кэшируем
-         if (value && typeof value === 'object') {
+         if (this._isPropertyValueCacheable(value)) {
             this._propertiesCache[name] = value;
          }
 
@@ -230,7 +216,11 @@ define('js!SBIS3.CONTROLS.Data.Model', [
          if (this._getOriginalPropertyValue(name) !== value) {
             this._setOriginalPropertyValue(name, value);
             this._setChanged(true);
-            delete this._propertiesCache[name];
+            if (name in this._propertiesCache &&
+               value !== this._propertiesCache[name]
+            ) {
+               delete this._propertiesCache[name];
+            }
             this._notify('onPropertyChange', name, value);
          }
       },
@@ -247,7 +237,7 @@ define('js!SBIS3.CONTROLS.Data.Model', [
       /**
        * Перебирает все свойства модели
        * @param {Function(*, Number)} callback Ф-я обратного вызова для каждого свойства. Первым аргументом придет название свойства, вторым - его значение.
-       * @param {Object} [context] Конекст вызова callback.
+       * @param {Object} [context] Контекст вызова callback.
        */
       each: function (callback, context) {
          for (var  name in this._options.properties) {
@@ -262,6 +252,32 @@ define('js!SBIS3.CONTROLS.Data.Model', [
       },
 
       // endregion SBIS3.CONTROLS.Data.Collection.IEnumerable
+
+      // region SBIS3.CONTROLS.Data.SerializableMixin
+
+      _getSerializableState: function() {
+         return $ws.core.merge(
+            Model.superclass._getSerializableState.call(this), {
+               _hash: this.getHash(),
+               _isStored: this._isStored,
+               _isDeleted: this._isDeleted,
+               _isChanged: this._isChanged,
+               _compatibleMode: this._compatibleMode
+            }
+         );
+      },
+
+      _setSerializableState: function(state) {
+         return Model.superclass._setSerializableState(state).callNext(function() {
+            this._hash = state._hash;
+            this._isStored = state._isStored;
+            this._isDeleted = state._isDeleted;
+            this._isChanged = state._isChanged;
+            this._compatibleMode = state._compatibleMode;
+         });
+      },
+
+      // endregion SBIS3.CONTROLS.Data.SerializableMixin
 
       // region Public methods
 
@@ -315,20 +331,16 @@ define('js!SBIS3.CONTROLS.Data.Model', [
          this._options.usingDataSetAsList = usingDataSetAsList;
       },
 
-
       /**
        * Клонирует модель
        * @returns {SBIS3.CONTROLS.Data.Model}
        */
       clone: function() {
-         var clone = new Model($ws.core.clone(this._options));
-         clone._isStored = this._isStored;
-         clone._isChanged = this._isChanged;
-         clone._isDeleted = this._isDeleted;
-         /* todo: Мальцев. Работает по ссылке. Переделывать на клонирование опасно, т.к. при больших объемах данных можно получить нехилые тормоза*/
-         clone._propertiesCache = this._propertiesCache;
-         clone._initProperties();
-         return clone;
+         var serializer = new Serializer();
+         return JSON.parse(
+            JSON.stringify(this, serializer.serialize),
+            serializer.deserialize
+         );
       },
 
       /**
@@ -358,6 +370,22 @@ define('js!SBIS3.CONTROLS.Data.Model', [
        */
       isChanged: function () {
          return this._isChanged;
+      },
+
+      /**
+       * Возвращает признак, что модель существует в источнике данных
+       * @returns {Boolean}
+       */
+      isStored: function () {
+         return this._isStored;
+      },
+
+      /**
+       * Устанавливает, существует ли модель в источнике данных
+       * @param {Boolean} stored Модель существует в источнике данных
+       */
+      setStored: function (stored) {
+         this._isStored = stored;
       },
 
       /**
@@ -392,15 +420,15 @@ define('js!SBIS3.CONTROLS.Data.Model', [
        * @returns {Object}
        */
       getRawData: function () {
-         return this._options.data;
+         return this._options.rawData;
       },
 
       /**
        * Устанавливает данные модели в "сыром" виде
-       * @param {Object} data Данные модели
+       * @param {Object} rawData Данные модели
        */
-      setRawData: function (data, silent) {
-         this._options.data = data || {};
+      setRawData: function (rawData, silent) {
+         this._options.rawData = rawData || {};
          this._propertiesCache = {};
          this._initProperties();
          if (!silent) {
@@ -409,19 +437,15 @@ define('js!SBIS3.CONTROLS.Data.Model', [
       },
 
       /**
-       * Возвращает признак, что модель существует в источнике данных
-       * @returns {Boolean}
+       * Возвращает данные в виде hash map свойство-значение
+       * @returns {Object}
        */
-      isStored: function () {
-         return this._isStored;
-      },
-
-      /**
-       * Устанавливает, существует ли модель в источнике данных
-       * @param {Boolean} stored Модель существует в источнике данных
-       */
-      setStored: function (stored) {
-         this._isStored = stored;
+      toObject: function() {
+         var data = {};
+         this.each(function(field, value) {
+            data[field] = value;
+         });
+         return data;
       },
 
       /**
@@ -429,11 +453,7 @@ define('js!SBIS3.CONTROLS.Data.Model', [
       * @returns {String}
       */
       toString: function() {
-         var data = {};
-         this.each(function(field, value) {
-            data[field] = value;
-         });
-         return JSON.stringify(data);
+         return JSON.stringify(this.toObject());
       },
 
       // endregion Public methods
@@ -459,7 +479,7 @@ define('js!SBIS3.CONTROLS.Data.Model', [
        */
       _initProperties: function() {
          var adapter = this._options.adapter.forRecord(),
-            fields = adapter.getFields(this._options.data),
+            fields = adapter.getFields(this._options.rawData),
             i,
             length;
          for (i = 0, length = fields.length; i < length; i++) {
@@ -478,14 +498,22 @@ define('js!SBIS3.CONTROLS.Data.Model', [
       },
 
       /**
+       * Возвращает признак, что значение свойства кэшируемое
+       * @private
+       */
+      _isPropertyValueCacheable: function(value) {
+         return value && typeof value === 'object';
+      },
+
+      /**
        * Возвращает значение свойства из сырых данных
        * @param {String} name Название свойства
        * @private
        */
       _getOriginalPropertyValue: function(name) {
          var adapter = this._options.adapter.forRecord(),
-            rawValue = adapter.get(this._options.data, name),
-            fieldData = adapter.getFullFieldData(this._options.data, name),
+            rawValue = adapter.get(this._options.rawData, name),
+            fieldData = adapter.getFullFieldData(this._options.rawData, name),
             value = Factory.cast(
                rawValue,
                fieldData.type,
@@ -506,10 +534,10 @@ define('js!SBIS3.CONTROLS.Data.Model', [
        */
       _setOriginalPropertyValue: function(name, value) {
          var adapter = this._options.adapter.forRecord(),
-            fieldData = adapter.getFullFieldData(this._options.data, name);
+            fieldData = adapter.getFullFieldData(this._options.rawData, name);
 
          adapter.set(
-            this._options.data,
+            this._options.rawData,
             name,
             Factory.serialize(
                value,
