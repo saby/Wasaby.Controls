@@ -180,6 +180,18 @@ define('js!SBIS3.CONTROLS.Data.Collection.List', [
          return this._items.length;
       },
 
+      equals: function (another) {
+         if (this._items.length !== another.getCount()) {
+            return false;
+         }
+         for (var i = 0, count = this._items.length; i < count; i++) {
+            if (this._items[i] !== another.at(i)) {
+               return false;
+            }
+         }
+         return true;
+      },
+
       //endregion SBIS3.CONTROLS.Data.Collection.IList
 
       //region SBIS3.CONTROLS.Data.Collection.IIndexedCollection

@@ -25,7 +25,7 @@ define('js!SBIS3.CONTROLS.CommonHandlers',[],
             })
          },
          editItems: function(tr, id) {
-            this.sendCommand('ActivateItem', id);
+            this.sendCommand('activateItem', id);
          },
          moveRecordDown: function(tr, id, record) {
             var nextItem = this._getNextItemById(id),
