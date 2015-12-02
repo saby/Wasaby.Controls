@@ -34,6 +34,10 @@ define([], function () {
       checkCondition: function(){
       },
 
+      getName: function(){
+         return this._name;
+      },
+
       /**
        * Обновляет настройки декоратора
        * @param {Object} control Экземпляр контрола

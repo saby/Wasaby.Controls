@@ -1,0 +1,68 @@
+<div>
+   {{? it.dataSet}}
+      {{for (var index=0; index < it.dataSet.getCount(); index++) {}}
+         {{var opt = it.dataSet.at(index).get('ПолеИнформации').get('Описание') === 'Компания' ? 'selectedItems' : 'selectedItem';}}
+         <component data-component="SBIS3.CONTROLS.FieldLink" class="controls-demo-FieldLinkWithEditInPlace__fieldLink">
+            <opt name="text" bind="ИнформацияПоСотруднику/{{=index}}/ПолеИнформации/Дополнение" nonexistentType="undefined"></opt>
+            <opt name="placeholder" bind="ИнформацияПоСотруднику/{{=index}}/ПолеИнформации/Описание" oneWay="true"></opt>
+            <opt name="displayField" value="Название"></opt>
+            <opt name="keyField" value="Ид"></opt>
+            <opts name="dictionaries" type="array">
+               <opts>
+                  <opt name="caption" bind="ИнформацияПоСотруднику/{{=index}}/ПолеИнформации/Описание" oneWay="true"></opt>
+                  <opt name="template">
+                     {{?it.dataSet.at(index).get('ПолеИнформации').get('Описание') === 'Компания'}}
+                        js!SBIS3.CONTROLS.Demo.FieldLinkDemoSelectingCompany
+                     {{??}}
+                        js!SBIS3.CONTROLS.Demo.FieldLinkDemoSelectingPost
+                     {{?}}
+                     </opt>
+               </opts>
+            </opts>
+            <opt name='{{=opt}}' bind='ИнформацияПоСотруднику/{{=index}}/ПолеИнформации/СвязанныеЗаписи'/>
+            <opts name="list">
+               <opt name="component" value="js!SBIS3.CONTROLS.DataGridView"/>
+               <opts name="options">
+                  <opts name="columns" type="array">
+                     <opts>
+                        <opt name="title">Ид</opt>
+                        <opt name="field">Ид</opt>
+                     </opts>
+                     <opts>
+                        <opt name="title">Название</opt>
+                        <opt name="field">Название</opt>
+                     </opts>
+                  </opts>
+                  <opt name="keyField" value="Ид"></opt>
+               </opts>
+            </opts>
+            <opts name="listFilter">
+               <opt name="Название" bind="ИнформацияПоСотруднику/{{=index}}/ПолеИнформации/Дополнение" oneWay="true"></opt>
+            </opts>
+            <opts name="handlers">
+               <opt name="onInit" type="function">
+                  {{?it.dataSet.at(index).get('ПолеИнформации').get('Описание') === 'Компания'}}
+                     js!SBIS3.CONTROLS.Demo.FieldLinkDemoArea:prototype.getCompanyDataSource
+                  {{??}}
+                     js!SBIS3.CONTROLS.Demo.FieldLinkDemoArea:prototype.getRankDataSource
+                  {{?}}
+               </opt>
+            </opts>
+         </component>
+      {{}}}
+   {{?}}
+   <component data-component="SBIS3.CONTROLS.Link" class="controls-demo-FieldLinkWithEditInPlace__demoAreaButton">
+      <opt name="caption">Добавить компании</opt>
+      <opt name="icon">sprite:icon-16 icon-Company icon-primary</opt>
+      <opts name="handlers">
+         <opt name="onActivated" type="function">js!SBIS3.CONTROLS.Demo.FieldLinkDemoArea:prototype.sendAddCompany</opt>
+      </opts>
+   </component>
+   <component data-component="SBIS3.CONTROLS.Link" class="controls-demo-FieldLinkWithEditInPlace__demoAreaButton">
+      <opt name="caption">Добавить должности</opt>
+      <opt name="icon">sprite:icon-16 icon-Groups icon-primary</opt>
+      <opts name="handlers">
+         <opt name="onActivated" type="function">js!SBIS3.CONTROLS.Demo.FieldLinkDemoArea:prototype.sendAddPost</opt>
+      </opts>
+   </component>
+</div>

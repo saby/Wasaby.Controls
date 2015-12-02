@@ -52,6 +52,27 @@ define(
                 });
             });
 
+            describe('.has()', function() {
+               context('when the field is defined', function() {
+                  it('should return true', function() {
+                     assert.isTrue(
+                        recordInstance.has('Имя')
+                     );
+                     assert.isTrue(
+                        recordInstance.has('Возраст')
+                     );
+                  });
+               });
+
+               context('when the field is undefined', function() {
+                  it('should return false', function() {
+                     assert.isFalse(
+                        recordInstance.has('Имя1')
+                     );
+                  });
+               });
+            });
+
             describe('.get()', function() {
                 context('when the field is defined', function() {
                     it('should return a value', function() {

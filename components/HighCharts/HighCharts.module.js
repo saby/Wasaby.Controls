@@ -710,6 +710,7 @@ function(BaseControl, dotTpl){
       init : function() {
          HighCharts.superclass.init.call(this);
 
+         this._loadingIndicator = $('.ws-HighCharts__loadingIndicator', this._container.get(0));
          var self = this;
          //читаем фильтры из контекста
          if (this._options.filterFields.length) {
@@ -758,8 +759,9 @@ function(BaseControl, dotTpl){
       },
 
       _drawHighChart : function() {
-         this.getContainer().highcharts(this._options.highChartOptions);
-         this._chartObj = this.getContainer().highcharts();
+         var plotCont = $('.ws-HighCharts__plot', this.getContainer().get(0));
+         plotCont.highcharts(this._options.highChartOptions);
+         this._chartObj = plotCont.highcharts();
       },
 
       _recordSetParse : function() {
@@ -1036,6 +1038,7 @@ function(BaseControl, dotTpl){
       },
 
       reload : function(noUpdateFromCtx) {
+         this._loadingIndicator.removeClass('ws-hidden');
          var
             def = new $ws.proto.Deferred(),
             self = this;
@@ -1067,6 +1070,7 @@ function(BaseControl, dotTpl){
 
             //готовим оси
             self._notify('onBeforeReload', self._options.highChartOptions, self._chartObj, self._series);
+            self._loadingIndicator.addClass('ws-hidden');
             self._drawHighChart();
             def.callback();
          }).addErrback(function(){

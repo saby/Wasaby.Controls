@@ -2,18 +2,23 @@
  * Created by as.manuylov on 10.11.14.
  */
 define('js!SBIS3.CONTROLS.Record', [
+   'js!SBIS3.CONTROLS.Data.SerializableMixin',
+   'js!SBIS3.CONTROLS.ArrayStrategy',
    'js!SBIS3.CONTROLS.DataFactory'
-], function (DataFactory) {
+], function (SerializableMixin, ArrayStrategy, DataFactory) {
    'use strict';
 
    /**
     * Класс для работы с одной записью
     * @class SBIS3.CONTROLS.Record
+    * @extends $ws.proto.Abstract
+    * @mixes SBIS3.CONTROLS.Data.SerializableMixin
     * @public
     * @author Крайнов Дмитрий Олегович
     */
 
-   var Record =  $ws.proto.Abstract.extend( /** @lends SBIS3.CONTROLS.Record.prototype */{
+   var Record =  $ws.proto.Abstract.extend([SerializableMixin], /** @lends SBIS3.CONTROLS.Record.prototype */{
+      _moduleName: 'SBIS3.CONTROLS.Record',
       $protected: {
          /**
           * @var {String|null} Клиентский идентификатор
@@ -49,7 +54,7 @@ define('js!SBIS3.CONTROLS.Record', [
           * @var {SBIS3.CONTROLS.IDataStrategy} Стратегия, обеспечивающая интерфейс доступа к "сырым" данным
           */
          _strategy: null,
-         
+
          /**
           * @var {Object} Объект содержащий экземпляры значений-объектов
           */
@@ -57,16 +62,34 @@ define('js!SBIS3.CONTROLS.Record', [
       },
 
       $constructor: function (cfg) {
+         cfg = cfg || {};
          this._publish('onChange');
-         this._strategy = cfg.strategy;
+         this._strategy = cfg.strategy || new ArrayStrategy();
          this._raw = cfg.raw || {};
          this._isCreated = 'isCreated' in cfg ? cfg.isCreated : false;
          this._keyField = cfg.keyField || null;
          this._cid = $ws.helpers.randomId('c');
       },
 
+      // region SBIS3.CONTROLS.Data.SerializableMixin
+
+      _getSerializableState: function() {
+         return $ws.core.merge(
+            Record.superclass._getSerializableState.call(this), {
+               _cid: this._cid,
+               _isCreated: this._isCreated,
+               _isDeleted: this._isDeleted,
+               _isChanged: this._isChanged,
+               _keyField: this._keyField,
+               _raw: this._raw
+            }
+         );
+      },
+
+      // endregion SBIS3.CONTROLS.Data.SerializableMixin
+
       clone: function() {
-         return new Record(this._options);
+         return new Record($ws.core.clone(this._options));
       },
 
       /**
@@ -82,8 +105,18 @@ define('js!SBIS3.CONTROLS.Record', [
          this._isDeleted = record._isDeleted;
          //this._keyField = record._keyField;
          this._fieldsCache = {};
+         this._notify('onChange')
 
          return this;
+      },
+
+      /**
+       * Возвращает признак наличия поля записи
+       * @param {String} field Название поля
+       * @returns {Boolean}
+       */
+      has: function (field) {
+         return this._strategy.value(this._raw, field) !== undefined;
       },
 
       /**
@@ -95,7 +128,7 @@ define('js!SBIS3.CONTROLS.Record', [
          if (this._fieldsCache.hasOwnProperty(field)) {
             return this._fieldsCache[field];
          }
-         
+
          var dataValue = this._strategy.value(this._raw, field),
             data = this._strategy.getFullFieldData(this._raw, field),
             value = DataFactory.cast(
@@ -213,6 +246,19 @@ define('js!SBIS3.CONTROLS.Record', [
       },
 
       /**
+       * Не использовать! Метод в кратчайшие сроки будет убран!
+       * Устанавливает исходные "сырые" данные записи
+       * todo Мальцев: придумать, как правильно мержить рекорды таким образом, чтобы один рекорд превращался в другой
+       * @private
+       * @returns {Object}
+       */
+      setRaw: function (raw) {
+         this._options.raw = this._raw = raw;
+         this._fieldsCache = {};
+         this._notify('onChange');
+      },
+
+      /**
        * Возвращает исходные "сырые" данные записи
        * @returns {Object}
        */
@@ -221,6 +267,8 @@ define('js!SBIS3.CONTROLS.Record', [
       }
 
    });
+
+   ContextField.registerRecord('ControlsFieldTypeRecord', Record, 'onChange');
 
    $ws.single.ioc.bind('SBIS3.CONTROLS.Record', function(config) {
       return new Record(config);

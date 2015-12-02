@@ -1,0 +1,51 @@
+<div>
+   <component data-component="SBIS3.CONTROLS.DataGridView" name="DemoDataGrid">
+      <opts name="columns" type="array">
+         <opts>
+            <opt name="title">Ид</opt>
+            <opt name="field">Ид</opt>
+            <opt name="cellTemplate">html!SBIS3.CONTROLS.Demo.FieldLinkWithEditInPlace/resources/cellID</opt>
+            <opt name="editor">
+               <span data-bind="{html: 'Ид'}" class="controls-demo-FieldLinkWithEditInPlace__cell"></span>
+            </opt>
+         </opts>
+         <opts>
+            <opt name="title">ФИО</opt>
+            <opt name="field">ФИО</opt>
+            <opt name="editor">
+               <component data-component="SBIS3.CONTROLS.TextBox" style="vertical-align: middle; display: inline-block; width: 100%;">
+                  <opt name="text" bind="ФИО"></opt>
+                  <opts name="validators" type="array">
+                     <opts>
+                        <opt name="validator" type="function">js!SBIS3.CORE.CoreValidators:required</opt>
+                     </opts>
+                  </opts>
+               </component>
+            </opt>
+            <opt name="cellTemplate">html!SBIS3.CONTROLS.Demo.FieldLinkWithEditInPlace/resources/cellFIO</opt>
+         </opts>
+         <opts>
+            <opt name="title">Место работы</opt>
+            <opt name="width" type="string">450</opt>
+            <opt name="field">МестоРаботы</opt>
+            <opt name="editor">
+               <component data-component="SBIS3.CONTROLS.Demo.FieldLinkDemoArea" style="width: 100%; display: block; border: 1px solid transparent;">
+                  <opt name="dataSet" bind="ИнформацияПоСотруднику"></opt>
+               </component>
+            </opt>
+            <opt name="cellTemplate">html!SBIS3.CONTROLS.Demo.FieldLinkWithEditInPlace/resources/cellWorkPlace</opt>
+         </opts>
+      </opts>
+      <opt name="emptyHTML">Нет записей</opt>
+      <opt name="multiselect">true</opt>
+      <opt name="editInPlaceEnabled" value="true"/>
+      <opt name="editInPlaceGetModelFromSource" value="true"/>
+   </component>
+   <component data-component="SBIS3.CONTROLS.Link" name="NewItem">
+      <opt name="caption">Новая запись</opt>
+      <opt name="icon">sprite: icon-16 icon-NewCategory icon-primary</opt>
+      <opts name="handlers">
+         <opt name="onActivated" type="function">js!SBIS3.CONTROLS.Demo.FieldLinkWithEditInPlace:prototype.sendAddItem</opt>
+      </opts>
+   </component>
+</div>
