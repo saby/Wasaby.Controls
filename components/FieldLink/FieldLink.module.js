@@ -83,9 +83,9 @@ define('js!SBIS3.CONTROLS.FieldLink',
             config: {
                isStack: true,
                autoHide: true,
+               selectorFieldLink: true,
                autoCloseOnHide: true,
                overlay: true,
-               parent: null,
                showDelay: 300
             },
             type: {
@@ -222,7 +222,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
              commonConfig = {
                 template: template,
                 opener: this,
-                parent: this,
+                parent: this._options.selectRecordsMode === 'newDialog' ? this : null,
                 context: new $ws.proto.Context().setPrevious(this.getLinkedContext()),
                 target: self.getContainer(),
                 multiSelect: self._options.multiselect
