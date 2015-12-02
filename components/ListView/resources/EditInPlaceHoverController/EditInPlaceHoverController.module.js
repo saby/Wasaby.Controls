@@ -57,7 +57,7 @@ define('js!SBIS3.CONTROLS.EditInPlaceHoverController',
                * здесь мы определяем, какую область нужно начинать редактировать
                * */
                var hoveredArea = this._getHoveredArea();
-               if (target.hasClass('controls-editInPlace') || hoveredArea && (hoveredArea.target.get(0) === target.get(0) || hoveredArea.editInPlace.getContainer().get(0) === target.get(0))) {
+               if (target.hasClass('controls-editInPlace') || hoveredArea && (hoveredArea.target.get(0) === target.get(0))) {
                   hoveredArea.hovered = false;
                   hoveredArea.editing = true;
                   //Показываем, потому что во время сохранения мог появиться overlay, который скроет hovered-area

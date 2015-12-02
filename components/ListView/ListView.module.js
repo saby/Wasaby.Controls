@@ -355,7 +355,6 @@ define('js!SBIS3.CONTROLS.ListView',
             var topParent = this.getTopParent(),
                   self = this;
             this._publish('onChangeHoveredItem', 'onItemClick', 'onItemActivate', 'onDataMerge');
-            $ws.single.CommandDispatcher.declareCommand(this, 'addItem', this._newItem.bind(this));
             this._container.on('mousemove', this._mouseMoveHandler.bind(this))
                            .on('mouseleave', this._mouseLeaveHandler.bind(this));
 
@@ -375,8 +374,10 @@ define('js!SBIS3.CONTROLS.ListView',
                   topParent.subscribe('onScroll', this._onFAScroll.bind(this));
                }
             }
-            $ws.single.CommandDispatcher.declareCommand(this, 'ActivateItem', this._activateItem);
-            $ws.single.CommandDispatcher.declareCommand(this, 'AddItem', this._addItem);
+            $ws.single.CommandDispatcher.declareCommand(this, 'activateItem', this._activateItem);
+            $ws.single.CommandDispatcher.declareCommand(this, 'addItem', this._addItem);
+            $ws.single.CommandDispatcher.declareCommand(this, 'editItem', this._editItem);
+            $ws.single.CommandDispatcher.declareCommand(this, 'endEdit', this._endEdit);
          },
 
          init: function () {
@@ -697,10 +698,6 @@ define('js!SBIS3.CONTROLS.ListView',
                //После релоада придется заново догружать данные до появлени скролла
                this._isLoadBeforeScrollAppears = true;
             }
-         },
-         _newItem: function() {
-            this._getEditInPlace().add();
-            return true;
          },
          /**
           * Метод установки/замены обработчика клика по строке.
@@ -1315,8 +1312,15 @@ define('js!SBIS3.CONTROLS.ListView',
             this._notify('onItemActivate', {id: id, item: item});
          },
          _addItem : function() {
-           //TODO если есть редактирование по месту запусть его
             this._notify('onAddItem');
+            return this._getEditInPlace().add();
+         },
+         _editItem : function(record) {
+            var target = this._getItemsContainer().find('.js-controls-ListView__item[data-id="' + record.getKey() + '"]:first');
+            return this._getEditInPlace().edit(target, record);
+         },
+         _endEdit : function(saveFields) {
+            return this._getEditInPlace().endEdit(saveFields);
          },
 
          destroy: function () {
