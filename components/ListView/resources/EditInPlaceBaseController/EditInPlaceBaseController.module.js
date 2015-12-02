@@ -149,6 +149,7 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                this._area.target = target;
                this._area.record = record;
                this._showEditArea(this._area);
+               this._area.editInPlace.activateFirstControl();
             },
             _showEditArea: function(area) {
                area.editInPlace.getContainer()
@@ -157,7 +158,6 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                area.editInPlace.show();
                area.target.hide();
                area.editInPlace.updateFields(area.record);
-               area.editInPlace.activateFirstControl();
             },
             /**
              * Завершить редактирование по месту

@@ -78,7 +78,7 @@ define('js!SBIS3.CONTROLS.EditInPlaceHoverController',
             updateHoveredArea: function(target) {
                var hoveredArea = this._area.editing ? this._secondArea : this._area;
                this._hideHoveredArea();
-               if (target.container && !(target.container.hasClass('controls-ListView__folder') || target.container.hasClass('controls-editInPlace'))) {
+               if (target.container && !target.container.hasClass('controls-editInPlace')) {
                   hoveredArea.hovered = true;
                   hoveredArea.target = target.container;
                   hoveredArea.record = this._options.dataSet.getRecordByKey(target.key);
