@@ -51,6 +51,8 @@ define('js!SBIS3.CONTROLS.FieldLink',
          })
       }
 
+      /* Обёртка для методов, в которых меняется несколько свойст,
+         нужна для того, чтобы синхронизация с контекстом происходила один раз */
       function propertyUpdateWrapper(func) {
          return function() {
             return this.runInPropertiesUpdate(func, arguments);
@@ -195,11 +197,11 @@ define('js!SBIS3.CONTROLS.FieldLink',
                    handlers: {
                       onChange: function(event, selectedRecords) {
                          var keys = [],
-	                         selItems = this.getSelectedItems(),
+	                         selItems = self._options.selectedItems,
                              rec;
 
                          if(selectedRecords[0] !== null) {
-	                         selItems.fill();
+	                        selItems.fill();
                             for (var i = 0, len = selectedRecords.length; i < len; i++) {
                                rec = recordConverter(selectedRecords[i]);
 	                           selItems.add(rec);
@@ -296,8 +298,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
          this.hidePicker();
          this.setText('');
          /* Чтобы не было лишнего запроса на БЛ, добавим рекорд в набор выбранных */
-         this.getSelectedItems().add(item);
-         this.addItemsSelection([id]);
+         this.addSelectedItems([item])
       }),
 
 
@@ -332,13 +333,13 @@ define('js!SBIS3.CONTROLS.FieldLink',
 
       /* Для синхронизации selectedItem и selectedItems */
 
-      setSelectedItem: function(item) {
+      setSelectedItem: propertyUpdateWrapper(function(item) {
          /* Когда передали selectedItem, то надо сделать коллекцию selectedItems из этого item'a */
          Object.isEmpty(item.getProperties()) ? this.removeSelectedItems() : this.setSelectedItems([item]);
          FieldLink.superclass.setSelectedItem.apply(this, arguments);
-      },
+      }),
 
-      _afterSelectionHandler: function() {
+      _afterSelectionHandler: propertyUpdateWrapper(function() {
          var self = this;
          /* selectedItem всегда смотрит на первый элемент набора selectedItems */
          this.getSelectedItems(true).addCallback(function(list) {
@@ -349,7 +350,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
             return list;
          });
          FieldLink.superclass._afterSelectionHandler.apply(this, arguments);
-      },
+      }),
 
       _drawSelectedItem: function(key) {
          this._drawSelectedItems(key === null ? [] : [key]);
@@ -482,7 +483,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
          return this._container[0].offsetWidth  -
             (this._container.find('.controls-TextBox__afterFieldWrapper')[0].offsetWidth +
              this._container.find('.controls-TextBox__beforeFieldWrapper')[0].offsetWidth +
-            INPUT_WRAPPER_PADDING);
+             INPUT_WRAPPER_PADDING);
       },
       /**
        * Обновляет ширину поля ввода

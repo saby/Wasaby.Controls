@@ -65,7 +65,7 @@ define('js!SBIS3.CONTROLS.ActiveMultiSelectable', ['js!SBIS3.CONTROLS.Data.Colle
        * Добавляет переданные элементы к набору выбранных
        * @param {Array | SBIS3.CONTROLS.Data.Collection.List} items
        */
-      addSelectedItems: function(items) {
+      addSelectedItems: propertyUpdateWrapper(function(items) {
          var selKeys = [],
              selItems = this._options.selectedItems;
 
@@ -75,7 +75,7 @@ define('js!SBIS3.CONTROLS.ActiveMultiSelectable', ['js!SBIS3.CONTROLS.Data.Colle
          });
          this.setSelectedKeys(selKeys);
          this._notifyOnPropertyChanged('selectedItems');
-      },
+      }),
 
       _makeList: function(listItems) {
          return new List({items: listItems});
@@ -88,7 +88,7 @@ define('js!SBIS3.CONTROLS.ActiveMultiSelectable', ['js!SBIS3.CONTROLS.Data.Colle
       /**
        * Возвращает набор выбранных элементов
        * @param loadItems загружать ли записи
-       * @returns {*}
+       * @returns {SBIS3.CONTROLS.Data.Collection.List} Возвращает коллекцию элементов
        */
       getSelectedItems: function(loadItems) {
          var self = this,
