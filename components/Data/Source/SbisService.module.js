@@ -348,7 +348,7 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
          ).addCallbacks((function (res) {
             return new DataSet({
                source: this,
-               data: res,
+               rawData: res,
                totalProperty: 'n'
             });
          }).bind(this), function (error) {
@@ -395,7 +395,7 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
          ).addCallbacks((function (res) {
             return new DataSet({
                source: this,
-               data: res
+               rawData: res
             });
          }).bind(this), function (error) {
             $ws.single.ioc.resolve('ILogger').log('SBIS3.CONTROLS.Data.Source.SbisService::call()', error);

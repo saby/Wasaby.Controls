@@ -87,7 +87,7 @@ define('js!SBIS3.CONTROLS.Data.Source.Base', [
          this._detectIdProperty(data);
 
          return new this._options.model({
-            data: data,
+            rawData: data,
             source: this,
             idProperty: this._options.idProperty
          });
