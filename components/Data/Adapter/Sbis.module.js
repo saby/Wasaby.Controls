@@ -50,9 +50,9 @@ define('js!SBIS3.CONTROLS.Data.Adapter.Sbis', [
                   break;
                }
             }
-         }
          if (index === undefined && s.length) {
             index = 0;
+            }
          }
 
          return index === undefined ? undefined : s[index].n;
