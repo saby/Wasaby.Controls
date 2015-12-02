@@ -5,6 +5,7 @@ define([
 '../../components/Data/Collection/resources/test/List.test',
 '../../components/Data/resources/test/Factory.test',
 '../../components/Data/resources/test/Model.test',
+'../../components/Data/resources/test/Serializer.test',
 '../../components/Data/Source/resources/test/Memory.test',
 '../../components/Data/Source/resources/test/SbisService.test',
 '../../components/__DataSet/DataFactory/resources/DataFactory.test',
