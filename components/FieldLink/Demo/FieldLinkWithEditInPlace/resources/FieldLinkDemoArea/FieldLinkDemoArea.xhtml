@@ -6,6 +6,7 @@
             <opt name="text" bind="ИнформацияПоСотруднику/{{=index}}/ПолеИнформации/Дополнение" nonexistentType="undefined"></opt>
             <opt name="placeholder" bind="ИнформацияПоСотруднику/{{=index}}/ПолеИнформации/Описание" oneWay="true"></opt>
             <opt name="displayField" value="Название"></opt>
+            <opt name="multiselect" value="{{= opt === 'selectedItems' }}" type="boolean"></opt>
             <opt name="keyField" value="Ид"></opt>
             <opts name="dictionaries" type="array">
                <opts>

@@ -79,6 +79,7 @@ define('js!SBIS3.CONTROLS.Demo.FieldLinkDemoArea', [
       },
 
       _addWorkPlaceField: function(type) {
+         var isCompany = type === 'company';
          var
             record = new Model({
                data: {
@@ -88,20 +89,21 @@ define('js!SBIS3.CONTROLS.Demo.FieldLinkDemoArea', [
                      {
                         _type: 'record',
                         d: [
-                           type === 'company' ? 'Компания' : 'Должность',
+                           isCompany ? 'Компания' : 'Должность',
                            {
-                              _type: 'recordset',
+                              _type: isCompany ? 'recordset' : 'record',
                               d: [],
-                              s: [
+                              s: isCompany ? [
                                  {n: 'Ид', t: 'ЧислоЦелое'},
                                  {n: 'Название', t: 'Текст'}
-                              ]
+                                 ] :
+                                 []
                            },
                            ''
                         ],
                         s: [
                            {n: 'Описание', t: 'Текст'},
-                           {n: 'СвязанныеЗаписи', t: 'Выборка'},
+                           {n: 'СвязанныеЗаписи', t: isCompany ? 'Выборка' : 'Запись'},
                            {n: 'Дополнение', t: 'Текст'}
                         ]
                      }
