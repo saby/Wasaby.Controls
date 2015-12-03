@@ -121,6 +121,7 @@ define('js!SBIS3.CONTROLS.EditInPlace',
                this.getContainer().attr('data-id', record.getKey());
                this.updateFields(record);
                //set target
+               this._target && this._target.show();
                this._target = target;
                this.getContainer().insertAfter(target);
                this._target.hide();
@@ -130,14 +131,14 @@ define('js!SBIS3.CONTROLS.EditInPlace',
                this._deactivateActiveChildControl();
                this.setActive(false);
                EditInPlace.superclass.hide.apply(this, arguments);
-               if (this._target) {
-                  this._target.show();
-               }
+               this._target && this._target.show();
             },
             edit: function(target, record) {
                this.show(target, record);
                this._editing = true;
-               this.activateFirstControl();
+               if (!this.hasActiveChildControl()) {
+                  this.activateFirstControl();
+               }
             },
             isEdit: function() {
                return this._editing;
