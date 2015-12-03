@@ -32,7 +32,8 @@ define('js!SBIS3.CONTROLS.ListView',
       'use strict';
 
       var
-         ITEMS_ACTIONS_HEIGHT = 20;
+         ITEMS_ACTIONS_HEIGHT = 20,
+         START_NEXT_LOAD_OFFSET = 150;
 
       /**
        * Контрол, отображающий внутри себя набор однотипных сущностей.
@@ -328,7 +329,7 @@ define('js!SBIS3.CONTROLS.ListView',
                 * @see isInfiniteScroll
                 * @see setInfiniteScroll
                 */
-               infiniteScrollContainer: '',
+               infiniteScrollContainer: undefined,
                /**
                 * @cfg {Boolean} Режим постраничной навигации
                 * @remark
@@ -399,6 +400,7 @@ define('js!SBIS3.CONTROLS.ListView',
                this._createLoadingIndicator();
                scrollWatcherCfg.type = $ws.helpers.instanceOfModule(topParent, 'SBIS3.CORE.FloatArea') ? 'floatArea'
                      : (this._options.infiniteScrollContainer ? 'container' : 'window');
+               scrollWatcherCfg.bottomCheckOffset = START_NEXT_LOAD_OFFSET;
                switch (scrollWatcherCfg.type) {
                   case 'floatArea' : scrollWatcherCfg.floatArea = topParent; break;
                   case 'container' : {
@@ -1113,7 +1115,7 @@ define('js!SBIS3.CONTROLS.ListView',
             return this._options.infiniteScroll && this._allowInfiniteScroll;
          },
          _onContainerScroll: function () {
-            return (this._loadingIndicator.offset().top - this.getContainer().offset().top < this.getContainer().height());
+            return (this._loadingIndicator.offset().top - this.getContainer().offset().top - START_NEXT_LOAD_OFFSET < this.getContainer().height());
          },
          /**
           *  Общая проверка и загрузка данных для всех событий по скроллу

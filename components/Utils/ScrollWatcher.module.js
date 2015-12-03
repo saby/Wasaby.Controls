@@ -37,7 +37,12 @@ define('js!SBIS3.CONTROLS.ScrollWatcher', [], function() {
              * @cfg {function} Пользовательская функция, которая будет вызвана по событию скролла.
              * Здесь можно написать какую-то свою проверку. Например, что мы доскроллили вверх по контейнеру
              */
-            scrollCheck: undefined
+            scrollCheck: undefined,
+            /**
+             * @cfg {Number} Определитель нижней границы. Если передать число > 0 то событие с типом "Достигли дна(до скроллили до низа страницы)"
+             * Будет срабатывать на bottomCheckOffset раньше
+             */
+            bottomCheckOffset : 0
          },
          _onWindowScrollHandler : undefined,
          _floatAreaScrollHandler : undefined,
@@ -96,7 +101,7 @@ define('js!SBIS3.CONTROLS.ScrollWatcher', [], function() {
          this._notifyOnScroll('windowBottom', this._isBottomOfPage());
       },
       _onFAScroll: function(event, scrollOptions) {
-         this._notifyOnScroll('floatAreaBottom', scrollOptions.clientHeight + scrollOptions.scrollTop >= scrollOptions.scrollHeight - $ws._const.Browser.minHeight);
+         this._notifyOnScroll('floatAreaBottom', scrollOptions.clientHeight + scrollOptions.scrollTop  >= scrollOptions.scrollHeight - SCROLL_INDICATOR_HEIGHT - this._options.bottomCheckOffset);
       },
       _onContainerScroll: function () {
          //TODO неправильная проверка this._options.element.offset().top < this._options.element.height()
@@ -108,7 +113,7 @@ define('js!SBIS3.CONTROLS.ScrollWatcher', [], function() {
             clientHeight = Math.min(docBody.clientHeight, docElem.clientHeight),
             scrollTop = Math.max(docBody.scrollTop, docElem.scrollTop),
             scrollHeight = Math.max(docBody.scrollHeight, docElem.scrollHeight);
-         return (clientHeight + scrollTop >= scrollHeight - SCROLL_INDICATOR_HEIGHT);//Учитываем отступ снизу на высоту картинки индикатора загрузки
+         return (clientHeight + scrollTop  >= scrollHeight - SCROLL_INDICATOR_HEIGHT - this._options.bottomCheckOffset);//Учитываем отступ снизу на высоту картинки индикатора загрузки
       },
       //TODO есть вариант, когда захотят останавливать и запускать отслеживание скролла. Как понадобится сделаем.
       //start : function(){},
