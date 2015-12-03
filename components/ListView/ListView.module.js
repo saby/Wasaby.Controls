@@ -19,11 +19,15 @@ define('js!SBIS3.CONTROLS.ListView',
       'js!SBIS3.CONTROLS.EditInPlaceHoverController',
       'js!SBIS3.CONTROLS.EditInPlaceClickController',
       'js!SBIS3.CONTROLS.Link',
+      'js!SBIS3.CONTROLS.ScrollWatcher',
       'is!browser?html!SBIS3.CONTROLS.ListView/resources/ListViewGroupBy',
       'is!browser?html!SBIS3.CONTROLS.ListView/resources/emptyData',
       'is!browser?js!SBIS3.CONTROLS.ListView/resources/SwipeHandlers'
    ],
-   function (CompoundControl, CompoundActiveFixMixin, DSMixin, MultiSelectable, Selectable, DataBindMixin, DecorableMixin, ItemActionsGroup, dotTplFn, CommonHandlers, MoveHandlers, Pager, EditInPlaceHoverController, EditInPlaceClickController, Link, groupByTpl, emptyDataTpl) {
+   function (CompoundControl, CompoundActiveFixMixin, DSMixin, MultiSelectable,
+             Selectable, DataBindMixin, DecorableMixin, ItemActionsGroup, dotTplFn,
+             CommonHandlers, MoveHandlers, Pager, EditInPlaceHoverController, EditInPlaceClickController,
+             Link, ScrollWatcher, groupByTpl, emptyDataTpl) {
 
       'use strict';
 
@@ -183,7 +187,6 @@ define('js!SBIS3.CONTROLS.ListView',
             _allowInfiniteScroll: true,
             _scrollIndicatorHeight: 32,
             _isLoadBeforeScrollAppears : true,
-            _infiniteScrollContainer: [],
             _pageChangeDeferred : undefined,
             _pager : undefined,
             _previousGroupBy : undefined,
@@ -320,6 +323,13 @@ define('js!SBIS3.CONTROLS.ListView',
                 */
                infiniteScroll: false,
                /**
+                * @cfg {jQuery || String} Контейнер в котором будет скролл, если представление данных ограничено по высоте.
+                * Можно передать имя класса, но поиск будет произведен от контейнера вниз.
+                * @see isInfiniteScroll
+                * @see setInfiniteScroll
+                */
+               infiniteScrollContainer: '',
+               /**
                 * @cfg {Boolean} Режим постраничной навигации
                 * @remark
                 * При частичной постраничной навигации заранее неизвестно общее количество страниц, режим пейджинга будет определн по параметру n из dataSource
@@ -370,30 +380,40 @@ define('js!SBIS3.CONTROLS.ListView',
                 * </pre>
                 */
                editingTemplate: undefined
-            }
+            },
+            _scrollWatcher : undefined
          },
 
          $constructor: function () {
             //TODO временно смотрим на TopParent, чтобы понять, где скролл. С внедрением ScrallWatcher этот функционал уберем
-            var topParent = this.getTopParent();
+            var topParent = this.getTopParent(),
+                  self = this,
+                  scrollWatcherCfg = {};
             this._publish('onChangeHoveredItem', 'onItemClick', 'onItemActivate', 'onDataMerge', 'onItemValueChanged', 'onShowEdit', 'onBeginEdit', 'onEndEdit', 'onBeginAdd', 'onAfterEndEdit', 'onPrepareFilterOnMove');
             this._container.on('mousemove', this._mouseMoveHandler.bind(this))
                            .on('mouseleave', this._mouseLeaveHandler.bind(this));
 
-            this._onWindowScrollHandler = this._onWindowScroll.bind(this);
+            this._scrollWidth = $ws.helpers.getScrollWidth();
 
             if (this.isInfiniteScroll()) {
                this._createLoadingIndicator();
-               //В зависимости от настроек высоты подписываемся либо на скролл у окна, либо у контейнера
-               if (!this._isHeightGrowable()) {
-                  this.getContainer().bind('scroll.wsInfiniteScroll', this._onContainerScroll.bind(this));
-               } else {
-                  $(window).bind('scroll.wsInfiniteScroll', this._onWindowScrollHandler);
+               scrollWatcherCfg.type = $ws.helpers.instanceOfModule(topParent, 'SBIS3.CORE.FloatArea') ? 'floatArea'
+                     : (this._options.infiniteScrollContainer ? 'container' : 'window');
+               switch (scrollWatcherCfg.type) {
+                  case 'floatArea' : scrollWatcherCfg.floatArea = topParent; break;
+                  case 'container' : {
+                     this._options.infiniteScrollContainer = this._options.infiniteScrollContainer instanceof jQuery
+                           ? this._options.infiniteScrollContainer
+                           : this.getContainer().parent().find('.' + this._options.infiniteScrollContainer);
+                     scrollWatcherCfg.element = this._options.infiniteScrollContainer;
+                     scrollWatcherCfg.scrollCheck = this._onContainerScroll.bind(this);
+                     break;
+                  }
                }
-               if ($ws.helpers.instanceOfModule(topParent, 'SBIS3.CORE.FloatArea')) {
-                  //Если браузер лежит на всплывающей панели и имеет автовысоту, то скролл появляется у контейнера всплывашки (.parent())
-                  topParent.subscribe('onScroll', this._onFAScroll.bind(this));
-               }
+               this._scrollWatcher = new ScrollWatcher(scrollWatcherCfg);
+               this._scrollWatcher.subscribe('onScroll', function(type){
+                  self._nextLoad();
+               });
             }
             this.initEditInPlace();
             $ws.single.CommandDispatcher.declareCommand(this, 'activateItem', this._activateItem);
@@ -1092,6 +1112,9 @@ define('js!SBIS3.CONTROLS.ListView',
          isInfiniteScroll: function () {
             return this._options.infiniteScroll && this._allowInfiniteScroll;
          },
+         _onContainerScroll: function () {
+            return (this._loadingIndicator.offset().top - this.getContainer().offset().top < this.getContainer().height());
+         },
          /**
           *  Общая проверка и загрузка данных для всех событий по скроллу
           */
@@ -1100,23 +1123,13 @@ define('js!SBIS3.CONTROLS.ListView',
                this._nextLoad();
             }
          },
-         _onWindowScroll: function (event) {
-            this._loadChecked(this._isBottomOfPage());
-         },
-         _onFAScroll: function(event, scrollOptions) {
-            this._loadChecked(scrollOptions.clientHeight + scrollOptions.scrollTop >= scrollOptions.scrollHeight - $ws._const.Browser.minHeight);
-         },
-         _onContainerScroll: function () {
-            this._loadChecked(this._loadingIndicator.offset().top - this.getContainer().offset().top < this.getContainer().height());
-         },
          /**
-          * Проверка на автовысоту у ListView. Аналог из TableView
+          * Проверка на то, где будет скролл у ListView.
           * @returns {*}
           * @private
           */
-         _isHeightGrowable: function() {
-            //В новых компонентах никто пока не смотрит на verticalAlignment
-            return this._options.autoHeight;/*&& this._verticalAlignment !== 'Stretch';*/
+         _isWindowScroll: function() {
+            return this._options.infiniteScrollContainer === undefined;
          },
          _nextLoad: function () {
             var self = this,
@@ -1133,7 +1146,7 @@ define('js!SBIS3.CONTROLS.ListView',
                   /*Леша Мальцев добавил скрытие индикатора, но на контейнерах с фиксированной высотой это чревато неправильным определением  offset от индикатора
                   * Т.е. можем не определить, что доскроллили до низа страницы. индикатор должен юыть виден, пока не загрузим все данные
                   */
-                  if (self._isHeightGrowable()) {
+                  if (self._isWindowScroll()) {
                      self._hideLoadingIndicator();
                   }
                   //нам до отрисовки для пейджинга уже нужно знать, остались еще записи или нет
@@ -1482,7 +1495,7 @@ define('js!SBIS3.CONTROLS.ListView',
          destroy: function () {
             this._destroyEditInPlace();
             if (this.isInfiniteScroll()) {
-               if (this._isHeightGrowable()) {
+               if (this._isWindowScroll()) {
                   this.getContainer().unbind('.wsInfiniteScroll');
                } else {
                   $(window).unbind('scroll.wsInfiniteScroll', this._onWindowScrollHandler);
