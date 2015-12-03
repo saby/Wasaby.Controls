@@ -251,21 +251,34 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
 
       /**
        * Удаляет модель из источника данных
-       * @param {String} key Первичный ключ модели
+       * @param {String} keys Первичный ключ модели
        * @param {Object|SBIS3.CONTROLS.Data.Model} [meta] Дополнительные мета данные
        * @returns {$ws.proto.Deferred} Асинхронный результат выполнения
        */
-      destroy: function(key, meta) {
-         var args = {
-            'ИдО': key
-         };
-         if (meta && !Object.isEmpty(meta)) {
-            args['ДопПоля'] = this._options.adapter.serialize(meta);
+      destroy: function(keys, meta) {
+         if ($ws.helpers.type(keys) !== 'array') {
+            keys = [keys];
          }
-         else {
-            var name = self._getProviderNameById(keys);
-            return self._destroy(parseInt(keys, 10), name, meta);
+         /*В ключе может содержаться ссылка на объект бл
+          сгруппируем ключи по соответсвующим им объектам*/
+         var groups = {},
+            providerName;
+         for (var i = 0, len = keys.length; i < len; i++) {
+            providerName = this._getProviderNameById(keys[i]);
+            groups[providerName] = groups[providerName] || [];
+            groups[providerName].push(parseInt(keys[i], 10));
          }
+         var pd = new $ws.proto.ParallelDeferred();
+         for (providerName in groups) {
+            if (groups.hasOwnProperty(providerName)) {
+               pd.push(this._destroy(
+                  groups[providerName].length > 1 ? groups[providerName] : groups[providerName][0],
+                  providerName,
+                  meta
+               ));
+            }
+         }
+         return pd.done().getResult();
       },
 
       merge: function(first, second) {
