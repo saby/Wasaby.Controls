@@ -438,9 +438,9 @@ define(
        * @returns {boolean} true - если строка установлена
        */
       setText: function(text, clearChar) {
-         /*if (text == '') {
+         if (text == '') {
             text = this.getStrMask(clearChar);
-         }*/
+         }
          /*массив со значениями, нужен чтобы не записывать значения до полной проверки соответствия текста маске */
          var tempModelValues = this.textIsFitToModel(text, clearChar),
              group;
@@ -602,7 +602,7 @@ define(
             inputValue,
             self = this,
             key;
-         this._publish('onInputFinished');
+         this._publish('onInputFinished','onTextChange');
          // Проверяем, является ли маска, с которой создается контролл, допустимой
          this._checkPossibleMask();
          this._inputField = $('.js-controls-FormattedTextBox__field', this.getContainer().get(0));
@@ -654,6 +654,9 @@ define(
                   if ( !self.formatModel.setText(inputValue, self._maskReplacer)) {
                      //Устанавливаемое значение не удовлетворяет маске данного контролла - вернуть предыдущее значение
                      self.setText(prevText);
+                  } else {
+                     //Текст есть в модели но через метод setText не прошел. Нужно для наследников, например DatePicker
+                     self.setText(self.formatModel.getText(self._maskReplacer));
                   }
                }
             }, 100);
@@ -788,6 +791,7 @@ define(
                //проверяем был ли введен последний символ в последней группе
                var lastGroupNum = this.formatModel.model.length - 1;
                lastGroupNum = this.formatModel.model[lastGroupNum].isGroup ? lastGroupNum : lastGroupNum - 1;
+               this._notify('onTextChange');
                if (keyInsertInfo.groupNum == lastGroupNum  &&  keyInsertInfo.position == this.formatModel.model[lastGroupNum].mask.length - 1) {
                   this._notify('onInputFinished');
                }
@@ -865,7 +869,7 @@ define(
        */
       setText: function(text) {
          this.formatModel.setText(text, this._maskReplacer);
-         //this._options.text = this.formatModel.getText(this._maskReplacer);
+         this._options.text = this.formatModel.getText(this._maskReplacer);
          //обновить html
          this._inputField.html(this._getHtmlMask());
       },
