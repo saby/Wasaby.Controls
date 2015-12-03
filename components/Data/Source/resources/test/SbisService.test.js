@@ -26,6 +26,7 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService/resources/SbisServiceBLO', [],
 
             switch (this._cfg.name) {
                case 'Товар':
+               case 'Продукт':
                   switch (method) {
                      case 'Создать':
                         data = {
@@ -68,7 +69,7 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService/resources/SbisServiceBLO', [],
                         break;
 
                      case 'Удалить':
-                        if (args['ИдО'] === existsId) {
+                        if (args['ИдО'] === existsId || ($ws.helpers.type(args['ИдО']) === 'array' && Array.indexOf(args['ИдО'],existsId) !== -1)) {
                            data = existsId;
                         } else {
                            error = 'Model is not found';
@@ -631,6 +632,42 @@ define([
                         resource: 'Товар'
                      });
                      service.destroy(SbisServiceBLO.existsId).addCallbacks(function (success) {
+                        try {
+                           if (!success) {
+                              throw new Error('Unsuccessful destroy');
+                           } else {
+                              done();
+                           }
+                        } catch (err) {
+                           done(err);
+                        }
+                     }, function (err) {
+                        done(err);
+                     });
+                  });
+                  it('should delete a few records', function (done) {
+                     var service = new SbisService({
+                        resource: 'Товар'
+                     });
+                     service.destroy([0, SbisServiceBLO.existsId, 1]).addCallbacks(function (success) {
+                        try {
+                           if (!success) {
+                              throw new Error('Unsuccessful destroy');
+                           } else {
+                              done();
+                           }
+                        } catch (err) {
+                           done(err);
+                        }
+                     }, function (err) {
+                        done(err);
+                     });
+                  });
+                  it('should delete records by a composite key', function (done) {
+                     var service = new SbisService({
+                        resource: 'Товар'
+                     });
+                     service.destroy([SbisServiceBLO.existsId+',Товар',SbisServiceBLO.existsId+',Продукт']).addCallbacks(function (success) {
                         try {
                            if (!success) {
                               throw new Error('Unsuccessful destroy');

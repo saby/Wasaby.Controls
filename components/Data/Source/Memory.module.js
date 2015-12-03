@@ -95,19 +95,19 @@ define('js!SBIS3.CONTROLS.Data.Source.Memory', [
          return $ws.proto.Deferred.success(true);
       },
 
-      destroy: function (key) {
-         var index = this._getIndexByKey(key);
-         if (index === -1) {
-            return $ws.proto.Deferred.fail('Model with key "' + key + '" isn\'t found');
-         } else {
-            this._options.adapter.forTable().remove(
-               this._options.data,
-               index
-            );
-            this._reIndex();
-
-            return $ws.proto.Deferred.success(true);
+      destroy: function (keys) {
+         if ($ws.helpers.type(keys) == 'array') {
+            var self = this;
+            for (var i=0, len = keys.length; i<len; i++) {
+               if (!self._destroy(keys[i])) {
+                  return $ws.proto.Deferred.fail('Model with key "' + keys[i] + '" isn\'t found');
+               }
+            }
          }
+         else {
+            return this.destroy([keys]);
+         }
+         return $ws.proto.Deferred.success(true);
       },
 
       copy: function(key) {
@@ -430,6 +430,26 @@ define('js!SBIS3.CONTROLS.Data.Source.Memory', [
       _getIndexByKey: function (key) {
          var index = this._index[key];
          return index === undefined ? -1 : index;
+      },
+
+      /**
+       * выполняет удаление записи
+       * @param key - идентификатор записи
+       * @returns {boolean}
+       * @private
+       */
+      _destroy: function (key) {
+         var index = this._getIndexByKey(key);
+         if(index !== -1) {
+            this._options.adapter.forTable().remove(
+               this._options.data,
+               index
+            );
+            this._reIndex();
+            return true;
+         } else {
+            return false;
+         }
       }
 
       //endregion Protected methods

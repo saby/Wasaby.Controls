@@ -141,11 +141,11 @@ define('js!SBIS3.CONTROLS.Data.Source.ISource', [
 
       /**
        * Удаляет модель из источника данных
-       * @param {String} key Первичный ключ модели
+       * @param {String|Array} keys Первичный ключ, или массив первичных ключей модели
        * @param {Object} [meta] Дополнительные мета данные
        * @returns {$ws.proto.Deferred} Асинхронный результат выполнения
        */
-      destroy: function (key, meta) {
+      destroy: function (keys, meta) {
          throw new Error('Method must be implemented');
       },
 

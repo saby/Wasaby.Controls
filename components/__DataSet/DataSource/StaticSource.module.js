@@ -10,11 +10,13 @@ define('js!SBIS3.CONTROLS.StaticSource', [
    'use strict';
 
    /**
+    *
     * Класс для работы с массивами, как с источником данных.
     * @class SBIS3.CONTROLS.StaticSource
     * @extends SBIS3.CONTROLS.BaseSource
     * @public
     * @author Крайнов Дмитрий Олегович
+    * @deprecated Будет удалено с 3.7.3.20 используйте {@link SBIS3.CONTROLS.Data.Source.Memory}
     */
 
    return BaseSource.extend(/** @lends SBIS3.CONTROLS.StaticSource.prototype */{
@@ -47,6 +49,7 @@ define('js!SBIS3.CONTROLS.StaticSource', [
       },
 
       $constructor: function (cfg) {
+         $ws.single.ioc.resolve('ILogger').log('$constructor', 'С 3.7.3.20 класс SBIS3.CONTROLS.StaticSource будет удален, используйте SBIS3.CONTROLS.Data.Source.Memory');
          this._options.strategy = cfg.strategy || new ArrayStrategy();
       },
 
@@ -172,7 +175,8 @@ define('js!SBIS3.CONTROLS.StaticSource', [
             strategy: this.getStrategy(),
             data: data,
             meta: this.getStrategy().getMetaData(this._options.data),
-            keyField: this._options.keyField
+            keyField: this._options.keyField,
+            compatibilityMode: true
          }));
       },
 

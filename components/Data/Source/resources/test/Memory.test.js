@@ -288,6 +288,22 @@ define([
                      done(err);
                   });
                });
+
+               it('should decrease the size of raw data when delete a few models', function (done) {
+                  var targetLength = data.length - 2;
+                  service.destroy([existsId,existsId2]).addCallbacks(function () {
+                     try {
+                        if (targetLength !== data.length) {
+                           throw new Error('The size of raw data expect to be ' + targetLength + ' but ' + data.length + ' detected');
+                        }
+                        done();
+                     } catch (err) {
+                        done(err);
+                     }
+                  }, function (err) {
+                     done(err);
+                  });
+               });
             });
 
             context('when the model isn\'t exists', function () {
