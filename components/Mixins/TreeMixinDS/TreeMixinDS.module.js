@@ -108,7 +108,7 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', ['js!SBIS3.CORE.Control'], function (Con
             filter['Разворот'] = 'С разворотом';
             filter['ВидДерева'] = 'Узлы и листья';
          }
-         this.setFilter(filter, true);
+         this.setFilter($ws.core.clone(filter), true);
          filter[this._options.hierField] = key;
          return filter;
       },
