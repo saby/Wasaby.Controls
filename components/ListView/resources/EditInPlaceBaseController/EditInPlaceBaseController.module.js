@@ -148,21 +148,23 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
              * @private
              */
             endEdit: function(saveFields) {
-               var eip = this._eip;
-               if (eip.isEdit()) {
+               var eip = this._getEditingEip();
+               if (eip) {
                   if (eip.validate() || !saveFields) {
                      eip.endEdit();
                      this._savingDeferred = saveFields ? eip.applyChanges() : $ws.proto.Deferred.success();
                      return this._savingDeferred.addCallback(function() {
-                        this._endEdit(saveFields);
+                        this._endEdit(eip, saveFields);
                      }.bind(this));
                   }
                   return $ws.proto.Deferred.fail();
                }
                return this._savingDeferred;
             },
-            _endEdit: function(saveFields) {
-               var eip = this._eip;
+            _getEditingEip: function() {
+               return this._eip.isEdit() ? this._eip : null;
+             },
+            _endEdit: function(eip, saveFields) {
                if (this._editingRecord) {
                   this._editingRecord.merge(eip.getRecord());
                   this._editingRecord = undefined;
