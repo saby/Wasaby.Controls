@@ -154,7 +154,7 @@ define('js!SBIS3.CONTROLS.Data.Adapter.Json', [
       },
 
       getFields: function (data) {
-         return Object.keys(data);
+         return data instanceof Object && Object.keys(data);
       },
 
       getEmpty: function () {
