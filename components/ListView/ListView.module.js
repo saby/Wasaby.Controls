@@ -725,6 +725,8 @@ define('js!SBIS3.CONTROLS.ListView',
                target = hoveredItem.container;
                if (target && !target.hasClass('controls-editInPlace')) {
                   this._getEditInPlace().show(target, this._dataSet.getRecordByKey(hoveredItem.key));
+               } else {
+                  this._getEditInPlace().hide();
                }
             }
          },
