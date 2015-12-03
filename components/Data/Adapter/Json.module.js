@@ -148,9 +148,10 @@ define('js!SBIS3.CONTROLS.Data.Adapter.Json', [
 
       set: function (data, name, value) {
          if (!(data instanceof Object)) {
-            throw new Error('Invalid argument');
+            data = {};
          }
          data[name] = value;
+         return data;
       },
 
       getFields: function (data) {

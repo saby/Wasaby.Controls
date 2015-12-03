@@ -205,6 +205,7 @@ define('js!SBIS3.CONTROLS.Data.Adapter.Sbis', [
             throw new Error('Property is not defined');
          }
          data.d[index] = value;
+         return data;
       },
 
       getFields: function (data) {

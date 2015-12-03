@@ -536,7 +536,7 @@ define('js!SBIS3.CONTROLS.Data.Model', [
          var adapter = this._options.adapter.forRecord(),
             fieldData = adapter.getFullFieldData(this._options.rawData, name);
 
-         adapter.set(
+         this._options.rawData = adapter.set(
             this._options.rawData,
             name,
             Factory.serialize(
