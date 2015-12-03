@@ -89,9 +89,9 @@ define('js!SBIS3.CONTROLS.BreadCrumbs', [
       },
 
       setItems: function(items){
+         this._toggleHomeIcon(items.length <= 0);
          BreadCrumbs.superclass.setItems.call(this, items);
          this._dataSet._keyField = this._options.keyField; 
-         this._toggleHomeIcon(items.length <= 0);
       },
 
       //TODO: придрот что бы фэйковый див не ломал :first-child стили
@@ -215,11 +215,11 @@ define('js!SBIS3.CONTROLS.BreadCrumbs', [
 
       _initNonTextElementSizes: function(){
          if (!this._homeIconWidth || !this._arrowWidth){
-            this._homeIconWidth = $('.controls-BreadCrumbs__crumb-home', this._container).outerWidth();
-            this._arrowWidth = $('.controls-BreadCrumbs__arrow', this._container).outerWidth();
+            this._homeIconWidth = $('.controls-BreadCrumbs__crumb-home', this._container).outerWidth(true);
+            this._arrowWidth = $('.controls-BreadCrumbs__arrow', this._container).outerWidth(true);
          } 
          if (!this._dotsWidth){
-            this._dotsWidth = $('.controls-BreadCrumbs__dots', this._container).outerWidth();
+            this._dotsWidth = $('.controls-BreadCrumbs__dots', this._container).outerWidth(true);
          }
       },
 
