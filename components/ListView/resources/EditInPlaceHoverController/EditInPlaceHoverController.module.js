@@ -30,9 +30,6 @@ define('js!SBIS3.CONTROLS.EditInPlaceHoverController',
                this._secondEip = new EditInPlace(this._getEditInPlaceConfig());
                this._secondEip.getContainer().bind('keyup', this._eipHandlers.onKeyDown);
             },
-            _getEditingEip: function() {
-               return this._eip.isEdit() ? this._eip : this._secondEip.isEdit() ? this._secondEip : null;
-            },
             _getEditInPlaceConfig: function() {
                return $ws.core.merge(EditInPlaceHoverController.superclass._getEditInPlaceConfig.apply(this), {
                   handlers: {
@@ -51,10 +48,15 @@ define('js!SBIS3.CONTROLS.EditInPlaceHoverController',
              */
             show: function(target, record) {
                this._hoveredEip = this._eip.isEdit() ? this._secondEip : this._eip;
-               if (this._hoveredEip.isVisible()) {
-                  this._hoveredEip.getTarget().show();
-               }
                this._hoveredEip.show(target, record);
+            },
+            /**
+             * Скрыть область отображаемую по ховеру
+             * @private
+             */
+            hide: function() {
+               this._hoveredEip = this._eip.isEdit() ? this._secondEip : this._eip;
+               this._hoveredEip.hide();
             },
             _onChildControlFocusIn: function(event, control) {
                this._options.editFieldFocusHandler && this._options.editFieldFocusHandler(control);
@@ -62,10 +64,15 @@ define('js!SBIS3.CONTROLS.EditInPlaceHoverController',
             edit: function (target, record) {
                var hoveredEip = this._hoveredEip;
                if (hoveredEip.isVisible() && (hoveredEip.getTarget().get(0) === target.get(0))) {
-                  this._hoveredEip.edit(target, record);
+                  this.endEdit(true).addCallback(function() {
+                     this._hoveredEip.edit(target, record);
+                  }.bind(this));
                } else {
                   EditInPlaceHoverController.superclass.edit.apply(this, arguments);
                }
+            },
+            _getEditingEip: function() {
+               return this._eip.isEdit() ? this._eip : this._secondEip.isEdit() ? this._secondEip : null;
             },
             /**
              * Обработчик события по приходу фокуса на контрол в области редактирования по месту
@@ -74,14 +81,12 @@ define('js!SBIS3.CONTROLS.EditInPlaceHoverController',
              * @private
              */
             _onChildFocusIn: function(e, control) {
-               var target = control.getContainer().closest('.controls-editInPlace');
-               //TODO: EIP Сухоручкин вторая проверка зачем?
-               if (!this.isEditing() || this._getEditingEip().getContainer().get(0) !== target.get(0)) {
-                  this.edit(target.prev(), this._hoveredEip.getRecord());
+               var
+                  target = control.getContainer().closest('.controls-editInPlace'),
+                  editingEip = this._getEditingEip();
+               if (!editingEip || editingEip.getContainer().get(0) !== target.get(0)) {
+                  this.edit(this._hoveredEip.getTarget(), this._hoveredEip.getRecord());
                }
-            },
-            isEditing: function() {
-               return this._eip.isEdit() || this._secondEip.isEdit();
             },
             destroy: function() {
                this._secondEip.editInPlace.unbind('keyup', this._eipHandlers.onKeyDown);
