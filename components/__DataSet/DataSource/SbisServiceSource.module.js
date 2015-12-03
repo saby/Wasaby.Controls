@@ -17,6 +17,7 @@ define('js!SBIS3.CONTROLS.SbisServiceSource', [
     * @extends SBIS3.CONTROLS.BaseSource
     * @public
     * @author Крайнов Дмитрий Олегович
+    * @deprecated Будет удалено с 3.7.3.20 используйте {@link SBIS3.CONTROLS.Data.Source.SbisService}
     * @example
     * <pre>
     *     var dataSource = new SbisService({
@@ -95,6 +96,7 @@ define('js!SBIS3.CONTROLS.SbisServiceSource', [
       },
 
       $constructor: function (cfg) {
+         $ws.single.ioc.resolve('ILogger').log('$constructor', 'С 3.7.3.20 класс SBIS3.CONTROLS.SbisServiceSource будет удален, используйте SBIS3.CONTROLS.Data.Source.SbisService');
          this._BL = new SbisServiceBLO(cfg.service);
          this._object = cfg.service;
          this._options.strategy = cfg.strategy || new SbisJSONStrategy();
@@ -287,7 +289,8 @@ define('js!SBIS3.CONTROLS.SbisServiceSource', [
             var DS = new DataSet({
                strategy: strategy,
                data: res,
-               meta: strategy.getMetaData(res)
+               meta: strategy.getMetaData(res),
+               compatibilityMode: true
             });
             def.callback(DS);
          }, function (error) {
