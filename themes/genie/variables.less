@@ -447,44 +447,69 @@
 // -------- //
 // Switcher //
 // -------- //
-
-
+@switcher-cursor:                               pointer;
+@switcher-cursor-disabled:                      default;
+@switcher-width:                                46px;
+@switcher-height:                               24px;
+@switcher-border:                               1px solid @gray-light-color;
+@switcher-border-radius:                        30px;
+@switcher-line-width:                           36px;
+@switcher-btn-bg-color:                         @white-color;
+@switcher-btn-color:                            @primary-color;
+@switcher-btn-color-inactive:                   @gray-color;
+@switcher-btn-color-disabled:                   @gray-light-color;
+@switcher-btn-border-width:                     2px;
+@switcher-btn-border-hover:                     3px;
+@switcher-btn-radius:                           6px;
+@switcher-btn-size:                             12px;
+@switcher-btn-margin:                           5px;
+@switcher-dot-width:                            2px;
+@switcher-dot-height:                           4px;
+@switcher-dot-margin:                           2px 0 0 3px;
+@switcher-dot-margin-hover:                     1px 0 0 2px;
 // ---------------------- //
 // Double online switcher //
 // ---------------------- //
 
 @switcher-do-margin:                            0 0 0 8px;
 
-@switcher-do-toggle-cursor:                     pointer;
-@switcher-do-text-cursor:                       @switcher-do-toggle-cursor;
+@switcher-do-text-cursor:                       @switcher-cursor;
 @switcher-do-text-color:                        @black-color;
 @switcher-do-decoration:                        none;
 @switcher-do-unselected-text-cursor:            @switcher-do-text-cursor;
 @switcher-do-unselected-text-color:             @gray-color;
 @switcher-do-unselected-text-decoration:        none;
+@switcher-do-unselected-text-decoration-hover:  underline;
 
-@switcher-do-disabled-toggle-cursor:            default;
-@switcher-do-disabled-text-cursor:              @switcher-do-disabled-toggle-cursor;
-@switcher-do-disabled-text-color:               @gray-color;
+@switcher-do-disabled-toggle-cursor:            @switcher-cursor-disabled;
+@switcher-do-disabled-text-cursor:              text;
+@switcher-do-disabled-text-color:               @gray-light-color;
 @switcher-do-disabled-text-decoration:          none;
 
-@switcher-do-horizontal-spritesheet:            '';
-@switcher-do-horizontal-toggle-width:           30px;
-@switcher-do-horizontal-toggle-height:          16px;
-@switcher-do-horizontal-toggle-margin:          0 4px;
-@switcher-do-horizontal-off-toggle-bg:          transparent;
-@switcher-do-horizontal-on-toggle-bg:           transparent;
-@switcher-do-horizontal-off-disabled-toggle-bg: transparent;
-@switcher-do-horizontal-on-disabled-toggle-bg:  transparent;
+@switcher-do-horizontal-toggle-width:           @switcher-width;
+@switcher-do-horizontal-toggle-height:          @switcher-height;
+@switcher-do-horizontal-toggle-margin:          0 6px;
 
-@switcher-do-vertical-spritesheet:              '';
-@switcher-do-vertical-toggle-width:             16px;
-@switcher-do-vertical-toggle-height:            32px;
-@switcher-do-vertical-toggle-margin:            0 2px 0 0;
-@switcher-do-vertical-off-toggle-bg:            transparent;
-@switcher-do-vertical-on-toggle-bg:             transparent;
-@switcher-do-vertical-off-disabled-toggle-bg:   transparent;
-@switcher-do-vertical-on-disabled-toggle-bg:    transparent;
+@switcher-do-vertical-toggle-width:             24px;
+@switcher-do-vertical-toggle-height:            48px;
+@switcher-do-vertical-toggle-margin:            0 12px 0 0;
+
+@switcher-do-border:                            @switcher-border;
+@switcher-do-border-radius:                     @switcher-border-radius;
+
+@switcher-do-horizontal-line-width:             @switcher-line-width;
+@switcher-do-vertical-line-width:               38px;
+@switcher-do-horizontal-line-color:             @gray-color;
+@switcher-do-horizontal-disabled-line-color:    @gray-light-color;
+
+@switcher-do-horizontal-btn-color:              @switcher-btn-color;
+@switcher-do-horizontal-btn-size:               @switcher-btn-size;
+@switcher-do-horizontal-btn-border-width:       @switcher-btn-border-width;
+@switcher-do-horizontal-btn-radius:             @switcher-btn-radius;
+@switcher-do-horizontal-btn-margin:             @switcher-btn-margin;
+@switcher-do-horizontal-btn-bg-color:           @switcher-btn-bg-color;
+@switcher-do-horizontal-btn-color-disabled:     @switcher-btn-color-disabled;
+@switcher-do-horizontal-btn-border-width-hover: 3px;
 
 
 
