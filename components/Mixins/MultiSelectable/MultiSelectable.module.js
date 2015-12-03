@@ -131,11 +131,7 @@ define('js!SBIS3.CONTROLS.MultiSelectable', [], function() {
             else {
                this._options.selectedKeys = [];
             }
-            if (this._checkEmptySelection()) {
-               this._setFirstItemAsSelected();
-            }
-            this._notifySelectedItems(this._options.selectedKeys);
-            this._drawSelectedItems(this._options.selectedKeys);
+	         this._afterSelectionHandler();
          }
          else {
             throw new Error('Argument must be instance of Array');
@@ -216,12 +212,7 @@ define('js!SBIS3.CONTROLS.MultiSelectable', [], function() {
                   this._options.selectedKeys = idArray.slice(0, 1);
                }
             }
-            if (this._checkEmptySelection()) {
-               this._setFirstItemAsSelected();
-            }
-            this._notifySelectedItems(this._options.selectedKeys);
-            this._drawSelectedItems(this._options.selectedKeys);
-            this._notifyOnPropertyChanged('selectedKeys');
+	         this._afterSelectionHandler();
          }
          else {
             throw new Error('Argument must be instance of Array');
@@ -250,12 +241,7 @@ define('js!SBIS3.CONTROLS.MultiSelectable', [], function() {
                   Array.remove(this._options.selectedKeys, index);
                }
             }
-            if (this._checkEmptySelection()) {
-               this._setFirstItemAsSelected();
-            }
-            this._notifySelectedItems(this._options.selectedKeys);
-            this._drawSelectedItems(this._options.selectedKeys);
-            this._notifyOnPropertyChanged('selectedKeys');
+	         this._afterSelectionHandler();
          }
          else {
             throw new Error('Argument must be instance of Array');
@@ -314,11 +300,7 @@ define('js!SBIS3.CONTROLS.MultiSelectable', [], function() {
                   else {
                      this._options.selectedKeys = idArray.slice(0, 1);
                   }
-                  if (this._checkEmptySelection()) {
-                     this._setFirstItemAsSelected();
-                  }
-                  this._notifySelectedItems(this._options.selectedKeys);
-                  this._drawSelectedItems(this._options.selectedKeys);
+	               this._afterSelectionHandler();
                }
             }
          }
@@ -362,6 +344,14 @@ define('js!SBIS3.CONTROLS.MultiSelectable', [], function() {
       _drawSelectedItems : function() {
          /*Method must be implemented*/
       },
+
+	   _afterSelectionHandler: function() {
+		   if (this._checkEmptySelection()) {
+			   this._setFirstItemAsSelected();
+		   }
+		   this._notifySelectedItems(this._options.selectedKeys);
+		   this._drawSelectedItems(this._options.selectedKeys);
+	   },
 
       _notifySelectedItems : function(idArray) {
          this._setSelectedRecords();

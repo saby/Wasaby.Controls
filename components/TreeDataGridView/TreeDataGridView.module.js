@@ -323,7 +323,8 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
          return keys;
       },
       _onDragStart: function(e) {
-         if (this._isShifted) {
+         //TODO: придумать как избавиться от второй проверки. За поля ввода DragNDrop происходить не должен.
+         if (this._isShifted || $ws.helpers.instanceOfModule($(e.target).wsControl(), 'SBIS3.CONTROLS.TextBoxBase')) {
             return;
          }
          var
@@ -358,7 +359,8 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
          this._avatar = $('<div class="controls-DragNDrop__draggedItem"><span class="controls-DragNDrop__draggedCount">' + count + '</span></div>')
             .css({
                'left': window.scrollX + e.clientX + 5,
-               'top': window.scrollY + e.clientY + 5
+               'top': window.scrollY + e.clientY + 5,
+               'z-index': $ws.single.WindowManager.acquireZIndex(false)
             }).appendTo($('body'));
       },
       _callDropHandler: function(e) {
@@ -382,6 +384,7 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
       },
       _endDropDown: function() {
          this._containerCoords = null;
+         $ws.single.WindowManager.releaseZIndex(this._avatar.css('z-index'));
          this._avatar.remove();
          this._isShifted = false;
       }
