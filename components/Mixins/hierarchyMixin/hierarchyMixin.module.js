@@ -133,7 +133,12 @@ define('js!SBIS3.CONTROLS.hierarchyMixin', [], function () {
       setCurrentRoot: function(key) {
          var
             filter = this.getFilter() || {};
-         filter[this._options.hierField] = key;
+         if (key) {
+            filter[this._options.hierField] = key;
+         }
+         else {
+            delete(filter[this._options.hierField]);
+         }
          this.setFilter(filter, true);
          this._hier = this._getHierarchy(this._dataSet, key);
          //узел грузим с 0-ой страницы
