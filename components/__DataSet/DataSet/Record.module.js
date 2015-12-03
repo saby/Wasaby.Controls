@@ -15,6 +15,7 @@ define('js!SBIS3.CONTROLS.Record', [
     * @extends $ws.proto.Abstract
     * @mixes SBIS3.CONTROLS.Data.SerializableMixin
     * @public
+    * @deprecated Будет удалено с 3.7.3.20 используйте {@link SBIS3.CONTROLS.Data.Model}
     * @author Крайнов Дмитрий Олегович
     */
 
@@ -64,6 +65,9 @@ define('js!SBIS3.CONTROLS.Record', [
 
       $constructor: function (cfg) {
          cfg = cfg || {};
+         if(!cfg.compatibilityMode) {
+            $ws.single.ioc.resolve('ILogger').log('$constructor', 'С 3.7.3.20 класс SBIS3.CONTROLS.DataSet будет удален, используйте SBIS3.CONTROLS.Data.Source.DataSet');
+         }
          this._publish('onChange');
          this._strategy = cfg.strategy || new ArrayStrategy();
          this._raw = cfg.raw || {};
