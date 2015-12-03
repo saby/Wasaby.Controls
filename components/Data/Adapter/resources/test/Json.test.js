@@ -534,18 +534,6 @@ define(
                   adapterInstance.replace(data, {}, 99);
                });
             });
-
-            it('should throw an error on invalid data', function () {
-               assert.throw(function () {
-                  adapterInstance.set('');
-               });
-               assert.throw(function () {
-                  adapterInstance.set(0);
-               });
-               assert.throw(function () {
-                  adapterInstance.set();
-               });
-            });
          });
 
          describe('.destroy()', function(){

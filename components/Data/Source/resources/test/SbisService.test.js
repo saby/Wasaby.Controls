@@ -230,7 +230,7 @@ define([
                   var service = new SbisService({
                      resource: 'Товар'
                   });
-                  service.create({myParam: 'myValue'}).addCallbacks(function () {
+                  service.create().addCallbacks(function () {
                      try {
                         var args = SbisServiceBLO.lastRequest.args;
 
@@ -247,14 +247,34 @@ define([
                         if (args['Фильтр'].s[0].t !== 'Логическое') {
                            throw new Error('Wrong type for argument Фильтр.ВызовИзБраузера');
                         }
+                        done();
+                     } catch (err) {
+                        done(err);
+                     }
+                  }, function (err) {
+                     done(err);
+                  });
+               });
 
-                        if (args['Фильтр'].d[1] !== 'myValue') {
+               it('should generate a request with valid meta data', function (done) {
+                  var service = new SbisService({
+                     resource: 'Товар'
+                  });
+                  service.create({myParam: 'myValue'}).addCallbacks(function () {
+                     try {
+                        var args = SbisServiceBLO.lastRequest.args;
+
+                        if (args['ИмяМетода'] !== undefined) {
+                           throw new Error('Wrong argument ИмяМетода');
+                        }
+
+                        if (args['Фильтр'].d[0] !== 'myValue') {
                            throw new Error('Wrong value for argument Фильтр.myParam');
                         }
-                        if (args['Фильтр'].s[1].n !== 'myParam') {
+                        if (args['Фильтр'].s[0].n !== 'myParam') {
                            throw new Error('Wrong name for argument Фильтр.myParam');
                         }
-                        if (args['Фильтр'].s[1].t !== 'Строка') {
+                        if (args['Фильтр'].s[0].t !== 'Строка') {
                            throw new Error('Wrong type for argument Фильтр.myParam');
                         }
                         done();
