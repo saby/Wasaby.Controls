@@ -117,6 +117,10 @@ define('js!SBIS3.CONTROLS.Browser', [
          this._notify('onEdit', {id: null, item: null});
       },
 
+      getView: function() {
+         return this._view;
+      },
+
       _getLinkedControl: function(name) {
          var ctrl = null;
          if (this.hasChildControlByName(name)) {

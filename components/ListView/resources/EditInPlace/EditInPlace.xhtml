@@ -1,5 +1,5 @@
 {{?it.columns}}
-   <tr class="controls-editInPlace js-controls-ListView__item">
+   <tr class="js-controls-ListView__item controls-editInPlace">
    {{?it.template}}
       {{var colspan = it.columns.length;}}
       {{if (it.ignoreFirstColumn) { colspan++; } }}
@@ -7,7 +7,7 @@
          {{=it.template}}
       </td>
    {{??}}
-      <!--TODO: вытащить логику ignoreFirstColumn в контроллер-->
+      <!--TODO EIP Сухоручкин: вытащить логику ignoreFirstColumn в контроллер-->
       {{?it.ignoreFirstColumn}}<td class="controls-DataGridView__td"></td>{{?}}
       {{~it.columns :column:index }}
          {{?column.editor}}
@@ -21,7 +21,7 @@
    {{?}}
    </tr>
 {{??}}
-   <div class="controls-editInPlace js-controls-ListView__item">
+   <div class="js-controls-ListView__item controls-editInPlace">
    {{?it.template}}
       {{=it.template}}
    {{?}}

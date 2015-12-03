@@ -3,6 +3,8 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
 ], function (PickerMixin) {
    'use strict';
 
+   var SUGGEST_PICKER_MIN_WIDTH = 150;
+
    /**
     * Миксин автодополнения. Позволяет навесить функционал автодополнения на любой контрол или набор контролов.
     * Управляет {@link list контролом списка сущностей}, реализующим определенный интерфейс.
@@ -125,6 +127,17 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
                component: 'js!SBIS3.CONTROLS.SuggestList',
                options: {}
             },
+
+            /**
+             * @var {Object} Фильтр данных
+             * @example
+             * <pre class="brush:xml">
+             *     <options name="listFilter">
+             *        <option name="creatingDate" bind="selectedDocumentDate"></option>
+             *        <option name="documentType" bind="selectedDocumentType"></option>
+             *     </options>
+             * </pre>
+             */
 	        listFilter: {},
 
             /**
@@ -146,11 +159,6 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
          _delayTimer: null,
 
          /**
-          * @var {Boolean} Реагировать на изменения в контексте
-          */
-         _checkContext: true,
-
-         /**
           * @var {Object} Индикатор загрузки
           */
          _loadingIndicator: undefined,
@@ -163,17 +171,8 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
          /**
           * @var {jQuery} Контейнер для контрола списка сущностей
           */
-         _listContainer: undefined,
+         _listContainer: undefined
 
-         /**
-          * @var {Function(String, String, String):Boolean|null|undefined} Фильтр данных для контрола списка сущностей
-          */
-         _dataSourceFilter: function (filterField, dataValue, filterValue) {
-            //Выбираем все строки, содержащие введенную пользователем подстроку без учета регистра
-            dataValue += '';
-            filterValue += '';
-            return (dataValue.toLowerCase()).indexOf(filterValue.toLowerCase()) !== -1;
-         }
       },
 
       $constructor: function () {
@@ -219,8 +218,8 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
          this._resultBindings = convertToObject(this._options.resultBindings);
       },
 
-	   setListFilter: function(filter) {
-		   var self = this,
+      setListFilter: function(filter) {
+         var self = this,
              changedFields = [];
 
          $ws.helpers.forEach(filter, function(value, key) {
@@ -230,19 +229,19 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
          });
 
          if(changedFields.length) {
-			   this._options.listFilter = filter;
-				for(var i = 0, len = changedFields.length; i < len; i++) {
-					if(String(this._options.listFilter[changedFields[i]]).length >= this._options.startChar) {
-						this._reloadList().addCallback(function() {
-                     if(self._checkPickerState()) {
-                        self._showList();
-                     }
+            this._options.listFilter = filter;
+            for(var i = 0, len = changedFields.length; i < len; i++) {
+               if(String(this._options.listFilter[changedFields[i]]).length >= this._options.startChar) {
+                  this._reloadList().addCallback(function() {
+                     self._checkPickerState() ? self._showList() : self._hideList();
                   });
-                  break;
-					}
-				}
-			}
-	   },
+                  return;
+               }
+            }
+            /* Если введено меньше символов чем указано в startChar, то скроем автодополнение */
+            self._hideList();
+         }
+      },
 
       /**
        * Устанавливает связи между компонентами
@@ -260,30 +259,6 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
             });
          }, this);
 
-      },
-
-      /**
-       * Устанавливает фильтр данных, прокидываемый в dataSource компонента списка сущностей
-       * @param {Function(String, String, String):Boolean|null|undefined} filter Фильтр данных
-       * <wiTag group="Отображение">
-       * Function - определяемый пользователем фильтр.
-       * null - фильтрация по полному совпадению значения поля.
-       * undefined - дополнительный фильтр по-умолчанию (поиск по подстроке).
-       * @example
-       * <pre>
-       *    function(filterField, dataValue, filterValue) {
-         *       //Все, начинающиеся с filterValue
-         *       return new RegExp('^' + filterValue + '.*$', 'i').test(dataValue);
-         *    }
-       * </pre>
-       */
-      setDataSourceFilter: function (filter) {
-         this._dataSourceFilter = filter;
-
-         //TODO: убрать обращение к protected-членам
-         if (this._list && typeof this._list._dataSource.setDataFilterCallback == 'function') {
-            this._list._dataSource.setDataFilterCallback(this._dataSourceFilter);
-         }
       },
 
       /**
@@ -314,35 +289,30 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
        * @see list
        */
       getList: function () {
-         var def = new $ws.proto.Deferred(),
-             self = this;
+         var options, component;
 
          if (!this._list) {
             if ($ws.helpers.instanceOfMixin(this._options.list, 'SBIS3.CONTROLS.DSMixin')) {
-               //Готовый инстанс
+               /* Если передали в опции готовый инстанс, то ничего создавать не надо */
                this._list = this._options.list;
                this._initList();
-               def.callback(this._list);
+               return this._list;
             } else {
                //Набор "Сделай сам"
-               require([this._options.list.component], function (ListControl) {
-                  var options = $ws.core.clone(self._options.list.options);
-                  if (!options.element) {
-                     options.element = self._getListContainer();
-                  }
-                  options.parent = self._picker;
-                  self._list = new ListControl(options);
+               options = $ws.core.clone(this._options.list.options);
+               component = require(this._options.list.component);
+               if (!options.element) {
+                  options.element = this._getListContainer();
+               }
+               options.parent = this._picker;
+               this._list = new component(options);
+               this._initList();
 
-                  self._initList();
-
-                  def.callback(self._list);
-               });
+               return this._list;
             }
          } else {
-            def.callback(this._list);
+            return this._list;
          }
-
-         return def;
       },
 
       /**
@@ -352,23 +322,14 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
       _initList: function () {
          var self = this;
 
-         this.setDataSourceFilter(this._dataSourceFilter);
-
          this.subscribeTo(this._list, 'onDataLoad', this._onListDataLoad.bind(this));
 
          this.subscribeTo(this._list, 'onDrawItems', this._onListDrawItems.bind(this));
 
-         this.subscribeTo(this._list, 'onSelectedItemChange', (function (eventObject, id) {
-            this._onListItemSelect(id);
-         }).bind(this));
-
-         this.subscribeTo(this._list, 'onSelectedItemsChange', (function (eventObject, idArray) {
-            this._onListItemSelect(idArray.length ? idArray[0] : null);
-         }).bind(this));
-
-         this._list.setDataSource = this._list.setDataSource.callNext(function () {
-            self.setDataSourceFilter(self._dataSourceFilter);
-         });
+         this.subscribeTo(this._list, 'onItemActivate', (function (eventObject, itemObj) {
+            self.hidePicker();
+            self._onListItemSelect(itemObj.id, itemObj.item);
+         }));
 
          this._notify('onListReady', this._list);
       },
@@ -378,14 +339,11 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
        * @private
        */
       _reloadList: function () {
-         var self = this,
-             result = new $ws.proto.Deferred();
+         var result = new $ws.proto.Deferred();
 
          this._showLoadingIndicator();
-         this.getList().addCallback(function (list) {
-            list.reload(self._options.listFilter).addCallback(function() {
-               result.callback();
-            })
+         this.getList().reload(this._options.listFilter).addCallback(function() {
+            result.callback();
          });
 
          return result;
@@ -431,12 +389,16 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
        * Вызывается после выбора записи в контроле списка сущностей
        * @private
        */
-      _onListItemSelect: function (id) {
+      _onListItemSelect: function (id, item) {
+         var def = new $ws.proto.Deferred(),
+             dataSet = this._list.getDataSet(),
+             ctx = this._getBindingContext(),
+             self = this;
+
          if (id === null || id === undefined) {
             return;
          }
 
-         this.hidePicker();
          if (!this._options.saveFocusOnSelect) {
             var activeFound = false;
             $ws.helpers.forEach(this._options.observableControls, function (control) {
@@ -447,24 +409,21 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
             }, this);
          }
 
-         //TODO: убрать обращение к protected-членам
-         var def = new $ws.proto.Deferred();
-         if (this._list._dataSet) {
-            def.callback(this._list._dataSet.getRecordByKey(id));
+         if(item) {
+            def.callback(item);
+         } else if (dataSet) {
+            def.callback(dataSet.getRecordByKey(id));
          } else {
             this._list._dataSource.read(id).addCallback(function (item) {
                def.callback(item);
             });
          }
 
-         var self = this;
          def.addCallback(function (item) {
-            self._checkContext = !self._options.usePicker;
             self._notify('onListItemSelect', item, self._resultBindings);
-            var context = self._getBindingContext();
             for (var field in self._resultBindings) {
                if (self._resultBindings.hasOwnProperty(field)) {
-                  context.setValue(
+                  ctx.setValue(
                      field,
                      item.get(self._resultBindings[field]),
                      false,
@@ -472,7 +431,6 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
                   );
                }
             }
-            self._checkContext = true;
          });
       },
 
@@ -492,12 +450,17 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
          }, this._options.delay);
       },
 
+      _hideList: function() {
+         this._clearDelayTimer();
+         this.hidePicker();
+      },
+
       /**
        * Проверяет необходимость изменения состояния пикера
        * @private
        */
       _checkPickerState: function () {
-         return !!(this._list && this._list.getDataSet().getCount());
+         return Boolean(this._options.usePicker && this._list && this._list.getDataSet().getCount());
       },
 
       _setPickerContent: function () {
@@ -507,15 +470,6 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
       showPicker: function () {
          if (this._options.usePicker) {
             PickerMixin.showPicker.apply(this, arguments);
-            this._setWidth();
-         }
-      },
-
-      _setWidth: function () {
-         if (this._picker._options.target) {
-            this._picker.getContainer().css({
-               'min-width': this._picker._options.target.outerWidth() - this._border
-            });
          }
       }
    };

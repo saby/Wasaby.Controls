@@ -173,7 +173,7 @@ define('js!SBIS3.CONTROLS.Data.Factory', [
        */
       _makeModel: function (data, adapter) {
          return $ws.single.ioc.resolve('SBIS3.CONTROLS.Data.Model', {
-            data: data,
+            rawData: data,
             adapter: adapter
          });
       },
@@ -191,7 +191,7 @@ define('js!SBIS3.CONTROLS.Data.Factory', [
          return $ws.single.ioc.resolve('SBIS3.CONTROLS.Data.Source.DataSet', {
             model: $ws.single.ioc.resolve('SBIS3.CONTROLS.Data.ModelConstructor'),
             adapter: adapter,
-            data: data,
+            rawData: data,
             totalProperty: 'total'
          });
       },

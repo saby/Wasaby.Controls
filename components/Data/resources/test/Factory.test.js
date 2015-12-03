@@ -92,14 +92,14 @@ define([
       ];
       sbisModel = new Model({
          adapter: new AdapterSbis(),
-         data: {
+         rawData: {
             d: dataValues,
             s: dataScheme
          }
       });
       sbisModelEmpty = new Model({
          adapter: (new AdapterSbis()),
-         data: {
+         rawData: {
             d: dataEmpty,
             s: dataScheme
          }
@@ -163,7 +163,7 @@ define([
          it('should cast undefined dateTime, date and time to undefined', function () {
             var model = new Model({
                adapter: new AdapterSbis(),
-               data: {
+               rawData: {
                   d: dataEmpty.map(function() {
                      return undefined;
                   }),
@@ -210,7 +210,7 @@ define([
          it('should serialize model', function () {
             var record = new Model({
                adapter: (new AdapterSbis()),
-               data: {d: [1], s: [{n: 'id', t: 'Число целое'}]}
+               rawData: {d: [1], s: [{n: 'id', t: 'Число целое'}]}
             });
             sbisModelEmpty.set('record', record);
             assert.deepEqual(getData(3), record.getRawData());
@@ -226,7 +226,7 @@ define([
             var list = sbisModel.get('recordSet');
             list.add(new Model({
                adapter: new AdapterSbis(),
-               data: {
+               rawData: {
                   d: [2],
                   s: [{n: 'id', t: 'Число целое'}]
                }

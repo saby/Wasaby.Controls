@@ -155,7 +155,7 @@ define('js!SBIS3.CONTROLS.Data.Source.Memory', [
 
          return $ws.proto.Deferred.success(new DataSet({
             source: this,
-            data: items,
+            rawData: items,
             totalProperty: 'total'
          }));
       },
