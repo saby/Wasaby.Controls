@@ -18,6 +18,24 @@ define('js!SBIS3.CONTROLS.ScrollWatcher', [], function() {
       })( jQuery );
    }
    $ws.proto.ScrollWatcher = $ws.proto.Abstract.extend(/** @lends SBIS3.CONTROLS.ScrollWatcher.prototype */{
+      /**
+       * @event onScroll Событие проиходит, когда срабатывает проверка на скроллею Например, когда достигли низа страницы
+       * @remark
+       *
+       * @param {$ws.proto.EventObject} eventObject Дескриптор события.
+       * @param {String} type - какое именно событие произошло. Достигли дна окна, контейнера, всплывающей панели.
+       * Или это Пользовательская проверка ('userCheck')
+       * @param {Object} result - то, что возвращает функция проверки положения скролла. В общем случае true || false, но
+       * пользователь может вернуть что угодно.
+       * @example
+       * <pre>
+       *     ScrollWatcher.subscribe('onScroll', function(event, type) {
+       *        if (type === 'windowBottom') {
+       *          $ws.core.alert('Вы достигли дна');
+       *        }
+       *     });
+       * </pre>
+       */
       $protected: {
          _options: {
             /**
@@ -91,11 +109,11 @@ define('js!SBIS3.CONTROLS.ScrollWatcher', [], function() {
          if (typeof  this._options.scrollCheck === 'function') {
             userResult = this._options.scrollCheck.bind(this)();
             if (userResult) {
-               this._notify('onScroll', 'userCheck');
+               this._notify('onScroll', 'userCheck', userResult);
             }
          }
          if (result) {
-            this._notify('onScroll', type);
+            this._notify('onScroll', type, result);
          }
       },
       _onWindowScroll: function (event) {
