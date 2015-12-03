@@ -27,6 +27,7 @@ define('js!SBIS3.CONTROLS.ScrollWatcher', [], function() {
             /**
              * @cfg{String}
              * Тип "Отслеживателя": container, window, floatArea
+             * @remark если тип === 'container', то необходимо самостоятельно определить функцию проверки scrollCheck
              */
             type : 'container',
             /**
@@ -103,8 +104,8 @@ define('js!SBIS3.CONTROLS.ScrollWatcher', [], function() {
       _onFAScroll: function(event, scrollOptions) {
          this._notifyOnScroll('floatAreaBottom', scrollOptions.clientHeight + scrollOptions.scrollTop  >= scrollOptions.scrollHeight - SCROLL_INDICATOR_HEIGHT - this._options.bottomCheckOffset);
       },
-      _onContainerScroll: function () {
-         //TODO неправильная проверка this._options.element.offset().top < this._options.element.height()
+      _onContainerScroll: function (event) {
+         //TODO может здесь сможет появится какая-нибудь проверка...
          this._notifyOnScroll('containerBottom', false);
       },
       _isBottomOfPage: function () {
