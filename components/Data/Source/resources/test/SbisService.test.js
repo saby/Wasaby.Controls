@@ -929,8 +929,8 @@ define([
                service.read(SbisServiceBLO.existsId).addCallback(function (model) {
                   service.move(model, 56).addCallbacks(function() {
                      var args = SbisServiceBLO.lastRequest.args;
-                     if (args['ИдО'] === SbisServiceBLO.existsId &&
-                        args['ИдОДо'] === 56 &&
+                     if (Array.indexOf(args['ИдО'], SbisServiceBLO.existsId) !== -1 &&
+                        Array.indexOf(args['ИдОДо'], 56) !== -1 &&
                         args['ПорядковыйНомер'] === 'ПорНомер'
                      ) {
                         done();
@@ -950,8 +950,8 @@ define([
                service.read(SbisServiceBLO.existsId).addCallback(function (model) {
                   service.move(model, 0).addCallbacks(function() {
                      var args = SbisServiceBLO.lastRequest.args;
-                     if (args['ИдО'] === SbisServiceBLO.existsId &&
-                        args['ИдОДо'] === 0 &&
+                     if (Array.indexOf(args['ИдО'], SbisServiceBLO.existsId) !== -1 &&
+                        Array.indexOf(args['ИдОДо'], 0) !== -1  &&
                         args['ПорядковыйНомер'] === 'ПорНомер'
                      ) {
                         done();
@@ -971,8 +971,8 @@ define([
                service.read(SbisServiceBLO.existsId).addCallback(function (model) {
                   service.move(model, 77, {after: true}).addCallbacks(function() {
                      var args = SbisServiceBLO.lastRequest.args;
-                     if (args['ИдО'] === SbisServiceBLO.existsId &&
-                        args['ИдОПосле'] === 77 &&
+                     if (Array.indexOf(args['ИдО'], SbisServiceBLO.existsId) !== -1 &&
+                        Array.indexOf(args['ИдОПосле'], 77) !== -1  &&
                         args['ПорядковыйНомер'] === 'ПорНомер'
                      ) {
                         done();
@@ -992,8 +992,8 @@ define([
                service.read(SbisServiceBLO.existsId).addCallback(function (model) {
                   service.move(model, 0, {after: true}).addCallbacks(function() {
                      var args = SbisServiceBLO.lastRequest.args;
-                     if (args['ИдО'] === SbisServiceBLO.existsId &&
-                        args['ИдОПосле'] === 0 &&
+                     if (Array.indexOf(args['ИдО'], SbisServiceBLO.existsId) !== -1 &&
+                        Array.indexOf(args['ИдОПосле'], 0) !== -1  &&
                         args['ПорядковыйНомер'] === 'ПорНомер'
                      ) {
                         done();
