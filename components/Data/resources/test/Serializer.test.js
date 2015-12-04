@@ -16,14 +16,14 @@ define([
                   f: [],
                   g: [undefined, 1, 2],
                   h: {
-                     da: undefined,
-                     db: Infinity,
-                     dc: -Infinity
+                     ha: undefined,
+                     hb: Infinity,
+                     hc: -Infinity
                   }
                };
             },
             getSerializedSample = function() {
-               return '{"b":null,"c":false,"d":0,"e":1,"f":[],"g":[{"$serialized$":"undef"},1,2],"h":{"db":{"$serialized$":"+inf"},"dc":{"$serialized$":"-inf"}}}' to equal '{"b":null,"c":false,"d":{"db":{"$serialized$":"+inf"},"dc":{"$serialized$":"-inf"}},"e":1,"f":[],"g":[{"$serialized$":"undef"},1,2]}';
+               return '{"b":null,"c":false,"d":0,"e":1,"f":[],"g":[{"$serialized$":"undef"},1,2],"h":{"hb":{"$serialized$":"+inf"},"hc":{"$serialized$":"-inf"}}}';
             };
          beforeEach(function () {
             serializer = new Serializer();
@@ -199,7 +199,7 @@ define([
 
                   //undefined is not serializable
                   delete expectObj.a;
-                  delete expectObj.d.da;
+                  delete expectObj.h.ha;
 
                   assert.notEqual(expectObj, obj);
                   assert.deepEqual(expectObj, obj);
