@@ -143,7 +143,7 @@ define('js!SBIS3.CONTROLS.MoveHandlers', ['js!SBIS3.CONTROLS.MoveDialog','js!SBI
        * @param {SBIS3.CONTROLS.Data.IMoveStrategy} strategy - стратегия перемещения
        */
       setMoveStrategy: function (strategy){
-         if(!$ws.halpers.instanceOfMixin('SBIS3.CONTROLS.Data.IMoveStrategy')){
+         if(!$ws.helpers.instanceOfMixin(strategy,'SBIS3.CONTROLS.Data.IMoveStrategy')){
             throw new Error('The strategy must implemented interfaces the SBIS3.CONTROLS.Data.IMoveStrategy.')
          }
          this._moveStrategy = strategy;
