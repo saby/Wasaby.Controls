@@ -50,9 +50,9 @@ define('js!SBIS3.CONTROLS.MoveDialog', [
       _onMoveButtonActivated: function() {
          var
             moveTo = this._treeView.getSelectedKey(),
-            record = this._treeView._dataSet.getRecordByKey(moveTo);
+            recordTo = moveTo === null ? moveTo : this._treeView._dataSet.getRecordByKey(moveTo);
          if (this._treeView._checkRecordsForMove(this._options.records, moveTo)) {
-            this._options.linkedView._move(this._options.records, record);
+            this._options.linkedView._move(this._options.records, recordTo);
          }
          this.close();
       },
