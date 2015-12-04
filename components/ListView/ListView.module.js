@@ -374,6 +374,21 @@ define('js!SBIS3.CONTROLS.ListView',
                   topParent.subscribe('onScroll', this._onFAScroll.bind(this));
                }
             }
+            if (this._options.editMode === 'click') {
+               this.subscribe('onItemClick', function(event, id, record, target) {
+                  this._getEditInPlace().edit(target.closest('.js-controls-ListView__item'), record);
+                  event.setResult(false);
+               }.bind(this));
+            } else if (this._options.editMode === 'hover'){
+               this.subscribe('onChangeHoveredItem', function(event, hoveredItem) {
+                  var target = hoveredItem.container;
+                  if (target && !target.hasClass('controls-editInPlace')) {
+                     this._getEditInPlace().show(target, this._dataSet.getRecordByKey(hoveredItem.key));
+                  } else {
+                     this._getEditInPlace().hide();
+                  }
+               }.bind(this));
+            }
             $ws.single.CommandDispatcher.declareCommand(this, 'activateItem', this._activateItem);
             $ws.single.CommandDispatcher.declareCommand(this, 'addItem', this._addItem);
             $ws.single.CommandDispatcher.declareCommand(this, 'editItem', this._editItem);
@@ -570,7 +585,6 @@ define('js!SBIS3.CONTROLS.ListView',
           * @private
           */
          _onChangeHoveredItem: function (target) {
-            this._updateEditInPlaceDisplay(target);
             if (this._options.itemsActions.length) {
          		if (target.container && !this._touchSupport){
                   this._showItemActions(target);
@@ -645,15 +659,8 @@ define('js!SBIS3.CONTROLS.ListView',
             }
          },
 
-         /* todo EIP: Сухоручкин. Этот метод переопределен в других классах. Надо поискать по проекту и сделать так, чтобы работало везде.
-            Разберемся когда поймем разницу showArea и showEditing */
          _elemClickHandlerInternal: function (data, id, target) {
-            if (this._options.editInPlaceEnabled && this._options.editInPlaceMode === 'click') {
-               this._getEditInPlace().edit($(target).closest('.js-controls-ListView__item'), data);
-            }
-            else {
-               this._activateItem(id);
-            }
+            this._activateItem(id);
          },
          _drawSelectedItems: function (idArray) {
             $(".controls-ListView__item", this._container).removeClass('controls-ListView__item__multiSelected');
@@ -718,18 +725,6 @@ define('js!SBIS3.CONTROLS.ListView',
          //********************************//
          //   БЛОК РЕДАКТИРОВАНИЯ ПО МЕСТУ //
          //*******************************//
-
-         _updateEditInPlaceDisplay: function(hoveredItem) {
-            var target;
-            if (this._options.editInPlaceEnabled && this._options.editInPlaceMode === 'hover') {
-               target = hoveredItem.container;
-               if (target && !target.hasClass('controls-editInPlace')) {
-                  this._getEditInPlace().show(target, this._dataSet.getRecordByKey(hoveredItem.key));
-               } else {
-                  this._getEditInPlace().hide();
-               }
-            }
-         },
 
          /**
           * @private

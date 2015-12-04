@@ -119,8 +119,10 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                return this.endEdit(true).addCallback(function() {
                   var
                      loadingIndicator,
+                     beginEditResult,
                      result = new $ws.proto.Deferred();
                   //Если необходимо перечитывать запись перед редактированием, то делаем это
+                  beginEditResult = self._notify('onRowBeginEdit', record);
                   if (self._options.readRecordBeforeEdit) {
                      loadingIndicator = setTimeout(function () {
                         $ws.helpers.toggleIndicator(true);
