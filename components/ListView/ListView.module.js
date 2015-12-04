@@ -357,19 +357,9 @@ define('js!SBIS3.CONTROLS.ListView',
                }
             }
             if (this._options.editMode === 'click') {
-               this.subscribe('onItemClick', function(event, id, record, target) {
-                  this._getEditInPlace().edit($(target).closest('.js-controls-ListView__item'), record);
-                  event.setResult(false);
-               }.bind(this));
+               this.subscribe('onItemClick', this._onItemClickHandler);
             } else if (this._options.editMode === 'hover'){
-               this.subscribe('onChangeHoveredItem', function(event, hoveredItem) {
-                  var target = hoveredItem.container;
-                  if (target && !target.hasClass('controls-editInPlace')) {
-                     this._getEditInPlace().show(target, this._dataSet.getRecordByKey(hoveredItem.key));
-                  } else {
-                     this._getEditInPlace().hide();
-                  }
-               }.bind(this));
+               this.subscribe('onChangeHoveredItem', this._onChangeHoveredItemHandler);
             }
             $ws.single.CommandDispatcher.declareCommand(this, 'activateItem', this._activateItem);
             $ws.single.CommandDispatcher.declareCommand(this, 'beginAdd', this._beginAdd);
@@ -708,6 +698,20 @@ define('js!SBIS3.CONTROLS.ListView',
          //********************************//
          //   БЛОК РЕДАКТИРОВАНИЯ ПО МЕСТУ //
          //*******************************//
+
+         _onItemClickHandler: function(event, id, record, target) {
+            this._getEditInPlace().edit($(target).closest('.js-controls-ListView__item'), record);
+            event.setResult(false);
+         },
+
+         _onChangeHoveredItemHandler: function(event, hoveredItem) {
+            var target = hoveredItem.container;
+            if (target && !target.hasClass('controls-editInPlace')) {
+               this._getEditInPlace().show(target, this._dataSet.getRecordByKey(hoveredItem.key));
+            } else {
+               this._getEditInPlace().hide();
+            }
+         },
 
          /**
           * @private
