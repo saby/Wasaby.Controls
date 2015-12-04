@@ -109,7 +109,7 @@ define('js!SBIS3.CONTROLS.ListView',
           * @event onDataMerge Перед добавлением загруженных записей в основной dataSet
           * @remark
           * Событие срабатывает при подгрузке по скроллу, при подгрузке в ветку дерева.
-          * Т.е. при любой вспеомогательной загрузке данных.
+          * Т.е. при любой вспомогательной загрузке данных.
           * @param {$ws.proto.EventObject} eventObject Дескриптор события.
           * @param {Object} dataSet - dataSet с загруженными данными
           * @example

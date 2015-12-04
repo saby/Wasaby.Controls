@@ -117,14 +117,14 @@ define('js!SBIS3.CONTROLS.ScrollWatcher', [], function() {
          }
       },
       _onWindowScroll: function (event) {
-         this._notifyOnScroll('windowBottom', this._isBottomOfPage());
+         this._notifyOnScroll('bottom', this._isBottomOfPage());
       },
       _onFAScroll: function(event, scrollOptions) {
-         this._notifyOnScroll('floatAreaBottom', scrollOptions.clientHeight + scrollOptions.scrollTop  >= scrollOptions.scrollHeight - SCROLL_INDICATOR_HEIGHT - this._options.bottomCheckOffset);
+         this._notifyOnScroll('bottom', scrollOptions.clientHeight + scrollOptions.scrollTop  >= scrollOptions.scrollHeight - SCROLL_INDICATOR_HEIGHT - this._options.bottomCheckOffset);
       },
       _onContainerScroll: function (event) {
          //TODO может здесь сможет появится какая-нибудь проверка...
-         this._notifyOnScroll('containerBottom', false);
+         this._notifyOnScroll('bottom', false);
       },
       _isBottomOfPage: function () {
          var docBody = document.body,
