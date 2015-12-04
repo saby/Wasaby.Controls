@@ -141,50 +141,8 @@ define('js!SBIS3.CONTROLS.DataGridView',
             };
 
             for (var i = 0; i < rowData.columns.length; i++) {
-               var column = rowData.columns[i],
-                   value = item.get(column.field);
-               if (column.cellTemplate) {
-                  var cellTpl;
-                  if ((typeof column.cellTemplate == 'string') && (column.cellTemplate.indexOf('html!') == 0)) {
-                     cellTpl = require(column.cellTemplate);
-                  }
-                  else {
-                     cellTpl = doT.template(column.cellTemplate);
-                  }
-                  var tplOptions = {
-                     item: item,
-                     hierField: this._options.hierField,
-                     isNode: item.get(rowData.hierField + '@'),
-                     decorators: this._decorators,
-                     field: column.field,
-                     value: value,
-                     highlight: column.highlight
-                  };
-                  if (column.templateBinding) {
-                     tplOptions.templateBinding = column.templateBinding;
-                  }
-                  if (column.includedTemplates) {
-                     var tpls = column.includedTemplates;
-                     tplOptions.included = {};
-                     for (var j in tpls) {
-                        if (tpls.hasOwnProperty(j)) {
-                           tplOptions.included[j] = require(tpls[j]);
-                        }
-                     }
-                  }
-                  value = MarkupTransformer((cellTpl)(tplOptions));
-               } else {
-                  value = this._decorators.applyIf(
-                     value === undefined || value === null ? '' : $ws.helpers.escapeHtml(value), {
-                        highlight: column.highlight,
-                        ladder: {
-                           column: column.field,
-                           parentId: item.get(this._options.hierField)
-                        }
-                     }
-                  );
-               }
-               column.value = value;
+               var column = rowData.columns[i];
+               column.value = this._getCellTemplate(item, column);
                column.item = item;
             }
             return this._rowTpl(rowData);
@@ -192,6 +150,52 @@ define('js!SBIS3.CONTROLS.DataGridView',
          else {
             return this._options.itemTemplate(item);
          }
+      },
+
+      _getCellTemplate: function(item, column) {
+         var value = item.get(column.field);
+         if (column.cellTemplate) {
+            var cellTpl;
+            if ((typeof column.cellTemplate == 'string') && (column.cellTemplate.indexOf('html!') == 0)) {
+               cellTpl = require(column.cellTemplate);
+            }
+            else {
+               cellTpl = doT.template(column.cellTemplate);
+            }
+            var tplOptions = {
+               item: item,
+               hierField: this._options.hierField,
+               isNode: item.get(this._options.hierField + '@'),
+               decorators: this._decorators,
+               field: column.field,
+               value: value,
+               highlight: column.highlight
+            };
+            if (column.templateBinding) {
+               tplOptions.templateBinding = column.templateBinding;
+            }
+            if (column.includedTemplates) {
+               var tpls = column.includedTemplates;
+               tplOptions.included = {};
+               for (var j in tpls) {
+                  if (tpls.hasOwnProperty(j)) {
+                     tplOptions.included[j] = require(tpls[j]);
+                  }
+               }
+            }
+            value = MarkupTransformer((cellTpl)(tplOptions));
+         } else {
+            value = this._decorators.applyIf(
+               value === undefined || value === null ? '' : $ws.helpers.escapeHtml(value), {
+                  highlight: column.highlight,
+                  ladder: {
+                     column: column.field,
+                     parentId: item.get(this._options.hierField)
+                  }
+               }
+            );
+         }
+         return value;
       },
 
       _drawItemsCallback: function () {
@@ -232,6 +236,13 @@ define('js!SBIS3.CONTROLS.DataGridView',
          if (!this.isNowScrollingPartScroll()) {
             DataGridView.superclass._updateEditInPlaceDisplay.apply(this, arguments);
          }
+      },
+      _getEditInPlaceConfig: function() {
+         return $ws.core.merge(DataGridView.superclass._getEditInPlaceConfig.apply(this, arguments), {
+            getCellTemplate: function(item, column) {
+               return this._getCellTemplate(item, column);
+            }.bind(this)
+         });
       },
       //********************************//
       // <editor-fold desc="PartScrollBlock">

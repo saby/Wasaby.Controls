@@ -759,22 +759,24 @@ define('js!SBIS3.CONTROLS.ListView',
 
          _createEditInPlace: function() {
             var
-               controller = this._options.editInPlaceMode === 'hover' && !$ws._const.isMobilePlatform ? EditInPlaceHoverController : EditInPlaceClickController,
-               options = {
-                  dataSet: this._dataSet,
-                  ignoreFirstColumn: this._options.multiselect,
-                  columns: this._options.columns,
-                  dataSource: this._dataSource,
-                  readRecordBeforeEdit: this._options.editInPlaceGetModelFromSource,
-                  template: this._options.editInPlaceTemplate,
-                  itemsContainer: this._getItemsContainer(),
-                  element: $('<div>'),
-                  onFieldChange: this._options.editInPlaceOnFieldChangeHandler
-               };
+               controller = this._options.editInPlaceMode === 'hover' && !$ws._const.isMobilePlatform ? EditInPlaceHoverController : EditInPlaceClickController;
+            this._editInPlace = new controller(this._getEditInPlaceConfig());
+         },
+
+         _getEditInPlaceConfig: function() {
             //todo Герасимов, Сухоручкин: для hover-режима надо передать в опции метод
-            //options.editFieldFocusHandler = this._editFieldFocusHandler.bind(this)
-            //подумать, как это сделать
-            this._editInPlace = new controller(options);
+            //options.editFieldFocusHandler = this._editFieldFocusHandler.bind(this) - подумать, как это сделать
+            return {
+               dataSet: this._dataSet,
+               ignoreFirstColumn: this._options.multiselect,
+               columns: this._options.columns,
+               dataSource: this._dataSource,
+               readRecordBeforeEdit: this._options.editInPlaceGetModelFromSource,
+               template: this._options.editInPlaceTemplate,
+               itemsContainer: this._getItemsContainer(),
+               element: $('<div>'),
+               onFieldChange: this._options.editInPlaceOnFieldChangeHandler
+            }
          },
 
          //********************************//
