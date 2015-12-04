@@ -268,6 +268,7 @@
          'js!SBIS3.CONTROLS.RadioButton',
          'js!SBIS3.CONTROLS.RadioGroup',
          'js!SBIS3.CONTROLS.Switcher',
+         'js!SBIS3.CONTROLS.SwitcherDouble',
          'js!SBIS3.Engine.SwitcherDoubleOnline'
       ], function(
          CheckBox,
@@ -275,6 +276,7 @@
          RadioButton,
          RadioGroup,
          Switcher,
+         SwitcherDouble,
          SwitcherDoubleOnline
       ) {
          var items = [{

@@ -1,8 +1,8 @@
-.controls-SwitcherDoubleOnline {
+.controls-SwitcherDouble {
    display: inline-block;
    margin: @switcher-do-margin;
 
-   .controls-SwitcherDoubleOnline__toggle {
+   .controls-SwitcherDouble__toggle {
       display: inline-block;
       cursor: @switcher-cursor;
       width: @switcher-do-horizontal-toggle-width;
@@ -12,14 +12,14 @@
       border-radius: @switcher-do-border-radius;
       line-height: @switcher-do-horizontal-toggle-height;
       position: relative;
-      &.controls-SwitcherDoubleOnline-on-toggled {
-         .controls-SwitcherDoubleOnline__btn {
+      &.controls-SwitcherDouble-on-toggled {
+         .controls-SwitcherDouble__btn {
             right: @switcher-do-horizontal-btn-margin;
             left: auto;
          }
       }
    }
-   .controls-SwitcherDoubleOnline__line {
+   .controls-SwitcherDouble__line {
       position: absolute;
       height: 2px;
       left: 50%;
@@ -29,7 +29,7 @@
       top: 50%;
       background-color: @gray-color;
    }
-   .controls-SwitcherDoubleOnline__btn {
+   .controls-SwitcherDouble__btn {
       display: block;
       position: absolute;
       box-sizing: border-box;
@@ -46,13 +46,13 @@
       top: (@switcher-do-horizontal-toggle-height - @switcher-do-horizontal-btn-size) / 2;
    }
 
-   .controls-SwitcherDoubleOnline__text {
+   .controls-SwitcherDouble__text {
       display: inline-block;
       cursor: @switcher-do-text-cursor;
       color: @switcher-do-text-color;
       text-decoration: @switcher-do-decoration;
 
-      &.controls-SwitcherDoubleOnline__unselected {
+      &.controls-SwitcherDouble__unselected {
          cursor: @switcher-do-unselected-text-cursor;
          color: @switcher-do-unselected-text-color;
          text-decoration: @switcher-do-unselected-text-decoration;
@@ -65,18 +65,18 @@
 
    }
 
-   &.controls-SwitcherDoubleOnline-vertical {
+   &.controls-SwitcherDouble-vertical {
       vertical-align: top;
 
-      .controls-SwitcherDoubleOnline__toggle {
+      .controls-SwitcherDouble__toggle {
          display: inline-block;
          vertical-align: top;
          cursor: @switcher-cursor;
          width: @switcher-do-vertical-toggle-width;
          height: @switcher-do-vertical-toggle-height;
          margin: @switcher-do-vertical-toggle-margin;
-         &.controls-SwitcherDoubleOnline-on-toggled {
-            .controls-SwitcherDoubleOnline__btn {
+         &.controls-SwitcherDouble-on-toggled {
+            .controls-SwitcherDouble__btn {
                top: @switcher-do-horizontal-btn-margin;
                bottom: auto;
                left: (@switcher-do-vertical-toggle-width - @switcher-do-horizontal-btn-size) / 2;
@@ -84,24 +84,24 @@
          }
 
       }
-      .controls-SwitcherDoubleOnline__line {
+      .controls-SwitcherDouble__line {
          height: @switcher-do-vertical-line-width;
          width: 2px;
          margin-top: -@switcher-do-vertical-line-width / 2;
          margin-left: -1px;
       }
 
-      .controls-SwitcherDoubleOnline__text-block {
+      .controls-SwitcherDouble__text-block {
          display: inline-block;
          height: 100%;
 
-         .controls-SwitcherDoubleOnline__text {
+         .controls-SwitcherDouble__text {
             display: block;
             height: @switcher-do-vertical-toggle-height / 2;
             line-height: @switcher-do-vertical-toggle-height / 2;
          }
       }
-      .controls-SwitcherDoubleOnline__btn {
+      .controls-SwitcherDouble__btn {
          bottom: @switcher-do-horizontal-btn-margin;
          top: auto;
          left: (@switcher-do-vertical-toggle-width - @switcher-do-horizontal-btn-size) / 2;
@@ -109,21 +109,21 @@
    }
 
    &:hover {
-      .controls-SwitcherDoubleOnline__btn {
+      .controls-SwitcherDouble__btn {
          border-width: @switcher-do-horizontal-btn-border-width-hover;
       }
    }
 
    &.ws-disabled {
-      .controls-SwitcherDoubleOnline__toggle {
+      .controls-SwitcherDouble__toggle {
          cursor: @switcher-do-disabled-toggle-cursor;
 
       }
-      .controls-SwitcherDoubleOnline__line {
+      .controls-SwitcherDouble__line {
          background: @gray-light-color;
       }
 
-      .controls-SwitcherDoubleOnline__text {
+      .controls-SwitcherDouble__text {
          cursor: @switcher-do-disabled-text-cursor;
          color: @switcher-do-disabled-text-color;
          text-decoration: @switcher-do-disabled-text-decoration;
@@ -131,7 +131,7 @@
             color: @switcher-do-disabled-text-color;
          }
       }
-      .controls-SwitcherDoubleOnline__btn {
+      .controls-SwitcherDouble__btn {
          border-color: @switcher-do-horizontal-btn-color-disabled;
          border-width: @switcher-do-horizontal-btn-border-width;
       }
