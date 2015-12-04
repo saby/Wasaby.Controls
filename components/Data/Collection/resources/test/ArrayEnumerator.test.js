@@ -84,10 +84,11 @@ define([
                      items: items
                   }),
                   index = -1,
-                  item;
-               while (item = enumerator.getNext()) {
+                  item = enumerator.getNext();
+               while (item) {
                   index++;
                   assert.strictEqual(items[index], item);
+                  item = enumerator.getNext();
                }
                assert.isUndefined(enumerator.getNext());
             });
@@ -118,9 +119,11 @@ define([
 
                enumerator.reset();
                index = -1;
-               while (item = enumerator.getNext()) {
+               item = enumerator.getNext();
+               while (item) {
                   index++;
                   assert.strictEqual(items[index], item);
+                  item = enumerator.getNext();
                }
 
                enumerator.reset();
