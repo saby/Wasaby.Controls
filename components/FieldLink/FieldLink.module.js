@@ -94,7 +94,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
                   newFloatArea: 'js!SBIS3.CORE.FloatAreaSelector'
                },
             //FIXME для поддержки старых справочников, удалить как откажемся
-               new: {
+               newType: {
                   newDialog: 'js!SBIS3.CONTROLS.DialogSelector',
                   newFloatArea: 'js!SBIS3.CONTROLS.FloatAreaSelector'
                }
@@ -186,7 +186,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
        */
       showSelector: function(template, type) {
          var self = this,
-             version = this._options.oldViews ? 'old' : 'new',
+             version = this._options.oldViews ? 'old' : 'newType',
              selectorConfig = {
                 //FIXME для поддержки старых справочников, удалить как откажемся
                 old: {
@@ -212,7 +212,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
                       }
                    }
                 },
-                new: {
+                newType: {
                    currentSelectedKeys: self.getSelectedKeys(),
                    closeCallback: function (result) {
                       result && self.setSelectedKeys(result);
