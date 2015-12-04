@@ -42,7 +42,7 @@ define('js!SBIS3.CONTROLS.Demo.MyMenuButton',
                   'title' : 'Третий'
 
                }],
-               keyField : 'id'
+               idProperty : 'id'
             });
             self._myMenu.setDataSource(ds);
          });

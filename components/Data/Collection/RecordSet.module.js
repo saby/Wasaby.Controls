@@ -1,7 +1,7 @@
 /* global define, $ws */
 define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
    'js!SBIS3.CONTROLS.Data.Collection.ObservableList',
-   'js!SBIS3.CONTROLS.DataSet',
+   'js!SBIS3.CONTROLS.Data.Collection.RecordSet',
    'js!SBIS3.CONTROLS.Data.Model'
 ], function (ObservableList, DataSet) {
    'use strict';
@@ -193,6 +193,14 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
 
          return this._options.meta;
       },
+      getTreeIndex: function(field, reindex){
+         if (reindex || (Object.isEmpty(this._indexTree) && field)){
+            this._reindexTree(field);
+         }
+         return this._indexTree;
+      },
+
+
 
       setMetaData: function (meta) {
          this._options.meta = meta;

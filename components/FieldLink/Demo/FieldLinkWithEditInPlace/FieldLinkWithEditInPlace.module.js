@@ -4,7 +4,7 @@ define('js!SBIS3.CONTROLS.Demo.FieldLinkWithEditInPlace', [
    'js!SBIS3.CONTROLS.DataGridView',
    'js!SBIS3.CONTROLS.Data.Source.Memory',
    'js!SBIS3.CONTROLS.Demo.FieldLinkDataSource',
-   'js!SBIS3.CONTROLS.DataSet',
+   'js!SBIS3.CONTROLS.Data.Collection.RecordSet',
    'js!SBIS3.CONTROLS.Data.Adapter.Sbis',
    'css!SBIS3.CONTROLS.Demo.FieldLinkWithEditInPlace',
    'js!SBIS3.CONTROLS.TextBox',
@@ -173,7 +173,7 @@ define('js!SBIS3.CONTROLS.Demo.FieldLinkWithEditInPlace', [
                   {n: 'Название', t: 'Текст'}
                ]
             },
-            keyField: 'Ид',
+            idProperty: 'Ид',
             adapter: new AdapterSbis()
          }));
          this.setDataSourceFilter(retTrue);
@@ -196,7 +196,7 @@ define('js!SBIS3.CONTROLS.Demo.FieldLinkWithEditInPlace', [
                   {n: 'Название', t: 'Текст'}
                ]
             },
-            keyField: 'Ид',
+            idProperty: 'Ид',
             adapter: new AdapterSbis()
          }));
          this.setDataSourceFilter(retTrue);
@@ -218,7 +218,7 @@ define('js!SBIS3.CONTROLS.Demo.FieldLinkWithEditInPlace', [
                   {n: 'Название', t: 'Текст'}
                ]
             },
-            keyField: 'Ид',
+            idProperty: 'Ид',
             adapter: new AdapterSbis()
          }));
          this.setDataSourceFilter(retTrue);

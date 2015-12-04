@@ -1,7 +1,7 @@
 /**
  * Created by am.gerasimov on 26.10.2015.
  */
-define('js!SBIS3.CONTROLS.ActiveMultiSelectable', ['js!SBIS3.CONTROLS.DataSet', 'js!SBIS3.CONTROLS.SbisJSONStrategy'], function(DataSet, SbisJSONStrategy) {
+define('js!SBIS3.CONTROLS.ActiveMultiSelectable', ['js!SBIS3.CONTROLS.Data.Collection.RecordSet', 'js!SBIS3.CONTROLS.SbisJSONStrategy'], function(DataSet, SbisJSONStrategy) {
 
    function propertyUpdateWrapper(func) {
       return function() {
