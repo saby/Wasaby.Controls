@@ -140,7 +140,7 @@ define('js!SBIS3.CONTROLS.EditInPlace',
                //set target
                this._target && this._target.show();
                this._target = target;
-               this.getContainer().insertAfter(target);
+               this.getContainer().insertAfter(target).addClass(target.attr('class').split(/\s+/));
                this._target.hide();
                EditInPlace.superclass.show.apply(this, arguments);
             },
