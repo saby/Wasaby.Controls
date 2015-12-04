@@ -12,7 +12,7 @@ define('js!SBIS3.CONTROLS.Data.SbisMoveStrategy', [
     * @author Ганшин Ярослав
     */
 
-   return $ws.proto.Abstract.extend(BaseMoveStrategy,[],/** @lends SBIS3.CONTROLS.Data.MoveStrategy.prototype */{
+   return BaseMoveStrategy.extend([],/** @lends SBIS3.CONTROLS.Data.MoveStrategy.prototype */{
       $protected: {
          _options:{
 
