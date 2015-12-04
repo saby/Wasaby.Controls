@@ -21,10 +21,7 @@ define('js!SBIS3.CONTROLS.FilterButton.FilterLine',
 
                if (changed) {
                   textArr = $ws.helpers.reduce(filterStructure, function(result, element) {
-                     var val = element.value,
-                         resVal = element.resetValue;
-
-                     if (element.caption && !$ws.helpers.isEqualObject(val, resVal)) {
+                     if (element.caption && !$ws.helpers.isEqualObject(element.value, element.resetValue)) {
                         result.push(element.caption);
                      }
                      return result;
