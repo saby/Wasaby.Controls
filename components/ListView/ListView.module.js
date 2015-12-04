@@ -118,7 +118,12 @@ define('js!SBIS3.CONTROLS.ListView',
           *     });
           * </pre>
           */
-
+         /**
+          * @event onCellValueChanged Событие при смене значения в одном из полей редактирования по месту и потере фокуса этим полем
+          * @param {$ws.proto.EventObject} eventObject Дескриптор события.
+          * @param {difference} Массив измененных полей
+          * @param {Object} model Модель с измененными данными
+          */
          $protected: {
             _floatCheckBox: null,
             _dotItemTpl: null,
@@ -296,15 +301,8 @@ define('js!SBIS3.CONTROLS.ListView',
                 */
                showPaging: false,
                /**
-                * @cfg {Boolean} Включить редактирование по месту
-                * @example
-                * <pre>
-                *     <opt name="editInPlaceEnabled">true</opt>
-                * </pre>
-                */
-               editInPlaceEnabled: false,
-               /**
                 * @cfg {String} Режим редактирования по месту
+                * @variant "" Редактирование по месту отлючено
                 * @variant click Отображение редактирования по клику
                 * @variant hover Отображение редактирования по наведению мыши
                 * @example
@@ -312,13 +310,13 @@ define('js!SBIS3.CONTROLS.ListView',
                 *     <opt name="editInPlaceMode">click</opt>
                 * </pre>
                 */
-               editInPlaceMode: 'click',
+               editMode: '',
                /**
                 * @cfg {String} Шаблон строки редактирования по месту.
                 * Данная опция обладает большим приоритетом, чем заданный в колонках редактор.
                 * @example
                 * <pre>
-                *     <opt name="editInPlaceTemplate">
+                *     <opt name="editingTemplate">
                 *       <component data-component="SBIS3.CONTROLS.TextBox" style="vertical-align: middle; display: inline-block; width: 100%;">
                 *          <opt name="text" bind="TextValue"></opt>
                 *          <opts name="validators" type="array">
@@ -330,23 +328,7 @@ define('js!SBIS3.CONTROLS.ListView',
                 *     </opt>
                 * </pre>
                 */
-               editInPlaceTemplate: undefined,
-               /**
-                * @cfg {Function} Метод, вызываемый при смене значения в одном из полей редактирования по месту и потере фокуса этим полем
-                * @example
-                * <pre>
-                *     <opt name="editInPlaceOnFieldChangeHandler" type="function">js!SBIS3.CONTROLS.MyModule:prototype.onFieldChangeHandler</opt>
-                * </pre>
-                */
-               editInPlaceOnFieldChangeHandler: undefined,
-               /**
-                * @cfg {Boolean} Перечитывать запись перед редактированием.
-                * @example
-                * <pre>
-                *     <opt name="editInPlaceGetModelFromSource">true</opt>
-                * </pre>
-                */
-               editInPlaceGetModelFromSource: false
+               editingTemplate: undefined
             }
          },
 
@@ -354,7 +336,7 @@ define('js!SBIS3.CONTROLS.ListView',
             //TODO временно смотрим на TopParent, чтобы понять, где скролл. С внедрением ScrallWatcher этот функционал уберем
             var topParent = this.getTopParent(),
                   self = this;
-            this._publish('onChangeHoveredItem', 'onItemClick', 'onItemActivate', 'onDataMerge');
+            this._publish('onChangeHoveredItem', 'onItemClick', 'onItemActivate', 'onDataMerge', 'onCellValueChanged');
             this._container.on('mousemove', this._mouseMoveHandler.bind(this))
                            .on('mouseleave', this._mouseLeaveHandler.bind(this));
 
@@ -375,9 +357,10 @@ define('js!SBIS3.CONTROLS.ListView',
                }
             }
             $ws.single.CommandDispatcher.declareCommand(this, 'activateItem', this._activateItem);
-            $ws.single.CommandDispatcher.declareCommand(this, 'addItem', this._addItem);
-            $ws.single.CommandDispatcher.declareCommand(this, 'editItem', this._editItem);
-            $ws.single.CommandDispatcher.declareCommand(this, 'endEdit', this._endEdit);
+            $ws.single.CommandDispatcher.declareCommand(this, 'beginAdd', this._beginAdd);
+            $ws.single.CommandDispatcher.declareCommand(this, 'beginEdit', this._beginEdit);
+            $ws.single.CommandDispatcher.declareCommand(this, 'cancelEdit', this._cancelEdit);
+            $ws.single.CommandDispatcher.declareCommand(this, 'commitEdit', this._commitEdit);
          },
 
          init: function () {
@@ -648,7 +631,7 @@ define('js!SBIS3.CONTROLS.ListView',
          /* todo EIP: Сухоручкин. Этот метод переопределен в других классах. Надо поискать по проекту и сделать так, чтобы работало везде.
             Разберемся когда поймем разницу showArea и showEditing */
          _elemClickHandlerInternal: function (data, id, target) {
-            if (this._options.editInPlaceEnabled && this._options.editInPlaceMode === 'click') {
+            if (this._options.editInPlaceMode === 'click') {
                this._getEditInPlace().edit($(target).closest('.js-controls-ListView__item'), data);
             }
             else {
@@ -721,7 +704,7 @@ define('js!SBIS3.CONTROLS.ListView',
 
          _updateEditInPlaceDisplay: function(hoveredItem) {
             var target;
-            if (this._options.editInPlaceEnabled && this._options.editInPlaceMode === 'hover') {
+            if (this._options.editInPlaceMode === 'hover') {
                target = hoveredItem.container;
                if (target && !target.hasClass('controls-editInPlace')) {
                   this._getEditInPlace().show(target, this._dataSet.getRecordByKey(hoveredItem.key));
@@ -772,10 +755,14 @@ define('js!SBIS3.CONTROLS.ListView',
                columns: this._options.columns,
                dataSource: this._dataSource,
                readRecordBeforeEdit: this._options.editInPlaceGetModelFromSource,
-               template: this._options.editInPlaceTemplate,
+               editingTemplate: this._options.editingTemplate,
                itemsContainer: this._getItemsContainer(),
                element: $('<div>'),
-               onFieldChange: this._options.editInPlaceOnFieldChangeHandler
+               handlers: {
+                  onCellValueChanged: function(difference, model) {
+                     this._notify('onCellValueChanged', difference, model)
+                  }.bind(this)
+               }
             }
          },
 
@@ -1307,7 +1294,7 @@ define('js!SBIS3.CONTROLS.ListView',
                this._pager.destroy();
                this._pager = undefined;
             }
-            if (this._options.editInPlaceEnabled && this._editInPlace) {
+            if (this._options.editMode && this._editInPlace) {
                this._editInPlace.destroy();
                this._editInPlace = null;
             }
@@ -1319,18 +1306,20 @@ define('js!SBIS3.CONTROLS.ListView',
                item = this._dataSet.getRecordByKey(id);
             this._notify('onItemActivate', {id: id, item: item});
          },
-         _addItem : function() {
+         _beginAdd: function() {
             this._notify('onAddItem');
             return this._getEditInPlace().add();
          },
-         _editItem : function(record) {
+         _beginEdit: function(record) {
             var target = this._getItemsContainer().find('.js-controls-ListView__item[data-id="' + record.getKey() + '"]:first');
             return this._getEditInPlace().edit(target, record);
          },
-         _endEdit : function(saveFields) {
-            return this._getEditInPlace().endEdit(saveFields);
+         _cancelEdit: function() {
+            return this._getEditInPlace().endEdit();
          },
-
+         _commitEdit: function() {
+            return this._getEditInPlace().endEdit(true);
+         },
          destroy: function () {
             if (this.isInfiniteScroll()) {
                if (this._isHeightGrowable()) {

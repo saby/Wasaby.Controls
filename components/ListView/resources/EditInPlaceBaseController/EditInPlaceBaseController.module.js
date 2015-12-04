@@ -23,7 +23,7 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
          EditInPlaceBaseController = CompoundControl.extend(/** @lends SBIS3.CONTROLS.EditInPlaceBaseController.prototype */ {
             $protected: {
                _options: {
-                  template: undefined,
+                  editingTemplate: undefined,
                   getCellTemplate: undefined,
                   columns: [],
                   readRecordBeforeEdit: false,
@@ -31,8 +31,7 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                   editFieldFocusHandler: undefined,
                   dataSource: undefined,
                   dataSet: undefined,
-                  itemsContainer: undefined,
-                  onFieldChange: undefined
+                  itemsContainer: undefined
                },
                _eip: undefined,
                _savingDeferred: undefined,
@@ -40,6 +39,7 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                _eipHandlers: null
             },
             $constructor: function () {
+               this.publish('onCellValueChanged');
                this._eipHandlers = {
                   onKeyDown: this._onKeyDown.bind(this)
                };
@@ -50,16 +50,18 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
             },
             _getEditInPlaceConfig: function() {
                return {
-                  template: this._options.template,
+                  editingTemplate: this._options.editingTemplate,
                   columns: this._options.columns,
                   element: $('<div>'),
                   getCellTemplate: this._options.getCellTemplate,
                   ignoreFirstColumn: this._options.ignoreFirstColumn,
                   context: this._getContextForEip(),
                   focusCatch: this._focusCatch.bind(this),
-                  onFieldChange: this._options.onFieldChange,
                   parent: this,
                   handlers: {
+                     onCellValueChanged: function(difference, model) {
+                        this._notify('onCellValueChanged', difference, model);
+                     }.bind(this),
                      onChildFocusOut: this._onChildFocusOut.bind(this)
                   }
                };
