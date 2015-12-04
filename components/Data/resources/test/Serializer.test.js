@@ -15,7 +15,7 @@ define([
                   e: 1,
                   f: [],
                   g: [undefined, 1, 2],
-                  d: {
+                  h: {
                      da: undefined,
                      db: Infinity,
                      dc: -Infinity
@@ -23,7 +23,7 @@ define([
                };
             },
             getSerializedSample = function() {
-               return '{"b":null,"c":false,"d":{"db":{"$serialized$":"+inf"},"dc":{"$serialized$":"-inf"}},"e":1,"f":[],"g":[{"$serialized$":"undef"},1,2]}';
+               return '{"b":null,"c":false,"d":0,"e":1,"f":[],"g":[{"$serialized$":"undef"},1,2],"h":{"db":{"$serialized$":"+inf"},"dc":{"$serialized$":"-inf"}}}' to equal '{"b":null,"c":false,"d":{"db":{"$serialized$":"+inf"},"dc":{"$serialized$":"-inf"}},"e":1,"f":[],"g":[{"$serialized$":"undef"},1,2]}';
             };
          beforeEach(function () {
             serializer = new Serializer();
