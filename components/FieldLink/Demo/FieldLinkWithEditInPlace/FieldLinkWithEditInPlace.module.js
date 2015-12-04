@@ -37,11 +37,11 @@ define('js!SBIS3.CONTROLS.Demo.FieldLinkWithEditInPlace', [
       },
 
       _addItem: function() {
-         return this._dataGrid.sendCommand('addItem');
+         return this._dataGrid.sendCommand('beginAdd');
       },
 
       sendAddItem: function() {
-         return this.sendCommand('addItem');
+         return this.sendCommand('beginAdd');
       },
 
       _createDataGridSource: function () {

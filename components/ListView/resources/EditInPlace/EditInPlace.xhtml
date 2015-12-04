@@ -1,10 +1,10 @@
 {{?it.columns}}
    <tr class="js-controls-ListView__item controls-editInPlace">
-   {{?it.template}}
+   {{?it.editingTemplate}}
       {{var colspan = it.columns.length;}}
       {{if (it.ignoreFirstColumn) { colspan++; } }}
       <td colspan="{{=colspan}}">
-         {{=it.template}}
+         {{=it.editingTemplate}}
       </td>
    {{??}}
       <!--TODO EIP Сухоручкин: вытащить логику ignoreFirstColumn в контроллер-->
@@ -22,8 +22,8 @@
    </tr>
 {{??}}
    <div class="js-controls-ListView__item controls-editInPlace">
-   {{?it.template}}
-      {{=it.template}}
+   {{?it.editingTemplate}}
+      {{=it.editingTemplate}}
    {{?}}
    </div>
 {{?}}
