@@ -758,7 +758,7 @@ define('js!SBIS3.CONTROLS.ListView',
                itemsContainer: this._getItemsContainer(),
                element: $('<div>'),
                handlers: {
-                  onCellValueChanged: function(difference, model) {
+                  onCellValueChanged: function(event, difference, model) {
                      this._notify('onCellValueChanged', difference, model)
                   }.bind(this)
                }

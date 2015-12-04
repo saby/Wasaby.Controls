@@ -59,7 +59,7 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                   focusCatch: this._focusCatch.bind(this),
                   parent: this,
                   handlers: {
-                     onCellValueChanged: function(difference, model) {
+                     onCellValueChanged: function(event, difference, model) {
                         this._notify('onCellValueChanged', difference, model);
                      }.bind(this),
                      onChildFocusOut: this._onChildFocusOut.bind(this)
