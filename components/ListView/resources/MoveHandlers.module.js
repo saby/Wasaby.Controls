@@ -31,19 +31,22 @@ define('js!SBIS3.CONTROLS.MoveHandlers', ['js!SBIS3.CONTROLS.MoveDialog','js!SBI
             recordTo,
             isNodeTo = true,
             self = this,
-            moveToKey = null,
             /*TODO переделать не на ParallelDeferred*/
             deferred = new $ws.proto.ParallelDeferred();
 
          if (moveTo !== null) {
-            recordTo = $ws.helpers.instanceOfModule(moveTo, 'SBIS3.CONTROLS.Record') ? moveTo : this._dataSet.getRecordByKey(moveTo);
-            moveToKey = recordTo.getKey();
+            if ($ws.helpers.instanceOfModule(moveTo, 'SBIS3.CONTROLS.Record')) {
+               recordTo = moveTo;
+               moveTo = recordTo.getKey();
+            } else {
+               recordTo = this._dataSet.getRecordByKey(moveTo);
+            }
             if (recordTo) {
                isNodeTo = recordTo.get(this._options.hierField + '@');
             }
          }
 
-         if (this._checkRecordsForMove(records, moveToKey)) {
+         if (this._checkRecordsForMove(records, moveTo)) {
             for (var i = 0; i < records.length; i++) {
                record = $ws.helpers.instanceOfModule(records[i], 'SBIS3.CONTROLS.Record') ? records[i] : this._dataSet.getRecordByKey(records[i]);
                if (isNodeTo) {
@@ -59,7 +62,7 @@ define('js!SBIS3.CONTROLS.MoveHandlers', ['js!SBIS3.CONTROLS.MoveDialog','js!SBI
                if (deferred.getResult().isSuccessful()) {
                   self.removeItemsSelectionAll();
                   if (isNodeTo) {
-                     self.setCurrentRoot(moveToKey);
+                     self.setCurrentRoot(moveTo);
                   }
                   self.reload();
                }
