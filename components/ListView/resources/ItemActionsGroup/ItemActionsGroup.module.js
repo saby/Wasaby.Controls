@@ -177,13 +177,8 @@ define('js!SBIS3.CONTROLS.ItemActionsGroup',
             cont.style.display = 'block';
 
             if (this._touchActions){
-               var contHeight = cont.offsetHeight,
-                   itemHeight = hoveredItem.size.height,
+               var itemHeight = hoveredItem.size.height,
                    itemsContainer = this._getItemsContainer();
-
-               if (contHeight < itemHeight){
-                  position.top -=  itemHeight - contHeight;
-               }
 
                itemsContainer[0].style.right = - cont.offsetWidth + 'px';
                cont.style.height = itemHeight + 'px';
@@ -206,8 +201,20 @@ define('js!SBIS3.CONTROLS.ItemActionsGroup',
           * Скрывает операции над записью
           * @private
           */
-         hideItemActions: function() {
-            this._container[0].style.display = 'none';
+         hideItemActions: function(animate) {
+            if (this._touchActions && animate){
+               var itemsContainer = this._getItemsContainer(),
+                  contWidth = this._container.width(),
+                  self = this;
+               itemsContainer.animate({right: -contWidth}, {
+                  duration: 350,
+                  complete: function(){
+                     self._container[0].style.display = 'none';
+                  }
+               });
+            } else {
+               this._container[0].style.display = 'none';
+            }
          },
          /**
           * Возвращает признак того, открыто ли сейчас меню операций над записью
