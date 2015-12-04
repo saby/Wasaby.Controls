@@ -5,16 +5,6 @@ define('js!SBIS3.CONTROLS.FilterButton.FilterLine',
    ],
    function(CompoundControl, dotTplFn) {
 
-      /**
-       * Метод, который переводит массивы и объекты в строку, чтобы их можно было сравнить
-       * @param val
-       * @returns {String}
-       * @private
-       */
-      var _convertToComparison = function(val) {
-         return val instanceof Array || val instanceof Object ? JSON.stringify(val) : val;
-      };
-
       var FilterLine = CompoundControl.extend({
          _dotTplFn: dotTplFn,
          $constructor: function() {
@@ -31,10 +21,10 @@ define('js!SBIS3.CONTROLS.FilterButton.FilterLine',
 
                if (changed) {
                   textArr = $ws.helpers.reduce(filterStructure, function(result, element) {
-                     var val = _convertToComparison(element.value),
-                         resVal = _convertToComparison(element.resetValue);
+                     var val = element.value,
+                         resVal = element.resetValue;
 
-                     if (element.caption && val !== resVal) {
+                     if (element.caption && (val instanceof Array || val instanceof Object ? !$ws.helpers.isEqualObject(val, resVal) : val !== resVal)) {
                         result.push(element.caption);
                      }
                      return result;
