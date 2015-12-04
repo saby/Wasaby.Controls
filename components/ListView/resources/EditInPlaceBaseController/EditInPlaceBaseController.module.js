@@ -39,7 +39,7 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                _eipHandlers: null
             },
             $constructor: function () {
-               this.publish('onCellValueChanged');
+               this._publish('onCellValueChanged');
                this._eipHandlers = {
                   onKeyDown: this._onKeyDown.bind(this)
                };

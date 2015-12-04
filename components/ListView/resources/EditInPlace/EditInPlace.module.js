@@ -40,7 +40,7 @@ define('js!SBIS3.CONTROLS.EditInPlace',
                _editingDeferred: undefined
             },
             init: function() {
-               this.publish('onCellValueChanged');
+               this._publish('onCellValueChanged');
                EditInPlace.superclass.init.apply(this, arguments);
                this._container.bind('keypress keydown', this._onKeyDown);
                this.subscribe('onChildControlFocusOut', this._onChildControlFocusOut);
@@ -140,7 +140,7 @@ define('js!SBIS3.CONTROLS.EditInPlace',
                //set target
                this._target && this._target.show();
                this._target = target;
-               this.getContainer().insertAfter(target).addClass(target.attr('class').split(/\s+/));
+               this.getContainer().insertAfter(target);
                this._target.hide();
                EditInPlace.superclass.show.apply(this, arguments);
             },

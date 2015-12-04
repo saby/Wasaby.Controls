@@ -358,7 +358,7 @@ define('js!SBIS3.CONTROLS.ListView',
             }
             if (this._options.editMode === 'click') {
                this.subscribe('onItemClick', function(event, id, record, target) {
-                  this._getEditInPlace().edit(target.closest('.js-controls-ListView__item'), record);
+                  this._getEditInPlace().edit($(target).closest('.js-controls-ListView__item'), record);
                   event.setResult(false);
                }.bind(this));
             } else if (this._options.editMode === 'hover'){
@@ -737,7 +737,7 @@ define('js!SBIS3.CONTROLS.ListView',
 
          _createEditInPlace: function() {
             var
-               controller = this._options.editInPlaceMode === 'hover' && !$ws._const.isMobilePlatform ? EditInPlaceHoverController : EditInPlaceClickController;
+               controller = this._options.editMode === 'hover' && !$ws._const.isMobilePlatform ? EditInPlaceHoverController : EditInPlaceClickController;
             this._editInPlace = new controller(this._getEditInPlaceConfig());
          },
 
