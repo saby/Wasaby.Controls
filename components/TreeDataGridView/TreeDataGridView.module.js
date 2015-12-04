@@ -180,6 +180,11 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
          }
       },
 
+      _drawExpandArrow: function(key, flag){
+         var itemCont = $('.controls-ListView__item[data-id="' + key + '"]', this.getContainer().get(0));
+         $('.js-controls-TreeView__expand', itemCont).toggleClass('controls-TreeView__expand__open', flag);
+      },
+
       destroyFolderToolbar: function(id) {
          var
             container = $('.controls-TreeDataGridView__folderToolbar' + (id ? '[data-parent="' + id + '"]' : ''), this._container.get(0));
@@ -225,7 +230,10 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
          container.attr('data-parent', parentKey);
 
          if (this._options.openedPath[key]) {
-            $('.js-controls-TreeView__expand', container).addClass('controls-TreeView__expand__open');
+            var tree = this._dataSet.getTreeIndex(this._options.hierField);
+            if (tree[key]) {
+               $('.js-controls-TreeView__expand', container).addClass('controls-TreeView__expand__open');
+            }
          }
          /*TODO пока придрот*/
          if (typeof parentKey != 'undefined' && parentKey !== null && parentContainer) {
@@ -325,6 +333,10 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
             this.setSelectedKey(id);
             this.setCurrentElement(e, this._getDragItems(id));
          }
+         //Предотвращаем нативное выделение текста на странице
+         if (!$ws._const.compatibility.touch) {
+            e.preventDefault();
+         }
       },
       _callMoveOutHandler: function() {
       },
@@ -351,13 +363,15 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
       },
       _callDropHandler: function(e) {
          var
+            clickHandler,
             target = $(e.target),
             keys = this.getCurrentElement(),
             moveTo = target.closest('.controls-ListView__item').data('id');
          //TODO придрот для того, чтобы если перетащить элемент сам на себя не отработал его обработчик клика
          if (this.getSelectedKey() === moveTo) {
+            clickHandler = this._elemClickHandler;
             this._elemClickHandler = function() {
-               this._elemClickHandler = TreeDataGridView.superclass._elemClickHandler;
+               this._elemClickHandler = clickHandler;
             }
          }
          this._move(keys, moveTo);

@@ -190,7 +190,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
              * Опция задаёт текст, отображаемый как при абсолютном отсутствии данных, так и в результате {@link groupBy фильтрации}.
              * @see items
              * @see setDataSource
-             * @see groupBy* @cfg {Function} Пользовательский метод добавления атрибутов на элементы коллекции
+             * @see groupBy*
              */
             emptyHTML: '',
             /**
@@ -203,7 +203,15 @@ define('js!SBIS3.CONTROLS.DSMixin', [
              *     </options>
              * </pre>
              */
-            filter: {}
+            filter: {},
+            /**
+             * @cfg {Object.<String,String>} соответствие опций шаблона полям в рекорде
+             */
+            templateBinding: {},
+            /**
+             * @cfg {Object.<String,String>} подключаемые внешние шаблоны, ключу соответствует поле it.included.<...> которое будет функцией в шаблоне
+             */
+            includedTemplates: {}
          },
          _loader: null
       },
@@ -434,7 +442,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
          this._options.filter = filter;
          this._dropPageSave();
          if (this._dataSource && !noLoad) {
-            this.reload(this._filter, this._sorting, 0, this.getPageSize());
+            this.reload(this._options.filter, this._sorting, 0, this.getPageSize());
          }
       },
 
@@ -743,9 +751,21 @@ define('js!SBIS3.CONTROLS.DSMixin', [
          }
       },
       _buildTplArgs: function(item) {
-         return {
-            item: item
-         };
+         var
+            tplOptions = {
+               templateBinding : this._options.templateBinding,
+               item: item
+            };
+         if (this._options.includedTemplates) {
+            var tpls = this._options.includedTemplates;
+            tplOptions.included = {};
+            for (var j in tpls) {
+               if (tpls.hasOwnProperty(j)) {
+                  tplOptions.included[j] = require(tpls[j]);
+               }
+            }
+         }
+         return tplOptions
       },
       _appendItemTemplate: function (item, targetContainer, itemBuildedTpl, at) {
          if (at && (typeof at.at !== 'undefined')) {
