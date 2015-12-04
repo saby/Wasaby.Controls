@@ -102,6 +102,25 @@ define('js!SBIS3.CONTROLS.EditInPlace',
                this._previousRecordState = record.clone();
                this._editingRecord = record.clone();
                ctx.setValue(CONTEXT_RECORD_FIELD, this._editingRecord)
+               if (!this._options.template) {
+                  this._fillCells(this._editingRecord);
+               }
+            },
+            _fillCells: function(record) {
+               var
+                  cell,
+                  cells = this.getContainer().find('.controls-DataGridView__td');
+               $ws.helpers.forEach(this._options.columns, function(column, index) {
+                  if (!this._options.columns[index].editor) {
+                     cell = cells.eq(this._options.ignoreFirstColumn ? index + 1 : index);
+                     cell.find('.ws-component').each(function(index, control) {
+                        control.wsControl.destroy();
+                     });
+                     cell.empty();
+                     cell.append(this._options.getCellTemplate(record, column));
+                  }
+               }, this);
+               this.reviveComponents();
             },
             canAcceptFocus: function () {
                return false;
