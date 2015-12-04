@@ -39,7 +39,7 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                _eipHandlers: null
             },
             $constructor: function () {
-               this._publish('onCellValueChanged');
+               this._publish('onCellValueChanged', 'onRowBeginEdit');
                this._eipHandlers = {
                   onKeyDown: this._onKeyDown.bind(this)
                };
@@ -121,31 +121,26 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                return this.endEdit(true).addCallback(function() {
                   var
                      loadingIndicator,
-                     beginEditResult,
-                     result = new $ws.proto.Deferred();
+                     beginEditResult;
                   //Если необходимо перечитывать запись перед редактированием, то делаем это
                   beginEditResult = self._notify('onRowBeginEdit', record);
-                  if (self._options.readRecordBeforeEdit) {
+                  if (beginEditResult instanceof $ws.proto.Deferred) {
                      loadingIndicator = setTimeout(function () {
                         $ws.helpers.toggleIndicator(true);
                      }, 100);
-                     result
-                        .addCallback(function () {
-                           return self._options.dataSource.read(record.getKey());
-                        })
-                        .addCallback(function (readRecord) {
-                           //Запоминаем запись, которую редактируем для того, чтобы по завершению редактирования подмержить в неё измененные данные
-                           self._editingRecord = record;
-                           return readRecord;
-                        })
-                        .addBoth(function (readRecord) {
-                           clearTimeout(loadingIndicator);
-                           $ws.helpers.toggleIndicator(false);
-                           return readRecord;
-                        });
-                     return result.callback();
+                     return beginEditResult.addCallback(function(readRecord) {
+                        self._editingRecord = readRecord;
+                        return readRecord;
+                     }).addBoth(function (readRecord) {
+                        clearTimeout(loadingIndicator);
+                        $ws.helpers.toggleIndicator(false);
+                        return readRecord;
+                     });
+                  } else if (beginEditResult !== false) {
+                     return record;
+                  } else {
+                     return $ws.proto.Deferred.fail();
                   }
-                  return record;
                });
             },
             /**

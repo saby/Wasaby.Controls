@@ -336,7 +336,7 @@ define('js!SBIS3.CONTROLS.ListView',
             //TODO временно смотрим на TopParent, чтобы понять, где скролл. С внедрением ScrallWatcher этот функционал уберем
             var topParent = this.getTopParent(),
                   self = this;
-            this._publish('onChangeHoveredItem', 'onItemClick', 'onItemActivate', 'onDataMerge', 'onCellValueChanged');
+            this._publish('onChangeHoveredItem', 'onItemClick', 'onItemActivate', 'onDataMerge', 'onCellValueChanged', 'onRowBeginEdit');
             this._container.on('mousemove', this._mouseMoveHandler.bind(this))
                            .on('mouseleave', this._mouseLeaveHandler.bind(this));
 
@@ -700,6 +700,7 @@ define('js!SBIS3.CONTROLS.ListView',
          //*******************************//
 
          _onItemClickHandler: function(event, id, record, target) {
+
             this._getEditInPlace().edit($(target).closest('.js-controls-ListView__item'), record);
             event.setResult(false);
          },
@@ -760,6 +761,9 @@ define('js!SBIS3.CONTROLS.ListView',
                handlers: {
                   onCellValueChanged: function(event, difference, model) {
                      this._notify('onCellValueChanged', difference, model)
+                  }.bind(this),
+                  onRowBeginEdit: function(event, result) {
+                     event.setResult(this._notify('onRowBeginEdit', result));
                   }.bind(this)
                }
             }
