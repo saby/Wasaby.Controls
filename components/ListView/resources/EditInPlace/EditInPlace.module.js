@@ -28,8 +28,7 @@ define('js!SBIS3.CONTROLS.EditInPlace',
                _options: {
                   columns: [],
                   focusCatch: undefined,
-                  onFieldChange: undefined,
-                  template: undefined,
+                  editingTemplate: undefined,
                   applyOnFieldChange: true,
                   visible: false
                },
@@ -41,11 +40,10 @@ define('js!SBIS3.CONTROLS.EditInPlace',
                _editingDeferred: undefined
             },
             init: function() {
+               this._publish('onCellValueChanged');
                EditInPlace.superclass.init.apply(this, arguments);
                this._container.bind('keypress keydown', this._onKeyDown);
-               if (this._options.onFieldChange) {
-                  this.subscribe('onChildControlFocusOut', this._onChildControlFocusOut);
-               }
+               this.subscribe('onChildControlFocusOut', this._onChildControlFocusOut);
             },
             _onChildControlFocusOut: function() {
                var
@@ -53,7 +51,7 @@ define('js!SBIS3.CONTROLS.EditInPlace',
                   difference = this._getRecordsDifference(),
                   loadingIndicator;
                if (difference.length) {
-                  result = this._options.onFieldChange(difference, this._editingRecord);
+                  result = this._notify('onCellValueChanged', difference, this._editingRecord);
                   if (result instanceof $ws.proto.Deferred) {
                      loadingIndicator = setTimeout(function () {
                         $ws.helpers.toggleIndicator(true);
@@ -102,6 +100,25 @@ define('js!SBIS3.CONTROLS.EditInPlace',
                this._previousRecordState = record.clone();
                this._editingRecord = record.clone();
                ctx.setValue(CONTEXT_RECORD_FIELD, this._editingRecord)
+               if (!this._options.editingTemplate) {
+                  this._fillCells(this._editingRecord);
+               }
+            },
+            _fillCells: function(record) {
+               var
+                  cell,
+                  cells = this.getContainer().find('.controls-DataGridView__td');
+               $ws.helpers.forEach(this._options.columns, function(column, index) {
+                  if (!this._options.columns[index].editor) {
+                     cell = cells.eq(this._options.ignoreFirstColumn ? index + 1 : index);
+                     cell.find('.ws-component').each(function(index, control) {
+                        control.wsControl.destroy();
+                     });
+                     cell.empty();
+                     cell.append(this._options.getCellTemplate(record, column));
+                  }
+               }, this);
+               this.reviveComponents();
             },
             canAcceptFocus: function () {
                return false;
