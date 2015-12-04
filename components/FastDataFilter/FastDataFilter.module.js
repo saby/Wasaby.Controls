@@ -92,7 +92,9 @@ define('js!SBIS3.CONTROLS.FastDataFilter',
                      text.push(ds.getRecordByKey(idArray[i]).get(this._options.displayField))
                   }
 
-                  self._filterStructure[idx].caption = text.join(', ');
+                  self._filterStructure[idx].caption = self._filterStructure[idx].value === undefined
+                        ? self._filterStructure[idx].resetCaption
+                        : text.join(', ');
                   self.applyFilter();
                }
             });
