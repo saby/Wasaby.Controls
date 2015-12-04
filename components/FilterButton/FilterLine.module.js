@@ -24,7 +24,7 @@ define('js!SBIS3.CONTROLS.FilterButton.FilterLine',
                      var val = element.value,
                          resVal = element.resetValue;
 
-                     if (element.caption && (val instanceof Array || val instanceof Object ? !$ws.helpers.isEqualObject(val, resVal) : val !== resVal)) {
+                     if (element.caption && !$ws.helpers.isEqualObject(val, resVal)) {
                         result.push(element.caption);
                      }
                      return result;
