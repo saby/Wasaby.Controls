@@ -9,19 +9,38 @@ define(['js!SBIS3.CONTROLS.Utils.HtmlDecorators/AbstractDecorator'], function (A
     */
    var LadderDecorator = AbstractDecorator.extend(/** @lends SBIS3.CONTROLS.Utils.HtmlDecorators/LadderDecorator.prototype */{
       $protected: {
+         _name: 'ladder',
          _options: {
             ladder: undefined
          },
          _ladderLastWords: {},
-         _columnName: undefined
+         _columnName: undefined,
+         _parentId: undefined
       },
 
       $constructor: function () {
       },
-
-      checkCondition: function(obj) {
-         if (obj.hasOwnProperty('ladder')) {
-            this._columnName = obj['ladder'];
+      /**
+       * @param {Object|String} data либо передаем имя колонки, либо объект
+       * Структура объекта:
+       *    {
+       *      column: String,               //имя колонки
+       *      parentId: String,             //id родительского узла
+       *    }
+       */
+      checkCondition: function(data) {
+         var ladderData = data.hasOwnProperty('ladder') && data['ladder'],
+            ladderDataType = typeof ladderData;
+         this._parentId = 'null';
+         if (!ladderData){
+            this._columnName = undefined;
+         }
+         else if (ladderData && ladderDataType == 'object') {
+            this._columnName = ladderData.column;
+            this._parentId = ladderData.parentId || 'null';
+         }
+         else if (ladderDataType == 'string'){
+            this._columnName = ladderData;
          }
       },
       /**
@@ -40,6 +59,11 @@ define(['js!SBIS3.CONTROLS.Utils.HtmlDecorators/AbstractDecorator'], function (A
       update: function (control) {
          LadderDecorator.superclass.update.apply(this, arguments);
          this._options.ladder = control._options.ladder;
+         this._ladderLastWords = {};
+      },
+
+      removeNodeData: function(key){
+         this._ladderLastWords[key] = {};
       },
 
       _isLadderColumn: function(){
@@ -56,11 +80,14 @@ define(['js!SBIS3.CONTROLS.Utils.HtmlDecorators/AbstractDecorator'], function (A
             return text;
          }
 
-         if (this._ladderLastWords[this._columnName] == text) {
+         if (!this._ladderLastWords[this._parentId]) {
+            this._ladderLastWords[this._parentId] = {};
+         }
+         else if (this._ladderLastWords[this._parentId][this._columnName] == text) {
             return '<span class="ws-invisible">' + text + '</span>';
          }
+         this._ladderLastWords[this._parentId][this._columnName] = text;
 
-         this._ladderLastWords[this._columnName] = text;
          return text;
       }
    });

@@ -393,7 +393,7 @@ define('js!SBIS3.CONTROLS.ComboBox', [
 
          filterFieldObj[this._options.displayField] = self._options.text;
 
-         self._dataSource.query(filterFieldObj).addCallback(function (DataSet) {
+         self._callQuery(filterFieldObj).addCallback(function (DataSet) {
             var noItems = true;
             DataSet.each(function (item) {
                noItems = false;

@@ -59,7 +59,6 @@ define(
         *    monthPicker.subscribe('onDateChange', dateChangeFn);
         * </pre>
         * @see setText
-        * @see setValue
         */
       $protected: {
          _options: {

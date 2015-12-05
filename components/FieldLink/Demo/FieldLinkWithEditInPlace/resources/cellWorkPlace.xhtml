@@ -1,0 +1,22 @@
+<div class="controls-demo-FieldLinkWithEditInPlace__cell">
+{{ var
+      workerInfo = it.item.get('ИнформацияПоСотруднику'),
+      workerData,
+      outStr = '';
+   workerInfo.each(function(workerRecord) {
+      workerData = workerRecord.get('ПолеИнформации');
+      outStr += '<p><span style="font-weight: bold;">' + workerData.get('Описание') + ':</span>';
+      var workerDataItem = workerData.get('СвязанныеЗаписи');
+      if(workerDataItem) {
+        if(workerDataItem.get) {
+            outStr += ' ' + (workerDataItem.get('Название') ? workerDataItem.get('Название') : '');
+        } else {
+            workerDataItem.each(function(record) {
+                outStr += ' ' + record.get('Название');
+            });
+        }
+      }
+      outStr += '<i> ' + workerData.get('Дополнение') + '</i></p>';
+   });
+}}{{=outStr}}
+</div>
