@@ -126,13 +126,7 @@ define('js!SBIS3.CONTROLS.CompositeViewMixin', ['html!SBIS3.CONTROLS.CompositeVi
                      } else {
                         dotTpl = doT.template('<div style="{{=it.decorators.apply(it.color, \'color\')}}">{{=it.decorators.apply(it.item.get(it.description))}}</div>');
                      }
-                     resultTpl = dotTpl({
-                        item: item,
-                        decorators: this._decorators,
-                        color: this._options.colorField ? item.get(this._options.colorField) : '',
-                        description: this._options.displayField,
-                        image: this._options.imageField
-                     });
+                     resultTpl = dotTpl;
                      break;
                   }
                case 'tile':
@@ -152,18 +146,22 @@ define('js!SBIS3.CONTROLS.CompositeViewMixin', ['html!SBIS3.CONTROLS.CompositeVi
                         }
                         dotTpl = doT.template('<div class="controls-CompositeView__verticalItemActions js-controls-CompositeView__verticalItemActions"><div class="controls-ListView__itemCheckBox js-controls-ListView__itemCheckBox"></div><img class="controls-CompositeView__tileImg" src="' + src + '"/><div class="controls-CompositeView__tileTitle" style="{{=it.decorators.apply(it.color, \'color\')}}">{{=it.decorators.apply(it.item.get(it.description))}}</div></div>');
                      }
-                     resultTpl = dotTpl({
-                        item: item,
-                        decorators: this._decorators,
-                        color: this._options.colorField ? item.get(this._options.colorField) : '',
-                        description: this._options.displayField,
-                        image: this._options.imageField
-                     });
+                     resultTpl = dotTpl;
                      break;
                   }
 
             }
             return resultTpl;
+         },
+
+
+         _buildTplArgs : function(parentFnc, item) {
+            var parentOptions = parentFnc.call(this, item);
+            if ((this._options.viewMode == 'list') || (this._options.viewMode == 'tile')) {
+               parentOptions.image = this._options.imageField;
+               parentOptions.description = this._options.displayField;
+            }
+            return parentOptions;
          },
 
          expandNode: function(parentFunc, key) {

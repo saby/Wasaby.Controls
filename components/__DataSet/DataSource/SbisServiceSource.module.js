@@ -345,7 +345,7 @@ define('js!SBIS3.CONTROLS.SbisServiceSource', [
             strategy = this.getStrategy(),
             def = new $ws.proto.Deferred(),
             params = strategy.prepareOrderParams(this._object, record, hierField, orderDetails),
-            suffix = orderDetails.after ? 'После' : 'До';
+            suffix = orderDetails.after ? 'До' : 'После';
          if(!this._orderBL){
             this._orderBL = new $ws.proto.BLObject('ПорядковыйНомер');
          }

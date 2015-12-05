@@ -33,9 +33,11 @@ define('js!SBIS3.CONTROLS.hierarchyMixin', [], function () {
          }
       },
       $constructor: function () {
+         var
+            filter = this.getFilter() || {};
          this._curRoot = this._options.root;
-         this._filter = this._filter || {};
-         this._filter[this._options.hierField] = this._options.root;
+         filter[this._options.hierField] = this._options.root;
+         this.setFilter(filter, true);
       },
 
       setHierField: function (hierField) {
@@ -129,9 +131,15 @@ define('js!SBIS3.CONTROLS.hierarchyMixin', [], function () {
        * @param {String} key Идентификатор раскрываемого узла
        */
       setCurrentRoot: function(key) {
-         var filter = this._filter || {};
-         filter[this._options.hierField] = key;
-         this._filter = filter;
+         var
+            filter = this.getFilter() || {};
+         if (key) {
+            filter[this._options.hierField] = key;
+         }
+         else {
+            delete(filter[this._options.hierField]);
+         }
+         this.setFilter(filter, true);
          this._hier = this._getHierarchy(this._dataSet, key);
          //узел грузим с 0-ой страницы
          this._offset = 0;
@@ -183,6 +191,19 @@ define('js!SBIS3.CONTROLS.hierarchyMixin', [], function () {
          var root = this._options.root;
          this._pageSaver = {};
          this._pageSaver[root] = 0;
+      },
+
+      //Переопределяем метод, чтоб передать тип записи
+      _activateItem : function(id) {
+         var
+            item = this._dataSet.getRecordByKey(id),
+            meta = {
+               id: id,
+               item: item,
+               hierField : this._options.hierField
+            };
+
+         this._notify('onItemActivate', meta);
       }
 
    };

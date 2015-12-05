@@ -27,7 +27,11 @@ define('js!SBIS3.CONTROLS.Clickable', [], function() {
       $protected: {
          _options: {
 
-         }
+         },
+         _keysWeHandle: [
+            $ws._const.key.enter,
+            $ws._const.key.space
+         ]
       },
 
       $constructor: function() {
@@ -49,15 +53,22 @@ define('js!SBIS3.CONTROLS.Clickable', [], function() {
          this._notify('onActivated', originalEvent);
       },
 
+      _keyboardHover: function(event){
+         if (this.isEnabled()) {
+            this._clickHandler(event);
+            this._notifyOnActivated(event);
+         }
+      },
+
       instead : {
          //TODO сделано через onClickHandler WS в базовом контроле
          _onClickHandler: function(e) {
-            e.stopImmediatePropagation();
             if (this.isEnabled()) {
                this._container.removeClass('controls-Click__active');
                this._clickHandler(e);
                this._notifyOnActivated(e);
             }
+            e.stopImmediatePropagation();
          }
       }
    };

@@ -135,9 +135,12 @@ define('js!SBIS3.CONTROLS.SbisJSONStrategy', [
        * @returns {Object} новый объект "сырых" данных
        */
       setValue: function (data, field, value) {
-         var index = this._getFieldIndex(data, field),
-            meta = data.s[index],
-            type = this._getType(meta);
+         var index = this._getFieldIndex(data, field);
+         if (index === -1) {
+            return data;
+         }
+         var meta = data.s[index],
+            type = this._getType(meta, data.d[index]);
          data.d[index] = Factory.serialize(value, type.name, SbisJSONStrategy, type.meta);
 
          return data;
@@ -329,21 +332,24 @@ define('js!SBIS3.CONTROLS.SbisJSONStrategy', [
          return {d: [], s: []};
       },
 
-       preprareOrderParams: function(object, record, hierField, orderDetails){
-          var params = {
-             'Объект': object,
-             'ИдО': record.getKey(),
-             'ПорядковыйНомер': orderDetails.column || 'ПорНомер',
-             'Иерархия': hierField
-          };
-          if(orderDetails.after){
-             params['ИдОПосле'] = orderDetails.after;
-          } else {
-             params['ИдОДо'] = orderDetails.before;
-          }
-          return params;
-       },
-       
+      prepareOrderParams: function (object, record, hierField, orderDetails) {
+         var params = {
+            'Объект': object,
+            'ИдО': [parseInt(record.getKey(), 10), object],
+            'ПорядковыйНомер': orderDetails.column || 'ПорНомер',
+            'Иерархия': typeof hierField === 'undefined' ? null : hierField
+         };
+         if (orderDetails.after) {
+            params['ИдОДо'] = [parseInt(orderDetails.after, 10), object];
+         }
+         else if (orderDetails.before) {
+            params['ИдОПосле'] = [parseInt(orderDetails.before, 10), object];
+         }
+         return params;
+      },
+
+
+
        setParentKey: function(record, hierField, parent) {
           record.set(hierField, [parent]);
        },
@@ -351,22 +357,21 @@ define('js!SBIS3.CONTROLS.SbisJSONStrategy', [
        getFullFieldData: function (data, name) {
           var index = this._getFieldIndex(data, name),
              meta = index >= 0 ? data.s[index] : undefined,
-             value = index >= 0 ? data.d[index] : undefined,
-             data = {meta: undefined, type: undefined};
+             result = {meta: undefined, type: undefined};
           if (meta) {
-             var type = this._getType(meta);
-             data.meta = type.meta;
-             data.type = type.name;
+             var type = this._getType(meta, data.d[index]);
+             result.meta = type.meta;
+             result.type = type.name;
           }
-          return data;
+          return result;
        },
        
-       _getType: function (meta, key) {
+       _getType: function (meta, value, key) {
           key = key || 't';
           var typeSbis = meta[key],
              type;
           if (typeof typeSbis === 'object') {
-             return this._getType(typeSbis, 'n');
+             return this._getType(typeSbis, value, 'n');
           }
           for (var fieldType in SbisJSONStrategy.FIELD_TYPE) {
              if (typeSbis === SbisJSONStrategy.FIELD_TYPE[fieldType]) {
@@ -374,12 +379,16 @@ define('js!SBIS3.CONTROLS.SbisJSONStrategy', [
                 break;
              }
           }
-          var prepareMeta = this._prepareMetaInfo(type, $ws.core.clone(meta));
+          var prepareMeta = this._prepareMetaInfo(type, $ws.core.clone(meta), value);
           return {'name': type, 'meta': prepareMeta};
        },
        
-       _prepareMetaInfo: function (type, meta) {
+       _prepareMetaInfo: function (type, meta, value) {
           switch (type) {
+             case 'Identity':
+                meta.separator = ',';
+                meta.isArray = value instanceof Array;
+                break;
              case 'Enum':
                 meta.source = meta.s;
                 break;

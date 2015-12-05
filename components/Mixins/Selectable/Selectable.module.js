@@ -44,11 +44,6 @@ define('js!SBIS3.CONTROLS.Selectable', [], function() {
              * @see onSelectedItemChange
              */
             selectedKey: null,
-            /**
-             * @deprecated Будет удалено с 3.7.3. Используйте {@link selectedKey}.
-             * @see selectedKey
-             */
-            selectedItem : null,
              /**
               * @cfg {Boolean} Разрешить отсутствие выбранного элемента в группе
               * @example
@@ -70,14 +65,8 @@ define('js!SBIS3.CONTROLS.Selectable', [], function() {
 
       $constructor: function() {
          this._publish('onSelectedItemChange');
-         if (this._options.selectedItem) {
-            $ws.single.ioc.resolve('ILogger').log('selectedItem', 'c 3.7.3 свойство selectedItem перестанет работать. Используйте свойство selectedKey');
-            this._options.selectedKey = this._options.selectedItem;
-         }
-         else {
-            if (this._options.allowEmptySelection == false) {
-               this._setFirstItemAsSelected();
-            }
+         if (this._options.allowEmptySelection == false) {
+            this._setFirstItemAsSelected();
          }
       },
 
@@ -85,27 +74,6 @@ define('js!SBIS3.CONTROLS.Selectable', [], function() {
          init : function() {
             this._drawSelectedItem(this._options.selectedKey);
          }
-      },
-
-      /**
-       * Метод-заглушка. Будет переделан на установку самого элемента, а не его id
-       * @param id
-       * @deprecated Будет удалено с 3.7.3. Используйте {@link setSelectedKey}.
-       */
-      setSelectedItem: function(id) {
-         //TODO изменить логику на установку выбранного элемента
-         $ws.single.ioc.resolve('ILogger').log('setSelectedItem', 'c 3.7.3 метод setSelectedItem перестанет работать. Используйте метод setSelectedKey');
-         this.setSelectedKey(id);
-      },
-
-      /**
-       * Метод-заглушка. Будет переделан на возвращение самого элемента, а не его id
-       * @deprecated Будет удалено с 3.7.3. Используйте {@link getSelectedKey}.
-       */
-      getSelectedItem : function() {
-         //TODO изменить логику на возврат выбранного элемента
-         $ws.single.ioc.resolve('ILogger').log('getSelectedItem', 'c 3.7.3 метод getSelectedItem перестанет работать. Используйте метод getSelectedKey');
-         return this.getSelectedKey();
       },
       /**
        * Установить выбранный элемент по идентификатору
@@ -155,7 +123,7 @@ define('js!SBIS3.CONTROLS.Selectable', [], function() {
       _notifySelectedItem : function(id) {
          //TODO: может тут указать, что метод надо переопредить чтобы текст передавать и пр.?
          this._notify('onSelectedItemChange', id);
-         this._notify('onPropertyChanged');
+         this._notifyOnPropertyChanged('selectedKey');
       },
 
       _dataLoadedCallback : function(){

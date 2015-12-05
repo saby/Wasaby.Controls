@@ -6,17 +6,6 @@ module.exports = function(grunt) {
        path = require('path');
 
    grunt.registerTask('build-dependencies', function() {
-      if ([
-         'components/contents.js',
-         'components/contents.json'
-      ].every(function(file) {
-         return grunt.file.exists(file) && grunt.file.isFile(file);
-      })) {
-         // All files are built, no need to rebuild them
-         grunt.log.writeln('Contents files already exist so there is no need to build them.');
-         return;
-      }
-
       var
          newPath,
          jsModules = {},

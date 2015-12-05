@@ -1,3 +1,14 @@
 .ws-HighCharts {
    -webkit-transform: none !important;
+   position: relative;
+}
+.ws-HighCharts__loadingIndicator
+{
+   position: absolute;
+   background: url('img/ajax-loader-indicator.gif') center center no-repeat;
+   height: 100%;
+   top: 0;
+   left: 0;
+   width: 100%;
+
 }
