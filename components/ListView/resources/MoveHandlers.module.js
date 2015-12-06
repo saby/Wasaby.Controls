@@ -35,7 +35,12 @@ define('js!SBIS3.CONTROLS.MoveHandlers', ['js!SBIS3.CONTROLS.MoveDialog','js!SBI
             deferred = new $ws.proto.ParallelDeferred();
 
          if (moveTo !== null) {
-            recordTo = this._dataSet.getRecordByKey(moveTo);
+            if ($ws.helpers.instanceOfModule(moveTo, 'SBIS3.CONTROLS.Record')) {
+               recordTo = moveTo;
+               moveTo = recordTo.getKey();
+            } else {
+               recordTo = this._dataSet.getRecordByKey(moveTo);
+            }
             if (recordTo) {
                isNodeTo = recordTo.get(this._options.hierField + '@');
             }
