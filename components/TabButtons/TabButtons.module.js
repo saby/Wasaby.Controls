@@ -51,6 +51,13 @@ define(
       _dotTplFn: TabButtonsTpl,
 
       $constructor: function () {
+         this._leftContainer  = this.getContainer().find('.controls-TabButtons__leftContainer');
+         this._rightContainer = this.getContainer().find('.controls-TabButtons__rightContainer');
+      },
+
+      /* Переопределяем получение контейнера для элементов */
+      _getTargetContainer:function(item){
+         return item.get('align') === 'left' ? this._leftContainer : this._rightContainer;
       },
       _getItemTemplate: function (item) {
          var displayField = this._options.displayField;
