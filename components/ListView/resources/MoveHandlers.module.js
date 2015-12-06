@@ -46,9 +46,9 @@ define('js!SBIS3.CONTROLS.MoveHandlers', ['js!SBIS3.CONTROLS.MoveDialog','js!SBI
                record = $ws.helpers.instanceOfModule(records[i], 'SBIS3.CONTROLS.Record') ? records[i] : this._dataSet.getRecordByKey(records[i]);
                if (isNodeTo) {
 
-                  this.getMoveStrategy().hierarhyMove(record, recordTo);
+                  deferred.push(this.getMoveStrategy().hierarhyMove(record, recordTo));
                } else {
-                  this.getMoveStrategy().move(record, recordTo, true);
+                  deferred.push(this.getMoveStrategy().move(record, recordTo, true));
 
 
                }
