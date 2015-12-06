@@ -265,6 +265,11 @@ define('js!SBIS3.CONTROLS.FieldLink',
          }
       },
 
+      _onResizeHandler: function() {
+         FieldLink.superclass._onResizeHandler.apply(this, arguments);
+         this._linkCollection.reload();
+      },
+
       _initEvents: function() {
          var self = this;
 
