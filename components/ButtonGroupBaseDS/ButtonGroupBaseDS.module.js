@@ -45,7 +45,7 @@ define('js!SBIS3.CONTROLS.ButtonGroupBaseDS', ['js!SBIS3.CORE.CompoundControl', 
                itemsInstances[i].setEnabled(enabled);
             }
          }
-      },      
+      },
 
       _drawItemsCallback : function(){
          var
@@ -63,6 +63,16 @@ define('js!SBIS3.CONTROLS.ButtonGroupBaseDS', ['js!SBIS3.CORE.CompoundControl', 
 
       _itemActivatedHandler : function() {
          /*метод должен быть перегружен*/
+      },
+
+      /**
+       * Переопределённый метод из базового Control
+       * Нужен, чтобы быстро работало скртие контрола,
+       * Не запускались расчёты авторазмеров
+       */
+      _setVisibility: function(show) {
+         this._container.toggleClass('ws-hidden', !show);
+         this._isVisible = show;
       }
    });
 

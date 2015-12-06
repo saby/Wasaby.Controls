@@ -37,7 +37,10 @@ define('js!SBIS3.CONTROLS.ContextMenu', ['js!SBIS3.CONTROLS.Menu', 'js!SBIS3.CON
       _drawItemsCallback: function() {
          ContextMenu.superclass._drawItemsCallback.apply(this, arguments);
          this.recalcPosition(true);
-      }
+      },
+
+      /* Заглушка, ContextMenu не должно вызывать расчёты авторазмеров, т.к. создаётся абсолютом в body */
+      _notifyOnSizeChanged: $ws.helpers.nop
    });
 
    return ContextMenu;
