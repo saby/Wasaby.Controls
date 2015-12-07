@@ -125,6 +125,7 @@ define('js!SBIS3.CONTROLS.Data.Source.DataSet', [
        * @returns {SBIS3.CONTROLS.Data.Collection.IList}
        */
       getAll: function (property) {
+         this._checkAdapter();
          if (property === undefined) {
             property = this._options.itemsProperty;
          }
@@ -163,12 +164,13 @@ define('js!SBIS3.CONTROLS.Data.Source.DataSet', [
        * @returns {SBIS3.CONTROLS.Data.Model|undefined}
        */
       getRow: function (property) {
+         this._checkAdapter();
          if (property === undefined) {
             property = this._options.itemsProperty;
          }
          var adapter = this.getAdapter().forTable(),
             data = this._getDataProperty(property),
-            type = adapter.getProperty(data, '_type');
+            type = this.getAdapter().getProperty(data, '_type');
          if (type === 'recordset') {
             if (adapter.getCount(data) > 0) {
                return this._getModelInstance(
@@ -208,18 +210,10 @@ define('js!SBIS3.CONTROLS.Data.Source.DataSet', [
       /**
        * Возвращает значение свойства в данных
        * @param {String} property Свойство
-       * @returns {Boolean}
+       * @returns {*}
        */
       getProperty: function (property) {
          return this._getDataProperty(property);
-      },
-
-      /**
-       * Устанавливает сырые данные
-       * @param rawData {Object} Сырые данные
-       */
-      setRawData: function(rawData) {
-         this._options.rawData = rawData;
       },
 
       /**
@@ -228,6 +222,14 @@ define('js!SBIS3.CONTROLS.Data.Source.DataSet', [
        */
       getRawData: function() {
          return this._options.rawData;
+      },
+
+      /**
+       * Устанавливает сырые данные
+       * @param rawData {Object} Сырые данные
+       */
+      setRawData: function(rawData) {
+         this._options.rawData = rawData;
       },
 
       //endregion Public methods
@@ -241,6 +243,7 @@ define('js!SBIS3.CONTROLS.Data.Source.DataSet', [
        * @private
        */
       _getDataProperty: function (property) {
+         this._checkAdapter();
          return property ?
             this.getAdapter().getProperty(this._options.rawData, property) :
             this._options.rawData;
@@ -253,12 +256,25 @@ define('js!SBIS3.CONTROLS.Data.Source.DataSet', [
        * @private
        */
       _getModelInstance: function (rawData) {
+         if (!this._options.model) {
+            throw new Error('Model is not defined');
+         }
          return new this._options.model({
             rawData: rawData,
             adapter: this.getAdapter(),
             source: this.getSource(),
             compatibleMode: true
          });
+      },
+
+      /**
+       * Проверят наличие адаптера
+       * @private
+       */
+      _checkAdapter: function () {
+         if (!this._options.adapter) {
+            throw new Error('Adapter is not defined');
+         }
       }
 
       //endregion Protected methods
