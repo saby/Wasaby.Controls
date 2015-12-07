@@ -35,7 +35,12 @@ define('js!SBIS3.CONTROLS.MoveHandlers', ['js!SBIS3.CONTROLS.MoveDialog','js!SBI
             deferred = new $ws.proto.ParallelDeferred();
 
          if (moveTo !== null) {
-            recordTo = this._dataSet.getRecordByKey(moveTo);
+            if ($ws.helpers.instanceOfModule(moveTo, 'SBIS3.CONTROLS.Record')) {
+               recordTo = moveTo;
+               moveTo = recordTo.getKey();
+            } else {
+               recordTo = this._dataSet.getRecordByKey(moveTo);
+            }
             if (recordTo) {
                isNodeTo = recordTo.get(this._options.hierField + '@');
             }
@@ -43,25 +48,25 @@ define('js!SBIS3.CONTROLS.MoveHandlers', ['js!SBIS3.CONTROLS.MoveDialog','js!SBI
 
          if (this._checkRecordsForMove(records, moveTo)) {
             for (var i = 0; i < records.length; i++) {
-               record = $ws.helpers.instanceOfModule(records[i], 'SBIS3.CONTROLS.Record') ? records[i] : this._dataSet.getRecordByKey(records[i]);
-               if (isNodeTo) {
-
-                  this.getMoveStrategy().hierarhyMove(record, recordTo);
-               } else {
-                  this.getMoveStrategy().move(record, recordTo, true);
-
-
-               }
+               records[i] = $ws.helpers.instanceOfModule(records[i], 'SBIS3.CONTROLS.Record') ? records[i] : this._dataSet.getRecordByKey(records[i]);
             }
-            deferred.done().getResult().addCallback(function() {
-               if (deferred.getResult().isSuccessful()) {
+            if (isNodeTo) {
+               deferred = this.getMoveStrategy().hierarhyMove(records, recordTo);
+            } else {
+               deferred = this.getMoveStrategy().move(records, recordTo, true);
+            }
+            if (deferred instanceof $ws.proto.Deferred) {
+               deferred.addCallback(function() {
                   self.removeItemsSelectionAll();
                   if (isNodeTo) {
                      self.setCurrentRoot(moveTo);
                   }
                   self.reload();
-               }
-            });
+               });
+            } else {
+               throw new Error('The MoveStrategy methods a move or a hierarhyMove must returning deferred.');
+            }
+
          }
       },
       _checkRecordsForMove: function(records, moveTo) {

@@ -10,6 +10,9 @@ define('js!SBIS3.CONTROLS.Data.SbisMoveStrategy', [
     * @extends SBIS3.CONTROLS.Data.BaseMoveStrategy
     * @public
     * @author Ганшин Ярослав
+    * @example
+    * <pre>
+    * </pre
     */
 
    return BaseMoveStrategy.extend([],/** @lends SBIS3.CONTROLS.Data.MoveStrategy.prototype */{
@@ -51,30 +54,33 @@ define('js!SBIS3.CONTROLS.Data.SbisMoveStrategy', [
 
       move: function (from, to, after) {
          var self = this,
-            params = this._getMoveParams(from, to, after),
-            suffix = after ? 'До':'После';
+            suffix = after ? 'До':'После',
+            def = new new $ws.proto.ParallelDeferred(),
+            method = this._options.moveMethodPrefix + suffix,
+            params = this._getMoveParams(to, after);
          if (!this._orderProvider) {
             this._orderProvider = new SbisServiceBLO(this._options.moveResource);
          }
-
-         return self._orderProvider.callMethod(this._options.moveMethodPrefix + suffix, params, $ws.proto.BLObject.RETURN_TYPE_ASIS).addErrback(function (error) {
-            $ws.single.ioc.resolve('ILogger').log('SBIS3.CONTROLS.Data.SbisMoveStrategy::move()', error);
-            return error;
+         $ws.helpers.forEach(from, function(record){
+            params['ИдО'] = [parseInt(this._getId(from)), objectName];
+            def.push(self._orderProvider.callMethod(method, params, $ws.proto.BLObject.RETURN_TYPE_ASIS).addErrback(function (error) {
+               $ws.single.ioc.resolve('ILogger').log('SBIS3.CONTROLS.Data.SbisMoveStrategy::move()', error);
+               return error;
+            }));
          });
+         return def.done().getResult();
       },
 
       /**
        * Возвращает параметры перемещения записей
-       * @param {SBIS3.CONTROLS.Data.Model} from Перемещаемая запись
        * @param {String} to Значение поля, в позицию которого перемещаем (по умолчанию - значение первичного ключа)
        * @param {Boolean} after Дополнительная информация о перемещении
        * @returns {Object}
        * @private
        */
-      _getMoveParams: function(from, to, after) {
+      _getMoveParams: function(to, after) {
          var objectName = this._options.resource,
             params = {
-               'ИдО': [parseInt(this._getId(from)), objectName],
                'ПорядковыйНомер': this._options.moveDefaultColumn,
                'Иерархия': null,
                'Объект': this._options.resource

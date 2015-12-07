@@ -41,8 +41,11 @@ define('js!SBIS3.CONTROLS.Data.BaseMoveStrategy', [
       },
 
       move: function (from, to, after) {
-
-         return this._options.dataSource.call('move', {from: from, to: to, details: {after: after}});
+         var def = new new $ws.proto.ParallelDeferred();
+         $ws.helpers.forEach(from, function(record){
+            def.push(this._options.dataSource.call('move', {from: record, to: to, details: {after: after}}))
+         });
+         return def.done().getResult();
       },
 
       hierarhyMove: function (from, to) {
@@ -52,8 +55,14 @@ define('js!SBIS3.CONTROLS.Data.BaseMoveStrategy', [
          if (!this._options.hierField) {
             throw new Error('Hierrarhy Field is not defined.');
          }
-         from.set(this._options.hierField, this._getId(to));
-         return this._options.dataSource.update(from);
+         var def = new new $ws.proto.ParallelDeferred(),
+            newParent = this._getId(to);
+         $ws.helpers.forEach(from, function(record){
+            record.set(this._options.hierField, newParent);
+            def.push(this._options.dataSource.update(from));
+         });
+         return def.done().getResult();
+
       },
 
 
@@ -61,7 +70,7 @@ define('js!SBIS3.CONTROLS.Data.BaseMoveStrategy', [
       _getId: function(model){
          if ($ws.helpers.instanceOfModule(model, 'SBIS3.CONTROLS.Data.Model')) {
             return model.getId();
-         } else if($ws.helpers.instanceOfModule(model, 'SBIS3.CONTROLS.Record')){
+         } else if($ws.helpers.instanceOfModule(model, 'SBIS3.CONTROLS.Record')) {
             return model.getKey()
          }
       }
