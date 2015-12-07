@@ -24,7 +24,7 @@ define('js!SBIS3.CONTROLS.FastDataFilter',
        * @control
        * @public
        */
-      var FastDataFilter = CompoundControl.extend([FilterMixin, DSMixin],{
+      var FastDataFilter = CompoundControl.extend([FilterMixin, DSMixin],/** @lends SBIS3.CONTROLS.FastDataFilter.prototype */{
          $protected: {
             _dotTplFn: dotTplFn,
             _options: {
@@ -49,7 +49,9 @@ define('js!SBIS3.CONTROLS.FastDataFilter',
                keyField: item.get('keyField'),
                mode: this._options.mode,
                multiselect : !!item.get('multiselect'),
-               displayField: item.get('displayField')
+               showSelectedInList : !!item.get('multiselect'),
+               displayField: item.get('displayField'),
+               className: 'controls-DropdownList__linkStyle'
             };
             return '<component data-component="SBIS3.CONTROLS.DropdownList" config="' + $ws.helpers.encodeCfgAttr(cfg) + '">' +
                         //'<opts name="selectedKeys" type="array" bind="' + cfg.filterName +'" ></opts>' + //direction="fromProperty" oneWay="true"
