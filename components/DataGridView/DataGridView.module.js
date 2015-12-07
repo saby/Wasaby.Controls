@@ -135,8 +135,10 @@ define('js!SBIS3.CONTROLS.DataGridView',
                color: this._options.colorField ? item.get(this._options.colorField) : '',
                multiselect : this._options.multiselect,
                isNode: item.get(this._options.hierField + '@'),
+               hasChilds: item.get(this._options.hierField + '$'),
                arrowActivatedHandler: this._options.arrowActivatedHandler,
                hierField: this._options.hierField,
+               displayType: this._options.displayType,
                startScrollColumn: this._options.startScrollColumn
             };
 
