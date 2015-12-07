@@ -4,6 +4,7 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService/resources/SbisServiceBLO', [],
       'use strict';
 
       var existsId = 7,
+         existsTooId = 987,
          notExistsId = 99;
 
       var SbisServiceBLO = $ws.core.extend({}, {
@@ -71,6 +72,8 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService/resources/SbisServiceBLO', [],
                      case 'Удалить':
                         if (args['ИдО'] === existsId || ($ws.helpers.type(args['ИдО']) === 'array' && Array.indexOf(args['ИдО'],existsId) !== -1)) {
                            data = existsId;
+                        } else if (args['ИдО'] === existsTooId || ($ws.helpers.type(args['ИдО']) === 'array' && Array.indexOf(args['ИдО'],existsTooId) !== -1)) {
+                              data = existsTooId;
                         } else {
                            error = 'Model is not found';
                         }
@@ -124,6 +127,7 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService/resources/SbisServiceBLO', [],
 
             setTimeout(function () {
                SbisServiceBLO.lastRequest = {
+                  cfg: this._cfg,
                   method: method,
                   args: args
                };
@@ -230,7 +234,7 @@ define([
                   var service = new SbisService({
                      resource: 'Товар'
                   });
-                  service.create({myParam: 'myValue'}).addCallbacks(function () {
+                  service.create().addCallbacks(function () {
                      try {
                         var args = SbisServiceBLO.lastRequest.args;
 
@@ -247,14 +251,34 @@ define([
                         if (args['Фильтр'].s[0].t !== 'Логическое') {
                            throw new Error('Wrong type for argument Фильтр.ВызовИзБраузера');
                         }
+                        done();
+                     } catch (err) {
+                        done(err);
+                     }
+                  }, function (err) {
+                     done(err);
+                  });
+               });
 
-                        if (args['Фильтр'].d[1] !== 'myValue') {
+               it('should generate a request with valid meta data', function (done) {
+                  var service = new SbisService({
+                     resource: 'Товар'
+                  });
+                  service.create({myParam: 'myValue'}).addCallbacks(function () {
+                     try {
+                        var args = SbisServiceBLO.lastRequest.args;
+
+                        if (args['ИмяМетода'] !== undefined) {
+                           throw new Error('Wrong argument ИмяМетода');
+                        }
+
+                        if (args['Фильтр'].d[0] !== 'myValue') {
                            throw new Error('Wrong value for argument Фильтр.myParam');
                         }
-                        if (args['Фильтр'].s[1].n !== 'myParam') {
+                        if (args['Фильтр'].s[0].n !== 'myParam') {
                            throw new Error('Wrong name for argument Фильтр.myParam');
                         }
-                        if (args['Фильтр'].s[1].t !== 'Строка') {
+                        if (args['Фильтр'].s[0].t !== 'Строка') {
                            throw new Error('Wrong type for argument Фильтр.myParam');
                         }
                         done();
@@ -645,42 +669,6 @@ define([
                         done(err);
                      });
                   });
-                  it('should delete a few records', function (done) {
-                     var service = new SbisService({
-                        resource: 'Товар'
-                     });
-                     service.destroy([0, SbisServiceBLO.existsId, 1]).addCallbacks(function (success) {
-                        try {
-                           if (!success) {
-                              throw new Error('Unsuccessful destroy');
-                           } else {
-                              done();
-                           }
-                        } catch (err) {
-                           done(err);
-                        }
-                     }, function (err) {
-                        done(err);
-                     });
-                  });
-                  it('should delete records by a composite key', function (done) {
-                     var service = new SbisService({
-                        resource: 'Товар'
-                     });
-                     service.destroy([SbisServiceBLO.existsId+',Товар',SbisServiceBLO.existsId+',Продукт']).addCallbacks(function (success) {
-                        try {
-                           if (!success) {
-                              throw new Error('Unsuccessful destroy');
-                           } else {
-                              done();
-                           }
-                        } catch (err) {
-                           done(err);
-                        }
-                     }, function (err) {
-                        done(err);
-                     });
-                  });
                });
 
                context('and the model isn\'t exists', function () {
@@ -745,6 +733,66 @@ define([
                         testArgIsModel(args['ДопПоля'], model);
 
                         done();
+                     } catch (err) {
+                        done(err);
+                     }
+                  }, function (err) {
+                     done(err);
+                  });
+               });
+
+               it('should delete a few records', function (done) {
+                  var service = new SbisService({
+                     resource: 'Товар'
+                  });
+                  service.destroy([0, SbisServiceBLO.existsId, 1]).addCallbacks(function (success) {
+                     try {
+                        var args = SbisServiceBLO.lastRequest.args;
+
+                        if (args['ИдО'][0] !== 0) {
+                           throw new Error('Wrong argument ИдО[0]');
+                        }
+                        if (args['ИдО'][1] !== SbisServiceBLO.existsId) {
+                           throw new Error('Wrong argument ИдО[1]');
+                        }
+                        if (args['ИдО'][2] !== 1) {
+                           throw new Error('Wrong argument ИдО[2]');
+                        }
+
+                        if (!success) {
+                           throw new Error('Unsuccessful destroy');
+                        } else {
+                           done();
+                        }
+                     } catch (err) {
+                        done(err);
+                     }
+                  }, function (err) {
+                     done(err);
+                  });
+               });
+
+               it('should delete records by a composite key', function (done) {
+                  var service = new SbisService({
+                     resource: 'Товар'
+                  });
+                  service.destroy([SbisServiceBLO.existsId + ',Товар', '987,Продукт']).addCallbacks(function (success) {
+                     try {
+                        var cfg = SbisServiceBLO.lastRequest.cfg;
+                        if (cfg.name !== 'Продукт') {
+                           throw new Error('Wrong service name');
+                        }
+
+                        var args = SbisServiceBLO.lastRequest.args;
+                        if (args['ИдО'] !== 987) {
+                           throw new Error('Wrong argument ИдО');
+                        }
+
+                        if (!success) {
+                           throw new Error('Unsuccessful destroy');
+                        } else {
+                           done();
+                        }
                      } catch (err) {
                         done(err);
                      }
