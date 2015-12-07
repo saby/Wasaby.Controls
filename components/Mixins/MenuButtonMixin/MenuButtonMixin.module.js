@@ -159,6 +159,23 @@ define('js!SBIS3.CONTROLS.MenuButtonMixin', ['js!SBIS3.CONTROLS.ContextMenu'], f
          },
          setItems: function(items){
             this._checkItemsIcons(items);
+         },
+         _drawIcon: function(icon){
+            if (this._picker){
+               var $icon = $('.controls-Menu__header-icon', this._picker.getContainer()),
+                  newclass = 'controls-Menu__header-icon ' + this._iconClass;
+               if (icon) {
+                  if ($icon.length){
+                     $icon.get(0).className = newclass;
+                  } else {
+                     var $caption = $('.controls-Menu__header-caption', this._picker.getContainer().get(0));
+                     $icon = $('<i class="' + newclass + '"></i>');
+                     $caption.before($icon);
+                  }
+               } else {
+                  $icon && $icon.remove();
+               }
+            }
          }
       },
 
