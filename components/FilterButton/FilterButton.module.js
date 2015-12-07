@@ -18,7 +18,7 @@ define('js!SBIS3.CONTROLS.FilterButton',
     * Кнопка фильтров. Функционал и внешний вид аналогичен $ws.proto.FilterButton, но работа с
     * фильтрами осуществляется только через контекст
     * @class SBIS3.CONTROLS.FilterButton
-    * @extends $ws.proto.Control
+    * @extends $ws.proto.CompoundControl
     * @author Крайнов Дмитрий Олегович
     * @mixes SBIS3.CONTROLS.FilterMixin
     * @mixes SBIS3.CONTROLS.PickerMixin
@@ -53,7 +53,7 @@ define('js!SBIS3.CONTROLS.FilterButton',
       return result;
    }
 
-   var FilterButton = CompoundControl.extend([FilterMixin, PickerMixin],{
+   var FilterButton = CompoundControl.extend([FilterMixin, PickerMixin],/** @lends SBIS3.CONTROLS.FilterButton.prototype */{
       _dotTplFn: dotTplFn,
       _dotTplPicker: dotTplForPicker,
       $protected: {
