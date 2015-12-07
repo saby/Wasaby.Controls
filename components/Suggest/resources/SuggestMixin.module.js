@@ -1,5 +1,6 @@
 define('js!SBIS3.CONTROLS.SuggestMixin', [
-   'js!SBIS3.CONTROLS.PickerMixin'
+   'js!SBIS3.CONTROLS.PickerMixin',
+   'js!SBIS3.CONTROLS.SuggestList'
 ], function (PickerMixin) {
    'use strict';
 
@@ -284,8 +285,8 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
       },
 
       /**
-       * Возвращает контрол списка сущностей через callback
-       * @returns {$ws.proto.Deferred}
+       * Возвращает контрол списка сущностей
+       * @returns {$ws.proto.Control}
        * @see list
        */
       getList: function () {
