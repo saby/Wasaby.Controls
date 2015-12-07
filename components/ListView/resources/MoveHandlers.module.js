@@ -167,7 +167,7 @@ define('js!SBIS3.CONTROLS.MoveHandlers', ['js!SBIS3.CONTROLS.MoveDialog','js!SBI
    };
    function moveRecord(itemRecord, moveTo, current, up){
       var self = this;
-      this.getMoveStrategy().move(itemRecord, this._dataSet.getRecordByKey(moveTo), up).addCallback(function(){
+      this.getMoveStrategy().move([itemRecord], this._dataSet.getRecordByKey(moveTo), up).addCallback(function(){
          self._moveItemTo(current, moveTo, up);
       }).addErrback(function(e){
          $ws.core.alert(e.message);
