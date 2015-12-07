@@ -357,6 +357,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
       }),
 
       _drawSelectedItem: function(key) {
+         this._options.selectedKeys = key === null ? [] : [key];
          this._drawSelectedItems(key === null ? [] : [key]);
       },
       /******************************************************/
