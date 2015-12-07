@@ -51,7 +51,7 @@ define('js!SBIS3.CONTROLS.MenuButtonMixin', ['js!SBIS3.CONTROLS.ContextMenu'], f
             }
             for (var i = 0; i < items.length; i++){
                //отступы нужны только в основном меню, но не в сабменю
-               if (!items[i].icon && !items[i][this._options.hierField]) { items[i].icon = icon;} 
+               if (!items[i].icon && !items[i][this._options.hierField]) { items[i].icon = icon;}
             }
          }
       },
@@ -60,6 +60,7 @@ define('js!SBIS3.CONTROLS.MenuButtonMixin', ['js!SBIS3.CONTROLS.ContextMenu'], f
          var menuconfig = {
             parent: this.getParent(),
             opener: this,
+            groupBy: this._options.groupBy,
             context: this.getParent() ? this.getParent().getLinkedContext() : {},
             element: targetElement,
             target : this.getContainer(),
@@ -123,7 +124,7 @@ define('js!SBIS3.CONTROLS.MenuButtonMixin', ['js!SBIS3.CONTROLS.ContextMenu'], f
          }
          return this._picker.getItemsInstances.apply(this._picker, arguments);
       },
-      
+
       _clickHandler: function () {
          if (this._dataSet.getCount() > 1) {
             this.togglePicker();
@@ -132,7 +133,7 @@ define('js!SBIS3.CONTROLS.MenuButtonMixin', ['js!SBIS3.CONTROLS.ContextMenu'], f
                var id = this._dataSet.at(0).getKey();
                this._notify('onMenuItemActivate', id);
             }
-         }  
+         }
       },
 
       _dataLoadedCallback : function() {
