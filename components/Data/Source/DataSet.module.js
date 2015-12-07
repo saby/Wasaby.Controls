@@ -28,7 +28,7 @@ define('js!SBIS3.CONTROLS.Data.Source.DataSet', [
             /**
              * @cfg {String} Сырые данные, выданные источником
              */
-            rawData: '',
+            rawData: null,
 
             /**
              * @cfg {Function} Конструктор модели
@@ -53,6 +53,7 @@ define('js!SBIS3.CONTROLS.Data.Source.DataSet', [
       },
 
       $constructor: function (cfg) {
+         cfg = cfg || {};
          if ('data' in cfg && !('rawData' in cfg)) {
             this._options.rawData = cfg.data;
             $ws.single.ioc.resolve('ILogger').log('SBIS3.CONTROLS.Data.Source.DataSet', 'option "data" is deprecated and will be removed in 3.7.20. Use "rawData" instead.');
