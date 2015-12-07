@@ -89,7 +89,7 @@ define('js!SBIS3.CONTROLS.EditInPlaceHoverController',
                }
             },
             destroy: function() {
-               this._secondEip.editInPlace.unbind('keyup', this._eipHandlers.onKeyDown);
+               this._secondEip.getContainer().unbind('keyup', this._eipHandlers.onKeyDown);
                EditInPlaceHoverController.superclass.destroy.apply(this, arguments);
             }
          });
