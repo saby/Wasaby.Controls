@@ -1,8 +1,9 @@
 define('js!SBIS3.CONTROLS.Browser', [
    'js!SBIS3.CORE.CompoundControl',
    'html!SBIS3.CONTROLS.Browser',
-   'js!SBIS3.CONTROLS.ComponentBinder'
-], function(CompoundControl, dotTplFn, ComponentBinder){
+   'js!SBIS3.CONTROLS.ComponentBinder',
+   'html!SBIS3.CONTROLS.Browser/resources/contentTpl'
+], function(CompoundControl, dotTplFn, ComponentBinder, contentTpl){
    'use strict';
 
    /**
@@ -26,6 +27,13 @@ define('js!SBIS3.CONTROLS.Browser', [
       };
 
    var Browser = CompoundControl.extend( /** @lends SBIS3.CONTROLS.Browser.prototype */{
+      /**
+       * @event onEdit при редактировании/создании записи
+       * @param {$ws.proto.EventObject} eventObject Дескриптор события.
+       * @param {String} id Ид редактируемой записи. Для добавления будет null
+       * @param {SBIS3.CONTROLS.Record} item Редактируемая запись
+       * @example
+       */
       _dotTplFn : dotTplFn,
       $protected: {
          _view: null,
@@ -45,7 +53,8 @@ define('js!SBIS3.CONTROLS.Browser', [
             /**
              * @cfg {String} Имя параметр фильтрации для поиска
              */
-            searchParam : 'СтрокаПоиска'
+            searchParam : 'СтрокаПоиска',
+            contentTpl : contentTpl
          }
       },
 
@@ -54,14 +63,18 @@ define('js!SBIS3.CONTROLS.Browser', [
       },
 
       init: function() {
+         var self = this;
          Browser.superclass.init.apply(this, arguments);
 
          this._view = this._getView();
+         this._view.subscribe('onItemActivate', function(e, itemMeta) {
+            self._notifyOnEditByActivate(itemMeta);
+         });
+
 
          this._hierMode = checkViewType(this._view);
 
 
-         this._searchForm = this._getSearchForm();
          if (this._hierMode) {
             this._backButton = this._getBackButton();
             this._breadCrumbs = this._getBreadCrumbs();
@@ -84,6 +97,8 @@ define('js!SBIS3.CONTROLS.Browser', [
                view: this._view
             });
          }
+
+         this._searchForm = this._getSearchForm();
          if (this._searchForm) {
             /*TODO вторым аргументом отдаем undefined - это параметр шаблон хлебных крошек в режиме поиска
              решить что с этим делать, может выпилить но юзается в номенклатуре?*/
@@ -95,10 +110,16 @@ define('js!SBIS3.CONTROLS.Browser', [
          if (this._operationsPanel) {
             this._componentBinder.bindOperationPanel(true, this._operationsPanel);
          }
-
       },
 
+      addItem: function(metaData) {
+         //При создании записи в простом случае просто зовем onEdit с пустыми параметрами
+         this._notify('onEdit', {id: null, item: null});
+      },
 
+      getView: function() {
+         return this._view;
+      },
 
       _getLinkedControl: function(name) {
          var ctrl = null;
@@ -123,6 +144,10 @@ define('js!SBIS3.CONTROLS.Browser', [
       },
       _getOperationsPanel: function() {
          return this._getLinkedControl('browserOperationsPanel');
+      },
+
+      _notifyOnEditByActivate: function(itemMeta) {
+         this._notify('onEdit', itemMeta)
       }
 
    });

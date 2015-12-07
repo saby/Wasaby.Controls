@@ -22,6 +22,12 @@
       }
    }
 
+   &.controls-DataGridView__hasSeparator{
+      .controls-DataGridView__table .controls-DataGridView__td{
+         border-color: @data-grid-cell-separator-color;
+      }
+   }
+
    .controls-DataGridView__table {
       width: 100%;
       position: relative;
@@ -176,7 +182,7 @@
          border-collapse: @data-grid-border-collapse;
          border-width: @data-grid-cell-border-width;
          border-style: @data-grid-cell-border-style;
-         border-color: #F5F5F5;
+         border-color: @data-grid-cell-border-color;
          vertical-align: @data-grid-cell-vertical-align;
          box-sizing: @data-grid-cell-box-sizing;
          line-height: @data-grid-cell-line-height;
@@ -201,8 +207,4 @@
          margin: @data-grid-checkbox-margin;
       }
    }
-}
-
-.controls-DataGridView__addInPlace-container {
-   padding-left: 8px;
 }

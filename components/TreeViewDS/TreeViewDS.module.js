@@ -48,8 +48,17 @@ define('js!SBIS3.CONTROLS.TreeViewDS', [
          return curList;
       },
 
-      _nodeDataLoaded : function(key, ds) {
-         TreeViewDS.superclass._nodeDataLoaded.apply(this, arguments);
+      _getItemActionsPosition: function(item) {
+         var treeItem = item.container.find('.js-controls-TreeView-itemContent');
+
+         return {
+            top: item.position.top + (treeItem.length ? treeItem[0].offsetHeight - 20 : 0),
+            right: 0
+         }
+      },
+
+      _drawLoadedNode : function(key) {
+         TreeViewDS.superclass._drawLoadedNode.apply(this, arguments);
          var itemCont = $('.controls-ListView__item[data-id="' + key + '"]', this.getContainer().get(0));
          $('.controls-TreeView__childContainer', itemCont).first().css('display', 'block');
       },

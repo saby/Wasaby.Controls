@@ -26,7 +26,8 @@ define('js!SBIS3.CONTROLS.MoveDialog', [
          var
             self = this,
             linkedView = this._options.linkedView,
-            selectedCount = this._options.records.length;
+            selectedCount = this._options.records.length,
+            filter;
          this.setTitle('Перенести ' + selectedCount + ' запис' + $ws.helpers.wordCaseByNumber(selectedCount, 'ей', 'ь', 'и') + ' в');
          this.getChildControlByName('MoveDialogTemplate-moveButton')
             .subscribe('onActivated', this._onMoveButtonActivated.bind(this));
@@ -37,11 +38,13 @@ define('js!SBIS3.CONTROLS.MoveDialog', [
          this._treeView.subscribe('onDrawItems', function() {
             self._createRoot();
          });
+         filter = this._treeView.getFilter();
          if ($ws.helpers.instanceOfModule(linkedView._dataSource, 'SBIS3.CONTROLS.SbisServiceSource')) {
-            this._treeView._filter['ВидДерева'] = "Только узлы";
+            filter['ВидДерева'] = "Только узлы";
             //TODO: костыль написан специально для нуменклатуры, чтобы не возвращалась выборка всех элементов при заходе в пустую папку
-            this._treeView._filter['folderChanged'] = true;
+            filter['folderChanged'] = true;
          }
+         this._treeView.setFilter(filter, true);
          this._treeView.setDataSource(linkedView._dataSource);
       },
       _onMoveButtonActivated: function() {
