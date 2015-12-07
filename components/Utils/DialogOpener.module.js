@@ -6,15 +6,15 @@ define('js!SBIS3.CONTROLS.Utils.DialogOpener',[
 ], function (DialogRecord) {
    'use strict';
    var convertRecord = function(record) {
-      var rec;
-      if (record._raw.s && record._raw.d) {
+      var rec, raw = record.getRaw();
+      if (raw.s && raw.d) {
          //TODO очень нужный метод
          var
             parser = new $ws.proto.ParserSBIS(),
-            cfg = parser.readRecord(record._raw),
+            cfg = parser.readRecord(raw),
             pkValue;
-         if (record._raw.d[0]) {
-            pkValue = record._raw.d[0] instanceof Array ? record._raw.d[0][0] : record._raw.d[0];
+         if (raw.d[0]) {
+            pkValue = raw.d[0] instanceof Array ? raw.d[0][0] : raw.d[0];
          }
          rec = new $ws.proto.Record({
             colDef : cfg.columns,
