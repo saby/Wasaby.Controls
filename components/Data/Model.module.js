@@ -428,7 +428,7 @@ define('js!SBIS3.CONTROLS.Data.Model', [
        * @param {Object} rawData Данные модели
        */
       setRawData: function (rawData, silent) {
-         this._options.rawData = rawData || {};
+         this._options.rawData = rawData;
          this._propertiesCache = {};
          this._initProperties();
          if (!silent) {
@@ -536,7 +536,7 @@ define('js!SBIS3.CONTROLS.Data.Model', [
          var adapter = this._options.adapter.forRecord(),
             fieldData = adapter.getFullFieldData(this._options.rawData, name);
 
-         adapter.set(
+         this._options.rawData = adapter.set(
             this._options.rawData,
             name,
             Factory.serialize(
