@@ -142,7 +142,7 @@ define('js!SBIS3.CONTROLS.SuggestList', [
       reload: function () {
          this._getItemsContainer().find('.controls-SuggestList__empty').remove();
 
-         SuggestList.superclass.reload.apply(this, arguments);
+         return SuggestList.superclass.reload.apply(this, arguments);
       },
 
       //TODO: заглушка
