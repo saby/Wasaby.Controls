@@ -41,9 +41,10 @@ define('js!SBIS3.CONTROLS.Data.BaseMoveStrategy', [
       },
 
       move: function (from, to, after) {
-         var def = new $ws.proto.ParallelDeferred();
+         var def = new $ws.proto.ParallelDeferred(),
+            self =this;
          $ws.helpers.forEach(from, function(record){
-            def.push(this._options.dataSource.call('move', {from: record, to: to, details: {after: after}}))
+            def.push(self._options.dataSource.call('move', {from: record, to: to, details: {after: after}}));
          });
          return def.done().getResult();
       },
