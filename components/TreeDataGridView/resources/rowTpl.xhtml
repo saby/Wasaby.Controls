@@ -7,7 +7,7 @@
    {{~it.columns :column:index}}
       <td class="controls-DataGridView__td{{?column.className}} {{=column.className}}{{?}}{{?it.startScrollColumn!== undefined}}{{?it.startScrollColumn <= index}} controls-DataGridView__scrolledCell{{??}} controls-DataGridView__notScrolledCell{{?}}{{?}}">
          {{?index == 0}}
-            <div class="controls-TreeView__expand js-controls-TreeView__expand{{?it.isNode == null}} controls-TreeView__expand__leaf{{??}} has-child{{?}}"></div>
+            <div class="controls-TreeView__expand js-controls-TreeView__expand{{?it.isNode == null || (it.displayType == 'folders' && it.hasChilds === false)}} controls-TreeView__expand__leaf{{??}} has-child{{?}}"></div>
             {{?it.isNode}}
                {{?it.arrowActivatedHandler}}
                <div class="controls-TreeView__ellipsis-wrapper">
