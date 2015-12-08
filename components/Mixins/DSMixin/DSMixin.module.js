@@ -352,8 +352,11 @@ define('js!SBIS3.CONTROLS.DSMixin', [
             def.callback(dataSet);
             self._redraw();
          }).addErrback(function(error){
-            self._toggleIndicator(false);
-            $ws.helpers.message(error.toString().replace('Error: ', ''));
+            if (!error.canceled) {
+               self._toggleIndicator(false);
+               $ws.helpers.message(error.message.toString().replace('Error: ', ''));
+            }
+            def.errback(error);
          });
 
          this._notifyOnPropertyChanged('filter');
