@@ -382,7 +382,7 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
        */
       _onListDrawItems: function () {
          if (this._picker) {
-            this._picker.recalcPosition();
+            this._picker.recalcPosition(true);
          }
       },
 
@@ -461,7 +461,8 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
        * @private
        */
       _checkPickerState: function () {
-         return Boolean(this._options.usePicker && this._list && this._list.getDataSet().getCount());
+         var dataSet = this._list && this._list.getDataSet();
+         return Boolean(this._options.usePicker && dataSet && dataSet.getCount());
       },
 
       _setPickerContent: function () {

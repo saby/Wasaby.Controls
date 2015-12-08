@@ -258,6 +258,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
         * @remark
         * Данные могут быть заданы либо этим методом, либо опцией {@link items}.
         * @param ds Новый источник данных.
+        * @param noLoad Установить новый источник данных без запроса на БЛ.
         * @example
         * <pre>
         *     define(
@@ -284,10 +285,12 @@ define('js!SBIS3.CONTROLS.DSMixin', [
         * @see onDrawItems
         * @see onDataLoad
         */
-      setDataSource: function (ds) {
+      setDataSource: function (ds, noLoad) {
          this._dataSource = ds;
          this._dataSet = null;
-         return this.reload();
+          if(!noLoad) {
+             return this.reload();
+          }
       },
       /**
        * Метод получения набора данных, который в данный момент установлен в представлении.
