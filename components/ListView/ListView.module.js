@@ -804,12 +804,12 @@ define('js!SBIS3.CONTROLS.ListView',
          _showItemActions: function (item) {
             //Создадим операции над записью, если их нет
             this.getItemsActions();
+            this._itemActionsGroup.applyItemActions();
 
             //Если показывается меню, то не надо позиционировать операции над записью
             if (this._itemActionsGroup.isItemActionsMenuVisible()) {
                return;
             }
-            this._itemActionsGroup.applyItemActions();
             this._itemActionsGroup.showItemActions(item, this._getItemActionsPosition(item));
          },
          _hideItemActions: function () {

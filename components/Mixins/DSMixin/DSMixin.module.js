@@ -287,7 +287,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
       setDataSource: function (ds) {
          this._dataSource = ds;
          this._dataSet = null;
-         this.reload();
+         return this.reload();
       },
       /**
        * Метод получения набора данных, который в данный момент установлен в представлении.
@@ -351,6 +351,9 @@ define('js!SBIS3.CONTROLS.DSMixin', [
             //self._notify('onBeforeRedraw');
             def.callback(dataSet);
             self._redraw();
+         }).addErrback(function(error){
+            self._toggleIndicator(false);
+            $ws.helpers.message(error.toString().replace('Error: ', ''));
          });
 
          this._notifyOnPropertyChanged('filter');
@@ -664,7 +667,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
          var
                groupBy = this._options.groupBy,
                tplOptions = {
-                  columns : $ws.core.clone(this._options.columns),
+                  columns : $ws.core.clone(this._options.columns || []),
                   multiselect : this._options.multiselect,
                   hierField: this._options.hierField + '@'
                },
@@ -672,7 +675,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
                itemInstance;
          targetContainer = this._getTargetContainer(item);
          tplOptions.item = item;
-         tplOptions.colspan = this._options.columns.length + this._options.multiselect;
+         tplOptions.colspan = tplOptions.columns.length + this._options.multiselect;
          itemInstance = this._buildTplItem(item, groupBy.template(tplOptions));
          this._appendItemTemplate(item, targetContainer, itemInstance, at);
          //Сначала положим в дом, потом будем звать рендеры, иначе контролы, которые могут создать в рендере неправмльно поймут свою ширину

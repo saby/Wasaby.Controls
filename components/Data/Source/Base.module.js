@@ -24,6 +24,8 @@ define('js!SBIS3.CONTROLS.Data.Source.Base', [
       _moduleName: 'SBIS3.CONTROLS.Data.Source.Base',
 
       $constructor: function (cfg) {
+         cfg = cfg || {};
+
          this._publish('onDataSync');
          this._options.model = 'model' in cfg ? cfg.model : Model;
       },
