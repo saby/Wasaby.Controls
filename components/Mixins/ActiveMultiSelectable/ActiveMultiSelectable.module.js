@@ -72,10 +72,18 @@ define('js!SBIS3.CONTROLS.ActiveMultiSelectable', ['js!SBIS3.CONTROLS.Data.Colle
        * @param {Array | SBIS3.CONTROLS.Data.Collection.List} items
        */
       addSelectedItems: propertyUpdateWrapper(function(items) {
-         var selKeys = [],
+         var self = this,
+             selKeys = [],
+             newItems = items instanceof Array ? this._makeList(items) : items,
              selItems = this._options.selectedItems;
 
-         selItems.concat(items);
+         /* Не добавляем уже выбранные элементы */
+         newItems.each(function(rec) {
+            if(self._isItemSelected(rec) !== -1) {
+               newItems.remove(rec)
+            }
+         });
+         selItems.concat(newItems);
          selItems.each(function(rec) {
             selKeys.push(rec.getId());
          });
@@ -154,10 +162,10 @@ define('js!SBIS3.CONTROLS.ActiveMultiSelectable', ['js!SBIS3.CONTROLS.Data.Colle
          }
          return this._loadItemsDeferred;
       },
-
       /* Синхронизирует выбранные ключи и выбранные записи */
       _syncSelectedItems: function() {
-         var selKeys = this.getSelectedKeys(),
+         var self = this,
+             selKeys = this.getSelectedKeys(),
              selItems = this._options.selectedItems,
              delItems = [],
              id;
@@ -173,9 +181,8 @@ define('js!SBIS3.CONTROLS.ActiveMultiSelectable', ['js!SBIS3.CONTROLS.Data.Colle
 
          /* Соберём элементы для удаления, т.к. в методе each не отслеживаются изменения IList'а */
          selItems.each(function(rec) {
-            id = rec.getId();
             /* ключи могут быть и строкой, поэтому надо проверить и на строку */
-            if(Array.indexOf(selKeys, id) === -1 && Array.indexOf(selKeys, String(id)) === -1) {
+            if(self._isItemSelected(rec.getId()) === -1) {
                delItems.push(rec);
             }
          });
@@ -185,6 +192,11 @@ define('js!SBIS3.CONTROLS.ActiveMultiSelectable', ['js!SBIS3.CONTROLS.Data.Colle
                selItems.remove(delItems[i]);
             }
             this._notifyOnPropertyChanged('selectedItems');
+         }
+      },
+      around: {
+         _isItemSelected: function(parentFunc, item) {
+            return parentFunc.call(this, item.getId ? item.getId() : item);
          }
       }
    };
