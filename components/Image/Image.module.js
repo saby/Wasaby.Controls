@@ -1,18 +1,17 @@
 /**
  * Created by ps.borisov on 30.09.2015.
  */
-
 define('js!SBIS3.CONTROLS.Image',
    [
       'js!SBIS3.CORE.CompoundControl',
+      'js!SBIS3.CONTROLS.Data.Source.SbisService',
+      'js!SBIS3.CONTROLS.Data.Source.Memory',
       'html!SBIS3.CONTROLS.Image',
       'js!SBIS3.CORE.FileLoader',
       'js!SBIS3.CORE.Dialog',
       'js!SBIS3.CONTROLS.Link'
-   ], function(CompoundControl, dotTplFn, FileLoader, Dialog) {
-
+   ], function(CompoundControl, SbisService, Memory, dotTplFn, FileLoader, Dialog) {
       'use strict';
-
       var
          //Продолжительность анимации при отображения панели изображения
          ANIMATION_DURATION = 300,
@@ -29,17 +28,101 @@ define('js!SBIS3.CONTROLS.Image',
           * </component>
           */
          Image = CompoundControl.extend(/** @lends SBIS3.CONTROLS.Image.prototype */{
+            /**
+             * @event onBeginLoad Возникает перед началом загрузки изображения
+             * <wiTag group="Загрузка изображения">
+             * — Обработка результата:
+             * False – отмена загрузки файла.
+             * @param {$ws.proto.EventObject} eventObject Дескриптор события описание в классе $ws.proto.Abstract
+             * @example
+             * <pre>
+             *    Image.subscribe('onBeginLoad', function(event){
+             *       event.setResult(false); // Отменим загрузку изображения
+             *    });
+             * </pre>
+             */
+            /**
+             * @event onEndLoad Возникает по завершению загружки изображения
+             * <wiTag group="Загрузка изображения">
+             * @param {$ws.proto.EventObject} eventObject Дескриптор события описание в классе $ws.proto.Abstract
+             * @example
+             * <pre>
+             *    Image.subscribe('onEndLoad', function(event) {
+             *       $ws.helpers.alert('Изображение загружено.');
+             *    });
+             * </pre>
+             */
+            /**
+             * @event onErrorLoad Возникает при ошибке загрузки изображения
+             * <wiTag group="Загрузка изображения">
+             * @param {$ws.proto.EventObject} eventObject Дескриптор события описание в классе $ws.proto.Abstract
+             * @example
+             * <pre>
+             *    Image.subscribe('onErrorLoad', function(event) {
+             *       $ws.helpers.alert('Произошла ошибка при загрузке изображения.');
+             *    });
+             * </pre>
+             */
+            /**
+             * @event onChangeImage Возникает при смене изображения
+             * <wiTag group="Загрузка изображения">
+             * @param {$ws.proto.EventObject} eventObject Дескриптор события описание в классе $ws.proto.Abstract
+             * @param {String} image Выбранное изображение
+             * @example
+             * <pre>
+             *    Image.subscribe('onChangeImage', function(event, image) {
+             *       $ws.helpers.alert('Изображение обновлено на ' + image);
+             *    });
+             * </pre>
+             */
+             /**
+             * @event onResetImage Возникает при сбросе изображения
+             * @param {$ws.proto.EventObject} eventObject Дескриптор события описание в классе $ws.proto.Abstract
+             * @example
+             * <pre>
+             *    Image.subscribe('onResetImage', function(event) {
+             *       var
+             *          deferred = new $ws.proto.Deferred();
+             *       $ws.core.attachInstance('SBIS3.CORE.DialogConfirm', {
+             *          message: 'Действительно удалить изображение?',
+             *          handlers: {
+             *             onConfirm: function(event, result) {
+             *                deferred.callback(result);
+             *             }
+             *          }
+             *       });
+             *       event.setResult(deferred);
+             *    });
+             * </pre>
+             */
+            /**
+             * @event onShowEdit Возникает при отображении диалога редактирования изображения
+             * <wiTag group="Обрезка изображения">
+             * @param {$ws.proto.EventObject} eventObject Дескриптор события описание в классе $ws.proto.Abstract
+             */
+            /**
+             * @event onBeginSave Возникает при сохранении изображения
+             * Позволяет динамически формировать параметры обрезки изображения
+             * <wiTag group="Обрезка изображения">
+             * @param {$ws.proto.EventObject} eventObject Дескриптор события описание в классе $ws.proto.Abstract
+             * @param {Object} sendObject Параметры обрезки изображения
+             * @example
+             * <pre>
+             * onBeginSave: function(event, filter) {
+             *    delete filter.realHeight;
+             *    delete filter.realWidth;
+             *    event.setResult(filter);
+             * }
+             * </pre>
+             */
+            /**
+             * @event onEndSave Возникает после обрезки изображения
+             * <wiTag group="Обрезка изображения">
+             * @param {$ws.proto.EventObject} eventObject Дескриптор события описание в классе $ws.proto.Abstract
+             */
             _dotTplFn : dotTplFn,
             $protected: {
                _options: {
-                  /**
-                   * @cfg {String} Текущее изображение
-                   * @example
-                   * <pre>
-                   *     <option name="image">/service/sbis-rpc-service300.dll?id=0&method=CompanyLogo.Read&protocol=3&params=e30%3D</option>
-                   * </pre>
-                   */
-                  image: '',
                   /**
                    * @cfg {Boolean} Использовать панель работы с изображением
                    * @example
@@ -49,13 +132,66 @@ define('js!SBIS3.CONTROLS.Image',
                    */
                   imageBar: true,
                   /**
-                   * @cfg {Boolean} При отображении вписывать изображение в контейнер (true) или использовать реальный размер указанного изображения (false)
+                   * @cfg {Boolean} Включить режим обрезки изображения.
+                   * Диалог обрезки изображения отображается при загрузке нового изображения и при нажатии на кнопку редактирования изображения
                    * @example
                    * <pre>
-                   *     <option name="expandImageOnContainer">true</option>
+                   *    <option name="enabled">true</option>
                    * </pre>
                    */
-                  expandImageOnContainer: true,
+                  edit: false,
+                  /**
+                   * @cfg {Object} Параметры диалога редактирования изображения
+                   * @example
+                   * <pre>
+                   *    <option name="editConfig">
+                   *       <option name="title">Редактирование фото</option>
+                   *    </option>
+                   * </pre>
+                   */
+                  editConfig: {
+                     title: 'Редактирование изображения'
+                  },
+                  /**
+                   * @cfg {Number} Соотношение сторон в выделяемой области
+                   * @example
+                   * <pre>
+                   *    <option name="cropAspectRatio">0.75</option>
+                   * </pre>
+                   */
+                  cropAspectRatio: undefined,
+                  /**
+                   * @cfg {Boolean} Режим автоматического маскимального расширения и центрирования области выделения
+                   * Если установлено в false - выделение будет установлено в соотстветствии с параметром cropSelection
+                   * @example
+                   * <pre>
+                   *     <option name="cropAutoSelectionMode">true</option>
+                   * </pre>
+                   */
+                  cropAutoSelectionMode: true,
+                  /**
+                   * @cfg {Array} Координаты начального выделения
+                   * @example
+                   * <pre>
+                   *     <options name="cropSelection" type="array">
+                   *        <option>50</option>
+                   *        <option>50</option>
+                   *        <option>200</option>
+                   *        <option>200</option>
+                   *     </options>
+                   * </pre>
+                   */
+                  cropSelection: undefined,
+                  /**
+                   * @cfg {String} Указывает способ отображения изображения в контейнере.
+                   * @variant normal Изображение размещается в верхнем левом углу. Изображение располагается в центре, если размер контейнера больше, чем размер изображения.
+                   * @variant stretch Изображение вытягивается или сужается, чтобы в точности соответствовать размеру контейнера.
+                   * @example
+                   * <pre>
+                   *     <option name="stretch">true</option>
+                   * </pre>
+                   */
+                  sizeMode: 'normal',
                   /**
                    * @cfg {String} Изображение, используемое по умолчанию
                    * @example
@@ -63,271 +199,219 @@ define('js!SBIS3.CONTROLS.Image',
                    *     <option name="defaultImage">/sbis3-controls/components/Image/resources/default-image.png</option>
                    * </pre>
                    */
-                  defaultImage: '/sbis3-controls/components/Image/resources/default-image.png',
+                  defaultImage: $ws.helpers.processImagePath('js!SBIS3.CONTROLS.Image/resources/default-image.png'),
                   /**
-                   * @cfg {String} Название метода бизнес логики для создания изображения
-                   * @example
-                   * <pre>
-                   *     <option name="createMethodName">DraftCompanyLogo.Create</option>
-                   * </pre>
+                   * @cfg {Object} Связанный источник данных
                    */
-                  createMethodName: '',
+                  dataSource: undefined,
                   /**
-                   * @cfg {Function} Функция, выполняемая при возникновении ошибки при работе с загружаемым изображением
-                   * @example
-                   * onError: function(error) {
-                   *    $ws.helpers.alert('Произошла ошибка при загрузке изображения.');
-                   * }
+                   * @cfg {Object} Фильтр данных
                    */
-                  onError: undefined,
+                  filter: {},
                   /**
-                   * @cfg {Function} Функция, выполняемая при обновлении изображения в компоненте
-                   * @deprecated Будет удалено с 3.7.3.20. Используйте подписку на изменение полей контекста.
-                   * @example
-                   * onImageUpdated: function(newImageURL) {
-                   *    $ws.helpers.reloadImage(image, newImageURL);
-                   * }
+                   * todo Удалить, временная опция для поддержки смены логотипа компании (используется в FileLoader)
+                   * @deprecated
+                   * @noshow
                    */
-                  onImageUpdated: undefined, //todo Убрать в 3.7.3.20 и поправить в прикладном коде.
-                  /**
-                   * @cfg {Object} Опции обрезки изображения
-                   */
-                  cropOptions: {
-                     /**
-                      * @cfg {Boolean} Включить режим обрезки изображения.
-                      * Диалог обрезки изображения отображается при загрузке нового изображения и при нажатии на кнопку редактирования изображения
-                      * @example
-                      * <pre>
-                      *     <option name="enabled">true</option>
-                      * </pre>
-                      */
-                     enabled: false,
-                     /**
-                      * @cfg {Function} Функция, выполняемая перед отображением диалога обрезки изображения.
-                      * Позволяет динамически задавать опции обрезки (ссылку на изображение, координаты выделения, методы БЛ и т.д.)
-                      * @example
-                      * onBeforeShowCrop: function(config) {
-                      *    config.image = '/service/?id=0&method=DraftCompanyLogo.Read&protocol=3&params=eyLQmNC00J4iOjF9';
-                      *    config.cropSelection = [50, 50, 100, 100];
-                      *    return config;
-                      * }
-                      */
-                     onBeforeShowCrop: undefined,
-                     /**
-                      * @cfg {Function} Функция, выполняемая после завершения закрытия диалога обрезки изображения и выполнения самой обрезки.
-                      * Позволяет динамически определять адрес, по которому будет хранится обрезанное (итоговое) изображение
-                      * @example
-                      * onAfterPerformCrop: function(imageUrl) {
-                      *    return /service/?id=0&method=DraftCompanyLogo.Read&protocol=3&params=eyLQmNC00J4iOjF9;
-                      * }
-                      */
-                     onAfterPerformCrop: undefined,
-                     /**
-                      * @cfg {Function} Функция, вызываемая перед началом обрезки изображения.
-                      * Позволяет динамически формировать объект, передаваемый в метод бизнес-логики для обрезки изображения
-                      * @example
-                      * onCropStarted: function(sendObject) {
-                      *    delete sendObject.realHeight;
-                      *    delete sendObject.realWidth;
-                      *    return sendObject;
-                      * }
-                      */
-                     onCropStarted: undefined,
-                     /**
-                      * @cfg {String} Имя связанного объекта бизнес логики
-                      * @example
-                      * <pre>
-                      *     <option name="linkedObjectName">CompanyLogo</option>
-                      * </pre>
-                      */
-                     linkedObjectName: '',
-                     /**
-                      * @cfg {String} Название метода для обрезки изображения
-                      * @example
-                      * <pre>
-                      *     <option name="cropMethodName">Apply</option>
-                      * </pre>
-                      */
-                     cropMethodName: '',
-                     /**
-                      * @cfg {Number} Соотношение сторон в выделяемой области
-                      * @example
-                      * <pre>
-                      *     <option name="cropAspectRatio">0.75</option>
-                      * </pre>
-                      */
-                     cropAspectRatio: undefined,
-                     /**
-                      * @cfg {Boolean} Режим автоматического маскимального расширения и центрирования области выделения
-                      * Если установлено в false - выделение будет установлено в соотстветствии с параметром cropSelection
-                      * @example
-                      * <pre>
-                      *     <option name="cropAutoSelectionMode">true</option>
-                      * </pre>
-                      */
-                     cropAutoSelectionMode: true,
-                     /**
-                      * @cfg {Array} Координаты начального выделения
-                      * @example
-                      * <pre>
-                      *     <options name="cropSelection" type="array">
-                      *        <option>50</option>
-                      *        <option>50</option>
-                      *        <option>200</option>
-                      *        <option>200</option>
-                      *     </options>
-                      * </pre>
-                      */
-                     cropSelection: undefined
-                  }
+                  linkedObject: ''
                },
+               _dataSource: undefined,
                _imageBar: undefined,
-               _imageName: '',
+               _imageUrl: '',
                _image: undefined,
                _fileLoader: undefined,
-               _deleteButton:undefined,
-               _cropButton: undefined,
+               _buttonReset: undefined,
+               _buttonEdit: undefined,
                _boundEvents: undefined,
                _firstLoaded: false
             },
-
             $constructor: function() {
+               this._publish('onBeginLoad', 'onEndLoad', 'onErrorLoad', 'onChangeImage', 'onResetImage', 'onShowEdit', 'onBeginSave', 'onEndSave');
+               $ws.single.CommandDispatcher.declareCommand(this, 'uploadImage', this._uploadImage);
+               $ws.single.CommandDispatcher.declareCommand(this, 'editImage', this._editImage);
+               $ws.single.CommandDispatcher.declareCommand(this, 'resetImage', this._resetImage);
+               if (this._options.dataSource) {
+                  this._dataSource = this._options.dataSource;
+               } else {
+                  this._dataSource = new Memory();
+               }
                if (this._options.imageBar) {
                   this._imageBar = this._container.find('.controls-image__image-bar');
                }
                this._image = this._container.find('.controls-image__image');
             },
-
             init: function() {
-               Image.superclass.init.call(this);
-
-               //Устанавливаем начальное изображение
-               if (!this._options.image) {
-                  this._options.image = this._options.defaultImage;
-               }
-
-               //Находим/создаем компоненты, необходимые для работы (если нужно)
+                Image.superclass.init.call(this);
+               //Находим компоненты, необходимые для работы (если нужно)
                if (this._options.imageBar) {
-                  this._cropButton = this.getChildControlByName('ButtonCrop');
-                  this._deleteButton = this.getChildControlByName('ButtonDelete');
+                  this._buttonEdit = this.getChildControlByName('ButtonEdit');
+                  this._buttonReset = this.getChildControlByName('ButtonReset');
                   this._fileLoader = this.getChildControlByName('FileLoader');
+                  //todo Удалить, временная опция для поддержки смены логотипа компании
+                  this._fileLoader.setMethod((this._options.linkedObject || this._dataSource.getResource()) + '.' + this._dataSource.getCreateMethodName());
                   this._bindEvens();
                }
-               this.setImage(this._options.image);
+               this.reload();
             },
-
+            /* ------------------------------------------------------------
+               Блок публичных методов
+               ------------------------------------------------------------ */
+            /**
+             * Метод перезагрузки данных.
+             */
+            reload: function() {
+               this._setImage($ws.helpers.prepareGetRPCInvocationURL(this._dataSource.getResource(),
+                  this._dataSource.getReadMethodName(), this._options.filter, $ws.proto.BLObject.RETURN_TYPE_ASIS));
+            },
+            /**
+             * Установить источник данных
+             * @param {Object} dataSource
+             * @param {Boolean} noReload установить фильтр без перезагрузки данных
+             */
+            setDataSource: function(dataSource, noReload) {
+               if (dataSource instanceof SbisService) {
+                  this._options.dataSource = this._dataSource = dataSource;
+                  if (this._options.imageBar) {
+                     //todo Удалить, временная опция для поддержки смены логотипа компании
+                     this._fileLoader.setMethod((this._options.linkedObject || this._dataSource.getResource()) + '.' + this._dataSource.getCreateMethodName());
+                  }
+                  if (!noReload) {
+                     this.reload();
+                  }
+               }
+            },
+            /**
+             * Получить текущий источник данных
+             * @returns {Object}
+             */
+            getDataSource: function() {
+               return this._dataSource;
+            },
+            /**
+             * Установить фильтр
+             * @param {Object} filter
+             * @param {Boolean} noReload установить фильтр без перезагрузки данных
+             */
+            setFilter: function(filter, noReload) {
+               this._options.filter = filter;
+               if (!noReload) {
+                  this.reload();
+               }
+            },
+            /**
+             * Получить текущий фильтр
+             * @returns {Object}
+             */
+            getFilter: function() {
+               return this._options.filter;
+            },
+            /**
+             * Установить способ отображения изображения в контейнере
+             * @param {String} Способ отображения
+             */
+            setSizeMode: function(sizeMode, noReload) {
+               this._options.sizeMode = sizeMode;
+               if (!noReload) {
+                  this.reload();
+               }
+            },
+            /**
+             * Получить текущий способ отображения изображения в контейнере
+             * @returns {String}
+             */
+            getSizeMode: function() {
+               return this._options.sizeMode;
+            },
+            /* ------------------------------------------------------------
+               Блок приватных методов
+               ------------------------------------------------------------ */
             _bindEvens: function() {
                this._boundEvents = {
                   onImageMouseEnter: this._onImageMouseEnter.bind(this),
                   onImageMouseLeave: this._onImageMouseLeave.bind(this),
                   onImageBarMouseLeave: this._onImageBarMouseLeave.bind(this),
-                  onImageLoad: this._onImageLoad.bind(this),
-                  onImageLoadError: this._onImageLoadError.bind(this)
+                  onChangeImage: this._onChangeImage.bind(this),
+                  onErrorLoad: this._onErrorLoad.bind(this)
                };
                this._image.mouseenter(this._boundEvents.onImageMouseEnter);
                this._image.mouseleave(this._boundEvents.onImageMouseLeave);
                this._imageBar.mouseleave(this._boundEvents.onImageBarMouseLeave);
-               this._image.load(this._boundEvents.onImageLoad);
-               this._image.error(this._boundEvents.onImageLoadError);
+               this._image.load(this._boundEvents.onChangeImage);
+               this._image.error(this._boundEvents.onErrorLoad);
             },
-
-            _onChangeFile: function(event, fileName) {
-               this.getParent()._imageName = fileName;
+            _onBeginLoad: function(event) {
+               var
+                  imageInstance = this.getParent(),
+                  result = imageInstance._notify('onBeginLoad', this);
+               event.setResult(result);
+               if (result !== false) {
+                  $ws.helpers.toggleLocalIndicator(imageInstance._container, true);
+               }
             },
-
-            _onStartUpload: function() {
-               $ws.helpers.toggleLocalIndicator(this.getParent()._container, true);
-            },
-
-            _onFinishUpload: function(event, response) {
-               var imageInstance = this.getParent();
+            _onEndLoad: function(event, response) {
+               var
+                  imageInstance = this.getParent();
                if (response.hasOwnProperty('error')) {
                   $ws.helpers.toggleLocalIndicator(imageInstance._container, false);
-                  this._boundEvents.onImageLoadError(response.error);
+                  imageInstance._boundEvents.onErrorLoad(response.error);
                } else {
-                  if (imageInstance._options.cropOptions.enabled) {
-                     $ws.helpers.toggleLocalIndicator(imageInstance._container, false);
-                     imageInstance._showCropDialog(imageInstance._options.image, true);
+                  imageInstance._notify('onEndLoad');
+                  if (imageInstance._options.edit) {
+                     imageInstance._showEditDialog('new');
                   } else {
-                     imageInstance.setImage(imageInstance._options.image);
+                     imageInstance.reload();
+                     $ws.helpers.toggleLocalIndicator(imageInstance._container, false);
                   }
                }
             },
-
-            _onImageLoad: function() {
+            _onChangeImage: function() {
                var
-                  image = this._image.get(0);
-               $ws.helpers.toggleLocalIndicator(this._container, false);
-               if (this._options.expandImageOnContainer) {
+                  image = this._image.get(0),
+                  showButtons = this._imageUrl !== this._options.defaultImage;
+               if (this._options.sizeMode === 'stretch') {
                   this._image.css(image.naturalHeight > image.naturalWidth ? 'height': 'width', '100%');
                }
-               //По говтовности изображения пересчитываем высоту image-bar (даже если его не нужно показывать - потом пригодится!)
+               //По готовности изображения пересчитываем высоту image-bar (даже если его не нужно показывать - потом пригодится!)
                this._recalculateImageBar();
+               if (this._options.imageBar) {
+                  this._buttonReset.toggle(showButtons);
+                  this._buttonEdit.toggle(this._options.edit && showButtons);
+               }
                if (!this._firstLoaded) {
                   this._firstLoaded = true;
-               } else if (typeof this._options.onImageUpdated === 'function') {
-                  this._options.onImageUpdated.call(this, this._options.image);
+               } else {
+                  this._notify('onChangeImage', this._imageUrl);
                }
             },
-
-            _onImageLoadError: function(error) {
-               if (typeof this._options.onError === 'function') {
-                  this._options.onError(error);
-               }
-               if (this.getImage() !== this._options.defaultImage) {
-                  this.setImage(this._options.defaultImage);
+            _onErrorLoad: function(error) {
+               this._notify('onErrorLoad', error);
+               if (this._imageUrl !== this._options.defaultImage) {
+                  this._setImage(this._options.defaultImage);
                }
             },
-
             _onImageMouseEnter: function() {
                if (this._canDisplayImageBar()) {
                   this._imageBar.fadeIn(ANIMATION_DURATION);
                }
             },
-
             _onImageMouseLeave: function(event) {
                if (this._canDisplayImageBar() && event.relatedTarget !== this._imageBar[0]) {
                   this._imageBar.hide();
                }
             },
-
             _onImageBarMouseLeave: function(event) {
                if (this._canDisplayImageBar() && event.relatedTarget !== this._image[0]) {
                   this._imageBar.hide();
                }
             },
-
             _canDisplayImageBar: function() {
                return this.isEnabled();
             },
-
-            /**
-             * Метод возвращает текущее изображение
-             * @returns {String} Текущее изображение
-             */
-            getImage: function() {
-               return this._options.image;
-            },
-
-            /**
-             * Метод устанавливает текущее изображение
-             * @param url {String} Путь до устанавливаемого изображения
-             */
-            setImage: function(url) {
-               var
-                  showButtons = url && typeof url === 'string' && url !== this._options.defaultImage;
-               if (this._options.imageBar) {
-                  this._deleteButton.toggle(showButtons);
-                  this._cropButton.toggle(this._options.cropOptions.enabled && showButtons);
-               }
-               if (!showButtons) {
-                  url = this._options.defaultImage;
-               }
-               this._options.image = url;
+            _setImage: function(url) {
                //Из-за проблем, связанных с кэшированием - перезагружаем картинку специальным хелпером
-               $ws.helpers.reloadImage(this._image, url, this._boundEvents.onImageLoadError);
+               $ws.helpers.reloadImage(this._image, url, this._boundEvents.onErrorLoad);
+               this._imageUrl = url;
             },
-
             _recalculateImageBar: function(){
                var
                   position =  this._image.position();
@@ -338,60 +422,85 @@ define('js!SBIS3.CONTROLS.Image',
                   top: position.top
                });
             },
-
-            _showCropDialog: function(image) {
+            _showEditDialog: function(imageType) {
                var
-                  cropOptions = {
-                     imageUrl: image,
-                     cropMethodName: this._options.cropOptions.cropMethodName,
-                     linkedObjectName: this._options.cropOptions.linkedObjectName,
-                     cropAspectRatio: this._options.cropOptions.cropAspectRatio,
-                     cropAutoSelectionMode: this._options.cropOptions.cropAutoSelectionMode,
-                     cropSelection: this._options.cropOptions.cropSelection
-                  };
-               //Позволяем прикладным программистам самостоятельно переопределять опции обрезки изображения
-               if (typeof this._options.cropOptions.onBeforeShowCrop === 'function') {
-                  cropOptions = this._options.cropOptions.onBeforeShowCrop(cropOptions);
+                  self = this,
+                  showCropResult = this._notify('onShowEdit', imageType),
+                  dataSource = this.getDataSource(),
+                  filter = this.getFilter();
+               //todo Удалить, временная опция для поддержки смены логотипа компании
+               if (showCropResult && showCropResult.dataSource instanceof SbisService) {
+                  dataSource = showCropResult.dataSource;
+                  filter = showCropResult.filter;
+               } else if (showCropResult) {
+                   filter = showCropResult;
                }
                new Dialog({
-                  template: 'js!SBIS3.CONTROLS.Image.CropDialog',
+                  template: 'js!SBIS3.CONTROLS.Image.EditDialog',
                   opener: this,
-                  componentOptions: {
-                     imageTitle: this._imageName,
-                     cropOptions: cropOptions,
-                     onCropStarted: function (sendObject) {
-                        return typeof this._options.cropOptions.onCropStarted === 'function' ?
-                           this._options.cropOptions.onCropStarted(sendObject) :
-                           sendObject;
-                     }.bind(this),
-                     onCropFinished: function (result) {
-                        var imageUrl = cropOptions.imageUrl;
-                        if (typeof this._options.cropOptions.onAfterPerformCrop === 'function') {
-                           imageUrl = this._options.cropOptions.onAfterPerformCrop(imageUrl);
+                  componentOptions: $ws.core.merge({
+                     dataSource: dataSource,
+                     filter: filter,
+                     cropAspectRatio: this._options.cropAspectRatio,
+                     cropAutoSelectionMode: this._options.cropAutoSelectionMode,
+                     cropSelection: this._options.cropSelection,
+                     handlers: {
+                        onBeginSave: function (event, sendObject) {
+                           event.setResult(self._notify('onBeginSave', sendObject));
+                        },
+                        onEndSave: function (event, result) {
+                           event.setResult(self._notify('onEndSave', result));
+                           self.reload();
                         }
-                        this.setImage(imageUrl);
-                        if (typeof this._options.cropOptions.onCropFinished === 'function') {
-                           this._options.cropOptions.onCropFinished(result);
-                        }
-                     }.bind(this)
+                     }
+                  }, this._options.editConfig),
+                  handlers: {
+                     onAfterClose: function() {
+                        $ws.helpers.toggleLocalIndicator(self._container, false);
+                     }
                   }
                });
             },
-
-            _cropButtonClick: function() {
-               this.getParent()._showCropDialog(this._options.image);
+            /* ------------------------------------------------------------
+               Блок обработчиков команд
+               ------------------------------------------------------------ */
+            _uploadImage: function(originalEvent) {
+               this._fileLoader.selectFile(originalEvent, false);
             },
-
-            _uploadButtonClick: function(event, originalEvent) {
-               this.getParent()._fileLoader.selectFile(originalEvent, false);
+            _editImage: function() {
+               $ws.helpers.toggleLocalIndicator(this.getContainer(), true);
+               this._showEditDialog('current');
             },
-
-            _deleteButtonClick: function() {
+            _resetImage: function() {
                var
-                  imageInstance = this.getParent();
-               imageInstance.setImage(imageInstance._options.defaultImage);
+                  self = this,
+                  imageResetResult = this._notify('onResetImage'),
+                  callDestroy = function(filter) {
+                     var
+                        sendFilter = filter && Object.prototype.toString.call(filter) === '[object Object]' ? filter : self.getFilter();
+                     new $ws.proto.BLObject(self._dataSource.getResource())
+                        .call(self._dataSource.getDestroyMethodName(), sendFilter, $ws.proto.BLObject.RETURN_TYPE_ASIS).addBoth(function(result) {
+                        self._setImage(self._options.defaultImage);
+                     });
+                  };
+               if (imageResetResult !== false) {
+                  if (imageResetResult instanceof $ws.proto.Deferred) {
+                     imageResetResult.addCallback(function(result) {
+                        if (result !== false) {
+                           callDestroy(result);
+                        }
+                     }.bind(this));
+                  } else {
+                     callDestroy(imageResetResult);
+                  }
+               }
+            },
+            /* ------------------------------------------------------------
+               Блок обработчиков кнопок imageBar
+               ------------------------------------------------------------ */
+            _buttonUploadClick: function(event, originalEvent) {
+               this.sendCommand('uploadImage', originalEvent);
             }
-      });
-
+         });
       return Image;
    });
