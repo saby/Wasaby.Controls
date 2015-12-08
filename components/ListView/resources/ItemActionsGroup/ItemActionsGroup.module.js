@@ -53,20 +53,22 @@ define('js!SBIS3.CONTROLS.ItemActionsGroup',
           */
          applyItemActions: function() {
             var onlyMain = true,
-               itemsInstances = this.getItemsInstances(),
-               show = false;
+                itemsInstances = this.getItemsInstances(),
+                isActionVisible,
+                isMain;
 
             for(var i in itemsInstances) {
                if(itemsInstances.hasOwnProperty(i)) {
-                  show = this._itemActionsButtons[i]['isMainAction'] && itemsInstances[i].isVisible();
-                  if (onlyMain && itemsInstances[i].isVisible() && !this._itemActionsButtons[i]['isMainAction']) {
+                  isMain = this._itemActionsButtons[i]['isMainAction'];
+                  isActionVisible = itemsInstances[i].isVisible();
+
+                  /* Проверка, надо ли показывать иконку меню */
+                  if (onlyMain && isActionVisible && !isMain) {
                      onlyMain = false;
                   }
-                  //TODO ВРЕМЕННЫЙ КОСТЫЛЬ ВЫПИЛИТЬ В 3.7.3.20, ВИДИМОСТЬЮ УПРАВЛЯЮТ ПРИКЛАДНЫЕ РАЗРАБОТЧИКИ
-                  itemsInstances[i].getContainer().toggleClass('ws-hidden', !show);
-                  //Если видимость кнопки не изменилась, то делать ничего не будем
-                  if(this._itemActionsButtons[i]['isVisible'] !== show) {
-                     this._itemActionsButtons[i]['isVisible'] = show;
+                  /* Скрываем на строке все неглавные опции */
+                  if(!isMain && isActionVisible) {
+                     itemsInstances[i].getContainer().addClass('ws-hidden');
                   }
                }
             }
@@ -117,6 +119,7 @@ define('js!SBIS3.CONTROLS.ItemActionsGroup',
                      var hoveredItem = self.getParent().getHoveredItem();
                      self._itemActionsMenuVisible = false;
                      self._activeItem.container.removeClass('controls-ItemActions__activeItem');
+                     self._menuVisibilityHandler(false);
 
                      if (self._touchActions) {
                         self._container[0].style.visibility = 'visible';
@@ -140,12 +143,32 @@ define('js!SBIS3.CONTROLS.ItemActionsGroup',
                this._createItemActionMenu();
             }
 
+            this._itemActionsMenuVisible = true;
             this._onBeforeMenuShowHandler();
+            this._menuVisibilityHandler(true);
             this._itemActionsMenu.show();
             this._activeItem.container.addClass('controls-ItemActions__activeItem');
-            this._itemActionsMenuVisible = true;
             this._itemActionsMenu.recalcPosition(true);
          },
+
+         /** Обработчик на смену видимости меню
+          * Устанавливает операциям видимость на время показа меню
+          * @param isVisible
+          * @private
+          */
+         _menuVisibilityHandler: function(isVisible) {
+            var itemActionsInstances = this.getItemsInstances();
+
+            for(var i in itemActionsInstances) {
+               if(itemActionsInstances.hasOwnProperty(i)) {
+                  if(!itemActionsInstances[i].isVisible()) {
+                     /* Делаю через inline стили, т.к. через ws-hidden делать небезопасно, кто-то может его удалить */
+                     itemActionsInstances[i].getContainer()[0].style.display = isVisible ? 'none' : '';
+                  }
+               }
+            }
+         },
+
          /**
           * Срабатывает перед открытием меню
           * Скрывает записи, которые нужно скрыть
