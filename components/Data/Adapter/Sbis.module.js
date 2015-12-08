@@ -65,103 +65,7 @@ define('js!SBIS3.CONTROLS.Data.Adapter.Sbis', [
        * @static
        */
       serialize: function (data) {
-         var getType = function (val) {
-            var type = typeof val;
-            switch (type) {
-               case 'boolean':
-                  return Sbis.FIELD_TYPE.Boolean;
-               case 'number':
-                  if (val % 1 === 0) {
-                     return Sbis.FIELD_TYPE.Integer;
-                  }
-                  return Sbis.FIELD_TYPE.Double;
-               case 'string':
-                  return Sbis.FIELD_TYPE.String;
-               case 'object':
-                  if (val === null) {
-                     return Sbis.FIELD_TYPE.String;
-                  }
-                  if (val instanceof Date) {
-                     return Sbis.FIELD_TYPE.DateTime;
-                  }
-                  break;
-            }
-            return Sbis.FIELD_TYPE.String;
-         },
-         serializeValue = function (value, type) {
-            switch (type) {
-               case Sbis.FIELD_TYPE.Time:
-                  return value.toSQL();
-            }
-            return value;
-         },
-         makeS = function (obj) {
-            var s = [];
-            for (var key in obj) {
-               if (!obj.hasOwnProperty(key)) {
-                  continue;
-               }
-               s.push({
-                  n: key,
-                  t: getType(obj[key])
-               });
-            }
-            return s;
-         },
-         makeD = function (obj, s) {
-            var d = [];
-            for (var i = 0, count = s.length; i < count; i++) {
-               d.push(serializeValue(obj[s[i].n], s[i].t));
-            }
-            return d;
-         },
-         result,
-         key;
-         if (data instanceof Array) {
-            var i,
-               count;
-            result = {
-               s: [],
-               d: []
-            };
-            for (i = 0, count = data.length; i < count; i++) {
-               if (i === 0) {
-                  result.s = makeS(data[i]);
-               }
-               result.d.push(makeD(data[i], result.s));
-            }
-            return result;
-         }
-         else if (typeof data === 'object' && data !== null) {
-            var allScalars = true;
-            for (key in data) {
-               if (!data.hasOwnProperty(key)) {
-                  continue;
-               }
-               var val = data[key];
-               if (val && typeof val === 'object' && !(val instanceof Date)) {
-                  allScalars = false;
-                  break;
-               }
-            }
-            result = {};
-            if (allScalars) {
-               result.s = makeS(data);
-               result.d = makeD(data, result.s);
-            }
-            else {
-               for (key in data) {
-                  if (!data.hasOwnProperty(key)) {
-                     continue;
-                  }
-                  result[key] = this.serialize(data[key]);
-               }
-            }
-            return result;
-         }
-         else {
-            return data;
-         }
+         return serializer.serialize(data);
       }
    });
 
@@ -301,6 +205,7 @@ define('js!SBIS3.CONTROLS.Data.Adapter.Sbis', [
             throw new Error('Property is not defined');
          }
          data.d[index] = value;
+         return data;
       },
 
       getFields: function (data) {
@@ -409,6 +314,151 @@ define('js!SBIS3.CONTROLS.Data.Adapter.Sbis', [
       }
 
    });
+
+   var serializer = (function() {
+      var
+         serialize = function(data) {
+            if (data instanceof Array) {
+               return serializeArray(data);
+            } else if (typeof data === 'object') {
+               return serializeObject(data);
+            } else {
+               return data;
+            }
+         },
+
+         serializeArray = function (arr) {
+            var i,
+               count,
+               result;
+            if (arr._type == 'recordset') {
+               result = {
+                  s: [],
+                  d: []
+               };
+               var mapper = function(val) {
+                  return arr[i][val.n];
+               };
+               for (i = 0, count = arr.length; i < count; i++) {
+                  if (i === 0) {
+                     result.s = makeS(arr[i]);
+                  }
+                  result.d.push($ws.helpers.map(result.s, mapper));
+               }
+            } else {
+               result = [];
+               for (i = 0, count = arr.length; i < count; i++) {
+                  result.push(serialize(arr[i]));
+               }
+            }
+
+            return result;
+         },
+
+         serializeObject = function (obj) {
+            if (obj === null) {
+               return obj;
+            } else if (obj instanceof Date) {
+               return obj.toSQL();
+            } else if ($ws.helpers.instanceOfModule(obj, 'SBIS3.CONTROLS.Data.Model')) {
+               return $ws.core.merge({
+                  _type: 'record'
+               }, obj.getRawData() || {});
+            } else if ($ws.helpers.instanceOfModule(obj, 'SBIS3.CONTROLS.Data.Source.DataSet')) {
+               return $ws.core.merge({
+                  _type: 'recordset'
+               }, obj.getRawData() || {});
+            } else if ($ws.helpers.instanceOfModule(obj, 'SBIS3.CONTROLS.Record')) {
+               return $ws.core.merge({
+                  _type: 'record'
+               }, obj.getRaw() || {});
+            } else if ($ws.helpers.instanceOfModule(obj, 'SBIS3.CONTROLS.DataSet')) {
+               return $ws.core.merge({
+                  _type: 'recordset'
+               }, obj.getRawData() || {});
+            } else {
+               var allScalars = true,
+                  key;
+               for (key in obj) {
+                  if (!obj.hasOwnProperty(key)) {
+                     continue;
+                  }
+                  var val = obj[key];
+                  if (val && typeof val === 'object' && !(val instanceof Date)) {
+                     allScalars = false;
+                     break;
+                  }
+               }
+
+               var result = {};
+               if (allScalars) {
+                  result = {
+                     d: [],
+                     s: []
+                  };
+                  result.s = makeS(obj);
+                  result.d = makeD(obj, result.s);
+               } else {
+                  for (key in obj) {
+                     if (!obj.hasOwnProperty(key)) {
+                        continue;
+                     }
+                     result[key] = serialize(obj[key]);
+                  }
+               }
+               return result;
+            }
+         },
+
+         getValueType = function (val) {
+            switch (typeof val) {
+               case 'boolean':
+                  return Sbis.FIELD_TYPE.Boolean;
+               case 'number':
+                  if (val % 1 === 0) {
+                     return Sbis.FIELD_TYPE.Integer;
+                  }
+                  return Sbis.FIELD_TYPE.Double;
+               case 'string':
+                  return Sbis.FIELD_TYPE.String;
+               case 'object':
+                  if (val === null) {
+                     return Sbis.FIELD_TYPE.String;
+                  }
+                  if (val instanceof Date) {
+                     return Sbis.FIELD_TYPE.DateTime;
+                  }
+                  break;
+            }
+            return Sbis.FIELD_TYPE.String;
+         },
+
+         makeS = function (obj) {
+            var s = [];
+            for (var key in obj) {
+               if (!obj.hasOwnProperty(key)) {
+                  continue;
+               }
+               s.push({
+                  n: key,
+                  t: getValueType(obj[key])
+               });
+            }
+            return s;
+         },
+
+         makeD = function (obj, s) {
+            var d = [];
+            for (var i = 0, count = s.length; i < count; i++) {
+               d.push(serialize(obj[s[i].n], s[i].t));
+            }
+            return d;
+         };
+
+      return {
+         serialize: serialize
+      };
+   })();
 
    return Sbis;
 });

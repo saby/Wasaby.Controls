@@ -95,19 +95,16 @@ define('js!SBIS3.CONTROLS.Data.Source.Memory', [
          return $ws.proto.Deferred.success(true);
       },
 
-      destroy: function (key) {
-         var index = this._getIndexByKey(key);
-         if (index === -1) {
-            return $ws.proto.Deferred.fail('Model with key "' + key + '" isn\'t found');
-         } else {
-            this._options.adapter.forTable().remove(
-               this._options.data,
-               index
-            );
-            this._reIndex();
-
-            return $ws.proto.Deferred.success(true);
+      destroy: function (keys) {
+         if ($ws.helpers.type(keys) !== 'array') {
+            keys = [keys];
          }
+         for (var i = 0, len = keys.length; i < len; i++) {
+            if (!this._destroy(keys[i])) {
+               return $ws.proto.Deferred.fail('Model with key "' + keys[i] + '" isn\'t found');
+            }
+         }
+         return $ws.proto.Deferred.success(true);
       },
 
       copy: function(key) {
@@ -160,18 +157,19 @@ define('js!SBIS3.CONTROLS.Data.Source.Memory', [
          }));
       },
 
-      move: function (model, to, details) {
+      _move: function (from, to, details) {
          details = details || {};
-         var sourceKey =  model.get(this._options.idProperty),
+         var sourceKey =  from.get(this._options.idProperty),
             sourcePosition = this._getIndexByKey(sourceKey),
             targetPosition = -1;
          if (to) {
+            var toKey = to.get(this._options.idProperty);
             if (details.column && details.column !== this._options.idProperty) {
                var tableAdapter = this._options.adapter.forTable(),
                   recordAdapter = this._options.adapter.forRecord();
                //TODO: indexed search
                for (var index = 0, count = tableAdapter.getCount(this._options.data); index < count; index++) {
-                  if (to === recordAdapter.get(
+                  if (toKey === recordAdapter.get(
                         tableAdapter.at(this._options.data, index),
                         details.column
                   )) {
@@ -181,7 +179,7 @@ define('js!SBIS3.CONTROLS.Data.Source.Memory', [
 
                }
             } else {
-               targetPosition = this._getIndexByKey(to);
+               targetPosition = this._getIndexByKey(toKey);
             }
             if (targetPosition === -1) {
                return $ws.proto.Deferred().fail('Can\'t find target position');
@@ -196,7 +194,12 @@ define('js!SBIS3.CONTROLS.Data.Source.Memory', [
          return new $ws.proto.Deferred().callback(true);
       },
 
-      call: function () {
+      call: function (command, data) {
+         data = data||{};
+         switch(command) {
+            case 'move':
+               return this._move(data.from, data.to, data.details);
+         }
          throw new Error('Not supported');
       },
 
@@ -424,6 +427,26 @@ define('js!SBIS3.CONTROLS.Data.Source.Memory', [
       _getIndexByKey: function (key) {
          var index = this._index[key];
          return index === undefined ? -1 : index;
+      },
+
+      /**
+       * выполняет удаление записи
+       * @param key - идентификатор записи
+       * @returns {boolean}
+       * @private
+       */
+      _destroy: function (key) {
+         var index = this._getIndexByKey(key);
+         if(index !== -1) {
+            this._options.adapter.forTable().remove(
+               this._options.data,
+               index
+            );
+            this._reIndex();
+            return true;
+         } else {
+            return false;
+         }
       }
 
       //endregion Protected methods

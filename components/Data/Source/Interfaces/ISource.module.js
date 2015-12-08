@@ -141,11 +141,11 @@ define('js!SBIS3.CONTROLS.Data.Source.ISource', [
 
       /**
        * Удаляет модель из источника данных
-       * @param {String} key Первичный ключ модели
+       * @param {String|Array} keys Первичный ключ, или массив первичных ключей модели
        * @param {Object} [meta] Дополнительные мета данные
        * @returns {$ws.proto.Deferred} Асинхронный результат выполнения
        */
-      destroy: function (key, meta) {
+      destroy: function (keys, meta) {
          throw new Error('Method must be implemented');
       },
 
@@ -177,17 +177,6 @@ define('js!SBIS3.CONTROLS.Data.Source.ISource', [
        */
 
       /**
-       * Перемещает модель
-       * @param {SBIS3.CONTROLS.Data.Model} model Перемещаемая модель
-       * @param {String} to Значение поля, в позицию которого перемещаем (по умолчанию - значение первичного ключа)
-       * @param {OrderDetails} [details] Дополнительная информация о перемещении
-       * @returns {$ws.proto.Deferred} Асинхронный результат выполнения
-       */
-      move: function (model, to, details) {
-         throw new Error('Method must be implemented');
-      },
-
-      /**
        * Выполняет запрос на выборку
        * @param {SBIS3.CONTROLS.Data.Query.Query} [query] Запрос
        * @returns {$ws.proto.Deferred} Асинхронный результат выполнения. В колбэке придет {@link SBIS3.CONTROLS.Data.Source.DataSet}.
@@ -203,6 +192,10 @@ define('js!SBIS3.CONTROLS.Data.Source.ISource', [
        * @returns {$ws.proto.Deferred} Асинхронный результат выполнения. В колбэке придет {@link SBIS3.CONTROLS.Data.Source.DataSet}.
        */
       call: function (command, data) {
+         throw new Error('Method must be implemented');
+      },
+
+      getResource:function (){
          throw new Error('Method must be implemented');
       }
    };
