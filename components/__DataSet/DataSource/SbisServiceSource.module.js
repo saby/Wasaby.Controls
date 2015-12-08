@@ -147,7 +147,7 @@ define('js!SBIS3.CONTROLS.SbisServiceSource', [
             def.callback(record);
          }, function (error) {
             $ws.single.ioc.resolve('ILogger').log('SbisServiceSource', error);
-            def.errback(error.message);
+            def.errback(error);
          });
          return def;
       },
@@ -186,7 +186,7 @@ define('js!SBIS3.CONTROLS.SbisServiceSource', [
             def.callback(record);
          }, function (error) {
             $ws.single.ioc.resolve('ILogger').log('SbisServiceSource', error);
-            def.errback(error.message);
+            def.errback(error);
          });
          return def;
       },
@@ -228,7 +228,7 @@ define('js!SBIS3.CONTROLS.SbisServiceSource', [
             def.callback(true);
          }, function (error) {
             $ws.single.ioc.resolve('ILogger').log('SbisServiceSource', error);
-            def.errback(error.message);
+            def.errback(error);
          });
 
          return def;
@@ -248,7 +248,7 @@ define('js!SBIS3.CONTROLS.SbisServiceSource', [
             def.callback(true);
          }, function (error) {
             $ws.single.ioc.resolve('ILogger').log('SbisServiceSource', error);
-            def.errback(error.message);
+            def.errback(error);
          });
 
          return def;
@@ -281,21 +281,18 @@ define('js!SBIS3.CONTROLS.SbisServiceSource', [
       query: function (filter, sorting, offset, limit) {
          var
             self = this,
-            strategy = this.getStrategy(),
-            def = new $ws.proto.Deferred();
-         self._BL.call(self._options.queryMethodName, this.prepareQueryParams(filter, sorting, offset, limit) , $ws.proto.BLObject.RETURN_TYPE_ASIS).addCallbacks(function (res) {
+            strategy = this.getStrategy();
+         return self._BL.call(self._options.queryMethodName, this.prepareQueryParams(filter, sorting, offset, limit) , $ws.proto.BLObject.RETURN_TYPE_ASIS).addCallbacks(function (res) {
             var DS = new DataSet({
                strategy: strategy,
                data: res,
                meta: strategy.getMetaData(res)
             });
-            def.callback(DS);
+            return DS;
          }, function (error) {
             $ws.single.ioc.resolve('ILogger').log('SbisServiceSource', error);
-            def.errback(error.message);
+            return error;
          });
-
-         return def;
 
       },
       /**
@@ -353,7 +350,7 @@ define('js!SBIS3.CONTROLS.SbisServiceSource', [
             def.callback(true);
          }, function (error) {
             $ws.single.ioc.resolve('ILogger').log('SbisServiceSource', error);
-            def.errback(error.message);
+            def.errback(error);
          });
          return def;
       }
