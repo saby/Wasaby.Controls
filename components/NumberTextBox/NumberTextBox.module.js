@@ -153,8 +153,14 @@ define('js!SBIS3.CONTROLS.NumberTextBox', ['js!SBIS3.CONTROLS.TextBox', 'html!SB
          if (this._options.numericValue) {
             this._options.text = this._options.numericValue + '';
          }
-         this._options.text = this._formatText(this._options.text);
+         this._options.text = this._formatText(this._options.text || '0');
          this._inputField.val(this._options.text);
+      },
+
+
+      setText: function(text){
+         text = this._formatText(text.toString());
+         NumberTextBox.superclass.setText.call(this, text);
       },
 
       _setText: function(text){
