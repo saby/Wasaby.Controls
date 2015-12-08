@@ -177,7 +177,16 @@ define([
                      '10': 10,
                      'Строка': 'String',
                      'Date': new Date('2015-12-03'),
-                     'Массив': [false, true, 0, 1, 'S', new Date('2001-09-11'), [], {}],
+                     'Массив': [
+                        false,
+                        true,
+                        0,
+                        1,
+                        'S',
+                        new Date('2001-09-11'),
+                        [],
+                        {}
+                     ],
                      'EmptyObject': {},
                      'Запись': {
                         'ВызовИзБраузера': true,
@@ -188,53 +197,76 @@ define([
                      }
                   }),
                   expect = {
-                     'null': null,
-                     'false': false,
-                     'true': true,
-                     '0': 0,
-                     '10': 10,
-                     'Строка': 'String',
-                     'Date': '2015-12-03',
-                     'Массив': [false, true, 0, 1, 'S', '2001-09-11', [], {d: [], s: []}],
-                     'EmptyObject': {
-                        d: [],
-                        s: []
-                     },
-                     'Запись': {
-                        d: [
-                           true,
-                           1,
-                           2.5,
-                           'Пустой',
-                           '2015-10-10'
-                        ],
-                        s: [{
-                           n: 'ВызовИзБраузера',
+                     d: [
+                        0,
+                        10,
+                        null,
+                        false,
+                        true,
+                        'String',
+                        '2015-12-03',
+                        [false, true, 0, 1, 'S', '2001-09-11', [], {d: [], s: []}],
+                        {
+                           d: [],
+                           s: []
+                        },
+                        {
+                           d: [true, 1, 2.5, 'Пустой', '2015-10-10'],
+                           s: [{
+                              n: 'ВызовИзБраузера',
+                              t: 'Логическое'
+                           }, {
+                              n: 'Количество',
+                              t: 'Число целое'
+                           }, {
+                              n: 'Вес',
+                              t: 'Число вещественное'
+                           }, {
+                              n: 'Тип',
+                              t: 'Строка'
+                           }, {
+                              n: 'Дата',
+                              t: 'Дата и время'
+                           }]
+                        }
+                     ],
+                     s: [{
+                        n: '0',
+                        t: 'Число целое'
+                     }, {
+                        n: '10',
+                        t: 'Число целое'
+                     }, {
+                        n: 'null',
+                        t: 'Строка'
+                     }, {
+                        n: 'false',
+                        t: 'Логическое'
+                     }, {
+                        n: 'true',
+                        t: 'Логическое'
+                     }, {
+                        n: 'Строка',
+                        t: 'Строка'
+                     }, {
+                        n: 'Date',
+                        t: 'Дата и время'
+                     }, {
+                        n: 'Массив',
+                        t: {
+                           n: 'Массив',
                            t: 'Логическое'
-                        },{
-                           n: 'Количество',
-                           t: 'Число целое'
-                        },{
-                           n: 'Вес',
-                           t: 'Число вещественное'
-                        },{
-                           n: 'Тип',
-                           t: 'Строка'
-                        },{
-                           n: 'Дата',
-                           t: 'Дата и время'
-                        }]
-                     }
+                        }
+                     }, {
+                        n: 'EmptyObject',
+                        t: 'Запись'
+                     }, {
+                        n: 'Запись',
+                        t: 'Запись'
+                     }]
                   };
-               assert.deepEqual(result['null'], expect['null'], 'wrong null');
-               assert.deepEqual(result['false'], expect['false'], 'wrong false');
-               assert.deepEqual(result['true'], expect['true'], 'wrong true');
-               assert.deepEqual(result['0'], expect['0'], 'wrong 0');
-               assert.deepEqual(result['10'], expect['10'], 'wrong 10');
-               assert.deepEqual(result['Строка'], expect['Строка'], 'wrong Строка');
-               assert.deepEqual(result['Массив'], expect['Массив'], 'wrong Массив');
-               assert.deepEqual(result['EmptyObject'], expect['EmptyObject'], 'wrong EmptyObject');
-               assert.deepEqual(result['Запись'], expect['Запись'], 'wrong Запись');
+               assert.sameDeepMembers(result.s, expect.s, 'wrong s');
+               assert.sameDeepMembers(result.d, expect.d, 'wrong d');
             });
 
             it('should serialize model', function () {
@@ -266,8 +298,14 @@ define([
 
             it('should serialize models and datasets in deep structure', function () {
                var adapter = new SbisAdapter(),
-                  model = new Model(),
-                  ds = new DataSet(),
+                  model = new Model({
+                     adapter: adapter,
+                     rawData: {}
+                  }),
+                  ds = new DataSet({
+                     adapter: adapter,
+                     rawData: {}
+                  }),
                   result = adapter.serialize({
                      some: {
                         model: model
@@ -277,15 +315,35 @@ define([
                      }
                   }),
                   expect = {
-                     some: {
-                        model: model.getRawData() || {}
-                     },
-                     and: {
-                        also: ds.getRawData() || {}
-                     }
+                     d: [{
+                        d: [
+                           model.getRawData() || {}
+                        ],
+                        s: [{
+                           n: 'model',
+                           t: 'Запись'
+                        }]
+                     }, {
+                        d: [
+                           ds.getRawData() || {}
+                        ],
+                        s: [{
+                           n: 'also',
+                           t: 'Выборка'
+                        }]
+                     }],
+                     s: [{
+                        n: 'some',
+                        t: 'Запись'
+                     }, {
+                        n: 'and',
+                        t: 'Запись'
+                     }]
                   };
-               expect.some.model._type = 'record';
-               expect.and.also._type = 'recordset';
+               expect.d[0].d[0]._type = 'record';
+               expect.d[1].d[0]._type = 'recordset';
+               console.log(result);
+               console.log(expect);
                assert.deepEqual(result, expect);
             });
          });
