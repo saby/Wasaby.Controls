@@ -25,6 +25,7 @@ define('js!SBIS3.CONTROLS.Data.Adapter.IRecord', [], function () {
        * @param {*} data Сырые данные
        * @param {String} name Поле записи
        * @param {*} value Значение
+       * @returns Новые сырые данные
        */
       set: function (data, name, value) {
          throw new Error('Method must be implemented');

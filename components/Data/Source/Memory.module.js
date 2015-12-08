@@ -96,16 +96,13 @@ define('js!SBIS3.CONTROLS.Data.Source.Memory', [
       },
 
       destroy: function (keys) {
-         if ($ws.helpers.type(keys) == 'array') {
-            var self = this;
-            for (var i=0, len = keys.length; i<len; i++) {
-               if (!self._destroy(keys[i])) {
-                  return $ws.proto.Deferred.fail('Model with key "' + keys[i] + '" isn\'t found');
-               }
-            }
+         if ($ws.helpers.type(keys) !== 'array') {
+            keys = [keys];
          }
-         else {
-            return this.destroy([keys]);
+         for (var i = 0, len = keys.length; i < len; i++) {
+            if (!this._destroy(keys[i])) {
+               return $ws.proto.Deferred.fail('Model with key "' + keys[i] + '" isn\'t found');
+            }
          }
          return $ws.proto.Deferred.success(true);
       },
