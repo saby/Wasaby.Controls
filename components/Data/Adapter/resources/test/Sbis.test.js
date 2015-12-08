@@ -342,8 +342,6 @@ define([
                   };
                expect.d[0].d[0]._type = 'record';
                expect.d[1].d[0]._type = 'recordset';
-               console.log(result);
-               console.log(expect);
                assert.deepEqual(result, expect);
             });
          });
