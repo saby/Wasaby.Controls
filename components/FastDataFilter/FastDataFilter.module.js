@@ -49,7 +49,7 @@ define('js!SBIS3.CONTROLS.FastDataFilter',
                 *       displayField: 'title',//Имя поля, в котором хранится текстовое отображение ключа из списка значений values
                 *       name: 'first',        //Имя фильтра
                 *       multiselect : false,  //Режим выпадающего списка
-                *       cssModifiers: 'controls-DropdownList__withoutCross', //Строка с классами css-модикаторов для выпадающего списка
+                *       className: 'controls-DropdownList__withoutCross', //Строка с классами css-модификаторов для выпадающего списка
                 *       values:[                //Набор элементов выпадающего списка
                 *       {
                 *          key : 0,
@@ -99,7 +99,7 @@ define('js!SBIS3.CONTROLS.FastDataFilter',
                multiselect : !!item.get('multiselect'),
                showSelectedInList : !!item.get('multiselect'),
                displayField: item.get('displayField'),
-               className: item.get('cssModifiers') || 'controls-DropdownList__linkStyle'
+               className: item.get('className') || 'controls-DropdownList__linkStyle'
             };
             return '<component data-component="SBIS3.CONTROLS.DropdownList" config="' + $ws.helpers.encodeCfgAttr(cfg) + '">' +
                         //'<opts name="selectedKeys" type="array" bind="' + cfg.filterName +'" ></opts>' + //direction="fromProperty" oneWay="true"

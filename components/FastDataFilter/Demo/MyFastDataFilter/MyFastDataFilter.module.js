@@ -21,7 +21,7 @@ define('js!SBIS3.CONTROLS.Demo.MyFastDataFilter',
                   displayField: 'title',
                   name: 'first',
                   multiselect : false,
-                  cssModifiers: 'controls-DropdownList__withoutCross',
+                  className: 'controls-DropdownList__withoutCross',
                   values:[
                      {
                         key : 0,
