@@ -287,7 +287,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
       setDataSource: function (ds) {
          this._dataSource = ds;
          this._dataSet = null;
-         this.reload();
+         return this.reload();
       },
       /**
        * Метод получения набора данных, который в данный момент установлен в представлении.
@@ -351,6 +351,9 @@ define('js!SBIS3.CONTROLS.DSMixin', [
             //self._notify('onBeforeRedraw');
             def.callback(dataSet);
             self._redraw();
+         }).addErrback(function(error){
+            self._toggleIndicator(false);
+            $ws.helpers.message(error.toString().replace('Error: ', ''));
          });
 
          this._notifyOnPropertyChanged('filter');
