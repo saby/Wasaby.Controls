@@ -396,7 +396,6 @@ define('js!SBIS3.CONTROLS.DSMixin', [
                   },
                   keyField: this._options.keyField || newDataSet.getIdProperty() || this._dataSource.getAdapter().forRecord(newDataSet.getRawData()).getKeyField()
                });
-               });
             }).bind(this));
          } else {
             return this._dataSource.query(filter, sorting, offset, limit);
