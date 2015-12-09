@@ -2,6 +2,11 @@
    -webkit-transform: none !important;
    position: relative;
 }
+
+.ws-HighCharts__plot {
+   height: 100%;
+}
+
 .ws-HighCharts__loadingIndicator
 {
    position: absolute;
