@@ -135,7 +135,7 @@ define('js!SBIS3.CONTROLS.ComponentBinder', [], function () {
     * @extends $ws.proto.Abstract
     * @public
     */
-   var ComponentBinder = $ws.proto.Abstract.extend({
+   var ComponentBinder = $ws.proto.Abstract.extend(/**@lends SBIS3.CONTROLS.ComponentBinder.prototype*/{
       $protected : {
          _searchReload : true,
          _searchForm : undefined,
@@ -178,7 +178,10 @@ define('js!SBIS3.CONTROLS.ComponentBinder', [], function () {
        * @param {SBIS3.CONROLS.SearchForm} [searchForm] объект формы поиска, если не передан используется тот, что задан в опциях
        * @example
        * <pre>
-       *     myBinder = new ComponentBinder();
+       *     myBinder = new ComponentBinder({
+       *        view: myGridView,
+       *        searchForm: mySearchForm
+       *     });
        *     myBinder.bindSearchGrid('СтрокаПоиска');
        * </pre>
        */
@@ -359,7 +362,10 @@ define('js!SBIS3.CONTROLS.ComponentBinder', [], function () {
        * в представлении данных вместе с панелью или нет.
        * @example
        * <pre>
-       *     myBinder = new ComponentBinder();
+       *     myBinder = new ComponentBinder({
+       *        view: myGridView,
+       *        operationPanel: myOperationPanel
+       *     });
        *     myBinder.bindOperationPanel(true);
        * </pre>
        */
