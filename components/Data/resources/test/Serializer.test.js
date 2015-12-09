@@ -229,7 +229,7 @@ define([
                            serializer.serialize),
                         serializer.deserialize
                      );
-                  
+
                   assert.strictEqual(obj.a, obj.c);
                   assert.strictEqual(obj.b, obj.e.a[0]);
 

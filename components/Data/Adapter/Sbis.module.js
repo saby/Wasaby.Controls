@@ -1,4 +1,4 @@
-/* global define, $ws */
+/* global define, require, $ws */
 
 var FIELD_TYPE = {
    DataSet: 'Выборка',
@@ -25,7 +25,7 @@ var FIELD_TYPE = {
 };
 
 define('js!SBIS3.CONTROLS.Data.Adapter.SbisRecord', [
-   'js!SBIS3.CONTROLS.Data.Adapter.IRecord',
+   'js!SBIS3.CONTROLS.Data.Adapter.IRecord'
 ], function (IRecord) {
    'use strict';
 
@@ -367,7 +367,7 @@ define('js!SBIS3.CONTROLS.Data.Adapter.Sbis', [
             var i,
                count,
                result;
-            if (arr._type == 'recordset') {
+            if (arr._type === 'recordset') {
                result = {
                   s: [],
                   d: []
