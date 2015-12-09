@@ -221,6 +221,9 @@ define('js!SBIS3.CONTROLS.DropdownList',
             return 'controls-DropdownList__item';
          },
          _getPickerContainer: function() {
+            if (!this._picker) {
+               this._initializePicker();
+            }
             return this._picker.getContainer();
          },
          _pickerMouseLeaveHandler: function(fromHeader, e) {
