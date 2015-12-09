@@ -30,20 +30,26 @@ define('js!SBIS3.CONTROLS.EditInPlace',
                   focusCatch: undefined,
                   editingTemplate: undefined,
                   applyOnFieldChange: true,
+                  itemsContainer: undefined,
                   visible: false
                },
                _record: undefined,
                _target: null,
                _editing: false,
+               _editors: [],
+               _trackerInterval: undefined,
+               _lastHeight: 0,
                _editingRecord: undefined,
                _previousRecordState: undefined,
                _editingDeferred: undefined
             },
             init: function() {
-               this._publish('onCellValueChanged');
+               this._publish('onItemValueChanged', 'onChangeHeight');
                EditInPlace.superclass.init.apply(this, arguments);
                this._container.bind('keypress keydown', this._onKeyDown);
                this.subscribe('onChildControlFocusOut', this._onChildControlFocusOut);
+               this._editors = this.getContainer().find('.controls-editInPlace__editor');
+               this._onRecordChangeHandler = this._onRecordChange.bind(this);
             },
             _onChildControlFocusOut: function() {
                var
@@ -51,7 +57,7 @@ define('js!SBIS3.CONTROLS.EditInPlace',
                   difference = this._getRecordsDifference(),
                   loadingIndicator;
                if (difference.length) {
-                  result = this._notify('onCellValueChanged', difference, this._editingRecord);
+                  result = this._notify('onItemValueChanged', difference, this._editingRecord);
                   if (result instanceof $ws.proto.Deferred) {
                      loadingIndicator = setTimeout(function () {
                         $ws.helpers.toggleIndicator(true);
@@ -95,30 +101,14 @@ define('js!SBIS3.CONTROLS.EditInPlace',
              * @param record Record, из которого будут браться значения полей
              */
             updateFields: function(record) {
-               var ctx = this.getContext();
                this._record = record;
                this._previousRecordState = record.clone();
                this._editingRecord = record.clone();
-               ctx.setValue(CONTEXT_RECORD_FIELD, this._editingRecord)
-               if (!this._options.editingTemplate) {
-                  this._fillCells(this._editingRecord);
-               }
+               this.getContext().setValue(CONTEXT_RECORD_FIELD, this._editingRecord);
             },
-            _fillCells: function(record) {
-               var
-                  cell,
-                  cells = this.getContainer().find('.controls-DataGridView__td');
-               $ws.helpers.forEach(this._options.columns, function(column, index) {
-                  if (!this._options.columns[index].editor) {
-                     cell = cells.eq(this._options.ignoreFirstColumn ? index + 1 : index);
-                     cell.find('.ws-component').each(function(index, control) {
-                        control.wsControl.destroy();
-                     });
-                     cell.empty();
-                     cell.append(this._options.getCellTemplate(record, column));
-                  }
-               }, this);
-               this.reviveComponents();
+            _onRecordChange: function() {
+               this._editingRecord.merge(this._record);
+               this.getContext().setValue(CONTEXT_RECORD_FIELD, this._editingRecord);
             },
             canAcceptFocus: function () {
                return false;
@@ -133,26 +123,57 @@ define('js!SBIS3.CONTROLS.EditInPlace',
                }.bind(this))
             },
             show: function(target, record) {
+               var editorTop;
                //set record
                this._record = record;
                this.getContainer().attr('data-id', record.getKey());
                this.updateFields(record);
+               this._record.subscribe('onChange', this._onRecordChangeHandler);
                //set target
-               this._target && this._target.show();
                this._target = target;
-               this.getContainer().insertAfter(target);
-               this._target.hide();
+               //позиционируем редакторы
+               editorTop = this._target.position().top - this._options.itemsContainer.position().top;
+               $.each(this._editors, function(id, editor) {
+                  $(editor).css('top', editorTop);
+               });
                EditInPlace.superclass.show.apply(this, arguments);
+            },
+            _beginTrackHeight: function() {
+               var self = this;
+               this._lastHeight = 0;
+               this._trackerInterval = setInterval(function() {
+                  var
+                     newHeight = 0,
+                     editorHeight;
+                  $.each(self._editors, function(id, editor) {
+                     editorHeight = $(editor).height();
+                     if (editorHeight > newHeight) {
+                        newHeight = editorHeight;
+                     }
+                  });
+                  if (self._lastHeight !== newHeight) {
+                     self._lastHeight = newHeight;
+                     self._notify('onChangeHeight');
+                     self._target.height(newHeight);
+                  }
+               }, 50);
+            },
+            _endTrackHeight: function() {
+               clearInterval(this._trackerInterval);
             },
             hide: function() {
                this._deactivateActiveChildControl();
                this.setActive(false);
+               if (this._record) {
+                  this._record.unsubscribe('onChange', this._onRecordChangeHandler);
+               }
                EditInPlace.superclass.hide.apply(this, arguments);
-               this._target && this._target.show();
             },
             edit: function(target, record) {
                this.show(target, record);
+               this._beginTrackHeight();
                this._editing = true;
+               this._target.addClass('controls-editInPlace__editing');
                if (!this.hasActiveChildControl()) {
                   this.activateFirstControl();
                }
@@ -161,6 +182,8 @@ define('js!SBIS3.CONTROLS.EditInPlace',
                return this._editing;
             },
             endEdit: function() {
+               this._endTrackHeight();
+               this._target.removeClass('controls-editInPlace__editing');
                this._editing = false;
             },
             getRecord: function() {
