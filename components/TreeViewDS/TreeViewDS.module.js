@@ -49,11 +49,12 @@ define('js!SBIS3.CONTROLS.TreeViewDS', [
       },
 
       _getItemActionsPosition: function(item) {
-         var treeItem = item.container.find('.js-controls-TreeView-itemContent');
+         var treeItem = item.container.find('.js-controls-TreeView-itemContent'),
+             parentResult = TreeViewDS.superclass._getItemActionsPosition.apply(this, arguments);
 
          return {
             top: item.position.top + (treeItem.length ? treeItem[0].offsetHeight - 20 : 0),
-            right: 0
+            right: parentResult.right
          }
       },
 
