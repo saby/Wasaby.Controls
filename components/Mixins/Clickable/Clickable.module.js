@@ -67,6 +67,9 @@ define('js!SBIS3.CONTROLS.Clickable', [], function() {
                this._container.removeClass('controls-Click__active');
                this._clickHandler(e);
                this._notifyOnActivated(e);
+               if (!this._isControlActive) {
+                  this.setActive(true);
+               }
             }
             e.stopImmediatePropagation();
          }
