@@ -12,26 +12,19 @@ define('js!SBIS3.CONTROLS.Data.Adapter.IAdapter', [], function () {
    return /** @lends SBIS3.CONTROLS.Data.Adapter.IAdapter.prototype */{
       /**
        * Возвращает интерфейс доступа к данным в виде таблицы
+       * @param {*} [data] Сырые данные
        * @returns {SBIS3.CONTROLS.Data.Adapter.ITable}
        */
-      forTable: function () {
+      forTable: function (data) {
          throw new Error('Method must be implemented');
       },
 
       /**
        * Возвращает интерфейс доступа к данным в виде записи
+       * @param {*} [data] Сырые данные
        * @returns {SBIS3.CONTROLS.Data.Adapter.IRecord}
        */
-      forRecord: function () {
-         throw new Error('Method must be implemented');
-      },
-
-      /**
-       * Возвращает название поля, которое является первичным ключем
-       * @param {*} data Сырые данные
-       * @returns {String}
-       */
-      getKeyField: function (data) {
+      forRecord: function (data) {
          throw new Error('Method must be implemented');
       },
 
