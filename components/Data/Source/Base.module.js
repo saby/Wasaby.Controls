@@ -24,6 +24,8 @@ define('js!SBIS3.CONTROLS.Data.Source.Base', [
       _moduleName: 'SBIS3.CONTROLS.Data.Source.Base',
 
       $constructor: function (cfg) {
+         cfg = cfg || {};
+
          this._publish('onDataSync');
          this._options.model = 'model' in cfg ? cfg.model : Model;
       },
@@ -62,6 +64,9 @@ define('js!SBIS3.CONTROLS.Data.Source.Base', [
          this._options.idProperty = name;
       },
 
+      getResource: function () {
+         return this._options.resource;
+      },
       //endregion SBIS3.CONTROLS.Data.Source.ISource
 
       //region Protected methods

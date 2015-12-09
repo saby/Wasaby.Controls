@@ -47,7 +47,8 @@ define('js!SBIS3.CONTROLS.FieldLink',
       function recordConverter(rec) {
          return new Model({
             data: rec.toJSON(),
-            adapter: new SbisAdapter()
+            adapter: new SbisAdapter(),
+            idProperty: this._options.keyField
          })
       }
 
@@ -129,6 +130,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
              * @typedef {Array} dictionaries
              * @property {String} caption Текст в меню.
              * @property {String} template Шаблон, который отобразится в диалоге выбора.
+             * @property {Object} componentsOptions Опции, которые прокинутся в компонент на диалоге выбора.
              */
             /**
              * @cfg {dictionaries[]} Набор диалогов выбора для поля связи
@@ -176,22 +178,36 @@ define('js!SBIS3.CONTROLS.FieldLink',
        */
       _menuItemActivatedHandler: function(e, item) {
          var rec = this.getDataSet().getRecordByKey(item);
-         this.getParent().showSelector(rec.get('template'), rec.get('selectionType'));
+         this.getParent().showSelector({
+            template: rec.get('template'),
+            selectionType: rec.get('selectionType'),
+            componentOptions: rec.get('componentOptions')
+         });
       },
 
       /**
-       * Показывает диалог выбора, в качестве аргумента принимает имя шаблона в виде 'js!SBIS3.CONTROLS.MyTemplate'
-       * @param template
-       * @param type
+       * Устанавливает набор словарей
+       * @param {Array} dic
        */
-      showSelector: function(template, type) {
+      setDictionaries: function(dic) {
+         this._options.dictionaries = dic;
+         this.getChildControlByName('fieldLinkMenu').setItems(dic);
+      },
+
+      /**
+       * Показывает диалог выбора, в качестве аргумента объект с полями
+       * template - имя шаблона в виде 'js!SBIS3.CONTROLS.MyTemplate'
+       * componentOptions - опции которые прокинутся в компонент выбора
+       * @param {object} config Конфигурация диалога выбора
+       */
+      showSelector: function(config) {
          var self = this,
              version = this._options.oldViews ? 'old' : 'newType',
              selectorConfig = {
                 //FIXME для поддержки старых справочников, удалить как откажемся
                 old: {
                    currentValue: self.getSelectedKeys(),
-                   selectionType: type,
+                   selectionType: config.selectionType,
                    selectorFieldLink: true,
                    handlers: {
                       onChange: function(event, selectedRecords) {
@@ -202,7 +218,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
                          if(selectedRecords[0] !== null) {
 	                        selItems.fill();
                             for (var i = 0, len = selectedRecords.length; i < len; i++) {
-                               rec = recordConverter(selectedRecords[i]);
+                               rec = recordConverter.call(self, selectedRecords[i]);
 	                           selItems.add(rec);
                                keys.push(rec.getId());
                             }
@@ -220,7 +236,8 @@ define('js!SBIS3.CONTROLS.FieldLink',
                 }
              },
              commonConfig = {
-                template: template,
+                template: config.template,
+                componentOptions: config.componentOptions || {},
                 opener: this,
                 parent: this._options.selectRecordsMode === 'newDialog' ? this : null,
                 context: new $ws.proto.Context().setPrevious(this.getLinkedContext()),
@@ -410,7 +427,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
             needDrawItem = $ws.helpers.getTextWidth(item[0].outerHTML) + INPUT_MIN_WIDTH < inputWidth + SHOW_ALL_LINK_WIDTH;
 
             if(!needDrawItem && !this._linkCollection.getContainer().find('.controls-FieldLink__linkItem').length) {
-               item[0].style.width = inputWidth - (this._options.multiselect ? INPUT_MIN_WIDTH : 0) + 'px';
+               item[0].style.width = inputWidth - ((this._options.multiselect || this._options.alwaysShowTextBox) ? INPUT_MIN_WIDTH : 0) + 'px';
                needDrawItem = true;
                this._checkWidth = false;
             }

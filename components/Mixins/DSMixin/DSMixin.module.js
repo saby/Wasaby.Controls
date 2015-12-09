@@ -673,7 +673,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
          var
                groupBy = this._options.groupBy,
                tplOptions = {
-                  columns : $ws.core.clone(this._options.columns),
+                  columns : $ws.core.clone(this._options.columns || []),
                   multiselect : this._options.multiselect,
                   hierField: this._options.hierField + '@'
                },
@@ -681,7 +681,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
                itemInstance;
          targetContainer = this._getTargetContainer(item);
          tplOptions.item = item;
-         tplOptions.colspan = this._options.columns.length + this._options.multiselect;
+         tplOptions.colspan = tplOptions.columns.length + this._options.multiselect;
          itemInstance = this._buildTplItem(item, groupBy.template(tplOptions));
          this._appendItemTemplate(item, targetContainer, itemInstance, at);
          //Сначала положим в дом, потом будем звать рендеры, иначе контролы, которые могут создать в рендере неправмльно поймут свою ширину
