@@ -410,7 +410,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
             needDrawItem = $ws.helpers.getTextWidth(item[0].outerHTML) + INPUT_MIN_WIDTH < inputWidth + SHOW_ALL_LINK_WIDTH;
 
             if(!needDrawItem && !this._linkCollection.getContainer().find('.controls-FieldLink__linkItem').length) {
-               item[0].style.width = inputWidth - (this._options.multiselect || this._options.alwaysShowTextBox ? INPUT_MIN_WIDTH : 0) + 'px';
+               item[0].style.width = inputWidth - ((this._options.multiselect || this._options.alwaysShowTextBox) ? INPUT_MIN_WIDTH : 0) + 'px';
                needDrawItem = true;
                this._checkWidth = false;
             }
