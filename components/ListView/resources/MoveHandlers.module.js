@@ -1,7 +1,7 @@
 /**
  * Created by as.suhoruchkin on 21.07.2015.
  */
-define('js!SBIS3.CONTROLS.MoveHandlers', ['js!SBIS3.CONTROLS.MoveDialog','js!SBIS3.CONTROLS.Data.SbisMoveStrategy', 'js!SBIS3.CONTROLS.Data.BaseMoveStrategy'], function(MoveDialog, SbisMoveStrategy, BaseMoveStrategy) {
+define('js!SBIS3.CONTROLS.MoveHandlers', ['js!SBIS3.CONTROLS.MoveDialog', 'js!SBIS3.CONTROLS.Data.BaseMoveStrategy'], function(MoveDialog, SbisMoveStrategy, BaseMoveStrategy) {
    var MoveHandlers = {
       $protected: {
         _moveStrategy: undefined
@@ -77,7 +77,8 @@ define('js!SBIS3.CONTROLS.MoveHandlers', ['js!SBIS3.CONTROLS.MoveDialog','js!SBI
             return false;
          }
          for (var i = 0; i < records.length; i++) {
-            key = '' + ($ws.helpers.instanceOfModule(records[i], 'SBIS3.CONTROLS.Record') ? records[i].getKey() : records[i]);
+            key = '' + (($ws.helpers.instanceOfModule(records[i], 'SBIS3.CONTROLS.Record')|| $ws.helpers.instanceOfModule(records[i], 'SBIS3.CONTROLS.Data.Model'))
+               ? records[i].getKey() : records[i]);
             if ($.inArray(key, toMap) !== -1) {
                $ws.helpers.alert('Вы не можете переместить запись саму в себя!', {}, this);
                return false;

@@ -1,13 +1,11 @@
 define('js!SBIS3.CONTROLS.DSMixin', [
-   'js!SBIS3.CONTROLS.StaticSource',
-   'js!SBIS3.CONTROLS.ArrayStrategy',
+   'js!SBIS3.CONTROLS.Data.Source.Memory',
    'js!SBIS3.CONTROLS.SbisJSONStrategy',
    'js!SBIS3.CONTROLS.DataFactory',
-   'js!SBIS3.CONTROLS.DataSet',
    'js!SBIS3.CONTROLS.Data.Collection.RecordSet',
    'js!SBIS3.CONTROLS.Data.Query.Query',
    'js!SBIS3.CORE.MarkupTransformer'
-], function (StaticSource, ArrayStrategy, SbisJSONStrategy, DataFactory, DataSet, RecordSet, Query, MarkupTransformer) {
+], function (StaticSource, SbisJSONStrategy, DataFactory, RecordSet, Query, MarkupTransformer) {
 
    /**
     * Миксин, задающий любому контролу поведение работы с набором однотипных элементов.
@@ -248,8 +246,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
             }
             this._dataSource = new StaticSource({
                data: items,
-               strategy: new ArrayStrategy(),
-               keyField: this._options.keyField
+               idProperty: this._options.keyField
             });
          }
       },
@@ -536,8 +533,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
 
          this._dataSource = new StaticSource({
             data: items,
-            strategy: new ArrayStrategy(),
-            keyField: keyField
+            idProperty: keyField
          });
          this.reload();
       },
