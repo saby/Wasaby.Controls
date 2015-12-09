@@ -195,7 +195,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
              */
             emptyHTML: '',
             /**
-             * @var {Object} Фильтр данных
+             * @cfg {Object} Фильтр данных
              * @example
              * <pre class="brush:xml">
              *     <options name="filter">
