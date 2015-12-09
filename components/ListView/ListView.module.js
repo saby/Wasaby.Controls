@@ -441,7 +441,7 @@ define('js!SBIS3.CONTROLS.ListView',
                order = isNext ? 1 : -1,
                siblingItem = items.eq(items.index(selectedItem) + order);
 
-            return this._dataSet.getRecordByKey(siblingItem.data('id')) ? siblingItem : this._getHtmlItem(siblingItem.get('id'), isNext);
+            return this._dataSet.getRecordByKey(siblingItem.data('id')) ? siblingItem : this._getHtmlItem(siblingItem.data('id'), isNext);
          },
          _isViewElement: function (elem) {
             return  $ws.helpers.contains(this._getItemsContainer()[0], elem[0]);
