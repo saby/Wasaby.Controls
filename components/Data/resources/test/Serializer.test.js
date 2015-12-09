@@ -1,8 +1,9 @@
 /* global define, beforeEach, afterEach, describe, context, it, assert, $ws */
 define([
       'js!SBIS3.CONTROLS.Data.Serializer',
-      'js!SBIS3.CONTROLS.Data.Model'
-   ], function (Serializer, Model) {
+      'js!SBIS3.CONTROLS.Data.Model',
+      'js!SBIS3.CONTROLS.Data.Collection.List'
+   ], function (Serializer, Model, List) {
       'use strict';
       describe('SBIS3.CONTROLS.Data.Serializer', function () {
          var serializer,
@@ -205,23 +206,40 @@ define([
                   assert.deepEqual(expectObj, obj);
                });
 
-               it('should create same instances for equail serialized objects of Model', function () {
+               it('should create same instances for equal serialized instances of SerializableMixin', function () {
                   var modelA = new Model(),
                      modelB = new Model(),
+                     listA = new List({
+                        items: [modelA, modelB]
+                     }),
+                     listB = new List(),
                      obj = JSON.parse(
                         JSON.stringify({
                               a: modelA,
                               b: modelB,
                               c: modelA,
-                              d: {
-                                 e: [modelB]
+                              d: listA,
+                              e: {
+                                 a: [modelB],
+                                 b: listA,
+                                 c: listB,
+                                 d: [listB, listA]
                               }
                            },
                            serializer.serialize),
                         serializer.deserialize
                      );
+                  
                   assert.strictEqual(obj.a, obj.c);
-                  assert.strictEqual(obj.b, obj.d.e[0]);
+                  assert.strictEqual(obj.b, obj.e.a[0]);
+
+                  assert.strictEqual(obj.d, obj.e.b);
+                  assert.strictEqual(obj.d, obj.e.d[1]);
+                  assert.strictEqual(obj.e.b, obj.e.d[1]);
+                  assert.strictEqual(obj.e.c, obj.e.d[0]);
+
+                  assert.strictEqual(obj.a, obj.d.at(0));
+                  assert.strictEqual(obj.b, obj.d.at(1));
                });
             });
          });

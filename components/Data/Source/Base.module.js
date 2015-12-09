@@ -78,7 +78,7 @@ define('js!SBIS3.CONTROLS.Data.Source.Base', [
        */
       _detectIdProperty: function(data) {
          if (!this._options.idProperty) {
-            this._options.idProperty = this.getAdapter().getKeyField(data);
+            this._options.idProperty = this.getAdapter().forRecord(data).getKeyField();
          }
       },
 
@@ -106,12 +106,12 @@ define('js!SBIS3.CONTROLS.Data.Source.Base', [
        * @private
        */
       _each: function (data, callback, context) {
-         var tableAdapter = this._options.adapter.forTable(),
+         var tableAdapter = this._options.adapter.forTable(data),
             index,
             count;
 
-         for (index = 0, count = tableAdapter.getCount(data); index < count; index++) {
-            callback.call(context || this, tableAdapter.at(data, index), index);
+         for (index = 0, count = tableAdapter.getCount(); index < count; index++) {
+            callback.call(context || this, tableAdapter.at(index), index);
          }
       },
 

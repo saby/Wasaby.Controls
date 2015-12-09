@@ -129,14 +129,13 @@ define('js!SBIS3.CONTROLS.Data.Source.DataSet', [
          if (property === undefined) {
             property = this._options.itemsProperty;
          }
-         var adapter = this.getAdapter().forTable(),
-             data = this._getDataProperty(property),
-             count = adapter.getCount(data),
+         var adapter = this.getAdapter().forTable(this._getDataProperty(property)),
+             count = adapter.getCount(),
              items = [];
          for (var i = 0; i < count; i++) {
             items.push(
                this._getModelInstance(
-                  adapter.at(data, i)
+                  adapter.at(i)
                )
             );
          }
@@ -168,13 +167,13 @@ define('js!SBIS3.CONTROLS.Data.Source.DataSet', [
          if (property === undefined) {
             property = this._options.itemsProperty;
          }
-         var adapter = this.getAdapter().forTable(),
-            data = this._getDataProperty(property),
+         var data = this._getDataProperty(property),
+            adapter = this.getAdapter().forTable(data),
             type = this.getAdapter().getProperty(data, '_type');
          if (type === 'recordset') {
-            if (adapter.getCount(data) > 0) {
+            if (adapter.getCount() > 0) {
                return this._getModelInstance(
-                  adapter.at(data, 0)
+                  adapter.at(0)
                );
             }
          } else {

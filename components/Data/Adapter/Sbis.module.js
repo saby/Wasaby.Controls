@@ -1,188 +1,33 @@
 /* global define, $ws */
-define('js!SBIS3.CONTROLS.Data.Adapter.Sbis', [
-   'js!SBIS3.CONTROLS.Data.Adapter.Abstract',
-   'js!SBIS3.CONTROLS.Data.Adapter.ITable',
+
+var FIELD_TYPE = {
+   DataSet: 'Выборка',
+   Model: 'Запись',
+   Integer: 'Число целое',
+   String: 'Строка',
+   Text: 'Текст',
+   Double: 'Число вещественное',
+   Money: 'Деньги',
+   Date: 'Дата',
+   DateTime: 'Дата и время',
+   Time: 'Время',
+   Array: 'Массив',
+   Boolean: 'Логическое',
+   Hierarchy: 'Иерархия',
+   Identity: 'Идентификатор',
+   Enum: 'Перечисляемое',
+   Flags: 'Флаги',
+   Link: 'Связь',
+   Binary: 'Двоичное',
+   UUID: 'UUID',
+   RpcFile: 'Файл-rpc',
+   TimeInterval: 'Временной интервал'
+};
+
+define('js!SBIS3.CONTROLS.Data.Adapter.SbisRecord', [
    'js!SBIS3.CONTROLS.Data.Adapter.IRecord',
-   'js!SBIS3.CONTROLS.Data.Source.DataSet',
-   'js!SBIS3.CONTROLS.Data.Model'
-], function (Abstract, ITable, IRecord) {
+], function (IRecord) {
    'use strict';
-   /**
-    * Адаптер для данных в формате СБиС
-    * @class SBIS3.CONTROLS.Data.Adapter.Sbis
-    * @extends SBIS3.CONTROLS.Data.Adapter.Abstract
-    * @public
-    * @author Мальцев Алексей
-    */
-
-   var Sbis = Abstract.extend(/** @lends SBIS3.CONTROLS.Data.Adapter.Sbis.prototype */{
-      _moduleName: 'SBIS3.CONTROLS.Data.Adapter.Sbis',
-      $protected: {
-         /**
-          * @var {SBIS3.CONTROLS.Data.Adapter.SbisTable} Адаптер для таблицы
-          */
-         _table: undefined,
-
-         /**
-          * @var {SBIS3.CONTROLS.Data.Adapter.SbisRecord} Адаптер для записи
-          */
-         _record: undefined
-      },
-
-      forTable: function () {
-         return this._table || (this._table = new SbisTable());
-      },
-
-      forRecord: function () {
-         return this._record || (this._record = new SbisRecord());
-      },
-
-      getKeyField: function (data) {
-         if (!data) {
-            return undefined;
-         }
-         var s = data.s,
-            index;
-         if (s) {
-            for (var i = 0, l = s.length; i < l; i++) {
-               if (s[i].n[0] === '@') {
-                  index = i;
-                  break;
-               }
-            }
-            if (index === undefined && s.length) {
-               index = 0;
-            }
-         }
-
-         return index === undefined ? undefined : s[index].n;
-      },
-
-      /**
-       * Сериализует данные
-       * @param {*} data
-       * @returns {Object}
-       * @static
-       */
-      serialize: function (data) {
-         return serializer.serialize(data);
-      }
-   });
-
-   Sbis.FIELD_TYPE = {
-      DataSet: 'Выборка',
-      Model: 'Запись',
-      Integer: 'Число целое',
-      String: 'Строка',
-      Text: 'Текст',
-      Double: 'Число вещественное',
-      Money: 'Деньги',
-      Date: 'Дата',
-      DateTime: 'Дата и время',
-      Time: 'Время',
-      Array: 'Массив',
-      Boolean: 'Логическое',
-      Hierarchy: 'Иерархия',
-      Identity: 'Идентификатор',
-      Enum: 'Перечисляемое',
-      Flags: 'Флаги',
-      Link: 'Связь',
-      Binary: 'Двоичное',
-      UUID: 'UUID',
-      RpcFile: 'Файл-rpc',
-      TimeInterval: 'Временной интервал'
-   };
-
-   /**
-    * Адаптер для таблицы данных в формате СБиС
-    * @class SBIS3.CONTROLS.Data.Adapter.SbisTable
-    * @mixes SBIS3.CONTROLS.Data.Adapter.ITable
-    * @author Мальцев Алексей
-    */
-   var SbisTable = $ws.core.extend({}, [ITable], /** @lends SBIS3.CONTROLS.Data.Adapter.SbisTable.prototype */{
-      _moduleName: 'SBIS3.CONTROLS.Data.Adapter.SbisTable',
-      getEmpty: function (data) {
-         return {
-            d: [],
-            s: data ? $ws.core.clone(data.s) : []
-         };
-      },
-
-      getCount: function (data) {
-         return data && data.d ? data.d.length || 0 : 0;
-      },
-
-      add: function (data, record, at) {
-         this._checkData(data);
-         if (!data.s || !data.s.length) {
-            data.s = record.s;
-         }
-         if (at === undefined) {
-            data.d.push(record.d);
-         } else {
-            this._checkPosition(data, at);
-            data.d.splice(at, 0, record.d);
-         }
-      },
-
-      at: function (data, index) {
-         return data && data.d && data.d[index] ? {
-            d: data.d[index],
-            s: data.s
-         } : undefined;
-      },
-
-      merge: function(data, one, two){
-         $ws.core.merge(data.d[one], data.d[two]);
-         this.remove(data, two);
-      },
-
-      copy: function(data, index){
-         this._checkPosition(data, index);
-         var source = data.d[index],
-            clone = $ws.core.clone(source);
-         data.d.splice(index, 0, clone);
-      },
-
-      remove: function (data, at) {
-         this._checkData(data);
-         this._checkPosition(data, at);
-         data.d.splice(at, 1);
-      },
-
-      replace: function (data, record, at) {
-         this._checkData(data);
-         this._checkPosition(data, at);
-         if (!data.s || !data.s.length) {
-            data.s = record.s;
-         }
-         data.d[at] = record.d;
-      },
-
-      move: function(data, source, target) {
-         this._checkData(data);
-         if (target === source) {
-            return;
-         }
-         var removed = data.d.splice(source, 1);
-         data.d.splice(target, 0, removed.shift());
-      },
-
-      _checkData: function (data) {
-         if (!(data instanceof Object)) {
-            throw new Error('Invalid argument');
-         }
-         if (!(data.d instanceof Array)) {
-            throw new Error('Invalid argument');
-         }
-      },
-
-      _checkPosition: function (data, at) {
-         if (at < 0 || at > data.d.length) {
-            throw new Error('Out of bounds');
-         }
-      }
-   });
 
    /**
     * Адаптер для записи таблицы данных в формате СБиС
@@ -192,49 +37,93 @@ define('js!SBIS3.CONTROLS.Data.Adapter.Sbis', [
     */
    var SbisRecord = $ws.core.extend({}, [IRecord], /** @lends SBIS3.CONTROLS.Data.Adapter.SbisRecord.prototype */{
       _moduleName: 'SBIS3.CONTROLS.Data.Adapter.SbisRecord',
+      $protected: {
+         /**
+          * @var {Object} Сырые данные
+          */
+         _data: undefined,
 
-      get: function (data, name) {
-         var index = this._getFieldIndex(data, name);
-         return index >= 0 ? data.d[index] : undefined;
+         /**
+          * @var {Object<String, Number>} Название поля -> индекс в d
+          */
+         _fieldIndexes: undefined
       },
 
-      set: function (data, name, value) {
-         this._checkData(data);
-         var index = this._getFieldIndex(data, name);
+      $constructor: function (data) {
+         if (!(data instanceof Object)) {
+            data = {};
+         }
+         if (!(data.s instanceof Array)) {
+            data.s = [];
+         }
+         if (!(data.d instanceof Array)) {
+            data.d = [];
+         }
+         this._data = data;
+      },
+
+      has: function (name) {
+         return this._getFieldIndex(name) >= 0;
+      },
+
+      get: function (name) {
+         var index = this._getFieldIndex(name);
+         return index >= 0 ? this._data.d[index] : undefined;
+      },
+
+      set: function (name, value) {
+         var index = this._getFieldIndex(name);
          if (index < 0) {
             throw new Error('Property is not defined');
          }
-         data.d[index] = value;
-         return data;
+         this._data.d[index] = value;
       },
 
-      getFields: function (data) {
+      getFields: function () {
          var fields = [];
-         if (data && data.s) {
-            for (var i = 0, count = data.s.length; i < count; i++) {
-               fields.push(data.s[i].n);
-            }
+         for (var i = 0, count = this._data.s.length; i < count; i++) {
+            fields.push(this._data.s[i].n);
          }
          return fields;
       },
 
-      getEmpty: function (data) {
+      getEmpty: function () {
          return {
             d: [],
-            s: data ? $ws.core.clone(data.s) : []
+            s: $ws.core.clone(this._data.s)
          };
       },
 
-      getFullFieldData: function (data, name) {
-         var index = this._getFieldIndex(data, name),
-            meta = index >= 0 ? data.s[index] : undefined,
+      getInfo: function (name) {
+         var index = this._getFieldIndex(name),
+            meta = index >= 0 ? this._data.s[index] : undefined,
             fieldData = {meta: undefined, type: undefined};
          if (meta) {
-            var type = this._getType(meta, data.d[index]);
+            var type = this._getType(meta, this._data.d[index]);
             fieldData.meta = type.meta;
             fieldData.type = type.name;
          }
          return fieldData;
+      },
+
+      getKeyField: function () {
+         var s = this._data.s,
+            index;
+         for (var i = 0, l = s.length; i < l; i++) {
+            if (s[i].n[0] === '@') {
+               index = i;
+               break;
+            }
+         }
+         if (index === undefined && s.length) {
+            index = 0;
+         }
+
+         return index === undefined ? undefined : s[index].n;
+      },
+
+      getData: function () {
+         return this._data;
       },
 
       _getType: function (meta, value, key) {
@@ -244,8 +133,8 @@ define('js!SBIS3.CONTROLS.Data.Adapter.Sbis', [
          if (typeof typeSbis === 'object') {
             return this._getType(typeSbis, value, 'n');
          }
-         for (var fieldType in Sbis.FIELD_TYPE) {
-            if (typeSbis === Sbis.FIELD_TYPE[fieldType]) {
+         for (var fieldType in FIELD_TYPE) {
+            if (typeSbis === FIELD_TYPE[fieldType]) {
                type = fieldType;
                break;
             }
@@ -277,7 +166,7 @@ define('js!SBIS3.CONTROLS.Data.Adapter.Sbis', [
                      fData = [];
                   for (var pI = 0, pL = pairs.keys.length; pI < pL; pI++) {
                      st.push({
-                        t: Sbis.FIELD_TYPE.Boolean,
+                        t: FIELD_TYPE.Boolean,
                         n: pairs.values[pI]
                      });
                      fData.push(value[pI]);
@@ -287,33 +176,180 @@ define('js!SBIS3.CONTROLS.Data.Adapter.Sbis', [
                      s: st
                   };
                };
-               meta.adapter = new Sbis();
+               var Adapter = require('js!SBIS3.CONTROLS.Data.Adapter.Sbis');
+               meta.adapter = new Adapter();
                break;
          }
          return meta;
       },
 
-      _getFieldIndex: function (data, name) {
-         if (data && data.s) {
-            for (var i = 0, count = data.s.length; i < count; i++) {
-               if (data.s[i].n === name) {
-                  return i;
-               }
+      _getFieldIndex: function (name) {
+         if (this._fieldIndexes === undefined) {
+            this._fieldIndexes = {};
+            for (var i = 0, count = this._data.s.length; i < count; i++) {
+               this._fieldIndexes[this._data.s[i].n] = i;
             }
          }
-         return -1;
+         return this._fieldIndexes.hasOwnProperty(name) ? this._fieldIndexes[name] : -1;
+      }
+   });
+
+   return SbisRecord;
+});
+
+define('js!SBIS3.CONTROLS.Data.Adapter.SbisTable', [
+   'js!SBIS3.CONTROLS.Data.Adapter.ITable'
+], function (ITable) {
+   'use strict';
+
+   /**
+    * Адаптер для таблицы данных в формате СБиС
+    * @class SBIS3.CONTROLS.Data.Adapter.SbisTable
+    * @mixes SBIS3.CONTROLS.Data.Adapter.ITable
+    * @author Мальцев Алексей
+    */
+   var SbisTable = $ws.core.extend({}, [ITable], /** @lends SBIS3.CONTROLS.Data.Adapter.SbisTable.prototype */{
+      _moduleName: 'SBIS3.CONTROLS.Data.Adapter.SbisTable',
+      $protected: {
+         /**
+          * @var {Object} Сырые данные
+          */
+         _data: undefined
       },
 
-      _checkData: function (data) {
+      $constructor: function (data) {
          if (!(data instanceof Object)) {
-            throw new Error('Invalid argument');
+            data = {};
+         }
+         if (!(data.s instanceof Array)) {
+            data.s = [];
          }
          if (!(data.d instanceof Array)) {
-            throw new Error('Invalid argument');
+            data.d = [];
+         }
+         this._data = data;
+      },
+
+      getEmpty: function () {
+         return {
+            d: [],
+            s: $ws.core.clone(this._data.s || [])
+         };
+      },
+
+      getCount: function () {
+         return this._data.d.length;
+      },
+
+      add: function (record, at) {
+         if (!this._data.s.length) {
+            this._data.s = record.s || [];
+         }
+         if (at === undefined) {
+            this._data.d.push(record.d);
+         } else {
+            this._checkPosition(at);
+            this._data.d.splice(at, 0, record.d);
+         }
+      },
+
+      at: function (index) {
+         return this._data.d[index] ? {
+            d: this._data.d[index],
+            s: this._data.s
+         } : undefined;
+      },
+
+      merge: function(one, two){
+         $ws.core.merge(
+            this._data.d[one],
+            this._data.d[two]
+         );
+         this.remove(two);
+      },
+
+      copy: function(index){
+         this._checkPosition(index);
+         var source = this._data.d[index],
+            clone = $ws.core.clone(source);
+         this._data.d.splice(index, 0, clone);
+      },
+
+      remove: function (at) {
+         this._checkPosition(at);
+         this._data.d.splice(at, 1);
+      },
+
+      replace: function (record, at) {
+         this._checkPosition(at);
+         if (!this._data.s.length) {
+            this._data.s = record.s || [];
+         }
+         this._data.d[at] = record.d;
+      },
+
+      move: function(source, target) {
+         if (target === source) {
+            return;
+         }
+         var removed = this._data.d.splice(source, 1);
+         this._data.d.splice(target, 0, removed.shift());
+      },
+
+      getData: function () {
+         return this._data;
+      },
+
+      _checkPosition: function (at) {
+         if (at < 0 || at > this._data.d.length) {
+            throw new Error('Out of bounds');
          }
       }
-
    });
+
+   return SbisTable;
+});
+
+define('js!SBIS3.CONTROLS.Data.Adapter.Sbis', [
+   'js!SBIS3.CONTROLS.Data.Adapter.Abstract',
+   'js!SBIS3.CONTROLS.Data.Adapter.SbisTable',
+   'js!SBIS3.CONTROLS.Data.Adapter.SbisRecord',
+   'js!SBIS3.CONTROLS.Data.Source.DataSet',
+   'js!SBIS3.CONTROLS.Data.Model'
+], function (Abstract, SbisTable, SbisRecord) {
+   'use strict';
+
+   /**
+    * Адаптер для данных в формате СБиС
+    * @class SBIS3.CONTROLS.Data.Adapter.Sbis
+    * @extends SBIS3.CONTROLS.Data.Adapter.Abstract
+    * @public
+    * @author Мальцев Алексей
+    */
+
+   var Sbis = Abstract.extend(/** @lends SBIS3.CONTROLS.Data.Adapter.Sbis.prototype */{
+      _moduleName: 'SBIS3.CONTROLS.Data.Adapter.Sbis',
+
+      forTable: function (data) {
+         return new SbisTable(data);
+      },
+
+      forRecord: function (data) {
+         return new SbisRecord(data);
+      },
+
+      /**
+       * Сериализует данные
+       * @param {*} data
+       * @returns {Object}
+       * @static
+       */
+      serialize: function (data) {
+         return serializer.serialize(data);
+      }
+   });
+
+   Sbis.FIELD_TYPE = FIELD_TYPE;
 
    var serializer = (function() {
       var
