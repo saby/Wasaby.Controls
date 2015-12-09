@@ -3,7 +3,7 @@
  */
 define('js!SBIS3.CONTROLS.SbisJSONStrategy', [
    'js!SBIS3.CONTROLS.IDataStrategy',
-   'js!SBIS3.CONTROLS.Data.Collection.RecordSet',
+   'js!SBIS3.CONTROLS.DataSet',
    'js!SBIS3.CONTROLS.Record',
    'js!SBIS3.CONTROLS.DataFactory'
 ], function (IDataStrategy, DataSet, Record, Factory) {

@@ -3,8 +3,7 @@
  */
 define('js!SBIS3.CONTROLS.MoveDialog', [
    'js!SBIS3.CORE.Dialog',
-   'js!SBIS3.CONTROLS.Data.Model',
-   'js!SBIS3.CONTROLS.ArrayStrategy'
+   'js!SBIS3.CONTROLS.Data.Model'
 ], function(Dialog) {
 
    var MoveDialog = Dialog.extend({
