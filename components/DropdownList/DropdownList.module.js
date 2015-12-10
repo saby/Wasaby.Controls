@@ -45,13 +45,15 @@ define('js!SBIS3.CONTROLS.DropdownList',
             _options: {
                /**
                 * @cfg {String} Шаблон шапки заголовка
-                * @remark Передать как функцию. (Т.е. сначала подгрузить в модуль, а потом передать в опцию)
+                * @remark
+                * Передать как функцию. (Т.е. сначала подгрузить в модуль, а потом передать в опцию)
                 * @editor ExternalComponentChooser
                 */
                headTemplate: dotTplFnHead,
                /**
                 * @cfg {String} Шаблон для каждого элемента выпадающего списка
-                * @remark Передать как функцию. (Т.е. сначала подгрузить в модуль, а потом передать в опцию)
+                * @remark
+                * Передать как функцию. (Т.е. сначала подгрузить в модуль, а потом передать в опцию)
                 * @editor ExternalComponentChooser
                 */
                itemTemplate: dotTplFnForItem,
