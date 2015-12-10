@@ -1,6 +1,6 @@
 /* global define, console, doT, $ws, $ */
 define('js!SBIS3.CONTROLS.DataGridControl.DataGridView', [
-   'js!SBIS3.CONTROLS.ListControl.ListView',
+   'js!SBIS3.CONTROLS.ListControl.View',
    'js!SBIS3.CONTROLS.DataGridControl.DataGridViewMixin'
 ], function (ListView, DataGridViewMixin) {
    'use strict';
@@ -8,7 +8,7 @@ define('js!SBIS3.CONTROLS.DataGridControl.DataGridView', [
    /**
     * Представление таблицы - реализует ее визуальный аспект.
     * @class SBIS3.CONTROLS.DataGridControl.DataGridView
-    * @extends SBIS3.CONTROLS.ListControl.ListView
+    * @extends SBIS3.CONTROLS.ListControl.View
     * @mixes SBIS3.CONTROLS.DataGridControl.DataGridViewMixin
     * @author Крайнов Дмитрий Олегович
     */

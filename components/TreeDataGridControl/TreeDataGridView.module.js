@@ -20,7 +20,7 @@ define('js!SBIS3.CONTROLS.TreeDataGridControl.TreeDataGridView', [
          _rootNode: undefined
       },
 
-      //region SBIS3.CONTROLS.ListControl.IListView
+      //region SBIS3.CONTROLS.ListControl.IView
 
       addItem: function (item, at) {
          var siblings = this._getTreeChildrenContainers(item.getParent()),
@@ -65,7 +65,7 @@ define('js!SBIS3.CONTROLS.TreeDataGridControl.TreeDataGridView', [
          return pagerContaner.find('div').first();
       },
 
-      //endregion SBIS3.CONTROLS.ListControl.IListView
+      //endregion SBIS3.CONTROLS.ListControl.IView
 
       //region SBIS3.CONTROLS.TreeControl.ITreeView
 

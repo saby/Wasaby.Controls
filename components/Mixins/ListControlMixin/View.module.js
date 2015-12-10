@@ -1,20 +1,20 @@
 /* global define, doT, $ws, $ */
-define('js!SBIS3.CONTROLS.ListControl.ListView', [
-   'js!SBIS3.CONTROLS.ListControl.IListView',
+define('js!SBIS3.CONTROLS.ListControl.View', [
+   'js!SBIS3.CONTROLS.ListControl.IView',
    'js!SBIS3.CORE.MarkupTransformer',
-   'html!SBIS3.CONTROLS.ListControl.ListView/resources/ListItem'
-], function (IListView, markupTransformer, ListItemContainerTemplate) {
+   'html!SBIS3.CONTROLS.ListControl.View/resources/ListItem'
+], function (IView, markupTransformer, ListItemContainerTemplate) {
    'use strict';
 
    /**
     * Представление списка - реализует его визуальный аспект.
-    * @class SBIS3.CONTROLS.ListControl.ListView
+    * @class SBIS3.CONTROLS.ListControl.View
     * @extends $ws.proto.Abstract
-    * @mixes SBIS3.CONTROLS.ListControl.IListView
+    * @mixes SBIS3.CONTROLS.ListControl.IView
     * @author Крайнов Дмитрий Олегович
     */
-   return $ws.proto.Abstract.extend([IListView], /** @lends SBIS3.CONTROLS.ListControl.ListView.prototype */{
-      _moduleName: 'SBIS3.CONTROLS.ListControl.ListView',
+   return $ws.proto.Abstract.extend([IView], /** @lends SBIS3.CONTROLS.ListControl.View.prototype */{
+      _moduleName: 'SBIS3.CONTROLS.ListControl.View',
       $protected: {
          /**
           * @var {String} CSS-префикс всех классов
@@ -92,7 +92,7 @@ define('js!SBIS3.CONTROLS.ListControl.ListView', [
          this._attachEventHandlers();
       },
 
-      //region SBIS3.CONTROLS.ListControl.IListView
+      //region SBIS3.CONTROLS.ListControl.IView
 
       render: function (items) {
          this.clear();
@@ -129,7 +129,7 @@ define('js!SBIS3.CONTROLS.ListControl.ListView', [
                this._buildItemContainer(item, template)
             );
          } else {
-            $ws.single.ioc.resolve('ILogger').error('SBIS3.CONTROLS.ListControl.ListView::updateItem()', 'Item at this position is not found');
+            $ws.single.ioc.resolve('ILogger').error('SBIS3.CONTROLS.ListControl.View::updateItem()', 'Item at this position is not found');
          }
       },
 
@@ -139,7 +139,7 @@ define('js!SBIS3.CONTROLS.ListControl.ListView', [
             this._removeСomponents(container);
             container.remove();
          } else {
-            $ws.single.ioc.resolve('ILogger').error('SBIS3.CONTROLS.ListControl.ListView::removeItem()', 'Item at this position is not found');
+            $ws.single.ioc.resolve('ILogger').error('SBIS3.CONTROLS.ListControl.View::removeItem()', 'Item at this position is not found');
          }
       },
 
@@ -150,7 +150,7 @@ define('js!SBIS3.CONTROLS.ListControl.ListView', [
          if (fromContainer.length && toContainer.length) {
             fromContainer.insertBefore(toContainer);
          } else {
-            $ws.single.ioc.resolve('ILogger').error('SBIS3.CONTROLS.ListControl.ListView::removeItem()', 'Positions are not found');
+            $ws.single.ioc.resolve('ILogger').error('SBIS3.CONTROLS.ListControl.View::removeItem()', 'Positions are not found');
          }
       },
 
@@ -224,7 +224,7 @@ define('js!SBIS3.CONTROLS.ListControl.ListView', [
          return container;
       },
 
-      //endregion SBIS3.CONTROLS.ListControl.IListView
+      //endregion SBIS3.CONTROLS.ListControl.IView
 
       //region Public methods
 
