@@ -385,7 +385,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
                /* При клике на крест, удалим ключ из выбранных */
                onCrossClick: propertyUpdateWrapper(function(e, key){
                   self.removeItemsSelection([key]);
-                  if(!self._options.multiselect) {
+                  if(!self._options.multiselect && self._options.alwaysShowTextBox) {
                      self.setText('');
                   }
                }),
