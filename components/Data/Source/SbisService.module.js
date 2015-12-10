@@ -338,7 +338,7 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
       call: function (command, data) {
          return this._provider.callMethod(
             command,
-            this._options.adapter.serialize(data)
+            this._serializeArguments(data)
          ).addCallbacks((function (res) {
             return new DataSet({
                source: this,
@@ -504,6 +504,36 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
       //endregion Public methods
 
       //region Protected methods
+
+      /**
+       * Сериализует все аргументы запроса
+       * @param {*} args Аргументы запроса
+       * @returns {*}
+       * @private
+       */
+      _serializeArguments: function (args) {
+         var result;
+         if (args instanceof Object) {
+            if (
+               $ws.helpers.instanceOfModule(args, 'SBIS3.CONTROLS.Data.Model') ||
+               $ws.helpers.instanceOfModule(args, 'SBIS3.CONTROLS.Record') ||
+               $ws.helpers.instanceOfModule(args, 'SBIS3.CONTROLS.Data.Source.DataSet') ||
+               $ws.helpers.instanceOfModule(args, 'SBIS3.CONTROLS.DataSet')
+            ) {
+               result = this._options.adapter.serialize(args);
+            } else {
+               result = {};
+               for (var key in args) {
+                  if (args.hasOwnProperty(key)) {
+                     result[key] = this._options.adapter.serialize(args[key]);
+                  }
+               }
+            }
+         } else {
+            result = this._options.adapter.serialize(args);
+         }
+         return result;
+      },
 
       /**
        * Возвращает параметры сортировки
