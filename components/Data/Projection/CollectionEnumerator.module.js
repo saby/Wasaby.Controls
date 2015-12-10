@@ -13,15 +13,6 @@ define('js!SBIS3.CONTROLS.Data.Projection.CollectionEnumerator', [
     * @public
     * @author Мальцев Алексей
     */
-   var moveStrategy = IStrategy.extend({
-      move: function() {
-         ....
-      }
-      hmove: function() {
-         ....
-      }
-   });
-   myTCV.setMoveStrategy(new moveStrategy());
 
    var CollectionEnumerator = $ws.core.extend({}, [IEnumerator, IndexedEnumeratorMixin], /** @lends SBIS3.CONTROLS.Data.Projection.CollectionEnumerator.prototype */{
       _moduleName: 'SBIS3.CONTROLS.Data.Projection.CollectionEnumerator',
