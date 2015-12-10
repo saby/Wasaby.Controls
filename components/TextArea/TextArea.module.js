@@ -185,11 +185,12 @@ define('js!SBIS3.CONTROLS.TextArea', ['js!SBIS3.CONTROLS.TextBoxBase', 'html!SBI
          }
       },
 
-      _keyUpBind: function() {
+      _keyUpBind: function(event) {
          var newText = this._inputField.val();
          if (newText != this._options.text) {
             TextArea.superclass.setText.call(this, newText);
          }
+         event.stopPropagation();
       },
        /**
         * Установить подсказку, отображаемую внутри многострочного поля ввода.
