@@ -383,7 +383,12 @@ define('js!SBIS3.CONTROLS.FieldLink',
                onDrawItems: this.updateInputWidth.bind(this),
 
                /* При клике на крест, удалим ключ из выбранных */
-               onCrossClick: function(e, key){ self.removeItemsSelection([key]); },
+               onCrossClick: propertyUpdateWrapper(function(e, key){
+                  self.removeItemsSelection([key]);
+                  if(!self._options.multiselect) {
+                     self.setText('');
+                  }
+               }),
 
                /* При закрытии пикера надо скрыть кнопку удаления всех выбранных */
                onClose: function() { self._pickerStateChangeHandler(false); }
