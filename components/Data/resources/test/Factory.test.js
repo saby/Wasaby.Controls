@@ -116,6 +116,11 @@ define([
             assert.strictEqual(val, 'Строка');
 
          });
+         it('should not cast null to string', function () {
+            var val = sbisModelEmpty.get('title');
+            assert.strictEqual(val, null);
+
+         });
          it('should cast value to enum', function () {
             assert.instanceOf(sbisModel.get('enum'), $ws.proto.Enum);
          });
