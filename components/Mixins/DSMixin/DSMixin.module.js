@@ -205,6 +205,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
              * </pre>
              */
             filter: {},
+            sorting: [],
             /**
              * @cfg {Object.<String,String>} соответствие опций шаблона полям в рекорде
              */
