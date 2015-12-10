@@ -331,8 +331,10 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
             target = $(e.target),
             id = target.closest('.controls-ListView__item').data('id');
          if (id) {
-            this.setSelectedKey(id);
-            this.setCurrentElement(e, this._getDragItems(id));
+            this.setCurrentElement(e, {
+               keys: this._getDragItems(id),
+               targetId: id
+             });
          }
          //Предотвращаем нативное выделение текста на странице
          if (!$ws._const.compatibility.touch) {
@@ -355,7 +357,7 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
          this._hideItemActions();
       },
       _createAvatar: function(e){
-         var count = this.getCurrentElement().length;
+         var count = this.getCurrentElement().keys.length;
          this._avatar = $('<div class="controls-DragNDrop__draggedItem"><span class="controls-DragNDrop__draggedCount">' + count + '</span></div>')
             .css({
                'left': window.scrollX + e.clientX + 5,
@@ -367,7 +369,7 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
          var
             clickHandler,
             target = $(e.target),
-            keys = this.getCurrentElement(),
+            keys = this.getCurrentElement().keys,
             moveTo = target.closest('.controls-ListView__item').data('id');
          //TODO придрот для того, чтобы если перетащить элемент сам на себя не отработал его обработчик клика
          if (this.getSelectedKey() === moveTo) {
@@ -379,6 +381,7 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
          this._move(keys, moveTo);
       },
       _beginDropDown: function(e) {
+         this.setSelectedKey(this.getCurrentElement().targetId);
          this._isShifted = true;
          this._createAvatar(e);
       },

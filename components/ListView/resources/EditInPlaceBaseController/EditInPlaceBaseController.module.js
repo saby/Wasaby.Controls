@@ -26,7 +26,16 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                   editingTemplate: undefined,
                   getCellTemplate: undefined,
                   columns: [],
-                  readRecordBeforeEdit: false,
+                  /**
+                   * @cfg {Boolean} Режим автоматического добавления элементов
+                   * @remark
+                   * Используется при включенном редактировании по месту. Позволяет при завершении редактирования последнего элемента автоматически создавать новый.
+                   * @example
+                   * <pre>
+                   *     <option name="modeAutoAdd">true</option>
+                   * </pre>
+                   */
+                  modeAutoAdd: false,
                   ignoreFirstColumn: false,
                   editFieldFocusHandler: undefined,
                   dataSource: undefined,
@@ -39,7 +48,7 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                _eipHandlers: null
             },
             $constructor: function () {
-               this._publish('onCellValueChanged', 'onRowBeginEdit');
+               this._publish('onItemValueChanged', 'onBeginEdit');
                this._eipHandlers = {
                   onKeyDown: this._onKeyDown.bind(this)
                };
@@ -52,15 +61,16 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                return {
                   editingTemplate: this._options.editingTemplate,
                   columns: this._options.columns,
-                  element: $('<div>'),
+                  element: $('<div>').prependTo(this._options.itemsContainer),
+                  itemsContainer: this._options.itemsContainer,
                   getCellTemplate: this._options.getCellTemplate,
                   ignoreFirstColumn: this._options.ignoreFirstColumn,
                   context: this._getContextForEip(),
                   focusCatch: this._focusCatch.bind(this),
                   parent: this,
                   handlers: {
-                     onCellValueChanged: function(event, difference, model) {
-                        this._notify('onCellValueChanged', difference, model);
+                     onItemValueChanged: function(event, difference, model) {
+                        event.setResult(this._notify('onItemValueChanged', difference, model));
                      }.bind(this),
                      onChildFocusOut: this._onChildFocusOut.bind(this)
                   }
@@ -103,13 +113,13 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                   nextTarget = this._getNextTarget(editNextRow);
                if (nextTarget.length) {
                   this.edit(nextTarget, this._options.dataSet.getRecordByKey(nextTarget.attr('data-id')));
-               } else if (editNextRow) {
+               } else if (editNextRow && this._options.modeAutoAdd) {
                   this.add();
                }
             },
             _getNextTarget: function(editNextRow) {
                var currentTarget = this._eip.getTarget();
-               return currentTarget[editNextRow ? 'nextAll' : 'prevAll']('.js-controls-ListView__item:not(".controls-editInPlace")').slice(0, 1);
+               return currentTarget[editNextRow ? 'next' : 'prev']('.js-controls-ListView__item:not(".controls-editInPlace")');
             },
             edit: function (target, record) {
                return this._prepareEdit(record).addCallback(function(preparedrecord) {
@@ -123,7 +133,7 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                      loadingIndicator,
                      beginEditResult;
                   //Если необходимо перечитывать запись перед редактированием, то делаем это
-                  beginEditResult = self._notify('onRowBeginEdit', record);
+                  beginEditResult = self._notify('onBeginEdit', record);
                   if (beginEditResult instanceof $ws.proto.Deferred) {
                      loadingIndicator = setTimeout(function () {
                         $ws.helpers.toggleIndicator(true);
@@ -198,9 +208,14 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                }
             },
             _onChildFocusOut: function (event, control) {
-               if (!this._isChildControl(control)) {
+               if (!(this._isChildControl(control) || this._isCurrentTarget(control))) {
                   this.endEdit(true);
                }
+            },
+            _isCurrentTarget: function(control) {
+               var currentTarget = this._getEditingEip().getTarget(),
+                   newTarget  = control.getContainer().closest('.js-controls-ListView__item');
+               return currentTarget.attr('data-id') === newTarget.attr('data-id');
             },
             _isChildControl: function(control) {
                while (control && control !== this) {

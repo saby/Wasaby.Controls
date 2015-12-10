@@ -101,6 +101,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
                rawData: record,
                idProperty: this._options.keyField
             });
+            record.setStored(true);
          }
          this.add(record);
       },
@@ -120,14 +121,17 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
          this._rawData = data;
 
          var adapter = this.getStrategy().forTable(),
-            count = adapter.getCount(data);
+            count = adapter.getCount(data),
+            record;
          for (var i = 0; i < count; i++) {
-            this.add(new this._model({
+            record = new this._model({
                compatibleMode: true,
                adapter: this.getStrategy(),
                rawData: adapter.at(data, i),
                idProperty: this._options.keyField
-            }));
+            });
+            record.setStored(true);
+            this.add(record);
          }
       },
 

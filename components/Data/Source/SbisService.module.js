@@ -203,7 +203,7 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
        */
       create: function(meta) {
          var args = {
-            'Фильтр': this._buildRequestField(meta, {
+            'Фильтр': this._options.adapter.serialize(meta || {
                'ВызовИзБраузера': true
             }),
             'ИмяМетода': this._options.formatMethodName
@@ -231,8 +231,8 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
             'ИдО': key,
             'ИмяМетода': this._options.formatMethodName
          };
-         if (!Object.isEmpty(meta)) {
-            args['ДопПоля'] = this._buildRequestField(meta);
+         if (meta && !Object.isEmpty(meta)) {
+            args['ДопПоля'] = this._options.adapter.serialize(meta);
          }
 
          return this._provider.callMethod(
@@ -256,10 +256,10 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
        */
       update: function(model, meta) {
          var args = {
-            'Запись': this._buildRequestField(model)
+            'Запись': this._options.adapter.serialize(model)
          };
-         if (!Object.isEmpty(meta)) {
-            args['ДопПоля'] = this._buildRequestField(meta);
+         if (meta && !Object.isEmpty(meta)) {
+            args['ДопПоля'] = this._options.adapter.serialize(meta);
          }
          this._detectIdProperty(model.getRawData());
 
@@ -288,8 +288,8 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
          var args = {
             'ИдО': key
          };
-         if (!Object.isEmpty(meta)) {
-            args['ДопПоля'] = this._buildRequestField(meta);
+         if (meta && !Object.isEmpty(meta)) {
+            args['ДопПоля'] = this._options.adapter.serialize(meta);
          }
 
          return this._provider.callMethod(
@@ -322,8 +322,8 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
             'ИдО': key,
             'ИмяМетода': this._options.formatMethodName
          };
-         if (!Object.isEmpty(meta)) {
-            args['ДопПоля'] = this._buildRequestField(meta);
+         if (meta && !Object.isEmpty(meta)) {
+            args['ДопПоля'] = this._options.adapter.serialize(meta);
          }
 
          return this._provider.callMethod(
@@ -391,7 +391,7 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
       call: function (command, data) {
          return this._provider.callMethod(
             command,
-            this._buildRequestField(data)
+            this._options.adapter.serialize(data)
          ).addCallbacks((function (res) {
             return new DataSet({
                source: this,
@@ -637,44 +637,9 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
       //region Protected methods
 
       /**
-       * Возвращает сериализованные данные для установки в поле запроса
-       * @param {Object|SBIS3.CONTROLS.Data.Model|SBIS3.CONTROLS.Data.Source.DataSet} data Данные для установки
-       * @param {Object} defaults Значения по умолчанию
-       * @returns {Object}
-       * @private
-       */
-      _buildRequestField: function(data, defaults) {
-         data = data || {};
-         defaults = defaults || {};
-         var result = {};
-         if ($ws.helpers.instanceOfModule(data, 'SBIS3.CONTROLS.Data.Model')) {
-            result = $ws.core.merge({
-               _type: 'record'
-            }, data.getRawData());
-         } else if ($ws.helpers.instanceOfModule(data, 'SBIS3.CONTROLS.Data.Source.DataSet')) {
-            result = $ws.core.merge({
-               _type: 'recordset'
-            }, data.getRawData());
-         } else if (data && $ws.helpers.instanceOfModule(data, 'SBIS3.CONTROLS.Record')) {
-            result = $ws.core.merge({
-               _type: 'record'
-            }, data.getRaw());
-         } else if (data && $ws.helpers.instanceOfModule(data, 'SBIS3.CONTROLS.DataSet')) {
-            result = $ws.core.merge({
-               _type: 'recordset'
-            }, data.getRawData());
-         } else {
-            $ws.core.merge(result, defaults);
-            $ws.core.merge(result, data);
-            result = this._options.adapter.serialize(result);
-         }
-         return result;
-      },
-
-      /**
        * Возвращает параметры сортировки
        * @param {SBIS3.CONTROLS.Data.Query.Query} query Запрос
-       * @returns {Object|null}
+       * @returns {Array|null}
        * @private
        */
       _getSortingParams: function (query) {
@@ -687,6 +652,7 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
          }
          var sort = [],
              order;
+         sort._type = 'recordset';
          for (var i = 0; i < orders.length; i++) {
             order = orders[i];
             sort.push({
