@@ -1,16 +1,18 @@
 /* global define, $ws */
 define('js!SBIS3.CONTROLS.Data.Collection.List', [
+   'js!SBIS3.CONTROLS.Data.SerializableMixin',
    'js!SBIS3.CONTROLS.Data.Collection.IEnumerable',
    'js!SBIS3.CONTROLS.Data.Collection.IList',
    'js!SBIS3.CONTROLS.Data.Collection.IIndexedCollection',
    'js!SBIS3.CONTROLS.Data.Collection.ArrayEnumerator'
-], function (IEnumerable, IList, IIndexedCollection, ArrayEnumerator) {
+], function (SerializableMixin, IEnumerable, IList, IIndexedCollection, ArrayEnumerator) {
    'use strict';
 
    /**
     * Список - коллекция c доступом по порядковому индексу
     * @class SBIS3.CONTROLS.Data.Collection.List
     * @extends $ws.proto.Abstract
+    * @mixes SBIS3.CONTROLS.Data.SerializableMixin
     * @mixes SBIS3.CONTROLS.Data.Collection.IEnumerable
     * @mixes SBIS3.CONTROLS.Data.Collection.IList
     * @public
@@ -18,7 +20,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.List', [
     */
    //mixes SBIS3.CONTROLS.Data.Collection.IIndexedCollection - временно отключаем упоминание об этом интерфейсе, возможно его не будет в этом виде
 
-   var List = $ws.proto.Abstract.extend([IEnumerable, IList, IIndexedCollection], /** @lends SBIS3.CONTROLS.Data.Collection.List.prototype */{
+   var List = $ws.proto.Abstract.extend([SerializableMixin, IEnumerable, IList, IIndexedCollection], /** @lends SBIS3.CONTROLS.Data.Collection.List.prototype */{
       _moduleName: 'SBIS3.CONTROLS.Data.Collection.List',
       $protected: {
          _options: {
@@ -48,6 +50,24 @@ define('js!SBIS3.CONTROLS.Data.Collection.List', [
             this._items = cfg.items;
          }
       },
+
+      // region SBIS3.CONTROLS.Data.SerializableMixin
+
+      _getSerializableState: function() {
+         return $ws.core.merge(
+            List.superclass._getSerializableState.call(this), {
+               _items: this._items
+            }
+         );
+      },
+
+      _setSerializableState: function(state) {
+         return SerializableMixin._setSerializableState(state).callNext(function() {
+            this._items = state._items;
+         });
+      },
+
+      // endregion SBIS3.CONTROLS.Data.SerializableMixin
 
       //region SBIS3.CONTROLS.Data.Collection.IEnumerable
 
@@ -162,6 +182,18 @@ define('js!SBIS3.CONTROLS.Data.Collection.List', [
 
       getCount: function () {
          return this._items.length;
+      },
+
+      equals: function (another) {
+         if (this._items.length !== another.getCount()) {
+            return false;
+         }
+         for (var i = 0, count = this._items.length; i < count; i++) {
+            if (this._items[i] !== another.at(i)) {
+               return false;
+            }
+         }
+         return true;
       },
 
       //endregion SBIS3.CONTROLS.Data.Collection.IList

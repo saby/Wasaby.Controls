@@ -4,6 +4,7 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService/resources/SbisServiceBLO', [],
       'use strict';
 
       var existsId = 7,
+         existsTooId = 987,
          notExistsId = 99;
 
       var SbisServiceBLO = $ws.core.extend({}, {
@@ -26,6 +27,7 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService/resources/SbisServiceBLO', [],
 
             switch (this._cfg.name) {
                case 'Товар':
+               case 'Продукт':
                   switch (method) {
                      case 'Создать':
                         data = {
@@ -68,8 +70,10 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService/resources/SbisServiceBLO', [],
                         break;
 
                      case 'Удалить':
-                        if (args['ИдО'] === existsId) {
+                        if (args['ИдО'] === existsId || ($ws.helpers.type(args['ИдО']) === 'array' && Array.indexOf(args['ИдО'],existsId) !== -1)) {
                            data = existsId;
+                        } else if (args['ИдО'] === existsTooId || ($ws.helpers.type(args['ИдО']) === 'array' && Array.indexOf(args['ИдО'],existsTooId) !== -1)) {
+                              data = existsTooId;
                         } else {
                            error = 'Model is not found';
                         }
@@ -101,11 +105,11 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService/resources/SbisServiceBLO', [],
 
                      case 'ВставитьДо':
                      case 'ВставитьПосле':
-                        data = args;
+                     case 'Произвольный':
                         break;
 
                      default:
-                        throw new Error('Method is undefined');
+                        error = 'Method ' + this._cfg.name + ' is undefined';
                   }
                   break;
 
@@ -113,7 +117,6 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService/resources/SbisServiceBLO', [],
                   switch (method) {
                      case 'ВставитьДо':
                      case 'ВставитьПосле':
-                        data = args;
                         break;
                   }
                   break;
@@ -123,6 +126,12 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService/resources/SbisServiceBLO', [],
             }
 
             setTimeout(function () {
+               SbisServiceBLO.lastRequest = {
+                  cfg: this._cfg,
+                  method: method,
+                  args: args
+               };
+
                if (error) {
                   return def.errback(error);
                }
@@ -134,6 +143,7 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService/resources/SbisServiceBLO', [],
          }
       });
 
+      SbisServiceBLO.lastRequest = {};
       SbisServiceBLO.existsId = existsId;
       SbisServiceBLO.notExistsId = notExistsId;
 
@@ -152,6 +162,45 @@ define([
       'use strict';
 
       describe('SBIS3.CONTROLS.Data.Source.SbisService', function () {
+         var getSampleModel = function() {
+               return new Model({
+                  adapter: new SbisAdapter(),
+                  data: {
+                     d: [
+                        0,
+                        ''
+                     ],
+                     s: [
+                        {'n': 'Ид', 't': 'Число целое'},
+                        {'n': 'Фамилия', 't': 'Строка'}
+                     ]
+                  },
+                  idProperty: 'Ид'
+               });
+            },
+            testArgIsModel = function(arg, model) {
+               if (arg._type !== 'record') {
+                  throw new Error('Wrong value for argument ДопПоля._type');
+               }
+               if (arg.d !== model.getRawData().d) {
+                  throw new Error('Wrong argument value ДопПоля.d');
+               }
+               if (arg.s !== model.getRawData().s) {
+                  throw new Error('Wrong argument value ДопПоля.s');
+               }
+            },
+            testArgIsDataSet = function(arg, dataSet) {
+               if (arg._type !== 'recordset') {
+                  throw new Error('Wrong value for argument _type');
+               }
+               if (arg.d !== dataSet.getRawData().d) {
+                  throw new Error('Wrong value for argument d');
+               }
+               if (arg.s !== dataSet.getRawData().s) {
+                  throw new Error('Wrong value for argument s');
+               }
+            };
+
          describe('.create()', function () {
             context('when the service is exists', function () {
                it('should return an empty model', function (done) {
@@ -172,6 +221,113 @@ define([
                         if (model.get('Фамилия') !== '') {
                            throw new Error('The model contains wrong data');
                         }
+                        done();
+                     } catch (err) {
+                        done(err);
+                     }
+                  }, function (err) {
+                     done(err);
+                  });
+               });
+
+               it('should generate a valid request', function (done) {
+                  var service = new SbisService({
+                     resource: 'Товар'
+                  });
+                  service.create().addCallbacks(function () {
+                     try {
+                        var args = SbisServiceBLO.lastRequest.args;
+
+                        if (args['ИмяМетода'] !== undefined) {
+                           throw new Error('Wrong argument ИмяМетода');
+                        }
+
+                        if (args['Фильтр'].d[0] !== true) {
+                           throw new Error('Wrong value for argument Фильтр.ВызовИзБраузера');
+                        }
+                        if (args['Фильтр'].s[0].n !== 'ВызовИзБраузера') {
+                           throw new Error('Wrong name for argument Фильтр.ВызовИзБраузера');
+                        }
+                        if (args['Фильтр'].s[0].t !== 'Логическое') {
+                           throw new Error('Wrong type for argument Фильтр.ВызовИзБраузера');
+                        }
+                        done();
+                     } catch (err) {
+                        done(err);
+                     }
+                  }, function (err) {
+                     done(err);
+                  });
+               });
+
+               it('should generate a request with valid meta data', function (done) {
+                  var service = new SbisService({
+                     resource: 'Товар'
+                  });
+                  service.create({myParam: 'myValue'}).addCallbacks(function () {
+                     try {
+                        var args = SbisServiceBLO.lastRequest.args;
+
+                        if (args['ИмяМетода'] !== undefined) {
+                           throw new Error('Wrong argument ИмяМетода');
+                        }
+
+                        if (args['Фильтр'].d[0] !== 'myValue') {
+                           throw new Error('Wrong value for argument Фильтр.myParam');
+                        }
+                        if (args['Фильтр'].s[0].n !== 'myParam') {
+                           throw new Error('Wrong name for argument Фильтр.myParam');
+                        }
+                        if (args['Фильтр'].s[0].t !== 'Строка') {
+                           throw new Error('Wrong type for argument Фильтр.myParam');
+                        }
+                        done();
+                     } catch (err) {
+                        done(err);
+                     }
+                  }, function (err) {
+                     done(err);
+                  });
+               });
+
+               it('should generate a request with custom method name in the filter', function (done) {
+                  var service = new SbisService({
+                     resource: 'Товар',
+                     formatMethodName: 'ПрочитатьФормат'
+                  });
+                  service.create({myParam: 'myValue'}).addCallbacks(function () {
+                     try {
+                        var args = SbisServiceBLO.lastRequest.args;
+
+                        if (args['ИмяМетода'] !== 'ПрочитатьФормат') {
+                           throw new Error('Wrong argument ИмяМетода');
+                        }
+                        done();
+                     } catch (err) {
+                        done(err);
+                     }
+                  }, function (err) {
+                     done(err);
+                  });
+               });
+
+               it('should accept a model', function (done) {
+                  var service = new SbisService({
+                        resource: 'Товар'
+                     }),
+                     model = getSampleModel();
+
+                  service.create(model).addCallbacks(function () {
+                     try {
+                        var args = SbisServiceBLO.lastRequest.args;
+
+                        if (args['Фильтр'].d !== model.getRawData().d) {
+                           throw new Error('Wrong value for argument Фильтр.d');
+                        }
+                        if (args['Фильтр'].s !== model.getRawData().s) {
+                           throw new Error('Wrong value for argument Фильтр.s');
+                        }
+
                         done();
                      } catch (err) {
                         done(err);
@@ -222,6 +378,66 @@ define([
                            if (model.get('Фамилия') !== 'Иванов') {
                               throw new Error('The model contains wrong data');
                            }
+                           done();
+                        } catch (err) {
+                           done(err);
+                        }
+                     }, function (err) {
+                        done(err);
+                     });
+                  });
+
+                  it('should generate a valid request', function (done) {
+                     var service = new SbisService({
+                        resource: 'Товар',
+                        formatMethodName: 'Формат'
+                     });
+                     service.read(
+                        SbisServiceBLO.existsId,
+                        {'ПолеОдин': 1}
+                     ).addCallbacks(function () {
+                        try {
+                           var args = SbisServiceBLO.lastRequest.args;
+
+                           if (args['ИмяМетода'] !== 'Формат') {
+                              throw new Error('Wrong argument ИмяМетода');
+                           }
+                           if (args['ИдО'] !== SbisServiceBLO.existsId) {
+                              throw new Error('Wrong argument ИдО');
+                           }
+
+                           if (args['ДопПоля'].d[0] !== 1) {
+                              throw new Error('Wrong argument value ДопПоля.ПолеОдин');
+                           }
+                           if (args['ДопПоля'].s[0].n !== 'ПолеОдин') {
+                              throw new Error('Wrong argument name Навигация.ПолеОдин');
+                           }
+                           if (args['ДопПоля'].s[0].t !== 'Число целое') {
+                              throw new Error('Wrong argument type Навигация.ПолеОдин');
+                           }
+
+                           done();
+                        } catch (err) {
+                           done(err);
+                        }
+                     }, function (err) {
+                        done(err);
+                     });
+                  });
+
+                  it('should accept a model in meta argument', function (done) {
+                     var service = new SbisService({
+                           resource: 'Товар'
+                        }),
+                        model = getSampleModel();
+                     service.read(
+                        SbisServiceBLO.existsId,
+                        model
+                     ).addCallbacks(function () {
+                        try {
+                           var args = SbisServiceBLO.lastRequest.args;
+                           testArgIsModel(args['ДопПоля'], model);
+
                            done();
                         } catch (err) {
                            done(err);
@@ -338,26 +554,74 @@ define([
                      var service = new SbisService({
                            resource: 'Товар'
                         }),
-                        model = new Model({
-                           adapter: new SbisAdapter(),
-                           data: {
-                              d: [
-                                 0,
-                                 ''
-                              ],
-                              s: [
-                                 {'n': 'Ид', 't': 'Число целое'},
-                                 {'n': 'Фамилия', 't': 'Строка'}
-                              ]
-                           },
-                           idProperty: 'Ид'
-                        });
+                        model = getSampleModel();
 
                      service.update(model).addCallbacks(function (success) {
                         testModel(success, model, done);
                      }, function (err) {
                         done(err);
                      });
+                  });
+               });
+
+               it('should generate a valid request', function (done) {
+                  var service = new SbisService({
+                     resource: 'Товар',
+                     formatMethodName: 'Формат'
+                  });
+                  service.read(SbisServiceBLO.existsId).addCallbacks(function (model) {
+                     var raw = model.getRaw();
+                     service.update(
+                        model,
+                        {'ПолеОдин': '2'}
+                     ).addCallbacks(function () {
+                        try {
+                           var args = SbisServiceBLO.lastRequest.args;
+
+                           testArgIsModel(args['Запись'], model);
+
+                           if (args['ДопПоля'].d[0] !== '2') {
+                              throw new Error('Wrong argument value ДопПоля.ПолеОдин');
+                           }
+                           if (args['ДопПоля'].s[0].n !== 'ПолеОдин') {
+                              throw new Error('Wrong argument name Навигация.ПолеОдин');
+                           }
+                           if (args['ДопПоля'].s[0].t !== 'Строка') {
+                              throw new Error('Wrong argument type Навигация.ПолеОдин');
+                           }
+
+                           done();
+                        } catch (err) {
+                           done(err);
+                        }
+                     }, function (err) {
+                        done(err);
+                     });
+                  }, function (err) {
+                     done(err);
+                  });
+               });
+
+               it('should accept a model in meta argument', function (done) {
+                  var service = new SbisService({
+                        resource: 'Товар'
+                     }),
+                     modelA = getSampleModel(),
+                     modelB = getSampleModel();
+                  service.update(
+                     modelA,
+                     modelB
+                  ).addCallbacks(function () {
+                     try {
+                        var args = SbisServiceBLO.lastRequest.args;
+                        testArgIsModel(args['ДопПоля'], modelB);
+
+                        done();
+                     } catch (err) {
+                        done(err);
+                     }
+                  }, function (err) {
+                     done(err);
                   });
                });
             });
@@ -421,6 +685,121 @@ define([
                      });
                   });
                });
+
+               it('should generate a valid request', function (done) {
+                  var service = new SbisService({
+                     resource: 'Товар'
+                  });
+                  service.destroy(
+                     SbisServiceBLO.existsId,
+                     {'ПолеОдин': true}
+                  ).addCallbacks(function () {
+                     try {
+                        var args = SbisServiceBLO.lastRequest.args;
+
+                        if (args['ИдО'] !== SbisServiceBLO.existsId) {
+                           throw new Error('Wrong argument ИдО');
+                        }
+
+                        if (args['ДопПоля'].d[0] !== true) {
+                           throw new Error('Wrong argument value ДопПоля.ПолеОдин');
+                        }
+                        if (args['ДопПоля'].s[0].n !== 'ПолеОдин') {
+                           throw new Error('Wrong argument name Навигация.ПолеОдин');
+                        }
+                        if (args['ДопПоля'].s[0].t !== 'Логическое') {
+                           throw new Error('Wrong argument type Навигация.ПолеОдин');
+                        }
+                        done();
+                     } catch (err) {
+                        done(err);
+                     }
+                  }, function (err) {
+                     done(err);
+                  });
+               });
+
+               it('should accept a model in meta argument', function (done) {
+                  var service = new SbisService({
+                        resource: 'Товар'
+                     }),
+                     model = getSampleModel();
+                  service.destroy(
+                     SbisServiceBLO.existsId,
+                     model
+                  ).addCallbacks(function () {
+                     try {
+                        var args = SbisServiceBLO.lastRequest.args;
+                        testArgIsModel(args['ДопПоля'], model);
+
+                        done();
+                     } catch (err) {
+                        done(err);
+                     }
+                  }, function (err) {
+                     done(err);
+                  });
+               });
+
+               it('should delete a few records', function (done) {
+                  var service = new SbisService({
+                     resource: 'Товар'
+                  });
+                  service.destroy([0, SbisServiceBLO.existsId, 1]).addCallbacks(function (success) {
+                     try {
+                        var args = SbisServiceBLO.lastRequest.args;
+
+                        if (args['ИдО'][0] !== 0) {
+                           throw new Error('Wrong argument ИдО[0]');
+                        }
+                        if (args['ИдО'][1] !== SbisServiceBLO.existsId) {
+                           throw new Error('Wrong argument ИдО[1]');
+                        }
+                        if (args['ИдО'][2] !== 1) {
+                           throw new Error('Wrong argument ИдО[2]');
+                        }
+
+                        if (!success) {
+                           throw new Error('Unsuccessful destroy');
+                        } else {
+                           done();
+                        }
+                     } catch (err) {
+                        done(err);
+                     }
+                  }, function (err) {
+                     done(err);
+                  });
+               });
+
+               it('should delete records by a composite key', function (done) {
+                  var service = new SbisService({
+                     resource: 'Товар'
+                  });
+                  service.destroy([SbisServiceBLO.existsId + ',Товар', '987,Продукт']).addCallbacks(function (success) {
+                     try {
+                        var cfg = SbisServiceBLO.lastRequest.cfg;
+                        if (cfg.name !== 'Продукт') {
+                           throw new Error('Wrong service name');
+                        }
+
+                        var args = SbisServiceBLO.lastRequest.args;
+                        if (args['ИдО'] !== 987) {
+                           throw new Error('Wrong argument ИдО');
+                        }
+
+                        if (!success) {
+                           throw new Error('Unsuccessful destroy');
+                        } else {
+                           done();
+                        }
+                     } catch (err) {
+                        done(err);
+                     }
+                  }, function (err) {
+                     done(err);
+                  });
+               });
             });
 
             context('when the service isn\'t exists', function () {
@@ -482,6 +861,133 @@ define([
                      done(err);
                   });
                });
+
+               it('should generate a valid request', function (done) {
+                  var service = new SbisService({
+                        resource: 'Товар'
+                     }),
+                     query = new Query();
+                  query
+                     .select(['fieldOne', 'fieldTwo'])
+                     .from('Goods')
+                     .where({
+                        id: 5,
+                        enabled: true,
+                        title: 'abc*'
+                     })
+                     .orderBy({
+                        id: true,
+                        enabled: false
+                     })
+                     .offset(100)
+                     .limit(33)
+                     .meta({
+                        'ПолеОдин': 4
+                     });
+
+                  service.query(query).addCallbacks(function () {
+                        try {
+                           var args = SbisServiceBLO.lastRequest.args;
+
+                           if (args['Фильтр'].d[0] !== 5) {
+                              throw new Error('Wrong argument value Фильтр.id');
+                           }
+                           if (args['Фильтр'].s[0].n !== 'id') {
+                              throw new Error('Wrong argument name Фильтр.id');
+                           }
+                           if (args['Фильтр'].s[0].t !== 'Число целое') {
+                              throw new Error('Wrong argument type Фильтр.id');
+                           }
+
+                           if (args['Фильтр'].d[1] !== true) {
+                              throw new Error('Wrong argument value Фильтр.enabled');
+                           }
+                           if (args['Фильтр'].s[1].n !== 'enabled') {
+                              throw new Error('Wrong argument name Фильтр.enabled');
+                           }
+                           if (args['Фильтр'].s[1].t !== 'Логическое') {
+                              throw new Error('Wrong argument type Фильтр.enabled');
+                           }
+
+                           if (args['Фильтр'].d[2] !== 'abc*') {
+                              throw new Error('Wrong argument value Фильтр.title');
+                           }
+                           if (args['Фильтр'].s[2].n !== 'title') {
+                              throw new Error('Wrong argument name Фильтр.title');
+                           }
+                           if (args['Фильтр'].s[2].t !== 'Строка') {
+                              throw new Error('Wrong argument type Фильтр.title');
+                           }
+
+                           if (args['Сортировка'].d[0][0] !== 'id') {
+                              throw new Error('Wrong argument value Сортировка.id.n');
+                           }
+                           if (args['Сортировка'].d[0][1] !== true) {
+                              throw new Error('Wrong argument value Сортировка.id.o');
+                           }
+                           if (args['Сортировка'].d[0][2] !== false) {
+                              throw new Error('Wrong argument value Сортировка.id.l');
+                           }
+
+                           if (args['Сортировка'].d[1][0] !== 'enabled') {
+                              throw new Error('Wrong argument value Сортировка.enabled.n');
+                           }
+                           if (args['Сортировка'].d[1][1] !== false) {
+                              throw new Error('Wrong argument value Сортировка.enabled.o');
+                           }
+                           if (args['Сортировка'].d[1][2] !== true) {
+                              throw new Error('Wrong argument value Сортировка.enabled.l');
+                           }
+
+                           if (args['Сортировка'].s[0].n !== 'n') {
+                              throw new Error('Wrong argument name Сортировка.n');
+                           }
+                           if (args['Сортировка'].s[1].n !== 'o') {
+                              throw new Error('Wrong argument name Сортировка.o');
+                           }
+                           if (args['Сортировка'].s[2].n !== 'l') {
+                              throw new Error('Wrong argument name Сортировка.l');
+                           }
+
+                           if (args['Навигация'].d[0] !== 3) {
+                              throw new Error('Wrong argument value Навигация.Страница');
+                           }
+                           if (args['Навигация'].s[0].n !== 'Страница') {
+                              throw new Error('Wrong argument name Навигация.Страница');
+                           }
+
+                           if (args['Навигация'].d[1] !== 33) {
+                              throw new Error('Wrong argument value Навигация.РазмерСтраницы');
+                           }
+                           if (args['Навигация'].s[1].n !== 'РазмерСтраницы') {
+                              throw new Error('Wrong argument name Навигация.РазмерСтраницы');
+                           }
+
+                           if (args['Навигация'].d[2] !== true) {
+                              throw new Error('Wrong argument value Навигация.ЕстьЕще');
+                           }
+                           if (args['Навигация'].s[2].n !== 'ЕстьЕще') {
+                              throw new Error('Wrong argument name Навигация.ЕстьЕще');
+                           }
+
+                           if (args['ДопПоля'].d[0] !== 4) {
+                              throw new Error('Wrong argument value ДопПоля.ПолеОдин');
+                           }
+                           if (args['ДопПоля'].s[0].n !== 'ПолеОдин') {
+                              throw new Error('Wrong argument name Навигация.ПолеОдин');
+                           }
+                           if (args['ДопПоля'].s[0].t !== 'Число целое') {
+                              throw new Error('Wrong argument type Навигация.ПолеОдин');
+                           }
+
+                           done();
+                        } catch (err) {
+                           done(err);
+                        }
+                     }, function (err) {
+                        done(err);
+                     });
+               });
             });
 
             context('when the service isn\'t exists', function () {
@@ -500,100 +1006,80 @@ define([
             });
          });
 
-         describe('.move()', function () {
-            it('should move ' + SbisServiceBLO.existsId + ' before ' + 56, function (done) {
-               var service = new SbisService({
-                  resource: 'Товар'
-               });
-               service.read(SbisServiceBLO.existsId).addCallback(function (model) {
-                  service.move(model, 56).addCallbacks(function(data) {
-                     if (data['ИдО'] === SbisServiceBLO.existsId &&
-                        data['ИдОДо'] === 56 &&
-                        data['ПорядковыйНомер'] === 'ПорНомер'
-                     ) {
+         describe('.call()', function () {
+            context('when the method is exists', function () {
+               it('should accept a model', function (done) {
+                  var service = new SbisService({
+                        resource: 'Товар'
+                     }),
+                     model = getSampleModel();
+
+                  service.call('Произвольный', model).addCallbacks(function () {
+                     try {
+                        if (SbisServiceBLO.lastRequest.method !== 'Произвольный') {
+                           throw new Error('Method name "' + SbisServiceBLO.lastRequest.method + '" expected to be "Произвольный"');
+                        }
+
+                        var args = SbisServiceBLO.lastRequest.args;
+                        testArgIsModel(args, model);
+
                         done();
-                     } else {
-                        done(new Error('Unexpected value'));
+                     } catch (err) {
+                        done(err);
                      }
-                  }, function(err){
+                  }, function (err) {
+                     done(err);
+                  });
+               });
+               it('should accept a dataset', function (done) {
+                  var service = new SbisService({
+                        resource: 'Товар'
+                     }),
+                     dataSet = new DataSet({
+                        adapter: new SbisAdapter(),
+                        data: {
+                           d: [
+                              [1, true],
+                              [2, false],
+                              [5, true]
+                           ],
+                           s: [
+                              {'n': 'Ид', 't': 'Идентификатор'},
+                              {'n': 'Флаг', 't': 'Логическое'}
+                           ]
+                        }
+                     });
+
+                  service.call('Произвольный', dataSet).addCallbacks(function () {
+                     try {
+                        if (SbisServiceBLO.lastRequest.method !== 'Произвольный') {
+                           throw new Error('Method name "' + SbisServiceBLO.lastRequest.method + '" expected to be "Произвольный"');
+                        }
+
+                        var args = SbisServiceBLO.lastRequest.args;
+                        testArgIsDataSet(args, dataSet);
+
+                        done();
+                     } catch (err) {
+                        done(err);
+                     }
+                  }, function (err) {
                      done(err);
                   });
                });
             });
 
-            it('should move ' + SbisServiceBLO.existsId + ' before ' + 0, function (done) {
-               var service = new SbisService({
-                  resource: 'Товар'
-               });
-               service.read(SbisServiceBLO.existsId).addCallback(function (model) {
-                  service.move(model, 0).addCallbacks(function(data) {
-                     if (data['ИдО'] === SbisServiceBLO.existsId &&
-                        data['ИдОДо'] === 0 &&
-                        data['ПорядковыйНомер'] === 'ПорНомер'
-                     ) {
-                        done();
-                     } else {
-                        done(new Error('Unexpected value'));
-                     }
-                  }, function(err){
-                     done(err);
+            context('when the method isn\'t exists', function () {
+               it('should return an error', function (done) {
+                  var service = new SbisService({
+                     resource: 'Товар'
                   });
-               });
-            });
-
-            it('should move ' + SbisServiceBLO.existsId + ' after ' + 77, function (done) {
-               var service = new SbisService({
-                  resource: 'Товар'
-               });
-               service.read(SbisServiceBLO.existsId).addCallback(function (model) {
-                  service.move(model, 77, {after: true}).addCallbacks(function(data) {
-                     if (data['ИдО'] === SbisServiceBLO.existsId &&
-                        data['ИдОПосле'] === 77 &&
-                        data['ПорядковыйНомер'] === 'ПорНомер'
-                     ) {
+                  service.call('МойМетод').addBoth(function (err) {
+                     if (err instanceof Error) {
                         done();
                      } else {
-                        done(new Error('Unexpected value'));
+                        done(new Error('That\'s no Error'));
                      }
-                  }, function(err){
-                     done(err);
-                  });
-               });
-            });
-
-            it('should move ' + SbisServiceBLO.existsId + ' after ' + 0, function (done) {
-               var service = new SbisService({
-                  resource: 'Товар'
-               });
-               service.read(SbisServiceBLO.existsId).addCallback(function (model) {
-                  service.move(model, 0, {after: true}).addCallbacks(function(data) {
-                     if (data['ИдО'] === SbisServiceBLO.existsId &&
-                        data['ИдОПосле'] === 0 &&
-                        data['ПорядковыйНомер'] === 'ПорНомер'
-                     ) {
-                        done();
-                     } else {
-                        done(new Error('Unexpected value'));
-                     }
-                  }, function(err){
-                     done(err);
-                  });
-               });
-            });
-
-            it('should move by given column', function (done) {
-               var service = new SbisService({
-                  resource: 'Товар'
-               });
-               service.read(SbisServiceBLO.existsId).addCallback(function (model) {
-                  service.move(model, 56, {column: 'Название'}).addCallbacks(function(data) {
-                     if (data['ПорядковыйНомер'] === 'Название') {
-                        done();
-                     } else {
-                        done(new Error('Unexpected value'));
-                     }
-                  }, function(err){
-                     done(err);
                   });
                });
             });

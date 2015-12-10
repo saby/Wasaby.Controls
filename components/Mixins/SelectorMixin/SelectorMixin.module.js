@@ -33,7 +33,7 @@ define('js!SBIS3.CONTROLS.SelectorMixin', [],
                 *     <option name="multiSelect">true</option>
                 * </pre>
                 */
-               multiselect: false,
+               multiSelect: false,
                /**
                 * Записи, выбранные в связном представлении
                 */
@@ -56,7 +56,7 @@ define('js!SBIS3.CONTROLS.SelectorMixin', [],
             }
 
             this._changeSelectionHandler = function (event, result) {
-               if(!self._options.multiselect) {
+               if(!self._options.multiSelect) {
                   self.close(result);
                }
             };
@@ -76,7 +76,7 @@ define('js!SBIS3.CONTROLS.SelectorMixin', [],
          },
 
          _toggleLinkedViewEvents: function(sub) {
-            this._options.multiselect ?
+            this._options.multiSelect ?
                this[sub ? 'subscribeOnceTo' : 'unsubscribeFrom'](this._linkedView, 'onDrawItems', this._linkedView.setSelectedKeys.bind(this._linkedView, this._options.currentSelectedKeys)) :
                this[sub ? 'subscribeTo' : 'unsubscribeFrom'](this._linkedView, 'onSelectedItemsChange', this._changeSelectionHandler);
          },
@@ -86,7 +86,7 @@ define('js!SBIS3.CONTROLS.SelectorMixin', [],
             this._linkedView = linkedView;
 
             if (linkedView) {
-               this._linkedView.setProperty('multiselect', this._options.multiselect);
+               this._linkedView.setProperty('multiselect', this._options.multiSelect);
                this._toggleLinkedViewEvents(true);
                this._linkedView.reload();
             }

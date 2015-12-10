@@ -1,8 +1,8 @@
-<span class="controls-MenuItem">
+<span class="controls-MenuItem"{{?it.tooltip}} title="{{=it.tooltip}}"{{?}}>
    {{?it.icon}}
-    <span class="controls-MenuItem__content">
+    <div class="controls-MenuItem__content">
         <i class="controls-MenuItem__icon js-controls-MenuItem__icon {{=it.iconTemplate(it)}}"></i><span class="controls-MenuItem__text js-controls-MenuItem__text">{{?it.caption}}{{=it.caption}}{{?}}</span>
-    </span>
+    </div>
     {{??}}
         {{?it.caption}}{{=it.caption}}{{?}}
     {{?}}

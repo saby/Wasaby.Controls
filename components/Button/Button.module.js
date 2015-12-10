@@ -46,6 +46,7 @@ define('js!SBIS3.CONTROLS.Button', ['js!SBIS3.CONTROLS.ButtonBase', 'html!SBIS3.
     * @ignoreEvents onKeyPressed onReady onResize onStateChanged onTooltipContentRequest
     * @ignoreEvents onDragIn onDragStart onDragStop onDragMove onDragOut
     *
+    * @cssModifier controls-Button__filled непрозрачный фон кнопки
     * @cssModifier controls-Button__big Большая кнопка.
     * @cssModifier controls-Button__ellipsis Кнопка, на которой в тексте появляется многоточие при нехватке ширины.
     * !Важно: при добавлении этого класса сломается "Базовая линия".
@@ -164,7 +165,7 @@ define('js!SBIS3.CONTROLS.Button', ['js!SBIS3.CONTROLS.ButtonBase', 'html!SBIS3.
 
       setEnabled: function(enabled){
          Button.superclass.setEnabled.call(this, enabled);
-         this._container.attr('disabled', !enabled);
+         this._container.attr('disabled', !this.isEnabled());
       },
 
       /*TODO методы для поддержки defaultButton*/

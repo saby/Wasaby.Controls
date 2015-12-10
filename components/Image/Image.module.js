@@ -28,7 +28,7 @@ define('js!SBIS3.CONTROLS.Image',
           * <component data-component='SBIS3.CONTROLS.Image' style='width: 100px; height: 100px'>
           * </component>
           */
-         Image = CompoundControl.extend({/** @lends SBIS3.CONTROLS.Image.prototype */
+         Image = CompoundControl.extend(/** @lends SBIS3.CONTROLS.Image.prototype */{
             _dotTplFn : dotTplFn,
             $protected: {
                _options: {
@@ -82,12 +82,13 @@ define('js!SBIS3.CONTROLS.Image',
                   onError: undefined,
                   /**
                    * @cfg {Function} Функция, выполняемая при обновлении изображения в компоненте
+                   * @deprecated Будет удалено с 3.7.3.20. Используйте подписку на изменение полей контекста.
                    * @example
                    * onImageUpdated: function(newImageURL) {
                    *    $ws.helpers.reloadImage(image, newImageURL);
                    * }
                    */
-                  onImageUpdated: undefined,
+                  onImageUpdated: undefined, //todo Убрать в 3.7.3.20 и поправить в прикладном коде.
                   /**
                    * @cfg {Object} Опции обрезки изображения
                    */

@@ -1,4 +1,6 @@
-<div class="controls-CompositeView controls-DataGridView controls-ListView{{?it.multiselect !== false}} controls-ListView__multiselect{{?}}">
+<div class="controls-CompositeView controls-DataGridView controls-ListView
+            {{?it.multiselect !== false}} controls-ListView__multiselect{{?}}
+            {{?it.startScrollColumn !== undefined}} controls-DataGridView__with-partScroll{{?}}">
    <div class="controls-AjaxLoader ws-hidden">
       <div class="controls-AjaxLoader__outer">
          <div class="controls-AjaxLoader__block">
@@ -9,7 +11,7 @@
    <div class="controls-CompositeView__itemsContainer ws-hidden">
       <div class="controls-CompositeView__foldersContainer"></div>
    </div>
-   <table class="controls-DataGridView__table">
+   <table class="controls-DataGridView__table {{?!it.autoHeight}}js-controls-View__scrollable{{?}}">
       <tbody class="controls-DataGridView__tbody"></tbody>
       <tfoot class="controls-DataGridView__tfoot ws-hidden">
       <tr>

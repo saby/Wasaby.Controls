@@ -1,13 +1,18 @@
 define('js!SBIS3.CONTROLS.DataSet', [
+   'js!SBIS3.CONTROLS.Data.SerializableMixin',
+   'js!SBIS3.CONTROLS.ArrayStrategy',
+   'js!SBIS3.CONTROLS.Data.ContextField',
    'js!SBIS3.CONTROLS.DataFactory'
-], function () {
+], function (SerializableMixin, ArrayStrategy, ContextField) {
    'use strict';
 
    /**
     * Класс для работы с набором записей.
     * @class SBIS3.CONTROLS.DataSet
     * @extends $ws.proto.Abstract
+    * @mixes SBIS3.CONTROLS.Data.SerializableMixin
     * @public
+    * @deprecated Будет удалено с 3.7.3.20 используйте {@link SBIS3.CONTROLS.Data.Source.DataSet}
     * @author Крайнов Дмитрий Олегович
     */
 
@@ -26,7 +31,8 @@ define('js!SBIS3.CONTROLS.DataSet', [
     */
    var addOptions = {add: true, remove: false};
 
-   var DataSet = $ws.proto.Abstract.extend(/** @lends SBIS3.CONTROLS.DataSet.prototype */{
+   var DataSet = $ws.proto.Abstract.extend([SerializableMixin], /** @lends SBIS3.CONTROLS.DataSet.prototype */{
+      _moduleName: 'SBIS3.CONTROLS.DataSet',
       $protected: {
          _indexTree: {},
          _isLoaded: false,
@@ -61,7 +67,11 @@ define('js!SBIS3.CONTROLS.DataSet', [
             keyField: ''
          }
       },
-      $constructor: function () {
+      $constructor: function (cfg) {
+         cfg = cfg || {};
+         if(!cfg.compatibilityMode) {
+            $ws.single.ioc.resolve('ILogger').log('$constructor', 'С 3.7.3.20 класс SBIS3.CONTROLS.DataSet будет удален, используйте SBIS3.CONTROLS.Data.Source.DataSet');
+         }
          this._publish('onRecordChange');
          this._prepareData(this._options.data);
 
@@ -73,6 +83,21 @@ define('js!SBIS3.CONTROLS.DataSet', [
 
          this.setMetaData(this._options.meta);
       },
+
+      // region SBIS3.CONTROLS.Data.SerializableMixin
+
+      _getSerializableState: function() {
+         return $ws.core.merge(
+            DataSet.superclass._getSerializableState.call(this), {
+               _indexTree: this._indexTree,
+               _isLoaded: this._isLoaded,
+               _byId: this._byId,
+               _indexId: this._indexId
+            }
+         );
+      },
+
+      // endregion SBIS3.CONTROLS.Data.SerializableMixin
 
       /**
        * Метод удаления записи. Помечает запись как удаленную. Реальное удаление записи из источника будет выполнено только после вызова метода sync на датасорсе.
@@ -126,6 +151,7 @@ define('js!SBIS3.CONTROLS.DataSet', [
          this._isLoaded = true;
          length = this.getCount();
          this._byId = {};
+         this._indexTree = {};
          for (var i = 0; i < length; i++) {
             data = this.getStrategy().at(this._rawData, i);
             this._byId[this.getRecordKeyByIndex(i)] = $ws.single.ioc.resolve('SBIS3.CONTROLS.Record', {
@@ -133,6 +159,7 @@ define('js!SBIS3.CONTROLS.DataSet', [
                raw: data,
                isCreated: true,//считаем, что сырые данные пришли из реального источника
                keyField: this._keyField,
+               compatibilityMode: true,
                handlers: {
                   onChange: function() {
                      self._notify('onRecordChange', this);
@@ -180,7 +207,7 @@ define('js!SBIS3.CONTROLS.DataSet', [
        * @see strategy
        */
       getStrategy: function () {
-         return this._options.strategy;
+         return this._options.strategy || (this._options.strategy = new ArrayStrategy());
       },
 
       // полная установка рекордов в DataSet
@@ -250,7 +277,7 @@ define('js!SBIS3.CONTROLS.DataSet', [
                this._prepareRecordForAdd(toAdd[i]);
                this.getStrategy().addRecord(this._rawData, toAdd[i], at);
 
-               if (at) {
+               if (at !== undefined && at >= 0) {
                   this._indexId.splice(at + i, 0, toAdd[i].getKey() || toAdd[i]._cid);
                } else {
                   this._indexId.push(toAdd[i].getKey() || toAdd[i]._cid);
@@ -267,7 +294,16 @@ define('js!SBIS3.CONTROLS.DataSet', [
       // рекорд будет пропущен, только если не передана опция {merge: true}, в этом случае атрибуты
       // будут совмещены в существующий рекорд
       _addRecords: function (records, options) {
-         this._setRecords(records, $ws.core.merge($ws.core.merge({merge: false}, options), addOptions));
+         this._setRecords(
+            records,
+            $ws.core.merge(
+               $ws.core.merge(
+                  {merge: false},
+                  options
+               ),
+               addOptions
+            )
+         );
       },
 
       /**
@@ -303,7 +339,8 @@ define('js!SBIS3.CONTROLS.DataSet', [
           record = $ws.single.ioc.resolve('SBIS3.CONTROLS.Record', {
             strategy: this.getStrategy(),
             raw: record,
-            keyField: this._options.keyField
+            keyField: this._options.keyField,
+            compatibilityMode: true
           })
         }
         this._addRecords(record);
@@ -315,7 +352,10 @@ define('js!SBIS3.CONTROLS.DataSet', [
        * @param at - позиция на которую нужно установить новый рекорд, если не задана то добавит в конец
        */
       insert: function (record, at) {
-         this._addRecords(record, {at: at});
+         this._addRecords(record, {
+            at: at,
+            merge: true
+         });
       },
       /**
        * Устанавливает данные в DataSet.
@@ -364,7 +404,7 @@ define('js!SBIS3.CONTROLS.DataSet', [
 
          this._byId[record._cid] = record;
          this._byId[key] = record;
-
+         this._indexTree = {};
       },
 
       /**
@@ -427,7 +467,8 @@ define('js!SBIS3.CONTROLS.DataSet', [
             this._options.meta.results = $ws.single.ioc.resolve('SBIS3.CONTROLS.Record', {
                strategy: this.getStrategy(),
                raw: $ws.helpers.instanceOfModule(this._options.meta.results, 'SBIS3.CONTROLS.Record') ? this._options.meta.results.getRaw() : this._options.meta.results,
-               keyField: this._keyField
+               keyField: this._keyField,
+               compatibilityMode: true
             });
          }
 
@@ -435,7 +476,8 @@ define('js!SBIS3.CONTROLS.DataSet', [
             this._options.meta.path = new DataSet({
                strategy: this._options.strategy,
                keyField: this._keyField,
-               data: $ws.helpers.instanceOfModule(this._options.meta.path, 'SBIS3.CONTROLS.DataSet') ? this._options.meta.path.getRawData() : this._options.meta.path
+               data: $ws.helpers.instanceOfModule(this._options.meta.path, 'SBIS3.CONTROLS.DataSet') ? this._options.meta.path.getRawData() : this._options.meta.path,
+               compatibilityMode: true
             });
          }
       },
@@ -492,6 +534,15 @@ define('js!SBIS3.CONTROLS.DataSet', [
       getParentKey: function (record, field) {
          return this.getStrategy().getParentKey(record, field);
       },
+      
+      // Придрот для выпуска 3.7.3.10. Возвращаент полностью indexTree 
+      // TODO: Избавиться в 3.7.3.20! Нужен метод который только возвращает детей по ключу
+      getTreeIndex: function(field, reindex){
+         if (reindex || (Object.isEmpty(this._indexTree) && field)){
+            this._reindexTree(field);
+         }
+         return this._indexTree;
+      },
 
       /*Делаем индекс по полю иерархии*/
       _reindexTree : function(field) {
@@ -516,7 +567,8 @@ define('js!SBIS3.CONTROLS.DataSet', [
       filter: function (filterCallback) {
          var filterDataSet = new DataSet({
             strategy: this._options.strategy,
-            keyField: this._keyField
+            keyField: this._keyField,
+            compatibilityMode: true
          });
 
          this.each(function (record) {
@@ -528,6 +580,8 @@ define('js!SBIS3.CONTROLS.DataSet', [
          return filterDataSet;
       }
    });
+
+   ContextField.registerDataSet('ControlsFieldTypeDataSet', DataSet, 'onRecordChange');
 
    $ws.single.ioc.bind('SBIS3.CONTROLS.DataSet', function(config) {
       return new DataSet(config);

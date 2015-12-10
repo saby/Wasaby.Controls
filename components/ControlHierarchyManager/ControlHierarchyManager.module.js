@@ -71,14 +71,15 @@ define('js!SBIS3.CONTROLS.ControlHierarchyManager', [], function () {
       _checkParentInclusion: function(component, target){
          var control = $(target).wsControl();
          if (control){
-            var parent = control.getParent() || (component.getOpener instanceof Function ? component.getOpener() : null),
+            var parent = control.getOpener instanceof Function ? control.getOpener() || control.getParent() : control.getParent(),
                parentContainer = parent ? parent.getContainer() : null;
             if (parentContainer && this._findContainer(component, parentContainer)){
                return true;
             } else {
-               this._checkParentInclusion(component, parentContainer);
+               return this._checkParentInclusion(component, parentContainer);
             }
          }
+         return false;
       },
 
       _findContainer: function(control, container){

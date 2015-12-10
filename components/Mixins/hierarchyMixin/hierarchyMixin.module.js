@@ -33,9 +33,11 @@ define('js!SBIS3.CONTROLS.hierarchyMixin', [], function () {
          }
       },
       $constructor: function () {
+         var
+            filter = this.getFilter() || {};
          this._curRoot = this._options.root;
-         this._filter = this._filter || {};
-         this._filter[this._options.hierField] = this._options.root;
+         filter[this._options.hierField] = this._options.root;
+         this.setFilter(filter, true);
       },
 
       setHierField: function (hierField) {
@@ -50,11 +52,8 @@ define('js!SBIS3.CONTROLS.hierarchyMixin', [], function () {
 
       // обход происходит в том порядке что и пришли
       hierIterate: function (DataSet, iterateCallback, status) {
-         if (Object.isEmpty(DataSet._indexTree)) {
-            DataSet._reindexTree(this._options.hierField);
-         }
          var
-            indexTree = DataSet._indexTree,
+            indexTree = DataSet.getTreeIndex(this._options.hierField, true),
             self = this,
             curParentId = (typeof this._curRoot != 'undefined') ? this._curRoot : null,
             curLvl = 0;
@@ -88,14 +87,16 @@ define('js!SBIS3.CONTROLS.hierarchyMixin', [], function () {
          if (!Object.isEmpty(this._options.groupBy)) {
             return this._dataSet._getRecords();
          }
-         this._dataSet.each(function (record) {
-            if (self._dataSet.getParentKey(record, self._options.hierField) == self._curRoot) {
+         var path = this._options.openedPath;
+         this.hierIterate(this._dataSet , function(record) {
+            //Рисуем рекорд если он принадлежит текущей папке или если его родитель есть в openedPath
+            var parentKey = self._dataSet.getParentKey(record, self._options.hierField);
+            if (parentKey == self._curRoot || path[parentKey]) {
                if (self._options.displayType == 'folders') {
                   if (record.get(self._options.hierField + '@')) {
                      records.push(record);
                   }
-               }
-               else {
+               } else {
                   records.push(record);
                }
             }
@@ -130,9 +131,15 @@ define('js!SBIS3.CONTROLS.hierarchyMixin', [], function () {
        * @param {String} key Идентификатор раскрываемого узла
        */
       setCurrentRoot: function(key) {
-         var filter = this._filter || {};
-         filter[this._options.hierField] = key;
-         this._filter = filter;
+         var
+            filter = this.getFilter() || {};
+         if (key) {
+            filter[this._options.hierField] = key;
+         }
+         else {
+            delete(filter[this._options.hierField]);
+         }
+         this.setFilter(filter, true);
          this._hier = this._getHierarchy(this._dataSet, key);
          //узел грузим с 0-ой страницы
          this._offset = 0;
@@ -184,6 +191,19 @@ define('js!SBIS3.CONTROLS.hierarchyMixin', [], function () {
          var root = this._options.root;
          this._pageSaver = {};
          this._pageSaver[root] = 0;
+      },
+
+      //Переопределяем метод, чтоб передать тип записи
+      _activateItem : function(id) {
+         var
+            item = this._dataSet.getRecordByKey(id),
+            meta = {
+               id: id,
+               item: item,
+               hierField : this._options.hierField
+            };
+
+         this._notify('onItemActivate', meta);
       }
 
    };

@@ -2,7 +2,6 @@
     <tr>
         {{?it.multiselect}}
         <th class="controls-DataGridView__th controls-DataGridView__td__checkBox {{?it.startScrollColumn!== undefined}}{{?it.startScrollColumn === 0}} controls-DataGridView__scrolledCell{{??}} controls-DataGridView__notScrolledCell{{?}}{{?}}">
-            </span>
         </th>{{?}} {{~it.columns :column:index}}
         <th class="controls-DataGridView__th{{?it.startScrollColumn!== undefined}}{{?it.startScrollColumn <= index}} controls-DataGridView__scrolledCell{{??}} controls-DataGridView__notScrolledCell{{?}}{{?}} {{?column.className}}{{=column.className}}{{?}}" title="{{?column.headTooltip}}{{=column.headTooltip}}{{??}}{{=column.title}}{{?}}">
             {{=column.value}}

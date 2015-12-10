@@ -53,7 +53,6 @@ define('js!SBIS3.CONTROLS.DSMixin', [
         */
       $protected: {
          _itemsInstances: {},
-         _filter: undefined,
          _sorting: undefined,
          _offset: 0,
          _limit: undefined,
@@ -192,9 +191,28 @@ define('js!SBIS3.CONTROLS.DSMixin', [
              * Опция задаёт текст, отображаемый как при абсолютном отсутствии данных, так и в результате {@link groupBy фильтрации}.
              * @see items
              * @see setDataSource
-             * @see groupBy* @cfg {Function} Пользовательский метод добавления атрибутов на элементы коллекции
+             * @see groupBy*
              */
-            emptyHTML: ''
+            emptyHTML: '',
+            /**
+             * @cfg {Object} Фильтр данных
+             * @example
+             * <pre class="brush:xml">
+             *     <options name="filter">
+             *        <option name="creatingDate" bind="selectedDocumentDate"></option>
+             *        <option name="documentType" bind="selectedDocumentType"></option>
+             *     </options>
+             * </pre>
+             */
+            filter: {},
+            /**
+             * @cfg {Object.<String,String>} соответствие опций шаблона полям в рекорде
+             */
+            templateBinding: {},
+            /**
+             * @cfg {Object.<String,String>} подключаемые внешние шаблоны, ключу соответствует поле it.included.<...> которое будет функцией в шаблоне
+             */
+            includedTemplates: {}
          },
          _loader: null
       },
@@ -240,6 +258,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
         * @remark
         * Данные могут быть заданы либо этим методом, либо опцией {@link items}.
         * @param ds Новый источник данных.
+        * @param noLoad Установить новый источник данных без запроса на БЛ.
         * @example
         * <pre>
         *     define(
@@ -266,10 +285,12 @@ define('js!SBIS3.CONTROLS.DSMixin', [
         * @see onDrawItems
         * @see onDataLoad
         */
-      setDataSource: function (ds) {
+      setDataSource: function (ds, noLoad) {
          this._dataSource = ds;
          this._dataSet = null;
-         this.reload();
+          if(!noLoad) {
+             return this.reload();
+          }
       },
       /**
        * Метод получения набора данных, который в данный момент установлен в представлении.
@@ -311,13 +332,15 @@ define('js!SBIS3.CONTROLS.DSMixin', [
             limitChanged = typeof(limit) !== 'undefined';
 
          this._cancelLoading();
-         this._filter = filterChanged ? filter : this._filter;
+         if (filterChanged) {
+            this.setFilter(filter, true);
+         }
          this._sorting = sortingChanged ? sorting : this._sorting;
          this._offset = offsetChanged ? offset : this._offset;
          this._limit = limitChanged ? limit : this._limit;
 
          this._toggleIndicator(true);
-         this._loader = this._callQuery(this._filter, this._sorting, this._offset, this._limit).addCallback(function (dataSet) {
+         this._loader = this._callQuery(this._options.filter, this._sorting, this._offset, this._limit).addCallback(function (dataSet) {
             self._toggleIndicator(false);
             self._loader = null;//Обнулили без проверки. И так знаем, что есть и загрузили
             if (self._dataSet) {
@@ -331,6 +354,12 @@ define('js!SBIS3.CONTROLS.DSMixin', [
             //self._notify('onBeforeRedraw');
             def.callback(dataSet);
             self._redraw();
+         }).addErrback(function(error){
+            if (!error.canceled) {
+               self._toggleIndicator(false);
+               $ws.helpers.message(error.message.toString().replace('Error: ', ''));
+            }
+            def.errback(error);
          });
 
          this._notifyOnPropertyChanged('filter');
@@ -358,13 +387,14 @@ define('js!SBIS3.CONTROLS.DSMixin', [
                return new RecordSet({
                   compatibleMode: true,
                   strategy: this._dataSource.getAdapter(),
+                  model: newDataSet.getModel(),
                   data: newDataSet.getRawData(),
                   meta: {
                      results: newDataSet.getProperty('r'),
                      more: newDataSet.getTotal(),
                      path: newDataSet.getProperty('p')
                   },
-                  keyField: this._options.keyField || this._dataSource.getAdapter().getKeyField(newDataSet.getRawData())
+                  keyField: this._options.keyField || newDataSet.getIdProperty() || this._dataSource.getAdapter().getKeyField(newDataSet.getRawData())
                });
             }).bind(this));
          } else {
@@ -398,18 +428,32 @@ define('js!SBIS3.CONTROLS.DSMixin', [
       setPageSize: function(pageSize){
          this._options.pageSize = pageSize;
          this._dropPageSave();
-         this.reload(this._filter, this._sorting, 0, pageSize);
+         this.reload(this._options.filter, this._sorting, 0, pageSize);
       },
-
+      /**
+       * Метод получения количества элементов на одной странице.
+       * @see pageSize
+       */
+      getPageSize: function() {
+         return this._options.pageSize
+      },
+      /**
+       * Получить текущий фильтр в наборе данных
+       * @returns {Object|*|DSMixin._filter}
+       */
       getFilter: function() {
-         return this._filter;
+         return this._options.filter;
       },
-
-      setFilter: function(filter){
-         this._filter = filter;
+      /**
+       * Установить фильтр на набор данных
+       * @param {Object} filter
+       * @param {Boolean} noLoad установить фильтр без запроса на БЛ
+       */
+      setFilter: function(filter, noLoad){
+         this._options.filter = filter;
          this._dropPageSave();
-         if (this._dataSource) {
-            this.reload(this._filter, this._sorting, 0, this.getProperty('pageSize'));
+         if (this._dataSource && !noLoad) {
+            this.reload(this._options.filter, this._sorting, 0, this.getPageSize());
          }
       },
 
@@ -556,7 +600,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
          }
          this._itemsInstances = {};
          if (container.length){
-            var itemsContainers = $('.controls-ListView__item', container.get(0));
+            var itemsContainers = $('.controls-ListView__item, .controls-GroupBy', container.get(0));
             /*Удаляем вложенные компоненты*/
             $('[data-component]', itemsContainers).each(function (i, item) {
                var inst = $(item).wsControl();
@@ -629,7 +673,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
          var
                groupBy = this._options.groupBy,
                tplOptions = {
-                  columns : $ws.core.clone(this._options.columns),
+                  columns : $ws.core.clone(this._options.columns || []),
                   multiselect : this._options.multiselect,
                   hierField: this._options.hierField + '@'
                },
@@ -637,18 +681,22 @@ define('js!SBIS3.CONTROLS.DSMixin', [
                itemInstance;
          targetContainer = this._getTargetContainer(item);
          tplOptions.item = item;
-         tplOptions.colspan = this._options.columns.length + this._options.multiselect;
+         tplOptions.colspan = tplOptions.columns.length + this._options.multiselect;
          itemInstance = this._buildTplItem(item, groupBy.template(tplOptions));
          this._appendItemTemplate(item, targetContainer, itemInstance, at);
          //Сначала положим в дом, потом будем звать рендеры, иначе контролы, которые могут создать в рендере неправмльно поймут свою ширину
          if (groupBy.render && typeof groupBy.render === 'function') {
             groupBy.render.apply(this, [item, itemInstance, last]);
          }
+         //Навесим класс группировки и удалим лишний класс на item, если он вдруг добавился
+         itemInstance.addClass('controls-GroupBy')
+               .removeClass('controls-ListView__item');
 
       },
       /**
        * Установка группировки элементов. Если нужно, чтобы стандартаная группировка для этого элемента не вызывалась -
        * нужно обязательно переопределить(передать) все опции (field, method, template, render) иначе в группировку запишутся стандартные параметры.
+       * @remark Всем элементам группы добавляется css-класс controls-GroupBy
        * @param group
        * @param redraw
        */
@@ -715,9 +763,21 @@ define('js!SBIS3.CONTROLS.DSMixin', [
          }
       },
       _buildTplArgs: function(item) {
-         return {
-            item: item
-         };
+         var
+            tplOptions = {
+               templateBinding : this._options.templateBinding,
+               item: item
+            };
+         if (this._options.includedTemplates) {
+            var tpls = this._options.includedTemplates;
+            tplOptions.included = {};
+            for (var j in tpls) {
+               if (tpls.hasOwnProperty(j)) {
+                  tplOptions.included[j] = require(tpls[j]);
+               }
+            }
+         }
+         return tplOptions
       },
       _appendItemTemplate: function (item, targetContainer, itemBuildedTpl, at) {
          if (at && (typeof at.at !== 'undefined')) {
@@ -790,7 +850,8 @@ define('js!SBIS3.CONTROLS.DSMixin', [
       _hasNextPage: function (hasMore, offset) {
          offset = offset === undefined ? this._offset : offset;
          //n - приходит true, false || общее количество записей в списочном методе
-         return typeof (hasMore) !== 'boolean' ? hasMore > (offset + this._options.pageSize) : !!hasMore;
+         //Если offset отрицательный, значит запрашивали последнюю страницу
+         return offset < 0 ? false : (typeof (hasMore) !== 'boolean' ? hasMore > (offset + this._options.pageSize) : !!hasMore);
       },
       /**
        * Установить что отображается при отсутствии записей.
@@ -803,6 +864,14 @@ define('js!SBIS3.CONTROLS.DSMixin', [
        */
       setEmptyHTML: function (html) {
          this._options.emptyHTML = html;
+      },
+
+      /**
+       * Возвращает источник данных.
+       * @returns {*}
+       */
+      getDataSource: function(){
+         return this._dataSource;
       },
 
       _dataLoadedCallback: function () {

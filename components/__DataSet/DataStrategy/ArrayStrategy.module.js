@@ -23,6 +23,7 @@ define('js!SBIS3.CONTROLS.ArrayStrategy', ['js!SBIS3.CONTROLS.IDataStrategy'], f
         * @returns {*}
         */
       getKey: function (data) {
+         data = data || {};
          var
             key,
             keys = Object.keys(data);

@@ -17,6 +17,7 @@ define('js!SBIS3.CONTROLS.SbisServiceSource', [
     * @extends SBIS3.CONTROLS.BaseSource
     * @public
     * @author Крайнов Дмитрий Олегович
+    * @deprecated Будет удалено с 3.7.3.20 используйте {@link SBIS3.CONTROLS.Data.Source.SbisService}
     * @example
     * <pre>
     *     var dataSource = new SbisService({
@@ -95,6 +96,7 @@ define('js!SBIS3.CONTROLS.SbisServiceSource', [
       },
 
       $constructor: function (cfg) {
+         $ws.single.ioc.resolve('ILogger').log('$constructor', 'С 3.7.3.20 класс SBIS3.CONTROLS.SbisServiceSource будет удален, используйте SBIS3.CONTROLS.Data.Source.SbisService');
          this._BL = new SbisServiceBLO(cfg.service);
          this._object = cfg.service;
          this._options.strategy = cfg.strategy || new SbisJSONStrategy();
@@ -147,7 +149,7 @@ define('js!SBIS3.CONTROLS.SbisServiceSource', [
             def.callback(record);
          }, function (error) {
             $ws.single.ioc.resolve('ILogger').log('SbisServiceSource', error);
-            def.errback('Не удалось выполнить метод create');
+            def.errback(error);
          });
          return def;
       },
@@ -186,7 +188,7 @@ define('js!SBIS3.CONTROLS.SbisServiceSource', [
             def.callback(record);
          }, function (error) {
             $ws.single.ioc.resolve('ILogger').log('SbisServiceSource', error);
-            def.errback('Не удалось выполнить метод read');
+            def.errback(error);
          });
          return def;
       },
@@ -228,7 +230,7 @@ define('js!SBIS3.CONTROLS.SbisServiceSource', [
             def.callback(true);
          }, function (error) {
             $ws.single.ioc.resolve('ILogger').log('SbisServiceSource', error);
-            def.errback('Не удалось выполнить метод update');
+            def.errback(error);
          });
 
          return def;
@@ -236,22 +238,34 @@ define('js!SBIS3.CONTROLS.SbisServiceSource', [
 
       /**
        * Вызов удаления записи из БЛ методом, указанным в опции {@link destroyMethodName}.
-       * @param {Array | Number} id Идентификатор записи или массив идентификаторов.
+       * @param {Number} id Идентификатор записи или массив идентификаторов.
        * @returns {$ws.proto.Deferred} Асинхронный результат выполнения. В колбэке придёт Boolean - результат успешности выполнения операции.
        * @see destroyMethodName
        */
       destroy: function (id) {
-         var self = this,
-            def = new $ws.proto.Deferred();
-
-         self._BL.call(self._options.destroyMethodName, {'ИдО': id}, $ws.proto.BLObject.RETURN_TYPE_ASIS).addCallbacks(function (res) {
-            def.callback(true);
-         }, function (error) {
-            $ws.single.ioc.resolve('ILogger').log('SbisServiceSource', error);
-            def.errback('Не удалось выполнить метод destroy');
-         });
-
-         return def;
+         var self = this;
+         if ($ws.helpers.type(id) == 'array') {
+            var BL = [],
+               ids = [];
+            $ws.helpers.forEach(id, function(key) {
+               //группируем идентификаторы по объекту
+               var obj = self._getBlObjName(key),
+                  index = Array.indexOf(BL, obj);
+               if (index !== -1) {
+                  ids[index].push(parseInt(key, 10));
+               } else {
+                  BL.push(obj);
+                  ids.push([parseInt(key, 10)]);
+               }
+            });
+            var pd = new $ws.proto.ParallelDeferred();
+            $ws.helpers.forEach(BL, function(obj, index) {
+               pd.push(self._destroy(ids[index], obj));
+            });
+            return pd.done().getResult();
+         } else {
+            return this._destroy(parseInt(id, 10), this._getBlObjName(id));
+         }
       },
 
       /**
@@ -279,35 +293,44 @@ define('js!SBIS3.CONTROLS.SbisServiceSource', [
        * @see queryMethodName
        */
       query: function (filter, sorting, offset, limit) {
-         filter = filter || {};
          var
             self = this,
-            strategy = this.getStrategy(),
-            def = new $ws.proto.Deferred(),
-            filterParam = strategy.prepareFilterParam(filter),
-            sortingParam = strategy.prepareSortingParam(sorting),
-            pagingParam = strategy.preparePagingParam(offset, limit);
+            strategy = this.getStrategy();
+         return self._BL.call(self._options.queryMethodName, this.prepareQueryParams(filter, sorting, offset, limit) , $ws.proto.BLObject.RETURN_TYPE_ASIS).addCallbacks(function (res) {
+            var DS = new DataSet({
+               strategy: strategy,
+               data: res,
+               meta: strategy.getMetaData(res),
+               compatibilityMode: true
+            });
+            return DS;
+         }, function (error) {
+            $ws.single.ioc.resolve('ILogger').log('SbisServiceSource', error);
+            return error;
+         });
 
-         self._BL.call(self._options.queryMethodName, {
+      },
+      /**
+       * Подготовка параметров списочного метода.
+       * @param {Object} filter Параметры фильтрации вида - {property1: value, property2: value}.
+       * @param {Array} sorting Параметры сортировки вида - [{property1: 'ASC'}, {property2: 'DESC'}].
+       * @param {Number} offset Смещение начала выборки.
+       * @param {Number} limit Количество возвращаемых записей.
+       * @param {Boolean} [hasMore] параметр для навигации "ЕстьЕще".
+       * @returns {{ДопПоля: Array, Фильтр: Object, Сортировка: Object || null, Навигация: Object }}
+       */
+      prepareQueryParams : function(filter, sorting, offset, limit, hasMore){
+         filter = filter || {};
+         var strategy = this.getStrategy(),
+               filterParam = strategy.prepareFilterParam(filter),
+               sortingParam = strategy.prepareSortingParam(sorting),
+               pagingParam = strategy.preparePagingParam(offset, limit, hasMore);
+         return {
             'ДопПоля': [],
             'Фильтр': filterParam,
             'Сортировка': sortingParam,
             'Навигация': pagingParam
-         }, $ws.proto.BLObject.RETURN_TYPE_ASIS).addCallbacks(function (res) {
-
-            var DS = new DataSet({
-               strategy: strategy,
-               data: res,
-               meta: strategy.getMetaData(res)
-            });
-            def.callback(DS);
-         }, function (error) {
-            $ws.single.ioc.resolve('ILogger').log('SbisServiceSource', error);
-            def.errback('Не удалось выполнить метод query');
-         });
-
-         return def;
-
+         }
       },
       /**
        * Метод перемещения записи к другому родителю и смены порядковых номеров
@@ -329,12 +352,20 @@ define('js!SBIS3.CONTROLS.SbisServiceSource', [
             throw new Error('Не передано достаточно информации для перемещения');
          }
       },
+      /**
+       * Возвращает имя объекта бизнес логики по которому построен источник
+       * @returns {String}
+       */
+      getResource: function () {
+         return this._object;
+      },
+
       _changeOrder: function(record, hierField, parentKey, orderDetails){
          var self = this,
             strategy = this.getStrategy(),
             def = new $ws.proto.Deferred(),
             params = strategy.prepareOrderParams(this._object, record, hierField, orderDetails),
-            suffix = orderDetails.after ? 'После' : 'До';
+            suffix = orderDetails.after ? 'До' : 'После';
          if(!this._orderBL){
             this._orderBL = new $ws.proto.BLObject('ПорядковыйНомер');
          }
@@ -342,10 +373,32 @@ define('js!SBIS3.CONTROLS.SbisServiceSource', [
             def.callback(true);
          }, function (error) {
             $ws.single.ioc.resolve('ILogger').log('SbisServiceSource', error);
-            def.errback('Не удалось выполнить метод _changeOrder');
+            def.errback(error);
          });
          return def;
-      }
+      },
+      /**
+       * Возвращает имя объекта бл из сложного идентификатора или имя объекта из источника, для простых идентификаторов
+       */
+      _getBlObjName: function (id) {
+         if (String(id).indexOf(',') !== -1) {
+            var ido = String(id).split(',');
+            return ido[1];
+         }
+         return this._object;
+      },
 
+      _destroy: function (id, blName) {
+         var BL = this._BL;
+         if(blName && blName !== this._object ) {
+            BL = new SbisServiceBLO(blName);
+         }
+         return BL.call(this._options.destroyMethodName, {'ИдО': id}, $ws.proto.BLObject.RETURN_TYPE_ASIS).addCallbacks(function (res) {
+            return res;
+         }, function (error) {
+            $ws.single.ioc.resolve('ILogger').log('SbisServiceSource', error);
+            return error;
+         });
+      }
    });
 });

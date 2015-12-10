@@ -9,9 +9,14 @@ define('js!SBIS3.CONTROLS.MultiSelectable', [], function() {
 
    var MultiSelectable = /**@lends SBIS3.CONTROLS.MultiSelectable.prototype  */{
        /**
+        * @typedef {Object} ChangedKeys
+        * @property {Array.<String>} added ключи, которые добавились
+        * @property {Array.<String>} removed ключи, которые удалились
+        *
         * @event onSelectedItemsChange При смене выбранных элементов коллекции
         * @param {$ws.proto.EventObject} Дескриптор события.
         * @param {Array.<String>} idArray Массив ключей выбранных элементов.
+        * @param {ChangedKeys} changedKeys Измененные ключи
         * @example
         * <pre>
         *     var itemsChanged = function() {
@@ -119,23 +124,24 @@ define('js!SBIS3.CONTROLS.MultiSelectable', [], function() {
        * @see addItemsSelection
        */
       setSelectedKeys : function(idArray) {
+         var addedKeys = [], removedKeys = [];
          if (Array.isArray(idArray)) {
             if (idArray.length) {
                if (this._options.multiselect) {
-                  this._options.selectedKeys = idArray;
+                  this._options.selectedKey = idArray;
+                  addedKeys = this._addItemsSelection(idArray);
                }
                else {
+                  removedKeys = $ws.core.clone(this._options.selectedKeys);
                   this._options.selectedKeys = idArray.slice(0, 1);
                }
+
             }
             else {
+               removedKeys = $ws.core.clone(this._options.selectedKeys);
                this._options.selectedKeys = [];
             }
-            if (this._checkEmptySelection()) {
-               this._setFirstItemAsSelected();
-            }
-            this._notifySelectedItems(this._options.selectedKeys);
-            this._drawSelectedItems(this._options.selectedKeys);
+	         this._afterSelectionHandler(addedKeys, removedKeys);
          }
          else {
             throw new Error('Argument must be instance of Array');
@@ -203,12 +209,18 @@ define('js!SBIS3.CONTROLS.MultiSelectable', [], function() {
        * @see multiselect
        */
       addItemsSelection : function(idArray) {
+         var addedKeys = this._addItemsSelection(idArray);
+         this._afterSelectionHandler(addedKeys, []);
+      },
+      _addItemsSelection : function(idArray) {
+         var addedKeys = [];
          if (Array.isArray(idArray)) {
             if (idArray.length) {
                if (this._options.multiselect) {
                   for (var i = 0; i < idArray.length; i++) {
                      if (this._isItemSelected(idArray[i]) < 0) {
                         this._options.selectedKeys.push(idArray[i]);
+                        addedKeys.push(idArray[i])
                      }
                   }
                }
@@ -216,17 +228,11 @@ define('js!SBIS3.CONTROLS.MultiSelectable', [], function() {
                   this._options.selectedKeys = idArray.slice(0, 1);
                }
             }
-            if (this._checkEmptySelection()) {
-               this._setFirstItemAsSelected();
-            }
-            this._notifySelectedItems(this._options.selectedKeys);
-            this._drawSelectedItems(this._options.selectedKeys);
-            this._notifyOnPropertyChanged('selectedKeys');
+            return addedKeys;
          }
          else {
             throw new Error('Argument must be instance of Array');
          }
-
       },
 
       /**
@@ -243,19 +249,21 @@ define('js!SBIS3.CONTROLS.MultiSelectable', [], function() {
        * @see allowEmptySelection
        */
       removeItemsSelection : function(idArray) {
+         var removedKeys = this._removeItemsSelection(idArray);
+         this._afterSelectionHandler([], removedKeys);
+      },
+
+      _removeItemsSelection : function(idArray) {
+         var removedKeys = [];
          if (Array.isArray(idArray)) {
             for (var i = idArray.length - 1; i >= 0; i--) {
                var index = this._isItemSelected(idArray[i]);
                if (index >= 0) {
                   Array.remove(this._options.selectedKeys, index);
+                  removedKeys.push(idArray[i]);
                }
             }
-            if (this._checkEmptySelection()) {
-               this._setFirstItemAsSelected();
-            }
-            this._notifySelectedItems(this._options.selectedKeys);
-            this._drawSelectedItems(this._options.selectedKeys);
-            this._notifyOnPropertyChanged('selectedKeys');
+            return removedKeys;
          }
          else {
             throw new Error('Argument must be instance of Array');
@@ -297,29 +305,35 @@ define('js!SBIS3.CONTROLS.MultiSelectable', [], function() {
       toggleItemsSelection : function(idArray) {
          if (Array.isArray(idArray)) {
             if (idArray.length) {
+               var
+                  addedKeysTotal = [],
+                  removedKeysTotal = [],
+                  addedKeys,
+                  removedKeys;
                if (this._options.multiselect) {
                   for (var i = 0; i < idArray.length; i++) {
                      if (this._isItemSelected(idArray[i]) < 0) {
-                        this.addItemsSelection([idArray[i]]);
+                        addedKeys = this._addItemsSelection([idArray[i]]);
+                        addedKeysTotal = addedKeysTotal.concat(addedKeys);
                      }
                      else {
-                        this.removeItemsSelection([idArray[i]]);
+                        removedKeys = this._removeItemsSelection([idArray[i]]);
+                        removedKeysTotal = removedKeysTotal.concat(removedKeys);
                      }
                   }
                }
                else {
-                  if (this._isItemSelected(idArray[0]) > 0) {
+                  if (this._isItemSelected(idArray[0]) >= 0) {
+                     removedKeysTotal = $ws.core.clone(this._options.selectedKeys);
                      this._options.selectedKeys = [];
                   }
                   else {
+                     removedKeysTotal = $ws.core.clone(this._options.selectedKeys);
                      this._options.selectedKeys = idArray.slice(0, 1);
+                     addedKeysTotal = $ws.core.clone(this._options.selectedKeys);
                   }
-                  if (this._checkEmptySelection()) {
-                     this._setFirstItemAsSelected();
-                  }
-                  this._notifySelectedItems(this._options.selectedKeys);
-                  this._drawSelectedItems(this._options.selectedKeys);
                }
+               this._afterSelectionHandler(addedKeysTotal, removedKeysTotal);
             }
          }
          else {
@@ -363,9 +377,21 @@ define('js!SBIS3.CONTROLS.MultiSelectable', [], function() {
          /*Method must be implemented*/
       },
 
-      _notifySelectedItems : function(idArray) {
+	   _afterSelectionHandler: function(addedKeys, removedKeys) {
+		   if (this._checkEmptySelection()) {
+			   this._setFirstItemAsSelected();
+		   }
+		   this._notifySelectedItems(this._options.selectedKeys, {
+            added : addedKeys,
+            removed : removedKeys
+         });
+		   this._drawSelectedItems(this._options.selectedKeys);
+	   },
+
+      _notifySelectedItems : function(idArray, changed) {
          this._setSelectedRecords();
-         this._notify('onSelectedItemsChange', idArray);
+         this._notify('onSelectedItemsChange', idArray, changed);
+         this._notifyOnPropertyChanged('selectedKeys');
       },
 
       _dataLoadedCallback : function(){
@@ -386,16 +412,18 @@ define('js!SBIS3.CONTROLS.MultiSelectable', [], function() {
       },
 
       _setSelectedRecords: function() {
-         var
-            self = this,
-            record;
-         this._selectedRecords = [];
-         $.each(this._options.selectedKeys, function(id, key) {
-            record = self._dataSet.getRecordByKey(key);
-            if (record) {
-               self._selectedRecords.push(record);
-            }
-         });
+         if (this._dataSet) {
+            var
+               self = this,
+               record;
+            this._selectedRecords = [];
+            $.each(this._options.selectedKeys, function (id, key) {
+               record = self._dataSet.getRecordByKey(key);
+               if (record) {
+                  self._selectedRecords.push(record);
+               }
+            });
+         }
       }
    };
 

@@ -29,79 +29,22 @@
             <opt name="width" type="string">450</opt>
             <opt name="field">МестоРаботы</opt>
             <opt name="editor">
-               <div style="height: 80px;">
-                  <component data-component="SBIS3.CONTROLS.FieldLink" style="width: 100%; margin-top: 8px;">
-                     <opt name="text" bind="text1"></opt>
-                     <opt name="placeholder" value="Компания"></opt>
-                     <opt name="displayField" value="Название"></opt>
-                     <opt name="keyField" value="Ид"></opt>
-                     <opt name='selectedItems' type='array' bind='МестоРаботы/Компания'/>
-                     <opts name="list">
-                        <opt name="className" value="js!SBIS3.CONTROLS.DataGridView"/>
-                        <opts name="options">
-                           <opts name="columns" type="array">
-                              <opts>
-                                 <opt name="title">Ид</opt>
-                                 <opt name="field">Ид</opt>
-                              </opts>
-                              <opts>
-                                 <opt name="title">Название</opt>
-                                 <opt name="field">Название</opt>
-                              </opts>
-                           </opts>
-                           <opt name="keyField" value="Ид"></opt>
-                        </opts>
-                     </opts>
-                     <opts name="filterBindings" type="array">
-                        <opts>
-                           <opt name="itemField" value="text"/>
-                           <opt name="contextField" value="text1"/>
-                        </opts>
-                     </opts>
-                     <opts name="handlers">
-                        <opt name="onInit" type="function">js!SBIS3.CONTROLS.Demo.FieldLinkWithEditInPlace:prototype.initFiledLink1</opt>
-                     </opts>
-                  </component>
-                  <component data-component="SBIS3.CONTROLS.FieldLink" style="width: 100%; margin-top: 8px;">
-                     <opt name="text" bind="text2"></opt>
-                     <opt name='selectedItems' type='array' bind='МестоРаботы/Должность'/>
-                     <opt name="placeholder" value="Должность"></opt>
-                     <opt name="displayField" value="Название"></opt>
-                     <opt name="keyField" value="Ид"></opt>
-                     <opts name="list">
-                        <opt name="className" value="js!SBIS3.CONTROLS.DataGridView"/>
-                        <opts name="options">
-                           <opts name="columns" type="array">
-                              <opts>
-                                 <opt name="title">Ид</opt>
-                                 <opt name="field">Ид</opt>
-                              </opts>
-                              <opts>
-                                 <opt name="title">Название</opt>
-                                 <opt name="field">Название</opt>
-                              </opts>
-                           </opts>
-                        </opts>
-                        <opt name="keyField" value="Ид"></opt>
-                     </opts>
-                     <opts>
-                        <opt name="itemField" value="text"/>
-                        <opt name="contextField" value="text2"/>
-                     </opts>
-                     <opts name="handlers">
-                        <opt name="onInit" type="function">js!SBIS3.CONTROLS.Demo.FieldLinkWithEditInPlace:prototype.initFiledLink2</opt>
-                     </opts>
-                  </component>
-               </div>
+               <component data-component="SBIS3.CONTROLS.Demo.FieldLinkDemoArea" style="width: 100%; display: block; border: 1px solid transparent;">
+                  <opt name="dataSet" bind="ИнформацияПоСотруднику"></opt>
+               </component>
             </opt>
             <opt name="cellTemplate">html!SBIS3.CONTROLS.Demo.FieldLinkWithEditInPlace/resources/cellWorkPlace</opt>
          </opts>
       </opts>
-      <opts name="editInPlace">
-         <opt name="enabled" value="true"/>
-         <opt name="addInPlace" value="true"/>
-      </opts>
       <opt name="emptyHTML">Нет записей</opt>
       <opt name="multiselect">true</opt>
+      <opt name="editMode" value="click"/>
+   </component>
+   <component data-component="SBIS3.CONTROLS.Link" name="NewItem">
+      <opt name="caption">Новая запись</opt>
+      <opt name="icon">sprite: icon-16 icon-NewCategory icon-primary</opt>
+      <opts name="handlers">
+         <opt name="onActivated" type="function">js!SBIS3.CONTROLS.Demo.FieldLinkWithEditInPlace:prototype.sendAddItem</opt>
+      </opts>
    </component>
 </div>

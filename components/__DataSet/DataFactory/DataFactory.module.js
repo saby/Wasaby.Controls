@@ -38,46 +38,48 @@ define('js!SBIS3.CONTROLS.DataFactory', [
        * @returns {*} - приведенные
        */
       cast: function (value, type, strategy, meta) {
-         if((value !== null && typeof value !== 'undefined') || type === 'Enum' ) {
-            switch(type) {
-               case 'DataSet':
-                  return this.makeDataSet(value, strategy);
-               case 'Record':
-                  return this.makeRecord(value, strategy);
-               case 'Time':
-               case 'Date':
-               case 'DateTime':
-                  return Date.fromSQL(value);
-               case 'Money':
-                  if(meta && meta.precision) {
-                     return $ws.helpers.bigNum(value).toString(meta.precision);
-                  }
+         switch(type) {
+            case 'Identity':
+               return meta.isArray ?
+                  value[0] === null ? null : value.join(meta.separator, value) :
+                  value;
+            case 'DataSet':
+               return this.makeDataSet(value, strategy);
+            case 'Record':
+               return this.makeRecord(value, strategy);
+            case 'Time':
+            case 'Date':
+            case 'DateTime':
+               return value === undefined || value === null ? value : Date.fromSQL('' + value);
+            case 'Money':
+               if (meta && meta.precision > 3) {
+                  return $ws.helpers.bigNum(value).toString(meta.precision);
+               }
+               return value === undefined ? null : value;
+            case 'Enum':
+               return new $ws.proto.Enum({
+                  availableValues: meta.source, //список вида {0:'one',1:'two'...}
+                  currentValue: value //число
+               });
+            case 'Flags':
+               return this.makeFlags(value, meta);
+            case 'TimeInterval':
+               if(value instanceof $ws.proto.TimeInterval) {
+                  return value.toString();
+               }
+               return $ws.proto.TimeInterval.toString(value);
+            case 'Boolean':
+               if (value === null) {
                   return value;
-               case 'Enum':
-                  return new $ws.proto.Enum({
-                     availableValues: meta.source, //список вида {0:'one',1:'two'...}
-                     currentValue: value //число
-                  });
-               case 'Flags':
-                  return this.makeFlags(value,meta);
-               case 'Identity':
-                  return $ws.helpers.parseIdentity(value);
-               case 'TimeInterval':
-                  if(value instanceof $ws.proto.TimeInterval) {
-                     return value.toString();
-                  }
-                  return $ws.proto.TimeInterval.toString(value);
-               case 'Boolean':
-                  return !!value;
-               default:
-                  return value;
-            }
+               }
+               return !!value;
+            default:
+               return value;
          }
-         return value;
       },
       
       /**
-       * сериализует значение перед вставкой в данные
+       * Сериализует значение перед вставкой в данные
        * @param value - значение
        * @param type - тип
        * @param strategy - стратегия, нужен для создания модели или датасета
@@ -85,10 +87,16 @@ define('js!SBIS3.CONTROLS.DataFactory', [
        * @returns {*}
        */
       serialize: function (value, type, strategy, meta) {
-         if((value === null || typeof value === 'undefined') && type !== ''){
-            return value;
-         }
          switch(type) {
+            case 'Identity':
+               return meta.isArray ?
+                  value === null ?
+                     [null] :
+                     typeof value === 'string' ?
+                        value.split(meta.separator) :
+                        [value]:
+                  value;
+
             case 'DataSet':
                if (strategy && strategy.serializeDataSet) {
                   return strategy.serializeDataSet(value);
@@ -113,7 +121,7 @@ define('js!SBIS3.CONTROLS.DataFactory', [
                      serializeMode = false;
                      break;
                }
-               return value instanceof Date ? value.toSQL(serializeMode) : null;
+               return value instanceof Date ? value.toSQL(serializeMode) : value;
 
             case 'Flags':
                if (strategy && strategy.serializeFlags) {
@@ -131,7 +139,7 @@ define('js!SBIS3.CONTROLS.DataFactory', [
                return value === null ? null : parseInt(value, 10);
 
             case 'Money':
-               if(meta.precision) {
+               if (meta && meta.precision > 3) {
                   return $ws.helpers.bigNum(value).toString(meta.precision);
                }
                return value;

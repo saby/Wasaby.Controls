@@ -1,21 +1,22 @@
 /* global define, $ws */
 define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
-   'js!SBIS3.CONTROLS.Data.Collection.List',
-   'js!SBIS3.CONTROLS.DataSet'
-], function (List, DataSet) {
+   'js!SBIS3.CONTROLS.Data.Collection.ObservableList',
+   'js!SBIS3.CONTROLS.DataSet',
+   'js!SBIS3.CONTROLS.Data.Model'
+], function (ObservableList, DataSet) {
    'use strict';
 
    /**
-    * Список, работающий с записями
+    * Список записей
     * @class SBIS3.CONTROLS.Data.Collection.RecordSet
-    * @extends SBIS3.CONTROLS.Data.Collection.List
+    * @extends SBIS3.CONTROLS.Data.Collection.ObservableList
     * @author Мальцев Алексей
     * @state mutable
     * @remark
     * Этот модуль временный. Обеспечивает совместимость c  SBIS3.CONTROLS.DataSet по API.
     */
 
-   var RecordSet = List.extend(/** @lends SBIS3.CONTROLS.Data.Collection.RecordSet.prototype */{
+   var RecordSet = ObservableList.extend(/** @lends SBIS3.CONTROLS.Data.Collection.RecordSet.prototype */{
       _moduleName: 'SBIS3.CONTROLS.Data.Collection.RecordSet',
       $protected: {
          _options: {
@@ -24,14 +25,18 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
             meta: {},
             keyField: ''
          },
+         _model: undefined,
          _rawData: undefined,
          _indexTree: {}
       },
 
       $constructor: function (cfg) {
+         cfg = cfg || {};
+
          if (!('compatibleMode' in cfg)) {
             $ws.single.ioc.resolve('ILogger').log('SBIS3.CONTROLS.Data.RecordSet', 'module SBIS3.CONTROLS.Data.Collection.RecordSet is deprecated and will be removed in 3.8.0. Use SBIS3.CONTROLS.Data.Collection.LoadableList instead.');
          }
+         this._model = 'model' in cfg ? cfg.model : $ws.single.ioc.resolve('SBIS3.CONTROLS.Data.ModelConstructor');
          if ('data' in cfg) {
             this.setRawData(cfg.data);
          }
@@ -90,18 +95,24 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
 
       push: function (record) {
          if (!$ws.helpers.instanceOfModule(record, 'SBIS3.CONTROLS.Data.Model')) {
-            record = $ws.single.ioc.resolve('SBIS3.CONTROLS.Data.Model', {
+            record = new this._model({
                compatibleMode: true,
                adapter: this.getStrategy(),
-               data: record,
+               rawData: record,
                idProperty: this._options.keyField
             });
+            record.setStored(true);
          }
          this.add(record);
       },
 
       insert: function (record, at) {
-         this.add(record, at);
+         var existsAt = this.getIndex(record);
+         if (existsAt == -1) {
+            this.add(record, at);
+         } else {
+            this.replace(record, existsAt);
+         }
       },
 
       setRawData: function(data) {
@@ -110,14 +121,17 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
          this._rawData = data;
 
          var adapter = this.getStrategy().forTable(),
-            count = adapter.getCount(data);
+            count = adapter.getCount(data),
+            record;
          for (var i = 0; i < count; i++) {
-            this.add($ws.single.ioc.resolve('SBIS3.CONTROLS.Data.Model', {
+            record = new this._model({
                compatibleMode: true,
                adapter: this.getStrategy(),
-               data: adapter.at(data, i),
+               rawData: adapter.at(data, i),
                idProperty: this._options.keyField
-            }));
+            });
+            record.setStored(true);
+            this.add(record);
          }
       },
 
@@ -176,7 +190,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
             this._options.meta.results = $ws.single.ioc.resolve('SBIS3.CONTROLS.Data.Model', {
                compatibleMode: true,
                adapter: this.getStrategy(),
-               data: this._options.meta.results,
+               rawData: this._options.meta.results,
                idProperty: this._options.keyField
             });
          }
@@ -186,6 +200,11 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
 
       setMetaData: function (meta) {
          this._options.meta = meta;
+      },
+
+      // TODO: В контролах избавиться от вызова этого метода - должно быть достаточно "выбрать по индексу".
+      getTreeIndex: function(field, reindex){
+         return DataSet.prototype.getTreeIndex.call(this, field, reindex);
       },
 
       getChildItems: function (parentId, getFullBranch, field) {

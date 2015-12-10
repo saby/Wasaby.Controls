@@ -130,7 +130,7 @@ define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManag
          container.addClass('ws-hidden');
          this._isVisible = false;
          /********************************/
-         
+
          this._initOppositeCorners();
          //При ресайзе расчитываем размеры
          $ws.single.EventBus.channel('WindowChangeChannel').subscribe('onWindowResize', this._windowChangeHandler, this);
@@ -188,7 +188,7 @@ define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManag
             if (recalcFlag) {
                this._initOrigins = true;
             }
-            this._initSizes();            
+            this._initSizes();
             if (this._options.target) {
                var offset = {
                      top: this._targetSizes.offset.top,
@@ -698,6 +698,11 @@ define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManag
          return spaces;
       },
 
+      close: function(){
+         this.hide();
+         this.destroy();
+      },
+
       _addOffset: function (offset1, offset2) {
          var offset = {
             top: 0,
@@ -710,15 +715,18 @@ define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManag
 
       //TODO Передалать на зависимость только от опций
       _notifyOnAlignmentChange: function () {
-         var newAlignment;
-         if (this._options.verticalAlign.side != this._currentAlignment.verticalAlign.side ||
-             this._options.horizontalAlign.side != this._currentAlignment.horizontalAlign.side ||
-             this._options.corner != this._currentAlignment.corner) {
+         var isVerAlignChanged = this._defaultVerticalAlignSide != this._currentAlignment.verticalAlign.side,
+             isHorAlignChanged = this._defaultHorizontalAlignSide != this._currentAlignment.horizontalAlign.side,
+             newAlignment;
+
+         if (isVerAlignChanged || isHorAlignChanged || this._options.corner != this._currentAlignment.corner) {
             newAlignment = {
                verticalAlign: this._options.verticalAlign,
                horizontalAlign: this._options.horizontalAlign,
                corner: this._options.corner
             };
+            this._container.toggleClass('controls-popup-revert-horizontal', isHorAlignChanged)
+                           .toggleClass('controls-popup-revert-vertical', isVerAlignChanged);
             this._notify('onAlignmentChange', newAlignment);
          }
       },

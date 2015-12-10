@@ -10,10 +10,10 @@
       {{?column.className}} {{=column.className}}{{?}}
       {{?it.startScrollColumn!== undefined}}{{?it.startScrollColumn <= index}} controls-DataGridView__scrolledCell{{??}} controls-DataGridView__notScrolledCell{{?}}{{?}}">
         {{?index == 0}}
-        <div class="controls-HierarchyDataGridView__expand js-controls-TreeView__expand icon-24 {{?column.item.get(it.hierField)}}icon-Folder action-hover icon-disabled has-child{{?}}"></div>
-        {{=it.decorators.applyIf(column.value, column.highlight)}}
+        <div class="controls-HierarchyDataGridView__expand js-controls-TreeView__expand icon-24 {{?it.isNode}}icon-Folder action-hover icon-disabled has-child{{?}}"></div>
+        {{=column.value}}
         {{??}}
-        {{=it.decorators.applyIf(column.value, column.highlight)}}
+        {{=column.value}}
         {{?}}
     </td>
     {{~}}

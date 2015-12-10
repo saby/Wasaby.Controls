@@ -36,6 +36,10 @@ define('js!SBIS3.CONTROLS.BreadCrumbs', [
          _resizeTimeout: null,
          _dropdownWidth: null,
          _homeIcon: undefined,
+         _sizesInited: false,
+         _arrowWidth: 0,
+         _homeIconWidth: 0,
+         _dotsWidth: 0,
          _options: {
             keyField: 'id',
             displayField: 'title',
@@ -85,9 +89,9 @@ define('js!SBIS3.CONTROLS.BreadCrumbs', [
       },
 
       setItems: function(items){
+         this._toggleHomeIcon(items.length <= 0);
          BreadCrumbs.superclass.setItems.call(this, items);
          this._dataSet._keyField = this._options.keyField; 
-         this._toggleHomeIcon(items.length <= 0);
       },
 
       //TODO: придрот что бы фэйковый див не ломал :first-child стили
@@ -154,29 +158,25 @@ define('js!SBIS3.CONTROLS.BreadCrumbs', [
       },
 
       _calculateSizes: function() {
-         var dots = $('.controls-BreadCrumbs__dots', this._container).detach();
+         this._initNonTextElementSizes();
+         $('.controls-BreadCrumbs__dots', this._container).remove();
          var targetContainer = this._getTargetContainer(),
             containerWidth = this._container.width(),
             points = $('.controls-BreadCrumbs__crumb', targetContainer),
             i = points.length - 1;
-
-         if (!dots.length)
-            dots = $(pointTpl({
-               item: {
-                  title: '...',
-                  dots: true,
-                  get: function(field) {
-                     return this[field];
-                  }
-               },
-               decorators: this._decorators,
-               displayField: this._options.displayField
-            }));
-
-         if (points.length) {
+         if (points.length){
             //20px - ширина блока с домиком
             //Добавляем троеточие если пункты не убираются в контейнер
             if ((targetContainer.width() + 20 >= containerWidth) && points.length > 2) {
+               var dots = $(pointTpl({
+                  item: {
+                     title: '...',
+                     dots: true,
+                     get: function(field) {return this[field];}
+                  },
+                  decorators: this._decorators,
+                  displayField: this._options.displayField
+               }));
                $(points[i - 1]).before(dots);
                //скрываем пункты левее троеточия пока не уберемся в контейнер
                for (i; i > 1; i--) {
@@ -186,27 +186,41 @@ define('js!SBIS3.CONTROLS.BreadCrumbs', [
                   points[i - 1].className += ' ws-hidden';
                }
             }
-
+            
             //Если после всех манипуляций все еще не убираемся в контейнер, будем обрезать текст
             points = $('.controls-BreadCrumbs__crumb:not(.ws-hidden)', targetContainer);
 
             //Минимум остается первая и последняя хлебная крошка
-            //20px - ширина блока с домиком
-            //78px - блок с домиком + стрелка + троеточие
-            if ((targetContainer.width() + 20 >= containerWidth)) {
-               var halfWidth = (containerWidth - 78) / 2;
-               if (points.length >= 2) {
+            if ((targetContainer.width() + this._arrowWidth >= containerWidth)) {
+               //ширина декоротивных элементов -  блок с домиком, троеточие, стрелки 
+               var width = this._homeIconWidth + this._dotsWidth + this._arrowWidth * 2;
+               var halfWidth = Math.floor((containerWidth - width) / 2);
+               if (points.length >= 2){
                   $('.controls-BreadCrumbs__title', points).css('max-width', halfWidth);
                } else {
-                  $('.controls-BreadCrumbs__title', points).css('max-width', containerWidth - 60);
+                  $('.controls-BreadCrumbs__title', points).css('max-width', containerWidth - width);
                }
             }
          }
+
+         if (this._picker) {
+            this.hidePicker();
+         }
       },
 
-      _redraw: function() {
+      _redraw: function(){
          BreadCrumbs.superclass._redraw.call(this);
          this._calculateSizes();
+      },
+
+      _initNonTextElementSizes: function(){
+         if (!this._homeIconWidth || !this._arrowWidth){
+            this._homeIconWidth = $('.controls-BreadCrumbs__crumb-home', this._container).outerWidth(true);
+            this._arrowWidth = $('.controls-BreadCrumbs__arrow', this._container).outerWidth(true);
+         } 
+         if (!this._dotsWidth){
+            this._dotsWidth = $('.controls-BreadCrumbs__dots', this._container).outerWidth(true);
+         }
       },
 
       _getItemTemplate: function() {

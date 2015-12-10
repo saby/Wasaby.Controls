@@ -33,12 +33,34 @@ define('js!SBIS3.CONTROLS.MenuButtonMixin', ['js!SBIS3.CONTROLS.ContextMenu'], f
 
       $constructor: function () {
          this._publish('onMenuItemActivate');
+         if (this._container.hasClass('controls-Menu__hide-menu-header')){
+            this._options.pickerClassName += ' controls-Menu__hide-menu-header';
+         }
+         this._checkItemsIcons();
+      },
+
+      //TODO: Можно будет выпилить когда меню будет сделано через таблицу
+      //3.7.3.10: придрот для отсупа в пунктах меню, если ни в одном пункте нет иконки а у кнопки есть
+      _checkItemsIcons: function(items){
+         var icon = 'sprite:';
+         if (this._options.icon && items){
+            if (this._options.icon.indexOf('icon-16') !== -1){
+               icon += 'icon-16';
+            } else if (this._options.icon.indexOf('icon-24') !== -1){
+               icon += 'icon-24';
+            }
+            for (var i = 0; i < items.length; i++){
+               //отступы нужны только в основном меню, но не в сабменю
+               if (!items[i].icon && !items[i][this._options.hierField]) { items[i].icon = icon;}
+            }
+         }
       },
 
       _createPicker: function(targetElement){
          var menuconfig = {
             parent: this.getParent(),
             opener: this,
+            groupBy: this._options.groupBy,
             context: this.getParent() ? this.getParent().getLinkedContext() : {},
             element: targetElement,
             target : this.getContainer(),
@@ -59,6 +81,7 @@ define('js!SBIS3.CONTROLS.MenuButtonMixin', ['js!SBIS3.CONTROLS.ContextMenu'], f
             closeByExternalClick: true,
             targetPart: true
          };
+         menuconfig = this._modifyPickerOptions(menuconfig);
          if (this._dataSource) {
             menuconfig.dataSource = this._dataSource;
          }
@@ -66,6 +89,10 @@ define('js!SBIS3.CONTROLS.MenuButtonMixin', ['js!SBIS3.CONTROLS.ContextMenu'], f
             menuconfig.items = this._options.items;
          }
          return new ContextMenu(menuconfig);
+      },
+
+      _modifyPickerOptions: function(opts) {
+         return opts;
       },
 
       _setPickerContent: function(){
@@ -80,7 +107,7 @@ define('js!SBIS3.CONTROLS.MenuButtonMixin', ['js!SBIS3.CONTROLS.ContextMenu'], f
       _getHeader: function(){
          var header = $('<div class="controls-Menu__header">');
          if (this._options.icon) {
-            header.append('<i class="' + this._options.iconTemplate(this._options) + '"></i>');
+            header.append('<i class="controls-Menu__header-icon ' + this._options.iconTemplate(this._options) + '"></i>');
          }
          header.append('<span class="controls-Menu__header-caption">' + (this._options.caption || '')  + '</span>');
          return header;
@@ -97,7 +124,7 @@ define('js!SBIS3.CONTROLS.MenuButtonMixin', ['js!SBIS3.CONTROLS.ContextMenu'], f
          }
          return this._picker.getItemsInstances.apply(this._picker, arguments);
       },
-      
+
       _clickHandler: function () {
          if (this._dataSet.getCount() > 1) {
             this.togglePicker();
@@ -106,7 +133,7 @@ define('js!SBIS3.CONTROLS.MenuButtonMixin', ['js!SBIS3.CONTROLS.ContextMenu'], f
                var id = this._dataSet.at(0).getKey();
                this._notify('onMenuItemActivate', id);
             }
-         }  
+         }
       },
 
       _dataLoadedCallback : function() {
@@ -130,6 +157,9 @@ define('js!SBIS3.CONTROLS.MenuButtonMixin', ['js!SBIS3.CONTROLS.ContextMenu'], f
             if (this._picker) {
                this._picker.setEnabled(enabled);
             }
+         },
+         setItems: function(items){
+            this._checkItemsIcons(items);
          }
       },
 

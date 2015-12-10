@@ -36,7 +36,7 @@ define('js!SBIS3.CONTROLS.ItemActionsGroup',
          $constructor: function() {
             var self = this;
 
-            if(this._options.items[0].title) {
+            if(this._options.items.length && this._options.items[0].title) {
                $ws.single.ioc.resolve('ILogger').log('title', 'C 3.8.0 свойство операции над записью title перестанет работать. Используйте свойство caption');
             }
 
@@ -46,30 +46,33 @@ define('js!SBIS3.CONTROLS.ItemActionsGroup',
                   self.showItemActionsMenu();
                });
 
-            this._touchActions = $ws._const.compatibility.touch;
+            this._touchActions = $ws._const.browser.isMobilePlatform;
          },
          /**
           * Изменяет операции над строкой до нужного состояния - скрывает / показывает кнопки
           */
          applyItemActions: function() {
             var onlyMain = true,
-               itemsInstances = this.getItemsInstances(),
-               show = false;
+                itemsInstances = this.getItemsInstances(),
+                isActionVisible,
+                isMain;
 
             for(var i in itemsInstances) {
                if(itemsInstances.hasOwnProperty(i)) {
-                  show = this._itemActionsButtons[i]['isMainAction'] && itemsInstances[i].isVisible();
-                  if (onlyMain && itemsInstances[i].isVisible() && !this._itemActionsButtons[i]['isMainAction']) {
+                  isMain = this._itemActionsButtons[i]['isMainAction'];
+                  isActionVisible = itemsInstances[i].isVisible();
+
+                  /* Проверка, надо ли показывать иконку меню */
+                  if (onlyMain && isActionVisible && !isMain) {
                      onlyMain = false;
                   }
-                  //Если видимость кнопки не изменилась, то делать ничего не будем
-                  if(this._itemActionsButtons[i]['isVisible'] !== show) {
-                     itemsInstances[i].getContainer()[0].style.display = show ? 'inline-block' : 'none';
-                     this._itemActionsButtons[i]['isVisible'] = show;
+                  /* Скрываем на строке все неглавные опции */
+                  if(!isMain && isActionVisible) {
+                     itemsInstances[i].getContainer().addClass('ws-hidden');
                   }
                }
             }
-            this._itemActionsMenuButton[0].style.display = (!onlyMain ? 'inline-block' : 'none');
+            this._itemActionsMenuButton.toggleClass('ws-hidden', onlyMain);
          },
          /**
           * Создаёт меню для операций над записью
@@ -77,7 +80,7 @@ define('js!SBIS3.CONTROLS.ItemActionsGroup',
           */
          _createItemActionMenu: function() {
             var self = this;
-            var menuCont = $('> .controls-ItemActions__menu-container', this._container[0]);
+            var menuCont = $('> .controls-ItemActions__menu-container', this._getItemsContainer()[0]);
             var verticalAlign = {
                   side: 'top',
                   offset: VERTICAL_OFFSET
@@ -113,10 +116,17 @@ define('js!SBIS3.CONTROLS.ItemActionsGroup',
                closeByExternalClick: true,
                handlers: {
                   onClose: function() {
-                     var hoveredItem = self.getParent().getHoveredItem().container;
+                     var hoveredItem = self.getParent().getHoveredItem();
                      self._itemActionsMenuVisible = false;
-                     this._activeItem.container.removeClass('controls-ItemActions__activeItem');
-                     self[hoveredItem ? 'showItemActions' : 'hideItemActions'](hoveredItem);
+                     self._activeItem.container.removeClass('controls-ItemActions__activeItem');
+                     self._menuVisibilityHandler(false);
+
+                     if (self._touchActions) {
+                        self._container[0].style.visibility = 'visible';
+                        self.hideItemActions();
+                     } else {
+                        self[hoveredItem.container ? 'showItemActions' : 'hideItemActions'](hoveredItem);
+                     }
                   },
                   onMenuItemActivate: function(e, id) {
                      self._itemActivatedHandler(id);
@@ -133,12 +143,32 @@ define('js!SBIS3.CONTROLS.ItemActionsGroup',
                this._createItemActionMenu();
             }
 
+            this._itemActionsMenuVisible = true;
             this._onBeforeMenuShowHandler();
+            this._menuVisibilityHandler(true);
             this._itemActionsMenu.show();
             this._activeItem.container.addClass('controls-ItemActions__activeItem');
-            this._itemActionsMenuVisible = true;
             this._itemActionsMenu.recalcPosition(true);
          },
+
+         /** Обработчик на смену видимости меню
+          * Устанавливает операциям видимость на время показа меню
+          * @param isVisible
+          * @private
+          */
+         _menuVisibilityHandler: function(isVisible) {
+            var itemActionsInstances = this.getItemsInstances();
+
+            for(var i in itemActionsInstances) {
+               if(itemActionsInstances.hasOwnProperty(i)) {
+                  if(!itemActionsInstances[i].isVisible()) {
+                     /* Делаю через inline стили, т.к. через ws-hidden делать небезопасно, кто-то может его удалить */
+                     itemActionsInstances[i].getContainer()[0].style.display = isVisible ? 'none' : '';
+                  }
+               }
+            }
+         },
+
          /**
           * Срабатывает перед открытием меню
           * Скрывает записи, которые нужно скрыть
@@ -147,16 +177,12 @@ define('js!SBIS3.CONTROLS.ItemActionsGroup',
          _onBeforeMenuShowHandler: function() {
             var menuInstances = this._itemActionsMenu.getItemsInstances(),
                 itemActionsInstances = this.getItemsInstances();
+
             if (this._touchActions){
                //Нельзя сделать hide так как display:none ломает позиционирование меню
-               var cont = this._container[0],
-                  self = this;
-               cont.style.visibility = 'hidden';
-               this._itemActionsMenu.subscribe('onClose', function(){
-                  cont.style.visibility = 'visible';
-                  self.hideItemActions();
-               });
+               this._container[0].style.visibility = 'hidden';
             }
+
             for(var i in menuInstances) {
                if(menuInstances.hasOwnProperty(i)) {
                   menuInstances[i].getContainer()[itemActionsInstances.hasOwnProperty(i) && itemActionsInstances[i].isVisible() ? 'show' : 'hide']();
@@ -167,21 +193,28 @@ define('js!SBIS3.CONTROLS.ItemActionsGroup',
           * Показывает операции над записью
           */
          showItemActions: function(hoveredItem, position) {
+            var cont = this._container[0];
+
             this._activeItem = hoveredItem;
-            this._container[0].style.top = position.top + 'px';
-            this._container[0].style.right = position.right + 'px';
-            this._container[0].style.display = 'block';
+            cont.style.right = position.right + 'px';
+            cont.style.display = 'block';
+
             if (this._touchActions){
-               this._container.width('auto');
-               var width = this._container.width(),
-                  height = $(hoveredItem.container).height(),
-                  padding = height / 2 - 10;// получено опытным путем для шрифта 16px;
-               this._container.width(0);
-            	this._container.height(height / 2 + 10);
-               this._container.css('padding-top', padding);
-            	this._container.animate({width : width}, 350);
+               var contHeight = cont.offsetHeight,
+                   itemHeight = hoveredItem.size.height,
+                   itemsContainer = this._getItemsContainer();
+
+               if (contHeight < itemHeight){
+                  position.top -=  itemHeight - contHeight;
+               }
+
+               itemsContainer[0].style.right = - cont.offsetWidth + 'px';
+               cont.style.height = itemHeight + 'px';
+               itemsContainer.animate({right : position.right}, 350);
             }
-        	},
+
+            cont.style.top = position.top + 'px';
+         },
          /***
           * Задаёт новые операции над записью
           * Как в меню, так и на строке
@@ -214,6 +247,10 @@ define('js!SBIS3.CONTROLS.ItemActionsGroup',
          _itemActivatedHandler: function(item) {
             this.hideItemActions();
             this._itemActionsButtons[item]['handler'].apply(this.getParent(), [this._activeItem.container, this._activeItem.key, this._activeItem.record]);
+         },
+
+         _getItemsContainer: function(){
+            return $('.controls-ItemActions__itemsContainer', this._container[0]);
          },
 
          canAcceptFocus: function() {

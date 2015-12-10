@@ -10,7 +10,7 @@ define('js!SBIS3.CONTROLS.ComponentBinder', [], function () {
    /*методы для поиска*/
    function startHierSearch(text, searchParamName, searchCrumbsTpl) {
       if (text) {
-         var filter = $ws.core.merge(this._options.view._filter, {
+         var filter = $ws.core.merge(this._options.view.getFilter(), {
                'Разворот': 'С разворотом',
                'usePages': 'full'
             }),
@@ -49,7 +49,7 @@ define('js!SBIS3.CONTROLS.ComponentBinder', [], function () {
    function startSearch(text, searchParamName){
       if (text){
          var view = this._options.view,
-            filter = $ws.core.merge(view._filter, {
+            filter = $ws.core.merge(view.getFilter(), {
                'usePages': 'full'
             });
          filter[searchParamName] = text;
@@ -60,10 +60,12 @@ define('js!SBIS3.CONTROLS.ComponentBinder', [], function () {
    }
 
    function resetSearch(searchParamName){
-      var view = this._options.view;
-      delete (view._filter[searchParamName]);
+      var
+         view = this._options.view,
+         filter = view.getFilter();
+      delete (filter[searchParamName]);
       view.setHighlightText('', false);
-      view.reload(view._filter, view._sorting, 0);
+      view.reload(filter, view._sorting, 0);
    }
 
    function resetGroup(searchParamName) {
@@ -72,13 +74,13 @@ define('js!SBIS3.CONTROLS.ComponentBinder', [], function () {
          return;
       }
       var view = this._options.view,
-         filter = $ws.core.merge(view._filter, {
+         filter = $ws.core.merge(view.getFilter(), {
             'Разворот' : 'Без разворота'
          });
       delete (filter[searchParamName]);
 
       view.setInfiniteScroll(false, true);
-      view.setGroupBy({});
+      view.setGroupBy(this._lastGroup);
       view.setHighlightText('', false);
       this._firstSearch = true;
       if (this._searchReload ) {
@@ -88,7 +90,7 @@ define('js!SBIS3.CONTROLS.ComponentBinder', [], function () {
          //DataGridView._filter = filter;
          //DataGridView.setCurrentRoot(self._lastRoot); - плохо, потому что ВСЕ крошки на странице получат изменения
          view.reload(filter, view._sorting, 0);
-         this._path = this._pathDSRawData;
+         this._path = this._pathDSRawData || [];
          if (this._options.breadCrumbs){
             this._options.breadCrumbs.getDataSet().setRawData(this._pathDSRawData);
             this._options.breadCrumbs._redraw();
@@ -98,7 +100,7 @@ define('js!SBIS3.CONTROLS.ComponentBinder', [], function () {
          }
       } else {
          //Очищаем крошки. TODO переделать, когда появятся привзяки по контексту
-         view._filter = filter;
+         view.setFilter(filter, true);
       }
       //При любом релоаде из режима поиска нужно снять класс
       view.once('onDataLoad', function(){
@@ -106,8 +108,8 @@ define('js!SBIS3.CONTROLS.ComponentBinder', [], function () {
       });
    }
 
-   function breakSearch(searchForm){
-      this._searchReload = false;
+   function breakSearch(searchForm, withReload){
+      this._searchReload = !!withReload;
       this._firstSearch = true;
       //Если в строке поиска что-то есть, очистим и сбросим Фильтр
       if (searchForm.getText()) {
@@ -138,8 +140,9 @@ define('js!SBIS3.CONTROLS.ComponentBinder', [], function () {
          _searchReload : true,
          _searchForm : undefined,
          _lastRoot : undefined,
+         _lastGroup: {},
          _currentRoot: null,
-         _pathDSRawData : undefined,
+         _pathDSRawData : [],
          _firstSearch: true,
          _lastViewMode: null,
          _path: [],
@@ -188,14 +191,17 @@ define('js!SBIS3.CONTROLS.ComponentBinder', [], function () {
             this._lastRoot = view.getCurrentRoot();
             //searchForm.subscribe('onReset', resetGroup);
             view.subscribe('onSetRoot', function(){
-               breakSearch(searchForm);
+               if (self._options.backButton) {
+                  self._options.backButton.getContainer().css({'visibility': 'visible'});
+               }
             });
             //Перед переключением в крошках в режиме поиска сбросим фильтр поиска
             view.subscribe('onSearchPathClick', function(){
-               breakSearch(searchForm);
+               breakSearch.call(self, searchForm, true);
             });
          }
 
+         this._lastGroup = view._options.groupBy;
          searchForm.subscribe('onTextChange', function(event, text){
             var checkedText = isSearchValid(text, 3);
             if (checkedText[1]) {
@@ -293,6 +299,9 @@ define('js!SBIS3.CONTROLS.ComponentBinder', [], function () {
                self._currentRoot = hier[0];
                self._path = hier.reverse();
             } else {
+               if (id === null){
+                   self._currentRoot = null;
+               }
                for (i = hier.length - 1; i >= 0; i--) {
                   var rec = hier[i];
                   if (rec){

@@ -1,0 +1,30 @@
+<div>
+   <div> Выпадающие списки с кликом(в виде ссылки), по ховеру, с множественным выбором</div>
+   <component id="dropdownList1" data-component="SBIS3.CONTROLS.DropdownList" class="DropdownList controls-DropdownList__withoutArrow controls-DropdownList__linkStyle">
+      <opt name="name" value="DropdownList1"></opt>
+      <opt name="keyField" value="key"></opt>
+      <opt name="displayField" value="title"></opt>
+      <opt name="mode" value="click"></opt>
+      <opt name="multiselect" >false</opt>
+      <opt name="showSelectedInList" >true</opt>
+      <opt name="itemTemplate" type="ref">{{@it.firstTemplate}}</opt>
+      <opts name="selectedKeys"  type="array" bind="filter/title" direction="fromProperty" oneWay="true" nonexistent="none"></opts>
+   </component>
+   <component id="dropdownList2" data-component="SBIS3.CONTROLS.DropdownList" class="DropdownList controls-DropdownList__withoutCross">
+      <opt name="name" value="DropdownList2"></opt>
+      <opt name="keyField" value="key"></opt>
+      <opt name="displayField" value="title"></opt>
+      <opt name="mode" value="hover"></opt>
+      <opt name="multiselect" >false</opt>
+      <opts name="selectedKeys"  type="array" bind="filter/title" direction="fromProperty" oneWay="true" nonexistent="none"></opts>
+   </component>
+   <component id="dropdownList3" data-component="SBIS3.CONTROLS.DropdownList" class="DropdownList controls-DropdownList__withoutArrow controls-DropdownList__withoutCross">
+      <opt name="name" value="DropdownList3"></opt>
+      <opt name="keyField" value="key"></opt>
+      <opt name="displayField" value="title"></opt>
+      <opt name="mode" value="click"></opt>
+      <opt name="multiselect" >true</opt>
+      <opts name="selectedKeys"  type="array" bind="filter/title" direction="fromProperty" oneWay="true" nonexistent="none"></opts>
+   </component>
+
+</div>
