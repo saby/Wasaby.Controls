@@ -24,7 +24,7 @@ define('js!SBIS3.CONTROLS.FastDataFilter',
        * @control
        * @public
        */
-      var FastDataFilter = CompoundControl.extend([FilterMixin, DSMixin],{
+      var FastDataFilter = CompoundControl.extend([FilterMixin, DSMixin],/** @lends SBIS3.CONTROLS.FastDataFilter.prototype */{
          $protected: {
             _dotTplFn: dotTplFn,
             _options: {
@@ -35,7 +35,55 @@ define('js!SBIS3.CONTROLS.FastDataFilter',
                 * @remark
                 * !Важно: Если на одной форме, в одном контексте лежит несколько хлебных фильтров, то только в этом случае стоит менять стандартное имя
                 */
-               internalContextFilterName : 'sbis3-controls-fast-filter'
+               internalContextFilterName : 'sbis3-controls-fast-filter',
+               /**
+                * @cfg {Array.<Object.<String,String>>} Массив объектов. Набор исходных данных, по которому строятся выпадающие списки
+                * @remark
+                * !Важно: каждый item - это настройка для выпадающего списка
+                * !Важно: данные для коллекции элементов можно задать либо в этой опции,
+                * либо через источник данных методом {@link setDataSource}.
+                * @example
+                * <pre>
+                *    items: [{
+                *       keyField : 'key',    //Имя поля с ключом из списка значений values
+                *       displayField: 'title',//Имя поля, в котором хранится текстовое отображение ключа из списка значений values
+                *       name: 'first',        //Имя фильтра
+                *       multiselect : false,  //Режим выпадающего списка
+                *       className: 'controls-DropdownList__withoutCross', //Строка с классами css-модификаторов для выпадающего списка
+                *       values:[                //Набор элементов выпадающего списка
+                *       {
+                *          key : 0,
+                *          title : 'Заголовок'
+                *       },
+                *       {
+                *          key : 1,
+                *          title : 'Один'
+                *       },
+                *       {
+                *          key : 2,
+                *          title : 'Два'
+                *       },
+                *       {
+                *           key : 3,
+                *          title : 'Три'
+                *       },
+                *       {
+                *           key : 4,
+                *          title : 'Четыре'
+                *       },
+                *       {
+                *           key : 5,
+                *          title : 'Пять'
+                *       }
+                *    ]
+                *  }]
+                * </pre>
+                * @see keyField
+                * @see displayField
+                * @see setDataSource
+                * @see getDataSet
+                */
+               items: []
             }
          },
          init: function () {
@@ -49,7 +97,9 @@ define('js!SBIS3.CONTROLS.FastDataFilter',
                keyField: item.get('keyField'),
                mode: this._options.mode,
                multiselect : !!item.get('multiselect'),
-               displayField: item.get('displayField')
+               showSelectedInList : !!item.get('multiselect'),
+               displayField: item.get('displayField'),
+               className: item.get('className') || 'controls-DropdownList__linkStyle'
             };
             return '<component data-component="SBIS3.CONTROLS.DropdownList" config="' + $ws.helpers.encodeCfgAttr(cfg) + '">' +
                         //'<opts name="selectedKeys" type="array" bind="' + cfg.filterName +'" ></opts>' + //direction="fromProperty" oneWay="true"

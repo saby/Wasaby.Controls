@@ -6,6 +6,8 @@
       <opt name="displayField" value="title"></opt>
       <opt name="mode" value="click"></opt>
       <opt name="multiselect" >false</opt>
+      <opt name="showSelectedInList" >true</opt>
+      <opt name="itemTemplate" type="ref">{{@it.firstTemplate}}</opt>
       <opts name="selectedKeys"  type="array" bind="filter/title" direction="fromProperty" oneWay="true" nonexistent="none"></opts>
    </component>
    <component id="dropdownList2" data-component="SBIS3.CONTROLS.DropdownList" class="DropdownList controls-DropdownList__withoutCross">

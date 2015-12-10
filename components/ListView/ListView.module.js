@@ -119,7 +119,8 @@ define('js!SBIS3.CONTROLS.ListView',
           * </pre>
           */
          /**
-          * @event onCellValueChanged Событие при смене значения в одном из полей редактирования по месту и потере фокуса этим полем
+          * @event onItemValueChanged Событие при смене значения в одном из полей редактирования по месту и потере фокуса этим полем
+          * @deprecated Будет удалено в 3.7.3.100. Временное решение
           * @param {$ws.proto.EventObject} eventObject Дескриптор события.
           * @param {difference} Массив измененных полей
           * @param {Object} model Модель с измененными данными
@@ -304,7 +305,11 @@ define('js!SBIS3.CONTROLS.ListView',
                 * @cfg {String} Режим редактирования по месту
                 * @variant "" Редактирование по месту отлючено
                 * @variant click Отображение редактирования по клику
+                * @variant click|autoadd Отображение редактирования по клику и включение режима автоматического добавления
                 * @variant hover Отображение редактирования по наведению мыши
+                * @variant hover|autoadd Отображение редактирования по наведению мыши и включение режима автоматического добавления
+                * @remark
+                * Режим автоматического добавления позволяет при завершении редактирования последнего элемента автоматически создавать новый
                 * @example
                 * <pre>
                 *     <opt name="editInPlaceMode">click</opt>
@@ -334,9 +339,8 @@ define('js!SBIS3.CONTROLS.ListView',
 
          $constructor: function () {
             //TODO временно смотрим на TopParent, чтобы понять, где скролл. С внедрением ScrallWatcher этот функционал уберем
-            var topParent = this.getTopParent(),
-                  self = this;
-            this._publish('onChangeHoveredItem', 'onItemClick', 'onItemActivate', 'onDataMerge', 'onCellValueChanged', 'onRowBeginEdit');
+            var topParent = this.getTopParent();
+            this._publish('onChangeHoveredItem', 'onItemClick', 'onItemActivate', 'onDataMerge', 'onItemValueChanged', 'onBeginEdit');
             this._container.on('mousemove', this._mouseMoveHandler.bind(this))
                            .on('mouseleave', this._mouseLeaveHandler.bind(this));
 
@@ -441,7 +445,7 @@ define('js!SBIS3.CONTROLS.ListView',
                order = isNext ? 1 : -1,
                siblingItem = items.eq(items.index(selectedItem) + order);
 
-            return this._dataSet.getRecordByKey(siblingItem.data('id')) ? siblingItem : this._getHtmlItem(siblingItem.get('id'), isNext);
+            return this._dataSet.getRecordByKey(siblingItem.data('id')) ? siblingItem : this._getHtmlItem(siblingItem.data('id'), isNext);
          },
          _isViewElement: function (elem) {
             return  $ws.helpers.contains(this._getItemsContainer()[0], elem[0]);
@@ -586,7 +590,7 @@ define('js!SBIS3.CONTROLS.ListView',
          },
 
          _getItemsContainer: function () {
-            return $(".controls-ListView__itemsContainer", this._container.get(0));
+            return $('.controls-ListView__itemsContainer', this._container.get(0)).first();
          },
 
          _addItemAttributes: function(container) {
@@ -692,15 +696,38 @@ define('js!SBIS3.CONTROLS.ListView',
          //   БЛОК РЕДАКТИРОВАНИЯ ПО МЕСТУ //
          //*******************************//
 
-         _onItemClickHandler: function(event, id, record, target) {
+         setEditMode: function(editMode) {
+            if (editMode !== this._options.editMode && (editMode === '' || editMode === 'click' || editMode === 'hover')) {
+               if (this._editInPlace) {
+                  if (this._options.editMode === 'click') {
+                     this.unsubscribe('onItemClick', this._onItemClickHandler);
+                  } else if (this._options.editMode === 'hover') {
+                     this.unsubscribe('onChangeHoveredItem', this._onChangeHoveredItemHandler);
+                  }
+                  this._editInPlace.destroy();
+                  this._editInPlace = null;
+               }
+               this._options.editMode = editMode;
+               if (this._options.editMode === 'click') {
+                  this.subscribe('onItemClick', this._onItemClickHandler);
+               } else if (this._options.editMode === 'hover') {
+                  this.subscribe('onChangeHoveredItem', this._onChangeHoveredItemHandler);
+               }
+            }
+         },
 
+         getEditMode: function() {
+            return this._options.editMode;
+         },
+
+         _onItemClickHandler: function(event, id, record, target) {
             this._getEditInPlace().edit($(target).closest('.js-controls-ListView__item'), record);
             event.setResult(false);
          },
 
          _onChangeHoveredItemHandler: function(event, hoveredItem) {
             var target = hoveredItem.container;
-            if (target && !target.hasClass('controls-editInPlace')) {
+            if (target && !(target.hasClass('controls-editInPlace') || target.hasClass('controls-editInPlace__editing'))) {
                this._getEditInPlace().show(target, this._dataSet.getRecordByKey(hoveredItem.key));
             } else {
                this._getEditInPlace().hide();
@@ -713,7 +740,7 @@ define('js!SBIS3.CONTROLS.ListView',
          _getEditInPlace: function() {
             /*todo EIP Крайнов, Сухоручкин, Авраменко - данная логика должна выполнятся на уровне новых миксинов, т.к. запись может измениться не только из-за редактировании по месту */
             function redrawRaw(record) {
-               this._getItemsContainer().find('.js-controls-ListView__item[data-id="' + record.getKey() + '"]:first').after(this._drawItem(record)).remove();
+               this._getItemsContainer().find('.js-controls-ListView__item[data-id="' + record.getKey() + '"]:not(".controls-editInPlace")').after(this._drawItem(record)).remove();
             }
             if (!this._editInPlace) {
                this._createEditInPlace();
@@ -747,16 +774,16 @@ define('js!SBIS3.CONTROLS.ListView',
                ignoreFirstColumn: this._options.multiselect,
                columns: this._options.columns,
                dataSource: this._dataSource,
-               readRecordBeforeEdit: this._options.editInPlaceGetModelFromSource,
                editingTemplate: this._options.editingTemplate,
                itemsContainer: this._getItemsContainer(),
                element: $('<div>'),
+               modeAutoAdd: this._options.editMode === 'click|autoadd' || this._options.editMode === 'hover|autoadd',
                handlers: {
-                  onCellValueChanged: function(event, difference, model) {
-                     this._notify('onCellValueChanged', difference, model)
+                  onItemValueChanged: function(event, difference, model) {
+                     event.setResult(this._notify('onItemValueChanged', difference, model));
                   }.bind(this),
-                  onRowBeginEdit: function(event, result) {
-                     event.setResult(this._notify('onRowBeginEdit', result));
+                  onBeginEdit: function(event, result) {
+                     event.setResult(this._notify('onBeginEdit', result));
                   }.bind(this)
                }
             }
@@ -804,12 +831,12 @@ define('js!SBIS3.CONTROLS.ListView',
          _showItemActions: function (item) {
             //Создадим операции над записью, если их нет
             this.getItemsActions();
+            this._itemActionsGroup.applyItemActions();
 
             //Если показывается меню, то не надо позиционировать операции над записью
             if (this._itemActionsGroup.isItemActionsMenuVisible()) {
                return;
             }
-            this._itemActionsGroup.applyItemActions();
             this._itemActionsGroup.showItemActions(item, this._getItemActionsPosition(item));
          },
          _hideItemActions: function () {

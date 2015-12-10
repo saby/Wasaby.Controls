@@ -13,11 +13,12 @@ define('js!SBIS3.CONTROLS.DropdownList',
       'js!SBIS3.CONTROLS.Link',
       'js!SBIS3.CORE.MarkupTransformer',
       'html!SBIS3.CONTROLS.DropdownList',
+      'html!SBIS3.CONTROLS.DropdownList/DropdownListHead',
       'html!SBIS3.CONTROLS.DropdownList/DropdownListItem',
       'html!SBIS3.CONTROLS.DropdownList/DropdownListPicker'
    ],
 
-   function(Control, PickerMixin, DSMixin, MultiSelectable, DataBindMixin, DropdownListMixin, Button, Link, MarkupTransformer, dotTplFn, dotTplFnForItem, dotTplFnPicker) {
+   function(Control, PickerMixin, DSMixin, MultiSelectable, DataBindMixin, DropdownListMixin, Button, Link, MarkupTransformer, dotTplFn, dotTplFnHead, dotTplFnForItem, dotTplFnPicker) {
 
       'use strict';
       /**
@@ -39,9 +40,22 @@ define('js!SBIS3.CONTROLS.DropdownList',
        * @cssModifier controls-DropdownList__withoutCross Убрать крестик справа от выбранного текста.
        * @cssModifier controls-DropdownList__linkStyle Отобразить текст в шапке в виде ссылки.
        */
-      var DropdownList = Control.extend([PickerMixin, DSMixin, MultiSelectable, DataBindMixin, DropdownListMixin], {
+      var DropdownList = Control.extend([PickerMixin, DSMixin, MultiSelectable, DataBindMixin, DropdownListMixin], /** @lends SBIS3.CONTROLS.DropdownList.prototype */{
          $protected: {
             _options: {
+               /**
+                * @cfg {String} Шаблон шапки заголовка
+                * @remark
+                * Передать как функцию. (Т.е. сначала подгрузить в модуль, а потом передать в опцию)
+                * @editor ExternalComponentChooser
+                */
+               headTemplate: dotTplFnHead,
+               /**
+                * @cfg {String} Шаблон для каждого элемента выпадающего списка
+                * @remark
+                * Передать как функцию. (Т.е. сначала подгрузить в модуль, а потом передать в опцию)
+                * @editor ExternalComponentChooser
+                */
                itemTemplate: dotTplFnForItem,
                /**
                 * @cfg {String} Режим работы выпадающего списка
@@ -54,6 +68,10 @@ define('js!SBIS3.CONTROLS.DropdownList',
                 * @cfg {String} Текст заголовка
                 */
                text : '',
+               /**
+                * @cfg {boolean} Отображать Все элементы  в выпадающем списке (включая выбранный)
+                */
+               showSelectedInList : false,
                pickerClassName: 'controls-DropdownList__picker',
                allowEmptySelection: false
             },
@@ -188,7 +206,7 @@ define('js!SBIS3.CONTROLS.DropdownList',
             this._hideAllowed = true;
             //Восстановим выделение по элементам
             for (var i = 0 ; i < items.length; i++) {
-               $(items[i]).toggleClass('controls-DropdownList__item__selected', !!this._currentSelection[$(items[i]).data('id')])
+               $(items[i]).toggleClass('controls-DropdownList__item__selected', !!this._currentSelection[$(items[i]).data('id')]);
             }
             DropdownList.superclass.showPicker.apply(this, arguments);
             this._getPickerContainer().toggleClass('controls-DropdownList__equalsWidth', this._pickerListContainer[0].offsetWidth === this._pickerHeadContainer[0].offsetWidth);
@@ -205,6 +223,9 @@ define('js!SBIS3.CONTROLS.DropdownList',
             return 'controls-DropdownList__item';
          },
          _getPickerContainer: function() {
+            if (!this._picker) {
+               this._initializePicker();
+            }
             return this._picker.getContainer();
          },
          _pickerMouseLeaveHandler: function(fromHeader, e) {
@@ -258,13 +279,22 @@ define('js!SBIS3.CONTROLS.DropdownList',
                   self.hidePicker();
                });
             }
+            if (this._options.showSelectedInList) {
+               pickerContainer.addClass('controls-DropdownList__showSelectedInList');
+            }
          },
          _addItemAttributes: function (container, item) {
             /*implemented from DSMixin*/
+            var addClass = 'controls-DropdownList__item';
             DropdownList.superclass._addItemAttributes.apply(this, arguments);
             if (item.getKey() == this.getDefaultId()) {
                container.addClass('controls-ListView__defaultItem');
             }
+
+            if (this._options.multiSelect) {
+               addClass += ' controls-DropdownList__multiselect';
+            }
+            container.addClass(addClass);
          },
 
          _drawSelectedItems : function(id) {
