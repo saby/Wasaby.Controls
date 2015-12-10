@@ -53,7 +53,6 @@ define('js!SBIS3.CONTROLS.DSMixin', [
         */
       $protected: {
          _itemsInstances: {},
-         _sorting: undefined,
          _offset: 0,
          _limit: undefined,
          _dataSource: undefined,
@@ -336,12 +335,14 @@ define('js!SBIS3.CONTROLS.DSMixin', [
          if (filterChanged) {
             this.setFilter(filter, true);
          }
-         this._sorting = sortingChanged ? sorting : this._sorting;
+          if (sortingChanged) {
+             this.setSorting(sorting, true);
+          }
          this._offset = offsetChanged ? offset : this._offset;
          this._limit = limitChanged ? limit : this._limit;
 
          this._toggleIndicator(true);
-         this._loader = this._callQuery(this._options.filter, this._sorting, this._offset, this._limit).addCallback(function (dataSet) {
+         this._loader = this._callQuery(this._options.filter, this.getSorting(), this._offset, this._limit).addCallback(function (dataSet) {
             self._toggleIndicator(false);
             self._loader = null;//Обнулили без проверки. И так знаем, что есть и загрузили
             if (self._dataSet) {
@@ -429,7 +430,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
       setPageSize: function(pageSize){
          this._options.pageSize = pageSize;
          this._dropPageSave();
-         this.reload(this._options.filter, this._sorting, 0, pageSize);
+         this.reload(this._options.filter, this.getSorting(), 0, pageSize);
       },
       /**
        * Метод получения количества элементов на одной странице.
@@ -454,10 +455,27 @@ define('js!SBIS3.CONTROLS.DSMixin', [
          this._options.filter = filter;
          this._dropPageSave();
          if (this._dataSource && !noLoad) {
-            this.reload(this._options.filter, this._sorting, 0, this.getPageSize());
+            this.reload(this._options.filter, this.getSorting(), 0, this.getPageSize());
          }
       },
-
+      /**
+       * Получить текущую сортировку
+       * @returns {Array}
+       */
+      getSorting: function() {
+         return this._options.sorting;
+      },
+      /**
+       * Получить текущую сортировку
+       * @returns {Array}
+       */
+      setSorting: function(sorting, noLoad) {
+         this._options.sorting = sorting;
+         this._dropPageSave();
+         if (this._dataSource && !noLoad) {
+            this.reload(this._options.filter, this.getSorting(), 0, this.getPageSize());
+         }
+      },
       //переопределяется в HierarchyMixin
       _setPageSave: function(pageNum){
       },

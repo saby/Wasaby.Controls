@@ -652,7 +652,7 @@ define('js!SBIS3.CONTROLS.ListView',
            *         caption: 'reload offset: 450'
            *    }).subscribe('onActivated', function(event, id){
            *           //При нажатии на кнопку перезагрузим DataGridView  с 450ой записи
-           *           DataGridViewBL.reload(DataGridViewBL._filter, DataGridViewBL._sorting, 450, DataGridViewBL._limit);
+           *           DataGridViewBL.reload(DataGridViewBL._filter, DataGridViewBL.getSorting(), 450, DataGridViewBL._limit);
            *    });
           * </pre>
           */
