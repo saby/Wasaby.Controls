@@ -295,7 +295,11 @@ define('js!SBIS3.CONTROLS.Data.Factory', [
        */
       _serializeFlags: function (data) {
          if ($ws.helpers.instanceOfModule(data, 'SBIS3.CONTROLS.Data.Model')) {
-            return data.getRawData();
+            var d = [];
+            data.each(function (name) {
+               d.push(data.get(name));
+            });
+            return d;
          } else if (data instanceof $ws.proto.Record) {
             var dt = [],
                s = {},
