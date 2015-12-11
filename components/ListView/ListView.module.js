@@ -440,7 +440,7 @@ define('js!SBIS3.CONTROLS.ListView',
          // TODO Подумать, как решить данную проблему. Не надёжно хранить информацию в доме
          // Поиск следующего или предыдущего элемента коллекции с учётом вложенных контролов
          _getHtmlItem: function (id, isNext) {
-            var items = $('.controls-ListView__item', this._getItemsContainer()).not('.ws-hidden'),
+            var items = $('.js-controls-ListView__item', this._getItemsContainer()).not('.ws-hidden'),
                selectedItem = $('[data-id="' + id + '"]', this._getItemsContainer()),
                order = isNext ? 1 : -1,
                siblingItem = items.eq(items.index(selectedItem) + order);
