@@ -77,7 +77,6 @@ define('js!SBIS3.CONTROLS.MoveHandlers', ['js!SBIS3.CONTROLS.MoveDialog','js!SBI
          for (var i = 0; i < records.length; i++) {
             key = '' + ($ws.helpers.instanceOfModule(records[i], 'SBIS3.CONTROLS.Record') ? records[i].getKey() : records[i]);
             if ($.inArray(key, toMap) !== -1) {
-               $ws.helpers.alert('Вы не можете переместить запись саму в себя!', {}, this);
                return false;
             }
          }
