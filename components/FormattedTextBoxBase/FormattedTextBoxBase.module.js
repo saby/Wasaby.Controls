@@ -580,6 +580,7 @@ define(
             modelForMaskTpl: []
          },
 
+         //TODO заменить на нормальные константы типа $ws._const.key.enter
          _KEYS: {
             DELETE: 46,
             TAB: 9,
