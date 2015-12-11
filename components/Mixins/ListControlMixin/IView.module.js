@@ -1,12 +1,12 @@
-define('js!SBIS3.CONTROLS.ListControl.IListView', [], function () {
+define('js!SBIS3.CONTROLS.ListControl.IView', [], function () {
    'use strict';
 
    /**
     * Интерфейс представления списка
-    * @mixin SBIS3.CONTROLS.ListControl.IListView
+    * @mixin SBIS3.CONTROLS.ListControl.IView
     * @author Крайнов Дмитрий Олегович
     */
-   return /** @lends SBIS3.CONTROLS.ListControl.IListView.prototype */{
+   return /** @lends SBIS3.CONTROLS.ListControl.IView.prototype */{
       /**
        * @event onItemHovered При наведении указателя мыши на контейнер элемента
        * @param {$ws.proto.EventObject} event Дескриптор события.

@@ -1,10 +1,10 @@
 /* global define, $ws */
 define('js!SBIS3.CONTROLS.ListControlMixin', [
-   'js!SBIS3.CONTROLS.ListControl.ListView',
+   'js!SBIS3.CONTROLS.ListControl.View',
    'js!SBIS3.CONTROLS.Data.Bind.ICollection',
    'js!SBIS3.CONTROLS.Data.Collection.ObservableList',
    'js!SBIS3.CONTROLS.Data.Collection.LoadableList',
-   'html!SBIS3.CONTROLS.ListControl.ListView',
+   'html!SBIS3.CONTROLS.ListControl.View',
    'js!SBIS3.CONTROLS.PagerMore',
    'js!SBIS3.CONTROLS.Data.Projection',
    'js!SBIS3.CONTROLS.Data.Projection.Collection'
@@ -132,7 +132,7 @@ define('js!SBIS3.CONTROLS.ListControlMixin', [
          _viewConstructor: ListView,
 
          /**
-          * @var {SBIS3.CONTROLS.ListControl.ListView} Представление списка
+          * @var {SBIS3.CONTROLS.ListControl.View} Представление списка
           */
          _view: undefined,
 
@@ -514,8 +514,8 @@ define('js!SBIS3.CONTROLS.ListControlMixin', [
        */
       _initView: function() {
          var view = this._getView();
-         if (!$ws.helpers.instanceOfMixin(view, 'SBIS3.CONTROLS.ListControl.IListView')) {
-            throw new Error('View should implement SBIS3.CONTROLS.ListControl.IListView');
+         if (!$ws.helpers.instanceOfMixin(view, 'SBIS3.CONTROLS.ListControl.IView')) {
+            throw new Error('View should implement SBIS3.CONTROLS.ListControl.IView');
          }
 
          this.subscribeTo(view, 'onItemHovered', this._onItemHovered.bind(this));
@@ -533,7 +533,7 @@ define('js!SBIS3.CONTROLS.ListControlMixin', [
 
       /**
        * Возвращает представление
-       * @returns {SBIS3.CONTROLS.ListControl.ListView}
+       * @returns {SBIS3.CONTROLS.ListControl.View}
        * @private
        */
       _getView: function () {
@@ -542,7 +542,7 @@ define('js!SBIS3.CONTROLS.ListControlMixin', [
 
       /**
        * Создает инстанс представления
-       * @returns {SBIS3.CONTROLS.ListControl.ListView}
+       * @returns {SBIS3.CONTROLS.ListControl.View}
        * @private
        */
       _createView: function () {

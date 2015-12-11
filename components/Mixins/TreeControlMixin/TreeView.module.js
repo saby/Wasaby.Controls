@@ -55,7 +55,7 @@ define('js!SBIS3.CONTROLS.TreeControl.TreeView', [
          this._publish('onLeverageClicked');
       },
 
-      //region SBIS3.CONTROLS.ListControl.IListView
+      //region SBIS3.CONTROLS.ListControl.IView
 
       getPagerContainer: function (items) {
          if (items.getCollection().isRoot()) {
@@ -73,7 +73,7 @@ define('js!SBIS3.CONTROLS.TreeControl.TreeView', [
          return container;
       },
 
-      //endregion SBIS3.CONTROLS.ListControl.IListView
+      //endregion SBIS3.CONTROLS.ListControl.IView
 
       //region SBIS3.CONTROLS.TreeControl.ITreeView
 

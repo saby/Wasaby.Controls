@@ -1,6 +1,6 @@
 /* global define, $ws, $ */
 define('js!SBIS3.CONTROLS.HierarchyControl.HierarchyView', [
-   'js!SBIS3.CONTROLS.ListControl.ListView',
+   'js!SBIS3.CONTROLS.ListControl.View',
    'html!SBIS3.CONTROLS.HierarchyControl.HierarchyView/resources/HierarchyViewItem'
 ], function (ListView, HierarchyViewItemContainerTemplate) {
    'use strict';
@@ -47,14 +47,14 @@ define('js!SBIS3.CONTROLS.HierarchyControl.HierarchyView', [
          _levelOffset: 0
       },
 
-      //region SBIS3.CONTROLS.ListControl.IListView
+      //region SBIS3.CONTROLS.ListControl.IView
 
       render: function (items) {
          this._levelOffset = items.getCollection().getOwner().getLevel();
          HierarchyView.superclass.render.call(this, items);
       },
 
-      //endregion SBIS3.CONTROLS.ListControl.IListView
+      //endregion SBIS3.CONTROLS.ListControl.IView
 
       //region SBIS3.CONTROLS.HierarchyControl.IHierarchyView
 

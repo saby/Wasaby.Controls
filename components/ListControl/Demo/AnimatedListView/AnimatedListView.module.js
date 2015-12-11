@@ -1,6 +1,6 @@
 /* global define, console, doT, $ws, $ */
 define('js!SBIS3.CONTROLS.ListControl.Demo.AnimatedListView', [
-   'js!SBIS3.CONTROLS.ListControl.ListView',
+   'js!SBIS3.CONTROLS.ListControl.View',
    'html!SBIS3.CONTROLS.ListControl.Demo.AnimatedListView/AnimatedListItem',
    'css!SBIS3.CONTROLS.ListControl.Demo.AnimatedListView'
 ], function (ListView, ListItemContainerTemplate) {
@@ -9,7 +9,7 @@ define('js!SBIS3.CONTROLS.ListControl.Demo.AnimatedListView', [
    /**
     * Представление списка с анимацией изменений.
     * @class SBIS3.CONTROLS.ListControl.AnimatedListView
-    * @extends SBIS3.CONTROLS.ListControl.ListView
+    * @extends SBIS3.CONTROLS.ListControl.View
     * @author Крайнов Дмитрий Олегович
     */
    var AnimatedListView = ListView.extend(/** @lends SBIS3.CONTROLS.ListControl.Demo.AnimatedListView.prototype */{
@@ -22,7 +22,7 @@ define('js!SBIS3.CONTROLS.ListControl.Demo.AnimatedListView', [
          _removeTimeout: 500
       },
 
-      //region SBIS3.CONTROLS.ListControl.IListView
+      //region SBIS3.CONTROLS.ListControl.IView
 
       addItem: function (item, at) {
          this._rowsCount++;
@@ -70,7 +70,7 @@ define('js!SBIS3.CONTROLS.ListControl.Demo.AnimatedListView', [
          this._updateItemContainerPosition(container);
       },
 
-      //endregion SBIS3.CONTROLS.ListControl.IListView
+      //endregion SBIS3.CONTROLS.ListControl.IView
 
       //region Protected methods
 
