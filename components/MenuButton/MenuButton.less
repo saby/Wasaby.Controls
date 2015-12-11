@@ -2,124 +2,14 @@
   // Normal button
   &.controls-MenuButton {
     position: relative;
-    .controls-MenuButton__arrowDown {
-      position: absolute;
-      display: inline-block;
-      width: @menu-button-arrow-width;
-      height: @menu-button-arrow-height;
-      right: @menu-button-arrow-right-offset - @button-border-width;
-      top: @menu-button-arrow-top-offset - @button-border-width;
-      .box-sizing(border-box);
-      border-width: @menu-button-arrow-border-width;
-      border-style: @menu-button-arrow-border-style;
-      border-color: @menu-button-arrow-border-color;
-      background: @menu-button-arrow-bg;
-    }
-
-    &:hover {
-      .controls-MenuButton__arrowDown {
-        border-width: @menu-button-arrow-hover-border-width;
-        border-style: @menu-button-arrow-hover-border-style;
-        border-color: @menu-button-arrow-hover-border-color;
-        background: @menu-button-arrow-hover-bg;
-      }
-    }
-
-    &.controls-Checked__checked,
-    &.controls-Click__active {
-      .controls-MenuButton__arrowDown {
-        border-width: @menu-button-arrow-checked-border-width;
-        border-style: @menu-button-arrow-checked-border-style;
-        border-color: @menu-button-arrow-checked-border-color;
-      }
-
-      &:hover {
-        .controls-MenuButton__arrowDown {
-          border-width: @menu-button-arrow-checked-hover-border-width;
-          border-style: @menu-button-arrow-checked-hover-border-style;
-          border-color: @menu-button-arrow-checked-hover-border-color;
-        }
-      }
-    }
-
-    // Primary button
-    &.controls-Button__primary {
-      .controls-MenuButton__arrowDown {
-        border-width: @menu-button-primary-arrow-border-width;
-        border-style: @menu-button-primary-arrow-border-style;
-        border-color: @menu-button-primary-arrow-border-color;
-        background: @menu-button-primary-arrow-bg;
-      }
-
-      &:hover {
-        &.ws-disabled{
-          .controls-MenuButton__arrowDown {
-            background: @menu-button-arrow-bg;
-            border-color: @menu-button-arrow-disabled-border-color;
-          }
-        }
-        .controls-MenuButton__arrowDown {
-          border-width: @menu-button-primary-arrow-hover-border-width;
-          border-style: @menu-button-primary-arrow-hover-border-style;
-          border-color: @menu-button-primary-arrow-hover-border-color;
-          background: @menu-button-primary-arrow-hover-bg;
-        }
-      }
-
-      &.controls-Checked__checked,
-      &.controls-Click__active {
-        .controls-MenuButton__arrowDown {
-          border-width: @menu-button-primary-arrow-checked-border-width;
-          border-style: @menu-button-primary-arrow-checked-border-style;
-          border-color: @menu-button-primary-arrow-checked-border-color;
-        }
-
-        &:hover {
-          .controls-MenuButton__arrowDown {
-            border-width: @menu-button-primary-arrow-checked-hover-border-width;
-            border-style: @menu-button-primary-arrow-checked-hover-border-style;
-            border-color: @menu-button-primary-arrow-checked-hover-border-color;
-          }
-        }
-      }
-    }
-
-    &.ws-disabled {
-      .controls-MenuButton__arrowDown {
-        border-width: @menu-button-arrow-disabled-border-width;
-        border-style: @menu-button-arrow-disabled-border-style;
-        border-color: @menu-button-arrow-disabled-border-color;
-        background: @menu-button-arrow-disabled-bg;
-      }
-    }
   }
 }
 
 .controls-MenuButton {
   .controls-Button__text, .controls-Button__icon + .controls-Button__text {
-    margin-right: @menu-button-text-right-margin; //this margin reserve space for arrow-down icon
-  }
-  &.controls-Checked__checked {
-    .controls-Button__text, .controls-Button__icon + .controls-Button__text {
-      margin-right: @menu-button-checked-text-right-margin; //this margin reserve space for arrow-down icon
-    }
-    .controls-MenuButton__arrowDown {
-      top: @menu-button-arrow-top-offset - @button-checked-border-width;
-      right: @menu-button-arrow-right-offset - @button-checked-border-width;
-    }
+    margin-right: @button-text-margin;
   }
 }
-.controls-MenuButton {
-   &.controls-MenuButton__withoutMenu {
-      .controls-Button__text {
-         margin: @button-text-margin;
-      }
-      .controls-Button__icon + .controls-Button__text {
-         margin: @button-icon-text-margin; //this margin reserve space for arrow-down icon
-      }
-   }
-}
-
 // Header
 .controls-MenuButton__header {
   display: inline-block;
