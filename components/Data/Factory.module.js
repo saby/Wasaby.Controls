@@ -80,7 +80,7 @@ define('js!SBIS3.CONTROLS.Data.Factory', [
                return $ws.proto.TimeInterval.toString(value);
             case 'Text':
             case 'String':
-               return value + '';
+               return value;
             case 'Boolean':
                if (value === null) {
                   return value;
