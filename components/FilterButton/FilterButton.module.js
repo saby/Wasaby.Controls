@@ -126,8 +126,10 @@ define('js!SBIS3.CONTROLS.FilterButton',
       },
 
       applyFilter: function() {
-         this.hidePicker();
-         FilterButton.superclass.applyFilter.call(this);
+         if(this._picker.validate()) {
+            this.hidePicker();
+            FilterButton.superclass.applyFilter.call(this);
+         }
       },
 
       _forEachFieldLinks: function(fn) {

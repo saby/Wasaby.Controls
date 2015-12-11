@@ -191,11 +191,11 @@ define('js!SBIS3.CONTROLS.DSMixin', [
              * Опция задаёт текст, отображаемый как при абсолютном отсутствии данных, так и в результате {@link groupBy фильтрации}.
              * @see items
              * @see setDataSource
-             * @see groupBy* @cfg {Function} Пользовательский метод добавления атрибутов на элементы коллекции
+             * @see groupBy*
              */
             emptyHTML: '',
             /**
-             * @var {Object} Фильтр данных
+             * @cfg {Object} Фильтр данных
              * @example
              * <pre class="brush:xml">
              *     <options name="filter">
@@ -393,7 +393,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
                      more: newDataSet.getTotal(),
                      path: newDataSet.getProperty('p')
                   },
-                  keyField: this._options.keyField || this._dataSource.getAdapter().getKeyField(newDataSet.getRawData())
+                  keyField: this._options.keyField || newDataSet.getIdProperty() || this._dataSource.getAdapter().getKeyField(newDataSet.getRawData())
                });
             }).bind(this));
          } else {
