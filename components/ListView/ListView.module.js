@@ -1077,6 +1077,14 @@ define('js!SBIS3.CONTROLS.ListView',
                scrollHeight = Math.max(docBody.scrollHeight, docElem.scrollHeight);
             return (clientHeight + scrollTop >= scrollHeight - this._scrollIndicatorHeight);//Учитываем отступ снизу на высоту картинки индикатора загрузки
          },
+         _scrollTo: function (container) {
+            var containerOffset = $(container).offset(),
+               body = $('body'),
+               needScroll = (body.scrollTop() >= containerOffset.top) || (containerOffset.top - body.scrollTop()) > $ws._const.$win.height() / 2;
+            if (needScroll) {
+               window.scrollTo(window.scrollX, containerOffset.top);
+            }
+         },
          _loadBeforeScrollAppears: function(){
             /*
             *   TODO убрать зависимость от опции autoHeight, перенести в scrollWatcher возможность отслежитвания скролла по переданному классу
