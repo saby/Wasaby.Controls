@@ -127,12 +127,12 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
          },
 
          /**
-          * @var {SBIS3.CONTROLS.SbisServiceSource/resources/SbisServiceBLO} Объект, который умеет ходить на бизнес-логику
+          * @var {SBIS3.CONTROLS.Data.Source.SbisService/resources/SbisServiceBLO} Объект, который умеет ходить на бизнес-логику
           */
          _provider: undefined,
 
          /**
-          * @var {SBIS3.CONTROLS.SbisServiceSource/resources/SbisServiceBLO} Объект, который умеет ходить на бизнес-логику, для смены порядковых номеров
+          * @var {SBIS3.CONTROLS.Data.Source.SbisService/resources/SbisServiceBLO} Объект, который умеет ходить на бизнес-логику, для смены порядковых номеров
           */
          _orderProvider: undefined
       },
