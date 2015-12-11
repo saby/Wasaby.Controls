@@ -6,7 +6,7 @@ define(
    [
       'js!SBIS3.CONTROLS.RadioGroupBase',
       'html!SBIS3.CONTROLS.TabButtons',
-      'html!SBIS3.CONTROLS.TabButtons/itemTpl',
+      'html!SBIS3.CONTROLS.TabButtons/ItemTpl',
       'js!SBIS3.CONTROLS.TabButton'
    ],
    function (RadioGroupBase, TabButtonsTpl, itemTpl) {
