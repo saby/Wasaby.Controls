@@ -1,21 +1,21 @@
 /* global define, console, doT, $ws, $ */
-define('js!SBIS3.CONTROLS.ListControl.Demo.AnimatedListView', [
+define('js!SBIS3.CONTROLS.ListControl.Demo.AnimatedList.View', [
    'js!SBIS3.CONTROLS.ListControl.View',
-   'html!SBIS3.CONTROLS.ListControl.Demo.AnimatedListView/AnimatedListItem',
-   'css!SBIS3.CONTROLS.ListControl.Demo.AnimatedListView'
-], function (ListView, ListItemContainerTemplate) {
+   'html!SBIS3.CONTROLS.ListControl.Demo.AnimatedList/Item',
+   'css!SBIS3.CONTROLS.ListControl.Demo.AnimatedList/View'
+], function (ListView, ItemContainerTemplate) {
    'use strict';
 
    /**
     * Представление списка с анимацией изменений.
-    * @class SBIS3.CONTROLS.ListControl.AnimatedListView
+    * @class SBIS3.CONTROLS.ListControl.Demo.AnimatedList.View
     * @extends SBIS3.CONTROLS.ListControl.View
     * @author Крайнов Дмитрий Олегович
     */
-   var AnimatedListView = ListView.extend(/** @lends SBIS3.CONTROLS.ListControl.Demo.AnimatedListView.prototype */{
+   var AnimatedListView = ListView.extend(/** @lends SBIS3.CONTROLS.ListControl.Demo.AnimatedList.View.prototype */{
       _moduleName: 'SBIS3.CONTROLS.ListControl.Demo.AnimatedListView',
       $protected: {
-         _itemContainerTemplate: ListItemContainerTemplate,
+         _itemContainerTemplate: ItemContainerTemplate,
          _rootNodeСssClass: 'controls-ListView controls-ListView__animated',
          _rowHeight: 28,
          _rowsCount: 0,
