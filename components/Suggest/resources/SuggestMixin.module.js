@@ -219,9 +219,19 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
          this._resultBindings = convertToObject(this._options.resultBindings);
       },
 
+      /**
+       * Устанавливает фильтр в список, при необходимости делает запрос на БЛ
+       * @param {Object} filter
+       */
       setListFilter: function(filter) {
          var self = this,
              changedFields = [];
+
+         /* Если в контролах, которые мы отслеживаем, нет фокуса, то делать ничего не надо */
+         if(!this._isObservableControlFocused()) {
+            this._options.listFilter = filter;
+            return;
+         }
 
          $ws.helpers.forEach(filter, function(value, key) {
             if(value !== self._options.listFilter[key]) {
@@ -382,7 +392,7 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
        */
       _onListDrawItems: function () {
          if (this._picker) {
-            this._picker.recalcPosition();
+            this._picker.recalcPosition(true);
          }
       },
 
@@ -435,6 +445,10 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
          });
       },
 
+      /**
+       * Очищает таймер задержки открытия списка
+       * @private
+       */
       _clearDelayTimer: function() {
          if (this._delayTimer) {
             clearTimeout(this._delayTimer);
@@ -442,6 +456,21 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
          }
       },
 
+      /**
+       * Проверяет, если ли фокус в отслеживаемых контролах
+       * @returns {*}
+       * @private
+       */
+      _isObservableControlFocused: function() {
+         return $ws.helpers.find(this._options.observableControls, function(ctrl) {
+            return ctrl.isActive();
+         }, this, false)
+      },
+
+      /**
+       * Показывает список, учитывает задержку
+       * @private
+       */
       _showList: function() {
          var self = this;
 
@@ -451,6 +480,10 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
          }, this._options.delay);
       },
 
+      /**
+       * Очищает таймер задержки, скрывает список
+       * @private
+       */
       _hideList: function() {
          this._clearDelayTimer();
          this.hidePicker();
@@ -461,7 +494,8 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
        * @private
        */
       _checkPickerState: function () {
-         return Boolean(this._options.usePicker && this._list && this._list.getDataSet().getCount());
+         var dataSet = this._list && this._list.getDataSet();
+         return Boolean(this._options.usePicker && dataSet && dataSet.getCount());
       },
 
       _setPickerContent: function () {

@@ -92,7 +92,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
              */
             displayField: null,
              /**
-              * @cfg {Items[]} Набор исходных данных, по которому строится отображение
+              * @cfg {Array.<Object.<String,String>>} Масив объектов. Набор исходных данных, по которому строится отображение
               * @remark
               * !Важно: данные для коллекции элементов можно задать либо в этой опции,
               * либо через источник данных методом {@link setDataSource}.
@@ -228,29 +228,26 @@ define('js!SBIS3.CONTROLS.DSMixin', [
          }
          else {
             var items;
-            if (this._options.items) {
+            if (this._options.items && this._options.items.length) {
                if (this._options.items instanceof Array) {
                   items = this._options.items;
                }
                else {
                   throw new Error('Array expected');
                }
+               var
+                  item = items[0];
+               if (!this._options.keyField) {
+                 if (item && Object.prototype.toString.call(item) === '[object Object]') {
+                   this._options.keyField = Object.keys(item)[0];
+                 }
+               }
+               this._dataSource = new StaticSource({
+                  data: items,
+                  strategy: new ArrayStrategy(),
+                  keyField: this._options.keyField
+               });
             }
-            else {
-               items = [];
-            }
-            var
-               item = items[0];
-            if (!this._options.keyField) {
-              if (item && Object.prototype.toString.call(item) === '[object Object]') {
-                this._options.keyField = Object.keys(item)[0];
-              }
-            }
-            this._dataSource = new StaticSource({
-               data: items,
-               strategy: new ArrayStrategy(),
-               keyField: this._options.keyField
-            });
          }
       },
        /**
@@ -258,6 +255,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
         * @remark
         * Данные могут быть заданы либо этим методом, либо опцией {@link items}.
         * @param ds Новый источник данных.
+        * @param noLoad Установить новый источник данных без запроса на БЛ.
         * @example
         * <pre>
         *     define(
@@ -284,10 +282,12 @@ define('js!SBIS3.CONTROLS.DSMixin', [
         * @see onDrawItems
         * @see onDataLoad
         */
-      setDataSource: function (ds) {
+      setDataSource: function (ds, noLoad) {
          this._dataSource = ds;
          this._dataSet = null;
-         this.reload();
+          if(!noLoad) {
+             return this.reload();
+          }
       },
       /**
        * Метод получения набора данных, который в данный момент установлен в представлении.
@@ -337,21 +337,29 @@ define('js!SBIS3.CONTROLS.DSMixin', [
          this._limit = limitChanged ? limit : this._limit;
 
          this._toggleIndicator(true);
-         this._loader = this._callQuery(this._options.filter, this._sorting, this._offset, this._limit).addCallback(function (dataSet) {
-            self._toggleIndicator(false);
-            self._loader = null;//Обнулили без проверки. И так знаем, что есть и загрузили
-            if (self._dataSet) {
-               self._dataSet.setRawData(dataSet.getRawData());
-               self._dataSet.setMetaData(dataSet.getMetaData());
-            } else {
-               self._dataSet = dataSet;
-            }
-            self._dataLoadedCallback();
-            self._notify('onDataLoad', dataSet);
-            //self._notify('onBeforeRedraw');
-            def.callback(dataSet);
-            self._redraw();
-         });
+         if (this._dataSource){
+	         this._loader = this._callQuery(this._options.filter, this._sorting, this._offset, this._limit).addCallback(function (dataSet) {
+	            self._toggleIndicator(false);
+	            self._loader = null;//Обнулили без проверки. И так знаем, что есть и загрузили
+	            if (self._dataSet) {
+	               self._dataSet.setRawData(dataSet.getRawData());
+	               self._dataSet.setMetaData(dataSet.getMetaData());
+	            } else {
+	               self._dataSet = dataSet;
+	            }
+	            self._dataLoadedCallback();
+	            self._notify('onDataLoad', dataSet);
+	            //self._notify('onBeforeRedraw');
+	            def.callback(dataSet);
+	            self._redraw();
+	         }).addErrback(function(error){
+	            if (!error.canceled) {
+	               self._toggleIndicator(false);
+	               $ws.helpers.message(error.message.toString().replace('Error: ', ''));
+	            }
+	            def.errback(error);
+	         });
+         }
 
          this._notifyOnPropertyChanged('filter');
          this._notifyOnPropertyChanged('sorting');
@@ -664,7 +672,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
          var
                groupBy = this._options.groupBy,
                tplOptions = {
-                  columns : $ws.core.clone(this._options.columns),
+                  columns : $ws.core.clone(this._options.columns || []),
                   multiselect : this._options.multiselect,
                   hierField: this._options.hierField + '@'
                },
@@ -672,7 +680,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
                itemInstance;
          targetContainer = this._getTargetContainer(item);
          tplOptions.item = item;
-         tplOptions.colspan = this._options.columns.length + this._options.multiselect;
+         tplOptions.colspan = tplOptions.columns.length + this._options.multiselect;
          itemInstance = this._buildTplItem(item, groupBy.template(tplOptions));
          this._appendItemTemplate(item, targetContainer, itemInstance, at);
          //Сначала положим в дом, потом будем звать рендеры, иначе контролы, которые могут создать в рендере неправмльно поймут свою ширину

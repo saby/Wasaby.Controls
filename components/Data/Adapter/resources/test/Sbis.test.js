@@ -1,7 +1,9 @@
 /* global define, beforeEach, afterEach, describe, context, it, assert */
-define(
-   ['js!SBIS3.CONTROLS.Data.Adapter.Sbis'],
-   function (SbisAdapter) {
+define([
+   'js!SBIS3.CONTROLS.Data.Adapter.Sbis',
+   'js!SBIS3.CONTROLS.Data.Model',
+   'js!SBIS3.CONTROLS.Data.Source.DataSet'
+], function (SbisAdapter, Model, DataSet) {
       'use strict';
 
       var checkInvalid = function (instance, method) {
@@ -165,57 +167,182 @@ define(
          });
 
          describe('.serialize()', function () {
-            it('should create identical structure', function () {
-               var checkStruct = function(given, expect) {
-                     var valid = true;
-                     if (typeof expect === 'object') {
-                        $ws.helpers.forEach(expect, function(val, key) {
-                           checkStruct(val, given[key]);
-                        });
-                     } else if (expect !== given) {
-                        throw new Error(given + ' expect to be ' + expect);
+            it('should create valid deep structure', function () {
+               var adapter = new SbisAdapter(),
+                  result = adapter.serialize({
+                     'null': null,
+                     'false': false,
+                     'true': true,
+                     '0': 0,
+                     '10': 10,
+                     'Строка': 'String',
+                     'Date': new Date('2015-12-03'),
+                     'Массив': [
+                        false,
+                        true,
+                        0,
+                        1,
+                        'S',
+                        new Date('2001-09-11'),
+                        [],
+                        {}
+                     ],
+                     'EmptyObject': {},
+                     'Запись': {
+                        'ВызовИзБраузера': true,
+                        'Количество': 1,
+                        'Вес': 2.5,
+                        'Тип': 'Пустой',
+                        'Дата': new Date('2015-10-10')
                      }
-                  };
-
-               assert.doesNotThrow(function() {
-                  var adapter = new SbisAdapter();
-                  checkStruct(
-                     adapter.serialize({
-                        'Фильтр': {
-                           'ВызовИзБраузера': true,
-                           'Количество': 1,
-                           'Вес': 2.5,
-                           'Тип':'Пустой',
-                           'Дата':new Date('2015-10-10')
+                  }),
+                  expect = {
+                     d: [
+                        0,
+                        10,
+                        null,
+                        false,
+                        true,
+                        'String',
+                        '2015-12-03',
+                        [false, true, 0, 1, 'S', '2001-09-11', [], {d: [], s: []}],
+                        {
+                           d: [],
+                           s: []
                         },
-                        'ИмяМетода': null
-                     }),
-                     {
-                        'Фильтр': {
-                           d: [
-                              true,1,2.5,'Пустой','2015-10-10'
-                           ],
+                        {
+                           d: [true, 1, 2.5, 'Пустой', '2015-10-10'],
                            s: [{
                               n: 'ВызовИзБраузера',
                               t: 'Логическое'
-                           },{
+                           }, {
                               n: 'Количество',
                               t: 'Число целое'
-                           },{
+                           }, {
                               n: 'Вес',
                               t: 'Число вещественное'
-                           },{
+                           }, {
                               n: 'Тип',
                               t: 'Строка'
-                           },{
+                           }, {
                               n: 'Дата',
                               t: 'Дата и время'
                            }]
-                        },
-                        'ИмяМетода': null
+                        }
+                     ],
+                     s: [{
+                        n: '0',
+                        t: 'Число целое'
+                     }, {
+                        n: '10',
+                        t: 'Число целое'
+                     }, {
+                        n: 'null',
+                        t: 'Строка'
+                     }, {
+                        n: 'false',
+                        t: 'Логическое'
+                     }, {
+                        n: 'true',
+                        t: 'Логическое'
+                     }, {
+                        n: 'Строка',
+                        t: 'Строка'
+                     }, {
+                        n: 'Date',
+                        t: 'Дата и время'
+                     }, {
+                        n: 'Массив',
+                        t: {
+                           n: 'Массив',
+                           t: 'Логическое'
+                        }
+                     }, {
+                        n: 'EmptyObject',
+                        t: 'Запись'
+                     }, {
+                        n: 'Запись',
+                        t: 'Запись'
+                     }]
+                  };
+               assert.sameDeepMembers(result.s, expect.s, 'wrong s');
+               assert.sameDeepMembers(result.d, expect.d, 'wrong d');
+            });
+
+            it('should serialize model', function () {
+               var adapter = new SbisAdapter(),
+                  model = new Model({
+                     rawData: {
+                        some: {deep: {object: 'here'}}
                      }
-                  );
-               });
+                  }),
+                  result = adapter.serialize(model),
+                  expect = model.getRawData();
+               expect._type = 'record';
+               assert.deepEqual(result, expect);
+            });
+
+            it('should serialize dataset', function () {
+               var adapter = new SbisAdapter(),
+                  ds = new DataSet({
+                     adapter: adapter,
+                     rawData: {
+                        d: [], s: []
+                     }
+                  }),
+                  result = adapter.serialize(ds),
+                  expect = ds.getRawData();
+               expect._type = 'recordset';
+               assert.deepEqual(result, expect);
+            });
+
+            it('should serialize models and datasets in deep structure', function () {
+               var adapter = new SbisAdapter(),
+                  model = new Model({
+                     adapter: adapter,
+                     rawData: {}
+                  }),
+                  ds = new DataSet({
+                     adapter: adapter,
+                     rawData: {}
+                  }),
+                  result = adapter.serialize({
+                     some: {
+                        model: model
+                     },
+                     and: {
+                        also: ds
+                     }
+                  }),
+                  expect = {
+                     d: [{
+                        d: [
+                           model.getRawData() || {}
+                        ],
+                        s: [{
+                           n: 'model',
+                           t: 'Запись'
+                        }]
+                     }, {
+                        d: [
+                           ds.getRawData() || {}
+                        ],
+                        s: [{
+                           n: 'also',
+                           t: 'Выборка'
+                        }]
+                     }],
+                     s: [{
+                        n: 'some',
+                        t: 'Запись'
+                     }, {
+                        n: 'and',
+                        t: 'Запись'
+                     }]
+                  };
+               expect.d[0].d[0]._type = 'record';
+               expect.d[1].d[0]._type = 'recordset';
+               assert.deepEqual(result, expect);
             });
          });
       });

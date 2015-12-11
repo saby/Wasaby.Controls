@@ -174,7 +174,7 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
        */
       create: function(meta) {
          var args = {
-            'Фильтр': this._buildRequestField(meta, {
+            'Фильтр': this._options.adapter.serialize(meta || {
                'ВызовИзБраузера': true
             }),
             'ИмяМетода': this._options.formatMethodName
@@ -202,8 +202,8 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
             'ИдО': key,
             'ИмяМетода': this._options.formatMethodName
          };
-         if (!Object.isEmpty(meta)) {
-            args['ДопПоля'] = this._buildRequestField(meta);
+         if (meta && !Object.isEmpty(meta)) {
+            args['ДопПоля'] = this._options.adapter.serialize(meta);
          }
 
          return this._provider.callMethod(
@@ -227,10 +227,10 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
        */
       update: function(model, meta) {
          var args = {
-            'Запись': this._buildRequestField(model)
+            'Запись': this._options.adapter.serialize(model)
          };
-         if (!Object.isEmpty(meta)) {
-            args['ДопПоля'] = this._buildRequestField(meta);
+         if (meta && !Object.isEmpty(meta)) {
+            args['ДопПоля'] = this._options.adapter.serialize(meta);
          }
          this._detectIdProperty(model.getRawData());
 
@@ -249,27 +249,36 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
          });
       },
 
+      /**
+       * Удаляет модель из источника данных
+       * @param {String} keys Первичный ключ модели
+       * @param {Object|SBIS3.CONTROLS.Data.Model} [meta] Дополнительные мета данные
+       * @returns {$ws.proto.Deferred} Асинхронный результат выполнения
+       */
       destroy: function(keys, meta) {
-         var self = this;
-         if ($ws.helpers.type(keys) == 'array') {
-            var groups = {};
-            $ws.helpers.forEach(keys, function (key) {
-               /*В ключе может содержаться ссылка на объект бл
-                 сгруппируем ключи по соответсвующим им объектам*/
-               var name = self._getProviderNameById(key);
-               groups[name] = groups[name]||[];
-               groups[name].push(parseInt(key, 10));
-            });
-            var pd = new $ws.proto.ParallelDeferred();
-            $ws.helpers.forEach(groups, function (group, name) {
-               pd.push(self._destroy(group, name, meta));
-            });
-            return pd.done().getResult();
+         if ($ws.helpers.type(keys) !== 'array') {
+            keys = [keys];
          }
-         else {
-            var name = self._getProviderNameById(keys);
-            return self._destroy(parseInt(keys, 10), name, meta);
+         /*В ключе может содержаться ссылка на объект бл
+          сгруппируем ключи по соответсвующим им объектам*/
+         var groups = {},
+            providerName;
+         for (var i = 0, len = keys.length; i < len; i++) {
+            providerName = this._getProviderNameById(keys[i]);
+            groups[providerName] = groups[providerName] || [];
+            groups[providerName].push(parseInt(keys[i], 10));
          }
+         var pd = new $ws.proto.ParallelDeferred();
+         for (providerName in groups) {
+            if (groups.hasOwnProperty(providerName)) {
+               pd.push(this._destroy(
+                  groups[providerName].length > 1 ? groups[providerName] : groups[providerName][0],
+                  providerName,
+                  meta
+               ));
+            }
+         }
+         return pd.done().getResult();
       },
 
       merge: function(first, second) {
@@ -291,8 +300,8 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
             'ИдО': key,
             'ИмяМетода': this._options.formatMethodName
          };
-         if (!Object.isEmpty(meta)) {
-            args['ДопПоля'] = this._buildRequestField(meta);
+         if (meta && !Object.isEmpty(meta)) {
+            args['ДопПоля'] = this._options.adapter.serialize(meta);
          }
 
          return this._provider.callMethod(
@@ -329,7 +338,7 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
       call: function (command, data) {
          return this._provider.callMethod(
             command,
-            this._buildRequestField(data)
+            this._serializeArguments(data)
          ).addCallbacks((function (res) {
             return new DataSet({
                source: this,
@@ -497,36 +506,31 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
       //region Protected methods
 
       /**
-       * Возвращает сериализованные данные для установки в поле запроса
-       * @param {Object|SBIS3.CONTROLS.Data.Model|SBIS3.CONTROLS.Data.Source.DataSet} data Данные для установки
-       * @param {Object} defaults Значения по умолчанию
-       * @returns {Object}
+       * Сериализует все аргументы запроса
+       * @param {*} args Аргументы запроса
+       * @returns {*}
        * @private
        */
-      _buildRequestField: function(data, defaults) {
-         data = data || {};
-         defaults = defaults || {};
-         var result = {};
-         if ($ws.helpers.instanceOfModule(data, 'SBIS3.CONTROLS.Data.Model')) {
-            result = $ws.core.merge({
-               _type: 'record'
-            }, data.getRawData());
-         } else if ($ws.helpers.instanceOfModule(data, 'SBIS3.CONTROLS.Data.Source.DataSet')) {
-            result = $ws.core.merge({
-               _type: 'recordset'
-            }, data.getRawData());
-         } else if (data && $ws.helpers.instanceOfModule(data, 'SBIS3.CONTROLS.Record')) {
-            result = $ws.core.merge({
-               _type: 'record'
-            }, data.getRaw());
-         } else if (data && $ws.helpers.instanceOfModule(data, 'SBIS3.CONTROLS.DataSet')) {
-            result = $ws.core.merge({
-               _type: 'recordset'
-            }, data.getRawData());
+      _serializeArguments: function (args) {
+         var result;
+         if (args instanceof Object) {
+            if (
+               $ws.helpers.instanceOfModule(args, 'SBIS3.CONTROLS.Data.Model') ||
+               $ws.helpers.instanceOfModule(args, 'SBIS3.CONTROLS.Record') ||
+               $ws.helpers.instanceOfModule(args, 'SBIS3.CONTROLS.Data.Source.DataSet') ||
+               $ws.helpers.instanceOfModule(args, 'SBIS3.CONTROLS.DataSet')
+            ) {
+               result = this._options.adapter.serialize(args);
+            } else {
+               result = {};
+               for (var key in args) {
+                  if (args.hasOwnProperty(key)) {
+                     result[key] = this._options.adapter.serialize(args[key]);
+                  }
+               }
+            }
          } else {
-            $ws.core.merge(result, defaults);
-            $ws.core.merge(result, data);
-            result = this._options.adapter.serialize(result);
+            result = this._options.adapter.serialize(args);
          }
          return result;
       },
@@ -534,7 +538,7 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
       /**
        * Возвращает параметры сортировки
        * @param {SBIS3.CONTROLS.Data.Query.Query} query Запрос
-       * @returns {Object|null}
+       * @returns {Array|null}
        * @private
        */
       _getSortingParams: function (query) {
@@ -547,6 +551,7 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
          }
          var sort = [],
              order;
+         sort._type = 'recordset';
          for (var i = 0; i < orders.length; i++) {
             order = orders[i];
             sort.push({
