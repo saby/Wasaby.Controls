@@ -839,7 +839,7 @@ define('js!SBIS3.CONTROLS.ListView',
                return;
             }
             this._itemActionsGroup.showItemActions(item, this._getItemActionsPosition(item));
-            if (this._touchSupport)
+            if (this._touchSupport){
                this._trackMove = $ws.helpers.trackElement(item.container, true);
                this._trackMove.subscribe('onMove', this._moveItemActions, this);
             }
