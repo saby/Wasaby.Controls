@@ -839,8 +839,10 @@ define('js!SBIS3.CONTROLS.ListView',
                return;
             }
             this._itemActionsGroup.showItemActions(item, this._getItemActionsPosition(item));
-            this._trackMove = $ws.helpers.trackElement(item.container, true);
-            this._trackMove.subscribe('onMove', this._moveItemActions, this);
+            if (this._touchSupport)
+               this._trackMove = $ws.helpers.trackElement(item.container, true);
+               this._trackMove.subscribe('onMove', this._moveItemActions, this);
+            }
          },
          _hideItemActions: function (animate) {
             if (this._itemActionsGroup && !this._itemActionsGroup.isItemActionsMenuVisible()) {
