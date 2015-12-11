@@ -38,6 +38,14 @@ define([
                assert.isTrue(result.id >= 0);
             });
 
+            it('should serialize a date', function () {
+               var date = new Date(),
+                  dateVal = date.getTime(),
+                  result = serializer.serialize('', date);
+               assert.strictEqual(result.$serialized$, 'date');
+               assert.strictEqual(result.stamp, dateVal);
+            });
+
             it('should serialize Infinity', function () {
                var result = serializer.serialize('i', Infinity);
                assert.strictEqual(result.$serialized$, '+inf');
@@ -107,13 +115,25 @@ define([
 
          describe('.deserialize()', function () {
             it('should deserialize a function', function () {
-               var result = serializer.deserialize(
-                  'f',
-                  serializer.serialize('f', function() {
+               var func = function() {
                      return Math.rand();
-                  })
+                  },
+                  result = serializer.deserialize(
+                  'f',
+                  serializer.serialize('f', func)
                );
                assert.instanceOf(result, Function);
+               assert.strictEqual(result, func);
+            });
+
+            it('should deserialize a date', function () {
+               var date = new Date('1995-12-17T01:02:03'),
+                  result = serializer.deserialize(
+                     '',
+                     serializer.serialize('', date)
+                  );
+               assert.instanceOf(result, Date);
+               assert.strictEqual(result.getTime(), date.getTime());
             });
 
             it('should deserialize Infinity', function () {

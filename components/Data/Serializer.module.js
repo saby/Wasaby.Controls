@@ -50,6 +50,11 @@ define('js!SBIS3.CONTROLS.Data.Serializer', [
                //TODO: При сериализации на сервере надо сохранять и код функций-"не членов класса"?
                //code: $ws.single.base64.encode(value.toString())
             };
+         } else if (value instanceof Date) {
+            return {
+               $serialized$: 'date',
+               stamp: value.getTime()
+            };
          } else if (value === Infinity) {
             return {
                $serialized$: '+inf'
@@ -96,6 +101,8 @@ define('js!SBIS3.CONTROLS.Data.Serializer', [
                      result = instance;
                   }
                   break;
+               case 'date':
+                  return new Date(value.stamp);
                case '+inf':
                   result = Infinity;
                   break;
@@ -106,7 +113,7 @@ define('js!SBIS3.CONTROLS.Data.Serializer', [
                   result = undefined;
                   break;
                default:
-                  throw new Error('Unknown serialized type "' + value.$type + '" detected');
+                  throw new Error('Unknown serialized type "' + value.$serialized$ + '" detected');
             }
          }
 
