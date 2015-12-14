@@ -53,7 +53,7 @@ define('js!SBIS3.CONTROLS.TreeViewDS', [
              parentResult = TreeViewDS.superclass._getItemActionsPosition.apply(this, arguments);
 
          return {
-            top: item.position.top + (treeItem.length ? treeItem[0].offsetHeight - 20 : 0),
+            top: item.position.top + (treeItem.length ? treeItem[0].offsetHeight : item.size.height) - 20,
             right: parentResult.right
          }
       },
