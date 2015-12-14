@@ -4,21 +4,6 @@ define(
    function (JsonAdapter) {
       'use strict';
 
-      var checkInvalid = function (instance, method) {
-         assert.throw(function () {
-            instance[method]({});
-         });
-         assert.throw(function () {
-            instance[method]('');
-         });
-         assert.throw(function () {
-            instance[method](0);
-         });
-         assert.throw(function () {
-            instance[method]();
-         });
-      };
-
       describe('SBIS3.CONTROLS.Data.Adapter.Json', function () {
          var data,
             adapterInstance;
@@ -198,7 +183,7 @@ define(
                'Фамилия': 'Арбузнов'
             }];
 
-            adapterInstance = new JsonAdapter().forTable();
+            adapterInstance = new JsonAdapter().forTable(data);
          });
 
          afterEach(function () {
@@ -219,34 +204,34 @@ define(
             it('should return records count', function () {
                assert.strictEqual(
                   7,
-                  adapterInstance.getCount(data)
-               );
-               assert.strictEqual(
-                  0,
-                  adapterInstance.getCount([])
-               );
-               assert.strictEqual(
-                  0,
-                  adapterInstance.getCount({})
-               );
-               assert.strictEqual(
-                  0,
-                  adapterInstance.getCount('')
-               );
-               assert.strictEqual(
-                  0,
-                  adapterInstance.getCount(0)
-               );
-               assert.strictEqual(
-                  0,
                   adapterInstance.getCount()
+               );
+               assert.strictEqual(
+                  0,
+                  new JsonAdapter().forTable().getCount([])
+               );
+               assert.strictEqual(
+                  0,
+                  new JsonAdapter().forTable().getCount({})
+               );
+               assert.strictEqual(
+                  0,
+                  new JsonAdapter().forTable().getCount('')
+               );
+               assert.strictEqual(
+                  0,
+                  new JsonAdapter().forTable().getCount(0)
+               );
+               assert.strictEqual(
+                  0,
+                  new JsonAdapter().forTable().getCount()
                );
             });
          });
 
          describe('.add()', function () {
             it('should append a record', function () {
-               adapterInstance.add(data, {
+               adapterInstance.add({
                   'Ид': 30
                });
                assert.strictEqual(
@@ -260,7 +245,7 @@ define(
             });
 
             it('should prepend a record', function () {
-               adapterInstance.add(data, {
+               adapterInstance.add({
                   'Ид': 31
                }, 0);
                assert.strictEqual(
@@ -274,7 +259,7 @@ define(
             });
 
             it('should insert a record', function () {
-               adapterInstance.add(data, {
+               adapterInstance.add({
                   'Ид': 32
                }, 2);
                assert.strictEqual(
@@ -289,19 +274,15 @@ define(
 
             it('should throw an error on invalid position', function () {
                assert.throw(function () {
-                  adapterInstance.add(data, {
+                  adapterInstance.add({
                      'Ид': 33
                   }, 100);
                });
                assert.throw(function () {
-                  adapterInstance.add(data, {
+                  adapterInstance.add({
                      'Ид': 34
                   }, -1);
                });
-            });
-
-            it('should throw an error on invalid data', function () {
-               checkInvalid(adapterInstance, 'add');
             });
          });
 
@@ -309,54 +290,54 @@ define(
             it('should return valid record', function () {
                assert.strictEqual(
                   1,
-                  adapterInstance.at(data, 0)['Ид']
+                  adapterInstance.at(0)['Ид']
                );
                assert.strictEqual(
                   3,
-                  adapterInstance.at(data, 2)['Ид']
+                  adapterInstance.at(2)['Ид']
                );
             });
 
             it('should return undefined on invalid position', function () {
                assert.isUndefined(
-                  adapterInstance.at(data, -1)
+                  adapterInstance.at(-1)
                );
                assert.isUndefined(
-                  adapterInstance.at(data, 99)
+                  adapterInstance.at(99)
                );
             });
 
             it('should return undefined on invalid data', function () {
                assert.isUndefined(
-                  adapterInstance.at({})
+                  new JsonAdapter().forTable({}).at()
                );
                assert.isUndefined(
-                  adapterInstance.at('')
+                  new JsonAdapter().forTable('').at()
                );
                assert.isUndefined(
-                  adapterInstance.at(0)
+                  new JsonAdapter().forTable(0).at()
                );
                assert.isUndefined(
-                  adapterInstance.at()
+                  new JsonAdapter().forTable().at()
                );
             });
          });
 
          describe('.remove()', function () {
             it('should remove the record', function () {
-               adapterInstance.remove(data, 0);
+               adapterInstance.remove(0);
                assert.strictEqual(
                   2,
                   data[0]['Ид']
                );
 
-               adapterInstance.remove(data, 2);
+               adapterInstance.remove(2);
                assert.strictEqual(
                   5,
                   data[2]['Ид']
                );
 
-               adapterInstance.remove(data, 5);
+               adapterInstance.remove(5);
                assert.isUndefined(
                   data[5]
                );
@@ -364,21 +345,17 @@ define(
 
             it('should throw an error on invalid position', function () {
                assert.throw(function () {
-                  adapterInstance.remove(data, -1);
+                  adapterInstance.remove(-1);
                });
                assert.throw(function () {
-                  adapterInstance.remove(data, 99);
+                  adapterInstance.remove(99);
                });
-            });
-
-            it('should throw an error on invalid data', function () {
-               checkInvalid(adapterInstance, 'remove');
             });
          });
 
          describe('.replace()', function () {
             it('should replace the record', function () {
-               adapterInstance.replace(data, {
+               adapterInstance.replace({
                   'Ид': 11
                }, 0);
                assert.strictEqual(
@@ -386,7 +363,7 @@ define(
                   data[0]['Ид']
                );
 
-               adapterInstance.replace(data, {
+               adapterInstance.replace({
                   'Ид': 12
                }, 4);
                assert.strictEqual(
@@ -398,21 +375,17 @@ define(
 
             it('should throw an error on invalid position', function () {
                assert.throw(function () {
-                  adapterInstance.replace(data, {}, -1);
+                  adapterInstance.replace({}, -1);
                });
                assert.throw(function () {
-                  adapterInstance.replace(data, {}, 99);
+                  adapterInstance.replace({}, 99);
                });
-            });
-
-            it('should throw an error on invalid data', function () {
-               checkInvalid(adapterInstance, 'replace');
             });
          });
 
          describe('.move()', function () {
             it('should move Иванов instead Сидоров', function () {
-               adapterInstance.move(data, 0, 2);
+               adapterInstance.move(0, 2);
                assert.strictEqual(
                   'Петров',
                   data[0]['Фамилия']
@@ -427,7 +400,7 @@ define(
                );
             });
             it('should move Сидоров instead Иванов', function () {
-               adapterInstance.move(data, 2, 0);
+               adapterInstance.move(2, 0);
                assert.strictEqual(
                   'Сидоров',
                   data[0]['Фамилия']
@@ -442,7 +415,7 @@ define(
                );
             });
             it('should move Петров to the end', function () {
-               adapterInstance.move(data, 1, 6);
+               adapterInstance.move(1, 6);
                assert.strictEqual(
                   'Петров',
                   data[6]['Фамилия']
@@ -467,7 +440,7 @@ define(
                'Отчество': 'Иванович'
             };
 
-            adapterInstance = new JsonAdapter().forRecord();
+            adapterInstance = new JsonAdapter().forRecord(data);
          });
 
          afterEach(function () {
@@ -479,48 +452,48 @@ define(
             it('should return the property value', function () {
                assert.strictEqual(
                   1,
-                  adapterInstance.get(data, 'Ид')
+                  adapterInstance.get('Ид')
                );
                assert.strictEqual(
                   'Иванов',
-                  adapterInstance.get(data, 'Фамилия')
+                  adapterInstance.get('Фамилия')
                );
                assert.isUndefined(
-                  adapterInstance.get(data, 'Должность')
+                  adapterInstance.get('Должность')
                );
                assert.isUndefined(
-                  adapterInstance.get({}, 'Должность')
+                  new JsonAdapter().forRecord({}).get('Должность')
                );
                assert.isUndefined(
-                  adapterInstance.get(data)
+                  new JsonAdapter().forRecord().get()
                );
                assert.isUndefined(
-                  adapterInstance.get('')
+                  new JsonAdapter().forRecord('').get()
                );
                assert.isUndefined(
-                  adapterInstance.get(0)
+                  new JsonAdapter().forRecord(0).get()
                );
                assert.isUndefined(
-                  adapterInstance.get()
+                  new JsonAdapter().forRecord().get()
                );
             });
          });
 
          describe('.set()', function () {
             it('should set the property value', function () {
-               adapterInstance.set(data, 'Ид', 20);
+               adapterInstance.set('Ид', 20);
                assert.strictEqual(
                   20,
                   data['Ид']
                );
 
-               adapterInstance.set(data, 'а', 5);
+               adapterInstance.set('а', 5);
                assert.strictEqual(
                   5,
                   data['а']
                );
 
-               adapterInstance.set(data, 'б');
+               adapterInstance.set('б');
                assert.isUndefined(
                   data['б']
                );
@@ -528,18 +501,11 @@ define(
 
             it('should throw an error on invalid position', function () {
                assert.throw(function () {
-                  adapterInstance.replace(data, {}, -1);
+                  adapterInstance.replace({}, -1);
                });
                assert.throw(function () {
-                  adapterInstance.replace(data, {}, 99);
+                  adapterInstance.replace({}, 99);
                });
-            });
-         });
-
-         describe('.destroy()', function(){
-            it('should destroy without error', function() {
-               var adapterDestroyInstance = new JsonAdapter();
-               adapterDestroyInstance.destroy();
             });
          });
       });
