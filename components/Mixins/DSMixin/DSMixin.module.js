@@ -243,6 +243,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
                  }
                }
                this._dataSource = new StaticSource({
+                  compatibilityMode: true,
                   data: items,
                   strategy: new ArrayStrategy(),
                   keyField: this._options.keyField
@@ -534,6 +535,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
          }
 
          this._dataSource = new StaticSource({
+            compatibilityMode: true,
             data: items,
             strategy: new ArrayStrategy(),
             keyField: keyField
