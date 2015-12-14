@@ -49,7 +49,10 @@ define('js!SBIS3.CONTROLS.StaticSource', [
       },
 
       $constructor: function (cfg) {
-         $ws.single.ioc.resolve('ILogger').log('$constructor', 'С 3.7.3.20 класс SBIS3.CONTROLS.StaticSource будет удален, используйте SBIS3.CONTROLS.Data.Source.Memory');
+         cfg = cfg || {};
+         if(!cfg.compatibilityMode) {
+            $ws.single.ioc.resolve('ILogger').log('$constructor', 'С 3.7.3.20 класс SBIS3.CONTROLS.StaticSource будет удален, используйте SBIS3.CONTROLS.Data.Source.Memory');
+         }
          this._options.strategy = cfg.strategy || new ArrayStrategy();
       },
 
