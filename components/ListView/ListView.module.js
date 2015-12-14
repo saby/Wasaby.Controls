@@ -541,11 +541,13 @@ define('js!SBIS3.CONTROLS.ListView',
             this._hoveredItem.container && this._hoveredItem.container.removeClass('controls-ListView__hoveredItem');
 
             /* Затрём всю информацию о выделенном элементе */
+            var emptyObject = {};
             for(var key in this._hoveredItem) {
                if(this._hoveredItem.hasOwnProperty(key)) {
-                  this._hoveredItem[key] = null;
+                  emptyObject[key] = null;
                }
             }
+            this._hoveredItem = emptyObject;
 
             this._notify('onChangeHoveredItem', this._hoveredItem);
             this._onChangeHoveredItem(this._hoveredItem);
