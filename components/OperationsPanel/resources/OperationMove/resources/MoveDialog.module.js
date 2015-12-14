@@ -3,9 +3,8 @@
  */
 define('js!SBIS3.CONTROLS.MoveDialog', [
    'js!SBIS3.CORE.Dialog',
-   'js!SBIS3.CONTROLS.Record',
-   'js!SBIS3.CONTROLS.ArrayStrategy'
-], function(Dialog, Record, ArrayStrategy) {
+   'js!SBIS3.CONTROLS.Data.Model'
+], function(Dialog) {
 
    var MoveDialog = Dialog.extend({
 
@@ -39,7 +38,7 @@ define('js!SBIS3.CONTROLS.MoveDialog', [
             self._createRoot();
          });
          filter = $ws.core.clone(linkedView.getFilter());
-         if ($ws.helpers.instanceOfModule(linkedView._dataSource, 'SBIS3.CONTROLS.SbisServiceSource')) {
+         if ($ws.helpers.instanceOfModule(linkedView._dataSource, 'SBIS3.CONTROLS.SbisServiceSource') || $ws.helpers.instanceOfModule(linkedView._dataSource, 'SBIS3.CONTROLS.Data.Source.SbisService') ) {
             filter['ВидДерева'] = "Только узлы";
             //TODO: костыль написан специально для нуменклатуры, чтобы не возвращалась выборка всех элементов при заходе в пустую папку
             filter['folderChanged'] = true;
