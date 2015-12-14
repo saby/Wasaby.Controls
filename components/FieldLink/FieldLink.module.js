@@ -400,7 +400,12 @@ define('js!SBIS3.CONTROLS.FieldLink',
                onDrawItems: this.updateInputWidth.bind(this),
 
                /* При клике на крест, удалим ключ из выбранных */
-               onCrossClick: function(e, key){ self.removeItemsSelection([key]); },
+               onCrossClick: propertyUpdateWrapper(function(e, key){
+                  self.removeItemsSelection([key]);
+                  if(!self._options.multiselect && self._options.alwaysShowTextBox) {
+                     self.setText('');
+                  }
+               }),
 
                /* При закрытии пикера надо скрыть кнопку удаления всех выбранных */
                onClose: function() { self._pickerStateChangeHandler(false); }
@@ -482,7 +487,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
 			   /* Нажатие на backspace должно удалять последние значение, если нет набранного текста */
 			   case $ws._const.key.backspace:
 				   var selectedKeys = this.getSelectedKeys();
-				   if(!this.getText()) {
+				   if(!this.getText() && selectedKeys.length) {
 					   this.removeItemsSelection([selectedKeys[selectedKeys.length - 1]]);
 				   }
 				   break;
