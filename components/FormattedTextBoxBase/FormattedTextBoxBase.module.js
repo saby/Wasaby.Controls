@@ -438,7 +438,7 @@ define(
        * @returns {boolean} true - если строка установлена
        */
       setText: function(text, clearChar) {
-         if (text == '') {
+         if (text === '') {
             text = this.getStrMask(clearChar);
          }
          /*массив со значениями, нужен чтобы не записывать значения до полной проверки соответствия текста маске */
@@ -662,6 +662,7 @@ define(
                }
             }, 100);
          });
+         this._updateText();
       },
 
       /* Переопределяем метод SBIS3.CORE.CompoundActiveFixMixin чтобы при клике нормально фокус ставился
@@ -792,7 +793,7 @@ define(
                //проверяем был ли введен последний символ в последней группе
                var lastGroupNum = this.formatModel.model.length - 1;
                lastGroupNum = this.formatModel.model[lastGroupNum].isGroup ? lastGroupNum : lastGroupNum - 1;
-               this._notify('onTextChange');
+               this._notify('onTextChange', this._options.text);
                if (keyInsertInfo.groupNum == lastGroupNum  &&  keyInsertInfo.position == this.formatModel.model[lastGroupNum].mask.length - 1) {
                   this._notify('onInputFinished');
                }
@@ -870,9 +871,11 @@ define(
        */
       setText: function(text) {
          this.formatModel.setText(text, this._maskReplacer);
-         this._options.text = this.formatModel.getText(this._maskReplacer);
+         this._updateText();
          //обновить html
          this._inputField.html(this._getHtmlMask());
+         this._notify('onTextChange', this._options.text);
+         this._notifyOnPropertyChanged('text');
       },
 
       /**
