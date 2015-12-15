@@ -67,7 +67,7 @@ define('js!SBIS3.CONTROLS.MenuLink', ['js!SBIS3.CONTROLS.Link', 'js!SBIS3.CONTRO
       },
 
       setCaption: function(caption){
-         Link.superclass.setCaption.call(this, caption);
+         MenuLink.superclass.setCaption.call(this, caption);
          $('.controls-Link__field', this._container).html(caption);
          if (this._picker){
             $('.controls-Menu__header-caption', this._picker._container).html(caption);
