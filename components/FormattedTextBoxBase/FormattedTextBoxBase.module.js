@@ -580,16 +580,6 @@ define(
             modelForMaskTpl: []
          },
 
-         _KEYS: {
-            DELETE: 46,
-            TAB: 9,
-            BACKSPACE: 8,
-            ARROW_LEFT: 37,
-            ARROW_RIGHT: 39,
-            END: 35,
-            HOME: 36
-         },
-
          /**
           * Модель форматного поля
           */
@@ -621,22 +611,22 @@ define(
          this._inputField.keydown(function (event) {
             //keydown ловит управляющие символы, keypress - нет
             key = event.which || event.keyCode;
-            if (key == self._KEYS.HOME && !event.shiftKey) {
+            if (key == $ws._const.key.home && !event.shiftKey) {
                event.preventDefault();
                self._keyPressHandler(key, 'home');
-            } else if (key == self._KEYS.END && !event.shiftKey) {
+            } else if (key == $ws._const.key.end && !event.shiftKey) {
                event.preventDefault();
                self._keyPressHandler(key, 'end');
-            } else if (key == self._KEYS.DELETE) {
+            } else if (key == $ws._const.key.del) {
                event.preventDefault();
                self._keyPressHandler(key, 'delete');
-            } else if (key == self._KEYS.BACKSPACE) {
+            } else if (key == $ws._const.key.backspace) {
                event.preventDefault();
                self._keyPressHandler(key, 'backspace');
-            } else if (key == self._KEYS.ARROW_LEFT && !event.shiftKey) {
+            } else if (key == $ws._const.key.left && !event.shiftKey) {
                event.preventDefault();
                self._keyPressHandler(key, 'arrow_left');
-            } else if (key == self._KEYS.ARROW_RIGHT && !event.shiftKey) {
+            } else if (key == $ws._const.key.right && !event.shiftKey) {
                event.preventDefault();
                self._keyPressHandler(key, 'arrow_right');
             } else if (event.ctrlKey && key == 88) {
