@@ -602,7 +602,7 @@ define(
             inputValue,
             self = this,
             key;
-         this._publish('onInputFinished');
+         this._publish('onInputFinished','onTextChange');
          // Проверяем, является ли маска, с которой создается контролл, допустимой
          this._checkPossibleMask();
          this._inputField = $('.js-controls-FormattedTextBox__field', this.getContainer().get(0));
@@ -792,6 +792,7 @@ define(
                //проверяем был ли введен последний символ в последней группе
                var lastGroupNum = this.formatModel.model.length - 1;
                lastGroupNum = this.formatModel.model[lastGroupNum].isGroup ? lastGroupNum : lastGroupNum - 1;
+               this._notify('onTextChange', this._options.text);
                if (keyInsertInfo.groupNum == lastGroupNum  &&  keyInsertInfo.position == this.formatModel.model[lastGroupNum].mask.length - 1) {
                   this._notify('onInputFinished');
                }
@@ -872,6 +873,7 @@ define(
          this._options.text = this.formatModel.getText(this._maskReplacer);
          //обновить html
          this._inputField.html(this._getHtmlMask());
+         this._notify('onTextChange', this._options.text);
       },
 
       /**
