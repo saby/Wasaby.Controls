@@ -4,19 +4,6 @@
 define('js!SBIS3.CONTROLS.ScrollWatcher', [], function() {
    'use strict';
    var SCROLL_INDICATOR_HEIGHT = 32;
-   if (typeof(jQuery) !== 'undefined') {
-      (function( $ ) {
-         $.fn.wsScrollWatcher = function() {
-            var scrollWatcher = null;
-            try {
-               scrollWatcher = this[0].wsScrollWatcher;
-            }
-            catch(e) {}
-            return scrollWatcher;
-         };
-
-      })( jQuery );
-   }
    $ws.proto.ScrollWatcher = $ws.proto.Abstract.extend(/** @lends SBIS3.CONTROLS.ScrollWatcher.prototype */{
       /**
        * @event onScroll Событие проиходит, когда срабатывает проверка на скроллею Например, когда достигли низа страницы
@@ -24,13 +11,12 @@ define('js!SBIS3.CONTROLS.ScrollWatcher', [], function() {
        *
        * @param {$ws.proto.EventObject} eventObject Дескриптор события.
        * @param {String} type - какое именно событие произошло. Достигли дна окна, контейнера, всплывающей панели.
-       * Или это Пользовательская проверка ('userCheck')
-       * @param {Object} result - то, что возвращает функция проверки положения скролла. В общем случае true || false, но
-       * пользователь может вернуть что угодно.
+       * Или это наоборот доскроллили вверх
+       * @param {jQuery} event - то самое соыбтие scroll, на которое подписан ScrollWatcher
        * @example
        * <pre>
        *     ScrollWatcher.subscribe('onScroll', function(event, type) {
-       *        if (type === 'windowBottom') {
+       *        if (type === 'bottom') {
        *          $ws.core.alert('Вы достигли дна');
        *        }
        *     });
@@ -51,16 +37,6 @@ define('js!SBIS3.CONTROLS.ScrollWatcher', [], function() {
              *
              */
             opener: undefined,
-            /**
-             * @cfg {{}} Набор пользовательский функций-проверок
-             * @remark
-             * Объект вида {checkName : function} , где function - пользовательская функция, которая будет вызвана по событию скролла.
-             * checkName - уникальное имя, оно будет передано как имя проверки в событии onScroll, если функция вернет true
-             * В функцию будет передан jQuery event
-             * Здесь можно написать какую-то свою проверку. Например, что мы доскроллили вверх по контейнеру
-             *
-             */
-            scrollCheck: {},
             /**
              * @cfg {Number} Определитель нижней границы. Если передать число > 0 то событие с типом "Достигли дна(до скроллили до низа\верха страницы)"
              * будет срабатывать на checkOffset px раньше
@@ -129,25 +105,10 @@ define('js!SBIS3.CONTROLS.ScrollWatcher', [], function() {
        * @private
        */
       _processScrollEvent: function (type, result, event) {
-         var scrollCheck = this._options.scrollCheck,
-               userResult;
-         this._defineScrollDirection(event);
-         //Если была пройдена пользовательская проверка, то оповестим пользователя.
-         if (!Object.isEmpty(scrollCheck)) {
-            for (var i in scrollCheck) {
-               if (scrollCheck.hasOwnProperty(i) && typeof scrollCheck[i] === 'function') {
-                  userResult = scrollCheck[i](event);
-                  if (userResult) {
-                     this._notify('onScroll', i, userResult);
-                  }
-               }
-            }
-
-         }
          if (result) {
-            this._notify('onScroll', type, result);
+            this._notify('onScroll', type, event);
          } else if (this._checkTop(event)) {
-            this._notify('onScroll', 'top', true);
+            this._notify('onScroll', 'top', event);
          }
       },
       _defineScrollDirection : function(event){
@@ -160,29 +121,22 @@ define('js!SBIS3.CONTROLS.ScrollWatcher', [], function() {
          this._lastScrollTop = curScrollTop;
       },
       _onWindowScroll: function (event) {
+         this._defineScrollDirection(event);
          this._processScrollEvent('bottom', this._isBottomOfPage(), event);
       },
       _onFAScroll: function(event, scrollOptions) {
+         this._defineScrollDirection(event);
          this._processScrollEvent('bottom', scrollOptions.clientHeight + scrollOptions.scrollTop  >= scrollOptions.scrollHeight - SCROLL_INDICATOR_HEIGHT - this._options.checkOffset, event);
       },
       _onContainerScroll: function (event) {
          var elem = event.target;
+         this._defineScrollDirection(event);
          //если высота скролла меньше чем высота контейнера с текущим scrollTop, то мы где-то внизу.
          //offsetHeight - высота контейнра, scrollHeight - вся высота скролла,
-         this._defineScrollDirection(event);
          this._processScrollEvent('bottom',!this._isScrollUp && (elem.scrollHeight - this._options.checkOffset <=  elem.scrollTop + elem.offsetHeight), event);
       },
       _checkTop : function(event){
          return event && this._isScrollUp && (this._lastScrollTop < this._options.checkOffset);
-      },
-      /**
-       * Добавить функцию проверки по событию скролла в контейнере. Важно -
-       * будьте внимательны от какого контекста выполняется функция!
-       * @param {String} checkName - уникальное имя проверки скролла
-       * @param {function} func - функция проверки события scroll
-       */
-      addScrollCheckFunction: function(checkName, func){
-         this._options.scrollCheck[checkName] = func;
       },
       _isBottomOfPage: function () {
          var docBody = document.body,
