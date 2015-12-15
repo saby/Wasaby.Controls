@@ -30,6 +30,12 @@ define('js!SBIS3.CONTROLS.Data.Collection.ObservableListMixin', [
          $ws.helpers.forEach(this._items, this._watchForChanges, this);
       },
 
+      before: {
+         destroy: function() {
+            $ws.helpers.forEach(this._items, this._cancelWatchForChanges, this);
+         }
+      },
+
       around: {
 
          //region SBIS3.CONTROLS.Data.Collection.IEnumerable
