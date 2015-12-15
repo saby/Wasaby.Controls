@@ -774,9 +774,11 @@ define('js!SBIS3.CONTROLS.ListControlMixin', [
     * @private
     */
    var onCurrentChange = function (event, newCurrent) {
-         this._view.selectItem(
-            newCurrent
-         );
+         if (this._view) {
+            this._view.selectItem(
+               newCurrent
+            );
+         }
       },
 
    /**

@@ -131,7 +131,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.IndexedEnumeratorMixin', [
             //FIXME: для проекций решить проблему, кода поиск осущетвляется как по ITreeItem, так и по его contents
             if (value === undefined &&
                item instanceof Object &&
-               $ws.helpers.instanceOfMixin(item, 'SBIS3.CONTROLS.Data.Projection.ITreeItem')
+               $ws.helpers.instanceOfMixin(item, 'SBIS3.CONTROLS.Data.Projection.ICollectionItem')
             ) {
                value = Utils.getItemPropertyValue(item.getContents(), property);
             }
