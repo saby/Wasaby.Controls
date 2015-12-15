@@ -196,7 +196,7 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                var options,
                    self = this;
                return this.endEdit(true).addCallback(function() {
-                  options = this._notify('onBeginAdd');
+                  options = self._notify('onBeginAdd');
                   return self._options.dataSource.create(options).addCallback(function (record) {
                      var target = $('<div class="js-controls-ListView__item"></div>').attr('data-id', record.getKey()).appendTo(self._options.itemsContainer);
                      self._eip.edit(target, record);
