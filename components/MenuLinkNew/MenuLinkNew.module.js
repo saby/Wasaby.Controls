@@ -12,8 +12,7 @@ define('js!SBIS3.CONTROLS.MenuLinkNew', ['js!SBIS3.CONTROLS.Link', 'html!SBIS3.C
     * @class SBIS3.CONTROLS.MenuLinkNew
     * @demo SBIS3.CONTROLS.Demo.MyMenuLink
     * @extends SBIS3.CONTROLS.ButtonBase
-    * @control
-    * @author Ганшин Ярослав Олегович
+    * @author Крайнов Дмитрий Олегович
     * @initial
     * <component data-component='SBIS3.CONTROLS.MenuLink'>
     *    <option name='caption' value='Ссылка с меню'></option>
@@ -31,7 +30,6 @@ define('js!SBIS3.CONTROLS.MenuLinkNew', ['js!SBIS3.CONTROLS.Link', 'html!SBIS3.C
     * @mixes SBIS3.CONTROLS.ListControlMixin
     * @mixes SBIS3.CONTROLS.PickerMixin
     * @mixes SBIS3.CONTROLS.MenuButtonMixin
-    * @public
     * @category Buttons
     *
     * @ignoreOptions independentContext contextRestriction extendedTooltip validators

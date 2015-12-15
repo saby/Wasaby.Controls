@@ -9,7 +9,6 @@ define('js!SBIS3.CONTROLS.SelectableNew', [
     * Миксин, добавляющий поведение хранения выбранного элемента. Всегда только одного.
     * *Это экспериментальный модуль, API будет меняться!*
     * @mixin SBIS3.CONTROLS.SelectableNew
-    * @public
     * @state mutable
     * @author Крайнов Дмитрий Олегович
     */
