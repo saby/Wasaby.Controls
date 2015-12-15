@@ -514,34 +514,33 @@ define('js!SBIS3.CONTROLS.DSMixin', [
         * @see onDrawItems
         * @see onDataLoad
         */
-      setItems: function (items) {
-         //TODO Сделать метод для очистки всех Items, ибо setItems([]) - не очевидно
-         if (items && items.length) {
-             var
-                item = items[0],
-                keyField;
+       setItems: function (items) {
+          //TODO Сделать метод для очистки всех Items, ибо setItems([]) - не очевидно
+          var keyField, item;
 
-             if (this._options.keyField) {
-                keyField = this._options.keyField;
-             }
-             else {
-                if (item && Object.prototype.toString.call(item) === '[object Object]') {
-                   keyField = Object.keys(item)[0];
-                }
-             }
-         }
-         else {
-            items = [];
-         }
+          if (this._options.keyField) {
+             keyField = this._options.keyField;
+          }
 
-         this._dataSource = new StaticSource({
-            compatibilityMode: true,
-            data: items,
-            strategy: new ArrayStrategy(),
-            keyField: keyField
-         });
-         this.reload();
-      },
+          if (items && items.length) {
+             item = items[0];
+
+             if (item && !keyField && Object.prototype.toString.call(item) === '[object Object]') {
+                keyField = Object.keys(item)[0];
+             }
+          }
+          else {
+             items = [];
+          }
+
+          this._dataSource = new StaticSource({
+             compatibilityMode: true,
+             data: items,
+             strategy: new ArrayStrategy(),
+             keyField: keyField
+          });
+          this.reload();
+       },
 
       _drawItemsCallback: function () {
          /*Method must be implemented*/
