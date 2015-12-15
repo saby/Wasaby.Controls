@@ -875,6 +875,7 @@ define(
          //обновить html
          this._inputField.html(this._getHtmlMask());
          this._notify('onTextChange', this._options.text);
+         this._notifyOnPropertyChanged('text');
       },
 
       /**
