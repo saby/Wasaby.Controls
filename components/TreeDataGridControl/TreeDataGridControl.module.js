@@ -15,7 +15,6 @@ define('js!SBIS3.CONTROLS.TreeDataGridControl', [
     * @extends SBIS3.CONTROLS.DataGridControl
     * @mixes SBIS3.CONTROLS.HierarchyControlMixin
     * @mixes SBIS3.CONTROLS.TreeControlMixin
-    * @public
     * @state mutable
     * @author Крайнов Дмитрий Олегович
     * @demo SBIS3.CONTROLS.Demo.MyTreeDataGridControl

@@ -13,7 +13,6 @@ define('js!SBIS3.CONTROLS.MenuButtonNew', ['js!SBIS3.CONTROLS.Button', 'js!SBIS3
     * @class SBIS3.CONTROLS.MenuButtonNew
     * @extends SBIS3.CONTROLS.Button
     * @demo SBIS3.CONTROLS.Demo.MyMenuButton Пример кнопки с выпадающим меню
-    * @control
     * @initial
     * <component data-component='SBIS3.CONTROLS.MenuButton'>
     *    <option name='caption' value='Кнопка с меню'></option>
@@ -28,8 +27,7 @@ define('js!SBIS3.CONTROLS.MenuButtonNew', ['js!SBIS3.CONTROLS.Button', 'js!SBIS3
     *         </options>
     *      </options>
     * </component>
-    * @public
-    * @author Ганшин Ярослав Олегович
+    * @author Крайнов Дмитрий Олегович
     * @category Buttons
     * @mixes SBIS3.CONTROLS.PickerMixin
     * @mixes SBIS3.CONTROLS.ListControlMixin
