@@ -398,25 +398,16 @@ define('js!SBIS3.CONTROLS.ListView',
 
             if (this.isInfiniteScroll()) {
                this._createLoadingIndicator();
-               scrollWatcherCfg.type = $ws.helpers.instanceOfModule(topParent, 'SBIS3.CORE.FloatArea') ? 'floatArea'
-                     : (this._options.infiniteScrollContainer ? 'container' : 'window');
+
                scrollWatcherCfg.checkOffset = START_NEXT_LOAD_OFFSET;
                scrollWatcherCfg.opener = this;
-               switch (scrollWatcherCfg.type) {
-                  case 'floatArea' : scrollWatcherCfg.floatArea = topParent; break;
-                  case 'container' : {
-                     this._options.infiniteScrollContainer = this._options.infiniteScrollContainer instanceof jQuery
-                           ? this._options.infiniteScrollContainer
-                           : this.getContainer().parent().find('.' + this._options.infiniteScrollContainer);
-                     scrollWatcherCfg.element = this._options.infiniteScrollContainer;
-                     //Если заработает новая проверка в контейнерах, то можно удалить
-                     //scrollWatcherCfg.scrollCheck = {
-                     //   'containerBottom' : this._onContainerScrollBottom.bind(this)
-                     //};
-
-                     break;
-                  }
+               if (this._options.infiniteScrollContainer) {
+                  this._options.infiniteScrollContainer = this._options.infiniteScrollContainer instanceof jQuery
+                        ? this._options.infiniteScrollContainer
+                        : this.getContainer().parent().find('.' + this._options.infiniteScrollContainer);
+                  scrollWatcherCfg.element = this._options.infiniteScrollContainer;
                }
+
                this._scrollWatcher = new ScrollWatcher(scrollWatcherCfg);
                this._scrollWatcher.subscribe('onScroll', function(event, type){
                   if (type !== 'top') {
