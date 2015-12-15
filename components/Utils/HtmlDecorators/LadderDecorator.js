@@ -15,7 +15,8 @@ define(['js!SBIS3.CONTROLS.Utils.HtmlDecorators/AbstractDecorator'], function (A
          },
          _ladderLastWords: {},
          _columnName: undefined,
-         _parentId: undefined
+         _parentId: undefined,
+         _isCheckCondition: false
       },
 
       $constructor: function () {
@@ -42,6 +43,7 @@ define(['js!SBIS3.CONTROLS.Utils.HtmlDecorators/AbstractDecorator'], function (A
          else if (ladderDataType == 'string'){
             this._columnName = ladderData;
          }
+         this._isCheckCondition = true;
       },
       /**
        * Применяет декоратор
@@ -49,6 +51,10 @@ define(['js!SBIS3.CONTROLS.Utils.HtmlDecorators/AbstractDecorator'], function (A
        * @returns {*}
        */
       apply: function (text) {
+         if (!this._isCheckCondition){
+            return text;
+         }
+         this._isCheckCondition = false;
          return this.setLadder(text);
       },
 
