@@ -7,8 +7,9 @@ define('js!SBIS3.CONTROLS.ListControl', [
    'js!SBIS3.CONTROLS.MultiSelectableNew',
    'js!SBIS3.CONTROLS.ListControl.ItemActions',
    'js!SBIS3.CONTROLS.ListControl.CommonHandlers',
-   'js!SBIS3.CONTROLS.MoveHandlers'
-], function (CompoundControl, CompoundActiveFixMixin, ListControlMixin, Selectable, MultiSelectable, ItemActions, CommonHandlers, MoveHandlers) {
+   'js!SBIS3.CONTROLS.MoveHandlers',
+   'js!SBIS3.CONTROLS.DisplayFieldMixin'
+], function (CompoundControl, CompoundActiveFixMixin, ListControlMixin, Selectable, MultiSelectable, ItemActions, CommonHandlers, MoveHandlers, DisplayFieldMixin) {
    'use strict';
 
    /**
@@ -21,11 +22,10 @@ define('js!SBIS3.CONTROLS.ListControl', [
     * @mixes SBIS3.CONTROLS.SelectableNew
     * @mixes SBIS3.CONTROLS.MultiSelectableNew
     * @mixes SBIS3.CONTROLS.ListControl.ItemActions
-    * @public
     * @author Крайнов Дмитрий Олегович
     */
 
-   var ListControl = CompoundControl.extend([CompoundActiveFixMixin, ListControlMixin, Selectable, /*MultiSelectable,*/ ItemActions, CommonHandlers, MoveHandlers], /** @lends SBIS3.CONTROLS.ListControl.prototype */{
+   var ListControl = CompoundControl.extend([CompoundActiveFixMixin, ListControlMixin, Selectable, /*MultiSelectable,*/ ItemActions, CommonHandlers, MoveHandlers, DisplayFieldMixin], /** @lends SBIS3.CONTROLS.ListControl.prototype */{
       /**
        * @event onChangeHoveredItem При переводе курсора мыши на другую запись
        * @remark

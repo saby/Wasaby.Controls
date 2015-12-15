@@ -144,6 +144,11 @@ define('js!SBIS3.CONTROLS.MenuButton', ['js!SBIS3.CONTROLS.Button', 'js!SBIS3.CO
             width: this._container.outerWidth() + 18,  //ширина выступающей части обводки
             height: this._container.outerHeight()
          });
+         var self = this;
+         this._header.mousedown(function(){
+            //TODO придрот, чтоб на кнопку вешался класс, как будто на кнопку нажали
+            self._container.addClass('controls-Click__active');
+         });
          $('body').append(this._header);
       },
 

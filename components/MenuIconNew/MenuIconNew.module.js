@@ -15,7 +15,6 @@ define('js!SBIS3.CONTROLS.MenuIconNew', [
     * Кнопка с выпадающим меню
     * @class SBIS3.CONTROLS.MenuIcon
 	 * @demo SBIS3.CONTROLS.Demo.MyMenuIconNew
-    * @control
     * @initial
     * <component data-component='SBIS3.CONTROLS.MenuIcon'>
     *    <option name="icon">sprite:icon-24 icon-AddButton icon-primary</option>
@@ -31,8 +30,7 @@ define('js!SBIS3.CONTROLS.MenuIconNew', [
     *      </options>
     * </component>
     * @extends SBIS3.CONTROLS.ToggleButton
-    * @public
-    * @author Ганшин Ярослав Олегович
+    * @author Крайнов Дмитрий Олегович
     * @category Buttons
     *
     * @ignoreOptions independentContext contextRestriction extendedTooltip validators

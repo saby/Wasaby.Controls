@@ -18,7 +18,6 @@ define('js!SBIS3.CONTROLS.ButtonGroupBaseDSNew', [
     * Контрол, реализующий поведение выбора одного из нескольких значений при помощи набора кнопок. Отображения не имеет.
     * *Это экспериментальный модуль, API будет меняться!*
     * @class SBIS3.CONTROLS.ButtonGroupBaseDSNew
-    * @public
     * @state mutable
     * @mixes SBIS3.CONTROLS.ListControlMixin
     * @mixes SBIS3.CONTROLS.DisplayFieldMixin

@@ -17,9 +17,7 @@ define('js!SBIS3.CONTROLS.CheckBoxGroupNew', [
        * @class SBIS3.CONTROLS.CheckBoxGroupNew
        * @extends SBIS3.CONTROLS.CheckBoxGroupBaseNew
        * @mixes SBIS3.CONTROLS.FormWidgetMixin
-       * @control
        * @demo SBIS3.CONTROLS.Demo.MyCheckBoxGroup
-       * @public
        * @initial
        * <component data-component='SBIS3.CONTROLS.CheckBoxGroup'>
        *    <options name="items" type="array">
