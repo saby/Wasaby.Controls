@@ -51,7 +51,7 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
             idProperty: '',
 
             /**
-             * @cfg {SBIS3.CONTROLS.Data.Adapter.IAdapter} Адаптер для работы с данными, по умолчанию SBIS3.CONTROLS.Data.Adapter.Sbis
+             * @cfg {SBIS3.CONTROLS.Data.Adapter.IAdapter} Адаптер для работы с данными, по умолчанию {@link SBIS3.CONTROLS.Data.Adapter.Sbis}
              */
             adapter: undefined,
 
@@ -127,21 +127,23 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
          },
 
          /**
-          * @var {SBIS3.CONTROLS.SbisServiceSource/resources/SbisServiceBLO} Объект, который умеет ходить на бизнес-логику
+          * @var {SBIS3.CONTROLS.Data.Source.SbisService/resources/SbisServiceBLO} Объект, который умеет ходить на бизнес-логику
           */
          _provider: undefined,
 
          /**
-          * @var {SBIS3.CONTROLS.SbisServiceSource/resources/SbisServiceBLO} Объект, который умеет ходить на бизнес-логику, для смены порядковых номеров
+          * @var {SBIS3.CONTROLS.Data.Source.SbisService/resources/SbisServiceBLO} Объект, который умеет ходить на бизнес-логику, для смены порядковых номеров
           */
          _orderProvider: undefined
       },
 
       $constructor: function(cfg) {
          cfg = cfg || {};
-         
-         this._options.adapter = cfg.adapter || new SbisAdapter();
-         
+
+         if (!this._options.adapter) {
+            this._options.adapter = new SbisAdapter();
+         }
+
          if ('service' in cfg && !cfg.resource) {
             this._options.resource = cfg.resource = cfg.service;
          }
