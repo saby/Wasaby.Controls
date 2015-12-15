@@ -26,9 +26,7 @@ define('js!SBIS3.CONTROLS.FilterButton',
     * @control
     * @public
     */
-   var
-      linkTextDef = 'Нужно отобрать?',
-      filterStructureElementDef = {
+   var filterStructureElementDef = {
          internalValueField: null,
          internalCaptionField: null
          /* По умолчанию их нет
@@ -46,11 +44,10 @@ define('js!SBIS3.CONTROLS.FilterButton',
    }
 
    function isFieldResetValue(element, fieldName, filter) {
-      var result =
-            ('resetValue' in element && fieldName in filter && filter[fieldName] === element.resetValue) ||
-            (!('resetValue' in element) && !(fieldName in filter));
+      var hasResetValue = 'resetValue' in element,
+          hasFilter = fieldName in filter;
 
-      return result;
+      return hasResetValue && hasFilter ? $ws.helpers.isEqualObject(filter[fieldName], element.resetValue) : true;
    }
 
    var FilterButton = CompoundControl.extend([FilterMixin, PickerMixin],/** @lends SBIS3.CONTROLS.FilterButton.prototype */{
@@ -58,15 +55,40 @@ define('js!SBIS3.CONTROLS.FilterButton',
       _dotTplPicker: dotTplForPicker,
       $protected: {
          _options: {
+            /**
+             * @cfg {String} Направление открытия всплывающей панели кнопки фильтров
+             * <wiTag group="Отображение">
+             * Возможные значения:
+             * <ol>
+             *    <li>left - открывается влево;</li>
+             *    <li>right - открывается вправо.</li>
+             * </ol>
+             */
             filterAlign: 'left',
+            /**
+             * @сfg {String} template Шаблон для всплывающей панели.
+             * <wiTag group="Данные">
+             * В данной опции задаётся шаблон для всплывающей панели, открываемой нажатием на кнопку фильтров.
+             */
             template: '',
-            pickerClassName: 'controls__filterButton__picker',
+            /**
+             * @cfg {String} Дополнительный CSS-класс для сплывающей панели
+             * @remark
+             * Дополнительный CSS-класс, который будет присвоен всплывающей панели контрола.
+             * Этот класс добавляется при построении всплывающей панели в атрибут class к уже заданным CSS-классам.
+             * <wiTag group="Отображение">
+             */
+            pickerClassName: '',
+            /**
+             * @cfg {String} Текст, который будет отображаться рядом с иконкой фильтра
+             * <wiTag group="Управление">
+             * Опция устанавливает текст, который будет отображаться рядом с иконкой фильтра
+             */
+            resetLinkText: '',
 
+            // TODO ДОКУМЕНТАЦИЯ
             filterLineComponent: 'SBIS3.CONTROLS.FilterButton.FilterLine',
             filterLineTemplate: undefined,
-
-            resetLinkText: linkTextDef,
-
             independentContext: true,
             internalContextFilterName : 'sbis3-controls-filter-button'
          },
@@ -142,7 +164,8 @@ define('js!SBIS3.CONTROLS.FilterButton',
                   filter: this.getFilter(),
                   caption: this._mapFilterStructureByProp('caption')
                });
-            }.bind(this);
+            }.bind(this),
+            isRightAlign = this._options.filterAlign === 'right';
 
          this._pickerContext = ctx;
 
@@ -176,10 +199,10 @@ define('js!SBIS3.CONTROLS.FilterButton',
          }.bind(this));
 
          return {
-            corner: this._options.filterAlign === 'right' ? 'tr' : 'tl',
+            corner: isRightAlign ? 'tl' : 'tr',
             parent: this,
             horizontalAlign: {
-               side: this._options.filterAlign
+               side: isRightAlign ? 'left' : 'right'
             },
             verticalAlign: {
                side: 'top'
@@ -187,6 +210,7 @@ define('js!SBIS3.CONTROLS.FilterButton',
             closeButton: true,
             closeByExternalClick: true,
             context: ctx,
+            className: 'controls__filterButton__picker',
             template: dotTplForPicker.call(this, {template: this._options.template}),
             handlers: {
                onClose: function() {

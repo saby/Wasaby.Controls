@@ -55,7 +55,8 @@ define('js!SBIS3.CONTROLS.MoveHandlers', ['js!SBIS3.CONTROLS.MoveDialog','js!SBI
             } else {
                deferred = this.getMoveStrategy().move(records, recordTo, true);
             }
-            if (deferred instanceof $ws.proto.Deferred) {
+            deferred = deferred === true ? new $ws.proto.Deferred().callback(true) : deferred;
+            if (deferred instanceof $ws.proto.Deferred) {//обновляем view если вернули true либо deferred
                deferred.addCallback(function() {
                   self.removeItemsSelectionAll();
                   if (isNodeTo) {
@@ -63,10 +64,7 @@ define('js!SBIS3.CONTROLS.MoveHandlers', ['js!SBIS3.CONTROLS.MoveDialog','js!SBI
                   }
                   self.reload();
                });
-            } else {
-               throw new Error('The MoveStrategy methods a move or a hierarhyMove must returning deferred.');
             }
-
          }
       },
       _checkRecordsForMove: function(records, moveTo) {
@@ -79,7 +77,6 @@ define('js!SBIS3.CONTROLS.MoveHandlers', ['js!SBIS3.CONTROLS.MoveDialog','js!SBI
          for (var i = 0; i < records.length; i++) {
             key = '' + ($ws.helpers.instanceOfModule(records[i], 'SBIS3.CONTROLS.Record') ? records[i].getKey() : records[i]);
             if ($.inArray(key, toMap) !== -1) {
-               $ws.helpers.alert('Вы не можете переместить запись саму в себя!', {}, this);
                return false;
             }
          }

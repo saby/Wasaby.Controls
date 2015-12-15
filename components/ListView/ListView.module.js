@@ -440,7 +440,7 @@ define('js!SBIS3.CONTROLS.ListView',
          // TODO Подумать, как решить данную проблему. Не надёжно хранить информацию в доме
          // Поиск следующего или предыдущего элемента коллекции с учётом вложенных контролов
          _getHtmlItem: function (id, isNext) {
-            var items = $('.controls-ListView__item', this._getItemsContainer()).not('.ws-hidden'),
+            var items = $('.js-controls-ListView__item', this._getItemsContainer()).not('.ws-hidden'),
                selectedItem = $('[data-id="' + id + '"]', this._getItemsContainer()),
                order = isNext ? 1 : -1,
                siblingItem = items.eq(items.index(selectedItem) + order);
@@ -794,14 +794,15 @@ define('js!SBIS3.CONTROLS.ListView',
          //*******************************//
 
          _swipeHandler: function(e){
-            if (e.direction == 'left'){
-               var target = this._findItemByElement($(e.target)),
-                   item = this._getElementData(target);
-               this._onChangeHoveredItem(item);
-               if (this._options.itemsActions.length) {
-         			item.container ? this._showItemActions(item) : this._hideItemActions();
+            var target = this._findItemByElement($(e.target)),
+               item = this._getElementData(target);
+            if (this._options.itemsActions.length) {
+               if (e.direction == 'left'){
+            		item.container ? this._showItemActions(item) : this._hideItemActions();
+                  this._hoveredItem = item;
+               } else {
+                  this._hideItemActions(true);
                }
-               this._hoveredItem = item;
             }
          },
 
@@ -838,11 +839,22 @@ define('js!SBIS3.CONTROLS.ListView',
                return;
             }
             this._itemActionsGroup.showItemActions(item, this._getItemActionsPosition(item));
-         },
-         _hideItemActions: function () {
-            if (this._itemActionsGroup && !this._itemActionsGroup.isItemActionsMenuVisible()) {
-               this._itemActionsGroup.hideItemActions();
+            if (this._touchSupport){
+               this._trackMove = $ws.helpers.trackElement(item.container, true);
+               this._trackMove.subscribe('onMove', this._moveItemActions, this);
             }
+         },
+         _hideItemActions: function (animate) {
+            if (this._itemActionsGroup && !this._itemActionsGroup.isItemActionsMenuVisible()) {
+               this._itemActionsGroup.hideItemActions(animate);
+            }
+            if (this._trackMove) {
+               this._trackMove.unsubscribe('onMove', this._moveItemActions);
+               this._trackMove = null;
+            }
+         },
+         _moveItemActions: function(event, offset){
+            this._getItemActionsContainer()[0].style.top = offset.top - this._container.offset().top + 'px';
          },
          _getItemActionsPosition: function (item) {
             return {
