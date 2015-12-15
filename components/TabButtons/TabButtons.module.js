@@ -45,7 +45,8 @@ define(
              *     </div>
              * </pre>
              */
-            itemTemplate: itemTpl
+            itemTemplate: itemTpl,
+            tabSpaceTemplate: undefined
          }
       },
       _dotTplFn: TabButtonsTpl,

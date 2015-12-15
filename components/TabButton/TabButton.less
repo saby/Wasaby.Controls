@@ -13,12 +13,15 @@
    &:hover {
       background: @tab-button-hover-background;
       border: @tab-button-hover-border;
-      border-bottom: none;
+      border-bottom: @tab-button-hover-border-bottom;
       .controls-TabButton__inner {
          &:before {
             display: @tab-button-hover-inner-after-display;
          }
       }
+   }
+   .controls-TabButton__bottomLine{
+      display: @tab-button-bottomLine-start-display;
    }
    //стиль для встраиваемых компонентов, чтобы текст был по стандарту
    .controls-TabButton__mainText {
@@ -34,6 +37,15 @@
       z-index: @tab-button-checked-z-index;
       cursor: @tab-button-checked-cursor;
       font-size: @tab-button-checked-font-size;
+      .controls-TabButton__bottomLine{
+         position: @tab-button-bottomLine-position;
+         bottom: @tab-button-bottomLine-bottom;
+         left: @tab-button-bottomLine-left;
+         right: @tab-button-bottomLine-right;
+         background: @tab-button-bottomLine-background;
+         height: @tab-button-bottomLine-height;
+         display: @tab-button-bottomLine-display;
+      }
       .controls-TabButton__inner {
          height: @tab-button-checked-height + 1;
          font-weight: @tab-button-checked-inner-font-weight;
@@ -112,8 +124,7 @@
    }
 
    &.controls-TabButton__right-align {
-      margin-left: @tab-button-right-margin-left;
-      float: @tab-button-right-float;
+      margin-right: @tab-button-right-margin-right;
       .controls-TabButton__inner:before{
          left: @tab-button-right-separator-left
       }
@@ -121,7 +132,6 @@
 
    &.controls-TabButton__left-align {
       margin-left: @tab-button-left-margin-left;
-      float: @tab-button-left-float;
       .controls-TabButton__inner:before{
          right: @tab-button-left-separator-right;
       }
@@ -139,12 +149,12 @@
    }
 
    &.ws-disabled, &.ws-disabled:hover, &.ws-disabled.controls-Checked__checked {
-      &:hover {
-         border-color: @tab-button-disabled-hover-border-color;
-         background: @tab-button-disabled-hover-bg;
-      }
+      border-color: @tab-button-disabled-border-color;
+      background: @tab-button-disabled-bg;
       .controls-TabButton__inner {
          color: @tab-button-disabled-inner-color;
+         border-color: @tab-button-disabled-border-color;
+         background: @tab-button-disabled-bg;
          &:before {
             display: @tab-button-disabled-inner-after-display;
          }
