@@ -7,8 +7,6 @@ define('js!SBIS3.CONTROLS.ContextMenuNew', ['js!SBIS3.CONTROLS.MenuNew', 'js!SBI
     * Контрол, отображающий горизонтальное меню.
     * *Это экспериментальный модуль, API будет меняться!*
     * @class SBIS3.CONTROLS.ContextMenu
-    * @control
-    * @public
     * @state mutable
     * @author Крайнов Дмитрий Олегович
     * @extends $ws.proto.Control

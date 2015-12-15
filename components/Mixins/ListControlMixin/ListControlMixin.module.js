@@ -15,7 +15,6 @@ define('js!SBIS3.CONTROLS.ListControlMixin', [
     * Миксин, задающий любому контролу поведение работы с нетипизированным списком
     * *Это экспериментальный модуль, API будет меняться!*
     * @mixin SBIS3.CONTROLS.ListControlMixin
-    * @public
     * @state mutable
     * @author Крайнов Дмитрий Олегович
     */

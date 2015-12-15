@@ -11,7 +11,6 @@ define('js!SBIS3.CONTROLS.HierarchyControlMixin', [
     * Миксин, задающий любому контролу поведение работы с иерархией
     * *Это экспериментальный модуль, API будет меняться!*
     * @mixin SBIS3.CONTROLS.HierarchyControlMixin
-    * @public
     * @state mutable
     * @author Крайнов Дмитрий Олегович
     */

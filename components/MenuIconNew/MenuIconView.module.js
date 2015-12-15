@@ -7,7 +7,7 @@ define('js!SBIS3.CONTROLS.MenuIconView', [
     * Представление для MenuIcon
     * @class SBIS3.CONTROLS.MenuIconNew
     * @extends SBIS3.CONTROLS.MenuLinkNewView
-    * @author Ганшин Ярослав Олегович
+    * @author Крайнов Дмитрий Олегович
     */
    var MenuView = MenuLinkNewView.extend(/** @lends SBIS3.CONTROLS.MenuIconNew.prototype */{
       _moduleName: 'SBIS3.CONTROLS.ContextMenuView',

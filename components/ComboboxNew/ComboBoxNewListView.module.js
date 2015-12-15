@@ -8,8 +8,7 @@ define('js!SBIS3.CONTROLS.ComboBoxNewListView', [
     * Представление для выпадающего списка комбобокса
     * @class SBIS3.CONTROLS.ComboBoxView
     * @extends SBIS3.CONTROLS.ListControl.View
-    * @public
-    * @author Ганшин Ярослав Олегович
+    * @author Крайнов Дмитрий Олегович
     */
    return ListView.extend(/** @lends SBIS3.CONTROLS.ComboBoxView.prototype */{
       $protected: {

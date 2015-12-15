@@ -15,7 +15,6 @@ define('js!SBIS3.CONTROLS.TreeControl', [
     * @mixes SBIS3.CONTROLS.ListControlMixin
     * @mixes SBIS3.CONTROLS.HierarchyControlMixin
     * @mixes SBIS3.CONTROLS.TreeControlMixin
-    * @public
     * @state mutable
     * @author Крайнов Дмитрий Олегович
     */
