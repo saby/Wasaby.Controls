@@ -1,0 +1,18 @@
+.controls-DataGridView {
+   .controls-DataGridView__table {
+      .controls-DataGridView__tr {
+         &.controls-ListView__item__hovered {
+            background: @data-grid-row-hover-bg;
+
+            .controls-DataGridView__th {
+               color: @data-grid-row-hover-header-cell-text-color;
+               background-color: @data-grid-row-hover-header-cell-bg;
+            }
+            .controls-DataGridView__td {
+               color: @data-grid-row-hover-cell-text-color;
+               background-color: @data-grid-row-hover-cell-bg;
+            }
+         }
+      }
+   }
+}
