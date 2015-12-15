@@ -1117,6 +1117,7 @@ define('js!SBIS3.CONTROLS.ListView',
                      self._dataSet.merge(dataSet, {remove: false});
                      self._drawItems(records);
                      self._dataLoadedCallback();
+                     self._toggleEmptyData();
                   }
 
                }).addErrback(function (error) {
