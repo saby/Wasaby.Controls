@@ -409,9 +409,10 @@ define('js!SBIS3.CONTROLS.ListView',
                            ? this._options.infiniteScrollContainer
                            : this.getContainer().parent().find('.' + this._options.infiniteScrollContainer);
                      scrollWatcherCfg.element = this._options.infiniteScrollContainer;
-                     scrollWatcherCfg.scrollCheck = {
-                        'containerBottom' : this._onContainerScrollBottom.bind(this)
-                     };
+                     //Если заработает новая проверка в контейнерах, то можно удалить
+                     //scrollWatcherCfg.scrollCheck = {
+                     //   'containerBottom' : this._onContainerScrollBottom.bind(this)
+                     //};
 
                      break;
                   }
@@ -1120,9 +1121,10 @@ define('js!SBIS3.CONTROLS.ListView',
          isInfiniteScroll: function () {
             return this._options.infiniteScroll && this._allowInfiniteScroll;
          },
-         _onContainerScrollBottom: function () {
-            return (this._loadingIndicator.offset().top - this.getContainer().offset().top - START_NEXT_LOAD_OFFSET < this.getContainer().height());
-         },
+         //TODO Удалить, если везде заработает новая проверка в контейнерах
+         //_onContainerScrollBottom: function () {
+         //   return (this._loadingIndicator.offset().top - this.getContainer().offset().top - START_NEXT_LOAD_OFFSET < this.getContainer().height());
+         //},
          /**
           *  Общая проверка и загрузка данных для всех событий по скроллу
           */
@@ -1151,12 +1153,9 @@ define('js!SBIS3.CONTROLS.ListView',
                   //ВНИМАНИЕ! Здесь стрелять onDataLoad нельзя! Либо нужно определить событие, которое будет
                   //стрелять только в reload, ибо между полной перезагрузкой и догрузкой данных есть разница!
                   self._loader = null;
-                  /*Леша Мальцев добавил скрытие индикатора, но на контейнерах с фиксированной высотой это чревато неправильным определением  offset от индикатора
-                  * Т.е. можем не определить, что доскроллили до низа страницы. индикатор должен юыть виден, пока не загрузим все данные
-                  */
-                  if (self._isWindowScroll()) {
-                     self._hideLoadingIndicator();
-                  }
+
+                  self._hideLoadingIndicator();
+
                   //нам до отрисовки для пейджинга уже нужно знать, остались еще записи или нет
                   if (self._hasNextPage(dataSet.getMetaData().more, self._infiniteScrollOffset)) {
                      self._infiniteScrollOffset += self._limit;

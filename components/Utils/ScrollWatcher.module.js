@@ -39,7 +39,7 @@ define('js!SBIS3.CONTROLS.ScrollWatcher', [], function() {
       $protected: {
          _options: {
             /**
-             * @cfg {jQuery} 
+             * @cfg {jQuery} У какого элемента отслеживат скролл
              */
             element : undefined,
             /**
@@ -51,7 +51,7 @@ define('js!SBIS3.CONTROLS.ScrollWatcher', [], function() {
             /**
              * @cfg {Control} Контрол, от которого отслеживается скролл.
              * @remark
-             * От него будем искать контейнер, если задан по классу, по нему будем искать находимся ли мы на floatArea
+             * По нему будем искать находимся ли мы на floatArea
              *
              */
             opener: undefined,
@@ -130,11 +130,8 @@ define('js!SBIS3.CONTROLS.ScrollWatcher', [], function() {
        */
       _processScrollEvent: function (type, result, event) {
          var scrollCheck = this._options.scrollCheck,
-               curScrollTop = $(event.target).scrollTop(),
                userResult;
-         this._isScrollUp = this._lastScrollTop > curScrollTop;
-         this._lastScrollTop = curScrollTop;
-
+         this._defineScrollDirection(event);
          //Если была пройдена пользовательская проверка, то оповестим пользователя.
          if (!Object.isEmpty(scrollCheck)) {
             for (var i in scrollCheck) {
@@ -153,6 +150,15 @@ define('js!SBIS3.CONTROLS.ScrollWatcher', [], function() {
             this._notify('onScroll', 'top', true);
          }
       },
+      _defineScrollDirection : function(event){
+         var curScrollTop = $(event.target).scrollTop();
+         //Это значит вызываем с тем же значением - перепроверять не надо.
+         if (this._lastScrollTop === curScrollTop) {
+            return;
+         }
+         this._isScrollUp = this._lastScrollTop > curScrollTop;
+         this._lastScrollTop = curScrollTop;
+      },
       _onWindowScroll: function (event) {
          this._processScrollEvent('bottom', this._isBottomOfPage(), event);
       },
@@ -160,8 +166,11 @@ define('js!SBIS3.CONTROLS.ScrollWatcher', [], function() {
          this._processScrollEvent('bottom', scrollOptions.clientHeight + scrollOptions.scrollTop  >= scrollOptions.scrollHeight - SCROLL_INDICATOR_HEIGHT - this._options.checkOffset, event);
       },
       _onContainerScroll: function (event) {
-         //TODO может здесь сможет появится какая-нибудь проверка...
-         this._processScrollEvent('bottom', false, event);
+         var elem = event.target;
+         //если высота скролла меньше чем высота контейнера с текущим scrollTop, то мы где-то внизу.
+         //offsetHeight - высота контейнра, scrollHeight - вся высота скролла,
+         this._defineScrollDirection(event);
+         this._processScrollEvent('bottom',!this._isScrollUp && (elem.scrollHeight - this._options.checkOffset <=  elem.scrollTop + elem.offsetHeight), event);
       },
       _checkTop : function(event){
          return event && this._isScrollUp && (this._lastScrollTop < this._options.checkOffset);
