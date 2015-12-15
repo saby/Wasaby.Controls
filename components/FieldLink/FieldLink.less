@@ -12,6 +12,13 @@
 
 .controls-FieldLink__picker,
 .controls-FieldLink {
+   &.controls-FieldLink__itemsEdited {
+      .controls-FieldLink__linkItem:hover {
+         text-decoration: @link-hover-text-decoration;
+         cursor: @link-cursor;
+      }
+   }
+
    .controls-FieldLink__linkItem {
       display: inline-block;
       margin: @controls-FieldLink-linkItem-margin;
