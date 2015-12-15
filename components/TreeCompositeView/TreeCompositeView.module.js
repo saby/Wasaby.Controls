@@ -41,37 +41,39 @@ define('js!SBIS3.CONTROLS.TreeCompositeView', ['js!SBIS3.CONTROLS.TreeDataGridVi
       },
 
       _elemClickHandler: function (id, data, target) {
-         var $target = $(target),
-             nodeID,
-             handler = function() {
-                var res = this._notify('onItemClick', id, data, target);
-                if (res !== false) {
-                   this._options.elemClickHandler && this._options.elemClickHandler.call(this, id, data, target);
-                   nodeID = $target.closest('.controls-ListView__item').data('id');
-                   if (this._dataSet.getRecordByKey(nodeID).get(this._options.hierField + '@')) {
-                      this.setCurrentRoot(nodeID);
-                      this.reload();
-                   }
-                   else {
-                      this._activateItem(id);
-                   }
-                }
-             }.bind(this);
+         var $target = $(target);
 
          if (this._options.viewMode == 'table') {
             TreeCompositeView.superclass._elemClickHandler.call(this, id, data, target);
          }
          else {
+            this.setSelectedKey(id);
             if (this._options.multiselect) {
                if ($target.hasClass('js-controls-ListView__itemCheckBox') || $target.hasClass('controls-ListView__itemCheckBox')) {
                   this.toggleItemsSelection([$target.closest('.controls-ListView__item').data('id')]);
                }
                else {
-                  handler();
+                  this._notifyOnItemClick(id, data, target);
                }
             } else {
                this.setSelectedKeys([id]);
-               handler();
+               this._notifyOnItemClick(id, data, target);
+            }
+         }
+      },
+      _notifyOnItemClick: function(id, data, target) {
+         var
+             nodeID,
+             res = this._notify('onItemClick', id, data, target);
+         if (res !== false) {
+            this._options.elemClickHandler && this._options.elemClickHandler.call(this, id, data, target);
+            nodeID = $(target).closest('.controls-ListView__item').data('id');
+            if (this._dataSet.getRecordByKey(nodeID).get(this._options.hierField + '@')) {
+               this.setCurrentRoot(nodeID);
+               this.reload();
+            }
+            else {
+               this._activateItem(id);
             }
          }
       },
@@ -201,7 +203,6 @@ define('js!SBIS3.CONTROLS.TreeCompositeView', ['js!SBIS3.CONTROLS.TreeDataGridVi
                //Если запись найдена в обновленном DataSet, то перерисовываем её
                if (record) {
                   currentDataSet.getRecordByKey(row.key).merge(record);
-                  self.redrawRow(record);
                } else { //Иначе - удаляем запись
                   currentDataSet.removeRecord(row.key);
                   self.destroyFolderToolbar(row.key);

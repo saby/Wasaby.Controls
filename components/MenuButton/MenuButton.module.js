@@ -1,4 +1,4 @@
-define('js!SBIS3.CONTROLS.MenuButton', ['js!SBIS3.CONTROLS.Button', 'js!SBIS3.CONTROLS.ContextMenu', 'js!SBIS3.CONTROLS.PickerMixin', 'js!SBIS3.CONTROLS.DSMixin', 'js!SBIS3.CONTROLS.MenuButtonMixin', 'html!SBIS3.CONTROLS.MenuButton'], function(Button, ContextMenu, PickerMixin, DSMixin, MenuButtonMixin, dotTplFn) {
+define('js!SBIS3.CONTROLS.MenuButton', ['js!SBIS3.CONTROLS.Button', 'js!SBIS3.CONTROLS.ContextMenu', 'js!SBIS3.CONTROLS.PickerMixin', 'js!SBIS3.CONTROLS.DSMixin', 'js!SBIS3.CONTROLS.MenuButtonMixin'], function(Button, ContextMenu, PickerMixin, DSMixin, MenuButtonMixin) {
 
    'use strict';
 
@@ -49,7 +49,6 @@ define('js!SBIS3.CONTROLS.MenuButton', ['js!SBIS3.CONTROLS.Button', 'js!SBIS3.CO
     */
 
    var MenuButton = Button.extend( [PickerMixin, DSMixin, MenuButtonMixin], /** @lends SBIS3.CONTROLS.MenuButton.prototype */ {
-      _dotTplFn: dotTplFn,
       $protected: {
          _header: null,
          _headerAlignment: {
@@ -63,6 +62,7 @@ define('js!SBIS3.CONTROLS.MenuButton', ['js!SBIS3.CONTROLS.Button', 'js!SBIS3.CO
 
       init: function(){
          var self = this;
+         this._container.addClass('controls-MenuButton');
          this.reload();
          MenuButton.superclass.init.call(this);
          $ws.helpers.trackElement(this._container, true).subscribe('onMove', function () {

@@ -119,7 +119,7 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', ['js!SBIS3.CORE.Control'], function (Con
          this._folderOffsets[key || 'null'] = 0;
          if (!tree[key]){
             this._toggleIndicator(true);
-            return this._dataSource.query(this._createTreeFilter(key), this._sorting, 0, this._limit).addCallback(function (dataSet) {
+            return this._callQuery(this._createTreeFilter(key), this._sorting, 0, this._limit).addCallback(function (dataSet) {
                // TODO: Отдельное событие при загрузке данных узла. Сделано так как тут нельзя нотифаить onDataLoad,
                // так как на него много всего завязано. (пользуется Янис)
                self._folderHasMore[key] = dataSet.getMetaData().more;
@@ -216,7 +216,7 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', ['js!SBIS3.CORE.Control'], function (Con
          var
             self = this,
             filter = id ? this._createTreeFilter(id) : this.getFilter();
-         this._loader = this._dataSource.query(filter, this._sorting, (id ? this._folderOffsets[id] : this._folderOffsets['null']) + this._limit, this._limit).addCallback(function (dataSet) {
+         this._loader = this._callQuery(filter, this._sorting, (id ? this._folderOffsets[id] : this._folderOffsets['null']) + this._limit, this._limit).addCallback(function (dataSet) {
             //ВНИМАНИЕ! Здесь стрелять onDataLoad нельзя! Либо нужно определить событие, которое будет
             //стрелять только в reload, ибо между полной перезагрузкой и догрузкой данных есть разница!
             self._notify('onDataMerge', dataSet);

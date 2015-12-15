@@ -19,9 +19,9 @@ define('js!SBIS3.CONTROLS.DemoMemory', ['js!SBIS3.CONTROLS.Data.Source.Memory'],
             return data;
          }
 
-         var tableAdapter = this._options.adapter.forTable(),
-             recordAdapter = this._options.adapter.forRecord(),
-             newData = tableAdapter.getEmpty();
+         var tableAdapter = this._options.adapter.forTable(
+            this._options.adapter.forTable(data).getEmpty()
+         );
          this._each(data, function(item) {
             var filterMatch = true;
 
@@ -34,7 +34,7 @@ define('js!SBIS3.CONTROLS.DemoMemory', ['js!SBIS3.CONTROLS.Data.Source.Memory'],
                if (filterField == 'Разворот' || filterField == 'ВидДерева') {
                   continue;
                }
-               var fieldValue = recordAdapter.get(item, filterField);
+               var fieldValue = this._options.adapter.forRecord(item).get(filterField);
                filterMatch = fieldValue && fieldValue.toLowerCase().indexOf(where[filterField].toLowerCase()) !== -1;
                if (!filterMatch) {
                   break;
@@ -42,11 +42,11 @@ define('js!SBIS3.CONTROLS.DemoMemory', ['js!SBIS3.CONTROLS.Data.Source.Memory'],
             }
 
             if (filterMatch) {
-               tableAdapter.add(newData, item);
+               tableAdapter.add(item);
             }
          }, this);
 
-         return newData;
+         return tableAdapter.getData();
       }
    });
 
