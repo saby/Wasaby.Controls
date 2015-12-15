@@ -1,4 +1,4 @@
-define('js!SBIS3.CONTROLS.MenuLink', ['js!SBIS3.CONTROLS.Link', 'html!SBIS3.CONTROLS.MenuLink', 'js!SBIS3.CONTROLS.DSMixin', 'js!SBIS3.CONTROLS.PickerMixin', 'js!SBIS3.CONTROLS.MenuButtonMixin', 'js!SBIS3.CONTROLS.ContextMenu'], function(Link, dotTplFn, DSMixin, PickerMixin, MenuButtonMixin, ContextMenu) {
+define('js!SBIS3.CONTROLS.MenuLink', ['js!SBIS3.CONTROLS.Link', 'js!SBIS3.CONTROLS.DSMixin', 'js!SBIS3.CONTROLS.PickerMixin', 'js!SBIS3.CONTROLS.MenuButtonMixin', 'js!SBIS3.CONTROLS.ContextMenu'], function(Link, DSMixin, PickerMixin, MenuButtonMixin, ContextMenu) {
 
    'use strict';
 
@@ -49,7 +49,6 @@ define('js!SBIS3.CONTROLS.MenuLink', ['js!SBIS3.CONTROLS.Link', 'html!SBIS3.CONT
     */
 
    var MenuLink = Link.extend( [PickerMixin, DSMixin, MenuButtonMixin], /** @lends SBIS3.CONTROLS.MenuLink.prototype */ {
-      _dotTplFn: dotTplFn,
       $protected: {
          _zIndex: '',
          _options: {
@@ -62,6 +61,7 @@ define('js!SBIS3.CONTROLS.MenuLink', ['js!SBIS3.CONTROLS.Link', 'html!SBIS3.CONT
       },
 
       init : function(){
+         this._container.addClass('controls-MenuLink');
          this.reload();
          MenuLink.superclass.init.call(this);
       },
@@ -94,24 +94,6 @@ define('js!SBIS3.CONTROLS.MenuLink', ['js!SBIS3.CONTROLS.Link', 'html!SBIS3.CONT
          }
          if (this._picker) {
             this.hidePicker();
-         }
-      },
-      
-      _drawIcon: function (icon) {
-         var
-            $icon = $('.controls-Link__icon', this._container.get(0)),
-            $caption = $('.controls-Link__field', this._container.get(0));
-         if (icon) {
-            if ($icon.length) {
-               $icon.get(0).className = 'controls-Link__icon ' + this._iconClass;
-            }
-            else {
-               $icon = $('<i class="controls-Link__icon ' + this._iconClass + '"></i>');
-               $caption.before($icon);
-            }
-         }
-         else {
-            $icon.remove();
          }
       }
    });

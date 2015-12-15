@@ -82,7 +82,7 @@ define('js!SBIS3.CONTROLS.Data.Factory', [
                return $ws.proto.TimeInterval.toString(value);
             case 'Text':
             case 'String':
-               return value + '';
+               return value;
             case 'Boolean':
                if (value === null) {
                   return value;
@@ -190,7 +190,11 @@ define('js!SBIS3.CONTROLS.Data.Factory', [
        * @private
        */
       _makeDataSet: function (data, adapter) {
-         adapter.setProperty(data, 'total', adapter.forTable().getCount(data));
+         adapter.setProperty(
+            data,
+            'total',
+            adapter.forTable(data).getCount()
+         );
 
          return $ws.single.ioc.resolve('SBIS3.CONTROLS.Data.Source.DataSet', {
             model: $ws.single.ioc.resolve('SBIS3.CONTROLS.Data.ModelConstructor'),
@@ -244,8 +248,8 @@ define('js!SBIS3.CONTROLS.Data.Factory', [
        */
       _serializeList: function (data, adapter) {
          var items = data.toArray(),
-            tableAdapter = adapter.forTable(),
             otherData = [],
+            tableAdapter,
             rawData,
             item,
             i,
@@ -254,20 +258,22 @@ define('js!SBIS3.CONTROLS.Data.Factory', [
          for (i = 0, length = items.length; i < length; i++) {
             item = items[i];
             if (typeof items === 'object' && $ws.helpers.instanceOfModule(item, 'SBIS3.CONTROLS.Data.Model')) {
-               if (rawData === undefined) {
-                  rawData = tableAdapter.getEmpty(item.getRawData());
+               if (tableAdapter === undefined) {
+                  tableAdapter = adapter.forTable(
+                     adapter.forTable(item.getRawData()).getEmpty()
+                  );
                }
-               tableAdapter.add(rawData, item.getRawData());
+               tableAdapter.add(item.getRawData());
             } else {
                otherData.push(item);
             }
          }
 
-         if (otherData.length) {
-            adapter.setProperty(rawData, 'other', otherData);
+         if (tableAdapter && otherData.length) {
+            adapter.setProperty(tableAdapter.getData(), 'other', otherData);
          }
 
-         return rawData;
+         return tableAdapter.getData();
       },
 
       /**

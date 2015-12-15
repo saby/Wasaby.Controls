@@ -48,25 +48,23 @@ define('js!SBIS3.CONTROLS.MoveHandlers', ['js!SBIS3.CONTROLS.MoveDialog','js!SBI
 
          if (this._checkRecordsForMove(records, moveTo)) {
             for (var i = 0; i < records.length; i++) {
-               record = $ws.helpers.instanceOfModule(records[i], 'SBIS3.CONTROLS.Record') ? records[i] : this._dataSet.getRecordByKey(records[i]);
-               if (isNodeTo) {
-
-                  deferred.push(this.getMoveStrategy().hierarhyMove(record, recordTo));
-               } else {
-                  deferred.push(this.getMoveStrategy().move(record, recordTo, true));
-
-
-               }
+               records[i] = $ws.helpers.instanceOfModule(records[i], 'SBIS3.CONTROLS.Record') ? records[i] : this._dataSet.getRecordByKey(records[i]);
             }
-            deferred.done().getResult().addCallback(function() {
-               if (deferred.getResult().isSuccessful()) {
+            if (isNodeTo) {
+               deferred = this.getMoveStrategy().hierarhyMove(records, recordTo);
+            } else {
+               deferred = this.getMoveStrategy().move(records, recordTo, true);
+            }
+            deferred = deferred === true ? new $ws.proto.Deferred().callback(true) : deferred;
+            if (deferred instanceof $ws.proto.Deferred) {//обновляем view если вернули true либо deferred
+               deferred.addCallback(function() {
                   self.removeItemsSelectionAll();
                   if (isNodeTo) {
                      self.setCurrentRoot(moveTo);
                   }
                   self.reload();
-               }
-            });
+               });
+            }
          }
       },
       _checkRecordsForMove: function(records, moveTo) {
@@ -79,7 +77,6 @@ define('js!SBIS3.CONTROLS.MoveHandlers', ['js!SBIS3.CONTROLS.MoveDialog','js!SBI
          for (var i = 0; i < records.length; i++) {
             key = '' + ($ws.helpers.instanceOfModule(records[i], 'SBIS3.CONTROLS.Record') ? records[i].getKey() : records[i]);
             if ($.inArray(key, toMap) !== -1) {
-               $ws.helpers.alert('Вы не можете переместить запись саму в себя!', {}, this);
                return false;
             }
          }
@@ -167,7 +164,7 @@ define('js!SBIS3.CONTROLS.MoveHandlers', ['js!SBIS3.CONTROLS.MoveDialog','js!SBI
    };
    function moveRecord(itemRecord, moveTo, current, up){
       var self = this;
-      this.getMoveStrategy().move(itemRecord, this._dataSet.getRecordByKey(moveTo), up).addCallback(function(){
+      this.getMoveStrategy().move([itemRecord], this._dataSet.getRecordByKey(moveTo), !up).addCallback(function(){
          self._moveItemTo(current, moveTo, up);
       }).addErrback(function(e){
          $ws.core.alert(e.message);

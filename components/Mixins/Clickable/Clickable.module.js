@@ -65,6 +65,11 @@ define('js!SBIS3.CONTROLS.Clickable', [], function() {
          _onClickHandler: function(e) {
             if (this.isEnabled()) {
                this._container.removeClass('controls-Click__active');
+               //Установим фокус в контрол, чтобы у него стрельнул onFocusIn и у контрола с которого уходит фокус, стрельнул onFocusOut.
+               //Такое поведение необходимо например в редактировании по месту, которое закрывается, когда у дочернего контрола стрельнул onFocusOut.
+               if (!this._isControlActive) {
+                  this.setActive(true);
+               }
                this._clickHandler(e);
                this._notifyOnActivated(e);
             }

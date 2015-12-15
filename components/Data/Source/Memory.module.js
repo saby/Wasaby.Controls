@@ -19,15 +19,20 @@ define('js!SBIS3.CONTROLS.Data.Source.Memory', [
       $protected: {
          _options: {
             /**
-             * @cfg {SBIS3.CONTROLS.Data.Adapter.IAdapter} Адаптер для работы с данными, по умолчанию SBIS3.CONTROLS.Data.Adapter.Json
+             * @cfg {SBIS3.CONTROLS.Data.Adapter.IAdapter} Адаптер для работы с данными, по умолчанию {@link SBIS3.CONTROLS.Data.Adapter.Json}
              */
             adapter: undefined,
 
             /**
-             * @cfg {*} Исходные данные
+             * @cfg {Object} Исходные данные
              */
-            data: undefined
+            data: []
          },
+
+         /**
+          * @var {SBIS3.CONTROLS.Data.Adapter.ITable} Адаптер для таблицы
+          */
+         _tableAdapter: undefined,
 
          /**
           * @var {Object} Индекс для быстрого поиска записи по ключу
@@ -35,11 +40,10 @@ define('js!SBIS3.CONTROLS.Data.Source.Memory', [
          _index: {}
       },
 
-      $constructor: function (cfg) {
-         cfg = cfg || {};
-
-         this._options.adapter = 'adapter' in cfg ? cfg.adapter : new JsonAdapter();
-         this._options.data = 'data' in cfg ? cfg.data : [];
+      $constructor: function () {
+         if (!this._options.adapter) {
+            this._options.adapter = new JsonAdapter();
+         }
          if (_static.resources[this._options.resource] === undefined) {
             _static.resources[this._options.resource] = this._options.data;
          }
@@ -51,7 +55,7 @@ define('js!SBIS3.CONTROLS.Data.Source.Memory', [
 
       create: function () {
          return $ws.proto.Deferred.success(this._getModelInstance(
-            this._options.adapter.forRecord().getEmpty()
+            this.getAdapter().forRecord().getEmpty()
          ));
       },
 
@@ -74,18 +78,16 @@ define('js!SBIS3.CONTROLS.Data.Source.Memory', [
             );
          }
 
-         var adapter = this._options.adapter.forTable(),
+         var adapter = this._getTableAdapter(),
              key = model.get(this._options.idProperty),
              index = this._getIndexByKey(key);
          if (index === -1) {
             adapter.add(
-               this._options.data,
                model.getRawData()
             );
-            this._index[key] = adapter.getCount(this._options.data) - 1;
+            this._index[key] = adapter.getCount() - 1;
          } else {
             adapter.replace(
-               this._options.data,
                model.getRawData(),
                index
             );
@@ -112,10 +114,7 @@ define('js!SBIS3.CONTROLS.Data.Source.Memory', [
          if (index === -1) {
             return $ws.proto.Deferred.fail('Model with key "' + key + '" isn\'t found');
          } else {
-            this._options.adapter.forTable().copy(
-               this._options.data,
-               index
-            );
+            this._getTableAdapter().copy(index);
             this._reIndex();
             return $ws.proto.Deferred.success(true);
          }
@@ -127,8 +126,7 @@ define('js!SBIS3.CONTROLS.Data.Source.Memory', [
          if (indexOne === -1 || indexTwo === -1) {
             return $ws.proto.Deferred.fail('Model with key "' + one + '" or "' + two + '" isn\'t exists');
          } else {
-            this._options.adapter.forTable().merge(
-               this._options.data,
+            this._getTableAdapter().merge(
                indexOne,
                indexTwo,
                this.getIdProperty()
@@ -139,15 +137,14 @@ define('js!SBIS3.CONTROLS.Data.Source.Memory', [
       },
 
       query: function (query) {
-         var adapter = this._options.adapter.forTable(),
-            items = this._applyFrom(query ? query.getFrom() : undefined);
+         var items = this._applyFrom(query ? query.getFrom() : undefined);
          if (query) {
             items = this._applyJoin(items, query.getJoin());
             items = this._applyWhere(items, query.getWhere());
             items = this._applyOrderBy(items, query.getOrderBy());
-            var total = adapter.getCount(items);
+            var total = this.getAdapter().forTable(items).getCount();
             items = this._applyPaging(items, query.getOffset(), query.getLimit());
-            this._options.adapter.setProperty(items, 'total', total);
+            this.getAdapter().setProperty(items, 'total', total);
          }
 
          return $ws.proto.Deferred.success(new DataSet({
@@ -163,16 +160,18 @@ define('js!SBIS3.CONTROLS.Data.Source.Memory', [
             sourcePosition = this._getIndexByKey(sourceKey),
             targetPosition = -1;
          if (to) {
-            var toKey = to.get(this._options.idProperty);
+            var toKey = to.get(this._options.idProperty),
+               tableAdapter = this._getTableAdapter();
             if (details.column && details.column !== this._options.idProperty) {
-               var tableAdapter = this._options.adapter.forTable(),
-                  recordAdapter = this._options.adapter.forRecord();
                //TODO: indexed search
-               for (var index = 0, count = tableAdapter.getCount(this._options.data); index < count; index++) {
-                  if (toKey === recordAdapter.get(
-                        tableAdapter.at(this._options.data, index),
+               var adapter = this.getAdapter();
+               for (var index = 0, count = tableAdapter.getCount(); index < count; index++) {
+                  if (toKey === adapter.forRecord(
+                        tableAdapter.at(index)
+                     ).get(
                         details.column
-                  )) {
+                     )
+                  ) {
                      targetPosition = index;
                      break;
                   }
@@ -187,7 +186,7 @@ define('js!SBIS3.CONTROLS.Data.Source.Memory', [
             if (details.after && sourcePosition > targetPosition) {
                targetPosition++;
             }
-            this._options.adapter.forTable().move(this._options.data, sourcePosition, targetPosition);
+            tableAdapter.move(sourcePosition, targetPosition);
             this._reIndex();
 
          }
@@ -208,6 +207,15 @@ define('js!SBIS3.CONTROLS.Data.Source.Memory', [
       //region Protected methods
 
       /**
+       * Возвращает адаптер для работы с таблицей
+       * @returns {SBIS3.CONTROLS.Data.Adapter.ITable}
+       * @private
+       */
+      _getTableAdapter: function () {
+         return this._tableAdapter || (this._tableAdapter = this.getAdapter().forTable(this._options.data));
+      },
+
+      /**
        * Применяет ресурс
        * @param {String} [from] Ресурс
        * @returns {*}
@@ -215,15 +223,16 @@ define('js!SBIS3.CONTROLS.Data.Source.Memory', [
        */
       _applyFrom: function (from) {
          from = from || '';
-         var adapter = this._options.adapter.forTable(),
-            items = adapter.getEmpty(this._options.data);
+         var adapter = this.getAdapter().forTable(
+            this._getTableAdapter().getEmpty()
+         );
          this._each(
             from === this._options.resource ? this._options.data : _static.resources[from],
             function(item) {
-               adapter.add(items, item);
+               adapter.add(item);
             }
          );
-         return items;
+         return adapter.getData();
       },
 
       /**
@@ -253,9 +262,10 @@ define('js!SBIS3.CONTROLS.Data.Source.Memory', [
             return data;
          }
 
-         var tableAdapter = this._options.adapter.forTable(),
-             recordAdapter = this._options.adapter.forRecord(),
-             newData = tableAdapter.getEmpty();
+         var adapter = this.getAdapter(),
+            tableAdapter = adapter.forTable(
+               adapter.forTable(data).getEmpty()
+            );
          this._each(data, function(item) {
             var filterMatch = true;
 
@@ -268,18 +278,18 @@ define('js!SBIS3.CONTROLS.Data.Source.Memory', [
                if (filterField == 'Разворот' || filterField == 'ВидДерева') {
                   continue;
                }
-               filterMatch = recordAdapter.get(item, filterField) == where[filterField];
+               filterMatch = adapter.forRecord(item).get(filterField) == where[filterField];
                if (!filterMatch) {
                   break;
                }
             }
 
             if (filterMatch) {
-               tableAdapter.add(newData, item);
+               tableAdapter.add(item);
             }
          }, this);
 
-         return newData;
+         return tableAdapter.getData();
       },
 
       /**
@@ -296,9 +306,7 @@ define('js!SBIS3.CONTROLS.Data.Source.Memory', [
          }
 
          //Создаем карту сортировки
-         var tableAdapter = this._options.adapter.forTable(),
-            recordAdapter = this._options.adapter.forRecord(),
-            orderMap = [],
+         var orderMap = [],
             i;
          for (i = order.length - 1; i >= 0; i--) {
             orderMap.push({
@@ -308,11 +316,12 @@ define('js!SBIS3.CONTROLS.Data.Source.Memory', [
          }
 
          //Создаем служебный массив, который будем сортировать
-         var dataMap = [];
+         var adapter = this.getAdapter(),
+            dataMap = [];
          this._each(data, function(item, index) {
             var values = [];
             for (var i = 0; i < orderMap.length; i++) {
-               values.push(recordAdapter.get(item, orderMap[i].field));
+               values.push(adapter.forRecord(item).get(orderMap[i].field));
             }
             dataMap.push({
                index: index,
@@ -336,16 +345,16 @@ define('js!SBIS3.CONTROLS.Data.Source.Memory', [
          }
 
          //Создаем новую таблицу по служебному массиву
-         var newData = tableAdapter.getEmpty(),
+         var sourceAdapter = adapter.forTable(data),
+            resultAdapter = adapter.forTable(sourceAdapter.getEmpty()),
             count;
          for (i = 0, count = dataMap.length; i < count; i++) {
-            tableAdapter.add(
-               newData,
-               tableAdapter.at(data, dataMap[i].index)
+            resultAdapter.add(
+               sourceAdapter.at(dataMap[i].index)
             );
          }
 
-         return newData;
+         return resultAdapter.getData();
       },
 
       /**
@@ -362,30 +371,30 @@ define('js!SBIS3.CONTROLS.Data.Source.Memory', [
             return data;
          }
 
-         var tableAdapter = this._options.adapter.forTable();
-
+         var dataAdapter = this.getAdapter().forTable(data);
          if (limit === undefined) {
-            limit = tableAdapter.getCount(data);
+            limit = dataAdapter.getCount();
          } else {
             limit = limit || 0;
          }
 
-         var newData = tableAdapter.getEmpty(),
+         var newDataAdapter = this.getAdapter().forTable(
+               dataAdapter.getEmpty()
+            ),
             newIndex = 0,
             beginIndex = offset,
             endIndex = Math.min(
-               tableAdapter.getCount(data),
+               dataAdapter.getCount(),
                beginIndex + limit
             ),
             index;
          for (index = beginIndex; index < endIndex; index++, newIndex++) {
-            tableAdapter.add(
-               newData,
-               tableAdapter.at(data, index)
+            newDataAdapter.add(
+               dataAdapter.at(index)
             );
          }
 
-         return newData;
+         return newDataAdapter.getData();
       },
 
       /**
@@ -394,11 +403,9 @@ define('js!SBIS3.CONTROLS.Data.Source.Memory', [
        */
       _reIndex: function () {
          this._index = {};
-         var recordAdapter = this._options.adapter.forRecord(),
-             key;
+         var key;
          this._each(this._options.data, function(item, index) {
-            key = recordAdapter.get(
-               item,
+            key = this._options.adapter.forRecord(item).get(
                this._options.idProperty
             );
             this._index[key] = index;
@@ -412,8 +419,7 @@ define('js!SBIS3.CONTROLS.Data.Source.Memory', [
        * @private
        */
       _getModelByKey: function (key) {
-         return this._options.adapter.forTable().at(
-            this._options.data,
+         return this._getTableAdapter().at(
             this._getIndexByKey(key)
          );
       },
@@ -438,10 +444,7 @@ define('js!SBIS3.CONTROLS.Data.Source.Memory', [
       _destroy: function (key) {
          var index = this._getIndexByKey(key);
          if(index !== -1) {
-            this._options.adapter.forTable().remove(
-               this._options.data,
-               index
-            );
+            this._getTableAdapter().remove(index);
             this._reIndex();
             return true;
          } else {
