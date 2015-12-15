@@ -495,12 +495,15 @@ define('js!SBIS3.CONTROLS.Data.Model', [
        * @private
        */
       _initProperties: function() {
-         var fields = this._getRecordAdapter().getFields(),
+         var properties = this._options.properties,
+            fields = this._getRecordAdapter().getFields(),
+            field,
             i,
             length;
          for (i = 0, length = fields.length; i < length; i++) {
-            if (!this._options.properties.hasOwnProperty(fields[i])) {
-               this._options.properties[fields[i]] = {};
+            field = fields[i];
+            if (!properties.hasOwnProperty(field)) {
+               properties[field] = {};
             }
          }
       },
