@@ -662,6 +662,7 @@ define(
                }
             }, 100);
          });
+         this._updateText();
       },
 
       /* Переопределяем метод SBIS3.CORE.CompoundActiveFixMixin чтобы при клике нормально фокус ставился
@@ -870,7 +871,7 @@ define(
        */
       setText: function(text) {
          this.formatModel.setText(text, this._maskReplacer);
-         this._options.text = this.formatModel.getText(this._maskReplacer);
+         this._updateText();
          //обновить html
          this._inputField.html(this._getHtmlMask());
          this._notify('onTextChange', this._options.text);
