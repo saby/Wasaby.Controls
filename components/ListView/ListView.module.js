@@ -417,7 +417,7 @@ define('js!SBIS3.CONTROLS.ListView',
                   }
                }
                this._scrollWatcher = new ScrollWatcher(scrollWatcherCfg);
-               this._scrollWatcher.subscribe('onScroll', function(type){
+               this._scrollWatcher.subscribe('onScroll', function(event, type){
                   if (type !== 'top') {
                      self._nextLoad();
                   }

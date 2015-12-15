@@ -49,6 +49,13 @@ define('js!SBIS3.CONTROLS.ScrollWatcher', [], function() {
              */
             type : 'container',
             /**
+             * @cfg {Control} Контрол, от которого отслеживается скролл.
+             * @remark
+             * От него будем искать контейнер, если задан по классу, по нему будем искать находимся ли мы на floatArea
+             *
+             */
+            opener: undefined,
+            /**
              * Если нужно отслеживать скролл во FloatArea, то ее нужно передать
              */
             floatArea: undefined,
@@ -101,6 +108,9 @@ define('js!SBIS3.CONTROLS.ScrollWatcher', [], function() {
             });
          }
       },
+      getOpener : function(){
+         return this._options.opener;
+      },
       _inFloatArea: function(){
          return this._options.type === 'floatArea';
       },
@@ -144,14 +154,14 @@ define('js!SBIS3.CONTROLS.ScrollWatcher', [], function() {
          }
       },
       _onWindowScroll: function (event) {
-         this._processScrollEvent('bottom', this._isBottomOfPage());
+         this._processScrollEvent('bottom', this._isBottomOfPage(), event);
       },
       _onFAScroll: function(event, scrollOptions) {
-         this._processScrollEvent('bottom', scrollOptions.clientHeight + scrollOptions.scrollTop  >= scrollOptions.scrollHeight - SCROLL_INDICATOR_HEIGHT - this._options.checkOffset);
+         this._processScrollEvent('bottom', scrollOptions.clientHeight + scrollOptions.scrollTop  >= scrollOptions.scrollHeight - SCROLL_INDICATOR_HEIGHT - this._options.checkOffset, event);
       },
       _onContainerScroll: function (event) {
          //TODO может здесь сможет появится какая-нибудь проверка...
-         this._processScrollEvent('bottom', false);
+         this._processScrollEvent('bottom', false, event);
       },
       _checkTop : function(event){
          return event && this._isScrollUp && (this._lastScrollTop < this._options.checkOffset);
