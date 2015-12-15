@@ -1,29 +1,13 @@
 .controls-MenuLink {
    line-height: @menu-link-line-height;
    position: relative;
-   padding: @menu-link-arrow-padding;
    text-decoration: @menu-link-text-decoration;
    color: @menu-link-text-color;
-   &.controls-MenuLink__withoutMenu {
-      padding: @menu-link-no-arrow-padding;
-   }
    &.ws-enabled {
       &:hover {
          text-decoration: @menu-link-hover-text-decoration;
          color: @menu-link-hover-text-color;
       }
-   }
-   .controls-MenuButton__arrowDown {
-      font-size: 10px!important;
-      position: absolute;
-      top: @menu-link-arrow-top-offset;
-      right: @menu-link-arrow-right-offset;
-      display: inline-block;
-      width: @menu-link-arrow-width;
-      height: @menu-link-arrow-height;
-      border-width: @menu-link-border-width;
-      border-style: @menu-link-border-style;
-      border-color: @menu-link-border-color;
    }
 }
 
@@ -40,11 +24,6 @@
    }
    &.controls-Menu__hide-menu-header .controls-MenuItem{
       padding: @menu-item-default-padding;
-   }
-   .controls-MenuLink__Menu {
-      .controls-MenuLink__arrowDown {
-         display: none;
-      }
    }
 }
 

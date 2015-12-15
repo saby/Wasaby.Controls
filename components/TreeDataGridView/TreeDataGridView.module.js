@@ -245,41 +245,39 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
       },
 
       _elemClickHandler: function (id, data, target) {
-         var
-            res,
-            $target = $(target),
-            elClickHandler = this._options.elemClickHandler;
+         var $target = $(target);
 
          this.setSelectedKey(id);
-         var handler = function() {
-            var nodeID = $(target).closest('.controls-ListView__item').data('id');
-            if ($(target).hasClass('js-controls-TreeView__expand') && $(target).hasClass('has-child')) {
-               this.toggleNode(nodeID);
-            }
-            else {
-               res = this._notify('onItemClick', id, data, target);
-               if (res !== false) {
-                  this._elemClickHandlerInternal(data, id, target);
-                  elClickHandler && elClickHandler.call(this, id, data, target);
-               }
-            }
-         }.bind(this);
-
          if (this._options.multiselect) {
             //TODO: оставить только js класс
             if ($target.hasClass('js-controls-ListView__itemCheckBox') || $target.hasClass('controls-ListView__itemCheckBox')) {
                this.toggleItemsSelection([$target.closest('.controls-ListView__item').attr('data-id')]);
             }
             else {
-               handler(target);
+               this._notifyOnItemClick(id, data, target);
             }
          }
          else {
             this.setSelectedKeys([id]);
-            handler(target);
+            this._notifyOnItemClick(id, data, target);
          }
       },
-
+      _notifyOnItemClick: function(id, data, target) {
+         var
+             res,
+             elClickHandler = this._options.elemClickHandler,
+             nodeID = $(target).closest('.controls-ListView__item').data('id');
+         if ($(target).hasClass('js-controls-TreeView__expand') && $(target).hasClass('has-child')) {
+            this.toggleNode(nodeID);
+         }
+         else {
+            res = this._notify('onItemClick', id, data, target);
+            if (res !== false) {
+               this._elemClickHandlerInternal(data, id, target);
+               elClickHandler && elClickHandler.call(this, id, data, target);
+            }
+         }
+      },
       _elemClickHandlerInternal: function(data, id, target) {
          var nodeID = $(target).closest('.controls-ListView__item').data('id');
          if (this._options.allowEnterToFolder){

@@ -32,15 +32,16 @@
       & .controls-DropdownList__beforeCaptionWrapper{
          display: none;
       }
+      .controls-DropdownList__textWrapper {
+         padding-left:4px;
+      }
    }
    &.controls-DropdownList__withoutCross{
       & .controls-DropdownList__afterCaptionWrapper{
          display: none;
       }
-   }
-   &.controls-DropdownList__withoutArrow.controls-DropdownList__withoutCross{
       .controls-DropdownList__textWrapper {
-         padding: 0 4px;
+         padding-right:8px;
       }
    }
    &:hover{
@@ -97,6 +98,11 @@
       }
       &.controls-DropdownList__item__selected {
          display: none;
+      }
+   }
+   &.controls-DropdownList__showSelectedInList{
+      .controls-DropdownList__item.controls-DropdownList__item__selected{
+         display: block;
       }
    }
    .controls-DropdownList__footer {
