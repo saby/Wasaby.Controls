@@ -11,7 +11,7 @@ define('js!SBIS3.CONTROLS.ComboBoxNew', [
    'js!SBIS3.CONTROLS.Data.Projection.Collection',
    'html!SBIS3.CONTROLS.ComboBox/resources/ComboBoxArrowDown',
    'js!SBIS3.CONTROLS.DisplayFieldMixin'
-], function (TextBox, dotTplFn, PickerMixin, ListControlMixin, Selectable, DataBindMixin, Utils, ComboBoxListView, CollectionProjection, arrowTpl) {
+], function (TextBox, dotTplFn, PickerMixin, ListControlMixin, Selectable, DataBindMixin, Utils, ComboBoxListView, CollectionProjection, arrowTpl, DisplayFieldMixin) {
    'use strict';
    /**
     * Выпадающий список с выбором значений из набора.
@@ -22,9 +22,7 @@ define('js!SBIS3.CONTROLS.ComboBoxNew', [
     * Контрол по умолчанию позволяет {@link editable вручную вводить значение}.
     * @class SBIS3.CONTROLS.ComboBox
     * @extends SBIS3.CONTROLS.TextBox
-    * @control
     * @author Крайнов Дмитрий Олегович
-    * @public
     * @initial
     * <component data-component='SBIS3.CONTROLS.ComboBox'>
     *     <options name="items" type="array">
@@ -47,7 +45,7 @@ define('js!SBIS3.CONTROLS.ComboBoxNew', [
     * @mixes SBIS3.CONTROLS.SelectableNew
     */
 
-   var ComboBox = TextBox.extend([PickerMixin, ListControlMixin, Selectable, DataBindMixin, ], /** @lends SBIS3.CONTROLS.ComboBoxNew.prototype */{
+   var ComboBox = TextBox.extend([PickerMixin, ListControlMixin, Selectable, DataBindMixin, DisplayFieldMixin ], /** @lends SBIS3.CONTROLS.ComboBoxNew.prototype */{
       _dotTplFn: dotTplFn,
       /**
        * @typedef {Object} ItemsComboBox

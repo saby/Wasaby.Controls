@@ -4,7 +4,7 @@
  * Created by iv.cheremushkin on 13.08.2014.
  */
 
-define('js!SBIS3.CONTROLS.RadioGroupBaseNew', ['js!SBIS3.CONTROLS.ButtonGroupBaseDSNew', 'js!SBIS3.CONTROLS.SelectableNew'], function(ButtonGroupBase, Selectable) {
+define('js!SBIS3.CONTROLS.RadioGroupBaseNew', ['js!SBIS3.CONTROLS.ButtonGroupBaseDSNew', 'js!SBIS3.CONTROLS.SelectableNew', 'js!SBIS3.CONTROLS.DisplayFieldMixin'], function(ButtonGroupBase, Selectable, DisplayFieldMixin) {
 
    'use strict';
 
@@ -14,12 +14,11 @@ define('js!SBIS3.CONTROLS.RadioGroupBaseNew', ['js!SBIS3.CONTROLS.ButtonGroupBas
     * @class SBIS3.CONTROLS.RadioGroupBaseNew
     * @mixes SBIS3.CONTROLS.SelectableNew
     * @extends $ws.proto.Control
-    * @public
     * @state mutable
     * @author Крайнов Дмитрий Олегович
     */
 
-   var RadioGroupBaseNew = ButtonGroupBase.extend([Selectable], /** @lends SBIS3.CONTROLS.RadioGroupBaseNew.prototype */ {
+   var RadioGroupBaseNew = ButtonGroupBase.extend([Selectable, DisplayFieldMixin], /** @lends SBIS3.CONTROLS.RadioGroupBaseNew.prototype */ {
       _moduleName: 'SBIS3.CONTROLS.RadioGroupBaseNew',
 
       getGroupControls: function() {

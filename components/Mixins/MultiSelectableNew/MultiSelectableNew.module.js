@@ -7,7 +7,6 @@ define('js!SBIS3.CONTROLS.MultiSelectableNew', [
     * Миксин, добавляющий поведение хранения одного или нескольких выбранных элементов
     * *Это экспериментальный модуль, API будет меняться!*
     * @mixin SBIS3.CONTROLS.MultiSelectableNew
-    * @public
     * @state mutable
     * @author Крайнов Дмитрий Олегович
     */

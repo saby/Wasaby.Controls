@@ -7,7 +7,7 @@ define('js!SBIS3.CONTROLS.ContextMenuView', [
     * Представление для контектсного меню
     * @class SBIS3.CONTROLS.ContextMenuView
     * @extends SBIS3.CONTROLS.MenuNewView
-    * @author Ганшин Ярослав Олегович
+    * @author Крайнов Дмитрий Олегович
     */
    var MenuView = MenuNewView.extend(/** @lends SBIS3.CONTROLS.ContextMenuView.prototype */{
       _moduleName: 'SBIS3.CONTROLS.ContextMenuView',
