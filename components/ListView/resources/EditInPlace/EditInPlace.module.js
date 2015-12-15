@@ -108,7 +108,6 @@ define('js!SBIS3.CONTROLS.EditInPlace',
             },
             _onRecordChange: function() {
                this._editingRecord.merge(this._record);
-               this.getContext().setValue(CONTEXT_RECORD_FIELD, this._editingRecord);
             },
             canAcceptFocus: function () {
                return false;
@@ -123,19 +122,8 @@ define('js!SBIS3.CONTROLS.EditInPlace',
                }.bind(this))
             },
             show: function(target, record) {
-               var editorTop;
-               //set record
-               this._record = record;
-               this.getContainer().attr('data-id', record.getKey());
-               this.updateFields(record);
-               this._record.subscribe('onChange', this._onRecordChangeHandler);
-               //set target
-               this._target = target;
-               //позиционируем редакторы
-               editorTop = this._target.position().top - this._options.itemsContainer.position().top;
-               $.each(this._editors, function(id, editor) {
-                  $(editor).css('top', editorTop);
-               });
+               this.setRecord(record);
+               this.setTarget(target);
                EditInPlace.superclass.show.apply(this, arguments);
             },
             _beginTrackHeight: function() {
@@ -160,17 +148,19 @@ define('js!SBIS3.CONTROLS.EditInPlace',
             },
             _endTrackHeight: function() {
                clearInterval(this._trackerInterval);
+               //Сбросим установленное ранее значение высоты строки
+               this._target.height('');
             },
             hide: function() {
                this._deactivateActiveChildControl();
+               this.getContainer().removeAttr('data-id');
                this.setActive(false);
-               if (this._record) {
-                  this._record.unsubscribe('onChange', this._onRecordChangeHandler);
-               }
                EditInPlace.superclass.hide.apply(this, arguments);
             },
             edit: function(target, record) {
-               this.show(target, record);
+               if (!this.isVisible()) {
+                  this.show(target, record);
+               }
                this._beginTrackHeight();
                this._editing = true;
                this._target.addClass('controls-editInPlace__editing');
@@ -185,6 +175,23 @@ define('js!SBIS3.CONTROLS.EditInPlace',
                this._endTrackHeight();
                this._target.removeClass('controls-editInPlace__editing');
                this._editing = false;
+            },
+            setRecord: function(record) {
+               if (this._record) {
+                  this._record.unsubscribe('onChange', this._onRecordChangeHandler);
+               }
+               this.updateFields(record);
+               this._record.subscribe('onChange', this._onRecordChangeHandler);
+               this.getContainer().attr('data-id', record.getKey());
+            },
+            setTarget: function(target) {
+               var editorTop;
+               this._target = target;
+               //позиционируем редакторы
+               editorTop = this._target.position().top - this._options.itemsContainer.position().top;
+               $.each(this._editors, function(id, editor) {
+                  $(editor).css('top', editorTop);
+               });
             },
             getRecord: function() {
                return this._record;
