@@ -262,6 +262,28 @@ define('js!SBIS3.CONTROLS.DataGridView',
          this.initializeDragAndDrop();
       },
 
+      /**
+       * Обрабатывает переход фокуса в редатировании по месту, проставляет позицию элементам в таблице
+       */
+      _scrollToEditControl: function(ctrl) {
+         var ctrlOffset = ctrl.getContainer()[0].getBoundingClientRect(),
+             tableOffset = this._container[0].getBoundingClientRect(),
+             leftScrollPos = tableOffset.left + this._stopMovingCords.left,
+             leftOffset;
+
+
+         /* Если контрол находится за пределами таблицы(скрыт) справа или слева, то проскролим ячейки так, чтобы его было видно */
+         if(ctrlOffset.right > tableOffset.right) {
+            leftOffset = this._currentScrollPosition + (ctrlOffset.right - tableOffset.right)/this._partScrollRatio;
+         } else if(ctrlOffset.left < leftScrollPos){
+            leftOffset = this._currentScrollPosition - (leftScrollPos - ctrlOffset.left)/this._partScrollRatio;
+         }
+
+         if(leftOffset) {
+            this._moveThumbAndColumns({left: leftOffset});
+            this._updateEditInPlaceDisplay(undefined, true);
+         }
+      },
 
       _setColumnWidthForPartScroll: function() {
          var cols = this._colgroup.find('col'),
@@ -425,7 +447,10 @@ define('js!SBIS3.CONTROLS.DataGridView',
 
          /* Найдём соотношение, для того чтобы правильно двигать скроллируемый контент относительно ползунка */
          this._partScrollRatio = (this._getItemsContainer()[0].offsetWidth - containerWidth) / (containerWidth - correctMargin - thumbWidth - 40);
-         this._stopMovingCords.right = scrollContainer[0].offsetWidth - thumbWidth - 40;
+         this._stopMovingCords = {
+            right: scrollContainer[0].offsetWidth - thumbWidth - 40,
+            left: correctMargin
+         }
       },
 
       _findMovableCells: function() {
@@ -433,7 +458,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
       },
 
       _checkThumbPosition: function(cords) {
-         if (cords.left <= this._stopMovingCords.left){
+         if (cords.left <= 0){
             this._toggleActiveArrow(this._arrowLeft, false);
             return 0;
          } else if (!this._arrowLeft.hasClass('icon-primary')) {
