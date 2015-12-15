@@ -400,7 +400,8 @@ define('js!SBIS3.CONTROLS.ListView',
                this._createLoadingIndicator();
                scrollWatcherCfg.type = $ws.helpers.instanceOfModule(topParent, 'SBIS3.CORE.FloatArea') ? 'floatArea'
                      : (this._options.infiniteScrollContainer ? 'container' : 'window');
-               scrollWatcherCfg.bottomCheckOffset = START_NEXT_LOAD_OFFSET;
+               scrollWatcherCfg.checkOffset = START_NEXT_LOAD_OFFSET;
+               scrollWatcherCfg.opener = this;
                switch (scrollWatcherCfg.type) {
                   case 'floatArea' : scrollWatcherCfg.floatArea = topParent; break;
                   case 'container' : {
@@ -408,13 +409,18 @@ define('js!SBIS3.CONTROLS.ListView',
                            ? this._options.infiniteScrollContainer
                            : this.getContainer().parent().find('.' + this._options.infiniteScrollContainer);
                      scrollWatcherCfg.element = this._options.infiniteScrollContainer;
-                     scrollWatcherCfg.scrollCheck = this._onContainerScroll.bind(this);
+                     scrollWatcherCfg.scrollCheck = {
+                        'containerBottom' : this._onContainerScrollBottom.bind(this)
+                     };
+
                      break;
                   }
                }
                this._scrollWatcher = new ScrollWatcher(scrollWatcherCfg);
                this._scrollWatcher.subscribe('onScroll', function(type){
-                  self._nextLoad();
+                  if (type !== 'top') {
+                     self._nextLoad();
+                  }
                });
             }
             this.initEditInPlace();
@@ -1114,7 +1120,7 @@ define('js!SBIS3.CONTROLS.ListView',
          isInfiniteScroll: function () {
             return this._options.infiniteScroll && this._allowInfiniteScroll;
          },
-         _onContainerScroll: function () {
+         _onContainerScrollBottom: function () {
             return (this._loadingIndicator.offset().top - this.getContainer().offset().top - START_NEXT_LOAD_OFFSET < this.getContainer().height());
          },
          /**
