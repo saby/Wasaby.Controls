@@ -88,7 +88,7 @@ define('js!SBIS3.CONTROLS.Link', ['js!SBIS3.CONTROLS.ButtonBase', 'html!SBIS3.CO
       _drawIcon: function(icon) {
          var content;
          if (icon) {
-            content = $('<i class="controls-Link__icon ' + this._iconClass + '" ></i><span class="controls-Link__field">' + this._options.caption + '</span>');
+            content = $('<i class="controls-Link__icon ' + this._iconClass + '" ></i><span class="controls-Link__field">' + (this._options.caption || '') + '</span>');
          } else {
             content = this._options.caption;
          }
