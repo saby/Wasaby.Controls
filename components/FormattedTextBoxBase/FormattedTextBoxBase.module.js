@@ -438,7 +438,7 @@ define(
        * @returns {boolean} true - если строка установлена
        */
       setText: function(text, clearChar) {
-         if (text == '') {
+         if (text === '') {
             text = this.getStrMask(clearChar);
          }
          /*массив со значениями, нужен чтобы не записывать значения до полной проверки соответствия текста маске */
@@ -644,6 +644,7 @@ define(
             }
          });
          this._inputField.bind('paste', function() {
+            //TODO возможно стоит сделать проверку до вставки, чтобы не портить данные и вставлять уже по факту после проверки
             self._pasteProcessing++;
             //TODO перенести в TextBoxBase и вместо этого вызвать метод для вставки
             window.setTimeout(function() {
@@ -654,10 +655,19 @@ define(
                   if ( !self.formatModel.setText(inputValue, self._maskReplacer)) {
                      //Устанавливаемое значение не удовлетворяет маске данного контролла - вернуть предыдущее значение
                      self.setText(prevText);
+                  } else {
+                     //Текст есть в модели но через метод setText не прошел. Нужно для наследников, например DatePicker
+                     self.setText(self.formatModel.getText(self._maskReplacer));
                   }
                }
             }, 100);
          });
+      },
+
+      /* Переопределяем метод SBIS3.CORE.CompoundActiveFixMixin чтобы при клике нормально фокус ставился
+       */
+      _getElementToFocus: function() {
+         return this._inputField;
       },
 
       /**
