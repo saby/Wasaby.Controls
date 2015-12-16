@@ -25,14 +25,13 @@ define('js!SBIS3.CONTROLS.MoveHandlers', ['js!SBIS3.CONTROLS.MoveDialog','js!SBI
       selectedMoveTo: function(moveTo) {
          this._move(this._selectedRecords, moveTo);
       },
-      _move: function(records, moveTo) {
+      _move: function(records, moveTo, insertAfter) {
          var
-            record,
             recordTo,
-            isNodeTo = true,
+            deferred,
             self = this,
-            /*TODO переделать не на ParallelDeferred*/
-            deferred = new $ws.proto.ParallelDeferred();
+            isNodeTo = true,
+            isChangeOrder = insertAfter !== undefined;
 
          if (moveTo !== null) {
             if ($ws.helpers.instanceOfModule(moveTo, 'SBIS3.CONTROLS.Record')) {
@@ -46,20 +45,20 @@ define('js!SBIS3.CONTROLS.MoveHandlers', ['js!SBIS3.CONTROLS.MoveDialog','js!SBI
             }
          }
 
-         if (this._checkRecordsForMove(records, moveTo)) {
+         if (this._checkRecordsForMove(records, moveTo, isChangeOrder)) {
             for (var i = 0; i < records.length; i++) {
                records[i] = $ws.helpers.instanceOfModule(records[i], 'SBIS3.CONTROLS.Record') ? records[i] : this._dataSet.getRecordByKey(records[i]);
             }
-            if (isNodeTo) {
+            if (isNodeTo && !isChangeOrder) {
                deferred = this.getMoveStrategy().hierarhyMove(records, recordTo);
             } else {
-               deferred = this.getMoveStrategy().move(records, recordTo, true);
+               deferred = this.getMoveStrategy().move(records, recordTo, insertAfter);
             }
             deferred = deferred === true ? new $ws.proto.Deferred().callback(true) : deferred;
             if (deferred instanceof $ws.proto.Deferred) {//обновляем view если вернули true либо deferred
                deferred.addCallback(function() {
                   self.removeItemsSelectionAll();
-                  if (isNodeTo) {
+                  if (isNodeTo && !isChangeOrder) {
                      self.setCurrentRoot(moveTo);
                   }
                   self.reload();
@@ -67,9 +66,10 @@ define('js!SBIS3.CONTROLS.MoveHandlers', ['js!SBIS3.CONTROLS.MoveDialog','js!SBI
             }
          }
       },
-      _checkRecordsForMove: function(records, moveTo) {
+      _checkRecordsForMove: function(records, moveTo, isChangeOrder) {
          var
             key,
+            record,
             toMap = this._getParentsMap(moveTo);
          if (moveTo === undefined) {
             return false;
@@ -78,6 +78,12 @@ define('js!SBIS3.CONTROLS.MoveHandlers', ['js!SBIS3.CONTROLS.MoveDialog','js!SBI
             key = '' + ($ws.helpers.instanceOfModule(records[i], 'SBIS3.CONTROLS.Record') ? records[i].getKey() : records[i]);
             if ($.inArray(key, toMap) !== -1) {
                return false;
+            }
+            if (moveTo !== null && !isChangeOrder) {
+               record = this._dataSet.getRecordByKey(moveTo);
+               if (!record.get(this._options.hierField + '@')) {
+                  return false;
+               }
             }
          }
 
