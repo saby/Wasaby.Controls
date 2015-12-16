@@ -394,11 +394,7 @@ define('js!SBIS3.CONTROLS.ListView',
                   topParent.subscribe('onScroll', this._onFAScroll.bind(this));
                }
             }
-            if (this._options.editMode.indexOf('click') !== -1) {
-               this.subscribe('onItemClick', this._onItemClickHandler);
-            } else if (this._options.editMode.indexOf('hover') !== -1) {
-               this.subscribe('onChangeHoveredItem', this._onChangeHoveredItemHandler);
-            }
+            this.initEditInPlace();
             $ws.single.CommandDispatcher.declareCommand(this, 'activateItem', this._activateItem);
             $ws.single.CommandDispatcher.declareCommand(this, 'beginAdd', this._beginAdd);
             $ws.single.CommandDispatcher.declareCommand(this, 'beginEdit', this._beginEdit);
@@ -729,6 +725,14 @@ define('js!SBIS3.CONTROLS.ListView',
          //********************************//
          //   БЛОК РЕДАКТИРОВАНИЯ ПО МЕСТУ //
          //*******************************//
+         initEditInPlace: function() {
+            this._notifyOnItemClick = this.beforeNotifyOnItemClick();
+            if (this._options.editMode.indexOf('click') !== -1) {
+               this.subscribe('onItemClick', this._onItemClickHandler);
+            } else if (this._options.editMode.indexOf('hover') !== -1) {
+               this.subscribe('onChangeHoveredItem', this._onChangeHoveredItemHandler);
+            }
+         },
          beforeNotifyOnItemClick: function() {
             var handler = this._notifyOnItemClick;
             return function() {
@@ -744,12 +748,12 @@ define('js!SBIS3.CONTROLS.ListView',
          },
          setEditMode: function(editMode) {
             if (editMode !== this._options.editMode && (editMode === '' || editMode === 'click' || editMode === 'hover')) {
+               if (this._options.editMode === 'click') {
+                  this.unsubscribe('onItemClick', this._onItemClickHandler);
+               } else if (this._options.editMode === 'hover') {
+                  this.unsubscribe('onChangeHoveredItem', this._onChangeHoveredItemHandler);
+               }
                if (this._editInPlace) {
-                  if (this._options.editMode === 'click') {
-                     this.unsubscribe('onItemClick', this._onItemClickHandler);
-                  } else if (this._options.editMode === 'hover') {
-                     this.unsubscribe('onChangeHoveredItem', this._onChangeHoveredItemHandler);
-                  }
                   this._editInPlace.destroy();
                   this._editInPlace = null;
                }
@@ -784,25 +788,8 @@ define('js!SBIS3.CONTROLS.ListView',
           * @private
           */
          _getEditInPlace: function() {
-            /*todo EIP Крайнов, Сухоручкин, Авраменко - данная логика должна выполнятся на уровне новых миксинов, т.к. запись может измениться не только из-за редактировании по месту */
-            function redrawRaw(record) {
-               this._getItemsContainer().find('.js-controls-ListView__item[data-id="' + record.getKey() + '"]:not(".controls-editInPlace")').after(this._drawItem(record)).remove();
-            }
             if (!this._editInPlace) {
                this._createEditInPlace();
-               this._notifyOnItemClick = this.beforeNotifyOnItemClick();
-               /*todo EIP Крайнов, Сухоручкин, Авраменко - данная логика должна выполнятся на уровне новых миксинов, т.к. запись может измениться не только из-за редактировании по месту */
-               this._dataSet.subscribe($ws.helpers.instanceOfMixin(this._dataSet, 'SBIS3.CONTROLS.Data.Bind.ICollection') ? 'onCollectionItemChange' : 'onRecordChange', function(event, record) {
-                  redrawRaw.apply(this, [record]);
-               }.bind(this));
-               if ($ws.helpers.instanceOfMixin(this._dataSet, 'SBIS3.CONTROLS.Data.Bind.ICollection')) {
-                  this._dataSet.subscribe('onCollectionChange', function (event, action, newItems) {
-                     /*todo Мальцев. Действия не вынесены в глобальные константы. Как понимать, какой действие произошло - не понятно.*/
-                     if (action === 'a') {
-                        redrawRaw.apply(this, newItems);
-                     }
-                  }.bind(this));
-               }
             }
             return this._editInPlace;
          },
@@ -1238,7 +1225,21 @@ define('js!SBIS3.CONTROLS.ListView',
                   this._hideLoadingIndicator();
                }
             }
-
+            /*todo EIP Крайнов, Сухоручкин, Авраменко - данная логика должна выполнятся на уровне новых миксинов, т.к. запись может измениться не только из-за редактировании по месту */
+            function redrawRaw(record) {
+               this._getItemsContainer().find('.js-controls-ListView__item[data-id="' + record.getKey() + '"]:not(".controls-editInPlace")').after(this._drawItem(record)).remove();
+            }
+            this._dataSet.subscribe($ws.helpers.instanceOfMixin(this._dataSet, 'SBIS3.CONTROLS.Data.Bind.ICollection') ? 'onCollectionItemChange' : 'onRecordChange', function(event, record) {
+               redrawRaw.apply(this, [record]);
+            }.bind(this));
+            if ($ws.helpers.instanceOfMixin(this._dataSet, 'SBIS3.CONTROLS.Data.Bind.ICollection')) {
+               this._dataSet.subscribe('onCollectionChange', function (event, action, newItems) {
+                  /*todo Мальцев. Действия не вынесены в глобальные константы. Как понимать, какой действие произошло - не понятно.*/
+                  if (action === 'a') {
+                     redrawRaw.apply(this, newItems);
+                  }
+               }.bind(this));
+            }
          },
          _toggleIndicator: function(show){
             this._showedLoading = show;
