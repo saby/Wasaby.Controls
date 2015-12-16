@@ -82,7 +82,7 @@ define('js!SBIS3.CONTROLS.ComponentBinder', [], function () {
          });
       delete (filter[searchParamName]);
 
-      view.setInfiniteScroll(false, true);
+      view.setInfiniteScroll(this._isInfiniteScroll, true);
       view.setGroupBy(this._lastGroup);
       view.setHighlightText('', false);
       view.setHighlightEnabled(false);
@@ -210,6 +210,7 @@ define('js!SBIS3.CONTROLS.ComponentBinder', [], function () {
          }
 
          this._lastGroup = view._options.groupBy;
+         this._isInfiniteScroll = view.isInfiniteScroll();
          searchForm.subscribe('onTextChange', function(event, text){
             var checkedText = isSearchValid(text, 3);
             if (checkedText[1]) {
