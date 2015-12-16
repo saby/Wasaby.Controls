@@ -45,7 +45,7 @@ define('js!SBIS3.CONTROLS.MoveHandlers', ['js!SBIS3.CONTROLS.MoveDialog','js!SBI
             }
          }
 
-         if (this._checkRecordsForMove(records, moveTo, isChangeOrder)) {
+         if (this._checkRecordsForMove(records, recordTo, isChangeOrder)) {
             for (var i = 0; i < records.length; i++) {
                records[i] = $ws.helpers.instanceOfModule(records[i], 'SBIS3.CONTROLS.Record') ? records[i] : this._dataSet.getRecordByKey(records[i]);
             }
@@ -66,12 +66,11 @@ define('js!SBIS3.CONTROLS.MoveHandlers', ['js!SBIS3.CONTROLS.MoveDialog','js!SBI
             }
          }
       },
-      _checkRecordsForMove: function(records, moveTo, isChangeOrder) {
+      _checkRecordsForMove: function(records, recordTo, isChangeOrder) {
          var
             key,
-            record,
-            toMap = this._getParentsMap(moveTo);
-         if (moveTo === undefined) {
+            toMap = this._getParentsMap(recordTo.getKey());
+         if (recordTo === undefined) {
             return false;
          }
          for (var i = 0; i < records.length; i++) {
@@ -79,11 +78,8 @@ define('js!SBIS3.CONTROLS.MoveHandlers', ['js!SBIS3.CONTROLS.MoveDialog','js!SBI
             if ($.inArray(key, toMap) !== -1) {
                return false;
             }
-            if (moveTo !== null && !isChangeOrder) {
-               record = this._dataSet.getRecordByKey(moveTo);
-               if (!record.get(this._options.hierField + '@')) {
-                  return false;
-               }
+            if (recordTo !== null && !isChangeOrder && !recordTo.get(this._options.hierField + '@')) {
+               return false;
             }
          }
 
