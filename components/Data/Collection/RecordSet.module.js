@@ -120,14 +120,14 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
 
          this._rawData = data;
 
-         var adapter = this.getStrategy().forTable(),
-            count = adapter.getCount(data),
+         var adapter = this.getStrategy().forTable(data),
+            count = adapter.getCount(),
             record;
          for (var i = 0; i < count; i++) {
             record = new this._model({
                compatibleMode: true,
                adapter: this.getStrategy(),
-               rawData: adapter.at(data, i),
+               rawData: adapter.at(i),
                idProperty: this._options.keyField
             });
             record.setStored(true);

@@ -89,7 +89,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
              */
             displayField: null,
              /**
-              * @cfg {Items[]} Набор исходных данных, по которому строится отображение
+              * @cfg {Array.<Object.<String,String>>} Масив объектов. Набор исходных данных, по которому строится отображение
               * @remark
               * !Важно: данные для коллекции элементов можно задать либо в этой опции,
               * либо через источник данных методом {@link setDataSource}.
@@ -192,7 +192,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
              */
             emptyHTML: '',
             /**
-             * @var {Object} Фильтр данных
+             * @cfg {Object} Фильтр данных
              * @example
              * <pre class="brush:xml">
              *     <options name="filter">
@@ -232,21 +232,18 @@ define('js!SBIS3.CONTROLS.DSMixin', [
                else {
                   throw new Error('Array expected');
                }
+               var
+                  item = items[0];
+               if (!this._options.keyField) {
+                 if (item && Object.prototype.toString.call(item) === '[object Object]') {
+                   this._options.keyField = Object.keys(item)[0];
+                 }
+               }
+               this._dataSource = new StaticSource({
+                  data: items,
+                  idProperty: this._options.keyField
+               });
             }
-            else {
-               items = [];
-            }
-            var
-               item = items[0];
-            if (!this._options.keyField) {
-              if (item && Object.prototype.toString.call(item) === '[object Object]') {
-                this._options.keyField = Object.keys(item)[0];
-              }
-            }
-            this._dataSource = new StaticSource({
-               data: items,
-               idProperty: this._options.keyField
-            });
          }
       },
        /**
@@ -333,8 +330,8 @@ define('js!SBIS3.CONTROLS.DSMixin', [
          this._offset = offsetChanged ? offset : this._offset;
          this._limit = limitChanged ? limit : this._limit;
 
-         this._toggleIndicator(true);
          if (this._dataSource){
+            this._toggleIndicator(true);
 	         this._loader = this._callQuery(this._options.filter, this._sorting, this._offset, this._limit).addCallback(function (dataSet) {
 	            self._toggleIndicator(false);
 	            self._loader = null;//Обнулили без проверки. И так знаем, что есть и загрузили
@@ -390,7 +387,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
                      more: newDataSet.getTotal(),
                      path: newDataSet.getProperty('p')
                   },
-                  keyField: this._options.keyField || newDataSet.getIdProperty() || this._dataSource.getAdapter().getKeyField(newDataSet.getRawData())
+                  keyField: this._options.keyField || newDataSet.getIdProperty() || this._dataSource.getAdapter().forRecord(newDataSet.getRawData()).getKeyField()
                });
             }).bind(this));
          } else {
@@ -510,25 +507,24 @@ define('js!SBIS3.CONTROLS.DSMixin', [
         * @see onDrawItems
         * @see onDataLoad
         */
-      setItems: function (items) {
-         //TODO Сделать метод для очистки всех Items, ибо setItems([]) - не очевидно
-         if (items && items.length) {
-             var
-                item = items[0],
-                keyField;
+       setItems: function (items) {
+          //TODO Сделать метод для очистки всех Items, ибо setItems([]) - не очевидно
+          var keyField, item;
 
-             if (this._options.keyField) {
-                keyField = this._options.keyField;
+          if (this._options.keyField) {
+             keyField = this._options.keyField;
+          }
+
+          if (items && items.length) {
+             item = items[0];
+
+             if (item && !keyField && Object.prototype.toString.call(item) === '[object Object]') {
+                keyField = Object.keys(item)[0];
              }
-             else {
-                if (item && Object.prototype.toString.call(item) === '[object Object]') {
-                   keyField = Object.keys(item)[0];
-                }
-             }
-         }
-         else {
-            items = [];
-         }
+          }
+          else {
+             items = [];
+          }
 
          this._dataSource = new StaticSource({
             data: items,

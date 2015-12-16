@@ -72,12 +72,30 @@ define('js!SBIS3.CONTROLS.FieldLink',
     * @mixes SBIS3.CONTROLS.FormWidgetMixin
     * @demo SBIS3.CONTROLS.Demo.FieldLinkWithEditInPlace Поле связи с редактированием по месту
     * @demo SBIS3.CONTROLS.Demo.FieldLinkDemo
+    * @cssModifier controls-FieldLink__itemsEdited При наведении на выделенные элементы, они подчёркиваются.
     * @control
     * @public
     * @author Крайнов Дмитрий Олегович
     */
 
    var FieldLink = SuggestTextBox.extend([FormWidgetMixin, MultiSelectable, ActiveMultiSelectable, Selectable, ActiveSelectable, DSMixin],/** @lends SBIS3.CONTROLS.FieldLink.prototype */{
+    /**
+      * @event onItemActivate При активации записи (клик с целью например редактирования)
+      * @param {$ws.proto.EventObject} eventObject Дескриптор события.
+      * @param {Object} meta Объект
+      * @param {String} meta.id ключ элемента
+      * @param {SBIS3.CONTROLS.Record} meta.item запись
+      */
+      /**
+       * @event onChooserClick При клике на кнопку(пункт меню) открытия диалога выбора
+       * @return {$ws.proto.Deferred|Boolean|*} Возможные значения:
+       * <ol>
+       *    <li>$ws.proto.Deferred - Деферед, результатом выполнения которого будут выбранные записи.</li>
+       *    <li>Если вернуть false - диалог выбора открыт не будет не будет открыт.</li>
+       *    <li>Любой другой результат - диалог выбора будет открыт стандартным образом.</li>
+       * </ol>
+       * @param {$ws.proto.EventObject} eventObject Дескриптор события.
+       */
       $protected: {
          /* КОНФИГУРАЦИЯ SELECTOR'а */
          _selector: {
@@ -154,6 +172,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
 
       $constructor: function() {
          this.getContainer().addClass('controls-FieldLink');
+         this._publish('onItemActivate', 'onChooserClick');
 
          /* Проиницализируем переменные и event'ы */
          this._setVariables();
@@ -203,47 +222,67 @@ define('js!SBIS3.CONTROLS.FieldLink',
       showSelector: function(config) {
          var self = this,
              version = this._options.oldViews ? 'old' : 'newType',
-             selectorConfig = {
-                //FIXME для поддержки старых справочников, удалить как откажемся
-                old: {
-                   currentValue: self.getSelectedKeys(),
-                   selectionType: config.selectionType,
-                   selectorFieldLink: true,
-                   handlers: {
-                      onChange: function(event, selectedRecords) {
-                         var keys = [],
-	                         selItems = self._options.selectedItems,
-                             rec;
+             selectorConfig, commonConfig, clickResult;
 
-                         if(selectedRecords[0] !== null) {
-	                        selItems.fill();
-                            for (var i = 0, len = selectedRecords.length; i < len; i++) {
-                               rec = recordConverter.call(self, selectedRecords[i]);
-	                           selItems.add(rec);
-                               keys.push(rec.getId());
-                            }
-                            self.setSelectedKeys(keys);
-                         }
-	                      this.close();
-                      }
-                   }
-                },
-                newType: {
-                   currentSelectedKeys: self.getSelectedKeys(),
-                   closeCallback: function (result) {
-                      result && self.setSelectedKeys(result);
-                   }
-                }
-             },
-             commonConfig = {
-                template: config.template,
-                componentOptions: config.componentOptions || {},
-                opener: this,
-                parent: this._options.selectRecordsMode === 'newDialog' ? this : null,
-                context: new $ws.proto.Context().setPrevious(this.getLinkedContext()),
-                target: self.getContainer(),
-                multiSelect: self._options.multiselect
-             };
+
+         function oldConfirmSelectionCallback(event, selectedRecords) {
+            var keys = [],
+                selItems = self._options.selectedItems,
+                rec;
+
+            if(selectedRecords[0] !== null) {
+               selItems.fill();
+               for (var i = 0, len = selectedRecords.length; i < len; i++) {
+                  rec = recordConverter.call(self, selectedRecords[i]);
+                  selItems.add(rec);
+                  keys.push(rec.getId());
+               }
+               self.setSelectedKeys(keys);
+            }
+            this.close && this.close();
+         }
+
+         function newConfirmSelectionCallBack(result) {
+            if(result) {
+               $ws.helpers.instanceOfModule(result[0], 'SBIS3.CONTROLS.Data.Model') ? self.setSelectedItems(result) : self.setSelectedKeys(result);
+            }
+         }
+
+         clickResult = this._notify('onChooserClick', config);
+
+         if(clickResult === false) {
+            return;
+         } else if(clickResult instanceof $ws.proto.Deferred) {
+            clickResult.addCallback(function(result) {
+               self._options.oldViews ? oldConfirmSelectionCallback(null, result) : newConfirmSelectionCallBack(result);
+            });
+            return;
+         }
+         selectorConfig = {
+            //FIXME для поддержки старых справочников, удалить как откажемся
+            old: {
+               currentValue: self.getSelectedKeys(),
+               selectionType: config.selectionType,
+               selectorFieldLink: true,
+               handlers: {
+                  onChange: oldConfirmSelectionCallback
+               }
+            },
+            newType: {
+               currentSelectedKeys: self.getSelectedKeys(),
+               closeCallback: newConfirmSelectionCallBack
+            }
+         };
+
+         commonConfig = {
+            template: config.template,
+            componentOptions: config.componentOptions || {},
+            opener: this,
+            parent: this._options.selectRecordsMode === 'newDialog' ? this : null,
+            context: new $ws.proto.Context().setPrevious(this.getLinkedContext()),
+            target: self.getContainer(),
+            multiSelect: self._options.multiselect
+         };
 
 
 
@@ -343,7 +382,11 @@ define('js!SBIS3.CONTROLS.FieldLink',
          }
 
          if(keysArrLen) {
+            /* Нужно скрыть контрол отображающий элементы, перед загрузкой, потому что часто бл может отвечать >500мс и
+               отображаемое знаение в поле связи долго не меняется, особенно заметно в редактировании по месту. */
+            self._linkCollection.hide();
             this.getSelectedItems(true).addCallback(function(list){
+               self._linkCollection.show();
                self._linkCollection.setItems(list);
                return list;
             });
@@ -400,7 +443,20 @@ define('js!SBIS3.CONTROLS.FieldLink',
                onDrawItems: this.updateInputWidth.bind(this),
 
                /* При клике на крест, удалим ключ из выбранных */
-               onCrossClick: function(e, key){ self.removeItemsSelection([key]); },
+               onCrossClick: propertyUpdateWrapper(function(e, key){
+                  self.removeItemsSelection([key]);
+                  if(!self._options.multiselect && self._options.alwaysShowTextBox) {
+                     self.setText('');
+                  }
+               }),
+
+               onItemActivate: function(e, key) {
+                  self.getSelectedItems(false).each(function(item) {
+                     if(item.getId() == key) {
+                        self._notify('onItemActivate', {item: item, id: key});
+                     }
+                  })
+               },
 
                /* При закрытии пикера надо скрыть кнопку удаления всех выбранных */
                onClose: function() { self._pickerStateChangeHandler(false); }
@@ -482,7 +538,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
 			   /* Нажатие на backspace должно удалять последние значение, если нет набранного текста */
 			   case $ws._const.key.backspace:
 				   var selectedKeys = this.getSelectedKeys();
-				   if(!this.getText()) {
+				   if(!this.getText() && selectedKeys.length) {
 					   this.removeItemsSelection([selectedKeys[selectedKeys.length - 1]]);
 				   }
 				   break;

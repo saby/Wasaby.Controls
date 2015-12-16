@@ -1,8 +1,9 @@
 /* global define, beforeEach, afterEach, describe, context, it, assert, $ws */
 define([
       'js!SBIS3.CONTROLS.Data.Serializer',
-      'js!SBIS3.CONTROLS.Data.Model'
-   ], function (Serializer, Model) {
+      'js!SBIS3.CONTROLS.Data.Model',
+      'js!SBIS3.CONTROLS.Data.Collection.List'
+   ], function (Serializer, Model, List) {
       'use strict';
       describe('SBIS3.CONTROLS.Data.Serializer', function () {
          var serializer,
@@ -36,6 +37,14 @@ define([
                });
                assert.strictEqual(result.$serialized$, 'func');
                assert.isTrue(result.id >= 0);
+            });
+
+            it('should serialize a date', function () {
+               var date = new Date(),
+                  dateVal = date.getTime(),
+                  result = serializer.serialize('', date);
+               assert.strictEqual(result.$serialized$, 'date');
+               assert.strictEqual(result.stamp, dateVal);
             });
 
             it('should serialize Infinity', function () {
@@ -107,13 +116,25 @@ define([
 
          describe('.deserialize()', function () {
             it('should deserialize a function', function () {
-               var result = serializer.deserialize(
-                  'f',
-                  serializer.serialize('f', function() {
+               var func = function() {
                      return Math.rand();
-                  })
+                  },
+                  result = serializer.deserialize(
+                  'f',
+                  serializer.serialize('f', func)
                );
                assert.instanceOf(result, Function);
+               assert.strictEqual(result, func);
+            });
+
+            it('should deserialize a date', function () {
+               var date = new Date('1995-12-17T01:02:03'),
+                  result = serializer.deserialize(
+                     '',
+                     serializer.serialize('', date)
+                  );
+               assert.instanceOf(result, Date);
+               assert.strictEqual(result.getTime(), date.getTime());
             });
 
             it('should deserialize Infinity', function () {
@@ -205,23 +226,40 @@ define([
                   assert.deepEqual(expectObj, obj);
                });
 
-               it('should create same instances for equail serialized objects of Model', function () {
+               it('should create same instances for equal serialized instances of SerializableMixin', function () {
                   var modelA = new Model(),
                      modelB = new Model(),
+                     listA = new List({
+                        items: [modelA, modelB]
+                     }),
+                     listB = new List(),
                      obj = JSON.parse(
                         JSON.stringify({
                               a: modelA,
                               b: modelB,
                               c: modelA,
-                              d: {
-                                 e: [modelB]
+                              d: listA,
+                              e: {
+                                 a: [modelB],
+                                 b: listA,
+                                 c: listB,
+                                 d: [listB, listA]
                               }
                            },
                            serializer.serialize),
                         serializer.deserialize
                      );
+
                   assert.strictEqual(obj.a, obj.c);
-                  assert.strictEqual(obj.b, obj.d.e[0]);
+                  assert.strictEqual(obj.b, obj.e.a[0]);
+
+                  assert.strictEqual(obj.d, obj.e.b);
+                  assert.strictEqual(obj.d, obj.e.d[1]);
+                  assert.strictEqual(obj.e.b, obj.e.d[1]);
+                  assert.strictEqual(obj.e.c, obj.e.d[0]);
+
+                  assert.strictEqual(obj.a, obj.d.at(0));
+                  assert.strictEqual(obj.b, obj.d.at(1));
                });
             });
          });

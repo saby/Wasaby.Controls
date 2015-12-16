@@ -67,7 +67,7 @@ define('js!SBIS3.CONTROLS.MenuLink', ['js!SBIS3.CONTROLS.Link', 'js!SBIS3.CONTRO
       },
 
       setCaption: function(caption){
-         Link.superclass.setCaption.call(this, caption);
+         MenuLink.superclass.setCaption.call(this, caption);
          $('.controls-Link__field', this._container).html(caption);
          if (this._picker){
             $('.controls-Menu__header-caption', this._picker._container).html(caption);
@@ -94,24 +94,6 @@ define('js!SBIS3.CONTROLS.MenuLink', ['js!SBIS3.CONTROLS.Link', 'js!SBIS3.CONTRO
          }
          if (this._picker) {
             this.hidePicker();
-         }
-      },
-      
-      _drawIcon: function (icon) {
-         var
-            $icon = $('.controls-Link__icon', this._container.get(0)),
-            $caption = $('.controls-Link__field', this._container.get(0));
-         if (icon) {
-            if ($icon.length) {
-               $icon.get(0).className = 'controls-Link__icon ' + this._iconClass;
-            }
-            else {
-               $icon = $('<i class="controls-Link__icon ' + this._iconClass + '"></i>');
-               $caption.before($icon);
-            }
-         }
-         else {
-            $icon.remove();
          }
       }
    });

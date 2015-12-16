@@ -198,7 +198,7 @@
 @button-checked-border-width:             2px;
 @button-checked-border:                   @button-checked-border-width solid @default-color;
 @button-checked-shadow:                   @button-active-shadow;
-@button-checked-bg:                       @button-active-bg;
+@button-checked-bg:                       @button-hover-bg;
 @button-checked-text-margin-left:         @button-text-margin-left - 1px;
 @button-checked-text-margin-right:        @button-text-margin-right - 1px;
 @button-checked-icon-top-offset:          3px;
@@ -210,7 +210,7 @@
 @button-primary-checked-text-color:       @button-primary-active-text-color;
 @button-primary-checked-border:           2px solid @link-hover-text-color;
 @button-primary-checked-shadow:           @button-primary-active-shadow;
-@button-primary-checked-bg:               @button-primary-active-bg;
+@button-primary-checked-bg:               @button-primary-hover-bg;
 
 // Big default button
 @button-big-checked-text-color:           @button-checked-text-color;
@@ -591,62 +591,6 @@
 // Menu button //
 // ----------- //
 
-@menu-button-arrow-width:                               8px;
-@menu-button-arrow-height:                              6px;
-@menu-button-arrow-right-offset:                        10px;
-@menu-button-arrow-top-offset:                          10px;
-
-@menu-button-arrow-padding:                             0 23px 0 12px;          // padding for menu button containing dropdown arrow
-@menu-button-no-arrow-padding:                          @button-padding;        // padding for menu button when dropdown arrow is missed
-
-// Default menu button
-@menu-button-text-right-margin:                         23px;                   //this margin reserve space for arrow-down icon
-@menu-button-checked-text-right-margin:                 @menu-button-text-right-margin - 1px;
-
-@menu-button-arrow-border-width:                        0;
-@menu-button-arrow-border-style:                        solid;
-@menu-button-arrow-border-color:                        transparent;
-@menu-button-arrow-bg:                                  transparent url(@menu-button-arrow-spritesheet) 0 26px;
-
-@menu-button-arrow-hover-border-width:                  @menu-button-arrow-border-width;
-@menu-button-arrow-hover-border-style:                  @menu-button-arrow-border-style;
-@menu-button-arrow-hover-border-color:                  @menu-button-arrow-border-color;
-@menu-button-arrow-hover-bg:                            transparent url(@menu-button-arrow-spritesheet) 0 6px;
-
-@menu-button-arrow-checked-border-width:                @menu-button-arrow-border-width;
-@menu-button-arrow-checked-border-style:                @menu-button-arrow-border-style;
-@menu-button-arrow-checked-border-color:                @menu-button-arrow-border-color;
-
-@menu-button-arrow-checked-hover-border-width:          @menu-button-arrow-checked-border-width;
-@menu-button-arrow-checked-hover-border-style:          @menu-button-arrow-checked-border-style;
-@menu-button-arrow-checked-hover-border-color:          @menu-button-arrow-checked-border-color;
-
-// Primary menu button
-
-@menu-button-primary-arrow-border-width:                @menu-button-arrow-border-width;
-@menu-button-primary-arrow-border-style:                @menu-button-arrow-border-style;
-@menu-button-primary-arrow-border-color:                @menu-button-arrow-border-color;
-@menu-button-primary-arrow-bg:                          transparent url(@menu-button-arrow-spritesheet) 0 26px;
-
-@menu-button-primary-arrow-hover-border-width:          @menu-button-primary-arrow-border-width;
-@menu-button-primary-arrow-hover-border-style:          @menu-button-primary-arrow-border-style;
-@menu-button-primary-arrow-hover-border-color:          @menu-button-primary-arrow-border-color;
-@menu-button-primary-arrow-hover-bg:                    @menu-button-primary-arrow-bg;
-
-@menu-button-primary-arrow-checked-border-width:        @menu-button-primary-arrow-border-width;
-@menu-button-primary-arrow-checked-border-style:        @menu-button-primary-arrow-border-style;
-@menu-button-primary-arrow-checked-border-color:        @menu-button-primary-arrow-border-color;
-
-@menu-button-primary-arrow-checked-hover-border-width:  @menu-button-primary-arrow-checked-border-width;
-@menu-button-primary-arrow-checked-hover-border-style:  @menu-button-primary-arrow-checked-border-style;
-@menu-button-primary-arrow-checked-hover-border-color:  @menu-button-primary-arrow-checked-border-color;
-
-// Disabled menu button
-@menu-button-arrow-disabled-border-width:               @menu-button-arrow-border-width;
-@menu-button-arrow-disabled-border-style:               @menu-button-arrow-border-style;
-@menu-button-arrow-disabled-border-color:               @menu-button-arrow-border-color;
-@menu-button-arrow-disabled-bg:                         transparent url(@menu-button-arrow-spritesheet) 0 0;
-
 // Menu
 @menu-button-menu-top-margin:                           29px;
 @menu-button-menu-left-margin:                          0;
@@ -687,28 +631,16 @@
 // Menu link //
 // --------- //
 
-@menu-link-arrow-spritesheet:             @menu-button-arrow-spritesheet;
-
-@menu-link-arrow-width:                   8px;
-@menu-link-arrow-height:                  6px;
-@menu-link-arrow-right-offset:            2px;
-@menu-link-arrow-top-offset:              4px;
-@menu-link-arrow-top-offset-big:          14px;
 @menu-link-line-height:                   24px;
-
-@menu-link-arrow-padding:                 0 12px 0 0;
-@menu-link-no-arrow-padding:              0;
 
 @menu-link-text-color:                    @link-text-color;
 @menu-link-text-decoration:               @link-text-decoration;
-@menu-link-arrow-bg:                      @menu-button-arrow-bg;
 @menu-link-border-color: 						transparent;
 @menu-link-border-style: 						solid;
 @menu-link-border-width: 						0;
 
 @menu-link-hover-text-color:              @link-hover-text-color;
 @menu-link-hover-text-decoration:         @link-hover-text-decoration;
-@menu-link-hover-arrow-bg:                transparent url(@menu-button-arrow-spritesheet) 0 13px;
 
 @menu-link-checked-text-color:            @menu-link-hover-text-color;
 @menu-link-checked-text-decoration:       none;
