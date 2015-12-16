@@ -21,6 +21,7 @@ define('js!SBIS3.CONTROLS.ComponentBinder', [], function () {
          }
          filter[searchParamName] = text;
          view.setHighlightText(text, false);
+         view.setHighlightEnabled(true);
          view.setInfiniteScroll(true, true);
          view.setGroupBy(groupBy);
          if (this._firstSearch) {
@@ -54,6 +55,7 @@ define('js!SBIS3.CONTROLS.ComponentBinder', [], function () {
             });
          filter[searchParamName] = text;
          view.setHighlightText(text, false);
+         view.setHighlightEnabled(true);
          view.setInfiniteScroll(true, true);
          view.reload(filter, view._sorting, 0);
       }
@@ -65,6 +67,7 @@ define('js!SBIS3.CONTROLS.ComponentBinder', [], function () {
          filter = view.getFilter();
       delete (filter[searchParamName]);
       view.setHighlightText('', false);
+      view.setHighlightEnabled(false);
       view.reload(filter, view._sorting, 0);
    }
 
@@ -82,6 +85,7 @@ define('js!SBIS3.CONTROLS.ComponentBinder', [], function () {
       view.setInfiniteScroll(false, true);
       view.setGroupBy(this._lastGroup);
       view.setHighlightText('', false);
+      view.setHighlightEnabled(false);
       this._firstSearch = true;
       if (this._searchReload ) {
          //Нужно поменять фильтр и загрузить нужный корень.
