@@ -346,7 +346,7 @@ define('js!SBIS3.CONTROLS.Data.Model', [
       getDefault: function (name) {
          var property = this._options.properties[name],
             value;
-         if ('def' in property) {
+         if (property && 'def' in property) {
             value = property.def = typeof property.def === 'function' ? property.def() : property.def;
          }
          return value;
