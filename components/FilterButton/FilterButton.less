@@ -34,6 +34,125 @@
             margin: @controls-filterButton-clearButton-margin;
          }
       }
+
+      /* Стилик для кнопки раскрытия списка в кнопке фильтров */
+      .controls-filterButton__toggleButton {
+         border: @controls-filterButton-toggleButton-border;
+         background-color: @controls-filterButton-toggleButton-bgColor;
+
+         &.ws-enabled {
+            &:hover {
+               .controls-Button__text {
+                  color: @primary-color;
+               }
+
+               .controls-filterButton__toggleButton-icon {
+                  border-color: @primary-color;
+                  color: @primary-color;
+               }
+            }
+         }
+
+         .controls-Button__text {
+            font-size: @controls-filterButton-toggleButton-fontSize;
+            color: @controls-filterButton-toggleButton-text-color;
+         }
+
+         .controls-filterButton__toggleButton-icon {
+            top: @controls-filterButton-toggleButton-icon-top;
+            font-style: @controls-filterButton-toggleButton-icon-style;
+            font-size: @controls-filterButton-toggleButton-icon-size;
+            .border-radius(@controls-filterButton-toggleButton-icon-radius);
+            border: @controls-filterButton-toggleButton-icon-border;
+            background-color: @controls-filterButton-toggleButton-icon-bgColor;
+            width: @controls-filterButton-toggleButton-icon-width;
+            height: @controls-filterButton-toggleButton-icon-height;
+
+            &:before {
+               content: @controls-filterButton-toggleButton-icon-up;
+            }
+         }
+
+         &.controls-Checked__checked {
+            .controls-filterButton__toggleButton-icon {
+               &:before {
+                  content: @controls-filterButton-toggleButton-icon-down;
+               }
+            }
+         }
+
+         .controls-Button__icon + .controls-Button__text {
+            margin-right: @controls-filterButton-toggleButton-text-marginR;
+            margin-left: @controls-filterButton-toggleButton-text-marginL;
+         }
+
+         .controls-Button__icon {
+            left: @controls-filterButton-toggleButton-icon-left;
+            right: @controls-filterButton-toggleButton-icon-right;
+         }
+      }
+
+      .controls__filterButton__area-footer {
+
+         .controls-filterButton__history-area {
+            padding: @controls-filterButton-history-area-padding;
+
+            .controls-filterButton__toggleButton {
+               margin-left: @controls-filterButton-history-tButton-margin;
+            }
+            .controls-filterButton__historyView-wrapper {
+               padding-top: @controls-filterButton-history-wrapper-padding;
+               overflow: @controls-filterButton-history-maxHeight-overflow;
+
+               &.controls-filterButton__historyView-maxHeight {
+                  max-height: @controls-filterButton-history-maxHeight-height;
+                  padding-bottom: @controls-filterButton-history-maxHeight-padding;
+               }
+            }
+
+            .controls-filterButton__historyView {
+
+               .controls-ItemActions {
+                  right: @controls-filterButton-history-actions-right;
+                  left: @controls-filterButton-history-actions-left;
+                  margin-top: @controls-filterButton-history-actions-margin;
+               }
+
+               .controls-filterButton__historyView-item {
+                  cursor: @link-cursor;
+                  min-height: @controls-filterButton-history-item-min-height;
+
+                  .controls-filterButton__historyView-pin {
+                     float: @controls-filterButton-history-pin-float;
+                     position: @controls-filterButton-history-pin-position;
+                     top: @controls-filterButton-history-pin-top;
+                  }
+
+                  .controls-filterButton__historyView-titleContainer {
+                     position: @controls-filterButton-history-titleCont-position;
+                     right: @controls-filterButton-history-titleCont-right;
+                     left: @controls-filterButton-history-titleCont-left;
+
+                     .controls-filterButton__historyView-item-title {
+                        display: @controls-filterButton-history-title-display;
+                        .text-overflow();
+                        max-height: @controls-filterButton-history-title-height;
+                        vertical-align: @controls-filterButton-history-title-verAlign;
+                        color: @controls-filterButton-history-title-color;
+                        width: @controls-filterButton-history-title-width;
+                     }
+                  }
+                  &.controls-ListView__hoveredItem {
+                     background-color: transparent !important;
+
+                     .controls-filterButton__historyView-item-title {
+                        color: @link-hover-text-color;
+                     }
+                  }
+               }
+            }
+         }
+      }
    }
 
    .controls__filterButton__area-content {
