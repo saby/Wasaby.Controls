@@ -199,6 +199,7 @@ define('js!SBIS3.CONTROLS.ComponentBinder', [], function () {
             this._lastRoot = view.getCurrentRoot();
             //searchForm.subscribe('onReset', resetGroup);
             view.subscribe('onSetRoot', function(){
+               self._lastRoot = view.getCurrentRoot();
                if (self._options.backButton) {
                   self._options.backButton.getContainer().css({'visibility': 'visible'});
                }
