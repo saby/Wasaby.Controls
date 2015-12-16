@@ -25,6 +25,7 @@ define('js!SBIS3.CONTROLS.MoveHandlers', ['js!SBIS3.CONTROLS.MoveDialog','js!SBI
       selectedMoveTo: function(moveTo) {
          this._move(this._selectedRecords, moveTo);
       },
+      //TODO: Унифицировать параметр moveTo, чтобы в него всегда приходил record.
       _move: function(records, moveTo, insertAfter) {
          var
             recordTo,
@@ -43,6 +44,8 @@ define('js!SBIS3.CONTROLS.MoveHandlers', ['js!SBIS3.CONTROLS.MoveDialog','js!SBI
             if (recordTo) {
                isNodeTo = recordTo.get(this._options.hierField + '@');
             }
+         } else {
+            recordTo = moveTo;
          }
 
          if (this._checkRecordsForMove(records, recordTo, isChangeOrder)) {
@@ -69,9 +72,12 @@ define('js!SBIS3.CONTROLS.MoveHandlers', ['js!SBIS3.CONTROLS.MoveDialog','js!SBI
       _checkRecordsForMove: function(records, recordTo, isChangeOrder) {
          var
             key,
-            toMap = this._getParentsMap(recordTo.getKey());
+            toMap = [];
          if (recordTo === undefined) {
             return false;
+         }
+         if (recordTo !== null) {
+            toMap = this._getParentsMap(recordTo.getKey());
          }
          for (var i = 0; i < records.length; i++) {
             key = '' + ($ws.helpers.instanceOfModule(records[i], 'SBIS3.CONTROLS.Record') ? records[i].getKey() : records[i]);
