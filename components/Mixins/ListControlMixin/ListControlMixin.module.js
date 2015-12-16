@@ -453,6 +453,14 @@ define('js!SBIS3.CONTROLS.ListControlMixin', [
       /**
        * Устанавливает список, отображаемый контролом
        * @param {Object} items
+       */
+      setItems: function(items) {
+         this._setItems(items);
+      },
+
+      /**
+       * Устанавливает список, отображаемый контролом
+       * @param {Object} items
        * @private
        */
       _setItems: function (items) {
