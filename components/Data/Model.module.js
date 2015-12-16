@@ -192,7 +192,7 @@ define('js!SBIS3.CONTROLS.Data.Model', [
             hasValue = this._getRecordAdapter().has(name),
             value = hasValue ? this._getOriginalPropertyValue(name) : undefined;
          if (!hasValue && 'def' in property) {
-            value = typeof property.def === 'function' ? property.def() : property.def;
+            value = this.getDefault(name);
             this._setOriginalPropertyValue(name, value);
          }
          if (property.get) {
@@ -336,6 +336,20 @@ define('js!SBIS3.CONTROLS.Data.Model', [
        */
       setUsingDataSetAsList: function (usingDataSetAsList) {
          this._options.usingDataSetAsList = usingDataSetAsList;
+      },
+
+      //
+      // * Возвращает значение свойства по умолчанию
+      // * @param {String} name Название свойства
+      // * @returns {*}
+      // */
+      getDefault: function (name) {
+         var property = this._options.properties[name],
+            value;
+         if ('def' in property) {
+            value = property.def = typeof property.def === 'function' ? property.def() : property.def;
+         }
+         return value;
       },
 
       /**
