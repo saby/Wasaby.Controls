@@ -201,9 +201,11 @@ define('js!SBIS3.CONTROLS.HierarchyDataGridView', [
                   //TODO в будущем нужно отдать уже dataSet крошек, ведь здесь уже все построено
                   /*TODO для Алены. Временный фикс, потому что так удалось починить*/
                   var filter = $ws.core.merge(self.getFilter(), {
-                     'Разворот' : 'Без разворота',
-                     'СтрокаПоиска': undefined
+                     'Разворот' : 'Без разворота'
                   });
+                  if (self._options.groupBy.field) {
+                     filter[self._options.groupBy.field] = undefined;
+                  }
                   self.setInfiniteScroll(false, true);
                   self.setGroupBy({});
                   self.setHighlightText('', false);
