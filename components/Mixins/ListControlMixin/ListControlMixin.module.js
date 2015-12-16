@@ -277,6 +277,14 @@ define('js!SBIS3.CONTROLS.ListControlMixin', [
       },
 
       /**
+       * Устанавливает список, отображаемый контролом
+       * @param {Object} items
+       */
+      setItems: function(items) {
+         this.getItems().fill(items);
+      },
+
+      /**
        * Возвращает проекцию списка, отображаемого контролом
        * @returns {SBIS3.CONTROLS.Data.Projection.Collection}
        */
@@ -437,6 +445,7 @@ define('js!SBIS3.CONTROLS.ListControlMixin', [
        * @private
        */
       _convertItems: function (items) {
+         items = items || [];
          if (items instanceof Array) {
             items = new ObservableList({
                items: items
@@ -448,14 +457,6 @@ define('js!SBIS3.CONTROLS.ListControlMixin', [
          }
 
          return items;
-      },
-
-      /**
-       * Устанавливает список, отображаемый контролом
-       * @param {Object} items
-       */
-      setItems: function(items) {
-         this._setItems(items);
       },
 
       /**
