@@ -278,7 +278,7 @@ define('js!SBIS3.CONTROLS.ListControlMixin', [
 
       /**
        * Устанавливает список, отображаемый контролом
-       * @param {Object} items
+       * @param {Array|SBIS3.CONTROLS.Data.Collection.IEnumerable} items
        */
       setItems: function(items) {
          this.getItems().fill(items);
