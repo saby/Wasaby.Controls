@@ -12,6 +12,8 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
     * @extends SBIS3.CONTROLS.Data.Collection.ObservableList
     * @author Мальцев Алексей
     * @state mutable
+    * @public
+    * @control
     * @remark
     * Этот модуль временный. Обеспечивает совместимость c  SBIS3.CONTROLS.DataSet по API.
     */
@@ -73,11 +75,42 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
       removeRecord: function (key) {
          return DataSet.prototype.removeRecord.call(this, key);
       },
-
-      getRecordByKey: function (key) {
+      /**
+       * Возвращает запись по ключу
+       * @param id
+       * @public
+       * @returns {*}
+       */
+      getRecordById: function (id) {
          return this.at(
-            this.getItemIndexByPropertyValue('id', key)
+            this.getItemIndexByPropertyValue('id', id)
          );
+      },
+      /**
+       * @deprecated метод будет удален в 3.7.4 используйте getRecordById
+       * @param key
+       * @returns {*}
+       */
+      getRecordByKey: function (key) {
+         return this.getRecordById(key);
+      },
+      /**
+       * @deprecated метод будет удален в 3.7.4 используйте getRecordById
+       * @param key
+       * @public
+       * @returns {*}
+       */
+      getIndexById: function (id) {
+         var item = getRecordById(id);
+         return this.getIndex(item);
+      },
+      /**
+       * Возвращает копию рекордсета
+       * @public
+       * @returns {*}
+       */
+      clone: function (){
+
       },
 
       getRecordKeyByIndex: function (index) {
@@ -116,7 +149,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
       },
 
       setRawData: function(data) {
-         this.fill();
+         this.assign();
 
          this._rawData = data;
 

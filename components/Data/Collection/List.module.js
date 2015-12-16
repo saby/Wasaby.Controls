@@ -92,44 +92,21 @@ define('js!SBIS3.CONTROLS.Data.Collection.List', [
          }
       },
 
-      concat: function (items, prepend) {
-         var isArray = items instanceof Array;
-         if (!isArray && !$ws.helpers.instanceOfMixin(items, 'SBIS3.CONTROLS.Data.Collection.IEnumerable')) {
-            throw new Error('Invalid argument');
-         }
-         if (!isArray) {
-            items = items.toArray();
-         }
-
-         if (prepend) {
-            Array.prototype.splice.apply(this._items, [0, 0].concat(items));
-         } else {
-            Array.prototype.splice.apply(this._items, [this._items.length, 0].concat(items));
-         }
-
-         this._getServiceEnumerator().reIndex();
-      },
-
-      toArray: function () {
-         return this._items;
-      },
-
       //endregion SBIS3.CONTROLS.Data.Collection.IEnumerable
 
       //region SBIS3.CONTROLS.Data.Collection.IList
 
-      fill: function (instead) {
-         this._items.length = 0;
+      assign: function (items) {
+         this._items = [];
+         this._splice(items, 0, 0);
+      },
 
-         if (instead) {
-            var isArray = instead instanceof Array;
-            if (!isArray && !$ws.helpers.instanceOfMixin(instead, 'SBIS3.CONTROLS.Data.Collection.IEnumerable')) {
-               throw new Error('Invalid argument');
-            }
-            Array.prototype.splice.apply(this._items, [0, 0].concat(instead.toArray()));
-         }
+      append: function (items) {
+         this._splice(items, this._length, 0);
+      },
 
-         this._getServiceEnumerator().reIndex();
+      prepend: function (items) {
+         this._splice(items, 0, 0);
       },
 
       add: function (item, at) {
@@ -220,6 +197,36 @@ define('js!SBIS3.CONTROLS.Data.Collection.List', [
 
       //endregion SBIS3.CONTROLS.Data.Collection.IIndexedCollection
 
+      /**
+       * Присоединяет другую коллекцию
+       * @param {SBIS3.CONTROLS.Data.Collection.IEnumerable} items Коллекция, которая будет присоединена
+       * @param {Boolean} [prepend=false] Присоединить в начало
+       */
+      concat: function (items, prepend) {
+         var isArray = items instanceof Array;
+         if (!isArray && !$ws.helpers.instanceOfMixin(items, 'SBIS3.CONTROLS.Data.Collection.IEnumerable')) {
+            throw new Error('Invalid argument');
+         }
+         if (!isArray) {
+            items = items.toArray();
+         }
+
+         if (prepend) {
+            Array.prototype.splice.apply(this._items, [0, 0].concat(items));
+         } else {
+            Array.prototype.splice.apply(this._items, [this._items.length, 0].concat(items));
+         }
+
+         this._getServiceEnumerator().reIndex();
+      },
+      /**
+       * Возвращает коллекцию в виде массива
+       * @returns {Array}
+       */
+      toArray: function () {
+         return this._items.slice();
+      },
+
       //region Protected methods
 
       /**
@@ -240,8 +247,33 @@ define('js!SBIS3.CONTROLS.Data.Collection.List', [
        */
       _isValidIndex: function (index) {
          return index >= 0 && index < this.getCount();
-      }
+      },
 
+      /**
+       * Вызывает метод splice
+       * @param {SBIS3.CONTROLS.Data.Collection.IEnumerable|Array} items Коллекция с элементами для замены
+       * @param {Number} start   Индекс в массиве, с которого начинать удаление.
+       * @param {Number} deleteCount Кол-во элементов, которое требуется удалить, начиная с индекса start.
+       * @private
+       */
+      _splice:function (items, start, deleteCount){
+         if (items) {
+            var addItems = [];
+            if(items instanceof Array) {
+               addItems = items;
+            } else if($ws.helpers.instanceOfMixin(instead, 'SBIS3.CONTROLS.Data.Collection.IEnumerable')) {
+               var self = this;
+               items.each(function (item){
+                  addItems.push(item);
+               });
+            } else {
+               throw new Error('Invalid argument');
+            }
+            Array.prototype.splice.apply(this._items,([start, deleteStart].concat(addItems)));
+         }
+
+         this._getServiceEnumerator().reIndex();
+      }
       //endregion Protected methods
 
    });

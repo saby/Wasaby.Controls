@@ -156,6 +156,7 @@ define('js!SBIS3.CONTROLS.MoveHandlers', ['js!SBIS3.CONTROLS.MoveDialog','js!SBI
             nextId = nextItem.data('id');
          moveRecord.call(this, record, nextId, id, false);
       },
+
       moveRecordUp: function(tr, id, record) {
          var prevItem = this.getPrevItemById(id),
             prevId = prevItem.data('id');

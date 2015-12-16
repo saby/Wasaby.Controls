@@ -52,16 +52,44 @@ define('js!SBIS3.CONTROLS.Data.Collection.ObservableListMixin', [
 
          //region SBIS3.CONTROLS.Data.Collection.List
 
-         fill: function (parentFnc, instead) {
-            var oldItems = this._items.slice();
+         assign: function (parentFnc, items) {
+            var oldItems =
             this._eventsEnabled = false;
-            parentFnc.call(this, instead);
+            parentFnc.call(this, items);
             this._eventsEnabled = true;
             this.notifyCollectionChange(
                IBindCollection.ACTION_RESET,
                this._items.slice(),
                0,
                oldItems,
+               0
+            );
+         },
+
+         append: function (parentFnc, items) {
+            this._eventsEnabled = false;
+            var length = this._length;
+            parentFnc.call(this, items);
+            this._eventsEnabled = true;
+            this.notifyCollectionChange(
+               IBindCollection.ACTION_ADD,
+               this._items.slice(length, this._lenght),
+               0,
+               [],
+               0
+            );
+         },
+
+         prepend: function (parentFnc, items) {
+            this._eventsEnabled = false;
+            var length = this._length;
+            parentFnc.call(this, items);
+            this._eventsEnabled = true;
+            this.notifyCollectionChange(
+               IBindCollection.ACTION_ADD,
+               this._items.slice(0, this._length - length),
+               0,
+               [],
                0
             );
          },

@@ -119,7 +119,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.LoadableListMixin', [
                   break;
 
                default:
-                  this.fill(list);
+                  this.assign(list);
             }
 
             this._notify(

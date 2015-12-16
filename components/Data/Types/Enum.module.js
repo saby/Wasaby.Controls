@@ -39,10 +39,6 @@ define('js!SBIS3.CONTROLS.Data.Types.Enum', [
          $ws.helpers.forEach(this._options.data, callback, context);
       },
 
-      toArray: function() {
-         return this._options.data;
-      },
-
       getEnumerator: function() {
          if (!this._enumerator) {
             this._enumerator =  new ArrayEnumerator({
