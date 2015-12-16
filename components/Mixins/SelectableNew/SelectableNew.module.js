@@ -76,7 +76,7 @@ define('js!SBIS3.CONTROLS.SelectableNew', [
             this.subscribeTo(projection, 'onCurrentChange', (function(event, newCurrent, oldCurrent, newPosition) {
                this._setSelectedIndex(
                   newPosition,
-                  self._getItemValue(newCurrent ? newCurrent.getContents() : undefined, this._options.keyField )
+                  self._getItemValue(newCurrent ? newCurrent.getContents() : null, this._options.keyField )
                );
             }).bind(this));
          },
@@ -252,7 +252,7 @@ define('js!SBIS3.CONTROLS.SelectableNew', [
          }
       },
       _getItemValue: function(value, keyField) {
-         if(typeof value === 'object') {
+         if(value && typeof value === 'object') {
             return Utils.getItemPropertyValue(value, keyField );
          }
          return value;

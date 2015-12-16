@@ -187,6 +187,10 @@ define('js!SBIS3.CONTROLS.ComboBox', [
          ComboBox.superclass.setText.call(this, text);
          this._drawNotEditablePlaceholder(text);
          $('.js-controls-ComboBox__fieldNotEditable', this._container.get(0)).text(text || this._options.placeholder);
+      },
+
+      _drawText: function() {
+         ComboBox.superclass._drawText.apply(this, arguments);
          this._setKeyByText();
       },
 
@@ -202,9 +206,6 @@ define('js!SBIS3.CONTROLS.ComboBox', [
             if(newText !== this._options.text) {
                this.setText(newText);
             }
-         }
-         else {
-            this.setText(this._options.text);
          }
 
       },
@@ -287,15 +288,6 @@ define('js!SBIS3.CONTROLS.ComboBox', [
          */      },
 
 
-      _keyUpBind: function (e) {
-         /*по изменению текста делаем то же что и в текстбоксе*/
-         ComboBox.superclass._keyUpBind.apply(this, arguments);
-         /*не делаем смену значения при нажатии на стрелки вверх вниз. Иначе событие смены ключа срабатывает два раза*/
-         if ((e.which != 40) && (e.which != 38)) {
-            this._setKeyByText();
-         }
-      },
-
       _setKeyByText: function () {
          /*устанавливаем ключ, когда текст изменен извне*/
          var
@@ -314,7 +306,14 @@ define('js!SBIS3.CONTROLS.ComboBox', [
             }
          });
          if (foundItem) {
-            this.setSelectedKey(selKey);
+            if (selKey != this._options.selectedKey) {
+               this.setSelectedKey(selKey);
+            }
+         }
+         else {
+            if (this._options.selectedKey) {
+               this.setSelectedKey(null);
+            }
          }
 
       },
