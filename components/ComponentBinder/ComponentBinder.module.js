@@ -170,7 +170,11 @@ define('js!SBIS3.CONTROLS.ComponentBinder', [], function () {
             /**
              * @cfg {SBIS3.CONROLS.OperationsPanel} объект панели массовых операций
              */
-            operationPanel: undefined
+            operationPanel: undefined,
+            /**
+             * @cfg {SBIS3.CONROLS.FilterButton} объект кнопки фильтров
+             */
+            filterButton: undefined
          }
       },
 
@@ -224,7 +228,7 @@ define('js!SBIS3.CONTROLS.ComponentBinder', [], function () {
                }
             }
          });
-         
+
          searchForm.subscribe('onSearchStart', function(event, text) {
             var checkedText = isSearchValid(text, 1);
             if (checkedText[1]) {
@@ -293,7 +297,7 @@ define('js!SBIS3.CONTROLS.ComponentBinder', [], function () {
 
          view.subscribe('onSetRoot', function(event, id, hier){
             var i;
-            /* 
+            /*
              TODO: Хак для того перерисовки хлебных крошек при переносе из папки в папку
              Проверить совпадение родительского id и текущего единственный способ понять,
              что в папку не провалились, а попали через перенос.
@@ -380,6 +384,26 @@ define('js!SBIS3.CONTROLS.ComponentBinder', [], function () {
          operationPanel.subscribe('onToggle', function() {
             toggleCheckBoxes(operationPanel, view, hideCheckBoxes);
          });
+      },
+      /**
+       * Метод для связывания истории фильтров с представлением данных
+       */
+      bindFilterHistory: function(filterButton, historyId, controller, browser) {
+         var view = this._options.view,
+             historyController = new controller({
+                historyId: historyId
+             });
+
+         filterButton.setHistoryController(historyController);
+         historyController.getHistory(true).addCallback(function() {
+            var filter = historyController.getActiveFilter();
+
+            if(filter) {
+               filterButton.setFilterStructure(filter.filter);
+               view.setFilter($ws.core.merge(view.getFilter(), filterButton.getFilter()), true);
+            }
+            browser._notifyOnFiltersReady();
+         })
       }
    });
 
