@@ -15,7 +15,7 @@ define('js!SBIS3.CONTROLS.ComponentBinder', [], function () {
                'usePages': 'full'
             }),
             view = this._options.view,
-            groupBy = view.getSearchGroupBy();
+            groupBy = view.getSearchGroupBy(searchParamName);
          if (searchCrumbsTpl) {
             groupBy.breadCrumbsTpl = searchCrumbsTpl;
          }
