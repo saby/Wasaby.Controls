@@ -826,6 +826,7 @@ define('js!SBIS3.CONTROLS.ListView',
                   editingTemplate: this._options.editingTemplate,
                   itemsContainer: this._getItemsContainer(),
                   element: $('<div>'),
+                  opener: this,
                   modeAutoAdd: this._options.editMode === 'click|autoadd' || this._options.editMode === 'hover|autoadd',
                   handlers: {
                      onItemValueChanged: function(event, difference, model) {
