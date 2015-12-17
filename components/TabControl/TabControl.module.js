@@ -58,7 +58,8 @@ define('js!SBIS3.CONTROLS.TabControl', [
              * @see keyField
              * @see items
              */
-            tabsDisplayField: null,            /**
+            tabsDisplayField: null,
+            /**
              * @cfg {String} Поле элемента коллекции, которое является идентификатором записи
              * @remark
              * Выбранный элемент в коллекции задаётся указанием ключа элемента selectedKey.
