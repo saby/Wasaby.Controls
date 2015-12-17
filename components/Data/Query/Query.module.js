@@ -390,7 +390,7 @@ define('js!SBIS3.CONTROLS.Data.Query.Query', [
       },
 
       /**
-       * Устанавливает смешение первого элемента выборки
+       * Устанавливает смещение первого элемента выборки
        * @param {Number} start Смещение первого элемента выборки
        * @returns {SBIS3.CONTROLS.Data.Query.Query}
        * @example
@@ -402,7 +402,7 @@ define('js!SBIS3.CONTROLS.Data.Query.Query', [
        * </pre>
        */
       offset: function (start) {
-         this._offset = Math.max(0, parseInt(start) || 0);
+         this._offset = parseInt(start) || 0;
 
          return this;
       },
