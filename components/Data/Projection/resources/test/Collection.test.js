@@ -4,10 +4,10 @@ define([
       'js!SBIS3.CONTROLS.Data.Projection.Collection',
       'js!SBIS3.CONTROLS.Data.Collection.ObservableList',
       'js!SBIS3.CONTROLS.Data.Collection.List',
-      'js!SBIS3.CONTROLS.Data.Bind.ICollection',
+      'js!SBIS3.CONTROLS.Data.Bind.ICollectionProjection',
       'js!SBIS3.CONTROLS.Data.Adapter.Json',
       'js!SBIS3.CONTROLS.Data.Model'
-   ], function (Projection, CollectionProjection, ObservableList, List, IBindCollection, JsonAdapter, Model) {
+   ], function (Projection, CollectionProjection, ObservableList, List, IBindCollectionProjection, JsonAdapter, Model) {
       'use strict';
 
       describe('SBIS3.CONTROLS.Data.Projection.Collection', function() {
@@ -140,6 +140,41 @@ define([
                projection.each(function(item, i) {
                   assert.equal(sortedItem[i], item.getContents());
                });
+            });
+
+            it('should trigger an event after add item', function(done) {
+               var items = [1, 2, 3, 4],
+                  list = new ObservableList({
+                     items: items
+                  }),
+                  projection = new CollectionProjection({
+                     collection: list
+                  }),
+                  handler = function(event, action, newItems, newItemsIndex, oldItems, oldItemsIndex) {
+                     try {
+                        if (action !== IBindCollectionProjection.ACTION_ADD) {
+                           throw new Error('Invalid action');
+                        }
+                        if (newItems[0].getContents() !== 5) {
+                           throw new Error('Invalid newItems');
+                        }
+                        if (newItemsIndex !== items.length - 1) {
+                           throw new Error('Invalid newItemsIndex');
+                        }
+                        if (oldItems.length > 0) {
+                           throw new Error('Invalid oldItems');
+                        }
+                        if (oldItemsIndex > 0) {
+                           throw new Error('Invalid oldItemsIndex');
+                        }
+                        done();
+                     } catch (err) {
+                        done(err);
+                     }
+                  };
+               projection.subscribe('onCollectionChange', handler);
+               projection.getCollection().add(5);
+               projection.unsubscribe('onCollectionChange', handler);
             });
 
             it('should sort projection after remove item', function() {
