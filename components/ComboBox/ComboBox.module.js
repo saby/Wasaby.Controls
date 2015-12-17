@@ -7,7 +7,7 @@ define('js!SBIS3.CONTROLS.ComboBox', [
    'js!SBIS3.CONTROLS.SelectableNew',
    'js!SBIS3.CONTROLS.DataBindMixin',
    'js!SBIS3.CONTROLS.Data.Utils',
-   'js!SBIS3.CONTROLS.ComboBoxNewListView',
+   'js!SBIS3.CONTROLS.ComboBoxListView',
    'js!SBIS3.CONTROLS.Data.Projection.Collection',
    'html!SBIS3.CONTROLS.ComboBox/resources/ComboBoxArrowDown',
    'js!SBIS3.CONTROLS.DisplayFieldMixin'
