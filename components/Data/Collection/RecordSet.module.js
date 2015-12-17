@@ -1,7 +1,7 @@
 /* global define, $ws */
 define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
    'js!SBIS3.CONTROLS.Data.Collection.ObservableList',
-   'js!SBIS3.CONTROLS.Data.Collection.RecordSet',
+   'js!SBIS3.CONTROLS.DataSet',
    'js!SBIS3.CONTROLS.Data.Model'
 ], function (ObservableList, DataSet) {
    'use strict';
