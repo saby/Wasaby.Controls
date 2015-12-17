@@ -17,7 +17,6 @@ define('js!SBIS3.CONTROLS.ComboBoxListView', [
          _itemContainerCssClass: 'itemRow',
          _itemContainerSelectedCssClass: 'itemRow__selected',
          _itemContainerHoverCssClass: 'itemRow__hovered',
-         _itemsEmptyCssClass: 'itemRow',
          _pickerClass: 'controls-ComboBox__picker'
 
       },
