@@ -180,6 +180,7 @@ define('js!SBIS3.CONTROLS.DataFactory', [
        */
       makeDataSet: function(data, strategy) {
          return $ws.single.ioc.resolve('SBIS3.CONTROLS.DataSet', {
+            compatibilityMode: true,
             strategy: strategy,
             data: data,
             meta: strategy.getMetaData(data)
