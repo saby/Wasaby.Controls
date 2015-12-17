@@ -58,6 +58,7 @@ define('js!SBIS3.CONTROLS.OpenDialogAction', ['js!SBIS3.CONTROLS.ActionBase', 'j
       _opendEditComponent: function(meta, dialogComponent, mode){
          var self = this,
             config = {
+               opener: this,
                template: dialogComponent,
                componentOptions : {
                   key : meta.id,
