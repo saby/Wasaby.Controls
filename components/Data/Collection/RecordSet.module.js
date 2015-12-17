@@ -107,10 +107,15 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
       /**
        * Возвращает копию рекордсета
        * @public
-       * @returns {*}
+       * @returns {SBIS3.CONTROLS.Data.Collection.RecordSet}
        */
-      clone: function (){
-
+      clone: function () {
+         return new RecordSet({
+            strategy: this._options.strategy,
+            data: this._rawData,
+            meta: this._options.meta,
+            keyField: this._options.keyField
+         });
       },
 
       getRecordKeyByIndex: function (index) {
