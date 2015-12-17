@@ -20,7 +20,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.IndexedEnumeratorMixin', [
       },
 
       $constructor: function () {
-         this._onCollectionChange.bind(this);
+         this._onCollectionChange = this._onCollectionChange.bind(this);
       },
 
       //region Public methods
