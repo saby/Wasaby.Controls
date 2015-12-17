@@ -32,23 +32,6 @@ define('js!SBIS3.CONTROLS.Data.Collection.ObservableListMixin', [
 
       around: {
 
-         //region SBIS3.CONTROLS.Data.Collection.IEnumerable
-
-         concat: function (parentFnc, items, prepend) {
-            var newItemsIndex = this.getCount();
-            this._eventsEnabled = false;
-            parentFnc.call(this, items, prepend);
-            this._eventsEnabled = true;
-            this.notifyCollectionChange(
-               IBindCollection.ACTION_ADD,
-               prepend ? this._items.slice(0, this.getCount() - newItemsIndex) : this._items.slice(newItemsIndex),
-               prepend ? 0 : newItemsIndex,
-               [],
-               0
-            );
-         },
-
-         //endregion SBIS3.CONTROLS.Data.Collection.IEnumerable
 
          //region SBIS3.CONTROLS.Data.Collection.List
 

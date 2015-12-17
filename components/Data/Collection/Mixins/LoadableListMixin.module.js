@@ -111,11 +111,11 @@ define('js!SBIS3.CONTROLS.Data.Collection.LoadableListMixin', [
 
             switch (mode) {
                case ISourceLoadable.MODE_APPEND:
-                  this.concat(list);
+                  this.append(list);
                   break;
 
                case ISourceLoadable.MODE_PREPEND:
-                  this.concat(list, true);
+                  this.append(list, true);
                   break;
 
                default:
