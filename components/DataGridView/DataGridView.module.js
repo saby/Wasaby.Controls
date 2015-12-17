@@ -612,7 +612,14 @@ define('js!SBIS3.CONTROLS.DataGridView',
                 column = rowData.columns[i];
 
             if (column.headTemplate) {
-               value = MarkupTransformer(doT.template(column.headTemplate)({
+               var headTpl;
+               if ((typeof column.headTemplate == 'string') && (column.headTemplate.indexOf('html!') == 0)) {
+                  headTpl = require(column.headTemplate);
+               }
+               else {
+                  headTpl = doT.template(column.headTemplate);
+               }
+               value = MarkupTransformer(headTpl({
                   column: column
                }));
             } else {

@@ -122,6 +122,11 @@ define('js!SBIS3.CONTROLS.Data.Model', [
          _hashPrefix: 'model-',
 
          /**
+          * @var {SBIS3.CONTROLS.Data.Adapter.IRecord} Адаптер для записи
+          */
+         _recordAdapter: undefined,
+
+         /**
           * @var {Boolean} Признак, что модель существует в источнике данных
           */
          _isStored: false,
@@ -161,14 +166,15 @@ define('js!SBIS3.CONTROLS.Data.Model', [
 
          if ('data' in cfg && !('rawData' in cfg)) {
             this._options.rawData = cfg.data;
-            $ws.single.ioc.resolve('ILogger').log('SBIS3.CONTROLS.Data.Model', 'option "data" is deprecated and will be removed in 3.7.20. Use "rawData" instead.');
+            $ws.single.ioc.resolve('ILogger').log('SBIS3.CONTROLS.Data.Model', 'option "data" is deprecated and will be removed in 3.7.3.20. Use "rawData" instead.');
          }
-         this._options.idProperty = this._options.idProperty || '';
          this._initAdapter();
-         if (!this._options.idProperty) {
-            this._options.idProperty = this.getAdapter().getKeyField(this._options.rawData);
-         }
          this.setRawData(this._options.rawData, true);
+
+         this._options.idProperty = this._options.idProperty || '';
+         if (!this._options.idProperty) {
+            this._options.idProperty = this._getRecordAdapter().getKeyField();
+         }
       },
 
       // region SBIS3.CONTROLS.Data.IPropertyAccess
@@ -183,8 +189,9 @@ define('js!SBIS3.CONTROLS.Data.Model', [
          }
 
          var property = this._options.properties[name],
-            value = this._getOriginalPropertyValue(name);
-         if (value === undefined && 'def' in property) {
+            hasValue = this._getRecordAdapter().has(name),
+            value = hasValue ? this._getOriginalPropertyValue(name) : undefined;
+         if (!hasValue && 'def' in property) {
             value = typeof property.def === 'function' ? property.def() : property.def;
             this._setOriginalPropertyValue(name, value);
          }
@@ -429,6 +436,7 @@ define('js!SBIS3.CONTROLS.Data.Model', [
        */
       setRawData: function (rawData, silent) {
          this._options.rawData = rawData;
+         this._recordAdapter = undefined;
          this._propertiesCache = {};
          this._initProperties();
          if (!silent) {
@@ -474,12 +482,20 @@ define('js!SBIS3.CONTROLS.Data.Model', [
       },
 
       /**
+       * Возвращает адаптер для работы с записью
+       * @returns {SBIS3.CONTROLS.Data.Adapter.IRecord}
+       * @private
+       */
+      _getRecordAdapter: function () {
+         return this._recordAdapter || (this._recordAdapter = this.getAdapter().forRecord(this._options.rawData));
+      },
+
+      /**
        * Инициализирует свойства модели
        * @private
        */
       _initProperties: function() {
-         var adapter = this._options.adapter.forRecord(),
-            fields = adapter.getFields(this._options.rawData),
+         var fields = this._getRecordAdapter().getFields(),
             i,
             length;
          for (i = 0, length = fields.length; i < length; i++) {
@@ -511,13 +527,13 @@ define('js!SBIS3.CONTROLS.Data.Model', [
        * @private
        */
       _getOriginalPropertyValue: function(name) {
-         var adapter = this._options.adapter.forRecord(),
-            rawValue = adapter.get(this._options.rawData, name),
-            fieldData = adapter.getFullFieldData(this._options.rawData, name),
+         var adapter = this._getRecordAdapter(),
+            rawValue = adapter.get(name),
+            fieldData = adapter.getInfo(name),
             value = Factory.cast(
                rawValue,
                fieldData.type,
-               this._options.adapter,
+               this.getAdapter(),
                fieldData.meta
             );
          if (value && this._options.usingDataSetAsList && fieldData.type === 'DataSet') {
@@ -533,19 +549,22 @@ define('js!SBIS3.CONTROLS.Data.Model', [
        * @private
        */
       _setOriginalPropertyValue: function(name, value) {
-         var adapter = this._options.adapter.forRecord(),
-            fieldData = adapter.getFullFieldData(this._options.rawData, name);
+         var adapter = this._getRecordAdapter(),
+            fieldData = adapter.getInfo(name);
 
-         this._options.rawData = adapter.set(
-            this._options.rawData,
+         adapter.set(
             name,
             Factory.serialize(
                value,
                fieldData.type,
-               this._options.adapter,
+               this.getAdapter(),
                fieldData.meta
             )
          );
+
+         if (!(this._options.rawData instanceof Object)) {
+            this._options.rawData = adapter.getData();
+         }
       },
 
       /**

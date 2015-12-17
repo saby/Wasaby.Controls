@@ -32,7 +32,7 @@ define('js!SBIS3.CONTROLS.FieldLinkItemsCollection', [
          },
 
          $constructor: function() {
-            this._publish('onCrossClick');
+            this._publish('onCrossClick', 'onItemActivate');
             /* Запомним контейнер поля связи */
             this._flContainer = this.getParent().getContainer();
          },
@@ -90,12 +90,10 @@ define('js!SBIS3.CONTROLS.FieldLinkItemsCollection', [
             var $target = $(e.target),
                 itemContainer;
 
-            if ($target.hasClass('controls-FieldLink__linkItem-cross')) {
-               itemContainer = $(e.target).closest('.controls-ListView__item');
+            itemContainer = $target.closest('.controls-ListView__item', this._container[0]);
 
-               if (itemContainer.length) {
-                  this._notify('onCrossClick', itemContainer.data('id'));
-               }
+            if(itemContainer.length) {
+               this._notify($target.hasClass('controls-FieldLink__linkItem-cross') ? 'onCrossClick' : 'onItemActivate', itemContainer.data('id'));
             }
          },
 

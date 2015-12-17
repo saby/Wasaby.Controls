@@ -228,29 +228,27 @@ define('js!SBIS3.CONTROLS.DSMixin', [
          }
          else {
             var items;
-            if (this._options.items) {
+            if (this._options.items && this._options.items.length) {
                if (this._options.items instanceof Array) {
                   items = this._options.items;
                }
                else {
                   throw new Error('Array expected');
                }
+               var
+                  item = items[0];
+               if (!this._options.keyField) {
+                 if (item && Object.prototype.toString.call(item) === '[object Object]') {
+                   this._options.keyField = Object.keys(item)[0];
+                 }
+               }
+               this._dataSource = new StaticSource({
+                  compatibilityMode: true,
+                  data: items,
+                  strategy: new ArrayStrategy(),
+                  keyField: this._options.keyField
+               });
             }
-            else {
-               items = [];
-            }
-            var
-               item = items[0];
-            if (!this._options.keyField) {
-              if (item && Object.prototype.toString.call(item) === '[object Object]') {
-                this._options.keyField = Object.keys(item)[0];
-              }
-            }
-            this._dataSource = new StaticSource({
-               data: items,
-               strategy: new ArrayStrategy(),
-               keyField: this._options.keyField
-            });
          }
       },
        /**
@@ -341,28 +339,30 @@ define('js!SBIS3.CONTROLS.DSMixin', [
          this._offset = offsetChanged ? offset : this._offset;
          this._limit = limitChanged ? limit : this._limit;
 
-         this._toggleIndicator(true);
-         this._loader = this._callQuery(this._options.filter, this.getSorting(), this._offset, this._limit).addCallback(function (dataSet) {
-            self._toggleIndicator(false);
-            self._loader = null;//Обнулили без проверки. И так знаем, что есть и загрузили
-            if (self._dataSet) {
-               self._dataSet.setRawData(dataSet.getRawData());
-               self._dataSet.setMetaData(dataSet.getMetaData());
-            } else {
-               self._dataSet = dataSet;
-            }
-            self._dataLoadedCallback();
-            self._notify('onDataLoad', dataSet);
-            //self._notify('onBeforeRedraw');
-            def.callback(dataSet);
-            self._redraw();
-         }).addErrback(function(error){
-            if (!error.canceled) {
-               self._toggleIndicator(false);
-               $ws.helpers.message(error.message.toString().replace('Error: ', ''));
-            }
-            def.errback(error);
-         });
+         if (this._dataSource){
+            this._toggleIndicator(true);
+	         this._loader = this._callQuery(this._options.filter, this.getSorting(), this._offset, this._limit).addCallback(function (dataSet) {
+	            self._toggleIndicator(false);
+	            self._loader = null;//Обнулили без проверки. И так знаем, что есть и загрузили
+	            if (self._dataSet) {
+	               self._dataSet.setRawData(dataSet.getRawData());
+	               self._dataSet.setMetaData(dataSet.getMetaData());
+	            } else {
+	               self._dataSet = dataSet;
+	            }
+	            self._dataLoadedCallback();
+	            self._notify('onDataLoad', dataSet);
+	            //self._notify('onBeforeRedraw');
+	            def.callback(dataSet);
+	            self._redraw();
+	         }).addErrback(function(error){
+	            if (!error.canceled) {
+	               self._toggleIndicator(false);
+	               $ws.helpers.message(error.message.toString().replace('Error: ', ''));
+	            }
+	            def.errback(error);
+	         });
+         }
 
          this._notifyOnPropertyChanged('filter');
          this._notifyOnPropertyChanged('sorting');
@@ -396,7 +396,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
                      more: newDataSet.getTotal(),
                      path: newDataSet.getProperty('p')
                   },
-                  keyField: this._options.keyField || this._dataSource.getAdapter().getKeyField(newDataSet.getRawData())
+                  keyField: this._options.keyField || this._dataSource.getAdapter().forRecord(newDataSet.getRawData()).getKeyField()
                });
             }).bind(this));
          } else {
@@ -533,33 +533,33 @@ define('js!SBIS3.CONTROLS.DSMixin', [
         * @see onDrawItems
         * @see onDataLoad
         */
-      setItems: function (items) {
-         //TODO Сделать метод для очистки всех Items, ибо setItems([]) - не очевидно
-         if (items && items.length) {
-             var
-                item = items[0],
-                keyField;
+       setItems: function (items) {
+          //TODO Сделать метод для очистки всех Items, ибо setItems([]) - не очевидно
+          var keyField, item;
 
-             if (this._options.keyField) {
-                keyField = this._options.keyField;
-             }
-             else {
-                if (item && Object.prototype.toString.call(item) === '[object Object]') {
-                   keyField = Object.keys(item)[0];
-                }
-             }
-         }
-         else {
-            items = [];
-         }
+          if (this._options.keyField) {
+             keyField = this._options.keyField;
+          }
 
-         this._dataSource = new StaticSource({
-            data: items,
-            strategy: new ArrayStrategy(),
-            keyField: keyField
-         });
-         this.reload();
-      },
+          if (items && items.length) {
+             item = items[0];
+
+             if (item && !keyField && Object.prototype.toString.call(item) === '[object Object]') {
+                keyField = Object.keys(item)[0];
+             }
+          }
+          else {
+             items = [];
+          }
+
+          this._dataSource = new StaticSource({
+             compatibilityMode: true,
+             data: items,
+             strategy: new ArrayStrategy(),
+             keyField: keyField
+          });
+          this.reload();
+       },
 
       _drawItemsCallback: function () {
          /*Method must be implemented*/

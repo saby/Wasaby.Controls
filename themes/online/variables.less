@@ -198,7 +198,7 @@
 @button-checked-border-width:             2px;
 @button-checked-border:                   @button-checked-border-width solid @default-color;
 @button-checked-shadow:                   @button-active-shadow;
-@button-checked-bg:                       @button-active-bg;
+@button-checked-bg:                       @button-hover-bg;
 @button-checked-text-margin-left:         @button-text-margin-left - 1px;
 @button-checked-text-margin-right:        @button-text-margin-right - 1px;
 @button-checked-icon-top-offset:          3px;
@@ -210,7 +210,7 @@
 @button-primary-checked-text-color:       @button-primary-active-text-color;
 @button-primary-checked-border:           2px solid @link-hover-text-color;
 @button-primary-checked-shadow:           @button-primary-active-shadow;
-@button-primary-checked-bg:               @button-primary-active-bg;
+@button-primary-checked-bg:               @button-primary-hover-bg;
 
 // Big default button
 @button-big-checked-text-color:           @button-checked-text-color;
@@ -640,64 +640,6 @@
 // Menu button //
 // ----------- //
 
-@menu-button-arrow-width:                               8px;
-@menu-button-arrow-height:                              6px;
-@menu-button-arrow-right-offset:                        10px;
-@menu-button-arrow-top-offset:                          10px;
-
-@menu-button-arrow-padding:                             0 23px 0 12px;          // padding for menu button containing dropdown arrow
-@menu-button-no-arrow-padding:                          @button-padding;        // padding for menu button when dropdown arrow is missed
-
-// Default menu button
-@menu-button-text-right-margin:                         23px;                   //this margin reserve space for arrow-down icon
-@menu-button-checked-text-right-margin:                 @menu-button-text-right-margin - 1px;
-@menu-button-arrow-spritesheet:                         'img/MenuButton-arrowDown.png';
-
-@menu-button-arrow-border-width:                        0;
-@menu-button-arrow-border-style:                        solid;
-@menu-button-arrow-border-color:                        transparent;
-@menu-button-arrow-bg:                                  transparent url(@menu-button-arrow-spritesheet) 0 26px;
-
-@menu-button-arrow-hover-border-width:                  @menu-button-arrow-border-width;
-@menu-button-arrow-hover-border-style:                  @menu-button-arrow-border-style;
-@menu-button-arrow-hover-border-color:                  @menu-button-arrow-border-color;
-@menu-button-arrow-hover-bg:                            transparent url(@menu-button-arrow-spritesheet) 0 6px;
-
-@menu-button-arrow-checked-border-width:                @menu-button-arrow-border-width;
-@menu-button-arrow-checked-border-style:                @menu-button-arrow-border-style;
-@menu-button-arrow-checked-border-color:                @menu-button-arrow-border-color;
-
-@menu-button-arrow-checked-hover-border-width:          @menu-button-arrow-checked-border-width;
-@menu-button-arrow-checked-hover-border-style:          @menu-button-arrow-checked-border-style;
-@menu-button-arrow-checked-hover-border-color:          @menu-button-arrow-checked-border-color;
-
-// Primary menu button
-@menu-button-primary-arrow-spritesheet:                 'img/MenuButton-arrowDown__primary.png';
-
-@menu-button-primary-arrow-border-width:                @menu-button-arrow-border-width;
-@menu-button-primary-arrow-border-style:                @menu-button-arrow-border-style;
-@menu-button-primary-arrow-border-color:                @menu-button-arrow-border-color;
-@menu-button-primary-arrow-bg:                          transparent url(@menu-button-arrow-spritesheet) 0 26px;
-
-@menu-button-primary-arrow-hover-border-width:          @menu-button-primary-arrow-border-width;
-@menu-button-primary-arrow-hover-border-style:          @menu-button-primary-arrow-border-style;
-@menu-button-primary-arrow-hover-border-color:          @menu-button-primary-arrow-border-color;
-@menu-button-primary-arrow-hover-bg:                    @menu-button-primary-arrow-bg;
-
-@menu-button-primary-arrow-checked-border-width:        @menu-button-primary-arrow-border-width;
-@menu-button-primary-arrow-checked-border-style:        @menu-button-primary-arrow-border-style;
-@menu-button-primary-arrow-checked-border-color:        @menu-button-primary-arrow-border-color;
-
-@menu-button-primary-arrow-checked-hover-border-width:  @menu-button-primary-arrow-checked-border-width;
-@menu-button-primary-arrow-checked-hover-border-style:  @menu-button-primary-arrow-checked-border-style;
-@menu-button-primary-arrow-checked-hover-border-color:  @menu-button-primary-arrow-checked-border-color;
-
-// Disabled menu button
-@menu-button-arrow-disabled-border-width:               @menu-button-arrow-border-width;
-@menu-button-arrow-disabled-border-style:               @menu-button-arrow-border-style;
-@menu-button-arrow-disabled-border-color:               @menu-button-arrow-border-color;
-@menu-button-arrow-disabled-bg:                         transparent url(@menu-button-arrow-spritesheet) 0 0;
-
 // Menu
 @menu-button-menu-top-margin:                           29px;
 @menu-button-menu-left-margin:                          0;
@@ -738,28 +680,16 @@
 // Menu link //
 // --------- //
 
-@menu-link-arrow-spritesheet:             @menu-button-arrow-spritesheet;
-
-@menu-link-arrow-width:                   8px;
-@menu-link-arrow-height:                  6px;
-@menu-link-arrow-right-offset:            2px;
-@menu-link-arrow-top-offset:              4px;
-@menu-link-arrow-top-offset-big:          14px;
 @menu-link-line-height:                   24px;
-
-@menu-link-arrow-padding:                 0 12px 0 0;
-@menu-link-no-arrow-padding:              0;
 
 @menu-link-text-color:                    @link-text-color;
 @menu-link-text-decoration:               @link-text-decoration;
-@menu-link-arrow-bg:                      @menu-button-arrow-bg;
 @menu-link-border-color: 						transparent;
 @menu-link-border-style: 						solid;
 @menu-link-border-width: 						0;
 
 @menu-link-hover-text-color:              @link-hover-text-color;
 @menu-link-hover-text-decoration:         @link-hover-text-decoration;
-@menu-link-hover-arrow-bg:                transparent url(@menu-button-arrow-spritesheet) 0 13px;
 
 @menu-link-checked-text-color:            @menu-link-hover-text-color;
 @menu-link-checked-text-decoration:       none;
@@ -1625,6 +1555,56 @@
 
 @controls-filterButton-clearButton-margin:        3px 0 0 0;
 
+//FilterButtonHistory
+@controls-filterButton-history-area-padding:      12px 12px 12px 4px;
+@controls-filterButton-history-tButton-margin:    8px;
+@controls-filterButton-history-wrapper-padding:   6px;
+@controls-filterButton-history-maxHeight-height:  64px;
+@controls-filterButton-history-maxHeight-overflow:hidden;
+@controls-filterButton-history-maxHeight-padding: 3px;
+@controls-filterButton-history-actions-right:     auto !important;
+@controls-filterButton-history-actions-left:      -4px !important;
+@controls-filterButton-history-actions-margin:    -2px;
+
+@controls-filterButton-history-item-min-height:   24px;
+
+@controls-filterButton-history-pin-float:         left;
+@controls-filterButton-history-pin-position:      relative;
+@controls-filterButton-history-pin-top:           2px;
+
+@controls-filterButton-history-titleCont-position:absolute;
+@controls-filterButton-history-titleCont-right:   0;
+@controls-filterButton-history-titleCont-left:    18px;
+
+@controls-filterButton-history-title-display:     inline-block;
+@controls-filterButton-history-title-height:      24px;
+@controls-filterButton-history-title-verAlign:    middle;
+@controls-filterButton-history-title-color:       #8991A9;
+@controls-filterButton-history-title-width:       100%;
+
+//FilterButtonToggleButton
+@controls-filterButton-toggleButton-border:       none;
+@controls-filterButton-toggleButton-bgColor:      transparent;
+@controls-filterButton-toggleButton-fontSize:     15px;
+@controls-filterButton-toggleButton-text-color:   #8991A9;
+
+@controls-filterButton-toggleButton-icon-size:    18px;
+@controls-filterButton-toggleButton-icon-style:   normal;
+@controls-filterButton-toggleButton-icon-top:     0;
+@controls-filterButton-toggleButton-icon-left:    auto;
+@controls-filterButton-toggleButton-icon-right:   0;
+@controls-filterButton-toggleButton-icon-radius:  16px;
+@controls-filterButton-toggleButton-icon-width:   22px;
+@controls-filterButton-toggleButton-icon-height:  22px;
+@controls-filterButton-toggleButton-icon-bgColor: #F2F2F2;
+@controls-filterButton-toggleButton-icon-border:  1px solid #E4E4E4;
+@controls-filterButton-toggleButton-icon-down:    "\e000";
+@controls-filterButton-toggleButton-icon-up:      "\e001";
+@controls-filterButton-toggleButton-icon-margin:  2px;
+
+@controls-filterButton-toggleButton-text-marginR: 31px;
+@controls-filterButton-toggleButton-text-marginL: 0;
+
 //DragNDropObject
 @drag-and-drop-object-bg:                          transparent url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAABHtJREFUeNqsV19MI0UY/7Zd0yJthRa8StJqjwgx2BKokBgTUSEUuT7wIJcjZ4xCcpdgfPDBF5N79MmY+MgdiZw+EMnFF+IfTMQcR0w4oAKVSIocBVFS6zW97baUttuu863dTbfdFrrXSb7M9Jv5vvnNb34zs6U2NjZ4ePxyu6ur6z01gZTP5+O7u7vLDuB5vqKPLAAoihJAuN3uqkHQuVyu7GTUj28AeH6uCIJlWejo6IDDw8N319bW2mmavl0wbJcwc7cSAA0CwGRo4XAYAoGAYLD8OvDP9EkTiWNEE32xWAwaGxvBZrMByfVyfX19v8vlgmw2i7/bCMOvncmAmNAUHoFM4x0wPRiB41w3WF+8gbPAq1/+DkyEAeYhA8FPPLIEyADGm81mSCQSuIjLVqt1L5lMgsPhgFAo9Oz6+nqbVqv15UMihJUDRQARzgkt8beBt1+CwEMvXMj7l955oew2IYDp6WkozNPT0yPUBAjU1dUJIIxGI0PA7RG9WAgrQPRyINMABicNH8Fx7FNg+SvQ0EBLfs+dIMRjcYg/Isb8b6HPR4T+8fFxGTiiA6E+OTkRapPJBMhGNBp1EbB7eb1YVldXobe394DGvRKRWywWSOhvgIG0yV5K/oW3njv3CRHz4XbMz89D4QJ1Op2gF/QhiJWVlRPZFhCawGAwKE6gNJmSH/Nt/s2C1fkKuO0Nkn9nZwe2t7eL9WKTAdjc3BRWkMlkgOM4yYp/F/owHm1iYkIC0NliKAGHeZX0IgPQ2dlZ1SWk5Md8/lACslwWODyKpO5xmIV+Jb3IROj3+1UzgMkxB7aPfHelVXq9XglYMXicS8aA0+lUdR0XMzA0NKToV9KLDABRpoCqGhPj+/v7paSzs7NS3/DwsNBP7gLA81+sF9kxtNvtqvdf7MN8Y2NjJeObm5thcHCwhBUZA/gWYFtEL1rxb9En7jnWooDx9+LiohRDbjyJgZmZmRK9yESIKNXsf6Ef8w0MDJT4m5qawOPxVGaAYRjZqsTVKrULazR8eMSkW1tbUl9ra6vgJ1exwEyxXuSvIbm31Z7/wlXhc1w8Hm9ZcveX6IVWOh5qQYgAgsGgNBG+iFjH43Hhpi3WS1kAlUAwbAKW1/wQ2D+CVDpTMsb34N7Hit9/1NEHhif1S2lKd+slZ/txiQjPAyL0bwS++mYBTlNpNd+gxmg65f1+8Ze+aJS5TijYld0DZ4F4xLDwxdfzaieXAbl3/9ebF1vMVxW3oByQn5bvCy9ajYox+Ff4mgzAU/9YiDRJgyP7hXW+Dfn2b/4PgcvoawWA5Er1yT7LmQuRsoOTp6cQS3xGWimoYTHKAJxVMpk01LoIAObm5s43OssJHxm1KuQPFUtPTk5SSp1TU1PXRkdHZb4/Do7fDx7+6aoVAL1et0SX61Ri5mmzcXl/n2sjLDy2ErUaDXvR5rhFVRNEWHFzvKbtux8WbhKARrWTa8jkl94cuk5TuV1NNYHIiobndjvan7/6BK39NstxLIffhuc0HI9xGI95MN9/AgwAe9CKFRkrHCkAAAAASUVORK5CYII=') no-repeat;
 @drag-and-drop-object-width:                       32px;
@@ -1634,6 +1614,7 @@
 @drag-and-drop-count-margin:                       20px 0 0 11px;
 @drag-and-drop-count-font-size:                    10px;
 @drag-and-drop-hover-bg:                           #9fd3fe !important;
+@drag-and-drop-border:                             1px solid @drag-and-drop-hover-bg;
 
 //FieldLink
 @controls-FieldLink-picker-show-border:            1px solid;

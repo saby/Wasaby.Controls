@@ -214,9 +214,13 @@ define('js!SBIS3.CONTROLS.TextBox', ['js!SBIS3.CONTROLS.TextBoxBase','html!SBIS3
          }
       },
 
-      _keyUpBind: function() {
+      _keyUpBind: function(event) {
          var newText = this._inputField.val();
          this.setText(newText);
+         var key = event.which || event.keyCode;
+         if (Array.indexOf([$ws._const.key.up, $ws._const.key.down], key) >= 0) {
+            event.stopPropagation();
+         }
       },
 
       _keyDownBind: function(event) {

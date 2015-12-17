@@ -51,7 +51,7 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
             idProperty: '',
 
             /**
-             * @cfg {SBIS3.CONTROLS.Data.Adapter.IAdapter} Адаптер для работы с данными, по умолчанию SBIS3.CONTROLS.Data.Adapter.Sbis
+             * @cfg {SBIS3.CONTROLS.Data.Adapter.IAdapter} Адаптер для работы с данными, по умолчанию {@link SBIS3.CONTROLS.Data.Adapter.Sbis}
              */
             adapter: undefined,
 
@@ -127,21 +127,23 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
          },
 
          /**
-          * @var {SBIS3.CONTROLS.SbisServiceSource/resources/SbisServiceBLO} Объект, который умеет ходить на бизнес-логику
+          * @var {SBIS3.CONTROLS.Data.Source.SbisService/resources/SbisServiceBLO} Объект, который умеет ходить на бизнес-логику
           */
          _provider: undefined,
 
          /**
-          * @var {SBIS3.CONTROLS.SbisServiceSource/resources/SbisServiceBLO} Объект, который умеет ходить на бизнес-логику, для смены порядковых номеров
+          * @var {SBIS3.CONTROLS.Data.Source.SbisService/resources/SbisServiceBLO} Объект, который умеет ходить на бизнес-логику, для смены порядковых номеров
           */
          _orderProvider: undefined
       },
 
       $constructor: function(cfg) {
          cfg = cfg || {};
-         
-         this._options.adapter = cfg.adapter || new SbisAdapter();
-         
+
+         if (!this._options.adapter) {
+            this._options.adapter = new SbisAdapter();
+         }
+
          if ('service' in cfg && !cfg.resource) {
             this._options.resource = cfg.resource = cfg.service;
          }
@@ -338,7 +340,7 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
       call: function (command, data) {
          return this._provider.callMethod(
             command,
-            this._options.adapter.serialize(data)
+            this._serializeArguments(data)
          ).addCallbacks((function (res) {
             return new DataSet({
                source: this,
@@ -504,6 +506,36 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
       //endregion Public methods
 
       //region Protected methods
+
+      /**
+       * Сериализует все аргументы запроса
+       * @param {*} args Аргументы запроса
+       * @returns {*}
+       * @private
+       */
+      _serializeArguments: function (args) {
+         var result;
+         if (args instanceof Object) {
+            if (
+               $ws.helpers.instanceOfModule(args, 'SBIS3.CONTROLS.Data.Model') ||
+               $ws.helpers.instanceOfModule(args, 'SBIS3.CONTROLS.Record') ||
+               $ws.helpers.instanceOfModule(args, 'SBIS3.CONTROLS.Data.Source.DataSet') ||
+               $ws.helpers.instanceOfModule(args, 'SBIS3.CONTROLS.DataSet')
+            ) {
+               result = this._options.adapter.serialize(args);
+            } else {
+               result = {};
+               for (var key in args) {
+                  if (args.hasOwnProperty(key)) {
+                     result[key] = this._options.adapter.serialize(args[key]);
+                  }
+               }
+            }
+         } else {
+            result = this._options.adapter.serialize(args);
+         }
+         return result;
+      },
 
       /**
        * Возвращает параметры сортировки

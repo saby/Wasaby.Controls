@@ -133,6 +133,9 @@
 			   <li>
                   <div id="FieldLink"></div>
                </li>
+               <li>
+                  <div id="FilterButtonHistory"></div>
+               </li>
             </ul>
          </td>
          <td>
@@ -380,6 +383,13 @@
                element: "FieldLink",
                caption: 'FieldLink',
                href: '/pages/FieldLink.html'
+            })
+         });
+         require(["js!SBIS3.CONTROLS.Link"], function (r) {
+            new r({
+               element: "FilterButtonHistory",
+               caption: 'FilterButtonHistory',
+               href: '/pages/FilterButtonHistory.html'
             })
          });
       })

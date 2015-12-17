@@ -38,7 +38,9 @@ define('js!SBIS3.CONTROLS.MoveDialog', [
          this._treeView.subscribe('onDrawItems', function() {
             self._createRoot();
          });
-         filter = this._treeView.getFilter();
+         filter = $ws.core.clone(linkedView.getFilter());
+         //Чтобы получить всю выборку папок, проставим в поле иерархии null
+         filter[linkedView._options.hierField] = null;
          if ($ws.helpers.instanceOfModule(linkedView._dataSource, 'SBIS3.CONTROLS.SbisServiceSource')) {
             filter['ВидДерева'] = "Только узлы";
             //TODO: костыль написан специально для нуменклатуры, чтобы не возвращалась выборка всех элементов при заходе в пустую папку
@@ -50,10 +52,10 @@ define('js!SBIS3.CONTROLS.MoveDialog', [
       _onMoveButtonActivated: function() {
          var
             moveTo = this._treeView.getSelectedKey();
+         if (moveTo !== null) {
+            moveTo = this._treeView._dataSet.getRecordByKey(moveTo);
+         }
          if (this._treeView._checkRecordsForMove(this._options.records, moveTo)) {
-            if (moveTo !== null) {
-               moveTo = this._treeView._dataSet.getRecordByKey(moveTo);
-            }
             this._options.linkedView._move(this._options.records, moveTo);
          }
          this.close();

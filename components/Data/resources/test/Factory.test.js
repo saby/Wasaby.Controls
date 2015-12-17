@@ -116,6 +116,11 @@ define([
             assert.strictEqual(val, 'Строка');
 
          });
+         it('should not cast null to string', function () {
+            var val = sbisModelEmpty.get('title');
+            assert.strictEqual(val, null);
+
+         });
          it('should cast value to enum', function () {
             assert.instanceOf(sbisModel.get('enum'), $ws.proto.Enum);
          });
@@ -286,6 +291,18 @@ define([
             var date = new Date();
             sbisModelEmpty.set('identity', 1);
             assert.equal(getData(13), [1]);
+         });
+         it('should serialize flags', function () {
+            var d = [true, true, false],
+            testModel = new Model({
+               adapter: new AdapterSbis(),
+               rawData: {
+                  d: d,
+                  s: [{n: 'id', t: 'Логическое'},{n: 'id1', t: 'Логическое'},{n: 'id2', t: 'Логическое'}]
+               }
+            });
+            sbisModelEmpty.set('flags', testModel);
+            assert.deepEqual(getData(5), d);
          });
       });
    });

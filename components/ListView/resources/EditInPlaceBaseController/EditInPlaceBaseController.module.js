@@ -48,7 +48,7 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                _eipHandlers: null
             },
             $constructor: function () {
-               this._publish('onItemValueChanged', 'onBeginEdit');
+               this._publish('onItemValueChanged', 'onBeginEdit', 'onEndEdit', 'onBeginAdd');
                this._eipHandlers = {
                   onKeyDown: this._onKeyDown.bind(this)
                };
@@ -57,6 +57,7 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                this._eip.getContainer().bind('keyup', this._eipHandlers.onKeyDown);
                this._savingDeferred = $ws.proto.Deferred.success();
             },
+
             _getEditInPlaceConfig: function() {
                return {
                   editingTemplate: this._options.editingTemplate,
@@ -159,9 +160,12 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
              * @private
              */
             endEdit: function(saveFields) {
-               var eip = this._getEditingEip();
+               var
+                  eip = this._getEditingEip(),
+                  endEditResult;
                if (eip) {
-                  if (eip.validate() || !saveFields) {
+                  endEditResult = this._notify('onEndEdit', eip.getRecord());
+                  if (endEditResult !== false && (!saveFields || eip.validate())) {
                      eip.endEdit();
                      this._savingDeferred = saveFields ? eip.applyChanges() : $ws.proto.Deferred.success();
                      return this._savingDeferred.addCallback(function() {
@@ -189,9 +193,11 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                }
             },
             add: function() {
-               var self = this;
+               var options,
+                   self = this;
                return this.endEdit(true).addCallback(function() {
-                  return self._options.dataSource.create().addCallback(function (record) {
+                  options = self._notify('onBeginAdd');
+                  return self._options.dataSource.create(options).addCallback(function (record) {
                      var target = $('<div class="js-controls-ListView__item"></div>').attr('data-id', record.getKey()).appendTo(self._options.itemsContainer);
                      self._eip.edit(target, record);
                   });
