@@ -472,10 +472,21 @@ define('js!SBIS3.CONTROLS.ListView',
          _getHtmlItem: function (id, isNext) {
             var items = $('.js-controls-ListView__item', this._getItemsContainer()).not('.ws-hidden'),
                selectedItem = $('[data-id="' + id + '"]', this._getItemsContainer()),
-               order = isNext ? 1 : -1,
-               siblingItem = items.eq(items.index(selectedItem) + order);
-
-            return this._dataSet.getRecordByKey(siblingItem.data('id')) ? siblingItem : this._getHtmlItem(siblingItem.data('id'), isNext);
+               index = items.index(selectedItem),
+               siblingItem;
+               if (isNext) {
+                  if(index +1 < items.length ){
+                     siblingItem = items.eq(index + 1);
+                  }
+               } else {
+                  if(index > 0){
+                     siblingItem = items.eq(index - 1);
+                  }
+               }
+            if (siblingItem)
+               return this._dataSet.getRecordByKey(siblingItem.data('id')) ? siblingItem : this._getHtmlItem(siblingItem.data('id'), isNext);
+            else
+               return undefined;
          },
          _isViewElement: function (elem) {
             return  $ws.helpers.contains(this._getItemsContainer()[0], elem[0]);
