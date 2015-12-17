@@ -800,9 +800,12 @@ define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManag
 
       around: {
          hide: function (parentHide) {
-            var
-               self = this,
-               result = this._notify('onClose');
+            /* Если кто-то позвал hide, а контрол уже скрыт, то не будет запускать цепочку кода,
+               могут валиться ошибки */
+            if(!this.isVisible()) return;
+
+            var self = this,
+                result = this._notify('onClose');
             if (result instanceof $ws.proto.Deferred) {
                result.addCallback(function (res) {
                   if (res !== false) {
