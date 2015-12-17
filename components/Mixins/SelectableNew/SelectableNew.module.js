@@ -57,6 +57,11 @@ define('js!SBIS3.CONTROLS.SelectableNew', [
 
       $constructor: function () {
          this._publish('onSelectedItemChange');
+         if (this._options.selectedKey) {
+            var index = this._getItemIndexByKey(this._options.selectedKey);
+            if (index >=0)
+               this._itemsProjection.setCurrentPosition(index, true);
+         }
       },
 
       before: {
@@ -73,10 +78,11 @@ define('js!SBIS3.CONTROLS.SelectableNew', [
          init: function(){
             var projection = this.getItemsProjection(),
                self = this;
+
             this.subscribeTo(projection, 'onCurrentChange', (function(event, newCurrent, oldCurrent, newPosition) {
                this._setSelectedIndex(
                   newPosition,
-                  self._getItemValue(newCurrent ? newCurrent.getContents() : undefined, this._options.keyField )
+                  self._getItemValue(newCurrent ? newCurrent.getContents() : null, this._options.keyField )
                );
             }).bind(this));
          },
@@ -84,7 +90,7 @@ define('js!SBIS3.CONTROLS.SelectableNew', [
          _initView: function() {
             var projection = this.getItemsProjection(),
                selected = projection.getCurrentPosition();
-            if(selected) {
+            if(selected >= 0) {
                this._setSelectedIndex(
                   selected,
                   this._getItemValue(projection.at(selected), this._options.keyField)
@@ -252,7 +258,7 @@ define('js!SBIS3.CONTROLS.SelectableNew', [
          }
       },
       _getItemValue: function(value, keyField) {
-         if(typeof value === 'object') {
+         if(value && typeof value === 'object') {
             return Utils.getItemPropertyValue(value, keyField );
          }
          return value;
