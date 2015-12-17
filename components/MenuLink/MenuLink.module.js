@@ -95,27 +95,6 @@ define('js!SBIS3.CONTROLS.MenuLink', ['js!SBIS3.CONTROLS.Link', 'js!SBIS3.CONTRO
          if (this._picker) {
             this.hidePicker();
          }
-      },
-      
-      _drawIcon: function (icon) {
-         var $icon = $('.controls-Link__icon', this._container.get(0));
-         if (icon) {
-            if ($icon.length) {
-               $icon.get(0).className = 'controls-Link__icon ' + this._iconClass;
-            }
-            else {
-               if (this._options.caption){
-                  this._container.empty();
-                  var $caption = $('<span class="controls-Link__field">' + this._options.caption +'</span>');
-                  this._container.append($caption);
-               }
-               $icon = $('<i class="controls-Link__icon ' + this._iconClass + '"></i>');
-               this._container.prepend($icon);
-            }
-         }
-         else {
-            $icon.remove();
-         }
       }
    });
 
