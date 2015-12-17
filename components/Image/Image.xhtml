@@ -1,36 +1,30 @@
 {{var alt = it.tooltip ? it.tooltip : it.name;}}
 <div class="controls-image"><div class="controls-image__wrapper">{{? it.imageBar}}<div class="controls-image__image-bar" style="display: none;">
    <component data-component="SBIS3.CORE.FileLoader"  name="FileLoader" class="controls-image__file-loader">
-      <option name="method" value="{{=it.createMethodName}}"/>
       <options name="extensions" type="array">
          <option>image</option>
       </options>
       <options name="handlers">
-         <option name="onLoadStarted" type="function">js!SBIS3.CONTROLS.Image:prototype._onStartUpload</option>
-         <option name="onLoaded" type="function">js!SBIS3.CONTROLS.Image:prototype._onFinishUpload</option>
-         <option name="onChange" type="function">js!SBIS3.CONTROLS.Image:prototype._onChangeFile</option>
+         <option name="onLoadStarted" type="function">js!SBIS3.CONTROLS.Image:prototype._onBeginLoad</option>
+         <option name="onLoaded" type="function">js!SBIS3.CONTROLS.Image:prototype._onEndLoad</option>
       </options>
    </component>
-   <component data-component="SBIS3.CONTROLS.Link"  name="ButtonUpload" class="controls-image__button-upload">
+   <component data-component="SBIS3.CONTROLS.Link" name="ButtonUpload" class="controls-image__button-upload">
       <option name="tooltip">Загрузить</option>
       <option name="caption">Загрузить</option>
       <option name="icon">sprite:icon-16 icon-Picture icon-primary</option>
       <options name="handlers">
-         <option name="onActivated" type="function">js!SBIS3.CONTROLS.Image:prototype._uploadButtonClick</option>
+         <option name="onActivated" type="function">js!SBIS3.CONTROLS.Image:prototype._buttonUploadClick</option>
       </options>
    </component>
-   <component data-component="SBIS3.CONTROLS.Link" name="ButtonCrop" class="controls-image__button-crop">
+   <component data-component="SBIS3.CONTROLS.Link" name="ButtonEdit" class="controls-image__button-edit">
       <option name="tooltip">Редактировать</option>
       <option name="icon">sprite:icon-16 icon-Edit icon-primary</option>
-      <options name="handlers">
-         <option name="onActivated" type="function">js!SBIS3.CONTROLS.Image:prototype._cropButtonClick</option>
-      </options>
+      <option name="command">editImage</option>
    </component>
-   <component data-component="SBIS3.CONTROLS.Link" name="ButtonDelete" class="controls-image__button-delete">
+   <component data-component="SBIS3.CONTROLS.Link" name="ButtonReset" class="controls-image__button-reset">
       <option name="tooltip">Удалить</option>
       <option name="icon">sprite:icon-16 icon-Erase icon-error</option>
-      <options name="handlers">
-         <option name="onActivated" type="function">js!SBIS3.CONTROLS.Image:prototype._deleteButtonClick</option>
-      </options>
+      <option name="command">resetImage</option>
    </component>
 </div>{{?}}<span class="controls-image__helper"></span><img class="controls-image__image"{{? it.tooltip}} tooltip="{{=it.tooltip}}"{{?}}{{? alt}} alt="{{=alt}}"{{?}}/></div></div>
