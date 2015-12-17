@@ -14,6 +14,7 @@ define('js!SBIS3.CONTROLS.TabControl', [
     * В каждый момент времени отображается только одна область. Отображаемая область может переключаться при клике на корешки закладок.
     * @class SBIS3.CONTROLS.TabControl
     * @extends SBIS3.CORE.CompoundControl
+    * @control
     * @author Крайнов Дмитрий Олегович
     * @public
     */
@@ -36,8 +37,8 @@ define('js!SBIS3.CONTROLS.TabControl', [
              */
             /**
              * @cfg {Item[]} Массив с элементами, отображающими закладки и области, связанные с ним
-             * Для настройки содержимого вкладок и областей нужно учитывать что задано в опциях displayField и selectedKey.
-             * Например, если задали <opt name="displayField">title</opt>, то и для текста вкладки задаем опцию <opt name="title">Текст вкладки</opt>
+             * Для настройки содержимого вкладок и областей нужно учитывать что задано в опциях tabsDisplayField и selectedKey.
+             * Например, если задали <opt name="tabsDisplayField">title</opt>, то и для текста вкладки задаем опцию <opt name="title">Текст вкладки</opt>
              * Если задали <opt name="keyField">id</opt>, то и для вкладки задаем ключ опцией <opt name="id">id1</opt>
              */
             items: null,
@@ -52,13 +53,12 @@ define('js!SBIS3.CONTROLS.TabControl', [
              * @cfg {String} Поле элемента коллекции, из которого отображать данные
              * @example
              * <pre class="brush:xml">
-             *     <option name="displayField">caption</option>
+             *     <option name="tabsDisplayField">caption</option>
              * </pre>
              * @see keyField
              * @see items
              */
-            displayField: null,
-            /**
+            tabsDisplayField: null,            /**
              * @cfg {String} Поле элемента коллекции, которое является идентификатором записи
              * @remark
              * Выбранный элемент в коллекции задаётся указанием ключа элемента selectedKey.
@@ -70,6 +70,15 @@ define('js!SBIS3.CONTROLS.TabControl', [
              * @see displayField
              */
             keyField: null,
+            /**
+             * @cfg {String} Режим загрузки дочерних контролов в области под вкладками
+             * @example
+             * <pre>
+             *     <option name="loadType">all</option>
+             * </pre>
+             * @variant all инстанцировать все области сразу;
+             * @variant cached инстанцировать только 1 область, при смене предыдущую не уничтожать (кэширование областей).
+             */
             loadType: 'cached'
          }
       },
@@ -82,6 +91,7 @@ define('js!SBIS3.CONTROLS.TabControl', [
       init: function() {
          TabControl.superclass.init.call(this);
          this._switchableArea = this.getChildControlByName('SwitchableArea');
+         this._switchableArea.setActiveArea(this._options.selectedKey);
          this._tabButtons = this.getChildControlByName('TabButtons');
          this._tabButtons.subscribe('onSelectedItemChange', this._onSelectedItemChange.bind(this));
       },
