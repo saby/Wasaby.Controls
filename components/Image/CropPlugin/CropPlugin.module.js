@@ -64,6 +64,7 @@ define('js!SBIS3.CONTROLS.Image.CropPlugin',
          },
          $constructor: function () {
             this._publish('onBeginSave', 'onEndSave', 'onChangeCrop');
+            //todo: Используется для работы с DataSource и Filter. Будет полностью удалено, когда появится базовый миксин для работы с DataSource.
             if (this._options.dataSource) {
                this._dataSource = this._options.dataSource;
             } else {
@@ -77,7 +78,6 @@ define('js!SBIS3.CONTROLS.Image.CropPlugin',
             this._cropCoords = coords;
             this._notify('onChangeCrop', coords);
          },
-
          /**
           * <wiTag group="Управление">
           * Инициализирует crop, отображается рамка выделения рабочей области
@@ -157,14 +157,6 @@ define('js!SBIS3.CONTROLS.Image.CropPlugin',
                   });
             }
          },
-         setDataSource: function(dataSource) {
-            if (dataSource instanceof SbisService) {
-               this._options.dataSource = this._dataSource = dataSource;
-            }
-         },
-         getDataSource: function() {
-            return this._dataSource;
-         },
          /**
           * <wiTag group="Управление">
           * Завершает/отменяет возможность совершения crop'а
@@ -180,8 +172,18 @@ define('js!SBIS3.CONTROLS.Image.CropPlugin',
          },
          destroy: function() {
             this._dropCrop();
+         },
+         /* ------------------------------------------------------------------------------------------------------------------------------------
+          todo: Используется для работы с DataSource и Filter. Будет полностью удалено, когда появится базовый миксин для работы с DataSource.
+          ------------------------------------------------------------------------------------------------------------------------------------ */
+         setDataSource: function(dataSource) {
+            if (dataSource instanceof SbisService) {
+               this._options.dataSource = this._dataSource = dataSource;
+            }
+         },
+         getDataSource: function() {
+            return this._dataSource;
          }
-
       });
    return CropPlugin;
 });

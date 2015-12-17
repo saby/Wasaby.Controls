@@ -230,6 +230,7 @@ define('js!SBIS3.CONTROLS.Image',
                $ws.single.CommandDispatcher.declareCommand(this, 'uploadImage', this._uploadImage);
                $ws.single.CommandDispatcher.declareCommand(this, 'editImage', this._editImage);
                $ws.single.CommandDispatcher.declareCommand(this, 'resetImage', this._resetImage);
+               /* todo: Используется для работы с DataSource и Filter. Будет полностью удалено, когда появится базовый миксин для работы с DataSource. */
                if (this._options.dataSource) {
                   this._dataSource = this._options.dataSource;
                } else {
@@ -262,48 +263,6 @@ define('js!SBIS3.CONTROLS.Image',
             reload: function() {
                this._setImage($ws.helpers.prepareGetRPCInvocationURL(this._dataSource.getResource(),
                   this._dataSource.getReadMethodName(), this._options.filter, $ws.proto.BLObject.RETURN_TYPE_ASIS));
-            },
-            /**
-             * Установить источник данных
-             * @param {Object} dataSource
-             * @param {Boolean} noReload установить фильтр без перезагрузки данных
-             */
-            setDataSource: function(dataSource, noReload) {
-               if (dataSource instanceof SbisService) {
-                  this._options.dataSource = this._dataSource = dataSource;
-                  if (this._options.imageBar) {
-                     //todo Удалить, временная опция для поддержки смены логотипа компании
-                     this._fileLoader.setMethod((this._options.linkedObject || this._dataSource.getResource()) + '.' + this._dataSource.getCreateMethodName());
-                  }
-                  if (!noReload) {
-                     this.reload();
-                  }
-               }
-            },
-            /**
-             * Получить текущий источник данных
-             * @returns {Object}
-             */
-            getDataSource: function() {
-               return this._dataSource;
-            },
-            /**
-             * Установить фильтр
-             * @param {Object} filter
-             * @param {Boolean} noReload установить фильтр без перезагрузки данных
-             */
-            setFilter: function(filter, noReload) {
-               this._options.filter = filter;
-               if (!noReload) {
-                  this.reload();
-               }
-            },
-            /**
-             * Получить текущий фильтр
-             * @returns {Object}
-             */
-            getFilter: function() {
-               return this._options.filter;
             },
             /**
              * Установить способ отображения изображения в контейнере
@@ -500,6 +459,54 @@ define('js!SBIS3.CONTROLS.Image',
                ------------------------------------------------------------ */
             _buttonUploadClick: function(event, originalEvent) {
                this.sendCommand('uploadImage', originalEvent);
+            },
+            /* ------------------------------------------------------------------------------------------------------------------------------------
+               todo: Используется для работы с DataSource и Filter. Будет полностью удалено, когда появится базовый миксин для работы с DataSource.
+               Задача в разработку от 17.12.2015 №1212750
+               Необходимо разработать миксин, предоставляющий стандартные методы для работы с DataSource. Это:- ...
+               https://inside.tensor.ru/opendoc.html?guid=427908a9-1e9e-4e7f-92f0-db5b27c1a631
+               ------------------------------------------------------------------------------------------------------------------------------------ */
+            /**
+             * Установить источник данных
+             * @param {Object} dataSource
+             * @param {Boolean} noReload установить фильтр без перезагрузки данных
+             */
+            setDataSource: function(dataSource, noReload) {
+               if (dataSource instanceof SbisService) {
+                  this._options.dataSource = this._dataSource = dataSource;
+                  if (this._options.imageBar) {
+                     //todo Удалить, временная опция для поддержки смены логотипа компании
+                     this._fileLoader.setMethod((this._options.linkedObject || this._dataSource.getResource()) + '.' + this._dataSource.getCreateMethodName());
+                  }
+                  if (!noReload) {
+                     this.reload();
+                  }
+               }
+            },
+            /**
+             * Получить текущий источник данных
+             * @returns {Object}
+             */
+            getDataSource: function() {
+               return this._dataSource;
+            },
+            /**
+             * Установить фильтр
+             * @param {Object} filter
+             * @param {Boolean} noReload установить фильтр без перезагрузки данных
+             */
+            setFilter: function(filter, noReload) {
+               this._options.filter = filter;
+               if (!noReload) {
+                  this.reload();
+               }
+            },
+            /**
+             * Получить текущий фильтр
+             * @returns {Object}
+             */
+            getFilter: function() {
+               return this._options.filter;
             }
          });
       return Image;
