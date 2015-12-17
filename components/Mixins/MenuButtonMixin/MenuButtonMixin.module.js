@@ -126,12 +126,14 @@ define('js!SBIS3.CONTROLS.MenuButtonMixin', ['js!SBIS3.CONTROLS.ContextMenu'], f
       },
 
       _clickHandler: function () {
-         if (this._dataSet.getCount() > 1) {
-            this.togglePicker();
-         } else {
-            if (this._dataSet.getCount() == 1) {
-               var id = this._dataSet.at(0).getKey();
-               this._notify('onMenuItemActivate', id);
+         if (this._dataSet){
+            if (this._dataSet.getCount() > 1) {
+               this.togglePicker();
+            } else {
+               if (this._dataSet.getCount() == 1) {
+                  var id = this._dataSet.at(0).getKey();
+                  this._notify('onMenuItemActivate', id);
+               }
             }
          }
       },
