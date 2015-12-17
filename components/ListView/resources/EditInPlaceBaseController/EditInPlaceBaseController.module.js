@@ -164,7 +164,7 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                   eip = this._getEditingEip(),
                   endEditResult;
                if (eip) {
-                  endEditResult = this._notify('onEndEdit', eip.getRecord());
+                  endEditResult = this._notify('onEndEdit', eip.getEditingRecord());
                   if (endEditResult !== false && (!saveFields || eip.validate())) {
                      eip.endEdit();
                      this._savingDeferred = saveFields ? eip.applyChanges() : $ws.proto.Deferred.success();
@@ -181,12 +181,12 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
              },
             _endEdit: function(eip, saveFields) {
                if (this._editingRecord) {
-                  this._editingRecord.merge(eip.getRecord());
+                  this._editingRecord.merge(eip.getEditingRecord());
                   this._editingRecord = undefined;
                }
                eip.hide();
-               if (!this._options.dataSet.getRecordByKey(eip.getRecord().getKey())) {
-                  saveFields ? this._options.dataSet.push(eip.getRecord()) : eip.getTarget().remove();
+               if (!this._options.dataSet.getRecordByKey(eip.getEditingRecord().getKey())) {
+                  saveFields ? this._options.dataSet.push(eip.getEditingRecord()) : eip.getTarget().remove();
                }
                if (saveFields) {
                   this._options.dataSource.sync(this._options.dataSet);
