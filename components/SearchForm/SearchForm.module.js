@@ -14,6 +14,7 @@ define('js!SBIS3.CONTROLS.SearchForm', [
     * @mixes SBIS3.CONTROLS.SearchMixin
     * @public
     * @control
+    * @demo SBIS3.CONTROLS.Demo.MySearchForm
     * @author Крайнов Дмитрий Олегович
     */
 
@@ -91,9 +92,14 @@ define('js!SBIS3.CONTROLS.SearchForm', [
       /**
        * Начать поиск с тем текстом, что введен
        * @see resetSearch
+       * @see startCharacter
        */
       applySearch: function() {
-         this._notify('onSearchStart', this.getText());
+         var text = this.getText().replace(/[«»’”@#№$%^&*;:?.,!\/~\]\[{}()|<>=+\-_\s'"]/g, '');
+         //не отправляем событие, если символов меньше startCharacter
+         if (text.length >= this._options.startCharacter) {
+            this._notify('onSearchStart', text);
+         }
       },
 
       /**
