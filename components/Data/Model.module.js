@@ -477,8 +477,16 @@ define('js!SBIS3.CONTROLS.Data.Model', [
             this._options.adapter = this._options.source.getAdapter();
          }
          if (!this._options.adapter) {
-            this._options.adapter = new JsonAdapter();
+            this._options.adapter = this._getDefaultAdapter();
          }
+      },
+
+      /**
+       * Возвращает адаптер по-умолчанию (можно переопределять в наследниках)
+       * @private
+       */
+      _getDefaultAdapter: function() {
+         return new JsonAdapter();
       },
 
       /**
