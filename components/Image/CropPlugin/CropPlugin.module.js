@@ -4,10 +4,9 @@
 define('js!SBIS3.CONTROLS.Image.CropPlugin',
    [
       'js!SBIS3.CONTROLS.Data.Source.SbisService',
-      'js!SBIS3.CONTROLS.Data.Source.Memory',
       "is!browser?js!SBIS3.CORE.FieldImage/resources/ext/jcrop/jquery.Jcrop.min",
       "css!SBIS3.CORE.FieldImage/resources/ext/jcrop/jquery.Jcrop.min"
-   ], function(SbisService, Memory) {
+   ], function(SbisService) {
       'use strict';
       /**
        * Контрол, позволяющий обрезать произвольное изображение.
@@ -58,18 +57,11 @@ define('js!SBIS3.CONTROLS.Image.CropPlugin',
                 */
                image: undefined
             },
-            _dataSource: undefined,
             _cropCoords: undefined,
             _imageProperties: undefined
          },
          $constructor: function () {
             this._publish('onBeginSave', 'onEndSave', 'onChangeCrop');
-            //todo: Используется для работы с DataSource и Filter. Будет полностью удалено, когда появится базовый миксин для работы с DataSource.
-            if (this._options.dataSource) {
-               this._dataSource = this._options.dataSource;
-            } else {
-               this._dataSource = new Memory();
-            }
             if (this._options.cropSelection) {
                this._options.cropSelection = (this._options.cropSelection + '').split(',');
             }
@@ -125,6 +117,7 @@ define('js!SBIS3.CONTROLS.Image.CropPlugin',
                self = this,
                coords = this._cropCoords,
                filter,
+               dataSource = this.getDataSource(),
                beginCropResult;
             //Если не заданы координаты - выходим и нотифицируем onCropFinished со значением false
             if(!coords || coords.x >= coords.x2 || coords.y >= coords.y2) {
@@ -144,13 +137,13 @@ define('js!SBIS3.CONTROLS.Image.CropPlugin',
             //todo Удалить, временная опция для поддержки смены логотипа компании
             if (beginCropResult !== false) {
                if (beginCropResult && beginCropResult.dataSource instanceof SbisService) {
-                  this._dataSource = beginCropResult.dataSource;
+                  dataSource = beginCropResult.dataSource;
                   filter = beginCropResult.filter;
                } else if (beginCropResult) {
                   filter = beginCropResult;
                }
-               new $ws.proto.BLObject(this._dataSource.getResource())
-                  .call(this._dataSource.getUpdateMethodName(), filter, $ws.proto.BLObject.RETURN_TYPE_ASIS).addBoth(function(result) {
+               new $ws.proto.BLObject(dataSource.getResource())
+                  .call(dataSource.getUpdateMethodName(), filter, $ws.proto.BLObject.RETURN_TYPE_ASIS).addBoth(function(result) {
                      self.finishCrop();
                      self._notify('onEndSave', result);
                      return result;
@@ -178,11 +171,11 @@ define('js!SBIS3.CONTROLS.Image.CropPlugin',
           ------------------------------------------------------------------------------------------------------------------------------------ */
          setDataSource: function(dataSource) {
             if (dataSource instanceof SbisService) {
-               this._options.dataSource = this._dataSource = dataSource;
+               this._options.dataSource = dataSource;
             }
          },
          getDataSource: function() {
-            return this._dataSource;
+            return this._options.dataSource;
          }
       });
    return CropPlugin;
