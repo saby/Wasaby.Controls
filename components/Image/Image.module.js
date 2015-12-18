@@ -5,12 +5,11 @@ define('js!SBIS3.CONTROLS.Image',
    [
       'js!SBIS3.CORE.CompoundControl',
       'js!SBIS3.CONTROLS.Data.Source.SbisService',
-      'js!SBIS3.CONTROLS.Data.Source.Memory',
       'html!SBIS3.CONTROLS.Image',
       'js!SBIS3.CORE.FileLoader',
       'js!SBIS3.CORE.Dialog',
       'js!SBIS3.CONTROLS.Link'
-   ], function(CompoundControl, SbisService, Memory, dotTplFn, FileLoader, Dialog) {
+   ], function(CompoundControl, SbisService, dotTplFn, FileLoader, Dialog) {
       'use strict';
       var
          //Продолжительность анимации при отображения панели изображения
@@ -215,7 +214,6 @@ define('js!SBIS3.CONTROLS.Image',
                    */
                   linkedObject: ''
                },
-               _dataSource: undefined,
                _imageBar: undefined,
                _imageUrl: '',
                _image: undefined,
@@ -230,18 +228,14 @@ define('js!SBIS3.CONTROLS.Image',
                $ws.single.CommandDispatcher.declareCommand(this, 'uploadImage', this._uploadImage);
                $ws.single.CommandDispatcher.declareCommand(this, 'editImage', this._editImage);
                $ws.single.CommandDispatcher.declareCommand(this, 'resetImage', this._resetImage);
-               /* todo: Используется для работы с DataSource и Filter. Будет полностью удалено, когда появится базовый миксин для работы с DataSource. */
-               if (this._options.dataSource) {
-                  this._dataSource = this._options.dataSource;
-               } else {
-                  this._dataSource = new Memory();
-               }
                if (this._options.imageBar) {
                   this._imageBar = this._container.find('.controls-image__image-bar');
                }
                this._image = this._container.find('.controls-image__image');
             },
             init: function() {
+               var
+                  dataSource = this.getDataSource();
                 Image.superclass.init.call(this);
                //Находим компоненты, необходимые для работы (если нужно)
                if (this._options.imageBar) {
@@ -249,7 +243,9 @@ define('js!SBIS3.CONTROLS.Image',
                   this._buttonReset = this.getChildControlByName('ButtonReset');
                   this._fileLoader = this.getChildControlByName('FileLoader');
                   //todo Удалить, временная опция для поддержки смены логотипа компании
-                  this._fileLoader.setMethod((this._options.linkedObject || this._dataSource.getResource()) + '.' + this._dataSource.getCreateMethodName());
+                  if (dataSource) {
+                     this._fileLoader.setMethod((this._options.linkedObject || dataSource.getResource()) + '.' + dataSource.getCreateMethodName());
+                  }
                   this._bindEvens();
                }
                this.reload();
@@ -261,8 +257,14 @@ define('js!SBIS3.CONTROLS.Image',
              * Метод перезагрузки данных.
              */
             reload: function() {
-               this._setImage($ws.helpers.prepareGetRPCInvocationURL(this._dataSource.getResource(),
-                  this._dataSource.getReadMethodName(), this._options.filter, $ws.proto.BLObject.RETURN_TYPE_ASIS));
+               var
+                  dataSource = this.getDataSource();
+               if (dataSource) {
+                  this._setImage($ws.helpers.prepareGetRPCInvocationURL(dataSource.getResource(),
+                     dataSource.getReadMethodName(), this._options.filter, $ws.proto.BLObject.RETURN_TYPE_ASIS));
+               } else {
+                  this._setImage(this._options.defaultImage);
+               }
             },
             /**
              * Установить способ отображения изображения в контейнере
@@ -424,7 +426,9 @@ define('js!SBIS3.CONTROLS.Image',
                Блок обработчиков команд
                ------------------------------------------------------------ */
             _uploadImage: function(originalEvent) {
-               this._fileLoader.selectFile(originalEvent, false);
+               if (this.getDataSource()) {
+                  this._fileLoader.selectFile(originalEvent, false);
+               }
             },
             _editImage: function() {
                $ws.helpers.toggleLocalIndicator(this.getContainer(), true);
@@ -436,11 +440,13 @@ define('js!SBIS3.CONTROLS.Image',
                   imageResetResult = this._notify('onResetImage'),
                   callDestroy = function(filter) {
                      var
+                        dataSource = self.getDataSource(),
                         sendFilter = filter && Object.prototype.toString.call(filter) === '[object Object]' ? filter : self.getFilter();
-                     new $ws.proto.BLObject(self._dataSource.getResource())
-                        .call(self._dataSource.getDestroyMethodName(), sendFilter, $ws.proto.BLObject.RETURN_TYPE_ASIS).addBoth(function(result) {
-                        self._setImage(self._options.defaultImage);
-                     });
+                     new $ws.proto.BLObject(dataSource.getResource())
+                        .call(dataSource.getDestroyMethodName(), sendFilter, $ws.proto.BLObject.RETURN_TYPE_ASIS)
+                        .addBoth(function() {
+                           self._setImage(self._options.defaultImage);
+                        });
                   };
                if (imageResetResult !== false) {
                   if (imageResetResult instanceof $ws.proto.Deferred) {
@@ -473,10 +479,10 @@ define('js!SBIS3.CONTROLS.Image',
              */
             setDataSource: function(dataSource, noReload) {
                if (dataSource instanceof SbisService) {
-                  this._options.dataSource = this._dataSource = dataSource;
+                  this._options.dataSource = dataSource;
                   if (this._options.imageBar) {
                      //todo Удалить, временная опция для поддержки смены логотипа компании
-                     this._fileLoader.setMethod((this._options.linkedObject || this._dataSource.getResource()) + '.' + this._dataSource.getCreateMethodName());
+                     this._fileLoader.setMethod((this._options.linkedObject || dataSource.getResource()) + '.' + dataSource.getCreateMethodName());
                   }
                   if (!noReload) {
                      this.reload();
@@ -488,7 +494,7 @@ define('js!SBIS3.CONTROLS.Image',
              * @returns {Object}
              */
             getDataSource: function() {
-               return this._dataSource;
+               return this._options.dataSource;
             },
             /**
              * Установить фильтр
