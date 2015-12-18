@@ -112,7 +112,7 @@ define('js!SBIS3.CONTROLS.Menu', [
             '</component>';
       },
 
-      _itemActivatedHandler : function(id){
+      _itemActivatedHandler : function(id, event){
          var menuItem = this.getItemInstance(id);
          if (!(menuItem.getContainer().hasClass('controls-Menu__hasChild'))) {
             for (var j in this._subMenus) {
@@ -121,7 +121,7 @@ define('js!SBIS3.CONTROLS.Menu', [
                }
             }
          }
-         this._notify('onMenuItemActivate', menuItem.getContainer().attr('data-id'));
+         this._notify('onMenuItemActivate', id, event);
       },
 
       _getTargetContainer : function(item) {
