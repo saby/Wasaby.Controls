@@ -4,7 +4,7 @@
  * Created by iv.cheremushkin on 13.08.2014.
  */
 
-define('js!SBIS3.CONTROLS.RadioGroup', [
+define('js!SBIS3.CONTROLS.RadioGroupNew', [
    'js!SBIS3.CONTROLS.RadioGroupBaseNew',
    'js!SBIS3.CONTROLS.Data.Utils',
    'html!SBIS3.CONTROLS.RadioGroup',

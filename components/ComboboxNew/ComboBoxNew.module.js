@@ -289,7 +289,7 @@ define('js!SBIS3.CONTROLS.ComboBoxNew', [
 
       _keyUpBind: function (e) {
          /*по изменению текста делаем то же что и в текстбоксе*/
-         ComboBox.superclass._keyUpBind.call(this);
+         ComboBox.superclass._keyUpBind.apply(this, arguments);
          /*не делаем смену значения при нажатии на стрелки вверх вниз. Иначе событие смены ключа срабатывает два раза*/
          if ((e.which != 40) && (e.which != 38)) {
             this._setKeyByText();
