@@ -701,11 +701,7 @@ define('js!SBIS3.CONTROLS.ListView',
             this._reloadInfiniteScrollParams();
             this._previousGroupBy = undefined;
             this._hideItemActions();
-            // Если используется редактирование по месту, то уничтожаем его
-            if (this._editInPlace) {
-               this._editInPlace.destroy();
-               this._editInPlace = null;
-            }
+            this._destroyEditInPlace();
             return ListView.superclass.reload.apply(this, arguments);
          },
          _reloadInfiniteScrollParams : function(){
@@ -764,10 +760,7 @@ define('js!SBIS3.CONTROLS.ListView',
                } else if (this._options.editMode === 'hover') {
                   this.unsubscribe('onChangeHoveredItem', this._onChangeHoveredItemHandler);
                }
-               if (this._editInPlace) {
-                  this._editInPlace.destroy();
-                  this._editInPlace = null;
-               }
+               this._destroyEditInPlace();
                this._options.editMode = editMode;
                if (this._options.editMode === 'click') {
                   this.subscribe('onItemClick', this._onItemClickHandler);
@@ -810,6 +803,13 @@ define('js!SBIS3.CONTROLS.ListView',
                hoverMode = !$ws._const.isMobilePlatform && (this._options.editMode === 'hover|autoadd' || this._options.editMode === 'hover'),
                controller = hoverMode ? EditInPlaceHoverController : EditInPlaceClickController;
             this._editInPlace = new controller(this._getEditInPlaceConfig(hoverMode));
+         },
+
+         _destroyEditInPlace: function() {
+            if (this._editInPlace) {
+               this._editInPlace.destroy();
+               this._editInPlace = null;
+            }
          },
 
          _getEditInPlaceConfig: function(hoverMode) {
@@ -1404,10 +1404,7 @@ define('js!SBIS3.CONTROLS.ListView',
                this._pager.destroy();
                this._pager = undefined;
             }
-            if (this._options.editMode && this._editInPlace) {
-               this._editInPlace.destroy();
-               this._editInPlace = null;
-            }
+            this._destroyEditInPlace();
             ListView.superclass.setDataSource.apply(this, arguments);
          },
 
@@ -1430,6 +1427,7 @@ define('js!SBIS3.CONTROLS.ListView',
             return this._getEditInPlace().endEdit(true);
          },
          destroy: function () {
+            this._destroyEditInPlace();
             if (this.isInfiniteScroll()) {
                if (this._isHeightGrowable()) {
                   this.getContainer().unbind('.wsInfiniteScroll');
