@@ -17,7 +17,9 @@ define('js!SBIS3.CONTROLS.FilterButton',
        'use strict';
        /**
         * Кнопка фильтров. Функционал и внешний вид аналогичен $ws.proto.FilterButton, но работа с
-        * фильтрами осуществляется только через контекст
+        * фильтрами осуществляется только через контекст.
+        * Если текст рядом с кнопкой фильтов может иметь большую ширину,
+        * то ширину кнопки фильтров надо ограничить, навесив max-width.
         * @class SBIS3.CONTROLS.FilterButton
         * @extends $ws.proto.CompoundControl
         * @author Крайнов Дмитрий Олегович
@@ -93,7 +95,7 @@ define('js!SBIS3.CONTROLS.FilterButton',
                 filterLineComponent: 'SBIS3.CONTROLS.FilterButton.FilterLine',
                 filterLineTemplate: undefined,
                 independentContext: true,
-                internalContextFilterName : 'sbis3-controls-filter-button',
+                internalContextFilterName : 'sbis3-controls-filter-button'
              },
 
              _pickerContext: null,        /* Контекст пикера */
@@ -102,7 +104,7 @@ define('js!SBIS3.CONTROLS.FilterButton',
           },
 
           $constructor: function() {
-             var showButtonEl = this._container.find('.controls__filterButton__filterLine-hoverContainer, .controls__filterButton-button'),
+             var showButtonEl = this._container.find('.controls__filterButton__filterLine-items, .controls__filterButton-button'),
                  dispatcher = $ws.single.CommandDispatcher,
                  declCmd = dispatcher.declareCommand.bind(dispatcher, this),
                  showPicker = this.showPicker.bind(this);

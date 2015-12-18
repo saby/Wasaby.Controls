@@ -157,6 +157,7 @@
 
    .controls__filterButton__area-content {
       padding: @controls-filterButton-area-content-padding;
+      overflow: hidden;
    }
 }
 
@@ -165,45 +166,75 @@
    display: inline-block;
 
    .controls__filterButton__filterLine {
-      display: inline-block;
       height: @controls-filterButton-button-height;
-      padding: 8px 8px 8px 0;
-      vertical-align: top;
-      text-align: center;
+      overflow: hidden;
+      margin: 8px 0 8px 0;
+      vertical-align: @controls-filterLine-align;
+      text-align: @controls-filterLine-text-align;
+
+      .controls__filterButton__filterLine-table {
+         display: @controls-filterLine-wrapper-display;
+         float: left;
+
+         .controls__filterButton__filterLine-table-row {
+            display: @controls-filterLine-line-display;
+         }
+      }
+      .controls__filterButton__filterLine-copyCross {
+         position: relative;
+         display: inline-block;
+         float: right;
+         top: -18px;
+         margin-left: -30px;
+         background-color: #fff;
+         .box-shadow(-6px 2px 8px -2px #fff);
+
+         span {
+            color: @controls-filterLine-link-color
+         }
+
+         .controls__filterButton__filterLine-cross {
+            display: inline-block;
+         }
+      }
    }
 
    .controls__filterButton__filterLine-items {
-      overflow: hidden;
-      text-overflow: ellipsis;
+      .text-overflow();
+      display: @controls-filterLine-items-display;
+      text-align: right;
       vertical-align: middle;
 
-      display: inline-block;
       cursor: pointer;
-      color: #0055bb;
+      color: @controls-filterLine-link-color;
       text-decoration: none;
-      text-align: center;
       line-height: normal;
-      padding: 0;
+      padding: @controls-filterLine-items-padding;
       box-sizing: border-box;
    }
 
    .controls__filterButton__filterLine-items:hover {
-      color: #ff7033;
+      color: @primary-color;
       text-decoration: underline;
+
+      .controls__filterButton__filterLine-arrow {
+         color: @primary-color !important;
+      }
    }
 
    .controls__filterButton__filterLine-cross {
-      width: 16px;
-      height: 16px;
-      display: inline-block;
-      vertical-align: bottom;
+      width: @controls-filterLine-cross-width;
+      height: @controls-filterLine-cross-height;
+      display: @controls-filterLine-items-display;
+      position: relative;
+      top: @controls-filterLine-cross-top;
       cursor: pointer;
-      background: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAQAAAC1+jfqAAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAAAgY0hSTQAAeiYAAICEAAD6AAAAgOgAAHUwAADqYAAAOpgAABdwnLpRPAAAAAJiS0dEAP+Hj8y/AAAACXBIWXMAAABIAAAASABGyWs+AAAAnElEQVQoz9WQMQ6CQBBFX2GI4QDcxp7CkI2lcxRrL0HPHRAbAiLZI1gRytWCwsbKsSDbrJQ2/mr+z0zy38A/SR4gawCJZxfoamXQCEAjGS/2a8FlTSsWQGzTusznKz8kZfJ6Hrjx3t83R+rFHmryKZ/ULJeMQWzVl73Y2YXXkQzVSY3uyrOvG2DWndsCOFN3C5haaOoxNdXidx/+AAnTQEYc86HTAAAAJXRFWHRkYXRlOmNyZWF0ZQAyMDE1LTA0LTEwVDEwOjM2OjQxKzAzOjAwZkUzPgAAACV0RVh0ZGF0ZTptb2RpZnkAMjAxNS0wNC0xMFQxMDozNjo0MSswMzowMBcYi4IAAAAASUVORK5CYII=');
    }
 
    .controls__filterButton__filterLine-arrow:before {
       line-height: normal;
-      vertical-align: sub;
+      position: relative;
+      top: @controls-filterLine-arrow-top;
    }
 
    .controls__filterButton-button {
@@ -213,6 +244,7 @@
       background: @controls-filterButton-button-image;
       display: inline-block;
       cursor: pointer;
+      float: right;
 
       &:hover {
          background-position: @controls-filterButton-button-image-hover

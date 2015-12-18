@@ -1,7 +1,15 @@
 <div class="controls__filterButton__filterLine">
-    <span class="controls__filterButton__filterLine-hoverContainer">
-        <i class="controls__filterButton__filterLine-arrow icon-16 icon-DayForward icon-primary"></i>
-        <span class="controls__filterButton__filterLine-items" data-bind="{text: 'linkText'}"></span>
-    </span>
-    <i class="controls__filterButton__filterLine-cross" data-bind="{visible: 'filterChanged'}"></i>
+<div class="controls__filterButton__filterLine-table">
+    <div class="controls__filterButton__filterLine-table-row">
+        <span class="controls__filterButton__filterLine-items">
+            <i class="controls__filterButton__filterLine-arrow icon-16 icon-DayForward icon-primary" data-bind="{visible: 'filterChanged'}"/>
+            <span data-bind="{html: 'linkText'}"/>
+        </span>
+        <i class="controls__filterButton__filterLine-cross icon-16 icon-Close icon-disabled action-hover" data-bind="{visible: 'filterChanged'}"/>
+    </div>
+</div>
+<div class="controls__filterButton__filterLine-copyCross">
+    <span>...</span>
+    <i class="controls__filterButton__filterLine-cross icon-16 icon-Close icon-disabled action-hover" data-bind="{visible: 'filterChanged'}"/>
+</div>
 </div>

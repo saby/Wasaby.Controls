@@ -6,7 +6,6 @@ define('js!SBIS3.CONTROLS.Image.EditDialog', [
    'html!SBIS3.CONTROLS.Image.EditDialog',
    'js!SBIS3.CONTROLS.Image.CropPlugin',
    'js!SBIS3.CONTROLS.Utils.ImageUtil',
-   'css!SBIS3.CONTROLS.Image.EditDialog',
    'js!SBIS3.CONTROLS.Button'
 ], function(CompoundControl, dotTplFn, CropPlugin, ImageUtil) {
    /**
@@ -95,7 +94,9 @@ define('js!SBIS3.CONTROLS.Image.EditDialog', [
          this.getParent()._cropPlugin.makeCrop();
       },
       destroy: function() {
-         this._cropPlugin.destroy();
+         if (this._cropPlugin) {
+            this._cropPlugin.destroy();
+         }
          EditDialog.superclass.destroy.apply(this, arguments);
       }
    });

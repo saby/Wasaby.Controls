@@ -356,9 +356,9 @@ define('js!SBIS3.CONTROLS.FieldLink',
        */
       _onListItemSelect: propertyUpdateWrapper(function(id, item) {
          this.hidePicker();
-         this.setText('');
          /* Чтобы не было лишнего запроса на БЛ, добавим рекорд в набор выбранных */
-         this.addSelectedItems([item])
+         this.addSelectedItems([item]);
+         this.setText('');
       }),
 
 

@@ -103,14 +103,16 @@ define('js!SBIS3.CONTROLS.MenuButton', ['js!SBIS3.CONTROLS.Button', 'js!SBIS3.CO
 
 
       _clickHandler: function(){
-         if (this._dataSet.getCount() > 1) {
-            this._container.addClass('controls-Checked__checked');
-            this.togglePicker();
-            this._header.toggleClass('controls-MenuButton__header-hidden', !this._container.hasClass('controls-Checked__checked'));
-         } else {
-            if (this._dataSet.getCount() == 1) {
-               var id = this._dataSet.at(0).getKey();
-               this._notify('onMenuItemActivate', id);
+         if (this._dataSet){
+            if (this._dataSet.getCount() > 1) {
+               this._container.addClass('controls-Checked__checked');
+               this.togglePicker();
+               this._header.toggleClass('controls-MenuButton__header-hidden', !this._container.hasClass('controls-Checked__checked'));
+            } else {
+               if (this._dataSet.getCount() == 1) {
+                  var id = this._dataSet.at(0).getKey();
+                  this._notify('onMenuItemActivate', id);
+               }
             }
          }
       },

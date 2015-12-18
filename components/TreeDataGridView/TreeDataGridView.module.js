@@ -266,8 +266,10 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
          var
              res,
              elClickHandler = this._options.elemClickHandler,
-             nodeID = $(target).closest('.controls-ListView__item').data('id');
-         if ($(target).hasClass('js-controls-TreeView__expand') && $(target).hasClass('has-child')) {
+             nodeID = $(target).closest('.controls-ListView__item').data('id'),
+             closestExpand = this._findExpandByElement($(target));
+
+         if ($(closestExpand).hasClass('js-controls-TreeView__expand') && $(closestExpand).hasClass('has-child')) {
             this.toggleNode(nodeID);
          }
          else {

@@ -1,10 +1,9 @@
 <div class="controls__filterButton controls__filterButton-{{= it.filterAlign}}">
+    <div class="controls__filterButton-button"></div>
     {{? it.filterLineComponent }}
         <component data-component="{{= it.filterLineComponent}}" name="filterLine">
         </component>
     {{?? it.filterLineTemplate }}
         {{= it.filterLineTemplate }}
     {{?}}
-
-    <div class="controls__filterButton-button"></div>
 </div>
