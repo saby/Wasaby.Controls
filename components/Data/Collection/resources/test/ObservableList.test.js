@@ -68,64 +68,61 @@ define([
             items = undefined;
          });
 
-         describe('.concat()', function() {
-            context('when append', function() {
-               it('should trigger an event with valid arguments', function(done) {
-                  var list = new ObservableList({
-                        items: items.slice()
-                     }),
-                     concatItems = [1, 2, 3],
-                     handler = function(event, action, newItems, newItemsIndex, oldItems, oldItemsIndex) {
-                        try {
-                           checkEvent(
-                              action, newItems, newItemsIndex, oldItems, oldItemsIndex,
-                              IBindCollection.ACTION_ADD, concatItems, items.length, [], 0
-                           );
-                           done();
-                        } catch (err) {
-                           done(err);
-                        }
-                     };
-                  list.subscribe('onCollectionChange', handler);
+         describe('.append()', function() {
+            it('should trigger an event with valid arguments', function(done) {
+               var list = new ObservableList({
+                     items: items.slice()
+                  }),
+                  concatItems = [1, 2, 3],
+                  handler = function(event, action, newItems, newItemsIndex, oldItems, oldItemsIndex) {
+                     try {
+                        checkEvent(
+                           action, newItems, newItemsIndex, oldItems, oldItemsIndex,
+                           IBindCollection.ACTION_ADD, concatItems, items.length, [], 0
+                        );
+                        done();
+                     } catch (err) {
+                        done(err);
+                     }
+                  };
+               list.subscribe('onCollectionChange', handler);
 
-                  list.concat(new List({
-                     items: concatItems
-                  }));
+               list.append(new List({
+                  items: concatItems
+               }));
 
-                  list.unsubscribe('onCollectionChange', handler);
-               });
-            });
-
-            context('when prepend', function() {
-               it('should trigger an event with valid arguments', function(done) {
-                  var list = new ObservableList({
-                        items: items.slice()
-                     }),
-                     concatItems = [4, 5, 6],
-                     handler = function(event, action, newItems, newItemsIndex, oldItems, oldItemsIndex) {
-                        try {
-                           checkEvent(
-                              action, newItems, newItemsIndex, oldItems, oldItemsIndex,
-                              IBindCollection.ACTION_ADD, concatItems, 0, [], 0
-                           );
-                           done();
-                        } catch (err) {
-                           done(err);
-                        }
-                     };
-
-                  list.subscribe('onCollectionChange', handler);
-
-                  list.concat(new List({
-                     items: concatItems
-                  }), true);
-
-                  list.unsubscribe('onCollectionChange', handler);
-               });
+               list.unsubscribe('onCollectionChange', handler);
             });
          });
 
-         describe('.fill()', function() {
+         describe('.prepend', function (){
+            it('should trigger an event with valid arguments', function(done) {
+               var list = new ObservableList({
+                     items: items.slice()
+                  }),
+                  concatItems = [4, 5, 6],
+                  handler = function(event, action, newItems, newItemsIndex, oldItems, oldItemsIndex) {
+                     try {
+                        checkEvent(
+                           action, newItems, newItemsIndex, oldItems, oldItemsIndex,
+                           IBindCollection.ACTION_ADD, concatItems, 0, [], 0
+                        );
+                        done();
+                     } catch (err) {
+                        done(err);
+                     }
+                  };
+
+               list.subscribe('onCollectionChange', handler);
+
+               list.prepend(new List({
+                  items: concatItems
+               }));
+
+               list.unsubscribe('onCollectionChange', handler);
+            });
+         });
+         describe('.assign()', function() {
             context('when has instead', function() {
                it('should trigger an event with valid arguments', function(done) {
                   var list = new ObservableList({
@@ -146,7 +143,7 @@ define([
 
                   list.subscribe('onCollectionChange', handler);
 
-                  list.fill(new List({
+                  list.assign(new List({
                      items: fillItems
                   }));
 
@@ -173,7 +170,7 @@ define([
 
                   list.subscribe('onCollectionChange', handler);
 
-                  list.fill();
+                  list.assign();
 
                   list.unsubscribe('onCollectionChange', handler);
                });

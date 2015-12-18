@@ -98,11 +98,11 @@ define('js!SBIS3.CONTROLS.Data.Collection.List', [
 
       assign: function (items) {
          this._items = [];
-         this._splice(items, 0, 0);
+         this._splice(items||[], 0, 0);
       },
 
       append: function (items) {
-         this._splice(items, this._length, 0);
+         this._splice(items, this.getCount(), 0);
       },
 
       prepend: function (items) {
@@ -257,20 +257,18 @@ define('js!SBIS3.CONTROLS.Data.Collection.List', [
        * @private
        */
       _splice:function (items, start, deleteCount){
-         if (items) {
-            var addItems = [];
-            if(items instanceof Array) {
-               addItems = items;
-            } else if($ws.helpers.instanceOfMixin(instead, 'SBIS3.CONTROLS.Data.Collection.IEnumerable')) {
-               var self = this;
-               items.each(function (item){
-                  addItems.push(item);
-               });
-            } else {
-               throw new Error('Invalid argument');
-            }
-            Array.prototype.splice.apply(this._items,([start, deleteStart].concat(addItems)));
+         var addItems = [];
+         if(items instanceof Array) {
+            addItems = items;
+         } else if(items && $ws.helpers.instanceOfMixin(items, 'SBIS3.CONTROLS.Data.Collection.IEnumerable')) {
+            var self = this;
+            items.each(function (item){
+               addItems.push(item);
+            });
+         } else {
+            throw new Error('Invalid argument');
          }
+         Array.prototype.splice.apply(this._items,([start, deleteCount].concat(addItems)));
 
          this._getServiceEnumerator().reIndex();
       }

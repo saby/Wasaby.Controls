@@ -36,7 +36,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.ObservableListMixin', [
          //region SBIS3.CONTROLS.Data.Collection.List
 
          assign: function (parentFnc, items) {
-            var oldItems =
+            var oldItems = this._items.slice();
             this._eventsEnabled = false;
             parentFnc.call(this, items);
             this._eventsEnabled = true;
@@ -51,13 +51,13 @@ define('js!SBIS3.CONTROLS.Data.Collection.ObservableListMixin', [
 
          append: function (parentFnc, items) {
             this._eventsEnabled = false;
-            var length = this._length;
+            var count = this.getCount();
             parentFnc.call(this, items);
             this._eventsEnabled = true;
             this.notifyCollectionChange(
                IBindCollection.ACTION_ADD,
-               this._items.slice(length, this._lenght),
-               0,
+               this._items.slice(count, this._lenght),
+               count,
                [],
                0
             );
@@ -65,12 +65,12 @@ define('js!SBIS3.CONTROLS.Data.Collection.ObservableListMixin', [
 
          prepend: function (parentFnc, items) {
             this._eventsEnabled = false;
-            var length = this._length;
+            var length = this.getCount();
             parentFnc.call(this, items);
             this._eventsEnabled = true;
             this.notifyCollectionChange(
                IBindCollection.ACTION_ADD,
-               this._items.slice(0, this._length - length),
+               this._items.slice(0, this.getCount() - length),
                0,
                [],
                0

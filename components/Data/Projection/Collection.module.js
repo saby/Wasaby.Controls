@@ -191,10 +191,6 @@ define('js!SBIS3.CONTROLS.Data.Projection.Collection', [
          }
       },
 
-      concat: function () {
-         throw new Error('SBIS3.CONTROLS.Data.Projection.Collection is read only. You should change the source collection.');
-      },
-
       //endregion SBIS3.CONTROLS.Data.Collection.IEnumerable
 
       //region SBIS3.CONTROLS.Data.Projection.ICollection
