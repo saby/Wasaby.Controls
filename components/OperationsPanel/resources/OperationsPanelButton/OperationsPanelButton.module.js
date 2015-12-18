@@ -53,6 +53,7 @@ define('js!SBIS3.CONTROLS.OperationsPanelButton', [
          if (this._options.linkedPanel) {
             this._options.linkedPanel.togglePanel();
          }
+         OperationsPanelButton.superclass._clickHandler.apply(this);
       },
       /**
        * Метод установки или замены связанной панели массовых операций, установленной в опции {@link linkedPanel}.

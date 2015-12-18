@@ -191,7 +191,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
              * Опция задаёт текст, отображаемый как при абсолютном отсутствии данных, так и в результате {@link groupBy фильтрации}.
              * @see items
              * @see setDataSource
-             * @see groupBy*
+             * @see groupBy
              */
             emptyHTML: '',
             /**

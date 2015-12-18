@@ -2,8 +2,9 @@ define('js!SBIS3.CONTROLS.Browser', [
    'js!SBIS3.CORE.CompoundControl',
    'html!SBIS3.CONTROLS.Browser',
    'js!SBIS3.CONTROLS.ComponentBinder',
+   'js!SBIS3.CONTROLS.FilterHistoryController',
    'html!SBIS3.CONTROLS.Browser/resources/contentTpl'
-], function(CompoundControl, dotTplFn, ComponentBinder, contentTpl){
+], function(CompoundControl, dotTplFn, ComponentBinder, HistoryController, contentTpl){
    'use strict';
 
    /**
@@ -37,11 +38,11 @@ define('js!SBIS3.CONTROLS.Browser', [
       _dotTplFn : dotTplFn,
       $protected: {
          _view: null,
-         _filtersButton: null,
          _backButton: null,
          _breadCrumbs: null,
          _searchForm: null,
          _operationsPanel: null,
+         _filterButton: null,
 
          _hierMode : false,
          _componentBinder : null,
@@ -54,6 +55,10 @@ define('js!SBIS3.CONTROLS.Browser', [
              * @cfg {String} Имя параметр фильтрации для поиска
              */
             searchParam : 'СтрокаПоиска',
+            /**
+             * @cfg {String} Id для работы с историей фильтров
+             */
+            historyId : '',
             contentTpl : contentTpl
          }
       },
@@ -110,6 +115,15 @@ define('js!SBIS3.CONTROLS.Browser', [
          if (this._operationsPanel) {
             this._componentBinder.bindOperationPanel(true, this._operationsPanel);
          }
+
+         this._filterButton = this._getFilterButton();
+         if (this._filterButton) {
+            if(this._options.historyId) {
+               this._componentBinder.bindFilterHistory(this._filterButton, this._options.historyId, HistoryController, this);
+            } else {
+               this._notifyOnFiltersReady();
+            }
+         }
       },
 
       addItem: function(metaData) {
@@ -119,6 +133,10 @@ define('js!SBIS3.CONTROLS.Browser', [
 
       getView: function() {
          return this._view;
+      },
+
+      _notifyOnFiltersReady: function() {
+         this._notify('onFiltersReady');
       },
 
       _getLinkedControl: function(name) {
@@ -132,7 +150,9 @@ define('js!SBIS3.CONTROLS.Browser', [
       _getView: function() {
          return this._getLinkedControl('browserView');
       },
-
+      _getFilterButton: function() {
+         return this._getLinkedControl('browserFilterButton');
+      },
       _getSearchForm: function() {
          return this._getLinkedControl('browserSearch');
       },

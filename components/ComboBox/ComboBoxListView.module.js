@@ -1,5 +1,5 @@
 /* global define, console, doT, $ws, $ */
-define('js!SBIS3.CONTROLS.ComboBoxNewListView', [
+define('js!SBIS3.CONTROLS.ComboBoxListView', [
    'js!SBIS3.CONTROLS.ListControl.View'
 ], function (ListView) {
    'use strict';
@@ -17,7 +17,6 @@ define('js!SBIS3.CONTROLS.ComboBoxNewListView', [
          _itemContainerCssClass: 'itemRow',
          _itemContainerSelectedCssClass: 'itemRow__selected',
          _itemContainerHoverCssClass: 'itemRow__hovered',
-         _itemsEmptyCssClass: 'itemRow',
          _pickerClass: 'controls-ComboBox__picker'
 
       },

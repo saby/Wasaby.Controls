@@ -77,6 +77,9 @@ define(['js!SBIS3.CONTROLS.Utils.HtmlDecorators/AbstractDecorator'], function (A
             return text;
          }
          text = '' + text;
+         highlight = $ws.helpers.escapeHtml('' + highlight)
+            .replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, '\\$&');
+
          return text.replace(
             new RegExp(highlight, 'gi'),
             '<span class="' + cssClass + '">$&</span>'

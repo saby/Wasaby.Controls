@@ -100,14 +100,18 @@
 }
 
 .dragdropBody {
-   .controls-ListView__folder {
-      &.controls-ListView__hoveredItem {
-         &:not(.controls-ListView__item__selected) {
+   .controls-ListView__folder.controls-ListView__hoveredItem {
+      &:not(.controls-ListView__item__selected):not(.controls-DragNDrop__insertAfter):not(.controls-DragNDrop__insertBefore) {
+         background: @drag-and-drop-hover-bg;
+         > td {
             background: @drag-and-drop-hover-bg;
-            > td {
-               background: @drag-and-drop-hover-bg;
-            }
          }
       }
+   }
+   .controls-DragNDrop__insertBefore > td{
+      border-top: @drag-and-drop-border;
+   }
+   .controls-DragNDrop__insertAfter > td {
+      border-bottom: @drag-and-drop-border;
    }
 }

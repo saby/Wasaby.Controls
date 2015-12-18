@@ -1,15 +1,14 @@
 /**
  * Created by as.avramenko on 02.10.2015.
  */
-
 define('js!SBIS3.CONTROLS.Image.CropPlugin',
    [
+      'js!SBIS3.CONTROLS.Data.Source.SbisService',
+      'js!SBIS3.CONTROLS.Data.Source.Memory',
       "is!browser?js!SBIS3.CORE.FieldImage/resources/ext/jcrop/jquery.Jcrop.min",
       "css!SBIS3.CORE.FieldImage/resources/ext/jcrop/jquery.Jcrop.min"
-   ], function() {
-
+   ], function(SbisService, Memory) {
       'use strict';
-
       /**
        * Контрол, позволяющий обрезать произвольное изображение.
        * @class SBIS3.CONTROLS.Image.CropPlugin
@@ -17,26 +16,13 @@ define('js!SBIS3.CONTROLS.Image.CropPlugin',
        * @control
        * @public
        */
-
       var CropPlugin = $ws.proto.Abstract.extend(/** @lends SBIS3.CONTROLS.Image.CropPlugin.prototype */{
          $protected: {
             _options: {
                /**
-                * @cfg {Number} Соотношение сторон в выделяемой области
-                * @example
-                * <pre>
-                *     <option name="cropAspectRatio">0.75</option>
-                * </pre>
+                * @cfg {Object} Связанный источник данных
                 */
-               cropMethodName: '',
-               /**
-                * @cfg {String} Название метода для обрезки изображения
-                * @example
-                * <pre>
-                *     <option name="cropMethodName">Apply</option>
-                * </pre>
-                */
-               linkedObjectName: '',
+               dataSource: undefined,
                /**
                 * @cfg {Number} Соотношение сторон в выделяемой области
                 * @example
@@ -70,37 +56,28 @@ define('js!SBIS3.CONTROLS.Image.CropPlugin',
                /**
                 * @cfg {Object} Редактируемое изображение (jQuery-элемент <img/>)
                 */
-               image: undefined,
-               /**
-                * @cfg {Function} Функция, вызываемая после изменения выделенного фрагмента изображения
-                */
-               onCropChange: undefined,
-               /**
-                * @cfg {Function} Функция, вызываемая перед началом обрезки изображения
-                */
-               onCropStarted: undefined,
-               /**
-                * @cfg {Function} Функция, вызываемая после завершения обрезки изображения
-                */
-               onCropFinished: undefined
+               image: undefined
             },
+            _dataSource: undefined,
             _cropCoords: undefined,
             _imageProperties: undefined
          },
-
          $constructor: function () {
+            this._publish('onBeginSave', 'onEndSave', 'onChangeCrop');
+            //todo: Используется для работы с DataSource и Filter. Будет полностью удалено, когда появится базовый миксин для работы с DataSource.
+            if (this._options.dataSource) {
+               this._dataSource = this._options.dataSource;
+            } else {
+               this._dataSource = new Memory();
+            }
             if (this._options.cropSelection) {
                this._options.cropSelection = (this._options.cropSelection + '').split(',');
             }
          },
-
          _storeCropCoords: function(coords) {
             this._cropCoords = coords;
-            if (typeof this._options.onCropChange === 'function') {
-               this._options.onCropChange(coords);
-            }
+            this._notify('onChangeCrop', coords);
          },
-
          /**
           * <wiTag group="Управление">
           * Инициализирует crop, отображается рамка выделения рабочей области
@@ -138,7 +115,6 @@ define('js!SBIS3.CONTROLS.Image.CropPlugin',
                element.Jcrop(jCropObj);
             }
          },
-
          /**
           * <wiTag group="Управление">
           * Выполняет crop при наличии выделения, загружает измнения на сервер
@@ -148,17 +124,14 @@ define('js!SBIS3.CONTROLS.Image.CropPlugin',
             var
                self = this,
                coords = this._cropCoords,
-               sendObject, result;
-
+               filter,
+               beginCropResult;
             //Если не заданы координаты - выходим и нотифицируем onCropFinished со значением false
             if(!coords || coords.x >= coords.x2 || coords.y >= coords.y2) {
-               if (typeof this._options.onCropFinished === 'function') {
-                  this._options.onCropFinished(false);
-               }
-               return;
+               this._notify('onEndSave', false);
+               return false;
             }
-
-            sendObject = {
+            filter = {
                left: coords.x,
                top: coords.y,
                width: coords.w,
@@ -167,26 +140,23 @@ define('js!SBIS3.CONTROLS.Image.CropPlugin',
                realHeight: this._imageProperties.realHeight,
                coefficient: this._imageProperties.coefficient
             };
-
-            if (typeof this._options.onCropStarted === 'function') {
-               result = this._options.onCropStarted(sendObject);
-            }
-
-            if (result !== false) {
-               if (result instanceof Object) {
-                  sendObject = result;
+            beginCropResult = this._notify('onBeginSave', filter);
+            //todo Удалить, временная опция для поддержки смены логотипа компании
+            if (beginCropResult !== false) {
+               if (beginCropResult && beginCropResult.dataSource instanceof SbisService) {
+                  this._dataSource = beginCropResult.dataSource;
+                  filter = beginCropResult.filter;
+               } else if (beginCropResult) {
+                  filter = beginCropResult;
                }
-               new $ws.proto.BLObject(this._options.linkedObjectName)
-                  .call(this._options.cropMethodName, sendObject, $ws.proto.BLObject.RETURN_TYPE_ASIS).addBoth(function(result){
+               new $ws.proto.BLObject(this._dataSource.getResource())
+                  .call(this._dataSource.getUpdateMethodName(), filter, $ws.proto.BLObject.RETURN_TYPE_ASIS).addBoth(function(result) {
                      self.finishCrop();
-                     if (typeof self._options.onCropFinished === 'function') {
-                        self._options.onCropFinished(result);
-                     }
+                     self._notify('onEndSave', result);
                      return result;
                   });
             }
          },
-
          /**
           * <wiTag group="Управление">
           * Завершает/отменяет возможность совершения crop'а
@@ -194,18 +164,26 @@ define('js!SBIS3.CONTROLS.Image.CropPlugin',
          finishCrop: function() {
             this._dropCrop();
          },
-
          _dropCrop: function() {
             var jCropApi = this._options.image.data('Jcrop');
             if (jCropApi && jCropApi.destroy) {
                jCropApi.destroy();
             }
          },
-
          destroy: function() {
             this._dropCrop();
+         },
+         /* ------------------------------------------------------------------------------------------------------------------------------------
+          todo: Используется для работы с DataSource и Filter. Будет полностью удалено, когда появится базовый миксин для работы с DataSource.
+          ------------------------------------------------------------------------------------------------------------------------------------ */
+         setDataSource: function(dataSource) {
+            if (dataSource instanceof SbisService) {
+               this._options.dataSource = this._dataSource = dataSource;
+            }
+         },
+         getDataSource: function() {
+            return this._dataSource;
          }
-
       });
    return CropPlugin;
 });
