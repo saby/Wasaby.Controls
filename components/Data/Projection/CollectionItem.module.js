@@ -35,12 +35,14 @@ define('js!SBIS3.CONTROLS.Data.Projection.CollectionItem', [
          return this._options.contents;
       },
 
-      setContents: function (contents) {
+      setContents: function (contents, silent) {
          if (this._options.contents === contents) {
             return;
          }
          this._options.contents = contents;
-         this._notifyItemChangeToOwner('contents');
+         if (!silent) {
+            this._notifyItemChangeToOwner('contents');
+         }
       },
 
       isSelected: function () {
