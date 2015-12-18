@@ -646,6 +646,7 @@
          'js!SBIS3.CONTROLS.NumberTextBox',
          'js!SBIS3.CONTROLS.ComboBox',
          'js!SBIS3.CONTROLS.SearchForm',
+         'js!SBIS3.CONTROLS.Demo.MySearchForm',
          'js!SBIS3.CONTROLS.TextArea',
          'js!SBIS3.CORE.AreaAbstract',
          'js!SBIS3.CONTROLS.EditAtPlace',
@@ -659,6 +660,7 @@
          NumberTextBox,
          ComboBox,
          SearchForm,
+         MySearchForm,
          TextArea,
          AreaAbstract,
          EditAtPlace,
@@ -787,9 +789,8 @@
             placeholder: "Введите что-нибудь"
          });
 
-         new SearchForm({
-            element: 'searchForm2',
-            placeholder: "Введите наименование"
+         new MySearchForm({
+            element: 'searchForm2'
          });
 
          new TextArea({
