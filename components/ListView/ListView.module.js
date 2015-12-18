@@ -539,13 +539,17 @@ define('js!SBIS3.CONTROLS.ListView',
             if (target.length){
                var cont = this._container[0],
                    containerCords = cont.getBoundingClientRect(),
-                   targetCords = target[0].getBoundingClientRect(),
-                   targetKey = target[0].getAttribute('data-id');
+                   targetKey = target[0].getAttribute('data-id'),
+               //FIXME т.к. строка редактирования по местру спозиционирована абсолютно, то надо искать оригинальную строку
+                   correctTarget = target.hasClass('controls-editInPlace') ?
+                       this._getItemsContainer().find('[data-id="' + targetKey + '"]:not(.controls-editInPlace)') :
+                       target,
+                   targetCords = correctTarget[0].getBoundingClientRect();
 
                return {
                   key: targetKey,
                   record: this.getDataSet().getRecordByKey(targetKey),
-                  container: target,
+                  container: correctTarget,
                   position: {
                      /* При расчётах координат по вертикали учитываем прокрутку */
                      top: targetCords.top - containerCords.top + cont.scrollTop,
@@ -553,8 +557,8 @@ define('js!SBIS3.CONTROLS.ListView',
                      left: targetCords.left - containerCords.left + (cont.scrollHeight !== cont.clientHeight ? this._scrollWidth : 0)
                   },
                   size: {
-                     height: target[0].offsetHeight,
-                     width: target[0].offsetWidth
+                     height: correctTarget[0].offsetHeight,
+                     width: correctTarget[0].offsetWidth
                   }
                }
             }
