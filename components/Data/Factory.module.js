@@ -303,9 +303,13 @@ define('js!SBIS3.CONTROLS.Data.Factory', [
        * @private
        */
       _serializeFlags: function (data) {
-         if ($ws.helpers.instanceOfModule(data, 'SBIS3.CONTROLS.Data.Model')) {
-            return data.getRawData();
-         } else if (data instanceof $ws.proto.Record) {
+         if ($ws.helpers.instanceOfModule(data, 'SBIS3.CONTROLS.Data.Flags') || $ws.helpers.instanceOfModule(data, 'SBIS3.CONTROLS.Data.Model')) {
+            var d = [];
+            data.each(function (name) {
+               d.push(data.get(name));
+            });
+            return d;
+         }  else if (data instanceof $ws.proto.Record) {
             var dt = [],
                s = {},
                t = data.getColumns();
