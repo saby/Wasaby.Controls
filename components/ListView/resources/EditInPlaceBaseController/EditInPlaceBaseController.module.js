@@ -116,6 +116,8 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                   this.edit(nextTarget, this._options.dataSet.getRecordByKey(nextTarget.attr('data-id')));
                } else if (editNextRow && this._options.modeAutoAdd) {
                   this.add();
+               } else {
+                  this.endEdit(true);
                }
             },
             _getNextTarget: function(editNextRow) {
