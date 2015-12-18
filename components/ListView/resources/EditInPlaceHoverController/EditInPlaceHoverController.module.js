@@ -100,7 +100,7 @@ define('js!SBIS3.CONTROLS.EditInPlaceHoverController',
                   target = control.getContainer().closest('.controls-editInPlace'),
                   editingEip = this._getEditingEip();
                if (!editingEip || editingEip.getContainer().get(0) !== target.get(0)) {
-                  this.edit(this._hoveredEip.getTarget(), this._hoveredEip.getRecord());
+                  this.edit(this._hoveredEip.getTarget(), this._hoveredEip.getEditingRecord());
                }
             },
             destroy: function() {

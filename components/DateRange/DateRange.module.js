@@ -1,3 +1,4 @@
+/*global define*/
 define('js!SBIS3.CONTROLS.DateRange', [
    'js!SBIS3.CORE.CompoundControl',
    'html!SBIS3.CONTROLS.DateRange',
@@ -49,10 +50,12 @@ define('js!SBIS3.CONTROLS.DateRange', [
          this._datePickerStart.subscribe('onDateChange', function(e, date) {
             //передаем false, чтобы не зацикливать событие
             self._setStartDate(date, false);
+            this._notifyOnPropertyChanged('startDate');
          });
          this._datePickerEnd = this.getChildControlByName('DateRange__DatePickerEnd');
          this._datePickerEnd.subscribe('onDateChange', function(e, date) {
             self._setEndDate(date, false);
+            this._notifyOnPropertyChanged('endDate');
          });
 
          this._dateRangeButton = this.getChildControlByName('DateRange__Button');

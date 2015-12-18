@@ -122,7 +122,13 @@ define('js!SBIS3.CONTROLS.EditInPlace',
                }.bind(this))
             },
             show: function(target, record) {
-               this.setRecord(record);
+               if (this._record) {
+                  this._record.unsubscribe('onChange', this._onRecordChangeHandler);
+               }
+               this.updateFields(record);
+               this._record.subscribe('onChange', this._onRecordChangeHandler);
+               this.getContainer().attr('data-id', record.getKey());
+
                this.setTarget(target);
                EditInPlace.superclass.show.apply(this, arguments);
             },
@@ -176,14 +182,6 @@ define('js!SBIS3.CONTROLS.EditInPlace',
                this._target.removeClass('controls-editInPlace__editing');
                this._editing = false;
             },
-            setRecord: function(record) {
-               if (this._record) {
-                  this._record.unsubscribe('onChange', this._onRecordChangeHandler);
-               }
-               this.updateFields(record);
-               this._record.subscribe('onChange', this._onRecordChangeHandler);
-               this.getContainer().attr('data-id', record.getKey());
-            },
             setTarget: function(target) {
                var editorTop;
                this._target = target;
@@ -193,8 +191,8 @@ define('js!SBIS3.CONTROLS.EditInPlace',
                   $(editor).css('top', editorTop);
                });
             },
-            getRecord: function() {
-               return this._record;
+            getEditingRecord: function() {
+               return this._editingRecord;
             },
             getTarget: function() {
                return this._target;

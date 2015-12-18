@@ -62,18 +62,23 @@ define('js!SBIS3.CONTROLS.TreeCompositeView', ['js!SBIS3.CONTROLS.TreeDataGridVi
          }
       },
       _notifyOnItemClick: function(id, data, target) {
-         var
-             nodeID,
-             res = this._notify('onItemClick', id, data, target);
-         if (res !== false) {
-            this._options.elemClickHandler && this._options.elemClickHandler.call(this, id, data, target);
-            nodeID = $(target).closest('.controls-ListView__item').data('id');
-            if (this._dataSet.getRecordByKey(nodeID).get(this._options.hierField + '@')) {
-               this.setCurrentRoot(nodeID);
-               this.reload();
-            }
-            else {
-               this._activateItem(id);
+         if (this._options.viewMode == 'table') {
+            TreeCompositeView.superclass._notifyOnItemClick.apply(this, arguments);
+         }
+         else {
+            var
+               nodeID,
+               res = this._notify('onItemClick', id, data, target);
+            if (res !== false) {
+               this._options.elemClickHandler && this._options.elemClickHandler.call(this, id, data, target);
+               nodeID = $(target).closest('.controls-ListView__item').data('id');
+               if (this._dataSet.getRecordByKey(nodeID).get(this._options.hierField + '@')) {
+                  this.setCurrentRoot(nodeID);
+                  this.reload();
+               }
+               else {
+                  this._activateItem(id);
+               }
             }
          }
       },
@@ -289,6 +294,17 @@ define('js!SBIS3.CONTROLS.TreeCompositeView', ['js!SBIS3.CONTROLS.TreeDataGridVi
                      $ws.helpers.toggleIndicator(false);
                   });
             });
+         }
+      },
+      //Переопределим метод определения направления изменения порядкового номера, так как если элементы отображаются в плиточном режиме,
+      //нужно подвести DragNDrop объект не к верхней(нижней) части элемента, а к левой(правой)
+      _getDirectionOrderChange: function(e, target) {
+         if (this.getViewMode() === 'tile' || (this.getViewMode() === 'list' && target.hasClass('controls-ListView__folder'))) {
+            if (target.length) {
+               return this._getOrderPosition(e.pageX - target.offset().left, target.width());
+            }
+         } else {
+            return TreeCompositeView.superclass._getDirectionOrderChange.apply(this, arguments);
          }
       }
 
