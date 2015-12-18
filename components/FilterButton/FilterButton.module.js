@@ -93,7 +93,7 @@ define('js!SBIS3.CONTROLS.FilterButton',
                 filterLineComponent: 'SBIS3.CONTROLS.FilterButton.FilterLine',
                 filterLineTemplate: undefined,
                 independentContext: true,
-                internalContextFilterName : 'sbis3-controls-filter-button',
+                internalContextFilterName : 'sbis3-controls-filter-button'
              },
 
              _pickerContext: null,        /* Контекст пикера */
