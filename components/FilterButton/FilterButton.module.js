@@ -104,7 +104,7 @@ define('js!SBIS3.CONTROLS.FilterButton',
           },
 
           $constructor: function() {
-             var showButtonEl = this._container.find('.controls__filterButton__filterLine-table, .controls__filterButton-button'),
+             var showButtonEl = this._container.find('.controls__filterButton__filterLine-items, .controls__filterButton-button'),
                  dispatcher = $ws.single.CommandDispatcher,
                  declCmd = dispatcher.declareCommand.bind(dispatcher, this),
                  showPicker = this.showPicker.bind(this);
