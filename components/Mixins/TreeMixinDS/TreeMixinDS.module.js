@@ -114,12 +114,28 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', ['js!SBIS3.CORE.Control'], function (Con
        */
 
       toggleNode: function (key) {
-         var itemCont = $('.controls-ListView__item[data-id="' + key + '"]', this.getContainer().get(0));
+         var
+            itemCont = $('.controls-ListView__item[data-id="' + key + '"]', this.getContainer().get(0));
          if ($('.js-controls-TreeView__expand', itemCont).hasClass('controls-TreeView__expand__open')) {
             this.collapseNode(key);
          }
          else {
             this.expandNode(key);
+         }
+      },
+
+      _findExpandByElement: function(elem){
+         if (elem.hasClass('js-controls-TreeView__expand')) {
+            return elem;
+         }
+         else {
+            var closest = elem.closest('.js-controls-TreeView__expand');
+            if (elem.closest('.js-controls-TreeView__expand').length){
+               return closest
+            }
+            else {
+               return elem;
+            }
          }
       },
 
@@ -343,8 +359,11 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', ['js!SBIS3.CORE.Control'], function (Con
       },
 
       _elemClickHandlerInternal: function (data, id, target) {
-         var nodeID = $(target).closest('.controls-ListView__item').data('id');
-         if ($(target).hasClass('js-controls-TreeView__expand')) {
+         var
+            nodeID = $(target).closest('.controls-ListView__item').data('id'),
+            closestExpand = this._findExpandByElement($(target));
+
+         if (closestExpand.hasClass('js-controls-TreeView__expand')) {
             this.toggleNode(nodeID);
          }
          else {
