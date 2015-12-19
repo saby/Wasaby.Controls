@@ -127,7 +127,7 @@ define('js!SBIS3.CONTROLS.FilterHistoryController',
            */
           saveToUserParams: function() {
              return this._saveParamsDeferred = $ws._const.userConfigSupport ?
-                 $ws.single.UserConfig.setParam(this._options.historyId, $ws.helpers.serializeURLData(this._history.toArray())) :
+                 $ws.single.UserConfig.setParam(this._options.historyId, $ws.helpers.serializeURLData(this._history.toArray()), true) :
                  (new $ws.proto.Deferred).callback([]);
 
           },
