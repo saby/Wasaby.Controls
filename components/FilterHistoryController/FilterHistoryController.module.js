@@ -20,7 +20,11 @@ define('js!SBIS3.CONTROLS.FilterHistoryController',
                  * Специальный id по которому будет сохраняться история
                  * @cfg {String}
                  */
-                historyId: undefined
+                historyId: undefined,
+	             /**
+	              * Представление данных
+	              */
+	             view: undefined
              },
              _history : undefined,              /* Объект с историей фильтров */
              _loadParamsDeferred: undefined,    /* Деферед загрузки истории */
@@ -70,18 +74,22 @@ define('js!SBIS3.CONTROLS.FilterHistoryController',
              this._history.add({
                 id: $ws.helpers.randomId(),
                 linkText: filterObject.linkText,
+	             viewFilter: this._options.view.getFilter(),
                 filter: filterObject.filter,
                 isActiveFilter: true,
                 isMarked: false
              });
 
+	          this._sortHistory();
              this.saveToUserParams();
           },
-
+	       /**
+	        * Очищает текущий активный фильтр
+	        */
           clearActiveFilter: function() {
              var item = this.getActiveFilter();
 
-             if(item.isActiveFilter) {
+             if(item) {
                 item.isActiveFilter = false;
                 this.saveToUserParams();
              }
@@ -140,7 +148,7 @@ define('js!SBIS3.CONTROLS.FilterHistoryController',
              var item = this._history.at(this._findFilterByKey(key).index);
              item.isMarked = !item.isMarked;
              this._sortHistory();
-             return this.saveToUserParams();
+             this.saveToUserParams();
           },
 
           _sortHistory: function() {
@@ -168,7 +176,7 @@ define('js!SBIS3.CONTROLS.FilterHistoryController',
            */
           clearHistory: function() {
              this._history.fill();
-             return this.saveToUserParams();
+             this.saveToUserParams();
           },
 
           /**
