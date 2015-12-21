@@ -19,110 +19,75 @@ define('js!SBIS3.CONTROLS.EditInPlaceHoverController',
        */
 
       var
-         isMobileBrowser = $ws._const.browser.isMobileSafari || $ws._const.browser.isMobileAndroid,
-
          EditInPlaceHoverController = EditInPlaceBaseController.extend( /** @lends SBIS3.CONTROLS.EditInPlaceHoverController.prototype */ {
             $protected: {
                _options: {
                },
-               _secondArea: undefined
+               _hoveredEip: null,
+               _secondEip: undefined
             },
             $constructor: function() {
-               if (!isMobileBrowser) {
-                  this._secondArea = this._initArea('second');
-                  this._secondArea.editInPlace.getContainer().bind('keyup', this._areaHandlers.onKeyDown);
-               }
+               this._publish('onShowEdit');
+               this._secondEip = new EditInPlace(this._getEditInPlaceConfig());
+               this._secondEip.getContainer().bind('keyup', this._eipHandlers.onKeyDown);
             },
-            _getEditingArea: function() {
-               return this._editing === 'first' ? this._area : this._editing === 'second' ? this._secondArea : null;
-            },
-            _getHoveredArea: function() {
-               return this._area.hovered ? this._area : this._secondArea.hovered ? this._secondArea : null;
-            },
-            _initArea: function() {
-               var self = this;
-               return {
-                  editInPlace: new EditInPlace({
-                     template: this._options.template,
-                     columns: this._options.columns,
-                     element: $('<div></div>'),
-                     ignoreFirstColumn: this._options.ignoreFirstColumn,
-                     focusCatch: this._focusCatch.bind(this),
-                     context: this._getContextForArea(),
-                     parent: this,
-                     handlers: {
-                        onChildControlFocusIn: this._onChildControlFocusIn.bind(this),
-                        onChildFocusOut: this._onChildFocusOut.bind(this),
-                        onChildFocusIn: this._onChildFocusIn.bind(this),
-                        onFocusIn: this._onFocusIn.bind(this),
-                        onFieldChange: function(event, fieldName, record) {
-                           event.setResult(self._notify('onFieldChange', fieldName, record));
+            _getEditInPlaceConfig: function() {
+               return $ws.core.merge(EditInPlaceHoverController.superclass._getEditInPlaceConfig.apply(this), {
+                  handlers: {
+                     onChildControlFocusIn: this._onChildControlFocusIn.bind(this),
+                     onChildFocusIn: this._onChildFocusIn.bind(this),
+                     onChangeHeight: function() {
+                        if (this._hoveredEip) {
+                           this._hoveredEip.hide();
                         }
-                     }
-                  }),
-                  record: null,
-                  target: null,
-                  hovered: false
-               };
-            },
-            _showEditing: function(target) {
-               var hoveredArea = this._getHoveredArea();
-               if (target.hasClass('controls-editInPlace') || hoveredArea && hoveredArea.target.get(0) === target.get(0)) {
-                  //TODO: отказаться от first и second
-                  this._editing = this._area.hovered ? 'first' : 'second';
-                  hoveredArea.hovered = false;
-                  hoveredArea.editInPlace.activateFirstControl();
-               } else {
-                  this._editing = this._area.hovered ? 'second' : 'first';
-                  EditInPlaceHoverController.superclass._showEditing.apply(this, arguments);
-               }
-               this._getEditingArea().editInPlace.getContainer().mousemove(this._onMouseMove.bind(this));
-            },
-            /**
-             * Завершить редактирование по месту
-             * @param {Boolean} saveFields Сохранить изменения в dataSet
-             * @private
-             */
-            finishEditing: function(saveFields) {
-               this._getEditingArea().editInPlace.getContainer().unbind('mousemove');
-               return EditInPlaceHoverController.superclass.finishEditing.apply(this, arguments);
-            },
-            /**
-             * Обновить отображение редактирования по месту
-             * @param {Object} target Элемент, для которого отображается редактирование по месту
-             * @private
-             */
-            updateHoveredArea: function(target) {
-               var hoveredArea = this._editing == 'first' ? this._secondArea : this._area;
-               this._hideHoveredArea();
-               if (target.container && !target.container.hasClass('controls-ListView__folder')) {
-                  if (isMobileBrowser) {
-                     if (this._editing) {
-                        this.finishEditing(true, true);
-                     } else {
-                        this._editing = 'first';
-                     }
+                     }.bind(this)
                   }
-                  hoveredArea.hovered = true;
-                  hoveredArea.target = target.container;
-                  hoveredArea.record = this._options.dataSet.getRecordByKey(target.key);
-                  this._showArea(hoveredArea, true);
+               })
+            },
+            _getNextTarget: function(editNextRow) {
+               return this._getEditingEip().getTarget()[editNextRow ? 'next' : 'prev']('.js-controls-ListView__item:not(".controls-editInPlace")');
+            },
+            /**
+             * Обновить область отображаемую по ховеру
+             * @param {Object} target Элемент, для которого отобразить область по ховеру
+             * @private
+             */
+            show: function(target, record) {
+               var
+                  showEditResult = this._notify('onShowEdit', record);
+               if (showEditResult !== false) {
+                  if (!this._hoveredEip) {
+                     this._hoveredEip = this._eip.isEdit() ? this._secondEip : this._eip;
+                  }
+                  this._hoveredEip.show(target, record);
                }
             },
             /**
-             * Метод для скрытия областей редактирования по месту
+             * Скрыть область отображаемую по ховеру
              * @private
              */
-            _hideHoveredArea: function() {
-               var area  = this._getHoveredArea();
-               if (area) {
-                  area.hovered = false;
-                  area.editInPlace.hide();
-                  area.target.show();
+            hide: function() {
+               if (this._hoveredEip) {
+                  this._hoveredEip.hide();
+                  this._hoveredEip = null;
                }
             },
             _onChildControlFocusIn: function(event, control) {
                this._options.editFieldFocusHandler && this._options.editFieldFocusHandler(control);
+            },
+            edit: function (target, record) {
+               var hoveredEip = this._hoveredEip;
+               this.endEdit(true).addCallback(function() {
+                  if (hoveredEip && (hoveredEip.getTarget().get(0) === target.get(0))) {
+                     hoveredEip.edit(target, record);
+                     this._hoveredEip = null;
+                  } else {
+                     EditInPlaceHoverController.superclass.edit.apply(this, [target, record])
+                  }
+               }.bind(this));
+            },
+            _getEditingEip: function() {
+               return this._eip.isEdit() ? this._eip : this._secondEip.isEdit() ? this._secondEip : null;
             },
             /**
              * Обработчик события по приходу фокуса на контрол в области редактирования по месту
@@ -131,30 +96,16 @@ define('js!SBIS3.CONTROLS.EditInPlaceHoverController',
              * @private
              */
             _onChildFocusIn: function(e, control) {
-               var target = control.getContainer().closest('.controls-editInPlace');
-               if (!this._editing || target.get(0) !== this._getEditingArea().editInPlace.getContainer().get(0)) {
-                  this.showEditing(target);
+               var
+                  target = control.getContainer().closest('.controls-editInPlace'),
+                  editingEip = this._getEditingEip();
+               if (!editingEip || editingEip.getContainer().get(0) !== target.get(0)) {
+                  this.edit(this._hoveredEip.getTarget(), this._hoveredEip.getEditingRecord());
                }
-            },
-            _onFocusIn: function(e) {
-               //TODO: написать
-               e._target.activateFirstControl();
-            },
-            /**
-             * Обработчик по наведению мыши на область editInPlace
-             * @private
-             */
-            _onMouseMove: function() {
-               var hoveredArea = this._getHoveredArea();
-               hoveredArea && hoveredArea.target.mouseleave();
             },
             destroy: function() {
+               this._secondEip.getContainer().unbind('keyup', this._eipHandlers.onKeyDown);
                EditInPlaceHoverController.superclass.destroy.apply(this, arguments);
-               if (!isMobileBrowser) {
-                  this._secondArea.editInPlace.getContainer().unbind('keyup', this._areaHandlers.onKeyDown);
-                  this._secondArea.editInPlace.destroy();
-                  this._secondArea = null;
-               }
             }
          });
 

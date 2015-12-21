@@ -86,14 +86,14 @@ define('js!SBIS3.CONTROLS.SbisJSONStrategy', [
         */
       rebuild: function (data, keyField) {
          var _indexId = [],
+            fieldIndex = keyField ? this._getFieldIndex(data, keyField) : 0,
             d = data.d,
             length = d.length;
          for (var i = 0; i < length; i++) {
-            //FixMe: допущение что ключ на первой позиции + там массив приходит
-            if (d[i][0] instanceof  Array)
-               _indexId[i] = d[i][0].length > 1 ? d[i][0].join(',') : d[i][0][0];
-            else {
-               _indexId[i] = d[i][0]
+            if (d[i][fieldIndex] instanceof Array) {
+               _indexId[i] = d[i][fieldIndex].length > 1 ? d[i][fieldIndex].join(',') : d[i][fieldIndex][0];
+            } else {
+               _indexId[i] = d[i][fieldIndex];
             }
          }
          return _indexId;

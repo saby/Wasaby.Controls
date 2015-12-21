@@ -256,11 +256,11 @@
 @tab-button-hover-border:                       1px solid @tab-button-border-color;
 @tab-button-hover-inner-after-display:          none;
 
+@tab-button-checked-height:                     29px;
 @tab-button-checked-border-top:                 1px solid #313E78;
 @tab-button-checked-border-bottom:              1px solid #FFF;
 @tab-button-checked-border-left:                transparent;
 @tab-button-checked-border-right:               transparent;
-@tab-button-checked-bg:                         #FFFFFF;
 @tab-button-checked-z-index:                    50;
 @tab-button-checked-cursor:                     default;
 @tab-button-checked-font-size:                  15px;
@@ -292,7 +292,6 @@
 @tab-button-inner-line-height:                  30px;
 @tab-button-inner-overflow:                     hidden;
 @tab-button-inner-height:                       29px;
-@tab-button-inner-max-height:                   29px;
 @tab-button-inner-after-content:                '';
 @tab-button-inner-after-display:                block;
 @tab-button-inner-after-width:                  1px;
@@ -303,12 +302,14 @@
 @tab-button-inner-after-z-index:                10;
 @tab-button-inner-after-left:                   0;
 @tab-button-inner-icon-margin-left:             2px;
+@tab-button-icon-position:                      relative;
+@tab-button-icon-top:                           1px;
 
 @tab-button-counter-font-weight:                normal;
 @tab-button-counter-font-size:                  14px;
 
 @tab-button-right-float:                        right;
-@tab-button-right-margin-right:                 -1px;
+@tab-button-right-margin-left:                  -1px;
 @tab-button-right-separator-left:               -1px;
 @tab-button-left-float:                         left;
 @tab-button-left-margin-left:                   -1px;
@@ -447,115 +448,69 @@
 // -------- //
 // Switcher //
 // -------- //
-
-@switcher-spritesheet:                                '';
-
-@switcher-cursor:                                     pointer;
-@switcher-min-width:                                  0;
-@switcher-height:                                     21px;
-@switcher-padding:                                    0 16px 0 0;
-
-@switcher-toggle-width:                               100%;
-@switcher-toggle-min-width:                           100px;
-@switcher-toggle-height:                              @switcher-height;
-@switcher-toggle-box-sizing:                          border-box;
-@switcher-toggle-border-radius:                       6px;
-@switcher-toggle-border-width:                        1px;
-@switcher-toggle-border-style:                        solid;
-@switcher-toggle-border-color:                        @primary-color;
-@switcher-toggle-bg:                                  @default-color;
-
-@switcher-gap-width:                                  0;
-@switcher-toggle-edge-width:                          0;
-
-@switcher-toggle-position-text-alignment:             center;
-@switcher-toggle-position-width:                      70%;
-@switcher-toggle-position-min-width:                  0;
-@switcher-toggle-position-height:                     auto;
-@switcher-toggle-position-min-height:                 17px;
-@switcher-toggle-position-box-sizing:                 content-box;
-@switcher-toggle-position-padding:                    0;
-
-@switcher-toggle-position-border-radius:              @switcher-toggle-border-radius;
-@switcher-toggle-position-border-width:               0;
-@switcher-toggle-position-border-style:               solid;
-@switcher-toggle-position-border-color:               transparent;
-
-@switcher-off-toggle-text-alignment:                  left;
-@switcher-off-toggle-padding:                         1px;
-@switcher-off-toggle-position-text-color:             @white-color;
-@switcher-off-toggle-position-margin:                 0;
-@switcher-off-toggle-position-bg:                     @primary-color;
-@switcher-off-toggle-left-edge-bg:                    none;
-@switcher-off-toggle-right-edge-bg:                   none;
-
-@switcher-on-toggle-text-alignment:                   right;
-@switcher-on-toggle-padding:                          @switcher-off-toggle-padding;
-@switcher-on-toggle-position-text-color:              @switcher-off-toggle-position-text-color;
-@switcher-on-toggle-position-margin:                  @switcher-off-toggle-position-margin;
-@switcher-on-toggle-position-bg:                      @switcher-off-toggle-position-bg;
-@switcher-on-toggle-left-edge-bg:                     none;
-@switcher-on-toggle-right-edge-bg:                    none;
-
-@switcher-disabled-cursor:                            default;
-
-@switcher-disabled-toggle-border-width:               @switcher-toggle-border-width;
-@switcher-disabled-toggle-border-style:               @switcher-toggle-border-style;
-@switcher-disabled-toggle-border-color:               @gray-light-color;
-@switcher-disabled-toggle-bg:                         @gray-light-color;
-
-@switcher-disabled-toggle-position-border-width:      @switcher-toggle-position-border-width;
-@switcher-disabled-toggle-position-border-style:      @switcher-toggle-position-border-style;
-@switcher-disabled-toggle-position-border-color:      @switcher-toggle-position-border-color;
-
-@switcher-off-disabled-toggle-position-text-color:    @gray-light-color;
-@switcher-off-disabled-toggle-position-bg:            @white-color;
-@switcher-off-disabled-toggle-left-edge-bg:           none;
-@switcher-off-disabled-toggle-right-edge-bg:          none;
-
-@switcher-on-disabled-toggle-position-text-color:     @switcher-off-disabled-toggle-position-text-color;
-@switcher-on-disabled-toggle-position-bg:             @switcher-off-disabled-toggle-position-bg;
-@switcher-on-disabled-toggle-left-edge-bg:            none;
-@switcher-on-disabled-toggle-right-edge-bg:           none;
-
-
-
+@switcher-cursor:                               pointer;
+@switcher-cursor-disabled:                      default;
+@switcher-width:                                46px;
+@switcher-height:                               24px;
+@switcher-border:                               1px solid @gray-light-color;
+@switcher-border-radius:                        30px;
+@switcher-line-width:                           36px;
+@switcher-btn-bg-color:                         @white-color;
+@switcher-btn-color:                            @primary-color;
+@switcher-btn-color-inactive:                   @gray-color;
+@switcher-btn-color-disabled:                   @gray-light-color;
+@switcher-btn-border-width:                     2px;
+@switcher-btn-border-hover:                     3px;
+@switcher-btn-radius:                           6px;
+@switcher-btn-size:                             12px;
+@switcher-btn-margin:                           5px;
+@switcher-dot-width:                            2px;
+@switcher-dot-height:                           4px;
+@switcher-dot-margin:                           2px 0 0 3px;
+@switcher-dot-margin-hover:                     1px 0 0 2px;
 // ---------------------- //
 // Double online switcher //
 // ---------------------- //
 
 @switcher-do-margin:                            0 0 0 8px;
 
-@switcher-do-toggle-cursor:                     pointer;
-@switcher-do-text-cursor:                       @switcher-do-toggle-cursor;
+@switcher-do-text-cursor:                       @switcher-cursor;
 @switcher-do-text-color:                        @black-color;
 @switcher-do-decoration:                        none;
 @switcher-do-unselected-text-cursor:            @switcher-do-text-cursor;
 @switcher-do-unselected-text-color:             @gray-color;
 @switcher-do-unselected-text-decoration:        none;
+@switcher-do-unselected-text-decoration-hover:  underline;
 
-@switcher-do-disabled-toggle-cursor:            default;
-@switcher-do-disabled-text-cursor:              @switcher-do-disabled-toggle-cursor;
-@switcher-do-disabled-text-color:               @gray-color;
+@switcher-do-disabled-toggle-cursor:            @switcher-cursor-disabled;
+@switcher-do-disabled-text-cursor:              text;
+@switcher-do-disabled-text-color:               @gray-light-color;
 @switcher-do-disabled-text-decoration:          none;
 
-@switcher-do-horizontal-spritesheet:            '';
-@switcher-do-horizontal-toggle-width:           30px;
-@switcher-do-horizontal-toggle-height:          16px;
-@switcher-do-horizontal-toggle-margin:          0 4px;
-@switcher-do-horizontal-off-toggle-bg:          transparent;
-@switcher-do-horizontal-on-toggle-bg:           transparent;
-@switcher-do-horizontal-off-disabled-toggle-bg: transparent;
-@switcher-do-horizontal-on-disabled-toggle-bg:  transparent;
+@switcher-do-horizontal-toggle-width:           @switcher-width;
+@switcher-do-horizontal-toggle-height:          @switcher-height;
+@switcher-do-horizontal-toggle-margin:          0 6px;
 
-@switcher-do-vertical-spritesheet:              '';
-@switcher-do-vertical-toggle-width:             16px;
-@switcher-do-vertical-toggle-height:            32px;
-@switcher-do-vertical-toggle-margin:            0 2px 0 0;
-@switcher-do-vertical-off-toggle-bg:            transparent;
-@switcher-do-vertical-on-toggle-bg:             transparent;
-@switcher-do-vertical-off-disabled-toggle-bg:   transparent;
-@switcher-do-vertical-on-disabled-toggle-bg:    transparent;
+@switcher-do-vertical-toggle-width:             24px;
+@switcher-do-vertical-toggle-height:            48px;
+@switcher-do-vertical-toggle-margin:            0 12px 0 0;
+
+@switcher-do-border:                            @switcher-border;
+@switcher-do-border-radius:                     @switcher-border-radius;
+
+@switcher-do-horizontal-line-width:             @switcher-line-width;
+@switcher-do-vertical-line-width:               38px;
+@switcher-do-horizontal-line-color:             @gray-color;
+@switcher-do-horizontal-disabled-line-color:    @gray-light-color;
+
+@switcher-do-horizontal-btn-color:              @switcher-btn-color;
+@switcher-do-horizontal-btn-size:               @switcher-btn-size;
+@switcher-do-horizontal-btn-border-width:       @switcher-btn-border-width;
+@switcher-do-horizontal-btn-radius:             @switcher-btn-radius;
+@switcher-do-horizontal-btn-margin:             @switcher-btn-margin;
+@switcher-do-horizontal-btn-bg-color:           @switcher-btn-bg-color;
+@switcher-do-horizontal-btn-color-disabled:     @switcher-btn-color-disabled;
+@switcher-do-horizontal-btn-border-width-hover: 3px;
 
 
 
@@ -1057,6 +1012,7 @@
 @suggest-picker-border-radius:                  0;
 @suggest-picker-box-shadow:                     0 4px 8px rgba(0, 0, 0, 0.2);
 @suggest-picker-margin:                         -1px 0 0;
+@suggest-picker-standard-width:                 500px;
 
 @suggest-picker-item-font:                      @suggest-field-font;
 @suggest-picker-item-text-color:                @suggest-field-text-color;
@@ -1364,6 +1320,8 @@
 @tree-view-hier-wrapper-width:						20px;
 @tree-view-hier-wrapper-height: 						20px;
 
+@tree-view-folder-title-display:                block;
+
 
 // --------- //
 // Data grid //
@@ -1547,13 +1505,6 @@
 @DropdownList-iconHeight:                     16px;
 @DropdownList-box-sizing:                     border-box;
 
-@DropdownList-cross:                          url('img/cancelIcon-sprite.png');
-@DropdownList-cross-bg:                       @DropdownList-cross 0 -35px no-repeat;
-@DropdownList-cross-bg-hover:                 @DropdownList-cross 0 -19px no-repeat;
-
-@DropdownList-arrow:                          url('img/select-arrow.png');
-@pathFilter-ComboBox-arrowBg:                     @DropdownList-arrow 0 -52px no-repeat;
-@pathFilter-ComboBox-arrowBg-hover:               @DropdownList-arrow 0 -26px no-repeat;
 
 @DropdownList-captionWrapper-margin:          0 19px 0 19px;
 @DropdownList-min-height:                     24px;
@@ -1582,9 +1533,11 @@
 
 //Pager
 @controls-Pager-amount-text :                     #999999;
+@controls-Pager-minHeight:                        35px;
 
 //FilterButton
 @controls-filterButton-picker-bg:                 #F9F9F9;
+@controls-filterButton-picker-height:             auto !important; //Приходится использовать important, т.к. попап считает высоту и выставляет её в inline-styles
 @controls-filterButton-picker-border-width:       1px 3px 3px 3px;
 @controls-filterButton-picker-border-style:       solid;
 @controls-filterButton-picker-border-color:       @gray-light-color;
@@ -1610,10 +1563,79 @@
 @controls-filterButton-area-text-weight:          bold;
 @controls-filterButton-area-text-margin:          0 12px 0 0;
 
-@controls-filterButton-area-content-padding:      12px 12px 10px 12px;
+@controls-filterButton-area-content-padding:      12px;
 
 @controls-filterButton-clearButton-margin:        3px 0 0 0;
 
+//FilterButtonHistory
+@controls-filterButton-history-area-padding:      0 12px 12px 4px;
+@controls-filterButton-history-tButton-margin:    8px;
+@controls-filterButton-history-wrapper-padding:   6px;
+@controls-filterButton-history-maxHeight-height:  64px;
+@controls-filterButton-history-maxHeight-overflow:hidden;
+@controls-filterButton-history-maxHeight-padding: 3px;
+@controls-filterButton-history-actions-right:     auto !important;
+@controls-filterButton-history-actions-left:      -4px !important;
+@controls-filterButton-history-actions-margin:    -2px;
+
+@controls-filterButton-history-item-min-height:   24px;
+
+@controls-filterButton-history-pin-float:         left;
+@controls-filterButton-history-pin-position:      relative;
+@controls-filterButton-history-pin-top:           2px;
+
+@controls-filterButton-history-titleCont-position:absolute;
+@controls-filterButton-history-titleCont-right:   0;
+@controls-filterButton-history-titleCont-left:    18px;
+
+@controls-filterButton-history-title-display:     inline-block;
+@controls-filterButton-history-title-height:      24px;
+@controls-filterButton-history-title-verAlign:    middle;
+@controls-filterButton-history-title-color:       #8991A9;
+@controls-filterButton-history-title-width:       100%;
+
+//FilterButtonToggleButton
+@controls-filterButton-toggleButton-border:       none;
+@controls-filterButton-toggleButton-bgColor:      transparent;
+@controls-filterButton-toggleButton-fontSize:     15px;
+@controls-filterButton-toggleButton-text-color:   #8991A9;
+
+@controls-filterButton-toggleButton-icon-size:    18px;
+@controls-filterButton-toggleButton-icon-style:   normal;
+@controls-filterButton-toggleButton-icon-top:     0;
+@controls-filterButton-toggleButton-icon-left:    auto;
+@controls-filterButton-toggleButton-icon-right:   0;
+@controls-filterButton-toggleButton-icon-radius:  16px;
+@controls-filterButton-toggleButton-icon-width:   22px;
+@controls-filterButton-toggleButton-icon-height:  22px;
+@controls-filterButton-toggleButton-icon-bgColor: #F2F2F2;
+@controls-filterButton-toggleButton-icon-border:  1px solid #E4E4E4;
+@controls-filterButton-toggleButton-icon-down:    "\e000";
+@controls-filterButton-toggleButton-icon-up:      "\e001";
+@controls-filterButton-toggleButton-icon-margin:  2px;
+
+@controls-filterButton-toggleButton-text-marginR: 31px;
+@controls-filterButton-toggleButton-text-marginL: 0;
+
+//FilterLine
+@controls-filterLine-padding:                     8px 8px 8px 0;
+@controls-filterLine-align:                       top;
+@controls-filterLine-text-align:                  center;
+@controls-filterLine-wrapper-display:             table;
+@controls-filterLine-wrapper-height:              24px;
+@controls-filterLine-line-display:                table-row;
+@controls-filterLine-items-display:               table-cell;
+@controls-filterLine-items-padding:               0;
+@controls-filterLine-cross-width:                 16px;
+@controls-filterLine-cross-height:                16px;
+@controls-filterLine-cross-top:                   5px;
+@controls-filterLine-arrow-top:                   2px;
+@controls-filterLine-link-color:                  #0055bb;
+
+@controls-filterLine-copyCross-top:               -22px;
+@controls-filterLine-copyCross-margin:            -30px;
+@controls-filterLine-copyCross-shadow:            -6px 2px 8px -2px @white-color;
+@controls-filterLine-copyCross-cross-top:         3px;
 
 //DragNDropObject
 @drag-and-drop-object-bg:                          transparent url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAABHtJREFUeNqsV19MI0UY/7Zd0yJthRa8StJqjwgx2BKokBgTUSEUuT7wIJcjZ4xCcpdgfPDBF5N79MmY+MgdiZw+EMnFF+IfTMQcR0w4oAKVSIocBVFS6zW97baUttuu863dTbfdFrrXSb7M9Jv5vvnNb34zs6U2NjZ4ePxyu6ur6z01gZTP5+O7u7vLDuB5vqKPLAAoihJAuN3uqkHQuVyu7GTUj28AeH6uCIJlWejo6IDDw8N319bW2mmavl0wbJcwc7cSAA0CwGRo4XAYAoGAYLD8OvDP9EkTiWNEE32xWAwaGxvBZrMByfVyfX19v8vlgmw2i7/bCMOvncmAmNAUHoFM4x0wPRiB41w3WF+8gbPAq1/+DkyEAeYhA8FPPLIEyADGm81mSCQSuIjLVqt1L5lMgsPhgFAo9Oz6+nqbVqv15UMihJUDRQARzgkt8beBt1+CwEMvXMj7l955oew2IYDp6WkozNPT0yPUBAjU1dUJIIxGI0PA7RG9WAgrQPRyINMABicNH8Fx7FNg+SvQ0EBLfs+dIMRjcYg/Isb8b6HPR4T+8fFxGTiiA6E+OTkRapPJBMhGNBp1EbB7eb1YVldXobe394DGvRKRWywWSOhvgIG0yV5K/oW3njv3CRHz4XbMz89D4QJ1Op2gF/QhiJWVlRPZFhCawGAwKE6gNJmSH/Nt/s2C1fkKuO0Nkn9nZwe2t7eL9WKTAdjc3BRWkMlkgOM4yYp/F/owHm1iYkIC0NliKAGHeZX0IgPQ2dlZ1SWk5Md8/lACslwWODyKpO5xmIV+Jb3IROj3+1UzgMkxB7aPfHelVXq9XglYMXicS8aA0+lUdR0XMzA0NKToV9KLDABRpoCqGhPj+/v7paSzs7NS3/DwsNBP7gLA81+sF9kxtNvtqvdf7MN8Y2NjJeObm5thcHCwhBUZA/gWYFtEL1rxb9En7jnWooDx9+LiohRDbjyJgZmZmRK9yESIKNXsf6Ef8w0MDJT4m5qawOPxVGaAYRjZqsTVKrULazR8eMSkW1tbUl9ra6vgJ1exwEyxXuSvIbm31Z7/wlXhc1w8Hm9ZcveX6IVWOh5qQYgAgsGgNBG+iFjH43Hhpi3WS1kAlUAwbAKW1/wQ2D+CVDpTMsb34N7Hit9/1NEHhif1S2lKd+slZ/txiQjPAyL0bwS++mYBTlNpNd+gxmg65f1+8Ze+aJS5TijYld0DZ4F4xLDwxdfzaieXAbl3/9ebF1vMVxW3oByQn5bvCy9ajYox+Ff4mgzAU/9YiDRJgyP7hXW+Dfn2b/4PgcvoawWA5Er1yT7LmQuRsoOTp6cQS3xGWimoYTHKAJxVMpk01LoIAObm5s43OssJHxm1KuQPFUtPTk5SSp1TU1PXRkdHZb4/Do7fDx7+6aoVAL1et0SX61Ri5mmzcXl/n2sjLDy2ErUaDXvR5rhFVRNEWHFzvKbtux8WbhKARrWTa8jkl94cuk5TuV1NNYHIiobndjvan7/6BK39NstxLIffhuc0HI9xGI95MN9/AgwAe9CKFRkrHCkAAAAASUVORK5CYII=') no-repeat;
@@ -1624,6 +1646,7 @@
 @drag-and-drop-count-margin:                       20px 0 0 11px;
 @drag-and-drop-count-font-size:                    10px;
 @drag-and-drop-hover-bg:                           #9fd3fe !important;
+@drag-and-drop-border:                             1px solid @drag-and-drop-hover-bg;
 
 //FieldLink
 @controls-FieldLink-picker-show-border:            1px solid;

@@ -309,6 +309,22 @@ define([
                      done(err);
                   });
                });
+
+               it('should decrease the size of raw data when delete a few models', function (done) {
+                  var targetLength = data.length - 2;
+                  service.destroy([existsId,existsId2]).addCallbacks(function () {
+                     try {
+                        if (targetLength !== data.length) {
+                           throw new Error('The size of raw data expect to be ' + targetLength + ' but ' + data.length + ' detected');
+                        }
+                        done();
+                     } catch (err) {
+                        done(err);
+                     }
+                  }, function (err) {
+                     done(err);
+                  });
+               });
             });
 
             context('when the model isn\'t exists', function () {
@@ -642,87 +658,106 @@ define([
 
          describe('.move()', function () {
             it('should move ' + existsId + ' instead ' + existsId2, function (done) {
-               service.read(existsId).addCallback(function (model) {
-                  service.move(model, existsId2).addCallbacks(function() {
-                     if (data[0]['Ид'] === existsId && data[1]['Ид'] === existsId2) {
-                        done();
-                     } else {
-                        done(new Error('Unexpected value'));
-                     }
-                  }, function(err){
-                     done(err);
+               service.read(existsId).addCallback(function (model1) {
+                  service.read(existsId2).addCallback(function (model2) {
+                     service.call('move', {from:model1,to:model2, details:{after:false}}).addCallbacks(function() {
+                        if (data[0]['Ид'] === existsId && data[1]['Ид'] === existsId2) {
+                           done();
+                        } else {
+                           done(new Error('Unexpected value'));
+                        }
+                     }, function(err){
+                        done(err);
+                     });
                   });
                });
             });
 
             it('should move ' + existsId2 + ' instead ' + existsId, function (done) {
-               service.read(existsId2).addCallback(function (model) {
-                  service.move(model, existsId).addCallbacks(function() {
-                     if (data[3]['Ид'] === existsId && data[4]['Ид'] === existsId2) {
-                        done();
-                     } else {
-                        done(new Error('Unexpected value'));
-                     }
-                  }, function(err){
-                     done(err);
+
+               service.read(existsId2).addCallback(function (model1) {
+                  service.read(existsId).addCallback(function (model2) {
+                     service.call('move', {from:model1,to:model2, details:{after:false}}).addCallbacks(function() {
+                        if (data[3]['Ид'] === existsId && data[4]['Ид'] === existsId2) {
+                           done();
+                        } else {
+                           done(new Error('Unexpected value'));
+                        }
+                     }, function(err){
+                        done(err);
+                     });
                   });
                });
+
             });
 
             it('should move ' + existsId + ' after ' + existsId2, function (done) {
-               service.read(existsId).addCallback(function (model) {
-                  service.move(model, existsId2, {after: true}).addCallbacks(function() {
-                     if(data[0]['Ид'] === existsId2 && data[1]['Ид'] === existsId) {
-                        done();
-                     } else {
-                        done(new Error('Unexpected value'));
-                     }
-                  }, function(err){
-                     done(err);
+
+               service.read(existsId).addCallback(function (model1) {
+                  service.read(existsId2).addCallback(function (model2) {
+                     service.call('move', {from:model1,to:model2, details:{after:true}}).addCallbacks(function() {
+                        if(data[0]['Ид'] === existsId2 && data[1]['Ид'] === existsId) {
+                           done();
+                        } else {
+                           done(new Error('Unexpected value'));
+                        }
+                     }, function(err){
+                        done(err);
+                     });
                   });
                });
+
             });
 
             it('should move ' + existsId2 + ' after ' + existsId, function (done) {
-               service.read(existsId2).addCallback(function (model) {
-                  service.move(model, existsId, {after: true}).addCallbacks(function() {
-                     if(data[3]['Ид'] === existsId && data[4]['Ид'] === existsId2) {
-                        done();
-                     } else {
-                        done(new Error('Unexpected value'));
-                     }
-                  }, function(err){
-                     done(err);
+
+               service.read(existsId2).addCallback(function (model1) {
+                  service.read(existsId).addCallback(function (model2) {
+                     service.call('move', {from:model1,to:model2, details:{after:true}}).addCallbacks(function() {
+                        if(data[3]['Ид'] === existsId && data[4]['Ид'] === existsId2) {
+                           done();
+                        } else {
+                           done(new Error('Unexpected value'));
+                        }
+                     }, function(err){
+                        done(err);
+                     });
                   });
                });
+
             });
 
             it('should move before record with ПорНом=6', function (done) {
                service.read(existsId).addCallback(function (model) {
-                  service.move(model, 6, {column: 'ПорНом'}).addCallbacks(function() {
-                     if(data[2]['Ид'] === existsId && data[3]['ПорНом'] === 6) {
-                        done();
-                     } else {
-                        done(new Error('Unexpected value'));
-                     }
-                  }, function(err){
-                     done(err);
+                  service.read(6).addCallback(function (model2) {
+                     service.call('move',{from:model, to:model2, details:{column: 'ПорНом', after: false}}).addCallbacks(function() {
+                        if(data[2]['Ид'] === existsId && data[3]['ПорНом'] === 6) {
+                           done();
+                        } else {
+                           done(new Error('Unexpected value'));
+                        }
+                     }, function(err){
+                        done(err);
+                     });
                   });
                });
             });
 
             it('should move after record with ПорНом=6', function (done) {
                service.read(existsId).addCallback(function (model) {
-                  service.move(model, 6, {after: true, column: 'ПорНом'}).addCallbacks(function() {
-                     if(data[3]['Ид'] === existsId && data[2]['ПорНом'] === 6) {
-                        done();
-                     } else {
-                        done(new Error('Unexpected value'));
-                     }
-                  }, function(err){
-                     done(err);
+                  service.read(6).addCallback(function (model2) {
+                     service.call('move',{from:model, to:model2, details:{column: 'ПорНом', after: true}}).addCallbacks(function() {
+                        if(data[3]['Ид'] === existsId && data[2]['ПорНом'] === 6) {
+                           done();
+                        } else {
+                           done(new Error('Unexpected value'));
+                        }
+                     }, function(err){
+                        done(err);
+                     });
                   });
                });
+
             });
          });
       });

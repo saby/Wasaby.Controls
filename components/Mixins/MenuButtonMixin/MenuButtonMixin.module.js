@@ -51,7 +51,7 @@ define('js!SBIS3.CONTROLS.MenuButtonMixin', ['js!SBIS3.CONTROLS.ContextMenu'], f
             }
             for (var i = 0; i < items.length; i++){
                //отступы нужны только в основном меню, но не в сабменю
-               if (!items[i].icon && !items[i][this._options.hierField]) { items[i].icon = icon;} 
+               if (!items[i].icon && !items[i][this._options.hierField]) { items[i].icon = icon;}
             }
          }
       },
@@ -60,6 +60,7 @@ define('js!SBIS3.CONTROLS.MenuButtonMixin', ['js!SBIS3.CONTROLS.ContextMenu'], f
          var menuconfig = {
             parent: this.getParent(),
             opener: this,
+            groupBy: this._options.groupBy,
             context: this.getParent() ? this.getParent().getLinkedContext() : {},
             element: targetElement,
             target : this.getContainer(),
@@ -106,7 +107,7 @@ define('js!SBIS3.CONTROLS.MenuButtonMixin', ['js!SBIS3.CONTROLS.ContextMenu'], f
       _getHeader: function(){
          var header = $('<div class="controls-Menu__header">');
          if (this._options.icon) {
-            header.append('<i class="' + this._options.iconTemplate(this._options) + '"></i>');
+            header.append('<i class="controls-Menu__header-icon ' + this._options.iconTemplate(this._options) + '"></i>');
          }
          header.append('<span class="controls-Menu__header-caption">' + (this._options.caption || '')  + '</span>');
          return header;
@@ -123,16 +124,18 @@ define('js!SBIS3.CONTROLS.MenuButtonMixin', ['js!SBIS3.CONTROLS.ContextMenu'], f
          }
          return this._picker.getItemsInstances.apply(this._picker, arguments);
       },
-      
+
       _clickHandler: function () {
-         if (this._dataSet.getCount() > 1) {
-            this.togglePicker();
-         } else {
-            if (this._dataSet.getCount() == 1) {
-               var id = this._dataSet.at(0).getKey();
-               this._notify('onMenuItemActivate', id);
+         if (this._dataSet){
+            if (this._dataSet.getCount() > 1) {
+               this.togglePicker();
+            } else {
+               if (this._dataSet.getCount() == 1) {
+                  var id = this._dataSet.at(0).getKey();
+                  this._notify('onMenuItemActivate', id);
+               }
             }
-         }  
+         }
       },
 
       _dataLoadedCallback : function() {
@@ -159,6 +162,23 @@ define('js!SBIS3.CONTROLS.MenuButtonMixin', ['js!SBIS3.CONTROLS.ContextMenu'], f
          },
          setItems: function(items){
             this._checkItemsIcons(items);
+         },
+         _drawIcon: function(icon){
+            if (this._picker){
+               var $icon = $('.controls-Menu__header-icon', this._picker.getContainer()),
+                  newclass = 'controls-Menu__header-icon ' + this._iconClass;
+               if (icon) {
+                  if ($icon.length){
+                     $icon.get(0).className = newclass;
+                  } else {
+                     var $caption = $('.controls-Menu__header-caption', this._picker.getContainer().get(0));
+                     $icon = $('<i class="' + newclass + '"></i>');
+                     $caption.before($icon);
+                  }
+               } else {
+                  $icon && $icon.remove();
+               }
+            }
          }
       },
 

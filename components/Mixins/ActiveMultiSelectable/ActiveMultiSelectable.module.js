@@ -1,7 +1,7 @@
 /**
  * Created by am.gerasimov on 26.10.2015.
  */
-define('js!SBIS3.CONTROLS.ActiveMultiSelectable', ['js!SBIS3.CONTROLS.DataSet', 'js!SBIS3.CONTROLS.SbisJSONStrategy'], function(DataSet, SbisJSONStrategy) {
+define('js!SBIS3.CONTROLS.ActiveMultiSelectable', ['js!SBIS3.CONTROLS.Data.Collection.List'], function(List) {
 
    function propertyUpdateWrapper(func) {
       return function() {
@@ -20,123 +20,183 @@ define('js!SBIS3.CONTROLS.ActiveMultiSelectable', ['js!SBIS3.CONTROLS.DataSet', 
       $protected: {
          _options: {
             /**
-             * @cfg {String[]} Массив выбранных записей
+             * @cfg {String[]} Набор выбранных записей
              */
-            selectedItems : []
-         }
+            selectedItems : undefined
+         },
+         _loadItemsDeferred: undefined
       },
 
       $constructor: function() {
          if(!$ws.helpers.instanceOfMixin(this, 'SBIS3.CONTROLS.MultiSelectable')) {
             throw new Error('MultiSelectable mixin is required');
          }
+
+         this._options.selectedItems = $ws.helpers.instanceOfMixin(this, 'SBIS3.CONTROLS.Data.Collection.List') ?
+             this._options.selectedItems :
+             this._makeList([]);
       },
       /**
-       * Устанавливает массив выбранных записей, по переданному датасету
+       * Устанавливает массив выбранных записей
        */
-      setSelectedItems: propertyUpdateWrapper(function(dataSet) {
-         var self = this,
-             isDataSet = $ws.helpers.instanceOfModule(dataSet, 'SBIS3.CONTROLS.DataSet'),
-             iterator = isDataSet ? dataSet.each : $ws.helpers.forEach;
-
-         function iteratorCallback(rec) {
-            self._options.selectedItems.push(rec);
-            self._options.selectedKeys.push(rec.getKey());
+      setSelectedItems: propertyUpdateWrapper(function(list) {
+         if(list instanceof Array) {
+            list = this._makeList(list);
          }
 
-         this._options.selectedKeys = [];
-         this._options.selectedItems = [];
-
-         iterator.apply(dataSet, (isDataSet ? [iteratorCallback] : [dataSet, iteratorCallback]));
-
-         if (this._checkEmptySelection()) {
-            this._setFirstItemAsSelected();
+         if(!$ws.helpers.instanceOfModule(list, 'SBIS3.CONTROLS.Data.Collection.List')) {
+            throw new Error('setSelectedItems called with invalid argument');
          }
 
-         this._notifySelectedItems(this._options.selectedKeys);
-         this._drawSelectedItems(this._options.selectedKeys);
+         var selKeys = [];
+
+         /* надо обязательно делать клон массива, чтобы порвать ссылку и не портить значения в контексте */
+         this._options.selectedItems = this._makeList((this._options.multiselect ? list.toArray() : list.getCount() > 1 ? [list.at(0)] : list.toArray()).slice());
+         this._options.selectedItems.each(function(rec) {
+            selKeys.push(rec.getId());
+         });
+         this.setSelectedKeys(selKeys);
+         this._notifyOnPropertyChanged('selectedItems');
       }),
 
       /**
-       * Возвращает deferred, рузельтатом которого будет DataSet выделенных элементов
+       * Очищает набор выбранных элементов
        */
-      getSelectedItems: function() {
+      clearSelectedItems: function() {
+         this.setSelectedItems(new List());
+      },
+
+
+      /**
+       * Добавляет переданные элементы к набору выбранных
+       * @param {Array | SBIS3.CONTROLS.Data.Collection.List} items
+       */
+      addSelectedItems: propertyUpdateWrapper(function(items) {
          var self = this,
-            selKeys = this._options.selectedKeys,
-            loadKeysArr = [],
-            itemKeysArr = [],
-            dResult = new $ws.proto.Deferred(),
-            newDsOptions = {
-               keyField: self._options.keyField,
-               strategy: new SbisJSONStrategy()
-            },
-            dMultiResult, item, dataSetItems;
+             selKeys = [],
+             newItems = items instanceof Array ? this._makeList(items) : items,
+             selItems = this._options.selectedItems;
+
+         /* Не добавляем уже выбранные элементы */
+         newItems.each(function(rec) {
+            if(self._isItemSelected(rec) !== -1) {
+               newItems.remove(rec)
+            }
+         });
+         selItems.concat(newItems);
+         selItems.each(function(rec) {
+            selKeys.push(rec.getId());
+         });
+         this.setSelectedKeys(selKeys);
+         this._notifyOnPropertyChanged('selectedItems');
+      }),
+
+      _makeList: function(listItems) {
+         return new List({items: listItems});
+      },
+
+      _getSelItemsClone: function() {
+         /* надо обязательно делать клон массива, чтобы порвать ссылку и не портить при изменении значения в контексте */
+         return this._makeList(this._options.selectedItems.toArray().slice());
+      },
+      /**
+       * Возвращает набор выбранных элементов
+       * @param loadItems загружать ли записи
+       * @returns {SBIS3.CONTROLS.Data.Collection.List} Возвращает коллекцию элементов
+       */
+      getSelectedItems: function(loadItems) {
+         var self = this,
+             selKeys = this.getSelectedKeys(),
+             selItems = this._options.selectedItems,
+             loadKeysArr = [],
+             itemKeysArr = [],
+             dMultiResult, item;
 
          this._syncSelectedItems();
 
-         /* Сфоримруем из массива выбранных записей, массив ключей этих записей */
-         for(var i = 0, items = this._options.selectedItems.length; i < items; i++) {
-            itemKeysArr.push(this._options.selectedItems[i].getKey());
+         if(!loadItems) {
+            return this._getSelItemsClone();
          }
 
+         if(this._loadItemsDeferred && !this._loadItemsDeferred.isReady()) {
+            return this._loadItemsDeferred;
+         }
+
+         this._loadItemsDeferred = new $ws.proto.Deferred();
+         /* Сфоримруем из массива выбранных записей, массив ключей этих записей */
+         selItems.each(function(rec){
+            itemKeysArr.push(rec.getId());
+         });
+
          /* Сфоримруем массив ключей записей, которые требуется вычитать с бл или взять из dataSet'a*/
-         for(var j = 0, keys = selKeys.length; j < keys; j++) {
-            if(Array.indexOf(itemKeysArr, selKeys[j]) === -1) {
-               loadKeysArr.push(selKeys[j]);
+         for(var i = 0, keys = selKeys.length; i < keys; i++) {
+            if(Array.indexOf(itemKeysArr, selKeys[i]) === -1 && Array.indexOf(itemKeysArr, parseInt(selKeys[i], 10)) === -1) {
+               loadKeysArr.push(selKeys[i]);
             }
          }
 
          if(loadKeysArr.length) {
             dMultiResult = new $ws.proto.ParallelDeferred({stopOnFirstError: false});
-            dataSetItems = [];
 
-            for (var g = 0; loadKeysArr.length > g; g++) {
-               item = this._dataSet && this._dataSet.getRecordByKey(loadKeysArr[g]);
+            for (var j = 0; loadKeysArr.length > j; j++) {
+               item = this._dataSet && this._dataSet.getRecordByKey(loadKeysArr[j]);
 
                /* если запись есть в датасете, то ничего не будем вычитывать */
                if(item) {
-                  dataSetItems.push(item);
+                  selItems.add(item);
                   continue;
                }
 
-               dMultiResult.push(this._dataSource.read(loadKeysArr[g]).addCallback(function (record) {
-                  self._options.selectedItems.push(record);
+               dMultiResult.push(this._dataSource.read(loadKeysArr[j]).addCallback(function (record) {
+                  selItems.add(record);
                }));
             }
 
             dMultiResult.done().getResult().addCallback(function() {
-               var dataSet = new DataSet(newDsOptions);
-               self._options.selectedItems = self._options.selectedItems.concat(dataSetItems);
-               dataSet.insert(self._options.selectedItems);
-               dResult.callback(dataSet);
+               self._loadItemsDeferred.callback(self._getSelItemsClone());
+               self._notifyOnPropertyChanged('selectedItems');
             });
 
          } else {
-            var dataSet = new DataSet(newDsOptions);
-            dataSet.insert(self._options.selectedItems);
-            dResult.callback(dataSet);
+            self._loadItemsDeferred.callback(self._getSelItemsClone());
          }
-         return dResult;
+         return this._loadItemsDeferred;
       },
-
       /* Синхронизирует выбранные ключи и выбранные записи */
       _syncSelectedItems: function() {
-         var count = 0,
-            selItems = this._options.selectedItems,
-            index;
+         var self = this,
+             selKeys = this.getSelectedKeys(),
+             selItems = this._options.selectedItems,
+             delItems = [],
+             id;
 
-         if(!this.getSelectedKeys().length) {
-           //FIXME Это сделано специально для демки, по делу если нет выбранных ключей, то и выбранных элементов быть не должно, обязательно это вернуть
-           // this._options.selectedItems = [];
+         /* Выбранных ключей нет - очистим IList */
+         if(!selKeys.length) {
+            if(selItems.getCount()) {
+               selItems.fill();
+               this._notifyOnPropertyChanged('selectedItems');
+            }
             return;
          }
 
-         for(var i = 0, len = selItems.length; i < len; i ++) {
-            index = i - count;
-            if(selItems[index] && Array.indexOf(this._options.selectedKeys, selItems[index].getKey()) === -1) {
-               selItems.splice(index, 1);
-               count++;
+         /* Соберём элементы для удаления, т.к. в методе each не отслеживаются изменения IList'а */
+         selItems.each(function(rec) {
+            /* ключи могут быть и строкой, поэтому надо проверить и на строку */
+            if(self._isItemSelected(rec.getId()) === -1) {
+               delItems.push(rec);
             }
+         });
+
+         if(delItems.length) {
+            for(var i = 0, len = delItems.length; i < len; i++) {
+               selItems.remove(delItems[i]);
+            }
+            this._notifyOnPropertyChanged('selectedItems');
+         }
+      },
+      around: {
+         _isItemSelected: function(parentFunc, item) {
+            return parentFunc.call(this, item.getId ? item.getId() : item);
          }
       }
    };

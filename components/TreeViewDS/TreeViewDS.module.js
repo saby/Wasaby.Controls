@@ -5,6 +5,8 @@ define('js!SBIS3.CONTROLS.TreeViewDS', [
    'js!SBIS3.CORE.MarkupTransformer'
 ], function (ListView, hierarchyMixin, TreeMixinDS, MarkupTransformer) {
    'use strict';
+   var ITEMS_ACTIONS_HEIGHT = 20;
+   
    /**
     * Контрол, отображающий данные имеющие иерархическую структуру. Позволяет отобразить данные в произвольном виде с возможностью открыть или закрыть отдельные узлы
     * @class SBIS3.CONTROLS.TreeViewDS
@@ -23,6 +25,12 @@ define('js!SBIS3.CONTROLS.TreeViewDS', [
             //FixME: так как приходит набор от листвью. пока он не нужен
             itemsActions: []
          }
+      },
+
+      init : function() {
+         TreeViewDS.superclass.init.apply(this, arguments);
+         //TODO чтоб не переопределять верстку навешиваем класс
+         this._container.addClass('controls-TreeView');
       },
 
       _getTargetContainer: function (record) {
@@ -49,11 +57,12 @@ define('js!SBIS3.CONTROLS.TreeViewDS', [
       },
 
       _getItemActionsPosition: function(item) {
-         var treeItem = item.container.find('.js-controls-TreeView-itemContent');
+         var treeItem = item.container.find('.js-controls-TreeView-itemContent'),
+             parentResult = TreeViewDS.superclass._getItemActionsPosition.apply(this, arguments);
 
          return {
-            top: item.position.top + (treeItem.length ? treeItem[0].offsetHeight - 20 : 0),
-            right: 0
+            top: item.position.top + (treeItem.length ? treeItem[0].offsetHeight : item.size.height) - ITEMS_ACTIONS_HEIGHT,
+            right: parentResult.right
          }
       },
 

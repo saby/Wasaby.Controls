@@ -11,31 +11,37 @@ define('js!SBIS3.CONTROLS.Data.Adapter.IRecord', [], function () {
 
    return /** @lends SBIS3.CONTROLS.Data.Adapter.IRecord.prototype */{
       /**
+       * Возвращает признак наличия поля в данных
+       * @param {String} name Поле записи
+       * @returns {Boolean}
+       */
+      has: function (name) {
+         throw new Error('Method must be implemented');
+      },
+
+      /**
        * Возвращает значение поля записи
-       * @param {*} data Сырые данные
        * @param {String} name Поле записи
        * @returns {*}
        */
-      get: function (data, name) {
+      get: function (name) {
          throw new Error('Method must be implemented');
       },
 
       /**
        * Сохраняет значение поля записи
-       * @param {*} data Сырые данные
        * @param {String} name Поле записи
        * @param {*} value Значение
        */
-      set: function (data, name, value) {
+      set: function (name, value) {
          throw new Error('Method must be implemented');
       },
 
       /**
        * Возвращает массив названий полей
-       * @param {*} data Сырые данные
        * @returns {String[]} Названия полей
        */
-      getFields: function (data) {
+      getFields: function () {
          throw new Error('Method must be implemented');
       },
 
@@ -49,11 +55,26 @@ define('js!SBIS3.CONTROLS.Data.Adapter.IRecord', [], function () {
 
       /**
        * Возвращает объект содержащий название типа и мета данные
-       * @param {*} data Сырые данные
        * @param {String} name Поле записи
        * @returns {Object} Объект вида {type: Название, meta: Мета данные типа }
        */
-      getFullFieldData: function (data, name) {
+      getInfo: function (name) {
+         throw new Error('Method must be implemented');
+      },
+
+      /**
+       * Возвращает название поля, которое является первичным ключем
+       * @returns {String}
+       */
+      getKeyField: function () {
+         throw new Error('Method must be implemented');
+      },
+
+      /**
+       * Возвращает данные
+       * @returns {*}
+       */
+      getData: function () {
          throw new Error('Method must be implemented');
       }
    };

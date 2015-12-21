@@ -23,7 +23,54 @@
   }
 }
 
-.ws-is-touch{
+@bottomStyle-item-actions-height:         30px;
+@bottomStyle-item-actions-margin-top:     20px;
+@bottomStyle-item-actions-border-color:   #F3F3F3;
+
+.controls-ListView.controls-ListView__bottomStyle {
+   padding-bottom: @bottomStyle-item-actions-height;
+   .controls-ItemActions, &.controls-DataGridView .controls-ItemActions {
+      box-shadow: none;
+      background-color: #F0F5FB;
+      margin-top: @bottomStyle-item-actions-margin-top;
+      height: @bottomStyle-item-actions-height - 1;
+      border-bottom: 1px solid @bottomStyle-item-actions-border-color;
+      &:before {
+         content: '';
+         position: absolute;
+         display: block;
+         background: url('img/items-actions-bottom-style-background.png') no-repeat 0 0;
+         width: 24px;
+         height: @bottomStyle-item-actions-height;
+         left: -24px;
+      }
+      &:after {
+         content: '';
+         position: absolute;
+         display: block;
+         background: url('img/items-actions-bottom-style-background.png') no-repeat 100% 0;
+         width: 3px;
+         height: @bottomStyle-item-actions-height;
+         right: -3px;
+         top: 0;
+      }
+   }
+   .controls-ItemActions .controls-ItemActions__itemsContainer {
+      height: @bottomStyle-item-actions-height - 1;
+      & > * {
+         top: 8px;
+         &.controls-ItemActions__menu-button {
+            margin-top: 7px;
+         }
+      }
+
+   }
+   &.controls-DataGridView .controls-ItemActions .controls-ItemActions__itemsContainer {
+      background-color: transparent;
+   }
+}
+
+.ws-is-mobile-platform{
    .controls-DataGridView{
       .controls-ItemActions{
          box-shadow: none;
@@ -159,22 +206,28 @@
 }
 
 .controls-ItemActions__menu-container {
-  .controls-MenuItem {
-    padding-right: 24px;
-  }
-  .controls-PopupMixin__closeButton {
-    height: 16px;
-    width: 16px;
-    z-index: 1;
-    right: 4px;
-    top: 4px;
-    position: absolute;
-    cursor: @list-view-actions-cursor;
-    background: @list-view-actions-menu-icon-close;
-    &:hover {
-      background: @list-view-actions-menu-icon 0 -60px;
-    }
-  }
+   .controls-MenuItem {
+      padding-right: 24px;
+   }
+   .controls-PopupMixin__closeButton {
+      height: 16px;
+      width: 16px;
+      z-index: 1;
+      right: 4px;
+      top: 4px;
+      position: absolute;
+      cursor: @list-view-actions-cursor;
+      background: @list-view-actions-menu-icon-close;
+      &:hover {
+         background: @list-view-actions-menu-icon 0 -60px;
+      }
+   }
+   &.controls-popup-revert-vertical {
+      .controls-PopupMixin__closeButton {
+         bottom: 4px;
+         top: auto;
+      }
+   }
 }
 .controls-ItemActions__activeItem {
   background-color: @list-view-actions-active-bg;

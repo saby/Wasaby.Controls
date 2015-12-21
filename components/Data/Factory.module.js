@@ -1,6 +1,8 @@
 /*global $ws, define*/
 define('js!SBIS3.CONTROLS.Data.Factory', [
-], function () {
+   'js!SBIS3.CONTROLS.Data.Types.Flags',
+   'js!SBIS3.CONTROLS.Data.Types.Enum'
+], function (Flags, Enum) {
    'use strict';
 
    /**
@@ -67,8 +69,8 @@ define('js!SBIS3.CONTROLS.Data.Factory', [
                }
                return value === undefined ? null : value;
             case 'Enum':
-               return new $ws.proto.Enum({
-                  availableValues: meta.source, //список вида {0:'one',1:'two'...}
+               return new Enum({
+                  data: meta.source, //массив строк
                   currentValue: value //число
                });
             case 'Flags':
@@ -80,7 +82,7 @@ define('js!SBIS3.CONTROLS.Data.Factory', [
                return $ws.proto.TimeInterval.toString(value);
             case 'Text':
             case 'String':
-               return value + '';
+               return value;
             case 'Boolean':
                if (value === null) {
                   return value;
@@ -154,7 +156,9 @@ define('js!SBIS3.CONTROLS.Data.Factory', [
                return $ws.proto.TimeInterval.toString(value);
 
             case 'Enum':
-               if (value instanceof $ws.proto.Enum) {
+               if (value instanceof Enum) {
+                  return value.get();
+               } else if (value instanceof $ws.proto.Enum) {
                   return value.getCurrentValue();
                }
                return value;
@@ -173,7 +177,7 @@ define('js!SBIS3.CONTROLS.Data.Factory', [
        */
       _makeModel: function (data, adapter) {
          return $ws.single.ioc.resolve('SBIS3.CONTROLS.Data.Model', {
-            data: data,
+            rawData: data,
             adapter: adapter
          });
       },
@@ -186,12 +190,16 @@ define('js!SBIS3.CONTROLS.Data.Factory', [
        * @private
        */
       _makeDataSet: function (data, adapter) {
-         adapter.setProperty(data, 'total', adapter.forTable().getCount(data));
+         adapter.setProperty(
+            data,
+            'total',
+            adapter.forTable(data).getCount()
+         );
 
          return $ws.single.ioc.resolve('SBIS3.CONTROLS.Data.Source.DataSet', {
             model: $ws.single.ioc.resolve('SBIS3.CONTROLS.Data.ModelConstructor'),
             adapter: adapter,
-            data: data,
+            rawData: data,
             totalProperty: 'total'
          });
       },
@@ -204,10 +212,9 @@ define('js!SBIS3.CONTROLS.Data.Factory', [
        * @private
        */
       _makeFlags: function (value, meta) {
-         return this._makeModel(
-            meta.makeData(value),
-            meta.adapter
-         );
+         return new Flags ({
+            data: meta.makeData(value)
+         });
       },
 
       /**
@@ -241,8 +248,8 @@ define('js!SBIS3.CONTROLS.Data.Factory', [
        */
       _serializeList: function (data, adapter) {
          var items = data.toArray(),
-            tableAdapter = adapter.forTable(),
             otherData = [],
+            tableAdapter,
             rawData,
             item,
             i,
@@ -251,20 +258,22 @@ define('js!SBIS3.CONTROLS.Data.Factory', [
          for (i = 0, length = items.length; i < length; i++) {
             item = items[i];
             if (typeof items === 'object' && $ws.helpers.instanceOfModule(item, 'SBIS3.CONTROLS.Data.Model')) {
-               if (rawData === undefined) {
-                  rawData = tableAdapter.getEmpty(item.getRawData());
+               if (tableAdapter === undefined) {
+                  tableAdapter = adapter.forTable(
+                     adapter.forTable(item.getRawData()).getEmpty()
+                  );
                }
-               tableAdapter.add(rawData, item.getRawData());
+               tableAdapter.add(item.getRawData());
             } else {
                otherData.push(item);
             }
          }
 
-         if (otherData.length) {
-            adapter.setProperty(rawData, 'other', otherData);
+         if (tableAdapter && otherData.length) {
+            adapter.setProperty(tableAdapter.getData(), 'other', otherData);
          }
 
-         return rawData;
+         return tableAdapter.getData();
       },
 
       /**
@@ -294,9 +303,13 @@ define('js!SBIS3.CONTROLS.Data.Factory', [
        * @private
        */
       _serializeFlags: function (data) {
-         if ($ws.helpers.instanceOfModule(data, 'SBIS3.CONTROLS.Data.Model')) {
-            return data.getRawData();
-         } else if (data instanceof $ws.proto.Record) {
+         if ($ws.helpers.instanceOfModule(data, 'SBIS3.CONTROLS.Data.Flags') || $ws.helpers.instanceOfModule(data, 'SBIS3.CONTROLS.Data.Model')) {
+            var d = [];
+            data.each(function (name) {
+               d.push(data.get(name));
+            });
+            return d;
+         }  else if (data instanceof $ws.proto.Record) {
             var dt = [],
                s = {},
                t = data.getColumns();
@@ -309,7 +322,7 @@ define('js!SBIS3.CONTROLS.Data.Factory', [
                dt.push(rO[sorted.values[y]]);
             }
             return dt;
-         } else if (data instanceof Array) {
+         } else if ($ws.helpers.type(data) === 'array') {
             return data;
          } else {
             return null;

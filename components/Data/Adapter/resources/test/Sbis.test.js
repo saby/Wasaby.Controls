@@ -1,23 +1,10 @@
 /* global define, beforeEach, afterEach, describe, context, it, assert */
-define(
-   ['js!SBIS3.CONTROLS.Data.Adapter.Sbis'],
-   function (SbisAdapter) {
+define([
+   'js!SBIS3.CONTROLS.Data.Adapter.Sbis',
+   'js!SBIS3.CONTROLS.Data.Model',
+   'js!SBIS3.CONTROLS.Data.Source.DataSet'
+], function (SbisAdapter, Model, DataSet) {
       'use strict';
-
-      var checkInvalid = function (instance, method) {
-         assert.throw(function () {
-            instance[method]({});
-         });
-         assert.throw(function () {
-            instance[method]('');
-         });
-         assert.throw(function () {
-            instance[method](0);
-         });
-         assert.throw(function () {
-            instance[method]();
-         });
-      };
 
       describe('SBIS3.CONTROLS.Data.Adapter.Sbis', function () {
          var data,
@@ -165,57 +152,182 @@ define(
          });
 
          describe('.serialize()', function () {
-            it('should create identical structure', function () {
-               var checkStruct = function(given, expect) {
-                     var valid = true;
-                     if (typeof expect === 'object') {
-                        $ws.helpers.forEach(expect, function(val, key) {
-                           checkStruct(val, given[key]);
-                        });
-                     } else if (expect !== given) {
-                        throw new Error(given + ' expect to be ' + expect);
+            it('should create valid deep structure', function () {
+               var adapter = new SbisAdapter(),
+                  result = adapter.serialize({
+                     'null': null,
+                     'false': false,
+                     'true': true,
+                     '0': 0,
+                     '10': 10,
+                     'Строка': 'String',
+                     'Date': new Date('2015-12-03'),
+                     'Массив': [
+                        false,
+                        true,
+                        0,
+                        1,
+                        'S',
+                        new Date('2001-09-11'),
+                        [],
+                        {}
+                     ],
+                     'EmptyObject': {},
+                     'Запись': {
+                        'ВызовИзБраузера': true,
+                        'Количество': 1,
+                        'Вес': 2.5,
+                        'Тип': 'Пустой',
+                        'Дата': new Date('2015-10-10')
                      }
-                  };
-
-               assert.doesNotThrow(function() {
-                  var adapter = new SbisAdapter();
-                  checkStruct(
-                     adapter.serialize({
-                        'Фильтр': {
-                           'ВызовИзБраузера': true,
-                           'Количество': 1,
-                           'Вес': 2.5,
-                           'Тип':'Пустой',
-                           'Дата':new Date('2015-10-10')
+                  }),
+                  expect = {
+                     d: [
+                        0,
+                        10,
+                        null,
+                        false,
+                        true,
+                        'String',
+                        '2015-12-03',
+                        [false, true, 0, 1, 'S', '2001-09-11', [], {d: [], s: []}],
+                        {
+                           d: [],
+                           s: []
                         },
-                        'ИмяМетода': null
-                     }),
-                     {
-                        'Фильтр': {
-                           d: [
-                              true,1,2.5,'Пустой','2015-10-10'
-                           ],
+                        {
+                           d: [true, 1, 2.5, 'Пустой', '2015-10-10'],
                            s: [{
                               n: 'ВызовИзБраузера',
                               t: 'Логическое'
-                           },{
+                           }, {
                               n: 'Количество',
                               t: 'Число целое'
-                           },{
+                           }, {
                               n: 'Вес',
                               t: 'Число вещественное'
-                           },{
+                           }, {
                               n: 'Тип',
                               t: 'Строка'
-                           },{
+                           }, {
                               n: 'Дата',
                               t: 'Дата и время'
                            }]
-                        },
-                        'ИмяМетода': null
+                        }
+                     ],
+                     s: [{
+                        n: '0',
+                        t: 'Число целое'
+                     }, {
+                        n: '10',
+                        t: 'Число целое'
+                     }, {
+                        n: 'null',
+                        t: 'Строка'
+                     }, {
+                        n: 'false',
+                        t: 'Логическое'
+                     }, {
+                        n: 'true',
+                        t: 'Логическое'
+                     }, {
+                        n: 'Строка',
+                        t: 'Строка'
+                     }, {
+                        n: 'Date',
+                        t: 'Дата и время'
+                     }, {
+                        n: 'Массив',
+                        t: {
+                           n: 'Массив',
+                           t: 'Логическое'
+                        }
+                     }, {
+                        n: 'EmptyObject',
+                        t: 'Запись'
+                     }, {
+                        n: 'Запись',
+                        t: 'Запись'
+                     }]
+                  };
+               assert.sameDeepMembers(result.s, expect.s, 'wrong s');
+               assert.sameDeepMembers(result.d, expect.d, 'wrong d');
+            });
+
+            it('should serialize model', function () {
+               var adapter = new SbisAdapter(),
+                  model = new Model({
+                     rawData: {
+                        some: {deep: {object: 'here'}}
                      }
-                  );
-               });
+                  }),
+                  result = adapter.serialize(model),
+                  expect = model.getRawData();
+               expect._type = 'record';
+               assert.deepEqual(result, expect);
+            });
+
+            it('should serialize dataset', function () {
+               var adapter = new SbisAdapter(),
+                  ds = new DataSet({
+                     adapter: adapter,
+                     rawData: {
+                        d: [], s: []
+                     }
+                  }),
+                  result = adapter.serialize(ds),
+                  expect = ds.getRawData();
+               expect._type = 'recordset';
+               assert.deepEqual(result, expect);
+            });
+
+            it('should serialize models and datasets in deep structure', function () {
+               var adapter = new SbisAdapter(),
+                  model = new Model({
+                     adapter: adapter,
+                     rawData: {}
+                  }),
+                  ds = new DataSet({
+                     adapter: adapter,
+                     rawData: {}
+                  }),
+                  result = adapter.serialize({
+                     some: {
+                        model: model
+                     },
+                     and: {
+                        also: ds
+                     }
+                  }),
+                  expect = {
+                     d: [{
+                        d: [
+                           model.getRawData() || {}
+                        ],
+                        s: [{
+                           n: 'model',
+                           t: 'Запись'
+                        }]
+                     }, {
+                        d: [
+                           ds.getRawData() || {}
+                        ],
+                        s: [{
+                           n: 'also',
+                           t: 'Выборка'
+                        }]
+                     }],
+                     s: [{
+                        n: 'some',
+                        t: 'Запись'
+                     }, {
+                        n: 'and',
+                        t: 'Запись'
+                     }]
+                  };
+               expect.d[0].d[0]._type = 'record';
+               expect.d[1].d[0]._type = 'recordset';
+               assert.deepEqual(result, expect);
             });
          });
       });
@@ -241,7 +353,7 @@ define(
                ]
             };
 
-            adapterInstance = new SbisAdapter().forTable();
+            adapterInstance = new SbisAdapter().forTable(data);
          });
 
          afterEach(function () {
@@ -253,7 +365,7 @@ define(
             it('should return empty data', function () {
                assert.strictEqual(
                   0,
-                  adapterInstance.getEmpty().d.length
+                  new SbisAdapter().forTable().getEmpty().d.length
                );
             });
          });
@@ -262,34 +374,34 @@ define(
             it('should return records count', function () {
                assert.strictEqual(
                   7,
-                  adapterInstance.getCount(data)
-               );
-               assert.strictEqual(
-                  0,
-                  adapterInstance.getCount([])
-               );
-               assert.strictEqual(
-                  0,
-                  adapterInstance.getCount({})
-               );
-               assert.strictEqual(
-                  0,
-                  adapterInstance.getCount('')
-               );
-               assert.strictEqual(
-                  0,
-                  adapterInstance.getCount(0)
-               );
-               assert.strictEqual(
-                  0,
                   adapterInstance.getCount()
+               );
+               assert.strictEqual(
+                  0,
+                  new SbisAdapter().forTable([]).getCount()
+               );
+               assert.strictEqual(
+                  0,
+                  new SbisAdapter().forTable({}).getCount()
+               );
+               assert.strictEqual(
+                  0,
+                  new SbisAdapter().forTable('').getCount()
+               );
+               assert.strictEqual(
+                  0,
+                  new SbisAdapter().forTable(0).getCount()
+               );
+               assert.strictEqual(
+                  0,
+                  new SbisAdapter().forTable().getCount()
                );
             });
          });
 
          describe('.add()', function () {
             it('should append a record', function () {
-               adapterInstance.add(data, {d: [30, 'Огурцов']});
+               adapterInstance.add({d: [30, 'Огурцов']});
                assert.strictEqual(
                   8,
                   data.d.length
@@ -305,7 +417,7 @@ define(
             });
 
             it('should prepend a record', function () {
-               adapterInstance.add(data, {d: [40, 'Перцов']}, 0);
+               adapterInstance.add({d: [40, 'Перцов']}, 0);
                assert.strictEqual(
                   8,
                   data.d.length
@@ -321,7 +433,7 @@ define(
             });
 
             it('should insert a record', function () {
-               adapterInstance.add(data, {d: [50, 'Горохов']}, 2);
+               adapterInstance.add({d: [50, 'Горохов']}, 2);
                assert.strictEqual(
                   8,
                   data.d.length
@@ -338,15 +450,11 @@ define(
 
             it('should throw an error on invalid position', function () {
                assert.throw(function () {
-                  adapterInstance.add(data, {d: [30, 'aaa']}, 100);
+                  adapterInstance.add({d: [30, 'aaa']}, 100);
                });
                assert.throw(function () {
-                  adapterInstance.add(data, {d: [30, 'aaa']}, -1);
+                  adapterInstance.add({d: [30, 'aaa']}, -1);
                });
-            });
-
-            it('should throw an error on invalid data', function () {
-               checkInvalid(adapterInstance, 'add');
             });
          });
 
@@ -354,54 +462,54 @@ define(
             it('should return valid record', function () {
                assert.strictEqual(
                   1,
-                  adapterInstance.at(data, 0).d[0]
+                  adapterInstance.at(0).d[0]
                );
                assert.strictEqual(
                   3,
-                  adapterInstance.at(data, 2).d[0]
+                  adapterInstance.at(2).d[0]
                );
             });
 
             it('should return undefined on invalid position', function () {
                assert.isUndefined(
-                  adapterInstance.at(data, -1)
+                  adapterInstance.at(-1)
                );
                assert.isUndefined(
-                  adapterInstance.at(data, 99)
+                  adapterInstance.at(99)
                );
             });
 
             it('should return undefined on invalid data', function () {
                assert.isUndefined(
-                  adapterInstance.at({})
+                  new SbisAdapter().forTable({}).at()
                );
                assert.isUndefined(
-                  adapterInstance.at('')
+                  new SbisAdapter().forTable('').at()
                );
                assert.isUndefined(
-                  adapterInstance.at(0)
+                  new SbisAdapter().forTable(0).at()
                );
                assert.isUndefined(
-                  adapterInstance.at()
+                  new SbisAdapter().forTable().at()
                );
             });
          });
 
          describe('.remove()', function () {
             it('should remove the record', function () {
-               adapterInstance.remove(data, 0);
+               adapterInstance.remove(0);
                assert.strictEqual(
                   2,
                   data.d[0][0]
                );
 
-               adapterInstance.remove(data, 2);
+               adapterInstance.remove(2);
                assert.strictEqual(
                   5,
                   data.d[2][0]
                );
 
-               adapterInstance.remove(data, 5);
+               adapterInstance.remove(5);
                assert.isUndefined(
                   data.d[5]
                );
@@ -409,21 +517,17 @@ define(
 
             it('should throw an error on invalid position', function () {
                assert.throw(function () {
-                  adapterInstance.remove(data, -1);
+                  adapterInstance.remove(-1);
                });
                assert.throw(function () {
-                  adapterInstance.remove(data, 99);
+                  adapterInstance.remove(99);
                });
-            });
-
-            it('should throw an error on invalid data', function () {
-               checkInvalid(adapterInstance, 'remove');
             });
          });
 
          describe('.merge()', function () {
             it('should merge two records', function () {
-               adapterInstance.merge(data, 0, 1, 'Ид');
+               adapterInstance.merge(0, 1, 'Ид');
                assert.strictEqual(
                   'Петров',
                   data.d[0][1]
@@ -433,7 +537,7 @@ define(
 
          describe('.copy()', function () {
             it('should merge two records', function () {
-               adapterInstance.copy(data, 0);
+               adapterInstance.copy(0);
                assert.strictEqual(
                   'Иванов',
                   data.d[1][1]
@@ -443,13 +547,13 @@ define(
 
          describe('.replace()', function () {
             it('should replace the record', function () {
-               adapterInstance.replace(data, {d: [11]}, 0);
+               adapterInstance.replace({d: [11]}, 0);
                assert.strictEqual(
                   11,
                   data.d[0][0]
                );
 
-               adapterInstance.replace(data, {d: [12]}, 4);
+               adapterInstance.replace({d: [12]}, 4);
                assert.strictEqual(
                   12,
                   data.d[4][0]
@@ -459,21 +563,17 @@ define(
 
             it('should throw an error on invalid position', function () {
                assert.throw(function () {
-                  adapterInstance.replace(data, {d: [13]}, -1);
+                  adapterInstance.replace({d: [13]}, -1);
                });
                assert.throw(function () {
-                  adapterInstance.replace(data, {d: [14]}, 99);
+                  adapterInstance.replace({d: [14]}, 99);
                });
-            });
-
-            it('should throw an error on invalid data', function () {
-               checkInvalid(adapterInstance, 'replace');
             });
          });
 
          describe('.move()', function () {
             it('should move Иванов instead Сидоров', function () {
-               adapterInstance.move(data, 0, 2);
+               adapterInstance.move(0, 2);
                assert.strictEqual(
                   'Петров',
                   data.d[0][1]
@@ -488,7 +588,7 @@ define(
                );
             });
             it('should move Сидоров instead Иванов', function () {
-               adapterInstance.move(data, 2, 0);
+               adapterInstance.move(2, 0);
                assert.strictEqual(
                   'Сидоров',
                   data.d[0][1]
@@ -503,7 +603,7 @@ define(
                );
             });
             it('should move Петров to the end', function () {
-               adapterInstance.move(data, 1, 6);
+               adapterInstance.move(1, 6);
                assert.strictEqual(
                   'Петров',
                   data.d[6][1]
@@ -531,7 +631,7 @@ define(
                ]
             };
 
-            adapterInstance = new SbisAdapter().forRecord();
+            adapterInstance = new SbisAdapter().forRecord(data);
          });
 
          afterEach(function () {
@@ -543,36 +643,36 @@ define(
             it('should return the property value', function () {
                assert.strictEqual(
                   1,
-                  adapterInstance.get(data, 'Ид')
+                  adapterInstance.get('Ид')
                );
                assert.strictEqual(
                   'Иванов',
-                  adapterInstance.get(data, 'Фамилия')
+                  adapterInstance.get('Фамилия')
                );
                assert.isUndefined(
-                  adapterInstance.get(data, 'Должность')
-               );
-               assert.isUndefined(
-                  adapterInstance.get({}, 'Должность')
-               );
-               assert.isUndefined(
-                  adapterInstance.get(data)
-               );
-               assert.isUndefined(
-                  adapterInstance.get('')
-               );
-               assert.isUndefined(
-                  adapterInstance.get(0)
+                  adapterInstance.get('Должность')
                );
                assert.isUndefined(
                   adapterInstance.get()
+               );
+               assert.isUndefined(
+                  new SbisAdapter().forRecord({}).get('Должность')
+               );
+               assert.isUndefined(
+                  new SbisAdapter().forRecord('').get()
+               );
+               assert.isUndefined(
+                  new SbisAdapter().forRecord(0).get()
+               );
+               assert.isUndefined(
+                  new SbisAdapter().forRecord().get()
                );
             });
          });
 
          describe('.set()', function () {
             it('should set the property value', function () {
-               adapterInstance.set(data, 'Ид', 20);
+               adapterInstance.set('Ид', 20);
                assert.strictEqual(
                   20,
                   data.d[0]
@@ -581,22 +681,22 @@ define(
 
             it('should throw an error on undefined property', function () {
                assert.throw(function () {
-                  adapterInstance.set(data, 'а', 5);
+                  adapterInstance.set('а', 5);
                });
                assert.throw(function () {
-                  adapterInstance.set(data, 'б');
+                  adapterInstance.set('б');
                });
             });
 
             it('should throw an error on invalid data', function () {
                assert.throw(function () {
-                  adapterInstance.set('');
+                  new SbisAdapter().forRecord('').set();
                });
                assert.throw(function () {
-                  adapterInstance.set(0);
+                  new SbisAdapter().forRecord(0).set(0);
                });
                assert.throw(function () {
-                  adapterInstance.set();
+                  new SbisAdapter().forRecord().set();
                });
             });
          });

@@ -7,7 +7,7 @@ define([
    ], function (Model, JsonAdapter, SbisAdapter, MemorySource) {
       'use strict';
       describe('SBIS3.CONTROLS.Data.Model', function () {
-         var adapter, model, modelData, modelProperties, source;
+         var adapter, model, modelData, modelProperties, source, sqMaxVal;
          beforeEach(function () {
             adapter = new JsonAdapter();
             modelData = {
@@ -18,8 +18,10 @@ define([
                title: 'A',
                id: 1
             },
+            sqMaxVal = 33,
             modelProperties = {
                calc: {
+                  def: 1,
                   get: function (value) {
                      return 10 * value;
                   },
@@ -28,21 +30,27 @@ define([
                   }
                },
                calcRead: {
+                  def: 2,
                   get: function(value) {
                      return 10 * value;
                   }
                },
                calcWrite: {
+                  def: 3,
                   set: function(value) {
                      return value / 10;
                   }
                },
                title: {
+                  def: 4,
                   get: function(value) {
                      return value + ' B';
                   }
                },
                sqMax: {
+                  def: function() {
+                     return sqMaxVal++;
+                  },
                   get: function () {
                      return this.get('max') * this.get('max');
                   }
@@ -50,7 +58,7 @@ define([
             },
             model = new Model({
                idProperty: 'id',
-               data: modelData,
+               rawData: modelData,
                properties: modelProperties,
                adapter: adapter
             }),
@@ -63,6 +71,7 @@ define([
                ]
             });
          });
+
          describe('.get()', function () {
             it('should return a data value', function () {
                assert.strictEqual(model.get('max'), modelData.max);
@@ -75,6 +84,7 @@ define([
                assert.strictEqual(model.get('sqMax'), modelData.max * modelData.max);
             });
          });
+
          describe('.set()', function () {
             it('should set value', function () {
                model.set('max', 13);
@@ -104,6 +114,7 @@ define([
                assert.strictEqual(model.get('title'), 'test B');
             });
          });
+
          describe('.has()', function () {
             it('should return true for raw-defined property', function () {
                for (var key in modelData) {
@@ -123,6 +134,23 @@ define([
                assert.isFalse(model.has('blah'));
             });
          });
+
+         describe('.getDefault()', function () {
+            it('should return undefined for undefined property', function () {
+               assert.strictEqual(model.getDefault('max'), undefined);
+            });
+            it('should return defined value', function () {
+               assert.strictEqual(model.getDefault('calc'), 1);
+               assert.strictEqual(model.getDefault('calcRead'), 2);
+               assert.strictEqual(model.getDefault('calcWrite'), 3);
+               assert.strictEqual(model.getDefault('title'), 4);
+            });
+            it('should return function result', function () {
+               assert.strictEqual(model.getDefault('sqMax'), 33);
+               assert.strictEqual(model.getDefault('sqMax'), 33);
+            });
+         });
+
          describe('.each()', function () {
             it('should return equivalent values', function () {
                model.each(function(name, value) {
@@ -160,6 +188,7 @@ define([
                assert.strictEqual(allProps.length, count);
             });
          });
+
          describe('.getProperties()', function () {
             it('should return a model properties', function () {
                for (var name in modelProperties) {
@@ -169,36 +198,41 @@ define([
                }
             });
          });
+
          describe('.getRawData()', function () {
             it('should return a model data', function () {
                assert.deepEqual(modelData, model.getRawData());
             });
          });
+
          describe('.setRawData()', function () {
             it('should set data', function () {
                var newModel = new Model({
                   idProperty: 'id',
-                  data: {}
+                  rawData: {}
                });
                newModel.setRawData(modelData);
                assert.strictEqual(newModel.getId(), modelData['id']);
             });
          });
+
          describe('.getAdapter()', function () {
             it('should return an adapter', function () {
                assert.deepEqual(model.getAdapter(), adapter);
             });
          });
+
          describe('.setAdapter()', function () {
             it('should set adapter', function () {
                var myModel = new Model({
                   idProperty: 'id',
-                  data: modelData
+                  rawData: modelData
                });
                myModel.setAdapter(adapter);
                assert.deepEqual(myModel.getAdapter(), adapter);
             });
          });
+
          describe('.getId()', function () {
             it('should return id', function () {
                assert.strictEqual(model.getId(), modelData['id']);
@@ -217,7 +251,7 @@ define([
                         {n: 'Name'}]
                   },
                   model = new Model({
-                     data: data,
+                     rawData: data,
                      adapter: new SbisAdapter()
                   });
                assert.strictEqual(model.getId(), data.d[1]);
@@ -225,41 +259,105 @@ define([
 
             it('should throw error for empty key property', function () {
                var newModel = new Model({
-                  data: modelData
+                  rawData: modelData
                });
                assert.throw(function () {
                   newModel.getId();
                });
             });
          });
+
          describe('.getIdProperty()', function () {
             it('should return id property', function () {
                assert.strictEqual(model.getIdProperty(), 'id');
             });
          });
+
          describe('.setIdProperty()', function () {
             it('should set id property', function () {
                var newModel = new Model({
-                  data: modelData
+                  rawData: modelData
                });
                newModel.setIdProperty('id');
                assert.strictEqual(newModel.getId(), modelData['id']);
             });
          });
-         describe('.clone()', function () {
-            it('should clone a model', function () {
-               var clone = model.clone();
-               assert.deepEqual(clone, model);
-               clone.set('max', 1);
-               assert.notEqual(clone.get('max'), model.get('max'));
-            });
 
+         describe('.clone()', function () {
+            it('should not be same as original', function () {
+               assert.notEqual(model.clone(), model);
+            });
+            it('should not be same as previous clone', function () {
+               assert.notEqual(model.clone(), model.clone());
+            });
+            it('should clone rawData', function () {
+               var clone = model.clone();
+               assert.notEqual(model.getRawData(), clone.getRawData());
+               assert.deepEqual(model.getRawData(), clone.getRawData());
+            });
+            it('should clone properties defintion', function () {
+               var clone = model.clone();
+               assert.notEqual(model.getProperties(), clone.getProperties());
+               assert.deepEqual(model.getProperties(), clone.getProperties());
+            });
+            it('should clone state markers', function () {
+               var cloneA = model.clone();
+               assert.strictEqual(model.isDeleted(), cloneA.isDeleted());
+               assert.strictEqual(model.isChanged(), cloneA.isChanged());
+               assert.strictEqual(model.isStored(), cloneA.isStored());
+
+               model._isDeleted = true;
+               model.set('a', 1);
+               model.setStored(true);
+               var cloneB = model.clone();
+               assert.strictEqual(model.isDeleted(), cloneB.isDeleted());
+               assert.strictEqual(model.isChanged(), cloneB.isChanged());
+               assert.strictEqual(model.isStored(), cloneB.isStored());
+            });
+            it('should clone id property', function () {
+               var clone = model.clone();
+               assert.strictEqual(model.getId(), clone.getId());
+               assert.strictEqual(model.getIdProperty(), clone.getIdProperty());
+            });
+            it('should give equal result of toObject', function () {
+               var clone = model.clone();
+               assert.notEqual(model.toObject(), clone.toObject());
+               assert.deepEqual(model.toObject(), clone.toObject());
+            });
+            it('should give equal fields', function () {
+               var clone = model.clone();
+               model.each(function(name, value) {
+                  assert.strictEqual(value, clone.get(name));
+               });
+               clone.each(function(name, value) {
+                  assert.strictEqual(value, model.get(name));
+               });
+            });
+            it('should make data unlinked from original', function () {
+               var cloneA = model.clone();
+               assert.equal(cloneA.get('max'), model.get('max'));
+               cloneA.set('max', 1);
+               assert.notEqual(cloneA.get('max'), model.get('max'));
+
+               var cloneB = model.clone();
+               assert.equal(cloneB.get('max'), model.get('max'));
+               model.set('max', 12);
+               assert.notEqual(cloneB.get('max'), model.get('max'));
+            });
+            it('should make data unlinked between several clones', function () {
+               var cloneA = model.clone();
+               var cloneB = model.clone();
+               assert.equal(cloneA.get('max'), cloneB.get('max'));
+               cloneA.set('max', 1);
+               assert.notEqual(cloneA.get('max'), cloneB.get('max'));
+            });
          });
+
          describe('.merge()', function () {
             it('should merge models', function () {
                var newModel = new Model({
                   idProperty: 'id',
-                  data: {
+                  rawData: {
                      'title': 'new',
                      'link': '123'
                   }
@@ -280,7 +378,7 @@ define([
                         {n: 'etc'}]
                   },
                   anotherModel = new Model({
-                     data: data,
+                     rawData: data,
                      adapter: new SbisAdapter()
                   });
                model.merge(anotherModel);
@@ -297,7 +395,7 @@ define([
             it('should stay unchanged with same donor', function () {
                assert.isFalse(model.isChanged());
                var anotherModel = new Model({
-                  data: {
+                  rawData: {
                      max: modelData.max
                   }
                });
@@ -308,7 +406,7 @@ define([
                model.set('max', 2);
                assert.isTrue(model.isChanged());
                var anotherModel = new Model({
-                  data: {
+                  rawData: {
                      max: 157
                   }
                });
@@ -318,7 +416,7 @@ define([
             it('should become changed with different donor', function () {
                assert.isFalse(model.isChanged());
                var anotherModel = new Model({
-                  data: {
+                  rawData: {
                      max: 157
                   }
                });
@@ -352,12 +450,13 @@ define([
                assert.isTrue(model.isDeleted());
             });
          });
+
          describe('.toJSON()', function () {
             it('should serialize a model', function () {
                var json = model.toJSON();
                assert.strictEqual(json.module, 'SBIS3.CONTROLS.Data.Model');
-               assert.isNumber(json.instance);
-               assert.isTrue(json.instance > 0);
+               assert.isNumber(json.id);
+               assert.isTrue(json.id > 0);
                assert.deepEqual(json.state._options, model._options);
                assert.strictEqual(json.state._hash, model.getHash());
                assert.strictEqual(json.state._isStored, model.isStored());

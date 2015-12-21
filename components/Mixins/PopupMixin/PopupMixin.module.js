@@ -130,7 +130,7 @@ define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManag
          container.addClass('ws-hidden');
          this._isVisible = false;
          /********************************/
-         
+
          this._initOppositeCorners();
          //При ресайзе расчитываем размеры
          $ws.single.EventBus.channel('WindowChangeChannel').subscribe('onWindowResize', this._windowChangeHandler, this);
@@ -144,23 +144,8 @@ define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManag
          else if (this._options.closeByExternalClick) {
             $ws.single.EventBus.channel('WindowChangeChannel').subscribe('onDocumentClick', this._clickHandler, this);
          }
-         
-         var trg = $ws.helpers.trackElement(this._options.target, true);
-         //перемещаем вслед за таргетом
-         trg.subscribe('onMove', function () {
-            if (self.isVisible()) {
-               self.recalcPosition();
-               self._checkTargetPosition();
-            } else {
-               self._initSizes();
-            }
-         });
-         //скрываем если таргет скрылся
-         trg.subscribe('onVisible', function (event, visible) {
-            if (!visible){
-              self.hide();
-            }
-         });
+
+         this._subscribeTargetMove();
 
          if (this._options.closeButton) {
             container.append('<div class="controls-PopupMixin__closeButton" ></div>');
@@ -172,6 +157,34 @@ define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManag
          this._defaultCorner = this._options.corner;
          this._defaultVerticalAlignSide = this._options.verticalAlign.side;
          this._defaultHorizontalAlignSide = this._options.horizontalAlign.side;
+      },
+      
+      //Подписка на изменение состояния таргета
+      _subscribeTargetMove: function(){
+         if (this._targetChanges){
+            this._targetChanges.unsubscribe('onMove', this._onTargetMove);
+            this._targetChanges.unsubscribe('onVisible', this._onTargetChangeVisibility);
+         }
+         this._targetChanges = $ws.helpers.trackElement(this._options.target, true);
+         //перемещаем вслед за таргетом
+         this._targetChanges.subscribe('onMove', this._onTargetMove, this);
+         //скрываем если таргет скрылся
+         this._targetChanges.subscribe('onVisible', this._onTargetChangeVisibility, this);
+      },
+
+      _onTargetMove: function(){
+         if (this.isVisible()) {
+            this.recalcPosition();
+            this._checkTargetPosition();
+         } else {
+            this._initSizes();
+         }
+      },
+
+      _onTargetChangeVisibility: function(event, visible){
+         if (!visible){
+           this.hide();
+         }   
       },
 
       /**
@@ -188,7 +201,7 @@ define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManag
             if (recalcFlag) {
                this._initOrigins = true;
             }
-            this._initSizes();            
+            this._initSizes();
             if (this._options.target) {
                var offset = {
                      top: this._targetSizes.offset.top,
@@ -230,6 +243,7 @@ define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManag
        */
       setTarget: function (target) {
          this._options.target = target;
+         this._subscribeTargetMove();
          this.recalcPosition(true);
       },
 
@@ -715,15 +729,18 @@ define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManag
 
       //TODO Передалать на зависимость только от опций
       _notifyOnAlignmentChange: function () {
-         var newAlignment;
-         if (this._options.verticalAlign.side != this._currentAlignment.verticalAlign.side ||
-             this._options.horizontalAlign.side != this._currentAlignment.horizontalAlign.side ||
-             this._options.corner != this._currentAlignment.corner) {
+         var isVerAlignChanged = this._defaultVerticalAlignSide != this._currentAlignment.verticalAlign.side,
+             isHorAlignChanged = this._defaultHorizontalAlignSide != this._currentAlignment.horizontalAlign.side,
+             newAlignment;
+
+         if (isVerAlignChanged || isHorAlignChanged || this._options.corner != this._currentAlignment.corner) {
             newAlignment = {
                verticalAlign: this._options.verticalAlign,
                horizontalAlign: this._options.horizontalAlign,
                corner: this._options.corner
             };
+            this._container.toggleClass('controls-popup-revert-horizontal', isHorAlignChanged)
+                           .toggleClass('controls-popup-revert-vertical', isVerAlignChanged);
             this._notify('onAlignmentChange', newAlignment);
          }
       },
@@ -797,9 +814,12 @@ define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManag
 
       around: {
          hide: function (parentHide) {
-            var
-               self = this,
-               result = this._notify('onClose');
+            /* Если кто-то позвал hide, а контрол уже скрыт, то не будет запускать цепочку кода,
+               могут валиться ошибки */
+            if(!this.isVisible()) return;
+
+            var self = this,
+                result = this._notify('onClose');
             if (result instanceof $ws.proto.Deferred) {
                result.addCallback(function (res) {
                   if (res !== false) {

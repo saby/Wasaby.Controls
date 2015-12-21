@@ -24,6 +24,8 @@ define('js!SBIS3.CONTROLS.Data.Source.Base', [
       _moduleName: 'SBIS3.CONTROLS.Data.Source.Base',
 
       $constructor: function (cfg) {
+         cfg = cfg || {};
+
          this._publish('onDataSync');
          this._options.model = 'model' in cfg ? cfg.model : Model;
       },
@@ -62,6 +64,9 @@ define('js!SBIS3.CONTROLS.Data.Source.Base', [
          this._options.idProperty = name;
       },
 
+      getResource: function () {
+         return this._options.resource;
+      },
       //endregion SBIS3.CONTROLS.Data.Source.ISource
 
       //region Protected methods
@@ -73,7 +78,7 @@ define('js!SBIS3.CONTROLS.Data.Source.Base', [
        */
       _detectIdProperty: function(data) {
          if (!this._options.idProperty) {
-            this._options.idProperty = this.getAdapter().getKeyField(data);
+            this._options.idProperty = this.getAdapter().forRecord(data).getKeyField();
          }
       },
 
@@ -87,7 +92,7 @@ define('js!SBIS3.CONTROLS.Data.Source.Base', [
          this._detectIdProperty(data);
 
          return new this._options.model({
-            data: data,
+            rawData: data,
             source: this,
             idProperty: this._options.idProperty
          });
@@ -101,12 +106,12 @@ define('js!SBIS3.CONTROLS.Data.Source.Base', [
        * @private
        */
       _each: function (data, callback, context) {
-         var tableAdapter = this._options.adapter.forTable(),
+         var tableAdapter = this._options.adapter.forTable(data),
             index,
             count;
 
-         for (index = 0, count = tableAdapter.getCount(data); index < count; index++) {
-            callback.call(context || this, tableAdapter.at(data, index), index);
+         for (index = 0, count = tableAdapter.getCount(); index < count; index++) {
+            callback.call(context || this, tableAdapter.at(index), index);
          }
       },
 

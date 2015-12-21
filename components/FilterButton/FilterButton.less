@@ -1,5 +1,6 @@
 .controls-FloatArea {
    &.controls__filterButton__picker {
+      height: @controls-filterButton-picker-height;
       background: @controls-filterButton-picker-bg;
       border-color: @controls-filterButton-picker-border-color;
       border-style: @controls-filterButton-picker-border-style;
@@ -33,10 +34,130 @@
             margin: @controls-filterButton-clearButton-margin;
          }
       }
+
+      /* Стилик для кнопки раскрытия списка в кнопке фильтров */
+      .controls-filterButton__toggleButton {
+         border: @controls-filterButton-toggleButton-border;
+         background-color: @controls-filterButton-toggleButton-bgColor;
+
+         &.ws-enabled {
+            &:hover {
+               .controls-Button__text {
+                  color: @primary-color;
+               }
+
+               .controls-filterButton__toggleButton-icon {
+                  border-color: @primary-color;
+                  color: @primary-color;
+               }
+            }
+         }
+
+         .controls-Button__text {
+            font-size: @controls-filterButton-toggleButton-fontSize;
+            color: @controls-filterButton-toggleButton-text-color;
+         }
+
+         .controls-filterButton__toggleButton-icon {
+            top: @controls-filterButton-toggleButton-icon-top;
+            font-style: @controls-filterButton-toggleButton-icon-style;
+            font-size: @controls-filterButton-toggleButton-icon-size;
+            .border-radius(@controls-filterButton-toggleButton-icon-radius);
+            border: @controls-filterButton-toggleButton-icon-border;
+            background-color: @controls-filterButton-toggleButton-icon-bgColor;
+            width: @controls-filterButton-toggleButton-icon-width;
+            height: @controls-filterButton-toggleButton-icon-height;
+
+            &:before {
+               content: @controls-filterButton-toggleButton-icon-up;
+            }
+         }
+
+         &.controls-Checked__checked {
+            .controls-filterButton__toggleButton-icon {
+               &:before {
+                  content: @controls-filterButton-toggleButton-icon-down;
+               }
+            }
+         }
+
+         .controls-Button__icon + .controls-Button__text {
+            margin-right: @controls-filterButton-toggleButton-text-marginR;
+            margin-left: @controls-filterButton-toggleButton-text-marginL;
+         }
+
+         .controls-Button__icon {
+            left: @controls-filterButton-toggleButton-icon-left;
+            right: @controls-filterButton-toggleButton-icon-right;
+         }
+      }
+
+      .controls__filterButton__area-footer {
+
+         .controls-filterButton__history-area {
+            padding: @controls-filterButton-history-area-padding;
+
+            .controls-filterButton__toggleButton {
+               margin-left: @controls-filterButton-history-tButton-margin;
+            }
+            .controls-filterButton__historyView-wrapper {
+               padding-top: @controls-filterButton-history-wrapper-padding;
+               overflow: @controls-filterButton-history-maxHeight-overflow;
+
+               &.controls-filterButton__historyView-maxHeight {
+                  max-height: @controls-filterButton-history-maxHeight-height;
+                  padding-bottom: @controls-filterButton-history-maxHeight-padding;
+               }
+            }
+
+            .controls-filterButton__historyView {
+
+               .controls-ItemActions {
+                  right: @controls-filterButton-history-actions-right;
+                  left: @controls-filterButton-history-actions-left;
+                  margin-top: @controls-filterButton-history-actions-margin;
+               }
+
+               .controls-filterButton__historyView-item {
+                  cursor: @link-cursor;
+                  min-height: @controls-filterButton-history-item-min-height;
+
+                  .controls-filterButton__historyView-pin {
+                     float: @controls-filterButton-history-pin-float;
+                     position: @controls-filterButton-history-pin-position;
+                     top: @controls-filterButton-history-pin-top;
+                  }
+
+                  .controls-filterButton__historyView-titleContainer {
+                     position: @controls-filterButton-history-titleCont-position;
+                     right: @controls-filterButton-history-titleCont-right;
+                     left: @controls-filterButton-history-titleCont-left;
+
+                     .controls-filterButton__historyView-item-title {
+                        display: @controls-filterButton-history-title-display;
+                        .text-overflow();
+                        max-height: @controls-filterButton-history-title-height;
+                        vertical-align: @controls-filterButton-history-title-verAlign;
+                        color: @controls-filterButton-history-title-color;
+                        width: @controls-filterButton-history-title-width;
+                     }
+                  }
+                  &.controls-ListView__hoveredItem {
+                     background-color: transparent !important;
+
+                     .controls-filterButton__historyView-item-title {
+                        color: @link-hover-text-color;
+                     }
+                  }
+               }
+            }
+         }
+      }
    }
 
    .controls__filterButton__area-content {
       padding: @controls-filterButton-area-content-padding;
+      overflow: hidden;
    }
 }
 
@@ -44,46 +165,85 @@
    height: @controls-filterButton-height;
    display: inline-block;
 
+   @-moz-document url-prefix() {
+      .controls__filterButton__filterLine {
+         margin: 8px 32px 8px 0;
+      }
+   }
+
+
    .controls__filterButton__filterLine {
-      display: inline-block;
       height: @controls-filterButton-button-height;
-      padding: 8px 8px 8px 0;
-      vertical-align: top;
-      text-align: center;
+      overflow: hidden;
+      margin: 8px 0 8px 0;
+      vertical-align: @controls-filterLine-align;
+      text-align: @controls-filterLine-text-align;
+
+      .controls__filterButton__filterLine-table {
+         display: @controls-filterLine-wrapper-display;
+         height: @controls-filterLine-wrapper-height;
+         float: left;
+
+         .controls__filterButton__filterLine-table-row {
+            display: @controls-filterLine-line-display;
+         }
+      }
+      .controls__filterButton__filterLine-copyCross {
+         position: relative;
+         display: inline-block;
+         float: right;
+         top: @controls-filterLine-copyCross-top;
+         margin-left: @controls-filterLine-copyCross-margin;
+         background-color: @white-color;
+         .box-shadow(@controls-filterLine-copyCross-shadow);
+
+         span {
+            color: @controls-filterLine-link-color
+         }
+
+         .controls__filterButton__filterLine-cross {
+            display: inline-block;
+            top: @controls-filterLine-copyCross-cross-top;
+         }
+      }
    }
 
    .controls__filterButton__filterLine-items {
-      overflow: hidden;
-      text-overflow: ellipsis;
+      .text-overflow();
+      display: @controls-filterLine-items-display;
+      text-align: right;
       vertical-align: middle;
 
-      display: inline-block;
       cursor: pointer;
-      color: #0055bb;
+      color: @controls-filterLine-link-color;
       text-decoration: none;
-      text-align: center;
       line-height: normal;
-      padding: 0;
+      padding: @controls-filterLine-items-padding;
       box-sizing: border-box;
    }
 
    .controls__filterButton__filterLine-items:hover {
-      color: #ff7033;
+      color: @primary-color;
       text-decoration: underline;
+
+      .controls__filterButton__filterLine-arrow {
+         color: @primary-color !important;
+      }
    }
 
    .controls__filterButton__filterLine-cross {
-      width: 16px;
-      height: 16px;
-      display: inline-block;
-      vertical-align: bottom;
+      width: @controls-filterLine-cross-width;
+      height: @controls-filterLine-cross-height;
+      display: @controls-filterLine-items-display;
+      position: relative;
+      top: @controls-filterLine-cross-top;
       cursor: pointer;
-      background: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAQAAAC1+jfqAAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAAAgY0hSTQAAeiYAAICEAAD6AAAAgOgAAHUwAADqYAAAOpgAABdwnLpRPAAAAAJiS0dEAP+Hj8y/AAAACXBIWXMAAABIAAAASABGyWs+AAAAnElEQVQoz9WQMQ6CQBBFX2GI4QDcxp7CkI2lcxRrL0HPHRAbAiLZI1gRytWCwsbKsSDbrJQ2/mr+z0zy38A/SR4gawCJZxfoamXQCEAjGS/2a8FlTSsWQGzTusznKz8kZfJ6Hrjx3t83R+rFHmryKZ/ULJeMQWzVl73Y2YXXkQzVSY3uyrOvG2DWndsCOFN3C5haaOoxNdXidx/+AAnTQEYc86HTAAAAJXRFWHRkYXRlOmNyZWF0ZQAyMDE1LTA0LTEwVDEwOjM2OjQxKzAzOjAwZkUzPgAAACV0RVh0ZGF0ZTptb2RpZnkAMjAxNS0wNC0xMFQxMDozNjo0MSswMzowMBcYi4IAAAAASUVORK5CYII=');
    }
 
    .controls__filterButton__filterLine-arrow:before {
       line-height: normal;
-      vertical-align: sub;
+      position: relative;
+      top: @controls-filterLine-arrow-top;
    }
 
    .controls__filterButton-button {
@@ -93,6 +253,7 @@
       background: @controls-filterButton-button-image;
       display: inline-block;
       cursor: pointer;
+      float: right;
 
       &:hover {
          background-position: @controls-filterButton-button-image-hover

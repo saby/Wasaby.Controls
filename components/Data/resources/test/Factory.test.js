@@ -4,8 +4,9 @@ define([
    'js!SBIS3.CONTROLS.Data.Model',
    'js!SBIS3.CONTROLS.Data.Collection.List',
    'js!SBIS3.CONTROLS.Data.Source.DataSet',
-   'js!SBIS3.CONTROLS.Data.Factory'
-], function (AdapterSbis, Model, List, DataSet, Factory) {
+   'js!SBIS3.CONTROLS.Data.Factory',
+   'js!SBIS3.CONTROLS.Data.Types.Enum'
+], function (AdapterSbis, Model, List, DataSet, Factory, Enum) {
    'use strict';
 
    var dataScheme,
@@ -92,14 +93,14 @@ define([
       ];
       sbisModel = new Model({
          adapter: new AdapterSbis(),
-         data: {
+         rawData: {
             d: dataValues,
             s: dataScheme
          }
       });
       sbisModelEmpty = new Model({
          adapter: (new AdapterSbis()),
-         data: {
+         rawData: {
             d: dataEmpty,
             s: dataScheme
          }
@@ -116,8 +117,13 @@ define([
             assert.strictEqual(val, 'Строка');
 
          });
+         it('should not cast null to string', function () {
+            var val = sbisModelEmpty.get('title');
+            assert.strictEqual(val, null);
+
+         });
          it('should cast value to enum', function () {
-            assert.instanceOf(sbisModel.get('enum'), $ws.proto.Enum);
+            assert.instanceOf(sbisModel.get('enum'), Enum);
          });
          it('should cast value to model', function () {
             assert.instanceOf(sbisModel.get('record'), Model);
@@ -163,7 +169,7 @@ define([
          it('should cast undefined dateTime, date and time to undefined', function () {
             var model = new Model({
                adapter: new AdapterSbis(),
-               data: {
+               rawData: {
                   d: dataEmpty.map(function() {
                      return undefined;
                   }),
@@ -210,7 +216,7 @@ define([
          it('should serialize model', function () {
             var record = new Model({
                adapter: (new AdapterSbis()),
-               data: {d: [1], s: [{n: 'id', t: 'Число целое'}]}
+               rawData: {d: [1], s: [{n: 'id', t: 'Число целое'}]}
             });
             sbisModelEmpty.set('record', record);
             assert.deepEqual(getData(3), record.getRawData());
@@ -226,7 +232,7 @@ define([
             var list = sbisModel.get('recordSet');
             list.add(new Model({
                adapter: new AdapterSbis(),
-               data: {
+               rawData: {
                   d: [2],
                   s: [{n: 'id', t: 'Число целое'}]
                }
@@ -286,6 +292,18 @@ define([
             var date = new Date();
             sbisModelEmpty.set('identity', 1);
             assert.equal(getData(13), [1]);
+         });
+         it('should serialize flags', function () {
+            var d = [true, true, false],
+            testModel = new Model({
+               adapter: new AdapterSbis(),
+               rawData: {
+                  d: d,
+                  s: [{n: 'id', t: 'Логическое'},{n: 'id1', t: 'Логическое'},{n: 'id2', t: 'Логическое'}]
+               }
+            });
+            sbisModelEmpty.set('flags', testModel);
+            assert.deepEqual(getData(5), d);
          });
       });
    });

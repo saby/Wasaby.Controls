@@ -73,8 +73,14 @@ define('js!SBIS3.CONTROLS.Link', ['js!SBIS3.CONTROLS.ButtonBase', 'html!SBIS3.CO
 
       setCaption: function(caption){
          Link.superclass.setCaption.call(this, caption);
+         var $caption = $('.controls-Link__field', this._container);
          if (this._options.icon) {
-            $('.controls-Link__field', this._container).html(caption);
+            if ($caption.length){
+               $caption.html(caption);
+            } else {
+               $caption = $('<span class="controls-Link__field"></span>');
+               this._container.append($caption);
+            }
          } else {
             this._container.html(caption);
          }
@@ -88,7 +94,7 @@ define('js!SBIS3.CONTROLS.Link', ['js!SBIS3.CONTROLS.ButtonBase', 'html!SBIS3.CO
       _drawIcon: function(icon) {
          var content;
          if (icon) {
-            content = $('<i class="controls-Link__icon ' + this._iconClass + '" ></i><span class="controls-Link__field">' + this._options.caption + '</span>');
+            content = $('<i class="controls-Link__icon ' + this._iconClass + '" ></i><span class="controls-Link__field">' + (this._options.caption || '') + '</span>');
          } else {
             content = this._options.caption;
          }

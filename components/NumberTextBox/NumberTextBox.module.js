@@ -428,7 +428,7 @@ define('js!SBIS3.CONTROLS.NumberTextBox', ['js!SBIS3.CONTROLS.TextBox', 'html!SB
       },
 
       _keyUpBind: function(e){
-         NumberTextBox.superclass._keyUpBind.call(this);
+         NumberTextBox.superclass._keyUpBind.apply(this, arguments);
          if (e.which == 16){
             this._SHIFT_KEY = false;
          }

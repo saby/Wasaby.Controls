@@ -15,12 +15,13 @@ define('js!SBIS3.CONTROLS.ComponentBinder', [], function () {
                'usePages': 'full'
             }),
             view = this._options.view,
-            groupBy = view.getSearchGroupBy();
+            groupBy = view.getSearchGroupBy(searchParamName);
          if (searchCrumbsTpl) {
             groupBy.breadCrumbsTpl = searchCrumbsTpl;
          }
          filter[searchParamName] = text;
          view.setHighlightText(text, false);
+         view.setHighlightEnabled(true);
          view.setInfiniteScroll(true, true);
          view.setGroupBy(groupBy);
          if (this._firstSearch) {
@@ -54,6 +55,7 @@ define('js!SBIS3.CONTROLS.ComponentBinder', [], function () {
             });
          filter[searchParamName] = text;
          view.setHighlightText(text, false);
+         view.setHighlightEnabled(true);
          view.setInfiniteScroll(true, true);
          view.reload(filter, view._sorting, 0);
       }
@@ -65,6 +67,7 @@ define('js!SBIS3.CONTROLS.ComponentBinder', [], function () {
          filter = view.getFilter();
       delete (filter[searchParamName]);
       view.setHighlightText('', false);
+      view.setHighlightEnabled(false);
       view.reload(filter, view._sorting, 0);
    }
 
@@ -79,9 +82,10 @@ define('js!SBIS3.CONTROLS.ComponentBinder', [], function () {
          });
       delete (filter[searchParamName]);
 
-      view.setInfiniteScroll(false, true);
+      view.setInfiniteScroll(this._isInfiniteScroll, true);
       view.setGroupBy(this._lastGroup);
       view.setHighlightText('', false);
+      view.setHighlightEnabled(false);
       this._firstSearch = true;
       if (this._searchReload ) {
          //Нужно поменять фильтр и загрузить нужный корень.
@@ -135,7 +139,7 @@ define('js!SBIS3.CONTROLS.ComponentBinder', [], function () {
     * @extends $ws.proto.Abstract
     * @public
     */
-   var ComponentBinder = $ws.proto.Abstract.extend({
+   var ComponentBinder = $ws.proto.Abstract.extend(/**@lends SBIS3.CONTROLS.ComponentBinder.prototype*/{
       $protected : {
          _searchReload : true,
          _searchForm : undefined,
@@ -166,7 +170,11 @@ define('js!SBIS3.CONTROLS.ComponentBinder', [], function () {
             /**
              * @cfg {SBIS3.CONROLS.OperationsPanel} объект панели массовых операций
              */
-            operationPanel: undefined
+            operationPanel: undefined,
+            /**
+             * @cfg {SBIS3.CONROLS.FilterButton} объект кнопки фильтров
+             */
+            filterButton: undefined
          }
       },
 
@@ -178,7 +186,10 @@ define('js!SBIS3.CONTROLS.ComponentBinder', [], function () {
        * @param {SBIS3.CONROLS.SearchForm} [searchForm] объект формы поиска, если не передан используется тот, что задан в опциях
        * @example
        * <pre>
-       *     myBinder = new ComponentBinder();
+       *     myBinder = new ComponentBinder({
+       *        view: myGridView,
+       *        searchForm: mySearchForm
+       *     });
        *     myBinder.bindSearchGrid('СтрокаПоиска');
        * </pre>
        */
@@ -191,6 +202,7 @@ define('js!SBIS3.CONTROLS.ComponentBinder', [], function () {
             this._lastRoot = view.getCurrentRoot();
             //searchForm.subscribe('onReset', resetGroup);
             view.subscribe('onSetRoot', function(){
+               self._lastRoot = view.getCurrentRoot();
                if (self._options.backButton) {
                   self._options.backButton.getContainer().css({'visibility': 'visible'});
                }
@@ -202,6 +214,7 @@ define('js!SBIS3.CONTROLS.ComponentBinder', [], function () {
          }
 
          this._lastGroup = view._options.groupBy;
+         this._isInfiniteScroll = view.isInfiniteScroll();
          searchForm.subscribe('onTextChange', function(event, text){
             var checkedText = isSearchValid(text, 3);
             if (checkedText[1]) {
@@ -220,7 +233,7 @@ define('js!SBIS3.CONTROLS.ComponentBinder', [], function () {
                }
             }
          });
-         
+
          searchForm.subscribe('onSearchStart', function(event, text) {
             var checkedText = isSearchValid(text, 1);
             if (checkedText[1]) {
@@ -289,7 +302,7 @@ define('js!SBIS3.CONTROLS.ComponentBinder', [], function () {
 
          view.subscribe('onSetRoot', function(event, id, hier){
             var i;
-            /* 
+            /*
              TODO: Хак для того перерисовки хлебных крошек при переносе из папки в папку
              Проверить совпадение родительского id и текущего единственный способ понять,
              что в папку не провалились, а попали через перенос.
@@ -359,7 +372,10 @@ define('js!SBIS3.CONTROLS.ComponentBinder', [], function () {
        * в представлении данных вместе с панелью или нет.
        * @example
        * <pre>
-       *     myBinder = new ComponentBinder();
+       *     myBinder = new ComponentBinder({
+       *        view: myGridView,
+       *        operationPanel: myOperationPanel
+       *     });
        *     myBinder.bindOperationPanel(true);
        * </pre>
        */
@@ -376,6 +392,27 @@ define('js!SBIS3.CONTROLS.ComponentBinder', [], function () {
          operationPanel.subscribe('onToggle', function() {
             toggleCheckBoxes(operationPanel, view, hideCheckBoxes);
          });
+      },
+      /**
+       * Метод для связывания истории фильтров с представлением данных
+       */
+      bindFilterHistory: function(filterButton, historyId, controller, browser) {
+	      var view = this._options.view,
+		      historyController = new controller({
+			      historyId: historyId,
+			      view: view
+		      });
+
+	      filterButton.setHistoryController(historyController);
+	      historyController.getHistory(true).addCallback(function() {
+		      var filter = historyController.getActiveFilter();
+
+		      if(filter) {
+			      filterButton._updateFilterStructure(filter.filter);
+			      view.setFilter($ws.core.merge(view.getFilter(), filter.viewFilter), true);
+		      }
+		      browser._notifyOnFiltersReady();
+	      })
       }
    });
 

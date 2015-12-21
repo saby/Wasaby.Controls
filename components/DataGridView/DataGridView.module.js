@@ -70,6 +70,13 @@ define('js!SBIS3.CONTROLS.DataGridView',
              * @property {String} headTooltip Всплывающая подсказка шапки колонки
              * @property {String} cellTemplate Шаблон отображения ячейки
              * Необходимо указать настройки декораторов разметки, если требуется
+             * Пример
+             * <pre>
+             *    {{=it.decorators.applyIf(it.value, {
+             *      highlight: it.highlight,
+             *      ladder: it.field
+             *    })}}
+             * </pre>
              * @property {Object.<String,String>} templateBinding соответствие опций шаблона полям в рекорде
              * @property {Object.<String,String>} includedTemplates подключаемые внешние шаблоны, ключу соответствует поле it.included.<...> которое будет функцией в шаблоне ячейки
              */
@@ -128,56 +135,16 @@ define('js!SBIS3.CONTROLS.DataGridView',
                color: this._options.colorField ? item.get(this._options.colorField) : '',
                multiselect : this._options.multiselect,
                isNode: item.get(this._options.hierField + '@'),
+               hasChilds: item.get(this._options.hierField + '$'),
                arrowActivatedHandler: this._options.arrowActivatedHandler,
                hierField: this._options.hierField,
+               displayType: this._options.displayType,
                startScrollColumn: this._options.startScrollColumn
             };
 
             for (var i = 0; i < rowData.columns.length; i++) {
-               var column = rowData.columns[i],
-                   value = item.get(column.field);
-               if (column.cellTemplate) {
-                  var cellTpl;
-                  if ((typeof column.cellTemplate == 'string') && (column.cellTemplate.indexOf('html!') == 0)) {
-                     cellTpl = require(column.cellTemplate);
-                  }
-                  else {
-                     cellTpl = doT.template(column.cellTemplate);
-                  }
-                  var tplOptions = {
-                     item: item,
-                     hierField: this._options.hierField,
-                     isNode: item.get(rowData.hierField + '@'),
-                     decorators: this._decorators,
-                     field: column.field,
-                     value: value,
-                     highlight: column.highlight
-                  };
-                  if (column.templateBinding) {
-                     tplOptions.templateBinding = column.templateBinding;
-                  }
-                  if (column.includedTemplates) {
-                     var tpls = column.includedTemplates;
-                     tplOptions.included = {};
-                     for (var j in tpls) {
-                        if (tpls.hasOwnProperty(j)) {
-                           tplOptions.included[j] = require(tpls[j]);
-                        }
-                     }
-                  }
-                  value = MarkupTransformer((cellTpl)(tplOptions));
-               } else {
-                  value = this._decorators.applyIf(
-                     value === undefined || value === null ? '' : $ws.helpers.escapeHtml(value), {
-                        highlight: column.highlight,
-                        ladder: {
-                           column: column.field,
-                           parentId: item.get(this._options.hierField)
-                        }
-                     }
-                  );
-               }
-               column.value = value;
+               var column = rowData.columns[i];
+               column.value = this._getCellTemplate(item, column);
                column.item = item;
             }
             return this._rowTpl(rowData);
@@ -185,6 +152,52 @@ define('js!SBIS3.CONTROLS.DataGridView',
          else {
             return this._options.itemTemplate(item);
          }
+      },
+
+      _getCellTemplate: function(item, column) {
+         var value = item.get(column.field);
+         if (column.cellTemplate) {
+            var cellTpl;
+            if ((typeof column.cellTemplate == 'string') && (column.cellTemplate.indexOf('html!') == 0)) {
+               cellTpl = require(column.cellTemplate);
+            }
+            else {
+               cellTpl = doT.template(column.cellTemplate);
+            }
+            var tplOptions = {
+               item: item,
+               hierField: this._options.hierField,
+               isNode: item.get(this._options.hierField + '@'),
+               decorators: this._decorators,
+               field: column.field,
+               value: value,
+               highlight: column.highlight
+            };
+            if (column.templateBinding) {
+               tplOptions.templateBinding = column.templateBinding;
+            }
+            if (column.includedTemplates) {
+               var tpls = column.includedTemplates;
+               tplOptions.included = {};
+               for (var j in tpls) {
+                  if (tpls.hasOwnProperty(j)) {
+                     tplOptions.included[j] = require(tpls[j]);
+                  }
+               }
+            }
+            value = MarkupTransformer((cellTpl)(tplOptions));
+         } else {
+            value = this._decorators.applyIf(
+               value === undefined || value === null ? '' : $ws.helpers.escapeHtml(value), {
+                  highlight: column.highlight,
+                  ladder: {
+                     column: column.field,
+                     parentId: item.get(this._options.hierField)
+                  }
+               }
+            );
+         }
+         return value;
       },
 
       _drawItemsCallback: function () {
@@ -225,6 +238,13 @@ define('js!SBIS3.CONTROLS.DataGridView',
          if (!this.isNowScrollingPartScroll()) {
             DataGridView.superclass._updateEditInPlaceDisplay.apply(this, arguments);
          }
+      },
+      _getEditInPlaceConfig: function() {
+         return $ws.core.merge(DataGridView.superclass._getEditInPlaceConfig.apply(this, arguments), {
+            getCellTemplate: function(item, column) {
+               return this._getCellTemplate(item, column);
+            }.bind(this)
+         });
       },
       //********************************//
       // <editor-fold desc="PartScrollBlock">
@@ -592,7 +612,14 @@ define('js!SBIS3.CONTROLS.DataGridView',
                 column = rowData.columns[i];
 
             if (column.headTemplate) {
-               value = MarkupTransformer(doT.template(column.headTemplate)({
+               var headTpl;
+               if ((typeof column.headTemplate == 'string') && (column.headTemplate.indexOf('html!') == 0)) {
+                  headTpl = require(column.headTemplate);
+               }
+               else {
+                  headTpl = doT.template(column.headTemplate);
+               }
+               value = MarkupTransformer(headTpl({
                   column: column
                }));
             } else {

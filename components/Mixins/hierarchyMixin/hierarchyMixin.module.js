@@ -133,7 +133,12 @@ define('js!SBIS3.CONTROLS.hierarchyMixin', [], function () {
       setCurrentRoot: function(key) {
          var
             filter = this.getFilter() || {};
-         filter[this._options.hierField] = key;
+         if (key) {
+            filter[this._options.hierField] = key;
+         }
+         else {
+            delete(filter[this._options.hierField]);
+         }
          this.setFilter(filter, true);
          this._hier = this._getHierarchy(this._dataSet, key);
          //узел грузим с 0-ой страницы
@@ -143,23 +148,23 @@ define('js!SBIS3.CONTROLS.hierarchyMixin', [], function () {
          this._curRoot = key;
          this.setSelectedKey(null);
       },
-
-      //TODO:После каждого релоада проверяется флаг _rootChanged и если флаг взведен, 
-      //то запускается перерисовка хлебных крошек. Это сделано для того, что изначально 
-      //грид может открыться на какой то внутренней папке, где надо рисовать хлебные крошки 
-      //Избавиться от всего этого когда будут готовы биндинги
-      _dataLoadedCallback: function(){
-         var path = this._dataSet.getMetaData().path,
-            hierarchy = this._hier;
-         if (!hierarchy.length && path){
-            hierarchy = this._getHierarchy(path, this._curRoot);
-         }
-         if (this._rootChanged) {
-            this._notify('onSetRoot', this._curRoot, hierarchy);
-            this._rootChanged = false;
+      after : {
+         //TODO:После каждого релоада проверяется флаг _rootChanged и если флаг взведен,
+         //то запускается перерисовка хлебных крошек. Это сделано для того, что изначально
+         //грид может открыться на какой то внутренней папке, где надо рисовать хлебные крошки
+         //Избавиться от всего этого когда будут готовы биндинги
+         _dataLoadedCallback: function () {
+            var path = this._dataSet.getMetaData().path,
+                  hierarchy = this._hier;
+            if (!hierarchy.length && path) {
+               hierarchy = this._getHierarchy(path, this._curRoot);
+            }
+            if (this._rootChanged) {
+               this._notify('onSetRoot', this._curRoot, hierarchy);
+               this._rootChanged = false;
+            }
          }
       },
-
       _getHierarchy: function(dataSet, key){
          var record, parentKey,
             hierarchy = [];
