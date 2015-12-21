@@ -72,6 +72,26 @@ define([
             });
          });
 
+         describe('.$constructor()', function () {
+            it('should take limited time', function() {
+               console.time('BatchCreating');
+               for (var i = 0; i < 10000; i++) {
+                  var item = {};
+                  for (var j = 0; j < 200; j++) {
+                     item['f' + j] = j;
+                  }
+                  item.id = i;
+                  item.title = 'Item ' + i;
+
+                  var model = new Model({
+                     idProperty: 'id',
+                     rawData: item
+                  });
+               }
+               console.timeEnd('BatchCreating');
+            });
+         });
+
          describe('.get()', function () {
             it('should return a data value', function () {
                assert.strictEqual(model.get('max'), modelData.max);

@@ -93,6 +93,7 @@ define([
                   }));
 
                   list.unsubscribe('onCollectionChange', handler);
+                  list.destroy();
                });
             });
 
@@ -121,6 +122,7 @@ define([
                   }), true);
 
                   list.unsubscribe('onCollectionChange', handler);
+                  list.destroy();
                });
             });
          });
@@ -151,6 +153,7 @@ define([
                   }));
 
                   list.unsubscribe('onCollectionChange', handler);
+                  list.destroy();
                });
             });
 
@@ -176,6 +179,7 @@ define([
                   list.fill();
 
                   list.unsubscribe('onCollectionChange', handler);
+                  list.destroy();
                });
             });
          });
@@ -218,6 +222,7 @@ define([
                   list.add(addItem);
 
                   list.unsubscribe('onCollectionChange', handler);
+                  list.destroy();
                });
             });
 
@@ -255,6 +260,7 @@ define([
                   list.add(addItem, 0);
 
                   list.unsubscribe('onCollectionChange', handler);
+                  list.destroy();
                });
             });
 
@@ -298,6 +304,7 @@ define([
 
 
                   list.unsubscribe('onCollectionChange', handler);
+                  list.destroy();
                });
             });
 
@@ -330,6 +337,7 @@ define([
                list.subscribe('onCollectionItemChange', handler);
                addItem.set('test', 'ok');
                list.unsubscribe('onCollectionItemChange', handler);
+               list.destroy();
             });
 
 
@@ -373,6 +381,7 @@ define([
                list.removeAt(at);
 
                list.unsubscribe('onCollectionChange', handler);
+               list.destroy();
             });
 
             it("shouldn't trigger an event with change item",function(done){
@@ -392,6 +401,7 @@ define([
                list.subscribe('onCollectionChange', handler);
                addItem.set('test','ok');
                list.unsubscribe('onCollectionChange', handler);
+               list.destroy();
                done();
             });
          });
@@ -438,6 +448,7 @@ define([
                list.replace(newItem, at);
 
                list.unsubscribe('onCollectionChange', handler);
+               list.destroy();
             });
          });
       });
