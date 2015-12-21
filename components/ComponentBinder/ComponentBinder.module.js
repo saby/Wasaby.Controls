@@ -391,21 +391,22 @@ define('js!SBIS3.CONTROLS.ComponentBinder', [], function () {
        * Метод для связывания истории фильтров с представлением данных
        */
       bindFilterHistory: function(filterButton, historyId, controller, browser) {
-         var view = this._options.view,
-             historyController = new controller({
-                historyId: historyId
-             });
+	      var view = this._options.view,
+		      historyController = new controller({
+			      historyId: historyId,
+			      view: view
+		      });
 
-         filterButton.setHistoryController(historyController);
-         historyController.getHistory(true).addCallback(function() {
-            var filter = historyController.getActiveFilter();
+	      filterButton.setHistoryController(historyController);
+	      historyController.getHistory(true).addCallback(function() {
+		      var filter = historyController.getActiveFilter();
 
-            if(filter) {
-               filterButton.setFilterStructure(filter.filter);
-               view.setFilter($ws.core.merge(view.getFilter(), filterButton.getFilter()), true);
-            }
-            browser._notifyOnFiltersReady();
-         })
+		      if(filter) {
+			      filterButton._updateFilterStructure(filter.filter);
+			      view.setFilter($ws.core.merge(view.getFilter(), filter.viewFilter), true);
+		      }
+		      browser._notifyOnFiltersReady();
+	      })
       }
    });
 
