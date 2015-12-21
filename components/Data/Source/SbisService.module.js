@@ -274,7 +274,7 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
          for (providerName in groups) {
             if (groups.hasOwnProperty(providerName)) {
                pd.push(this._destroy(
-                  groups[providerName].length > 1 ? groups[providerName] : groups[providerName][0],
+                  groups[providerName],
                   providerName,
                   meta
                ));
