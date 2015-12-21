@@ -153,13 +153,6 @@ define(
                );
             });
          });
-
-         describe('.destroy()', function(){
-            it('should destroy without error', function() {
-               var adapterDestroyInstance = new JsonAdapter();
-               adapterDestroyInstance.destroy();
-            });
-         });
       });
 
       describe('SBIS3.CONTROLS.Data.Adapter.Json::forTable()', function () {
