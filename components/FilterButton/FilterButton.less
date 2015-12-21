@@ -165,6 +165,13 @@
    height: @controls-filterButton-height;
    display: inline-block;
 
+   @-moz-document url-prefix() {
+      .controls__filterButton__filterLine {
+         margin: 8px 32px 8px 0;
+      }
+   }
+
+
    .controls__filterButton__filterLine {
       height: @controls-filterButton-button-height;
       overflow: hidden;
@@ -174,6 +181,7 @@
 
       .controls__filterButton__filterLine-table {
          display: @controls-filterLine-wrapper-display;
+         height: @controls-filterLine-wrapper-height;
          float: left;
 
          .controls__filterButton__filterLine-table-row {
@@ -184,10 +192,10 @@
          position: relative;
          display: inline-block;
          float: right;
-         top: -18px;
-         margin-left: -30px;
-         background-color: #fff;
-         .box-shadow(-6px 2px 8px -2px #fff);
+         top: @controls-filterLine-copyCross-top;
+         margin-left: @controls-filterLine-copyCross-margin;
+         background-color: @white-color;
+         .box-shadow(@controls-filterLine-copyCross-shadow);
 
          span {
             color: @controls-filterLine-link-color
@@ -195,6 +203,7 @@
 
          .controls__filterButton__filterLine-cross {
             display: inline-block;
+            top: @controls-filterLine-copyCross-cross-top;
          }
       }
    }
