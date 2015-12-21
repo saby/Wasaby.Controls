@@ -48,7 +48,7 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                _eipHandlers: null
             },
             $constructor: function () {
-               this._publish('onItemValueChanged', 'onBeginEdit', 'onEndEdit', 'onBeginAdd');
+               this._publish('onItemValueChanged', 'onBeginEdit', 'onEndEdit', 'onBeginAdd', 'onAfterEndEdit');
                this._eipHandlers = {
                   onKeyDown: this._onKeyDown.bind(this)
                };
@@ -182,17 +182,20 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                return this._eip.isEdit() ? this._eip : null;
              },
             _endEdit: function(eip, saveFields) {
+               var
+                  eipRecord = eip.getEditingRecord();
                if (this._editingRecord) {
-                  this._editingRecord.merge(eip.getEditingRecord());
+                  this._editingRecord.merge(eipRecord);
                   this._editingRecord = undefined;
                }
                eip.hide();
-               if (!this._options.dataSet.getRecordByKey(eip.getEditingRecord().getKey())) {
-                  saveFields ? this._options.dataSet.push(eip.getEditingRecord()) : eip.getTarget().remove();
+               if (!this._options.dataSet.getRecordByKey(eipRecord.getKey())) {
+                  saveFields ? this._options.dataSet.push(eipRecord) : eip.getTarget().remove();
                }
                if (saveFields) {
                   this._options.dataSource.sync(this._options.dataSet);
                }
+               this._notify('onAfterEndEdit', this._options.dataSet.getRecordByKey(eipRecord.getKey()));
             },
             add: function() {
                var options,

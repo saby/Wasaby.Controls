@@ -159,6 +159,11 @@ define('js!SBIS3.CONTROLS.ListView',
           *    <li>* - продолжить редактирование в штатном режиме.</li>
           * </ol>
           */
+         /**
+          * @event onAfterEndEdit Возникает после окончания редактирования по месту
+          * @param {$ws.proto.EventObject} eventObject Дескриптор события.
+          * @param {Object} model Отредактированная модель
+          */
          $protected: {
             _floatCheckBox: null,
             _dotItemTpl: null,
@@ -374,7 +379,7 @@ define('js!SBIS3.CONTROLS.ListView',
          $constructor: function () {
             //TODO временно смотрим на TopParent, чтобы понять, где скролл. С внедрением ScrallWatcher этот функционал уберем
             var topParent = this.getTopParent();
-            this._publish('onChangeHoveredItem', 'onItemClick', 'onItemActivate', 'onDataMerge', 'onItemValueChanged', 'onShowEdit', 'onBeginEdit', 'onEndEdit', 'onBeginAdd');
+            this._publish('onChangeHoveredItem', 'onItemClick', 'onItemActivate', 'onDataMerge', 'onItemValueChanged', 'onShowEdit', 'onBeginEdit', 'onEndEdit', 'onBeginAdd', 'onAfterEndEdit');
             this._container.on('mousemove', this._mouseMoveHandler.bind(this))
                            .on('mouseleave', this._mouseLeaveHandler.bind(this));
 
@@ -838,6 +843,10 @@ define('js!SBIS3.CONTROLS.ListView',
                      }.bind(this),
                      onEndEdit: function(event, model) {
                         event.setResult(this._notify('onEndEdit', model));
+                     }.bind(this),
+                     onAfterEndEdit: function(event, model) {
+                        this._getItemsContainer().find('.js-controls-ListView__item[data-id="' + model.getKey() + '"]:not(".controls-editInPlace")').after(this._drawItem(model)).remove();
+                        event.setResult(this._notify('onAfterEndEdit', model));
                      }.bind(this)
                   }
                };
@@ -1235,21 +1244,6 @@ define('js!SBIS3.CONTROLS.ListView',
                if (!this._hasNextPage(this._dataSet.getMetaData().more)) {
                   this._hideLoadingIndicator();
                }
-            }
-            /*todo EIP Крайнов, Сухоручкин, Авраменко - данная логика должна выполнятся на уровне новых миксинов, т.к. запись может измениться не только из-за редактировании по месту */
-            function redrawRaw(record) {
-               this._getItemsContainer().find('.js-controls-ListView__item[data-id="' + record.getKey() + '"]:not(".controls-editInPlace")').after(this._drawItem(record)).remove();
-            }
-            this._dataSet.subscribe($ws.helpers.instanceOfMixin(this._dataSet, 'SBIS3.CONTROLS.Data.Bind.ICollection') ? 'onCollectionItemChange' : 'onRecordChange', function(event, record) {
-               redrawRaw.apply(this, [record]);
-            }.bind(this));
-            if ($ws.helpers.instanceOfMixin(this._dataSet, 'SBIS3.CONTROLS.Data.Bind.ICollection')) {
-               this._dataSet.subscribe('onCollectionChange', function (event, action, newItems) {
-                  /*todo Мальцев. Действия не вынесены в глобальные константы. Как понимать, какой действие произошло - не понятно.*/
-                  if (action === 'a') {
-                     redrawRaw.apply(this, newItems);
-                  }
-               }.bind(this));
             }
          },
          _toggleIndicator: function(show){
