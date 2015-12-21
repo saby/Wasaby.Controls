@@ -170,12 +170,12 @@ define('js!SBIS3.CONTROLS.FilterMixin', [
             context.setValueSelf(this._options.internalContextFilterName + '/filter', resetFilter);
          }
 
-         this._notify('onResetFilter');
-
          if (!internalOnly) {
             this._updateFilterStructure(undefined, resetFilter);
             this._notifyFilterUpdate();
          }
+
+	      this._notify('onResetFilter');
       }),
       _getCurrentContext : function(){
          /*Must be implemented!*/
