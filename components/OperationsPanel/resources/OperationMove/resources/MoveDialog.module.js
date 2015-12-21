@@ -34,7 +34,7 @@ define('js!SBIS3.CONTROLS.MoveDialog', [
          this._treeView = this.getChildControlByName('MoveDialogTemplate-TreeDataGridView')
             .subscribe('onDataLoad', this._onDataLoadHandler.bind(this));
          this._treeView.setHierField(linkedView._options.hierField);
-         this._treeView.setColumns([{ field: linkedView._options.displayField }]);
+         this._treeView.setColumns([{ field: linkedView._options.displayField, className: 'controls-DataGridView-cell-overflow-ellipsis' }]);
          this._treeView.subscribe('onDrawItems', function() {
             self._createRoot();
          });
