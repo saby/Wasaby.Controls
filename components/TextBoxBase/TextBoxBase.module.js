@@ -50,6 +50,11 @@ define('js!SBIS3.CONTROLS.TextBoxBase',
       $protected: {
          _options: {
             /**
+             * @cfg {Boolean} Отлавливать ли фокус (делать активным не только по событию click, но так же отслеживает focusin) на контроле
+             * @noShow
+             */
+            handleFocusCatch: true,
+            /**
              * @cfg {String} Текст в поле ввода
              * @example
              * <pre class="brush:xml">
