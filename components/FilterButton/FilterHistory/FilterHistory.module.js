@@ -74,10 +74,11 @@ define('js!SBIS3.CONTROLS.FilterHistory',
       _onApplyFilterHandler: function() {
          var structure = this._filterButton.getFilterStructure(),
              hc =  this._historyController,
-             linkTextArr = [];
+             linkTextArr = [],
+	          self = this;
 
          /* Если это дефолтный фильтр, то сохранять в историю не надо */
-         if(!this._filterButton.getLinkedContext().getValue('filterChanged')) {
+         if(this._isDefaultFilter()) {
             /* Если применили дефолтный фильтр, то надо сбросить текущий активный */
             hc.clearActiveFilter();
             return;
@@ -90,18 +91,29 @@ define('js!SBIS3.CONTROLS.FilterHistory',
             }
          }
 
-         hc.saveToHistory({
-            linkText: linkTextArr.join(', '),
-            filter: structure
-         });
+	      //FIXME Пока делаю через нулевой timeout, т.к. фильтр в браузер проставляется после синхронизации контекста, и до этого нам его не получить.
+	      setTimeout(function() {
+		      hc.saveToHistory({
+			      linkText: linkTextArr.join(', '),
+			      filter: structure
+		      });
 
-         this.updateHistoryViewItems();
-         this._toggleHistoryBlock(true);
+		      self.updateHistoryViewItems();
+		      self._toggleHistoryBlock(true);
+	      }, 0)
       },
 
       _onResetFilterHandler: function() {
-         this._historyController.clearActiveFilter();
+	      /* Очищаем активный фильтр, только если действительно сбросили фильтр,
+	         а не очистили внутренний контекст */
+	      if(this._isDefaultFilter()) {
+		      this._historyController.clearActiveFilter();
+	      }
       },
+
+	   _isDefaultFilter: function() {
+		   return !this._filterButton.getLinkedContext().getValue('filterChanged');
+	   },
 
       _initHistoryView: function() {
          var self = this;
