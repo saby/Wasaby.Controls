@@ -7,7 +7,7 @@ define([
    ], function (Model, JsonAdapter, SbisAdapter, MemorySource) {
       'use strict';
       describe('SBIS3.CONTROLS.Data.Model', function () {
-         var adapter, model, modelData, modelProperties, source;
+         var adapter, model, modelData, modelProperties, source, sqMaxVal;
          beforeEach(function () {
             adapter = new JsonAdapter();
             modelData = {
@@ -18,8 +18,10 @@ define([
                title: 'A',
                id: 1
             },
+            sqMaxVal = 33,
             modelProperties = {
                calc: {
+                  def: 1,
                   get: function (value) {
                      return 10 * value;
                   },
@@ -28,21 +30,27 @@ define([
                   }
                },
                calcRead: {
+                  def: 2,
                   get: function(value) {
                      return 10 * value;
                   }
                },
                calcWrite: {
+                  def: 3,
                   set: function(value) {
                      return value / 10;
                   }
                },
                title: {
+                  def: 4,
                   get: function(value) {
                      return value + ' B';
                   }
                },
                sqMax: {
+                  def: function() {
+                     return sqMaxVal++;
+                  },
                   get: function () {
                      return this.get('max') * this.get('max');
                   }
@@ -124,6 +132,22 @@ define([
             });
             it('should return false for undefined property', function () {
                assert.isFalse(model.has('blah'));
+            });
+         });
+
+         describe('.getDefault()', function () {
+            it('should return undefined for undefined property', function () {
+               assert.strictEqual(model.getDefault('max'), undefined);
+            });
+            it('should return defined value', function () {
+               assert.strictEqual(model.getDefault('calc'), 1);
+               assert.strictEqual(model.getDefault('calcRead'), 2);
+               assert.strictEqual(model.getDefault('calcWrite'), 3);
+               assert.strictEqual(model.getDefault('title'), 4);
+            });
+            it('should return function result', function () {
+               assert.strictEqual(model.getDefault('sqMax'), 33);
+               assert.strictEqual(model.getDefault('sqMax'), 33);
             });
          });
 
