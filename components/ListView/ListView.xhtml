@@ -6,8 +6,11 @@
          </div>
       </div>
    </div>
-   <div class="controls-ListView__itemsContainer {{?!it.autoHeight}}js-controls-View__scrollable{{?}}"></div>
-   {{?it.infiniteScroll}}
+   {{?it.infiniteScroll && it.infiniteScrollDirection !== 'bottom'}}
+      <div class="controls-ListView-scrollIndicator ws-hidden"></div>
+   {{?}}
+   <div class="controls-ListView__itemsContainer js-controls-View__scrollable"></div>
+   {{?it.infiniteScroll && it.infiniteScrollDirection !== 'top'}}
       <div class="controls-ListView-scrollIndicator ws-hidden"></div>
    {{?}}
    {{? it.itemsActions.length}}

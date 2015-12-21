@@ -48,7 +48,8 @@ define('js!SBIS3.CONTROLS.ScrollWatcher', [], function() {
          _lastScrollTop: 0,                        //Последний сохраненный скролл
          _onWindowScrollHandler : undefined,
          _floatAreaScrollHandler : undefined,
-         _onContainerScrollHandler: undefined
+         _onContainerScrollHandler: undefined,
+         _onBeforeBodyMarkupChangedHandler: undefined
       },
 
       $constructor: function() {
@@ -70,6 +71,10 @@ define('js!SBIS3.CONTROLS.ScrollWatcher', [], function() {
             this._options.element.addClass('ws-ScrollWatcher');
             this._onContainerScrollHandler =  this._onContainerScroll.bind(this);
             this._options.element.bind('scroll.wsScrollWatcher', this._onContainerScrollHandler);
+            $ws.helpers.wheel(this._options.element, function(event){
+               //console.log(event.wheelDelta);
+               $(self._options.element).scrollTop($(self._options.element).scrollTop() - event.wheelDelta/2);
+            });
 
          } else if (this._inWindow()) {
             this._onWindowScrollHandler = this._onWindowScroll.bind(this);
@@ -83,9 +88,27 @@ define('js!SBIS3.CONTROLS.ScrollWatcher', [], function() {
                self.destroy();
             });
          }
+         //Обработка открывающихся стек-панелей
+         $ws.single.EventBus.globalChannel().subscribe('onBeforeBodyMarkupChanged',
+               self._onBeforeBodyMarkupChangedHandler = self._onBeforeBodyMarkupChanged.bind(self));
+
+      },
+      _onBeforeBodyMarkupChanged:function(event, changeEventArg){
+         if ($ws.helpers.isElementVisible(this._getContainer())) {
+            if (changeEventArg.floatAreaStack) {
+               $(window).unbind('scroll', this._onWindowScrollHandler);
+               $(changeEventArg.contentScrollBlock).bind('scroll.wsScrollPaging', this._onContainerScroll.bind(this));
+            } else {
+               $(window).bind('scroll', this._onWindowScrollHandler);
+               $(changeEventArg.contentScrollBlock).unbind('.wsScrollPaging');
+            }
+         }
       },
       getOpener : function(){
          return this._options.opener;
+      },
+      _getContainer: function(){
+         return this._options.element || $('body');
       },
       _inFloatArea: function(){
          return this._type === 'floatArea';
@@ -146,6 +169,17 @@ define('js!SBIS3.CONTROLS.ScrollWatcher', [], function() {
             scrollHeight = Math.max(docBody.scrollHeight, docElem.scrollHeight);
          return (clientHeight + scrollTop  >= scrollHeight - SCROLL_INDICATOR_HEIGHT - this._options.checkOffset);//Учитываем отступ снизу на высоту картинки индикатора загрузки
       },
+      /**
+       * Проскроллить в контейнере
+       * @param {String|Number} offset куда или насколько скроллить.
+       * @variant top - доскроллить до верха контейнера
+       * @variant bottom - доскроллить до низа контейнера
+       * @variant {Number} - поскроллить на указанную величину
+       */
+      scrollTo:function(offset){
+         var scrollable = this._getContainer()[0];
+         scrollable.scrollTop = (typeof offset === 'string' ? (offset === 'top' ? 0 : scrollable.scrollHeight) : offset)
+      },
       //TODO есть вариант, когда захотят останавливать и запускать отслеживание скролла. Как понадобится сделаем.
       //start : function(){},
       //stop : function(){},
@@ -153,6 +187,9 @@ define('js!SBIS3.CONTROLS.ScrollWatcher', [], function() {
          if (this._inWindow()) {
             $(window).unbind('scroll.wsScrollWatcher', this._onWindowScrollHandler);
             this._onWindowScrollHandler = undefined;
+         }
+         if (this._onBeforeBodyMarkupChangedHandler) {
+            $ws.single.EventBus.globalChannel().unsubscribe('onBeforeBodyMarkupChanged', this._onBeforeBodyMarkupChangedHandler);
          }
          $ws.proto.ScrollWatcher.superclass.destroy.call(this);
       }
