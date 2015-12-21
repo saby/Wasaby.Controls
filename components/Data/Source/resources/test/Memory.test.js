@@ -3,8 +3,9 @@ define([
       'js!SBIS3.CONTROLS.Data.Source.Memory',
       'js!SBIS3.CONTROLS.Data.Source.DataSet',
       'js!SBIS3.CONTROLS.Data.Model',
+      'js!SBIS3.CONTROLS.Data.Collection.List',
       'js!SBIS3.CONTROLS.Data.Query.Query'
-   ], function (MemorySource, DataSet, Model, Query) {
+   ], function (MemorySource, DataSet, Model, List, Query) {
       'use strict';
 
       var existsId = 5,
@@ -392,6 +393,7 @@ define([
                   done(err);
                });
             });
+
             it('should work with no query', function (done) {
                service.query().addCallbacks(function (ds) {
                   try {
@@ -400,6 +402,40 @@ define([
                      }
                      if (ds.getAll().getCount() !== data.length) {
                         throw new Error('Wrong models count');
+                     }
+                     done();
+                  } catch (err) {
+                     done(err);
+                  }
+               }, function (err) {
+                  done(err);
+               });
+            });
+
+            it('should return a list instance of injected module', function (done) {
+               var MyList = List.extend({});
+               service.setListModule(MyList);
+               service.query().addCallbacks(function (ds) {
+                  try {
+                     if (!(ds.getAll() instanceof MyList)) {
+                        throw new Error('Wrong list instance');
+                     }
+                     done();
+                  } catch (err) {
+                     done(err);
+                  }
+               }, function (err) {
+                  done(err);
+               });
+            });
+
+            it('should return a model instance of injected module', function (done) {
+               var MyModel = Model.extend({});
+               service.setModel(MyModel);
+               service.query().addCallbacks(function (ds) {
+                  try {
+                     if (!(ds.getAll().at(0) instanceof MyModel)) {
+                        throw new Error('Wrong model instance');
                      }
                      done();
                   } catch (err) {
