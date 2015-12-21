@@ -153,7 +153,7 @@ define('js!SBIS3.CONTROLS.FilterMixin', [
       _recalcInternalContext: function() {
          var
                changed = $ws.helpers.reduce(this._filterStructure, function(result, element) {
-                  return result || element.resetValue !== element.value;
+                  return result || (element.value ? !$ws.helpers.isEqualObject(element.resetValue, element.value) : false);
                }, false);
 
          this.getLinkedContext().setValueSelf({
