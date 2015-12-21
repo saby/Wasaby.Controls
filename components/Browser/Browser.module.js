@@ -56,6 +56,10 @@ define('js!SBIS3.CONTROLS.Browser', [
              */
             searchParam : 'СтрокаПоиска',
             /**
+             * @cfg {String|Object} Шаблон для хлебных крошек в режиме поиска
+             */
+            searchCrumbsTpl: undefined,
+            /**
              * @cfg {String} Id для работы с историей фильтров
              */
             historyId : '',
@@ -105,9 +109,7 @@ define('js!SBIS3.CONTROLS.Browser', [
 
          this._searchForm = this._getSearchForm();
          if (this._searchForm) {
-            /*TODO вторым аргументом отдаем undefined - это параметр шаблон хлебных крошек в режиме поиска
-             решить что с этим делать, может выпилить но юзается в номенклатуре?*/
-            this._componentBinder.bindSearchGrid(this._options.searchParam, undefined, this._searchForm);
+            this._componentBinder.bindSearchGrid(this._options.searchParam, this._options.searchCrumbsTpl, this._searchForm);
          }
 
 
