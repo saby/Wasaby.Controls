@@ -127,6 +127,11 @@ define('js!SBIS3.CONTROLS.Data.Model', [
          _recordAdapter: undefined,
 
          /**
+          * @var {Object} Описание всех свойств (и внедренных через опции, и полученных из сырых данных)
+          */
+         _properties: null,
+
+         /**
           * @var {Boolean} Признак, что модель существует в источнике данных
           */
          _isStored: false,
@@ -188,7 +193,7 @@ define('js!SBIS3.CONTROLS.Data.Model', [
             return undefined;
          }
 
-         var property = this._options.properties[name],
+         var property = this.getProperties()[name],
             hasValue = this._getRecordAdapter().has(name),
             value = hasValue ? this._getOriginalPropertyValue(name) : undefined;
          if (!hasValue && 'def' in property) {
@@ -215,7 +220,7 @@ define('js!SBIS3.CONTROLS.Data.Model', [
             this._addProperty(name);
          }
 
-         var property = this._options.properties[name];
+         var property = this.getProperties()[name];
          if (property && property.set) {
             value = this._getCalculatedValue(name, value, property, false);
          }
@@ -233,7 +238,7 @@ define('js!SBIS3.CONTROLS.Data.Model', [
       },
 
       has: function (name) {
-         return this._options.properties.hasOwnProperty(name);
+         return this.getProperties().hasOwnProperty(name);
       },
 
       // endregion SBIS3.CONTROLS.Data.IPropertyAccess
@@ -247,8 +252,9 @@ define('js!SBIS3.CONTROLS.Data.Model', [
        * @param {Object} [context] Контекст вызова callback.
        */
       each: function (callback, context) {
-         for (var  name in this._options.properties) {
-            if (this._options.properties.hasOwnProperty(name)) {
+         var properties = this.getProperties();
+         for (var  name in properties) {
+            if (properties.hasOwnProperty(name)) {
                callback.call(
                   context || this,
                   name,
@@ -315,7 +321,7 @@ define('js!SBIS3.CONTROLS.Data.Model', [
        * @see properties
        */
       getProperties: function () {
-         return this._options.properties;
+         return this._properties || (this._properties = this._buildProperties());
       },
 
       /**
@@ -374,7 +380,6 @@ define('js!SBIS3.CONTROLS.Data.Model', [
          }, this);
          this._isStored = this._isStored || model._isStored;
          this._isDeleted = this._isDeleted || model._isDeleted;
-         this._initProperties();
       },
 
       /**
@@ -452,7 +457,6 @@ define('js!SBIS3.CONTROLS.Data.Model', [
          this._options.rawData = rawData;
          this._recordAdapter = undefined;
          this._propertiesCache = {};
-         this._initProperties();
          if (!silent) {
             this._notify('onPropertyChange');
          }
@@ -505,18 +509,22 @@ define('js!SBIS3.CONTROLS.Data.Model', [
       },
 
       /**
-       * Инициализирует свойства модели
+       * Формирует свойства модели
        * @private
        */
-      _initProperties: function() {
-         var fields = this._getRecordAdapter().getFields(),
+      _buildProperties: function() {
+         var properties = $ws.core.clone(this._options.properties),
+            fields = this._getRecordAdapter().getFields(),
+            field,
             i,
             length;
          for (i = 0, length = fields.length; i < length; i++) {
-            if (!this._options.properties.hasOwnProperty(fields[i])) {
-               this._options.properties[fields[i]] = {};
+            field = fields[i];
+            if (!properties.hasOwnProperty(field)) {
+               properties[field] = {};
             }
          }
+         return properties;
       },
 
       /**
@@ -524,7 +532,8 @@ define('js!SBIS3.CONTROLS.Data.Model', [
        * @private
        */
       _addProperty: function(name) {
-         this._options.properties[name] = {};
+         var properties = this.getProperties();
+         properties[name] = {};
       },
 
       /**
