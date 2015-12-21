@@ -390,8 +390,8 @@ define('js!SBIS3.CONTROLS.MultiSelectable', [], function() {
 
       _notifySelectedItems : function(idArray, changed) {
          this._setSelectedRecords();
-         this._notify('onSelectedItemsChange', idArray, changed);
          this._notifyOnPropertyChanged('selectedKeys');
+         this._notify('onSelectedItemsChange', idArray, changed);
       },
 
       _dataLoadedCallback : function(){
