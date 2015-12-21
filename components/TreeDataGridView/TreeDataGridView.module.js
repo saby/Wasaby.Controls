@@ -33,6 +33,9 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
    var TreeDataGridView = HierarchyDataGridView.extend([TreeMixinDS, DragNDropMixin], /** @lends SBIS3.CONTROLS.TreeDataGridView.prototype*/ {
       $protected: {
          _rowTpl : rowTpl,
+         _keysWeHandle: [
+            $ws._const.key.m
+         ],
          _options: {
             /**
              * @cfg {Boolean}
@@ -148,6 +151,9 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
                break;
             case $ws._const.key.left:
                isBranch && this.collapseNode(selectedKey);
+               break;
+            case $ws._const.key.m:
+               e.ctrlKey && this.moveRecordsWithDialog();
                break;
          }
          return parentResult;
