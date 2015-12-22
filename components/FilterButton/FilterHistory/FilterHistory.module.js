@@ -48,9 +48,6 @@ define('js!SBIS3.CONTROLS.FilterHistory',
          /* Если применили фильтр - сохраним в историю */
          this._filterButton.subscribe('onApplyFilter', this._onApplyFilterHandler.bind(this));
 
-         /* Если сбросили фильтр - сбросим активный */
-         this._filterButton.subscribe('onResetFilter', this._onResetFilterHandler.bind(this));
-
          /* При нажатии развернём/свернём список истории */
          this._toggleHistoryButton.subscribe('onActivated', this._toggleHistoryBlock.bind(this));
 
@@ -78,7 +75,7 @@ define('js!SBIS3.CONTROLS.FilterHistory',
 	          self = this;
 
          /* Если это дефолтный фильтр, то сохранять в историю не надо */
-         if(this._isDefaultFilter()) {
+         if(!this._filterButton.getLinkedContext().getValue('filterChanged')) {
             /* Если применили дефолтный фильтр, то надо сбросить текущий активный */
             hc.clearActiveFilter();
             return;
@@ -102,18 +99,6 @@ define('js!SBIS3.CONTROLS.FilterHistory',
 		      self._toggleHistoryBlock(true);
 	      }, 0)
       },
-
-      _onResetFilterHandler: function() {
-	      /* Очищаем активный фильтр, только если действительно сбросили фильтр,
-	         а не очистили внутренний контекст */
-	      if(this._isDefaultFilter()) {
-		      this._historyController.clearActiveFilter();
-	      }
-      },
-
-	   _isDefaultFilter: function() {
-		   return !this._filterButton.getLinkedContext().getValue('filterChanged');
-	   },
 
       _initHistoryView: function() {
          var self = this;

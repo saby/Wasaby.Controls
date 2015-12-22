@@ -400,6 +400,7 @@ define('js!SBIS3.CONTROLS.ComponentBinder', [], function () {
 	      var view = this._options.view,
 		      historyController = new controller({
 			      historyId: historyId,
+                  filterButton: filterButton,
 			      view: view
 		      });
 
