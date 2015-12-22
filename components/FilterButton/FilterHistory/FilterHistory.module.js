@@ -29,7 +29,8 @@ define('js!SBIS3.CONTROLS.FilterHistory',
          _filterButton: undefined,
          _historyView: undefined,
          _historyController: undefined,
-         _toggleHistoryButton: undefined
+         _toggleHistoryButton: undefined,
+	      _needSave: true
       },
 
       $constructor: function() {
@@ -69,6 +70,8 @@ define('js!SBIS3.CONTROLS.FilterHistory',
        * @private
        */
       _onApplyFilterHandler: function() {
+	      if(!this._needSave) return;
+
          var structure = this._filterButton.getFilterStructure(),
              hc =  this._historyController,
              linkTextArr = [],
@@ -101,7 +104,8 @@ define('js!SBIS3.CONTROLS.FilterHistory',
       },
 
       _initHistoryView: function() {
-         var self = this;
+         var self = this,
+	          fb = this._filterButton;
 
          /* Установка операции отметки записи маркером */
          self._historyView.setItemsActions([{
@@ -117,8 +121,28 @@ define('js!SBIS3.CONTROLS.FilterHistory',
 
          /* При клике по строке списка фильтров - применим фильтр из истории */
          self._historyView.subscribe('onItemActivate', function(e, itemObj) {
-            self._filterButton.setFilterStructure(self._historyController.getFilterFromHistory(itemObj.id));
-            self._filterButton.applyFilter();
+	         var hc = self._historyController,
+		          historyObj = hc.getFilterFromHistory(itemObj.id);
+
+	         /* Выставим флаг, что данный фильтр не надо сохранять в историю */
+	         self._needSave = false;
+
+	         /* Применим фильтр из истории*/
+	         fb.setFilterStructure(historyObj.filter);
+	         fb.getChildControlByName('filterLine').getContext().setValue('linkText', historyObj.linkText);
+	         fb.hidePicker();
+
+	         /* Если этот фильтр не активный, сделаем его активным и сохраним */
+	         if(!historyObj.isActiveFilter) {
+		         hc.clearActiveFilter();
+		         historyObj.isActiveFilter = true;
+		         hc.saveHistory();
+	         }
+
+	         /* Обновим список, отображающий фильтр */
+	         self._needSave = true;
+	         self.updateHistoryViewItems();
+	         self._toggleHistoryBlock(true);
          });
 
          self._historyView.subscribe('onDrawItems', function(e) {
