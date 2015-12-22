@@ -160,6 +160,7 @@ define('js!SBIS3.CONTROLS.hierarchyMixin', [], function () {
                hierarchy = this._getHierarchy(path, this._curRoot);
             }
             if (this._rootChanged) {
+               this._scrollTo(this.getContainer());
                this._notify('onSetRoot', this._curRoot, hierarchy);
                this._rootChanged = false;
             }
