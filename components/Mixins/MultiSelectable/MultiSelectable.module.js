@@ -124,18 +124,32 @@ define('js!SBIS3.CONTROLS.MultiSelectable', [], function() {
        * @see addItemsSelection
        */
       setSelectedKeys : function(idArray) {
+         function ArrayDifference(arr1, arr2) {
+            var M = arr1.length, N=arr1.length, diff=[];
+
+            for (var i=0; i<M; i++)
+            { var j=0, k=0;
+               while (arr2[j]+'' !== arr1[i]+'' && j < N) j++;
+               while (diff[k]+'' !== arr1[i]+'' && k < diff.length) k++;
+               if (j == N && k == diff.length) diff[diff.length] = arr1[i]+'';
+            }
+
+            return diff;
+         }
+
+
          var addedKeys = [], removedKeys = [];
          if (Array.isArray(idArray)) {
             if (idArray.length) {
                if (this._options.multiselect) {
-                  this._options.selectedKey = idArray;
+                  removedKeys = ArrayDifference(this._options.selectedKeys, idArray);
                   addedKeys = this._addItemsSelection(idArray);
+                  this._removeItemsSelection(removedKeys);
                }
                else {
                   removedKeys = $ws.core.clone(this._options.selectedKeys);
                   this._options.selectedKeys = idArray.slice(0, 1);
                }
-
             }
             else {
                removedKeys = $ws.core.clone(this._options.selectedKeys);
@@ -368,7 +382,7 @@ define('js!SBIS3.CONTROLS.MultiSelectable', [], function() {
          //TODO пока нет определенности ключ - строка или число - надо избавиться
          var index = this._options.selectedKeys.indexOf(id);
          if (index < 0) {
-            index = this._options.selectedKeys.indexOf(id + '')
+            index = this._options.selectedKeys.indexOf(id - 0)
          }
          return index;
       },
