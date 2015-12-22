@@ -272,7 +272,7 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
          for (var i = 0, len = keys.length; i < len; i++) {
             providerName = this._getProviderNameById(keys[i]);
             groups[providerName] = groups[providerName] || [];
-            groups[providerName].push(parseInt(keys[i], 10));
+            groups[providerName].push(String.prototype.split.call(keys[i],',')[0]);
          }
          var pd = new $ws.proto.ParallelDeferred();
          for (providerName in groups) {
