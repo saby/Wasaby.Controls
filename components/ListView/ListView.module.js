@@ -824,12 +824,14 @@ define('js!SBIS3.CONTROLS.ListView',
                      onBeginAdd: function(event, options) {
                         event.setResult(this._notify('onBeginAdd', options));
                      }.bind(this),
-                     onEndEdit: function(event, model) {
-                        event.setResult(this._notify('onEndEdit', model));
+                     onEndEdit: function(event, model, withSaving) {
+                        event.setResult(this._notify('onEndEdit', model, withSaving));
                      }.bind(this),
-                     onAfterEndEdit: function(event, model) {
-                        this._getItemsContainer().find('.js-controls-ListView__item[data-id="' + model.getKey() + '"]:not(".controls-editInPlace")').after(this._drawItem(model)).remove();
-                        event.setResult(this._notify('onAfterEndEdit', model));
+                     onAfterEndEdit: function(event, model, withSaving) {
+                        if (withSaving) {
+                           this._getItemsContainer().find('.js-controls-ListView__item[data-id="' + model.getKey() + '"]:not(".controls-editInPlace")').after(this._drawItem(model)).remove();
+                        }
+                        event.setResult(this._notify('onAfterEndEdit', model, withSaving));
                      }.bind(this)
                   }
                };
