@@ -158,20 +158,20 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
             },
             /**
              * Завершить редактирование по месту
-             * @param {Boolean} saveFields Сохранить изменения в dataSet
+             * @param {Boolean} withSaving Сохранить изменения в dataSet
              * @private
              */
-            endEdit: function(saveFields) {
+            endEdit: function(withSaving) {
                var
                   eip = this._getEditingEip(),
                   endEditResult;
                if (eip) {
-                  endEditResult = this._notify('onEndEdit', eip.getEditingRecord());
-                  if (endEditResult !== false && (!saveFields || eip.validate())) {
+                  endEditResult = this._notify('onEndEdit', eip.getEditingRecord(), withSaving);
+                  if (endEditResult !== false && (!withSaving || eip.validate())) {
                      eip.endEdit();
-                     this._savingDeferred = saveFields ? eip.applyChanges() : $ws.proto.Deferred.success();
+                     this._savingDeferred = withSaving ? eip.applyChanges() : $ws.proto.Deferred.success();
                      return this._savingDeferred.addCallback(function() {
-                        this._endEdit(eip, saveFields);
+                        this._endEdit(eip, withSaving);
                      }.bind(this));
                   }
                   return $ws.proto.Deferred.fail();
@@ -181,7 +181,7 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
             _getEditingEip: function() {
                return this._eip.isEdit() ? this._eip : null;
              },
-            _endEdit: function(eip, saveFields) {
+            _endEdit: function(eip, withSaving) {
                var
                   eipRecord = eip.getEditingRecord();
                if (this._editingRecord) {
@@ -190,12 +190,12 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                }
                eip.hide();
                if (!this._options.dataSet.getRecordByKey(eipRecord.getKey())) {
-                  saveFields ? this._options.dataSet.push(eipRecord) : eip.getTarget().remove();
+                  withSaving ? this._options.dataSet.push(eipRecord) : eip.getTarget().remove();
                }
-               if (saveFields) {
+               if (withSaving) {
                   this._options.dataSource.sync(this._options.dataSet);
                }
-               this._notify('onAfterEndEdit', this._options.dataSet.getRecordByKey(eipRecord.getKey()));
+               this._notify('onAfterEndEdit', withSaving ? this._options.dataSet.getRecordByKey(eipRecord.getKey()) : eipRecord, withSaving);
             },
             add: function() {
                var options,
