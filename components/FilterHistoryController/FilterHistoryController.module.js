@@ -98,10 +98,10 @@ define('js!SBIS3.CONTROLS.FilterHistoryController',
 	        * Сортирует и сохраняет историю в пользовательские параметры
 	        * @param filterObject
 	        */
-	       saveHistory: function() {
-		       this._sortHistory();
-		       this.saveToUserParams();
-	       },
+          saveHistory: function() {
+             this._sortHistory();
+             this.saveToUserParams();
+          },
 
 	       /**
 	        * Очищает текущий активный фильтр
