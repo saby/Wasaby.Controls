@@ -5,14 +5,13 @@ define('js!SBIS3.CONTROLS.FilterButton',
        'html!SBIS3.CONTROLS.FilterButton/FilterAreaTemplate',
        'js!SBIS3.CONTROLS.FilterMixin',
        'js!SBIS3.CONTROLS.PickerMixin',
-       'js!SBIS3.CORE.FieldLink',
        'js!SBIS3.CONTROLS.ControlHierarchyManager',
        'js!SBIS3.CONTROLS.Link',
        'js!SBIS3.CONTROLS.Button',
        'js!SBIS3.CONTROLS.FilterButton.FilterLine',
        'js!SBIS3.CONTROLS.FilterHistory'
     ],
-    function(CompoundControl, dotTplFn, dotTplForPicker, FilterMixin, PickerMixin, FieldLink, ControlHierarchyManager) {
+    function(CompoundControl, dotTplFn, dotTplForPicker, FilterMixin, PickerMixin, ControlHierarchyManager) {
 
        'use strict';
        /**
@@ -128,9 +127,12 @@ define('js!SBIS3.CONTROLS.FilterButton',
 
           _forEachFieldLinks: function(fn) {
              if(this._picker) {
+                var fieldLink = require.defined('js!SBIS3.CORE.FieldLink') ? require('js!SBIS3.CORE.FieldLink') : null;
                 $ws.helpers.forEach(this._picker.getChildControls(), function (child) {
-                   if (child instanceof FieldLink) {
-                      fn.call(this, child);
+                   if(fieldLink) {
+                      if (child instanceof fieldLink) {
+                         fn.call(this, child);
+                      }
                    }
                 });
              }
