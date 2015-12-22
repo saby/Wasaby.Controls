@@ -30,7 +30,7 @@ define('js!SBIS3.CONTROLS.FilterHistory',
          _historyView: undefined,
          _historyController: undefined,
          _toggleHistoryButton: undefined,
-	      _needSave: true
+         _needSave: true
       },
 
       $constructor: function() {
@@ -105,7 +105,7 @@ define('js!SBIS3.CONTROLS.FilterHistory',
 
       _initHistoryView: function() {
          var self = this,
-	          fb = this._filterButton;
+            fb = this._filterButton;
 
          /* Установка операции отметки записи маркером */
          self._historyView.setItemsActions([{

@@ -166,7 +166,7 @@ define('js!SBIS3.CONTROLS.FilterHistoryController',
           toggleMarkFilter: function(key) {
              var item = this._history.at(this._findFilterByKey(key).index);
              item.isMarked = !item.isMarked;
-	          this.saveHistory()
+             this.saveHistory()
           },
 
           _sortHistory: function() {
