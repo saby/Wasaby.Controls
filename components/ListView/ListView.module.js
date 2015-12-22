@@ -1152,9 +1152,8 @@ define('js!SBIS3.CONTROLS.ListView',
              * т.е. пока не появится скролл внутри контейнера
              */
             var  windowHeight = $(window).height(),
-                isOnFloatArea = $ws.helpers.instanceOfModule(this.getTopParent(), 'SBIS3.CORE.FloatArea'),
                 checkHeights = this._isHeightGrowable() ?
-                  (!($('body').get(0).scrollHeight > windowHeight + this._scrollIndicatorHeight) && !isOnFloatArea) || (this._container.height() < windowHeight) :
+                  this._container.height() < windowHeight :
                   this._container.height() >= this._container.find('.js-controls-View__scrollable').height();
             //Если на странице появился скролл и мы достигли дна скролла
             if (this._isLoadBeforeScrollAppears && checkHeights){
