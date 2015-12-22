@@ -21,10 +21,14 @@ define('js!SBIS3.CONTROLS.FilterHistoryController',
                  * @cfg {String}
                  */
                 historyId: undefined,
-	             /**
-	              * Представление данных
-	              */
-	             view: undefined
+                /**
+                 * Представление данных
+                 */
+                view: undefined,
+                /**
+                 * Кнопка фильтров
+                 */
+                filterButton: undefined
              },
              _history : undefined,              /* Объект с историей фильтров */
              _loadParamsDeferred: undefined,    /* Деферед загрузки истории */
@@ -36,6 +40,13 @@ define('js!SBIS3.CONTROLS.FilterHistoryController',
              this.getHistory(true).addCallback(function(result) {
                 self._history = new List({items: result});
                 return result;
+             });
+
+             /* Если сбросили фильтр - сбросим активный */
+             this._options.filterButton.subscribe('onResetFilter', function() {
+                if(!self._options.filterButton.getLinkedContext().getValue('filterChanged')) {
+                   self.clearActiveFilter();
+                }
              });
           },
 
