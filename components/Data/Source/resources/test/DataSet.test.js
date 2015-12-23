@@ -4,8 +4,8 @@ define([
    'js!SBIS3.CONTROLS.Data.Source.Memory',
    'js!SBIS3.CONTROLS.Data.Adapter.Json',
    'js!SBIS3.CONTROLS.Data.Model',
-   'js!SBIS3.CONTROLS.Data.Collection.List'
-], function (DataSet, MemorySource, JsonAdapter, Model, List) {
+   'js!SBIS3.CONTROLS.Data.Collection.RecordSet'
+], function (DataSet, MemorySource, JsonAdapter, Model, RecordSet) {
       'use strict';
 
       var list;
@@ -168,9 +168,10 @@ define([
          describe('.getAll()', function () {
             it('should return a list', function () {
                var ds = new DataSet({
-                  adapter: new JsonAdapter()
+                  adapter: new JsonAdapter(),
+                  rawData:{}
                });
-               assert.instanceOf(ds.getAll(), List);
+               assert.instanceOf(ds.getAll(), RecordSet);
             });
 
             it('should return a list of 2 by default', function () {
