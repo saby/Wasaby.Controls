@@ -126,7 +126,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.List', [
             if (!isArray && !$ws.helpers.instanceOfMixin(instead, 'SBIS3.CONTROLS.Data.Collection.IEnumerable')) {
                throw new Error('Invalid argument');
             }
-            Array.prototype.splice.apply(this._items, [0, 0].concat(instead.toArray()));
+            Array.prototype.splice.apply(this._items, [0, 0].concat(isArray ? instead : instead.toArray()));
          }
 
          this._getServiceEnumerator().reIndex();
