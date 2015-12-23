@@ -92,7 +92,7 @@ define('js!SBIS3.CONTROLS.Selectable', [], function() {
        */
       setSelectedKey : function(id) {
          this._options.selectedKey = id;
-         if (!this._options.selectedKey && this._options.allowEmptySelection == false) {
+         if (this._options.allowEmptySelection == false) {
             this._setFirstItemAsSelected();
          }
          this._drawSelectedItem(this._options.selectedKey);
@@ -127,14 +127,22 @@ define('js!SBIS3.CONTROLS.Selectable', [], function() {
       },
 
       _dataLoadedCallback : function(){
-         if (!this._options.selectedKey && this._options.allowEmptySelection == false) {
+         if (this._options.allowEmptySelection == false) {
             this._setFirstItemAsSelected();
          }
       },
 
       _setFirstItemAsSelected : function() {
          if (this._dataSet) {
-            this._options.selectedKey = this._dataSet.at(0).getKey();
+            var selKey = this._options.selectedKey;
+
+            if(!selKey || (selKey && !this._dataSet.getRecordByKey(selKey))) {
+               var rec = this._dataSet.at(0);
+
+               if(rec) {
+                  this._options.selectedKey = rec.getKey();
+               }
+            }
          }
       }
    };
