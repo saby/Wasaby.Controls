@@ -201,6 +201,14 @@ define('js!SBIS3.CONTROLS.ListView',
             _scrollWidth: undefined,
             _options: {
                /**
+                * @cfg {Boolean} Разрешить отсутствие выбранного элемента
+                * @example
+                * <pre>
+                *     <option name="allowEmptySelection">false</option>
+                * </pre>
+                */
+               allowEmptySelection: false,
+               /**
                 * @faq Почему нет флажков при включенной опции {@link SBIS3.CONTROLS.ListView#multiselect multiselect}?
                 * Для отрисовки флажков необходимо в шаблоне отображания элемента прописать их место:
                 * <pre>
@@ -1237,6 +1245,7 @@ define('js!SBIS3.CONTROLS.ListView',
                   this._hideLoadingIndicator();
                }
             }
+            ListView.superclass._dataLoadedCallback.apply(this, arguments);
          },
          _toggleIndicator: function(show){
             this._showedLoading = show;
