@@ -258,7 +258,6 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
             }
          }
          else {
-            this.setSelectedKeys([id]);
             this._notifyOnItemClick(id, data, target);
          }
       },
