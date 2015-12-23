@@ -404,10 +404,6 @@ define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManag
          }
          this._containerSizes.border = (container.outerWidth() - container.innerWidth()) / 2;
          var buff = this._getGeneralOffset(this._defaultVerticalAlignSide, this._defaultHorizontalAlignSide, this._defaultCorner, true);
-         if (this._initOrigins) {
-            this._containerSizes.originWidth = this._container.get(0).scrollWidth + this._containerSizes.border * 2;
-            this._containerSizes.originHeight = this._container.get(0).scrollHeight + this._containerSizes.border * 2;
-         }
          //Запоминаем координаты правого нижнего угла контейнера необходимые для отображения контейнера целиком и там где нужно.
          if (target) {
             this._containerSizes.requredOffset = {
@@ -456,7 +452,6 @@ define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManag
          switch (corner) {
             case 'tr':
                offset.left += width;
-               offset.top;
                break;
             case 'bl':
                offset.top += height;
@@ -623,7 +618,7 @@ define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManag
                   this._container.css('height', spaces.top - vOffset - this._margins.top + this._margins.bottom);
                }
             }
-            if (this._containerSizes.originHeight + vOffset + this._margins.top - this._margins.bottom < spaces.bottom) {
+            if (this._containerSizes.originHeight + vOffset + this._margins.top - this._margins.bottom < spaces.bottom && this._overflowedV) {
                this._container.css('overflow-y', 'visible');
                this._container.css('height', '');
                this._overflowedV = false;
@@ -646,7 +641,7 @@ define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManag
                   this._container.css('width', spaces.left - hOffset - this._margins.left + this._margins.right);
                }
             }
-            if (this._containerSizes.originWidth + hOffset + this._margins.left - this._margins.right < spaces.right) {
+            if (this._containerSizes.originWidth + hOffset + this._margins.left - this._margins.right < spaces.right && this._overflowedH) {
                this._container.css('overflow-x', 'visible');
                this._container.css('width', '');
                this._overflowedH = false;
@@ -749,8 +744,8 @@ define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManag
             }
             this._initSizes();
             if (this._initOrigins) {
-               this._containerSizes.originWidth = this._container.get(0).scrollWidth + this._containerSizes.border * 2;
-               this._containerSizes.originHeight = this._container.get(0).scrollHeight + this._containerSizes.border * 2;
+               this._containerSizes.originWidth = parseFloat(this._container.css('max-width'), 10) || this._container.get(0).scrollWidth + this._containerSizes.border * 2;
+               this._containerSizes.originHeight = parseFloat(this._container.css('max-height'), 10) || this._container.get(0).scrollHeight + this._containerSizes.border * 2;
                this._initOrigins = false;
             }
             this.recalcPosition();
