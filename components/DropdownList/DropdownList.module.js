@@ -15,10 +15,12 @@ define('js!SBIS3.CONTROLS.DropdownList',
       'html!SBIS3.CONTROLS.DropdownList',
       'html!SBIS3.CONTROLS.DropdownList/DropdownListHead',
       'html!SBIS3.CONTROLS.DropdownList/DropdownListItem',
-      'html!SBIS3.CONTROLS.DropdownList/DropdownListPicker'
+      'html!SBIS3.CONTROLS.DropdownList/DropdownListPicker',
+      'html!SBIS3.CONTROLS.DropdownList/DropdownListFooter'
    ],
 
-   function(Control, PickerMixin, DSMixin, MultiSelectable, DataBindMixin, DropdownListMixin, Button, Link, MarkupTransformer, dotTplFn, dotTplFnHead, dotTplFnForItem, dotTplFnPicker) {
+   function(Control, PickerMixin, DSMixin, MultiSelectable, DataBindMixin, DropdownListMixin, Button, Link, MarkupTransformer,
+            dotTplFn, dotTplFnHead, dotTplFnForItem, dotTplFnPicker, dotTplFnFooter) {
 
       'use strict';
       /**
@@ -57,6 +59,7 @@ define('js!SBIS3.CONTROLS.DropdownList',
                 * @editor ExternalComponentChooser
                 */
                itemTemplate: dotTplFnForItem,
+               footerTpl : undefined,
                /**
                 * @cfg {String} Режим работы выпадающего списка
                 * @remark
@@ -93,6 +96,9 @@ define('js!SBIS3.CONTROLS.DropdownList',
          $constructor: function() {
             this._container.bind(this._options.mode === 'hover' ? 'mouseenter' : 'mousedown', this.showPicker.bind(this));
             this._publish('onClickMore');
+            if (this._options.multiselect && !this._options.footerTpl){
+               this._options.footerTpl = dotTplFnFooter;
+            }
          },
          init : function () {
             DropdownList.superclass.init.apply(this, arguments);
@@ -102,7 +108,8 @@ define('js!SBIS3.CONTROLS.DropdownList',
             var self = this,
                 pickerContainer = this._getPickerContainer(),
                 header = pickerContainer.find('.controls-DropdownList__header');
-            header.append(this._container.clone().removeAttr('style'));
+            //смешно, но reviveComponents может найти в верстек config и другие атрибуты компонентов и тогда всё зациклится
+            header.append(this._container.clone().removeAttr('style data-component config id'));
             this._setVariables();
             this.reload();
             this._bindItemSelect();
@@ -235,8 +242,30 @@ define('js!SBIS3.CONTROLS.DropdownList',
                this.hidePicker();
             }
          },
+         _getFooterContainer: function(){
+            return this._pickerFooterContainer;
+         },
          _drawItemsCallback: function() {
-
+            var self = this;
+            if (this._options.footerTpl) {
+               //Если есть шаблон, его надо оживить. Для режима мультивыбора у нас шаблон с кнопкой отобрать и еще
+               this._picker.reviveComponents().addCallback(function(){
+                  self._buttonChoose = self._picker.getChildControlByName('DropdownList_buttonChoose');
+                  self._buttonChoose.subscribe('onActivated', function(){
+                     var currSelection = self._getCurrentSelection();
+                     self._hideAllowed = true;
+                     if (!self._isSimilarArrays(self.getSelectedKeys(), currSelection)) {
+                        self.setSelectedKeys(currSelection);
+                     }
+                     self.hidePicker();
+                  });
+                  self._buttonHasMore = self._picker.getChildControlByName('DropdownList_buttonHasMore');
+                  self._buttonHasMore.subscribe('onActivated', function(){
+                     self._notify('onClickMore');
+                     self.hidePicker();
+                  });
+               });
+            }
             //Надо вызвать просто для того, чтобы отрисовалось выбранное значение/значения
             if (this._dataSet.getRawData().length) {
                this.setSelectedKeys(this._options.selectedKeys);
@@ -254,8 +283,7 @@ define('js!SBIS3.CONTROLS.DropdownList',
             }
          },
          _setVariables: function() {
-            var pickerContainer = this._getPickerContainer(),
-                  self = this;
+            var pickerContainer = this._getPickerContainer()
 
             this._text = this._container.find('.controls-DropdownList__text');
             this._resetButton = this._container.find('.controls-DropdownList__crossIcon');
@@ -265,22 +293,6 @@ define('js!SBIS3.CONTROLS.DropdownList',
             this._pickerBodyContainer = pickerContainer.find('.controls-DropdownList__body');
             this._pickerHeadContainer = pickerContainer.find('.controls-DropdownList__header');
             this._pickerFooterContainer = pickerContainer.find('.controls-DropdownList__footer');
-            if (this._options.multiselect) {
-               this._buttonChoose = this._picker.getChildControlByName('DropdownList_buttonChoose');
-               this._buttonChoose.subscribe('onActivated', function(){
-                  var currSelection = self._getCurrentSelection();
-                  self._hideAllowed = true;
-                  if (!self._isSimilarArrays(self.getSelectedKeys(), currSelection)) {
-                     self.setSelectedKeys(currSelection);
-                  }
-                  self.hidePicker();
-               });
-               this._buttonHasMore = this._picker.getChildControlByName('DropdownList_buttonHasMore');
-               this._buttonHasMore.subscribe('onActivated', function(){
-                  self._notify('onClickMore');
-                  self.hidePicker();
-               });
-            }
             if (this._options.showSelectedInList) {
                pickerContainer.addClass('controls-DropdownList__showSelectedInList');
             }
