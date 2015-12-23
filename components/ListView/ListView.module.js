@@ -33,7 +33,7 @@ define('js!SBIS3.CONTROLS.ListView',
 
       var
          ITEMS_ACTIONS_HEIGHT = 20,
-         START_NEXT_LOAD_OFFSET = 150;
+         START_NEXT_LOAD_OFFSET = 180;
 
       /**
        * Контрол, отображающий внутри себя набор однотипных сущностей.

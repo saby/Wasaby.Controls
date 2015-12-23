@@ -3,7 +3,6 @@
  */
 define('js!SBIS3.CONTROLS.ScrollWatcher', [], function() {
    'use strict';
-   var SCROLL_INDICATOR_HEIGHT = 32;
    $ws.proto.ScrollWatcher = $ws.proto.Abstract.extend(/** @lends SBIS3.CONTROLS.ScrollWatcher.prototype */{
       /**
        * @event onScroll Событие проиходит, когда срабатывает проверка на скроллею Например, когда достигли низа страницы
@@ -66,13 +65,9 @@ define('js!SBIS3.CONTROLS.ScrollWatcher', [], function() {
 
          //В зависимости от настроек высоты подписываемся либо на скролл у окна, либо у контейнера
          if (this._inContainer()) {
-            //Вдруг кому-то понадобится
-            this._options.element.wsScrollWatcher = this;
-            this._options.element.addClass('ws-ScrollWatcher');
             this._onContainerScrollHandler =  this._onContainerScroll.bind(this);
             this._options.element.bind('scroll.wsScrollWatcher', this._onContainerScrollHandler);
             $ws.helpers.wheel(this._options.element, function(event){
-               //console.log(event.wheelDelta);
                $(self._options.element).scrollTop($(self._options.element).scrollTop() - event.wheelDelta/2);
             });
 
@@ -122,16 +117,19 @@ define('js!SBIS3.CONTROLS.ScrollWatcher', [], function() {
       /**
        * Точка соприкосновения всех подписанных скроллов
        * Здесь проиходяит проверки - куда поскроллили, вызываются пользовательские функции проверки
-       * @param type
-       * @param result
+       * @param isBottom Проверка на то, находимся ли мы внизу страницы. При этом isScrollUp не учитывается, потому что мы просто
+       * вычисляем.
        * @param event
        * @private
        */
-      _processScrollEvent: function (type, result, event) {
-         if (result) {
-            this._notify('onScroll', type, event);
-         } else if (this._checkTop(event)) {
-            this._notify('onScroll', 'top', event);
+      _processScrollEvent: function (isBottom, event) {
+         this._defineScrollDirection(event);
+         if (this._isScrollUp ) {
+            if (this._isOnTop(event)) {
+               this._notify('onScroll', 'top', event);
+            }
+         } else if (isBottom) {
+            this._notify('onScroll', 'bottom', event);
          }
       },
       _defineScrollDirection : function(event){
@@ -144,30 +142,25 @@ define('js!SBIS3.CONTROLS.ScrollWatcher', [], function() {
          this._lastScrollTop = curScrollTop;
       },
       _onWindowScroll: function (event) {
-         this._defineScrollDirection(event);
-         this._processScrollEvent('bottom', this._isBottomOfPage(), event);
+         var docBody = document.body,
+               docElem = document.documentElement,
+               clientHeight = Math.min(docBody.clientHeight, docElem.clientHeight),
+               scrollTop = Math.max(docBody.scrollTop, docElem.scrollTop),
+               scrollHeight = Math.max(docBody.scrollHeight, docElem.scrollHeight);
+         this._processScrollEvent((clientHeight + scrollTop  >= scrollHeight - this._options.checkOffset), event);
       },
       _onFAScroll: function(event, scrollOptions) {
-         this._defineScrollDirection(event);
-         this._processScrollEvent('bottom', scrollOptions.clientHeight + scrollOptions.scrollTop  >= scrollOptions.scrollHeight - SCROLL_INDICATOR_HEIGHT - this._options.checkOffset, event);
+         this._processScrollEvent(scrollOptions.clientHeight + scrollOptions.scrollTop  >= scrollOptions.scrollHeight - this._options.checkOffset, event);
       },
       _onContainerScroll: function (event) {
          var elem = event.target;
-         this._defineScrollDirection(event);
          //если высота скролла меньше чем высота контейнера с текущим scrollTop, то мы где-то внизу.
          //offsetHeight - высота контейнра, scrollHeight - вся высота скролла,
-         this._processScrollEvent('bottom',!this._isScrollUp && (elem.scrollHeight - this._options.checkOffset <=  elem.scrollTop + elem.offsetHeight), event);
+         //elem.clientHeight === elem.offsetHeight если где-то не будет соблюдаться, то нужно взять offsetHeight
+         this._processScrollEvent(elem.scrollTop + elem.clientHeight >= elem.scrollHeight - this._options.checkOffset, event);
       },
-      _checkTop : function(event){
+      _isOnTop : function(event){
          return event && this._isScrollUp && (this._lastScrollTop < this._options.checkOffset);
-      },
-      _isBottomOfPage: function () {
-         var docBody = document.body,
-            docElem = document.documentElement,
-            clientHeight = Math.min(docBody.clientHeight, docElem.clientHeight),
-            scrollTop = Math.max(docBody.scrollTop, docElem.scrollTop),
-            scrollHeight = Math.max(docBody.scrollHeight, docElem.scrollHeight);
-         return (clientHeight + scrollTop  >= scrollHeight - SCROLL_INDICATOR_HEIGHT - this._options.checkOffset);//Учитываем отступ снизу на высоту картинки индикатора загрузки
       },
       /**
        * Проскроллить в контейнере
