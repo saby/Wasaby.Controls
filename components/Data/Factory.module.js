@@ -246,8 +246,15 @@ define('js!SBIS3.CONTROLS.Data.Factory', [
       _serializeList: function (data, adapter) {
          var items = data.toArray(),
             otherData = [],
+            getTableAdapter = function(item) {
+               if (tableAdapter === undefined) {
+                  tableAdapter = adapter.forTable(
+                     adapter.forTable(item ? item.getRawData() : undefined).getEmpty()
+                  );
+               }
+               return tableAdapter;
+            },
             tableAdapter,
-            rawData,
             item,
             i,
             length;
@@ -255,22 +262,17 @@ define('js!SBIS3.CONTROLS.Data.Factory', [
          for (i = 0, length = items.length; i < length; i++) {
             item = items[i];
             if (typeof items === 'object' && $ws.helpers.instanceOfModule(item, 'SBIS3.CONTROLS.Data.Model')) {
-               if (tableAdapter === undefined) {
-                  tableAdapter = adapter.forTable(
-                     adapter.forTable(item.getRawData()).getEmpty()
-                  );
-               }
-               tableAdapter.add(item.getRawData());
+               getTableAdapter(item).add(item.getRawData());
             } else {
                otherData.push(item);
             }
          }
 
-         if (tableAdapter && otherData.length) {
-            adapter.setProperty(tableAdapter.getData(), 'other', otherData);
+         if (otherData.length) {
+            adapter.setProperty(getTableAdapter().getData(), 'other', otherData);
          }
 
-         return tableAdapter.getData();
+         return getTableAdapter().getData();
       },
 
       /**
