@@ -46,6 +46,7 @@ define('js!SBIS3.CONTROLS.FilterHistoryController',
              this._options.filterButton.subscribe('onResetFilter', function() {
                 if(!self._options.filterButton.getLinkedContext().getValue('filterChanged')) {
                    self.clearActiveFilter();
+	                self.saveHistory();
                 }
              });
           },
@@ -70,8 +71,7 @@ define('js!SBIS3.CONTROLS.FilterHistoryController',
                 /* Если такой фильтр есть в истории, то надо его сделать активным */
                 if(equalFilter) {
                    equalFilter.isActiveFilter = true;
-                   this._sortHistory();
-                   this.saveToUserParams();
+	                this.saveHistory()
                 }
                 return;
              }
@@ -91,9 +91,18 @@ define('js!SBIS3.CONTROLS.FilterHistoryController',
                 isMarked: false
              });
 
-	          this._sortHistory();
+	          this.saveHistory();
+          },
+
+	       /**
+	        * Сортирует и сохраняет историю в пользовательские параметры
+	        * @param filterObject
+	        */
+          saveHistory: function() {
+             this._sortHistory();
              this.saveToUserParams();
           },
+
 	       /**
 	        * Очищает текущий активный фильтр
 	        */
@@ -102,7 +111,6 @@ define('js!SBIS3.CONTROLS.FilterHistoryController',
 
              if(item) {
                 item.isActiveFilter = false;
-                this.saveToUserParams();
              }
           },
 
@@ -118,7 +126,7 @@ define('js!SBIS3.CONTROLS.FilterHistoryController',
            * @private
            */
           getFilterFromHistory: function(key) {
-             return this._findFilterByKey(key).filter.filter;
+             return this._findFilterByKey(key).filter;
           },
 
           /**
@@ -158,8 +166,7 @@ define('js!SBIS3.CONTROLS.FilterHistoryController',
           toggleMarkFilter: function(key) {
              var item = this._history.at(this._findFilterByKey(key).index);
              item.isMarked = !item.isMarked;
-             this._sortHistory();
-             this.saveToUserParams();
+             this.saveHistory()
           },
 
           _sortHistory: function() {
