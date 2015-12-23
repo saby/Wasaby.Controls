@@ -161,16 +161,15 @@
    }
 }
 
+@-moz-document url-prefix() {
+   .controls__filterButton.controls__filterButton__filterLine {
+      margin: 8px 32px 8px 0;
+   }
+}
+
 .controls__filterButton {
    height: @controls-filterButton-height;
    display: inline-block;
-
-   @-moz-document url-prefix() {
-      .controls__filterButton__filterLine {
-         margin: 8px 32px 8px 0;
-      }
-   }
-
 
    .controls__filterButton__filterLine {
       height: @controls-filterButton-button-height;
