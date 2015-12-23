@@ -623,7 +623,7 @@ define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManag
             spaces, oppositeOffset;
          spaces = this._getSpaces(this._options.corner);
          if (orientation == 'vertical') {
-            if (offset.top < 0) {
+            if (offset.top < 0 && this._options.verticalAlign.side !== 'top') {
                this._overflowedV = true;
                this._container.css('overflow-y', 'auto');
                if (spaces.top < spaces.bottom) {
@@ -645,7 +645,7 @@ define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManag
             return offset.top;
          }
          else {
-            if (offset.left < 0) {
+            if (offset.left < 0 && this._options.horizontalAlign.side !== 'left') {
                this._overflowedH = true;
                this._container.css('overflow-x', 'auto');
                spaces = this._getSpaces(this._options.corner);
