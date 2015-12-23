@@ -4,6 +4,12 @@ define('js!SBIS3.CONTROLS.SuggestTextBox', [
    'js!SBIS3.CONTROLS.SuggestMixin'
 ], function (TextBox, PickerMixin, SuggestMixin) {
    'use strict';
+
+   function stopEvent(e) {
+      e.stopPropagation();
+      e.preventDefault();
+   }
+
    /**
     * Поле ввода с автодополнением
     * @class SBIS3.CONTROLS.SuggestTextBox
@@ -28,6 +34,12 @@ define('js!SBIS3.CONTROLS.SuggestTextBox', [
          this.getContainer().addClass('controls-SuggestTextBox');
       },
 
+      /**
+       * Блочим события поднятия служебных клавиш,
+       * нужно в основном при использовании в редактировании по месту
+       * @param e
+       * @private
+       */
       _keyUpBind: function(e) {
          SuggestTextBox.superclass._keyUpBind.apply(this, arguments);
          switch (e.which) {
@@ -38,13 +50,25 @@ define('js!SBIS3.CONTROLS.SuggestTextBox', [
             case $ws._const.key.enter:
                if(this.isPickerVisible()) {
                   this._list && this._list._keyboardHover(e);
-                  e.stopPropagation();
-                  e.preventDefault();
+                  stopEvent(e);
                }
                break;
             case $ws._const.key.esc:
-               this.hidePicker();
+               if(this.isPickerVisible()) {
+                  this.hidePicker();
+                  stopEvent(e);
+               }
                break;
+         }
+      },
+
+      _keyDownBind: function(e) {
+         SuggestTextBox.superclass._keyDownBind.apply(this, arguments);
+
+         /* Запрещаем всплытие enter по событию keyDown,
+            т.к. Area тоже его слушает и закрывает floatArea */
+         if(e.which === $ws._const.key.enter && this.isPickerVisible()) {
+            stopEvent(e);
          }
       }
    });

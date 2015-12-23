@@ -139,7 +139,7 @@ define('js!SBIS3.CONTROLS.ComponentBinder', [], function () {
     * @extends $ws.proto.Abstract
     * @public
     */
-   var ComponentBinder = $ws.proto.Abstract.extend({
+   var ComponentBinder = $ws.proto.Abstract.extend(/**@lends SBIS3.CONTROLS.ComponentBinder.prototype*/{
       $protected : {
          _searchReload : true,
          _searchForm : undefined,
@@ -186,7 +186,10 @@ define('js!SBIS3.CONTROLS.ComponentBinder', [], function () {
        * @param {SBIS3.CONROLS.SearchForm} [searchForm] объект формы поиска, если не передан используется тот, что задан в опциях
        * @example
        * <pre>
-       *     myBinder = new ComponentBinder();
+       *     myBinder = new ComponentBinder({
+       *        view: myGridView,
+       *        searchForm: mySearchForm
+       *     });
        *     myBinder.bindSearchGrid('СтрокаПоиска');
        * </pre>
        */
@@ -369,7 +372,10 @@ define('js!SBIS3.CONTROLS.ComponentBinder', [], function () {
        * в представлении данных вместе с панелью или нет.
        * @example
        * <pre>
-       *     myBinder = new ComponentBinder();
+       *     myBinder = new ComponentBinder({
+       *        view: myGridView,
+       *        operationPanel: myOperationPanel
+       *     });
        *     myBinder.bindOperationPanel(true);
        * </pre>
        */
@@ -391,21 +397,23 @@ define('js!SBIS3.CONTROLS.ComponentBinder', [], function () {
        * Метод для связывания истории фильтров с представлением данных
        */
       bindFilterHistory: function(filterButton, historyId, controller, browser) {
-         var view = this._options.view,
-             historyController = new controller({
-                historyId: historyId
-             });
+	      var view = this._options.view,
+		      historyController = new controller({
+			      historyId: historyId,
+                  filterButton: filterButton,
+			      view: view
+		      });
 
-         filterButton.setHistoryController(historyController);
-         historyController.getHistory(true).addCallback(function() {
-            var filter = historyController.getActiveFilter();
+	      filterButton.setHistoryController(historyController);
+	      historyController.getHistory(true).addCallback(function() {
+		      var filter = historyController.getActiveFilter();
 
-            if(filter) {
-               filterButton.setFilterStructure(filter.filter);
-               view.setFilter($ws.core.merge(view.getFilter(), filterButton.getFilter()), true);
-            }
-            browser._notifyOnFiltersReady();
-         })
+		      if(filter) {
+			      filterButton._updateFilterStructure(filter.filter);
+			      view.setFilter($ws.core.merge(view.getFilter(), filter.viewFilter), true);
+		      }
+		      browser._notifyOnFiltersReady();
+	      })
       }
    });
 

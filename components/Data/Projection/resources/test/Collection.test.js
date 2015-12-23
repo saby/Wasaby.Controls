@@ -93,105 +93,68 @@ define([
          });
 
          describe('.setSort()', function() {
+            var getItems = function() {
+                 return [1, 2, 3, 4];
+               },
+               getSortedItems = function() {
+                  return [4, 3, 2, 1];
+               },
+               sort = function(a, b){
+                  return a.item <= b.item ? 1 : -1;
+               };
+
             it('should sort projection', function() {
                var list = new ObservableList({
-                     items: [1, 2, 3, 4]
+                     items: getItems()
                   }),
-                  sortedItem = [4, 3, 2, 1],
-                  sort = function(a, b){
-                     return a.item <= b.item ? 1 : -1;
-                  };
+                  sortedItems = getSortedItems();
                var projection = Projection.getDefaultProjection(list);
                projection.setSort(sort);
                projection.each(function(item, i){
-                  assert.equal(sortedItem[i], item.getContents());
+                  assert.equal(sortedItems[i], item.getContents());
                });
             });
 
             it('should reset a sort projection', function() {
                var list = new ObservableList({
-                     items: [1, 2, 3, 4]
+                     items: getItems()
                   }),
-                  sortedItem = [1, 2, 3, 4],
-                  sort = function(a, b) {
-                     return a.item <= b.item ? 1 : -1;
-                  };
+                  sortedItems = getItems();
                var projection = Projection.getDefaultProjection(list);
                projection.setSort(sort);
                projection.setSort();
                projection.each(function(item, i){
-                  assert.equal(sortedItem[i], item.getContents());
+                  assert.equal(sortedItems[i], item.getContents());
                });
             });
 
             it('should sort projection after add item', function() {
                var list = new ObservableList({
-                     items: [1, 2, 3, 4]
+                     items: getItems()
                   }),
-                  sortedItem = [5, 4, 3, 2, 1],
-                  sort = function(a, b) {
-                     return a.item <= b.item ? 1 : -1;
-                  };
+                  sortedItems = [5, 4, 3, 2, 1];
                var projection = new CollectionProjection({
                   collection: list
                });
                projection.setSort(sort);
                projection.getCollection().add(5);
                projection.each(function(item, i) {
-                  assert.equal(sortedItem[i], item.getContents());
+                  assert.equal(sortedItems[i], item.getContents());
                });
-            });
-
-            it('should trigger an event after add item', function(done) {
-               var items = [1, 2, 3, 4],
-                  list = new ObservableList({
-                     items: items
-                  }),
-                  projection = new CollectionProjection({
-                     collection: list
-                  }),
-                  handler = function(event, action, newItems, newItemsIndex, oldItems, oldItemsIndex) {
-                     try {
-                        if (action !== IBindCollectionProjection.ACTION_ADD) {
-                           throw new Error('Invalid action');
-                        }
-                        if (newItems[0].getContents() !== 5) {
-                           throw new Error('Invalid newItems');
-                        }
-                        if (newItemsIndex !== items.length - 1) {
-                           throw new Error('Invalid newItemsIndex');
-                        }
-                        if (oldItems.length > 0) {
-                           throw new Error('Invalid oldItems');
-                        }
-                        if (oldItemsIndex > 0) {
-                           throw new Error('Invalid oldItemsIndex');
-                        }
-                        done();
-                     } catch (err) {
-                        done(err);
-                     }
-                  };
-               projection.subscribe('onCollectionChange', handler);
-               projection.getCollection().add(5);
-               projection.unsubscribe('onCollectionChange', handler);
             });
 
             it('should sort projection after remove item', function() {
                var list = new ObservableList({
                      items: [1, 2, 10, 3, 4]
                   }),
-                  sortedItem = [4, 3, 2, 1],
-                  sort = function(a,b){
-                     return a.item <= b.item ? 1 : -1;
-                  };
+                  sortedItems = getSortedItems();
                var projection = new CollectionProjection({
                   collection: list
                });
                projection.setSort(sort);
                projection.getCollection().removeAt(2);
                projection.each(function(item, i){
-                  assert.equal(sortedItem[i], item.getContents());
+                  assert.equal(sortedItems[i], item.getContents());
                });
             });
 
@@ -199,63 +162,57 @@ define([
                var list = new ObservableList({
                      items: [1, 2, 2, 3, 5]
                   }),
-                  sortedItem = [5, 4, 3, 2, 1],
-                  sort = function(a, b) {
-                     return a.item <= b.item ? 1 :-1;
-                  };
+                  sortedItems = [5, 4, 3, 2, 1];
                var projection = new CollectionProjection({
                   collection: list
                });
                projection.setSort(sort);
                projection.getCollection().replace(4, 2);
                projection.each(function(item, i) {
-                  assert.equal(sortedItem[i], item.getContents());
+                  assert.equal(sortedItems[i], item.getContents());
                });
             });
 
             it('should sort projection after change item', function() {
                var
                   adapter = new JsonAdapter(),
-                  changeModel = new Model({data:{max: 2},adapter:adapter}),
+                  changeModel = new Model({data:{max: 2}}),
                   list = new ObservableList({
                      items: [
                         new Model({
-                           data: {max: 1},
-                           adapter: adapter
+                           data: {max: 1}
                         }),
                         new Model({
-                           data: {max: 3},
-                           adapter: adapter
+                           data: {max: 3}
                         }),
                         new Model({
-                           data: {max: 4},
-                           adapter: adapter
+                           data: {max: 4}
                         }),
                         changeModel
                      ]
                   }),
-                  sortedItem = [10, 4, 3, 1],
-                  sort = function(a ,b){
-                     return a.item.get('max') <= b.item.get('max') ? 1 : -1;
-                  };
+                  sortedItems = [10, 4, 3, 1];
                var projection = new CollectionProjection({
                   collection: list
                });
-               projection.setSort(sort);
-               changeModel.set('max',10);
+               projection.setSort(function(a ,b){
+                  return a.item.get('max') <= b.item.get('max') ? 1 : -1;
+               });
+               changeModel.set('max', 10);
                projection.each(function(item, i) {
-                  assert.equal(sortedItem[i], item.getContents().get('max'));
+                  assert.equal(sortedItems[i], item.getContents().get('max'));
                });
             });
-
-
-
          });
 
          describe('.setFilter()', function() {
+            var getItems = function() {
+               return [1, 2, 3, 4];
+            };
+
             it('should filter projection', function() {
                var list = new ObservableList({
-                     items: [1, 2, 3, 4]
+                     items: getItems()
                   }),
                   filter = function(item) {
                      return item === 3;
@@ -274,7 +231,7 @@ define([
 
             it('should filter projection after add item', function() {
                var list = new ObservableList({
-                     items: [1, 2, 3, 4]
+                     items: getItems()
                   }),
                   filter = function(item){
                      return item === 3;
@@ -357,7 +314,7 @@ define([
                         changeModel
                      ]
                   }),
-                  sortedItem = [10, 4, 3, 1],
+                  sortedItems = [10, 4, 3, 1],
                   filter = function(item) {
                      return item.get('max') === 3;
                   };
@@ -645,6 +602,250 @@ define([
                }
 
                projection.unsubscribe('onCurrentChange', handler);
+            });
+         });
+
+         describe('[onCollectionChange]', function() {
+            var getItems = function() {
+                  return [1, 2, 3, 4];
+               },
+               getSortedItems = function() {
+                  return [4, 3, 2, 1];
+               },
+               sort = function(a, b) {
+                  return a.item <= b.item ? 1 : -1;
+               },
+               filter = function(item) {
+                  return outsideItems.indexOf(item) === -1;
+               },
+               outsideItems = [1, 3];
+
+            it('should fire after add an item', function(done) {
+               var items = getItems(),
+                  list = new ObservableList({
+                     items: items
+                  }),
+                  projection = new CollectionProjection({
+                     collection: list
+                  }),
+                  handler = function(event, action, newItems, newItemsIndex, oldItems, oldItemsIndex) {
+                     try {
+                        if (action !== IBindCollectionProjection.ACTION_ADD) {
+                           throw new Error('Invalid action');
+                        }
+                        if (newItems[0].getContents() !== 5) {
+                           throw new Error('Invalid newItems');
+                        }
+                        if (newItemsIndex !== items.length - 1) {
+                           throw new Error('Invalid newItemsIndex');
+                        }
+                        if (oldItems.length > 0) {
+                           throw new Error('Invalid oldItems');
+                        }
+                        if (oldItemsIndex > 0) {
+                           throw new Error('Invalid oldItemsIndex');
+                        }
+                        done();
+                     } catch (err) {
+                        done(err);
+                     }
+                  };
+               projection.subscribe('onCollectionChange', handler);
+               projection.getCollection().add(5);
+               projection.unsubscribe('onCollectionChange', handler);
+            });
+
+            it('should fire after remove an item', function(done) {
+               var items = getItems(),
+                  list = new ObservableList({
+                     items: items
+                  }),
+                  projection = new CollectionProjection({
+                     collection: list
+                  }),
+                  handler = function(event, action, newItems, newItemsIndex, oldItems, oldItemsIndex) {
+                     try {
+                        if (action !== IBindCollectionProjection.ACTION_REMOVE) {
+                           throw new Error('Invalid action');
+                        }
+                        if (newItems.length > 0) {
+                           throw new Error('Invalid newItems');
+                        }
+                        if (newItemsIndex > 0) {
+                           throw new Error('Invalid newItemsIndex');
+                        }
+                        if (oldItems[0].getContents() !== 2) {
+                           throw new Error('Invalid oldItems');
+                        }
+                        if (oldItemsIndex !== 1) {
+                           throw new Error('Invalid oldItemsIndex');
+                        }
+                        done();
+                     } catch (err) {
+                        done(err);
+                     }
+                  };
+               projection.subscribe('onCollectionChange', handler);
+               projection.getCollection().remove(2);
+               projection.unsubscribe('onCollectionChange', handler);
+            });
+
+            it('should fire after replace an item', function(done) {
+               var items = getItems(),
+                  list = new ObservableList({
+                     items: items
+                  }),
+                  projection = new CollectionProjection({
+                     collection: list
+                  }),
+                  handler = function(event, action, newItems, newItemsIndex, oldItems, oldItemsIndex) {
+                     try {
+                        if (action !== IBindCollectionProjection.ACTION_REPLACE) {
+                           throw new Error('Invalid action');
+                        }
+                        if (newItems[0].getContents() !== 33) {
+                           throw new Error('Invalid newItems');
+                        }
+                        if (newItemsIndex !== 2) {
+                           throw new Error('Invalid newItemsIndex');
+                        }
+                        if (oldItems[0].getContents() !== 3) {
+                           throw new Error('Invalid oldItems');
+                        }
+                        if (oldItemsIndex !== 2) {
+                           throw new Error('Invalid oldItemsIndex');
+                        }
+                        done();
+                     } catch (err) {
+                        done(err);
+                     }
+                  };
+               projection.subscribe('onCollectionChange', handler);
+               projection.getCollection().replace(33, 2);
+               projection.unsubscribe('onCollectionChange', handler);
+            });
+
+            it('should fire after reset a collection', function(done) {
+               var itemsOld = getItems(),
+                  itemsNew = [9, 8, 7],
+                  list = new ObservableList({
+                     items: itemsOld.slice()
+                  }),
+                  projection = new CollectionProjection({
+                     collection: list
+                  }),
+                  handler = function(event, action, newItems, newItemsIndex, oldItems, oldItemsIndex) {
+                     try {
+                        if (action !== IBindCollectionProjection.ACTION_RESET) {
+                           throw new Error('Invalid action');
+                        }
+                        if (newItems[0].getContents() !== itemsNew[0] ||
+                           newItems[1].getContents() !== itemsNew[1] ||
+                           newItems[2].getContents() !== itemsNew[2]
+                        ) {
+                           throw new Error('Invalid newItems');
+                        }
+                        if (newItemsIndex !== 0) {
+                           throw new Error('Invalid newItemsIndex');
+                        }
+                        if (oldItems[0].getContents() !== itemsOld[0] ||
+                           oldItems[1].getContents() !== itemsOld[1] ||
+                           oldItems[2].getContents() !== itemsOld[2] ||
+                           oldItems[3].getContents() !== itemsOld[3]
+                        ) {
+                           throw new Error('Invalid oldItems');
+                        }
+                        if (oldItemsIndex !== 0) {
+                           throw new Error('Invalid oldItemsIndex');
+                        }
+                        done();
+                     } catch (err) {
+                        done(err);
+                     }
+                  };
+               projection.subscribe('onCollectionChange', handler);
+               projection.getCollection().fill(itemsNew);
+               projection.unsubscribe('onCollectionChange', handler);
+            });
+
+            it('should fire after sort the projection', function(done) {
+               var list = new ObservableList({
+                     items: getItems()
+                  }),
+                  sortedItems = getSortedItems(),
+                  projection = new CollectionProjection({
+                     collection: list
+                  }),
+                  handler = function(event, action, newItems, newItemsIndex, oldItems, oldItemsIndex) {
+                     try {
+                        if (action !== IBindCollectionProjection.ACTION_MOVE) {
+                           throw new Error('Invalid action');
+                        }
+                        if (newItems[0].getContents() !== sortedItems[fireId]) {
+                           throw new Error('Invalid newItems');
+                        }
+                        if (newItemsIndex !== fireId) {
+                           throw new Error('Invalid newItemsIndex');
+                        }
+                        if (oldItems[0].getContents() !== sortedItems[fireId]) {
+                           throw new Error('Invalid oldItems');
+                        }
+                        if (oldItemsIndex !== sortedItems.length - 1) {
+                           throw new Error('Invalid oldItemsIndex');
+                        }
+                        if (fireId === firesToBeDone) {
+                           done();
+                        }
+                     } catch (err) {
+                        done(err);
+                     }
+                     fireId++;
+                  },
+                  fireId = 0,
+                  firesToBeDone = 2;
+               projection.subscribe('onCollectionChange', handler);
+               projection.setSort(sort);
+               projection.unsubscribe('onCollectionChange', handler);
+            });
+
+            it('should fire after filter the projection', function(done) {
+               var list = new ObservableList({
+                     items: getItems()
+                  }),
+                  sortedItems = getSortedItems(),
+                  projection = new CollectionProjection({
+                     collection: list
+                  }),
+                  handler = function(event, action, newItems, newItemsIndex, oldItems, oldItemsIndex) {
+                     try {
+                        if (action !== IBindCollectionProjection.ACTION_REMOVE) {
+                           throw new Error('Invalid action');
+                        }
+                        if (newItems.length > 0) {
+                           throw new Error('Invalid newItems');
+                        }
+                        if (newItemsIndex > 0) {
+                           throw new Error('Invalid newItemsIndex');
+                        }
+                        if (outsideItems.indexOf(oldItems[0].getContents()) === -1) {
+                           throw new Error('Invalid oldItems');
+                        }
+                        if (oldItemsIndex !== fireId) {
+                           throw new Error('Invalid oldItemsIndex');
+                        }
+                        if (fireId === firesToBeDone) {
+                           done();
+                        }
+                     } catch (err) {
+                        done(err);
+                     }
+                     fireId++;
+                  },
+                  fireId = 0,
+                  firesToBeDone = 1;
+               projection.subscribe('onCollectionChange', handler);
+               projection.setFilter(filter);
+               projection.unsubscribe('onCollectionChange', handler);
             });
          });
       });

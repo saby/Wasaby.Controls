@@ -20,7 +20,15 @@ define('js!SBIS3.CONTROLS.FilterHistoryController',
                  * Специальный id по которому будет сохраняться история
                  * @cfg {String}
                  */
-                historyId: undefined
+                historyId: undefined,
+                /**
+                 * Представление данных
+                 */
+                view: undefined,
+                /**
+                 * Кнопка фильтров
+                 */
+                filterButton: undefined
              },
              _history : undefined,              /* Объект с историей фильтров */
              _loadParamsDeferred: undefined,    /* Деферед загрузки истории */
@@ -32,6 +40,14 @@ define('js!SBIS3.CONTROLS.FilterHistoryController',
              this.getHistory(true).addCallback(function(result) {
                 self._history = new List({items: result});
                 return result;
+             });
+
+             /* Если сбросили фильтр - сбросим активный */
+             this._options.filterButton.subscribe('onResetFilter', function() {
+                if(!self._options.filterButton.getLinkedContext().getValue('filterChanged')) {
+                   self.clearActiveFilter();
+	                self.saveHistory();
+                }
              });
           },
 
@@ -55,8 +71,7 @@ define('js!SBIS3.CONTROLS.FilterHistoryController',
                 /* Если такой фильтр есть в истории, то надо его сделать активным */
                 if(equalFilter) {
                    equalFilter.isActiveFilter = true;
-                   this._sortHistory();
-                   this.saveToUserParams();
+	                this.saveHistory()
                 }
                 return;
              }
@@ -70,20 +85,32 @@ define('js!SBIS3.CONTROLS.FilterHistoryController',
              this._history.add({
                 id: $ws.helpers.randomId(),
                 linkText: filterObject.linkText,
+	             viewFilter: this._options.view.getFilter(),
                 filter: filterObject.filter,
                 isActiveFilter: true,
                 isMarked: false
              });
 
+	          this.saveHistory();
+          },
+
+	       /**
+	        * Сортирует и сохраняет историю в пользовательские параметры
+	        * @param filterObject
+	        */
+          saveHistory: function() {
+             this._sortHistory();
              this.saveToUserParams();
           },
 
+	       /**
+	        * Очищает текущий активный фильтр
+	        */
           clearActiveFilter: function() {
              var item = this.getActiveFilter();
 
-             if(item.isActiveFilter) {
+             if(item) {
                 item.isActiveFilter = false;
-                this.saveToUserParams();
              }
           },
 
@@ -99,7 +126,7 @@ define('js!SBIS3.CONTROLS.FilterHistoryController',
            * @private
            */
           getFilterFromHistory: function(key) {
-             return this._findFilterByKey(key).filter.filter;
+             return this._findFilterByKey(key).filter;
           },
 
           /**
@@ -127,7 +154,7 @@ define('js!SBIS3.CONTROLS.FilterHistoryController',
            */
           saveToUserParams: function() {
              return this._saveParamsDeferred = $ws._const.userConfigSupport ?
-                 $ws.single.UserConfig.setParam(this._options.historyId, $ws.helpers.serializeURLData(this._history.toArray())) :
+                 $ws.single.UserConfig.setParam(this._options.historyId, $ws.helpers.serializeURLData(this._history.toArray()), true) :
                  (new $ws.proto.Deferred).callback([]);
 
           },
@@ -139,8 +166,7 @@ define('js!SBIS3.CONTROLS.FilterHistoryController',
           toggleMarkFilter: function(key) {
              var item = this._history.at(this._findFilterByKey(key).index);
              item.isMarked = !item.isMarked;
-             this._sortHistory();
-             return this.saveToUserParams();
+             this.saveHistory()
           },
 
           _sortHistory: function() {
@@ -168,7 +194,7 @@ define('js!SBIS3.CONTROLS.FilterHistoryController',
            */
           clearHistory: function() {
              this._history.fill();
-             return this.saveToUserParams();
+             this.saveToUserParams();
           },
 
           /**

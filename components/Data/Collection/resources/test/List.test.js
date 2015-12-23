@@ -5,31 +5,34 @@ define(
       'use strict';
 
       describe('SBIS3.CONTROLS.Data.Collection.List', function() {
-         var items;
+         var getItems = function() {
+               return [{
+                  'Ид': 1,
+                  'Фамилия': 'Иванов'
+               }, {
+                  'Ид': 2,
+                  'Фамилия': 'Петров'
+               }, {
+                  'Ид': 3,
+                  'Фамилия': 'Сидоров'
+               }, {
+                  'Ид': 4,
+                  'Фамилия': 'Пухов'
+               }, {
+                  'Ид': 5,
+                  'Фамилия': 'Молодцов'
+               }, {
+                  'Ид': 6,
+                  'Фамилия': 'Годолцов'
+               }, {
+                  'Ид': 7,
+                  'Фамилия': 'Арбузнов'
+               }];
+            },
+            items;
 
          beforeEach(function() {
-            items = [{
-               'Ид': 1,
-               'Фамилия': 'Иванов'
-            }, {
-               'Ид': 2,
-               'Фамилия': 'Петров'
-            }, {
-               'Ид': 3,
-               'Фамилия': 'Сидоров'
-            }, {
-               'Ид': 4,
-               'Фамилия': 'Пухов'
-            }, {
-               'Ид': 5,
-               'Фамилия': 'Молодцов'
-            }, {
-               'Ид': 6,
-               'Фамилия': 'Годолцов'
-            }, {
-               'Ид': 7,
-               'Фамилия': 'Арбузнов'
-            }];
+            items = getItems();
          });
 
          afterEach(function() {
@@ -560,6 +563,53 @@ define(
 
                list.replace(10, 2);
                assert.strictEqual(3, list.getCount());
+            });
+         });
+
+         describe('.equals()', function () {
+            it('should return true for list with same instances', function () {
+               var listA = new List({
+                     items: items.slice()
+                  }),
+                  listB = new List({
+                     items: items.slice()
+                  });
+               assert.isTrue(listA.equals(listB));
+            });
+
+            it('should return false for list with different instances', function () {
+               var listA = new List({
+                     items: getItems()
+                  }),
+                  listB = new List({
+                     items: getItems()
+                  });
+               assert.isFalse(listA.equals(listB));
+            });
+
+            it('should return false for list with different count', function () {
+               var listA = new List({
+                     items: items.slice()
+                  }),
+                  listB = new List({
+                     items: items.slice()
+                  });
+               listB.removeAt(5);
+               assert.isFalse(listA.equals(listB));
+            });
+
+            it('should return false for not a list', function () {
+               var list = new List();
+               assert.isFalse(list.equals());
+               assert.isFalse(list.equals(null));
+               assert.isFalse(list.equals(false));
+               assert.isFalse(list.equals(true));
+               assert.isFalse(list.equals(0));
+               assert.isFalse(list.equals(1));
+               assert.isFalse(list.equals(''));
+               assert.isFalse(list.equals('a'));
+               assert.isFalse(list.equals({}));
+               assert.isFalse(list.equals([]));
             });
          });
 

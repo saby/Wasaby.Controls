@@ -162,6 +162,13 @@ define('js!SBIS3.CONTROLS.Data.Collection.List', [
       },
 
       equals: function (another) {
+         if (!another ||
+            typeof another !== 'object' ||
+            !$ws.helpers.instanceOfMixin(another, 'SBIS3.CONTROLS.Data.Collection.IList')
+         ) {
+            return false;
+         }
+
          if (this._items.length !== another.getCount()) {
             return false;
          }

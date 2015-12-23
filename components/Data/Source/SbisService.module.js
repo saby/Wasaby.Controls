@@ -163,6 +163,7 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
        * Создает пустую модель через источник данных
        * @param {Object|SBIS3.CONTROLS.Data.Model} [meta] Дополнительные мета данные
        * @returns {$ws.proto.Deferred} Асинхронный результат выполнения. В колбэке придет {@link SBIS3.CONTROLS.Data.Model}.
+       * @see SBIS3.CONTROLS.Data.Source.ISource#create
        * @example
        * <pre>
        *     var dataSource = new SbisService({
@@ -198,6 +199,7 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
        * @param {String} key Первичный ключ модели
        * @param {Object|SBIS3.CONTROLS.Data.Model} [meta] Дополнительные мета данные
        * @returns {$ws.proto.Deferred} Асинхронный результат выполнения. В колбэке придет {@link SBIS3.CONTROLS.Data.Model}.
+       * @see SBIS3.CONTROLS.Data.Source.ISource#read
        */
       read: function(key, meta) {
          var args = {
@@ -226,6 +228,7 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
        * @param {SBIS3.CONTROLS.Data.Model} model Обновляемая модель
        * @param {Object|SBIS3.CONTROLS.Data.Model} [meta] Дополнительные мета данные
        * @returns {$ws.proto.Deferred} Асинхронный результат выполнения
+       * @see SBIS3.CONTROLS.Data.Source.ISource#update
        */
       update: function(model, meta) {
          var args = {
@@ -256,6 +259,7 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
        * @param {String} keys Первичный ключ модели
        * @param {Object|SBIS3.CONTROLS.Data.Model} [meta] Дополнительные мета данные
        * @returns {$ws.proto.Deferred} Асинхронный результат выполнения
+       * @see SBIS3.CONTROLS.Data.Source.ISource#destroy
        */
       destroy: function(keys, meta) {
          if ($ws.helpers.type(keys) !== 'array') {
@@ -274,7 +278,7 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
          for (providerName in groups) {
             if (groups.hasOwnProperty(providerName)) {
                pd.push(this._destroy(
-                  groups[providerName].length > 1 ? groups[providerName] : groups[providerName][0],
+                  groups[providerName],
                   providerName,
                   meta
                ));

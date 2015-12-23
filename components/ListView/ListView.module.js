@@ -159,6 +159,11 @@ define('js!SBIS3.CONTROLS.ListView',
           *    <li>* - продолжить редактирование в штатном режиме.</li>
           * </ol>
           */
+         /**
+          * @event onAfterEndEdit Возникает после окончания редактирования по месту
+          * @param {$ws.proto.EventObject} eventObject Дескриптор события.
+          * @param {Object} model Отредактированная модель
+          */
          $protected: {
             _floatCheckBox: null,
             _dotItemTpl: null,
@@ -308,21 +313,6 @@ define('js!SBIS3.CONTROLS.ListView',
                 */
                infiniteScroll: false,
                /**
-                * @cfg {Boolean} Игнорировать значение в localStorage (т.е. смотреть на опцию pageSize)
-                * @remark Важно! На страницах нашего приложения есть функционал сохранения выбранного количества записей на всех реестрах.
-                * Это значит, что если на одном реестре пользователь выбрал “отображать по 50 записей”, то по умолчанию в других реестрах тоже
-                * будет отображаться 50 записей. Чтобы отключить функционал “следования выбору пользователя” на
-                * конкретном табличном представлении есть опция ignoreLocalPageSize
-                * (аналог css-класса ws-browser-ignore-local-page-size в старых табличных представления),
-                * которую нужно поставить в true (по умолчанию она = false)
-                * @example
-                * <pre>
-                *    <option name="ignoreLocalPageSize">true</option>
-                * </pre>
-                * @see pageSize
-                */
-               ignoreLocalPageSize: false,
-               /**
                 * @cfg {Boolean} Режим постраничной навигации
                 * @remark
                 * При частичной постраничной навигации заранее неизвестно общее количество страниц, режим пейджинга будет определн по параметру n из dataSource
@@ -374,7 +364,7 @@ define('js!SBIS3.CONTROLS.ListView',
          $constructor: function () {
             //TODO временно смотрим на TopParent, чтобы понять, где скролл. С внедрением ScrallWatcher этот функционал уберем
             var topParent = this.getTopParent();
-            this._publish('onChangeHoveredItem', 'onItemClick', 'onItemActivate', 'onDataMerge', 'onItemValueChanged', 'onShowEdit', 'onBeginEdit', 'onEndEdit', 'onBeginAdd');
+            this._publish('onChangeHoveredItem', 'onItemClick', 'onItemActivate', 'onDataMerge', 'onItemValueChanged', 'onShowEdit', 'onBeginEdit', 'onEndEdit', 'onBeginAdd', 'onAfterEndEdit');
             this._container.on('mousemove', this._mouseMoveHandler.bind(this))
                            .on('mouseleave', this._mouseLeaveHandler.bind(this));
 
@@ -403,8 +393,6 @@ define('js!SBIS3.CONTROLS.ListView',
          },
 
          init: function () {
-            var localPageSize = $ws.helpers.getLocalStorageValue('ws-page-size');
-            this._options.pageSize = !this._options.ignoreLocalPageSize && localPageSize ? localPageSize : this._options.pageSize;
             if (typeof this._options.pageSize === 'string') {
                this._options.pageSize = this._options.pageSize * 1;
             }
@@ -836,8 +824,14 @@ define('js!SBIS3.CONTROLS.ListView',
                      onBeginAdd: function(event, options) {
                         event.setResult(this._notify('onBeginAdd', options));
                      }.bind(this),
-                     onEndEdit: function(event, model) {
-                        event.setResult(this._notify('onEndEdit', model));
+                     onEndEdit: function(event, model, withSaving) {
+                        event.setResult(this._notify('onEndEdit', model, withSaving));
+                     }.bind(this),
+                     onAfterEndEdit: function(event, model, withSaving) {
+                        if (withSaving) {
+                           this._getItemsContainer().find('.js-controls-ListView__item[data-id="' + model.getKey() + '"]:not(".controls-editInPlace")').after(this._drawItem(model)).remove();
+                        }
+                        event.setResult(this._notify('onAfterEndEdit', model, withSaving));
                      }.bind(this)
                   }
                };
@@ -1138,6 +1132,14 @@ define('js!SBIS3.CONTROLS.ListView',
                scrollHeight = Math.max(docBody.scrollHeight, docElem.scrollHeight);
             return (clientHeight + scrollTop >= scrollHeight - this._scrollIndicatorHeight);//Учитываем отступ снизу на высоту картинки индикатора загрузки
          },
+         _scrollTo: function (container) {
+            var containerOffset = $(container).offset(),
+               body = $('body'),
+               needScroll = (body.scrollTop() >= containerOffset.top) || (containerOffset.top - body.scrollTop()) > $ws._const.$win.height() / 2;
+            if (needScroll) {
+               window.scrollTo(window.scrollX, containerOffset.top);
+            }
+         },
          _loadBeforeScrollAppears: function(){
             /*
             *   TODO убрать зависимость от опции autoHeight, перенести в scrollWatcher возможность отслежитвания скролла по переданному классу
@@ -1150,9 +1152,8 @@ define('js!SBIS3.CONTROLS.ListView',
              * т.е. пока не появится скролл внутри контейнера
              */
             var  windowHeight = $(window).height(),
-                isOnFloatArea = $ws.helpers.instanceOfModule(this.getTopParent(), 'SBIS3.CORE.FloatArea'),
                 checkHeights = this._isHeightGrowable() ?
-                  (!($('body').get(0).scrollHeight > windowHeight + this._scrollIndicatorHeight) && !isOnFloatArea) || (this._container.height() < windowHeight) :
+                  this._container.height() < windowHeight :
                   this._container.height() >= this._container.find('.js-controls-View__scrollable').height();
             //Если на странице появился скролл и мы достигли дна скролла
             if (this._isLoadBeforeScrollAppears && checkHeights){
@@ -1236,21 +1237,6 @@ define('js!SBIS3.CONTROLS.ListView',
                   this._hideLoadingIndicator();
                }
             }
-            /*todo EIP Крайнов, Сухоручкин, Авраменко - данная логика должна выполнятся на уровне новых миксинов, т.к. запись может измениться не только из-за редактировании по месту */
-            function redrawRaw(record) {
-               this._getItemsContainer().find('.js-controls-ListView__item[data-id="' + record.getKey() + '"]:not(".controls-editInPlace")').after(this._drawItem(record)).remove();
-            }
-            this._dataSet.subscribe($ws.helpers.instanceOfMixin(this._dataSet, 'SBIS3.CONTROLS.Data.Bind.ICollection') ? 'onCollectionItemChange' : 'onRecordChange', function(event, record) {
-               redrawRaw.apply(this, [record]);
-            }.bind(this));
-            if ($ws.helpers.instanceOfMixin(this._dataSet, 'SBIS3.CONTROLS.Data.Bind.ICollection')) {
-               this._dataSet.subscribe('onCollectionChange', function (event, action, newItems) {
-                  /*todo Мальцев. Действия не вынесены в глобальные константы. Как понимать, какой действие произошло - не понятно.*/
-                  if (action === 'a') {
-                     redrawRaw.apply(this, newItems);
-                  }
-               }.bind(this));
-            }
          },
          _toggleIndicator: function(show){
             this._showedLoading = show;
@@ -1293,7 +1279,6 @@ define('js!SBIS3.CONTROLS.ListView',
                this._pager = new Pager({
                   pageSize: this._options.pageSize,
                   opener: this,
-                  ignoreLocalPageSize: this._options.ignoreLocalPageSize,
                   element: pagerContainer.find('div'),
                   allowChangeEnable: false, //Запрещаем менять состояние, т.к. он нужен активный всегда
                   pagingOptions: pagingOptions,

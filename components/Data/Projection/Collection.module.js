@@ -446,13 +446,13 @@ define('js!SBIS3.CONTROLS.Data.Projection.Collection', [
                      [item],
                      index,
                      [],
-                     -1
+                     0
                   );
                } else if (oldMatch !== undefined) {
                   this._notifyCollectionChange(
                      IBindCollectionProjection.ACTION_REMOVE,
                      [],
-                     -1,
+                     0,
                      [item],
                      index
                   );
@@ -598,7 +598,7 @@ define('js!SBIS3.CONTROLS.Data.Projection.Collection', [
        * @private
        */
       _isFalseMirror: function () {
-         return this._isFiltered() || this._isSorted;
+         return this._isFiltered() || this._isSorted();
       },
 
       /**
@@ -658,13 +658,47 @@ define('js!SBIS3.CONTROLS.Data.Projection.Collection', [
       /**
        * Заменяет элементы в индексах
        * @param {Number} start Начальный индекс (в исходной коллекци)
-       * @param {Array} items Элементы
+       * @param {Array} items Новые элементы
+       * @returns {Array} Замененные элементы
        * @private
        */
       _replaceItems: function (start, items) {
+         var replaced = [],
+            item;
          for (var i = 0, count = items.length; i < count; i++) {
-            this._itemsMap[start + i].setContents(items[i]);
+            item = this._itemsMap[start + i];
+            if (item) {
+               replaced.push(item.getContents());
+               item.setContents(items[i], true);
+            } else {
+               $ws.single.ioc.resolve('ILogger').log('SBIS3.CONTROLS.Data.Projection.Collection::_replaceItems', 'Item for replace is not exists');
+            }
          }
+         return replaced;
+      },
+
+      /**
+       * Возвращает элементы в соотвествии с порядком сортировки
+       * @param {Array} items Элементы
+       * @param {Number} start Начальный индекс (в исходной коллекци)
+       * @returns {Array}
+       * @private
+       */
+      _getItemsSorted: function (items, start) {
+         start = start || 0;
+
+         if (this._sortMap.length === 0) {
+            return items;
+         }
+
+         var count = items.length,
+            sorted = [];
+         for (var i = 0; i < count; i++) {
+            sorted.push(
+               items[this._sortMap[start + i]]
+            );
+         }
+         return sorted;
       },
 
       /**
@@ -677,25 +711,37 @@ define('js!SBIS3.CONTROLS.Data.Projection.Collection', [
        * @private
        */
       _notifyCollectionChange: function (action, newItems, newItemsIndex, oldItems, oldItemsIndex) {
-         if (this._isFalseMirror() || action === IBindCollectionProjection.ACTION_RESET) {
-            this._notify(
-               'onCollectionChange',
-               action,
-               this._itemsMap.slice(newItemsIndex, newItemsIndex + newItems.length),
-               newItemsIndex,
-               this._itemsMap.slice(oldItemsIndex, oldItemsIndex + oldItems.length),
-               oldItemsIndex
-            );
+         var newItemsMap = this._itemsMap.slice(newItemsIndex, newItemsIndex + newItems.length),
+            oldItemsMap;
+         if (action === IBindCollectionProjection.ACTION_REPLACE ||
+            action === IBindCollectionProjection.ACTION_RESET
+         ) {
+            oldItemsMap = oldItems.map((function(item) {
+               return this._convertToItem(item);
+            }).bind(this));
          } else {
+            oldItemsMap = this._itemsMap.slice(oldItemsIndex, oldItemsIndex + oldItems.length);
+         }
+
+         if (this._isFalseMirror() || action !== IBindCollectionProjection.ACTION_RESET) {
             var newItemsProjectionIndex = this._getServiceEnumerator().getInternalBySource(newItemsIndex),
                oldItemsProjectionIndex = this._getServiceEnumerator().getInternalBySource(oldItemsIndex);
             this._notify(
                'onCollectionChange',
                action,
-               newItemsProjectionIndex === -1 ? [] : this._itemsMap.slice(newItemsIndex, newItemsIndex + newItems.length),
+               newItemsProjectionIndex === -1 ? [] : newItemsMap,
                newItemsProjectionIndex,
-               oldItemsProjectionIndex === -1 ? [] : this._itemsMap.slice(oldItemsIndex, oldItemsIndex + oldItems.length),
+               oldItemsProjectionIndex === -1 ? [] : oldItemsMap,
                oldItemsProjectionIndex
+            );
+         } else {
+            this._notify(
+               'onCollectionChange',
+               action,
+               newItemsMap,
+               newItemsIndex,
+               oldItemsMap,
+               oldItemsIndex
             );
          }
       },
@@ -756,27 +802,26 @@ define('js!SBIS3.CONTROLS.Data.Projection.Collection', [
             break;
 
          case IBindCollectionProjection.ACTION_REMOVE:
-            notifyStandard.call(this);
             this._removeItems(oldItemsIndex, oldItems.length);
+            if (this._isSorted()) {
+               this._reSort(true);
+            } else {
+               notifyStandard.call(this);
+            }
             this._getServiceEnumerator().reIndex();
             break;
 
          case IBindCollectionProjection.ACTION_REPLACE:
             if (this._isFalseMirror()) {
-               this._notifyCollectionChange(
-                  IBindCollectionProjection.ACTION_REMOVE,
-                  [],
-                  -1,
-                  oldItems,
-                  oldItemsIndex
-               );
                this._removeItems(oldItemsIndex, oldItems.length);
+               this._reSort(true);
 
                this._addItems(newItemsIndex, newItems);
                this._reFilter(newItemsIndex, newItems.length);
                this._reSort(true);
             } else {
                this._replaceItems(newItemsIndex, newItems);
+               notifyStandard.call(this);
             }
             this._getServiceEnumerator().reIndex();
             break;
@@ -785,34 +830,23 @@ define('js!SBIS3.CONTROLS.Data.Projection.Collection', [
             notifyStandard.call(this);
             this._removeItems(oldItemsIndex, oldItems.length);
             this._addItems(newItemsIndex, newItems);
-            if (this._isFalseMirror()) {
-               this._reFilter(newItemsIndex, newItems.length);
+            if (this._isSorted()) {
                this._reSort(true);
+            } else {
+               notifyStandard.call(this);
             }
             this._getServiceEnumerator().reIndex();
             break;
 
          case IBindCollectionProjection.ACTION_RESET:
-            var oldItemsOrdered = this._sortMap.length ?
-               this._sortMap.map(function(index) {
-                  return oldItems[index];
-               }) :
-               oldItems;
+            oldItems = this._getItemsSorted(oldItems);
 
             this._reBuild();
             this._reSort(false);
-            this._notifyCollectionChange(
-               action,
-               this._sortMap.length ?
-                  this._sortMap.map(function(index) {
-                     return newItems[index];
-                  }) :
-                  newItems,
-               newItemsIndex,
-               oldItemsOrdered,
-               oldItemsIndex
-            );
             this._getServiceEnumerator().reIndex();
+
+            newItems = this._getItemsSorted(newItems);
+            notifyStandard.call(this);
             break;
       }
    },
