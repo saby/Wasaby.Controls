@@ -246,9 +246,6 @@ define('js!SBIS3.CONTROLS.DropdownList',
                this.hidePicker();
             }
          },
-         _getFooterContainer: function(){
-            return this._pickerFooterContainer;
-         },
          _drawItemsCallback: function() {
             //Надо вызвать просто для того, чтобы отрисовалось выбранное значение/значения
             if (this._dataSet.getRawData().length) {
