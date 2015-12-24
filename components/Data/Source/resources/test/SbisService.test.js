@@ -156,9 +156,10 @@ define([
       'js!SBIS3.CONTROLS.Data.Source.SbisService/resources/SbisServiceBLO',
       'js!SBIS3.CONTROLS.Data.Source.DataSet',
       'js!SBIS3.CONTROLS.Data.Model',
+      'js!SBIS3.CONTROLS.Data.Collection.List',
       'js!SBIS3.CONTROLS.Data.Adapter.Sbis',
       'js!SBIS3.CONTROLS.Data.Query.Query'
-   ], function (SbisService, SbisServiceBLO, DataSet, Model, SbisAdapter, Query) {
+   ], function (SbisService, SbisServiceBLO, DataSet, Model, List, SbisAdapter, Query) {
       'use strict';
 
       describe('SBIS3.CONTROLS.Data.Source.SbisService', function () {
@@ -238,7 +239,7 @@ define([
                      try {
                         var args = SbisServiceBLO.lastRequest.args;
 
-                        if (args['ИмяМетода'] !== undefined) {
+                        if (args['ИмяМетода'] !== null) {
                            throw new Error('Wrong argument ИмяМетода');
                         }
 
@@ -267,10 +268,6 @@ define([
                   service.create({myParam: 'myValue'}).addCallbacks(function () {
                      try {
                         var args = SbisServiceBLO.lastRequest.args;
-
-                        if (args['ИмяМетода'] !== undefined) {
-                           throw new Error('Wrong argument ИмяМетода');
-                        }
 
                         if (args['Фильтр'].d[0] !== 'myValue') {
                            throw new Error('Wrong value for argument Фильтр.myParam');
@@ -852,6 +849,46 @@ define([
                         }
                         if (ds.getAll().getCount() !== 2) {
                            throw new Error('Wrong models count');
+                        }
+                        done();
+                     } catch (err) {
+                        done(err);
+                     }
+                  }, function (err) {
+                     done(err);
+                  });
+               });
+
+               it('should return a list instance of injected module', function (done) {
+                  var service = new SbisService({
+                        resource: 'Товар'
+                     }),
+                     MyList = List.extend({});
+                  service.setListModule(MyList);
+                  service.query().addCallbacks(function (ds) {
+                     try {
+                        if (!(ds.getAll() instanceof MyList)) {
+                           throw new Error('Wrong list instance');
+                        }
+                        done();
+                     } catch (err) {
+                        done(err);
+                     }
+                  }, function (err) {
+                     done(err);
+                  });
+               });
+
+               it('should return a model instance of injected module', function (done) {
+                  var service = new SbisService({
+                        resource: 'Товар'
+                     }),
+                     MyModel = Model.extend({});
+                  service.setModel(MyModel);
+                  service.query().addCallbacks(function (ds) {
+                     try {
+                        if (!(ds.getAll().at(0) instanceof MyModel)) {
+                           throw new Error('Wrong model instance');
                         }
                         done();
                      } catch (err) {
