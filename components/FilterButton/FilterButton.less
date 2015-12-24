@@ -161,12 +161,6 @@
    }
 }
 
-@-moz-document url-prefix() {
-   .controls__filterButton.controls__filterButton__filterLine {
-      margin: 8px 32px 8px 0;
-   }
-}
-
 .controls__filterButton {
    height: @controls-filterButton-height;
    display: inline-block;
@@ -260,5 +254,12 @@
       &:active {
          background-position: @controls-filterButton-button-image-hover
       }
+   }
+}
+
+// ФИКС ДЛЯ ФФ
+@-moz-document url-prefix() {
+   .controls__filterButton .controls__filterButton__filterLine {
+      margin: 8px 32px 8px 0;
    }
 }
