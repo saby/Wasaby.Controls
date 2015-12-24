@@ -282,6 +282,22 @@ define('js!SBIS3.CONTROLS.DropdownList',
             this._pickerBodyContainer = pickerContainer.find('.controls-DropdownList__body');
             this._pickerHeadContainer = pickerContainer.find('.controls-DropdownList__header');
             this._pickerFooterContainer = pickerContainer.find('.controls-DropdownList__footer');
+            if (this._options.multiselect) {
+               this._buttonChoose = this._picker.getChildControlByName('DropdownList_buttonChoose');
+               this._buttonChoose.subscribe('onActivated', function(){
+                  var currSelection = self._getCurrentSelection();
+                  self._hideAllowed = true;
+                  if (!self._isSimilarArrays(self.getSelectedKeys(), currSelection)) {
+                     self.setSelectedKeys(currSelection);
+                  }
+                  self.hidePicker();
+               });
+               this._buttonHasMore = this._picker.getChildControlByName('DropdownList_buttonHasMore');
+               this._buttonHasMore.subscribe('onActivated', function(){
+                  self._notify('onClickMore');
+                  self.hidePicker();
+               });
+            }
             if (this._options.showSelectedInList) {
                pickerContainer.addClass('controls-DropdownList__showSelectedInList');
             }
