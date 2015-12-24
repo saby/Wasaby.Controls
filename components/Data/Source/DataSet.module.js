@@ -1,8 +1,9 @@
 /* global define, $ws */
 define('js!SBIS3.CONTROLS.Data.Source.DataSet', [
    'js!SBIS3.CONTROLS.Data.Model',
-   'js!SBIS3.CONTROLS.Data.Collection.RecordSet'
-], function (Model, RecordSet) {
+   'js!SBIS3.CONTROLS.Data.Collection.RecordSet',
+   'js!SBIS3.CONTROLS.Data.Collection.ObservableList'
+], function (Model, RecordSet, ObservableList) {
    'use strict';
 
    /**
@@ -51,7 +52,7 @@ define('js!SBIS3.CONTROLS.Data.Source.DataSet', [
              * @see setListModule
              * @see SBIS3.CONTROLS.Data.Collection.ObservableList
              */
-            listModule: ObservableList,
+            listModule: RecordSet,
 
             /**
              * @cfg {String} Поле модели, содержащее первичный ключ
@@ -223,11 +224,30 @@ define('js!SBIS3.CONTROLS.Data.Source.DataSet', [
          if (property === undefined) {
             property = this._options.itemsProperty;
          }
-         return new RecordSet({
-            rawData: this._getDataProperty(property),
-            adapter: this.getAdapter(),
-            model: this._options.model
-         });
+         if($ws.helpers.isEqualObject(this._options.listModule, RecordSet)){
+            return new RecordSet({
+               rawData: this._getDataProperty(property),
+               adapter: this.getAdapter(),
+               model: this._options.model
+            });
+         } else {
+            var adapter = this.getAdapter().forTable(this._getDataProperty(property)),
+               count = adapter.getCount(),
+               items = [];
+            for (var i = 0; i < count; i++) {
+               items.push(
+                  this._getModelInstance(
+                     adapter.at(i)
+                  )
+               );
+            }
+
+            return new this._options.listModule({
+               items: items
+            });
+         }
+
+
       },
 
       /**
