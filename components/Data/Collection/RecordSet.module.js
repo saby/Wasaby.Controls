@@ -13,7 +13,6 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
     * @author Мальцев Алексей
     * @state mutable
     * @public
-    * @control
     * @remark
     * Этот модуль временный. Обеспечивает совместимость c  SBIS3.CONTROLS.DataSet по API.
     */
@@ -22,26 +21,88 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
       _moduleName: 'SBIS3.CONTROLS.Data.Collection.RecordSet',
       $protected: {
          _options: {
-            strategy: null,
-            data: undefined,
+            /**
+             * @cfg {Object} Данные в "сыром" виде
+             * @example
+             * <pre>
+             *    var user = new Model({
+             *       rawData: {
+             *          id: 1,
+             *          firstName: 'John',
+             *          lastName: 'Smith'
+             *       }
+             *    });
+             *    user.get('id');//5
+             *    user.get('firstName');//John
+             * </pre>
+             * @see getRawData
+             * @see setRawData
+             */
+            rawData: null,
+
+            /**
+             * @cfg {SBIS3.CONTROLS.Data.Adapter.IAdapter} Адаптер для работы с данными
+             * @example
+             * <pre>
+             *    var user = new Model({
+             *       adapter: new SbisAdapter()
+             *    });
+             * </pre>
+             * @see getAdapter
+             * @see setAdapter
+             */
+            adapter: undefined,
+
+            /**
+             * @cfg {Object} Метаданные
+             */
             meta: {},
-            keyField: ''
+
+            /**
+             * @cfg {String} Поле, содержащее первичный ключ
+             */
+            idProperty: '',
+
+            /**
+             * @cfg {Function} Конструктор модели
+             */
+            model: undefined
          },
+         /**
+          * @var {Function} Конструктор модели
+          */
          _model: undefined,
+         /**
+          * @var {Object} Сырые данные
+          */
          _rawData: undefined,
-         _indexTree: {}
+         /**
+          * @var {SBIS3.CONTROLS.Data.Adapter.ITable} Адаптер для набора записей
+          */
+         _indexTree: {},
+         /**
+          * @var {SBIS3.CONTROLS.Data.Adapter.ITable} Адаптер для набора записей
+          */
+         _tableAdapter: undefined
       },
 
       $constructor: function (cfg) {
          cfg = cfg || {};
 
-         if (!('compatibleMode' in cfg)) {
-            $ws.single.ioc.resolve('ILogger').log('SBIS3.CONTROLS.Data.RecordSet', 'module SBIS3.CONTROLS.Data.Collection.RecordSet is deprecated and will be removed in 3.8.0. Use SBIS3.CONTROLS.Data.Collection.LoadableList instead.');
-         }
          this._model = 'model' in cfg ? cfg.model : $ws.single.ioc.resolve('SBIS3.CONTROLS.Data.ModelConstructor');
-         if ('data' in cfg) {
-            this.setRawData(cfg.data);
+         if ('data' in cfg && !('rawData' in cfg)) {
+            this._options.rawData = cfg.data;
+            $ws.single.ioc.resolve('ILogger').log('SBIS3.CONTROLS.Data.Collection.RecordSet', 'option "data" is deprecated and will be removed in 3.7.4. Use "rawData" instead.');
          }
+         if ('strategy' in cfg && !('adapter' in cfg)) {
+            this._options.adapter = cfg.strategy;
+            $ws.single.ioc.resolve('ILogger').log('SBIS3.CONTROLS.Data.Collection.RecordSet', 'option "strategy" is deprecated and will be removed in 3.7.4. Use "adapter" instead.');
+         }
+         if ('keyField' in cfg && !('idProperty' in cfg)) {
+            this._options.idProperty = cfg.keyField;
+            $ws.single.ioc.resolve('ILogger').log('SBIS3.CONTROLS.Data.Collection.RecordSet', 'option "keyField" is deprecated and will be removed in 3.7.4. Use "idProperty" instead.');
+         }
+         this.setRawData(this._options.rawData);
       },
 
       saveChanges: function(dataSource, added, changed, deleted) {
@@ -124,7 +185,12 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
       },
 
       getStrategy: function () {
-         return this._options.strategy;
+         $ws.single.ioc.resolve('ILogger').log('SBIS3.CONTROLS.Data.Collection.RecordSet:getStrategy', 'method getStrategy is deprecated and will be removed in 3.7.4. Use "getAdapter" instead.');
+         return this.getAdapter();
+      },
+
+      getAdapter: function (){
+         return this._options.adapter;
       },
 
       merge: function (dataSetMergeFrom, options) {
@@ -135,9 +201,9 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
          if (!$ws.helpers.instanceOfModule(record, 'SBIS3.CONTROLS.Data.Model')) {
             record = new this._model({
                compatibleMode: true,
-               adapter: this.getStrategy(),
+               adapter: this.getAdapter(),
                rawData: record,
-               idProperty: this._options.keyField
+               idProperty: this._options.idProperty
             });
             record.setStored(true);
          }
@@ -154,22 +220,21 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
       },
 
       setRawData: function(data) {
-         this.assign();
+         this.clear();
 
          this._rawData = data;
-
-         var adapter = this.getStrategy().forTable(data),
+         var adapter = this._getTableAdapter(true),
             count = adapter.getCount(),
             record;
          for (var i = 0; i < count; i++) {
             record = new this._model({
                compatibleMode: true,
-               adapter: this.getStrategy(),
+               adapter: this.getAdapter(),
                rawData: adapter.at(i),
-               idProperty: this._options.keyField
+               idProperty: this._options.idProperty
             });
             record.setStored(true);
-            this.add(record);
+            RecordSet.superclass.add.call(this, record);
          }
       },
 
@@ -214,10 +279,9 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
             !$ws.helpers.instanceOfModule(this._options.meta.path, 'SBIS3.CONTROLS.Data.Collection.RecordSet')
          ) {
             this._options.meta.path = new RecordSet({
-               compatibleMode: true,
-               strategy: this.getStrategy(),
-               data: this._options.meta.path,
-               keyField: this._options.keyField
+               adapter: this.getAdapter(),
+               rawData: this._options.meta.path,
+               idProperty: this._options.idProperty
             });
          }
 
@@ -226,10 +290,9 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
             !$ws.helpers.instanceOfModule(this._options.meta.results, 'SBIS3.CONTROLS.Data.Model')
          ) {
             this._options.meta.results = $ws.single.ioc.resolve('SBIS3.CONTROLS.Data.Model', {
-               compatibleMode: true,
-               adapter: this.getStrategy(),
+               adapter: this.getAdapter(),
                rawData: this._options.meta.results,
-               idProperty: this._options.keyField
+               idProperty: this._options.idProperty
             });
          }
 
@@ -262,8 +325,8 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
 
       filter: function (filterCallback) {
          var filterDataSet = new RecordSet({
-            strategy: this._options.strategy,
-            keyField: this._keyField
+            adapter: this._options.adapter,
+            idProperty: this._idProperty
          });
 
          this.each(function (record) {
@@ -334,15 +397,47 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
             }
             this._indexTree[parentKey].push(record.getKey());
          }, 'all');
-      }
+      },
 
       //endregion SBIS3.CONTROLS.DataSet
 
-      //region Protected methods
+      /*region list*/
+      add: function (item, at) {
+         if(item && $ws.helpers.instanceOfModule(item, 'SBIS3.CONTROLS.Data.Model')){
+            this._getTableAdapter().add(item.getRawData(), at);
+            RecordSet.superclass.add.apply(this, arguments);
+         } else {
+            throw new Error('Item is not a model')
+         }
 
+      },
+
+      removeAt: function (index) {
+         RecordSet.superclass.removeAt.apply(this, arguments);
+         this._getTableAdapter().remove(index);
+      },
+
+      replace: function (item, at) {
+         RecordSet.superclass.replace.apply(this, arguments);
+
+         if (!this._isValidIndex(at)) {
+            throw new Error('Index is out of bounds');
+         }
+         this._items[at] = item;
+
+         this._getServiceEnumerator().reIndex();
+      },
+      /*endregion list*/
+
+      //region Protected methods
+      _getTableAdapter: function (forceCreate) {
+         return (this._tableAdapter && !forceCreate) ?  this._tableAdapter : (this._tableAdapter = this.getAdapter().forTable(this._rawData));
+      }
       //endregion Protected methods
 
    });
-
+   $ws.single.ioc.bind('SBIS3.CONTROLS.Data.Collection.RecordSet', function(config) {
+      return new RecordSet(config);
+   });
    return RecordSet;
 });

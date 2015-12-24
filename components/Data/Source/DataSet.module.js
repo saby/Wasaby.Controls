@@ -1,7 +1,7 @@
 /* global define, $ws */
 define('js!SBIS3.CONTROLS.Data.Source.DataSet', [
-   'js!SBIS3.CONTROLS.Data.Collection.ObservableList'
-], function (ObservableList) {
+   'js!SBIS3.CONTROLS.Data.Collection.RecordSet'
+], function (RecordSet) {
    'use strict';
 
    /**
@@ -129,19 +129,10 @@ define('js!SBIS3.CONTROLS.Data.Source.DataSet', [
          if (property === undefined) {
             property = this._options.itemsProperty;
          }
-         var adapter = this.getAdapter().forTable(this._getDataProperty(property)),
-             count = adapter.getCount(),
-             items = [];
-         for (var i = 0; i < count; i++) {
-            items.push(
-               this._getModelInstance(
-                  adapter.at(i)
-               )
-            );
-         }
-
-         return new ObservableList({
-            items: items
+         return new RecordSet({
+            rawData: this._getDataProperty(property),
+            adapter: this.getAdapter(),
+            model: this._options.model
          });
       },
 
