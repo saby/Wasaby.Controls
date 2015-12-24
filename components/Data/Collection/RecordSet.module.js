@@ -2,8 +2,9 @@
 define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
    'js!SBIS3.CONTROLS.Data.Collection.ObservableList',
    'js!SBIS3.CONTROLS.DataSet',
+   'js!SBIS3.CONTROLS.Data.Adapter.Json',
    'js!SBIS3.CONTROLS.Data.Model'
-], function (ObservableList, DataSet) {
+], function (ObservableList, DataSet, JsonAdapter) {
    'use strict';
 
    /**
@@ -102,7 +103,12 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
             this._options.idProperty = cfg.keyField;
             $ws.single.ioc.resolve('ILogger').log('SBIS3.CONTROLS.Data.Collection.RecordSet', 'option "keyField" is deprecated and will be removed in 3.7.4. Use "idProperty" instead.');
          }
-         this.setRawData(this._options.rawData);
+         this._initAdapter();
+         if ('items' in cfg && !('rawData' in cfg)) {
+            this._initForItems();
+         } else {
+            this.setRawData(this._options.rawData);
+         }
       },
 
       saveChanges: function(dataSource, added, changed, deleted) {
@@ -415,7 +421,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
          } else {
             throw new Error('Invalid argument');
          }
-         for(var i=0, len = newItems.length; i< len; i++) {
+         for (var i=0, len = newItems.length; i< len; i++) {
             var item = newItems[i];
             this._checkItem(item);
             this._getTableAdapter().add(item.getRawData(), start);
@@ -447,8 +453,9 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
          if (!this._isValidIndex(at)) {
             throw new Error('Index is out of bounds');
          }
-         this._items[at] = item;
 
+         this._items[at] = item;
+         this._getTableAdapter().replace(item.getRawData(), at);
          this._getServiceEnumerator().reIndex();
       },
       /*endregion list*/
@@ -458,13 +465,22 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
          return (this._tableAdapter && !forceCreate) ?  this._tableAdapter : (this._tableAdapter = this.getAdapter().forTable(this._rawData));
       },
 
-      _checkItem: function (item){
+      _checkItem: function (item) {
          if(!item || !$ws.helpers.instanceOfModule(item, 'SBIS3.CONTROLS.Data.Model')){
             throw new Error('Item is not a model')
          }
          return true;
-      }
+      },
 
+      /**
+       * Инициализирует адаптер
+       * @private
+       */
+      _initAdapter: function () {
+         if (!this._options.adapter) {
+            this._options.adapter = new JsonAdapter();
+         }
+      }
       //endregion Protected methods
 
    });
