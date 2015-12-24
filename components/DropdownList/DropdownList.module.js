@@ -240,9 +240,6 @@ define('js!SBIS3.CONTROLS.DropdownList',
                this.hidePicker();
             }
          },
-         _getFooterContainer: function(){
-            return this._pickerFooterContainer;
-         },
          _drawItemsCallback: function() {
             var self = this;
             if (this._options.footerTpl) {

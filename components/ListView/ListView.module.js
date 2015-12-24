@@ -1046,9 +1046,6 @@ define('js!SBIS3.CONTROLS.ListView',
 
             this._notifyOnSizeChanged(true);
          },
-         _getFooterContainer: function(){
-            return this._container.find('.controls-ListView__footer');
-         },
          //-----------------------------------infiniteScroll------------------------
          //TODO Сделать подгрузку вверх
          //TODO (?) избавиться от _allowInfiniteScroll - пусть все будет завязано на опцию infiniteScroll
