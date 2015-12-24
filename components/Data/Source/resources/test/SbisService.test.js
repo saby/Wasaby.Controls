@@ -239,7 +239,7 @@ define([
                      try {
                         var args = SbisServiceBLO.lastRequest.args;
 
-                        if (args['ИмяМетода'] !== undefined) {
+                        if (args['ИмяМетода'] !== null) {
                            throw new Error('Wrong argument ИмяМетода');
                         }
 
@@ -268,10 +268,6 @@ define([
                   service.create({myParam: 'myValue'}).addCallbacks(function () {
                      try {
                         var args = SbisServiceBLO.lastRequest.args;
-
-                        if (args['ИмяМетода'] !== undefined) {
-                           throw new Error('Wrong argument ИмяМетода');
-                        }
 
                         if (args['Фильтр'].d[0] !== 'myValue') {
                            throw new Error('Wrong value for argument Фильтр.myParam');

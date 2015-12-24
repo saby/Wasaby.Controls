@@ -176,11 +176,12 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
        * </pre>
        */
       create: function(meta) {
+         //TODO: вместо 'ИмяМетода' может предаваться 'Расширение'
          var args = {
             'Фильтр': this.getAdapter().serialize(meta || {
                'ВызовИзБраузера': true
             }),
-            'ИмяМетода': this._options.formatMethodName
+            'ИмяМетода': this._options.formatMethodName || null
          };
 
          return this._provider.callMethod(
