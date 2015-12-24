@@ -162,7 +162,7 @@ define('js!SBIS3.CONTROLS.OperationsMark', [
          this._options.linkedView.toggleItemsSelectionAll();
       },
       _createMarkCheckBox: function() {
-         if (!this._markCheckBox) {
+         if (!this._markCheckBox) {//TODO костыль для ЭДО, чтоб не создавалось 2 раза
             this._markCheckBox = new CheckBox({
                threeState: true,
                element: $('<span>').insertBefore(this._container),
