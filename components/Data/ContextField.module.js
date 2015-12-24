@@ -193,7 +193,10 @@ define('js!SBIS3.CONTROLS.Data.ContextField', [
                      result = subType.setWillChange(subValue, keyPath.slice(1), value);
                   }
                } else {
-                  result = !oldValue.equals(value);
+                  if($ws.helpers.type(oldValue.equals) == 'function')
+                     result = !oldValue.equals(value);
+                  else
+                     result = !$ws.helpers.isEqualObject(oldValue, value);
                }
 
                return result;
