@@ -212,6 +212,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.List', [
        * Присоединяет другую коллекцию
        * @param {SBIS3.CONTROLS.Data.Collection.IEnumerable} items Коллекция, которая будет присоединена
        * @param {Boolean} [prepend=false] Присоединить в начало
+       * @deprecated используйте append или prepend
        */
       concat: function (items, prepend) {
          var isArray = items instanceof Array;
@@ -232,6 +233,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.List', [
       },
       /**
        * Возвращает коллекцию в виде массива
+       * @deprecated используйте each
        * @returns {Array}
        */
       toArray: function () {

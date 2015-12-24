@@ -250,7 +250,7 @@ define([
             });
          });
          it('should serialize an empty list', function () {
-            var res = Factory.serialize(new List(), 'DataSet', new AdapterJson());
+            var res = Factory.serialize(new List(), 'RecordSet', new AdapterJson());
             assert.instanceOf(res, Array);
             assert.strictEqual(res.length, 0);
          });

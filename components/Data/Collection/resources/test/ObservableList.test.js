@@ -154,31 +154,6 @@ define([
                });
             });
 
-            context('when only clear', function() {
-               it('should trigger an event with valid arguments', function(done) {
-                  var list = new ObservableList({
-                        items: items.slice()
-                     }),
-                     handler = function(event, action, newItems, newItemsIndex, oldItems, oldItemsIndex) {
-                        try {
-                           checkEvent(
-                              action, newItems, newItemsIndex, oldItems, oldItemsIndex,
-                              IBindCollection.ACTION_RESET, [], 0, items, 0
-                           );
-                           done();
-                        } catch (err) {
-                           done(err);
-                        }
-                     };
-
-                  list.subscribe('onCollectionChange', handler);
-
-                  list.assign();
-
-                  list.unsubscribe('onCollectionChange', handler);
-                  list.destroy();
-               });
-            });
          });
 
          describe('.add()', function() {
