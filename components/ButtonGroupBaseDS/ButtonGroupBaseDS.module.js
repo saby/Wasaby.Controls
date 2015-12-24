@@ -53,15 +53,15 @@ define('js!SBIS3.CONTROLS.ButtonGroupBaseDS', ['js!SBIS3.CORE.CompoundControl', 
             self = this;
          for (var i in controls) {
             if (controls.hasOwnProperty(i)) {
-               controls[i].subscribe('onActivated', function () {
+               controls[i].subscribe('onActivated', function (busEvent, event) {
                   var id = this.getContainer().data('id');
-                  self._itemActivatedHandler(id);
-               })
+                  self._itemActivatedHandler(id, event);
+               });
             }
          }
       },
 
-      _itemActivatedHandler : function() {
+      _itemActivatedHandler : function(id, event) {
          /*метод должен быть перегружен*/
       },
 
