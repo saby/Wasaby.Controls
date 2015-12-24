@@ -59,7 +59,6 @@ define('js!SBIS3.CONTROLS.DropdownList',
                 * @editor ExternalComponentChooser
                 */
                itemTemplate: dotTplFnForItem,
-               footerTpl : undefined,
                /**
                 * @cfg {String} Режим работы выпадающего списка
                 * @remark
@@ -96,9 +95,13 @@ define('js!SBIS3.CONTROLS.DropdownList',
          $constructor: function() {
             this._container.bind(this._options.mode === 'hover' ? 'mouseenter' : 'mousedown', this.showPicker.bind(this));
             this._publish('onClickMore');
-            if (this._options.multiselect && !this._options.footerTpl){
-               this._options.footerTpl = dotTplFnFooter;
+         },
+         _modifyOptions: function(opts){
+            //Если у нас режим мультивыбора, то возьмем свой шаблон с кнопками Отобрать и Еще.
+            if (opts.multiselect && !opts.footerTpl){
+               opts.footerTpl = dotTplFnFooter;
             }
+            return DropdownList.superclass._modifyOptions.apply(this, arguments);
          },
          init : function () {
             DropdownList.superclass.init.apply(this, arguments);
@@ -387,7 +390,10 @@ define('js!SBIS3.CONTROLS.DropdownList',
                closeByExternalOver: this._options.mode === 'hover' && !this._options.multiselect,
                closeByExternalClick : true,
                targetPart: true,
-               template : MarkupTransformer(dotTplFnPicker)({'multiselect' : this._options.multiselect})
+               template : MarkupTransformer(dotTplFnPicker)({
+                  'multiselect' : this._options.multiselect,
+                  'footerTpl' : this._options.footerTpl
+               })
             };
          },
          //Переопределяю, чтобы элементы чистились в пикере

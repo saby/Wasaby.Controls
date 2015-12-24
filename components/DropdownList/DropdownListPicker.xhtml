@@ -1,7 +1,7 @@
 <div class="controls-DropdownList__header"></div>
 <div class="controls-DropdownList__body">
    <div class="controls-DropdownList__list"></div>
-   {{?it.multiselect}}
-      <div class="controls-DropdownList__footer"></div>
+   {{?it.footerTpl}}
+      <div class="controls-ListView__footer">{{=it.footerTpl(it)}}</div>
    {{?}}
 </div>
