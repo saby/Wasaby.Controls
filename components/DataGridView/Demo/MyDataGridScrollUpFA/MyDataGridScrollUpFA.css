@@ -17,10 +17,10 @@
    position: relative;
 
 }
-.myDataGridView-button1{
+.myDataGridView-buttonTop{
    top: 40px;
 }
-.myDataGridView-button2{
+.myDataGridView-buttonBottom{
    position: fixed;
    top: 670px;
 }
