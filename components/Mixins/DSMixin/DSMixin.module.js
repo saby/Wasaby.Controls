@@ -278,6 +278,14 @@ define('js!SBIS3.CONTROLS.DSMixin', [
             }
          }
       },
+      _modifyOptions: function(opts){
+         var tpl = opts.footerTpl;
+         //Если нам передали шаблон как строку вида !html, то нужно из нее сделать функцию
+         if (tpl && typeof tpl === 'string' && tpl.match(/^html!/)){
+            opts.footerTpl = require(tpl);
+         }
+         return opts;
+      },
        /**
         * Метод установки источника данных.
         * @remark
@@ -627,19 +635,12 @@ define('js!SBIS3.CONTROLS.DSMixin', [
                   curAt.at++;
                }
             }
-            if (this._options.footerTpl) {
-               targetContainer = this._getFooterContainer();
-               this._appendItemTemplate(undefined, targetContainer,  this._buildTplItem({}, this._options.footerTpl));
-            }
             this.reviveComponents().addCallback(this._notifyOnDrawItems.bind(this)).addErrback(function(e){
                throw e;
             });
          } else {
             this._notifyOnDrawItems();
          }
-      },
-      _getFooterContainer: function(){
-         return this._getTargetContainer();
       },
 
       /**
