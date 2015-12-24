@@ -277,13 +277,11 @@ define([
                assert.strictEqual(model.getId(), data.d[1]);
             });
 
-            it('should throw error for empty key property', function () {
+            it('should return undefined for empty key property', function () {
                var newModel = new Model({
                   rawData: modelData
                });
-               assert.throw(function () {
-                  newModel.getId();
-               });
+               assert.isUndefined(newModel.getId());
             });
          });
 
