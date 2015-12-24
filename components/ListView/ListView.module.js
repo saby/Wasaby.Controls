@@ -201,6 +201,14 @@ define('js!SBIS3.CONTROLS.ListView',
             _scrollWidth: undefined,
             _options: {
                /**
+                * @cfg {Boolean} Разрешить отсутствие выбранного элемента
+                * @example
+                * <pre>
+                *     <option name="allowEmptySelection">false</option>
+                * </pre>
+                */
+               allowEmptySelection: false,
+               /**
                 * @faq Почему нет флажков при включенной опции {@link SBIS3.CONTROLS.ListView#multiselect multiselect}?
                 * Для отрисовки флажков необходимо в шаблоне отображания элемента прописать их место:
                 * <pre>
@@ -527,13 +535,17 @@ define('js!SBIS3.CONTROLS.ListView',
             if (target.length){
                var cont = this._container[0],
                    containerCords = cont.getBoundingClientRect(),
-                   targetCords = target[0].getBoundingClientRect(),
-                   targetKey = target[0].getAttribute('data-id');
+                   targetKey = target[0].getAttribute('data-id'),
+               //FIXME т.к. строка редактирования по местру спозиционирована абсолютно, то надо искать оригинальную строку
+                   correctTarget = target.hasClass('controls-editInPlace') ?
+                       this._getItemsContainer().find('[data-id="' + targetKey + '"]:not(.controls-editInPlace)') :
+                       target,
+                   targetCords = correctTarget[0].getBoundingClientRect();
 
                return {
                   key: targetKey,
                   record: this.getDataSet().getRecordByKey(targetKey),
-                  container: target,
+                  container: correctTarget,
                   position: {
                      /* При расчётах координат по вертикали учитываем прокрутку */
                      top: targetCords.top - containerCords.top + cont.scrollTop,
@@ -541,8 +553,8 @@ define('js!SBIS3.CONTROLS.ListView',
                      left: targetCords.left - containerCords.left + (cont.scrollHeight !== cont.clientHeight ? this._scrollWidth : 0)
                   },
                   size: {
-                     height: target[0].offsetHeight,
-                     width: target[0].offsetWidth
+                     height: correctTarget[0].offsetHeight,
+                     width: correctTarget[0].offsetWidth
                   }
                }
             }
@@ -1237,6 +1249,7 @@ define('js!SBIS3.CONTROLS.ListView',
                   this._hideLoadingIndicator();
                }
             }
+            ListView.superclass._dataLoadedCallback.apply(this, arguments);
          },
          _toggleIndicator: function(show){
             this._showedLoading = show;

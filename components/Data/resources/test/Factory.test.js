@@ -1,5 +1,6 @@
 /* global define, beforeEach, afterEach, describe, context, it, assert, $ws */
 define([
+   'js!SBIS3.CONTROLS.Data.Adapter.Json',
    'js!SBIS3.CONTROLS.Data.Adapter.Sbis',
    'js!SBIS3.CONTROLS.Data.Model',
    'js!SBIS3.CONTROLS.Data.Collection.List',
@@ -7,7 +8,7 @@ define([
    'js!SBIS3.CONTROLS.Data.Factory',
    'js!SBIS3.CONTROLS.Data.Types.Enum',
    'js!SBIS3.CONTROLS.Data.Collection.RecordSet'
-], function (AdapterSbis, Model, List, DataSet, Factory, Enum, RecordSet) {
+], function (AdapterJson, AdapterSbis, Model, List, DataSet, Factory, Enum, RecordSet) {
    'use strict';
 
    var dataScheme,
@@ -229,7 +230,7 @@ define([
             sbisModelEmpty.set('record', record);
             assert.deepEqual(getData(3), record.toJSON());
          });
-         it('should serialize List', function () {
+         it('should serialize a list', function () {
             var list = sbisModel.get('recordSet');
             list.add(new Model({
                adapter: new AdapterSbis(),
@@ -247,6 +248,11 @@ define([
                assert.deepEqual(getData(4).s, item.getRawData().s);
                index++;
             });
+         });
+         it('should serialize an empty list', function () {
+            var res = Factory.serialize(new List(), 'DataSet', new AdapterJson());
+            assert.instanceOf(res, Array);
+            assert.strictEqual(res.length, 0);
          });
          it('should serialize dataSet', function () {
             var
