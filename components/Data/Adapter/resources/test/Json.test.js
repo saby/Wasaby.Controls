@@ -192,7 +192,8 @@ define(
          });
 
          describe('.getEmpty()', function () {
-            it('should return empty data', function () {
+            it('should return an empty array', function () {
+               assert.instanceOf(adapterInstance.getEmpty(), Array);
                assert.strictEqual(
                   0,
                   adapterInstance.getEmpty().length
@@ -506,6 +507,13 @@ define(
                assert.throw(function () {
                   adapterInstance.replace({}, 99);
                });
+            });
+         });
+
+         describe('.getEmpty()', function () {
+            it('should return an empty object', function () {
+               assert.instanceOf(adapterInstance.getEmpty(), Object);
+               assert.isTrue(Object.isEmpty(adapterInstance.getEmpty()));
             });
          });
       });

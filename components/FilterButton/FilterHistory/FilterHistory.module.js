@@ -29,8 +29,7 @@ define('js!SBIS3.CONTROLS.FilterHistory',
          _filterButton: undefined,
          _historyView: undefined,
          _historyController: undefined,
-         _toggleHistoryButton: undefined,
-         _needSave: true
+         _toggleHistoryButton: undefined
       },
 
       $constructor: function() {
@@ -70,8 +69,6 @@ define('js!SBIS3.CONTROLS.FilterHistory',
        * @private
        */
       _onApplyFilterHandler: function() {
-         if(!this._needSave) return;
-
          var structure = this._filterButton.getFilterStructure(),
              hc =  this._historyController,
              linkTextArr = [],
@@ -81,6 +78,7 @@ define('js!SBIS3.CONTROLS.FilterHistory',
          if(!this._filterButton.getLinkedContext().getValue('filterChanged')) {
             /* Если применили дефолтный фильтр, то надо сбросить текущий активный */
             hc.clearActiveFilter();
+            hc.saveToUserParams();
             return;
          }
 
@@ -124,9 +122,6 @@ define('js!SBIS3.CONTROLS.FilterHistory',
             var hc = self._historyController,
                 historyObj = hc.getFilterFromHistory(itemObj.id);
 
-            /* Выставим флаг, что данный фильтр не надо сохранять в историю */
-            self._needSave = false;
-
             /* Применим фильтр из истории*/
             fb.setFilterStructure(historyObj.filter);
             fb.getChildControlByName('filterLine').getContext().setValue('linkText', historyObj.linkText);
@@ -139,8 +134,6 @@ define('js!SBIS3.CONTROLS.FilterHistory',
                hc.saveHistory();
             }
 
-            /* Обновим список, отображающий фильтр */
-            self._needSave = true;
             self.updateHistoryViewItems();
             self._toggleHistoryBlock(true);
          });
