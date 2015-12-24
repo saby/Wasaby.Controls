@@ -1,9 +1,10 @@
 /* global define, $ws */
 define('js!SBIS3.CONTROLS.Data.Source.DataSet', [
    'js!SBIS3.CONTROLS.Data.Model',
+   'js!SBIS3.CONTROLS.Data.Collection.List',
    'js!SBIS3.CONTROLS.Data.Collection.RecordSet',
    'js!SBIS3.CONTROLS.Data.Collection.ObservableList'
-], function (Model, RecordSet, ObservableList) {
+], function (Model, List, RecordSet, ObservableList) {
    'use strict';
 
    /**
@@ -50,9 +51,9 @@ define('js!SBIS3.CONTROLS.Data.Source.DataSet', [
              * @cfg {Function} Конструктор списка моделей, по умолчанию {@link SBIS3.CONTROLS.Data.Collection.ObservableList}
              * @see getListModule
              * @see setListModule
-             * @see SBIS3.CONTROLS.Data.Collection.ObservableList
+             * @see SBIS3.CONTROLS.Data.Collection.List
              */
-            listModule: RecordSet,
+            listModule: List,
 
             /**
              * @cfg {String} Поле модели, содержащее первичный ключ
@@ -217,9 +218,10 @@ define('js!SBIS3.CONTROLS.Data.Source.DataSet', [
       /**
        * Возвращает элементы выборки
        * @param {String} [property] Свойство данных, в которых находятся элементы выборки
+       * @param {Boolean} [observable=false] Вернуть {SBIS3.CONTROLS.Data.Collection.ObservableList}, а не {SBIS3.CONTROLS.Data.Collection.List}
        * @returns {SBIS3.CONTROLS.Data.Collection.IList}
        */
-      getAll: function (property) {
+      getAll: function (property, observable) {
          this._checkAdapter();
          if (property === undefined) {
             property = this._options.itemsProperty;
@@ -242,12 +244,11 @@ define('js!SBIS3.CONTROLS.Data.Source.DataSet', [
                );
             }
 
-            return new this._options.listModule({
-               items: items
-            });
-         }
-
-
+         return observable ? new ObservableList({
+            items: items
+         }) : new this._options.listModule({
+            items: items
+         });
       },
 
       /**
