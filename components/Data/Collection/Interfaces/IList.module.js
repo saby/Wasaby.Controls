@@ -90,6 +90,13 @@ define('js!SBIS3.CONTROLS.Data.Collection.IList', [
        */
       getCount: function () {
          throw new Error('Method must be implemented');
+      },
+      /**
+      * Очищает список
+      * @returns {Number}
+      */
+      clear: function () {
+         throw new Error('Method must be implemented');
       }
    };
 });

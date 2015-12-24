@@ -109,6 +109,10 @@ define('js!SBIS3.CONTROLS.Data.Collection.List', [
          this._splice(items, 0, 0);
       },
 
+      clear: function () {
+         this._items = [];
+      },
+
       add: function (item, at) {
          if (at === undefined) {
             this._items.push(item);
@@ -259,11 +263,10 @@ define('js!SBIS3.CONTROLS.Data.Collection.List', [
       /**
        * Вызывает метод splice
        * @param {SBIS3.CONTROLS.Data.Collection.IEnumerable|Array} items Коллекция с элементами для замены
-       * @param {Number} start   Индекс в массиве, с которого начинать удаление.
-       * @param {Number} deleteCount Кол-во элементов, которое требуется удалить, начиная с индекса start.
+       * @param {Number} start Индекс в массиве, с которого начинать добавление.
        * @private
        */
-      _splice:function (items, start, deleteCount){
+      _splice: function (items, start){
          var addItems = [];
          if(items instanceof Array) {
             addItems = items;
@@ -275,7 +278,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.List', [
          } else {
             throw new Error('Invalid argument');
          }
-         Array.prototype.splice.apply(this._items,([start, deleteCount].concat(addItems)));
+         Array.prototype.splice.apply(this._items,([start, 0].concat(addItems)));
 
          this._getServiceEnumerator().reIndex();
       }

@@ -220,8 +220,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
       },
 
       setRawData: function(data) {
-         this.clear();
-
+         this._items = [];
          this._rawData = data;
          var adapter = this._getTableAdapter(true),
             count = adapter.getCount(),
@@ -402,14 +401,40 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
       //endregion SBIS3.CONTROLS.DataSet
 
       /*region list*/
-      add: function (item, at) {
-         if(item && $ws.helpers.instanceOfModule(item, 'SBIS3.CONTROLS.Data.Model')){
-            this._getTableAdapter().add(item.getRawData(), at);
-            RecordSet.superclass.add.apply(this, arguments);
+
+
+      _splice: function (items, start){
+         var newItems = [];
+         if(items instanceof Array) {
+            newItems = items;
+         } else if(items && $ws.helpers.instanceOfMixin(items, 'SBIS3.CONTROLS.Data.Collection.IEnumerable')) {
+            var self = this;
+            items.each(function (item){
+               newItems.push(item);
+            });
          } else {
-            throw new Error('Item is not a model')
+            throw new Error('Invalid argument');
+         }
+         for(var i=0, len = newItems.length; i< len; i++) {
+            var item = newItems[i];
+            this._checkItem(item);
+            this._getTableAdapter().add(item.getRawData(), start);
+            this._items.splice(item, start, 0);
+            start++;
          }
 
+         this._getServiceEnumerator().reIndex();
+      },
+
+      clear: function () {
+         this.setRawData(this._getTableAdapter().getEmpty());
+         RecordSet.superclass.clear.call(this);
+      },
+
+      add: function (item, at) {
+         this._checkItem(item);
+         this._getTableAdapter().add(item.getRawData(), at);
+         RecordSet.superclass.add.apply(this, arguments);
       },
 
       removeAt: function (index) {
@@ -419,7 +444,6 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
 
       replace: function (item, at) {
          RecordSet.superclass.replace.apply(this, arguments);
-
          if (!this._isValidIndex(at)) {
             throw new Error('Index is out of bounds');
          }
@@ -432,7 +456,15 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
       //region Protected methods
       _getTableAdapter: function (forceCreate) {
          return (this._tableAdapter && !forceCreate) ?  this._tableAdapter : (this._tableAdapter = this.getAdapter().forTable(this._rawData));
+      },
+
+      _checkItem: function (item){
+         if(!item || !$ws.helpers.instanceOfModule(item, 'SBIS3.CONTROLS.Data.Model')){
+            throw new Error('Item is not a model')
+         }
+         return true;
       }
+
       //endregion Protected methods
 
    });

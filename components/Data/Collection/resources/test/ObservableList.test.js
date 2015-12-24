@@ -91,10 +91,10 @@ define([
                   items: concatItems
                }));
 
-                  list.unsubscribe('onCollectionChange', handler);
-                  list.destroy();
-               });
+               list.unsubscribe('onCollectionChange', handler);
+               list.destroy();
             });
+         });
 
          describe('.prepend', function (){
             it('should trigger an event with valid arguments', function(done) {
@@ -120,9 +120,8 @@ define([
                   items: concatItems
                }));
 
-                  list.unsubscribe('onCollectionChange', handler);
-                  list.destroy();
-               });
+               list.unsubscribe('onCollectionChange', handler);
+               list.destroy();
             });
          });
          describe('.assign()', function() {
