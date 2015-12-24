@@ -13,14 +13,26 @@ define('js!SBIS3.CONTROLS.FilterButton.FilterLine',
                self = this;
 
             function updateContext() {
-               var
-                  changed = ctx.getValue('filterChanged'),
-                  filterStructure = ctx.getValue('filterStructure'),
-                  resetLinkText = ctx.getValue('filterResetLinkText'),
-                  linkText, textArr;
+               var changed = ctx.getValue('filterChanged'),
+                   filterStructure = ctx.getValue('filterStructure'),
+                   resetLinkText = ctx.getValue('filterResetLinkText'),
+                   linkText, textArr, template;
 
                if (changed) {
                   textArr = $ws.helpers.reduce(filterStructure, function(result, element) {
+                     template = element.itemTemplate;
+
+                     if(template) {
+                        if (typeof template === 'string') {
+                           result.push(doT.template(template)(element));
+                        } else if(typeof template == 'function') {
+                           result.push(template(element));
+                        }
+                        return result;
+                     } else if(template === null) {
+                        return result;
+                     }
+
                      if (element.caption && !$ws.helpers.isEqualObject(element.value, element.resetValue)) {
                         result.push(element.caption);
                      }

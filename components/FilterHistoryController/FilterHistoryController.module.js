@@ -65,12 +65,10 @@ define('js!SBIS3.CONTROLS.FilterHistoryController',
 
              /* Если сбросили фильтр - сбросим активный */
              this._options.filterButton.subscribe('onResetFilter', function() {
-                if(!self._options.filterButton.getLinkedContext().getValue('filterChanged')) {
-                   self.clearActiveFilter();
+                self.clearActiveFilter();
 
-                   if (!self._isNowSaving()) {
-                      self.saveHistory();
-                   }
+                if (!self._isNowSaving()) {
+                   self.saveHistory();
                 }
              });
           },
