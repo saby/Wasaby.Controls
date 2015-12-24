@@ -18,7 +18,7 @@ define('js!SBIS3.CONTROLS.ContextMenu', ['js!SBIS3.CONTROLS.Menu', 'js!SBIS3.CON
 
    var ContextMenu = Menu.extend([PopupMixin], /** @lends SBIS3.CONTROLS.ContextMenu.prototype */ {
       _dotTplFn : dotTplFn,
-      _itemActivatedHandler : function(id) {
+      _itemActivatedHandler : function(id, event) {
          var menuItem = this.getItemInstance(id);
          if (!(menuItem.getContainer().hasClass('controls-Menu__hasChild'))) {
             this.hide();
@@ -29,7 +29,7 @@ define('js!SBIS3.CONTROLS.ContextMenu', ['js!SBIS3.CONTROLS.Menu', 'js!SBIS3.CON
                }
             }
          }
-         this._notify('onMenuItemActivate', menuItem.getContainer().attr('data-id'));
+         this._notify('onMenuItemActivate', id, event);
       },
       _onMenuConfig : function(config) {
          return config;
