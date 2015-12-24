@@ -688,19 +688,12 @@ define('js!SBIS3.CONTROLS.DSMixin', [
                   curAt.at++;
                }
             }
-            if (this._options.footerTpl) {
-               targetContainer = this._getFooterContainer();
-               this._appendItemTemplate(undefined, targetContainer,  this._buildTplItem({}, this._options.footerTpl));
-            }
             this.reviveComponents().addCallback(this._notifyOnDrawItems.bind(this)).addErrback(function(e){
                throw e;
             });
          } else {
             this._notifyOnDrawItems();
          }
-      },
-      _getFooterContainer: function(){
-         return this._getTargetContainer();
       },
 
       /**
