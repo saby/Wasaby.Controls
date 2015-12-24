@@ -101,6 +101,27 @@ define([
                   done(err);
                });
             });
+
+            it('should return an model with initial data', function (done) {
+               service.create({
+                  a: 1,
+                  b: true
+               }).addCallbacks(function (model) {
+                  try {
+                     if (model.get('a') !== 1) {
+                        throw new Error('The model property "a" contains wrong data');
+                     }
+                     if (model.get('b') !== true) {
+                        throw new Error('The model property "b" contains wrong data');
+                     }
+                     done();
+                  } catch (err) {
+                     done(err);
+                  }
+               }, function (err) {
+                  done(err);
+               });
+            });
          });
 
          describe('.read()', function () {
