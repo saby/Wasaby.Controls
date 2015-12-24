@@ -198,7 +198,6 @@ define('js!SBIS3.CONTROLS.ListView',
             ],
             _itemActionsGroup: null,
             _emptyData: undefined,
-            _scrollWidth: undefined,
             _options: {
                /**
                 * @cfg {Boolean} Разрешить отсутствие выбранного элемента
@@ -392,7 +391,6 @@ define('js!SBIS3.CONTROLS.ListView',
                            .on('mouseleave', this._mouseLeaveHandler.bind(this));
 
             this._onWindowScrollHandler = this._onWindowScroll.bind(this);
-            this._scrollWidth = $ws.helpers.getScrollWidth();
 
             if (this.isInfiniteScroll()) {
                this._createLoadingIndicator();
@@ -566,8 +564,7 @@ define('js!SBIS3.CONTROLS.ListView',
                   position: {
                      /* При расчётах координат по вертикали учитываем прокрутку */
                      top: targetCords.top - containerCords.top + cont.scrollTop,
-                     /* При расчётах координат по горизонтали учитываем ширину скрооллбара */
-                     left: targetCords.left - containerCords.left + (cont.scrollHeight !== cont.clientHeight ? this._scrollWidth : 0)
+                     left: targetCords.left - containerCords.left
                   },
                   size: {
                      height: correctTarget[0].offsetHeight,
