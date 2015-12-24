@@ -188,7 +188,6 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                   this._editingRecord.merge(eipRecord);
                   this._editingRecord = undefined;
                }
-               eip.hide();
                if (!this._options.dataSet.getRecordByKey(eipRecord.getKey())) {
                   withSaving ? this._options.dataSet.push(eipRecord) : eip.getTarget().remove();
                }
@@ -205,6 +204,7 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                   return self._options.dataSource.create(options).addCallback(function (record) {
                      var target = $('<div class="js-controls-ListView__item"></div>').attr('data-id', record.getKey()).appendTo(self._options.itemsContainer);
                      self._eip.edit(target, record);
+                     return record;
                   });
                });
             },
