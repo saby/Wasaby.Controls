@@ -122,11 +122,8 @@ define('js!SBIS3.CONTROLS.EditInPlace',
                }.bind(this))
             },
             show: function(target, record) {
-               if (this._record) {
-                  this._record.unsubscribe('onChange', this._onRecordChangeHandler);
-               }
                this.updateFields(record);
-               this._record.subscribe('onChange', this._onRecordChangeHandler);
+               this._record.subscribe(this._useModel() ? 'onPropertyChange' : 'onChange', this._onRecordChangeHandler);
                this.getContainer().attr('data-id', record.getKey());
 
                this.setTarget(target);
@@ -158,10 +155,17 @@ define('js!SBIS3.CONTROLS.EditInPlace',
                this._target.height('');
             },
             hide: function() {
+               if (this._record) {
+                  this._record.unsubscribe(this._useModel() ? 'onPropertyChange' : 'onChange', this._onRecordChangeHandler);
+               }
                this._deactivateActiveChildControl();
                this.getContainer().removeAttr('data-id');
                this.setActive(false);
                EditInPlace.superclass.hide.apply(this, arguments);
+            },
+            //TODO: выпилить когда откажемся от SBIS3.Controls.Record
+            _useModel: function() {
+               return $ws.helpers.instanceOfMixin(this._record, 'SBIS3.CONTROLS.Data.IPropertyAccess');
             },
             edit: function(target, record) {
                if (!this.isVisible()) {
@@ -178,6 +182,7 @@ define('js!SBIS3.CONTROLS.EditInPlace',
                return this._editing;
             },
             endEdit: function() {
+               this.hide();
                this._endTrackHeight();
                this._target.removeClass('controls-editInPlace__editing');
                this._editing = false;
