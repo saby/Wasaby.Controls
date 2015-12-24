@@ -35,7 +35,7 @@ define('js!SBIS3.CONTROLS.MoveHandlers', ['js!SBIS3.CONTROLS.MoveDialog','js!SBI
             isChangeOrder = insertAfter !== undefined;
 
          if (moveTo !== null) {
-            if ($ws.helpers.instanceOfModule(moveTo, 'SBIS3.CONTROLS.Record')) {
+            if ($ws.helpers.instanceOfModule(moveTo, 'SBIS3.CONTROLS.Record') || $ws.helpers.instanceOfModule(moveTo, 'SBIS3.CONTROLS.Data.Model')) {
                recordTo = moveTo;
                moveTo = recordTo.getKey();
             } else {
