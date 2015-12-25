@@ -1461,7 +1461,7 @@ define('js!SBIS3.CONTROLS.ListView',
          /**
           * двигает элемент
           * Метод будет удален после того как перерисовка научится сохранять раскрытые узлы в дереве
-          * @param {String} item1  - идентифкатор первого элемента
+          * @param {String} item  - идентифкатор первого элемента
           * @param {String} anchor - идентифкатор второго элемента
           * @param {Boolean} before - если true то вставит перед anchor иначе после него
           * @private
@@ -1470,11 +1470,23 @@ define('js!SBIS3.CONTROLS.ListView',
             //TODO метод сделан специально для перемещения элементов, этот костыль надо удалить и переписать через _redraw
             var itemsContainer = this._getItemsContainer(),
                itemContainer = itemsContainer.find('tr[data-id="'+item+'"]'),
-               anchor = itemsContainer.find('tr[data-id="'+anchor+'"]');
+               anchor = itemsContainer.find('tr[data-id="'+anchor+'"]'),
+               rows;
+
             if(before){
+               rows = [anchor.prev(), itemContainer, anchor, itemContainer.next()];
                itemContainer.insertBefore(anchor);
             } else {
+               rows = [itemContainer.prev(), anchor, itemContainer, anchor.next()];
                itemContainer.insertAfter(anchor);
+            }
+            this._ladderCompare(rows);
+         },
+         _ladderCompare: function(rows){
+            for (var i = 1; i < rows.length; i++){
+               var upperRow = $('.controls-ladder', rows[i - 1]),
+                  lowerRow = $('.controls-ladder', rows[i]);
+               lowerRow.toggleClass('ws-invisible', upperRow.html() == lowerRow.html());
             }
          }
       });

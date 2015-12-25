@@ -90,11 +90,11 @@ define(['js!SBIS3.CONTROLS.Utils.HtmlDecorators/AbstractDecorator'], function (A
             this._ladderLastWords[this._parentId] = {};
          }
          else if (this._ladderLastWords[this._parentId][this._columnName] == text) {
-            return '<span class="ws-invisible">' + text + '</span>';
+            return '<span class="controls-ladder ws-invisible">' + text + '</span>';
          }
          this._ladderLastWords[this._parentId][this._columnName] = text;
 
-         return text;
+         return '<span class="controls-ladder">' + text + '</span>';
       }
    });
 
