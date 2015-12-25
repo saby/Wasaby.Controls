@@ -23,13 +23,11 @@
       border-width: @radio-button-icon-border-width;
       border-radius: @radio-button-icon-border-radius;
       &:before {
-         content: '';
          width: @radio-button-dot-size;
          height: @radio-button-dot-size;
          background: @radio-button-dot-color;
          margin: @radio-button-dot-margin;
          border-radius: @radio-button-dot-radius;
-         display: none;
       }
    }
 
@@ -50,6 +48,7 @@
          background: @radio-button-icon-checked-bg;
          border-color: @radio-button-icon-border-color-checked;
          &:before {
+            content: '';
             display: block;
          }
       }
