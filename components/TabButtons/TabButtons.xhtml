@@ -1,6 +1,6 @@
 <div class="controls-TabButtons {{? it.items}}hasItems{{?}}">
     {{~it.items :item:index}}
-    <component data-component="SBIS3.CONTROLS.TabButton" data-id="{{=item[it.keyField]}}" class="controls-ListView__item">
+    <component data-component="SBIS3.CONTROLS.TabButton" data-id="{{=item[it.keyField]}}" class="controls-ListView__item {{? item.visible == false}}ws-hidden{{?}}">
         <option name="caption">{{=item[it.displayField]}}</option>
         <option name="id" value="{{=item[it.keyField]}}"></option>
         <option name="align" value="{{=item.align || 'right'}}"></option>
