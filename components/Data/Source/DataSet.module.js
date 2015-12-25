@@ -243,7 +243,7 @@ define('js!SBIS3.CONTROLS.Data.Source.DataSet', [
                   )
                );
             }
-
+         }
          return observable ? new ObservableList({
             items: items
          }) : new this._options.listModule({
