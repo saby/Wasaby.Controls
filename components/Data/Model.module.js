@@ -140,6 +140,14 @@ define('js!SBIS3.CONTROLS.Data.Model', [
             }
          }
 
+         if (this._options.usingDataSetAsList &&
+            this._isFieldValueCacheable(value) &&
+            $ws.helpers.instanceOfModule(value, 'SBIS3.CONTROLS.Data.Source.DataSet')
+         ) {
+            value = value.getAll();
+            this._propertiesCache[name] = value;
+         }
+
          return value;
       },
 
@@ -296,7 +304,7 @@ define('js!SBIS3.CONTROLS.Data.Model', [
        */
       getId: function () {
          if (!this._options.idProperty) {
-            $ws.single.ioc.resolve('ILogger').log('SBIS3.CONTROLS.Data.Model::getId()', 'Id property is not defined');
+            $ws.single.ioc.resolve('ILogger').log('SBIS3.CONTROLS.Data.Model::getId()', 'Option idProperty is not defined');
             return undefined;
          }
          return this.get(this._options.idProperty);

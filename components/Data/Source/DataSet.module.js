@@ -363,7 +363,6 @@ define('js!SBIS3.CONTROLS.Data.Source.DataSet', [
          return new this._options.model({
             rawData: rawData,
             adapter: this.getAdapter(),
-            source: this.getSource(),
             compatibleMode: true
          });
       },

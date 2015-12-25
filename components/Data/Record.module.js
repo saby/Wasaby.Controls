@@ -251,21 +251,21 @@ define('js!SBIS3.CONTROLS.Data.Record', [
       //region Protected methods
 
       /**
-       * Возвращает адаптер по-умолчанию (можно переопределять в наследниках)
-       * @private
-       */
-      _getDefaultAdapter: function() {
-         return new JsonAdapter();
-      },
-
-      /**
        * Инициализирует адаптер
        * @protected
        */
       _initAdapter: function() {
          if (!this._options.adapter) {
-            this._options.adapter = new JsonAdapter();
+            this._options.adapter = this._getDefaultAdapter();
          }
+      },
+
+      /**
+       * Возвращает адаптер по-умолчанию (можно переопределять в наследниках)
+       * @private
+       */
+      _getDefaultAdapter: function() {
+         return new JsonAdapter();
       },
 
       /**
