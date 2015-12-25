@@ -3,7 +3,6 @@ define('js!SBIS3.CONTROLS.CompositeViewMixinNew', ['html!SBIS3.CONTROLS.DataGrid
    /**
     * Позволяет контролу отображать данные в виде плитки/списка/таблицы
     * @mixin SBIS3.CONTROLS.CompositeViewMixin
-    * @public
     */
    var CompositeViewMixin = {
       $protected: {

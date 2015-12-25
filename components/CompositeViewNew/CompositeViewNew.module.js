@@ -5,13 +5,6 @@ define('js!SBIS3.CONTROLS.CompositeViewControl.CompositeView', [
 ], function (ListView, DataGridViewMixin) {
    'use strict';
 
-   /**
-    * Представление таблицы - реализует ее визуальный аспект.
-    * @class SBIS3.CONTROLS.DataGridControl.DataGridView
-    * @extends SBIS3.CONTROLS.ListControl.View
-    * @mixes SBIS3.CONTROLS.DataGridControl.DataGridViewMixin
-    * @author Крайнов Дмитрий Олегович
-    */
    var CompositeView = ListView.extend([DataGridViewMixin], /** @lends SBIS3.CONTROLS.CompositeViewControl.CompositeView.prototype */{
       _moduleName: 'SBIS3.CONTROLS.CompositeViewControl.CompositeView',
       

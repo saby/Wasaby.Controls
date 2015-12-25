@@ -6,29 +6,6 @@ define('js!SBIS3.CONTROLS.CompositeViewControl', [
 ], function (DataGridControl, CompositeViewMixin, CompositeView) {
    'use strict';
 
-   /**
-    * Контрол, отображающий набор данных в виде таблицы с несколькими колонками.
-    * *Это экспериментальный модуль, API будет меняться!*
-    * @class SBIS3.CONTROLS.DataGridControl
-    * @extends SBIS3.CONTROLS.ListControl
-    * @control
-    * @public
-    * @state mutable
-    * @demo SBIS3.CONTROLS.Demo.MyDataGridView
-    * @initial
-    * <component data-component='SBIS3.CONTROLS.DataGridControl'>
-    *    <options name="columns" type="array">
-    *       <options>
-    *          <option name="title">Поле 1</option>
-    *          <option name="width">100</option>
-    *       </options>
-    *       <options>
-    *          <option name="title">Поле 2</option>
-    *       </options>
-    *    </options>
-    * </component>
-    */
-
    var CompositeViewControl = DataGridControl.extend([CompositeViewMixin],/** @lends SBIS3.CONTROLS.CompositeViewControl.prototype*/ {
       _moduleName: 'SBIS3.CONTROLS.CompositeViewControl',
       $protected: {
