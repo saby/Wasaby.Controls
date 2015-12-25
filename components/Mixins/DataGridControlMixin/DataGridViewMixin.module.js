@@ -61,35 +61,35 @@ define('js!SBIS3.CONTROLS.DataGridControl.DataGridViewMixin', [
             Array.prototype.shift.call(args);
             var data = parentFnc.apply(this, args);
 
-            if (!this._options.itemTemplate) {
+            if (!this._getItemTemplate(item)) {
                data.template = this._rowTemplate;
-
-               var cells = [],
-                  columns = $ws.core.clone(this._options.columns),
-                  cell,
-                  i;
-               for (i = 0; i < columns.length; i++) {
-                  cell = columns[i];
-                  cell.owner = item;
-                  cell.item = item.getContents();
-                  cell.value = Utils.getItemPropertyValue(cell.item, columns[i].field);
-                  if (cell.value === undefined) {
-                     cell.value = '';
-                  }
-                  cell.template = this._buildTemplate(
-                     columns[i].cellTemplate || '{{=it.value}}',
-                     item.getContents()
-                  );
-                  cells.push(cell);
-               }
-               data.cells = cells;
-
-               data.multiselect = this._options.multiselect;
-               data.arrowActivatedHandler = this._options.arrowActivatedHandler;
-               //data.data.decorators: this._decorators,
-               //data.data.color: this._options.colorField ? item.get(this._options.colorField) : '',
-               //data.data.startScrollColumn: this._options.startScrollColumn
             }
+
+            var cells = [],
+               columns = $ws.core.clone(this._options.columns),
+               cell,
+               i;
+            for (i = 0; i < columns.length; i++) {
+               cell = columns[i];
+               cell.owner = item;
+               cell.item = item.getContents();
+               cell.value = Utils.getItemPropertyValue(cell.item, columns[i].field);
+               if (cell.value === undefined) {
+                  cell.value = '';
+               }
+               cell.template = this._buildTemplate(
+                  columns[i].cellTemplate || '{{=it.value}}',
+                  item.getContents()
+               );
+               cells.push(cell);
+            }
+            data.cells = cells;
+
+            data.multiselect = this._options.multiselect;
+            data.arrowActivatedHandler = this._options.arrowActivatedHandler;
+            //data.data.decorators: this._decorators,
+            //data.data.color: this._options.colorField ? item.get(this._options.colorField) : '',
+            //data.data.startScrollColumn: this._options.startScrollColumn
 
             return data;
          }
