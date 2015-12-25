@@ -19,7 +19,11 @@ define('js!SBIS3.CONTROLS.ButtonGroupBaseDS', ['js!SBIS3.CORE.CompoundControl', 
       $protected: {
          _options: {
             captionField : ''
-         }
+         },
+         /**
+          * Элементы были задаты в верстке
+          */
+         _hasItems: null
       },
 
       $constructor: function() {
@@ -30,12 +34,15 @@ define('js!SBIS3.CONTROLS.ButtonGroupBaseDS', ['js!SBIS3.CORE.CompoundControl', 
             $ws.single.ioc.resolve('ILogger').log('ButtonGroupBase', 'Опция "captionField" устарела. Используйте опцию "displayField".');
          }
 
+         this._hasItems = this._container.hasClass('hasItems');
       },
 
       init : function() {
          ButtonGroupBase.superclass.init.call(this);
          //Если элементы были заданы в верстке (используем в CONTROLS.TabButtons), то не перезагружаем
-         if ( ! this._hasItems) {
+         if (this._hasItems) {
+            this._drawItemsCallback();
+         } else {
             this.reload();
          }
       },

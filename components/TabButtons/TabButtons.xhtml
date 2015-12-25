@@ -9,6 +9,9 @@
         <option name="icon" value="{{=item.icon}}"></option>
         <option name="enabled" value="{{=(item.enabled !== false)}}"></option>
         <option name="visible" value="{{=(item.visible !== false)}}"></option>
+        {{? item[it.keyField] == it.selectedKey}}
+        <option name="checked" value="true" type="boolean"></option>
+        {{?}}
     </component>
     {{~}}
 </div>
