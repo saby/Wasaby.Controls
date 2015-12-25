@@ -17,7 +17,7 @@ define('js!SBIS3.CONTROLS.MoveHandlers', ['js!SBIS3.CONTROLS.MoveDialog','js!SBI
       },
       _getRecordsForMove: function(records) {
          if (!Array.isArray(records) || !records.length) {
-            records = this.getSelectedKeys().length ? this.getSelectedKeys() :
+            records = this._selectedRecords.length ? this._selectedRecords :
                this.getSelectedKey() ? [this.getSelectedKey()] : [];
          }
          return records;
