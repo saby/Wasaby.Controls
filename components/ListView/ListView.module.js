@@ -628,6 +628,18 @@ define('js!SBIS3.CONTROLS.ListView',
          _getItemTemplate: function () {
             return this._options.itemTemplate;
          },
+         /**
+          * Устанавливает шаблон отображения элемента
+          * @param  {String} tpl Шаблон отображения каждого элемента коллекции
+          * @example
+          * <pre>
+          *     DataGridView.setEmptyHTML('html!MyTemplate');
+          * </pre>
+          * @see emptyHTML
+          */
+         setItemTemplate: function(tpl) {
+            this._options.itemTemplate = tpl;
+         },
 
          _getItemsContainer: function () {
             return $('.controls-ListView__itemsContainer', this._container.get(0)).first();
