@@ -43,7 +43,7 @@ define('js!SBIS3.CONTROLS.Selectable', [], function() {
              * @see SBIS3.CONTROLS.DSMixin#keyField
              * @see onSelectedItemChange
              */
-            selectedKey: undefined,
+            selectedKey: null,
              /**
               * @cfg {Boolean} Разрешить отсутствие выбранного элемента в группе
               * @example
