@@ -70,9 +70,9 @@ define('js!SBIS3.CONTROLS.Data.Record', [
          _fields: null,
 
          /**
-          * @var {Boolean} Признак, что запись изменена по отношению с состоянием, в котором она была проинициализирована.
+          * @var {Object.<String, *>} Измененные поля и оригинальные значения
           */
-         _isChanged: false,
+         _changedFields: {},
 
          /**
           * @var {Object} Объект содержащий закэшированные инстансы значений-объектов
@@ -114,12 +114,13 @@ define('js!SBIS3.CONTROLS.Data.Record', [
             $ws.single.ioc.resolve('ILogger').error('SBIS3.CONTROLS.Data.Record::set()', 'Property name is empty');
          }
 
-         if (this._getRawDataValue(name) !== value) {
+         var oldValue = this._getRawDataValue(name);
+         if (oldValue !== value) {
             if (!this.has(name)) {
                this._addRawDataField(name);
             }
             this._setRawDataValue(name, value);
-            this._setChanged(true);
+            this._setChanged(name, oldValue);
             if (name in this._propertiesCache &&
                value !== this._propertiesCache[name]
             ) {
@@ -171,14 +172,14 @@ define('js!SBIS3.CONTROLS.Data.Record', [
       _getSerializableState: function() {
          return $ws.core.merge(
             Record.superclass._getSerializableState.call(this), {
-               _isChanged: this._isChanged
+               _changedFields: this._changedFields
             }
          );
       },
 
       _setSerializableState: function(state) {
          return Record.superclass._setSerializableState(state).callNext(function() {
-            this._isChanged = state._isChanged;
+            this._changedFields = state._changedFields;
          });
       },
 
@@ -208,6 +209,18 @@ define('js!SBIS3.CONTROLS.Data.Record', [
       },
 
       /**
+       * Возвращает признак, что поле с указанным именем было изменено.
+       * Если name не передано, то проверяет, что изменено хотя бы одно поле.
+       * @param {String} [name] Имя поля
+       * @returns {Boolean}
+       */
+      isChanged: function (name) {
+         return name ?
+            this._changedFields.hasOwnProperty(name) :
+            !Object.isEmpty(this._changedFields);
+      },
+
+      /**
        * Клонирует запись
        * @returns {SBIS3.CONTROLS.Data.Record}
        */
@@ -217,14 +230,6 @@ define('js!SBIS3.CONTROLS.Data.Record', [
             JSON.stringify(this, serializer.serialize),
             serializer.deserialize
          );
-      },
-
-      /**
-       * Возвращает признак, что запись изменена
-       * @returns {Boolean}
-       */
-      isChanged: function () {
-         return this._isChanged;
       },
 
       /**
@@ -349,12 +354,24 @@ define('js!SBIS3.CONTROLS.Data.Record', [
       },
 
       /**
-       * Устанавливает изменена ли запись
-       * @param {Boolean} changed Запись изменена
+       * Устанавливает признак изменения поля
+       * @param {String} name Название поля
+       * @param {Boolean} value Старое значение поля
        * @protected
        */
-      _setChanged: function (changed) {
-         this._isChanged = changed;
+      _setChanged: function (name, value) {
+         if (!this._changedFields.hasOwnProperty(name)) {
+            this._changedFields[name] = [value];
+         }
+      },
+
+      /**
+       * Снимает признак изменения поля
+       * @param {String} name Название поля
+       * @protected
+       */
+      _unsetChanged: function (name) {
+         delete this._changedFields[name];
       }
 
       //endregion Protected methods

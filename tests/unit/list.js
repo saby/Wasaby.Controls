@@ -9,6 +9,7 @@ define([
 '../../components/Data/Projection/resources/test/Projection.test',
 '../../components/Data/resources/test/Factory.test',
 '../../components/Data/resources/test/Model.test',
+'../../components/Data/resources/test/Record.test',
 '../../components/Data/resources/test/Serializer.test',
 '../../components/Data/Source/resources/test/DataSet.test',
 '../../components/Data/Source/resources/test/Memory.test',

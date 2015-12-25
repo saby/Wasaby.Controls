@@ -29,7 +29,7 @@ define('js!SBIS3.CONTROLS.Data.Model', [
              */
 
             /**
-             * @cfg {Object.<String, Property>} Описание свойст модели. Дополняет/уточняет свойства, уже существующие в сырых данных.
+             * @cfg {Object.<String, Property>} Описание свойстdв модели. Дополняет/уточняет свойства, уже существующие в сырых данных.
              * @example
              * <pre>
              *    var User = Model.extend({
@@ -101,7 +101,12 @@ define('js!SBIS3.CONTROLS.Data.Model', [
          _isDeleted: false,
 
          /**
-          * @var {Object} Объект содержащий названия свойств, для которых сейчас выполняется вычисление значения
+          * @var {Object.<String, *>} Объект содержащий вычисленные значения свойств по умолчанию
+          */
+         _defaultPropertiesValues: {},
+
+         /**
+          * @var {Object.<String, Boolean>} Объект содержащий названия свойств, для которых сейчас выполняется вычисление значения
           */
          _nowCalculatingProperties: {},
 
@@ -200,6 +205,7 @@ define('js!SBIS3.CONTROLS.Data.Model', [
                _hash: this.getHash(),
                _isStored: this._isStored,
                _isDeleted: this._isDeleted,
+               _defaultPropertiesValues: this._defaultPropertiesValues,
                _compatibleMode: this._compatibleMode
             }
          );
@@ -210,6 +216,7 @@ define('js!SBIS3.CONTROLS.Data.Model', [
             this._hash = state._hash;
             this._isStored = state._isStored;
             this._isDeleted = state._isDeleted;
+            this._defaultPropertiesValues = state._defaultPropertiesValues;
             this._compatibleMode = state._compatibleMode;
          });
       },
@@ -254,12 +261,15 @@ define('js!SBIS3.CONTROLS.Data.Model', [
       // * @returns {*}
       // */
       getDefault: function (name) {
-         var property = this._options.properties[name],
-            value;
-         if (property && 'def' in property) {
-            value = typeof property.def === 'function' ? (property.def = property.def()) : property.def;
+         if (!this._defaultPropertiesValues.hasOwnProperty(name)) {
+            var property = this._options.properties[name];
+            if (property && 'def' in property) {
+               this._defaultPropertiesValues[name] = [typeof property.def === 'function' ? property.def.call(this) : property.def];
+            } else {
+               this._defaultPropertiesValues[name] = [];
+            }
          }
-         return value;
+         return this._defaultPropertiesValues[name][0];
       },
 
       /**
@@ -373,16 +383,6 @@ define('js!SBIS3.CONTROLS.Data.Model', [
       },
 
       /**
-       * Устанавливает изменена ли модель
-       * @param {Boolean} changed Модель изменена
-       * @returns {Boolean}
-       * @protected
-       */
-      _setChanged: function (changed) {
-         this._isChanged = changed;
-      },
-
-      /**
        * Возвращает вычисленное значение свойства
        * @param {String} name Ися свойства
        * @param {*} value Значение свойства
@@ -444,7 +444,11 @@ define('js!SBIS3.CONTROLS.Data.Model', [
          if (!this._compatibleMode) {
             $ws.single.ioc.resolve('ILogger').log('SBIS3.CONTROLS.Data.Model', 'method setChanged() is deprecated and will be removed in 3.8.0.');
          }
-         this._setChanged(changed);
+         if (changed) {
+            this._changedFields.__fake_field = '__fake_value';
+         } else {
+            this._changedFields = {};
+         }
       },
 
       getKey: function () {
