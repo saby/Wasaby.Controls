@@ -139,7 +139,7 @@ define('js!SBIS3.CONTROLS.Selectable', [], function() {
             if(selKey === null || (selKey !== null && !this._dataSet.getRecordByKey(selKey))) {
                var rec = this._dataSet.at(0);
 
-               if(rec) {
+               if (rec) {
                   this._options.selectedKey = rec.getKey();
                }
             }
