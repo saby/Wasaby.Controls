@@ -384,6 +384,9 @@ define('js!SBIS3.CONTROLS.MultiSelectable', [], function() {
          if (index < 0) {
             index = this._options.selectedKeys.indexOf(id - 0)
          }
+         if (index < 0) {
+            index = this._options.selectedKeys.indexOf(id + '')
+         }
          return index;
       },
 
