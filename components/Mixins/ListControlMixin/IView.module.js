@@ -70,6 +70,13 @@ define('js!SBIS3.CONTROLS.ListControl.IView', [], function () {
       render: function (items) {
          throw new Error('Method must be implemented');
       },
+      /**
+       * Установить новый шаблон отображения контрола
+       * @param {String|Function} template шаблон отображения или функция возвращающая его
+       */
+      setTemplate: function(template) {
+         throw new Error('Method must be implemented');
+      },
 
       /**
        * Очищает представление
