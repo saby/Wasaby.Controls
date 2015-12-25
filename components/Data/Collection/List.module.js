@@ -97,7 +97,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.List', [
       //region SBIS3.CONTROLS.Data.Collection.IList
 
       assign: function (items) {
-         this._items = [];
+         this._items.length = 0;
          this._splice(items||[], 0, 0);
       },
 
@@ -110,7 +110,8 @@ define('js!SBIS3.CONTROLS.Data.Collection.List', [
       },
 
       clear: function () {
-         this._items = [];
+         this._items.length = 0;
+         this._getServiceEnumerator().reIndex();
       },
 
       add: function (item, at) {

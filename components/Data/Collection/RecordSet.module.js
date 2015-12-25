@@ -14,8 +14,6 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
     * @author Мальцев Алексей
     * @state mutable
     * @public
-    * @remark
-    * Этот модуль временный. Обеспечивает совместимость c  SBIS3.CONTROLS.DataSet по API.
     */
 
    var RecordSet = ObservableList.extend(/** @lends SBIS3.CONTROLS.Data.Collection.RecordSet.prototype */{
@@ -26,15 +24,21 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
              * @cfg {Object} Данные в "сыром" виде
              * @example
              * <pre>
-             *    var user = new Model({
-             *       rawData: {
+             *    var users = new RecordSet({
+             *       rawData: [{
              *          id: 1,
              *          firstName: 'John',
              *          lastName: 'Smith'
-             *       }
+             *       },{
+             *          id: 2,
+             *          firstName: 'Sara',
+             *          lastName: 'Conor'
+             *       }],
+             *       adapter: new JsonAdapter,
+             *       idProperty: 'id'
              *    });
-             *    user.get('id');//5
-             *    user.get('firstName');//John
+             *    users.at(0).get('id');//5
+             *    users.getRecordById(2).get('firstName');//Sara
              * </pre>
              * @see getRawData
              * @see setRawData
@@ -45,7 +49,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
              * @cfg {SBIS3.CONTROLS.Data.Adapter.IAdapter} Адаптер для работы с данными
              * @example
              * <pre>
-             *    var user = new Model({
+             *    var user = new RecordSet({
              *       adapter: new SbisAdapter()
              *    });
              * </pre>
@@ -76,9 +80,9 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
          /**
           * @var {Object} Сырые данные
           */
-         _rawData: undefined,
+         _rawData: null,
          /**
-          * @var {SBIS3.CONTROLS.Data.Adapter.ITable} Адаптер для набора записей
+          * @var {Object} индексы
           */
          _indexTree: {},
          /**
