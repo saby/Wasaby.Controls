@@ -748,18 +748,24 @@ define('js!SBIS3.CONTROLS.DSMixin', [
                buildedTpl,
                dotTemplate;
          if (typeof itemTpl == 'string') {
-            dotTemplate = itemTpl;
+            if (itemTpl.indexOf('html!') == 0) {
+               dotTemplate = require(itemTpl);
+            }
+            else {
+               dotTemplate = doT.template(itemTpl);
+            }
+
          }
          else if (typeof itemTpl == 'function') {
-            dotTemplate = itemTpl(this._buildTplArgs(item));
+            dotTemplate = itemTpl;
          }
 
-         if (typeof dotTemplate == 'string') {
-            buildedTpl = $(MarkupTransformer(doT.template(dotTemplate)(this._buildTplArgs(item))));
+         if (typeof dotTemplate == 'function') {
+            buildedTpl = $(MarkupTransformer(dotTemplate(this._buildTplArgs(item))));
             return buildedTpl;
          }
          else {
-            throw new Error('Шаблон должен быть строкой');
+            throw new Error('Ошибка в itemTemplate');
          }
       },
       _buildTplArgs: function(item) {
