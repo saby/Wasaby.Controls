@@ -410,7 +410,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
             var item = list.at(0);
             self._options.selectedItem = item ? item : new Model();
             self._options.selectedKey = item ? item.getId() : null;
-            self._notifyOnPropertyChanged('selectedItem');
+            self._notifySelectedItem(self._options.selectedKey);
             return list;
          });
          FieldLink.superclass._afterSelectionHandler.apply(this, arguments);
