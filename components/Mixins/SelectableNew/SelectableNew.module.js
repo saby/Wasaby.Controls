@@ -208,7 +208,7 @@ define('js!SBIS3.CONTROLS.SelectableNew', [
 
       _getItemIndexByKey: function(id) {
          if(this._options.keyField) {
-            return this._getUtilityEnumerator().getItemIndexByPropertyValue(
+            return this._getUtilityEnumerator().getIndexByValue(
                this._options.keyField,
                id
             );

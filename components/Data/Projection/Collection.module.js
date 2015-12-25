@@ -123,7 +123,9 @@ define('js!SBIS3.CONTROLS.Data.Projection.Collection', [
        * @state mutable
        */
       getByHash: function(hash) {
-         return this._getServiceEnumerator().getItemByPropertyValue('hash', hash);
+         return this.at(
+            this._getServiceEnumerator().getIndexByValue('hash', hash)
+         );
       },
 
       /**
@@ -133,7 +135,7 @@ define('js!SBIS3.CONTROLS.Data.Projection.Collection', [
        * @state mutable
        */
       getIndexByHash: function (hash) {
-         return this._getServiceEnumerator().getItemIndexByPropertyValue('hash', hash);
+         return this._getServiceEnumerator().getIndexByValue('hash', hash);
       },
 
       /**

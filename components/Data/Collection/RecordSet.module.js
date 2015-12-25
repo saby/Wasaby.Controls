@@ -76,7 +76,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
 
       getRecordByKey: function (key) {
          return this.at(
-            this.getItemIndexByPropertyValue('id', key)
+            this.getIndexByValue('id', key)
          );
       },
 
