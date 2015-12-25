@@ -41,8 +41,20 @@ define(
          }
       },
       _dotTplFn: TabButtonsTpl,
+      /**
+       * Элементы были задаты в верстке
+       */
+      _hasItems: null,
 
       $constructor: function () {
+         this._hasItems = this._container.hasClass('hasItems');
+      },
+      init : function() {
+         TabButtons.superclass.init.call(this);
+
+         if (this._hasItems) {
+            this._drawItemsCallback();
+         }
       },
       _getItemTemplate: function (item) {
          var displayField = this._options.displayField;

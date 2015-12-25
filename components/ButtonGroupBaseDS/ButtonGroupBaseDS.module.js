@@ -34,7 +34,10 @@ define('js!SBIS3.CONTROLS.ButtonGroupBaseDS', ['js!SBIS3.CORE.CompoundControl', 
 
       init : function() {
          ButtonGroupBase.superclass.init.call(this);
-         this.reload();
+         //Если элементы были заданы в верстке (используем в CONTROLS.TabButtons), то не перезагружаем
+         if ( ! this._hasItems) {
+            this.reload();
+         }
       },
 
       setEnabled: function (enabled) {
