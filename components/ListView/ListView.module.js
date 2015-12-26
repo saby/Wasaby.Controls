@@ -719,7 +719,7 @@ define('js!SBIS3.CONTROLS.ListView',
            *         caption: 'reload offset: 450'
            *    }).subscribe('onActivated', function(event, id){
            *           //При нажатии на кнопку перезагрузим DataGridView  с 450ой записи
-           *           DataGridViewBL.reload(DataGridViewBL._filter, DataGridViewBL._sorting, 450, DataGridViewBL._limit);
+           *           DataGridViewBL.reload(DataGridViewBL._filter, DataGridViewBL.getSorting(), 450, DataGridViewBL._limit);
            *    });
           * </pre>
           */
@@ -1127,7 +1127,7 @@ define('js!SBIS3.CONTROLS.ListView',
             if (loadAllowed && $ws.helpers.isElementVisible(this.getContainer()) &&
                   this._hasNextPage(this._dataSet.getMetaData().more, this._infiniteScrollOffset) && this._hasScrollMore && !this._isLoading()) {
                this._showLoadingIndicator();
-               this._loader = this._callQuery(this.getFilter(), this._sorting, this._infiniteScrollOffset + this._limit, this._limit).addCallback(function (dataSet) {
+               this._loader = this._callQuery(this.getFilter(), this.getSorting(), this._infiniteScrollOffset + this._limit, this._limit).addCallback(function (dataSet) {
                   //ВНИМАНИЕ! Здесь стрелять onDataLoad нельзя! Либо нужно определить событие, которое будет
                   //стрелять только в reload, ибо между полной перезагрузкой и догрузкой данных есть разница!
                   self._loader = null;
