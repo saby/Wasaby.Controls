@@ -41,7 +41,7 @@ define('js!SBIS3.CONTROLS.ComponentBinder', [], function () {
             this._options.backButton.getContainer().css({'visibility': 'hidden'});
          }
 
-         view.reload(filter, view._sorting, 0).addCallback(function(){
+         view.reload(filter, view.getSorting(), 0).addCallback(function(){
             view._container.addClass('controls-GridView__searchMode');
          });
       }
@@ -57,7 +57,7 @@ define('js!SBIS3.CONTROLS.ComponentBinder', [], function () {
          view.setHighlightText(text, false);
          view.setHighlightEnabled(true);
          view.setInfiniteScroll(true, true);
-         view.reload(filter, view._sorting, 0);
+         view.reload(filter, view.getSorting(), 0);
       }
    }
 
@@ -67,9 +67,7 @@ define('js!SBIS3.CONTROLS.ComponentBinder', [], function () {
          filter = view.getFilter();
       delete (filter[searchParamName]);
       view.setHighlightText('', false);
-      view.setHighlightEnabled(false);
-      view.reload(filter, view._sorting, 0);
-   }
+      view.setHighlightEnabled(false);      view.reload(filter, view.getSorting(), 0);   }
 
    function resetGroup(searchParamName) {
       //Если мы ничего не искали, то и сбрасывать нечего
@@ -93,7 +91,7 @@ define('js!SBIS3.CONTROLS.ComponentBinder', [], function () {
          filter[view.getHierField()] = this._lastRoot;
          //DataGridView._filter = filter;
          //DataGridView.setCurrentRoot(self._lastRoot); - плохо, потому что ВСЕ крошки на странице получат изменения
-         view.reload(filter, view._sorting, 0);
+         view.reload(filter, view.getSorting(), 0);
          this._path = this._pathDSRawData || [];
          if (this._options.breadCrumbs){
             this._options.breadCrumbs.getDataSet().setRawData(this._pathDSRawData);
