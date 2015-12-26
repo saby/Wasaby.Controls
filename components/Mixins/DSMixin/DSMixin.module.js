@@ -394,7 +394,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
                      more: newDataSet.getTotal(),
                      path: newDataSet.getProperty('p')
                   },
-                  keyField: this._options.keyField || this._dataSource.getAdapter().forRecord(newDataSet.getRawData()).getKeyField()
+                  keyField: this._options.keyField || newDataSet.getIdProperty() || this._dataSource.getAdapter().forRecord(newDataSet.getRawData()).getKeyField()
                });
             }).bind(this));
          } else {
