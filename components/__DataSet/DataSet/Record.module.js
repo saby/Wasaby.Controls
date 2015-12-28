@@ -104,7 +104,9 @@ define('js!SBIS3.CONTROLS.Record', [
        */
       merge: function (record) {
          //FIXME: сейчас стратегии должны быть одинаковы. Сделать объединение _raw через стратегии.
-         $ws.core.merge(this._raw, record._raw);
+         if (this._raw !== record._raw) {
+            $ws.core.merge(this._raw, record._raw);
+         }
          this._isCreated = record._isCreated;
          this._isChanged = record._isChanged;
          this._isDeleted = record._isDeleted;
