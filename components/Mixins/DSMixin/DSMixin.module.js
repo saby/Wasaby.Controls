@@ -1,5 +1,6 @@
 define('js!SBIS3.CONTROLS.DSMixin', [
    'js!SBIS3.CONTROLS.Data.Source.Memory',
+   'js!SBIS3.CONTROLS.Data.Source.SbisService',
    'js!SBIS3.CONTROLS.DataFactory',
    'js!SBIS3.CONTROLS.Data.Collection.RecordSet',
    'js!SBIS3.CONTROLS.Data.Query.Query',
@@ -7,7 +8,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
    'js!SBIS3.CONTROLS.Data.Collection.LoadableList',
    'js!SBIS3.CONTROLS.Data.Collection.ObservableList',
    'js!SBIS3.CONTROLS.Data.Projection'
-], function (MemorySource, DataFactory, RecordSet, Query, MarkupTransformer, LoadableList, ObservableList, Projection) {
+], function (MemorySource, SbisService, DataFactory, RecordSet, Query, MarkupTransformer, LoadableList, ObservableList, Projection) {
 
    /**
     * Миксин, задающий любому контролу поведение работы с набором однотипных элементов.
@@ -236,7 +237,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
          }
          if (sourceOpt) {
             this._dataSource = this._prepareSource(sourceOpt);
-            this._items = this._convertDataSourceToItems(sourceOpt);
+            this._items = this._convertDataSourceToItems(this._dataSource);
          }
          else if (itemsOpt) {
             this._items = this._prepareItems(itemsOpt);
@@ -259,8 +260,10 @@ define('js!SBIS3.CONTROLS.DSMixin', [
                if ($ws.helpers.instanceOfMixin(sourceOpt, 'SBIS3.CONTROLS.Data.Source.ISource')) {
                   result = sourceOpt;
                }
+               /*TODO поддержка старого сорса*/
                else if ($ws.helpers.instanceOfModule(sourceOpt, 'SBIS3.CONTROLS.BaseSource')) {
-                  result = sourceOpt;
+                  $ws.single.ioc.resolve('ILogger').log('SBIS3.CONTROLS.ListControl', 'в качестве Source должен передаваться объект интерфейса SBIS3.CONTROLS.Data.Source.ISource');
+                  result = this._convertOldSource(sourceOpt);
                }
                if ('module' in sourceOpt) {
                   var DataSourceConstructor = require(sourceOpt.module);
@@ -292,6 +295,23 @@ define('js!SBIS3.CONTROLS.DSMixin', [
          return result;
       },
 
+      _convertOldSource: function(source) {
+         var newSource;
+         /*TODO поддержка старого сорса*/
+         if ($ws.helpers.instanceOfModule(source, 'SBIS3.CONTROLS.SbisServiceSource')) {
+            var options = $ws.core.clone(source._options);
+            options['idProperty'] = this._options.keyField;
+            newSource = new SbisService(source._options);
+         }
+         else if ($ws.helpers.instanceOfModule(source, 'SBIS3.CONTROLS.StaticSource')) {
+            newSource = new MemorySource({
+               data : source._options.data,
+               idProperty : this._options.keyField
+            })
+         }
+         return newSource;
+      },
+
       _convertItems: function(items) {
          items = items || [];
          if (items instanceof Array) {
@@ -314,16 +334,9 @@ define('js!SBIS3.CONTROLS.DSMixin', [
        * @private
        */
       _convertDataSourceToItems: function (source) {
-         if ($ws.helpers.instanceOfMixin(source, 'SBIS3.CONTROLS.Data.Source.ISource')) {
-            return new LoadableList({
-               source: source
-            });
-         }
-         /*TODO поддержка старого сорса*/
-         else if ($ws.helpers.instanceOfModule(source, 'SBIS3.CONTROLS.BaseSource')) {
-            return this._convertItems(source.options._data || [])
-         }
-
+         return new LoadableList({
+            source: source
+         });
       },
 
        /**
@@ -358,7 +371,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
         */
       setDataSource: function (source, noLoad) {
           this._dataSource = this._prepareSource(source);
-          this._items = this._convertDataSourceToItems(source);
+          this._items = this._convertDataSourceToItems(this._dataSource);
           if (!noLoad) {
              return this.reload();
           }
