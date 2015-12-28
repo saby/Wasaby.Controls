@@ -320,21 +320,6 @@ define('js!SBIS3.CONTROLS.ListView',
                 */
                infiniteScroll: false,
                /**
-                * @cfg {Boolean} Игнорировать значение в localStorage (т.е. смотреть на опцию pageSize)
-                * @remark Важно! На страницах нашего приложения есть функционал сохранения выбранного количества записей на всех реестрах.
-                * Это значит, что если на одном реестре пользователь выбрал “отображать по 50 записей”, то по умолчанию в других реестрах тоже
-                * будет отображаться 50 записей. Чтобы отключить функционал “следования выбору пользователя” на
-                * конкретном табличном представлении есть опция ignoreLocalPageSize
-                * (аналог css-класса ws-browser-ignore-local-page-size в старых табличных представления),
-                * которую нужно поставить в true (по умолчанию она = false)
-                * @example
-                * <pre>
-                *    <option name="ignoreLocalPageSize">true</option>
-                * </pre>
-                * @see pageSize
-                */
-               ignoreLocalPageSize: false,
-               /**
                 * @cfg {Boolean} Режим постраничной навигации
                 * @remark
                 * При частичной постраничной навигации заранее неизвестно общее количество страниц, режим пейджинга будет определн по параметру n из dataSource
@@ -414,8 +399,6 @@ define('js!SBIS3.CONTROLS.ListView',
          },
 
          init: function () {
-            var localPageSize = $ws.helpers.getLocalStorageValue('ws-page-size');
-            this._options.pageSize = !this._options.ignoreLocalPageSize && localPageSize ? localPageSize : this._options.pageSize;
             if (typeof this._options.pageSize === 'string') {
                this._options.pageSize = this._options.pageSize * 1;
             }
@@ -1171,6 +1154,14 @@ define('js!SBIS3.CONTROLS.ListView',
                scrollHeight = Math.max(docBody.scrollHeight, docElem.scrollHeight);
             return (clientHeight + scrollTop >= scrollHeight - this._scrollIndicatorHeight);//Учитываем отступ снизу на высоту картинки индикатора загрузки
          },
+         _scrollTo: function (container) {
+            var containerOffset = $(container).offset(),
+               body = $('body'),
+               needScroll = (body.scrollTop() >= containerOffset.top) || (containerOffset.top - body.scrollTop()) > $ws._const.$win.height() / 2;
+            if (needScroll) {
+               window.scrollTo(window.scrollX, containerOffset.top);
+            }
+         },
          _loadBeforeScrollAppears: function(){
             /*
             *   TODO убрать зависимость от опции autoHeight, перенести в scrollWatcher возможность отслежитвания скролла по переданному классу
@@ -1311,7 +1302,6 @@ define('js!SBIS3.CONTROLS.ListView',
                this._pager = new Pager({
                   pageSize: this._options.pageSize,
                   opener: this,
-                  ignoreLocalPageSize: this._options.ignoreLocalPageSize,
                   element: pagerContainer.find('div'),
                   allowChangeEnable: false, //Запрещаем менять состояние, т.к. он нужен активный всегда
                   pagingOptions: pagingOptions,

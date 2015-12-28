@@ -30,7 +30,6 @@ define('js!SBIS3.CONTROLS.Pager', ['js!SBIS3.CORE.CompoundControl', 'html!SBIS3.
       $protected: {
          _dotTplFn: dotTplFn,
          _options: {
-            ignoreLocalPageSize : false,
             pagingOptions: {}
          },
          _fddDataKeys: [10, 20, 25, 50, 100, 200, 500, 1000],
@@ -40,15 +39,7 @@ define('js!SBIS3.CONTROLS.Pager', ['js!SBIS3.CORE.CompoundControl', 'html!SBIS3.
          _lastNextPage: undefined
       },
       $constructor: function(){
-         var localPageSize = $ws.helpers.getLocalStorageValue('ws-page-size');
          this._publish('onPageChange');
-         this._options.pageSize = !this._options.ignoreLocalPageSize  && localPageSize ? localPageSize : this._options.pageSize;
-         this._updateLocalStorageValue();
-      },
-      _updateLocalStorageValue: function(){
-         if (!this._options.ignoreLocalPageSize && this._options.pageSize <= 100) {
-            $ws.helpers.setLocalStorageValue('ws-page-size', this._options.pageSize);
-         }
       },
       init: function(){
          var self = this,

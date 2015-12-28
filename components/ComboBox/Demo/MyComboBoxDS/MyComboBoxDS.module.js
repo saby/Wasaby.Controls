@@ -1,4 +1,4 @@
-define('js!SBIS3.CONTROLS.Demo.MyComboBoxDS', ['js!SBIS3.CORE.CompoundControl', 'html!SBIS3.CONTROLS.Demo.MyComboBoxDS', 'js!SBIS3.CONTROLS.ArrayStrategy', 'js!SBIS3.CONTROLS.StaticSource', 'css!SBIS3.CONTROLS.Demo.MyComboBoxDS', 'js!SBIS3.CONTROLS.ComboBox' ], function(CompoundControl, dotTplFn, ArrayStrategy, StaticSource) {
+define('js!SBIS3.CONTROLS.Demo.MyComboBoxDS', ['js!SBIS3.CORE.CompoundControl', 'html!SBIS3.CONTROLS.Demo.MyComboBoxDS', 'js!SBIS3.CONTROLS.Data.Source.Memory', 'css!SBIS3.CONTROLS.Demo.MyComboBoxDS', 'js!SBIS3.CONTROLS.ComboBox' ], function(CompoundControl, dotTplFn, StaticSource) {
    /**
     * SBIS3.CONTROLS.Demo.MyComboBoxDS
     * @class SBIS3.CONTROLS.Demo.MyComboBoxDS
@@ -25,8 +25,7 @@ define('js!SBIS3.CONTROLS.Demo.MyComboBoxDS', ['js!SBIS3.CORE.CompoundControl', 
                ];   
          var ds1 = new StaticSource({
             data: arrayOfObj,
-            keyField: '@Заметка',
-            strategy: new ArrayStrategy()
+            keyField: '@Заметка'
             });
          this.getChildControlByName("ComboBox 1").setDataSource(ds1);
       }

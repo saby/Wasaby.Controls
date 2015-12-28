@@ -13,21 +13,29 @@
    &:hover {
       background: @tab-button-hover-background;
       border: @tab-button-hover-border;
+      border-bottom: none;
       .controls-TabButton__inner {
          &:before {
             display: @tab-button-hover-inner-after-display;
          }
       }
    }
+   //стиль для встраиваемых компонентов, чтобы текст был по стандарту
+   .controls-TabButton__mainText {
+      color: @tab-button-color;
+      font: @tab-button-font;
+      font-size: @tab-button-large-inner-font-size;
+      font-weight: @tab-button-large-inner-font-weight;
+   }
    &.controls-Checked__checked {
       border-top: @tab-button-checked-border-top;
       border-left: @tab-button-checked-border-left;
       border-right: @tab-button-checked-border-right;
-      background: @tab-button-checked-bg;
       z-index: @tab-button-checked-z-index;
       cursor: @tab-button-checked-cursor;
       font-size: @tab-button-checked-font-size;
       .controls-TabButton__inner {
+         height: @tab-button-checked-height;
          font-weight: @tab-button-checked-inner-font-weight;
          font-size: @tab-button-checked-inner-font-size;
          color: @tab-button-checked-inner-color;
@@ -40,6 +48,12 @@
       }
       .controls-tabButton__overlay{
          display: @tab-button-checked-overlay-display;
+      }
+      //стиль для встраиваемых компонентов, чтобы текст был по стандарту
+      .controls-TabButton__mainText {
+         color: @tab-button-checked-inner-color;
+         font-size: @tab-button-large-inner-font-size;
+         font-weight: @tab-button-large-inner-font-weight;
       }
    }
    &.controls-TabButton__main-item {
@@ -70,7 +84,6 @@
       padding: @tab-button-inner-padding;
       line-height: @tab-button-inner-line-height;
       overflow: @tab-button-inner-overflow;
-      max-height: @tab-button-inner-max-height;
       height: @tab-button-inner-height;
       &:before {
          content: @tab-button-inner-after-content;
@@ -84,6 +97,8 @@
       }
       .controls-TabButton__icon {
          margin-right: @tab-button-inner-icon-margin-left;
+         position: @tab-button-icon-position;
+         top: @tab-button-icon-top;
       }
    }
 
