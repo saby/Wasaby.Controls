@@ -243,12 +243,6 @@ define('js!SBIS3.CONTROLS.DSMixin', [
                idProperty: this._options.keyField
             });
          }
-
-         if (typeof cfg.items === 'function') {
-            cfg.items = cfg.items.call(this);
-         }
-
-         this._setItems(cfg.items);
       },
 
       _prepareSource: function(sourceOpt) {
