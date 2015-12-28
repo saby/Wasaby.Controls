@@ -391,6 +391,8 @@ define('js!SBIS3.CONTROLS.DSMixin', [
        * @see onDrawItems
        * @see onDataLoad
        */
+
+      /*TODO поддержка старого API*/
       getDataSet: function() {
          return this._dataSet;
       },
@@ -463,31 +465,27 @@ define('js!SBIS3.CONTROLS.DSMixin', [
             return;
          }
 
-         //TODO: remove switch after migration to SBIS3.CONTROLS.Data.Source.ISource
-         if ($ws.helpers.instanceOfMixin(this._dataSource, 'SBIS3.CONTROLS.Data.Source.ISource')) {
-            var query = new Query();
-            query.where(filter)
-               .offset(offset)
-               .limit(limit)
-               .orderBy(sorting);
+         var query = new Query();
+         query.where(filter)
+            .offset(offset)
+            .limit(limit)
+            .orderBy(sorting);
 
-            return this._dataSource.query(query).addCallback((function(newDataSet) {
-               return new RecordSet({
-                  compatibleMode: true,
-                  strategy: this._dataSource.getAdapter(),
-                  model: newDataSet.getModel(),
-                  data: newDataSet.getRawData(),
-                  meta: {
-                     results: newDataSet.getProperty('r'),
-                     more: newDataSet.getTotal(),
-                     path: newDataSet.getProperty('p')
-                  },
-                  keyField: this._options.keyField || newDataSet.getIdProperty() || this._dataSource.getAdapter().forRecord(newDataSet.getRawData()).getKeyField()
-               });
-            }).bind(this));
-         } else {
-            return this._dataSource.query(filter, sorting, offset, limit);
-         }
+         return this._dataSource.query(query).addCallback((function(newDataSet) {
+            return new RecordSet({
+               compatibleMode: true,
+               strategy: this._dataSource.getAdapter(),
+               model: newDataSet.getModel(),
+               data: newDataSet.getRawData(),
+               meta: {
+                  results: newDataSet.getProperty('r'),
+                  more: newDataSet.getTotal(),
+                  path: newDataSet.getProperty('p')
+               },
+               keyField: this._options.keyField || newDataSet.getIdProperty() || this._dataSource.getAdapter().forRecord(newDataSet.getRawData()).getKeyField()
+            });
+         }).bind(this));
+
       },
 
       _toggleIndicator:function(){
