@@ -19,10 +19,12 @@ module.exports = function (grunt) {
       runCommand = function (done, name, args) {
          args = args || [];
 
-         console.log(name + ' ' + args.join(' '));
-         checkResults(childProcess.exec(
-            name + ' ' + args.join(' ')
-         ), done);
+         //name = path.resolve(process.cwd(), name);
+         name = name + ' ' + args.join(' ');
+         console.log(name);
+         checkResults(childProcess.exec(name, {
+            cwd: process.cwd()
+         }), done);
       },
       checkResults = function(proc, done) {
          proc.stdout.on('data', function (data) {
