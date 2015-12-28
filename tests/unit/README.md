@@ -4,7 +4,14 @@
 
 `http://localhost:666/tests/unit/via-webdriver.html`
 
-## Запуск из командной строки через Selenium webdriver
+## Команды Grunt
+- `grunt tests` - прогнать unit тесты и тест покрытия;
+- `grunt tests-webdriver` - прогнать unit тесты через webdriver;
+- `grunt tests-isolated` - прогнать unit тесты изолированно;
+- `grunt tests-coverage` - прогнать тест покрытия через webdriver;
+- `grunt tests-list-build` - пересобрать список тестов для webdriver.
+
+## Запуск в ручном режиме из командной строки через Selenium webdriver
 1. Установить selenium-standalone и webdriverio:
 
     a) Добавить в PATH путь к бинарникам Java (если его еще там нет, требуется для запуска selenium standalone server): `https://java.com/en/download/help/path.xml`
@@ -35,18 +42,10 @@
 ## Отчет о покрытии
 Выполнить в консоли (в корневой папке репозитория):
 
-    node  tests/unit/jscoverage.run
+    node tests/unit/jscoverage.run
 
 Результаты можно смотреть тут:
-`http://localhost:666/ tests/unit/artifacts/jscoverage-report/jscoverage.html`
-
-## Команды Grunt
-- `grunt tests` - прогнать unit тесты и тест покрытия;
-- `grunt tests-webdriver` - прогнать unit тесты через webdriver;
-- `grunt tests-isolated` - прогнать unit тесты изолированно;
-- `grunt tests-coverage` - прогнать тест покрытия через webdriver;
-- `grunt tests-list-build` - пересобрать список тестов для webdriver.
-
+`http://localhost:666/tests/unit/artifacts/jscoverage-report/jscoverage.html`
 
 # Jenkins
 Настройки сборки в Jenkins

@@ -1,23 +1,17 @@
 {
-  "execWin": "tests/unit/bin/jscoverage/jscoverage-server.exe",
+  "execWin": "java -Dfile.encoding=UTF-8 -jar tests/unit/bin/jscoverage/target/dist/JSCover-all.jar -ws",
   "execNix": "/usr/bin/jscoverage-server",
   "docRoot": "",
   "params": {
-    "verbose": true,
-    "ip-address": "0.0.0.0",
     "port": 667,
-    "no-instrument": [
-      "/sbis3-ws/",
-      "/node_modules/",
-      "/tests/",
-      ".test.js"
-    ],
+    "document-root": ".",
+    "only-instrument-reg": "^/components/.+\\.module\\.js$",
     "report-dir": "tests/unit/artifacts/jscoverage-report"
   },
   "webdriver": {
     "host": "localhost",
     "path": "/jscoverage.html?tests/unit/via-webdriver.html"
   },
-  "checkerTimeout": 15000,
-  "reportTimeout": 2000
+  "checkerTimeout": 120000,
+  "reportTimeout": 10000
 }

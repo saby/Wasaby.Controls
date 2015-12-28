@@ -7,6 +7,7 @@ var path = require('path'),
    fs = require('fs'),
    spawn = require('child_process').spawn,
    exec = require('child_process').exec,
+   execFile = require('child_process').execFile,
    util = require('./util'),
    fromEnv = util.config.fromEnv,
    config = require('../jscoverage.json'),
@@ -24,6 +25,7 @@ var Server = function () {
    this.executable = config.execWin;
    this.docRoot = path.resolve(process.cwd(), config.docRoot);
    this.params = this._buildParams(config.params);
+   this.started = false;
 };
 
 /**
@@ -31,28 +33,38 @@ var Server = function () {
  * @param {Function} callback При успешном запуске
  */
 Server.prototype.start = function (callback) {
+   this.started = true;
    var self = this;
 
    this.clear(function () {
       var hasData = false,
          hasExit = false;
 
-      self.proc = spawn(self.executable, self.params, {
+      console.log(self.executable + ' ' + self.params.join(' '));
+      self.proc = exec(self.executable + ' ' + self.params.join(' '), {
          cwd: self.docRoot
       });
 
       self.proc.on('error', function (err) {
+         console.log('JSCOVERAGE error: ' + err);
          throw err;
       });
 
       self.proc.on('close', function (code) {
          hasExit = true;
-         console.log('jscoverage-server: exited with code ' + code);
+         console.log('JSCOVERAGE: exited with code ' + code);
       });
 
       self.proc.stdout.on('data', function (data) {
          hasData = true;
-         console.log('jscoverage-server: ' + data);
+         console.log('JSCOVERAGE: ' + data);
+      });
+
+      self.proc.stderr.on('data', function (data) {
+         if ((data + '').indexOf('jscover.Main') !== '-1') {
+            hasData = true;
+         }
+         console.log('JSCOVERAGE: ' + data);
       });
 
       setTimeout(function () {
@@ -60,7 +72,7 @@ Server.prototype.start = function (callback) {
             throw new Error('Cannot start the jscoverage server');
          }
          callback();
-      }, 200);
+      }, 1000);
    });
 };
 
@@ -68,6 +80,7 @@ Server.prototype.start = function (callback) {
  * Останавливает Jscoverage сервер
  */
 Server.prototype.stop = function () {
+   this.started = false;
    if (this.proc) {
       this.proc.kill();
    }
@@ -78,13 +91,22 @@ Server.prototype.stop = function () {
  * @param {Function} callback При успешном запуске
  */
 Server.prototype.clear = function (callback) {
-   var params = this._buildParams({
+   callback();
+   /*var params = this._buildParams({
       port: config.params.port,
       shutdown: true
    });
    exec(this.executable + ' ' + params.join(' '), {
       cwd: this.docRoot
-   }, callback);
+   }, callback);*/
+};
+
+/**
+ * Возвращает признак, что был вызван метод start()
+ * @returns Boolean
+ */
+Server.prototype.isStarted = function () {
+   return this.started;
 };
 
 /**
@@ -119,6 +141,7 @@ Server.prototype._buildParams = function (raw) {
  * Загрузчик отчета о покрытии кода тестами
  */
 var Loader = function () {
+   this.started = false;
    this._provider = new DriverProvider();
 };
 
@@ -127,6 +150,7 @@ var Loader = function () {
  * @param {Function} done При успешном завершении операции
  */
 Loader.prototype.start = function (done) {
+   this.started = true;
    this._removeReport();
 
    var self = this;
@@ -147,7 +171,16 @@ Loader.prototype.start = function (done) {
  * @param {Function} done При успешном запуске
  */
 Loader.prototype.stop = function (done) {
+   this.started = false;
    this._provider.tearDown(done);
+};
+
+/**
+ * Возвращает признак, что был вызван метод start()
+ * @returns Boolean
+ */
+Loader.prototype.isStarted = function () {
+   return this.started;
 };
 
 /**
@@ -234,10 +267,18 @@ exports.run = function () {
       }
 
       stopInProgress = true;
-      server.stop();
-      loader.stop(function () {
+      if (server.isStarted()) {
+         server.stop();
+         if (loader.isStarted()) {
+            loader.stop(function () {
+               throw err;
+            });
+         } else {
+            throw err;
+         }
+      } else {
          throw err;
-      });
+      }
    });
 
    server.start(function () {
