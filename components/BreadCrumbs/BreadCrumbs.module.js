@@ -54,7 +54,7 @@ define('js!SBIS3.CONTROLS.BreadCrumbs', [
          this._homeIcon = $('.controls-BreadCrumbs__crumb-home', this._container);
          this._homeIcon.data('id', null); //клик по домику ведет в корень TODO: придрочено под null
          //инициализируем dataSet
-         this.setItems(this._options.items || []);
+         //this.setItems(this._options.items || []);
       },
 
       _resizeHandler: function() {
