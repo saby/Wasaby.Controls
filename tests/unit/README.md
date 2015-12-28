@@ -8,7 +8,7 @@
 - `grunt tests` - прогнать unit тесты и тест покрытия;
 - `grunt tests-webdriver` - прогнать unit тесты через webdriver;
 - `grunt tests-isolated` - прогнать unit тесты изолированно;
-- `grunt tests-coverage` - прогнать тест покрытия через webdriver;
+- `grunt tests-coverage` - прогнать тест покрытия;
 - `grunt tests-list-build` - пересобрать список тестов для webdriver.
 
 ## Запуск в ручном режиме из командной строки через Selenium webdriver
@@ -20,7 +20,7 @@
 
         npm install selenium-standalone
         node node_modules/selenium-standalone/bin/selenium-standalone install
-        npm install webdriverio
+        npm install webdriverio istanbul
 
 2. Выполнить в консоли (в корневой папке репозитория), предварительно запустив http-сервер (`node app`):
 
@@ -42,7 +42,7 @@
 ## Отчет о покрытии
 Выполнить в консоли (в корневой папке репозитория):
 
-    node tests/unit/jscoverage.run
+    coverage tests/unit/via-isolated.run
 
 Результаты можно смотреть тут:
 `http://localhost:666/tests/unit/artifacts/jscoverage-report/jscoverage.html`

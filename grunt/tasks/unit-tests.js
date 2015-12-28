@@ -10,11 +10,8 @@ module.exports = function (grunt) {
       defTimeout = config.timeout,
       runTest = function (done, name, options, args) {
          options = options || {};
-         args = args || [];
-         var command = arguments[4] || 'node';
 
-         var execMethod = command == 'node' ? 'spawn' : 'execFile',
-            defOptions = {
+         var defOptions = {
                timeout: defTimeout
             };
          for (var key in defOptions) {
@@ -24,6 +21,14 @@ module.exports = function (grunt) {
                }
             }
          }
+         runCommand(done, name, options, args);
+
+      },
+      runCommand = function (done, name, options, args) {
+         options = options || {};
+         args = args || [];
+         var command = arguments[4] || 'node',
+            execMethod = command === 'node' ? 'spawn' : 'execFile';
 
          args.push(config.path + name);
          var testing = childProcess[execMethod](
@@ -142,7 +147,7 @@ module.exports = function (grunt) {
       grunt.task.requires('tests-setup-packages');
       grunt.task.requires('js');
       grunt.task.requires('express:development');
-      runTest(this.async(), 'jscoverage.run');
+      runCommand(this.async(), 'coverage', 'tests/unit/via-isolated.run');
    });
 
    grunt.registerTask('tests-coverage', [
