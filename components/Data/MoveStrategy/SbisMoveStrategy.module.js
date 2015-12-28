@@ -54,7 +54,7 @@ define('js!SBIS3.CONTROLS.Data.SbisMoveStrategy', [
 
       move: function (from, to, after) {
          var self = this,
-            suffix = after ? 'До':'После',
+            suffix = after ? 'После':'До',
             def = new $ws.proto.ParallelDeferred(),
             method = this._options.moveMethodPrefix + suffix,
             params = this._getMoveParams(to, after);
@@ -88,9 +88,10 @@ define('js!SBIS3.CONTROLS.Data.SbisMoveStrategy', [
             id = String.prototype.split.call(this._getId(to), ',')[0];
 
          if (after) {
-            params['ИдОДо'] = [id, objectName];
-         } else {
             params['ИдОПосле'] = [id, objectName];
+         } else {
+            params['ИдОДо'] = [id, objectName];
+
          }
          return params;
       }
