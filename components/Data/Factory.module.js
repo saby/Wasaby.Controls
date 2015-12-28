@@ -88,11 +88,6 @@ define('js!SBIS3.CONTROLS.Data.Factory', [
                   return value;
                }
                return !!value;
-            case 'Array':
-               var self = this;
-               return value.map(function (val){
-                  return self.cast(val, meta.arrayType, adapter, meta);
-               });
             default:
                return value;
          }
@@ -167,11 +162,7 @@ define('js!SBIS3.CONTROLS.Data.Factory', [
                   return value.getCurrentValue();
                }
                return value;
-            case 'Array':
-               var self = this;
-               return value.map(function (val){
-                  return self.serialize(val, meta.arrayType, adapter, meta);
-               });
+
             default:
                return value;
          }
