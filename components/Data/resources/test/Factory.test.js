@@ -118,6 +118,13 @@ define([
          null,
          null,
          null,
+         null,
+         null,
+         null,
+         null,
+         null,
+         null,
+         null,
          null
       ];
       sbisModel = new Model({
@@ -367,6 +374,36 @@ define([
             sbisModelEmpty.set('flags', testModel);
             assert.deepEqual(getData(5), d);
          });
+
+         it('should serialize array of date', function (){
+            var  date = new Date(2016,1,1);
+            sbisModelEmpty.set('arrayDate',[date]);
+            assert.deepEqual([date.toSQL()], getData(15));
+         });
+         it('should serialize array of date and time', function (){
+            var date = new Date(2016,1,1);
+            sbisModelEmpty.set('arrayDatetime',[date]);
+            assert.deepEqual([date.toSQL(true)], getData(16));
+         });
+         it('should serialize array of int', function (){
+            sbisModelEmpty.set('arrayInt',[2,3]);
+            assert.deepEqual([2,3], getData(17));
+         });
+         it('should serialize array of float', function (){
+            sbisModelEmpty.set('arrayFloat',[2.1,3.3]);
+            assert.deepEqual([2.1,3.3], getData(18));
+
+         });
+         it('should serialize array of string', function (){
+            sbisModelEmpty.set('arrayString',['stop','bomb']);
+            assert.deepEqual(['stop','bomb'], getData(19));
+         });
+         it('should serialize array of time', function (){
+            var  date = new Date(2016,1,1);
+            sbisModelEmpty.set('arrayTime',[date]);
+            assert.deepEqual([date.toSQL(false)], getData(20));
+         });
+
       });
    });
 });

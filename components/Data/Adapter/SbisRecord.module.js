@@ -152,7 +152,7 @@ define('js!SBIS3.CONTROLS.Data.Adapter.SbisRecord', [
                break;
             case 'Array':
                var type = this._getType(meta);
-               meta.arrayType = type.name;
+               meta.elementsType = type.name;
                break;
 
          }

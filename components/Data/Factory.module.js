@@ -89,9 +89,12 @@ define('js!SBIS3.CONTROLS.Data.Factory', [
                }
                return !!value;
             case 'Array':
+               if (value === null) {
+                  return value;
+               }
                var self = this;
                return value.map(function (val){
-                  return self.cast(val, meta.arrayType, adapter, meta);
+                  return self.cast(val, meta.elementsType, adapter, meta);
                });
             default:
                return value;
@@ -170,7 +173,7 @@ define('js!SBIS3.CONTROLS.Data.Factory', [
             case 'Array':
                var self = this;
                return value.map(function (val){
-                  return self.serialize(val, meta.arrayType, adapter, meta);
+                  return self.serialize(val, meta.elementsType, adapter, meta);
                });
             default:
                return value;
