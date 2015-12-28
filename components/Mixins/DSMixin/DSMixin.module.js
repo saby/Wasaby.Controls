@@ -228,8 +228,12 @@ define('js!SBIS3.CONTROLS.DSMixin', [
 
       _prepareConfig : function() {
          var
+            keyField = this._options.keyField,
             sourceOpt = this._options.dataSource,
             itemsOpt = this._options.items;
+         if (!keyField) {
+            throw new Error('Option keyField is required');
+         }
          if (sourceOpt) {
             this._dataSource = this._prepareSource(sourceOpt);
             this._items = this._convertDataSourceToItems(sourceOpt);
@@ -310,16 +314,23 @@ define('js!SBIS3.CONTROLS.DSMixin', [
        * @private
        */
       _convertDataSourceToItems: function (source) {
-         return new LoadableList({
-            source: source
-         });
+         if ($ws.helpers.instanceOfMixin(source, 'SBIS3.CONTROLS.Data.Source.ISource')) {
+            return new LoadableList({
+               source: source
+            });
+         }
+         /*TODO поддержка старого сорса*/
+         else if ($ws.helpers.instanceOfModule(source, 'SBIS3.CONTROLS.BaseSource')) {
+            return this._convertItems(source.options._data || [])
+         }
+
       },
 
        /**
         * Метод установки источника данных.
         * @remark
         * Данные могут быть заданы либо этим методом, либо опцией {@link items}.
-        * @param ds Новый источник данных.
+        * @param source Новый источник данных.
         * @param noLoad Установить новый источник данных без запроса на БЛ.
         * @example
         * <pre>
@@ -345,10 +356,10 @@ define('js!SBIS3.CONTROLS.DSMixin', [
         * @see onDrawItems
         * @see onDataLoad
         */
-      setDataSource: function (ds, noLoad) {
-         this._dataSource = ds;
-         this._dataSet = null;
-          if(!noLoad) {
+      setDataSource: function (source, noLoad) {
+          this._dataSource = this._prepareSource(source);
+          this._items = this._convertDataSourceToItems(source);
+          if (!noLoad) {
              return this.reload();
           }
       },
@@ -562,12 +573,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
       },
       //TODO поддержка старого - обратная совместимость
       getItems : function() {
-         if (this._dataSet) {
-            return this._dataSet.getRawData();
-         }
-         else {
-            return this._options.items;
-         }
+         return this._items;
       },
        /**
         * Метод установки либо замены коллекции элементов, заданных опцией {@link items}.
@@ -596,29 +602,14 @@ define('js!SBIS3.CONTROLS.DSMixin', [
         * @see onDataLoad
         */
        setItems: function (items) {
-          //TODO Сделать метод для очистки всех Items, ибо setItems([]) - не очевидно
-          var keyField, item;
+          this.getItems().fill(items);
 
-          if (this._options.keyField) {
-             keyField = this._options.keyField;
-          }
-
-          if (items && items.length) {
-             item = items[0];
-
-             if (item && !keyField && Object.prototype.toString.call(item) === '[object Object]') {
-                keyField = Object.keys(item)[0];
-             }
-          }
-          else {
-             items = [];
-          }
-
-         this._dataSource = new StaticSource({
-            data: items,
-            idProperty: keyField
-         });
-         this.reload();
+          /*TODO для совместимости создадим сорс*/
+          this._dataSource = new MemorySource({
+             data: items,
+             idProperty: this._options.keyField
+          });
+          this.reload();
       },
 
       _drawItemsCallback: function () {
