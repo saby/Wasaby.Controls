@@ -343,7 +343,7 @@ define('js!SBIS3.CONTROLS.ListView',
                 * Режим автоматического добавления позволяет при завершении редактирования последнего элемента автоматически создавать новый
                 * @example
                 * <pre>
-                *     <opt name="editInPlaceMode">click</opt>
+                *     <opt name="editMode">click</opt>
                 * </pre>
                 */
                editMode: '',
