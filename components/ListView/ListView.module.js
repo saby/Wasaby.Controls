@@ -481,23 +481,34 @@ define('js!SBIS3.CONTROLS.ListView',
          // TODO Подумать, как решить данную проблему. Не надёжно хранить информацию в доме
          // Поиск следующего или предыдущего элемента коллекции с учётом вложенных контролов
          _getHtmlItem: function (id, isNext) {
-            var items = $('.js-controls-ListView__item', this._getItemsContainer()).not('.ws-hidden'),
-               selectedItem = $('[data-id="' + id + '"]', this._getItemsContainer()),
-               index = items.index(selectedItem),
-               siblingItem;
+            if($ws.helpers.instanceOfMixin(this._dataSet, 'SBIS3.CONTROLS.Data.Collection.IList')) {
+               var index = this._dataSet.getIndex(this._dataSet.getRecordByKey(id)),
+                  item;
+               item = this._dataSet.at(isNext ? ++index : --index);
+               if(item)
+                  return $('.js-controls-ListView__item[data-id="' + item.getId() + '"]', this._getItemsContainer());
+               else
+                  return undefined;
+            } else {
+               var items = $('.js-controls-ListView__item', this._getItemsContainer()).not('.ws-hidden'),
+                  selectedItem = $('[data-id="' + id + '"]', this._getItemsContainer()),
+                  index = items.index(selectedItem),
+                  siblingItem;
                if (isNext) {
-                  if(index +1 < items.length ){
+                  if (index + 1 < items.length) {
                      siblingItem = items.eq(index + 1);
                   }
-               } else {
-                  if(index > 0){
+               }
+               else {
+                  if (index > 0) {
                      siblingItem = items.eq(index - 1);
                   }
                }
-            if (siblingItem)
-               return this._dataSet.getRecordByKey(siblingItem.data('id')) ? siblingItem : this._getHtmlItem(siblingItem.data('id'), isNext);
-            else
-               return undefined;
+               if (siblingItem)
+                  return this._dataSet.getRecordByKey(siblingItem.data('id')) ? siblingItem : this._getHtmlItem(siblingItem.data('id'), isNext);
+               else
+                  return undefined;
+            }
          },
          _isViewElement: function (elem) {
             return  $ws.helpers.contains(this._getItemsContainer()[0], elem[0]);
