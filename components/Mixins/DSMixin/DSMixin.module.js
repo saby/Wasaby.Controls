@@ -3,8 +3,11 @@ define('js!SBIS3.CONTROLS.DSMixin', [
    'js!SBIS3.CONTROLS.DataFactory',
    'js!SBIS3.CONTROLS.Data.Collection.RecordSet',
    'js!SBIS3.CONTROLS.Data.Query.Query',
-   'js!SBIS3.CORE.MarkupTransformer'
-], function (StaticSource, DataFactory, RecordSet, Query, MarkupTransformer) {
+   'js!SBIS3.CORE.MarkupTransformer',
+   'js!SBIS3.CONTROLS.Data.Collection.LoadableList',
+   'js!SBIS3.CONTROLS.Data.Collection.ObservableList',
+   'js!SBIS3.CONTROLS.Data.Projection'
+], function (MemorySource, DataFactory, RecordSet, Query, MarkupTransformer, LoadableList, ObservableList, Projection) {
 
    /**
     * Миксин, задающий любому контролу поведение работы с набором однотипных элементов.
@@ -89,6 +92,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
             displayField: null,
              /**
               * @cfg {Array.<Object.<String,String>>} Масив объектов. Набор исходных данных, по которому строится отображение
+              * @name SBIS3.CONTROLS.ListControlMixin#items
               * @remark
               * !Важно: данные для коллекции элементов можно задать либо в этой опции,
               * либо через источник данных методом {@link setDataSource}.
@@ -121,7 +125,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
               */
             items: [],
             /**
-             * @cfg {DataSource} Набор исходных данных, по которому строится отображение
+             * @cfg {DataSource|SBIS3.CONTROLS.Data.Source.ISource|Function} Набор исходных данных, по которому строится отображение
              * @noShow
              * @see setDataSource
              */
@@ -219,33 +223,104 @@ define('js!SBIS3.CONTROLS.DSMixin', [
          if (typeof this._options.pageSize === 'string') {
             this._options.pageSize = this._options.pageSize * 1;
          }
-         //Для совместимости пока делаем Array
-         if (this._options.dataSource) {
-            this._dataSource = this._options.dataSource;
-         }
-         else {
-            var items;
-            if (this._options.items && this._options.items.length) {
-               if (this._options.items instanceof Array) {
-                  items = this._options.items;
-               }
-               else {
-                  throw new Error('Array expected');
-               }
-               var
-                  item = items[0];
-               if (!this._options.keyField) {
-                 if (item && Object.prototype.toString.call(item) === '[object Object]') {
-                   this._options.keyField = Object.keys(item)[0];
-                 }
-               }
-               this._dataSource = new StaticSource({
-                  data: items,
-                  idProperty: this._options.keyField
-               });
-            }
-         }
+         this._prepareConfig();
       },
+
+      _prepareConfig : function() {
+         var
+            sourceOpt = this._options.dataSource,
+            itemsOpt = this._options.items;
+         if (sourceOpt) {
+            this._dataSource = this._prepareSource(sourceOpt);
+            this._items = this._convertDataSourceToItems(sourceOpt);
+         }
+         else if (itemsOpt) {
+            this._items = this._prepareItems(itemsOpt);
+
+            /*TODO для совеместимости пока создадим сорс*/
+            this._dataSource = new MemorySource({
+               data: itemsOpt,
+               idProperty: this._options.keyField
+            });
+         }
+
+         if (typeof cfg.items === 'function') {
+            cfg.items = cfg.items.call(this);
+         }
+
+         this._setItems(cfg.items);
+      },
+
+      _prepareSource: function(sourceOpt) {
+         var result;
+         switch (typeof sourceOpt) {
+            case 'function':
+               result = sourceOpt.call(this);
+               break;
+            case 'object':
+               if ($ws.helpers.instanceOfMixin(sourceOpt, 'SBIS3.CONTROLS.Data.Source.ISource')) {
+                  result = sourceOpt;
+               }
+               else if ($ws.helpers.instanceOfModule(sourceOpt, 'SBIS3.CONTROLS.BaseSource')) {
+                  result = sourceOpt;
+               }
+               if ('module' in sourceOpt) {
+                  var DataSourceConstructor = require(sourceOpt.module);
+                  result = new DataSourceConstructor(sourceOpt.options || {});
+               }
+               break;
+         }
+         return result;
+      },
+
+      _prepareItems: function(itemsOpt) {
+         var result;
+         switch (typeof itemsOpt) {
+            case 'function':
+               result = itemsOpt.call(this);
+               break;
+            case 'object':
+               if ($ws.helpers.instanceOfModule(itemsOpt, 'SBIS3.CONTROLS.Data.Projection')) {
+                  this._itemsProjection = itemsOpt;
+                  this._items = this._convertItems(this._itemsProjection.getCollection());
+               } else {
+                  this._items = this._convertItems(itemsOpt);
+                  this._itemsProjection = Projection.getDefaultProjection(this._items);
+               }
+
+               break;
+         }
+
+         return result;
+      },
+
+      _convertItems: function(items) {
+         items = items || [];
+         if (items instanceof Array) {
+            items = new ObservableList({
+               items: items
+            });
+         }
+
+         if (!$ws.helpers.instanceOfMixin(items, 'SBIS3.CONTROLS.Data.Collection.IEnumerable')) {
+            throw new Error('Items should implement SBIS3.CONTROLS.Data.Collection.IEnumerable');
+         }
+
+         return items;
+      },
+
+      /**
+       * Возвращает отображаемую контролом коллекцию, сделанную на основе источника данных
+       * @param {SBIS3.CONTROLS.Data.Source.ISource} source
+       * @returns {SBIS3.CONTROLS.Data.Collection.IList}
+       * @private
+       */
+      _convertDataSourceToItems: function (source) {
+         return new LoadableList({
+            source: source
+         });
+      },
+
        /**
         * Метод установки источника данных.
         * @remark
