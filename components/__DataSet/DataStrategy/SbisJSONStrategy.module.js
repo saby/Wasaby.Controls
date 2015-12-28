@@ -268,7 +268,7 @@ define('js!SBIS3.CONTROLS.SbisJSONStrategy', [
                if (!Object.isEmpty(value)) {
                   for (var i in value) {
                      if (value.hasOwnProperty(i)) {
-                        fl = (value[i] == 'ASC');
+                        fl = (value[i] == 'DESC');
                         sort.push([i, fl, !fl]);
                      }
                   }

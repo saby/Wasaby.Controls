@@ -4,7 +4,7 @@
 define('js!SBIS3.CONTROLS.Demo.FieldLinkDemo', [
       'js!SBIS3.CORE.CompoundControl',
       'html!SBIS3.CONTROLS.Demo.FieldLinkDemo',
-      'js!SBIS3.CONTROLS.Data.Source.Memory',
+      'js!SBIS3.CONTROLS.Demo.FieldLinkDemoMemory',
       'js!SBIS3.CONTROLS.Data.Adapter.Sbis',
        'js!SBIS3.CONTROLS.FieldLink',
        'js!SBIS3.CONTROLS.DataGridView'

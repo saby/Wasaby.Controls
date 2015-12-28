@@ -270,11 +270,7 @@ define('js!SBIS3.CONTROLS.Data.ContextField', [
       }
    },
    getRsIdx = function(id) {
-      var idx = parseInt(id, 10);
-      if (isNaN(idx)) {
-         idx = -1;
-      }
-      return idx;
+      return String.prototype.split.call(id, ',')[0];
    };
 
    return ContextField;

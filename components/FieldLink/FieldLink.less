@@ -4,6 +4,7 @@
    border: @controls-FieldLink-picker-border;
    border-top: none;
    background: @controls-FieldLink-picker-background;
+   overflow: auto;
 
    .controls-FieldLink__linksContainer {
       padding: @controls-FieldLink-linkContainer-padding;
@@ -44,6 +45,17 @@
 
       &:hover {
          background: @edit-at-place-cancel-button-hover-bg;
+      }
+   }
+
+   &.ws-disabled {
+
+      .controls-FieldLink__linkItem {
+         padding: @controls-FieldLink-disabled-item-padding;
+
+         .controls-FieldLink__linkItem-cross {
+            display: none;
+         }
       }
    }
 }
