@@ -1,7 +1,6 @@
-<?xml version="1.0" encoding="WINDOWS-1251" ?>
 <dictionary dicx_version="1.21">
 
-  <table last_changed="Дубенец Д.А." name="TreeCompositeViewTable" personal_data="0" responsible="Дубенец Д.А." table_ignore_convert="0" table_logged="0" table_partitioned="0" table_replicated="0">
+  <table last_changed="Р”СѓР±РµРЅРµС† Р”.Рђ." name="TreeCompositeViewTable" personal_data="0" responsible="Р”СѓР±РµРЅРµС† Р”.Рђ." table_ignore_convert="0" table_logged="0" table_partitioned="0" table_replicated="0">
     <column name="____SBIS_PRIMARY_KEY_FIELD____">
       <format>
         <type>IDENTIFIER</type>
@@ -22,13 +21,13 @@
       </format>
     </column>
     <index method="btree" name="parent" null_keys="1" service="1" unique="0">
-      <column is_expressions="0" name="parent" nulls_place="LAST" sorting="ASC"/>
-      <column is_expressions="0" name="parent@" nulls_place="LAST" sorting="DESC"/>
+      <column is_expressions="0" name="parent" nulls_place="LAST" sorting="ASC" />
+      <column is_expressions="0" name="parent@" nulls_place="LAST" sorting="DESC" />
     </index>
-    <trigger_list/>
+    <trigger_list />
   </table>
   
-  <table last_changed="Дубенец Д.А." name="TreeCompositeViewList" personal_data="0" responsible="Дубенец Д.А." table_ignore_convert="0" table_logged="0" table_partitioned="0" table_replicated="0">
+  <table last_changed="Р”СѓР±РµРЅРµС† Р”.Рђ." name="TreeCompositeViewList" personal_data="0" responsible="Р”СѓР±РµРЅРµС† Р”.Рђ." table_ignore_convert="0" table_logged="0" table_partitioned="0" table_replicated="0">
     <column name="____SBIS_PRIMARY_KEY_FIELD____">
       <format>
         <type>IDENTIFIER</type>
@@ -49,13 +48,13 @@
       </format>
     </column>
     <index method="btree" name="parent" null_keys="1" service="1" unique="0">
-      <column is_expressions="0" name="parent" nulls_place="LAST" sorting="ASC"/>
-      <column is_expressions="0" name="parent@" nulls_place="LAST" sorting="DESC"/>
+      <column is_expressions="0" name="parent" nulls_place="LAST" sorting="ASC" />
+      <column is_expressions="0" name="parent@" nulls_place="LAST" sorting="DESC" />
     </index>
-    <trigger_list/>
+    <trigger_list />
   </table>
   
-  <table last_changed="Дубенец Д.А." name="TreeCompositeViewTile" personal_data="0" responsible="Дубенец Д.А." table_ignore_convert="0" table_logged="0" table_partitioned="0" table_replicated="0">
+  <table last_changed="Р”СѓР±РµРЅРµС† Р”.Рђ." name="TreeCompositeViewTile" personal_data="0" responsible="Р”СѓР±РµРЅРµС† Р”.Рђ." table_ignore_convert="0" table_logged="0" table_partitioned="0" table_replicated="0">
     <column name="____SBIS_PRIMARY_KEY_FIELD____">
       <format>
         <type>IDENTIFIER</type>
@@ -76,13 +75,13 @@
       </format>
     </column>
     <index method="btree" name="parent" null_keys="1" service="1" unique="0">
-      <column is_expressions="0" name="parent" nulls_place="LAST" sorting="ASC"/>
-      <column is_expressions="0" name="parent@" nulls_place="LAST" sorting="DESC"/>
+      <column is_expressions="0" name="parent" nulls_place="LAST" sorting="ASC" />
+      <column is_expressions="0" name="parent@" nulls_place="LAST" sorting="DESC" />
     </index>
-    <trigger_list/>
+    <trigger_list />
   </table>
 
-  <table last_changed="Дубенец Д.А." name="CompositeViewTile" personal_data="0" responsible="Дубенец Д.А." table_ignore_convert="0" table_logged="0" table_partitioned="0" table_replicated="0">
+  <table last_changed="Р”СѓР±РµРЅРµС† Р”.Рђ." name="CompositeViewTile" personal_data="0" responsible="Р”СѓР±РµРЅРµС† Р”.Рђ." table_ignore_convert="0" table_logged="0" table_partitioned="0" table_replicated="0">
     <column name="____SBIS_PRIMARY_KEY_FIELD____">
       <format>
         <type>IDENTIFIER</type>
@@ -103,13 +102,13 @@
       </format>
     </column>
     <index method="btree" name="parent" null_keys="1" service="1" unique="0">
-      <column is_expressions="0" name="parent" nulls_place="LAST" sorting="ASC"/>
-      <column is_expressions="0" name="parent@" nulls_place="LAST" sorting="DESC"/>
+      <column is_expressions="0" name="parent" nulls_place="LAST" sorting="ASC" />
+      <column is_expressions="0" name="parent@" nulls_place="LAST" sorting="DESC" />
     </index>
-    <trigger_list/>
+    <trigger_list />
   </table>
   
-  <table last_changed="Дубенец Д.А." name="CompositeViewTable" personal_data="0" responsible="Дубенец Д.А." table_ignore_convert="0" table_logged="0" table_partitioned="0" table_replicated="0">
+  <table last_changed="Р”СѓР±РµРЅРµС† Р”.Рђ." name="CompositeViewTable" personal_data="0" responsible="Р”СѓР±РµРЅРµС† Р”.Рђ." table_ignore_convert="0" table_logged="0" table_partitioned="0" table_replicated="0">
     <column name="____SBIS_PRIMARY_KEY_FIELD____">
       <format>
         <type>IDENTIFIER</type>
@@ -130,13 +129,13 @@
       </format>
     </column>
     <index method="btree" name="parent" null_keys="1" service="1" unique="0">
-      <column is_expressions="0" name="parent" nulls_place="LAST" sorting="ASC"/>
-      <column is_expressions="0" name="parent@" nulls_place="LAST" sorting="DESC"/>
+      <column is_expressions="0" name="parent" nulls_place="LAST" sorting="ASC" />
+      <column is_expressions="0" name="parent@" nulls_place="LAST" sorting="DESC" />
     </index>
-    <trigger_list/>
+    <trigger_list />
   </table>
   
-  <table last_changed="Дубенец Д.А." name="CompositeViewList" personal_data="0" responsible="Дубенец Д.А." table_ignore_convert="0" table_logged="0" table_partitioned="0" table_replicated="0">
+  <table last_changed="Р”СѓР±РµРЅРµС† Р”.Рђ." name="CompositeViewList" personal_data="0" responsible="Р”СѓР±РµРЅРµС† Р”.Рђ." table_ignore_convert="0" table_logged="0" table_partitioned="0" table_replicated="0">
     <column name="____SBIS_PRIMARY_KEY_FIELD____">
       <format>
         <type>IDENTIFIER</type>
@@ -157,13 +156,13 @@
       </format>
     </column>
     <index method="btree" name="parent" null_keys="1" service="1" unique="0">
-      <column is_expressions="0" name="parent" nulls_place="LAST" sorting="ASC"/>
-      <column is_expressions="0" name="parent@" nulls_place="LAST" sorting="DESC"/>
+      <column is_expressions="0" name="parent" nulls_place="LAST" sorting="ASC" />
+      <column is_expressions="0" name="parent@" nulls_place="LAST" sorting="DESC" />
     </index>
-    <trigger_list/>
+    <trigger_list />
   </table>
   
-  <table last_changed="Дубенец Д.А." name="PathSelector" personal_data="0" responsible="Дубенец Д.А." table_ignore_convert="0" table_logged="0" table_partitioned="0" table_replicated="0">
+  <table last_changed="Р”СѓР±РµРЅРµС† Р”.Рђ." name="PathSelector" personal_data="0" responsible="Р”СѓР±РµРЅРµС† Р”.Рђ." table_ignore_convert="0" table_logged="0" table_partitioned="0" table_replicated="0">
     <column name="____SBIS_PRIMARY_KEY_FIELD____">
       <format>
         <type>IDENTIFIER</type>
@@ -184,13 +183,13 @@
       </format>
     </column>
     <index method="btree" name="parent" null_keys="1" service="1" unique="0">
-      <column is_expressions="0" name="parent" nulls_place="LAST" sorting="ASC"/>
-      <column is_expressions="0" name="parent@" nulls_place="LAST" sorting="DESC"/>
+      <column is_expressions="0" name="parent" nulls_place="LAST" sorting="ASC" />
+      <column is_expressions="0" name="parent@" nulls_place="LAST" sorting="DESC" />
     </index>
-    <trigger_list/>
+    <trigger_list />
   </table>
 
-  <table last_changed="Дубенец Д.А." name="TreeDataGrid" personal_data="0" responsible="Дубенец Д.А." table_ignore_convert="0" table_logged="0" table_partitioned="0" table_replicated="0">
+  <table last_changed="Р”СѓР±РµРЅРµС† Р”.Рђ." name="TreeDataGrid" personal_data="0" responsible="Р”СѓР±РµРЅРµС† Р”.Рђ." table_ignore_convert="0" table_logged="0" table_partitioned="0" table_replicated="0">
     <column name="____SBIS_PRIMARY_KEY_FIELD____">
       <format>
         <type>IDENTIFIER</type>
@@ -211,90 +210,90 @@
       </format>
     </column>
     <index method="btree" name="parent" null_keys="1" service="1" unique="0">
-      <column is_expressions="0" name="parent" nulls_place="LAST" sorting="ASC"/>
-      <column is_expressions="0" name="parent@" nulls_place="LAST" sorting="DESC"/>
+      <column is_expressions="0" name="parent" nulls_place="LAST" sorting="ASC" />
+      <column is_expressions="0" name="parent@" nulls_place="LAST" sorting="DESC" />
     </index>
-    <trigger_list/>
+    <trigger_list />
   </table>
 
-  <table last_changed="Дубенец Д.А." name="График" personal_data="0" responsible="Дубенец Д.А." table_ignore_convert="0" table_logged="0" table_partitioned="0" table_replicated="0">
+  <table last_changed="Р”СѓР±РµРЅРµС† Р”.Рђ." name="Р“СЂР°С„РёРє" personal_data="0" responsible="Р”СѓР±РµРЅРµС† Р”.Рђ." table_ignore_convert="0" table_logged="0" table_partitioned="0" table_replicated="0">
     <column name="____SBIS_PRIMARY_KEY_FIELD____">
       <format>
         <type>IDENTIFIER</type>
         <max_size>4</max_size>
       </format>
     </column>
-    <column name="Доход">
+    <column name="Р”РѕС…РѕРґ">
       <format>
         <type>INTEGER</type>
       </format>
     </column>
-    <column name="Года">
+    <column name="Р“РѕРґР°">
       <format>
         <type>INTEGER</type>
       </format>
     </column>
-    <trigger_list/>
+    <trigger_list />
   </table>
 
-  <table last_changed="Дубенец Д.А." name="График2" personal_data="0" responsible="Дубенец Д.А." table_ignore_convert="0" table_logged="0" table_partitioned="0" table_replicated="0">
+  <table last_changed="Р”СѓР±РµРЅРµС† Р”.Рђ." name="Р“СЂР°С„РёРє2" personal_data="0" responsible="Р”СѓР±РµРЅРµС† Р”.Рђ." table_ignore_convert="0" table_logged="0" table_partitioned="0" table_replicated="0">
     <column name="____SBIS_PRIMARY_KEY_FIELD____">
       <format>
         <type>IDENTIFIER</type>
         <max_size>4</max_size>
       </format>
     </column>
-    <column name="Доход">
+    <column name="Р”РѕС…РѕРґ">
       <format>
         <type>INTEGER</type>
       </format>
     </column>
-    <column name="Года">
+    <column name="Р“РѕРґР°">
       <format>
         <type>TEXT</type>
       </format>
     </column>
-    <trigger_list/>
+    <trigger_list />
   </table>
 
-  <table last_changed="Дубенец Д.А." name="График3" personal_data="0" responsible="Дубенец Д.А." table_ignore_convert="0" table_logged="0" table_partitioned="0" table_replicated="0">
+  <table last_changed="Р”СѓР±РµРЅРµС† Р”.Рђ." name="Р“СЂР°С„РёРє3" personal_data="0" responsible="Р”СѓР±РµРЅРµС† Р”.Рђ." table_ignore_convert="0" table_logged="0" table_partitioned="0" table_replicated="0">
     <column name="____SBIS_PRIMARY_KEY_FIELD____">
       <format>
         <type>IDENTIFIER</type>
         <max_size>4</max_size>
       </format>
     </column>
-    <column name="Года">
+    <column name="Р“РѕРґР°">
       <format>
         <type>INTEGER</type>
       </format>
     </column>
-    <column name="Ряд1">
+    <column name="Р СЏРґ1">
       <format>
         <type>INTEGER</type>
       </format>
     </column>
-    <column name="Ряд2">
+    <column name="Р СЏРґ2">
       <format>
         <type>INTEGER</type>
       </format>
     </column>
-    <trigger_list/>
+    <trigger_list />
   </table>
 
-  <table last_changed="Дубенец Д.А." name="Заметка" personal_data="0" responsible="Дубенец Д.А." table_ignore_convert="0" table_logged="0" table_partitioned="0" table_replicated="0">
+  <table last_changed="Р”СѓР±РµРЅРµС† Р”.Рђ." name="Р—Р°РјРµС‚РєР°" personal_data="0" responsible="Р”СѓР±РµРЅРµС† Р”.Рђ." table_ignore_convert="0" table_logged="0" table_partitioned="0" table_replicated="0">
     <column name="____SBIS_PRIMARY_KEY_FIELD____">
       <format>
         <type>IDENTIFIER</type>
         <max_size>4</max_size>
       </format>
     </column>
-    <column name="Содержимое">
+    <column name="РЎРѕРґРµСЂР¶РёРјРѕРµ">
       <format>
         <type>TEXT</type>
       </format>
     </column>
-    <column name="Завершена">
+    <column name="Р—Р°РІРµСЂС€РµРЅР°">
       <format>
         <default>0</default>
         <type>BOOLEAN</type>
@@ -306,22 +305,22 @@
         <type>BOOLEAN</type>
       </format>
     </column>
-    <trigger_list/>
+    <trigger_list />
   </table>
   
-  <table last_changed="Дубенец Д.А." name="ЗаметкаПанельОпераций" personal_data="0" responsible="Дубенец Д.А." table_ignore_convert="0" table_logged="0" table_partitioned="0" table_replicated="0">
+  <table last_changed="Р”СѓР±РµРЅРµС† Р”.Рђ." name="Р—Р°РјРµС‚РєР°РџР°РЅРµР»СЊРћРїРµСЂР°С†РёР№" personal_data="0" responsible="Р”СѓР±РµРЅРµС† Р”.Рђ." table_ignore_convert="0" table_logged="0" table_partitioned="0" table_replicated="0">
     <column name="____SBIS_PRIMARY_KEY_FIELD____">
       <format>
         <type>IDENTIFIER</type>
         <max_size>4</max_size>
       </format>
     </column>
-    <column name="Содержимое">
+    <column name="РЎРѕРґРµСЂР¶РёРјРѕРµ">
       <format>
         <type>TEXT</type>
       </format>
     </column>
-    <column name="Завершена">
+    <column name="Р—Р°РІРµСЂС€РµРЅР°">
       <format>
         <default>0</default>
         <type>BOOLEAN</type>
@@ -333,22 +332,22 @@
         <type>BOOLEAN</type>
       </format>
     </column>
-    <trigger_list/>
+    <trigger_list />
   </table>
   
-  <table last_changed="Дубенец Д.А." name="ЗаметкаПанельОпераций2" personal_data="0" responsible="Дубенец Д.А." table_ignore_convert="0" table_logged="0" table_partitioned="0" table_replicated="0">
+  <table last_changed="Р”СѓР±РµРЅРµС† Р”.Рђ." name="Р—Р°РјРµС‚РєР°РџР°РЅРµР»СЊРћРїРµСЂР°С†РёР№2" personal_data="0" responsible="Р”СѓР±РµРЅРµС† Р”.Рђ." table_ignore_convert="0" table_logged="0" table_partitioned="0" table_replicated="0">
     <column name="____SBIS_PRIMARY_KEY_FIELD____">
       <format>
         <type>IDENTIFIER</type>
         <max_size>4</max_size>
       </format>
     </column>
-    <column name="Содержимое">
+    <column name="РЎРѕРґРµСЂР¶РёРјРѕРµ">
       <format>
         <type>TEXT</type>
       </format>
     </column>
-    <column name="Завершена">
+    <column name="Р—Р°РІРµСЂС€РµРЅР°">
       <format>
         <default>0</default>
         <type>BOOLEAN</type>
@@ -360,22 +359,22 @@
         <type>BOOLEAN</type>
       </format>
     </column>
-    <trigger_list/>
+    <trigger_list />
   </table>
   
-  <table last_changed="Дубенец Д.А." name="ЗаметкаФильтр" personal_data="0" responsible="Дубенец Д.А." table_ignore_convert="0" table_logged="0" table_partitioned="0" table_replicated="0">
+  <table last_changed="Р”СѓР±РµРЅРµС† Р”.Рђ." name="Р—Р°РјРµС‚РєР°Р¤РёР»СЊС‚СЂ" personal_data="0" responsible="Р”СѓР±РµРЅРµС† Р”.Рђ." table_ignore_convert="0" table_logged="0" table_partitioned="0" table_replicated="0">
     <column name="____SBIS_PRIMARY_KEY_FIELD____">
       <format>
         <type>IDENTIFIER</type>
         <max_size>4</max_size>
       </format>
     </column>
-    <column name="Содержимое">
+    <column name="РЎРѕРґРµСЂР¶РёРјРѕРµ">
       <format>
         <type>TEXT</type>
       </format>
     </column>
-    <column name="Завершена">
+    <column name="Р—Р°РІРµСЂС€РµРЅР°">
       <format>
         <default>0</default>
         <type>BOOLEAN</type>
@@ -387,22 +386,22 @@
         <type>BOOLEAN</type>
       </format>
     </column>
-    <trigger_list/>
+    <trigger_list />
   </table>
   
-  <table last_changed="Дубенец Д.А." name="ЗаметкаРедактированиеПоМесту" personal_data="0" responsible="Дубенец Д.А." table_ignore_convert="0" table_logged="0" table_partitioned="0" table_replicated="0">
+  <table last_changed="Р”СѓР±РµРЅРµС† Р”.Рђ." name="Р—Р°РјРµС‚РєР°Р РµРґР°РєС‚РёСЂРѕРІР°РЅРёРµРџРѕРњРµСЃС‚Сѓ" personal_data="0" responsible="Р”СѓР±РµРЅРµС† Р”.Рђ." table_ignore_convert="0" table_logged="0" table_partitioned="0" table_replicated="0">
     <column name="____SBIS_PRIMARY_KEY_FIELD____">
       <format>
         <type>IDENTIFIER</type>
         <max_size>4</max_size>
       </format>
     </column>
-    <column name="Содержимое">
+    <column name="РЎРѕРґРµСЂР¶РёРјРѕРµ">
       <format>
         <type>TEXT</type>
       </format>
     </column>
-    <column name="Завершена">
+    <column name="Р—Р°РІРµСЂС€РµРЅР°">
       <format>
         <default>0</default>
         <type>BOOLEAN</type>
@@ -414,22 +413,22 @@
         <type>BOOLEAN</type>
       </format>
     </column>
-    <trigger_list/>
+    <trigger_list />
   </table>
   
-  <table last_changed="Дубенец Д.А." name="ЗаметкаЧастичныйСкролл" personal_data="0" responsible="Дубенец Д.А." table_ignore_convert="0" table_logged="0" table_partitioned="0" table_replicated="0">
+  <table last_changed="Р”СѓР±РµРЅРµС† Р”.Рђ." name="Р—Р°РјРµС‚РєР°Р§Р°СЃС‚РёС‡РЅС‹Р№РЎРєСЂРѕР»Р»" personal_data="0" responsible="Р”СѓР±РµРЅРµС† Р”.Рђ." table_ignore_convert="0" table_logged="0" table_partitioned="0" table_replicated="0">
     <column name="____SBIS_PRIMARY_KEY_FIELD____">
       <format>
         <type>IDENTIFIER</type>
         <max_size>4</max_size>
       </format>
     </column>
-    <column name="Содержимое">
+    <column name="РЎРѕРґРµСЂР¶РёРјРѕРµ">
       <format>
         <type>TEXT</type>
       </format>
     </column>
-    <column name="Завершена">
+    <column name="Р—Р°РІРµСЂС€РµРЅР°">
       <format>
         <default>0</default>
         <type>BOOLEAN</type>
@@ -441,7 +440,7 @@
         <type>BOOLEAN</type>
       </format>
     </column>
-    <trigger_list/>
+    <trigger_list />
   </table>
 
 </dictionary>
