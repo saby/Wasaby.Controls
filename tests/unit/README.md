@@ -45,7 +45,7 @@
     coverage tests/unit/via-isolated.run
 
 Результаты можно смотреть тут:
-`http://localhost:666/tests/unit/artifacts/jscoverage-report/jscoverage.html`
+`http://localhost:666/coverage/lcov-report/index.html`
 
 # Jenkins
 Настройки сборки в Jenkins
@@ -140,6 +140,6 @@ Publish documents
 
     Title: Отчет о покрытии
 
-    Directory to archive: tests/unit/artifacts/jscoverage-report/
+    Directory to archive: coverage/lcov-report/
 
-    Index file: jscoverage.html
+    Index file: index.html
