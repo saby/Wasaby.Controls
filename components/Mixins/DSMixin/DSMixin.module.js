@@ -7,8 +7,9 @@ define('js!SBIS3.CONTROLS.DSMixin', [
    'js!SBIS3.CORE.MarkupTransformer',
    'js!SBIS3.CONTROLS.Data.Collection.LoadableList',
    'js!SBIS3.CONTROLS.Data.Collection.ObservableList',
-   'js!SBIS3.CONTROLS.Data.Projection'
-], function (MemorySource, SbisService, DataFactory, RecordSet, Query, MarkupTransformer, LoadableList, ObservableList, Projection) {
+   'js!SBIS3.CONTROLS.Data.Projection',
+   'js!SBIS3.CONTROLS.Data.Bind.ICollection'
+], function (MemorySource, SbisService, DataFactory, RecordSet, Query, MarkupTransformer, LoadableList, ObservableList, Projection, IBindCollection) {
 
    /**
     * Миксин, задающий любому контролу поведение работы с набором однотипных элементов.
@@ -75,7 +76,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
              * @see SBIS3.CONTROLS.Selectable#setSelectedKey
              * @see SBIS3.CONTROLS.Selectable#getSelectedKey
              */
-            keyField : null,
+            keyField : 'id',
             /**
              * @cfg {String} Поле элемента коллекции, из которого отображать данные
              * @example
@@ -224,6 +225,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
          if (typeof this._options.pageSize === 'string') {
             this._options.pageSize = this._options.pageSize * 1;
          }
+         this._bindHandlers();
          this._prepareConfig();
       },
 
@@ -233,7 +235,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
             sourceOpt = this._options.dataSource,
             itemsOpt = this._options.items;
          if (!keyField) {
-            throw new Error('Option keyField is required');
+            $ws.single.ioc.resolve('ILogger').error('Option keyField is required');
          }
          if (sourceOpt) {
             this._dataSource = this._prepareSource(sourceOpt);
@@ -283,14 +285,15 @@ define('js!SBIS3.CONTROLS.DSMixin', [
             case 'object':
                if ($ws.helpers.instanceOfModule(itemsOpt, 'SBIS3.CONTROLS.Data.Projection')) {
                   this._itemsProjection = itemsOpt;
-                  this._items = this._convertItems(this._itemsProjection.getCollection());
+                  result = this._convertItems(this._itemsProjection.getCollection());
                } else {
-                  this._items = this._convertItems(itemsOpt);
-                  this._itemsProjection = Projection.getDefaultProjection(this._items);
+                  result = this._convertItems(itemsOpt);
+                  this._itemsProjection = Projection.getDefaultProjection(result);
                }
 
                break;
          }
+         this._setItemsEventHandlers();
 
          return result;
       },
@@ -339,6 +342,19 @@ define('js!SBIS3.CONTROLS.DSMixin', [
          });
       },
 
+
+      _bindHandlers: function () {
+         /*this._onBeforeItemsLoad = onBeforeItemsLoad.bind(this);
+         this._onAfterItemsLoad = onAfterItemsLoad.bind(this);
+         this._dataLoadedCallback = this._dataLoadedCallback.bind(this);*/
+         this._onCollectionChange = onCollectionChange.bind(this);
+         /*this._onCollectionItemChange = onCollectionItemChange.bind(this);
+         this._onCurrentChange = onCurrentChange.bind(this);*/
+      },
+
+      _setItemsEventHandlers: function() {
+         this.subscribeTo(this._itemsProjection, 'onCollectionChange', this._onCollectionChange);
+      },
        /**
         * Метод установки источника данных.
         * @remark
@@ -967,7 +983,66 @@ define('js!SBIS3.CONTROLS.DSMixin', [
 
 
    };
+   var
+      /**
+       * Обрабатывает событие об изменении коллекции
+       * @param {$ws.proto.EventObject} event Дескриптор события.
+       * @param {String} action Действие, приведшее к изменению.
+       * @param {SBIS3.CONTROLS.Data.Projection.ICollectionItem[]} newItems Новые элементы коллеции.
+       * @param {Integer} newItemsIndex Индекс, в котором появились новые элементы.
+       * @param {SBIS3.CONTROLS.Data.Projection.ICollectionItem[]} oldItems Удаленные элементы коллекции.
+       * @param {Integer} oldItemsIndex Индекс, в котором удалены элементы.
+       * @private
+       */
+      onCollectionChange = function (event, action, newItems, newItemsIndex, oldItems) {
+         var i;
 
+         switch (action) {
+            case IBindCollection.ACTION_ADD:
+            case IBindCollection.ACTION_REMOVE:
+               for (i = 0; i < oldItems.length; i++) {
+                  this._view.removeItem(
+                     oldItems[i]
+                  );
+               }
+               for (i = 0; i < newItems.length; i++) {
+                  this._view.addItem(
+                     newItems[i],
+                        newItemsIndex + i
+                  );
+               }
+               this._view.checkEmpty();
+               this.reviveComponents();
+               break;
+
+            case IBindCollection.ACTION_MOVE:
+               for (i = 0; i < newItems.length; i++) {
+                  this._view.moveItem(
+                     newItems[i],
+                        newItemsIndex + i
+                  );
+               }
+               this.reviveComponents();
+               break;
+
+            case IBindCollection.ACTION_REPLACE:
+               for (i = 0; i < newItems.length; i++) {
+                  this._view.updateItem(
+                     newItems[i]
+                  );
+               }
+               this._view.selectItem(
+                  this._itemsProjection.getCurrent(),
+                  this._itemsProjection.getCurrentPosition()
+               );
+               this.reviveComponents();
+               break;
+
+            case IBindCollection.ACTION_RESET:
+               this.redraw();
+               break;
+         }
+      };
    return DSMixin;
 
 });

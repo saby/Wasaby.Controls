@@ -103,6 +103,9 @@
                <li>
                   <div id="Views"></div>
                </li>
+               <li>
+                  <div id="ViewsNEWDS"></div>
+               </li>
                 <li>
                     <div id="ViewsNew"></div>
                 </li>
@@ -331,7 +334,13 @@
                caption: 'Views',
                href: '/pages/Views.html'
             })
+            new r({
+               element: "ViewsNEWDS",
+               caption: 'Views New DataSetMixin',
+               href: '/pages/ViewsNEWDS.html'
+            })
          });
+
           require(["js!SBIS3.CONTROLS.Link"], function (r) {
               new r({
                   element: "ViewsNew",
