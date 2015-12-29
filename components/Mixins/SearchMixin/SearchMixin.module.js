@@ -56,7 +56,7 @@ define('js!SBIS3.CONTROLS.SearchMixin', [], function() {
 
       _applySearch : function(text) {
          if (text) {
-            text = text.replace(/[«»’”@#№$%^&*;:?.,!\/~\]\[{}()|<>=+\-_\s'"]/g, '');
+            text = String.trim(text.replace(/[«»’”@#№$%^&*;:?.,!\/~\]\[{}()|<>=+\-_'"]/g, ''));
             if (text.length >= this._options.startCharacter) {
                this._notify('onSearch', text);
             }
