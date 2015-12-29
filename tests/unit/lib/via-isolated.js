@@ -51,6 +51,16 @@ exports.run = function (config, wsConfig, rootPath) {
       resources: wsConfig.resourceRoot
    });
 
+   //Запускаем тесты
+   console.error = console.log;
+   unit.test.getList().forEach(function (test) {
+      try {
+         requirejs(test);
+      } catch (e) {
+         console.log(e.toString());
+      }
+   });
+
    if (config.saveToFile) {
       //Удаляем старый отчет
       report.clear();
@@ -61,18 +71,18 @@ exports.run = function (config, wsConfig, rootPath) {
          encoding: 'utf8',
          mode: 0666
       });
-      //writeOriginal = process.stdout.write;
-
+      //var writeOriginal = process.stdout.write;
       process.stdout.write = function (chunk) {
-         if (typeof chunk == 'string') {
-            ws.write(chunk);
+         var str = '' + chunk;
+         if (str && str[0] !== '<') {
+            str = '<!--' + str + '-->';
          }
+         ws.write(str);
          //writeOriginal.apply(process.stdout, arguments);
       };
-   }
+      process.stdout.on('finish', function() {
+         ws.end();
+      });
 
-   //Запускаем тесты
-   unit.test.getList().forEach(function (test) {
-      requirejs(test);
-   });
+   }
 };

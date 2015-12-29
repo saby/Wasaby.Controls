@@ -37,12 +37,12 @@
 
 или в формате XUnit:
 
-    mocha -t 10000 -R XUnit  tests/unit/via-isolated.run
+    mocha -t 10000 -R XUnit tests/unit/via-isolated.run
 
 ## Отчет о покрытии
 Выполнить в консоли (в корневой папке репозитория):
 
-    coverage tests/unit/via-isolated.run
+    coverage tests/unit/coverage.run
 
 Результаты можно смотреть тут:
 `http://localhost:666/coverage/lcov-report/index.html`

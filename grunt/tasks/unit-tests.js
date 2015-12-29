@@ -11,6 +11,7 @@ module.exports = function (grunt) {
          args = args || [];
          args.push(config.path + name);
 
+         grunt.log.writeln('run node script: ' + args.join(' '));
          checkResults(childProcess.spawn(
             'node',
             args
@@ -21,7 +22,7 @@ module.exports = function (grunt) {
 
          //name = path.resolve(process.cwd(), name);
          name = name + ' ' + args.join(' ');
-         console.log(name);
+         grunt.log.writeln('executing: ' + name);
          checkResults(childProcess.exec(name, {
             cwd: process.cwd()
          }), done);
@@ -120,7 +121,7 @@ module.exports = function (grunt) {
    grunt.registerTask('tests-isolated[main]', function () {
       grunt.task.requires('js');
       var cfg = config.mocha.slice();
-      cfg.push(config.path + 'via-isolated.run');
+      cfg.push(config.path + 'coverage.run');
       runCommand(
          this.async(),
          'mocha',
