@@ -859,11 +859,11 @@ define('js!SBIS3.CONTROLS.ListView',
                      onEndEdit: function(event, model, withSaving) {
                         event.setResult(this._notify('onEndEdit', model, withSaving));
                      }.bind(this),
-                     onAfterEndEdit: function(event, model, withSaving) {
+                     onAfterEndEdit: function(event, model, terget, withSaving) {
                         if (withSaving) {
-                           this._getItemsContainer().find('.js-controls-ListView__item[data-id="' + model.getKey() + '"]:not(".controls-editInPlace")').after(this._drawItem(model)).remove();
+                           terget.after(this._drawItem(model)).remove();
                         }
-                        event.setResult(this._notify('onAfterEndEdit', model, withSaving));
+                        event.setResult(this._notify('onAfterEndEdit', model, terget, withSaving));
                      }.bind(this)
                   }
                };
