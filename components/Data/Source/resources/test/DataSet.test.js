@@ -4,8 +4,9 @@ define([
    'js!SBIS3.CONTROLS.Data.Source.Memory',
    'js!SBIS3.CONTROLS.Data.Adapter.Json',
    'js!SBIS3.CONTROLS.Data.Model',
-   'js!SBIS3.CONTROLS.Data.Collection.List'
-], function (DataSet, MemorySource, JsonAdapter, Model, List) {
+   'js!SBIS3.CONTROLS.Data.Collection.List',
+      'js!SBIS3.CONTROLS.Data.Collection.ObservableList'
+], function (DataSet, MemorySource, JsonAdapter, Model, List, ObservableList) {
       'use strict';
 
       var list;
@@ -28,69 +29,6 @@ define([
       });
 
       describe('SBIS3.CONTROLS.Data.Source.DataSet', function () {
-         describe('.$constructor()', function () {
-            it('should take adapter from the source', function () {
-               var source =  new MemorySource(),
-                  ds = new DataSet({
-                  source: source
-               });
-               assert.strictEqual(ds.getAdapter(), source.getAdapter());
-            });
-
-            it('should don\'t take adapter from the source', function () {
-               var source =  new MemorySource(),
-                  adapter = new JsonAdapter(),
-                  ds = new DataSet({
-                     adapter: adapter,
-                     source: source
-                  });
-               assert.strictEqual(ds.getAdapter(), adapter);
-               assert.notStrictEqual(ds.getAdapter(), source.getAdapter());
-            });
-
-            it('should take model from source', function () {
-               var source =  new MemorySource(),
-                  ds = new DataSet({
-                     source: source
-                  });
-               assert.strictEqual(ds.getModel(), source.getModel());
-            });
-
-            it('should don\'t take adapter from the source', function () {
-               var source =  new MemorySource(),
-                  ExtModel = Model.extend({}),
-                  ds = new DataSet({
-                     model: ExtModel,
-                     source: source
-                  });
-               assert.strictEqual(ds.getModel(), ExtModel);
-               assert.notStrictEqual(ds.getModel(), source.getModel());
-            });
-
-            it('should take idProperty from the source', function () {
-               var source =  new MemorySource({
-                     idProperty: 'abc'
-                  }),
-                  ds = new DataSet({
-                     source: source
-                  });
-               assert.equal(ds.getIdProperty(), 'abc');
-               assert.equal(ds.getIdProperty(), source.getIdProperty());
-            });
-
-            it('should don\'t take idProperty from the source', function () {
-               var source =  new MemorySource({
-                     idProperty: 'abc'
-                  }),
-                  ds = new DataSet({
-                     idProperty: 'def',
-                     source: source
-                  });
-               assert.equal(ds.getIdProperty(), 'def');
-               assert.notEqual(ds.getIdProperty(), source.getIdProperty());
-            });
-         });
-
          describe('.getSource()', function () {
             it('should return the source', function () {
                var source =  new MemorySource(),
@@ -100,9 +38,9 @@ define([
                assert.strictEqual(ds.getSource(), source);
             });
 
-            it('should return an undefined source', function () {
+            it('should return the null', function () {
                var ds = new DataSet();
-               assert.isUndefined(ds.getSource());
+               assert.isNull(ds.getSource());
             });
          });
 
@@ -115,31 +53,57 @@ define([
                assert.strictEqual(ds.getAdapter(), adapter);
             });
 
-            it('should return an undefined adapter', function () {
+            it('should return the null', function () {
                var ds = new DataSet();
-               assert.isUndefined(ds.getAdapter());
+               assert.isNull(ds.getAdapter());
             });
          });
 
          describe('.getModel()', function () {
-            it('should return the model', function () {
-               var ds = new DataSet({
-                  model: Model
-               });
+            it('should return a default model', function () {
+               var ds = new DataSet();
                assert.strictEqual(ds.getModel(), Model);
             });
 
-            it('should return an undefined model', function () {
-               var ds = new DataSet();
-               assert.isUndefined(ds.getModel());
+            it('should return the given model', function () {
+               var MyModel = Model.extend({}),
+                  ds = new DataSet({
+                  model: MyModel
+               });
+               assert.strictEqual(ds.getModel(), MyModel);
             });
          });
 
          describe('.setModel()', function () {
             it('should set the model', function () {
+               var MyModel = Model.extend({}),
+                  ds = new DataSet();
+               ds.setModel(MyModel);
+               assert.strictEqual(ds.getModel(), MyModel);
+            });
+         });
+
+         describe('.getListModule()', function () {
+            it('should return a default list', function () {
                var ds = new DataSet();
-               ds.setModel(Model);
-               assert.strictEqual(ds.getModel(), Model);
+               assert.strictEqual(ds.getListModule(), ObservableList);
+            });
+
+            it('should return the given list', function () {
+               var MyList = List.extend({}),
+                  ds = new DataSet({
+                     listModule: MyList
+                  });
+               assert.strictEqual(ds.getListModule(), MyList);
+            });
+         });
+
+         describe('.setListModule()', function () {
+            it('should set the model', function () {
+               var MyList = List.extend({}),
+                  ds = new DataSet();
+               ds.setListModule(MyList);
+               assert.strictEqual(ds.getListModule(), MyList);
             });
          });
 
@@ -272,15 +236,6 @@ define([
 
             it('should throw an Error if adapter is not defined', function () {
                var ds = new DataSet();
-               assert.throw(function() {
-                  ds.getRow();
-               });
-            });
-
-            it('should throw an Error if model is not defined', function () {
-               var ds = new DataSet({
-                  adapter: new JsonAdapter()
-               });
                assert.throw(function() {
                   ds.getRow();
                });

@@ -1,0 +1,51 @@
+.controls-ListView__treeLeverage {
+   float: left;
+   .box-sizing(border-box);
+   cursor: @tree-view-expand-cursor;
+   width: @tree-view-expand-width;
+   height: @tree-view-expand-height;
+   margin: @tree-view-expand-margin;
+   border-width: @tree-view-expand-border-width;
+   border-style: @tree-view-expand-border-style;
+   border-color: @tree-view-expand-border-color;
+   background: @tree-view-expand-bg;
+
+   &:hover {
+      border-width: @tree-view-expand-hover-border-width;
+      border-style: @tree-view-expand-hover-border-style;
+      border-color: @tree-view-expand-hover-border-color;
+      background: @tree-view-expand-hover-bg;
+   }
+
+   & + .controls-TreeView__itemContent {
+      margin: @tree-view-item-content-margin;
+   }
+}
+
+.controls-ListView__items-treeChildren {
+   list-style: none;
+   padding: @tree-view-child-container-padding;
+}
+
+.controls-ListView__itemContainer-treeNodeCollapsed {
+  > .controls-ListView__items-treeChildren {
+    display: none;
+  }
+}
+.controls-ListView__itemContainer-treeNodeExpanded {
+   > .controls-ListView__treeItem {
+      > .controls-ListView__treeLeverage {
+         border-width: @tree-view-expand-open-border-width;
+         border-style: @tree-view-expand-open-border-style;
+         border-color: @tree-view-expand-open-border-color;
+         background: @tree-view-expand-open-bg;
+
+         &:hover {
+            border-width: @tree-view-expand-open-hover-border-width;
+            border-style: @tree-view-expand-open-hover-border-style;
+            border-color: @tree-view-expand-open-hover-border-color;
+            background: @tree-view-expand-open-hover-bg;
+         }
+      }
+   }
+}

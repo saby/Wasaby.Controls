@@ -1,8 +1,9 @@
 /* global define, $ws */
 define('js!SBIS3.CONTROLS.Data.Source.Base', [
    'js!SBIS3.CONTROLS.Data.Source.ISource',
-   'js!SBIS3.CONTROLS.Data.Model'
-], function (ISource, Model) {
+   'js!SBIS3.CONTROLS.Data.Source.DataSet',
+   'js!SBIS3.CONTROLS.Data.Adapter.Json'
+], function (ISource, DataSet, JsonAdapter) {
    'use strict';
 
    /**
@@ -23,25 +24,18 @@ define('js!SBIS3.CONTROLS.Data.Source.Base', [
 
       _moduleName: 'SBIS3.CONTROLS.Data.Source.Base',
 
-      $constructor: function (cfg) {
-         cfg = cfg || {};
-
+      $constructor: function () {
          this._publish('onDataSync');
-         this._options.model = 'model' in cfg ? cfg.model : Model;
-      },
-
-      after: {
-         $constructor: function () {
-            if (!this._options.adapter) {
-               throw new Error('Data adapter is undefined');
-            }
-         }
       },
 
       //region SBIS3.CONTROLS.Data.Source.ISource
 
+      getResource: function () {
+         return this._options.resource;
+      },
+
       getAdapter: function () {
-         return this._options.adapter;
+         return this._options.adapter || (this._options.adapter = new JsonAdapter());
       },
 
       setAdapter: function (adapter) {
@@ -56,6 +50,14 @@ define('js!SBIS3.CONTROLS.Data.Source.Base', [
          this._options.model = model;
       },
 
+      getListModule: function () {
+         return this._options.listModule;
+      },
+
+      setListModule: function (listModule) {
+         this._options.listModule = listModule;
+      },
+
       getIdProperty: function () {
          return this._options.idProperty;
       },
@@ -64,9 +66,6 @@ define('js!SBIS3.CONTROLS.Data.Source.Base', [
          this._options.idProperty = name;
       },
 
-      getResource: function () {
-         return this._options.resource;
-      },
       //endregion SBIS3.CONTROLS.Data.Source.ISource
 
       //region Protected methods
@@ -99,6 +98,24 @@ define('js!SBIS3.CONTROLS.Data.Source.Base', [
       },
 
       /**
+       * Создает новый экзепляр dataSet
+       * @param {Object} cfg Опции конструктора
+       * @returns {SBIS3.CONTROLS.Data.Source.DataSet}
+       * @private
+       */
+      _getDataSetInstance: function (cfg) {
+         return new DataSet($ws.core.merge({
+            source: this,
+            adapter: this.getAdapter(),
+            model: this.getModel(),
+            listModule: this.getListModule(),
+            idProperty: this.getIdProperty()
+         }, cfg, {
+            rec: false
+         }));
+      },
+
+      /**
        * Перебирает все записи выборки
        * @param {*} data Выборка
        * @param {Function} callback Ф-я обратного вызова для каждой записи
@@ -106,7 +123,7 @@ define('js!SBIS3.CONTROLS.Data.Source.Base', [
        * @private
        */
       _each: function (data, callback, context) {
-         var tableAdapter = this._options.adapter.forTable(data),
+         var tableAdapter = this.getAdapter().forTable(data),
             index,
             count;
 

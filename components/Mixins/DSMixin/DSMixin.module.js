@@ -1,13 +1,10 @@
 define('js!SBIS3.CONTROLS.DSMixin', [
-   'js!SBIS3.CONTROLS.StaticSource',
-   'js!SBIS3.CONTROLS.ArrayStrategy',
-   'js!SBIS3.CONTROLS.SbisJSONStrategy',
+   'js!SBIS3.CONTROLS.Data.Source.Memory',
    'js!SBIS3.CONTROLS.DataFactory',
-   'js!SBIS3.CONTROLS.DataSet',
    'js!SBIS3.CONTROLS.Data.Collection.RecordSet',
    'js!SBIS3.CONTROLS.Data.Query.Query',
    'js!SBIS3.CORE.MarkupTransformer'
-], function (StaticSource, ArrayStrategy, SbisJSONStrategy, DataFactory, DataSet, RecordSet, Query, MarkupTransformer) {
+], function (StaticSource, DataFactory, RecordSet, Query, MarkupTransformer) {
 
    /**
     * Миксин, задающий любому контролу поведение работы с набором однотипных элементов.
@@ -190,11 +187,11 @@ define('js!SBIS3.CONTROLS.DSMixin', [
              * Опция задаёт текст, отображаемый как при абсолютном отсутствии данных, так и в результате {@link groupBy фильтрации}.
              * @see items
              * @see setDataSource
-             * @see groupBy* @cfg {Function} Пользовательский метод добавления атрибутов на элементы коллекции
+             * @see groupBy
              */
             emptyHTML: '',
             /**
-             * @var {Object} Фильтр данных
+             * @cfg {Object} Фильтр данных
              * @example
              * <pre class="brush:xml">
              *     <options name="filter">
@@ -243,10 +240,8 @@ define('js!SBIS3.CONTROLS.DSMixin', [
                  }
                }
                this._dataSource = new StaticSource({
-                  compatibilityMode: true,
                   data: items,
-                  strategy: new ArrayStrategy(),
-                  keyField: this._options.keyField
+                  idProperty: this._options.keyField
                });
             }
          }
@@ -261,9 +256,8 @@ define('js!SBIS3.CONTROLS.DSMixin', [
         * <pre>
         *     define(
         *     'SBIS3.MY.Demo',
-        *     'js!SBIS3.CONTROLS.StaticSource',
-        *     'js!SBIS3.CONTROLS.ArrayStrategy',
-        *     function(StaticSource, ArrayStrategy){
+        *     'js!SBIS3.CONTROLS.Data.Source.Memory',
+        *     function(MemorySource){
         *        //коллекция элементов
         *        var arrayOfObj = [
         *           {'@Заметка': 1, 'Содержимое': 'Пункт 1', 'Завершена': false},
@@ -271,10 +265,9 @@ define('js!SBIS3.CONTROLS.DSMixin', [
         *           {'@Заметка': 3, 'Содержимое': 'Пункт 3', 'Завершена': true}
         *        ];
         *        //источник статических данных
-        *        var ds1 = new StaticSource({
+        *        var ds1 = new MemorySource({
         *           data: arrayOfObj,
-        *           keyField: '@Заметка',
-        *           strategy: ArrayStrategy
+        *           idProperty: '@Заметка'
         *        });
         *        this.getChildControlByName("ComboBox 1").setDataSource(ds1);
         *     })
@@ -552,14 +545,12 @@ define('js!SBIS3.CONTROLS.DSMixin', [
              items = [];
           }
 
-          this._dataSource = new StaticSource({
-             compatibilityMode: true,
-             data: items,
-             strategy: new ArrayStrategy(),
-             keyField: keyField
-          });
-          this.reload();
-       },
+         this._dataSource = new StaticSource({
+            data: items,
+            idProperty: keyField
+         });
+         this.reload();
+      },
 
       _drawItemsCallback: function () {
          /*Method must be implemented*/

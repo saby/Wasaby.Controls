@@ -30,6 +30,12 @@ define('js!SBIS3.CONTROLS.Data.Collection.ObservableListMixin', [
          $ws.helpers.forEach(this._items, this._watchForChanges, this);
       },
 
+      before: {
+         destroy: function() {
+            $ws.helpers.forEach(this._items, this._cancelWatchForChanges, this);
+         }
+      },
+
       around: {
 
          //region SBIS3.CONTROLS.Data.Collection.IEnumerable
@@ -191,7 +197,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.ObservableListMixin', [
          if (this._needWatchForChanges(item)) {
             var handlers = item.getEventHandlers('onPropertyChange');
             if (Array.indexOf(handlers, this._onItemPropertyChangeHandler) === -1) {
-               this.subscribeTo(item, 'onPropertyChange', this._onItemPropertyChangeHandler);
+               item.subscribe('onPropertyChange', this._onItemPropertyChangeHandler);
             }
          }
       },
@@ -203,7 +209,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.ObservableListMixin', [
        */
       _cancelWatchForChanges: function(item) {
          if (this._needWatchForChanges(item)) {
-            this.unsubscribeFrom(item, 'onPropertyChange', this._onItemPropertyChangeHandler);
+            item.unsubscribe('onPropertyChange', this._onItemPropertyChangeHandler);
          }
       },
 
