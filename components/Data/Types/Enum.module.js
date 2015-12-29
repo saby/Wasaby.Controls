@@ -1,8 +1,9 @@
 /* global define, $ws */
 define('js!SBIS3.CONTROLS.Data.Types.Enum', [
    'js!SBIS3.CONTROLS.Data.Collection.IEnumerable',
-   'js!SBIS3.CONTROLS.Data.Collection.ArrayEnumerator'
-], function (IEnumerable, ArrayEnumerator) {
+   'js!SBIS3.CONTROLS.Data.Collection.ArrayEnumerator',
+   'js!SBIS3.CONTROLS.Data.ContextField'
+], function (IEnumerable, ArrayEnumerator, ContextField) {
    /**
     * Тип данных перечисляемое.
     * @class SBIS3.CONTROLS.Data.Types.Enum
@@ -117,5 +118,8 @@ define('js!SBIS3.CONTROLS.Data.Types.Enum', [
          return false;
       }
    });
+
+   ContextField.registerEnum('ControlsFieldTypeEnum', Enum);
+
    return Enum;
 });

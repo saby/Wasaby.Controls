@@ -267,8 +267,45 @@ define('js!SBIS3.CONTROLS.Data.ContextField', [
                };
             }
          });
-      }
+      },
+      registerEnum: function(name, module) {
+         $ws.proto.Context.registerFieldType({
+            name: name,
+
+            is: function (value) {
+               return value instanceof module;
+            },
+
+            get: function (value, keyPath) {
+               var
+                  Context = $ws.proto.Context,
+                  NonExistentValue = $ws.proto.Context.NonExistentValue,
+                  recordSet = value,
+                  count = recordSet.getCount(),
+                  idx, result, subValue, key, subType;
+
+               if (keyPath.length !== 0) {
+                  key = keyPath[0];
+                  idx = getRsIdx(key);
+
+                  if (idx >= 0 && idx < count) {//at
+                     subValue = recordSet.at(idx);
+                     subType = Context.getValueType(subValue);
+                     result = subType.get(subValue, keyPath.slice(1));
+                  } else {
+                     result = NonExistentValue;
+                  }
+               } else {
+                  result = value;
+               }
+
+               return result;
+            },
+
+         });
+      },
    },
+
    getRsIdx = function(id) {
       return String.prototype.split.call(id, ',')[0];
    };
