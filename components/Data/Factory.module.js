@@ -93,7 +93,7 @@ define('js!SBIS3.CONTROLS.Data.Factory', [
                   return value;
                }
                var self = this;
-               return value.map(function (val){
+               return $ws.helpers.map(value, function (val) {
                   return self.cast(val, meta.elementsType, adapter, meta);
                });
             default:
@@ -172,8 +172,8 @@ define('js!SBIS3.CONTROLS.Data.Factory', [
                return value;
             case 'Array':
                var self = this;
-               return value.map(function (val){
-                  return self.serialize(val, meta.arrayType, adapter, meta);
+               return $ws.helpers.map(value, function (val){
+                  return self.serialize(val, meta.elementsType, adapter, meta);
                });
             default:
                return value;
