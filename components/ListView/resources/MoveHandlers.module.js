@@ -50,7 +50,7 @@ define('js!SBIS3.CONTROLS.MoveHandlers', ['js!SBIS3.CONTROLS.MoveDialog','js!SBI
 
          if (this._checkRecordsForMove(records, recordTo, isChangeOrder)) {
             for (var i = 0; i < records.length; i++) {
-               records[i] = $ws.helpers.instanceOfModule(records[i], 'SBIS3.CONTROLS.Record') ? records[i] : this._dataSet.getRecordByKey(records[i]);
+               records[i] = ($ws.helpers.instanceOfModule(records[i], 'SBIS3.CONTROLS.Record') || $ws.helpers.instanceOfModule(records[i], 'SBIS3.CONTROLS.Data.Model')) ? records[i] : this._dataSet.getRecordByKey(records[i]);
             }
             if (isNodeTo && !isChangeOrder) {
                deferred = this.getMoveStrategy().hierarhyMove(records, recordTo);
