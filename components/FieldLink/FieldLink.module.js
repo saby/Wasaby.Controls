@@ -403,18 +403,18 @@ define('js!SBIS3.CONTROLS.FieldLink',
          FieldLink.superclass.setSelectedItem.apply(this, arguments);
       }),
 
-      _afterSelectionHandler: propertyUpdateWrapper(function() {
+      _afterSelectionHandler: function() {
          var self = this;
          /* selectedItem всегда смотрит на первый элемент набора selectedItems */
          this.getSelectedItems(true).addCallback(function(list) {
             var item = list.at(0);
             self._options.selectedItem = item ? item : new Model();
             self._options.selectedKey = item ? item.getId() : null;
-            self._notifyOnPropertyChanged('selectedItem');
+            self._notifySelectedItem(self._options.selectedKey);
             return list;
          });
          FieldLink.superclass._afterSelectionHandler.apply(this, arguments);
-      }),
+      },
 
       _drawSelectedItem: function(key) {
          this._options.selectedKeys = key === null ? [] : [key];
