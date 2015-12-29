@@ -78,6 +78,9 @@ define('js!SBIS3.CONTROLS.ComboBox', [
        */
 
       $protected: {
+         //если поменяли текст до того, как были установлены items. То мы не сможем проставить соответсвующий ключ из набора
+         //это надо будет сделать после уставноки items, а этот флаг используем для понимания
+         _delayedSettingTextByKey: false,
          _keysWeHandle: [$ws._const.key.up, $ws._const.key.down, $ws._const.key.enter],
          _options: {
             /**
@@ -391,27 +394,38 @@ define('js!SBIS3.CONTROLS.ComboBox', [
             self = this,
             filterFieldObj = {};
 
-         filterFieldObj[this._options.displayField] = self._options.text;
+         if (this._dataSource) {
+            filterFieldObj[this._options.displayField] = self._options.text;
 
-         self._callQuery(filterFieldObj).addCallback(function (DataSet) {
-            var noItems = true;
-            DataSet.each(function (item) {
-               noItems = false;
-               selKey = item.getKey();
-               self._options.selectedKey = (selKey !== null && selKey !== undefined && selKey == selKey) ? selKey : null;
-               //TODO: переделать на setSelectedItem, чтобы была запись в контекст и валидация если надо. Учесть проблемы с первым выделением
-               if (oldKey !== self._options.selectedKey) { // при повторном индексе null не стреляет событием
-                  self._notifySelectedItem(self._options.selectedKey);
-                  self._drawSelectedItem(self._options.selectedKey);
+            self._callQuery(filterFieldObj).addCallback(function (DataSet) {
+               var noItems = true;
+               DataSet.each(function (item) {
+                  noItems = false;
+                  selKey = item.getKey();
+                  self._options.selectedKey = (selKey !== null && selKey !== undefined && selKey == selKey) ? selKey : null;
+                  //TODO: переделать на setSelectedItem, чтобы была запись в контекст и валидация если надо. Учесть проблемы с первым выделением
+                  if (oldKey !== self._options.selectedKey) { // при повторном индексе null не стреляет событием
+                     self._notifySelectedItem(self._options.selectedKey);
+                     self._drawSelectedItem(self._options.selectedKey);
+                  }
+               });
+
+               if (noItems) {
+                  self._options.selectedKey = null;
+                  self._notifySelectedItem(null);
+                  self._drawSelectedItem(null);
                }
             });
+         }
+         else {
+            this._delayedSettingTextByKey = true;
+         }
+      },
 
-            if (noItems) {
-               self._options.selectedKey = null;
-               self._notifySelectedItem(null);
-               self._drawSelectedItem(null);
-            }
-         });
+      _dataLoadedCallback: function() {
+         if (this._delayedSettingTextByKey) {
+            this._setKeyByText();
+         }
       },
 
       _clearItems : function() {
