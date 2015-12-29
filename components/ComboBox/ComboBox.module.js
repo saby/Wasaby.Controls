@@ -128,7 +128,7 @@ define('js!SBIS3.CONTROLS.ComboBox', [
              */
             valueFormat: ''
          },
-         _viewConstructor: ComboBoxListView,
+         _viewConstructor: ComboBoxListView
       },
 
       $constructor: function () {
@@ -303,24 +303,35 @@ define('js!SBIS3.CONTROLS.ComboBox', [
             collection = this.getItems(),
             foundItem = null,
             self = this;
-         collection.each(function(item, index) {
-            var title = self._getItemValue(item, displayField) ;
-            if (title === text) {
-               selKey = self._getItemValue(item, keyField);
-               foundItem = item;
+         if (collection.getCount()) {
+            collection.each(function (item, index) {
+               var title = self._getItemValue(item, displayField);
+               if (title === text) {
+                  selKey = self._getItemValue(item, keyField);
+                  foundItem = item;
+               }
+            });
+            if (foundItem) {
+               if (selKey != this._options.selectedKey) {
+                  this.setSelectedKey(selKey);
+               }
             }
-         });
-         if (foundItem) {
-            if (selKey != this._options.selectedKey) {
-               this.setSelectedKey(selKey);
+            else {
+               if (this._options.selectedKey) {
+                  this.setSelectedKey(null);
+               }
             }
          }
          else {
-            if (this._options.selectedKey) {
-               this.setSelectedKey(null);
-            }
+            this._delayedSettingTextByKey = true;
          }
+      },
 
+      redraw: function() {
+         ComboBox.superclass.redraw.call(this);
+         if (this._delayedSettingTextByKey) {
+            this._setKeyByText();
+         }
       },
 
       _clearItems : function() {
@@ -429,7 +440,7 @@ define('js!SBIS3.CONTROLS.ComboBox', [
       _getViewNode: function() {
          /*устаналивает rootnode для listView*/
          return this._picker.getContainer();
-      },
+      }
 
    });
 
