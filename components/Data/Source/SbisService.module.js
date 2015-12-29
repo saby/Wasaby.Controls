@@ -3,8 +3,9 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
    'js!SBIS3.CONTROLS.Data.Source.Base',
    'js!SBIS3.CONTROLS.Data.Source.DataSet',
    'js!SBIS3.CONTROLS.Data.Adapter.Sbis',
-   'js!SBIS3.CONTROLS.Data.Source.SbisService/resources/SbisServiceBLO'
-], function (Base, DataSet, SbisAdapter, SbisServiceBLO) {
+   'js!SBIS3.CONTROLS.Data.Source.SbisService/resources/SbisServiceBLO',
+   'js!SBIS3.CONTROLS.Data.Query.Query'
+], function (Base, DataSet, SbisAdapter, SbisServiceBLO, Query) {
    'use strict';
 
    /**
@@ -627,9 +628,46 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
             $ws.single.ioc.resolve('ILogger').log('SBIS3.CONTROLS.Data.Source.SbisService::destroy()', error);
             return error;
          });
-      }
+      },
 
       //endregion Protected methods
+
+      //TODO: совместимость с SBIS3.CONTROLS.SbisServiceSource - выплить после перехода на ISource
+      //region SBIS3.CONTROLS.SbisServiceSource
+      prepareQueryParams : function(filter, sorting, offset, limit, hasMore){
+         var preparePagingParam = function (offset, limit, hasMore) {
+            var pagingParam = null;
+            if (typeof(offset) !== 'undefined' && offset !== null && typeof(limit) !== 'undefined' && limit !== null) {
+               var numPage = Math.floor(offset / limit);
+               pagingParam = {
+                  'd': [
+                     numPage,
+                     limit,
+                     hasMore !== undefined ? hasMore : offset >= 0 //Если offset отрицательный, то грузится последняя страница
+                  ],
+                  's': [
+                     {'n': 'Страница', 't': 'Число целое'},
+                     {'n': 'РазмерСтраницы', 't': 'Число целое'},
+                     {'n': 'ЕстьЕще', 't': 'Логическое'}
+                  ]
+               };
+            }
+            return pagingParam;
+         };
+
+         var query = new Query();
+         query.where(filter)
+            .offset(hasMore === undefined ? offset : hasMore)
+            .limit(limit)
+            .orderBy(sorting);
+         return {
+            'Фильтр': !query || Object.isEmpty(query.getWhere()) ? null : this._options.adapter.serialize(query.getWhere()),
+            'Сортировка': this._options.adapter.serialize(this._getSortingParams(query)),
+            'Навигация': preparePagingParam(offset, limit, hasMore),
+            'ДопПоля': !query || Object.isEmpty(query.getMeta()) ? [] : this._options.adapter.serialize(query.getMeta())
+         };
+      }
+      //endregion SBIS3.CONTROLS.SbisServiceSource
    });
 
    $ws.single.ioc.bind('SBIS3.CONTROLS.Data.Source.SbisService', function(config) {
