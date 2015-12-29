@@ -200,7 +200,9 @@ define('js!SBIS3.CONTROLS.ComboBox', [
 
       _drawSelectedItem: function (key) {
          var item = this.getItemsProjection().getCurrent();
-         if(item) {
+         if(item === undefined) {
+            this.setText('');
+         } else {
             item = item.getContents();
             var newText = this._getItemValue(item, this._options.displayField);
             if(newText !== this._options.text) {
