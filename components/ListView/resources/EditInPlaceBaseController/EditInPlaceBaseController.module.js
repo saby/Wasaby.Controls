@@ -194,7 +194,7 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                if (withSaving) {
                   this._options.dataSource.sync(this._options.dataSet);
                }
-               this._notify('onAfterEndEdit', withSaving ? this._options.dataSet.getRecordByKey(eipRecord.getKey()) : eipRecord, withSaving);
+               this._notify('onAfterEndEdit', withSaving ? this._options.dataSet.getRecordByKey(eipRecord.getKey()) : eipRecord, eip.getTarget(), withSaving);
             },
             add: function() {
                var options,
@@ -202,7 +202,7 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                return this.endEdit(true).addCallback(function() {
                   options = self._notify('onBeginAdd');
                   return self._options.dataSource.create(options).addCallback(function (record) {
-                     var target = $('<div class="js-controls-ListView__item"></div>').attr('data-id', record.getKey()).appendTo(self._options.itemsContainer);
+                     var target = $('<div class="js-controls-ListView__item"></div>').appendTo(self._options.itemsContainer);
                      self._eip.edit(target, record);
                      return record;
                   });
