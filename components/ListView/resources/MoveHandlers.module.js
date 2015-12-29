@@ -161,14 +161,16 @@ define('js!SBIS3.CONTROLS.MoveHandlers', ['js!SBIS3.CONTROLS.MoveDialog','js!SBI
       },
 
       moveRecordDown: function(tr, id, record) {
-         var nextItem = this.getNextItemById(id),
-            nextId = nextItem.data('id');
-         moveRecord.call(this, record, nextId, id, false);
+         var nextItem = this.getNextItemById(id);
+         if(nextItem) {
+            moveRecord.call(this, record, nextItem.data('id'), id, false);
+         }
       },
       moveRecordUp: function(tr, id, record) {
-         var prevItem = this.getPrevItemById(id),
-            prevId = prevItem.data('id');
-         moveRecord.call(this, record, prevId, id, true);
+         var prevItem = this.getPrevItemById(id);
+         if(prevItem) {
+            moveRecord.call(this, record, prevItem.data('id'), id, false);
+         }
       }
    };
    function moveRecord(itemRecord, moveTo, current, up){
