@@ -50,6 +50,11 @@ define('js!SBIS3.CONTROLS.SelectableNew', [
          },
 
          /**
+          * @var {Function} Обработчик изменения текущего элемента проекции
+          */
+         _onProjectionCurrentChange: null,
+
+         /**
           * @var {SBIS3.CONTROLS.Data.Projection.CollectionEnumerator} Служебный энумератор
           */
          _utilityEnumerator: undefined
@@ -71,20 +76,33 @@ define('js!SBIS3.CONTROLS.SelectableNew', [
                   this._itemsProjection
                );
             }
+         },
+
+         _setItems: function() {
+            if (this._itemsProjection && this._onProjectionCurrentChange) {
+               this.unsubscribeFrom(this._itemsProjection, 'onCurrentChange', this._onProjectionCurrentChange);
+            }
          }
       },
 
       after: {
-         init: function(){
-            var projection = this.getItemsProjection(),
-               self = this;
-
-            this.subscribeTo(projection, 'onCurrentChange', (function(event, newCurrent, oldCurrent, newPosition) {
+         setItems: function() {
+            var selectedIndex = this._itemsProjection.getCurrentPosition(),
+               selectedKey = selectedIndex === -1 ? null : this._getItemValue(this._itemsProjection.at(selectedIndex), this._options.keyField);
+            if(selectedKey !== this._options.selectedKey) {
                this._setSelectedIndex(
-                  newPosition,
-                  self._getItemValue(newCurrent ? newCurrent.getContents() : null, this._options.keyField )
+                  selectedIndex,
+                  selectedKey
                );
-            }).bind(this));
+            }
+         },
+
+         _setItems: function() {
+            if (!this._onProjectionCurrentChange) {
+               this._onProjectionCurrentChange = onProjectionCurrentChange.bind(this);
+            }
+            this.subscribeTo(this._itemsProjection, 'onCurrentChange', this._onProjectionCurrentChange);
+
          },
 
          _initView: function() {
@@ -263,6 +281,22 @@ define('js!SBIS3.CONTROLS.SelectableNew', [
          }
          return value;
       }
+   };
+
+   /**
+    * Обработчк события изменения текущего элемента проекции
+    * @param {$ws.proto.EventObject} event Дескриптор события.
+    * @param {$ws.proto.EventObject} eventObject Дескриптор события.
+    * @param {SBIS3.CONTROLS.Data.Projection.ICollectionItem} newCurrent Новый текущий элемент
+    * @param {SBIS3.CONTROLS.Data.Projection.ICollectionItem} oldCurrent Старый текущий элемент
+    * @param {Number} newPosition Новая позиция
+    * @param {Number} oldPosition Старая позиция
+    */
+   var onProjectionCurrentChange = function (event, newCurrent, oldCurrent, newPosition) {
+      this._setSelectedIndex(
+         newPosition,
+         this._getItemValue(newCurrent ? newCurrent.getContents() : null, this._options.keyField )
+      );
    };
 
    return SelectableNew;
