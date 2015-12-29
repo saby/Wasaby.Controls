@@ -52,7 +52,6 @@ exports.run = function (config, wsConfig, rootPath) {
    });
 
    //Запускаем тесты
-   console.error = console.log;
    unit.test.getList().forEach(function (test) {
       try {
          requirejs(test);
@@ -73,10 +72,10 @@ exports.run = function (config, wsConfig, rootPath) {
       });
       //var writeOriginal = process.stdout.write;
       process.stdout.write = function (chunk) {
-         var str = '' + chunk;
+         /*var str = '' + chunk;
          if (str && str[0] !== '<') {
             str = '<!--' + str + '-->';
-         }
+         }*/
          ws.write(str);
          //writeOriginal.apply(process.stdout, arguments);
       };

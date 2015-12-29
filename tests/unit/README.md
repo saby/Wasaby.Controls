@@ -5,10 +5,10 @@
 `http://localhost:666/tests/unit/via-webdriver.html`
 
 ## Команды Grunt
-- `grunt tests` - прогнать unit тесты и тест покрытия;
+- `grunt --force tests` - прогнать unit тесты и тест покрытия;
 - `grunt tests-webdriver` - прогнать unit тесты через webdriver;
 - `grunt tests-isolated` - прогнать unit тесты изолированно;
-- `grunt tests-coverage` - прогнать тест покрытия;
+- `grunt --force tests-coverage` - прогнать тест покрытия;
 - `grunt tests-list-build` - пересобрать список тестов для webdriver.
 
 ## Запуск в ручном режиме из командной строки через Selenium webdriver
@@ -45,7 +45,7 @@
     coverage tests/unit/coverage.run
 
 Результаты можно смотреть тут:
-`http://localhost:666/coverage/lcov-report/index.html`
+`http://localhost:666/tests/unit/artifacts/coverage/lcov-report/index.html`
 
 # Jenkins
 Настройки сборки в Jenkins
@@ -127,7 +127,7 @@
     rem SET PATH=%WORKSPACE%\tests\unit\bin\nodejs;%PATH%
     rem [/if Node.js version installed < 10]
 
-    node "node_modules/grunt-cli/bin/grunt" tests
+    node "node_modules/grunt-cli/bin/grunt" --force tests
 
 ## Послесборочные операции
 Publish JUnit test result report
@@ -140,6 +140,6 @@ Publish documents
 
     Title: Отчет о покрытии
 
-    Directory to archive: coverage/lcov-report/
+    Directory to archive: tests/unit/artifacts/coverage/lcov-report/
 
     Index file: index.html

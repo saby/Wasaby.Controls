@@ -2,8 +2,7 @@
 module.exports = function (grunt) {
    'use strict';
 
-   var childProcess = require('child_process'),
-      StringDecoder = require('string_decoder').StringDecoder,
+   var StringDecoder = require('string_decoder').StringDecoder,
       path = require('path'),
       config = grunt.config('unit-tests'),
       webdriver = require(path.join(process.cwd(), config.path + 'lib/webdriver')),
@@ -12,35 +11,35 @@ module.exports = function (grunt) {
          args.push(config.path + name);
 
          grunt.log.writeln('run node script: ' + args.join(' '));
-         checkResults(childProcess.spawn(
-            'node',
-            args
-         ), done);
+         checkResults(grunt.util.spawn({
+            cmd: 'node',
+            args: args
+         }, done));
       },
       runCommand = function (done, name, args) {
          args = args || [];
 
          //name = path.resolve(process.cwd(), name);
-         name = name + ' ' + args.join(' ');
-         grunt.log.writeln('executing: ' + name);
-         checkResults(childProcess.exec(name, {
-            cwd: process.cwd()
-         }), done);
+         grunt.log.writeln('executing: ' + name + ' ' + args.join(' '));
+         checkResults(grunt.util.spawn({
+            cmd: name,
+            args: args,
+            opts: {
+               cwd: process.cwd()
+            }
+         }, done));
       },
-      checkResults = function(proc, done) {
+      checkResults = function(proc) {
          proc.stdout.on('data', function (data) {
             var decoder = new StringDecoder();
             grunt.log.ok(decoder.write(data));
          });
          proc.stderr.on('data', function (data) {
             var decoder = new StringDecoder();
-            grunt.fail.fatal(decoder.write(data));
+            grunt.fail.warn(decoder.write(data));
          });
          proc.on('error', function (err) {
             grunt.fail.fatal(err);
-         });
-         proc.on('close', function (code) {
-            done(code);
          });
       };
 
@@ -49,19 +48,9 @@ module.exports = function (grunt) {
          pckgStack = [],
          installPackage = function (name, version, callback) {
             grunt.log.writeln('installing package ' + name);
-            childProcess.exec('npm install ' + name + '@' + version, function (err, stdout, stderr) {
-               if (err) {
-                  grunt.fail.fatal(err);
-               }
-               var decoder = new StringDecoder();
-               if (stderr) {
-                  grunt.log.error(decoder.write(stderr));
-               }
-               if (stdout) {
-                  grunt.log.ok(decoder.write(stdout));
-               }
-               callback();
-            });
+            checkResults(grunt.util.spawn({
+               cmd: 'npm install ' + name + '@' + version
+            }, callback));
          },
          installNext = function () {
             var item = pckgStack.shift();
@@ -140,7 +129,7 @@ module.exports = function (grunt) {
       runCommand(
          this.async(),
          'coverage',
-         [config.path + 'via-isolated.run']
+         [config.path + 'coverage.run']
       );
    });
 
