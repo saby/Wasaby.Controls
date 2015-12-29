@@ -119,11 +119,6 @@ define('js!SBIS3.CONTROLS.ComponentBinder', [], function () {
       }
    }
 
-   function isSearchValid(text, minLength) {
-      var checkText = text.replace(/[«»’”@#№$%^&*;:?.,!\/~\]\[{}()|<>=+\-_\s'"]/g, '');
-      return [checkText, checkText.length >= minLength];
-   }
-
    function toggleCheckBoxes(operationPanel, gridView, hideCheckBoxes) {
       if (gridView._options.multiselect && hideCheckBoxes) {
          gridView._container.toggleClass('controls-ListView__showCheckBoxes', operationPanel.isOpen())
@@ -210,17 +205,9 @@ define('js!SBIS3.CONTROLS.ComponentBinder', [], function () {
 
          this._lastGroup = view._options.groupBy;
          this._isInfiniteScroll = view.isInfiniteScroll();
+
          searchForm.subscribe('onTextChange', function(event, text){
-            var checkedText = isSearchValid(text, 3);
-            if (checkedText[1]) {
-               if (hierarchy) {
-                  startHierSearch.call(self, text, searchParamName, searchCrumbsTpl);
-                  self._path = [];
-               } else {
-                  startSearch.call(self, text, searchParamName);
-               }
-            }
-            if (!checkedText[0]) {
+            if (text.length < searchForm.getProperty('startCharacter')) {
                if (hierarchy) {
                   resetGroup.call(self, searchParamName);
                } else {
@@ -229,14 +216,11 @@ define('js!SBIS3.CONTROLS.ComponentBinder', [], function () {
             }
          });
 
-         searchForm.subscribe('onSearchStart', function(event, text) {
-            var checkedText = isSearchValid(text, 1);
-            if (checkedText[1]) {
-               if (hierarchy) {
-                  startHierSearch.call(self, text, searchParamName);
-               } else {
-                  startSearch.call(self, text, searchParamName);
-               }
+         searchForm.subscribe('onSearch', function(event, text) {
+            if (hierarchy) {
+               startHierSearch.call(self, text, searchParamName);
+            } else {
+               startSearch.call(self, text, searchParamName);
             }
          });
       },
