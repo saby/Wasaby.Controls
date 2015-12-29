@@ -157,16 +157,7 @@ define('js!SBIS3.CONTROLS.ItemActionsGroup',
           * @private
           */
          _menuVisibilityHandler: function(isVisible) {
-            var itemActionsInstances = this.getItemsInstances();
-
-            for(var i in itemActionsInstances) {
-               if(itemActionsInstances.hasOwnProperty(i)) {
-                  if(!itemActionsInstances[i].isVisible()) {
-                     /* Делаю через inline стили, т.к. через ws-hidden делать небезопасно, кто-то может его удалить */
-                     itemActionsInstances[i].getContainer()[0].style.display = isVisible ? 'none' : '';
-                  }
-               }
-            }
+            this._container.toggleClass('ws-invisible', isVisible);
          },
 
          /**

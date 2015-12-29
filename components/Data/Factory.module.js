@@ -173,7 +173,7 @@ define('js!SBIS3.CONTROLS.Data.Factory', [
             case 'Array':
                var self = this;
                return value.map(function (val){
-                  return self.serialize(val, meta.elementsType, adapter, meta);
+                  return self.serialize(val, meta.arrayType, adapter, meta);
                });
             default:
                return value;

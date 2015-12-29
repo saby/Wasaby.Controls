@@ -59,27 +59,6 @@ define([
       }, {
          n: 'identity',
          t: 'Идентификатор'
-      }, {
-         "n":"arrayBool",
-         "t":{"n":"Массив","t":"Логическое"}
-      }, {
-         "n":"arrayDate",
-         "t":{"n":"Массив","t":"Дата"}
-      }, {
-         "n":"arrayDatetime",
-         "t":{"n":"Массив","t":"Дата и время"}
-      }, {
-         "n":"arrayInt",
-         "t":{"n":"Массив","t":"Число целое"}
-      }, {
-         "n":"arrayFloat",
-         "t":{"n":"Массив","t":"Число вещественное"}
-      }, {
-         "n":"arrayString",
-         "t":{"n":"Массив","t":"Текст"}
-      }, {
-         "n":"arrayTime",
-         "t":{"n":"Массив","t":"Время"}
       }];
       dataValues = [
          4,
@@ -95,14 +74,7 @@ define([
          '2015-09-24',
          '15:54:28.981+03',
          'P10DT0H0M0S',//10 дней
-         [22],
-         [true,false],
-         ["2015-12-25"],
-         ["2007-12-06 16:29:43.079+03"],
-         [15,19],
-         [1.2,1.3],
-         ["text","text2"],
-         ["12:30:00+03"]
+         [22]
       ];
       dataEmpty = [
          null,
@@ -230,34 +202,6 @@ define([
             assert.strictEqual(false, val.get('two'));
             assert.strictEqual(false, val.get('three'));
             assert.strictEqual(undefined, val.get('four'));
-         });
-         it('should cast to array bool', function (){
-            var val = sbisModel.get('arrayBool');
-            assert.deepEqual(dataValues[14], val);
-         });
-         it('should cast to array arrayDate', function (){
-            var val = sbisModel.get('arrayDate');
-            assert.deepEqual([Date.fromSQL(dataValues[15][0])], val);
-         });
-         it('should cast to array arrayDateTime', function (){
-            var val = sbisModel.get('arrayDatetime');
-            assert.deepEqual([Date.fromSQL(dataValues[16][0])], val);
-         });
-         it('should cast to array arrayInt', function (){
-            var val = sbisModel.get('arrayInt');
-            assert.deepEqual(dataValues[17], val);
-         });
-         it('should cast to array arrayFloat', function (){
-            var val = sbisModel.get('arrayFloat');
-            assert.deepEqual(dataValues[18], val);
-         });
-         it('should cast to array string', function (){
-            var val = sbisModel.get('arrayString');
-            assert.deepEqual(dataValues[19], val);
-         });
-         it('should cast to array arrayTime', function (){
-            var val = sbisModel.get('arrayTime');
-            assert.deepEqual([Date.fromSQL(dataValues[20][0])], val);
          });
       });
       describe('.serialize()', function () {
