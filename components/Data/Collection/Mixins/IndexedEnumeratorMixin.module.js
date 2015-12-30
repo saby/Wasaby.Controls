@@ -50,7 +50,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.IndexedEnumeratorMixin', [
        * @returns {Array}
        */
       getItemsByPropertyValue: function (property, value) {
-         return this._getIndexForPropertyValue(property, value).map(function(item) {
+         return $ws.helpers.map(this._getIndexForPropertyValue(property, value), function(item) {
             return item[1];
          });
       },
@@ -73,7 +73,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.IndexedEnumeratorMixin', [
        * @returns {Array}
        */
       getItemsIndexByPropertyValue: function (property, value) {
-         return this._getIndexForPropertyValue(property, value).map(function(item) {
+         return $ws.helpers.map(this._getIndexForPropertyValue(property, value), function(item) {
             return item[0];
          });
       },
