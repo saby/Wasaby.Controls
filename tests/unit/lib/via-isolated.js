@@ -44,6 +44,20 @@ exports.run = function (config, wsConfig, rootPath) {
    requirejs(path.join(wsConfig.wsRoot, 'lib/core.js'));
    requirejs(path.join(wsConfig.wsRoot, 'lib/Source.js'));
 
+   //Подменяем штатный логгер
+   $ws.proto.TestConsoleLogger = $ws.proto.ILogger.extend({
+      log: function(tag, message) {
+         console.log(tag + ': ' + message);
+      },
+      error: function(tag, message, exception) {
+         console.error(tag + ': ' + message + (exception ? exception.toString() : ''));
+      },
+      info: function(){
+         console.info(tag + ': ' + message);
+      }
+   });
+   $ws.single.ioc.bindSingle('ILogger', 'TestConsoleLogger');
+   
    //Подключаем контролы к requirejs
    var contents = require(path.join(rootPath, wsConfig.resourceRoot, 'contents.json'));
    $ws.core.loadContents(contents, false, {
