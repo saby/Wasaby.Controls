@@ -47,9 +47,10 @@ module.exports = function (grunt) {
       var done = this.async(),
          pckgStack = [],
          installPackage = function (name, version, callback) {
-            grunt.log.writeln('installing package ' + name);
+            grunt.log.writeln('installing package ' + name + '@' + version);
             checkResults(grunt.util.spawn({
-               cmd: 'npm install ' + name + '@' + version
+               cmd: 'npm',
+               args: ['install', name + '@' + version]
             }, callback));
          },
          installNext = function () {

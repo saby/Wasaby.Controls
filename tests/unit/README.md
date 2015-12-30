@@ -141,5 +141,3 @@ Publish documents
     Title: Отчет о покрытии
 
     Directory to archive: tests/unit/artifacts/coverage/lcov-report/
-
-    Index file: index.html

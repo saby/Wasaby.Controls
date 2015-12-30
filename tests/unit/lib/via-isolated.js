@@ -57,7 +57,7 @@ exports.run = function (config, wsConfig, rootPath) {
       }
    });
    $ws.single.ioc.bindSingle('ILogger', 'TestConsoleLogger');
-   
+
    //Подключаем контролы к requirejs
    var contents = require(path.join(rootPath, wsConfig.resourceRoot, 'contents.json'));
    $ws.core.loadContents(contents, false, {
