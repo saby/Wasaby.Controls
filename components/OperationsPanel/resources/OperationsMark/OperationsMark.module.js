@@ -165,6 +165,7 @@ define('js!SBIS3.CONTROLS.OperationsMark', [
          if (!this._markCheckBox) {//TODO костыль для ЭДО, чтоб не создавалось 2 раза
             this._markCheckBox = new CheckBox({
                threeState: true,
+               parent: this,
                element: $('<span>').insertBefore(this._container),
                className: 'controls-OperationsMark-checkBox',
                handlers: {

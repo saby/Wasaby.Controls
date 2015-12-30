@@ -649,7 +649,11 @@ define('js!SBIS3.CONTROLS.Data.Model', [
          if (!this._compatibleMode) {
             $ws.single.ioc.resolve('ILogger').log('SBIS3.CONTROLS.Data.Model', 'method getType() is deprecated and will be removed in 3.8.0.');
          }
-         return field ? 'Текст' : undefined;
+         var adapter = this._getRecordAdapter(),
+            info = adapter.getInfo(field);
+         return info && info.meta && info.meta.t ?
+            (typeof info.meta.t === 'object' ? info.meta.t.n : info.meta.t) :
+            (field ? 'Текст' : undefined);
       },
 
       setCreated: function (created) {

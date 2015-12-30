@@ -95,7 +95,7 @@ define('js!SBIS3.CONTROLS.SearchForm', [
        * @see startCharacter
        */
       applySearch: function() {
-         var text = this.getText().replace(/[«»’”@#№$%^&*;:?.,!\/~\]\[{}()|<>=+\-_\s'"]/g, '');
+         var text = String.trim(this.getText().replace(/[«»’”@#№$%^&*;:?.,!\/~\]\[{}()|<>=+\-_'"]/g, ''));
          //не отправляем событие, если символов меньше startCharacter
          if (text.length >= this._options.startCharacter) {
             this._notify('onSearchStart', text);

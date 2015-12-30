@@ -464,23 +464,34 @@ define('js!SBIS3.CONTROLS.ListView',
          // TODO Подумать, как решить данную проблему. Не надёжно хранить информацию в доме
          // Поиск следующего или предыдущего элемента коллекции с учётом вложенных контролов
          _getHtmlItem: function (id, isNext) {
-            var items = $('.js-controls-ListView__item', this._getItemsContainer()).not('.ws-hidden'),
-               selectedItem = $('[data-id="' + id + '"]', this._getItemsContainer()),
-               index = items.index(selectedItem),
-               siblingItem;
+            if($ws.helpers.instanceOfMixin(this._dataSet, 'SBIS3.CONTROLS.Data.Collection.IList')) {
+               var index = this._dataSet.getIndex(this._dataSet.getRecordByKey(id)),
+                  item;
+               item = this._dataSet.at(isNext ? ++index : --index);
+               if(item)
+                  return $('.js-controls-ListView__item[data-id="' + item.getId() + '"]', this._getItemsContainer());
+               else
+                  return undefined;
+            } else {
+               var items = $('.js-controls-ListView__item', this._getItemsContainer()).not('.ws-hidden'),
+                  selectedItem = $('[data-id="' + id + '"]', this._getItemsContainer()),
+                  index = items.index(selectedItem),
+                  siblingItem;
                if (isNext) {
-                  if(index +1 < items.length ){
+                  if (index + 1 < items.length) {
                      siblingItem = items.eq(index + 1);
                   }
-               } else {
-                  if(index > 0){
+               }
+               else {
+                  if (index > 0) {
                      siblingItem = items.eq(index - 1);
                   }
                }
-            if (siblingItem)
-               return this._dataSet.getRecordByKey(siblingItem.data('id')) ? siblingItem : this._getHtmlItem(siblingItem.data('id'), isNext);
-            else
-               return undefined;
+               if (siblingItem)
+                  return this._dataSet.getRecordByKey(siblingItem.data('id')) ? siblingItem : this._getHtmlItem(siblingItem.data('id'), isNext);
+               else
+                  return undefined;
+            }
          },
          _isViewElement: function (elem) {
             return  $ws.helpers.contains(this._getItemsContainer()[0], elem[0]);
@@ -848,11 +859,11 @@ define('js!SBIS3.CONTROLS.ListView',
                      onEndEdit: function(event, model, withSaving) {
                         event.setResult(this._notify('onEndEdit', model, withSaving));
                      }.bind(this),
-                     onAfterEndEdit: function(event, model, withSaving) {
+                     onAfterEndEdit: function(event, model, terget, withSaving) {
                         if (withSaving) {
-                           this._getItemsContainer().find('.js-controls-ListView__item[data-id="' + model.getKey() + '"]:not(".controls-editInPlace")').after(this._drawItem(model)).remove();
+                           terget.after(this._drawItem(model)).remove();
                         }
-                        event.setResult(this._notify('onAfterEndEdit', model, withSaving));
+                        event.setResult(this._notify('onAfterEndEdit', model, terget, withSaving));
                      }.bind(this)
                   }
                };
@@ -1451,7 +1462,7 @@ define('js!SBIS3.CONTROLS.ListView',
          /**
           * двигает элемент
           * Метод будет удален после того как перерисовка научится сохранять раскрытые узлы в дереве
-          * @param {String} item1  - идентифкатор первого элемента
+          * @param {String} item  - идентифкатор первого элемента
           * @param {String} anchor - идентифкатор второго элемента
           * @param {Boolean} before - если true то вставит перед anchor иначе после него
           * @private
@@ -1460,11 +1471,24 @@ define('js!SBIS3.CONTROLS.ListView',
             //TODO метод сделан специально для перемещения элементов, этот костыль надо удалить и переписать через _redraw
             var itemsContainer = this._getItemsContainer(),
                itemContainer = itemsContainer.find('tr[data-id="'+item+'"]'),
-               anchor = itemsContainer.find('tr[data-id="'+anchor+'"]');
+               anchor = itemsContainer.find('tr[data-id="'+anchor+'"]'),
+               rows;
+
             if(before){
+               rows = [anchor.prev(), itemContainer, anchor, itemContainer.next()];
                itemContainer.insertBefore(anchor);
             } else {
+               rows = [itemContainer.prev(), anchor, itemContainer, anchor.next()];
                itemContainer.insertAfter(anchor);
+            }
+            this._ladderCompare(rows);
+         },
+         _ladderCompare: function(rows){
+            //TODO придрот - метод нужен только для адекватной работы лесенки при перемещении элементов местами
+            for (var i = 1; i < rows.length; i++){
+               var upperRow = $('.controls-ladder', rows[i - 1]),
+                  lowerRow = $('.controls-ladder', rows[i]);
+               lowerRow.toggleClass('ws-invisible', upperRow.html() == lowerRow.html());
             }
          }
       });

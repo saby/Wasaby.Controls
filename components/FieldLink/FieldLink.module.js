@@ -403,7 +403,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
          FieldLink.superclass.setSelectedItem.apply(this, arguments);
       }),
 
-      _afterSelectionHandler: propertyUpdateWrapper(function() {
+      _afterSelectionHandler: function() {
          var self = this;
          /* selectedItem всегда смотрит на первый элемент набора selectedItems */
          this.getSelectedItems(true).addCallback(function(list) {
@@ -414,7 +414,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
             return list;
          });
          FieldLink.superclass._afterSelectionHandler.apply(this, arguments);
-      }),
+      },
 
       _drawSelectedItem: function(key) {
          this._options.selectedKeys = key === null ? [] : [key];

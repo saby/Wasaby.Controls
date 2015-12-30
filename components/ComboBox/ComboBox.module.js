@@ -80,6 +80,9 @@ define('js!SBIS3.CONTROLS.ComboBox', [
        */
 
       $protected: {
+         //если поменяли текст до того, как были установлены items. То мы не сможем проставить соответсвующий ключ из набора
+         //это надо будет сделать после уставноки items, а этот флаг используем для понимания
+         _delayedSettingTextByKey: false,
          _keysWeHandle: [$ws._const.key.up, $ws._const.key.down, $ws._const.key.enter],
          _options: {
             /**
@@ -125,7 +128,7 @@ define('js!SBIS3.CONTROLS.ComboBox', [
              */
             valueFormat: ''
          },
-         _viewConstructor: ComboBoxListView,
+         _viewConstructor: ComboBoxListView
       },
 
       $constructor: function () {
@@ -200,7 +203,9 @@ define('js!SBIS3.CONTROLS.ComboBox', [
 
       _drawSelectedItem: function (key) {
          var item = this.getItemsProjection().getCurrent();
-         if(item) {
+         if(item === undefined) {
+            this.setText('');
+         } else {
             item = item.getContents();
             var newText = this._getItemValue(item, this._options.displayField);
             if(newText !== this._options.text) {
@@ -298,24 +303,35 @@ define('js!SBIS3.CONTROLS.ComboBox', [
             collection = this.getItems(),
             foundItem = null,
             self = this;
-         collection.each(function(item, index) {
-            var title = self._getItemValue(item, displayField) ;
-            if (title === text) {
-               selKey = self._getItemValue(item, keyField);
-               foundItem = item;
+         if (collection.getCount()) {
+            collection.each(function (item, index) {
+               var title = self._getItemValue(item, displayField);
+               if (title === text) {
+                  selKey = self._getItemValue(item, keyField);
+                  foundItem = item;
+               }
+            });
+            if (foundItem) {
+               if (selKey != this._options.selectedKey) {
+                  this.setSelectedKey(selKey);
+               }
             }
-         });
-         if (foundItem) {
-            if (selKey != this._options.selectedKey) {
-               this.setSelectedKey(selKey);
+            else {
+               if (this._options.selectedKey) {
+                  this.setSelectedKey(null);
+               }
             }
          }
          else {
-            if (this._options.selectedKey) {
-               this.setSelectedKey(null);
-            }
+            this._delayedSettingTextByKey = true;
          }
+      },
 
+      redraw: function() {
+         ComboBox.superclass.redraw.call(this);
+         if (this._delayedSettingTextByKey) {
+            this._setKeyByText();
+         }
       },
 
       _clearItems : function() {
@@ -424,7 +440,7 @@ define('js!SBIS3.CONTROLS.ComboBox', [
       _getViewNode: function() {
          /*устаналивает rootnode для listView*/
          return this._picker.getContainer();
-      },
+      }
 
    });
 
