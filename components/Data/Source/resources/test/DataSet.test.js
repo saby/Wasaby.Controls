@@ -5,8 +5,8 @@ define([
    'js!SBIS3.CONTROLS.Data.Adapter.Json',
    'js!SBIS3.CONTROLS.Data.Model',
    'js!SBIS3.CONTROLS.Data.Collection.List',
-      'js!SBIS3.CONTROLS.Data.Collection.ObservableList'
-], function (DataSet, MemorySource, JsonAdapter, Model, List, ObservableList) {
+   'js!SBIS3.CONTROLS.Data.Collection.RecordSet'
+], function (DataSet, MemorySource, JsonAdapter, Model, List, RecordSet) {
       'use strict';
 
       var list;
@@ -86,7 +86,7 @@ define([
          describe('.getListModule()', function () {
             it('should return a default list', function () {
                var ds = new DataSet();
-               assert.strictEqual(ds.getListModule(), ObservableList);
+               assert.strictEqual(ds.getListModule(), List);
             });
 
             it('should return the given list', function () {

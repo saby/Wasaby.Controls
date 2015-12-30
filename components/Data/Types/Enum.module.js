@@ -29,9 +29,7 @@ define('js!SBIS3.CONTROLS.Data.Types.Enum', [
          context = context || this;
          $ws.helpers.forEach(this._options.data, callback, context);
       },
-      toArray: function () {
-         return this._options.data;
-      },
+
       getEnumerator: function () {
          if (!this._enumerator) {
             this._enumerator = new ArrayEnumerator({
@@ -81,15 +79,10 @@ define('js!SBIS3.CONTROLS.Data.Types.Enum', [
             throw "The value was not found in the dictionary";
          }
       },
-      /**
-       * Возвращает текстовое значение
-       */
-      toString: function () {
-         return this._otions.data[this.get()];
-      },
+
       /**
        * Возвращает представление Enum в виде объекта.
-       * @deprecated Будет удалено с 3.8.0 Используйте {@link toArray}
+       * @deprecated Будет удалено с 3.8.0 Используйте {@link each}
        * @returns {Number}
        */
       getValues: function () {
@@ -100,6 +93,11 @@ define('js!SBIS3.CONTROLS.Data.Types.Enum', [
          });
          return values;
       },
+      /**
+       * Сравнивает переданный Enum c собой. True - если текущее значение и словарь полностью совпадают
+       * @param {SBIS3.CONTROLS.Data.Types.Enum} value
+       * @returns {boolean}
+       */
       equals: function (value) {
          if (value instanceof Enum) {
             if (this.get() !== value.get()) {
