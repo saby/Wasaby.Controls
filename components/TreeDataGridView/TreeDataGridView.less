@@ -33,6 +33,24 @@
 
 .controls-ListView__folder {
 
+   &.controls-ListView__item__multiSelected {
+      .controls-DataGridView__td {
+         .controls-TreeView__ellipsis-copyArrow {
+            background-color: @data-grid-row-selected-bg;
+            .box-shadow(@tree-view-ellipsis-copyArrow-shadow @data-grid-row-selected-bg);
+         }
+      }
+   }
+
+   &.controls-ListView__item__selected {
+      .controls-DataGridView__td {
+         .controls-TreeView__ellipsis-copyArrow {
+            background-color: @data-grid-row-hover-bg;
+            .box-shadow(@tree-view-ellipsis-copyArrow-shadow @data-grid-row-hover-bg);
+         }
+      }
+   }
+
    &.controls-ListView__hoveredItem {
 
       .controls-DataGridView__td {
