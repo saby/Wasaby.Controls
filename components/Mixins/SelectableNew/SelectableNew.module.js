@@ -155,9 +155,7 @@ define('js!SBIS3.CONTROLS.SelectableNew', [
       _setSelectedIndex: function(index, id) {
          if(id !==  this._options.selectedKey) {
             this._options.selectedKey = index === -1?null:id;
-            if(this._view) {
-               this._itemsProjection.setCurrentPosition(index);
-            }
+            this._itemsProjection.setCurrentPosition(index);
             //this.saveToContext('SelectedItem', this._options.selectedKey); //TODO: Перенести отсюда
             this._drawSelectedItem();
             this._notifySelectedItem();
