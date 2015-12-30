@@ -2,8 +2,9 @@
 define('js!SBIS3.CONTROLS.Data.Source.DataSet', [
    'js!SBIS3.CONTROLS.Data.Model',
    'js!SBIS3.CONTROLS.Data.Collection.List',
+   'js!SBIS3.CONTROLS.Data.Collection.RecordSet',
    'js!SBIS3.CONTROLS.Data.Collection.ObservableList'
-], function (Model, List, ObservableList) {
+], function (Model, List, RecordSet, ObservableList) {
    'use strict';
 
    /**
@@ -225,17 +226,24 @@ define('js!SBIS3.CONTROLS.Data.Source.DataSet', [
          if (property === undefined) {
             property = this._options.itemsProperty;
          }
-         var adapter = this.getAdapter().forTable(this._getDataProperty(property)),
-             count = adapter.getCount(),
-             items = [];
-         for (var i = 0; i < count; i++) {
-            items.push(
-               this._getModelInstance(
-                  adapter.at(i)
-               )
-            );
+         if($ws.helpers.isEqualObject(this._options.listModule, RecordSet)){
+            return new RecordSet({
+               rawData: this._getDataProperty(property),
+               adapter: this.getAdapter(),
+               model: this._options.model
+            });
+         } else {
+            var adapter = this.getAdapter().forTable(this._getDataProperty(property)),
+               count = adapter.getCount(),
+               items = [];
+            for (var i = 0; i < count; i++) {
+               items.push(
+                  this._getModelInstance(
+                     adapter.at(i)
+                  )
+               );
+            }
          }
-
          return observable ? new ObservableList({
             items: items
          }) : new this._options.listModule({

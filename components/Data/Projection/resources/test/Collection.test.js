@@ -764,7 +764,7 @@ define([
                      }
                   };
                projection.subscribe('onCollectionChange', handler);
-               projection.getCollection().fill(itemsNew);
+               projection.getCollection().append(itemsNew);
                projection.unsubscribe('onCollectionChange', handler);
             });
 
