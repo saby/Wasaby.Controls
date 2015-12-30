@@ -196,9 +196,6 @@ define(
       $constructor: function () {
          this._publish('onDateChange');
 
-         // Проверить тип маски -- дата, время или и дата, и время. В случае времени -- сделать isCalendarIconShown = false
-         this._checkTypeOfMask(this._options);
-
          // Первоначальная установка даты, если передана опция
          if ( this._options.date ) {
             this._setDate( this._options.date );
@@ -212,11 +209,6 @@ define(
 
       },
 
-
-      _modifyOptions : function(options) {
-         this._checkTypeOfMask(options);
-         return DatePicker.superclass._modifyOptions.apply(this, arguments);
-      },
       /**
        * Инициализация календарика
        */
@@ -283,19 +275,6 @@ define(
             self.setDate(date);
             self.hidePicker();
          });
-      },
-
-      /**
-       * Проверить тип даты. Скрыть иконку календаря, если
-       *    1. Отсутствуют день, месяц и год (т.е. присутствует только время)
-       *    2. Присутствует день и месяц, но отсутствует год
-       * @private
-       */
-      _checkTypeOfMask: function (options) {
-         if ( !/[DMY]/.test(options.mask) || ( /[DMY]/.test(options.mask) && !/Y/.test(options.mask) ) ||
-            ( /[DMY]/.test(options.mask) && !/D/.test(options.mask) ) ){
-            options.isCalendarIconShown = false;
-         }
       },
 
      /**
@@ -410,38 +389,35 @@ define(
        * @private
        */
       _updateText: function() {
-         var text = $(this._inputField.get(0)).text();
+         // Запоминаем стый текст для последующего сравнения и генерации события
+         var oldText = this._options.text;
 
-         // Запоминаем старую дату для последующего сравнения и генерации события
-         var oldDate = this._options.date;
-
-         var expr = new RegExp('(' + this._maskReplacer + ')', 'ig');
-         // если есть плейсхолдеры (т.е. незаполненные места), то значит опция text = null
-         if (expr.test(text)) {
-            this._options.text = '';
-            this._options.date = null;
-         }
-         else {
-            this._options.date = this._getDateByText(text);
-            this._options.text = this._getTextByDate(this._options.date);
-         }
+         DatePicker.superclass._updateText.apply(this, arguments);
 
          // Если дата изменилась -- генерировать событие.
-         // Если использовать просто setDate, то событие будет генерироваться даже если дата введена с клавиатуры не полностью, что неверно
-         if (oldDate !== this._options.date) {
-            this._notify('onDateChange', this._options.date);
+         if (oldText !== this._options.text) {
+            this._options.date = this._getDateByText(this._options.text, this._options.date);
+            if (DateUtil.isValidDate(this._options.date)) {
+               //если в текст ввели невалидную дату, например 05.14 (14-месяц) и произошла корректировка
+               this._options.text = this._getTextByDate(this._options.date);
+               this._notify('onDateChange', this._options.date);
+            } else {
+               this._options.date = null;
+            }
          }
       },
 
       /**
        * Получить дату в формате Date по строке
        * @param text - дата в соответствии с маской
+       * @param oldDate - старая дата
        * @returns {Date} Дата в формата Date
        * @private
        */
-      _getDateByText: function(text) {
+      _getDateByText: function(text, oldDate) {
          var
-            date = new Date(),
+            //используем старую дату как основу, чтобы сохранять год, при его отсутствии в маске
+            date = (DateUtil.isValidDate(oldDate)) ? oldDate : new Date(),
             item,
             value;
          for (var i = 0; i < this.formatModel.model.length; i++) {
