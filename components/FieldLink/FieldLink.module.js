@@ -12,6 +12,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
       'html!SBIS3.CONTROLS.FieldLink/beforeFieldWrapper',
       'js!SBIS3.CONTROLS.Data.Model',
       'js!SBIS3.CONTROLS.Data.Adapter.Sbis',
+      'js!SBIS3.CONTROLS.Utils.DialogOpener',
       'js!SBIS3.CONTROLS.MenuIcon'
 
    ],
@@ -34,7 +35,8 @@ define('js!SBIS3.CONTROLS.FieldLink',
        afterFieldWrapper,
        beforeFieldWrapper,
        Model,
-       SbisAdapter
+       SbisAdapter,
+       DialogOpener
    ) {
 
       'use strict';
@@ -262,6 +264,12 @@ define('js!SBIS3.CONTROLS.FieldLink',
             //FIXME для поддержки старых справочников, удалить как откажемся
             old: {
                currentValue: self.getSelectedKeys(),
+               /* Конвертируем новые рекорды в старые, чтобы корректно работал старый selector */
+               selectedRecords: $ws.helpers.reduce(this.getSelectedItems().toArray(),
+                  function(result, rec) {
+                     result.push(DialogOpener.convertRecord(rec));
+                     return result;
+                  }, []),
                selectionType: config.selectionType,
                selectorFieldLink: true,
                handlers: {
@@ -483,7 +491,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
             needDrawItem = $ws.helpers.getTextWidth(item[0].outerHTML) + INPUT_MIN_WIDTH < inputWidth + SHOW_ALL_LINK_WIDTH;
 
             if(!needDrawItem && !this._linkCollection.getContainer().find('.controls-FieldLink__linkItem').length) {
-               item[0].style.width = inputWidth - ((this._options.multiselect || this._options.alwaysShowTextBox) ? INPUT_MIN_WIDTH : 0) + 'px';
+               item[0].style.width = inputWidth - ((this._options.multiselect || this._options.alwaysShowTextBox) ? INPUT_MIN_WIDTH : INPUT_WRAPPER_PADDING) + 'px';
                needDrawItem = true;
                this._checkWidth = false;
             }
