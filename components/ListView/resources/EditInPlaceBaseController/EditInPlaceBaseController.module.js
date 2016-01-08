@@ -11,6 +11,9 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
 
       'use strict';
 
+      //TODO: согласовать и изменить имена констант на правильные
+      var CANCEL_END_EDIT = false,
+          END_EDIT_WITHOUT_SAVE = 1;
       /**
        * @class SBIS3.CONTROLS.EditInPlaceBaseController
        * @extends SBIS3.CORE.CompoundControl
@@ -167,7 +170,10 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                   endEditResult;
                if (eip) {
                   endEditResult = this._notify('onEndEdit', eip.getEditingRecord(), withSaving);
-                  if (endEditResult !== false && (!withSaving || eip.validate())) {
+                  if (endEditResult === END_EDIT_WITHOUT_SAVE) {
+                     withSaving = false;
+                  }
+                  if (endEditResult !== CANCEL_END_EDIT && (!withSaving || eip.validate())) {
                      eip.endEdit();
                      this._savingDeferred = withSaving ? eip.applyChanges() : $ws.proto.Deferred.success();
                      return this._savingDeferred.addCallback(function() {
