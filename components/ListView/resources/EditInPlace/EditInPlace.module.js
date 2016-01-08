@@ -78,13 +78,22 @@ define('js!SBIS3.CONTROLS.EditInPlace',
              */
             _getRecordsDifference: function() {
                var
-                  raw1 = this._editingRecord.getRaw(),
-                  raw2 = this._previousRecordState.getRaw(),
+                  raw1, raw2,
                   result = [];
-               for (var field in raw1) {
-                  if (raw1.hasOwnProperty(field)) {
-                     if (raw1[field] != raw2[field]) {
+               if ($ws.helpers.instanceOfModule(this._editingRecord, 'SBIS3.CONTROLS.Data.Model')) {
+                  this._editingRecord.each(function(field, value) {
+                     if (value != this._previousRecordState.get(field)) {
                         result.push(field);
+                     }
+                  }, this);
+               } else {
+                  raw1 = this._editingRecord.getRaw();
+                  raw2 = this._previousRecordState.getRaw();
+                  for (var field in raw1) {
+                     if (raw1.hasOwnProperty(field)) {
+                        if (raw1[field] != raw2[field]) {
+                           result.push(field);
+                        }
                      }
                   }
                }
