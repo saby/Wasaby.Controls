@@ -5,8 +5,6 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
    'html!SBIS3.CONTROLS.TreeDataGridView/resources/rowTpl'
 ], function(HierarchyDataGridView, TreeMixinDS, DragNDropMixin, rowTpl) {
    'use strict';
-
-   var DRAG_AVATAR_OFFSET = 5;
    /**
     * Контрол отображающий набор данных, имеющих иерархическую структуру, в виде в таблицы с несколькими колонками.
     * @class SBIS3.CONTROLS.TreeDataGridView
@@ -358,6 +356,12 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
              isCorrectDrop,
              currentElement = this.getCurrentElement(),
              target = $(e.target).closest('.js-controls-ListView__item');
+         if (!this._containerCoords) {
+            this._containerCoords = {
+               x: this._moveBeginX - parseInt(this._avatar.css('left'), 10),
+               y: this._moveBeginY - parseInt(this._avatar.css('top'), 10)
+            };
+         }
          if (currentElement.targetId != target.data('id')) {
             insertAfter = this._getDirectionOrderChange(e, target);
          }
@@ -367,7 +371,10 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
          } else {
             this._clearDragHighlight();
          }
-         this._setAvatarPosition(e);
+         this._avatar.css({
+            top: e.pageY - this._containerCoords.y,
+            left: e.pageX - this._containerCoords.x
+         });
       },
       _setDragTarget: function(target, insertAfter) {
          var currentElement = this.getCurrentElement();
@@ -400,14 +407,11 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
       _createAvatar: function(e){
          var count = this.getCurrentElement().keys.length;
          this._avatar = $('<div class="controls-DragNDrop__draggedItem"><span class="controls-DragNDrop__draggedCount">' + count + '</span></div>')
-            .css('z-index', $ws.single.WindowManager.acquireZIndex(false)).appendTo($('body'));
-         this._setAvatarPosition(e);
-      },
-      _setAvatarPosition: function(e) {
-         this._avatar.css({
-            'left': e.pageX + DRAG_AVATAR_OFFSET,
-            'top': e.pageY + DRAG_AVATAR_OFFSET
-         });
+            .css({
+               'left': window.scrollX + e.clientX + 5,
+               'top': window.scrollY + e.clientY + 5,
+               'z-index': $ws.single.WindowManager.acquireZIndex(false)
+            }).appendTo($('body'));
       },
       _callDropHandler: function(e) {
          var
@@ -430,6 +434,7 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
          this._hideItemActions();
       },
       _endDropDown: function() {
+         this._containerCoords = null;
          $ws.single.WindowManager.releaseZIndex(this._avatar.css('z-index'));
          this._avatar.remove();
          this._isShifted = false;
