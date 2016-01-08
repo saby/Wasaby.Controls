@@ -121,8 +121,11 @@ define('js!SBIS3.CONTROLS.ComponentBinder', [], function () {
 
    function toggleCheckBoxes(operationPanel, gridView, hideCheckBoxes) {
       if (gridView._options.multiselect && hideCheckBoxes) {
-         gridView._container.toggleClass('controls-ListView__showCheckBoxes', operationPanel.isOpen())
-            .toggleClass('controls-ListView__hideCheckBoxes', !operationPanel.isOpen());
+         gridView._container.toggleClass('controls-ListView__showCheckBoxes', operationPanel.isVisible())
+            .toggleClass('controls-ListView__hideCheckBoxes', !operationPanel.isVisible());
+         if (gridView.hasPartScroll()) {
+            gridView.updateScrollAndColumns();
+         }
       }
    }
    /**
@@ -359,12 +362,17 @@ define('js!SBIS3.CONTROLS.ComponentBinder', [], function () {
       bindOperationPanel: function(hideCheckBoxes, operationPanel) {
          var view = this._options.view;
          operationPanel = operationPanel || this._options.operationPanel;
-         operationPanel._addItemOptions = function(options) {
-            options.linkedView = view;
+         //TODO: После перехода на новую идеалогию, кнопки ни чего знать о view не будут, и этот костыль уйдёт.
+         operationPanel.addItemOptions = function(instance) {
+            if ($ws.helpers.instanceOfModule(instance, 'SBIS3.CONTROLS.OperationsMark')) {
+               instance.setLinkedView(view);
+            } else {
+               instance._options.linkedView = view;
+            }
          };
          toggleCheckBoxes(operationPanel, view, hideCheckBoxes);
          view.subscribe('onSelectedItemsChange', function(event, idArray) {
-            operationPanel.setPanelState(idArray.length);
+            operationPanel.onSelectedItemsChange(idArray);
          });
          operationPanel.subscribe('onToggle', function() {
             toggleCheckBoxes(operationPanel, view, hideCheckBoxes);
