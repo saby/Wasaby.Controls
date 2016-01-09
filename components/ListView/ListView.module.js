@@ -1302,7 +1302,9 @@ define('js!SBIS3.CONTROLS.ListView',
          },
          //------------------------Paging---------------------
          _processPaging: function() {
-            this._processPagingStandart();
+            if (!this.isDestroyed()) {
+               this._processPagingStandart();
+            }
          },
          _processPagingStandart: function () {
             if (!this._pager) {
