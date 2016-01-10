@@ -66,6 +66,7 @@ define('js!SBIS3.CONTROLS.Image.EditDialog', [
          this._publish('onBeginSave', 'onEndSave');
          this._image = this._container.find('.controls-EditDialog__image');
          this._image.load(function() {
+            this.getTopParent().show();
             this.getTopParent().setSize(ImageUtil.getDimensions(this._image[0]));
             this._cropPlugin = new CropPlugin(
                {

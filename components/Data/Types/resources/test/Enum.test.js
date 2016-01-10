@@ -57,8 +57,12 @@ define([
          });
          describe('.equals()', function () {
             it('should equals to testEnum', function () {
+               var data = [];
+               testEnum.each(function (val){
+                  data.push(val);
+               });
                var e = new Enum({
-                  data: testEnum.toArray(),
+                  data: data,
                   currentValue: testEnum.get()
                });
                if (!testEnum.equals(e)) {
@@ -66,8 +70,12 @@ define([
                }
             });
             it('should not equals to testEnum when data testEnum and new emun equals', function () {
+               var data = [];
+               testEnum.each(function (val){
+                  data.push(val);
+               });
                var e = new Enum({
-                  data: testEnum.toArray(),
+                  data: data,
                   currentValue: 0
                });
                if (testEnum.equals(e)) {
