@@ -191,10 +191,6 @@ define('js!SBIS3.CONTROLS.Data.Projection.Collection', [
          }
       },
 
-      concat: function () {
-         throw new Error('SBIS3.CONTROLS.Data.Projection.Collection is read only. You should change the source collection.');
-      },
-
       //endregion SBIS3.CONTROLS.Data.Collection.IEnumerable
 
       //region SBIS3.CONTROLS.Data.Projection.ICollection
@@ -727,17 +723,22 @@ define('js!SBIS3.CONTROLS.Data.Projection.Collection', [
             oldItemsMap = this._itemsMap.slice(oldItemsIndex, oldItemsIndex + oldItems.length);
          }
 
-         if (this._isFalseMirror() || action !== IBindCollectionProjection.ACTION_RESET) {
-            var newItemsProjectionIndex = this._getServiceEnumerator().getInternalBySource(newItemsIndex),
-               oldItemsProjectionIndex = this._getServiceEnumerator().getInternalBySource(oldItemsIndex);
-            this._notify(
-               'onCollectionChange',
-               action,
-               newItemsProjectionIndex === -1 ? [] : newItemsMap,
-               newItemsProjectionIndex,
-               oldItemsProjectionIndex === -1 ? [] : oldItemsMap,
-               oldItemsProjectionIndex
-            );
+         if (this._isFalseMirror() && action !== IBindCollectionProjection.ACTION_RESET) {
+            var enumerator = this._getServiceEnumerator(),
+               newItemsInternalIndex,
+               oldItemsInternalIndex;
+            for (var i = 0, len = Math.max(newItemsMap.length, oldItemsMap.length); i < len; i++) {
+               newItemsInternalIndex = newItems[i] === undefined ? -1 : enumerator.getInternalBySource(newItemsIndex + i);
+               oldItemsInternalIndex = oldItems[i] === undefined ? -1 : enumerator.getInternalBySource(oldItemsIndex + i);
+               this._notify(
+                  'onCollectionChange',
+                  action,
+                  newItemsInternalIndex === -1 ? [] : [newItemsMap[i]],
+                  newItemsInternalIndex === -1 ? 0 : newItemsInternalIndex,
+                  oldItemsInternalIndex === -1 ? [] : [oldItemsMap[i]],
+                  oldItemsInternalIndex === -1 ? 0 : oldItemsInternalIndex
+               );
+            }
          } else {
             this._notify(
                'onCollectionChange',
@@ -806,12 +807,8 @@ define('js!SBIS3.CONTROLS.Data.Projection.Collection', [
             break;
 
          case IBindCollectionProjection.ACTION_REMOVE:
+            notifyStandard.call(this);
             this._removeItems(oldItemsIndex, oldItems.length);
-            if (this._isSorted()) {
-               this._reSort(true);
-            } else {
-               notifyStandard.call(this);
-            }
             this._getServiceEnumerator().reIndex();
             break;
 

@@ -49,12 +49,7 @@ define('js!SBIS3.CONTROLS.FilterHistoryController',
                 /* Запишем новую историю */
                 self._history.fill($ws.core.clone(newHistory.toArray()));
                 self._saveParamsDeferred = saveDeferred;
-
-                if(!activeFilter) {
-                   fb._resetFilter();
-                } else {
-                   fb.setFilterStructure(activeFilter.filter);
-                }
+                fb[activeFilter ? 'setFilterStructure' : '_resetFilter'](activeFilter.filter);
                 self._updateFilterButtonHistoryView();
              });
 
@@ -91,7 +86,9 @@ define('js!SBIS3.CONTROLS.FilterHistoryController',
            */
           saveToHistory: function(filterObject) {
              var equalFilter = $ws.helpers.find(this._history.toArray(), function(item) { return $ws.helpers.isEqualObject(item.filter, filterObject.filter); }),
-                 activeFilter = this.getActiveFilter();
+                 activeFilter = this.getActiveFilter(),
+                 view = this._options.view,
+                 viewFilter = $ws.core.clone(view.getFilter());
 
              /* Если есть активный фильтр - сбросим его */
              if(activeFilter) {
@@ -115,11 +112,16 @@ define('js!SBIS3.CONTROLS.FilterHistoryController',
                 this._history.removeAt(LAST_FILTER_NUMBER);
              }
 
+             /* Не сохраняем раздел, т.к. одна и та же история может быть у нескольких представлений */
+             if($ws.helpers.instanceOfMixin(view, 'SBIS3.CONTROLS.hierarchyMixin')) {
+                delete viewFilter[view.getHierField()];
+             }
+
              /* Добавим новый фильтр в начало набора */
              this._history.add({
                 id: $ws.helpers.randomId(),
                 linkText: filterObject.linkText,
-	            viewFilter: this._options.view.getFilter(),
+	             viewFilter: viewFilter,
                 filter: filterObject.filter,
                 isActiveFilter: true,
                 isMarked: false

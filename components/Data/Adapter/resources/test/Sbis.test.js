@@ -2,8 +2,8 @@
 define([
    'js!SBIS3.CONTROLS.Data.Adapter.Sbis',
    'js!SBIS3.CONTROLS.Data.Model',
-   'js!SBIS3.CONTROLS.Data.Source.DataSet'
-], function (SbisAdapter, Model, DataSet) {
+   'js!SBIS3.CONTROLS.Data.Collection.RecordSet'
+], function (SbisAdapter, Model, RecordSet) {
       'use strict';
 
       describe('SBIS3.CONTROLS.Data.Adapter.Sbis', function () {
@@ -267,9 +267,9 @@ define([
                assert.deepEqual(result, expect);
             });
 
-            it('should serialize dataset', function () {
+            it('should serialize RecordSet', function () {
                var adapter = new SbisAdapter(),
-                  ds = new DataSet({
+                  ds = new RecordSet({
                      adapter: adapter,
                      rawData: {
                         d: [], s: []
@@ -281,13 +281,13 @@ define([
                assert.deepEqual(result, expect);
             });
 
-            it('should serialize models and datasets in deep structure', function () {
+            it('should serialize models and RecordSets in deep structure', function () {
                var adapter = new SbisAdapter(),
                   model = new Model({
                      adapter: adapter,
                      rawData: {}
                   }),
-                  ds = new DataSet({
+                  ds = new RecordSet({
                      adapter: adapter,
                      rawData: {}
                   }),

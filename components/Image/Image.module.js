@@ -399,6 +399,8 @@ define('js!SBIS3.CONTROLS.Image',
                new Dialog({
                   template: 'js!SBIS3.CONTROLS.Image.EditDialog',
                   opener: this,
+                  visible: false,
+                  minWidth: 315,
                   componentOptions: $ws.core.merge({
                      dataSource: dataSource,
                      filter: filter,
