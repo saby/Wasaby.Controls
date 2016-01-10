@@ -15,10 +15,10 @@ define('js!SBIS3.CONTROLS.Data.Collection.List', [
     * @mixes SBIS3.CONTROLS.Data.SerializableMixin
     * @mixes SBIS3.CONTROLS.Data.Collection.IEnumerable
     * @mixes SBIS3.CONTROLS.Data.Collection.IList
+    * @mixes SBIS3.CONTROLS.Data.Collection.IIndexedCollection
     * @public
     * @author Мальцев Алексей
     */
-   //mixes SBIS3.CONTROLS.Data.Collection.IIndexedCollection - временно отключаем упоминание об этом интерфейсе, возможно его не будет в этом виде
 
    var List = $ws.proto.Abstract.extend([SerializableMixin, IEnumerable, IList, IIndexedCollection], /** @lends SBIS3.CONTROLS.Data.Collection.List.prototype */{
       _moduleName: 'SBIS3.CONTROLS.Data.Collection.List',
@@ -156,7 +156,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.List', [
 
       getIndex: function (item) {
          if ($ws.helpers.instanceOfMixin(item, 'SBIS3.CONTROLS.Data.IHashable')) {
-            return this.getItemIndexByPropertyValue('hash', item.getHash());
+            return this.getIndexByValue('hash', item.getHash());
          }
 
          return Array.indexOf(this._items, item);
@@ -189,22 +189,12 @@ define('js!SBIS3.CONTROLS.Data.Collection.List', [
 
       //region SBIS3.CONTROLS.Data.Collection.IIndexedCollection
 
-      // Attention! Не используйте методы интерфейса SBIS3.CONTROLS.Data.Collection.IIndexedCollection - он будет изменен.
-
-      getItemByPropertyValue: function (property, value) {
-         return this._getServiceEnumerator().getItemByPropertyValue(property, value);
+      getIndexByValue: function (property, value) {
+         return this._getServiceEnumerator().getIndexByValue(property, value);
       },
 
-      getItemsByPropertyValue: function (property, value) {
-         return this._getServiceEnumerator().getItemsByPropertyValue(property, value);
-      },
-
-      getItemIndexByPropertyValue: function (property, value) {
-         return this._getServiceEnumerator().getItemIndexByPropertyValue(property, value);
-      },
-
-      getItemsIndexByPropertyValue: function (property, value) {
-         return this._getServiceEnumerator().getItemsIndexByPropertyValue(property, value);
+      getIndiciesByValue: function (property, value) {
+         return this._getServiceEnumerator().getIndiciesByValue(property, value);
       },
 
       //endregion SBIS3.CONTROLS.Data.Collection.IIndexedCollection

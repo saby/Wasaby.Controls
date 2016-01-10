@@ -154,7 +154,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
        */
       getRecordById: function (id) {
          return this.at(
-            this.getItemIndexByPropertyValue('id', id)
+            this.getIndexByValue('id', id)
          );
       },
       /**
