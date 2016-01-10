@@ -53,6 +53,8 @@ define('js!SBIS3.CONTROLS.DSMixin', [
         * @see getDataSource
         */
       $protected: {
+         _itemsProjection: null,
+         _items : null,
          _itemsInstances: {},
          _offset: 0,
          _limit: undefined,
@@ -238,16 +240,45 @@ define('js!SBIS3.CONTROLS.DSMixin', [
          }
          if (sourceOpt) {
             this._dataSource = this._prepareSource(sourceOpt);
+            this._items = this._convertDataSourceToItems(this._dataSource);
+            this._createDefaultProjection(this._items);
          }
          else if (itemsOpt) {
-             /*TODO для совеместимости пока создадим сорс*/
-            this._dataSource = new MemorySource({
-               data: itemsOpt,
-               idProperty: this._options.keyField
+            if ($ws.helpers.instanceOfModule(itemsOpt, 'SBIS3.CONTROLS.Data.Projection')) {
+               this._itemsProjection = itemsOpt;
+               this._items = this._convertItems(this._itemsProjection.getCollection());
+            }
+            else if (itemsOpt instanceof Array) {
+               /*TODO для совеместимости пока создадим сорс*/
+               this._dataSource = new MemorySource({
+                  data: itemsOpt,
+                  idProperty: this._options.keyField
+               });
+               this._items = this._convertDataSourceToItems(this._dataSource);
+               this._createDefaultProjection(this._items);
+            }
+         }
+
+         this._setItemsEventHandlers();
+      },
+
+      _createDefaultProjection: function(items) {
+         this._itemsProjection = Projection.getDefaultProjection(items);
+      },
+
+      _convertItems: function (items) {
+         items = items || [];
+         if (items instanceof Array) {
+            items = new ObservableList({
+               items: items
             });
          }
-         this._items = this._convertDataSourceToItems(this._dataSource);
-         this._setItemsEventHandlers();
+
+         if (!$ws.helpers.instanceOfMixin(items, 'SBIS3.CONTROLS.Data.Collection.IEnumerable')) {
+            throw new Error('Items should implement SBIS3.CONTROLS.Data.Collection.IEnumerable');
+         }
+
+         return items;
       },
 
       _prepareSource: function(sourceOpt) {
@@ -409,7 +440,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
 	         this._loader = this._callQuery(this._options.filter, this.getSorting(), this._offset, this._limit).addCallback(function (dataSet) {
 	            self._toggleIndicator(false);
 	            self._loader = null;//Обнулили без проверки. И так знаем, что есть и загрузили
-	            self._items.fill(dataSet);
+	            self._items.assign(dataSet);
 	            self._dataLoadedCallback();
 	            self._notify('onDataLoad', dataSet);
 	            //self._notify('onBeforeRedraw');
