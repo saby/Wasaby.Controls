@@ -39,6 +39,7 @@ define('js!SBIS3.CONTROLS.MoveDialog', [
          this._treeView.subscribe('onDrawItems', function() {
             self._createRoot();
          });
+         //TODO: Избавиться от этого события в .100 версии. Придрот для выпуска .20 чтобы подменить фильтр в диалоге перемещения. Необходимо придумать другой механизм.
          filter = this._notify('onPrepareFilterOnMove', this._options.records) || {};
          if ($ws.helpers.instanceOfModule(linkedView._dataSource, 'SBIS3.CONTROLS.SbisServiceSource') || $ws.helpers.instanceOfModule(linkedView._dataSource,'SBIS3.CONTROLS.Data.Source.SbisService')) {
             filter['ВидДерева'] = "Только узлы";
