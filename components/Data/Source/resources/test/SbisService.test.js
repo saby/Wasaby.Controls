@@ -5,7 +5,8 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService/resources/SbisServiceBLO', [],
 
       var existsId = 7,
          existsTooId = 987,
-         notExistsId = 99;
+         notExistsId = 99,
+         textId = 'uuid';
 
       var SbisServiceBLO = $ws.core.extend({}, {
          _cfg: '',
@@ -70,9 +71,9 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService/resources/SbisServiceBLO', [],
                         break;
 
                      case 'Удалить':
-                        if (args['ИдО'] === existsId || ($ws.helpers.type(args['ИдО']) === 'array' && Array.indexOf(args['ИдО'],existsId) !== -1)) {
+                        if (args['ИдО'] === existsId ||args['ИдО'] == textId|| ($ws.helpers.type(args['ИдО']) === 'array' && Array.indexOf(args['ИдО'], String(existsId)) !== -1)) {
                            data = existsId;
-                        } else if (args['ИдО'] === existsTooId || ($ws.helpers.type(args['ИдО']) === 'array' && Array.indexOf(args['ИдО'],existsTooId) !== -1)) {
+                        } else if (args['ИдО'] === existsTooId || ($ws.helpers.type(args['ИдО']) === 'array' && Array.indexOf(args['ИдО'],String(existsTooId)) !== -1)) {
                               data = existsTooId;
                         } else {
                            error = 'Model is not found';
@@ -156,9 +157,10 @@ define([
       'js!SBIS3.CONTROLS.Data.Source.SbisService/resources/SbisServiceBLO',
       'js!SBIS3.CONTROLS.Data.Source.DataSet',
       'js!SBIS3.CONTROLS.Data.Model',
+      'js!SBIS3.CONTROLS.Data.Collection.List',
       'js!SBIS3.CONTROLS.Data.Adapter.Sbis',
       'js!SBIS3.CONTROLS.Data.Query.Query'
-   ], function (SbisService, SbisServiceBLO, DataSet, Model, SbisAdapter, Query) {
+   ], function (SbisService, SbisServiceBLO, DataSet, Model, List, SbisAdapter, Query) {
       'use strict';
 
       describe('SBIS3.CONTROLS.Data.Source.SbisService', function () {
@@ -238,7 +240,7 @@ define([
                      try {
                         var args = SbisServiceBLO.lastRequest.args;
 
-                        if (args['ИмяМетода'] !== undefined) {
+                        if (args['ИмяМетода'] !== null) {
                            throw new Error('Wrong argument ИмяМетода');
                         }
 
@@ -267,10 +269,6 @@ define([
                   service.create({myParam: 'myValue'}).addCallbacks(function () {
                      try {
                         var args = SbisServiceBLO.lastRequest.args;
-
-                        if (args['ИмяМетода'] !== undefined) {
-                           throw new Error('Wrong argument ИмяМетода');
-                        }
 
                         if (args['Фильтр'].d[0] !== 'myValue') {
                            throw new Error('Wrong value for argument Фильтр.myParam');
@@ -697,7 +695,7 @@ define([
                      try {
                         var args = SbisServiceBLO.lastRequest.args;
 
-                        if (args['ИдО'] !== SbisServiceBLO.existsId) {
+                        if ($ws.helpers.type(args['ИдО']) != 'array' ||  args['ИдО'] != SbisServiceBLO.existsId) {
                            throw new Error('Wrong argument ИдО');
                         }
 
@@ -749,13 +747,13 @@ define([
                      try {
                         var args = SbisServiceBLO.lastRequest.args;
 
-                        if (args['ИдО'][0] !== 0) {
+                        if (args['ИдО'][0] !== 0 && args['ИдО'][0] !== "0") {
                            throw new Error('Wrong argument ИдО[0]');
                         }
-                        if (args['ИдО'][1] !== SbisServiceBLO.existsId) {
+                        if (args['ИдО'][1] != SbisServiceBLO.existsId) {
                            throw new Error('Wrong argument ИдО[1]');
                         }
-                        if (args['ИдО'][2] !== 1) {
+                        if (args['ИдО'][2] != 1) {
                            throw new Error('Wrong argument ИдО[2]');
                         }
 
@@ -779,12 +777,12 @@ define([
                   service.destroy([SbisServiceBLO.existsId + ',Товар', '987,Продукт']).addCallbacks(function (success) {
                      try {
                         var cfg = SbisServiceBLO.lastRequest.cfg;
-                        if (cfg.name !== 'Продукт') {
+                        if (cfg.name != 'Продукт') {
                            throw new Error('Wrong service name');
                         }
 
                         var args = SbisServiceBLO.lastRequest.args;
-                        if (args['ИдО'] !== 987) {
+                        if (args['ИдО'] != 987) {
                            throw new Error('Wrong argument ИдО');
                         }
 
@@ -800,6 +798,31 @@ define([
                      done(err);
                   });
                });
+
+               it('should delete records by text key', function (done) {
+                  var service = new SbisService({
+                     resource: 'Товар'
+                  });
+                  service.destroy(['uuid']).addCallbacks(function (success) {
+                     try {
+                        var args = SbisServiceBLO.lastRequest.args;
+                        if (args['ИдО'] != 'uuid') {
+                           throw new Error('Wrong argument ИдО');
+                        }
+
+                        if (!success) {
+                           throw new Error('Unsuccessful destroy');
+                        } else {
+                           done();
+                        }
+                     } catch (err) {
+                        done(err);
+                     }
+                  }, function (err) {
+                     done(err);
+                  });
+               });
+
             });
 
             context('when the service isn\'t exists', function () {
@@ -852,6 +875,46 @@ define([
                         }
                         if (ds.getAll().getCount() !== 2) {
                            throw new Error('Wrong models count');
+                        }
+                        done();
+                     } catch (err) {
+                        done(err);
+                     }
+                  }, function (err) {
+                     done(err);
+                  });
+               });
+
+               it('should return a list instance of injected module', function (done) {
+                  var service = new SbisService({
+                        resource: 'Товар'
+                     }),
+                     MyList = List.extend({});
+                  service.setListModule(MyList);
+                  service.query().addCallbacks(function (ds) {
+                     try {
+                        if (!(ds.getAll() instanceof MyList)) {
+                           throw new Error('Wrong list instance');
+                        }
+                        done();
+                     } catch (err) {
+                        done(err);
+                     }
+                  }, function (err) {
+                     done(err);
+                  });
+               });
+
+               it('should return a model instance of injected module', function (done) {
+                  var service = new SbisService({
+                        resource: 'Товар'
+                     }),
+                     MyModel = Model.extend({});
+                  service.setModel(MyModel);
+                  service.query().addCallbacks(function (ds) {
+                     try {
+                        if (!(ds.getAll().at(0) instanceof MyModel)) {
+                           throw new Error('Wrong model instance');
                         }
                         done();
                      } catch (err) {

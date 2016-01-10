@@ -5,8 +5,10 @@ define([
    'js!SBIS3.CONTROLS.Data.Model',
    'js!SBIS3.CONTROLS.Data.Collection.List',
    'js!SBIS3.CONTROLS.Data.Source.DataSet',
-   'js!SBIS3.CONTROLS.Data.Factory'
-], function (AdapterJson, AdapterSbis, Model, List, DataSet, Factory) {
+   'js!SBIS3.CONTROLS.Data.Factory',
+   'js!SBIS3.CONTROLS.Data.Types.Enum',
+   'js!SBIS3.CONTROLS.Data.Collection.RecordSet'
+], function (AdapterJson, AdapterSbis, Model, List, DataSet, Factory, Enum, RecordSet) {
    'use strict';
 
    var dataScheme,
@@ -123,7 +125,7 @@ define([
 
          });
          it('should cast value to enum', function () {
-            assert.instanceOf(sbisModel.get('enum'), $ws.proto.Enum);
+            assert.instanceOf(sbisModel.get('enum'), Enum);
          });
          it('should cast value to model', function () {
             assert.instanceOf(sbisModel.get('record'), Model);
@@ -132,9 +134,9 @@ define([
          it('should cast value to List', function () {
             assert.instanceOf(sbisModel.get('recordSet'), List);
          });
-         it('should cast value to DataSet', function () {
+         it('should cast value to RecordSet', function () {
             sbisModel.setUsingDataSetAsList(false);
-            assert.instanceOf(sbisModel.get('recordSet'), DataSet);
+            assert.instanceOf(sbisModel.get('recordSet'), RecordSet);
          });
          it('should cast link to integer', function () {
             var val = sbisModel.get('link');
@@ -240,27 +242,48 @@ define([
             sbisModelEmpty.set('recordSet', list);
             assert.strictEqual(2, sbisModelEmpty.get('recordSet').getCount());
             assert.deepEqual(getData(4), sbisModelEmpty.getRawData().d[4]);
-            sbisModelEmpty.get('recordSet').each(function(item, index) {
+            var index = 0;
+            sbisModelEmpty.get('recordSet').each(function(item) {
                assert.deepEqual(getData(4).d[index], item.getRawData().d);
                assert.deepEqual(getData(4).s, item.getRawData().s);
+               index++;
             });
          });
          it('should serialize an empty list', function () {
-            var res = Factory.serialize(new List(), 'DataSet', new AdapterJson());
+            var res = Factory.serialize(new List(), 'RecordSet', new AdapterJson());
             assert.instanceOf(res, Array);
             assert.strictEqual(res.length, 0);
          });
          it('should serialize dataSet', function () {
+            var
+               adapter = new AdapterSbis(),
+               dataSet = new DataSet({
+                  rawData: {
+                     d: [[0]],
+                     s: [{
+                        n: 'id',
+                        t: 'Число целое'
+                     }]
+                  },
+                  adapter: adapter
+               });
+            sbisModel.setUsingDataSetAsList(false);
+            sbisModelEmpty.set('recordSet', dataSet);
+            assert.deepEqual(getData(4), dataSet.getRawData());
+         });
+
+         it('should serialize recordSet', function () {
             var data = {
                   d: [[0]],
                   s: [{n: 'id', t: 'Число целое'}]
                },
                adapter = new AdapterSbis(),
-               dataSet = Factory._makeDataSet(data, adapter);
+               dataSet = Factory._makeRecordSet(data, adapter);
             sbisModel.setUsingDataSetAsList(false);
             sbisModelEmpty.set('recordSet', dataSet);
             assert.deepEqual(getData(4), dataSet.getRawData());
          });
+
          it('should serialize flags', function () {
             sbisModelEmpty.set('flags', null);
             assert.strictEqual(getData(5), null);

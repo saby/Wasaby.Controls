@@ -128,7 +128,11 @@ define('js!SBIS3.CONTROLS.Data.Adapter.SbisRecord', [
                meta.isArray = value instanceof Array;
                break;
             case 'Enum':
-               meta.source = meta.s;
+               meta.source = [];
+               for (var index in  meta.s){
+                  if(meta.s.hasOwnProperty(index))
+                     meta.source[index] = meta.s[index];
+               }
                break;
             case 'Money':
                meta.precision = meta.p;
@@ -136,23 +140,15 @@ define('js!SBIS3.CONTROLS.Data.Adapter.SbisRecord', [
             case 'Flags':
                meta.makeData = function (value) {
                   value = value || {};
-                  var st = [],
-                     pairs = Object.sortedPairs(meta.s),
-                     fData = [];
-                  for (var pI = 0, pL = pairs.keys.length; pI < pL; pI++) {
-                     st.push({
-                        t: FIELD_TYPE.Boolean,
-                        n: pairs.values[pI]
-                     });
-                     fData.push(value[pI]);
+                  var s = meta.s,
+                     res = {};
+                  for (var index in s) {//s - объект из бл вида {0:key, 1:key1 ...}
+                     if (s.hasOwnProperty(index)) {
+                        res[s[index]] = value[index];
+                     }
                   }
-                  return {
-                     d: fData,
-                     s: st
-                  };
+                  return res;
                };
-               var Adapter = require('js!SBIS3.CONTROLS.Data.Adapter.Sbis');
-               meta.adapter = new Adapter();
                break;
          }
          return meta;
