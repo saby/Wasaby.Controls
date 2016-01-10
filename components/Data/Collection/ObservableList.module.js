@@ -2,9 +2,8 @@
 define('js!SBIS3.CONTROLS.Data.Collection.ObservableList', [
    'js!SBIS3.CONTROLS.Data.Collection.List',
    'js!SBIS3.CONTROLS.Data.Bind.ICollection',
-   'js!SBIS3.CONTROLS.Data.Collection.ObservableListMixin',
-   'js!SBIS3.CONTROLS.Data.ContextField'
-], function (List, IBindCollection, ObservableListMixin, ContextField) {
+   'js!SBIS3.CONTROLS.Data.Collection.ObservableListMixin'
+], function (List, IBindCollection, ObservableListMixin) {
    'use strict';
 
    /**
@@ -21,9 +20,6 @@ define('js!SBIS3.CONTROLS.Data.Collection.ObservableList', [
       _moduleName: 'SBIS3.CONTROLS.Data.Collection.ObservableList'
    });
 
-   //Регистрируем класс ObservableList для работы с контекстами $ws.proto.Context
-   //в новой версии ядра нужно будет сделать, чтобы привязыки данных к этим типам работали "из коробки"
-   ContextField.registerDataSet('ControlsFieldTypeList', ObservableList, 'onCollectionItemChange');
 
    return ObservableList;
 });
