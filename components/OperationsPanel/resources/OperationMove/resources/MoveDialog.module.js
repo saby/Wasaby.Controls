@@ -37,7 +37,7 @@ define('js!SBIS3.CONTROLS.MoveDialog', [
          this._treeView.subscribe('onDrawItems', function() {
             self._createRoot();
          });
-         if ($ws.helpers.instanceOfModule(linkedView._dataSource, 'SBIS3.CONTROLS.SbisServiceSource')) {
+         if ($ws.helpers.instanceOfModule(linkedView._dataSource, 'SBIS3.CONTROLS.SbisServiceSource') || $ws.helpers.instanceOfModule(this._dataSource,'SBIS3.CONTROLS.Data.Source.SbisService')) {
             filter['ВидДерева'] = "Только узлы";
             //TODO: костыль написан специально для нуменклатуры, чтобы не возвращалась выборка всех элементов при заходе в пустую папку
             filter['folderChanged'] = true;

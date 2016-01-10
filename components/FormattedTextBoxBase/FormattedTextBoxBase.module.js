@@ -652,6 +652,10 @@ define(
                }
             }, 100);
          });
+      },
+
+      init: function(){
+         FormattedTextBoxBase.superclass.init.apply(this, arguments);
          this._updateText();
       },
 

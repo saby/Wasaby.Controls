@@ -677,6 +677,18 @@ define('js!SBIS3.CONTROLS.DSMixin', [
          return this._container;
       },
 
+      /**
+       * Метод перерисовки определенной записи
+       * @param {Object} item Запись, которую необходимо перерисовать
+       */
+      redrawItem: function(item) {
+         var
+            targetElement = this._getItemsContainer().find('.js-controls-ListView__item[data-id="' + item.getKey() + '"]'),
+            newElement = this._drawItem(item).addClass(targetElement.attr('class'));
+         targetElement.after(newElement).remove();
+         this.reviveComponents();
+      },
+
       _drawItem: function (item, at, last) {
          var
             itemInstance;
