@@ -145,22 +145,19 @@ define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManag
             $ws.single.EventBus.channel('WindowChangeChannel').subscribe('onDocumentClick', this._clickHandler, this);
          }
 
-         var trg = $ws.helpers.trackElement(this._options.target, true);
-         //перемещаем вслед за таргетом
-         trg.subscribe('onMove', function () {
-            if (self.isVisible()) {
-               self.recalcPosition();
-               self._checkTargetPosition();
-            } else {
-               self._initSizes();
-            }
-         });
-         //скрываем если таргет скрылся
-         trg.subscribe('onVisible', function (event, visible) {
-            if (!visible){
-              self.hide();
-            }
-         });
+         $ws.helpers.trackElement(this._options.target, true)
+            .subscribe('onMove', function () { //перемещаем вслед за таргетом
+               if (self.isVisible()) {
+                  self.recalcPosition();
+                  self._checkTargetPosition();
+               } else {
+                  self._initSizes();
+               }
+            }).subscribe('onVisible', function (event, visible) { //скрываем если таргет скрылся
+               if (!visible){
+                 self.hide();
+               }
+            });
 
          if (this._options.closeButton) {
             container.append('<div class="controls-PopupMixin__closeButton" ></div>');
@@ -779,6 +776,7 @@ define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManag
          },
          destroy: function () {
             //ControlHierarchyManager.zIndexManager.setFree(this._zIndex);
+            $ws.helpers.trackElement(this._options.target, false);
             $ws.single.WindowManager.setHidden(this._zIndex);
             $ws.single.WindowManager.releaseZIndex(this._zIndex);
             ControlHierarchyManager.removeNode(this);
