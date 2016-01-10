@@ -59,6 +59,7 @@ define(
       _getTargetContainer:function(item){
          return item.get('align') === 'left' ? this._leftContainer : this._rightContainer;
       },
+
       _getItemTemplate: function (item) {
          var displayField = this._options.displayField;
          return this._options.itemTemplate.call(this,
