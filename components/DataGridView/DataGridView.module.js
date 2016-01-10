@@ -224,7 +224,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
       },
 
       _editFieldFocusHandler: function(focusedCtrl) {
-         if(this._itemActionsGroup) {
+         if(this.getItemsActions()) {
             this._hideItemActions()
          }
 
