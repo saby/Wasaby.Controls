@@ -182,6 +182,7 @@ define('js!SBIS3.CONTROLS.EditInPlace',
                return this._editing;
             },
             endEdit: function() {
+               this.getContainer().removeAttr('data-id');
                this.hide();
                this._endTrackHeight();
                this._target.removeClass('controls-editInPlace__editing');
