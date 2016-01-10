@@ -20,6 +20,7 @@ define('js!SBIS3.CONTROLS.MoveDialog', [
          _rootBlock: undefined
       },
       $constructor: function() {
+         this._publish('onPrepareFilterOnMove');
          this.subscribe('onReady', this._onReady.bind(this));
       },
       _onReady: function() {
@@ -27,7 +28,7 @@ define('js!SBIS3.CONTROLS.MoveDialog', [
             self = this,
             linkedView = this._options.linkedView,
             selectedCount = this._options.records.length,
-            filter = {};
+            filter;
          this.setTitle('Перенести ' + selectedCount + ' запис' + $ws.helpers.wordCaseByNumber(selectedCount, 'ей', 'ь', 'и') + ' в');
          this.getChildControlByName('MoveDialogTemplate-moveButton')
             .subscribe('onActivated', this._onMoveButtonActivated.bind(this));
@@ -38,7 +39,9 @@ define('js!SBIS3.CONTROLS.MoveDialog', [
          this._treeView.subscribe('onDrawItems', function() {
             self._createRoot();
          });
-         if ($ws.helpers.instanceOfModule(linkedView._dataSource, 'SBIS3.CONTROLS.SbisServiceSource') || $ws.helpers.instanceOfModule(this._dataSource,'SBIS3.CONTROLS.Data.Source.SbisService')) {
+         //TODO: Избавиться от этого события в .100 версии. Придрот для выпуска .20 чтобы подменить фильтр в диалоге перемещения. Необходимо придумать другой механизм.
+         filter = this._notify('onPrepareFilterOnMove', this._options.records) || {};
+         if ($ws.helpers.instanceOfModule(linkedView._dataSource, 'SBIS3.CONTROLS.SbisServiceSource') || $ws.helpers.instanceOfModule(linkedView._dataSource,'SBIS3.CONTROLS.Data.Source.SbisService')) {
             filter['ВидДерева'] = "Только узлы";
             //TODO: костыль написан специально для нуменклатуры, чтобы не возвращалась выборка всех элементов при заходе в пустую папку
             filter['folderChanged'] = true;
