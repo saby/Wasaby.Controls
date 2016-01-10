@@ -401,7 +401,10 @@ define('js!SBIS3.CONTROLS.DSMixin', [
        */
 
       /*TODO поддержка старого API*/
-      getDataSet: function() {
+      getDataSet: function(compatibilityMode) {
+         if(!compatibilityMode) {
+            $ws.single.ioc.resolve('ILogger').log('Получение DataSet явялется устаревшим функционалом используйте getItems()');
+         }
          return this._dataSet;
       },
        /**
@@ -440,8 +443,12 @@ define('js!SBIS3.CONTROLS.DSMixin', [
 	         this._loader = this._callQuery(this._options.filter, this.getSorting(), this._offset, this._limit).addCallback(function (dataSet) {
 	            self._toggleIndicator(false);
 	            self._loader = null;//Обнулили без проверки. И так знаем, что есть и загрузили
+
+               //TODO вот тут получится рассинхронизация данных, если кто-то начнет руками менять items
+               self._dataSet = dataSet;
 	            self._items.assign(dataSet);
-	            self._dataLoadedCallback();
+
+               self._dataLoadedCallback();
 	            self._notify('onDataLoad', dataSet);
 	            //self._notify('onBeforeRedraw');
 	            def.callback(dataSet);
@@ -1006,7 +1013,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
 
       _getItemContainer: function(parent, item) {
          return parent.find('>[data-id="' + item.getId() + '"]');
-      },
+      }
    };
    var
       /**

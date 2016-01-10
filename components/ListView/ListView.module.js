@@ -553,7 +553,7 @@ define('js!SBIS3.CONTROLS.ListView',
 
                return {
                   key: targetKey,
-                  record: this.getDataSet().getRecordByKey(targetKey),
+                  record: this.getDataSet(true).getRecordByKey(targetKey),
                   container: correctTarget,
                   position: {
                      /* При расчётах координат по вертикали учитываем прокрутку */
@@ -903,7 +903,7 @@ define('js!SBIS3.CONTROLS.ListView',
             /* Поиск элемента коллекции с учётом вложенных контролов,
                обязательно проверяем, что мы нашли, возможно это элемент вложенного контрола,
                тогда поднимемся на уровень выше и опять поищем */
-            return elem[0] && this.getDataSet().getRecordByKey(elem[0].getAttribute('data-id')) ? elem : this._findItemByElement(elem.parent());
+            return elem[0] && this.getDataSet(true).getRecordByKey(elem[0].getAttribute('data-id')) ? elem : this._findItemByElement(elem.parent());
          },
          /**
           * Показывает оперцаии над записью для элемента
