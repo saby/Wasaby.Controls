@@ -163,7 +163,7 @@ define('js!SBIS3.CONTROLS.ComboBox', [
          });
       },
       init: function() {
-         this._drawSelectedItem();
+        this._showSelectedItem();
          ComboBox.superclass.init.call(this);
       },
 
@@ -191,7 +191,10 @@ define('js!SBIS3.CONTROLS.ComboBox', [
          this._drawNotEditablePlaceholder(text);
          $('.js-controls-ComboBox__fieldNotEditable', this._container.get(0)).text(text || this._options.placeholder);
       },
-
+      setDataSource: function (dataSource){
+         ComboBox.superclass.setDataSource.call(this, dataSource);
+         this._showSelectedItem();
+      },
       _drawText: function() {
          ComboBox.superclass._drawText.apply(this, arguments);
          this._setKeyByText();
@@ -235,6 +238,12 @@ define('js!SBIS3.CONTROLS.ComboBox', [
          this._getListView().addPickerClass();
       },
 
+      _showSelectedItem: function (){
+         if ($ws.helpers.instanceOfMixin(this._items, 'SBIS3.CONTROLS.Data.Collection.LoadableListMixin') && !this._items.isLoaded()) {
+            this._items.load();
+         }
+         this._drawSelectedItem();
+      },
       _setPickerConfig: function() {
          return {
             corner: 'bl',

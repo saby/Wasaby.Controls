@@ -135,8 +135,19 @@ define('js!SBIS3.CONTROLS.SelectableNew', [
        * @see getSelectedKey
        */
       setSelectedKey: function(id) {
+         if ($ws.helpers.instanceOfMixin(this._items, 'SBIS3.CONTROLS.Data.Collection.LoadableListMixin') && !this._items.isLoaded()) {
+            var self = this;
+            this._items.once('onAfterLoadedApply', function (){
+               self._setSelectedKey(id);
+            });
+         } else {
+            this._setSelectedKey(id);
+         }
+      },
+
+      _setSelectedKey: function (id) {
          var index;
-         if(id === null){
+         if (id === null) {
             this._setSelectedIndex(null, null);
          } else {
             index = this._getItemIndexByKey(id);
