@@ -164,6 +164,12 @@ define('js!SBIS3.CONTROLS.ListView',
           * @param {$ws.proto.EventObject} eventObject Дескриптор события.
           * @param {Object} model Отредактированная модель
           */
+         /**
+          * @event onPrepareFilterOnMove Возникает перед установкой фильтра в диалоге перемещения
+          * @param {$ws.proto.EventObject} eventObject Дескриптор события.
+          * @param {Array} records Массив перемещаемых записей
+          * @returns {Object} filter Фильтр который будет установлен в диалоге перемещения
+          */
          $protected: {
             _floatCheckBox: null,
             _dotItemTpl: null,
@@ -386,7 +392,7 @@ define('js!SBIS3.CONTROLS.ListView',
          $constructor: function () {
             //TODO временно смотрим на TopParent, чтобы понять, где скролл. С внедрением ScrallWatcher этот функционал уберем
             var topParent = this.getTopParent();
-            this._publish('onChangeHoveredItem', 'onItemClick', 'onItemActivate', 'onDataMerge', 'onItemValueChanged', 'onShowEdit', 'onBeginEdit', 'onEndEdit', 'onBeginAdd', 'onAfterEndEdit');
+            this._publish('onChangeHoveredItem', 'onItemClick', 'onItemActivate', 'onDataMerge', 'onItemValueChanged', 'onShowEdit', 'onBeginEdit', 'onEndEdit', 'onBeginAdd', 'onAfterEndEdit, onPrepareFilterOnMove');
             this._container.on('mousemove', this._mouseMoveHandler.bind(this))
                            .on('mouseleave', this._mouseLeaveHandler.bind(this));
 
