@@ -135,9 +135,8 @@ define('js!SBIS3.CONTROLS.Selectable', [], function() {
       _setFirstItemAsSelected : function() {
          if (this._dataSet) {
             var selKey = this._options.selectedKey;
-            //Строго сравниваем selKey с undefined и null, т.к. он может быть равным 0.
-            //selKey может быть равным null(корень), но в DataSet'е его может не быть (MoveDialog)
-            if (selKey === undefined || (selKey !== undefined && selKey !== null && !this._dataSet.getRecordByKey(selKey))) {
+
+            if(selKey === null || (selKey !== null && !this._dataSet.getRecordByKey(selKey))) {
                var rec = this._dataSet.at(0);
 
                if (rec) {

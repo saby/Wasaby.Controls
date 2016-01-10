@@ -232,7 +232,7 @@ define('js!SBIS3.CONTROLS.ListControlMixin', [
        */
       setDataSource: function (source) {
          this._options.dataSource = source;
-         this._setItems(
+         this.setItems(
             this._convertDataSourceToItems(source)
          );
       },
@@ -281,7 +281,8 @@ define('js!SBIS3.CONTROLS.ListControlMixin', [
        * @param {Array|SBIS3.CONTROLS.Data.Collection.IEnumerable} items
        */
       setItems: function(items) {
-         this.getItems().fill(items);
+         this._setItems(items);
+         this.redraw();
       },
 
       /**

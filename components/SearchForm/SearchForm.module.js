@@ -20,7 +20,7 @@ define('js!SBIS3.CONTROLS.SearchForm', [
 
    var SearchForm = TextBox.extend([SearchMixin],/** @lends SBIS3.CONTROLS.SearchForm.prototype */ {
       /**
-       * @event onSearchStart При нажатии кнопки поиска
+       * @event onSearch При нажатии кнопки поиска
        * @param {$ws.proto.EventObject} eventObject Дескриптор события.
        * @param {String} text Текст введенный в поле поиска
        */
@@ -54,26 +54,16 @@ define('js!SBIS3.CONTROLS.SearchForm', [
       $constructor: function () {
          var self = this;
 
-         this._publish('onSearchStart','onReset');
-
          this.subscribe('onTextChange', function(e, text) {
-            if (text == '') {
-               $('.js-controls-SearchForm__reset', self.getContainer().get(0)).hide();
-            } else {
-               $('.js-controls-SearchForm__reset', self.getContainer().get(0)).show();
-            }
+            $('.js-controls-SearchForm__reset', self.getContainer().get(0)).toggleClass('ws-hidden', text == '');
          });
+
          $('.js-controls-SearchForm__reset', this.getContainer().get(0)).click(function() {
             self.resetSearch();
          });
+
          $('.js-controls-SearchForm__search', this.getContainer().get(0)).click(function() {
-            self.applySearch();
-         });
-         $(this.getContainer().get(0)).keydown(function(event) {
-            event.stopPropagation();
-         });
-         $(this.getContainer().get(0)).keyup(function(event) {
-            self._keyUp(event);
+            self._applySearch(self.getText());
          });
       },
 
@@ -81,25 +71,21 @@ define('js!SBIS3.CONTROLS.SearchForm', [
        * Обработчик поднятия клавиши
        * @private
        */
-      _keyUp:function(event) {
-         if (event.which == 13) {
-            this.applySearch();
-            //TODO в 3.7.3.20 перейти на общие с миксином события. в 10 страшно пока отпиливать
+      _keyUpBind:function(event) {
+         SearchForm.superclass._keyUpBind.apply(this, arguments);
+         if (event.which === $ws._const.key.enter) {
             this._applySearch(this.getText());
+            event.stopPropagation();
          }
       },
 
       /**
-       * Начать поиск с тем текстом, что введен
-       * @see resetSearch
-       * @see startCharacter
+       * Обработчик нажатия клавиши
+       * @private
        */
-      applySearch: function() {
-         var text = this.getText().replace(/[«»’”@#№$%^&*;:?.,!\/~\]\[{}()|<>=+\-_\s'"]/g, '');
-         //не отправляем событие, если символов меньше startCharacter
-         if (text.length >= this._options.startCharacter) {
-            this._notify('onSearchStart', text);
-         }
+      _keyDownBind: function(e) {
+         SearchForm.superclass._keyDownBind.apply(this, arguments);
+         e.stopPropagation();
       },
 
       /**
@@ -107,7 +93,7 @@ define('js!SBIS3.CONTROLS.SearchForm', [
        * @see applySearch
        */
       resetSearch: function(){
-         $('.js-controls-SearchForm__reset', this.getContainer().get(0)).hide();
+         $('.js-controls-SearchForm__reset', this.getContainer().get(0)).addClass('ws-hidden');
          this.setText('');
       }
    });

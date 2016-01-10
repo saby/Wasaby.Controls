@@ -244,6 +244,7 @@ define('js!SBIS3.CONTROLS.DataSet', [
                }
 
                if (merge) {
+                  existing.setRaw(record.getRaw());
                   existing.merge(record);
                }
 

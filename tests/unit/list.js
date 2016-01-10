@@ -4,6 +4,7 @@ define([
 '../../components/Data/Collection/resources/test/ArrayEnumerator.test',
 '../../components/Data/Collection/resources/test/List.test',
 '../../components/Data/Collection/resources/test/ObservableList.test',
+'../../components/Data/Collection/resources/test/RecordSet.test',
 '../../components/Data/Projection/resources/test/Collection.test',
 '../../components/Data/Projection/resources/test/CollectionEnumerator.test',
 '../../components/Data/Projection/resources/test/Projection.test',

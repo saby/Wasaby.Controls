@@ -126,7 +126,6 @@
          height: 44px;
          background: #F3F8FC;
          padding-right: 37px;
-         white-space: nowrap;
          .controls-MenuItem__icon{
             top: 13px;
          }
@@ -207,14 +206,15 @@
 
 .controls-ItemActions__menu-container {
    .controls-MenuItem {
-      padding-right: 24px;
+      padding-right: @list-view-actions-menu-item-padding-right;
+      white-space: nowrap;
    }
    .controls-PopupMixin__closeButton {
-      height: 16px;
-      width: 16px;
+      height: @list-view-actions-menu-close-height;
+      width: @list-view-actions-menu-close-width;
       z-index: 1;
-      right: 4px;
-      top: 4px;
+      right: @list-view-actions-menu-close-right;
+      top: @list-view-actions-menu-close-top;
       position: absolute;
       cursor: @list-view-actions-cursor;
       background: @list-view-actions-menu-icon-close;
@@ -224,8 +224,8 @@
    }
    &.controls-popup-revert-vertical {
       .controls-PopupMixin__closeButton {
-         bottom: 4px;
-         top: auto;
+         bottom: @list-view-actions-menu-close-revVert-bottom;
+         top: @list-view-actions-menu-close-revVert-top;
       }
    }
 }

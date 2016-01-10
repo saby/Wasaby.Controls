@@ -208,6 +208,7 @@ define('js!SBIS3.CONTROLS.TreeCompositeView', ['js!SBIS3.CONTROLS.TreeDataGridVi
                //Если запись найдена в обновленном DataSet, то перерисовываем её
                if (record) {
                   currentDataSet.getRecordByKey(row.key).merge(record);
+                  self.redrawItem(record);
                } else { //Иначе - удаляем запись
                   currentDataSet.removeRecord(row.key);
                   self.destroyFolderToolbar(row.key);
@@ -258,7 +259,7 @@ define('js!SBIS3.CONTROLS.TreeCompositeView', ['js!SBIS3.CONTROLS.TreeDataGridVi
                   } else if (self._limit !== undefined) {
                      limit = (self._folderOffsets.hasOwnProperty(branchId) ? self._folderOffsets[branchId] : 0) + self._limit;
                   }
-                  return self._callQuery(filter, self._sorting, self._offset, limit)
+                  return self._callQuery(filter, self.getSorting(), self._offset, limit)
                      .addCallback(function(dataSet) {
                         branchesData[branchId] = dataSet;
                         return dataSet;

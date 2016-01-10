@@ -14,14 +14,14 @@ define('js!SBIS3.CONTROLS.Data.Factory', [
 
    /**
     * @faq Почему я вижу ошибки от $ws.single.ioc?
-    * Для корректной работы с зависимости сначала надо загрузить {@link SBIS3.CONTROLS.Data.Model} и {@link SBIS3.CONTROLS.Data.Source.DataSet}, а уже потом {@link SBIS3.CONTROLS.Data.Factory}
+    * Для корректной работы с зависимости сначала надо загрузить {@link SBIS3.CONTROLS.Data.Model} и {@link SBIS3.CONTROLS.Data.Source.RecordSet}, а уже потом {@link SBIS3.CONTROLS.Data.Factory}
     */
 
    var Factory = /** @lends SBIS3.CONTROLS.Data.Factory.prototype */{
       /**
        * Приводит сырые данные к переданному типу.
        * Возможные типы:
-       * DataSet - набор записей
+       * RecordSet - набор записей
        * Model - одна запись из выборки
        * Time  - время
        * Date - дата
@@ -51,8 +51,8 @@ define('js!SBIS3.CONTROLS.Data.Factory', [
                return meta.isArray ?
                   value[0] === null ? null : value.join(meta.separator, value) :
                   value;
-            case 'DataSet':
-               return this._makeDataSet(value, adapter);
+            case 'RecordSet':
+               return this._makeRecordSet(value, adapter);
             case 'Model':
                return this._makeModel(value, adapter);
             case 'Time':
@@ -113,8 +113,8 @@ define('js!SBIS3.CONTROLS.Data.Factory', [
                         [value]:
                   value;
 
-            case 'DataSet':
-               return this._serializeDataSet(value, adapter);
+            case 'RecordSet':
+               return this._serializeRecordSet(value, adapter);
             case 'Model':
                return this._serializeModel(value, adapter);
 
@@ -184,20 +184,20 @@ define('js!SBIS3.CONTROLS.Data.Factory', [
       },
 
       /**
-       * Создает DataSet по сырым данным
+       * Создает RecordSet по сырым данным
        * @param {*} data Сырые данные
        * @param {SBIS3.CONTROLS.Data.Adapter.IAdapter} adapter Адаптер для работы с сырыми данными
-       * @returns {SBIS3.CONTROLS.Data.Source.DataSet}
+       * @returns {SBIS3.CONTROLS.Data.Collection.RecordSet}
        * @private
        */
-      _makeDataSet: function (data, adapter) {
+      _makeRecordSet: function (data, adapter) {
          adapter.setProperty(
             data,
             'total',
             adapter.forTable(data).getCount()
          );
 
-         return $ws.single.ioc.resolve('SBIS3.CONTROLS.Data.Source.DataSet', {
+         return $ws.single.ioc.resolve('SBIS3.CONTROLS.Data.Collection.RecordSet', {
             model: $ws.single.ioc.resolve('SBIS3.CONTROLS.Data.ModelConstructor'),
             adapter: adapter,
             rawData: data,
@@ -219,14 +219,14 @@ define('js!SBIS3.CONTROLS.Data.Factory', [
       },
 
       /**
-       * Сериализует DataSet
-       * @param {*} data Датасет
+       * Сериализует RecordSet
+       * @param {*} data Данные
        * @param {SBIS3.CONTROLS.Data.Adapter.IAdapter} adapter Адаптер для работы с сырыми данными
        * @returns {*}
        * @private
        */
-      _serializeDataSet: function (data, adapter) {
-         if ($ws.helpers.instanceOfModule(data, 'SBIS3.CONTROLS.Data.Source.DataSet')) {
+      _serializeRecordSet: function (data, adapter) {
+         if ($ws.helpers.instanceOfModule(data, 'SBIS3.CONTROLS.Data.Collection.RecordSet') || $ws.helpers.instanceOfModule(data, 'SBIS3.CONTROLS.Data.Source.DataSet') || $ws.helpers.instanceOfModule(data, 'SBIS3.CONTROLS.DataSet') ) {
             return data.getRawData();
          } else if ($ws.helpers.instanceOfModule(data, 'SBIS3.CONTROLS.Data.Collection.List')) {
             return this._serializeList(data, adapter);

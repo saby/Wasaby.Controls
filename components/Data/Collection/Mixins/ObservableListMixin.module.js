@@ -38,36 +38,47 @@ define('js!SBIS3.CONTROLS.Data.Collection.ObservableListMixin', [
 
       around: {
 
-         //region SBIS3.CONTROLS.Data.Collection.IEnumerable
-
-         concat: function (parentFnc, items, prepend) {
-            var newItemsIndex = this.getCount();
-            this._eventsEnabled = false;
-            parentFnc.call(this, items, prepend);
-            this._eventsEnabled = true;
-            this.notifyCollectionChange(
-               IBindCollection.ACTION_ADD,
-               prepend ? this._items.slice(0, this.getCount() - newItemsIndex) : this._items.slice(newItemsIndex),
-               prepend ? 0 : newItemsIndex,
-               [],
-               0
-            );
-         },
-
-         //endregion SBIS3.CONTROLS.Data.Collection.IEnumerable
 
          //region SBIS3.CONTROLS.Data.Collection.List
 
-         fill: function (parentFnc, instead) {
+         assign: function (parentFnc, items) {
             var oldItems = this._items.slice();
             this._eventsEnabled = false;
-            parentFnc.call(this, instead);
+            parentFnc.call(this, items);
             this._eventsEnabled = true;
             this.notifyCollectionChange(
                IBindCollection.ACTION_RESET,
                this._items.slice(),
                0,
                oldItems,
+               0
+            );
+         },
+
+         append: function (parentFnc, items) {
+            this._eventsEnabled = false;
+            var count = this.getCount();
+            parentFnc.call(this, items);
+            this._eventsEnabled = true;
+            this.notifyCollectionChange(
+               IBindCollection.ACTION_ADD,
+               this._items.slice(count, this._lenght),
+               count,
+               [],
+               0
+            );
+         },
+
+         prepend: function (parentFnc, items) {
+            this._eventsEnabled = false;
+            var length = this.getCount();
+            parentFnc.call(this, items);
+            this._eventsEnabled = true;
+            this.notifyCollectionChange(
+               IBindCollection.ACTION_ADD,
+               this._items.slice(0, this.getCount() - length),
+               0,
+               [],
                0
             );
          },
