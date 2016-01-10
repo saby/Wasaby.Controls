@@ -44,7 +44,7 @@ define('js!SBIS3.CONTROLS.Data.Adapter.JsonRecord', [
       },
 
       getEmpty: function () {
-         return [];
+         return {};
       },
 
       getInfo: function(name) {

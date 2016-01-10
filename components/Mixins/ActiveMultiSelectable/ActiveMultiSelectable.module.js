@@ -173,7 +173,7 @@ define('js!SBIS3.CONTROLS.ActiveMultiSelectable', ['js!SBIS3.CONTROLS.Data.Colle
          /* Выбранных ключей нет - очистим IList */
          if(!selKeys.length) {
             if(selItems.getCount()) {
-               selItems.fill();
+               selItems.clear();
                this._notifyOnPropertyChanged('selectedItems');
             }
             return;

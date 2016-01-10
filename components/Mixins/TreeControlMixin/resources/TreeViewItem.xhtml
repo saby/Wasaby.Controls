@@ -1,0 +1,18 @@
+{{?it.item.containerTag}}
+    <{{=it.item.containerTag}} class="{{=it.item.containerClass}}" data-hash="{{=it.item.hash}}">
+{{?}}
+
+<div class="{{=it.item.contentsClass}}">
+    {{?it.item.isNode}}
+        <span class="{{=it.item.leverageClass}}" data-hash="{{=it.item.hash}}"></span>
+    {{?}}
+    {{=it.item.template(it.item)}}
+</div>
+
+{{?it.item.isNode}}
+    {{=it.item.childrenTemplate(it.item.children)}}
+{{?}}
+
+{{?it.item.containerTag}}
+    </{{=it.item.containerTag}}>
+{{?}}
