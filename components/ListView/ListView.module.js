@@ -748,7 +748,6 @@ define('js!SBIS3.CONTROLS.ListView',
          setElemClickHandler: function (method) {
             this._options.elemClickHandler = method;
          },
-
          //********************************//
          //   БЛОК РЕДАКТИРОВАНИЯ ПО МЕСТУ //
          //*******************************//
@@ -859,11 +858,11 @@ define('js!SBIS3.CONTROLS.ListView',
                      onEndEdit: function(event, model, withSaving) {
                         event.setResult(this._notify('onEndEdit', model, withSaving));
                      }.bind(this),
-                     onAfterEndEdit: function(event, model, terget, withSaving) {
+                     onAfterEndEdit: function(event, model, target, withSaving) {
                         if (withSaving) {
-                           terget.after(this._drawItem(model)).remove();
+                           this.redrawItem(model);
                         }
-                        event.setResult(this._notify('onAfterEndEdit', model, terget, withSaving));
+                        event.setResult(this._notify('onAfterEndEdit', model, target, withSaving));
                      }.bind(this)
                   }
                };
