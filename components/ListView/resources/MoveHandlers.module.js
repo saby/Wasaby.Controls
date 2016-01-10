@@ -7,11 +7,17 @@ define('js!SBIS3.CONTROLS.MoveHandlers', ['js!SBIS3.CONTROLS.MoveDialog','js!SBI
         _moveStrategy: undefined
       },
       moveRecordsWithDialog: function(records) {
+         var self = this;
          records = this._getRecordsForMove(records);
          if (records.length) {
             new MoveDialog({
                linkedView: this,
-               records: records
+               records: records,
+               handlers: {
+                  onPrepareFilterOnMove: function(event, rec) {
+                     event.setResult(self._notify('onPrepareFilterOnMove', rec))
+                  }
+               }
             });
          }
       },
