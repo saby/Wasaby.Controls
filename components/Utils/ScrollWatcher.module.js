@@ -160,7 +160,7 @@ define('js!SBIS3.CONTROLS.ScrollWatcher', [], function() {
          this._processScrollEvent(elem.scrollTop + elem.clientHeight >= elem.scrollHeight - this._options.checkOffset, event);
       },
       _isOnTop : function(event){
-         return event && this._isScrollUp && (this._lastScrollTop < this._options.checkOffset);
+         return event && this._isScrollUp && (this._lastScrollTop <= this._options.checkOffset);
       },
       /**
        * Проскроллить в контейнере
@@ -173,9 +173,22 @@ define('js!SBIS3.CONTROLS.ScrollWatcher', [], function() {
          var scrollable = this._getContainer()[0];
          scrollable.scrollTop = (typeof offset === 'string' ? (offset === 'top' ? 0 : scrollable.scrollHeight) : offset)
       },
-      //TODO есть вариант, когда захотят останавливать и запускать отслеживание скролла. Как понадобится сделаем.
-      //start : function(){},
-      //stop : function(){},
+      /**
+       * Получить текущую высоту скролла отслеживаемого элемента
+       * @returns {*}
+       */
+      getScrollHeight: function(){
+         if (this._inContainer()){
+            return this._options.element[0].scrollHeight;
+         }
+         if (this._inWindow()){
+            return document.body.scrollHeight;
+         }
+         if (this._inFloatArea()) {
+            return this.getOpener().getTopParent().getContainer().parent()[0].scrollHeight;
+         }
+
+      },
       destroy: function(){
          if (this._inWindow()) {
             $(window).unbind('scroll.wsScrollWatcher', this._onWindowScrollHandler);

@@ -203,6 +203,7 @@ define('js!SBIS3.CONTROLS.ListView',
             _itemActionsGroup: null,
             _emptyData: undefined,
             _scrollWidth: undefined,
+            _containerScrollHeight : 0,
             _firstScrollTop : true,
             _options: {
                /**
@@ -436,8 +437,9 @@ define('js!SBIS3.CONTROLS.ListView',
                   scrollWatcherCfg = {};
             if (this.isInfiniteScroll()) {
                this._createLoadingIndicator();
-
-               scrollWatcherCfg.checkOffset = START_NEXT_LOAD_OFFSET;
+               //для подгрузки вверх пока поставим 0 - иначе при постоянной прокрутке может сразу много данных
+               //загрузиться - будет некрасиво доскроллено
+               scrollWatcherCfg.checkOffset = this._options.infiniteScrollDirection === 'bottom' ?  START_NEXT_LOAD_OFFSET : 0;
                scrollWatcherCfg.opener = this;
                if (this._options.infiniteScrollContainer) {
                   this._options.infiniteScrollContainer = this._options.infiniteScrollContainer instanceof jQuery
@@ -1108,6 +1110,7 @@ define('js!SBIS3.CONTROLS.ListView',
          _drawItems: function(records, at){
             if (this._options.infiniteScrollDirection === 'top' && !at) {
                at = {at : 0};
+               this._containerScrollHeight = this._scrollWatcher.getScrollHeight();
             }
             ListView.superclass._drawItems.apply(this, [records, at]);
          },
@@ -1252,10 +1255,10 @@ define('js!SBIS3.CONTROLS.ListView',
           */
          _moveTopScroll : function(){
             if (this._options.infiniteScrollDirection == 'top'){
-               //Если запускаем 1ый раз, то нужно поскроллить в самый низ, иначе взяли от балды 100 пикселей - отступ
-               //сверху, чтобы пользователь понял, что вверх еще можно скроллить.
-               this._scrollWatcher.scrollTo(this._firstScrollTop ? 'bottom' : 100);
-
+               //Если запускаем 1ый раз, то нужно поскроллить в самый низ (ведь там "начало" данных), в остальных догрузках скроллим вниз на
+               //разницы величины скролла (т.е. на сколько добавилось высоты, на столько и опустили). Получается плавно
+               //Так же цчитываем то, что индикатор появляется только на время загрузки и добавляет свою высоту
+               this._scrollWatcher.scrollTo(this._firstScrollTop ? 'bottom' : this._scrollWatcher.getScrollHeight() - this._containerScrollHeight - this._scrollIndicatorHeight);
             }
          },
          _showLoadingIndicator: function () {
