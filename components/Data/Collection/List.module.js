@@ -99,7 +99,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.List', [
 
       assign: function (items) {
          this._items.length = 0;
-         this._splice(items||[], 0, 0);
+         this._splice(items || [], 0, 0);
       },
 
       append: function (items) {

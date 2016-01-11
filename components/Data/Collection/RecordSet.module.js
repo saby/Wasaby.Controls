@@ -31,14 +31,14 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
              *          lastName: 'Smith'
              *       },{
              *          id: 2,
-             *          firstName: 'Sara',
-             *          lastName: 'Conor'
+             *          firstName: 'Sarah',
+             *          lastName: 'Connor'
              *       }],
              *       adapter: new JsonAdapter,
              *       idProperty: 'id'
              *    });
              *    users.at(0).get('id');//5
-             *    users.getRecordById(2).get('firstName');//Sara
+             *    users.getRecordById(2).get('firstName');//Sarah
              * </pre>
              * @see getRawData
              * @see setRawData
@@ -73,22 +73,26 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
              */
             model: undefined
          },
+
          /**
           * @var {Function} Конструктор модели
           */
          _model: undefined,
+
          /**
           * @var {Object} Сырые данные
           */
          _rawData: null,
+
          /**
           * @var {Object} индексы
           */
          _indexTree: {},
+
          /**
           * @var {SBIS3.CONTROLS.Data.Adapter.ITable} Адаптер для набора записей
           */
-         _tableAdapter: undefined
+         _tableAdapter: null
       },
 
       $constructor: function (cfg) {
@@ -166,7 +170,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
          return this.getRecordById(key);
       },
       /**
-       * @deprecated метод будет удален в 3.7.4 используйте getRecordById
+       * @deprecated метод будет удален в 3.7.4 используйте getIndex(getRecordById())
        * @param key
        * @public
        * @returns {*}
@@ -222,7 +226,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
 
       insert: function (record, at) {
          var existsAt = this.getIndex(record);
-         if (existsAt == -1) {
+         if (existsAt === -1) {
             this.add(record, at);
          } else {
             this.replace(record, existsAt);
@@ -230,9 +234,10 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
       },
 
       setRawData: function(data) {
-         this._items = [];
+         RecordSet.superclass.clear.call(this);
          this._rawData = data;
-         var adapter = this._getTableAdapter(true),
+         this._resetTableAdapter();
+         var adapter = this._getTableAdapter(),
             count = adapter.getCount(),
             record;
          for (var i = 0; i < count; i++) {
@@ -410,31 +415,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
 
       //endregion SBIS3.CONTROLS.DataSet
 
-      /*region list*/
-
-
-      _splice: function (items, start){
-         var newItems = [];
-         if(items instanceof Array) {
-            newItems = items;
-         } else if(items && $ws.helpers.instanceOfMixin(items, 'SBIS3.CONTROLS.Data.Collection.IEnumerable')) {
-            var self = this;
-            items.each(function (item){
-               newItems.push(item);
-            });
-         } else {
-            throw new Error('Invalid argument');
-         }
-         for (var i=0, len = newItems.length; i< len; i++) {
-            var item = newItems[i];
-            this._checkItem(item);
-            this._getTableAdapter().add(item.getRawData(), start);
-            this._items.splice(item, start, 0);
-            start++;
-         }
-
-         this._getServiceEnumerator().reIndex();
-      },
+      //region SBIS3.CONTROLS.Data.Collection.List
 
       clear: function () {
          this.setRawData(this._getTableAdapter().getEmpty());
@@ -453,25 +434,66 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
       },
 
       replace: function (item, at) {
+         this._checkItem(item);
          RecordSet.superclass.replace.apply(this, arguments);
-         if (!this._isValidIndex(at)) {
-            throw new Error('Index is out of bounds');
-         }
 
-         this._items[at] = item;
          this._getTableAdapter().replace(item.getRawData(), at);
-         this._getServiceEnumerator().reIndex();
       },
-      /*endregion list*/
+
+      //endregion SBIS3.CONTROLS.Data.Collection.List
 
       //region Protected methods
-      _getTableAdapter: function (forceCreate) {
-         return (this._tableAdapter && !forceCreate) ?  this._tableAdapter : (this._tableAdapter = this.getAdapter().forTable(this._rawData));
+
+      /**
+       * Вставляет набор записей в указанную позицию
+       * @private
+       */
+      _splice: function (items, start){
+         var newItems = [];
+         if(items instanceof Array) {
+            newItems = items;
+         } else if(items && $ws.helpers.instanceOfMixin(items, 'SBIS3.CONTROLS.Data.Collection.IEnumerable')) {
+            var self = this;
+            items.each(function (item){
+               newItems.push(item);
+            });
+         } else {
+            throw new Error('Invalid argument');
+         }
+         for (var i = 0, len = newItems.length; i< len; i++) {
+            var item = newItems[i];
+            this._checkItem(item);
+            this._getTableAdapter().add(item.getRawData(), start);
+            this._items.splice(item, start, 0);
+            start++;
+         }
+
+         this._getServiceEnumerator().reIndex();
       },
 
+      /**
+       * Возвращает адаптер для сырых данных (лениво создает)
+       * @private
+       */
+      _getTableAdapter: function () {
+         return this._tableAdapter || (this._tableAdapter = this.getAdapter().forTable(this._rawData));
+      },
+
+      /**
+       * Сбрасывает созданный адаптер для сырых данных
+       * @private
+       */
+      _resetTableAdapter: function () {
+         this._tableAdapter = null;
+      },
+
+      /**
+       * ПРроверяет, что переданный элемент - модель
+       * @private
+       */
       _checkItem: function (item) {
          if(!item || !$ws.helpers.instanceOfModule(item, 'SBIS3.CONTROLS.Data.Model')){
-            throw new Error('Item is not a model')
+            throw new Error('Item should be an instance of SBIS3.CONTROLS.Data.Model');
          }
          return true;
       },
@@ -485,11 +507,14 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
             this._options.adapter = new JsonAdapter();
          }
       }
+
       //endregion Protected methods
 
    });
+
    $ws.single.ioc.bind('SBIS3.CONTROLS.Data.Collection.RecordSet', function(config) {
       return new RecordSet(config);
    });
+
    return RecordSet;
 });
