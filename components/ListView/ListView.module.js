@@ -405,7 +405,7 @@ define('js!SBIS3.CONTROLS.ListView',
                            .on('mouseleave', this._mouseLeaveHandler.bind(this));
 
             this._scrollWidth = $ws.helpers.getScrollWidth();
-            
+
             this.initEditInPlace();
             $ws.single.CommandDispatcher.declareCommand(this, 'activateItem', this._activateItem);
             $ws.single.CommandDispatcher.declareCommand(this, 'beginAdd', this._beginAdd);
