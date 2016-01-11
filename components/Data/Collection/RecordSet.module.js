@@ -185,6 +185,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
        * @returns {SBIS3.CONTROLS.Data.Collection.RecordSet}
        */
       clone: function () {
+         //TODO: сделать через сериализатор
          return new RecordSet({
             strategy: this._options.strategy,
             data: this._rawData,
