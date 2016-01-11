@@ -507,7 +507,7 @@ define('js!SBIS3.CONTROLS.MultiSelectable', ['js!SBIS3.CONTROLS.Data.Collection.
             this._syncSelectedItems();
             $ws.helpers.forEach(this.getSelectedKeys(), function (key) {
                record = self._dataSet.getRecordByKey(key);
-               if (record && selItems.getIndex(record) === -1) {
+               if (record && !selItems.getItemByPropertyValue(record.getKeyField(), record.getKey())) {
                   selItems.add(record);
                }
             });
