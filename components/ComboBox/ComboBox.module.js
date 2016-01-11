@@ -191,7 +191,7 @@ define('js!SBIS3.CONTROLS.ComboBox', [
          this._drawNotEditablePlaceholder(text);
          $('.js-controls-ComboBox__fieldNotEditable', this._container.get(0)).text(text || this._options.placeholder);
       },
-      setDataSource: function (dataSource){
+      setDataSource: function (dataSource) {
          ComboBox.superclass.setDataSource.call(this, dataSource);
          this._showSelectedItem();
       },
@@ -240,9 +240,14 @@ define('js!SBIS3.CONTROLS.ComboBox', [
 
       _showSelectedItem: function (){
          if ($ws.helpers.instanceOfMixin(this._items, 'SBIS3.CONTROLS.Data.Collection.LoadableListMixin') && !this._items.isLoaded()) {
+            var self = this;
+            this._items.once('onAfterLoadedApply', function (){
+               self._drawSelectedItem();
+            });
             this._items.load();
+         } else {
+            this._drawSelectedItem();
          }
-         this._drawSelectedItem();
       },
       _setPickerConfig: function() {
          return {
