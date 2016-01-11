@@ -15,7 +15,8 @@ define([
       dataValues,
       dataEmpty,
       sbisModel,
-      sbisModelEmpty;
+      sbisModelEmpty,
+      identityIndex = 13;
 
    beforeEach(function () {
       dataScheme = [{
@@ -119,11 +120,6 @@ define([
             assert.strictEqual(val, 'Строка');
 
          });
-         it('should not cast null to string', function () {
-            var val = sbisModelEmpty.get('title');
-            assert.strictEqual(val, null);
-
-         });
          it('should cast value to enum', function () {
             assert.instanceOf(sbisModel.get('enum'), Enum);
          });
@@ -153,20 +149,11 @@ define([
          it('should cast dateTime to Date', function () {
             assert.instanceOf(sbisModel.get('dateTime'), Date);
          });
-         it('should cast null dateTime to null', function () {
-            assert.isNull(sbisModelEmpty.get('dateTime'));
-         });
          it('should cast date to Date', function () {
             assert.instanceOf(sbisModel.get('date'), Date);
          });
-         it('should cast null date to null', function () {
-            assert.isNull(sbisModelEmpty.get('date'));
-         });
          it('should cast time to Date', function () {
             assert.instanceOf(sbisModel.get('time'), Date);
-         });
-         it('should cast null time to null', function () {
-            assert.isNull(sbisModelEmpty.get('time'));
          });
          it('should cast undefined dateTime, date and time to undefined', function () {
             var model = new Model({
@@ -197,141 +184,176 @@ define([
             assert.strictEqual(false, val.get('three'));
             assert.strictEqual(undefined, val.get('four'));
          });
+         it('should return null for null value in raw data', function () {
+            for (var i = 0; i < dataScheme.length; i++) {
+               assert.isNull(sbisModelEmpty.get(dataScheme[i].n));
+            }
+         });
       });
+
       describe('.serialize()', function () {
-         var getData = function (index) {
-            return sbisModelEmpty.getRawData().d[index];
-         };
-         it('should serialize integer value', function () {
-            sbisModelEmpty.set('id', 1);
-            assert.strictEqual(getData(0), 1);
+         var getData = function (model, index) {
+               return model.getRawData().d[index];
+            },
+            getModel = function (type) {
+               return type === 'filled' ? sbisModel : sbisModelEmpty;
+            },
+            types = ['filled', 'empty'],
+            type,
+            model;
+         while (types.length) {
+            (function(type) {
+               context('for ' + type + ' model', function () {
+                  it('should store integer value', function () {
+                     var model = getModel(type);
+                     model.set('id', 1);
+                     assert.strictEqual(getData(model, 0), 1);
+                  });
+                  it('should store string value', function () {
+                     var model = getModel(type);
+                     model.set('title', 'test');
+                     assert.strictEqual(getData(model, 1), 'test');
+                  });
+                  it('should store enum value', function () {
+                     var model = getModel(type);
+                     //model.get('enum');
+                     model.set('enum', 1);
+                     assert.strictEqual(getData(model, 2), 1);
+                  });
+                  it('should store model', function () {
+                     var model = getModel(type),
+                        record = new Model({
+                           adapter: (new AdapterSbis()),
+                           rawData: {d: [1], s: [{n: 'id', t: 'Число целое'}]}
+                        });
+                     model.set('record', record);
+                     assert.deepEqual(getData(model, 3), record.getRawData());
+                  });
+                  it('should store record', function () {
+                     var model = getModel(type),
+                        record = new $ws.proto.Record();
+                     record.addColumn('id', $ws.proto.Record.FIELD_TYPE_INTEGER);
+                     record.set('id', 1);
+                     model.set('record', record);
+                     assert.deepEqual(getData(model, 3), record.toJSON());
+                  });
+                  it('should store a list', function () {
+                     var model = getModel(type),
+                        list = new List();
+                     list.add(new Model({
+                        adapter: new AdapterSbis(),
+                        rawData: {
+                           d: [2],
+                           s: [{n: 'id', t: 'Число целое'}]
+                        }
+                     }));
+                     list.add(new Model({
+                        adapter: new AdapterSbis(),
+                        rawData: {
+                           d: [3],
+                           s: [{n: 'id', t: 'Число целое'}]
+                        }
+                     }));
+                     model.set('recordSet', list);
+                     assert.strictEqual(2, model.get('recordSet').getCount());
+                     model.get('recordSet').each(function(item, index) {
+                        assert.deepEqual(getData(model, 4).d[index], item.getRawData().d);
+                        assert.deepEqual(getData(model, 4).s, item.getRawData().s);
+                     });
+                  });
+                  it('should store dataSet', function () {
+                     var model = getModel(type),
+                        data = {
+                           d: [[0]],
+                           s: [{n: 'id', t: 'Число целое'}]
+                        },
+                        adapter = new AdapterSbis(),
+                        dataSet = Factory._makeDataSet(data, adapter);
+                     model.setUsingDataSetAsList(false);
+                     model.set('recordSet', dataSet);
+                     assert.deepEqual(getData(model, 4), dataSet.getRawData());
+                  });
+                  it('should store link', function () {
+                     var model = getModel(type);
+                     model.set('link', 1);
+                     assert.equal(getData(model, 6), 1);
+                  });
+                  it('should store double', function () {
+                     var model = getModel(type);
+                     model.set('double', 5.1);
+                     assert.strictEqual(getData(model, 7), 5.1);
+                  });
+                  it('should store money', function () {
+                     var model = getModel(type),
+                        value = 12.003;
+                     model.set('money', value);
+                     assert.strictEqual(getData(model, 8), $ws.helpers.bigNum(value).toString(20));
+                  });
+                  it('should store date and time', function () {
+                     var model = getModel(type),
+                        date = new Date();
+                     model.set('dateTime', date);
+                     assert.equal(getData(model, 9), date.toSQL(true));
+                  });
+                  it('should store date', function () {
+                     var model = getModel(type),
+                        date = new Date();
+                     model.set('date', date);
+                     assert.equal(getData(model, 10), date.toSQL());
+                  });
+                  it('should store time', function () {
+                     var model = getModel(type),
+                        date = new Date();
+                     model.set('time', date);
+                     assert.equal(getData(model, 11), date.toSQL(false));
+                  });
+                  it('should store flags', function () {
+                     var model = getModel(type),
+                        d = [true, true, false],
+                        testModel = new Model({
+                           adapter: new AdapterSbis(),
+                           rawData: {
+                              d: d,
+                              s: [{n: 'id', t: 'Логическое'},{n: 'id1', t: 'Логическое'},{n: 'id2', t: 'Логическое'}]
+                           }
+                        });
+                     model.set('flags', testModel);
+                     assert.deepEqual(getData(model, 5), d);
+                  });
+                  it('should store null for not Identity', function () {
+                     var model = getModel(type);
+                     for (var i = 0; i < dataScheme.length; i++) {
+                        if (dataScheme[i].t === 'Идентификатор') {
+                           continue;
+                        }
+                        model.set(dataScheme[i].n, null);
+                        assert.isNull(getData(model, i));
+                     }
+                  });
+               });
+            })(types.shift());
+         }
+
+         it('should store Identity in filled model', function () {
+            sbisModel.set('identity', 1);
+            assert.deepEqual(getData(sbisModel, identityIndex), [1]);
          });
-         it('should serialize string value', function () {
-            var val = sbisModelEmpty.set('title', 'test');
-            assert.strictEqual(getData(1), 'test');
+         it('should store Identity in empty model', function () {
+            sbisModelEmpty.set('identity', 1);
+            assert.strictEqual(getData(sbisModelEmpty, identityIndex), 1);
          });
-         it('should serialize enum value', function () {
-            var val = sbisModelEmpty.get('enum');
-            sbisModelEmpty.set('enum', 1);
-            assert.strictEqual(getData(2), 1);
+         it('should store [null] for Identity in filled model', function () {
+            sbisModel.set('identity', null);
+            assert.deepEqual(getData(sbisModel, identityIndex), [null]);
          });
-         it('should serialize model', function () {
-            var record = new Model({
-               adapter: (new AdapterSbis()),
-               rawData: {d: [1], s: [{n: 'id', t: 'Число целое'}]}
-            });
-            sbisModelEmpty.set('record', record);
-            assert.deepEqual(getData(3), record.getRawData());
+         it('should store null for Identity in empty model', function () {
+            sbisModelEmpty.set('identity', null);
+            assert.isNull(getData(sbisModelEmpty, identityIndex));
          });
-         it('should serialize record', function () {
-            var record = new $ws.proto.Record();
-            record.addColumn('id', $ws.proto.Record.FIELD_TYPE_INTEGER);
-            record.set('id', 1);
-            sbisModelEmpty.set('record', record);
-            assert.deepEqual(getData(3), record.toJSON());
-         });
-         it('should serialize a list', function () {
-            var list = sbisModel.get('recordSet');
-            list.add(new Model({
-               adapter: new AdapterSbis(),
-               rawData: {
-                  d: [2],
-                  s: [{n: 'id', t: 'Число целое'}]
-               }
-            }));
-            sbisModelEmpty.set('recordSet', list);
-            assert.strictEqual(2, sbisModelEmpty.get('recordSet').getCount());
-            assert.deepEqual(getData(4), sbisModelEmpty.getRawData().d[4]);
-            var index = 0;
-            sbisModelEmpty.get('recordSet').each(function(item) {
-               assert.deepEqual(getData(4).d[index], item.getRawData().d);
-               assert.deepEqual(getData(4).s, item.getRawData().s);
-               index++;
-            });
-         });
-         it('should serialize an empty list', function () {
+         it('should accept an empty list', function () {
             var res = Factory.serialize(new List(), 'RecordSet', new AdapterJson());
             assert.instanceOf(res, Array);
             assert.strictEqual(res.length, 0);
-         });
-         it('should serialize dataSet', function () {
-            var
-               adapter = new AdapterSbis(),
-               dataSet = new DataSet({
-                  rawData: {
-                     d: [[0]],
-                     s: [{
-                        n: 'id',
-                        t: 'Число целое'
-                     }]
-                  },
-                  adapter: adapter
-               });
-            sbisModel.setUsingDataSetAsList(false);
-            sbisModelEmpty.set('recordSet', dataSet);
-            assert.deepEqual(getData(4), dataSet.getRawData());
-         });
-
-         it('should serialize recordSet', function () {
-            var data = {
-                  d: [[0]],
-                  s: [{n: 'id', t: 'Число целое'}]
-               },
-               adapter = new AdapterSbis(),
-               dataSet = Factory._makeRecordSet(data, adapter);
-            sbisModel.setUsingDataSetAsList(false);
-            sbisModelEmpty.set('recordSet', dataSet);
-            assert.deepEqual(getData(4), dataSet.getRawData());
-         });
-
-         it('should serialize flags', function () {
-            sbisModelEmpty.set('flags', null);
-            assert.strictEqual(getData(5), null);
-         });
-         it('should serialize link', function () {
-            sbisModelEmpty.set('link', 1);
-            assert.equal(getData(6), 1);
-         });
-         it('should serialize double', function () {
-            sbisModelEmpty.set('double', 5.1);
-            assert.strictEqual(getData(7), 5.1);
-         });
-         it('should serialize money', function () {
-            var value = 12.003;
-            sbisModelEmpty.set('money', value);
-            assert.strictEqual(getData(8), $ws.helpers.bigNum(value).toString(20));
-         });
-         it('should serialize date and time', function () {
-            var date = new Date();
-            sbisModelEmpty.set('dateTime', date);
-            assert.equal(getData(9), date.toSQL(true));
-         });
-         it('should serialize date', function () {
-            var date = new Date();
-            sbisModelEmpty.set('date', date);
-            assert.equal(getData(10), date.toSQL());
-         });
-         it('should serialize time', function () {
-            var date = new Date();
-            sbisModelEmpty.set('time', date);
-            assert.equal(getData(11), date.toSQL(false));
-         });
-         it('should serialize identity', function () {
-            var date = new Date();
-            sbisModelEmpty.set('identity', 1);
-            assert.equal(getData(13), [1]);
-         });
-         it('should serialize flags', function () {
-            var d = [true, true, false],
-            testModel = new Model({
-               adapter: new AdapterSbis(),
-               rawData: {
-                  d: d,
-                  s: [{n: 'id', t: 'Логическое'},{n: 'id1', t: 'Логическое'},{n: 'id2', t: 'Логическое'}]
-               }
-            });
-            sbisModelEmpty.set('flags', testModel);
-            assert.deepEqual(getData(5), d);
          });
       });
    });
