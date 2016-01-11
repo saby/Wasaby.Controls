@@ -124,6 +124,13 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                var currentTarget = this._eip.getTarget();
                return currentTarget[editNextRow ? 'next' : 'prev']('.js-controls-ListView__item:not(".controls-editInPlace")');
             },
+            showEip: function(target, record) {
+               if (target && record) {
+                  return this.edit(target, record)
+               } else {
+                  return this.add();
+               }
+            },
             edit: function (target, record) {
                return this._prepareEdit(record).addCallback(function(preparedrecord) {
                   this._eip.edit(target, preparedrecord);

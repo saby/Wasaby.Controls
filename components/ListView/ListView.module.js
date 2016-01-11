@@ -743,6 +743,13 @@ define('js!SBIS3.CONTROLS.ListView',
          setElemClickHandler: function (method) {
             this._options.elemClickHandler = method;
          },
+
+         setEnabled: function(enabled) {
+            if (!enabled) {
+               this._cancelEdit();
+            }
+            ListView.superclass.setEnabled.apply(this, arguments);
+         },
          //********************************//
          //   БЛОК РЕДАКТИРОВАНИЯ ПО МЕСТУ //
          //*******************************//
@@ -788,15 +795,21 @@ define('js!SBIS3.CONTROLS.ListView',
             return this._options.editMode;
          },
 
+         showEip: function(target, record, isEdit) {
+            if (this.isEnabled()) {
+               this._getEditInPlace().showEip(target, record, isEdit);
+            }
+         },
+
          _onItemClickHandler: function(event, id, record, target) {
-            this._getEditInPlace().edit($(target).closest('.js-controls-ListView__item'), record);
+            this.showEip($(target).closest('.js-controls-ListView__item'), record);
             event.setResult(false);
          },
 
          _onChangeHoveredItemHandler: function(event, hoveredItem) {
             var target = hoveredItem.container;
             if (target && !(target.hasClass('controls-editInPlace') || target.hasClass('controls-editInPlace__editing'))) {
-               this._getEditInPlace().show(target, this._dataSet.getRecordByKey(hoveredItem.key));
+               this.showEip(target, this._dataSet.getRecordByKey(hoveredItem.key), false);
             } else {
                this._getEditInPlace().hide();
             }
@@ -1456,11 +1469,11 @@ define('js!SBIS3.CONTROLS.ListView',
             this._notify('onItemActivate', {id: id, item: item});
          },
          _beginAdd: function() {
-            return this._getEditInPlace().add();
+            return this.showEip();
          },
          _beginEdit: function(record) {
             var target = this._getItemsContainer().find('.js-controls-ListView__item[data-id="' + record.getKey() + '"]:first');
-            return this._getEditInPlace().edit(target, record);
+            return this.showEip(target, record);
          },
          _cancelEdit: function() {
             return this._getEditInPlace().endEdit();
