@@ -206,8 +206,6 @@ define('js!SBIS3.CONTROLS.HierarchyDataGridView', [
                   if (self._options.groupBy.field) {
                      filter[self._options.groupBy.field] = undefined;
                   }
-                  //Если бесконечный скролл был установлен в опции - вернем его
-                  self.setInfiniteScroll(self._options.infiniteScroll, true);
                   self.setGroupBy({});
                   self.setHighlightText('', false);
                   self.setFilter(filter, true);
