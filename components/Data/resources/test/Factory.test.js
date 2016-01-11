@@ -268,7 +268,7 @@ define([
                            s: [{n: 'id', t: 'Число целое'}]
                         },
                         adapter = new AdapterSbis(),
-                        dataSet = Factory._makeDataSet(data, adapter);
+                        dataSet = Factory._makeRecordSet(data, adapter);
                      model.setUsingDataSetAsList(false);
                      model.set('recordSet', dataSet);
                      assert.deepEqual(getData(model, 4), dataSet.getRawData());
