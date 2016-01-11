@@ -374,7 +374,7 @@ define('js!SBIS3.CONTROLS.MultiSelectable', ['js!SBIS3.CONTROLS.Data.Collection.
          this._loadItemsDeferred = new $ws.proto.Deferred();
          /* Сфоримруем из массива выбранных записей, массив ключей этих записей */
          selItems.each(function(rec){
-            itemKeysArr.push(rec.getId());
+            itemKeysArr.push(rec.getKey());
          });
 
          /* Сфоримруем массив ключей записей, которые требуется вычитать с бл или взять из dataSet'a*/
@@ -433,7 +433,7 @@ define('js!SBIS3.CONTROLS.MultiSelectable', ['js!SBIS3.CONTROLS.Data.Collection.
          /* Соберём элементы для удаления, т.к. в методе each не отслеживаются изменения IList'а */
          selItems.each(function(rec) {
             /* ключи могут быть и строкой, поэтому надо проверить и на строку */
-            if(self._isItemSelected(rec.getId()) === -1) {
+            if(self._isItemSelected(rec.getKey()) === -1) {
                delItems.push(rec);
             }
          });
