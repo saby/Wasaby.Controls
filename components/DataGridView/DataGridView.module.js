@@ -113,10 +113,8 @@ define('js!SBIS3.CONTROLS.DataGridView',
       },
 
       init: function() {
-         DataGridView.superclass.init.call(this);
-
          this._buildHead();
-
+         DataGridView.superclass.init.call(this);
          if(this._options.startScrollColumn !== undefined) {
             this._initPartScroll();
          }
