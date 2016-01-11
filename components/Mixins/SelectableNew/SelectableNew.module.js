@@ -62,11 +62,7 @@ define('js!SBIS3.CONTROLS.SelectableNew', [
 
       $constructor: function () {
          this._publish('onSelectedItemChange');
-         if (this._options.selectedKey) {
-            var index = this._getItemIndexByKey(this._options.selectedKey);
-            if (index >=0)
-               this._itemsProjection.setCurrentPosition(index, true);
-         }
+
       },
 
       before: {
@@ -81,6 +77,16 @@ define('js!SBIS3.CONTROLS.SelectableNew', [
          _setItems: function() {
             if (this._itemsProjection && this._onProjectionCurrentChange) {
                this.unsubscribeFrom(this._itemsProjection, 'onCurrentChange', this._onProjectionCurrentChange);
+            }
+         },
+
+         init: function (){
+            if (this._options.selectedKey) {
+               var index = this._getItemIndexByKey(this._options.selectedKey);
+               if (index >=0) {
+                  this._itemsProjection.setCurrentPosition(index, true);
+                  this._drawSelectedItem();
+               }
             }
          }
       },
@@ -106,16 +112,11 @@ define('js!SBIS3.CONTROLS.SelectableNew', [
          },
 
          _initView: function() {
-            var projection = this.getItemsProjection(),
-               selected = projection.getCurrentPosition();
-            if(selected >= 0) {
-               this._setSelectedIndex(
-                  selected,
-                  this._getItemValue(projection.at(selected), this._options.keyField)
-               );
-            } else if (this._options.selectedKey) {
-               this.setSelectedKey(this._options.selectedKey);
-            }
+            var projection = this.getItemsProjection();
+            this._view.selectItem(
+               projection.getCurrent(),
+               projection.getCurrentPosition()
+            );
             if (this._isItemMustSelected()) {
                this._setFirstItemAsSelected();
             }

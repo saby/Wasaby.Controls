@@ -163,7 +163,6 @@ define('js!SBIS3.CONTROLS.ComboBox', [
          });
       },
       init: function() {
-        this._showSelectedItem();
          ComboBox.superclass.init.call(this);
       },
 
@@ -193,7 +192,15 @@ define('js!SBIS3.CONTROLS.ComboBox', [
       },
       setDataSource: function (dataSource) {
          ComboBox.superclass.setDataSource.call(this, dataSource);
-         this._showSelectedItem();
+         if ($ws.helpers.instanceOfMixin(this._items, 'SBIS3.CONTROLS.Data.Collection.LoadableListMixin') && !this._items.isLoaded()) {
+            var self = this;
+            this._items.once('onAfterLoadedApply', function (){
+               self._drawSelectedItem();
+            });
+            this._items.load();
+         } else {
+            this._drawSelectedItem();
+         }
       },
       _drawText: function() {
          ComboBox.superclass._drawText.apply(this, arguments);
@@ -204,7 +211,7 @@ define('js!SBIS3.CONTROLS.ComboBox', [
          $('.js-controls-ComboBox__fieldNotEditable', this._container.get(0)).toggleClass('controls-ComboBox__fieldNotEditable__placeholder', !text);
       },
 
-      _drawSelectedItem: function (key) {
+      _drawSelectedItem: function () {
          var item = this.getItemsProjection().getCurrent();
          if(item === undefined) {
             this.setText('');
@@ -215,7 +222,6 @@ define('js!SBIS3.CONTROLS.ComboBox', [
                this.setText(newText);
             }
          }
-
       },
 
       _drawItemsCallback : function() {
@@ -238,17 +244,6 @@ define('js!SBIS3.CONTROLS.ComboBox', [
          this._getListView().addPickerClass();
       },
 
-      _showSelectedItem: function (){
-         if ($ws.helpers.instanceOfMixin(this._items, 'SBIS3.CONTROLS.Data.Collection.LoadableListMixin') && !this._items.isLoaded()) {
-            var self = this;
-            this._items.once('onAfterLoadedApply', function (){
-               self._drawSelectedItem();
-            });
-            this._items.load();
-         } else {
-            this._drawSelectedItem();
-         }
-      },
       _setPickerConfig: function() {
          return {
             corner: 'bl',
