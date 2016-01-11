@@ -731,7 +731,8 @@ define([
                   cases = [
                      {method: 'assign', action: IBindCollectionProjection.ACTION_RESET, newAt: 0, newItems: itemsNew,  oldAt: 0, oldItems: itemsOld},
                      {method: 'append', action: IBindCollectionProjection.ACTION_ADD, newAt: 4, newItems: itemsNew, oldAt: 0, oldItems: []},
-                     {method: 'prepend', action: IBindCollectionProjection.ACTION_ADD, newAt: 0, newItems: itemsNew, oldAt: 0, oldItems: []}
+                     {method: 'prepend', action: IBindCollectionProjection.ACTION_ADD, newAt: 0, newItems: itemsNew, oldAt: 0, oldItems: []},
+                     {method: 'clear', action: IBindCollectionProjection.ACTION_RESET, newAt: 0, newItems: [], oldAt: 0, oldItems: itemsOld}
                   ];
 
                while (cases.length) {
@@ -743,6 +744,9 @@ define([
                                  if (action !== theCase.action) {
                                     throw new Error('Invalid action ' + action + ' - ' + theCase.action + ' expected');
                                  }
+                                 if (newItems.length !== theCase.newItems.length) {
+                                    throw new Error('Invalid newItems length ' + newItems.length + ' - ' + theCase.newItems.length + ' expected');
+                                 }
                                  for (i = 0; i < theCase.newItems.length; i++) {
                                     if (newItems[i].getContents() !== theCase.newItems[i]) {
                                        throw new Error('Invalid newItems at ' + i);
@@ -750,6 +754,9 @@ define([
                                  }
                                  if (newItemsIndex !== theCase.newAt) {
                                     throw new Error('Invalid newItemsIndex ' + newItemsIndex + ' - ' + theCase.newAt + ' expected');
+                                 }
+                                 if (oldItems.length !== theCase.oldItems.length) {
+                                    throw new Error('Invalid oldItems length ' + oldItems.length + ' - ' + theCase.oldItems.length + ' expected');
                                  }
                                  for (i = 0; i < theCase.oldItems.length; i++) {
                                     if (oldItems[i].getContents() !== theCase.oldItems[i]) {
