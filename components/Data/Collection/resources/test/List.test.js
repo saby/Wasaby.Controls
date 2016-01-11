@@ -349,6 +349,32 @@ define(
             });
          });
 
+         describe('.clear()', function() {
+            it('should reset items count', function() {
+               var list = new List({
+                     items: items
+                  });
+               list.clear();
+               assert.strictEqual(list.getCount(), 0);
+            });
+            it('should return an empty enumerator', function() {
+               var list = new List({
+                  items: items
+               });
+               list.clear();
+               assert.isUndefined(list.getEnumerator().getNext());
+            });
+            it('should not call callback in each', function() {
+               var list = new List({
+                  items: items
+               });
+               list.clear();
+               list.each(function() {
+                  throw new Error('Callback was called');
+               });
+            });
+         });
+
          describe('.add()', function() {
             it('should append an item', function() {
                var list = new List({

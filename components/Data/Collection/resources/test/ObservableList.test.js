@@ -124,36 +124,60 @@ define([
                list.destroy();
             });
          });
+
          describe('.assign()', function() {
-            context('when has instead', function() {
-               it('should trigger an event with valid arguments', function(done) {
-                  var list = new ObservableList({
-                        items: items.slice()
-                     }),
-                     fillItems = ['a', 'b'],
-                     handler = function(event, action, newItems, newItemsIndex, oldItems, oldItemsIndex) {
-                        try {
-                           checkEvent(
-                              action, newItems, newItemsIndex, oldItems, oldItemsIndex,
-                              IBindCollection.ACTION_RESET, fillItems, 0, items, 0
-                           );
-                           done();
-                        } catch (err) {
-                           done(err);
-                        }
-                     };
+            it('should trigger an event with valid arguments', function(done) {
+               var list = new ObservableList({
+                     items: items.slice()
+                  }),
+                  fillItems = ['a', 'b'],
+                  handler = function(event, action, newItems, newItemsIndex, oldItems, oldItemsIndex) {
+                     try {
+                        checkEvent(
+                           action, newItems, newItemsIndex, oldItems, oldItemsIndex,
+                           IBindCollection.ACTION_RESET, fillItems, 0, items, 0
+                        );
+                        done();
+                     } catch (err) {
+                        done(err);
+                     }
+                  };
 
-                  list.subscribe('onCollectionChange', handler);
+               list.subscribe('onCollectionChange', handler);
 
-                  list.assign(new List({
-                     items: fillItems
-                  }));
+               list.assign(new List({
+                  items: fillItems
+               }));
 
-                  list.unsubscribe('onCollectionChange', handler);
-                  list.destroy();
-               });
+               list.unsubscribe('onCollectionChange', handler);
+               list.destroy();
             });
+         });
 
+         describe('.clear()', function() {
+            it('should trigger an event with valid arguments', function(done) {
+               var list = new ObservableList({
+                     items: items.slice()
+                  }),
+                  handler = function(event, action, newItems, newItemsIndex, oldItems, oldItemsIndex) {
+                     try {
+                        checkEvent(
+                           action, newItems, newItemsIndex, oldItems, oldItemsIndex,
+                           IBindCollection.ACTION_RESET, [], 0, items, 0
+                        );
+                        done();
+                     } catch (err) {
+                        done(err);
+                     }
+                  };
+
+               list.subscribe('onCollectionChange', handler);
+
+               list.clear();
+
+               list.unsubscribe('onCollectionChange', handler);
+               list.destroy();
+            });
          });
 
          describe('.add()', function() {
