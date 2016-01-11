@@ -432,7 +432,6 @@ define('js!SBIS3.CONTROLS.MultiSelectable', ['js!SBIS3.CONTROLS.Data.Collection.
 
          /* Соберём элементы для удаления, т.к. в методе each не отслеживаются изменения IList'а */
          selItems.each(function(rec) {
-            /* ключи могут быть и строкой, поэтому надо проверить и на строку */
             if(self._isItemSelected(rec.getKey()) === -1) {
                delItems.push(rec);
             }
