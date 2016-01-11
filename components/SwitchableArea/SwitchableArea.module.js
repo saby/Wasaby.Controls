@@ -188,8 +188,11 @@ define('js!SBIS3.CONTROLS.SwitchableArea', [
          this._areaItems = $ws.helpers.collection(this._areaItems);
       },
       setItems: function(items) {
-         this._options.items = items;
-         this._createAreasByItems(this._options.items);
+         if (this._options.items !== items) {
+            this._options.items = items;
+            this._destroyAreas();
+            this._createAreasByItems(this._options.items);
+         }
       },
       /**
        * Возвращает коллекцию областей
