@@ -1,11 +1,21 @@
 .controls-demo-FieldLinkWithEditInPlace__cell {
-   padding-left: 4px;
-   border: 1px solid transparent;
-   line-height: 19px;
+   padding-left: 2px;
+}
+
+.controls-demo-FieldLinkWithEditInPlace__topAlign {
+   vertical-align: top !important;
+   padding-top: 0 !important;
 }
 
 .controls-demo-FieldLinkWithEditInPlace__cell > p {
-   margin: 12px 0;
+   margin: 8px 0;
+   line-height: 24px;
+   text-overflow: ellipsis;
+   white-space: nowrap;
+}
+
+.controls-demo-FieldLinkWithEditInPlace__cell > div {
+   margin-top: 11px;
 }
 
 .controls-demo-FieldLinkWithEditInPlace__newItem {

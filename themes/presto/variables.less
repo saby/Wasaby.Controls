@@ -261,7 +261,6 @@
 @tab-button-checked-border-bottom:              1px solid #FFF;
 @tab-button-checked-border-left:                transparent;
 @tab-button-checked-border-right:               transparent;
-@tab-button-checked-bg:                         #FFFFFF;
 @tab-button-checked-z-index:                     50;
 @tab-button-checked-cursor:                     default;
 @tab-button-checked-font-size:                  15px;
@@ -293,7 +292,6 @@
 @tab-button-inner-line-height:                  30px;
 @tab-button-inner-overflow:                     hidden;
 @tab-button-inner-height:                       29px;
-@tab-button-inner-max-height:                   29px;
 @tab-button-inner-after-content:                '';
 @tab-button-inner-after-display:                block;
 @tab-button-inner-after-width:                  1px;
@@ -452,77 +450,26 @@
 // Switcher //
 // -------- //
 
-@switcher-spritesheet:                                '';
-
-@switcher-cursor:                                     pointer;
-@switcher-min-width:                                  0;
-@switcher-height:                                     31px;
-@switcher-padding:                                    0 16px 0 0;
-
-@switcher-toggle-width:                               100%;
-@switcher-toggle-min-width:                           100px;
-@switcher-toggle-height:                              @switcher-height;
-@switcher-toggle-box-sizing:                          border-box;
-@switcher-toggle-border-radius:                       0;
-@switcher-toggle-border-width:                        0;
-@switcher-toggle-border-style:                        solid;
-@switcher-toggle-border-color:                        transparent;
-@switcher-toggle-bg:                                  darken(@secondary-color, 5%);
-
-@switcher-gap-width:                                  0;
-@switcher-toggle-edge-width:                          0;
-
-@switcher-toggle-position-text-alignment:             center;
-@switcher-toggle-position-width:                      70%;
-@switcher-toggle-position-min-width:                  0;
-@switcher-toggle-position-height:                     auto;
-@switcher-toggle-position-min-height:                 23px;
-@switcher-toggle-position-box-sizing:                 border-box;
-@switcher-toggle-position-padding:                    3px 0 0;
-
-@switcher-toggle-position-border-radius:              @switcher-toggle-border-radius;
-@switcher-toggle-position-border-width:               0;
-@switcher-toggle-position-border-style:               solid;
-@switcher-toggle-position-border-color:               transparent;
-
-@switcher-off-toggle-text-alignment:                  left;
-@switcher-off-toggle-padding:                         4px;
-@switcher-off-toggle-position-text-color:             @black-color;
-@switcher-off-toggle-position-margin:                 0;
-@switcher-off-toggle-position-bg:                     @default-color;
-@switcher-off-toggle-left-edge-bg:                    none;
-@switcher-off-toggle-right-edge-bg:                   none;
-
-@switcher-on-toggle-text-alignment:                   right;
-@switcher-on-toggle-padding:                          @switcher-off-toggle-padding;
-@switcher-on-toggle-position-text-color:              @switcher-off-toggle-position-text-color;
-@switcher-on-toggle-position-margin:                  @switcher-off-toggle-position-margin;
-@switcher-on-toggle-position-bg:                      @switcher-off-toggle-position-bg;
-@switcher-on-toggle-left-edge-bg:                     none;
-@switcher-on-toggle-right-edge-bg:                    none;
-
-@switcher-disabled-cursor:                            default;
-
-@switcher-disabled-toggle-border-width:               @switcher-toggle-border-width;
-@switcher-disabled-toggle-border-style:               @switcher-toggle-border-style;
-@switcher-disabled-toggle-border-color:               @gray-color;
-@switcher-disabled-toggle-bg:                         @gray-color;
-
-@switcher-disabled-toggle-position-border-width:      @switcher-toggle-position-border-width;
-@switcher-disabled-toggle-position-border-style:      @switcher-toggle-position-border-style;
-@switcher-disabled-toggle-position-border-color:      @switcher-toggle-position-border-color;
-
-@switcher-off-disabled-toggle-position-text-color:    @gray-color;
-@switcher-off-disabled-toggle-position-bg:            @white-color;
-@switcher-off-disabled-toggle-left-edge-bg:           none;
-@switcher-off-disabled-toggle-right-edge-bg:          none;
-
-@switcher-on-disabled-toggle-position-text-color:     @switcher-off-disabled-toggle-position-text-color;
-@switcher-on-disabled-toggle-position-bg:             @switcher-off-disabled-toggle-position-bg;
-@switcher-on-disabled-toggle-left-edge-bg:            none;
-@switcher-on-disabled-toggle-right-edge-bg:           none;
-
-
+@switcher-cursor:                               pointer;
+@switcher-cursor-disabled:                      default;
+@switcher-width:                                46px;
+@switcher-height:                               24px;
+@switcher-border:                               1px solid @gray-light-color;
+@switcher-border-radius:                        30px;
+@switcher-line-width:                           36px;
+@switcher-btn-bg-color:                         @white-color;
+@switcher-btn-color:                            @primary-color;
+@switcher-btn-color-inactive:                   @gray-color;
+@switcher-btn-color-disabled:                   @gray-light-color;
+@switcher-btn-border-width:                     2px;
+@switcher-btn-border-hover:                     3px;
+@switcher-btn-radius:                           6px;
+@switcher-btn-size:                             12px;
+@switcher-btn-margin:                           5px;
+@switcher-dot-width:                            2px;
+@switcher-dot-height:                           4px;
+@switcher-dot-margin:                           2px 0 0 3px;
+@switcher-dot-margin-hover:                     1px 0 0 2px;
 
 // ---- //
 // Menu //
@@ -1342,6 +1289,7 @@
 @tree-view-hier-wrapper-width:						20px;
 @tree-view-hier-wrapper-height: 						20px;
 
+@tree-view-folder-title-display:                inline-block;
 
 // --------- //
 // Data grid //

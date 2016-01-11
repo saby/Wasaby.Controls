@@ -24,16 +24,24 @@ fs.mkdir = function(pathname, mode) {
  * @param {String} path Удаляемый каталог
  */
 fs.rmdir = function (path) {
-   if (sysfs.existsSync(path)) {
-      sysfs.readdirSync(path).forEach(function (file, index) {
-         var curPath = path + '/' + file;
-         if (sysfs.lstatSync(curPath).isDirectory()) {
-            fs.rmdir(curPath);
-         } else {
-            sysfs.unlinkSync(curPath);
-         }
-      });
-      sysfs.rmdirSync(path);
+   try {
+      if (sysfs.existsSync(path)) {
+         sysfs.readdirSync(path).forEach(function (file) {
+            try {
+               var curPath = path + '/' + file;
+               if (sysfs.lstatSync(curPath).isDirectory()) {
+                  fs.rmdir(curPath);
+               } else {
+                  sysfs.unlinkSync(curPath);
+               }
+            } catch (e) {
+               console.error(e.toString());
+            }
+         });
+         sysfs.rmdirSync(path);
+      }
+   } catch (e) {
+      console.error(e.toString());
    }
 };
 

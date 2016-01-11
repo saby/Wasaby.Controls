@@ -7,6 +7,27 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', ['js!SBIS3.CORE.Control'], function (Con
     */
 
    var TreeMixinDS = /** @lends SBIS3.CONTROLS.TreeMixinDS.prototype */{
+      /**
+       * @event onNodeExpand После разворачивания ветки
+       * @param {$ws.proto.EventObject} eventObject Дескриптор события.
+       * @param {String} key ключ разворачиваемой ветки
+       * @example
+       * <pre>
+       *    onNodeExpand: function(event){
+       *       $ws.helpers.question('Продолжить?');
+       *    }
+       * </pre>
+       *
+       * @event onNodeCollapse После сворачивания ветки
+       * @param {$ws.proto.EventObject} eventObject Дескриптор события.
+       * @param {String} key ключ разворачиваемой ветки
+       * @example
+       * <pre>
+       *    onNodeCollapse: function(event){
+       *       $ws.helpers.question('Продолжить?');
+       *    }
+       * </pre>
+       */
       $protected: {
          _folderOffsets : {},
          _folderHasMore : {},
@@ -15,9 +36,8 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', ['js!SBIS3.CORE.Control'], function (Con
          _options: {
             /**
              * @cfg {Boolean} При открытия узла закрывать другие
-             * @noShow
              */
-            singleExpand: '',
+            singleExpand: false,
 
             /**
              * Опция задаёт режим разворота.
@@ -73,6 +93,7 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', ['js!SBIS3.CORE.Control'], function (Con
          this._collapseChilds(key);
          delete(this._options.openedPath[key]);
          this._nodeClosed(key);
+         this._notify('onNodeCollapse', key);
       },
 
       //Рекурсивно удаляем из индекса открытых узлов все дочерние узлы закрываемого узла
@@ -133,6 +154,14 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', ['js!SBIS3.CORE.Control'], function (Con
          var self = this,
          tree = this._dataSet.getTreeIndex(this._options.hierField, true);
          this._folderOffsets[key || 'null'] = 0;
+
+         if (this._options.singleExpand){
+            $.each(this._options.openedPath, function(openedKey, _value){
+               if (key != openedKey){
+                  self.collapseNode(openedKey);
+               }
+            });
+         }
          if (!tree[key]){
             this._toggleIndicator(true);
             return this._callQuery(this._createTreeFilter(key), this.getSorting(), 0, this._limit).addCallback(function (dataSet) {
@@ -142,6 +171,7 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', ['js!SBIS3.CORE.Control'], function (Con
                self._notify('onDataMerge', dataSet);
                self._toggleIndicator(false);
                self._nodeDataLoaded(key, dataSet);
+               self._notify('onNodeExpand', key);
             });
          } else {
             var child = tree[key];
@@ -152,6 +182,7 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', ['js!SBIS3.CORE.Control'], function (Con
                }
                this._options.openedPath[key] = true;
                this._drawLoadedNode(key, records, this._folderHasMore[key]);
+               this._notify('onNodeExpand', key);
             }
          }
       },
