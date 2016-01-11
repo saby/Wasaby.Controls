@@ -725,47 +725,65 @@ define([
                projection.unsubscribe('onCollectionChange', handler);
             });
 
-            it('should fire after reset a collection', function(done) {
+            context('when change a collection', function() {
                var itemsOld = getItems(),
                   itemsNew = [9, 8, 7],
-                  list = new ObservableList({
-                     items: itemsOld.slice()
-                  }),
-                  projection = new CollectionProjection({
-                     collection: list
-                  }),
-                  handler = function(event, action, newItems, newItemsIndex, oldItems, oldItemsIndex) {
-                     try {
-                        if (action !== IBindCollectionProjection.ACTION_RESET) {
-                           throw new Error('Invalid action');
-                        }
-                        if (newItems[0].getContents() !== itemsNew[0] ||
-                           newItems[1].getContents() !== itemsNew[1] ||
-                           newItems[2].getContents() !== itemsNew[2]
-                        ) {
-                           throw new Error('Invalid newItems');
-                        }
-                        if (newItemsIndex !== 0) {
-                           throw new Error('Invalid newItemsIndex');
-                        }
-                        if (oldItems[0].getContents() !== itemsOld[0] ||
-                           oldItems[1].getContents() !== itemsOld[1] ||
-                           oldItems[2].getContents() !== itemsOld[2] ||
-                           oldItems[3].getContents() !== itemsOld[3]
-                        ) {
-                           throw new Error('Invalid oldItems');
-                        }
-                        if (oldItemsIndex !== 0) {
-                           throw new Error('Invalid oldItemsIndex');
-                        }
-                        done();
-                     } catch (err) {
-                        done(err);
-                     }
-                  };
-               projection.subscribe('onCollectionChange', handler);
-               projection.getCollection().append(itemsNew);
-               projection.unsubscribe('onCollectionChange', handler);
+                  cases = [
+                     {method: 'assign', action: IBindCollectionProjection.ACTION_RESET, newAt: 0, newItems: itemsNew,  oldAt: 0, oldItems: itemsOld},
+                     {method: 'append', action: IBindCollectionProjection.ACTION_ADD, newAt: 4, newItems: itemsNew, oldAt: 0, oldItems: []},
+                     {method: 'prepend', action: IBindCollectionProjection.ACTION_ADD, newAt: 0, newItems: itemsNew, oldAt: 0, oldItems: []},
+                     {method: 'clear', action: IBindCollectionProjection.ACTION_RESET, newAt: 0, newItems: [], oldAt: 0, oldItems: itemsOld}
+                  ];
+
+               while (cases.length) {
+                  (function(theCase) {
+                     it('should fire after ' + theCase.method, function(done) {
+                        var handler = function(event, action, newItems, newItemsIndex, oldItems, oldItemsIndex) {
+                              try {
+                                 var i;
+                                 if (action !== theCase.action) {
+                                    throw new Error('Invalid action ' + action + ' - ' + theCase.action + ' expected');
+                                 }
+                                 if (newItems.length !== theCase.newItems.length) {
+                                    throw new Error('Invalid newItems length ' + newItems.length + ' - ' + theCase.newItems.length + ' expected');
+                                 }
+                                 for (i = 0; i < theCase.newItems.length; i++) {
+                                    if (newItems[i].getContents() !== theCase.newItems[i]) {
+                                       throw new Error('Invalid newItems at ' + i);
+                                    }
+                                 }
+                                 if (newItemsIndex !== theCase.newAt) {
+                                    throw new Error('Invalid newItemsIndex ' + newItemsIndex + ' - ' + theCase.newAt + ' expected');
+                                 }
+                                 if (oldItems.length !== theCase.oldItems.length) {
+                                    throw new Error('Invalid oldItems length ' + oldItems.length + ' - ' + theCase.oldItems.length + ' expected');
+                                 }
+                                 for (i = 0; i < theCase.oldItems.length; i++) {
+                                    if (oldItems[i].getContents() !== theCase.oldItems[i]) {
+                                       throw new Error('Invalid oldItems at ' + i);
+                                    }
+                                 }
+                                 if (oldItemsIndex !== theCase.oldAt) {
+                                    throw new Error('Invalid oldItemsIndex ' + oldItemsIndex + ' - ' + theCase.oldAt + ' expected');
+                                 }
+                                 done();
+                              } catch (err) {
+                                 done(err);
+                              }
+                           },
+                           list = new ObservableList({
+                              items: itemsOld.slice()
+                           }),
+                           projection = new CollectionProjection({
+                              collection: list
+                           });
+
+                        projection.subscribe('onCollectionChange', handler);
+                        projection.getCollection()[theCase.method](itemsNew);
+                        projection.unsubscribe('onCollectionChange', handler);
+                     });
+                  })(cases.shift());
+               }
             });
 
             it('should fire after sort the projection', function(done) {
