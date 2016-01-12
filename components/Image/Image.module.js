@@ -8,8 +8,9 @@ define('js!SBIS3.CONTROLS.Image',
       'html!SBIS3.CONTROLS.Image',
       'js!SBIS3.CORE.FileLoader',
       'js!SBIS3.CORE.Dialog',
+      'js!SBIS3.CORE.LoadingIndicator',
       'js!SBIS3.CONTROLS.Link'
-   ], function(CompoundControl, SbisService, dotTplFn, FileLoader, Dialog) {
+   ], function(CompoundControl, SbisService, dotTplFn, FileLoader, Dialog, LoadingIndicator) {
       'use strict';
       var
          //Продолжительность анимации при отображения панели изображения
@@ -221,6 +222,7 @@ define('js!SBIS3.CONTROLS.Image',
                _buttonReset: undefined,
                _buttonEdit: undefined,
                _boundEvents: undefined,
+               _saveIndicator: undefined,
                _firstLoaded: false
             },
             $constructor: function() {
@@ -410,9 +412,11 @@ define('js!SBIS3.CONTROLS.Image',
                      handlers: {
                         onBeginSave: function (event, sendObject) {
                            event.setResult(self._notify('onBeginSave', sendObject));
+                           self._toggleSaveIndicator(true);
                         },
                         onEndSave: function (event, result) {
                            event.setResult(self._notify('onEndSave', result));
+                           self._toggleSaveIndicator(false);
                            self.reload();
                         }
                      }
@@ -423,6 +427,23 @@ define('js!SBIS3.CONTROLS.Image',
                      }
                   }
                });
+            },
+            /**
+             * Показать/скрыть индикатор сохранения изображения
+             */
+            _toggleSaveIndicator: function(state) {
+               if (state) {
+                  if (!this._saveIndicator) {
+                     this._saveIndicator = new LoadingIndicator({
+                        'message': 'Сохранение',
+                        'name': 'ws-load-indicator'
+                     });
+                  } else {
+                     this._saveIndicator.show();
+                  }
+               } else if (this._saveIndicator) {
+                  this._saveIndicator.hide();
+               }
             },
             /* ------------------------------------------------------------
                Блок обработчиков команд
