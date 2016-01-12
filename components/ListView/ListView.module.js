@@ -202,7 +202,6 @@ define('js!SBIS3.CONTROLS.ListView',
             ],
             _itemActionsGroup: null,
             _emptyData: undefined,
-            _scrollWidth: undefined,
             _containerScrollHeight : 0,
             _firstScrollTop : true,
             _options: {
@@ -403,8 +402,6 @@ define('js!SBIS3.CONTROLS.ListView',
             this._publish('onChangeHoveredItem', 'onItemClick', 'onItemActivate', 'onDataMerge', 'onItemValueChanged', 'onShowEdit', 'onBeginEdit', 'onEndEdit', 'onBeginAdd', 'onAfterEndEdit', 'onPrepareFilterOnMove');
             this._container.on('mousemove', this._mouseMoveHandler.bind(this))
                            .on('mouseleave', this._mouseLeaveHandler.bind(this));
-
-            this._scrollWidth = $ws.helpers.getScrollWidth();
 
             this.initEditInPlace();
             $ws.single.CommandDispatcher.declareCommand(this, 'activateItem', this._activateItem);
