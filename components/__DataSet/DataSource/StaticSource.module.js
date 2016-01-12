@@ -6,5 +6,5 @@ define('js!SBIS3.CONTROLS.StaticSource', [
 ], function (Memory) {
    'use strict';
    $ws.single.ioc.resolve('ILogger').log('StaticSource', 'С 3.7.3.20 класс SBIS3.CONTROLS.StaticSource устарел, используйте SBIS3.CONTROLS.Data.Source.Memory');
-   return SbisService
+   return Memory
 });
