@@ -1497,7 +1497,9 @@ define('js!SBIS3.CONTROLS.ListView',
             for (var i = 1; i < rows.length; i++){
                var upperRow = $('.controls-ladder', rows[i - 1]),
                   lowerRow = $('.controls-ladder', rows[i]);
-               lowerRow.toggleClass('ws-invisible', upperRow.html() == lowerRow.html());
+               for (var j = 0; j < lowerRow.length; j++){
+                  lowerRow.eq(j).toggleClass('ws-invisible', upperRow.eq(j).html() == lowerRow.eq(j).html());
+               }
             }
          }
       });
