@@ -144,7 +144,22 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
       //region SBIS3.CONTROLS.DataSet
 
       removeRecord: function (key) {
-         return DataSet.prototype.removeRecord.call(this, key);
+         var self = this;
+         var mark = function (key) {
+            var record = self.getRecordById(key);
+            if (record) {
+               record.setDeleted(true);
+            }
+         };
+
+         if (key instanceof Array) {
+            var length = key.length;
+            for (var i = 0; i < length; i++) {
+               mark(key[i]);
+            }
+         } else {
+            mark(key);
+         }
       },
       /**
        * Возвращает запись по ключу
@@ -204,7 +219,11 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
       },
 
       merge: function (dataSetMergeFrom, options) {
-         return DataSet.prototype.merge.call(this, dataSetMergeFrom, options);
+         /*TODO какая то лажа с ключами*/
+         if ((!this._keyField) && (dataSetMergeFrom._keyField)) {
+            this._keyField = dataSetMergeFrom._keyField;
+         }
+         this._setRecords(dataSetMergeFrom._getRecords(), options);
       },
 
       push: function (record) {
@@ -314,15 +333,47 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
 
       // TODO: В контролах избавиться от вызова этого метода - должно быть достаточно "выбрать по индексу".
       getTreeIndex: function(field, reindex){
-         return DataSet.prototype.getTreeIndex.call(this, field, reindex);
+         if (reindex || (Object.isEmpty(this._indexTree) && field)){
+            this._reindexTree(field);
+         }
+         return this._indexTree;
       },
 
       getChildItems: function (parentId, getFullBranch, field) {
-         return DataSet.prototype.getChildItems.call(this, parentId, getFullBranch, field);
+         if(Object.isEmpty(this._indexTree)) {
+            this._reindexTree(field);
+         }
+         parentId = (typeof parentId != 'undefined') ? parentId : null;
+         if (this._indexTree.hasOwnProperty(parentId)) {
+            if (getFullBranch) {
+               var curParent = parentId,
+                  parents = [],
+                  childs = [];
+
+               do {
+                  $ws.helpers.forEach(this._indexTree[curParent], function (newParent) {
+                     parents.push(newParent);
+                     childs.push(newParent);
+                  });
+                  if (parents.length) {
+                     curParent = Array.remove(parents, 0);
+                  } else {
+                     curParent = null;
+                  }
+               } while (curParent);
+               return childs;
+            }
+            return this._indexTree[parentId];
+         } else {
+            return [];
+         }
       },
 
       hasChild: function (parentKey, field) {
-         return DataSet.prototype.hasChild.call(this, parentKey, field);
+         if(Object.isEmpty(this._indexTree)) {
+            this._reindexTree(field);
+         }
+         return this._indexTree.hasOwnProperty(parentKey);
       },
 
       getParent: function () {
@@ -363,7 +414,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
             key = records[i].getKey();
             recordsMap[key] = true;
 
-            if ((record = self.getRecordByKey(key))) {
+            if ((record = self.getRecordById(key))) {
                if (options.merge) {
                   record.merge(records[i]);
                }
