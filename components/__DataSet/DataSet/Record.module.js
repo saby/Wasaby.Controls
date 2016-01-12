@@ -1,6 +1,3 @@
-/**
- * Created by as.manuylov on 10.11.14.
- */
 define('js!SBIS3.CONTROLS.Record', [
    'js!SBIS3.CONTROLS.Data.Model'
 ], function (Model) {
