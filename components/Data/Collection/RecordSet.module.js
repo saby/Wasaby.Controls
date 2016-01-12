@@ -120,12 +120,14 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
          added = added === undefined ? true : added;
          changed = changed === undefined ? true : changed;
          deleted = deleted === undefined ? true : deleted;
-
-         var syncCompleteDef = new $ws.proto.ParallelDeferred();
+         var self = this;
+         var syncCompleteDef = new $ws.proto.ParallelDeferred(),
+            willRemove = [];
          this.each(function(model) {
             if (model.isDeleted()) {
                syncCompleteDef.push(dataSource.destroy(model.getId()).addCallback(function() {
                   model.setStored(false);
+                  willRemove.push(model);//each рушится если удалять тут, поэтому удаляем потом
                   return model;
                }));
             } else if (model.isChanged() || !model.isStored()) {
@@ -136,9 +138,10 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
                }));
             }
          }, 'all');
-
          syncCompleteDef.done(true);
-         return syncCompleteDef.getResult();
+         return syncCompleteDef.getResult().addCallback(function (){
+            $ws.helpers.map(willRemove, this.remove, this);
+         });
       },
 
       //region SBIS3.CONTROLS.DataSet
