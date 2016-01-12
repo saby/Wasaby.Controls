@@ -459,9 +459,7 @@ define('js!SBIS3.CONTROLS.ListView',
                this._scrollWatcher = new ScrollWatcher(scrollWatcherCfg);
                this._scrollWatcher.subscribe('onScroll', function(event, type){
                   //top || bottom
-                  if (type === self._options.infiniteScrollDirection) {
-                     self._nextLoad();
-                  }
+                  self._loadChecked(type === self._options.infiniteScrollDirection);
                });
             }
          },
@@ -1131,7 +1129,6 @@ define('js!SBIS3.CONTROLS.ListView',
             this._notifyOnSizeChanged(true);
          },
          //-----------------------------------infiniteScroll------------------------
-         //TODO Сделать подгрузку вверх
          //TODO (?) избавиться от _allowInfiniteScroll - пусть все будет завязано на опцию infiniteScroll
          /**
           * Используется ли подгрузка по скроллу.
@@ -1151,10 +1148,6 @@ define('js!SBIS3.CONTROLS.ListView',
          isInfiniteScroll: function () {
             return this._options.infiniteScroll && this._allowInfiniteScroll;
          },
-         //TODO Удалить, если везде заработает новая проверка в контейнерах
-         //_onContainerScrollBottom: function () {
-         //   return (this._loadingIndicator.offset().top - this.getContainer().offset().top - START_NEXT_LOAD_OFFSET < this.getContainer().height());
-         //},
          /**
           *  Общая проверка и загрузка данных для всех событий по скроллу
           */
