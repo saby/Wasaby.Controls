@@ -1,0 +1,15 @@
+<tr class="controls-DataGridView__tr {{=it.containerClass}}" data-hash="{{=it.hash}}">
+    {{?it.multiselect}}
+       <td class="controls-DataGridView__td js-controls-ListView__itemCheckBox controls-DataGridView__td__checkBox">
+          <span class="controls-ListView__itemCheckBox js-controls-ListView__itemCheckBox"/>
+       </td>
+    {{?}}
+    {{~it.cells :cell:index}}
+       <td class="controls-DataGridView__td
+             {{? !!cell.editor}} controls-DataGridView__edited-td{{?}}
+             {{?cell.className}} {{=cell.className}}{{?}}"
+          >
+          {{=cell.template(cell)}}
+       </td>
+    {{~}}
+</tr>

@@ -95,7 +95,15 @@ define('js!SBIS3.CONTROLS.DataGridView',
              */
             showHead : true,
             /**
-             * @cfg {Number} Частичный скролл
+             * @cfg {Number} Количество столбцов слева, которые будут не скроллируемы
+             * @remark
+             * Для появления частичного скролла, надо установить такую ширину колонок,
+             * чтобы сумма ширин всех столбцов была больше чем ширина контейнера таблицы
+             * @example
+             * <pre>
+             *     <option name="startScrollColumn">3</option>
+             * </pre>
+             * @group Scroll
              */
             startScrollColumn: undefined,
             /**
@@ -216,7 +224,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
       },
 
       _editFieldFocusHandler: function(focusedCtrl) {
-         if(this._itemActionsGroup) {
+         if(this.getItemsActions()) {
             this._hideItemActions()
          }
 
