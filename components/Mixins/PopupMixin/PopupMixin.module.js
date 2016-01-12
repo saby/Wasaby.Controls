@@ -43,7 +43,6 @@ define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManag
          _defaultHorizontalAlignSide: '',
          _defaultVerticalAlignSide: '',
          _margins: null,
-         _initOrigins: true,
          _marginsInited: false,
          _zIndex: null,
          _resizeTimeout: null,
@@ -186,7 +185,8 @@ define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManag
                corner : this._options.corner
             };
             if (recalcFlag) {
-               this._initOrigins = true;
+               this._containerSizes.originWidth = parseFloat(this._container.css('max-width'), 10) || this._container.get(0).scrollWidth + this._containerSizes.border * 2;
+               this._containerSizes.originHeight = parseFloat(this._container.css('max-height'), 10) || this._container.get(0).scrollHeight + this._containerSizes.border * 2;
             }
             this._initSizes();
             if (this._options.target) {
@@ -221,7 +221,6 @@ define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManag
                this._container.offset(bodyOffset);
 
             }
-            this._initOrigins = false;
          }
       },
       /**
@@ -742,13 +741,7 @@ define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManag
                this._container.css('margin', 0);
                this._marginsInited = true;
             }
-            this._initSizes();
-            if (this._initOrigins) {
-               this._containerSizes.originWidth = parseFloat(this._container.css('max-width'), 10) || this._container.get(0).scrollWidth + this._containerSizes.border * 2;
-               this._containerSizes.originHeight = parseFloat(this._container.css('max-height'), 10) || this._container.get(0).scrollHeight + this._containerSizes.border * 2;
-               this._initOrigins = false;
-            }
-            this.recalcPosition();
+            this.recalcPosition(true);
             this.moveToTop();//пересчитываем, чтобы z-index был выше других панелей
 
             this._notify('onShow');
