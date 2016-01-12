@@ -15,12 +15,10 @@ define('js!SBIS3.CONTROLS.DropdownList',
       'html!SBIS3.CONTROLS.DropdownList',
       'html!SBIS3.CONTROLS.DropdownList/DropdownListHead',
       'html!SBIS3.CONTROLS.DropdownList/DropdownListItem',
-      'html!SBIS3.CONTROLS.DropdownList/DropdownListPicker',
-      'html!SBIS3.CONTROLS.DropdownList/DropdownListFooter'
+      'html!SBIS3.CONTROLS.DropdownList/DropdownListPicker'
    ],
 
-   function(Control, PickerMixin, DSMixin, MultiSelectable, DataBindMixin, DropdownListMixin, Button, Link, MarkupTransformer,
-            dotTplFn, dotTplFnHead, dotTplFnForItem, dotTplFnPicker, dotTplFnFooter) {
+   function(Control, PickerMixin, DSMixin, MultiSelectable, DataBindMixin, DropdownListMixin, Button, Link, MarkupTransformer, dotTplFn, dotTplFnHead, dotTplFnForItem, dotTplFnPicker) {
 
       'use strict';
       /**
@@ -95,13 +93,6 @@ define('js!SBIS3.CONTROLS.DropdownList',
          $constructor: function() {
             this._container.bind(this._options.mode === 'hover' ? 'mouseenter' : 'mousedown', this.showPicker.bind(this));
             this._publish('onClickMore');
-         },
-         _modifyOptions: function(opts){
-            //Если у нас режим мультивыбора, то возьмем свой шаблон с кнопками Отобрать и Еще.
-            if (opts.multiselect && !opts.footerTpl){
-               opts.footerTpl = dotTplFnFooter;
-            }
-            return DropdownList.superclass._modifyOptions.apply(this, arguments);
          },
          init : function () {
             DropdownList.superclass.init.apply(this, arguments);
