@@ -1,0 +1,7 @@
+<div class="{{=it.class}}" id="{{=it.id}}" data-hash="{{=it.hash}}">
+   {{?it.items.length}}
+      {{~it.items :item}}
+         {{=item.template(item)}}
+      {{~}}
+   {{?}}
+</div>
