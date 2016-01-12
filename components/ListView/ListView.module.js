@@ -1114,7 +1114,7 @@ define('js!SBIS3.CONTROLS.ListView',
             if (loadAllowed && $ws.helpers.isElementVisible(this.getContainer()) &&
                   this._hasNextPage(this._dataSet.getMetaData().more, this._infiniteScrollOffset) && this._hasScrollMore && !this._isLoading()) {
                this._showLoadingIndicator();
-               this._loader = this._callQuery(this.getFilter(), this.getSorting(), this._infiniteScrollOffset + this._limit, this._limit).addCallback(function (dataSet) {
+               this._loader = this._callQuery(this.getFilter(), this.getSorting(), this._infiniteScrollOffset + this._limit, this._limit).addCallback($ws.helpers.forAliveOnly(function (dataSet) {
                   //ВНИМАНИЕ! Здесь стрелять onDataLoad нельзя! Либо нужно определить событие, которое будет
                   //стрелять только в reload, ибо между полной перезагрузкой и догрузкой данных есть разница!
                   self._loader = null;
@@ -1141,7 +1141,7 @@ define('js!SBIS3.CONTROLS.ListView',
                      self._toggleEmptyData();
                   }
 
-               }).addErrback(function (error) {
+               }, self)).addErrback(function (error) {
                   //Здесь при .cancel приходит ошибка вида DeferredCanceledError
                   return error;
                });
@@ -1510,7 +1510,9 @@ define('js!SBIS3.CONTROLS.ListView',
             for (var i = 1; i < rows.length; i++){
                var upperRow = $('.controls-ladder', rows[i - 1]),
                   lowerRow = $('.controls-ladder', rows[i]);
-               lowerRow.toggleClass('ws-invisible', upperRow.html() == lowerRow.html());
+               for (var j = 0; j < lowerRow.length; j++){
+                  lowerRow.eq(j).toggleClass('ws-invisible', upperRow.eq(j).html() == lowerRow.eq(j).html());
+               }
             }
          }
       });

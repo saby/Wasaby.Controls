@@ -440,7 +440,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
 
          if (this._dataSource){
             this._toggleIndicator(true);
-	         this._loader = this._callQuery(this._options.filter, this.getSorting(), this._offset, this._limit).addCallback(function (dataSet) {
+	         this._loader = this._callQuery(this._options.filter, this.getSorting(), this._offset, this._limit).addCallback($ws.helpers.forAliveOnly(function (dataSet) {
 	            self._toggleIndicator(false);
 	            self._loader = null;//Обнулили без проверки. И так знаем, что есть и загрузили
 
@@ -452,13 +452,13 @@ define('js!SBIS3.CONTROLS.DSMixin', [
 	            self._notify('onDataLoad', dataSet);
 	            //self._notify('onBeforeRedraw');
 	            def.callback(dataSet);
-	         }).addErrback(function(error){
+	         }, self)).addErrback($ws.helpers.forAliveOnly(function(error){
 	            if (!error.canceled) {
 	               self._toggleIndicator(false);
 	               $ws.helpers.message(error.message.toString().replace('Error: ', ''));
 	            }
 	            def.errback(error);
-	         });
+	         }, self));
          }
 
          this._notifyOnPropertyChanged('filter');
