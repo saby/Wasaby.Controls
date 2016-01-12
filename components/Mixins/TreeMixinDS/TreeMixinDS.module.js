@@ -40,8 +40,7 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', ['js!SBIS3.CORE.Control'], function (Con
             singleExpand: false,
 
             /**
-             * Опция задаёт режим разворота.
-             * @Boolean false Без разворота
+             * @cfg {Boolean} Опция задаёт режим разворота. false Без разворота
              */
             expand: false,
             openedPath : {},
