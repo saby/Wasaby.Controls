@@ -44,7 +44,13 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', ['js!SBIS3.CORE.Control'], function (Con
              * @Boolean false Без разворота
              */
             expand: false,
-            openedPath : {}
+            openedPath : {},
+            /**
+             * @cfg {Boolean}
+             * Разрешить проваливаться в папки
+             * Если выключено, то папки можно открывать только в виде дерева, проваливаться в них нельзя
+             */
+            allowEnterToFolder: true
          }
       },
 
