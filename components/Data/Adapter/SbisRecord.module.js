@@ -8,6 +8,7 @@ define('js!SBIS3.CONTROLS.Data.Adapter.SbisRecord', [
     * Адаптер для записи таблицы данных в формате СБиС
     * @class SBIS3.CONTROLS.Data.Adapter.SbisRecord
     * @mixes SBIS3.CONTROLS.Data.Adapter.IRecord
+    * @public
     * @author Мальцев Алексей
     */
    var SbisRecord = $ws.core.extend({}, [IRecord], /** @lends SBIS3.CONTROLS.Data.Adapter.SbisRecord.prototype */{
