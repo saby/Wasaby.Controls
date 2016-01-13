@@ -140,7 +140,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
          }, 'all');
          syncCompleteDef.done(true);
          return syncCompleteDef.getResult().addCallback(function (){
-            $ws.helpers.map(willRemove, this.remove, this);
+            $ws.helpers.map(willRemove, self.remove, self);
          });
       },
 
