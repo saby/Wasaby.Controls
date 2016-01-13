@@ -33,38 +33,40 @@ define('js!SBIS3.CONTROLS.FilterHistoryController',
              },
              _history : undefined,              /* Объект с историей фильтров */
              _loadParamsDeferred: undefined,    /* Деферед загрузки истории */
-             _saveParamsDeferred: undefined     /* Деферед сохранения истории */
+             _saveParamsDeferred: undefined,    /* Деферед сохранения истории */
+
+             _changeHistoryFnc: undefined
           },
 
           $constructor: function() {
-             var self = this,
-                 fb = self._options.filterButton;
+             var self = this;
+             this._changeHistoryFnc = function(e, id, newHistory, activeFilter, saveDeferred) {
+                /* Если изменения произошло в истории с другим ID или история не изменилась, то ничего делать не будем */
+                if (this._options.historyId !== id || this._history.equals(newHistory) || $ws.helpers.isEqualObject(this.getActiveFilter(), activeFilter)) return;
+
+                /* Запишем новую историю */
+                this._history.fill($ws.core.clone(newHistory.toArray()));
+                this._saveParamsDeferred = saveDeferred;
+                this._options.filterButton[activeFilter ? 'setFilterStructure' : '_resetFilter'](activeFilter.filter);
+                this._updateFilterButtonHistoryView();
+             }.bind(this);
 
              /* Подпишемся на глобальный канал изменения истории,
                 чтобы изменения сразу применялись ко всем реестрам, у которых один historyId */
-             EVENT_CHANNEL.subscribe('onChangeHistory', function(e, id, newHistory, activeFilter, saveDeferred) {
-                /* Если изменения произошло в истории с другим ID или история не изменилась, то ничего делать не будем */
-                if (self._options.historyId !== id || self._history.equals(newHistory) || $ws.helpers.isEqualObject(self.getActiveFilter(), activeFilter)) return;
-
-                /* Запишем новую историю */
-                self._history.fill($ws.core.clone(newHistory.toArray()));
-                self._saveParamsDeferred = saveDeferred;
-                fb[activeFilter ? 'setFilterStructure' : '_resetFilter'](activeFilter.filter);
-                self._updateFilterButtonHistoryView();
-             });
-
-             this.getHistory(true).addCallback(function(result) {
-                self._history = new List({items: result});
-                return result;
-             });
+             EVENT_CHANNEL.subscribe('onChangeHistory', this._changeHistoryFnc);
 
              /* Если сбросили фильтр - сбросим активный */
-             this._options.filterButton.subscribe('onResetFilter', function() {
+             this.subscribeTo(this._options.filterButton, 'onResetFilter', function() {
                 self.clearActiveFilter();
 
                 if (!self._isNowSaving()) {
                    self.saveHistory();
                 }
+             });
+
+             this.getHistory(true).addCallback(function(result) {
+                self._history = new List({items: result});
+                return result;
              });
           },
 
@@ -274,6 +276,17 @@ define('js!SBIS3.CONTROLS.FilterHistoryController',
              }
 
              return this._loadParamsDeferred;
+          },
+
+          destroy: function() {
+             if(this._loadParamsDeferred) {
+                this._loadParamsDeferred.cancel();
+                this._loadParamsDeferred = undefined;
+             }
+             EVENT_CHANNEL.unsubscribe('onChangeHistory', this._changeHistoryFnc);
+             this._changeHistoryFnc = undefined;
+
+             FilterHistoryController.superclass.destroy.apply(this, arguments);
           }
        });
 
