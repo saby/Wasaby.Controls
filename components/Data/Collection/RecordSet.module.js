@@ -189,7 +189,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
        * @returns {*}
        */
       getIndexById: function (id) {
-         return this.getItemIndexByPropertyValue(this._options.idProperty, id);
+         return this.getIndexByValue(this._options.idProperty, id);
       },
       /**
        * Возвращает копию рекордсета
