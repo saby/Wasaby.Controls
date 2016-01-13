@@ -176,17 +176,17 @@ define([
             it('should sort projection after change item', function() {
                var
                   adapter = new JsonAdapter(),
-                  changeModel = new Model({data:{max: 2}}),
+                  changeModel = new Model({rawData:{max: 2}}),
                   list = new ObservableList({
                      items: [
                         new Model({
-                           data: {max: 1}
+                           rawData: {max: 1}
                         }),
                         new Model({
-                           data: {max: 3}
+                           rawData: {max: 3}
                         }),
                         new Model({
-                           data: {max: 4}
+                           rawData: {max: 4}
                         }),
                         changeModel
                      ]
@@ -294,21 +294,21 @@ define([
                var
                   adapter = new JsonAdapter(),
                   changeModel = new Model({
-                     data: {max: 2},
+                     rawData: {max: 2},
                      adapter: adapter
                   }),
                   list = new ObservableList({
                      items: [
                         new Model({
-                           data: {max: 1},
+                           rawData: {max: 1},
                            adapter: adapter
                         }),
                         new Model({
-                           data: {max: 3},
+                           rawData: {max: 3},
                            adapter: adapter
                         }),
                         new Model({
-                           data: {max: 4},
+                           rawData: {max: 4},
                            adapter: adapter
                         }),
                         changeModel
