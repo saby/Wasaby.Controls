@@ -91,6 +91,7 @@ define('js!SBIS3.CONTROLS.Browser', [
 
          this._hierMode = checkViewType(this._view);
 
+         $(window).on('resize', this._onWindowResize.bind(this));
 
          if (this._hierMode) {
             this._backButton = this._getBackButton();
@@ -156,14 +157,19 @@ define('js!SBIS3.CONTROLS.Browser', [
          } else {
             newWidth = width - backButtonWidth;
          }
-         this._breadCrumbs.getContainer().css('max-width', newWidth);
+         this._breadCrumbs.getContainer().css('width', newWidth);
       },
 
       _setPathWidth: function(){
-         var firstColumn = $('.controls-DataGridView__th', this._view.getContainer()).first();
+         var firstColumn = $('.controls-DataGridView__th', this._view.getContainer()).not('.controls-DataGridView__td__checkBox').first();
          if (firstColumn.length){
             $('.controls-Browser__path', this._container).width(firstColumn.width());
          }
+      },
+
+      _onWindowResize: function(){
+         this._setPathWidth();
+         this._calculatePathSize();
       },
 
       _notifyOnFiltersReady: function() {
@@ -199,6 +205,11 @@ define('js!SBIS3.CONTROLS.Browser', [
 
       _notifyOnEditByActivate: function(itemMeta) {
          this._notify('onEdit', itemMeta);
+      },
+
+      destroy: function(){
+         $(window).off('resize', this._calculatePathSize);
+         Browser.superclass.destroy.call(this);
       }
 
    });
