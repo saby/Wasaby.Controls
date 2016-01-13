@@ -83,7 +83,7 @@ define('js!SBIS3.CONTROLS.Data.Source.DataSet', [
          cfg = cfg || {};
          if ('data' in cfg && !('rawData' in cfg)) {
             this._options.rawData = cfg.data;
-            $ws.single.ioc.resolve('ILogger').log('SBIS3.CONTROLS.Data.Source.DataSet', 'option "data" is deprecated and will be removed in 3.7.20. Use "rawData" instead.');
+            $ws.single.ioc.resolve('ILogger').log('SBIS3.CONTROLS.Data.Source.DataSet', 'option "data" is deprecated and will be removed in 3.7.4. Use "rawData" instead.');
          }
       },
 
