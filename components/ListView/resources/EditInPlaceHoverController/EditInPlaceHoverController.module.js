@@ -47,6 +47,13 @@ define('js!SBIS3.CONTROLS.EditInPlaceHoverController',
             _getNextTarget: function(editNextRow) {
                return this._getEditingEip().getTarget()[editNextRow ? 'next' : 'prev']('.js-controls-ListView__item:not(".controls-editInPlace")');
             },
+            showEip: function(target, record, isEdit) {
+               if (isEdit === false) {
+                  this.show(target, record)
+               } else {
+                  EditInPlaceHoverController.superclass.showEip.apply(this, arguments)
+               }
+            },
             /**
              * Обновить область отображаемую по ховеру
              * @param {Object} target Элемент, для которого отобразить область по ховеру
