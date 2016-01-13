@@ -130,7 +130,7 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
             },
 
             /**
-             * @var {Object} Фильтр данных
+             * @cfg {Object} Фильтр данных
              * @example
              * <pre class="brush:xml">
              *     <options name="listFilter">
