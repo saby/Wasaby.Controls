@@ -786,6 +786,7 @@ define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManag
          },
          destroy: function () {
             //ControlHierarchyManager.zIndexManager.setFree(this._zIndex);
+            $ws.helpers.trackElement(this._options.target, false);
             $ws.single.WindowManager.setHidden(this._zIndex);
             $ws.single.WindowManager.releaseZIndex(this._zIndex);
             ControlHierarchyManager.removeNode(this);
