@@ -2,6 +2,6 @@ define('js!SBIS3.CONTROLS.Record', [
    'js!SBIS3.CONTROLS.Data.Model'
 ], function (Model) {
    'use strict';
-   $ws.single.ioc.resolve('ILogger').log('Record', 'С 3.7.3.20 класс SBIS3.CONTROLS.Record устарел, используйте SBIS3.CONTROLS.Data.Model');
+   $ws.single.ioc.resolve('ILogger').error('Record', 'Module SBIS3.CONTROLS.Record has been removed in 3.7.3.100. Use SBIS3.CONTROLS.Data.Model instead');
    return Model;
 });

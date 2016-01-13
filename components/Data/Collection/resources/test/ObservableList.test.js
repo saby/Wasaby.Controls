@@ -302,7 +302,7 @@ define([
                      }
                   };
                var addItem = new Model({
-                  data: {test: 'fail'},
+                  rawData: {test: 'fail'},
                   adapter: new JsonAdapter()
                });
                list.add(addItem);
@@ -365,7 +365,7 @@ define([
                      done(err);
                   };
                var addItem = new Model({
-                  data: {test: 'fail'},
+                  rawData: {test: 'fail'},
                   adapter: new JsonAdapter()
                });
                list.add(addItem);
