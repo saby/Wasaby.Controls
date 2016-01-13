@@ -18,7 +18,7 @@ define('js!SBIS3.CONTROLS.LoadingIndicator', ['js!SBIS3.CORE.Control'], function
       $protected: {
          _options: {
             /**
-             * @cfg {String}  Сообщение при закгрузке
+             * @cfg {String}  Сообщение при загрузке
              */
             message: '',
             /**

@@ -18,6 +18,7 @@ define('js!SBIS3.CONTROLS.DialogTemplate', ['js!SBIS3.CORE.Control'], function(C
          _options: {
             /**
              * @cfg {String}  Текст заголовка
+             * @translatable
              */
             caption: ''
          }

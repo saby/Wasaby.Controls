@@ -67,6 +67,10 @@ define('js!SBIS3.CONTROLS.CheckBox', ['js!SBIS3.CONTROLS.ButtonBase', 'js!SBIS3.
              * </pre>
              */
             threeState: false,
+            /**
+             * @cfg {String} Текст подписи флага
+             * @translatable
+             */
             textValue : ''
          }
       },

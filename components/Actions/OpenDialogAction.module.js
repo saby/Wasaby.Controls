@@ -34,10 +34,10 @@ define('js!SBIS3.CONTROLS.OpenDialogAction', ['js!SBIS3.CONTROLS.ActionBase', 'j
              */
             dialogComponent : '',
             /**
-             * @cfg {String}
+             * @cfg {String} Режим отображения компонента редактирования - в диалоге или панели
              * @variant dialog в новом диалоге
              * @variant floatArea во всплывающей панели
-             * Режим отображения компонента редактирования - в диалоге или панели
+             *
              */
             mode: 'dialog'
          } 

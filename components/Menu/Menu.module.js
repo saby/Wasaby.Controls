@@ -89,6 +89,11 @@ define('js!SBIS3.CONTROLS.Menu', [
              * @noShow
              */
             hideDelay: null,
+            /**
+             * @cfg {String} Поле отображается как название
+             * @translatable
+             * @noShow
+             */
             displayField : 'title',
             expand: true
          }

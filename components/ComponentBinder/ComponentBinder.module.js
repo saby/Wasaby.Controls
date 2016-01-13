@@ -5,7 +5,7 @@ define('js!SBIS3.CONTROLS.ComponentBinder', [], function () {
     * @class SBIS3.CONTROLS.ComponentBinder
     * @extends $ws.proto.Abstract
     * @public
-    * @param backButton объект книпоки назад
+    * @param backButton объект кнопки назад
     */
    /*методы для поиска*/
    function startHierSearch(text, searchParamName, searchCrumbsTpl) {

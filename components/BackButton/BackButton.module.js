@@ -54,10 +54,11 @@ define('js!SBIS3.CONTROLS.BackButton', ['js!SBIS3.CORE.CompoundControl', 'html!S
          _options:{
             /**
              * @cfg {String} Надпись
+             * @translatable
              */ 
             caption: '',
             /**
-             * @cfg {String} спрайт икноки
+             * @cfg {String} спрайт иконки
              */
             icon: ''
          }
