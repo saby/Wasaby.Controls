@@ -326,8 +326,8 @@ define('js!SBIS3.CONTROLS.DropdownList',
                      pickerContainer.find('[data-id="' + id[0] + '"]').addClass('controls-DropdownList__item__selected');
                   }
                   self.setText(textValue.join(', '));
+                  self._setResetButtonVisibility(id[0] === self._defaultId);
                });
-               self._setResetButtonVisibility(id[0] === this._defaultId);
             }
          },
          /**
