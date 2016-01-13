@@ -136,7 +136,14 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
 
       $constructor: function(cfg) {
          cfg = cfg || {};
-
+         if ('strategy' in cfg && !('adapter' in cfg)) {
+            this._options.adapter = cfg.strategy;
+            $ws.single.ioc.resolve('ILogger').log('SBIS3.CONTROLS.Data.Collection.RecordSet', 'option "strategy" is deprecated and will be removed in 3.7.4. Use "adapter" instead.');
+         }
+         if ('keyField' in cfg && !('idProperty' in cfg)) {
+            this._options.idProperty = cfg.keyField;
+            $ws.single.ioc.resolve('ILogger').log('SBIS3.CONTROLS.Data.Collection.RecordSet', 'option "keyField" is deprecated and will be removed in 3.7.4. Use "idProperty" instead.');
+         }
          if (!this._options.adapter) {
             this._options.adapter = new SbisAdapter();
          }
