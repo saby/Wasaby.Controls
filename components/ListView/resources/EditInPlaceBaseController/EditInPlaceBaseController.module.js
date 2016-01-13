@@ -167,7 +167,10 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                   endEditResult;
                if (eip) {
                   endEditResult = this._notify('onEndEdit', eip.getEditingRecord(), withSaving);
-                  if (endEditResult !== false && (!withSaving || eip.validate())) {
+                  if (endEditResult !== undefined) {
+                     withSaving = endEditResult;
+                  }
+                  if (!withSaving || eip.validate()) {
                      eip.endEdit();
                      this._savingDeferred = withSaving ? eip.applyChanges() : $ws.proto.Deferred.success();
                      return this._savingDeferred.addCallback(function() {
