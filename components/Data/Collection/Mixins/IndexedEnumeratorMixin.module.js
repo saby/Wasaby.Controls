@@ -33,35 +33,12 @@ define('js!SBIS3.CONTROLS.Data.Collection.IndexedEnumeratorMixin', [
       },
 
       /**
-       * Возвращает первый элемент с указанным значением свойства. Если такого элемента нет - вернет undefined.
-       * @param {String} property Название свойства элемента.
-       * @param {*} value Значение свойства элемента.
-       * @returns {*}
-       */
-      getItemByPropertyValue: function (property, value) {
-         var index = this._getIndexForPropertyValue(property, value);
-         return index.length ? index[0][1] : undefined;
-      },
-
-      /**
-       * Возвращает все элементы с указанным значением свойства.
-       * @param {String} property Название свойства элемента.
-       * @param {*} value Значение свойства элемента.
-       * @returns {Array}
-       */
-      getItemsByPropertyValue: function (property, value) {
-         return this._getIndexForPropertyValue(property, value).map(function(item) {
-            return item[1];
-         });
-      },
-
-      /**
        * Возвращает индекс первого элемента с указанным значением свойства. Если такого элемента нет - вернет -1.
        * @param {String} property Название свойства элемента.
        * @param {*} value Значение свойства элемента.
        * @returns {Number}
        */
-      getItemIndexByPropertyValue: function (property, value) {
+      getIndexByValue: function (property, value) {
          var index = this._getIndexForPropertyValue(property, value);
          return index.length ? index[0][0] : -1;
       },
@@ -72,7 +49,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.IndexedEnumeratorMixin', [
        * @param {*} value Значение свойства элемента.
        * @returns {Array}
        */
-      getItemsIndexByPropertyValue: function (property, value) {
+      getIndiciesByValue: function (property, value) {
          return this._getIndexForPropertyValue(property, value).map(function(item) {
             return item[0];
          });
