@@ -46,6 +46,9 @@ define('js!SBIS3.CONTROLS.ListView',
        * @cssModifier controls-ListView__withoutMarker Убирать маркер активной строки.
        * @cssModifier controls-ListView__showCheckBoxes Чекбоксы показываются не по ховеру, а сразу все.
        * @cssModifier controls-ListView__hideCheckBoxes Скрыть все чекбоксы.
+       * @cssModifier controls-ListView__pagerNoSizePicker Скрыть выбор размера страницы в пейджинге.
+       * @cssModifier controls-ListView__pagerNoAmount Скрыть отображение количества записей на странице в пейджинге.
+       * Т.е. текст "1-10" при отображении 10 записей на 1-ой странице
        */
 
       /*TODO CommonHandlers MoveHandlers тут в наследовании не нужны*/
