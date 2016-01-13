@@ -278,6 +278,11 @@ define('js!SBIS3.CONTROLS.FilterButton',
                 }
              });
 
+             if(this._historyController) {
+                this._historyController.destroy();
+                this._historyController = null;
+             }
+
              FilterButton.superclass.destroy.apply(this, arguments);
           }
 
