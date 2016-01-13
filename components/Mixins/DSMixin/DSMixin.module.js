@@ -1,10 +1,9 @@
 define('js!SBIS3.CONTROLS.DSMixin', [
    'js!SBIS3.CONTROLS.Data.Source.Memory',
-   'js!SBIS3.CONTROLS.DataFactory',
    'js!SBIS3.CONTROLS.Data.Collection.RecordSet',
    'js!SBIS3.CONTROLS.Data.Query.Query',
    'js!SBIS3.CORE.MarkupTransformer'
-], function (StaticSource, DataFactory, RecordSet, Query, MarkupTransformer) {
+], function (StaticSource, RecordSet, Query, MarkupTransformer) {
 
    /**
     * Миксин, задающий любому контролу поведение работы с набором однотипных элементов.
@@ -334,7 +333,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
 
          if (this._dataSource){
             this._toggleIndicator(true);
-	         this._loader = this._callQuery(this._options.filter, this.getSorting(), this._offset, this._limit).addCallback(function (dataSet) {
+	         this._loader = this._callQuery(this._options.filter, this.getSorting(), this._offset, this._limit).addCallback($ws.helpers.forAliveOnly(function (dataSet) {
 	            self._toggleIndicator(false);
 	            self._loader = null;//Обнулили без проверки. И так знаем, что есть и загрузили
 	            if (self._dataSet) {
@@ -348,13 +347,13 @@ define('js!SBIS3.CONTROLS.DSMixin', [
 	            //self._notify('onBeforeRedraw');
 	            def.callback(dataSet);
 	            self._redraw();
-	         }).addErrback(function(error){
+	         }, self)).addErrback($ws.helpers.forAliveOnly(function(error){
 	            if (!error.canceled) {
 	               self._toggleIndicator(false);
 	               $ws.helpers.message(error.message.toString().replace('Error: ', ''));
 	            }
 	            def.errback(error);
-	         });
+	         }, self));
          }
 
          this._notifyOnPropertyChanged('filter');
@@ -381,15 +380,15 @@ define('js!SBIS3.CONTROLS.DSMixin', [
             return this._dataSource.query(query).addCallback((function(newDataSet) {
                return new RecordSet({
                   compatibleMode: true,
-                  strategy: this._dataSource.getAdapter(),
+                  adapter: this._dataSource.getAdapter(),
                   model: newDataSet.getModel(),
-                  data: newDataSet.getRawData(),
+                  rawData: newDataSet.getRawData(),
                   meta: {
                      results: newDataSet.getProperty('r'),
                      more: newDataSet.getTotal(),
                      path: newDataSet.getProperty('p')
                   },
-                  keyField: this._options.keyField || newDataSet.getIdProperty() || this._dataSource.getAdapter().forRecord(newDataSet.getRawData()).getKeyField()
+                  idProperty: this._options.keyField || newDataSet.getIdProperty() || this._dataSource.getAdapter().forRecord(newDataSet.getRawData()).getKeyField()
                });
             }).bind(this));
          } else {
@@ -641,10 +640,14 @@ define('js!SBIS3.CONTROLS.DSMixin', [
        */
       redrawItem: function(item) {
          var
-            targetElement = this._getItemsContainer().find('.js-controls-ListView__item[data-id="' + item.getKey() + '"]'),
+            targetElement = this._getElementForRedraw(item),
             newElement = this._drawItem(item).addClass(targetElement.attr('class'));
          targetElement.after(newElement).remove();
          this.reviveComponents();
+      },
+
+      _getElementForRedraw: function(item) {
+         return this._getItemsContainer().find('.js-controls-ListView__item[data-id="' + item.getKey() + '"]');
       },
 
       _drawItem: function (item, at, last) {
