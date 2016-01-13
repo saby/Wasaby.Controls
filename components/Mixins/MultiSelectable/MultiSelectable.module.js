@@ -124,17 +124,29 @@ define('js!SBIS3.CONTROLS.MultiSelectable', [], function() {
        * @see addItemsSelection
        */
       setSelectedKeys : function(idArray) {
-         function ArrayDifference(arr1, arr2) {
-            var M = arr1.length, N=arr1.length, diff=[];
 
-            for (var i=0; i<M; i++)
-            { var j=0, k=0;
-               while (arr2[j]+'' !== arr1[i]+'' && j < N) j++;
-               while (diff[k]+'' !== arr1[i]+'' && k < diff.length) k++;
-               if (j == N && k == diff.length) diff[diff.length] = arr1[i]+'';
+         function ArrayDifference(arr1,arr2){
+            var idx = 0, arr3 = [];
+            for (var i = 0; i < arr1.length; i++){
+               var
+                  findElem = arr1[i],
+                  result = true;
+               idx = arr2.indexOf(arr1[i]);
+               if (idx < 0) {
+                  findElem = (typeof findElem === 'string') ? findElem - 0 : findElem + '';
+                  idx = arr2.indexOf(findElem);
+                  if (idx >= 0) {
+                     result = false;
+                  }
+               }
+               else {
+                  result = false;
+               }
+               if (result) {
+                  arr3.push(arr1[i]);
+               }
             }
-
-            return diff;
+            return arr3;
          }
 
 
@@ -144,7 +156,6 @@ define('js!SBIS3.CONTROLS.MultiSelectable', [], function() {
                if (this._options.multiselect) {
                   removedKeys = ArrayDifference(this._options.selectedKeys, idArray);
                   addedKeys = this._addItemsSelection(idArray);
-                  this._removeItemsSelection(removedKeys);
                }
                else {
                   removedKeys = $ws.core.clone(this._options.selectedKeys);

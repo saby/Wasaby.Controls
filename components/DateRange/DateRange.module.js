@@ -70,6 +70,14 @@ define('js!SBIS3.CONTROLS.DateRange', [
          this._dateRangeChoose.subscribe('onChange', this._onRangeChooseChange.bind(this));
          this._dateRangeChoose.setVisible(false);
 
+         //TODO заплатка для 3.7.3.20 Нужно переделать контрол на PickerMixin
+         var floatArea = this._getFloatArea();
+         if (floatArea) {
+            floatArea.subscribe('onClose', function() {
+               self._dateRangeChoose._hideMenu();
+            });
+         }
+
          //приводим даты к Date-типу
          this._options.startDate = DateUtil.valueToDate(this._options.startDate);
          this._options.endDate   = DateUtil.valueToDate(this._options.endDate);
@@ -185,6 +193,16 @@ define('js!SBIS3.CONTROLS.DateRange', [
          } else {
             this._dateRangeChoose._hideMenu();
          }
+      },
+
+      //TODO заплатка для 3.7.3.20 Нужно переделать контрол на PickerMixin
+      //ищем родительскую FloatArea
+      _getFloatArea: function() {
+         var par = this.getParent();
+         while (par && !$ws.helpers.instanceOfMixin(par, 'SBIS3.CONTROLS.PopupMixin')) {
+            par = par.getParent();
+         }
+         return (par && $ws.helpers.instanceOfMixin(par, 'SBIS3.CONTROLS.PopupMixin')) ? par : null;
       },
 
       _onMenuHide: function() {

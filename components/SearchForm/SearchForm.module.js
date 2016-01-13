@@ -85,7 +85,10 @@ define('js!SBIS3.CONTROLS.SearchForm', [
        */
       _keyDownBind: function(e) {
          SearchForm.superclass._keyDownBind.apply(this, arguments);
-         e.stopPropagation();
+         if (e.which === $ws._const.key.enter) {
+            e.stopPropagation();
+            e.preventDefault();
+         }
       },
 
       /**

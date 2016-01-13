@@ -120,12 +120,14 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
          added = added === undefined ? true : added;
          changed = changed === undefined ? true : changed;
          deleted = deleted === undefined ? true : deleted;
-
-         var syncCompleteDef = new $ws.proto.ParallelDeferred();
+         var self = this;
+         var syncCompleteDef = new $ws.proto.ParallelDeferred(),
+            willRemove = [];
          this.each(function(model) {
             if (model.isDeleted()) {
                syncCompleteDef.push(dataSource.destroy(model.getId()).addCallback(function() {
                   model.setStored(false);
+                  willRemove.push(model);//each рушится если удалять тут, поэтому удаляем потом
                   return model;
                }));
             } else if (model.isChanged() || !model.isStored()) {
@@ -136,9 +138,10 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
                }));
             }
          }, 'all');
-
          syncCompleteDef.done(true);
-         return syncCompleteDef.getResult();
+         return syncCompleteDef.getResult().addCallback(function (){
+            $ws.helpers.map(willRemove, this.remove, this);
+         });
       },
 
       //region SBIS3.CONTROLS.DataSet
@@ -154,7 +157,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
        */
       getRecordById: function (id) {
          return this.at(
-            this.getIndexByValue('id', id)
+            this.getIndexById(id)
          );
       },
       /**
@@ -166,14 +169,13 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
          return this.getRecordById(key);
       },
       /**
-       * @deprecated метод будет удален в 3.7.4 используйте getRecordById
-       * @param key
+       * Возвращает индекс элемента по ключу
+       * @param id
        * @public
        * @returns {*}
        */
       getIndexById: function (id) {
-         var item = getRecordById(id);
-         return this.getIndex(item);
+         return this.getIndexByValue(this._options.idProperty, id);
       },
       /**
        * Возвращает копию рекордсета
@@ -402,9 +404,12 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
                }
             }
             if (!this._indexTree.hasOwnProperty(parentKey)) {
-               this._indexTree[parentKey] = [];
+               if(parentKey === null || this.getIndexById(parentKey) !== -1 ){
+                  this._indexTree[parentKey] = [record.getKey()];
+               }
+            } else {
+               this._indexTree[parentKey].push(record.getKey());
             }
-            this._indexTree[parentKey].push(record.getKey());
          }, 'all');
       },
 
