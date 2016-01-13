@@ -5,6 +5,6 @@ define('js!SBIS3.CONTROLS.SbisServiceSource', [
    'js!SBIS3.CONTROLS.Data.Source.SbisService'
 ], function (SbisService) {
    'use strict';
-   $ws.single.ioc.resolve('ILogger').log('SbisServiceSource', 'С 3.7.3.20 класс SBIS3.CONTROLS.SbisServiceSource устарел, используйте SBIS3.CONTROLS.Data.Source.SbisService');
-   return SbisService
+   $ws.single.ioc.resolve('ILogger').error('SbisServiceSource', 'Module SBIS3.CONTROLS.SbisServiceSource has been removed in 3.7.3.100. Use SBIS3.CONTROLS.Data.Source.SbisService instead');
+   return SbisService;
 });
