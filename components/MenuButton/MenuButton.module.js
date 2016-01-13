@@ -65,20 +65,23 @@ define('js!SBIS3.CONTROLS.MenuButton', ['js!SBIS3.CONTROLS.Button', 'js!SBIS3.CO
          this._container.addClass('controls-MenuButton');
          this.reload();
          MenuButton.superclass.init.call(this);
-         $ws.helpers.trackElement(this._container, true).subscribe('onMove', function () {
-            if (self._header) {
-               self._header.css({
-                  left: (self._headerAlignment.horizontal == 'left') ? self._container.offset().left : self._container.offset().left - 16,
-                  top: (self._headerAlignment.vertical == 'top') ? self._container.offset().top + 2 : self._container.offset().top - 7
-               });
-            }
-         });
+         $ws.helpers.trackElement(this._container, true).subscribe('onMove', this._onMoveHandler, this);
+      },
+
+      _onMoveHandler: function () {
+         if (this._header) {
+            this._header.css({
+               left: (this._headerAlignment.horizontal == 'left') ? this._container.offset().left : this._container.offset().left - 16,
+               top: (this._headerAlignment.vertical == 'top') ? this._container.offset().top + 2 : this._container.offset().top - 7
+            });
+         }
       },
 
       destroy: function(){
-         MenuButton.superclass.destroy.call(this);
-         if(this._header)
+         $ws.helpers.trackElement(this._container, false);
+         if(this._header) 
             this._header.remove();
+         MenuButton.superclass.destroy.call(this);
       },
 
       _onAlignmentChangeHandler: function(alignment){
