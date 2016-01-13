@@ -17,7 +17,6 @@ define('js!SBIS3.CONTROLS.ControlHierarchyManager', [], function () {
       },
 
       _index: {},
-      _tree: [],
       _topWindow: null,
 
       addNode: function (component) {
@@ -26,26 +25,18 @@ define('js!SBIS3.CONTROLS.ControlHierarchyManager', [], function () {
          //если есть парент
          if (parent  &&  parent.getId instanceof Function) {
             //то ищем узел этого парента по id
-            if (this._index[parent.getId()]) {
-               node = this._componentToNode(component, this._index[parent.getId()]);
-               node.parent.children.push(node);
-               //и индексируем новый узел
-               this._index[id] = node;
-            } else { //Если не нашли узел парента
-               //TODO: выпилить, кода это будет реализовано в контроле
+            if (!this._index[parent.getId()]) {
                this.addNode(parent);
-               node = this._componentToNode(component, this._index[parent.getId()]);
-               node.parent.children.push(node);
-               //и индексируем новый узел
-               this._index[id] = node;
             }
+            node = this._componentToNode(component, this._index[parent.getId()]);
+            node.parent.children.push(node);
+            //и индексируем новый узел
+            this._index[id] = node;
          } else {
             //если парента нет
             node = this._componentToNode(component, null);
             //создаем новый узел и проверяем нет ли его уже
             if (!this._wasAdded(node)) {
-               //добавляем в дерево
-               this._tree.push(node);
                //и в индекс
                this._index[id] = node;
             }
@@ -53,7 +44,12 @@ define('js!SBIS3.CONTROLS.ControlHierarchyManager', [], function () {
       },
 
       removeNode: function(component){
-         this._index[component.getId()] = null;
+         var parent = component.getParent() || (component.getOpener instanceof Function ? component.getOpener() : null),
+             id = component.getId();
+         if (parent && parent.getId instanceof Function && this._index[parent.getId()]) {
+             this.removeNode(parent);
+         }
+         delete this._index[id];
       },
 
       //Проверить является ли target jQuery элементом component или его детей
@@ -122,11 +118,11 @@ define('js!SBIS3.CONTROLS.ControlHierarchyManager', [], function () {
       },
 
       setTopWindow: function(window){
-         this.topWindow = window;
+         this._topWindow = window;
       },
 
       getTopWindow: function(){
-         return this.topWindow;
+         return this._topWindow;
       }
    };
 
