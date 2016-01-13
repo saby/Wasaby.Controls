@@ -45,6 +45,7 @@ define('js!SBIS3.CONTROLS.Data.Factory', [
        * @returns {*} Приведенные к нужному типу сырые данные
        */
       cast: function (value, type, adapter, meta) {
+         //TODO: вместо type + meta принимать fieldInfo
          switch (type) {
             case 'Identity':
                return meta.isArray ?

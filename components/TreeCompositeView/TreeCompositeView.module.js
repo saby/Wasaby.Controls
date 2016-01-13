@@ -204,7 +204,9 @@ define('js!SBIS3.CONTROLS.TreeCompositeView', ['js!SBIS3.CONTROLS.TreeDataGridVi
             },
             //Метод удаляет или перерисовывает переданную строку
             removeOrRedraw = function(dataSet, row, recordOffset) {
-               var record = needRedraw ? dataSet.getRecordByKey(row.key) : false;
+               var record = needRedraw ? dataSet.getRecordByKey(row.key) : false,
+                  environment = [row.$row.prev(), row.$row.next()];
+
                //Если запись найдена в обновленном DataSet, то перерисовываем её
                if (record) {
                   currentDataSet.getRecordByKey(row.key).merge(record);
@@ -212,6 +214,7 @@ define('js!SBIS3.CONTROLS.TreeCompositeView', ['js!SBIS3.CONTROLS.TreeDataGridVi
                } else { //Иначе - удаляем запись
                   currentDataSet.removeRecord(row.key);
                   self.destroyFolderToolbar(row.key);
+                  self._ladderCompare(environment);
                   row.$row.remove();
                   //Если количество записей в текущем DataSet меньше, чем в обновленном, то добавляем в него недостающую запись
                   if (needRedraw && currentDataSet.getCount() < dataSet.getCount()) {
