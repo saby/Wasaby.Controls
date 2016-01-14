@@ -159,16 +159,13 @@ define('js!SBIS3.CONTROLS.BreadCrumbs', [
 
       _calculateSizes: function() {
          this._initNonTextElementSizes();
-         $('.controls-BreadCrumbs__dots', this._container).remove();
-         var targetContainer = this._getTargetContainer(),
-            containerWidth = this._container.width(),
-            points = $('.controls-BreadCrumbs__crumb', targetContainer),
-            i = points.length - 1;
-         if (points.length){
-            //20px - ширина блока с домиком
-            //Добавляем троеточие если пункты не убираются в контейнер
-            if ((targetContainer.width() + 20 >= containerWidth) && points.length > 2) {
-               var dots = $(pointTpl({
+         // Уберем троеточие, что бы оно не мешало при расчете размеров
+         // или создадим его, если его нет
+         var dots = $('.controls-BreadCrumbs__dots', this._container);
+         if (dots.length){
+            dots.detach();
+         } else {
+            dots = $(pointTpl({
                   item: {
                      title: '...',
                      dots: true,
@@ -177,6 +174,17 @@ define('js!SBIS3.CONTROLS.BreadCrumbs', [
                   decorators: this._decorators,
                   displayField: this._options.displayField
                }));
+         }
+
+         var targetContainer = this._getTargetContainer(),
+            containerWidth = this._container.width(),
+            points = $('.controls-BreadCrumbs__crumb', targetContainer),
+            i = points.length - 1;
+
+         if (points.length){
+            //20px - ширина блока с домиком
+            //Добавляем троеточие если пункты не убираются в контейнер
+            if ((targetContainer.width() + 20 >= containerWidth) && points.length > 2) {
                $(points[i - 1]).before(dots);
                //скрываем пункты левее троеточия пока не уберемся в контейнер
                for (i; i > 1; i--) {
@@ -201,10 +209,6 @@ define('js!SBIS3.CONTROLS.BreadCrumbs', [
                   $('.controls-BreadCrumbs__title', points).css('max-width', containerWidth - width);
                }
             }
-         }
-
-         if (this._picker) {
-            this.hidePicker();
          }
       },
 
