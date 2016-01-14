@@ -428,15 +428,10 @@ define(
                }
             });
 
-            it('should throw an error on undefined item', function() {
-               assert.throw(function() {
-                  var list = new List();
-                  list.remove({});
-               });
-               assert.throw(function() {
-                  var list = new List();
-                  list.remove(10);
-               });
+            it('should return false if item is undefined', function() {
+               var list = new List();
+               assert.isFalse(list.remove({}));
+               assert.isFalse(list.remove(10));
             });
          });
 
