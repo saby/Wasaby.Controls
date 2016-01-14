@@ -50,7 +50,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.IndexedEnumeratorMixin', [
        * @returns {Array}
        */
       getIndiciesByValue: function (property, value) {
-         return this._getIndexForPropertyValue(property, value).map(function(item) {
+         return $ws.helpers.map(this._getIndexForPropertyValue(property, value), function(item) {
             return item[0];
          });
       },

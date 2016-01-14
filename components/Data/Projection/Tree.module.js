@@ -417,13 +417,13 @@ define('js!SBIS3.CONTROLS.Data.Projection.Tree', [
    var TreeChildrenByParentIdStrategy = $ws.core.extend({}, [ITreeChildrenStrategy], /** @lends SBIS3.CONTROLS.Data.Projection.Tree.TreeChildrenByParentIdStrategy.prototype */{
       _moduleName: 'SBIS3.CONTROLS.Data.Projection.Tree.TreeChildrenByParentIdStrategy',
       getChildren: function(parent) {
-         return this._options.source.getIndiciesByValue(
+         return $ws.helpers.map(this._options.source.getIndiciesByValue(
             this._options.settings.parentProperty,
             Utils.getItemPropertyValue(
                parent.getContents(),
                this._options.settings.idProperty
             )
-         ).map((function(index) {
+         ), (function(index) {
             return this._options.source.at(index);
          }).bind(this));
       },

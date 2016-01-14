@@ -164,7 +164,7 @@ define('js!SBIS3.CONTROLS.Data.Projection.Collection', [
        * @state mutable
        */
       getCount: function () {
-         return this._filterMap.reduce(function(prev, current) {
+         return $ws.helpers.reduce(this._filterMap.reduce,function(prev, current) {
             return prev + (current ? 1 : 0);
          }, 0);
       },
@@ -328,7 +328,7 @@ define('js!SBIS3.CONTROLS.Data.Projection.Collection', [
             }
          }
 
-         this._sort = Array.prototype.slice.call(arguments).filter(function(item) {
+         this._sort = $ws.helpers.filter(Array.prototype.slice.call(arguments), function(item) {
             return typeof item === 'function';
          });
 
