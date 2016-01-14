@@ -6,7 +6,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.ArrayEnumerator', [
    'use strict';
 
    /**
-    * Энумератор для списка
+    * Энумератор для массива
     * @class SBIS3.CONTROLS.Data.Collection.ArrayEnumerator
     * @mixes SBIS3.CONTROLS.Data.Collection.IEnumerator
     * @mixes SBIS3.CONTROLS.Data.Collection.IndexedEnumeratorMixin
@@ -19,7 +19,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.ArrayEnumerator', [
       $protected: {
          _options: {
             /**
-             * @var {Array} Список
+             * @cfg {Array} Массив
              */
             items: []
          },
