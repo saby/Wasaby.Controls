@@ -83,6 +83,20 @@ define('js!SBIS3.CONTROLS.Data.Collection.ObservableListMixin', [
             );
          },
 
+         clear: function (parentFnc) {
+            var oldItems = this._items.slice();
+            this._eventsEnabled = false;
+            parentFnc.call(this);
+            this._eventsEnabled = true;
+            this.notifyCollectionChange(
+               IBindCollection.ACTION_RESET,
+               this._items.slice(),
+               0,
+               oldItems,
+               0
+            );
+         },
+
          add: function (parentFnc, item, at) {
             parentFnc.call(this, item, at);
             at = this._isValidIndex(at) ? at : this.getCount() - 1;
