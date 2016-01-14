@@ -150,6 +150,11 @@ define('js!SBIS3.CONTROLS.Data.Adapter.SbisRecord', [
                   return res;
                };
                break;
+            case 'Array':
+               var type = this._getType(meta);
+               meta.elementsType = type.name;
+               break;
+
          }
          return meta;
       },
