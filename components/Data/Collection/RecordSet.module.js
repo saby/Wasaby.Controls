@@ -175,7 +175,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
        */
       getRecordById: function (id) {
          return this.at(
-            this.getIndexById(id)
+            this.getIndexByValue(this._options.idProperty, id)
          );
       },
       /**
@@ -461,12 +461,9 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
                }
             }
             if (!this._indexTree.hasOwnProperty(parentKey)) {
-               if(parentKey === null || this.getIndexById(parentKey) !== -1 ){
-                  this._indexTree[parentKey] = [record.getKey()];
-               }
-            } else {
-               this._indexTree[parentKey].push(record.getKey());
+               this._indexTree[parentKey] = [];
             }
+            this._indexTree[parentKey].push(record.getKey());
          }, 'all');
       },
 
