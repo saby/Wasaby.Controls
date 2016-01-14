@@ -53,6 +53,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.IList', [
       /**
        * Удаляет элемент из списка
        * @param {*} item Удаляемый элемент
+       * @returns {Boolean} Если true элемент удален, если false то нет.
        */
       remove: function (item) {
          throw new Error('Method must be implemented');

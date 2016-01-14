@@ -137,7 +137,9 @@ define('js!SBIS3.CONTROLS.Data.Collection.List', [
          var index = this.getIndex(item);
          if(index !== -1) {
             this.removeAt(index);
+            return true;
          }
+         return false;
       },
 
       removeAt: function (index) {
