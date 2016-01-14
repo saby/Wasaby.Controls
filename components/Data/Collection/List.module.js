@@ -99,7 +99,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.List', [
 
       assign: function (items) {
          this._items.length = 0;
-         this._splice(items||[], 0, 0);
+         this._splice(items || [], 0, 0);
       },
 
       append: function (items) {
@@ -134,7 +134,12 @@ define('js!SBIS3.CONTROLS.Data.Collection.List', [
       },
 
       remove: function (item) {
-         this.removeAt(this.getIndex(item));
+         var index = this.getIndex(item);
+         if(index !== -1) {
+            this.removeAt(index);
+            return true;
+         }
+         return false;
       },
 
       removeAt: function (index) {
