@@ -5,14 +5,13 @@ define('js!SBIS3.CONTROLS.IMenuNewView', [
 
    /**
     * Интерфейс представления меню
-    * @mixin SBIS3.CONTROLS.HierarchyControl.IHierarchyItems
+    * @mixin SBIS3.CONTROLS.IMenuNewView
     * @implements SBIS3.CONTROLS.Data.Collection.IEnumerable
     * @implements [SBIS3.CONTROLS.Data.Projection.ITreeItem]
     * @implements [SBIS3.CONTROLS.Data.Collection.ISourceLoadable]
-    * @implements [SBIS3.CONTROLS.Data.Bind.IProperty]
     * @author Крайнов Дмитрий Олегович
     */
-   return /** @lends SBIS3.CONTROLS.HierarchyControl.IHierarchyItems.prototype */{
+   return /** @lends SBIS3.CONTROLS.IMenuNewView.prototype */{
       /**
        * Возвращает список всех построеных всплывающих меню
        * @returns {Object} - Объект вида {'Хеш эелемента': ссылка на }

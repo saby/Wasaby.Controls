@@ -120,10 +120,6 @@ define('js!SBIS3.CONTROLS.Data.Collection.ObservableListMixin', [
 
          //endregion SBIS3.CONTROLS.Data.Collection.List
 
-         //region SBIS3.CONTROLS.Data.Bind.IBindProperty
-
-         //endregion SBIS3.CONTROLS.Data.Bind.IBindProperty
-
       },
 
       /**
