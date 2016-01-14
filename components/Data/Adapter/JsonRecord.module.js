@@ -8,6 +8,7 @@ define('js!SBIS3.CONTROLS.Data.Adapter.JsonRecord', [
     * Адаптер для записи таблицы данных в формате JSON
     * @class SBIS3.CONTROLS.Data.Adapter.JsonRecord
     * @mixes SBIS3.CONTROLS.Data.Adapter.IRecord
+    * @public
     * @author Мальцев Алексей
     */
 

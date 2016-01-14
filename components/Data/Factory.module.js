@@ -90,6 +90,14 @@ define('js!SBIS3.CONTROLS.Data.Factory', [
                return value;
             case 'Boolean':
                return !!value;
+            case 'Array':
+               if (value === null) {
+                  return value;
+               }
+               var self = this;
+               return $ws.helpers.map(value, function (val) {
+                  return self.cast(val, meta.elementsType, adapter, meta);
+               });
             default:
                return value;
          }
@@ -165,7 +173,11 @@ define('js!SBIS3.CONTROLS.Data.Factory', [
                   return value.getCurrentValue();
                }
                return value;
-
+            case 'Array':
+               var self = this;
+               return $ws.helpers.map(value, function (val){
+                  return self.serialize(val, meta.elementsType, adapter, meta);
+               });
             default:
                return value;
          }
