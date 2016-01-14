@@ -324,12 +324,17 @@ define('js!SBIS3.CONTROLS.ListView',
                 * @remark
                 * При частичной постраничной навигации заранее неизвестно общее количество страниц, режим пейджинга будет определн по параметру n из dataSource
                 * Если пришел boolean, значит частичная постраничная навигация
+                * Важно! В SBIS3.CONTROLS.TreeCompositeView особый режим навигации - в плоском списке и таблице автоматически работает
+                * бесконечная подгрузка по скроллу (@see infiniteScroll), а вот в режиме плитки (tile) будет работать постраничная навигация
+                * (при условии showPaging = true)
                 * @example
                 * <pre>
                 *     <option name="showPaging">true</option>
                 * </pre>
                 * @see setPage
                 * @see getPage
+                * @see infiniteScroll
+                * @see SBIS3.CONTROLS.TreeCompositeView
                 */
                showPaging: false,
                /**
@@ -371,7 +376,7 @@ define('js!SBIS3.CONTROLS.ListView',
          $constructor: function () {
             //TODO временно смотрим на TopParent, чтобы понять, где скролл. С внедрением ScrallWatcher этот функционал уберем
             var topParent = this.getTopParent();
-            this._publish('onChangeHoveredItem', 'onItemClick', 'onItemActivate', 'onDataMerge', 'onItemValueChanged', 'onShowEdit', 'onBeginEdit', 'onEndEdit', 'onBeginAdd', 'onAfterEndEdit');
+            this._publish('onChangeHoveredItem', 'onItemClick', 'onItemActivate', 'onDataMerge', 'onItemValueChanged', 'onShowEdit', 'onBeginEdit', 'onEndEdit', 'onBeginAdd', 'onAfterEndEdit', 'onPrepareFilterOnMove');
             this._container.on('mousemove', this._mouseMoveHandler.bind(this))
                            .on('mouseleave', this._mouseLeaveHandler.bind(this));
 
@@ -409,9 +414,9 @@ define('js!SBIS3.CONTROLS.ListView',
             this._touchSupport = $ws._const.browser.isMobilePlatform;
             if (this._touchSupport){
             	this._getItemActionsContainer().addClass('controls-ItemsActions__touch-actions');
-            	this._container.bind('swipe', this._swipeHandler.bind(this));
-               this._container.bind('tap', this._tapHandler.bind(this));
-               this._container.bind('touchmove',this._mouseMoveHandler.bind(this));
+            	this._container.bind('swipe', this._swipeHandler.bind(this))
+                               .bind('tap', this._tapHandler.bind(this))
+                               .bind('touchmove',this._mouseMoveHandler.bind(this));
             }
          },
          _keyboardHover: function (e) {
@@ -742,6 +747,13 @@ define('js!SBIS3.CONTROLS.ListView',
          setElemClickHandler: function (method) {
             this._options.elemClickHandler = method;
          },
+
+         setEnabled: function(enabled) {
+            if (!enabled) {
+               this._cancelEdit();
+            }
+            ListView.superclass.setEnabled.apply(this, arguments);
+         },
          //********************************//
          //   БЛОК РЕДАКТИРОВАНИЯ ПО МЕСТУ //
          //*******************************//
@@ -787,15 +799,21 @@ define('js!SBIS3.CONTROLS.ListView',
             return this._options.editMode;
          },
 
+         showEip: function(target, record, isEdit) {
+            if (this.isEnabled()) {
+               this._getEditInPlace().showEip(target, record, isEdit);
+            }
+         },
+
          _onItemClickHandler: function(event, id, record, target) {
-            this._getEditInPlace().edit($(target).closest('.js-controls-ListView__item'), record);
+            this.showEip($(target).closest('.js-controls-ListView__item'), record);
             event.setResult(false);
          },
 
          _onChangeHoveredItemHandler: function(event, hoveredItem) {
             var target = hoveredItem.container;
             if (target && !(target.hasClass('controls-editInPlace') || target.hasClass('controls-editInPlace__editing'))) {
-               this._getEditInPlace().show(target, this._dataSet.getRecordByKey(hoveredItem.key));
+               this.showEip(target, this._dataSet.getRecordByKey(hoveredItem.key), false);
             } else {
                this._getEditInPlace().hide();
             }
@@ -1461,11 +1479,11 @@ define('js!SBIS3.CONTROLS.ListView',
             this._notify('onItemActivate', {id: id, item: item});
          },
          _beginAdd: function() {
-            return this._getEditInPlace().add();
+            return this.showEip();
          },
          _beginEdit: function(record) {
             var target = this._getItemsContainer().find('.js-controls-ListView__item[data-id="' + record.getKey() + '"]:first');
-            return this._getEditInPlace().edit(target, record);
+            return this.showEip(target, record);
          },
          _cancelEdit: function() {
             return this._getEditInPlace().endEdit();

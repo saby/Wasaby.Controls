@@ -1,14 +1,13 @@
 define('js!SBIS3.CONTROLS.DSMixin', [
    'js!SBIS3.CONTROLS.Data.Source.Memory',
    'js!SBIS3.CONTROLS.Data.Source.SbisService',
-   'js!SBIS3.CONTROLS.DataFactory',
    'js!SBIS3.CONTROLS.Data.Collection.RecordSet',
    'js!SBIS3.CONTROLS.Data.Query.Query',
    'js!SBIS3.CORE.MarkupTransformer',
    'js!SBIS3.CONTROLS.Data.Collection.ObservableList',
    'js!SBIS3.CONTROLS.Data.Projection',
    'js!SBIS3.CONTROLS.Data.Bind.ICollection'
-], function (MemorySource, SbisService, DataFactory, RecordSet, Query, MarkupTransformer, ObservableList, Projection, IBindCollection) {
+], function (MemorySource, SbisService, RecordSet, Query, MarkupTransformer, ObservableList, Projection, IBindCollection) {
 
    /**
     * Миксин, задающий любому контролу поведение работы с набором однотипных элементов.
@@ -483,15 +482,15 @@ define('js!SBIS3.CONTROLS.DSMixin', [
          return this._dataSource.query(query).addCallback((function(newDataSet) {
             return new RecordSet({
                compatibleMode: true,
-               strategy: this._dataSource.getAdapter(),
+               adapter: this._dataSource.getAdapter(),
                model: newDataSet.getModel(),
-               data: newDataSet.getRawData(),
+               rawData: newDataSet.getRawData(),
                meta: {
                   results: newDataSet.getProperty('r'),
                   more: newDataSet.getTotal(),
                   path: newDataSet.getProperty('p')
                },
-               keyField: this._options.keyField || newDataSet.getIdProperty() || this._dataSource.getAdapter().forRecord(newDataSet.getRawData()).getKeyField()
+               idProperty: this._options.keyField || newDataSet.getIdProperty() || this._dataSource.getAdapter().forRecord(newDataSet.getRawData()).getKeyField()
             });
          }).bind(this));
 

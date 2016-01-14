@@ -1,12 +1,12 @@
 /**
  * Created by ps.borisov on 03.12.2015.
  */
-define('js!SBIS3.CONTROLS.Utils.TinyEditorUtil',[], function () {
+define('js!SBIS3.CONTROLS.Utils.RichTextAreaUtil',[], function () {
    'use strict';
    /**
     *
     */
-   var TinyEditorUtil = {
+   var RichTextAreaUtil = {
       /**
        * Метод для добавления определяющей метки в контент при копировании/вырезки из БТРа
        * @param {$object}$object - jquery элемент при копировании/вырезке из которого в буффер необходимо добавлять метку БТРа
@@ -80,5 +80,5 @@ define('js!SBIS3.CONTROLS.Utils.TinyEditorUtil',[], function () {
       }
    };
 
-   return TinyEditorUtil;
+   return RichTextAreaUtil;
 });
