@@ -61,6 +61,27 @@ define([
       }, {
          n: 'identity',
          t: 'Идентификатор'
+      }, {
+         "n":"arrayBool",
+         "t":{"n":"Массив","t":"Логическое"}
+      }, {
+         "n":"arrayDate",
+         "t":{"n":"Массив","t":"Дата"}
+      }, {
+         "n":"arrayDatetime",
+         "t":{"n":"Массив","t":"Дата и время"}
+      }, {
+         "n":"arrayInt",
+         "t":{"n":"Массив","t":"Число целое"}
+      }, {
+         "n":"arrayFloat",
+         "t":{"n":"Массив","t":"Число вещественное"}
+      }, {
+         "n":"arrayString",
+         "t":{"n":"Массив","t":"Текст"}
+      }, {
+         "n":"arrayTime",
+         "t":{"n":"Массив","t":"Время"}
       }];
       dataValues = [
          4,
@@ -76,9 +97,23 @@ define([
          '2015-09-24',
          '15:54:28.981+03',
          'P10DT0H0M0S',//10 дней
-         [22]
+         [22],
+         [true,false],
+         ["2015-12-25"],
+         ["2007-12-06 16:29:43.079+03"],
+         [15,19],
+         [1.2,1.3],
+         ["text","text2"],
+         ["12:30:00+03"]
       ];
       dataEmpty = [
+         null,
+         null,
+         null,
+         null,
+         null,
+         null,
+         null,
          null,
          null,
          null,
@@ -188,6 +223,34 @@ define([
             for (var i = 0; i < dataScheme.length; i++) {
                assert.isNull(sbisModelEmpty.get(dataScheme[i].n));
             }
+         });
+         it('should cast to array bool', function (){
+            var val = sbisModel.get('arrayBool');
+            assert.deepEqual(dataValues[14], val);
+         });
+         it('should cast to array arrayDate', function (){
+            var val = sbisModel.get('arrayDate');
+            assert.deepEqual([Date.fromSQL(dataValues[15][0])], val);
+         });
+         it('should cast to array arrayDateTime', function (){
+            var val = sbisModel.get('arrayDatetime');
+            assert.deepEqual([Date.fromSQL(dataValues[16][0])], val);
+         });
+         it('should cast to array arrayInt', function (){
+            var val = sbisModel.get('arrayInt');
+            assert.deepEqual(dataValues[17], val);
+         });
+         it('should cast to array arrayFloat', function (){
+            var val = sbisModel.get('arrayFloat');
+            assert.deepEqual(dataValues[18], val);
+         });
+         it('should cast to array string', function (){
+            var val = sbisModel.get('arrayString');
+            assert.deepEqual(dataValues[19], val);
+         });
+         it('should cast to array arrayTime', function (){
+            var val = sbisModel.get('arrayTime');
+            assert.deepEqual([Date.fromSQL(dataValues[20][0])], val);
          });
       });
 
@@ -355,6 +418,36 @@ define([
             assert.instanceOf(res, Array);
             assert.strictEqual(res.length, 0);
          });
+
+         it('should serialize array of date', function (){
+            var  date = new Date(2016,1,1);
+            sbisModelEmpty.set('arrayDate',[date]);
+            assert.deepEqual([date.toSQL()], getData(sbisModelEmpty, 15));
+         });
+         it('should serialize array of date and time', function (){
+            var date = new Date(2016,1,1);
+            sbisModelEmpty.set('arrayDatetime',[date]);
+            assert.deepEqual([date.toSQL(true)], getData(sbisModelEmpty, 16));
+         });
+         it('should serialize array of int', function (){
+            sbisModelEmpty.set('arrayInt',[2,3]);
+            assert.deepEqual([2,3], getData(sbisModelEmpty, 17));
+         });
+         it('should serialize array of float', function (){
+            sbisModelEmpty.set('arrayFloat',[2.1,3.3]);
+            assert.deepEqual([2.1,3.3], getData(sbisModelEmpty, 18));
+
+         });
+         it('should serialize array of string', function (){
+            sbisModelEmpty.set('arrayString',['stop','bomb']);
+            assert.deepEqual(['stop','bomb'], getData(sbisModelEmpty, 19));
+         });
+         it('should serialize array of time', function (){
+            var  date = new Date(2016,1,1);
+            sbisModelEmpty.set('arrayTime',[date]);
+            assert.deepEqual([date.toSQL(false)], getData(sbisModelEmpty, 20));
+         });
+
       });
    });
 });
