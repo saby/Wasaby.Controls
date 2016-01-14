@@ -60,8 +60,8 @@ define('js!SBIS3.CONTROLS.IconButton', ['js!SBIS3.CONTROLS.ButtonBase', 'js!SBIS
          this._container.addClass('controls-IconButton ' + this._iconClass);
       },
 
-      setCaption: function(caption) {
-         this._container.attr('title', caption);       
+      setTooltip: function(tooltip) {
+         this._container.attr('title', tooltip);
       }
    });
 
