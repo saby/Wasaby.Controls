@@ -30,7 +30,7 @@ define('js!SBIS3.CONTROLS.SearchMixin', [], function() {
             /**
              * @cfg {Number} временной интервал, который показывает с какой частотой бросать событие поиска
              */
-            searchDelay : 200
+            searchDelay : 300
          }
       },
 
@@ -56,7 +56,7 @@ define('js!SBIS3.CONTROLS.SearchMixin', [], function() {
 
       _applySearch : function(text) {
          if (text) {
-            text = text.replace(/[«»’”@#№$%^&*;:?.,!\/~\]\[{}()|<>=+\-_\s'"]/g, '');
+            text = String.trim(text.replace(/[«»’”@#№$%^&*;:?.,!\/~\]\[{}()|<>=+\-'"]/g, ''));
             if (text.length >= this._options.startCharacter) {
                this._notify('onSearch', text);
             }

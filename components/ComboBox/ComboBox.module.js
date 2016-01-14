@@ -80,6 +80,9 @@ define('js!SBIS3.CONTROLS.ComboBox', [
        */
 
       $protected: {
+         //если поменяли текст до того, как были установлены items. То мы не сможем проставить соответсвующий ключ из набора
+         //это надо будет сделать после уставноки items, а этот флаг используем для понимания
+         _delayedSettingTextByKey: false,
          _keysWeHandle: [$ws._const.key.up, $ws._const.key.down, $ws._const.key.enter],
          _options: {
             /**
@@ -125,7 +128,7 @@ define('js!SBIS3.CONTROLS.ComboBox', [
              */
             valueFormat: ''
          },
-         _viewConstructor: ComboBoxListView,
+         _viewConstructor: ComboBoxListView
       },
 
       $constructor: function () {
@@ -160,7 +163,6 @@ define('js!SBIS3.CONTROLS.ComboBox', [
          });
       },
       init: function() {
-         this._drawSelectedItem();
          ComboBox.superclass.init.call(this);
       },
 
@@ -188,7 +190,18 @@ define('js!SBIS3.CONTROLS.ComboBox', [
          this._drawNotEditablePlaceholder(text);
          $('.js-controls-ComboBox__fieldNotEditable', this._container.get(0)).text(text || this._options.placeholder);
       },
-
+      setDataSource: function (dataSource) {
+         ComboBox.superclass.setDataSource.call(this, dataSource);
+         if ($ws.helpers.instanceOfMixin(this._items, 'SBIS3.CONTROLS.Data.Collection.LoadableListMixin') && !this._items.isLoaded()) {
+            var self = this;
+            this._items.once('onAfterLoadedApply', function (){
+               self._drawSelectedItem();
+            });
+            this._items.load();
+         } else {
+            this._drawSelectedItem();
+         }
+      },
       _drawText: function() {
          ComboBox.superclass._drawText.apply(this, arguments);
          this._setKeyByText();
@@ -198,16 +211,17 @@ define('js!SBIS3.CONTROLS.ComboBox', [
          $('.js-controls-ComboBox__fieldNotEditable', this._container.get(0)).toggleClass('controls-ComboBox__fieldNotEditable__placeholder', !text);
       },
 
-      _drawSelectedItem: function (key) {
+      _drawSelectedItem: function () {
          var item = this.getItemsProjection().getCurrent();
-         if(item) {
+         if(item === undefined) {
+            this.setText('');
+         } else {
             item = item.getContents();
             var newText = this._getItemValue(item, this._options.displayField);
             if(newText !== this._options.text) {
                this.setText(newText);
             }
          }
-
       },
 
       _drawItemsCallback : function() {
@@ -298,24 +312,35 @@ define('js!SBIS3.CONTROLS.ComboBox', [
             collection = this.getItems(),
             foundItem = null,
             self = this;
-         collection.each(function(item, index) {
-            var title = self._getItemValue(item, displayField) ;
-            if (title === text) {
-               selKey = self._getItemValue(item, keyField);
-               foundItem = item;
+         if (collection.getCount()) {
+            collection.each(function (item, index) {
+               var title = self._getItemValue(item, displayField);
+               if (title === text) {
+                  selKey = self._getItemValue(item, keyField);
+                  foundItem = item;
+               }
+            });
+            if (foundItem) {
+               if (selKey != this._options.selectedKey) {
+                  this.setSelectedKey(selKey);
+               }
             }
-         });
-         if (foundItem) {
-            if (selKey != this._options.selectedKey) {
-               this.setSelectedKey(selKey);
+            else {
+               if (this._options.selectedKey) {
+                  this.setSelectedKey(null);
+               }
             }
          }
          else {
-            if (this._options.selectedKey) {
-               this.setSelectedKey(null);
-            }
+            this._delayedSettingTextByKey = true;
          }
+      },
 
+      redraw: function() {
+         ComboBox.superclass.redraw.call(this);
+         if (this._delayedSettingTextByKey) {
+            this._setKeyByText();
+         }
       },
 
       _clearItems : function() {
@@ -424,7 +449,7 @@ define('js!SBIS3.CONTROLS.ComboBox', [
       _getViewNode: function() {
          /*устаналивает rootnode для listView*/
          return this._picker.getContainer();
-      },
+      }
 
    });
 

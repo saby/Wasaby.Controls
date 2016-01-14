@@ -7,17 +7,23 @@ define('js!SBIS3.CONTROLS.MoveHandlers', ['js!SBIS3.CONTROLS.MoveDialog','js!SBI
         _moveStrategy: undefined
       },
       moveRecordsWithDialog: function(records) {
+         var self = this;
          records = this._getRecordsForMove(records);
          if (records.length) {
             new MoveDialog({
                linkedView: this,
-               records: records
+               records: records,
+               handlers: {
+                  onPrepareFilterOnMove: function(event, rec) {
+                     event.setResult(self._notify('onPrepareFilterOnMove', rec))
+                  }
+               }
             });
          }
       },
       _getRecordsForMove: function(records) {
          if (!Array.isArray(records) || !records.length) {
-            records = this.getSelectedKeys().length ? this.getSelectedKeys() :
+            records = this._selectedRecords.length ? this._selectedRecords :
                this.getSelectedKey() ? [this.getSelectedKey()] : [];
          }
          return records;
@@ -50,7 +56,7 @@ define('js!SBIS3.CONTROLS.MoveHandlers', ['js!SBIS3.CONTROLS.MoveDialog','js!SBI
 
          if (this._checkRecordsForMove(records, recordTo, isChangeOrder)) {
             for (var i = 0; i < records.length; i++) {
-               records[i] = $ws.helpers.instanceOfModule(records[i], 'SBIS3.CONTROLS.Record') ? records[i] : this._dataSet.getRecordByKey(records[i]);
+               records[i] = ($ws.helpers.instanceOfModule(records[i], 'SBIS3.CONTROLS.Record') || $ws.helpers.instanceOfModule(records[i], 'SBIS3.CONTROLS.Data.Model')) ? records[i] : this._dataSet.getRecordByKey(records[i]);
             }
             if (isNodeTo && !isChangeOrder) {
                deferred = this.getMoveStrategy().hierarhyMove(records, recordTo);
@@ -61,7 +67,7 @@ define('js!SBIS3.CONTROLS.MoveHandlers', ['js!SBIS3.CONTROLS.MoveDialog','js!SBI
             if (deferred instanceof $ws.proto.Deferred) {//обновляем view если вернули true либо deferred
                deferred.addCallback(function() {
                   self.removeItemsSelectionAll();
-                  if (isNodeTo && !isChangeOrder) {
+                  if (isNodeTo && !isChangeOrder && self._options.allowEnterToFolder) {
                      self.setCurrentRoot(moveTo);
                   }
                   self.reload();
@@ -161,19 +167,27 @@ define('js!SBIS3.CONTROLS.MoveHandlers', ['js!SBIS3.CONTROLS.MoveDialog','js!SBI
       },
 
       moveRecordDown: function(tr, id, record) {
-         var nextItem = this.getNextItemById(id),
-            nextId = nextItem.data('id');
-         moveRecord.call(this, record, nextId, id, false);
+         var nextItem = this.getNextItemById(id);
+         if(nextItem) {
+            moveRecord.call(this, record, nextItem.data('id'), id, false);
+         }
       },
+
       moveRecordUp: function(tr, id, record) {
-         var prevItem = this.getPrevItemById(id),
-            prevId = prevItem.data('id');
-         moveRecord.call(this, record, prevId, id, true);
+         var prevItem = this.getPrevItemById(id);
+         if(prevItem) {
+            moveRecord.call(this, record, prevItem.data('id'), id, true);
+         }
       }
    };
    function moveRecord(itemRecord, moveTo, current, up){
-      var self = this;
-      this.getMoveStrategy().move([itemRecord], this._dataSet.getRecordByKey(moveTo), !up).addCallback(function(){
+      var self = this,
+         item = this._dataSet.getRecordByKey(moveTo);
+      this.getMoveStrategy().move([itemRecord], item, !up).addCallback(function(){
+         self._dataSet.remove(itemRecord);
+         var index = self._dataSet.getIndex(item);
+         index = up ? index : ++index;
+         self._dataSet.add(itemRecord, index < self._dataSet.getCount() ? index : undefined);
          self._moveItemTo(current, moveTo, up);
       }).addErrback(function(e){
          $ws.core.alert(e.message);

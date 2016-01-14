@@ -1,9 +1,9 @@
 /* global define, $ws */
 define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
    'js!SBIS3.CONTROLS.Data.Collection.ObservableList',
-   'js!SBIS3.CONTROLS.DataSet',
+   'js!SBIS3.CONTROLS.Data.Adapter.Json',
    'js!SBIS3.CONTROLS.Data.Model'
-], function (ObservableList, DataSet) {
+], function (ObservableList, JsonAdapter) {
    'use strict';
 
    /**
@@ -12,33 +12,109 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
     * @extends SBIS3.CONTROLS.Data.Collection.ObservableList
     * @author Мальцев Алексей
     * @state mutable
-    * @remark
-    * Этот модуль временный. Обеспечивает совместимость c  SBIS3.CONTROLS.DataSet по API.
+    * @public
     */
 
    var RecordSet = ObservableList.extend(/** @lends SBIS3.CONTROLS.Data.Collection.RecordSet.prototype */{
       _moduleName: 'SBIS3.CONTROLS.Data.Collection.RecordSet',
       $protected: {
          _options: {
-            strategy: null,
-            data: undefined,
+            /**
+             * @cfg {Object} Данные в "сыром" виде
+             * @example
+             * <pre>
+             *    var users = new RecordSet({
+             *       rawData: [{
+             *          id: 1,
+             *          firstName: 'John',
+             *          lastName: 'Smith'
+             *       },{
+             *          id: 2,
+             *          firstName: 'Sarah',
+             *          lastName: 'Connor'
+             *       }],
+             *       adapter: new JsonAdapter,
+             *       idProperty: 'id'
+             *    });
+             *    users.at(0).get('id');//5
+             *    users.getRecordById(2).get('firstName');//Sarah
+             * </pre>
+             * @see getRawData
+             * @see setRawData
+             */
+            rawData: null,
+
+            /**
+             * @cfg {SBIS3.CONTROLS.Data.Adapter.IAdapter} Адаптер для работы с данными
+             * @example
+             * <pre>
+             *    var user = new RecordSet({
+             *       adapter: new SbisAdapter()
+             *    });
+             * </pre>
+             * @see getAdapter
+             * @see setAdapter
+             */
+            adapter: undefined,
+
+            /**
+             * @cfg {Object} Метаданные
+             */
             meta: {},
-            keyField: ''
+
+            /**
+             * @cfg {String} Поле, содержащее первичный ключ
+             */
+            idProperty: '',
+
+            /**
+             * @cfg {Function} Конструктор модели
+             */
+            model: undefined
          },
+
+         /**
+          * @var {Function} Конструктор модели
+          */
          _model: undefined,
-         _rawData: undefined,
-         _indexTree: {}
+
+         /**
+          * @var {Object} Сырые данные
+          */
+         _rawData: null,
+
+         /**
+          * @var {Object} индексы
+          */
+         _indexTree: {},
+
+         /**
+          * @var {SBIS3.CONTROLS.Data.Adapter.ITable} Адаптер для набора записей
+          */
+         _tableAdapter: null
       },
 
       $constructor: function (cfg) {
          cfg = cfg || {};
 
-         if (!('compatibleMode' in cfg)) {
-            $ws.single.ioc.resolve('ILogger').log('SBIS3.CONTROLS.Data.RecordSet', 'module SBIS3.CONTROLS.Data.Collection.RecordSet is deprecated and will be removed in 3.8.0. Use SBIS3.CONTROLS.Data.Collection.LoadableList instead.');
-         }
          this._model = 'model' in cfg ? cfg.model : $ws.single.ioc.resolve('SBIS3.CONTROLS.Data.ModelConstructor');
-         if ('data' in cfg) {
-            this.setRawData(cfg.data);
+         if ('data' in cfg && !('rawData' in cfg)) {
+            this._options.rawData = cfg.data;
+            $ws.single.ioc.resolve('ILogger').log('SBIS3.CONTROLS.Data.Collection.RecordSet', 'option "data" is deprecated and will be removed in 3.7.4. Use "rawData" instead.');
+         }
+         if ('strategy' in cfg && !('adapter' in cfg)) {
+            this._options.adapter = cfg.strategy;
+            $ws.single.ioc.resolve('ILogger').log('SBIS3.CONTROLS.Data.Collection.RecordSet', 'option "strategy" is deprecated and will be removed in 3.7.4. Use "adapter" instead.');
+         }
+         if ('keyField' in cfg && !('idProperty' in cfg)) {
+            this._options.idProperty = cfg.keyField;
+            $ws.single.ioc.resolve('ILogger').log('SBIS3.CONTROLS.Data.Collection.RecordSet', 'option "keyField" is deprecated and will be removed in 3.7.4. Use "idProperty" instead.');
+         }
+         this._initAdapter();
+         if ('items' in cfg && !('rawData' in cfg)) {
+            this._initForItems();
+         } else {
+            this.setRawData(this._options.rawData);
          }
       },
 
@@ -47,12 +123,14 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
          added = added === undefined ? true : added;
          changed = changed === undefined ? true : changed;
          deleted = deleted === undefined ? true : deleted;
-
-         var syncCompleteDef = new $ws.proto.ParallelDeferred();
+         var self = this;
+         var syncCompleteDef = new $ws.proto.ParallelDeferred(),
+            willRemove = [];
          this.each(function(model) {
             if (model.isDeleted()) {
                syncCompleteDef.push(dataSource.destroy(model.getId()).addCallback(function() {
                   model.setStored(false);
+                  willRemove.push(model);//each рушится если удалять тут, поэтому удаляем потом
                   return model;
                }));
             } else if (model.isChanged() || !model.isStored()) {
@@ -63,21 +141,74 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
                }));
             }
          }, 'all');
-
          syncCompleteDef.done(true);
-         return syncCompleteDef.getResult();
+         return syncCompleteDef.getResult().addCallback(function (){
+            $ws.helpers.map(willRemove, self.remove, self);
+         });
       },
 
       //region SBIS3.CONTROLS.DataSet
 
       removeRecord: function (key) {
-         return DataSet.prototype.removeRecord.call(this, key);
-      },
+         var self = this;
+         var mark = function (key) {
+            var record = self.getRecordById(key);
+            if (record) {
+               record.setDeleted(true);
+            }
+         };
 
-      getRecordByKey: function (key) {
+         if (key instanceof Array) {
+            var length = key.length;
+            for (var i = 0; i < length; i++) {
+               mark(key[i]);
+            }
+         } else {
+            mark(key);
+         }
+      },
+      /**
+       * Возвращает запись по ключу
+       * @param id
+       * @public
+       * @returns {*}
+       */
+      getRecordById: function (id) {
          return this.at(
-            this.getItemIndexByPropertyValue('id', key)
+            this.getIndexById(id)
          );
+      },
+      /**
+       * @deprecated метод будет удален в 3.7.4 используйте getRecordById
+       * @param key
+       * @returns {*}
+       */
+      getRecordByKey: function (key) {
+         return this.getRecordById(key);
+      },
+      /**
+       * Возвращает индекс элемента по ключу
+       * @param id
+       * @deprecated метод будет удален в 3.7.4 используйте getIndex(getRecordById())
+       * @public
+       * @returns {*}
+       */
+      getIndexById: function (id) {
+         return this.getIndexByValue(this._options.idProperty, id);
+      },
+      /**
+       * Возвращает копию рекордсета
+       * @public
+       * @returns {SBIS3.CONTROLS.Data.Collection.RecordSet}
+       */
+      clone: function () {
+         //TODO: сделать через сериализатор
+         return new RecordSet({
+            strategy: this._options.strategy,
+            data: this._rawData,
+            meta: this._options.meta,
+            keyField: this._options.keyField
+         });
       },
 
       getRecordKeyByIndex: function (index) {
@@ -86,20 +217,29 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
       },
 
       getStrategy: function () {
-         return this._options.strategy;
+         $ws.single.ioc.resolve('ILogger').log('SBIS3.CONTROLS.Data.Collection.RecordSet:getStrategy', 'method getStrategy is deprecated and will be removed in 3.7.4. Use "getAdapter" instead.');
+         return this.getAdapter();
+      },
+
+      getAdapter: function (){
+         return this._options.adapter;
       },
 
       merge: function (dataSetMergeFrom, options) {
-         return DataSet.prototype.merge.call(this, dataSetMergeFrom, options);
+         /*TODO какая то лажа с ключами*/
+         if ((!this._keyField) && (dataSetMergeFrom._keyField)) {
+            this._keyField = dataSetMergeFrom._keyField;
+         }
+         this._setRecords(dataSetMergeFrom._getRecords(), options);
       },
 
       push: function (record) {
          if (!$ws.helpers.instanceOfModule(record, 'SBIS3.CONTROLS.Data.Model')) {
             record = new this._model({
                compatibleMode: true,
-               adapter: this.getStrategy(),
+               adapter: this.getAdapter(),
                rawData: record,
-               idProperty: this._options.keyField
+               idProperty: this._options.idProperty
             });
             record.setStored(true);
          }
@@ -108,7 +248,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
 
       insert: function (record, at) {
          var existsAt = this.getIndex(record);
-         if (existsAt == -1) {
+         if (existsAt === -1) {
             this.add(record, at);
          } else {
             this.replace(record, existsAt);
@@ -116,22 +256,21 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
       },
 
       setRawData: function(data) {
-         this.fill();
-
+         RecordSet.superclass.clear.call(this);
          this._rawData = data;
-
-         var adapter = this.getStrategy().forTable(data),
+         this._resetTableAdapter();
+         var adapter = this._getTableAdapter(),
             count = adapter.getCount(),
             record;
          for (var i = 0; i < count; i++) {
             record = new this._model({
                compatibleMode: true,
-               adapter: this.getStrategy(),
+               adapter: this.getAdapter(),
                rawData: adapter.at(i),
-               idProperty: this._options.keyField
+               idProperty: this._options.idProperty
             });
             record.setStored(true);
-            this.add(record);
+            RecordSet.superclass.add.call(this, record);
          }
       },
 
@@ -145,26 +284,26 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
             var record = this.at(i);
             switch (status) {
                case 'all':
-                  iterateCallback.call(this, record);
+                  iterateCallback.call(this, record, i);
                   break;
                case 'created':
                   if (record.isCreated()) {
-                     iterateCallback.call(this, record);
+                     iterateCallback.call(this, record, i);
                   }
                   break;
                case 'deleted':
                   if (record.isDeleted()) {
-                     iterateCallback.call(this, record);
+                     iterateCallback.call(this, record, i);
                   }
                   break;
                case 'changed':
                   if (record.isChanged()) {
-                     iterateCallback.call(this, record);
+                     iterateCallback.call(this, record, i);
                   }
                   break;
                default :
                   if (!record.isDeleted()) {
-                     iterateCallback.call(this, record);
+                     iterateCallback.call(this, record, i);
                   }
             }
          }
@@ -176,10 +315,9 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
             !$ws.helpers.instanceOfModule(this._options.meta.path, 'SBIS3.CONTROLS.Data.Collection.RecordSet')
          ) {
             this._options.meta.path = new RecordSet({
-               compatibleMode: true,
-               strategy: this.getStrategy(),
-               data: this._options.meta.path,
-               keyField: this._options.keyField
+               adapter: this.getAdapter(),
+               rawData: this._options.meta.path,
+               idProperty: this._options.idProperty
             });
          }
 
@@ -188,10 +326,9 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
             !$ws.helpers.instanceOfModule(this._options.meta.results, 'SBIS3.CONTROLS.Data.Model')
          ) {
             this._options.meta.results = $ws.single.ioc.resolve('SBIS3.CONTROLS.Data.Model', {
-               compatibleMode: true,
-               adapter: this.getStrategy(),
+               adapter: this.getAdapter(),
                rawData: this._options.meta.results,
-               idProperty: this._options.keyField
+               idProperty: this._options.idProperty
             });
          }
 
@@ -204,15 +341,47 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
 
       // TODO: В контролах избавиться от вызова этого метода - должно быть достаточно "выбрать по индексу".
       getTreeIndex: function(field, reindex){
-         return DataSet.prototype.getTreeIndex.call(this, field, reindex);
+         if (reindex || (Object.isEmpty(this._indexTree) && field)){
+            this._reindexTree(field);
+         }
+         return this._indexTree;
       },
 
       getChildItems: function (parentId, getFullBranch, field) {
-         return DataSet.prototype.getChildItems.call(this, parentId, getFullBranch, field);
+         if(Object.isEmpty(this._indexTree)) {
+            this._reindexTree(field);
+         }
+         parentId = (typeof parentId != 'undefined') ? parentId : null;
+         if (this._indexTree.hasOwnProperty(parentId)) {
+            if (getFullBranch) {
+               var curParent = parentId,
+                  parents = [],
+                  childs = [];
+
+               do {
+                  $ws.helpers.forEach(this._indexTree[curParent], function (newParent) {
+                     parents.push(newParent);
+                     childs.push(newParent);
+                  });
+                  if (parents.length) {
+                     curParent = Array.remove(parents, 0);
+                  } else {
+                     curParent = null;
+                  }
+               } while (curParent);
+               return childs;
+            }
+            return this._indexTree[parentId];
+         } else {
+            return [];
+         }
       },
 
       hasChild: function (parentKey, field) {
-         return DataSet.prototype.hasChild.call(this, parentKey, field);
+         if(Object.isEmpty(this._indexTree)) {
+            this._reindexTree(field);
+         }
+         return this._indexTree.hasOwnProperty(parentKey);
       },
 
       getParent: function () {
@@ -224,8 +393,8 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
 
       filter: function (filterCallback) {
          var filterDataSet = new RecordSet({
-            strategy: this._options.strategy,
-            keyField: this._keyField
+            adapter: this._options.adapter,
+            idProperty: this._idProperty
          });
 
          this.each(function (record) {
@@ -253,7 +422,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
             key = records[i].getKey();
             recordsMap[key] = true;
 
-            if ((record = self.getRecordByKey(key))) {
+            if ((record = self.getRecordById(key))) {
                if (options.merge) {
                   record.merge(records[i]);
                }
@@ -292,18 +461,116 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
                }
             }
             if (!this._indexTree.hasOwnProperty(parentKey)) {
-               this._indexTree[parentKey] = [];
+               if(parentKey === null || this.getIndexById(parentKey) !== -1 ){
+                  this._indexTree[parentKey] = [record.getKey()];
+               }
+            } else {
+               this._indexTree[parentKey].push(record.getKey());
             }
-            this._indexTree[parentKey].push(record.getKey());
          }, 'all');
-      }
+      },
 
       //endregion SBIS3.CONTROLS.DataSet
 
+      //region SBIS3.CONTROLS.Data.Collection.List
+
+      clear: function () {
+         this.setRawData(this._getTableAdapter().getEmpty());
+         RecordSet.superclass.clear.call(this);
+      },
+
+      add: function (item, at) {
+         this._checkItem(item);
+         this._getTableAdapter().add(item.getRawData(), at);
+         RecordSet.superclass.add.apply(this, arguments);
+      },
+
+      removeAt: function (index) {
+         RecordSet.superclass.removeAt.apply(this, arguments);
+         this._getTableAdapter().remove(index);
+      },
+
+      replace: function (item, at) {
+         this._checkItem(item);
+         RecordSet.superclass.replace.apply(this, arguments);
+
+         this._getTableAdapter().replace(item.getRawData(), at);
+      },
+
+      //endregion SBIS3.CONTROLS.Data.Collection.List
+
       //region Protected methods
+
+      /**
+       * Вставляет набор записей в указанную позицию
+       * @private
+       */
+      _splice: function (items, start){
+         var newItems = [];
+         if(items instanceof Array) {
+            newItems = items;
+         } else if(items && $ws.helpers.instanceOfMixin(items, 'SBIS3.CONTROLS.Data.Collection.IEnumerable')) {
+            var self = this;
+            items.each(function (item){
+               newItems.push(item);
+            });
+         } else {
+            throw new Error('Invalid argument');
+         }
+         for (var i = 0, len = newItems.length; i< len; i++) {
+            var item = newItems[i];
+            this._checkItem(item);
+            this._getTableAdapter().add(item.getRawData(), start);
+            this._items.splice(item, start, 0);
+            start++;
+         }
+
+         this._getServiceEnumerator().reIndex();
+      },
+
+      /**
+       * Возвращает адаптер для сырых данных (лениво создает)
+       * @private
+       */
+      _getTableAdapter: function () {
+         return this._tableAdapter || (this._tableAdapter = this.getAdapter().forTable(this._rawData));
+      },
+
+      /**
+       * Сбрасывает созданный адаптер для сырых данных
+       * @private
+       */
+      _resetTableAdapter: function () {
+         this._tableAdapter = null;
+      },
+
+      /**
+       * ПРроверяет, что переданный элемент - модель
+       * @private
+       */
+      _checkItem: function (item) {
+         if(!item || !$ws.helpers.instanceOfModule(item, 'SBIS3.CONTROLS.Data.Model')){
+            throw new Error('Item should be an instance of SBIS3.CONTROLS.Data.Model');
+         }
+         return true;
+      },
+
+      /**
+       * Инициализирует адаптер
+       * @private
+       */
+      _initAdapter: function () {
+         if (!this._options.adapter) {
+            this._options.adapter = new JsonAdapter();
+         }
+      }
 
       //endregion Protected methods
 
+   });
+
+   $ws.single.ioc.bind('SBIS3.CONTROLS.Data.Collection.RecordSet', function(config) {
+      return new RecordSet(config);
    });
 
    return RecordSet;

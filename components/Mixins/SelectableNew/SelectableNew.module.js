@@ -50,6 +50,11 @@ define('js!SBIS3.CONTROLS.SelectableNew', [
          },
 
          /**
+          * @var {Function} Обработчик изменения текущего элемента проекции
+          */
+         _onProjectionCurrentChange: null,
+
+         /**
           * @var {SBIS3.CONTROLS.Data.Projection.CollectionEnumerator} Служебный энумератор
           */
          _utilityEnumerator: undefined
@@ -57,11 +62,7 @@ define('js!SBIS3.CONTROLS.SelectableNew', [
 
       $constructor: function () {
          this._publish('onSelectedItemChange');
-         if (this._options.selectedKey) {
-            var index = this._getItemIndexByKey(this._options.selectedKey);
-            if (index >=0)
-               this._itemsProjection.setCurrentPosition(index, true);
-         }
+
       },
 
       before: {
@@ -71,33 +72,51 @@ define('js!SBIS3.CONTROLS.SelectableNew', [
                   this._itemsProjection
                );
             }
+         },
+
+         _setItems: function() {
+            if (this._itemsProjection && this._onProjectionCurrentChange) {
+               this.unsubscribeFrom(this._itemsProjection, 'onCurrentChange', this._onProjectionCurrentChange);
+            }
+         },
+
+         init: function (){
+            if (this._options.selectedKey) {
+               var index = this._getItemIndexByKey(this._options.selectedKey);
+               if (index >=0) {
+                  this._itemsProjection.setCurrentPosition(index, true);
+                  this._drawSelectedItem();
+               }
+            }
          }
       },
 
       after: {
-         init: function(){
-            var projection = this.getItemsProjection(),
-               self = this;
-
-            this.subscribeTo(projection, 'onCurrentChange', (function(event, newCurrent, oldCurrent, newPosition) {
+         setItems: function() {
+            var selectedIndex = this._itemsProjection.getCurrentPosition(),
+               selectedKey = selectedIndex === -1 ? null : this._getItemValue(this._itemsProjection.at(selectedIndex), this._options.keyField);
+            if(selectedKey !== this._options.selectedKey) {
                this._setSelectedIndex(
-                  newPosition,
-                  self._getItemValue(newCurrent ? newCurrent.getContents() : null, this._options.keyField )
+                  selectedIndex,
+                  selectedKey
                );
-            }).bind(this));
+            }
+         },
+
+         _setItems: function() {
+            if (!this._onProjectionCurrentChange) {
+               this._onProjectionCurrentChange = onProjectionCurrentChange.bind(this);
+            }
+            this.subscribeTo(this._itemsProjection, 'onCurrentChange', this._onProjectionCurrentChange);
+
          },
 
          _initView: function() {
-            var projection = this.getItemsProjection(),
-               selected = projection.getCurrentPosition();
-            if(selected >= 0) {
-               this._setSelectedIndex(
-                  selected,
-                  this._getItemValue(projection.at(selected), this._options.keyField)
-               );
-            } else if (this._options.selectedKey) {
-               this.setSelectedKey(this._options.selectedKey);
-            }
+            var projection = this.getItemsProjection();
+            this._view.selectItem(
+               projection.getCurrent(),
+               projection.getCurrentPosition()
+            );
             if (this._isItemMustSelected()) {
                this._setFirstItemAsSelected();
             }
@@ -117,8 +136,19 @@ define('js!SBIS3.CONTROLS.SelectableNew', [
        * @see getSelectedKey
        */
       setSelectedKey: function(id) {
+         if ($ws.helpers.instanceOfMixin(this._items, 'SBIS3.CONTROLS.Data.Collection.LoadableListMixin') && !this._items.isLoaded()) {
+            var self = this;
+            this._items.once('onAfterLoadedApply', function (){
+               self._setSelectedKey(id);
+            });
+         } else {
+            this._setSelectedKey(id);
+         }
+      },
+
+      _setSelectedKey: function (id) {
          var index;
-         if(id === null){
+         if (id === null) {
             this._setSelectedIndex(null, null);
          } else {
             index = this._getItemIndexByKey(id);
@@ -137,9 +167,7 @@ define('js!SBIS3.CONTROLS.SelectableNew', [
       _setSelectedIndex: function(index, id) {
          if(id !==  this._options.selectedKey) {
             this._options.selectedKey = index === -1?null:id;
-            if(this._view) {
-               this._itemsProjection.setCurrentPosition(index);
-            }
+            this._itemsProjection.setCurrentPosition(index);
             //this.saveToContext('SelectedItem', this._options.selectedKey); //TODO: Перенести отсюда
             this._drawSelectedItem();
             this._notifySelectedItem();
@@ -208,7 +236,7 @@ define('js!SBIS3.CONTROLS.SelectableNew', [
 
       _getItemIndexByKey: function(id) {
          if(this._options.keyField) {
-            return this._getUtilityEnumerator().getItemIndexByPropertyValue(
+            return this._getUtilityEnumerator().getIndexByValue(
                this._options.keyField,
                id
             );
@@ -263,6 +291,22 @@ define('js!SBIS3.CONTROLS.SelectableNew', [
          }
          return value;
       }
+   };
+
+   /**
+    * Обработчк события изменения текущего элемента проекции
+    * @param {$ws.proto.EventObject} event Дескриптор события.
+    * @param {$ws.proto.EventObject} eventObject Дескриптор события.
+    * @param {SBIS3.CONTROLS.Data.Projection.ICollectionItem} newCurrent Новый текущий элемент
+    * @param {SBIS3.CONTROLS.Data.Projection.ICollectionItem} oldCurrent Старый текущий элемент
+    * @param {Number} newPosition Новая позиция
+    * @param {Number} oldPosition Старая позиция
+    */
+   var onProjectionCurrentChange = function (event, newCurrent, oldCurrent, newPosition) {
+      this._setSelectedIndex(
+         newPosition,
+         this._getItemValue(newCurrent ? newCurrent.getContents() : null, this._options.keyField )
+      );
    };
 
    return SelectableNew;

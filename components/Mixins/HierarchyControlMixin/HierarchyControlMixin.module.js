@@ -19,11 +19,6 @@ define('js!SBIS3.CONTROLS.HierarchyControlMixin', [
       $protected: {
          _options: {
             /**
-             * @cfg {SBIS3.CONTROLS.HierarchyControl.IHierarchyItems|Array} Узел дерева, отображаемый контролом
-             * @name SBIS3.CONTROLS.HierarchyControlMixin#items
-             */
-
-            /**
              * @cfg {String} Название свойства, содержащего идентификатор узла.
              */
             idProperty: '',

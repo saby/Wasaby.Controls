@@ -34,7 +34,7 @@ define('js!SBIS3.CONTROLS.HierarchyDataGridView', [
        * Событие, происходящее после клика по хлебным крошкам, отображающим результаты поиска
        * @param {$ws.proto.EventObject} eventObject Дескриптор события.
        * @param {number} id ключ узла, по которму кликнули
-       * @return Если вернуть false - загрузка узла не произойдет
+       * @returns {Boolean} Если вернуть false - загрузка узла не произойдет
        * @example
        * <pre>
        *    DataGridView.subscribe('onSearchPathClick', function(event){
@@ -206,7 +206,8 @@ define('js!SBIS3.CONTROLS.HierarchyDataGridView', [
                   if (self._options.groupBy.field) {
                      filter[self._options.groupBy.field] = undefined;
                   }
-                  self.setInfiniteScroll(false, true);
+                  //Если бесконечный скролл был установлен в опции - вернем его
+                  self.setInfiniteScroll(self._options.infiniteScroll, true);
                   self.setGroupBy({});
                   self.setHighlightText('', false);
                   self.setFilter(filter, true);

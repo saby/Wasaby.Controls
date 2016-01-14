@@ -324,12 +324,17 @@ define('js!SBIS3.CONTROLS.ListView',
                 * @remark
                 * При частичной постраничной навигации заранее неизвестно общее количество страниц, режим пейджинга будет определн по параметру n из dataSource
                 * Если пришел boolean, значит частичная постраничная навигация
+                * Важно! В SBIS3.CONTROLS.TreeCompositeView особый режим навигации - в плоском списке и таблице автоматически работает
+                * бесконечная подгрузка по скроллу (@see infiniteScroll), а вот в режиме плитки (tile) будет работать постраничная навигация
+                * (при условии showPaging = true)
                 * @example
                 * <pre>
                 *     <option name="showPaging">true</option>
                 * </pre>
                 * @see setPage
                 * @see getPage
+                * @see infiniteScroll
+                * @see SBIS3.CONTROLS.TreeCompositeView
                 */
                showPaging: false,
                /**
@@ -371,7 +376,7 @@ define('js!SBIS3.CONTROLS.ListView',
          $constructor: function () {
             //TODO временно смотрим на TopParent, чтобы понять, где скролл. С внедрением ScrallWatcher этот функционал уберем
             var topParent = this.getTopParent();
-            this._publish('onChangeHoveredItem', 'onItemClick', 'onItemActivate', 'onDataMerge', 'onItemValueChanged', 'onShowEdit', 'onBeginEdit', 'onEndEdit', 'onBeginAdd', 'onAfterEndEdit');
+            this._publish('onChangeHoveredItem', 'onItemClick', 'onItemActivate', 'onDataMerge', 'onItemValueChanged', 'onShowEdit', 'onBeginEdit', 'onEndEdit', 'onBeginAdd', 'onAfterEndEdit', 'onPrepareFilterOnMove');
             this._container.on('mousemove', this._mouseMoveHandler.bind(this))
                            .on('mouseleave', this._mouseLeaveHandler.bind(this));
 
@@ -409,9 +414,9 @@ define('js!SBIS3.CONTROLS.ListView',
             this._touchSupport = $ws._const.browser.isMobilePlatform;
             if (this._touchSupport){
             	this._getItemActionsContainer().addClass('controls-ItemsActions__touch-actions');
-            	this._container.bind('swipe', this._swipeHandler.bind(this));
-               this._container.bind('tap', this._tapHandler.bind(this));
-               this._container.bind('touchmove',this._mouseMoveHandler.bind(this));
+            	this._container.bind('swipe', this._swipeHandler.bind(this))
+                               .bind('tap', this._tapHandler.bind(this))
+                               .bind('touchmove',this._mouseMoveHandler.bind(this));
             }
          },
          _keyboardHover: function (e) {
@@ -464,23 +469,34 @@ define('js!SBIS3.CONTROLS.ListView',
          // TODO Подумать, как решить данную проблему. Не надёжно хранить информацию в доме
          // Поиск следующего или предыдущего элемента коллекции с учётом вложенных контролов
          _getHtmlItem: function (id, isNext) {
-            var items = $('.js-controls-ListView__item', this._getItemsContainer()).not('.ws-hidden'),
-               selectedItem = $('[data-id="' + id + '"]', this._getItemsContainer()),
-               index = items.index(selectedItem),
-               siblingItem;
+            if($ws.helpers.instanceOfMixin(this._dataSet, 'SBIS3.CONTROLS.Data.Collection.IList')) {
+               var index = this._dataSet.getIndex(this._dataSet.getRecordByKey(id)),
+                  item;
+               item = this._dataSet.at(isNext ? ++index : --index);
+               if(item)
+                  return $('.js-controls-ListView__item[data-id="' + item.getId() + '"]', this._getItemsContainer());
+               else
+                  return undefined;
+            } else {
+               var items = $('.js-controls-ListView__item', this._getItemsContainer()).not('.ws-hidden'),
+                  selectedItem = $('[data-id="' + id + '"]', this._getItemsContainer()),
+                  index = items.index(selectedItem),
+                  siblingItem;
                if (isNext) {
-                  if(index +1 < items.length ){
+                  if (index + 1 < items.length) {
                      siblingItem = items.eq(index + 1);
                   }
-               } else {
-                  if(index > 0){
+               }
+               else {
+                  if (index > 0) {
                      siblingItem = items.eq(index - 1);
                   }
                }
-            if (siblingItem)
-               return this._dataSet.getRecordByKey(siblingItem.data('id')) ? siblingItem : this._getHtmlItem(siblingItem.data('id'), isNext);
-            else
-               return undefined;
+               if (siblingItem)
+                  return this._dataSet.getRecordByKey(siblingItem.data('id')) ? siblingItem : this._getHtmlItem(siblingItem.data('id'), isNext);
+               else
+                  return undefined;
+            }
          },
          _isViewElement: function (elem) {
             return  $ws.helpers.contains(this._getItemsContainer()[0], elem[0]);
@@ -507,20 +523,20 @@ define('js!SBIS3.CONTROLS.ListView',
           */
          _mouseMoveHandler: function (e) {
             var $target = $(e.target),
-                target, targetKey, hoveredItemClone;
+                target, targetKey, hoveredItem, hoveredItemClone;
 
             target = this._findItemByElement($target);
 
             if (target.length) {
                targetKey = target[0].getAttribute('data-id');
-               if (targetKey !== undefined && this._hoveredItem.key !== targetKey) {
-                  this._hoveredItem.container && this._hoveredItem.container.removeClass('controls-ListView__hoveredItem');
-                  target.addClass('controls-ListView__hoveredItem');
-                  this._hoveredItem = this._getElementData(target);
+               hoveredItem = this.getHoveredItem();
+               if (targetKey !== undefined && hoveredItem.key !== targetKey) {
+                  this._clearHoveredItem();
+                  this._setHoveredItem(hoveredItem = this._getElementData(target));
 
                   /* Надо делать клон и отдавать наружу только клон объекта, иначе,
                      если его кто-то испортит, испортится он у всех, в том числе и у нас */
-                  hoveredItemClone = $ws.core.clone(this._hoveredItem);
+                  hoveredItemClone = $ws.core.clone(hoveredItem);
                   this._notify('onChangeHoveredItem', hoveredItemClone);
                   this._onChangeHoveredItem(hoveredItemClone);
                }
@@ -565,30 +581,25 @@ define('js!SBIS3.CONTROLS.ListView',
           * @private
           */
          _isHoverControl: function ($target) {
-            var itemActionsContainer = this._itemActionsGroup && this._itemActionsGroup.getContainer();
-            return itemActionsContainer && (itemActionsContainer[0] === $target[0] || $.contains(itemActionsContainer[0], $target[0]) || this._itemActionsGroup.isItemActionsMenuVisible());
+            var itemsActions = this.getItemsActions(),
+                itemsActionsContainer = itemsActions && itemsActions.getContainer();
+            return itemsActionsContainer && (itemsActionsContainer[0] === $target[0] || $.contains(itemsActionsContainer[0], $target[0]) || itemsActions.isItemActionsMenuVisible());
          },
          /**
           * Обрабатывает уведение мышки с элемента представления
           * @private
           */
          _mouseLeaveHandler: function () {
-            if (this._hoveredItem.container === null) {
+            var hoveredItem = this.getHoveredItem(),
+                emptyHoveredItem;
+
+            if (hoveredItem.container === null) {
                return;
             }
-            this._hoveredItem.container && this._hoveredItem.container.removeClass('controls-ListView__hoveredItem');
 
-            /* Затрём всю информацию о выделенном элементе */
-            var emptyObject = {};
-            for(var key in this._hoveredItem) {
-               if(this._hoveredItem.hasOwnProperty(key)) {
-                  emptyObject[key] = null;
-               }
-            }
-            this._hoveredItem = emptyObject;
-
-            this._notify('onChangeHoveredItem', this._hoveredItem);
-            this._onChangeHoveredItem(this._hoveredItem);
+            emptyHoveredItem = this._clearHoveredItem();
+            this._notify('onChangeHoveredItem', emptyHoveredItem);
+            this._onChangeHoveredItem(emptyHoveredItem);
          },
          /**
           * Обработчик на смену выделенного элемента представления
@@ -627,6 +638,18 @@ define('js!SBIS3.CONTROLS.ListView',
          },
          _getItemTemplate: function () {
             return this._options.itemTemplate;
+         },
+         /**
+          * Устанавливает шаблон отображения элемента
+          * @param  {String} tpl Шаблон отображения каждого элемента коллекции
+          * @example
+          * <pre>
+          *     DataGridView.setEmptyHTML('html!MyTemplate');
+          * </pre>
+          * @see emptyHTML
+          */
+         setItemTemplate: function(tpl) {
+            this._options.itemTemplate = tpl;
          },
 
          _getItemsContainer: function () {
@@ -690,7 +713,7 @@ define('js!SBIS3.CONTROLS.ListView',
            *         caption: 'reload offset: 450'
            *    }).subscribe('onActivated', function(event, id){
            *           //При нажатии на кнопку перезагрузим DataGridView  с 450ой записи
-           *           DataGridViewBL.reload(DataGridViewBL._filter, DataGridViewBL._sorting, 450, DataGridViewBL._limit);
+           *           DataGridViewBL.reload(DataGridViewBL._filter, DataGridViewBL.getSorting(), 450, DataGridViewBL._limit);
            *    });
           * </pre>
           */
@@ -726,6 +749,12 @@ define('js!SBIS3.CONTROLS.ListView',
             this._options.elemClickHandler = method;
          },
 
+         setEnabled: function(enabled) {
+            if (!enabled) {
+               this._cancelEdit();
+            }
+            ListView.superclass.setEnabled.apply(this, arguments);
+         },
          //********************************//
          //   БЛОК РЕДАКТИРОВАНИЯ ПО МЕСТУ //
          //*******************************//
@@ -771,15 +800,21 @@ define('js!SBIS3.CONTROLS.ListView',
             return this._options.editMode;
          },
 
+         showEip: function(target, record, isEdit) {
+            if (this.isEnabled()) {
+               this._getEditInPlace().showEip(target, record, isEdit);
+            }
+         },
+
          _onItemClickHandler: function(event, id, record, target) {
-            this._getEditInPlace().edit($(target).closest('.js-controls-ListView__item'), record);
+            this.showEip($(target).closest('.js-controls-ListView__item'), record);
             event.setResult(false);
          },
 
          _onChangeHoveredItemHandler: function(event, hoveredItem) {
             var target = hoveredItem.container;
             if (target && !(target.hasClass('controls-editInPlace') || target.hasClass('controls-editInPlace__editing'))) {
-               this._getEditInPlace().show(target, this._dataSet.getRecordByKey(hoveredItem.key));
+               this.showEip(target, this._dataSet.getRecordByKey(hoveredItem.key), false);
             } else {
                this._getEditInPlace().hide();
             }
@@ -836,11 +871,11 @@ define('js!SBIS3.CONTROLS.ListView',
                      onEndEdit: function(event, model, withSaving) {
                         event.setResult(this._notify('onEndEdit', model, withSaving));
                      }.bind(this),
-                     onAfterEndEdit: function(event, model, withSaving) {
+                     onAfterEndEdit: function(event, model, target, withSaving) {
                         if (withSaving) {
-                           this._getItemsContainer().find('.js-controls-ListView__item[data-id="' + model.getKey() + '"]:not(".controls-editInPlace")').after(this._drawItem(model)).remove();
+                           this.redrawItem(model);
                         }
-                        event.setResult(this._notify('onAfterEndEdit', model, withSaving));
+                        event.setResult(this._notify('onAfterEndEdit', model, target, withSaving));
                      }.bind(this)
                   }
                };
@@ -850,6 +885,12 @@ define('js!SBIS3.CONTROLS.ListView',
                }.bind(this);
             }
             return config;
+         },
+
+         _getElementForRedraw: function(item) {
+            // Даже не думать удалять ":not(...)". Это связано с тем, что при редактировании по месту может возникнуть задача перерисовать строку
+            // DataGridView. В виду одинакового атрибута "data-id", это единственный способ отличить строку DataGridView от строки EditInPlace.
+            return this._getItemsContainer().find('.js-controls-ListView__item[data-id="' + item.getKey() + '"]:not(".controls-editInPlace")');
          },
 
          //********************************//
@@ -862,7 +903,7 @@ define('js!SBIS3.CONTROLS.ListView',
             if (this._options.itemsActions.length) {
                if (e.direction == 'left'){
             		item.container ? this._showItemActions(item) : this._hideItemActions();
-                  this._hoveredItem = item;
+                  this._setHoveredItem(item)
                } else {
                   this._hideItemActions(true);
                }
@@ -894,22 +935,23 @@ define('js!SBIS3.CONTROLS.ListView',
           */
          _showItemActions: function (item) {
             //Создадим операции над записью, если их нет
-            this.getItemsActions();
-            this._itemActionsGroup.applyItemActions();
+            var itemsActions = this.getItemsActions();
+            itemsActions.applyItemActions();
 
             //Если показывается меню, то не надо позиционировать операции над записью
-            if (this._itemActionsGroup.isItemActionsMenuVisible()) {
+            if (itemsActions.isItemActionsMenuVisible()) {
                return;
             }
-            this._itemActionsGroup.showItemActions(item, this._getItemActionsPosition(item));
+            itemsActions.showItemActions(item, this._getItemActionsPosition(item));
             if (this._touchSupport){
                this._trackMove = $ws.helpers.trackElement(item.container, true);
                this._trackMove.subscribe('onMove', this._moveItemActions, this);
             }
          },
          _hideItemActions: function (animate) {
-            if (this._itemActionsGroup && !this._itemActionsGroup.isItemActionsMenuVisible()) {
-               this._itemActionsGroup.hideItemActions(animate);
+            var itemsActions = this.getItemsActions();
+            if (itemsActions && !itemsActions.isItemActionsMenuVisible()) {
+               itemsActions.hideItemActions(animate);
             }
             if (this._trackMove) {
                this._trackMove.unsubscribe('onMove', this._moveItemActions);
@@ -930,7 +972,6 @@ define('js!SBIS3.CONTROLS.ListView',
           * @private
           */
          _drawItemActions: function () {
-            var actionsContainer = this._container.find('> .controls-ListView__itemActions-container');
             return new ItemActionsGroup({
                items: this._options.itemsActions,
                element: this._getItemActionsContainer(),
@@ -1027,7 +1068,7 @@ define('js!SBIS3.CONTROLS.ListView',
          //*********************************//
 
          _drawItemsCallback: function () {
-            var hoveredItem = this._hoveredItem.container;
+            var hoveredItem = this.getHoveredItem().container;
 
             if (this.isInfiniteScroll()) {
                this._loadBeforeScrollAppears();
@@ -1095,9 +1136,10 @@ define('js!SBIS3.CONTROLS.ListView',
                loadAllowed  = this._isAllowInfiniteScroll(),
                records;
             //Если в догруженных данных в датасете пришел n = false, то больше не грузим.
-            if (loadAllowed && this._hasNextPage(this._dataSet.getMetaData().more, this._infiniteScrollOffset) && this._hasScrollMore && !this._isLoading()) {
+            if (loadAllowed && $ws.helpers.isElementVisible(this.getContainer()) &&
+                  this._hasNextPage(this._dataSet.getMetaData().more, this._infiniteScrollOffset) && this._hasScrollMore && !this._isLoading()) {
                this._showLoadingIndicator();
-               this._loader = this._callQuery(this.getFilter(), this._sorting, this._infiniteScrollOffset + this._limit, this._limit).addCallback(function (dataSet) {
+               this._loader = this._callQuery(this.getFilter(), this.getSorting(), this._infiniteScrollOffset + this._limit, this._limit).addCallback($ws.helpers.forAliveOnly(function (dataSet) {
                   //ВНИМАНИЕ! Здесь стрелять onDataLoad нельзя! Либо нужно определить событие, которое будет
                   //стрелять только в reload, ибо между полной перезагрузкой и догрузкой данных есть разница!
                   self._loader = null;
@@ -1124,7 +1166,7 @@ define('js!SBIS3.CONTROLS.ListView',
                      self._toggleEmptyData();
                   }
 
-               }).addErrback(function (error) {
+               }, self)).addErrback(function (error) {
                   //Здесь при .cancel приходит ошибка вида DeferredCanceledError
                   return error;
                });
@@ -1236,6 +1278,35 @@ define('js!SBIS3.CONTROLS.ListView',
          getHoveredItem: function () {
             return this._hoveredItem;
          },
+
+         /**
+          * Устанавливает текущий выделенный элемент
+          * @param {Object} hoveredItem
+          * @private
+          */
+         _setHoveredItem: function(hoveredItem) {
+            hoveredItem.container && hoveredItem.container.addClass('controls-ListView__hoveredItem');
+            this._hoveredItem = hoveredItem;
+         },
+
+         /**
+          * Очищает текущий выделенный элемент
+          * @private
+          */
+         _clearHoveredItem: function() {
+            var hoveredItem = this.getHoveredItem(),
+                emptyObject = {};
+
+            hoveredItem.container && hoveredItem.container.removeClass('controls-ListView__hoveredItem');
+            for(var key in hoveredItem) {
+               if(hoveredItem.hasOwnProperty(key)) {
+                  emptyObject[key] = null;
+               }
+            }
+            return (this._hoveredItem = emptyObject);
+
+         },
+
          _dataLoadedCallback: function () {
             if (this._options.showPaging) {
                this._processPaging();
@@ -1409,11 +1480,11 @@ define('js!SBIS3.CONTROLS.ListView',
             this._notify('onItemActivate', {id: id, item: item});
          },
          _beginAdd: function() {
-            return this._getEditInPlace().add();
+            return this.showEip();
          },
          _beginEdit: function(record) {
             var target = this._getItemsContainer().find('.js-controls-ListView__item[data-id="' + record.getKey() + '"]:first');
-            return this._getEditInPlace().edit(target, record);
+            return this.showEip(target, record);
          },
          _cancelEdit: function() {
             return this._getEditInPlace().endEdit();
@@ -1438,7 +1509,7 @@ define('js!SBIS3.CONTROLS.ListView',
          /**
           * двигает элемент
           * Метод будет удален после того как перерисовка научится сохранять раскрытые узлы в дереве
-          * @param {String} item1  - идентифкатор первого элемента
+          * @param {String} item  - идентифкатор первого элемента
           * @param {String} anchor - идентифкатор второго элемента
           * @param {Boolean} before - если true то вставит перед anchor иначе после него
           * @private
@@ -1447,11 +1518,26 @@ define('js!SBIS3.CONTROLS.ListView',
             //TODO метод сделан специально для перемещения элементов, этот костыль надо удалить и переписать через _redraw
             var itemsContainer = this._getItemsContainer(),
                itemContainer = itemsContainer.find('tr[data-id="'+item+'"]'),
-               anchor = itemsContainer.find('tr[data-id="'+anchor+'"]');
+               anchor = itemsContainer.find('tr[data-id="'+anchor+'"]'),
+               rows;
+
             if(before){
+               rows = [anchor.prev(), itemContainer, anchor, itemContainer.next()];
                itemContainer.insertBefore(anchor);
             } else {
+               rows = [itemContainer.prev(), anchor, itemContainer, anchor.next()];
                itemContainer.insertAfter(anchor);
+            }
+            this._ladderCompare(rows);
+         },
+         _ladderCompare: function(rows){
+            //TODO придрот - метод нужен только для адекватной работы лесенки при перемещении элементов местами
+            for (var i = 1; i < rows.length; i++){
+               var upperRow = $('.controls-ladder', rows[i - 1]),
+                  lowerRow = $('.controls-ladder', rows[i]);
+               for (var j = 0; j < lowerRow.length; j++){
+                  lowerRow.eq(j).toggleClass('ws-invisible', upperRow.eq(j).html() == lowerRow.eq(j).html());
+               }
             }
          }
       });

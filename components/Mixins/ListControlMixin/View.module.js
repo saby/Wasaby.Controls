@@ -244,6 +244,10 @@ define('js!SBIS3.CONTROLS.ListControl.View', [
          return this._options.template;
       },
 
+      setTemplate: function(template){
+      	this._options.template = template;
+      },
+
       /**
        * Возвращает шаблон разметки каждого элемента списка
        * @returns {String|Function}
