@@ -36,6 +36,7 @@ define('js!SBIS3.CONTROLS.Data.Source.Memory', [
       },
 
       $constructor: function (cfg) {
+         cfg = cfg || {};
          if (_static.resources[this._options.resource] === undefined) {
             _static.resources[this._options.resource] = this._options.data;
          }
