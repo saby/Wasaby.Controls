@@ -3,10 +3,8 @@ define('js!SBIS3.CONTROLS.SwitchableArea', [
    'js!SBIS3.CORE.CompoundControl',
    'js!SBIS3.CONTROLS.SwitchableArea/SwitchableAreaItem',
    'html!SBIS3.CONTROLS.SwitchableArea',
-   'html!SBIS3.CORE.SwitchableArea/SwitchableArea_area',
-   'js!SBIS3.CONTROLS.DSMixin',
-   'js!SBIS3.CONTROLS.Selectable'
-], function(CompoundControl, SwitchableAreaItem, dotTplFn, areaTplFn, DSMixin, Selectable) {
+   'html!SBIS3.CORE.SwitchableArea/SwitchableArea_area'
+], function(CompoundControl, SwitchableAreaItem, dotTplFn, areaTplFn) {
 
    'use strict';
 
@@ -21,7 +19,7 @@ define('js!SBIS3.CONTROLS.SwitchableArea', [
     * @mixes SBIS3.CONTROLS.Selectable
     */
 
-   var SwitchableArea = CompoundControl.extend([DSMixin, Selectable], /** @lends SBIS3.CONTROLS.SwitchableArea.prototype */ {
+   var SwitchableArea = CompoundControl.extend([], /** @lends SBIS3.CONTROLS.SwitchableArea.prototype */ {
       _dotTplFn: dotTplFn,
       $protected: {
          // HashMap вида id: SwitchableAreaItem
@@ -29,8 +27,6 @@ define('js!SBIS3.CONTROLS.SwitchableArea', [
          _bindedHandlers: undefined,
          // Id текущей видимой области
          _currentAreaId: null,
-         /* Замена старому _options.items */
-         _areaItems: [],
          _options: {
             areaTemplate: areaTplFn,
             /**
@@ -88,7 +84,6 @@ define('js!SBIS3.CONTROLS.SwitchableArea', [
       },
       init: function(){
          SwitchableArea.superclass.init.call(this);
-         this.reload();
       },
 
       // Подмена метода из CompoundControl. Не инстанцируем детей, дети инстанцируются внутри SwitchableAreaItem
@@ -159,6 +154,7 @@ define('js!SBIS3.CONTROLS.SwitchableArea', [
          }
       },
       _createAreasByItems: function(items) {
+         this._options.items = [];
          // создаем элементы массива items в коллекцию SwitchableAreaItem-ов
          for (var i = 0, l = items.length; i < l; i++){
             var
@@ -169,7 +165,7 @@ define('js!SBIS3.CONTROLS.SwitchableArea', [
                id: areaItem.getId(),
                content: areaItem.getContent()
             };
-            this._areaItems[i] = areaItem;
+            this._options.items[i] = areaItem;
             //построим разметку
             $ws.helpers.replaceContainer(areaItem.getContainer(), this._buildMarkup(areaTplFn, { outer: this._options, item: itemObj, index: this._getItemIndexById(areaId) }));
             // делаем видимой только дефолтную область
@@ -184,19 +180,17 @@ define('js!SBIS3.CONTROLS.SwitchableArea', [
             // заполняем _areaHashMap
             this._areaHashMap[areaId] = areaItem;
          }
-         //this._options.items = $ws.helpers.collection(this._options.items);
-         this._areaItems = $ws.helpers.collection(this._areaItems);
       },
       setItems: function(items) {
-         this._options.items = items;
-         this._createAreasByItems(this._options.items);
+         this._destroyAreas();
+         this._createAreasByItems(items);
       },
       /**
        * Возвращает коллекцию областей
        * @return {$ws.helpers.collection} коллекция элементов SwitchableAreaItem, содержащих информацию о вкладке
        */
       getItems: function() {
-         return this._areaItems;//this._options.items;
+         return this._options.items;
       },
       /**
        * Возвращает объект области по Id
