@@ -409,9 +409,9 @@ define('js!SBIS3.CONTROLS.ListView',
             this._touchSupport = $ws._const.browser.isMobilePlatform;
             if (this._touchSupport){
             	this._getItemActionsContainer().addClass('controls-ItemsActions__touch-actions');
-            	this._container.bind('swipe', this._swipeHandler.bind(this));
-               this._container.bind('tap', this._tapHandler.bind(this));
-               this._container.bind('touchmove',this._mouseMoveHandler.bind(this));
+            	this._container.bind('swipe', this._swipeHandler.bind(this))
+                               .bind('tap', this._tapHandler.bind(this))
+                               .bind('touchmove',this._mouseMoveHandler.bind(this));
             }
          },
          _keyboardHover: function (e) {
