@@ -5,8 +5,10 @@ define([
    'js!SBIS3.CONTROLS.Data.Model',
    'js!SBIS3.CONTROLS.Data.Collection.List',
    'js!SBIS3.CONTROLS.Data.Source.DataSet',
-   'js!SBIS3.CONTROLS.Data.Factory'
-], function (AdapterJson, AdapterSbis, Model, List, DataSet, Factory) {
+   'js!SBIS3.CONTROLS.Data.Factory',
+   'js!SBIS3.CONTROLS.Data.Types.Enum',
+   'js!SBIS3.CONTROLS.Data.Collection.RecordSet'
+], function (AdapterJson, AdapterSbis, Model, List, DataSet, Factory, Enum, RecordSet) {
    'use strict';
 
    var dataScheme,
@@ -58,6 +60,27 @@ define([
       }, {
          n: 'identity',
          t: 'Идентификатор'
+      }, {
+         "n":"arrayBool",
+         "t":{"n":"Массив","t":"Логическое"}
+      }, {
+         "n":"arrayDate",
+         "t":{"n":"Массив","t":"Дата"}
+      }, {
+         "n":"arrayDatetime",
+         "t":{"n":"Массив","t":"Дата и время"}
+      }, {
+         "n":"arrayInt",
+         "t":{"n":"Массив","t":"Число целое"}
+      }, {
+         "n":"arrayFloat",
+         "t":{"n":"Массив","t":"Число вещественное"}
+      }, {
+         "n":"arrayString",
+         "t":{"n":"Массив","t":"Текст"}
+      }, {
+         "n":"arrayTime",
+         "t":{"n":"Массив","t":"Время"}
       }];
       dataValues = [
          4,
@@ -73,9 +96,23 @@ define([
          '2015-09-24',
          '15:54:28.981+03',
          'P10DT0H0M0S',//10 дней
-         [22]
+         [22],
+         [true,false],
+         ["2015-12-25"],
+         ["2007-12-06 16:29:43.079+03"],
+         [15,19],
+         [1.2,1.3],
+         ["text","text2"],
+         ["12:30:00+03"]
       ];
       dataEmpty = [
+         null,
+         null,
+         null,
+         null,
+         null,
+         null,
+         null,
          null,
          null,
          null,
@@ -123,7 +160,7 @@ define([
 
          });
          it('should cast value to enum', function () {
-            assert.instanceOf(sbisModel.get('enum'), $ws.proto.Enum);
+            assert.instanceOf(sbisModel.get('enum'), Enum);
          });
          it('should cast value to model', function () {
             assert.instanceOf(sbisModel.get('record'), Model);
@@ -132,9 +169,9 @@ define([
          it('should cast value to List', function () {
             assert.instanceOf(sbisModel.get('recordSet'), List);
          });
-         it('should cast value to DataSet', function () {
+         it('should cast value to RecordSet', function () {
             sbisModel.setUsingDataSetAsList(false);
-            assert.instanceOf(sbisModel.get('recordSet'), DataSet);
+            assert.instanceOf(sbisModel.get('recordSet'), RecordSet);
          });
          it('should cast link to integer', function () {
             var val = sbisModel.get('link');
@@ -195,6 +232,34 @@ define([
             assert.strictEqual(false, val.get('three'));
             assert.strictEqual(undefined, val.get('four'));
          });
+         it('should cast to array bool', function (){
+            var val = sbisModel.get('arrayBool');
+            assert.deepEqual(dataValues[14], val);
+         });
+         it('should cast to array arrayDate', function (){
+            var val = sbisModel.get('arrayDate');
+            assert.deepEqual([Date.fromSQL(dataValues[15][0])], val);
+         });
+         it('should cast to array arrayDateTime', function (){
+            var val = sbisModel.get('arrayDatetime');
+            assert.deepEqual([Date.fromSQL(dataValues[16][0])], val);
+         });
+         it('should cast to array arrayInt', function (){
+            var val = sbisModel.get('arrayInt');
+            assert.deepEqual(dataValues[17], val);
+         });
+         it('should cast to array arrayFloat', function (){
+            var val = sbisModel.get('arrayFloat');
+            assert.deepEqual(dataValues[18], val);
+         });
+         it('should cast to array string', function (){
+            var val = sbisModel.get('arrayString');
+            assert.deepEqual(dataValues[19], val);
+         });
+         it('should cast to array arrayTime', function (){
+            var val = sbisModel.get('arrayTime');
+            assert.deepEqual([Date.fromSQL(dataValues[20][0])], val);
+         });
       });
       describe('.serialize()', function () {
          var getData = function (index) {
@@ -240,27 +305,48 @@ define([
             sbisModelEmpty.set('recordSet', list);
             assert.strictEqual(2, sbisModelEmpty.get('recordSet').getCount());
             assert.deepEqual(getData(4), sbisModelEmpty.getRawData().d[4]);
-            sbisModelEmpty.get('recordSet').each(function(item, index) {
+            var index = 0;
+            sbisModelEmpty.get('recordSet').each(function(item) {
                assert.deepEqual(getData(4).d[index], item.getRawData().d);
                assert.deepEqual(getData(4).s, item.getRawData().s);
+               index++;
             });
          });
          it('should serialize an empty list', function () {
-            var res = Factory.serialize(new List(), 'DataSet', new AdapterJson());
+            var res = Factory.serialize(new List(), 'RecordSet', new AdapterJson());
             assert.instanceOf(res, Array);
             assert.strictEqual(res.length, 0);
          });
          it('should serialize dataSet', function () {
+            var
+               adapter = new AdapterSbis(),
+               dataSet = new DataSet({
+                  rawData: {
+                     d: [[0]],
+                     s: [{
+                        n: 'id',
+                        t: 'Число целое'
+                     }]
+                  },
+                  adapter: adapter
+               });
+            sbisModel.setUsingDataSetAsList(false);
+            sbisModelEmpty.set('recordSet', dataSet);
+            assert.deepEqual(getData(4), dataSet.getRawData());
+         });
+
+         it('should serialize recordSet', function () {
             var data = {
                   d: [[0]],
                   s: [{n: 'id', t: 'Число целое'}]
                },
                adapter = new AdapterSbis(),
-               dataSet = Factory._makeDataSet(data, adapter);
+               dataSet = Factory._makeRecordSet(data, adapter);
             sbisModel.setUsingDataSetAsList(false);
             sbisModelEmpty.set('recordSet', dataSet);
             assert.deepEqual(getData(4), dataSet.getRawData());
          });
+
          it('should serialize flags', function () {
             sbisModelEmpty.set('flags', null);
             assert.strictEqual(getData(5), null);
@@ -310,6 +396,36 @@ define([
             sbisModelEmpty.set('flags', testModel);
             assert.deepEqual(getData(5), d);
          });
+
+         it('should serialize array of date', function (){
+            var  date = new Date(2016,1,1);
+            sbisModelEmpty.set('arrayDate',[date]);
+            assert.deepEqual([date.toSQL()], getData(15));
+         });
+         it('should serialize array of date and time', function (){
+            var date = new Date(2016,1,1);
+            sbisModelEmpty.set('arrayDatetime',[date]);
+            assert.deepEqual([date.toSQL(true)], getData(16));
+         });
+         it('should serialize array of int', function (){
+            sbisModelEmpty.set('arrayInt',[2,3]);
+            assert.deepEqual([2,3], getData(17));
+         });
+         it('should serialize array of float', function (){
+            sbisModelEmpty.set('arrayFloat',[2.1,3.3]);
+            assert.deepEqual([2.1,3.3], getData(18));
+
+         });
+         it('should serialize array of string', function (){
+            sbisModelEmpty.set('arrayString',['stop','bomb']);
+            assert.deepEqual(['stop','bomb'], getData(19));
+         });
+         it('should serialize array of time', function (){
+            var  date = new Date(2016,1,1);
+            sbisModelEmpty.set('arrayTime',[date]);
+            assert.deepEqual([date.toSQL(false)], getData(20));
+         });
+
       });
    });
 });

@@ -3,7 +3,7 @@
  */
 define('js!SBIS3.CONTROLS.DragAndDropMixin', [], function() {
 
-   var isMobile = $ws._const.browser.isMobileSafari || $ws._const.browser.isMobileAndroid;
+   var isMobile = $ws._const.browser.isMobilePlatform;
 
    var DragAndDropMixin = {
       $protected: {
@@ -13,21 +13,20 @@ define('js!SBIS3.CONTROLS.DragAndDropMixin', [], function() {
             x: 0,
             y: 0
          },
-	      _dragStartEventHandler: undefined,
-	      _eventHandlers: {}
+         _dragStartEventHandler: undefined,
+         _eventHandlers: isMobile ?
+            {
+               touchmove: '_moveAt',
+               touchend: '_moveEnd',
+               touchcancel: '_moveEnd'
+            }  :
+            mouseHandlers = {
+               mousemove: '_moveAt',
+               mouseup: '_moveEnd'
+            }
       },
 	   $constructor: function () {
-		   var touchHandlers = {
-				   touchmove: '_moveAt',
-				   touchend: '_moveEnd',
-				   touchcancel: '_moveEnd'
-			   },
-			   mouseHandlers = {
-				   mousemove: '_moveAt',
-				   mouseup: '_moveEnd'
-			   };
 		   this._dragStartEventHandler = this._startEventHandler.bind(this);
-		   this._eventHandlers = isMobile ? touchHandlers : mouseHandlers;
 	   },
       /*
        * Инициализирует drag-n-Drop
@@ -40,7 +39,7 @@ define('js!SBIS3.CONTROLS.DragAndDropMixin', [], function() {
 
          /* Навесим класс и обработчики, необходимые для работы drag-n-drop'а */
          this._dragContainers.addClass('draggable')
-	                          .bind('mousedown touchstart', this._dragStartEventHandler);
+	                         .bind('mousedown touchstart', this._dragStartEventHandler);
       },
       /*
        * Навешивает обработчики движения необходимые для обработки переноса
@@ -88,20 +87,26 @@ define('js!SBIS3.CONTROLS.DragAndDropMixin', [], function() {
          this._setStartPosition(e, e.target);
          this._bindDragEvents();
       },
+      _preparePageXY: function(e) {
+         if (e.type == "touchstart" || e.type == "touchmove") {
+            e.pageX = e.originalEvent.touches[0].pageX;
+            e.pageY = e.originalEvent.touches[0].pageY;
+         }
+      },
 
       /**
        * Сообщает координаты мыши в метод dragMove
        */
       _moveAt: function(e) {
-         var eventCords = isMobile ? e.originalEvent.touches[0] : e;
-         this._dragMove(e,{top: eventCords.pageY - this._startPosition.y, left: eventCords.pageX - this._startPosition.x});
+         this._preparePageXY(e);
+         this._dragMove(e,{top: e.pageY - this._startPosition.y, left: e.pageX - this._startPosition.x});
       },
 
       /**
        * Отписывается от событий, вызывает метод dragEnd
        */
       _moveEnd: function(e) {
-	      $ws._const.$doc.unbind('.dragNDrop');
+	     $ws._const.$doc.unbind('.dragNDrop');
          this._dragEnd(e);
       },
 
@@ -124,11 +129,11 @@ define('js!SBIS3.CONTROLS.DragAndDropMixin', [], function() {
       /* Cчитает координаты с которых началось движение */
       _setStartPosition: function(e, elem) {
          var position = this._getCords(elem),
-             style = window.getComputedStyle ? getComputedStyle(elem, "") : elem.currentStyle,
-             eventCords = isMobile ? e.originalEvent.touches[0] : e;
+             style = window.getComputedStyle ? getComputedStyle(elem, "") : elem.currentStyle;
 
-         this._startPosition.x = eventCords.pageX - position.left + parseInt(style.marginLeft);
-         this._startPosition.y = eventCords.pageY - position.top + parseInt(style.marginTop);
+         this._preparePageXY(e);
+         this._startPosition.x = e.pageX - position.left + parseInt(style.marginLeft);
+         this._startPosition.y = e.pageY - position.top + parseInt(style.marginTop);
       },
 
       _getDragContainer: function() {

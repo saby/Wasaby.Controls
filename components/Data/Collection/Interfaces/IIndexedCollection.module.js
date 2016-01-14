@@ -6,39 +6,17 @@ define('js!SBIS3.CONTROLS.Data.Collection.IIndexedCollection', [], function () {
     * Интерфейс коллеции c индексированным поиском элементов
     * @mixin SBIS3.CONTROLS.Data.Collection.IIndexedCollection
     * @author Мальцев Алексей
-    * @state mutable
-    * @remark
-    * Этот интерфейс временный. Не используйте его - он будет изменен.
+    * @public
     */
 
    return /** @lends SBIS3.CONTROLS.Data.Collection.IIndexedCollection.prototype */{
-      /**
-       * Возвращает первый элемент с указанным значением свойства. Если такого элемента нет - вернет undefined.
-       * @param {String} property Название свойства элемента.
-       * @param {*} value Значение свойства элемента.
-       * @returns {*}
-       */
-      getItemByPropertyValue: function (property, value) {
-         throw new Error('Method must be implemented');
-      },
-
-      /**
-       * Возвращает все элементы с указанным значением свойства.
-       * @param {String} property Название свойства элемента.
-       * @param {*} value Значение свойства элемента.
-       * @returns {Array}
-       */
-      getItemsByPropertyValue: function (property, value) {
-         throw new Error('Method must be implemented');
-      },
-
       /**
        * Возвращает индекс первого элемента с указанным значением свойства. Если такого элемента нет - вернет -1.
        * @param {String} property Название свойства элемента.
        * @param {*} value Значение свойства элемента.
        * @returns {Number}
        */
-      getItemIndexByPropertyValue: function (property, value) {
+      getIndexByValue: function (property, value) {
          throw new Error('Method must be implemented');
       },
 
@@ -46,9 +24,9 @@ define('js!SBIS3.CONTROLS.Data.Collection.IIndexedCollection', [], function () {
        * Возвращает индексы всех элементов с указанным значением свойства.
        * @param {String} property Название свойства элемента.
        * @param {*} value Значение свойства элемента.
-       * @returns {Array}
+       * @returns {Array.<Number>}
        */
-      getItemsIndexByPropertyValue: function (property, value) {
+      getIndiciesByValue: function (property, value) {
          throw new Error('Method must be implemented');
       }
    };

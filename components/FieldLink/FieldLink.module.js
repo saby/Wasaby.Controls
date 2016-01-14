@@ -233,7 +233,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
                 rec;
 
             if(selectedRecords[0] !== null) {
-               selItems.fill();
+               selItems.clear();
                for (var i = 0, len = selectedRecords.length; i < len; i++) {
                   rec = recordConverter.call(self, selectedRecords[i]);
                   selItems.add(rec);
