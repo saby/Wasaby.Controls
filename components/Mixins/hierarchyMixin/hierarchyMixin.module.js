@@ -171,7 +171,7 @@ define('js!SBIS3.CONTROLS.hierarchyMixin', [], function () {
             hierarchy = [];
          if (dataSet){
             do {
-               record = dataSet.getRecordByKey(key);
+               record = dataSet.getRecordById(key);
                parentKey = record ? dataSet.getParentKey(record, this._options.hierField) : null;
                if (record) {
                   hierarchy.push({
