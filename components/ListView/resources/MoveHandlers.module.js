@@ -23,13 +23,15 @@ define('js!SBIS3.CONTROLS.MoveHandlers', ['js!SBIS3.CONTROLS.MoveDialog','js!SBI
       },
       _getRecordsForMove: function(records) {
          if (!Array.isArray(records) || !records.length) {
-            records = this._selectedRecords.length ? this._selectedRecords :
-               this.getSelectedKey() ? [this.getSelectedKey()] : [];
+            var selItems = this.getSelectedItems(false).toArray(),
+                key = this.getSelectedKey();
+
+            records = selItems.length ? selItems : key ? [key] : [];
          }
          return records;
       },
       selectedMoveTo: function(moveTo) {
-         this._move(this._selectedRecords, moveTo);
+         this._move(this.getSelectedItems(false).toArray(), moveTo);
       },
       //TODO: Унифицировать параметр moveTo, чтобы в него всегда приходил record.
       _move: function(records, moveTo, insertAfter) {
