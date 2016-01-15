@@ -1,7 +1,7 @@
 /* global define */
 define('js!SBIS3.CONTROLS.Data.SbisMoveStrategy', [
    'js!SBIS3.CONTROLS.Data.BaseMoveStrategy',
-   'js!SBIS3.CONTROLS.Data.Source.SbisService/resources/SbisServiceBLO'
+   'js!SBIS3.CONTROLS.Data.Source.Provider.SbisBusinessLogic'
 ], function (BaseMoveStrategy, SbisServiceBLO) {
    'use strict';
    /**

@@ -1,6 +1,6 @@
 /* global define, describe, context, it, assert, $ws */
 /* Mocking SbisServiceBLO */
-define('js!SBIS3.CONTROLS.Data.Source.SbisService/resources/SbisServiceBLO', [], function () {
+define('js!SBIS3.CONTROLS.Data.Source.Provider.SbisBusinessLogic', [], function () {
       'use strict';
 
       var existsId = 7,
@@ -153,7 +153,7 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService/resources/SbisServiceBLO', [],
 
 define([
       'js!SBIS3.CONTROLS.Data.Source.SbisService',
-      'js!SBIS3.CONTROLS.Data.Source.SbisService/resources/SbisServiceBLO',
+      'js!SBIS3.CONTROLS.Data.Source.Provider.SbisBusinessLogic',
       'js!SBIS3.CONTROLS.Data.Source.DataSet',
       'js!SBIS3.CONTROLS.Data.Model',
       'js!SBIS3.CONTROLS.Data.Adapter.Sbis',

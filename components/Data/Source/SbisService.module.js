@@ -3,9 +3,9 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
    'js!SBIS3.CONTROLS.Data.Source.Base',
    'js!SBIS3.CONTROLS.Data.Source.DataSet',
    'js!SBIS3.CONTROLS.Data.Adapter.Sbis',
-   'js!SBIS3.CONTROLS.Data.Source.SbisService/resources/SbisServiceBLO',
+   'js!SBIS3.CONTROLS.Data.Source.Provider.SbisBusinessLogic',
    'js!SBIS3.CONTROLS.Data.Query.Query'
-], function (Base, DataSet, SbisAdapter, SbisServiceBLO, Query) {
+], function (Base, DataSet, SbisAdapter, SbisBusinessLogic, Query) {
    'use strict';
 
    /**
@@ -128,12 +128,12 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
          },
 
          /**
-          * @var {SBIS3.CONTROLS.Data.Source.SbisService/resources/SbisServiceBLO} Объект, который умеет ходить на бизнес-логику
+          * @var {SBIS3.CONTROLS.Data.Source.Provider.SbisBusinessLogic} Объект, который умеет ходить на бизнес-логику
           */
          _provider: undefined,
 
          /**
-          * @var {SBIS3.CONTROLS.Data.Source.SbisService/resources/SbisServiceBLO} Объект, который умеет ходить на бизнес-логику, для смены порядковых номеров
+          * @var {SBIS3.CONTROLS.Data.Source.Provider.SbisBusinessLogic} Объект, который умеет ходить на бизнес-логику, для смены порядковых номеров
           */
          _orderProvider: undefined
       },
@@ -154,7 +154,7 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
                name: this._options.resource
             };
          }
-         this._provider = new SbisServiceBLO(this._options.resource);
+         this._provider = new SbisBusinessLogic(this._options.resource);
 
       },
 
@@ -620,7 +620,7 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
          }
          var provider = this._provider;
          if (BLObjName && this._options.resource.name !== BLObjName) {
-            provider = new SbisServiceBLO({name: BLObjName});
+            provider = new SbisBusinessLogic({name: BLObjName});
          }
          return provider.callMethod(
             this._options.destroyMethodName,
