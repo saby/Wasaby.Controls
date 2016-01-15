@@ -8,6 +8,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.ObservableListMixin', [
     * Миксин, поддерживающий отcлеживание изменений в списках
     * @mixin SBIS3.CONTROLS.Data.Collection.ObservableListMixin
     * @public
+    * @ignoreMethods notifyCollectionChange notifyItemChange
     * @author Мальцев Алексей
     */
 
@@ -116,7 +117,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.ObservableListMixin', [
        * @param {Number} newItemsIndex Индекс, в котором появились новые элементы.
        * @param {*[]} oldItems Удаленные элементы коллекции.
        * @param {Number} oldItemsIndex Индекс, в котором удалены элементы.
-       * @private
+       * @public
        */
       notifyCollectionChange: function (action, newItems, newItemsIndex, oldItems, oldItemsIndex) {
          if (!this._eventsEnabled) {
@@ -144,6 +145,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.ObservableListMixin', [
        * Генерирует событие об изменении элемента
        * @param {*} item Элемент
        * @param {String} property Измененное свойство
+       * @public
        */
       notifyItemChange: function (item, property) {
          var index = this.getIndex(item);
@@ -164,7 +166,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.ObservableListMixin', [
        * @param {Number} newItemsIndex Индекс, в котором появились новые элементы.
        * @param {*[]} oldItems Удаленные элементы коллекции.
        * @param {Number} oldItemsIndex Индекс, в котором удалены элементы.
-       * @private
+       * @protected
        */
       _checkWatchableOnCollectionChange: function(action, newItems, newItemsIndex, oldItems) {
          switch (action){
@@ -185,7 +187,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.ObservableListMixin', [
       /**
        * Подписывается на событие onPropertyChange на содержимом элемента коллекции
        * @param item {*} Элемент коллекции
-       * @private
+       * @protected
        */
       _watchForChanges: function(item) {
          if (this._needWatchForChanges(item)) {
@@ -199,7 +201,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.ObservableListMixin', [
       /**
        * Отписываетсят события onPropertyChange
        * @param item {*} Элемент коллекции
-       * @private
+       * @protected
        */
       _cancelWatchForChanges: function(item) {
          if (this._needWatchForChanges(item)) {
@@ -211,7 +213,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.ObservableListMixin', [
        * Проверяет нужно ли следить за изменением содержимого элемента коллекции
        * @param item {*} Содержимое элемента коллекции
        * @returns {Boolean}
-       * @private
+       * @protected
        */
       _needWatchForChanges: function(item) {
          if ($ws.helpers.instanceOfMixin(item, 'SBIS3.CONTROLS.Data.IPropertyAccess')) {
