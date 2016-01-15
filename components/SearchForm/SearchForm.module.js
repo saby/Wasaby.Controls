@@ -38,6 +38,7 @@ define('js!SBIS3.CONTROLS.SearchForm', [
              * <pre>
              *     <option name="btnCaption">Найти</option>
              * </pre>
+             * @translatable
              */
             btnCaption: '',
             /**
@@ -46,6 +47,7 @@ define('js!SBIS3.CONTROLS.SearchForm', [
              * <pre>
              *     <option name="placeholder">Введите ФИО полностью</option>
              * </pre>
+             * @translatable
              */
             placeholder: ''
          }

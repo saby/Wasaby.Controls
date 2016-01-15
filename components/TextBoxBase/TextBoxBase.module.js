@@ -61,6 +61,7 @@ define('js!SBIS3.CONTROLS.TextBoxBase',
              * @see getText
              * @see setValue
              * @see getValue
+             * @translatable
              */
             text: '',
             /**

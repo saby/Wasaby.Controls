@@ -54,7 +54,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
          })
       }
 
-      /* Обёртка для методов, в которых меняется несколько свойст,
+      /* Обёртка для методов, в которых меняется несколько свойств,
          нужна для того, чтобы синхронизация с контекстом происходила один раз */
       function propertyUpdateWrapper(func) {
          return function() {
@@ -72,6 +72,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
     * @mixes SBIS3.CONTROLS.ActiveSelectable
     * @mixes SBIS3.CONTROLS.ActiveMultiSelectable
     * @mixes SBIS3.CONTROLS.FormWidgetMixin
+    * @mixes SBIS3.CONTROLS.DSMixin
     * @demo SBIS3.CONTROLS.Demo.FieldLinkWithEditInPlace Поле связи с редактированием по месту
     * @demo SBIS3.CONTROLS.Demo.FieldLinkDemo
     * @cssModifier controls-FieldLink__itemsEdited При наведении на выделенные элементы, они подчёркиваются.
@@ -123,7 +124,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
          },
          _inputWrapper: undefined,     /* Обертка инпута */
          _linksWrapper: undefined,     /* Контейнер для контрола выбранных элементов */
-         _dropAllButton: undefined,    /* Кнопка очитски всех выбранных записей */
+         _dropAllButton: undefined,    /* Кнопка очистки всех выбранных записей */
          _showAllLink: undefined,      /* Кнопка показа всех записей в пикере */
          _linkCollection: undefined,   /* Контрол отображающий выбранные элементы */
          _options: {
@@ -144,6 +145,10 @@ define('js!SBIS3.CONTROLS.FieldLink',
              * <wiTag group="Управление">
              * @variant newDialog в новом диалоге
              * @variant newFloatArea во всплывающей панели
+             * @example
+             * <pre class=”brush: xml”>
+             *  <option name="selectRecordsMode">newFloatArea</option>
+             * </pre>
              */
             selectRecordsMode: 'newDialog',
             /**
@@ -153,9 +158,23 @@ define('js!SBIS3.CONTROLS.FieldLink',
              * @property {Object} componentsOptions Опции, которые прокинутся в компонент на диалоге выбора.
              */
             /**
-             * @cfg {dictionaries[]} Набор диалогов выбора для поля связи
+             * @cfg {dictionaries[]} Набор критериев для выбора значения, формирует диалоги выбора для поля связи.
              * @remark
-             * Если передать всего один элемент, то дилог выбора откроется при клике на иконку меню.
+             * Если передать всего один элемент, то диалог выбора откроется при клике на иконку меню.
+             *
+             * @example
+             * <pre class=”brush: xml”>
+             *   <options name="dictionaries" type="array">
+             *      <options>
+             *         <option name="caption">ФИО</option>
+             *         <option name="template">js!SBIS3.MySite.FieldLinkDemoTemplate</option>
+             *      </options>
+             *      <options>
+             *         <option name="caption">Должность</option>
+             *         <option name="template">js!SBIS3.MySite.FieldLinkDemoTemplate</option>
+             *      </options>
+             *  </options>
+             *</pre>
              */
             dictionaries: [],
             /**
@@ -166,7 +185,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
             /**
              * @cfg {Boolean} Не скрывать поле ввода после выбора
              * @remark
-             * Актуально для поля связи с единичным выбором (Например чтобы записать что-то в поле контекста)
+             * Актуально для поля связи с единичным выбором. Например, чтобы записать что-то в поле контекста.
              */
             alwaysShowTextBox: false
          }
@@ -561,7 +580,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
       },
 
       /**
-       * Расщитывает ширину поля ввода, учитывая всевозможные wrapper'ы и отступы
+       * Рассчитывает ширину поля ввода, учитывая всевозможные wrapper'ы и отступы
        * @returns {number}
        * @private
        */

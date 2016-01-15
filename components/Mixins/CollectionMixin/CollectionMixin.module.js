@@ -42,6 +42,7 @@ define('js!SBIS3.CONTROLS.CollectionMixin', ['js!SBIS3.CONTROLS.Collection', /*T
              *     <option name="displayField">Заголовок</option>
              * </pre>
              * @see keyField
+             * @translatable
              */
             displayField: '',
              /**
