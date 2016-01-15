@@ -60,10 +60,10 @@ define('js!SBIS3.CONTROLS.TabControl', [
          this._tabButtons.subscribe('onSelectedItemChange', this._onSelectedItemChange.bind(this));
 
          //передаем элементы заданные TabControl-у
-         this._setItems(this._options.items);
+         this.setItems(this._options.items);
       },
 
-      _setItems: function(items) {
+      setItems: function(items) {
          this._tabButtons.setItems(items);
          this._switchableArea.setItems(items);
       },
