@@ -324,12 +324,17 @@ define('js!SBIS3.CONTROLS.ListView',
                 * @remark
                 * При частичной постраничной навигации заранее неизвестно общее количество страниц, режим пейджинга будет определн по параметру n из dataSource
                 * Если пришел boolean, значит частичная постраничная навигация
+                * Важно! В SBIS3.CONTROLS.TreeCompositeView особый режим навигации - в плоском списке и таблице автоматически работает
+                * бесконечная подгрузка по скроллу (@see infiniteScroll), а вот в режиме плитки (tile) будет работать постраничная навигация
+                * (при условии showPaging = true)
                 * @example
                 * <pre>
                 *     <option name="showPaging">true</option>
                 * </pre>
                 * @see setPage
                 * @see getPage
+                * @see infiniteScroll
+                * @see SBIS3.CONTROLS.TreeCompositeView
                 */
                showPaging: false,
                /**
@@ -409,9 +414,9 @@ define('js!SBIS3.CONTROLS.ListView',
             this._touchSupport = $ws._const.browser.isMobilePlatform;
             if (this._touchSupport){
             	this._getItemActionsContainer().addClass('controls-ItemsActions__touch-actions');
-            	this._container.bind('swipe', this._swipeHandler.bind(this));
-               this._container.bind('tap', this._tapHandler.bind(this));
-               this._container.bind('touchmove',this._mouseMoveHandler.bind(this));
+            	this._container.bind('swipe', this._swipeHandler.bind(this))
+                               .bind('tap', this._tapHandler.bind(this))
+                               .bind('touchmove',this._mouseMoveHandler.bind(this));
             }
          },
          _keyboardHover: function (e) {
