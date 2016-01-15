@@ -193,7 +193,10 @@ define('js!SBIS3.CONTROLS.Data.ContextField', [
                      result = subType.setWillChange(subValue, keyPath.slice(1), value);
                   }
                } else {
-                  result = !oldValue.equals(value);
+                  if($ws.helpers.type(oldValue.equals) == 'function')
+                     result = !oldValue.equals(value);
+                  else
+                     result = !$ws.helpers.isEqualObject(oldValue, value);
                }
 
                return result;
@@ -267,11 +270,7 @@ define('js!SBIS3.CONTROLS.Data.ContextField', [
       }
    },
    getRsIdx = function(id) {
-      var idx = parseInt(id, 10);
-      if (isNaN(idx)) {
-         idx = -1;
-      }
-      return idx;
+      return String.prototype.split.call(id, ',')[0];
    };
 
    return ContextField;

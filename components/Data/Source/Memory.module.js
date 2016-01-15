@@ -3,7 +3,7 @@ define('js!SBIS3.CONTROLS.Data.Source.Memory', [
    'js!SBIS3.CONTROLS.Data.Source.Base',
    'js!SBIS3.CONTROLS.Data.Source.DataSet',
    'js!SBIS3.CONTROLS.Data.Adapter.Json'
-], function (Base, DataSet, JsonAdapter) {
+], function (Base, DataSet) {
    'use strict';
 
    /**
@@ -18,11 +18,6 @@ define('js!SBIS3.CONTROLS.Data.Source.Memory', [
       _moduleName: 'SBIS3.CONTROLS.Data.Source.Memory',
       $protected: {
          _options: {
-            /**
-             * @cfg {SBIS3.CONTROLS.Data.Adapter.IAdapter} Адаптер для работы с данными, по умолчанию {@link SBIS3.CONTROLS.Data.Adapter.Json}
-             */
-            adapter: undefined,
-
             /**
              * @cfg {Object} Исходные данные
              */
@@ -40,22 +35,26 @@ define('js!SBIS3.CONTROLS.Data.Source.Memory', [
          _index: {}
       },
 
-      $constructor: function () {
-         if (!this._options.adapter) {
-            this._options.adapter = new JsonAdapter();
-         }
+      $constructor: function (cfg) {
          if (_static.resources[this._options.resource] === undefined) {
             _static.resources[this._options.resource] = this._options.data;
          }
-
+         if ('strategy' in cfg && !('adapter' in cfg)) {
+            this._options.adapter = cfg.strategy;
+            $ws.single.ioc.resolve('ILogger').log('SBIS3.CONTROLS.Data.Collection.RecordSet', 'option "strategy" is deprecated and will be removed in 3.7.4. Use "adapter" instead.');
+         }
+         if ('keyField' in cfg && !('idProperty' in cfg)) {
+            this._options.idProperty = cfg.keyField;
+            $ws.single.ioc.resolve('ILogger').log('SBIS3.CONTROLS.Data.Collection.RecordSet', 'option "keyField" is deprecated and will be removed in 3.7.4. Use "idProperty" instead.');
+         }
          this._reIndex();
       },
 
       //region SBIS3.CONTROLS.Data.Source.ISource
 
-      create: function () {
+      create: function (meta) {
          return $ws.proto.Deferred.success(this._getModelInstance(
-            this.getAdapter().forRecord().getEmpty()
+            meta || this.getAdapter().forRecord().getEmpty()
          ));
       },
 
@@ -147,8 +146,7 @@ define('js!SBIS3.CONTROLS.Data.Source.Memory', [
             this.getAdapter().setProperty(items, 'total', total);
          }
 
-         return $ws.proto.Deferred.success(new DataSet({
-            source: this,
+         return $ws.proto.Deferred.success(this._getDataSetInstance({
             rawData: items,
             totalProperty: 'total'
          }));
@@ -405,7 +403,7 @@ define('js!SBIS3.CONTROLS.Data.Source.Memory', [
          this._index = {};
          var key;
          this._each(this._options.data, function(item, index) {
-            key = this._options.adapter.forRecord(item).get(
+            key = this.getAdapter().forRecord(item).get(
                this._options.idProperty
             );
             this._index[key] = index;

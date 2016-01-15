@@ -4,7 +4,7 @@ define('js!SBIS3.CONTROLS.Data.Adapter.Sbis', [
    'js!SBIS3.CONTROLS.Data.Adapter.SbisTable',
    'js!SBIS3.CONTROLS.Data.Adapter.SbisRecord',
    'js!SBIS3.CONTROLS.Data.Adapter.FieldType',
-   'js!SBIS3.CONTROLS.Data.Source.DataSet',
+   'js!SBIS3.CONTROLS.Data.Collection.RecordSet',
    'js!SBIS3.CONTROLS.Data.Model'
 ], function (Abstract, SbisTable, SbisRecord, FIELD_TYPE) {
    'use strict';
@@ -85,7 +85,7 @@ define('js!SBIS3.CONTROLS.Data.Adapter.Sbis', [
                return $ws.core.merge({
                   _type: 'record'
                }, obj.getRawData() || {});
-            } else if ($ws.helpers.instanceOfModule(obj, 'SBIS3.CONTROLS.Data.Source.DataSet')) {
+            } else if ($ws.helpers.instanceOfModule(obj, 'SBIS3.CONTROLS.Data.Collection.RecordSet') || $ws.helpers.instanceOfModule(obj, 'SBIS3.CONTROLS.Data.Source.DataSet')) {
                return $ws.core.merge({
                   _type: 'recordset'
                }, obj.getRawData() || {});
@@ -126,8 +126,8 @@ define('js!SBIS3.CONTROLS.Data.Adapter.Sbis', [
                      return Sbis.FIELD_TYPE.String;
                   } else if ($ws.helpers.instanceOfModule(val, 'SBIS3.CONTROLS.Data.Model') || $ws.helpers.instanceOfModule(val, 'SBIS3.CONTROLS.Record')) {
                      return Sbis.FIELD_TYPE.Model;
-                  } else if ($ws.helpers.instanceOfModule(val, 'SBIS3.CONTROLS.Data.Source.DataSet') || $ws.helpers.instanceOfModule(val, 'SBIS3.CONTROLS.DataSet')) {
-                     return Sbis.FIELD_TYPE.DataSet;
+                  } else if ($ws.helpers.instanceOfModule(val, 'SBIS3.CONTROLS.Data.Collection.RecordSet') || $ws.helpers.instanceOfModule(val, 'SBIS3.CONTROLS.DataSet') || $ws.helpers.instanceOfModule(val, 'SBIS3.CONTROLS.Data.Source.DataSet')) {
+                     return Sbis.FIELD_TYPE.RecordSet;
                   } else if (val instanceof Date) {
                      return Sbis.FIELD_TYPE.DateTime;
                   } else if (val instanceof Array) {

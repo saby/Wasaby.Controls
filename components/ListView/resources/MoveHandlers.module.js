@@ -67,7 +67,7 @@ define('js!SBIS3.CONTROLS.MoveHandlers', ['js!SBIS3.CONTROLS.MoveDialog','js!SBI
             if (deferred instanceof $ws.proto.Deferred) {//обновляем view если вернули true либо deferred
                deferred.addCallback(function() {
                   self.removeItemsSelectionAll();
-                  if (isNodeTo && !isChangeOrder) {
+                  if (isNodeTo && !isChangeOrder && self._options.allowEnterToFolder) {
                      self.setCurrentRoot(moveTo);
                   }
                   self.reload();
@@ -171,6 +171,7 @@ define('js!SBIS3.CONTROLS.MoveHandlers', ['js!SBIS3.CONTROLS.MoveDialog','js!SBI
             moveRecord.call(this, record, nextItem.data('id'), id, false);
          }
       },
+
       moveRecordUp: function(tr, id, record) {
          var prevItem = this.getPrevItemById(id);
          if(prevItem) {
