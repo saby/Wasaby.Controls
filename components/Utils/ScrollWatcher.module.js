@@ -189,6 +189,28 @@ define('js!SBIS3.CONTROLS.ScrollWatcher', [], function() {
          }
 
       },
+      /**
+       * Получить текущую высоту скроллируемого контейнера
+       * @returns {Number}
+       */
+      getContainerHeight: function(){
+         if (this._inContainer()){
+            return this._options.element[0].offsetHeight;
+         }
+         if (this._inWindow()){
+            return $(window).height();
+         }
+         if (this._inFloatArea()) {
+            return this.getOpener().getTopParent().getContainer().parent().height();
+         }
+      },
+      /**
+       * Есть ли у скроллируемого элемента скролл (т.е. данные, вылезшие за пределы контейнера по высоте)
+       * @returns {boolean}
+       */
+      hasScroll: function(){
+         return this.getScrollHeight() > this.getContainerHeight();
+      },
       destroy: function(){
          if (this._inWindow()) {
             $(window).unbind('scroll.wsScrollWatcher', this._onWindowScrollHandler);

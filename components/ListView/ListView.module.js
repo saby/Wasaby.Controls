@@ -445,8 +445,8 @@ define('js!SBIS3.CONTROLS.ListView',
                   scrollWatcherCfg.element = this._options.infiniteScrollContainer;
                }
                /**TODO Это специфическое решение из-за того, что нам нужно догружать данные пока не появится скролл
-                * Если мы находися на панельке, то пока она скрыта все данные уже могут загрузится, потому что проверка на то
-                * появился ли скролл не пройдет и данные постоянно будут грузится, поэтому вызовем подгрузку только после того, как данные загрузятся*/
+                * Если мы находися на панельке, то пока она скрыта все данные уже могут загрузиться, но новая пачка не загрузится
+                * потому что контейнер невидимый*/
                if ($ws.helpers.instanceOfModule(topParent, 'SBIS3.CORE.FloatArea')){
                   this._isLoadBeforeScrollAppears = false;
                   topParent.once('onAfterShow', function(){
@@ -771,15 +771,9 @@ define('js!SBIS3.CONTROLS.ListView',
          },
          _reloadInfiniteScrollParams : function(){
             if (this.isInfiniteScroll() || this._isAllowInfiniteScroll()) {
-               //this._loadingIndicator = undefined;
                this._hasScrollMore = true;
                this._infiniteScrollOffset = this._offset;
-               //После релоада придется заново догружать данные до появлени скролла. Но если мы на панели, то
-               // подгружать данные начнем только после того, как она покажется
-               if (this.getTopParent().isShow()){
-                  this._isLoadBeforeScrollAppears = true;
-               }
-
+               this._isLoadBeforeScrollAppears = true;
             }
          },
          /**
@@ -1103,9 +1097,10 @@ define('js!SBIS3.CONTROLS.ListView',
          //КОНЕЦ БЛОКА ОПЕРАЦИЙ НАД ЗАПИСЬЮ //
          //*********************************//
          _drawItems: function(records, at){
+            //Это реализовано здесь, потому что 1ый раз отрисовка вызвана не после подгрузки в
+            // бесконечном скролле, а после первого получения данных!
             if (this._options.infiniteScrollDirection === 'top' && !at) {
                at = {at : 0};
-               this._containerScrollHeight = this._scrollWatcher.getScrollHeight();
             }
             ListView.superclass._drawItems.apply(this, [records, at]);
          },
@@ -1113,9 +1108,7 @@ define('js!SBIS3.CONTROLS.ListView',
             var hoveredItem = this.getHoveredItem().container;
 
             if (this.isInfiniteScroll()) {
-               this._moveTopScroll();
-
-               this._loadBeforeScrollAppears();
+               this._preScrollLoading();
             }
             this._drawSelectedItems(this._options.selectedKeys);
             this._drawSelectedItem(this._options.selectedKey);
@@ -1156,14 +1149,6 @@ define('js!SBIS3.CONTROLS.ListView',
                this._nextLoad();
             }
          },
-         /**
-          * Проверка на то, где будет скролл у ListView.
-          * @returns {*}
-          * @private
-          */
-         _isWindowScroll: function() {
-            return this._options.infiniteScrollContainer === undefined;
-         },
          _nextLoad: function () {
             var self = this,
                loadAllowed  = this._isAllowInfiniteScroll(),
@@ -1191,6 +1176,9 @@ define('js!SBIS3.CONTROLS.ListView',
                   if (dataSet.getCount()) {
                      records = dataSet._getRecords();
                      self._dataSet.merge(dataSet, {remove: false});
+                     if (self._options.infiniteScrollDirection === 'top') {
+                        self._containerScrollHeight = this._scrollWatcher.getScrollHeight();
+                     }
                      self._drawItems(records);
                      self._dataLoadedCallback();
                      self._toggleEmptyData();
@@ -1213,23 +1201,17 @@ define('js!SBIS3.CONTROLS.ListView',
                window.scrollTo(window.scrollX, containerOffset.top);
             }
          },
-         _loadBeforeScrollAppears: function(){
-            /*
-            *   TODO убрать зависимость от опции autoHeight, перенести в scrollWatcher возможность отслежитвания скролла по переданному классу
-            *   и все, что связано c GrowableHeight
-            *   Так же убрать overflow:auto - прикладные разработчики сами будут его навешивать на нужный им див
-            */
+         /**
+          * Функция догрузки данных пока не появится скролл
+          * @private
+          */
+         _preScrollLoading: function(){
             /**
              * Если у нас автовысота, то подгружать данные надо пока размер контейнера не привысит размеры экрана (контейнера window)
              * Если же высота фиксированная, то подгружать данные в этой функции будем пока высота контейнера(ту, что фиксированно задали) не станет меньше высоты таблицы(table),
              * т.е. пока не появится скролл внутри контейнера
              */
-            var  windowHeight = $(window).height(),
-                  checkHeights = this._isWindowScroll() ?
-                  this._container.height() < windowHeight :
-                  this._options.infiniteScrollContainer.height() >= this._container.find('.js-controls-View__scrollable').height();
-            //Если на странице появился скролл и мы достигли дна скролла
-            if (this._isLoadBeforeScrollAppears && checkHeights){
+            if (this._isLoadBeforeScrollAppears && !this._scrollWatcher.hasScroll()){
                this._nextLoad();
             } else {
                this._isLoadBeforeScrollAppears = false;
@@ -1239,9 +1221,11 @@ define('js!SBIS3.CONTROLS.ListView',
          },
          /**
           * Управляет доскролливанием в режиме подгрузки вверх
+          * При подгрузке данных вверх необходимо подскролливать элементы, чтобы
           * @private
           */
          _moveTopScroll : function(){
+            //сюда попадем только когда уже точно есть скролл
             if (this._options.infiniteScrollDirection == 'top'){
                //Если запускаем 1ый раз, то нужно поскроллить в самый низ (ведь там "начало" данных), в остальных догрузках скроллим вниз на
                //разницы величины скролла (т.е. на сколько добавилось высоты, на столько и опустили). Получается плавно
