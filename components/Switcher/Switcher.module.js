@@ -5,12 +5,6 @@ define('js!SBIS3.CONTROLS.Switcher', ['js!SBIS3.CONTROLS.SwitcherBase', 'html!SB
 
    /**
     * Контрол, отображающий обычный переключатель.
-    * Можно настроить:
-    * <ol>
-    *    <li>{@link state} - начальное состояние;</li>
-    *    <li>{@link stateOn} - текст подписи при включенном состоянии;</li>
-    *    <li>{@link stateOff} - текст подписи при выключенном состоянии.</li>
-    * </ol>
     * @class SBIS3.CONTROLS.Switcher
     * @extends SBIS3.CONTROLS.SwitcherBase
     * @mixes SBIS3.CONTROLS.FormWidgetMixin
