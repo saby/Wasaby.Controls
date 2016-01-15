@@ -228,18 +228,13 @@ define('js!SBIS3.CONTROLS.FieldLink',
 
 
          function oldConfirmSelectionCallback(event, selectedRecords) {
-            var keys = [],
-                selItems = self._options.selectedItems,
-                rec;
+            var itemArr = [];
 
             if(selectedRecords[0] !== null) {
-               selItems.fill();
                for (var i = 0, len = selectedRecords.length; i < len; i++) {
-                  rec = recordConverter.call(self, selectedRecords[i]);
-                  selItems.add(rec);
-                  keys.push(rec.getId());
+                  itemArr.push(recordConverter.call(self, selectedRecords[i]));
                }
-               self.setSelectedKeys(keys);
+               self.addSelectedItems(itemArr);
             }
             this.close && this.close();
          }
