@@ -213,7 +213,7 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
       read: function(key, meta) {
          var args = {
             'ИдО': key,
-            'ИмяМетода': this._options.formatMethodName
+            'ИмяМетода': this._options.formatMethodName || null
          };
          if (meta && !Object.isEmpty(meta)) {
             args['ДопПоля'] = this.getAdapter().serialize(meta);
