@@ -80,18 +80,9 @@ define('js!SBIS3.CONTROLS.Browser', [
             self._notifyOnEditByActivate(itemMeta);
          });
 
-         this._view.subscribe('onDataLoad', function() {
-            self._calculatePathSize();
-         });
-
-         this._setPathWidth();
-         this._view.subscribe('onDrawHead', function(){
-            self._setPathWidth();
-         });
 
          this._hierMode = checkViewType(this._view);
 
-         $(window).on('resize', this._onWindowResize.bind(this));
 
          if (this._hierMode) {
             this._backButton = this._getBackButton();
@@ -146,32 +137,6 @@ define('js!SBIS3.CONTROLS.Browser', [
          return this._view;
       },
 
-      _calculatePathSize: function(){
-         var backButton = this._backButton.getContainer(),
-            width = $('.controls-Browser__path', this._container).width() - 8,
-            backButtonWidth = backButton.width(),
-            newWidth;
-         if (backButtonWidth > width / 2 && this._breadCrumbs.getContainer().width()){
-            $('.controls-BackButton__caption', backButton).css('max-width', width / 2);
-            newWidth = width / 2;
-         } else {
-            newWidth = width - backButtonWidth;
-         }
-         this._breadCrumbs.getContainer().css('width', newWidth);
-      },
-
-      _setPathWidth: function(){
-         var firstColumn = $('.controls-DataGridView__th', this._view.getContainer()).not('.controls-DataGridView__td__checkBox').first();
-         if (firstColumn.length){
-            $('.controls-Browser__path', this._container).width(firstColumn.width());
-         }
-      },
-
-      _onWindowResize: function(){
-         this._setPathWidth();
-         this._calculatePathSize();
-      },
-
       _notifyOnFiltersReady: function() {
          this._notify('onFiltersReady');
       },
@@ -204,12 +169,7 @@ define('js!SBIS3.CONTROLS.Browser', [
       },
 
       _notifyOnEditByActivate: function(itemMeta) {
-         this._notify('onEdit', itemMeta);
-      },
-
-      destroy: function(){
-         $(window).off('resize', this._calculatePathSize);
-         Browser.superclass.destroy.call(this);
+         this._notify('onEdit', itemMeta)
       }
 
    });
