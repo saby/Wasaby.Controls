@@ -333,7 +333,7 @@ define('js!SBIS3.CONTROLS.ListView',
                 * </pre>
                 * @see pageSize
                 */
-               ignoreLocalPageSize: false,
+               ignoreLocalPageSize: true,
                /**
                 * @cfg {Boolean} Режим постраничной навигации
                 * @remark
