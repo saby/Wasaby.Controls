@@ -43,7 +43,6 @@ define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManag
          _defaultHorizontalAlignSide: '',
          _defaultVerticalAlignSide: '',
          _margins: null,
-         _initOrigins: true,
          _marginsInited: false,
          _zIndex: null,
          _resizeTimeout: null,
@@ -145,22 +144,7 @@ define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManag
             $ws.single.EventBus.channel('WindowChangeChannel').subscribe('onDocumentClick', this._clickHandler, this);
          }
 
-         var trg = $ws.helpers.trackElement(this._options.target, true);
-         //перемещаем вслед за таргетом
-         trg.subscribe('onMove', function () {
-            if (self.isVisible()) {
-               self.recalcPosition();
-               self._checkTargetPosition();
-            } else {
-               self._initSizes();
-            }
-         });
-         //скрываем если таргет скрылся
-         trg.subscribe('onVisible', function (event, visible) {
-            if (!visible){
-              self.hide();
-            }
-         });
+         this._subscribeTargetMove();
 
          if (this._options.closeButton) {
             container.append('<div class="controls-PopupMixin__closeButton" ></div>');
@@ -172,6 +156,34 @@ define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManag
          this._defaultCorner = this._options.corner;
          this._defaultVerticalAlignSide = this._options.verticalAlign.side;
          this._defaultHorizontalAlignSide = this._options.horizontalAlign.side;
+      },
+      
+      //Подписка на изменение состояния таргета
+      _subscribeTargetMove: function(){
+         if (this._targetChanges){
+            this._targetChanges.unsubscribe('onMove', this._onTargetMove);
+            this._targetChanges.unsubscribe('onVisible', this._onTargetChangeVisibility);
+         }
+         this._targetChanges = $ws.helpers.trackElement(this._options.target, true);
+         //перемещаем вслед за таргетом
+         this._targetChanges.subscribe('onMove', this._onTargetMove, this);
+         //скрываем если таргет скрылся
+         this._targetChanges.subscribe('onVisible', this._onTargetChangeVisibility, this);
+      },
+
+      _onTargetMove: function(){
+         if (this.isVisible()) {
+            this.recalcPosition();
+            this._checkTargetPosition();
+         } else {
+            this._initSizes();
+         }
+      },
+
+      _onTargetChangeVisibility: function(event, visible){
+         if (!visible){
+           this.hide();
+         }   
       },
 
       /**
@@ -185,10 +197,11 @@ define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManag
                horizontalAlign : this._options.horizontalAlign,
                corner : this._options.corner
             };
-            if (recalcFlag) {
-               this._initOrigins = true;
-            }
             this._initSizes();
+            if (recalcFlag) {
+               this._containerSizes.originWidth = parseFloat(this._container.css('max-width'), 10) || this._container.get(0).scrollWidth + this._containerSizes.border * 2;
+               this._containerSizes.originHeight = parseFloat(this._container.css('max-height'), 10) || this._container.get(0).scrollHeight + this._containerSizes.border * 2;
+            }
             if (this._options.target) {
                var offset = {
                      top: this._targetSizes.offset.top,
@@ -221,7 +234,6 @@ define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManag
                this._container.offset(bodyOffset);
 
             }
-            this._initOrigins = false;
          }
       },
       /**
@@ -230,6 +242,7 @@ define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManag
        */
       setTarget: function (target) {
          this._options.target = target;
+         this._subscribeTargetMove();
          this.recalcPosition(true);
       },
 
@@ -567,7 +580,8 @@ define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManag
       _getOffsetByWindowSize: function (offset) {
          var buf = this._targetSizes.offset;
          //Проверяем убираемся ли в экран снизу
-         if (offset.top + this._containerSizes.originHeight + (this._options.verticalAlign.offset || 0) + this._margins.top - this._margins.bottom > this._windowSizes.height && !this._isMovedV) {
+         var requredOffsetTop = Math.floor(offset.top + this._containerSizes.originHeight + (this._options.verticalAlign.offset || 0) + this._margins.top - this._margins.bottom);
+         if (requredOffsetTop > this._windowSizes.height && !this._isMovedV) {
             this._isMovedV = true;
             offset.top = this._getOppositeOffset(this._options.corner, 'vertical').top;
             offset.top = this._addOffset(offset, buf).top;
@@ -582,7 +596,8 @@ define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManag
 
          //TODO Избавиться от дублирования
          //Проверяем убираемся ли в экран справа
-         if (offset.left + this._containerSizes.originWidth + (this._options.horizontalAlign.offset || 0) + this._margins.left - this._margins.right > this._windowSizes.width && !this._isMovedH) {
+         var requredOffsetLift = Math.floor(offset.left + this._containerSizes.originWidth + (this._options.horizontalAlign.offset || 0) + this._margins.left - this._margins.right);
+         if (requredOffsetLift > this._windowSizes.width && !this._isMovedH) {
             this._isMovedH = true;
             offset.left = this._getOppositeOffset(this._options.corner, 'horizontal').left;
             offset.left = this._addOffset(offset, buf).left;
@@ -742,13 +757,7 @@ define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManag
                this._container.css('margin', 0);
                this._marginsInited = true;
             }
-            this._initSizes();
-            if (this._initOrigins) {
-               this._containerSizes.originWidth = parseFloat(this._container.css('max-width'), 10) || this._container.get(0).scrollWidth + this._containerSizes.border * 2;
-               this._containerSizes.originHeight = parseFloat(this._container.css('max-height'), 10) || this._container.get(0).scrollHeight + this._containerSizes.border * 2;
-               this._initOrigins = false;
-            }
-            this.recalcPosition();
+            this.recalcPosition(true);
             this.moveToTop();//пересчитываем, чтобы z-index был выше других панелей
 
             this._notify('onShow');
@@ -779,6 +788,7 @@ define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManag
          },
          destroy: function () {
             //ControlHierarchyManager.zIndexManager.setFree(this._zIndex);
+            $ws.helpers.trackElement(this._options.target, false);
             $ws.single.WindowManager.setHidden(this._zIndex);
             $ws.single.WindowManager.releaseZIndex(this._zIndex);
             ControlHierarchyManager.removeNode(this);

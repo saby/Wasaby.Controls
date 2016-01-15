@@ -124,6 +124,13 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                var currentTarget = this._eip.getTarget();
                return currentTarget[editNextRow ? 'next' : 'prev']('.js-controls-ListView__item:not(".controls-editInPlace")');
             },
+            showEip: function(target, record) {
+               if (target && record) {
+                  return this.edit(target, record)
+               } else {
+                  return this.add();
+               }
+            },
             edit: function (target, record) {
                return this._prepareEdit(record).addCallback(function(preparedrecord) {
                   this._eip.edit(target, preparedrecord);
@@ -167,7 +174,10 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                   endEditResult;
                if (eip) {
                   endEditResult = this._notify('onEndEdit', eip.getEditingRecord(), withSaving);
-                  if (endEditResult !== false && (!withSaving || eip.validate())) {
+                  if (endEditResult !== undefined) {
+                     withSaving = endEditResult;
+                  }
+                  if (!withSaving || eip.validate()) {
                      eip.endEdit();
                      this._savingDeferred = withSaving ? eip.applyChanges() : $ws.proto.Deferred.success();
                      return this._savingDeferred.addCallback(function() {

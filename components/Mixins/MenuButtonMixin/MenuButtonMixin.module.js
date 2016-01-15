@@ -125,14 +125,14 @@ define('js!SBIS3.CONTROLS.MenuButtonMixin', ['js!SBIS3.CONTROLS.ContextMenu'], f
          return this._picker.getItemsInstances.apply(this._picker, arguments);
       },
 
-      _clickHandler: function () {
+      _clickHandler: function (event) {
          if (this._dataSet){
             if (this._dataSet.getCount() > 1) {
                this.togglePicker();
             } else {
                if (this._dataSet.getCount() == 1) {
                   var id = this._dataSet.at(0).getKey();
-                  this._notify('onMenuItemActivate', id);
+                  this._notify('onMenuItemActivate', id, event);
                }
             }
          }
@@ -148,8 +148,8 @@ define('js!SBIS3.CONTROLS.MenuButtonMixin', ['js!SBIS3.CONTROLS.ContextMenu'], f
       after : {
          _initializePicker : function() {
             var self = this;
-            this._picker.subscribe('onMenuItemActivate', function(e, id) {
-               self._notify('onMenuItemActivate', id);
+            this._picker.subscribe('onMenuItemActivate', function(e, id, mEvent) {
+               self._notify('onMenuItemActivate', id, mEvent);
             });
             this._setWidth();
          },
@@ -162,6 +162,23 @@ define('js!SBIS3.CONTROLS.MenuButtonMixin', ['js!SBIS3.CONTROLS.ContextMenu'], f
          },
          setItems: function(items){
             this._checkItemsIcons(items);
+         },
+         _drawIcon: function(icon){
+            if (this._picker){
+               var $icon = $('.controls-Menu__header-icon', this._picker.getContainer()),
+                  newclass = 'controls-Menu__header-icon ' + this._iconClass;
+               if (icon) {
+                  if ($icon.length){
+                     $icon.get(0).className = newclass;
+                  } else {
+                     var $caption = $('.controls-Menu__header-caption', this._picker.getContainer().get(0));
+                     $icon = $('<i class="' + newclass + '"></i>');
+                     $caption.before($icon);
+                  }
+               } else {
+                  $icon && $icon.remove();
+               }
+            }
          }
       },
 

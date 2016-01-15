@@ -121,8 +121,10 @@ define('js!SBIS3.CONTROLS.FilterButton',
           },
 
           applyFilter: function() {
-             this.hidePicker();
-             FilterButton.superclass.applyFilter.call(this);
+             if(this._picker.validate()) {
+                this.hidePicker();
+                FilterButton.superclass.applyFilter.call(this);
+             }
           },
 
           _forEachFieldLinks: function(fn) {
@@ -277,6 +279,11 @@ define('js!SBIS3.CONTROLS.FilterButton',
                    ControlHierarchyManager.removeNode(suggest);
                 }
              });
+
+             if(this._historyController) {
+                this._historyController.destroy();
+                this._historyController = null;
+             }
 
              FilterButton.superclass.destroy.apply(this, arguments);
           }

@@ -16,6 +16,7 @@ define('js!SBIS3.CONTROLS.TabControl', [
     * @extends SBIS3.CORE.CompoundControl
     * @control
     * @author Крайнов Дмитрий Олегович
+    * @public
     */
 
    var TabControl = CompoundControl.extend( /** @lends SBIS3.CONTROLS.TabControl.prototype */ {
@@ -25,17 +26,49 @@ define('js!SBIS3.CONTROLS.TabControl', [
          _switchableArea: null,
          _options: {
             /**
-             * @cfg {String} Ключ выбранной записи.
-             * @see keyField
+             * @typedef {String} AlignType
+             * @variant '' выравнивание вкладки по умолчанию (справа)
+             * @variant left выравнивание вкладки слева
+             */
+            /**
+             * @typedef {object} Item
+             * @property {AlignType} [align=''] Выравнивание вкладки
+             * @property {Content} content Xhtml-вёрстка заголовка закладки при редактировании по месту
+             */
+            /**
+             * @cfg {Item[]} Массив с элементами, отображающими закладки и области, связанные с ним
+             * Для настройки содержимого вкладок и областей нужно учитывать что задано в опциях tabsDisplayField и selectedKey.
+             * Например, если задали <opt name="tabsDisplayField">title</opt>, то и для текста вкладки задаем опцию <opt name="title">Текст вкладки</opt>
+             * Если задали <opt name="keyField">id</opt>, то и для вкладки задаем ключ опцией <opt name="id">id1</opt>
+             */
+            items: null,
+            /**
+             * @cfg {String} Идентификатор выбранного элемента
+             * @remark
+             * Для задания выбранного элемента необходимо указать значение {@link SBIS3.CONTROLS.DSMixin#keyField ключевого поля} элемента коллекции.
+             * @see SBIS3.CONTROLS.DSMixin#keyField
              */
             selectedKey: null,
             /**
-             * @cfg {String} Наименование поля из которого будет браться содержимое вкладки (корешка)
+             * @cfg {String} Поле элемента коллекции, из которого отображать данные
+             * @example
+             * <pre class="brush:xml">
+             *     <option name="tabsDisplayField">caption</option>
+             * </pre>
+             * @see keyField
+             * @see items
              */
             tabsDisplayField: null,
             /**
-             * @cfg {String} Название поля-идентификатора записи. Например 'id'
-             * @see selectedKey
+             * @cfg {String} Поле элемента коллекции, которое является идентификатором записи
+             * @remark
+             * Выбранный элемент в коллекции задаётся указанием ключа элемента selectedKey.
+             * @example
+             * <pre class="brush:xml">
+             *     <option name="keyField">id</option>
+             * </pre>
+             * @see items
+             * @see displayField
              */
             keyField: null,
             /**
@@ -65,6 +98,8 @@ define('js!SBIS3.CONTROLS.TabControl', [
       },
 
       _onSelectedItemChange: function(event, id) {
+         this._options.selectedKey = id;
+         this._switchableArea._options.defaultArea = id;
          this._switchableArea.setActiveArea(id);
       }
    });

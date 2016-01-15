@@ -13,12 +13,25 @@ define('js!SBIS3.CONTROLS.Data.Collection.IList', [
    return /** @lends SBIS3.CONTROLS.Data.Collection.IList.prototype */{
       /**
        * Заменяет список другой коллекцией. Если не передать коллекцию для замены, то список будет просто очищен.
-       * @param {SBIS3.CONTROLS.Data.Collection.IEnumerable|Array} [instead] Коллекция с элементами для замены
+       * @param {SBIS3.CONTROLS.Data.Collection.IEnumerable|Array} [items] Коллекция с элементами для замены
        */
-      fill: function (instead) {
+      assign: function (items) {
          throw new Error('Method must be implemented');
       },
-
+      /**
+       * Добавляет элементы другой коллекции к концу списка
+       * @param {SBIS3.CONTROLS.Data.Collection.IEnumerable|Array} [items] Коллекция с элементами для добавления
+      */
+      append: function (items) {
+         throw new Error('Method must be implemented');
+      },
+      /**
+       * Добавляет элементы другой коллекции в начало списка.
+       * @param {SBIS3.CONTROLS.Data.Collection.IEnumerable|Array} [items] Коллекция с элементами для добавления
+      */
+      prepend: function (items) {
+         throw new Error('Method must be implemented');
+      },
       /**
        * Добавляет элемент в список
        * @param {*} item Элемент
@@ -40,6 +53,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.IList', [
       /**
        * Удаляет элемент из списка
        * @param {*} item Удаляемый элемент
+       * @returns {Boolean} Если true элемент удален, если false то нет.
        */
       remove: function (item) {
          throw new Error('Method must be implemented');
@@ -76,6 +90,13 @@ define('js!SBIS3.CONTROLS.Data.Collection.IList', [
        * @returns {Number}
        */
       getCount: function () {
+         throw new Error('Method must be implemented');
+      },
+      /**
+      * Очищает список
+      * @returns {Number}
+      */
+      clear: function () {
          throw new Error('Method must be implemented');
       }
    };
