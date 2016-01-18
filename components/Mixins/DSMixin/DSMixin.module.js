@@ -1,14 +1,13 @@
 define('js!SBIS3.CONTROLS.DSMixin', [
    'js!SBIS3.CONTROLS.Data.Source.Memory',
    'js!SBIS3.CONTROLS.Data.Source.SbisService',
-   'js!SBIS3.CONTROLS.DataFactory',
    'js!SBIS3.CONTROLS.Data.Collection.RecordSet',
    'js!SBIS3.CONTROLS.Data.Query.Query',
    'js!SBIS3.CORE.MarkupTransformer',
    'js!SBIS3.CONTROLS.Data.Collection.ObservableList',
    'js!SBIS3.CONTROLS.Data.Projection',
    'js!SBIS3.CONTROLS.Data.Bind.ICollection'
-], function (MemorySource, SbisService, DataFactory, RecordSet, Query, MarkupTransformer, ObservableList, Projection, IBindCollection) {
+], function (MemorySource, SbisService, RecordSet, Query, MarkupTransformer, ObservableList, Projection, IBindCollection) {
 
    /**
     * Миксин, задающий любому контролу поведение работы с набором однотипных элементов.
@@ -53,6 +52,8 @@ define('js!SBIS3.CONTROLS.DSMixin', [
         * @see getDataSource
         */
       $protected: {
+         _itemsProjection: null,
+         _items : null,
          _itemsInstances: {},
          _offset: 0,
          _limit: undefined,
@@ -238,16 +239,45 @@ define('js!SBIS3.CONTROLS.DSMixin', [
          }
          if (sourceOpt) {
             this._dataSource = this._prepareSource(sourceOpt);
+            this._items = this._convertDataSourceToItems(this._dataSource);
+            this._createDefaultProjection(this._items);
          }
          else if (itemsOpt) {
-             /*TODO для совеместимости пока создадим сорс*/
-            this._dataSource = new MemorySource({
-               data: itemsOpt,
-               idProperty: this._options.keyField
+            if ($ws.helpers.instanceOfModule(itemsOpt, 'SBIS3.CONTROLS.Data.Projection')) {
+               this._itemsProjection = itemsOpt;
+               this._items = this._convertItems(this._itemsProjection.getCollection());
+            }
+            else if (itemsOpt instanceof Array) {
+               /*TODO для совеместимости пока создадим сорс*/
+               this._dataSource = new MemorySource({
+                  data: itemsOpt,
+                  idProperty: this._options.keyField
+               });
+               this._items = this._convertDataSourceToItems(this._dataSource);
+               this._createDefaultProjection(this._items);
+            }
+         }
+
+         this._setItemsEventHandlers();
+      },
+
+      _createDefaultProjection: function(items) {
+         this._itemsProjection = Projection.getDefaultProjection(items);
+      },
+
+      _convertItems: function (items) {
+         items = items || [];
+         if (items instanceof Array) {
+            items = new ObservableList({
+               items: items
             });
          }
-         this._items = this._convertDataSourceToItems(this._dataSource);
-         this._setItemsEventHandlers();
+
+         if (!$ws.helpers.instanceOfMixin(items, 'SBIS3.CONTROLS.Data.Collection.IEnumerable')) {
+            throw new Error('Items should implement SBIS3.CONTROLS.Data.Collection.IEnumerable');
+         }
+
+         return items;
       },
 
       _prepareSource: function(sourceOpt) {
@@ -309,12 +339,13 @@ define('js!SBIS3.CONTROLS.DSMixin', [
          this._onAfterItemsLoad = onAfterItemsLoad.bind(this);
          this._dataLoadedCallback = this._dataLoadedCallback.bind(this);*/
          this._onCollectionChange = onCollectionChange.bind(this);
-         /*this._onCollectionItemChange = onCollectionItemChange.bind(this);
-         this._onCurrentChange = onCurrentChange.bind(this);*/
+         this._onCollectionItemChange = onCollectionItemChange.bind(this);
+         /*this._onCurrentChange = onCurrentChange.bind(this);*/
       },
 
       _setItemsEventHandlers: function() {
          this.subscribeTo(this._items, 'onCollectionChange', this._onCollectionChange);
+         this.subscribeTo(this._items, 'onCollectionItemChange', this._onCollectionItemChange);
       },
        /**
         * Метод установки источника данных.
@@ -370,7 +401,10 @@ define('js!SBIS3.CONTROLS.DSMixin', [
        */
 
       /*TODO поддержка старого API*/
-      getDataSet: function() {
+      getDataSet: function(compatibilityMode) {
+         if(!compatibilityMode) {
+            $ws.single.ioc.resolve('ILogger').log('Получение DataSet явялется устаревшим функционалом используйте getItems()');
+         }
          return this._dataSet;
       },
        /**
@@ -406,21 +440,25 @@ define('js!SBIS3.CONTROLS.DSMixin', [
 
          if (this._dataSource){
             this._toggleIndicator(true);
-	         this._loader = this._callQuery(this._options.filter, this.getSorting(), this._offset, this._limit).addCallback(function (dataSet) {
+	         this._loader = this._callQuery(this._options.filter, this.getSorting(), this._offset, this._limit).addCallback($ws.helpers.forAliveOnly(function (dataSet) {
 	            self._toggleIndicator(false);
 	            self._loader = null;//Обнулили без проверки. И так знаем, что есть и загрузили
-	            self._items.fill(dataSet);
-	            self._dataLoadedCallback();
+
+               //TODO вот тут получится рассинхронизация данных, если кто-то начнет руками менять items
+               self._dataSet = dataSet;
+	            self._items.assign(dataSet);
+
+               self._dataLoadedCallback();
 	            self._notify('onDataLoad', dataSet);
 	            //self._notify('onBeforeRedraw');
 	            def.callback(dataSet);
-	         }).addErrback(function(error){
+	         }, self)).addErrback($ws.helpers.forAliveOnly(function(error){
 	            if (!error.canceled) {
 	               self._toggleIndicator(false);
 	               $ws.helpers.message(error.message.toString().replace('Error: ', ''));
 	            }
 	            def.errback(error);
-	         });
+	         }, self));
          }
 
          this._notifyOnPropertyChanged('filter');
@@ -445,15 +483,15 @@ define('js!SBIS3.CONTROLS.DSMixin', [
          return this._dataSource.query(query).addCallback((function(newDataSet) {
             return new RecordSet({
                compatibleMode: true,
-               strategy: this._dataSource.getAdapter(),
+               adapter: this._dataSource.getAdapter(),
                model: newDataSet.getModel(),
-               data: newDataSet.getRawData(),
+               rawData: newDataSet.getRawData(),
                meta: {
                   results: newDataSet.getProperty('r'),
                   more: newDataSet.getTotal(),
                   path: newDataSet.getProperty('p')
                },
-               keyField: this._options.keyField || newDataSet.getIdProperty() || this._dataSource.getAdapter().forRecord(newDataSet.getRawData()).getKeyField()
+               idProperty: this._options.keyField || newDataSet.getIdProperty() || this._dataSource.getAdapter().forRecord(newDataSet.getRawData()).getKeyField()
             });
          }).bind(this));
 
@@ -683,10 +721,14 @@ define('js!SBIS3.CONTROLS.DSMixin', [
        */
       redrawItem: function(item) {
          var
-            targetElement = this._getItemsContainer().find('.js-controls-ListView__item[data-id="' + item.getKey() + '"]'),
+            targetElement = this._getElementForRedraw(item),
             newElement = this._drawItem(item).addClass(targetElement.attr('class'));
          targetElement.after(newElement).remove();
          this.reviveComponents();
+      },
+
+      _getElementForRedraw: function(item) {
+         return this._getItemsContainer().find('.js-controls-ListView__item[data-id="' + item.getKey() + '"]');
       },
 
       _drawItem: function (item, at, last) {
@@ -951,12 +993,14 @@ define('js!SBIS3.CONTROLS.DSMixin', [
       _addItem: function (item, at) {
          var target = this._getTargetContainer(item),
             nextSibling = at > -1 ? this._getItemContainerByIndex(target, at) : null,
-            template = this._getItemTemplate(item);
+            template = this._getItemTemplate(item),
+            newItemContainer = this._buildTplItem(item, template);
          if (nextSibling && nextSibling.length) {
-            this._buildTplItem(item, template).insertBefore(nextSibling);
+            newItemContainer.insertBefore(nextSibling);
          } else {
-            this._buildTplItem(item, template).appendTo(target);
+            newItemContainer.appendTo(target);
          }
+         this._addItemAttributes(newItemContainer, item);
       },
 
       _removeItem: function (item) {
@@ -969,15 +1013,34 @@ define('js!SBIS3.CONTROLS.DSMixin', [
          }
       },
 
+      _updateItem: function(item) {
+         var container = this._getItemContainer(this._getTargetContainer(item), item),
+            template = this._getItemTemplate(item);
+
+         if (container.length) {
+            var newItemContainer = this._buildTplItem(item, template);
+            this._addItemAttributes(newItemContainer, item);
+            this._clearItems(container);
+            container.replaceWith(this._buildTplItem(item, template));
+         } else {
+            $ws.single.ioc.resolve('ILogger').error('SBIS3.CONTROLS.ListControl.View::updateItem()', 'Item at this position is not found');
+         }
+      },
+
       _getItemContainerByIndex: function(parent, at) {
          return parent.find('> .' + 'controls-ListView__item' + ':eq(' + at + ')');
       },
 
       _getItemContainer: function(parent, item) {
          return parent.find('>[data-id="' + item.getId() + '"]');
-      },
+      }
    };
+
    var
+
+      onCollectionItemChange = function(eventObject, item, index, property){
+         this._updateItem(item);
+      },
       /**
        * Обрабатывает событие об изменении коллекции
        * @param {$ws.proto.EventObject} event Дескриптор события.
@@ -1006,7 +1069,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
                   );
                }
                //this._view.checkEmpty(); toggleEmtyData
-               //this.reviveComponents(); надо?
+               this.reviveComponents(); //надо?
                break;
 
             case IBindCollection.ACTION_MOVE:
@@ -1021,7 +1084,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
 
             case IBindCollection.ACTION_REPLACE:
                for (i = 0; i < newItems.length; i++) {
-                  this._view.updateItem(
+                  this._updateItem(
                      newItems[i]
                   );
                }
