@@ -140,8 +140,6 @@ define('js!SBIS3.CONTROLS.ComboBox', [
             e.stopPropagation();
             return false;
          });
-         //Для инициализации dataSet
-         this.reload();
          var key = this._options.selectedKey;
          if (key !== undefined && key !== null) {
             this._drawSelectedItem(this._options.selectedKey);
@@ -339,7 +337,11 @@ define('js!SBIS3.CONTROLS.ComboBox', [
       },
 
       _getItemsContainer: function () {
-         return this._picker.getContainer();
+         if (this._picker){
+         	return this._picker.getContainer();
+         } else {
+         	return null;
+         }
       },
 
       _getItemTemplate: function (item) {

@@ -1004,13 +1004,17 @@ define('js!SBIS3.CONTROLS.DSMixin', [
          }
       },
 
+      _isNeedToRedraw: function(){
+      	return !!this._getItemsContainer();
+      },
+
       _removeItem: function (item) {
          var container = this._getItemContainer(this._getTargetContainer(item), item);
          if (container.length) {
             this._clearItems(container);
             container.remove();
          } else {
-            $ws.single.ioc.resolve('ILogger').error('SBIS3.CONTROLS.ListControl.View::removeItem()', 'Item at this position is not found');
+            $ws.single.ioc.resolve('ILogger').error('SBIS3.CONTROLS.DSMixin::removeItem()', 'Item is not found');
          }
       },
 
@@ -1024,12 +1028,12 @@ define('js!SBIS3.CONTROLS.DSMixin', [
             this._clearItems(container);
             container.replaceWith(newItemContainer);
          } else {
-            $ws.single.ioc.resolve('ILogger').error('SBIS3.CONTROLS.ListControl.View::updateItem()', 'Item at this position is not found');
+            $ws.single.ioc.resolve('ILogger').error('SBIS3.CONTROLS.DSMixin::updateItem()', 'Item at this position is not found');
          }
       },
 
       _getItemContainerByIndex: function(parent, at) {
-         return parent.find('> .' + 'controls-ListView__item' + ':eq(' + at + ')');
+         return parent.find('> .controls-ListView__item:eq(' + at + ')');
       },
 
       _getItemContainer: function(parent, item) {
@@ -1054,52 +1058,53 @@ define('js!SBIS3.CONTROLS.DSMixin', [
        */
       onCollectionChange = function (event, action, newItems, newItemsIndex, oldItems) {
          var i;
+         if (this._isNeedToRedraw()) {
+	         switch (action) {
+	            case IBindCollection.ACTION_ADD:
+	            case IBindCollection.ACTION_REMOVE:
+	               for (i = 0; i < oldItems.length; i++) {
+	                  this._removeItem(
+	                     oldItems[i]
+	                  );
+	               }
+	               for (i = 0; i < newItems.length; i++) {
+	                  this._addItem(
+	                     newItems[i],
+	                        newItemsIndex + i
+	                  );
+	               }
+	               //this._view.checkEmpty(); toggleEmtyData
+	               this.reviveComponents(); //надо?
+	               break;
 
-         switch (action) {
-            case IBindCollection.ACTION_ADD:
-            case IBindCollection.ACTION_REMOVE:
-               for (i = 0; i < oldItems.length; i++) {
-                  this._removeItem(
-                     oldItems[i]
-                  );
-               }
-               for (i = 0; i < newItems.length; i++) {
-                  this._addItem(
-                     newItems[i],
-                        newItemsIndex + i
-                  );
-               }
-               //this._view.checkEmpty(); toggleEmtyData
-               this.reviveComponents(); //надо?
-               break;
+	            case IBindCollection.ACTION_MOVE:
+	               for (i = 0; i < newItems.length; i++) {
+	                  this._view.moveItem(
+	                     newItems[i],
+	                        newItemsIndex + i
+	                  );
+	               }
+	               this.reviveComponents();
+	               break;
 
-            case IBindCollection.ACTION_MOVE:
-               for (i = 0; i < newItems.length; i++) {
-                  this._view.moveItem(
-                     newItems[i],
-                        newItemsIndex + i
-                  );
-               }
-               this.reviveComponents();
-               break;
+	            case IBindCollection.ACTION_REPLACE:
+	               for (i = 0; i < newItems.length; i++) {
+	                  this._updateItem(
+	                     newItems[i]
+	                  );
+	               }
+	               this._view.selectItem(
+	                  this._itemsProjection.getCurrent(),
+	                  this._itemsProjection.getCurrentPosition()
+	               );
+	               this.reviveComponents();
+	               break;
 
-            case IBindCollection.ACTION_REPLACE:
-               for (i = 0; i < newItems.length; i++) {
-                  this._updateItem(
-                     newItems[i]
-                  );
-               }
-               this._view.selectItem(
-                  this._itemsProjection.getCurrent(),
-                  this._itemsProjection.getCurrentPosition()
-               );
-               this.reviveComponents();
-               break;
-
-            case IBindCollection.ACTION_RESET:
-               this._redraw();
-               break;
-         }
+	            case IBindCollection.ACTION_RESET:
+	               this._redraw();
+	               break;
+	         }
+      	}
       };
    return DSMixin;
 
