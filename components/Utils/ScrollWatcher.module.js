@@ -103,7 +103,7 @@ define('js!SBIS3.CONTROLS.ScrollWatcher', [], function() {
          return this._options.opener;
       },
       _getContainer: function(){
-         return this._options.element || $('body');
+         return this._options.element || (this._inWindow() ?  $('body') : this.getOpener().getTopParent()._getScrollContainer());
       },
       _inFloatArea: function(){
          return this._type === 'floatArea';
@@ -119,21 +119,20 @@ define('js!SBIS3.CONTROLS.ScrollWatcher', [], function() {
        * Здесь проиходяит проверки - куда поскроллили, вызываются пользовательские функции проверки
        * @param isBottom Проверка на то, находимся ли мы внизу страницы. При этом isScrollUp не учитывается, потому что мы просто
        * вычисляем.
-       * @param event
+       * @param {number} curScrollTop - текущее положение скролла
        * @private
        */
-      _processScrollEvent: function (isBottom, event) {
-         this._defineScrollDirection(event);
+      _processScrollEvent: function (isBottom, curScrollTop) {
+         this._defineScrollDirection(curScrollTop);
          if (this._isScrollUp ) {
-            if (this._isOnTop(event)) {
-               this._notify('onScroll', 'top', event);
+            if (this._isOnTop()) {
+               this._notify('onScroll', 'top', curScrollTop);
             }
          } else if (isBottom) {
-            this._notify('onScroll', 'bottom', event);
+            this._notify('onScroll', 'bottom', curScrollTop);
          }
       },
-      _defineScrollDirection : function(event){
-         var curScrollTop = $(event.target).scrollTop();
+      _defineScrollDirection : function(curScrollTop){
          //Это значит вызываем с тем же значением - перепроверять не надо.
          if (this._lastScrollTop === curScrollTop) {
             return;
@@ -147,20 +146,20 @@ define('js!SBIS3.CONTROLS.ScrollWatcher', [], function() {
                clientHeight = Math.min(docBody.clientHeight, docElem.clientHeight),
                scrollTop = Math.max(docBody.scrollTop, docElem.scrollTop),
                scrollHeight = Math.max(docBody.scrollHeight, docElem.scrollHeight);
-         this._processScrollEvent((clientHeight + scrollTop  >= scrollHeight - this._options.checkOffset), event);
+         this._processScrollEvent((clientHeight + scrollTop  >= scrollHeight - this._options.checkOffset), scrollTop);
       },
       _onFAScroll: function(event, scrollOptions) {
-         this._processScrollEvent(scrollOptions.clientHeight + scrollOptions.scrollTop  >= scrollOptions.scrollHeight - this._options.checkOffset, event);
+         this._processScrollEvent(scrollOptions.clientHeight + scrollOptions.scrollTop  >= scrollOptions.scrollHeight - this._options.checkOffset, scrollOptions.scrollTop);
       },
       _onContainerScroll: function (event) {
          var elem = event.target;
          //если высота скролла меньше чем высота контейнера с текущим scrollTop, то мы где-то внизу.
          //offsetHeight - высота контейнра, scrollHeight - вся высота скролла,
          //elem.clientHeight === elem.offsetHeight если где-то не будет соблюдаться, то нужно взять offsetHeight
-         this._processScrollEvent(elem.scrollTop + elem.clientHeight >= elem.scrollHeight - this._options.checkOffset, event);
+         this._processScrollEvent(elem.clientHeight + elem.scrollTop >= elem.scrollHeight - this._options.checkOffset, elem.scrollTop);
       },
-      _isOnTop : function(event){
-         return event && this._isScrollUp && (this._lastScrollTop <= this._options.checkOffset);
+      _isOnTop : function(){
+         return this._isScrollUp && (this._lastScrollTop <= this._options.checkOffset);
       },
       /**
        * Проскроллить в контейнере
@@ -170,8 +169,8 @@ define('js!SBIS3.CONTROLS.ScrollWatcher', [], function() {
        * @variant {Number} - поскроллить на указанную величину
        */
       scrollTo:function(offset){
-         var scrollable = this._getContainer()[0];
-         scrollable.scrollTop = (typeof offset === 'string' ? (offset === 'top' ? 0 : scrollable.scrollHeight) : offset)
+         var scrollable = this._getContainer();
+         scrollable.scrollTop(typeof offset === 'string' ? (offset === 'top' ? 0 : scrollable[0].scrollHeight) : offset);
       },
       /**
        * Получить текущую высоту скролла отслеживаемого элемента
@@ -209,7 +208,8 @@ define('js!SBIS3.CONTROLS.ScrollWatcher', [], function() {
        * @returns {boolean}
        */
       hasScroll: function(){
-         return this.getScrollHeight() > this.getContainerHeight();
+         var scrollHeight = this.getScrollHeight();
+         return scrollHeight > this.getContainerHeight() || scrollHeight > $(window).height();
       },
       destroy: function(){
          if (this._inWindow()) {
