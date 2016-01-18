@@ -175,7 +175,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
        */
       getRecordById: function (id) {
          return this.at(
-            this.getIndexById(id)
+            this.getIndexByValue(this._options.idProperty, id)
          );
       },
       /**
@@ -284,26 +284,26 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
             var record = this.at(i);
             switch (status) {
                case 'all':
-                  iterateCallback.call(this, record);
+                  iterateCallback.call(this, record, i);
                   break;
                case 'created':
                   if (record.isCreated()) {
-                     iterateCallback.call(this, record);
+                     iterateCallback.call(this, record, i);
                   }
                   break;
                case 'deleted':
                   if (record.isDeleted()) {
-                     iterateCallback.call(this, record);
+                     iterateCallback.call(this, record, i);
                   }
                   break;
                case 'changed':
                   if (record.isChanged()) {
-                     iterateCallback.call(this, record);
+                     iterateCallback.call(this, record, i);
                   }
                   break;
                default :
                   if (!record.isDeleted()) {
-                     iterateCallback.call(this, record);
+                     iterateCallback.call(this, record, i);
                   }
             }
          }
@@ -461,12 +461,9 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
                }
             }
             if (!this._indexTree.hasOwnProperty(parentKey)) {
-               if(parentKey === null || this.getIndexById(parentKey) !== -1 ){
-                  this._indexTree[parentKey] = [record.getKey()];
-               }
-            } else {
-               this._indexTree[parentKey].push(record.getKey());
+               this._indexTree[parentKey] = [];
             }
+            this._indexTree[parentKey].push(record.getKey());
          }, 'all');
       },
 
