@@ -6,9 +6,10 @@ define('js!SBIS3.CONTROLS.Data.Model', [
    'js!SBIS3.CONTROLS.Data.IHashable',
    'js!SBIS3.CONTROLS.Data.HashableMixin',
    'js!SBIS3.CONTROLS.Data.ContextField',
+   'js!SBIS3.CONTROLS.Data.Di',
    'js!SBIS3.CONTROLS.Data.Factory',
    'js!SBIS3.CONTROLS.Data.Adapter.Json'
-], function (SerializableMixin, Serializer, IPropertyAccess, IHashable, HashableMixin, ContextField, Factory, JsonAdapter) {
+], function (SerializableMixin, Serializer, IPropertyAccess, IHashable, HashableMixin, ContextField, Di, Factory, JsonAdapter) {
    'use strict';
 
    /**
@@ -693,12 +694,7 @@ define('js!SBIS3.CONTROLS.Data.Model', [
       //endregion SBIS3.CONTROLS.Record
    });
 
-   $ws.single.ioc.bind('SBIS3.CONTROLS.Data.Model', function(config) {
-      return new Model(config);
-   });
-   $ws.single.ioc.bind('SBIS3.CONTROLS.Data.ModelConstructor', function() {
-      return Model;
-   });
+   Di.register('model', Model);
 
    ContextField.registerRecord('ControlsFieldTypeModel', Model, 'onPropertyChange');
 

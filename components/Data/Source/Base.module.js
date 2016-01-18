@@ -1,8 +1,10 @@
 /* global define, $ws */
 define('js!SBIS3.CONTROLS.Data.Source.Base', [
    'js!SBIS3.CONTROLS.Data.Source.ISource',
+   'js!SBIS3.CONTROLS.Data.Di',
+   'js!SBIS3.CONTROLS.Data.Adapter.Json',
    'js!SBIS3.CONTROLS.Data.Model'
-], function (ISource, Model) {
+], function (ISource, Di) {
    'use strict';
 
    /**
@@ -14,33 +16,29 @@ define('js!SBIS3.CONTROLS.Data.Source.Base', [
     * @author Мальцев Алексей
     */
 
-   return $ws.proto.Abstract.extend([ISource], /** @lends SBIS3.CONTROLS.Data.Source.Base.prototype */{
+   var Base = $ws.proto.Abstract.extend([ISource], /** @lends SBIS3.CONTROLS.Data.Source.Base.prototype */{
       /**
        * @event onDataSync При изменении синхронизации данных с источником
        * @param {$ws.proto.EventObject} eventObject Дескриптор события.
-       * @param (SBIS3.CONTROLS.Data.Model[]) records Измененные записи
+       * @param (Array.<SBIS3.CONTROLS.Data.Model>) records Измененные записи
        */
 
       _moduleName: 'SBIS3.CONTROLS.Data.Source.Base',
 
-      $constructor: function (cfg) {
-         cfg = cfg || {};
-
+      $constructor: function () {
          this._publish('onDataSync');
-         this._options.model = 'model' in cfg ? cfg.model : Model;
-      },
-
-      after: {
-         $constructor: function () {
-            if (!this._options.adapter) {
-               throw new Error('Data adapter is undefined');
-            }
-         }
       },
 
       //region SBIS3.CONTROLS.Data.Source.ISource
 
+      getResource: function () {
+         return this._options.resource;
+      },
+
       getAdapter: function () {
+         if (typeof this._options.adapter === 'string') {
+            this._options.adapter = Di.resolve(this._options.adapter);
+         }
          return this._options.adapter;
       },
 
@@ -64,9 +62,6 @@ define('js!SBIS3.CONTROLS.Data.Source.Base', [
          this._options.idProperty = name;
       },
 
-      getResource: function () {
-         return this._options.resource;
-      },
       //endregion SBIS3.CONTROLS.Data.Source.ISource
 
       //region Protected methods
@@ -91,7 +86,7 @@ define('js!SBIS3.CONTROLS.Data.Source.Base', [
       _getModelInstance: function (data) {
          this._detectIdProperty(data);
 
-         return new this._options.model({
+         return Di.resolve(this._options.model, {
             rawData: data,
             source: this,
             idProperty: this._options.idProperty
@@ -106,7 +101,7 @@ define('js!SBIS3.CONTROLS.Data.Source.Base', [
        * @private
        */
       _each: function (data, callback, context) {
-         var tableAdapter = this._options.adapter.forTable(data),
+         var tableAdapter = this.getAdapter().forTable(data),
             index,
             count;
 
@@ -142,4 +137,6 @@ define('js!SBIS3.CONTROLS.Data.Source.Base', [
       //endregion SBIS3.CONTROLS.BaseSource
 
    });
+
+   return Base;
 });

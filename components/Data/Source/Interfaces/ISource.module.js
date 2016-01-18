@@ -14,31 +14,71 @@ define('js!SBIS3.CONTROLS.Data.Source.ISource', [
       $protected: {
          _options: {
             /**
-             * @cfg {String} Ресурс, с которым работает источник (имя таблицы, объекта, файла, URL, path и т.п.)
+             * @cfg {String} Название ресурса, с которым работает источник (имя таблицы, объекта, файла, URL, path и т.п.)
+             * @see getResource
+             * @example
+             * <pre>
+             *    var dataSource = new Source({
+             *       resource: '/users/'
+             *    });
+             * </pre>
              */
             resource: '',
 
             /**
-             * @cfg {SBIS3.CONTROLS.Data.Adapter.IAdapter} Адаптер для работы с данными
+             * @cfg {String|SBIS3.CONTROLS.Data.Adapter.IAdapter} Адаптер для работы с данными, по умолчанию {@link SBIS3.CONTROLS.Data.Adapter.Json}
              * @see getAdapter
              * @see setAdapter
+             * @example
+             * <pre>
+             *    var dataSource = new MemorySource({
+             *       adapter: 'adapter.xml'
+             *    });
+             * </pre>
              */
-            adapter: undefined,
+            adapter: 'adapter.json',
 
             /**
-             * @cfg {Function} Конструктор модели
+             * @cfg {String|Function} Конструктор модели, по умолчанию {@link SBIS3.CONTROLS.Data.Model}
              * @see getModel
              * @see setModel
+             * @see SBIS3.CONTROLS.Data.Model
+             * @example
+             * <pre>
+             *    var User = Model.extend({
+             *       identify: function(login, password) {
+             *       }
+             *    });
+             *    //...
+             *    var dataSource = new Source({
+             *       model: User
+             *    });
+             * </pre>
              */
-            model: undefined,
+            model: 'model',
 
             /**
              * @cfg {String} Свойство модели, содержащее первичный ключ
              * @see getIdProperty
              * @see setIdProperty
+             * @example
+             * <pre>
+             *    var dataSource = new Source({
+             *       idProperty: 'primaryId'
+             *    });
+             * </pre>
              */
             idProperty: ''
          }
+      },
+
+      /**
+       * Возвращает название ресурса, с которым работает источник
+       * @returns {String}
+       * @see resource
+       */
+      getResource:function (){
+         throw new Error('Method must be implemented');
       },
 
       /**
@@ -53,7 +93,7 @@ define('js!SBIS3.CONTROLS.Data.Source.ISource', [
 
       /**
        * Устанавливает адаптер для работы с данными
-       * @param {SBIS3.CONTROLS.Data.Adapter.IAdapter} adapter
+       * @param {String|SBIS3.CONTROLS.Data.Adapter.IAdapter} adapter
        * @see getAdapter
        * @see adapter
        */
@@ -63,9 +103,10 @@ define('js!SBIS3.CONTROLS.Data.Source.ISource', [
 
       /**
        * Возвращает конструктор модели
-       * @returns {Function}
+       * @returns {String|Function}
        * @see setModel
        * @see model
+       * @see SBIS3.CONTROLS.Data.Model
        */
       getModel: function () {
          throw new Error('Method must be implemented');
@@ -73,9 +114,10 @@ define('js!SBIS3.CONTROLS.Data.Source.ISource', [
 
       /**
        * Устанавливает конструктор модели
-       * @param {Function} model
+       * @param {String|Function} model
        * @see getModel
        * @see model
+       * @see SBIS3.CONTROLS.Data.Model
        */
       setModel: function (model) {
          throw new Error('Method must be implemented');
@@ -107,12 +149,15 @@ define('js!SBIS3.CONTROLS.Data.Source.ISource', [
        * @returns {$ws.proto.Deferred} Асинхронный результат выполнения. В колбэке придет {@link SBIS3.CONTROLS.Data.Model}.
        * @example
        * <pre>
-       *     var dataSource = new SbisService({
-       *         resource: 'Сотрудник'
-       *     });
-       *     dataSource.create().addCallback(function(model) {
-       *         var name = model.get('Имя');
-       *     });
+       *    var dataSource = new RestSource({
+       *       resource: '/articles/'
+       *    });
+       *    dataSource.create().addCallback(function(model) {
+       *       var id = model.get('Id'),//01c5151e-21fe-5316-d118-cb13216c9412
+       *          title = model.get('Title');//Untitled
+       *    }).addErrback(function() {
+       *       $ws.helpers.alert('Can\'t create an article');
+       *    });
        * </pre>
        */
       create: function (meta) {
@@ -124,6 +169,18 @@ define('js!SBIS3.CONTROLS.Data.Source.ISource', [
        * @param {String} key Первичный ключ модели
        * @param {Object} [meta] Дополнительные мета данные
        * @returns {$ws.proto.Deferred} Асинхронный результат выполнения. В колбэке придет {@link SBIS3.CONTROLS.Data.Model}.
+       * @example
+       * <pre>
+       *    var dataSource = new RestSource({
+       *       resource: '/articles/'
+       *    });
+       *    dataSource.read('how-to-read-an-item').addCallback(function(model) {
+       *       var id = model.get('Id'),//how-to-read-an-item
+       *          title = model.get('Title');//How to read an item
+       *    }).addErrback(function() {
+       *       $ws.helpers.alert('Can\'t read the article');
+       *    });
+       * </pre>
        */
       read: function (key, meta) {
          throw new Error('Method must be implemented');
@@ -134,6 +191,23 @@ define('js!SBIS3.CONTROLS.Data.Source.ISource', [
        * @param {SBIS3.CONTROLS.Data.Model} model Обновляемая модель
        * @param {Object} [meta] Дополнительные мета данные
        * @returns {$ws.proto.Deferred} Асинхронный результат выполнения
+       * @example
+       * <pre>
+       *    var dataSource = new RestSource({
+       *       resource: '/articles/'
+       *    }),
+       *    article = new Model({
+       *       rawData: {
+       *          Id: 'how-to-update-an-item',
+       *          Title: 'How to update an item'
+       *       }
+       *    });
+       *    dataSource.update(article).addCallback(function() {
+       *       $ws.helpers.alert('The article was updated successfully');
+       *    }).addErrback(function() {
+       *       $ws.helpers.alert('Can\'t update the article');
+       *    });
+       * </pre>
        */
       update: function (model, meta) {
          throw new Error('Method must be implemented');
@@ -144,6 +218,17 @@ define('js!SBIS3.CONTROLS.Data.Source.ISource', [
        * @param {String|Array} keys Первичный ключ, или массив первичных ключей модели
        * @param {Object} [meta] Дополнительные мета данные
        * @returns {$ws.proto.Deferred} Асинхронный результат выполнения
+       * @example
+       * <pre>
+       *    var dataSource = new RestSource({
+       *       resource: '/articles/'
+       *    });
+       *    dataSource.destroy('article-id-to-destroy').addCallback(function() {
+       *       $ws.helpers.alert('The article was deleted successfully');
+       *    }).addErrback(function() {
+       *       $ws.helpers.alert('Can\'t delete the article');
+       *    });
+       * </pre>
        */
       destroy: function (keys, meta) {
          throw new Error('Method must be implemented');
@@ -192,10 +277,6 @@ define('js!SBIS3.CONTROLS.Data.Source.ISource', [
        * @returns {$ws.proto.Deferred} Асинхронный результат выполнения. В колбэке придет {@link SBIS3.CONTROLS.Data.Source.DataSet}.
        */
       call: function (command, data) {
-         throw new Error('Method must be implemented');
-      },
-
-      getResource:function (){
          throw new Error('Method must be implemented');
       }
    };

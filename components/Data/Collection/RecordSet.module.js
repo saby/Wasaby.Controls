@@ -2,8 +2,9 @@
 define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
    'js!SBIS3.CONTROLS.Data.Collection.ObservableList',
    'js!SBIS3.CONTROLS.DataSet',
+   'js!SBIS3.CONTROLS.Data.Di',
    'js!SBIS3.CONTROLS.Data.Model'
-], function (ObservableList, DataSet) {
+], function (ObservableList, DataSet, Di) {
    'use strict';
 
    /**
@@ -36,7 +37,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
          if (!('compatibleMode' in cfg)) {
             $ws.single.ioc.resolve('ILogger').log('SBIS3.CONTROLS.Data.RecordSet', 'module SBIS3.CONTROLS.Data.Collection.RecordSet is deprecated and will be removed in 3.8.0. Use SBIS3.CONTROLS.Data.Collection.LoadableList instead.');
          }
-         this._model = 'model' in cfg ? cfg.model : $ws.single.ioc.resolve('SBIS3.CONTROLS.Data.ModelConstructor');
+         this._model = 'model' in cfg ? cfg.model : 'model';
          if ('data' in cfg) {
             this.setRawData(cfg.data);
          }
@@ -187,7 +188,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
             this._options.meta.results &&
             !$ws.helpers.instanceOfModule(this._options.meta.results, 'SBIS3.CONTROLS.Data.Model')
          ) {
-            this._options.meta.results = $ws.single.ioc.resolve('SBIS3.CONTROLS.Data.Model', {
+            this._options.meta.results = Di.resolve('model', {
                compatibleMode: true,
                adapter: this.getStrategy(),
                rawData: this._options.meta.results,
@@ -305,6 +306,8 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
       //endregion Protected methods
 
    });
+
+   Di.register('collection.recordset', RecordSet);
 
    return RecordSet;
 });

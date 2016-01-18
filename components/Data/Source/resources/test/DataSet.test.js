@@ -48,7 +48,7 @@ define([
                assert.notStrictEqual(ds.getAdapter(), source.getAdapter());
             });
 
-            it('should take model from source', function () {
+            it('should take a model from source', function () {
                var source =  new MemorySource(),
                   ds = new DataSet({
                      source: source
@@ -56,7 +56,7 @@ define([
                assert.strictEqual(ds.getModel(), source.getModel());
             });
 
-            it('should don\'t take adapter from the source', function () {
+            it('should don\'t take the model from the source', function () {
                var source =  new MemorySource(),
                   ExtModel = Model.extend({}),
                   ds = new DataSet({
@@ -100,9 +100,9 @@ define([
                assert.strictEqual(ds.getSource(), source);
             });
 
-            it('should return an undefined source', function () {
+            it('should return null', function () {
                var ds = new DataSet();
-               assert.isUndefined(ds.getSource());
+               assert.isNull(ds.getSource());
             });
          });
 
@@ -115,9 +115,9 @@ define([
                assert.strictEqual(ds.getAdapter(), adapter);
             });
 
-            it('should return an undefined adapter', function () {
+            it('should return default adapter', function () {
                var ds = new DataSet();
-               assert.isUndefined(ds.getAdapter());
+               assert.instanceOf(ds.getAdapter(), JsonAdapter);
             });
          });
 
@@ -129,9 +129,9 @@ define([
                assert.strictEqual(ds.getModel(), Model);
             });
 
-            it('should return an undefined model', function () {
+            it('should return "model"', function () {
                var ds = new DataSet();
-               assert.isUndefined(ds.getModel());
+               assert.strictEqual(ds.getModel(), 'model');
             });
          });
 
@@ -199,15 +199,6 @@ define([
                });
                assert.equal(ds.getAll('some.prop').getCount(), 0);
             });
-
-            it('should throw an Error if adapter is not defined', function () {
-               var ds = new DataSet({
-
-               });
-               assert.throw(function() {
-                  ds.getAll();
-               });
-            });
          });
 
          describe('.getRow()', function () {
@@ -269,22 +260,6 @@ define([
                data._type = 'recordset';
                assert.isUndefined(ds.getRow());
             });
-
-            it('should throw an Error if adapter is not defined', function () {
-               var ds = new DataSet();
-               assert.throw(function() {
-                  ds.getRow();
-               });
-            });
-
-            it('should throw an Error if model is not defined', function () {
-               var ds = new DataSet({
-                  adapter: new JsonAdapter()
-               });
-               assert.throw(function() {
-                  ds.getRow();
-               });
-            });
          });
 
          describe('.getScalar()', function () {
@@ -314,13 +289,6 @@ define([
                });
                assert.isUndefined(ds.getScalar('some.prop'));
             });
-
-            it('should throw an Error if adapter is not defined', function () {
-               var ds = new DataSet();
-               assert.throw(function() {
-                  ds.getScalar();
-               });
-            });
          });
 
          describe('.hasProperty()', function () {
@@ -344,13 +312,6 @@ define([
                assert.isFalse(ds.hasProperty('e'));
                assert.isFalse(ds.hasProperty('a.e'));
                assert.isFalse(ds.hasProperty('a.b.e'));
-            });
-
-            it('should throw an Error if adapter is not defined', function () {
-               var ds = new DataSet();
-               assert.throw(function() {
-                  ds.hasProperty('a');
-               });
             });
          });
 
@@ -376,13 +337,6 @@ define([
                assert.isUndefined(ds.getProperty('e'));
                assert.isUndefined(ds.getProperty('a.e'));
                assert.isUndefined(ds.getProperty('a.b.e'));
-            });
-
-            it('should throw an Error if adapter is not defined', function () {
-               var ds = new DataSet();
-               assert.throw(function() {
-                  ds.getProperty('a');
-               });
             });
          });
 

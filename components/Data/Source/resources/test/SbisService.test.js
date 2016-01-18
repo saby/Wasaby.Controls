@@ -12,7 +12,7 @@ define('js!SBIS3.CONTROLS.Data.Source.Provider.SbisBusinessLogic', [], function 
          $constructor: function (cfg) {
             this._cfg = cfg;
          },
-         callMethod: function (method, args) {
+         call: function (method, args) {
             var def = new $ws.proto.Deferred(),
                meta = [
                   {'n': 'Ид', 't': 'Число целое'},
