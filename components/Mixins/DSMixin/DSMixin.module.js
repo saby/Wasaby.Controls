@@ -6,8 +6,9 @@ define('js!SBIS3.CONTROLS.DSMixin', [
    'js!SBIS3.CORE.MarkupTransformer',
    'js!SBIS3.CONTROLS.Data.Collection.ObservableList',
    'js!SBIS3.CONTROLS.Data.Projection',
-   'js!SBIS3.CONTROLS.Data.Bind.ICollection'
-], function (MemorySource, SbisService, RecordSet, Query, MarkupTransformer, ObservableList, Projection, IBindCollection) {
+   'js!SBIS3.CONTROLS.Data.Bind.ICollection',
+   'js!SBIS3.CONTROLS.Data.Projection.Collection'
+], function (MemorySource, SbisService, RecordSet, Query, MarkupTransformer, ObservableList, Projection, IBindCollection, Collection) {
 
    /**
     * Миксин, задающий любому контролу поведение работы с набором однотипных элементов.
@@ -1021,7 +1022,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
             var newItemContainer = this._buildTplItem(item, template);
             this._addItemAttributes(newItemContainer, item);
             this._clearItems(container);
-            container.replaceWith(this._buildTplItem(item, template));
+            container.replaceWith(newItemContainer);
          } else {
             $ws.single.ioc.resolve('ILogger').error('SBIS3.CONTROLS.ListControl.View::updateItem()', 'Item at this position is not found');
          }
