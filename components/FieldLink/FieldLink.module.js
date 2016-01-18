@@ -167,11 +167,11 @@ define('js!SBIS3.CONTROLS.FieldLink',
              *   <options name="dictionaries" type="array">
              *      <options>
              *         <option name="caption">ФИО</option>
-             *         <option name="template">js!SBIS3.MySite.FieldLinkDemoTemplate</option>
+             *         <option name="template">js!SBIS3.Demo.FieldLink1</option>
              *      </options>
              *      <options>
              *         <option name="caption">Должность</option>
-             *         <option name="template">js!SBIS3.MySite.FieldLinkDemoTemplate</option>
+             *         <option name="template">js!SBIS3.Demo.FieldLink2</option>
              *      </options>
              *  </options>
              *</pre>
