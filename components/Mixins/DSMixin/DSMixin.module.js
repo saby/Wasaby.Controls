@@ -995,12 +995,12 @@ define('js!SBIS3.CONTROLS.DSMixin', [
             nextSibling = at > -1 ? this._getItemContainerByIndex(target, at) : null,
             template = this._getItemTemplate(item),
             newItemContainer = this._buildTplItem(item, template);
+         this._addItemAttributes(newItemContainer, item);
          if (nextSibling && nextSibling.length) {
             newItemContainer.insertBefore(nextSibling);
          } else {
             newItemContainer.appendTo(target);
          }
-         this._addItemAttributes(newItemContainer, item);
       },
 
       _removeItem: function (item) {
