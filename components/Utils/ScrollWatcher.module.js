@@ -104,7 +104,7 @@ define('js!SBIS3.CONTROLS.ScrollWatcher', [], function() {
          return this._options.opener;
       },
       _getContainer: function(){
-         return this._options.element || (this._inWindow() ?  $('body') : this.getOpener().getTopParent()._getScrollContainer());
+         return this._options.element || (this._inWindow() ?  $('body') : this.getOpener().getTopParent().getContainer().parent());
       },
       _inFloatArea: function(){
          return this._type === 'floatArea';
