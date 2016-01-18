@@ -49,6 +49,7 @@ define('js!SBIS3.CONTROLS.FieldLinkItemsCollection', [
          _buildTplArgs: function(item) {
             return {
                item: item,
+               itemTpl: this._options.itemTemplate,
                displayField: this._options.displayField
             }
          },
@@ -62,18 +63,13 @@ define('js!SBIS3.CONTROLS.FieldLinkItemsCollection', [
          },
 
          setItems: function(list) {
-            var self = this,
-                items = [];
-
-            list.each(function(rec) {
-               var itemObject = {};
-
-               itemObject[self._options.keyField] = rec.getId();
-               itemObject[self._options.displayField] = rec.get(self._options.displayField);
-               items.push(itemObject);
-            });
-
-            FieldLinkItemsCollection.superclass.setItems.call(this, items);
+            FieldLinkItemsCollection.superclass.setItems.call(
+                this,
+                $ws.helpers.reduce(list.toArray(), function(result, rec) {
+                   result.push(rec.toObject());
+                   return result
+                }, [])
+            );
          },
 
          _appendItemTemplate:function(item, targetContainer, itemInstance) {
