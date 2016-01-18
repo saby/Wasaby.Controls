@@ -95,16 +95,16 @@ define('js!SBIS3.CONTROLS.Browser', [
                   });
                   this._componentBinder.bindBreadCrumbs();
                }
-               else {
-                  this._componentBinder = new ComponentBinder({
-                     view: this._view
-                  });
-               }
+            this._getBackButton().getContainer().show();
+            this._getBreadCrumbs().getContainer().show();
          }
-         else {
+
+         if (!this._componentBinder){
             this._componentBinder = new ComponentBinder({
                view: this._view
             });
+            this._getBackButton().getContainer().hide();
+            this._getBreadCrumbs().getContainer().hide();
          }
 
          this._searchForm = this._getSearchForm();
