@@ -8,7 +8,7 @@ define('js!SBIS3.CONTROLS.ListView',
       'js!SBIS3.CORE.CompoundActiveFixMixin',
       'js!SBIS3.CONTROLS.DSMixin',
       'js!SBIS3.CONTROLS.MultiSelectable',
-      'js!SBIS3.CONTROLS.Selectable',
+      'js!SBIS3.CONTROLS.SelectableNew',
       'js!SBIS3.CONTROLS.DataBindMixin',
       'js!SBIS3.CONTROLS.DecorableMixin',
       'js!SBIS3.CONTROLS.ItemActionsGroup',
@@ -324,12 +324,17 @@ define('js!SBIS3.CONTROLS.ListView',
                 * @remark
                 * При частичной постраничной навигации заранее неизвестно общее количество страниц, режим пейджинга будет определн по параметру n из dataSource
                 * Если пришел boolean, значит частичная постраничная навигация
+                * Важно! В SBIS3.CONTROLS.TreeCompositeView особый режим навигации - в плоском списке и таблице автоматически работает
+                * бесконечная подгрузка по скроллу (@see infiniteScroll), а вот в режиме плитки (tile) будет работать постраничная навигация
+                * (при условии showPaging = true)
                 * @example
                 * <pre>
                 *     <option name="showPaging">true</option>
                 * </pre>
                 * @see setPage
                 * @see getPage
+                * @see infiniteScroll
+                * @see SBIS3.CONTROLS.TreeCompositeView
                 */
                showPaging: false,
                /**
@@ -371,7 +376,7 @@ define('js!SBIS3.CONTROLS.ListView',
          $constructor: function () {
             //TODO временно смотрим на TopParent, чтобы понять, где скролл. С внедрением ScrallWatcher этот функционал уберем
             var topParent = this.getTopParent();
-            this._publish('onChangeHoveredItem', 'onItemClick', 'onItemActivate', 'onDataMerge', 'onItemValueChanged', 'onShowEdit', 'onBeginEdit', 'onEndEdit', 'onBeginAdd', 'onAfterEndEdit');
+            this._publish('onChangeHoveredItem', 'onItemClick', 'onItemActivate', 'onDataMerge', 'onItemValueChanged', 'onShowEdit', 'onBeginEdit', 'onEndEdit', 'onBeginAdd', 'onAfterEndEdit', 'onPrepareFilterOnMove');
             this._container.on('mousemove', this._mouseMoveHandler.bind(this))
                            .on('mouseleave', this._mouseLeaveHandler.bind(this));
 
@@ -409,9 +414,9 @@ define('js!SBIS3.CONTROLS.ListView',
             this._touchSupport = $ws._const.browser.isMobilePlatform;
             if (this._touchSupport){
             	this._getItemActionsContainer().addClass('controls-ItemsActions__touch-actions');
-            	this._container.bind('swipe', this._swipeHandler.bind(this));
-               this._container.bind('tap', this._tapHandler.bind(this));
-               this._container.bind('touchmove',this._mouseMoveHandler.bind(this));
+            	this._container.bind('swipe', this._swipeHandler.bind(this))
+                               .bind('tap', this._tapHandler.bind(this))
+                               .bind('touchmove',this._mouseMoveHandler.bind(this));
             }
          },
          _keyboardHover: function (e) {
@@ -553,7 +558,7 @@ define('js!SBIS3.CONTROLS.ListView',
 
                return {
                   key: targetKey,
-                  record: this.getDataSet().getRecordByKey(targetKey),
+                  record: this.getDataSet(true).getRecordByKey(targetKey),
                   container: correctTarget,
                   position: {
                      /* При расчётах координат по вертикали учитываем прокрутку */
@@ -672,7 +677,6 @@ define('js!SBIS3.CONTROLS.ListView',
                }
             }
             else {
-               this.setSelectedKeys([id]);
                this._notifyOnItemClick(id, data, target);
             }
          },
@@ -743,6 +747,13 @@ define('js!SBIS3.CONTROLS.ListView',
          setElemClickHandler: function (method) {
             this._options.elemClickHandler = method;
          },
+
+         setEnabled: function(enabled) {
+            if (!enabled) {
+               this._cancelEdit();
+            }
+            ListView.superclass.setEnabled.apply(this, arguments);
+         },
          //********************************//
          //   БЛОК РЕДАКТИРОВАНИЯ ПО МЕСТУ //
          //*******************************//
@@ -788,15 +799,21 @@ define('js!SBIS3.CONTROLS.ListView',
             return this._options.editMode;
          },
 
+         showEip: function(target, record, isEdit) {
+            if (this.isEnabled()) {
+               this._getEditInPlace().showEip(target, record, isEdit);
+            }
+         },
+
          _onItemClickHandler: function(event, id, record, target) {
-            this._getEditInPlace().edit($(target).closest('.js-controls-ListView__item'), record);
+            this.showEip($(target).closest('.js-controls-ListView__item'), record);
             event.setResult(false);
          },
 
          _onChangeHoveredItemHandler: function(event, hoveredItem) {
             var target = hoveredItem.container;
             if (target && !(target.hasClass('controls-editInPlace') || target.hasClass('controls-editInPlace__editing'))) {
-               this._getEditInPlace().show(target, this._dataSet.getRecordByKey(hoveredItem.key));
+               this.showEip(target, this._dataSet.getRecordByKey(hoveredItem.key), false);
             } else {
                this._getEditInPlace().hide();
             }
@@ -869,6 +886,12 @@ define('js!SBIS3.CONTROLS.ListView',
             return config;
          },
 
+         _getElementForRedraw: function(item) {
+            // Даже не думать удалять ":not(...)". Это связано с тем, что при редактировании по месту может возникнуть задача перерисовать строку
+            // DataGridView. В виду одинакового атрибута "data-id", это единственный способ отличить строку DataGridView от строки EditInPlace.
+            return this._getItemsContainer().find('.js-controls-ListView__item[data-id="' + item.getKey() + '"]:not(".controls-editInPlace")');
+         },
+
          //********************************//
          //   БЛОК ОПЕРАЦИЙ НАД ЗАПИСЬЮ    //
          //*******************************//
@@ -903,7 +926,7 @@ define('js!SBIS3.CONTROLS.ListView',
             /* Поиск элемента коллекции с учётом вложенных контролов,
                обязательно проверяем, что мы нашли, возможно это элемент вложенного контрола,
                тогда поднимемся на уровень выше и опять поищем */
-            return elem[0] && this.getDataSet().getRecordByKey(elem[0].getAttribute('data-id')) ? elem : this._findItemByElement(elem.parent());
+            return elem[0] && this.getDataSet(true).getRecordByKey(elem[0].getAttribute('data-id')) ? elem : this._findItemByElement(elem.parent());
          },
          /**
           * Показывает оперцаии над записью для элемента
@@ -1115,7 +1138,7 @@ define('js!SBIS3.CONTROLS.ListView',
             if (loadAllowed && $ws.helpers.isElementVisible(this.getContainer()) &&
                   this._hasNextPage(this._dataSet.getMetaData().more, this._infiniteScrollOffset) && this._hasScrollMore && !this._isLoading()) {
                this._showLoadingIndicator();
-               this._loader = this._callQuery(this.getFilter(), this.getSorting(), this._infiniteScrollOffset + this._limit, this._limit).addCallback(function (dataSet) {
+               this._loader = this._callQuery(this.getFilter(), this.getSorting(), this._infiniteScrollOffset + this._limit, this._limit).addCallback($ws.helpers.forAliveOnly(function (dataSet) {
                   //ВНИМАНИЕ! Здесь стрелять onDataLoad нельзя! Либо нужно определить событие, которое будет
                   //стрелять только в reload, ибо между полной перезагрузкой и догрузкой данных есть разница!
                   self._loader = null;
@@ -1142,7 +1165,7 @@ define('js!SBIS3.CONTROLS.ListView',
                      self._toggleEmptyData();
                   }
 
-               }).addErrback(function (error) {
+               }, self)).addErrback(function (error) {
                   //Здесь при .cancel приходит ошибка вида DeferredCanceledError
                   return error;
                });
@@ -1456,11 +1479,11 @@ define('js!SBIS3.CONTROLS.ListView',
             this._notify('onItemActivate', {id: id, item: item});
          },
          _beginAdd: function() {
-            return this._getEditInPlace().add();
+            return this.showEip();
          },
          _beginEdit: function(record) {
             var target = this._getItemsContainer().find('.js-controls-ListView__item[data-id="' + record.getKey() + '"]:first');
-            return this._getEditInPlace().edit(target, record);
+            return this.showEip(target, record);
          },
          _cancelEdit: function() {
             return this._getEditInPlace().endEdit();
@@ -1511,7 +1534,9 @@ define('js!SBIS3.CONTROLS.ListView',
             for (var i = 1; i < rows.length; i++){
                var upperRow = $('.controls-ladder', rows[i - 1]),
                   lowerRow = $('.controls-ladder', rows[i]);
-               lowerRow.toggleClass('ws-invisible', upperRow.html() == lowerRow.html());
+               for (var j = 0; j < lowerRow.length; j++){
+                  lowerRow.eq(j).toggleClass('ws-invisible', upperRow.eq(j).html() == lowerRow.eq(j).html());
+               }
             }
          }
       });

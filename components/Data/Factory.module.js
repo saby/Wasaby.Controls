@@ -45,6 +45,7 @@ define('js!SBIS3.CONTROLS.Data.Factory', [
        * @returns {*} Приведенные к нужному типу сырые данные
        */
       cast: function (value, type, adapter, meta) {
+         //TODO: вместо type + meta принимать fieldInfo
          switch (type) {
             case 'Identity':
                return meta.isArray ?
@@ -88,6 +89,14 @@ define('js!SBIS3.CONTROLS.Data.Factory', [
                   return value;
                }
                return !!value;
+            case 'Array':
+               if (value === null) {
+                  return value;
+               }
+               var self = this;
+               return $ws.helpers.map(value, function (val) {
+                  return self.cast(val, meta.elementsType, adapter, meta);
+               });
             default:
                return value;
          }
@@ -162,7 +171,11 @@ define('js!SBIS3.CONTROLS.Data.Factory', [
                   return value.getCurrentValue();
                }
                return value;
-
+            case 'Array':
+               var self = this;
+               return $ws.helpers.map(value, function (val){
+                  return self.serialize(val, meta.elementsType, adapter, meta);
+               });
             default:
                return value;
          }

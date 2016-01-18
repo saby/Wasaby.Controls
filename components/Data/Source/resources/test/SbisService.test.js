@@ -167,7 +167,7 @@ define([
          var getSampleModel = function() {
                return new Model({
                   adapter: new SbisAdapter(),
-                  data: {
+                  rawData: {
                      d: [
                         0,
                         ''
@@ -568,7 +568,7 @@ define([
                      formatMethodName: 'Формат'
                   });
                   service.read(SbisServiceBLO.existsId).addCallbacks(function (model) {
-                     var raw = model.getRaw();
+                     var raw = model.getRawData();
                      service.update(
                         model,
                         {'ПолеОдин': '2'}
@@ -1100,7 +1100,7 @@ define([
                      }),
                      dataSet = new DataSet({
                         adapter: new SbisAdapter(),
-                        data: {
+                        rawData: {
                            d: [
                               [1, true],
                               [2, false],

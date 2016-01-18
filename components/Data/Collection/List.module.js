@@ -4,8 +4,9 @@ define('js!SBIS3.CONTROLS.Data.Collection.List', [
    'js!SBIS3.CONTROLS.Data.Collection.IEnumerable',
    'js!SBIS3.CONTROLS.Data.Collection.IList',
    'js!SBIS3.CONTROLS.Data.Collection.IIndexedCollection',
-   'js!SBIS3.CONTROLS.Data.Collection.ArrayEnumerator'
-], function (SerializableMixin, IEnumerable, IList, IIndexedCollection, ArrayEnumerator) {
+   'js!SBIS3.CONTROLS.Data.Collection.ArrayEnumerator',
+   'js!SBIS3.CONTROLS.Data.ContextField'
+], function (SerializableMixin, IEnumerable, IList, IIndexedCollection, ArrayEnumerator, ContextField) {
    'use strict';
 
    /**
@@ -15,10 +16,10 @@ define('js!SBIS3.CONTROLS.Data.Collection.List', [
     * @mixes SBIS3.CONTROLS.Data.SerializableMixin
     * @mixes SBIS3.CONTROLS.Data.Collection.IEnumerable
     * @mixes SBIS3.CONTROLS.Data.Collection.IList
+    * @mixes SBIS3.CONTROLS.Data.Collection.IIndexedCollection
     * @public
     * @author Мальцев Алексей
     */
-   //mixes SBIS3.CONTROLS.Data.Collection.IIndexedCollection - временно отключаем упоминание об этом интерфейсе, возможно его не будет в этом виде
 
    var List = $ws.proto.Abstract.extend([SerializableMixin, IEnumerable, IList, IIndexedCollection], /** @lends SBIS3.CONTROLS.Data.Collection.List.prototype */{
       _moduleName: 'SBIS3.CONTROLS.Data.Collection.List',
@@ -98,7 +99,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.List', [
 
       assign: function (items) {
          this._items.length = 0;
-         this._splice(items||[], 0, 0);
+         this._splice(items || [], 0, 0);
       },
 
       append: function (items) {
@@ -156,7 +157,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.List', [
 
       getIndex: function (item) {
          if ($ws.helpers.instanceOfMixin(item, 'SBIS3.CONTROLS.Data.IHashable')) {
-            return this.getItemIndexByPropertyValue('hash', item.getHash());
+            return this.getIndexByValue('hash', item.getHash());
          }
 
          return Array.indexOf(this._items, item);
@@ -189,22 +190,12 @@ define('js!SBIS3.CONTROLS.Data.Collection.List', [
 
       //region SBIS3.CONTROLS.Data.Collection.IIndexedCollection
 
-      // Attention! Не используйте методы интерфейса SBIS3.CONTROLS.Data.Collection.IIndexedCollection - он будет изменен.
-
-      getItemByPropertyValue: function (property, value) {
-         return this._getServiceEnumerator().getItemByPropertyValue(property, value);
+      getIndexByValue: function (property, value) {
+         return this._getServiceEnumerator().getIndexByValue(property, value);
       },
 
-      getItemsByPropertyValue: function (property, value) {
-         return this._getServiceEnumerator().getItemsByPropertyValue(property, value);
-      },
-
-      getItemIndexByPropertyValue: function (property, value) {
-         return this._getServiceEnumerator().getItemIndexByPropertyValue(property, value);
-      },
-
-      getItemsIndexByPropertyValue: function (property, value) {
-         return this._getServiceEnumerator().getItemsIndexByPropertyValue(property, value);
+      getIndiciesByValue: function (property, value) {
+         return this._getServiceEnumerator().getIndiciesByValue(property, value);
       },
 
       //endregion SBIS3.CONTROLS.Data.Collection.IIndexedCollection
@@ -288,6 +279,10 @@ define('js!SBIS3.CONTROLS.Data.Collection.List', [
       //endregion Protected methods
 
    });
+
+   //Регистрируем класс ObservableList для работы с контекстами $ws.proto.Context
+   //в новой версии ядра нужно будет сделать, чтобы привязыки данных к этим типам работали "из коробки"
+   ContextField.registerDataSet('ControlsFieldTypeList', List, 'onCollectionItemChange');
 
    return List;
 });

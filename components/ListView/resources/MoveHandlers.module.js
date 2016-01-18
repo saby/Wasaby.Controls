@@ -7,11 +7,17 @@ define('js!SBIS3.CONTROLS.MoveHandlers', ['js!SBIS3.CONTROLS.MoveDialog','js!SBI
         _moveStrategy: undefined
       },
       moveRecordsWithDialog: function(records) {
+         var self = this;
          records = this._getRecordsForMove(records);
          if (records.length) {
             new MoveDialog({
                linkedView: this,
-               records: records
+               records: records,
+               handlers: {
+                  onPrepareFilterOnMove: function(event, rec) {
+                     event.setResult(self._notify('onPrepareFilterOnMove', rec))
+                  }
+               }
             });
          }
       },
@@ -61,7 +67,7 @@ define('js!SBIS3.CONTROLS.MoveHandlers', ['js!SBIS3.CONTROLS.MoveDialog','js!SBI
             if (deferred instanceof $ws.proto.Deferred) {//обновляем view если вернули true либо deferred
                deferred.addCallback(function() {
                   self.removeItemsSelectionAll();
-                  if (isNodeTo && !isChangeOrder) {
+                  if (isNodeTo && !isChangeOrder && self._options.allowEnterToFolder) {
                      self.setCurrentRoot(moveTo);
                   }
                   self.reload();
@@ -80,7 +86,8 @@ define('js!SBIS3.CONTROLS.MoveHandlers', ['js!SBIS3.CONTROLS.MoveDialog','js!SBI
             toMap = this._getParentsMap(recordTo.getKey());
          }
          for (var i = 0; i < records.length; i++) {
-            key = '' + (($ws.helpers.instanceOfModule(records[i], 'SBIS3.CONTROLS.Record')||$ws.helpers.instanceOfModule(records[i], 'SBIS3.CONTROLS.Data.Model')) ? records[i].getKey() : records[i]);
+            key = '' + (($ws.helpers.instanceOfModule(records[i], 'SBIS3.CONTROLS.Record')|| $ws.helpers.instanceOfModule(records[i], 'SBIS3.CONTROLS.Data.Model'))
+               ? records[i].getKey() : records[i]);
             if ($.inArray(key, toMap) !== -1) {
                return false;
             }

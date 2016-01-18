@@ -125,14 +125,14 @@ define('js!SBIS3.CONTROLS.MenuButtonMixin', ['js!SBIS3.CONTROLS.ContextMenu'], f
          return this._picker.getItemsInstances.apply(this._picker, arguments);
       },
 
-      _clickHandler: function () {
+      _clickHandler: function (event) {
          if (this._dataSet){
             if (this._dataSet.getCount() > 1) {
                this.togglePicker();
             } else {
                if (this._dataSet.getCount() == 1) {
                   var id = this._dataSet.at(0).getKey();
-                  this._notify('onMenuItemActivate', id);
+                  this._notify('onMenuItemActivate', id, event);
                }
             }
          }
@@ -148,8 +148,8 @@ define('js!SBIS3.CONTROLS.MenuButtonMixin', ['js!SBIS3.CONTROLS.ContextMenu'], f
       after : {
          _initializePicker : function() {
             var self = this;
-            this._picker.subscribe('onMenuItemActivate', function(e, id) {
-               self._notify('onMenuItemActivate', id);
+            this._picker.subscribe('onMenuItemActivate', function(e, id, mEvent) {
+               self._notify('onMenuItemActivate', id, mEvent);
             });
             this._setWidth();
          },
