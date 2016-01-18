@@ -289,13 +289,12 @@ define('js!SBIS3.CONTROLS.MultiSelectable', ['js!SBIS3.CONTROLS.Data.Collection.
       },
 
       _removeItemsSelection : function(idArray) {
-         var removedKeys = [],
-             keys = this.getSelectedKeys();
+         var removedKeys = [];
 
          if (Array.isArray(idArray)) {
             for (var i = idArray.length - 1; i >= 0; i--) {
                if (this._isItemSelected(idArray[i])) {
-                  Array.remove(keys, this._getSelectedIndex(idArray[i]));
+                  Array.remove(this._options.selectedKeys, this._getSelectedIndex(idArray[i]));
                   removedKeys.push(idArray[i]);
                }
             }
