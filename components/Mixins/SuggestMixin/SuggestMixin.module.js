@@ -58,6 +58,10 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
              * @cfg {Number} Задержка, мс
              * <wiTag group="Отображение">
              * Задержка перед началом поиска.
+             * @example
+             * <pre class=”brush: xml”>
+             *    <option name="delay">800</option>
+             * </pre>
              */
             delay: 500,
 
@@ -65,15 +69,29 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
              * @cfg {Number} Минимальная длина значения
              * <wiTag group="Данные">
              * Минимальная длина введённого значения, при которой следует начать поиск.
+             * @example
+             * <pre class=”brush: xml”>
+             *    <option name="startChar">8</option>
+             * </pre>
              */
             startChar: 3,
             /**
-             * @cfg {Boolean} Автоматически показывать варианты при приходе фокуса
+             * @cfg {Boolean} Автоматически показывать варианты при приходе фокуса.
+             * В случае использования опции - выбор нескольких значений из списка вариантов для {@link SBIS3.CONTROLS.FieldLink множественного выбора}
+             * работать не будет.
+             * @example
+             * <pre class=”brush: xml”>
+             *    <option name="autoShow">true</option>
+             * </pre>
              */
             autoShow: false,
 
             /**
              * @cfg {Boolean} Оставлять фокус на контроле при выборе элемента
+             * @example
+             * <pre class=”brush: xml”>
+             *    <option name="saveFocusOnSelect">true</option>
+             * </pre>
              * <wiTag group="Данные">
              */
             saveFocusOnSelect: false,

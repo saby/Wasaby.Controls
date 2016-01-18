@@ -73,6 +73,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
              * @see SBIS3.CONTROLS.Selectable#selectedKey
              * @see SBIS3.CONTROLS.Selectable#setSelectedKey
              * @see SBIS3.CONTROLS.Selectable#getSelectedKey
+             * @see SBIS3.CONTROLS.FieldLink
              */
             keyField : null,
             /**
@@ -88,6 +89,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
              * @see keyField
              * @see items
              * @see setDataSource
+             * @see SBIS3.CONTROLS.FieldLink
              */
             displayField: null,
              /**
@@ -130,9 +132,9 @@ define('js!SBIS3.CONTROLS.DSMixin', [
              */
             dataSource: undefined,
              /**
-              * @cfg {Number} Количество записей, запрашиваемых с источника данных
+              * @cfg {Number} Количество записей, запрашиваемых с источника данных.
               * @remark
-              * Опция определяет количество запрашиваемых записей с источника даныых как при построении контрола, так и
+              * Опция определяет количество запрашиваемых записей с источника данных как при построении контрола, так и
               * при осуществлении подгрузки.
               * Для иерархических структур при пейджинге по скроллу опция также задаёт количество подгружаемых записей
               * кликом по кнопке "Ещё".

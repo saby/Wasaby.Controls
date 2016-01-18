@@ -167,11 +167,11 @@ define('js!SBIS3.CONTROLS.FieldLink',
              *   <options name="dictionaries" type="array">
              *      <options>
              *         <option name="caption">ФИО</option>
-             *         <option name="template">js!SBIS3.Demo.FieldLink1</option>
+             *         <option name="template">js!SBIS3.Demo.FieldLink</option>
              *      </options>
              *      <options>
              *         <option name="caption">Должность</option>
-             *         <option name="template">js!SBIS3.Demo.FieldLink2</option>
+             *         <option name="template">js!SBIS3.Demo.FieldLink</option>
              *      </options>
              *  </options>
              *</pre>
@@ -186,6 +186,10 @@ define('js!SBIS3.CONTROLS.FieldLink',
              * @cfg {Boolean} Не скрывать поле ввода после выбора
              * @remark
              * Актуально для поля связи с единичным выбором. Например, чтобы записать что-то в поле контекста.
+             * @example
+             * <pre class=”brush: xml”>
+             *     <option name="alwaysShowTextBox">true</option>
+             * </pre>
              */
             alwaysShowTextBox: false
          }

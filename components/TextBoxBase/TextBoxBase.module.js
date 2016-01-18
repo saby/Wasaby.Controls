@@ -82,12 +82,13 @@ define('js!SBIS3.CONTROLS.TextBoxBase',
              */
             trim: false,
             /**
-             * @cfg {Number} Максимальное количество символов, которое может содержать значение
+             * @cfg {Number} Максимальное количество символов, которое может содержать значение при вводе.
              * @example
              * <pre class="brush:xml">
              *     <option name="maxLength">40</option>
              * </pre>
              * @remark
+             * Применяется для ввода значения.
              * В случае превышения количества символов ввод не будет осуществлён.
              * @see setMaxLength
              * @see trim
@@ -100,6 +101,10 @@ define('js!SBIS3.CONTROLS.TextBoxBase',
              * setActive(true), поскольку это вызовет появление клавиатуры, что неудобно - она нужна тогда, когда пользователь
              * сам тыкнул в поле ввода, или в исключительных случаях - когда есть какой-то модальный диалог с полем ввода, и
              * ему точно ничего другого, как писать в это поле ввода, не остаётся.
+             * @example
+             * <pre class="brush:xml">
+             *    <option name="focusOnActivatedOnMobiles">true</option>
+             * </pre>
              * <wiTag group="Управление">
              */
             focusOnActivatedOnMobiles: false
