@@ -278,12 +278,6 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
          return this._rawData;
       },
 
-      /**
-       * Итератор для обхода всех записей RecordSet
-       * Цикл проходит полное количество итераций, его невозможно прервать досрочно
-       * @param iterateCallback
-       * @param status {'all'|'created'|'deleted'|'changed'} по умолчанию все, кроме удаленных
-       */
       each: function (iterateCallback, status) {
          var length = this.getCount();
          for (var i = 0; i < length; i++) {
