@@ -302,7 +302,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
 
 	   /**
 	    * Возвращает выбранные элементы в виде текста
-        * @deprecated
+        * @deprecated Метод getCaption устарел, используйте getTextValue
 	    * @returns {string}
 	    */
        getCaption: function() {
