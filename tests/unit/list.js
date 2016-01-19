@@ -3,6 +3,7 @@ define([
 '../../components/Data/Adapter/resources/test/Sbis.test',
 '../../components/Data/Collection/resources/test/ArrayEnumerator.test',
 '../../components/Data/Collection/resources/test/List.test',
+'../../components/Data/resources/test/Di.test',
 '../../components/Data/resources/test/Factory.test',
 '../../components/Data/resources/test/Model.test',
 '../../components/Data/resources/test/Serializer.test',

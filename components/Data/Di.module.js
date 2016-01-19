@@ -16,7 +16,7 @@ define('js!SBIS3.CONTROLS.Data.Di', [], function () {
       map: {}
    };
 
-   return /** @lends SBIS3.CONTROLS.Data.Di.prototype */{
+   var Di = /** @lends SBIS3.CONTROLS.Data.Di.prototype */{
       _moduleName: 'SBIS3.CONTROLS.Data.Di',
 
       /**
@@ -50,9 +50,7 @@ define('js!SBIS3.CONTROLS.Data.Di', [], function () {
        * </pre>
        */
       register: function (alias, factory, options) {
-         if (!alias) {
-            throw new TypeError('Alias is not defined');
-         }
+         Di._checkAlias(alias);
          _private.map[alias] = [factory, options];
       },
 
@@ -66,9 +64,7 @@ define('js!SBIS3.CONTROLS.Data.Di', [], function () {
        * </pre>
        */
       unregister: function (alias) {
-         if (!alias) {
-            throw new TypeError('Alias is not defined');
-         }
+         Di._checkAlias(alias);
          delete _private.map[alias];
       },
 
@@ -83,9 +79,7 @@ define('js!SBIS3.CONTROLS.Data.Di', [], function () {
        * </pre>
        */
       isRegistered: function (alias) {
-         if (!alias) {
-            throw new TypeError('Alias is not defined');
-         }
+         Di._checkAlias(alias);
          return _private.map.hasOwnProperty(alias);
       },
 
@@ -105,9 +99,6 @@ define('js!SBIS3.CONTROLS.Data.Di', [], function () {
        * </pre>
        */
       resolve: function (alias, options) {
-         if (!alias) {
-            throw new TypeError('Alias is not defined');
-         }
          var Factory,
             config,
             singleInst;
@@ -115,7 +106,7 @@ define('js!SBIS3.CONTROLS.Data.Di', [], function () {
          if (typeof alias === 'function') {
             Factory = alias;
          } else {
-            if (!_private.map.hasOwnProperty(alias)) {
+            if (!Di.isRegistered(alias)) {
                throw new ReferenceError('Alias ' + alias + ' is not registered');
 
             }
@@ -125,7 +116,7 @@ define('js!SBIS3.CONTROLS.Data.Di', [], function () {
          }
 
          if (config && config.instantiate === false) {
-            return factory;
+            return Factory;
          }
 
          if (config && config.single === true) {
@@ -136,6 +127,23 @@ define('js!SBIS3.CONTROLS.Data.Di', [], function () {
          }
 
          return new Factory(options);
+      },
+
+      /**
+       * Проверяет валидность названия зависимости
+       * @param {String} alias Название зависимости
+       * @static
+       * @private
+       */
+      _checkAlias: function (alias) {
+         if (typeof alias !== 'string') {
+            throw new TypeError('Alias should be a string');
+         }
+         if (!alias) {
+            throw new TypeError('Alias is empty');
+         }
       }
    };
+
+   return Di;
 });
