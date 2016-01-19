@@ -1,0 +1,28 @@
+.controls-ListView__animated .controls-ListView__itemsContainer {
+    overflow: hidden;
+    position: relative;
+
+    -webkit-transition: height 500ms ease-out 10ms;
+    -moz-transition: height 500ms ease-out 10ms;
+    -o-transition: height 500ms ease-out 10ms;
+    transition: height 500ms ease-out 10ms;
+}
+.controls-ListView__animated .controls-ListView__item {
+    box-sizing: border-box;
+    left: 0;
+    position: absolute;
+    right: 0;
+
+    -webkit-transition: top 500ms ease-out 10ms, left 300ms ease-out, opacity 500ms ease-out;
+    -moz-transition: top 500ms ease-out 10ms, left 300ms ease-out, opacity 500ms ease-out;
+    -o-transition: top 500ms ease-out 10ms, left 300ms ease-out, opacity 500ms ease-out;
+    transition: top 500ms ease-out 10ms, left 300ms ease-out, opacity 500ms ease-out;
+}
+.controls-ListView__animated .controls-ListView__item__beforeInsert {
+    opacity: 0;
+    left: -100%;
+}
+.controls-ListView__animated .controls-ListView__item__afterDelete {
+    opacity: 0;
+    left: 100%;
+}

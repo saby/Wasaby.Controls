@@ -1,6 +1,8 @@
 /*global $ws, define*/
 define('js!SBIS3.CONTROLS.Data.Factory', [
-], function () {
+   'js!SBIS3.CONTROLS.Data.Types.Flags',
+   'js!SBIS3.CONTROLS.Data.Types.Enum'
+], function (Flags, Enum) {
    'use strict';
 
    /**
@@ -12,14 +14,14 @@ define('js!SBIS3.CONTROLS.Data.Factory', [
 
    /**
     * @faq Почему я вижу ошибки от $ws.single.ioc?
-    * Для корректной работы с зависимости сначала надо загрузить {@link SBIS3.CONTROLS.Data.Model} и {@link SBIS3.CONTROLS.Data.Source.DataSet}, а уже потом {@link SBIS3.CONTROLS.Data.Factory}
+    * Для корректной работы с зависимости сначала надо загрузить {@link SBIS3.CONTROLS.Data.Model} и {@link SBIS3.CONTROLS.Data.Source.RecordSet}, а уже потом {@link SBIS3.CONTROLS.Data.Factory}
     */
 
    var Factory = /** @lends SBIS3.CONTROLS.Data.Factory.prototype */{
       /**
        * Приводит сырые данные к переданному типу.
        * Возможные типы:
-       * DataSet - набор записей
+       * RecordSet - набор записей
        * Model - одна запись из выборки
        * Time  - время
        * Date - дата
@@ -43,6 +45,7 @@ define('js!SBIS3.CONTROLS.Data.Factory', [
        * @returns {*} Приведенные к нужному типу сырые данные
        */
       cast: function (value, type, adapter, meta) {
+         //TODO: вместо type + meta принимать fieldInfo
          if (value === undefined || value === null) {
             return value;
          }
@@ -52,8 +55,8 @@ define('js!SBIS3.CONTROLS.Data.Factory', [
                return meta.isArray ?
                   value[0] === null ? null : value.join(meta.separator, value) :
                   value;
-            case 'DataSet':
-               return this._makeDataSet(value, adapter);
+            case 'RecordSet':
+               return this._makeRecordSet(value, adapter);
             case 'Model':
                return this._makeModel(value, adapter);
             case 'Time':
@@ -71,8 +74,8 @@ define('js!SBIS3.CONTROLS.Data.Factory', [
                }
                return value === undefined ? null : value;
             case 'Enum':
-               return new $ws.proto.Enum({
-                  availableValues: meta.source, //список вида {0:'one',1:'two'...}
+               return new Enum({
+                  data: meta.source, //массив строк
                   currentValue: value //число
                });
             case 'Flags':
@@ -87,6 +90,14 @@ define('js!SBIS3.CONTROLS.Data.Factory', [
                return value;
             case 'Boolean':
                return !!value;
+            case 'Array':
+               if (value === null) {
+                  return value;
+               }
+               var self = this;
+               return $ws.helpers.map(value, function (val) {
+                  return self.cast(val, meta.elementsType, adapter, meta);
+               });
             default:
                return value;
          }
@@ -115,8 +126,8 @@ define('js!SBIS3.CONTROLS.Data.Factory', [
          }
 
          switch (type) {
-            case 'DataSet':
-               return this._serializeDataSet(value, adapter);
+            case 'RecordSet':
+               return this._serializeRecordSet(value, adapter);
             case 'Model':
                return this._serializeModel(value, adapter);
 
@@ -156,11 +167,17 @@ define('js!SBIS3.CONTROLS.Data.Factory', [
                return $ws.proto.TimeInterval.toString(value);
 
             case 'Enum':
-               if (value instanceof $ws.proto.Enum) {
+               if (value instanceof Enum) {
+                  return value.get();
+               } else if (value instanceof $ws.proto.Enum) {
                   return value.getCurrentValue();
                }
                return value;
-
+            case 'Array':
+               var self = this;
+               return $ws.helpers.map(value, function (val){
+                  return self.serialize(val, meta.elementsType, adapter, meta);
+               });
             default:
                return value;
          }
@@ -181,20 +198,20 @@ define('js!SBIS3.CONTROLS.Data.Factory', [
       },
 
       /**
-       * Создает DataSet по сырым данным
+       * Создает RecordSet по сырым данным
        * @param {*} data Сырые данные
        * @param {SBIS3.CONTROLS.Data.Adapter.IAdapter} adapter Адаптер для работы с сырыми данными
-       * @returns {SBIS3.CONTROLS.Data.Source.DataSet}
+       * @returns {SBIS3.CONTROLS.Data.Collection.RecordSet}
        * @private
        */
-      _makeDataSet: function (data, adapter) {
+      _makeRecordSet: function (data, adapter) {
          adapter.setProperty(
             data,
             'total',
             adapter.forTable(data).getCount()
          );
 
-         return $ws.single.ioc.resolve('SBIS3.CONTROLS.Data.Source.DataSet', {
+         return $ws.single.ioc.resolve('SBIS3.CONTROLS.Data.Collection.RecordSet', {
             model: $ws.single.ioc.resolve('SBIS3.CONTROLS.Data.ModelConstructor'),
             adapter: adapter,
             rawData: data,
@@ -210,21 +227,20 @@ define('js!SBIS3.CONTROLS.Data.Factory', [
        * @private
        */
       _makeFlags: function (value, meta) {
-         return this._makeModel(
-            meta.makeData(value),
-            meta.adapter
-         );
+         return new Flags ({
+            data: meta.makeData(value)
+         });
       },
 
       /**
-       * Сериализует DataSet
-       * @param {*} data Датасет
+       * Сериализует RecordSet
+       * @param {*} data Данные
        * @param {SBIS3.CONTROLS.Data.Adapter.IAdapter} adapter Адаптер для работы с сырыми данными
        * @returns {*}
        * @private
        */
-      _serializeDataSet: function (data, adapter) {
-         if ($ws.helpers.instanceOfModule(data, 'SBIS3.CONTROLS.Data.Source.DataSet')) {
+      _serializeRecordSet: function (data, adapter) {
+         if ($ws.helpers.instanceOfModule(data, 'SBIS3.CONTROLS.Data.Collection.RecordSet') || $ws.helpers.instanceOfModule(data, 'SBIS3.CONTROLS.Data.Source.DataSet') || $ws.helpers.instanceOfModule(data, 'SBIS3.CONTROLS.DataSet') ) {
             return data.getRawData();
          } else if ($ws.helpers.instanceOfModule(data, 'SBIS3.CONTROLS.Data.Collection.List')) {
             return this._serializeList(data, adapter);
@@ -304,13 +320,13 @@ define('js!SBIS3.CONTROLS.Data.Factory', [
        * @private
        */
       _serializeFlags: function (data) {
-         if ($ws.helpers.instanceOfModule(data, 'SBIS3.CONTROLS.Data.Model')) {
+         if ($ws.helpers.instanceOfModule(data, 'SBIS3.CONTROLS.Data.Flags') || $ws.helpers.instanceOfModule(data, 'SBIS3.CONTROLS.Data.Model')) {
             var d = [];
             data.each(function (name) {
                d.push(data.get(name));
             });
             return d;
-         } else if (data instanceof $ws.proto.Record) {
+         }  else if (data instanceof $ws.proto.Record) {
             var dt = [],
                s = {},
                t = data.getColumns();
@@ -323,7 +339,7 @@ define('js!SBIS3.CONTROLS.Data.Factory', [
                dt.push(rO[sorted.values[y]]);
             }
             return dt;
-         } else if (data instanceof Array) {
+         } else if ($ws.helpers.type(data) === 'array') {
             return data;
          } else {
             return null;

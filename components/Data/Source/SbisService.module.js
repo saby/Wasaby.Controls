@@ -43,18 +43,14 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
 
             /**
              * @cfg {String|ResourceConfig} Имя объекта бизнес-логики или его параметры
+             * @name SBIS3.CONTROLS.Data.Source.ISource#resource
+             * @see ResourceConfig
              */
-            resource: '',
-
-            /**
-             * @cfg {String} Поле модели, содержащее первичный ключ
-             */
-            idProperty: '',
 
             /**
              * @cfg {SBIS3.CONTROLS.Data.Adapter.IAdapter} Адаптер для работы с данными, по умолчанию {@link SBIS3.CONTROLS.Data.Adapter.Sbis}
+             * @name SBIS3.CONTROLS.Data.Source.ISource#adapter
              */
-            adapter: undefined,
 
             /**
              * @cfg {String} Имя метода, который используется для получения выборки. По умолчанию 'Список'.
@@ -140,7 +136,14 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
 
       $constructor: function(cfg) {
          cfg = cfg || {};
-
+         if ('strategy' in cfg && !('adapter' in cfg)) {
+            this._options.adapter = cfg.strategy;
+            $ws.single.ioc.resolve('ILogger').log('SBIS3.CONTROLS.Data.Collection.RecordSet', 'option "strategy" is deprecated and will be removed in 3.7.4. Use "adapter" instead.');
+         }
+         if ('keyField' in cfg && !('idProperty' in cfg)) {
+            this._options.idProperty = cfg.keyField;
+            $ws.single.ioc.resolve('ILogger').log('SBIS3.CONTROLS.Data.Collection.RecordSet', 'option "keyField" is deprecated and will be removed in 3.7.4. Use "idProperty" instead.');
+         }
          if (!this._options.adapter) {
             this._options.adapter = new SbisAdapter();
          }
@@ -160,10 +163,15 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
 
       //region SBIS3.CONTROLS.Data.Source.ISource
 
+      getResource: function () {
+         return this._options.resource.name;
+      },
+
       /**
        * Создает пустую модель через источник данных
        * @param {Object|SBIS3.CONTROLS.Data.Model} [meta] Дополнительные мета данные
        * @returns {$ws.proto.Deferred} Асинхронный результат выполнения. В колбэке придет {@link SBIS3.CONTROLS.Data.Model}.
+       * @see SBIS3.CONTROLS.Data.Source.ISource#create
        * @example
        * <pre>
        *     var dataSource = new SbisService({
@@ -176,11 +184,12 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
        * </pre>
        */
       create: function(meta) {
+         //TODO: вместо 'ИмяМетода' может предаваться 'Расширение'
          var args = {
-            'Фильтр': this._options.adapter.serialize(meta || {
+            'Фильтр': this.getAdapter().serialize(meta || {
                'ВызовИзБраузера': true
             }),
-            'ИмяМетода': this._options.formatMethodName
+            'ИмяМетода': this._options.formatMethodName || null
          };
 
          return this._provider.callMethod(
@@ -199,14 +208,15 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
        * @param {String} key Первичный ключ модели
        * @param {Object|SBIS3.CONTROLS.Data.Model} [meta] Дополнительные мета данные
        * @returns {$ws.proto.Deferred} Асинхронный результат выполнения. В колбэке придет {@link SBIS3.CONTROLS.Data.Model}.
+       * @see SBIS3.CONTROLS.Data.Source.ISource#read
        */
       read: function(key, meta) {
          var args = {
             'ИдО': key,
-            'ИмяМетода': this._options.formatMethodName
+            'ИмяМетода': this._options.formatMethodName || null
          };
          if (meta && !Object.isEmpty(meta)) {
-            args['ДопПоля'] = this._options.adapter.serialize(meta);
+            args['ДопПоля'] = this.getAdapter().serialize(meta);
          }
 
          return this._provider.callMethod(
@@ -227,13 +237,14 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
        * @param {SBIS3.CONTROLS.Data.Model} model Обновляемая модель
        * @param {Object|SBIS3.CONTROLS.Data.Model} [meta] Дополнительные мета данные
        * @returns {$ws.proto.Deferred} Асинхронный результат выполнения
+       * @see SBIS3.CONTROLS.Data.Source.ISource#update
        */
       update: function(model, meta) {
          var args = {
-            'Запись': this._options.adapter.serialize(model)
+            'Запись': this.getAdapter().serialize(model)
          };
          if (meta && !Object.isEmpty(meta)) {
-            args['ДопПоля'] = this._options.adapter.serialize(meta);
+            args['ДопПоля'] = this.getAdapter().serialize(meta);
          }
          this._detectIdProperty(model.getRawData());
 
@@ -257,6 +268,7 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
        * @param {String} keys Первичный ключ модели
        * @param {Object|SBIS3.CONTROLS.Data.Model} [meta] Дополнительные мета данные
        * @returns {$ws.proto.Deferred} Асинхронный результат выполнения
+       * @see SBIS3.CONTROLS.Data.Source.ISource#destroy
        */
       destroy: function(keys, meta) {
          if ($ws.helpers.type(keys) !== 'array') {
@@ -269,13 +281,13 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
          for (var i = 0, len = keys.length; i < len; i++) {
             providerName = this._getProviderNameById(keys[i]);
             groups[providerName] = groups[providerName] || [];
-            groups[providerName].push(parseInt(keys[i], 10));
+            groups[providerName].push(String.prototype.split.call(keys[i],',')[0]);
          }
          var pd = new $ws.proto.ParallelDeferred();
          for (providerName in groups) {
             if (groups.hasOwnProperty(providerName)) {
                pd.push(this._destroy(
-                  groups[providerName].length > 1 ? groups[providerName] : groups[providerName][0],
+                  groups[providerName],
                   providerName,
                   meta
                ));
@@ -304,7 +316,7 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
             'ИмяМетода': this._options.formatMethodName
          };
          if (meta && !Object.isEmpty(meta)) {
-            args['ДопПоля'] = this._options.adapter.serialize(meta);
+            args['ДопПоля'] = this.getAdapter().serialize(meta);
          }
 
          return this._provider.callMethod(
@@ -321,14 +333,13 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
       query: function(query) {
          return this._provider.callMethod(
             this._options.queryMethodName, {
-               'Фильтр': !query || Object.isEmpty(query.getWhere()) ? null : this._options.adapter.serialize(query.getWhere()),
-               'Сортировка': this._options.adapter.serialize(this._getSortingParams(query)),
-               'Навигация': this._options.adapter.serialize(this._getPagingParams(query)),
-               'ДопПоля': !query || Object.isEmpty(query.getMeta()) ? [] : this._options.adapter.serialize(query.getMeta())
+               'Фильтр': !query || Object.isEmpty(query.getWhere()) ? null : this.getAdapter().serialize(query.getWhere()),
+               'Сортировка': this.getAdapter().serialize(this._getSortingParams(query)),
+               'Навигация': this.getAdapter().serialize(this._getPagingParams(query)),
+               'ДопПоля': !query || Object.isEmpty(query.getMeta()) ? [] : this.getAdapter().serialize(query.getMeta())
             }
          ).addCallbacks((function (res) {
-            return new DataSet({
-               source: this,
+            return this._getDataSetInstance({
                rawData: res,
                totalProperty: 'n'
             });
@@ -343,9 +354,9 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
             command,
             this._serializeArguments(data)
          ).addCallbacks((function (res) {
-            return new DataSet({
-               source: this,
-               rawData: res
+            return this._getDataSetInstance({
+               rawData: res,
+               totalProperty: 'n'
             });
          }).bind(this), function (error) {
             $ws.single.ioc.resolve('ILogger').log('SBIS3.CONTROLS.Data.Source.SbisService::call()', error);
@@ -496,14 +507,7 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
       setMergeMethodName: function (method) {
          this._options.mergeMethodName = method;
       },
-      /**
-       * Возвращает назваие объекта бизнес логоки по которому построен источник данных
-       * @returns {String}
-       * @see resource
-       */
-      getResource: function () {
-         return this._options.resource.name;
-      },
+
       //endregion Public methods
 
       //region Protected methods
@@ -523,17 +527,17 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
                $ws.helpers.instanceOfModule(args, 'SBIS3.CONTROLS.Data.Source.DataSet') ||
                $ws.helpers.instanceOfModule(args, 'SBIS3.CONTROLS.DataSet')
             ) {
-               result = this._options.adapter.serialize(args);
+               result = this.getAdapter().serialize(args);
             } else {
                result = {};
                for (var key in args) {
                   if (args.hasOwnProperty(key)) {
-                     result[key] = this._options.adapter.serialize(args[key]);
+                     result[key] = this.getAdapter().serialize(args[key]);
                   }
                }
             }
          } else {
-            result = this._options.adapter.serialize(args);
+            result = this.getAdapter().serialize(args);
          }
          return result;
       },
@@ -616,7 +620,7 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
             'ИдО': id
          };
          if (!Object.isEmpty(meta)) {
-            args['ДопПоля'] = this._options.adapter.serialize(meta);
+            args['ДопПоля'] = this.getAdapter().serialize(meta);
          }
          var provider = this._provider;
          if (BLObjName && this._options.resource.name !== BLObjName) {
