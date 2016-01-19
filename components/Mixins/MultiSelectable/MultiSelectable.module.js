@@ -165,6 +165,7 @@ define('js!SBIS3.CONTROLS.MultiSelectable', ['js!SBIS3.CONTROLS.Data.Collection.
             if (idArray.length) {
                if (this._options.multiselect) {
                   removedKeys = ArrayDifference(this._options.selectedKeys, idArray);
+                  this._removeItemsSelection(removedKeys);
                   addedKeys = this._addItemsSelection(idArray);
                }
                else {
