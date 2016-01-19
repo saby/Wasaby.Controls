@@ -135,8 +135,8 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
       _keyboardHover: function(e) {
          var parentResult = TreeDataGridView.superclass._keyboardHover.apply(this, arguments),
              selectedKey = this.getSelectedKey(),
-             rec = this._dataSet.getRecordByKey(selectedKey),
-             isBranch = rec && rec.get(this._options.hierField);
+             rec = this.getDataSet().getRecordById(selectedKey),
+             isBranch = rec && rec.get(this._options.hierField + '@');
 
          switch(e.which) {
             case $ws._const.key.right:
