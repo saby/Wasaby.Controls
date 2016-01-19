@@ -239,6 +239,7 @@ define('js!SBIS3.CONTROLS.Image',
                var
                   dataSource = this.getDataSource();
                 Image.superclass.init.call(this);
+               this._bindEvens();
                //Находим компоненты, необходимые для работы (если нужно)
                if (this._options.imageBar) {
                   this._buttonEdit = this.getChildControlByName('ButtonEdit');
@@ -248,7 +249,7 @@ define('js!SBIS3.CONTROLS.Image',
                   if (dataSource) {
                      this._fileLoader.setMethod((this._options.linkedObject || dataSource.getResource()) + '.' + dataSource.getCreateMethodName());
                   }
-                  this._bindEvens();
+                  this._bindToolbarEvents();
                }
                this.reload();
             },
@@ -290,17 +291,19 @@ define('js!SBIS3.CONTROLS.Image',
                ------------------------------------------------------------ */
             _bindEvens: function() {
                this._boundEvents = {
-                  onImageMouseEnter: this._onImageMouseEnter.bind(this),
-                  onImageMouseLeave: this._onImageMouseLeave.bind(this),
-                  onImageBarMouseLeave: this._onImageBarMouseLeave.bind(this),
                   onChangeImage: this._onChangeImage.bind(this),
                   onErrorLoad: this._onErrorLoad.bind(this)
                };
+               this._image.load(this._boundEvents.onChangeImage);
+               this._image.error(this._boundEvents.onErrorLoad);
+            },
+            _bindToolbarEvents: function(){
+               this._boundEvents.onImageMouseEnter = this._onImageMouseEnter.bind(this);
+               this._boundEvents.onImageMouseLeave = this._onImageMouseLeave.bind(this);
+               this._boundEvents.onImageBarMouseLeave = this._onImageBarMouseLeave.bind(this);
                this._image.mouseenter(this._boundEvents.onImageMouseEnter);
                this._image.mouseleave(this._boundEvents.onImageMouseLeave);
                this._imageBar.mouseleave(this._boundEvents.onImageBarMouseLeave);
-               this._image.load(this._boundEvents.onChangeImage);
-               this._image.error(this._boundEvents.onErrorLoad);
             },
             _onBeginLoad: function(event) {
                var
@@ -378,12 +381,14 @@ define('js!SBIS3.CONTROLS.Image',
             _recalculateImageBar: function(){
                var
                   position =  this._image.position();
-               this._imageBar.css({
-                  height:  this._image.height(),
-                  width:  this._image.width(),
-                  left: position.left,
-                  top: position.top
-               });
+               if (this._options.imageBar) {
+                  this._imageBar.css({
+                     height: this._image.height(),
+                     width: this._image.width(),
+                     left: position.left,
+                     top: position.top
+                  });
+               }
             },
             _showEditDialog: function(imageType) {
                var
