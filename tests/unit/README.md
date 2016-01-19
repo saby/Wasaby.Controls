@@ -4,7 +4,14 @@
 
 `http://localhost:666/tests/unit/via-webdriver.html`
 
-## Запуск из командной строки через Selenium webdriver
+## Команды Grunt
+- `grunt --force tests` - прогнать unit тесты и тест покрытия;
+- `grunt tests-webdriver` - прогнать unit тесты через webdriver;
+- `grunt tests-isolated` - прогнать unit тесты изолированно;
+- `grunt --force tests-coverage` - прогнать тест покрытия;
+- `grunt tests-list-build` - пересобрать список тестов для webdriver.
+
+## Запуск в ручном режиме из командной строки через Selenium webdriver
 1. Установить selenium-standalone и webdriverio:
 
     a) Добавить в PATH путь к бинарникам Java (если его еще там нет, требуется для запуска selenium standalone server): `https://java.com/en/download/help/path.xml`
@@ -13,7 +20,7 @@
 
         npm install selenium-standalone
         node node_modules/selenium-standalone/bin/selenium-standalone install
-        npm install webdriverio
+        npm install webdriverio istanbul
 
 2. Выполнить в консоли (в корневой папке репозитория), предварительно запустив http-сервер (`node app`):
 
@@ -30,23 +37,15 @@
 
 или в формате XUnit:
 
-    mocha -t 10000 -R XUnit  tests/unit/via-isolated.run
+    mocha -t 10000 -R XUnit tests/unit/via-isolated.run
 
 ## Отчет о покрытии
 Выполнить в консоли (в корневой папке репозитория):
 
-    node  tests/unit/jscoverage.run
+    coverage tests/unit/coverage.run
 
 Результаты можно смотреть тут:
-`http://localhost:666/ tests/unit/artifacts/jscoverage-report/jscoverage.html`
-
-## Команды Grunt
-- `grunt tests` - прогнать unit тесты и тест покрытия;
-- `grunt tests-webdriver` - прогнать unit тесты через webdriver;
-- `grunt tests-isolated` - прогнать unit тесты изолированно;
-- `grunt tests-coverage` - прогнать тест покрытия через webdriver;
-- `grunt tests-list-build` - пересобрать список тестов для webdriver.
-
+`http://localhost:666/tests/unit/artifacts/coverage/lcov-report/index.html`
 
 # Jenkins
 Настройки сборки в Jenkins
@@ -128,7 +127,7 @@
     rem SET PATH=%WORKSPACE%\tests\unit\bin\nodejs;%PATH%
     rem [/if Node.js version installed < 10]
 
-    node "node_modules/grunt-cli/bin/grunt" tests
+    node "node_modules/grunt-cli/bin/grunt" --force tests
 
 ## Послесборочные операции
 Publish JUnit test result report
@@ -141,6 +140,4 @@ Publish documents
 
     Title: Отчет о покрытии
 
-    Directory to archive: tests/unit/artifacts/jscoverage-report/
-
-    Index file: jscoverage.html
+    Directory to archive: tests/unit/artifacts/coverage/lcov-report/
