@@ -13,7 +13,9 @@ define('js!SBIS3.CONTROLS.ListView',
       'js!SBIS3.CONTROLS.DecorableMixin',
       'js!SBIS3.CONTROLS.DragNDropMixin',
       'js!SBIS3.CONTROLS.ItemActionsGroup',
+      'js!SBIS3.CORE.MarkupTransformer',
       'html!SBIS3.CONTROLS.ListView',
+      'js!SBIS3.CONTROLS.Utils.TemplateUtil',
       'js!SBIS3.CONTROLS.CommonHandlers',
       'js!SBIS3.CONTROLS.MoveHandlers',
       'js!SBIS3.CONTROLS.Pager',
@@ -27,8 +29,8 @@ define('js!SBIS3.CONTROLS.ListView',
       'is!browser?js!SBIS3.CONTROLS.ListView/resources/SwipeHandlers'
    ],
    function (CompoundControl, CompoundActiveFixMixin, DSMixin, MultiSelectable,
-             Selectable, DataBindMixin, DecorableMixin, DragNDropMixin, ItemActionsGroup, dotTplFn,
-             CommonHandlers, MoveHandlers, Pager, EditInPlaceHoverController, EditInPlaceClickController,
+             Selectable, DataBindMixin, DecorableMixin, DragNDropMixin, ItemActionsGroup, MarkupTransformer, dotTplFn,
+             TemplateUtil, CommonHandlers, MoveHandlers, Pager, EditInPlaceHoverController, EditInPlaceClickController,
              Link, ScrollWatcher, rk, groupByTpl, emptyDataTpl) {
 
       'use strict';
@@ -203,8 +205,6 @@ define('js!SBIS3.CONTROLS.ListView',
                model: null
             },
             _emptyData: undefined,
-            _containerScrollHeight : 0,
-            _firstScrollTop : true,
             _options: {
                /**
                 * @cfg {Boolean} Разрешить отсутствие выбранного элемента
@@ -392,7 +392,23 @@ define('js!SBIS3.CONTROLS.ListView',
                 *     </opt>
                 * </pre>
                 */
-               editingTemplate: undefined
+               editingTemplate: undefined,
+               /**
+                * @cfg {String} Позиция отображения строки итогов
+                * Данная опция позволяет отображать строку итогов в случае отсутствия записей.
+                * Возможные значения:
+                * <ol>
+                *    <li>'none' - Не отображать строку итогов</li>
+                *    <li>'top' - вверху</li>
+                *    <li>'bottom' - внизу</li>
+                * </ol>
+                */
+               resultsPosition: 'none',
+               /**
+                * @cfg {String} Заголовок строки итогов
+                */
+               resultsText : 'Итого',
+               resultsTpl: undefined
             },
             _scrollWatcher : undefined
          },
@@ -412,6 +428,7 @@ define('js!SBIS3.CONTROLS.ListView',
             $ws.single.CommandDispatcher.declareCommand(this, 'beginEdit', this._beginEdit);
             $ws.single.CommandDispatcher.declareCommand(this, 'cancelEdit', this._cancelEdit);
             $ws.single.CommandDispatcher.declareCommand(this, 'commitEdit', this._commitEdit);
+            this.subscribe('onDrawItems', this._setResults);
          },
 
          init: function () {
@@ -1733,8 +1750,35 @@ define('js!SBIS3.CONTROLS.ListView',
             if (this.getItemsActions() && hoveredItem.container) {
                this._showItemActions(hoveredItem);
             }
-         }
+         },
          /*DRAG_AND_DROP END*/
+         _setResults: function(){
+            if (!this._checkResults()){
+               return;
+            }
+            var resultsDS = this.getDataSet().getMetaData().results,
+               resultRow = this._getResultsContainer(resultsDS);
+            this._drawResults(this._getItemsContainer(), resultRow);
+         },
+         _checkResults: function(){
+            return this._options.resultsPosition !== 'none' && this.getDataSet().getCount();
+         },
+         _getResultsContainer: function(resultsData){
+            return MarkupTransformer(TemplateUtil.prepareTemplate(this._options.resultsTpl)({
+               results: resultsData
+            }));
+         },
+         _drawResults: function(container, resultRow){
+            if (!resultRow){
+               return;
+            }
+            var position = this._options.resultsPosition == 'top' ? 'prepend' : 'append';
+            if (this._isDrawResults){
+               $('.controls-DataGridView__results', container).remove();
+            }
+            this._isDrawResults = true;
+            $(container)[position](resultRow);
+         }
       });
 
       return ListView;
