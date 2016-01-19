@@ -383,7 +383,7 @@ define('js!SBIS3.CONTROLS.ComponentBinder', [], function () {
          filterButton.setHistoryController(historyController);
          historyController.getHistory(true).addCallback(function() {
             var filter = historyController.getActiveFilter();
-            if(filter) {
+            if(filter && filter.viewFilter) {
 
                //FIXME Удалить это в 3.7.3.30, сделано, чтобы удалить раздел из фильтров истории, это сейчас делается ещё при сохранении
                if($ws.helpers.instanceOfMixin(view, 'SBIS3.CONTROLS.hierarchyMixin')) {
