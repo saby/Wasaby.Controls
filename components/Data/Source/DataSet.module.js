@@ -1,11 +1,9 @@
 /* global define, $ws */
 define('js!SBIS3.CONTROLS.Data.Source.DataSet', [
+   'js!SBIS3.CONTROLS.Data.Di',
    'js!SBIS3.CONTROLS.Data.Model',
-   'js!SBIS3.CONTROLS.Data.Collection.List',
-   'js!SBIS3.CONTROLS.Data.Collection.RecordSet',
-   'js!SBIS3.CONTROLS.Data.Collection.ObservableList',
-   'js!SBIS3.CONTROLS.Data.Di'
-], function (Model, List, RecordSet, ObservableList, Di) {
+   'js!SBIS3.CONTROLS.Data.Collection.RecordSet'
+], function (Di) {
    'use strict';
 
    /**
@@ -28,12 +26,12 @@ define('js!SBIS3.CONTROLS.Data.Source.DataSet', [
             source: null,
 
             /**
-             * @cfg {String|SBIS3.CONTROLS.Data.Adapter.IAdapter} Адаптер для работы с данными
+             * @cfg {String|SBIS3.CONTROLS.Data.Adapter.IAdapter} Адаптер для работы с данными, по умолчанию {@link SBIS3.CONTROLS.Data.Adapter.Json}
              * @see getAdapter
              * @see getAdapter
              * @see SBIS3.CONTROLS.Data.Adapter.IAdapter
              */
-            adapter: null,
+            adapter: 'adapter.json',
 
             /**
              * @cfg {String} Сырые данные, выданные источником
@@ -48,15 +46,15 @@ define('js!SBIS3.CONTROLS.Data.Source.DataSet', [
              * @see setModel
              * @see SBIS3.CONTROLS.Data.Model
              */
-            model: Model,
+            model: 'model',
 
             /**
-             * @cfg {Function} Конструктор списка моделей, по умолчанию {@link SBIS3.CONTROLS.Data.Collection.ObservableList}
+             * @cfg {String|Function} Конструктор списка моделей, по умолчанию {@link SBIS3.CONTROLS.Data.Collection.RecordSet}
              * @see getListModule
              * @see setListModule
-             * @see SBIS3.CONTROLS.Data.Collection.List
+             * @see SBIS3.CONTROLS.Data.Collection.RecordSet
              */
-            listModule: List,
+            listModule: 'collection.recordset',
 
             /**
              * @cfg {String} Поле модели, содержащее первичный ключ
@@ -148,7 +146,7 @@ define('js!SBIS3.CONTROLS.Data.Source.DataSet', [
 
       /**
        * Возвращает конструктор списка моделей
-       * @returns {Function}
+       * @returns {String|Function}
        * @see setListModule
        * @see listModule
        * @see SBIS3.CONTROLS.Data.Collection.List
@@ -159,7 +157,7 @@ define('js!SBIS3.CONTROLS.Data.Source.DataSet', [
 
       /**
        * Устанавливает конструктор списка моделей
-       * @param {Function} listModule
+       * @param {String|Function} listModule
        * @see getListModule
        * @see listModule
        * @see SBIS3.CONTROLS.Data.Collection.List
@@ -233,37 +231,19 @@ define('js!SBIS3.CONTROLS.Data.Source.DataSet', [
       /**
        * Возвращает элементы выборки
        * @param {String} [property] Свойство данных, в которых находятся элементы выборки
-       * @param {Boolean} [observable=false] Вернуть {SBIS3.CONTROLS.Data.Collection.ObservableList}, а не {SBIS3.CONTROLS.Data.Collection.List}
        * @returns {SBIS3.CONTROLS.Data.Collection.IList}
        * @see itemsProperty
        */
-      getAll: function (property, observable) {
+      getAll: function (property) {
          this._checkAdapter();
          if (property === undefined) {
             property = this._options.itemsProperty;
          }
-         if($ws.helpers.isEqualObject(this._options.listModule, RecordSet)){
-            return new RecordSet({
-               rawData: this._getDataProperty(property),
-               adapter: this.getAdapter(),
-               model: this._options.model
-            });
-         } else {
-            var adapter = this.getAdapter().forTable(this._getDataProperty(property)),
-               count = adapter.getCount(),
-               items = [];
-            for (var i = 0; i < count; i++) {
-               items.push(
-                  this._getModelInstance(
-                     adapter.at(i)
-                  )
-               );
-            }
-         }
-         return observable ? new ObservableList({
-            items: items
-         }) : new this._options.listModule({
-            items: items
+
+         return Di.resolve(this._options.listModule, {
+            rawData: this._getDataProperty(property),
+            adapter: this._options.adapter,
+            model: this._options.model
          });
       },
 
@@ -391,7 +371,7 @@ define('js!SBIS3.CONTROLS.Data.Source.DataSet', [
          }
          return Di.resolve(this._options.model, {
             rawData: rawData,
-            adapter: this.getAdapter(),
+            adapter: this._options.adapter,
             compatibleMode: true
          });
       },

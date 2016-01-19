@@ -158,10 +158,6 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
 
       //region SBIS3.CONTROLS.Data.Source.ISource
 
-      getResource: function () {
-         return this._options.resource.name;
-      },
-
       /**
        * Возвращает название объекта бизнес логики, с которым работает источник данных
        * @returns {String}

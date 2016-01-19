@@ -46,7 +46,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
             rawData: null,
 
             /**
-             * @cfg {SBIS3.CONTROLS.Data.Adapter.IAdapter} Адаптер для работы с данными
+             * @cfg {String|SBIS3.CONTROLS.Data.Adapter.IAdapter} Адаптер для работы с данными, по умолчанию {@link SBIS3.CONTROLS.Data.Adapter.Json}
              * @example
              * <pre>
              *    var user = new RecordSet({
@@ -55,8 +55,9 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
              * </pre>
              * @see getAdapter
              * @see setAdapter
+             * @see SBIS3.CONTROLS.Data.Adapter.IAdapter
              */
-            adapter: undefined,
+            adapter: 'adapter.json',
 
             /**
              * @cfg {Object} Метаданные
@@ -69,15 +70,10 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
             idProperty: '',
 
             /**
-             * @cfg {Function} Конструктор модели
+             * @cfg {String|Function} Конструктор модели
              */
-            model: undefined
+            model: 'model'
          },
-
-         /**
-          * @var {Function} Конструктор модели
-          */
-         _model: undefined,
 
          /**
           * @var {Object} Сырые данные
@@ -98,7 +94,6 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
       $constructor: function (cfg) {
          cfg = cfg || {};
 
-         this._model = 'model' in cfg ? cfg.model : 'model';
          if ('data' in cfg && !('rawData' in cfg)) {
             this._options.rawData = cfg.data;
             $ws.single.ioc.resolve('ILogger').log('SBIS3.CONTROLS.Data.Collection.RecordSet', 'option "data" is deprecated and will be removed in 3.7.4. Use "rawData" instead.');
@@ -111,7 +106,6 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
             this._options.idProperty = cfg.keyField;
             $ws.single.ioc.resolve('ILogger').log('SBIS3.CONTROLS.Data.Collection.RecordSet', 'option "keyField" is deprecated and will be removed in 3.7.4. Use "idProperty" instead.');
          }
-         this._initAdapter();
          if ('items' in cfg && !('rawData' in cfg)) {
             this._initForItems();
          } else {
@@ -223,6 +217,9 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
       },
 
       getAdapter: function (){
+         if (typeof this._options.adapter === 'string') {
+            this._options.adapter = Di.resolve(this._options.adapter);
+         }
          return this._options.adapter;
       },
 
@@ -236,7 +233,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
 
       push: function (record) {
          if (!$ws.helpers.instanceOfModule(record, 'SBIS3.CONTROLS.Data.Model')) {
-            record = new this._model({
+            record = Di.resolve(this._options.model, {
                compatibleMode: true,
                adapter: this.getAdapter(),
                rawData: record,
@@ -264,7 +261,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
             count = adapter.getCount(),
             record;
          for (var i = 0; i < count; i++) {
-            record = new this._model({
+            record = Di.resolve(this._options.model, {
                compatibleMode: true,
                adapter: this.getAdapter(),
                rawData: adapter.at(i),
@@ -551,16 +548,6 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
             throw new Error('Item should be an instance of SBIS3.CONTROLS.Data.Model');
          }
          return true;
-      },
-
-      /**
-       * Инициализирует адаптер
-       * @private
-       */
-      _initAdapter: function () {
-         if (!this._options.adapter) {
-            this._options.adapter = new JsonAdapter();
-         }
       }
 
       //endregion Protected methods

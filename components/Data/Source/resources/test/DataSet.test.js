@@ -60,8 +60,10 @@ define([
          });
 
          describe('.getModel()', function () {
-            it('should return a default model', function () {
-               var ds = new DataSet();
+            it('should return a given model', function () {
+               var ds = new DataSet({
+                  model: Model
+               });
                assert.strictEqual(ds.getModel(), Model);
             });
 
@@ -83,7 +85,7 @@ define([
          describe('.getListModule()', function () {
             it('should return a default list', function () {
                var ds = new DataSet();
-               assert.strictEqual(ds.getListModule(), List);
+               assert.strictEqual(ds.getListModule(), 'collection.recordset');
             });
 
             it('should return the given list', function () {

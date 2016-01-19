@@ -757,7 +757,7 @@ define([
                         if (args['ИдО'][0] !== 0 && args['ИдО'][0] !== "0") {
                            throw new Error('Wrong argument ИдО[0]');
                         }
-                        if (args['ИдО'][1] !== SbisBusinessLogic.existsId) {
+                        if (args['ИдО'][1] != SbisBusinessLogic.existsId) {
                            throw new Error('Wrong argument ИдО[1]');
                         }
                         if (args['ИдО'][2] != 1) {
@@ -812,7 +812,7 @@ define([
                   });
                   service.destroy(['uuid']).addCallbacks(function (success) {
                      try {
-                        var args = SbisServiceBLO.lastRequest.args;
+                        var args = SbisBusinessLogic.lastRequest.args;
                         if (args['ИдО'] != 'uuid') {
                            throw new Error('Wrong argument ИдО');
                         }

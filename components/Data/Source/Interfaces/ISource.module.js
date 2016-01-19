@@ -63,12 +63,12 @@ define('js!SBIS3.CONTROLS.Data.Source.ISource', [
             model: 'model',
 
             /**
-             * @cfg {Function} Конструктор списка моделей, по умолчанию {@link SBIS3.CONTROLS.Data.Collection.ObservableList}
+             * @cfg {String|Function} Конструктор списка моделей, по умолчанию {@link SBIS3.CONTROLS.Data.Collection.RecordSet}
              * @see getListModule
              * @see setListModule
-             * @see SBIS3.CONTROLS.Data.Collection.ObservableList
+             * @see SBIS3.CONTROLS.Data.Collection.RecordSet
              */
-            listModule: ObservableList,
+            listModule: 'collection.recordset',
 
             /**
              * @cfg {String} Свойство модели, содержащее первичный ключ
@@ -148,10 +148,9 @@ define('js!SBIS3.CONTROLS.Data.Source.ISource', [
 
       /**
        * Возвращает конструктор списка моделей
-       * @returns {Function}
+       * @returns {String|Function}
        * @see setListModule
        * @see listModule
-       * @see SBIS3.CONTROLS.Data.Collection.List
        */
       getListModule: function () {
          throw new Error('Method must be implemented');
@@ -159,10 +158,9 @@ define('js!SBIS3.CONTROLS.Data.Source.ISource', [
 
       /**
        * Устанавливает конструктор списка моделей
-       * @param {Function} listModule
+       * @param {String|Function} listModule
        * @see getListModule
        * @see listModule
-       * @see SBIS3.CONTROLS.Data.Collection.List
        */
       setListModule: function (listModule) {
          throw new Error('Method must be implemented');
