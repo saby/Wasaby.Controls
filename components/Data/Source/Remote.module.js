@@ -35,19 +35,15 @@ define('js!SBIS3.CONTROLS.Data.Source.Remote', [
 
       //region Public methods
 
-      init: function() {
-         Remote.superclass.init.call(this);
-         if (!this._options.provider) {
-            throw new Error('Remote access provider is not defined');
-         }
-      },
-
       /**
        * Возвращает объект, реализующий сетевой протокол для обмена в режиме клиент-сервер
        * @returns {Object}
        * @see provider
        */
       getProvider: function () {
+         if (!this._options.provider) {
+            throw new Error('Remote access provider is not defined');
+         }
          if (typeof this._options.provider === 'string') {
             this._options.provider = Di.resolve(this._options.provider, this._options.resource);
          }

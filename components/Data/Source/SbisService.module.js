@@ -44,7 +44,7 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
 
             /**
              * @cfg {String|ResourceConfig} Имя объекта бизнес-логики или его параметры
-             * @name {SBIS3.CONTROLS.Data.Source.ISource#resource}
+             * @name {SBIS3.CONTROLS.Data.Source.SbisService#resource}
              * <pre>
              *    var dataSource = new SbisService({
              *       resource: 'СообщениеОтКлиента',

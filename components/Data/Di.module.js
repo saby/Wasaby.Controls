@@ -28,7 +28,7 @@ define('js!SBIS3.CONTROLS.Data.Di', [], function () {
       /**
        * Регистрирует зависимость
        * @param {String} alias Название зависимости
-       * @param {Function|Object} factory Фабрика объектов или готовый интсанс
+       * @param {Function|Object} factory Фабрика объектов или готовый инстанс
        * @param {DependencyOptions} [options] Опции
        * @static
        * @example
