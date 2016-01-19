@@ -636,7 +636,9 @@ define('js!SBIS3.CONTROLS.DSMixin', [
       _drawItemsCallback: function () {
          /*Method must be implemented*/
       },
-
+      redraw: function(){
+         this._redraw();
+      },
       _redraw: function () {
          var records;
 
@@ -1101,7 +1103,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
 	               break;
 
 	            case IBindCollection.ACTION_RESET:
-	               this._redraw();
+	               this.redraw();
 	               break;
 	         }
       	}

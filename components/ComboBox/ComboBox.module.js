@@ -160,6 +160,7 @@ define('js!SBIS3.CONTROLS.ComboBox', [
                }
             }
          });
+         this.reload();
       },
 
       _keyboardHover: function (e) {
@@ -302,12 +303,11 @@ define('js!SBIS3.CONTROLS.ComboBox', [
 
       _setPickerContent: function () {
          var self = this;
-         this.reload();
-         //TODO придумать что то нормальное и выпилить
          this._picker.getContainer().mousedown(function (e) {
             e.stopPropagation();
          });
-
+         //TODO нужно ли здесь звать redraw? Сейчас без этого не работает.
+         this.redraw();
          //Подписка на клик по элементу комбобокса
          //TODO mouseup из за того что контрол херит событие клик
          this._picker.getContainer().mouseup(function (e) {
