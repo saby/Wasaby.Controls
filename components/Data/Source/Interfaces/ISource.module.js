@@ -16,26 +16,51 @@ define('js!SBIS3.CONTROLS.Data.Source.ISource', [
       $protected: {
          _options: {
             /**
-             * @cfg {String} Ресурс, с которым работает источник (имя таблицы, объекта, файла, URL, path и т.п.)
+             * @cfg {String} Название ресурса, с которым работает источник (имя таблицы, объекта, файла, URL, path и т.п.)
+             * @see getResource
+             * @example
+             * <pre>
+             *    var dataSource = new Source({
+             *       resource: '/users/'
+             *    });
+             * </pre>
              * @see getResource
              */
             resource: '',
 
             /**
-             * @cfg {SBIS3.CONTROLS.Data.Adapter.IAdapter} Адаптер для работы с данными, по умолчанию {@link SBIS3.CONTROLS.Data.Adapter.Json}
+             * @cfg {String|SBIS3.CONTROLS.Data.Adapter.IAdapter} Адаптер для работы с данными, по умолчанию {@link SBIS3.CONTROLS.Data.Adapter.Json}
              * @see getAdapter
              * @see setAdapter
              * @see SBIS3.CONTROLS.Data.Adapter.IAdapter
+             * @example
+             * <pre>
+             *    var dataSource = new MemorySource({
+             *       adapter: 'adapter.xml'
+             *    });
+             * </pre>
              */
-            adapter: null,
+            adapter: 'adapter.json',
 
             /**
-             * @cfg {Function} Конструктор модели, по умолчанию {@link SBIS3.CONTROLS.Data.Model}
+             * @cfg {String|Function} Конструктор модели, по умолчанию {@link SBIS3.CONTROLS.Data.Model}
              * @see getModel
              * @see setModel
              * @see SBIS3.CONTROLS.Data.Model
+             * @see SBIS3.CONTROLS.Data.Model
+             * @example
+             * <pre>
+             *    var User = Model.extend({
+             *       identify: function(login, password) {
+             *       }
+             *    });
+             *    //...
+             *    var dataSource = new Source({
+             *       model: User
+             *    });
+             * </pre>
              */
-            model: Model,
+            model: 'model',
 
             /**
              * @cfg {Function} Конструктор списка моделей, по умолчанию {@link SBIS3.CONTROLS.Data.Collection.ObservableList}
@@ -50,6 +75,12 @@ define('js!SBIS3.CONTROLS.Data.Source.ISource', [
              * @see getIdProperty
              * @see setIdProperty
              * @see SBIS3.CONTROLS.Data.Model#idProperty
+             * @example
+             * <pre>
+             *    var dataSource = new Source({
+             *       idProperty: 'primaryId'
+             *    });
+             * </pre>
              */
             idProperty: ''
          }
@@ -77,7 +108,7 @@ define('js!SBIS3.CONTROLS.Data.Source.ISource', [
 
       /**
        * Устанавливает адаптер для работы с данными
-       * @param {SBIS3.CONTROLS.Data.Adapter.IAdapter} adapter
+       * @param {String|SBIS3.CONTROLS.Data.Adapter.IAdapter} adapter
        * @see getAdapter
        * @see adapter
        * @see SBIS3.CONTROLS.Data.Adapter.IAdapter
@@ -88,7 +119,7 @@ define('js!SBIS3.CONTROLS.Data.Source.ISource', [
 
       /**
        * Возвращает конструктор модели
-       * @returns {Function}
+       * @returns {String|Function}
        * @see setModel
        * @see model
        * @see SBIS3.CONTROLS.Data.Model
@@ -99,9 +130,10 @@ define('js!SBIS3.CONTROLS.Data.Source.ISource', [
 
       /**
        * Устанавливает конструктор модели
-       * @param {Function} model
+       * @param {String|Function} model
        * @see getModel
        * @see model
+       * @see SBIS3.CONTROLS.Data.Model
        * @see SBIS3.CONTROLS.Data.Model
        * @example
        * <pre>
@@ -169,11 +201,14 @@ define('js!SBIS3.CONTROLS.Data.Source.ISource', [
        * @see SBIS3.CONTROLS.Data.Model
        * @example
        * <pre>
-       *    var dataSource = new Source({
-       *       resource: 'Employee'
+       *    var dataSource = new RestSource({
+       *       resource: '/articles/'
        *    });
-       *    dataSource.create().addCallback(function(employee) {
-       *       var newId = employee.get('Id');
+       *    dataSource.create().addCallback(function(model) {
+       *       var id = model.get('Id'),//01c5151e-21fe-5316-d118-cb13216c9412
+       *          title = model.get('Title');//Untitled
+       *    }).addErrback(function() {
+       *       $ws.helpers.alert('Can\'t create an article');
        *    });
        * </pre>
        */
@@ -186,14 +221,16 @@ define('js!SBIS3.CONTROLS.Data.Source.ISource', [
        * @param {String} key Первичный ключ модели
        * @param {Object} [meta] Дополнительные мета данные
        * @returns {$ws.proto.Deferred} Асинхронный результат выполнения. В колбэке придет {@link SBIS3.CONTROLS.Data.Model}.
-       * @see SBIS3.CONTROLS.Data.Model
        * @example
        * <pre>
-       *    var dataSource = new Source({
-       *       resource: 'Employee'
+       *    var dataSource = new RestSource({
+       *       resource: '/articles/'
        *    });
-       *    dataSource.read(employeeId).addCallback(function(employee) {
-       *       var name = employee.get('Name');
+       *    dataSource.read('how-to-read-an-item').addCallback(function(model) {
+       *       var id = model.get('Id'),//how-to-read-an-item
+       *          title = model.get('Title');//How to read an item
+       *    }).addErrback(function() {
+       *       $ws.helpers.alert('Can\'t read the article');
        *    });
        * </pre>
        */
@@ -206,20 +243,21 @@ define('js!SBIS3.CONTROLS.Data.Source.ISource', [
        * @param {SBIS3.CONTROLS.Data.Model} model Обновляемая модель
        * @param {Object} [meta] Дополнительные мета данные
        * @returns {$ws.proto.Deferred} Асинхронный результат выполнения
-       * @see SBIS3.CONTROLS.Data.Model
        * @example
        * <pre>
-       *    var dataSource = new Source({
-       *          resource: 'Employee'
-       *       }),
-       *       employee = new Model({
-       *          rawData: {
-       *             Id: 13,
-       *             Name: 'Paul'
-       *          }
-       *       });
-       *    dataSource.update(employee).addCallback(function() {
-       *       //successful update
+       *    var dataSource = new RestSource({
+       *       resource: '/articles/'
+       *    }),
+       *    article = new Model({
+       *       rawData: {
+       *          Id: 'how-to-update-an-item',
+       *          Title: 'How to update an item'
+       *       }
+       *    });
+       *    dataSource.update(article).addCallback(function() {
+       *       $ws.helpers.alert('The article was updated successfully');
+       *    }).addErrback(function() {
+       *       $ws.helpers.alert('Can\'t update the article');
        *    });
        * </pre>
        */
@@ -234,11 +272,13 @@ define('js!SBIS3.CONTROLS.Data.Source.ISource', [
        * @returns {$ws.proto.Deferred} Асинхронный результат выполнения
        * @example
        * <pre>
-       *    var dataSource = new Source({
-       *       resource: 'Employee'
+       *    var dataSource = new RestSource({
+       *       resource: '/articles/'
        *    });
-       *    dataSource.destroy(13).addCallback(function() {
-       *       //successful destroy
+       *    dataSource.destroy('article-id-to-destroy').addCallback(function() {
+       *       $ws.helpers.alert('The article was deleted successfully');
+       *    }).addErrback(function() {
+       *       $ws.helpers.alert('Can\'t delete the article');
        *    });
        * </pre>
        */

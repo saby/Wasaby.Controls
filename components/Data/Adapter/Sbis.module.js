@@ -4,9 +4,10 @@ define('js!SBIS3.CONTROLS.Data.Adapter.Sbis', [
    'js!SBIS3.CONTROLS.Data.Adapter.SbisTable',
    'js!SBIS3.CONTROLS.Data.Adapter.SbisRecord',
    'js!SBIS3.CONTROLS.Data.Adapter.FieldType',
+   'js!SBIS3.CONTROLS.Data.Di',
    'js!SBIS3.CONTROLS.Data.Collection.RecordSet',
    'js!SBIS3.CONTROLS.Data.Model'
-], function (Abstract, SbisTable, SbisRecord, FIELD_TYPE) {
+], function (Abstract, SbisTable, SbisRecord, FIELD_TYPE, Di) {
    'use strict';
 
    /**
@@ -169,6 +170,8 @@ define('js!SBIS3.CONTROLS.Data.Adapter.Sbis', [
          serialize: serialize
       };
    })();
+
+   Di.register('adapter.sbis', Sbis);
 
    return Sbis;
 });

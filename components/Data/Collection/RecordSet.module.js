@@ -2,8 +2,9 @@
 define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
    'js!SBIS3.CONTROLS.Data.Collection.ObservableList',
    'js!SBIS3.CONTROLS.Data.Adapter.Json',
+   'js!SBIS3.CONTROLS.Data.Di',
    'js!SBIS3.CONTROLS.Data.Model'
-], function (ObservableList, JsonAdapter) {
+], function (ObservableList, JsonAdapter, Di) {
    'use strict';
 
    /**
@@ -97,7 +98,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
       $constructor: function (cfg) {
          cfg = cfg || {};
 
-         this._model = 'model' in cfg ? cfg.model : $ws.single.ioc.resolve('SBIS3.CONTROLS.Data.ModelConstructor');
+         this._model = 'model' in cfg ? cfg.model : 'model';
          if ('data' in cfg && !('rawData' in cfg)) {
             this._options.rawData = cfg.data;
             $ws.single.ioc.resolve('ILogger').log('SBIS3.CONTROLS.Data.Collection.RecordSet', 'option "data" is deprecated and will be removed in 3.7.4. Use "rawData" instead.');
@@ -325,7 +326,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
             this._options.meta.results &&
             !$ws.helpers.instanceOfModule(this._options.meta.results, 'SBIS3.CONTROLS.Data.Model')
          ) {
-            this._options.meta.results = $ws.single.ioc.resolve('SBIS3.CONTROLS.Data.Model', {
+            this._options.meta.results = Di.resolve('model', {
                adapter: this.getAdapter(),
                rawData: this._options.meta.results,
                idProperty: this._options.idProperty
@@ -566,9 +567,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
 
    });
 
-   $ws.single.ioc.bind('SBIS3.CONTROLS.Data.Collection.RecordSet', function(config) {
-      return new RecordSet(config);
-   });
+   Di.register('collection.recordset', RecordSet);
 
    return RecordSet;
 });
