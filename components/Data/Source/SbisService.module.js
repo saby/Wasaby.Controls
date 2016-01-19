@@ -2,11 +2,11 @@
 define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
    'js!SBIS3.CONTROLS.Data.Source.Rpc',
    'js!SBIS3.CONTROLS.Data.Source.DataSet',
-   'js!SBIS3.CONTROLS.Data.Adapter.Sbis',
-   'js!SBIS3.CONTROLS.Data.Source.Provider.SbisBusinessLogic',
    'js!SBIS3.CONTROLS.Data.Query.Query',
-   'js!SBIS3.CONTROLS.Data.Di'
-], function (Rpc, DataSet, SbisAdapter, SbisBusinessLogic, Query, Di) {
+   'js!SBIS3.CONTROLS.Data.Di',
+   'js!SBIS3.CONTROLS.Data.Adapter.Sbis',
+   'js!SBIS3.CONTROLS.Data.Source.Provider.SbisBusinessLogic'
+], function (Rpc, DataSet, Query, Di, Adapter, SBL) {
    'use strict';
 
    /**
@@ -56,6 +56,19 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
              * @cfg {SBIS3.CONTROLS.Data.Adapter.IAdapter} Адаптер для работы с данными, по умолчанию {@link SBIS3.CONTROLS.Data.Adapter.Sbis}
              */
             adapter: 'adapter.sbis',
+
+            /**
+             * @cfg {String|Object} Объект, реализующий сетевой протокол для обмена в режиме клиент-сервер
+             * @see getProvider
+             * @example
+             * <pre>
+             *    var dataSource = new RemoteSource({
+             *       resource: 'Сотрудник',
+             *       provider: 'source.provider.sbis-plugin'
+             *    });
+             * </pre>
+             */
+            provider: 'source.provider.sbis-business-logic',
 
             /**
              * @cfg {String} Имя метода, который используется для получения выборки. По умолчанию 'Список'.
@@ -132,7 +145,6 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
                name: this._options.resource
             };
          }
-         this._options.provider = this._options.provider || new SbisBusinessLogic(this._options.resource);
 
       },
 
@@ -180,7 +192,7 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
             'ИмяМетода': this._options.formatMethodName
          };
 
-         return this._options.provider.call(
+         return this.getProvider().call(
             this._options.createMethodName,
             args
          ).addCallbacks((function (data) {
@@ -206,7 +218,7 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
             args['ДопПоля'] = this.getAdapter().serialize(meta);
          }
 
-         return this._options.provider.call(
+         return this.getProvider().call(
             this._options.readMethodName,
             args
          ).addCallbacks((function (data) {
@@ -234,7 +246,7 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
          }
          this._detectIdProperty(model.getRawData());
 
-         return this._options.provider.call(
+         return this.getProvider().call(
             this._options.updateMethodName,
             args
          ).addCallbacks((function (key) {
@@ -282,7 +294,7 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
       },
 
       merge: function(first, second) {
-         return this._options.provider.call(
+         return this.getProvider().call(
             this._options.mergeMethodName, {
                'ИдО' : first,
                'ИдОУд': second
@@ -304,7 +316,7 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
             args['ДопПоля'] = this.getAdapter().serialize(meta);
          }
 
-         return this._options.provider.call(
+         return this.getProvider().call(
             this._options.copyMethodName,
             args
          ).addCallbacks(function (res) {
@@ -316,7 +328,7 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
       },
 
       query: function(query) {
-         return this._options.provider.call(
+         return this.getProvider().call(
             this._options.queryMethodName, {
                'Фильтр': !query || Object.isEmpty(query.getWhere()) ? null : this.getAdapter().serialize(query.getWhere()),
                'Сортировка': this.getAdapter().serialize(this._getSortingParams(query)),
@@ -336,7 +348,7 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
       },
 
       call: function (command, data) {
-         return this._options.provider.call(
+         return this.getProvider().call(
             command,
             this._serializeArguments(data)
          ).addCallbacks((function (res) {
@@ -464,9 +476,9 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
          if (!Object.isEmpty(meta)) {
             args['ДопПоля'] = this.getAdapter().serialize(meta);
          }
-         var provider = this._options.provider;
+         var provider = this.getProvider();
          if (BLObjName && this._options.resource.name !== BLObjName) {
-            provider = new SbisBusinessLogic({name: BLObjName});
+            provider = Di.resolve('source.provider.sbis-business-logic', {name: BLObjName});
          }
          return provider.call(
             this._options.destroyMethodName,

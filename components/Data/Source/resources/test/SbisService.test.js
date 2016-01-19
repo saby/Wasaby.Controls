@@ -1,14 +1,17 @@
 /* global define, describe, context, it, assert, $ws */
-/* Mocking SbisServiceBLO */
-define('js!SBIS3.CONTROLS.Data.Source.Provider.SbisBusinessLogic', [], function () {
+
+/* Dummy for SBIS3.CONTROLS.Data.Source.Provider.SbisBusinessLogic */
+define('js!Test.SbisBusinessLogic', [
+   'js!SBIS3.CONTROLS.Data.Source.Provider.IRpc'
+], function (IRpc) {
       'use strict';
 
       var existsId = 7,
          existsTooId = 987,
          notExistsId = 99;
 
-      var SbisServiceBLO = $ws.core.extend({}, {
-         _cfg: '',
+      var SbisBusinessLogic = $ws.core.extend({}, [IRpc], {
+         _cfg: {},
          $constructor: function (cfg) {
             this._cfg = cfg;
          },
@@ -126,7 +129,7 @@ define('js!SBIS3.CONTROLS.Data.Source.Provider.SbisBusinessLogic', [], function 
             }
 
             setTimeout(function () {
-               SbisServiceBLO.lastRequest = {
+               SbisBusinessLogic.lastRequest = {
                   cfg: this._cfg,
                   method: method,
                   args: args
@@ -143,23 +146,27 @@ define('js!SBIS3.CONTROLS.Data.Source.Provider.SbisBusinessLogic', [], function 
          }
       });
 
-      SbisServiceBLO.lastRequest = {};
-      SbisServiceBLO.existsId = existsId;
-      SbisServiceBLO.notExistsId = notExistsId;
+      SbisBusinessLogic.lastRequest = {};
+      SbisBusinessLogic.existsId = existsId;
+      SbisBusinessLogic.notExistsId = notExistsId;
 
-      return SbisServiceBLO;
+      return SbisBusinessLogic;
    }
 );
 
 define([
       'js!SBIS3.CONTROLS.Data.Source.SbisService',
-      'js!SBIS3.CONTROLS.Data.Source.Provider.SbisBusinessLogic',
+      'js!SBIS3.CONTROLS.Data.Di',
+      'js!Test.SbisBusinessLogic',
       'js!SBIS3.CONTROLS.Data.Source.DataSet',
       'js!SBIS3.CONTROLS.Data.Model',
       'js!SBIS3.CONTROLS.Data.Adapter.Sbis',
       'js!SBIS3.CONTROLS.Data.Query.Query'
-   ], function (SbisService, SbisServiceBLO, DataSet, Model, SbisAdapter, Query) {
+   ], function (SbisService, Di, SbisBusinessLogic, DataSet, Model, SbisAdapter, Query) {
       'use strict';
+
+      //Replacing of standard implementation
+      Di.register('source.provider.sbis-business-logic', SbisBusinessLogic);
 
       describe('SBIS3.CONTROLS.Data.Source.SbisService', function () {
          var getSampleModel = function() {
@@ -236,7 +243,7 @@ define([
                   });
                   service.create().addCallbacks(function () {
                      try {
-                        var args = SbisServiceBLO.lastRequest.args;
+                        var args = SbisBusinessLogic.lastRequest.args;
 
                         if (args['ИмяМетода'] !== undefined) {
                            throw new Error('Wrong argument ИмяМетода');
@@ -266,7 +273,7 @@ define([
                   });
                   service.create({myParam: 'myValue'}).addCallbacks(function () {
                      try {
-                        var args = SbisServiceBLO.lastRequest.args;
+                        var args = SbisBusinessLogic.lastRequest.args;
 
                         if (args['ИмяМетода'] !== undefined) {
                            throw new Error('Wrong argument ИмяМетода');
@@ -297,7 +304,7 @@ define([
                   });
                   service.create({myParam: 'myValue'}).addCallbacks(function () {
                      try {
-                        var args = SbisServiceBLO.lastRequest.args;
+                        var args = SbisBusinessLogic.lastRequest.args;
 
                         if (args['ИмяМетода'] !== 'ПрочитатьФормат') {
                            throw new Error('Wrong argument ИмяМетода');
@@ -319,7 +326,7 @@ define([
 
                   service.create(model).addCallbacks(function () {
                      try {
-                        var args = SbisServiceBLO.lastRequest.args;
+                        var args = SbisBusinessLogic.lastRequest.args;
 
                         if (args['Фильтр'].d !== model.getRawData().d) {
                            throw new Error('Wrong value for argument Фильтр.d');
@@ -361,7 +368,7 @@ define([
                      var service = new SbisService({
                         resource: 'Товар'
                      });
-                     service.read(SbisServiceBLO.existsId).addCallbacks(function (model) {
+                     service.read(SbisBusinessLogic.existsId).addCallbacks(function (model) {
                         try {
                            if (!(model instanceof Model)) {
                               throw new Error('That\'s no Model');
@@ -372,7 +379,7 @@ define([
                            if (!model.getId()) {
                               throw new Error('The model has empty id');
                            }
-                           if (model.getId() !== SbisServiceBLO.existsId) {
+                           if (model.getId() !== SbisBusinessLogic.existsId) {
                               throw new Error('The model has wrong id');
                            }
                            if (model.get('Фамилия') !== 'Иванов') {
@@ -393,16 +400,16 @@ define([
                         formatMethodName: 'Формат'
                      });
                      service.read(
-                        SbisServiceBLO.existsId,
+                        SbisBusinessLogic.existsId,
                         {'ПолеОдин': 1}
                      ).addCallbacks(function () {
                         try {
-                           var args = SbisServiceBLO.lastRequest.args;
+                           var args = SbisBusinessLogic.lastRequest.args;
 
                            if (args['ИмяМетода'] !== 'Формат') {
                               throw new Error('Wrong argument ИмяМетода');
                            }
-                           if (args['ИдО'] !== SbisServiceBLO.existsId) {
+                           if (args['ИдО'] !== SbisBusinessLogic.existsId) {
                               throw new Error('Wrong argument ИдО');
                            }
 
@@ -431,11 +438,11 @@ define([
                         }),
                         model = getSampleModel();
                      service.read(
-                        SbisServiceBLO.existsId,
+                        SbisBusinessLogic.existsId,
                         model
                      ).addCallbacks(function () {
                         try {
-                           var args = SbisServiceBLO.lastRequest.args;
+                           var args = SbisBusinessLogic.lastRequest.args;
                            testArgIsModel(args['ДопПоля'], model);
 
                            done();
@@ -453,7 +460,7 @@ define([
                      var service = new SbisService({
                         resource: 'Товар'
                      });
-                     service.read(SbisServiceBLO.notExistsId).addBoth(function (err) {
+                     service.read(SbisBusinessLogic.notExistsId).addBoth(function (err) {
                         if (err instanceof Error) {
                            done();
                         } else {
@@ -469,7 +476,7 @@ define([
                   var service = new SbisService({
                      resource: 'Купец'
                   });
-                  service.read(SbisServiceBLO.existsId).addBoth(function (err) {
+                  service.read(SbisBusinessLogic.existsId).addBoth(function (err) {
                      if (err instanceof Error) {
                         done();
                      } else {
@@ -488,7 +495,7 @@ define([
                         resource: 'Товар'
                      });
 
-                     service.read(SbisServiceBLO.existsId).addCallbacks(function (model) {
+                     service.read(SbisBusinessLogic.existsId).addCallbacks(function (model) {
                         model.set('Фамилия', 'Петров');
                         service.update(model).addCallbacks(function (success) {
                            try {
@@ -569,14 +576,14 @@ define([
                      resource: 'Товар',
                      formatMethodName: 'Формат'
                   });
-                  service.read(SbisServiceBLO.existsId).addCallbacks(function (model) {
+                  service.read(SbisBusinessLogic.existsId).addCallbacks(function (model) {
                      var raw = model.getRaw();
                      service.update(
                         model,
                         {'ПолеОдин': '2'}
                      ).addCallbacks(function () {
                         try {
-                           var args = SbisServiceBLO.lastRequest.args;
+                           var args = SbisBusinessLogic.lastRequest.args;
 
                            testArgIsModel(args['Запись'], model);
 
@@ -613,7 +620,7 @@ define([
                      modelB
                   ).addCallbacks(function () {
                      try {
-                        var args = SbisServiceBLO.lastRequest.args;
+                        var args = SbisBusinessLogic.lastRequest.args;
                         testArgIsModel(args['ДопПоля'], modelB);
 
                         done();
@@ -655,7 +662,7 @@ define([
                      var service = new SbisService({
                         resource: 'Товар'
                      });
-                     service.destroy(SbisServiceBLO.existsId).addCallbacks(function (success) {
+                     service.destroy(SbisBusinessLogic.existsId).addCallbacks(function (success) {
                         try {
                            if (!success) {
                               throw new Error('Unsuccessful destroy');
@@ -676,7 +683,7 @@ define([
                      var service = new SbisService({
                         resource: 'Товар'
                      });
-                     service.destroy(SbisServiceBLO.notExistsId).addBoth(function (err) {
+                     service.destroy(SbisBusinessLogic.notExistsId).addBoth(function (err) {
                         if (err instanceof Error) {
                            done();
                         } else {
@@ -691,13 +698,13 @@ define([
                      resource: 'Товар'
                   });
                   service.destroy(
-                     SbisServiceBLO.existsId,
+                     SbisBusinessLogic.existsId,
                      {'ПолеОдин': true}
                   ).addCallbacks(function () {
                      try {
-                        var args = SbisServiceBLO.lastRequest.args;
+                        var args = SbisBusinessLogic.lastRequest.args;
 
-                        if (args['ИдО'] !== SbisServiceBLO.existsId) {
+                        if (args['ИдО'] !== SbisBusinessLogic.existsId) {
                            throw new Error('Wrong argument ИдО');
                         }
 
@@ -725,11 +732,11 @@ define([
                      }),
                      model = getSampleModel();
                   service.destroy(
-                     SbisServiceBLO.existsId,
+                     SbisBusinessLogic.existsId,
                      model
                   ).addCallbacks(function () {
                      try {
-                        var args = SbisServiceBLO.lastRequest.args;
+                        var args = SbisBusinessLogic.lastRequest.args;
                         testArgIsModel(args['ДопПоля'], model);
 
                         done();
@@ -745,14 +752,14 @@ define([
                   var service = new SbisService({
                      resource: 'Товар'
                   });
-                  service.destroy([0, SbisServiceBLO.existsId, 1]).addCallbacks(function (success) {
+                  service.destroy([0, SbisBusinessLogic.existsId, 1]).addCallbacks(function (success) {
                      try {
-                        var args = SbisServiceBLO.lastRequest.args;
+                        var args = SbisBusinessLogic.lastRequest.args;
 
                         if (args['ИдО'][0] !== 0) {
                            throw new Error('Wrong argument ИдО[0]');
                         }
-                        if (args['ИдО'][1] !== SbisServiceBLO.existsId) {
+                        if (args['ИдО'][1] !== SbisBusinessLogic.existsId) {
                            throw new Error('Wrong argument ИдО[1]');
                         }
                         if (args['ИдО'][2] !== 1) {
@@ -776,14 +783,14 @@ define([
                   var service = new SbisService({
                      resource: 'Товар'
                   });
-                  service.destroy([SbisServiceBLO.existsId + ',Товар', '987,Продукт']).addCallbacks(function (success) {
+                  service.destroy([SbisBusinessLogic.existsId + ',Товар', '987,Продукт']).addCallbacks(function (success) {
                      try {
-                        var cfg = SbisServiceBLO.lastRequest.cfg;
+                        var cfg = SbisBusinessLogic.lastRequest.cfg;
                         if (cfg.name !== 'Продукт') {
                            throw new Error('Wrong service name');
                         }
 
-                        var args = SbisServiceBLO.lastRequest.args;
+                        var args = SbisBusinessLogic.lastRequest.args;
                         if (args['ИдО'] !== 987) {
                            throw new Error('Wrong argument ИдО');
                         }
@@ -807,7 +814,7 @@ define([
                   var service = new SbisService({
                      resource: 'Купец'
                   });
-                  service.destroy(SbisServiceBLO.existsId).addBoth(function (err) {
+                  service.destroy(SbisBusinessLogic.existsId).addBoth(function (err) {
                      if (err instanceof Error) {
                         done();
                      } else {
@@ -887,7 +894,7 @@ define([
 
                   service.query(query).addCallbacks(function () {
                         try {
-                           var args = SbisServiceBLO.lastRequest.args;
+                           var args = SbisBusinessLogic.lastRequest.args;
 
                            if (args['Фильтр'].d[0] !== 5) {
                               throw new Error('Wrong argument value Фильтр.id');
@@ -1016,11 +1023,11 @@ define([
 
                   service.call('Произвольный', model).addCallbacks(function () {
                      try {
-                        if (SbisServiceBLO.lastRequest.method !== 'Произвольный') {
-                           throw new Error('Method name "' + SbisServiceBLO.lastRequest.method + '" expected to be "Произвольный"');
+                        if (SbisBusinessLogic.lastRequest.method !== 'Произвольный') {
+                           throw new Error('Method name "' + SbisBusinessLogic.lastRequest.method + '" expected to be "Произвольный"');
                         }
 
-                        var args = SbisServiceBLO.lastRequest.args;
+                        var args = SbisBusinessLogic.lastRequest.args;
                         testArgIsModel(args, model);
 
                         done();
@@ -1052,11 +1059,11 @@ define([
 
                   service.call('Произвольный', dataSet).addCallbacks(function () {
                      try {
-                        if (SbisServiceBLO.lastRequest.method !== 'Произвольный') {
-                           throw new Error('Method name "' + SbisServiceBLO.lastRequest.method + '" expected to be "Произвольный"');
+                        if (SbisBusinessLogic.lastRequest.method !== 'Произвольный') {
+                           throw new Error('Method name "' + SbisBusinessLogic.lastRequest.method + '" expected to be "Произвольный"');
                         }
 
-                        var args = SbisServiceBLO.lastRequest.args;
+                        var args = SbisBusinessLogic.lastRequest.args;
                         testArgIsDataSet(args, dataSet);
 
                         done();

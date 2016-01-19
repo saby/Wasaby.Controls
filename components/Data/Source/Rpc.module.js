@@ -12,13 +12,20 @@ define('js!SBIS3.CONTROLS.Data.Source.Rpc', [
     * @author Мальцев Алексей
     */
 
-   return Remote.extend(/** @lends SBIS3.CONTROLS.Data.Source.Rpc.prototype */{
+   var Rpc = Remote.extend(/** @lends SBIS3.CONTROLS.Data.Source.Rpc.prototype */{
       _moduleName: 'SBIS3.CONTROLS.Data.Source.Rpc',
       $protected: {
          _options: {
             /**
-             * @cfg {SBIS3.CONTROLS.Data.Source.Provider.IRpc} Объект, реализующий сетевой протокол для обмена в режиме клиент-сервер
+             * @cfg {String|SBIS3.CONTROLS.Data.Source.Provider.IRpc} Объект, реализующий сетевой протокол для обмена в режиме клиент-сервер
              * @name {SBIS3.CONTROLS.Data.Source.Remote#provider}
+             * @example
+             * <pre>
+             *    var dataSource = new RpcSource({
+             *       resource: '/users/'
+             *       provider: 'source.provider.rpc-json'
+             *    });
+             * </pre>
              */
 
             /**
@@ -136,7 +143,13 @@ define('js!SBIS3.CONTROLS.Data.Source.Rpc', [
        * @see provider
        */
       getProvider: function () {
-         return this._options.provider;
+         var provider = Rpc.superclass.getProvider.call(this);
+
+         if (!provider || !$ws.helpers.instanceOfMixin(provider, 'SBIS3.CONTROLS.Data.Source.Provider.IRpc')) {
+            throw new Error('Provider should implement SBIS3.CONTROLS.Data.Source.Provider.IRpc');
+         }
+
+         return provider;
       },
 
       //endregion SBIS3.CONTROLS.Data.Source.Remote
@@ -288,4 +301,6 @@ define('js!SBIS3.CONTROLS.Data.Source.Rpc', [
       //region Protected methods
       //endregion Protected methods
    });
+
+   return Rpc;
 });

@@ -1,7 +1,8 @@
 /* global define, $ws */
 define('js!SBIS3.CONTROLS.Data.Source.Provider.SbisBusinessLogic', [
-   'js!SBIS3.CONTROLS.Data.Source.Provider.IRpc'
-], function (IRpc) {
+   'js!SBIS3.CONTROLS.Data.Source.Provider.IRpc',
+   'js!SBIS3.CONTROLS.Data.Di'
+], function (IRpc, Di) {
     'use strict';
 
     /**
@@ -11,6 +12,8 @@ define('js!SBIS3.CONTROLS.Data.Source.Provider.SbisBusinessLogic', [
      * @mixes SBIS3.CONTROLS.Data.Source.Provider.IRpc
      */
     var SbisBusinessLogic = $ws.proto.ClientBLObject.extend([IRpc], {
+       _moduleName: 'SBIS3.CONTROLS.Data.Source.Provider.SbisBusinessLogic',
+
         call: function(method, args) {
             return SbisBusinessLogic.superclass.call.call(
                this,
@@ -20,6 +23,8 @@ define('js!SBIS3.CONTROLS.Data.Source.Provider.SbisBusinessLogic', [
             );
         }
     });
+
+   Di.register('source.provider.sbis-business-logic', SbisBusinessLogic);
 
    return SbisBusinessLogic;
 });

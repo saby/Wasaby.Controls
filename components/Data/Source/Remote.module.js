@@ -1,7 +1,8 @@
 /* global define, $ws */
 define('js!SBIS3.CONTROLS.Data.Source.Remote', [
-   'js!SBIS3.CONTROLS.Data.Source.Base'
-], function (Base) {
+   'js!SBIS3.CONTROLS.Data.Source.Base',
+   'js!SBIS3.CONTROLS.Data.Di'
+], function (Base, Di) {
    'use strict';
 
    /**
@@ -18,8 +19,15 @@ define('js!SBIS3.CONTROLS.Data.Source.Remote', [
       $protected: {
          _options: {
             /**
-             * @cfg {Object} Объект, реализующий сетевой протокол для обмена в режиме клиент-сервер
+             * @cfg {String|Object} Объект, реализующий сетевой протокол для обмена в режиме клиент-сервер
              * @see getProvider
+             * @example
+             * <pre>
+             *    var dataSource = new RemoteSource({
+             *       resource: '/users/'
+             *       provider: 'source.provider.ajax'
+             *    });
+             * </pre>
              */
             provider: null
          }
@@ -40,6 +48,9 @@ define('js!SBIS3.CONTROLS.Data.Source.Remote', [
        * @see provider
        */
       getProvider: function () {
+         if (typeof this._options.provider === 'string') {
+            this._options.provider = Di.resolve(this._options.provider, this._options.resource);
+         }
          return this._options.provider;
       }
 
