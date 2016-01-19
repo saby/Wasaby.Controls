@@ -20,7 +20,7 @@ define('js!SBIS3.CONTROLS.TreeCompositeViewControl', [
 
       $constructor: function () {
 
-      },
+      }
    });
 
    return CompositeViewControl;

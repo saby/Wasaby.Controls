@@ -20,7 +20,7 @@ define('js!SBIS3.CONTROLS.CompositeViewControl', [
 
       $constructor: function () {
 
-      },
+      }
    });
 
    return CompositeViewControl;
