@@ -26,7 +26,8 @@ define('js!SBIS3.CONTROLS.Data.IPropertyAccess', [], function () {
        */
 
       /**
-       * Возвращает значение свойства
+       * Возвращает значение свойства.
+       * Если свойство не существует, возвращает undefined.
        * @param {String} name Название свойства
        * @returns {*}
        */
@@ -35,7 +36,8 @@ define('js!SBIS3.CONTROLS.Data.IPropertyAccess', [], function () {
       },
 
       /**
-       * Устанавливает значение свойства
+       * Устанавливает значение свойства.
+       * Если свойство только для чтения, генерирует исключение.
        * @param {String} name Название свойства
        * @param {*} value Значение свойства
        */
@@ -44,7 +46,7 @@ define('js!SBIS3.CONTROLS.Data.IPropertyAccess', [], function () {
       },
 
       /**
-       * Проверяет наличие свойства у объекта
+       * Проверяет наличие свойства у объекта.
        * @param {String} name Название свойства
        * @returns {Boolean}
        */
