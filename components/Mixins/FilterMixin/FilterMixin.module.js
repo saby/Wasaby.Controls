@@ -39,8 +39,18 @@ define('js!SBIS3.CONTROLS.FilterMixin', [
    var FilterMixin = /**@lends SBIS3.CONTROLS.FilterMixin.prototype  */{
       $protected: {
          _options: {
-            /***
-             * при установке структуры меняется значение св-ва filter (строится по полям value у структуры)
+            /**
+             * @typedef {Array} filterStructure
+             * @property {String} internalValueField Индекс поля, содержащего значение элемента. По-умолчанию null.
+             * @property {String} internalCaptionField Индекс поля, содержащего подпись элемента. По-умолчанию null.
+             * @property {Object} caption Текущая подпись элемента. Может быть не определено.
+             * @property {Object} value Текущее значение элемента. Может быть не определено.
+             * @property {Object} resetValue Значение элемента по-умолчанию, используемое для сброса текущего значения. Может быть не определено.
+             * @property {Object} resetCaption Подпись элемента по-умолчанию, использаемая для сброса текущей подписи. Может быть не определено.
+             */
+            /**
+             * @cfg {filterStructure[]} Структура элемента фильтра
+             * @remark при установке структуры меняется значение св-ва filter (строится по полям value у структуры)
              */
             filterStructure: [ /*filterStructureElementDef*/ ],
             /**
