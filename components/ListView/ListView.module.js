@@ -1225,12 +1225,14 @@ define('js!SBIS3.CONTROLS.ListView',
           * @private
           */
          _moveTopScroll : function(){
+            var scrollAmount;
             //сюда попадем только когда уже точно есть скролл
             if (this._options.infiniteScrollDirection == 'top'){
+               scrollAmount = this._scrollWatcher.getScrollHeight() - this._containerScrollHeight - this._scrollIndicatorHeight;
                //Если запускаем 1ый раз, то нужно поскроллить в самый низ (ведь там "начало" данных), в остальных догрузках скроллим вниз на
                //разницы величины скролла (т.е. на сколько добавилось высоты, на столько и опустили). Получается плавно
                //Так же цчитываем то, что индикатор появляется только на время загрузки и добавляет свою высоту
-               this._scrollWatcher.scrollTo(this._firstScrollTop ? 'bottom' : this._scrollWatcher.getScrollHeight() - this._containerScrollHeight - this._scrollIndicatorHeight);
+               this._scrollWatcher.scrollTo(this._firstScrollTop || (scrollAmount < 0) ? 'bottom' : scrollAmount);
             }
          },
          _showLoadingIndicator: function () {
