@@ -82,6 +82,12 @@ define('js!SBIS3.CONTROLS.Data.Collection.List', [
          });
       },
 
+      /**
+       * Итератор для обхода всех элементов коллекции
+       * Цикл проходит полное количество итераций, его невозможно прервать досрочно
+       * @param callback
+       * @param context
+       */
       each: function (callback, context) {
          //так быстрее, чем по правильному - через enumerator
          for (var i = 0, count = this._items.length; i < count; i++) {
