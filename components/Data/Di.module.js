@@ -87,6 +87,7 @@ define('js!SBIS3.CONTROLS.Data.Di', [], function () {
        * Разрешает зависимость
        * @param {String|Function|Object} alias Название зависимости, или конструктор объекта или инстанс объекта
        * @param {Object} [options] Опции конструктора
+       * @returns Object
        * @static
        * @example
        * <pre>
