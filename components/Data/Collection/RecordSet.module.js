@@ -21,6 +21,27 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
       $protected: {
          _options: {
             /**
+             * @cfg {String|SBIS3.CONTROLS.Data.Adapter.IAdapter} Адаптер для работы с данными, по умолчанию {@link SBIS3.CONTROLS.Data.Adapter.Json}
+             * @see getAdapter
+             * @see setAdapter
+             * @see SBIS3.CONTROLS.Data.Adapter.Json
+             * @see SBIS3.CONTROLS.Data.Di
+             * @example
+             * <pre>
+             *    var user = new RecordSet({
+             *       adapter: 'adapter.sbis'
+             *    });
+             * </pre>
+             * @example
+             * <pre>
+             *    var user = new RecordSet({
+             *       adapter: new SbisAdapter()
+             *    });
+             * </pre>
+             */
+            adapter: 'adapter.json',
+
+            /**
              * @cfg {Object} Данные в "сыром" виде
              * @example
              * <pre>
@@ -43,37 +64,6 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
              * @see setRawData
              */
             rawData: null,
-
-            /**
-             * @cfg {String|SBIS3.CONTROLS.Data.Adapter.IAdapter} Адаптер для работы с данными, по умолчанию {@link SBIS3.CONTROLS.Data.Adapter.Json}
-             * @see getAdapter
-             * @see setAdapter
-             * @see SBIS3.CONTROLS.Data.Adapter.Json
-             * @see SBIS3.CONTROLS.Data.Di
-             * @example
-             * <pre>
-             *    var user = new RecordSet({
-             *       adapter: 'adapter.sbis'
-             *    });
-             * </pre>
-             * @example
-             * <pre>
-             *    var user = new RecordSet({
-             *       adapter: new SbisAdapter()
-             *    });
-             * </pre>
-             */
-            adapter: 'adapter.json',
-
-            /**
-             * @cfg {Object} Метаданные
-             */
-            meta: {},
-
-            /**
-             * @cfg {String} Поле модели, содержащее первичный ключ
-             */
-            idProperty: '',
 
             /**
              * @cfg {String|Function} Конструктор модели
@@ -104,7 +94,27 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
              *    });
              * </pre>
              */
-            model: 'model'
+            model: 'model',
+
+            /**
+             * @cfg {String} Поле модели, содержащее первичный ключ
+             * @see getIdProperty
+             * @see SBIS3.CONTROLS.Data.Model#idProperty
+             * @example
+             * <pre>
+             *    var dataSource = new RecordSet({
+             *       idProperty: 'primaryId'
+             *    });
+             * </pre>
+             */
+            idProperty: '',
+
+            /**
+             * @cfg {Object} Метаданные
+             * @see getMetaData
+             * @see setMetaData
+             */
+            meta: {}
          },
 
          /**
@@ -172,6 +182,100 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
          return syncCompleteDef.getResult().addCallback(function (){
             $ws.helpers.map(willRemove, self.remove, self);
          });
+      },
+
+      /**
+       * Возвращает адаптер для работы с данными
+       * @returns {String|SBIS3.CONTROLS.Data.Adapter.IAdapter}
+       * @see adapter
+       * @see SBIS3.CONTROLS.Data.Adapter.IAdapter
+       */
+      getAdapter: function (){
+         if (typeof this._options.adapter === 'string') {
+            this._options.adapter = Di.resolve(this._options.adapter);
+         }
+         return this._options.adapter;
+      },
+
+      /**
+       * Возвращает сырые данные
+       * @returns {Object}
+       * @see setRawData
+       * @see rawData
+       */
+      getRawData: function() {
+         return this._rawData;
+      },
+
+      /**
+       * Устанавливает сырые данные
+       * @param rawData {Object} Сырые данные
+       * @see getRawData
+       * @see rawData
+       */
+      setRawData: function(data) {
+         RecordSet.superclass.clear.call(this);
+         this._rawData = data;
+         this._resetTableAdapter();
+         var adapter = this._getTableAdapter(),
+            count = adapter.getCount(),
+            record;
+         for (var i = 0; i < count; i++) {
+            record = this._getModelInstance(adapter.at(i));
+            RecordSet.superclass.add.call(this, record);
+         }
+      },
+
+      /**
+       * Возвращает свойство модели, содержащее первичный ключ
+       * @returns {String}
+       * @see idProperty
+       * @see SBIS3.CONTROLS.Data.Model#idProperty
+       */
+      getIdProperty: function () {
+         return this._options.idProperty;
+      },
+
+      /**
+       * Возвращает метаданные
+       * @returns {Object}
+       * @see meta
+       * @see setMetaData
+       */
+      getMetaData: function () {
+         if (this._options.meta &&
+            this._options.meta.path &&
+            !$ws.helpers.instanceOfModule(this._options.meta.path, 'SBIS3.CONTROLS.Data.Collection.RecordSet')
+         ) {
+            this._options.meta.path = new RecordSet({
+               adapter: this.getAdapter(),
+               rawData: this._options.meta.path,
+               idProperty: this._options.idProperty
+            });
+         }
+
+         if (this._options.meta &&
+            this._options.meta.results &&
+            !$ws.helpers.instanceOfModule(this._options.meta.results, 'SBIS3.CONTROLS.Data.Model')
+         ) {
+            this._options.meta.results = Di.resolve('model', {
+               adapter: this.getAdapter(),
+               rawData: this._options.meta.results,
+               idProperty: this._options.idProperty
+            });
+         }
+
+         return this._options.meta;
+      },
+
+      /**
+       * Устанавливает метаданные
+       * @param meta {Object} Метаданные
+       * @see meta
+       * @see getMetaData
+       */
+      setMetaData: function (meta) {
+         this._options.meta = meta;
       },
 
       //region SBIS3.CONTROLS.DataSet
@@ -248,13 +352,6 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
          return this.getAdapter();
       },
 
-      getAdapter: function (){
-         if (typeof this._options.adapter === 'string') {
-            this._options.adapter = Di.resolve(this._options.adapter);
-         }
-         return this._options.adapter;
-      },
-
       merge: function (dataSetMergeFrom, options) {
          /*TODO какая то лажа с ключами*/
          if ((!this._keyField) && (dataSetMergeFrom._keyField)) {
@@ -277,23 +374,6 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
          } else {
             this.replace(record, existsAt);
          }
-      },
-
-      setRawData: function(data) {
-         RecordSet.superclass.clear.call(this);
-         this._rawData = data;
-         this._resetTableAdapter();
-         var adapter = this._getTableAdapter(),
-            count = adapter.getCount(),
-            record;
-         for (var i = 0; i < count; i++) {
-            record = this._getModelInstance(adapter.at(i));
-            RecordSet.superclass.add.call(this, record);
-         }
-      },
-
-      getRawData: function() {
-         return this._rawData;
       },
 
       each: function (iterateCallback, status) {
@@ -325,36 +405,6 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
                   }
             }
          }
-      },
-
-      getMetaData: function () {
-         if (this._options.meta &&
-            this._options.meta.path &&
-            !$ws.helpers.instanceOfModule(this._options.meta.path, 'SBIS3.CONTROLS.Data.Collection.RecordSet')
-         ) {
-            this._options.meta.path = new RecordSet({
-               adapter: this.getAdapter(),
-               rawData: this._options.meta.path,
-               idProperty: this._options.idProperty
-            });
-         }
-
-         if (this._options.meta &&
-            this._options.meta.results &&
-            !$ws.helpers.instanceOfModule(this._options.meta.results, 'SBIS3.CONTROLS.Data.Model')
-         ) {
-            this._options.meta.results = Di.resolve('model', {
-               adapter: this.getAdapter(),
-               rawData: this._options.meta.results,
-               idProperty: this._options.idProperty
-            });
-         }
-
-         return this._options.meta;
-      },
-
-      setMetaData: function (meta) {
-         this._options.meta = meta;
       },
 
       // TODO: В контролах избавиться от вызова этого метода - должно быть достаточно "выбрать по индексу".
