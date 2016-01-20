@@ -1,0 +1,78 @@
+.controls-MergeDialogTemplate {
+
+  .controls-MergeDialogTemplate__applyBlock {
+    position: absolute;
+    bottom: @controls-MergeDialogTemplate-applyBlock-bottom;
+    right: @controls-MergeDialogTemplate-applyBlock-right;
+
+    .controls-MergeDialogTemplate__mergeButton {
+      margin-left: @controls-MergeDialogTemplate-mergeButton-margin-left;
+    }
+    .controls-MergeDialogTemplate__warning {
+      color: @controls-MergeDialogTemplate-warning-color;
+    }
+  }
+  .controls-MergeDialogTemplate__hint {
+    color: @gray-color;
+    font-size: @controls-MergeDialogTemplate-hint-font-size;
+    margin: @controls-MergeDialogTemplate-hint-margin;
+    display: inline-block;
+  }
+  .controls-MergeDialogTemplate__treeDataGridView {
+    padding-bottom: @controls-MergeDialogTemplate-treeDataGridView-padding-bottom;
+
+    .controls-DataGridView__th {
+      &:first-child {
+        .controls-DataGridView__th-content {
+          margin-left: @controls-MergeDialogTemplate-DataGridView-th-content-margin-left;
+        }
+      }
+      font-size: @font-basic-size;
+    }
+    .controls-DataGridView__td, .controls-DataGridView__th {
+      border-bottom: @controls-MergeDialogTemplate-DataGridView-td-border-bottom
+    }
+
+    .controls-BreadCrumbs {
+      margin-left: @controls-MergeDialogTemplate-BreadCrumbs-margin-left;
+      top: @controls-MergeDialogTemplate-BreadCrumbs-top;
+      .controls-BreadCrumbs__itemsContainer {
+        .controls-BreadCrumbs__crumb {
+          .controls-BreadCrumbs__title {
+            font-size: @font-basic-size;
+          }
+          &:first-child {
+            .controls-BreadCrumbs__title {
+              font-size: @font-popup-size;
+            }
+          }
+        }
+      }
+    }
+    .controls-MergeDialogTemplate__notMergeAvailable {
+      color: @gray-ccc-color;
+    }
+
+    .controls-MergeDialogTemplate__radioButton {
+      width: @controls-MergeDialogTemplate-radioButton-metric;
+      height: @controls-MergeDialogTemplate-radioButton-metric;
+      border-radius: @controls-MergeDialogTemplate-radioButton-border-radius;
+      margin-top: @controls-MergeDialogTemplate-radioButton-margin-top;
+    }
+
+    .controls-ListView__item__selected {
+      .controls-MergeDialogTemplate__radioButton {
+        border-color: @primary-color;
+
+        &:before {
+          content: '';
+          width: @controls-MergeDialogTemplate-radioButtonIcon-metric;
+          height: @controls-MergeDialogTemplate-radioButtonIcon-metric;
+          background: @primary-color;
+          margin: @controls-MergeDialogTemplate-radioButtonIcon-margin;
+          display: block;
+        }
+      }
+    }
+  }
+}
