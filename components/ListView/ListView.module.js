@@ -46,6 +46,7 @@ define('js!SBIS3.CONTROLS.ListView',
        * @cssModifier controls-ListView__withoutMarker Убирать маркер активной строки.
        * @cssModifier controls-ListView__showCheckBoxes Чекбоксы показываются не по ховеру, а сразу все.
        * @cssModifier controls-ListView__hideCheckBoxes Скрыть все чекбоксы.
+       * @cssModifier controls-ListView__bottomStyle Оформляет операции строки под строкой
        */
 
       /*TODO CommonHandlers MoveHandlers тут в наследовании не нужны*/
@@ -348,7 +349,7 @@ define('js!SBIS3.CONTROLS.ListView',
                 * Режим автоматического добавления позволяет при завершении редактирования последнего элемента автоматически создавать новый
                 * @example
                 * <pre>
-                *     <opt name="editInPlaceMode">click</opt>
+                *     <opt name="editMode">click</opt>
                 * </pre>
                 */
                editMode: '',
@@ -424,11 +425,11 @@ define('js!SBIS3.CONTROLS.ListView',
 
             switch (e.which) {
                case $ws._const.key.up:
-                  var previousItem = this.getPrevItemById(selectedKey);
+                  var previousItem = this._getPrevItemByDOM(selectedKey);
                   previousItem ? this.setSelectedKey(previousItem.data('id')) : this.setSelectedKey(selectedKey);
                   break;
                case $ws._const.key.down:
-                  var nextItem = this.getNextItemById(selectedKey);
+                  var nextItem = this._getNextItemByDOM(selectedKey);
                   nextItem ? this.setSelectedKey(nextItem.data('id')) : this.setSelectedKey(selectedKey);
                   break;
                case $ws._const.key.enter:
@@ -436,7 +437,7 @@ define('js!SBIS3.CONTROLS.ListView',
                   this._elemClickHandler(selectedKey, this._dataSet.getRecordByKey(selectedKey), selectedItem);
                   break;
                case $ws._const.key.space:
-                  var nextItem = this.getNextItemById(selectedKey);
+                  var nextItem = this._getNextItemByDOM(selectedKey);
                   this.toggleItemsSelection([selectedKey]);
                   nextItem ? this.setSelectedKey(nextItem.data('id')) : this.setSelectedKey(selectedKey);
                   break;
@@ -449,7 +450,7 @@ define('js!SBIS3.CONTROLS.ListView',
           * @returns {*}
           */
          getNextItemById: function (id) {
-            return this._getHtmlItem(id, true);
+            return this._getItem(id, true);
          },
          /**
           * Возвращает предыдущий элемент
@@ -457,7 +458,29 @@ define('js!SBIS3.CONTROLS.ListView',
           * @returns {jQuery}
           */
          getPrevItemById: function (id) {
-            return this._getHtmlItem(id, false);
+            return this._getItem(id, false);
+         },
+
+         _getNextItemByDOM: function(id) {
+            return this._getHtmlItemByDOM(id, true)
+         },
+
+         _getPrevItemByDOM: function(id) {
+            return this._getHtmlItemByDOM(id, false)
+         },
+
+         _getItem: function(id, isNext) {
+            if($ws.helpers.instanceOfMixin(this._dataSet, 'SBIS3.CONTROLS.Data.Collection.IList')) {
+               var index = this._dataSet.getIndex(this._dataSet.getRecordByKey(id)),
+                  item;
+               item = this._dataSet.at(isNext ? ++index : --index);
+               if (item)
+                  return $('.js-controls-ListView__item[data-id="' + item.getId() + '"]', this._getItemsContainer());
+               else
+                  return undefined;
+            } else {
+               this._getHtmlItemByDOM(id, isNext);
+            }
          },
          /**
           *
@@ -468,35 +491,25 @@ define('js!SBIS3.CONTROLS.ListView',
           */
          // TODO Подумать, как решить данную проблему. Не надёжно хранить информацию в доме
          // Поиск следующего или предыдущего элемента коллекции с учётом вложенных контролов
-         _getHtmlItem: function (id, isNext) {
-            if($ws.helpers.instanceOfMixin(this._dataSet, 'SBIS3.CONTROLS.Data.Collection.IList')) {
-               var index = this._dataSet.getIndex(this._dataSet.getRecordByKey(id)),
-                  item;
-               item = this._dataSet.at(isNext ? ++index : --index);
-               if(item)
-                  return $('.js-controls-ListView__item[data-id="' + item.getId() + '"]', this._getItemsContainer());
-               else
-                  return undefined;
-            } else {
-               var items = $('.js-controls-ListView__item', this._getItemsContainer()).not('.ws-hidden'),
-                  selectedItem = $('[data-id="' + id + '"]', this._getItemsContainer()),
-                  index = items.index(selectedItem),
-                  siblingItem;
-               if (isNext) {
-                  if (index + 1 < items.length) {
-                     siblingItem = items.eq(index + 1);
-                  }
+         _getHtmlItemByDOM: function (id, isNext) {
+            var items = $('.js-controls-ListView__item', this._getItemsContainer()).not('.ws-hidden'),
+               selectedItem = $('[data-id="' + id + '"]', this._getItemsContainer()),
+               index = items.index(selectedItem),
+               siblingItem;
+            if (isNext) {
+               if (index + 1 < items.length) {
+                  siblingItem = items.eq(index + 1);
                }
-               else {
-                  if (index > 0) {
-                     siblingItem = items.eq(index - 1);
-                  }
-               }
-               if (siblingItem)
-                  return this._dataSet.getRecordByKey(siblingItem.data('id')) ? siblingItem : this._getHtmlItem(siblingItem.data('id'), isNext);
-               else
-                  return undefined;
             }
+            else {
+               if (index > 0) {
+                  siblingItem = items.eq(index - 1);
+               }
+            }
+            if (siblingItem)
+               return this._dataSet.getRecordByKey(siblingItem.data('id')) ? siblingItem : this._getHtmlItem(siblingItem.data('id'), isNext);
+            else
+               return undefined;
          },
          _isViewElement: function (elem) {
             return  $ws.helpers.contains(this._getItemsContainer()[0], elem[0]);

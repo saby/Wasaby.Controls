@@ -20,6 +20,7 @@ define('js!SBIS3.CONTROLS.ComboBox', [
     * @control
     * @author Крайнов Дмитрий Олегович
     * @public
+    * @control
     * @initial
     * <component data-component='SBIS3.CONTROLS.ComboBox'>
     *     <options name="items" type="array">

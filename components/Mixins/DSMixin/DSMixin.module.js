@@ -623,7 +623,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
         * @see onDataLoad
         */
        setItems: function (items) {
-          this.getItems().fill(items);
+          this.getItems().assign(items);
 
           /*TODO для совместимости создадим сорс*/
           this._dataSource = new MemorySource({

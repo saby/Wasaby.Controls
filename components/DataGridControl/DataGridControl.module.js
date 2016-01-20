@@ -11,8 +11,6 @@ define('js!SBIS3.CONTROLS.DataGridControl', [
     * *Это экспериментальный модуль, API будет меняться!*
     * @class SBIS3.CONTROLS.DataGridControl
     * @extends SBIS3.CONTROLS.ListControl
-    * @control
-    * @public
     * @state mutable
     * @demo SBIS3.CONTROLS.Demo.MyDataGridView
     * @initial
