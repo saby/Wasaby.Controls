@@ -38,9 +38,6 @@ define('js!SBIS3.CONTROLS.CompositeViewMixin', ['html!SBIS3.CONTROLS.CompositeVi
             if (self._options.viewMode == 'tile'){
                self._calculateTileWidth();
             }
-            if (self._options.viewMode == 'table'){
-               self._buildHead();
-            }
          });
          //TODO:Нужен какой то общий канал для ресайза окна
          $(window).bind('resize', function(){
