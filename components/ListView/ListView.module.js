@@ -195,7 +195,8 @@ define('js!SBIS3.CONTROLS.ListView',
                $ws._const.key.space,
                $ws._const.key.enter,
                $ws._const.key.right,
-               $ws._const.key.left
+               $ws._const.key.left,
+               $ws._const.key.o
             ],
             _itemActionsGroup: null,
             _emptyData: undefined,
@@ -452,6 +453,11 @@ define('js!SBIS3.CONTROLS.ListView',
                   var nextItem = this._getNextItemByDOM(selectedKey);
                   this.toggleItemsSelection([selectedKey]);
                   nextItem ? this.setSelectedKey(nextItem.data('id')) : this.setSelectedKey(selectedKey);
+                  break;
+               case $ws._const.key.o:
+                  if (e.ctrlKey && e.altKey && e.shiftKey) {
+                     this.sendCommand('mergeItems', this.getSelectedKeys());
+                  }
                   break;
             }
             return false;

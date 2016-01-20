@@ -1,0 +1,39 @@
+<div class="controls-MergeDialogTemplate">
+    <span class="controls-MergeDialogTemplate__hint">{{=it.hint}}</span>
+    <component data-component="SBIS3.CONTROLS.TreeDataGridView" class="controls-MergeDialogTemplate__treeDataGridView controls-ListView__withoutMarker controls-GridView__searchMode">
+        <option name="name" value="MergeDialogTemplate__treeDataGridView"></option>
+        <option name="allowDragNDropMove" type="boolean">false</option>
+        <option name="showPaging" type="boolean">false</option>
+        <option name="allowEmptySelection" type="boolean">true</option>
+        <option name="userItemAttributes" type="function">js!SBIS3.CONTROLS.MergeDialogTemplate:prototype.addUserItemAttributes</option>
+        <option name="displayField">{{=it.displayField}}</option>
+        <option name="hierField">{{=it.hierField}}</option>
+        <options name="itemsActions" type="array"></options>
+        <options name="columns" type="array">
+            <options>
+                <option name="title">Наименование</option>
+                <option name="width">400</option>
+                <option name="field">{{=it.displayField}}</option>
+                <option name="cellTemplate">html!SBIS3.CONTROLS.MergeDialogTemplate/resources/cellNameTpl</option>
+                <option name="className">controls-DataGridView-cell-overflow-ellipsis</option>
+            </options>
+            <options>
+                <option name="title">Комментарий</option>
+                <option name="field">Comment</option>
+                <option name="cellTemplate">html!SBIS3.CONTROLS.MergeDialogTemplate/resources/cellCommentTpl</option>
+                <option name="className">controls-DataGridView-cell-overflow-ellipsis</option>
+            </options>
+        </options>
+        <options name="handlers">
+            <option name="onSearchPathClick" type="function">js!SBIS3.CONTROLS.MergeDialogTemplate:prototype.onSearchPathClick</option>
+        </options>
+    </component>
+    <div class="controls-MergeDialogTemplate__applyBlock {{?!it.selectedKey}}ws-hidden{{?}}">
+        <span class="controls-MergeDialogTemplate__warning">{{=it.warning}}</span>
+        <component data-component="SBIS3.CONTROLS.Button" class="controls-MergeDialogTemplate__mergeButton">
+            <option name="name" value="MergeDialogTemplate-mergeButton"></option>
+            <option name="caption" value="Объединить"></option>
+            <option name="primary" type="boolean" value="true"></option>
+        </component>
+    </div>
+</div>
