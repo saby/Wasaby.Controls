@@ -164,7 +164,7 @@ define('js!SBIS3.CONTROLS.Data.Projection.Collection', [
        * @state mutable
        */
       getCount: function () {
-         return $ws.helpers.reduce(this._filterMap.reduce,function(prev, current) {
+         return $ws.helpers.reduce(this._filterMap, function(prev, current) {
             return prev + (current ? 1 : 0);
          }, 0);
       },
