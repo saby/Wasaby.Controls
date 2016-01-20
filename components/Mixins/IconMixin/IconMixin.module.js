@@ -34,7 +34,7 @@ define('js!SBIS3.CONTROLS.IconMixin', ['html!SBIS3.CONTROLS.IconMixin/IconTempla
 
       after : {
          _modifyOptions: function (opts) {
-            if (opts.icon) opts._iconClass = this._iconTemplate(opts);
+            if (opts.icon) opts._iconClass = IconTemplate(opts);
             return opts;
          }
       },
