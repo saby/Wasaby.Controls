@@ -384,9 +384,8 @@ define('js!SBIS3.CONTROLS.FieldLink',
             this._toggleShowAllLink(false);
          }
 
-         /* Нужно поле делать невидимым, а не скрывать, чтобы можно было посчитать размеры */
          if(!this._options.multiselect && !this._options.alwaysShowTextBox) {
-            this._inputWrapper.toggleClass('ws-invisible', Boolean(keysArrLen))
+            this._inputWrapper.toggleClass('ws-hidden', Boolean(keysArrLen))
          }
 
          if(keysArrLen) {
