@@ -372,12 +372,12 @@ define('js!SBIS3.CONTROLS.FieldLink',
        * Обработчик на выбор записи в автодополнении
        * @private
        */
-      _onListItemSelect: propertyUpdateWrapper(function(id, item) {
+      _onListItemSelect: function(id, item) {
          this.hidePicker();
          /* Чтобы не было лишнего запроса на БЛ, добавим рекорд в набор выбранных */
          this.addSelectedItems([item]);
          this.setText('');
-      }),
+      },
 
 
       setDataSource: function(ds, noLoad) {
