@@ -23,11 +23,13 @@ define('js!SBIS3.CONTROLS.DateRange', [
             /**
              * @cfg {Date|String} Начальная дата диапазона
              * При задании задается вместе с endDate, либо обе даты остаются не заданными
+             * @translatable
              */
             startDate: null,
             /**
              * @cfg {Date|String} Конечная дата диапазона
              * При задании задается вместе с startDate, либо обе даты остаются не заданными
+             * @translatable
              */
             endDate: null
          },

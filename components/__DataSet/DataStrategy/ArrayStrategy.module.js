@@ -38,7 +38,7 @@ define('js!SBIS3.CONTROLS.ArrayStrategy', ['js!SBIS3.CONTROLS.IDataStrategy'], f
        * @param {function} iterateCallback пользовательская функция обратного вызова
        * @param context контекст
        */
-      each: function (data, iterateCallback, context) {
+         each: function (data, iterateCallback, context) {
          var
             length = data.length;
          for (var i = 0; i < length; i++) {

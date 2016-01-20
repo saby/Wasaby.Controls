@@ -29,8 +29,17 @@ define('js!SBIS3.CONTROLS.OperationUnload', [
       $protected: {
          _options: {
             icon: 'sprite:icon-24 action-hover icon-Save icon-primary',
+            /**
+             * @translatable
+             */
             title: 'Выгрузить',
+            /**
+             * @translatable
+             */
             linkText: 'Выгрузить',
+            /**
+             * @translatable
+             */
             caption: 'Выгрузить',
             //TODO перенести настройку опции в item. Чтобы можно было отдельно выгружать либо Excel, либо PDF
             serverSideUnload : false,
