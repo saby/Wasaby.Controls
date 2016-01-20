@@ -472,6 +472,12 @@ define('js!SBIS3.CONTROLS.FieldLink',
          });
       },
 
+      showPicker: function() {
+         /* Если открыт пикер, который показывает все выбранные записи, то не показываем автодополнение */
+         if(!this._linkCollection.isPickerVisible()) {
+            FieldLink.superclass.showPicker.apply(this, arguments);
+         }
+      },
       /**
        * Проверяет, нужно ли отрисовывать элемент или надо показать троеточие
        */
