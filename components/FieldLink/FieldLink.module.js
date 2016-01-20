@@ -241,7 +241,10 @@ define('js!SBIS3.CONTROLS.FieldLink',
                }
                self.setSelectedKeys(keys);
             }
-            this.close && this.close();
+            /* Если обрабатываем результат deferred'a то в функции нету контекста, проверим на это */
+            if(this && this.close) {
+               this.close();
+            }
          }
 
          function newConfirmSelectionCallBack(result) {
@@ -331,7 +334,9 @@ define('js!SBIS3.CONTROLS.FieldLink',
 
       _onResizeHandler: function() {
          FieldLink.superclass._onResizeHandler.apply(this, arguments);
-         this._linkCollection.reload();
+         if(!this._linkCollection.isPickerVisible()) {
+            this._linkCollection.reload();
+         }
       },
 
       _initEvents: function() {
@@ -377,7 +382,8 @@ define('js!SBIS3.CONTROLS.FieldLink',
 
       _drawSelectedItems: function(keysArr) {
          var self = this,
-             keysArrLen = keysArr.length;
+             keysArrLen = keysArr.length,
+             linkCollectionContainer = self._linkCollection.getContainer();
 
          /* Если удалили в пикере все записи, и он был открыт, то скроем его */
          if (!keysArrLen) {
@@ -391,9 +397,9 @@ define('js!SBIS3.CONTROLS.FieldLink',
          if(keysArrLen) {
             /* Нужно скрыть контрол отображающий элементы, перед загрузкой, потому что часто бл может отвечать >500мс и
                отображаемое знаение в поле связи долго не меняется, особенно заметно в редактировании по месту. */
-            self._linkCollection.hide();
+            linkCollectionContainer.addClass('ws-hidden');
             this.getSelectedItems(true).addCallback(function(list){
-               self._linkCollection.show();
+               linkCollectionContainer.removeClass('ws-hidden');
                self._linkCollection.setItems(list);
                return list;
             });
@@ -489,9 +495,11 @@ define('js!SBIS3.CONTROLS.FieldLink',
             inputWidth = this._getInputWidth();
             needDrawItem = $ws.helpers.getTextWidth(item[0].outerHTML) + INPUT_MIN_WIDTH < inputWidth + SHOW_ALL_LINK_WIDTH;
 
-            if(!needDrawItem && !this._linkCollection.getContainer().find('.controls-FieldLink__linkItem').length) {
-               item[0].style.width = inputWidth - ((this._options.multiselect || this._options.alwaysShowTextBox) ? INPUT_MIN_WIDTH : INPUT_WRAPPER_PADDING) + 'px';
-               needDrawItem = true;
+            if(!needDrawItem) {
+               if(!this._linkCollection.getContainer().find('.controls-FieldLink__linkItem').length) {
+                  item[0].style.width = inputWidth - ((this._options.multiselect || this._options.alwaysShowTextBox) ? INPUT_MIN_WIDTH : INPUT_WRAPPER_PADDING) + 'px';
+                  needDrawItem = true;
+               }
                this._checkWidth = false;
             }
          }
