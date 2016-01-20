@@ -88,7 +88,8 @@ define('js!SBIS3.CONTROLS.ListView',
           * @see itemsActions
           * @see setItemsActions
           * @see getItemsActions
-          *
+          */
+          /**
           * @event onItemClick При клике на запись
           * @remark
           * Событие срабатывает при любом клике под курсором мыши.
@@ -96,8 +97,8 @@ define('js!SBIS3.CONTROLS.ListView',
           * @param {String} id Ключ записи
           * @param {SBIS3.CONTROLS.Record} data запись
           * @param {jQuery} target html элемент на который кликнули
-
-          *
+          */
+          /**
           * @event onItemActivate При активации записи (клик с целью например редактирования или выбора)
           * @remark
           * Событие срабатывает при смене записи под курсором мыши.
