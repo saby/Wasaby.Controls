@@ -522,7 +522,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
             start++;
          }
 
-         this._getServiceEnumerator().reIndex();
+         this._reindex();
       },
 
       /**

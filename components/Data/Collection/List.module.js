@@ -123,7 +123,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.List', [
 
       clear: function () {
          this._items.length = 0;
-         this._reIndex()
+         this._reindex();
       },
 
       add: function (item, at) {
@@ -237,7 +237,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.List', [
             Array.prototype.splice.apply(this._items, [this._items.length, 0].concat(items));
          }
 
-         this._getServiceEnumerator().reIndex();
+         this._reindex();
       },
       /**
        * Возвращает коллекцию в виде массива
