@@ -514,6 +514,20 @@ define([
                assert.isFalse(model.isEqual({}));
             });
          });
+
+         describe('.toJSON()', function () {
+            it('should serialize a model', function () {
+               var json = model.toJSON();
+               assert.strictEqual(json.module, 'SBIS3.CONTROLS.Data.Model');
+               assert.isNumber(json.id);
+               assert.isTrue(json.id > 0);
+               assert.deepEqual(json.state._options, model._options);
+               assert.strictEqual(json.state._hash, model.getHash());
+               assert.strictEqual(json.state._isStored, model.isStored());
+               assert.strictEqual(json.state._isDeleted, model.isDeleted());
+               assert.strictEqual(json.state._isChanged, model.isChanged());
+            });
+         });
       });
    }
 );
