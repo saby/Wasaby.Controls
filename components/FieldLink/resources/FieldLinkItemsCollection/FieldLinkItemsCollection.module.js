@@ -122,6 +122,10 @@ define('js!SBIS3.CONTROLS.FieldLinkItemsCollection', [
             /* Не очень правильное решение, пикер может сам менять ширину, поэтому устанавливаю минимальну и максимальную */
             pickerContainer[0].style.maxWidth = flWidth + 'px';
             pickerContainer[0].style.minWidth = flWidth + 'px';
+            /* Зачем сделано:
+               Не надо, чтобы пикер поля связи вызывал перерасчёт размеров,
+               т.к. никаких расчётов при его показе не происходит, а просто отрисовываются элементы */
+            this._picker._notifyOnSizeChanged = $ws.helpers.nop;
          },
 
          _setPickerConfig: function () {
