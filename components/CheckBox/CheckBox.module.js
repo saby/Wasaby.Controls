@@ -1,5 +1,5 @@
 
-define('js!SBIS3.CONTROLS.CheckBox', ['js!SBIS3.CONTROLS.ButtonBase', 'js!SBIS3.CONTROLS.Checkable', 'html!SBIS3.CONTROLS.CheckBox'], function(ButtonBase, Checkable, dotTplFn) {
+define('js!SBIS3.CONTROLS.CheckBox', ['js!SBIS3.CONTROLS.ButtonBase', 'js!SBIS3.CONTROLS.Checkable', 'html!SBIS3.CONTROLS.CheckBox', 'js!SBIS3.CONTROLS.ITextValue'], function(ButtonBase, Checkable, dotTplFn, ITextValue) {
 
    'use strict';
    var prepareChecked = function(checked, threeState) {
@@ -48,7 +48,7 @@ define('js!SBIS3.CONTROLS.CheckBox', ['js!SBIS3.CONTROLS.ButtonBase', 'js!SBIS3.
     * @ignoreEvents onFocusIn onFocusOut onReady
     */
 
-   var CheckBox = ButtonBase.extend([Checkable], /** @lends SBIS3.CONTROLS.CheckBox.prototype */ {
+   var CheckBox = ButtonBase.extend([Checkable, ITextValue], /** @lends SBIS3.CONTROLS.CheckBox.prototype */ {
       $protected: {
          _dotTplFn : dotTplFn,
          _checkBoxCaption: null,
@@ -106,6 +106,10 @@ define('js!SBIS3.CONTROLS.CheckBox', ['js!SBIS3.CONTROLS.ButtonBase', 'js!SBIS3.
          }
       },
 
+      /**
+       * Возвращает текстовое значение контрола
+       * @returns {String}
+       */
       getTextValue: function() {
          return this._options.textValue;
       },
