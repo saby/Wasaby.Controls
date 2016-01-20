@@ -2,7 +2,6 @@ define('js!SBIS3.CONTROLS.FieldLink',
    [
       'js!SBIS3.CONTROLS.SuggestTextBox',
       'js!SBIS3.CONTROLS.DSMixin',
-      'js!SBIS3.CONTROLS.FormWidgetMixin',
       'js!SBIS3.CONTROLS.MultiSelectable',
       'js!SBIS3.CONTROLS.ActiveMultiSelectable',
       'js!SBIS3.CONTROLS.Selectable',
@@ -13,13 +12,13 @@ define('js!SBIS3.CONTROLS.FieldLink',
       'js!SBIS3.CONTROLS.Data.Model',
       'js!SBIS3.CONTROLS.Data.Adapter.Sbis',
       'js!SBIS3.CONTROLS.Utils.DialogOpener',
+      'js!SBIS3.CONTROLS.ITextValue',
       'js!SBIS3.CONTROLS.MenuIcon'
 
    ],
    function (
        SuggestTextBox,
        DSMixin,
-       FormWidgetMixin,
 
        /* Интерфейс для работы с набором выбранных записей */
        MultiSelectable,
@@ -36,7 +35,8 @@ define('js!SBIS3.CONTROLS.FieldLink',
        beforeFieldWrapper,
        Model,
        SbisAdapter,
-       DialogOpener
+       DialogOpener,
+       ITextValue
    ) {
 
       'use strict';
@@ -80,7 +80,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
     * @author Крайнов Дмитрий Олегович
     */
 
-   var FieldLink = SuggestTextBox.extend([FormWidgetMixin, MultiSelectable, ActiveMultiSelectable, Selectable, ActiveSelectable, DSMixin],/** @lends SBIS3.CONTROLS.FieldLink.prototype */{
+   var FieldLink = SuggestTextBox.extend([MultiSelectable, ActiveMultiSelectable, Selectable, ActiveSelectable, DSMixin, ITextValue],/** @lends SBIS3.CONTROLS.FieldLink.prototype */{
     /**
       * @event onItemActivate При активации записи (клик с целью например редактирования)
       * @param {$ws.proto.EventObject} eventObject Дескриптор события.
@@ -310,9 +310,15 @@ define('js!SBIS3.CONTROLS.FieldLink',
 
 	   /**
 	    * Возвращает выбранные элементы в виде текста
+        * @deprecated Метод getCaption устарел, используйте getTextValue
 	    * @returns {string}
 	    */
-      getCaption: function() {
+       getCaption: function() {
+          $ws.single.ioc.resolve('ILogger').log('FieldLink::getCaption', 'Метод getCaption устарел, используйте getTextValue');
+          return this.getTextValue();
+       },
+
+      getTextValue: function() {
          var displayFields = [],
              self = this;
 
