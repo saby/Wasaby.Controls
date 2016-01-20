@@ -1,0 +1,37 @@
+<div class="myDemo-container">
+   <component  data-component="SBIS3.CONTROLS.Button" name="Кнопка" class="myDataGridView-buttonTop">
+      <opt name="caption">Просто кнопка над таблицей</opt>
+   </component>
+   <div class="myDataGridView-list">
+      <div class="myDataGridView-scroll">
+      <component data-component="SBIS3.CONTROLS.DataGridView" name="Таблица" class="myDataGridView-container">
+         <options name="columns" type="array">
+            <options>
+               <option name="title">Ид</option>
+               <option name="width" type="string">50</option>
+               <option name="field">id</option>
+            </options>
+            <options>
+               <option name="title">Имя</option>
+               <option name="field">title</option>
+            </options>
+            <options>
+               <option name="title">Флаг</option>
+               <option name="width" type="string">50</option>
+               <option name="field">flag</option>
+            </options>
+         </options>
+         <option name="emptyHTML">Нет записей</option>
+         <option name="multiselect">true</option>
+         <option name="infiniteScroll">true</option>
+         <option name="infiniteScrollDirection">top</option>
+         <option name="infiniteScrollContainer" type="string">.myDataGridView-scroll</option>
+         <option name="pageSize">10</option>
+      </component>
+
+      </div>
+   </div>
+   <component  data-component="SBIS3.CONTROLS.Button" name="Кнопка" class="myDataGridView-buttonBottom">
+      <opt name="caption">Просто кнопка под таблицей</opt>
+   </component>
+</div>
