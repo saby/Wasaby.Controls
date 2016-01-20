@@ -122,7 +122,7 @@ define('js!SBIS3.CONTROLS.TextBox', ['js!SBIS3.CONTROLS.TextBoxBase','html!SBIS3
             window.setTimeout(function(){
                self._pasteProcessing--;
                if (!self._pasteProcessing) {
-                  self.setText(self._options._formatText(self._inputField.val()));
+                  self.setText(self._formatText(self._inputField.val()));
                }
             }, 100);
          });

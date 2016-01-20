@@ -153,13 +153,13 @@ define('js!SBIS3.CONTROLS.NumberTextBox', ['js!SBIS3.CONTROLS.TextBox', 'html!SB
          if (this._options.numericValue) {
             this._options.text = this._options.numericValue + '';
          }
-         this._options.text = this._formatText(this._options.text || '0');
+         this._options.text = this._formatText(this._options.text);
          this._inputField.val(this._options.text);
       },
 
 
       setText: function(text){
-         text = this._formatText(text.toString());
+         text = this._formatText(text);
          NumberTextBox.superclass.setText.call(this, text);
       },
 
@@ -219,6 +219,7 @@ define('js!SBIS3.CONTROLS.NumberTextBox', ['js!SBIS3.CONTROLS.TextBox', 'html!SB
 
       _formatText: function(value, fromFocusOut){
          var decimals;
+         value = value.toString();
          if (this._options.onlyInteger){
             decimals = 0;
             value = parseInt(value.replace(/\s/g, ''));
