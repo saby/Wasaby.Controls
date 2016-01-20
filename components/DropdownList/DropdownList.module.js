@@ -229,7 +229,7 @@ define('js!SBIS3.CONTROLS.DropdownList',
             return this._picker.getContainer();
          },
          _pickerMouseLeaveHandler: function(fromHeader, e) {
-            if(this._hideAllowed && !$(e.toElement).closest('.controls-DropdownList__' + (fromHeader ? 'body' : 'header')).length) {
+            if(this._hideAllowed && !$(e.toElement || e.relatedTarget).closest('.controls-DropdownList__' + (fromHeader ? 'body' : 'header')).length) {
                this.hidePicker();
             }
          },
