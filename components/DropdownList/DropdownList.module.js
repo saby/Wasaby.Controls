@@ -201,17 +201,19 @@ define('js!SBIS3.CONTROLS.DropdownList',
 
          },
          showPicker: function() {
-            var items = this._getPickerContainer().find('.controls-DropdownList__item');
-            this._updateCurrentSelection();
-            this._hideAllowed = true;
-            //Восстановим выделение по элементам
-            for (var i = 0 ; i < items.length; i++) {
-               $(items[i]).toggleClass('controls-DropdownList__item__selected', !!this._currentSelection[$(items[i]).data('id')]);
-            }
-            DropdownList.superclass.showPicker.apply(this, arguments);
-            this._getPickerContainer().toggleClass('controls-DropdownList__equalsWidth', this._pickerListContainer[0].offsetWidth === this._pickerHeadContainer[0].offsetWidth);
-            if (this._buttonChoose) {
-               this._buttonChoose.getContainer().addClass('ws-invisible');
+            if (this.isEnabled()) {
+               var items = this._getPickerContainer().find('.controls-DropdownList__item');
+               this._updateCurrentSelection();
+               this._hideAllowed = true;
+               //Восстановим выделение по элементам
+               for (var i = 0 ; i < items.length; i++) {
+                  $(items[i]).toggleClass('controls-DropdownList__item__selected', !!this._currentSelection[$(items[i]).data('id')]);
+               }
+               DropdownList.superclass.showPicker.apply(this, arguments);
+               this._getPickerContainer().toggleClass('controls-DropdownList__equalsWidth', this._pickerListContainer[0].offsetWidth === this._pickerHeadContainer[0].offsetWidth);
+               if (this._buttonChoose) {
+                  this._buttonChoose.getContainer().addClass('ws-invisible');
+               }
             }
          },
          hide: function(){
