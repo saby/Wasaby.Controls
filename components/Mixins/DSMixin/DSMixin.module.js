@@ -314,7 +314,6 @@ define('js!SBIS3.CONTROLS.DSMixin', [
          }
 
          var
-            def = new $ws.proto.Deferred(),
             self = this,
             filterChanged = typeof(filter) !== 'undefined',
             sortingChanged = typeof(sorting) !== 'undefined',
@@ -345,14 +344,14 @@ define('js!SBIS3.CONTROLS.DSMixin', [
 	            self._dataLoadedCallback();
 	            self._notify('onDataLoad', dataSet);
 	            //self._notify('onBeforeRedraw');
-	            def.callback(dataSet);
 	            self._redraw();
+               return dataSet;
 	         }, self)).addErrback($ws.helpers.forAliveOnly(function(error){
 	            if (!error.canceled) {
 	               self._toggleIndicator(false);
 	               $ws.helpers.message(error.message.toString().replace('Error: ', ''));
 	            }
-	            def.errback(error);
+	            return error;
 	         }, self));
          }
 
@@ -361,7 +360,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
          this._notifyOnPropertyChanged('offset');
          this._notifyOnPropertyChanged('limit');
 
-         return def;
+         return this._loader;
       }),
 
       _callQuery: function (filter, sorting, offset, limit) {
