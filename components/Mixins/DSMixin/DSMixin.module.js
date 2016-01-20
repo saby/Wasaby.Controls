@@ -768,43 +768,37 @@ define('js!SBIS3.CONTROLS.DSMixin', [
       _createItemInstance: function (item, targetContainer, at) {
          return this._buildTplItem(item, this._getItemTemplate(item));
       },
-      _buildTplItem: function(item, itemTpl){
-         var
-               buildedTpl,
-               dotTemplate;
-         if (typeof itemTpl == 'string') {
-            if (itemTpl.indexOf('html!') == 0) {
-               dotTemplate = require(itemTpl);
-            }
-            else {
-               dotTemplate = doT.template(itemTpl);
-            }
 
-         }
-         else if (typeof itemTpl == 'function') {
-            dotTemplate = itemTpl;
-         }
+      _prepareTpl: function(itemTpl) {
+         return itemTpl && typeof itemTpl === 'string' ?
+            itemTpl.indexOf('html!') === 0 ?
+               require(itemTpl) :
+               doT.template(itemTpl) :
+            typeof itemTpl === 'function' ?
+               itemTpl :
+               undefined;
+      },
+
+      _buildTplItem: function(item, itemTpl){
+         var dotTemplate = this._prepareTpl(itemTpl);
 
          if (typeof dotTemplate == 'function') {
-            buildedTpl = $(MarkupTransformer(dotTemplate(this._buildTplArgs(item))));
-            return buildedTpl;
-         }
-         else {
+            return $(MarkupTransformer(dotTemplate(this._buildTplArgs(item))));
+         } else {
             throw new Error('Ошибка в itemTemplate');
          }
       },
       _buildTplArgs: function(item) {
-         var
-            tplOptions = {
-               templateBinding : this._options.templateBinding,
-               item: item
-            };
+         var tplOptions = {
+            templateBinding : this._options.templateBinding,
+            item: item
+         };
          if (this._options.includedTemplates) {
             var tpls = this._options.includedTemplates;
             tplOptions.included = {};
             for (var j in tpls) {
                if (tpls.hasOwnProperty(j)) {
-                  tplOptions.included[j] = require(tpls[j]);
+                  tplOptions.included[j] = this._prepareTpl(tpls[j]);
                }
             }
          }
