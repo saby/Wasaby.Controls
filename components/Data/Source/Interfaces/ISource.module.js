@@ -33,10 +33,17 @@ define('js!SBIS3.CONTROLS.Data.Source.ISource', [
              * @see getAdapter
              * @see setAdapter
              * @see SBIS3.CONTROLS.Data.Adapter.IAdapter
+             * @see SBIS3.CONTROLS.Data.Di
              * @example
              * <pre>
              *    var dataSource = new MemorySource({
-             *       adapter: 'adapter.xml'
+             *       adapter: 'adapter.sbis'
+             *    });
+             * </pre>
+             * @example
+             * <pre>
+             *    var dataSource = new MemorySource({
+             *       adapter: new SbisAdapter()
              *    });
              * </pre>
              */
@@ -47,7 +54,19 @@ define('js!SBIS3.CONTROLS.Data.Source.ISource', [
              * @see getModel
              * @see setModel
              * @see SBIS3.CONTROLS.Data.Model
-             * @see SBIS3.CONTROLS.Data.Model
+             * @see SBIS3.CONTROLS.Data.Di
+             * @example
+             * <pre>
+             *    var User = Model.extend({
+             *       identify: function(login, password) {
+             *       }
+             *    });
+             *    Di.register('model.user', User);
+             *    //...
+             *    var dataSource = new Source({
+             *       model: 'model.user'
+             *    });
+             * </pre>
              * @example
              * <pre>
              *    var User = Model.extend({
@@ -67,6 +86,30 @@ define('js!SBIS3.CONTROLS.Data.Source.ISource', [
              * @see getListModule
              * @see setListModule
              * @see SBIS3.CONTROLS.Data.Collection.RecordSet
+             * @see SBIS3.CONTROLS.Data.Di
+             * @example
+             * <pre>
+             *    var Users = RecordSet.extend({
+             *       getAdministrators: function() {
+             *       }
+             *    });
+             *    Di.register('collection.recordset.users', Users);
+             *    //...
+             *    var dataSource = new Source({
+             *       listModule: 'collection.recordset.users'
+             *    });
+             * </pre>
+             * @example
+             * <pre>
+             *    var Users = RecordSet.extend({
+             *       getAdministrators: function() {
+             *       }
+             *    });
+             *    //...
+             *    var dataSource = new Source({
+             *       listModule: Users
+             *    });
+             * </pre>
              */
             listModule: 'collection.recordset',
 
@@ -112,6 +155,15 @@ define('js!SBIS3.CONTROLS.Data.Source.ISource', [
        * @see getAdapter
        * @see adapter
        * @see SBIS3.CONTROLS.Data.Adapter.IAdapter
+       * @see SBIS3.CONTROLS.Data.Di
+       * @example
+       * <pre>
+       *    dataSource.setAdapter('adapter.sbis');
+       * </pre>
+       * @example
+       * <pre>
+       *    dataSource.setAdapter(new SbisAdapter());
+       * </pre>
        */
       setAdapter: function (adapter) {
          throw new Error('Method must be implemented');
@@ -123,6 +175,7 @@ define('js!SBIS3.CONTROLS.Data.Source.ISource', [
        * @see setModel
        * @see model
        * @see SBIS3.CONTROLS.Data.Model
+       * @see SBIS3.CONTROLS.Data.Di
        */
       getModel: function () {
          throw new Error('Method must be implemented');
@@ -134,7 +187,11 @@ define('js!SBIS3.CONTROLS.Data.Source.ISource', [
        * @see getModel
        * @see model
        * @see SBIS3.CONTROLS.Data.Model
-       * @see SBIS3.CONTROLS.Data.Model
+       * @see SBIS3.CONTROLS.Data.Di
+       * @example
+       * <pre>
+       *    dataSource.setModel('app.my-module.my-model');
+       * </pre>
        * @example
        * <pre>
        *    require(['js!MyModule.Data.MyModel'], function(MyModel) {
@@ -161,6 +218,7 @@ define('js!SBIS3.CONTROLS.Data.Source.ISource', [
        * @param {String|Function} listModule
        * @see getListModule
        * @see listModule
+       * @see SBIS3.CONTROLS.Data.Di
        */
       setListModule: function (listModule) {
          throw new Error('Method must be implemented');

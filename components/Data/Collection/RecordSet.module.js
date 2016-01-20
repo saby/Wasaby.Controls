@@ -34,10 +34,9 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
              *          firstName: 'Sarah',
              *          lastName: 'Connor'
              *       }],
-             *       adapter: new JsonAdapter,
              *       idProperty: 'id'
              *    });
-             *    users.at(0).get('id');//5
+             *    users.at(0).get('id');//1
              *    users.getRecordById(2).get('firstName');//Sarah
              * </pre>
              * @see getRawData
@@ -47,15 +46,22 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
 
             /**
              * @cfg {String|SBIS3.CONTROLS.Data.Adapter.IAdapter} Адаптер для работы с данными, по умолчанию {@link SBIS3.CONTROLS.Data.Adapter.Json}
+             * @see getAdapter
+             * @see setAdapter
+             * @see SBIS3.CONTROLS.Data.Adapter.Json
+             * @see SBIS3.CONTROLS.Data.Di
+             * @example
+             * <pre>
+             *    var user = new RecordSet({
+             *       adapter: 'adapter.sbis'
+             *    });
+             * </pre>
              * @example
              * <pre>
              *    var user = new RecordSet({
              *       adapter: new SbisAdapter()
              *    });
              * </pre>
-             * @see getAdapter
-             * @see setAdapter
-             * @see SBIS3.CONTROLS.Data.Adapter.IAdapter
              */
             adapter: 'adapter.json',
 
@@ -65,12 +71,38 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
             meta: {},
 
             /**
-             * @cfg {String} Поле, содержащее первичный ключ
+             * @cfg {String} Поле модели, содержащее первичный ключ
              */
             idProperty: '',
 
             /**
              * @cfg {String|Function} Конструктор модели
+             * @see getModel
+             * @see SBIS3.CONTROLS.Data.Model
+             * @see SBIS3.CONTROLS.Data.Di
+             * @example
+             * <pre>
+             *    var User = Model.extend({
+             *       identify: function(login, password) {
+             *       }
+             *    });
+             *    Di.register('model.user', User);
+             *    //...
+             *    var user = new RecordSet({
+             *       model: 'model.user'
+             *    });
+             * </pre>
+             * @example
+             * <pre>
+             *    var User = Model.extend({
+             *       identify: function(login, password) {
+             *       }
+             *    });
+             *    //...
+             *    var user = new RecordSet({
+             *       model: User
+             *    });
+             * </pre>
              */
             model: 'model'
          },
@@ -233,13 +265,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
 
       push: function (record) {
          if (!$ws.helpers.instanceOfModule(record, 'SBIS3.CONTROLS.Data.Model')) {
-            record = Di.resolve(this._options.model, {
-               compatibleMode: true,
-               adapter: this.getAdapter(),
-               rawData: record,
-               idProperty: this._options.idProperty
-            });
-            record.setStored(true);
+            record = this._getModelInstance(record);
          }
          this.add(record);
       },
@@ -261,13 +287,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
             count = adapter.getCount(),
             record;
          for (var i = 0; i < count; i++) {
-            record = Di.resolve(this._options.model, {
-               compatibleMode: true,
-               adapter: this.getAdapter(),
-               rawData: adapter.at(i),
-               idProperty: this._options.idProperty
-            });
-            record.setStored(true);
+            record = this._getModelInstance(adapter.at(i));
             RecordSet.superclass.add.call(this, record);
          }
       },
@@ -537,6 +557,23 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
        */
       _resetTableAdapter: function () {
          this._tableAdapter = null;
+      },
+
+      /**
+       * Создает новый экземпляр модели
+       * @param {*} model Данные модели
+       * @returns {SBIS3.CONTROLS.Data.Model}
+       * @private
+       */
+      _getModelInstance: function (data) {
+         var model = Di.resolve(this._options.model, {
+            compatibleMode: true,
+            adapter: this.getAdapter(),
+            rawData: data,
+            idProperty: this._options.idProperty
+         });
+         model.setStored(true);
+         return model;
       },
 
       /**

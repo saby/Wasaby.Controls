@@ -86,7 +86,7 @@ define('js!SBIS3.CONTROLS.Data.Source.Base', [
       },
 
       /**
-       * Создает новый экзепляр модели
+       * Создает новый экземпляр модели
        * @param {*} model Данные модели
        * @returns {SBIS3.CONTROLS.Data.Model}
        * @private

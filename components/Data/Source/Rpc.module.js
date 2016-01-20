@@ -19,6 +19,8 @@ define('js!SBIS3.CONTROLS.Data.Source.Rpc', [
             /**
              * @cfg {String|SBIS3.CONTROLS.Data.Source.Provider.IRpc} Объект, реализующий сетевой протокол для обмена в режиме клиент-сервер
              * @name {SBIS3.CONTROLS.Data.Source.Rpc#provider}
+             * @see getProvider
+             * @see SBIS3.CONTROLS.Data.Di
              * @example
              * <pre>
              *    var dataSource = new RpcSource({

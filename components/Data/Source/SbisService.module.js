@@ -6,7 +6,7 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
    'js!SBIS3.CONTROLS.Data.Di',
    'js!SBIS3.CONTROLS.Data.Adapter.Sbis',
    'js!SBIS3.CONTROLS.Data.Source.Provider.SbisBusinessLogic'
-], function (Rpc, DataSet, Query, Di, Adapter, SBL) {
+], function (Rpc, DataSet, Query, Di) {
    'use strict';
 
    /**
@@ -45,6 +45,7 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
             /**
              * @cfg {String|ResourceConfig} Имя объекта бизнес-логики или его параметры
              * @name {SBIS3.CONTROLS.Data.Source.SbisService#resource}
+             * @see getResource
              * <pre>
              *    var dataSource = new SbisService({
              *       resource: 'СообщениеОтКлиента',
@@ -54,12 +55,17 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
 
             /**
              * @cfg {SBIS3.CONTROLS.Data.Adapter.IAdapter} Адаптер для работы с данными, по умолчанию {@link SBIS3.CONTROLS.Data.Adapter.Sbis}
+             * @see getAdapter
+             * @see setAdapter
+             * @see SBIS3.CONTROLS.Data.Adapter.Sbis
+             * @see SBIS3.CONTROLS.Data.Di
              */
             adapter: 'adapter.sbis',
 
             /**
-             * @cfg {String|Object} Объект, реализующий сетевой протокол для обмена в режиме клиент-сервер
+             * @cfg {String|Object} Объект, реализующий сетевой протокол для обмена в режиме клиент-сервер, по умолчанию {@link SBIS3.CONTROLS.Data.Source.Provider.SbisBusinessLogic}
              * @see getProvider
+             * @see SBIS3.CONTROLS.Data.Di
              * @example
              * <pre>
              *    var dataSource = new RemoteSource({

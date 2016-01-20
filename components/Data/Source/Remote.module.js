@@ -21,6 +21,7 @@ define('js!SBIS3.CONTROLS.Data.Source.Remote', [
             /**
              * @cfg {String|Object} Объект, реализующий сетевой протокол для обмена в режиме клиент-сервер
              * @see getProvider
+             * @see SBIS3.CONTROLS.Data.Di
              * @example
              * <pre>
              *    var dataSource = new RemoteSource({
