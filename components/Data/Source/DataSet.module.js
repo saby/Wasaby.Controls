@@ -20,7 +20,6 @@ define('js!SBIS3.CONTROLS.Data.Source.DataSet', [
             /**
              * @cfg {String|SBIS3.CONTROLS.Data.Source.ISource} Источник, из которого получены данные
              * @see getSource
-             * @see getSource
              * @see SBIS3.CONTROLS.Data.Source.ISource
              */
             source: null,
@@ -28,8 +27,8 @@ define('js!SBIS3.CONTROLS.Data.Source.DataSet', [
             /**
              * @cfg {String|SBIS3.CONTROLS.Data.Adapter.IAdapter} Адаптер для работы с данными, по умолчанию {@link SBIS3.CONTROLS.Data.Adapter.Json}
              * @see getAdapter
-             * @see getAdapter
              * @see SBIS3.CONTROLS.Data.Adapter.IAdapter
+             * @see SBIS3.CONTROLS.Data.Di
              */
             adapter: 'adapter.json',
 
@@ -45,6 +44,7 @@ define('js!SBIS3.CONTROLS.Data.Source.DataSet', [
              * @see getModel
              * @see setModel
              * @see SBIS3.CONTROLS.Data.Model
+             * @see SBIS3.CONTROLS.Data.Di
              */
             model: 'model',
 
@@ -53,6 +53,7 @@ define('js!SBIS3.CONTROLS.Data.Source.DataSet', [
              * @see getListModule
              * @see setListModule
              * @see SBIS3.CONTROLS.Data.Collection.RecordSet
+             * @see SBIS3.CONTROLS.Data.Di
              */
             listModule: 'collection.recordset',
 
@@ -94,7 +95,6 @@ define('js!SBIS3.CONTROLS.Data.Source.DataSet', [
        * Возвращает источник, из которого получены данные
        * @returns {String|SBIS3.CONTROLS.Data.Source.ISource}
        * @see source
-       * @see source
        * @see SBIS3.CONTROLS.Data.Source.ISource
        */
       getSource: function () {
@@ -107,7 +107,6 @@ define('js!SBIS3.CONTROLS.Data.Source.DataSet', [
       /**
        * Возвращает адаптер для работы с данными
        * @returns {String|SBIS3.CONTROLS.Data.Adapter.IAdapter}
-       * @see adapter
        * @see adapter
        * @see SBIS3.CONTROLS.Data.Adapter.IAdapter
        */
@@ -123,9 +122,8 @@ define('js!SBIS3.CONTROLS.Data.Source.DataSet', [
        * @returns {String|Function}
        * @see model
        * @see setModel
-       * @see setModel
-       * @see model
        * @see SBIS3.CONTROLS.Data.Model
+       * @see SBIS3.CONTROLS.Data.Di
        */
       getModel: function () {
          return this._options.model;
@@ -136,9 +134,8 @@ define('js!SBIS3.CONTROLS.Data.Source.DataSet', [
        * @param {String|Function} model
        * @see model
        * @see getModel
-       * @see getModel
-       * @see model
        * @see SBIS3.CONTROLS.Data.Model
+       * @see SBIS3.CONTROLS.Data.Di
        */
       setModel: function (model) {
          this._options.model = model;
@@ -149,7 +146,7 @@ define('js!SBIS3.CONTROLS.Data.Source.DataSet', [
        * @returns {String|Function}
        * @see setListModule
        * @see listModule
-       * @see SBIS3.CONTROLS.Data.Collection.List
+       * @see SBIS3.CONTROLS.Data.Di
        */
       getListModule: function () {
          return this._options.listModule;
@@ -160,7 +157,7 @@ define('js!SBIS3.CONTROLS.Data.Source.DataSet', [
        * @param {String|Function} listModule
        * @see getListModule
        * @see listModule
-       * @see SBIS3.CONTROLS.Data.Collection.List
+       * @see SBIS3.CONTROLS.Data.Di
        */
       setListModule: function (listModule) {
          this._options.listModule = listModule;
@@ -229,9 +226,9 @@ define('js!SBIS3.CONTROLS.Data.Source.DataSet', [
       },
 
       /**
-       * Возвращает элементы выборки
-       * @param {String} [property] Свойство данных, в которых находятся элементы выборки
-       * @returns {SBIS3.CONTROLS.Data.Collection.IList}
+       * Возвращает выборку
+       * @param {String} [property] Свойство данных, в которых находятся элементы выборки. Если не указывать, вернется основная выборка.
+       * @returns {SBIS3.CONTROLS.Data.Collection.RecordSet}
        * @see itemsProperty
        */
       getAll: function (property) {
@@ -240,11 +237,15 @@ define('js!SBIS3.CONTROLS.Data.Source.DataSet', [
             property = this._options.itemsProperty;
          }
 
-         return Di.resolve(this._options.listModule, {
+         var items = Di.resolve(this._options.listModule, {
             rawData: this._getDataProperty(property),
             adapter: this._options.adapter,
             model: this._options.model
          });
+         if (!items && !$ws.helpers.instanceOfModule(items, 'SBIS3.CONTROLS.Data.Collection.RecordSet')) {
+            throw new TypeError('SBIS3.CONTROLS.Data.Source.DataSet::getAll(): listModule should extend SBIS3.CONTROLS.Data.Collection.RecordSet');
+         }
+         return items;
       },
 
       /**
