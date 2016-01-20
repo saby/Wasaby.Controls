@@ -85,7 +85,7 @@ define('js!SBIS3.CONTROLS.Data.Di', [], function () {
 
       /**
        * Разрешает зависимость
-       * @param {String} alias Название зависимости
+       * @param {String|Function|Object} alias Название зависимости, или конструктор объекта или инстанс объекта
        * @param {Object} [options] Опции конструктора
        * @static
        * @example
@@ -99,31 +99,39 @@ define('js!SBIS3.CONTROLS.Data.Di', [], function () {
        * </pre>
        */
       resolve: function (alias, options) {
-         var Factory,
+         var aliasType = typeof alias,
+            Factory,
             config,
             singleInst;
 
-         if (typeof alias === 'function') {
-            Factory = alias;
-         } else {
-            if (!Di.isRegistered(alias)) {
-               throw new ReferenceError('Alias ' + alias + ' is not registered');
+         switch (aliasType) {
+            case 'function':
+               Factory = alias;
+               break;
+            case 'object':
+               Factory = alias;
+               config = {instantiate: false};
+               break;
+            default:
+               if (!Di.isRegistered(alias)) {
+                  throw new ReferenceError('Alias ' + alias + ' is not registered');
 
-            }
-            Factory = _private.map[alias][0],
-               config = _private.map[alias][1],
-               singleInst = _private.map[alias][2];
+               }
+               Factory = _private.map[alias][0],
+                  config = _private.map[alias][1],
+                  singleInst = _private.map[alias][2];
          }
 
-         if (config && config.instantiate === false) {
-            return Factory;
-         }
-
-         if (config && config.single === true) {
-            if (singleInst === undefined) {
-               singleInst = _private.map[alias][2] = new Factory(options);
+         if (config) {
+            if (config.instantiate === false) {
+               return Factory;
             }
-            return singleInst;
+            if (config.single === true) {
+               if (singleInst === undefined) {
+                  singleInst = _private.map[alias][2] = new Factory(options);
+               }
+               return singleInst;
+            }
          }
 
          return new Factory(options);

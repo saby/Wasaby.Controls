@@ -186,9 +186,6 @@ define([
                assert.throw(function () {
                   Di.resolve();
                });
-               assert.throw(function () {
-                  Di.resolve({});
-               });
             });
 
             it('should accept a function as alias', function () {
@@ -205,6 +202,14 @@ define([
                assert.instanceOf(instA, Module);
                assert.instanceOf(instB, Module);
                assert.notEqual(instA, instB);
+            });
+            
+            it('should accept an instance as alias', function () {
+               var inst = {},
+                  instA = Di.resolve(inst),
+                  instB = Di.resolve(inst);
+               assert.strictEqual(instA, inst);
+               assert.strictEqual(instB, inst);
             });
          });
       });
