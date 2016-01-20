@@ -24,7 +24,22 @@ define([
                assert.strictEqual(record.get('id'), recordData.id);
             });
          });
-
+         describe('.getChanged()', function () {
+            it('should return a changed value', function () {
+               record.set('max', 15);
+               record.set('title', 'B');
+               assert.include(record.getChanged(), 'max');
+               assert.include(record.getChanged(), 'title');
+            });
+         });
+         describe('.applyChanged()', function () {
+            it('shouldnt return a changed value', function () {
+               record.set('max', 15);
+               record.set('title', 'B');
+               record.applyChanged();
+               assert.deepEqual(record.getChanged(), []);
+            });
+         });
          describe('.set()', function () {
             it('should set value', function () {
                record.set('max', 13);
