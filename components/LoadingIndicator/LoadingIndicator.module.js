@@ -19,6 +19,7 @@ define('js!SBIS3.CONTROLS.LoadingIndicator', ['js!SBIS3.CORE.Control'], function
          _options: {
             /**
              * @cfg {String}  Сообщение при загрузке
+             * @translatable
              */
             message: '',
             /**

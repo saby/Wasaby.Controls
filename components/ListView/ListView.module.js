@@ -244,6 +244,7 @@ define('js!SBIS3.CONTROLS.ListView',
                 * @property {Function} onActivated Действие кнопки.
                 * @editor icon ImageEditor
                 * @translatable caption
+                * @translatable tooltip
                 */
                /**
                 * @cfg {ItemsActions[]} Набор действий над элементами, отображающийся в виде иконок

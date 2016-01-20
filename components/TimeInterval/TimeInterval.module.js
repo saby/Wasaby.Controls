@@ -112,6 +112,7 @@ define(
                 * @variant 'HHH:II'
                 * @variant 'DDDD:HH'
                 * @variant 'DDD:HH'
+                * @translatable
                 * @see interval
                 * @see setInterval
                 * @see setDays

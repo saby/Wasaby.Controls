@@ -61,7 +61,7 @@ define('js!SBIS3.CONTROLS.TextBox', ['js!SBIS3.CONTROLS.TextBoxBase','html!SBIS3
              * @variant lowercase Все символы нижним регистром.
              * @variant none Без изменений.
              * @see setTextTransform
-             * @translatable
+             *
              */
             textTransform: 'none',
             /**
