@@ -136,6 +136,24 @@ define([
             });
          });
 
+         describe('.getChanged()', function () {
+            it('should return a changed value', function () {
+               model.set('max', 15);
+               model.set('title', 'B');
+               assert.include(model.getChanged(), 'max');
+               assert.include(model.getChanged(), 'title');
+            });
+         });
+
+         describe('.applyChanged()', function () {
+            it('shouldnt return a changed value', function () {
+               model.set('max', 15);
+               model.set('title', 'B');
+               model.applyChanged();
+               assert.deepEqual(model.getChanged(), []);
+            });
+         });
+
          describe('.each()', function () {
             it('should return equivalent values', function () {
                model.each(function(name, value) {
@@ -494,20 +512,6 @@ define([
                assert.isFalse(model.isEqual('a'));
                assert.isFalse(model.isEqual([]));
                assert.isFalse(model.isEqual({}));
-            });
-         });
-
-         describe('.toJSON()', function () {
-            it('should serialize a model', function () {
-               var json = model.toJSON();
-               assert.strictEqual(json.module, 'SBIS3.CONTROLS.Data.Model');
-               assert.isNumber(json.id);
-               assert.isTrue(json.id > 0);
-               assert.deepEqual(json.state._options, model._options);
-               assert.strictEqual(json.state._hash, model.getHash());
-               assert.strictEqual(json.state._isStored, model.isStored());
-               assert.strictEqual(json.state._isDeleted, model.isDeleted());
-               assert.strictEqual(json.state._isChanged, model.isChanged());
             });
          });
       });
