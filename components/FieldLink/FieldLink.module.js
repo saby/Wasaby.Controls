@@ -133,7 +133,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
             /**********************************************************************************************/
 
             list: {
-               className: 'js!SBIS3.CONTROLS.DataGridView',
+               component: 'js!SBIS3.CONTROLS.DataGridView',
                options: {
                   showHead: false,
                   columns: []
@@ -168,7 +168,17 @@ define('js!SBIS3.CONTROLS.FieldLink',
              * @remark
              * Актуально для поля связи с единичным выбором (Например чтобы записать что-то в поле контекста)
              */
-            alwaysShowTextBox: false
+            alwaysShowTextBox: false,
+            /**
+             * @cfg {String} Шаблон отображения для каждого выбранного элемента
+             * @example
+             * <pre>
+             *     <div class="fieldLinkText">
+             *        {{=it.item.get("title")}}
+             *     </div>
+             * </pre>
+             */
+            itemTemplate: ''
          }
       },
 
@@ -444,6 +454,8 @@ define('js!SBIS3.CONTROLS.FieldLink',
             element: this._linksWrapper.find('.controls-FieldLink__linksContainer'),
             displayField: this._options.displayField,
             keyField: this._options.keyField,
+            itemTemplate: this._prepareTpl(this.getProperty('itemTemplate')),
+            userItemAttributes: this._options.userItemAttributes,
             parent: this,
             itemCheckFunc: this._checkItemBeforeDraw.bind(this),
             handlers: {
