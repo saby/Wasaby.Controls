@@ -623,14 +623,13 @@ define('js!SBIS3.CONTROLS.DSMixin', [
         * @see onDataLoad
         */
        setItems: function (items) {
-          this.getItems().assign(items);
+         this._unsetItemsEventHandlers();
+         this.getItems().assign(items);
 
-          /*TODO для совместимости создадим сорс*/
-          this._dataSource = new MemorySource({
-             data: items,
-             idProperty: this._options.keyField
-          });
-          this.reload();
+         /*TODO для совместимости создадим сорс*/
+         this._prepareConfig();
+         this._setItemsEventHandlers();
+         this.reload();
       },
 
       _drawItemsCallback: function () {
