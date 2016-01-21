@@ -94,6 +94,11 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', ['js!SBIS3.CORE.Control'], function (Con
        * @param {String} key Идентификатор раскрываемого узла
        */
       collapseNode: function (key) {
+         /* Закроем узел, только если он раскрыт */
+         if(!this.getOpenedPath()[key]) {
+            return;
+         }
+
          this._drawExpandArrow(key, false);
          this._collapseChilds(key);
          delete(this._options.openedPath[key]);
@@ -118,14 +123,7 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', ['js!SBIS3.CORE.Control'], function (Con
        */
 
       toggleNode: function (key) {
-         var
-            itemCont = $('.controls-ListView__item[data-id="' + key + '"]', this.getContainer().get(0));
-         if ($('.js-controls-TreeView__expand', itemCont).hasClass('controls-TreeView__expand__open')) {
-            this.collapseNode(key);
-         }
-         else {
-            this.expandNode(key);
-         }
+         this[this.getOpenedPath()[key] ? 'collapseNode' : 'expandNode'](key);
       },
 
       _findExpandByElement: function(elem){
@@ -156,10 +154,15 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', ['js!SBIS3.CORE.Control'], function (Con
       },
 
       expandNode: function (key) {
-         var self = this,
-         tree = this._dataSet.getTreeIndex(this._options.hierField, true);
-         this._folderOffsets[key || 'null'] = 0;
+         /* Если узел уже открыт, то ничего делать не надо*/
+         if(this.getOpenedPath()[key]) {
+            return;
+         }
 
+         var self = this,
+             tree = this._dataSet.getTreeIndex(this._options.hierField, true);
+
+         this._folderOffsets[key || 'null'] = 0;
          if (this._options.singleExpand){
             $.each(this._options.openedPath, function(openedKey, _value){
                if (key != openedKey){
@@ -183,7 +186,7 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', ['js!SBIS3.CORE.Control'], function (Con
             var records = [];
             if (child){
                for (var i = 0; i < child.length; i++){
-                  records.push(this._dataSet.getRecordByKey(child[i]));
+                  records.push(this._dataSet.getRecordById(child[i]));
                }
                this._options.openedPath[key] = true;
                this._drawLoadedNode(key, records, this._folderHasMore[key]);
@@ -196,7 +199,7 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', ['js!SBIS3.CORE.Control'], function (Con
        */
       getOpenedPath: function(){
          return this._options.openedPath;
-      }, 
+      },
 
       _drawLoadedNode: function(key, records){
          this._drawExpandArrow(key);
@@ -386,7 +389,7 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', ['js!SBIS3.CORE.Control'], function (Con
          }
       }
    };
-    
+
    var TreePagingLoader = Control.Control.extend({
       $protected :{
          _options : {

@@ -285,6 +285,22 @@ define('js!SBIS3.CONTROLS.Data.Model', [
       },
 
       /**
+       * Проверяет эквивалентность формата и данных другой модели
+       * @param {SBIS3.CONTROLS.Data.Model} model Модель, с которой сравнить
+       * @returns {Boolean}
+       */
+      isEqual: function (model) {
+         return !!(model &&
+            model.$constructor &&
+            this.$constructor.prototype === model.$constructor.prototype &&
+            $ws.helpers.isEqualObject(
+               this._options.rawData,
+               model.getRawData()
+            )
+         );
+      },
+
+      /**
        * Возвращает признак, что модель удалена
        * @returns {Boolean}
        */
@@ -368,7 +384,7 @@ define('js!SBIS3.CONTROLS.Data.Model', [
       _getAllProperties: function() {
          var fields = this._getRawDataFields(),
             props = Object.keys(this.getProperties());
-         return props.concat(fields.filter(function(field) {
+         return props.concat($ws.helpers.filter(fields, function(field) {
             return props.indexOf(field) === -1;
          }));
       },

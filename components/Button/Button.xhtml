@@ -3,7 +3,7 @@
 -->
 <button class="controls-Button{{?it.primary}} controls-Button__primary{{?}}"{{?it.tooltip}} title="{{=it.tooltip}}"{{?}} {{?!it.enabled}}disabled="disabled"{{?}}>
     {{?it.icon}}
-        <i class="controls-Button__icon js-controls-Button__icon {{=it.iconTemplate(it)}}"></i>
+        <i class="controls-Button__icon js-controls-Button__icon {{=it._iconClass}}"></i>
     {{?}}
     <span class="controls-Button__text js-controls-Button__text {{?!it.caption}}controls-Button__emptyCaption{{?}}">{{?it.caption}}{{=it.caption}}{{?}}</span>
 </button>

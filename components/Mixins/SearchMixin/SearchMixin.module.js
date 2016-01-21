@@ -22,6 +22,8 @@ define('js!SBIS3.CONTROLS.SearchMixin', [], function() {
        */
       $protected: {
          _curText: '',
+         //Чтобы событие onReset не отправлялось непрерывно
+         _onResetIsFired: true,
          _options: {
             /**
              * @cfg {Number} количество символов, которые нужно ввести, чтоб начать поиск
@@ -56,13 +58,17 @@ define('js!SBIS3.CONTROLS.SearchMixin', [], function() {
 
       _applySearch : function(text) {
          if (text) {
-            text = String.trim(text.replace(/[«»’”@#№$%^&*;:?.,!\/~\]\[{}()|<>=+\-'"]/g, ''));
+            text = String.trim(text.replace(/[«»’”@#№$%^&*;:?.!\/~\]\[{}|<>=+'"]/g, ''));
             if (text.length >= this._options.startCharacter) {
                this._notify('onSearch', text);
             }
+            this._onResetIsFired = false;
          }
          else {
-            this._notify('onReset');
+            if (!this._onResetIsFired) {
+               this._notify('onReset');
+               this._onResetIsFired = true;
+            }
          }
       }
 

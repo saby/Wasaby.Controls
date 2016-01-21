@@ -7,8 +7,6 @@ define('js!SBIS3.CONTROLS.TabControl', [
 
    'use strict';
 
-   var contextName = 'sbis3-controls-tab-control';
-
    /**
     * Контрол, содержащий несколько областей содержащих контент.
     * В каждый момент времени отображается только одна область. Отображаемая область может переключаться при клике на корешки закладок.
@@ -85,8 +83,6 @@ define('js!SBIS3.CONTROLS.TabControl', [
       },
 
       $constructor: function() {
-         //Задаём items в контекст, чтобы потом TabButtons и SwitchableArea их использовали (в TabControl.xhtml)
-         this._context.setValueSelf(contextName+'/items',this._options.items);
       },
 
       init: function() {
@@ -95,9 +91,19 @@ define('js!SBIS3.CONTROLS.TabControl', [
          this._switchableArea.setActiveArea(this._options.selectedKey);
          this._tabButtons = this.getChildControlByName('TabButtons');
          this._tabButtons.subscribe('onSelectedItemChange', this._onSelectedItemChange.bind(this));
+
+         //передаем элементы заданные TabControl-у
+         this.setItems(this._options.items);
+      },
+
+      setItems: function(items) {
+         this._tabButtons.setItems(items);
+         this._switchableArea.setItems(items);
       },
 
       _onSelectedItemChange: function(event, id) {
+         this._options.selectedKey = id;
+         this._switchableArea._options.defaultArea = id;
          this._switchableArea.setActiveArea(id);
       }
    });

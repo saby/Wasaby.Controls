@@ -82,6 +82,12 @@ define('js!SBIS3.CONTROLS.Data.Collection.List', [
          });
       },
 
+      /**
+       * Итератор для обхода всех элементов коллекции
+       * Цикл проходит полное количество итераций, его невозможно прервать досрочно
+       * @param callback
+       * @param context
+       */
       each: function (callback, context) {
          //так быстрее, чем по правильному - через enumerator
          for (var i = 0, count = this._items.length; i < count; i++) {
@@ -134,7 +140,12 @@ define('js!SBIS3.CONTROLS.Data.Collection.List', [
       },
 
       remove: function (item) {
-         this.removeAt(this.getIndex(item));
+         var index = this.getIndex(item);
+         if(index !== -1) {
+            this.removeAt(index);
+            return true;
+         }
+         return false;
       },
 
       removeAt: function (index) {

@@ -46,6 +46,10 @@ define('js!SBIS3.CONTROLS.Data.Factory', [
        */
       cast: function (value, type, adapter, meta) {
          //TODO: вместо type + meta принимать fieldInfo
+         if (value === undefined || value === null) {
+            return value;
+         }
+
          switch (type) {
             case 'Identity':
                return meta.isArray ?
@@ -58,7 +62,7 @@ define('js!SBIS3.CONTROLS.Data.Factory', [
             case 'Time':
             case 'Date':
             case 'DateTime':
-               return value === undefined || value === null ? value : Date.fromSQL('' + value);
+               return Date.fromSQL('' + value);
             case 'Link':
             case 'Integer':
                return (typeof(value) === 'number') ? value : (isNaN(parseInt(value, 10)) ? null : parseInt(value, 10));
@@ -85,9 +89,6 @@ define('js!SBIS3.CONTROLS.Data.Factory', [
             case 'String':
                return value;
             case 'Boolean':
-               if (value === null) {
-                  return value;
-               }
                return !!value;
             case 'Array':
                if (value === null) {
@@ -113,14 +114,18 @@ define('js!SBIS3.CONTROLS.Data.Factory', [
       serialize: function (value, type, adapter, meta) {
          switch (type) {
             case 'Identity':
-               return meta.isArray ?
-                  value === null ?
-                     [null] :
-                     typeof value === 'string' ?
-                        value.split(meta.separator) :
-                        [value]:
-                  value;
+               return meta.isArray ? (
+                  typeof value === 'string' ?
+                     value.split(meta.separator) :
+                     [value]
+               ) : value;
+         }
 
+         if (value === undefined || value === null) {
+            return value;
+         }
+
+         switch (type) {
             case 'RecordSet':
                return this._serializeRecordSet(value, adapter);
             case 'Model':
@@ -146,11 +151,8 @@ define('js!SBIS3.CONTROLS.Data.Factory', [
             case 'Integer':
                return (typeof(value) === 'number') ? value : (isNaN(parseInt(value, 10)) ? null : parseInt(value, 10));
 
-            case 'String':
-               return value === null ? null : value + '';
-
             case 'Link':
-               return value === null ? null : parseInt(value, 10);
+               return parseInt(value, 10);
 
             case 'Money':
                if (meta && meta.precision > 3) {

@@ -12,12 +12,13 @@ define('js!SBIS3.CONTROLS.Data.Collection.IList', [
     */
    return /** @lends SBIS3.CONTROLS.Data.Collection.IList.prototype */{
       /**
-       * Заменяет список другой коллекцией. Если не передать коллекцию для замены, то список будет просто очищен.
+       * Заменяет список другой коллекцией.
        * @param {SBIS3.CONTROLS.Data.Collection.IEnumerable|Array} [items] Коллекция с элементами для замены
        */
       assign: function (items) {
          throw new Error('Method must be implemented');
       },
+
       /**
        * Добавляет элементы другой коллекции к концу списка
        * @param {SBIS3.CONTROLS.Data.Collection.IEnumerable|Array} [items] Коллекция с элементами для добавления
@@ -25,6 +26,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.IList', [
       append: function (items) {
          throw new Error('Method must be implemented');
       },
+
       /**
        * Добавляет элементы другой коллекции в начало списка.
        * @param {SBIS3.CONTROLS.Data.Collection.IEnumerable|Array} [items] Коллекция с элементами для добавления
@@ -32,8 +34,17 @@ define('js!SBIS3.CONTROLS.Data.Collection.IList', [
       prepend: function (items) {
          throw new Error('Method must be implemented');
       },
+
       /**
-       * Добавляет элемент в список
+       * Очищает список
+       */
+      clear: function () {
+         throw new Error('Method must be implemented');
+      },
+
+      /**
+       * Добавляет элемент в список.
+       * При недопустимом at генерируется исключение.
        * @param {*} item Элемент
        * @param {Number} [at] Позиция, в которую добавляется элемент (по умолчанию - в конец)
        */
@@ -42,7 +53,8 @@ define('js!SBIS3.CONTROLS.Data.Collection.IList', [
       },
 
       /**
-       * Возвращает элемент по позиции
+       * Возвращает элемент по позиции.
+       * При недопустимом index возвращает undefined.
        * @param {Number} index Позиция
        * @returns {*} Элемент списка
        */
@@ -51,15 +63,17 @@ define('js!SBIS3.CONTROLS.Data.Collection.IList', [
       },
 
       /**
-       * Удаляет элемент из списка
+       * Удаляет элемент из списка (первый найденный). Элементы, следующие за удаленным, смещаются вверх.
        * @param {*} item Удаляемый элемент
+       * @returns {Boolean} Если true - элемент удален, если false - такого элемента нет в списке.
        */
       remove: function (item) {
          throw new Error('Method must be implemented');
       },
 
       /**
-       * Удаляет элемент из списка по позиции
+       * Удаляет элемент в указанной позиции. Элементы, следующие за удаленным, смещаются вверх.
+       * При недопустимом index генерируется исключение.
        * @param {Number} index Позиция элемента
        */
       removeAt: function (index) {
@@ -67,7 +81,8 @@ define('js!SBIS3.CONTROLS.Data.Collection.IList', [
       },
 
       /**
-       * Заменяет элемент списка
+       * Заменяет элемент в указанной позиции.
+       * При недопустимом at генерируется исключение.
        * @param {*} item Заменяющий элемент
        * @param {Number} at Позиция, в которой будет произведена замена
        */
@@ -76,9 +91,9 @@ define('js!SBIS3.CONTROLS.Data.Collection.IList', [
       },
 
       /**
-       * Возвращает индекс элемента списка
+       * Возвращает позицию первого вхождения элемента в список.
        * @param {*} item Искомый элемент
-       * @returns {Number} Индекс элемента или -1, если не найден
+       * @returns {Number} Позвиция элемента или -1, если не найден
        */
       getIndex: function (item) {
          throw new Error('Method must be implemented');
@@ -89,13 +104,6 @@ define('js!SBIS3.CONTROLS.Data.Collection.IList', [
        * @returns {Number}
        */
       getCount: function () {
-         throw new Error('Method must be implemented');
-      },
-      /**
-      * Очищает список
-      * @returns {Number}
-      */
-      clear: function () {
          throw new Error('Method must be implemented');
       }
    };

@@ -176,7 +176,6 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
           * @var {$ws.proto.Deferred|null} Деферред загрузки данных для контрола списка сущностей
           */
          _loadDeferred: null
-
       },
 
       $constructor: function () {
@@ -228,10 +227,14 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
        */
       setListFilter: function(filter) {
          var self = this,
-             changedFields = [];
+             changedFields = [],
+             ds;
 
-         /* Если в контролах, которые мы отслеживаем, нет фокуса, то делать ничего не надо */
+         /* Если в контролах, которые мы отслеживаем, нет фокуса,
+            то почистим датасет, т.к. фильтр сменился и больше ничего делать не будем */
          if(!this._isObservableControlFocused()) {
+            ds = this.getList().getDataSet();
+            ds && ds.fill(); //TODO в 3.7.3.100 поменять на clear
             this._options.listFilter = filter;
             return;
          }
@@ -246,27 +249,43 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
             this._options.listFilter = filter;
             for(var i = 0, len = changedFields.length; i < len; i++) {
                if(String(this._options.listFilter[changedFields[i]]).length >= this._options.startChar) {
-                  (this._loadDeferred = this._reloadList()).addCallback(function() {
-                     self._checkPickerState() ? self._showList() : self._hideList();
-                  });
+                  this._startSearch();
                   return;
                }
             }
             /* Если введено меньше символов чем указано в startChar, то скроем автодополнение */
-            if(this._loadDeferred) {
-
-               /* Т.к. list может быть компонентом, который не наследован от DSmixin'a и метода _cancelLoading там может не быть,
-                  надо это проверить, но в любом случае, надо деферед отменить, чтобы не сработал показ пикера */
-               if(this._list._cancelLoading) {
-                  this._list._cancelLoading();
-               }
-
-               this._loadDeferred.cancel();
-               this._loadDeferred = null;
-               this._hideLoadingIndicator();
-            }
-            self._hideList();
+            self._resetSearch();
+            self.hidePicker();
          }
+      },
+
+      // TODO использовать searchMixin 3.7.3.100
+      _startSearch: function() {
+         var self = this;
+
+         this._clearDelayTimer();
+         this._delayTimer = setTimeout(function() {
+            self._showLoadingIndicator();
+            self._loadDeferred = self.getList().reload(self._options.listFilter).addCallback(function () {
+               self._checkPickerState() ? self.showPicker() : self.hidePicker();
+            });
+         }, this._options.delay);
+      },
+
+      _resetSearch: function() {
+         if(this._loadDeferred) {
+
+            /* Т.к. list может быть компонентом, который не наследован от DSmixin'a и метода _cancelLoading там может не быть,
+             надо это проверить, но в любом случае, надо деферед отменить, чтобы не сработал показ пикера */
+            if(this._list._cancelLoading) {
+               this._list._cancelLoading();
+            }
+
+            this._loadDeferred.cancel();
+            this._loadDeferred = null;
+            this._hideLoadingIndicator();
+         }
+         this._clearDelayTimer();
       },
 
       /**
@@ -279,8 +298,8 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
          //Подписываемся на события в отслеживаемых контролах
          $ws.helpers.forEach(this._options.observableControls, function (control) {
             this.subscribeTo(control, 'onFocusIn', function() {
-               if(self._checkPickerState() && self._options.autoShow) {
-                  self._showList();
+               if(self._options.autoShow) {
+                  self._checkPickerState() ? self.showPicker() : self._startSearch();
                }
             });
          }, this);
@@ -348,31 +367,15 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
       _initList: function () {
          var self = this;
 
-         this.subscribeTo(this._list, 'onDataLoad', this._onListDataLoad.bind(this));
-
-         this.subscribeTo(this._list, 'onDrawItems', this._onListDrawItems.bind(this));
-
-         this.subscribeTo(this._list, 'onItemActivate', (function (eventObject, itemObj) {
-            self.hidePicker();
-            self._onListItemSelect(itemObj.id, itemObj.item);
-         }));
+         this.subscribeTo(this._list, 'onDataLoad', this._hideLoadingIndicator.bind(this))
+             .subscribeTo(this._list, 'onDataLoadError', this._hideLoadingIndicator.bind(this))
+             .subscribeTo(this._list, 'onDrawItems', this._onListDrawItems.bind(this))
+             .subscribeTo(this._list, 'onItemActivate', (function (eventObject, itemObj) {
+                self.hidePicker();
+                self._onListItemSelect(itemObj.id, itemObj.item);
+             }));
 
          this._notify('onListReady', this._list);
-      },
-
-      /**
-       * Перезагружает содержимое контрола списка сущностей, если есть изменения в фильтре
-       * @private
-       */
-      _reloadList: function () {
-         var result = new $ws.proto.Deferred();
-
-         this._showLoadingIndicator();
-         this.getList().reload(this._options.listFilter).addCallback(function() {
-            result.callback();
-         });
-
-         return result;
       },
 
       /**
@@ -391,14 +394,6 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
          }
 
          return this._listContainer;
-      },
-
-      /**
-       * Вызывается после загрузки данных контролом списка сущностей
-       * @private
-       */
-      _onListDataLoad: function () {
-         this._hideLoadingIndicator();
       },
 
       /**
@@ -480,28 +475,6 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
          return $ws.helpers.find(this._options.observableControls, function(ctrl) {
             return ctrl.isActive();
          }, this, false)
-      },
-
-      /**
-       * Показывает список, учитывает задержку
-       * @private
-       */
-      _showList: function() {
-         var self = this;
-
-         this._clearDelayTimer();
-         this._delayTimer = setTimeout(function () {
-            self.showPicker();
-         }, this._options.delay);
-      },
-
-      /**
-       * Очищает таймер задержки, скрывает список
-       * @private
-       */
-      _hideList: function() {
-         this._clearDelayTimer();
-         this.hidePicker();
       },
 
       /**

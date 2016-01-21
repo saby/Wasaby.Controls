@@ -23,6 +23,8 @@ define('js!SBIS3.CONTROLS.ComboBox', [
     * @class SBIS3.CONTROLS.ComboBox
     * @extends SBIS3.CONTROLS.TextBox
     * @author Крайнов Дмитрий Олегович
+    * @public
+    * @control
     * @initial
     * <component data-component='SBIS3.CONTROLS.ComboBox'>
     *     <options name="items" type="array">
@@ -163,7 +165,6 @@ define('js!SBIS3.CONTROLS.ComboBox', [
          });
       },
       init: function() {
-         this._drawSelectedItem();
          ComboBox.superclass.init.call(this);
       },
 
@@ -191,7 +192,18 @@ define('js!SBIS3.CONTROLS.ComboBox', [
          this._drawNotEditablePlaceholder(text);
          $('.js-controls-ComboBox__fieldNotEditable', this._container.get(0)).text(text || this._options.placeholder);
       },
-
+      setDataSource: function (dataSource) {
+         ComboBox.superclass.setDataSource.call(this, dataSource);
+         if ($ws.helpers.instanceOfMixin(this._items, 'SBIS3.CONTROLS.Data.Collection.LoadableListMixin') && !this._items.isLoaded()) {
+            var self = this;
+            this._items.once('onAfterLoadedApply', function (){
+               self._drawSelectedItem();
+            });
+            this._items.load();
+         } else {
+            this._drawSelectedItem();
+         }
+      },
       _drawText: function() {
          ComboBox.superclass._drawText.apply(this, arguments);
          this._setKeyByText();
@@ -201,7 +213,7 @@ define('js!SBIS3.CONTROLS.ComboBox', [
          $('.js-controls-ComboBox__fieldNotEditable', this._container.get(0)).toggleClass('controls-ComboBox__fieldNotEditable__placeholder', !text);
       },
 
-      _drawSelectedItem: function (key) {
+      _drawSelectedItem: function () {
          var item = this.getItemsProjection().getCurrent();
          if(item === undefined) {
             this.setText('');
@@ -212,7 +224,6 @@ define('js!SBIS3.CONTROLS.ComboBox', [
                this.setText(newText);
             }
          }
-
       },
 
       _drawItemsCallback : function() {

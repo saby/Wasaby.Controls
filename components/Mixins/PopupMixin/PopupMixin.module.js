@@ -790,8 +790,10 @@ define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManag
             //ControlHierarchyManager.zIndexManager.setFree(this._zIndex);
             $ws.helpers.trackElement(this._options.target, false);
             $ws.single.WindowManager.setHidden(this._zIndex);
-            $ws.single.WindowManager.releaseZIndex(this._zIndex);
-            ControlHierarchyManager.removeNode(this);
+            if (this.isVisible()){
+               $ws.single.WindowManager.releaseZIndex(this._zIndex);
+               ControlHierarchyManager.removeNode(this);
+            }
             $ws.single.EventBus.channel('WindowChangeChannel').unsubscribe('onWindowResize', this._windowChangeHandler, this);
             $ws.single.EventBus.channel('WindowChangeChannel').unsubscribe('onWindowScroll', this._windowChangeHandler, this);
             if (this._options.closeByExternalOver) {
