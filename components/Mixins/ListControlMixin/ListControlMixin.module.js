@@ -803,7 +803,9 @@ define('js!SBIS3.CONTROLS.ListControlMixin', [
     */
    onCollectionChange = function (event, action, newItems, newItemsIndex, oldItems) {
       var i;
-
+      if (!this._view) {
+         return;
+      }
       switch (action) {
          case IBindCollection.ACTION_ADD:
          case IBindCollection.ACTION_REMOVE:
@@ -860,6 +862,9 @@ define('js!SBIS3.CONTROLS.ListControlMixin', [
     * @private
     */
    onCollectionItemChange = function (event, item, index, property) {
+      if (!this._view) {
+         return;
+      }
       switch (property) {
          case 'contents':
             this._view.updateItem(

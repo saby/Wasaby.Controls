@@ -52,6 +52,9 @@ define('js!SBIS3.CONTROLS.ListView',
        * @cssModifier controls-ListView__showCheckBoxes Чекбоксы показываются не по ховеру, а сразу все.
        * @cssModifier controls-ListView__hideCheckBoxes Скрыть все чекбоксы.
        * @cssModifier controls-ListView__bottomStyle Оформляет операции строки под строкой
+       * @cssModifier controls-ListView__pagerNoSizePicker Скрыть выбор размера страницы в пейджинге.
+       * @cssModifier controls-ListView__pagerNoAmount Скрыть отображение количества записей на странице в пейджинге.
+       * Т.е. текст "1-10" при отображении 10 записей на 1-ой странице
        */
 
       /*TODO CommonHandlers MoveHandlers тут в наследовании не нужны*/
@@ -131,19 +134,6 @@ define('js!SBIS3.CONTROLS.ListView',
           * @param {$ws.proto.EventObject} eventObject Дескриптор события.
           * @param {Array} difference Массив измененных полей
           * @param {Object} model Модель с измененными данными
-          */
-         /**
-          * @event onShowEdit Возникает перед отображением редактирования.
-          * @remark
-          * Позволяет не отображать редактирование для определенных моделей.
-          * Срабатывает только для редактирования в режиме "hover".
-          * @param {$ws.proto.EventObject} eventObject Дескриптор события.
-          * @param {Object} model Редактируемая модель
-          * @returns {*} Возможные значения:
-          * <ol>
-          *    <li>false - отменить отображение редактирование;</li>
-          *    <li>* - продолжить редактирование в штатном режиме.</li>
-          * </ol>
           */
          /**
           * @event onBeginEdit Возникает перед началом редактирования
@@ -402,7 +392,7 @@ define('js!SBIS3.CONTROLS.ListView',
          },
 
          $constructor: function () {
-            this._publish('onChangeHoveredItem', 'onItemClick', 'onItemActivate', 'onDataMerge', 'onItemValueChanged', 'onShowEdit', 'onBeginEdit', 'onEndEdit', 'onBeginAdd', 'onAfterEndEdit', 'onPrepareFilterOnMove');
+            this._publish('onChangeHoveredItem', 'onItemClick', 'onItemActivate', 'onDataMerge', 'onItemValueChanged', 'onBeginEdit', 'onEndEdit', 'onBeginAdd', 'onAfterEndEdit', 'onPrepareFilterOnMove');
             this._container.on('mousemove', this._mouseMoveHandler.bind(this))
                            .on('mouseleave', this._mouseLeaveHandler.bind(this));
 
@@ -935,11 +925,6 @@ define('js!SBIS3.CONTROLS.ListView',
                      }.bind(this)
                   }
                };
-            if (hoverMode) {
-               config.handlers.onShowEdit = function(event, model) {
-                  event.setResult(this._notify('onShowEdit', model));
-               }.bind(this);
-            }
             return config;
          },
 
@@ -1260,6 +1245,17 @@ define('js!SBIS3.CONTROLS.ListView',
                //Так же цчитываем то, что индикатор появляется только на время загрузки и добавляет свою высоту
                this._scrollWatcher.scrollTo(this._firstScrollTop || (scrollAmount < 0) ? 'bottom' : scrollAmount);
             }
+         },
+         /**
+          * Если высота контейнера меньше высоты экрана (т.е. нет скролла в контейнере иди в окне),
+          * то будет загружать данные, пока скролл все-таки не появится.
+          * Работает в паре с взведенной опцией infiniteScroll
+          * @remark Работает только в 3.7.3.30
+          * @see infiniteScroll
+          * @deprecated Удалено в 3.7.3.100.
+          */
+         loadDataTillScroll : function(){
+            $ws.single.ioc.resolve('ILogger').log('loadDataTillScroll', 'Метод работает только в 3.7.3.30, просьба исправить свой функционал');
          },
          _showLoadingIndicator: function () {
             if (!this._loadingIndicator) {

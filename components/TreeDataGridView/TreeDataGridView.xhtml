@@ -30,6 +30,9 @@
    {{?it.infiniteScroll && it.infiniteScrollDirection !== 'top'}}
       <div class="controls-ListView-scrollIndicator ws-hidden"></div>
    {{?}}
+   {{?it.footerTpl}}
+      <div class="controls-ListView__footer">{{=it.footerTpl(it)}}</div>
+   {{?}}
    {{? it.itemsActions.length}}
       <div class="controls-ListView__itemActions-container"></div>
    {{?}}

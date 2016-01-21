@@ -160,7 +160,7 @@ define('js!SBIS3.CONTROLS.Data.Model', [
          var property = this.getProperties()[name];
          if (property && property.set) {
             value = this._processCalculatedValue(name, value, property, false);
-            if (!this._getRecordAdapter().has(name)) {
+            if (value === undefined) {
                return;
             }
          }
@@ -278,7 +278,13 @@ define('js!SBIS3.CONTROLS.Data.Model', [
        */
       merge: function (model) {
          model.each(function(field, value) {
-            this.set(field, value);
+            try {
+               this.set(field, value);
+            } catch (e) {
+               if (!(e instanceof ReferenceError)) {
+                  throw e;
+               }
+            }
          }, this);
          this._isStored = this._isStored || model._isStored;
          this._isDeleted = this._isDeleted || model._isDeleted;

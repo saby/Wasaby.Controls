@@ -216,7 +216,14 @@ define('js!SBIS3.CONTROLS.DSMixin', [
             /**
              * @cfg {Object.<String,String>} подключаемые внешние шаблоны, ключу соответствует поле it.included.<...> которое будет функцией в шаблоне
              */
-            includedTemplates: {}
+            includedTemplates: {},
+            /**
+             * @cfg {String|function} Шаблон элементов, которые будт рисоваться под даннными.
+             * @remark
+             * Например для отрисовки кнопко +Документ, +Папка.
+             * Если задан, то под всеми(!) элементами появится контейнер с содержимым этого шаблона
+             */
+            footerTpl: undefined
          },
          _loader: null
       },
@@ -260,6 +267,14 @@ define('js!SBIS3.CONTROLS.DSMixin', [
          }
 
          this._setItemsEventHandlers();
+      },
+      _modifyOptions: function(opts){
+         var tpl = opts.footerTpl;
+         //Если нам передали шаблон как строку вида !html, то нужно из нее сделать функцию
+         if (tpl && typeof tpl === 'string' && tpl.match(/^html!/)){
+            opts.footerTpl = require(tpl);
+         }
+         return opts;
       },
 
       _createDefaultProjection: function(items) {
@@ -664,7 +679,8 @@ define('js!SBIS3.CONTROLS.DSMixin', [
 
       _drawItems: function (records, at) {
          var
-            curAt = at;
+            curAt = at,
+               targetContainer;
          if (records && records.length > 0) {
             for (var i = 0; i < records.length; i++) {
                this._drawAndAppendItem(records[i], curAt, i === records.length - 1);

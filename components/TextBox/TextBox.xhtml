@@ -3,7 +3,7 @@
    {{? it.afterFieldWrapper}}{{? it.enableArrows !== false}}<div class="controls-TextBox__afterFieldWrapper">{{= typeof(it.afterFieldWrapper) === 'function' ? it.afterFieldWrapper() : it.afterFieldWrapper}}</div>{{?}}{{?}}
    <div class="controls-TextBox__fieldWrapper {{? it.enableArrows !== false}}controls-NumberTextBox__enable-arrow{{?}}">
       <input class="controls-TextBox__field js-controls-TextBox__field{{? it.textTransform == 'uppercase'}} controls-TextBox__field-uppercase {{?}}{{? it.textTransform == 'lowercase'}} controls-TextBox__field-lowercase {{?}}" type="text"
-      {{? it.text }} value="{{? it.numberFractDigits && !it.onlyInteger}}{{=parseFloat(it.text).toFixed(it.numberFractDigits)}}{{??}}{{=it.text}}{{?}}"{{?}}
+      {{? it.text }} value="{{? it.numberFractDigits && !it.onlyInteger}}{{=parseFloat(it.text).toFixed(it.numberFractDigits)}}{{??}}{{!it.text}}{{?}}"{{?}}
       {{? it.placeholder }} placeholder="{{=it.placeholder}}"{{?}}
       {{? it.maxLength }} maxlength="{{=it.maxLength}}"{{?}}
       {{? !it.enabled }} readonly="readonly"{{?}}

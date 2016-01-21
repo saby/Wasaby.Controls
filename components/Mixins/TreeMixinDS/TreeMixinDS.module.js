@@ -33,6 +33,9 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', ['js!SBIS3.CORE.Control'], function (Con
          _folderHasMore : {},
          _treePagers : {},
          _treePager: null,
+         _keysWeHandle: [
+            $ws._const.key.m
+         ],
          _options: {
             /**
              * @cfg {Boolean} При открытия узла закрывать другие
@@ -347,6 +350,13 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', ['js!SBIS3.CORE.Control'], function (Con
          reload : function() {
             this._folderOffsets['null'] = 0;
          },
+         _keyboardHover: function(e) {
+            switch(e.which) {
+               case $ws._const.key.m:
+                  e.ctrlKey && this.moveRecordsWithDialog();
+                  break;
+            }
+         },
          _dataLoadedCallback: function () {
             //this._options.openedPath = {};
             if (this._options.expand) {
@@ -385,6 +395,9 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', ['js!SBIS3.CORE.Control'], function (Con
             if ((this._options.allowEnterToFolder) && ((data.get(this._options.hierField + '@')))){
                this.setCurrentRoot(nodeID);
                this.reload();
+            }
+            else {
+               this._activateItem(id);
             }
          }
       }
