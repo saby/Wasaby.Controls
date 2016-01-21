@@ -127,19 +127,6 @@ define('js!SBIS3.CONTROLS.ListView',
           * @param {Object} model Модель с измененными данными
           */
          /**
-          * @event onShowEdit Возникает перед отображением редактирования.
-          * @remark
-          * Позволяет не отображать редактирование для определенных моделей.
-          * Срабатывает только для редактирования в режиме "hover".
-          * @param {$ws.proto.EventObject} eventObject Дескриптор события.
-          * @param {Object} model Редактируемая модель
-          * @returns {*} Возможные значения:
-          * <ol>
-          *    <li>false - отменить отображение редактирование;</li>
-          *    <li>* - продолжить редактирование в штатном режиме.</li>
-          * </ol>
-          */
-         /**
           * @event onBeginEdit Возникает перед началом редактирования
           * @param {$ws.proto.EventObject} eventObject Дескриптор события.
           * @param {Object} model Редактируемая модель
@@ -388,7 +375,7 @@ define('js!SBIS3.CONTROLS.ListView',
          $constructor: function () {
             //TODO временно смотрим на TopParent, чтобы понять, где скролл. С внедрением ScrallWatcher этот функционал уберем
             var topParent = this.getTopParent();
-            this._publish('onChangeHoveredItem', 'onItemClick', 'onItemActivate', 'onDataMerge', 'onItemValueChanged', 'onShowEdit', 'onBeginEdit', 'onEndEdit', 'onBeginAdd', 'onAfterEndEdit', 'onPrepareFilterOnMove');
+            this._publish('onChangeHoveredItem', 'onItemClick', 'onItemActivate', 'onDataMerge', 'onItemValueChanged', 'onBeginEdit', 'onEndEdit', 'onBeginAdd', 'onAfterEndEdit', 'onPrepareFilterOnMove');
             this._container.on('mousemove', this._mouseMoveHandler.bind(this))
                            .on('mouseleave', this._mouseLeaveHandler.bind(this));
 
@@ -922,11 +909,6 @@ define('js!SBIS3.CONTROLS.ListView',
                      }.bind(this)
                   }
                };
-            if (hoverMode) {
-               config.handlers.onShowEdit = function(event, model) {
-                  event.setResult(this._notify('onShowEdit', model));
-               }.bind(this);
-            }
             return config;
          },
 
