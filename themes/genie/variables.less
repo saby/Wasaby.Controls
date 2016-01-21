@@ -247,15 +247,16 @@
 @tab-button-overflow:                           hidden;
 @tab-button-color:                              #313E78;
 @tab-button-font:                               14px 'TensorFont Regular', 'TensorFont';
-@tab-button-margin-top:                         1px;
+@tab-button-margin-top:                         0;
 @tab-button-border:                             1px solid transparent;
 @tab-button-z-index:                            10;
-@tab-button-border-bottom:                      1px solid #CCCCCC;
+@tab-button-border-bottom:                      none;
 
 @tab-button-hover-background:                   #F0F5FB;
 @tab-button-hover-border:                       1px solid @tab-button-border-color;
 @tab-button-hover-inner-after-display:          none;
 
+@tab-button-checked-height:                     29px;
 @tab-button-checked-border-top:                 1px solid #313E78;
 @tab-button-checked-border-bottom:              1px solid #FFF;
 @tab-button-checked-border-left:                transparent;
@@ -303,11 +304,13 @@
 @tab-button-inner-after-z-index:                10;
 @tab-button-inner-after-left:                   0;
 @tab-button-inner-icon-margin-left:             2px;
+@tab-button-icon-position:                      relative;
+@tab-button-icon-top:                           1px;
 
 @tab-button-counter-font-weight:                normal;
 @tab-button-counter-font-size:                  14px;
 
-@tab-button-right-float:                        right;
+@tab-button-right-float:                        left;
 @tab-button-right-margin-left:                  -1px;
 @tab-button-right-separator-left:               -1px;
 @tab-button-left-float:                         left;
@@ -1315,6 +1318,14 @@
 @list-view-actions-menu-touch-size:             4px 18px;
 @list-view-actions-touch-padding:               5px 0 0 0;
 
+@list-view-actions-menu-close-top:              4px;
+@list-view-actions-menu-close-right:            4px;
+@list-view-actions-menu-close-height:           16px;
+@list-view-actions-menu-close-width:            16px;
+@list-view-actions-menu-close-revVert-bottom:   4px;
+@list-view-actions-menu-close-revVert-top:      auto;
+@list-view-actions-menu-item-padding-right:     24px;
+
 @list-view-scroll-spritesheet :                 'img/ajax-loader-indicator.gif';
 @list-view-scroll-bg:                           url(@list-view-scroll-spritesheet) 0 0 no-repeat;
 @list-view-scroll-height:                       32px;
@@ -1356,7 +1367,7 @@
 @tree-view-expand-open-hover-bg:                @tree-view-expand-open-bg;
 
 @tree-view-ellipsis-wrapper-height:             19px;
-@tree-view-ellipsis-copyArrow-shadow:           -6px 2px 8px -2px;
+@tree-view-ellipsis-copyArrow-shadow:           -10px 2px 8px -5px;
 @tree-view-ellipsis-copyArrow-padding:          0 0 0 3px;
 
 @tree-view-item-content-margin:                 0 0 0 15px;
@@ -1590,7 +1601,7 @@
 @controls-Popup-closeButton-width:                36px;
 @controls-Popup-closeButton-height:               24px;
 
-@controls-filterButton-button-image:              transparent url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEgAAAAYCAMAAAEZunsUAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAUdQTFRFAAAA////WHqwzMzM/3AzWHqwzMzM/3AzWHqwzMzM/3AzWHqwzMzM/3Az/3AzWHqwzMzM/3AzWHqwzMzM/3AzWHqwzMzM/3AzWHqwzMzM/3AzWHqwWHqwzMzM/3AzWHqwzMzM/3AzWHqwzMzM/3AzWHqwzMzM/3Az/3AzWHqwzMzM/3AzWHqwzMzM/3AzWHqwzMzM/3AzWHqwzMzM/3AzWHqwzMzM/3AzWHqwzMzM/3AzWHqwzMzMWHqwzMzM/3AzWHqw/3AzWHqwzMzM/3AzWHqwzMzM/3AzWHqwzMzM/3AzWHqwzMzM/3AzWHqwzMzM/3Az/3AzWHqwzMzM/3AzWHqwzMzM/3AzWHqwWHqwzMzM/3AzWHqwzMzM/3AzWHqwzMzM/3AzWHqwzMzM/3AzWHqwzMzMWHqwzMzM/3AzWHqwzMzM/3Az+dKQlQAAAGp0Uk5TAAABAQEDAwMGBgYKCgoPEBAQEREREhISGRkZHyQkJC4uLjY2Njw8PEhMTExaWlppaWlwcHB9fX2NjY2goKKioqysr6+vsLCwwcHBzc3N2dnZ3d/f3+Li4uTs7Ozy8vL5+fn6+vr8/P39/UNA/EMAAAIYSURBVDjLxZNZTxQBEIS/UpFTdxE5PQAVEOT0ADxRkftUBOQWb7r7/z/7MLPMYNa4JiZ25qFT+boyU5VBZoqQOyJ9UAGBimBmEeHuGE+DKecFGSgzM1NERMjd3RGmI0ToGOH6CKJwDQSXQRSbSA+liAjJ3V1lpU7Yl7rhUOqCA6EeJpH6eILUy2OEMEMiAgn330gVDJKlq0mKdA9Jnu4upGarB5ZWkdQalxAr60hq8QZgeQ0hwaOvMkASTJwoSvv4DzmkUMEyiMigoucgblkG3YlTiNueQlYaJREmlSRBuru7Ko2gIqc/xyT0fB+ATpM0dQhAd0h6dgBAl0uI1SWg3polsb6CuBStklhbBhq8RUJwNCmsJ/nq4yci+pL942PhvSQQpu+PsixPJkq769s4GWSFXOCNGeTFv4Re5qBXOWg6B/Eug3ifQWyUIGWZ58PP558vIt9FrpTK+q3wN/h3b2TWT276M6N7ef1uZjSQ1wdOjWrmbbOtJLdt2nxNclC3GNsdJb1jOxbrEr12wbfaS3r7li/UpkZwfcdmqpComrGd66TBwc29mKtGonou9m5m+o1dn72IxMVZ372RFJiWOGg2Io2YDUJ2AMMRY9JYxPBZfch9VBp1H0r1khEFM8mswNkDLkRIEY2/6kV3yb1IpUb8N6Nz9z/Zh3JGD7/E2zJG5x989o1yRsCV1+WM4OqbMkZA03TO6CfSsMjJweTlCwAAAABJRU5ErkJggg==") no-repeat;
+@controls-filterButton-button-image:              transparent url("img/sprite_filter.png") no-repeat;
 @controls-filterButton-button-image-hover:        -24px 0;
 @controls-filterButton-button-height:             24px;
 @controls-filterButton-button-width:              24px;
@@ -1706,6 +1717,7 @@
 @controls-FieldLink-picker-border:                 1px solid #eaeaea;
 @controls-FieldLink-picker-background:             @white-color;
 
+@controls-FieldLink-linkItem-cursor:               default;
 @controls-FieldLink-linkItem-margin:               2px 0;
 @controls-FieldLink-linkItem-position:             relative;
 @controls-FieldLink-linkItem-padding:              0 16px 0 4px;
@@ -1713,4 +1725,6 @@
 @controls-FieldLink-linkItem-cross-heigth:         @controls-FieldLink-linkItem-caption-height;
 @controls-FieldLink-linkItem-cross-width:          16px;
 @controls-FieldLink-linkItem-cross-right:          0;
+
+@controls-FieldLink-disabled-item-padding:         0 4px;
 

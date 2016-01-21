@@ -130,7 +130,7 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
             },
 
             /**
-             * @var {Object} Фильтр данных
+             * @cfg {Object} Фильтр данных
              * @example
              * <pre class="brush:xml">
              *     <options name="listFilter">
@@ -168,11 +168,14 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
           * @var {SBIS3.CONTROLS.DSMixin}{SBIS3.CONTROLS.Selectable|SBIS3.CONTROLS.MultiSelectable} Контрол списка сущностей
           */
          _list: undefined,
-
          /**
           * @var {jQuery} Контейнер для контрола списка сущностей
           */
-         _listContainer: undefined
+         _listContainer: undefined,
+         /**
+          * @var {$ws.proto.Deferred|null} Деферред загрузки данных для контрола списка сущностей
+          */
+         _loadDeferred: null
 
       },
 
@@ -243,13 +246,25 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
             this._options.listFilter = filter;
             for(var i = 0, len = changedFields.length; i < len; i++) {
                if(String(this._options.listFilter[changedFields[i]]).length >= this._options.startChar) {
-                  this._reloadList().addCallback(function() {
+                  (this._loadDeferred = this._reloadList()).addCallback(function() {
                      self._checkPickerState() ? self._showList() : self._hideList();
                   });
                   return;
                }
             }
             /* Если введено меньше символов чем указано в startChar, то скроем автодополнение */
+            if(this._loadDeferred) {
+
+               /* Т.к. list может быть компонентом, который не наследован от DSmixin'a и метода _cancelLoading там может не быть,
+                  надо это проверить, но в любом случае, надо деферед отменить, чтобы не сработал показ пикера */
+               if(this._list._cancelLoading) {
+                  this._list._cancelLoading();
+               }
+
+               this._loadDeferred.cancel();
+               this._loadDeferred = null;
+               this._hideLoadingIndicator();
+            }
             self._hideList();
          }
       },

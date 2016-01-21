@@ -1,4 +1,21 @@
 .controls-TabButtons {
-   border-bottom: @tab-buttons-border-bottom;
    height: @tab-buttons-height;
+   position: relative;
+   overflow: hidden;
+}
+
+.controls-TabButtons__leftContainer {
+   float: left;
+}
+
+.controls-TabButtons__rightContainer {
+   float: right;
+}
+
+.controls-TabButtons__bottomBorder {
+   position: absolute;
+   z-index: 1;
+   width: 100%;
+   bottom: 0;
+   border-bottom: @tab-buttons-border-bottom;
 }

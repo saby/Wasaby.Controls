@@ -221,7 +221,7 @@ define(
           * @private
           */
          _setSection: function(value, section){
-            var values = this.timeInterval.getValueAsObject();
+            var values = this.timeInterval.toObject();
             values[section] = value;
             this.timeInterval.set(values);
             this._updateTextByTimeInterval();
@@ -265,7 +265,7 @@ define(
          setInterval: function ( interval ) {
             this.timeInterval.set(interval);
             this._updateTextByTimeInterval();
-            this._notify('onChangeInterval', this.timeInterval.getValue());
+            this._notify('onChangeInterval', this.timeInterval.toString());
          },
          /**
           * Метод получения интервала, заданного либо опцией {@link interval}, либо методом {@link setInterval} возвращает
@@ -286,7 +286,7 @@ define(
           * @see setInterval
           */
          getInterval: function(){
-            return this.timeInterval.getValue();
+            return this.timeInterval.toString();
          },
          /**
           * Увеличить маску.
@@ -349,7 +349,7 @@ define(
           * @private
           */
          _getSectionValues: function () {
-            var intervalValues = this.timeInterval.getValueAsObject(),
+            var intervalValues = this.timeInterval.toObject(),
                sectionArray = [];
 
             if (this._hasMaskSection(this._sections.days)) {
@@ -399,7 +399,7 @@ define(
           */
          _updateText: function(){
             var text = this.formatModel.getText(this._maskReplacer),
-                oldDate = this.timeInterval.getValue();
+                oldDate = this.timeInterval.toString();
 
             this._updateIntervalByText(text);
 
@@ -409,8 +409,8 @@ define(
             }
 
             // Если дата изменилась -- генерировать событие.
-            if ( oldDate !== this.timeInterval.getValue()) {
-               this._notify('onChangeInterval', this.timeInterval.getValue());
+            if ( oldDate !== this.timeInterval.toString()) {
+               this._notify('onChangeInterval', this.timeInterval.toString());
             }
          }
       });

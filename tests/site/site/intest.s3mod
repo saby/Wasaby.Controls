@@ -1,14 +1,13 @@
-﻿<?xml version="1.0" encoding="UTF-8" ?>
 <ui_module id="62bf645b-207a-4e83-b06d-40e9c36d3ab2" name="intest" version="1.00">
 
-  <description/>
+  <description />
 
-  <depends/>
+  <depends />
 
-  <load_after/>
+  <load_after />
 
-  <parameters/>
+  <parameters />
 
-  <resources/>
+  <resources />
 
 </ui_module>
