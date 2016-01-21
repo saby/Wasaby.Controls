@@ -116,10 +116,10 @@ define('js!SBIS3.CONTROLS.Data.Record', [
 
          var oldValue = this._getRawDataValue(name);
          if (oldValue !== value) {
+            this._setRawDataValue(name, value);
             if (!this.has(name)) {
                this._addRawDataField(name);
             }
-            this._setRawDataValue(name, value);
             this._setChanged(name, oldValue);
             if (name in this._propertiesCache &&
                value !== this._propertiesCache[name]
