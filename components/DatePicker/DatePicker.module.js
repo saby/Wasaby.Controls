@@ -196,6 +196,9 @@ define(
       $constructor: function () {
          this._publish('onDateChange');
 
+         // Проверить тип маски -- дата, время или и дата, и время. В случае времени -- сделать isCalendarIconShown = false
+         this._checkTypeOfMask(this._options);
+
          // Первоначальная установка даты, если передана опция
          if ( this._options.date ) {
             this._setDate( this._options.date );
@@ -207,6 +210,11 @@ define(
 
          this._calendarInit();
 
+      },
+
+      _modifyOptions : function(options) {
+         this._checkTypeOfMask(options);
+         return DatePicker.superclass._modifyOptions.apply(this, arguments);
       },
 
       /**
@@ -275,6 +283,16 @@ define(
             self.setDate(date);
             self.hidePicker();
          });
+      },
+
+      /**
+       * Проверить тип даты. Скрыть иконку календаря, если отсутствуют день, месяц и год (т.е. присутствует только время)
+       * @private
+       */
+      _checkTypeOfMask: function (options) {
+         if (options.mask  &&  !/[DMY]/.test(options.mask) ) {
+            options.isCalendarIconShown = false;
+         }
       },
 
      /**

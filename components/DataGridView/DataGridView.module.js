@@ -113,10 +113,8 @@ define('js!SBIS3.CONTROLS.DataGridView',
       },
 
       init: function() {
-         DataGridView.superclass.init.call(this);
-
          this._buildHead();
-
+         DataGridView.superclass.init.call(this);
          if(this._options.startScrollColumn !== undefined) {
             this._initPartScroll();
          }
@@ -157,13 +155,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
       _getCellTemplate: function(item, column) {
          var value = item.get(column.field);
          if (column.cellTemplate) {
-            var cellTpl;
-            if ((typeof column.cellTemplate == 'string') && (column.cellTemplate.indexOf('html!') == 0)) {
-               cellTpl = require(column.cellTemplate);
-            }
-            else {
-               cellTpl = doT.template(column.cellTemplate);
-            }
+            var cellTpl = this._prepareTpl(column.cellTemplate);
             var tplOptions = {
                item: item,
                hierField: this._options.hierField,
@@ -181,7 +173,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
                tplOptions.included = {};
                for (var j in tpls) {
                   if (tpls.hasOwnProperty(j)) {
-                     tplOptions.included[j] = require(tpls[j]);
+                     tplOptions.included[j] = this._prepareTpl(tpls[j]);
                   }
                }
             }
@@ -612,14 +604,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
                 column = rowData.columns[i];
 
             if (column.headTemplate) {
-               var headTpl;
-               if ((typeof column.headTemplate == 'string') && (column.headTemplate.indexOf('html!') == 0)) {
-                  headTpl = require(column.headTemplate);
-               }
-               else {
-                  headTpl = doT.template(column.headTemplate);
-               }
-               value = MarkupTransformer(headTpl({
+               value = MarkupTransformer(this._prepareTpl(column.headTemplate)({
                   column: column
                }));
             } else {

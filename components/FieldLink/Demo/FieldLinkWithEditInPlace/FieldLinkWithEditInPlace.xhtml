@@ -5,15 +5,13 @@
             <opt name="title">Ид</opt>
             <opt name="field">Ид</opt>
             <opt name="cellTemplate">html!SBIS3.CONTROLS.Demo.FieldLinkWithEditInPlace/resources/cellID</opt>
-            <opt name="editor">
-               <span data-bind="{html: 'Ид'}" class="controls-demo-FieldLinkWithEditInPlace__cell"></span>
-            </opt>
          </opts>
          <opts>
             <opt name="title">ФИО</opt>
             <opt name="field">ФИО</opt>
+            <opt name="className">controls-DataGridView-cell-overflow-ellipsis controls-demo-FieldLinkWithEditInPlace__topAlign</opt>
             <opt name="editor">
-               <component data-component="SBIS3.CONTROLS.TextBox" style="vertical-align: middle; display: inline-block; width: 100%;">
+               <component data-component="SBIS3.CONTROLS.TextBox" style="margin-top: 9px; width: 100%;">
                   <opt name="text" bind="ФИО"></opt>
                   <opts name="validators" type="array">
                      <opts>
@@ -28,6 +26,7 @@
             <opt name="title">Место работы</opt>
             <opt name="width" type="string">450</opt>
             <opt name="field">МестоРаботы</opt>
+            <opt name="className">controls-demo-FieldLinkWithEditInPlace__topAlign</opt>
             <opt name="editor">
                <component data-component="SBIS3.CONTROLS.Demo.FieldLinkDemoArea" style="width: 100%; display: block; border: 1px solid transparent;">
                   <opt name="dataSet" bind="ИнформацияПоСотруднику"></opt>

@@ -8,8 +8,9 @@ define('js!SBIS3.CONTROLS.Image',
       'html!SBIS3.CONTROLS.Image',
       'js!SBIS3.CORE.FileLoader',
       'js!SBIS3.CORE.Dialog',
+      'js!SBIS3.CORE.LoadingIndicator',
       'js!SBIS3.CONTROLS.Link'
-   ], function(CompoundControl, SbisService, dotTplFn, FileLoader, Dialog) {
+   ], function(CompoundControl, SbisService, dotTplFn, FileLoader, Dialog, LoadingIndicator) {
       'use strict';
       var
          //Продолжительность анимации при отображения панели изображения
@@ -221,6 +222,7 @@ define('js!SBIS3.CONTROLS.Image',
                _buttonReset: undefined,
                _buttonEdit: undefined,
                _boundEvents: undefined,
+               _saveIndicator: undefined,
                _firstLoaded: false
             },
             $constructor: function() {
@@ -237,6 +239,7 @@ define('js!SBIS3.CONTROLS.Image',
                var
                   dataSource = this.getDataSource();
                 Image.superclass.init.call(this);
+               this._bindEvens();
                //Находим компоненты, необходимые для работы (если нужно)
                if (this._options.imageBar) {
                   this._buttonEdit = this.getChildControlByName('ButtonEdit');
@@ -246,7 +249,7 @@ define('js!SBIS3.CONTROLS.Image',
                   if (dataSource) {
                      this._fileLoader.setMethod((this._options.linkedObject || dataSource.getResource()) + '.' + dataSource.getCreateMethodName());
                   }
-                  this._bindEvens();
+                  this._bindToolbarEvents();
                }
                this.reload();
             },
@@ -288,17 +291,19 @@ define('js!SBIS3.CONTROLS.Image',
                ------------------------------------------------------------ */
             _bindEvens: function() {
                this._boundEvents = {
-                  onImageMouseEnter: this._onImageMouseEnter.bind(this),
-                  onImageMouseLeave: this._onImageMouseLeave.bind(this),
-                  onImageBarMouseLeave: this._onImageBarMouseLeave.bind(this),
                   onChangeImage: this._onChangeImage.bind(this),
                   onErrorLoad: this._onErrorLoad.bind(this)
                };
+               this._image.load(this._boundEvents.onChangeImage);
+               this._image.error(this._boundEvents.onErrorLoad);
+            },
+            _bindToolbarEvents: function(){
+               this._boundEvents.onImageMouseEnter = this._onImageMouseEnter.bind(this);
+               this._boundEvents.onImageMouseLeave = this._onImageMouseLeave.bind(this);
+               this._boundEvents.onImageBarMouseLeave = this._onImageBarMouseLeave.bind(this);
                this._image.mouseenter(this._boundEvents.onImageMouseEnter);
                this._image.mouseleave(this._boundEvents.onImageMouseLeave);
                this._imageBar.mouseleave(this._boundEvents.onImageBarMouseLeave);
-               this._image.load(this._boundEvents.onChangeImage);
-               this._image.error(this._boundEvents.onErrorLoad);
             },
             _onBeginLoad: function(event) {
                var
@@ -376,12 +381,14 @@ define('js!SBIS3.CONTROLS.Image',
             _recalculateImageBar: function(){
                var
                   position =  this._image.position();
-               this._imageBar.css({
-                  height:  this._image.height(),
-                  width:  this._image.width(),
-                  left: position.left,
-                  top: position.top
-               });
+               if (this._options.imageBar) {
+                  this._imageBar.css({
+                     height: this._image.height(),
+                     width: this._image.width(),
+                     left: position.left,
+                     top: position.top
+                  });
+               }
             },
             _showEditDialog: function(imageType) {
                var
@@ -410,9 +417,11 @@ define('js!SBIS3.CONTROLS.Image',
                      handlers: {
                         onBeginSave: function (event, sendObject) {
                            event.setResult(self._notify('onBeginSave', sendObject));
+                           self._toggleSaveIndicator(true);
                         },
                         onEndSave: function (event, result) {
                            event.setResult(self._notify('onEndSave', result));
+                           self._toggleSaveIndicator(false);
                            self.reload();
                         }
                      }
@@ -423,6 +432,23 @@ define('js!SBIS3.CONTROLS.Image',
                      }
                   }
                });
+            },
+            /**
+             * Показать/скрыть индикатор сохранения изображения
+             */
+            _toggleSaveIndicator: function(state) {
+               if (state) {
+                  if (!this._saveIndicator) {
+                     this._saveIndicator = new LoadingIndicator({
+                        'message': 'Сохранение',
+                        'name': 'ws-load-indicator'
+                     });
+                  } else {
+                     this._saveIndicator.show();
+                  }
+               } else if (this._saveIndicator) {
+                  this._saveIndicator.hide();
+               }
             },
             /* ------------------------------------------------------------
                Блок обработчиков команд

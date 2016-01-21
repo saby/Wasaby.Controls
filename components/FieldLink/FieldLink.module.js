@@ -2,7 +2,6 @@ define('js!SBIS3.CONTROLS.FieldLink',
    [
       'js!SBIS3.CONTROLS.SuggestTextBox',
       'js!SBIS3.CONTROLS.DSMixin',
-      'js!SBIS3.CONTROLS.FormWidgetMixin',
       'js!SBIS3.CONTROLS.MultiSelectable',
       'js!SBIS3.CONTROLS.ActiveMultiSelectable',
       'js!SBIS3.CONTROLS.Selectable',
@@ -13,13 +12,13 @@ define('js!SBIS3.CONTROLS.FieldLink',
       'js!SBIS3.CONTROLS.Data.Model',
       'js!SBIS3.CONTROLS.Data.Adapter.Sbis',
       'js!SBIS3.CONTROLS.Utils.DialogOpener',
+      'js!SBIS3.CONTROLS.ITextValue',
       'js!SBIS3.CONTROLS.MenuIcon'
 
    ],
    function (
        SuggestTextBox,
        DSMixin,
-       FormWidgetMixin,
 
        /* Интерфейс для работы с набором выбранных записей */
        MultiSelectable,
@@ -36,7 +35,8 @@ define('js!SBIS3.CONTROLS.FieldLink',
        beforeFieldWrapper,
        Model,
        SbisAdapter,
-       DialogOpener
+       DialogOpener,
+       ITextValue
    ) {
 
       'use strict';
@@ -80,7 +80,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
     * @author Крайнов Дмитрий Олегович
     */
 
-   var FieldLink = SuggestTextBox.extend([FormWidgetMixin, MultiSelectable, ActiveMultiSelectable, Selectable, ActiveSelectable, DSMixin],/** @lends SBIS3.CONTROLS.FieldLink.prototype */{
+   var FieldLink = SuggestTextBox.extend([MultiSelectable, ActiveMultiSelectable, Selectable, ActiveSelectable, DSMixin, ITextValue],/** @lends SBIS3.CONTROLS.FieldLink.prototype */{
     /**
       * @event onItemActivate При активации записи (клик с целью например редактирования)
       * @param {$ws.proto.EventObject} eventObject Дескриптор события.
@@ -133,7 +133,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
             /**********************************************************************************************/
 
             list: {
-               className: 'js!SBIS3.CONTROLS.DataGridView',
+               component: 'js!SBIS3.CONTROLS.DataGridView',
                options: {
                   showHead: false,
                   columns: []
@@ -168,7 +168,17 @@ define('js!SBIS3.CONTROLS.FieldLink',
              * @remark
              * Актуально для поля связи с единичным выбором (Например чтобы записать что-то в поле контекста)
              */
-            alwaysShowTextBox: false
+            alwaysShowTextBox: false,
+            /**
+             * @cfg {String} Шаблон отображения для каждого выбранного элемента
+             * @example
+             * <pre>
+             *     <div class="fieldLinkText">
+             *        {{=it.item.get("title")}}
+             *     </div>
+             * </pre>
+             */
+            itemTemplate: ''
          }
       },
 
@@ -228,20 +238,18 @@ define('js!SBIS3.CONTROLS.FieldLink',
 
 
          function oldConfirmSelectionCallback(event, selectedRecords) {
-            var keys = [],
-                selItems = self._options.selectedItems,
-                rec;
+            var itemArr = [];
 
             if(selectedRecords[0] !== null) {
-               selItems.fill();
                for (var i = 0, len = selectedRecords.length; i < len; i++) {
-                  rec = recordConverter.call(self, selectedRecords[i]);
-                  selItems.add(rec);
-                  keys.push(rec.getId());
+                  itemArr.push(recordConverter.call(self, selectedRecords[i]));
                }
-               self.setSelectedKeys(keys);
+               self.addSelectedItems(itemArr);
             }
-            this.close && this.close();
+            /* Если обрабатываем результат deferred'a то в функции нету контекста, проверим на это */
+            if(this && this.close) {
+               this.close();
+            }
          }
 
          function newConfirmSelectionCallBack(result) {
@@ -302,9 +310,15 @@ define('js!SBIS3.CONTROLS.FieldLink',
 
 	   /**
 	    * Возвращает выбранные элементы в виде текста
+        * @deprecated Метод getCaption устарел, используйте getTextValue
 	    * @returns {string}
 	    */
-      getCaption: function() {
+       getCaption: function() {
+          $ws.single.ioc.resolve('ILogger').log('FieldLink::getCaption', 'Метод getCaption устарел, используйте getTextValue');
+          return this.getTextValue();
+       },
+
+      getTextValue: function() {
          var displayFields = [],
              self = this;
 
@@ -331,7 +345,9 @@ define('js!SBIS3.CONTROLS.FieldLink',
 
       _onResizeHandler: function() {
          FieldLink.superclass._onResizeHandler.apply(this, arguments);
-         this._linkCollection.reload();
+         if(!this._linkCollection.isPickerVisible()) {
+            this._linkCollection.reload();
+         }
       },
 
       _initEvents: function() {
@@ -362,12 +378,12 @@ define('js!SBIS3.CONTROLS.FieldLink',
        * Обработчик на выбор записи в автодополнении
        * @private
        */
-      _onListItemSelect: propertyUpdateWrapper(function(id, item) {
+      _onListItemSelect: function(id, item) {
          this.hidePicker();
          /* Чтобы не было лишнего запроса на БЛ, добавим рекорд в набор выбранных */
          this.addSelectedItems([item]);
          this.setText('');
-      }),
+      },
 
 
       setDataSource: function(ds, noLoad) {
@@ -377,24 +393,24 @@ define('js!SBIS3.CONTROLS.FieldLink',
 
       _drawSelectedItems: function(keysArr) {
          var self = this,
-             keysArrLen = keysArr.length;
+             keysArrLen = keysArr.length,
+             linkCollectionContainer = self._linkCollection.getContainer();
 
          /* Если удалили в пикере все записи, и он был открыт, то скроем его */
          if (!keysArrLen) {
             this._toggleShowAllLink(false);
          }
 
-         /* Нужно поле делать невидимым, а не скрывать, чтобы можно было посчитать размеры */
          if(!this._options.multiselect && !this._options.alwaysShowTextBox) {
-            this._inputWrapper.toggleClass('ws-invisible', Boolean(keysArrLen))
+            this._inputWrapper.toggleClass('ws-hidden', Boolean(keysArrLen))
          }
 
          if(keysArrLen) {
             /* Нужно скрыть контрол отображающий элементы, перед загрузкой, потому что часто бл может отвечать >500мс и
                отображаемое знаение в поле связи долго не меняется, особенно заметно в редактировании по месту. */
-            self._linkCollection.hide();
+            linkCollectionContainer.addClass('ws-hidden');
             this.getSelectedItems(true).addCallback(function(list){
-               self._linkCollection.show();
+               linkCollectionContainer.removeClass('ws-hidden');
                self._linkCollection.setItems(list);
                return list;
             });
@@ -444,6 +460,8 @@ define('js!SBIS3.CONTROLS.FieldLink',
             element: this._linksWrapper.find('.controls-FieldLink__linksContainer'),
             displayField: this._options.displayField,
             keyField: this._options.keyField,
+            itemTemplate: this._prepareTpl(this.getProperty('itemTemplate')),
+            userItemAttributes: this._options.userItemAttributes,
             parent: this,
             itemCheckFunc: this._checkItemBeforeDraw.bind(this),
             handlers: {
@@ -472,6 +490,12 @@ define('js!SBIS3.CONTROLS.FieldLink',
          });
       },
 
+      showPicker: function() {
+         /* Если открыт пикер, который показывает все выбранные записи, то не показываем автодополнение */
+         if(!this._linkCollection.isPickerVisible()) {
+            FieldLink.superclass.showPicker.apply(this, arguments);
+         }
+      },
       /**
        * Проверяет, нужно ли отрисовывать элемент или надо показать троеточие
        */
@@ -490,9 +514,11 @@ define('js!SBIS3.CONTROLS.FieldLink',
             inputWidth = this._getInputWidth();
             needDrawItem = $ws.helpers.getTextWidth(item[0].outerHTML) + INPUT_MIN_WIDTH < inputWidth + SHOW_ALL_LINK_WIDTH;
 
-            if(!needDrawItem && !this._linkCollection.getContainer().find('.controls-FieldLink__linkItem').length) {
-               item[0].style.width = inputWidth - ((this._options.multiselect || this._options.alwaysShowTextBox) ? INPUT_MIN_WIDTH : INPUT_WRAPPER_PADDING) + 'px';
-               needDrawItem = true;
+            if(!needDrawItem) {
+               if(!this._linkCollection.getContainer().find('.controls-FieldLink__linkItem').length) {
+                  item[0].style.width = inputWidth - ((this._options.multiselect || this._options.alwaysShowTextBox) ? INPUT_MIN_WIDTH : INPUT_WRAPPER_PADDING) + 'px';
+                  needDrawItem = true;
+               }
                this._checkWidth = false;
             }
          }

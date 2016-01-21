@@ -82,7 +82,8 @@ define('js!SBIS3.CONTROLS.ListView',
           * @see itemsActions
           * @see setItemsActions
           * @see getItemsActions
-          *
+          */
+          /**
           * @event onItemClick При клике на запись
           * @remark
           * Событие срабатывает при любом клике под курсором мыши.
@@ -90,8 +91,8 @@ define('js!SBIS3.CONTROLS.ListView',
           * @param {String} id Ключ записи
           * @param {SBIS3.CONTROLS.Record} data запись
           * @param {jQuery} target html элемент на который кликнули
-
-          *
+          */
+          /**
           * @event onItemActivate При активации записи (клик с целью например редактирования или выбора)
           * @remark
           * Событие срабатывает при смене записи под курсором мыши.
@@ -124,19 +125,6 @@ define('js!SBIS3.CONTROLS.ListView',
           * @param {$ws.proto.EventObject} eventObject Дескриптор события.
           * @param {Array} difference Массив измененных полей
           * @param {Object} model Модель с измененными данными
-          */
-         /**
-          * @event onShowEdit Возникает перед отображением редактирования.
-          * @remark
-          * Позволяет не отображать редактирование для определенных моделей.
-          * Срабатывает только для редактирования в режиме "hover".
-          * @param {$ws.proto.EventObject} eventObject Дескриптор события.
-          * @param {Object} model Редактируемая модель
-          * @returns {*} Возможные значения:
-          * <ol>
-          *    <li>false - отменить отображение редактирование;</li>
-          *    <li>* - продолжить редактирование в штатном режиме.</li>
-          * </ol>
           */
          /**
           * @event onBeginEdit Возникает перед началом редактирования
@@ -194,7 +182,8 @@ define('js!SBIS3.CONTROLS.ListView',
                $ws._const.key.space,
                $ws._const.key.enter,
                $ws._const.key.right,
-               $ws._const.key.left
+               $ws._const.key.left,
+               $ws._const.key.o
             ],
             _itemActionsGroup: null,
             _emptyData: undefined,
@@ -386,7 +375,7 @@ define('js!SBIS3.CONTROLS.ListView',
          $constructor: function () {
             //TODO временно смотрим на TopParent, чтобы понять, где скролл. С внедрением ScrallWatcher этот функционал уберем
             var topParent = this.getTopParent();
-            this._publish('onChangeHoveredItem', 'onItemClick', 'onItemActivate', 'onDataMerge', 'onItemValueChanged', 'onShowEdit', 'onBeginEdit', 'onEndEdit', 'onBeginAdd', 'onAfterEndEdit', 'onPrepareFilterOnMove');
+            this._publish('onChangeHoveredItem', 'onItemClick', 'onItemActivate', 'onDataMerge', 'onItemValueChanged', 'onBeginEdit', 'onEndEdit', 'onBeginAdd', 'onAfterEndEdit', 'onPrepareFilterOnMove');
             this._container.on('mousemove', this._mouseMoveHandler.bind(this))
                            .on('mouseleave', this._mouseLeaveHandler.bind(this));
 
@@ -426,32 +415,44 @@ define('js!SBIS3.CONTROLS.ListView',
             this._touchSupport = $ws._const.browser.isMobilePlatform;
             if (this._touchSupport){
             	this._getItemActionsContainer().addClass('controls-ItemsActions__touch-actions');
-            	this._container.bind('swipe', this._swipeHandler.bind(this));
-               this._container.bind('tap', this._tapHandler.bind(this));
-               this._container.bind('touchmove',this._mouseMoveHandler.bind(this));
+            	this._container.bind('swipe', this._swipeHandler.bind(this))
+                               .bind('tap', this._tapHandler.bind(this))
+                               .bind('touchmove',this._mouseMoveHandler.bind(this));
             }
          },
+         _scrollToItem: function(itemId) {
+            $(".controls-ListView__item[data-id='" + itemId + "']", this._container).attr('tabindex', '-1').focus();
+         },
          _keyboardHover: function (e) {
-            var selectedKey = this.getSelectedKey();
-
+            var
+               selectedKey = this.getSelectedKey(),
+               newSelectedKey,
+               newSelectedItem;
             switch (e.which) {
                case $ws._const.key.up:
-                  var previousItem = this.getPrevItemById(selectedKey);
-                  previousItem ? this.setSelectedKey(previousItem.data('id')) : this.setSelectedKey(selectedKey);
+                  newSelectedItem = this._getPrevItemByDOM(selectedKey);
                   break;
                case $ws._const.key.down:
-                  var nextItem = this.getNextItemById(selectedKey);
-                  nextItem ? this.setSelectedKey(nextItem.data('id')) : this.setSelectedKey(selectedKey);
+                  newSelectedItem = this._getNextItemByDOM(selectedKey);
                   break;
                case $ws._const.key.enter:
                   var selectedItem = $('[data-id="' + selectedKey + '"]', this._getItemsContainer());
                   this._elemClickHandler(selectedKey, this._dataSet.getRecordByKey(selectedKey), selectedItem);
                   break;
                case $ws._const.key.space:
-                  var nextItem = this.getNextItemById(selectedKey);
+                  newSelectedItem = this._getNextItemByDOM(selectedKey);
                   this.toggleItemsSelection([selectedKey]);
-                  nextItem ? this.setSelectedKey(nextItem.data('id')) : this.setSelectedKey(selectedKey);
                   break;
+               case $ws._const.key.o:
+                  if (e.ctrlKey && e.altKey && e.shiftKey) {
+                     this.sendCommand('mergeItems', this.getSelectedKeys());
+                  }
+                  break;
+            }
+            if (newSelectedItem.length) {
+               newSelectedKey = newSelectedItem.data('id');
+               this.setSelectedKey(newSelectedKey);
+               this._scrollToItem(newSelectedKey);
             }
             return false;
          },
@@ -461,7 +462,7 @@ define('js!SBIS3.CONTROLS.ListView',
           * @returns {*}
           */
          getNextItemById: function (id) {
-            return this._getHtmlItem(id, true);
+            return this._getItem(id, true);
          },
          /**
           * Возвращает предыдущий элемент
@@ -469,7 +470,29 @@ define('js!SBIS3.CONTROLS.ListView',
           * @returns {jQuery}
           */
          getPrevItemById: function (id) {
-            return this._getHtmlItem(id, false);
+            return this._getItem(id, false);
+         },
+
+         _getNextItemByDOM: function(id) {
+            return this._getHtmlItemByDOM(id, true)
+         },
+
+         _getPrevItemByDOM: function(id) {
+            return this._getHtmlItemByDOM(id, false)
+         },
+
+         _getItem: function(id, isNext) {
+            if($ws.helpers.instanceOfMixin(this._dataSet, 'SBIS3.CONTROLS.Data.Collection.IList')) {
+               var index = this._dataSet.getIndex(this._dataSet.getRecordByKey(id)),
+                  item;
+               item = this._dataSet.at(isNext ? ++index : --index);
+               if (item)
+                  return $('.js-controls-ListView__item[data-id="' + item.getId() + '"]', this._getItemsContainer());
+               else
+                  return undefined;
+            } else {
+               this._getHtmlItemByDOM(id, isNext);
+            }
          },
          /**
           *
@@ -480,35 +503,25 @@ define('js!SBIS3.CONTROLS.ListView',
           */
          // TODO Подумать, как решить данную проблему. Не надёжно хранить информацию в доме
          // Поиск следующего или предыдущего элемента коллекции с учётом вложенных контролов
-         _getHtmlItem: function (id, isNext) {
-            if($ws.helpers.instanceOfMixin(this._dataSet, 'SBIS3.CONTROLS.Data.Collection.IList')) {
-               var index = this._dataSet.getIndex(this._dataSet.getRecordByKey(id)),
-                  item;
-               item = this._dataSet.at(isNext ? ++index : --index);
-               if(item)
-                  return $('.js-controls-ListView__item[data-id="' + item.getId() + '"]', this._getItemsContainer());
-               else
-                  return undefined;
-            } else {
-               var items = $('.js-controls-ListView__item', this._getItemsContainer()).not('.ws-hidden'),
-                  selectedItem = $('[data-id="' + id + '"]', this._getItemsContainer()),
-                  index = items.index(selectedItem),
-                  siblingItem;
-               if (isNext) {
-                  if (index + 1 < items.length) {
-                     siblingItem = items.eq(index + 1);
-                  }
+         _getHtmlItemByDOM: function (id, isNext) {
+            var items = $('.js-controls-ListView__item', this._getItemsContainer()).not('.ws-hidden'),
+               selectedItem = $('[data-id="' + id + '"]', this._getItemsContainer()),
+               index = items.index(selectedItem),
+               siblingItem;
+            if (isNext) {
+               if (index + 1 < items.length) {
+                  siblingItem = items.eq(index + 1);
                }
-               else {
-                  if (index > 0) {
-                     siblingItem = items.eq(index - 1);
-                  }
-               }
-               if (siblingItem)
-                  return this._dataSet.getRecordByKey(siblingItem.data('id')) ? siblingItem : this._getHtmlItem(siblingItem.data('id'), isNext);
-               else
-                  return undefined;
             }
+            else {
+               if (index > 0) {
+                  siblingItem = items.eq(index - 1);
+               }
+            }
+            if (siblingItem)
+               return this._dataSet.getRecordByKey(siblingItem.data('id')) ? siblingItem : this._getHtmlItem(siblingItem.data('id'), isNext);
+            else
+               return undefined;
          },
          _isViewElement: function (elem) {
             return  $ws.helpers.contains(this._getItemsContainer()[0], elem[0]);
@@ -896,11 +909,6 @@ define('js!SBIS3.CONTROLS.ListView',
                      }.bind(this)
                   }
                };
-            if (hoverMode) {
-               config.handlers.onShowEdit = function(event, model) {
-                  event.setResult(this._notify('onShowEdit', model));
-               }.bind(this);
-            }
             return config;
          },
 
