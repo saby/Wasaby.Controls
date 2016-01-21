@@ -34,7 +34,7 @@
          padding-left:4px;
       }
    }
-   &.controls-DropdownList__withoutCross{
+   &.controls-DropdownList__withoutCross, &.ws-disabled{
       & .controls-DropdownList__afterCaptionWrapper{
          display: none;
       }
@@ -51,7 +51,17 @@
       &:hover{
          color: @DropdownList-linkStyleHoverColor;
       }
+      &.ws-disabled:hover{
+         color: @DropdownList-linkStyleColor;
+      }
    }
+   &.ws-disabled{
+      cursor: default !important;
+      .controls-DropdownList__textWrapper {
+         margin-top: 1px;
+      }
+   }
+
 }
 
 .controls-DropdownList__picker {

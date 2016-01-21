@@ -101,6 +101,9 @@
                   <div id="FieldFormat"></div>
                </li>
                <li>
+                  <div id="OP"></div>
+               </li>
+               <li>
                   <div id="Views"></div>
                </li>
                <li>
@@ -325,6 +328,14 @@
                element: "FieldFormat",
                caption: 'FieldFormat',
                href: '/pages/FieldFormat.html'
+            })
+         });
+
+         require(["js!SBIS3.CONTROLS.Link"], function (r) {
+            new r({
+               element: "OP",
+               caption: 'OperationsPanel',
+               href: '/pages/OperationsPanel.html'
             })
          });
 

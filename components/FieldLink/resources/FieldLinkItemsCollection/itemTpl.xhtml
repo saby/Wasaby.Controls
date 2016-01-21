@@ -1,4 +1,10 @@
-<div class="controls-FieldLink__linkItem" data-id="{{=it.item.getKey()}}">
-    <span class="controls-FieldLink__linkItem-caption">{{=it.item.get(it.displayField)}}</span>
+<div class="controls-FieldLink__linkItem">
+    <span class="controls-FieldLink__linkItem-caption">
+        {{? it.itemTpl}}
+            {{=it.itemTpl(it.item)}}
+        {{??}}
+            {{=it.item.get(it.displayField)}}
+        {{?}}
+    </span>
     <span class="controls-FieldLink__linkItem-cross"/>
 </div>
