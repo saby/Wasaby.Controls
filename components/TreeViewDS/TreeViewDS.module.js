@@ -81,6 +81,13 @@ define('js!SBIS3.CONTROLS.TreeViewDS', [
       _nodeClosed : function(key) {
          var itemCont = $('.controls-ListView__item[data-id="' + key + '"]', this.getContainer().get(0));
          $('.controls-TreeView__childContainer', itemCont).css('display', 'none').empty();
+      },
+
+      _drawSelectedItems : function(idArray) {
+         $('.controls-ListView__itemCheckBox__multi').removeClass('controls-ListView__itemCheckBox__multi');
+         for (var i = 0; i < idArray.length; i++) {
+            $(".controls-ListView__item[data-id='" + idArray[i] + "']", this._container).find('.js-controls-ListView__itemCheckBox').first().addClass('controls-ListView__itemCheckBox__multi');
+         }
       }
    });
 
