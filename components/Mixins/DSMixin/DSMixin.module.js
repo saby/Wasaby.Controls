@@ -395,7 +395,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
                   compatibleMode: true,
                   strategy: this._dataSource.getAdapter(),
                   model: newDataSet.getModel(),
-                  data: newDataSet.getRawData(),
+                  data: newDataSet.getProperty(newDataSet.getItemsProperty()),
                   meta: {
                      results: newDataSet.getProperty('r'),
                      more: newDataSet.getTotal(),
