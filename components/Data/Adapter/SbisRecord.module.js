@@ -50,7 +50,7 @@ define('js!SBIS3.CONTROLS.Data.Adapter.SbisRecord', [
       set: function (name, value) {
          var index = this._getFieldIndex(name);
          if (index < 0) {
-            throw new Error('Property is not defined');
+            throw new ReferenceError('Property is not defined');
          }
          this._data.d[index] = value;
       },
