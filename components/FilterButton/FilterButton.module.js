@@ -265,8 +265,9 @@ define('js!SBIS3.CONTROLS.FilterButton',
           },
 
           /**
-           * Уста
-           * @param controller
+           * Устанавливает контроллер для работы с историей
+           * @param {SBIS3.CONTROLS.FilterHistoryController} controller
+           * @noshow
            */
           setHistoryController: function(controller) {
              this._historyController = controller;
