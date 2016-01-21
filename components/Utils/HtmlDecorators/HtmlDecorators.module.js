@@ -84,18 +84,23 @@ define('js!SBIS3.CONTROLS.Utils.HtmlDecorators', ['js!SBIS3.CONTROLS.Utils.HtmlD
       },
 
       /**
-       * Применяет декораторы с проверкой условия
-       * @param {*} value Значение для декорирования
-       * @param {*} condition Условие для проверки
-       * @param {String} [area=''] Область декорирования
-       * @returns {String}
+       * @deprecated Опция не поддерживается с 3.7.3.100, вместо нее используйте {@link applyOnly}
        */
       applyIf: function (value, condition, area) {
+         $ws.single.ioc.resolve('ILogger').log('HtmlDecorators', 'Опция applyIf не поддерживается с 3.7.3.100, вместо нее используйте applyOnly');
+         return this.applyOnly.apply(this, arguments);
+      },
+      /**
+       * Вызывает только указанные декораторы
+       * @param {String} value Значение для декорирования
+       * @param {Object} condition Объект, свойствами которого являются имена декораторов, которые хотим запустить.
+       * Значения свойств - данные, передаваемые в конкретный декоратор
+       * @returns {String}
+       */
+      applyOnly:  function (value, condition) {
          if (typeof condition === 'object'){
             this.setConditions(condition);
-         }
-         if (typeof condition === 'function' ? condition(value) : condition) {
-            return this.apply(value, area);
+            return this.apply(value);
          }
       },
       /**
