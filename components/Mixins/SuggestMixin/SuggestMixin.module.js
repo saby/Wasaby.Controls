@@ -81,16 +81,20 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
             /**
              * @cfg {Boolean} Использовать выпадающий блок
              * <wiTag group="Данные">
-             * true, если контрол списка сущностей находится внутри выпадающего блока.
-             * false, если контрол списка сущностей находится вне выпадающего блока.
+             * @variant true если контрол списка сущностей находится внутри выпадающего блока.
+             * @variant false если контрол списка сущностей находится вне выпадающего блока.
              */
             usePicker: true,
-
+            /**
+             * @typedef {Array} BindingsSuggest
+             * @property {String} contextField Поле контекста.
+             * @property {String} itemField Поле записи.
+             */
             /**
              * @cfg {BindingsSuggest[]} Соответствие полей для подстановки в результат выбора
              * <wiTag group="Данные">
              * Соответствие полей выбранной записи и полей контекста.
-             * Если не заполнено, то используется {@link filterBindings}.
+             * @example
              * <pre>
              *    resultBindings: [{
                  *       contextField: 'ФИО',
@@ -114,14 +118,33 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
              * Должен иметь примеси {SBIS3.CONTROLS.DSMixin}{SBIS3.CONTROLS.Selectable|SBIS3.CONTROLS.MultiSelectable}.
              * @property {Object} options Опции конструктора контрола
              */
-
             /**
              * @cfg {SBIS3.CONTROLS.DSMixin|ListControl} Конфигурация контрола списка сущностей
              * <wiTag group="Отображение">
-             * SBIS3.CONTROLS.DSMixin: инстанс контрола, отображающего список сущностей.
+             * @var {SBIS3.CONTROLS.DSMixin} инстанс контрола, отображающего список сущностей.
              * Должен также иметь примеси {SBIS3.CONTROLS.Selectable|SBIS3.CONTROLS.MultiSelectable}.
-             * ListControl: Настройки контрола, отображающего список сущностей
+             *
+             * @var {ListControl} Настройки контрола, отображающего список сущностей
+             * @remark
              * При передаче настроек инстанс создается лениво - при необходимости.
+             * @example
+             * <pre class="brush:xml">
+             *     <options name="list">
+             *        <option name="component" value="js!SBIS3.CONTROLS.DataGridView"></option>
+             *        <options name="options">
+             *           <option name="showHead" type="boolean" value="false">
+             *           <options name="columns" type="array">
+             *           <options>
+             *              <option name="title">Ид</option>
+             *              <option name="field">Ид</option>
+             *           </options>
+             *           <options>
+             *              <option name="title">Название</option>
+             *              <option name="field">Название</option>
+             *           </options>
+             *        </options>
+             *     </options>
+             * </pre>
              * @group Data
              */
             list: {
@@ -131,6 +154,7 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
 
             /**
              * @cfg {Object} Фильтр данных
+             * При изменении полей фильтра производится запрос к источнику данных.
              * @example
              * <pre class="brush:xml">
              *     <options name="listFilter">
