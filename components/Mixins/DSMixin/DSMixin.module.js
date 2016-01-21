@@ -306,11 +306,6 @@ define('js!SBIS3.CONTROLS.DSMixin', [
                if ($ws.helpers.instanceOfMixin(sourceOpt, 'SBIS3.CONTROLS.Data.Source.ISource')) {
                   result = sourceOpt;
                }
-               /*TODO поддержка старого сорса*/
-               else if ($ws.helpers.instanceOfModule(sourceOpt, 'SBIS3.CONTROLS.BaseSource')) {
-                  $ws.single.ioc.resolve('ILogger').log('SBIS3.CONTROLS.ListControl', 'в качестве Source должен передаваться объект интерфейса SBIS3.CONTROLS.Data.Source.ISource');
-                  result = this._convertOldSource(sourceOpt);
-               }
                if ('module' in sourceOpt) {
                   var DataSourceConstructor = require(sourceOpt.module);
                   result = new DataSourceConstructor(sourceOpt.options || {});
@@ -318,23 +313,6 @@ define('js!SBIS3.CONTROLS.DSMixin', [
                break;
          }
          return result;
-      },
-
-      _convertOldSource: function(source) {
-         var newSource;
-         /*TODO поддержка старого сорса*/
-         if ($ws.helpers.instanceOfModule(source, 'SBIS3.CONTROLS.SbisServiceSource')) {
-            var options = $ws.core.clone(source._options);
-            options['idProperty'] = this._options.keyField;
-            newSource = new SbisService(source._options);
-         }
-         else if ($ws.helpers.instanceOfModule(source, 'SBIS3.CONTROLS.StaticSource')) {
-            newSource = new MemorySource({
-               data : source._options.data,
-               idProperty : this._options.keyField
-            })
-         }
-         return newSource;
       },
 
       /**
