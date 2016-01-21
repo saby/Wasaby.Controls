@@ -133,7 +133,9 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
             },
             edit: function (target, record) {
                return this._prepareEdit(record).addCallback(function(preparedrecord) {
-                  this._eip.edit(target, preparedrecord);
+                  if (preparedrecord) {
+                     this._eip.edit(target, preparedrecord);
+                  }
                }.bind(this));
             },
             _prepareEdit: function(record) {
@@ -158,8 +160,6 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                      });
                   } else if (beginEditResult !== false) {
                      return record;
-                  } else {
-                     return $ws.proto.Deferred.fail();
                   }
                });
             },

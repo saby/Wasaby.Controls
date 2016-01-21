@@ -46,7 +46,7 @@ define('js!SBIS3.CONTROLS.ListControlMixin', [
              */
 
             /**
-             * @cfg {DataSource|SBIS3.CONTROLS.Data.Source.ISource|Function} Источник данных. Если указан, то опция {@link items} не действует.
+             * @cfg {DataSource|SBIS3.CONTROLS.Data.Source.ISource} Источник данных. Если указан, то опция {@link items} не действует.
              * @remark Нужен только для того, чтобы создать SBIS3.CONTROLS.Data.Collection.ISourceLoadable коллекцию в конструкторе. Далее не используется.
              * @example
              * Задаем источник данных декларативно:

@@ -57,6 +57,9 @@ define('js!SBIS3.CONTROLS.ItemActionsGroup',
                 isActionVisible,
                 isMain;
 
+            /* Если открыто меню, не меняем состояние кнопок */
+            if(this._itemActionsMenu && this._itemActionsMenu.isVisible()) return;
+
             for(var i in itemsInstances) {
                if(itemsInstances.hasOwnProperty(i)) {
                   isMain = this._itemActionsButtons[i]['isMainAction'];
@@ -116,7 +119,9 @@ define('js!SBIS3.CONTROLS.ItemActionsGroup',
                closeByExternalClick: true,
                handlers: {
                   onClose: function() {
-                     var hoveredItem = self.getParent().getHoveredItem();
+                     var parent = self.getParent(),
+                         hoveredItem = parent.getHoveredItem();
+
                      self._itemActionsMenuVisible = false;
                      self._activeItem.container.removeClass('controls-ItemActions__activeItem');
                      self._menuVisibilityHandler(false);
@@ -124,8 +129,10 @@ define('js!SBIS3.CONTROLS.ItemActionsGroup',
                      if (self._touchActions) {
                         self._container[0].style.visibility = 'visible';
                         self.hideItemActions();
+                     } else if(hoveredItem.container) {
+                        parent._showItemActions(hoveredItem)
                      } else {
-                        self[hoveredItem.container ? 'showItemActions' : 'hideItemActions'](hoveredItem);
+                        self.hideItemActions();
                      }
                   },
                   onMenuItemActivate: function(e, id) {
