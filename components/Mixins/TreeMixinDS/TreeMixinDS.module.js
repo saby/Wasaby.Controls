@@ -386,6 +386,9 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', ['js!SBIS3.CORE.Control'], function (Con
                this.setCurrentRoot(nodeID);
                this.reload();
             }
+            else {
+               this._activateItem(id);
+            }
          }
       }
    };
