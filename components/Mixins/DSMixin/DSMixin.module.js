@@ -423,6 +423,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
          }
 
          var
+            def,
             self = this,
             filterChanged = typeof(filter) !== 'undefined',
             sortingChanged = typeof(sorting) !== 'undefined',
@@ -441,7 +442,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
 
          if (this._dataSource){
             this._toggleIndicator(true);
-	         this._loader = this._callQuery(this._options.filter, this.getSorting(), this._offset, this._limit).addCallback($ws.helpers.forAliveOnly(function (dataSet) {
+	         def = this._callQuery(this._options.filter, this.getSorting(), this._offset, this._limit).addCallback($ws.helpers.forAliveOnly(function (dataSet) {
 	            self._toggleIndicator(false);
 	            self._loader = null;//Обнулили без проверки. И так знаем, что есть и загрузили
 
@@ -460,7 +461,12 @@ define('js!SBIS3.CONTROLS.DSMixin', [
 	            }
 	            return error;
 	         }, self));
+            this._loader = def;
          }
+         else {
+            def = new $ws.proto.Deferred();
+            def.callback();
+         } 
 
          this._notifyOnPropertyChanged('filter');
          this._notifyOnPropertyChanged('sorting');
