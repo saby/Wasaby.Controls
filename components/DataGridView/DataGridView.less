@@ -205,6 +205,8 @@
       overflow: hidden;
       .controls-ListView__itemCheckBox {
          margin: @data-grid-checkbox-margin;
+        //В FireFox все чекбоксы улетают в верхний левый угол из за position: absolute
+         position: static;
       }
    }
 }
