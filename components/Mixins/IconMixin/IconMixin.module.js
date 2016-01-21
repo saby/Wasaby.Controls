@@ -14,8 +14,9 @@ define('js!SBIS3.CONTROLS.IconMixin', ['html!SBIS3.CONTROLS.IconMixin/IconTempla
       $protected: {
          _iconClass: '',
          _oldIcon: '',
+         _iconTemplate: IconTemplate,
          _options: {
-            iconTemplate: IconTemplate,
+
             /**
              * @cfg {String}  Путь до иконки
              * Путь задаётся относительно корня сайта либо через sprite.
@@ -31,8 +32,15 @@ define('js!SBIS3.CONTROLS.IconMixin', ['html!SBIS3.CONTROLS.IconMixin/IconTempla
          }
       },
 
+      after : {
+         _modifyOptions: function (opts) {
+            if (opts.icon) opts._iconClass = IconTemplate(opts);
+            return opts;
+         }
+      },
+
       $constructor: function() {
-         if (this._options.icon) this._iconClass = this._getIconClass(this._options.icon);
+
       },
 
       /**
@@ -49,8 +57,8 @@ define('js!SBIS3.CONTROLS.IconMixin', ['html!SBIS3.CONTROLS.IconMixin/IconTempla
        */
       setIcon: function(icon) {
          this._options.icon = icon;
-         this._oldIcon = this._iconClass;
-         this._iconClass = this._getIconClass(icon);
+         this._oldIcon = this._options._iconClass;
+         this._options._iconClass = this._iconTemplate(this._options);
          this._drawIcon(icon);
       },
       /**
@@ -71,16 +79,6 @@ define('js!SBIS3.CONTROLS.IconMixin', ['html!SBIS3.CONTROLS.IconMixin/IconTempla
       },
       _drawIcon: function(icon) {
 
-      },
-
-      _getIconClass: function(icon){
-         if (icon) {
-            if (icon.indexOf('sprite:') >= 0) {
-               return icon.substr(7);
-            } else {
-               return icon;
-            }
-         }
       }
    };
 
