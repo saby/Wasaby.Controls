@@ -82,7 +82,8 @@ define('js!SBIS3.CONTROLS.ListView',
           * @see itemsActions
           * @see setItemsActions
           * @see getItemsActions
-          *
+          */
+          /**
           * @event onItemClick При клике на запись
           * @remark
           * Событие срабатывает при любом клике под курсором мыши.
@@ -90,8 +91,8 @@ define('js!SBIS3.CONTROLS.ListView',
           * @param {String} id Ключ записи
           * @param {SBIS3.CONTROLS.Record} data запись
           * @param {jQuery} target html элемент на который кликнули
-
-          *
+          */
+          /**
           * @event onItemActivate При активации записи (клик с целью например редактирования или выбора)
           * @remark
           * Событие срабатывает при смене записи под курсором мыши.
@@ -194,7 +195,8 @@ define('js!SBIS3.CONTROLS.ListView',
                $ws._const.key.space,
                $ws._const.key.enter,
                $ws._const.key.right,
-               $ws._const.key.left
+               $ws._const.key.left,
+               $ws._const.key.o
             ],
             _itemActionsGroup: null,
             _emptyData: undefined,
@@ -333,7 +335,7 @@ define('js!SBIS3.CONTROLS.ListView',
                 * </pre>
                 * @see pageSize
                 */
-               ignoreLocalPageSize: false,
+               ignoreLocalPageSize: true,
                /**
                 * @cfg {Boolean} Режим постраничной навигации
                 * @remark
@@ -386,7 +388,7 @@ define('js!SBIS3.CONTROLS.ListView',
          $constructor: function () {
             //TODO временно смотрим на TopParent, чтобы понять, где скролл. С внедрением ScrallWatcher этот функционал уберем
             var topParent = this.getTopParent();
-            this._publish('onChangeHoveredItem', 'onItemClick', 'onItemActivate', 'onDataMerge', 'onItemValueChanged', 'onShowEdit', 'onBeginEdit', 'onEndEdit', 'onBeginAdd', 'onAfterEndEdit');
+            this._publish('onChangeHoveredItem', 'onItemClick', 'onItemActivate', 'onDataMerge', 'onItemValueChanged', 'onShowEdit', 'onBeginEdit', 'onEndEdit', 'onBeginAdd', 'onAfterEndEdit', 'onPrepareFilterOnMove');
             this._container.on('mousemove', this._mouseMoveHandler.bind(this))
                            .on('mouseleave', this._mouseLeaveHandler.bind(this));
 
@@ -426,9 +428,9 @@ define('js!SBIS3.CONTROLS.ListView',
             this._touchSupport = $ws._const.browser.isMobilePlatform;
             if (this._touchSupport){
             	this._getItemActionsContainer().addClass('controls-ItemsActions__touch-actions');
-            	this._container.bind('swipe', this._swipeHandler.bind(this));
-               this._container.bind('tap', this._tapHandler.bind(this));
-               this._container.bind('touchmove',this._mouseMoveHandler.bind(this));
+            	this._container.bind('swipe', this._swipeHandler.bind(this))
+                               .bind('tap', this._tapHandler.bind(this))
+                               .bind('touchmove',this._mouseMoveHandler.bind(this));
             }
          },
          _scrollToItem: function(itemId) {
@@ -441,18 +443,23 @@ define('js!SBIS3.CONTROLS.ListView',
                newSelectedItem;
             switch (e.which) {
                case $ws._const.key.up:
-                  newSelectedItem = this.getPrevItemById(selectedKey);
+                  newSelectedItem = this._getPrevItemByDOM(selectedKey);
                   break;
                case $ws._const.key.down:
-                  newSelectedItem = this.getNextItemById(selectedKey);
+                  newSelectedItem = this._getNextItemByDOM(selectedKey);
                   break;
                case $ws._const.key.enter:
                   var selectedItem = $('[data-id="' + selectedKey + '"]', this._getItemsContainer());
                   this._elemClickHandler(selectedKey, this._dataSet.getRecordByKey(selectedKey), selectedItem);
                   break;
                case $ws._const.key.space:
-                  newSelectedItem = this.getNextItemById(selectedKey);
+                  newSelectedItem = this._getNextItemByDOM(selectedKey);
                   this.toggleItemsSelection([selectedKey]);
+                  break;
+               case $ws._const.key.o:
+                  if (e.ctrlKey && e.altKey && e.shiftKey) {
+                     this.sendCommand('mergeItems', this.getSelectedKeys());
+                  }
                   break;
             }
             if (newSelectedItem.length) {
@@ -468,7 +475,7 @@ define('js!SBIS3.CONTROLS.ListView',
           * @returns {*}
           */
          getNextItemById: function (id) {
-            return this._getHtmlItem(id, true);
+            return this._getItem(id, true);
          },
          /**
           * Возвращает предыдущий элемент
@@ -476,7 +483,29 @@ define('js!SBIS3.CONTROLS.ListView',
           * @returns {jQuery}
           */
          getPrevItemById: function (id) {
-            return this._getHtmlItem(id, false);
+            return this._getItem(id, false);
+         },
+
+         _getNextItemByDOM: function(id) {
+            return this._getHtmlItemByDOM(id, true)
+         },
+
+         _getPrevItemByDOM: function(id) {
+            return this._getHtmlItemByDOM(id, false)
+         },
+
+         _getItem: function(id, isNext) {
+            if($ws.helpers.instanceOfMixin(this._dataSet, 'SBIS3.CONTROLS.Data.Collection.IList')) {
+               var index = this._dataSet.getIndex(this._dataSet.getRecordByKey(id)),
+                  item;
+               item = this._dataSet.at(isNext ? ++index : --index);
+               if (item)
+                  return $('.js-controls-ListView__item[data-id="' + item.getId() + '"]', this._getItemsContainer());
+               else
+                  return undefined;
+            } else {
+               this._getHtmlItemByDOM(id, isNext);
+            }
          },
          /**
           *
@@ -487,7 +516,7 @@ define('js!SBIS3.CONTROLS.ListView',
           */
          // TODO Подумать, как решить данную проблему. Не надёжно хранить информацию в доме
          // Поиск следующего или предыдущего элемента коллекции с учётом вложенных контролов
-         _getHtmlItem: function (id, isNext) {
+         _getHtmlItemByDOM: function (id, isNext) {
             var items = $('.js-controls-ListView__item', this._getItemsContainer()).not('.ws-hidden'),
                selectedItem = $('[data-id="' + id + '"]', this._getItemsContainer()),
                index = items.index(selectedItem),
@@ -762,6 +791,13 @@ define('js!SBIS3.CONTROLS.ListView',
          setElemClickHandler: function (method) {
             this._options.elemClickHandler = method;
          },
+
+         setEnabled: function(enabled) {
+            if (!enabled) {
+               this._cancelEdit();
+            }
+            ListView.superclass.setEnabled.apply(this, arguments);
+         },
          //********************************//
          //   БЛОК РЕДАКТИРОВАНИЯ ПО МЕСТУ //
          //*******************************//
@@ -807,15 +843,21 @@ define('js!SBIS3.CONTROLS.ListView',
             return this._options.editMode;
          },
 
+         showEip: function(target, record, isEdit) {
+            if (this.isEnabled()) {
+               this._getEditInPlace().showEip(target, record, isEdit);
+            }
+         },
+
          _onItemClickHandler: function(event, id, record, target) {
-            this._getEditInPlace().edit($(target).closest('.js-controls-ListView__item'), record);
+            this.showEip($(target).closest('.js-controls-ListView__item'), record);
             event.setResult(false);
          },
 
          _onChangeHoveredItemHandler: function(event, hoveredItem) {
             var target = hoveredItem.container;
             if (target && !(target.hasClass('controls-editInPlace') || target.hasClass('controls-editInPlace__editing'))) {
-               this._getEditInPlace().show(target, this._dataSet.getRecordByKey(hoveredItem.key));
+               this.showEip(target, this._dataSet.getRecordByKey(hoveredItem.key), false);
             } else {
                this._getEditInPlace().hide();
             }
@@ -886,6 +928,12 @@ define('js!SBIS3.CONTROLS.ListView',
                }.bind(this);
             }
             return config;
+         },
+
+         _getElementForRedraw: function(item) {
+            // Даже не думать удалять ":not(...)". Это связано с тем, что при редактировании по месту может возникнуть задача перерисовать строку
+            // DataGridView. В виду одинакового атрибута "data-id", это единственный способ отличить строку DataGridView от строки EditInPlace.
+            return this._getItemsContainer().find('.js-controls-ListView__item[data-id="' + item.getKey() + '"]:not(".controls-editInPlace")');
          },
 
          //********************************//
@@ -1439,11 +1487,11 @@ define('js!SBIS3.CONTROLS.ListView',
             this._notify('onItemActivate', {id: id, item: item});
          },
          _beginAdd: function() {
-            return this._getEditInPlace().add();
+            return this.showEip();
          },
          _beginEdit: function(record) {
             var target = this._getItemsContainer().find('.js-controls-ListView__item[data-id="' + record.getKey() + '"]:first');
-            return this._getEditInPlace().edit(target, record);
+            return this.showEip(target, record);
          },
          _cancelEdit: function() {
             return this._getEditInPlace().endEdit();
@@ -1494,7 +1542,9 @@ define('js!SBIS3.CONTROLS.ListView',
             for (var i = 1; i < rows.length; i++){
                var upperRow = $('.controls-ladder', rows[i - 1]),
                   lowerRow = $('.controls-ladder', rows[i]);
-               lowerRow.toggleClass('ws-invisible', upperRow.html() == lowerRow.html());
+               for (var j = 0; j < lowerRow.length; j++){
+                  lowerRow.eq(j).toggleClass('ws-invisible', upperRow.eq(j).html() == lowerRow.eq(j).html());
+               }
             }
          }
       });

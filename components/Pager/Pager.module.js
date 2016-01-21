@@ -30,7 +30,7 @@ define('js!SBIS3.CONTROLS.Pager', ['js!SBIS3.CORE.CompoundControl', 'html!SBIS3.
       $protected: {
          _dotTplFn: dotTplFn,
          _options: {
-            ignoreLocalPageSize : false,
+            ignoreLocalPageSize : true,
             pagingOptions: {}
          },
          _fddDataKeys: [10, 20, 25, 50, 100, 200, 500, 1000],

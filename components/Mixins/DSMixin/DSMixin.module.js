@@ -322,7 +322,6 @@ define('js!SBIS3.CONTROLS.DSMixin', [
          }
 
          var
-            def = new $ws.proto.Deferred(),
             self = this,
             filterChanged = typeof(filter) !== 'undefined',
             sortingChanged = typeof(sorting) !== 'undefined',
@@ -353,14 +352,14 @@ define('js!SBIS3.CONTROLS.DSMixin', [
 	            self._dataLoadedCallback();
 	            self._notify('onDataLoad', dataSet);
 	            //self._notify('onBeforeRedraw');
-	            def.callback(dataSet);
 	            self._redraw();
+               return dataSet;
 	         }, self)).addErrback($ws.helpers.forAliveOnly(function(error){
 	            if (!error.canceled) {
 	               self._toggleIndicator(false);
 	               $ws.helpers.message(error.message.toString().replace('Error: ', ''));
 	            }
-	            def.errback(error);
+	            return error;
 	         }, self));
          }
 
@@ -369,7 +368,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
          this._notifyOnPropertyChanged('offset');
          this._notifyOnPropertyChanged('limit');
 
-         return def;
+         return this._loader;
       }),
 
       _callQuery: function (filter, sorting, offset, limit) {
@@ -650,10 +649,14 @@ define('js!SBIS3.CONTROLS.DSMixin', [
        */
       redrawItem: function(item) {
          var
-            targetElement = this._getItemsContainer().find('.js-controls-ListView__item[data-id="' + item.getKey() + '"]'),
+            targetElement = this._getElementForRedraw(item),
             newElement = this._drawItem(item).addClass(targetElement.attr('class'));
          targetElement.after(newElement).remove();
          this.reviveComponents();
+      },
+
+      _getElementForRedraw: function(item) {
+         return this._getItemsContainer().find('.js-controls-ListView__item[data-id="' + item.getKey() + '"]');
       },
 
       _drawItem: function (item, at, last) {
@@ -774,43 +777,37 @@ define('js!SBIS3.CONTROLS.DSMixin', [
       _createItemInstance: function (item, targetContainer, at) {
          return this._buildTplItem(item, this._getItemTemplate(item));
       },
-      _buildTplItem: function(item, itemTpl){
-         var
-               buildedTpl,
-               dotTemplate;
-         if (typeof itemTpl == 'string') {
-            if (itemTpl.indexOf('html!') == 0) {
-               dotTemplate = require(itemTpl);
-            }
-            else {
-               dotTemplate = doT.template(itemTpl);
-            }
 
-         }
-         else if (typeof itemTpl == 'function') {
-            dotTemplate = itemTpl;
-         }
+      _prepareTpl: function(itemTpl) {
+         return itemTpl && typeof itemTpl === 'string' ?
+            itemTpl.indexOf('html!') === 0 ?
+               require(itemTpl) :
+               doT.template(itemTpl) :
+            typeof itemTpl === 'function' ?
+               itemTpl :
+               undefined;
+      },
+
+      _buildTplItem: function(item, itemTpl){
+         var dotTemplate = this._prepareTpl(itemTpl);
 
          if (typeof dotTemplate == 'function') {
-            buildedTpl = $(MarkupTransformer(dotTemplate(this._buildTplArgs(item))));
-            return buildedTpl;
-         }
-         else {
+            return $(MarkupTransformer(dotTemplate(this._buildTplArgs(item))));
+         } else {
             throw new Error('Ошибка в itemTemplate');
          }
       },
       _buildTplArgs: function(item) {
-         var
-            tplOptions = {
-               templateBinding : this._options.templateBinding,
-               item: item
-            };
+         var tplOptions = {
+            templateBinding : this._options.templateBinding,
+            item: item
+         };
          if (this._options.includedTemplates) {
             var tpls = this._options.includedTemplates;
             tplOptions.included = {};
             for (var j in tpls) {
                if (tpls.hasOwnProperty(j)) {
-                  tplOptions.included[j] = require(tpls[j]);
+                  tplOptions.included[j] = this._prepareTpl(tpls[j]);
                }
             }
          }

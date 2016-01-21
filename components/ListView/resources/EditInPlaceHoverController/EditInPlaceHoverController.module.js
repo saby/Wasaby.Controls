@@ -47,6 +47,13 @@ define('js!SBIS3.CONTROLS.EditInPlaceHoverController',
             _getNextTarget: function(editNextRow) {
                return this._getEditingEip().getTarget()[editNextRow ? 'next' : 'prev']('.js-controls-ListView__item:not(".controls-editInPlace")');
             },
+            showEip: function(target, record, isEdit) {
+               if (isEdit === false) {
+                  this.show(target, record)
+               } else {
+                  EditInPlaceHoverController.superclass.showEip.apply(this, arguments)
+               }
+            },
             /**
              * Обновить область отображаемую по ховеру
              * @param {Object} target Элемент, для которого отобразить область по ховеру
@@ -79,8 +86,10 @@ define('js!SBIS3.CONTROLS.EditInPlaceHoverController',
                var hoveredEip = this._hoveredEip;
                this.endEdit(true).addCallback(function() {
                   if (hoveredEip && (hoveredEip.getTarget().get(0) === target.get(0))) {
-                     hoveredEip.edit(target, record);
-                     this._hoveredEip = null;
+                     if (this._notify('onBeginEdit', record) !== false) {
+                        hoveredEip.edit(target, record);
+                        this._hoveredEip = null;
+                     }
                   } else {
                      EditInPlaceHoverController.superclass.edit.apply(this, [target, record])
                   }

@@ -411,6 +411,7 @@ define(
             // Если дата изменилась -- генерировать событие.
             if ( oldDate !== this.timeInterval.toString()) {
                this._notify('onChangeInterval', this.timeInterval.toString());
+               this._notifyOnPropertyChanged('interval');
             }
          }
       });
