@@ -194,7 +194,7 @@ define([
             var model = new Model({
                adapter: new AdapterSbis(),
                rawData: {
-                  d: dataEmpty.map(function() {
+                  d: $ws.helpers.map(dataEmpty, function() {
                      return undefined;
                   }),
                   s: dataScheme

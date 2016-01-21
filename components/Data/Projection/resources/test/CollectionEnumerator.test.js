@@ -257,7 +257,7 @@ define([
                sortReverse = [4, 3, 2, 1, 0],
                tests = [{
                   //0
-                  goto: -1,
+                  'goto': -1,
                   hide: [],
                   sort: [],
                   remove: [0],
@@ -273,7 +273,7 @@ define([
                   }
                }, {
                   //1
-                  goto: 0,
+                  'goto': 0,
                   hide: [],
                   sort: [],
                   remove: [0],
@@ -285,7 +285,7 @@ define([
                   }
                }, {
                   //2
-                  goto: 1,
+                  'goto': 1,
                   hide: [],
                   sort: [],
                   remove: [0],
@@ -297,7 +297,7 @@ define([
                   }
                }, {
                   //3
-                  goto: 4,
+                  'goto': 4,
                   hide: [],
                   sort: [],
                   remove: [3],
@@ -313,7 +313,7 @@ define([
                   }
                }, {
                   //4
-                  goto: 1,
+                  'goto': 1,
                   hide: [],
                   sort: [],
                   remove: [2],
@@ -330,7 +330,7 @@ define([
                   }
                }, {
                   //5
-                  goto: -1,
+                  'goto': -1,
                   hide: [0],
                   sort: [],
                   remove: [],
@@ -346,7 +346,7 @@ define([
                   }
                }, {
                   //6
-                  goto: 0,
+                  'goto': 0,
                   hide: [0],
                   sort: [],
                   remove: [],
@@ -358,7 +358,7 @@ define([
                   }
                }, {
                   //7
-                  goto: 1,
+                  'goto': 1,
                   hide: [0],
                   sort: [],
                   remove: [],
@@ -370,7 +370,7 @@ define([
                   }
                }, {
                   //8
-                  goto: 4,
+                  'goto': 4,
                   hide: [3],
                   sort: [],
                   remove: [],
@@ -386,7 +386,7 @@ define([
                   }
                }, {
                   //9
-                  goto: 1,
+                  'goto': 1,
                   hide: [2],
                   sort: [],
                   remove: [],
@@ -403,7 +403,7 @@ define([
                   }
                }, {
                   //10
-                  goto: -1,
+                  'goto': -1,
                   hide: [1],
                   sort: [],
                   remove: [0],
@@ -419,7 +419,7 @@ define([
                   }
                }, {
                   //11
-                  goto: 0,
+                  'goto': 0,
                   hide: [1],
                   sort: [],
                   remove: [0],
@@ -431,7 +431,7 @@ define([
                   }
                }, {
                   //12
-                  goto: 1,
+                  'goto': 1,
                   hide: [1],
                   sort: [],
                   remove: [0],
@@ -443,7 +443,7 @@ define([
                   }
                }, {
                   //13
-                  goto: 2,
+                  'goto': 2,
                   hide: [1],
                   sort: [],
                   remove: [0],
@@ -455,7 +455,7 @@ define([
                   }
                }, {
                   //14
-                  goto: 1,
+                  'goto': 1,
                   hide: [2],
                   sort: [],
                   remove: [0],
@@ -472,7 +472,7 @@ define([
                   }
                }, {
                   //15
-                  goto: 2,
+                  'goto': 2,
                   hide: [1, 2, 3],
                   sort: [],
                   remove: [],
@@ -488,7 +488,7 @@ define([
                   }
                }, {
                   //16
-                  goto: 2,
+                  'goto': 2,
                   hide: [1, 3],
                   sort: [],
                   remove: [],
@@ -505,7 +505,7 @@ define([
                   }
                } , {
                   //17
-                  goto: -1,
+                  'goto': -1,
                   hide: [],
                   sort: sortReverse,
                   remove: [],
@@ -524,7 +524,7 @@ define([
                   }
                }, {
                   //18
-                  goto: 0,
+                  'goto': 0,
                   hide: [],
                   sort: sortReverse,
                   remove: [],
@@ -536,7 +536,7 @@ define([
                   }
                }, {
                   //19
-                  goto: 1,
+                  'goto': 1,
                   hide: [],
                   sort: sortReverse,
                   remove: [],
@@ -548,7 +548,7 @@ define([
                   }
                }, {
                   //20
-                  goto: 2,
+                  'goto': 2,
                   hide: [],
                   sort: [1, 3, 0, 4, 2],
                   remove: [],
@@ -567,7 +567,7 @@ define([
                   }
                }, {
                   //21
-                  goto: 0,
+                  'goto': 0,
                   hide: [],
                   sort: [1, 3, 0, 4, 2],
                   remove: [],
@@ -579,7 +579,7 @@ define([
                   }
                }, {
                   //22
-                  goto: 1,
+                  'goto': 1,
                   hide: [1, 2],
                   sort: sortReverse,
                   remove: [],
@@ -591,7 +591,7 @@ define([
                   }
                }, {
                   //23
-                  goto: 3,
+                  'goto': 3,
                   hide: [1, 2, 4],
                   sort: sortReverse,
                   remove: [],
@@ -603,7 +603,7 @@ define([
                   }
                }, {
                   //24
-                  goto: 2,
+                  'goto': 2,
                   hide: [1, 3],
                   sort: sortReverse,
                   remove: [],
@@ -621,7 +621,7 @@ define([
                   var original;
 
                   context(testNum + ': when ' +
-                     (test.goto > -1 ? 'goto #' + test.goto + ', ' : '' ) +
+                     (test['goto'] > -1 ? 'goto #' + test['goto'] + ', ' : '' ) +
                      (test.sort.length ? 'sort [' + test.sort.join(',') + '], ' : '') +
                      (test.hide.length ? 'hide [' + test.hide.join(',') + '], ' : '') +
                      (test.remove.length ? 'remove [' + test.remove.join(',') + ']' : ''),
@@ -629,8 +629,8 @@ define([
                      beforeEach(function() {
                         original = itemsMap.slice();
 
-                        if (test.goto > -1) {
-                           enumerator.setPosition(test.goto);
+                        if (test['goto'] > -1) {
+                           enumerator.setPosition(test['goto']);
                         }
 
                         if (test.hide.length) {
@@ -665,7 +665,7 @@ define([
 
                      it('the current is ' + (test.expect.current ? 'not changed' : 'reset'), function() {
                         if (test.expect.current) {
-                           assert.strictEqual(original[test.goto], enumerator.getCurrent());
+                           assert.strictEqual(original[test['goto']], enumerator.getCurrent());
                         } else {
                            assert.isUndefined(enumerator.getCurrent());
                         }
