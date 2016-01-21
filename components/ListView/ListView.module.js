@@ -309,26 +309,24 @@ define('js!SBIS3.CONTROLS.ListView',
                 */
                multiselect: false,
                /**
-                * @cfg {Boolean} Подгружать ли данные по скроллу
-                * @example
-                * <pre>
-                *    <option name="infiniteScroll">true</option>
-                * </pre>
-                * @see isInfiniteScroll
-                * @see setInfiniteScroll
-                */
-               infiniteScroll: false,
-               /**
-                * @cfg{String} Направление отслеживания скролла.
+                * @cfg {String|null} Подгружать ли данные по скроллу
                 * @remark
                 * По умолчанию, подгрузка осуществялется "вниз". Мы поскроллили и записи подгрузились вниз.
                 * Но можно настроить скролл так, что записи будут загружаться по скроллу к верхней границе контейнера.
                 * Важно. Запросы к БЛ все так же будут уходить с увеличением номера страницы. V
                 * Может использоваться для загрузки систории сообщений, например.
-                * @variant bottom - подгрузка вниз. Параметр по умолчанию
-                * @variant top - Подгрузка по скроллу "вверх".
+                * @variant down - подгружать данные при достижении дна контейнера (подгрузка "вниз")
+                * @variant up - подгружать данные при достижении верха контейнера (подгрузка "вверх")
+                * @variant null - не загружать данные по скроллу
+                *
+                * @example
+                * <pre>
+                *    <option name="infiniteScroll">down</option>
+                * </pre>
+                * @see isInfiniteScroll
+                * @see setInfiniteScroll
                 */
-               infiniteScrollDirection: 'bottom',
+               infiniteScroll: null,
                /**
                 * @cfg {jQuery || String} Контейнер в котором будет скролл, если представление данных ограничено по высоте.
                 * Можно передать Jquery-селектор, но поиск будет произведен от контейнера вверх.
@@ -421,6 +419,16 @@ define('js!SBIS3.CONTROLS.ListView',
                                .bind('touchmove',this._mouseMoveHandler.bind(this));
             }
          },
+         _modifyOptions : function(opts){
+            //ListView.superclass._modifyOptions.apply(this, arguments);
+            //Если нам задали бесконечный скролл в виде Bool, то если true, то 'down' иначе null
+            if (opts.hasOwnProperty('infiniteScroll')){
+               opts.infiniteScroll = typeof opts.infiniteScroll === 'boolean' ?
+                     (opts.infiniteScroll ? 'down' : null)
+                     : opts.infiniteScroll;
+            }
+            return opts;
+         },
          _prepareInfiniteScroll: function(){
             var topParent = this.getTopParent(),
                   self = this,
@@ -429,7 +437,7 @@ define('js!SBIS3.CONTROLS.ListView',
                this._createLoadingIndicator();
                //для подгрузки вверх пока поставим 0 - иначе при постоянной прокрутке может сразу много данных
                //загрузиться - будет некрасиво доскроллено
-               scrollWatcherCfg.checkOffset = this._options.infiniteScrollDirection === 'bottom' ?  START_NEXT_LOAD_OFFSET : 0;
+               scrollWatcherCfg.checkOffset = this._options.infiniteScroll === 'down' ?  START_NEXT_LOAD_OFFSET : 0;
                scrollWatcherCfg.opener = this;
                if (this._options.infiniteScrollContainer) {
                   this._options.infiniteScrollContainer = this._options.infiniteScrollContainer instanceof jQuery
@@ -452,7 +460,8 @@ define('js!SBIS3.CONTROLS.ListView',
                this._scrollWatcher = new ScrollWatcher(scrollWatcherCfg);
                this._scrollWatcher.subscribe('onScroll', function(event, type){
                   //top || bottom
-                  self._loadChecked(type === self._options.infiniteScrollDirection);
+                  self._loadChecked((type === 'top' && self._options.infiniteScroll === 'up') ||
+                     (type === 'bottom' && self._options.infiniteScroll === 'down'));
                });
             }
          },
@@ -1111,7 +1120,7 @@ define('js!SBIS3.CONTROLS.ListView',
          _drawItems: function(records, at){
             //Это реализовано здесь, потому что 1ый раз отрисовка вызвана не после подгрузки в
             // бесконечном скролле, а после первого получения данных!
-            if (this._options.infiniteScrollDirection === 'top' && !at) {
+            if (this._options.infiniteScroll === 'up' && !at) {
                at = {at : 0};
             }
             ListView.superclass._drawItems.apply(this, [records, at]);
@@ -1188,7 +1197,7 @@ define('js!SBIS3.CONTROLS.ListView',
                   if (dataSet.getCount()) {
                      records = dataSet._getRecords();
                      self._dataSet.merge(dataSet, {remove: false});
-                     if (self._options.infiniteScrollDirection === 'top') {
+                     if (self._options.infiniteScroll === 'up') {
                         self._containerScrollHeight = this._scrollWatcher.getScrollHeight();
                      }
                      self._drawItems(records);
@@ -1239,7 +1248,7 @@ define('js!SBIS3.CONTROLS.ListView',
          _moveTopScroll : function(){
             var scrollAmount;
             //сюда попадем только когда уже точно есть скролл
-            if (this._options.infiniteScrollDirection == 'top'){
+            if (this.isInfiniteScroll() && this._options.infiniteScroll == 'up'){
                scrollAmount = this._scrollWatcher.getScrollHeight() - this._containerScrollHeight - this._scrollIndicatorHeight;
                //Если запускаем 1ый раз, то нужно поскроллить в самый низ (ведь там "начало" данных), в остальных догрузках скроллим вниз на
                //разницы величины скролла (т.е. на сколько добавилось высоты, на столько и опустили). Получается плавно
