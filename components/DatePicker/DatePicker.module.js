@@ -158,7 +158,6 @@ define(
              * @variant 'YY-MM-DD HH:II'
              * @variant 'YYYY'
              * @variant 'MM/YYYY'
-             * @translatable
              * @see date
              * @see isCalendarIconShow
              */
@@ -171,7 +170,6 @@ define(
              * <pre>
              *     <option name="date">2015-03-07T21:00:00.000Z</option>
              * </pre>
-             * @translatable
              * @see isCalendarIconShow
              * @see onDateChange
              * @see setDate

@@ -81,7 +81,6 @@ define(
                  * <pre class="brush:xml">
                  *     <option name="date">2015-03-07T21:00:00.000Z</option>
                  * </pre>
-                 * @translatable
                  * @see setDate
                  * @see getDate
                  * @see onDateChange

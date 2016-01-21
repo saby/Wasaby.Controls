@@ -91,7 +91,6 @@ define(
              * <pre>
              *     <option name="date">2015-03-26T21:00:00.000Z</option>
              * </pre>
-             * @translatable
              */
             date: ''
          },
