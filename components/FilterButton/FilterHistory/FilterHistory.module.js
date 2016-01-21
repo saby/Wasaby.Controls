@@ -26,7 +26,6 @@ define('js!SBIS3.CONTROLS.FilterHistory',
       $protected: {
          _options: {
          },
-         _filterButton: undefined,
          _historyView: undefined,
          _historyController: undefined,
          _toggleHistoryButton: undefined
@@ -43,13 +42,9 @@ define('js!SBIS3.CONTROLS.FilterHistory',
 
          this._historyView = this.getChildControlByName('historyView');
          this._toggleHistoryButton = this.getChildControlByName('toggleHistory');
-         this._filterButton = this.getParentByClass('SBIS3.CONTROLS.FilterButton');
-
-         /* Если применили фильтр - сохраним в историю */
-         this._filterButton.subscribe('onApplyFilter', this._onApplyFilterHandler.bind(this));
 
          /* При нажатии развернём/свернём список истории */
-         this._toggleHistoryButton.subscribe('onActivated', this._toggleHistoryBlock.bind(this));
+         this.subscribeTo(this._toggleHistoryButton, 'onActivated', this.toggleHistoryBlock.bind(this));
 
          /* Проинициализируем список: подпишемся на события, проставим операции над записью */
          this._initHistoryView();
@@ -64,46 +59,8 @@ define('js!SBIS3.CONTROLS.FilterHistory',
          this.updateHistoryViewItems();
       },
 
-      /**
-       * Обработчик на применение фильтра в кнопке фильтров
-       * @private
-       */
-      _onApplyFilterHandler: function() {
-         var structure = this._filterButton.getFilterStructure(),
-             hc =  this._historyController,
-             linkTextArr = [],
-             self = this;
-
-         /* Если это дефолтный фильтр, то сохранять в историю не надо */
-         if(!this._filterButton.getLinkedContext().getValue('filterChanged')) {
-            /* Если применили дефолтный фильтр, то надо сбросить текущий активный */
-            hc.clearActiveFilter();
-            hc.saveToUserParams();
-            return;
-         }
-
-         /* Из структуры соберём строку */
-         for(var i = 0, len = structure.length; i < len; i++) {
-            if(structure[i].caption && !$ws.helpers.isEqualObject(structure[i].value, structure[i].resetValue)) {
-               linkTextArr.push(structure[i].caption);
-            }
-         }
-
-         //FIXME Пока делаю через нулевой timeout, т.к. фильтр в браузер проставляется после синхронизации контекста, и до этого нам его не получить.
-         setTimeout(function() {
-            hc.saveToHistory({
-               linkText: linkTextArr.join(', '),
-               filter: structure
-            });
-
-            self.updateHistoryViewItems();
-            self._toggleHistoryBlock(true);
-         }, 0)
-      },
-
       _initHistoryView: function() {
-         var self = this,
-            fb = this._filterButton;
+         var self = this;
 
          /* Установка операции отметки записи маркером */
          self._historyView.setItemsActions([{
@@ -118,27 +75,13 @@ define('js!SBIS3.CONTROLS.FilterHistory',
          }]);
 
          /* При клике по строке списка фильтров - применим фильтр из истории */
-         self._historyView.subscribe('onItemActivate', function(e, itemObj) {
-            var hc = self._historyController,
-                historyObj = hc.getFilterFromHistory(itemObj.id);
-
-            /* Применим фильтр из истории*/
-            fb.setFilterStructure(historyObj.filter);
-            fb.getChildControlByName('filterLine').getContext().setValue('linkText', historyObj.linkText);
-            fb.hidePicker();
-
-            /* Если этот фильтр не активный, сделаем его активным и сохраним */
-            if(!historyObj.isActiveFilter) {
-               hc.clearActiveFilter();
-               historyObj.isActiveFilter = true;
-               hc.saveHistory();
-            }
-
+         self.subscribeTo(self._historyView,'onItemActivate', function(e, itemObj) {
+            self._historyController.activateFilterByKey(itemObj.id);
             self.updateHistoryViewItems();
-            self._toggleHistoryBlock(true);
+            self.toggleHistoryBlock(true);
          });
 
-         self._historyView.subscribe('onDrawItems', function(e) {
+         self.subscribeTo(self._historyView, 'onDrawItems', function(e) {
             var dsCount = self._historyView.getDataSet().getCount();
 
             /* Если записей в истории нет - скроем историю */
@@ -152,11 +95,8 @@ define('js!SBIS3.CONTROLS.FilterHistory',
        * Обновляет список истории
        */
       updateHistoryViewItems: function() {
-         var self = this;
          if(this._historyController) {
-            this._historyController.getHistory(false).addCallback(function (res) {
-               self._historyView.setItems(res);
-            });
+            this._historyView.setItems(this._historyController.getHistory() || []);
          }
       },
 
@@ -165,7 +105,7 @@ define('js!SBIS3.CONTROLS.FilterHistory',
        * @param {Boolean} closed
        * @private
        */
-      _toggleHistoryBlock: function(closed) {
+      toggleHistoryBlock: function(closed) {
          this._container.find('.controls-filterButton__historyView-wrapper')
                         .toggleClass('controls-filterButton__historyView-maxHeight', typeof closed === 'boolean' ? closed : undefined);
       },

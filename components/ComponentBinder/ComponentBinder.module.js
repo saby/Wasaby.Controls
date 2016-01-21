@@ -372,29 +372,24 @@ define('js!SBIS3.CONTROLS.ComponentBinder', [], function () {
       /**
        * Метод для связывания истории фильтров с представлением данных
        */
-      bindFilterHistory: function(filterButton, historyId, controller, browser) {
-         var view = this._options.view,
+      bindFilterHistory: function(filterButton, fastDataFilter, historyId, controller, browser) {
+         var view = browser.getView(),
              historyController = new controller({
                 historyId: historyId,
                 filterButton: filterButton,
+                fastDataFilter: fastDataFilter,
                 view: view
-             });
+             }),
+             filter = historyController.getActiveFilter();
 
          filterButton.setHistoryController(historyController);
-         historyController.getHistory(true).addCallback(function() {
-            var filter = historyController.getActiveFilter();
-            if(filter && filter.viewFilter) {
-
-               //FIXME Удалить это в 3.7.3.30, сделано, чтобы удалить раздел из фильтров истории, это сейчас делается ещё при сохранении
-               if($ws.helpers.instanceOfMixin(view, 'SBIS3.CONTROLS.hierarchyMixin')) {
-                  delete filter.viewFilter[view.getHierField()];
-               }
-
-               filterButton._updateFilterStructure(filter.filter);
+         setTimeout($ws.helpers.forAliveOnly(function() {
+            if(filter) {
+               filter && filterButton._updateFilterStructure(filter.filter);
                view.setFilter($ws.core.merge(view.getFilter(), filter.viewFilter), true);
             }
             browser._notifyOnFiltersReady();
-         })
+         }, view), 0);
       }
    });
 
