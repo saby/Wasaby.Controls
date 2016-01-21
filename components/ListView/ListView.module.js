@@ -1268,10 +1268,10 @@ define('js!SBIS3.CONTROLS.ListView',
           * Работает в паре с взведенной опцией infiniteScroll
           * @remark Работает только в 3.7.3.30
           * @see infiniteScroll
+          * @deprecated Удалено в 3.7.3.100.
           */
          loadDataTillScroll : function(){
-            this._isLoadBeforeScrollAppears = true;
-            this._loadBeforeScrollAppears();
+            $ws.single.ioc.resolve('ILogger').log('loadDataTillScroll', 'Метод работает только в 3.7.3.30, просьба исправить свой функционал');
          },
          _showLoadingIndicator: function () {
             if (!this._loadingIndicator) {
