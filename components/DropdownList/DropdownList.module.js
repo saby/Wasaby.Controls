@@ -102,7 +102,8 @@ define('js!SBIS3.CONTROLS.DropdownList',
             var self = this,
                 pickerContainer = this._getPickerContainer(),
                 header = pickerContainer.find('.controls-DropdownList__header');
-            header.append(this._container.clone().removeAttr('style'));
+            //смешно, но reviveComponents может найти в верстек config и другие атрибуты компонентов и тогда всё зациклится
+            header.append(this._container.clone().removeAttr('style data-component config id'));
             this._setVariables();
             this.reload();
             this._bindItemSelect();
@@ -236,7 +237,6 @@ define('js!SBIS3.CONTROLS.DropdownList',
             }
          },
          _drawItemsCallback: function() {
-
             //Надо вызвать просто для того, чтобы отрисовалось выбранное значение/значения
             if (this._dataSet.getRawData().length) {
                this.setSelectedKeys(this._options.selectedKeys);
@@ -255,7 +255,7 @@ define('js!SBIS3.CONTROLS.DropdownList',
          },
          _setVariables: function() {
             var pickerContainer = this._getPickerContainer(),
-                  self = this;
+               self = this;
 
             this._text = this._container.find('.controls-DropdownList__text');
             this._resetButton = this._container.find('.controls-DropdownList__crossIcon');
@@ -380,7 +380,10 @@ define('js!SBIS3.CONTROLS.DropdownList',
                closeByExternalOver: this._options.mode === 'hover' && !this._options.multiselect,
                closeByExternalClick : true,
                targetPart: true,
-               template : MarkupTransformer(dotTplFnPicker)({'multiselect' : this._options.multiselect})
+               template : MarkupTransformer(dotTplFnPicker)({
+                  'multiselect' : this._options.multiselect,
+                  'footerTpl' : this._options.footerTpl
+               })
             };
          },
          //Переопределяю, чтобы элементы чистились в пикере
