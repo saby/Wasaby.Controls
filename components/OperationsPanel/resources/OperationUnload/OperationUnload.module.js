@@ -28,16 +28,34 @@ define('js!SBIS3.CONTROLS.OperationUnload', [
        */
       $protected: {
          _options: {
+            /**
+             * @cfg {String} спрайт иконки
+             */
             icon: 'sprite:icon-24 action-hover icon-Save icon-primary',
             /**
+             * @cfg {String} Всплывающая подсказка кнопки
+             * @example
+             * <pre>
+             *     <option name="title">Выгрузить</option>
+             * </pre>
              * @translatable
              */
             title: 'Выгрузить',
             /**
+             * @cfg {String} Текст для кнопки в виде ссылки
+             * @example
+             * <pre>
+             *     <option name="LinkText">Выгрузить</option>
+             * </pre>
              * @translatable
              */
             linkText: 'Выгрузить',
             /**
+             * @cfg {String} Текст на кнопке
+             * @example
+             * <pre>
+             *     <option name="caption">Выгрузить</option>
+             * </pre>
              * @translatable
              */
             caption: 'Выгрузить',

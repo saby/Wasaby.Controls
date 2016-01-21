@@ -13,9 +13,36 @@ define('js!SBIS3.CONTROLS.OperationPrint', [
          _options: {
             items: [
                {
+                  /**
+                   * @cfg {String} спрайт иконки
+                   */
                   icon: 'sprite:icon-24 action-hover icon-Print icon-primary',
+                  /**
+                   * @cfg {String} Всплывающая подсказка кнопки
+                   * @example
+                   * <pre>
+                   *     <option name="title">Распечатать</option>
+                   * </pre>
+                   * @translatable
+                   */
                   title: 'Распечатать',
+                  /**
+                   * @cfg {String} Текст для кнопки в виде ссылки
+                   * @example
+                   * <pre>
+                   *     <option name="LinkText">Распечатать</option>
+                   * </pre>
+                   * @translatable
+                   */
                   linkText: 'Распечатать',
+                  /**
+                   * @cfg {String} Текст на кнопке
+                   * @example
+                   * <pre>
+                   *     <option name="caption">Распечатать</option>
+                   * </pre>
+                   * @translatable
+                   */
                   caption: 'Распечатать'
                }
             ],
