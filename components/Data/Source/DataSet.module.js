@@ -121,6 +121,22 @@ define('js!SBIS3.CONTROLS.Data.Source.DataSet', [
       },
 
       /**
+       * Возвращает свойство данных, в которых находится выборка
+       * @returns {String}
+       */
+      getItemsProperty: function () {
+         return this._options.itemsProperty;
+      },
+
+      /**
+       * Возвращает свойство данных, в которых находится общее число элементов выборки
+       * @returns {String}
+       */
+      getTotalProperty: function () {
+         return this._options.totalProperty;
+      },
+
+      /**
        * Возвращает элементы выборки
        * @param {String} [property] Свойство данных, в которых находятся элементы выборки
        * @param {Boolean} [observable=false] Вернуть {SBIS3.CONTROLS.Data.Collection.ObservableList}, а не {SBIS3.CONTROLS.Data.Collection.List}

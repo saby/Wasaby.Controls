@@ -27,7 +27,6 @@ define('js!SBIS3.CONTROLS.EditInPlaceHoverController',
                _secondEip: undefined
             },
             $constructor: function() {
-               this._publish('onShowEdit');
                this._secondEip = new EditInPlace(this._getEditInPlaceConfig());
                this._secondEip.getContainer().bind('keyup', this._eipHandlers.onKeyDown);
             },
@@ -60,9 +59,7 @@ define('js!SBIS3.CONTROLS.EditInPlaceHoverController',
              * @private
              */
             show: function(target, record) {
-               var
-                  showEditResult = this._notify('onShowEdit', record);
-               if (showEditResult !== false) {
+               if (this._notify('onBeginEdit', record) !== false) {
                   if (!this._hoveredEip) {
                      this._hoveredEip = this._eip.isEdit() ? this._secondEip : this._eip;
                   }
@@ -86,8 +83,10 @@ define('js!SBIS3.CONTROLS.EditInPlaceHoverController',
                var hoveredEip = this._hoveredEip;
                this.endEdit(true).addCallback(function() {
                   if (hoveredEip && (hoveredEip.getTarget().get(0) === target.get(0))) {
-                     hoveredEip.edit(target, record);
-                     this._hoveredEip = null;
+                     if (this._notify('onBeginEdit', record) !== false) {
+                        hoveredEip.edit(target, record);
+                        this._hoveredEip = null;
+                     }
                   } else {
                      EditInPlaceHoverController.superclass.edit.apply(this, [target, record])
                   }

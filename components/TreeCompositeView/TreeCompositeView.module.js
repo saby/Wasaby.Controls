@@ -192,7 +192,7 @@ define('js!SBIS3.CONTROLS.TreeCompositeView', ['js!SBIS3.CONTROLS.TreeDataGridVi
                      if (parentKey !== undefined) {
                         result.parentKey = parentKey;
                      }
-                     if (result.$row.hasClass('controls-ListView__folder')) {
+                     if (result.$row.hasClass('controls-ListView__folder') || result.$row.hasClass('controls-DataGridView__tr__type-false')) {
                         container.find('.controls-ListView__item[data-parent="' + key + '"]').each(function (idx, row) {
                            var rowKey = row.getAttribute('data-id');
                            result.childs.push(findDependents(rowKey, key));

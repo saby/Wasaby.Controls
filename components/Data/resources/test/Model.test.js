@@ -47,6 +47,14 @@ define([
                      get: function () {
                         return this.get('max') * this.get('max');
                      }
+                  },
+                  internal: {
+                     get: function () {
+                        return this.hasOwnProperty('_internal') ? this._internal : 'internalDefault';
+                     },
+                     set: function (value) {
+                        this._internal = value;
+                     }
                   }
                };
             },
@@ -84,35 +92,101 @@ define([
                assert.strictEqual(model.get('title'), 'A B');
                assert.strictEqual(model.get('sqMax'), modelData.max * modelData.max);
             });
+            it('should return the property value', function () {
+               assert.strictEqual(model.get('internal'), 'internalDefault');
+            });
          });
 
          describe('.set()', function () {
             it('should set value', function () {
                model.set('max', 13);
                assert.strictEqual(model.get('max'), 13);
+               assert.strictEqual(model.getRawData().max, 13);
             });
-
             it('should set a calculated value', function () {
                model.set('calc', 50);
                assert.strictEqual(model.get('calc'), 50);
+               assert.strictEqual(model.getRawData().calc, 5);
 
                model.set('calc', 70);
                assert.strictEqual(model.get('calc'), 70);
+               assert.strictEqual(model.getRawData().calc, 7);
 
                model.set('calcRead', 50);
                assert.strictEqual(model.get('calcRead'), 500);
+               assert.strictEqual(model.getRawData().calcRead, 50);
 
                model.set('calcRead', 70);
                assert.strictEqual(model.get('calcRead'), 700);
+               assert.strictEqual(model.getRawData().calcRead, 70);
 
                model.set('calcWrite', 50);
                assert.strictEqual(model.get('calcWrite'), 5);
+               assert.strictEqual(model.getRawData().calcWrite, 5);
 
                model.set('calcWrite', 70);
                assert.strictEqual(model.get('calcWrite'), 7);
+               assert.strictEqual(model.getRawData().calcWrite, 7);
 
                model.set('title', 'test');
                assert.strictEqual(model.get('title'), 'test B');
+               assert.strictEqual(model.getRawData().title, 'test');
+            });
+            it('should set the property value', function () {
+               model.set('internal', 'testInternal');
+               assert.strictEqual(model.get('internal'), 'testInternal');
+               assert.isUndefined(model.getRawData().internal);
+            });
+            context('if adapter doesn\'t support dynamic properties define', function () {
+               var getData = function() {
+                 return {
+                    d: [
+                       1,
+                       '2'
+                    ],
+                    s: [
+                       {n: 'a'},
+                       {n: 'b'}
+                    ]
+                 };
+               };
+               it('should throw an error', function () {
+                  var model = new Model({
+                     rawData: getData(),
+                     adapter: new SbisAdapter()
+                  });
+                  assert.throw(function () {
+                     model.set('c', 50);
+                  });
+               });
+               it('should don\'t throw an error if user defined property has setter without a result', function () {
+                  var model = new Model({
+                     rawData: getData(),
+                     adapter: new SbisAdapter(),
+                     properties: {
+                        c: {
+                           set: function() {}
+                        }
+                     }
+                  });
+                  model.set('c', 50);
+               });
+               it('should throw an error if user defined property has setter with a result', function () {
+                  var model = new Model({
+                     rawData: getData(),
+                     adapter: new SbisAdapter(),
+                     properties: {
+                        c: {
+                           set: function(value) {
+                              return value;
+                           }
+                        }
+                     }
+                  });
+                  assert.throw(function () {
+                     model.set('c', 50);
+                  });
+               });
             });
          });
 
@@ -162,6 +236,7 @@ define([
                      case 'calcRead':
                      case 'title':
                      case 'sqMax':
+                     case 'internal':
                         assert.strictEqual(model.get(name), value);
                         break;
                      default:
@@ -368,25 +443,57 @@ define([
                newModel.merge(model);
                assert.strictEqual(newModel.getId(), modelData['id']);
             });
-            it('should merge models with various adapter types', function () {
-               var data = {
-                     d: [
-                        48,
-                        27,
-                        'sdsd'
-                     ],
-                     s: [
-                        {n: 'max'},
-                        {n: 'calc'},
-                        {n: 'etc'}]
+            context('with various adapter types', function () {
+               var getSbisData = function() {
+                     return {
+                        d: [
+                           1,
+                           2,
+                           3
+                        ],
+                        s: [
+                           {n: 'a'},
+                           {n: 'b'},
+                           {n: 'c'}
+                        ]
+                     };
                   },
-                  anotherModel = new Model({
-                     rawData: data,
-                     adapter: new SbisAdapter()
+                  getSimpleData = function() {
+                     return {
+                        c: 4,
+                        d: 5,
+                        e: 6
+                     };
+                  };
+               it('should append new fields if acceptor\'s adapter supports dynamic fields definition', function () {
+                  var acceptor = new Model({
+                        rawData: getSimpleData()
+                     }),
+                     donor = new Model({
+                        rawData: getSbisData(),
+                        adapter: new SbisAdapter()
+                     });
+
+                  acceptor.merge(donor);
+                  donor.each(function(field, value) {
+                     assert.strictEqual(acceptor.get(field), value);
                   });
-               model.merge(anotherModel);
-               anotherModel.each(function(field, value) {
-                  assert.strictEqual(model.get(field), value);
+               });
+               it('should just update exists fields if acceptor\'s adapter doesn\'t support dynamic fields definition', function () {
+                  var acceptor = new Model({
+                        rawData: getSbisData(),
+                        adapter: new SbisAdapter()
+                     }),
+                     donor = new Model({
+                        rawData: getSimpleData()
+                     });
+
+                  acceptor.merge(donor);
+                  acceptor.each(function(field, value) {
+                     if (donor.has(field)) {
+                        assert.strictEqual(donor.get(field), value);
+                     }
+                  });
                });
             });
             it('should stay unchanged with empty donor', function () {

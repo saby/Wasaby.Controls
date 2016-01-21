@@ -49,6 +49,7 @@ define('js!SBIS3.CONTROLS.FieldLinkItemsCollection', [
          _buildTplArgs: function(item) {
             return {
                item: item,
+               itemTpl: this._options.itemTemplate,
                displayField: this._options.displayField
             }
          },
@@ -62,24 +63,27 @@ define('js!SBIS3.CONTROLS.FieldLinkItemsCollection', [
          },
 
          setItems: function(list) {
-            var self = this,
-                items = [];
-
-            list.each(function(rec) {
-               var itemObject = {};
-
-               itemObject[self._options.keyField] = rec.getId();
-               itemObject[self._options.displayField] = rec.get(self._options.displayField);
-               items.push(itemObject);
-            });
-
-            FieldLinkItemsCollection.superclass.setItems.call(this, items);
+            FieldLinkItemsCollection.superclass.setItems.call(
+                this,
+                $ws.helpers.reduce(list.toArray(), function(result, rec) {
+                   result.push(rec.toObject());
+                   return result
+                }, [])
+            );
          },
 
          _appendItemTemplate:function(item, targetContainer, itemInstance) {
             if(this._options.itemCheckFunc(itemInstance)) {
                FieldLinkItemsCollection.superclass._appendItemTemplate.apply(this, arguments);
             }
+         },
+
+         /**
+          * Контрол выбранных записей не должен принимать фокус, просто переводим его на поле связи
+          */
+         setActive: function() {
+            var fieldLink = this.getParent();
+            fieldLink.setActive.apply(fieldLink, arguments);
          },
          /**
           * Обработчик клика на крестик
@@ -122,6 +126,10 @@ define('js!SBIS3.CONTROLS.FieldLinkItemsCollection', [
             /* Не очень правильное решение, пикер может сам менять ширину, поэтому устанавливаю минимальну и максимальную */
             pickerContainer[0].style.maxWidth = flWidth + 'px';
             pickerContainer[0].style.minWidth = flWidth + 'px';
+            /* Зачем сделано:
+               Не надо, чтобы пикер поля связи вызывал перерасчёт размеров,
+               т.к. никаких расчётов при его показе не происходит, а просто отрисовываются элементы */
+            this._picker._notifyOnSizeChanged = $ws.helpers.nop;
          },
 
          _setPickerConfig: function () {

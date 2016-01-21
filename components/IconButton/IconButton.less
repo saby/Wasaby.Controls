@@ -7,6 +7,15 @@
    text-align: center;
    &:hover{
       border-color: @default-color;
+      &.controls-IconButton__errorBorder {
+         border-color: #ef463a;
+      }
+      &.controls-IconButton__doneBorder {
+         border-color: #72be44;
+      }
+   }
+   .ws-disabled {
+      border-color: @gray-ccc-color;
    }
    box-sizing: border-box;
 }
@@ -19,5 +28,8 @@
    }
    &.controls-IconButton__round-border{
       .round-button-mixin(@gray-ccc-color);
+   }
+   &.ws-disabled {
+      cursor: default;
    }
 }
