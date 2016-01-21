@@ -145,11 +145,11 @@ define([
             });
          });
 
-         describe('.applyChanged()', function () {
+         describe('.applyChanges()', function () {
             it('shouldnt return a changed value', function () {
                model.set('max', 15);
                model.set('title', 'B');
-               model.applyChanged();
+               model.applyChanges();
                assert.deepEqual(model.getChanged(), []);
             });
          });
