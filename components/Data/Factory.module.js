@@ -70,7 +70,7 @@ define('js!SBIS3.CONTROLS.Data.Factory', [
                return (typeof(value) === 'number') ? value : (isNaN(parseFloat(value)) ? null : parseFloat(value));
             case 'Money':
                if (meta && meta.precision > 3) {
-                  return $ws.helpers.bigNum(value).toString(meta.precision);
+                  return $ws.helpers.prepareMoneyByPrecision(value, meta.precision)
                }
                return value === undefined ? null : value;
             case 'Enum':
@@ -156,7 +156,7 @@ define('js!SBIS3.CONTROLS.Data.Factory', [
 
             case 'Money':
                if (meta && meta.precision > 3) {
-                  return $ws.helpers.bigNum(value).toString(meta.precision);
+                  return $ws.helpers.prepareMoneyByPrecision(value, meta.precision)
                }
                return value;
 
