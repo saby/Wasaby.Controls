@@ -8,9 +8,10 @@ define('js!SBIS3.CONTROLS.DataGridView',
       'js!SBIS3.CORE.MarkupTransformer',
       'js!SBIS3.CONTROLS.DragAndDropMixin',
       'is!browser?html!SBIS3.CONTROLS.DataGridView/resources/DataGridViewGroupBy',
-      'js!SBIS3.CONTROLS.Utils.HtmlDecorators/LadderDecorator'
+      'js!SBIS3.CONTROLS.Utils.HtmlDecorators/LadderDecorator',
+      'js!SBIS3.CONTROLS.Utils.TemplateUtil'
    ],
-   function(ListView, dotTplFn, rowTpl, colgroupTpl, headTpl, MarkupTransformer, DragAndDropMixin, groupByTpl, LadderDecorator) {
+   function(ListView, dotTplFn, rowTpl, colgroupTpl, headTpl, MarkupTransformer, DragAndDropMixin, groupByTpl, LadderDecorator, TemplateUtil) {
    'use strict';
       /* TODO: Надо считать высоту один раз, а не делать константой */
       var
@@ -163,7 +164,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
       _getCellTemplate: function(item, column) {
          var value = item.get(column.field);
          if (column.cellTemplate) {
-            var cellTpl = this._prepareTpl(column.cellTemplate);
+            var cellTpl = TemplateUtil.prepareTemplate(column.cellTemplate);
             var tplOptions = {
                item: item,
                hierField: this._options.hierField,
@@ -181,7 +182,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
                tplOptions.included = {};
                for (var j in tpls) {
                   if (tpls.hasOwnProperty(j)) {
-                     tplOptions.included[j] = this._prepareTpl(tpls[j]);
+                     tplOptions.included[j] = TemplateUtil.prepareTemplate(tpls[j]);
                   }
                }
             }
@@ -612,7 +613,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
                 column = rowData.columns[i];
 
             if (column.headTemplate) {
-               value = MarkupTransformer(this._prepareTpl(column.headTemplate)({
+               value = MarkupTransformer(TemplateUtil.prepareTemplate(column.headTemplate)({
                   column: column
                }));
             } else {
