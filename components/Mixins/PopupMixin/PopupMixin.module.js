@@ -420,8 +420,8 @@ define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManag
 
       _initWindowSizes: function () {
          this._windowSizes = {
-            height: this._container.offset().top - this._containerSizes.boundingClientRect.top + $(window).height(),
-            width: this._container.offset().left - this._containerSizes.boundingClientRect.left + $(window).width()
+            height: $(window).height(),
+            width: $(window).width()
          };
       },
 
