@@ -466,32 +466,39 @@ define('js!SBIS3.CONTROLS.ListView',
                });
             }
          },
+         _scrollToItem: function(itemId) {
+            $(".controls-ListView__item[data-id='" + itemId + "']", this._container).attr('tabindex', '-1').focus();
+         },
          _keyboardHover: function (e) {
-            var selectedKey = this.getSelectedKey();
-
+            var
+               selectedKey = this.getSelectedKey(),
+               newSelectedKey,
+               newSelectedItem;
             switch (e.which) {
                case $ws._const.key.up:
-                  var previousItem = this._getPrevItemByDOM(selectedKey);
-                  previousItem ? this.setSelectedKey(previousItem.data('id')) : this.setSelectedKey(selectedKey);
+                  newSelectedItem = this._getPrevItemByDOM(selectedKey);
                   break;
                case $ws._const.key.down:
-                  var nextItem = this._getNextItemByDOM(selectedKey);
-                  nextItem ? this.setSelectedKey(nextItem.data('id')) : this.setSelectedKey(selectedKey);
+                  newSelectedItem = this._getNextItemByDOM(selectedKey);
                   break;
                case $ws._const.key.enter:
                   var selectedItem = $('[data-id="' + selectedKey + '"]', this._getItemsContainer());
                   this._elemClickHandler(selectedKey, this._dataSet.getRecordByKey(selectedKey), selectedItem);
                   break;
                case $ws._const.key.space:
-                  var nextItem = this._getNextItemByDOM(selectedKey);
+                  newSelectedItem = this._getNextItemByDOM(selectedKey);
                   this.toggleItemsSelection([selectedKey]);
-                  nextItem ? this.setSelectedKey(nextItem.data('id')) : this.setSelectedKey(selectedKey);
                   break;
                case $ws._const.key.o:
                   if (e.ctrlKey && e.altKey && e.shiftKey) {
                      this.sendCommand('mergeItems', this.getSelectedKeys());
                   }
                   break;
+            }
+            if (newSelectedItem.length) {
+               newSelectedKey = newSelectedItem.data('id');
+               this.setSelectedKey(newSelectedKey);
+               this._scrollToItem(newSelectedKey);
             }
             return false;
          },
