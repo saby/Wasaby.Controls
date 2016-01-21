@@ -32,11 +32,11 @@ define([
                assert.include(record.getChanged(), 'title');
             });
          });
-         describe('.applyChanged()', function () {
+         describe('.applyChanges()', function () {
             it('shouldnt return a changed value', function () {
                record.set('max', 15);
                record.set('title', 'B');
-               record.applyChanged();
+               record.applyChanges();
                assert.deepEqual(record.getChanged(), []);
             });
          });

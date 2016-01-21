@@ -260,7 +260,7 @@ define('js!SBIS3.CONTROLS.Data.Record', [
       /**
        * Забывет измененные поля.
        */
-      applyChanged: function (){
+      applyChanges: function (){
          this._changedFields = {};
       },
       // endregion Public methods
