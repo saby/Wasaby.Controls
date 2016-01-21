@@ -2,8 +2,9 @@
 define('js!SBIS3.CONTROLS.Data.Adapter.Json', [
    'js!SBIS3.CONTROLS.Data.Adapter.Abstract',
    'js!SBIS3.CONTROLS.Data.Adapter.JsonTable',
-   'js!SBIS3.CONTROLS.Data.Adapter.JsonRecord'
-], function (Abstract, JsonTable, JsonRecord) {
+   'js!SBIS3.CONTROLS.Data.Adapter.JsonRecord',
+   'js!SBIS3.CONTROLS.Data.Di'
+], function (Abstract, JsonTable, JsonRecord, Di) {
    'use strict';
 
    /**
@@ -25,6 +26,8 @@ define('js!SBIS3.CONTROLS.Data.Adapter.Json', [
          return new JsonRecord(data);
       }
    });
+
+   Di.register('adapter.json', Json);
 
    return Json;
 });
