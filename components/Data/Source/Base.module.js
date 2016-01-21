@@ -2,8 +2,9 @@
 define('js!SBIS3.CONTROLS.Data.Source.Base', [
    'js!SBIS3.CONTROLS.Data.Source.ISource',
    'js!SBIS3.CONTROLS.Data.Source.DataSet',
+   'js!SBIS3.CONTROLS.Data.Di',
    'js!SBIS3.CONTROLS.Data.Adapter.Json'
-], function (ISource, DataSet, JsonAdapter) {
+], function (ISource, DataSet, Di) {
    'use strict';
 
    /**
@@ -15,11 +16,11 @@ define('js!SBIS3.CONTROLS.Data.Source.Base', [
     * @author Мальцев Алексей
     */
 
-   return $ws.proto.Abstract.extend([ISource], /** @lends SBIS3.CONTROLS.Data.Source.Base.prototype */{
+   var Base = $ws.proto.Abstract.extend([ISource], /** @lends SBIS3.CONTROLS.Data.Source.Base.prototype */{
       /**
        * @event onDataSync При изменении синхронизации данных с источником
        * @param {$ws.proto.EventObject} eventObject Дескриптор события.
-       * @param (SBIS3.CONTROLS.Data.Model[]) records Измененные записи
+       * @param (Array.<SBIS3.CONTROLS.Data.Model>) records Измененные записи
        */
 
       _moduleName: 'SBIS3.CONTROLS.Data.Source.Base',
@@ -35,7 +36,10 @@ define('js!SBIS3.CONTROLS.Data.Source.Base', [
       },
 
       getAdapter: function () {
-         return this._options.adapter || (this._options.adapter = new JsonAdapter());
+         if (typeof this._options.adapter === 'string') {
+            this._options.adapter = Di.resolve(this._options.adapter);
+         }
+         return this._options.adapter;
       },
 
       setAdapter: function (adapter) {
@@ -82,7 +86,7 @@ define('js!SBIS3.CONTROLS.Data.Source.Base', [
       },
 
       /**
-       * Создает новый экзепляр модели
+       * Создает новый экземпляр модели
        * @param {*} model Данные модели
        * @returns {SBIS3.CONTROLS.Data.Model}
        * @private
@@ -90,7 +94,7 @@ define('js!SBIS3.CONTROLS.Data.Source.Base', [
       _getModelInstance: function (data) {
          this._detectIdProperty(data);
 
-         return new this._options.model({
+         return Di.resolve(this._options.model, {
             rawData: data,
             adapter: this.getAdapter(),
             idProperty: this.getIdProperty()
@@ -159,4 +163,6 @@ define('js!SBIS3.CONTROLS.Data.Source.Base', [
       //endregion SBIS3.CONTROLS.BaseSource
 
    });
+
+   return Base;
 });

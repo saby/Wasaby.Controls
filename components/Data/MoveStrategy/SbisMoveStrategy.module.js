@@ -1,7 +1,7 @@
 /* global define */
 define('js!SBIS3.CONTROLS.Data.SbisMoveStrategy', [
    'js!SBIS3.CONTROLS.Data.BaseMoveStrategy',
-   'js!SBIS3.CONTROLS.Data.Source.SbisService/resources/SbisServiceBLO'
+   'js!SBIS3.CONTROLS.Data.Source.Provider.SbisBusinessLogic'
 ], function (BaseMoveStrategy, SbisServiceBLO) {
    'use strict';
    /**
@@ -63,7 +63,7 @@ define('js!SBIS3.CONTROLS.Data.SbisMoveStrategy', [
          }
          $ws.helpers.forEach(from, function(record){
             params['ИдО'] = [String.prototype.split.call(self._getId(record))[0], self._options.resource];
-            def.push(self._orderProvider.callMethod(method, params, $ws.proto.BLObject.RETURN_TYPE_ASIS).addErrback(function (error) {
+            def.push(self._orderProvider.call(method, params, $ws.proto.BLObject.RETURN_TYPE_ASIS).addErrback(function (error) {
                $ws.single.ioc.resolve('ILogger').log('SBIS3.CONTROLS.Data.SbisMoveStrategy::move()', error);
                return error;
             }));

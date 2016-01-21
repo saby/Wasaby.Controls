@@ -1,8 +1,9 @@
 /*global $ws, define*/
 define('js!SBIS3.CONTROLS.Data.Factory', [
+   'js!SBIS3.CONTROLS.Data.Di',
    'js!SBIS3.CONTROLS.Data.Types.Flags',
    'js!SBIS3.CONTROLS.Data.Types.Enum'
-], function (Flags, Enum) {
+], function (Di, Flags, Enum) {
    'use strict';
 
    /**
@@ -13,7 +14,7 @@ define('js!SBIS3.CONTROLS.Data.Factory', [
     */
 
    /**
-    * @faq Почему я вижу ошибки от $ws.single.ioc?
+    * @faq Почему я вижу ошибки от SBIS3.CONTROLS.Data.Di::resolve?
     * Для корректной работы с зависимости сначала надо загрузить {@link SBIS3.CONTROLS.Data.Model} и {@link SBIS3.CONTROLS.Data.Source.RecordSet}, а уже потом {@link SBIS3.CONTROLS.Data.Factory}
     */
 
@@ -191,7 +192,7 @@ define('js!SBIS3.CONTROLS.Data.Factory', [
        * @private
        */
       _makeModel: function (data, adapter) {
-         return $ws.single.ioc.resolve('SBIS3.CONTROLS.Data.Model', {
+         return Di.resolve('model', {
             rawData: data,
             adapter: adapter
          });
@@ -211,8 +212,8 @@ define('js!SBIS3.CONTROLS.Data.Factory', [
             adapter.forTable(data).getCount()
          );
 
-         return $ws.single.ioc.resolve('SBIS3.CONTROLS.Data.Collection.RecordSet', {
-            model: $ws.single.ioc.resolve('SBIS3.CONTROLS.Data.ModelConstructor'),
+         return Di.resolve('collection.recordset', {
+            model: 'model',
             adapter: adapter,
             rawData: data,
             totalProperty: 'total'
@@ -347,9 +348,7 @@ define('js!SBIS3.CONTROLS.Data.Factory', [
       }
    };
 
-   $ws.single.ioc.bind('SBIS3.CONTROLS.Data.Factory', function () {
-      return Factory;
-   });
+   Di.register('factory', Factory, {instantiate: false});
 
    return Factory;
 });

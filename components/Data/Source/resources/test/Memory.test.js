@@ -563,7 +563,7 @@ define([
                            if (ds.getAll().getCount() === test.expect) {
                               done();
                            } else {
-                              done(new Error(ds.getCount() + ' expect to be ' + test.expect));
+                              done(new Error(ds.getAll().getCount() + ' expect to be ' + test.expect));
                            }
                         }, function (err) {
                            done(err);
