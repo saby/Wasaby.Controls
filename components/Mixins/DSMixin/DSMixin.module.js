@@ -77,7 +77,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
              * @see SBIS3.CONTROLS.Selectable#setSelectedKey
              * @see SBIS3.CONTROLS.Selectable#getSelectedKey
              */
-            keyField : 'id',
+            keyField : null,
             /**
              * @cfg {String} Поле элемента коллекции, из которого отображать данные
              * @example
@@ -348,6 +348,11 @@ define('js!SBIS3.CONTROLS.DSMixin', [
          this.subscribeTo(this._items, 'onCollectionChange', this._onCollectionChange);
          this.subscribeTo(this._items, 'onCollectionItemChange', this._onCollectionItemChange);
       },
+
+      _unsetItemsEventHandlers: function () {
+         this.unsubscribeFrom(this._itemsProjection, 'onCollectionChange', this._onCollectionChange);
+         this.unsubscribeFrom(this._itemsProjection, 'onCollectionItemChange', this._onCollectionItemChange);
+      },
        /**
         * Метод установки источника данных.
         * @remark
@@ -380,7 +385,10 @@ define('js!SBIS3.CONTROLS.DSMixin', [
         */
       setDataSource: function (source, noLoad) {
           this._dataSource = this._prepareSource(source);
+          this._setItemsEventHandlers();
+          this._unsetItemsEventHandlers();
           this._items = this._convertDataSourceToItems(this._dataSource);
+          this._setItemsEventHandlers();
           if (!noLoad) {
              return this.reload();
           }
