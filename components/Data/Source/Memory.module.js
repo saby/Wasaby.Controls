@@ -1,25 +1,25 @@
 /* global define, $ws */
 define('js!SBIS3.CONTROLS.Data.Source.Memory', [
-   'js!SBIS3.CONTROLS.Data.Source.Base',
+   'js!SBIS3.CONTROLS.Data.Source.Local',
    'js!SBIS3.CONTROLS.Data.Source.DataSet',
-   'js!SBIS3.CONTROLS.Data.Adapter.Json'
-], function (Base, DataSet) {
+   'js!SBIS3.CONTROLS.Data.Di'
+], function (Local, DataSet, Di) {
    'use strict';
 
    /**
     * Источник данных в памяти ОС
     * @class SBIS3.CONTROLS.Data.Source.Memory
-    * @extends SBIS3.CONTROLS.Data.Source.Base
+    * @extends SBIS3.CONTROLS.Data.Source.Local
     * @public
     * @author Мальцев Алексей
     */
 
-   var Memory = Base.extend(/** @lends SBIS3.CONTROLS.Data.Source.Memory.prototype */{
+   var Memory = Local.extend(/** @lends SBIS3.CONTROLS.Data.Source.Memory.prototype */{
       _moduleName: 'SBIS3.CONTROLS.Data.Source.Memory',
       $protected: {
          _options: {
             /**
-             * @cfg {Object} Исходные данные
+             * @cfg {Object} Данные, с которыми работает источник
              */
             data: []
          },
@@ -274,7 +274,7 @@ define('js!SBIS3.CONTROLS.Data.Source.Memory', [
                   continue;
                }
                //FIXME: избавиться от этого sbis-specified
-               if (filterField == 'Разворот' || filterField == 'ВидДерева') {
+               if (filterField === 'Разворот' || filterField === 'ВидДерева') {
                   continue;
                }
                filterMatch = adapter.forRecord(item).get(filterField) == where[filterField];
@@ -465,9 +465,7 @@ define('js!SBIS3.CONTROLS.Data.Source.Memory', [
       resources: {}
    };
 
-   $ws.single.ioc.bind('SBIS3.CONTROLS.Data.Source.Memory', function(config) {
-      return new Memory(config);
-   });
+   Di.register('source.memory', Memory);
 
    return Memory;
 });
