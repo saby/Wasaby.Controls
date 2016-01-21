@@ -338,8 +338,8 @@ define('js!SBIS3.CONTROLS.DSMixin', [
       },
 
       _setItemsEventHandlers: function() {
-         this.subscribeTo(this._items, 'onCollectionChange', this._onCollectionChange);
-         this.subscribeTo(this._items, 'onCollectionItemChange', this._onCollectionItemChange);
+         this.subscribeTo(this._itemsProjection, 'onCollectionChange', this._onCollectionChange);
+         this.subscribeTo(this._itemsProjection, 'onCollectionItemChange', this._onCollectionItemChange);
       },
 
       _unsetItemsEventHandlers: function () {
@@ -466,7 +466,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
          else {
             def = new $ws.proto.Deferred();
             def.callback();
-         } 
+         }
 
          this._notifyOnPropertyChanged('filter');
          this._notifyOnPropertyChanged('sorting');
