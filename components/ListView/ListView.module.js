@@ -452,7 +452,7 @@ define('js!SBIS3.CONTROLS.ListView',
                   }
                   break;
             }
-            if (newSelectedItem.length) {
+            if (newSelectedItem && newSelectedItem.length) {
                newSelectedKey = newSelectedItem.data('id');
                this.setSelectedKey(newSelectedKey);
                this._scrollToItem(newSelectedKey);
