@@ -323,60 +323,66 @@ define('js!SBIS3.CONTROLS.DSMixin', [
         * @param offset Элемент, с которого перезагружать данные.
         * @param {Number} limit Ограничение количества перезагружаемых элементов.
         */
-      reload: propertyUpdateWrapper(function (filter, sorting, offset, limit) {
-         if (this._options.pageSize) {
-            this._limit = this._options.pageSize;
-         }
+       reload: propertyUpdateWrapper(function (filter, sorting, offset, limit) {
+          if (this._options.pageSize) {
+             this._limit = this._options.pageSize;
+          }
 
-         var
-            self = this,
-            filterChanged = typeof(filter) !== 'undefined',
-            sortingChanged = typeof(sorting) !== 'undefined',
-            offsetChanged = typeof(offset) !== 'undefined',
-            limitChanged = typeof(limit) !== 'undefined';
+          var
+             def,
+             self = this,
+             filterChanged = typeof(filter) !== 'undefined',
+             sortingChanged = typeof(sorting) !== 'undefined',
+             offsetChanged = typeof(offset) !== 'undefined',
+             limitChanged = typeof(limit) !== 'undefined';
 
-         this._cancelLoading();
-         if (filterChanged) {
-            this.setFilter(filter, true);
-         }
+          this._cancelLoading();
+          if (filterChanged) {
+             this.setFilter(filter, true);
+          }
           if (sortingChanged) {
              this.setSorting(sorting, true);
           }
-         this._offset = offsetChanged ? offset : this._offset;
-         this._limit = limitChanged ? limit : this._limit;
+          this._offset = offsetChanged ? offset : this._offset;
+          this._limit = limitChanged ? limit : this._limit;
 
-         if (this._dataSource){
-            this._toggleIndicator(true);
-	         this._loader = this._callQuery(this._options.filter, this.getSorting(), this._offset, this._limit).addCallback($ws.helpers.forAliveOnly(function (dataSet) {
-	            self._toggleIndicator(false);
-	            self._loader = null;//Обнулили без проверки. И так знаем, что есть и загрузили
-	            if (self._dataSet) {
-	               self._dataSet.setRawData(dataSet.getRawData());
-	               self._dataSet.setMetaData(dataSet.getMetaData());
-	            } else {
-	               self._dataSet = dataSet;
-	            }
-	            self._dataLoadedCallback();
-	            self._notify('onDataLoad', dataSet);
-	            //self._notify('onBeforeRedraw');
-	            self._redraw();
-               return dataSet;
-	         }, self)).addErrback($ws.helpers.forAliveOnly(function(error){
-	            if (!error.canceled) {
-	               self._toggleIndicator(false);
-	               $ws.helpers.message(error.message.toString().replace('Error: ', ''));
-	            }
-	            return error;
-	         }, self));
-         }
+          if (this._dataSource) {
+             this._toggleIndicator(true);
+             def = this._callQuery(this._options.filter, this.getSorting(), this._offset, this._limit).addCallback($ws.helpers.forAliveOnly(function (dataSet) {
+                self._toggleIndicator(false);
+                self._loader = null;//Обнулили без проверки. И так знаем, что есть и загрузили
+                if (self._dataSet) {
+                   self._dataSet.setRawData(dataSet.getRawData());
+                   self._dataSet.setMetaData(dataSet.getMetaData());
+                } else {
+                   self._dataSet = dataSet;
+                }
+                self._dataLoadedCallback();
+                self._notify('onDataLoad', dataSet);
+                //self._notify('onBeforeRedraw');
+                self._redraw();
+                return dataSet;
+             }, self)).addErrback($ws.helpers.forAliveOnly(function (error) {
+                if (!error.canceled) {
+                   self._toggleIndicator(false);
+                   $ws.helpers.message(error.message.toString().replace('Error: ', ''));
+                }
+                return error;
+             }, self));
+             this._loader = def;
+          }
+          else {
+             def = new $ws.proto.Deferred();
+             def.callback();
+          }
 
-         this._notifyOnPropertyChanged('filter');
-         this._notifyOnPropertyChanged('sorting');
-         this._notifyOnPropertyChanged('offset');
-         this._notifyOnPropertyChanged('limit');
+          this._notifyOnPropertyChanged('filter');
+          this._notifyOnPropertyChanged('sorting');
+          this._notifyOnPropertyChanged('offset');
+          this._notifyOnPropertyChanged('limit');
 
-         return this._loader;
-      }),
+          return def;
+       }),
 
       _callQuery: function (filter, sorting, offset, limit) {
          if (!this._dataSource) {
