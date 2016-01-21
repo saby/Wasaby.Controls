@@ -1241,6 +1241,17 @@ define('js!SBIS3.CONTROLS.ListView',
                this._isLoadBeforeScrollAppears = false;
             }
          },
+         /**
+          * Если высота контейнера меньше высоты экрана (т.е. нет скролла в контейнере иди в окне),
+          * то будет загружать данные, пока скролл все-таки не появится.
+          * Работает в паре с взведенной опцией infiniteScroll
+          * @remark Работает только в 3.7.3.30
+          * @see infiniteScroll
+          */
+         loadDataTillScroll : function(){
+            this._isLoadBeforeScrollAppears = true;
+            this._loadBeforeScrollAppears();
+         },
          _showLoadingIndicator: function () {
             if (!this._loadingIndicator) {
                this._createLoadingIndicator();
