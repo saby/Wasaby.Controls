@@ -385,7 +385,8 @@ define('js!SBIS3.CONTROLS.ComponentBinder', [], function () {
          filterButton.setHistoryController(historyController);
          setTimeout($ws.helpers.forAliveOnly(function() {
             if(filter) {
-               filter && filterButton._updateFilterStructure(filter.filter);
+               /* Надо вмерживать структуру, полученную из истории, т.к. мы не сохраняем в историю шаблоны строки фильтров */
+               filterButton._updateFilterStructure($ws.core.merge(filterButton.getFilterStructure(), filter.filter));
                view.setFilter($ws.core.merge(view.getFilter(), filter.viewFilter), true);
             }
             browser._notifyOnFiltersReady();
