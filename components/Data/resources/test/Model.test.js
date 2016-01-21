@@ -71,7 +71,7 @@ define([
 
          describe('.$constructor()', function () {
             it('should take limited time', function() {
-               console.time('BatchCreating');
+               if (window) window['console'].time('BatchCreating');
                for (var i = 0; i < 10000; i++) {
                   var item = {};
                   for (var j = 0; j < 200; j++) {
@@ -85,7 +85,7 @@ define([
                      rawData: item
                   });
                }
-               console.timeEnd('BatchCreating');
+               if (window) window['console'].timeEnd('BatchCreating');
             });
          });
 
