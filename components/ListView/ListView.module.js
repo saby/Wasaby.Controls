@@ -1247,6 +1247,17 @@ define('js!SBIS3.CONTROLS.ListView',
                this._scrollWatcher.scrollTo(this._firstScrollTop || (scrollAmount < 0) ? 'bottom' : scrollAmount);
             }
          },
+         /**
+          * Если высота контейнера меньше высоты экрана (т.е. нет скролла в контейнере иди в окне),
+          * то будет загружать данные, пока скролл все-таки не появится.
+          * Работает в паре с взведенной опцией infiniteScroll
+          * @remark Работает только в 3.7.3.30
+          * @see infiniteScroll
+          * @deprecated Удалено в 3.7.3.100.
+          */
+         loadDataTillScroll : function(){
+            $ws.single.ioc.resolve('ILogger').log('loadDataTillScroll', 'Метод работает только в 3.7.3.30, просьба исправить свой функционал');
+         },
          _showLoadingIndicator: function () {
             if (!this._loadingIndicator) {
                this._createLoadingIndicator();
