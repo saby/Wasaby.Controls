@@ -77,6 +77,14 @@ define('js!SBIS3.CONTROLS.FieldLinkItemsCollection', [
                FieldLinkItemsCollection.superclass._appendItemTemplate.apply(this, arguments);
             }
          },
+
+         /**
+          * Контрол выбранных записей не должен принимать фокус, просто переводим его на поле связи
+          */
+         setActive: function() {
+            var fieldLink = this.getParent();
+            fieldLink.setActive.apply(fieldLink, arguments);
+         },
          /**
           * Обработчик клика на крестик
           * @param e
