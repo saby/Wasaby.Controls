@@ -5,10 +5,11 @@ define('js!SBIS3.CONTROLS.Data.Record', [
    'js!SBIS3.CONTROLS.Data.Collection.ArrayEnumerator',
    'js!SBIS3.CONTROLS.Data.SerializableMixin',
    'js!SBIS3.CONTROLS.Data.Serializer',
+   'js!SBIS3.CONTROLS.Data.Di',
    'js!SBIS3.CONTROLS.Data.Factory',
-   'js!SBIS3.CONTROLS.Data.Adapter.Json',
-   'js!SBIS3.CONTROLS.Data.ContextField'
-], function (IPropertyAccess, IEnumerable, ArrayEnumerator, SerializableMixin, Serializer, Factory, JsonAdapter, ContextField) {
+   'js!SBIS3.CONTROLS.Data.ContextField',
+   'js!SBIS3.CONTROLS.Data.Adapter.Json'
+], function (IPropertyAccess, IEnumerable, ArrayEnumerator, SerializableMixin, Serializer, Di, Factory, ContextField) {
    'use strict';
 
    /**
@@ -46,17 +47,17 @@ define('js!SBIS3.CONTROLS.Data.Record', [
             rawData: null,
 
             /**
-             * @cfg {SBIS3.CONTROLS.Data.Adapter.IAdapter} Адаптер для работы с данными в "сыром" виде, по умолчанию {@link SBIS3.CONTROLS.Data.Adapter.Json}
+             * @cfg {String|SBIS3.CONTROLS.Data.Adapter.IAdapter} Адаптер для работы с данными в "сыром" виде, по умолчанию {@link SBIS3.CONTROLS.Data.Adapter.Json}
              * @example
              * <pre>
              *    var user = new Record({
-             *       adapter: new SbisAdapter()
+             *       adapter: 'adapter.sbis'
              *    });
              * </pre>
              * @see getAdapter
              * @see setAdapter
              */
-            adapter: null
+            adapter: ''
          },
 
          /**
@@ -88,8 +89,7 @@ define('js!SBIS3.CONTROLS.Data.Record', [
             this._options.rawData = cfg.data;
             $ws.single.ioc.resolve('ILogger').log('SBIS3.CONTROLS.Data.Record', 'option "data" is deprecated and will be removed in 3.7.4. Use "rawData" instead.');
          }
-         this._initAdapter();
-         this.setRawData(this._options.rawData, true);
+         this.setRawData(this._options.rawData);
       },
 
       // region SBIS3.CONTROLS.Data.IPropertyAccess
@@ -194,12 +194,18 @@ define('js!SBIS3.CONTROLS.Data.Record', [
        * @see setAdapter
        */
       getAdapter: function () {
+         if (!this._options.adapter) {
+            this._options.adapter = this._getDefaultAdapter();
+         }
+         if (typeof this._options.adapter === 'string') {
+            this._options.adapter = Di.resolve(this._options.adapter);
+         }
          return this._options.adapter;
       },
 
       /**
        * Устанавливает адаптер для работы с данными в "сыром" виде
-       * @param {SBIS3.CONTROLS.Data.Adapter.IAdapter} adapter
+       * @param {String|SBIS3.CONTROLS.Data.Adapter.IAdapter} adapter
        * @see adapter
        * @see getAdapter
        */
@@ -256,21 +262,15 @@ define('js!SBIS3.CONTROLS.Data.Record', [
       //region Protected methods
 
       /**
-       * Инициализирует адаптер
-       * @protected
-       */
-      _initAdapter: function() {
-         if (!this._options.adapter) {
-            this._options.adapter = this._getDefaultAdapter();
-         }
-      },
-
-      /**
        * Возвращает адаптер по-умолчанию (можно переопределять в наследниках)
        * @private
+       * @deprecated Метод _getDefaultAdapter() не рекомендуется к использованию и будет удален в 3.7.4. Используйте опцию adapter.
        */
       _getDefaultAdapter: function() {
-         return new JsonAdapter();
+         if (Record.prototype._getDefaultAdapter !== this._getDefaultAdapter) {
+            $ws.single.ioc.resolve('ILogger').log('SBIS3.CONTROLS.Data.Record', 'Method _getDefaultAdapter() is deprecated and will be removed in 3.7.4. Use \'adapter\' option instead.');
+         }
+         return 'adapter.json';
       },
 
       /**
@@ -376,6 +376,8 @@ define('js!SBIS3.CONTROLS.Data.Record', [
 
       //endregion Protected methods
    });
+
+   Di.register('record', Record);
 
    ContextField.registerRecord('ControlsDataRecord', Record, 'onPropertyChange');
 
