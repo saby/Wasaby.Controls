@@ -33,9 +33,6 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', ['js!SBIS3.CORE.Control'], function (Con
          _folderHasMore : {},
          _treePagers : {},
          _treePager: null,
-         _keysWeHandle: [
-            $ws._const.key.m
-         ],
          _options: {
             /**
              * @cfg {Boolean} При открытия узла закрывать другие
