@@ -637,6 +637,23 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
       },
 
       /**
+       * Создает новый экземпляр модели
+       * @param {*} model Данные модели
+       * @returns {SBIS3.CONTROLS.Data.Model}
+       * @private
+       */
+      _getModelInstance: function (data) {
+         var model = Di.resolve(this._options.model, {
+            compatibleMode: true,
+            adapter: this.getAdapter(),
+            rawData: data,
+            idProperty: this._options.idProperty
+         });
+         model.setStored(true);
+         return model;
+      },
+
+      /**
        * ПРроверяет, что переданный элемент - модель
        * @private
        */
