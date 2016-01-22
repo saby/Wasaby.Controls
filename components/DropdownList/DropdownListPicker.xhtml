@@ -2,8 +2,7 @@
 <div class="controls-DropdownList__body">
    <div class="controls-DropdownList__list"></div>
    {{?it.multiselect}}
-   <div class="controls-DropdownList__footer">
-      <div class="controls-DropdownListFooter {{?it.className}} {{=it.className}}{{?}}">
+      <div class="controls-DropdownList__buttonsBlock {{?it.className}} {{=it.className}}{{?}}">
          <component data-component="SBIS3.CONTROLS.Button" class="ws-invisible">
             <opt name="name">DropdownList_buttonChoose</opt>
             <opt name="caption">Отобрать</opt>
@@ -14,6 +13,8 @@
             <opt name="name">DropdownList_buttonHasMore</opt>
          </component>
       </div>
-   </div>
+   {{?}}
+   {{?it.footerTpl}}
+      <div class="controls-DropdownListFooter">{{=it.footerTpl(it)}}</div>
    {{?}}
 </div>
