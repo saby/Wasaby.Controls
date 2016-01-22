@@ -20,7 +20,19 @@ define('js!SBIS3.CONTROLS.ActiveMultiSelectable', ['js!SBIS3.CONTROLS.Data.Colle
       $protected: {
          _options: {
             /**
-             * @cfg {String[]} Набор выбранных записей
+             * @cfg {String[]} Набор выбранных значений
+             * @example
+             * <pre>
+             *     <options name="selectedItems" type="array">
+             *       <option>значение1</option>
+             *       <option>значение2</option>
+             *       <option>значение3</option>
+             *    </options>
+             * </pre>
+             * @see setSelectedItems
+             * @see getSelectedItems
+             * @see addSelectedItems
+             * @see clearSelectedItems
              */
             selectedItems : undefined
          },

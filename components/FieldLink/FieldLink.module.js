@@ -174,7 +174,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
              *         <option name="template">js!SBIS3.Demo.FieldLink</option>
              *      </options>
              *  </options>
-             *</pre>
+             * </pre>
              */
             dictionaries: [],
             /**
