@@ -16,10 +16,10 @@ define('js!SBIS3.CONTROLS.Data.Collection.List', [
     * @mixes SBIS3.CONTROLS.Data.SerializableMixin
     * @mixes SBIS3.CONTROLS.Data.Collection.IEnumerable
     * @mixes SBIS3.CONTROLS.Data.Collection.IList
+    * @mixes SBIS3.CONTROLS.Data.Collection.IIndexedCollection
     * @public
     * @author Мальцев Алексей
     */
-   //mixes SBIS3.CONTROLS.Data.Collection.IIndexedCollection - временно отключаем упоминание об этом интерфейсе, возможно его не будет в этом виде
 
    var List = $ws.proto.Abstract.extend([SerializableMixin, IEnumerable, IList, IIndexedCollection], /** @lends SBIS3.CONTROLS.Data.Collection.List.prototype */{
       _moduleName: 'SBIS3.CONTROLS.Data.Collection.List',
@@ -32,7 +32,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.List', [
          },
 
          /**
-          * @var {SBIS3.CONTROLS.Data.Collection.CollectionItem[]} Элементы списка
+          * @var {*[]} Элементы списка
           */
          _items: [],
 
@@ -87,6 +87,12 @@ define('js!SBIS3.CONTROLS.Data.Collection.List', [
          });
       },
 
+      /**
+       * Итератор для обхода всех элементов коллекции
+       * Цикл проходит полное количество итераций, его невозможно прервать досрочно
+       * @param callback
+       * @param context
+       */
       each: function (callback, context) {
          //так быстрее, чем по правильному - через enumerator
          for (var i = 0, count = this._items.length; i < count; i++) {
@@ -98,43 +104,25 @@ define('js!SBIS3.CONTROLS.Data.Collection.List', [
          }
       },
 
-      concat: function (items, prepend) {
-         var isArray = items instanceof Array;
-         if (!isArray && !$ws.helpers.instanceOfMixin(items, 'SBIS3.CONTROLS.Data.Collection.IEnumerable')) {
-            throw new Error('Invalid argument');
-         }
-         if (!isArray) {
-            items = items.toArray();
-         }
-
-         if (prepend) {
-            Array.prototype.splice.apply(this._items, [0, 0].concat(items));
-         } else {
-            Array.prototype.splice.apply(this._items, [this._items.length, 0].concat(items));
-         }
-
-         this._reindex();
-      },
-
-      toArray: function () {
-         return this._items;
-      },
-
       //endregion SBIS3.CONTROLS.Data.Collection.IEnumerable
 
       //region SBIS3.CONTROLS.Data.Collection.IList
 
-      fill: function (instead) {
+      assign: function (items) {
          this._items.length = 0;
+         this._splice(items || [], 0, 0);
+      },
 
-         if (instead) {
-            var isArray = instead instanceof Array;
-            if (!isArray && !$ws.helpers.instanceOfMixin(instead, 'SBIS3.CONTROLS.Data.Collection.IEnumerable')) {
-               throw new Error('Invalid argument');
-            }
-            Array.prototype.splice.apply(this._items, [0, 0].concat(isArray ? instead : instead.toArray()));
-         }
+      append: function (items) {
+         this._splice(items, this.getCount(), 0);
+      },
 
+      prepend: function (items) {
+         this._splice(items, 0, 0);
+      },
+
+      clear: function () {
+         this._items.length = 0;
          this._reindex();
       },
 
@@ -157,7 +145,12 @@ define('js!SBIS3.CONTROLS.Data.Collection.List', [
       },
 
       remove: function (item) {
-         this.removeAt(this.getIndex(item));
+         var index = this.getIndex(item);
+         if(index !== -1) {
+            this.removeAt(index);
+            return true;
+         }
+         return false;
       },
 
       removeAt: function (index) {
@@ -180,7 +173,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.List', [
 
       getIndex: function (item) {
          if ($ws.helpers.instanceOfMixin(item, 'SBIS3.CONTROLS.Data.IHashable')) {
-            return this._getItemIndexByHash(item.getHash());
+            return this.getIndexByValue('hash', item.getHash());
          }
 
          return Array.indexOf(this._items, item);
@@ -213,25 +206,47 @@ define('js!SBIS3.CONTROLS.Data.Collection.List', [
 
       //region SBIS3.CONTROLS.Data.Collection.IIndexedCollection
 
-      // Attention! Не используйте методы интерфейса SBIS3.CONTROLS.Data.Collection.IIndexedCollection - он будет изменен.
-
-      getItemByPropertyValue: function (property, value) {
-         return this._getServiceEnumerator().getItemByPropertyValue(property, value);
+      getIndexByValue: function (property, value) {
+         return this._getServiceEnumerator().getIndexByValue(property, value);
       },
 
-      getItemsByPropertyValue: function (property, value) {
-         return this._getServiceEnumerator().getItemsByPropertyValue(property, value);
-      },
-
-      getItemIndexByPropertyValue: function (property, value) {
-         return this._getServiceEnumerator().getItemIndexByPropertyValue(property, value);
-      },
-
-      getItemsIndexByPropertyValue: function (property, value) {
-         return this._getServiceEnumerator().getItemsIndexByPropertyValue(property, value);
+      getIndiciesByValue: function (property, value) {
+         return this._getServiceEnumerator().getIndiciesByValue(property, value);
       },
 
       //endregion SBIS3.CONTROLS.Data.Collection.IIndexedCollection
+
+      /**
+       * Присоединяет другую коллекцию
+       * @param {SBIS3.CONTROLS.Data.Collection.IEnumerable} items Коллекция, которая будет присоединена
+       * @param {Boolean} [prepend=false] Присоединить в начало
+       * @deprecated используйте append или prepend
+       */
+      concat: function (items, prepend) {
+         var isArray = items instanceof Array;
+         if (!isArray && !$ws.helpers.instanceOfMixin(items, 'SBIS3.CONTROLS.Data.Collection.IEnumerable')) {
+            throw new Error('Invalid argument');
+         }
+         if (!isArray) {
+            items = items.toArray();
+         }
+
+         if (prepend) {
+            Array.prototype.splice.apply(this._items, [0, 0].concat(items));
+         } else {
+            Array.prototype.splice.apply(this._items, [this._items.length, 0].concat(items));
+         }
+
+         this._reindex();
+      },
+      /**
+       * Возвращает коллекцию в виде массива
+       * @deprecated используйте each
+       * @returns {Array}
+       */
+      toArray: function () {
+         return this._items.slice();
+      },
 
       //region Protected methods
 
@@ -275,8 +290,30 @@ define('js!SBIS3.CONTROLS.Data.Collection.List', [
       _reindex: function () {
          this._hashIndex = undefined;
          this._getServiceEnumerator().reIndex();
-      }
+      },
 
+      /**
+       * Вызывает метод splice
+       * @param {SBIS3.CONTROLS.Data.Collection.IEnumerable|Array} items Коллекция с элементами для замены
+       * @param {Number} start Индекс в массиве, с которого начинать добавление.
+       * @private
+       */
+      _splice: function (items, start){
+         var addItems = [];
+         if(items instanceof Array) {
+            addItems = items;
+         } else if(items && $ws.helpers.instanceOfMixin(items, 'SBIS3.CONTROLS.Data.Collection.IEnumerable')) {
+            var self = this;
+            items.each(function (item){
+               addItems.push(item);
+            });
+         } else {
+            throw new Error('Invalid argument');
+         }
+         Array.prototype.splice.apply(this._items,([start, 0].concat(addItems)));
+
+         this._reindex();
+      }
       //endregion Protected methods
 
    });

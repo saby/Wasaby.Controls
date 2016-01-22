@@ -150,7 +150,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
              * @typedef {Array} dictionaries
              * @property {String} caption Текст в меню.
              * @property {String} template Шаблон, который отобразится в диалоге выбора.
-             * @property {Object} componentsOptions Опции, которые прокинутся в компонент на диалоге выбора.
+             * @property {Object} componentOptions Опции, которые прокинутся в компонент на диалоге выбора.
              */
             /**
              * @cfg {dictionaries[]} Набор диалогов выбора для поля связи
@@ -233,7 +233,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
                 rec;
 
             if(selectedRecords[0] !== null) {
-               selItems.fill();
+               selItems.clear();
                for (var i = 0, len = selectedRecords.length; i < len; i++) {
                   rec = recordConverter.call(self, selectedRecords[i]);
                   selItems.add(rec);

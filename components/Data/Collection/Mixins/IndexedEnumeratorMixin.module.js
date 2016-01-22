@@ -20,7 +20,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.IndexedEnumeratorMixin', [
       },
 
       $constructor: function () {
-         this._onCollectionChange.bind(this);
+         this._onCollectionChange = this._onCollectionChange.bind(this);
       },
 
       //region Public methods
@@ -33,35 +33,12 @@ define('js!SBIS3.CONTROLS.Data.Collection.IndexedEnumeratorMixin', [
       },
 
       /**
-       * Возвращает первый элемент с указанным значением свойства. Если такого элемента нет - вернет undefined.
-       * @param {String} property Название свойства элемента.
-       * @param {*} value Значение свойства элемента.
-       * @returns {*}
-       */
-      getItemByPropertyValue: function (property, value) {
-         var index = this._getIndexForPropertyValue(property, value);
-         return index.length ? index[0][1] : undefined;
-      },
-
-      /**
-       * Возвращает все элементы с указанным значением свойства.
-       * @param {String} property Название свойства элемента.
-       * @param {*} value Значение свойства элемента.
-       * @returns {Array}
-       */
-      getItemsByPropertyValue: function (property, value) {
-         return this._getIndexForPropertyValue(property, value).map(function(item) {
-            return item[1];
-         });
-      },
-
-      /**
        * Возвращает индекс первого элемента с указанным значением свойства. Если такого элемента нет - вернет -1.
        * @param {String} property Название свойства элемента.
        * @param {*} value Значение свойства элемента.
        * @returns {Number}
        */
-      getItemIndexByPropertyValue: function (property, value) {
+      getIndexByValue: function (property, value) {
          var index = this._getIndexForPropertyValue(property, value);
          return index.length ? index[0][0] : -1;
       },
@@ -72,8 +49,8 @@ define('js!SBIS3.CONTROLS.Data.Collection.IndexedEnumeratorMixin', [
        * @param {*} value Значение свойства элемента.
        * @returns {Array}
        */
-      getItemsIndexByPropertyValue: function (property, value) {
-         return this._getIndexForPropertyValue(property, value).map(function(item) {
+      getIndiciesByValue: function (property, value) {
+         return $ws.helpers.map(this._getIndexForPropertyValue(property, value), function(item) {
             return item[0];
          });
       },
@@ -127,6 +104,15 @@ define('js!SBIS3.CONTROLS.Data.Collection.IndexedEnumeratorMixin', [
          this.reset();
          while ((item = this.getNext())) {
             value = Utils.getItemPropertyValue(item, property);
+
+            //FIXME: для проекций решить проблему, кода поиск осущетвляется как по ITreeItem, так и по его contents
+            if (value === undefined &&
+               item instanceof Object &&
+               $ws.helpers.instanceOfMixin(item, 'SBIS3.CONTROLS.Data.Projection.ICollectionItem')
+            ) {
+               value = Utils.getItemPropertyValue(item.getContents(), property);
+            }
+
             if (index[value] === undefined) {
                index[value] = [];
             }
