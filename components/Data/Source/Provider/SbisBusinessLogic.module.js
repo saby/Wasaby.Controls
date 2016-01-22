@@ -15,7 +15,7 @@ define('js!SBIS3.CONTROLS.Data.Source.Provider.SbisBusinessLogic', [
        _moduleName: 'SBIS3.CONTROLS.Data.Source.Provider.SbisBusinessLogic',
 
         call: function(method, args) {
-            return SbisBusinessLogic.superclass.call.call(
+            return $ws.proto.ClientBLObject.prototype.call.call(
                this,
                method,
                args,
