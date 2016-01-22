@@ -131,6 +131,15 @@ define('js!SBIS3.CONTROLS.NumberTextBox', ['js!SBIS3.CONTROLS.TextBox', 'html!SB
              * @see decimals
              */
             delimiters: false,
+            /**
+             * @cfg {Number} Числовое значение контрола
+             * Если установлено, то значение опции text игнорируется.
+             * @example
+             * <pre>
+             *     <option name="numericValue">123.456</option>
+             * </pre>
+             * @see text
+             */
             numericValue: null
          }
       },
@@ -264,7 +273,7 @@ define('js!SBIS3.CONTROLS.NumberTextBox', ['js!SBIS3.CONTROLS.TextBox', 'html!SB
             return true;
          }
          var keyCode = (event.which >= 96 && event.which <= 105) ? event.which - 48 : event.which;
-         if(keyCode == 190 /*точка*/){
+         if(keyCode == 190 || keyCode == 110/*точка*/){
             this._dotHandler(event);
             return;
          }
