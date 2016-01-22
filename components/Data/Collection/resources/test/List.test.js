@@ -448,8 +448,13 @@ define(
                   items: newItems
                });
 
-               for (var i = 0; i < items.length; i++) {
+               for (var i = 0; i < newItems.length; i++) {
                   assert.strictEqual(i, list.getIndex(newItems[i]));
+               }
+
+               list.removeAt(0);
+               for (var i = 0; i < newItems.length; i++) {
+                  assert.strictEqual(i, list.getIndex(newItems[i]), 'after reindex');
                }
             });
 
