@@ -420,14 +420,14 @@ define('js!SBIS3.CONTROLS.ListView',
             }
          },
          _modifyOptions : function(opts){
-            //ListView.superclass._modifyOptions.apply(this, arguments);
+            var lvOpts = ListView.superclass._modifyOptions.apply(this, arguments);
             //Если нам задали бесконечный скролл в виде Bool, то если true, то 'down' иначе null
-            if (opts.hasOwnProperty('infiniteScroll')){
-               opts.infiniteScroll = typeof opts.infiniteScroll === 'boolean' ?
-                     (opts.infiniteScroll ? 'down' : null)
-                     : opts.infiniteScroll;
+            if (lvOpts.hasOwnProperty('infiniteScroll')){
+               lvOpts.infiniteScroll = typeof lvOpts.infiniteScroll === 'boolean' ?
+                     (lvOpts.infiniteScroll ? 'down' : null)
+                     : lvOpts.infiniteScroll;
             }
-            return opts;
+            return lvOpts;
          },
          _prepareInfiniteScroll: function(){
             var topParent = this.getTopParent(),
