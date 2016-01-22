@@ -594,33 +594,6 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
       //region Protected methods
 
       /**
-       * Вставляет набор записей в указанную позицию
-       * @private
-       */
-      _splice: function (items, start){
-         var newItems = [];
-         if(items instanceof Array) {
-            newItems = items;
-         } else if(items && $ws.helpers.instanceOfMixin(items, 'SBIS3.CONTROLS.Data.Collection.IEnumerable')) {
-            var self = this;
-            items.each(function (item){
-               newItems.push(item);
-            });
-         } else {
-            throw new Error('Invalid argument');
-         }
-         for (var i = 0, len = newItems.length; i< len; i++) {
-            var item = newItems[i];
-            this._checkItem(item);
-            this._getTableAdapter().add(item.getRawData(), start);
-            this._items.splice(item, start, 0);
-            start++;
-         }
-
-         this._getServiceEnumerator().reIndex();
-      },
-
-      /**
        * Возвращает адаптер для сырых данных (лениво создает)
        * @private
        */
