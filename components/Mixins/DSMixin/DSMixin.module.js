@@ -234,14 +234,12 @@ define('js!SBIS3.CONTROLS.DSMixin', [
             this._options.pageSize = this._options.pageSize * 1;
          }
          this._bindHandlers();
-         this._prepareConfig();
+         this._prepareConfig(this._options.dataSource, this._options.items);
       },
 
-      _prepareConfig : function() {
+      _prepareConfig : function(sourceOpt, itemsOpt) {
          var
-            keyField = this._options.keyField,
-            sourceOpt = this._options.dataSource,
-            itemsOpt = this._options.items;
+            keyField = this._options.keyField
          if (!keyField) {
             $ws.single.ioc.resolve('ILogger').error('Option keyField is required');
          }
@@ -377,11 +375,8 @@ define('js!SBIS3.CONTROLS.DSMixin', [
         * @see onDataLoad
         */
       setDataSource: function (source, noLoad) {
-          this._dataSource = this._prepareSource(source);
-          this._setItemsEventHandlers();
           this._unsetItemsEventHandlers();
-          this._items = this._convertDataSourceToItems(this._dataSource);
-          this._setItemsEventHandlers();
+          this._prepareConfig(source);
           if (!noLoad) {
              return this.reload();
           }
@@ -630,11 +625,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
         */
        setItems: function (items) {
          this._unsetItemsEventHandlers();
-         this.getItems().assign(items);
-
-         /*TODO для совместимости создадим сорс*/
-         this._prepareConfig();
-         this._setItemsEventHandlers();
+         this._prepareConfig(undefined, items);
          this.reload();
       },
 
@@ -1041,7 +1032,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
       },
 
       _getItemContainer: function(parent, item) {
-         return parent.find('>[data-id="' + item.getId() + '"]');
+         return parent.find('>[data-id="' + item.getContents().getKey() + '"]');
       }
    };
 
