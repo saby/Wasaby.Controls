@@ -338,8 +338,11 @@ define('js!SBIS3.CONTROLS.Data.Source.Memory', [
             sortHandler = function (a, b) {
                var res;
                if (a.values[orderIndex] === null && b.values[orderIndex] !== null) {
-                  //Считаем null меньше любого другого значения
+                  //Считаем null меньше любого не-null
                   res = -1;
+               } else if (a.values[orderIndex] !== null && b.values[orderIndex] === null) {
+                  //Считаем любое не-null больше null
+                  res = 1;
                } else if (a.values[orderIndex] == b.values[orderIndex]) {
                   res = 0;
                } else {
