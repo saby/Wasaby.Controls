@@ -8,7 +8,9 @@ define([
       'use strict';
 
       var existsId = 5,
+         existsPosition = 5,
          existsId2 = 6,
+         existsPosition2 = 0,
          notExistsId = 33,
          data,
          service;
@@ -29,6 +31,8 @@ define([
             'Отчество': 'Иванович',
             'Должность': 'Директор'
          }, {
+            'ПорНом': null
+         }, {
             'Ид': 7,
             'ПорНом': 6,
             'Фамилия': 'Аксенова',
@@ -42,6 +46,8 @@ define([
             'Имя': 'Иван',
             'Отчество': 'Андреевич',
             'Должность': 'Директор'
+         }, {
+            'Ид': null
          }, {
             'Ид': 5,
             'ПорНом': 4,
@@ -520,26 +526,26 @@ define([
                var tests = [{
                   sorting: 'Ид',
                   check: 'Ид',
-                  expect: [1, 2, 3, 4, 5, 6, 7]
+                  expect: [undefined, null, 1, 2, 3, 4, 5, 6, 7]
                }, {
                   sorting: [{'Ид': false}],
                   check: 'Ид',
-                  expect: [7, 6, 5, 4, 3, 2, 1]
+                  expect: [7, 6, 5, 4, 3, 2, 1, undefined, null]
                }, {
                   sorting: [{'Ид': true}],
                   offset: 2,
                   check: 'Ид',
-                  expect: [3, 4, 5, 6, 7]
+                  expect: [1, 2, 3, 4, 5, 6, 7]
                }, {
                   sorting: [{'Ид': false}],
                   offset: 2,
                   check: 'Ид',
-                  expect: [5, 4, 3, 2, 1]
+                  expect: [5, 4, 3, 2, 1, undefined, null]
                }, {
                   sorting: [{'Ид': true}],
                   limit: 4,
                   check: 'Ид',
-                  expect: [1, 2, 3, 4]
+                  expect: [undefined, null, 1, 2, 3, 4]
                }, {
                   sorting: [{'Ид': false}],
                   limit: 4,
@@ -550,7 +556,7 @@ define([
                   offset: 3,
                   limit: 2,
                   check: 'Ид',
-                  expect: [4, 5, 6]
+                  expect: [2, 3, 4]
                }, {
                   sorting: [{'Ид': false}],
                   offset: 3,
@@ -559,9 +565,9 @@ define([
                   expect: [4, 3]
                }, {
                   sorting: [{'Фамилия': true}],
-                  limit: 3,
+                  limit: 5,
                   check: 'Фамилия',
-                  expect: ['Аксенова', 'Афанасьев', 'Баранов']
+                  expect: [undefined, undefined, 'Аксенова', 'Афанасьев', 'Баранов']
                }, {
                   sorting: [{'Фамилия': false}],
                   limit: 3,
@@ -575,21 +581,21 @@ define([
                }, {
                   sorting: [{'Фамилия': true}, {'Имя': false}],
                   check: ['Фамилия', 'Имя'],
-                  expect: ['Аксенова+Федора', 'Афанасьев+Иван', 'Баранов+Иванко', 'Годолцов+Иван', 'Иванов+Ян', 'Иванов+Иван', 'Петров+Федор']
+                  expect: ['+', '+', 'Аксенова+Федора', 'Афанасьев+Иван', 'Баранов+Иванко', 'Годолцов+Иван', 'Иванов+Ян', 'Иванов+Иван', 'Петров+Федор']
                }, {
                   sorting: [{'Имя': true}, {'Отчество': true}],
-                  limit: 5,
+                  limit: 7,
                   check: ['Имя', 'Отчество'],
-                  expect: ['Иван+Андреевич', 'Иван+Викторович', 'Иван+Иванович', 'Иванко+Петрович', 'Федор+Иванович']
+                  expect: ['+', '+', 'Иван+Андреевич', 'Иван+Викторович', 'Иван+Иванович', 'Иванко+Петрович', 'Федор+Иванович']
                }, {
                   sorting: [{'Имя': true}, {'Отчество': false}],
-                  limit: 5,
+                  limit: 7,
                   check: ['Имя', 'Отчество'],
-                  expect: ['Иван+Иванович', 'Иван+Викторович', 'Иван+Андреевич', 'Иванко+Петрович', 'Федор+Иванович']
+                  expect: ['+', '+', 'Иван+Иванович', 'Иван+Викторович', 'Иван+Андреевич', 'Иванко+Петрович', 'Федор+Иванович']
                }, {
                   sorting: [{'Должность': true}, {'Фамилия': true}, {'Имя': true}],
                   check: ['Должность', 'Фамилия', 'Имя'],
-                  expect: ['Директор+Афанасьев+Иван', 'Директор+Годолцов+Иван', 'Директор+Петров+Федор', 'Инженер+Аксенова+Федора', 'Инженер+Иванов+Иван', 'Карапуз+Баранов+Иванко', 'Маркетолог+Иванов+Ян']
+                  expect: ['++', '++', 'Директор+Афанасьев+Иван', 'Директор+Годолцов+Иван', 'Директор+Петров+Федор', 'Инженер+Аксенова+Федора', 'Инженер+Иванов+Иван', 'Карапуз+Баранов+Иванко', 'Маркетолог+Иванов+Ян']
                }];
 
                for (var i = 0; i < tests.length; i++) {
@@ -609,13 +615,18 @@ define([
                               failOn;
                            ds.getAll().each(function (model) {
                               if (failOn === undefined) {
-                                 var have = [],
+                                 var have,
                                     need = test.expect[modelNum];
-                                 for (var j = 0; j < test.check.length; j++) {
-                                    have.push(model.get(test.check[j]));
+                                 if (test.check.length > 1) {
+                                    have = [];
+                                    for (var j = 0; j < test.check.length; j++) {
+                                       have.push(model.get(test.check[j]));
+                                    }
+                                    have = have.join('+');
+                                 } else {
+                                    have = model.get(test.check[0]);
                                  }
-                                 have = have.join('+');
-                                 if (have != need) {
+                                 if (have !== need) {
                                     failOn = [have, need];
                                  }
                               }
@@ -639,8 +650,12 @@ define([
             it('should move ' + existsId + ' instead ' + existsId2, function (done) {
                service.read(existsId).addCallback(function (model1) {
                   service.read(existsId2).addCallback(function (model2) {
-                     service.call('move', {from:model1,to:model2, details:{after:false}}).addCallbacks(function() {
-                        if (data[0]['Ид'] === existsId && data[1]['Ид'] === existsId2) {
+                     service.call('move', {
+                        from: model1,
+                        to: model2,
+                        details: {after: false}
+                     }).addCallbacks(function() {
+                        if (data[existsPosition2]['Ид'] === existsId && data[existsPosition2 + 1]['Ид'] === existsId2) {
                            done();
                         } else {
                            done(new Error('Unexpected value'));
@@ -653,11 +668,14 @@ define([
             });
 
             it('should move ' + existsId2 + ' instead ' + existsId, function (done) {
-
                service.read(existsId2).addCallback(function (model1) {
                   service.read(existsId).addCallback(function (model2) {
-                     service.call('move', {from:model1,to:model2, details:{after:false}}).addCallbacks(function() {
-                        if (data[3]['Ид'] === existsId && data[4]['Ид'] === existsId2) {
+                     service.call('move', {
+                        from: model1,
+                        to: model2,
+                        details: {after: false}
+                     }).addCallbacks(function() {
+                        if (data[existsPosition]['Ид'] === existsId && data[1 + existsPosition]['Ид'] === existsId2) {
                            done();
                         } else {
                            done(new Error('Unexpected value'));
@@ -671,11 +689,14 @@ define([
             });
 
             it('should move ' + existsId + ' after ' + existsId2, function (done) {
-
                service.read(existsId).addCallback(function (model1) {
                   service.read(existsId2).addCallback(function (model2) {
-                     service.call('move', {from:model1,to:model2, details:{after:true}}).addCallbacks(function() {
-                        if(data[0]['Ид'] === existsId2 && data[1]['Ид'] === existsId) {
+                     service.call('move', {
+                        from: model1,
+                        to: model2,
+                        details: {after: true}
+                     }).addCallbacks(function() {
+                        if(data[existsPosition2]['Ид'] === existsId2 && data[1 + existsPosition2]['Ид'] === existsId) {
                            done();
                         } else {
                            done(new Error('Unexpected value'));
@@ -689,11 +710,14 @@ define([
             });
 
             it('should move ' + existsId2 + ' after ' + existsId, function (done) {
-
                service.read(existsId2).addCallback(function (model1) {
                   service.read(existsId).addCallback(function (model2) {
-                     service.call('move', {from:model1,to:model2, details:{after:true}}).addCallbacks(function() {
-                        if(data[3]['Ид'] === existsId && data[4]['Ид'] === existsId2) {
+                     service.call('move', {
+                        from: model1,
+                        to: model2,
+                        details: {after: true}
+                     }).addCallbacks(function() {
+                        if(data[existsPosition]['Ид'] === existsId && data[1 + existsPosition]['Ид'] === existsId2) {
                            done();
                         } else {
                            done(new Error('Unexpected value'));
@@ -707,10 +731,16 @@ define([
             });
 
             it('should move before record with ПорНом=6', function (done) {
+               var pn = 6,
+                  newPos = 3;
                service.read(existsId).addCallback(function (model) {
-                  service.read(6).addCallback(function (model2) {
-                     service.call('move',{from:model, to:model2, details:{column: 'ПорНом', after: false}}).addCallbacks(function() {
-                        if(data[2]['Ид'] === existsId && data[3]['ПорНом'] === 6) {
+                  service.read(existsId2).addCallback(function (model2) {
+                     service.call('move', {
+                        from: model,
+                        to: model2,
+                        details: {column: 'ПорНом', after: false}
+                     }).addCallbacks(function() {
+                        if(data[newPos]['Ид'] === existsId && data[1 + newPos]['ПорНом'] === pn) {
                            done();
                         } else {
                            done(new Error('Unexpected value'));
@@ -723,10 +753,16 @@ define([
             });
 
             it('should move after record with ПорНом=6', function (done) {
+               var pn = 6,
+                  newPos = 4;
                service.read(existsId).addCallback(function (model) {
-                  service.read(6).addCallback(function (model2) {
-                     service.call('move',{from:model, to:model2, details:{column: 'ПорНом', after: true}}).addCallbacks(function() {
-                        if(data[3]['Ид'] === existsId && data[2]['ПорНом'] === 6) {
+                  service.read(existsId2).addCallback(function (model2) {
+                     service.call('move', {
+                        from: model,
+                        to: model2,
+                        details: {column: 'ПорНом', after: true}
+                     }).addCallbacks(function() {
+                        if(data[newPos]['Ид'] === existsId && data[newPos - 1]['ПорНом'] === pn) {
                            done();
                         } else {
                            done(new Error('Unexpected value'));
