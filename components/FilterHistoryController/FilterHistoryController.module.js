@@ -4,10 +4,11 @@
 define('js!SBIS3.CONTROLS.FilterHistoryController',
     [
        'js!SBIS3.CONTROLS.HistoryController',
-       'js!SBIS3.CONTROLS.Data.Collection.List'
+       'js!SBIS3.CONTROLS.Data.Collection.List',
+       'js!SBIS3.CONTROLS.Utils.TemplateUtil'
     ],
 
-    function(HistoryController, List) {
+    function(HistoryController, List, TemplateUtil) {
 
        'use strict';
 
@@ -64,7 +65,7 @@ define('js!SBIS3.CONTROLS.FilterHistoryController',
              }
 
              /* Запишем новую историю */
-             this._listHistory.fill($ws.core.clone(newHistory.toArray()));
+             this._listHistory.fill(newHistory.toArray());
              this._saveParamsDeferred = saveDeferred;
              this._options.filterButton[activeFilter ? 'setFilterStructure' : '_resetFilter'](activeFilter.filter);
              this._updateFilterButtonHistoryView();
@@ -91,9 +92,9 @@ define('js!SBIS3.CONTROLS.FilterHistoryController',
 
           _onApplyFilterHandler: function() {
              var fb = this._options.filterButton,
-                 structure = fb.getFilterStructure(),
+                 structure = $ws.core.clone(fb.getFilterStructure()),
                  self = this,
-                 linkTextArr = [];
+                 linkText, template, templateRes;
 
              /* Если это дефолтный фильтр, то сохранять в историю не надо */
              if(!fb.getLinkedContext().getValue('filterChanged')) {
@@ -103,15 +104,37 @@ define('js!SBIS3.CONTROLS.FilterHistoryController',
                 return;
              }
 
-             /* Из структуры соберём строку */
-             for(var i = 0, len = structure.length; i < len; i++) {
-                if(structure[i].caption && !$ws.helpers.isEqualObject(structure[i].value, structure[i].resetValue)) {
-                   linkTextArr.push(structure[i].caption);
+             linkText = $ws.helpers.reduce(structure, function(res, elem) {
+                template = TemplateUtil.prepareTemplate(elem.historyItemTemplate);
+
+                if(template) {
+                   templateRes = template(elem);
+                   if(templateRes) {
+                      res.push(template(elem));
+                   }
+                   return res;
+                } else if(template === null) {
+                   return res;
                 }
-             }
+
+                if (elem.caption && !$ws.helpers.isEqualObject(elem.value, elem.resetValue)) {
+                   res.push(elem.caption);
+                }
+                return res;
+             }, []).join(', ');
+
+             /* Надо удалить из истории шаблоны, т.к. история сохраняется строкой */
+             $ws.helpers.forEach(structure, function(elem) {
+                if(elem.itemTemplate) {
+                   delete elem.itemTemplate;
+                }
+                if(elem.historyItemTemplate) {
+                   delete elem.historyItemTemplate;
+                }
+             });
 
              self.saveToHistory({
-                linkText: linkTextArr.join(', '),
+                linkText: linkText,
                 filter: structure
              });
 
@@ -133,8 +156,23 @@ define('js!SBIS3.CONTROLS.FilterHistoryController',
              var filter = this.findFilterByKey(key),
                  fb = this._options.filterButton;
 
+             /* В фильтр, который был сохранён в историю надо смержить шаблоны из структуры */
+             function mergeTemplates(to, from) {
+                if(to.length === from.length) {
+                   for(var i = 0; i < to.length; i++) {
+                      if(from[i].itemTemplate && to[i]) {
+                         to[i].itemTemplate = from[i].itemTemplate;
+                      }
+                      if(from[i].historyItemTemplate && to[i]) {
+                         to[i].historyItemTemplate = from[i].historyItemTemplate
+                      }
+                   }
+                }
+                return to;
+             }
+
              /* Применим фильтр из истории*/
-             fb.setFilterStructure(filter.filter);
+             fb.setFilterStructure(mergeTemplates($ws.core.clone(filter.filter), fb.getFilterStructure()));
              fb.getChildControlByName('filterLine').getContext().setValue('linkText', filter.linkText);
              fb.hidePicker();
 
@@ -152,7 +190,9 @@ define('js!SBIS3.CONTROLS.FilterHistoryController',
            * @param filterObject
            */
           saveToHistory: function(filterObject) {
-             var equalFilter = $ws.helpers.find(this.getHistoryArr(), function(item) { return $ws.helpers.isEqualObject(item.filter, filterObject.filter); }),
+             var equalFilter = $ws.helpers.find(this.getHistoryArr(), function(item) {
+                    return $ws.helpers.isEqualObject(item.filter, filterObject.filter) || item.linkText === filterObject.linkText;
+                 }),
                  activeFilter = this.getActiveFilter();
 
              /* Если есть активный фильтр - сбросим его */
@@ -271,7 +311,7 @@ define('js!SBIS3.CONTROLS.FilterHistoryController',
           _sortHistory: function() {
              /* Сортирует историю по флагу отмеченности и активности.
                 Приоритет: отмеченные > активный > обычные. */
-             this.getHistoryArr().sort(function(a, b) {
+             this._listHistory.assign(this.getHistoryArr().sort(function(a, b) {
                 if(a.isMarked && b.isMarked) {
                    return 0;
                 } else if(a.isMarked) {
@@ -285,7 +325,7 @@ define('js!SBIS3.CONTROLS.FilterHistoryController',
                 } else if(b.isActiveFilter) {
                    return 1;
                 }
-             });
+             }));
           },
 
           destroy: function() {
