@@ -2,8 +2,9 @@ define('js!SBIS3.CONTROLS.DSMixin', [
    'js!SBIS3.CONTROLS.Data.Source.Memory',
    'js!SBIS3.CONTROLS.Data.Collection.RecordSet',
    'js!SBIS3.CONTROLS.Data.Query.Query',
-   'js!SBIS3.CORE.MarkupTransformer'
-], function (StaticSource, RecordSet, Query, MarkupTransformer) {
+   'js!SBIS3.CORE.MarkupTransformer',
+   'js!SBIS3.CONTROLS.Utils.TemplateUtil'
+], function (StaticSource, RecordSet, Query, MarkupTransformer, TemplateUtil) {
 
    /**
     * Миксин, задающий любому контролу поведение работы с набором однотипных элементов.
@@ -790,18 +791,8 @@ define('js!SBIS3.CONTROLS.DSMixin', [
          return this._buildTplItem(item, this._getItemTemplate(item));
       },
 
-      _prepareTpl: function(itemTpl) {
-         return itemTpl && typeof itemTpl === 'string' ?
-            itemTpl.indexOf('html!') === 0 ?
-               require(itemTpl) :
-               doT.template(itemTpl) :
-            typeof itemTpl === 'function' ?
-               itemTpl :
-               undefined;
-      },
-
       _buildTplItem: function(item, itemTpl){
-         var dotTemplate = this._prepareTpl(itemTpl);
+         var dotTemplate = TemplateUtil.prepareTemplate(itemTpl);
 
          if (typeof dotTemplate == 'function') {
             return $(MarkupTransformer(dotTemplate(this._buildTplArgs(item))));
@@ -819,7 +810,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
             tplOptions.included = {};
             for (var j in tpls) {
                if (tpls.hasOwnProperty(j)) {
-                  tplOptions.included[j] = this._prepareTpl(tpls[j]);
+                  tplOptions.included[j] = TemplateUtil.prepareTemplate(tpls[j]);
                }
             }
          }

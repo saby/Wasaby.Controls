@@ -13,6 +13,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
       'js!SBIS3.CONTROLS.Data.Adapter.Sbis',
       'js!SBIS3.CONTROLS.Utils.DialogOpener',
       'js!SBIS3.CONTROLS.ITextValue',
+      'js!SBIS3.CONTROLS.Utils.TemplateUtil',
       'js!SBIS3.CONTROLS.MenuIcon'
 
    ],
@@ -36,7 +37,8 @@ define('js!SBIS3.CONTROLS.FieldLink',
        Model,
        SbisAdapter,
        DialogOpener,
-       ITextValue
+       ITextValue,
+       TemplateUtil
    ) {
 
       'use strict';
@@ -460,7 +462,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
             element: this._linksWrapper.find('.controls-FieldLink__linksContainer'),
             displayField: this._options.displayField,
             keyField: this._options.keyField,
-            itemTemplate: this._prepareTpl(this.getProperty('itemTemplate')),
+            itemTemplate: TemplateUtil.prepareTemplate(this.getProperty('itemTemplate')),
             userItemAttributes: this._options.userItemAttributes,
             parent: this,
             itemCheckFunc: this._checkItemBeforeDraw.bind(this),
