@@ -1004,6 +1004,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
       },
 
       _removeItem: function (item) {
+         item = item.getContents();
          var container = this._getItemContainer(this._getTargetContainer(item), item);
          if (container.length) {
             this._clearItems(container);
@@ -1014,6 +1015,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
       },
 
       _updateItem: function(item) {
+         item = item.getContents();
          var container = this._getItemContainer(this._getTargetContainer(item), item),
             template = this._getItemTemplate(item);
 
@@ -1037,7 +1039,6 @@ define('js!SBIS3.CONTROLS.DSMixin', [
    };
 
    var
-
       onCollectionItemChange = function(eventObject, item, index, property){
          this._updateItem(item);
       },
