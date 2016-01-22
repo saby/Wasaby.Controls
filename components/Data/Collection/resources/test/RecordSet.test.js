@@ -51,10 +51,6 @@ define([
                }));
                Array.prototype.push.apply(items,rd);
                assert.deepEqual(list.getRawData(), items);
-               assert.deepEqual(list.getCount(), items.length);
-               $ws.helpers.forEach(items, function (item, i) {
-                  assert.deepEqual(list.at(i).getRawData(), item);
-               });
             });
 
          });
@@ -70,10 +66,6 @@ define([
                }));
                Array.prototype.splice.apply(items,([0, 0].concat(rd)));
                assert.deepEqual(list.getRawData(), items);
-               assert.deepEqual(list.getCount(), items.length);
-               $ws.helpers.forEach(items, function (item, i) {
-                  assert.deepEqual(list.at(i).getRawData(), item);
-               });
             });
          });
 
@@ -89,10 +81,6 @@ define([
                list.add(addItem);
                items.push({id: 3});
                assert.deepEqual(list.getRawData(), items);
-               assert.deepEqual(list.getCount(), items.length);
-               $ws.helpers.forEach(items, function (item, i) {
-                  assert.deepEqual(list.at(i).getRawData(), item);
-               });
             });
          });
 

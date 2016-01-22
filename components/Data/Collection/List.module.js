@@ -299,29 +299,20 @@ define('js!SBIS3.CONTROLS.Data.Collection.List', [
        * @private
        */
       _splice: function (items, start){
-         Array.prototype.splice.apply(this._items,([start, 0].concat(
-            this._itemsToArray(items)
-         )));
-         this._reindex();
-      },
-      /**
-       * Приводит переденные элементы к массиву
-       * @param items
-       * @returns {Array}
-       * @private
-       */
-      _itemsToArray: function (items) {
+         var addItems = [];
          if(items instanceof Array) {
-            return items;
+            addItems = items;
          } else if(items && $ws.helpers.instanceOfMixin(items, 'SBIS3.CONTROLS.Data.Collection.IEnumerable')) {
-            var result = [];
-            items.each(function (item) {
-               result.push(item);
+            var self = this;
+            items.each(function (item){
+               addItems.push(item);
             });
-            return result;
          } else {
-            throw new Error('Arguments must be an array or implemenst SBIS3.CONTROLS.Data.Collection.IEnumerable.');
+            throw new Error('Invalid argument');
          }
+         Array.prototype.splice.apply(this._items,([start, 0].concat(addItems)));
+
+         this._getServiceEnumerator().reIndex();
       }
       //endregion Protected methods
 
