@@ -43,6 +43,8 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                   itemsContainer: undefined
                },
                _eip: undefined,
+               // Используется для хранения Deferred при сохранении в редактировании по месту.
+               // Обязательно нужен, т.к. лишь таким способом можно обработать несколько последовательных вызовов endEdit и вернуть ожидаемый результат (Deferred).
                _savingDeferred: undefined,
                _editingRecord: undefined,
                _eipHandlers: null
@@ -168,14 +170,14 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
              * todo EIP Авраменко, Сухоручкин: сейчас сделано через pendingOperation, в будущем переделать на команды блокировки родительких компонентов
              * @private
              */
-            _sendLockCommand: function() {
+            _sendLockCommand: function(savingDeferred) {
                var
                   opener = this.getOpener(),
                   dialog;
                if (opener) {
                   dialog = opener.getParentByClass('SBIS3.CORE.RecordArea') || opener.getTopParent();
                   if (dialog) {
-                     dialog.addPendingOperation(this._savingDeferred);
+                     dialog.addPendingOperation(savingDeferred);
                   }
                }
             },
@@ -196,7 +198,7 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                   if (!withSaving || eip.validate()) {
                      eip.endEdit();
                      this._savingDeferred = new $ws.proto.Deferred();
-                     this._sendLockCommand();
+                     this._sendLockCommand(this._savingDeferred);
                      if (withSaving) {
                         eip.applyChanges().addCallback(function() {
                            this._endEdit(eip, withSaving);
