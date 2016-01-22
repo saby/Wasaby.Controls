@@ -627,7 +627,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
       },
 
       /**
-       * ПРроверяет, что переданный элемент - модель
+       * Проверяет, что переданный элемент - модель
        * @private
        */
       _checkItem: function (item) {
