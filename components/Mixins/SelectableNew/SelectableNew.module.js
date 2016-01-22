@@ -169,7 +169,7 @@ define('js!SBIS3.CONTROLS.SelectableNew', [
             this._options.selectedKey = index === -1?null:id;
             this._itemsProjection.setCurrentPosition(index);
             //this.saveToContext('SelectedItem', this._options.selectedKey); //TODO: Перенести отсюда
-            this._drawSelectedItem();
+            this._drawSelectedItem(id);
             this._notifySelectedItem();
          }
       },
