@@ -562,6 +562,33 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
          this._getTableAdapter().replace(item.getRawData(), at);
       },
 
+      assign: function (items) {
+         var self = this;
+         RecordSet.superclass.assign.apply(this, arguments);
+         this.setRawData(this._getTableAdapter().getEmpty());
+         this.each(function(item){
+            self._getTableAdapter().add(item.getRawData());
+         });
+      },
+
+      append: function (items) {
+         var self = this,
+            addItems = this._itemsToArray(items);
+         $ws.helpers.forEach(addItems, function(item, i){
+            self._getTableAdapter().add(item.getRawData());
+         });
+         RecordSet.superclass.append.call(this, addItems);
+      },
+
+      prepend: function (items) {
+         var self = this,
+            addItems = this._itemsToArray(items);
+         $ws.helpers.forEach(addItems, function(item, i){
+            self._getTableAdapter().add(item.getRawData(), i);
+         });
+         RecordSet.superclass.prepend.call(this, addItems);
+      },
+
       //endregion SBIS3.CONTROLS.Data.Collection.List
 
       //region Protected methods
@@ -607,23 +634,6 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
        */
       _resetTableAdapter: function () {
          this._tableAdapter = null;
-      },
-
-      /**
-       * Создает новый экземпляр модели
-       * @param {*} model Данные модели
-       * @returns {SBIS3.CONTROLS.Data.Model}
-       * @private
-       */
-      _getModelInstance: function (data) {
-         var model = Di.resolve(this._options.model, {
-            compatibleMode: true,
-            adapter: this.getAdapter(),
-            rawData: data,
-            idProperty: this._options.idProperty
-         });
-         model.setStored(true);
-         return model;
       },
 
       /**

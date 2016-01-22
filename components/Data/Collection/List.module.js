@@ -273,20 +273,29 @@ define('js!SBIS3.CONTROLS.Data.Collection.List', [
        * @private
        */
       _splice: function (items, start){
-         var addItems = [];
-         if(items instanceof Array) {
-            addItems = items;
-         } else if(items && $ws.helpers.instanceOfMixin(items, 'SBIS3.CONTROLS.Data.Collection.IEnumerable')) {
-            var self = this;
-            items.each(function (item){
-               addItems.push(item);
-            });
-         } else {
-            throw new Error('Invalid argument');
-         }
-         Array.prototype.splice.apply(this._items,([start, 0].concat(addItems)));
-
+         Array.prototype.splice.apply(this._items,([start, 0].concat(
+            this._itemsToArray(items)
+         )));
          this._getServiceEnumerator().reIndex();
+      },
+      /**
+       * Приводит переденные элементы к массиву
+       * @param items
+       * @returns {Array}
+       * @private
+       */
+      _itemsToArray: function (items){
+         if(items instanceof Array) {
+            return items;
+         } else if(items && $ws.helpers.instanceOfMixin(items, 'SBIS3.CONTROLS.Data.Collection.IEnumerable')) {
+            var result = [];
+            items.each(function (item) {
+               result.push(item);
+            });
+            return result;
+         } else {
+            throw new Error('Arguments must be an array or implemenst SBIS3.CONTROLS.Data.Collection.IEnumerable.');
+         }
       }
       //endregion Protected methods
 
