@@ -174,7 +174,7 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                   dialog;
                if (opener) {
                   dialog = opener.getParentByClass('SBIS3.CORE.RecordArea') || opener.getTopParent();
-                  if (dialog instanceof $ws.proto.AreaAbstract) {
+                  if (dialog) {
                      dialog.addPendingOperation(this._savingDeferred);
                   }
                }
@@ -226,11 +226,12 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                if (withSaving) {
                   this._options.dataSource.sync(this._options.dataSet).addCallback(function() {
                      this._savingDeferred.callback();
+                     this._notify('onAfterEndEdit', this._options.dataSet.getRecordByKey(eipRecord.getKey()), eip.getTarget(), withSaving);
                   }.bind(this));
                } else {
                   this._savingDeferred.callback();
+                  this._notify('onAfterEndEdit', eipRecord, eip.getTarget(), withSaving);
                }
-               this._notify('onAfterEndEdit', withSaving ? this._options.dataSet.getRecordByKey(eipRecord.getKey()) : eipRecord, eip.getTarget(), withSaving);
             },
             add: function() {
                var options,
