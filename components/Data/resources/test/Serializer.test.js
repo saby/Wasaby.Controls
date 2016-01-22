@@ -108,13 +108,23 @@ define([
 
          describe('.deserialize()', function () {
             it('should deserialize a function', function () {
-               var result = serializer.deserialize(
-                  'f',
-                  serializer.serialize('f', function() {
+               var func = function() {
                      return Math.rand();
-                  })
+                  },
+                  result = serializer.deserialize(
+                  'f',
+                  serializer.serialize('f', func)
                );
                assert.instanceOf(result, Function);
+               assert.strictEqual(result, func);
+            });
+
+            it('should deserialize a date', function () {
+               var date = new Date('1995-12-17T01:02:03'),
+                  dateStr = date.toJSON(),
+                  result = serializer.deserialize('', dateStr);
+               assert.instanceOf(result, Date);
+               assert.strictEqual(result.getTime(), date.getTime());
             });
 
             it('should deserialize Infinity', function () {

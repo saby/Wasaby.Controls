@@ -29,6 +29,13 @@ define('js!SBIS3.CONTROLS.Data.Serializer', [
          _instanceStorage: {}
       },
 
+      /**
+       * @member {Object<String, RegExp>} Сигнатуры результатов сериализации через метод toJSON для стандартных JS-объектов
+       */
+      _patterns: {
+         'Date': /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:[0-9\.]+Z$/
+      },
+
       $constructor: function () {
          this.serialize = this.serialize.bind(this);
          this.deserialize = this.deserialize.bind(this);
@@ -106,7 +113,20 @@ define('js!SBIS3.CONTROLS.Data.Serializer', [
                   result = undefined;
                   break;
                default:
-                  throw new Error('Unknown serialized type "' + value.$type + '" detected');
+                  throw new Error('Unknown serialized type "' + value.$serialized$ + '" detected');
+            }
+         }
+
+         if (typeof result === 'string') {
+            for (var key in this._patterns) {
+               if (this._patterns.hasOwnProperty(key) &&
+                  this._patterns[key].test(result)
+               ) {
+                  switch (key) {
+                     case 'Date':
+                        return new Date(result);
+                  }
+               }
             }
          }
 
