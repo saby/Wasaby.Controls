@@ -424,8 +424,8 @@ define('js!SBIS3.CONTROLS.ListView',
             //Если нам задали бесконечный скролл в виде Bool, то если true, то 'down' иначе null
             if (lvOpts.hasOwnProperty('infiniteScroll')){
                lvOpts.infiniteScroll = typeof lvOpts.infiniteScroll === 'boolean' ?
-                     (lvOpts.infiniteScroll ? 'down' : null)
-                     : lvOpts.infiniteScroll;
+                  (lvOpts.infiniteScroll ? 'down' : null) :
+                  lvOpts.infiniteScroll;
             }
             return lvOpts;
          },
