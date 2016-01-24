@@ -1,6 +1,75 @@
-<div>
-   <component data-component="SBIS3.CONTROLS.DatePicker" name="DatePicker 1" class="position">
-      <option name="date">2015-03-08T07:30:30.000+03:00</option>
-      <option name="mask">DD.MM.YY HH:II</option>
-   </component>
+<div class="demoContainer">
+   <table class="demoTable">
+      <thead>
+      <tr>
+         <th></th>
+         <th>Маска</th>
+         <th>Примечание</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr>
+         <td>
+            <component data-component="SBIS3.CONTROLS.DatePicker" name="DatePicker 1" class="someClass">
+               <option name="date" bind="myDatePickerBind">2016-03-08T07:30:30.000+03:00</option>
+               <option name="mask">DD.MM.YY HH:II</option>
+            </component>
+         </td>
+         <td>DD.MM.YY HH:II</td>
+         <td>дата со временем; date = 2016-03-08T07:30:30.000+03:00; Настроен контекст со вторым DatePicker</td>
+      </tr>
+      <tr>
+         <td>
+            <component data-component="SBIS3.CONTROLS.DatePicker" name="DatePicker 2" >
+               <option name="date" bind="myDatePickerBind">1986-03-08</option>
+               <option name="mask">DD.MM.YY</option>
+            </component>
+         </td>
+         <td>DD.MM.YY</td>
+         <td>год двумя символами; date = 1986-03-08; Настроен контекст с первым DatePicker</td>
+      </tr>
+      <tr>
+         <td>
+            <component data-component="SBIS3.CONTROLS.DatePicker" name="DatePicker 3" >
+               <option name="date">1986-03-08</option>
+               <option name="mask">DD.MM.YY</option>
+               <option name="isCalendarIconShown" value="false"></option>
+            </component>
+         </td>
+         <td>DD.MM.YY</td>
+         <td>isCalendarIconShown = false</td>
+      </tr>
+      <tr>
+         <td>
+            <component data-component="SBIS3.CONTROLS.DatePicker" name="DatePicker 4" >
+               <option name="date" >1986-03-08</option>
+               <option name="mask">DD.MM</option>
+            </component>
+         </td>
+         <td>DD.MM</td>
+         <td>без года; date = 1986-03-08</td>
+      </tr>
+      <tr>
+         <td>
+            <component data-component="SBIS3.CONTROLS.DatePicker" name="DatePicker 5" >
+               <option name="date">2016-03-08T07:35:08.000+03:00</option>
+               <option name="mask">HH:II:SS</option>
+            </component>
+         </td>
+         <td>HH:II:SS</td>
+         <td>только время; date = 2016-03-08T07:35:08.000+03:00</td>
+      </tr>
+      <tr>
+         <td>
+            <component data-component="SBIS3.CONTROLS.DatePicker" name="DatePicker 6" >
+               <option name="date">2016-03-08T07:35:08.000+03:00</option>
+               <option name="mask">HH:II</option>
+            </component>
+         </td>
+         <td>HH:II</td>
+         <td>время без секунд; date = 2016-03-08T07:35:08.000+03:00</td>
+      </tr>
+      </tbody>
+   </table>
+
 </div>
