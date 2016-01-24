@@ -137,9 +137,9 @@ define('js!SBIS3.CONTROLS.Data.Model', [
          _isDeleted: false,
 
          /**
-          * @var {Boolean} Признак, что модель изменения модели не синхронизированы с хранилищем данных
+          * @var {Object.<String, *>} Измененные поля и оригинальные значения
           */
-         _isChanged: false,
+         _changedFields: {},
 
          /**
           * @var {Object} Объект содержащий закэшированные инстансы значений-объектов
@@ -218,13 +218,13 @@ define('js!SBIS3.CONTROLS.Data.Model', [
                return;
             }
          }
-
-         if (this._getOriginalPropertyValue(name) !== value) {
+         var oldValue = this._getOriginalPropertyValue(name);
+         if (oldValue !== value) {
             this._setOriginalPropertyValue(name, value);
             if (!this.has(name)) {
                this._addProperty(name);
             }
-            this._setChanged(true);
+            this._setChanged(name, oldValue);
             if (name in this._propertiesCache &&
                value !== this._propertiesCache[name]
             ) {
@@ -270,7 +270,7 @@ define('js!SBIS3.CONTROLS.Data.Model', [
                _hash: this.getHash(),
                _isStored: this._isStored,
                _isDeleted: this._isDeleted,
-               _isChanged: this._isChanged,
+               _changedFields: this._changedFields,
                _compatibleMode: this._compatibleMode
             }
          );
@@ -281,7 +281,7 @@ define('js!SBIS3.CONTROLS.Data.Model', [
             this._hash = state._hash;
             this._isStored = state._isStored;
             this._isDeleted = state._isDeleted;
-            this._isChanged = state._isChanged;
+            this._changedFields = state._changedFields;
             this._compatibleMode = state._compatibleMode;
          });
       },
@@ -396,11 +396,15 @@ define('js!SBIS3.CONTROLS.Data.Model', [
       },
 
       /**
-       * Возвращает признак, что модель изменена
+       * Возвращает признак, что поле с указанным именем было изменено.
+       * Если name не передано, то проверяет, что изменено хотя бы одно поле.
+       * @param {String} [name] Имя поля
        * @returns {Boolean}
        */
-      isChanged: function () {
-         return this._isChanged;
+      isChanged: function (name) {
+         return name ?
+            this._changedFields.hasOwnProperty(name) :
+            !Object.isEmpty(this._changedFields);
       },
 
       /**
@@ -487,7 +491,19 @@ define('js!SBIS3.CONTROLS.Data.Model', [
       toString: function() {
          return JSON.stringify(this.toObject());
       },
-
+      /**
+       *  Возвращает массив названий измененных полей.
+       *  @returns {Array}
+       */
+      getChanged: function (){
+         return Object.keys(this._changedFields);
+      },
+      /**
+       * Забывет измененные поля.
+       */
+      applyChanges: function (){
+         this._changedFields = {};
+      },
       // endregion Public methods
 
       //region Protected methods
@@ -606,8 +622,10 @@ define('js!SBIS3.CONTROLS.Data.Model', [
        * @returns {Boolean}
        * @private
        */
-      _setChanged: function (changed) {
-         this._isChanged = changed;
+      _setChanged: function (name, value) {
+         if (!this._changedFields.hasOwnProperty(name)) {
+            this._changedFields[name] = [value];
+         }
       },
 
       /**
@@ -640,7 +658,7 @@ define('js!SBIS3.CONTROLS.Data.Model', [
 
       getType: function (field) {
          if (!this._compatibleMode) {
-            $ws.single.ioc.resolve('ILogger').log('SBIS3.CONTROLS.Data.Model', 'method getType() is deprecated and will be removed in 3.8.0.');
+            $ws.single.ioc.resolve('ILogger').log('SBIS3.CONTROLS.Data.Model', 'method getType() is deprecated and will be removed in 3.7.4');
          }
          var adapter = this._getRecordAdapter(),
             info = adapter.getInfo(field);
@@ -651,49 +669,53 @@ define('js!SBIS3.CONTROLS.Data.Model', [
 
       setCreated: function (created) {
          if (!this._compatibleMode) {
-            $ws.single.ioc.resolve('ILogger').log('SBIS3.CONTROLS.Data.Model', 'method setCreated() is deprecated and will be removed in 3.8.0. Use setStored() instead.');
+            $ws.single.ioc.resolve('ILogger').log('SBIS3.CONTROLS.Data.Model', 'method setCreated() is deprecated and will be removed in 3.7.4. Use setStored() instead.');
          }
          this.setStored(created);
       },
 
       isCreated: function () {
          if (!this._compatibleMode) {
-            $ws.single.ioc.resolve('ILogger').log('SBIS3.CONTROLS.Data.Model', 'method isCreated() is deprecated and will be removed in 3.8.0. Use isStored() instead.');
+            $ws.single.ioc.resolve('ILogger').log('SBIS3.CONTROLS.Data.Model', 'method isCreated() is deprecated and will be removed in 3.7.4. Use isStored() instead.');
          }
          return this.isStored();
       },
 
       setDeleted: function (deleted) {
          if (!this._compatibleMode) {
-            $ws.single.ioc.resolve('ILogger').log('SBIS3.CONTROLS.Data.Model', 'method setDeleted() is deprecated and will be removed in 3.8.0.');
+            $ws.single.ioc.resolve('ILogger').log('SBIS3.CONTROLS.Data.Model', 'method setDeleted() is deprecated and will be removed in 3.7.4.');
          }
          this._setDeleted(deleted);
       },
 
       setChanged: function (changed) {
          if (!this._compatibleMode) {
-            $ws.single.ioc.resolve('ILogger').log('SBIS3.CONTROLS.Data.Model', 'method setChanged() is deprecated and will be removed in 3.8.0.');
+            $ws.single.ioc.resolve('ILogger').log('SBIS3.CONTROLS.Data.Model', 'method setChanged() is deprecated and will be removed in 3.7.4.');
          }
-         this._setChanged(changed);
+         if (changed) {
+            this._changedFields.__fake_field = '__fake_value';
+         } else {
+            this._changedFields = {};
+         }
       },
 
       getKey: function () {
          if (!this._compatibleMode) {
-            $ws.single.ioc.resolve('ILogger').log('SBIS3.CONTROLS.Data.Model', 'method getKey() is deprecated and will be removed in 3.8.0. Use getId() instead.');
+            $ws.single.ioc.resolve('ILogger').log('SBIS3.CONTROLS.Data.Model', 'method getKey() is deprecated and will be removed in 3.7.4. Use getId() instead.');
          }
          return this.getId();
       },
 
       getKeyField: function () {
          if (!this._compatibleMode) {
-            $ws.single.ioc.resolve('ILogger').log('SBIS3.CONTROLS.Data.Model', 'method getKeyField() is deprecated and will be removed in 3.8.0. Use getIdProperty() instead.');
+            $ws.single.ioc.resolve('ILogger').log('SBIS3.CONTROLS.Data.Model', 'method getKeyField() is deprecated and will be removed in 3.7.4. Use getIdProperty() instead.');
          }
          return this.getIdProperty();
       },
 
       getRaw: function () {
          if (!this._compatibleMode) {
-            $ws.single.ioc.resolve('ILogger').log('SBIS3.CONTROLS.Data.Model', 'method getRaw() is deprecated and will be removed in 3.8.0. Use getRawData() instead.');
+            $ws.single.ioc.resolve('ILogger').log('SBIS3.CONTROLS.Data.Model', 'method getRaw() is deprecated and will be removed in 3.7.4. Use getRawData() instead.');
          }
          return this.getRawData();
       }

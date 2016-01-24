@@ -210,6 +210,24 @@ define([
             });
          });
 
+         describe('.getChanged()', function () {
+            it('should return a changed value', function () {
+               model.set('max', 15);
+               model.set('title', 'B');
+               assert.include(model.getChanged(), 'max');
+               assert.include(model.getChanged(), 'title');
+            });
+         });
+
+         describe('.applyChanges()', function () {
+            it('shouldnt return a changed value', function () {
+               model.set('max', 15);
+               model.set('title', 'B');
+               model.applyChanges();
+               assert.deepEqual(model.getChanged(), []);
+            });
+         });
+
          describe('.each()', function () {
             it('should return equivalent values', function () {
                model.each(function(name, value) {
