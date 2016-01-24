@@ -303,6 +303,7 @@ define(
       setText: function (text) {
          DatePicker.superclass.setText.call(this, text);
          this._options.date = text == '' ? null : this._getDateByText(text);
+         this._notifyOnPropertyChanged('date', this._options.date);
          this._notify('onDateChange', this._options.date);
       },
 
@@ -322,6 +323,7 @@ define(
        */
       setDate: function (date) {
          this._setDate(date);
+         this._notifyOnPropertyChanged('date', this._options.date);
          this._notify('onDateChange', this._options.date);
       },
 
@@ -418,6 +420,7 @@ define(
             if (DateUtil.isValidDate(this._options.date)) {
                //если в текст ввели невалидную дату, например 05.14 (14-месяц) и произошла корректировка
                this._options.text = this._getTextByDate(this._options.date);
+               this._notifyOnPropertyChanged('date', this._options.date);
                this._notify('onDateChange', this._options.date);
             } else {
                this._options.date = null;
@@ -435,7 +438,8 @@ define(
       _getDateByText: function(text, oldDate) {
          var
             //используем старую дату как основу, чтобы сохранять год, при его отсутствии в маске
-            date = (DateUtil.isValidDate(oldDate)) ? oldDate : new Date(),
+            //new Date от старой даты делаем, чтобы контекст увидел новый объект
+            date = (DateUtil.isValidDate(oldDate)) ? new Date(oldDate.getTime())  : new Date(),
             item,
             value;
          for (var i = 0; i < this.formatModel.model.length; i++) {
@@ -449,7 +453,9 @@ define(
             }
             switch (item.mask) {
                case 'YY' :
-                  date.setYear('20' + value);
+                  //сохраняем век для года, чтобы дата 1986 не превращалась в 2086, после правки дня или месяца
+                  var baseYear = date.getFullYear() - date.getFullYear() % 100;
+                  date.setYear(baseYear + parseInt(value));
                   break;
                case 'YYYY' :
                   date.setYear(value);
