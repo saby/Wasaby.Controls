@@ -78,6 +78,18 @@ define('js!SBIS3.CONTROLS.DataGridView',
              *      ladder: it.field
              *    })}}
              * </pre>
+             * @remark
+             * Данные, которые передаются в cellTemplate:
+             * <ol>
+             *    <li>item</li>
+             *    <li>hierField - поле иерархии</li>
+             *    <li>isNode - является ли узлом</li>
+             *    <li>decorators - объект декораторов</li>
+             *    <li>field - имя поля</li>
+             *    <li>value - значение</li>
+             *    <li>highlight - есть ли подсветка</li>
+             *    item: item,
+             * </ol>
              * @property {Object.<String,String>} templateBinding соответствие опций шаблона полям в рекорде
              * @property {Object.<String,String>} includedTemplates подключаемые внешние шаблоны, ключу соответствует поле it.included.<...> которое будет функцией в шаблоне ячейки
              */
