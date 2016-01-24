@@ -256,7 +256,19 @@ define('js!SBIS3.CONTROLS.Data.Record', [
          this._propertiesCache = {};
          this._notify('onPropertyChange');
       },
-
+      /**
+       *  Возвращает массив названий измененных полей.
+       *  @returns {Array}
+       */
+      getChanged: function (){
+         return Object.keys(this._changedFields);
+      },
+      /**
+       * Забывет измененные поля.
+       */
+      applyChanges: function (){
+         this._changedFields = {};
+      },
       // endregion Public methods
 
       //region Protected methods

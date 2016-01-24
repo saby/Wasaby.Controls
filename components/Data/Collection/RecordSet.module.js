@@ -172,7 +172,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
                }));
             } else if (model.isChanged() || !model.isStored()) {
                syncCompleteDef.push(dataSource.update(model).addCallback(function() {
-                  model.setChanged(false);
+                  model.applyChanges();
                   model.setStored(true);
                   return model;
                }));
