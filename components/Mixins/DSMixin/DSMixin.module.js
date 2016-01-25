@@ -485,21 +485,20 @@ define('js!SBIS3.CONTROLS.DSMixin', [
             .limit(limit)
             .orderBy(sorting);
 
-         return this._dataSource.query(query).addCallback((function(newDataSet) {
-            return new RecordSet({
-               compatibleMode: true,
-               adapter: this._dataSource.getAdapter(),
-               model: newDataSet.getModel(),
-               rawData: newDataSet.getRawData(),
-               meta: {
-                  results: newDataSet.getProperty('r'),
-                  more: newDataSet.getTotal(),
-                  path: newDataSet.getProperty('p')
-               },
-               idProperty: this._options.keyField || newDataSet.getIdProperty() || this._dataSource.getAdapter().forRecord(newDataSet.getRawData()).getKeyField()
+         return this._dataSource.query(query).addCallback((function(dataSet) {
+            var recordSet = dataSet.getAll();
+            recordSet.setMetaData({
+               results: dataSet.getProperty('r'),
+               more: dataSet.getTotal(),
+               path: dataSet.getProperty('p')
             });
+            recordSet.setIdProperty(
+               this._options.keyField ||
+               dataSet.getIdProperty() ||
+               recordSet.getAdapter().forRecord(recordSet.getRawData()).getKeyField()
+            );
+            return recordSet;
          }).bind(this));
-
       },
 
       _toggleIndicator:function(){
