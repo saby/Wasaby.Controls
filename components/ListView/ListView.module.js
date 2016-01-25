@@ -46,6 +46,9 @@ define('js!SBIS3.CONTROLS.ListView',
        * @cssModifier controls-ListView__withoutMarker Убирать маркер активной строки.
        * @cssModifier controls-ListView__showCheckBoxes Чекбоксы показываются не по ховеру, а сразу все.
        * @cssModifier controls-ListView__hideCheckBoxes Скрыть все чекбоксы.
+       * @cssModifier controls-ListView__pagerNoSizePicker Скрыть выбор размера страницы в пейджинге.
+       * @cssModifier controls-ListView__pagerNoAmount Скрыть отображение количества записей на странице в пейджинге.
+       * Т.е. текст "1-10" при отображении 10 записей на 1-ой странице
        */
 
       /*TODO CommonHandlers MoveHandlers тут в наследовании не нужны*/
@@ -82,7 +85,8 @@ define('js!SBIS3.CONTROLS.ListView',
           * @see itemsActions
           * @see setItemsActions
           * @see getItemsActions
-          *
+          */
+          /**
           * @event onItemClick При клике на запись
           * @remark
           * Событие срабатывает при любом клике под курсором мыши.
@@ -90,8 +94,8 @@ define('js!SBIS3.CONTROLS.ListView',
           * @param {String} id Ключ записи
           * @param {SBIS3.CONTROLS.Record} data запись
           * @param {jQuery} target html элемент на который кликнули
-
-          *
+          */
+          /**
           * @event onItemActivate При активации записи (клик с целью например редактирования или выбора)
           * @remark
           * Событие срабатывает при смене записи под курсором мыши.
@@ -124,19 +128,6 @@ define('js!SBIS3.CONTROLS.ListView',
           * @param {$ws.proto.EventObject} eventObject Дескриптор события.
           * @param {Array} difference Массив измененных полей
           * @param {Object} model Модель с измененными данными
-          */
-         /**
-          * @event onShowEdit Возникает перед отображением редактирования.
-          * @remark
-          * Позволяет не отображать редактирование для определенных моделей.
-          * Срабатывает только для редактирования в режиме "hover".
-          * @param {$ws.proto.EventObject} eventObject Дескриптор события.
-          * @param {Object} model Редактируемая модель
-          * @returns {*} Возможные значения:
-          * <ol>
-          *    <li>false - отменить отображение редактирование;</li>
-          *    <li>* - продолжить редактирование в штатном режиме.</li>
-          * </ol>
           */
          /**
           * @event onBeginEdit Возникает перед началом редактирования
@@ -194,7 +185,8 @@ define('js!SBIS3.CONTROLS.ListView',
                $ws._const.key.space,
                $ws._const.key.enter,
                $ws._const.key.right,
-               $ws._const.key.left
+               $ws._const.key.left,
+               $ws._const.key.o
             ],
             _itemActionsGroup: null,
             _emptyData: undefined,
@@ -386,7 +378,7 @@ define('js!SBIS3.CONTROLS.ListView',
          $constructor: function () {
             //TODO временно смотрим на TopParent, чтобы понять, где скролл. С внедрением ScrallWatcher этот функционал уберем
             var topParent = this.getTopParent();
-            this._publish('onChangeHoveredItem', 'onItemClick', 'onItemActivate', 'onDataMerge', 'onItemValueChanged', 'onShowEdit', 'onBeginEdit', 'onEndEdit', 'onBeginAdd', 'onAfterEndEdit', 'onPrepareFilterOnMove');
+            this._publish('onChangeHoveredItem', 'onItemClick', 'onItemActivate', 'onDataMerge', 'onItemValueChanged', 'onBeginEdit', 'onEndEdit', 'onBeginAdd', 'onAfterEndEdit', 'onPrepareFilterOnMove');
             this._container.on('mousemove', this._mouseMoveHandler.bind(this))
                            .on('mouseleave', this._mouseLeaveHandler.bind(this));
 
@@ -431,27 +423,39 @@ define('js!SBIS3.CONTROLS.ListView',
                                .bind('touchmove',this._mouseMoveHandler.bind(this));
             }
          },
+         _scrollToItem: function(itemId) {
+            $(".controls-ListView__item[data-id='" + itemId + "']", this._container).attr('tabindex', '-1').focus();
+         },
          _keyboardHover: function (e) {
-            var selectedKey = this.getSelectedKey();
-
+            var
+               selectedKey = this.getSelectedKey(),
+               newSelectedKey,
+               newSelectedItem;
             switch (e.which) {
                case $ws._const.key.up:
-                  var previousItem = this._getPrevItemByDOM(selectedKey);
-                  previousItem ? this.setSelectedKey(previousItem.data('id')) : this.setSelectedKey(selectedKey);
+                  newSelectedItem = this._getPrevItemByDOM(selectedKey);
                   break;
                case $ws._const.key.down:
-                  var nextItem = this._getNextItemByDOM(selectedKey);
-                  nextItem ? this.setSelectedKey(nextItem.data('id')) : this.setSelectedKey(selectedKey);
+                  newSelectedItem = this._getNextItemByDOM(selectedKey);
                   break;
                case $ws._const.key.enter:
                   var selectedItem = $('[data-id="' + selectedKey + '"]', this._getItemsContainer());
                   this._elemClickHandler(selectedKey, this._dataSet.getRecordByKey(selectedKey), selectedItem);
                   break;
                case $ws._const.key.space:
-                  var nextItem = this._getNextItemByDOM(selectedKey);
+                  newSelectedItem = this._getNextItemByDOM(selectedKey);
                   this.toggleItemsSelection([selectedKey]);
-                  nextItem ? this.setSelectedKey(nextItem.data('id')) : this.setSelectedKey(selectedKey);
                   break;
+               case $ws._const.key.o:
+                  if (e.ctrlKey && e.altKey && e.shiftKey) {
+                     this.sendCommand('mergeItems', this.getSelectedKeys());
+                  }
+                  break;
+            }
+            if (newSelectedItem && newSelectedItem.length) {
+               newSelectedKey = newSelectedItem.data('id');
+               this.setSelectedKey(newSelectedKey);
+               this._scrollToItem(newSelectedKey);
             }
             return false;
          },
@@ -908,11 +912,6 @@ define('js!SBIS3.CONTROLS.ListView',
                      }.bind(this)
                   }
                };
-            if (hoverMode) {
-               config.handlers.onShowEdit = function(event, model) {
-                  event.setResult(this._notify('onShowEdit', model));
-               }.bind(this);
-            }
             return config;
          },
 
@@ -1233,6 +1232,17 @@ define('js!SBIS3.CONTROLS.ListView',
             } else {
                this._isLoadBeforeScrollAppears = false;
             }
+         },
+         /**
+          * Если высота контейнера меньше высоты экрана (т.е. нет скролла в контейнере иди в окне),
+          * то будет загружать данные, пока скролл все-таки не появится.
+          * Работает в паре с взведенной опцией infiniteScroll
+          * @remark Работает только в 3.7.3.30
+          * @see infiniteScroll
+          */
+         loadDataTillScroll : function(){
+            this._isLoadBeforeScrollAppears = true;
+            this._loadBeforeScrollAppears();
          },
          _showLoadingIndicator: function () {
             if (!this._loadingIndicator) {

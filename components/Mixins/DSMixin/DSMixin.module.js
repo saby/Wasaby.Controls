@@ -6,8 +6,9 @@ define('js!SBIS3.CONTROLS.DSMixin', [
    'js!SBIS3.CONTROLS.DataSet',
    'js!SBIS3.CONTROLS.Data.Collection.RecordSet',
    'js!SBIS3.CONTROLS.Data.Query.Query',
-   'js!SBIS3.CORE.MarkupTransformer'
-], function (StaticSource, ArrayStrategy, SbisJSONStrategy, DataFactory, DataSet, RecordSet, Query, MarkupTransformer) {
+   'js!SBIS3.CORE.MarkupTransformer',
+   'js!SBIS3.CONTROLS.Utils.TemplateUtil'
+], function (StaticSource, ArrayStrategy, SbisJSONStrategy, DataFactory, DataSet, RecordSet, Query, MarkupTransformer, TemplateUtil) {
 
    /**
     * Миксин, задающий любому контролу поведение работы с набором однотипных элементов.
@@ -316,61 +317,66 @@ define('js!SBIS3.CONTROLS.DSMixin', [
         * @param offset Элемент, с которого перезагружать данные.
         * @param {Number} limit Ограничение количества перезагружаемых элементов.
         */
-      reload: propertyUpdateWrapper(function (filter, sorting, offset, limit) {
-         if (this._options.pageSize) {
-            this._limit = this._options.pageSize;
-         }
+       reload: propertyUpdateWrapper(function (filter, sorting, offset, limit) {
+          if (this._options.pageSize) {
+             this._limit = this._options.pageSize;
+          }
 
-         var
-            def = new $ws.proto.Deferred(),
-            self = this,
-            filterChanged = typeof(filter) !== 'undefined',
-            sortingChanged = typeof(sorting) !== 'undefined',
-            offsetChanged = typeof(offset) !== 'undefined',
-            limitChanged = typeof(limit) !== 'undefined';
+          var
+             def,
+             self = this,
+             filterChanged = typeof(filter) !== 'undefined',
+             sortingChanged = typeof(sorting) !== 'undefined',
+             offsetChanged = typeof(offset) !== 'undefined',
+             limitChanged = typeof(limit) !== 'undefined';
 
-         this._cancelLoading();
-         if (filterChanged) {
-            this.setFilter(filter, true);
-         }
+          this._cancelLoading();
+          if (filterChanged) {
+             this.setFilter(filter, true);
+          }
           if (sortingChanged) {
              this.setSorting(sorting, true);
           }
-         this._offset = offsetChanged ? offset : this._offset;
-         this._limit = limitChanged ? limit : this._limit;
+          this._offset = offsetChanged ? offset : this._offset;
+          this._limit = limitChanged ? limit : this._limit;
 
-         if (this._dataSource){
-            this._toggleIndicator(true);
-	         this._loader = this._callQuery(this._options.filter, this.getSorting(), this._offset, this._limit).addCallback($ws.helpers.forAliveOnly(function (dataSet) {
-	            self._toggleIndicator(false);
-	            self._loader = null;//Обнулили без проверки. И так знаем, что есть и загрузили
-	            if (self._dataSet) {
-	               self._dataSet.setRawData(dataSet.getRawData());
-	               self._dataSet.setMetaData(dataSet.getMetaData());
-	            } else {
-	               self._dataSet = dataSet;
-	            }
-	            self._dataLoadedCallback();
-	            self._notify('onDataLoad', dataSet);
-	            //self._notify('onBeforeRedraw');
-	            def.callback(dataSet);
-	            self._redraw();
-	         }, self)).addErrback($ws.helpers.forAliveOnly(function(error){
-	            if (!error.canceled) {
-	               self._toggleIndicator(false);
-	               $ws.helpers.message(error.message.toString().replace('Error: ', ''));
-	            }
-	            def.errback(error);
-	         }, self));
-         }
+          if (this._dataSource) {
+             this._toggleIndicator(true);
+             def = this._callQuery(this._options.filter, this.getSorting(), this._offset, this._limit).addCallback($ws.helpers.forAliveOnly(function (dataSet) {
+                self._toggleIndicator(false);
+                self._loader = null;//Обнулили без проверки. И так знаем, что есть и загрузили
+                if (self._dataSet) {
+                   self._dataSet.setRawData(dataSet.getRawData());
+                   self._dataSet.setMetaData(dataSet.getMetaData());
+                } else {
+                   self._dataSet = dataSet;
+                }
+                self._dataLoadedCallback();
+                self._notify('onDataLoad', dataSet);
+                //self._notify('onBeforeRedraw');
+                self._redraw();
+                return dataSet;
+             }, self)).addErrback($ws.helpers.forAliveOnly(function (error) {
+                if (!error.canceled) {
+                   self._toggleIndicator(false);
+                   $ws.helpers.message(error.message.toString().replace('Error: ', ''));
+                }
+                return error;
+             }, self));
+             this._loader = def;
+          }
+          else {
+             def = new $ws.proto.Deferred();
+             def.callback();
+          }
 
-         this._notifyOnPropertyChanged('filter');
-         this._notifyOnPropertyChanged('sorting');
-         this._notifyOnPropertyChanged('offset');
-         this._notifyOnPropertyChanged('limit');
+          this._notifyOnPropertyChanged('filter');
+          this._notifyOnPropertyChanged('sorting');
+          this._notifyOnPropertyChanged('offset');
+          this._notifyOnPropertyChanged('limit');
 
-         return def;
-      }),
+          return def;
+       }),
 
       _callQuery: function (filter, sorting, offset, limit) {
          if (!this._dataSource) {
@@ -390,7 +396,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
                   compatibleMode: true,
                   strategy: this._dataSource.getAdapter(),
                   model: newDataSet.getModel(),
-                  data: newDataSet.getRawData(),
+                  data: newDataSet.getProperty(newDataSet.getItemsProperty()),
                   meta: {
                      results: newDataSet.getProperty('r'),
                      more: newDataSet.getTotal(),
@@ -778,43 +784,27 @@ define('js!SBIS3.CONTROLS.DSMixin', [
       _createItemInstance: function (item, targetContainer, at) {
          return this._buildTplItem(item, this._getItemTemplate(item));
       },
-      _buildTplItem: function(item, itemTpl){
-         var
-               buildedTpl,
-               dotTemplate;
-         if (typeof itemTpl == 'string') {
-            if (itemTpl.indexOf('html!') == 0) {
-               dotTemplate = require(itemTpl);
-            }
-            else {
-               dotTemplate = doT.template(itemTpl);
-            }
 
-         }
-         else if (typeof itemTpl == 'function') {
-            dotTemplate = itemTpl;
-         }
+      _buildTplItem: function(item, itemTpl){
+         var dotTemplate = TemplateUtil.prepareTemplate(itemTpl);
 
          if (typeof dotTemplate == 'function') {
-            buildedTpl = $(MarkupTransformer(dotTemplate(this._buildTplArgs(item))));
-            return buildedTpl;
-         }
-         else {
+            return $(MarkupTransformer(dotTemplate(this._buildTplArgs(item))));
+         } else {
             throw new Error('Ошибка в itemTemplate');
          }
       },
       _buildTplArgs: function(item) {
-         var
-            tplOptions = {
-               templateBinding : this._options.templateBinding,
-               item: item
-            };
+         var tplOptions = {
+            templateBinding : this._options.templateBinding,
+            item: item
+         };
          if (this._options.includedTemplates) {
             var tpls = this._options.includedTemplates;
             tplOptions.included = {};
             for (var j in tpls) {
                if (tpls.hasOwnProperty(j)) {
-                  tplOptions.included[j] = require(tpls[j]);
+                  tplOptions.included[j] = TemplateUtil.prepareTemplate(tpls[j]);
                }
             }
          }

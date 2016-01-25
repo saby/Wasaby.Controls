@@ -2,7 +2,7 @@ define('js!SBIS3.CONTROLS.OpenDialogAction', ['js!SBIS3.CONTROLS.ActionBase', 'j
    'use strict';
 
    /**
-    * Действие открытия окна редактирования записи
+    * Действие открытия окна с заданным шаблоном
     * @class SBIS3.CONTROLS.OpenDialogAction
     * @public
     * @extends SBIS3.CONTROLS.ActionBase
@@ -30,7 +30,7 @@ define('js!SBIS3.CONTROLS.OpenDialogAction', ['js!SBIS3.CONTROLS.ActionBase', 'j
          _options : {
             /**
              * @cfg {String}
-             * Компонент который будет отображен для редактирования
+             * Компонент который будет отображен
              */
             dialogComponent : '',
             /**
@@ -60,10 +60,11 @@ define('js!SBIS3.CONTROLS.OpenDialogAction', ['js!SBIS3.CONTROLS.ActionBase', 'j
             config = {
                opener: this,
                template: dialogComponent,
-               componentOptions : {
+                //TODO: в .100 избавиться от merge, в .30 сделано для совместимости
+               componentOptions: $ws.core.merge(meta, {
                   key : meta.id,
                   initValues : meta.filter
-               }
+               })
             }, 
             Component;
 
@@ -75,9 +76,9 @@ define('js!SBIS3.CONTROLS.OpenDialogAction', ['js!SBIS3.CONTROLS.ActionBase', 'j
             Component = Dialog;
          }
          
-         new Component(config).subscribe('onAfterClose', function(e, flag){
-            if (flag === true) {
-               self._notifyOnExecuted();
+         new Component(config).subscribe('onAfterClose', function(e, meta){
+            if (meta === true || Object.isValid(meta)) {
+               self._notifyOnExecuted(meta);
             }
          });
       }

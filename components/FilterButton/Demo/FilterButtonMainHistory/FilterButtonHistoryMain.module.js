@@ -36,7 +36,9 @@ define('js!SBIS3.CONTROLS.Demo.FilterButtonHistoryMain', [
          init: function() {
             Main.superclass.init.apply(this, arguments);
             var a = new FilterHistoryController({
-               historyId: '123'
+               historyId: '123',
+               filterButton: this.getChildControlByName('filterButton'),
+               view: this.getChildControlByName('MyDataGrid')
             });
             this.getChildControlByName('filterButton').setHistoryController(a);
          }

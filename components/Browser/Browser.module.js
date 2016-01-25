@@ -121,7 +121,12 @@ define('js!SBIS3.CONTROLS.Browser', [
          this._filterButton = this._getFilterButton();
          if (this._filterButton) {
             if(this._options.historyId) {
-               this._componentBinder.bindFilterHistory(this._filterButton, this._options.historyId, HistoryController, this);
+               this._componentBinder.bindFilterHistory(
+                   this._filterButton,
+                   this._getFastDataFilter(),
+                   this._options.historyId,
+                   HistoryController,
+                   this);
             } else {
                this._notifyOnFiltersReady();
             }
@@ -166,6 +171,9 @@ define('js!SBIS3.CONTROLS.Browser', [
       },
       _getOperationsPanel: function() {
          return this._getLinkedControl('browserOperationsPanel');
+      },
+      _getFastDataFilter: function() {
+         return this._getLinkedControl('browserFastDataFilter');
       },
 
       _notifyOnEditByActivate: function(itemMeta) {

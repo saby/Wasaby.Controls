@@ -8,9 +8,10 @@ define('js!SBIS3.CONTROLS.DataGridView',
       'js!SBIS3.CORE.MarkupTransformer',
       'js!SBIS3.CONTROLS.DragAndDropMixin',
       'is!browser?html!SBIS3.CONTROLS.DataGridView/resources/DataGridViewGroupBy',
-      'js!SBIS3.CONTROLS.Utils.HtmlDecorators/LadderDecorator'
+      'js!SBIS3.CONTROLS.Utils.HtmlDecorators/LadderDecorator',
+      'js!SBIS3.CONTROLS.Utils.TemplateUtil'
    ],
-   function(ListView, dotTplFn, rowTpl, colgroupTpl, headTpl, MarkupTransformer, DragAndDropMixin, groupByTpl, LadderDecorator) {
+   function(ListView, dotTplFn, rowTpl, colgroupTpl, headTpl, MarkupTransformer, DragAndDropMixin, groupByTpl, LadderDecorator, TemplateUtil) {
    'use strict';
       /* TODO: Надо считать высоту один раз, а не делать константой */
       var
@@ -77,6 +78,18 @@ define('js!SBIS3.CONTROLS.DataGridView',
              *      ladder: it.field
              *    })}}
              * </pre>
+             * @remark
+             * Данные, которые передаются в cellTemplate:
+             * <ol>
+             *    <li>item</li>
+             *    <li>hierField - поле иерархии</li>
+             *    <li>isNode - является ли узлом</li>
+             *    <li>decorators - объект декораторов</li>
+             *    <li>field - имя поля</li>
+             *    <li>value - значение</li>
+             *    <li>highlight - есть ли подсветка</li>
+             *    item: item,
+             * </ol>
              * @property {Object.<String,String>} templateBinding соответствие опций шаблона полям в рекорде
              * @property {Object.<String,String>} includedTemplates подключаемые внешние шаблоны, ключу соответствует поле it.included.<...> которое будет функцией в шаблоне ячейки
              */
@@ -113,10 +126,8 @@ define('js!SBIS3.CONTROLS.DataGridView',
       },
 
       init: function() {
-         DataGridView.superclass.init.call(this);
-
          this._buildHead();
-
+         DataGridView.superclass.init.call(this);
          if(this._options.startScrollColumn !== undefined) {
             this._initPartScroll();
          }
@@ -157,13 +168,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
       _getCellTemplate: function(item, column) {
          var value = item.get(column.field);
          if (column.cellTemplate) {
-            var cellTpl;
-            if ((typeof column.cellTemplate == 'string') && (column.cellTemplate.indexOf('html!') == 0)) {
-               cellTpl = require(column.cellTemplate);
-            }
-            else {
-               cellTpl = doT.template(column.cellTemplate);
-            }
+            var cellTpl = TemplateUtil.prepareTemplate(column.cellTemplate);
             var tplOptions = {
                item: item,
                hierField: this._options.hierField,
@@ -181,7 +186,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
                tplOptions.included = {};
                for (var j in tpls) {
                   if (tpls.hasOwnProperty(j)) {
-                     tplOptions.included[j] = require(tpls[j]);
+                     tplOptions.included[j] = TemplateUtil.prepareTemplate(tpls[j]);
                   }
                }
             }
@@ -612,14 +617,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
                 column = rowData.columns[i];
 
             if (column.headTemplate) {
-               var headTpl;
-               if ((typeof column.headTemplate == 'string') && (column.headTemplate.indexOf('html!') == 0)) {
-                  headTpl = require(column.headTemplate);
-               }
-               else {
-                  headTpl = doT.template(column.headTemplate);
-               }
-               value = MarkupTransformer(headTpl({
+               value = MarkupTransformer(TemplateUtil.prepareTemplate(column.headTemplate)({
                   column: column
                }));
             } else {

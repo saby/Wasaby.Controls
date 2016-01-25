@@ -414,7 +414,7 @@ define('js!SBIS3.CONTROLS.SwitchableArea', [
       },
       destroy: function() {
          this._destroyAreas();
-         $ws.proto.SwitchableArea.superclass.destroy.apply(this, arguments);
+         SwitchableArea.superclass.destroy.apply(this, arguments);
       },
 
       /* заглушка для DSMixin */
