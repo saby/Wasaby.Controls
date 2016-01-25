@@ -29,12 +29,6 @@ define('js!SBIS3.CONTROLS.Data.Adapter.Sbis', [
          return new SbisRecord(data);
       },
 
-      /**
-       * Сериализует данные
-       * @param {*} data
-       * @returns {Object}
-       * @static
-       */
       serialize: function (data) {
          return serializer.serialize(data);
       }

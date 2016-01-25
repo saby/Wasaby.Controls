@@ -24,6 +24,10 @@ define('js!SBIS3.CONTROLS.Data.Adapter.Json', [
 
       forRecord: function (data) {
          return new JsonRecord(data);
+      },
+
+      serialize: function (data) {
+         return data;
       }
    });
 
