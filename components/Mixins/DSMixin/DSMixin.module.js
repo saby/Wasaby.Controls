@@ -979,6 +979,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
       },
 
       _addItem: function (item, at) {
+         item = item.getContents();
          var target = this._getTargetContainer(item),
             nextSibling = at > -1 ? this._getItemContainerByIndex(target, at) : null,
             template = this._getItemTemplate(item),
@@ -1026,7 +1027,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
       },
 
       _getItemContainer: function(parent, item) {
-         return parent.find('>[data-id="' + item.getContents().getKey() + '"]');
+         return parent.find('>[data-id="' + item.getKey() + '"]');
       }
    };
 
@@ -1092,6 +1093,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
 	               this.redraw();
 	               break;
 	         }
+            this._drawItemsCallback();
       	}
       };
    return DSMixin;
