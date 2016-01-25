@@ -632,10 +632,10 @@ define('js!SBIS3.CONTROLS.Data.Projection.Collection', [
          Array.prototype.splice.apply(this._itemsMap, [start, 0].concat(
             $ws.helpers.map(items, (function(item, index) {
                return this._convertToItem(item);
-            }).bind(this)))
-         );
+            }), this)
+         ));
          Array.prototype.splice.apply(this._sourceMap, [start, 0].concat(items));
-         Array.prototype.splice.apply(this._filterMap, [start, 0].concat(items.map(function() {
+         Array.prototype.splice.apply(this._filterMap, [start, 0].concat($ws.helpers.map(items, function() {
             return !isFalseMirror;
          })));
          this._addToSortMap(start, items.length);
@@ -720,7 +720,7 @@ define('js!SBIS3.CONTROLS.Data.Projection.Collection', [
          ) {
             oldItemsMap = $ws.helpers.map(oldItems, (function(item) {
                return this._convertToItem(item);
-            }).bind(this));
+            }), this);
          } else {
             oldItemsMap = this._itemsMap.slice(oldItemsIndex, oldItemsIndex + oldItems.length);
          }
