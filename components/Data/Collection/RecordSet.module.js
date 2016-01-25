@@ -229,11 +229,23 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
       /**
        * Возвращает свойство модели, содержащее первичный ключ
        * @returns {String}
+       * @see setIdProperty
        * @see idProperty
        * @see SBIS3.CONTROLS.Data.Model#idProperty
        */
       getIdProperty: function () {
          return this._options.idProperty;
+      },
+
+      /**
+       * Устанавливает свойство модели, содержащее первичный ключ
+       * @param {String} name
+       * @see getIdProperty
+       * @see idProperty
+       * @see SBIS3.CONTROLS.Data.Model#idProperty
+       */
+      setIdProperty: function (name) {
+         this._options.idProperty = name;
       },
 
       /**
@@ -627,7 +639,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
       },
 
       /**
-       * ПРроверяет, что переданный элемент - модель
+       * Проверяет, что переданный элемент - модель
        * @private
        */
       _checkItem: function (item) {
