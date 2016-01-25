@@ -1027,7 +1027,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
       },
 
       _getItemContainer: function(parent, item) {
-         return parent.find('>[data-id="' + item.getContents().getKey() + '"]');
+         return parent.find('>[data-id="' + item.getKey() + '"]');
       }
    };
 
