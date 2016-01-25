@@ -46,6 +46,7 @@ define(
          this._leftContainer  = this.getContainer().find('.controls-TabButtons__leftContainer');
          this._rightContainer = this.getContainer().find('.controls-TabButtons__rightContainer');
 
+         //TODO эту проверку можно будет убрать в .100, т.к. там уже есть в DSMixin проверка на keyField
          if (this._hasItems && !this._container.hasClass('hasKeyField')) {
             $ws.single.ioc.resolve('ILogger').log('TabButtons. Option keyField is required');
          }
