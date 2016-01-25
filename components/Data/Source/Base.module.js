@@ -3,6 +3,8 @@ define('js!SBIS3.CONTROLS.Data.Source.Base', [
    'js!SBIS3.CONTROLS.Data.Source.ISource',
    'js!SBIS3.CONTROLS.Data.Source.DataSet',
    'js!SBIS3.CONTROLS.Data.Di',
+   'js!SBIS3.CONTROLS.Data.Model',
+   'js!SBIS3.CONTROLS.Data.Collection.RecordSet',
    'js!SBIS3.CONTROLS.Data.Adapter.Json'
 ], function (ISource, DataSet, Di) {
    'use strict';
@@ -102,7 +104,7 @@ define('js!SBIS3.CONTROLS.Data.Source.Base', [
       },
 
       /**
-       * Создает новый экзепляр dataSet
+       * Создает новый экземпляр dataSet
        * @param {Object} cfg Опции конструктора
        * @returns {SBIS3.CONTROLS.Data.Source.DataSet}
        * @private
@@ -142,7 +144,7 @@ define('js!SBIS3.CONTROLS.Data.Source.Base', [
       //region SBIS3.CONTROLS.BaseSource
 
       sync: function (data) {
-         $ws.single.ioc.resolve('ILogger').log('SBIS3.CONTROLS.Data.Source.Base', 'method sync() is deprecated and will be removed in 3.8.0. Use SBIS3.CONTROLS.Data.Model::sync() instead.');
+         //$ws.single.ioc.resolve('ILogger').log('SBIS3.CONTROLS.Data.Source.Base', 'method sync() is deprecated and will be removed in 3.7.4. Use SBIS3.CONTROLS.Data.Model::sync() instead.');
 
          var result;
          if ($ws.helpers.instanceOfModule(data, 'SBIS3.CONTROLS.Data.Model')) {
