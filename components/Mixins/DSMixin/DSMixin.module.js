@@ -213,14 +213,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
             /**
              * @cfg {Object.<String,String>} подключаемые внешние шаблоны, ключу соответствует поле it.included.<...> которое будет функцией в шаблоне
              */
-            includedTemplates: {},
-            /**
-             * @cfg {String|function} Шаблон элементов, которые будт рисоваться под даннными.
-             * @remark
-             * Например для отрисовки кнопко +Документ, +Папка.
-             * Если задан, то под всеми(!) элементами появится контейнер с содержимым этого шаблона
-             */
-            footerTpl: undefined
+            includedTemplates: {}
          },
          _loader: null
       },
@@ -596,8 +589,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
 
       _drawItems: function (records, at) {
          var
-            curAt = at,
-               targetContainer;
+            curAt = at;
          if (records && records.length > 0) {
             for (var i = 0; i < records.length; i++) {
                this._drawAndAppendItem(records[i], curAt, i === records.length - 1);
@@ -605,19 +597,12 @@ define('js!SBIS3.CONTROLS.DSMixin', [
                   curAt.at++;
                }
             }
-            if (this._options.footerTpl) {
-               targetContainer = this._getFooterContainer();
-               this._appendItemTemplate(undefined, targetContainer,  this._buildTplItem({}, this._options.footerTpl));
-            }
             this.reviveComponents().addCallback(this._notifyOnDrawItems.bind(this)).addErrback(function(e){
                throw e;
             });
          } else {
             this._notifyOnDrawItems();
          }
-      },
-      _getFooterContainer: function(){
-         return this._getTargetContainer();
       },
 
       /**
