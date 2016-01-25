@@ -1093,6 +1093,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
 	               this.redraw();
 	               break;
 	         }
+            this._drawItemsCallback();
       	}
       };
    return DSMixin;
