@@ -34,7 +34,7 @@ define('js!SBIS3.CONTROLS.HierarchyDataGridView', [
        * Событие, происходящее после клика по хлебным крошкам, отображающим результаты поиска
        * @param {$ws.proto.EventObject} eventObject Дескриптор события.
        * @param {number} id ключ узла, по которму кликнули
-       * @return Если вернуть false - загрузка узла не произойдет
+       * @returns {Boolean} Если вернуть false - загрузка узла не произойдет
        * @example
        * <pre>
        *    DataGridView.subscribe('onSearchPathClick', function(event){

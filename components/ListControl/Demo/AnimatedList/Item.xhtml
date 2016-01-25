@@ -1,0 +1,9 @@
+{{?it.item.containerTag}}
+   <{{=it.item.containerTag}} class="{{=it.item.containerClass}}" style="height: {{=it.item.height}}px; top: {{=it.item.top}}px;" data-hash="{{=it.item.hash}}" data-index="{{=it.item.index}}">
+{{?}}
+
+{{=it.item.template(it.item)}}
+
+{{?it.item.containerTag}}
+   </{{=it.item.containerTag}}>
+{{?}}

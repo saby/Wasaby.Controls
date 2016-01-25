@@ -72,7 +72,9 @@ Loader.prototype = {
     */
    getReport: function (done) {
       var driver = this._driver,
-         checker = new DriverChecker(driver);
+         checker = new DriverChecker(driver, {
+            timeout: config.checkerTimeout
+         });
       checker.start(function (checksDone) {
          //Ждем завершения тестов
          driver.isExisting('body.tests-finished', function (err, isExisting) {
