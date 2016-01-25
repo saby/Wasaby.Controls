@@ -424,9 +424,13 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
          this._hideItemActions();
       },
       _endDropDown: function() {
+         var hoveredItem = this.getHoveredItem();
          $ws.single.WindowManager.releaseZIndex(this._avatar.css('z-index'));
          this._avatar.remove();
          this._isShifted = false;
+         if (hoveredItem.container) {
+            this._showItemActions(hoveredItem);
+         }
       }
       /*DRAG_AND_DROP END*/
    });
