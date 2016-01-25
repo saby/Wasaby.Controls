@@ -1196,10 +1196,11 @@ define('js!SBIS3.CONTROLS.ListView',
                   if (dataSet.getCount()) {
                      records = dataSet._getRecords();
                      self._dataSet.merge(dataSet, {remove: false});
+                     self._items.append(dataSet);
                      if (self._options.infiniteScroll === 'up') {
                         self._containerScrollHeight = self._scrollWatcher.getScrollHeight();
                      }
-                     self._drawItems(records);
+                     //self._drawItems(records);
                      self._dataLoadedCallback();
                      self._toggleEmptyData();
                   }
