@@ -477,7 +477,7 @@ define('js!SBIS3.CONTROLS.Data.Projection.Collection', [
          }
 
          var getIndexes = function(arr) {
-               return arr.map(function(item, index) {
+               return $ws.helpers.map(arr, function(item, index) {
                   return index;
                });
             },
@@ -630,7 +630,7 @@ define('js!SBIS3.CONTROLS.Data.Projection.Collection', [
       _addItems: function (start, items) {
          var isFalseMirror = this._isFalseMirror();
          Array.prototype.splice.apply(this._itemsMap, [start, 0].concat(
-            items.map((function(item, index) {
+            $ws.helpers.map(items, (function(item, index) {
                return this._convertToItem(item);
             }).bind(this)))
          );
@@ -718,7 +718,7 @@ define('js!SBIS3.CONTROLS.Data.Projection.Collection', [
          if (action === IBindCollectionProjection.ACTION_REPLACE ||
             action === IBindCollectionProjection.ACTION_RESET
          ) {
-            oldItemsMap = oldItems.map((function(item) {
+            oldItemsMap = $ws.helpers.map(oldItems, (function(item) {
                return this._convertToItem(item);
             }).bind(this));
          } else {

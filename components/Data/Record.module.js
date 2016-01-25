@@ -131,7 +131,7 @@ define('js!SBIS3.CONTROLS.Data.Record', [
       },
 
       has: function (name) {
-         return this._getRawDataFields().indexOf(name) > -1;
+         return Array.indexOf(this._getRawDataFields(), name) > -1;
       },
 
       // endregion SBIS3.CONTROLS.Data.IPropertyAccess
