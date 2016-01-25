@@ -43,6 +43,8 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                   itemsContainer: undefined
                },
                _eip: undefined,
+               // Используется для хранения Deferred при сохранении в редактировании по месту.
+               // Обязательно нужен, т.к. лишь таким способом можно обработать несколько последовательных вызовов endEdit и вернуть ожидаемый результат (Deferred).
                _savingDeferred: undefined,
                _editingRecord: undefined,
                _eipHandlers: null
@@ -164,6 +166,22 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                });
             },
             /**
+             * Отправить команду блокировки
+             * todo EIP Авраменко, Сухоручкин: сейчас сделано через pendingOperation, в будущем переделать на команды блокировки родительких компонентов
+             * @private
+             */
+            _sendLockCommand: function(savingDeferred) {
+               var
+                  opener = this.getOpener(),
+                  dialog;
+               if (opener) {
+                  dialog = opener.getParentByClass('SBIS3.CORE.RecordArea') || opener.getTopParent();
+                  if (dialog) {
+                     dialog.addPendingOperation(savingDeferred);
+                  }
+               }
+            },
+            /**
              * Завершить редактирование по месту
              * @param {Boolean} withSaving Сохранить изменения в dataSet
              * @private
@@ -179,10 +197,16 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                   }
                   if (!withSaving || eip.validate()) {
                      eip.endEdit();
-                     this._savingDeferred = withSaving ? eip.applyChanges() : $ws.proto.Deferred.success();
-                     return this._savingDeferred.addCallback(function() {
+                     this._savingDeferred = new $ws.proto.Deferred();
+                     this._sendLockCommand(this._savingDeferred);
+                     if (withSaving) {
+                        eip.applyChanges().addCallback(function() {
+                           this._endEdit(eip, withSaving);
+                        }.bind(this))
+                     } else {
                         this._endEdit(eip, withSaving);
-                     }.bind(this));
+                     }
+                     return this._savingDeferred;
                   }
                   return $ws.proto.Deferred.fail();
                }
@@ -202,9 +226,14 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                   withSaving ? this._options.dataSet.push(eipRecord) : eip.getTarget().remove();
                }
                if (withSaving) {
-                  this._options.dataSource.sync(this._options.dataSet);
+                  this._options.dataSource.sync(this._options.dataSet).addCallback(function() {
+                     this._savingDeferred.callback();
+                     this._notify('onAfterEndEdit', this._options.dataSet.getRecordByKey(eipRecord.getKey()), eip.getTarget(), withSaving);
+                  }.bind(this));
+               } else {
+                  this._savingDeferred.callback();
+                  this._notify('onAfterEndEdit', eipRecord, eip.getTarget(), withSaving);
                }
-               this._notify('onAfterEndEdit', withSaving ? this._options.dataSet.getRecordByKey(eipRecord.getKey()) : eipRecord, eip.getTarget(), withSaving);
             },
             add: function() {
                var options,
