@@ -1,9 +1,10 @@
 define('js!SBIS3.CONTROLS.FilterButton.FilterLine',
    [
       'js!SBIS3.CORE.CompoundControl',
+      'js!SBIS3.CONTROLS.Utils.TemplateUtil',
       'html!SBIS3.CONTROLS.FilterButton.FilterLine'
    ],
-   function(CompoundControl, dotTplFn) {
+   function(CompoundControl, TemplateUtil, dotTplFn) {
 
       var FilterLine = CompoundControl.extend({
          _dotTplFn: dotTplFn,
@@ -16,16 +17,15 @@ define('js!SBIS3.CONTROLS.FilterButton.FilterLine',
                var changed = ctx.getValue('filterChanged'),
                    filterStructure = ctx.getValue('filterStructure'),
                    resetLinkText = ctx.getValue('filterResetLinkText'),
-                   linkText, textArr, template;
+                   linkText, textArr, template, templateRes;
 
                if (changed) {
                   textArr = $ws.helpers.reduce(filterStructure, function(result, element) {
-                     template = element.itemTemplate;
+                     template = TemplateUtil.prepareTemplate(element.itemTemplate);
 
                      if(template) {
-                        if (typeof template === 'string') {
-                           result.push(doT.template(template)(element));
-                        } else if(typeof template == 'function') {
+                        templateRes = template(element);
+                        if(templateRes) {
                            result.push(template(element));
                         }
                         return result;

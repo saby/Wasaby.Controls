@@ -8,7 +8,7 @@ define('js!SBIS3.CONTROLS.ListView',
       'js!SBIS3.CORE.CompoundActiveFixMixin',
       'js!SBIS3.CONTROLS.DSMixin',
       'js!SBIS3.CONTROLS.MultiSelectable',
-      'js!SBIS3.CONTROLS.Selectable',
+      'js!SBIS3.CONTROLS.SelectableNew',
       'js!SBIS3.CONTROLS.DataBindMixin',
       'js!SBIS3.CONTROLS.DecorableMixin',
       'js!SBIS3.CONTROLS.ItemActionsGroup',
@@ -485,7 +485,7 @@ define('js!SBIS3.CONTROLS.ListView',
                   }
                   break;
             }
-            if (newSelectedItem.length) {
+            if (newSelectedItem && newSelectedItem.length) {
                newSelectedKey = newSelectedItem.data('id');
                this.setSelectedKey(newSelectedKey);
                this._scrollToItem(newSelectedKey);
@@ -619,7 +619,7 @@ define('js!SBIS3.CONTROLS.ListView',
 
                return {
                   key: targetKey,
-                  record: this.getDataSet().getRecordByKey(targetKey),
+                  record: this.getDataSet(true).getRecordByKey(targetKey),
                   container: correctTarget,
                   position: {
                      /* При расчётах координат по вертикали учитываем прокрутку */
@@ -738,7 +738,6 @@ define('js!SBIS3.CONTROLS.ListView',
                }
             }
             else {
-               this.setSelectedKeys([id]);
                this._notifyOnItemClick(id, data, target);
             }
          },
@@ -969,7 +968,7 @@ define('js!SBIS3.CONTROLS.ListView',
             /* Поиск элемента коллекции с учётом вложенных контролов,
                обязательно проверяем, что мы нашли, возможно это элемент вложенного контрола,
                тогда поднимемся на уровень выше и опять поищем */
-            return elem[0] && this.getDataSet().getRecordByKey(elem[0].getAttribute('data-id')) ? elem : this._findItemByElement(elem.parent());
+            return elem[0] && this.getDataSet(true).getRecordByKey(elem[0].getAttribute('data-id')) ? elem : this._findItemByElement(elem.parent());
          },
          /**
           * Показывает оперцаии над записью для элемента
