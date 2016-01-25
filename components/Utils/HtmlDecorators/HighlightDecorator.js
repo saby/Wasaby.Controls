@@ -43,7 +43,7 @@ define(['js!SBIS3.CONTROLS.Utils.HtmlDecorators/AbstractDecorator'], function (A
       },
 
       checkCondition: function(obj) {
-         this._options.enabled = !!obj['highlight'];
+         return !!obj['highlight'];
       },
 
       /**
