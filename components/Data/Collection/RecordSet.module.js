@@ -527,7 +527,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
       },
 
       _reindexTree: function (field) {
-         this._getServiceEnumerator().reIndex();
+         this._reindex();
 
          this._indexTree = {};
          var self = this,
