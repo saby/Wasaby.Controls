@@ -68,7 +68,7 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
              * @see SBIS3.CONTROLS.Data.Di
              * @example
              * <pre>
-             *    var dataSource = new RemoteSource({
+             *    var dataSource = new SbisService({
              *       resource: 'Сотрудник',
              *       provider: 'source.provider.sbis-plugin'
              *    });
@@ -200,7 +200,7 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
        * </pre>
        */
       create: function(meta) {
-         //TODO: вместо 'ИмяМетода' может предаваться 'Расширение'
+         //TODO: вместо 'ИмяМетода' может передаваться 'Расширение'
          var args = {
             'Фильтр': this.getAdapter().serialize(meta || {
                'ВызовИзБраузера': true
