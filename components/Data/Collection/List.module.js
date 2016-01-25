@@ -277,6 +277,29 @@ define('js!SBIS3.CONTROLS.Data.Collection.List', [
          this._getServiceEnumerator().reIndex();
       }
 
+
+      /**
+       * Вызывает метод splice
+       * @param {SBIS3.CONTROLS.Data.Collection.IEnumerable|Array} items Коллекция с элементами для замены
+       * @param {Number} start Индекс в массиве, с которого начинать добавление.
+       * @private
+       */
+      _splice: function (items, start){
+         var addItems = [];
+         if(items instanceof Array) {
+            addItems = items;
+         } else if(items && $ws.helpers.instanceOfMixin(items, 'SBIS3.CONTROLS.Data.Collection.IEnumerable')) {
+            var self = this;
+            items.each(function (item){
+               addItems.push(item);
+            });
+         } else {
+            throw new Error('Invalid argument');
+         }
+         Array.prototype.splice.apply(this._items,([start, 0].concat(addItems)));
+
+         this._reindex();
+      }
       //endregion Protected methods
 
    });
