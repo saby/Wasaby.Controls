@@ -10,6 +10,8 @@ define('js!SBIS3.CONTROLS.Data.Source.Provider.SbisBusinessLogic', [
      * @class SBIS3.CONTROLS.Data.Source.Provider.SbisBusinessLogic
      * @extends $ws.proto.ClientBLObject
      * @mixes SBIS3.CONTROLS.Data.Source.Provider.IRpc
+     * @public
+     * @author Мальцев Алексей
      */
     var SbisBusinessLogic = $ws.proto.ClientBLObject.extend([IRpc], {
        _moduleName: 'SBIS3.CONTROLS.Data.Source.Provider.SbisBusinessLogic',
