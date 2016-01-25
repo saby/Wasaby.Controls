@@ -68,7 +68,7 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
              * @see SBIS3.CONTROLS.Data.Di
              * @example
              * <pre>
-             *    var dataSource = new RemoteSource({
+             *    var dataSource = new SbisService({
              *       resource: 'Сотрудник',
              *       provider: 'source.provider.sbis-plugin'
              *    });
@@ -173,16 +173,6 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
          return this._options.resource.name;
       },
 
-      getAdapter: function () {
-         var adapter = SbisService.superclass.getAdapter.call(this);
-
-         if (!adapter || !$ws.helpers.instanceOfModule(adapter, 'SBIS3.CONTROLS.Data.Adapter.Sbis')) {
-            throw new Error('Data adapter should extend SBIS3.CONTROLS.Data.Adapter.Sbis');
-         }
-
-         return adapter;
-      },
-
       /**
        * Создает пустую модель через источник данных
        * @param {Object|SBIS3.CONTROLS.Data.Model} [meta] Дополнительные мета данные
@@ -200,7 +190,7 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
        * </pre>
        */
       create: function(meta) {
-         //TODO: вместо 'ИмяМетода' может предаваться 'Расширение'
+         //TODO: вместо 'ИмяМетода' может передаваться 'Расширение'
          var args = {
             'Фильтр': this.getAdapter().serialize(meta || {
                'ВызовИзБраузера': true
