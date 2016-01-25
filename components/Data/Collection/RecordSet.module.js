@@ -562,36 +562,36 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
          this._getTableAdapter().replace(item.getRawData(), at);
       },
 
+      assign: function (items) {
+         var self = this;
+         RecordSet.superclass.assign.apply(this, arguments);
+         this.setRawData(this._getTableAdapter().getEmpty());
+         this.each(function(item){
+            self._getTableAdapter().add(item.getRawData());
+         });
+      },
+
+      append: function (items) {
+         var self = this,
+            addItems = this._itemsToArray(items);
+         $ws.helpers.forEach(addItems, function(item, i){
+            self._getTableAdapter().add(item.getRawData());
+         });
+         RecordSet.superclass.append.call(this, addItems);
+      },
+
+      prepend: function (items) {
+         var self = this,
+            addItems = this._itemsToArray(items);
+         $ws.helpers.forEach(addItems, function(item, i){
+            self._getTableAdapter().add(item.getRawData(), i);
+         });
+         RecordSet.superclass.prepend.call(this, addItems);
+      },
+
       //endregion SBIS3.CONTROLS.Data.Collection.List
 
       //region Protected methods
-
-      /**
-       * Вставляет набор записей в указанную позицию
-       * @private
-       */
-      _splice: function (items, start){
-         var newItems = [];
-         if(items instanceof Array) {
-            newItems = items;
-         } else if(items && $ws.helpers.instanceOfMixin(items, 'SBIS3.CONTROLS.Data.Collection.IEnumerable')) {
-            var self = this;
-            items.each(function (item){
-               newItems.push(item);
-            });
-         } else {
-            throw new Error('Invalid argument');
-         }
-         for (var i = 0, len = newItems.length; i< len; i++) {
-            var item = newItems[i];
-            this._checkItem(item);
-            this._getTableAdapter().add(item.getRawData(), start);
-            this._items.splice(item, start, 0);
-            start++;
-         }
-
-         this._getServiceEnumerator().reIndex();
-      },
 
       /**
        * Возвращает адаптер для сырых данных (лениво создает)
