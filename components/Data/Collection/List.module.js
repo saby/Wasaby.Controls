@@ -179,7 +179,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.List', [
 
       getIndex: function (item) {
          if ($ws.helpers.instanceOfMixin(item, 'SBIS3.CONTROLS.Data.IHashable')) {
-            return this.getItemIndexByPropertyValue('hash', item.getHash());
+            return this._getItemIndexByHash(item.getHash());
          }
 
          return Array.indexOf(this._items, item);
