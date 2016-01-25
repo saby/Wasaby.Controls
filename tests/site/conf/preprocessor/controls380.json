@@ -1,0 +1,25 @@
+{
+  "root": "C:\\inetpub\\InTestControls380",
+  "uid": "controls380",
+  "protocol": "http",
+  "port": 2171,
+  "scale": "auto",
+  "checkrights": false,
+  "loglevel": 5,
+  "profiler": false,
+  "services": {
+    "/": {
+      "root": "/",
+      "ws": "/ws",
+      "resources": "/resources",
+	  "data": "/resources",
+	  "checkrights": false,
+	  "backend": {
+		"protocol": "http",
+		"host": "localhost",
+		"port": 171,
+		"path": ""
+	  }
+    }
+  }
+}

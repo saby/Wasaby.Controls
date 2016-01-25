@@ -37,12 +37,6 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
          _rowTpl : rowTpl,
          _options: {
             /**
-             * @cfg {Boolean}
-             * Разрешить проваливаться в папки
-             * Если выключено, то папки можно открывать только в виде дерева, проваливаться в них нельзя
-             */
-            allowEnterToFolder: true,
-            /**
              * @cfg {Function}
              * Обработчик нажатия на стрелку у папок. Если не задан, стрелка показана не будет
              */
@@ -87,7 +81,7 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
                         startRow = i + 1;
                      } else {
                         //TODO сейчас ключи могут оказаться строками, а могут целыми числами, в 20 все должно быть строками и это можно выпилить
-                        if ((childKeys.indexOf($(allContainers[i]).attr('data-id')) >= 0) || ((childKeys.indexOf($(allContainers[i]).data('id')) >= 0))) {
+                        if ((Array.indexOf(childKeys,$(allContainers[i]).attr('data-id')) >= 0) || (Array.indexOf(childKeys, $(allContainers[i]).data('id')) >= 0)) {
                            startRow++;
                         }
                      }
@@ -141,8 +135,8 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
       _keyboardHover: function(e) {
          var parentResult = TreeDataGridView.superclass._keyboardHover.apply(this, arguments),
              selectedKey = this.getSelectedKey(),
-             rec = this._dataSet.getRecordByKey(selectedKey),
-             isBranch = rec && rec.get(this._options.hierField);
+             rec = this.getDataSet().getRecordById(selectedKey),
+             isBranch = rec && rec.get(this._options.hierField + '@');
 
          switch(e.which) {
             case $ws._const.key.right:

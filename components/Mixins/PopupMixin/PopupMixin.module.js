@@ -144,19 +144,7 @@ define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManag
             $ws.single.EventBus.channel('WindowChangeChannel').subscribe('onDocumentClick', this._clickHandler, this);
          }
 
-         $ws.helpers.trackElement(this._options.target, true)
-            .subscribe('onMove', function () { //перемещаем вслед за таргетом
-               if (self.isVisible()) {
-                  self.recalcPosition();
-                  self._checkTargetPosition();
-               } else {
-                  self._initSizes();
-               }
-            }).subscribe('onVisible', function (event, visible) { //скрываем если таргет скрылся
-               if (!visible){
-                 self.hide();
-               }
-            });
+         this._subscribeTargetMove();
 
          if (this._options.closeButton) {
             container.append('<div class="controls-PopupMixin__closeButton" ></div>');
@@ -168,6 +156,34 @@ define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManag
          this._defaultCorner = this._options.corner;
          this._defaultVerticalAlignSide = this._options.verticalAlign.side;
          this._defaultHorizontalAlignSide = this._options.horizontalAlign.side;
+      },
+      
+      //Подписка на изменение состояния таргета
+      _subscribeTargetMove: function(){
+         if (this._targetChanges){
+            this._targetChanges.unsubscribe('onMove', this._onTargetMove);
+            this._targetChanges.unsubscribe('onVisible', this._onTargetChangeVisibility);
+         }
+         this._targetChanges = $ws.helpers.trackElement(this._options.target, true);
+         //перемещаем вслед за таргетом
+         this._targetChanges.subscribe('onMove', this._onTargetMove, this);
+         //скрываем если таргет скрылся
+         this._targetChanges.subscribe('onVisible', this._onTargetChangeVisibility, this);
+      },
+
+      _onTargetMove: function(){
+         if (this.isVisible()) {
+            this.recalcPosition();
+            this._checkTargetPosition();
+         } else {
+            this._initSizes();
+         }
+      },
+
+      _onTargetChangeVisibility: function(event, visible){
+         if (!visible){
+           this.hide();
+         }   
       },
 
       /**
@@ -225,6 +241,7 @@ define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManag
        */
       setTarget: function (target) {
          this._options.target = target;
+         this._subscribeTargetMove();
          this.recalcPosition(true);
       },
 
