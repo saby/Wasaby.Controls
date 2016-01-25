@@ -275,8 +275,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.List', [
       _reindex: function () {
          this._hashIndex = undefined;
          this._getServiceEnumerator().reIndex();
-      }
-
+      },
 
       /**
        * Вызывает метод splice
