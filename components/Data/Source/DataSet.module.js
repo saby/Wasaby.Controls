@@ -237,10 +237,12 @@ define('js!SBIS3.CONTROLS.Data.Source.DataSet', [
             property = this._options.itemsProperty;
          }
 
-         var items = Di.resolve(this._options.listModule, {
-            rawData: this._getDataProperty(property),
+         var data =  this._getDataProperty(property),
+            items = Di.resolve(this._options.listModule, {
+            rawData: data,
             adapter: this._options.adapter,
-            model: this._options.model
+            model: this._options.model,
+            idProperty: this._options.idProperty
          });
          if (!items && !$ws.helpers.instanceOfModule(items, 'SBIS3.CONTROLS.Data.Collection.RecordSet')) {
             throw new TypeError('SBIS3.CONTROLS.Data.Source.DataSet::getAll(): listModule should extend SBIS3.CONTROLS.Data.Collection.RecordSet');

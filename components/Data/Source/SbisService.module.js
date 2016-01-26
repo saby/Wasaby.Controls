@@ -260,16 +260,16 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
          if (meta && !Object.isEmpty(meta)) {
             args['ДопПоля'] = this.getAdapter().serialize(meta);
          }
-         this._detectIdProperty(model.getRawData());
 
          return this.getProvider().call(
             this._options.updateMethodName,
             args
          ).addCallbacks((function (key) {
-            if (!model.isStored()) {
-               model.set(this._options.idProperty, key);
+            if (key && !model.isStored() && this.getIdProperty()) {
+               model.set(this.getIdProperty(), key);
             }
             model.setStored(true);
+            model.applyChanges();
             return key;
          }).bind(this), function (error) {
             $ws.single.ioc.resolve('ILogger').log('SBIS3.CONTROLS.Data.Source.SbisService::update()', error);

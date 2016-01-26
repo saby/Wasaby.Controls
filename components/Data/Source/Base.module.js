@@ -77,14 +77,12 @@ define('js!SBIS3.CONTROLS.Data.Source.Base', [
       //region Protected methods
 
       /**
-       * Определяет название свойства с первичным ключем, если оно не было задано
+       * Определяет название свойства с первичным ключем по данным
        * @param {*} data Сырые данные
        * @private
        */
-      _detectIdProperty: function(data) {
-         if (!this._options.idProperty) {
-            this._options.idProperty = this.getAdapter().forRecord(data).getKeyField();
-         }
+      _getIdPropertyByData: function(data) {
+         this.getAdapter().forRecord(data).getKeyField();
       },
 
       /**
@@ -94,12 +92,10 @@ define('js!SBIS3.CONTROLS.Data.Source.Base', [
        * @private
        */
       _getModelInstance: function (data) {
-         this._detectIdProperty(data);
-
          return Di.resolve(this._options.model, {
             rawData: data,
             adapter: this.getAdapter(),
-            idProperty: this.getIdProperty()
+            idProperty: this.getIdProperty() || this._getIdPropertyByData(data)
          });
       },
 
@@ -115,7 +111,7 @@ define('js!SBIS3.CONTROLS.Data.Source.Base', [
             adapter: this.getAdapter(),
             model: this.getModel(),
             listModule: this.getListModule(),
-            idProperty: this.getIdProperty()
+            idProperty: this.getIdProperty() || this._getIdPropertyByData(cfg.rawData || null)
          }, cfg, {
             rec: false
          }));
