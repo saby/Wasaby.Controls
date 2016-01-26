@@ -260,6 +260,7 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
             ds = this.getList().getDataSet();
             ds && ds.fill(); //TODO в 3.7.3.100 поменять на clear
             this._options.listFilter = filter;
+            this._notifyOnPropertyChanged('listFilter');
             return;
          }
 
@@ -274,12 +275,14 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
             for(var i = 0, len = changedFields.length; i < len; i++) {
                if(String(this._options.listFilter[changedFields[i]]).length >= this._options.startChar) {
                   this._startSearch();
+                  this._notifyOnPropertyChanged('listFilter');
                   return;
                }
             }
             /* Если введено меньше символов чем указано в startChar, то скроем автодополнение */
-            self._resetSearch();
-            self.hidePicker();
+            this._resetSearch();
+            this.hidePicker();
+            this._notifyOnPropertyChanged('listFilter');
          }
       },
 
