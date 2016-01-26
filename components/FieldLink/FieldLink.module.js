@@ -76,7 +76,8 @@ define('js!SBIS3.CONTROLS.FieldLink',
     * @mixes SBIS3.CONTROLS.FormWidgetMixin
     * @demo SBIS3.CONTROLS.Demo.FieldLinkWithEditInPlace Поле связи с редактированием по месту
     * @demo SBIS3.CONTROLS.Demo.FieldLinkDemo
-    * @cssModifier controls-FieldLink__itemsEdited При наведении на выделенные элементы, они подчёркиваются.
+    * @cssModifier controls-FieldLink__itemsEdited При наведении на выбранные элементы в поле связи, они подчёркиваются.
+    * @cssModifier controls-FieldLink__itemsBold Текст выбранных элементов в поле связи отображается жирным.
     * @control
     * @public
     * @author Крайнов Дмитрий Олегович
