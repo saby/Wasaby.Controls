@@ -1,7 +1,7 @@
 /* global define */
 define('js!SBIS3.CONTROLS.Data.SbisMoveStrategy', [
    'js!SBIS3.CONTROLS.Data.BaseMoveStrategy',
-   'js!SBIS3.CONTROLS.Data.Source.SbisService/resources/SbisServiceBLO'
+   'js!SBIS3.CONTROLS.Data.Source.Provider.SbisBusinessLogic'
 ], function (BaseMoveStrategy, SbisServiceBLO) {
    'use strict';
    /**
@@ -62,8 +62,8 @@ define('js!SBIS3.CONTROLS.Data.SbisMoveStrategy', [
             this._orderProvider = new SbisServiceBLO(this._options.moveResource);
          }
          $ws.helpers.forEach(from, function(record){
-            params['ИдО'] = [parseInt(self._getId(record)), self._options.resource];
-            def.push(self._orderProvider.callMethod(method, params, $ws.proto.BLObject.RETURN_TYPE_ASIS).addErrback(function (error) {
+            params['ИдО'] = [String.prototype.split.call(self._getId(record))[0], self._options.resource];
+            def.push(self._orderProvider.call(method, params, $ws.proto.BLObject.RETURN_TYPE_ASIS).addErrback(function (error) {
                $ws.single.ioc.resolve('ILogger').log('SBIS3.CONTROLS.Data.SbisMoveStrategy::move()', error);
                return error;
             }));
@@ -84,12 +84,13 @@ define('js!SBIS3.CONTROLS.Data.SbisMoveStrategy', [
                'ПорядковыйНомер': this._options.moveDefaultColumn,
                'Иерархия': null,
                'Объект': this._options.resource
-            };
+            },
+            id = String.prototype.split.call(this._getId(to), ',')[0];
 
          if (after) {
-            params['ИдОПосле'] = [parseInt(this._getId(to), 10), objectName];
+            params['ИдОПосле'] = [id, objectName];
          } else {
-            params['ИдОДо'] = [parseInt(this._getId(to), 10), objectName];
+            params['ИдОДо'] = [id, objectName];
 
          }
          return params;

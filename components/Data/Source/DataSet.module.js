@@ -1,8 +1,9 @@
 /* global define, $ws */
 define('js!SBIS3.CONTROLS.Data.Source.DataSet', [
-   'js!SBIS3.CONTROLS.Data.Collection.List',
-   'js!SBIS3.CONTROLS.Data.Collection.ObservableList'
-], function (List, ObservableList) {
+   'js!SBIS3.CONTROLS.Data.Di',
+   'js!SBIS3.CONTROLS.Data.Model',
+   'js!SBIS3.CONTROLS.Data.Collection.RecordSet'
+], function (Di) {
    'use strict';
 
    /**
@@ -17,37 +18,64 @@ define('js!SBIS3.CONTROLS.Data.Source.DataSet', [
       $protected: {
          _options: {
             /**
-             * @cfg {SBIS3.CONTROLS.Data.Source.ISource} Источник, из которого получены данные
+             * @cfg {String|SBIS3.CONTROLS.Data.Source.ISource} Источник, из которого получены данные
+             * @see getSource
+             * @see SBIS3.CONTROLS.Data.Source.ISource
              */
-            source: undefined,
+            source: null,
 
             /**
-             * @cfg {SBIS3.CONTROLS.Data.Adapter.IAdapter} Адаптер для работы с данными
+             * @cfg {String|SBIS3.CONTROLS.Data.Adapter.IAdapter} Адаптер для работы с данными, по умолчанию {@link SBIS3.CONTROLS.Data.Adapter.Json}
+             * @see getAdapter
+             * @see SBIS3.CONTROLS.Data.Adapter.IAdapter
+             * @see SBIS3.CONTROLS.Data.Di
              */
-            adapter: undefined,
+            adapter: 'adapter.json',
 
             /**
              * @cfg {String} Сырые данные, выданные источником
+             * @see getRawData
+             * @see setRawData
              */
             rawData: null,
 
             /**
-             * @cfg {Function} Конструктор модели
+             * @cfg {String|Function} Конструктор модели, по умолчанию {@link SBIS3.CONTROLS.Data.Model}
+             * @see getModel
+             * @see setModel
+             * @see SBIS3.CONTROLS.Data.Model
+             * @see SBIS3.CONTROLS.Data.Di
              */
-            model: undefined,
+            model: 'model',
+
+            /**
+             * @cfg {String|Function} Конструктор списка моделей, по умолчанию {@link SBIS3.CONTROLS.Data.Collection.RecordSet}
+             * @see getListModule
+             * @see setListModule
+             * @see SBIS3.CONTROLS.Data.Collection.RecordSet
+             * @see SBIS3.CONTROLS.Data.Di
+             */
+            listModule: 'collection.recordset',
 
             /**
              * @cfg {String} Поле модели, содержащее первичный ключ
+             * @see getIdProperty
+             * @see setIdProperty
+             * @see SBIS3.CONTROLS.Data.Model#idProperty
              */
             idProperty: '',
 
             /**
              * @cfg {String} Свойство данных, в которых находится выборка
+             * @see getItemsProperty
+             * @see setItemsProperty
              */
             itemsProperty: '',
 
             /**
              * @cfg {String} Свойство данных, в которых находится общее число элементов выборки
+             * @see getTotalProperty
+             * @see setTotalProperty
              */
             totalProperty: ''
          }
@@ -57,16 +85,7 @@ define('js!SBIS3.CONTROLS.Data.Source.DataSet', [
          cfg = cfg || {};
          if ('data' in cfg && !('rawData' in cfg)) {
             this._options.rawData = cfg.data;
-            $ws.single.ioc.resolve('ILogger').log('SBIS3.CONTROLS.Data.Source.DataSet', 'option "data" is deprecated and will be removed in 3.7.20. Use "rawData" instead.');
-         }
-         if (!this._options.adapter && this._options.source) {
-            this._options.adapter = this._options.source.getAdapter();
-         }
-         if (!this._options.model && this._options.source) {
-            this._options.model = this._options.source.getModel();
-         }
-         if (!this._options.idProperty && this._options.source) {
-            this._options.idProperty = this._options.source.getIdProperty();
+            $ws.single.ioc.resolve('ILogger').log('SBIS3.CONTROLS.Data.Source.DataSet', 'option "data" is deprecated and will be removed in 3.7.4. Use "rawData" instead.');
          }
       },
 
@@ -74,23 +93,37 @@ define('js!SBIS3.CONTROLS.Data.Source.DataSet', [
 
       /**
        * Возвращает источник, из которого получены данные
-       * @returns {SBIS3.CONTROLS.Data.Source.ISource}
+       * @returns {String|SBIS3.CONTROLS.Data.Source.ISource}
+       * @see source
+       * @see SBIS3.CONTROLS.Data.Source.ISource
        */
       getSource: function () {
+         if (typeof this._options.source === 'string') {
+            this._options.source = Di.resolve(this._options.source);
+         }
          return this._options.source;
       },
 
       /**
        * Возвращает адаптер для работы с данными
-       * @returns {SBIS3.CONTROLS.Data.Adapter.IAdapter}
+       * @returns {String|SBIS3.CONTROLS.Data.Adapter.IAdapter}
+       * @see adapter
+       * @see SBIS3.CONTROLS.Data.Adapter.IAdapter
        */
       getAdapter: function () {
+         if (typeof this._options.adapter === 'string') {
+            this._options.adapter = Di.resolve(this._options.adapter);
+         }
          return this._options.adapter;
       },
 
       /**
        * Возвращает конструктор модели
-       * @returns {Function}
+       * @returns {String|Function}
+       * @see model
+       * @see setModel
+       * @see SBIS3.CONTROLS.Data.Model
+       * @see SBIS3.CONTROLS.Data.Di
        */
       getModel: function () {
          return this._options.model;
@@ -98,15 +131,44 @@ define('js!SBIS3.CONTROLS.Data.Source.DataSet', [
 
       /**
        * Устанавливает конструктор модели
-       * @param {Function} model
+       * @param {String|Function} model
+       * @see model
+       * @see getModel
+       * @see SBIS3.CONTROLS.Data.Model
+       * @see SBIS3.CONTROLS.Data.Di
        */
       setModel: function (model) {
          this._options.model = model;
       },
 
       /**
+       * Возвращает конструктор списка моделей
+       * @returns {String|Function}
+       * @see setListModule
+       * @see listModule
+       * @see SBIS3.CONTROLS.Data.Di
+       */
+      getListModule: function () {
+         return this._options.listModule;
+      },
+
+      /**
+       * Устанавливает конструктор списка моделей
+       * @param {String|Function} listModule
+       * @see getListModule
+       * @see listModule
+       * @see SBIS3.CONTROLS.Data.Di
+       */
+      setListModule: function (listModule) {
+         this._options.listModule = listModule;
+      },
+
+      /**
        * Возвращает свойство модели, содержащее первичный ключ
        * @returns {String}
+       * @see setIdProperty
+       * @see idProperty
+       * @see SBIS3.CONTROLS.Data.Model#idProperty
        */
       getIdProperty: function () {
          return this._options.idProperty;
@@ -115,6 +177,9 @@ define('js!SBIS3.CONTROLS.Data.Source.DataSet', [
       /**
        * Устанавливает свойство модели, содержащее первичный ключ
        * @param {String} name
+       * @see getIdProperty
+       * @see idProperty
+       * @see SBIS3.CONTROLS.Data.Model#idProperty
        */
       setIdProperty: function (name) {
          this._options.idProperty = name;
@@ -123,52 +188,71 @@ define('js!SBIS3.CONTROLS.Data.Source.DataSet', [
       /**
        * Возвращает свойство данных, в которых находится выборка
        * @returns {String}
+       * @see setItemsProperty
+       * @see itemsProperty
        */
       getItemsProperty: function () {
          return this._options.itemsProperty;
       },
 
       /**
-       * Возвращает свойство данных, в которых находится общее число элементов выборки
+       * Устанавливает свойство данных, в которых находится выборка
+       * @param {String} name
+       * @see getItemsProperty
+       * @see itemsProperty
+       */
+      setItemsProperty: function (name) {
+         this._options.itemsProperty = name;
+      },
+
+      /**
+       * Возвращает свойство данных, в которых находится выборка
        * @returns {String}
+       * @see setTotalProperty
+       * @see totalProperty
        */
       getTotalProperty: function () {
          return this._options.totalProperty;
       },
 
       /**
-       * Возвращает элементы выборки
-       * @param {String} [property] Свойство данных, в которых находятся элементы выборки
-       * @param {Boolean} [observable=false] Вернуть {SBIS3.CONTROLS.Data.Collection.ObservableList}, а не {SBIS3.CONTROLS.Data.Collection.List}
-       * @returns {SBIS3.CONTROLS.Data.Collection.IList}
+       * Устанавливает свойство данных, в которых находится выборка
+       * @param {String} name
+       * @see getTotalProperty
+       * @see totalProperty
        */
-      getAll: function (property, observable) {
+      setTotalProperty: function (name) {
+         this._options.totalProperty = name;
+      },
+
+      /**
+       * Возвращает выборку
+       * @param {String} [property] Свойство данных, в которых находятся элементы выборки. Если не указывать, вернется основная выборка.
+       * @returns {SBIS3.CONTROLS.Data.Collection.RecordSet}
+       * @see itemsProperty
+       */
+      getAll: function (property) {
          this._checkAdapter();
          if (property === undefined) {
             property = this._options.itemsProperty;
          }
-         var adapter = this.getAdapter().forTable(this._getDataProperty(property)),
-             count = adapter.getCount(),
-             items = [];
-         for (var i = 0; i < count; i++) {
-            items.push(
-               this._getModelInstance(
-                  adapter.at(i)
-               )
-            );
-         }
 
-         return observable ? new ObservableList({
-            items: items
-         }) : new List({
-            items: items
+         var items = Di.resolve(this._options.listModule, {
+            rawData: this._getDataProperty(property),
+            adapter: this._options.adapter,
+            model: this._options.model
          });
+         if (!items && !$ws.helpers.instanceOfModule(items, 'SBIS3.CONTROLS.Data.Collection.RecordSet')) {
+            throw new TypeError('SBIS3.CONTROLS.Data.Source.DataSet::getAll(): listModule should extend SBIS3.CONTROLS.Data.Collection.RecordSet');
+         }
+         return items;
       },
 
       /**
        * Возвращает общее число элементов выборки
        * @param {String} [property] Свойство данных, в которых находится общее число элементов выборки
        * @returns {*}
+       * @see totalProperty
        */
       getTotal: function (property) {
          if (property === undefined) {
@@ -181,6 +265,7 @@ define('js!SBIS3.CONTROLS.Data.Source.DataSet', [
        * Возвращает модель
        * @param {String} [property] Свойство данных, в которых находится модель
        * @returns {SBIS3.CONTROLS.Data.Model|undefined}
+       * @see itemsProperty
        */
       getRow: function (property) {
          this._checkAdapter();
@@ -209,6 +294,7 @@ define('js!SBIS3.CONTROLS.Data.Source.DataSet', [
        * Возвращает значение
        * @param {String} [property] Свойство данных, в которых находится значение
        * @returns {*}
+       * @see itemsProperty
        */
       getScalar: function (property) {
          if (property === undefined) {
@@ -221,6 +307,7 @@ define('js!SBIS3.CONTROLS.Data.Source.DataSet', [
        * Проверяет наличие свойства в данных
        * @param {String} property Свойство
        * @returns {Boolean}
+       * @see getProperty
        */
       hasProperty: function (property) {
          return this._getDataProperty(property) !== undefined;
@@ -230,6 +317,7 @@ define('js!SBIS3.CONTROLS.Data.Source.DataSet', [
        * Возвращает значение свойства в данных
        * @param {String} property Свойство
        * @returns {*}
+       * @see hasProperty
        */
       getProperty: function (property) {
          return this._getDataProperty(property);
@@ -238,6 +326,8 @@ define('js!SBIS3.CONTROLS.Data.Source.DataSet', [
       /**
        * Возвращает сырые данные
        * @returns {Object}
+       * @see setRawData
+       * @see rawData
        */
       getRawData: function() {
          return this._options.rawData;
@@ -246,6 +336,8 @@ define('js!SBIS3.CONTROLS.Data.Source.DataSet', [
       /**
        * Устанавливает сырые данные
        * @param rawData {Object} Сырые данные
+       * @see getRawData
+       * @see rawData
        */
       setRawData: function(rawData) {
          this._options.rawData = rawData;
@@ -278,10 +370,9 @@ define('js!SBIS3.CONTROLS.Data.Source.DataSet', [
          if (!this._options.model) {
             throw new Error('Model is not defined');
          }
-         return new this._options.model({
+         return Di.resolve(this._options.model, {
             rawData: rawData,
-            adapter: this.getAdapter(),
-            source: this.getSource(),
+            adapter: this._options.adapter,
             compatibleMode: true
          });
       },
@@ -291,7 +382,7 @@ define('js!SBIS3.CONTROLS.Data.Source.DataSet', [
        * @private
        */
       _checkAdapter: function () {
-         if (!this._options.adapter) {
+         if (!this.getAdapter()) {
             throw new Error('Adapter is not defined');
          }
       }
@@ -300,12 +391,7 @@ define('js!SBIS3.CONTROLS.Data.Source.DataSet', [
 
    });
 
-   $ws.single.ioc.bind('SBIS3.CONTROLS.Data.Source.DataSet', function(config) {
-      return new DataSet(config);
-   });
-   $ws.single.ioc.bind('SBIS3.CONTROLS.Data.Source.DataSetConstructor', function() {
-      return DataSet;
-   });
+   Di.register('source.dataset', DataSet);
 
    return DataSet;
 });
