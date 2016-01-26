@@ -30,7 +30,7 @@ define('js!SBIS3.CONTROLS.Data.Model', [
              */
 
             /**
-             * @cfg {Object.<String, Property>} Описание свойстdв модели. Дополняет/уточняет свойства, уже существующие в сырых данных.
+             * @cfg {Object.<String, Property>} Описание свойств модели. Дополняет/уточняет свойства, уже существующие в сырых данных.
              * @example
              * <pre>
              *    var User = Model.extend({

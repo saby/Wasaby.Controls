@@ -12,7 +12,6 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
     * @class SBIS3.CONTROLS.Data.Collection.RecordSet
     * @extends SBIS3.CONTROLS.Data.Collection.ObservableList
     * @author Мальцев Алексей
-    * @state mutable
     * @public
     */
 
