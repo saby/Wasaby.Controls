@@ -105,28 +105,6 @@ define('js!SBIS3.CONTROLS.Data.Collection.List', [
          }
       },
 
-      concat: function (items, prepend) {
-         var isArray = items instanceof Array;
-         if (!isArray && !$ws.helpers.instanceOfMixin(items, 'SBIS3.CONTROLS.Data.Collection.IEnumerable')) {
-            throw new Error('Invalid argument');
-         }
-         if (!isArray) {
-            items = items.toArray();
-         }
-
-         if (prepend) {
-            Array.prototype.splice.apply(this._items, [0, 0].concat(items));
-         } else {
-            Array.prototype.splice.apply(this._items, [this._items.length, 0].concat(items));
-         }
-
-         this._getServiceEnumerator().reIndex();
-      },
-
-      toArray: function () {
-         return this._items;
-      },
-
       //endregion SBIS3.CONTROLS.Data.Collection.IEnumerable
 
       //region SBIS3.CONTROLS.Data.Collection.IList
