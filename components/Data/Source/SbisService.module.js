@@ -54,7 +54,8 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
              */
 
             /**
-             * @cfg {SBIS3.CONTROLS.Data.Adapter.IAdapter} Адаптер для работы с данными, по умолчанию {@link SBIS3.CONTROLS.Data.Adapter.Sbis}
+             * @cfg {String|SBIS3.CONTROLS.Data.Adapter.IAdapter} Адаптер для работы с данными, по умолчанию {@link SBIS3.CONTROLS.Data.Adapter.Sbis}
+             * @see SBIS3.CONTROLS.Data.Source.ISource#adapter
              * @see getAdapter
              * @see setAdapter
              * @see SBIS3.CONTROLS.Data.Adapter.Sbis
@@ -63,7 +64,8 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
             adapter: 'adapter.sbis',
 
             /**
-             * @cfg {String|Object} Объект, реализующий сетевой протокол для обмена в режиме клиент-сервер, по умолчанию {@link SBIS3.CONTROLS.Data.Source.Provider.SbisBusinessLogic}
+             * @cfg {String|SBIS3.CONTROLS.Data.Source.Provider.IRpc} Объект, реализующий сетевой протокол для обмена в режиме клиент-сервер, по умолчанию {@link SBIS3.CONTROLS.Data.Source.Provider.SbisBusinessLogic}
+             * @see SBIS3.CONTROLS.Data.Source.Rpc#provider
              * @see getProvider
              * @see SBIS3.CONTROLS.Data.Di
              * @example
@@ -73,7 +75,13 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
              *       provider: 'source.provider.sbis-plugin'
              *    });
              * </pre>
-             * @name SBIS3.CONTROLS.Data.Source.ISource#adapter
+             * @example
+             * <pre>
+             *    var dataSource = new SbisService({
+             *       resource: 'Сотрудник',
+             *       provider: new SbisPluginProvider()
+             *    });
+             * </pre>
              */
             provider: 'source.provider.sbis-business-logic',
 
@@ -252,16 +260,16 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
          if (meta && !Object.isEmpty(meta)) {
             args['ДопПоля'] = this.getAdapter().serialize(meta);
          }
-         this._detectIdProperty(model.getRawData());
 
          return this.getProvider().call(
             this._options.updateMethodName,
             args
          ).addCallbacks((function (key) {
-            if (!model.isStored()) {
-               model.set(this._options.idProperty, key);
+            if (key && !model.isStored() && this.getIdProperty()) {
+               model.set(this.getIdProperty(), key);
             }
             model.setStored(true);
+            model.applyChanges();
             return key;
          }).bind(this), function (error) {
             $ws.single.ioc.resolve('ILogger').log('SBIS3.CONTROLS.Data.Source.SbisService::update()', error);

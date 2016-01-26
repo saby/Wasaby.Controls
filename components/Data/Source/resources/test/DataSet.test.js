@@ -4,9 +4,8 @@ define([
    'js!SBIS3.CONTROLS.Data.Source.Memory',
    'js!SBIS3.CONTROLS.Data.Adapter.Json',
    'js!SBIS3.CONTROLS.Data.Model',
-   'js!SBIS3.CONTROLS.Data.Collection.List',
    'js!SBIS3.CONTROLS.Data.Collection.RecordSet'
-], function (DataSet, MemorySource, JsonAdapter, Model, List, RecordSet) {
+], function (DataSet, MemorySource, JsonAdapter, Model, RecordSet) {
       'use strict';
 
       var list;
@@ -89,7 +88,7 @@ define([
             });
 
             it('should return the given list', function () {
-               var MyList = List.extend({}),
+               var MyList = RecordSet.extend({}),
                   ds = new DataSet({
                      listModule: MyList
                   });
@@ -99,7 +98,7 @@ define([
 
          describe('.setListModule()', function () {
             it('should set the model', function () {
-               var MyList = List.extend({}),
+               var MyList = RecordSet.extend({}),
                   ds = new DataSet();
                ds.setListModule(MyList);
                assert.strictEqual(ds.getListModule(), MyList);
@@ -129,35 +128,35 @@ define([
          });
 
          describe('.getAll()', function () {
-            it('should return a list', function () {
-               var ds = new DataSet({
-                  adapter: new JsonAdapter()
-               });
-               assert.instanceOf(ds.getAll(), List);
+            it('should return a recordset', function () {
+               var ds = new DataSet();
+               assert.instanceOf(ds.getAll(), RecordSet);
             });
 
-            it('should return a list of 2 by default', function () {
+            it('should return pass idProperty to the model', function () {
                var ds = new DataSet({
-                  model: Model,
-                  adapter: new JsonAdapter(),
+                  rawData: [{}],
+                  idProperty: 'myprop'
+               });
+               assert.strictEqual(ds.getAll().at(0).getIdProperty(), 'myprop');
+            });
+
+            it('should return a recordset of 2 by default', function () {
+               var ds = new DataSet({
                   rawData: [1, 2]
                });
                assert.equal(ds.getAll().getCount(), 2);
             });
 
-            it('should return a list of 2 from given property', function () {
+            it('should return a recordset of 2 from given property', function () {
                var ds = new DataSet({
-                  model: Model,
-                  adapter: new JsonAdapter(),
                   rawData: {some: {prop: [1, 2]}}
                });
                assert.equal(ds.getAll('some.prop').getCount(), 2);
             });
 
-            it('should return an empty list from undefined property', function () {
+            it('should return an empty recordset from undefined property', function () {
                var ds = new DataSet({
-                  model: Model,
-                  adapter: new JsonAdapter(),
                   rawData: {}
                });
                assert.equal(ds.getAll('some.prop').getCount(), 0);
@@ -166,17 +165,12 @@ define([
 
          describe('.getRow()', function () {
             it('should return a model', function () {
-               var ds = new DataSet({
-                  model: Model,
-                  adapter: new JsonAdapter()
-               });
+               var ds = new DataSet();
                assert.instanceOf(ds.getRow(), Model);
             });
 
             it('should return a model by default', function () {
                var ds = new DataSet({
-                  model: Model,
-                  adapter: new JsonAdapter(),
                   rawData: {a: 1, b: 2}
                });
                assert.strictEqual(ds.getRow().get('a'), 1);
@@ -185,18 +179,14 @@ define([
 
             it('should return a model from given property', function () {
                var ds = new DataSet({
-                  model: Model,
-                  adapter: new JsonAdapter(),
                   rawData: {some: {prop: {a: 1, b: 2}}}
                });
                assert.equal(ds.getRow('some.prop').get('a'), 1);
                assert.equal(ds.getRow('some.prop').get('b'), 2);
             });
 
-            it('should return an empty list from undefined property', function () {
+            it('should return an empty recordset from undefined property', function () {
                var ds = new DataSet({
-                  model: Model,
-                  adapter: new JsonAdapter(),
                   rawData: {}
                });
                assert.instanceOf(ds.getRow('some.prop'), Model);
@@ -205,8 +195,6 @@ define([
             it('should return a first item of recordset', function () {
                var data = [{a: 1}, {a: 2}],
                   ds = new DataSet({
-                  model: Model,
-                  adapter: new JsonAdapter(),
                   rawData: data
                });
                data._type = 'recordset';
@@ -216,8 +204,6 @@ define([
             it('should return undefined from empty recordset', function () {
                var data = [],
                   ds = new DataSet({
-                     model: Model,
-                     adapter: new JsonAdapter(),
                      rawData: data
                   });
                data._type = 'recordset';
@@ -228,7 +214,6 @@ define([
          describe('.getScalar()', function () {
             it('should return a default value', function () {
                var ds = new DataSet({
-                  adapter: new JsonAdapter(),
                   rawData: 'qwe'
                });
                assert.equal(ds.getScalar(), 'qwe');
@@ -236,8 +221,6 @@ define([
 
             it('should return a value from given property', function () {
                var ds = new DataSet({
-                  model: Model,
-                  adapter: new JsonAdapter(),
                   rawData: {some: {propA: 'a', propB: 'b'}}
                });
                assert.equal(ds.getScalar('some.propA'), 'a');
@@ -246,8 +229,6 @@ define([
 
             it('should return undefined from undefined property', function () {
                var ds = new DataSet({
-                  model: Model,
-                  adapter: new JsonAdapter(),
                   rawData: {}
                });
                assert.isUndefined(ds.getScalar('some.prop'));
@@ -257,7 +238,6 @@ define([
          describe('.hasProperty()', function () {
             it('should return true for defined property', function () {
                var ds = new DataSet({
-                  adapter: new JsonAdapter(),
                   rawData: {a: {b: {c: {}}}}
                });
                assert.isTrue(ds.hasProperty('a'));
@@ -269,7 +249,6 @@ define([
 
             it('should return false for undefined property', function () {
                var ds = new DataSet({
-                  adapter: new JsonAdapter(),
                   rawData: {a: {b: {c: {}}}}
                });
                assert.isFalse(ds.hasProperty('e'));
@@ -282,9 +261,8 @@ define([
             it('should return defined property', function () {
                var data = {a: {b: {c: {}}}},
                   ds = new DataSet({
-                  adapter: new JsonAdapter(),
-                  rawData: data
-               });
+                     rawData: data
+                  });
                assert.strictEqual(ds.getProperty('a'), data.a);
                assert.strictEqual(ds.getProperty('a.b'), data.a.b);
                assert.strictEqual(ds.getProperty('a.b.c'), data.a.b.c);
@@ -294,7 +272,6 @@ define([
 
             it('should return undefined for undefined property', function () {
                var ds = new DataSet({
-                  adapter: new JsonAdapter(),
                   rawData: {a: {b: {c: {}}}}
                });
                assert.isUndefined(ds.getProperty('e'));
@@ -307,7 +284,6 @@ define([
             it('should return raw data', function () {
                var data = {a: {b: {c: {}}}},
                   ds = new DataSet({
-                     adapter: new JsonAdapter(),
                      rawData: data
                   });
                assert.strictEqual(ds.getRawData(), data);
@@ -317,9 +293,7 @@ define([
          describe('.setRawData()', function () {
             it('should set raw data', function () {
                var data = {a: {b: {c: {}}}},
-                  ds = new DataSet({
-                     adapter: new JsonAdapter()
-                  });
+                  ds = new DataSet();
                ds.setRawData(data);
                assert.strictEqual(ds.getRawData(), data);
             });

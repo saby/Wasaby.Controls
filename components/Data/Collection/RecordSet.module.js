@@ -12,7 +12,6 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
     * @class SBIS3.CONTROLS.Data.Collection.RecordSet
     * @extends SBIS3.CONTROLS.Data.Collection.ObservableList
     * @author Мальцев Алексей
-    * @state mutable
     * @public
     */
 
@@ -246,6 +245,9 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
        */
       setIdProperty: function (name) {
          this._options.idProperty = name;
+         this.each((function(item) {
+            item.setIdProperty(this._options.idProperty);
+         }).bind(this));
       },
 
       /**
@@ -527,7 +529,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
       },
 
       _reindexTree: function (field) {
-         this._getServiceEnumerator().reIndex();
+         this._reindex();
 
          this._indexTree = {};
          var self = this,

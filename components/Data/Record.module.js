@@ -29,6 +29,8 @@ define('js!SBIS3.CONTROLS.Data.Record', [
          _options: {
             /**
              * @cfg {Object} Данные в "сыром" виде
+             * @see getRawData
+             * @see setRawData
              * @example
              * <pre>
              *    var user = new Record({
@@ -41,21 +43,26 @@ define('js!SBIS3.CONTROLS.Data.Record', [
              *    user.get('id');//5
              *    user.get('firstName');//John
              * </pre>
-             * @see getRawData
-             * @see setRawData
              */
             rawData: null,
 
             /**
              * @cfg {String|SBIS3.CONTROLS.Data.Adapter.IAdapter} Адаптер для работы с данными в "сыром" виде, по умолчанию {@link SBIS3.CONTROLS.Data.Adapter.Json}
+             * @see getAdapter
+             * @see setAdapter
+             * @see SBIS3.CONTROLS.Data.Di
              * @example
              * <pre>
              *    var user = new Record({
              *       adapter: 'adapter.sbis'
              *    });
              * </pre>
-             * @see getAdapter
-             * @see setAdapter
+             * @example
+             * <pre>
+             *    var user = new Record({
+             *       adapter: new SbisAdapter()
+             *    });
+             * </pre>
              */
             adapter: ''
          },
