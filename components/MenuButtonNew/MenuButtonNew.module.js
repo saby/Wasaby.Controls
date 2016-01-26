@@ -1,9 +1,9 @@
 /*global define, $, $ws*/
 define('js!SBIS3.CONTROLS.MenuButtonNew', ['js!SBIS3.CONTROLS.Button', 'js!SBIS3.CONTROLS.ContextMenuNew', 'js!SBIS3.CONTROLS.PickerMixin',
-      'js!SBIS3.CONTROLS.ListControlMixin', 'js!SBIS3.CONTROLS.MenuButtonNewMixin', 'html!SBIS3.CONTROLS.MenuButton',
+      'js!SBIS3.CONTROLS.ListControlMixin', 'js!SBIS3.CONTROLS.MenuButtonNewMixin',
       'js!SBIS3.CONTROLS.HierarchyControlMixin','js!SBIS3.CONTROLS.TreeControlMixin', 'js!SBIS3.CONTROLS.Data.Utils','js!SBIS3.CONTROLS.MenuButtonNewView'],
    function(Button, ContextMenu, PickerMixin,
-      ListControlMixin, MenuButtonMixin, dotTplFn,
+      ListControlMixin, MenuButtonMixin,
       HierarchyControlMixin, TreeControlMixin, DataUtils, MenuButtonView) {
 
    'use strict';
@@ -50,7 +50,6 @@ define('js!SBIS3.CONTROLS.MenuButtonNew', ['js!SBIS3.CONTROLS.Button', 'js!SBIS3
     */
 
    var MenuButton = Button.extend( [PickerMixin, ListControlMixin, MenuButtonMixin, HierarchyControlMixin, TreeControlMixin], /** @lends SBIS3.CONTROLS.MenuButtonNew.prototype */ {
-      _dotTplFn: dotTplFn,
       $protected: {
          _header: null,
 
