@@ -259,7 +259,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
 
       _prepareConfig : function(sourceOpt, itemsOpt) {
          var
-            keyField = this._options.keyField;
+            keyField = this._options.keyField
          if (!keyField) {
             $ws.single.ioc.resolve('ILogger').error('Option keyField is required');
          }
