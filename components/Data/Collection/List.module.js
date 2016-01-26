@@ -174,7 +174,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.List', [
 
       getIndex: function (item) {
          if ($ws.helpers.instanceOfMixin(item, 'SBIS3.CONTROLS.Data.IHashable')) {
-            return this.getIndexByValue('hash', item.getHash());
+            return this._getItemIndexByHash(item.getHash());
          }
 
          return Array.indexOf(this._items, item);
@@ -277,6 +277,23 @@ define('js!SBIS3.CONTROLS.Data.Collection.List', [
          }
          return this._hashIndex.hasOwnProperty(hash) ? this._hashIndex[hash] : -1;
       },
+
+      _createHashIndex: function () {
+         var self = this,
+            position = 0;
+         self._hashIndex = {};
+         this.each(function (item) {
+            if ($ws.helpers.instanceOfMixin(item, 'SBIS3.CONTROLS.Data.IHashable')) {
+               self._hashIndex[item.getHash()] = position;
+            }
+            position++;
+         });
+      },
+
+      _reindex: function () {
+         this._hashIndex = undefined;
+         this._getServiceEnumerator().reIndex();
+      }
 
       _createHashIndex: function () {
          var self = this;
