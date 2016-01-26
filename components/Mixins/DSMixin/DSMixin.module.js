@@ -240,14 +240,12 @@ define('js!SBIS3.CONTROLS.DSMixin', [
 
       _prepareConfig : function(sourceOpt, itemsOpt) {
          var
-            keyField = this._options.keyField
+            keyField = this._options.keyField;
          if (!keyField) {
             $ws.single.ioc.resolve('ILogger').error('Option keyField is required');
          }
          if (sourceOpt) {
             this._dataSource = this._prepareSource(sourceOpt);
-            this._items = this._convertDataSourceToItems(this._dataSource);
-            this._createDefaultProjection(this._items);
          }
          else if (itemsOpt) {
             if ($ws.helpers.instanceOfModule(itemsOpt, 'SBIS3.CONTROLS.Data.Projection')) {
@@ -263,9 +261,8 @@ define('js!SBIS3.CONTROLS.DSMixin', [
                this._items = this._convertDataSourceToItems(this._dataSource);
                this._createDefaultProjection(this._items);
             }
+            this._setItemsEventHandlers();
          }
-
-         this._setItemsEventHandlers();
       },
       after : {
          _modifyOptions: function (opts) {
@@ -440,18 +437,26 @@ define('js!SBIS3.CONTROLS.DSMixin', [
 
          if (this._dataSource){
             this._toggleIndicator(true);
-	         def = this._callQuery(this._options.filter, this.getSorting(), this._offset, this._limit).addCallback($ws.helpers.forAliveOnly(function (dataSet) {
+	         def = this._callQuery(this._options.filter, this.getSorting(), this._offset, this._limit).addCallback($ws.helpers.forAliveOnly(function (list) {
 	            self._toggleIndicator(false);
 	            self._loader = null;//Обнулили без проверки. И так знаем, что есть и загрузили
 
                //TODO вот тут получится рассинхронизация данных, если кто-то начнет руками менять items
-               self._dataSet = dataSet;
-	            self._items.assign(dataSet);
+               self._dataSet = list;
+
+               if (self._items) {
+                  self._items.assign(list);
+               }
+               else {
+                  self._items = list;
+                  self._createDefaultProjection(self._items);
+                  self._setItemsEventHandlers();
+               }
 
                self._dataLoadedCallback();
-	            self._notify('onDataLoad', dataSet);
+	            self._notify('onDataLoad', list);
 	            //self._notify('onBeforeRedraw');
-               return dataSet;
+               return list;
 	         }, self)).addErrback($ws.helpers.forAliveOnly(function(error){
 	            if (!error.canceled) {
 	               self._toggleIndicator(false);
