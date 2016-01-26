@@ -1,7 +1,7 @@
 <!--
 т.к. иконка зависела от высоты controls-Button__content, высота которого менялась для 1 или 2 строк. Принято решение разместить иконку и текст прямо в button.
 -->
-<button class="controls-Button{{?it.primary}} controls-Button__primary{{?}}{{?it.checked===true}} controls-Checked__checked{{?}}">
+<button class="controls-Button{{?it.primary}} controls-Button__primary{{?}}{{?it.checked===true}} controls-Checked__checked{{?}}" {{?it.tooltip}} title="{{=it.tooltip}}"{{?}}>
    {{?it.icon}}
        <i class="controls-Button__icon js-controls-Button__icon {{=it._iconClass}}"></i>
    {{?}}
