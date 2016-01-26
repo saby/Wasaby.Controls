@@ -82,9 +82,7 @@ define('js!SBIS3.CONTROLS.Data.Source.Base', [
        * @private
        */
       _getIdPropertyByData: function(data) {
-         if (!this._options.idProperty) {
-            this._options.idProperty = this.getAdapter().forRecord(data).getKeyField();
-         }
+         this.getAdapter().forRecord(data).getKeyField();
       },
 
       /**
