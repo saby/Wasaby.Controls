@@ -1,7 +1,8 @@
 /* global define, beforeEach, afterEach, describe, context, it, assert, $ws */
 define(
-   ['js!SBIS3.CONTROLS.Data.Collection.List'],
-   function (List) {
+   ['js!SBIS3.CONTROLS.Data.Collection.List',
+   'js!SBIS3.CONTROLS.Data.Model'],
+   function (List, Model) {
       'use strict';
 
       describe('SBIS3.CONTROLS.Data.Collection.List', function() {
@@ -542,6 +543,50 @@ define(
                assert.strictEqual(-1, list.getIndex(''));
                assert.strictEqual(-1, list.getIndex(0));
                assert.strictEqual(-1, list.getIndex(false));
+            });
+
+            it('should return  an index of given hashable item', function() {
+               var newItems = [];
+               $ws.helpers.forEach(items, function(item){
+                  newItems.push(new Model({
+                     idProperty:'Ид',
+                     rawData: item
+                  }));
+               });
+
+               var list = new List({
+                  items: newItems
+               });
+
+               for (var i = 0; i < newItems.length; i++) {
+                  assert.strictEqual(i, list.getIndex(newItems[i]));
+               }
+
+               list.removeAt(0);
+               for (var i = 0; i < newItems.length; i++) {
+                  assert.strictEqual(i, list.getIndex(newItems[i]), 'after reindex');
+               }
+            });
+
+            it('should return  an -1 for undefined hashable item', function() {
+               var newItems = [];
+               $ws.helpers.forEach(items, function(item){
+                  newItems.push(new Model({
+                     idProperty: 'Ид',
+                     rawData: item
+                  }));
+               });
+               var list = new List({
+                  items: newItems
+               });
+               assert.strictEqual(-1, list.getIndex(new Model({
+                  idProperty: 'Ид',
+                  rawData: {'Ид': 100500}
+               })));
+               assert.strictEqual(-1, list.getIndex(new Model({
+                  idProperty: 'Ид',
+                  rawData: items[1]
+               })));
             });
          });
 
