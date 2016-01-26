@@ -455,62 +455,41 @@ define('js!SBIS3.CONTROLS.DSMixin', [
              this.setSorting(sorting, true);
           }
          this._offset = offsetChanged ? offset : this._offset;
-         this._limit = limitChanged ? limit : this._limit;
+          this._limit = limitChanged ? limit : this._limit;
 
-          if (this._dataSource){
+          if (this._dataSource) {
              this._toggleIndicator(true);
              def = this._callQuery(this._options.filter, this.getSorting(), this._offset, this._limit)
-                 .addCallback($ws.helpers.forAliveOnly(function (dataSet) {
-                    self._toggleIndicator(false);
-                    self._loader = null;//Обнулили без проверки. И так знаем, что есть и загрузили
+                .addCallback($ws.helpers.forAliveOnly(function (dataSet) {
+                   self._toggleIndicator(false);
+                   self._loader = null;//Обнулили без проверки. И так знаем, что есть и загрузили
 
-                    //TODO вот тут получится рассинхронизация данных, если кто-то начнет руками менять items
-                    self._dataSet = dataSet;
-                    self._items.assign(dataSet);
+                   //TODO вот тут получится рассинхронизация данных, если кто-то начнет руками менять items
+                   self._dataSet = dataSet;
+                   self._items.assign(dataSet);
 
-                    self._dataLoadedCallback();
-                    self._notify('onDataLoad', dataSet);
-                    return dataSet;
-                 }, self))
-                 .addErrback($ws.helpers.forAliveOnly(function(error){
-                    if (!error.canceled) {
-                       self._toggleIndicator(false);
+                   self._dataLoadedCallback();
+                   self._notify('onDataLoad', dataSet);
+                   //self._notify('onBeforeRedraw');
+                   return dataSet;
+                }, self))
+                .addErrback($ws.helpers.forAliveOnly(function (error) {
+                   if (!error.canceled) {
+                      self._toggleIndicator(false);
 
-                       if(self._notify('onDataLoadError', error) !== true) {
-                          $ws.helpers.message(error.message.toString().replace('Error: ', ''));
-                       }
-                    }
-                    return error;
-                 }, self));
+                      if (self._notify('onDataLoadError', error) !== true) {
+                         $ws.helpers.message(error.message.toString().replace('Error: ', ''));
+                      }
+                   }
+                   return error;
+                }, self));
              this._loader = def;
           } else {
              def = new $ws.proto.Deferred();
              def.callback();
           }
 
-               //TODO вот тут получится рассинхронизация данных, если кто-то начнет руками менять items
-               self._dataSet = dataSet;
-	            self._items.assign(dataSet);
-
-               self._dataLoadedCallback();
-	            self._notify('onDataLoad', dataSet);
-	            //self._notify('onBeforeRedraw');
-               return dataSet;
-	         }, self)).addErrback($ws.helpers.forAliveOnly(function(error){
-	            if (!error.canceled) {
-	               self._toggleIndicator(false);
-	               $ws.helpers.message(error.message.toString().replace('Error: ', ''));
-	            }
-	            return error;
-	         }, self));
-            this._loader = def;
-         }
-         else {
-            def = new $ws.proto.Deferred();
-            def.callback();
-         }
-
-         this._notifyOnPropertyChanged('filter');
+          this._notifyOnPropertyChanged('filter');
          this._notifyOnPropertyChanged('sorting');
          this._notifyOnPropertyChanged('offset');
          this._notifyOnPropertyChanged('limit');
