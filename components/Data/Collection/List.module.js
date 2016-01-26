@@ -293,21 +293,6 @@ define('js!SBIS3.CONTROLS.Data.Collection.List', [
       _reindex: function () {
          this._hashIndex = undefined;
          this._getServiceEnumerator().reIndex();
-      }
-
-      _createHashIndex: function () {
-         var self = this;
-         self._hashIndex = {};
-         this.each(function (item, position) {
-            if ($ws.helpers.instanceOfMixin(item, 'SBIS3.CONTROLS.Data.IHashable')) {
-               self._hashIndex[item.getHash()] = position;
-            }
-         });
-      },
-
-      _reindex: function () {
-         this._hashIndex = undefined;
-         this._getServiceEnumerator().reIndex();
       },
 
       /**
