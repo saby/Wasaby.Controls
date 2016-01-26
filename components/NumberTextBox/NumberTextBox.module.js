@@ -159,10 +159,24 @@ define('js!SBIS3.CONTROLS.NumberTextBox', ['js!SBIS3.CONTROLS.TextBox', 'html!SB
             }
          });
 
+         this._inputField.bind('blur', function(){
+            // Прятать нулевую дробную часть при потере фокуса
+            if (self._options.hideEmptyDecimals) {
+               self._options.text = self._formatText(self._options.text, true);
+               $(this).val(self._options.text);
+            }
+         }).bind('focus', function(){
+            // Показывать нулевую дробную часть при фокусировки не зависимо от опции hideEmptyDecimals
+            if (self._options.hideEmptyDecimals) {
+               self._options.text = self._formatText(self._options.text);
+               $(this).val(self._options.text);
+            }
+         });
+
          if (this._options.numericValue) {
             this._options.text = this._options.numericValue + '';
          }
-         this._options.text = this._formatText(this._options.text);
+         this._options.text = this._formatText(this._options.text, this._options.hideEmptyDecimals);
          this._inputField.val(this._options.text);
       },
 
@@ -226,7 +240,7 @@ define('js!SBIS3.CONTROLS.NumberTextBox', ['js!SBIS3.CONTROLS.TextBox', 'html!SB
             decimals = 0;
             value = parseInt(value.replace(/\s/g, ''));
          } else {
-            decimals =this._options.decimals;
+            decimals = this._options.decimals;
             value = parseFloat(value.replace(/\s/g, ''));
          }
          value = $ws.render.defaultColumn.numeric(
@@ -237,9 +251,12 @@ define('js!SBIS3.CONTROLS.NumberTextBox', ['js!SBIS3.CONTROLS.TextBox', 'html!SB
             this._options.onlyPositive,
             this._options.maxLength
          );
-         if (this._options.hideEmptyDecimals && !(value.indexOf('.') == -1) && fromFocusOut ){
-            while (value[value.length - 1] == '0'){
+         if (this._options.hideEmptyDecimals && (value && value.indexOf('.') != -1) && fromFocusOut ){
+            while (value[value.length - 1] == '0' || value[value.length - 1] == '.'){
                value = value.substr(0, value.length - 1);
+               if (value.indexOf('.') == -1) { // удаляем только дробную часть
+                  break;
+               }
             }
          }
          return value || '';
@@ -273,11 +290,11 @@ define('js!SBIS3.CONTROLS.NumberTextBox', ['js!SBIS3.CONTROLS.TextBox', 'html!SB
             return true;
          }
          var keyCode = (event.which >= 96 && event.which <= 105) ? event.which - 48 : event.which;
-         if(keyCode == 190 || keyCode == 110/*точка*/){
+         if(keyCode == 190 || keyCode == 110){ /*точка*/
             this._dotHandler(event);
             return;
          }
-         if(keyCode == 189 /*минус*/){
+         if(keyCode == 189 || keyCode == 109){ /*минус*/
             this._toggleMinus();
             event.preventDefault();
          }
