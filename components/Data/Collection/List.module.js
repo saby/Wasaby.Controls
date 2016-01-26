@@ -262,12 +262,14 @@ define('js!SBIS3.CONTROLS.Data.Collection.List', [
       },
 
       _createHashIndex: function () {
-         var self = this;
+         var self = this,
+            position = 0;
          self._hashIndex = {};
-         this.each(function (item, position) {
+         this.each(function (item) {
             if ($ws.helpers.instanceOfMixin(item, 'SBIS3.CONTROLS.Data.IHashable')) {
                self._hashIndex[item.getHash()] = position;
             }
+            position++;
          });
       },
 
