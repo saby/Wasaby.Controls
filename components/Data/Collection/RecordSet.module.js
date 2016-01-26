@@ -245,6 +245,9 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
        */
       setIdProperty: function (name) {
          this._options.idProperty = name;
+         this.each((function(item) {
+            item.setIdProperty(this._options.idProperty);
+         }).bind(this));
       },
 
       /**
