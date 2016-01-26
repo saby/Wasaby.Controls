@@ -1137,7 +1137,8 @@ define('js!SBIS3.CONTROLS.ListView',
           *  Общая проверка и загрузка данных для всех событий по скроллу
           */
          _loadChecked: function (result) {
-            if (result) {
+            //Важно, чтобы датасет уже был готов к моменту, когда мы попытаемся грузить данные
+            if (this._dataSet && result) {
                this._nextLoad();
             }
          },
