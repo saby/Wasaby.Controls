@@ -2,7 +2,7 @@ define('js!SBIS3.CONTROLS.Demo.MyMenuIconNew',
     ['js!SBIS3.CORE.CompoundControl',
      'html!SBIS3.CONTROLS.Demo.MyMenuIconNew',
      'css!SBIS3.CONTROLS.Demo.MyMenuIconNew',
-     'js!SBIS3.CONTROLS.MyMenuIconNew'],
+     'js!SBIS3.CONTROLS.MenuIconNew'],
     function(CompoundControl, dotTplFn) {
    /**
     * SBIS3.CONTROLS.Demo.MyMenuIcon
