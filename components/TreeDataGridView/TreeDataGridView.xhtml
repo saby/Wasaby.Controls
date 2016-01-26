@@ -8,7 +8,7 @@
          </div>
       </div>
    </div>
-   {{?it.infiniteScroll && it.infiniteScrollDirection !== 'bottom'}}
+   {{?it.infiniteScroll === 'up'}}
       <div class="controls-ListView-scrollIndicator ws-hidden"></div>
    {{?}}
    <table class="controls-DataGridView__table">
@@ -27,7 +27,7 @@
    {{? it.showPaging}}
       <div class="controls-TreePager-container"></div>
    {{?}}
-   {{?it.infiniteScroll && it.infiniteScrollDirection !== 'top'}}
+   {{?it.infiniteScroll === 'down'}}
       <div class="controls-ListView-scrollIndicator ws-hidden"></div>
    {{?}}
    {{?it.footerTpl}}
