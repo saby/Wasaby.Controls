@@ -221,14 +221,7 @@ define('js!SBIS3.CONTROLS.NumberTextBox', ['js!SBIS3.CONTROLS.TextBox', 'html!SB
       },
 
       _formatText: function(value, fromFocusOut){
-         var decimals;
-         if (this._options.onlyInteger){
-            decimals = 0;
-            value = parseInt(value.replace(/\s/g, ''));
-         } else {
-            decimals =this._options.decimals;
-            value = parseFloat(value.replace(/\s/g, ''));
-         }
+         var decimals = this._options.onlyInteger ? 0 : this._options.decimals;
          value = $ws.render.defaultColumn.numeric(
             value,
             this._options.integers,
