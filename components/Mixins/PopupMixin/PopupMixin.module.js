@@ -159,6 +159,7 @@ define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManag
       },
       
       //Подписка на изменение состояния таргета
+      //TODO: Нужно отписываться от канала если попап скрыт
       _subscribeTargetMove: function(){
          if (this._targetChanges){
             this._targetChanges.unsubscribe('onMove', this._onTargetMove);
