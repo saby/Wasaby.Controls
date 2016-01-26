@@ -420,11 +420,11 @@ define(
             if (DateUtil.isValidDate(this._options.date)) {
                //если в текст ввели невалидную дату, например 05.14 (14-месяц) и произошла корректировка
                this._options.text = this._getTextByDate(this._options.date);
-               this._notifyOnPropertyChanged('date', this._options.date);
-               this._notify('onDateChange', this._options.date);
             } else {
                this._options.date = null;
             }
+            this._notifyOnPropertyChanged('date', this._options.date);
+            this._notify('onDateChange', this._options.date);
          }
       },
 

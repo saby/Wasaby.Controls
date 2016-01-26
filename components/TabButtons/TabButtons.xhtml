@@ -1,4 +1,4 @@
-<div class="controls-TabButtons {{? it.items}}hasItems{{?}}">
+<div class="controls-TabButtons {{? it.items && it.items.length}}hasItems{{?}} {{? it.keyField}}hasKeyField{{?}}">
     <div class="controls-TabButtons__leftContainer">
         {{~it.items :item:index}}
             {{? item.align == 'left'}}
