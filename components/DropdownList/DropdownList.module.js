@@ -102,7 +102,7 @@ define('js!SBIS3.CONTROLS.DropdownList',
             var self = this,
                 pickerContainer = this._getPickerContainer(),
                 header = pickerContainer.find('.controls-DropdownList__header');
-            header.append(this._container.clone().removeAttr('style'));
+            header.append(this._container.clone().removeAttr('style').removeClass('ws-hidden'));
             this._setVariables();
             this.reload();
             this._bindItemSelect();
@@ -200,8 +200,12 @@ define('js!SBIS3.CONTROLS.DropdownList',
             }
 
          },
-         showPicker: function() {
+         showPicker: function(ev) {
             if (this.isEnabled()) {
+               //Если мы не в режиме хоевера, то клик по крестику нужно пропустить до его обработчика
+               if (this._options.mode !== 'hover' && $(ev.target).hasClass('controls-DropdownList__crossIcon')) {
+                  return true;
+               }
                var items = this._getPickerContainer().find('.controls-DropdownList__item');
                this._updateCurrentSelection();
                this._hideAllowed = true;
@@ -259,6 +263,10 @@ define('js!SBIS3.CONTROLS.DropdownList',
 
             this._text = this._container.find('.controls-DropdownList__text');
             this._resetButton = this._container.find('.controls-DropdownList__crossIcon');
+            this._resetButton.click(function() {
+               self.removeItemsSelectionAll();
+               self.hidePicker();
+            });
             this._pickerText  = pickerContainer.find('.controls-DropdownList__text');
             this._pickerResetButton = pickerContainer.find('.controls-DropdownList__crossIcon');
             this._pickerListContainer = pickerContainer.find('.controls-DropdownList__list');

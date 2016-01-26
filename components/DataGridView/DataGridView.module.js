@@ -73,7 +73,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
              * Необходимо указать настройки декораторов разметки, если требуется
              * Пример
              * <pre>
-             *    {{=it.decorators.applyIf(it.value, {
+             *    {{=it.decorators.applyOnly(it.value, {
              *      highlight: it.highlight,
              *      ladder: it.field
              *    })}}
@@ -192,7 +192,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
             }
             value = MarkupTransformer((cellTpl)(tplOptions));
          } else {
-            value = this._decorators.applyIf(
+            value = this._decorators.applyOnly(
                value === undefined || value === null ? '' : $ws.helpers.escapeHtml(value), {
                   highlight: column.highlight,
                   ladder: {
