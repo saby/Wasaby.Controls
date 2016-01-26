@@ -4,7 +4,7 @@
 define('js!SBIS3.CONTROLS.Image.CropPlugin',
    [
       'js!SBIS3.CONTROLS.Data.Source.SbisService',
-      "is!browser?js!SBIS3.CORE.FieldImage/resources/ext/jcrop/jquery.Jcrop.min",
+      "browser!js!SBIS3.CORE.FieldImage/resources/ext/jcrop/jquery.Jcrop.min",
       "css!SBIS3.CORE.FieldImage/resources/ext/jcrop/jquery.Jcrop.min"
    ], function(SbisService) {
       'use strict';
