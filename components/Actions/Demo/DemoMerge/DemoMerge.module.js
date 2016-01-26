@@ -68,12 +68,5 @@ function(CompoundControl, dotTplFn, SbisServiceSource) {
       }
    });
 
-   
-   
-   
-   moduleClass.webPage = {
-      outFileName: "index", 
-      htmlTemplate: "/Theme/Shop.html"
-   };
    return moduleClass;
 });
