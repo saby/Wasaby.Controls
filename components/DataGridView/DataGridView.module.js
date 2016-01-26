@@ -7,7 +7,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
       'html!SBIS3.CONTROLS.DataGridView/resources/headTpl',
       'js!SBIS3.CORE.MarkupTransformer',
       'js!SBIS3.CONTROLS.DragAndDropMixin',
-      'is!browser?html!SBIS3.CONTROLS.DataGridView/resources/DataGridViewGroupBy',
+      'browser!html!SBIS3.CONTROLS.DataGridView/resources/DataGridViewGroupBy',
       'js!SBIS3.CONTROLS.Utils.HtmlDecorators/LadderDecorator',
       'js!SBIS3.CONTROLS.Utils.TemplateUtil'
    ],
