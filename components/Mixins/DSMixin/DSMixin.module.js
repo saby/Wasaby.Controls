@@ -127,7 +127,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
               * @see getDataSet
               * @see hierField
               */
-            items: [],
+            items: null,
             /**
              * @cfg {DataSource|SBIS3.CONTROLS.Data.Source.ISource|Function} Набор исходных данных, по которому строится отображение
              * @noShow
@@ -451,6 +451,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
                   self._items = list;
                   self._createDefaultProjection(self._items);
                   self._setItemsEventHandlers();
+                  self.redraw();
                }
 
                self._dataLoadedCallback();
