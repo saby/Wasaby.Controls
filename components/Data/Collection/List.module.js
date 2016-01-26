@@ -105,6 +105,28 @@ define('js!SBIS3.CONTROLS.Data.Collection.List', [
          }
       },
 
+      concat: function (items, prepend) {
+         var isArray = items instanceof Array;
+         if (!isArray && !$ws.helpers.instanceOfMixin(items, 'SBIS3.CONTROLS.Data.Collection.IEnumerable')) {
+            throw new Error('Invalid argument');
+         }
+         if (!isArray) {
+            items = items.toArray();
+         }
+
+         if (prepend) {
+            Array.prototype.splice.apply(this._items, [0, 0].concat(items));
+         } else {
+            Array.prototype.splice.apply(this._items, [this._items.length, 0].concat(items));
+         }
+
+         this._getServiceEnumerator().reIndex();
+      },
+
+      toArray: function () {
+         return this._items;
+      },
+
       //endregion SBIS3.CONTROLS.Data.Collection.IEnumerable
 
       //region SBIS3.CONTROLS.Data.Collection.IList
@@ -174,7 +196,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.List', [
 
       getIndex: function (item) {
          if ($ws.helpers.instanceOfMixin(item, 'SBIS3.CONTROLS.Data.IHashable')) {
-            return this.getIndexByValue('hash', item.getHash());
+            return this._getItemIndexByHash(item.getHash());
          }
 
          return Array.indexOf(this._items, item);
@@ -279,12 +301,14 @@ define('js!SBIS3.CONTROLS.Data.Collection.List', [
       },
 
       _createHashIndex: function () {
-         var self = this;
+         var self = this,
+            position = 0;
          self._hashIndex = {};
-         this.each(function (item, position) {
+         this.each(function (item) {
             if ($ws.helpers.instanceOfMixin(item, 'SBIS3.CONTROLS.Data.IHashable')) {
                self._hashIndex[item.getHash()] = position;
             }
+            position++;
          });
       },
 
