@@ -51,8 +51,7 @@ define('js!SBIS3.CONTROLS.ChooserMixin', [
                isStack: true,
                autoHide: true,
                autoCloseOnHide: true,
-               overlay: true,
-               showDelay: 300
+               overlay: true
             },
             type: {
                old: {
