@@ -500,8 +500,8 @@ define([
                               if (!success) {
                                  throw new Error('Unsuccessful update');
                               }
-                              if (!model.isChanged()) {
-                                 throw new Error('The model should stay changed');
+                              if (model.isChanged()) {
+                                 throw new Error('The model should become unchanged');
                               }
                               if (model.get('Фамилия') !== 'Петров') {
                                  throw new Error('The model contains wrong data');
@@ -527,8 +527,8 @@ define([
                      if (!model.isStored()) {
                         throw new Error('The model should become stored');
                      }
-                     if (!model.isChanged()) {
-                        throw new Error('The model should stay changed');
+                     if (model.isChanged()) {
+                        throw new Error('The model should become unchanged');
                      }
                      if (!model.getId()) {
                         throw new Error('The model should become having a id');
@@ -542,7 +542,8 @@ define([
                context('and the model was not stored', function () {
                   it('should create the model by 1st way', function (done) {
                      var service = new SbisService({
-                        resource: 'Товар'
+                        resource: 'Товар',
+                        idProperty: 'Ид'
                      });
                      service.create().addCallbacks(function (model) {
                         service.update(model).addCallbacks(function (success) {
@@ -557,7 +558,8 @@ define([
 
                   it('should create the model by 2nd way', function (done) {
                      var service = new SbisService({
-                           resource: 'Товар'
+                           resource: 'Товар',
+                           idProperty: 'Ид'
                         }),
                         model = getSampleModel();
 
