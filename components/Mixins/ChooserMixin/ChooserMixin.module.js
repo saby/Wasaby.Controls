@@ -6,7 +6,7 @@ define('js!SBIS3.CONTROLS.ChooserMixin', [
    'js!SBIS3.CONTROLS.Data.Adapter.Sbis'
 ], function(Model, SbisAdapter) {
    /**
-    * Миксин, добавляющий поведение выбора из окна выбора.
+    * Миксин, добавляющий интерфейс для открытия окна выбора.
     * @mixin SBIS3.CONTROLS.ChooserMixin
     * @public
     * @author Крайнов Дмитрий Олегович
