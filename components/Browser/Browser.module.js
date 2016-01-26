@@ -43,6 +43,7 @@ define('js!SBIS3.CONTROLS.Browser', [
          _searchForm: null,
          _operationsPanel: null,
          _filterButton: null,
+         _fastDataFilter: null,
 
          _hierMode : false,
          _componentBinder : null,
@@ -119,17 +120,20 @@ define('js!SBIS3.CONTROLS.Browser', [
          }
 
          this._filterButton = this._getFilterButton();
+         this._fastDataFilter = this._getFastDataFilter();
          if (this._filterButton) {
             if(this._options.historyId) {
                this._componentBinder.bindFilterHistory(
                    this._filterButton,
-                   this._getFastDataFilter(),
+                   this._fastDataFilter,
                    this._options.historyId,
                    HistoryController,
                    this);
             } else {
                this._notifyOnFiltersReady();
             }
+         } else {
+            this._notifyOnFiltersReady();
          }
       },
 
@@ -143,6 +147,7 @@ define('js!SBIS3.CONTROLS.Browser', [
       },
 
       _notifyOnFiltersReady: function() {
+         this._fastDataFilter && this._fastDataFilter.getContainer().removeClass('ws-hidden');
          this._notify('onFiltersReady');
       },
 
