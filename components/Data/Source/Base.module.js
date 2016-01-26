@@ -3,6 +3,8 @@ define('js!SBIS3.CONTROLS.Data.Source.Base', [
    'js!SBIS3.CONTROLS.Data.Source.ISource',
    'js!SBIS3.CONTROLS.Data.Source.DataSet',
    'js!SBIS3.CONTROLS.Data.Di',
+   'js!SBIS3.CONTROLS.Data.Model',
+   'js!SBIS3.CONTROLS.Data.Collection.RecordSet',
    'js!SBIS3.CONTROLS.Data.Adapter.Json'
 ], function (ISource, DataSet, Di) {
    'use strict';
@@ -75,14 +77,12 @@ define('js!SBIS3.CONTROLS.Data.Source.Base', [
       //region Protected methods
 
       /**
-       * Определяет название свойства с первичным ключем, если оно не было задано
+       * Определяет название свойства с первичным ключем по данным
        * @param {*} data Сырые данные
        * @private
        */
-      _detectIdProperty: function(data) {
-         if (!this._options.idProperty) {
-            this._options.idProperty = this.getAdapter().forRecord(data).getKeyField();
-         }
+      _getIdPropertyByData: function(data) {
+         this.getAdapter().forRecord(data).getKeyField();
       },
 
       /**
@@ -92,17 +92,15 @@ define('js!SBIS3.CONTROLS.Data.Source.Base', [
        * @private
        */
       _getModelInstance: function (data) {
-         this._detectIdProperty(data);
-
          return Di.resolve(this._options.model, {
             rawData: data,
             adapter: this.getAdapter(),
-            idProperty: this.getIdProperty()
+            idProperty: this.getIdProperty() || this._getIdPropertyByData(data)
          });
       },
 
       /**
-       * Создает новый экзепляр dataSet
+       * Создает новый экземпляр dataSet
        * @param {Object} cfg Опции конструктора
        * @returns {SBIS3.CONTROLS.Data.Source.DataSet}
        * @private
@@ -113,7 +111,7 @@ define('js!SBIS3.CONTROLS.Data.Source.Base', [
             adapter: this.getAdapter(),
             model: this.getModel(),
             listModule: this.getListModule(),
-            idProperty: this.getIdProperty()
+            idProperty: this.getIdProperty() || this._getIdPropertyByData(cfg.rawData || null)
          }, cfg, {
             rec: false
          }));
@@ -142,7 +140,7 @@ define('js!SBIS3.CONTROLS.Data.Source.Base', [
       //region SBIS3.CONTROLS.BaseSource
 
       sync: function (data) {
-         $ws.single.ioc.resolve('ILogger').log('SBIS3.CONTROLS.Data.Source.Base', 'method sync() is deprecated and will be removed in 3.8.0. Use SBIS3.CONTROLS.Data.Model::sync() instead.');
+         //$ws.single.ioc.resolve('ILogger').log('SBIS3.CONTROLS.Data.Source.Base', 'method sync() is deprecated and will be removed in 3.7.4. Use SBIS3.CONTROLS.Data.Model::sync() instead.');
 
          var result;
          if ($ws.helpers.instanceOfModule(data, 'SBIS3.CONTROLS.Data.Model')) {

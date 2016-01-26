@@ -178,8 +178,8 @@ define([
                            if (!success) {
                               throw new Error('Unsuccessful update');
                            }
-                           if (!model.isChanged()) {
-                              throw new Error('The model should stay unchanged');
+                           if (model.isChanged()) {
+                              throw new Error('The model should become unchanged');
                            }
                            service.read(existsId).addCallbacks(function (model) {
                               if (model.get('Фамилия') !== 'Петров') {
@@ -211,8 +211,8 @@ define([
                      if (!model.isStored()) {
                         throw new Error('The model should become stored');
                      }
-                     if (!model.isChanged()) {
-                        throw new Error('The model should stay changed');
+                     if (model.isChanged()) {
+                        throw new Error('The model should become unchanged');
                      }
                      if (!model.getId()) {
                         throw new Error('The model should become having a key');
