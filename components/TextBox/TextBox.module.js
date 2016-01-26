@@ -144,6 +144,32 @@ define('js!SBIS3.CONTROLS.TextBox', ['js!SBIS3.CONTROLS.TextBoxBase','html!SBIS3
          if (this._options.placeholder && !$ws._const.compatibility.placeholder) {
             this._createCompatPlaceholder();
          }
+
+         this._container.one("mouseenter", function(e){
+            self._applyTooltip();
+         });
+      },
+
+      /**
+       * Применить tooltip
+       * Если текст не умещается в поле по ширине, то показываем подсказку с полным текстом
+       * Если текст умещается, то показываем из опции tooltip
+       */
+      _applyTooltip: function() {
+         var scrollWidth;
+         if ($ws._const.browser.isIE) {
+            scrollWidth = $ws.helpers.getTextWidth(this._options.text);
+         }
+         else {
+            scrollWidth = this._inputField[0].scrollWidth;
+         }
+         // для случая, когда текст не умещается в поле ввода по ширине, показываем всплывающую подсказку с полным текстом
+         if (scrollWidth > this._inputField[0].clientWidth) {
+            this._container.attr('title', this._options.text);
+         }
+         else {
+            this.setTooltip(this._options.tooltip);
+         }
       },
 
       _drawText: function(text) {
@@ -153,6 +179,11 @@ define('js!SBIS3.CONTROLS.TextBox', ['js!SBIS3.CONTROLS.TextBoxBase','html!SBIS3
          if (this._inputField.val() != text) {
             this._inputField.val(text || '');
          }
+      },
+
+      setText: function(text) {
+         TextBox.superclass.setText.call(this, text);
+         this._applyTooltip();
       },
 
       setMaxLength: function(num) {
