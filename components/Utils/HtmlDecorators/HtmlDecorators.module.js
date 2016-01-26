@@ -84,15 +84,24 @@ define('js!SBIS3.CONTROLS.Utils.HtmlDecorators', ['js!SBIS3.CONTROLS.Utils.HtmlD
       },
 
       /**
-       * Применяет декораторы с проверкой условия
-       * @param {*} value Значение для декорирования
-       * @param {*} condition Условие для проверки
-       * @param {String} [area=''] Область декорирования
-       * @returns {String}
+       * @deprecated Опция не поддерживается с 3.7.3.100, вместо нее используйте {@link applyOnly}
        */
       applyIf: function (value, condition, area) {
+         $ws.single.ioc.resolve('ILogger').log('HtmlDecorators', 'Опция applyIf не поддерживается с 3.7.3.100, вместо нее используйте applyOnly');
+         return this.applyOnly.apply(this, arguments);
+      },
+      /**
+       * Вызывает только указанные декораторы
+       * @param {String} value Значение для декорирования
+       * @param {Object} condition Объект, свойствами которого являются имена декораторов, которые хотим запустить.
+       * Значения свойств - данные, передаваемые в конкретный декоратор
+       * @returns {String}
+       */
+      applyOnly:  function (value, condition) {
+         var enabledDecorators = [];
          if (typeof condition === 'object'){
-            this.setConditions(condition);
+            enabledDecorators = this.setConditions(condition);
+            return this._applyDecorators(value, '', enabledDecorators);
          }
          if (typeof condition === 'function' ? condition(value) : condition) {
             return this.apply(value, area);
@@ -105,13 +114,17 @@ define('js!SBIS3.CONTROLS.Utils.HtmlDecorators', ['js!SBIS3.CONTROLS.Utils.HtmlD
        * value - значение, которое хотим передать
        */
       setConditions: function(obj) {
+         var enabledDecorators = [];
          for (var area in this._decorators) {
             if (this._decorators.hasOwnProperty(area)) {
                for (var i = 0; i < this._decorators[area].length; i++) {
-                  this._decorators[area][i].checkCondition(obj);
+                  if (this._decorators[area][i].checkCondition(obj)){
+                     enabledDecorators.push(this._decorators[area][i]);
+                  }
                }
             }
          }
+         return enabledDecorators;
       },
 
       /**
@@ -121,19 +134,21 @@ define('js!SBIS3.CONTROLS.Utils.HtmlDecorators', ['js!SBIS3.CONTROLS.Utils.HtmlD
        * @returns {*}
        */
       apply: function (value, area) {
-         area = this._getDefaultArea(area);
-
          if (this._kinds[area] === AREA_KIND_ATTR && typeof value !== 'object') {
             throw new Error('The value must be instance of an Object for attribute decorators');
          }
 
-         var decorators = this._getByArea(area);
+         return this._applyDecorators(value, area);
+      },
+
+      _applyDecorators: function(value, area, enabledDecorators){
+         area = this._getDefaultArea(area);
+         var decorators = enabledDecorators || this._getByArea(area);
          for (var i = 0, cnt = decorators.length; i < cnt; i++) {
             if (decorators[i].isEnabled()) {
                value = decorators[i].apply(value);
             }
          }
-
          return this._render(value, area);
       },
 
