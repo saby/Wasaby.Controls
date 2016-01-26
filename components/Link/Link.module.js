@@ -86,8 +86,8 @@ define('js!SBIS3.CONTROLS.Link', ['js!SBIS3.CONTROLS.ButtonBase', 'html!SBIS3.CO
          }
       },
 
-      setEnabled: function(enabled){
-          Link.superclass.setEnabled.apply(this, arguments);
+      _setEnabled: function(enabled){
+          Link.superclass._setEnabled.apply(this, arguments);
           this._container.toggleClass('ws-hover-target', enabled);
       },
 
