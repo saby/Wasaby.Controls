@@ -265,6 +265,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
          }
          if (sourceOpt) {
             this._dataSource = this._prepareSource(sourceOpt);
+            this._items = null;
          }
          else if (itemsOpt) {
             if ($ws.helpers.instanceOfModule(itemsOpt, 'SBIS3.CONTROLS.Data.Projection')) {
