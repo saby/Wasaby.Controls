@@ -65,7 +65,6 @@ define('js!SBIS3.CONTROLS.MenuButton', ['js!SBIS3.CONTROLS.Button', 'js!SBIS3.CO
          this._container.addClass('controls-MenuButton');
          this.reload();
          MenuButton.superclass.init.call(this);
-         $ws.helpers.trackElement(this._container, true).subscribe('onMove', this._onMoveHandler, this);
       },
 
       _onMoveHandler: function () {
@@ -78,7 +77,7 @@ define('js!SBIS3.CONTROLS.MenuButton', ['js!SBIS3.CONTROLS.Button', 'js!SBIS3.CO
       },
 
       destroy: function(){
-         $ws.helpers.trackElement(this._container, false);
+         this._toggleTrackHeader(false);
          if(this._header) 
             this._header.remove();
          MenuButton.superclass.destroy.call(this);
@@ -104,13 +103,22 @@ define('js!SBIS3.CONTROLS.MenuButton', ['js!SBIS3.CONTROLS.Button', 'js!SBIS3.CO
          }
       },
 
+      _toggleTrackHeader: function(state){
+      	var track = $ws.helpers.trackElement(this._container);
+      	if (state){
+      		track.subscribe('onMove', this._onMoveHandler, this);
+      	} else {
+      		track.unsubscribe('onMove', this._onMoveHandler);
+      	}
+      },
 
       _clickHandler: function(){
          if (this._dataSet){
             if (this._dataSet.getCount() > 1) {
                this._container.addClass('controls-Checked__checked');
                this.togglePicker();
-               this._header.toggleClass('controls-MenuButton__header-hidden', !this._container.hasClass('controls-Checked__checked'));
+               this._header.removeClass('ws-hidden');
+               this._toggleTrackHeader(true);
             } else {
                if (this._dataSet.getCount() == 1) {
                   var id = this._dataSet.at(0).getKey();
@@ -139,7 +147,7 @@ define('js!SBIS3.CONTROLS.MenuButton', ['js!SBIS3.CONTROLS.Button', 'js!SBIS3.CO
       },
 
       _createHeader: function(){
-         this._header = $('<span class="controls-MenuButton__header controls-MenuButton__header-hidden">\
+         this._header = $('<span class="controls-MenuButton__header ws-hidden">\
                                   <i class="controls-MenuButton__headerLeft"></i>\
                                   <i class="controls-MenuButton__headerCenter"></i>\
                                   <i class="controls-MenuButton__headerRight"></i>\
@@ -187,7 +195,8 @@ define('js!SBIS3.CONTROLS.MenuButton', ['js!SBIS3.CONTROLS.Button', 'js!SBIS3.CO
       _closeHandler: function(){
          this._container.removeClass('controls-Checked__checked');
          if (this._header) {
-            this._header.addClass('controls-MenuButton__header-hidden');
+            this._header.addClass('ws-hidden');
+            this._toggleTrackHeader(false);
          }
       },
 
