@@ -356,6 +356,10 @@ define('js!SBIS3.CONTROLS.Data.Model', [
        * @param {String} idProperty Первичный ключ модели.
        */
       setIdProperty: function (idProperty) {
+         if (!this.has(idProperty)) {
+            $ws.single.ioc.resolve('ILogger').log('SBIS3.CONTROLS.Data.Model::setIdProperty()', 'Property "' + idProperty + '" is not defined');
+            return;
+         }
          this._options.idProperty = idProperty;
       },
 
