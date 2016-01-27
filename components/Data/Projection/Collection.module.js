@@ -477,7 +477,7 @@ define('js!SBIS3.CONTROLS.Data.Projection.Collection', [
          }
 
          var getIndexes = function(arr) {
-               return arr.map(function(item, index) {
+               return $ws.helpers.map(arr, function(item, index) {
                   return index;
                });
             },
@@ -630,12 +630,12 @@ define('js!SBIS3.CONTROLS.Data.Projection.Collection', [
       _addItems: function (start, items) {
          var isFalseMirror = this._isFalseMirror();
          Array.prototype.splice.apply(this._itemsMap, [start, 0].concat(
-            items.map((function(item, index) {
+            $ws.helpers.map(items, (function(item, index) {
                return this._convertToItem(item);
-            }).bind(this)))
-         );
+            }), this)
+         ));
          Array.prototype.splice.apply(this._sourceMap, [start, 0].concat(items));
-         Array.prototype.splice.apply(this._filterMap, [start, 0].concat(items.map(function() {
+         Array.prototype.splice.apply(this._filterMap, [start, 0].concat($ws.helpers.map(items, function() {
             return !isFalseMirror;
          })));
          this._addToSortMap(start, items.length);
@@ -718,9 +718,9 @@ define('js!SBIS3.CONTROLS.Data.Projection.Collection', [
          if (action === IBindCollectionProjection.ACTION_REPLACE ||
             action === IBindCollectionProjection.ACTION_RESET
          ) {
-            oldItemsMap = oldItems.map((function(item) {
+            oldItemsMap = $ws.helpers.map(oldItems, (function(item) {
                return this._convertToItem(item);
-            }).bind(this));
+            }), this);
          } else {
             oldItemsMap = this._itemsMap.slice(oldItemsIndex, oldItemsIndex + oldItems.length);
          }
