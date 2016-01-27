@@ -644,6 +644,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
        */
       _assignRawData: function(data) {
          this._options.rawData = data;
+         this._resetTableAdapter();
       },
 
       /**
@@ -652,7 +653,6 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
        */
       _createFromRawData: function(data) {
          RecordSet.superclass.clear.call(this);
-         this._resetTableAdapter();
          var adapter = this._getTableAdapter(),
             count = adapter.getCount(),
             record;
