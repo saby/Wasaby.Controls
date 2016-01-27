@@ -316,11 +316,15 @@ define('js!SBIS3.CONTROLS.Data.Source.Memory', [
 
          //Создаем служебный массив, который будем сортировать
          var adapter = this.getAdapter(),
-            dataMap = [];
+            dataMap = [],
+            values = [],
+            value;
          this._each(data, function(item, index) {
-            var values = [];
+            values = [];
             for (var i = 0; i < orderMap.length; i++) {
-               values.push(adapter.forRecord(item).get(orderMap[i].field));
+               value = adapter.forRecord(item).get(orderMap[i].field);
+               //undefined значения не передаются в compareFunction Array.prototype.sort, и в результате сортируются непредсказуемо. Поэтому заменим их на null.
+               values.push(value === undefined ? null : value);
             }
             dataMap.push({
                index: index,
@@ -331,13 +335,19 @@ define('js!SBIS3.CONTROLS.Data.Source.Memory', [
          //Сортируем служебный массив
          var orderIndex,
             sortHandler = function (a, b) {
-               if (a.values[orderIndex] == b.values[orderIndex]) {
-                  return 0;
-               } else if (a.values[orderIndex] > b.values[orderIndex]) {
-                  return orderMap[orderIndex].order ? 1 : -1;
+               var res;
+               if (a.values[orderIndex] === null && b.values[orderIndex] !== null) {
+                  //Считаем null меньше любого не-null
+                  res = -1;
+               } else if (a.values[orderIndex] !== null && b.values[orderIndex] === null) {
+                  //Считаем любое не-null больше null
+                  res = 1;
+               } else if (a.values[orderIndex] == b.values[orderIndex]) {
+                  res = 0;
                } else {
-                  return orderMap[orderIndex].order ? -1 : 1;
+                  res = a.values[orderIndex] > b.values[orderIndex] ? 1 : -1;
                }
+               return orderMap[orderIndex].order ? res : -res;
             };
          for (orderIndex = 0; orderIndex < orderMap.length; orderIndex++) {
             dataMap.sort(sortHandler);

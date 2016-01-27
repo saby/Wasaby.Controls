@@ -133,6 +133,20 @@ define([
                assert.deepEqual(list.getRawData(), items);
             });
          });
+
+         describe('.getIndex()', function (){
+            it('should return an index of given item', function() {
+               var list = new RecordSet({
+                     rawData: items.slice()
+                  });
+
+               for (var i = 0; i < items.length; i++){
+                  assert.equal(i, list.getIndex(list.at(i)));
+               }
+
+            });
+         });
+
       });
    }
 );

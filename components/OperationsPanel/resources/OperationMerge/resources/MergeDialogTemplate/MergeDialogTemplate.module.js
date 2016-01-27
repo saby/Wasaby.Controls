@@ -35,6 +35,7 @@ define('js!SBIS3.CONTROLS.MergeDialogTemplate', [
                  */
                 warning: 'Внимание! Операция необратима',
                 testMergeMethodName: undefined,
+                queryMethodName: undefined,
                 dataSource: undefined,
                 hierField: undefined,
                 displayField: undefined
@@ -58,14 +59,19 @@ define('js!SBIS3.CONTROLS.MergeDialogTemplate', [
             event.setResult(false);
         },
         _onReady: function() {
-            var self = this;
+            var
+                dataSource,
+                self = this;
             this._applyContainer = this.getContainer().find('.controls-MergeDialogTemplate__applyBlock');
             this.getChildControlByName('MergeDialogTemplate-mergeButton')
                 .subscribe('onActivated', this.onMergeButtonActivated.bind(this));
             this._treeView = this.getChildControlByName('MergeDialogTemplate__treeDataGridView');
             this._treeView.subscribe('onSelectedItemChange', this.onSelectedItemChange.bind(this));
             this._treeView.setGroupBy(this._treeView.getSearchGroupBy(), false);
-            this._treeView.setDataSource(this._options.dataSource, true);
+            dataSource = this._options.queryMethodName ? new SbisServiceSource($ws.core.merge(this._options.dataSource._options, {
+                queryMethodName: this._options.queryMethodName
+            })) : this._options.dataSource;
+            this._treeView.setDataSource(dataSource, true);
             this._treeView.reload({
                 'Разворот': 'С разворотом',
                 'usePages': 'full',

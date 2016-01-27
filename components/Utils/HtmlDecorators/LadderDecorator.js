@@ -44,6 +44,7 @@ define(['js!SBIS3.CONTROLS.Utils.HtmlDecorators/AbstractDecorator'], function (A
             this._columnName = ladderData;
          }
          this._isCheckCondition = true;
+         return true;
       },
       /**
        * Применяет декоратор
