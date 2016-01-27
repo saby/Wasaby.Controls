@@ -271,6 +271,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
             if ($ws.helpers.instanceOfModule(itemsOpt, 'SBIS3.CONTROLS.Data.Projection')) {
                this._itemsProjection = itemsOpt;
                this._items = this._convertItems(this._itemsProjection.getCollection());
+               this._setItemsEventHandlers();
             }
             else if (itemsOpt instanceof Array) {
                /*TODO для совеместимости пока создадим сорс*/
@@ -278,10 +279,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
                   data: itemsOpt,
                   idProperty: this._options.keyField
                });
-               this._items = this._convertDataSourceToItems(this._dataSource);
-               this._createDefaultProjection(this._items);
             }
-            this._setItemsEventHandlers();
          }
       },
       after : {
@@ -514,15 +512,15 @@ define('js!SBIS3.CONTROLS.DSMixin', [
             .orderBy(sorting);
 
          return this._dataSource.query(query).addCallback((function(dataSet) {
+            if (this._options.keyField && this._options.keyField !== dataSet.getIdProperty()) {
+               dataSet.setIdProperty(this._options.keyField);
+            }
             var recordSet = dataSet.getAll();
             recordSet.setMetaData({
                results: dataSet.getProperty('r'),
                more: dataSet.getTotal(),
                path: dataSet.getProperty('p')
             });
-            if (this._options.keyField !== dataSet.getIdProperty()) {
-               recordSet.setIdProperty(this._options.keyField);
-            }
             return recordSet;
          }).bind(this));
       },
