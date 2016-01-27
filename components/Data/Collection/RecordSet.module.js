@@ -118,11 +118,6 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
          },
 
          /**
-          * @var {Object} Сырые данные
-          */
-         _rawData: null,
-
-         /**
           * @var {Object} индексы
           */
          _indexTree: {},
@@ -151,7 +146,9 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
          if ('items' in cfg) {
             $ws.single.ioc.resolve('ILogger').log('SBIS3.CONTROLS.Data.Collection.RecordSet', 'option "items" is not acceptable. Use "rawData" instead.');
          }
-         this.setRawData(this._options.rawData);
+         if (this._options.rawData) {
+            this.setRawData(this._options.rawData);
+         }
       },
 
       //region Public methods
@@ -205,7 +202,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
        * @see rawData
        */
       getRawData: function() {
-         return this._rawData;
+         return this._options.rawData;
       },
 
       /**
@@ -346,7 +343,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
          //TODO: сделать через сериализатор
          return new RecordSet({
             strategy: this._options.strategy,
-            data: this._rawData,
+            data: this._options.rawData,
             meta: this._options.meta,
             keyField: this._options.keyField
          });
@@ -613,7 +610,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
        * @private
        */
       _getTableAdapter: function () {
-         return this._tableAdapter || (this._tableAdapter = this.getAdapter().forTable(this._rawData));
+         return this._tableAdapter || (this._tableAdapter = this.getAdapter().forTable(this._options.rawData));
       },
 
       /**
@@ -646,7 +643,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
        * @private
        */
       _assignRawData: function(data) {
-         this._rawData = data;
+         this._options.rawData = data;
       },
 
       /**
