@@ -28,7 +28,7 @@ define('js!SBIS3.CONTROLS.ListView',
    function (CompoundControl, CompoundActiveFixMixin, DSMixin, MultiSelectable,
              Selectable, DataBindMixin, DecorableMixin, ItemActionsGroup, dotTplFn,
              CommonHandlers, MoveHandlers, Pager, EditInPlaceHoverController, EditInPlaceClickController,
-             Link, ScrollWatcher, rc, groupByTpl, emptyDataTpl) {
+             Link, ScrollWatcher, rk, groupByTpl, emptyDataTpl) {
 
       'use strict';
 
@@ -273,8 +273,8 @@ define('js!SBIS3.CONTROLS.ListView',
                itemsActions: [{
                   name: 'delete',
                   icon: 'sprite:icon-16 icon-Erase icon-error',
-                  tooltip: rc('Удалить'),
-                  caption: rc('Удалить'),
+                  tooltip: rk('Удалить'),
+                  caption: rk('Удалить'),
                   isMainAction: true,
                   onActivated: function (item) {
                      this.deleteRecords(item.data('id'));
@@ -282,8 +282,8 @@ define('js!SBIS3.CONTROLS.ListView',
                },{
                   name: 'move',
                   icon: 'sprite:icon-16 icon-Move icon-primary action-hover',
-                  tooltip: rc('Перенести'),
-                  caption: rc('Перенести'),
+                  tooltip: rk('Перенести'),
+                  caption: rk('Перенести'),
                   isMainAction: false,
                   onActivated: function (item) {
                      this.selectedMoveTo(item.data('id'));
