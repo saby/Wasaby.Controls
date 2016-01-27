@@ -48,6 +48,7 @@ define('js!SBIS3.CONTROLS.TextBox', ['js!SBIS3.CONTROLS.TextBoxBase','html!SBIS3
          _pasteProcessing : 0,
          _inputField : null,
          _compatPlaceholder: null,
+         _tooltipText: null,
          _options: {
             beforeFieldWrapper: null,
             afterFieldWrapper: null,
@@ -145,8 +146,11 @@ define('js!SBIS3.CONTROLS.TextBox', ['js!SBIS3.CONTROLS.TextBoxBase','html!SBIS3
             this._createCompatPlaceholder();
          }
 
-         this._container.one("mouseenter", function(e){
-            self._applyTooltip();
+         this._container.bind("mouseenter", function(e){
+            if (self._tooltipText != self._options.text) {
+               self._applyTooltip();
+               self._tooltipText = self._options.text;
+            }
          });
       },
 
@@ -181,10 +185,10 @@ define('js!SBIS3.CONTROLS.TextBox', ['js!SBIS3.CONTROLS.TextBoxBase','html!SBIS3
          }
       },
 
-      setText: function(text) {
-         TextBox.superclass.setText.call(this, text);
-         this._applyTooltip();
-      },
+      //setText: function(text) {
+      //   TextBox.superclass.setText.call(this, text);
+      //   this._applyTooltip();
+      //},
 
       setMaxLength: function(num) {
          TextBox.superclass.setMaxLength.call(this, num);
