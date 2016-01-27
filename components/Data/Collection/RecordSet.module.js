@@ -11,6 +11,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
     * Список записей
     * @class SBIS3.CONTROLS.Data.Collection.RecordSet
     * @extends SBIS3.CONTROLS.Data.Collection.ObservableList
+    * @ignoreOptions items
     * @author Мальцев Алексей
     * @public
     */
@@ -147,11 +148,10 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
             this._options.idProperty = cfg.keyField;
             $ws.single.ioc.resolve('ILogger').log('SBIS3.CONTROLS.Data.Collection.RecordSet', 'option "keyField" is deprecated and will be removed in 3.7.4. Use "idProperty" instead.');
          }
-         if ('items' in cfg && !('rawData' in cfg)) {
-            this._initForItems();
-         } else {
-            this.setRawData(this._options.rawData);
+         if ('items' in cfg) {
+            $ws.single.ioc.resolve('ILogger').log('SBIS3.CONTROLS.Data.Collection.RecordSet', 'option "items" is not acceptable. Use "rawData" instead.');
          }
+         this.setRawData(this._options.rawData);
       },
 
       saveChanges: function(dataSource, added, changed, deleted) {
