@@ -9,7 +9,7 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
    /**
     * Миксин автодополнения. Позволяет навесить функционал автодополнения на любой контрол или набор контролов.
     * Управляет {@link list контролом списка сущностей}, реализующим определенный интерфейс.
-    *
+    * 
     * @remark
     * Получает готовый инстанс {@link list контрола списка сущностей}, либо название его конструктора и опции (в этом случае инстанс создается "лениво").
     * Данный инстанс вставляется в контейнер, предоставляемый SBIS3.CONTROLS.PickerMixin (также предусмотрена возможность и {@link usePicker не менять контейнер}, в этом случае поведение PickerMixin блокируется).
@@ -115,6 +115,13 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
                  *       itemField: 'РП.ФИО'
                  *    }]
              * </pre>
+             * <pre class=”brush: xml”>
+             * <opts name="resultBindings" type="array">
+             *    <opts>
+             *       <opt name="contextField">NomenclatureExt.EGAIS</opt>
+             *       <opt name="itemField">NomenclatureExt.EGAIS</opt>
+             *    </opts>
+             * </opts>
              * @group Data
              * @editor InternalOptions?
              */
