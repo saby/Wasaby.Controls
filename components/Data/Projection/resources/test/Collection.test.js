@@ -229,7 +229,7 @@ define([
                assert.equal(count, 1);
             });
 
-            it('should filter projection assign an items', function() {
+            it('should filter projection after assign an items', function() {
                var list = new ObservableList({
                      items: getItems()
                   }),
