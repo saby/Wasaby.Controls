@@ -180,6 +180,11 @@ define('js!SBIS3.CONTROLS.DSMixin', [
             groupBy : {},
             /**
              * @cfg {Function} Пользовательский метод добавления атрибутов на элементы коллекции
+             * @example
+             * Пример добавления пользовательского класса отображения строк
+             * <pre class="brush:xml">
+             *    <option name="userItemAttributes" type="function">js!SBIS3.Warehouse.NomenclatureDataGrid:prototype.setUserItemAttributes</option>
+             * </pre>
              */
             userItemAttributes : null,
             /**
@@ -201,8 +206,11 @@ define('js!SBIS3.CONTROLS.DSMixin', [
              * @example
              * <pre class="brush:xml">
              *     <options name="filter">
-             *        <option name="creatingDate" bind="selectedDocumentDate"></option>
-             *        <option name="documentType" bind="selectedDocumentType"></option>
+             *       <option name="СкладскойДокумент" bind="@Документ"</option>
+             *       <option name="ТипДокумента" bind="ТипДокумента.ТипДокумента"</option>
+             *       <option name="ВключитьКатегории">0</option>
+             *       <option name="ВключитьПолныйИтог" type="boolean">false</option>
+             *       <option name="ЭтоРасходы" type="boolean">false</option>
              *     </options>
              * </pre>
              */
@@ -210,10 +218,25 @@ define('js!SBIS3.CONTROLS.DSMixin', [
             sorting: [],
             /**
              * @cfg {Object.<String,String>} соответствие опций шаблона полям в рекорде
+             * @example
+             * <pre class="brush:xml">
+             *    <options name="templateBinding">
+             *        <option name="date_field">Документ.Дата</option>
+             *        <option name="only_date">true</option>
+             *    </options>
+             * </pre>
              */
             templateBinding: {},
             /**
              * @cfg {Object.<String,String>} подключаемые внешние шаблоны, ключу соответствует поле it.included.<...> которое будет функцией в шаблоне
+             * @example
+             * <pre class="brush:xml">
+             *    <options name="includedTemplates">
+             *       <option name="photoTpl">html!SBIS3.PersonCore.Photo/photoTpl</option>
+             *       <option name="employeeTpl">html!SBIS3.Employee.ListEmployees/rowTemplate</option>
+             *       <option name="departmentTpl">html!SBIS3.Employee.ListEmployees/departmentTemplate</option>
+             *    </options>
+             * </pre>
              */
             includedTemplates: {}
          },

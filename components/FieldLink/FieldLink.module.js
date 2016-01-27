@@ -79,6 +79,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
     * @control
     * @public
     * @author Крайнов Дмитрий Олегович
+    * @ignoreOptions tooltip alwaysShowExtendedTooltip loadingContainer observableControls usePicker
     */
 
    var FieldLink = SuggestTextBox.extend([FormWidgetMixin, MultiSelectable, ActiveMultiSelectable, Selectable, ActiveSelectable, DSMixin],/** @lends SBIS3.CONTROLS.FieldLink.prototype */{
@@ -180,6 +181,10 @@ define('js!SBIS3.CONTROLS.FieldLink',
             /**
              * @cfg {Boolean} Поддерживать старые представления данных
              * Данная опция требуется, если на диалоге выбора лежит старое представление данных.
+             * @example
+             * <pre class=”brush: xml”>
+             *      <option name="oldViews">true</option>
+             * </pre>
              */
             oldViews: false,
             /**

@@ -9,7 +9,7 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
    /**
     * Миксин автодополнения. Позволяет навесить функционал автодополнения на любой контрол или набор контролов.
     * Управляет {@link list контролом списка сущностей}, реализующим определенный интерфейс.
-    * 
+    *
     * @remark
     * Получает готовый инстанс {@link list контрола списка сущностей}, либо название его конструктора и опции (в этом случае инстанс создается "лениво").
     * Данный инстанс вставляется в контейнер, предоставляемый SBIS3.CONTROLS.PickerMixin (также предусмотрена возможность и {@link usePicker не менять контейнер}, в этом случае поведение PickerMixin блокируется).
@@ -77,7 +77,7 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
             startChar: 3,
             /**
              * @cfg {Boolean} Автоматически показывать варианты при приходе фокуса.
-             * В случае использования опции - выбор нескольких значений из списка вариантов для {@link SBIS3.CONTROLS.FieldLink множественного выбора}
+             * Не предусматривает множественного выбора из списка вариантов.
              * работать не будет.
              * @example
              * <pre class=”brush: xml”>
@@ -148,6 +148,20 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
              * ListControl: Настройки контрола, отображающего список сущностей
              * При передаче настроек инстанс создается лениво - при необходимости.
              * @group Data
+             * @example
+             * <pre class="brush:xml">
+             *    <options name="list">
+             *       <option name="component" value="js!SBIS3.CONTROLS.DataGridView"></option>
+             *       <options name="options">
+             *          <option name="showHead" type="boolean">true</option>
+             *          <options name="columns" type="array">
+             *             <options>
+             *                <option name="cellTemplate" type="string" value="html!SBIS3.DOCS.FieldLink/resources/itemTemplate"></option>
+             *             </options>
+             *          </options>
+             *       </options>
+             *       <option name="keyField" value="Ид"></option>
+             *    </options>
              */
             list: {
                component: 'js!SBIS3.CONTROLS.SuggestList',
@@ -155,7 +169,7 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
             },
 
             /**
-             * @var {Object} Фильтр данных
+             * @var {Object} Фильтр данных, для опции {@link list}
              * @example
              * <pre class="brush:xml">
              *     <options name="listFilter">
@@ -163,6 +177,7 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
              *        <option name="documentType" bind="selectedDocumentType"></option>
              *     </options>
              * </pre>
+             * @see list
              */
 	        listFilter: {},
 
