@@ -463,17 +463,18 @@ define('js!SBIS3.CONTROLS.DSMixin', [
                    self._dataSet = list;
 
                    if (self._items) {
+                      self._dataLoadedCallback();
+                      self._notify('onDataLoad', list);
                       self._items.assign(list);
                    }
                    else {
                       self._items = list;
                       self._createDefaultProjection(self._items);
                       self._setItemsEventHandlers();
+                      self._dataLoadedCallback();
+                      self._notify('onDataLoad', list);
                       self.redraw();
                    }
-
-                   self._dataLoadedCallback();
-                   self._notify('onDataLoad', list);
                    //self._notify('onBeforeRedraw');
                    return list;
                 }, self))
