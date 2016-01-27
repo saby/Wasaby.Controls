@@ -52,7 +52,7 @@ define(['js!SBIS3.CONTROLS.Utils.HtmlDecorators/AbstractDecorator'], function (A
        * @returns {*}
        */
       apply: function (text) {
-         if (!this._isCheckCondition){
+         if (!this._isCheckCondition || this._options.enable){
             return text;
          }
          this._isCheckCondition = false;

@@ -62,7 +62,12 @@ define([], function () {
       apply: function (value) {
          return value;
       },
-
+      /**
+       * Устанавливает активность декоратора
+       */
+      setEnabled: function (enable) {
+         this._options.enabled = !!enable;
+      },
       /**
        * Возвращает признак активности декоратора
        * @returns {Boolean}
