@@ -174,7 +174,7 @@ define('js!SBIS3.CONTROLS.Data.Projection.CollectionEnumerator', [
 
       /**
        * Вычисляет позицию в проекции относительно позиции в исходной коллекции
-       * @param {Number} sourcePosition Позиция в исходной коллекции
+       * @param {Number} source Позиция в исходной коллекции
        * @returns {Number}
        */
       getInternalBySource: function (source) {
