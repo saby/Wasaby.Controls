@@ -147,10 +147,7 @@ define('js!SBIS3.CONTROLS.TextBox', ['js!SBIS3.CONTROLS.TextBoxBase','html!SBIS3
          }
 
          this._container.bind("mouseenter", function(e){
-            if (self._tooltipText != self._options.text) {
-               self._applyTooltip();
-               self._tooltipText = self._options.text;
-            }
+            self._applyTooltip();
          });
       },
 
@@ -160,19 +157,22 @@ define('js!SBIS3.CONTROLS.TextBox', ['js!SBIS3.CONTROLS.TextBoxBase','html!SBIS3
        * Если текст умещается, то показываем из опции tooltip
        */
       _applyTooltip: function() {
-         var scrollWidth;
-         if ($ws._const.browser.isIE) {
-            scrollWidth = $ws.helpers.getTextWidth(this._options.text);
-         }
-         else {
-            scrollWidth = this._inputField[0].scrollWidth;
-         }
-         // для случая, когда текст не умещается в поле ввода по ширине, показываем всплывающую подсказку с полным текстом
-         if (scrollWidth > this._inputField[0].clientWidth) {
-            this._container.attr('title', this._options.text);
-         }
-         else {
-            this.setTooltip(this._options.tooltip);
+         if (this._tooltipText != this._options.text) {
+            var scrollWidth;
+            if ($ws._const.browser.isIE) {
+               scrollWidth = $ws.helpers.getTextWidth(this._options.text);
+            }
+            else {
+               scrollWidth = this._inputField[0].scrollWidth;
+            }
+            // для случая, когда текст не умещается в поле ввода по ширине, показываем всплывающую подсказку с полным текстом
+            if (scrollWidth > this._inputField[0].clientWidth) {
+               this._container.attr('title', this._options.text);
+            }
+            else {
+               this.setTooltip(this._options.tooltip);
+            }
+            this._tooltipText = this._options.text;
          }
       },
 
