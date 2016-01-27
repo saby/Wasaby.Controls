@@ -40,12 +40,13 @@ define('js!SBIS3.CONTROLS.ButtonGroupBaseDS', ['js!SBIS3.CORE.CompoundControl', 
 
       init : function() {
          ButtonGroupBase.superclass.init.call(this);
+         //TODO Временно сделали reload безусловно, т.к. getItems() не возвращал элементы. Но теперь есть перерисовка лишняя.
          //Если элементы были заданы в верстке (используем в CONTROLS.TabButtons), то не перезагружаем
-         if (this._hasItems) {
-            this._drawItemsCallback();
-         } else {
+         /*if (this._hasItems) {
+          this._drawItemsCallback();
+          } else {*/
             this.reload();
-         }
+         /*}*/
       },
 
       setEnabled: function (enabled) {
