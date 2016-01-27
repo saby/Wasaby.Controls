@@ -651,7 +651,6 @@ define('js!SBIS3.CONTROLS.DSMixin', [
         */
        setItems: function (items) {
          this._unsetItemsEventHandlers();
-         //не вызывался redraw
          this._items = null;
          this._prepareConfig(undefined, items);
          this.reload();
