@@ -1089,6 +1089,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
 	               }
 	               //this._view.checkEmpty(); toggleEmtyData
 	               this.reviveComponents(); //надо?
+                   this._drawItemsCallback();
 	               break;
 
 	            case IBindCollection.ACTION_MOVE:
@@ -1099,6 +1100,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
 	                  );
 	               }
 	               this.reviveComponents();
+                   this._drawItemsCallback();
 	               break;
 
 	            case IBindCollection.ACTION_REPLACE:
@@ -1112,13 +1114,13 @@ define('js!SBIS3.CONTROLS.DSMixin', [
 	                  this._itemsProjection.getCurrentPosition()
 	               );
 	               this.reviveComponents();
+                   this._drawItemsCallback();
 	               break;
 
 	            case IBindCollection.ACTION_RESET:
 	               this.redraw();
 	               break;
 	         }
-            this._drawItemsCallback();
       	}
       };
    return DSMixin;
