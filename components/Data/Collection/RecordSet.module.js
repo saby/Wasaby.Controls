@@ -578,8 +578,8 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
 
       assign: function (items) {
          var self = this;
-         RecordSet.superclass.assign.apply(this, arguments);
          this.setRawData(this._getTableAdapter().getEmpty());
+         RecordSet.superclass.assign.apply(this, arguments);
          this.each(function(item){
             self._getTableAdapter().add(item.getRawData());
          });
