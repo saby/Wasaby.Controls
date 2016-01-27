@@ -19,13 +19,14 @@ define('js!Test.SbisBusinessLogic', [
          call: function (method, args) {
             var def = new $ws.proto.Deferred(),
                meta = [
-                  {'n': 'Ид', 't': 'Число целое'},
                   {'n': 'Фамилия', 't': 'Строка'},
                   {'n': 'Имя', 't': 'Строка'},
                   {'n': 'Отчество', 't': 'Строка'},
+                  {'n': '@Ид', 't': 'Число целое'},
                   {'n': 'Должность', 't': 'Строка'},
                   {'n': 'В штате', 't': 'Логическое'}
                ],
+               idPosition = 3,
                error = '',
                data;
 
@@ -36,10 +37,10 @@ define('js!Test.SbisBusinessLogic', [
                      case 'Создать':
                         data = {
                            d: [
+                              '',
+                              '',
+                              '',
                               0,
-                              '',
-                              '',
-                              '',
                               '',
                               false
                            ],
@@ -51,10 +52,10 @@ define('js!Test.SbisBusinessLogic', [
                         if (args['ИдО'] === existsId) {
                            data = {
                               d: [
-                                 existsId,
                                  'Иванов',
                                  'Иван',
                                  'Иванович',
+                                 existsId,
                                  'Инженер',
                                  true
                               ],
@@ -66,8 +67,8 @@ define('js!Test.SbisBusinessLogic', [
                         break;
 
                      case 'Записать':
-                        if (args['Запись'].d && args['Запись'].d[0]) {
-                           data = args['Запись'].d[0];
+                        if (args['Запись'].d && args['Запись'].d[idPosition]) {
+                           data = args['Запись'].d[idPosition];
                         } else {
                            data = 99;
                         }
@@ -87,18 +88,18 @@ define('js!Test.SbisBusinessLogic', [
                         data = {
                            d: [
                               [
-                                 existsId,
                                  'Иванов',
                                  'Иван',
                                  'Иванович',
+                                 existsId,
                                  'Инженер',
                                  true
                               ],
                               [
-                                 1 + existsId,
                                  'Петров',
                                  'Петр',
                                  'Петрович',
+                                 1 + existsId,
                                  'Специалист',
                                  true
                               ]
@@ -180,11 +181,11 @@ define([
                         ''
                      ],
                      s: [
-                        {'n': 'Ид', 't': 'Число целое'},
+                        {'n': '@Ид', 't': 'Число целое'},
                         {'n': 'Фамилия', 't': 'Строка'}
                      ]
                   },
-                  idProperty: 'Ид'
+                  idProperty: '@Ид'
                });
             },
             testArgIsModel = function(arg, model) {
@@ -543,7 +544,7 @@ define([
                   it('should create the model by 1st way', function (done) {
                      var service = new SbisService({
                         resource: 'Товар',
-                        idProperty: 'Ид'
+                        idProperty: '@Ид'
                      });
                      service.create().addCallbacks(function (model) {
                         service.update(model).addCallbacks(function (success) {
@@ -559,7 +560,7 @@ define([
                   it('should create the model by 2nd way', function (done) {
                      var service = new SbisService({
                            resource: 'Товар',
-                           idProperty: 'Ид'
+                           idProperty: '@Ид'
                         }),
                         model = getSampleModel();
 
@@ -704,7 +705,7 @@ define([
                      try {
                         var args = SbisBusinessLogic.lastRequest.args;
 
-                        if ($ws.helpers.type(args['ИдО']) != 'array' ||  args['ИдО'] != SbisBusinessLogic.existsId) {
+                        if ($ws.helpers.type(args['ИдО']) != 'array' || args['ИдО'] != SbisBusinessLogic.existsId) {
                            throw new Error('Wrong argument ИдО');
                         }
 
@@ -863,6 +864,24 @@ define([
                         }
                         if (ds.getAll().getCount() !== 2) {
                            throw new Error('Wrong models count');
+                        }
+                        done();
+                     } catch (err) {
+                        done(err);
+                     }
+                  }, function (err) {
+                     done(err);
+                  });
+               });
+
+               it('should take idProperty for dataset  from raw data', function (done) {
+                  var service = new SbisService({
+                     resource: 'Товар'
+                  });
+                  service.query(new Query()).addCallbacks(function (ds) {
+                     try {
+                        if (ds.getIdProperty() !== '@Ид') {
+                           throw new Error('Wrong idProperty');
                         }
                         done();
                      } catch (err) {
@@ -1116,7 +1135,7 @@ define([
                               [5, true]
                            ],
                            s: [
-                              {'n': 'Ид', 't': 'Идентификатор'},
+                              {'n': '@Ид', 't': 'Идентификатор'},
                               {'n': 'Флаг', 't': 'Логическое'}
                            ]
                         }
