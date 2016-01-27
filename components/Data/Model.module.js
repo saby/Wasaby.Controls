@@ -384,19 +384,6 @@ define('js!SBIS3.CONTROLS.Data.Model', [
          return JSON.stringify(this.toObject());
       },
       /**
-       *  Возвращает массив названий измененных полей.
-       *  @returns {Array}
-       */
-      getChanged: function (){
-         return Object.keys(this._changedFields);
-      },
-      /**
-       * Забывет измененные поля.
-       */
-      applyChanges: function (){
-         this._changedFields = undefined;
-      },
-      /**
        * Возвращает признак синхронизации модели
        * @returns {Boolean}
        */
