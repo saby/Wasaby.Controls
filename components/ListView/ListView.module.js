@@ -271,26 +271,7 @@ define('js!SBIS3.CONTROLS.ListView',
                   onActivated: function (item) {
                      this.deleteRecords(item.data('id'));
                   }
-               },
-                  {
-                     name: 'delete1',
-                     tooltip: 'Удалить',
-                     caption: 'Удалить',
-                     isMainAction: true,
-                     onActivated: function (item) {
-                        this.deleteRecords(item.data('id'));
-                     }
-                  },
-                  {
-                     name: 'delete2',
-                     icon: 'sprite:icon-16 icon-Erase icon-error controls-IconButton__round-border',
-                     tooltip: 'Удалить',
-                     caption: 'Удалить',
-                     isMainAction: true,
-                     onActivated: function (item) {
-                        this.deleteRecords(item.data('id'));
-                     }
-                  },{
+               },{
                   name: 'move',
                   icon: 'sprite:icon-16 icon-Move icon-primary action-hover',
                   tooltip: 'Перенести',
