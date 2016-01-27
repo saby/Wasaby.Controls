@@ -46,15 +46,6 @@ define('js!SBIS3.CONTROLS.MergeAction', [
                 queryMethodName: undefined
             }
         },
-        /**
-         * Метод запускающий выполнение MergeAction
-         * @param {Object} [meta]
-         * @param {Array} [meta.items] Массив ключей, объединяемых записей.
-         * @param {String} [meta.selectedKey] Ключ записи, которая будет выбрана по умолчанию.
-         */
-        execute : function(meta) {
-            this._opendEditComponent();
-        },
 
         _notifyOnExecuted: function(meta) {
             this._notify('onExecuted', meta)
