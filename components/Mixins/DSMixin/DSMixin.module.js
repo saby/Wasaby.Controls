@@ -259,7 +259,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
 
       _prepareConfig : function(sourceOpt, itemsOpt) {
          var
-            keyField = this._options.keyField
+            keyField = this._options.keyField;
          if (!keyField) {
             $ws.single.ioc.resolve('ILogger').error('Option keyField is required');
          }
@@ -361,16 +361,6 @@ define('js!SBIS3.CONTROLS.DSMixin', [
       _unsetItemsEventHandlers: function () {
          this.unsubscribeFrom(this._itemsProjection, 'onCollectionChange', this._onCollectionChange);
          this.unsubscribeFrom(this._itemsProjection, 'onCollectionItemChange', this._onCollectionItemChange);
-      },
-      after : {
-         _modifyOptions: function (opts) {
-            var tpl = opts.footerTpl;
-            //Если нам передали шаблон как строку вида !html, то нужно из нее сделать функцию
-            if (tpl && typeof tpl === 'string' && tpl.match(/^html!/)) {
-               opts.footerTpl = require(tpl);
-            }
-            return opts;
-         }
       },
        /**
         * Метод установки источника данных.
