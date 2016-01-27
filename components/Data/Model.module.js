@@ -154,7 +154,12 @@ define('js!SBIS3.CONTROLS.Data.Model', [
          /**
           * @var {Object} Работа в режиме совместимости API
           */
-         _compatibleMode: false
+         _compatibleMode: false,
+
+         /**
+          * @var {Object} Флаг показывающий была ли модель синхронизирована
+          */
+         _synced: false
       },
 
       $constructor: function (cfg) {
@@ -503,6 +508,20 @@ define('js!SBIS3.CONTROLS.Data.Model', [
        */
       applyChanges: function (){
          this._changedFields = {};
+      },
+      /**
+       * Возвращает признак синхронизации модели
+       * @returns {Boolean}
+       */
+      isSynced: function () {
+         return this._synced;
+      },
+      /**
+       * Устанавливает признак синхронизации модели
+       * @param synced {Boolean}
+       */
+      setSynced: function (synced) {
+         this._synced = synced;
       },
       // endregion Public methods
 
