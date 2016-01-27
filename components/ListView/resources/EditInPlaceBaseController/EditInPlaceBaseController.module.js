@@ -50,7 +50,7 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                _eipHandlers: null
             },
             $constructor: function () {
-               this._publish('onItemValueChanged', 'onBeginEdit', 'onEndEdit', 'onBeginAdd', 'onAfterEndEdit');
+               this._publish('onItemValueChanged', 'onBeginEdit', 'onAfterBeginEdit', 'onEndEdit', 'onBeginAdd', 'onAfterEndEdit');
                this._eipHandlers = {
                   onKeyDown: this._onKeyDown.bind(this)
                };
@@ -135,9 +135,10 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                }
             },
             edit: function (target, record) {
-               return this._prepareEdit(record).addCallback(function(preparedrecord) {
-                  if (preparedrecord) {
-                     this._eip.edit(target, preparedrecord);
+               return this._prepareEdit(record).addCallback(function(preparedRecord) {
+                  if (preparedRecord) {
+                     this._eip.edit(target, preparedRecord);
+                     this._notify('onAfterBeginEdit', preparedRecord);
                   }
                }.bind(this));
             },
@@ -260,20 +261,29 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                }
             },
             _onChildFocusOut: function (event, control) {
-               if (!(this._isChildControl(control) || this._isCurrentTarget(control))) {
+               var
+                  endEdit = this._isAnotherTarget(control, this.getOpener()) && (this._isAnotherTarget(control, this) || this._isCurrentTarget(control));
+               if (endEdit) {
                   this.endEdit(true);
                }
+            },
+            /**
+             * Функция проверки, куда был переведен фокус
+             * @param target
+             * @param control
+             * @returns {boolean} Возвращает true, если фокус переведен на компонент, не являющийся дочерним элементом родителя редактирования по месту.
+             * @private
+             */
+            _isAnotherTarget: function(target, control) {
+               while (target && target !== control) {
+                  target = target.getParent() || target.getOpener();
+               }
+               return target !== control;
             },
             _isCurrentTarget: function(control) {
                var currentTarget = this._getEditingEip().getTarget(),
                    newTarget  = control.getContainer().closest('.js-controls-ListView__item');
                return currentTarget.attr('data-id') === newTarget.attr('data-id');
-            },
-            _isChildControl: function(control) {
-               while (control && control !== this) {
-                  control = control.getParent() || control.getOpener();
-               }
-               return control === this;
             },
             destroy: function() {
                this.endEdit();
