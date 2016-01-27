@@ -79,10 +79,11 @@ define('js!SBIS3.CONTROLS.Data.Source.Base', [
       /**
        * Определяет название свойства с первичным ключем по данным
        * @param {*} data Сырые данные
+       * @returns {String}
        * @private
        */
       _getIdPropertyByData: function(data) {
-         this.getAdapter().forRecord(data).getKeyField();
+         return this.getAdapter().forRecord(data).getKeyField() || '';
       },
 
       /**
