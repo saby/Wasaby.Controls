@@ -9,6 +9,7 @@ define([
 '../../components/Data/Projection/resources/test/CollectionEnumerator.test',
 '../../components/Data/Projection/resources/test/Projection.test',
 '../../components/Data/resources/test/Factory.test',
+'../../components/Data/resources/test/Helpers.test',
 '../../components/Data/resources/test/Model.test',
 '../../components/Data/resources/test/Record.test',
 '../../components/Data/resources/test/Serializer.test',
