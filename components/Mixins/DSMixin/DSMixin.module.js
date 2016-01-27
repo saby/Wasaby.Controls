@@ -514,15 +514,15 @@ define('js!SBIS3.CONTROLS.DSMixin', [
             .orderBy(sorting);
 
          return this._dataSource.query(query).addCallback((function(dataSet) {
+            if (this._options.keyField && this._options.keyField !== dataSet.getIdProperty()) {
+               dataSet.setIdProperty(this._options.keyField);
+            }
             var recordSet = dataSet.getAll();
             recordSet.setMetaData({
                results: dataSet.getProperty('r'),
                more: dataSet.getTotal(),
                path: dataSet.getProperty('p')
             });
-            if (this._options.keyField !== dataSet.getIdProperty()) {
-               recordSet.setIdProperty(this._options.keyField);
-            }
             return recordSet;
          }).bind(this));
       },
