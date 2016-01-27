@@ -144,30 +144,47 @@ define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManag
             $ws.single.EventBus.channel('WindowChangeChannel').subscribe('onDocumentClick', this._clickHandler, this);
          }
          //TODO нужно отписываться от канала если попап скрыт (сделать как в MenuButton)
-         $ws.helpers.trackElement(this._options.target, true)
-            .subscribe('onMove', function () { //перемещаем вслед за таргетом
-               if (self.isVisible()) {
-                  self.recalcPosition();
-                  self._checkTargetPosition();
-               } else {
-                  self._initSizes();
-               }
-            }).subscribe('onVisible', function (event, visible) { //скрываем если таргет скрылся
-               if (!visible){
-                 self.hide();
-               }
-            });
-
          if (this._options.closeButton) {
             container.append('<div class="controls-PopupMixin__closeButton" ></div>');
             $('.controls-PopupMixin__closeButton', this.getContainer().get(0)).click(function() {
-                  self.hide();
+               self.hide();
             });
          }
          container.appendTo('body');
          this._defaultCorner = this._options.corner;
          this._defaultVerticalAlignSide = this._options.verticalAlign.side;
          this._defaultHorizontalAlignSide = this._options.horizontalAlign.side;
+      },
+      
+      //Подписка на изменение состояния таргета
+      _subscribeTargetMove: function(){
+         this._targetChanges = $ws.helpers.trackElement(this._options.target, true);
+         //перемещаем вслед за таргетом
+         this._targetChanges.subscribe('onMove', this._onTargetMove, this);
+         //скрываем если таргет скрылся
+         this._targetChanges.subscribe('onVisible', this._onTargetChangeVisibility, this);
+      },
+
+      _unsubscribeTargetMove: function(){
+         if (this._targetChanges){
+            this._targetChanges.unsubscribe('onMove', this._onTargetMove);
+            this._targetChanges.unsubscribe('onVisible', this._onTargetChangeVisibility);
+         }
+      },
+
+      _onTargetMove: function(){
+         if (this.isVisible()) {
+            this.recalcPosition();
+            this._checkTargetPosition();
+         } else {
+            this._initSizes();
+         }
+      },
+
+      _onTargetChangeVisibility: function(event, visible){
+         if (!visible){
+           this.hide();
+         }   
       },
 
       /**
@@ -226,6 +243,7 @@ define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManag
        */
       setTarget: function (target) {
          this._options.target = target;
+         this._subscribeTargetMove();
          this.recalcPosition(true);
       },
 
@@ -748,6 +766,7 @@ define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManag
 
          hide: function () {
             // Убираем оверлей
+            this._unsubscribeTargetMove();
             if (this._options.isModal) {
                this._setModal(false);
             }
@@ -760,6 +779,7 @@ define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManag
                left: '-10000px',
                top: '-10000px'
             });
+            this._subscribeTargetMove();
             ControlHierarchyManager.setTopWindow(this);
             //Показываем оверлей
             if (!this._zIndex) {
@@ -777,6 +797,7 @@ define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManag
                $ws.single.WindowManager.releaseZIndex(this._zIndex);
                ControlHierarchyManager.removeNode(this);
             }
+            this._unsubscribeTargetMove();
             $ws.single.EventBus.channel('WindowChangeChannel').unsubscribe('onWindowResize', this._windowChangeHandler, this);
             $ws.single.EventBus.channel('WindowChangeChannel').unsubscribe('onWindowScroll', this._windowChangeHandler, this);
             if (this._options.closeByExternalOver) {
