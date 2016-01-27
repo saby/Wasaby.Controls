@@ -154,6 +154,8 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
          this.setRawData(this._options.rawData);
       },
 
+      //region Public methods
+
       saveChanges: function(dataSource, added, changed, deleted) {
          //TODO: refactor after migration to SBIS3.CONTROLS.Data.Source.ISource
          added = added === undefined ? true : added;
@@ -213,16 +215,8 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
        * @see rawData
        */
       setRawData: function(data) {
-         RecordSet.superclass.clear.call(this);
-         this._rawData = data;
-         this._resetTableAdapter();
-         var adapter = this._getTableAdapter(),
-            count = adapter.getCount(),
-            record;
-         for (var i = 0; i < count; i++) {
-            record = this._getModelInstance(adapter.at(i));
-            RecordSet.superclass.add.call(this, record);
-         }
+         this._assignRawData(data);
+         this._createFromRawData();
       },
 
       /**
@@ -291,6 +285,8 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
       setMetaData: function (meta) {
          this._options.meta = meta;
       },
+
+      //endregion Public methods
 
       //region SBIS3.CONTROLS.DataSet
 
@@ -554,7 +550,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
       //region SBIS3.CONTROLS.Data.Collection.List
 
       clear: function () {
-         this.setRawData(this._getTableAdapter().getEmpty());
+         this._assignRawData(this._getTableAdapter().getEmpty());
          RecordSet.superclass.clear.call(this);
       },
 
@@ -564,43 +560,48 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
          RecordSet.superclass.add.apply(this, arguments);
       },
 
+      remove: function (item) {
+         this._checkItem(item);
+         return RecordSet.superclass.remove.apply(this, arguments);
+      },
+
       removeAt: function (index) {
-         RecordSet.superclass.removeAt.apply(this, arguments);
          this._getTableAdapter().remove(index);
+         RecordSet.superclass.removeAt.apply(this, arguments);
       },
 
       replace: function (item, at) {
          this._checkItem(item);
-         RecordSet.superclass.replace.apply(this, arguments);
-
          this._getTableAdapter().replace(item.getRawData(), at);
+         RecordSet.superclass.replace.apply(this, arguments);
       },
 
       assign: function (items) {
-         var self = this;
-         this.setRawData(this._getTableAdapter().getEmpty());
-         RecordSet.superclass.assign.apply(this, arguments);
-         this.each(function(item){
-            self._getTableAdapter().add(item.getRawData());
-         });
+         this._assignRawData(this._getTableAdapter().getEmpty());
+         items = this._itemsToArray(items);
+         for (var i = 0, len = items.length; i < len; i++) {
+            this._checkItem(items[i]);
+            this._getTableAdapter().add(items[i].getRawData());
+         }
+         RecordSet.superclass.assign.call(this, items);
       },
 
       append: function (items) {
-         var self = this,
-            addItems = this._itemsToArray(items);
-         $ws.helpers.forEach(addItems, function(item, i){
-            self._getTableAdapter().add(item.getRawData());
-         });
-         RecordSet.superclass.append.call(this, addItems);
+         items = this._itemsToArray(items);
+         for (var i = 0, len = items.length; i < len; i++) {
+            this._checkItem(items[i]);
+            this._getTableAdapter().add(items[i].getRawData());
+         }
+         RecordSet.superclass.append.call(this, items);
       },
 
       prepend: function (items) {
-         var self = this,
-            addItems = this._itemsToArray(items);
-         $ws.helpers.forEach(addItems, function(item, i){
-            self._getTableAdapter().add(item.getRawData(), i);
-         });
-         RecordSet.superclass.prepend.call(this, addItems);
+         items = this._itemsToArray(items);
+         for (var i = 0, len = items.length; i < len; i++) {
+            this._checkItem(items[i]);
+            this._getTableAdapter().add(items[i].getRawData(), i);
+         }
+         RecordSet.superclass.prepend.call(this, items);
       },
 
       //endregion SBIS3.CONTROLS.Data.Collection.List
@@ -638,6 +639,30 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
          });
          model.setStored(true);
          return model;
+      },
+
+      /**
+       * Переустанавливает сырые данные
+       * @private
+       */
+      _assignRawData: function(data) {
+         this._rawData = data;
+      },
+
+      /**
+       * Пересоздает элементы из сырых данных
+       * @private
+       */
+      _createFromRawData: function(data) {
+         RecordSet.superclass.clear.call(this);
+         this._resetTableAdapter();
+         var adapter = this._getTableAdapter(),
+            count = adapter.getCount(),
+            record;
+         for (var i = 0; i < count; i++) {
+            record = this._getModelInstance(adapter.at(i));
+            RecordSet.superclass.add.call(this, record);
+         }
       },
 
       /**
