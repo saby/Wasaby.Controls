@@ -185,11 +185,6 @@ define('js!SBIS3.CONTROLS.TextBox', ['js!SBIS3.CONTROLS.TextBoxBase','html!SBIS3
          }
       },
 
-      //setText: function(text) {
-      //   TextBox.superclass.setText.call(this, text);
-      //   this._applyTooltip();
-      //},
-
       setMaxLength: function(num) {
          TextBox.superclass.setMaxLength.call(this, num);
          this._inputField.attr('maxlength',num);
