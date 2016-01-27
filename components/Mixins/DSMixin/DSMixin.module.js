@@ -271,6 +271,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
             if ($ws.helpers.instanceOfModule(itemsOpt, 'SBIS3.CONTROLS.Data.Projection')) {
                this._itemsProjection = itemsOpt;
                this._items = this._convertItems(this._itemsProjection.getCollection());
+               this._setItemsEventHandlers();
             }
             else if (itemsOpt instanceof Array) {
                /*TODO для совеместимости пока создадим сорс*/
@@ -278,10 +279,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
                   data: itemsOpt,
                   idProperty: this._options.keyField
                });
-               this._items = this._convertDataSourceToItems(this._dataSource);
-               this._createDefaultProjection(this._items);
             }
-            this._setItemsEventHandlers();
          }
       },
       after : {
