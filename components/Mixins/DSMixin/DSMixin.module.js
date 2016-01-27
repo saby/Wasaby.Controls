@@ -376,6 +376,16 @@ define('js!SBIS3.CONTROLS.DSMixin', [
             return opts;
          }
       },
+      after : {
+         _modifyOptions: function (opts) {
+            var tpl = opts.footerTpl;
+            //Если нам передали шаблон как строку вида !html, то нужно из нее сделать функцию
+            if (tpl && typeof tpl === 'string' && tpl.match(/^html!/)) {
+               opts.footerTpl = require(tpl);
+            }
+            return opts;
+         }
+      },
        /**
         * Метод установки источника данных.
         * @remark
