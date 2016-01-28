@@ -678,13 +678,13 @@ define('js!SBIS3.CONTROLS.DSMixin', [
        */
       redrawItem: function(item) {
          var
-            targetElement = this._getElementForRedraw(item),
+            targetElement = this._getElementByModel(item),
             newElement = this._drawItem(item).addClass(targetElement.attr('class'));
          targetElement.after(newElement).remove();
          this.reviveComponents();
       },
 
-      _getElementForRedraw: function(item) {
+      _getElementByModel: function(item) {
          return this._getItemsContainer().find('.js-controls-ListView__item[data-id="' + item.getKey() + '"]');
       },
 
