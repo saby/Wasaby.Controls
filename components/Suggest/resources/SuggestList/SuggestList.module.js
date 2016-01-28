@@ -3,8 +3,9 @@ define('js!SBIS3.CONTROLS.SuggestList', [
    'js!SBIS3.CONTROLS.DataBindMixin',
    'js!SBIS3.CONTROLS.DSMixin',
    'js!SBIS3.CONTROLS.Selectable',
-   'html!SBIS3.CONTROLS.SuggestList'
-], function (CompoundControl, DataBindMixin, DSMixin, Selectable, dotTplFn) {
+   'html!SBIS3.CONTROLS.SuggestList',
+   'i18n!SBIS3.CONTROLS.SuggestList'
+], function (CompoundControl, DataBindMixin, DSMixin, Selectable, dotTplFn, rk) {
    'use strict';
 
    /**
@@ -27,7 +28,7 @@ define('js!SBIS3.CONTROLS.SuggestList', [
              * <wiTag group="Данные">
              * Текст сообщения, отображающиегося вместо результатов поиска в случае отсутсвия совпадений
              */
-            emptyMessage: 'Не найдено',
+            emptyMessage: rk('Не найдено'),
 
             /**
              * @cfg {Array} Поля записей, отображаемые в списке
