@@ -24,11 +24,6 @@ define('js!SBIS3.CONTROLS.Data.Projection.CollectionEnumerator', [
             itemsMap: [],
 
             /**
-             * @cfg {*[]} Индекс исходной коллекции
-             */
-            sourceMap: [],
-
-            /**
              * @cfg {Boolean[]} Результат применения фильтра
              */
             filterMap: [],
@@ -59,9 +54,6 @@ define('js!SBIS3.CONTROLS.Data.Projection.CollectionEnumerator', [
       $constructor: function () {
          if (!(this._options.itemsMap instanceof Array)) {
             throw new Error('Items map should be instance of an Array');
-         }
-         if (!(this._options.sourceMap instanceof Array)) {
-            throw new Error('Source map should be instance of an Array');
          }
          if (!(this._options.filterMap instanceof Array)) {
             throw new Error('Filter map should be instance of an Array');
@@ -229,7 +221,7 @@ define('js!SBIS3.CONTROLS.Data.Projection.CollectionEnumerator', [
                processItem.call(this, index);
             }, this);
          } else {
-            $ws.helpers.map(this._options.sourceMap, function(item, index){
+            $ws.helpers.map(this._options.itemsMap, function(item, index){
                processItem.call(this, index);
             }, this);
          }
@@ -263,7 +255,7 @@ define('js!SBIS3.CONTROLS.Data.Projection.CollectionEnumerator', [
        * @private
        */
       _isValidPosition: function (position) {
-         return position >= -1 && position < this._options.sourceMap.length;
+         return position >= -1 && position < this._options.itemsMap.length;
       }
 
       //endregion Protected methods

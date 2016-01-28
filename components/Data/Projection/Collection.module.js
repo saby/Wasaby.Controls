@@ -34,11 +34,6 @@ define('js!SBIS3.CONTROLS.Data.Projection.Collection', [
          _itemsMap: [],
 
          /**
-          * @var {*[]} Индекс исходной коллекции
-          */
-         _sourceMap: [],
-
-         /**
           * @var {SBIS3.CONTROLS.Data.Projection.CollectionEnumerator} Служебный энумератор проекции - для отслеживания текущего элемента и поиска по свойствам
           */
          _serviceEnumerator: undefined,
@@ -178,7 +173,6 @@ define('js!SBIS3.CONTROLS.Data.Projection.Collection', [
       getEnumerator: function () {
          return new CollectionProjectionEnumerator({
             itemsMap: this._itemsMap,
-            sourceMap: this._sourceMap,
             filterMap: this._filterMap,
             sortMap: this._sortMap
          });
@@ -403,7 +397,6 @@ define('js!SBIS3.CONTROLS.Data.Projection.Collection', [
        */
       _reBuild: function () {
          this._itemsMap.length = 0;
-         this._sourceMap.length = 0;
          this._filterMap.length = 0;
          this._sortMap.length = 0;
 
@@ -413,7 +406,6 @@ define('js!SBIS3.CONTROLS.Data.Projection.Collection', [
          while ((item = enumerator.getNext())) {
             index++;
             this._itemsMap.push(this._convertToItem(item));
-            this._sourceMap.push(item);
             this._filterMap.push(true);
          }
 
@@ -429,7 +421,7 @@ define('js!SBIS3.CONTROLS.Data.Projection.Collection', [
        */
       _reFilter: function (start, count, silent) {
          start = start || 0;
-         count = count || this._sourceMap.length - start;
+         count = count || this._itemsMap.length - start;
 
          var enumerator = this._getServiceEnumerator(),
              finish = start + count,
@@ -487,7 +479,7 @@ define('js!SBIS3.CONTROLS.Data.Projection.Collection', [
                   return index;
                });
             },
-            oldSortMap = this._sortMap.length ? this._sortMap.slice() : getIndexes(this._sourceMap),
+            oldSortMap = this._sortMap.length ? this._sortMap.slice() : getIndexes(this._itemsMap),
             newSortMap,
             index,
             count;
@@ -497,9 +489,9 @@ define('js!SBIS3.CONTROLS.Data.Projection.Collection', [
             //Создаем служебный массив
             var items = [];
 
-            for (index = 0, count = this._sourceMap.length; index < count; index++) {
+            for (index = 0, count = this._itemsMap.length; index < count; index++) {
                items.push({
-                  item: this._sourceMap[index],
+                  item: this._itemsMap[index].getContents(),
                   index: index,
                   collectionIndex: index
                });
@@ -516,7 +508,7 @@ define('js!SBIS3.CONTROLS.Data.Projection.Collection', [
             }
             newSortMap = this._sortMap;
          } else {
-            newSortMap = getIndexes(this._sourceMap);
+            newSortMap = getIndexes(this._itemsMap);
          }
 
          this._getServiceEnumerator().reIndex();
@@ -636,11 +628,10 @@ define('js!SBIS3.CONTROLS.Data.Projection.Collection', [
       _addItems: function (start, items) {
          var isFalseMirror = this._isFalseMirror();
          Array.prototype.splice.apply(this._itemsMap, [start, 0].concat(
-            $ws.helpers.map(items, (function(item, index) {
+            $ws.helpers.map(items, (function(item) {
                return this._convertToItem(item);
             }), this)
          ));
-         Array.prototype.splice.apply(this._sourceMap, [start, 0].concat(items));
          Array.prototype.splice.apply(this._filterMap, [start, 0].concat($ws.helpers.map(items, function() {
             return !isFalseMirror;
          })));
@@ -658,7 +649,6 @@ define('js!SBIS3.CONTROLS.Data.Projection.Collection', [
          count = count === undefined ? this._sortMap.length - start : count;
 
          this._itemsMap.splice(start, count);
-         this._sourceMap.splice(start, count);
          this._filterMap.splice(start, count);
          this._removeFromSortMap(start, count);
       },
@@ -791,10 +781,11 @@ define('js!SBIS3.CONTROLS.Data.Projection.Collection', [
          case IBindCollectionProjection.ACTION_ADD:
             this._addItems(newItemsIndex, newItems);
             this._getServiceEnumerator().reIndex();
-            this._reFilter(newItemsIndex, newItems.length, true);
             if (this._isSorted()) {
+               this._reFilter(newItemsIndex, newItems.length);
                this._reSort();
             } else {
+               this._reFilter(newItemsIndex, newItems.length, true);
                newItems = this._getItemsProjection(newItems, newItemsIndex);
                oldItems = this._getItemsProjection(oldItems, oldItemsIndex);
                notifyStandard.call(this);
@@ -804,8 +795,8 @@ define('js!SBIS3.CONTROLS.Data.Projection.Collection', [
          case IBindCollectionProjection.ACTION_REMOVE:
             newItems = this._getItemsProjection(newItems, newItemsIndex);
             oldItems = this._getItemsProjection(oldItems, oldItemsIndex);
-            notifyStandard.call(this);
             this._removeItems(oldItemsIndex, oldItems.length);
+            notifyStandard.call(this);
             this._getServiceEnumerator().reIndex();
             break;
 
@@ -827,7 +818,6 @@ define('js!SBIS3.CONTROLS.Data.Projection.Collection', [
             break;
 
          case IBindCollectionProjection.ACTION_MOVE:
-            //notifyStandard.call(this);
             this._removeItems(oldItemsIndex, oldItems.length);
             this._addItems(newItemsIndex, newItems);
             if (this._isSorted()) {
