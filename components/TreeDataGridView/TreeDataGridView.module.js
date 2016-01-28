@@ -222,9 +222,7 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
 
       _addItemAttributes : function(container, item) {
          TreeDataGridView.superclass._addItemAttributes.call(this, container, item);
-         if (item.get(this._options.hierField + '@')){
-         	container.addClass('controls-ListView__folder');
-         }
+         container.addClass('controls-ListView__item-type-' + item.get(this._options.hierField + '@'));
          var
             key = item.getKey(),
             parentKey = this._dataSet.getParentKey(item, this._options.hierField),
