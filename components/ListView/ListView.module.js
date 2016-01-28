@@ -198,7 +198,6 @@ define('js!SBIS3.CONTROLS.ListView',
                model: null
             },
             _emptyData: undefined,
-            _isDrawResults: false,
             _options: {
                /**
                 * @cfg {Boolean} Разрешить отсутствие выбранного элемента
@@ -1723,11 +1722,15 @@ define('js!SBIS3.CONTROLS.ListView',
             if (!resultRow){
                return;
             }
-            var position = this._options.resultsPosition == 'top' ? 'prepend' : 'append';
-            if (this._isDrawResults){
-               $('.controls-DataGridView__results', container).remove();
+            var position = this._options.resultsPosition == 'top' ? 'prepend' : 'append',
+               drawnResults = $('.controls-DataGridView__results', container);
+            if (drawnResults.length){
+               $('[data-component]', drawnResults).each(function(i, item) {
+                  var inst = $(item).wsControl();
+                  inst.destroy();
+               });
+               drawnResults.remove();
             }
-            this._isDrawResults = true;
             $(container)[position](resultRow);
          }
          /*DRAG_AND_DROP END*/
