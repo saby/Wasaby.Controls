@@ -78,10 +78,11 @@ define(
          );
       },
       _modifyOptions: function (opts) {
+         opts = TabButtons.superclass._modifyOptions.call(this, opts);
          if (opts.tabSpaceTemplate) {
             opts.tabSpaceTemplate = MarkupTransformer(TemplateUtil.prepareTemplate(opts.tabSpaceTemplate));
          }
-         return TabButtons.superclass._modifyOptions.call(this, opts);
+         return opts;
       }
    });
    return TabButtons;
