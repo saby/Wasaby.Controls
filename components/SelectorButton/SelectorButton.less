@@ -1,0 +1,37 @@
+.controls-SelectorButton {
+   display: inline-block;
+   cursor: @link-cursor;
+   text-align: @link-text-alignment;
+   line-height: @link-line-height;
+   box-sizing: border-box;
+
+   .controls-SelectorButton__icon,
+   .controls-SelectorButton__cross {
+      vertical-align: @link-icon-vertical-alignment;
+   }
+
+   .controls-SelectorButton__icon {
+      margin: @link-icon-margin;
+   }
+
+   &.ws-disabled {
+      color: @link-disabled-text-color;
+      cursor: default;
+
+      .controls-SelectorButton__cross {
+         display: none;
+      }
+   }
+
+   &.controls-SelectorButton__asLink {
+      .controls-SelectorButton__text {
+         color: @link-text-color;
+         text-decoration: @link-text-decoration;
+
+         &:hover {
+            color: @link-hover-text-color;
+            text-decoration: @link-hover-text-decoration;
+         }
+      }
+   }
+}
