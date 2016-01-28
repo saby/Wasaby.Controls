@@ -24,52 +24,52 @@ define('js!SBIS3.CONTROLS.Data.Projection.Collection', [
       _moduleName: 'SBIS3.CONTROLS.Data.Projection.Collection',
       $protected: {
          /**
-          * @var {String} Модуль элемента проекции
+          * @member {String} Модуль элемента проекции
           */
          _itemModule: 'SBIS3.CONTROLS.Data.Projection.CollectionItem',
 
          /**
-          * @var {SBIS3.CONTROLS.Data.Projection.CollectionItem[]} Индекс проекции коллекции
+          * @member {Array.<SBIS3.CONTROLS.Data.Projection.CollectionItem>} Индекс проекции коллекции
           */
          _itemsMap: [],
 
          /**
-          * @var {SBIS3.CONTROLS.Data.Projection.CollectionEnumerator} Служебный энумератор проекции - для отслеживания текущего элемента и поиска по свойствам
+          * @member {SBIS3.CONTROLS.Data.Projection.CollectionEnumerator} Служебный энумератор проекции - для отслеживания текущего элемента и поиска по свойствам
           */
          _serviceEnumerator: undefined,
 
          /**
-          * @var {Function(*, Number} Фильтр элементов проекции
+          * @member {Function(*, Number} Фильтр элементов проекции
           */
          _filter: undefined,
 
          /**
-          * @var {Boolean[]} Результат применения фильтра
+          * @member {Array.<Boolean>} Результат применения фильтра
           */
          _filterMap: [],
 
          /**
-          * @var {Function} Метод группировки элементов проекции
+          * @member {Function} Метод группировки элементов проекции
           */
          _group: undefined,
 
          /**
-          * @var {Function[]} Метод сортировки элементов проекции
+          * @member {Array.<Function>} Метод сортировки элементов проекции
           */
          _sort: [],
 
          /**
-          * @var {Number[]} Результат применения сортировки
+          * @member {Array.<Number>} Результат применения сортировки
           */
          _sortMap: [],
 
          /**
-          * @var {Function} Обработчик события об изменении исходной коллекции
+          * @member {Function} Обработчик события об изменении исходной коллекции
           */
          _onSourceCollectionChange: undefined,
 
          /**
-          * @var {Function} Обработчик события об изменении элемента исходной коллекции
+          * @member {Function} Обработчик события об изменении элемента исходной коллекции
           */
          _onSourceCollectionItemChange: undefined
       },

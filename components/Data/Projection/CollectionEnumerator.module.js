@@ -19,33 +19,33 @@ define('js!SBIS3.CONTROLS.Data.Projection.CollectionEnumerator', [
       $protected: {
          _options: {
             /**
-             * @var {SBIS3.CONTROLS.Data.Projection.CollectionItem[]} Индекс проекции коллекции
+             * @member {Array.<SBIS3.CONTROLS.Data.Projection.CollectionItem>} Индекс проекции коллекции
              */
             itemsMap: [],
 
             /**
-             * @cfg {Boolean[]} Результат применения фильтра
+             * @cfg {Array.<Boolean>} Результат применения фильтра
              */
             filterMap: [],
 
             /**
-             * @cfg {Number[]} Результат применения сортировки
+             * @cfg {Array.<Number>} Результат применения сортировки
              */
             sortMap: []
          },
 
          /**
-          * @var {SBIS3.CONTROLS.Data.Projection.CollectionItem} Текущий элемент
+          * @member {SBIS3.CONTROLS.Data.Projection.CollectionItem} Текущий элемент
           */
          _сurrent: undefined,
 
          /**
-          * @var {Number} Текущая позиция (в исходной коллекции)
+          * @member {Number} Текущая позиция (в исходной коллекции)
           */
          _currentPosition: -1,
 
          /**
-          * @cfg {Number[]} Соответствие позиций проекции и исходной коллекции
+          * @member {Array.<Number>} Соответствие позиций проекции и исходной коллекции
           */
          _internalMap: undefined
 
