@@ -12,7 +12,9 @@ define('js!SBIS3.CONTROLS.ListView',
       'js!SBIS3.CONTROLS.DataBindMixin',
       'js!SBIS3.CONTROLS.DecorableMixin',
       'js!SBIS3.CONTROLS.ItemActionsGroup',
+      'js!SBIS3.CORE.MarkupTransformer',
       'html!SBIS3.CONTROLS.ListView',
+      'js!SBIS3.CONTROLS.Utils.TemplateUtil',
       'js!SBIS3.CONTROLS.CommonHandlers',
       'js!SBIS3.CONTROLS.MoveHandlers',
       'js!SBIS3.CONTROLS.Pager',
@@ -25,8 +27,8 @@ define('js!SBIS3.CONTROLS.ListView',
       'is!browser?js!SBIS3.CONTROLS.ListView/resources/SwipeHandlers'
    ],
    function (CompoundControl, CompoundActiveFixMixin, DSMixin, MultiSelectable,
-             Selectable, DataBindMixin, DecorableMixin, ItemActionsGroup, dotTplFn,
-             CommonHandlers, MoveHandlers, Pager, EditInPlaceHoverController, EditInPlaceClickController,
+             Selectable, DataBindMixin, DecorableMixin, ItemActionsGroup, MarkupTransformer, dotTplFn,
+             TemplateUtil, CommonHandlers, MoveHandlers, Pager, EditInPlaceHoverController, EditInPlaceClickController,
              Link, ScrollWatcher, groupByTpl, emptyDataTpl) {
 
       'use strict';
@@ -389,7 +391,23 @@ define('js!SBIS3.CONTROLS.ListView',
                 *     </opt>
                 * </pre>
                 */
-               editingTemplate: undefined
+               editingTemplate: undefined,
+               /**
+                * @cfg {String} Позиция отображения строки итогов
+                * Данная опция позволяет отображать строку итогов в случае отсутствия записей.
+                * Возможные значения:
+                * <ol>
+                *    <li>'none' - Не отображать строку итогов</li>
+                *    <li>'top' - вверху</li>
+                *    <li>'bottom' - внизу</li>
+                * </ol>
+                */
+               resultsPosition: 'none',
+               /**
+                * @cfg {String} Заголовок строки итогов
+                */
+               resultsText : 'Итого',
+               resultsTpl: undefined
             },
             _scrollWatcher : undefined
          },
@@ -1153,6 +1171,7 @@ define('js!SBIS3.CONTROLS.ListView',
             }
 
             this._notifyOnSizeChanged(true);
+            this._drawResults();
          },
          //-----------------------------------infiniteScroll------------------------
          //TODO (?) избавиться от _allowInfiniteScroll - пусть все будет завязано на опцию infiniteScroll
@@ -1575,6 +1594,38 @@ define('js!SBIS3.CONTROLS.ListView',
                this._pager = undefined;
             }
             ListView.superclass.destroy.call(this);
+         },
+         _drawResults: function(){
+            if (!this._checkResults()){
+               return;
+            }
+            var resultRow = this._makeResultsTemplate(this._getResultsData());
+            this._appendResultsContainer(this._getItemsContainer(), resultRow);
+         },
+         _checkResults: function(){
+            return this._options.resultsPosition !== 'none' && this.getDataSet().getCount();
+         },
+         _makeResultsTemplate: function(resultsData){
+            var self = this;
+            return MarkupTransformer(TemplateUtil.prepareTemplate(this._options.resultsTpl)({
+               results: resultsData,
+               multiselect: self._options.multiselect
+            }));
+         },
+         _getResultsData: function(){
+            return this.getDataSet().getMetaData().results;
+         },
+         _appendResultsContainer: function(container, resultRow){
+            if (!resultRow){
+               return;
+            }
+            var position = this._options.resultsPosition == 'top' ? 'prepend' : 'append',
+               drawnResults = $('.controls-DataGridView__results', container);
+            if (drawnResults.length){
+               this._destroyControls(drawnResults);
+               drawnResults.remove();
+            }
+            $(container)[position](resultRow);
          }
       });
 
