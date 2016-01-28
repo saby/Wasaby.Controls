@@ -656,28 +656,13 @@ define('js!SBIS3.CONTROLS.DataGridView',
       _getGroupTpl : function(){
          return this._options.groupBy.template || groupByTpl;
       },
-
-      _setResults: function(){
-         if (!this._checkResults()){
-            return;
-         }
-         var resultRow = this._getResultsContainer(this._getResultsData()),
-            body = $('.controls-DataGridView__tbody', this.getContainer());
-         this._drawResults(body, resultRow);
-      },
       _getResultsData: function(){
          var resultsDS = this.getDataSet().getMetaData().results,
             self = this,
-            columns = this.getColumns(),
-            resultsTextIndex = 0,
             value,
             data;
          if (!resultsDS){
             return;
-         }
-         if (this._options.multiselect){
-            columns.unshift({});
-            resultsTextIndex = 1;
          }
          data = $ws.helpers.map(this.getColumns(), function(col){
             value = resultsDS.get(col.field);
@@ -686,7 +671,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
             }
             return self._getResultTemplate(col, $ws.render.defaultColumn.integer(value));
          });
-         data[resultsTextIndex] = this._options.resultsText;
+         data[0] = this._options.resultsText;
          return data;
       },
       _getResultTemplate: function (column, result) {
