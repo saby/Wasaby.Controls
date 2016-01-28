@@ -13,6 +13,7 @@ define('js!SBIS3.CONTROLS.MoveHandlers', ['js!SBIS3.CORE.Dialog','js!SBIS3.CONTR
             new Dialog({
                template: 'js!SBIS3.CONTROLS.MoveDialogTemplate',
                title: 'Перенести ' + records.length + ' запис' + $ws.helpers.wordCaseByNumber(records.length, 'ей', 'ь', 'и') + ' в',
+               cssClassName: 'controls-moveDialog',
                componentOptions: {
                   linkedView: this,
                   records: records,
