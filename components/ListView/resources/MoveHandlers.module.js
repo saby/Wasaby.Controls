@@ -190,7 +190,6 @@ define('js!SBIS3.CONTROLS.MoveHandlers', ['js!SBIS3.CONTROLS.MoveDialog','js!SBI
          var index = self._dataSet.getIndex(item);
          index = up ? index : ++index;
          self._dataSet.add(itemRecord, index < self._dataSet.getCount() ? index : undefined);
-         self._moveItemTo(current, moveTo, up);
       }).addErrback(function(e){
          $ws.core.alert(e.message);
       });
