@@ -33,9 +33,6 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', ['js!SBIS3.CORE.Control'], function (Con
          _folderHasMore : {},
          _treePagers : {},
          _treePager: null,
-         _keysWeHandle: [
-            $ws._const.key.m
-         ],
          _options: {
             /**
              * @cfg {Boolean} При открытия узла закрывать другие
@@ -237,6 +234,16 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', ['js!SBIS3.CORE.Control'], function (Con
          });
          this._options.openedPath[key] = true;
          self._drawLoadedNode(key, records, self._folderHasMore[key]);
+      },
+
+      around : {
+         _addItem: function (parentFnc, item, at) {
+            //TODO придрот, чтоб не отрисовывались данные в дереве при первом открытии узла
+            var parent = item.getContents().get(this._options.hierField);
+            if (this._options.openedPath['parent']) {
+               parentFnc.apply(this, arguments);
+            }
+         }
       },
 
       _nodeClosed : function(key) {

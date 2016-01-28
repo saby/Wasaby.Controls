@@ -651,6 +651,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
         */
        setItems: function (items) {
          this._unsetItemsEventHandlers();
+         this._items = null;
          this._prepareConfig(undefined, items);
          this.reload();
       },
@@ -1003,19 +1004,35 @@ define('js!SBIS3.CONTROLS.DSMixin', [
       },
 
       _addItem: function (item, at) {
+         var ladderDecorator = this._decorators.getByName('ladder');
+         ladderDecorator.setEnabled(false);
          item = item.getContents();
          var target = this._getTargetContainer(item),
             nextSibling = at > -1 ? this._getItemContainerByIndex(target, at) : null,
             template = this._getItemTemplate(item),
-            newItemContainer = this._buildTplItem(item, template);
+            newItemContainer = this._buildTplItem(item, template),
+            rows;
          this._addItemAttributes(newItemContainer, item);
          if (nextSibling && nextSibling.length) {
             newItemContainer.insertBefore(nextSibling);
+            rows = [newItemContainer.prev(), newItemContainer, nextSibling];
          } else {
             newItemContainer.appendTo(target);
+            rows = [newItemContainer.prev(), newItemContainer];
+         }
+         ladderDecorator.setEnabled(true);
+         this._ladderCompare(rows);
+      },
+      _ladderCompare: function(rows){
+         //TODO придрот - метод нужен только для адекватной работы лесенки при перемещении элементов местами
+         for (var i = 1; i < rows.length; i++){
+            var upperRow = $('.controls-ladder', rows[i - 1]),
+               lowerRow = $('.controls-ladder', rows[i]);
+            for (var j = 0; j < lowerRow.length; j++){
+               lowerRow.eq(j).toggleClass('ws-invisible', upperRow.eq(j).html() == lowerRow.eq(j).html());
+            }
          }
       },
-
       _isNeedToRedraw: function(){
       	return !!this._getItemsContainer();
       },
