@@ -31,7 +31,8 @@ define('js!SBIS3.CONTROLS.EditInPlace',
                   editingTemplate: undefined,
                   applyOnFieldChange: true,
                   itemsContainer: undefined,
-                  visible: false
+                  visible: false,
+                  editingItem: undefined
                },
                _record: undefined,
                _target: null,
@@ -154,14 +155,14 @@ define('js!SBIS3.CONTROLS.EditInPlace',
                   if (self._lastHeight !== newHeight) {
                      self._lastHeight = newHeight;
                      self._notify('onChangeHeight');
-                     self._target.height(newHeight);
+                     self.getEditingItem().target.height(newHeight);
                   }
                }, 50);
             },
             _endTrackHeight: function() {
                clearInterval(this._trackerInterval);
                //Сбросим установленное ранее значение высоты строки
-               this._target.height('');
+               this.getEditingItem().target.height('');
             },
             hide: function() {
                if (this._record) {
@@ -180,9 +181,10 @@ define('js!SBIS3.CONTROLS.EditInPlace',
                if (!this.isVisible()) {
                   this.show(target, record);
                }
+               this.setEditingItem(target, record);
                this._beginTrackHeight();
                this._editing = true;
-               this._target.addClass('controls-editInPlace__editing');
+               target.addClass('controls-editInPlace__editing');
                if (!this.hasActiveChildControl()) {
                   this.activateFirstControl();
                }
@@ -192,10 +194,10 @@ define('js!SBIS3.CONTROLS.EditInPlace',
             },
             endEdit: function() {
                this.getContainer().removeAttr('data-id');
-               this.hide();
                this._endTrackHeight();
-               this._target.removeClass('controls-editInPlace__editing');
+               this.getEditingItem().target.removeClass('controls-editInPlace__editing');
                this._editing = false;
+               this.hide();
             },
             setTarget: function(target) {
                var editorTop;
@@ -211,6 +213,13 @@ define('js!SBIS3.CONTROLS.EditInPlace',
             },
             getTarget: function() {
                return this._target;
+            },
+            setEditingItem: function(target, model) {
+               this._options.editingItem.target = target;
+               this._options.editingItem.model = model;
+            },
+            getEditingItem: function() {
+               return this._editingItem;
             },
             _deactivateActiveChildControl: function() {
                var activeChild = this.getActiveChildControl();
