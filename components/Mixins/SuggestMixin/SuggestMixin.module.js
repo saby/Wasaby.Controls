@@ -465,7 +465,7 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
 
             /* Изменяем видимость кнопки в зависимости от, того, есть ли ещё записи */
             this._showAllButton.getContainer()
-                .toggleClass('ws-hidden', list._hasNextPage(list.getDataSet().getMetaData().more));
+                .toggleClass('ws-hidden', !list._hasNextPage(list.getDataSet().getMetaData().more));
          }
       },
 
