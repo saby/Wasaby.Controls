@@ -143,7 +143,7 @@ define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManag
          else if (this._options.closeByExternalClick) {
             $ws.single.EventBus.channel('WindowChangeChannel').subscribe('onDocumentClick', this._clickHandler, this);
          }
-         //TODO нужно отписываться от канала если попап скрыт (сделать как в MenuButton)
+
          if (this._options.closeButton) {
             container.append('<div class="controls-PopupMixin__closeButton" ></div>');
             $('.controls-PopupMixin__closeButton', this.getContainer().get(0)).click(function() {
@@ -199,8 +199,13 @@ define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManag
                corner : this._options.corner
             };
             if (recalcFlag) {
-               this._containerSizes.originWidth = parseFloat(this._container.css('max-width'), 10) || this._container.get(0).scrollWidth + this._containerSizes.border * 2;
-               this._containerSizes.originHeight = parseFloat(this._container.css('max-height'), 10) || this._container.get(0).scrollHeight + this._containerSizes.border * 2;
+               var scrollWidth = this._container.get(0).scrollWidth,
+                  scrollHeight = this._container.get(0).scrollHeight,
+                  maxWidth = parseFloat(this._container.css('max-width'), 10),
+                  maxHeight = parseFloat(this._container.css('max-height'), 10);
+
+               this._containerSizes.originWidth = scrollWidth > maxWidth ? maxWidth : scrollWidth;
+               this._containerSizes.originHeight = scrollHeight > maxHeight ? maxHeight : scrollHeight;
             }
             this._initSizes();
             if (this._options.target) {
@@ -233,7 +238,6 @@ define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManag
             } else {
                var bodyOffset = this._bodyPositioning();
                this._container.offset(bodyOffset);
-
             }
          }
       },

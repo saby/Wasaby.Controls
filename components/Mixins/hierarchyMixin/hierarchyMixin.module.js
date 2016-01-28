@@ -160,6 +160,7 @@ define('js!SBIS3.CONTROLS.hierarchyMixin', [], function () {
                hierarchy = this._getHierarchy(path, this._curRoot);
             }
             if (this._rootChanged) {
+               this._scrollTo(this.getContainer());
                this._notify('onSetRoot', this._curRoot, hierarchy);
                this._rootChanged = false;
             }
@@ -170,7 +171,7 @@ define('js!SBIS3.CONTROLS.hierarchyMixin', [], function () {
             hierarchy = [];
          if (dataSet){
             do {
-               record = dataSet.getRecordByKey(key);
+               record = dataSet.getRecordById(key);
                parentKey = record ? dataSet.getParentKey(record, this._options.hierField) : null;
                if (record) {
                   hierarchy.push({

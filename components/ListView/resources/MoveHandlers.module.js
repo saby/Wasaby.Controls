@@ -69,7 +69,7 @@ define('js!SBIS3.CONTROLS.MoveHandlers', ['js!SBIS3.CONTROLS.MoveDialog','js!SBI
             if (deferred instanceof $ws.proto.Deferred) {//обновляем view если вернули true либо deferred
                deferred.addCallback(function() {
                   self.removeItemsSelectionAll();
-                  if (isNodeTo && !isChangeOrder) {
+                  if (isNodeTo && !isChangeOrder && self._options.allowEnterToFolder) {
                      self.setCurrentRoot(moveTo);
                   }
                   self.reload();
@@ -88,7 +88,8 @@ define('js!SBIS3.CONTROLS.MoveHandlers', ['js!SBIS3.CONTROLS.MoveDialog','js!SBI
             toMap = this._getParentsMap(recordTo.getKey());
          }
          for (var i = 0; i < records.length; i++) {
-            key = '' + (($ws.helpers.instanceOfModule(records[i], 'SBIS3.CONTROLS.Record')||$ws.helpers.instanceOfModule(records[i], 'SBIS3.CONTROLS.Data.Model')) ? records[i].getKey() : records[i]);
+            key = '' + (($ws.helpers.instanceOfModule(records[i], 'SBIS3.CONTROLS.Record')|| $ws.helpers.instanceOfModule(records[i], 'SBIS3.CONTROLS.Data.Model'))
+               ? records[i].getKey() : records[i]);
             if ($.inArray(key, toMap) !== -1) {
                return false;
             }
@@ -173,6 +174,7 @@ define('js!SBIS3.CONTROLS.MoveHandlers', ['js!SBIS3.CONTROLS.MoveDialog','js!SBI
             moveRecord.call(this, record, nextItem.data('id'), id, false);
          }
       },
+
       moveRecordUp: function(tr, id, record) {
          var prevItem = this.getPrevItemById(id);
          if(prevItem) {
@@ -188,7 +190,6 @@ define('js!SBIS3.CONTROLS.MoveHandlers', ['js!SBIS3.CONTROLS.MoveDialog','js!SBI
          var index = self._dataSet.getIndex(item);
          index = up ? index : ++index;
          self._dataSet.add(itemRecord, index < self._dataSet.getCount() ? index : undefined);
-         self._moveItemTo(current, moveTo, up);
       }).addErrback(function(e){
          $ws.core.alert(e.message);
       });
