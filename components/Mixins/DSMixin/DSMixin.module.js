@@ -228,6 +228,16 @@ define('js!SBIS3.CONTROLS.DSMixin', [
              * </pre>
              */
             filter: {},
+            /**
+             * @cfg {Array} Сортировка данных
+             * @example
+             * <pre class="brush:xml">
+             *     <options name="sorting" type="Array">
+             *        <option name="date" value="ASC"></option>
+             *        <option name="name" value="DESC"></option>
+             *     </options>
+             * </pre>
+             */
             sorting: [],
             /**
              * @cfg {Object.<String,String>} соответствие опций шаблона полям в рекорде
