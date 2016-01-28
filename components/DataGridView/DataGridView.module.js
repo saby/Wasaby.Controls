@@ -661,12 +661,12 @@ define('js!SBIS3.CONTROLS.DataGridView',
             if (value == undefined){
                return '';
             }
-            return self._getResultTemplate(col, $ws.render.defaultColumn.integer(value));
+            return self._getColumnResultTemplate(col, $ws.render.defaultColumn.integer(value));
          });
          data[0] = this._options.resultsText;
          return data;
       },
-      _getResultTemplate: function (column, result) {
+      _getColumnResultTemplate: function (column, result) {
          var columnTpl = result;
          if (column.resultTemplate) {
             columnTpl = MarkupTransformer(TemplateUtil.prepareTemplate(column.resultTemplate)({
