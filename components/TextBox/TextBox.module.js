@@ -48,6 +48,7 @@ define('js!SBIS3.CONTROLS.TextBox', ['js!SBIS3.CONTROLS.TextBoxBase','html!SBIS3
          _pasteProcessing : 0,
          _inputField : null,
          _compatPlaceholder: null,
+         _tooltipText: null,
          _options: {
             beforeFieldWrapper: null,
             afterFieldWrapper: null,
@@ -146,6 +147,35 @@ define('js!SBIS3.CONTROLS.TextBox', ['js!SBIS3.CONTROLS.TextBoxBase','html!SBIS3
 
          if (this._options.placeholder && !$ws._const.compatibility.placeholder) {
             this._createCompatPlaceholder();
+         }
+
+         this._container.bind("mouseenter", function(e){
+            self._applyTooltip();
+         });
+      },
+
+      /**
+       * Применить tooltip
+       * Если текст не умещается в поле по ширине, то показываем подсказку с полным текстом
+       * Если текст умещается, то показываем из опции tooltip
+       */
+      _applyTooltip: function() {
+         if (this._tooltipText != this._options.text) {
+            var scrollWidth;
+            if ($ws._const.browser.isIE) {
+               scrollWidth = $ws.helpers.getTextWidth(this._options.text);
+            }
+            else {
+               scrollWidth = this._inputField[0].scrollWidth;
+            }
+            // для случая, когда текст не умещается в поле ввода по ширине, показываем всплывающую подсказку с полным текстом
+            if (scrollWidth > this._inputField[0].clientWidth) {
+               this._container.attr('title', this._options.text);
+            }
+            else {
+               this.setTooltip(this._options.tooltip);
+            }
+            this._tooltipText = this._options.text;
          }
       },
 
