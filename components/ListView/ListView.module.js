@@ -1779,10 +1779,7 @@ define('js!SBIS3.CONTROLS.ListView',
             var position = this._options.resultsPosition == 'top' ? 'prepend' : 'append',
                drawnResults = $('.controls-DataGridView__results', container);
             if (drawnResults.length){
-               $('[data-component]', drawnResults).each(function(i, item) {
-                  var inst = $(item).wsControl();
-                  inst.destroy();
-               });
+               this._destroyControls(drawnResults);
                drawnResults.remove();
             }
             $(container)[position](resultRow);
