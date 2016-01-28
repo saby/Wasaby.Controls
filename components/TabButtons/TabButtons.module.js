@@ -15,14 +15,22 @@ define(
 
    /**
     * Контрол, отображающий корешки закладок
-    * Для оформления дополнительного текста 1 внутри вкладки нужно использовать класс <strong>controls-TabButton__additionalText1</strong>
-    * Для оформления дополнительного текста 2 внутри вкладки нужно использовать класс <strong>controls-TabButton__additionalText2</strong>
+    * Для оформления компонентов внутри вкладки, можно использовать следующие классы:
+    * <ol>
+    *    <li><strong>controls-TabButton__mainText</strong> - параметры текста, как у главной вкладки</li>
+    *    <li><strong>controls-TabButton__additionalText1</strong> - оформление дополнительного текста 1</li>
+    *    <li><strong>controls-TabButton__additionalText2</strong> - оформление дополнительного текста 2</li>
+    * </ol>
+    * Также для отдельных вкладок можно использовать модификаторы:
+    * <ol>
+    *    <li><strong>controls-TabButton__counter</strong> - оформления вкладок-счётчиков с иконками</li>
+    *    <li><strong>controls-TabButton__main-item</strong> - оформления главной вкладки</li>
+    * </ol>
     * @class SBIS3.CONTROLS.TabButtons
     * @extends SBIS3.CONTROLS.RadioGroupBase
     * @author Крайнов Дмитрий Олегович
-    *
-    * @cssModifier controls-TabButton__counter Для оформления вкладок-счётчиков с иконками
-    * @cssModifier controls-TabButton__main-item Для оформления главной вкладки
+    * @public
+    * @demo SBIS3.CONTROLS.Demo.MyTabButtons
     */
 
    var TabButtons = RadioGroupBase.extend(/** @lends SBIS3.CONTROLS.TabButtons.prototype */ {

@@ -122,10 +122,9 @@ define('js!SBIS3.CONTROLS.TextBox', ['js!SBIS3.CONTROLS.TextBoxBase','html!SBIS3
             window.setTimeout(function(){
                self._pasteProcessing--;
                if (!self._pasteProcessing) {
-                  TextBox.superclass.setText.call(self, self._formatText(self._inputField.val()));
-                  self._inputField.val(self._options.text);
+                  self.setText(self._formatText(self._inputField.val()));
                }
-            }, 100)
+            }, 100);
          });
 
          this._inputField.change(function(){
@@ -139,6 +138,10 @@ define('js!SBIS3.CONTROLS.TextBox', ['js!SBIS3.CONTROLS.TextBoxBase','html!SBIS3
             if (self._options.selectOnClick){
                self._inputField.select();
             }
+         });
+
+         this._inputField.bind('focusout', function(){
+            self.setText(self._formatText(self._inputField.val()));
          });
 
          if (this._options.placeholder && !$ws._const.compatibility.placeholder) {

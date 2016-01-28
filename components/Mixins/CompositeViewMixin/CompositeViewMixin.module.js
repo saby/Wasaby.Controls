@@ -51,6 +51,7 @@ define('js!SBIS3.CONTROLS.CompositeViewMixin', ['html!SBIS3.CONTROLS.CompositeVi
          this._getItemsContainer().unbind('mousedown', this._dragStartHandler);
          this._options.viewMode = mode;
          this._getItemsContainer().bind('mousedown', this._dragStartHandler);
+         this._options.openedPath = [];
          this._drawViewMode(mode);
       },
 
