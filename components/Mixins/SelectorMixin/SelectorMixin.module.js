@@ -103,7 +103,7 @@ define('js!SBIS3.CONTROLS.SelectorMixin', [],
          before: {
             close: function (value) {
                if (typeof this._options.closeCallback === 'function') {
-                  this._options.closeCallback.call(this, value);
+                  this._options.closeCallback(value);
                }
             }
          }

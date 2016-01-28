@@ -1,8 +1,9 @@
 define('js!SBIS3.CONTROLS.SuggestTextBox', [
    'js!SBIS3.CONTROLS.TextBox',
    'js!SBIS3.CONTROLS.PickerMixin',
-   'js!SBIS3.CONTROLS.SuggestMixin'
-], function (TextBox, PickerMixin, SuggestMixin) {
+   'js!SBIS3.CONTROLS.SuggestMixin',
+   'js!SBIS3.CONTROLS.ChooserMixin'
+], function (TextBox, PickerMixin, SuggestMixin, ChooserMixin) {
    'use strict';
 
    function stopEvent(e) {
@@ -23,7 +24,7 @@ define('js!SBIS3.CONTROLS.SuggestTextBox', [
     * @demo SBIS3.CONTROLS.Demo.MySuggestTextBoxDS Поле ввода с автодополнением, использующим DataSource
     * @author Алексей Мальцев
     */
-   var SuggestTextBox = TextBox.extend([PickerMixin, SuggestMixin], /** @lends SBIS3.CONTROLS.SuggestTextBox.prototype */ {
+   var SuggestTextBox = TextBox.extend([PickerMixin, SuggestMixin, ChooserMixin], /** @lends SBIS3.CONTROLS.SuggestTextBox.prototype */ {
       $constructor: function () {
          this._options = $ws.core.merge({
             loadingContainer: this.getContainer().find('.controls-TextBox__fieldWrapper')
