@@ -422,7 +422,6 @@ define('js!SBIS3.CONTROLS.ListView',
             $ws.single.CommandDispatcher.declareCommand(this, 'beginEdit', this._beginEdit);
             $ws.single.CommandDispatcher.declareCommand(this, 'cancelEdit', this._cancelEdit);
             $ws.single.CommandDispatcher.declareCommand(this, 'commitEdit', this._commitEdit);
-            this.subscribe('onDrawItems', this._setResults);
          },
 
          init: function () {
@@ -1131,6 +1130,7 @@ define('js!SBIS3.CONTROLS.ListView',
             }
 
             this._notifyOnSizeChanged(true);
+            this._drawResults();
          },
          //-----------------------------------infiniteScroll------------------------
          //TODO Сделать подгрузку вверх
@@ -1564,23 +1564,27 @@ define('js!SBIS3.CONTROLS.ListView',
                }
             }
          },
-         _setResults: function(){
+         _drawResults: function(){
             if (!this._checkResults()){
                return;
             }
-            var resultsDS = this.getDataSet().getMetaData().results,
-               resultRow = this._getResultsContainer(resultsDS);
-            this._drawResults(this._getItemsContainer(), resultRow);
+            var resultRow = this._makeResultsTemplate(this._getResultsData());
+            this._appendResultsContainer(this._getItemsContainer(), resultRow);
          },
          _checkResults: function(){
             return this._options.resultsPosition !== 'none' && this.getDataSet().getCount();
          },
-         _getResultsContainer: function(resultsData){
+         _makeResultsTemplate: function(resultsData){
+            var self = this;
             return MarkupTransformer(TemplateUtil.prepareTemplate(this._options.resultsTpl)({
-               results: resultsData
+               results: resultsData,
+               multiselect: self._options.multiselect
             }));
          },
-         _drawResults: function(container, resultRow){
+         _getResultsData: function(){
+            return this.getDataSet().getMetaData().results;
+         },
+         _appendResultsContainer: function(container, resultRow){
             if (!resultRow){
                return;
             }
