@@ -191,6 +191,7 @@ define('js!SBIS3.CONTROLS.ListView',
                $ws._const.key.enter,
                $ws._const.key.right,
                $ws._const.key.left,
+               $ws._const.key.m,
                $ws._const.key.o
             ],
             _itemActionsGroup: null,
