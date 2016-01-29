@@ -106,7 +106,7 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
       },
 
       _drawLoadedNode : function(key, records, more) {
-         this._drawExpandArrow(key);
+         this._drawExpandArrow(key, true);
          this._drawItemsFolder(records);
 
          //TODO пока не очень общо создаем внутренние пэйджинги
