@@ -4,6 +4,9 @@
          <option name="name" value="MoveDialogTemplate-moveButton"></option>
          <option name="caption" value="Перенести"></option>
          <option name="primary" type="boolean" value="true"></option>
+         <options name="handlers">
+            <option name="onActivated" type="function">js!SBIS3.CONTROLS.MoveDialogTemplate:prototype._onMoveButtonActivated</option>
+         </options>
       </component>
    </div>
    <component data-component="SBIS3.CONTROLS.TreeDataGridView" class="controls-MoveDialogTemplate-TreeDataGridView">
@@ -16,5 +19,17 @@
       <option name="showPaging" type="boolean">false</option>
       <option name="allowDragNDropMove" type="boolean">false</option>
       <option name="allowEmptySelection" type="boolean">true</option>
+      <options name="columns" type="array">
+         <options>
+            <option name="title"></option>
+            <option name="field">{{=it.linkedView._options.displayField}}</option>
+            <option name="className">controls-DataGridView-cell-overflow-ellipsis</option>
+         </options>
+      </options>
+      <option name="keyField" type="boolean">{{=it.linkedView._options.keyField}}</option>
+      <option name="hierField" type="boolean">{{=it.linkedView.getHierField()}}</option>
+      <options name="handlers">
+         <option name="onDrawItems" type="function">js!SBIS3.CONTROLS.MoveDialogTemplate:prototype._createRoot</option>
+      </options>
    </component>
 </div>
