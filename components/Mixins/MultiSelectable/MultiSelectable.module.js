@@ -9,9 +9,14 @@ define('js!SBIS3.CONTROLS.MultiSelectable', ['js!SBIS3.CONTROLS.Data.Collection.
 
    var MultiSelectable = /**@lends SBIS3.CONTROLS.MultiSelectable.prototype  */{
        /**
+        * @typedef {Object} ChangedKeys
+        * @property {Array.<String>} added ключи, которые добавились
+        * @property {Array.<String>} removed ключи, которые удалились
+        *
         * @event onSelectedItemsChange При смене выбранных элементов коллекции
         * @param {$ws.proto.EventObject} Дескриптор события.
         * @param {Array.<String>} idArray Массив ключей выбранных элементов.
+        * @param {ChangedKeys} changedKeys Измененные ключи
         * @example
         * <pre>
         *     var itemsChanged = function() {
@@ -129,19 +134,50 @@ define('js!SBIS3.CONTROLS.MultiSelectable', ['js!SBIS3.CONTROLS.Data.Collection.
        * @see addItemsSelection
        */
       setSelectedKeys : function(idArray) {
+
+         function ArrayDifference(arr1,arr2){
+            var idx = 0, arr3 = [];
+            for (var i = 0; i < arr1.length; i++){
+               var
+                  findElem = arr1[i],
+                  result = true;
+               idx = arr2.indexOf(arr1[i]);
+               if (idx < 0) {
+                  findElem = (typeof findElem === 'string') ? findElem - 0 : findElem + '';
+                  idx = arr2.indexOf(findElem);
+                  if (idx >= 0) {
+                     result = false;
+                  }
+               }
+               else {
+                  result = false;
+               }
+               if (result) {
+                  arr3.push(arr1[i]);
+               }
+            }
+            return arr3;
+         }
+
+
+         var addedKeys = [], removedKeys = [];
          if (Array.isArray(idArray)) {
             if (idArray.length) {
                if (this._options.multiselect) {
-                  this._options.selectedKeys = idArray;
+                  removedKeys = ArrayDifference(this._options.selectedKeys, idArray);
+                  this._removeItemsSelection(removedKeys);
+                  addedKeys = this._addItemsSelection(idArray);
                }
                else {
+                  removedKeys = $ws.core.clone(this._options.selectedKeys);
                   this._options.selectedKeys = idArray.slice(0, 1);
                }
             }
             else {
+               removedKeys = $ws.core.clone(this._options.selectedKeys);
                this._options.selectedKeys = [];
             }
-	         this._afterSelectionHandler();
+	         this._afterSelectionHandler(addedKeys, removedKeys);
          }
          else {
             throw new Error('Argument must be instance of Array');
@@ -209,12 +245,18 @@ define('js!SBIS3.CONTROLS.MultiSelectable', ['js!SBIS3.CONTROLS.Data.Collection.
        * @see multiselect
        */
       addItemsSelection : function(idArray) {
+         var addedKeys = this._addItemsSelection(idArray);
+         this._afterSelectionHandler(addedKeys, []);
+      },
+      _addItemsSelection : function(idArray) {
+         var addedKeys = [];
          if (Array.isArray(idArray)) {
             if (idArray.length) {
                if (this._options.multiselect) {
                   for (var i = 0; i < idArray.length; i++) {
-                     if (this._isItemSelected(idArray[i]) < 0) {
+                     if (!this._isItemSelected(idArray[i])) {
                         this._options.selectedKeys.push(idArray[i]);
+                        addedKeys.push(idArray[i])
                      }
                   }
                }
@@ -222,12 +264,11 @@ define('js!SBIS3.CONTROLS.MultiSelectable', ['js!SBIS3.CONTROLS.Data.Collection.
                   this._options.selectedKeys = idArray.slice(0, 1);
                }
             }
-	         this._afterSelectionHandler();
+            return addedKeys;
          }
          else {
             throw new Error('Argument must be instance of Array');
          }
-
       },
 
       /**
@@ -244,14 +285,21 @@ define('js!SBIS3.CONTROLS.MultiSelectable', ['js!SBIS3.CONTROLS.Data.Collection.
        * @see allowEmptySelection
        */
       removeItemsSelection : function(idArray) {
+         var removedKeys = this._removeItemsSelection(idArray);
+         this._afterSelectionHandler([], removedKeys);
+      },
+
+      _removeItemsSelection : function(idArray) {
+         var removedKeys = [];
+
          if (Array.isArray(idArray)) {
             for (var i = idArray.length - 1; i >= 0; i--) {
-               var index = this._isItemSelected(idArray[i]);
-               if (index >= 0) {
-                  Array.remove(this._options.selectedKeys, index);
+               if (this._isItemSelected(idArray[i])) {
+                  Array.remove(this._options.selectedKeys, this._getSelectedIndex(idArray[i]));
+                  removedKeys.push(idArray[i]);
                }
             }
-	         this._afterSelectionHandler();
+            return removedKeys;
          }
          else {
             throw new Error('Argument must be instance of Array');
@@ -293,25 +341,35 @@ define('js!SBIS3.CONTROLS.MultiSelectable', ['js!SBIS3.CONTROLS.Data.Collection.
       toggleItemsSelection : function(idArray) {
          if (Array.isArray(idArray)) {
             if (idArray.length) {
+               var
+                  addedKeysTotal = [],
+                  removedKeysTotal = [],
+                  addedKeys,
+                  removedKeys;
                if (this._options.multiselect) {
                   for (var i = 0; i < idArray.length; i++) {
-                     if (this._isItemSelected(idArray[i]) < 0) {
-                        this.addItemsSelection([idArray[i]]);
+                     if (!this._isItemSelected(idArray[i])) {
+                        addedKeys = this._addItemsSelection([idArray[i]]);
+                        addedKeysTotal = addedKeysTotal.concat(addedKeys);
                      }
                      else {
-                        this.removeItemsSelection([idArray[i]]);
+                        removedKeys = this._removeItemsSelection([idArray[i]]);
+                        removedKeysTotal = removedKeysTotal.concat(removedKeys);
                      }
                   }
                }
                else {
-                  if (this._isItemSelected(idArray[0]) > 0) {
+                  if (this._isItemSelected(idArray[0])) {
+                     removedKeysTotal = $ws.core.clone(this._options.selectedKeys);
                      this._options.selectedKeys = [];
                   }
                   else {
+                     removedKeysTotal = $ws.core.clone(this._options.selectedKeys);
                      this._options.selectedKeys = idArray.slice(0, 1);
+                     addedKeysTotal = $ws.core.clone(this._options.selectedKeys);
                   }
-	               this._afterSelectionHandler();
                }
+               this._afterSelectionHandler(addedKeysTotal, removedKeysTotal);
             }
          }
          else {
@@ -388,7 +446,7 @@ define('js!SBIS3.CONTROLS.MultiSelectable', ['js!SBIS3.CONTROLS.Data.Collection.
             dMultiResult = new $ws.proto.ParallelDeferred({stopOnFirstError: false});
 
             for (var j = 0; loadKeysArr.length > j; j++) {
-               item = this._dataSet && this._dataSet.getRecordByKey(loadKeysArr[j]);
+               item = this._dataSet && this._dataSet.getRecordById(loadKeysArr[j]);
 
                /* если запись есть в датасете, то ничего не будем вычитывать */
                if(item) {
@@ -424,7 +482,7 @@ define('js!SBIS3.CONTROLS.MultiSelectable', ['js!SBIS3.CONTROLS.Data.Collection.
          /* Выбранных ключей нет - очистим IList */
          if(!this.getSelectedKeys().length) {
             if(selItems.getCount()) {
-               selItems.fill();
+               selItems.clear();
                this._notifyOnPropertyChanged('selectedItems');
             }
             return;
@@ -432,7 +490,7 @@ define('js!SBIS3.CONTROLS.MultiSelectable', ['js!SBIS3.CONTROLS.Data.Collection.
 
          /* Соберём элементы для удаления, т.к. в методе each не отслеживаются изменения IList'а */
          selItems.each(function(rec) {
-            if(self._isItemSelected(rec.getKey()) === -1) {
+            if(!self._isItemSelected(rec.getKey())) {
                delItems.push(rec);
             }
          });
@@ -445,11 +503,24 @@ define('js!SBIS3.CONTROLS.MultiSelectable', ['js!SBIS3.CONTROLS.Data.Collection.
          }
       },
 
-      _isItemSelected : function(id) {
-         //TODO пока нет определенности ключ - строка или число - надо избавиться
-         var index = this._options.selectedKeys.indexOf(id);
-         if (index < 0) {
-            index = this._options.selectedKeys.indexOf(id + '')
+      _isItemSelected : function(item) {
+         return this._getSelectedIndex(item) !== -1;
+      },
+
+      _getSelectedIndex: function(item) {
+         var keys = this._options.selectedKeys,
+             index;
+
+         if($ws.helpers.instanceOfModule(item, 'SBIS3.CONTROLS.Data.Model')) {
+            index = this._options.selectedItems.getIndexByValue(item.getKeyField(), item.getKey());
+         } else {
+            index = Array.indexOf(keys, item);
+            if (index < 0) {
+               index = Array.indexOf(keys, parseInt(item, 10));
+            }
+            if (index < 0) {
+               index = Array.indexOf(keys, String(item));
+            }
          }
          return index;
       },
@@ -462,18 +533,21 @@ define('js!SBIS3.CONTROLS.MultiSelectable', ['js!SBIS3.CONTROLS.Data.Collection.
          return new List({items: listItems ? listItems : []});
       },
 
-	   _afterSelectionHandler: function() {
+	   _afterSelectionHandler: function(addedKeys, removedKeys) {
 		   if (this._checkEmptySelection()) {
 			   this._setFirstItemAsSelected();
 		   }
-		   this._notifySelectedItems(this._options.selectedKeys);
+		   this._notifySelectedItems(this._options.selectedKeys, {
+            added : addedKeys,
+            removed : removedKeys
+         });
 		   this._drawSelectedItems(this._options.selectedKeys);
 	   },
 
-      _notifySelectedItems : function(idArray) {
+      _notifySelectedItems : function(idArray, changed) {
          this._setSelectedItems();
-	     this._notifyOnPropertyChanged('selectedKeys');
-         this._notify('onSelectedItemsChange', idArray);
+         this._notifyOnPropertyChanged('selectedKeys');
+         this._notify('onSelectedItemsChange', idArray, changed);
       },
 
       _dataLoadedCallback : function(){
@@ -498,16 +572,16 @@ define('js!SBIS3.CONTROLS.MultiSelectable', ['js!SBIS3.CONTROLS.Data.Collection.
       },
 
       _setSelectedItems: function() {
-         if (this._dataSet) {
-            var self = this,
-                selItems = self._options.selectedItems,
-                record;
+         var dataSet = this.getDataSet(),
+             self = this,
+             record;
 
+         if (dataSet) {
             this._syncSelectedItems();
             $ws.helpers.forEach(this.getSelectedKeys(), function (key) {
-               record = self._dataSet.getRecordByKey(key);
-               if (record && !selItems.getItemByPropertyValue(record.getKeyField(), record.getKey())) {
-                  selItems.add(record);
+               record = dataSet.getRecordById(key);
+               if (record && !self._isItemSelected(record)) {
+                  self._options.selectedItems.add(record);
                }
             });
          }
