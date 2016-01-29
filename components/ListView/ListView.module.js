@@ -20,9 +20,9 @@ define('js!SBIS3.CONTROLS.ListView',
       'js!SBIS3.CONTROLS.EditInPlaceClickController',
       'js!SBIS3.CONTROLS.Link',
       'js!SBIS3.CONTROLS.ScrollWatcher',
-      'is!browser?html!SBIS3.CONTROLS.ListView/resources/ListViewGroupBy',
-      'is!browser?html!SBIS3.CONTROLS.ListView/resources/emptyData',
-      'is!browser?js!SBIS3.CONTROLS.ListView/resources/SwipeHandlers'
+      'browser!html!SBIS3.CONTROLS.ListView/resources/ListViewGroupBy',
+      'browser!html!SBIS3.CONTROLS.ListView/resources/emptyData',
+      'browser!js!SBIS3.CONTROLS.ListView/resources/SwipeHandlers'
    ],
    function (CompoundControl, CompoundActiveFixMixin, DSMixin, MultiSelectable,
              Selectable, DataBindMixin, DecorableMixin, ItemActionsGroup, dotTplFn,
