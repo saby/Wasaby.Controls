@@ -82,9 +82,9 @@ define('js!SBIS3.CONTROLS.ItemActionsGroup',
           * @private
           */
          _createItemActionMenu: function() {
-            var self = this;
-            var menuCont = $('> .controls-ItemActions__menu-container', this._getItemsContainer()[0]);
-            var verticalAlign = {
+            var self = this,
+                menuCont = $('> .controls-ItemActions__menu-container', this._getItemsContainer()[0]),
+                verticalAlign = {
                   side: 'top',
                   offset: VERTICAL_OFFSET
                },
@@ -93,7 +93,8 @@ define('js!SBIS3.CONTROLS.ItemActionsGroup',
                   offset: HORIZONTAL_OFFSET
                },
                target = this._itemActionsMenuButton,
-               corner = 'br';
+               corner = 'br',
+               items = this.getItems();
 
             if (this._touchActions) {
                menuCont.addClass('controls-ItemsActions__touch-actions');
@@ -105,10 +106,10 @@ define('js!SBIS3.CONTROLS.ItemActionsGroup',
 
             this._itemActionsMenu = new ContextMenu({
                element: menuCont.show(),
-               items: this._options.items,
+               items: items,
                keyField: this._options.keyField,
                //FIXME для обратной совместимости
-               displayField: this._options.items[0].title ? 'title' : 'caption',
+               displayField: items[0].title ? 'title' : 'caption',
                parent: this,
                opener: this,
                target:  target,
@@ -191,7 +192,13 @@ define('js!SBIS3.CONTROLS.ItemActionsGroup',
           * Показывает операции над записью
           */
          showItemActions: function(hoveredItem, position) {
-            var cont = this._container[0];
+            var cont = this._container[0],
+                hasVisibleOptions = $ws.helpers.find(this.getItemsInstances(), function(instance) {
+                   return instance.isVisible();
+                });
+
+            /* Если нет видимых операций над записью, то не будем вообще показывать блок с операциями */
+            if(!hasVisibleOptions) return;
 
             this._activeItem = hoveredItem;
             cont.style.right = position.right + 'px';
