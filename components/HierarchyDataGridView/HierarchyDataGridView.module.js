@@ -184,6 +184,7 @@ define('js!SBIS3.CONTROLS.HierarchyDataGridView', [
             cfg = {
                element : elem,
                items: this._createPathItemsDS(path),
+               parent: this.getTopParent(),
                highlightEnabled: this._options.highlightEnabled,
                highlightText: this._options.highlightText,
                colorMarkEnabled: this._options.colorMarkEnabled,
