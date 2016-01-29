@@ -162,9 +162,9 @@ define('js!SBIS3.CONTROLS.CompositeViewMixin', ['html!SBIS3.CONTROLS.CompositeVi
             return parentOptions;
          },
 
-         expandNode: function(parentFunc, key) {
+         expandNode: function(parentFunc, key, needReload) {
             if(this.getViewMode() === 'table') {
-               parentFunc.call(this, key);
+               parentFunc.call(this, key, needReload);
 
             }
          },
