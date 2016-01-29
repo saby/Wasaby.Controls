@@ -43,8 +43,6 @@ define('js!SBIS3.CONTROLS.MoveHandlers', ['js!SBIS3.CORE.Dialog','js!SBIS3.CONTR
          var
             recordTo,
             deferred,
-            isRecord,
-            keys = [],
             self = this,
             isNodeTo = true,
             isChangeOrder = insertAfter !== undefined;
@@ -65,9 +63,7 @@ define('js!SBIS3.CONTROLS.MoveHandlers', ['js!SBIS3.CORE.Dialog','js!SBIS3.CONTR
 
          if (this._checkRecordsForMove(records, recordTo, isChangeOrder)) {
             for (var i = 0; i < records.length; i++) {
-               isRecord = $ws.helpers.instanceOfModule(records[i], 'SBIS3.CONTROLS.Record') || $ws.helpers.instanceOfModule(records[i], 'SBIS3.CONTROLS.Data.Model');
-               keys[i] = isRecord ? records[i].getId() : records[i];
-               records[i] = isRecord ? records[i] : this._dataSet.getRecordByKey(records[i]);
+               records[i] = ($ws.helpers.instanceOfModule(records[i], 'SBIS3.CONTROLS.Record') || $ws.helpers.instanceOfModule(records[i], 'SBIS3.CONTROLS.Data.Model')) ? records[i] : this._dataSet.getRecordByKey(records[i]);
             }
             if (isNodeTo && !isChangeOrder) {
                deferred = this.getMoveStrategy().hierarhyMove(records, recordTo);
@@ -78,24 +74,13 @@ define('js!SBIS3.CONTROLS.MoveHandlers', ['js!SBIS3.CORE.Dialog','js!SBIS3.CONTR
             if (deferred instanceof $ws.proto.Deferred) {//обновляем view если вернули true либо deferred
                deferred.addCallback(function() {
                   self.removeItemsSelectionAll();
-                  if (isNodeTo && !isChangeOrder && self._options.allowEnterToFolder) {
-                     self._redrawAfterMove(keys, moveTo);
+                  if (isNodeTo && !isChangeOrder) {
+                     self.setCurrentRoot(moveTo);
                   }
+                  self.reload();
                });
             }
          }
-      },
-      _redrawAfterMove: function(keys, moveTo) {
-         this.partialyReload(keys);
-         if (this._options.openedPath[moveTo]) {
-            this.expandNode(moveTo, true)
-         }
-         /*$ws.helpers.forEach(records, function(record) {
-            rawForDelete = this._getElementForRedraw(record);
-            if (rawForDelete) {
-               rawForDelete.remove();
-            }
-         }, this);*/
       },
       _checkRecordsForMove: function(records, recordTo, isChangeOrder) {
          var
