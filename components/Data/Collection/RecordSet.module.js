@@ -158,16 +158,18 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
          added = added === undefined ? true : added;
          changed = changed === undefined ? true : changed;
          deleted = deleted === undefined ? true : deleted;
-         var self = this;
+
          var syncCompleteDef = new $ws.proto.ParallelDeferred(),
-            willRemove = [];
+            self = this,
+            position = 0;
          this.each(function(model) {
             if (model.isDeleted()) {
-               syncCompleteDef.push(dataSource.destroy(model.getId()).addCallback(function() {
-                  model.setStored(false);
-                  willRemove.push(model);//each рушится если удалять тут, поэтому удаляем потом
-                  return model;
-               }));
+               (function(position){
+                  syncCompleteDef.push(dataSource.destroy(model.getId()).addCallback(function() {
+                     self.removeAt(position);
+                     return model;
+                  }));
+               })(position);
             } else if (model.isChanged() || !model.isStored()) {
                syncCompleteDef.push(dataSource.update(model).addCallback(function() {
                   model.applyChanges();
@@ -175,11 +177,11 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
                   return model;
                }));
             }
+            position++;
          }, 'all');
+
          syncCompleteDef.done(true);
-         return syncCompleteDef.getResult().addCallback(function (){
-            $ws.helpers.map(willRemove, self.remove, self);
-         });
+         return syncCompleteDef.getResult();
       },
 
       /**
