@@ -11,6 +11,7 @@ define('js!SBIS3.CONTROLS.ListView',
       'js!SBIS3.CONTROLS.Selectable',
       'js!SBIS3.CONTROLS.DataBindMixin',
       'js!SBIS3.CONTROLS.DecorableMixin',
+      'js!SBIS3.CONTROLS.DragNDropMixin',
       'js!SBIS3.CONTROLS.ItemActionsGroup',
       'html!SBIS3.CONTROLS.ListView',
       'js!SBIS3.CONTROLS.CommonHandlers',
@@ -25,7 +26,7 @@ define('js!SBIS3.CONTROLS.ListView',
       'is!browser?js!SBIS3.CONTROLS.ListView/resources/SwipeHandlers'
    ],
    function (CompoundControl, CompoundActiveFixMixin, DSMixin, MultiSelectable,
-             Selectable, DataBindMixin, DecorableMixin, ItemActionsGroup, dotTplFn,
+             Selectable, DataBindMixin, DecorableMixin, DragNDropMixin, ItemActionsGroup, dotTplFn,
              CommonHandlers, MoveHandlers, Pager, EditInPlaceHoverController, EditInPlaceClickController,
              Link, ScrollWatcher, groupByTpl, emptyDataTpl) {
 
@@ -33,6 +34,7 @@ define('js!SBIS3.CONTROLS.ListView',
 
       var
          ITEMS_ACTIONS_HEIGHT = 20,
+         DRAG_AVATAR_OFFSET = 5,
          START_NEXT_LOAD_OFFSET = 180;
 
       /**
@@ -58,7 +60,7 @@ define('js!SBIS3.CONTROLS.ListView',
        */
 
       /*TODO CommonHandlers MoveHandlers тут в наследовании не нужны*/
-      var ListView = CompoundControl.extend([CompoundActiveFixMixin, DSMixin, MultiSelectable, Selectable, DataBindMixin, DecorableMixin, CommonHandlers, MoveHandlers], /** @lends SBIS3.CONTROLS.ListView.prototype */ {
+      var ListView = CompoundControl.extend([CompoundActiveFixMixin, DSMixin, MultiSelectable, Selectable, DataBindMixin, DecorableMixin, DragNDropMixin, CommonHandlers, MoveHandlers], /** @lends SBIS3.CONTROLS.ListView.prototype */ {
          _dotTplFn: dotTplFn,
          /**
           * @event onChangeHoveredItem При переводе курсора мыши на другую запись
@@ -300,7 +302,7 @@ define('js!SBIS3.CONTROLS.ListView',
                 *     <option name="itemsDragNDrop">true</option>
                 * </pre>
                 */
-               itemsDragNDrop: false,
+               itemsDragNDrop: true,
                elemClickHandler: null,
                /**
                 * @cfg {Boolean} Разрешить выбор нескольких строк
@@ -399,6 +401,10 @@ define('js!SBIS3.CONTROLS.ListView',
             this._container.on('mousemove', this._mouseMoveHandler.bind(this))
                            .on('mouseleave', this._mouseLeaveHandler.bind(this));
 
+            if (this._options.itemsDragNDrop) {
+               this._dragStartHandler = this._onDragStart.bind(this);
+               this._getItemsContainer().bind('mousedown', this._dragStartHandler);
+            }
             this.initEditInPlace();
             $ws.single.CommandDispatcher.declareCommand(this, 'activateItem', this._activateItem);
             $ws.single.CommandDispatcher.declareCommand(this, 'beginAdd', this._beginAdd);
@@ -997,6 +1003,10 @@ define('js!SBIS3.CONTROLS.ListView',
           * @private
           */
          _showItemActions: function (item) {
+            //Если происходит перемещение записей, не нужно показывать операции над записями
+            if (this._isShifted) {
+               return;
+            }
             //Создадим операции над записью, если их нет
             var itemsActions = this.getItemsActions();
             itemsActions.applyItemActions();
@@ -1575,7 +1585,155 @@ define('js!SBIS3.CONTROLS.ListView',
                this._pager = undefined;
             }
             ListView.superclass.destroy.call(this);
+         },
+         /**
+          * двигает элемент
+          * Метод будет удален после того как перерисовка научится сохранять раскрытые узлы в дереве
+          * @param {String} item  - идентифкатор первого элемента
+          * @param {String} anchor - идентифкатор второго элемента
+          * @param {Boolean} before - если true то вставит перед anchor иначе после него
+          * @private
+          */
+         _moveItemTo: function(item, anchor, before){
+            //TODO метод сделан специально для перемещения элементов, этот костыль надо удалить и переписать через _redraw
+            var itemsContainer = this._getItemsContainer(),
+               itemContainer = itemsContainer.find('tr[data-id="'+item+'"]'),
+               anchor = itemsContainer.find('tr[data-id="'+anchor+'"]'),
+               rows;
+
+            if(before){
+               rows = [anchor.prev(), itemContainer, anchor, itemContainer.next()];
+               itemContainer.insertBefore(anchor);
+            } else {
+               rows = [itemContainer.prev(), anchor, itemContainer, anchor.next()];
+               itemContainer.insertAfter(anchor);
+            }
+            this._ladderCompare(rows);
+         },
+         _ladderCompare: function(rows){
+            //TODO придрот - метод нужен только для адекватной работы лесенки при перемещении элементов местами
+            for (var i = 1; i < rows.length; i++){
+               var upperRow = $('.controls-ladder', rows[i - 1]),
+                  lowerRow = $('.controls-ladder', rows[i]);
+               for (var j = 0; j < lowerRow.length; j++){
+                  lowerRow.eq(j).toggleClass('ws-invisible', upperRow.eq(j).html() == lowerRow.eq(j).html());
+               }
+            }
+         },
+         /*DRAG_AND_DROP START*/
+         _findDragDropContainer: function() {
+            return this._getItemsContainer();
+         },
+         _getDragItems: function(key) {
+            var keys = this._options.multiselect ? $ws.core.clone(this.getSelectedKeys()) : [];
+            if ($.inArray(key, keys) < 0) {
+               keys.push(key);
+            }
+            return keys;
+         },
+         _onDragStart: function(e) {
+            //TODO: придумать как избавиться от второй проверки. За поля ввода DragNDrop происходить не должен.
+            if (this._isShifted || $ws.helpers.instanceOfModule($(e.target).wsControl(), 'SBIS3.CONTROLS.TextBoxBase')) {
+               return;
+            }
+            var
+                target = $(e.target).closest('.controls-ListView__item'),
+                id = target.data('id');
+            if (id) {
+               this.setCurrentElement(e, {
+                  keys: this._getDragItems(id),
+                  targetId: id,
+                  target: target,
+                  insertAfter: undefined
+               });
+            }
+            //Предотвращаем нативное выделение текста на странице
+            if (!$ws._const.compatibility.touch) {
+               e.preventDefault();
+            }
+         },
+         _callMoveOutHandler: function() {
+         },
+         _callMoveHandler: function(e) {
+            var
+                insertAfter,
+                isCorrectDrop,
+                currentElement = this.getCurrentElement(),
+                target = $(e.target).closest('.js-controls-ListView__item');
+            this._clearDragHighlight();
+            if (target.length && target.data('id') != currentElement.targetId) {
+               insertAfter = this._getDirectionOrderChange(e, target);
+            }
+            isCorrectDrop = this._notify('onDragMove', currentElement.keys, target.data('id'), insertAfter);
+            if (isCorrectDrop !== false) {
+               this._setDragTarget(target, insertAfter);
+            }
+            this._setAvatarPosition(e);
+         },
+         _setDragTarget: function(target, insertAfter) {
+            var currentElement = this.getCurrentElement();
+            if (target.length) {
+               if (insertAfter === true && target.next().data('id') !== currentElement.targetId) {
+                  target.addClass('controls-DragNDrop__insertAfter');
+               } else if (insertAfter === false && target.prev().data('id') !== currentElement.targetId) {
+                  target.addClass('controls-DragNDrop__insertBefore');
+               }
+            }
+            currentElement.insertAfter = insertAfter;
+            currentElement.target = target;
+         },
+         _getDirectionOrderChange: function(e, target) {
+            return this._getOrderPosition(e.pageY - target.offset().top, target.height());
+         },
+         _getOrderPosition: function(offset, metric) {
+            return offset < 10 ? false : offset > metric - 10 ? true : undefined;
+         },
+         _createAvatar: function(e){
+            var count = this.getCurrentElement().keys.length;
+            this._avatar = $('<div class="controls-DragNDrop__draggedItem"><span class="controls-DragNDrop__draggedCount">' + count + '</span></div>')
+                .css('z-index', $ws.single.WindowManager.acquireZIndex(false)).appendTo($('body'));
+            this._setAvatarPosition(e);
+         },
+         _setAvatarPosition: function(e) {
+            this._avatar.css({
+               'left': e.pageX + DRAG_AVATAR_OFFSET,
+               'top': e.pageY + DRAG_AVATAR_OFFSET
+            });
+         },
+         _callDropHandler: function(e) {
+            var
+                clickHandler,
+                currentElement = this.getCurrentElement(),
+                targetId = currentElement.target.data('id');
+            //TODO придрот для того, чтобы если перетащить элемент сам на себя не отработал его обработчик клика
+            if (this.getSelectedKey() == targetId) {
+               clickHandler = this._elemClickHandler;
+               this._elemClickHandler = function() {
+                  this._elemClickHandler = clickHandler;
+               }
+            }
+            this._move(currentElement.keys, targetId, currentElement.insertAfter);
+         },
+         _beginDropDown: function(e) {
+            this.setSelectedKey(this.getCurrentElement().targetId);
+            this._isShifted = true;
+            this._createAvatar(e);
+            this._hideItemActions();
+         },
+         _clearDragHighlight: function() {
+            this.getCurrentElement().target.removeClass('controls-DragNDrop__insertBefore controls-DragNDrop__insertAfter');
+         },
+         _endDropDown: function() {
+            var hoveredItem = this.getHoveredItem();
+            $ws.single.WindowManager.releaseZIndex(this._avatar.css('z-index'));
+            this._clearDragHighlight();
+            this._avatar.remove();
+            this._isShifted = false;
+            if (this.getItemsActions() && hoveredItem.container) {
+               this._showItemActions(hoveredItem);
+            }
          }
+         /*DRAG_AND_DROP END*/
       });
 
       return ListView;
