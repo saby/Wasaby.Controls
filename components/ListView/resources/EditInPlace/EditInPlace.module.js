@@ -219,7 +219,7 @@ define('js!SBIS3.CONTROLS.EditInPlace',
                this._options.editingItem.model = model;
             },
             getEditingItem: function() {
-               return this._options.editingItem;
+               return this._editingItem;
             },
             _deactivateActiveChildControl: function() {
                var activeChild = this.getActiveChildControl();
