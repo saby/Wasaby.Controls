@@ -5,13 +5,14 @@ define('js!SBIS3.CONTROLS.DataGridView',
       'html!SBIS3.CONTROLS.DataGridView/resources/rowTpl',
       'html!SBIS3.CONTROLS.DataGridView/resources/colgroupTpl',
       'html!SBIS3.CONTROLS.DataGridView/resources/headTpl',
+      'html!SBIS3.CONTROLS.DataGridView/resources/resultsTpl',
       'js!SBIS3.CORE.MarkupTransformer',
       'js!SBIS3.CONTROLS.DragAndDropMixin',
       'is!browser?html!SBIS3.CONTROLS.DataGridView/resources/DataGridViewGroupBy',
       'js!SBIS3.CONTROLS.Utils.HtmlDecorators/LadderDecorator',
       'js!SBIS3.CONTROLS.Utils.TemplateUtil'
    ],
-   function(ListView, dotTplFn, rowTpl, colgroupTpl, headTpl, MarkupTransformer, DragAndDropMixin, groupByTpl, LadderDecorator, TemplateUtil) {
+   function(ListView, dotTplFn, rowTpl, colgroupTpl, headTpl, resultsTpl, MarkupTransformer, DragAndDropMixin, groupByTpl, LadderDecorator, TemplateUtil) {
    'use strict';
       /* TODO: Надо считать высоту один раз, а не делать константой */
       var
@@ -66,6 +67,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
              * @property {String} width Ширина колонки
              * Значение необходимо задавать для колонок с фиксированной шириной.
              * @property {Boolean} highlight=true Подсвечивать фразу при поиске
+             * @property {String} resultTemplate Шаблон отображения колонки в строке результатов
              * @property {String} className Имя класса, который будет применён к каждой ячейке столбца
              * @property {String} headTemplate Шаблон отображения шапки колонки
              * @property {String} headTooltip Всплывающая подсказка шапки колонки
@@ -123,7 +125,8 @@ define('js!SBIS3.CONTROLS.DataGridView',
              * @cfg {Array} Лесенка
              * Массив имен столбцов, по которым строится лесенка
              */
-            ladder: undefined
+            ladder: undefined,
+            resultsTpl: resultsTpl
          }
       },
 
@@ -654,6 +657,33 @@ define('js!SBIS3.CONTROLS.DataGridView',
       //------------------------GroupBy---------------------
       _getGroupTpl : function(){
          return this._options.groupBy.template || groupByTpl;
+      },
+      _getResultsData: function(){
+         var resultsDS = this.getDataSet().getMetaData().results,
+            self = this,
+            value,
+            data;
+         if (!resultsDS){
+            return;
+         }
+         data = $ws.helpers.map(this.getColumns(), function(col){
+            value = resultsDS.get(col.field);
+            if (value == undefined){
+               return '';
+            }
+            return self._getColumnResultTemplate(col, $ws.render.defaultColumn.integer(value));
+         });
+         data[0] = this._options.resultsText;
+         return data;
+      },
+      _getColumnResultTemplate: function (column, result) {
+         var columnTpl = result;
+         if (column.resultTemplate) {
+            columnTpl = MarkupTransformer(TemplateUtil.prepareTemplate(column.resultTemplate)({
+               result: result
+            }));
+         }
+         return columnTpl;
       },
 
       destroy: function() {
