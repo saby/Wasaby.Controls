@@ -1723,7 +1723,7 @@ define('js!SBIS3.CONTROLS.ListView',
             this._clearDragHighlight();
             this._avatar.remove();
             this._isShifted = false;
-            if (hoveredItem.container) {
+            if (this.getItemsActions() && hoveredItem.container) {
                this._showItemActions(hoveredItem);
             }
          }
