@@ -158,7 +158,7 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', ['js!SBIS3.CORE.Control'], function (Con
 
       expandNode: function (key) {
          /* Если узел уже открыт, то ничего делать не надо*/
-         if(this.getOpenedPath()[key]) {
+         if(this.getOpenedPath()[key] || forceReload) {
             return;
          }
 
@@ -173,7 +173,7 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', ['js!SBIS3.CORE.Control'], function (Con
                }
             });
          }
-         if (!tree[key]){
+         if (!tree[key] || forceReload){
             this._toggleIndicator(true);
             return this._callQuery(this._createTreeFilter(key), this.getSorting(), 0, this._limit).addCallback(function (dataSet) {
                // TODO: Отдельное событие при загрузке данных узла. Сделано так как тут нельзя нотифаить onDataLoad,
