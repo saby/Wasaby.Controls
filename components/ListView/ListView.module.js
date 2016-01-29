@@ -301,7 +301,7 @@ define('js!SBIS3.CONTROLS.ListView',
                 *     <option name="itemsDragNDrop">true</option>
                 * </pre>
                 */
-               itemsDragNDrop: false,
+               itemsDragNDrop: true,
                elemClickHandler: null,
                /**
                 * @cfg {Boolean} Разрешить выбор нескольких строк
