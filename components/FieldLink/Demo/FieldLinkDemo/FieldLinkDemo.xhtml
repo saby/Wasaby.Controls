@@ -70,6 +70,39 @@
         <opt name="onInitComplete" type="function">js!SBIS3.CONTROLS.Demo.FieldLinkDemo:prototype.initFiledLink2</opt>
     </opts>
     </component>
+    <h2>В виде ссылки</h2>
+    <component data-component="SBIS3.CONTROLS.SelectorButton">
+        <option name="icon">icon-16 icon-Erase icon-error</option>
+        <option name="caption">Кнопка</option>
+        <option name="multiselect" type="boolean">false</option>
+        <option name="defaultCaption" value=""></option>
+        <opt name="displayField" value="Название"></opt>
+        <opts name="dictionaries" type="array">
+            <opts>
+                <opt name="caption">Должности</opt>
+                <opt name="template">js!SBIS3.CONTROLS.Demo.FieldLinkDemoTemplate</opt>
+            </opts>
+        </opts>
+        <opts name="handlers">
+            <opt name="onInitComplete" type="function">js!SBIS3.CONTROLS.Demo.FieldLinkDemo:prototype.initFiledLink2</opt>
+        </opts>
+    </component>
+    <h2>В виде ссылки без иконки</h2>
+    <component data-component="SBIS3.CONTROLS.SelectorButton" class="controls-SelectorButton__asLink">
+        <option name="caption">Кнопка</option>
+        <option name="multiselect" type="boolean">false</option>
+        <option name="defaultCaption" value="Кнопка"></option>
+        <opt name="displayField" value="Название"></opt>
+        <opts name="dictionaries" type="array">
+            <opts>
+                <opt name="caption">Должности</opt>
+                <opt name="template">js!SBIS3.CONTROLS.Demo.FieldLinkDemoTemplate</opt>
+            </opts>
+        </opts>
+        <opts name="handlers">
+            <opt name="onInitComplete" type="function">js!SBIS3.CONTROLS.Demo.FieldLinkDemo:prototype.initFiledLink2</opt>
+        </opts>
+    </component>
     <h2>Возможные значения для ввода:</h2>
     <ul>
         <li>Инженер-программист</li>

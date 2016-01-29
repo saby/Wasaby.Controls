@@ -194,6 +194,10 @@ define('js!SBIS3.CONTROLS.ListView',
                $ws._const.key.o
             ],
             _itemActionsGroup: null,
+            _editingItem: {
+               target: null,
+               model: null
+            },
             _emptyData: undefined,
             _containerScrollHeight : 0,
             _firstScrollTop : true,
@@ -875,6 +879,13 @@ define('js!SBIS3.CONTROLS.ListView',
             }
          },
 
+         redrawItem: function(item) {
+            ListView.superclass.redrawItem.apply(this, arguments);
+            if (this._editingItem.model && this._editingItem.model.getKey() === item.getKey()) {
+               this._editingItem.target = this._getElementByModel(item);
+            }
+         },
+
          /**
           * @private
           */
@@ -905,6 +916,7 @@ define('js!SBIS3.CONTROLS.ListView',
             var
                config = {
                   dataSet: this._dataSet,
+                  editingItem: this._editingItem,
                   ignoreFirstColumn: this._options.multiselect,
                   columns: this._options.columns,
                   dataSource: this._dataSource,
@@ -937,7 +949,7 @@ define('js!SBIS3.CONTROLS.ListView',
             return config;
          },
 
-         _getElementForRedraw: function(item) {
+         _getElementByModel: function(item) {
             // Даже не думать удалять ":not(...)". Это связано с тем, что при редактировании по месту может возникнуть задача перерисовать строку
             // DataGridView. В виду одинакового атрибута "data-id", это единственный способ отличить строку DataGridView от строки EditInPlace.
             return this._getItemsContainer().find('.js-controls-ListView__item[data-id="' + item.getKey() + '"]:not(".controls-editInPlace")');
