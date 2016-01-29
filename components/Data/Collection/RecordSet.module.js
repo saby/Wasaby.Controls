@@ -55,15 +55,14 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
 
          var syncCompleteDef = new $ws.proto.ParallelDeferred(),
             self = this,
-            position = 0;
+            position = 0,
+            willRemove = [];
          this.each(function(model) {
             if (model.isDeleted()) {
-               (function(position){
-                  syncCompleteDef.push(dataSource.destroy(model.getId()).addCallback(function() {
-                     self.removeAt(position);
-                     return model;
-                  }));
-               })(position);
+               syncCompleteDef.push(dataSource.destroy(model.getId()).addCallback(function() {
+                  willRemove.push(model);
+                  return model;
+               }));
             } else if (model.isChanged() || !model.isStored()) {
                syncCompleteDef.push(dataSource.update(model).addCallback(function() {
                   model.applyChanges();
@@ -75,7 +74,9 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
          }, 'all');
 
          syncCompleteDef.done(true);
-         return syncCompleteDef.getResult();
+         return syncCompleteDef.getResult(true).addCallback(function(){
+            $ws.helpers.map(willRemove, self.remove, self);
+         });
       },
 
       getRawData: function() {
