@@ -11,7 +11,7 @@ define('js!SBIS3.CONTROLS.Data.Types.Enum', [
     * @author Ганшнин Ярослав
     */
    'use strict';
-   var Enum = $ws.core.extend({}, [IEnumerable], {
+   var Enum = $ws.core.extend({}, [IEnumerable],/** @lends SBIS3.CONTROLS.Data.Types.Enum.prototype */ {
       _moduleName: 'SBIS3.CONTROLS.Data.Types.Enum',
       $protected: {
          _options: {

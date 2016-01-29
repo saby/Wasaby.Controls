@@ -11,7 +11,7 @@ define('js!SBIS3.CONTROLS.Data.Types.Flags', [
     * @author Ганшин Ярослав
     */
 
-   var Flags = $ws.core.extend({}, [IEnumerable], {
+   var Flags = $ws.core.extend({}, [IEnumerable],/** @lends SBIS3.CONTROLS.Data.Types.Flags.prototype */ {
       _moduleName: 'SBIS3.CONTROLS.Data.Types.Flags',
       $protected: {
          _options: {
