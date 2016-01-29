@@ -191,9 +191,14 @@ define('js!SBIS3.CONTROLS.ListView',
                $ws._const.key.enter,
                $ws._const.key.right,
                $ws._const.key.left,
+               $ws._const.key.m,
                $ws._const.key.o
             ],
             _itemActionsGroup: null,
+            _editingItem: {
+               target: null,
+               model: null
+            },
             _emptyData: undefined,
             _containerScrollHeight : 0,
             _firstScrollTop : true,
@@ -875,6 +880,13 @@ define('js!SBIS3.CONTROLS.ListView',
             }
          },
 
+         redrawItem: function(item) {
+            ListView.superclass.redrawItem.apply(this, arguments);
+            if (this._editingItem.model && this._editingItem.model.getKey() === item.getKey()) {
+               this._editingItem.target = this._getElementByModel(item);
+            }
+         },
+
          /**
           * @private
           */
@@ -905,6 +917,7 @@ define('js!SBIS3.CONTROLS.ListView',
             var
                config = {
                   dataSet: this._dataSet,
+                  editingItem: this._editingItem,
                   ignoreFirstColumn: this._options.multiselect,
                   columns: this._options.columns,
                   dataSource: this._dataSource,
@@ -937,7 +950,7 @@ define('js!SBIS3.CONTROLS.ListView',
             return config;
          },
 
-         _getElementForRedraw: function(item) {
+         _getElementByModel: function(item) {
             // Даже не думать удалять ":not(...)". Это связано с тем, что при редактировании по месту может возникнуть задача перерисовать строку
             // DataGridView. В виду одинакового атрибута "data-id", это единственный способ отличить строку DataGridView от строки EditInPlace.
             return this._getItemsContainer().find('.js-controls-ListView__item[data-id="' + item.getKey() + '"]:not(".controls-editInPlace")');
@@ -1562,40 +1575,6 @@ define('js!SBIS3.CONTROLS.ListView',
                this._pager = undefined;
             }
             ListView.superclass.destroy.call(this);
-         },
-         /**
-          * двигает элемент
-          * Метод будет удален после того как перерисовка научится сохранять раскрытые узлы в дереве
-          * @param {String} item  - идентифкатор первого элемента
-          * @param {String} anchor - идентифкатор второго элемента
-          * @param {Boolean} before - если true то вставит перед anchor иначе после него
-          * @private
-          */
-         _moveItemTo: function(item, anchor, before){
-            //TODO метод сделан специально для перемещения элементов, этот костыль надо удалить и переписать через _redraw
-            var itemsContainer = this._getItemsContainer(),
-               itemContainer = itemsContainer.find('tr[data-id="'+item+'"]'),
-               anchor = itemsContainer.find('tr[data-id="'+anchor+'"]'),
-               rows;
-
-            if(before){
-               rows = [anchor.prev(), itemContainer, anchor, itemContainer.next()];
-               itemContainer.insertBefore(anchor);
-            } else {
-               rows = [itemContainer.prev(), anchor, itemContainer, anchor.next()];
-               itemContainer.insertAfter(anchor);
-            }
-            this._ladderCompare(rows);
-         },
-         _ladderCompare: function(rows){
-            //TODO придрот - метод нужен только для адекватной работы лесенки при перемещении элементов местами
-            for (var i = 1; i < rows.length; i++){
-               var upperRow = $('.controls-ladder', rows[i - 1]),
-                  lowerRow = $('.controls-ladder', rows[i]);
-               for (var j = 0; j < lowerRow.length; j++){
-                  lowerRow.eq(j).toggleClass('ws-invisible', upperRow.eq(j).html() == lowerRow.eq(j).html());
-               }
-            }
          }
       });
 

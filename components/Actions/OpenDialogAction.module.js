@@ -1,4 +1,4 @@
-define('js!SBIS3.CONTROLS.OpenDialogAction', ['js!SBIS3.CONTROLS.ActionBase', 'js!SBIS3.CORE.Dialog', 'js!SBIS3.CORE.FloatArea'], function(ActionBase, Dialog, FloatArea){
+define('js!SBIS3.CONTROLS.OpenDialogAction', ['js!SBIS3.CONTROLS.DialogActionBase'], function(DialogActionBase){
    'use strict';
 
    /**
@@ -25,62 +25,12 @@ define('js!SBIS3.CONTROLS.OpenDialogAction', ['js!SBIS3.CONTROLS.ActionBase', 'j
     * @ignoreEvents onActivate onAfterLoad onAfterShow onBeforeControlsLoad onBeforeLoad onBeforeShow onChange onClick
     * @ignoreEvents onFocusIn onFocusOut onKeyPressed onReady onResize onStateChanged onTooltipContentRequest
     */
-   var OpenDialogAction = ActionBase.extend(/** @lends SBIS3.CONTROLS.OpenDialogAction.prototype */{
-      $protected : {
-         _options : {
-            /**
-             * @cfg {String}
-             * Компонент который будет отображен
-             */
-            dialogComponent : '',
-            /**
-             * @cfg {String}
-             * @variant dialog в новом диалоге
-             * @variant floatArea во всплывающей панели
-             * Режим отображения компонента редактирования - в диалоге или панели
-             */
-            mode: 'dialog'
-         } 
-      },
-
-      execute : function(meta) {
-         this._opendEditComponent(meta, this._options.dialogComponent);
-      },
-
-      _openDialog: function(meta, dialogComponent){
-         this._opendEditComponent(meta, dialogComponent, 'dialog');
-      },
-
-      _openFloatArea: function(meta, dialogComponent){
-         this._opendEditComponent(meta, dialogComponent, 'floatArea');
-      },
-
-      _opendEditComponent: function(meta, dialogComponent, mode){
-         var self = this,
-            config = {
-               opener: this,
-               template: dialogComponent,
-                //TODO: в .100 избавиться от merge, в .30 сделано для совместимости
-               componentOptions: $ws.core.merge(meta, {
-                  key : meta.id,
-                  initValues : meta.filter
-               })
-            }, 
-            Component;
-
-         mode = mode || this._options.mode;
-         if (mode == 'floatArea'){
-            Component = FloatArea;
-            config.isStack = true;
-         } else if (mode == 'dialog'){
-            Component = Dialog;
+   var OpenDialogAction = DialogActionBase.extend(/** @lends SBIS3.CONTROLS.OpenDialogAction.prototype */{
+      _buildComponentConfig: function(meta) {
+         return {
+            key : meta.id,
+            initValues : meta.filter
          }
-         
-         new Component(config).subscribe('onAfterClose', function(e, meta){
-            if (meta === true || Object.isValid(meta)) {
-               self._notifyOnExecuted(meta);
-            }
-         });
       }
    });
    return OpenDialogAction;

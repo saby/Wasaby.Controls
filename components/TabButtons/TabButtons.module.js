@@ -70,6 +70,7 @@ define(
          return this._options.itemTemplate.call(this,
             {
                item: item,
+               allowChangeEnable: this._options.allowChangeEnable,
                caption: item.get(displayField)
             }
          );

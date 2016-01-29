@@ -1,7 +1,7 @@
 /**
  * Created by as.suhoruchkin on 21.07.2015.
  */
-define('js!SBIS3.CONTROLS.MoveHandlers', ['js!SBIS3.CONTROLS.MoveDialog','js!SBIS3.CONTROLS.Data.MoveStrategy.Sbis', 'js!SBIS3.CONTROLS.Data.MoveStrategy.Base'], function(MoveDialog, SbisMoveStrategy, BaseMoveStrategy) {
+define('js!SBIS3.CONTROLS.MoveHandlers', ['js!SBIS3.CORE.Dialog','js!SBIS3.CONTROLS.Data.MoveStrategy.Sbis', 'js!SBIS3.CONTROLS.Data.MoveStrategy.Base', 'js!SBIS3.CONTROLS.MoveDialogTemplate'], function(MoveDialog, SbisMoveStrategy, BaseMoveStrategy) {
    var MoveHandlers = {
       $protected: {
         _moveStrategy: undefined
@@ -10,12 +10,17 @@ define('js!SBIS3.CONTROLS.MoveHandlers', ['js!SBIS3.CONTROLS.MoveDialog','js!SBI
          var self = this;
          records = this._getRecordsForMove(records);
          if (records.length) {
-            new MoveDialog({
-               linkedView: this,
-               records: records,
-               handlers: {
-                  onPrepareFilterOnMove: function(event, rec) {
-                     event.setResult(self._notify('onPrepareFilterOnMove', rec))
+            new Dialog({
+               template: 'js!SBIS3.CONTROLS.MoveDialogTemplate',
+               title: 'Перенести ' + records.length + ' запис' + $ws.helpers.wordCaseByNumber(records.length, 'ей', 'ь', 'и') + ' в',
+               cssClassName: 'controls-moveDialog',
+               componentOptions: {
+                  linkedView: this,
+                  records: records,
+                  handlers: {
+                     onPrepareFilterOnMove: function(event, rec) {
+                        event.setResult(self._notify('onPrepareFilterOnMove', rec))
+                     }
                   }
                }
             });
@@ -69,7 +74,7 @@ define('js!SBIS3.CONTROLS.MoveHandlers', ['js!SBIS3.CONTROLS.MoveDialog','js!SBI
             if (deferred instanceof $ws.proto.Deferred) {//обновляем view если вернули true либо deferred
                deferred.addCallback(function() {
                   self.removeItemsSelectionAll();
-                  if (isNodeTo && !isChangeOrder && self._options.allowEnterToFolder) {
+                  if (isNodeTo && !isChangeOrder) {
                      self.setCurrentRoot(moveTo);
                   }
                   self.reload();
@@ -190,7 +195,6 @@ define('js!SBIS3.CONTROLS.MoveHandlers', ['js!SBIS3.CONTROLS.MoveDialog','js!SBI
          var index = self._dataSet.getIndex(item);
          index = up ? index : ++index;
          self._dataSet.add(itemRecord, index < self._dataSet.getCount() ? index : undefined);
-         self._moveItemTo(current, moveTo, up);
       }).addErrback(function(e){
          $ws.core.alert(e.message);
       });
