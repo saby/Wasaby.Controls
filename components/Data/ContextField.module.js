@@ -269,7 +269,7 @@ define('js!SBIS3.CONTROLS.Data.ContextField', [
          });
       },
       registerEnum: function(name, module) {
-         $ws.proto.Context.registerFieldType({
+         var EnumFieldType = {
             name: name,
 
             is: function (value) {
@@ -277,33 +277,63 @@ define('js!SBIS3.CONTROLS.Data.ContextField', [
             },
 
             get: function (value, keyPath) {
-               var
-                  Context = $ws.proto.Context,
-                  NonExistentValue = $ws.proto.Context.NonExistentValue,
-                  recordSet = value,
-                  count = recordSet.getCount(),
-                  idx, result, subValue, key, subType;
+               var result;
 
-               if (keyPath.length !== 0) {
-                  key = keyPath[0];
-                  idx = getRsIdx(key);
+               if (keyPath.length === 0) {
+                  return value;
+               } else  {
+                  return $ws.proto.Context.NonExistentValue;
+               }
+            },
 
-                  if (idx >= 0 && idx < count) {//at
-                     subValue = recordSet.at(idx);
-                     subType = Context.getValueType(subValue);
-                     result = subType.get(subValue, keyPath.slice(1));
-                  } else {
-                     result = NonExistentValue;
-                  }
-               } else {
-                  result = value;
+            setWillChange: function (oldValue, keyPath, value) {
+               var result, subValue, subType, key;
+
+               if (keyPath.length === 0) {
+                  result = !SimpleFieldType.equals(oldValue, value);
+               } else  {
+                  result = false;
                }
 
                return result;
             },
 
-         });
-      },
+            set: function (oldValue, keyPath, value) {
+               var subValue, newSubValue, subType, key, result,
+                  isEqual, equals = SimpleFieldType.equals;
+
+               if (keyPath.length === 0) {
+                  result = value;
+               }
+               else {
+                  result = oldValue;
+               }
+
+               return result;
+            },
+
+            remove: function (value, keyPath) {
+               return {
+                  value:  value,
+                  changed: false
+               };
+            },
+
+            toJSON: function (value, deep) {
+               if(deep){
+                  var result = [];
+                  value.each(function (name ){
+                     result.push(name);
+                  });
+                  return  result
+               }
+
+               return value.get();
+            }
+
+         };
+         $ws.proto.Context.registerFieldType(EnumFieldType);
+      }
    },
 
    getRsIdx = function(id) {
