@@ -88,7 +88,7 @@ define('js!SBIS3.CONTROLS.ChooserMixin', [
                   res.push(recordConverter.call(self, elem));
                   return res;
                }
-            }), []);
+            }, []));
             /* Если обрабатываем результат deferred'a то в функции нету контекста, проверим на это */
             if(this && this.close) {
                this.close();
