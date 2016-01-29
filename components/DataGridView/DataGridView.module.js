@@ -124,6 +124,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
          this._publish('onDrawHead');
          this._checkColumns();
          this._decorators.add(new LadderDecorator());
+         this._tfoot = $('.controls-DataGridView__tfoot', this.getContainer());
       },
 
       init: function() {
@@ -674,6 +675,19 @@ define('js!SBIS3.CONTROLS.DataGridView',
             }));
          }
          return columnTpl;
+      },
+      _getResultsContainer: function(){
+         var isPositionTop = this._options.resultsPosition == 'top',
+            container;
+         if (this._thead && isPositionTop){
+            this._addResultsMethod = 'append';
+            container = this._thead;
+         }
+         else if (this._tfoot && !isPositionTop){
+            this._addResultsMethod = 'prepend';
+            container = this._tfoot;
+         }
+         return container || this._getItemsContainer();
       },
 
       destroy: function() {
