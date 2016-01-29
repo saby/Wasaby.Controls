@@ -582,9 +582,9 @@ define('js!SBIS3.CONTROLS.DataGridView',
       _buildHead: function() {
          var body = $('.controls-DataGridView__tbody', this._container);
 
+         this._thead && this._thead.remove();
+         this._thead = $(this._getHeadTemplate()).insertBefore(body);
          if(this._options.showHead) {
-            this._thead && this._thead.remove();
-            this._thead = $(this._getHeadTemplate()).insertBefore(body);
             this._isPartScrollVisible = false;
          }
 
@@ -679,17 +679,9 @@ define('js!SBIS3.CONTROLS.DataGridView',
          return columnTpl;
       },
       _getResultsContainer: function(){
-         var isPositionTop = this._options.resultsPosition == 'top',
-            container;
-         if (this._thead && isPositionTop){
-            this._addResultsMethod = 'append';
-            container = this._thead;
-         }
-         else if (this._tfoot && !isPositionTop){
-            this._addResultsMethod = 'prepend';
-            container = this._tfoot;
-         }
-         return container || this._getItemsContainer();
+         var isPositionTop = this._options.resultsPosition == 'top';
+         this._addResultsMethod = isPositionTop ? 'append' : 'prepend';
+         return this._options.resultsPosition == 'top' ? this._thead : this._tfoot;
       },
 
       destroy: function() {
