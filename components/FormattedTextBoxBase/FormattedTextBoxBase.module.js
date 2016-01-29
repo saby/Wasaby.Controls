@@ -396,6 +396,30 @@ define(
 
          return insertInfo;
       },
+
+      /**
+       * Заполнена ли модель полностью
+       * @returns {boolean} true если все позиции заполнены, false в противном случае
+       */
+      isFilled: function() {
+         var isFilled = true,
+             group;
+         for (var i = 0; i < this.model.length; i++) {
+            group = this.model[i];
+            if (group.isGroup) {
+               for (var j = 0; j < group.mask.length; j++) {
+                  if (typeof group.value[j] === 'undefined') {
+                     isFilled = false;
+                     break;
+                  }
+               }
+               if ( ! isFilled) {
+                  break;
+               }
+            }
+         }
+         return isFilled;
+      },
       /**
        * Проверяет подходит ли текст маске модели. Например, маске 'HH:MM' подходит текст '12:34'
        * @param text строка, например '23:37'. Можно использовать символ заполнитель, например '_3:37'

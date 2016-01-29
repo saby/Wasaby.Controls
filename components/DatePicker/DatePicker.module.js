@@ -436,6 +436,10 @@ define(
        * @private
        */
       _getDateByText: function(text, oldDate) {
+         //не разбираем дату, если вся не заполнена
+         if ( ! this.formatModel.isFilled()) {
+            return null;
+         }
          var
             //используем старую дату как основу, чтобы сохранять год, при его отсутствии в маске
             //new Date от старой даты делаем, чтобы контекст увидел новый объект
