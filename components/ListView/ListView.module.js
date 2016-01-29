@@ -206,6 +206,7 @@ define('js!SBIS3.CONTROLS.ListView',
             _containerScrollHeight : 0,
             _firstScrollTop : true,
             _isDrawResults: false,
+            _addResultsMethod: undefined,
             _options: {
                /**
                 * @cfg {Boolean} Разрешить отсутствие выбранного элемента
@@ -1752,10 +1753,13 @@ define('js!SBIS3.CONTROLS.ListView',
                return;
             }
             var resultRow = this._makeResultsTemplate(this._getResultsData());
-            this._appendResultsContainer(this._getItemsContainer(), resultRow);
+            this._appendResultsContainer(this._getResultsContainer(), resultRow);
          },
          _checkResults: function(){
             return this._options.resultsPosition !== 'none' && this.getDataSet().getCount();
+         },
+         _getResultsContainer: function(){
+            return this._getItemsContainer();
          },
          _makeResultsTemplate: function(resultsData){
             var self = this;
@@ -1771,7 +1775,7 @@ define('js!SBIS3.CONTROLS.ListView',
             if (!resultRow){
                return;
             }
-            var position = this._options.resultsPosition == 'top' ? 'prepend' : 'append',
+            var position = this._addResultsMethod || (this._options.resultsPosition == 'top' ? 'prepend' : 'append'),
                drawnResults = $('.controls-DataGridView__results', container);
             if (drawnResults.length){
                this._destroyControls(drawnResults);
