@@ -105,9 +105,6 @@ define('js!SBIS3.CONTROLS.OperationsPanel', [
          };
          this.setVisibleMarkBlock(true);
       },
-      _drawItemsCallback: function() {
-         this._itemsDrawn = true;
-      },
       /**
        * Открыть панель массовых операций.
        */
@@ -143,9 +140,7 @@ define('js!SBIS3.CONTROLS.OperationsPanel', [
       togglePanel: function() {
          var self = this,
             isOpen = this.isOpen();
-         if (!this._itemsDrawn) {
-            this._drawItems();
-         }
+         this._drawItems();
          this._container.removeClass('ws-hidden');
          this._blocks.wrapper.animate({'margin-top': isOpen ? '-30px' : 0},
             {
@@ -182,6 +177,12 @@ define('js!SBIS3.CONTROLS.OperationsPanel', [
             };
          }
       },
+      _drawItems: function() {
+         if (!this._itemsDrawn) {
+            OperationsPanel.superclass._drawItems.apply(this);
+            this._itemsDrawn = true;
+         }
+      },
       _getItemType: function (type) {
          return type.mark ? 'mark' : type.mass && type.selection ? 'all' : type.mass ? 'mass' : 'selection';
       },
@@ -201,9 +202,7 @@ define('js!SBIS3.CONTROLS.OperationsPanel', [
        * @returns {Array}
        */
       getItemInstance: function() {
-         if (!this._itemsDrawn) {
-            this._drawItems();
-         }
+         this._drawItems();
          return OperationsPanel.superclass.getItemInstance.apply(this, arguments);
       },
        /**

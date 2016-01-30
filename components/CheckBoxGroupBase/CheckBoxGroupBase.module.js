@@ -67,7 +67,8 @@ define('js!SBIS3.CONTROLS.CheckBoxGroupBase', ['js!SBIS3.CONTROLS.ButtonGroupBas
                }
                else {
                   var key = controls[i].getContainer().data('id');
-                  if (idArray.indexOf(key) >= 0) {
+                  //TODO проверка на строку и число. Избавиться, когда наконец все ключи будут строками
+                  if ((idArray.indexOf(key) >= 0) || (idArray.indexOf(key+'') >= 0)) {
                      controls[i].setChecked(true);
                   }
                   else {

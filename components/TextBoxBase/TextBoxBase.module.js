@@ -131,11 +131,10 @@ define('js!SBIS3.CONTROLS.TextBoxBase',
        */
       setText:function(text){
          text = (text !== null && text !== undefined && text == text) ? text.toString() : '';
-         var newText = this._formatText(text);
-         if (newText !== this._options.text) {
-            this._options.text = newText;
-            this._drawText(newText);
-            this._notify('onTextChange', newText);
+         if (text !== this._options.text) {
+            this._drawText(text);
+            this._options.text = text;
+            this._notify('onTextChange', text);
             this._notifyOnPropertyChanged('text');
          }
       },
@@ -192,7 +191,7 @@ define('js!SBIS3.CONTROLS.TextBoxBase',
 
       setValue : function(txt) {
          $ws.single.ioc.resolve('ILogger').log('setValue()', 'setValue is deprecated. Use setText()');
-         this.setText(txt)
+         this.setText(txt);
       }
    });
 

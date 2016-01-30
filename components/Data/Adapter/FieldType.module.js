@@ -1,7 +1,7 @@
 define('js!SBIS3.CONTROLS.Data.Adapter.FieldType', [], function(){
    'use strict';
    return {
-      DataSet: 'Выборка',
+      RecordSet: 'Выборка',
       Model: 'Запись',
       Integer: 'Число целое',
       String: 'Строка',
