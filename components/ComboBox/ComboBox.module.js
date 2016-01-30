@@ -86,15 +86,34 @@ define('js!SBIS3.CONTROLS.ComboBox', [
          _options: {
             /**
              * @cfg {String} Шаблон отображения каждого элемента коллекции
+             * Шаблон отображения элемента коллекции - это отдельный XHTML-файл.
+             * Чтобы его можно было использовать, шаблон подключают в массив зависимостей компонента.
+             * Внутри шаблона доступ к полям каждого элемента коллекции можно получить через инструкции шаблонизатора типа {{=it.item.get('ИмяПоля')}}.
              * @example
-             * <pre class="brush:xml">
-             *     <option name="itemTemplate">
-             *         <div data-key="{{=it.item.getKey()}}" class="controls-ComboBox__itemRow js-controls-ComboBox__itemRow">
-             *             <div class="genie-colorComboBox__itemTitle">
-             *                 {{=it.displayField}}
-             *             </div>
-             *         </div>
-             *     </option>
+             * Для отрисовки каждого элемента коллекции используется шаблон:
+             * <pre class="brush:html">
+             *     <div class="myarea-MyComponent__itemTemplate">
+             *       {{=it.item.get('НазваниеДокумента')}}
+             *    </div>
+             * </pre>
+             * Шаблон подключен в массив зависимостей компонента:
+             * <pre class="brush: js">
+             *    define('js!SBIS3.MyArea.MyComponent',
+             *       [
+             *          'js!SBIS3.CORE.CompoundControl',
+             *          'html!SBIS3.MyArea.MyComponent',
+             *          ...
+             *          'html!SBIS3.MyArea.MyComponent/itemTemplate'  // подключаем шаблон в массив зависимостей компонента
+             *       ],
+             *       ...
+             *    });
+             * </pre>
+             * Шаблон указан для опции itemTemplate:
+             * <pre class="brush:html">
+             *    <component data-component="SBIS3.CONTROLS.ComboBox" name="ComboBox 1" class="control-MyComboBoxDS__position">
+             *       ...
+             *       <option name="itemTemplate">html!SBIS3.MyArea.MyComponent/itemTemplate</option>
+             *    </component>
              * </pre>
              */
             itemTemplate: '',
