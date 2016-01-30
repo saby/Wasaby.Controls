@@ -250,9 +250,11 @@ define('js!SBIS3.CONTROLS.ComboBox', [
                def.callback(item);
             }
             else {
-               this._dataSource.read(key).addCallback(function(item){
-                  def.callback(item);
-               });
+               if (this._dataSource) {
+                  this._dataSource.read(key).addCallback(function(item){
+                     def.callback(item);
+                  });
+               }
             }
             var self = this;
             def.addCallback(function(item){

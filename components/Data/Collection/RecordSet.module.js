@@ -11,8 +11,8 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
     * Список записей
     * @class SBIS3.CONTROLS.Data.Collection.RecordSet
     * @extends SBIS3.CONTROLS.Data.Collection.ObservableList
+    * @ignoreOptions items
     * @author Мальцев Алексей
-    * @state mutable
     * @public
     */
 
@@ -118,11 +118,6 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
          },
 
          /**
-          * @var {Object} Сырые данные
-          */
-         _rawData: null,
-
-         /**
           * @var {Object} индексы
           */
          _indexTree: {},
@@ -148,12 +143,15 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
             this._options.idProperty = cfg.keyField;
             $ws.single.ioc.resolve('ILogger').log('SBIS3.CONTROLS.Data.Collection.RecordSet', 'option "keyField" is deprecated and will be removed in 3.7.4. Use "idProperty" instead.');
          }
-         if ('items' in cfg && !('rawData' in cfg)) {
-            this._initForItems();
-         } else {
+         if ('items' in cfg) {
+            $ws.single.ioc.resolve('ILogger').log('SBIS3.CONTROLS.Data.Collection.RecordSet', 'option "items" is not acceptable. Use "rawData" instead.');
+         }
+         if (this._options.rawData) {
             this.setRawData(this._options.rawData);
          }
       },
+
+      //region Public methods
 
       saveChanges: function(dataSource, added, changed, deleted) {
          //TODO: refactor after migration to SBIS3.CONTROLS.Data.Source.ISource
@@ -207,7 +205,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
        * @see rawData
        */
       getRawData: function() {
-         return this._rawData;
+         return this._options.rawData;
       },
 
       /**
@@ -217,26 +215,33 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
        * @see rawData
        */
       setRawData: function(data) {
-         RecordSet.superclass.clear.call(this);
-         this._rawData = data;
-         this._resetTableAdapter();
-         var adapter = this._getTableAdapter(),
-            count = adapter.getCount(),
-            record;
-         for (var i = 0; i < count; i++) {
-            record = this._getModelInstance(adapter.at(i));
-            RecordSet.superclass.add.call(this, record);
-         }
+         this._assignRawData(data);
+         this._createFromRawData();
       },
 
       /**
        * Возвращает свойство модели, содержащее первичный ключ
        * @returns {String}
+       * @see setIdProperty
        * @see idProperty
        * @see SBIS3.CONTROLS.Data.Model#idProperty
        */
       getIdProperty: function () {
          return this._options.idProperty;
+      },
+
+      /**
+       * Устанавливает свойство модели, содержащее первичный ключ
+       * @param {String} name
+       * @see getIdProperty
+       * @see idProperty
+       * @see SBIS3.CONTROLS.Data.Model#idProperty
+       */
+      setIdProperty: function (name) {
+         this._options.idProperty = name;
+         this.each((function(item) {
+            item.setIdProperty(this._options.idProperty);
+         }).bind(this));
       },
 
       /**
@@ -280,6 +285,8 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
       setMetaData: function (meta) {
          this._options.meta = meta;
       },
+
+      //endregion Public methods
 
       //region SBIS3.CONTROLS.DataSet
 
@@ -339,7 +346,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
          //TODO: сделать через сериализатор
          return new RecordSet({
             strategy: this._options.strategy,
-            data: this._rawData,
+            data: this._options.rawData,
             meta: this._options.meta,
             keyField: this._options.keyField
          });
@@ -543,7 +550,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
       //region SBIS3.CONTROLS.Data.Collection.List
 
       clear: function () {
-         this.setRawData(this._getTableAdapter().getEmpty());
+         this._assignRawData(this._getTableAdapter().getEmpty());
          RecordSet.superclass.clear.call(this);
       },
 
@@ -553,16 +560,48 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
          RecordSet.superclass.add.apply(this, arguments);
       },
 
+      remove: function (item) {
+         this._checkItem(item);
+         return RecordSet.superclass.remove.apply(this, arguments);
+      },
+
       removeAt: function (index) {
-         RecordSet.superclass.removeAt.apply(this, arguments);
          this._getTableAdapter().remove(index);
+         RecordSet.superclass.removeAt.apply(this, arguments);
       },
 
       replace: function (item, at) {
          this._checkItem(item);
-         RecordSet.superclass.replace.apply(this, arguments);
-
          this._getTableAdapter().replace(item.getRawData(), at);
+         RecordSet.superclass.replace.apply(this, arguments);
+      },
+
+      assign: function (items) {
+         this._assignRawData(this._getTableAdapter().getEmpty());
+         items = this._itemsToArray(items);
+         for (var i = 0, len = items.length; i < len; i++) {
+            this._checkItem(items[i]);
+            this._getTableAdapter().add(items[i].getRawData());
+         }
+         RecordSet.superclass.assign.call(this, items);
+      },
+
+      append: function (items) {
+         items = this._itemsToArray(items);
+         for (var i = 0, len = items.length; i < len; i++) {
+            this._checkItem(items[i]);
+            this._getTableAdapter().add(items[i].getRawData());
+         }
+         RecordSet.superclass.append.call(this, items);
+      },
+
+      prepend: function (items) {
+         items = this._itemsToArray(items);
+         for (var i = 0, len = items.length; i < len; i++) {
+            this._checkItem(items[i]);
+            this._getTableAdapter().add(items[i].getRawData(), i);
+         }
+         RecordSet.superclass.prepend.call(this, items);
       },
 
       //endregion SBIS3.CONTROLS.Data.Collection.List
@@ -570,38 +609,11 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
       //region Protected methods
 
       /**
-       * Вставляет набор записей в указанную позицию
-       * @private
-       */
-      _splice: function (items, start){
-         var newItems = [];
-         if(items instanceof Array) {
-            newItems = items;
-         } else if(items && $ws.helpers.instanceOfMixin(items, 'SBIS3.CONTROLS.Data.Collection.IEnumerable')) {
-            var self = this;
-            items.each(function (item){
-               newItems.push(item);
-            });
-         } else {
-            throw new Error('Invalid argument');
-         }
-         for (var i = 0, len = newItems.length; i< len; i++) {
-            var item = newItems[i];
-            this._checkItem(item);
-            this._getTableAdapter().add(item.getRawData(), start);
-            this._items.splice(item, start, 0);
-            start++;
-         }
-
-         this._getServiceEnumerator().reIndex();
-      },
-
-      /**
        * Возвращает адаптер для сырых данных (лениво создает)
        * @private
        */
       _getTableAdapter: function () {
-         return this._tableAdapter || (this._tableAdapter = this.getAdapter().forTable(this._rawData));
+         return this._tableAdapter || (this._tableAdapter = this.getAdapter().forTable(this._options.rawData));
       },
 
       /**
@@ -630,7 +642,31 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
       },
 
       /**
-       * ПРроверяет, что переданный элемент - модель
+       * Переустанавливает сырые данные
+       * @private
+       */
+      _assignRawData: function(data) {
+         this._options.rawData = data;
+         this._resetTableAdapter();
+      },
+
+      /**
+       * Пересоздает элементы из сырых данных
+       * @private
+       */
+      _createFromRawData: function(data) {
+         RecordSet.superclass.clear.call(this);
+         var adapter = this._getTableAdapter(),
+            count = adapter.getCount(),
+            record;
+         for (var i = 0; i < count; i++) {
+            record = this._getModelInstance(adapter.at(i));
+            RecordSet.superclass.add.call(this, record);
+         }
+      },
+
+      /**
+       * Проверяет, что переданный элемент - модель
        * @private
        */
       _checkItem: function (item) {

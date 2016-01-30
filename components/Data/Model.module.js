@@ -30,7 +30,7 @@ define('js!SBIS3.CONTROLS.Data.Model', [
              */
 
             /**
-             * @cfg {Object.<String, Property>} Описание свойстdв модели. Дополняет/уточняет свойства, уже существующие в сырых данных.
+             * @cfg {Object.<String, Property>} Описание свойств модели. Дополняет/уточняет свойства, уже существующие в сырых данных.
              * @example
              * <pre>
              *    var User = Model.extend({
@@ -356,6 +356,10 @@ define('js!SBIS3.CONTROLS.Data.Model', [
        * @param {String} idProperty Первичный ключ модели.
        */
       setIdProperty: function (idProperty) {
+         if (!this.has(idProperty)) {
+            $ws.single.ioc.resolve('ILogger').log('SBIS3.CONTROLS.Data.Model::setIdProperty()', 'Property "' + idProperty + '" is not defined');
+            return;
+         }
          this._options.idProperty = idProperty;
       },
 
@@ -392,7 +396,7 @@ define('js!SBIS3.CONTROLS.Data.Model', [
          var fields = this._getRawDataFields(),
             props = Object.keys(this.getProperties());
          return props.concat($ws.helpers.filter(fields, function(field) {
-            return props.indexOf(field) === -1;
+            return Array.indexOf(props, field) === -1;
          }));
       },
 

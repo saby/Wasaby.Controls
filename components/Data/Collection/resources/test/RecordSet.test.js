@@ -10,7 +10,7 @@ define([
       'use strict';
 
       describe('SBIS3.CONTROLS.Data.Collection.RecordSet', function() {
-         var items, sbisList;
+         var items;
 
          beforeEach(function() {
             items = [{
@@ -52,6 +52,10 @@ define([
                }));
                Array.prototype.push.apply(items,rd);
                assert.deepEqual(list.getRawData(), items);
+               assert.deepEqual(list.getCount(), items.length);
+               $ws.helpers.forEach(items, function (item, i) {
+                  assert.deepEqual(list.at(i).getRawData(), item);
+               });
             });
 
          });
@@ -67,21 +71,31 @@ define([
                }));
                Array.prototype.splice.apply(items,([0, 0].concat(rd)));
                assert.deepEqual(list.getRawData(), items);
+               assert.deepEqual(list.getCount(), items.length);
+               $ws.helpers.forEach(items, function (item, i) {
+                  assert.deepEqual(list.at(i).getRawData(), item);
+               });
             });
          });
 
          describe('.assign()', function() {
-            it('should change raw data', function() {
-               var items = [{id:1},{id:2}],
-                  list = new RecordSet({
-                     rawData: items.slice()
-                  });
-               var addItem = new Model({
-                  rawData: {id: 3}
-               });
-               list.add(addItem);
-               items.push({id: 3});
-               assert.deepEqual(list.getRawData(), items);
+            it('should change raw data and count', function() {
+               var list = new RecordSet({
+                     rawData: [{id: 1}, {id: 2}, {id: 3}]
+                  }),
+                  data4 = {id: 4},
+                  data5 = {id: 5};
+
+               list.assign([new Model({
+                  rawData: data4
+               }), new Model({
+                  rawData: data5
+               })]);
+               assert.deepEqual(list.getRawData()[0], data4);
+               assert.deepEqual(list.getRawData()[1], data5);
+               assert.deepEqual(list.at(0).getRawData(), data4);
+               assert.deepEqual(list.at(1).getRawData(), data5);
+               assert.strictEqual(list.getCount(), 2);
             });
          });
 
