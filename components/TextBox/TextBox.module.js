@@ -49,6 +49,7 @@ define('js!SBIS3.CONTROLS.TextBox', ['js!SBIS3.CONTROLS.TextBoxBase','html!SBIS3
          _inputField : null,
          _compatPlaceholder: null,
          _tooltipText: null,
+         _fromTab: true,
          _options: {
             beforeFieldWrapper: null,
             afterFieldWrapper: null,
@@ -136,10 +137,15 @@ define('js!SBIS3.CONTROLS.TextBox', ['js!SBIS3.CONTROLS.TextBoxBase','html!SBIS3
             }
          });
 
+         $(this._inputField).on('mousedown', function(){
+            self._fromTab = false;
+         });
+
          this._inputField.bind('focusin', function (e) {
-            if (self._options.selectOnClick){
+            if (self._options.selectOnClick || self._fromTab){
                self._inputField.select();
             }
+            self._fromTab = true;
             /* При получении фокуса полем ввода, сделаем контрол активным.
             *  Делать контрол надо активным по фокусу, т.к. при клике и уведении мыши,
             *  кусор поставится в поле ввода, но соыбтие click не произойдёт и контрол актвным не станет, а должен бы.*/
