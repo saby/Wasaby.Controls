@@ -254,7 +254,7 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
 
       /**
        * Удаляет модель из источника данных
-       * @param {String} keys Первичный ключ модели
+       * @param {String|Array} keys Первичный ключ, или массив первичных ключей модели
        * @param {Object|SBIS3.CONTROLS.Data.Model} [meta] Дополнительные мета данные
        * @returns {$ws.proto.Deferred} Асинхронный результат выполнения
        */
@@ -269,13 +269,13 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
          for (var i = 0, len = keys.length; i < len; i++) {
             providerName = this._getProviderNameById(keys[i]);
             groups[providerName] = groups[providerName] || [];
-            groups[providerName].push(parseInt(keys[i], 10));
+            groups[providerName].push(String.prototype.split.call(keys[i],',')[0]);
          }
          var pd = new $ws.proto.ParallelDeferred();
          for (providerName in groups) {
             if (groups.hasOwnProperty(providerName)) {
                pd.push(this._destroy(
-                  groups[providerName].length > 1 ? groups[providerName] : groups[providerName][0],
+                  groups[providerName],
                   providerName,
                   meta
                ));
