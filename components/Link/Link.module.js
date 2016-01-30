@@ -1,4 +1,4 @@
-define('js!SBIS3.CONTROLS.Link', ['js!SBIS3.CONTROLS.ButtonBase', 'html!SBIS3.CONTROLS.Link' ], function(ButtonBase, dotTplFn) {
+define('js!SBIS3.CONTROLS.Link', ['js!SBIS3.CONTROLS.ButtonBase', 'html!SBIS3.CONTROLS.Link', 'html!SBIS3.CONTROLS.Link/resources/hrefTemplate'], function(ButtonBase, dotTplFn, hrefTemplate) {
 
    'use strict';
 
@@ -47,6 +47,7 @@ define('js!SBIS3.CONTROLS.Link', ['js!SBIS3.CONTROLS.ButtonBase', 'html!SBIS3.CO
       _dotTplFn: dotTplFn,
       $protected: {
          _options: {
+            hrefTemplate: hrefTemplate,
              /**
               * @cfg {String} Адрес документа, к которому нужно перейти
               * @example
@@ -109,10 +110,7 @@ define('js!SBIS3.CONTROLS.Link', ['js!SBIS3.CONTROLS.ButtonBase', 'html!SBIS3.CO
         */
       setHref: function(href){
          this._options.href = href;
-         if (!href) {
-            href = 'javascript:void(0);';
-         } 
-         this._container.attr('href', href);
+         this._container.html(this._options.hrefTemplate(this._options));
       }
 
    });
