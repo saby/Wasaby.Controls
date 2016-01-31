@@ -337,6 +337,13 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
                   self._checkPickerState() ? self.showPicker() : self._startSearch();
                }
             });
+            /* Если фокус уходит на список - вернём его обратно в контрол, с которого фокус ушёл */
+            this.subscribeTo(control, 'onFocusOut', function(e, destroyed, focusedControl) {
+               if(self.getList() === focusedControl) {
+                  focusedControl.setActive(false, false, false, this);
+                  this.setActive(true);
+               }
+            });
          }, this);
 
       },
