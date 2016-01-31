@@ -19,38 +19,33 @@ define('js!SBIS3.CONTROLS.Data.Projection.CollectionEnumerator', [
       $protected: {
          _options: {
             /**
-             * @var {SBIS3.CONTROLS.Data.Projection.CollectionItem[]} Индекс проекции коллекции
+             * @member {Array.<SBIS3.CONTROLS.Data.Projection.CollectionItem>} Индекс проекции коллекции
              */
             itemsMap: [],
 
             /**
-             * @cfg {*[]} Индекс исходной коллекции
-             */
-            sourceMap: [],
-
-            /**
-             * @cfg {Boolean[]} Результат применения фильтра
+             * @cfg {Array.<Boolean>} Результат применения фильтра
              */
             filterMap: [],
 
             /**
-             * @cfg {Number[]} Результат применения сортировки
+             * @cfg {Array.<Number>} Результат применения сортировки
              */
             sortMap: []
          },
 
          /**
-          * @var {SBIS3.CONTROLS.Data.Projection.CollectionItem} Текущий элемент
+          * @member {SBIS3.CONTROLS.Data.Projection.CollectionItem} Текущий элемент
           */
          _сurrent: undefined,
 
          /**
-          * @var {Number} Текущая позиция (в исходной коллекции)
+          * @member {Number} Текущая позиция (в исходной коллекции)
           */
          _currentPosition: -1,
 
          /**
-          * @cfg {Number[]} Соответствие позиций проекции и исходной коллекции
+          * @member {Array.<Number>} Соответствие позиций проекции и исходной коллекции
           */
          _internalMap: undefined
 
@@ -59,9 +54,6 @@ define('js!SBIS3.CONTROLS.Data.Projection.CollectionEnumerator', [
       $constructor: function () {
          if (!(this._options.itemsMap instanceof Array)) {
             throw new Error('Items map should be instance of an Array');
-         }
-         if (!(this._options.sourceMap instanceof Array)) {
-            throw new Error('Source map should be instance of an Array');
          }
          if (!(this._options.filterMap instanceof Array)) {
             throw new Error('Filter map should be instance of an Array');
@@ -174,7 +166,7 @@ define('js!SBIS3.CONTROLS.Data.Projection.CollectionEnumerator', [
 
       /**
        * Вычисляет позицию в проекции относительно позиции в исходной коллекции
-       * @param {Number} sourcePosition Позиция в исходной коллекции
+       * @param {Number} source Позиция в исходной коллекции
        * @returns {Number}
        */
       getInternalBySource: function (source) {
@@ -229,7 +221,7 @@ define('js!SBIS3.CONTROLS.Data.Projection.CollectionEnumerator', [
                processItem.call(this, index);
             }, this);
          } else {
-            $ws.helpers.map(this._options.sourceMap, function(item, index){
+            $ws.helpers.map(this._options.itemsMap, function(item, index){
                processItem.call(this, index);
             }, this);
          }
@@ -263,7 +255,7 @@ define('js!SBIS3.CONTROLS.Data.Projection.CollectionEnumerator', [
        * @private
        */
       _isValidPosition: function (position) {
-         return position >= -1 && position < this._options.sourceMap.length;
+         return position >= -1 && position < this._options.itemsMap.length;
       }
 
       //endregion Protected methods
