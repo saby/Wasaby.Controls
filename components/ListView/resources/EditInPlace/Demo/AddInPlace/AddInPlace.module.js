@@ -38,11 +38,6 @@ define('js!SBIS3.CONTROLS.DEMO.AddInPlace',
              });
          
          view.setDataSource(dataSource); // устанавливаем источник данных для таблицы
-         
-         // подписываем кнопку на добавление новой записи представлению данных
-         this.getChildControlByName('СоздатьЗапись').subscribe('onActivated', function(){
-            view.sendCommand('beginAdd');
-         }.bind(this));
       },
       sendAddItem: function() {
          this.sendCommand('beginAdd');
