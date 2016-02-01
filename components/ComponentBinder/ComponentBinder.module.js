@@ -111,10 +111,15 @@ define('js!SBIS3.CONTROLS.ComponentBinder', [], function () {
    }
 
    function breakSearch(searchForm, withReload){
+      var view = this._options.view;
       this._searchReload = !!withReload;
       this._firstSearch = true;
       //Если в строке поиска что-то есть, очистим и сбросим Фильтр
       if (searchForm.getText()) {
+         //При любом релоаде из режима поиска нужно снять класс
+         view.once('onDataLoad', function(){
+            view._container.removeClass('controls-GridView__searchMode');
+         });
          searchForm.setText('');
       }
    }
