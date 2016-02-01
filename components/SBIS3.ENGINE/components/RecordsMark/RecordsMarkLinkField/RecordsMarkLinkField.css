@@ -1,0 +1,28 @@
+.recordsMarkLinkField__LinkButton{
+    width: 102px;
+    float:left;
+    color:#999999;
+    height:24px;
+    text-decoration: underline;
+}
+
+.recordsMarkLinkField__VisualColorLink{
+    float: left;
+    margin-left: 8px;
+    margin-top: -4px;
+    width: auto; color: #999999;
+    max-width: 220px;
+}
+
+.recordsMarkLinkField__ResetButton{
+    width:16px;
+    float:left;
+    color:#999999;
+    height:16px;
+    margin-top:2px;
+}
+
+.recordsMarkLinkField__RecordsMark{
+    width:1px;
+    float:left;
+}

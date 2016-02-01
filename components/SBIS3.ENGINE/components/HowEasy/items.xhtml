@@ -1,0 +1,13 @@
+<ul>
+   {{~it :item:index }}
+   <li class='how_easy_li'>
+      {{? (item.data && item.data.action) }}
+      <a class='asLink' target='_blank' onclick='{{=$ws.helpers.escapeHtml(item.data.action)}}'>{{=item.title}}</a><a
+         class='how_easy_run' target='_blank' href='{{=item.url}}'
+         title='{{=item.data.comment || ""}}'></a>
+      {{??}}
+      <a class='asLink' target='_blank' href='{{=item.url}}' title='{{=(item.data && item.data.comment) || ""}}'>{{=item.title}}</a>
+      {{?}}
+   </li>
+   {{~}}
+</ul>

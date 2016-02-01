@@ -1,0 +1,134 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html lang="ru" xml:lang="ru" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+   %{INCLUDE "/Тема Скрепка/Шаблоны/includes/common-data-providers.html"}
+   <meta
+      name="data-provider"
+      data-alias="infoUser"
+      data-cache-policy="sid"
+      content="Tema_Skrepka/data-providers/infoUser.js" />
+   <meta
+      name="data-provider"
+      data-alias="help"
+      data-cache-policy="page"
+      data-cache-expires="4h"
+      content="Tema_Skrepka/data-providers/helpInvert.js" />
+
+   <noscript>
+      <meta http-equiv="refresh" content="2; URL={{=it.appRoot}}noscript.html"/>
+   </noscript>
+   <meta name="viewport" content="width=1024" />
+   <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+   <meta http-equiv="X-UA-Compatible" content="IE=10"/>
+   <meta name="msapplication-config" content="none"/>
+
+   <title>{{=it.title}}/СБИС</title>
+
+   %{INCLUDE "/Тема Скрепка/Шаблоны/includes/bad-browser-check.html"}
+   %{INCLUDE "/Тема Скрепка/Шаблоны/includes/analytics.html"}
+   %{INCLUDE "/Тема Скрепка/Шаблоны/includes/regions.html"}
+   %{INCLUDE "/Тема Скрепка/Шаблоны/includes/favicon.html"}
+   %{INCLUDE "/Тема Скрепка/Шаблоны/includes/ws-styles.html"}
+
+   <script type="text/javascript">
+      // new config support
+      window.wsConfig = {
+         appRoot: '{{=it.appRoot}}',
+         wsRoot: '{{=it.wsRoot}}',
+         WSRootPath: '{{=it.wsRoot}}',
+         resourceRoot: '{{=it.resourceRoot}}',
+         ResourcePath: '{{=it.resourceRoot}}',
+         defaultServiceUrl: '{{=it.servicesPath || ""}}' || '/service/',
+         ServicesPath: '{{=it.servicesPath || ""}}' || '/service/',
+         theme: 'wi_scheme',
+         WSTheme: 'wi_scheme',
+         userConfigSupport: '{{=it.userConfigSupport || ""}}' || true,
+         globalConfigSupport: '{{=it.globalConfigSupport || ""}}' || true,
+         saveLastState: '{{=it.saveLastState || ""}}' || false,
+         fasttemplate: true,
+         nostyle: true
+      };
+   </script>
+
+   <link rel="stylesheet" href="{{=it.resourceRoot}}Tema_Skrepka/components/LeftNavigation/LeftNavigation.css" type="text/css" />
+   <link rel="stylesheet" href="{{=it.resourceRoot}}SBIS3.ENGINE/components/HowEasy/HowEasy.css" type="text/css" />
+   <link rel="stylesheet" href="{{=it.resourceRoot}}Tema_Skrepka/SHablony/css/topInformer.css" type="text/css"/>
+   <link rel="stylesheet" href="{{=it.resourceRoot}}Tema_Skrepka/SHablony/css/user_profile.css" type="text/css"/>
+   <link rel="stylesheet" href="{{=it.resourceRoot}}Tema_Skrepka/SHablony/css/Sbis30.css" type="text/css"/>
+   <link rel="stylesheet" href="{{=it.resourceRoot}}Tema_Skrepka/SHablony/css/graytheme.css" type="text/css" />
+   <link rel="stylesheet" href="{{=it.resourceRoot}}Tema_Skrepka/SHablony/css/help.css" type="text/css"/>
+
+   {{=it.cssBlock}}
+
+   %{INCLUDE "/Тема Скрепка/Шаблоны/includes/ws.html"}
+
+   <script type="text/javascript">
+      $ws.core.ready.addCallback(function(){
+         require([ 'bootup' ], function() {
+            $ws.core.bootup();
+         });
+      });
+   </script>
+
+   <script type="text/javascript" src="{{=it.resourceRoot}}Tema_Skrepka/SHablony/js/cur_user_template.js" charset="utf-8"></script>
+   <script type="text/javascript" src="{{=it.resourceRoot}}Tema_Skrepka/SHablony/js/langSelector.js" charset="utf-8"></script>
+
+   <script type="text/javascript" src="{{=it.resourceRoot}}Tema_Skrepka/SHablony/js/authError.js" charset="utf-8"></script>
+   <script type="text/javascript" src="{{=it.resourceRoot}}Tema_Skrepka/SHablony/js/topInformer.js" charset="utf-8"></script>
+   <script type="text/javascript" src="{{=it.resourceRoot}}Tema_Skrepka/SHablony/js/lockInformer.js" charset="utf-8"></script>
+   <script type="text/javascript" src="{{=it.resourceRoot}}Tema_Skrepka/SHablony/js/fixedBird.js" charset="utf-8"></script>
+   <script type="text/javascript" src="{{=it.resourceRoot}}Tema_Skrepka/SHablony/js/configuration.js" charset="utf-8"></script>
+   <script type="text/javascript" src="{{=it.resourceRoot}}Tema_Skrepka/SHablony/js/userConfiguration.js" charset="utf-8"></script>
+   <script type="text/javascript" src="{{=it.resourceRoot}}SBIS3.ENGINE/components/Hints/help.js" charset="utf-8"></script>
+   {{=it.jsBlock}}
+
+   <script type="text/javascript">
+      $ws.core.ready.addCallback(function () {
+         $ws.single.GlobalContext.setValue('StructureCompany', '{{=(it.infoUser? it.infoUser.structure : '')}}');
+         $ws.single.GlobalContext.setValue('PrivatePerson', '{{=(it.infoUser? it.infoUser.privPerson : '')}}');
+      })
+   </script>
+
+   %{INCLUDE "/Тема Скрепка/Шаблоны/includes/webrtc.html"}
+</head>
+
+<body class="ws-server-generated touchInterface {{=it.leftAccCompact}}">
+   <div id="min-width">
+      <div id="middle">
+         <!--[if lte IE 8]><div id="shadowRight"></div><![endif]-->
+         <div id="accordionBg"></div>
+         <!-- accordeon -->
+         <div class="sidebar ws-float-area-stack-sidebar" id="sideLeft">
+            <div class="sideBarBackground">
+               <div id="leftInfoBlocks" class="leftInfoBlocks">{{=it.navigation}}</div>
+               <component data-component="SBIS3.Engine.HowEasy" name="HowEasy">
+                  <option name="helpLink" value="{{=it.helpLink || ''}}"></option>
+               </component>
+            </div>
+         </div>
+         <div id="logoBlock">
+            <span id="compact-mode-btn"></span>
+            <a id="logoSbis" href="/" title="На главную"></a>
+            <span id="logoPtica"></span>
+         </div>
+         <!-- main area -->
+         <div id="container" class="ws-float-area-stack-root">
+            <!--[if lte IE 8]><div id="shadowLeft"></div><![endif]-->
+            <div id="contentArea">
+               {{=it.header}}
+               {{=it.workspace}}
+            </div>
+         </div>
+      </div>
+   </div>
+
+   %{INCLUDE "/Тема Скрепка/Шаблоны/includes/ie-hacks.html"}
+
+   %{INCLUDE "/Тема Скрепка/Шаблоны/includes/google-analytics.html"}
+</body>
+<script type="text/javascript">
+   fixedBirdForGrayTheme();
+</script>
+
+%{INCLUDE "/Тема Скрепка/Шаблоны/includes/common-javascript-files.html"}
+</html>

@@ -1,0 +1,78 @@
+<div>
+    <component data-component="SBIS3.Engine.OperationsPanelExpand" name="OperationsPanelExpand" class="MyOperationsPanelExpand">
+        <options name="operationsPanelConfig" type="array">
+            <options name="items" type="array">
+                <options>
+                    <option name="name">delete</option>
+                    <options name="options">
+                        <option name="className">controls__operations-panel__action-type-all</option>
+                        <options name="element"></options>
+                        <options name="parent"></options>
+                    </options>
+                    <option name="componentType">js!SBIS3.CONTROLS.OperationDelete</option>
+                    <options name="type">
+                        <option name="mass">true</option>
+                        <option name="selection">true</option>
+                    </options>
+                </options>
+                <options>
+                    <option name="name">print</option>
+                    <options name="options">
+                        <option name="className">controls__operations-panel__action-type-all</option>
+                        <options name="element"></options>
+                        <options name="parent"></options>
+                    </options>
+                    <option name="componentType">js!SBIS3.CONTROLS.OperationPrint</option>
+                    <options name="type">
+                        <option name="mass">true</option>
+                        <option name="selection">true</option>
+                    </options>
+                </options>
+                <options>
+                    <option name="name">unload</option>
+                    <options name="options">
+                        <option name="className">controls__operations-panel__action-type-all</option>
+                        <options name="element"></options>
+                        <options name="parent"></options>
+                    </options>
+                    <option name="componentType">js!SBIS3.CONTROLS.OperationUnload</option>
+                    <options name="type">
+                        <option name="mass">true</option>
+                        <option name="selection">true</option>
+                    </options>
+                </options>
+                <options>
+                    <options name="options">
+                        <option name="className">controls__operations-panel__action-type-mark</option>
+                        <options name="element"></options>
+                        <options name="parent"></options>
+                    </options>
+                    <option name="name">markOperations</option>
+                    <options name="type">
+                        <option name="mark">true</option>
+                    </options>
+                    <option name="componentType">js!SBIS3.CONTROLS.OperationsMark</option>
+                </options>
+            </options>
+        </options>
+
+        <option name="displayField">caption</option>
+        <option name="keyField">id</option>
+        <options name="items" type="array">
+            <options>
+                <option name="id">1</option>
+                <option name="caption">Сканировать</option>
+                <option name="icon">sprite:icon-16 icon-Scan icon-primary</option>
+            </options>
+            <options>
+                <option name="id">2</option>
+                <option name="caption">Прикрепить</option>
+                <option name="icon">sprite:icon-24 icon-Attach icon-primary</option>
+            </options>
+            <options>
+                <option name="id">3</option>
+                <option name="caption">Наверх</option>
+            </options>
+        </options>
+    </component>
+</div>

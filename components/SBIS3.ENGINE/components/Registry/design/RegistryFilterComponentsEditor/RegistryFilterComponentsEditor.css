@@ -1,0 +1,24 @@
+.genie-PropertyGrid__Remove:after {
+   font-weight: 400;
+   font-style: normal;
+   font-family: 'GenieIconsFont';
+   content: "\e61c";
+   color: gray;
+   cursor: pointer;
+}
+
+.genie-PropertyGrid__Remove:hover:after {
+   color: #00d7d7;
+}
+
+.genie-PropertyEditor__groupBtn .genie-PropertyGrid__Remove {
+   font-size: 16px;
+   position: absolute;
+   right: 30px;
+   top: 4px;
+   display: none;
+}
+
+.genie-PropertyEditor__groupBtn.can-remove:hover .genie-PropertyGrid__Remove {
+   display: block;
+}

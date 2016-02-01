@@ -1,0 +1,461 @@
+.dark-overlay {
+   position: absolute;
+   left: 0;
+   top: 0;
+   z-index: 30000;
+}
+
+.hiddenOver {
+   display: none;
+}
+
+.dark-overlay .controlWrapper {
+   position: absolute;
+}
+
+.dark-overlay .hint {
+   position: absolute;
+   width: 222px;
+}
+
+.dark-overlay .hint a {
+   color: #0055BB;
+}
+
+.dark-overlay .hint .title {
+   display: none;
+}
+
+/*---*/
+
+.dark-overlay .hint table {
+   width: 100%;
+   border-collapse: collapse;
+}
+
+.dark-overlay .hint table td {
+   min-height: 1px;
+}
+
+.dark-overlay .hint table td.wrap {
+   background: url("./img/contentBackground.png") top left repeat;
+}
+
+.dark-overlay .hint .number {
+   width: 40px;
+   height: 35px;
+   margin: 0 auto;
+   position: absolute;
+   background-repeat: no-repeat;
+   background-position: center center;
+   top: 15px;
+   left: 25px;
+}
+
+.dark-overlay .hint .number.one {
+   background-image: url("./img/one.png");
+}
+
+.dark-overlay .hint .number.two {
+   background-image: url("./img/two.png");
+}
+
+.dark-overlay .hint .number.three {
+   background-image: url("./img/three.png");
+}
+
+.dark-overlay .hint .number.four {
+   background-image: url("./img/four.png");
+}
+
+.dark-overlay .hint .number.five {
+   background-image: url("./img/five.png");
+}
+
+.dark-overlay .hint .number.six {
+   background-image: url("./img/six.png");
+}
+
+.dark-overlay .hint .number.seven {
+   background-image: url("./img/seven.png");
+}
+
+.dark-overlay .hint .number.ili {
+   background-image: url("./img/ili.png");
+}
+
+.dark-overlay .hint .itTR {
+   background: url("./img/repeaterL.png") top right repeat-y;
+   width: 15px;
+}
+
+.dark-overlay .hint .itTL {
+   background: url("./img/repeaterL.png") top left repeat-y;
+   width: 30px;
+}
+
+.dark-overlay .withNum .itTL {
+   width: 78px;
+}
+
+.dark-overlay .left-top {
+   margin-top: -15px;
+}
+
+.dark-overlay .left-top .header {
+   background: url("./img/left-top_header.png") top right no-repeat;
+   height: 36px;
+}
+
+.dark-overlay .left-top .content {
+   margin-top: -25px;
+}
+
+.dark-overlay .left-top .footer {
+   background: url("./img/footerMono.png") bottom right no-repeat;
+   height: 14px;
+}
+
+.dark-overlay .left-top.withNum .header {
+   background: url("./img/left-top_withNum_header.png") top right no-repeat;
+}
+
+.dark-overlay .top-left {
+   margin-left: -33px;
+}
+
+.dark-overlay .top-left .header {
+   background: url("./img/top-left_header.png") top right no-repeat;
+   height: 27px;
+}
+
+.dark-overlay .top-left .footer {
+   background: url("./img/footerMono.png") bottom right no-repeat;
+   height: 14px;
+}
+
+.dark-overlay .top-left.withNum .header {
+   background: url("./img/top-left_withNum_header.png") top right no-repeat;
+}
+
+.dark-overlay .top-left.withNum .number {
+   top: 27px;
+}
+
+.dark-overlay .top-center {
+   margin-left: -100px;
+}
+
+.dark-overlay .top-center .header {
+   background: url("./img/top-center_header.png") top right no-repeat;
+   height: 27px;
+}
+
+.dark-overlay .top-center .footer {
+   background: url("./img/footerMono.png") bottom right no-repeat;
+   height: 14px;
+}
+
+.dark-overlay .top-center.withNum .number {
+   top: 27px;
+}
+
+.dark-overlay .top-center.withNum .header {
+   background: url("./img/top-center_withNum_header.png") top right no-repeat;
+}
+
+.dark-overlay .top-right {
+   margin-left: -200px;
+}
+
+.dark-overlay .top-right .header {
+   background: url("./img/top-right_header.png") top right no-repeat;
+   height: 28px;
+}
+
+.dark-overlay .top-right .footer {
+   background: url("./img/footerMono.png") bottom right no-repeat;
+   height: 14px;
+}
+
+.dark-overlay .top-right.withNum .header {
+   background: url("./img/top-right_withNum_header.png") top left no-repeat;
+}
+
+.dark-overlay .top-right.withNum .itTL {
+   width: 15px;
+   background: url("./img/repeaterR.png") top left repeat-y;
+}
+
+.dark-overlay .top-right.withNum .itTR {
+   width: 75px;
+   background: url("./img/repeaterR.png") top right repeat-y;
+}
+
+.dark-overlay .top-right.withNum .footer {
+   background: url("./img/footerMono.png") bottom left no-repeat;
+}
+
+.dark-overlay .top-right.withNum .number {
+   top: 27px;
+   right: 25px;
+   left: auto;
+}
+
+.dark-overlay .right-top {
+   margin-left: -222px;
+   margin-top: -15px;
+}
+
+.dark-overlay .right-top .header {
+   background: url("./img/right-top_header.png") top right no-repeat;
+   height: 36px;
+}
+
+.dark-overlay .right-top .footer {
+   background: url("./img/footerMono.png") bottom left no-repeat;
+   height: 14px;
+}
+
+.dark-overlay .right-top .itTL {
+   background: url("./img/repeaterR.png") top left repeat-y;
+   width: 15px;
+}
+
+.dark-overlay .right-top .itTR {
+   background: url("./img/repeaterR.png") top right repeat-y;
+   width: 25px;
+}
+
+.dark-overlay .right-top .content {
+   margin-top: -20px;
+}
+
+.dark-overlay .right-top.withNum .header {
+   background: url("./img/right-top_withNum_header.png") top right no-repeat;
+}
+
+.dark-overlay .right-top.withNum .itTR {
+   width: 75px;
+}
+
+.dark-overlay .right-top.withNum .number {
+   right: 25px;
+   left: auto;
+}
+
+.dark-overlay .left-top {
+   margin-top: -15px;
+}
+
+.dark-overlay .left-bottom .header {
+   background: url("./img/headerMono.png") top right no-repeat;
+   height: 14px;
+}
+
+.dark-overlay .left-bottom .content {
+   margin-bottom: -20px;
+}
+
+.dark-overlay .left-bottom .footer {
+   background: url("./img/left-bottom_footer.png") bottom right no-repeat;
+   height: 37px;
+}
+
+.dark-overlay .left-bottom.withNum .footer {
+   background: url("./img/left-bottom_withNum_footer.png") bottom right no-repeat;
+}
+
+.dark-overlay .bottom-left {
+   margin-left: -33px;
+}
+
+.dark-overlay .bottom-left .header {
+   background: url("./img/headerMono.png") top right no-repeat;
+   height: 14px;
+}
+
+.dark-overlay .bottom-left .footer {
+   background: url("./img/bottom-left_footer.png") bottom right no-repeat;
+   height: 28px;
+}
+
+.dark-overlay .bottom-left.withNum .footer {
+   background: url("./img/bottom-left_withNum_footer.png") bottom right no-repeat;
+}
+
+.dark-overlay .bottom-center {
+   margin-left: -100px;
+}
+
+.dark-overlay .bottom-center .header {
+   background: url("./img/headerMono.png") top right no-repeat;
+   height: 14px;
+}
+
+.dark-overlay .bottom-center .footer {
+   background: url("./img/bottom-center_footer.png") bottom right no-repeat;
+   height: 28px;
+}
+
+.dark-overlay .bottom-center.withNum .footer {
+   background: url("./img/bottom-center_withNum_footer.png") bottom right no-repeat;
+}
+
+.dark-overlay .bottom-right {
+   margin-left: -205px;
+}
+
+.dark-overlay .bottom-right .header {
+   background: url("./img/headerMono.png") top right no-repeat;
+   height: 14px;
+}
+
+.dark-overlay .bottom-right .footer {
+   background: url("./img/bottom-right_footer.png") bottom right no-repeat;
+   height: 27px;
+}
+
+.dark-overlay .bottom-right.withNum .header {
+   background: url("./img/headerMono.png") top left no-repeat;
+}
+
+.dark-overlay .bottom-right.withNum .footer {
+   background: url("./img/bottom-right_withNum_footer.png") bottom left no-repeat;
+}
+
+.dark-overlay .bottom-right.withNum .itTL {
+   width: 15px;
+   background: url("./img/repeaterR.png") top left repeat-y;
+}
+
+.dark-overlay .bottom-right.withNum .itTR {
+   width: 75px;
+   background: url("./img/repeaterR.png") top right repeat-y;
+}
+
+.dark-overlay .bottom-right.withNum .number {
+   right: 25px;
+   left: auto;
+}
+
+.dark-overlay .right-bottom {
+   margin-left: -222px;
+}
+
+.dark-overlay .right-bottom .header {
+   background: url("./img/headerMono.png") top left no-repeat;
+   height: 14px;
+}
+
+.dark-overlay .right-bottom .footer {
+   background: url("./img/right-bottom_footer.png") bottom left no-repeat;
+   height: 37px;
+}
+
+.dark-overlay .right-bottom .itTL {
+   background: url("./img/repeaterR.png") top left repeat-y;
+   width: 15px;
+}
+
+.dark-overlay .right-bottom .itTR {
+   background: url("./img/repeaterR.png") top right repeat-y;
+   width: 25px;
+}
+
+.dark-overlay .right-bottom .content {
+   margin-bottom: -20px;
+}
+
+.dark-overlay .right-bottom.withNum .itTR {
+   width: 75px;
+}
+
+.dark-overlay .right-bottom.withNum .footer {
+   background: url("./img/right-bottom_withNum_footer.png") bottom right no-repeat;
+}
+
+.dark-overlay .right-bottom.withNum .number {
+   right: 25px;
+   left: auto;
+}
+
+/* brickText */
+
+.dark-overlay .brickText {
+   padding: 50px 75px;
+   background: url("./img/lamp1.png") 93% 160px no-repeat #f5f5f5;
+   position: absolute;
+   top: 400px;
+   padding-right: 430px;
+   min-height: 250px;
+}
+
+.dark-overlay .brickText .title {
+   font-size: 40px;
+   color: #587ab0;
+   display: block;
+   padding-bottom: 20px;
+   font-family: "Trebuchet MS", Helvetica, sans-serif;
+}
+
+.dark-overlay .close {
+   display: block;
+   right: 10px;
+   top: 30px;
+   position: absolute;
+   cursor: pointer;
+}
+
+.dark-overlay .LShadow,
+.dark-overlay .RShadow {
+   position: absolute;
+   bottom: -24px;
+   left: 16px;
+   background: url("./img/LShadow.png") top center no-repeat;
+   width: 622px;
+   height: 24px;
+}
+
+.dark-overlay .RShadow {
+   right: 16px;
+   left: auto;
+   background: url("./img/RShadow.png") top center no-repeat;
+}
+
+.dark-overlay .brickNote {
+   width: 308px !important;
+   top: 534px;
+   right: 90px;
+}
+
+.dark-overlay .brickNote .title {
+   display: block;
+   font-size: 18px;
+   color: #587ab0;
+   padding-bottom: 20px;
+   font-family: "Trebuchet MS", Helvetica, sans-serif;
+}
+
+.dark-overlay .brickNote .header {
+   background: url("./img/brickNote_top.png") top center no-repeat;
+   height: 54px;
+}
+
+.dark-overlay .brickNote .footer {
+   background: url("./img/brickNote_bottom.png") top center no-repeat;
+   height: 28px;
+}
+
+.dark-overlay .brickNote .itTL,
+.dark-overlay .brickNote .itTR {
+   width: 30px;
+}
+
+.dark-overlay .brickNote .itTL {
+   background: url("./img/brickNote_body.png") top left repeat-y;
+}
+
+.dark-overlay .brickNote .wrap {
+   padding-bottom: 15px;
+}

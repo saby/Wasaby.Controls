@@ -1,0 +1,64 @@
+<div class="engine-BrowserTabs">
+         {{
+         var defaultTab = it.defaultTab || (it.tabs.length ? it.tabs[0].id : ''),
+            defaultTabPos = 0,
+            tabsAreaToTabs = {};
+         for(var i = 0; i < it.tabs.length; i++) {
+            var arrTabId = tabsAreaToTabs[it.tabs[i].tabsArea] || [];
+            arrTabId.push(it.tabs[i].id);
+            tabsAreaToTabs[it.tabs[i].tabsArea] = arrTabId;
+            if (it.tabs[i].id == defaultTab) { defaultTabPos = i; }
+         }
+         }}
+         <div class="browserTabs__middle-area">
+            <component data-component='SBIS3.CORE.SwitchableArea' name="tabsArea" class="ws-switchableArea">
+               <option name="defaultArea" value="{{=(it.tabs[defaultTabPos] && it.tabs[defaultTabPos].tabsArea)? it.tabs[defaultTabPos].tabsArea: ''}}"></option>
+               <option name="loadType" value="{{=it.design ? 'all': 'cached'}}"></option>
+               <options name="items" type="Array">
+                  {{~it.tabsArea :item:index}}
+                  {{var arrTabId = tabsAreaToTabs[item.id];}}
+                  <options name="{{=index}}">
+                     <option name="id">{{=item.id}}</option>
+                     <option name="content">{{=item.content || ''}}</option>
+                     {{?item.content && it.operationsButtonVisibility}}<option name="className">browserTabs__middle-areaSplitter</option>{{?}}
+                     <option name="visible" type="boolean">{{=(Array.indexOf(arrTabId, defaultTab) !== -1)}}</option>
+                  </options>
+                  {{~}}
+               </options>
+            </component>
+            <component data-component='SBIS3.CONTROLS.OperationsPanelButton' name="operationsButton" class="controls-operationsPanelButton">
+               <option name="visible">{{=it.operationsButtonVisibility}}</option>
+            </component>
+         </div>
+         <component data-component='SBIS3.CONTROLS.TabButtons' name="{{=(it.tabsName? it.tabsName: 'tab-buttons')}}" class="browserTabs__main-tabs">
+            <options name="items" type="Array">
+               {{~it.tabs :tab:index}}
+               <options name="{{=index}}">
+                  <option name="id">{{=(tab.id = tab.id || ('tab-' + index))}}</option>
+                  <option name="title">{{=tab.title || ''}}</option>
+                  <option name="icon">{{=tab.icon || ''}}</option>
+                  <option name="className">{{=tab.className || ''}}</option>
+                  <option name="enabled">{{=(tab.enabled === undefined ? true : !!tab.enabled)}}</option>
+                  <option name="visible">{{=(tab.visible === undefined ? true : !!tab.visible)}}</option>
+               </options>
+               {{~}}
+            </options>
+             <option name="selectedKey" value="{{=defaultTab || ''}}"></option>
+             <option name="displayField" value="title"></option>
+             <option name="keyField" value="id"></option>
+         </component>
+         <component data-component='SBIS3.CORE.SwitchableArea' name="mainArea" class="ws-switchableArea browserTabs__main-area">
+            <option name="defaultArea" value="{{=(it.tabs[defaultTabPos] && it.tabs[defaultTabPos].mainArea)? it.tabs[defaultTabPos].mainArea: ''}}"></option>
+            <option name="loadType" value="{{=it.design ? 'all': 'cached'}}"></option>
+            <options name="items" type="Array">
+               {{~it.mainArea :item:index}}
+               <options name="{{=index}}">
+                  <option name="id">{{=item.id}}</option>
+                  <option name="content">
+                      {{?it.design}}<div class="browserTabs__mainContent genie-Placeholder">{{=item.content || ''}}</div>{{??}}{{=item.content || ''}}{{?}}
+                  </option>
+               </options>
+               {{~}}
+            </options>
+         </component>
+</div>
