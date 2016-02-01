@@ -918,7 +918,7 @@ define('js!SBIS3.CONTROLS.ListView',
                      }.bind(this),
                      onAfterEndEdit: function(event, model, target, withSaving) {
                         if (withSaving) {
-                           target.attr('data-id', model.getId());
+                           target.attr('data-id', model.getKey());
                            this.redrawItem(model);
                         }
                         event.setResult(this._notify('onAfterEndEdit', model, target, withSaving));
