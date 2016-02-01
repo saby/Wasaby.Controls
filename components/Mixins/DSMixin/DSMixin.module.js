@@ -229,7 +229,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
              */
             filter: {},
             /**
-             * @cfg {Array} Сортировка данных
+             * @cfg {Array} Сортировка данных. Задается массивом объектов, в котором ключ - это имя поля, а значение ASC - по-возрастанию, DESC  - по-убыванию
              * @example
              * <pre class="brush:xml">
              *     <options name="sorting" type="Array">
@@ -729,18 +729,21 @@ define('js!SBIS3.CONTROLS.DSMixin', [
          if (container.length){
             var itemsContainers = $('.controls-ListView__item, .controls-GroupBy', container.get(0));
             /*Удаляем вложенные компоненты*/
-            $('[data-component]', itemsContainers).each(function (i, item) {
-               var inst = $(item).wsControl();
-               if (inst) {
-                  inst.destroy();
-               }
-            });
+            this._destroyControls(itemsContainers);
 
             /*Удаляем сами items*/
             itemsContainers.remove();
          }
       },
 
+      _destroyControls: function(container){
+         $('[data-component]', container).each(function (i, item) {
+            var inst = $(item).wsControl();
+            if (inst) {
+               inst.destroy();
+            }
+         });
+      },
       //метод определяющий в какой контейнер разместить определенный элемент
       _getTargetContainer: function (item) {
          //по стандарту все строки рисуются в itemsContainer
