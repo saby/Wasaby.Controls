@@ -27,22 +27,23 @@ define('js!SBIS3.CONTROLS.Data.Collection.List', [
       $protected: {
          _options: {
             /**
-             * @cfg {Array} Элементы списка
+             * @cfg {Array.<*>} Элементы списка
              * @name SBIS3.CONTROLS.Data.Collection.List#items
              */
          },
 
          /**
-          * @var {*[]} Элементы списка
+          * @member {Array.<*>} Элементы списка
           */
          _items: [],
 
          /**
-          * @var {SBIS3.CONTROLS.Data.Collection.ArrayEnumerator} Служебный энумератор
+          * @member {SBIS3.CONTROLS.Data.Collection.ArrayEnumerator} Служебный энумератор
           */
          _serviceEnumerator: undefined,
+
          /**
-          * @var {SBIS3.CONTROLS.Data.Collection._hashIndex} Индекс хешей элементов
+          * @member {SBIS3.CONTROLS.Data.Collection._hashIndex} Индекс хешей элементов
           */
          _hashIndex: undefined
 

@@ -5,11 +5,12 @@ define('js!SBIS3.CONTROLS.Data.Record', [
    'js!SBIS3.CONTROLS.Data.Collection.ArrayEnumerator',
    'js!SBIS3.CONTROLS.Data.SerializableMixin',
    'js!SBIS3.CONTROLS.Data.Serializer',
+   'js!SBIS3.CONTROLS.Data.FormattableMixin',
    'js!SBIS3.CONTROLS.Data.Di',
    'js!SBIS3.CONTROLS.Data.Factory',
    'js!SBIS3.CONTROLS.Data.ContextField',
    'js!SBIS3.CONTROLS.Data.Adapter.Json'
-], function (IPropertyAccess, IEnumerable, ArrayEnumerator, SerializableMixin, Serializer, Di, Factory, ContextField) {
+], function (IPropertyAccess, IEnumerable, ArrayEnumerator, SerializableMixin, Serializer, FormattableMixin, Di, Factory, ContextField) {
    'use strict';
 
    /**
@@ -19,11 +20,12 @@ define('js!SBIS3.CONTROLS.Data.Record', [
     * @mixes SBIS3.CONTROLS.Data.IPropertyAccess
     * @mixes SBIS3.CONTROLS.Data.Collection.IEnumerable
     * @mixes SBIS3.CONTROLS.Data.SerializableMixin
+    * @mixes SBIS3.CONTROLS.Data.FormattableMixin
     * @public
     * @author Мальцев Алексей
     */
 
-   var Record = $ws.proto.Abstract.extend([IPropertyAccess, IEnumerable, SerializableMixin], /** @lends SBIS3.CONTROLS.Data.Record.prototype */{
+   var Record = $ws.proto.Abstract.extend([IPropertyAccess, IEnumerable, SerializableMixin, FormattableMixin], /** @lends SBIS3.CONTROLS.Data.Record.prototype */{
       _moduleName: 'SBIS3.CONTROLS.Data.Record',
       $protected: {
          _options: {
@@ -64,26 +66,32 @@ define('js!SBIS3.CONTROLS.Data.Record', [
              *    });
              * </pre>
              */
-            adapter: ''
+            adapter: '',
+
+            /**
+             * @cfg {SBIS3.CONTROLS.Data.Collection.RecordSet} Рекордсет, которому принадлежит запись. Может не принадлежать рекордсету.
+             * @see getOwner
+             */
+            owner: null
          },
 
          /**
-          * @var {SBIS3.CONTROLS.Data.Adapter.IRecord} Адаптер для записи
+          * @member {SBIS3.CONTROLS.Data.Adapter.IRecord} Адаптер для записи
           */
          _recordAdapter: null,
 
          /**
-          * @var {Array} Описание всех полей, полученных из данных в "сыром" виде
+          * @member {Array} Описание всех полей, полученных из данных в "сыром" виде
           */
          _fields: null,
 
          /**
-          * @var {Object.<String, *>} Измененные поля и оригинальные значения
+          * @member {Object.<String, *>} Измененные поля и оригинальные значения
           */
          _changedFields: {},
 
          /**
-          * @var {Object} Объект содержащий закэшированные инстансы значений-объектов
+          * @member {Object} Объект содержащий закэшированные инстансы значений-объектов
           */
          _propertiesCache: {}
       },
@@ -192,6 +200,9 @@ define('js!SBIS3.CONTROLS.Data.Record', [
 
       // endregion SBIS3.CONTROLS.Data.SerializableMixin
 
+      // region SBIS3.CONTROLS.Data.FormattableMixin
+      // endregion SBIS3.CONTROLS.Data.FormattableMixin
+
       // region Public methods
 
       /**
@@ -249,7 +260,7 @@ define('js!SBIS3.CONTROLS.Data.Record', [
        * Возвращает "сырые" данные записи
        * @returns {Object}
        */
-      getRawData: function () {
+      getRawData: function() {
          return this._options.rawData;
       },
 
@@ -257,25 +268,37 @@ define('js!SBIS3.CONTROLS.Data.Record', [
        * Устанавливает "сырые" данные записи
        * @param {Object} rawData Данные в "сыром" виде
        */
-      setRawData: function (rawData) {
+      setRawData: function(rawData) {
          this._options.rawData = rawData;
          this._recordAdapter = null;
          this._propertiesCache = {};
          this._notify('onPropertyChange');
       },
+
+      /**
+       * Возвращает рекордсет, которому принадлежит запись. Может не принадлежать рекордсету.
+       * @returns {SBIS3.CONTROLS.Data.Collection.RecordSet}
+       * @see owner
+       */
+      getOwner: function() {
+         return this._options.owner;
+      },
+
       /**
        *  Возвращает массив названий измененных полей.
        *  @returns {Array}
        */
-      getChanged: function (){
+      getChanged: function() {
          return Object.keys(this._changedFields);
       },
+
       /**
-       * Забывет измененные поля.
+       * Забывает измененные поля.
        */
-      applyChanges: function (){
+      applyChanges: function() {
          this._changedFields = {};
       },
+
       // endregion Public methods
 
       //region Protected methods
@@ -297,7 +320,7 @@ define('js!SBIS3.CONTROLS.Data.Record', [
        * @returns {SBIS3.CONTROLS.Data.Adapter.IRecord}
        * @protected
        */
-      _getRecordAdapter: function () {
+      _getRecordAdapter: function() {
          return this._recordAdapter || (this._recordAdapter = this.getAdapter().forRecord(this._options.rawData));
       },
 
@@ -306,7 +329,7 @@ define('js!SBIS3.CONTROLS.Data.Record', [
        * @returns {Array.<String>}
        * @protected
        */
-      _getRawDataFields: function () {
+      _getRawDataFields: function() {
          return this._fields || (this._fields = this._getRecordAdapter().getFields());
       },
 

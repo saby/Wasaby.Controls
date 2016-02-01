@@ -1,22 +1,24 @@
 /* global define, $ws */
 define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
    'js!SBIS3.CONTROLS.Data.Collection.ObservableList',
-   'js!SBIS3.CONTROLS.Data.Adapter.Json',
+   'js!SBIS3.CONTROLS.Data.FormattableMixin',
    'js!SBIS3.CONTROLS.Data.Di',
+   'js!SBIS3.CONTROLS.Data.Adapter.Json',
    'js!SBIS3.CONTROLS.Data.Model'
-], function (ObservableList, JsonAdapter, Di) {
+], function (ObservableList, FormattableMixin, Di) {
    'use strict';
 
    /**
     * Список записей
     * @class SBIS3.CONTROLS.Data.Collection.RecordSet
     * @extends SBIS3.CONTROLS.Data.Collection.ObservableList
+    * @mixes SBIS3.CONTROLS.Data.FormattableMixin
     * @ignoreOptions items
     * @author Мальцев Алексей
     * @public
     */
 
-   var RecordSet = ObservableList.extend(/** @lends SBIS3.CONTROLS.Data.Collection.RecordSet.prototype */{
+   var RecordSet = ObservableList.extend([FormattableMixin], /** @lends SBIS3.CONTROLS.Data.Collection.RecordSet.prototype */{
       _moduleName: 'SBIS3.CONTROLS.Data.Collection.RecordSet',
       $protected: {
          _options: {
