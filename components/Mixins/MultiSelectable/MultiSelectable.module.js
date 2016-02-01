@@ -44,7 +44,8 @@ define('js!SBIS3.CONTROLS.MultiSelectable', ['js!SBIS3.CONTROLS.Data.Collection.
              * @cfg {Boolean} Разрешить множественный выбор
              * @example
              * <pre>
-             *     <option name="multiselect">false</option>
+             *    <option name="multiselect">false</option>
+             *    <option name="multiselect" type="boolean" value="false"></option>
              * </pre>
              * @see selectedKeys
              */

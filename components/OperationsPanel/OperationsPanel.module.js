@@ -63,6 +63,7 @@ define('js!SBIS3.CONTROLS.OperationsPanel', [
              * @property {String} componentType Тип компонента, определяющий формат.
              * @property {Type} type Тип операций.
              * @property {Object} options Настройки компонента, переданного в componentType.
+             * @translatable name
              *
              */
             /**

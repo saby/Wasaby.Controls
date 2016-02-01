@@ -66,6 +66,7 @@ define('js!SBIS3.CONTROLS.DropdownList',
                mode: 'hover',
                /**
                 * @cfg {String} Текст заголовка
+                * @translatable
                 */
                text : '',
                /**

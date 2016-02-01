@@ -148,6 +148,7 @@ define('js!SBIS3.CONTROLS.Image',
                    *       <option name="title">Редактирование фото</option>
                    *    </option>
                    * </pre>
+                   * @translatable title
                    */
                   editConfig: {
                      title: 'Редактирование изображения'

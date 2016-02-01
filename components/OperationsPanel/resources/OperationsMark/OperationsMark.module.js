@@ -30,6 +30,7 @@ define('js!SBIS3.CONTROLS.OperationsMark', [
               * <pre>
               *     <option name="caption">Операции отметки</option>
               * </pre>
+              * @translatable
               */
             caption: undefined,
             /**
