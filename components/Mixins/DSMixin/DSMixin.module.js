@@ -229,7 +229,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
              */
             filter: {},
             /**
-             * @cfg {Array} Сортировка данных
+             * @cfg {Array} Сортировка данных. Задается массивом объектов, в котором ключ - это имя поля, а значение ASC - по-возрастанию, DESC  - по-убыванию
              * @example
              * <pre class="brush:xml">
              *     <options name="sorting" type="Array">
