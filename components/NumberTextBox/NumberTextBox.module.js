@@ -237,7 +237,7 @@ define('js!SBIS3.CONTROLS.NumberTextBox', ['js!SBIS3.CONTROLS.TextBox', 'html!SB
             this._options.onlyPositive,
             this._options.maxLength
          );
-         if (this._options.hideEmptyDecimals && !(value.indexOf('.') == -1) && fromFocusOut ){
+         if (value && this._options.hideEmptyDecimals && !(value.indexOf('.') == -1) && fromFocusOut ){
             while (value[value.length - 1] == '0'){
                value = value.substr(0, value.length - 1);
             }
