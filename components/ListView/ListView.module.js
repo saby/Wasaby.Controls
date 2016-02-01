@@ -29,9 +29,9 @@ define('js!SBIS3.CONTROLS.ListView',
       'is!browser?js!SBIS3.CONTROLS.ListView/resources/SwipeHandlers'
    ],
    function (CompoundControl, CompoundActiveFixMixin, DSMixin, MultiSelectable,
-             Selectable, DataBindMixin, DecorableMixin, DragNDropMixin, ItemActionsGroup, MarkupTransformer, dotTplFn,
-             TemplateUtil, CommonHandlers, MoveHandlers, Pager, EditInPlaceHoverController, EditInPlaceClickController,
-             Link, ScrollWatcher, rk, groupByTpl, emptyDataTpl) {
+             Selectable, DataBindMixin, DecorableMixin, ItemActionsGroup, dotTplFn,
+             CommonHandlers, MoveHandlers, Pager, EditInPlaceHoverController, EditInPlaceClickController,
+             Link, ScrollWatcher, groupByTpl, emptyDataTpl) {
 
       'use strict';
 
