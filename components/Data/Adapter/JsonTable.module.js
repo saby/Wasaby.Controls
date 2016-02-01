@@ -9,6 +9,7 @@ define('js!SBIS3.CONTROLS.Data.Adapter.JsonTable', [
     * Адаптер для таблицы данных в формате JSON
     * @class SBIS3.CONTROLS.Data.Adapter.JsonTable
     * @mixes SBIS3.CONTROLS.Data.Adapter.ITable
+    * @public
     * @author Мальцев Алексей
     */
 
