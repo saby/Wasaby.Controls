@@ -609,7 +609,12 @@ define('js!SBIS3.CONTROLS.DSMixin', [
       _drawItemsCallback: function () {
          /*Method must be implemented*/
       },
-
+      /**
+       * Метод перерисовки контрола без пересчета и получения данных
+       */
+      redraw: function(){
+         this._redraw();
+      },
       _redraw: function () {
          var records;
 
