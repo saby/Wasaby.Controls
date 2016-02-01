@@ -6,7 +6,8 @@ define('js!SBIS3.CONTROLS.DEMO.AddInPlace',
       'js!SBIS3.CONTROLS.DataGridView', 
       'js!SBIS3.CONTROLS.Button',
       'js!SBIS3.CONTROLS.TextBox',
-      'js!SBIS3.CONTROLS.NumberTextBox'
+      'js!SBIS3.CONTROLS.NumberTextBox',
+      'html!SBIS3.CONTROLS.DEMO.AddInPlace/resources/AddButtonsTpl'
    ], 
    function(CompoundControl, dotTplFn, SbisService) {
    /**
@@ -42,7 +43,10 @@ define('js!SBIS3.CONTROLS.DEMO.AddInPlace',
          this.getChildControlByName('СоздатьЗапись').subscribe('onActivated', function(){
             view.sendCommand('beginAdd');
          }.bind(this));
-      }     
+      },
+      sendAddItem: function() {
+         this.sendCommand('beginAdd');
+      }
    });
 
    return moduleClass;
