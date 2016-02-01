@@ -107,7 +107,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.IndexedEnumeratorMixin', [
        */
       _getIndexForPropertyValue: function (property, value) {
          var index;
-         if (this._enumeratorIndexes.hasOwnProperty(property)) {
+         if (Object.prototype.hasOwnProperty.call(this._enumeratorIndexes, property)) {
             index = this._enumeratorIndexes[property];
          } else {
             index = this._createIndex(property);
@@ -129,7 +129,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.IndexedEnumeratorMixin', [
          this.reset();
          while ((item = this.getNext())) {
             value = Utils.getItemPropertyValue(item, property);
-            if (!index.hasOwnProperty(value)) {
+            if (!Object.prototype.hasOwnProperty.call(index, value)) {
                index[value] = [];
             }
             index[value].push([position, item]);
