@@ -1,4 +1,5 @@
-<thead class="controls-DataGridView__thead{{?it.showHead === false}} ws-hidden{{?}}">
+<thead class="controls-DataGridView__thead">
+    {{?it.showHead !== false}}
     <tr>
         {{?it.multiselect}}
         <th class="controls-DataGridView__th controls-DataGridView__td__checkBox {{?it.startScrollColumn!== undefined}}{{?it.startScrollColumn === 0}} controls-DataGridView__scrolledCell{{??}} controls-DataGridView__notScrolledCell{{?}}{{?}}">
@@ -18,5 +19,6 @@
             </div>
         </th>
     </tr>
+    {{?}}
     {{?}}
 </thead>

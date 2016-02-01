@@ -227,6 +227,8 @@ define('js!SBIS3.CONTROLS.TextArea', ['js!SBIS3.CONTROLS.TextBoxBase', 'html!SBI
          var cnt = parseInt(count, 10);
          this._options.minLinesCount = cnt;
          this._inputField.attr('rows', cnt);
+         this._inputField.data('minLinesCount', count);
+         this._inputField.trigger('autosize.resize');
       },
 
       _drawText: function(text) {

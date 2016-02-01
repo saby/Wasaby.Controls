@@ -29,10 +29,7 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', ['js!SBIS3.CORE.Control'], function (Con
       },
 
       $constructor : function() {
-         var
-            filter = this.getFilter() || {};
-         this._filter = this._filter || {};
-         delete (filter[this._options.hierField]);
+         var filter = this.getFilter() || {};
          if (this._options.expand) {
             filter['Разворот'] = 'С разворотом';
             filter['ВидДерева'] = 'Узлы и листья';
@@ -346,6 +343,9 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', ['js!SBIS3.CORE.Control'], function (Con
             if ((this._options.allowEnterToFolder) && ((data.get(this._options.hierField + '@')))){
                this.setCurrentRoot(nodeID);
                this.reload();
+            }
+            else {
+               this._activateItem(id);
             }
          }
       }
