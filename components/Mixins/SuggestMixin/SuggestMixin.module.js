@@ -260,13 +260,14 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
       setListFilter: function(filter) {
          var self = this,
              changedFields = [],
-             ds;
+             dataSet = this._getListDataSet();
 
          /* Если в контролах, которые мы отслеживаем, нет фокуса,
             то почистим датасет, т.к. фильтр сменился и больше ничего делать не будем */
          if(!this._isObservableControlFocused()) {
-            ds = this.getList().getDataSet();
-            ds && ds.fill(); //TODO в 3.7.3.100 поменять на clear
+            if(dataSet) {
+               dataSet.fill();//TODO в 3.7.3.100 поменять на clear
+            }
             this._options.listFilter = filter;
             this._notifyOnPropertyChanged('listFilter');
             return;
@@ -465,8 +466,17 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
 
             /* Изменяем видимость кнопки в зависимости от, того, есть ли ещё записи */
             this._showAllButton.getContainer()
-                .toggleClass('ws-hidden', !list._hasNextPage(list.getDataSet().getMetaData().more));
+                .toggleClass('ws-hidden', !list._hasNextPage(this._getListDataSet().getMetaData().more));
          }
+      },
+
+      /**
+       * Возвращает dataSet списка, если список уже инициализирован
+       * @returns {SBIS3.CONTROLS.Data.Collection.List|undefined}
+       * @private
+       */
+      _getListDataSet: function() {
+         return this._list ? this._list.getDataSet() : undefined;
       },
 
       /**
