@@ -54,7 +54,8 @@ define('js!SBIS3.CONTROLS.OperationsMark', [
                { name: 'selectCurrentPage', title: rk('Всю страницу') },
                { name: 'removeSelection', title: rk('Снять') },
                { name: 'invertSelection', title: rk('Инвертировать') }
-            ]
+            ],
+            keyField: 'name'
          },
          _markCheckBox: undefined
       },
