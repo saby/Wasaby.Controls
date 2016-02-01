@@ -205,7 +205,6 @@ define('js!SBIS3.CONTROLS.ListView',
             _emptyData: undefined,
             _containerScrollHeight : 0,
             _firstScrollTop : true,
-            _isDrawResults: false,
             _addResultsMethod: undefined,
             _options: {
                /**
@@ -1748,6 +1747,7 @@ define('js!SBIS3.CONTROLS.ListView',
                this._showItemActions(hoveredItem);
             }
          },
+         /*DRAG_AND_DROP END*/
          _drawResults: function(){
             if (!this._checkResults()){
                return;
@@ -1783,7 +1783,6 @@ define('js!SBIS3.CONTROLS.ListView',
             }
             $(container)[position](resultRow);
          }
-         /*DRAG_AND_DROP END*/
       });
 
       return ListView;
