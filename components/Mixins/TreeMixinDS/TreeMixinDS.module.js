@@ -54,10 +54,7 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', ['js!SBIS3.CORE.Control'], function (Con
       },
 
       $constructor : function() {
-         var
-            filter = this.getFilter() || {};
-         this._filter = this._filter || {};
-         delete (filter[this._options.hierField]);
+         var filter = this.getFilter() || {};
          if (this._options.expand) {
             filter['Разворот'] = 'С разворотом';
             filter['ВидДерева'] = 'Узлы и листья';
@@ -240,7 +237,7 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', ['js!SBIS3.CORE.Control'], function (Con
          _addItem: function (parentFnc, item, at) {
             //TODO придрот, чтоб не отрисовывались данные в дереве при первом открытии узла
             var parent = item.getContents().get(this._options.hierField);
-            if (this._options.openedPath['parent']) {
+            if (this._options.openedPath[parent] || (parent == this._curRoot)) {
                parentFnc.apply(this, arguments);
             }
          }

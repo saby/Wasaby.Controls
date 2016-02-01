@@ -7,10 +7,11 @@ define('js!SBIS3.CONTROLS.Demo.MyFastDataFilter',
       'js!SBIS3.CONTROLS.FastDataFilter',
       'js!SBIS3.CONTROLS.Demo.FilterButtonMain',
       'html!SBIS3.CONTROLS.Demo.MyFastDataFilter',
+      'i18n!SBIS3.CONTROLS.Demo.MyFastDataFilter',
       'css!SBIS3.CONTROLS.Demo.MyFastDataFilter'
    ],
 
-   function(CompoundControl, FastDataFilter, FilterButtonMainDemo, dotTplFn) {
+   function(CompoundControl, FastDataFilter, FilterButtonMainDemo, dotTplFn, rk) {
       'use strict';
       var MyFastDataFilter = CompoundControl.extend([],{
          $protected: {
@@ -25,27 +26,27 @@ define('js!SBIS3.CONTROLS.Demo.MyFastDataFilter',
                   values:[
                      {
                         key : 0,
-                        title : 'Заголовок'
+                        title : rk('Заголовок')
                      },
                      {
                         key : 1,
-                        title : 'Один'
+                        title : rk('Один')
                      },
                      {
                         key : 2,
-                        title : 'Два'
+                        title : rk('Два')
                      },
                      {
                         key : 3,
-                        title : 'Три'
+                        title : rk('Три')
                      },
                      {
                         key : 4,
-                        title : 'Четыре'
+                        title : rk('Четыре')
                      },
                      {
                         key : 5,
-                        title : 'Пять'
+                        title : rk('Пять')
                      }
                   ]
                },
@@ -57,23 +58,23 @@ define('js!SBIS3.CONTROLS.Demo.MyFastDataFilter',
                   values:[
                      {
                         secondKey : 0,
-                        user : 'Все пользователи'
+                        user : rk('Все пользователи')
                      },
                      {
                         secondKey : 1,
-                        user : 'Пушкин'
+                        user : rk('Пушкин')
                      },
                      {
                         secondKey : 2,
-                        user : 'Лермонтов'
+                        user : rk('Лермонтов')
                      },
                      {
                         secondKey : 3,
-                        user : 'Толстой'
+                        user : rk('Толстой')
                      },
                      {
                         secondKey : 4,
-                        user : 'Бродский'
+                        user : rk('Бродский')
                      }
                   ]
                },
@@ -85,19 +86,19 @@ define('js!SBIS3.CONTROLS.Demo.MyFastDataFilter',
                   values:[
                      {
                         key : 0,
-                        title : 'Не выбрано'
+                        title : rk('Не выбрано')
                      },
                      {
                         key : 1,
-                        title : 'Все (для продажи и нет)'
+                        title : rk('Все (для продажи и нет)')
                      },
                      {
                         key : 2,
-                        title : 'Не для продажи'
+                        title : rk('Не для продажи')
                      },
                      {
                         key : 3,
-                        title : 'Для продажи'
+                        title : rk('Для продажи')
                      }
                   ]
                }]

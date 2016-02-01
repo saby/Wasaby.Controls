@@ -70,15 +70,6 @@ define('js!SBIS3.CONTROLS.DataGridView',
              * @property {String} headTemplate Шаблон отображения шапки колонки
              * @property {String} headTooltip Всплывающая подсказка шапки колонки
              * @property {String} cellTemplate Шаблон отображения ячейки
-             * Необходимо указать настройки декораторов разметки, если требуется
-             * Пример
-             * <pre>
-             *    {{=it.decorators.applyOnly(it.value, {
-             *      highlight: it.highlight,
-             *      ladder: it.field
-             *    })}}
-             * </pre>
-             * @remark
              * Данные, которые передаются в cellTemplate:
              * <ol>
              *    <li>item</li>
@@ -88,8 +79,15 @@ define('js!SBIS3.CONTROLS.DataGridView',
              *    <li>field - имя поля</li>
              *    <li>value - значение</li>
              *    <li>highlight - есть ли подсветка</li>
-             *    item: item,
              * </ol>
+             * Необходимо указать настройки декораторов разметки, если требуется
+             * Пример
+             * <pre>
+             *    {{=it.decorators.applyOnly(it.value, {
+             *      highlight: it.highlight,
+             *      ladder: it.field
+             *    })}}
+             * </pre>
              * @property {Object.<String,String>} templateBinding соответствие опций шаблона полям в рекорде
              * @property {Object.<String,String>} includedTemplates подключаемые внешние шаблоны, ключу соответствует поле it.included.<...> которое будет функцией в шаблоне ячейки
              */

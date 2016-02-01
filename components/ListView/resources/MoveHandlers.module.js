@@ -1,7 +1,7 @@
 /**
  * Created by as.suhoruchkin on 21.07.2015.
  */
-define('js!SBIS3.CONTROLS.MoveHandlers', ['js!SBIS3.CORE.Dialog','js!SBIS3.CONTROLS.Data.MoveStrategy.Sbis', 'js!SBIS3.CONTROLS.Data.MoveStrategy.Base', 'js!SBIS3.CONTROLS.MoveDialogTemplate'], function(MoveDialog, SbisMoveStrategy, BaseMoveStrategy) {
+define('js!SBIS3.CONTROLS.MoveHandlers', ['js!SBIS3.CORE.Dialog','js!SBIS3.CONTROLS.Data.MoveStrategy.Sbis', 'js!SBIS3.CONTROLS.Data.MoveStrategy.Base'], function(Dialog, SbisMoveStrategy, BaseMoveStrategy) {
    var MoveHandlers = {
       $protected: {
         _moveStrategy: undefined
