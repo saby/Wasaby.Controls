@@ -1,11 +1,11 @@
 /*global define, $*/
 define('js!SBIS3.CONTROLS.MenuIconNew', [
    'js!SBIS3.CONTROLS.IconButton', 'js!SBIS3.CONTROLS.ContextMenuNew', 'js!SBIS3.CONTROLS.PickerMixin',
-   'js!SBIS3.CONTROLS.ListControlMixin',  'js!SBIS3.CONTROLS.MenuButtonNewMixin', 'html!SBIS3.CONTROLS.MenuIcon',
+   'js!SBIS3.CONTROLS.ListControlMixin',  'js!SBIS3.CONTROLS.MenuButtonNewMixin',
    'js!SBIS3.CONTROLS.MenuIconView', 'js!SBIS3.CONTROLS.Data.Utils', 'js!SBIS3.CONTROLS.HierarchyControlMixin',
    'js!SBIS3.CONTROLS.TreeControlMixin'
 ], function(IconButton, ContextMenu, PickerMixin,
-      ListControlMixin, MenuButtonMixin, dotTplFn,
+      ListControlMixin, MenuButtonMixin,
       MenuIconView, DataUtils, HierarchyControlMixin,
       TreeControlMixin ) {
 
@@ -54,7 +54,6 @@ define('js!SBIS3.CONTROLS.MenuIconNew', [
     */
 
    var MenuIcon = IconButton.extend( [PickerMixin, ListControlMixin, MenuButtonMixin, HierarchyControlMixin, TreeControlMixin], /** @lends SBIS3.CONTROLS.MenuIcon.prototype */ {
-      _dotTplFn: dotTplFn,
       _hasHeader: false,
       $protected: {
          _options: {
