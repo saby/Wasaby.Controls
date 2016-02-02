@@ -3,7 +3,7 @@ define('js!SBIS3.CONTROLS.HierarchyDataGridView', [
    'js!SBIS3.CONTROLS.hierarchyMixin',
    'html!SBIS3.CONTROLS.HierarchyDataGridView/resources/rowTpl',
    'js!SBIS3.CONTROLS.BreadCrumbs',
-   'is!browser?html!SBIS3.CONTROLS.DataGridView/resources/DataGridViewGroupBy'
+   'browser!html!SBIS3.CONTROLS.DataGridView/resources/DataGridViewGroupBy'
 ], function (DataGridView, hierarchyMixin, rowTpl, BreadCrumbs, groupByTpl) {
    'use strict';
    /**
@@ -34,7 +34,7 @@ define('js!SBIS3.CONTROLS.HierarchyDataGridView', [
        * Событие, происходящее после клика по хлебным крошкам, отображающим результаты поиска
        * @param {$ws.proto.EventObject} eventObject Дескриптор события.
        * @param {number} id ключ узла, по которму кликнули
-       * @return Если вернуть false - загрузка узла не произойдет
+       * @returns {Boolean} Если вернуть false - загрузка узла не произойдет
        * @example
        * <pre>
        *    DataGridView.subscribe('onSearchPathClick', function(event){

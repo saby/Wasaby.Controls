@@ -135,63 +135,7 @@ define([
             });
          });
 
-         describe('.getItemByPropertyValue()', function() {
-            it('should return item with given property', function() {
-               var enumerator = new ArrayEnumerator({
-                  items: items
-               });
-               for (var i = 0; i < items.length; i++) {
-                  assert.strictEqual(
-                     items[i],
-                     enumerator.getItemByPropertyValue('Ид', items[i]['Ид'])
-                  );
-                  assert.strictEqual(
-                     items[i],
-                     enumerator.getItemByPropertyValue('Фамилия', items[i]['Фамилия'])
-                  );
-               }
-            });
-            it('should return undefined with not exists property', function() {
-               var enumerator = new ArrayEnumerator({
-                  items: items
-               });
-               assert.strictEqual(
-                  undefined,
-                  enumerator.getItemByPropertyValue('Ид', 0)
-               );
-            });
-         });
-
-         describe('.getItemsByPropertyValue()', function() {
-            it('should return items with given property', function() {
-               var enumerator = new ArrayEnumerator({
-                  items: items
-               });
-               assert.deepEqual(
-                  [items[0]],
-                  enumerator.getItemsByPropertyValue('Ид', 1)
-               );
-               assert.deepEqual(
-                  [items[0], items[1], items[3]],
-                  enumerator.getItemsByPropertyValue('Пол', 'м')
-               );
-               assert.deepEqual(
-                  [items[2]],
-                  enumerator.getItemsByPropertyValue('Пол', 'ж')
-               );
-            });
-            it('should return no items with not exists property', function() {
-               var enumerator = new ArrayEnumerator({
-                  items: items
-               });
-               assert.strictEqual(
-                  0,
-                  enumerator.getItemsByPropertyValue('Ид', 0).length
-               );
-            });
-         });
-
-         describe('.getItemIndexByPropertyValue()', function() {
+         describe('.getIndexByValue()', function() {
             it('should return item index with given property', function() {
                var enumerator = new ArrayEnumerator({
                   items: items
@@ -199,11 +143,11 @@ define([
                for (var i = 0; i < items.length; i++) {
                   assert.strictEqual(
                      i,
-                     enumerator.getItemIndexByPropertyValue('Ид', items[i]['Ид'])
+                     enumerator.getIndexByValue('Ид', items[i]['Ид'])
                   );
                   assert.strictEqual(
                      i,
-                     enumerator.getItemIndexByPropertyValue('Фамилия', items[i]['Фамилия'])
+                     enumerator.getIndexByValue('Фамилия', items[i]['Фамилия'])
                   );
                }
             });
@@ -213,27 +157,27 @@ define([
                });
                assert.strictEqual(
                   -1,
-                  enumerator.getItemIndexByPropertyValue('Ид', 0)
+                  enumerator.getIndexByValue('Ид', 0)
                );
             });
          });
 
-         describe('.getItemsIndexByPropertyValue()', function() {
+         describe('.getIndiciesByValue()', function() {
             it('should return items indexes with given property', function() {
                var enumerator = new ArrayEnumerator({
                   items: items
                });
                assert.deepEqual(
                   [0],
-                  enumerator.getItemsIndexByPropertyValue('Ид', 1)
+                  enumerator.getIndiciesByValue('Ид', 1)
                );
                assert.deepEqual(
                   [0, 1, 3],
-                  enumerator.getItemsIndexByPropertyValue('Пол', 'м')
+                  enumerator.getIndiciesByValue('Пол', 'м')
                );
                assert.deepEqual(
                   [2],
-                  enumerator.getItemsIndexByPropertyValue('Пол', 'ж')
+                  enumerator.getIndiciesByValue('Пол', 'ж')
                );
             });
             it('should return no indexes with not exists property', function() {
@@ -242,7 +186,7 @@ define([
                });
                assert.strictEqual(
                   0,
-                  enumerator.getItemsIndexByPropertyValue('Ид', 0).length
+                  enumerator.getIndiciesByValue('Ид', 0).length
                );
             });
          });

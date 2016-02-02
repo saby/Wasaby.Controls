@@ -166,6 +166,12 @@ define('js!SBIS3.CONTROLS.NumberTextBox', ['js!SBIS3.CONTROLS.TextBox', 'html!SB
          this._inputField.val(this._options.text);
       },
 
+
+      setText: function(text){
+         text = this._formatText(text);
+         NumberTextBox.superclass.setText.call(this, text);
+      },
+
       _setText: function(text){
          if (text !== '-' && text !== '.' && text !== ''){
             if (text.indexOf('.') === text.length - 1) {
@@ -222,6 +228,7 @@ define('js!SBIS3.CONTROLS.NumberTextBox', ['js!SBIS3.CONTROLS.TextBox', 'html!SB
 
       _formatText: function(value, fromFocusOut){
          var decimals;
+         value = value.toString();
          if (this._options.onlyInteger){
             decimals = 0;
             value = parseInt(value.replace(/\s/g, ''));

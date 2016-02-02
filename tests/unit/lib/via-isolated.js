@@ -44,11 +44,34 @@ exports.run = function (config, wsConfig, rootPath) {
    requirejs(path.join(wsConfig.wsRoot, 'lib/core.js'));
    requirejs(path.join(wsConfig.wsRoot, 'lib/Source.js'));
 
+   //Подменяем штатный логгер
+   $ws.proto.TestConsoleLogger = $ws.proto.ILogger.extend({
+      log: function(tag, message) {
+         console.log(tag + ': ' + message);
+      },
+      error: function(tag, message, exception) {
+         console.error(tag + ': ' + message + (exception ? exception.toString() : ''));
+      },
+      info: function(){
+         console.info(tag + ': ' + message);
+      }
+   });
+   $ws.single.ioc.bindSingle('ILogger', 'TestConsoleLogger');
+
    //Подключаем контролы к requirejs
    var contents = require(path.join(rootPath, wsConfig.resourceRoot, 'contents.json'));
    $ws.core.loadContents(contents, false, {
       service: rootPath,
       resources: wsConfig.resourceRoot
+   });
+
+   //Запускаем тесты
+   unit.test.getList().forEach(function (test) {
+      try {
+         requirejs(test);
+      } catch (e) {
+         console.log(e.toString());
+      }
    });
 
    if (config.saveToFile) {
@@ -61,18 +84,18 @@ exports.run = function (config, wsConfig, rootPath) {
          encoding: 'utf8',
          mode: 0666
       });
-      //writeOriginal = process.stdout.write;
-
+      //var writeOriginal = process.stdout.write;
       process.stdout.write = function (chunk) {
-         if (typeof chunk == 'string') {
-            ws.write(chunk);
-         }
+         /*var str = '' + chunk;
+         if (str && str[0] !== '<') {
+            str = '<!--' + str + '-->';
+         }*/
+         ws.write(str);
          //writeOriginal.apply(process.stdout, arguments);
       };
-   }
+      process.stdout.on('finish', function() {
+         ws.end();
+      });
 
-   //Запускаем тесты
-   unit.test.getList().forEach(function (test) {
-      requirejs(test);
-   });
+   }
 };
