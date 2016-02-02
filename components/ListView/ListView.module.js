@@ -1168,13 +1168,13 @@ define('js!SBIS3.CONTROLS.ListView',
             ListView.superclass._drawItems.apply(this, [records, at]);
          },
          _drawItemsCallback: function () {
+            ListView.superclass._drawItemsCallback.apply(this, arguments);
             var hoveredItem = this.getHoveredItem().container;
 
             if (this.isInfiniteScroll()) {
                this._preScrollLoading();
             }
             this._drawSelectedItems(this._options.selectedKeys);
-            this._drawSelectedItem(this._options.selectedKey);
 
             /* Если после перерисовки выделенный элемент удалился из DOM дерава,
                то событие mouseLeave не сработает, поэтому вызовем руками метод */
