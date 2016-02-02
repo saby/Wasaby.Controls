@@ -27,6 +27,12 @@ define('js!SBIS3.CONTROLS.TreeViewDS', [
          }
       },
 
+      init : function() {
+         TreeViewDS.superclass.init.apply(this, arguments);
+         //TODO чтоб не переопределять верстку навешиваем класс
+         this._container.addClass('controls-TreeView');
+      },
+
       _getTargetContainer: function (record) {
          var
             parentKey = this._dataSet.getParentKey(record, this._options.hierField),
@@ -38,7 +44,13 @@ define('js!SBIS3.CONTROLS.TreeViewDS', [
             if (!curList.length) {
                curList = $('<div></div>').appendTo(parentItem).addClass('controls-TreeView__childContainer');
             }
-
+            if (this._options.openedPath[parentKey]) {
+               var tree = this._dataSet.getTreeIndex(this._options.hierField);
+               if (tree[parentKey]) {
+                  $('.js-controls-TreeView__expand', parentItem).first().addClass('controls-TreeView__expand__open');
+                  curList.css('display', 'block');
+               }
+            }
             // !! для статичных данных тоже надо указыавть является ли запись разделом. нужно чтобы отрисовать корректно запись, которая является узлом
             if (record.get(this._options.hierField + '@')) {
                $('.controls-TreeView__item', parentItem).first().addClass('controls-TreeView__hasChild');
