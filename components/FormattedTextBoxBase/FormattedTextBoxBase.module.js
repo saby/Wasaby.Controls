@@ -184,6 +184,8 @@ define(
                position: 0
             }
          },
+         //хранит текст, который прилетел через setText
+         _settedText: '',
          /* модель хранит объекты разделителей и групп, порядок совпадает с порядком в маске */
          model: []
       },
@@ -438,7 +440,10 @@ define(
        * @returns {boolean} true - если строка установлена
        */
       setText: function(text, clearChar) {
-         if (text === '') {
+         // TODO запоминаем что изначально пришло, чтобы можно было null обработать (из контекста), но при этом выводить незаполненное поле
+         //      надо как-то иначе это обработать
+         this._settedText = text;
+         if (text === '' || text === null) {
             text = this.getStrMask(clearChar);
          }
          /*массив со значениями, нужен чтобы не записывать значения до полной проверки соответствия текста маске */
@@ -687,7 +692,8 @@ define(
        * @protected
        */
       _updateText:function() {
-         this._options.text = this.formatModel.getText(this._maskReplacer);
+         //TODO неодинаковое поведение получается для разного text. Но нельзя this._options.text не обновлять, т.к. его getText() использует
+         this._options.text = (this.formatModel._settedText !== null) ? this.formatModel.getText(this._maskReplacer) : null;
       },
 
       /**
@@ -781,6 +787,8 @@ define(
          character = isShiftPressed ? character.toUpperCase() : character.toLowerCase();
          character = isClear ? this._maskReplacer : character;
          if (type == 'character'  ||  isClear) {
+            //TODO сбрасываем, чтобы после setText(null) _updateText после ввода символов обновлял опцию text
+            this.formatModel._settedText = '';
             if (isClear && (positionIndexesBegin[0] != positionIndexesEnd[0] || positionIndexesBegin[1] != positionIndexesEnd[1])) {
                //проходим группы с конца
                startGroupNum = positionIndexesBegin[0];
