@@ -49,7 +49,7 @@ define('js!SBIS3.CONTROLS.Data.Adapter.IAdapter', [], function () {
       },
 
       /**
-       * Уснатанвливает значение свойства
+       * Устанавливает значение свойства
        * @param {*} data Сырые данные
        * @param {String} property Название свойства
        * @param {*} value Значение свойства

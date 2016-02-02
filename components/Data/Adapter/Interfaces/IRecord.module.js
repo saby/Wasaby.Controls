@@ -39,7 +39,7 @@ define('js!SBIS3.CONTROLS.Data.Adapter.IRecord', [], function () {
 
       /**
        * Возвращает массив названий полей
-       * @returns {String[]} Названия полей
+       * @returns {Array.<String>} Названия полей
        */
       getFields: function () {
          throw new Error('Method must be implemented');
@@ -71,7 +71,7 @@ define('js!SBIS3.CONTROLS.Data.Adapter.IRecord', [], function () {
       },
 
       /**
-       * Возвращает данные
+       * Возвращает данные записи в формате адаптера
        * @returns {*}
        */
       getData: function () {

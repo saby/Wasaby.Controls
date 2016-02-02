@@ -55,22 +55,6 @@ define('js!SBIS3.CONTROLS.Data.Adapter.JsonTable', [
          this._data.splice(at, 1);
       },
 
-      merge: function(one, two, idProperty) {
-         var first = this.at(one),
-            extention = this.at(two),
-            adapter = new JsonRecord(first),
-            id = adapter.get(idProperty);
-         $ws.core.merge(first, extention);
-         adapter.set(idProperty, id);
-         this.remove(two);
-      },
-
-      copy: function(index) {
-         var source = this.at(index),
-            clone = $ws.core.clone(source);
-         this.add(clone, index);
-      },
-
       replace: function (record, at) {
          this._checkPosition(at);
          this._data[at] = record;
@@ -82,6 +66,22 @@ define('js!SBIS3.CONTROLS.Data.Adapter.JsonTable', [
          }
          var removed = this._data.splice(source, 1);
          this._data.splice(target, 0, removed.shift());
+      },
+
+      merge: function(acceptor, donor, idProperty) {
+         var first = this.at(acceptor),
+            extention = this.at(donor),
+            adapter = new JsonRecord(first),
+            id = adapter.get(idProperty);
+         $ws.core.merge(first, extention);
+         adapter.set(idProperty, id);
+         this.remove(donor);
+      },
+
+      copy: function(index) {
+         var source = this.at(index),
+            clone = $ws.core.clone(source);
+         this.add(clone, index);
       },
 
       getData: function () {

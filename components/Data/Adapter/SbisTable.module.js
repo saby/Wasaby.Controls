@@ -62,21 +62,6 @@ define('js!SBIS3.CONTROLS.Data.Adapter.SbisTable', [
          } : undefined;
       },
 
-      merge: function(one, two){
-         $ws.core.merge(
-            this._data.d[one],
-            this._data.d[two]
-         );
-         this.remove(two);
-      },
-
-      copy: function(index){
-         this._checkPosition(index);
-         var source = this._data.d[index],
-            clone = $ws.core.clone(source);
-         this._data.d.splice(index, 0, clone);
-      },
-
       remove: function (at) {
          this._checkPosition(at);
          this._data.d.splice(at, 1);
@@ -96,6 +81,21 @@ define('js!SBIS3.CONTROLS.Data.Adapter.SbisTable', [
          }
          var removed = this._data.d.splice(source, 1);
          this._data.d.splice(target, 0, removed.shift());
+      },
+
+      merge: function(acceptor, donor){
+         $ws.core.merge(
+            this._data.d[acceptor],
+            this._data.d[donor]
+         );
+         this.remove(donor);
+      },
+
+      copy: function(index){
+         this._checkPosition(index);
+         var source = this._data.d[index],
+            clone = $ws.core.clone(source);
+         this._data.d.splice(index, 0, clone);
       },
 
       getData: function () {

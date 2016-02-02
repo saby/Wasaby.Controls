@@ -73,25 +73,26 @@ define('js!SBIS3.CONTROLS.Data.Adapter.ITable', [], function () {
 
       /**
        * Объединяет две записи
-       * @param {Number} one Позиция записи в которую будет идти объединение
-       * @param {Number} two Позиция второй записи
+       * @param {Number} acceptor Позиция принимающей записи
+       * @param {Number} donor Позиция записи-донора
        * @param {String} idProperty  Название поля содержащего первичный ключ
        * @returns {*}
        */
-      merge: function(one, two, idProperty){
+      merge: function(acceptor, donor, idProperty) {
          throw new Error('Method must be implemented');
       },
+
       /**
        * Копирует запись по позиции
        * @param {Number} index Позиция, которая будет скопирована
        * @returns {*}
        */
-      copy: function(index){
+      copy: function(index) {
          throw new Error('Method must be implemented');
       },
 
       /**
-       * Возвращает данные
+       * Возвращает данные таблицы в формате адаптера
        * @returns {*}
        */
       getData: function () {
