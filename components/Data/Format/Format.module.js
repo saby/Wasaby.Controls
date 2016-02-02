@@ -28,7 +28,6 @@ define('js!SBIS3.CONTROLS.Data.Format.Format', [
          _items: []
       },
 
-
       //region SBIS3.CONTROLS.Data.Collection.List
 
       clear: function () {
