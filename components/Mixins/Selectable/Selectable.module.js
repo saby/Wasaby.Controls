@@ -112,10 +112,6 @@ define('js!SBIS3.CONTROLS.Selectable', ['js!SBIS3.CONTROLS.Data.Utils'], functio
             if (this._itemsProjection && this._onProjectionCurrentChange) {
                this.unsubscribeFrom(this._itemsProjection, 'onCurrentChange', this._onProjectionCurrentChange);
             }
-            if (!this._onProjectionCurrentChange) {
-               this._onProjectionCurrentChange = onProjectionCurrentChange.bind(this);
-            }
-            this.subscribeTo(this._itemsProjection, 'onCurrentChange', this._onProjectionCurrentChange);
          }
       },
 
