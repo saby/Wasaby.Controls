@@ -22,9 +22,9 @@ define('js!SBIS3.CONTROLS.ListView',
       'js!SBIS3.CONTROLS.EditInPlaceHoverController',
       'js!SBIS3.CONTROLS.EditInPlaceClickController',
       'js!SBIS3.CONTROLS.Link',
-      'is!browser?html!SBIS3.CONTROLS.ListView/resources/ListViewGroupBy',
-      'is!browser?html!SBIS3.CONTROLS.ListView/resources/emptyData',
-      'is!browser?js!SBIS3.CONTROLS.ListView/resources/SwipeHandlers'
+      'browser!html!SBIS3.CONTROLS.ListView/resources/ListViewGroupBy',
+      'browser!html!SBIS3.CONTROLS.ListView/resources/emptyData',
+      'browser!js!SBIS3.CONTROLS.ListView/resources/SwipeHandlers'
    ],
    function (CompoundControl, CompoundActiveFixMixin, DSMixin, MultiSelectable, Selectable, DataBindMixin, DecorableMixin, DragNDropMixin, ItemActionsGroup, MarkupTransformer, dotTplFn, TemplateUtil, CommonHandlers, MoveHandlers, Pager, EditInPlaceHoverController, EditInPlaceClickController, Link, groupByTpl, emptyDataTpl) {
 
@@ -1571,6 +1571,17 @@ define('js!SBIS3.CONTROLS.ListView',
                rows = [anchor.prev(), itemContainer, anchor, itemContainer.next()];
                itemContainer.insertBefore(anchor);
             } else {
+               var childs = this._dataSet.getChildItems(anchor.data('id'), true),
+                  lastChild;
+               if(childs.length > 0) {
+                  for(var i = childs.length-1; i>=0; i--) {
+                     lastChild = itemsContainer.find('tr[data-id="'+childs[i]+'"]:visible');
+                     if(lastChild.length > 0) {
+                        anchor = lastChild;
+                        break;
+                     }
+                  }
+               }
                rows = [itemContainer.prev(), anchor, itemContainer, anchor.next()];
                itemContainer.insertAfter(anchor);
             }
