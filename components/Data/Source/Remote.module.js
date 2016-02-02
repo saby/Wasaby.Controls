@@ -29,6 +29,13 @@ define('js!SBIS3.CONTROLS.Data.Source.Remote', [
              *       provider: 'source.provider.ajax'
              *    });
              * </pre>
+             * @example
+             * <pre>
+             *    var dataSource = new RemoteSource({
+             *       resource: '/users/'
+             *       provider: new AjaxProvider()
+             *    });
+             * </pre>
              */
             provider: null
          }

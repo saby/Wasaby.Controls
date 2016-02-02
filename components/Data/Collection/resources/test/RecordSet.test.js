@@ -3,14 +3,12 @@ define([
       'js!SBIS3.CONTROLS.Data.Collection.RecordSet',
       'js!SBIS3.CONTROLS.Data.Collection.List',
       'js!SBIS3.CONTROLS.Data.Bind.ICollection',
-      'js!SBIS3.CONTROLS.Data.Model',
-      'js!SBIS3.CONTROLS.Data.Source.Memory',
-      'js!SBIS3.CONTROLS.Data.Adapter.Json'
-   ], function (RecordSet, List, IBindCollection, Model, MemorySource, JsonAdapter) {
+      'js!SBIS3.CONTROLS.Data.Model'
+   ], function (RecordSet, List, IBindCollection, Model) {
       'use strict';
 
       describe('SBIS3.CONTROLS.Data.Collection.RecordSet', function() {
-         var items, sbisList;
+         var items;
 
          beforeEach(function() {
             items = [{
@@ -52,6 +50,10 @@ define([
                }));
                Array.prototype.push.apply(items,rd);
                assert.deepEqual(list.getRawData(), items);
+               assert.deepEqual(list.getCount(), items.length);
+               $ws.helpers.forEach(items, function (item, i) {
+                  assert.deepEqual(list.at(i).getRawData(), item);
+               });
             });
 
          });
@@ -67,21 +69,31 @@ define([
                }));
                Array.prototype.splice.apply(items,([0, 0].concat(rd)));
                assert.deepEqual(list.getRawData(), items);
+               assert.deepEqual(list.getCount(), items.length);
+               $ws.helpers.forEach(items, function (item, i) {
+                  assert.deepEqual(list.at(i).getRawData(), item);
+               });
             });
          });
 
          describe('.assign()', function() {
-            it('should change raw data', function() {
-               var items = [{id:1},{id:2}],
-                  list = new RecordSet({
-                     rawData: items.slice()
-                  });
-               var addItem = new Model({
-                  rawData: {id: 3}
-               });
-               list.add(addItem);
-               items.push({id: 3});
-               assert.deepEqual(list.getRawData(), items);
+            it('should change raw data and count', function() {
+               var list = new RecordSet({
+                     rawData: [{id: 1}, {id: 2}, {id: 3}]
+                  }),
+                  data4 = {id: 4},
+                  data5 = {id: 5};
+
+               list.assign([new Model({
+                  rawData: data4
+               }), new Model({
+                  rawData: data5
+               })]);
+               assert.deepEqual(list.getRawData()[0], data4);
+               assert.deepEqual(list.getRawData()[1], data5);
+               assert.deepEqual(list.at(0).getRawData(), data4);
+               assert.deepEqual(list.at(1).getRawData(), data5);
+               assert.strictEqual(list.getCount(), 2);
             });
          });
 
@@ -145,26 +157,6 @@ define([
                   assert.equal(i, list.getIndex(list.at(i)));
                }
 
-            });
-         });
-
-         describe('.saveChanges()', function (){
-            it('should return an index of given item', function(done) {
-               var source = new MemorySource({
-                  data: items.slice(),
-                  idProperty: 'Ид'
-               });
-               source.query().addCallback(function(ds){
-                  var list = ds.getAll(),
-                     length = list.getCount(),
-                     item_2 = $ws.core.clone(list.at(0));
-                  list.at(2).setDeleted(true);
-                  list.at(6).setDeleted(true);
-                  list.saveChanges(source);
-                  assert.equal(list.getCount(), length-2);
-                  assert.notDeepEqual(item_2, list.at(2));
-                  done();
-               });
             });
          });
 

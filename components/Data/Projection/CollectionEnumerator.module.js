@@ -225,11 +225,11 @@ define('js!SBIS3.CONTROLS.Data.Projection.CollectionEnumerator', [
          };
 
          if (this._options.sortMap.length) {
-            this._options.sortMap.map(function(index){
+            $ws.helpers.map(this._options.sortMap, function(index){
                processItem.call(this, index);
             }, this);
          } else {
-            this._options.sourceMap.map(function(item, index){
+            $ws.helpers.map(this._options.sourceMap, function(item, index){
                processItem.call(this, index);
             }, this);
          }
