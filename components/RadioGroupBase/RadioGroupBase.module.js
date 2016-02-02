@@ -22,13 +22,6 @@ define('js!SBIS3.CONTROLS.RadioGroupBase', ['js!SBIS3.CONTROLS.ButtonGroupBaseDS
          }
       },
 
-      _drawItemsCallback : function() {
-         RadioGroupBase.superclass._drawItemsCallback.call(this);
-         if (this._options.selectedKey) {
-            this._drawSelectedItem(this._options.selectedKey);
-         }
-      },
-
       _itemActivatedHandler : function(key) {
          this.setSelectedKey(key);
       },

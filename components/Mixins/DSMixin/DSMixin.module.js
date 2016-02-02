@@ -282,6 +282,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
                this._itemsProjection = itemsOpt;
                this._items = this._convertItems(this._itemsProjection.getCollection());
                this._setItemsEventHandlers();
+               this._itemsReadyCallback();
             }
             else if (itemsOpt instanceof Array) {
                /*TODO для совеместимости пока создадим сорс*/
@@ -289,6 +290,11 @@ define('js!SBIS3.CONTROLS.DSMixin', [
                   data: itemsOpt,
                   idProperty: this._options.keyField
                });
+            }
+            else {
+               this._items = itemsOpt;
+               this._createDefaultProjection(this._items);
+               this._itemsReadyCallback();
             }
          }
       },
@@ -479,6 +485,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
                       self._items = list;
                       self._createDefaultProjection(self._items);
                       self._setItemsEventHandlers();
+                      self._itemsReadyCallback();
                       self._dataLoadedCallback();
                       self._notify('onDataLoad', list);
                       self.redraw();
@@ -1013,6 +1020,9 @@ define('js!SBIS3.CONTROLS.DSMixin', [
       },
 
       _dataLoadedCallback: function () {
+
+      },
+      _itemsReadyCallback: function() {
 
       },
 
