@@ -31,7 +31,7 @@ define('js!SBIS3.CONTROLS.ListView',
    function (CompoundControl, CompoundActiveFixMixin, DSMixin, MultiSelectable,
              Selectable, DataBindMixin, DecorableMixin, DragNDropMixin, ItemActionsGroup, MarkupTransformer, dotTplFn,
              TemplateUtil, CommonHandlers, MoveHandlers, Pager, EditInPlaceHoverController, EditInPlaceClickController,
-             Link, ScrollWatcher, groupByTpl, emptyDataTpl) {
+             Link, ScrollWatcher, rk,  groupByTpl, emptyDataTpl) {
 
       'use strict';
 
