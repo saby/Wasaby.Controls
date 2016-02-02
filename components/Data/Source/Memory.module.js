@@ -265,7 +265,16 @@ define('js!SBIS3.CONTROLS.Data.Source.Memory', [
          var adapter = this.getAdapter(),
             tableAdapter = adapter.forTable(
                adapter.forTable(data).getEmpty()
-            );
+            ),
+            compare = function(given, expect) {
+               if (given && given instanceof Array) {
+                  //FIXME: если в поле хранится массив, то ищем совпадение по любому из элементов (требуется для поддержки типа "Иерархия"). Возможно поможет разделение иерархии на 2 поля.
+                  return $ws.helpers.reduce(given, function(prev, current) {
+                     return prev || (current == expect);
+                  }, false);
+               }
+               return given == expect;
+            };
          this._each(data, function(item) {
             var filterMatch = true;
 
@@ -278,7 +287,10 @@ define('js!SBIS3.CONTROLS.Data.Source.Memory', [
                if (filterField === 'Разворот' || filterField === 'ВидДерева') {
                   continue;
                }
-               filterMatch = adapter.forRecord(item).get(filterField) == where[filterField];
+               filterMatch = compare(
+                  adapter.forRecord(item).get(filterField),
+                  where[filterField]
+               );
                if (!filterMatch) {
                   break;
                }
