@@ -80,6 +80,7 @@ define('js!SBIS3.CONTROLS.Data.Format.Format', [
 
       /**
        * Добавляет поле в формат.
+       * Если поле с таким именем уже есть, генерирует исключение.
        * @param {String} name Имя поля
        * @param {SBIS3.CONTROLS.Data.Format.FieldType} type Тип поля
        * @returns {SBIS3.CONTROLS.Data.Format.Field}

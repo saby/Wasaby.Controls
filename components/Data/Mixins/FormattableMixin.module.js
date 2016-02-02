@@ -95,7 +95,7 @@ define('js!SBIS3.CONTROLS.Data.FormattableMixin', [
       //region Protected methods
 
       /**
-       * Возвращает формат полей (в режиме только для чтения)
+       * Возвращает формат полей
        * @returns {SBIS3.CONTROLS.Data.Format.Format}
        * @protected
        */
