@@ -1,9 +1,9 @@
 /*global define, $ws, $*/
-define('js!SBIS3.CONTROLS.MenuLinkNew', ['js!SBIS3.CONTROLS.Link', 'html!SBIS3.CONTROLS.MenuLink', 'js!SBIS3.CONTROLS.ListControlMixin',
+define('js!SBIS3.CONTROLS.MenuLinkNew', ['js!SBIS3.CONTROLS.Link', 'js!SBIS3.CONTROLS.ListControlMixin',
       'js!SBIS3.CONTROLS.PickerMixin', 'js!SBIS3.CONTROLS.MenuButtonNewMixin',
       'js!SBIS3.CONTROLS.ContextMenuNew',
       'js!SBIS3.CONTROLS.HierarchyControlMixin', 'js!SBIS3.CONTROLS.MenuLinkNewView'],
-   function(Link, MenuLinkViewTemplate, ListControlMixin, PickerMixin, MenuButtonMixin, ContextMenu, HierarchyControlMixin, MenuLinkView) {
+   function(Link, ListControlMixin, PickerMixin, MenuButtonMixin, ContextMenu, HierarchyControlMixin, MenuLinkView) {
 
    'use strict';
 
@@ -53,8 +53,7 @@ define('js!SBIS3.CONTROLS.MenuLinkNew', ['js!SBIS3.CONTROLS.Link', 'html!SBIS3.C
          _zIndex: '',
          _options: {
             pickerClassName: 'controls-MenuLink__Menu'
-         },
-         _viewConstructor: MenuLinkView
+         }
       },
 
       $constructor: function() {

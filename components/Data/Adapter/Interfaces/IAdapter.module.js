@@ -29,6 +29,16 @@ define('js!SBIS3.CONTROLS.Data.Adapter.IAdapter', [], function () {
       },
 
       /**
+       * Сериализует данные - переводит из нативного формата в формат адаптера
+       * @param {*} data Сериализуемые данные
+       * @returns {Object} Сериализованные данные
+       * @static
+       */
+      serialize: function (data) {
+         throw new Error('Method must be implemented');
+      },
+
+      /**
        * Возвращает значение свойства
        * @param {*} data Сырые данные
        * @param {String} property Название свойства

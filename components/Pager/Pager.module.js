@@ -66,7 +66,6 @@ define('js!SBIS3.CONTROLS.Pager', ['js!SBIS3.CORE.CompoundControl', 'html!SBIS3.
             self._options.pageSize = value;
             self.getPaging().setPageSize(value);
             self.getOpener().setPageSize(value);
-            self._updateLocalStorageValue();
          });
          this._paging = this.getChildControlByName('controls-Pager_paging');
          this._paging.subscribe('onPageChange', function(event, pageNum, deferred){

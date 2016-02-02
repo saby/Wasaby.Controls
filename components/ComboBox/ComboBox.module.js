@@ -141,16 +141,6 @@ define('js!SBIS3.CONTROLS.ComboBox', [
             e.stopPropagation();
             return false;
          });
-         var key = this._options.selectedKey;
-         if (key !== undefined && key !== null) {
-            this._drawSelectedItem(this._options.selectedKey);
-         } else {
-            /*TODO следующая строчка должна быть в Selector*/
-            this._options.selectedKey = null;
-            if (this._options.text) {
-               this._setKeyByText();
-            }
-         }
 
          /*обрабочики кликов TODO mouseup!!*/
          this._container.mouseup(function (e) {
@@ -162,6 +152,17 @@ define('js!SBIS3.CONTROLS.ComboBox', [
             }
          });
          this.reload();
+      },
+
+      init : function() {
+         ComboBox.superclass.init.apply(this, arguments);
+         if (this._options.selectedIndex !== undefined && this._options.selectedIndex !== null) {
+            //this._drawSelectedItem(this._options.selectedKey, this._options.selectedIndex);
+         } else {
+            if (this._options.text) {
+               this._setKeyByText();
+            }
+         }
       },
 
       _keyboardHover: function (e) {
@@ -241,18 +242,22 @@ define('js!SBIS3.CONTROLS.ComboBox', [
          $('.js-controls-ComboBox__fieldNotEditable', this._container.get(0)).toggleClass('controls-ComboBox__fieldNotEditable__placeholder', !text);
       },
 
-      _drawSelectedItem: function (key) {
-         if (typeof(key) != 'undefined' && key != null) {
+      _drawSelectedItem: function (key, index) {
+
             var item, def;
             def = new $ws.proto.Deferred();
             if (this._dataSet) {
-               item = this._dataSet.getRecordByKey(key);
+               item = this.getItems().at(index);
                def.callback(item);
             }
             else {
-               this._dataSource.read(key).addCallback(function(item){
-                  def.callback(item);
-               });
+               if (this._dataSource) {
+                  if ((key != undefined) && (key != null)) {
+                     this._dataSource.read(key).addCallback(function (item) {
+                        def.callback(item);
+                     });
+                  }
+               }
             }
             var self = this;
             def.addCallback(function(item){
@@ -275,31 +280,16 @@ define('js!SBIS3.CONTROLS.ComboBox', [
                }
             });
 
-         }
-         else {
-            if (this._picker) {
-               $('.controls-ComboBox__itemRow__selected', this._picker.getContainer().get(0)).removeClass('controls-ComboBox__itemRow__selected');
-            }
-            /*$('.js-controls-ComboBox__fieldNotEditable', this._container.get(0)).text('');
-             ComboBox.superclass.setText.call(this, '');*/
+
+         if (this._picker) {
+            $('.controls-ComboBox__itemRow__selected', this._picker.getContainer().get(0)).removeClass('controls-ComboBox__itemRow__selected');
          }
 
-      },
-
-      _drawItemsCallback : function() {
-         this._drawSelectedItem(this._options.selectedKey);
       },
 
       _addItemAttributes : function(container, item) {
          ComboBox.superclass._addItemAttributes.call(this, container, item);
          container.addClass('controls-ComboBox__itemRow').addClass('js-controls-ComboBox__itemRow');
-      },
-
-      //TODO от этого надо избавиться. Пользуется Саня Кузьмин
-      _notifySelectedItem: function (key) {
-         var text = this.getText();
-         this._notify('onSelectedItemChange', key, text);
-         this._notifyOnPropertyChanged('selectedItem');
       },
 
       _setPickerContent: function () {
@@ -443,7 +433,7 @@ define('js!SBIS3.CONTROLS.ComboBox', [
             this._picker.recalcPosition();
          }
          else {
-            this._drawSelectedItem(this._options.selectedKey);
+            this._drawSelectedItem(this._options.selectedKey, this._options.selectedIndex);
          }
       },
       /**
