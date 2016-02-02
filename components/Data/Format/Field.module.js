@@ -245,5 +245,15 @@ define('js!SBIS3.CONTROLS.Data.Format.Field', [
 
    });
 
+   /**
+    * Конструирует формат поля по декларативному описанию
+    * @param {Object} declaration Декларативное описание
+    * @returns {SBIS3.CONTROLS.Data.Format.Field}
+    * @static
+    */
+   Field.fromDeclaration = function(declaration) {
+      throw new Error('Under construction');
+   };
+
    return Field;
 });

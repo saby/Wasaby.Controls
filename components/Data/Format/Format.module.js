@@ -1,11 +1,12 @@
 /* global define, $ws */
 define('js!SBIS3.CONTROLS.Data.Format.Format', [
-   'js!SBIS3.CONTROLS.Data.Collection.List'
-], function (List) {
+   'js!SBIS3.CONTROLS.Data.Collection.List',
+   'js!SBIS3.CONTROLS.Data.Serializer'
+], function (List, Serializer) {
    'use strict';
 
    /**
-    * Формат полей записи
+    * Формат полей
     * @class SBIS3.CONTROLS.Data.Format.Format
     * @extends SBIS3.CONTROLS.Data.Collection.List
     * @public
@@ -31,51 +32,54 @@ define('js!SBIS3.CONTROLS.Data.Format.Format', [
       //region SBIS3.CONTROLS.Data.Collection.List
 
       clear: function () {
+         //Format.superclass.clear.call(this);
          throw new Error('Under construction');
-         Format.superclass.clear.call(this);
       },
 
       add: function (item, at) {
+         //Format.superclass.add.apply(this, arguments);
          throw new Error('Under construction');
-         Format.superclass.add.apply(this, arguments);
       },
 
       remove: function (item) {
+         //return Format.superclass.remove.apply(this, arguments);
          throw new Error('Under construction');
-         return Format.superclass.remove.apply(this, arguments);
       },
 
       removeAt: function (index) {
+         //Format.superclass.removeAt.apply(this, arguments);
          throw new Error('Under construction');
-         Format.superclass.removeAt.apply(this, arguments);
       },
 
       replace: function (item, at) {
+         //Format.superclass.replace.apply(this, arguments);
          throw new Error('Under construction');
-         Format.superclass.replace.apply(this, arguments);
       },
 
       assign: function (items) {
+         //Format.superclass.assign.call(this, items);
          throw new Error('Under construction');
-         Format.superclass.assign.call(this, items);
       },
 
       append: function (items) {
+         //Format.superclass.append.call(this, items);
          throw new Error('Under construction');
-         Format.superclass.append.call(this, items);
       },
 
       prepend: function (items) {
+         //Format.superclass.prepend.call(this, items);
          throw new Error('Under construction');
-         Format.superclass.prepend.call(this, items);
       },
 
       //endregion SBIS3.CONTROLS.Data.Collection.List
 
+      // region SBIS3.CONTROLS.Data.SerializableMixin
+      // endregion SBIS3.CONTROLS.Data.SerializableMixin
+
       //region Public methods
 
       /**
-       * Добавляет поле в формат записи.
+       * Добавляет поле в формат.
        * @param {String} name Имя поля
        * @param {SBIS3.CONTROLS.Data.Format.FieldType} type Тип поля
        * @returns {SBIS3.CONTROLS.Data.Format.Field}
@@ -102,11 +106,33 @@ define('js!SBIS3.CONTROLS.Data.Format.Format', [
        */
       getFieldName: function (at) {
          throw new Error('Under construction');
+      },
+
+      /**
+       * Клонирует формат
+       * @returns {SBIS3.CONTROLS.Data.Format.Format}
+       */
+      clone: function() {
+         var serializer = new Serializer();
+         return JSON.parse(
+            JSON.stringify(this, serializer.serialize),
+            serializer.deserialize
+         );
       }
 
       //endregion Public methods
 
    });
+
+   /**
+    * Конструирует формат полей по декларативному описанию
+    * @param {Object} declaration Декларативное описание
+    * @returns {SBIS3.CONTROLS.Data.Format.Format}
+    * @static
+    */
+   Format.fromDeclaration = function(declaration) {
+      throw new Error('Under construction');
+   };
 
    return Format;
 });
