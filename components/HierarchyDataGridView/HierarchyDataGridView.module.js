@@ -3,7 +3,7 @@ define('js!SBIS3.CONTROLS.HierarchyDataGridView', [
    'js!SBIS3.CONTROLS.hierarchyMixin',
    'html!SBIS3.CONTROLS.HierarchyDataGridView/resources/rowTpl',
    'js!SBIS3.CONTROLS.BreadCrumbs',
-   'is!browser?html!SBIS3.CONTROLS.DataGridView/resources/DataGridViewGroupBy'
+   'browser!html!SBIS3.CONTROLS.DataGridView/resources/DataGridViewGroupBy'
 ], function (DataGridView, hierarchyMixin, rowTpl, BreadCrumbs, groupByTpl) {
    'use strict';
    /**

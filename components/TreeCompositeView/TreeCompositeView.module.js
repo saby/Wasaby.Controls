@@ -192,7 +192,7 @@ define('js!SBIS3.CONTROLS.TreeCompositeView', ['js!SBIS3.CONTROLS.TreeDataGridVi
                      if (parentKey !== undefined) {
                         result.parentKey = parentKey;
                      }
-                     if (result.$row.hasClass('controls-ListView__item-type-true') || result.$row.hasClass('controls-ListView__item-type-false')) {
+                     if (result.$row.hasClass('controls-ListView__item-type-node') || result.$row.hasClass('controls-ListView__item-type-false')) {
                         container.find('.controls-ListView__item[data-parent="' + key + '"]').each(function (idx, row) {
                            var rowKey = row.getAttribute('data-id');
                            result.childs.push(findDependents(rowKey, key));
@@ -303,7 +303,7 @@ define('js!SBIS3.CONTROLS.TreeCompositeView', ['js!SBIS3.CONTROLS.TreeDataGridVi
       //Переопределим метод определения направления изменения порядкового номера, так как если элементы отображаются в плиточном режиме,
       //нужно подвести DragNDrop объект не к верхней(нижней) части элемента, а к левой(правой)
       _getDirectionOrderChange: function(e, target) {
-         if (this.getViewMode() === 'tile' || (this.getViewMode() === 'list' && target.hasClass('controls-ListView__item-type-true'))) {
+         if (this.getViewMode() === 'tile' || (this.getViewMode() === 'list' && target.hasClass('controls-ListView__item-type-node'))) {
             if (target.length) {
                return this._getOrderPosition(e.pageX - target.offset().left, target.width());
             }

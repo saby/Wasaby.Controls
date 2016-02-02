@@ -1,12 +1,10 @@
 define('js!SBIS3.CONTROLS.TreeDataGridView', [
    'js!SBIS3.CONTROLS.HierarchyDataGridView',
    'js!SBIS3.CONTROLS.TreeMixinDS',
-   'js!SBIS3.CONTROLS.DragNDropMixin',
    'html!SBIS3.CONTROLS.TreeDataGridView/resources/rowTpl'
-], function(HierarchyDataGridView, TreeMixinDS, DragNDropMixin, rowTpl) {
+], function(HierarchyDataGridView, TreeMixinDS, rowTpl) {
    'use strict';
 
-   var DRAG_AVATAR_OFFSET = 5;
    /**
     * Контрол отображающий набор данных, имеющих иерархическую структуру, в виде в таблицы с несколькими колонками.
     * @class SBIS3.CONTROLS.TreeDataGridView
@@ -32,7 +30,7 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
     *
     */
 
-   var TreeDataGridView = HierarchyDataGridView.extend([TreeMixinDS, DragNDropMixin], /** @lends SBIS3.CONTROLS.TreeDataGridView.prototype*/ {
+   var TreeDataGridView = HierarchyDataGridView.extend([TreeMixinDS], /** @lends SBIS3.CONTROLS.TreeDataGridView.prototype*/ {
       $protected: {
          _rowTpl : rowTpl,
          _options: {
@@ -40,21 +38,12 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
              * @cfg {Function}
              * Обработчик нажатия на стрелку у папок. Если не задан, стрелка показана не будет
              */
-            arrowActivatedHandler: undefined,
-            /**
-            * @cfg {Boolean}
-            * Разрешить перемещать элементы с помощью DragAndDrop
-            */
-            allowDragNDropMove: true
+            arrowActivatedHandler: undefined
          },
          _dragStartHandler: undefined
       },
 
       $constructor: function() {
-         if (this._options.allowDragNDropMove) {
-            this._dragStartHandler = this._onDragStart.bind(this);
-            this._getItemsContainer().bind('mousedown', this._dragStartHandler);
-         }
       },
 
       _drawItemsFolder: function(records) {
@@ -216,7 +205,9 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
 
       _addItemAttributes : function(container, item) {
          TreeDataGridView.superclass._addItemAttributes.call(this, container, item);
-         container.addClass('controls-ListView__item-type-' + item.get(this._options.hierField + '@'));
+         var hierType = item.get(this._options.hierField + '@'),
+            itemType = hierType == null ? 'leaf' : hierType == true ? 'node' : 'hidden';
+         container.addClass('controls-ListView__item-type-' + itemType);
          var
             key = item.getKey(),
             parentKey = this._dataSet.getParentKey(item, this._options.hierField),
@@ -303,134 +294,7 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
                this._activateItem(id);
             }
          }
-      },
-      //Переопределим метод, чтобы при DRAG&DROP не показывать операции по ховеру
-      _showItemActions: function() {
-         if (!this._isShifted) {
-            TreeDataGridView.superclass._showItemActions.apply(this, arguments);
-         }
-      },
-      /*DRAG_AND_DROP START*/
-      _findDragDropContainer: function() {
-         return this._getItemsContainer();
-      },
-      _getDragItems: function(key) {
-         var keys = this._options.multiselect ? $ws.core.clone(this.getSelectedKeys()) : [];
-         if ($.inArray(key, keys) < 0) {
-            keys.push(key);
-         }
-         return keys;
-      },
-      _onDragStart: function(e) {
-         //TODO: придумать как избавиться от второй проверки. За поля ввода DragNDrop происходить не должен.
-         if (this._isShifted || $ws.helpers.instanceOfModule($(e.target).wsControl(), 'SBIS3.CONTROLS.TextBoxBase')) {
-            return;
-         }
-         var
-            target = $(e.target).closest('.controls-ListView__item'),
-            id = target.data('id');
-         if (id) {
-            this.setCurrentElement(e, {
-               keys: this._getDragItems(id),
-               targetId: id,
-               target: target,
-               insertAfter: undefined
-             });
-         }
-         //Предотвращаем нативное выделение текста на странице
-         if (!$ws._const.compatibility.touch) {
-            e.preventDefault();
-         }
-      },
-      _callMoveOutHandler: function() {
-      },
-      _callMoveHandler: function(e) {
-         var
-             insertAfter,
-             isCorrectDrop,
-             currentElement = this.getCurrentElement(),
-             target = $(e.target).closest('.js-controls-ListView__item');
-         if (currentElement.targetId != target.data('id')) {
-            insertAfter = this._getDirectionOrderChange(e, target);
-         }
-         isCorrectDrop = this._notify('onDragMove', currentElement.keys, target.data('id'), insertAfter);
-         if (isCorrectDrop !== false) {
-            this._setDragTarget(target, insertAfter);
-         } else {
-            this._clearDragHighlight();
-         }
-         this._setAvatarPosition(e);
-      },
-      _setDragTarget: function(target, insertAfter) {
-         var currentElement = this.getCurrentElement();
-         this._clearDragHighlight();
-         if (target.length) {
-            if (insertAfter === true && target.next().data('id') !== currentElement.targetId) {
-               target.addClass('controls-DragNDrop__insertAfter');
-            } else if (insertAfter === false && target.prev().data('id') !== currentElement.targetId) {
-               target.addClass('controls-DragNDrop__insertBefore');
-            }
-         }
-         currentElement.insertAfter = insertAfter;
-         currentElement.target = target;
-      },
-      _clearDragHighlight: function() {
-         this.getCurrentElement().target.removeClass('controls-DragNDrop__insertBefore controls-DragNDrop__insertAfter');
-      },
-      _getDirectionOrderChange: function(e, target) {
-         if (target.length) {
-            return this._getOrderPosition(e.pageY - target.offset().top, target.height());
-         }
-      },
-      _getOrderPosition: function(offset, metric) {
-         if (offset < 10) {
-            return false;
-         } else if (offset > metric - 10) {
-            return true;
-         }
-      },
-      _createAvatar: function(e){
-         var count = this.getCurrentElement().keys.length;
-         this._avatar = $('<div class="controls-DragNDrop__draggedItem"><span class="controls-DragNDrop__draggedCount">' + count + '</span></div>')
-            .css('z-index', $ws.single.WindowManager.acquireZIndex(false)).appendTo($('body'));
-         this._setAvatarPosition(e);
-      },
-      _setAvatarPosition: function(e) {
-         this._avatar.css({
-            'left': e.pageX + DRAG_AVATAR_OFFSET,
-            'top': e.pageY + DRAG_AVATAR_OFFSET
-         });
-      },
-      _callDropHandler: function(e) {
-         var
-            clickHandler,
-            currentElement = this.getCurrentElement(),
-            moveTo = currentElement.target.data('id');
-         //TODO придрот для того, чтобы если перетащить элемент сам на себя не отработал его обработчик клика
-         if (this.getSelectedKey() === moveTo) {
-            clickHandler = this._elemClickHandler;
-            this._elemClickHandler = function() {
-               this._elemClickHandler = clickHandler;
-            }
-         }
-         this._move(currentElement.keys, moveTo, currentElement.insertAfter);
-      },
-      _beginDropDown: function(e) {
-         this.setSelectedKey(this.getCurrentElement().targetId);
-         this._isShifted = true;
-         this._createAvatar(e);
-         this._hideItemActions();
-      },
-      _endDropDown: function() {
-         var hoveredItem = this.getHoveredItem();
-         $ws.single.WindowManager.releaseZIndex(this._avatar.css('z-index'));
-         this._avatar.remove();
-         this._isShifted = false;
-         if (hoveredItem.container) {
-            this._showItemActions(hoveredItem);
-         }
       }
-      /*DRAG_AND_DROP END*/
    });
 
    return TreeDataGridView;
