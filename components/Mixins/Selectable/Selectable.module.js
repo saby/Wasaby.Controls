@@ -229,20 +229,6 @@ define('js!SBIS3.CONTROLS.Selectable', ['js!SBIS3.CONTROLS.Data.Utils'], functio
          this._notifyOnPropertyChanged('selectedKey');
          this._notifyOnPropertyChanged('selectedIndex');
          this._notify('onSelectedItemChange', id, index);
-      },
-
-      _setFirstItemAsSelected : function() {
-         if (this._dataSet) {
-            var selKey = this._options.selectedKey;
-
-            if(selKey === null || (selKey !== null && !this._dataSet.getRecordByKey(selKey))) {
-               var rec = this._dataSet.at(0);
-
-               if (rec) {
-                  this._options.selectedKey = rec.getKey();
-               }
-            }
-         }
       }
    };
 
