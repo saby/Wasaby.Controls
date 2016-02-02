@@ -667,18 +667,21 @@ define('js!SBIS3.CONTROLS.DSMixin', [
          if (container.length){
             var itemsContainers = $('.controls-ListView__item, .controls-GroupBy', container.get(0));
             /*Удаляем вложенные компоненты*/
-            $('[data-component]', itemsContainers).each(function (i, item) {
-               var inst = $(item).wsControl();
-               if (inst) {
-                  inst.destroy();
-               }
-            });
+            this._destroyControls(itemsContainers);
 
             /*Удаляем сами items*/
             itemsContainers.remove();
          }
       },
 
+      _destroyControls: function(container){
+         $('[data-component]', container).each(function (i, item) {
+            var inst = $(item).wsControl();
+            if (inst) {
+               inst.destroy();
+            }
+         });
+      },
       //метод определяющий в какой контейнер разместить определенный элемент
       _getTargetContainer: function (item) {
          //по стандарту все строки рисуются в itemsContainer
@@ -696,13 +699,13 @@ define('js!SBIS3.CONTROLS.DSMixin', [
        */
       redrawItem: function(item) {
          var
-            targetElement = this._getElementForRedraw(item),
+            targetElement = this._getElementByModel(item),
             newElement = this._drawItem(item).addClass(targetElement.attr('class'));
          targetElement.after(newElement).remove();
          this.reviveComponents();
       },
 
-      _getElementForRedraw: function(item) {
+      _getElementByModel: function(item) {
          return this._getItemsContainer().find('.js-controls-ListView__item[data-id="' + item.getKey() + '"]');
       },
 

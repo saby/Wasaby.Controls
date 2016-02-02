@@ -2,7 +2,7 @@
  * Created by as.suhoruchkin on 02.04.2015.
  */
 define('js!SBIS3.CONTROLS.MergeAction', [
-    'js!SBIS3.CONTROLS.OpenDialogAction',
+    'js!SBIS3.CONTROLS.DialogActionBase',
     'js!SBIS3.CONTROLS.MergeDialogTemplate'
 ], function(OpenDialogAction) {
     var MergeAction = OpenDialogAction.extend({
@@ -46,22 +46,6 @@ define('js!SBIS3.CONTROLS.MergeAction', [
                 queryMethodName: undefined
             }
         },
-        /**
-         * Метод запускающий выполнение MergeAction
-         * @param {Object} [meta]
-         * @param {Array} [meta.items] Массив ключей, объединяемых записей.
-         * @param {String} [meta.selectedKey] Ключ записи, которая будет выбрана по умолчанию.
-         */
-        execute : function(meta) {
-            this._opendEditComponent($ws.core.merge(meta, {
-                //Прокидываем необходимые опции в шаблон
-                displayField: this._options.displayField,
-                queryMethodName: this._options.queryMethodName,
-                hierField: this._options.hierField,
-                dataSource: this._options.dataSource,
-                testMergeMethodName: this._options.testMergeMethodName
-            }), this._options.dialogComponent);
-        },
 
         _notifyOnExecuted: function(meta) {
             this._notify('onExecuted', meta)
@@ -69,7 +53,18 @@ define('js!SBIS3.CONTROLS.MergeAction', [
 
         setDataSource: function(ds) {
             this._options.dataSource = ds;
-        }
+        },
+
+       _buildComponentConfig: function(meta) {
+          return $ws.core.merge(meta, {
+             //Прокидываем необходимые опции в шаблон
+             displayField: this._options.displayField,
+             queryMethodName: this._options.queryMethodName,
+             hierField: this._options.hierField,
+             dataSource: this._options.dataSource,
+             testMergeMethodName: this._options.testMergeMethodName
+          });
+       }
     });
 
     return MergeAction;

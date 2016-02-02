@@ -1,0 +1,8 @@
+<tr class="controls-DataGridView__results">
+    {{?it.multiselect}}
+        <td class="controls-DataGridView__td"></td>
+    {{?}}
+    {{~it.results :result:index}}
+        <td class="controls-DataGridView__td">{{=result}}</td>
+    {{~}}
+</tr>
