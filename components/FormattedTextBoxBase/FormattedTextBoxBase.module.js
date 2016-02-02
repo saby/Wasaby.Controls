@@ -770,6 +770,9 @@ define(
             },
             character = String.fromCharCode(key),
             groupNum = positionIndexesBegin[0],
+            group = null,
+            startGroupNum = null,
+            endGroupNum = null,
             isClear = (type == 'delete' || type == 'backspace'),
             positionOffset = (type == 'backspace') ? -1 : 0,
             keyInsertInfo;
@@ -777,8 +780,37 @@ define(
          // Обработка зажатой кнопки shift (-> в букву верхнего регистра)
          character = isShiftPressed ? character.toUpperCase() : character.toLowerCase();
          character = isClear ? this._maskReplacer : character;
-         if (type == 'character'  ||  type == 'delete'  ||  type == 'backspace') {
-            keyInsertInfo = this.formatModel.insertCharacter(groupNum, positionObject.position + positionOffset, character, isClear);
+         if (type == 'character'  ||  isClear) {
+            if (isClear && (positionIndexesBegin[0] != positionIndexesEnd[0] || positionIndexesBegin[1] != positionIndexesEnd[1])) {
+               //проходим группы с конца
+               startGroupNum = positionIndexesBegin[0];
+               endGroupNum   = positionIndexesEnd[0];
+               for (var i = endGroupNum; i >= startGroupNum; i--) {
+                  group = this.formatModel.model[i];
+                  if ( ! group.isGroup) {
+                     continue;
+                  }
+                  //средняя группа - значение по умолчанию
+                  var startCharNum = 0,
+                      endCharNum = group.mask.length - 1;
+                  //последняя группа
+                  if (i == endGroupNum) {
+                     endCharNum = positionIndexesEnd[1] - 1;
+                  }
+                  //первая группа
+                  if (i == startGroupNum) {
+                     startCharNum = positionIndexesBegin[1];
+                  }
+                  for (var j = endCharNum; j >= startCharNum; j--) {
+                     keyInsertInfo = this.formatModel.insertCharacter(i, j, character, isClear) || keyInsertInfo;
+                  }
+               }
+               //модель обновили - обновляем опцию text и html-отображение
+               this._updateText();
+               this._inputField.html(this._getHtmlMask());
+            } else {
+               keyInsertInfo = this.formatModel.insertCharacter(groupNum, positionObject.position + positionOffset, character, isClear);
+            }
             if (keyInsertInfo) {
                //записываем символ в html
                positionObject.container = _getContainerByIndex.call(this, keyInsertInfo.groupNum);
