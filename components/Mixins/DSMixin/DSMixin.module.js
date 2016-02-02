@@ -700,7 +700,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
       redrawItem: function(item) {
          var
             targetElement = this._getElementByModel(item),
-            newElement = this._drawItem(item).addClass(targetElement.attr('class'));
+            newElement = this._drawItem(item);
          targetElement.after(newElement).remove();
          this.reviveComponents();
       },
