@@ -89,7 +89,6 @@ define('js!SBIS3.CONTROLS.BreadCrumbs', [
       },
 
       setItems: function(items){
-         this._toggleHomeIcon(items.length <= 0);
          BreadCrumbs.superclass.setItems.call(this, items);
          this._dataSet._keyField = this._options.keyField; 
       },
@@ -213,6 +212,7 @@ define('js!SBIS3.CONTROLS.BreadCrumbs', [
       },
 
       _redraw: function(){
+         this._toggleHomeIcon(this._dataSet.getCount() <= 0);
          BreadCrumbs.superclass._redraw.call(this);
          this._calculateSizes();
       },
