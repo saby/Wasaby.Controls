@@ -287,7 +287,7 @@ define('js!SBIS3.CONTROLS.ListView',
                   caption: 'Перенести',
                   isMainAction: false,
                   onActivated: function (item) {
-                     this.selectedMoveTo(item.data('id'));
+                     this.moveRecordsWithDialog([item.data('id')]);
                   }
                }],
                /**
