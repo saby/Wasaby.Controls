@@ -443,7 +443,7 @@ define(
          // TODO запоминаем что изначально пришло, чтобы можно было null обработать (из контекста), но при этом выводить незаполненное поле
          //      надо как-то иначе это обработать
          this._settedText = text;
-         if (text === '' || text === null) {
+         if (text === '' || text === null || typeof text === "undefined") {
             text = this.getStrMask(clearChar);
          }
          /*массив со значениями, нужен чтобы не записывать значения до полной проверки соответствия текста маске */
@@ -693,7 +693,7 @@ define(
        */
       _updateText:function() {
          //TODO неодинаковое поведение получается для разного text. Но нельзя this._options.text не обновлять, т.к. его getText() использует
-         this._options.text = (this.formatModel._settedText !== null) ? this.formatModel.getText(this._maskReplacer) : null;
+         this._options.text = (this.formatModel._settedText !== null && typeof this.formatModel._settedText !== "undefined") ? this.formatModel.getText(this._maskReplacer) : this.formatModel._settedText;
       },
 
       /**
