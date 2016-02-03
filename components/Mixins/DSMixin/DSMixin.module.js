@@ -460,18 +460,25 @@ define('js!SBIS3.CONTROLS.DSMixin', [
           if (this._dataSource) {
              this._toggleIndicator(true);
              def = this._callQuery(this._options.filter, this.getSorting(), this._offset, this._limit)
-                .addCallback($ws.helpers.forAliveOnly(function (dataSet) {
+                .addCallback($ws.helpers.forAliveOnly(function (list) {
                    self._toggleIndicator(false);
-                   self._loader = null;//Обнулили без проверки. И так знаем, что есть и загрузили
+                   self._dataSet = list;
 
-                   //TODO вот тут получится рассинхронизация данных, если кто-то начнет руками менять items
-                   self._dataSet = dataSet;
-                   self._items.assign(dataSet);
-
-                   self._dataLoadedCallback();
-                   self._notify('onDataLoad', dataSet);
+                   if (self._items) {
+                      self._dataLoadedCallback();
+                      self._notify('onDataLoad', list);
+                      self._items.assign(list);
+                   }
+                   else {
+                      self._items = list;
+                      self._createDefaultProjection(self._items);
+                      self._setItemsEventHandlers();
+                      self._dataLoadedCallback();
+                      self._notify('onDataLoad', list);
+                      self.redraw();
+                   }
                    //self._notify('onBeforeRedraw');
-                   return dataSet;
+                   return list;
                 }, self))
                 .addErrback($ws.helpers.forAliveOnly(function (error) {
                    if (!error.canceled) {
