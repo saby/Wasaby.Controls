@@ -21,12 +21,9 @@ define('js!SBIS3.CONTROLS.Data.Source.Provider.INotify', [
     * </pre>
     * @example
     * <pre>
-    *    var provider = dataSource.getProvider();
-    *    if ($ws.helpers.instanceOfMixin(provider, 'SBIS3.CONTROLS.Data.Source.Provider.INotify') {
-       *       provider.getEventsChannel('ErrorLog').subscribe('onMessage', function(event, message) {
-       *          $ws.helpers.alert('Something went wrong: ' + message);
-       *       });
-       *    }
+    *    dataSource.getProvider().getEventsChannel('ErrorLog').subscribe('onMessage', function(event, message) {
+    *       $ws.helpers.alert('Something went wrong: ' + message);
+    *    });
     * </pre>
     */
 
