@@ -397,7 +397,7 @@ define('js!SBIS3.CONTROLS.ComponentBinder', [], function () {
                }
                /* Надо вмерживать структуру, полученную из истории, т.к. мы не сохраняем в историю шаблоны строки фильтров */
                filterButton._updateFilterStructure($ws.core.merge(filterButton.getFilterStructure(), filter.filter));
-               view.setFilter($ws.core.merge(view.getFilter(), filter.viewFilter), true);
+               view.setFilter($ws.core.merge(view.getFilter(), viewFilter), true);
             }
             browser._notifyOnFiltersReady();
          }, view), 0);
