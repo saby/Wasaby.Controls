@@ -700,7 +700,11 @@ define('js!SBIS3.CONTROLS.DSMixin', [
       _destroySearchBreadCrumbs: function(){
       },
       _getRecordsForRedraw : function() {
-         return this.getItems().toArray();
+         var records = [];
+         this._itemsProjection.each(function(item){
+            records.push(item.getContents());
+         });
+         return records;
       },
 
       _drawItems: function (records, at) {
