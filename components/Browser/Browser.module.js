@@ -126,6 +126,7 @@ define('js!SBIS3.CONTROLS.Browser', [
                this._componentBinder.bindFilterHistory(
                    this._filterButton,
                    this._fastDataFilter,
+                   this._options.searchParam,
                    this._options.historyId,
                    HistoryController,
                    this);
