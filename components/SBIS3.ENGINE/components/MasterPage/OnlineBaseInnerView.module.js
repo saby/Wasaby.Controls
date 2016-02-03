@@ -1,0 +1,1 @@
+define( "js!SBIS3.Engine.OnlineBaseInnerView", [], function(){});

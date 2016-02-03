@@ -1,0 +1,59 @@
+.registryTabsAreaDialog {
+   width: 250px;
+   height: auto;
+   background: gray;
+   border-radius: 10px;
+   border: 1px solid black;
+   padding: 5px;
+}
+
+.registryTabsAreaDialog__msg {
+   color: #ffffff;
+   font-size: 14px;
+}
+
+.registryTabsAreaDialog__areaGroup {
+   padding: 2px 4px;
+   position: relative;
+}
+
+.registryTabsAreaDialog__groupAreaTitle {
+   color: #353439;
+   margin-left: 5px;
+}
+
+.registryTabsAreaDialog__group {
+   padding: 8px 0 8px 8px;
+   color: #999999;
+   position: relative;
+   background: white;
+   border: 1px solid #D1D1D4;
+   border-radius: 2px;
+}
+
+.registryTabsAreaDialog__group:hover {
+   color: #fff;
+   background: #2AD2C9;
+   cursor: default;
+}
+
+.registryTabsAreaDialog__group:hover .registryTabsAreaDialog__removeGroup {
+   display: block;
+}
+
+.registryTabsAreaDialog__removeGroup {
+   font-size: 16px;
+   position: absolute;
+   right: 7px;
+   top: 9px;
+   display: none;
+   cursor: pointer;
+
+   font-weight: 400;
+   font-style: normal;
+   font-family: 'GenieIconsFont';
+}
+
+.registryTabsAreaDialog__removeGroup:after {
+   content: "\e61c";
+}

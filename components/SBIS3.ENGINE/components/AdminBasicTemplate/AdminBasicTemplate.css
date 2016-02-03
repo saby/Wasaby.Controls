@@ -1,0 +1,140 @@
+.adminBasic {
+    position: absolute;
+    height: 100%;
+    width: 100%;
+}
+.adminBasic__header {
+    min-width: 300px;
+    margin-right: 8px;
+    margin-left: 236px;
+}
+.adminBasic__contentArea {
+    position: absolute;
+    float: none;
+    clear: both;
+    left: 0;
+    height: auto;
+    top: 36px;
+    bottom: 0;
+    right: 0;
+}
+body .ws-float-area-title {
+    font-size: 18px;
+    line-height: 40px;
+    height: 40px;
+    max-height: 40px;
+    font-family: inherit !important;
+    font-size: 18px!important;
+    font-style: normal!important;
+    font-weight: 400!important;
+    cursor: default;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    padding-left: 2px;
+}
+#fld-UserNameLabel:hover {
+    cursor: pointer;
+    text-decoration: underline;
+}
+.auth_menu_top {
+    width: 0;
+    height: 0;
+    border-left: 24px solid transparent;
+    border-right: 24px solid transparent;
+    border-bottom: 18px solid #787878;
+}
+.auth_menu {
+    border-radius: 2px;
+    z-index: 300;
+    position: relative;
+}
+.auth_menu_exit {
+    z-index: 900;
+}
+#cloud_exit:hover {
+    cursor: pointer;
+    text-decoration: underline;
+}
+#cloud_exit {
+    border: 1px solid #f2f2f2;
+    border-radius: 2px;
+    -webkit-box-shadow: -2px -3px 16px 0px rgba(50, 50, 50, 0.44);
+    -moz-box-shadow: -2px -3px 16px 0px rgba(50, 50, 50, 0.44);
+    box-shadow: -2px -3px 16px 0px rgba(50, 50, 50, 0.44);
+    color: rgb(88, 88, 88);
+    position: fixed;
+    width: 84px;
+    height: 20px;
+    padding-left: -12px;
+    text-align: center;
+    padding-top: 8px;
+    background-color: rgb(245, 245, 245);
+    display: none;
+    font-size: 11px;
+    top: 36px;
+    right: 8px;
+    z-index: 4000;
+}
+#cloud_exit::after {
+    content: '';
+    width: 0;
+    position: absolute;
+    left: 34px;
+    bottom: 23px;
+    border: 9px solid rgba(0, 0, 0, 0);
+    border-bottom: 11px solid #F5F5F5;
+}
+.appSearchMark {
+    background: rgba(250, 120, 26, 0.59);
+}
+.cloud__header__labelsBlock {
+    float: right;
+    padding: 8px;
+    position: relative;
+    width: auto;
+    color: #0055BB;
+}
+.cloud__header__labelsBlock__UserNameIco {
+    background: url('../../../Tema_Skrepka/SHablony/img/User/userIcon.png') no-repeat left 2px;
+    position: relative;
+    width: 24px;
+    height: 24px;
+    float: left;
+    margin-left: 20px;
+}
+.cloud__header__exitIco {
+    background: url('resources/logout.png');
+    width: 14px;
+    height: 14px;
+    display: block;
+    background-repeat: no-repeat;
+    margin-top: -15px;
+    margin-left: 68px;
+    background-size: contain;
+}
+.header__siteAdress {
+    float: left;
+}
+.cloud__header__UserName {
+    position: relative;
+    width: auto;
+    float: right;
+}
+.cloud__header__versionLabel {
+    width: 400px;
+    float: left;
+    margin-top: 6px;
+    color: #0055BB;
+}
+.cloud__templatedArea {
+    width: 100%;
+    height: 100%;
+    float: none;
+    position: absolute;
+    right: 0;
+    left: 224px;
+    margin: 0;
+    bottom: 0;
+    top: 0;
+    clear: both;
+}

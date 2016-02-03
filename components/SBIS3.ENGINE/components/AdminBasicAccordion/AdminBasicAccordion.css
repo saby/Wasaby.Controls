@@ -1,0 +1,224 @@
+.cloud_accord {
+    background: #F7F3F0;
+    top: 0;
+    width: 228px;
+    height: 100% !important;
+    position: absolute;
+    -webkit-box-shadow: 3px 0px 9px 0px rgba(50, 50, 50, 0.21);
+    -moz-box-shadow: 3px 0px 9px 0px rgba(50, 50, 50, 0.21);
+    box-shadow: 1px 0px 6px 0px rgba(50, 50, 50, 0.21);
+}
+.submenus_wrapper {
+    width: 100% !important;
+}
+.wrap--preview .wrap-closed {
+    width: auto !important;
+}
+.wrap--preview {
+    margin-left: 48px;
+    margin-top: -52px;
+    position: absolute;
+    z-index: 1000;
+}
+.active_preview_bg {
+    background: #FBF9F7;
+}
+.acc__head__logo {
+    background-repeat: no-repeat;
+    position: absolute;
+    width: 93px;
+    top: 9px;
+    left: 60px;
+    height: 40px;
+    background-size: contain;
+}
+.accord-submenu-header--fixed {
+    width: 220px;
+    height: 49px;
+    background: #F0E9E4;
+    border-bottom: 1px solid #ddd;
+    color: #414141;
+    font-size: 15px;
+    font-family: 'TensorFont Regular', 'TensorFont';
+    padding-top: 16px;
+    padding-left: 8px;
+    position: relative;
+}
+.accord-submenu-header--fixed:hover {
+    cursor: default;
+}
+.submenu-header-close {
+    position: absolute;
+    right: 0;
+    top: -2px;
+    height: 26px;
+    line-height: 26px;
+    width: 24px;
+    margin: 8px;
+    padding: 4px;
+    text-align: center;
+    display: block;
+    color: #3B677C;
+    font-family: 'cbuc-icons Regular', 'cbuc-icons' !important;
+    font-size: 20px;
+    cursor: pointer;
+}
+.submenu-header-close:hover {
+    color: #FF7733;
+}
+.acc__head {
+    height: 65px;
+}
+.acc__head__logo:hover {
+    cursor: pointer;
+}
+body {
+    margin: 0;
+    padding: 0;
+}
+.accord_submenu .submenu-second-range {
+    margin-left: 228px;
+    position: relative;
+    top: -248px;
+}
+.second-range-header {
+    width: auto;
+}
+.submenu-first-range {
+    float: left;
+}
+.wrap-for-second-range {
+    width: 456px !important;
+}
+.change_view_ico {
+    width: 64px;
+    height: 64px;
+    background: url('img/change_view.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 50%;
+    margin-left: -10px;
+}
+.change_view_ico:hover {
+    background: url('img/change_view_hover.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 50%;
+    cursor: pointer;
+}
+.acc--compact {
+    width: 48px;
+}
+.acc--compact .menu_title {
+    display: none;
+}
+.acc--compact .acc__head__logo {
+    display: none;
+}
+.left-column {
+    float: left;
+}
+.right-column {
+    float: right;
+}
+.accord-menu-item--selected--compact {
+    background: #ED6A32 !important;
+}
+.submenu-title-container {
+    font-size: 13px;
+}
+.menuItemTitleContainer {
+    height: 52px;
+}
+.accord_menu_item {
+    font-size: 15px;
+    border-top: 1px solid #ddd;
+    border-bottom: 1px solid #ddd;
+    margin-top: -1px;
+    color: black;
+    font-family: 'TensorFont Regular', 'TensorFont';
+    position: relative;
+}
+.menuItemTitleContainer:hover {
+    background: #F0E9E4;
+    cursor: pointer;
+}
+.acc_title_img {
+    width: 40px;
+    height: 40px;
+    background-size: contain !important;
+    background-repeat: no-repeat;
+    margin-left: 2px;
+    position: relative;
+    top: 6px;
+}
+.accord-submenu--fixed_view {
+    width: 228px;
+}
+span.menu_title {
+    display: block;
+    width: 150px;
+    margin-left: 56px;
+    top: 10px;
+    position: absolute;
+    color: #414141;
+    padding-top: 6px;
+}
+.previewHeader-color {
+    background: #FBF9F7 !important;
+    height: 36px;
+}
+.accord-submenu--selected {
+    border-left: 2px solid #ED6A32;
+}
+.accord-submenu-header--fixed:hover {
+    cursor: pointer;
+}
+.accord_submenu {
+    color: #414141;
+    font-weight: 500;
+    font-family: 'TensorFont Regular', 'TensorFont';
+    padding-top: 8px;
+    padding-bottom: 8px;
+    background: #FBF9F7;
+    box-sizing: border-box;
+}
+.menu_item_selected {
+    border-left: 2px #ED6A32 solid;
+}
+.accord_submenu:hover {
+    background: #F0E9E4;
+    cursor: pointer;
+}
+.content_area--minified {
+    left: 40px;
+}
+.expandBranchBtn {
+    float: left;
+    position: absolute;
+    left: 7px;
+    margin-top: -5px;
+    padding-left: 6px;
+    line-height: 32px;
+    font-size: 15px;
+    font-family: 'TensorFont Regular', TensorFont!important;
+    display: block!important;
+    color: #3B677C;
+}
+.expandBranchBtn:before {
+    content: "\e000";
+}
+.openedBranch:before {
+    content: "\e001" !important;
+}
+.expandBranchBtn:hover {
+    color: #F73;
+}
+.disablePaddingLeft {
+    padding-left: 32px !important;
+}
+.--active {
+    border-left: 2px solid #FF7033;
+}

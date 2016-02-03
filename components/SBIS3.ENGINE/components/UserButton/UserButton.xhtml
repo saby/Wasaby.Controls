@@ -1,0 +1,11 @@
+<div class="user-button-component" style="display: inline-block;float: right;">
+   {{? it.showHeader }}
+   <div class="icon-16 icon-Admin icon-primary action-hover userConfig-icon" style="display: none;" title="Настройка"></div>
+   {{?}}
+   <div class="UserButton__indicator" style="display:none;"></div>
+   <component data-component="SBIS3.CORE.LinkButton" name="UserNameLinkButton" class="user-name-button-container"
+              style="float: right;margin-right: 8px;margin-top: -3px;">
+      <opt name="caption">{{=$ws.helpers.escapeASCII(it.userName)}}</opt>
+      <opt name="image">sprite:icon-16 icon-Profile icon-primary</opt>
+   </component>
+</div>

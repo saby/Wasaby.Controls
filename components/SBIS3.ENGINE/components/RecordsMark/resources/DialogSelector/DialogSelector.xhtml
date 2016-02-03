@@ -1,0 +1,72 @@
+<div style="height:auto;margin-bottom: 16px;">
+    <div class="ws-window-titlebar-custom">
+        <component data-component="SBIS3.CORE.Button" class="recordsMarkPlugin-DialogSelector__DeleteMark" name="DeleteMark">
+            <option name="caption">Снять все пометки</option>
+            <option name="renderStyle">asLink</option>
+            <option name="visible">false</option>
+        </component>
+    </div>
+    <div class="userMarksContainer ws-browser-hover ellipsis"></div>
+    <div style="border-top: 1px solid #EAEAEA ;margin-bottom: 4px;margin-left: 8px; margin-right: 8px;"></div>
+    <div class="recordsMarkPlugin-DialogSelector__SetDefaultButton ws-browser-hover">
+        <div class="recordsMarkPlugin-DialogSelector__userMarkRow ws-customView__element" style="padding-left: 32px; width: 268px;">Цвет и шрифт по умолчанию</div>
+    </div>
+    <component data-component="SBIS3.CORE.TableView" class="ws-treeview-employees recordsMarkPlugin-DialogSelector__ColorTable withoutRowOptions" name="ColorTable">
+        <options name="display">
+            <options name="columns" type="array">
+                <options>
+                    <option name="field">Class</option>
+                    <option name="title">&nbsp;</option>
+                    <option name="render" type="function">js!SBIS3.ENGINE.RecordsMarkPlugin.DialogSelector:prototype.renderNameColomn</option>
+                </options>
+            </options>
+            <option name="hasZebra">false</option>
+            <options name="mainRowOptions">
+                <option name="recordDown">false</option>
+                <option name="recordUp">false</option>
+            </options>
+            <option name="showHead">false</option>
+            <option name="showRecordsCount">false</option>
+            <option name="usePageSizeSelect">false</option>
+            <option name="showPaging">false</option>
+            <option name="rowOptions">true</option>
+            <option name="atPlaceLinkText">Новый вариант отметки</option>
+            <option name="editAtThePlaceTemplate">js!SBIS3.ENGINE.RecordsMarkPlugin.DialogSelector.AtPlace</option>
+            <option name="allowAddAtThePlace">true</option>
+            <option name="editAtThePlaceOnly">true</option>
+            <option name="addRecordInEmptyTable">false</option>
+        </options>
+        <options name="dataSource">
+            <options name="readerParams">
+                <option name="createMethodName">Создать</option>
+                <option name="linkedObject">ColorMark</option>
+                <option name="readMethodName">Прочитать</option>
+                <option name="updateMethodName">Записать</option>
+                <option name="nameApplication">Основной сервис</option>
+                <option name="nameService">Основной сервис</option>
+                <option name="queryName">Список</option>
+                <option name="destroyMethodName">Удалить</option>
+                <option name="format">ColorMark.Список</option>
+            </options>
+            <option name="firstRequest">false</option>
+        </options>
+        <options name="filterParams">
+            <options name="Object">
+                <option name="fieldName" value="Object"></option>
+            </options>
+        </options>
+        <option name="useHoverRowAsActive">true</option>
+        <option name="autoHeight">true</option>
+        <option name="verticalAlignment">Top</option>
+        <option name="multiSelect">false</option>
+        <option name="mode">dblClickMode</option>
+    </component>
+    <div class="addEmptyMessage">
+        Вы можете <span class="asLink addToEmptyTable">добавить</span> собственные пометки цветом/шрифтом.
+    </div>
+    <component data-component="SBIS3.CORE.LinkButton" class="recordsMarkPlugin-DialogSelector__MarkSettings" name="MarkSettings" data-access="Настройка пометок записей">
+        <option name="caption">Настроить</option>
+        <option name="image">sprite:icon-16 icon-Admin icon-disabled</option>
+        <option name="visible">false</option>
+    </component>
+</div>

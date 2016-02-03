@@ -1,0 +1,145 @@
+#contentArea .registry__area {
+   margin-top: 5px;
+}
+
+.registry__main-tabs {
+   width: auto;
+}
+
+.registry__header {
+   padding-top: 8px;
+   height: 16px;
+   padding-bottom: 5px;
+   margin: 0 8px;
+}
+
+.registry__user-header#header {
+   height: 16px;
+   padding-top: 0;
+}
+
+.registry__main {
+   margin-top: 5px;
+   position: relative;
+}
+
+.registry__header:after {
+   content: '';
+   clear: both;
+}
+
+.registry__left-icons {
+   float: left;
+}
+
+.registry__left-icons > #informerPanel {
+   position: static;
+}
+
+.clear {
+   clear: both;
+}
+
+.registry__filtersContent {
+   height: 40px;
+   display: table;
+   /*width: 100%;*/
+   margin: 0px;
+}
+
+.registry__filtersContent > *{
+   display: inline-block;
+}
+
+.registry__user-header {
+   float: right;
+}
+
+.registry__user-header:after {
+   clear: both;
+   content: '';
+}
+
+.registry__top-area {
+   position: absolute;
+   /*top: 0;*/
+   left: 8px;
+   height: 24px;
+   z-index: 100;
+}
+
+.registry__top-area > * {
+   display: inline-block;
+   float: left;
+}
+
+.registry__top-area .controls__OperationsPanelButton {
+   margin-left: 4px;
+}
+
+.registry__top-area .controls__OperationsPanelButton:before {
+   position: absolute;
+   margin-left: -4px;
+   background: #ccc;
+   width: 1px;
+   height: 24px;
+   content: '\00a0';
+   font-size: 1px;
+}
+
+.registry__middle-area > .ws-SwitchableArea__item > * {
+   vertical-align: top;/* fix control's vertical align to top*/
+}
+
+.registry__filtersArea-component {
+   display: inline-block;
+   vertical-align: top;
+}
+
+.registry__filtersArea-tableCell {
+   display: table-cell !important;
+   vertical-align: middle;
+}
+
+.filtersArea-customWrapper .ws-OperationsPanel {
+   height: 24px;
+   margin-top: -3px;
+}
+
+.filtersArea-componentWrapper {
+   line-height: 24px;
+   display: inline-block;
+   vertical-align: top;
+}
+.filtersArea-componentWrapper > * {
+   vertical-align: top !important;
+}
+
+.filtersArea-customWrapper {
+   margin: 8px 0;
+   line-height: 24px;
+   vertical-align: top;
+   height: 24px;
+}
+
+.registry__filtersArea-component.registry__filterController {
+   /*float: right;*/
+   max-width: 500px;
+}
+
+.registry__searchString > .registry-field {
+   min-width: 100px;
+   vertical-align: middle;
+}
+
+.registry__searchString{
+   padding-right: 8px;
+}
+
+.registry__searchString.registry__emptyCell {
+   padding-right: 0;
+}
+
+.registry__top-area {
+    overflow: hidden;
+}

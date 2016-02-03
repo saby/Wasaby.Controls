@@ -1,0 +1,15 @@
+<div class="engine-OperationsPanelExpand {{? it.isExpanded}}engine-OperationsPanelExpand__expanded{{?}}">
+    <div class="engine-OperationsPanelExpand__expandPanel">
+        <component data-component="SBIS3.CONTROLS.OperationsPanel" class="engine-OperationsPanelExpand__massOperation" name="operationsPanelExpand__massOperation">
+            <option name="tabindex">0</option>
+            {{=it.operationsPanelConfig}}
+        </component>
+    </div>
+    <div class="engine-OperationsPanelExpand__fixedPanel">
+        <div class="engine-OperationsPanelExpand__content">
+        </div>
+        <component data-component="SBIS3.CONTROLS.IconButton" name="operationsPanelExpand__IconButton" class="operationsPanelExpand__IconButton">
+            <option name="icon">sprite:icon-16 icon-Next icon-primary</option>
+        </component>
+    </div>
+</div>

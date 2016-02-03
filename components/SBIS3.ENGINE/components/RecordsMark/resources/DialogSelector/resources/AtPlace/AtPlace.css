@@ -1,0 +1,47 @@
+.simpleClassForPatch{
+	color: black
+}
+.marked{
+	border: 1px solid white;
+	outline: 1px solid rgb(255, 0, 0);
+	height: 12px !important;
+	width: 12px !important;
+	margin-top: 1px;
+	margin-left: 1px;
+}
+.markedLetter {
+	border: 1px solid #FF0000;
+	height: 14px !important;
+	line-height: 16px !important;
+	width: 14px !important;
+}
+.colorSelector, .fontSelector{
+	cursor:pointer;
+}
+
+.recordsMarkPlugin-DialogSelectorAtPlace__Name{
+	width: 240px;
+	height: 24px;
+	position: relative;
+	margin: 4px 0px 4px 8px;
+	font-family: 'TensorFont Bold', 'TensorFont';
+	font-style: normal;
+	font-size: 15px;
+}
+
+.recordsMarkPlugin-DialogSelectorAtPlace__ChoiceColorComponent{
+	width: 290px;
+	margin-left: 10px;
+	background-color: white;
+	height: 24px;
+	padding-top: 4px;
+	padding-bottom: 4px;
+}
+
+.recordsMarkPlugin-DialogSelectorAtPlace__marksContainer{
+	position: relative;
+	height: 20px;
+	background-color: white;
+	padding-top: 4px;
+	border-left: 10px solid white;
+}
