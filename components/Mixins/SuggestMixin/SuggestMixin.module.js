@@ -81,13 +81,6 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
              * @cfg {Boolean} Автоматически показывать варианты при приходе фокуса
              */
             autoShow: false,
-
-            /**
-             * @cfg {Boolean} Оставлять фокус на контроле при выборе элемента
-             * <wiTag group="Данные">
-             */
-            saveFocusOnSelect: false,
-
             /**
              * @cfg {Boolean} Использовать выпадающий блок
              * <wiTag group="Данные">
@@ -337,6 +330,13 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
                   self._checkPickerState() ? self.showPicker() : self._startSearch();
                }
             });
+            /* Если фокус уходит на список - вернём его обратно в контрол, с которого фокус ушёл */
+            this.subscribeTo(control, 'onFocusOut', function(e, destroyed, focusedControl) {
+               if(self.getList() === focusedControl) {
+                  focusedControl.setActive(false, false, false, this);
+                  this.setActive(true);
+               }
+            });
          }, this);
 
       },
@@ -491,16 +491,6 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
 
          if (id === null || id === undefined) {
             return;
-         }
-
-         if (!this._options.saveFocusOnSelect) {
-            var activeFound = false;
-            $ws.helpers.forEach(this._options.observableControls, function (control) {
-               if (!activeFound && control.isActive()) {
-                  control.setActive(false);
-                  activeFound = true;
-               }
-            }, this);
          }
 
          if(item) {
