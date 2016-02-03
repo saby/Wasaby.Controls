@@ -314,6 +314,10 @@ define('js!SBIS3.CONTROLS.DSMixin', [
                opts.footerTpl = require(tpl);
             }
             return opts;
+         },
+         destroy : function() {
+            this._unsetItemsEventHandlers();
+            this._clearItems();
          }
       },
 
