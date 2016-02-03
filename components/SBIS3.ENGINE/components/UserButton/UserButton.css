@@ -1,0 +1,35 @@
+.user-button-component {
+   display: inline-block;
+   float: right;
+}
+
+.user-name-button-container {
+   float: right;
+   margin-right: 8px;
+   /*из-за выравнивания в верхней панельке*/
+   margin-top: -3px;
+}
+
+.user-name-button-container .ws-button-caption {
+   display: inline-block;
+   max-width: 348px;
+}
+
+.userConfig-icon {
+   margin: 1px 8px 0 0;
+   cursor: pointer;
+   float: left;
+}
+
+.UserButton__indicator {
+    width: 16px;
+    height: 16px;
+    border-radius: 16px;
+    background-color: #FF7033;
+    float: left;
+    color: #FFFFFF;
+    text-align: center;
+    font-size: 11px;
+    top: 2px;
+    position: relative;
+}

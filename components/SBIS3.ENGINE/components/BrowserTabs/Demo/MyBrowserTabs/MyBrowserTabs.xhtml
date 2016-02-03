@@ -1,0 +1,176 @@
+<div>
+    <component data-component="SBIS3.Engine.BrowserTabs">
+        <options name="tabs" type="array">
+            <options>
+                <option name="id">complete</option>
+                <option name="title">Выполненные</option>
+                <option name="mainArea">mainAreaFirst</option>
+                <option name="tabsArea">tabsAreaFirst</option>
+            </options>
+            <options>
+                <option name="id">bySenders</option>
+                <option name="title">По отправителям</option>
+                <option name="mainArea">mainAreaSecond</option>
+                <option name="tabsArea">tabsAreaSecond</option>
+            </options>
+            <options>
+                <option name="id">list</option>
+                <option name="title">Список</option>
+                <option name="mainArea">mainAreaFirst</option>
+                <option name="tabsArea">tabsAreaSecond</option>
+            </options>
+        </options>
+        <options name="tabsArea" type="array">
+            <options>
+                <option name="id">tabsAreaFirst</option>
+                <option name="content">
+                    <component data-component="SBIS3.CONTROLS.Button" name="tabsAreaFirstBtn">
+                        <option name="caption">+ Задача</option>
+                        <option name="primary">true</option>
+                    </component>
+                </option>
+            </options>
+            <options>
+                <option name="id">tabsAreaSecond</option>
+                <option name="content">
+                    <component data-component="SBIS3.CONTROLS.Button" name="tabsAreaSecondBtn">
+                        <option name="caption">+ Кнопка 2</option>
+                        <option name="primary">true</option>
+                    </component>
+                </option>
+            </options>
+        </options>
+        <options name="mainArea" type="array">
+            <options>
+                <option name="id" >mainAreaFirst</option>
+                <option name="content">
+                    <component data-component="SBIS3.Engine.Browser" name="brows" class="controls-Browser__view">
+                        <option name="searchParam" value="title"></option>
+                        <option name="searchConfig">
+                            <option name="placeholder">Текст для поиска</option>
+                        </option>
+                        <option name="filterButtonConfig">
+                            <opt name="filter"></opt>
+
+                            <opt name="resetLinkText">Нужно отобрать?</opt>
+
+                            <opts name="filterStructure" type="array">
+                                <opts>
+                                    <!-- По умолчанию будет NDS, если не указано - тоже NDS -->
+                                    <opt name="internalValueField">NDS</opt>
+
+                                    <!-- По умолчанию будет NDS -->
+                                    <opt name="internalCaptionField">NDSText</opt>
+
+                                    <!-- По умолчанию будет "ничего" - если по привязке нет, и тут нет -->
+                                    <opt name="caption" bind="filterDescr/NDS"></opt>
+
+                                    <opt name="value" bind="filter/NDS"></opt>
+
+                                </opts>
+                            </opts>
+                            <opt name="template">
+                                <component data-component="SBIS3.CONTROLS.Demo.FilterButtonFilterContent"></component>
+                            </opt>
+                        </option>
+                        <option name="fastDataFilterConfig">
+                            <opt name="keyField" value="name"></opt>
+                            <opt name="filter"></opt>
+
+                            <opts name="filterStructure" type="array">
+                                <opts>
+                                    <!-- По умолчанию будет key, если не указано - тоже key -->
+                                    <opt name="internalValueField">first</opt>
+
+                                    <!-- По умолчанию будет titleText -->
+                                    <opt name="internalCaptionField">title</opt>
+
+                                    <!-- По умолчанию будет "ничего" - если по привязке нет, и тут нет -->
+                                    <opt name="caption" bind="filter/title"></opt>
+
+                                    <opt name="value" bind="filterDescr/Заголовок"></opt>
+
+                                    <opt name="resetValue" ></opt>
+                                    <opt name="resetCaption" ></opt>
+                                    <!--    <opt name="resetCaption">Заголовок</opt>-->
+                                </opts>
+                            </opts>
+                        </option>
+                        <option name="content">
+                            <component data-component="SBIS3.CONTROLS.TreeDataGridView" name="browserView" class="controls-Browser__view">
+                                <opt name="filter" bind="filter"></opt>
+                                <option name="keyField" value="id"></option>
+                                <option name="hierField" value="parent"></option>
+                                <option name="displayField" value="title"></option>
+                                <option name="ignoreLocalPageSize" value="true" type="boolean"></option>
+                                <option name="arrowActivatedHandler" value="js!SBIS3.Engine.Demo.MyBrowserTabs:prototype.activateItem" type="function"></option>
+                                <options name="itemsActions" type="Array"></options>
+                                <options name="columns" type="Array">
+                                    <options>
+                                        <option name="title" value=""></option>
+                                        <option name="field" value="id"></option>
+                                    </options>
+                                    <options>
+                                        <option name="title" value="Флаг"></option>
+                                        <option name="field" value="flag"></option>
+                                    </options>
+                                    <options>
+                                        <option name="title" value="Заголовок"></option>
+                                        <option name="field" value="title"></option>
+                                    </options>
+                                </options>
+                            </component>
+                        </option>
+                    </component>
+                </option>
+            </options>
+            <options>
+                <option name="id" >mainAreaSecond</option>
+                <option name="content">
+                    <component data-component="SBIS3.CONTROLS.OperationsPanel">
+                    </component>
+                    <component data-component="SBIS3.CONTROLS.TreeCompositeView" name="MyTreeCompositeView">
+                        <options name="columns" type="array">
+                            <options>
+                                <option name="title">Заголовок</option>
+                                <option name="field">title</option>
+                            </options>
+                            <options>
+                                <option name="title">№</option>
+                                <option name="width" type="string">100</option>
+                                <option name="field">id</option>
+                            </options>
+                        </options>
+                        <options name="itemsActions" type="array">
+                            <options>
+                                <option name="name">delete</option>
+                                <option name="icon">sprite:icon-16 icon-Erase icon-error</option>
+                                <option name="isMainAction">true</option>
+                                <option name="tooltip">Удалить</option>
+                                <option name="title">Удалить</option>
+                            </options>
+                        </options>
+                        <option name="viewMode">table</option>
+                        <option name="displayField">title</option>
+                        <option name="hierField">parent</option>
+                        <option name="ignoreLocalPageSize">true</option>
+                        <option name="emptyHTML">Нет записей</option>
+                        <option name="multiselect">true</option>
+                    </component>
+                </option>
+            </options>
+            <options>
+                <option name="id" >mainAreaSecond2</option>
+                <option name="content">
+                    <component data-component="SBIS3.CONTROLS.Button" name="tabsAreaFirstBtn2">
+                        <option name="caption">+ Кнопка в области</option>
+                        <option name="primary">true</option>
+                    </component>
+                </option>
+            </options>
+        </options>
+        <option name="loadAll">true</option>
+        <option name="defaultTab">bySenders</option>
+        <option name="tabsName">ЗакладкиВРеестре</option>
+    </component>
+</div>

@@ -1,0 +1,19 @@
+<div class="my-float-area-editor">
+   <div class="ws-window-titlebar-custom">
+         <component data-component="SBIS3.CONTROLS.Button" class="demo-MyDialog__submit__position">
+            <opt name="caption">Сохранить</opt>
+            <opt name="name">submit</opt>
+            <opt name="primary">true</opt>
+         </component>
+   </div>
+   <div class="mydialog__content">
+      <div class="mydialog__label">Текст</div>
+      <component data-component="SBIS3.CONTROLS.TextBox" class="mydialog__field">
+         <opt name="text" bind="record/title" value=""></opt>
+      </component>
+      <div class="mydialog__label">Флаг</div>
+      <component data-component="SBIS3.CONTROLS.CheckBox" class="mydialog__field">
+         <opt name="checked" bind="record/flag" value=""></opt>
+      </component>
+   </div>
+</div>

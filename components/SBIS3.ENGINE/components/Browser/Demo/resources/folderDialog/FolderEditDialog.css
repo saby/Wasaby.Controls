@@ -1,0 +1,15 @@
+.my-dialog-editor .mydialog__content {
+   margin-top: -20px;
+   padding: 16px;
+}
+.my-dialog-editor .mydialog__label {
+   margin-bottom: 4px;
+}
+.my-dialog-editor .mydialog__field {
+   width: 497px;
+}
+.demo-MyDialog__submit__position {
+   float: right;
+   top: 8px;
+   right: 65px;
+}
