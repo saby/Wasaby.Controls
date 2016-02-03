@@ -144,7 +144,7 @@ define('js!SBIS3.CONTROLS.ScrollWatcher', [], function() {
       _onWindowScroll: function (event) {
          var docBody = document.body,
                docElem = document.documentElement,
-               clientHeight = Math.min(docBody.clientHeight, docElem.clientHeight),
+               clientHeight = $(window).height(),
                scrollTop = Math.max(docBody.scrollTop, docElem.scrollTop),
                scrollHeight = Math.max(docBody.scrollHeight, docElem.scrollHeight);
          this._processScrollEvent((clientHeight + scrollTop  >= scrollHeight - this._options.checkOffset), scrollTop);

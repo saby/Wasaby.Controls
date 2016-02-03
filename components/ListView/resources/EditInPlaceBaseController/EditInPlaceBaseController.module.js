@@ -70,6 +70,7 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                   ignoreFirstColumn: this._options.ignoreFirstColumn,
                   context: this._getContextForEip(),
                   focusCatch: this._focusCatch.bind(this),
+                  editingItem: this._options.editingItem,
                   parent: this,
                   handlers: {
                      onItemValueChanged: function(event, difference, model) {

@@ -240,7 +240,8 @@ define('js!SBIS3.CONTROLS.Data.Source.DataSet', [
          var items = Di.resolve(this._options.listModule, {
             rawData: this._getDataProperty(property),
             adapter: this._options.adapter,
-            model: this._options.model
+            model: this._options.model,
+            idProperty: this._options.idProperty
          });
          if (!items && !$ws.helpers.instanceOfModule(items, 'SBIS3.CONTROLS.Data.Collection.RecordSet')) {
             throw new TypeError('SBIS3.CONTROLS.Data.Source.DataSet::getAll(): listModule should extend SBIS3.CONTROLS.Data.Collection.RecordSet');

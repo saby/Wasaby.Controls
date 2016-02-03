@@ -4,8 +4,9 @@ define([
       'js!SBIS3.CONTROLS.Data.Collection.List',
       'js!SBIS3.CONTROLS.Data.Bind.ICollection',
       'js!SBIS3.CONTROLS.Data.Model',
+      'js!SBIS3.CONTROLS.Data.Source.Memory',
       'js!SBIS3.CONTROLS.Data.Adapter.Json'
-   ], function (RecordSet, List, IBindCollection, Model, JsonAdapter) {
+   ], function (RecordSet, List, IBindCollection, Model, MemorySource, JsonAdapter) {
       'use strict';
 
       describe('SBIS3.CONTROLS.Data.Collection.RecordSet', function() {
@@ -133,6 +134,40 @@ define([
                assert.deepEqual(list.getRawData(), items);
             });
          });
+
+         describe('.getIndex()', function (){
+            it('should return an index of given item', function() {
+               var list = new RecordSet({
+                     rawData: items.slice()
+                  });
+
+               for (var i = 0; i < items.length; i++){
+                  assert.equal(i, list.getIndex(list.at(i)));
+               }
+
+            });
+         });
+
+         describe('.saveChanges()', function (){
+            it('should return an index of given item', function(done) {
+               var source = new MemorySource({
+                  data: items.slice(),
+                  idProperty: 'Ид'
+               });
+               source.query().addCallback(function(ds){
+                  var list = ds.getAll(),
+                     length = list.getCount(),
+                     item_2 = $ws.core.clone(list.at(0));
+                  list.at(2).setDeleted(true);
+                  list.at(6).setDeleted(true);
+                  list.saveChanges(source);
+                  assert.equal(list.getCount(), length-2);
+                  assert.notDeepEqual(item_2, list.at(2));
+                  done();
+               });
+            });
+         });
+
       });
    }
 );

@@ -2,7 +2,7 @@
  * Created by as.suhoruchkin on 02.04.2015.
  */
 define('js!SBIS3.CONTROLS.MergeAction', [
-    'js!SBIS3.CONTROLS.OpenDialogAction',
+    'js!SBIS3.CONTROLS.DialogActionBase',
     'js!SBIS3.CONTROLS.MergeDialogTemplate'
 ], function(OpenDialogAction) {
     var MergeAction = OpenDialogAction.extend({
@@ -38,23 +38,13 @@ define('js!SBIS3.CONTROLS.MergeAction', [
                  * 4) {String} поле 'Comment' в котором находится резюме операции
                  * 5) {Boolean} поле 'Available' в котором находится возможность объединения данной записи
                  */
-                testMergeMethodName: undefined
+                testMergeMethodName: undefined,
+                /**
+                 * @cfg {String} Имя списочного метода, который будет вызван для получения записей,
+                 * отображаемых в диалоге объединения
+                 */
+                queryMethodName: undefined
             }
-        },
-        /**
-         * Метод запускающий выполнение MergeAction
-         * @param {Object} [meta]
-         * @param {Array} [meta.items] Массив ключей, объединяемых записей.
-         * @param {String} [meta.selectedKey] Ключ записи, которая будет выбрана по умолчанию.
-         */
-        execute : function(meta) {
-            this._opendEditComponent($ws.core.merge(meta, {
-                //Прокидываем необходимые опции в шаблон
-                displayField: this._options.displayField,
-                hierField: this._options.hierField,
-                dataSource: this._options.dataSource,
-                testMergeMethodName: this._options.testMergeMethodName
-            }), this._options.dialogComponent);
         },
 
         _notifyOnExecuted: function(meta) {
@@ -63,7 +53,18 @@ define('js!SBIS3.CONTROLS.MergeAction', [
 
         setDataSource: function(ds) {
             this._options.dataSource = ds;
-        }
+        },
+
+       _buildComponentConfig: function(meta) {
+          return $ws.core.merge(meta, {
+             //Прокидываем необходимые опции в шаблон
+             displayField: this._options.displayField,
+             queryMethodName: this._options.queryMethodName,
+             hierField: this._options.hierField,
+             dataSource: this._options.dataSource,
+             testMergeMethodName: this._options.testMergeMethodName
+          });
+       }
     });
 
     return MergeAction;

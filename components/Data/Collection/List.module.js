@@ -40,7 +40,12 @@ define('js!SBIS3.CONTROLS.Data.Collection.List', [
          /**
           * @var {SBIS3.CONTROLS.Data.Collection.ArrayEnumerator} Служебный энумератор
           */
-         _serviceEnumerator: undefined
+         _serviceEnumerator: undefined,
+         /**
+          * @var {SBIS3.CONTROLS.Data.Collection._hashIndex} Индекс хешей элементов
+          */
+         _hashIndex: undefined
+
       },
 
       $constructor: function (cfg) {
@@ -119,7 +124,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.List', [
 
       clear: function () {
          this._items.length = 0;
-         this._getServiceEnumerator().reIndex();
+         this._reindex();
       },
 
       add: function (item, at) {
@@ -133,7 +138,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.List', [
             this._items.splice(at, 0, item);
          }
 
-         this._getServiceEnumerator().reIndex();
+         this._reindex();
       },
 
       at: function (index) {
@@ -155,7 +160,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.List', [
          }
          this._items.splice(index, 1);
 
-         this._getServiceEnumerator().reIndex();
+         this._reindex();
       },
 
       replace: function (item, at) {
@@ -164,12 +169,12 @@ define('js!SBIS3.CONTROLS.Data.Collection.List', [
          }
          this._items[at] = item;
 
-         this._getServiceEnumerator().reIndex();
+         this._reindex();
       },
 
       getIndex: function (item) {
          if ($ws.helpers.instanceOfMixin(item, 'SBIS3.CONTROLS.Data.IHashable')) {
-            return this.getIndexByValue('hash', item.getHash());
+            return this._getItemIndexByHash(item.getHash());
          }
 
          return Array.indexOf(this._items, item);
@@ -233,7 +238,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.List', [
             Array.prototype.splice.apply(this._items, [this._items.length, 0].concat(items));
          }
 
-         this._getServiceEnumerator().reIndex();
+         this._reindex();
       },
       /**
        * Возвращает коллекцию в виде массива
@@ -264,6 +269,29 @@ define('js!SBIS3.CONTROLS.Data.Collection.List', [
        */
       _isValidIndex: function (index) {
          return index >= 0 && index < this.getCount();
+      },
+
+      _getItemIndexByHash: function (hash) {
+         if (typeof this._hashIndex === 'undefined') {
+            this._createHashIndex();
+         }
+         return this._hashIndex.hasOwnProperty(hash) ? this._hashIndex[hash] : -1;
+      },
+
+      _createHashIndex: function () {
+         this._hashIndex = {};
+         for (var i = 0, count = this._items.length; i < count; i++) {
+            var item = this._items[i];
+            if ($ws.helpers.instanceOfMixin(item, 'SBIS3.CONTROLS.Data.IHashable')) {
+               this._hashIndex[item.getHash()] = i;
+            }
+         }
+
+      },
+
+      _reindex: function () {
+         this._hashIndex = undefined;
+         this._getServiceEnumerator().reIndex();
       },
 
       /**

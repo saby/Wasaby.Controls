@@ -4,7 +4,11 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
 ], function (PickerMixin) {
    'use strict';
 
-   var SUGGEST_PICKER_MIN_WIDTH = 150;
+
+   var DEFAULT_SHOW_ALL_CONFIG = {
+      template: 'js!SBIS3.CONTROLS.SuggestShowAll',
+      componentOptions: {}
+   };
 
    /**
     * Миксин автодополнения. Позволяет навесить функционал автодополнения на любой контрол или набор контролов.
@@ -18,9 +22,15 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
     * - отслеживает изменения полей контекста, указанных в {@link filterBindings}, формирует фильтр, и отправляет его в {@link list контрол списка сущностей}, вызывая SBIS3.CONTROLS.DSMixin::reload();
     * - отслеживает выбор элемента в {@link list контроле списка сущностей}, разбрасывает значения полей выбранного элемента, указанных в {@link resultBindings}, по полям контектста.
     *
+    * Кнопку отображения всех записей нужно самостоятельно положить в {@link list} и указать ей имя "showAllButton'
+    *
     * Для показа автодополнения при получения контролом фокуса, используется {@link observableControls}.
     *
-    * Обязательно требует миксины SBIS3.CONTROLS.PickerMixin и SBIS3.CONTROLS.DataBindMixin в контроле, к которому подмешивается.
+    * Обязательно требует миксины:
+    * @link SBIS3.CONTROLS.PickerMixin
+    * @link SBIS3.CONTROLS.DataBindMixin
+    * @link SBIS3.CONTROLS.ChooserMixin
+    * в контроле, к которому подмешивается.
     * @mixin SBIS3.CONTROLS.SuggestMixin
     * @public
     * @author Алексей Мальцев
@@ -170,36 +180,33 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
              * <wiTag group="Отображение">
              * Если не указан, то будет вставлен в контейнер компонента.
              */
-            loadingContainer: undefined
+            loadingContainer: undefined,
+            /**
+             * @typedef {Object} showAll
+             * @property {String} template Шаблон, который отобразится в диалоге всех записей
+             * @property {Object} componentOptions Опции опции которые прокинутся в компонент, отображаемый на диалоге всех записей
+             */
+            /**
+             * @cfg {showAll} Конфигурация диалога всех записей
+             * @example
+             * <pre>
+             *    <options name="showAllConfig">
+             *       <option name="template" value="js!SBIS3.CONTROLS.SuggestShowAll"></option>
+             *       <options name="componentOptions">
+             *          <option name="showSelectButton" type="Boolean" value="true"></option>
+             *       </options>
+             *    </options>
+             * </pre>
+             */
+            showAllConfig: {}
          },
-
-         /**
-          * @var {Object} Соответствие полей для подстановки в контекст
-          */
-         _resultBindings: {},
-
-         /**
-          * @var {Object|null} Таймер задержки загрузки picker-а
-          */
-         _delayTimer: null,
-
-         /**
-          * @var {Object} Индикатор загрузки
-          */
-         _loadingIndicator: undefined,
-
-         /**
-          * @var {SBIS3.CONTROLS.DSMixin}{SBIS3.CONTROLS.Selectable|SBIS3.CONTROLS.MultiSelectable} Контрол списка сущностей
-          */
-         _list: undefined,
-         /**
-          * @var {jQuery} Контейнер для контрола списка сущностей
-          */
-         _listContainer: undefined,
-         /**
-          * @var {$ws.proto.Deferred|null} Деферред загрузки данных для контрола списка сущностей
-          */
-         _loadDeferred: null
+         _resultBindings: {},                   /* {Object} Соответствие полей для подстановки в контекст */
+         _delayTimer: null,                     /* {Object|null} Таймер задержки загрузки picker-а */
+         _loadingIndicator: undefined,          /* {Object} Индикатор загрузки */
+         _list: undefined,                      /* {SBIS3.CONTROLS.DSMixin}{SBIS3.CONTROLS.Selectable|SBIS3.CONTROLS.MultiSelectable} Контрол списка сущностей */
+         _listContainer: undefined,             /* {jQuery} Контейнер для контрола списка сущностей */
+         _loadDeferred: null,                   /* {$ws.proto.Deferred|null} Деферред загрузки данных для контрола списка сущностей */
+         _showAllButton: undefined              /* {$ws.proto.Control} Кнопка открытия всех записей */
       },
 
       $constructor: function () {
@@ -221,6 +228,7 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
          destroy: function () {
             this._clearDelayTimer();
             this._loadingIndicator = undefined;
+            this._showAllButton = undefined;
             if (this._list) {
                this._list.destroy();
             }
@@ -260,6 +268,7 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
             ds = this.getList().getDataSet();
             ds && ds.fill(); //TODO в 3.7.3.100 поменять на clear
             this._options.listFilter = filter;
+            this._notifyOnPropertyChanged('listFilter');
             return;
          }
 
@@ -274,12 +283,14 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
             for(var i = 0, len = changedFields.length; i < len; i++) {
                if(String(this._options.listFilter[changedFields[i]]).length >= this._options.startChar) {
                   this._startSearch();
+                  this._notifyOnPropertyChanged('listFilter');
                   return;
                }
             }
             /* Если введено меньше символов чем указано в startChar, то скроем автодополнение */
-            self._resetSearch();
-            self.hidePicker();
+            this._resetSearch();
+            this.hidePicker();
+            this._notifyOnPropertyChanged('listFilter');
          }
       },
 
@@ -391,7 +402,7 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
       _initList: function () {
          var self = this;
 
-         this.subscribeTo(this._list, 'onDataLoad', this._hideLoadingIndicator.bind(this))
+         this.subscribeTo(this._list, 'onDataLoad', this._onListDataLoad.bind(this))
              .subscribeTo(this._list, 'onDataLoadError', this._hideLoadingIndicator.bind(this))
              .subscribeTo(this._list, 'onDrawItems', this._onListDrawItems.bind(this))
              .subscribeTo(this._list, 'onItemActivate', (function (eventObject, itemObj) {
@@ -399,7 +410,29 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
                 self._onListItemSelect(itemObj.id, itemObj.item);
              }));
 
+         /* Найдём и подпишемся на клик кнопки показа всех записей (если она есть) */
+         if(this._list.hasChildControlByName('showAllButton')) {
+            this._showAllButton = this._list.getChildControlByName('showAllButton');
+
+            this.subscribeTo(this._showAllButton, 'onActivated', function() {
+
+               /* Если передали конфигурацию диалога, то используем его, иначе используем дефолтный */
+               var showAllConfig = Object.keys(self._options.showAllConfig) ?
+                   self._options.showAllConfig :
+                   DEFAULT_SHOW_ALL_CONFIG;
+
+               self._showChooser(showAllConfig.template, showAllConfig.componentOptions, null);
+            });
+         }
+
          this._notify('onListReady', this._list);
+      },
+
+      _chooseCallback: function(result) {
+         if(result && $ws.helpers.instanceOfModule(result[0], 'SBIS3.CONTROLS.Data.Model')) {
+            var item = result[0];
+            this._onListItemSelect(item.getId(), item);
+         }
       },
 
       /**
@@ -418,6 +451,22 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
          }
 
          return this._listContainer;
+      },
+
+      /**
+       * Вызывается после загрузки данных контролом списка сущностей
+       * @private
+       */
+      _onListDataLoad: function() {
+         this._hideLoadingIndicator();
+
+         if(this._showAllButton) {
+            var list = this.getList();
+
+            /* Изменяем видимость кнопки в зависимости от, того, есть ли ещё записи */
+            this._showAllButton.getContainer()
+                .toggleClass('ws-hidden', !list._hasNextPage(list.getDataSet().getMetaData().more));
+         }
       },
 
       /**
