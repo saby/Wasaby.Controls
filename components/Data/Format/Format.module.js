@@ -90,6 +90,15 @@ define('js!SBIS3.CONTROLS.Data.Format.Format', [
       },
 
       /**
+       * Удаляет поле из формата по имени.
+       * Если поля с таким именем нет, генерирует исключение.
+       * @param {String} name Имя поля
+       */
+      removeField: function (name) {
+         throw new Error('Under construction');
+      },
+
+      /**
        * Возвращает индекс поля по его имени.
        * Если поля с таким именем нет, возвращает -1.
        * @param {String} name Имя поля

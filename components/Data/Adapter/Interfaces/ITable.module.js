@@ -63,8 +63,8 @@ define('js!SBIS3.CONTROLS.Data.Adapter.ITable', [], function () {
 
       /**
        * Перемещает запись
-       * @param {Number} from Позиция, откуда перемещаем
-       * @param {Number} to Позиция, в позицию которую перемещаем
+       * @param {Number} source Позиция, откуда перемещаем
+       * @param {Number} target Позиция, в позицию которую перемещаем
        * @returns {*}
        */
       move: function(source, target) {
@@ -88,6 +88,34 @@ define('js!SBIS3.CONTROLS.Data.Adapter.ITable', [], function () {
        * @returns {*}
        */
       copy: function(index) {
+         throw new Error('Method must be implemented');
+      },
+
+      /**
+       * Добавляет поле в таблицу.
+       * Если позиция не указана (или указана как -1), поле добавляется в конец.
+       * Если поле с таким форматом уже есть, генерирует исключение.
+       * @param {SBIS3.CONTROLS.Data.Format.Field} format Формат поля
+       * @param {Number} [at] Позиция поля
+       */
+      addField: function(format, at) {
+         throw new Error('Method must be implemented');
+      },
+
+      /**
+       * Удаляет поле из таблицы по имени.
+       * @param {String} name Имя поля
+       */
+      removeField: function(name) {
+         throw new Error('Method must be implemented');
+      },
+
+      /**
+       * Удаляет поле из таблицы по позиции.
+       * Если позиция выходит за рамки допустимого индекса, генерирует исключение.
+       * @param {String} index Позиция поля
+       */
+      removeFieldAt: function(index) {
          throw new Error('Method must be implemented');
       },
 

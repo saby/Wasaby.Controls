@@ -1,7 +1,9 @@
 /* global define, $ws */
 define('js!SBIS3.CONTROLS.Data.FormattableMixin', [
-   'js!SBIS3.CONTROLS.Data.Format.Format'
-], function (Format) {
+   'js!SBIS3.CONTROLS.Data.Format.Format',
+   'js!SBIS3.CONTROLS.Data.Di',
+   'js!SBIS3.CONTROLS.Data.Adapter.Json'
+], function (Format, Di) {
    'use strict';
 
    /**
@@ -14,6 +16,46 @@ define('js!SBIS3.CONTROLS.Data.FormattableMixin', [
    var FormattableMixin = /**@lends SBIS3.CONTROLS.Data.FormattableMixin.prototype */{
       $protected: {
          _options: {
+            /**
+             * @cfg {Object} Данные в "сыром" виде
+             * @see getRawData
+             * @see setRawData
+             * @example
+             * <pre>
+             *    var user = new Record({
+             *       rawData: {
+             *          id: 1,
+             *          firstName: 'John',
+             *          lastName: 'Smith'
+             *       }
+             *    });
+             *    user.get('id');//5
+             *    user.get('firstName');//John
+             * </pre>
+             */
+            rawData: null,
+
+            /**
+             * @cfg {String|SBIS3.CONTROLS.Data.Adapter.IAdapter} Адаптер для работы с данными, по умолчанию {@link SBIS3.CONTROLS.Data.Adapter.Json}
+             * @see getAdapter
+             * @see setAdapter
+             * @see SBIS3.CONTROLS.Data.Adapter.Json
+             * @see SBIS3.CONTROLS.Data.Di
+             * @example
+             * <pre>
+             *    var user = new Record({
+             *       adapter: 'adapter.sbis'
+             *    });
+             * </pre>
+             * @example
+             * <pre>
+             *    var user = new Record({
+             *       adapter: new SbisAdapter()
+             *    });
+             * </pre>
+             */
+            adapter: 'adapter.json',
+
             /**
              * @cfg {SBIS3.CONTROLS.Data.Format.Format|Object} Формат полей
              * @see getFormat
@@ -43,6 +85,52 @@ define('js!SBIS3.CONTROLS.Data.FormattableMixin', [
       //region Public methods
 
       /**
+       * Возвращает данные в "сыром" виде
+       * @returns {Object}
+       * @see setRawData
+       * @see rawData
+       */
+      getRawData: function() {
+         return this._options.rawData;
+      },
+
+      /**
+       * Устанавливает данные в "сыром" виде
+       * @param rawData {Object} Данные в "сыром" виде
+       * @see getRawData
+       * @see rawData
+       */
+      setRawData: function(data) {
+         this._options.rawData = data;
+      },
+
+      /**
+       * Возвращает адаптер для работы с данными в "сыром" виде
+       * @returns {SBIS3.CONTROLS.Data.Adapter.IAdapter}
+       * @see adapter
+       * @see setAdapter
+       */
+      getAdapter: function () {
+         if (!this._options.adapter) {
+            this._options.adapter = this._getDefaultAdapter();
+         }
+         if (typeof this._options.adapter === 'string') {
+            this._options.adapter = Di.resolve(this._options.adapter);
+         }
+         return this._options.adapter;
+      },
+
+      /**
+       * Устанавливает адаптер для работы с данными в "сыром" виде
+       * @param {String|SBIS3.CONTROLS.Data.Adapter.IAdapter} adapter
+       * @see adapter
+       * @see getAdapter
+       */
+      setAdapter: function (adapter) {
+         this._options.adapter = adapter;
+      },
+
+      /**
        * Возвращает формат полей (в режиме только для чтения)
        * @returns {SBIS3.CONTROLS.Data.Format.Format}
        * @see format
@@ -62,6 +150,7 @@ define('js!SBIS3.CONTROLS.Data.FormattableMixin', [
        */
       addField: function(format, at) {
          this._getFormat().add(format, at);
+         this.getAdapter().addField(format, at);
       },
 
       /**
@@ -88,11 +177,24 @@ define('js!SBIS3.CONTROLS.Data.FormattableMixin', [
        */
       removeFieldAt: function(at) {
          this._getFormat().removeAt(at);
+         this.getAdapter().removeFieldAt(at);
       },
 
       //endregion Public methods
 
       //region Protected methods
+
+      /**
+       * Возвращает адаптер по-умолчанию (можно переопределять в наследниках)
+       * @protected
+       * @deprecated Метод _getDefaultAdapter() не рекомендуется к использованию и будет удален в 3.7.4. Используйте опцию adapter.
+       */
+      _getDefaultAdapter: function() {
+         if (FormattableMixin._getDefaultAdapter !== this._getDefaultAdapter) {
+            $ws.single.ioc.resolve('ILogger').log('SBIS3.CONTROLS.Data.Record', 'Method _getDefaultAdapter() is deprecated and will be removed in 3.7.4. Use \'adapter\' option instead.');
+         }
+         return 'adapter.json';
+      },
 
       /**
        * Возвращает формат полей

@@ -1,9 +1,9 @@
 /* global define, $ws */
+/* global define, $ws */
 define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
    'js!SBIS3.CONTROLS.Data.Collection.ObservableList',
    'js!SBIS3.CONTROLS.Data.FormattableMixin',
    'js!SBIS3.CONTROLS.Data.Di',
-   'js!SBIS3.CONTROLS.Data.Adapter.Json',
    'js!SBIS3.CONTROLS.Data.Model'
 ], function (ObservableList, FormattableMixin, Di) {
    'use strict';
@@ -22,51 +22,6 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
       _moduleName: 'SBIS3.CONTROLS.Data.Collection.RecordSet',
       $protected: {
          _options: {
-            /**
-             * @cfg {String|SBIS3.CONTROLS.Data.Adapter.IAdapter} Адаптер для работы с данными, по умолчанию {@link SBIS3.CONTROLS.Data.Adapter.Json}
-             * @see getAdapter
-             * @see setAdapter
-             * @see SBIS3.CONTROLS.Data.Adapter.Json
-             * @see SBIS3.CONTROLS.Data.Di
-             * @example
-             * <pre>
-             *    var user = new RecordSet({
-             *       adapter: 'adapter.sbis'
-             *    });
-             * </pre>
-             * @example
-             * <pre>
-             *    var user = new RecordSet({
-             *       adapter: new SbisAdapter()
-             *    });
-             * </pre>
-             */
-            adapter: 'adapter.json',
-
-            /**
-             * @cfg {Object} Данные в "сыром" виде
-             * @example
-             * <pre>
-             *    var users = new RecordSet({
-             *       rawData: [{
-             *          id: 1,
-             *          firstName: 'John',
-             *          lastName: 'Smith'
-             *       },{
-             *          id: 2,
-             *          firstName: 'Sarah',
-             *          lastName: 'Connor'
-             *       }],
-             *       idProperty: 'id'
-             *    });
-             *    users.at(0).get('id');//1
-             *    users.getRecordById(2).get('firstName');//Sarah
-             * </pre>
-             * @see getRawData
-             * @see setRawData
-             */
-            rawData: null,
-
             /**
              * @cfg {String|Function} Конструктор модели
              * @see getModel
@@ -153,6 +108,30 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
          }
       },
 
+      //region SBIS3.CONTROLS.Data.FormattableMixin
+
+      /**
+       * Устанавливает сырые данные
+       * @param rawData {Object} Сырые данные
+       * @see getRawData
+       * @see rawData
+       */
+      setRawData: function(data) {
+         this._assignRawData(data);
+         this._createFromRawData();
+      },
+
+      /**
+       * Переустанавливает сырые данные
+       * @protected
+       */
+      _assignRawData: function(data) {
+         RecordSet.superclass.setRawData.call(this, data);
+         this._resetTableAdapter();
+      },
+
+      //endregion SBIS3.CONTROLS.Data.FormattableMixin
+
       //region Public methods
 
       saveChanges: function(dataSource, added, changed, deleted) {
@@ -186,40 +165,6 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
          return syncCompleteDef.getResult(true).addCallback(function(){
             $ws.helpers.map(willRemove, self.remove, self);
          });
-      },
-
-      /**
-       * Возвращает адаптер для работы с данными
-       * @returns {String|SBIS3.CONTROLS.Data.Adapter.IAdapter}
-       * @see adapter
-       * @see SBIS3.CONTROLS.Data.Adapter.IAdapter
-       */
-      getAdapter: function (){
-         if (typeof this._options.adapter === 'string') {
-            this._options.adapter = Di.resolve(this._options.adapter);
-         }
-         return this._options.adapter;
-      },
-
-      /**
-       * Возвращает сырые данные
-       * @returns {Object}
-       * @see setRawData
-       * @see rawData
-       */
-      getRawData: function() {
-         return this._options.rawData;
-      },
-
-      /**
-       * Устанавливает сырые данные
-       * @param rawData {Object} Сырые данные
-       * @see getRawData
-       * @see rawData
-       */
-      setRawData: function(data) {
-         this._assignRawData(data);
-         this._createFromRawData();
       },
 
       /**
@@ -613,7 +558,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
 
       /**
        * Возвращает адаптер для сырых данных (лениво создает)
-       * @private
+       * @protected
        */
       _getTableAdapter: function () {
          return this._tableAdapter || (this._tableAdapter = this.getAdapter().forTable(this._options.rawData));
@@ -621,7 +566,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
 
       /**
        * Сбрасывает созданный адаптер для сырых данных
-       * @private
+       * @protected
        */
       _resetTableAdapter: function () {
          this._tableAdapter = null;
@@ -631,7 +576,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
        * Создает новый экземпляр модели
        * @param {*} model Данные модели
        * @returns {SBIS3.CONTROLS.Data.Model}
-       * @private
+       * @protected
        */
       _getModelInstance: function (data) {
          var model = Di.resolve(this._options.model, {
@@ -645,17 +590,8 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
       },
 
       /**
-       * Переустанавливает сырые данные
-       * @private
-       */
-      _assignRawData: function(data) {
-         this._options.rawData = data;
-         this._resetTableAdapter();
-      },
-
-      /**
        * Пересоздает элементы из сырых данных
-       * @private
+       * @protected
        */
       _createFromRawData: function(data) {
          RecordSet.superclass.clear.call(this);
@@ -670,7 +606,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
 
       /**
        * Проверяет, что переданный элемент - модель
-       * @private
+       * @protected
        */
       _checkItem: function (item) {
          if(!item || !$ws.helpers.instanceOfModule(item, 'SBIS3.CONTROLS.Data.Model')){
