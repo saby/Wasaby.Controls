@@ -1761,7 +1761,7 @@ define('js!SBIS3.CONTROLS.ListView',
             if (this.getItemsActions() && hoveredItem.container) {
                this._showItemActions(hoveredItem);
             }
-         }
+         },
          /*DRAG_AND_DROP END*/
          _drawResults: function(){
             if (!this._checkResults()){
