@@ -14,11 +14,19 @@ define('js!SBIS3.CONTROLS.MenuItem', ['js!SBIS3.CONTROLS.ButtonBase', 'html!SBIS
       $protected: {
          _options: {
 
-         }
+         },
+         _iconContainer: undefined
       },
 
       $constructor: function() {
-
+         this._iconContainer = $('.js-controls-MenuItem__icon',this.getContainer());
+      },
+      setIcon: function(){
+         this._iconContainer && this._iconContainer.removeClass(this._oldIcon);
+         MenuItem.superclass.setIcon.apply(this, arguments);
+      },
+      _drawIcon: function(){
+         this._iconContainer && this._iconContainer.addClass(this._options._iconClass);
       }
 
    });
