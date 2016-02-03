@@ -129,9 +129,9 @@ define('js!SBIS3.CONTROLS.TextBoxBase',
        * @see setValue
        * @see getValue
        */
-      setText:function(text){
-         text = (text !== null && text !== undefined && text == text) ? text.toString() : '';
-         var newText = this._formatText(text);
+      setText: function(text){
+         //null, NaN, undefined оставляем как есть, но выводим их как пустую строку
+         var newText = (text === null || text !== text || typeof text === "undefined") ? text : this._formatText(text.toString());
          if (newText !== this._options.text) {
             this._options.text = newText;
             this._drawText(newText);
