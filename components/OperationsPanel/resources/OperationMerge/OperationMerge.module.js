@@ -2,8 +2,9 @@
  * Created by as.suhoruchkin on 02.04.2015.
  */
 define('js!SBIS3.CONTROLS.OperationMerge', [
-    'js!SBIS3.CONTROLS.Link'
-], function(Link) {
+    'js!SBIS3.CONTROLS.Link',
+   'i18n!SBIS3.CONTROLS.OperationMerge'
+], function(Link, rk) {
     /**
      * Операция объединения.
      *
@@ -31,7 +32,7 @@ define('js!SBIS3.CONTROLS.OperationMerge', [
                  * @editor icon ImageEditor
                  */
                 icon: 'sprite:icon-24 icon-Unite icon-primary',
-                caption: 'Объединить'
+                caption: rk('Объединить')
             }
         },
 
