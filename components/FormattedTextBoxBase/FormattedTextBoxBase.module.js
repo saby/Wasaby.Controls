@@ -790,22 +790,26 @@ define(
             //TODO сбрасываем, чтобы после setText(null) _updateText после ввода символов обновлял опцию text
             this.formatModel._settedText = '';
             if (isClear && (positionIndexesBegin[0] != positionIndexesEnd[0] || positionIndexesBegin[1] != positionIndexesEnd[1])) {
-               //проходим группы с конца
+               //проходим группы с конца, чтобы закончить самым левым символом выделенного текста и использовать его данные в keyInsertInfo о позиции курсора
                startGroupNum = positionIndexesBegin[0];
                endGroupNum   = positionIndexesEnd[0];
                for (var i = endGroupNum; i >= startGroupNum; i--) {
                   group = this.formatModel.model[i];
+                  //проходим только группы, т.к. разделители не интересуют
                   if ( ! group.isGroup) {
                      continue;
                   }
-                  //средняя группа - значение по умолчанию
+                  /* средняя группа - значение по умолчанию.
+                     Средняя для выбора например мы выделили такой текст: 11)222-34 из текста 8 (111)222-34-56.
+                     Средняя здесь это не начальная и не конечная группа выделения, т.е. 222, 111 - начальная, а 34 - конечная
+                   */
                   var startCharNum = 0,
                       endCharNum = group.mask.length - 1;
-                  //последняя группа
+                  //последняя группа выделенного текста
                   if (i == endGroupNum) {
                      endCharNum = positionIndexesEnd[1] - 1;
                   }
-                  //первая группа
+                  //первая группа выделенного текста
                   if (i == startGroupNum) {
                      startCharNum = positionIndexesBegin[1];
                   }
