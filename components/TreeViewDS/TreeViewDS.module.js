@@ -27,6 +27,11 @@ define('js!SBIS3.CONTROLS.TreeViewDS', [
          }
       },
 
+      init: function () {
+         TreeViewDS.superclass.init.apply(this, arguments);
+         this._container.addClass('controls-TreeView');
+      },
+
       _getTargetContainer: function (record) {
          var
             parentKey = this._dataSet.getParentKey(record, this._options.hierField),
