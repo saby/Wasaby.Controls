@@ -688,7 +688,10 @@ define('js!SBIS3.CONTROLS.DSMixin', [
       _drawItemsCallback: function () {
          /*Method must be implemented*/
       },
-      redraw: function(){
+      /**
+       * Метод перерисвоки списка без повторного получения данных
+       */
+      redraw: function() {
          this._redraw();
       },
       _redraw: function () {
@@ -785,7 +788,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
       redrawItem: function(item) {
          var
             targetElement = this._getElementByModel(item),
-            newElement = this._drawItem(item).addClass(targetElement.attr('class'));
+            newElement = this._drawItem(item);
          targetElement.after(newElement).remove();
          this.reviveComponents();
       },
