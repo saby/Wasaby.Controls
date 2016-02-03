@@ -95,7 +95,7 @@ define('js!SBIS3.CONTROLS.ItemActionsGroup',
                target = this._itemActionsMenuButton,
                corner = 'br',
                 // TODO перевести на проекции
-               items = this.getItems().getRawData();
+               items = this._options.items;
 
             if (this._touchActions) {
                menuCont.addClass('controls-ItemsActions__touch-actions');
