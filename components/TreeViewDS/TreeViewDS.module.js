@@ -27,9 +27,8 @@ define('js!SBIS3.CONTROLS.TreeViewDS', [
          }
       },
 
-      init : function() {
+      init: function () {
          TreeViewDS.superclass.init.apply(this, arguments);
-         //TODO чтоб не переопределять верстку навешиваем класс
          this._container.addClass('controls-TreeView');
       },
 
