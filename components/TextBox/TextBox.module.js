@@ -149,7 +149,7 @@ define('js!SBIS3.CONTROLS.TextBox', ['js!SBIS3.CONTROLS.TextBoxBase','html!SBIS3
          });
 
          this._inputField.bind('focusout', function(){
-            self.setText(self._formatText(self._inputField.val()));
+            self.setText(self._inputField.val());
          });
 
          if (this._options.placeholder && !$ws._const.compatibility.placeholder) {
