@@ -279,7 +279,7 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
 
       /**
        * Удаляет модель из источника данных
-       * @param {String} keys Первичный ключ модели
+       * @param {String|Array} keys Первичный ключ, или массив первичных ключей модели
        * @param {Object|SBIS3.CONTROLS.Data.Model} [meta] Дополнительные мета данные
        * @returns {$ws.proto.Deferred} Асинхронный результат выполнения
        * @see SBIS3.CONTROLS.Data.Source.ISource#destroy
