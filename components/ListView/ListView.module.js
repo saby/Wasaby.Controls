@@ -909,6 +909,9 @@ define('js!SBIS3.CONTROLS.ListView',
             if (this._editingItem.model && this._editingItem.model.getKey() === item.getKey()) {
                this._editingItem.target = this._getElementByModel(item);
             }
+            //TODO: Временное решение для .100.  В .30 состояния выбранности элемента должны добавляться в шаблоне.
+            this._drawSelectedItems(this.getSelectedKeys());
+            this._drawSelectedItem(this.getSelectedKey());
          },
 
          /**
