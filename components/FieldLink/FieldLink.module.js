@@ -375,6 +375,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
        */
       _checkItemBeforeDraw: function(item) {
          var needDrawItem = false,
+             isMultiSelect = this._options.multiselect,
              inputWidth;
 
          /* Если элементы рисуются в пикере то ничего считать не надо */
@@ -386,11 +387,11 @@ define('js!SBIS3.CONTROLS.FieldLink',
             то отрисовываться он не будет и покажется троеточие, однако хотя бы один элемент в поле связи должен поместиться */
          if(this._checkWidth) {
             inputWidth = this._getInputWidth();
-            needDrawItem = $ws.helpers.getTextWidth(item[0].outerHTML) + INPUT_MIN_WIDTH < inputWidth + SHOW_ALL_LINK_WIDTH;
+            needDrawItem = $ws.helpers.getTextWidth(item[0].outerHTML) + isMultiSelect ? INPUT_MIN_WIDTH : 0 < inputWidth + SHOW_ALL_LINK_WIDTH;
 
             if(!needDrawItem) {
                if(!this._linkCollection.getContainer().find('.controls-FieldLink__linkItem').length) {
-                  item[0].style.width = inputWidth - ((this._options.multiselect || this._options.alwaysShowTextBox) ? INPUT_MIN_WIDTH : INPUT_WRAPPER_PADDING) + 'px';
+                  item[0].style.width = inputWidth - ((isMultiSelect || this._options.alwaysShowTextBox) ? INPUT_MIN_WIDTH : INPUT_WRAPPER_PADDING) + 'px';
                   needDrawItem = true;
                }
                this._checkWidth = false;
