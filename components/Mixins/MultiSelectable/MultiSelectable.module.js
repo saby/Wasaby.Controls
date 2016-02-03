@@ -59,7 +59,7 @@ define('js!SBIS3.CONTROLS.MultiSelectable', ['js!SBIS3.CONTROLS.Data.Collection.
              *     </options>
              * </pre>
              * @see multiselect
-             * @see allowEmptySelection
+             * @see allowEmptyMultiSelection
              * @see setSelectedKeys
              * @see getSelectedKeys
              * @see addItemsSelection
@@ -73,7 +73,7 @@ define('js!SBIS3.CONTROLS.MultiSelectable', ['js!SBIS3.CONTROLS.Data.Collection.
               * @cfg {Boolean} Разрешить отсутствие выбранного элемента в группе
               * @example
               * <pre>
-              *     <option name="allowEmptySelection">false</option>
+              *     <option name="allowEmptyMultiSelection">false</option>
               * </pre>
               * @see selectedKeys
               * @see removeItemsSelectionAll
@@ -81,7 +81,7 @@ define('js!SBIS3.CONTROLS.MultiSelectable', ['js!SBIS3.CONTROLS.Data.Collection.
               * @see toggleItemsSelection
               * @see toggleItemsSelectionAll
               */
-            allowEmptySelection : true,
+            allowEmptyMultiSelection : true,
             /**
              * @cfg {SBIS3.CONTROLS.Data.Collection.List} Набор выбранных записей
              * @see getSelectedItems
@@ -109,7 +109,7 @@ define('js!SBIS3.CONTROLS.MultiSelectable', ['js!SBIS3.CONTROLS.Data.Collection.
             }
          }
          else {
-            if (this._options.allowEmptySelection == false) {
+            if (this._options.allowEmptyMultiSelection == false) {
                this._setFirstItemAsSelected();
             }
          }
@@ -282,7 +282,7 @@ define('js!SBIS3.CONTROLS.MultiSelectable', ['js!SBIS3.CONTROLS.Data.Collection.
        * </pre>
        * @see removeItemsSelectionAll
        * @see getSelectedKeys
-       * @see allowEmptySelection
+       * @see allowEmptyMultiSelection
        */
       removeItemsSelection : function(idArray) {
          var removedKeys = this._removeItemsSelection(idArray);
@@ -318,7 +318,7 @@ define('js!SBIS3.CONTROLS.MultiSelectable', ['js!SBIS3.CONTROLS.Data.Collection.
        * @see removeItemsSelection
        * @see getSelectedKeys
        * @see toggleItemsSelectionAll
-       * @see allowEmptySelection
+       * @see allowEmptyMultiSelection
        */
       removeItemsSelectionAll : function() {
          this.setSelectedKeys([]);
@@ -388,7 +388,7 @@ define('js!SBIS3.CONTROLS.MultiSelectable', ['js!SBIS3.CONTROLS.Data.Collection.
        * @see removeItemsSelectionAll
        * @see toggleItemsSelection
        * @see multiselect
-       * @see allowEmptySelection
+       * @see allowEmptyMultiSelection
        */
       toggleItemsSelectionAll : function() {
          if (this._dataSet) {
@@ -563,7 +563,7 @@ define('js!SBIS3.CONTROLS.MultiSelectable', ['js!SBIS3.CONTROLS.Data.Collection.
       },
 
       _checkEmptySelection: function() {
-         return !this._options.selectedKeys.length && this._options.allowEmptySelection == false;
+         return !this._options.selectedKeys.length && this._options.allowEmptyMultiSelection == false;
       },
 
       _getSelItemsClone: function() {
