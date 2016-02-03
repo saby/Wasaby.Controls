@@ -37,7 +37,8 @@ define('js!SBIS3.CONTROLS.TreeViewDS', [
             parentKey = this._dataSet.getParentKey(record, this._options.hierField),
             curList;
 
-         if (parentKey && (parentKey !== this._curRoot)) {
+         //TODO убрать, когда ключи будут 100% строками
+         if (parentKey && ((parentKey + '') !== (this._curRoot + ''))) {
             var parentItem = $('.controls-ListView__item[data-id="' + parentKey + '"]', this.getContainer().get(0));
             curList = $('.controls-TreeView__childContainer', parentItem.get(0)).first();
             if (!curList.length) {
