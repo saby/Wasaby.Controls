@@ -76,12 +76,15 @@ define('js!SBIS3.CONTROLS.ActiveMultiSelectable', [], function() {
                newItems.remove(rec)
             }
          });
-         selItems.concat(newItems);
-         selItems.each(function(rec) {
-            selKeys.push(rec.getId());
-         });
-         this.setSelectedKeys(selKeys);
-         this._notifyOnPropertyChanged('selectedItems');
+
+         if(newItems.getCount()) {
+            selItems.concat(newItems);
+            selItems.each(function (rec) {
+               selKeys.push(rec.getId());
+            });
+            this.setSelectedKeys(selKeys);
+            this._notifyOnPropertyChanged('selectedItems');
+         }
       })
    };
 
