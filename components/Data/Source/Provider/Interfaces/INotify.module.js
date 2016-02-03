@@ -13,7 +13,7 @@ define('js!SBIS3.CONTROLS.Data.Source.Provider.INotify', [
     *    if ($ws.helpers.instanceOfModule(dataSource, 'SBIS3.CONTROLS.Data.Source.Remote') {
     *       var provider = dataSource.getProvider();
     *       if ($ws.helpers.instanceOfMixin(provider, 'SBIS3.CONTROLS.Data.Source.Provider.INotify') {
-    *          provider.getChannel().subscribe('onMessage', function(event, message) {
+    *          provider.getEventsChannel().subscribe('onMessage', function(event, message) {
     *             $ws.helpers.alert('A message from the server: ' + message);
     *          });
     *       }
@@ -23,7 +23,7 @@ define('js!SBIS3.CONTROLS.Data.Source.Provider.INotify', [
     * <pre>
     *    var provider = dataSource.getProvider();
     *    if ($ws.helpers.instanceOfMixin(provider, 'SBIS3.CONTROLS.Data.Source.Provider.INotify') {
-       *       provider.getChannel('ErrorLog').subscribe('onMessage', function(event, message) {
+       *       provider.getEventsChannel('ErrorLog').subscribe('onMessage', function(event, message) {
        *          $ws.helpers.alert('Something went wrong: ' + message);
        *       });
        *    }
