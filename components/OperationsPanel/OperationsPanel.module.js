@@ -4,12 +4,12 @@
 define('js!SBIS3.CONTROLS.OperationsPanel', [
    'js!SBIS3.CORE.CompoundControl',
    'html!SBIS3.CONTROLS.OperationsPanel',
-   'js!SBIS3.CONTROLS.CollectionMixin',
+   'js!SBIS3.CONTROLS.DSMixin',
    /*TODO это должна подключать не панель а прекладники, потом убрать*/
    'js!SBIS3.CONTROLS.OperationDelete',
    'js!SBIS3.CONTROLS.OperationsMark',
    'js!SBIS3.CONTROLS.OperationMove'
-], function(Control, dotTplFn, CollectionMixin) {
+], function(Control, dotTplFn, DSMixin) {
    /**
     * Компонент "Панель действий" используют совместно с представлениями данных ({@link SBIS3.CONTROLS.ListView} или любой его контрол-наследник),
     * с записями которых требуется производить манипуляции. Он состоит из всплывающей панели, скрытой по умолчанию, и
@@ -47,7 +47,7 @@ define('js!SBIS3.CONTROLS.OperationsPanel', [
     *
     * </component>
     */
-   var OperationsPanel = Control.extend([CollectionMixin],/** @lends SBIS3.CONTROLS.OperationsPanel.prototype */{
+   var OperationsPanel = Control.extend([DSMixin],/** @lends SBIS3.CONTROLS.OperationsPanel.prototype */{
       _dotTplFn: dotTplFn,
       $protected: {
          _options: {
@@ -90,91 +90,64 @@ define('js!SBIS3.CONTROLS.OperationsPanel', [
              /**
               * @noShow
               */
-            keyField: 'name'
+            keyField: 'name',
+            /**
+             * @cfg {Boolean} Флаг наличия блока с операциями отметки
+             */
+            hasMarkBlock: true,
+            visible: false
          },
-         _blocks: undefined
+         _blocks: undefined,
+         _itemsDrawn: false
       },
-
       $constructor: function() {
          this._publish('onToggle', 'onChangeEnabled');
+      },
+      _drawItemsCallback: function() {
+         this._itemsDrawn = true;
+         //TODO: После перехода на новую идеалогию, кнопки ни чего знать о view не будут, и этот костыль уйдёт.
+         $ws.helpers.forEach(this.getItemsInstances(), function(item) {
+            this.addItemOptions(item);
+         }, this)
+      },
+      _setVisibility: function(show) {
+         var self = this;
+         if (!this._itemsDrawn && show) {
+            this.reload();
+         }
+         if (this.isVisible() !== show) {
+            this._container.removeClass('ws-hidden');
+            this._blocks.wrapper.animate({'margin-top': show ? 0 : '-30px'}, {
+               duration: 150,
+               easing: 'linear',
+               complete: function () {
+                  OperationsPanel.superclass._setVisibility.apply(self, [show]);
+                  self._notify('onToggle');
+               }
+            });
+         }
+      },
+      _initContainer: function() {
+         OperationsPanel.superclass._initContainer.apply(this, arguments);
          this._container.removeClass('ws-area');
          this._blocks = {
             markOperations: this._container.find('.controls-operationsPanel__actionMark'),
             allOperations: this._container.find('.controls-operationsPanel__actions'),
             wrapper: this._container.find('.controls-operationsPanel__wrapper')
          };
-         this.setVisibleMarkBlock(true);
-      },
-      /**
-       * Открыть панель массовых операций.
-       */
-      open: function() {
-         this._toggle(true);
-      },
-      /**
-       * Закрыть панель массовых операций.
-       */
-      close: function() {
-         this._toggle(false);
-      },
-      /**
-       * Получить состояние панели.
-       * @returns {Boolean} Состояние панели массовых операций.
-       * Возможные значения:
-       * <ol>
-       *    <li>true - панель открыта,</li>
-       *    <li>false - панель закрыта.</li>
-       * </ol>
-       */
-      isOpen: function() {
-         return !this._container.hasClass('ws-hidden');
-      },
-      _toggle: function(toggle) {
-         if (this.isOpen() !== toggle) {
-            this.togglePanel();
-         }
-      },
-      /**
-       * Поменять состояние панели на противоположное.
-       */
-      togglePanel: function() {
-         var self = this,
-            isOpen = this.isOpen();
-         this._drawItems();
-         this._container.removeClass('ws-hidden');
-         this._blocks.wrapper.animate({'margin-top': isOpen ? '-30px' : 0},
-            {
-               duration: 150,
-               easing: 'linear',
-               complete: function(){
-                  self._container.toggleClass('ws-hidden', isOpen);
-                  self._notify('onToggle');
-               }
-            });
-      },
-      /**
-       * Установить видимость блока с операциями отметки.
-       * @param visible
-       */
-      setVisibleMarkBlock: function(visible) {
-         this._blocks.markOperations.toggleClass('ws-hidden', !visible);
       },
       _getTargetContainer: function(item) {
-         return this._blocks[item.type.mark ? 'markOperations' : 'allOperations'];
+         return this._blocks[item.get('type').mark ? 'markOperations' : 'allOperations'];
       },
       _getItemTemplate: function() {
+         var self = this;
          return function (cfg) {
-            var type = this._getItemType(cfg.type);
-            cfg.options = cfg.options || {};
-            cfg.options.className = 'controls-operationsPanel__actionType-' + type;
-            /*TODO костыль, чтобы в контроллере прокинуть linkedView*/
-            if (this._addItemOptions){
-               this._addItemOptions(cfg.options);
-            }
-            return {
-               componentType: cfg.componentType,
-               config: cfg.options
-            };
+            var
+                item = cfg.item,
+                options = item.get('options') || {},
+                type = self._getItemType(item.get('type'));
+            options.className = 'controls-operationsPanel__actionType-' + type;
+            return '<component data-component="' + item.get('componentType').substr(3) + '" config="' + $ws.helpers.encodeCfgAttr(options) + '"></component>';
          }
       },
       _drawItems: function() {
@@ -205,35 +178,12 @@ define('js!SBIS3.CONTROLS.OperationsPanel', [
          this._drawItems();
          return OperationsPanel.superclass.getItemInstance.apply(this, arguments);
       },
-       /**
-        * Получить режим работы панели.
-        * Режим работы панели информирует о том над какими записями
-        * связанного представления данных будут выполняться операции.
-        * @returns {Boolean} Режим работы панели массовых операций.
-        * Возможные значения:
-        * <ol>
-        *    <li>true - управление отмеченными записями,</li>
-        *    <li>false - управление всеми записями.</li>
-        * </ol>
-        */
-      getPanelState: function() {
-         return this._currentMode;
-      },
-      /**
-       * Установить состояние панели.
-       * Состояние панели информирует о режиме работы с записями связанного представления данных.
-       * @param {Boolean} Состояние панели массовых операций.
-       * Возможные значения:
-       * <ol>
-       *    <li>true - управление отмеченными записями,</li>
-       *    <li>false - управление всеми записями.</li>
-       * </ol>
-       */
-      setPanelState: function(isSelection) {
-         this._currentMode = isSelection = !!isSelection;
-         this._blocks.wrapper.toggleClass('controls-operationsPanel__massMode', !isSelection).toggleClass('controls-operationsPanel__selectionMode',  isSelection);
+      onSelectedItemsChange: function(idArray) {
+         this._blocks.wrapper.toggleClass('controls-operationsPanel__massMode', !idArray.length)
+                             .toggleClass('controls-operationsPanel__selectionMode', !!idArray.length);
       },
       destroy: function() {
+         this._blocks = null;
          OperationsPanel.superclass.destroy.apply(this);
       }
    });
