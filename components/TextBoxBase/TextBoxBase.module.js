@@ -131,8 +131,7 @@ define('js!SBIS3.CONTROLS.TextBoxBase',
        */
       setText: function(text){
          //null, NaN, undefined оставляем как есть, но выводим их как пустую строку
-         var newText = (text) ? text.toString() : text;
-         newText = (text) ? this._formatText(text) : text;
+         var newText = (text === null || text !== text || typeof text === "undefined") ? text : this._formatText(text.toString());
          if (newText !== this._options.text) {
             this._options.text = newText;
             this._drawText(newText);
@@ -175,11 +174,7 @@ define('js!SBIS3.CONTROLS.TextBoxBase',
       },
 
       _formatText : function(text) {
-         text = text || ''; // так как есть датабиндинг может прийти undefined
-         if (this._options.trim) {
-            text = String.trim(text);
-         }
-         return text;
+         return text || ''; // так как есть датабиндинг может прийти undefined
       },
 
       _drawText: function() {
