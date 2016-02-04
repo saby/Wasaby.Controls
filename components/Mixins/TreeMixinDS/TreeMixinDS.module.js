@@ -160,13 +160,7 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', ['js!SBIS3.CORE.Control'], function (Con
              tree = this._dataSet.getTreeIndex(this._options.hierField, true);
 
          this._folderOffsets[key || 'null'] = 0;
-         if (this._options.singleExpand){
-            $.each(this._options.openedPath, function(openedKey, _value){
-               if (key != openedKey){
-                  self.collapseNode(openedKey);
-               }
-            });
-         }
+         this._closeAllExpandedNode(key);
          if (!tree[key]){
             this._toggleIndicator(true);
             return this._callQuery(this._createTreeFilter(key), this.getSorting(), 0, this._limit).addCallback(function (dataSet) {
@@ -189,6 +183,16 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', ['js!SBIS3.CORE.Control'], function (Con
                this._drawLoadedNode(key, records, this._folderHasMore[key]);
                this._notify('onNodeExpand', key);
             }
+         }
+      },
+      _closeAllExpandedNode: function(key){
+         var self = this;
+         if (this._options.singleExpand){
+            $.each(this._options.openedPath, function(openedKey, _value){
+               if (key != openedKey){
+                  self.collapseNode(openedKey);
+               }
+            });
          }
       },
       /**
