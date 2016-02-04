@@ -201,7 +201,7 @@ define('js!SBIS3.CONTROLS.Data.Projection.CollectionEnumerator', [
 
       /**
        * Строит соответствие позиций проекции и исходной коллекции
-       * @private
+       * @protected
        */
       _buildInternalMap: function () {
          this._internalMap = [];
@@ -231,7 +231,7 @@ define('js!SBIS3.CONTROLS.Data.Projection.CollectionEnumerator', [
 
       /**
        * Запоминает текущий элемент
-       * @private
+       * @protected
        */
       _storeSourceCurrent: function () {
          this._сurrent = this._options.itemsMap[this._currentPosition];
@@ -240,7 +240,7 @@ define('js!SBIS3.CONTROLS.Data.Projection.CollectionEnumerator', [
       /**
        * Проверяет корректность позиции
        * @param {Number} position Позиция
-       * @private
+       * @protected
        */
       _checkPosition: function (position) {
          if (!this._isValidPosition(position)) {
@@ -252,7 +252,7 @@ define('js!SBIS3.CONTROLS.Data.Projection.CollectionEnumerator', [
        * Возвращает признак корректности позиции
        * @param {Number} position Позиция
        * @returns {Boolean}
-       * @private
+       * @protected
        */
       _isValidPosition: function (position) {
          return position >= -1 && position < this._options.itemsMap.length;

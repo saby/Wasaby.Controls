@@ -35,7 +35,7 @@ define('js!SBIS3.CONTROLS.Data.Projection.Tree', [
          _childrenStrategy: null,
 
          /**
-          * @var {Object} Соответствие элементов и их дочерних узлов
+          * @var {Object.<String, SBIS3.CONTROLS.Data.Projection.Collection>} Соответствие элементов и их дочерних узлов
           */
          _childrenMap: {}
       },
@@ -57,6 +57,8 @@ define('js!SBIS3.CONTROLS.Data.Projection.Tree', [
       destroy: function () {
          TreeProjection.superclass.destroy.call(this);
       },
+
+      //region mutable
 
       /**
        * Возвращает дочерний элемент узла с указанным хэшем
@@ -104,6 +106,8 @@ define('js!SBIS3.CONTROLS.Data.Projection.Tree', [
          return index;
       },
 
+      //endregion mutable
+
       //region SBIS3.CONTROLS.Data.Collection.IEnumerable
 
       /**
@@ -116,15 +120,6 @@ define('js!SBIS3.CONTROLS.Data.Projection.Tree', [
             filterMap: this._filterMap,
             sortMap: this._sortMap
          });
-      },
-
-      each: function (callback, context) {
-         var enumerator = this.getEnumerator(),
-            index = 0,
-            item;
-         while ((item = enumerator.getNext())) {
-            callback.call(context, item, index++);
-         }
       },
 
       //endregion SBIS3.CONTROLS.Data.Collection.IEnumerable
@@ -330,7 +325,7 @@ define('js!SBIS3.CONTROLS.Data.Projection.Tree', [
 
       /**
        * Инициализирует стратегию получения дочерних элементов узла
-       * @private
+       * @protected
        */
       _initChildrenStrategy: function() {
          var Strategy;
@@ -348,7 +343,7 @@ define('js!SBIS3.CONTROLS.Data.Projection.Tree', [
       /**
        * Проверяет валидность элемента коллекции
        * @param {*} item Элемент коллекции
-       * @private
+       * @protected
        */
       _checkItem: function (item) {
          if (!item && !$ws.helpers.instanceOfModule(item, this._itemModule)) {
