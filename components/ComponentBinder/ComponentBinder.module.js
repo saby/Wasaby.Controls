@@ -67,19 +67,25 @@ define('js!SBIS3.CONTROLS.ComponentBinder', [], function () {
          filter = view.getFilter();
       delete (filter[searchParamName]);
       view.setHighlightText('', false);
-      view.setHighlightEnabled(false);      view.reload(filter, view.getSorting(), 0);   }
+      view.setHighlightEnabled(false);
+      view.reload(filter, view.getSorting(), 0);
+   }
 
    function resetGroup(searchParamName) {
+      var view = this._options.view,
+            filter = $ws.core.merge(view.getFilter(), {
+               'Разворот' : 'Без разворота'
+            });
+      delete (filter[searchParamName]);
+      //При сбрасывании группировки в иерархии нужно снять класс-можификатор, но сделать это можно
+      //только после релоада, иначе визуально будут прыжки и дерганья (класс меняет паддинги)
+      view.once('onDataLoad', function(){
+         view._container.removeClass('controls-GridView__searchMode');
+      });
       //Если мы ничего не искали, то и сбрасывать нечего
       if (this._firstSearch) {
          return;
       }
-      var view = this._options.view,
-         filter = $ws.core.merge(view.getFilter(), {
-            'Разворот' : 'Без разворота'
-         });
-      delete (filter[searchParamName]);
-
       view.setInfiniteScroll(this._isInfiniteScroll, true);
       view.setGroupBy(this._lastGroup);
       view.setHighlightText('', false);
@@ -104,10 +110,6 @@ define('js!SBIS3.CONTROLS.ComponentBinder', [], function () {
          //Очищаем крошки. TODO переделать, когда появятся привзяки по контексту
          view.setFilter(filter, true);
       }
-      //При любом релоаде из режима поиска нужно снять класс
-      view.once('onDataLoad', function(){
-         view._container.removeClass('controls-GridView__searchMode');
-      });
    }
 
    function breakSearch(searchForm, withReload){
