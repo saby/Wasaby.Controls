@@ -71,8 +71,15 @@ define('js!SBIS3.CONTROLS.Selectable', [], function() {
       },
 
       after : {
-         init : function() {
+         init: function () {
             this._drawSelectedItem(this._options.selectedKey);
+         }
+      },
+      before: {
+         _dataLoadedCallback : function(){
+            if (this._options.allowEmptySelection == false) {
+               this._setFirstItemAsSelected();
+            }
          }
       },
       /**
@@ -124,12 +131,6 @@ define('js!SBIS3.CONTROLS.Selectable', [], function() {
          //TODO: может тут указать, что метод надо переопредить чтобы текст передавать и пр.?
          this._notifyOnPropertyChanged('selectedKey');
          this._notify('onSelectedItemChange', id);
-      },
-
-      _dataLoadedCallback : function(){
-         if (this._options.allowEmptySelection == false) {
-            this._setFirstItemAsSelected();
-         }
       },
 
       _setFirstItemAsSelected : function() {

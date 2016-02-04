@@ -8,7 +8,7 @@ define('js!SBIS3.CONTROLS.ListView',
       'js!SBIS3.CORE.CompoundActiveFixMixin',
       'js!SBIS3.CONTROLS.DSMixin',
       'js!SBIS3.CONTROLS.MultiSelectable',
-      'js!SBIS3.CONTROLS.SelectableNew',
+      'js!SBIS3.CONTROLS.Selectable',
       'js!SBIS3.CONTROLS.DataBindMixin',
       'js!SBIS3.CONTROLS.DecorableMixin',
       'js!SBIS3.CONTROLS.DragNDropMixin',
@@ -195,6 +195,7 @@ define('js!SBIS3.CONTROLS.ListView',
                $ws._const.key.enter,
                $ws._const.key.right,
                $ws._const.key.left,
+               $ws._const.key.m,
                $ws._const.key.o
             ],
             _itemActionsGroup: null,
@@ -909,6 +910,9 @@ define('js!SBIS3.CONTROLS.ListView',
             if (this._editingItem.model && this._editingItem.model.getKey() === item.getKey()) {
                this._editingItem.target = this._getElementByModel(item);
             }
+            //TODO: Временное решение для .100.  В .30 состояния выбранности элемента должны добавляться в шаблоне.
+            this._drawSelectedItems(this.getSelectedKeys());
+            this._drawSelectedItem(this.getSelectedKey());
          },
 
          /**
@@ -965,6 +969,7 @@ define('js!SBIS3.CONTROLS.ListView',
                      }.bind(this),
                      onAfterEndEdit: function(event, model, target, withSaving) {
                         if (withSaving) {
+                           target.attr('data-id', model.getKey());
                            this.redrawItem(model);
                         }
                         event.setResult(this._notify('onAfterEndEdit', model, target, withSaving));
@@ -1053,10 +1058,14 @@ define('js!SBIS3.CONTROLS.ListView',
             this._getItemActionsContainer()[0].style.top = offset.top - this._container.offset().top + 'px';
          },
          _getItemActionsPosition: function (item) {
-            return {
+            var cfg = {
                top : item.position.top + ((item.size.height > ITEMS_ACTIONS_HEIGHT) ? item.size.height - ITEMS_ACTIONS_HEIGHT : 0 ),
-               right : this._touchSupport ? item.position.top : this._container[0].offsetWidth - (item.position.left + item.size.width)
+               right : this._container[0].offsetWidth - (item.position.left + item.size.width)
             };
+            if (this._touchSupport){
+               cfg.top = item.position.top;
+            }
+            return cfg;
          },
          /**
           * Создаёт операции над записью
@@ -1757,7 +1766,7 @@ define('js!SBIS3.CONTROLS.ListView',
             if (this.getItemsActions() && hoveredItem.container) {
                this._showItemActions(hoveredItem);
             }
-         }
+         },
          /*DRAG_AND_DROP END*/
          _drawResults: function(){
             if (!this._checkResults()){

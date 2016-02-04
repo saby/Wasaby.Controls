@@ -138,7 +138,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
       init: function() {
          this._buildHead();
          DataGridView.superclass.init.call(this);
-         if(this._options.startScrollColumn !== undefined) {
+         if(this.hasPartScroll()) {
             this._initPartScroll();
          }
       },
@@ -216,7 +216,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
       },
 
       _drawItemsCallback: function () {
-         if(this._options.startScrollColumn !== undefined) {
+         if (this.hasPartScroll()) {
             var needShowScroll = this._isTableWide();
 
             this._isPartScrollVisible ?
@@ -269,6 +269,10 @@ define('js!SBIS3.CONTROLS.DataGridView',
       /************************/
       /*   Частичный скролл   */
       /***********************/
+      hasPartScroll: function() {
+         return this._options.startScrollColumn !== undefined;
+      },
+
       _initPartScroll: function() {
          (this._arrowLeft = this._thead.find('.controls-DataGridView__PartScroll__arrowLeft')).click(this._arrowClickHandler.bind(this, true));
          (this._arrowRight = this._thead.find('.controls-DataGridView__PartScroll__arrowRight')).click(this._arrowClickHandler.bind(this, false));
@@ -597,7 +601,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
          this._colgroup && this._colgroup.remove();
          this._colgroup = $(this._getColgroupTemplate()).insertBefore(this._thead || body);
 
-         if(this._options.startScrollColumn !== undefined) {
+         if(this.hasPartScroll()) {
             this._initPartScroll();
             this.updateDragAndDrop();
 
@@ -691,7 +695,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
       },
 
       destroy: function() {
-         if(this._options.startScrollColumn !== undefined) {
+         if (this.hasPartScroll()) {
             this._thumb.unbind('click');
             this._thumb = undefined;
             this._arrowLeft.unbind('click');

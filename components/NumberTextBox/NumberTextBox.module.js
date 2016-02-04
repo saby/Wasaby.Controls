@@ -227,15 +227,7 @@ define('js!SBIS3.CONTROLS.NumberTextBox', ['js!SBIS3.CONTROLS.TextBox', 'html!SB
       },
 
       _formatText: function(value, fromFocusOut){
-         var decimals;
-         value = value.toString();
-         if (this._options.onlyInteger){
-            decimals = 0;
-            value = parseInt(value.replace(/\s/g, ''));
-         } else {
-            decimals =this._options.decimals;
-            value = parseFloat(value.replace(/\s/g, ''));
-         }
+         var decimals = this._options.onlyInteger ? 0 : this._options.decimals;
          value = $ws.render.defaultColumn.numeric(
             value,
             this._options.integers,
@@ -244,7 +236,7 @@ define('js!SBIS3.CONTROLS.NumberTextBox', ['js!SBIS3.CONTROLS.TextBox', 'html!SB
             this._options.onlyPositive,
             this._options.maxLength
          );
-         if (this._options.hideEmptyDecimals && !(value.indexOf('.') == -1) && fromFocusOut ){
+         if (value && this._options.hideEmptyDecimals && !(value.indexOf('.') == -1) && fromFocusOut ){
             while (value[value.length - 1] == '0'){
                value = value.substr(0, value.length - 1);
             }
