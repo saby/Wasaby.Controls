@@ -212,6 +212,7 @@ define('js!SBIS3.CONTROLS.MultiSelectable', ['js!SBIS3.CONTROLS.Data.Collection.
          if (Array.isArray(idArray)) {
             if (idArray.length) {
                if (this._options.multiselect) {
+                  this._options.selectedKeys = Array.clone(this._options.selectedKeys);
                   for (var i = 0; i < idArray.length; i++) {
                      if (this._isItemSelected(idArray[i]) < 0) {
                         this._options.selectedKeys.push(idArray[i]);
@@ -245,13 +246,14 @@ define('js!SBIS3.CONTROLS.MultiSelectable', ['js!SBIS3.CONTROLS.Data.Collection.
        */
       removeItemsSelection : function(idArray) {
          if (Array.isArray(idArray)) {
+            this._options.selectedKeys = Array.clone(this._options.selectedKeys);
             for (var i = idArray.length - 1; i >= 0; i--) {
                var index = this._isItemSelected(idArray[i]);
                if (index >= 0) {
                   Array.remove(this._options.selectedKeys, index);
                }
             }
-	         this._afterSelectionHandler();
+            this._afterSelectionHandler();
          }
          else {
             throw new Error('Argument must be instance of Array');
