@@ -1058,10 +1058,14 @@ define('js!SBIS3.CONTROLS.ListView',
             this._getItemActionsContainer()[0].style.top = offset.top - this._container.offset().top + 'px';
          },
          _getItemActionsPosition: function (item) {
-            return {
+            var cfg = {
                top : item.position.top + ((item.size.height > ITEMS_ACTIONS_HEIGHT) ? item.size.height - ITEMS_ACTIONS_HEIGHT : 0 ),
-               right : this._touchSupport ? item.position.top : this._container[0].offsetWidth - (item.position.left + item.size.width)
+               right : this._container[0].offsetWidth - (item.position.left + item.size.width)
             };
+            if (this._touchSupport){
+               cfg.top = item.position.top;
+            }
+            return cfg;
          },
          /**
           * Создаёт операции над записью
