@@ -170,13 +170,15 @@ define('js!SBIS3.CONTROLS.OperationsPanel', [
        * @returns {Array}
        */
       getItemInstances: function() {
+         var args = arguments;
          return this.reload().addCallback(function() {
-            return OperationsPanel.superclass.getItemInstances.apply(this, arguments);
+            return OperationsPanel.superclass.getItemInstances.apply(this, args);
          }.bind(this));
       },
       getItemInstance: function() {
+         var args = arguments;
          return this.reload().addCallback(function() {
-            return OperationsPanel.superclass.getItemInstance.apply(this, arguments);
+            return OperationsPanel.superclass.getItemInstance.apply(this, args);
          }.bind(this));
       },
       onSelectedItemsChange: function(idArray) {
