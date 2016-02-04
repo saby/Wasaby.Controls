@@ -1,0 +1,22 @@
+<span class="controls-SwitcherDouble {{?it.disposition === 'vertical'}}controls-SwitcherDouble-vertical{{?}}">
+    {{?it.disposition === 'vertical'}}
+
+        <span class="js-controls-Switcher__toggle controls-SwitcherDouble__toggle {{?it.state == 'on'}}controls-SwitcherDouble-on-toggled{{??}}controls-SwitcherDouble-off-toggled{{?}}">
+           &nbsp;
+           <span class="controls-SwitcherDouble__line"></span>
+           <span class="controls-SwitcherDouble__btn"></span>
+        </span>
+        <span class="controls-SwitcherDouble__text-block">
+            <span class="js-controls-SwitcherDouble__textOn controls-SwitcherDouble__text {{?it.state == 'off'}}controls-SwitcherDouble__unselected{{?}}">{{?it.stateOn}}{{=it.stateOn}}{{?}}</span>
+            <span class="js-controls-SwitcherDouble__textOff controls-SwitcherDouble__text {{?it.state == 'on'}}controls-SwitcherDouble__unselected{{?}}">{{?it.stateOff}}{{=it.stateOff}}{{?}}</span>
+        </span>
+    {{??}}
+        <span class="js-controls-SwitcherDouble__textOff controls-SwitcherDouble__text {{?it.state == 'on'}}controls-SwitcherDouble__unselected{{?}}">{{?it.stateOff}}{{=it.stateOff}}{{?}}</span>
+        <span class="js-controls-Switcher__toggle controls-SwitcherDouble__toggle {{?it.state == 'on'}}controls-SwitcherDouble-on-toggled{{??}}controls-SwitcherDouble-off-toggled{{?}}">
+           &nbsp;
+           <span class="controls-SwitcherDouble__line"></span>
+           <span class="controls-SwitcherDouble__btn"></span>
+        </span>
+        <span class="js-controls-SwitcherDouble__textOn controls-SwitcherDouble__text {{?it.state == 'off'}}controls-SwitcherDouble__unselected{{?}}">{{?it.stateOn}}{{=it.stateOn}}{{?}}</span>
+    {{?}}
+</span>

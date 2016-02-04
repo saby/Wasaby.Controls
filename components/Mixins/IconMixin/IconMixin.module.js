@@ -13,8 +13,10 @@ define('js!SBIS3.CONTROLS.IconMixin', ['html!SBIS3.CONTROLS.IconMixin/IconTempla
    var IconMixin = /**@lends SBIS3.CONTROLS.IconMixin.prototype  */{
       $protected: {
          _iconClass: '',
+         _oldIcon: '',
+         _iconTemplate: IconTemplate,
          _options: {
-            iconTemplate: IconTemplate,
+
             /**
              * @cfg {String}  Путь до иконки
              * Путь задаётся относительно корня сайта либо через sprite.
@@ -30,7 +32,15 @@ define('js!SBIS3.CONTROLS.IconMixin', ['html!SBIS3.CONTROLS.IconMixin/IconTempla
          }
       },
 
+      after : {
+         _modifyOptions: function (opts) {
+            if (opts.icon) opts._iconClass = IconTemplate(opts);
+            return opts;
+         }
+      },
+
       $constructor: function() {
+
       },
 
       /**
@@ -45,17 +55,12 @@ define('js!SBIS3.CONTROLS.IconMixin', ['html!SBIS3.CONTROLS.IconMixin/IconTempla
        * @see icon
        * @see getIcon
        */
-      setIcon: function(iconPath) {
-         this._options.icon = iconPath;
-         if (iconPath) {
-            if (iconPath.indexOf('sprite:') >= 0) {
-               this._iconClass = iconPath.substr(7);
-            } else {
-               this._iconClass = iconPath;
-            }
-         }
+      setIcon: function(icon) {
+         this._options.icon = icon;
+         this._oldIcon = this._options._iconClass;
+         this._options._iconClass = this._iconTemplate(this._options);
+         this._drawIcon(icon);
       },
-
       /**
        * Получить изображение на кнопке.
        * Метод получения изображения, заданного опцией {@link icon}, либо методом {@link setIcon}.
@@ -71,6 +76,9 @@ define('js!SBIS3.CONTROLS.IconMixin', ['html!SBIS3.CONTROLS.IconMixin/IconTempla
        */
       getIcon: function() {
          return this._options.icon;
+      },
+      _drawIcon: function(icon) {
+
       }
    };
 

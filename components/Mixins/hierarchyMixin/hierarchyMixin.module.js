@@ -22,7 +22,7 @@ define('js!SBIS3.CONTROLS.hierarchyMixin', [], function () {
              * @cfg {String} Идентификатор узла, относительно которого надо отображать данные
              * @noShow
              */
-            root: null,
+            root: undefined,
 
             /**
              * @cfg {String} Поле иерархии
@@ -33,9 +33,13 @@ define('js!SBIS3.CONTROLS.hierarchyMixin', [], function () {
          }
       },
       $constructor: function () {
-         this._curRoot = this._options.root;
-         this._filter = this._filter || {};
-         this._filter[this._options.hierField] = this._options.root;
+         var
+            filter = this.getFilter() || {};
+         if (typeof this._options.root != 'undefined') {
+            this._curRoot = this._options.root;
+            filter[this._options.hierField] = this._options.root;
+         }
+         this.setFilter(filter, true);
       },
 
       setHierField: function (hierField) {
@@ -50,11 +54,8 @@ define('js!SBIS3.CONTROLS.hierarchyMixin', [], function () {
 
       // обход происходит в том порядке что и пришли
       hierIterate: function (DataSet, iterateCallback, status) {
-         if (Object.isEmpty(DataSet._indexTree)) {
-            DataSet._reindexTree(this._options.hierField);
-         }
          var
-            indexTree = DataSet._indexTree,
+            indexTree = DataSet.getTreeIndex(this._options.hierField, true),
             self = this,
             curParentId = (typeof this._curRoot != 'undefined') ? this._curRoot : null,
             curLvl = 0;
@@ -88,14 +89,16 @@ define('js!SBIS3.CONTROLS.hierarchyMixin', [], function () {
          if (!Object.isEmpty(this._options.groupBy)) {
             return this._dataSet._getRecords();
          }
-         this._dataSet.each(function (record) {
-            if (self._dataSet.getParentKey(record, self._options.hierField) == self._curRoot) {
+         var path = this._options.openedPath;
+         this.hierIterate(this._dataSet , function(record) {
+            //Рисуем рекорд если он принадлежит текущей папке или если его родитель есть в openedPath
+            var parentKey = self._dataSet.getParentKey(record, self._options.hierField);
+            if (parentKey == self._curRoot || path[parentKey]) {
                if (self._options.displayType == 'folders') {
                   if (record.get(self._options.hierField + '@')) {
                      records.push(record);
                   }
-               }
-               else {
+               } else {
                   records.push(record);
                }
             }
@@ -114,8 +117,8 @@ define('js!SBIS3.CONTROLS.hierarchyMixin', [], function () {
        * Установить корень выборки
        * @param {String} root Идентификатор корня
        */
-      setRoot: function (root) {
-
+      setRoot: function(root){
+         this._options.root = root;
       },
       /**
        * Получить текущий корень иерархии
@@ -130,9 +133,15 @@ define('js!SBIS3.CONTROLS.hierarchyMixin', [], function () {
        * @param {String} key Идентификатор раскрываемого узла
        */
       setCurrentRoot: function(key) {
-         var filter = this._filter || {};
-         filter[this._options.hierField] = key;
-         this._filter = filter;
+         var
+            filter = this.getFilter() || {};
+         if (key) {
+            filter[this._options.hierField] = key;
+         }
+         else {
+            delete(filter[this._options.hierField]);
+         }
+         this.setFilter(filter, true);
          this._hier = this._getHierarchy(this._dataSet, key);
          //узел грузим с 0-ой страницы
          this._offset = 0;
@@ -141,29 +150,30 @@ define('js!SBIS3.CONTROLS.hierarchyMixin', [], function () {
          this._curRoot = key;
          this.setSelectedKey(null);
       },
-
-      //TODO:После каждого релоада проверяется флаг _rootChanged и если флаг взведен, 
-      //то запускается перерисовка хлебных крошек. Это сделано для того, что изначально 
-      //грид может открыться на какой то внутренней папке, где надо рисовать хлебные крошки 
-      //Избавиться от всего этого когда будут готовы биндинги
-      _dataLoadedCallback: function(){
-         var path = this._dataSet.getMetaData().path,
-            hierarchy = this._hier;
-         if (!hierarchy.length && path){
-            hierarchy = this._getHierarchy(path, this._curRoot);
-         }
-         if (this._rootChanged) {
-            this._notify('onSetRoot', this._curRoot, hierarchy);
-            this._rootChanged = false;
+      after : {
+         //TODO:После каждого релоада проверяется флаг _rootChanged и если флаг взведен,
+         //то запускается перерисовка хлебных крошек. Это сделано для того, что изначально
+         //грид может открыться на какой то внутренней папке, где надо рисовать хлебные крошки
+         //Избавиться от всего этого когда будут готовы биндинги
+         _dataLoadedCallback: function () {
+            var path = this._dataSet.getMetaData().path,
+                  hierarchy = this._hier;
+            if (!hierarchy.length && path) {
+               hierarchy = this._getHierarchy(path, this._curRoot);
+            }
+            if (this._rootChanged) {
+               this._scrollTo(this.getContainer());
+               this._notify('onSetRoot', this._curRoot, hierarchy);
+               this._rootChanged = false;
+            }
          }
       },
-
       _getHierarchy: function(dataSet, key){
          var record, parentKey,
             hierarchy = [];
          if (dataSet){
             do {
-               record = dataSet.getRecordByKey(key);
+               record = dataSet.getRecordById(key);
                parentKey = record ? dataSet.getParentKey(record, this._options.hierField) : null;
                if (record) {
                   hierarchy.push({
@@ -184,6 +194,19 @@ define('js!SBIS3.CONTROLS.hierarchyMixin', [], function () {
          var root = this._options.root;
          this._pageSaver = {};
          this._pageSaver[root] = 0;
+      },
+
+      //Переопределяем метод, чтоб передать тип записи
+      _activateItem : function(id) {
+         var
+            item = this._dataSet.getRecordByKey(id),
+            meta = {
+               id: id,
+               item: item,
+               hierField : this._options.hierField
+            };
+
+         this._notify('onItemActivate', meta);
       }
 
    };

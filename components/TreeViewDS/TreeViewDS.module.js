@@ -5,6 +5,8 @@ define('js!SBIS3.CONTROLS.TreeViewDS', [
    'js!SBIS3.CORE.MarkupTransformer'
 ], function (ListView, hierarchyMixin, TreeMixinDS, MarkupTransformer) {
    'use strict';
+   var ITEMS_ACTIONS_HEIGHT = 20;
+   
    /**
     * Контрол, отображающий данные имеющие иерархическую структуру. Позволяет отобразить данные в произвольном виде с возможностью открыть или закрыть отдельные узлы
     * @class SBIS3.CONTROLS.TreeViewDS
@@ -25,18 +27,30 @@ define('js!SBIS3.CONTROLS.TreeViewDS', [
          }
       },
 
+      init: function () {
+         TreeViewDS.superclass.init.apply(this, arguments);
+         this._container.addClass('controls-TreeView');
+      },
+
       _getTargetContainer: function (record) {
          var
             parentKey = this._dataSet.getParentKey(record, this._options.hierField),
             curList;
 
-         if (parentKey && (parentKey !== this._curRoot)) {
+         //TODO убрать, когда ключи будут 100% строками
+         if (parentKey && ((parentKey + '') !== (this._curRoot + ''))) {
             var parentItem = $('.controls-ListView__item[data-id="' + parentKey + '"]', this.getContainer().get(0));
             curList = $('.controls-TreeView__childContainer', parentItem.get(0)).first();
             if (!curList.length) {
                curList = $('<div></div>').appendTo(parentItem).addClass('controls-TreeView__childContainer');
             }
-
+            if (this._options.openedPath[parentKey]) {
+               var tree = this._dataSet.getTreeIndex(this._options.hierField);
+               if (tree[parentKey]) {
+                  $('.js-controls-TreeView__expand', parentItem).first().addClass('controls-TreeView__expand__open');
+                  curList.css('display', 'block');
+               }
+            }
             // !! для статичных данных тоже надо указыавть является ли запись разделом. нужно чтобы отрисовать корректно запись, которая является узлом
             if (record.get(this._options.hierField + '@')) {
                $('.controls-TreeView__item', parentItem).first().addClass('controls-TreeView__hasChild');
@@ -48,8 +62,18 @@ define('js!SBIS3.CONTROLS.TreeViewDS', [
          return curList;
       },
 
-      _nodeDataLoaded : function(key, ds) {
-         TreeViewDS.superclass._nodeDataLoaded.apply(this, arguments);
+      _getItemActionsPosition: function(item) {
+         var treeItem = item.container.find('.js-controls-TreeView-itemContent'),
+             parentResult = TreeViewDS.superclass._getItemActionsPosition.apply(this, arguments);
+
+         return {
+            top: item.position.top + (treeItem.length ? treeItem[0].offsetHeight : item.size.height) - ITEMS_ACTIONS_HEIGHT,
+            right: parentResult.right
+         }
+      },
+
+      _drawLoadedNode : function(key) {
+         TreeViewDS.superclass._drawLoadedNode.apply(this, arguments);
          var itemCont = $('.controls-ListView__item[data-id="' + key + '"]', this.getContainer().get(0));
          $('.controls-TreeView__childContainer', itemCont).first().css('display', 'block');
       },
@@ -57,6 +81,13 @@ define('js!SBIS3.CONTROLS.TreeViewDS', [
       _nodeClosed : function(key) {
          var itemCont = $('.controls-ListView__item[data-id="' + key + '"]', this.getContainer().get(0));
          $('.controls-TreeView__childContainer', itemCont).css('display', 'none').empty();
+      },
+
+      _drawSelectedItems : function(idArray) {
+         $('.controls-ListView__itemCheckBox__multi').removeClass('controls-ListView__itemCheckBox__multi');
+         for (var i = 0; i < idArray.length; i++) {
+            $(".controls-ListView__item[data-id='" + idArray[i] + "']", this._container).find('.js-controls-ListView__itemCheckBox').first().addClass('controls-ListView__itemCheckBox__multi');
+         }
       }
    });
 

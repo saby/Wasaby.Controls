@@ -3,8 +3,9 @@
  */
 define('js!SBIS3.CONTROLS.OperationsMark', [
    'js!SBIS3.CONTROLS.MenuLink',
-   'js!SBIS3.CONTROLS.CheckBox'
-], function(MenuLink, CheckBox) {
+   'js!SBIS3.CONTROLS.CheckBox',
+   'i18n!SBIS3.CONTROLS.OperationsMark'
+], function(MenuLink, CheckBox, rk) {
    /**
     * Операции выделения.
     *
@@ -50,10 +51,11 @@ define('js!SBIS3.CONTROLS.OperationsMark', [
               * @cfg {OperationsMarkItems[]} Операции отметки.
               */
             items: [
-               { name: 'selectCurrentPage', title: 'Всю страницу' },
-               { name: 'removeSelection', title: 'Снять' },
-               { name: 'invertSelection', title: 'Инвертировать' }
-            ]
+               { name: 'selectCurrentPage', title: rk('Всю страницу') },
+               { name: 'removeSelection', title: rk('Снять') },
+               { name: 'invertSelection', title: rk('Инвертировать') }
+            ],
+            keyField: 'name'
          },
          _markCheckBox: undefined
       },
@@ -153,7 +155,7 @@ define('js!SBIS3.CONTROLS.OperationsMark', [
        * Снять выделение со всех элементов.
        */
       removeSelection: function() {
-         this._options.linkedView.setSelectedItems([]);
+         this._options.linkedView.setSelectedKeys([]);
       },
       /**
        * Инвертировать выделение всех элементов.
@@ -162,14 +164,17 @@ define('js!SBIS3.CONTROLS.OperationsMark', [
          this._options.linkedView.toggleItemsSelectionAll();
       },
       _createMarkCheckBox: function() {
-         this._markCheckBox = new CheckBox({
-            threeState: true,
-            element: $('<span>').insertBefore(this._container),
-            className: 'controls-OperationsMark-checkBox',
-            handlers: {
-               onActivated: this._onCheckBoxActivated.bind(this)
-            }
-         });
+         if (!this._markCheckBox) {//TODO костыль для ЭДО, чтоб не создавалось 2 раза
+            this._markCheckBox = new CheckBox({
+               threeState: true,
+               parent: this,
+               element: $('<span>').insertBefore(this._container),
+               className: 'controls-OperationsMark-checkBox',
+               handlers: {
+                  onActivated: this._onCheckBoxActivated.bind(this)
+               }
+            });
+         }
       }
    });
 

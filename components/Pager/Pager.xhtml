@@ -3,19 +3,20 @@
    <table class="controls-Pager__table">
       <tr>
          <td class="controls-Pager-block-amount">
-            <component  data-component="SBIS3.CORE.FieldDropdown" data-bind="{value: controls-pageSize}" class="controls-Pager-block controls-Pager__pageSize-container">
+            <component  data-component="SBIS3.CORE.FieldDropdown" class="controls-Pager-block controls-Pager__pageSize-container">
                <options name="data" type="array">
                   <options name="keys" type="array"></options>
                   <options name="values" type="array"></options>
                </options>
                <option name="name" value="controls-Pager_comboBox"></option>
                <option name="showSelectedInList" value="false" type="boolean"></option>
+               <option name="flipVertical" value="true" type="boolean"></option>
                <option name="wordWrap" value="false" type="boolean"></option>
                <option name="enabled" value="true" type="boolean"></option>
                <option name="renderStyle" value="simple" ></option>
             </component>
-            <span class="controls-Pager-block  controls-text">, по</span>
-            <div class="controls-Pager-block controls-text controls-Amount-text_js"></div>
+            <span class="controls-Pager-block  controls-text controls-text-extra">, по</span>
+            <div class="controls-Pager-block controls-text controls-Amount-text controls-Amount-text_js"></div>
          </td>
          <td class="controls-Pager-block-paging">
             <component  data-component="SBIS3.CORE.Paging"  class="controls-Pager-block controls-Pager__paging-container">

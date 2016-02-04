@@ -1,0 +1,29 @@
+.myDemo-container{
+   height: 500px;
+   width: 700px;
+}
+.myDataGridView-scroll{
+   overflow: hidden;
+   width: 500px;
+   height: 100%;
+   position: absolute;
+   top: 150px;
+}
+.myDataGridView-container{
+   /*max-height: 400px;*/
+   /*min-height: 200px;*/
+   /*overflow-y: auto;*/
+   height: auto;
+   position: relative;
+
+}
+.myDataGridView-buttonTop{
+   top: 40px;
+}
+.myDataGridView-buttonBottom{
+   position: fixed;
+   top: 670px;
+}
+.ws-float-area-stack-scroll-wrapper{
+   overflow: hidden !important;
+}

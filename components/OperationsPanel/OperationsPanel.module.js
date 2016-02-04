@@ -49,33 +49,25 @@ define('js!SBIS3.CONTROLS.OperationsPanel', [
     */
    var OperationsPanel = Control.extend([CollectionMixin],/** @lends SBIS3.CONTROLS.OperationsPanel.prototype */{
       _dotTplFn: dotTplFn,
-       /**
-        * @typedef {Object} Type
-        * @property {Boolean} mass Массовые операции.
-        * @property {Boolean} mark Операции отметки.
-        * @property {Boolean} selection Операции над выбранными записями.
-        */
-       /**
-        * @typedef {Object} Items
-        * @property {String} name Имя кнопки панели массовых операций.
-        * @property {String} componentType Тип компонента, определяющий формат.
-        * @property {Type} type Тип операций.
-        * @property {Object} options Настройки компонента, переданного в componentType.
-        *
-        */
-       /**
-        * @cfg {Items[]} Набор исходных данных, по которому строится отображение
-        * @name SBIS3.CONTROLS.OperationsPanel#items
-        * @example
-        * <pre>
-        *
-        * </pre>
-        */
       $protected: {
          _options: {
-             /**
-              * @cfg  Набор элементов панели массовых операций
-              */
+            /**
+             * @typedef {Object} Type
+             * @property {Boolean} mass Массовые операции.
+             * @property {Boolean} mark Операции отметки.
+             * @property {Boolean} selection Операции над выбранными записями.
+             */
+            /**
+             * @typedef {Object} Items
+             * @property {String} name Имя кнопки панели массовых операций.
+             * @property {String} componentType Тип компонента, определяющий формат.
+             * @property {Type} type Тип операций.
+             * @property {Object} options Настройки компонента, переданного в componentType.
+             *
+             */
+            /**
+             * @cfg {Items[]} Набор исходных данных, по которому строится отображение
+             */
             items: [
                {
                    name: 'delete',
@@ -113,9 +105,6 @@ define('js!SBIS3.CONTROLS.OperationsPanel', [
          };
          this.setVisibleMarkBlock(true);
       },
-      _drawItemsCallback: function() {
-         this._itemsDrawn = true;
-      },
       /**
        * Открыть панель массовых операций.
        */
@@ -142,18 +131,16 @@ define('js!SBIS3.CONTROLS.OperationsPanel', [
       },
       _toggle: function(toggle) {
          if (this.isOpen() !== toggle) {
-            this.toggle();
+            this.togglePanel();
          }
       },
       /**
        * Поменять состояние панели на противоположное.
        */
-      toggle: function() {
+      togglePanel: function() {
          var self = this,
             isOpen = this.isOpen();
-         if (!this._itemsDrawn) {
-            this._drawItems();
-         }
+         this._drawItems();
          this._container.removeClass('ws-hidden');
          this._blocks.wrapper.animate({'margin-top': isOpen ? '-30px' : 0},
             {
@@ -190,6 +177,12 @@ define('js!SBIS3.CONTROLS.OperationsPanel', [
             };
          }
       },
+      _drawItems: function() {
+         if (!this._itemsDrawn) {
+            OperationsPanel.superclass._drawItems.apply(this);
+            this._itemsDrawn = true;
+         }
+      },
       _getItemType: function (type) {
          return type.mark ? 'mark' : type.mass && type.selection ? 'all' : type.mass ? 'mass' : 'selection';
       },
@@ -209,9 +202,7 @@ define('js!SBIS3.CONTROLS.OperationsPanel', [
        * @returns {Array}
        */
       getItemInstance: function() {
-         if (!this._itemsDrawn) {
-            this._drawItems();
-         }
+         this._drawItems();
          return OperationsPanel.superclass.getItemInstance.apply(this, arguments);
       },
        /**

@@ -28,9 +28,25 @@ define([], function () {
       destroy: function () {
       },
 
+      setConditions: function(){
+      },
+
       /**
-       * Обновляет настройки декоратора
-       * @param {Object} control Экземпляр контрола
+       * Проверяет, пришли ли необходимые данные для работы декоратора,
+       * в зависимости от этого реализует необходимую для декоратора логику
+       * @param {Object} data Данные, необходимые для работы декоратора. Сюда приходят данные для всех декораторов, поэтому
+       * необходимо отсеять ненужные по имени декоратора. Данные для текущего декоратора = data[this._name]
+       */
+      checkCondition: function(data){
+      },
+
+      getName: function(){
+         return this._name;
+      },
+
+      /**
+       * Обновляет настройки декоратора в зависимости от состояния контрола
+       * @param {Object} control Контрол-владелец декораторов
        */
       update: function (control) {
          if (this._options.enabledGetter) {
@@ -46,7 +62,12 @@ define([], function () {
       apply: function (value) {
          return value;
       },
-
+      /**
+       * Устанавливает активность декоратора
+       */
+      setEnabled: function (enable) {
+         this._options.enabled = !!enable;
+      },
       /**
        * Возвращает признак активности декоратора
        * @returns {Boolean}

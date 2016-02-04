@@ -1,17 +1,16 @@
-﻿<?xml version="1.0" encoding="UTF-8" ?>
 <bl_module id="22461534-980e-4ff9-ba1e-467c32ff1208" name="ИнТест" version="1.00">
 
-  <description/>
+  <description />
 
   <depends>
-    <bl_module id="16779777-d6ee-4d93-bd86-83dbd7ce03b4" name="Python"/>
-    <bl_module id="b23836ee-86c3-4ee2-aa62-7bc88a88d233" name="Пользователь"/>
+    <bl_module id="16779777-d6ee-4d93-bd86-83dbd7ce03b4" name="Python" />
+    <bl_module id="b23836ee-86c3-4ee2-aa62-7bc88a88d233" name="Пользователь" />
   </depends>
 
-  <load_after/>
+  <load_after />
 
-  <parameters/>
+  <parameters />
 
-  <resources/>
+  <resources />
 
 </bl_module>

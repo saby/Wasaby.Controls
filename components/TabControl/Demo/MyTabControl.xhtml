@@ -1,0 +1,45 @@
+<div class="demoContainer">
+    <component data-component="SBIS3.CONTROLS.TabControl" name="TabControl" class="TabControl">
+        <!-- Обязательные параметры -->
+        <option name="tabsDisplayField" value="title"></option>
+        <option name="keyField" value="id"></option>
+        <!-- дополнительные -->
+        <option name="selectedKey" value="d"></option>
+        <option name="loadType" value="cached"></option>
+        <!-- список элементов (вкладки и их содержимое -->
+        <opts name="items" type="Array">
+            <options>
+                <option name="id">a</option>
+                <option name="title">Статистика</option>
+                <option name="align">left</option>
+                <!-- содержимое -->
+                <option name="content">
+                    <component data-component="SBIS3.CONTROLS.Link"><opt name="caption">testBtn A</opt></component>
+                </option>
+            </options>
+            <options>
+                <option name="id">b</option>
+                <option name="title">Второй</option>
+                <option name="align">left</option>
+                <option name="content">
+                    <component data-component="SBIS3.CONTROLS.Link"><opt name="caption">testBtn B</opt></component>
+                </option>
+            </options>
+            <options>
+                <option name="id">c</option>
+                <option name="title">Список</option>
+                <option name="content">
+                    <component data-component="SBIS3.CONTROLS.Link"><opt name="caption">testBtn C</opt></component>
+                </option>
+            </options>
+            <options>
+                <option name="id">d</option>
+                <option name="title">Иконка</option>
+                <option name="icon" value="icon-16 icon-EmoiconTongue icon-done"></option>
+                <option name="content">
+                    <component data-component="SBIS3.CONTROLS.Link"><opt name="caption">testBtn D</opt></component>
+                </option>
+            </options>
+        </opts>
+    </component>
+</div>

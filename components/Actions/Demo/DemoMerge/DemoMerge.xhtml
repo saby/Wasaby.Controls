@@ -1,0 +1,59 @@
+
+<div>
+    <component data-component="SBIS3.CONTROLS.OperationsPanelButton" name="panelsButton"></component>
+    <component data-component="SBIS3.Engine.Browser" name="Browser">
+       <option name="operationsPanelConfig">
+          <options name="items" type="array">
+                  <options>
+                      <option name="name">operationsMark</option>
+                      <option name="componentType">js!SBIS3.CONTROLS.OperationsMark</option>
+                      <options name="type">
+                          <option name="mark">true</option>
+                      </options>
+                  </options>
+                  <options>
+                      <option name="name">merge</option>
+                      <option name="componentType">js!SBIS3.CONTROLS.OperationMerge</option>
+                      <options name="type">
+                          <option name="selection">true</option>
+                      </options>
+                      <options name="options">
+                         <option name="visible">false</option>
+                      </options>
+                  </options>
+              </options>
+         </option>
+       <option name="content">
+          <component data-component="SBIS3.CONTROLS.TreeDataGridView" name="browserView">
+              <options name="columns" type="array">
+                  <options>
+                      <option name="title">Название</option>
+                      <option name="field">Title</option>
+                  </options>
+                  <options>
+                      <option name="title">Количество</option>
+                      <option name="field">Number</option>
+                  </options>
+                  <options>
+                      <option name="title">Ед. измерения</option>
+                      <option name="field">Units</option>
+                  </options>
+                  <options>
+                      <option name="title">Цена</option>
+                      <option name="field">Price</option>
+                  </options>
+              </options>
+              <option name="emptyHTML">Нет записей</option>
+              <option name="multiselect">true</option>
+              <option name="displayField">Title</option>
+              <option name="hierField">parent</option>
+              <options name="itemsActions" type="array"></options>
+          </component>
+       </option>
+    </component>
+    <component data-component="SBIS3.CONTROLS.MergeAction" name="MergeAction">
+        <option name="displayField">Title</option>
+        <option name="hierField">parent</option>
+        <option name="testMergeMethodName">TestMerge</option>
+    </component>
+</div>

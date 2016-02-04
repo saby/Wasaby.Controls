@@ -1,0 +1,21 @@
+body {
+   font-family: 'TensorFont Regular', TensorFont, sans-serif;
+   font-size: 14px;
+   font-style: normal;
+   font-variant: normal;
+   font-weight: normal;
+   font-stretch: normal;
+   line-height: normal;
+}
+.controls-Browser {
+   margin-top: 10px;
+}
+
+.controls-BreadCrumbs {
+   height: 25px;
+   margin-top: 5px;
+}
+
+.controls-BackButton {
+   height: 27px;
+}

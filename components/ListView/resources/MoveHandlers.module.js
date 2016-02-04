@@ -1,74 +1,112 @@
 /**
  * Created by as.suhoruchkin on 21.07.2015.
  */
-define('js!SBIS3.CONTROLS.MoveHandlers', ['js!SBIS3.CONTROLS.MoveDialog'], function(MoveDialog) {
+define('js!SBIS3.CONTROLS.MoveHandlers', ['js!SBIS3.CORE.Dialog','js!SBIS3.CONTROLS.Data.SbisMoveStrategy', 'js!SBIS3.CONTROLS.Data.BaseMoveStrategy'], function(Dialog, SbisMoveStrategy, BaseMoveStrategy) {
    var MoveHandlers = {
+      $protected: {
+        _moveStrategy: undefined
+      },
       moveRecordsWithDialog: function(records) {
+         var self = this;
          records = this._getRecordsForMove(records);
          if (records.length) {
-            new MoveDialog({
-               linkedView: this,
-               records: records
+            new Dialog({
+               template: 'js!SBIS3.CONTROLS.MoveDialogTemplate',
+               title: 'Перенести ' + records.length + ' запис' + $ws.helpers.wordCaseByNumber(records.length, 'ей', 'ь', 'и') + ' в',
+               cssClassName: 'controls-moveDialog',
+               componentOptions: {
+                  linkedView: this,
+                  records: records,
+                  handlers: {
+                     onPrepareFilterOnMove: function(event, rec) {
+                        event.setResult(self._notify('onPrepareFilterOnMove', rec))
+                     }
+                  }
+               }
             });
          }
       },
       _getRecordsForMove: function(records) {
          if (!Array.isArray(records) || !records.length) {
-            records = this.getSelectedKeys().length ? this.getSelectedKeys() :
-               this.getSelectedKey() ? [this.getSelectedKey()] : [];
+            var selItems = this.getSelectedItems(false).toArray(),
+                key = this.getSelectedKey();
+
+            records = selItems.length ? selItems : key ? [key] : [];
          }
          return records;
       },
       selectedMoveTo: function(moveTo) {
-         this._move(this._selectedRecords, moveTo);
+         this._move(this.getSelectedItems(false).toArray(), moveTo);
       },
-      _move: function(records, moveTo) {
+      //TODO: Унифицировать параметр moveTo, чтобы в него всегда приходил record.
+      _move: function(records, moveTo, insertAfter) {
          var
-            record,
+            recordTo,
+            deferred,
             self = this,
-            /*TODO переделать не на ParallelDeferred*/
-            deferred = new $ws.proto.ParallelDeferred();
-         if (this._checkRecordsForMove(records, moveTo)) {
-            for (var i = 0; i < records.length; i++) {
-               record = typeof records[i] === 'number' ? this._dataSet.getRecordByKey(records[i]) : records[i];
-               deferred.push(this._dataSource.move(record, this._options.hierField, moveTo));
+            isNodeTo = true,
+            isChangeOrder = insertAfter !== undefined;
+
+         if (moveTo !== null) {
+            if ($ws.helpers.instanceOfModule(moveTo, 'SBIS3.CONTROLS.Record') || $ws.helpers.instanceOfModule(moveTo, 'SBIS3.CONTROLS.Data.Model')) {
+               recordTo = moveTo;
+               moveTo = recordTo.getKey();
+            } else {
+               recordTo = this._dataSet.getRecordByKey(moveTo);
             }
-            deferred.done().getResult().addCallback(function() {
-               if (deferred.getResult().isSuccessful()) {
+            if (recordTo) {
+               isNodeTo = recordTo.get(this._options.hierField + '@');
+            }
+         } else {
+            recordTo = moveTo;
+         }
+
+         if (this._checkRecordsForMove(records, recordTo, isChangeOrder)) {
+            for (var i = 0; i < records.length; i++) {
+               records[i] = ($ws.helpers.instanceOfModule(records[i], 'SBIS3.CONTROLS.Record') || $ws.helpers.instanceOfModule(records[i], 'SBIS3.CONTROLS.Data.Model')) ? records[i] : this._dataSet.getRecordByKey(records[i]);
+            }
+            if (isNodeTo && !isChangeOrder) {
+               deferred = this.getMoveStrategy().hierarhyMove(records, recordTo);
+            } else {
+               deferred = this.getMoveStrategy().move(records, recordTo, insertAfter);
+            }
+            deferred = deferred === true ? new $ws.proto.Deferred().callback(true) : deferred;
+            if (deferred instanceof $ws.proto.Deferred) {//обновляем view если вернули true либо deferred
+               deferred.addCallback(function() {
                   self.removeItemsSelectionAll();
-                  self.setCurrentRoot(moveTo);
+                  if (isNodeTo && !isChangeOrder) {
+                     self.setCurrentRoot(moveTo);
+                  }
                   self.reload();
-               }
-            });
+               });
+            }
          }
       },
-      _checkRecordsForMove: function(records, moveTo) {
+      _checkRecordsForMove: function(records, recordTo, isChangeOrder) {
          var
-            record,
-            toMap = this._getParentsMap(moveTo);
-         if (moveTo === undefined) {
+            key,
+            toMap = [];
+         if (recordTo === undefined) {
             return false;
          }
+         if (recordTo !== null) {
+            toMap = this._getParentsMap(recordTo.getKey());
+         }
          for (var i = 0; i < records.length; i++) {
-            if (typeof records[i] === 'number' && $.inArray(records[i], toMap) !== -1 ||
-                typeof records[i] === 'object' && $.inArray(records[i].getKey(), toMap) !== -1) {
-               $ws.helpers.alert("Вы не можете переместить запись саму в себя!", {}, this);
+            key = '' + (($ws.helpers.instanceOfModule(records[i], 'SBIS3.CONTROLS.Record')|| $ws.helpers.instanceOfModule(records[i], 'SBIS3.CONTROLS.Data.Model'))
+               ? records[i].getKey() : records[i]);
+            if ($.inArray(key, toMap) !== -1) {
+               return false;
+            }
+            if (recordTo !== null && !isChangeOrder && !recordTo.get(this._options.hierField + '@')) {
                return false;
             }
          }
 
-         if (moveTo !== null) {
-            record = this._dataSet.getRecordByKey(moveTo);
-            if (record && !record.get(this._options.hierField + '@')) {
-               $ws.helpers.alert('Вы не можете перемещать в лист! Выберите другую запись для перемещения!', {}, this);
-               return false;
-            }
-         }
          return true;
       },
       _getParentsMap: function(parentKey) {
          var
-            record,
             dataSet = this.getDataSet(),
             hierField = this.getHierField(),
             /*
@@ -81,16 +119,86 @@ define('js!SBIS3.CONTROLS.MoveHandlers', ['js!SBIS3.CONTROLS.MoveDialog'], funct
                3. это не исключает ситуации, когда БЛ не возвращает иерархию до корня, либо пользователь самостоятельно пытается что-то переместить с помощью интерфейса IDataSource.move. В таком случае мы считаем, что БЛ вне зависимости от возможности проверки на клиенте, всегда должна проверять входные значения при перемещении. В противном случае это приводит к зависанию запроса.
             */
             path = dataSet.getMetaData().path,
-            toMap = path ? Array.clone(path.getChildItems()) : [];
-         while (record = dataSet.getRecordByKey(parentKey)) {
-            parentKey = record.getKey();
-            if (toMap.indexOf(parentKey) < 0) {
+            toMap = path ? $.map(path.getChildItems(), function(elem) {
+               return '' + elem;
+            }) : [];
+         var record = dataSet.getRecordByKey(parentKey);
+         while (record) {
+            parentKey = '' + record.getKey();
+            if ($.inArray(parentKey, toMap) === -1) {
                toMap.push(parentKey);
             }
             parentKey = dataSet.getParentKey(record, hierField);
+            record = dataSet.getRecordByKey(parentKey);
          }
          return toMap;
+      },
+      /**
+       * Возвращает стратегию перемещения
+       * @see SBIS3.CONTROLS.Data.IMoveStrategy
+       * @returns {SBIS3.CONTROLS.Data.IMoveStrategy}
+       */
+      getMoveStrategy: function () {
+         return this._moveStrategy || (this._moveStrategy = this._makeMoveStrategy());
+      },
+      /**
+       * Создает стратегию перемещения в зависимости от источника данных
+       * @returns {SBIS3.CONTROLS.Data.IMoveStrategy}
+       * @private
+       */
+      _makeMoveStrategy: function () {
+         if($ws.helpers.instanceOfModule(this._dataSource,'SBIS3.CONTROLS.Data.Source.SbisService') ||
+            $ws.helpers.instanceOfModule(this._dataSource,'SBIS3.CONTROLS.SbisServiceSource')
+         ) {
+            return new SbisMoveStrategy({
+               dataSource: this._dataSource,
+               hierField: this._options.hierField
+            });
+         } else {
+            return new BaseMoveStrategy({
+               dataSource: this._dataSource,
+               hierField: this._options.hierField
+            });
+         }
+      },
+      /**
+       * Устанавливает стратегию перемещения
+       * @see SBIS3.CONTROLS.Data.IMoveStrategy
+       * @param {SBIS3.CONTROLS.Data.IMoveStrategy} strategy - стратегия перемещения
+       */
+      setMoveStrategy: function (strategy){
+         if(!$ws.helpers.instanceOfMixin(strategy,'SBIS3.CONTROLS.Data.IMoveStrategy')){
+            throw new Error('The strategy must implemented interfaces the SBIS3.CONTROLS.Data.IMoveStrategy.')
+         }
+         this._moveStrategy = strategy;
+      },
+
+      moveRecordDown: function(tr, id, record) {
+         var nextItem = this.getNextItemById(id);
+         if(nextItem) {
+            moveRecord.call(this, record, nextItem.data('id'), id, false);
+         }
+      },
+
+      moveRecordUp: function(tr, id, record) {
+         var prevItem = this.getPrevItemById(id);
+         if(prevItem) {
+            moveRecord.call(this, record, prevItem.data('id'), id, true);
+         }
       }
    };
+   function moveRecord(itemRecord, moveTo, current, up){
+      var self = this,
+         item = this._dataSet.getRecordByKey(moveTo);
+      this.getMoveStrategy().move([itemRecord], item, !up).addCallback(function(){
+         self._dataSet.remove(itemRecord);
+         var index = self._dataSet.getIndex(item);
+         index = up ? index : ++index;
+         self._dataSet.add(itemRecord, index < self._dataSet.getCount() ? index : undefined);
+      }).addErrback(function(e){
+         $ws.core.alert(e.message);
+      });
+
+   }
    return MoveHandlers;
 });

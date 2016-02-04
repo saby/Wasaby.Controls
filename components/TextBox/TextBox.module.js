@@ -48,6 +48,7 @@ define('js!SBIS3.CONTROLS.TextBox', ['js!SBIS3.CONTROLS.TextBoxBase','html!SBIS3
          _pasteProcessing : 0,
          _inputField : null,
          _compatPlaceholder: null,
+         _tooltipText: null,
          _options: {
             beforeFieldWrapper: null,
             afterFieldWrapper: null,
@@ -122,10 +123,9 @@ define('js!SBIS3.CONTROLS.TextBox', ['js!SBIS3.CONTROLS.TextBoxBase','html!SBIS3
             window.setTimeout(function(){
                self._pasteProcessing--;
                if (!self._pasteProcessing) {
-                  TextBox.superclass.setText.call(self, self._formatText(self._inputField.val()));
-                  self._inputField.val(self._options.text);
+                  self.setText(self._formatText(self._inputField.val()));
                }
-            }, 100)
+            }, 100);
          });
 
          this._inputField.change(function(){
@@ -135,14 +135,58 @@ define('js!SBIS3.CONTROLS.TextBox', ['js!SBIS3.CONTROLS.TextBoxBase','html!SBIS3
             }
          });
 
-         this._inputField.bind('focusin', function () {
+         this._inputField.bind('focusin', function (e) {
             if (self._options.selectOnClick){
                self._inputField.select();
             }
+            /* При получении фокуса полем ввода, сделаем контрол активным.
+            *  Делать контрол надо активным по фокусу, т.к. при клике и уведении мыши,
+            *  кусор поставится в поле ввода, но соыбтие click не произойдёт и контрол актвным не станет, а должен бы.*/
+            if(!self.isActive()) {
+               self.setActive(true, false, true);
+               e.stopPropagation();
+            }
+         });
+
+         this._inputField.bind('focusout', function(){
+            var text = self._inputField.val();
+            if (self._options.trim) {
+               text = String.trim(text);
+            }
+            self.setText(text);
          });
 
          if (this._options.placeholder && !$ws._const.compatibility.placeholder) {
             this._createCompatPlaceholder();
+         }
+
+         this._container.bind("mouseenter", function(e){
+            self._applyTooltip();
+         });
+      },
+
+      /**
+       * Применить tooltip
+       * Если текст не умещается в поле по ширине, то показываем подсказку с полным текстом
+       * Если текст умещается, то показываем из опции tooltip
+       */
+      _applyTooltip: function() {
+         if (this._tooltipText != this._options.text) {
+            var scrollWidth;
+            if ($ws._const.browser.isIE) {
+               scrollWidth = $ws.helpers.getTextWidth(this._options.text);
+            }
+            else {
+               scrollWidth = this._inputField[0].scrollWidth;
+            }
+            // для случая, когда текст не умещается в поле ввода по ширине, показываем всплывающую подсказку с полным текстом
+            if (scrollWidth > this._inputField[0].clientWidth) {
+               this._container.attr('title', this._options.text);
+            }
+            else {
+               this.setTooltip(this._options.tooltip);
+            }
+            this._tooltipText = this._options.text;
          }
       },
 
@@ -173,7 +217,7 @@ define('js!SBIS3.CONTROLS.TextBox', ['js!SBIS3.CONTROLS.TextBoxBase','html!SBIS3
        * @see placeholder
        */
       setPlaceholder: function(text){
-         if ($ws._const.compatibility.placeholder) {
+         if (!$ws._const.compatibility.placeholder) {
             this._compatPlaceholder.text(text || '');
          }
          else {
@@ -214,9 +258,13 @@ define('js!SBIS3.CONTROLS.TextBox', ['js!SBIS3.CONTROLS.TextBoxBase','html!SBIS3
          }
       },
 
-      _keyUpBind: function() {
+      _keyUpBind: function(event) {
          var newText = this._inputField.val();
          this.setText(newText);
+         var key = event.which || event.keyCode;
+         if (Array.indexOf([$ws._const.key.up, $ws._const.key.down], key) >= 0) {
+            event.stopPropagation();
+         }
       },
 
       _keyDownBind: function(event) {
@@ -244,11 +292,21 @@ define('js!SBIS3.CONTROLS.TextBox', ['js!SBIS3.CONTROLS.TextBoxBase','html!SBIS3
       },
 
       _inputRegExp: function (e, regexp) {
-         var code = e.which;
-         if (code < 32 || e.ctrlKey || e.altKey) {
-            return true;
+         if (e.shiftKey) return true;
+         var keyCode = (e.which >= 96 && e.which <= 105) ? e.which - 48 : e.which;
+         if (keyCode < 32
+            || e.ctrlKey
+            || e.altKey
+            || e.which == $ws._const.key.left
+            || e.which == $ws._const.key.right
+            || e.which == $ws._const.key.end
+            || e.which == $ws._const.key.home
+            || e.which == $ws._const.key.del
+
+            ) {
+            return false;
          }
-         return (!regexp.test(String.fromCharCode(code)));
+         return (!regexp.test(String.fromCharCode(keyCode)));
       },
 
       _createCompatPlaceholder : function() {

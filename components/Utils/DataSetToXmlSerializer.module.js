@@ -93,7 +93,7 @@ define('js!SBIS3.CONTROLS.Utils.DataSetToXMLSerializer', [
                recordElement,
                currentElement,
                pkColumnName;
-         if ($ws.helpers.instanceOfModule( object , 'SBIS3.CONTROLS.DataSet')){
+         if ($ws.helpers.instanceOfModule( object , 'SBIS3.CONTROLS.DataSet') || $ws.helpers.instanceOfModule( object , 'SBIS3.CONTROLS.Data.Collection.RecordSet')){
             var self = this;
             parentElement.appendChild(currentElement = document.createElement('RecordSet'));
             object.each(function(record){
@@ -101,7 +101,7 @@ define('js!SBIS3.CONTROLS.Utils.DataSetToXMLSerializer', [
             });
 
          }
-         else if (object && object.getRaw()){
+         else if (object && (typeof object.getRaw === 'function') && object.getRaw()){
             var key = object.getKey();
             if(key === null){
                key = 'null';
@@ -130,19 +130,19 @@ define('js!SBIS3.CONTROLS.Utils.DataSetToXMLSerializer', [
          column.type = record.getRaw ?  record.getType(column.field) : column.type || 'Text';
          var typeName =  typeof(column.type) == 'object' ? column.type.n : column.type;
          if(!this._complexFields[typeName] && !column.s && !this._complexFields[column.s]){
-            tagName = this._colNameToTag[column.type] ? this._colNameToTag[column.type] : column.type;
-            tagName = this._wordsToTranslate[tagName] ? this._wordsToTranslate[tagName] : tagName;
+            tagName = this._colNameToTag[typeName] || typeName;
+            tagName = this._wordsToTranslate[tagName] || tagName;
             var resultTest = cyrillicTest.test(tagName);
             if(resultTest) {
                $ws.single.ioc.resolve('ILogger').error('XSLT', 'Внимание! Кирилический тэг без замены: ' + tagName);
             }
             element = document.createElement(tagName);
             if(fieldValue instanceof Date){
-               if(column.type == "Дата и время")
+               if(typeName == "Дата и время")
                   fieldValue = fieldValue.toSQL() + "T" + fieldValue.toTimeString().replace(" GMT", "").replace(/\s[\w\W]*/, "");
-               if(column.type == "Дата")
+               if(typeName == "Дата")
                   fieldValue = fieldValue.toSQL();
-               if(column.type == "Время")
+               if(typeName == "Время")
                   fieldValue = fieldValue.toTimeString().replace(" GMT", "").replace(/\s[\w\W]*/, "");
             }
             fieldValue = $ws.helpers.removeInvalidXMLChars(fieldValue + "");

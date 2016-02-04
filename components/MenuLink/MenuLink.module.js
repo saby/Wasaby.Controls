@@ -1,11 +1,14 @@
-define('js!SBIS3.CONTROLS.MenuLink', ['js!SBIS3.CONTROLS.Link', 'html!SBIS3.CONTROLS.MenuLink', 'js!SBIS3.CONTROLS.DSMixin', 'js!SBIS3.CONTROLS.PickerMixin', 'js!SBIS3.CONTROLS.MenuButtonMixin', 'js!SBIS3.CONTROLS.ContextMenu'], function(Link, dotTplFn, DSMixin, PickerMixin, MenuButtonMixin, ContextMenu) {
+define('js!SBIS3.CONTROLS.MenuLink', ['js!SBIS3.CONTROLS.Link', 'js!SBIS3.CONTROLS.DSMixin', 'js!SBIS3.CONTROLS.PickerMixin', 'js!SBIS3.CONTROLS.MenuButtonMixin', 'js!SBIS3.CONTROLS.ContextMenu'], function(Link, DSMixin, PickerMixin, MenuButtonMixin, ContextMenu) {
 
    'use strict';
 
    /**
     * Контрол, отображающий кнопку в виде ссылки и выпадающее из нее меню
     * @class SBIS3.CONTROLS.MenuLink
-	* @demo SBIS3.CONTROLS.Demo.MyMenuLink
+	 * @demo SBIS3.CONTROLS.Demo.MyMenuLink
+    * @remark
+    * !Важно: Если в меню задан только один пункт, то меню НЕ будет показано, а при нажатии на кнопку будет выполнено действие соответствующее этому пункту.
+    * Кнопка с меню - это кнопка с выбором варинта действия, и если возможно только одно действие, то оно и будет выполнено по нажатию.
     * @extends SBIS3.CONTROLS.ButtonBase
     * @control
     * @author Крайнов Дмитрий Олегович
@@ -46,7 +49,6 @@ define('js!SBIS3.CONTROLS.MenuLink', ['js!SBIS3.CONTROLS.Link', 'html!SBIS3.CONT
     */
 
    var MenuLink = Link.extend( [PickerMixin, DSMixin, MenuButtonMixin], /** @lends SBIS3.CONTROLS.MenuLink.prototype */ {
-      _dotTplFn: dotTplFn,
       $protected: {
          _zIndex: '',
          _options: {
@@ -59,21 +61,17 @@ define('js!SBIS3.CONTROLS.MenuLink', ['js!SBIS3.CONTROLS.Link', 'html!SBIS3.CONT
       },
 
       init : function(){
+         this._container.addClass('controls-MenuLink');
          this.reload();
          MenuLink.superclass.init.call(this);
       },
 
       setCaption: function(caption){
-         Link.superclass.setCaption.call(this, caption);
+         MenuLink.superclass.setCaption.call(this, caption);
          $('.controls-Link__field', this._container).html(caption);
          if (this._picker){
             $('.controls-Menu__header-caption', this._picker._container).html(caption);
          }
-      },
-
-      _initializePicker: function(){
-         MenuLink.superclass._initializePicker.call(this);
-         this._setWidth();
       },
 
       _setWidth: function(){
@@ -83,19 +81,20 @@ define('js!SBIS3.CONTROLS.MenuLink', ['js!SBIS3.CONTROLS.Link', 'html!SBIS3.CONT
          });
       },
 
-      _clickHandler: function(){
+      _dataLoadedCallback: function () {
+         //TODO в 3.7.3.20 надо это убрать потому что стелки у всех кнопок пропадают
          if (this._dataSet.getCount() > 1) {
-            this.togglePicker();
+            $('.controls-MenuButton__arrowDown', this._container).show();
+            this._container.removeClass('controls-MenuLink__withoutMenu');
          } else {
-            if (this._dataSet.getCount() == 1) {
-               var id = this._dataSet.at(0).getKey();
-               this._notify('onMenuItemActivate', id);
-            }
+            $('.controls-MenuButton__arrowDown', this._container).hide();
+            this._container.addClass('controls-MenuLink__withoutMenu');
+            this._container.removeClass('controls-Picker__show');
+            $('.controls-MenuButton__header', this._container).remove();
          }
-      },
-
-      _dataLoadedCallback : function() {
-         if (this._picker) this.hidePicker();
+         if (this._picker) {
+            this.hidePicker();
+         }
       }
    });
 

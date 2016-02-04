@@ -68,6 +68,25 @@ define('js!SBIS3.CONTROLS.Utils.DateUtil',[], function () {
       isValidDate: function( date ) {
          //Если date это Invalid Date, то instanceof Date вернёт true, поэтому проверяем getTime.
          return date instanceof Date  &&  !isNaN(date.getTime());
+      },
+
+      /**
+       * Преобразует значение в объект Date
+       * @param {Date|String} value объект даты, либо дата строкой в формате ISO, например 2015-12-20
+       * @return {Date|null} вернет Date если успешно, либо null если дата некорректна
+       */
+      valueToDate: function(value) {
+         var date = null;
+         if (value instanceof Date) {
+            date = value;
+         } else if (typeof value === 'string') {
+            //convert ISO-date to Date
+            date = this.dateFromIsoString(value);
+         }
+         if ( ! DateUtil.isValidDate(date)) {
+            date = null;
+         }
+         return date;
       }
 
    };

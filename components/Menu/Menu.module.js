@@ -102,14 +102,17 @@ define('js!SBIS3.CONTROLS.Menu', [
          var
             caption = item.get(this._options.displayField),
             icon = item.get('icon') ? '<option name="icon">' + item.get('icon') + '</option>' : '',
-            className = item.get('className') ? '<option name="className">' + item.get('className') + '</option>' : '';
+            className = item.get('className') ? '<option name="className">' + item.get('className') + '</option>' : '',
+            tooltip = item.get('tooltip') ? '<option name="tooltip">' + item.get('tooltip') + '</option>' : '',
+            enabled = item.get('enabled') !== undefined ? '<option name="enabled">' + item.get('enabled') + '</option>' : '';
 
          return '<component data-component="SBIS3.CONTROLS.MenuItem">' +
-            '<option name="caption">'+caption+'</option>' + icon + className+
+            '<option name="caption" type="string">' + caption + '</option>' +
+            '<option name="allowChangeEnable">' + this._options.allowChangeEnable + '</option>' + icon + className + tooltip + enabled +
             '</component>';
       },
 
-      _itemActivatedHandler : function(id){
+      _itemActivatedHandler : function(id, event){
          var menuItem = this.getItemInstance(id);
          if (!(menuItem.getContainer().hasClass('controls-Menu__hasChild'))) {
             for (var j in this._subMenus) {
@@ -118,7 +121,7 @@ define('js!SBIS3.CONTROLS.Menu', [
                }
             }
          }
-         this._notify('onMenuItemActivate', menuItem.getContainer().attr('data-id'));
+         this._notify('onMenuItemActivate', id, event);
       },
 
       _getTargetContainer : function(item) {
@@ -143,7 +146,38 @@ define('js!SBIS3.CONTROLS.Menu', [
       },
       _drawItems : function() {
          this.destroySubObjects();
+         this._checkIcons();
          Menu.superclass._drawItems.apply(this, arguments);
+      },
+      //TODO: Придрот для выпуска 3.7.3
+      //Обходим все дерево для пунктов и проверяем наличие иконки у хотя бы одного в каждом меню
+      //При наличии таковой делаем всем пунктам в этом меню фэйковую иконку для их сдвига.
+      //По нормальному можно было бы сделать через css, но имеются три различных отступа слева у пунктов
+      //для разных меню и совершенно не ясно как это делать.
+      _checkIcons: function() {
+         var tree = this._dataSet.getTreeIndex(this._options.hierField);
+         for (var i in tree) {
+            if (tree.hasOwnProperty(i)) {
+               var hasIcon = false,
+                  icon = '',
+                  childs = tree[i];
+               for (var j = 0; j < childs.length; j++) {
+                  icon = this._dataSet.getRecordByKey(childs[j]).get('icon');
+                  if (icon) {
+                     if (icon.indexOf('icon-16') !== -1) { icon = 'sprite:icon-16'; } else { icon = 'sprite:icon-24'; }
+                     hasIcon = true;
+                     break;
+                  }
+               }
+               if (hasIcon) {
+                  for (var j = 0; j < childs.length; j++) {
+                     if (!this._dataSet.getRecordByKey(childs[j]).get('icon')) {
+                        this._dataSet.getRecordByKey(childs[j]).set('icon', icon);
+                     }
+                  }
+               }
+            }
+         }
       },
       _drawItemsCallback : function() {
          var

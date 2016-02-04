@@ -4,6 +4,7 @@
     position: relative;
 
      &.controls-ListView__hoveredItem {
+        background-color: @default-itemHover-color;
         .controls-ListView__itemCheckBox {
            	background: @check-box-icon-bg;
            	&:hover{
@@ -12,10 +13,15 @@
         }
      }
   }
+
+   .controls-Pager-container {
+      min-height: @controls-Pager-minHeight;
+   }
+
    .controls-ListView__EmptyData{
       color: @gray-color;
       .box-sizing(border-box);
-      margin-left: 8px;
+      padding-left: 8px;
       min-height: 33px;
       position: relative;
       top: 0;
@@ -72,6 +78,17 @@
          }
       }
    }
+   &.controls-ListView__pagerNoSizePicker .controls-Pager-container {
+      .controls-Pager__pageSize-container, {
+         display: none;
+      }
+      .controls-Pager__table .controls-text-extra{
+         display: none;
+      }
+   }
+   &.controls-ListView__pagerNoAmount .controls-Pager-container .controls-Amount-text{
+      display: none;
+   }
 }
 .controls-AjaxLoader{
    background: none repeat scroll 0 0 rgba(255, 255, 255, 0.7);
@@ -83,6 +100,8 @@
    width: 100%;
    height: 100%;
    z-index: 1;
+   overflow: hidden;
+   min-height: 32px;
    .controls-AjaxLoader__outer{
       height: 36px;
       position: relative;
@@ -106,4 +125,48 @@
          }
       }
    }
+}
+.controls-DragNDrop__draggedItem {
+  position: absolute;
+  width: @drag-and-drop-object-width;
+  height: @drag-and-drop-object-height;
+  background: @drag-and-drop-object-bg;
+  text-align: center;
+}
+
+.controls-DragNDrop__draggedCount {
+  display: inline-block;
+  width: @drag-and-drop-count-width;
+  height: @drag-and-drop-count-height;
+  line-height: @drag-and-drop-count-height;
+  margin: @drag-and-drop-count-margin;
+  color: @white-color;
+  font-family: @font-basic-name;
+  font-size: 10px;
+}
+
+.dragdropBody {
+  .controls-ListView__folder.controls-ListView__hoveredItem {
+    &:not(.controls-ListView__item__selected):not(.controls-DragNDrop__insertAfter):not(.controls-DragNDrop__insertBefore) {
+      background: @drag-and-drop-hover-bg;
+      > td {
+        background: @drag-and-drop-hover-bg;
+      }
+    }
+  }
+  .controls-DragNDrop__insertBefore{
+    &, > td {
+      border-top: @drag-and-drop-border;
+    }
+  }
+  .controls-DragNDrop__insertAfter {
+    &, > td {
+      border-bottom: @drag-and-drop-border;
+    }
+  }
+}
+
+.controls-DataGridView__results{
+  background: #F0F0F0;
+  font-weight: bold;
 }

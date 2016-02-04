@@ -127,8 +127,8 @@ define(
        * @protected
        */
       _getCursor = function(position) {
-         var selection = window.getSelection();
-         if (selection.type !== "None"){
+         var selection = $ws._const.browser.isIE8 ? window.getSelectionForIE() : window.getSelection();
+         if (selection.type !== 'None') {
             selection = selection.getRangeAt(0);
             this._lastSelection = selection;
          } else {
@@ -209,7 +209,7 @@ define(
             //заменяем символы маски на внутренние, например HH:MM на dd:dd
             innerChar = maskChar;
             if (innerChar in this._options.controlCharactersSet) {
-               innerChar = this._options.controlCharactersSet[maskChar]
+               innerChar = this._options.controlCharactersSet[maskChar];
             }
             if (groupCharactersRegExp.test(innerChar)) {
                if (separator.length) {
@@ -283,9 +283,8 @@ define(
        * @returns {boolean} true если курсор установлен
        */
       setCursor: function(groupNum, position) {
-         var group,
-             insertInfo;
-         if ( !this.model  ||  this.model.length == 0) {
+         var insertInfo;
+         if ( !this.model  ||  this.model.length === 0) {
             throw new Error('setCursor. Не задана модель');
          }
          insertInfo = this._calcPosition(groupNum, position);
@@ -357,7 +356,7 @@ define(
             group: group,
             groupNum: groupNum,
             position: position
-         }
+         };
       },
       /**
        * Вставляет символ в заданную группу и позицию, если это возможно
@@ -371,7 +370,7 @@ define(
          var group,
              insertInfo;
 
-         if ( !this.model  ||  this.model.length == 0) {
+         if ( !this.model  ||  this.model.length === 0) {
             throw new Error('insertCharacter. Не задана модель');
          }
          insertInfo = this._calcPosition(groupNum, position);
@@ -397,6 +396,30 @@ define(
 
          return insertInfo;
       },
+
+      /**
+       * Заполнена ли модель полностью
+       * @returns {boolean} true если все позиции заполнены, false в противном случае
+       */
+      isFilled: function() {
+         var isFilled = true,
+             group;
+         for (var i = 0; i < this.model.length; i++) {
+            group = this.model[i];
+            if (group.isGroup) {
+               for (var j = 0; j < group.mask.length; j++) {
+                  if (typeof group.value[j] === 'undefined') {
+                     isFilled = false;
+                     break;
+                  }
+               }
+               if ( ! isFilled) {
+                  break;
+               }
+            }
+         }
+         return isFilled;
+      },
       /**
        * Проверяет подходит ли текст маске модели. Например, маске 'HH:MM' подходит текст '12:34'
        * @param text строка, например '23:37'. Можно использовать символ заполнитель, например '_3:37'
@@ -417,7 +440,7 @@ define(
             for (var j = 0; j < group.innerMask.length; j++) {
                character = text.charAt(curIndex);
                character = (character == clearChar) ? undefined : this.charIsFitToGroup(group, j, character);
-               if (character || (typeof character === "undefined")) {
+               if (character || (typeof character === 'undefined')) {
                   value.push(character);
                } else {
                   return false;
@@ -439,6 +462,9 @@ define(
        * @returns {boolean} true - если строка установлена
        */
       setText: function(text, clearChar) {
+         if (text === '') {
+            text = this.getStrMask(clearChar);
+         }
          /*массив со значениями, нужен чтобы не записывать значения до полной проверки соответствия текста маске */
          var tempModelValues = this.textIsFitToModel(text, clearChar),
              group;
@@ -468,7 +494,7 @@ define(
             group = this.model[i];
             if (group.isGroup) {
                for (var j = 0; j < group.mask.length; j++) {
-                  text += (typeof group.value[j] === "undefined") ? clearChar : group.value[j];
+                  text += (typeof group.value[j] === 'undefined') ? clearChar : group.value[j];
                }
             } else {
                text += group.innerMask;
@@ -578,16 +604,6 @@ define(
             modelForMaskTpl: []
          },
 
-         _KEYS: {
-            DELETE: 46,
-            TAB: 9,
-            BACKSPACE: 8,
-            ARROW_LEFT: 37,
-            ARROW_RIGHT: 39,
-            END: 35,
-            HOME: 36
-         },
-
          /**
           * Модель форматного поля
           */
@@ -600,7 +616,7 @@ define(
             inputValue,
             self = this,
             key;
-         this._publish('onInputFinished');
+         this._publish('onInputFinished','onTextChange');
          // Проверяем, является ли маска, с которой создается контролл, допустимой
          this._checkPossibleMask();
          this._inputField = $('.js-controls-FormattedTextBox__field', this.getContainer().get(0));
@@ -619,22 +635,22 @@ define(
          this._inputField.keydown(function (event) {
             //keydown ловит управляющие символы, keypress - нет
             key = event.which || event.keyCode;
-            if (key == self._KEYS.HOME && !event.shiftKey) {
+            if (key == $ws._const.key.home && !event.shiftKey) {
                event.preventDefault();
                self._keyPressHandler(key, 'home');
-            } else if (key == self._KEYS.END && !event.shiftKey) {
+            } else if (key == $ws._const.key.end && !event.shiftKey) {
                event.preventDefault();
                self._keyPressHandler(key, 'end');
-            } else if (key == self._KEYS.DELETE) {
+            } else if (key == $ws._const.key.del) {
                event.preventDefault();
                self._keyPressHandler(key, 'delete');
-            } else if (key == self._KEYS.BACKSPACE) {
+            } else if (key == $ws._const.key.backspace) {
                event.preventDefault();
                self._keyPressHandler(key, 'backspace');
-            } else if (key == self._KEYS.ARROW_LEFT && !event.shiftKey) {
+            } else if (key == $ws._const.key.left && !event.shiftKey) {
                event.preventDefault();
                self._keyPressHandler(key, 'arrow_left');
-            } else if (key == self._KEYS.ARROW_RIGHT && !event.shiftKey) {
+            } else if (key == $ws._const.key.right && !event.shiftKey) {
                event.preventDefault();
                self._keyPressHandler(key, 'arrow_right');
             } else if (event.ctrlKey && key == 88) {
@@ -642,6 +658,7 @@ define(
             }
          });
          this._inputField.bind('paste', function() {
+            //TODO возможно стоит сделать проверку до вставки, чтобы не портить данные и вставлять уже по факту после проверки
             self._pasteProcessing++;
             //TODO перенести в TextBoxBase и вместо этого вызвать метод для вставки
             window.setTimeout(function() {
@@ -652,10 +669,24 @@ define(
                   if ( !self.formatModel.setText(inputValue, self._maskReplacer)) {
                      //Устанавливаемое значение не удовлетворяет маске данного контролла - вернуть предыдущее значение
                      self.setText(prevText);
+                  } else {
+                     //Текст есть в модели но через метод setText не прошел. Нужно для наследников, например DatePicker
+                     self.setText(self.formatModel.getText(self._maskReplacer));
                   }
                }
             }, 100);
          });
+      },
+
+      init: function(){
+         FormattedTextBoxBase.superclass.init.apply(this, arguments);
+         this._updateText();
+      },
+
+      /* Переопределяем метод SBIS3.CORE.CompoundActiveFixMixin чтобы при клике нормально фокус ставился
+       */
+      _getElementToFocus: function() {
+         return this._inputField;
       },
 
       /**
@@ -677,11 +708,10 @@ define(
       },
       /**
        * Обновляяет значение this._options.text
-       * null если есть хотя бы одно незаполненное место (плэйсхолдер)
        * @protected
        */
       _updateText:function() {
-         this._options.text = this.formatModel.getStrMask(this._maskReplacer);
+         this._options.text = this.formatModel.getText(this._maskReplacer);
       },
 
       /**
@@ -713,7 +743,7 @@ define(
          for (var i = 0; i < model.length; i++) {
             value = '';
             for (var j = 0; j < model[i].mask.length; j++) {
-               value += (typeof model[i].value[j] === "undefined") ? this._maskReplacer : model[i].value[j];
+               value += (typeof model[i].value[j] === 'undefined') ? this._maskReplacer : model[i].value[j];
             }
             items.push({isGroup: model[i].isGroup, text: value});
          }
@@ -781,6 +811,7 @@ define(
                //проверяем был ли введен последний символ в последней группе
                var lastGroupNum = this.formatModel.model.length - 1;
                lastGroupNum = this.formatModel.model[lastGroupNum].isGroup ? lastGroupNum : lastGroupNum - 1;
+               this._notify('onTextChange', this._options.text);
                if (keyInsertInfo.groupNum == lastGroupNum  &&  keyInsertInfo.position == this.formatModel.model[lastGroupNum].mask.length - 1) {
                   this._notify('onInputFinished');
                }
@@ -858,8 +889,11 @@ define(
        */
       setText: function(text) {
          this.formatModel.setText(text, this._maskReplacer);
+         this._updateText();
          //обновить html
          this._inputField.html(this._getHtmlMask());
+         this._notify('onTextChange', this._options.text);
+         this._notifyOnPropertyChanged('text');
       },
 
       /**

@@ -1,4 +1,4 @@
-define('js!SBIS3.CONTROLS.TextArea', ['js!SBIS3.CONTROLS.TextBoxBase', 'html!SBIS3.CONTROLS.TextArea', 'is!browser?js!SBIS3.CORE.FieldText/resources/Autosize-plugin'], function(TextBoxBase, dotTplFn) {
+define('js!SBIS3.CONTROLS.TextArea', ['js!SBIS3.CONTROLS.TextBoxBase', 'html!SBIS3.CONTROLS.TextArea', 'browser!js!SBIS3.CORE.FieldText/resources/Autosize-plugin'], function(TextBoxBase, dotTplFn) {
 
    'use strict';
 
@@ -105,6 +105,10 @@ define('js!SBIS3.CONTROLS.TextArea', ['js!SBIS3.CONTROLS.TextBoxBase', 'html!SBI
          });
 
          this._inputField.bind('keydown', function(event){
+            if ((event.ctrlKey || event.shiftKey) && (event.which == $ws._const.key.left || event.which == $ws._const.key.right)) {
+               event.stopPropagation();
+               return true;
+            }
             if(event.shiftKey || event.altKey || event.ctrlKey || event.which == $ws._const.key.esc || event.which == $ws._const.key.tab)
                return true;
             event.stopPropagation();
@@ -181,10 +185,15 @@ define('js!SBIS3.CONTROLS.TextArea', ['js!SBIS3.CONTROLS.TextBoxBase', 'html!SBI
          }
       },
 
-      _keyUpBind: function() {
+      _keyUpBind: function(event) {
          var newText = this._inputField.val();
          if (newText != this._options.text) {
             TextArea.superclass.setText.call(this, newText);
+         }
+         var key = event.which || event.keyCode;
+         if ((key === $ws._const.key.enter && !event.ctrlKey) ||
+             Array.indexOf([$ws._const.key.up, $ws._const.key.down], key) >= 0) {
+            event.stopPropagation();
          }
       },
        /**
@@ -218,6 +227,8 @@ define('js!SBIS3.CONTROLS.TextArea', ['js!SBIS3.CONTROLS.TextBoxBase', 'html!SBI
          var cnt = parseInt(count, 10);
          this._options.minLinesCount = cnt;
          this._inputField.attr('rows', cnt);
+         this._inputField.data('minLinesCount', count);
+         this._inputField.trigger('autosize.resize');
       },
 
       _drawText: function(text) {

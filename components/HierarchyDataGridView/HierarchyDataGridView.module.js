@@ -3,7 +3,7 @@ define('js!SBIS3.CONTROLS.HierarchyDataGridView', [
    'js!SBIS3.CONTROLS.hierarchyMixin',
    'html!SBIS3.CONTROLS.HierarchyDataGridView/resources/rowTpl',
    'js!SBIS3.CONTROLS.BreadCrumbs',
-   'is!browser?html!SBIS3.CONTROLS.DataGridView/resources/DataGridViewGroupBy'
+   'browser!html!SBIS3.CONTROLS.DataGridView/resources/DataGridViewGroupBy'
 ], function (DataGridView, hierarchyMixin, rowTpl, BreadCrumbs, groupByTpl) {
    'use strict';
    /**
@@ -34,7 +34,7 @@ define('js!SBIS3.CONTROLS.HierarchyDataGridView', [
        * Событие, происходящее после клика по хлебным крошкам, отображающим результаты поиска
        * @param {$ws.proto.EventObject} eventObject Дескриптор события.
        * @param {number} id ключ узла, по которму кликнули
-       * @return Если вернуть false - загрузка узла не произойдет
+       * @returns {Boolean} Если вернуть false - загрузка узла не произойдет
        * @example
        * <pre>
        *    DataGridView.subscribe('onSearchPathClick', function(event){
@@ -107,9 +107,9 @@ define('js!SBIS3.CONTROLS.HierarchyDataGridView', [
          }
          key = record.getKey();
          curRecRoot = record.get(this._options.hierField);
-         //TODO для SBISServiceSource в ключе находится массив
+         //TODO для SBISServiceSource в ключе находится массив, а теперь он еще и к строке приводится...
          curRecRoot = curRecRoot instanceof Array ? curRecRoot[0] : curRecRoot;
-         if (curRecRoot === this._lastParent){
+         if (curRecRoot == this._lastParent){
             //Лист
             if (record.get(this._options.hierField + '@') !== true){
                //Нарисуем путь до листа, если пришли из папки
@@ -133,7 +133,7 @@ define('js!SBIS3.CONTROLS.HierarchyDataGridView', [
             //Если текущий раздел у записи есть в lastPath, то возьмем все элементы до этого ключа
             kInd = -1;
             for (var k = 0; k < this._lastPath.length; k++) {
-               if (this._lastPath[k].getKey() === curRecRoot){
+               if (this._lastPath[k].getKey() == curRecRoot){
                   kInd = k;
                   break;
                }
@@ -178,11 +178,13 @@ define('js!SBIS3.CONTROLS.HierarchyDataGridView', [
             var self = this,
                   elem,
                   groupBy = this._options.groupBy,
-                  cfg;
-            container.find('td').append(elem = $('<div style="width:'+ this._container.width() +'px"></div>'));
+                  cfg,
+                  td = container.find('td');
+                  td.append(elem = $('<div style="width:'+ td.width() +'px"></div>'));
             cfg = {
                element : elem,
                items: this._createPathItemsDS(path),
+               parent: this.getTopParent(),
                highlightEnabled: this._options.highlightEnabled,
                highlightText: this._options.highlightText,
                colorMarkEnabled: this._options.colorMarkEnabled,
@@ -199,14 +201,17 @@ define('js!SBIS3.CONTROLS.HierarchyDataGridView', [
                if (self._notify('onSearchPathClick', id) !== false ) {
                   //TODO в будущем нужно отдать уже dataSet крошек, ведь здесь уже все построено
                   /*TODO для Алены. Временный фикс, потому что так удалось починить*/
-                  var filter = $ws.core.merge(self._filter, {
-                     'Разворот' : 'Без разворота',
-                     'СтрокаПоиска': undefined
+                  var filter = $ws.core.merge(self.getFilter(), {
+                     'Разворот' : 'Без разворота'
                   });
-                  self.setInfiniteScroll(false, true);
+                  if (self._options.groupBy.field) {
+                     delete filter[self._options.groupBy.field];
+                  }
+                  //Если бесконечный скролл был установлен в опции - вернем его
+                  self.setInfiniteScroll(self._options.infiniteScroll, true);
                   self.setGroupBy({});
                   self.setHighlightText('', false);
-                  self._filter = filter;
+                  self.setFilter(filter, true);
                   self.setCurrentRoot(id);
                   self.reload();
                }

@@ -1,4 +1,4 @@
-define('js!SBIS3.CONTROLS.MultiSelectable', [], function() {
+define('js!SBIS3.CONTROLS.MultiSelectable', ['js!SBIS3.CONTROLS.Data.Collection.List'], function(List) {
 
    /**
     * Миксин, добавляющий поведение хранения одного или нескольких выбранных элементов
@@ -9,9 +9,14 @@ define('js!SBIS3.CONTROLS.MultiSelectable', [], function() {
 
    var MultiSelectable = /**@lends SBIS3.CONTROLS.MultiSelectable.prototype  */{
        /**
+        * @typedef {Object} ChangedKeys
+        * @property {Array.<String>} added ключи, которые добавились
+        * @property {Array.<String>} removed ключи, которые удалились
+        *
         * @event onSelectedItemsChange При смене выбранных элементов коллекции
         * @param {$ws.proto.EventObject} Дескриптор события.
         * @param {Array.<String>} idArray Массив ключей выбранных элементов.
+        * @param {ChangedKeys} changedKeys Измененные ключи
         * @example
         * <pre>
         *     var itemsChanged = function() {
@@ -54,7 +59,7 @@ define('js!SBIS3.CONTROLS.MultiSelectable', [], function() {
              *     </options>
              * </pre>
              * @see multiselect
-             * @see allowEmptySelection
+             * @see allowEmptyMultiSelection
              * @see setSelectedKeys
              * @see getSelectedKeys
              * @see addItemsSelection
@@ -64,16 +69,11 @@ define('js!SBIS3.CONTROLS.MultiSelectable', [], function() {
              * @see toggleItemsSelectionAll
              */
             selectedKeys : [],
-            /**
-             * TODO Выбранные элементы
-             * @deprecated Будет удалено с 3.7.3. Используйте {@link selectedKeys}.
-             */
-            selectedItems : [],
              /**
               * @cfg {Boolean} Разрешить отсутствие выбранного элемента в группе
               * @example
               * <pre>
-              *     <option name="allowEmptySelection">false</option>
+              *     <option name="allowEmptyMultiSelection">false</option>
               * </pre>
               * @see selectedKeys
               * @see removeItemsSelectionAll
@@ -81,19 +81,25 @@ define('js!SBIS3.CONTROLS.MultiSelectable', [], function() {
               * @see toggleItemsSelection
               * @see toggleItemsSelectionAll
               */
-            allowEmptySelection : true
+            allowEmptyMultiSelection : true,
+            /**
+             * @cfg {SBIS3.CONTROLS.Data.Collection.List} Набор выбранных записей
+             * @see getSelectedItems
+             */
+            selectedItems : undefined
          },
-         _selectedRecords: []
+         _loadItemsDeferred: undefined
       },
 
       $constructor: function() {
          this._publish('onSelectedItemsChange');
-         if (this._options.selectedItems && this._options.selectedItems.length) {
-            $ws.single.ioc.resolve('ILogger').log('selectedItems', 'c 3.7.3 метод selectedItems перестанет работать. Используйте метод selectedKeys');
-            this._options.selectedKeys = this._options.selectedItems;
-         }
-         if (this._options.selectedKeys) {
-            if (Object.prototype.toString.call(this._options.selectedKeys) == '[object Array]' ) {
+
+         this._options.selectedItems = $ws.helpers.instanceOfModule(this._options.selectedItems, 'SBIS3.CONTROLS.Data.Collection.List') ?
+             this._options.selectedItems :
+             this._makeList(this._options.selectedItems);
+
+         if (this._options.selectedKeys && this._options.selectedKeys.length) {
+            if (Array.isArray(this._options.selectedKeys)) {
                if (!this._options.multiselect) {
                   this._options.selectedKeys = this._options.selectedKeys.slice(0, 1);
                }
@@ -103,7 +109,7 @@ define('js!SBIS3.CONTROLS.MultiSelectable', [], function() {
             }
          }
          else {
-            if (this._options.allowEmptySelection == false) {
+            if (this._options.allowEmptyMultiSelection == false) {
                this._setFirstItemAsSelected();
             }
          }
@@ -114,26 +120,6 @@ define('js!SBIS3.CONTROLS.MultiSelectable', [], function() {
             this._drawSelectedItems(this._options.selectedKeys);
          }
       },
-      /**
-       * Метод-заглушка. Будет переделан на установку самих элементов, а не их id
-       * @deprecated Будет удалено с 3.7.3. Используйте {@link setSelectedKeys}.
-       */
-      setSelectedItems: function(idArray) {
-         //TODO изменить логику на установку выбранных элементов
-         $ws.single.ioc.resolve('ILogger').log('setSelectedItems', 'c 3.7.3 метод setSelectedItems перестанет работать. Используйте метод setSelectedKeys');
-         this.setSelectedKeys(idArray);
-      },
-
-      /**
-       * Метод-заглушка. Будет переделан на получение самих элементов, а не их id
-       * @deprecated Будет удалено с 3.7.3. Используйте {@link getSelectedKeys}.
-       */
-      getSelectedItems: function() {
-         //TODO изменить логику на получение выбранных элементов
-         $ws.single.ioc.resolve('ILogger').log('getSelectedItems', 'c 3.7.3 метод getSelectedItems перестанет работать. Используйте метод setSelectedKeys');
-         return this.getSelectedKeys();
-      },
-
       /**
        * Устанавливает выбранные элементы по id.
        * @param {Array} idArray Массив идентификаторов выбранных элементов.
@@ -148,23 +134,50 @@ define('js!SBIS3.CONTROLS.MultiSelectable', [], function() {
        * @see addItemsSelection
        */
       setSelectedKeys : function(idArray) {
-         if (Object.prototype.toString.call(idArray) == '[object Array]' ) {
-            if (idArray.length) {
-               if (this._options.multiselect) {
-                  this._options.selectedKeys = idArray;
+
+         function ArrayDifference(arr1,arr2){
+            var idx = 0, arr3 = [];
+            for (var i = 0; i < arr1.length; i++){
+               var
+                  findElem = arr1[i],
+                  result = true;
+               idx = arr2.indexOf(arr1[i]);
+               if (idx < 0) {
+                  findElem = (typeof findElem === 'string') ? findElem - 0 : findElem + '';
+                  idx = arr2.indexOf(findElem);
+                  if (idx >= 0) {
+                     result = false;
+                  }
                }
                else {
+                  result = false;
+               }
+               if (result) {
+                  arr3.push(arr1[i]);
+               }
+            }
+            return arr3;
+         }
+
+
+         var addedKeys = [], removedKeys = [];
+         if (Array.isArray(idArray)) {
+            if (idArray.length) {
+               if (this._options.multiselect) {
+                  removedKeys = ArrayDifference(this._options.selectedKeys, idArray);
+                  this._removeItemsSelection(removedKeys);
+                  addedKeys = this._addItemsSelection(idArray);
+               }
+               else {
+                  removedKeys = $ws.core.clone(this._options.selectedKeys);
                   this._options.selectedKeys = idArray.slice(0, 1);
                }
             }
             else {
+               removedKeys = $ws.core.clone(this._options.selectedKeys);
                this._options.selectedKeys = [];
             }
-            if (!this._options.selectedKeys.length && this._options.allowEmptySelection == false) {
-               this._setFirstItemAsSelected();
-            }
-            this._notifySelectedItems(this._options.selectedKeys);
-            this._drawSelectedItems(this._options.selectedKeys);
+	         this._afterSelectionHandler(addedKeys, removedKeys);
          }
          else {
             throw new Error('Argument must be instance of Array');
@@ -232,12 +245,18 @@ define('js!SBIS3.CONTROLS.MultiSelectable', [], function() {
        * @see multiselect
        */
       addItemsSelection : function(idArray) {
-         if (Object.prototype.toString.call(idArray) == '[object Array]' ) {
+         var addedKeys = this._addItemsSelection(idArray);
+         this._afterSelectionHandler(addedKeys, []);
+      },
+      _addItemsSelection : function(idArray) {
+         var addedKeys = [];
+         if (Array.isArray(idArray)) {
             if (idArray.length) {
                if (this._options.multiselect) {
                   for (var i = 0; i < idArray.length; i++) {
-                     if (this._isItemSelected(idArray[i]) < 0) {
+                     if (!this._isItemSelected(idArray[i])) {
                         this._options.selectedKeys.push(idArray[i]);
+                        addedKeys.push(idArray[i])
                      }
                   }
                }
@@ -245,16 +264,11 @@ define('js!SBIS3.CONTROLS.MultiSelectable', [], function() {
                   this._options.selectedKeys = idArray.slice(0, 1);
                }
             }
-            if (!this._options.selectedKeys.length && this._options.allowEmptySelection == false) {
-               this._setFirstItemAsSelected();
-            }
-            this._notifySelectedItems(this._options.selectedKeys);
-            this._drawSelectedItems(this._options.selectedKeys);
+            return addedKeys;
          }
          else {
             throw new Error('Argument must be instance of Array');
          }
-
       },
 
       /**
@@ -268,21 +282,24 @@ define('js!SBIS3.CONTROLS.MultiSelectable', [], function() {
        * </pre>
        * @see removeItemsSelectionAll
        * @see getSelectedKeys
-       * @see allowEmptySelection
+       * @see allowEmptyMultiSelection
        */
       removeItemsSelection : function(idArray) {
-         if (Object.prototype.toString.call(idArray) == '[object Array]' ) {
+         var removedKeys = this._removeItemsSelection(idArray);
+         this._afterSelectionHandler([], removedKeys);
+      },
+
+      _removeItemsSelection : function(idArray) {
+         var removedKeys = [];
+
+         if (Array.isArray(idArray)) {
             for (var i = idArray.length - 1; i >= 0; i--) {
-               var index = this._isItemSelected(idArray[i]);
-               if (index >= 0) {
-                  Array.remove(this._options.selectedKeys, index);
+               if (this._isItemSelected(idArray[i])) {
+                  Array.remove(this._options.selectedKeys, this._getSelectedIndex(idArray[i]));
+                  removedKeys.push(idArray[i]);
                }
             }
-            if (!this._options.selectedKeys.length && this._options.allowEmptySelection == false) {
-               this._setFirstItemAsSelected();
-            }
-            this._notifySelectedItems(this._options.selectedKeys);
-            this._drawSelectedItems(this._options.selectedKeys);
+            return removedKeys;
          }
          else {
             throw new Error('Argument must be instance of Array');
@@ -301,7 +318,7 @@ define('js!SBIS3.CONTROLS.MultiSelectable', [], function() {
        * @see removeItemsSelection
        * @see getSelectedKeys
        * @see toggleItemsSelectionAll
-       * @see allowEmptySelection
+       * @see allowEmptyMultiSelection
        */
       removeItemsSelectionAll : function() {
          this.setSelectedKeys([]);
@@ -322,31 +339,37 @@ define('js!SBIS3.CONTROLS.MultiSelectable', [], function() {
        * @see multiselect
        */
       toggleItemsSelection : function(idArray) {
-         if (Object.prototype.toString.call(idArray) == '[object Array]' ) {
+         if (Array.isArray(idArray)) {
             if (idArray.length) {
+               var
+                  addedKeysTotal = [],
+                  removedKeysTotal = [],
+                  addedKeys,
+                  removedKeys;
                if (this._options.multiselect) {
                   for (var i = 0; i < idArray.length; i++) {
-                     if (this._isItemSelected(idArray[i]) < 0) {
-                        this.addItemsSelection([idArray[i]]);
+                     if (!this._isItemSelected(idArray[i])) {
+                        addedKeys = this._addItemsSelection([idArray[i]]);
+                        addedKeysTotal = addedKeysTotal.concat(addedKeys);
                      }
                      else {
-                        this.removeItemsSelection([idArray[i]]);
+                        removedKeys = this._removeItemsSelection([idArray[i]]);
+                        removedKeysTotal = removedKeysTotal.concat(removedKeys);
                      }
                   }
                }
                else {
-                  if (this._isItemSelected(idArray[0]) > 0) {
+                  if (this._isItemSelected(idArray[0])) {
+                     removedKeysTotal = $ws.core.clone(this._options.selectedKeys);
                      this._options.selectedKeys = [];
                   }
                   else {
+                     removedKeysTotal = $ws.core.clone(this._options.selectedKeys);
                      this._options.selectedKeys = idArray.slice(0, 1);
+                     addedKeysTotal = $ws.core.clone(this._options.selectedKeys);
                   }
-                  if (!this._options.selectedKeys.length && this._options.allowEmptySelection == false) {
-                     this._setFirstItemAsSelected();
-                  }
-                  this._notifySelectedItems(this._options.selectedKeys);
-                  this._drawSelectedItems(this._options.selectedKeys);
                }
+               this._afterSelectionHandler(addedKeysTotal, removedKeysTotal);
             }
          }
          else {
@@ -365,7 +388,7 @@ define('js!SBIS3.CONTROLS.MultiSelectable', [], function() {
        * @see removeItemsSelectionAll
        * @see toggleItemsSelection
        * @see multiselect
-       * @see allowEmptySelection
+       * @see allowEmptyMultiSelection
        */
       toggleItemsSelectionAll : function() {
          if (this._dataSet) {
@@ -376,12 +399,128 @@ define('js!SBIS3.CONTROLS.MultiSelectable', [], function() {
             this.toggleItemsSelection(items);
          }
       },
+      /**
+       * Возвращает набор выбранных элементов
+       * @param loadItems загружать ли записи, если их нет в текущем наборе выбранных и они отсутствуют в dataSet'e
+       * @returns {SBIS3.CONTROLS.Data.Collection.List} Возвращает коллекцию элементов
+       * @example
+       * <pre>
+       *    if (!checkBoxGroup.getSelectedItems().at(0).get('Текст') === 'Не выбрано') {
+       *       myControl.setEnabled(false);
+       *    }
+       * </pre>
+       * @see multiselect
+       */
+      getSelectedItems: function(loadItems) {
+         var self = this,
+             selKeys = this._options.selectedKeys,
+             selItems = this._options.selectedItems,
+             loadKeysArr = [],
+             itemKeysArr = [],
+             dMultiResult, item;
 
-      _isItemSelected : function(id) {
-         //TODO пока нет определенности ключ - строка или число - надо избавиться
-         var index = this._options.selectedKeys.indexOf(id);
-         if (index < 0) {
-            index = this._options.selectedKeys.indexOf(id + '')
+         this._syncSelectedItems();
+
+         if(!loadItems) {
+            return this._getSelItemsClone();
+         }
+
+         if(this._loadItemsDeferred && !this._loadItemsDeferred.isReady()) {
+            return this._loadItemsDeferred;
+         }
+
+         this._loadItemsDeferred = new $ws.proto.Deferred();
+         /* Сфоримруем из массива выбранных записей, массив ключей этих записей */
+         selItems.each(function(rec){
+            itemKeysArr.push(rec.getKey());
+         });
+
+         /* Сфоримруем массив ключей записей, которые требуется вычитать с бл или взять из dataSet'a*/
+         for(var i = 0, keys = selKeys.length; i < keys; i++) {
+            if(Array.indexOf(itemKeysArr, selKeys[i]) === -1 && Array.indexOf(itemKeysArr, parseInt(selKeys[i], 10)) === -1) {
+               loadKeysArr.push(selKeys[i]);
+            }
+         }
+
+         if(loadKeysArr.length) {
+            dMultiResult = new $ws.proto.ParallelDeferred({stopOnFirstError: false});
+
+            for (var j = 0; loadKeysArr.length > j; j++) {
+               item = this._dataSet && this._dataSet.getRecordById(loadKeysArr[j]);
+
+               /* если запись есть в датасете, то ничего не будем вычитывать */
+               if(item) {
+                  selItems.add(item);
+                  continue;
+               }
+
+               dMultiResult.push(this._dataSource.read(loadKeysArr[j]).addCallback(function (record) {
+                  selItems.add(record);
+               }));
+            }
+
+            dMultiResult.done().getResult().addCallback(function() {
+               self._loadItemsDeferred.callback(self._getSelItemsClone());
+               self._notifyOnPropertyChanged('selectedItems');
+            });
+
+         } else {
+            self._loadItemsDeferred.callback(self._getSelItemsClone());
+         }
+         return this._loadItemsDeferred;
+      },
+
+      /**
+       * Синхронизирует выбранные ключи и выбранные записи
+       * @private
+       */
+      _syncSelectedItems: function() {
+         var self = this,
+             selItems = this._options.selectedItems,
+             delItems = [];
+
+         /* Выбранных ключей нет - очистим IList */
+         if(!this.getSelectedKeys().length) {
+            if(selItems.getCount()) {
+               selItems.clear();
+               this._notifyOnPropertyChanged('selectedItems');
+            }
+            return;
+         }
+
+         /* Соберём элементы для удаления, т.к. в методе each не отслеживаются изменения IList'а */
+         selItems.each(function(rec) {
+            if(!self._isItemSelected(rec.getKey())) {
+               delItems.push(rec);
+            }
+         });
+
+         if(delItems.length) {
+            for(var i = 0, len = delItems.length; i < len; i++) {
+               selItems.remove(delItems[i]);
+            }
+            this._notifyOnPropertyChanged('selectedItems');
+         }
+      },
+
+      _isItemSelected : function(item) {
+         return this._getSelectedIndex(item) !== -1;
+      },
+
+      _getSelectedIndex: function(item) {
+         var keys = this._options.selectedKeys,
+             index;
+
+         if($ws.helpers.instanceOfModule(item, 'SBIS3.CONTROLS.Data.Model')) {
+            index = this._options.selectedItems.getIndexByValue(item.getKeyField(), item.getKey());
+         } else {
+            index = Array.indexOf(keys, item);
+            if (index < 0) {
+               index = Array.indexOf(keys, parseInt(item, 10));
+            }
+            if (index < 0) {
+               index = Array.indexOf(keys, String(item));
+            }
          }
          return index;
       },
@@ -390,35 +529,62 @@ define('js!SBIS3.CONTROLS.MultiSelectable', [], function() {
          /*Method must be implemented*/
       },
 
-      _notifySelectedItems : function(idArray) {
-         this._setSelectedRecords();
-         this._notify('onSelectedItemsChange', idArray);
+      _makeList: function(listItems) {
+         return new List({items: listItems ? listItems : []});
+      },
+
+	   _afterSelectionHandler: function(addedKeys, removedKeys) {
+		   if (this._checkEmptySelection()) {
+			   this._setFirstItemAsSelected();
+		   }
+		   this._notifySelectedItems(this._options.selectedKeys, {
+            added : addedKeys,
+            removed : removedKeys
+         });
+		   this._drawSelectedItems(this._options.selectedKeys);
+	   },
+
+      _notifySelectedItems : function(idArray, changed) {
+         this._setSelectedItems();
+         this._notifyOnPropertyChanged('selectedKeys');
+         this._notify('onSelectedItemsChange', idArray, changed);
       },
 
       _dataLoadedCallback : function(){
-         if (!this._options.selectedKeys.length && this._options.allowEmptySelection == false) {
+         if (this._checkEmptySelection()) {
             this._setFirstItemAsSelected();
          }
       },
 
       _setFirstItemAsSelected : function() {
          if (this._dataSet) {
-            var firstKey = this._dataSet.at(0).getKey();
-            this._options.selectedKeys = [firstKey];
+            this._options.selectedKeys = [this._dataSet.at(0).getKey()];
          }
       },
 
-      _setSelectedRecords: function() {
-         var
-            self = this,
-            record;
-         this._selectedRecords = [];
-         $.each(this._options.selectedKeys, function(id, key) {
-            record = self._dataSet.getRecordByKey(key);
-            if (record) {
-               self._selectedRecords.push(record);
-            }
-         });
+      _checkEmptySelection: function() {
+         return !this._options.selectedKeys.length && this._options.allowEmptyMultiSelection == false;
+      },
+
+      _getSelItemsClone: function() {
+         /* надо обязательно делать клон массива, чтобы порвать ссылку и не портить при изменении значения в контексте */
+         return this._makeList(this._options.selectedItems.toArray().slice());
+      },
+
+      _setSelectedItems: function() {
+         var dataSet = this.getDataSet(),
+             self = this,
+             record;
+
+         if (dataSet) {
+            this._syncSelectedItems();
+            $ws.helpers.forEach(this.getSelectedKeys(), function (key) {
+               record = dataSet.getRecordById(key);
+               if (record && !self._isItemSelected(record)) {
+                  self._options.selectedItems.add(record);
+               }
+            });
+         }
       }
    };
 

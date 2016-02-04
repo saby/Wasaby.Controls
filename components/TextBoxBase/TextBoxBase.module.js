@@ -1,4 +1,10 @@
-define('js!SBIS3.CONTROLS.TextBoxBase', ['js!SBIS3.CORE.Control', 'js!SBIS3.CONTROLS.FormWidgetMixin','js!SBIS3.CONTROLS.DataBindMixin'], function(Control, FormWidgetMixin, DataBindMixin) {
+define('js!SBIS3.CONTROLS.TextBoxBase',
+   [
+      'js!SBIS3.CORE.CompoundControl',
+      'js!SBIS3.CONTROLS.FormWidgetMixin',
+      'js!SBIS3.CONTROLS.DataBindMixin',
+      'js!SBIS3.CORE.CompoundActiveFixMixin'
+   ], function(CompoundControl, FormWidgetMixin, DataBindMixin, CompoundActiveFixMixin) {
 
    'use strict';
 
@@ -23,7 +29,7 @@ define('js!SBIS3.CONTROLS.TextBoxBase', ['js!SBIS3.CORE.Control', 'js!SBIS3.CONT
     * @ignoreEvents onTooltipContentRequest
     */
 
-   var TextBoxBase = Control.Control.extend([FormWidgetMixin, DataBindMixin], /** @lends SBIS3.CONTROLS.TextBoxBase.prototype*/ {
+   var TextBoxBase = CompoundControl.extend([FormWidgetMixin, DataBindMixin, CompoundActiveFixMixin], /** @lends SBIS3.CONTROLS.TextBoxBase.prototype*/ {
 
        /**
         * @event onTextChange Срабатывает при изменении текста в поле ввода.
@@ -101,6 +107,7 @@ define('js!SBIS3.CONTROLS.TextBoxBase', ['js!SBIS3.CORE.Control', 'js!SBIS3.CONT
 
       $constructor: function() {
          this._publish('onTextChange');
+         this._container.removeClass('ws-area');
          this._options.text = (this._options.text) ? this._options.text.toString() : '';
          this.subscribe('onTextChange', function () {
             //снимаем выделение валидатора на время ввода
@@ -122,9 +129,10 @@ define('js!SBIS3.CONTROLS.TextBoxBase', ['js!SBIS3.CORE.Control', 'js!SBIS3.CONT
        * @see setValue
        * @see getValue
        */
-      setText:function(text){
-         text = (text !== null && text !== undefined && text == text) ? text.toString() : '';
-         var newText = this._formatText(text);
+      setText: function(text){
+         //null, NaN, undefined оставляем как есть, но выводим их как пустую строку
+         var newText = (text) ? text.toString() : text;
+         newText = (text) ? this._formatText(text) : text;
          if (newText !== this._options.text) {
             this._options.text = newText;
             this._drawText(newText);
@@ -167,11 +175,7 @@ define('js!SBIS3.CONTROLS.TextBoxBase', ['js!SBIS3.CORE.Control', 'js!SBIS3.CONT
       },
 
       _formatText : function(text) {
-         text = text || ''; // так как есть датабиндинг может прийти undefined
-         if (this._options.trim) {
-            text = String.trim(text);
-         }
-         return text;
+         return text || ''; // так как есть датабиндинг может прийти undefined
       },
 
       _drawText: function() {
@@ -185,7 +189,7 @@ define('js!SBIS3.CONTROLS.TextBoxBase', ['js!SBIS3.CORE.Control', 'js!SBIS3.CONT
 
       setValue : function(txt) {
          $ws.single.ioc.resolve('ILogger').log('setValue()', 'setValue is deprecated. Use setText()');
-         this.setText(txt)
+         this.setText(txt);
       }
    });
 

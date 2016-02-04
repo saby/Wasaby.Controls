@@ -1,4 +1,18 @@
-.position {
-   margin-top: 50px;
-   margin-left: 50px;
+.demoContainer {
+   padding: 10px;
+}
+.demoTable {
+   min-width: 700px;
+   border-collapse: collapse;
+}
+.demoTable td:nth-child(2) {
+   min-width: 110px;
+}
+.demoTable td:nth-child(3) {
+   min-width: 300px;
+}
+
+.demoTable th, .demoTable td {
+   padding: 5px 15px;
+   border: 1px solid #CCCCCC;
 }

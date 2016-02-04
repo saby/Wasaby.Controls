@@ -130,7 +130,17 @@ define('js!SBIS3.CONTROLS.NumberTextBox', ['js!SBIS3.CONTROLS.TextBox', 'html!SB
              * @see onlyInteger
              * @see decimals
              */
-            delimiters: false
+            delimiters: false,
+            /**
+             * @cfg {Number} Числовое значение контрола
+             * Если установлено, то значение опции text игнорируется.
+             * @example
+             * <pre>
+             *     <option name="numericValue">123.456</option>
+             * </pre>
+             * @see text
+             */
+            numericValue: null
          }
       },
 
@@ -149,8 +159,17 @@ define('js!SBIS3.CONTROLS.NumberTextBox', ['js!SBIS3.CONTROLS.TextBox', 'html!SB
             }
          });
 
+         if (this._options.numericValue) {
+            this._options.text = this._options.numericValue + '';
+         }
          this._options.text = this._formatText(this._options.text);
          this._inputField.val(this._options.text);
+      },
+
+
+      setText: function(text){
+         text = this._formatText(text);
+         NumberTextBox.superclass.setText.call(this, text);
       },
 
       _setText: function(text){
@@ -187,6 +206,9 @@ define('js!SBIS3.CONTROLS.NumberTextBox', ['js!SBIS3.CONTROLS.TextBox', 'html!SB
         return (isNaN(val)) ? null : val;
       },
 
+      setNumericValue: function(value) {
+         this.setText(value + '')
+      },
       /**
        * Установить количество знаков после запятой
        * @param decimals Количество знаков после запятой
@@ -200,12 +222,13 @@ define('js!SBIS3.CONTROLS.NumberTextBox', ['js!SBIS3.CONTROLS.TextBox', 'html!SB
       /**
        * Получить количество знаков после запятой
        */
-      getDecimals: function(decimals) {
+      getDecimals: function() {
          return this._options.decimals;
       },
 
       _formatText: function(value, fromFocusOut){
          var decimals;
+         value = value.toString();
          if (this._options.onlyInteger){
             decimals = 0;
             value = parseInt(value.replace(/\s/g, ''));
@@ -257,7 +280,7 @@ define('js!SBIS3.CONTROLS.NumberTextBox', ['js!SBIS3.CONTROLS.TextBox', 'html!SB
             return true;
          }
          var keyCode = (event.which >= 96 && event.which <= 105) ? event.which - 48 : event.which;
-         if(keyCode == 190 /*точка*/){
+         if(keyCode == 190 || keyCode == 110/*точка*/){
             this._dotHandler(event);
             return;
          }
@@ -300,7 +323,7 @@ define('js!SBIS3.CONTROLS.NumberTextBox', ['js!SBIS3.CONTROLS.TextBox', 'html!SB
                if (dotPosition == this._options.integers + spaceCount || (dotPosition == -1 && currentVal.length - spaceCount == this._options.integers)){
                   return;
                }
-               (this._options.delimiters && this._getIntegersCount(currentVal) % 3 == 0) ? newCaretPosition+=2 : newCaretPosition++;
+               (this._options.delimiters && this._getIntegersCount(currentVal) % 3 == 0 && currentVal.length) ? newCaretPosition+=2 : newCaretPosition++;
                currentVal = currentVal.substr(0, b) + symbol + currentVal.substr(e);
             } else {
                currentVal = currentVal.substr(0, b) + symbol + currentVal.substr(e);
@@ -421,7 +444,7 @@ define('js!SBIS3.CONTROLS.NumberTextBox', ['js!SBIS3.CONTROLS.TextBox', 'html!SB
       },
 
       _keyUpBind: function(e){
-         NumberTextBox.superclass._keyUpBind.call(this);
+         NumberTextBox.superclass._keyUpBind.apply(this, arguments);
          if (e.which == 16){
             this._SHIFT_KEY = false;
          }
@@ -465,7 +488,7 @@ define('js!SBIS3.CONTROLS.NumberTextBox', ['js!SBIS3.CONTROLS.TextBox', 'html!SB
             e,
             l;
          if (document.selection){                        //IE
-            var range = document.selection.createRange();
+            var range = document.createRangeForIE();
             l = range.text.length;
             range.moveStart('textedit', -1);
             e = range.text.length;

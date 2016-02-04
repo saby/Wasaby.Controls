@@ -18,6 +18,8 @@
         </div>
     </div>
     <div class="controls__filterButton__area-footer">
-        <!-- Заглушка, тут будет история выбора -->
+        {{? it.historyController}}
+        <component data-component="SBIS3.CONTROLS.FilterHistory" name="filterHistory"/>
+        {{?}}
     </div>
 </div>

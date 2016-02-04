@@ -1,8 +1,9 @@
-{{var caption = it.item.get('caption'),
+{{var icon = it.item.get('icon'),
+      caption = it.item.get('caption'),
       allowChangeEnable = it.item.get('allowChangeEnable'); }}
 
-<component data-component="{{? caption }}SBIS3.CONTROLS.Link{{??}}SBIS3.CONTROLS.IconButton{{?}}">
+<component data-component="{{? icon }}SBIS3.CONTROLS.IconButton{{??}}SBIS3.CONTROLS.Link{{?}}">
     {{? allowChangeEnable !== undefined }}<option name="allowChangeEnable" type="boolean">{{= allowChangeEnable }}</option>{{?}}
-    {{? caption}}<option name="caption">{{= caption }}</option>{{??}}<option name="icon">{{= it.item.get('icon') }}</option>{{?}}
+    {{? icon}}<option name="icon">{{= icon }}</option>{{??}}<option name="caption">{{= caption }}</option>{{?}}
     {{? it.item.get('tooltip') }}<option name="tooltip">{{= it.item.get('tooltip')}}</option>{{?}}
 </component>

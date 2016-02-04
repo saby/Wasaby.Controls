@@ -46,6 +46,7 @@ define('js!SBIS3.CONTROLS.Button', ['js!SBIS3.CONTROLS.ButtonBase', 'html!SBIS3.
     * @ignoreEvents onKeyPressed onReady onResize onStateChanged onTooltipContentRequest
     * @ignoreEvents onDragIn onDragStart onDragStop onDragMove onDragOut
     *
+    * @cssModifier controls-Button__filled непрозрачный фон кнопки
     * @cssModifier controls-Button__big Большая кнопка.
     * @cssModifier controls-Button__ellipsis Кнопка, на которой в тексте появляется многоточие при нехватке ширины.
     * !Важно: при добавлении этого класса сломается "Базовая линия".
@@ -85,6 +86,14 @@ define('js!SBIS3.CONTROLS.Button', ['js!SBIS3.CONTROLS.ButtonBase', 'html!SBIS3.
          if (this._options.primary === true) {
             this._registerDefaultButton();
          }
+      },
+
+      init : function() {
+         Button.superclass.init.call(this);
+         /*Хак чтобы в IE не прыгал тег button при зажатии мышки*/
+         this._container.click(function(e){
+            e.preventDefault();
+         });
       },
 
       setCaption: function(caption){
@@ -142,17 +151,21 @@ define('js!SBIS3.CONTROLS.Button', ['js!SBIS3.CONTROLS.ButtonBase', 'html!SBIS3.
         *    btn.setIcon('sprite:icon16 icon-Alert icon-done');
         * </pre>
         */
-      setIcon: function(icon) {
-         Button.superclass.setIcon.call(this, icon);
+      _drawIcon: function(icon) {
          var content,
-             caption = $(".js-controls-Button__text", this._container.get(0)).html();
+             caption = $('.js-controls-Button__text', this._container.get(0)).html();
          if (!icon) {
              content = $('<span class="controls-Button__text js-controls-Button__text">' + caption + '</span>');
          } else {
-             content = $('<i class="controls-Button__icon js-controls-Button__icon ' + this._iconClass + '"></i><span class="controls-Button__text js-controls-Button__text">' + caption + '</span>');
+             content = $('<i class="controls-Button__icon js-controls-Button__icon ' + this._options._iconClass + '"></i><span class="controls-Button__text js-controls-Button__text">' + caption + '</span>');
          }
          $('.controls-Button__text', content).toggleClass('controls-Button__emptyCaption', !caption);
          this._container.html(content);
+      },
+
+      setEnabled: function(enabled){
+         Button.superclass.setEnabled.call(this, enabled);
+         this._container.attr('disabled', !this.isEnabled());
       },
 
       /*TODO методы для поддержки defaultButton*/

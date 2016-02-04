@@ -1,4 +1,4 @@
-define('js!SBIS3.CONTROLS.MenuButton', ['js!SBIS3.CONTROLS.Button', 'js!SBIS3.CONTROLS.ContextMenu', 'js!SBIS3.CONTROLS.PickerMixin', 'js!SBIS3.CONTROLS.DSMixin', 'js!SBIS3.CONTROLS.MenuButtonMixin', 'html!SBIS3.CONTROLS.MenuButton'], function(Button, ContextMenu, PickerMixin, DSMixin, MenuButtonMixin, dotTplFn) {
+define('js!SBIS3.CONTROLS.MenuButton', ['js!SBIS3.CONTROLS.Button', 'js!SBIS3.CONTROLS.ContextMenu', 'js!SBIS3.CONTROLS.PickerMixin', 'js!SBIS3.CONTROLS.DSMixin', 'js!SBIS3.CONTROLS.MenuButtonMixin'], function(Button, ContextMenu, PickerMixin, DSMixin, MenuButtonMixin) {
 
    'use strict';
 
@@ -6,6 +6,9 @@ define('js!SBIS3.CONTROLS.MenuButton', ['js!SBIS3.CONTROLS.Button', 'js!SBIS3.CO
     * Кнопка с выпадающим меню
     * @class SBIS3.CONTROLS.MenuButton
     * @extends SBIS3.CONTROLS.Button
+    * @remark
+    * !Важно: Если в меню задан только один пункт, то меню НЕ будет показано, а при нажатии на кнопку будет выполнено действие соответствующее этому пункту.
+    * Кнопка с меню - это кнопка с выбором варинта действия, и если возможно только одно действие, то оно и будет выполнено по нажатию.
     * @demo SBIS3.CONTROLS.Demo.MyMenuButton Пример кнопки с выпадающим меню
     * @control
     * @initial
@@ -46,7 +49,6 @@ define('js!SBIS3.CONTROLS.MenuButton', ['js!SBIS3.CONTROLS.Button', 'js!SBIS3.CO
     */
 
    var MenuButton = Button.extend( [PickerMixin, DSMixin, MenuButtonMixin], /** @lends SBIS3.CONTROLS.MenuButton.prototype */ {
-      _dotTplFn: dotTplFn,
       $protected: {
          _header: null,
          _headerAlignment: {
@@ -60,22 +62,25 @@ define('js!SBIS3.CONTROLS.MenuButton', ['js!SBIS3.CONTROLS.Button', 'js!SBIS3.CO
 
       init: function(){
          var self = this;
+         this._container.addClass('controls-MenuButton');
          this.reload();
          MenuButton.superclass.init.call(this);
-         $ws.helpers.trackElement(this._container, true).subscribe('onMove', function () {
-            if (self._header) {
-               self._header.css({
-                  left: (self._headerAlignment.horizontal == 'left') ? self._container.offset().left : self._container.offset().left - 16,
-                  top: (self._headerAlignment.vertical == 'top') ? self._container.offset().top + 2 : self._container.offset().top - 7
-               });
-            }
-         });
+      },
+
+      _onMoveHandler: function () {
+         if (this._header) {
+            this._header.css({
+               left: (this._headerAlignment.horizontal == 'left') ? this._container.offset().left : this._container.offset().left - 16,
+               top: (this._headerAlignment.vertical == 'top') ? this._container.offset().top + 2 : this._container.offset().top - 7
+            });
+         }
       },
 
       destroy: function(){
-         MenuButton.superclass.destroy.call(this);
-         if(this._header)
+         this._toggleTrackHeader(false);
+         if(this._header) 
             this._header.remove();
+         MenuButton.superclass.destroy.call(this);
       },
 
       _onAlignmentChangeHandler: function(alignment){
@@ -98,16 +103,27 @@ define('js!SBIS3.CONTROLS.MenuButton', ['js!SBIS3.CONTROLS.Button', 'js!SBIS3.CO
          }
       },
 
+      _toggleTrackHeader: function(state){
+      	var track = $ws.helpers.trackElement(this._container);
+      	if (state){
+      		track.subscribe('onMove', this._onMoveHandler, this);
+      	} else {
+      		track.unsubscribe('onMove', this._onMoveHandler);
+      	}
+      },
 
       _clickHandler: function(){
-         if (this._dataSet.getCount() > 1) {
-            this._container.addClass('controls-Checked__checked');
-            this.togglePicker();
-            this._header.toggleClass('controls-MenuButton__header-hidden', !this._container.hasClass('controls-Checked__checked'));
-         } else {
-            if (this._dataSet.getCount() == 1) {
-               var id = this._dataSet.at(0).getKey();
-               this._notify('onMenuItemActivate', id);
+         if (this._dataSet){
+            if (this._dataSet.getCount() > 1) {
+               this._container.addClass('controls-Checked__checked');
+               this.togglePicker();
+               this._header.removeClass('ws-hidden');
+               this._toggleTrackHeader(true);
+            } else {
+               if (this._dataSet.getCount() == 1) {
+                  var id = this._dataSet.at(0).getKey();
+                  this._notify('onMenuItemActivate', id);
+               }
             }
          }
       },
@@ -131,7 +147,7 @@ define('js!SBIS3.CONTROLS.MenuButton', ['js!SBIS3.CONTROLS.Button', 'js!SBIS3.CO
       },
 
       _createHeader: function(){
-         this._header = $('<span class="controls-MenuButton__header controls-MenuButton__header-hidden">\
+         this._header = $('<span class="controls-MenuButton__header ws-hidden">\
                                   <i class="controls-MenuButton__headerLeft"></i>\
                                   <i class="controls-MenuButton__headerCenter"></i>\
                                   <i class="controls-MenuButton__headerRight"></i>\
@@ -140,6 +156,11 @@ define('js!SBIS3.CONTROLS.MenuButton', ['js!SBIS3.CONTROLS.Button', 'js!SBIS3.CO
          this._header.css({
             width: this._container.outerWidth() + 18,  //ширина выступающей части обводки
             height: this._container.outerHeight()
+         });
+         var self = this;
+         this._header.mousedown(function(){
+            //TODO придрот, чтоб на кнопку вешался класс, как будто на кнопку нажали
+            self._container.addClass('controls-Click__active');
          });
          $('body').append(this._header);
       },
@@ -174,7 +195,8 @@ define('js!SBIS3.CONTROLS.MenuButton', ['js!SBIS3.CONTROLS.Button', 'js!SBIS3.CO
       _closeHandler: function(){
          this._container.removeClass('controls-Checked__checked');
          if (this._header) {
-            this._header.addClass('controls-MenuButton__header-hidden');
+            this._header.addClass('ws-hidden');
+            this._toggleTrackHeader(false);
          }
       },
 

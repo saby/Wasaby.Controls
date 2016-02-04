@@ -1,10 +1,10 @@
 define('js!SBIS3.CONTROLS.TreeDataGridView', [
    'js!SBIS3.CONTROLS.HierarchyDataGridView',
    'js!SBIS3.CONTROLS.TreeMixinDS',
-   'js!SBIS3.CONTROLS.DragNDropMixin',
    'html!SBIS3.CONTROLS.TreeDataGridView/resources/rowTpl'
-], function(HierarchyDataGridView, TreeMixinDS, DragNDropMixin, rowTpl) {
+], function(HierarchyDataGridView, TreeMixinDS, rowTpl) {
    'use strict';
+
    /**
     * Контрол отображающий набор данных, имеющих иерархическую структуру, в виде в таблицы с несколькими колонками.
     * @class SBIS3.CONTROLS.TreeDataGridView
@@ -30,35 +30,20 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
     *
     */
 
-   var TreeDataGridView = HierarchyDataGridView.extend([TreeMixinDS, DragNDropMixin], /** @lends SBIS3.CONTROLS.TreeDataGridView.prototype*/ {
+   var TreeDataGridView = HierarchyDataGridView.extend([TreeMixinDS], /** @lends SBIS3.CONTROLS.TreeDataGridView.prototype*/ {
       $protected: {
          _rowTpl : rowTpl,
          _options: {
             /**
-             * @cfg {Boolean}
-             * Разрешить проваливаться в папки
-             * Если выключено, то папки можно открывать только в виде дерева, проваливаться в них нельзя
-             */
-            allowEnterToFolder: true,
-            /**
              * @cfg {Function}
              * Обработчик нажатия на стрелку у папок. Если не задан, стрелка показана не будет
              */
-            arrowActivatedHandler: undefined,
-            /**
-            * @cfg {Boolean}
-            * Разрешить перемещать элементы с помощью DragAndDrop
-            */
-            allowDragNDropMove: true
+            arrowActivatedHandler: undefined
          },
          _dragStartHandler: undefined
       },
 
       $constructor: function() {
-         if (this._options.allowDragNDropMove) {
-            this._dragStartHandler = this._onDragStart.bind(this);
-            this._getItemsContainer().bind('mousedown', this._dragStartHandler);
-         }
       },
 
       _drawItemsFolder: function(records) {
@@ -84,7 +69,8 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
                      if (allContainers[i] == parentContainer.get(0)) {
                         startRow = i + 1;
                      } else {
-                        if (childKeys.indexOf($(allContainers[i]).data('id')) >= 0) {
+                        //TODO сейчас ключи могут оказаться строками, а могут целыми числами, в 20 все должно быть строками и это можно выпилить
+                        if ((Array.indexOf(childKeys,$(allContainers[i]).attr('data-id')) >= 0) || (Array.indexOf(childKeys, $(allContainers[i]).data('id')) >= 0)) {
                            startRow++;
                         }
                      }
@@ -108,32 +94,20 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
          self._drawItemsCallback();
       },
 
-      _nodeDataLoaded : function(key, dataSet) {
-         /*TODO Копипаст с TreeView*/
-         var
-            self = this,
-            itemCont = $('.controls-ListView__item[data-id="' + key + '"]', this.getContainer().get(0));
-         $('.js-controls-TreeView__expand', itemCont).first().addClass('controls-TreeView__expand__open');
-         this._options.openedPath[key] = true;
-
-         //при раскрытии узла по стрелке приходит новый датасет, в котором только содержимое узла
-         //поэтому удалять из текущего датасета ничего не нужно, только добавить новое.
-         this._dataSet.merge(dataSet, {remove: false});
-         this._dataSet._reindexTree(this._options.hierField);
-
-         var
-            records = dataSet._getRecords();
-
+      _drawLoadedNode : function(key, records, more) {
+         this._drawExpandArrow(key);
          this._drawItemsFolder(records);
-         /*TODO пока не очень общо создаем внутренние пэйджинги*/
-         var allContainers = $('.controls-ListView__item[data-parent="'+key+'"]', self._getItemsContainer().get(0));
+
+         //TODO пока не очень общо создаем внутренние пэйджинги
+         var allContainers = $('.controls-ListView__item[data-parent="' + key + '"]', this._getItemsContainer().get(0));
          var row = $('<tr class="controls-TreeDataGridView__folderToolbar">' +
-            '<td colspan="'+(this._options.columns.length+(this._options.multiselect ? 1 : 0))+'"><div style="overflow:hidden" class="controls-TreeDataGridView__folderToolbarContainer"><div class="controls-TreePager-container"></div></div></td>' +
-            '</tr>').attr('data-parent',key);
+            '<td colspan="' + (this._options.columns.length + (this._options.multiselect ? 1 : 0)) + '"><div style="overflow:hidden" class="controls-TreeDataGridView__folderToolbarContainer"><div class="controls-TreePager-container"></div></div></td>' +
+            '</tr>').attr('data-parent', key);
          $(allContainers.last()).after(row);
          this._resizeFolderToolbars();
          var elem = $('.controls-TreePager-container', row.get(0));
-         this._createFolderPager(key, elem, dataSet.getMetaData().more);
+
+         this._createFolderPager(key, elem, more);
       },
 
       _onResizeHandler: function() {
@@ -150,8 +124,8 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
       _keyboardHover: function(e) {
          var parentResult = TreeDataGridView.superclass._keyboardHover.apply(this, arguments),
              selectedKey = this.getSelectedKey(),
-             rec = this._dataSet.getRecordByKey(selectedKey),
-             isBranch = rec && rec.get(this._options.hierField);
+             rec = this.getDataSet().getRecordById(selectedKey),
+             isBranch = rec && rec.get(this._options.hierField + '@');
 
          switch(e.which) {
             case $ws._const.key.right:
@@ -164,6 +138,24 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
          return parentResult;
       },
 
+      collapseNode: function (key) {
+         this._clearLadderData(key);
+         TreeDataGridView.superclass.collapseNode.apply(this, arguments);
+      },
+
+      expandNode: function (key) {
+         this._clearLadderData(key);
+         return TreeDataGridView.superclass.expandNode.apply(this, arguments);
+      },
+
+
+      _clearLadderData: function(key){
+         var ladderDecorator = this._decorators.getByName('ladder');
+         if (ladderDecorator){
+            ladderDecorator.removeNodeData(key);
+         }
+      },
+
       _drawItemsFolderLoad: function(records, id) {
          if (!id) {
             this._drawItems(records);
@@ -171,6 +163,11 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
          else {
             this._drawItemsFolder(records);
          }
+      },
+
+      _drawExpandArrow: function(key, flag){
+         var itemCont = $('.controls-ListView__item[data-id="' + key + '"]', this.getContainer().get(0));
+         $('.js-controls-TreeView__expand', itemCont).toggleClass('controls-TreeView__expand__open', flag);
       },
 
       destroyFolderToolbar: function(id) {
@@ -218,7 +215,10 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
          container.attr('data-parent', parentKey);
 
          if (this._options.openedPath[key]) {
-            $('.js-controls-TreeView__expand', container).addClass('controls-TreeView__expand__open');
+            var tree = this._dataSet.getTreeIndex(this._options.hierField);
+            if (tree[key]) {
+               $('.js-controls-TreeView__expand', container).addClass('controls-TreeView__expand__open');
+            }
          }
          /*TODO пока придрот*/
          if (typeof parentKey != 'undefined' && parentKey !== null && parentContainer) {
@@ -229,94 +229,72 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
          }
       },
 
+      _elemClickHandler: function (id, data, target) {
+         var $target = $(target);
+
+         this.setSelectedKey(id);
+         if (this._options.multiselect) {
+            //TODO: оставить только js класс
+            if ($target.hasClass('js-controls-ListView__itemCheckBox') || $target.hasClass('controls-ListView__itemCheckBox')) {
+               this.toggleItemsSelection([$target.closest('.controls-ListView__item').attr('data-id')]);
+            }
+            else {
+               this._notifyOnItemClick(id, data, target);
+            }
+         }
+         else {
+            this._notifyOnItemClick(id, data, target);
+         }
+      },
+      _notifyOnItemClick: function(id, data, target) {
+         var
+             res,
+             elClickHandler = this._options.elemClickHandler,
+             nodeID = $(target).closest('.controls-ListView__item').data('id'),
+             closestExpand = this._findExpandByElement($(target));
+
+         if ($(closestExpand).hasClass('js-controls-TreeView__expand') && $(closestExpand).hasClass('has-child')) {
+            this.toggleNode(nodeID);
+         }
+         else {
+            res = this._notify('onItemClick', id, data, target);
+            if (res !== false) {
+               this._elemClickHandlerInternal(data, id, target);
+               elClickHandler && elClickHandler.call(this, id, data, target);
+            }
+         }
+      },
       _elemClickHandlerInternal: function(data, id, target) {
          var nodeID = $(target).closest('.controls-ListView__item').data('id');
-         if ($(target).hasClass('js-controls-TreeView__expand') && $(target).hasClass('has-child')) {
-            this.toggleNode(nodeID);
-         } else {
-            if (this._options.allowEnterToFolder){
-               if ($(target).hasClass('js-controls-TreeView__editArrow')) {
-                  if (this._options.arrowActivatedHandler) {
+         if (this._options.allowEnterToFolder){
+            if ($(target).hasClass('js-controls-TreeView__editArrow')) {
+               if (this._options.arrowActivatedHandler) {
+
+                  //TODO оставляем для совеместимости с номенклатурой
+                  if (this._options.arrowActivatedHandler instanceof Function) {
                      this._options.arrowActivatedHandler.apply(this, arguments);
                   }
-               } else if (data.get(this._options.hierField + '@')) {
-                  this.setCurrentRoot(nodeID);
-                  this.reload();
+                  else {
+                     this._activateItem(id);
+                  }
                }
-            } else {
-               if (data.get(this._options.hierField + '@')) {
-                  this.toggleNode(nodeID);
-               }
+            } else if (data.get(this._options.hierField + '@')) {
+               this.setCurrentRoot(nodeID);
+               this.reload();
+            }
+            else {
+               this._activateItem(id);
             }
          }
-      },
-      /*DRAG_AND_DROP START*/
-      _findDragDropContainer: function() {
-         return this._getItemsContainer();
-      },
-      _getDragItems: function(key) {
-         var keys = this._options.multiselect ? $ws.core.clone(this.getSelectedKeys()) : [];
-         if ($.inArray(key, keys) < 0) {
-            keys.push(key);
-         }
-         return keys;
-      },
-      _onDragStart: function(e) {
-         var
-            target = $(e.target),
-            id = target.closest('.controls-ListView__item').data('id');
-         if (id) {
-            this.setSelectedKey(id);
-            this.setCurrentElement(e, this._getDragItems(id));
-         }
-         e.preventDefault();
-      },
-      _callMoveOutHandler: function() {
-      },
-      _callMoveHandler: function(e) {
-         if (!this._containerCoords) {
-            this._containerCoords = {
-               x: this._moveBeginX - parseInt(this._avatar.css('left'), 10),
-               y: this._moveBeginY - parseInt(this._avatar.css('top'), 10)
-            };
-         }
-         this._avatar.css({
-            top: e.pageY - this._containerCoords.y,
-            left: e.pageX - this._containerCoords.x
-         });
-         this._hideItemActions();
-      },
-      _createAvatar: function(e){
-         var count = this.getCurrentElement().length;
-         this._avatar = $('<div class="controls-DragNDrop__draggedItem"><span class="controls-DragNDrop__draggedCount">' + count + '</span></div>')
-            .css({
-               'left': window.scrollX + e.clientX + 5,
-               'top': window.scrollY + e.clientY + 5
-            }).appendTo($('body'));
-      },
-      _callDropHandler: function(e) {
-         var
-            target = $(e.target),
-            keys = this.getCurrentElement(),
-            moveTo = target.closest('.controls-ListView__item').data('id');
-         //TODO придрот для того, чтобы если перетащить элемент сам на себя не отработал его обработчик клика
-         if (this.getSelectedKey() === moveTo) {
-            this._elemClickHandler = function() {
-               this._elemClickHandler = TreeDataGridView.superclass._elemClickHandler;
+         else {
+            if (data.get(this._options.hierField + '@')) {
+               this.toggleNode(nodeID);
+            }
+            else {
+               this._activateItem(id);
             }
          }
-         this._move(keys, moveTo);
-      },
-      _beginDropDown: function(e) {
-         this._isShifted = true;
-         this._createAvatar(e);
-      },
-      _endDropDown: function() {
-         this._containerCoords = null;
-         this._avatar.remove();
-         this._isShifted = false;
       }
-      /*DRAG_AND_DROP END*/
    });
 
    return TreeDataGridView;

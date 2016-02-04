@@ -3,7 +3,7 @@
  */
 define('js!SBIS3.CONTROLS.MenuButtonMixin', ['js!SBIS3.CONTROLS.ContextMenu'], function(ContextMenu) {
    /**
-    * Миксин, добавляющий поведение хранения одного или нескольких выбранных элементов
+    * Миксин, добавляющий поведение работы с выподающим меню
     * @mixin SBIS3.CONTROLS.MenuButtonMixin
     * @public
     * @author Крайнов Дмитрий Олегович
@@ -33,12 +33,34 @@ define('js!SBIS3.CONTROLS.MenuButtonMixin', ['js!SBIS3.CONTROLS.ContextMenu'], f
 
       $constructor: function () {
          this._publish('onMenuItemActivate');
+         if (this._container.hasClass('controls-Menu__hide-menu-header')){
+            this._options.pickerClassName += ' controls-Menu__hide-menu-header';
+         }
+         this._checkItemsIcons(this._options.items);
+      },
+
+      //TODO: Можно будет выпилить когда меню будет сделано через таблицу
+      //3.7.3.10: придрот для отсупа в пунктах меню, если ни в одном пункте нет иконки а у кнопки есть
+      _checkItemsIcons: function(items){
+         var icon = 'sprite:';
+         if (this._options.icon && items){
+            if (this._options.icon.indexOf('icon-16') !== -1){
+               icon += 'icon-16';
+            } else if (this._options.icon.indexOf('icon-24') !== -1){
+               icon += 'icon-24';
+            }
+            for (var i = 0; i < items.length; i++){
+               //отступы нужны только в основном меню, но не в сабменю
+               if (!items[i].icon && !items[i][this._options.hierField]) { items[i].icon = icon;}
+            }
+         }
       },
 
       _createPicker: function(targetElement){
          var menuconfig = {
             parent: this.getParent(),
             opener: this,
+            groupBy: this._options.groupBy,
             context: this.getParent() ? this.getParent().getLinkedContext() : {},
             element: targetElement,
             target : this.getContainer(),
@@ -47,6 +69,7 @@ define('js!SBIS3.CONTROLS.MenuButtonMixin', ['js!SBIS3.CONTROLS.ContextMenu'], f
             enabled: this.isEnabled(),
             hierField: this._options.hierField,
             keyField: this._options.keyField,
+            allowChangeEnable: this._options.allowChangeEnable,
             //title задано для совместимости со старыми контролами, когда люди не указывали displayField
             displayField: this._options.displayField || 'title',
             verticalAlign: {
@@ -58,6 +81,7 @@ define('js!SBIS3.CONTROLS.MenuButtonMixin', ['js!SBIS3.CONTROLS.ContextMenu'], f
             closeByExternalClick: true,
             targetPart: true
          };
+         menuconfig = this._modifyPickerOptions(menuconfig);
          if (this._dataSource) {
             menuconfig.dataSource = this._dataSource;
          }
@@ -65,6 +89,10 @@ define('js!SBIS3.CONTROLS.MenuButtonMixin', ['js!SBIS3.CONTROLS.ContextMenu'], f
             menuconfig.items = this._options.items;
          }
          return new ContextMenu(menuconfig);
+      },
+
+      _modifyPickerOptions: function(opts) {
+         return opts;
       },
 
       _setPickerContent: function(){
@@ -79,7 +107,7 @@ define('js!SBIS3.CONTROLS.MenuButtonMixin', ['js!SBIS3.CONTROLS.ContextMenu'], f
       _getHeader: function(){
          var header = $('<div class="controls-Menu__header">');
          if (this._options.icon) {
-            header.append('<i class="' + this._options.iconTemplate(this._options) + '"></i>');
+            header.append('<i class="controls-Menu__header-icon ' + this._iconTemplate(this._options) + '"></i>');
          }
          header.append('<span class="controls-Menu__header-caption">' + (this._options.caption || '')  + '</span>');
          return header;
@@ -89,18 +117,67 @@ define('js!SBIS3.CONTROLS.MenuButtonMixin', ['js!SBIS3.CONTROLS.ContextMenu'], f
          this.togglePicker();
       },
 
+      //Прокидываем вызов метода в меню
+      getItemsInstances: function() {
+         if (!this._picker) {
+            this._initializePicker();
+         }
+         return this._picker.getItemsInstances.apply(this._picker, arguments);
+      },
+
+      _clickHandler: function (event) {
+         if (this._dataSet){
+            if (this._dataSet.getCount() > 1) {
+               this.togglePicker();
+            } else {
+               if (this._dataSet.getCount() == 1) {
+                  var id = this._dataSet.at(0).getKey();
+                  this._notify('onMenuItemActivate', id, event);
+               }
+            }
+         }
+      },
+
+      _dataLoadedCallback : function() {
+         if (this._picker) this.hidePicker();
+      },
+
+      _setWidth: function(){
+         //Установить ширину меню
+      },
       after : {
          _initializePicker : function() {
             var self = this;
-            this._picker.subscribe('onMenuItemActivate', function(e, id) {
-               self._notify('onMenuItemActivate', id);
+            this._picker.subscribe('onMenuItemActivate', function(e, id, mEvent) {
+               self._notify('onMenuItemActivate', id, mEvent);
             });
+            this._setWidth();
          },
 
          //TODO в 3.7.3 ждать починки от Вити
          setEnabled: function (enabled) {
             if (this._picker) {
                this._picker.setEnabled(enabled);
+            }
+         },
+         setItems: function(items){
+            this._checkItemsIcons(items);
+         },
+         _drawIcon: function(icon){
+            if (this._picker){
+               var $icon = $('.controls-Menu__header-icon', this._picker.getContainer()),
+                  newclass = 'controls-Menu__header-icon ' + this._iconClass;
+               if (icon) {
+                  if ($icon.length){
+                     $icon.get(0).className = newclass;
+                  } else {
+                     var $caption = $('.controls-Menu__header-caption', this._picker.getContainer().get(0));
+                     $icon = $('<i class="' + newclass + '"></i>');
+                     $caption.before($icon);
+                  }
+               } else {
+                  $icon && $icon.remove();
+               }
             }
          }
       },

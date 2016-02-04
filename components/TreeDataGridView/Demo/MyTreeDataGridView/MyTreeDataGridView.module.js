@@ -1,15 +1,14 @@
 define('js!SBIS3.CONTROLS.Demo.MyTreeDataGridView',
     [
         'js!SBIS3.CORE.CompoundControl',
-        'js!SBIS3.CONTROLS.StaticSource',
-        'js!SBIS3.CONTROLS.ArrayStrategy',
+        'js!SBIS3.CONTROLS.Data.Source.Memory',
         'js!SBIS3.CONTROLS.ComponentBinder',
         'html!SBIS3.CONTROLS.Demo.MyTreeDataGridView',
         'css!SBIS3.CONTROLS.Demo.MyTreeDataGridView',
         'js!SBIS3.CONTROLS.TreeDataGridView',
         'js!SBIS3.CONTROLS.BreadCrumbs',
         'js!SBIS3.CONTROLS.BackButton'
-    ], function(CompoundControl, StaticSource, ArrayStrategy, ComponentBinder, dotTplFn) {
+    ], function(CompoundControl, StaticSource, ComponentBinder, dotTplFn) {
    /**
     * SBIS3.CONTROLS.Demo.MyTreeDataGridView
     * @class SBIS3.CONTROLS.Demo.MyTreeDataGridView
@@ -42,15 +41,16 @@ define('js!SBIS3.CONTROLS.Demo.MyTreeDataGridView',
 
          var source = new StaticSource({
                data: items,
-               keyField: 'id',
-               strategy: new ArrayStrategy()
+               idProperty: 'id'
             }
          );
 
          var treeDataGridView = this.getChildControlByName('MyTreeDataGridView'),
             breadCrumbs = this.getChildControlByName('MyBreadCrumbs'),
             backButton = this.getChildControlByName('MyBackButton'),
-            componentBinder = new ComponentBinder();
+            componentBinder = new ComponentBinder({
+               view: treeDataGridView
+            });
 
          componentBinder.bindBreadCrumbs(breadCrumbs, backButton, treeDataGridView);
 

@@ -1,0 +1,17 @@
+<div class="controls-filterButton__history-area ws-hidden">
+    <component data-component="SBIS3.CONTROLS.ToggleButton" name="toggleHistory" class="controls-filterButton__toggleButton">
+        <option name="caption">Ранее отбирались</option>
+        <option name="icon">controls-filterButton__toggleButton-icon</option>
+        <option name="enabled" type="boolean">false</option>
+    </component>
+    <div class="controls-filterButton__historyView-wrapper controls-filterButton__historyView-maxHeight">
+        <component data-component="SBIS3.CONTROLS.ListView" name="historyView" class="controls-ListView__withoutMarker controls-filterButton__historyView">
+            <option name="itemTemplate" type="function">js!SBIS3.CONTROLS.FilterHistory:prototype._historyItemTpl</option>
+            <options name="itemsActions" type="Array"></options>
+            <option name="keyField" value="id"></option>
+            <options name="handlers">
+                <option name="onChangeHoveredItem" type="function">js!SBIS3.CONTROLS.FilterHistory:prototype._onChangeHoverHistoryItem</option>
+            </options>
+        </component>
+    </div>
+</div>

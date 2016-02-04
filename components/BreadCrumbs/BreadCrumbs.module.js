@@ -36,6 +36,10 @@ define('js!SBIS3.CONTROLS.BreadCrumbs', [
          _resizeTimeout: null,
          _dropdownWidth: null,
          _homeIcon: undefined,
+         _sizesInited: false,
+         _arrowWidth: 0,
+         _homeIconWidth: 0,
+         _dotsWidth: 0,
          _options: {
             keyField: 'id',
             displayField: 'title',
@@ -50,7 +54,7 @@ define('js!SBIS3.CONTROLS.BreadCrumbs', [
          this._homeIcon = $('.controls-BreadCrumbs__crumb-home', this._container);
          this._homeIcon.data('id', null); //клик по домику ведет в корень TODO: придрочено под null
          //инициализируем dataSet
-         this.setItems(this._options.items || []);
+         this.reload();
       },
 
       _resizeHandler: function() {
@@ -85,9 +89,9 @@ define('js!SBIS3.CONTROLS.BreadCrumbs', [
       },
 
       setItems: function(items){
+         this._toggleHomeIcon(items.length <= 0);
          BreadCrumbs.superclass.setItems.call(this, items);
          this._dataSet._keyField = this._options.keyField; 
-         this._toggleHomeIcon(items.length <= 0);
       },
 
       //TODO: придрот что бы фэйковый див не ломал :first-child стили
@@ -149,19 +153,19 @@ define('js!SBIS3.CONTROLS.BreadCrumbs', [
          }
       },
 
-      _redraw: function() {
-         BreadCrumbs.superclass._redraw.call(this);
-         $('.controls-BreadCrumbs__dots', this._container).remove();
-         var targetContainer = this._getTargetContainer(),
-            containerWidth = this._container.width(),
-            points = $('.controls-BreadCrumbs__crumb', targetContainer),
-            i = points.length - 1;
-         
-         if (points.length){
-            //20px - ширина блока с домиком
-            //Добавляем троеточие если пункты не убираются в контейнер
-            if ((targetContainer.width() + 20 >= containerWidth) && points.length > 2) {
-               var dots = $(pointTpl({
+      _onResizeHandler: function(){
+         this._redraw();
+      },
+
+      _calculateSizes: function() {
+         this._initNonTextElementSizes();
+         // Уберем троеточие, что бы оно не мешало при расчете размеров
+         // или создадим его, если его нет
+         var dots = $('.controls-BreadCrumbs__dots', this._container);
+         if (dots.length){
+            dots.detach();
+         } else {
+            dots = $(pointTpl({
                   item: {
                      title: '...',
                      dots: true,
@@ -170,6 +174,17 @@ define('js!SBIS3.CONTROLS.BreadCrumbs', [
                   decorators: this._decorators,
                   displayField: this._options.displayField
                }));
+         }
+
+         var targetContainer = this._getTargetContainer(),
+            containerWidth = this._container.width(),
+            points = $('.controls-BreadCrumbs__crumb', targetContainer),
+            i = points.length - 1;
+
+         if (points.length){
+            //20px - ширина блока с домиком
+            //Добавляем троеточие если пункты не убираются в контейнер
+            if ((targetContainer.width() + 20 >= containerWidth) && points.length > 2) {
                $(points[i - 1]).before(dots);
                //скрываем пункты левее троеточия пока не уберемся в контейнер
                for (i; i > 1; i--) {
@@ -184,20 +199,32 @@ define('js!SBIS3.CONTROLS.BreadCrumbs', [
             points = $('.controls-BreadCrumbs__crumb:not(.ws-hidden)', targetContainer);
 
             //Минимум остается первая и последняя хлебная крошка
-            //20px - ширина блока с домиком
-            //60px - блок с домиком + стрелка + троеточие
-            if ((targetContainer.width() + 20 >= containerWidth)) {
-               var halfWidth = (containerWidth - 60) / 2;
+            if ((targetContainer.width() + this._arrowWidth >= containerWidth)) {
+               //ширина декоротивных элементов -  блок с домиком, троеточие, стрелки 
+               var width = this._homeIconWidth + this._dotsWidth + this._arrowWidth * 2;
+               var halfWidth = Math.floor((containerWidth - width) / 2);
                if (points.length >= 2){
                   $('.controls-BreadCrumbs__title', points).css('max-width', halfWidth);
                } else {
-                  $('.controls-BreadCrumbs__title', points).css('max-width', containerWidth - 60);
+                  $('.controls-BreadCrumbs__title', points).css('max-width', containerWidth - width);
                }
             }
          }
+      },
 
-         if (this._picker) {
-            this.hidePicker();
+      _redraw: function(){
+         this._toggleHomeIcon(this.getItems().getCount() <= 0);
+         BreadCrumbs.superclass._redraw.call(this);
+         this._calculateSizes();
+      },
+
+      _initNonTextElementSizes: function(){
+         if (!this._homeIconWidth || !this._arrowWidth){
+            this._homeIconWidth = $('.controls-BreadCrumbs__crumb-home', this._container).outerWidth(true);
+            this._arrowWidth = $('.controls-BreadCrumbs__arrow', this._container).outerWidth(true);
+         } 
+         if (!this._dotsWidth){
+            this._dotsWidth = $('.controls-BreadCrumbs__dots', this._container).outerWidth(true);
          }
       },
 

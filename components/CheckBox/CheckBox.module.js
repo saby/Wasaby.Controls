@@ -1,8 +1,16 @@
 
-define('js!SBIS3.CONTROLS.CheckBox', ['js!SBIS3.CONTROLS.ButtonBase', 'js!SBIS3.CONTROLS.Checkable', 'html!SBIS3.CONTROLS.CheckBox'], function(ButtonBase, Checkable, dotTplFn) {
+define('js!SBIS3.CONTROLS.CheckBox', ['js!SBIS3.CONTROLS.ButtonBase', 'js!SBIS3.CONTROLS.Checkable', 'html!SBIS3.CONTROLS.CheckBox', 'js!SBIS3.CONTROLS.ITextValue'], function(ButtonBase, Checkable, dotTplFn, ITextValue) {
 
    'use strict';
-
+   var prepareChecked = function(checked, threeState) {
+      var newChecked;
+      if (!threeState) {
+         newChecked = !!(checked);
+      } else {
+         newChecked = (checked === false || checked === true) ? checked : null;
+      }
+      return newChecked;
+   };
    /**
     * Контрол, отображающий стандартный флажок.
     * Можно настроить:
@@ -40,7 +48,7 @@ define('js!SBIS3.CONTROLS.CheckBox', ['js!SBIS3.CONTROLS.ButtonBase', 'js!SBIS3.
     * @ignoreEvents onFocusIn onFocusOut onReady
     */
 
-   var CheckBox = ButtonBase.extend([Checkable], /** @lends SBIS3.CONTROLS.CheckBox.prototype */ {
+   var CheckBox = ButtonBase.extend([Checkable, ITextValue], /** @lends SBIS3.CONTROLS.CheckBox.prototype */ {
       $protected: {
          _dotTplFn : dotTplFn,
          _checkBoxCaption: null,
@@ -58,16 +66,17 @@ define('js!SBIS3.CONTROLS.CheckBox', ['js!SBIS3.CONTROLS.ButtonBase', 'js!SBIS3.
              *    <option name="threeState">true</option>
              * </pre>
              */
-            threeState: false
+            threeState: false,
+            textValue : ''
          }
       },
 
+
       $constructor: function() {
          this._checkBoxCaption = $('.js-controls-CheckBox__caption', this._container);
-         if (!this._options.threeState) {
-            this._options.checked = !!(this._options.checked);
-         } else {
-            this._options.checked = (this._options.checked === false || this._options.checked === true) ? this._options.checked : null;
+         this._options.checked = prepareChecked(this._options.checked, this._options.threeState);
+         if (this._options.checked) {
+            this._options.textValue = this._options.caption;
          }
       },
       /**
@@ -87,10 +96,22 @@ define('js!SBIS3.CONTROLS.CheckBox', ['js!SBIS3.CONTROLS.ButtonBase', 'js!SBIS3.
          CheckBox.superclass.setCaption.call(this,captionTxt);
          if (captionTxt) {
             this._checkBoxCaption.html(captionTxt).removeClass('ws-hidden');
+            if (this._options.checked) {
+               this._options.textValue = this._options.caption;
+            }
          }
          else {
             this._checkBoxCaption.empty().addClass('ws-hidden');
+            this._options.textValue = '';
          }
+      },
+
+      /**
+       * Возвращает текстовое значение контрола
+       * @returns {String}
+       */
+      getTextValue: function() {
+         return this._options.textValue;
       },
 
       _keyboardHover: function(e) {
@@ -114,23 +135,16 @@ define('js!SBIS3.CONTROLS.CheckBox', ['js!SBIS3.CONTROLS.ButtonBase', 'js!SBIS3.
        * @see setValue
        */
       setChecked: function(flag) {
-         if (flag === true) {
-            this._container.addClass('controls-Checked__checked');
-            this._container.removeClass('controls-ToggleButton__null');
-            this._options.checked = true;
-         } else
-         if (flag === false) {
-            this._container.removeClass('controls-Checked__checked');
-            this._container.removeClass('controls-ToggleButton__null');
-            this._options.checked = false;
-         } else {
-            if (this._options.threeState) {
-               this._container.removeClass('controls-Checked__checked');
-               this._container.addClass('controls-ToggleButton__null');
-               this._options.checked = null;
-            }
+         this._options.checked = prepareChecked(flag, this._options.threeState);
+         if (this._options.checked) {
+            this._options.textValue = this._options.caption;
          }
-         this.saveToContext('Checked', this._options.checked);
+         else {
+            this._options.textValue = '';
+         }
+         this._container.toggleClass('controls-Checked__checked', this._options.checked);
+         this._container.toggleClass('controls-ToggleButton__null', this._options.checked == null);
+         this._notifyOnPropertyChanged('checked');
          this._notify('onCheckedChange', this._options.checked);
          this._notifyOnPropertyChanged('checked');
       },

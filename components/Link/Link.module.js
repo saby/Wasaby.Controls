@@ -1,4 +1,4 @@
-define('js!SBIS3.CONTROLS.Link', ['js!SBIS3.CONTROLS.ButtonBase', 'html!SBIS3.CONTROLS.Link' ], function(ButtonBase, dotTplFn) {
+define('js!SBIS3.CONTROLS.Link', ['js!SBIS3.CONTROLS.ButtonBase', 'html!SBIS3.CONTROLS.Link', 'html!SBIS3.CONTROLS.Link/resources/hrefTemplate'], function(ButtonBase, dotTplFn, hrefTemplate) {
 
    'use strict';
 
@@ -47,6 +47,7 @@ define('js!SBIS3.CONTROLS.Link', ['js!SBIS3.CONTROLS.ButtonBase', 'html!SBIS3.CO
       _dotTplFn: dotTplFn,
       $protected: {
          _options: {
+            hrefTemplate: hrefTemplate,
              /**
               * @cfg {String} Адрес документа, к которому нужно перейти
               * @example
@@ -73,23 +74,28 @@ define('js!SBIS3.CONTROLS.Link', ['js!SBIS3.CONTROLS.ButtonBase', 'html!SBIS3.CO
 
       setCaption: function(caption){
          Link.superclass.setCaption.call(this, caption);
+         var $caption = $('.controls-Link__field', this._container);
          if (this._options.icon) {
-            $('.controls-Link__field', this._container).html(caption);
+            if ($caption.length){
+               $caption.html(caption);
+            } else {
+               $caption = $('<span class="controls-Link__field"></span>');
+               this._container.append($caption);
+            }
          } else {
             this._container.html(caption);
          }
       },
 
-      setEnabled: function(enabled){
-          Link.superclass.setEnabled.apply(this, arguments);
+      _setEnabled: function(enabled){
+          Link.superclass._setEnabled.apply(this, arguments);
           this._container.toggleClass('ws-hover-target', enabled);
       },
 
-      setIcon: function(icon){
-         Link.superclass.setIcon.call(this, icon);
+      _drawIcon: function(icon) {
          var content;
          if (icon) {
-            content = $('<i class="controls-Link__icon ' + this._iconClass + '" ></i><span class="controls-Link__field">' + this._options.caption + '</span>');
+            content = $('<i class="controls-Link__icon ' + this._options._iconClass + '" ></i><span class="controls-Link__field">' + (this._options.caption || '') + '</span>');
          } else {
             content = this._options.caption;
          }
@@ -104,10 +110,7 @@ define('js!SBIS3.CONTROLS.Link', ['js!SBIS3.CONTROLS.ButtonBase', 'html!SBIS3.CO
         */
       setHref: function(href){
          this._options.href = href;
-         if (!href) {
-            href = 'javascript:void(0);';
-         } 
-         this._container.attr('href', href);
+         this._container.html(this._options.hrefTemplate(this._options));
       }
 
    });

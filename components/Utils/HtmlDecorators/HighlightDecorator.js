@@ -9,6 +9,7 @@ define(['js!SBIS3.CONTROLS.Utils.HtmlDecorators/AbstractDecorator'], function (A
     */
    var HighlightDecorator = AbstractDecorator.extend(/** @lends SBIS3.CONTROLS.Utils.HtmlDecorators/HighlightDecorator.prototype */{
       $protected: {
+         _name: 'highlight',
          _options: {
             /**
              * @cfg {String} CSS класс для подсветки
@@ -41,12 +42,20 @@ define(['js!SBIS3.CONTROLS.Utils.HtmlDecorators/AbstractDecorator'], function (A
          }
       },
 
+      checkCondition: function(obj) {
+         return !!obj['highlight'];
+      },
+
       /**
        * Применяет декоратор
        * @param {*} value Текст для декорирования
        * @returns {*}
        */
       apply: function (value) {
+         if (!this._options.enabled) {
+            return value;
+         }
+
          return this.getHighlighted(
             value,
             this._text,
@@ -66,6 +75,9 @@ define(['js!SBIS3.CONTROLS.Utils.HtmlDecorators/AbstractDecorator'], function (A
             return text;
          }
          text = '' + text;
+         highlight = $ws.helpers.escapeHtml('' + highlight)
+            .replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, '\\$&');
+
          return text.replace(
             new RegExp(highlight, 'gi'),
             '<span class="' + cssClass + '">$&</span>'

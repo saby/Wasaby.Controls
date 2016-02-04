@@ -1,0 +1,111 @@
+<div>
+    <component data-component="SBIS3.CONTROLS.OperationsPanelButton" name="PanelsButton"></component>
+    <component data-component="SBIS3.CONTROLS.OperationsPanel" name="OperationsPanel">
+        <options name="items" type="array">
+            <options>
+                <option name="name">delete</option>
+                <option name="componentType">js!SBIS3.CONTROLS.OperationDelete</option>
+                <options name="type">
+                    <option name="mass">true</option>
+                    <option name="selection">true</option>
+                </options>
+            </options>
+            <options>
+                <option name="name">operationsMark</option>
+                <option name="componentType">js!SBIS3.CONTROLS.OperationsMark</option>
+                <options name="type">
+                    <option name="mark">true</option>
+                </options>
+                <options name="options">
+                    <option name="captionRender" type="function">js!SBIS3.CONTROLS.Demo.MyOperationsPanel:prototype._markCaptionRender</option>
+                </options>
+            </options>
+            <options>
+                <option name="name">print</option>
+                <option name="componentType">js!SBIS3.CONTROLS.OperationPrint</option>
+                <options name="type">
+                    <option name="mass">true</option>
+                </options>
+            </options>
+            <options>
+                <option name="name">move</option>
+                <option name="componentType">js!SBIS3.CONTROLS.OperationMove</option>
+                <options name="type">
+                    <option name="selection">true</option>
+                </options>
+            </options>
+            <options>
+                <option name="name">merge</option>
+                <option name="componentType">js!SBIS3.CONTROLS.OperationMerge</option>
+                <options name="type">
+                    <option name="selection">true</option>
+                </options>
+            </options>
+        </options>
+    </component>
+    <component data-component="SBIS3.CONTROLS.BreadCrumbs" name="BreadCrumbs"></component>
+    <component data-component="SBIS3.CONTROLS.BackButton" name="BackButton"></component>
+    <component data-component="SBIS3.CONTROLS.TreeDataGridView" name="DataGridView">
+        <options name="columns" type="array">
+            <options>
+                <option name="title">№</option>
+                <option name="width" type="string">100</option>
+                <option name="field">id</option>
+            </options>
+            <options>
+                <option name="title">Заголовок</option>
+                <option name="field">title</option>
+            </options>
+        </options>
+        <option name="emptyHTML">Нет записей</option>
+        <options name="items" type="array">
+            <options>
+                <option name="id" type="string">1</option>
+                <option name="title">Первый</option>
+                <option name="parent@">true</option>
+            </options>
+            <options>
+                <option name="id" type="string">3</option>
+                <option name="title">Третий</option>
+                <option name="parent">1</option>
+            </options>
+            <options>
+                <option name="id" type="string">2</option>
+                <option name="title">Второй</option>
+                <option name="parent@">true</option>
+            </options>
+            <options>
+                <option name="id" type="string">4</option>
+                <option name="title">Четвёртый</option>
+                <option name="parent">2</option>
+                <option name="parent@">true</option>
+            </options>
+            <options>
+                <option name="id" type="string">5</option>
+                <option name="title">Пятый</option>
+                <option name="parent">4</option>
+            </options>
+            <options>
+                <option name="id" type="string">6</option>
+                <option name="title">Шестой</option>
+            </options>
+            <options>
+                <option name="id" type="string">7</option>
+                <option name="title">Седьмой</option>
+            </options>
+            <options>
+                <option name="id" type="string">8</option>
+                <option name="title">Восьмой</option>
+            </options>
+        </options>
+        <option name="multiselect">true</option>
+        <option name="displayField">title</option>
+        <option name="hierField">parent</option>
+        <option name="keyField">id</option>
+    </component>
+    <component data-component="SBIS3.CONTROLS.MergeAction" name="MergeAction">
+        <option name="displayField">title</option>
+        <option name="hierField">parent</option>
+        <option name="testMergeMethodName">TestMerge</option>
+    </component>
+</div>

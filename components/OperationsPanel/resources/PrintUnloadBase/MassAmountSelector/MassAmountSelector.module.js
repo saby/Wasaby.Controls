@@ -15,7 +15,7 @@ define('js!SBIS3.CONTROLS.MassAmountSelector', [
          _options: {
             name: 'controls-MassAmountSelector',
             verticalAlignment: 'Top',
-            width: '325px',
+            width: '350px',
             height: 'auto',
             resizable: false
          },

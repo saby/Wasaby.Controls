@@ -10,22 +10,23 @@ define('js!SBIS3.CONTROLS.ComponentBinder', [], function () {
    /*методы для поиска*/
    function startHierSearch(text, searchParamName, searchCrumbsTpl) {
       if (text) {
-         var filter = $ws.core.merge(this._options.view._filter, {
+         var filter = $ws.core.merge(this._options.view.getFilter(), {
                'Разворот': 'С разворотом',
                'usePages': 'full'
             }),
             view = this._options.view,
-            groupBy = view.getSearchGroupBy();
+            groupBy = view.getSearchGroupBy(searchParamName);
          if (searchCrumbsTpl) {
             groupBy.breadCrumbsTpl = searchCrumbsTpl;
          }
          filter[searchParamName] = text;
          view.setHighlightText(text, false);
+         view.setHighlightEnabled(true);
          view.setInfiniteScroll(true, true);
          view.setGroupBy(groupBy);
          if (this._firstSearch) {
             this._lastRoot = view.getCurrentRoot();
-            if (this._options.breadCrumbs){
+            if (this._options.breadCrumbs && this._options.breadCrumbs.getDataSet()){
                this._pathDSRawData = $ws.core.clone(this._options.breadCrumbs.getDataSet().getRawData());
             }
          }
@@ -40,7 +41,7 @@ define('js!SBIS3.CONTROLS.ComponentBinder', [], function () {
             this._options.backButton.getContainer().css({'visibility': 'hidden'});
          }
 
-         view.reload(filter, view._sorting, 0).addCallback(function(){
+         view.reload(filter, view.getSorting(), 0).addCallback(function(){
             view._container.addClass('controls-GridView__searchMode');
          });
       }
@@ -49,22 +50,24 @@ define('js!SBIS3.CONTROLS.ComponentBinder', [], function () {
    function startSearch(text, searchParamName){
       if (text){
          var view = this._options.view,
-            filter = $ws.core.merge(view._filter, {
+            filter = $ws.core.merge(view.getFilter(), {
                'usePages': 'full'
             });
          filter[searchParamName] = text;
          view.setHighlightText(text, false);
+         view.setHighlightEnabled(true);
          view.setInfiniteScroll(true, true);
-         view.reload(filter, view._sorting, 0);
+         view.reload(filter, view.getSorting(), 0);
       }
    }
 
    function resetSearch(searchParamName){
-      var view = this._options.view;
-      delete (view._filter[searchParamName]);
+      var
+         view = this._options.view,
+         filter = view.getFilter();
+      delete (filter[searchParamName]);
       view.setHighlightText('', false);
-      view.reload(view._filter, view._sorting, 0);
-   }
+      view.setHighlightEnabled(false);      view.reload(filter, view.getSorting(), 0);   }
 
    function resetGroup(searchParamName) {
       //Если мы ничего не искали, то и сбрасывать нечего
@@ -72,14 +75,15 @@ define('js!SBIS3.CONTROLS.ComponentBinder', [], function () {
          return;
       }
       var view = this._options.view,
-         filter = $ws.core.merge(view._filter, {
+         filter = $ws.core.merge(view.getFilter(), {
             'Разворот' : 'Без разворота'
          });
       delete (filter[searchParamName]);
 
-      view.setInfiniteScroll(false, true);
-      view.setGroupBy({});
+      view.setInfiniteScroll(this._isInfiniteScroll, true);
+      view.setGroupBy(this._lastGroup);
       view.setHighlightText('', false);
+      view.setHighlightEnabled(false);
       this._firstSearch = true;
       if (this._searchReload ) {
          //Нужно поменять фильтр и загрузить нужный корень.
@@ -87,8 +91,8 @@ define('js!SBIS3.CONTROLS.ComponentBinder', [], function () {
          filter[view.getHierField()] = this._lastRoot;
          //DataGridView._filter = filter;
          //DataGridView.setCurrentRoot(self._lastRoot); - плохо, потому что ВСЕ крошки на странице получат изменения
-         view.reload(filter, view._sorting, 0);
-         this._path = this._pathDSRawData;
+         view.reload(filter, view.getSorting(), 0);
+         this._path = this._pathDSRawData || [];
          if (this._options.breadCrumbs){
             this._options.breadCrumbs.getDataSet().setRawData(this._pathDSRawData);
             this._options.breadCrumbs._redraw();
@@ -98,7 +102,7 @@ define('js!SBIS3.CONTROLS.ComponentBinder', [], function () {
          }
       } else {
          //Очищаем крошки. TODO переделать, когда появятся привзяки по контексту
-         view._filter = filter;
+         view.setFilter(filter, true);
       }
       //При любом релоаде из режима поиска нужно снять класс
       view.once('onDataLoad', function(){
@@ -106,18 +110,13 @@ define('js!SBIS3.CONTROLS.ComponentBinder', [], function () {
       });
    }
 
-   function breakSearch(searchForm){
-      this._searchReload = false;
+   function breakSearch(searchForm, withReload){
+      this._searchReload = !!withReload;
       this._firstSearch = true;
       //Если в строке поиска что-то есть, очистим и сбросим Фильтр
       if (searchForm.getText()) {
          searchForm.setText('');
       }
-   }
-
-   function isSearchValid(text, minLength) {
-      var checkText = text.replace(/[«»’”@#№$%^&*;:?.,!\/~\]\[{}()|<>=+\-_\s'"]/g, '');
-      return [checkText, checkText.length >= minLength];
    }
 
    function toggleCheckBoxes(operationPanel, gridView, hideCheckBoxes) {
@@ -133,13 +132,14 @@ define('js!SBIS3.CONTROLS.ComponentBinder', [], function () {
     * @extends $ws.proto.Abstract
     * @public
     */
-   var ComponentBinder = $ws.proto.Abstract.extend({
+   var ComponentBinder = $ws.proto.Abstract.extend(/**@lends SBIS3.CONTROLS.ComponentBinder.prototype*/{
       $protected : {
          _searchReload : true,
          _searchForm : undefined,
          _lastRoot : undefined,
+         _lastGroup: {},
          _currentRoot: null,
-         _pathDSRawData : undefined,
+         _pathDSRawData : [],
          _firstSearch: true,
          _lastViewMode: null,
          _path: [],
@@ -163,7 +163,11 @@ define('js!SBIS3.CONTROLS.ComponentBinder', [], function () {
             /**
              * @cfg {SBIS3.CONROLS.OperationsPanel} объект панели массовых операций
              */
-            operationPanel: undefined
+            operationPanel: undefined,
+            /**
+             * @cfg {SBIS3.CONROLS.FilterButton} объект кнопки фильтров
+             */
+            filterButton: undefined
          }
       },
 
@@ -175,7 +179,10 @@ define('js!SBIS3.CONTROLS.ComponentBinder', [], function () {
        * @param {SBIS3.CONROLS.SearchForm} [searchForm] объект формы поиска, если не передан используется тот, что задан в опциях
        * @example
        * <pre>
-       *     myBinder = new ComponentBinder();
+       *     myBinder = new ComponentBinder({
+       *        view: myGridView,
+       *        searchForm: mySearchForm
+       *     });
        *     myBinder.bindSearchGrid('СтрокаПоиска');
        * </pre>
        */
@@ -188,25 +195,22 @@ define('js!SBIS3.CONTROLS.ComponentBinder', [], function () {
             this._lastRoot = view.getCurrentRoot();
             //searchForm.subscribe('onReset', resetGroup);
             view.subscribe('onSetRoot', function(){
-               breakSearch(searchForm);
+               self._lastRoot = view.getCurrentRoot();
+               if (self._options.backButton) {
+                  self._options.backButton.getContainer().css({'visibility': 'visible'});
+               }
             });
             //Перед переключением в крошках в режиме поиска сбросим фильтр поиска
             view.subscribe('onSearchPathClick', function(){
-               breakSearch(searchForm);
+               breakSearch.call(self, searchForm, true);
             });
          }
 
+         this._lastGroup = view._options.groupBy;
+         this._isInfiniteScroll = view.isInfiniteScroll();
+
          searchForm.subscribe('onTextChange', function(event, text){
-            var checkedText = isSearchValid(text, 3);
-            if (checkedText[1]) {
-               if (hierarchy) {
-                  startHierSearch.call(self, text, searchParamName, searchCrumbsTpl);
-                  self._path = [];
-               } else {
-                  startSearch.call(self, text, searchParamName);
-               }
-            }
-            if (!checkedText[0]) {
+            if (text.length < searchForm.getProperty('startCharacter')) {
                if (hierarchy) {
                   resetGroup.call(self, searchParamName);
                } else {
@@ -214,15 +218,12 @@ define('js!SBIS3.CONTROLS.ComponentBinder', [], function () {
                }
             }
          });
-         
-         searchForm.subscribe('onSearchStart', function(event, text) {
-            var checkedText = isSearchValid(text, 1);
-            if (checkedText[1]) {
-               if (hierarchy) {
-                  startHierSearch.call(self, text, searchParamName);
-               } else {
-                  startSearch.call(self, text, searchParamName);
-               }
+
+         searchForm.subscribe('onSearch', function(event, text) {
+            if (hierarchy) {
+               startHierSearch.call(self, text, searchParamName);
+            } else {
+               startSearch.call(self, text, searchParamName);
             }
          });
       },
@@ -283,7 +284,7 @@ define('js!SBIS3.CONTROLS.ComponentBinder', [], function () {
 
          view.subscribe('onSetRoot', function(event, id, hier){
             var i;
-            /* 
+            /*
              TODO: Хак для того перерисовки хлебных крошек при переносе из папки в папку
              Проверить совпадение родительского id и текущего единственный способ понять,
              что в папку не провалились, а попали через перенос.
@@ -293,6 +294,10 @@ define('js!SBIS3.CONTROLS.ComponentBinder', [], function () {
                self._currentRoot = hier[0];
                self._path = hier.reverse();
             } else {
+               if (id === null){
+                   self._currentRoot = null;
+                   self._path = [];
+               }
                for (i = hier.length - 1; i >= 0; i--) {
                   var rec = hier[i];
                   if (rec){
@@ -350,7 +355,10 @@ define('js!SBIS3.CONTROLS.ComponentBinder', [], function () {
        * в представлении данных вместе с панелью или нет.
        * @example
        * <pre>
-       *     myBinder = new ComponentBinder();
+       *     myBinder = new ComponentBinder({
+       *        view: myGridView,
+       *        operationPanel: myOperationPanel
+       *     });
        *     myBinder.bindOperationPanel(true);
        * </pre>
        */
@@ -367,6 +375,29 @@ define('js!SBIS3.CONTROLS.ComponentBinder', [], function () {
          operationPanel.subscribe('onToggle', function() {
             toggleCheckBoxes(operationPanel, view, hideCheckBoxes);
          });
+      },
+      /**
+       * Метод для связывания истории фильтров с представлением данных
+       */
+      bindFilterHistory: function(filterButton, fastDataFilter, historyId, controller, browser) {
+         var view = browser.getView(),
+             historyController = new controller({
+                historyId: historyId,
+                filterButton: filterButton,
+                fastDataFilter: fastDataFilter,
+                view: view
+             }),
+             filter = historyController.getActiveFilter();
+
+         filterButton.setHistoryController(historyController);
+         setTimeout($ws.helpers.forAliveOnly(function() {
+            if(filter) {
+               /* Надо вмерживать структуру, полученную из истории, т.к. мы не сохраняем в историю шаблоны строки фильтров */
+               filterButton._updateFilterStructure($ws.core.merge(filterButton.getFilterStructure(), filter.filter));
+               view.setFilter($ws.core.merge(view.getFilter(), filter.viewFilter), true);
+            }
+            browser._notifyOnFiltersReady();
+         }, view), 0);
       }
    });
 

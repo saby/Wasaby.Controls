@@ -7,33 +7,59 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', ['js!SBIS3.CORE.Control'], function (Con
     */
 
    var TreeMixinDS = /** @lends SBIS3.CONTROLS.TreeMixinDS.prototype */{
+      /**
+       * @event onNodeExpand После разворачивания ветки
+       * @param {$ws.proto.EventObject} eventObject Дескриптор события.
+       * @param {String} key ключ разворачиваемой ветки
+       * @example
+       * <pre>
+       *    onNodeExpand: function(event){
+       *       $ws.helpers.question('Продолжить?');
+       *    }
+       * </pre>
+       *
+       * @event onNodeCollapse После сворачивания ветки
+       * @param {$ws.proto.EventObject} eventObject Дескриптор события.
+       * @param {String} key ключ разворачиваемой ветки
+       * @example
+       * <pre>
+       *    onNodeCollapse: function(event){
+       *       $ws.helpers.question('Продолжить?');
+       *    }
+       * </pre>
+       */
       $protected: {
          _folderOffsets : {},
+         _folderHasMore : {},
          _treePagers : {},
          _treePager: null,
          _options: {
             /**
              * @cfg {Boolean} При открытия узла закрывать другие
-             * @noShow
              */
-            singleExpand: '',
+            singleExpand: false,
 
             /**
-             * Опция задаёт режим разворота.
-             * @Boolean false Без разворота
+             * @cfg {Boolean} Опция задаёт режим разворота. false Без разворота
              */
             expand: false,
-            openedPath : {}
+            openedPath : {},
+            /**
+             * @cfg {Boolean}
+             * Разрешить проваливаться в папки
+             * Если выключено, то папки можно открывать только в виде дерева, проваливаться в них нельзя
+             */
+            allowEnterToFolder: true
          }
       },
 
       $constructor : function() {
-         this._filter = this._filter || {};
-         delete (this._filter[this._options.hierField]);
+         var filter = this.getFilter() || {};
          if (this._options.expand) {
-            this._filter['Разворот'] = 'С разворотом';
-            this._filter['ВидДерева'] = 'Узлы и листья';
+            filter['Разворот'] = 'С разворотом';
+            filter['ВидДерева'] = 'Узлы и листья';
          }
+         this.setFilter(filter, true);
       },
 
       _getRecordsForRedraw: function() {
@@ -65,10 +91,27 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', ['js!SBIS3.CORE.Control'], function (Con
        * @param {String} key Идентификатор раскрываемого узла
        */
       collapseNode: function (key) {
-         var itemCont = $('.controls-ListView__item[data-id="' + key + '"]', this.getContainer().get(0));
-         $('.js-controls-TreeView__expand', itemCont).removeClass('controls-TreeView__expand__open');
+         /* Закроем узел, только если он раскрыт */
+         if(!this.getOpenedPath()[key]) {
+            return;
+         }
+
+         this._drawExpandArrow(key, false);
+         this._collapseChilds(key);
          delete(this._options.openedPath[key]);
          this._nodeClosed(key);
+         this._notify('onNodeCollapse', key);
+      },
+
+      //Рекурсивно удаляем из индекса открытых узлов все дочерние узлы закрываемого узла
+      _collapseChilds: function(key){
+         var tree = this._dataSet._indexTree;
+         if (tree[key]){
+            for (var i = 0; i < tree[key].length; i++){
+               this._collapseChilds(tree[key][i]);
+               delete(this._options.openedPath[tree[key][i]]);
+            }
+         }
       },
 
       /**
@@ -77,63 +120,127 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', ['js!SBIS3.CORE.Control'], function (Con
        */
 
       toggleNode: function (key) {
-         var itemCont = $('.controls-ListView__item[data-id="' + key + '"]', this.getContainer().get(0));
-         if ($('.js-controls-TreeView__expand', itemCont).hasClass('controls-TreeView__expand__open')) {
-            this.collapseNode(key);
+         this[this.getOpenedPath()[key] ? 'collapseNode' : 'expandNode'](key);
+      },
+
+      _findExpandByElement: function(elem){
+         if (elem.hasClass('js-controls-TreeView__expand')) {
+            return elem;
          }
          else {
-            this.expandNode(key);
+            var closest = elem.closest('.js-controls-TreeView__expand');
+            if (elem.closest('.js-controls-TreeView__expand').length){
+               return closest
+            }
+            else {
+               return elem;
+            }
          }
       },
 
       _createTreeFilter: function(key) {
-         var filter = $ws.core.clone(this._filter) || {};
+         var
+            filter = $ws.core.clone(this.getFilter()) || {};
          if (this._options.expand) {
-            this._filter = this._filter || {};
             filter['Разворот'] = 'С разворотом';
             filter['ВидДерева'] = 'Узлы и листья';
          }
+         this.setFilter($ws.core.clone(filter), true);
          filter[this._options.hierField] = key;
          return filter;
       },
 
       expandNode: function (key) {
-         var self = this;
+         /* Если узел уже открыт, то ничего делать не надо*/
+         if(this.getOpenedPath()[key]) {
+            return;
+         }
+
+         var self = this,
+             tree = this._dataSet.getTreeIndex(this._options.hierField, true);
+
          this._folderOffsets[key || 'null'] = 0;
-         this._toggleIndicator(true);
-         return this._dataSource.query(this._createTreeFilter(key), this._sorting, 0, this._limit).addCallback(function (dataSet) {
-            self._toggleIndicator(false);
-            self._nodeDataLoaded(key, dataSet);
-         });
+         if (this._options.singleExpand){
+            $.each(this._options.openedPath, function(openedKey, _value){
+               if (key != openedKey){
+                  self.collapseNode(openedKey);
+               }
+            });
+         }
+         if (!tree[key]){
+            this._toggleIndicator(true);
+            return this._callQuery(this._createTreeFilter(key), this.getSorting(), 0, this._limit).addCallback(function (dataSet) {
+               // TODO: Отдельное событие при загрузке данных узла. Сделано так как тут нельзя нотифаить onDataLoad,
+               // так как на него много всего завязано. (пользуется Янис)
+               self._folderHasMore[key] = dataSet.getMetaData().more;
+               self._notify('onDataMerge', dataSet);
+               self._toggleIndicator(false);
+               self._nodeDataLoaded(key, dataSet);
+               self._notify('onNodeExpand', key);
+            });
+         } else {
+            var child = tree[key];
+            var records = [];
+            if (child){
+               for (var i = 0; i < child.length; i++){
+                  records.push(this._dataSet.getRecordById(child[i]));
+               }
+               this._options.openedPath[key] = true;
+               this._drawLoadedNode(key, records, this._folderHasMore[key]);
+               this._notify('onNodeExpand', key);
+            }
+         }
+      },
+      /**
+       * Получить текущий набор открытых элементов иерархии
+       */
+      getOpenedPath: function(){
+         return this._options.openedPath;
       },
 
-      _nodeDataLoaded : function(key, dataSet) {
-         var
-            self = this,
-            itemCont = $('.controls-ListView__item[data-id="' + key + '"]', this.getContainer().get(0));
-
-         $('.js-controls-TreeView__expand', itemCont).first().addClass('controls-TreeView__expand__open');
-         this._options.openedPath[key] = true;
-         this._dataSet.merge(dataSet, {remove: false});
-         this._dataSet._reindexTree(this._options.hierField);
-
-
-         dataSet.each(function (record) {
-            var targetContainer = self._getTargetContainer(record);
+      _drawLoadedNode: function(key, records){
+         this._drawExpandArrow(key);
+         for (var i = 0; i < records.length; i++) {
+            var record = records[i];
+            var targetContainer = this._getTargetContainer(record);
             if (targetContainer) {
-               if (self._options.displayType == 'folders') {
-                  if (record.get(self._options.hierField + '@')) {
-                     self._drawAndAppendItem(record, targetContainer);
+               if (this._options.displayType == 'folders') {
+                  if (record.get(this._options.hierField + '@')) {
+                     this._drawAndAppendItem(record, targetContainer);
                   }
                }
                else {
-                  self._drawAndAppendItem(record, targetContainer);
+                  this._drawAndAppendItem(record, targetContainer);
                }
-
             }
+         }
+      },
+
+      _drawExpandArrow: function(key, flag){
+         var itemCont = $('.controls-ListView__item[data-id="' + key + '"]', this.getContainer().get(0));
+         $('.js-controls-TreeView__expand', itemCont).first().toggleClass('controls-TreeView__expand__open', flag);
+      },
+
+      _nodeDataLoaded : function(key, dataSet) {
+         var self = this;
+         this._dataSet.merge(dataSet, {remove: false});
+         this._dataSet.getTreeIndex(this._options.hierField, true);
+         var records = [];
+         dataSet.each(function (record) {
+            records.push(record);
          });
+         this._options.openedPath[key] = true;
+         self._drawLoadedNode(key, records, self._folderHasMore[key]);
+      },
 
-
+      around : {
+         _addItem: function (parentFnc, item, at) {
+            //TODO придрот, чтоб не отрисовывались данные в дереве при первом открытии узла
+            var parent = item.getContents().get(this._options.hierField);
+            if (this._options.openedPath[parent] || (parent == this._curRoot)) {
+               parentFnc.call(this, item, at);
+            }
+         }
       },
 
       _nodeClosed : function(key) {
@@ -170,16 +277,11 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', ['js!SBIS3.CORE.Control'], function (Con
       _folderLoad: function(id) {
          var
             self = this,
-            filter;
-         if (id) {
-            filter = this._createTreeFilter(id);
-         }
-         else {
-            filter = this._filter;
-         }
-         this._loader = this._dataSource.query(filter, this._sorting, (id ? this._folderOffsets[id] : this._folderOffsets['null']) + this._limit, this._limit).addCallback(function (dataSet) {
+            filter = id ? this._createTreeFilter(id) : this.getFilter();
+         this._loader = this._callQuery(filter, this.getSorting(), (id ? this._folderOffsets[id] : this._folderOffsets['null']) + this._limit, this._limit).addCallback($ws.helpers.forAliveOnly(function (dataSet) {
             //ВНИМАНИЕ! Здесь стрелять onDataLoad нельзя! Либо нужно определить событие, которое будет
             //стрелять только в reload, ибо между полной перезагрузкой и догрузкой данных есть разница!
+            self._notify('onDataMerge', dataSet);
             self._loader = null;
             //нам до отрисовки для пейджинга уже нужно знать, остались еще записи или нет
             if (id) {
@@ -188,6 +290,7 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', ['js!SBIS3.CORE.Control'], function (Con
             else {
                self._folderOffsets['null'] += self._limit;
             }
+            self._folderHasMore[id] = dataSet.getMetaData().more;
             if (!self._hasNextPageInFolder(dataSet.getMetaData().more, id)) {
                if (typeof id != 'undefined') {
                   self._treePagers[id].setHasMore(false)
@@ -195,17 +298,18 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', ['js!SBIS3.CORE.Control'], function (Con
                else {
                   self._treePager.setHasMore(false)
                }
-               self._removeLoadingIndicator();
+               self._hideLoadingIndicator();
             }
             //Если данные пришли, нарисуем
             if (dataSet.getCount()) {
                var records = dataSet._getRecords();
                self._dataSet.merge(dataSet, {remove: false});
+               self._dataSet.getTreeIndex(self._options.hierField, true);
                self._drawItemsFolderLoad(records, id);
                self._dataLoadedCallback();
             }
 
-         }).addErrback(function (error) {
+         }, self)).addErrback(function (error) {
             //Здесь при .cancel приходит ошибка вида DeferredCanceledError
             return error;
          });
@@ -250,11 +354,17 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', ['js!SBIS3.CORE.Control'], function (Con
          reload : function() {
             this._folderOffsets['null'] = 0;
          },
+         _keyboardHover: function(e) {
+            switch(e.which) {
+               case $ws._const.key.m:
+                  e.ctrlKey && this.moveRecordsWithDialog();
+                  break;
+            }
+         },
          _dataLoadedCallback: function () {
-            this._options.openedPath = {};
-            this._dataSet._reindexTree(this._options.hierField);
+            //this._options.openedPath = {};
             if (this._options.expand) {
-               var tree = this._dataSet._indexTree;
+               var tree = this._dataSet.getTreeIndex(this._options.hierField);
                for (var i in tree) {
                   if (tree.hasOwnProperty(i) && i != 'null' && i != this._curRoot) {
                      this._options.openedPath[i] = true;
@@ -278,8 +388,11 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', ['js!SBIS3.CORE.Control'], function (Con
       },
 
       _elemClickHandlerInternal: function (data, id, target) {
-         var nodeID = $(target).closest('.controls-ListView__item').data('id');
-         if ($(target).hasClass('js-controls-TreeView__expand')) {
+         var
+            nodeID = $(target).closest('.controls-ListView__item').data('id'),
+            closestExpand = this._findExpandByElement($(target));
+
+         if (closestExpand.hasClass('js-controls-TreeView__expand')) {
             this.toggleNode(nodeID);
          }
          else {
@@ -287,13 +400,13 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', ['js!SBIS3.CORE.Control'], function (Con
                this.setCurrentRoot(nodeID);
                this.reload();
             }
+            else {
+               this._activateItem(id);
+            }
          }
       }
-
-
-
    };
-    
+
    var TreePagingLoader = Control.Control.extend({
       $protected :{
          _options : {

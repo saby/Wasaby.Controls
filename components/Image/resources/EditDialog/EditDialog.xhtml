@@ -1,0 +1,12 @@
+<div class="controls-EditDialog__content">
+   <div class="ws-window-titlebar-custom">
+      <div class="ws-window-title controls-EditDialog__title" title="{{=it.imageTitle}}">{{=it.title}}</div>
+      <component data-component="SBIS3.CONTROLS.Button" class="controls-EditDialog__applyButton" name="applyButton">
+         <option name="caption">Сохранить</option>
+         <option name="defaultButton">true</option>
+         <option name="tabindex">5</option>
+         <options name="handlers">
+            <option name="onActivated" type="function">js!SBIS3.CONTROLS.Image.EditDialog:prototype.onActivateSaveButton</option>
+         </options>
+      </component>
+   </div><div class="controls-EditDialog__image-wrapper"><img class="controls-EditDialog__image"/></div></div>

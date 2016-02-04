@@ -1,3 +1,16 @@
 .controls-editInPlace {
-   background-color: #F3F3F3;
+   height: 0 !important;
+
+   .controls-editInPlace__withoutEditor, .controls-editInPlace__withEditor {
+      position: relative;
+      padding: 0;
+   }
+   .controls-editInPlace__editor {
+      position: absolute;
+      width: 100%;
+      z-index: 1;
+      box-sizing: border-box;
+      margin-top: @controls-editInPlace-editor-margin-top;
+      padding: @controls-editInPlace-editor-padding;
+   }
 }

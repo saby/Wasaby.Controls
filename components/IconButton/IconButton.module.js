@@ -42,6 +42,8 @@ define('js!SBIS3.CONTROLS.IconButton', ['js!SBIS3.CONTROLS.ButtonBase', 'js!SBIS
     * @ignoreEvents onActivate onAfterLoad onAfterShow onBeforeControlsLoad onBeforeLoad onBeforeShow onChange onClick
     * @ignoreEvents onFocusIn onFocusOut onKeyPressed onReady onResize onStateChanged onTooltipContentRequest
     * @ignoreEvents onDragIn onDragStart onDragStop onDragMove onDragOut
+    *
+    * @cssModifier controls-IconButton__round-border круглый бордер вокруг иконки
     */
 
    var IconButton = ButtonBase.extend([Clickable, IconMixin], /** @lends SBIS3.CONTROLS.IconButton.prototype */ {
@@ -51,13 +53,36 @@ define('js!SBIS3.CONTROLS.IconButton', ['js!SBIS3.CONTROLS.ButtonBase', 'js!SBIS
          }
       },
 
-      setIcon: function(icon){
-         IconButton.superclass.setIcon.call(this, icon);
-         this._container.removeClass().addClass('controls-IconButton ' + this._iconClass);
+      _modifyOptions: function (opts) {
+         var
+            options = IconButton.superclass._modifyOptions.apply(this, arguments),
+            iconClass = options._iconClass;
+         if (iconClass) {
+            options._moreClass = '';
+            if ((iconClass.indexOf('icon-error') < 0) && (iconClass.indexOf('icon-done') < 0)) {
+               options._moreClass += ' action-hover';
+            }
+            else {
+               if (iconClass.indexOf('icon-error') >= 0) {
+                  options._moreClass += ' controls-IconButton__errorBorder';
+               }
+               else {
+                  options._moreClass += ' controls-IconButton__doneBorder';
+               }
+            }
+         }
+         return options;
       },
 
-      setCaption: function(caption) {
-         this._container.attr('title', caption);       
+      _drawIcon: function(icon){
+      	if (this._oldIcon){
+      		this._container.removeClass(this._oldIcon);
+      	}
+         this._container.addClass('controls-IconButton ' + this._options._iconClass);
+      },
+
+      setTooltip: function(tooltip) {
+         this._container.attr('title', tooltip);
       }
    });
 
