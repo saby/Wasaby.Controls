@@ -36,7 +36,7 @@ define('js!SBIS3.CONTROLS.hierarchyMixin', [], function () {
          var
             filter = this.getFilter() || {};
          //Внимание! Событие очень нужно иерархическому поиску. Подписано в ComponentBinder
-         this._publish('onSetRoot');
+         this._publish('onSetRoot', 'onBeforeSetRoot');
          if (typeof this._options.root != 'undefined') {
             this._curRoot = this._options.root;
             filter[this._options.hierField] = this._options.root;
@@ -153,6 +153,8 @@ define('js!SBIS3.CONTROLS.hierarchyMixin', [], function () {
          this._offset = 0;
          //TODO: нужно избавиться от флага когда будут готовы биндинги
          this._rootChanged = this._curRoot !== key;
+         //Если добавить проверку на rootChanged, то при переносе в ту же папку, из которой искали ничего не произойдет
+         this._notify('onBeforeSetRoot', key);
          this._curRoot = key || this._options.root;
       },
       after : {
