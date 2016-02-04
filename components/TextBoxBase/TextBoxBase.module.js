@@ -192,7 +192,7 @@ define('js!SBIS3.CONTROLS.TextBoxBase',
 
       setValue : function(txt) {
          $ws.single.ioc.resolve('ILogger').log('setValue()', 'setValue is deprecated. Use setText()');
-         this.setText(txt)
+         this.setText(txt);
       }
    });
 

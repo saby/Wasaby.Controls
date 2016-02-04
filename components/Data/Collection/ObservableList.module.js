@@ -2,8 +2,9 @@
 define('js!SBIS3.CONTROLS.Data.Collection.ObservableList', [
    'js!SBIS3.CONTROLS.Data.Collection.List',
    'js!SBIS3.CONTROLS.Data.Bind.ICollection',
-   'js!SBIS3.CONTROLS.Data.Collection.ObservableListMixin'
-], function (List, IBindCollection, ObservableListMixin) {
+   'js!SBIS3.CONTROLS.Data.Collection.ObservableListMixin',
+   'js!SBIS3.CONTROLS.Data.Di'
+], function (List, IBindCollection, ObservableListMixin, Di) {
    'use strict';
 
    /**
@@ -20,6 +21,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.ObservableList', [
       _moduleName: 'SBIS3.CONTROLS.Data.Collection.ObservableList'
    });
 
+   Di.register('collection.observable-list', ObservableList);
 
    return ObservableList;
 });

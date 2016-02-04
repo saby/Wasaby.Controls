@@ -72,7 +72,7 @@ define('js!SBIS3.CONTROLS.ActiveMultiSelectable', [], function() {
 
          /* Не добавляем уже выбранные элементы */
          newItems.each(function(rec) {
-            if(self._isItemSelected(rec.getId()) !== -1) {
+            if(self._isItemSelected(rec)) {
                newItems.remove(rec)
             }
          });

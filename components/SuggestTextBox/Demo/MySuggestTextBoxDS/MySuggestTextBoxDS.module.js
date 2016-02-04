@@ -3,9 +3,8 @@ define('js!SBIS3.CONTROLS.Demo.MySuggestTextBoxDS', [
    'html!SBIS3.CONTROLS.Demo.MySuggestTextBox',
    'css!SBIS3.CONTROLS.Demo.MySuggestTextBox',
    'js!SBIS3.CONTROLS.SuggestTextBox',
-   'js!SBIS3.CONTROLS.ArrayStrategy',
-   'js!SBIS3.CONTROLS.StaticSource'
-], function (CompoundControl, dotTplFn, cssFn, SuggestTextBox, ArrayStrategy, StaticSource) {
+   'js!SBIS3.CONTROLS.Data.Source.Memory'
+], function (CompoundControl, dotTplFn, cssFn, SuggestTextBox, StaticSource) {
    /**
     * SBIS3.CONTROLS.Demo.MySuggestTextBoxDS
     * @class SBIS3.CONTROLS.Demo.MySuggestTextBoxDS
@@ -23,56 +22,56 @@ define('js!SBIS3.CONTROLS.Demo.MySuggestTextBoxDS', [
       init: function () {
          moduleClass.superclass.init.call(this);
 
-         var list = this.getChildControlByName('TextBoxLastName').getList();
-         var dataSource = new StaticSource({
-            data: [{
-               'Ид': 1,
-               'Фамилия': 'Иванов',
-               'Имя': 'Иван',
-               'Отчество': 'Иванович',
-               'Должность': 'Инженер'
-            }, {
-               'Ид': 2,
-               'Фамилия': 'Иванов',
-               'Имя': 'Федор',
-               'Отчество': 'Иванович',
-               'Должность': 'Директор'
-            }, {
-               'Ид': 3,
-               'Фамилия': 'Иванова',
-               'Имя': 'Федора',
-               'Отчество': 'Сергеевна',
-               'Должность': 'Инженер'
-            }, {
-               'Ид': 4,
-               'Фамилия': 'Петров',
-               'Имя': 'Иван',
-               'Отчество': 'Андреевич',
-               'Должность': 'Директор'
-            }, {
-               'Ид': 5,
-               'Фамилия': 'Сидоров',
-               'Имя': 'Михаил',
-               'Отчество': 'Петрович',
-               'Должность': 'Карапуз'
-            }, {
-               'Ид': 6,
-               'Фамилия': 'Яковлев',
-               'Имя': 'Иван',
-               'Отчество': 'Викторович',
-               'Должность': 'Директор'
-            }, {
-               'Ид': 7,
-               'Фамилия': 'Арбузнов',
-               'Имя': 'Иванко',
-               'Отчество': 'Яковлевич',
-               'Должность': 'Маркетолог'
-            }],
-            keyField: 'Ид',
-            strategy: new ArrayStrategy()
-         });
+         this.getChildControlByName('TextBoxLastName').getList().addCallback(function (list) {
+            var dataSource = new StaticSource({
+               data: [{
+                  'Ид': 1,
+                  'Фамилия': 'Иванов',
+                  'Имя': 'Иван',
+                  'Отчество': 'Иванович',
+                  'Должность': 'Инженер'
+               }, {
+                  'Ид': 2,
+                  'Фамилия': 'Иванов',
+                  'Имя': 'Федор',
+                  'Отчество': 'Иванович',
+                  'Должность': 'Директор'
+               }, {
+                  'Ид': 3,
+                  'Фамилия': 'Иванова',
+                  'Имя': 'Федора',
+                  'Отчество': 'Сергеевна',
+                  'Должность': 'Инженер'
+               }, {
+                  'Ид': 4,
+                  'Фамилия': 'Петров',
+                  'Имя': 'Иван',
+                  'Отчество': 'Андреевич',
+                  'Должность': 'Директор'
+               }, {
+                  'Ид': 5,
+                  'Фамилия': 'Сидоров',
+                  'Имя': 'Михаил',
+                  'Отчество': 'Петрович',
+                  'Должность': 'Карапуз'
+               }, {
+                  'Ид': 6,
+                  'Фамилия': 'Яковлев',
+                  'Имя': 'Иван',
+                  'Отчество': 'Викторович',
+                  'Должность': 'Директор'
+               }, {
+                  'Ид': 7,
+                  'Фамилия': 'Арбузнов',
+                  'Имя': 'Иванко',
+                  'Отчество': 'Яковлевич',
+                  'Должность': 'Маркетолог'
+               }],
+               idProperty: 'Ид'
+            });
 
-         list.setDataSource(dataSource);
+            list.setDataSource(dataSource);
+         });
       }
    });
    return moduleClass;
