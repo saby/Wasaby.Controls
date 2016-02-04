@@ -27,12 +27,12 @@ define('js!SBIS3.CONTROLS.Data.Projection.Tree', [
          /**
           * @var {SBIS3.CONTROLS.Data.Projection.TreeItem} Корневой элемент дерева
           */
-         _root: undefined,
+         _root: null,
 
          /**
           * @var {Object} Стратегия получения дочерних элементов узла
           */
-         _childrenStrategy: undefined,
+         _childrenStrategy: null,
 
          /**
           * @var {Object} Соответствие элементов и их дочерних узлов
@@ -103,6 +103,31 @@ define('js!SBIS3.CONTROLS.Data.Projection.Tree', [
          }
          return index;
       },
+
+      //region SBIS3.CONTROLS.Data.Collection.IEnumerable
+
+      /**
+       * Возвращает энумератор для перебора элементов проекции
+       * @returns {SBIS3.CONTROLS.Data.Projection.CollectionEnumerator}
+       */
+      getEnumerator: function () {
+         return new CollectionProjectionEnumerator({
+            itemsMap: this._itemsMap,
+            filterMap: this._filterMap,
+            sortMap: this._sortMap
+         });
+      },
+
+      each: function (callback, context) {
+         var enumerator = this.getEnumerator(),
+            index = 0,
+            item;
+         while ((item = enumerator.getNext())) {
+            callback.call(context, item, index++);
+         }
+      },
+
+      //endregion SBIS3.CONTROLS.Data.Collection.IEnumerable
 
       //region SBIS3.CONTROLS.Data.Projection.ICollection
 
@@ -201,7 +226,7 @@ define('js!SBIS3.CONTROLS.Data.Projection.Tree', [
       },
 
       getRoot: function () {
-         if (this._root === undefined) {
+         if (this._root === null) {
             if (this._options.root && $ws.helpers.instanceOfModule(this._options.root, this._itemModule)) {
                this._root = this._options.root;
             } else {
