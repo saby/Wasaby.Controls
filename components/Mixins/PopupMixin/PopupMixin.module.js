@@ -198,14 +198,16 @@ define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManag
                horizontalAlign : this._options.horizontalAlign,
                corner : this._options.corner
             };
+            // Пересчитать оригинальные размеры, флаг true если размеры контейнера поменялись
             if (recalcFlag) {
                var scrollWidth = this._container.get(0).scrollWidth,
                   scrollHeight = this._container.get(0).scrollHeight,
                   maxWidth = parseFloat(this._container.css('max-width'), 10),
-                  maxHeight = parseFloat(this._container.css('max-height'), 10);
+                  maxHeight = parseFloat(this._container.css('max-height'), 10),
+                  border = (this._container.outerWidth() - this._container.innerWidth());
 
-               this._containerSizes.originWidth = scrollWidth > maxWidth ? maxWidth : scrollWidth;
-               this._containerSizes.originHeight = scrollHeight > maxHeight ? maxHeight : scrollHeight;
+               this._containerSizes.originWidth = scrollWidth > maxWidth ? maxWidth : scrollWidth + border ;
+               this._containerSizes.originHeight = scrollHeight > maxHeight ? maxHeight : scrollHeight + border;
             }
             this._initSizes();
             if (this._options.target) {
