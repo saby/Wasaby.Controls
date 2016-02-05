@@ -58,7 +58,9 @@ define('js!SBIS3.CONTROLS.Clickable', [], function() {
       },
 
       before : {
-         _clickHandler: {}
+         _clickHandler: function() {
+
+         }
       },
 
       instead : {
