@@ -151,12 +151,6 @@ define('js!SBIS3.CONTROLS.OperationsPanel', [
             return '<component data-component="' + item.get('componentType').substr(3) + '" config="' + $ws.helpers.encodeCfgAttr(options) + '"></component>';
          }
       },
-      _drawItems: function() {
-         if (!this._itemsDrawn) {
-            OperationsPanel.superclass._drawItems.apply(this);
-            this._itemsDrawn = true;
-         }
-      },
       _getItemType: function (type) {
          return type.mark ? 'mark' : type.mass && type.selection ? 'all' : type.mass ? 'mass' : 'selection';
       },
@@ -175,9 +169,17 @@ define('js!SBIS3.CONTROLS.OperationsPanel', [
        * Получить инстансы всех элементов панели массовых операций.
        * @returns {Array}
        */
+      getItemInstances: function() {
+         var args = arguments;
+         return this.reload().addCallback(function() {
+            return OperationsPanel.superclass.getItemInstances.apply(this, args);
+         }.bind(this));
+      },
       getItemInstance: function() {
-         this._drawItems();
-         return OperationsPanel.superclass.getItemInstance.apply(this, arguments);
+         var args = arguments;
+         return this.reload().addCallback(function() {
+            return OperationsPanel.superclass.getItemInstance.apply(this, args);
+         }.bind(this));
       },
       onSelectedItemsChange: function(idArray) {
          this._blocks.wrapper.toggleClass('controls-operationsPanel__massMode', !idArray.length)
