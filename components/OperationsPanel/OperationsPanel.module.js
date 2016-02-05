@@ -169,11 +169,17 @@ define('js!SBIS3.CONTROLS.OperationsPanel', [
        * Получить инстансы всех элементов панели массовых операций.
        * @returns {Array}
        */
+      getItemInstances: function() {
+         var args = arguments;
+         return this.reload().addCallback(function() {
+            return OperationsPanel.superclass.getItemInstances.apply(this, args);
+         }.bind(this));
+      },
       getItemInstance: function() {
-         if (!this._itemsDrawn) {
-            this._drawItems();
-         }
-         return OperationsPanel.superclass.getItemInstance.apply(this, arguments);
+         var args = arguments;
+         return this.reload().addCallback(function() {
+            return OperationsPanel.superclass.getItemInstance.apply(this, args);
+         }.bind(this));
       },
       onSelectedItemsChange: function(idArray) {
          this._blocks.wrapper.toggleClass('controls-operationsPanel__massMode', !idArray.length)
