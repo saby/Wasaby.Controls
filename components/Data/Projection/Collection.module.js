@@ -21,7 +21,7 @@ define('js!SBIS3.CONTROLS.Data.Projection.Collection', [
     * @author Мальцев Алексей
     */
 
-   var CollectionProjection = Projection.extend([ICollectionProjection, IBindCollectionProjection], /** @lends SBIS3.CONTROLS.Data.Projection.Collection.prototype */{
+   var CollectionProjection = Projection.extend([IEnumerable, ICollectionProjection, IBindCollectionProjection], /** @lends SBIS3.CONTROLS.Data.Projection.Collection.prototype */{
       _moduleName: 'SBIS3.CONTROLS.Data.Projection.Collection',
       $protected: {
          /**
