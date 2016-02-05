@@ -1,7 +1,7 @@
 /* global define, $ws */
 define('js!SBIS3.CONTROLS.Data.Projection.Tree', [
    'js!SBIS3.CONTROLS.Data.Projection.ITree',
-   'js!SBIS3.CONTROLS.Data.Projection',
+   'js!SBIS3.CONTROLS.Data.Projection.Projection',
    'js!SBIS3.CONTROLS.Data.Projection.TreeEnumerator',
    'js!SBIS3.CONTROLS.Data.Projection.Collection',
    'js!SBIS3.CONTROLS.Data.Projection.TreeChildren',
@@ -124,6 +124,10 @@ define('js!SBIS3.CONTROLS.Data.Projection.Tree', [
       //endregion SBIS3.CONTROLS.Data.Collection.IEnumerable
 
       //region SBIS3.CONTROLS.Data.Projection.ICollection
+
+      setFilter: function (filter) {
+         throw new Error('Tree projection doesn\'t support filtering');
+      },
 
       //endregion SBIS3.CONTROLS.Data.Projection.ICollection
 
@@ -333,44 +337,6 @@ define('js!SBIS3.CONTROLS.Data.Projection.Tree', [
    $ws.single.ioc.bind('SBIS3.CONTROLS.Data.Projection.Tree', function(config) {
       return new TreeProjection(config);
    });
-
-   /**
-    * Интерфейс стратегии получения дочерних элементов узла дерева
-    * @mixin SBIS3.CONTROLS.Data.Projection.Tree.ITreeChildrenStrategy
-    */
-   var ITreeChildrenStrategy = /** @lends SBIS3.CONTROLS.Data.Projection.Tree.ITreeChildrenStrategy.prototype */{
-      $protected: {
-         _options: {
-            /**
-             * @cfg {SBIS3.CONTROLS.Data.Collection.IEnumerable} Исходная коллекция
-             */
-            source: undefined,
-
-            /**
-             * @cfg {Object} Опции стратегии
-             */
-            settings: undefined
-         }
-      },
-
-      /**
-       * Возвращает коллекцию потомков для родителя
-       * @param {SBIS3.CONTROLS.Data.Projection.ITreeItem} parent Родитель
-       * @returns {Array}
-       */
-      getChildren: function(parent) {
-         throw new Error('Method must be implemented');
-      },
-
-      /**
-       * Возвращает метод конвертации элемета коллеции в элемент проекции
-       * @param {SBIS3.CONTROLS.Data.Projection.ITreeItem} parent Родитель
-       * @returns {Function}
-       */
-      getItemConverter: function(parent) {
-         throw new Error('Method must be implemented');
-      }
-   };
 
    /**
     * Стратегия получения дочерних элементов по идентификатору родителя

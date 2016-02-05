@@ -5,7 +5,7 @@ define('js!SBIS3.CONTROLS.Data.Projection.Collection', [
    'js!SBIS3.CONTROLS.Data.Projection.ICollection',
    'js!SBIS3.CONTROLS.Data.Projection.CollectionEnumerator',
    'js!SBIS3.CONTROLS.Data.Collection.ArrayEnumerator',
-   'js!SBIS3.CONTROLS.Data.Projection',
+   'js!SBIS3.CONTROLS.Data.Projection.Projection',
    'js!SBIS3.CONTROLS.Data.Projection.CollectionItem'
 ], function (IEnumerable, IBindCollectionProjection, ICollectionProjection, CollectionProjectionEnumerator, ArrayEnumerator, Projection) {
    'use strict';
@@ -13,7 +13,7 @@ define('js!SBIS3.CONTROLS.Data.Projection.Collection', [
    /**
     * Проекция коллекции - предоставляет методы навигации, фильтрации и сортировки, не меняя при этом исходную коллекцию.
     * @class SBIS3.CONTROLS.Data.Projection.Collection
-    * @extends SBIS3.CONTROLS.Data.Projection
+    * @extends SBIS3.CONTROLS.Data.Projection.Projection
     * @mixes SBIS3.CONTROLS.Data.Bind.ICollectionProjection
     * @mixes SBIS3.CONTROLS.Data.Projection.ICollection
     * @ignoreMethods notifyItemChange

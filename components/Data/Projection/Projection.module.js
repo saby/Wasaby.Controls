@@ -1,18 +1,18 @@
 /* global define, require, $ws */
-define('js!SBIS3.CONTROLS.Data.Projection', [
+define('js!SBIS3.CONTROLS.Data.Projection.Projection', [
 ], function () {
    'use strict';
 
    /**
     * Абстрактная проекция данных
-    * @class SBIS3.CONTROLS.Data.Projection
+    * @class SBIS3.CONTROLS.Data.Projection.Projection
     * @extends $ws.proto.Abstract
     * @public
     * @author Мальцев Алексей
     */
 
-   var Projection = $ws.proto.Abstract.extend(/** @lends SBIS3.CONTROLS.Data.Projection */{
-      _moduleName: 'SBIS3.CONTROLS.Data.Projection'
+   var Projection = $ws.proto.Abstract.extend(/** @lends SBIS3.CONTROLS.Data.Projection.Projection */{
+      _moduleName: 'SBIS3.CONTROLS.Data.Projection.Projection'
    });
 
    /**
@@ -35,7 +35,7 @@ define('js!SBIS3.CONTROLS.Data.Projection', [
    /**
     * Возвращает проекцию по умолчанию
     * @param {Object} object Объект, для которого требуется получить проекцию
-    * @returns {SBIS3.CONTROLS.Data.Projection}
+    * @returns {SBIS3.CONTROLS.Data.Projection.Projection}
     * @static
     */
    Projection.getDefaultProjection = function (object) {
@@ -62,10 +62,10 @@ define('js!SBIS3.CONTROLS.Data.Projection', [
       }
    };
 
-   $ws.single.ioc.bind('SBIS3.CONTROLS.Data.Projection', function(config) {
+   $ws.single.ioc.bind('SBIS3.CONTROLS.Data.Projection.Projection', function(config) {
       return new Projection(config);
    });
-   $ws.single.ioc.bind('SBIS3.CONTROLS.Data.ProjectionConstructor', function() {
+   $ws.single.ioc.bind('SBIS3.CONTROLS.Data.Projection.ProjectionConstructor', function() {
       return Projection;
    });
 

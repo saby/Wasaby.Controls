@@ -1,6 +1,6 @@
 /* global define, beforeEach, afterEach, describe, context, it, assert, $ws */
 define([
-      'js!SBIS3.CONTROLS.Data.Projection',
+      'js!SBIS3.CONTROLS.Data.Projection.Projection',
       'js!SBIS3.CONTROLS.Data.Collection.ObservableList'
    ], function (Projection, ObservableList) {
       'use strict';

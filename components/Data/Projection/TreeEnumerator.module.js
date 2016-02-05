@@ -39,7 +39,12 @@ define('js!SBIS3.CONTROLS.Data.Projection.TreeEnumerator', [
          /**
           * @member {Number} Текущая позиция (в исходной коллекции)
           */
-         _currentPosition: -1
+         _currentPosition: -1,
+
+         /**
+          * @member {Array} Соответствие позиций и элементов
+          */
+         _positions: []
       },
 
       $constructor: function (cfg) {
@@ -55,6 +60,7 @@ define('js!SBIS3.CONTROLS.Data.Projection.TreeEnumerator', [
          if (next) {
             this._сurrent = next;
             this._currentPosition++;
+            this._positions[this._currentPosition] = this._сurrent;
             return this._сurrent;
          }
       },
@@ -73,11 +79,12 @@ define('js!SBIS3.CONTROLS.Data.Projection.TreeEnumerator', [
       //region SBIS3.CONTROLS.Data.Projection.IEnumerator
 
       at: function (index) {
+         return this._positions[index];
       },
 
       setCurrent: function(item) {
          this._сurrent = item;
-         this._currentPosition = this._getPositionOf(item);
+         this._currentPosition = Array.indexOf(this._positions, item);
       },
 
       getPosition: function() {
@@ -95,11 +102,13 @@ define('js!SBIS3.CONTROLS.Data.Projection.TreeEnumerator', [
          if (prev) {
             this._сurrent = prev;
             this._currentPosition--;
+            this._positions[this._currentPosition] = this._сurrent;
             return this._сurrent;
          }
       },
 
       getInternalBySource: function (source) {
+         return source;
       },
 
       //endregion SBIS3.CONTROLS.Data.Projection.IEnumerator

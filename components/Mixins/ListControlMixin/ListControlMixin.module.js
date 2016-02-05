@@ -6,7 +6,7 @@ define('js!SBIS3.CONTROLS.ListControlMixin', [
    'js!SBIS3.CONTROLS.Data.Collection.LoadableList',
    'html!SBIS3.CONTROLS.ListControl.View',
    'js!SBIS3.CONTROLS.PagerMore',
-   'js!SBIS3.CONTROLS.Data.Projection',
+   'js!SBIS3.CONTROLS.Data.Projection.Projection',
    'js!SBIS3.CONTROLS.Data.Projection.Collection'
 ], function (ListView, IBindCollection, ObservableList, LoadableList, ListViewTemplate, PagerMore, Projection) {
    'use strict';
