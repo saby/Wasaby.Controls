@@ -287,7 +287,9 @@ define('js!SBIS3.CONTROLS.FieldLink',
 
 
       setDataSource: function(ds, noLoad) {
-         this.getList().setDataSource(ds, noLoad);
+         this.once('onListReady', function() {
+            this.getList().setDataSource(ds, noLoad);
+         });
          FieldLink.superclass.setDataSource.apply(this, arguments);
       },
 

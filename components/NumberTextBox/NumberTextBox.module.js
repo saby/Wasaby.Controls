@@ -236,6 +236,9 @@ define('js!SBIS3.CONTROLS.NumberTextBox', ['js!SBIS3.CONTROLS.TextBox', 'html!SB
 
       _formatText: function(value, fromFocusOut){
          var decimals = this._options.onlyInteger ? 0 : this._options.decimals;
+         if (value == '-') {
+            return value;
+         }
          value = $ws.render.defaultColumn.numeric(
             value,
             this._options.integers,
@@ -283,11 +286,11 @@ define('js!SBIS3.CONTROLS.NumberTextBox', ['js!SBIS3.CONTROLS.TextBox', 'html!SB
             return true;
          }
          var keyCode = (event.which >= 96 && event.which <= 105) ? event.which - 48 : event.which;
-         if(keyCode == 190 || keyCode == 110){ /*точка*/
+         if(keyCode == 190 || keyCode == 110/*точка*/){
             this._dotHandler(event);
             return;
          }
-         if(keyCode == 189 || keyCode == 109){ /*минус*/
+         if(keyCode == 189 || keyCode == 173 || keyCode == 109/*минус 173 - firefox, 109 - NumPad*/){
             this._toggleMinus();
             event.preventDefault();
          }

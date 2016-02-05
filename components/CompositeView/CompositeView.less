@@ -11,7 +11,7 @@
     &.controls-ListView__item.controls-ListView__hoveredItem {
       background: @data-grid-row-hover-bg;
     }
-    &.controls-ListView__folder {
+    &.controls-ListView__item-type-node {
       padding: 0;
       display: inline-block;
       width: 228px;
@@ -85,7 +85,7 @@
       }
     }
 
-     &.controls-ListView__folder {
+     &.controls-ListView__item-type-node {
       width: 228px;
       height: 190px;
       .controls-CompositeView__tileImg-container {
@@ -130,7 +130,7 @@
    .controls-ListView__item__selected {
 
       /* Заливка выделенных элементов */
-      &.controls-CompositeView__listItem.controls-ListView__folder,
+      &.controls-CompositeView__listItem.controls-ListView__item-type-node,
       &.controls-CompositeView__tileItem {
          background-color: @default-itemHover-color;
       }
@@ -141,7 +141,7 @@
          border-color: @multiView-tile-selected-item-border-color;
       }
 
-      &.controls-CompositeView__listItem:not(.controls-ListView__folder),
+      &.controls-CompositeView__listItem:not(.controls-ListView__item-type-node),
       &.controls-CompositeView__listItem:not(.controls-CompositeView__verticalItemActions) {
          background-image: url('img/rowSelect.png');
          background-position: left top;
@@ -151,7 +151,7 @@
 }
 .dragdropBody {
   .controls-CompositeView__tileItem,
-  .controls-CompositeView__listItem.controls-ListView__folder {
+  .controls-CompositeView__listItem.controls-ListView__item-type-node {
     &.controls-DragNDrop__insertBefore {
       border-left: @drag-and-drop-border;
     }
@@ -159,7 +159,7 @@
       border-right: @drag-and-drop-border;
     }
   }
-  .controls-CompositeView__listItem:not(.controls-ListView__folder) {
+  .controls-CompositeView__listItem:not(.controls-ListView__item-type-node) {
     &.controls-DragNDrop__insertBefore {
       border-top: @drag-and-drop-border;
     }
