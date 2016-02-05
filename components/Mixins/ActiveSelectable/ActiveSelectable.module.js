@@ -20,7 +20,13 @@ define('js!SBIS3.CONTROLS.ActiveSelectable', ['js!SBIS3.CONTROLS.Data.Model'], f
       $protected: {
          _options: {
             /**
-             * @cfg {*} Выбранное значение
+             * @cfg {String} Выбранное значение (запись)
+             * @example
+             * <pre class=”brush: xml”>
+             *    <option name="selectedItem">Выбранное значение</option>
+             * </pre>
+             * @see setSelectedItem
+             * @see getSelectedItem
              */
             selectedItem : undefined
          }
@@ -49,7 +55,7 @@ define('js!SBIS3.CONTROLS.ActiveSelectable', ['js!SBIS3.CONTROLS.Data.Model'], f
 
       /**
        * Возвращает выбранную запись
-       * @param loadItem загружать ли запись, если о ней нет информации в dataSet'e
+       * @param loadItem загружать ли запись, если о ней нет информации в dataSet
        * @returns {*}
        */
       getSelectedItem: function(loadItem) {

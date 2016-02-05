@@ -22,7 +22,7 @@ define('js!SBIS3.CONTROLS.ButtonGroupBaseDS', ['js!SBIS3.CORE.CompoundControl', 
             captionField : ''
          },
          /**
-          * Элементы были задаты в верстке
+          * Элементы были заданы в верстке
           */
          _hasItems: null
       },
