@@ -333,6 +333,11 @@ define(
        */
       _setDate: function (date) {
          var isCorrect = false;
+         if (date === null || typeof date === "undefined") {
+            this._options.date = date;
+            this._options.text = this.formatModel.getStrMask(this._maskReplacer);
+            isCorrect = true;
+         }
          if (date instanceof Date) {
             this._options.date = date;
             this._options.text = this._getTextByDate(date);
@@ -399,7 +404,7 @@ define(
       _drawDate: function(){
          var newText = this._options.date == null ? '' : this._getTextByDate( this._options.date );
          //записываем текст в модель
-         this.formatModel.setText(newText);
+         this.formatModel.setText(newText, this._maskReplacer);
          this._inputField.html( this._getHtmlMask() );
       },
 
@@ -436,6 +441,10 @@ define(
        * @private
        */
       _getDateByText: function(text, oldDate) {
+         //не разбираем дату, если вся не заполнена
+         if ( ! this.formatModel.isFilled()) {
+            return null;
+         }
          var
             //используем старую дату как основу, чтобы сохранять год, при его отсутствии в маске
             //new Date от старой даты делаем, чтобы контекст увидел новый объект

@@ -50,8 +50,10 @@ define('js!SBIS3.CONTROLS.OperationsPanelButton', [
          }
       },
       _clickHandler: function() {
-         if (this._options.linkedPanel) {
-            this._options.linkedPanel.togglePanel();
+         var linkedPanel = this._options.linkedPanel;
+         if (linkedPanel) {
+            //Проверка для совместимости со тарой панелью операций, у которой метод toggle влияет на видимость
+            linkedPanel[$ws.helpers.instanceOfModule(linkedPanel, 'SBIS3.CONTROLS.OperationsPanel') ? 'toggle' : 'togglePanel']();
          }
          OperationsPanelButton.superclass._clickHandler.apply(this);
       },
@@ -64,7 +66,7 @@ define('js!SBIS3.CONTROLS.OperationsPanelButton', [
          if (linkedPanel && ($ws.helpers.instanceOfModule(linkedPanel, 'SBIS3.CORE.OperationsPanel') || $ws.helpers.instanceOfModule(linkedPanel, 'SBIS3.CONTROLS.OperationsPanel'))) {
             this._reassignPanel(linkedPanel);
             this._onChangeEnabled();
-            this.setChecked(linkedPanel.isOpen());
+            this.setChecked(linkedPanel.isVisible());
          }
       },
       _reassignPanel: function(linkedPanel) {
@@ -77,7 +79,7 @@ define('js!SBIS3.CONTROLS.OperationsPanelButton', [
          this._options.linkedPanel.subscribe('onChangeEnabled', this._internalHandlers.onChangeEnabled);
       },
       _onTogglePanel: function() {
-         this.setChecked(this._options.linkedPanel.isOpen());
+         this.setChecked(this._options.linkedPanel.isVisible());
       },
       _onChangeEnabled: function() {
          this.setEnabled(this._options.linkedPanel.isEnabled());
