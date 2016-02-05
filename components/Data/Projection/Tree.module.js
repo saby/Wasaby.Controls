@@ -2,12 +2,13 @@
 define('js!SBIS3.CONTROLS.Data.Projection.Tree', [
    'js!SBIS3.CONTROLS.Data.Projection.ITree',
    'js!SBIS3.CONTROLS.Data.Projection',
+   'js!SBIS3.CONTROLS.Data.Projection.TreeEnumerator',
    'js!SBIS3.CONTROLS.Data.Projection.Collection',
    'js!SBIS3.CONTROLS.Data.Projection.TreeChildren',
    'js!SBIS3.CONTROLS.Data.Collection.ObservableList',
    'js!SBIS3.CONTROLS.Data.Utils',
    'js!SBIS3.CONTROLS.Data.Projection.LoadableTreeItem'
-], function (ITreeProjection, Projection, CollectionProjection, TreeChildren, ObservableList, Utils) {
+], function (ITreeProjection, Projection, TreeEnumerator, CollectionProjection, TreeChildren, ObservableList, Utils) {
    'use strict';
 
    /**
@@ -115,58 +116,14 @@ define('js!SBIS3.CONTROLS.Data.Projection.Tree', [
        * @returns {SBIS3.CONTROLS.Data.Projection.CollectionEnumerator}
        */
       getEnumerator: function () {
-         return new CollectionProjectionEnumerator({
-            itemsMap: this._itemsMap,
-            filterMap: this._filterMap,
-            sortMap: this._sortMap
+         return new TreeEnumerator({
+            tree: this
          });
       },
 
       //endregion SBIS3.CONTROLS.Data.Collection.IEnumerable
 
       //region SBIS3.CONTROLS.Data.Projection.ICollection
-
-      moveToNext: function () {
-         var current = this.getCurrent(),
-            parent = current ? current.getParent() : this.getRoot(),
-            siblings = this.getChildren(parent),
-            index = current ? siblings.getIndex(current) : -1;
-         if (index >= siblings.getCount() - 1) {
-            return false;
-         }
-
-         this.setCurrent(siblings.at(index + 1));
-         return true;
-      },
-
-      moveToPrevious: function () {
-         var current = this.getCurrent();
-         if (!current) {
-            return false;
-         }
-         var parent = current.getParent(),
-            siblings = this.getChildren(parent),
-            index = current ? siblings.getIndex(current) : -1;
-         if (index <= 0) {
-            return false;
-         }
-
-         this.setCurrent(siblings.at(index - 1));
-         return true;
-      },
-
-      moveToFirst: function () {
-         var current = this.getCurrent(),
-            parent = current ? current.getParent() : this.getRoot(),
-            siblings = this.getChildren(parent),
-            first = siblings.at(0);
-         if (first === current) {
-            return false;
-         }
-
-         this.setCurrent(first);
-         return true;
-      },
 
       moveToLast: function () {
          var current = this.getCurrent(),

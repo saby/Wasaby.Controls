@@ -279,12 +279,12 @@ define('js!SBIS3.CONTROLS.Data.Projection.Collection', [
       },
 
       moveToLast: function () {
-         var position = this._getServiceEnumerator().getInternalBySource(this.getCollection().getCount() - 1);
+         var position = this.getCount() - 1;
          if (this.getCurrentPosition() === position) {
             return false;
          }
          this.setCurrentPosition(position);
-         return this._getServiceEnumerator().getPosition() === position;
+         return this.getCurrentPosition() === position;
       },
 
       getFilter: function () {
