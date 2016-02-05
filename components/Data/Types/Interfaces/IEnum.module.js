@@ -4,12 +4,12 @@ define('js!SBIS3.CONTROLS.Data.Types.IEnum', [], function () {
 
    /**
     * Интерфейс перечисляемого
-    * @mixin SBIS3.CONTROLS.Data.Data.Types.IEnum
+    * @mixin SBIS3.CONTROLS.Data.Types.IEnum
     * @public
     * @author Ганшин Ярослав
     */
 
-   return /** @lends SBIS3.CONTROLS.Data.Data.Types.IEnum.prototype */{
+   return /** @lends SBIS3.CONTROLS.Data.Types.IEnum.prototype */{
       /**
        * Возвращает текущее значение
        * @returns {Number}

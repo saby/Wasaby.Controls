@@ -1,7 +1,7 @@
 /**
  * Created by as.suhoruchkin on 21.07.2015.
  */
-define('js!SBIS3.CONTROLS.MoveHandlers', ['js!SBIS3.CORE.Dialog','js!SBIS3.CONTROLS.Data.SbisMoveStrategy', 'js!SBIS3.CONTROLS.Data.BaseMoveStrategy'], function(Dialog, SbisMoveStrategy, BaseMoveStrategy) {
+define('js!SBIS3.CONTROLS.MoveHandlers', ['js!SBIS3.CORE.Dialog','js!SBIS3.CONTROLS.Data.MoveStrategy.Sbis', 'js!SBIS3.CONTROLS.Data.MoveStrategy.Base'], function(Dialog, SbisMoveStrategy, BaseMoveStrategy) {
    var MoveHandlers = {
       $protected: {
         _moveStrategy: undefined
@@ -135,15 +135,15 @@ define('js!SBIS3.CONTROLS.MoveHandlers', ['js!SBIS3.CORE.Dialog','js!SBIS3.CONTR
       },
       /**
        * Возвращает стратегию перемещения
-       * @see SBIS3.CONTROLS.Data.IMoveStrategy
-       * @returns {SBIS3.CONTROLS.Data.IMoveStrategy}
+       * @see SBIS3.CONTROLS.Data.MoveStrategy.IMoveStrategy
+       * @returns {SBIS3.CONTROLS.Data.MoveStrategy.IMoveStrategy}
        */
       getMoveStrategy: function () {
          return this._moveStrategy || (this._moveStrategy = this._makeMoveStrategy());
       },
       /**
        * Создает стратегию перемещения в зависимости от источника данных
-       * @returns {SBIS3.CONTROLS.Data.IMoveStrategy}
+       * @returns {SBIS3.CONTROLS.Data.MoveStrategy.IMoveStrategy}
        * @private
        */
       _makeMoveStrategy: function () {
@@ -163,12 +163,12 @@ define('js!SBIS3.CONTROLS.MoveHandlers', ['js!SBIS3.CORE.Dialog','js!SBIS3.CONTR
       },
       /**
        * Устанавливает стратегию перемещения
-       * @see SBIS3.CONTROLS.Data.IMoveStrategy
-       * @param {SBIS3.CONTROLS.Data.IMoveStrategy} strategy - стратегия перемещения
+       * @see SBIS3.CONTROLS.Data.MoveStrategy.IMoveStrategy
+       * @param {SBIS3.CONTROLS.Data.MoveStrategy.IMoveStrategy} strategy - стратегия перемещения
        */
       setMoveStrategy: function (strategy){
-         if(!$ws.helpers.instanceOfMixin(strategy,'SBIS3.CONTROLS.Data.IMoveStrategy')){
-            throw new Error('The strategy must implemented interfaces the SBIS3.CONTROLS.Data.IMoveStrategy.')
+         if(!$ws.helpers.instanceOfMixin(strategy,'SBIS3.CONTROLS.Data.MoveStrategy.IMoveStrategy')){
+            throw new Error('The strategy must implemented interfaces the SBIS3.CONTROLS.Data.MoveStrategy.IMoveStrategy.')
          }
          this._moveStrategy = strategy;
       },
