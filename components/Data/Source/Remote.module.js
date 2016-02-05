@@ -19,6 +19,26 @@ define('js!SBIS3.CONTROLS.Data.Source.Remote', [
       $protected: {
          _options: {
             /**
+             * @cfg {String} Адрес удаленного сервиса, с которым работает источник (хост, путь, название)
+             * @see getService
+             * @example
+             * <pre>
+             *    var dataSource = new RemoteSource({
+             *       service: 'http://my.host.name'
+             *       resource: '/users/'
+             *    });
+             * </pre>
+             * @example
+             * <pre>
+             *    var dataSource = new RemoteSource({
+             *       service: 'MyPlugin.v001'
+             *       resource: 'Users'
+             *    });
+             * </pre>
+             */
+            service: '',
+
+            /**
              * @cfg {String|Object} Объект, реализующий сетевой протокол для обмена в режиме клиент-сервер
              * @see getProvider
              * @see SBIS3.CONTROLS.Data.Di
@@ -44,6 +64,15 @@ define('js!SBIS3.CONTROLS.Data.Source.Remote', [
       //region Public methods
 
       /**
+       * Возвращает адрес удаленного сервиса, с которым работает источник (хост, путь, название)
+       * @returns {String}
+       * @see service
+       */
+      getService: function () {
+         return this._options.service;
+      },
+
+      /**
        * Возвращает объект, реализующий сетевой протокол для обмена в режиме клиент-сервер
        * @returns {Object}
        * @see provider
@@ -53,7 +82,10 @@ define('js!SBIS3.CONTROLS.Data.Source.Remote', [
             throw new Error('Remote access provider is not defined');
          }
          if (typeof this._options.provider === 'string') {
-            this._options.provider = Di.resolve(this._options.provider, this._options.resource);
+            this._options.provider = Di.resolve(this._options.provider, {
+               service: this._options.service,
+               resource: this._options.resource
+            });
          }
          return this._options.provider;
       }
