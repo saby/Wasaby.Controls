@@ -45,9 +45,6 @@ define('js!SBIS3.CONTROLS.Clickable', [], function() {
             //return false;
          });
       },
-      _clickHandler : function() {
-
-      },
 
       _notifyOnActivated : function(originalEvent) {
          this._notify('onActivated', originalEvent);
@@ -58,6 +55,10 @@ define('js!SBIS3.CONTROLS.Clickable', [], function() {
             this._clickHandler(event);
             this._notifyOnActivated(event);
          }
+      },
+
+      before : {
+         _clickHandler: {}
       },
 
       instead : {
