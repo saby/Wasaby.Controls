@@ -66,6 +66,7 @@ define('js!SBIS3.CONTROLS.BackButton', ['js!SBIS3.CORE.CompoundControl', 'html!S
       init: function(){
          this._publish('onActivated');
          BackButton.superclass.init.call(this);
+         this._container.removeClass('ws-area');
          var self = this;
          this._link = this.getChildControlByName('BackButton-caption');
          // Две подписки сделаны для того что бы в тестах можно было стриггерить событие нажатия
@@ -85,7 +86,7 @@ define('js!SBIS3.CONTROLS.BackButton', ['js!SBIS3.CORE.CompoundControl', 'html!S
       setCaption: function(caption){
          this._link.setCaption(caption);
          this._options.caption = caption;
-         this._container.toggleClass('controls-BackButton__empty', !caption);
+         this._container.toggleClass('controls-BackButton__empty ws-hidden', !caption);
       },
       /**
        * Устанавливает исконку кнопки
