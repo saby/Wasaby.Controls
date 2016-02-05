@@ -228,6 +228,9 @@ define('js!SBIS3.CONTROLS.NumberTextBox', ['js!SBIS3.CONTROLS.TextBox', 'html!SB
 
       _formatText: function(value, fromFocusOut){
          var decimals = this._options.onlyInteger ? 0 : this._options.decimals;
+         if (value == '-') {
+            return value;
+         }
          value = $ws.render.defaultColumn.numeric(
             value,
             this._options.integers,
