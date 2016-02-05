@@ -143,7 +143,7 @@ define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManag
          else if (this._options.closeByExternalClick) {
             $ws.single.EventBus.channel('WindowChangeChannel').subscribe('onDocumentClick', this._clickHandler, this);
          }
-         //TODO нужно отписываться от канала если попап скрыт (сделать как в MenuButton)
+
          if (this._options.closeButton) {
             container.append('<div class="controls-PopupMixin__closeButton" ></div>');
             $('.controls-PopupMixin__closeButton', this.getContainer().get(0)).click(function() {

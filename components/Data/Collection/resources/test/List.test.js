@@ -134,7 +134,7 @@ define(
             });
          });
 
-         describe('.concat()', function() {
+         describe('.append()', function() {
             it('should append items', function() {
                var list = new List({
                      items: items.slice()
@@ -146,7 +146,7 @@ define(
                   }],
                   ok = true;
 
-               list.concat(new List({
+               list.append(new List({
                   items: moreItems
                }));
 
@@ -160,6 +160,50 @@ define(
                assert.isTrue(ok);
             });
 
+            it('should append items when items is array', function() {
+               var list = new List({
+                     items: items.slice()
+                  }),
+                  moreItems = [{
+                     'Ид': 8
+                  }, {
+                     'Ид': 9
+                  }],
+                  ok = true;
+
+               list.append(moreItems);
+
+               for (var i = 0, count = items.length + moreItems.length; i < count; i++) {
+                  var item = i < items.length ? items[i] : moreItems[i - items.length];
+                  if (list.at(i) !== item) {
+                     ok = false;
+                     break;
+                  }
+               }
+               assert.isTrue(ok);
+            });
+
+            it('should throw an error on invalid argument', function() {
+               assert.throw(function() {
+                  var list = new List();
+                  list.append({});
+               });
+               assert.throw(function() {
+                  var list = new List();
+                  list.append('');
+               });
+               assert.throw(function() {
+                  var list = new List();
+                  list.append(0);
+               });
+               assert.throw(function() {
+                  var list = new List();
+                  list.append();
+               });
+            });
+         });
+
+         describe('.prepend()', function() {
             it('should prepend items', function() {
                var list = new List({
                      items: items.slice()
@@ -171,9 +215,32 @@ define(
                   }],
                   ok = true;
 
-               list.concat(new List({
+               list.prepend(new List({
                   items: moreItems
-               }), true);
+               }));
+
+               for (var i = 0, count = items.length + moreItems.length; i < count; i++) {
+                  var item = i < moreItems.length ? moreItems[i] : items[i - moreItems.length];
+                  if (list.at(i) !== item) {
+                     ok = false;
+                     break;
+                  }
+               }
+               assert.isTrue(ok);
+            });
+
+            it('should prepend items when items is array', function() {
+               var list = new List({
+                     items: items.slice()
+                  }),
+                  moreItems = [{
+                     'Ид': 8
+                  }, {
+                     'Ид': 9
+                  }],
+                  ok = true;
+
+               list.prepend(moreItems);
 
                for (var i = 0, count = items.length + moreItems.length; i < count; i++) {
                   var item = i < moreItems.length ? moreItems[i] : items[i - moreItems.length];
@@ -188,24 +255,24 @@ define(
             it('should throw an error on invalid argument', function() {
                assert.throw(function() {
                   var list = new List();
-                  list.concat({});
+                  list.prepend({});
                });
                assert.throw(function() {
                   var list = new List();
-                  list.concat('');
+                  list.prepend('');
                });
                assert.throw(function() {
                   var list = new List();
-                  list.concat(0);
+                  list.prepend(0);
                });
                assert.throw(function() {
                   var list = new List();
-                  list.concat();
+                  list.prepend();
                });
             });
          });
 
-         describe('.fill()', function() {
+         describe('.assign()', function() {
             it('should replace items', function() {
                var list = new List({
                      items: items
@@ -217,9 +284,31 @@ define(
                   }],
                   ok = true;
 
-               list.fill(new List({
+               list.assign(new List({
                   items: moreItems
                }));
+
+               for (var i = 0; i < moreItems.length; i++) {
+                  if (list.at(i) !== moreItems[i]) {
+                     ok = false;
+                     break;
+                  }
+               }
+               assert.isTrue(ok);
+            });
+
+            it('should replace items when items is array', function() {
+               var list = new List({
+                     items: items
+                  }),
+                  moreItems = [{
+                     'Ид': 8
+                  }, {
+                     'Ид': 9
+                  }],
+                  ok = true;
+
+               list.assign(moreItems);
 
                for (var i = 0; i < moreItems.length; i++) {
                   if (list.at(i) !== moreItems[i]) {
@@ -236,7 +325,7 @@ define(
                   }),
                   ok = true;
 
-               list.fill();
+               list.assign();
 
                list.each(function() {
                   ok = false;
@@ -248,15 +337,41 @@ define(
             it('should throw an error on invalid argument', function() {
                assert.throw(function() {
                   var list = new List();
-                  list.fill({});
+                  list.assign({});
                });
                assert.throw(function() {
                   var list = new List();
-                  list.fill('a');
+                  list.assign('a');
                });
                assert.throw(function() {
                   var list = new List();
-                  list.fill(1);
+                  list.assign(1);
+               });
+            });
+         });
+
+         describe('.clear()', function() {
+            it('should reset items count', function() {
+               var list = new List({
+                     items: items
+                  });
+               list.clear();
+               assert.strictEqual(list.getCount(), 0);
+            });
+            it('should return an empty enumerator', function() {
+               var list = new List({
+                  items: items
+               });
+               list.clear();
+               assert.isUndefined(list.getEnumerator().getNext());
+            });
+            it('should not call callback in each', function() {
+               var list = new List({
+                  items: items
+               });
+               list.clear();
+               list.each(function() {
+                  throw new Error('Callback was called');
                });
             });
          });
@@ -340,15 +455,10 @@ define(
                }
             });
 
-            it('should throw an error on undefined item', function() {
-               assert.throw(function() {
-                  var list = new List();
-                  list.remove({});
-               });
-               assert.throw(function() {
-                  var list = new List();
-                  list.remove(10);
-               });
+            it('should return false if item is undefined', function() {
+               var list = new List();
+               assert.isFalse(list.remove({}));
+               assert.isFalse(list.remove(10));
             });
          });
 
@@ -498,15 +608,15 @@ define(
                list.add({}, 1);
                assert.strictEqual(3, list.getCount());
 
-               list.fill();
+               list.assign();
                assert.strictEqual(0, list.getCount());
 
-               list.fill(new List({
+               list.assign(new List({
                   items: [1, 2]
                }));
                assert.strictEqual(2, list.getCount());
 
-               list.concat(new List({
+               list.append(new List({
                   items: [3, 4, 5]
                }));
                assert.strictEqual(5, list.getCount());

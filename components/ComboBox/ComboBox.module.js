@@ -20,6 +20,7 @@ define('js!SBIS3.CONTROLS.ComboBox', [
     * @control
     * @author Крайнов Дмитрий Олегович
     * @public
+    * @control
     * @initial
     * <component data-component='SBIS3.CONTROLS.ComboBox'>
     *     <options name="items" type="array">
@@ -140,8 +141,6 @@ define('js!SBIS3.CONTROLS.ComboBox', [
             e.stopPropagation();
             return false;
          });
-         //Для инициализации dataSet
-         this.reload();
          var key = this._options.selectedKey;
          if (key !== undefined && key !== null) {
             this._drawSelectedItem(this._options.selectedKey);
@@ -156,12 +155,13 @@ define('js!SBIS3.CONTROLS.ComboBox', [
          /*обрабочики кликов TODO mouseup!!*/
          this._container.mouseup(function (e) {
             if ($(e.target).hasClass('js-controls-ComboBox__arrowDown') ||
-                  $(e.target).hasClass('controls-TextBox__afterFieldWrapper')) {
+               $(e.target).hasClass('controls-TextBox__afterFieldWrapper')) {
                if (self.isEnabled()) {
                   self.togglePicker();
                }
             }
          });
+         this.reload();
       },
 
       _keyboardHover: function (e) {
@@ -281,7 +281,7 @@ define('js!SBIS3.CONTROLS.ComboBox', [
                $('.controls-ComboBox__itemRow__selected', this._picker.getContainer().get(0)).removeClass('controls-ComboBox__itemRow__selected');
             }
             /*$('.js-controls-ComboBox__fieldNotEditable', this._container.get(0)).text('');
-            ComboBox.superclass.setText.call(this, '');*/
+             ComboBox.superclass.setText.call(this, '');*/
          }
 
       },
@@ -304,12 +304,11 @@ define('js!SBIS3.CONTROLS.ComboBox', [
 
       _setPickerContent: function () {
          var self = this;
-         this.reload();
-         //TODO придумать что то нормальное и выпилить
          this._picker.getContainer().mousedown(function (e) {
             e.stopPropagation();
          });
-
+         //TODO нужно ли здесь звать redraw? Сейчас без этого не работает.
+         this.redraw();
          //Подписка на клик по элементу комбобокса
          //TODO mouseup из за того что контрол херит событие клик
          this._picker.getContainer().mouseup(function (e) {
@@ -339,7 +338,11 @@ define('js!SBIS3.CONTROLS.ComboBox', [
       },
 
       _getItemsContainer: function () {
-         return this._picker.getContainer();
+         if (this._picker){
+         	return this._picker.getContainer();
+         } else {
+         	return null;
+         }
       },
 
       _getItemTemplate: function (item) {
@@ -356,25 +359,25 @@ define('js!SBIS3.CONTROLS.ComboBox', [
          //TODO: так как нет итератора заккоментим
          /*описываем здесь поведение стрелок вверх и вниз*/
          /*
-         var self = this,
-            current = self.getSelectedKey();
-         if (e.which == 40 || e.which == 38) {
-            e.preventDefault();
-         }
-         var newItem;
-         if (e.which == 40) {
-            newItem = self.getItems().getNextItem(current);
-         }
-         if (e.which == 38) {
-            newItem = self.getItems().getPreviousItem(current);
-         }
-         if (newItem) {
-            self.setSelectedKey(this._items.getKey(newItem));
-         }
-         if (e.which == 13) {
-            this.hidePicker();
-         }
-         */      },
+          var self = this,
+          current = self.getSelectedKey();
+          if (e.which == 40 || e.which == 38) {
+          e.preventDefault();
+          }
+          var newItem;
+          if (e.which == 40) {
+          newItem = self.getItems().getNextItem(current);
+          }
+          if (e.which == 38) {
+          newItem = self.getItems().getPreviousItem(current);
+          }
+          if (newItem) {
+          self.setSelectedKey(this._items.getKey(newItem));
+          }
+          if (e.which == 13) {
+          this.hidePicker();
+          }
+          */      },
 
 
       _keyUpBind: function (e) {
@@ -428,9 +431,9 @@ define('js!SBIS3.CONTROLS.ComboBox', [
          }
       },
 
-      _clearItems : function() {
+      _clearItems : function(container) {
          if (this._picker) {
-            ComboBox.superclass._clearItems.call(this, this._picker.getContainer());
+            ComboBox.superclass._clearItems.call(this, container);
          }
       },
 
@@ -496,21 +499,21 @@ define('js!SBIS3.CONTROLS.ComboBox', [
       },
 
       showPicker: function(){
-        ComboBox.superclass.showPicker.call(this);
-        this._setWidth();
+         ComboBox.superclass.showPicker.call(this);
+         this._setWidth();
       },
 
       _initializePicker: function(){
-        ComboBox.superclass._initializePicker.call(this);
-        this._setWidth();
+         ComboBox.superclass._initializePicker.call(this);
+         this._setWidth();
       },
 
       _setWidth: function(){
          var self = this;
          if (self._picker._options.target){
-           this._picker.getContainer().css({
-              'min-width': self._picker._options.target.outerWidth() - this._border/*ширина бордеров*/
-           });
+            this._picker.getContainer().css({
+               'min-width': self._picker._options.target.outerWidth() - this._border/*ширина бордеров*/
+            });
          }
       },
 
