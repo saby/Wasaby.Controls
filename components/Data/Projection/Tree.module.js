@@ -1,14 +1,15 @@
 /* global define, $ws */
 define('js!SBIS3.CONTROLS.Data.Projection.Tree', [
    'js!SBIS3.CONTROLS.Data.Projection.ITree',
-   'js!SBIS3.CONTROLS.Data.Projection.Projection',
-   'js!SBIS3.CONTROLS.Data.Projection.TreeEnumerator',
    'js!SBIS3.CONTROLS.Data.Projection.Collection',
+   'js!SBIS3.CONTROLS.Data.Projection.TreeEnumerator',
    'js!SBIS3.CONTROLS.Data.Projection.TreeChildren',
+   'js!SBIS3.CONTROLS.Data.Projection.TreeChildrenByItemPropertyStrategy',
+   'js!SBIS3.CONTROLS.Data.Projection.TreeChildrenByParentIdStrategy',
    'js!SBIS3.CONTROLS.Data.Collection.ObservableList',
    'js!SBIS3.CONTROLS.Data.Utils',
    'js!SBIS3.CONTROLS.Data.Projection.LoadableTreeItem'
-], function (ITreeProjection, Projection, TreeEnumerator, CollectionProjection, TreeChildren, ObservableList, Utils) {
+], function (ITreeProjection, CollectionProjection, TreeEnumerator, TreeChildren, TreeChildrenByItemPropertyStrategy, TreeChildrenByParentIdStrategy, ObservableList, Utils) {
    'use strict';
 
    /**
@@ -113,7 +114,7 @@ define('js!SBIS3.CONTROLS.Data.Projection.Tree', [
 
       /**
        * Возвращает энумератор для перебора элементов проекции
-       * @returns {SBIS3.CONTROLS.Data.Projection.CollectionEnumerator}
+       * @returns {SBIS3.CONTROLS.Data.Projection.TreeEnumerator}
        */
       getEnumerator: function () {
          return new TreeEnumerator({
@@ -125,7 +126,7 @@ define('js!SBIS3.CONTROLS.Data.Projection.Tree', [
 
       //region SBIS3.CONTROLS.Data.Projection.ICollection
 
-      setFilter: function (filter) {
+      setFilter: function () {
          throw new Error('Tree projection doesn\'t support filtering');
       },
 
@@ -336,60 +337,6 @@ define('js!SBIS3.CONTROLS.Data.Projection.Tree', [
 
    $ws.single.ioc.bind('SBIS3.CONTROLS.Data.Projection.Tree', function(config) {
       return new TreeProjection(config);
-   });
-
-   /**
-    * Стратегия получения дочерних элементов по идентификатору родителя
-    * @class SBIS3.CONTROLS.Data.Projection.Tree.TreeChildrenByParentIdStrategy
-    * @mixes SBIS3.CONTROLS.Data.Projection.Tree.ITreeChildrenStrategy
-    */
-   var TreeChildrenByParentIdStrategy = $ws.core.extend({}, [ITreeChildrenStrategy], /** @lends SBIS3.CONTROLS.Data.Projection.Tree.TreeChildrenByParentIdStrategy.prototype */{
-      _moduleName: 'SBIS3.CONTROLS.Data.Projection.Tree.TreeChildrenByParentIdStrategy',
-      getChildren: function(parent) {
-         return $ws.helpers.map(this._options.source.getIndiciesByValue(
-            this._options.settings.parentProperty,
-            Utils.getItemPropertyValue(
-               parent.getContents(),
-               this._options.settings.idProperty
-            )
-         ), (function(index) {
-            return this._options.source.at(index);
-         }).bind(this));
-      },
-      getItemConverter: function() {
-         var source = this._options.source;
-         return function(item) {
-            //FIXME: getIndex не оптимально, оптимизировать
-            return this.at(source.getIndex(item));
-         };
-      }
-   });
-
-   /**
-    * Стратегия получения дочерних элементов, находящихся в свойстве родительского
-    * @class SBIS3.CONTROLS.Data.Projection.Tree.TreeChildrenByItemPropertyStrategy
-    * @mixes SBIS3.CONTROLS.Data.Projection.Tree.ITreeChildrenStrategy
-    */
-   var TreeChildrenByItemPropertyStrategy = $ws.core.extend({}, [ITreeChildrenStrategy], /** @lends SBIS3.CONTROLS.Data.Projection.Tree.TreeChildrenByItemPropertyStrategy.prototype */{
-      _moduleName: 'SBIS3.CONTROLS.Data.Projection.Tree.TreeChildrenByItemPropertyStrategy',
-      getChildren: function(parent) {
-         return parent.isRoot() ?
-            this._options.source.toArray() :
-            Utils.getItemPropertyValue(
-               parent.getContents(),
-               this._options.settings.childrenProperty
-            );
-      },
-      getItemConverter: function(parent) {
-         return function(item) {
-            return $ws.single.ioc.resolve(this._itemModule, {
-               contents: item,
-               owner: this,
-               parent: parent,
-               node: !!Utils.getItemPropertyValue(item, this._options.nodeProperty)
-            });
-         };
-      }
    });
 
    return TreeProjection;

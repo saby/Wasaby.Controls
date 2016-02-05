@@ -343,7 +343,7 @@ define('js!SBIS3.CONTROLS.ListControlMixin', [
          this._view.render(items);
 
          if (this._options.pageSize > 0) {
-            var collection = $ws.helpers.instanceOfModule(items, 'SBIS3.CONTROLS.Data.Projection') ?
+            var collection = $ws.helpers.instanceOfModule(items, 'SBIS3.CONTROLS.Data.Projection.Projection') ?
                items.getCollection() :
                items;
             if ($ws.helpers.instanceOfMixin(collection, 'SBIS3.CONTROLS.Data.Collection.ISourceLoadable') &&
@@ -468,7 +468,7 @@ define('js!SBIS3.CONTROLS.ListControlMixin', [
       _setItems: function (items) {
          this._unsetItemsEventHandlers();
 
-         if ($ws.helpers.instanceOfModule(items, 'SBIS3.CONTROLS.Data.Projection')) {
+         if ($ws.helpers.instanceOfModule(items, 'SBIS3.CONTROLS.Data.Projection.Projection')) {
             this._itemsProjection = items;
             this._items = this._convertItems(this._itemsProjection.getCollection());
          } else  {

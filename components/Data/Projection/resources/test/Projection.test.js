@@ -5,7 +5,7 @@ define([
    ], function (Projection, ObservableList) {
       'use strict';
 
-      describe('SBIS3.CONTROLS.Data.Projection', function() {
+      describe('SBIS3.CONTROLS.Data.Projection.Projection', function() {
          var items,
             list,
             projection;

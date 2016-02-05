@@ -62,12 +62,5 @@ define('js!SBIS3.CONTROLS.Data.Projection.Projection', [
       }
    };
 
-   $ws.single.ioc.bind('SBIS3.CONTROLS.Data.Projection.Projection', function(config) {
-      return new Projection(config);
-   });
-   $ws.single.ioc.bind('SBIS3.CONTROLS.Data.Projection.ProjectionConstructor', function() {
-      return Projection;
-   });
-
    return Projection;
 });

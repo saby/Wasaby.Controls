@@ -278,7 +278,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
             this._items = null;
          }
          else if (itemsOpt) {
-            if ($ws.helpers.instanceOfModule(itemsOpt, 'SBIS3.CONTROLS.Data.Projection')) {
+            if ($ws.helpers.instanceOfModule(itemsOpt, 'SBIS3.CONTROLS.Data.Projection.Projection')) {
                this._itemsProjection = itemsOpt;
                this._items = this._convertItems(this._itemsProjection.getCollection());
                this._setItemsEventHandlers();

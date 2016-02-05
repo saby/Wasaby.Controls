@@ -1,27 +1,27 @@
 /* global define, require, $ws */
 define('js!SBIS3.CONTROLS.Data.Projection.Collection', [
    'js!SBIS3.CONTROLS.Data.Collection.IEnumerable',
-   'js!SBIS3.CONTROLS.Data.Bind.ICollectionProjection',
    'js!SBIS3.CONTROLS.Data.Projection.ICollection',
+   'js!SBIS3.CONTROLS.Data.Bind.ICollectionProjection',
    'js!SBIS3.CONTROLS.Data.Projection.CollectionEnumerator',
-   'js!SBIS3.CONTROLS.Data.Collection.ArrayEnumerator',
    'js!SBIS3.CONTROLS.Data.Projection.Projection',
    'js!SBIS3.CONTROLS.Data.Projection.CollectionItem'
-], function (IEnumerable, IBindCollectionProjection, ICollectionProjection, CollectionProjectionEnumerator, ArrayEnumerator, Projection) {
+], function (IEnumerable, ICollectionProjection, IBindCollectionProjection, CollectionProjectionEnumerator, Projection) {
    'use strict';
 
    /**
     * Проекция коллекции - предоставляет методы навигации, фильтрации и сортировки, не меняя при этом исходную коллекцию.
     * @class SBIS3.CONTROLS.Data.Projection.Collection
     * @extends SBIS3.CONTROLS.Data.Projection.Projection
-    * @mixes SBIS3.CONTROLS.Data.Bind.ICollectionProjection
+    * @mixes SBIS3.CONTROLS.Data.Collection.IEnumerable
     * @mixes SBIS3.CONTROLS.Data.Projection.ICollection
+    * @mixes SBIS3.CONTROLS.Data.Bind.ICollectionProjection
     * @ignoreMethods notifyItemChange
     * @public
     * @author Мальцев Алексей
     */
 
-   var CollectionProjection = Projection.extend([IBindCollectionProjection, ICollectionProjection], /** @lends SBIS3.CONTROLS.Data.Projection.Collection.prototype */{
+   var CollectionProjection = Projection.extend([ICollectionProjection, IBindCollectionProjection], /** @lends SBIS3.CONTROLS.Data.Projection.Collection.prototype */{
       _moduleName: 'SBIS3.CONTROLS.Data.Projection.Collection',
       $protected: {
          /**
