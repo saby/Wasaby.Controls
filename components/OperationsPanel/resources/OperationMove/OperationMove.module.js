@@ -34,6 +34,11 @@ define('js!SBIS3.CONTROLS.OperationMove', [
             icon: 'sprite:icon-24 icon-Move icon-primary action-hover',
             /**
              * @cfg {String} Всплывающая подсказка кнопки перемещения
+             * @example
+             *  <pre>
+             *     <option name="title">Перенести отмеченные записи</option>
+             * </pre>
+             * @translatable
              */
             title: rk('Перенести отмеченные'),
             /**
@@ -42,6 +47,7 @@ define('js!SBIS3.CONTROLS.OperationMove', [
              * <pre>
              *     <option name="caption">Перенести записи</option>
              * </pre>
+             * @translatable
              */
             caption: rk('Перенести')
          }

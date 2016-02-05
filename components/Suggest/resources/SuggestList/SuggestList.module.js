@@ -27,6 +27,7 @@ define('js!SBIS3.CONTROLS.SuggestList', [
              * @cfg {String} Сообщение об отсутствии данных
              * <wiTag group="Данные">
              * Текст сообщения, отображающиегося вместо результатов поиска в случае отсутсвия совпадений
+             * @translatable
              */
             emptyMessage: rk('Не найдено'),
 

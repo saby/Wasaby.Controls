@@ -49,6 +49,7 @@ define('js!SBIS3.CONTROLS.ButtonBase', ['js!SBIS3.CORE.CompoundControl', 'js!SBI
              * <pre class="brush:xml">
              *     <option name="caption">Сохранить</option>
              * </pre>
+             * @translatable
              * @see setCaption
              * @see getCaption
              */
