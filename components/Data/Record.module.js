@@ -234,6 +234,28 @@ define('js!SBIS3.CONTROLS.Data.Record', [
       },
 
       /**
+       * Проверяет эквивалентность формата и данных другой записи.
+       * @param {SBIS3.CONTROLS.Data.Record} record Запись, эквивалентность которой проверяется
+       * @returns {Boolean}
+       */
+      isEqual: function (record) {
+         if (record === this) {
+            return true;
+         }
+         if (!record) {
+            return false;
+         }
+         if (!$ws.helpers.instanceOfModule(record, 'SBIS3.CONTROLS.Data.Record')) {
+            return false;
+         }
+         //TODO: когда появятся форматы, сделать через сравнение форматов
+         return $ws.helpers.isEqualObject(
+            this.getRawData(),
+            record.getRawData()
+         );
+      },
+
+      /**
        * Клонирует запись
        * @returns {SBIS3.CONTROLS.Data.Record}
        */
