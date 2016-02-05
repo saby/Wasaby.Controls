@@ -300,6 +300,17 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
                this._activateItem(id);
             }
          }
+      },
+      /**
+       * Говорят, что группировка должна быть только в текущем разделе. Поддерживаем
+       * @param record
+       * @private
+       */
+      _groupByDefaultMethod: function(record){
+         if (record.get(this._options.hierField) != this.getCurrentRoot()){
+            return false;
+         }
+         return TreeDataGridView.superclass._groupByDefaultMethod.apply(this, arguments);
       }
    });
 
