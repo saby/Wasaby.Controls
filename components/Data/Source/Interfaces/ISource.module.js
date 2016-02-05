@@ -22,7 +22,6 @@ define('js!SBIS3.CONTROLS.Data.Source.ISource', [
              *       resource: '/users/'
              *    });
              * </pre>
-             * @see getResource
              */
             resource: '',
 
