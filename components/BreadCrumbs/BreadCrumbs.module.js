@@ -52,6 +52,7 @@ define('js!SBIS3.CONTROLS.BreadCrumbs', [
          this._publish('onItemClick');
          $ws.single.EventBus.channel('BreadCrumbsChannel').subscribe('onWindowResize', this._resizeHandler, this);
          this._homeIcon = $('.controls-BreadCrumbs__crumb-home', this._container);
+         this._container.toggleClass('ws-hidden', this._options.items.length == 0);
          this._homeIcon.data('id', null); //клик по домику ведет в корень TODO: придрочено под null
          //инициализируем dataSet
          this.reload();
@@ -89,7 +90,6 @@ define('js!SBIS3.CONTROLS.BreadCrumbs', [
       },
 
       setItems: function(items){
-         this._toggleHomeIcon(items.length <= 0);
          BreadCrumbs.superclass.setItems.call(this, items);
          this._dataSet._keyField = this._options.keyField; 
       },
@@ -213,7 +213,9 @@ define('js!SBIS3.CONTROLS.BreadCrumbs', [
       },
 
       _redraw: function(){
-         this._toggleHomeIcon(this.getItems().getCount() <= 0);
+         var isEmpty = this._dataSet.getCount() == 0;
+         this._toggleHomeIcon(isEmpty);
+         this._container.toggleClass('ws-hidden', isEmpty);
          BreadCrumbs.superclass._redraw.call(this);
          this._calculateSizes();
       },
