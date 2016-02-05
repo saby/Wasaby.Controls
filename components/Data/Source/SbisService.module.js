@@ -37,13 +37,19 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
       $protected: {
          _options: {
             /**
-             * @typedef {Object} ResourceConfig
-             * @property {String} name Имя объекта бизнес-логики
-             * @property {Object} [serviceUrl] Точка входа
+             * @cfg {String} Адрес удаленного сервиса, с которым работает источник (хост, путь, название)
+             * @name {SBIS3.CONTROLS.Data.Source.SbisService#service}
+             * @see getService
+             * <pre>
+             *    var dataSource = new SbisService({
+             *       service: '/service/url/',
+             *       resource: 'Сотрудник',
+             *    });
+             * </pre>
              */
 
             /**
-             * @cfg {String|ResourceConfig} Имя объекта бизнес-логики или его параметры
+             * @cfg {String} Имя объекта бизнес-логики
              * @name {SBIS3.CONTROLS.Data.Source.SbisService#resource}
              * @see getResource
              * <pre>
@@ -158,14 +164,9 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
             this._options.idProperty = cfg.keyField;
             $ws.single.ioc.resolve('ILogger').log('SBIS3.CONTROLS.Data.Collection.RecordSet', 'option "keyField" is deprecated and will be removed in 3.7.4. Use "idProperty" instead.');
          }
-         if ('service' in cfg && !cfg.resource) {
-            this._options.resource = cfg.resource = cfg.service;
-         }
-
-         if (this._options.resource && typeof this._options.resource !== 'object') {
-            this._options.resource = {
-               name: this._options.resource
-            };
+         if (this._options.resource && typeof this._options.resource === 'object') {
+            this._options.service = this._options.resource.serviceUrl || '';
+            this._options.resource = this._options.resource.name || '';
          }
 
       },
@@ -178,7 +179,7 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
        * @see resource
        */
       getResource: function () {
-         return this._options.resource.name;
+         return this._options.resource;
       },
 
       /**
@@ -475,7 +476,7 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
             var ido = String(id).split(',');
             return ido[1];
          }
-         return this._options.resource.name;
+         return this._options.resource;
       },
       /**
        * вызвает метод удаления
@@ -489,12 +490,12 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
          var args = {
             'ИдО': id
          };
-         if (!Object.isEmpty(meta)) {
+         if (meta && !Object.isEmpty(meta)) {
             args['ДопПоля'] = this.getAdapter().serialize(meta);
          }
          var provider = this.getProvider();
-         if (BLObjName && this._options.resource.name !== BLObjName) {
-            provider = Di.resolve('source.provider.sbis-business-logic', {name: BLObjName});
+         if (BLObjName && this._options.resource !== BLObjName) {
+            provider = Di.resolve('source.provider.sbis-business-logic', {resource: BLObjName});
          }
          return provider.call(
             this._options.destroyMethodName,
