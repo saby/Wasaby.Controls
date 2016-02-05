@@ -52,6 +52,7 @@ define('js!SBIS3.CONTROLS.BreadCrumbs', [
          this._publish('onItemClick');
          $ws.single.EventBus.channel('BreadCrumbsChannel').subscribe('onWindowResize', this._resizeHandler, this);
          this._homeIcon = $('.controls-BreadCrumbs__crumb-home', this._container);
+         this._container.toggleClass('ws-hidden', this._options.items.length == 0);
          this._homeIcon.data('id', null); //клик по домику ведет в корень TODO: придрочено под null
          //инициализируем dataSet
          this.setItems(this._options.items || []);
