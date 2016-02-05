@@ -1,15 +1,15 @@
 /* global define */
-define('js!SBIS3.CONTROLS.Data.IMoveStrategy', [], function () {
+define('js!SBIS3.CONTROLS.Data.MoveStrategy.IMoveStrategy', [], function () {
    'use strict';
 
    /**
     * Интерфейс стратегии перемещения записей
-    * @mixin SBIS3.CONTROLS.Data.IMoveStrategy
+    * @mixin SBIS3.CONTROLS.Data.MoveStrategy.IMoveStrategy
     * @public
     * @author Ганшин Ярослав
     */
 
-   return /** @lends SBIS3.CONTROLS.Data.IMoveStrategy.prototype */{
+   return /** @lends SBIS3.CONTROLS.Data.MoveStrategy.IMoveStrategy.prototype */{
 
       /**
        * Перемещение, смена порядка.
