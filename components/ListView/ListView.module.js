@@ -23,6 +23,7 @@ define('js!SBIS3.CONTROLS.ListView',
       'js!SBIS3.CONTROLS.EditInPlaceClickController',
       'js!SBIS3.CONTROLS.Link',
       'js!SBIS3.CONTROLS.ScrollWatcher',
+      'i18n!SBIS3.CONTROLS.ListView',
       'browser!html!SBIS3.CONTROLS.ListView/resources/ListViewGroupBy',
       'browser!html!SBIS3.CONTROLS.ListView/resources/emptyData',
       'browser!js!SBIS3.CONTROLS.ListView/resources/SwipeHandlers'
@@ -30,7 +31,7 @@ define('js!SBIS3.CONTROLS.ListView',
    function (CompoundControl, CompoundActiveFixMixin, DSMixin, MultiSelectable,
              Selectable, DataBindMixin, DecorableMixin, DragNDropMixin, ItemActionsGroup, MarkupTransformer, dotTplFn,
              TemplateUtil, CommonHandlers, MoveHandlers, Pager, EditInPlaceHoverController, EditInPlaceClickController,
-             Link, ScrollWatcher, groupByTpl, emptyDataTpl) {
+             Link, ScrollWatcher, rk,  groupByTpl, emptyDataTpl) {
 
       'use strict';
 
@@ -253,6 +254,7 @@ define('js!SBIS3.CONTROLS.ListView',
                 * @property {Function} onActivated Действие кнопки.
                 * @editor icon ImageEditor
                 * @translatable caption
+                * @translatable tooltip
                 */
                /**
                 * @cfg {ItemsActions[]} Набор действий над элементами, отображающийся в виде иконок
@@ -282,8 +284,8 @@ define('js!SBIS3.CONTROLS.ListView',
                itemsActions: [{
                   name: 'delete',
                   icon: 'sprite:icon-16 icon-Erase icon-error',
-                  tooltip: 'Удалить',
-                  caption: 'Удалить',
+                  tooltip: rk('Удалить'),
+                  caption: rk('Удалить'),
                   isMainAction: true,
                   onActivated: function (item) {
                      this.deleteRecords(item.data('id'));
@@ -291,8 +293,8 @@ define('js!SBIS3.CONTROLS.ListView',
                },{
                   name: 'move',
                   icon: 'sprite:icon-16 icon-Move icon-primary action-hover',
-                  tooltip: 'Перенести',
-                  caption: 'Перенести',
+                  tooltip: rk('Перенести'),
+                  caption: rk('Перенести'),
                   isMainAction: false,
                   onActivated: function (item) {
                      this.selectedMoveTo(item.data('id'));
@@ -1175,13 +1177,13 @@ define('js!SBIS3.CONTROLS.ListView',
             ListView.superclass._drawItems.apply(this, [records, at]);
          },
          _drawItemsCallback: function () {
+            ListView.superclass._drawItemsCallback.apply(this, arguments);
             var hoveredItem = this.getHoveredItem().container;
 
             if (this.isInfiniteScroll()) {
                this._preScrollLoading();
             }
             this._drawSelectedItems(this._options.selectedKeys);
-            this._drawSelectedItem(this._options.selectedKey);
 
             /* Если после перерисовки выделенный элемент удалился из DOM дерава,
                то событие mouseLeave не сработает, поэтому вызовем руками метод */
@@ -1224,7 +1226,7 @@ define('js!SBIS3.CONTROLS.ListView',
          _nextLoad: function () {
             var self = this,
                loadAllowed  = this._isAllowInfiniteScroll(),
-               records;
+               records = [];
             //Если в догруженных данных в датасете пришел n = false, то больше не грузим.
             if (loadAllowed && $ws.helpers.isElementVisible(this.getContainer()) &&
                   this._hasNextPage(this._dataSet.getMetaData().more, this._infiniteScrollOffset) && this._hasScrollMore && !this._isLoading()) {
@@ -1246,12 +1248,17 @@ define('js!SBIS3.CONTROLS.ListView',
                   self._notify('onDataMerge', dataSet);
                   //Если данные пришли, нарисуем
                   if (dataSet.getCount()) {
-                     records = dataSet._getRecords();
-                     self._dataSet.merge(dataSet, {remove: false});
+                     //TODO перевести на each
+                     records = dataSet.toArray();
                      if (self._options.infiniteScroll === 'up') {
                         self._containerScrollHeight = self._scrollWatcher.getScrollHeight();
+                        //TODO Провести тесты с unshift и Array.insert
+                        //сортируем пришедшие данные в обратном порядке, чтобы красиво отрисовать
+                        records = records.reverse();
                      }
-                     self._drawItems(records);
+                     self._items[self._options.infiniteScroll === 'up' ? 'prepend' : 'append'](records);
+                     //TODO Пытались оставить для совместимости со старыми данными, но вызывает onCollectionItemChange!!!
+                     //self._dataSet.merge(dataSet, {remove: false});
                      self._dataLoadedCallback();
                      self._toggleEmptyData();
                   }
@@ -1300,7 +1307,7 @@ define('js!SBIS3.CONTROLS.ListView',
             var scrollAmount;
             //сюда попадем только когда уже точно есть скролл
             if (this.isInfiniteScroll() && this._options.infiniteScroll == 'up'){
-               scrollAmount = this._scrollWatcher.getScrollHeight() - this._containerScrollHeight - this._scrollIndicatorHeight;
+               scrollAmount = this._scrollWatcher.getScrollHeight() - this._containerScrollHeight;
                //Если запускаем 1ый раз, то нужно поскроллить в самый низ (ведь там "начало" данных), в остальных догрузках скроллим вниз на
                //разницы величины скролла (т.е. на сколько добавилось высоты, на столько и опустили). Получается плавно
                //Так же цчитываем то, что индикатор появляется только на время загрузки и добавляет свою высоту
@@ -1628,17 +1635,6 @@ define('js!SBIS3.CONTROLS.ListView',
                rows = [anchor.prev(), itemContainer, anchor, itemContainer.next()];
                itemContainer.insertBefore(anchor);
             } else {
-               var childs = this._dataSet.getChildItems(anchor.data('id'), true),
-                  lastChild;
-               if(childs.length > 0) {
-                  for(var i = childs.length-1; i>=0; i--) {
-                     lastChild = itemsContainer.find('tr[data-id="'+childs[i]+'"]:visible');
-                     if(lastChild.length > 0) {
-                        anchor = lastChild;
-                        break;
-                     }
-                  }
-               }
                rows = [itemContainer.prev(), anchor, itemContainer, anchor.next()];
                itemContainer.insertAfter(anchor);
             }

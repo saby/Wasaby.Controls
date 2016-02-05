@@ -19,27 +19,28 @@ define('js!Test.SbisBusinessLogic', [
          call: function (method, args) {
             var def = new $ws.proto.Deferred(),
                meta = [
-                  {'n': 'Ид', 't': 'Число целое'},
                   {'n': 'Фамилия', 't': 'Строка'},
                   {'n': 'Имя', 't': 'Строка'},
                   {'n': 'Отчество', 't': 'Строка'},
+                  {'n': '@Ид', 't': 'Число целое'},
                   {'n': 'Должность', 't': 'Строка'},
                   {'n': 'В штате', 't': 'Логическое'}
                ],
+               idPosition = 3,
                error = '',
                data;
 
-            switch (this._cfg.name) {
+            switch (this._cfg.resource) {
                case 'Товар':
                case 'Продукт':
                   switch (method) {
                      case 'Создать':
                         data = {
                            d: [
+                              '',
+                              '',
+                              '',
                               0,
-                              '',
-                              '',
-                              '',
                               '',
                               false
                            ],
@@ -51,10 +52,10 @@ define('js!Test.SbisBusinessLogic', [
                         if (args['ИдО'] === existsId) {
                            data = {
                               d: [
-                                 existsId,
                                  'Иванов',
                                  'Иван',
                                  'Иванович',
+                                 existsId,
                                  'Инженер',
                                  true
                               ],
@@ -66,8 +67,8 @@ define('js!Test.SbisBusinessLogic', [
                         break;
 
                      case 'Записать':
-                        if (args['Запись'].d && args['Запись'].d[0]) {
-                           data = args['Запись'].d[0];
+                        if (args['Запись'].d && args['Запись'].d[idPosition]) {
+                           data = args['Запись'].d[idPosition];
                         } else {
                            data = 99;
                         }
@@ -87,18 +88,18 @@ define('js!Test.SbisBusinessLogic', [
                         data = {
                            d: [
                               [
-                                 existsId,
                                  'Иванов',
                                  'Иван',
                                  'Иванович',
+                                 existsId,
                                  'Инженер',
                                  true
                               ],
                               [
-                                 1 + existsId,
                                  'Петров',
                                  'Петр',
                                  'Петрович',
+                                 1 + existsId,
                                  'Специалист',
                                  true
                               ]
@@ -113,7 +114,7 @@ define('js!Test.SbisBusinessLogic', [
                         break;
 
                      default:
-                        error = 'Method ' + this._cfg.name + ' is undefined';
+                        error = 'Method "' + method + '" is undefined';
                   }
                   break;
 
@@ -126,7 +127,7 @@ define('js!Test.SbisBusinessLogic', [
                   break;
 
                default:
-                  error = 'Service is not found';
+                  error = 'Service "' + this._cfg.resource + '" is not found';
             }
 
             setTimeout(function () {
@@ -180,11 +181,11 @@ define([
                         ''
                      ],
                      s: [
-                        {'n': 'Ид', 't': 'Число целое'},
+                        {'n': '@Ид', 't': 'Число целое'},
                         {'n': 'Фамилия', 't': 'Строка'}
                      ]
                   },
-                  idProperty: 'Ид'
+                  idProperty: '@Ид'
                });
             },
             testArgIsModel = function(arg, model) {
@@ -500,8 +501,8 @@ define([
                               if (!success) {
                                  throw new Error('Unsuccessful update');
                               }
-                              if (!model.isChanged()) {
-                                 throw new Error('The model should stay changed');
+                              if (model.isChanged()) {
+                                 throw new Error('The model should become unchanged');
                               }
                               if (model.get('Фамилия') !== 'Петров') {
                                  throw new Error('The model contains wrong data');
@@ -527,8 +528,8 @@ define([
                      if (!model.isStored()) {
                         throw new Error('The model should become stored');
                      }
-                     if (!model.isChanged()) {
-                        throw new Error('The model should stay changed');
+                     if (model.isChanged()) {
+                        throw new Error('The model should become unchanged');
                      }
                      if (!model.getId()) {
                         throw new Error('The model should become having a id');
@@ -542,7 +543,8 @@ define([
                context('and the model was not stored', function () {
                   it('should create the model by 1st way', function (done) {
                      var service = new SbisService({
-                        resource: 'Товар'
+                        resource: 'Товар',
+                        idProperty: '@Ид'
                      });
                      service.create().addCallbacks(function (model) {
                         service.update(model).addCallbacks(function (success) {
@@ -557,7 +559,8 @@ define([
 
                   it('should create the model by 2nd way', function (done) {
                      var service = new SbisService({
-                           resource: 'Товар'
+                           resource: 'Товар',
+                           idProperty: '@Ид'
                         }),
                         model = getSampleModel();
 
@@ -702,7 +705,7 @@ define([
                      try {
                         var args = SbisBusinessLogic.lastRequest.args;
 
-                        if ($ws.helpers.type(args['ИдО']) != 'array' ||  args['ИдО'] != SbisBusinessLogic.existsId) {
+                        if ($ws.helpers.type(args['ИдО']) != 'array' || args['ИдО'] != SbisBusinessLogic.existsId) {
                            throw new Error('Wrong argument ИдО');
                         }
 
@@ -784,7 +787,7 @@ define([
                   service.destroy([SbisBusinessLogic.existsId + ',Товар', '987,Продукт']).addCallbacks(function (success) {
                      try {
                         var cfg = SbisBusinessLogic.lastRequest.cfg;
-                        if (cfg.name != 'Продукт') {
+                        if (cfg.resource != 'Продукт') {
                            throw new Error('Wrong service name');
                         }
 
@@ -861,6 +864,24 @@ define([
                         }
                         if (ds.getAll().getCount() !== 2) {
                            throw new Error('Wrong models count');
+                        }
+                        done();
+                     } catch (err) {
+                        done(err);
+                     }
+                  }, function (err) {
+                     done(err);
+                  });
+               });
+
+               it('should take idProperty for dataset  from raw data', function (done) {
+                  var service = new SbisService({
+                     resource: 'Товар'
+                  });
+                  service.query(new Query()).addCallbacks(function (ds) {
+                     try {
+                        if (ds.getIdProperty() !== '@Ид') {
+                           throw new Error('Wrong idProperty');
                         }
                         done();
                      } catch (err) {
@@ -1114,7 +1135,7 @@ define([
                               [5, true]
                            ],
                            s: [
-                              {'n': 'Ид', 't': 'Идентификатор'},
+                              {'n': '@Ид', 't': 'Идентификатор'},
                               {'n': 'Флаг', 't': 'Логическое'}
                            ]
                         }

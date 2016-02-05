@@ -16,10 +16,16 @@ define('js!SBIS3.CONTROLS.Data.Adapter.Abstract', [
 
    var Abstract = $ws.core.extend({}, [IAdapter, SerializableMixin], /** @lends SBIS3.CONTROLS.Data.Adapter.Abstract.prototype */{
       _moduleName: 'SBIS3.CONTROLS.Data.Adapter.Abstract',
+      $protected: {
+         /**
+          * @member {String} Разделитель для обозначения пути в данных
+          */
+         _pathSeparator: '.'
+      },
 
       getProperty: function (data, property) {
          property = property || '';
-         var parts = property.split('.'),
+         var parts = property.split(this._pathSeparator),
             result;
          for (var i = 0; i < parts.length; i++) {
             result = i ?
@@ -34,7 +40,7 @@ define('js!SBIS3.CONTROLS.Data.Adapter.Abstract', [
             return;
          }
          property = property || '';
-         var parts = property.split('.'),
+         var parts = property.split(this._pathSeparator),
             current = data;
          for (var i = 0, max = parts.length - 1; i <= max; i++) {
             if (i === max) {

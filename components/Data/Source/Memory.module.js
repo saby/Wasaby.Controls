@@ -71,7 +71,7 @@ define('js!SBIS3.CONTROLS.Data.Source.Memory', [
       },
 
       update: function (model) {
-         if (!model.isStored() && !model.get(this._options.idProperty)) {
+         if (!model.isStored() && this._options.idProperty && !model.get(this._options.idProperty)) {
             model.set(
                this._options.idProperty,
                $ws.helpers.randomId('k')
@@ -93,6 +93,7 @@ define('js!SBIS3.CONTROLS.Data.Source.Memory', [
             );
          }
          model.setStored(true);
+         model.applyChanges();
 
          return $ws.proto.Deferred.success(true);
       },

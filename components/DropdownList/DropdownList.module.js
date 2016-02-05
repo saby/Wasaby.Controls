@@ -66,6 +66,7 @@ define('js!SBIS3.CONTROLS.DropdownList',
                mode: 'hover',
                /**
                 * @cfg {String} Текст заголовка
+                * @translatable
                 */
                text : '',
                /**
@@ -91,7 +92,7 @@ define('js!SBIS3.CONTROLS.DropdownList',
             _hideAllowed : true
          },
          $constructor: function() {
-            this._container.bind(this._options.mode === 'hover' ? 'mouseenter' : 'mousedown', this.showPicker.bind(this));
+            this._container.bind(this._options.mode === 'hover' ? 'mouseenter' : 'mouseup', this.showPicker.bind(this));
             this._publish('onClickMore');
          },
          init : function () {
