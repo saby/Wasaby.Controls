@@ -50,6 +50,13 @@
 
    &.ws-disabled {
 
+      .controls-TextBox__field {
+         &::-webkit-input-placeholder { opacity: 0 }
+         &:-moz-placeholder {  opacity: 0 }
+         &::-moz-placeholder {  opacity: 0 }
+         &:-ms-input-placeholder {  opacity: 0 }
+      }
+
       .controls-FieldLink__linkItem {
          padding: @controls-FieldLink-disabled-item-padding;
 

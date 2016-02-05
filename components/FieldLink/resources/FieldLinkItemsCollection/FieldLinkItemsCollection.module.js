@@ -85,6 +85,11 @@ define('js!SBIS3.CONTROLS.FieldLinkItemsCollection', [
             var fieldLink = this.getParent();
             fieldLink.setActive.apply(fieldLink, arguments);
          },
+
+
+         canAcceptFocus: function() {
+            return false;
+         },
          /**
           * Обработчик клика на крестик
           * @param e
