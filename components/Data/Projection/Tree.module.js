@@ -33,7 +33,7 @@ define('js!SBIS3.CONTROLS.Data.Projection.Tree', [
    var TreeProjection = CollectionProjection.extend([ITreeProjection], /** @lends SBIS3.CONTROLS.Data.Projection.Tree.prototype */{
       _moduleName: 'SBIS3.CONTROLS.Data.Projection.Tree',
       $protected: {
-         _itemModule: 'SBIS3.CONTROLS.Data.Projection.TreeItem',
+         _itemModule: 'projection.tree-item',
 
          /**
           * @var {SBIS3.CONTROLS.Data.Projection.TreeItem} Корневой элемент дерева
@@ -57,7 +57,7 @@ define('js!SBIS3.CONTROLS.Data.Projection.Tree', [
          }
 
          if ($ws.helpers.instanceOfMixin(this._options.collection, 'SBIS3.CONTROLS.Data.Collection.ISourceLoadable')) {
-            this._itemModule = 'SBIS3.CONTROLS.Data.Projection.LoadableTreeItem';
+            this._itemModule = 'projection.loadable-tree-item';
          }
 
          this._initChildrenStrategy();
