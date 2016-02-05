@@ -5,13 +5,13 @@ define('js!SBIS3.CONTROLS.Data.Types.Flags', [
 ], function (IEnumerable, ArrayEnumerator) {
    'use strict';
    /**
-    * Интерфейс флагов
-    * @mixin SBIS3.CONTROLS.Data.Types.IEnumerable
+    * Тип данных набор флагов
+    * @mixin SBIS3.CONTROLS.Data.Collection.IEnumerable
     * @public
     * @author Ганшин Ярослав
     */
 
-   var Flags = $ws.core.extend({}, [IEnumerable], {
+   var Flags = $ws.core.extend({}, [IEnumerable],/** @lends SBIS3.CONTROLS.Data.Types.Flags.prototype */ {
       _moduleName: 'SBIS3.CONTROLS.Data.Types.Flags',
       $protected: {
          _options: {

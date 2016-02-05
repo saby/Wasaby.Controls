@@ -7,10 +7,11 @@ define('js!SBIS3.CONTROLS.Demo.MyDropdownList',
          'js!SBIS3.CONTROLS.DropdownList',
          'html!SBIS3.CONTROLS.Demo.MyDropdownList',
          'html!SBIS3.CONTROLS.Demo.MyDropdownList/MyDropdownListItem',
+         'i18n!SBIS3.CONTROLS.Demo.MyDropdownList',
          'css!SBIS3.CONTROLS.Demo.MyDropdownList'
       ],
 
-      function(CompoundControl, DropdownList, dotTplFn, dotHeadTemplate) {
+      function(CompoundControl, DropdownList, dotTplFn, dotHeadTemplate, rk) {
          'use strict';
          var MyDropdownList = CompoundControl.extend([],{
             $protected: {
@@ -20,27 +21,27 @@ define('js!SBIS3.CONTROLS.Demo.MyDropdownList',
                   data: [
                      {
                         key : 0,
-                        title : 'Заголовок'
+                        title : rk('Заголовок')
                      },
                      {
                         key : 1,
-                        title : 'Один'
+                        title : rk('Один')
                      },
                      {
                         key : 2,
-                        title : 'Два'
+                        title : rk('Два')
                      },
                      {
                         key : 3,
-                        title : 'Три'
+                        title : rk('Три')
                      },
                      {
                         key : 4,
-                        title : 'Четыре'
+                        title : rk('Четыре')
                      },
                      {
                         key : 5,
-                        title : 'Пять'
+                        title : rk('Пять')
                      }
                   ]
                }
