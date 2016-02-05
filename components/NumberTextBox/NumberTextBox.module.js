@@ -270,7 +270,7 @@ define('js!SBIS3.CONTROLS.NumberTextBox', ['js!SBIS3.CONTROLS.TextBox', 'html!SB
             this._dotHandler(event);
             return;
          }
-         if(keyCode == 189 /*минус*/){
+         if(keyCode == 189 || keyCode == 173 || keyCode == 109/*минус 173 - firefox, 109 - NumPad*/){
             this._toggleMinus();
             event.preventDefault();
          }
