@@ -22,7 +22,7 @@ define('js!SBIS3.CONTROLS.hierarchyMixin', [], function () {
              * @cfg {String} Идентификатор узла, относительно которого надо отображать данные
              * @noShow
              */
-            root: null,
+            root: undefined,
 
             /**
              * @cfg {String} Поле иерархии
@@ -35,8 +35,10 @@ define('js!SBIS3.CONTROLS.hierarchyMixin', [], function () {
       $constructor: function () {
          var
             filter = this.getFilter() || {};
-         this._curRoot = this._options.root;
-         filter[this._options.hierField] = this._options.root;
+         if (typeof this._options.root != 'undefined') {
+            this._curRoot = this._options.root;
+            filter[this._options.hierField] = this._options.root;
+         }
          this.setFilter(filter, true);
       },
 

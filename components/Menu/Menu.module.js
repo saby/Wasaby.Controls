@@ -107,7 +107,7 @@ define('js!SBIS3.CONTROLS.Menu', [
             enabled = item.get('enabled') !== undefined ? '<option name="enabled">' + item.get('enabled') + '</option>' : '';
 
          return '<component data-component="SBIS3.CONTROLS.MenuItem">' +
-            '<option name="caption">' + caption + '</option>' +
+            '<option name="caption" type="string">' + caption + '</option>' +
             '<option name="allowChangeEnable">' + this._options.allowChangeEnable + '</option>' + icon + className + tooltip + enabled +
             '</component>';
       },

@@ -72,16 +72,19 @@ define('js!SBIS3.CONTROLS.ActiveMultiSelectable', [], function() {
 
          /* Не добавляем уже выбранные элементы */
          newItems.each(function(rec) {
-            if(self._isItemSelected(rec) !== -1) {
+            if(self._isItemSelected(rec.getId()) !== -1) {
                newItems.remove(rec)
             }
          });
-         selItems.concat(newItems);
-         selItems.each(function(rec) {
-            selKeys.push(rec.getId());
-         });
-         this.setSelectedKeys(selKeys);
-         this._notifyOnPropertyChanged('selectedItems');
+
+         if(newItems.getCount()) {
+            selItems.concat(newItems);
+            selItems.each(function (rec) {
+               selKeys.push(rec.getId());
+            });
+            this.setSelectedKeys(selKeys);
+            this._notifyOnPropertyChanged('selectedItems');
+         }
       })
    };
 

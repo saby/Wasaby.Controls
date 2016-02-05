@@ -53,24 +53,31 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
          changed = changed === undefined ? true : changed;
          deleted = deleted === undefined ? true : deleted;
 
-         var syncCompleteDef = new $ws.proto.ParallelDeferred();
+         var syncCompleteDef = new $ws.proto.ParallelDeferred(),
+            self = this,
+            position = 0,
+            willRemove = [];
          this.each(function(model) {
-            if (model.isDeleted()) {
+            if (model.isDeleted() && !model.isSynced()) {
+               model.setSynced(true);
                syncCompleteDef.push(dataSource.destroy(model.getId()).addCallback(function() {
-                  model.setStored(false);
+                  willRemove.push(model);
                   return model;
                }));
-            } else if (model.isChanged() || !model.isStored()) {
+            } else if (model.isChanged() || (!model.isStored() && !model.isSynced())) {
                syncCompleteDef.push(dataSource.update(model).addCallback(function() {
                   model.applyChanges();
                   model.setStored(true);
                   return model;
                }));
             }
+            position++;
          }, 'all');
 
          syncCompleteDef.done(true);
-         return syncCompleteDef.getResult();
+         return syncCompleteDef.getResult(true).addCallback(function(){
+            $ws.helpers.map(willRemove, self.remove, self);
+         });
       },
 
       getRawData: function() {

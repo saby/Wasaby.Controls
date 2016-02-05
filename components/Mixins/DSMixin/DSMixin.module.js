@@ -52,6 +52,25 @@ define('js!SBIS3.CONTROLS.DSMixin', [
         * @see setDataSource
         * @see getDataSource
         */
+      /**
+       * @event onDataLoadError При ошибке загрузки данных
+       * @remark
+       * Событие сработает при получении ошибки от любого метода БЛ, вызванного стандартным способом.
+       * @param {$ws.proto.EventObject} eventObject Дескриптор события.
+       * @param {HTTPError} error Произошедшая ошибка.
+       * @return {Boolean} Если вернуть:
+       * <ol>
+       * <li>true, то будет считаться, что ошибка обработана, и стандартное поведение отменяется.</li>
+       * <li>Если не возвращать true, то выведется alert с описанием ошибки.</li>
+       * </ol>
+       * @example
+       * <pre>
+       *    myView.subscribe('onDataLoadError', function(event, error){
+       *       event.setResult(true);
+       *       TextBox.setText('Ошибка при загрузке данных');
+       *    });
+       * </pre>
+       */
       $protected: {
          _itemsInstances: {},
          _offset: 0,
@@ -213,13 +232,20 @@ define('js!SBIS3.CONTROLS.DSMixin', [
             /**
              * @cfg {Object.<String,String>} подключаемые внешние шаблоны, ключу соответствует поле it.included.<...> которое будет функцией в шаблоне
              */
-            includedTemplates: {}
+            includedTemplates: {},
+            /**
+             * @cfg {String|function} Шаблон элементов, которые будт рисоваться под даннными.
+             * @remark
+             * Например для отрисовки кнопко +Документ, +Папка.
+             * Если задан, то под всеми(!) элементами появится контейнер с содержимым этого шаблона
+             */
+            footerTpl: undefined
          },
          _loader: null
       },
 
       $constructor: function () {
-         this._publish('onDrawItems', 'onDataLoad');
+         this._publish('onDrawItems', 'onDataLoad', 'onDataLoadError');
          if (typeof this._options.pageSize === 'string') {
             this._options.pageSize = this._options.pageSize * 1;
          }
@@ -250,6 +276,16 @@ define('js!SBIS3.CONTROLS.DSMixin', [
                   keyField: this._options.keyField
                });
             }
+         }
+      },
+      after : {
+         _modifyOptions: function (opts) {
+            var tpl = opts.footerTpl;
+            //Если нам передали шаблон как строку вида !html, то нужно из нее сделать функцию
+            if (tpl && typeof tpl === 'string' && tpl.match(/^html!/)) {
+               opts.footerTpl = require(tpl);
+            }
+            return opts;
          }
       },
        /**
@@ -340,35 +376,38 @@ define('js!SBIS3.CONTROLS.DSMixin', [
           this._offset = offsetChanged ? offset : this._offset;
           this._limit = limitChanged ? limit : this._limit;
 
-          if (this._dataSource) {
-             this._toggleIndicator(true);
-             def = this._callQuery(this._options.filter, this.getSorting(), this._offset, this._limit).addCallback($ws.helpers.forAliveOnly(function (dataSet) {
-                self._toggleIndicator(false);
-                self._loader = null;//Обнулили без проверки. И так знаем, что есть и загрузили
-                if (self._dataSet) {
-                   self._dataSet.setRawData(dataSet.getRawData());
-                   self._dataSet.setMetaData(dataSet.getMetaData());
-                } else {
-                   self._dataSet = dataSet;
-                }
-                self._dataLoadedCallback();
-                self._notify('onDataLoad', dataSet);
-                //self._notify('onBeforeRedraw');
-                self._redraw();
-                return dataSet;
-             }, self)).addErrback($ws.helpers.forAliveOnly(function (error) {
-                if (!error.canceled) {
-                   self._toggleIndicator(false);
-                   $ws.helpers.message(error.message.toString().replace('Error: ', ''));
-                }
-                return error;
-             }, self));
-             this._loader = def;
-          }
-          else {
-             def = new $ws.proto.Deferred();
-             def.callback();
-          }
+         if (this._dataSource){
+            this._toggleIndicator(true);
+	         def = this._callQuery(this._options.filter, this.getSorting(), this._offset, this._limit)
+                 .addCallback($ws.helpers.forAliveOnly(function (dataSet) {
+                    self._toggleIndicator(false);
+                    self._loader = null;//Обнулили без проверки. И так знаем, что есть и загрузили
+                    if (self._dataSet) {
+                       self._dataSet.setRawData(dataSet.getRawData());
+                       self._dataSet.setMetaData(dataSet.getMetaData());
+                    } else {
+                       self._dataSet = dataSet;
+                    }
+                    self._dataLoadedCallback();
+                    self._notify('onDataLoad', dataSet);
+                    self._redraw();
+                    return dataSet;
+                 }, self))
+                 .addErrback($ws.helpers.forAliveOnly(function(error){
+                    if (!error.canceled) {
+                       self._toggleIndicator(false);
+
+                       if(self._notify('onDataLoadError', error) !== true) {
+                          $ws.helpers.message(error.message.toString().replace('Error: ', ''));
+                       }
+                    }
+                    return error;
+                 }, self));
+            this._loader = def;
+         } else {
+            def = new $ws.proto.Deferred();
+            def.callback();
+         }
 
           this._notifyOnPropertyChanged('filter');
           this._notifyOnPropertyChanged('sorting');
@@ -570,7 +609,12 @@ define('js!SBIS3.CONTROLS.DSMixin', [
       _drawItemsCallback: function () {
          /*Method must be implemented*/
       },
-
+      /**
+       * Метод перерисвоки списка без повторного получения данных
+       */
+      redraw: function() {
+         this._redraw();
+      },
       _redraw: function () {
          var records;
 
@@ -589,7 +633,8 @@ define('js!SBIS3.CONTROLS.DSMixin', [
 
       _drawItems: function (records, at) {
          var
-            curAt = at;
+            curAt = at,
+               targetContainer;
          if (records && records.length > 0) {
             for (var i = 0; i < records.length; i++) {
                this._drawAndAppendItem(records[i], curAt, i === records.length - 1);
@@ -627,18 +672,21 @@ define('js!SBIS3.CONTROLS.DSMixin', [
          if (container.length){
             var itemsContainers = $('.controls-ListView__item, .controls-GroupBy', container.get(0));
             /*Удаляем вложенные компоненты*/
-            $('[data-component]', itemsContainers).each(function (i, item) {
-               var inst = $(item).wsControl();
-               if (inst) {
-                  inst.destroy();
-               }
-            });
+            this._destroyControls(itemsContainers);
 
             /*Удаляем сами items*/
             itemsContainers.remove();
          }
       },
 
+      _destroyControls: function(container){
+         $('[data-component]', container).each(function (i, item) {
+            var inst = $(item).wsControl();
+            if (inst) {
+               inst.destroy();
+            }
+         });
+      },
       //метод определяющий в какой контейнер разместить определенный элемент
       _getTargetContainer: function (item) {
          //по стандарту все строки рисуются в itemsContainer
@@ -656,13 +704,13 @@ define('js!SBIS3.CONTROLS.DSMixin', [
        */
       redrawItem: function(item) {
          var
-            targetElement = this._getElementForRedraw(item),
-            newElement = this._drawItem(item).addClass(targetElement.attr('class'));
+            targetElement = this._getElementByModel(item),
+            newElement = this._drawItem(item);
          targetElement.after(newElement).remove();
          this.reviveComponents();
       },
 
-      _getElementForRedraw: function(item) {
+      _getElementByModel: function(item) {
          return this._getItemsContainer().find('.js-controls-ListView__item[data-id="' + item.getKey() + '"]');
       },
 

@@ -70,6 +70,7 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                   ignoreFirstColumn: this._options.ignoreFirstColumn,
                   context: this._getContextForEip(),
                   focusCatch: this._focusCatch.bind(this),
+                  editingItem: this._options.editingItem,
                   parent: this,
                   handlers: {
                      onItemValueChanged: function(event, difference, model) {
@@ -217,22 +218,23 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
              },
             _endEdit: function(eip, withSaving) {
                var
+                  target = eip.getTarget(),
                   eipRecord = eip.getEditingRecord();
                if (this._editingRecord) {
                   this._editingRecord.merge(eipRecord);
                   this._editingRecord = undefined;
                }
                if (!this._options.dataSet.getRecordByKey(eipRecord.getKey())) {
-                  withSaving ? this._options.dataSet.push(eipRecord) : eip.getTarget().remove();
+                  withSaving ? this._options.dataSet.push(eipRecord) : target.remove();
                }
                if (withSaving) {
                   this._options.dataSource.sync(this._options.dataSet).addCallback(function() {
                      this._savingDeferred.callback();
-                     this._notify('onAfterEndEdit', this._options.dataSet.getRecordByKey(eipRecord.getKey()), eip.getTarget(), withSaving);
+                     this._notify('onAfterEndEdit', this._options.dataSet.getRecordByKey(eipRecord.getKey()), target, withSaving);
                   }.bind(this));
                } else {
                   this._savingDeferred.callback();
-                  this._notify('onAfterEndEdit', eipRecord, eip.getTarget(), withSaving);
+                  this._notify('onAfterEndEdit', eipRecord, target, withSaving);
                }
             },
             add: function() {
