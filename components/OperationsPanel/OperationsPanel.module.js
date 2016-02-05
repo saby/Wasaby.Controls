@@ -117,12 +117,14 @@ define('js!SBIS3.CONTROLS.OperationsPanel', [
             this.reload();
          }
          if (this.isVisible() !== show) {
-            this._container.removeClass('ws-hidden');
+            this._isVisible = show;
+            show && this._container.removeClass('ws-hidden');
             this._blocks.wrapper.animate({'margin-top': show ? 0 : '-30px'}, {
                duration: 150,
                easing: 'linear',
+               queue: false,
                complete: function () {
-                  OperationsPanel.superclass._setVisibility.apply(self, [show]);
+                  self._container.toggleClass('ws-hidden', !show);
                   self._notify('onToggle');
                }
             });
