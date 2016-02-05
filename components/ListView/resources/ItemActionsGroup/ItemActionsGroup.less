@@ -59,6 +59,14 @@
       height: @bottomStyle-item-actions-height - 1;
       & > * {
          top: 8px;
+         &.controls-IconButton__round-border {
+            height: @list-view-actions-icon-round-height;
+            vertical-align: top;
+            top: @list-view-actions-icon-round-top;
+         }
+         &.controls-Link {
+            top: @list-view-actions-link-top;
+         }
          &.controls-ItemActions__menu-button {
             margin-top: 7px;
          }
@@ -199,7 +207,7 @@
       }
       > .controls-Link {
          display: inline;
-         top: -4px;
+         top: -@list-view-actions-link-top;
       }
    }
 }

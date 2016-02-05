@@ -6,11 +6,11 @@ define('js!SBIS3.CONTROLS.FieldLink',
       'js!SBIS3.CONTROLS.ActiveMultiSelectable',
       'js!SBIS3.CONTROLS.Selectable',
       'js!SBIS3.CONTROLS.ActiveSelectable',
+      'js!SBIS3.CONTROLS.SyncSelectionMixin',
       'js!SBIS3.CONTROLS.FieldLinkItemsCollection',
       'html!SBIS3.CONTROLS.FieldLink/afterFieldWrapper',
       'html!SBIS3.CONTROLS.FieldLink/beforeFieldWrapper',
       'js!SBIS3.CONTROLS.Data.Model',
-      'js!SBIS3.CONTROLS.Data.Adapter.Sbis',
       'js!SBIS3.CONTROLS.Utils.DialogOpener',
       'js!SBIS3.CONTROLS.ITextValue',
       'js!SBIS3.CONTROLS.Utils.TemplateUtil',
@@ -31,11 +31,11 @@ define('js!SBIS3.CONTROLS.FieldLink',
        ActiveSelectable,
        /********************************************/
 
+       SyncSelectionMixin,
        FieldLinkItemsCollection,
        afterFieldWrapper,
        beforeFieldWrapper,
        Model,
-       SbisAdapter,
        DialogOpener,
        ITextValue,
        TemplateUtil
@@ -47,23 +47,6 @@ define('js!SBIS3.CONTROLS.FieldLink',
       var SHOW_ALL_LINK_WIDTH = 11;
       var INPUT_MIN_WIDTH = 100;
 
-      //FIXME для поддержки старых справочников, удалить как откажемся
-      function recordConverter(rec) {
-         return new Model({
-            data: rec.toJSON(),
-            adapter: new SbisAdapter(),
-            idProperty: this._options.keyField
-         })
-      }
-
-      /* Обёртка для методов, в которых меняется несколько свойст,
-         нужна для того, чтобы синхронизация с контекстом происходила один раз */
-      function propertyUpdateWrapper(func) {
-         return function() {
-            return this.runInPropertiesUpdate(func, arguments);
-         };
-      }
-
    /**
     * Поле связи. Можно выбирать значение из списка, можно из автодополнения
     * @class SBIS3.CONTROLS.FieldLink
@@ -73,6 +56,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
     * @mixes SBIS3.CONTROLS.MultiSelectable
     * @mixes SBIS3.CONTROLS.ActiveSelectable
     * @mixes SBIS3.CONTROLS.ActiveMultiSelectable
+    * @mixes SBIS3.CONTROLS.ChooserMixin
     * @mixes SBIS3.CONTROLS.FormWidgetMixin
     * @demo SBIS3.CONTROLS.Demo.FieldLinkWithEditInPlace Поле связи с редактированием по месту
     * @demo SBIS3.CONTROLS.Demo.FieldLinkDemo
@@ -82,7 +66,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
     * @author Крайнов Дмитрий Олегович
     */
 
-   var FieldLink = SuggestTextBox.extend([MultiSelectable, ActiveMultiSelectable, Selectable, ActiveSelectable, DSMixin, ITextValue],/** @lends SBIS3.CONTROLS.FieldLink.prototype */{
+   var FieldLink = SuggestTextBox.extend([MultiSelectable, ActiveMultiSelectable, Selectable, ActiveSelectable, SyncSelectionMixin, DSMixin, ITextValue],/** @lends SBIS3.CONTROLS.FieldLink.prototype */{
     /**
       * @event onItemActivate При активации записи (клик с целью например редактирования)
       * @param {$ws.proto.EventObject} eventObject Дескриптор события.
@@ -90,39 +74,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
       * @param {String} meta.id ключ элемента
       * @param {SBIS3.CONTROLS.Record} meta.item запись
       */
-      /**
-       * @event onChooserClick При клике на кнопку(пункт меню) открытия диалога выбора
-       * @return {$ws.proto.Deferred|Boolean|*} Возможные значения:
-       * <ol>
-       *    <li>$ws.proto.Deferred - Деферед, результатом выполнения которого будут выбранные записи.</li>
-       *    <li>Если вернуть false - диалог выбора открыт не будет не будет открыт.</li>
-       *    <li>Любой другой результат - диалог выбора будет открыт стандартным образом.</li>
-       * </ol>
-       * @param {$ws.proto.EventObject} eventObject Дескриптор события.
-       */
       $protected: {
-         /* КОНФИГУРАЦИЯ SELECTOR'а */
-         _selector: {
-            config: {
-               isStack: true,
-               autoHide: true,
-               selectorFieldLink: true,
-               autoCloseOnHide: true,
-               overlay: true,
-               showDelay: 300
-            },
-            type: {
-               old: {
-                  newDialog: 'js!SBIS3.CORE.DialogSelector',
-                  newFloatArea: 'js!SBIS3.CORE.FloatAreaSelector'
-               },
-            //FIXME для поддержки старых справочников, удалить как откажемся
-               newType: {
-                  newDialog: 'js!SBIS3.CONTROLS.DialogSelector',
-                  newFloatArea: 'js!SBIS3.CONTROLS.FloatAreaSelector'
-               }
-            }
-         },
          _inputWrapper: undefined,     /* Обертка инпута */
          _linksWrapper: undefined,     /* Контейнер для контрола выбранных элементов */
          _dropAllButton: undefined,    /* Кнопка очитски всех выбранных записей */
@@ -142,13 +94,6 @@ define('js!SBIS3.CONTROLS.FieldLink',
                }
             },
             /**
-             * @cfg {String} Режим выбора записей. В новом диалоге или во всплывающей панели
-             * <wiTag group="Управление">
-             * @variant newDialog в новом диалоге
-             * @variant newFloatArea во всплывающей панели
-             */
-            selectRecordsMode: 'newDialog',
-            /**
              * @typedef {Array} dictionaries
              * @property {String} caption Текст в меню.
              * @property {String} template Шаблон, который отобразится в диалоге выбора.
@@ -160,11 +105,6 @@ define('js!SBIS3.CONTROLS.FieldLink',
              * Если передать всего один элемент, то дилог выбора откроется при клике на иконку меню.
              */
             dictionaries: [],
-            /**
-             * @cfg {Boolean} Поддерживать старые представления данных
-             * Данная опция требуется, если на диалоге выбора лежат старое представление данных.
-             */
-            oldViews: false,
             /**
              * @cfg {Boolean} Не скрывать поле ввода после выбора
              * @remark
@@ -186,7 +126,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
 
       $constructor: function() {
          this.getContainer().addClass('controls-FieldLink');
-         this._publish('onItemActivate', 'onChooserClick');
+         this._publish('onItemActivate');
 
          /* Проиницализируем переменные и event'ы */
          this._setVariables();
@@ -194,6 +134,12 @@ define('js!SBIS3.CONTROLS.FieldLink',
 
          /* Создём контрол, который рисует выбранные элементы  */
          this._linkCollection = this._drawFieldLinkItemsCollection();
+
+         /* Если не передали конфигурацию диалога всех записей для автодополнения,
+            то по-умолчанию возьмём конфигурацию первого словаря */
+         if(!Object.keys(this._options.showAllConfig).length) {
+            this._options.showAllConfig = this._options.dictionaries[0];
+         }
 
          if(this._options.oldViews) {
             $ws.single.ioc.resolve('ILogger').log('FieldLink', 'В 3.8.0 будет удалена опция oldViews, а так же поддержка старых представлений данных на диалогах выбора.');
@@ -211,103 +157,55 @@ define('js!SBIS3.CONTROLS.FieldLink',
        */
       _menuItemActivatedHandler: function(e, item) {
          var rec = this.getDataSet().getRecordByKey(item);
-         this.getParent().showSelector({
-            template: rec.get('template'),
-            selectionType: rec.get('selectionType'),
-            componentOptions: rec.get('componentOptions')
-         });
+         this.getParent().showSelector(rec.get('template'), rec.get('componentOptions'));
       },
 
       /**
        * Устанавливает набор словарей
-       * @param {Array} dic
+       * @param {Array} dictionaries
+       * @see dictionaries
        */
-      setDictionaries: function(dic) {
-         this._options.dictionaries = dic;
-         this.getChildControlByName('fieldLinkMenu').setItems(dic);
+      setDictionaries: function(dictionaries) {
+         this._options.dictionaries = dictionaries;
+         this.getChildControlByName('fieldLinkMenu').setItems(dictionaries);
       },
 
       /**
-       * Показывает диалог выбора, в качестве аргумента объект с полями
-       * template - имя шаблона в виде 'js!SBIS3.CONTROLS.MyTemplate'
-       * componentOptions - опции которые прокинутся в компонент выбора
-       * @param {object} config Конфигурация диалога выбора
+       * Показывает диалог выбора
+       * @param {String} template Имя шаблона в виде 'js!SBIS3.CONTROLS.MyTemplate'
+       * @param {Object} componentOptions Опции которые прокинутся в компонент выбора
+       * @see dictionaries
+       * @see setDictionaries
        */
-      showSelector: function(config) {
-         var self = this,
-             version = this._options.oldViews ? 'old' : 'newType',
-             selectorConfig, commonConfig, clickResult;
+      showSelector: function(template, componentOptions) {
+         this._showChooser(
+             template,
+             componentOptions,
+             /* Дополнительный конфиг, который нужно прокинуть в selector */
+             {
+                currentValue: this.getSelectedKeys(),
+                selectorFieldLink: true,
+                multiSelect: this._options.multiselect,
+                selectedRecords: $ws.helpers.reduce(this.getSelectedItems().toArray(),
+                    function(result, rec) {
+                       result.push(DialogOpener.convertRecord(rec));
+                       return result;
+                    }, [])
+             });
+      },
 
-
-         function oldConfirmSelectionCallback(event, selectedRecords) {
-            var itemArr = [];
-
-            if(selectedRecords[0] !== null) {
-               for (var i = 0, len = selectedRecords.length; i < len; i++) {
-                  itemArr.push(recordConverter.call(self, selectedRecords[i]));
-               }
-               self.addSelectedItems(itemArr);
-            }
-            /* Если обрабатываем результат deferred'a то в функции нету контекста, проверим на это */
-            if(this && this.close) {
-               this.close();
-            }
+      /**
+       * Обрабатывает результат выбора из справочника
+       * @param {Array} result
+       * @private
+       */
+      _chooseCallback: function(result) {
+         if(result && result.length) {
+            $ws.helpers.instanceOfModule(result[0], 'SBIS3.CONTROLS.Data.Model') ?
+                this.addSelectedItems(result) :
+                this.addItemsSelection(result);
+            this.setText('');
          }
-
-         function newConfirmSelectionCallBack(result) {
-            if(result) {
-               $ws.helpers.instanceOfModule(result[0], 'SBIS3.CONTROLS.Data.Model') ? self.setSelectedItems(result) : self.setSelectedKeys(result);
-            }
-         }
-
-         clickResult = this._notify('onChooserClick', config);
-
-         if(clickResult === false) {
-            return;
-         } else if(clickResult instanceof $ws.proto.Deferred) {
-            clickResult.addCallback(function(result) {
-               self._options.oldViews ? oldConfirmSelectionCallback(null, result) : newConfirmSelectionCallBack(result);
-            });
-            return;
-         }
-         selectorConfig = {
-            //FIXME для поддержки старых справочников, удалить как откажемся
-            old: {
-               currentValue: self.getSelectedKeys(),
-               /* Конвертируем новые рекорды в старые, чтобы корректно работал старый selector */
-               selectedRecords: $ws.helpers.reduce(this.getSelectedItems().toArray(),
-                  function(result, rec) {
-                     result.push(DialogOpener.convertRecord(rec));
-                     return result;
-                  }, []),
-               selectionType: config.selectionType,
-               selectorFieldLink: true,
-               handlers: {
-                  onChange: oldConfirmSelectionCallback
-               }
-            },
-            newType: {
-               currentSelectedKeys: self.getSelectedKeys(),
-               closeCallback: newConfirmSelectionCallBack
-            }
-         };
-
-         commonConfig = {
-            template: config.template,
-            componentOptions: config.componentOptions || {},
-            opener: this,
-            parent: this._options.selectRecordsMode === 'newDialog' ? this : null,
-            context: new $ws.proto.Context().setPrevious(this.getLinkedContext()),
-            target: self.getContainer(),
-            multiSelect: self._options.multiselect
-         };
-
-
-
-         requirejs([this._selector.type[version][this._options.selectRecordsMode]], function(ctrl) {
-            /* Необходимо клонировать конфигурацию селектора, иначе кто-то может её испортить, если передавать по ссылке */
-            new ctrl($ws.core.merge($ws.core.clone(self._selector.config), $ws.core.merge(selectorConfig[version], commonConfig)));
-         });
       },
 
 	   /**
@@ -383,13 +281,15 @@ define('js!SBIS3.CONTROLS.FieldLink',
       _onListItemSelect: function(id, item) {
          this.hidePicker();
          /* Чтобы не было лишнего запроса на БЛ, добавим рекорд в набор выбранных */
-         this.addSelectedItems([item]);
+         this.addSelectedItems(item instanceof Array ? item : [item]);
          this.setText('');
       },
 
 
       setDataSource: function(ds, noLoad) {
-         this.getList().setDataSource(ds, noLoad);
+         this.once('onListReady', function() {
+            this.getList().setDataSource(ds, noLoad);
+         });
          FieldLink.superclass.setDataSource.apply(this, arguments);
       },
 
@@ -421,33 +321,6 @@ define('js!SBIS3.CONTROLS.FieldLink',
          }
       },
 
-      /* Для синхронизации selectedItem и selectedItems */
-
-      setSelectedItem: propertyUpdateWrapper(function(item) {
-         /* Когда передали selectedItem, то надо сделать коллекцию selectedItems из этого item'a */
-         Object.isEmpty(item.getProperties()) ? this.clearSelectedItems() : this.setSelectedItems([item]);
-         FieldLink.superclass.setSelectedItem.apply(this, arguments);
-      }),
-
-      _afterSelectionHandler: function() {
-         var self = this;
-         /* selectedItem всегда смотрит на первый элемент набора selectedItems */
-         this.getSelectedItems(true).addCallback(function(list) {
-            var item = list.at(0);
-            self._options.selectedItem = item ? item : new Model();
-            self._options.selectedKey = item ? item.getId() : null;
-            self._notifySelectedItem(self._options.selectedKey);
-            return list;
-         });
-         FieldLink.superclass._afterSelectionHandler.apply(this, arguments);
-      },
-
-      _drawSelectedItem: function(key) {
-         this._options.selectedKeys = key === null ? [] : [key];
-         this._drawSelectedItems(key === null ? [] : [key]);
-      },
-      /******************************************************/
-
       setListFilter: function() {
          /* Если единичный выбор в поле связи, но textBox всё равно показывается(включена опция), запрещаем работу suggest'a */
          if(!this._options.multiselect && this.getSelectedItems().getCount() && this._options.alwaysShowTextBox) {
@@ -457,12 +330,13 @@ define('js!SBIS3.CONTROLS.FieldLink',
       },
 
       _drawFieldLinkItemsCollection: function() {
-         var self = this;
+         var self = this,
+             tpl = this.getProperty('itemTemplate');
          return new FieldLinkItemsCollection({
             element: this._linksWrapper.find('.controls-FieldLink__linksContainer'),
             displayField: this._options.displayField,
             keyField: this._options.keyField,
-            itemTemplate: TemplateUtil.prepareTemplate(this.getProperty('itemTemplate')),
+            itemTemplate: tpl ? TemplateUtil.prepareTemplate(tpl) : undefined,
             userItemAttributes: this._options.userItemAttributes,
             parent: this,
             itemCheckFunc: this._checkItemBeforeDraw.bind(this),
@@ -471,12 +345,12 @@ define('js!SBIS3.CONTROLS.FieldLink',
                onDrawItems: this.updateInputWidth.bind(this),
 
                /* При клике на крест, удалим ключ из выбранных */
-               onCrossClick: propertyUpdateWrapper(function(e, key){
+               onCrossClick: function(e, key){
                   self.removeItemsSelection([key]);
                   if(!self._options.multiselect && self._options.alwaysShowTextBox) {
                      self.setText('');
                   }
-               }),
+               },
 
                onItemActivate: function(e, key) {
                   self.getSelectedItems(false).each(function(item) {
@@ -503,6 +377,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
        */
       _checkItemBeforeDraw: function(item) {
          var needDrawItem = false,
+             isMultiSelect = this._options.multiselect,
              inputWidth;
 
          /* Если элементы рисуются в пикере то ничего считать не надо */
@@ -514,11 +389,11 @@ define('js!SBIS3.CONTROLS.FieldLink',
             то отрисовываться он не будет и покажется троеточие, однако хотя бы один элемент в поле связи должен поместиться */
          if(this._checkWidth) {
             inputWidth = this._getInputWidth();
-            needDrawItem = $ws.helpers.getTextWidth(item[0].outerHTML) + INPUT_MIN_WIDTH < inputWidth + SHOW_ALL_LINK_WIDTH;
+            needDrawItem = $ws.helpers.getTextWidth(item[0].outerHTML) + isMultiSelect ? INPUT_MIN_WIDTH : 0 < inputWidth + SHOW_ALL_LINK_WIDTH;
 
             if(!needDrawItem) {
                if(!this._linkCollection.getContainer().find('.controls-FieldLink__linkItem').length) {
-                  item[0].style.width = inputWidth - ((this._options.multiselect || this._options.alwaysShowTextBox) ? INPUT_MIN_WIDTH : INPUT_WRAPPER_PADDING) + 'px';
+                  item[0].style.width = inputWidth - ((isMultiSelect || this._options.alwaysShowTextBox) ? INPUT_MIN_WIDTH : INPUT_WRAPPER_PADDING) + 'px';
                   needDrawItem = true;
                }
                this._checkWidth = false;

@@ -184,6 +184,8 @@ define(
                position: 0
             }
          },
+         //хранит текст, который прилетел через setText
+         _settedText: '',
          /* модель хранит объекты разделителей и групп, порядок совпадает с порядком в маске */
          model: []
       },
@@ -396,6 +398,30 @@ define(
 
          return insertInfo;
       },
+
+      /**
+       * Заполнена ли модель полностью
+       * @returns {boolean} true если все позиции заполнены, false в противном случае
+       */
+      isFilled: function() {
+         var isFilled = true,
+             group;
+         for (var i = 0; i < this.model.length; i++) {
+            group = this.model[i];
+            if (group.isGroup) {
+               for (var j = 0; j < group.mask.length; j++) {
+                  if (typeof group.value[j] === 'undefined') {
+                     isFilled = false;
+                     break;
+                  }
+               }
+               if ( ! isFilled) {
+                  break;
+               }
+            }
+         }
+         return isFilled;
+      },
       /**
        * Проверяет подходит ли текст маске модели. Например, маске 'HH:MM' подходит текст '12:34'
        * @param text строка, например '23:37'. Можно использовать символ заполнитель, например '_3:37'
@@ -438,7 +464,10 @@ define(
        * @returns {boolean} true - если строка установлена
        */
       setText: function(text, clearChar) {
-         if (text === '') {
+         // TODO запоминаем что изначально пришло, чтобы можно было null обработать (из контекста), но при этом выводить незаполненное поле
+         //      надо как-то иначе это обработать
+         this._settedText = text;
+         if (text === '' || text === null || typeof text === "undefined") {
             text = this.getStrMask(clearChar);
          }
          /*массив со значениями, нужен чтобы не записывать значения до полной проверки соответствия текста маске */
@@ -687,7 +716,8 @@ define(
        * @protected
        */
       _updateText:function() {
-         this._options.text = this.formatModel.getText(this._maskReplacer);
+         //TODO неодинаковое поведение получается для разного text. Но нельзя this._options.text не обновлять, т.к. его getText() использует
+         this._options.text = (this.formatModel._settedText !== null && typeof this.formatModel._settedText !== "undefined") ? this.formatModel.getText(this._maskReplacer) : this.formatModel._settedText;
       },
 
       /**
@@ -770,6 +800,9 @@ define(
             },
             character = String.fromCharCode(key),
             groupNum = positionIndexesBegin[0],
+            group = null,
+            startGroupNum = null,
+            endGroupNum = null,
             isClear = (type == 'delete' || type == 'backspace'),
             positionOffset = (type == 'backspace') ? -1 : 0,
             keyInsertInfo;
@@ -777,8 +810,43 @@ define(
          // Обработка зажатой кнопки shift (-> в букву верхнего регистра)
          character = isShiftPressed ? character.toUpperCase() : character.toLowerCase();
          character = isClear ? this._maskReplacer : character;
-         if (type == 'character'  ||  type == 'delete'  ||  type == 'backspace') {
-            keyInsertInfo = this.formatModel.insertCharacter(groupNum, positionObject.position + positionOffset, character, isClear);
+         if (type == 'character'  ||  isClear) {
+            //TODO сбрасываем, чтобы после setText(null) _updateText после ввода символов обновлял опцию text
+            this.formatModel._settedText = '';
+            if (isClear && (positionIndexesBegin[0] != positionIndexesEnd[0] || positionIndexesBegin[1] != positionIndexesEnd[1])) {
+               //проходим группы с конца, чтобы закончить самым левым символом выделенного текста и использовать его данные в keyInsertInfo о позиции курсора
+               startGroupNum = positionIndexesBegin[0];
+               endGroupNum   = positionIndexesEnd[0];
+               for (var i = endGroupNum; i >= startGroupNum; i--) {
+                  group = this.formatModel.model[i];
+                  //проходим только группы, т.к. разделители не интересуют
+                  if ( ! group.isGroup) {
+                     continue;
+                  }
+                  /* средняя группа - значение по умолчанию.
+                     Средняя для выбора например мы выделили такой текст: 11)222-34 из текста 8 (111)222-34-56.
+                     Средняя здесь это не начальная и не конечная группа выделения, т.е. 222, 111 - начальная, а 34 - конечная
+                   */
+                  var startCharNum = 0,
+                      endCharNum = group.mask.length - 1;
+                  //последняя группа выделенного текста
+                  if (i == endGroupNum) {
+                     endCharNum = positionIndexesEnd[1] - 1;
+                  }
+                  //первая группа выделенного текста
+                  if (i == startGroupNum) {
+                     startCharNum = positionIndexesBegin[1];
+                  }
+                  for (var j = endCharNum; j >= startCharNum; j--) {
+                     keyInsertInfo = this.formatModel.insertCharacter(i, j, character, isClear) || keyInsertInfo;
+                  }
+               }
+               //модель обновили - обновляем опцию text и html-отображение
+               this._updateText();
+               this._inputField.html(this._getHtmlMask());
+            } else {
+               keyInsertInfo = this.formatModel.insertCharacter(groupNum, positionObject.position + positionOffset, character, isClear);
+            }
             if (keyInsertInfo) {
                //записываем символ в html
                positionObject.container = _getContainerByIndex.call(this, keyInsertInfo.groupNum);

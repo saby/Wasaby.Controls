@@ -3,7 +3,7 @@ define('js!SBIS3.CONTROLS.HierarchyDataGridView', [
    'js!SBIS3.CONTROLS.hierarchyMixin',
    'html!SBIS3.CONTROLS.HierarchyDataGridView/resources/rowTpl',
    'js!SBIS3.CONTROLS.BreadCrumbs',
-   'is!browser?html!SBIS3.CONTROLS.DataGridView/resources/DataGridViewGroupBy'
+   'browser!html!SBIS3.CONTROLS.DataGridView/resources/DataGridViewGroupBy'
 ], function (DataGridView, hierarchyMixin, rowTpl, BreadCrumbs, groupByTpl) {
    'use strict';
    /**
@@ -184,6 +184,7 @@ define('js!SBIS3.CONTROLS.HierarchyDataGridView', [
             cfg = {
                element : elem,
                items: this._createPathItemsDS(path),
+               parent: this.getTopParent(),
                highlightEnabled: this._options.highlightEnabled,
                highlightText: this._options.highlightText,
                colorMarkEnabled: this._options.colorMarkEnabled,

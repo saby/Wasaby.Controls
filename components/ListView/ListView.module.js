@@ -8,11 +8,14 @@ define('js!SBIS3.CONTROLS.ListView',
       'js!SBIS3.CORE.CompoundActiveFixMixin',
       'js!SBIS3.CONTROLS.DSMixin',
       'js!SBIS3.CONTROLS.MultiSelectable',
-      'js!SBIS3.CONTROLS.SelectableNew',
+      'js!SBIS3.CONTROLS.Selectable',
       'js!SBIS3.CONTROLS.DataBindMixin',
       'js!SBIS3.CONTROLS.DecorableMixin',
+      'js!SBIS3.CONTROLS.DragNDropMixin',
       'js!SBIS3.CONTROLS.ItemActionsGroup',
+      'js!SBIS3.CORE.MarkupTransformer',
       'html!SBIS3.CONTROLS.ListView',
+      'js!SBIS3.CONTROLS.Utils.TemplateUtil',
       'js!SBIS3.CONTROLS.CommonHandlers',
       'js!SBIS3.CONTROLS.MoveHandlers',
       'js!SBIS3.CONTROLS.Pager',
@@ -20,19 +23,20 @@ define('js!SBIS3.CONTROLS.ListView',
       'js!SBIS3.CONTROLS.EditInPlaceClickController',
       'js!SBIS3.CONTROLS.Link',
       'js!SBIS3.CONTROLS.ScrollWatcher',
-      'is!browser?html!SBIS3.CONTROLS.ListView/resources/ListViewGroupBy',
-      'is!browser?html!SBIS3.CONTROLS.ListView/resources/emptyData',
-      'is!browser?js!SBIS3.CONTROLS.ListView/resources/SwipeHandlers'
+      'browser!html!SBIS3.CONTROLS.ListView/resources/ListViewGroupBy',
+      'browser!html!SBIS3.CONTROLS.ListView/resources/emptyData',
+      'browser!js!SBIS3.CONTROLS.ListView/resources/SwipeHandlers'
    ],
    function (CompoundControl, CompoundActiveFixMixin, DSMixin, MultiSelectable,
-             Selectable, DataBindMixin, DecorableMixin, ItemActionsGroup, dotTplFn,
-             CommonHandlers, MoveHandlers, Pager, EditInPlaceHoverController, EditInPlaceClickController,
+             Selectable, DataBindMixin, DecorableMixin, DragNDropMixin, ItemActionsGroup, MarkupTransformer, dotTplFn,
+             TemplateUtil, CommonHandlers, MoveHandlers, Pager, EditInPlaceHoverController, EditInPlaceClickController,
              Link, ScrollWatcher, groupByTpl, emptyDataTpl) {
 
       'use strict';
 
       var
          ITEMS_ACTIONS_HEIGHT = 20,
+         DRAG_AVATAR_OFFSET = 5,
          START_NEXT_LOAD_OFFSET = 180;
 
       /**
@@ -58,7 +62,7 @@ define('js!SBIS3.CONTROLS.ListView',
        */
 
       /*TODO CommonHandlers MoveHandlers тут в наследовании не нужны*/
-      var ListView = CompoundControl.extend([CompoundActiveFixMixin, DSMixin, MultiSelectable, Selectable, DataBindMixin, DecorableMixin, CommonHandlers, MoveHandlers], /** @lends SBIS3.CONTROLS.ListView.prototype */ {
+      var ListView = CompoundControl.extend([CompoundActiveFixMixin, DSMixin, MultiSelectable, Selectable, DataBindMixin, DecorableMixin, DragNDropMixin, CommonHandlers, MoveHandlers], /** @lends SBIS3.CONTROLS.ListView.prototype */ {
          _dotTplFn: dotTplFn,
          /**
           * @event onChangeHoveredItem При переводе курсора мыши на другую запись
@@ -191,12 +195,18 @@ define('js!SBIS3.CONTROLS.ListView',
                $ws._const.key.enter,
                $ws._const.key.right,
                $ws._const.key.left,
+               $ws._const.key.m,
                $ws._const.key.o
             ],
             _itemActionsGroup: null,
+            _editingItem: {
+               target: null,
+               model: null
+            },
             _emptyData: undefined,
             _containerScrollHeight : 0,
             _firstScrollTop : true,
+            _addResultsMethod: undefined,
             _options: {
                /**
                 * @cfg {Boolean} Разрешить отсутствие выбранного элемента
@@ -295,7 +305,7 @@ define('js!SBIS3.CONTROLS.ListView',
                 *     <option name="itemsDragNDrop">true</option>
                 * </pre>
                 */
-               itemsDragNDrop: false,
+               itemsDragNDrop: true,
                elemClickHandler: null,
                /**
                 * @cfg {Boolean} Разрешить выбор нескольких строк
@@ -384,7 +394,23 @@ define('js!SBIS3.CONTROLS.ListView',
                 *     </opt>
                 * </pre>
                 */
-               editingTemplate: undefined
+               editingTemplate: undefined,
+               /**
+                * @cfg {String} Позиция отображения строки итогов
+                * Данная опция позволяет отображать строку итогов в случае отсутствия записей.
+                * Возможные значения:
+                * <ol>
+                *    <li>'none' - Не отображать строку итогов</li>
+                *    <li>'top' - вверху</li>
+                *    <li>'bottom' - внизу</li>
+                * </ol>
+                */
+               resultsPosition: 'none',
+               /**
+                * @cfg {String} Заголовок строки итогов
+                */
+               resultsText : 'Итого',
+               resultsTpl: undefined
             },
             _scrollWatcher : undefined
          },
@@ -394,6 +420,10 @@ define('js!SBIS3.CONTROLS.ListView',
             this._container.on('mousemove', this._mouseMoveHandler.bind(this))
                            .on('mouseleave', this._mouseLeaveHandler.bind(this));
 
+            if (this._options.itemsDragNDrop) {
+               this._dragStartHandler = this._onDragStart.bind(this);
+               this._getItemsContainer().bind('mousedown', this._dragStartHandler);
+            }
             this.initEditInPlace();
             $ws.single.CommandDispatcher.declareCommand(this, 'activateItem', this._activateItem);
             $ws.single.CommandDispatcher.declareCommand(this, 'beginAdd', this._beginAdd);
@@ -875,6 +905,16 @@ define('js!SBIS3.CONTROLS.ListView',
             }
          },
 
+         redrawItem: function(item) {
+            ListView.superclass.redrawItem.apply(this, arguments);
+            if (this._editingItem.model && this._editingItem.model.getKey() === item.getKey()) {
+               this._editingItem.target = this._getElementByModel(item);
+            }
+            //TODO: Временное решение для .100.  В .30 состояния выбранности элемента должны добавляться в шаблоне.
+            this._drawSelectedItems(this.getSelectedKeys());
+            this._drawSelectedItem(this.getSelectedKey());
+         },
+
          /**
           * @private
           */
@@ -905,6 +945,7 @@ define('js!SBIS3.CONTROLS.ListView',
             var
                config = {
                   dataSet: this._dataSet,
+                  editingItem: this._editingItem,
                   ignoreFirstColumn: this._options.multiselect,
                   columns: this._options.columns,
                   dataSource: this._dataSource,
@@ -928,6 +969,7 @@ define('js!SBIS3.CONTROLS.ListView',
                      }.bind(this),
                      onAfterEndEdit: function(event, model, target, withSaving) {
                         if (withSaving) {
+                           target.attr('data-id', model.getKey());
                            this.redrawItem(model);
                         }
                         event.setResult(this._notify('onAfterEndEdit', model, target, withSaving));
@@ -937,7 +979,7 @@ define('js!SBIS3.CONTROLS.ListView',
             return config;
          },
 
-         _getElementForRedraw: function(item) {
+         _getElementByModel: function(item) {
             // Даже не думать удалять ":not(...)". Это связано с тем, что при редактировании по месту может возникнуть задача перерисовать строку
             // DataGridView. В виду одинакового атрибута "data-id", это единственный способ отличить строку DataGridView от строки EditInPlace.
             return this._getItemsContainer().find('.js-controls-ListView__item[data-id="' + item.getKey() + '"]:not(".controls-editInPlace")');
@@ -984,6 +1026,10 @@ define('js!SBIS3.CONTROLS.ListView',
           * @private
           */
          _showItemActions: function (item) {
+            //Если происходит перемещение записей, не нужно показывать операции над записями
+            if (this._isShifted) {
+               return;
+            }
             //Создадим операции над записью, если их нет
             var itemsActions = this.getItemsActions();
             itemsActions.applyItemActions();
@@ -1012,10 +1058,14 @@ define('js!SBIS3.CONTROLS.ListView',
             this._getItemActionsContainer()[0].style.top = offset.top - this._container.offset().top + 'px';
          },
          _getItemActionsPosition: function (item) {
-            return {
+            var cfg = {
                top : item.position.top + ((item.size.height > ITEMS_ACTIONS_HEIGHT) ? item.size.height - ITEMS_ACTIONS_HEIGHT : 0 ),
-               right : this._touchSupport ? item.position.top : this._container[0].offsetWidth - (item.position.left + item.size.width)
+               right : this._container[0].offsetWidth - (item.position.left + item.size.width)
             };
+            if (this._touchSupport){
+               cfg.top = item.position.top;
+            }
+            return cfg;
          },
          /**
           * Создаёт операции над записью
@@ -1140,6 +1190,7 @@ define('js!SBIS3.CONTROLS.ListView',
             }
 
             this._notifyOnSizeChanged(true);
+            this._drawResults();
          },
          //-----------------------------------infiniteScroll------------------------
          //TODO (?) избавиться от _allowInfiniteScroll - пусть все будет завязано на опцию infiniteScroll
@@ -1577,6 +1628,17 @@ define('js!SBIS3.CONTROLS.ListView',
                rows = [anchor.prev(), itemContainer, anchor, itemContainer.next()];
                itemContainer.insertBefore(anchor);
             } else {
+               var childs = this._dataSet.getChildItems(anchor.data('id'), true),
+                  lastChild;
+               if(childs.length > 0) {
+                  for(var i = childs.length-1; i>=0; i--) {
+                     lastChild = itemsContainer.find('tr[data-id="'+childs[i]+'"]:visible');
+                     if(lastChild.length > 0) {
+                        anchor = lastChild;
+                        break;
+                     }
+                  }
+               }
                rows = [itemContainer.prev(), anchor, itemContainer, anchor.next()];
                itemContainer.insertAfter(anchor);
             }
@@ -1591,6 +1653,155 @@ define('js!SBIS3.CONTROLS.ListView',
                   lowerRow.eq(j).toggleClass('ws-invisible', upperRow.eq(j).html() == lowerRow.eq(j).html());
                }
             }
+         },
+         /*DRAG_AND_DROP START*/
+         _findDragDropContainer: function() {
+            return this._getItemsContainer();
+         },
+         _getDragItems: function(key) {
+            var keys = this._options.multiselect ? $ws.core.clone(this.getSelectedKeys()) : [];
+            if ($.inArray(key, keys) < 0) {
+               keys.push(key);
+            }
+            return keys;
+         },
+         _onDragStart: function(e) {
+            //TODO: придумать как избавиться от второй проверки. За поля ввода DragNDrop происходить не должен.
+            if (this._isShifted || $ws.helpers.instanceOfModule($(e.target).wsControl(), 'SBIS3.CONTROLS.TextBoxBase')) {
+               return;
+            }
+            var
+                target = $(e.target).closest('.controls-ListView__item'),
+                id = target.data('id');
+            if (id) {
+               this.setCurrentElement(e, {
+                  keys: this._getDragItems(id),
+                  targetId: id,
+                  target: target,
+                  insertAfter: undefined
+               });
+            }
+            //Предотвращаем нативное выделение текста на странице
+            if (!$ws._const.compatibility.touch) {
+               e.preventDefault();
+            }
+         },
+         _callMoveOutHandler: function() {
+         },
+         _callMoveHandler: function(e) {
+            var
+                insertAfter,
+                isCorrectDrop,
+                currentElement = this.getCurrentElement(),
+                target = $(e.target).closest('.js-controls-ListView__item');
+            this._clearDragHighlight();
+            if (target.length && target.data('id') != currentElement.targetId) {
+               insertAfter = this._getDirectionOrderChange(e, target);
+            }
+            isCorrectDrop = this._notify('onDragMove', currentElement.keys, target.data('id'), insertAfter);
+            if (isCorrectDrop !== false) {
+               this._setDragTarget(target, insertAfter);
+            }
+            this._setAvatarPosition(e);
+         },
+         _setDragTarget: function(target, insertAfter) {
+            var currentElement = this.getCurrentElement();
+            if (target.length) {
+               if (insertAfter === true && target.next().data('id') !== currentElement.targetId) {
+                  target.addClass('controls-DragNDrop__insertAfter');
+               } else if (insertAfter === false && target.prev().data('id') !== currentElement.targetId) {
+                  target.addClass('controls-DragNDrop__insertBefore');
+               }
+            }
+            currentElement.insertAfter = insertAfter;
+            currentElement.target = target;
+         },
+         _getDirectionOrderChange: function(e, target) {
+            return this._getOrderPosition(e.pageY - target.offset().top, target.height());
+         },
+         _getOrderPosition: function(offset, metric) {
+            return offset < 10 ? false : offset > metric - 10 ? true : undefined;
+         },
+         _createAvatar: function(e){
+            var count = this.getCurrentElement().keys.length;
+            this._avatar = $('<div class="controls-DragNDrop__draggedItem"><span class="controls-DragNDrop__draggedCount">' + count + '</span></div>')
+                .css('z-index', $ws.single.WindowManager.acquireZIndex(false)).appendTo($('body'));
+            this._setAvatarPosition(e);
+         },
+         _setAvatarPosition: function(e) {
+            this._avatar.css({
+               'left': e.pageX + DRAG_AVATAR_OFFSET,
+               'top': e.pageY + DRAG_AVATAR_OFFSET
+            });
+         },
+         _callDropHandler: function(e) {
+            var
+                clickHandler,
+                currentElement = this.getCurrentElement(),
+                targetId = currentElement.target.data('id');
+            //TODO придрот для того, чтобы если перетащить элемент сам на себя не отработал его обработчик клика
+            if (this.getSelectedKey() == targetId) {
+               clickHandler = this._elemClickHandler;
+               this._elemClickHandler = function() {
+                  this._elemClickHandler = clickHandler;
+               }
+            }
+            this._move(currentElement.keys, targetId, currentElement.insertAfter);
+         },
+         _beginDropDown: function(e) {
+            this.setSelectedKey(this.getCurrentElement().targetId);
+            this._isShifted = true;
+            this._createAvatar(e);
+            this._hideItemActions();
+         },
+         _clearDragHighlight: function() {
+            this.getCurrentElement().target.removeClass('controls-DragNDrop__insertBefore controls-DragNDrop__insertAfter');
+         },
+         _endDropDown: function() {
+            var hoveredItem = this.getHoveredItem();
+            $ws.single.WindowManager.releaseZIndex(this._avatar.css('z-index'));
+            this._clearDragHighlight();
+            this._avatar.remove();
+            this._isShifted = false;
+            if (this.getItemsActions() && hoveredItem.container) {
+               this._showItemActions(hoveredItem);
+            }
+         },
+         /*DRAG_AND_DROP END*/
+         _drawResults: function(){
+            if (!this._checkResults()){
+               return;
+            }
+            var resultRow = this._makeResultsTemplate(this._getResultsData());
+            this._appendResultsContainer(this._getResultsContainer(), resultRow);
+         },
+         _checkResults: function(){
+            return this._options.resultsPosition !== 'none' && this.getDataSet().getCount();
+         },
+         _getResultsContainer: function(){
+            return this._getItemsContainer();
+         },
+         _makeResultsTemplate: function(resultsData){
+            var self = this;
+            return MarkupTransformer(TemplateUtil.prepareTemplate(this._options.resultsTpl)({
+               results: resultsData,
+               multiselect: self._options.multiselect
+            }));
+         },
+         _getResultsData: function(){
+            return this.getDataSet().getMetaData().results;
+         },
+         _appendResultsContainer: function(container, resultRow){
+            if (!resultRow){
+               return;
+            }
+            var position = this._addResultsMethod || (this._options.resultsPosition == 'top' ? 'prepend' : 'append'),
+               drawnResults = $('.controls-DataGridView__results', container);
+            if (drawnResults.length){
+               this._destroyControls(drawnResults);
+               drawnResults.remove();
+            }
+            $(container)[position](resultRow);
          }
       });
 

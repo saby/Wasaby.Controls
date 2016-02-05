@@ -198,9 +198,16 @@ define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManag
                horizontalAlign : this._options.horizontalAlign,
                corner : this._options.corner
             };
+            // Пересчитать оригинальные размеры, флаг true если размеры контейнера поменялись
             if (recalcFlag) {
-               this._containerSizes.originWidth = parseFloat(this._container.css('max-width'), 10) || this._container.get(0).scrollWidth + this._containerSizes.border * 2;
-               this._containerSizes.originHeight = parseFloat(this._container.css('max-height'), 10) || this._container.get(0).scrollHeight + this._containerSizes.border * 2;
+               var scrollWidth = this._container.get(0).scrollWidth,
+                  scrollHeight = this._container.get(0).scrollHeight,
+                  maxWidth = parseFloat(this._container.css('max-width'), 10),
+                  maxHeight = parseFloat(this._container.css('max-height'), 10),
+                  border = (this._container.outerWidth() - this._container.innerWidth());
+
+               this._containerSizes.originWidth = scrollWidth > maxWidth ? maxWidth : scrollWidth + border ;
+               this._containerSizes.originHeight = scrollHeight > maxHeight ? maxHeight : scrollHeight + border;
             }
             this._initSizes();
             if (this._options.target) {
@@ -233,7 +240,6 @@ define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManag
             } else {
                var bodyOffset = this._bodyPositioning();
                this._container.offset(bodyOffset);
-
             }
          }
       },

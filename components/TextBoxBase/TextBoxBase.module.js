@@ -109,12 +109,6 @@ define('js!SBIS3.CONTROLS.TextBoxBase',
          this._publish('onTextChange');
          this._container.removeClass('ws-area');
          this._options.text = (this._options.text) ? this._options.text.toString() : '';
-         /* Выставляем опцию, при включении которой,
-            контрол активируется при получении фокуса (нативного браузерного).
-            В CompoundControl'e, контрол активируется при клике на него, а в случае с текстбоксом,
-            пользователь может ткнуть в поле ввода и увести мышку, тогда контрол не активируется,
-            т.к. события click на контроле не произошло. Надо отслеживать событие focusin.*/
-         this._options.handleFocusCatch = true;
          this.subscribe('onTextChange', function () {
             //снимаем выделение валидатора на время ввода
             this.clearMark();
@@ -135,12 +129,13 @@ define('js!SBIS3.CONTROLS.TextBoxBase',
        * @see setValue
        * @see getValue
        */
-      setText:function(text){
-         text = (text !== null && text !== undefined && text == text) ? text.toString() : '';
-         if (text !== this._options.text) {
-            this._drawText(text);
-            this._options.text = text;
-            this._notify('onTextChange', text);
+      setText: function(text){
+         //null, NaN, undefined оставляем как есть, но выводим их как пустую строку
+         var newText = (text === null || text !== text || typeof text === "undefined") ? text : this._formatText(text.toString());
+         if (newText !== this._options.text) {
+            this._options.text = newText;
+            this._drawText(newText);
+            this._notify('onTextChange', newText);
             this._notifyOnPropertyChanged('text');
          }
       },
@@ -179,11 +174,7 @@ define('js!SBIS3.CONTROLS.TextBoxBase',
       },
 
       _formatText : function(text) {
-         text = text || ''; // так как есть датабиндинг может прийти undefined
-         if (this._options.trim) {
-            text = String.trim(text);
-         }
-         return text;
+         return text || ''; // так как есть датабиндинг может прийти undefined
       },
 
       _drawText: function() {

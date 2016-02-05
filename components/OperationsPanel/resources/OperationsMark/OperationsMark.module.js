@@ -53,14 +53,14 @@ define('js!SBIS3.CONTROLS.OperationsMark', [
                { name: 'selectCurrentPage', title: 'Всю страницу' },
                { name: 'removeSelection', title: 'Снять' },
                { name: 'invertSelection', title: 'Инвертировать' }
-            ]
+            ],
+            keyField: 'name'
          },
          _markCheckBox: undefined
       },
       $constructor: function() {
          this._createMarkCheckBox();
          this._setCaptionRender();
-         this.setLinkedView(this._options.linkedView);
       },
       _initItems: function(items) {
          var self = this;

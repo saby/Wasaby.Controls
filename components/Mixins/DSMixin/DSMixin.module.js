@@ -259,7 +259,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
 
       _prepareConfig : function(sourceOpt, itemsOpt) {
          var
-            keyField = this._options.keyField
+            keyField = this._options.keyField;
          if (!keyField) {
             $ws.single.ioc.resolve('ILogger').error('Option keyField is required');
          }
@@ -460,18 +460,25 @@ define('js!SBIS3.CONTROLS.DSMixin', [
           if (this._dataSource) {
              this._toggleIndicator(true);
              def = this._callQuery(this._options.filter, this.getSorting(), this._offset, this._limit)
-                .addCallback($ws.helpers.forAliveOnly(function (dataSet) {
+                .addCallback($ws.helpers.forAliveOnly(function (list) {
                    self._toggleIndicator(false);
-                   self._loader = null;//Обнулили без проверки. И так знаем, что есть и загрузили
+                   self._dataSet = list;
 
-                   //TODO вот тут получится рассинхронизация данных, если кто-то начнет руками менять items
-                   self._dataSet = dataSet;
-                   self._items.assign(dataSet);
-
-                   self._dataLoadedCallback();
-                   self._notify('onDataLoad', dataSet);
+                   if (self._items) {
+                      self._dataLoadedCallback();
+                      self._notify('onDataLoad', list);
+                      self._items.assign(list);
+                   }
+                   else {
+                      self._items = list;
+                      self._createDefaultProjection(self._items);
+                      self._setItemsEventHandlers();
+                      self._dataLoadedCallback();
+                      self._notify('onDataLoad', list);
+                      self.redraw();
+                   }
                    //self._notify('onBeforeRedraw');
-                   return dataSet;
+                   return list;
                 }, self))
                 .addErrback($ws.helpers.forAliveOnly(function (error) {
                    if (!error.canceled) {
@@ -658,7 +665,10 @@ define('js!SBIS3.CONTROLS.DSMixin', [
       _drawItemsCallback: function () {
          /*Method must be implemented*/
       },
-      redraw: function(){
+      /**
+       * Метод перерисвоки списка без повторного получения данных
+       */
+      redraw: function() {
          this._redraw();
       },
       _redraw: function () {
@@ -718,18 +728,21 @@ define('js!SBIS3.CONTROLS.DSMixin', [
          if (container.length){
             var itemsContainers = $('.controls-ListView__item, .controls-GroupBy', container.get(0));
             /*Удаляем вложенные компоненты*/
-            $('[data-component]', itemsContainers).each(function (i, item) {
-               var inst = $(item).wsControl();
-               if (inst) {
-                  inst.destroy();
-               }
-            });
+            this._destroyControls(itemsContainers);
 
             /*Удаляем сами items*/
             itemsContainers.remove();
          }
       },
 
+      _destroyControls: function(container){
+         $('[data-component]', container).each(function (i, item) {
+            var inst = $(item).wsControl();
+            if (inst) {
+               inst.destroy();
+            }
+         });
+      },
       //метод определяющий в какой контейнер разместить определенный элемент
       _getTargetContainer: function (item) {
          //по стандарту все строки рисуются в itemsContainer
@@ -747,13 +760,13 @@ define('js!SBIS3.CONTROLS.DSMixin', [
        */
       redrawItem: function(item) {
          var
-            targetElement = this._getElementForRedraw(item),
-            newElement = this._drawItem(item).addClass(targetElement.attr('class'));
+            targetElement = this._getElementByModel(item),
+            newElement = this._drawItem(item);
          targetElement.after(newElement).remove();
          this.reviveComponents();
       },
 
-      _getElementForRedraw: function(item) {
+      _getElementByModel: function(item) {
          return this._getItemsContainer().find('.js-controls-ListView__item[data-id="' + item.getKey() + '"]');
       },
 
