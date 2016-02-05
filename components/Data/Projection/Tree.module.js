@@ -6,10 +6,19 @@ define('js!SBIS3.CONTROLS.Data.Projection.Tree', [
    'js!SBIS3.CONTROLS.Data.Projection.TreeChildren',
    'js!SBIS3.CONTROLS.Data.Projection.TreeChildrenByItemPropertyStrategy',
    'js!SBIS3.CONTROLS.Data.Projection.TreeChildrenByParentIdStrategy',
-   'js!SBIS3.CONTROLS.Data.Collection.ObservableList',
+   'js!SBIS3.CONTROLS.Data.Di',
    'js!SBIS3.CONTROLS.Data.Utils',
    'js!SBIS3.CONTROLS.Data.Projection.LoadableTreeItem'
-], function (ITreeProjection, CollectionProjection, TreeEnumerator, TreeChildren, TreeChildrenByItemPropertyStrategy, TreeChildrenByParentIdStrategy, ObservableList, Utils) {
+], function (
+   ITreeProjection,
+   CollectionProjection,
+   TreeEnumerator,
+   TreeChildren,
+   TreeChildrenByItemPropertyStrategy,
+   TreeChildrenByParentIdStrategy,
+   Di,
+   Utils
+) {
    'use strict';
 
    /**
@@ -178,7 +187,7 @@ define('js!SBIS3.CONTROLS.Data.Projection.Tree', [
                   contents = {};
                   contents[this._options.idProperty] = this._options.root;
                }
-               this._root = $ws.single.ioc.resolve(this._itemModule, {
+               this._root = Di.resolve(this._itemModule, {
                   owner: this,
                   node: true,
                   expanded: true,
@@ -263,7 +272,7 @@ define('js!SBIS3.CONTROLS.Data.Projection.Tree', [
             parent = this.getRoot();
          }
 
-         return $ws.single.ioc.resolve(this._itemModule, {
+         return Di.resolve(this._itemModule, {
             contents: item,
             owner: this,
             parent: parent,
@@ -335,9 +344,7 @@ define('js!SBIS3.CONTROLS.Data.Projection.Tree', [
       prevFn.apply(this, arguments);
    };
 
-   $ws.single.ioc.bind('SBIS3.CONTROLS.Data.Projection.Tree', function(config) {
-      return new TreeProjection(config);
-   });
+   Di.register('projection.tree', TreeProjection);
 
    return TreeProjection;
 });

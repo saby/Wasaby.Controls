@@ -3,8 +3,9 @@ define('js!SBIS3.CONTROLS.Data.Projection.LoadableTreeItem', [
    'js!SBIS3.CONTROLS.Data.Projection.TreeItem',
    'js!SBIS3.CONTROLS.Data.Query.IQueryable',
    'js!SBIS3.CONTROLS.Data.Collection.ISourceLoadable',
+   'js!SBIS3.CONTROLS.Data.Di',
    'js!SBIS3.CONTROLS.Data.Utils'
-], function (TreeItem, IQueryable, ISourceLoadable, Utils) {
+], function (TreeItem, IQueryable, ISourceLoadable, Di, Utils) {
    'use strict';
 
    /**
@@ -13,7 +14,6 @@ define('js!SBIS3.CONTROLS.Data.Projection.LoadableTreeItem', [
     * @extends SBIS3.CONTROLS.Data.Projection.TreeItem
     * @mixes SBIS3.CONTROLS.Data.Query.IQueryable
     * @mixes SBIS3.CONTROLS.Data.Collection.ISourceLoadable
-    * @public
     * @author Мальцев Алексей
     */
    var LoadableTreeItem = TreeItem.extend([IQueryable, ISourceLoadable], /** @lends SBIS3.CONTROLS.Data.Projection.LoadableTreeItem.prototype */{
@@ -112,9 +112,7 @@ define('js!SBIS3.CONTROLS.Data.Projection.LoadableTreeItem', [
 
    });
 
-   $ws.single.ioc.bind('SBIS3.CONTROLS.Data.Projection.LoadableTreeItem', function(config) {
-      return new LoadableTreeItem(config);
-   });
+   Di.register('projection.loadable-tree-item', LoadableTreeItem);
 
    return LoadableTreeItem;
 });

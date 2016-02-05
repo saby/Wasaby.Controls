@@ -1,8 +1,9 @@
 /* global define, require, $ws */
 define('js!SBIS3.CONTROLS.Data.Projection.TreeChildrenByItemPropertyStrategy', [
    'js!SBIS3.CONTROLS.Data.Projection.ITreeChildrenStrategy',
+   'js!SBIS3.CONTROLS.Data.Di',
    'js!SBIS3.CONTROLS.Data.Utils'
-], function (ITreeChildrenStrategy, Utils) {
+], function (ITreeChildrenStrategy, Di, Utils) {
    'use strict';
 
    /**
@@ -22,7 +23,7 @@ define('js!SBIS3.CONTROLS.Data.Projection.TreeChildrenByItemPropertyStrategy', [
       },
       getItemConverter: function(parent) {
          return function(item) {
-            return $ws.single.ioc.resolve(this._itemModule, {
+            return Di.resolve(this._itemModule, {
                contents: item,
                owner: this,
                parent: parent,

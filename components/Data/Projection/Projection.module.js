@@ -1,6 +1,7 @@
 /* global define, require, $ws */
 define('js!SBIS3.CONTROLS.Data.Projection.Projection', [
-], function () {
+   'js!SBIS3.CONTROLS.Data.Di'
+], function (Di) {
    'use strict';
 
    /**
@@ -43,11 +44,11 @@ define('js!SBIS3.CONTROLS.Data.Projection.Projection', [
       if (index === -1) {
          var instance;
          if ($ws.helpers.instanceOfMixin(object, 'SBIS3.CONTROLS.Data.Types.IEnum')) {
-            instance = $ws.single.ioc.resolve('SBIS3.CONTROLS.Data.Projection.Enum', {
+            instance = Di.resolve('projection.enum', {
                collection: object
             });
          } else if ($ws.helpers.instanceOfMixin(object, 'SBIS3.CONTROLS.Data.Collection.IEnumerable')) {
-            instance = $ws.single.ioc.resolve('SBIS3.CONTROLS.Data.Projection.Collection', {
+            instance = Di.resolve('projection.collection', {
                collection: object
             });
          } else {

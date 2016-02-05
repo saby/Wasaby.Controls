@@ -5,8 +5,9 @@ define('js!SBIS3.CONTROLS.Data.Projection.Collection', [
    'js!SBIS3.CONTROLS.Data.Bind.ICollectionProjection',
    'js!SBIS3.CONTROLS.Data.Projection.CollectionEnumerator',
    'js!SBIS3.CONTROLS.Data.Projection.Projection',
+   'js!SBIS3.CONTROLS.Data.Di',
    'js!SBIS3.CONTROLS.Data.Projection.CollectionItem'
-], function (IEnumerable, ICollectionProjection, IBindCollectionProjection, CollectionProjectionEnumerator, Projection) {
+], function (IEnumerable, ICollectionProjection, IBindCollectionProjection, CollectionProjectionEnumerator, Projection, Di) {
    'use strict';
 
    /**
@@ -27,7 +28,7 @@ define('js!SBIS3.CONTROLS.Data.Projection.Collection', [
          /**
           * @member {String} Модуль элемента проекции
           */
-         _itemModule: 'SBIS3.CONTROLS.Data.Projection.CollectionItem',
+         _itemModule: 'projection.collection-item',
 
          /**
           * @member {Array.<SBIS3.CONTROLS.Data.Projection.CollectionItem>} Индекс проекции коллекции
@@ -393,7 +394,7 @@ define('js!SBIS3.CONTROLS.Data.Projection.Collection', [
        * @protected
        */
       _convertToItem: function (item) {
-         return $ws.single.ioc.resolve(this._itemModule, {
+         return Di.resolve(this._itemModule, {
             owner: this,
             contents: item
          });
@@ -868,9 +869,7 @@ define('js!SBIS3.CONTROLS.Data.Projection.Collection', [
       this._reSort();
    };
 
-   $ws.single.ioc.bind('SBIS3.CONTROLS.Data.Projection.Collection', function(config) {
-      return new CollectionProjection(config);
-   });
+   Di.register('projection.collection', CollectionProjection);
 
    return CollectionProjection;
 });
