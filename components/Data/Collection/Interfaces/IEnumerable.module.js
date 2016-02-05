@@ -25,23 +25,6 @@ define('js!SBIS3.CONTROLS.Data.Collection.IEnumerable', [], function () {
        */
       each: function (callback, context) {
          throw new Error('Method must be implemented');
-      },
-
-      /**
-       * Присоединяет другую коллекцию
-       * @param {SBIS3.CONTROLS.Data.Collection.IEnumerable} items Коллекция, которая будет присоединена
-       * @param {Boolean} [prepend=false] Присоединить в начало
-       */
-      concat: function (items, prepend) {
-         throw new Error('Method must be implemented');
-      },
-
-      /**
-       * Возвращает коллекцию в виде массива
-       * @returns {Array}
-       */
-      toArray: function () {
-         throw new Error('Method must be implemented');
       }
    };
 });

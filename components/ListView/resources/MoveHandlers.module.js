@@ -1,7 +1,7 @@
 /**
  * Created by as.suhoruchkin on 21.07.2015.
  */
-define('js!SBIS3.CONTROLS.MoveHandlers', ['js!SBIS3.CONTROLS.MoveDialog','js!SBIS3.CONTROLS.Data.SbisMoveStrategy', 'js!SBIS3.CONTROLS.Data.BaseMoveStrategy'], function(MoveDialog, SbisMoveStrategy, BaseMoveStrategy) {
+define('js!SBIS3.CONTROLS.MoveHandlers', ['js!SBIS3.CORE.Dialog','js!SBIS3.CONTROLS.Data.SbisMoveStrategy', 'js!SBIS3.CONTROLS.Data.BaseMoveStrategy'], function(Dialog, SbisMoveStrategy, BaseMoveStrategy) {
    var MoveHandlers = {
       $protected: {
         _moveStrategy: undefined
@@ -10,12 +10,17 @@ define('js!SBIS3.CONTROLS.MoveHandlers', ['js!SBIS3.CONTROLS.MoveDialog','js!SBI
          var self = this;
          records = this._getRecordsForMove(records);
          if (records.length) {
-            new MoveDialog({
-               linkedView: this,
-               records: records,
-               handlers: {
-                  onPrepareFilterOnMove: function(event, rec) {
-                     event.setResult(self._notify('onPrepareFilterOnMove', rec))
+            new Dialog({
+               template: 'js!SBIS3.CONTROLS.MoveDialogTemplate',
+               title: 'Перенести ' + records.length + ' запис' + $ws.helpers.wordCaseByNumber(records.length, 'ей', 'ь', 'и') + ' в',
+               cssClassName: 'controls-moveDialog',
+               componentOptions: {
+                  linkedView: this,
+                  records: records,
+                  handlers: {
+                     onPrepareFilterOnMove: function(event, rec) {
+                        event.setResult(self._notify('onPrepareFilterOnMove', rec))
+                     }
                   }
                }
             });
@@ -88,7 +93,8 @@ define('js!SBIS3.CONTROLS.MoveHandlers', ['js!SBIS3.CONTROLS.MoveDialog','js!SBI
             toMap = this._getParentsMap(recordTo.getKey());
          }
          for (var i = 0; i < records.length; i++) {
-            key = '' + (($ws.helpers.instanceOfModule(records[i], 'SBIS3.CONTROLS.Record')||$ws.helpers.instanceOfModule(records[i], 'SBIS3.CONTROLS.Data.Model')) ? records[i].getKey() : records[i]);
+            key = '' + (($ws.helpers.instanceOfModule(records[i], 'SBIS3.CONTROLS.Record')|| $ws.helpers.instanceOfModule(records[i], 'SBIS3.CONTROLS.Data.Model'))
+               ? records[i].getKey() : records[i]);
             if ($.inArray(key, toMap) !== -1) {
                return false;
             }
@@ -173,6 +179,7 @@ define('js!SBIS3.CONTROLS.MoveHandlers', ['js!SBIS3.CONTROLS.MoveDialog','js!SBI
             moveRecord.call(this, record, nextItem.data('id'), id, false);
          }
       },
+
       moveRecordUp: function(tr, id, record) {
          var prevItem = this.getPrevItemById(id);
          if(prevItem) {

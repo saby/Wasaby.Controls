@@ -68,119 +68,115 @@ define([
             items = undefined;
          });
 
-         describe('.concat()', function() {
-            context('when append', function() {
-               it('should trigger an event with valid arguments', function(done) {
-                  var list = new ObservableList({
-                        items: items.slice()
-                     }),
-                     concatItems = [1, 2, 3],
-                     handler = function(event, action, newItems, newItemsIndex, oldItems, oldItemsIndex) {
-                        try {
-                           checkEvent(
-                              action, newItems, newItemsIndex, oldItems, oldItemsIndex,
-                              IBindCollection.ACTION_ADD, concatItems, items.length, [], 0
-                           );
-                           done();
-                        } catch (err) {
-                           done(err);
-                        }
-                     };
-                  list.subscribe('onCollectionChange', handler);
+         describe('.append()', function() {
+            it('should trigger an event with valid arguments', function(done) {
+               var list = new ObservableList({
+                     items: items.slice()
+                  }),
+                  concatItems = [1, 2, 3],
+                  handler = function(event, action, newItems, newItemsIndex, oldItems, oldItemsIndex) {
+                     try {
+                        checkEvent(
+                           action, newItems, newItemsIndex, oldItems, oldItemsIndex,
+                           IBindCollection.ACTION_ADD, concatItems, items.length, [], 0
+                        );
+                        done();
+                     } catch (err) {
+                        done(err);
+                     }
+                  };
+               list.subscribe('onCollectionChange', handler);
 
-                  list.concat(new List({
-                     items: concatItems
-                  }));
+               list.append(new List({
+                  items: concatItems
+               }));
 
-                  list.unsubscribe('onCollectionChange', handler);
-                  list.destroy();
-               });
-            });
-
-            context('when prepend', function() {
-               it('should trigger an event with valid arguments', function(done) {
-                  var list = new ObservableList({
-                        items: items.slice()
-                     }),
-                     concatItems = [4, 5, 6],
-                     handler = function(event, action, newItems, newItemsIndex, oldItems, oldItemsIndex) {
-                        try {
-                           checkEvent(
-                              action, newItems, newItemsIndex, oldItems, oldItemsIndex,
-                              IBindCollection.ACTION_ADD, concatItems, 0, [], 0
-                           );
-                           done();
-                        } catch (err) {
-                           done(err);
-                        }
-                     };
-
-                  list.subscribe('onCollectionChange', handler);
-
-                  list.concat(new List({
-                     items: concatItems
-                  }), true);
-
-                  list.unsubscribe('onCollectionChange', handler);
-                  list.destroy();
-               });
+               list.unsubscribe('onCollectionChange', handler);
+               list.destroy();
             });
          });
 
-         describe('.fill()', function() {
-            context('when has instead', function() {
-               it('should trigger an event with valid arguments', function(done) {
-                  var list = new ObservableList({
-                        items: items.slice()
-                     }),
-                     fillItems = ['a', 'b'],
-                     handler = function(event, action, newItems, newItemsIndex, oldItems, oldItemsIndex) {
-                        try {
-                           checkEvent(
-                              action, newItems, newItemsIndex, oldItems, oldItemsIndex,
-                              IBindCollection.ACTION_RESET, fillItems, 0, items, 0
-                           );
-                           done();
-                        } catch (err) {
-                           done(err);
-                        }
-                     };
+         describe('.prepend', function (){
+            it('should trigger an event with valid arguments', function(done) {
+               var list = new ObservableList({
+                     items: items.slice()
+                  }),
+                  concatItems = [4, 5, 6],
+                  handler = function(event, action, newItems, newItemsIndex, oldItems, oldItemsIndex) {
+                     try {
+                        checkEvent(
+                           action, newItems, newItemsIndex, oldItems, oldItemsIndex,
+                           IBindCollection.ACTION_ADD, concatItems, 0, [], 0
+                        );
+                        done();
+                     } catch (err) {
+                        done(err);
+                     }
+                  };
 
-                  list.subscribe('onCollectionChange', handler);
+               list.subscribe('onCollectionChange', handler);
 
-                  list.fill(new List({
-                     items: fillItems
-                  }));
+               list.prepend(new List({
+                  items: concatItems
+               }));
 
-                  list.unsubscribe('onCollectionChange', handler);
-                  list.destroy();
-               });
+               list.unsubscribe('onCollectionChange', handler);
+               list.destroy();
             });
+         });
 
-            context('when only clear', function() {
-               it('should trigger an event with valid arguments', function(done) {
-                  var list = new ObservableList({
-                        items: items.slice()
-                     }),
-                     handler = function(event, action, newItems, newItemsIndex, oldItems, oldItemsIndex) {
-                        try {
-                           checkEvent(
-                              action, newItems, newItemsIndex, oldItems, oldItemsIndex,
-                              IBindCollection.ACTION_RESET, [], 0, items, 0
-                           );
-                           done();
-                        } catch (err) {
-                           done(err);
-                        }
-                     };
+         describe('.assign()', function() {
+            it('should trigger an event with valid arguments', function(done) {
+               var list = new ObservableList({
+                     items: items.slice()
+                  }),
+                  fillItems = ['a', 'b'],
+                  handler = function(event, action, newItems, newItemsIndex, oldItems, oldItemsIndex) {
+                     try {
+                        checkEvent(
+                           action, newItems, newItemsIndex, oldItems, oldItemsIndex,
+                           IBindCollection.ACTION_RESET, fillItems, 0, items, 0
+                        );
+                        done();
+                     } catch (err) {
+                        done(err);
+                     }
+                  };
 
-                  list.subscribe('onCollectionChange', handler);
+               list.subscribe('onCollectionChange', handler);
 
-                  list.fill();
+               list.assign(new List({
+                  items: fillItems
+               }));
 
-                  list.unsubscribe('onCollectionChange', handler);
-                  list.destroy();
-               });
+               list.unsubscribe('onCollectionChange', handler);
+               list.destroy();
+            });
+         });
+
+         describe('.clear()', function() {
+            it('should trigger an event with valid arguments', function(done) {
+               var list = new ObservableList({
+                     items: items.slice()
+                  }),
+                  handler = function(event, action, newItems, newItemsIndex, oldItems, oldItemsIndex) {
+                     try {
+                        checkEvent(
+                           action, newItems, newItemsIndex, oldItems, oldItemsIndex,
+                           IBindCollection.ACTION_RESET, [], 0, items, 0
+                        );
+                        done();
+                     } catch (err) {
+                        done(err);
+                     }
+                  };
+
+               list.subscribe('onCollectionChange', handler);
+
+               list.clear();
+
+               list.unsubscribe('onCollectionChange', handler);
+               list.destroy();
             });
          });
 
@@ -330,7 +326,7 @@ define([
                      }
                   };
                var addItem = new Model({
-                  data: {test: 'fail'},
+                  rawData: {test: 'fail'},
                   adapter: new JsonAdapter()
                });
                list.add(addItem);
@@ -393,7 +389,7 @@ define([
                      done(err);
                   };
                var addItem = new Model({
-                  data: {test: 'fail'},
+                  rawData: {test: 'fail'},
                   adapter: new JsonAdapter()
                });
                list.add(addItem);
