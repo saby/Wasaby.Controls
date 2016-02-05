@@ -1,28 +1,35 @@
 /* global define, $ws */
 define('js!SBIS3.CONTROLS.Data.Projection.TreeEnumerator', [
    'js!SBIS3.CONTROLS.Data.Collection.IEnumerator',
+   'js!SBIS3.CONTROLS.Data.Projection.IEnumerator',
    'js!SBIS3.CONTROLS.Data.Collection.IndexedEnumeratorMixin'
-], function (IEnumerator, IndexedEnumeratorMixin) {
+], function (IEnumerator, IProjectionEnumerator, IndexedEnumeratorMixin) {
    'use strict';
 
    /**
     * Энумератор для проекции коллекции
     * @class SBIS3.CONTROLS.Data.Projection.TreeEnumerator
     * @mixes SBIS3.CONTROLS.Data.Collection.IEnumerator
+    * @mixes SBIS3.CONTROLS.Data.Projection.IEnumerator
     * @mixes SBIS3.CONTROLS.Data.Collection.IndexedEnumeratorMixin
     * @public
     * @author Мальцев Алексей
     */
 
-   var TreeEnumerator = $ws.core.extend({}, [IEnumerator, IndexedEnumeratorMixin], /** @lends SBIS3.CONTROLS.Data.Projection.TreeEnumerator.prototype */{
+   var TreeEnumerator = $ws.core.extend({}, [IEnumerator, IProjectionEnumerator, IndexedEnumeratorMixin], /** @lends SBIS3.CONTROLS.Data.Projection.TreeEnumerator.prototype */{
       _moduleName: 'SBIS3.CONTROLS.Data.Projection.TreeEnumerator',
       $protected: {
          _options: {
             /**
-             * @member {SBIS3.CONTROLS.Data.Projection.Tree>} Проекция дерева
+             * @cfg {SBIS3.CONTROLS.Data.Projection.Tree} Проекция дерева
+             * @name SBIS3.CONTROLS.Data.Projection.TreeEnumerator#tree
              */
-            tree: null
          },
+
+         /**
+          * @member {SBIS3.CONTROLS.Data.Projection.Tree} Проекция дерева
+          */
+         tree: null,
 
          /**
           * @member {SBIS3.CONTROLS.Data.Projection.TreeItem} Текущий элемент
@@ -35,8 +42,9 @@ define('js!SBIS3.CONTROLS.Data.Projection.TreeEnumerator', [
          _currentPosition: -1
       },
 
-      $constructor: function () {
-         this._tree = this._options.tree;
+      $constructor: function (cfg) {
+         cfg = cfg || {};
+         this._tree = cfg.tree;
       },
 
       //region SBIS3.CONTROLS.Data.Collection.IEnumerator
@@ -69,7 +77,7 @@ define('js!SBIS3.CONTROLS.Data.Projection.TreeEnumerator', [
 
       setCurrent: function(item) {
          this._сurrent = item;
-         this._currentPosition = this._getPosition(item);
+         this._currentPosition = this._getPositionOf(item);
       },
 
       getPosition: function() {
@@ -94,13 +102,13 @@ define('js!SBIS3.CONTROLS.Data.Projection.TreeEnumerator', [
       getInternalBySource: function (source) {
       },
 
-      reIndex: function () {
-         IndexedEnumeratorMixin.reIndex.call(this);
-      },
-
       //endregion SBIS3.CONTROLS.Data.Projection.IEnumerator
 
       //region SBIS3.CONTROLS.Data.Collection.IndexedEnumeratorMixin
+
+      reIndex: function () {
+         IndexedEnumeratorMixin.reIndex.call(this);
+      },
 
       _createIndex: function (property) {
          var savedItem = this._current,
@@ -118,9 +126,22 @@ define('js!SBIS3.CONTROLS.Data.Projection.TreeEnumerator', [
       //region Protected methods
 
       _getNextAfter: function (item) {
-         var parent = item ? item.getParent() : this._tree.getRoot(),
-            siblings = this._tree.getChildren(parent),
-            index = item ? siblings.getIndex(item) : -1;
+         if (!item) {
+            item = this._tree.getRoot();
+         }
+         if (item.isNode()) {
+            var children = this._tree.getChildren(item);
+            if (children.getCount() > 0) {
+               return children.at(0);
+            }
+         }
+
+         var parent = item.isRoot() ? null : item.getParent(),
+            siblings = parent ? this._tree.getChildren(parent) : null,
+            index = siblings ? siblings.getIndex(item) : -1;
+         if (!siblings) {
+            return;
+         }
          if (index >= siblings.getCount() - 1) {
             return parent.isRoot() ? null : this._getNextAfter(parent);
          }
@@ -136,7 +157,7 @@ define('js!SBIS3.CONTROLS.Data.Projection.TreeEnumerator', [
             siblings = this._tree.getChildren(parent),
             index = item ? siblings.getIndex(item) : -1;
          if (index <= 0) {
-            return parent.isRoot() ? null : this._getPreviousBefore(parent);
+            return parent.isRoot() ? null : parent;
          }
 
          return siblings.at(index - 1);

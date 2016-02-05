@@ -125,20 +125,6 @@ define('js!SBIS3.CONTROLS.Data.Projection.Tree', [
 
       //region SBIS3.CONTROLS.Data.Projection.ICollection
 
-      moveToLast: function () {
-         var current = this.getCurrent(),
-            parent = current ? current.getParent() : this.getRoot(),
-            siblings = this.getChildren(parent),
-            last = siblings.at(siblings.getCount() - 1);
-
-         if (last === current) {
-            return false;
-         }
-
-         this.setCurrent(last);
-         return true;
-      },
-
       //endregion SBIS3.CONTROLS.Data.Projection.ICollection
 
       //region SBIS3.CONTROLS.Data.Projection.ITree

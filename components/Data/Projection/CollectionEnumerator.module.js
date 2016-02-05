@@ -145,14 +145,14 @@ define('js!SBIS3.CONTROLS.Data.Projection.CollectionEnumerator', [
          throw new Error('Method getSourceByInternal is no more available. I\'m so sorry.');
       },
 
+      //endregion SBIS3.CONTROLS.Data.Projection.IEnumerator
+
+      //region SBIS3.CONTROLS.Data.Collection.IndexedEnumeratorMixin
+
       reIndex: function () {
          IndexedEnumeratorMixin.reIndex.call(this);
          this._buildInternalMap();
       },
-
-      //endregion SBIS3.CONTROLS.Data.Projection.IEnumerator
-
-      //region SBIS3.CONTROLS.Data.Collection.IndexedEnumeratorMixin
 
       _createIndex: function (property) {
          var savedPosition = this._currentPosition,

@@ -62,13 +62,6 @@ define('js!SBIS3.CONTROLS.Data.Projection.IEnumerator', [
        */
       getInternalBySource: function (source) {
          throw new Error('Method must be implemented');
-      },
-
-      /**
-       * Переиндексирует энумератор
-       */
-      reIndex: function () {
-         throw new Error('Method must be implemented');
       }
    };
 });
