@@ -9,7 +9,7 @@ define('js!SBIS3.CONTROLS.Data.Types.IFlags', [], function () {
     * @author Ганшин Ярослав
     */
 
-   return /** @lends SBIS3.CONTROLS.Data.Data.Types.IFlags.prototype */{
+   return /** @lends SBIS3.CONTROLS.Data.Types.IFlags.prototype */{
       /**
        * Возвращает значение флага по названию
        * @param name {String} Название флага

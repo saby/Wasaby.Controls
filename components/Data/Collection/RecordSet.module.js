@@ -246,6 +246,43 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
       },
 
       /**
+       * Проверяет эквивалентность формата и записей другого рекордсета.
+       * @param {SBIS3.CONTROLS.Data.Record} record Рекордсет, эквивалентность которого проверяется
+       * @returns {Boolean}
+       */
+      isEqual: function (recordset) {
+         if (recordset === this) {
+            return true;
+         }
+         if (!recordset) {
+            return false;
+         }
+         if (!$ws.helpers.instanceOfModule(recordset, 'SBIS3.CONTROLS.Data.Collection.RecordSet')) {
+            return false;
+         }
+         //TODO: когда появятся форматы, сделать через сравнение форматов и записей
+         return $ws.helpers.isEqualObject(
+            this.getRawData(),
+            recordset.getRawData()
+         );
+      },
+
+      /**
+       * Возвращает копию рекордсета
+       * @public
+       * @returns {SBIS3.CONTROLS.Data.Collection.RecordSet}
+       */
+      clone: function () {
+         //TODO: сделать через сериализатор
+         return new RecordSet({
+            adapter: this._options.adapter,
+            data: this._options.rawData,
+            meta: this._options.meta,
+            keyField: this._options.keyField
+         });
+      },
+
+      /**
        * Возвращает метаданные
        * @returns {Object}
        * @see meta
@@ -337,20 +374,6 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
        */
       getIndexById: function (id) {
          return this.getIndexByValue(this._options.idProperty, id);
-      },
-      /**
-       * Возвращает копию рекордсета
-       * @public
-       * @returns {SBIS3.CONTROLS.Data.Collection.RecordSet}
-       */
-      clone: function () {
-         //TODO: сделать через сериализатор
-         return new RecordSet({
-            strategy: this._options.strategy,
-            data: this._options.rawData,
-            meta: this._options.meta,
-            keyField: this._options.keyField
-         });
       },
 
       getRecordKeyByIndex: function (index) {

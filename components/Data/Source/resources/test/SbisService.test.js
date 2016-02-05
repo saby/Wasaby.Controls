@@ -30,7 +30,7 @@ define('js!Test.SbisBusinessLogic', [
                error = '',
                data;
 
-            switch (this._cfg.name) {
+            switch (this._cfg.resource) {
                case 'Товар':
                case 'Продукт':
                   switch (method) {
@@ -114,7 +114,7 @@ define('js!Test.SbisBusinessLogic', [
                         break;
 
                      default:
-                        error = 'Method ' + this._cfg.name + ' is undefined';
+                        error = 'Method "' + method + '" is undefined';
                   }
                   break;
 
@@ -127,7 +127,7 @@ define('js!Test.SbisBusinessLogic', [
                   break;
 
                default:
-                  error = 'Service is not found';
+                  error = 'Service "' + this._cfg.resource + '" is not found';
             }
 
             setTimeout(function () {
@@ -787,7 +787,7 @@ define([
                   service.destroy([SbisBusinessLogic.existsId + ',Товар', '987,Продукт']).addCallbacks(function (success) {
                      try {
                         var cfg = SbisBusinessLogic.lastRequest.cfg;
-                        if (cfg.name != 'Продукт') {
+                        if (cfg.resource != 'Продукт') {
                            throw new Error('Wrong service name');
                         }
 
