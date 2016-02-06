@@ -87,7 +87,7 @@ define('js!SBIS3.CONTROLS.BackButton', ['js!SBIS3.CORE.CompoundControl', 'html!S
       setCaption: function(caption){
          this._link.setCaption(caption);
          this._options.caption = caption;
-         this._container.toggleClass('controls-BackButton__empty ws-hidden', !caption);
+         this._container.toggleClass('controls-BackButton__empty', !caption);
       },
       /**
        * Устанавливает исконку кнопки
