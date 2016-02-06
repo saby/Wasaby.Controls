@@ -213,7 +213,7 @@ define('js!SBIS3.CONTROLS.BreadCrumbs', [
       },
 
       _redraw: function(){
-         var isEmpty = this._dataSet.getCount() == 0;
+         var isEmpty = (this._dataSet && (this._dataSet.getCount() == 0));
          this._toggleHomeIcon(isEmpty);
          this._container.toggleClass('ws-hidden', isEmpty);
          BreadCrumbs.superclass._redraw.call(this);
