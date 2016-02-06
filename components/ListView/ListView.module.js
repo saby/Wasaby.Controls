@@ -801,9 +801,19 @@ define('js!SBIS3.CONTROLS.ListView',
             }
          },
 
-         _drawSelectedItem: function (id) {
+         _drawSelectedItem: function (id, index) {
+            var selId;
+            if (!id) {
+               var items = this.getItems();
+               if (items) {
+                  selId = items.at(index).getId()
+               }
+            }
+            else {
+               selId = id
+            }
             $(".controls-ListView__item", this._container).removeClass('controls-ListView__item__selected');
-            $(".controls-ListView__item[data-id='" + id + "']", this._container).addClass('controls-ListView__item__selected');
+            $(".controls-ListView__item[data-id='" + selId + "']", this._container).addClass('controls-ListView__item__selected');
          },
          /**
           * Перезагружает набор записей представления данных с последующим обновлением отображения.
