@@ -62,7 +62,7 @@ define('js!SBIS3.CONTROLS.Data.MoveStrategy.Sbis', [
             this._orderProvider = new SbisServiceBLO(this._options.moveResource);
          }
          $ws.helpers.forEach(from, function(record){
-            params['ИдО'] = [String.prototype.split.call(self._getId(record))[0], self._options.resource];
+            params['ИдО'] = [String.prototype.split.call(self._getId(record), ',')[0], self._options.resource];
             def.push(self._orderProvider.call(method, params, $ws.proto.BLObject.RETURN_TYPE_ASIS).addErrback(function (error) {
                $ws.single.ioc.resolve('ILogger').log('SBIS3.CONTROLS.Data.MoveStrategy.Sbis::move()', error);
                return error;
