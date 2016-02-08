@@ -86,6 +86,7 @@ define('js!SBIS3.CONTROLS.EditInPlaceHoverController',
                      if (this._notify('onBeginEdit', record) !== false) {
                         hoveredEip.edit(target, record);
                         this._hoveredEip = null;
+                        this._notify('onAfterBeginEdit', record);
                      }
                   } else {
                      EditInPlaceHoverController.superclass.edit.apply(this, [target, record])
