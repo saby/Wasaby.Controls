@@ -64,7 +64,7 @@ define('js!TestDataGridFilter',
                     }
                 }
                 var arrayStrategy = new ArrayStrategy(),
-                    ds1 = new SbisServiceSource({service: 'ЗаметкаФильтр'}),
+                    ds1 = new SbisServiceSource({resource: 'ЗаметкаФильтр'}),
                     ds2 = new StaticSource({
                         data: bigColls,
                         keyField: '@ЗаметкаФильтр',
