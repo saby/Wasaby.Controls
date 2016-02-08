@@ -55,7 +55,7 @@ define('js!SBIS3.CONTROLS.BreadCrumbs', [
          this._container.toggleClass('ws-hidden', (this._options.items && this._options.items.length == 0));
          this._homeIcon.data('id', null); //клик по домику ведет в корень TODO: придрочено под null
          //инициализируем dataSet
-         this.setItems(this._options.items || []);
+         this.reload();
       },
 
       _resizeHandler: function() {

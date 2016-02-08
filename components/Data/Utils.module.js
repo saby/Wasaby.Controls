@@ -21,6 +21,10 @@ define('js!SBIS3.CONTROLS.Data.Utils', [], function () {
       getItemPropertyValue: function (item, property) {
          property = property || '';
 
+         if (item === null) {
+            return undefined;
+         }
+
          if (typeof item !== 'object') {
             return undefined;
          }
