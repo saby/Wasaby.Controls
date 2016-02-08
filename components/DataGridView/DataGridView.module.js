@@ -706,9 +706,9 @@ define('js!SBIS3.CONTROLS.DataGridView',
          }
       },
 
-      _showItemActions: function(item) {
+      _showItemsToolbar: function(item) {
          if(!this.isNowScrollingPartScroll()) {
-            DataGridView.superclass._showItemActions.call(this, item);
+            DataGridView.superclass._showItemsToolbar.call(this, item);
          }
       },
 
