@@ -246,7 +246,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
       _onResizeHandler: function() {
          FieldLink.superclass._onResizeHandler.apply(this, arguments);
          if(!this._linkCollection.isPickerVisible()) {
-            this._linkCollection.reload();
+            this.updateInputWidth();
          }
       },
 

@@ -259,7 +259,7 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
             то почистим датасет, т.к. фильтр сменился и больше ничего делать не будем */
          if(!this._isObservableControlFocused()) {
             if(dataSet) {
-               dataSet.fill();//TODO в 3.7.3.100 поменять на clear
+               dataSet.clear();
             }
             this._options.listFilter = filter;
             this._notifyOnPropertyChanged('listFilter');
@@ -476,7 +476,7 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
        * @private
        */
       _getListDataSet: function() {
-         return this._list ? this._list.getDataSet() : undefined;
+         return this._list ? this._list.getItems() : undefined;
       },
 
       /**
@@ -495,7 +495,7 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
        */
       _onListItemSelect: function (id, item) {
          var def = new $ws.proto.Deferred(),
-             dataSet = this._list.getDataSet(),
+             dataSet = this._list.getItems(),
              ctx = this._getBindingContext(),
              self = this;
 
@@ -506,7 +506,7 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
          if(item) {
             def.callback(item);
          } else if (dataSet) {
-            def.callback(dataSet.getRecordByKey(id));
+            def.callback(dataSet.getRecordById(id));
          } else {
             this._list._dataSource.read(id).addCallback(function (item) {
                def.callback(item);
@@ -555,7 +555,7 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
        * @private
        */
       _checkPickerState: function () {
-         var dataSet = this._list && this._list.getDataSet();
+         var dataSet = this._list && this._list.getItems();
          return Boolean(this._options.usePicker && dataSet && dataSet.getCount());
       },
 
