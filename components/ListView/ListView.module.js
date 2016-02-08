@@ -819,7 +819,10 @@ define('js!SBIS3.CONTROLS.ListView',
             if (!id) {
                var items = this.getItems();
                if (items) {
-                  selId = items.at(index).getId()
+                  var selItem = items.at(index);
+                  if (selItem) {
+                     selId = selItem.getId();
+                  }
                }
             }
             else {
