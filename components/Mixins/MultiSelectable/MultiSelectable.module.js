@@ -522,11 +522,9 @@ define('js!SBIS3.CONTROLS.MultiSelectable', ['js!SBIS3.CONTROLS.Data.Collection.
                index = Array.indexOf(keys, String(item));
             }
          }
-         if (index < 0) {
-            index = Array.indexOf(keys, String(id));
-         }
          return index;
       },
+
       _drawSelectedItems : function() {
          /*Method must be implemented*/
       },
