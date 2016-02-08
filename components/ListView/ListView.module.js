@@ -1699,7 +1699,7 @@ define('js!SBIS3.CONTROLS.ListView',
             this._avatar.remove();
             this._isShifted = false;
             if (this.getItemsActions() && hoveredItem.container) {
-               this._showItemActions(hoveredItem);
+               this._showItemsToolbar(hoveredItem);
             }
          },
          _drawResults: function(){
