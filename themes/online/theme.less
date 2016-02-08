@@ -7,8 +7,8 @@
    position: absolute;
    top: @controls-Popup-closeButton-top;
    right: @controls-Popup-closeButton-right;
-   width: @controls-Popup-closeButton-width;
-   height: @controls-Popup-closeButton-height;
+   width: @closeButtonWidth;
+   height: @closeButtonHeight;
    cursor: pointer;
    background: @closeButtonImage;
    &:hover {
@@ -20,6 +20,17 @@
    z-index: 1;
 }
 
+.controls-Button__closeButton {
+   width: @closeButtonWidth;
+   height: @closeButtonHeight;
+   background: @closeButtonImage;
+   &:hover {
+      background: @closeButtonImageHover;
+   }
+   &:active {
+      background: @closeButtonImageHover;
+   }
+}
 
 .controls-ListView__item__selected {
    .controls-DataGridView__td:first-child {
