@@ -159,10 +159,24 @@ define('js!SBIS3.CONTROLS.NumberTextBox', ['js!SBIS3.CONTROLS.TextBox', 'html!SB
             }
          });
 
+         this._inputField.bind('blur', function(){
+            // Прятать нулевую дробную часть при потере фокуса
+            if (self._options.hideEmptyDecimals) {
+               self._options.text = self._formatText(self._options.text, true);
+               $(this).val(self._options.text);
+            }
+         }).bind('focus', function(){
+            // Показывать нулевую дробную часть при фокусировки не зависимо от опции hideEmptyDecimals
+            if (self._options.hideEmptyDecimals) {
+               self._options.text = self._formatText(self._options.text);
+               $(this).val(self._options.text);
+            }
+         });
+
          if (this._options.numericValue) {
             this._options.text = this._options.numericValue + '';
          }
-         this._options.text = this._formatText(this._options.text);
+         this._options.text = this._formatText(this._options.text, this._options.hideEmptyDecimals);
          this._inputField.val(this._options.text);
       },
 
@@ -233,9 +247,12 @@ define('js!SBIS3.CONTROLS.NumberTextBox', ['js!SBIS3.CONTROLS.TextBox', 'html!SB
             this._options.onlyPositive,
             this._options.maxLength
          );
-         if (value && this._options.hideEmptyDecimals && !(value.indexOf('.') == -1) && fromFocusOut ){
-            while (value[value.length - 1] == '0'){
+         if (this._options.hideEmptyDecimals && (value && value.indexOf('.') != -1) && fromFocusOut ){
+            while (value[value.length - 1] == '0' || value[value.length - 1] == '.'){
                value = value.substr(0, value.length - 1);
+               if (value.indexOf('.') == -1) { // удаляем только дробную часть
+                  break;
+               }
             }
          }
          return value || '';
