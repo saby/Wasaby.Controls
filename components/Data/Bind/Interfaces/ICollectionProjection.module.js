@@ -15,7 +15,7 @@ define('js!SBIS3.CONTROLS.Data.Bind.ICollectionProjection', [
       /**
        * @event onCollectionChange После изменения коллекции
        * @param {$ws.proto.EventObject} event Дескриптор события.
-       * @param {String} action Действие, приведшее к изменению.
+       * @param {SBIS3.CONTROLS.Data.Bind.ICollection#ChangeAction} action Действие, приведшее к изменению.
        * @param {SBIS3.CONTROLS.Data.Projection.ICollectionItem[]} newItems Новые элементы коллеции.
        * @param {Integer} newItemsIndex Индекс, в котором появились новые элементы.
        * @param {SBIS3.CONTROLS.Data.Projection.ICollectionItem[]} oldItems Удаленные элементы коллекции.

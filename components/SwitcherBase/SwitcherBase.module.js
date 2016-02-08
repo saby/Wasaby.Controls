@@ -54,6 +54,7 @@ define('js!SBIS3.CONTROLS.SwitcherBase', ['js!SBIS3.CORE.Control', 'js!SBIS3.CON
              * @see setState
              * @see setStateOff
              * @see setStateOn
+             * @translatable
              */
             stateOn: '',
             /**
@@ -66,6 +67,7 @@ define('js!SBIS3.CONTROLS.SwitcherBase', ['js!SBIS3.CORE.Control', 'js!SBIS3.CON
              * @see setState
              * @see setStateOff
              * @see setStateOn
+             * @translatable
              */
             stateOff: ''
          }

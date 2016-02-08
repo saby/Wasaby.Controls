@@ -50,6 +50,7 @@ define('js!SBIS3.CONTROLS.CompoundControl', ['js!SBIS3.CORE.CompoundControl'], f
             /**
              * @cfg {String|Boolean} Текст расширенной подсказки, отображаемой во всплывающей панельке (Infobox)
              * Задается либо текст подсказки, либо "true". Во втором случае соджержимое подсказки можно задать с помощью события {@link onTooltipContentRequest}
+             * @translatable
              * @noShow
              */
             extendedTooltip: false

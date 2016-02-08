@@ -1,27 +1,30 @@
 .controls-TabButtons {
-   height: @tab-buttons-height;
-   position: relative;
-   overflow: hidden;
-}
-
-.controls-TabButtons__leftContainer {
-   float: left;
-}
-
-.controls-TabButtons__rightContainer {
-   float: right;
-}
-
-.controls-TabButtons__bottomBorder {
-   position: absolute;
-   z-index: 1;
-   width: 100%;
-   bottom: 0;
+   display: @tab-buttons-display;
+   width: @tab-buttons-width;
    border-bottom: @tab-buttons-border-bottom;
-}
-.controls-TabButtons__leftContainer {
-   float: left;
-}
-.controls-TabButtons__rightContainer {
-   float: right;
+   height: @tab-buttons-height;
+   border-collapse: @tab-buttons-border-collapse;
+
+   > div {
+      display: @tab-buttons-div-display;
+      white-space: @tab-buttons-div-space;
+      vertical-align: @tab-buttons-div-align;
+   }
+   .controls-TabButtons__tabSpace-template{
+      width: @tab-buttons-tabSpace-template-width;
+      .controls-TabButtons__tabSpace-template-inner{
+         width: @tab-buttons-tabSpace-template-inner-width;
+         min-width: @tab-buttons-tabSpace-template-inner-min-width;
+         overflow: @tab-buttons-tabSpace-template-overflow;
+         height: @tab-buttons-height;
+      }
+   }
+   .controls-TabButtons__leftContainer{
+      float: @tab-buttons-leftItems-float;
+      padding-left: @tab-buttons-items-padding;
+   }
+   .controls-TabButtons__rightContainer{
+      float: @tab-buttons-rightItems-float;
+      padding-right: @tab-buttons-items-padding;
+   }
 }

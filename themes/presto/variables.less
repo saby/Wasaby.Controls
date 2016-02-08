@@ -235,13 +235,26 @@
 // ---------- //
 // Tab button //
 // ---------- //
-@tab-buttons-height:                            30px;
+@tab-buttons-height:                            29px;
+@tab-buttons-display:                           table;
+@tab-buttons-width:                             100%;
+@tab-buttons-border-collapse:                   collapse;
 @tab-buttons-border-bottom:                     1px solid #CCCCCC;
+@tab-buttons-div-display:                       table-cell;
+@tab-buttons-div-space:                         nowrap;
+@tab-buttons-div-align:                         middle;
+@tab-buttons-tabSpace-template-width:             100%;
+@tab-buttons-tabSpace-template-inner-width:       0;
+@tab-buttons-tabSpace-template-inner-min-width:   100%;
+@tab-buttons-tabSpace-template-overflow:          hidden;
+@tab-buttons-leftItems-float:                   left;
+@tab-buttons-items-padding:                     5px;
+@tab-buttons-rightItems-float:                  right;
 
 @tab-button-border-color:                       #E4E4E4;
 @tab-button-checked-border-color:               #CCCCCC;
 
-@tab-button-display:                            table-cell;
+@tab-button-display:                            inline-block;
 @tab-button-vertical-align:                     middle;
 @tab-button-cursor:                             pointer;
 @tab-button-height:                             28px;
@@ -256,9 +269,19 @@
 
 @tab-button-hover-background:                   #F0F5FB;
 @tab-button-hover-border:                       1px solid @tab-button-border-color;
+@tab-button-hover-border-bottom:                none;
 @tab-button-hover-inner-after-display:          none;
 
-@tab-button-checked-height:                     29px;
+@tab-button-bottomLine-start-display:           none;
+@tab-button-bottomLine-position:                absolute;
+@tab-button-bottomLine-bottom:                  -1px;
+@tab-button-bottomLine-left:                    1px;
+@tab-button-bottomLine-right:                   1px;
+@tab-button-bottomLine-background:              #fff;
+@tab-button-bottomLine-height:                  1px;
+@tab-button-bottomLine-display:                 block;
+
+@tab-button-checked-height:                     28px;
 @tab-button-checked-border-top:                 1px solid #313E78;
 @tab-button-checked-border-bottom:              1px solid #FFF;
 @tab-button-checked-border-left:                transparent;
@@ -309,11 +332,9 @@
 @tab-button-counter-font-weight:                normal;
 @tab-button-counter-font-size:                  14px;
 
-@tab-button-right-float:                        left;
-@tab-button-right-margin-left:                  -1px;
+@tab-button-right-margin-right:                 -5px;
 @tab-button-right-separator-left:               -1px;
-@tab-button-left-float:                         left;
-@tab-button-left-margin-left:                   -1px;
+@tab-button-left-margin-left:                   -5px;
 @tab-button-left-separator-right:               -1px;
 
 @tab-button-overlay-position:                   absolute;
@@ -325,8 +346,8 @@
 @tab-button-overlay-ms-filter:                  "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";
 @tab-button-overlay-opacity:                    0;
 
-@tab-button-disabled-hover-border-color:        transparent;
-@tab-button-disabled-hover-bg:                  transparent;
+@tab-button-disabled-border-color:              transparent;
+@tab-button-disabled-bg:                        transparent;
 @tab-button-disabled-inner-color:               #CCCCCC;
 @tab-button-disabled-inner-after-display:       none;
 // ------------ //
