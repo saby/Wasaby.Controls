@@ -1,6 +1,6 @@
 define('js!SBIS3.CONTROLS.SuggestMixin', [
    'js!SBIS3.CONTROLS.PickerMixin',
-   'js!SBIS3.CONTROLS.SuggestList'
+   'js!SBIS3.CONTROLS.SuggestShowAll'
 ], function (PickerMixin) {
    'use strict';
 
@@ -151,7 +151,7 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
              * @group Data
              */
             list: {
-               component: 'js!SBIS3.CONTROLS.SuggestList',
+               component: 'js!SBIS3.CONTROLS.ListView',
                options: {}
             },
 
@@ -418,7 +418,7 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
             this.subscribeTo(this._showAllButton, 'onActivated', function() {
 
                /* Если передали конфигурацию диалога, то используем его, иначе используем дефолтный */
-               var showAllConfig = Object.keys(self._options.showAllConfig) ?
+               var showAllConfig = Object.keys(self._options.showAllConfig).length ?
                    self._options.showAllConfig :
                    DEFAULT_SHOW_ALL_CONFIG;
 
