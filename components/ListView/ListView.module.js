@@ -254,6 +254,7 @@ define('js!SBIS3.CONTROLS.ListView',
                 * @property {Function} onActivated Действие кнопки.
                 * @editor icon ImageEditor
                 * @translatable caption
+                * @translatable tooltip
                 */
                /**
                 * @cfg {ItemsActions[]} Набор действий над элементами, отображающийся в виде иконок
@@ -800,9 +801,19 @@ define('js!SBIS3.CONTROLS.ListView',
             }
          },
 
-         _drawSelectedItem: function (id) {
+         _drawSelectedItem: function (id, index) {
+            var selId;
+            if (!id) {
+               var items = this.getItems();
+               if (items) {
+                  selId = items.at(index).getId()
+               }
+            }
+            else {
+               selId = id
+            }
             $(".controls-ListView__item", this._container).removeClass('controls-ListView__item__selected');
-            $(".controls-ListView__item[data-id='" + id + "']", this._container).addClass('controls-ListView__item__selected');
+            $(".controls-ListView__item[data-id='" + selId + "']", this._container).addClass('controls-ListView__item__selected');
          },
          /**
           * Перезагружает набор записей представления данных с последующим обновлением отображения.
@@ -911,6 +922,9 @@ define('js!SBIS3.CONTROLS.ListView',
             if (this._editingItem.model && this._editingItem.model.getKey() === item.getKey()) {
                this._editingItem.target = this._getElementByModel(item);
             }
+            //TODO: Временное решение для .100.  В .30 состояния выбранности элемента должны добавляться в шаблоне.
+            this._drawSelectedItems(this.getSelectedKeys());
+            this._drawSelectedItem(this.getSelectedKey());
          },
 
          /**
@@ -1056,10 +1070,14 @@ define('js!SBIS3.CONTROLS.ListView',
             this._getItemActionsContainer()[0].style.top = offset.top - this._container.offset().top + 'px';
          },
          _getItemActionsPosition: function (item) {
-            return {
+            var cfg = {
                top : item.position.top + ((item.size.height > ITEMS_ACTIONS_HEIGHT) ? item.size.height - ITEMS_ACTIONS_HEIGHT : 0 ),
-               right : this._touchSupport ? item.position.top : this._container[0].offsetWidth - (item.position.left + item.size.width)
+               right : this._container[0].offsetWidth - (item.position.left + item.size.width)
             };
+            if (this._touchSupport){
+               cfg.top = item.position.top;
+            }
+            return cfg;
          },
          /**
           * Создаёт операции над записью

@@ -4,12 +4,16 @@
    font-size: 18px;
    line-height: 24px;
    font-weight: 700;
+   position: relative;
    .controls-BackButton__caption {
       font-style: normal;
       color: @blue-dark-color;
       overflow: hidden;
-      vertical-align: top;
       padding-left: 4px;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      text-align: left;
+      max-width: calc(~"100% - 8px");
    }
    &:before {
       width: 8px;
@@ -17,7 +21,6 @@
       font-weight: normal;
       content: '\e003';
       float: left;
-      margin-left: 8px;
    }
 
 

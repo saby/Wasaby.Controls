@@ -48,6 +48,7 @@ define('js!SBIS3.CONTROLS.TextArea', ['js!SBIS3.CONTROLS.TextBoxBase', 'html!SBI
               *     <option name="placeholder">Введите ФИО полностью</option>
               * </pre>
               * @see setPlaceholder
+              * @translatable
               */
              placeholder: '',
             /**

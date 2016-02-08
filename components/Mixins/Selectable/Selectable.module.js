@@ -79,9 +79,6 @@ define('js!SBIS3.CONTROLS.Selectable', ['js!SBIS3.CONTROLS.Data.Utils'], functio
          this._publish('onSelectedItemChange');
       },
 
-      _itemsReadyCallback: function() {
-         this._prepareSelectedConfig(this._options.selectedIndex, this._options.selectedKey);
-      },
 
       _prepareSelectedConfig: function(index, key) {
          if ((typeof index == 'undefined') || (index === null)) {
@@ -107,11 +104,6 @@ define('js!SBIS3.CONTROLS.Selectable', ['js!SBIS3.CONTROLS.Data.Utils'], functio
                   this._itemsProjection
                );
             }
-         },
-         _setItemsEventHandlers : function() {
-            if (this._itemsProjection && this._onProjectionCurrentChange) {
-               this.unsubscribeFrom(this._itemsProjection, 'onCurrentChange', this._onProjectionCurrentChange);
-            }
          }
       },
 
@@ -124,8 +116,17 @@ define('js!SBIS3.CONTROLS.Selectable', ['js!SBIS3.CONTROLS.Data.Utils'], functio
          },
          _drawItemsCallback: function() {
             this._drawSelectedItem(this._options.selectedKey, this._options.selectedIndex);
+         },
+         _unsetItemsEventHandlers : function() {
+            if (this._itemsProjection && this._onProjectionCurrentChange) {
+               this.unsubscribeFrom(this._itemsProjection, 'onCurrentChange', this._onProjectionCurrentChange);
+            }
+         },
+         _itemsReadyCallback: function() {
+            this._prepareSelectedConfig(this._options.selectedIndex, this._options.selectedKey);
          }
       },
+
       _getUtilityEnumerator: function() {
          if (!this._utilityEnumerator) {
             this._utilityEnumerator = this._itemsProjection.getEnumerator();

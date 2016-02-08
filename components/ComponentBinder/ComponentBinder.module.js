@@ -5,7 +5,7 @@ define('js!SBIS3.CONTROLS.ComponentBinder', [], function () {
     * @class SBIS3.CONTROLS.ComponentBinder
     * @extends $ws.proto.Abstract
     * @public
-    * @param backButton объект книпоки назад
+    * @param backButton объект кнопки назад
     */
    /*методы для поиска*/
    function startHierSearch(text, searchParamName, searchCrumbsTpl) {
@@ -67,19 +67,25 @@ define('js!SBIS3.CONTROLS.ComponentBinder', [], function () {
          filter = view.getFilter();
       delete (filter[searchParamName]);
       view.setHighlightText('', false);
-      view.setHighlightEnabled(false);      view.reload(filter, view.getSorting(), 0);   }
+      view.setHighlightEnabled(false);
+      view.reload(filter, view.getSorting(), 0);
+   }
 
    function resetGroup(searchParamName) {
+      var view = this._options.view,
+            filter = $ws.core.merge(view.getFilter(), {
+               'Разворот' : 'Без разворота'
+            });
+      delete (filter[searchParamName]);
+      //При сбрасывании группировки в иерархии нужно снять класс-можификатор, но сделать это можно
+      //только после релоада, иначе визуально будут прыжки и дерганья (класс меняет паддинги)
+      view.once('onDataLoad', function(){
+         view._container.removeClass('controls-GridView__searchMode');
+      });
       //Если мы ничего не искали, то и сбрасывать нечего
       if (this._firstSearch) {
          return;
       }
-      var view = this._options.view,
-         filter = $ws.core.merge(view.getFilter(), {
-            'Разворот' : 'Без разворота'
-         });
-      delete (filter[searchParamName]);
-
       view.setInfiniteScroll(this._isInfiniteScroll, true);
       view.setGroupBy(this._lastGroup);
       view.setHighlightText('', false);
@@ -104,10 +110,6 @@ define('js!SBIS3.CONTROLS.ComponentBinder', [], function () {
          //Очищаем крошки. TODO переделать, когда появятся привзяки по контексту
          view.setFilter(filter, true);
       }
-      //При любом релоаде из режима поиска нужно снять класс
-      view.once('onDataLoad', function(){
-         view._container.removeClass('controls-GridView__searchMode');
-      });
    }
 
    function breakSearch(searchForm, withReload){
@@ -121,8 +123,11 @@ define('js!SBIS3.CONTROLS.ComponentBinder', [], function () {
 
    function toggleCheckBoxes(operationPanel, gridView, hideCheckBoxes) {
       if (gridView._options.multiselect && hideCheckBoxes) {
-         gridView._container.toggleClass('controls-ListView__showCheckBoxes', operationPanel.isOpen())
-            .toggleClass('controls-ListView__hideCheckBoxes', !operationPanel.isOpen());
+         gridView._container.toggleClass('controls-ListView__showCheckBoxes', operationPanel.isVisible())
+            .toggleClass('controls-ListView__hideCheckBoxes', !operationPanel.isVisible());
+         if (gridView.hasPartScroll()) {
+            gridView.updateScrollAndColumns();
+         }
       }
    }
    /**
@@ -365,12 +370,17 @@ define('js!SBIS3.CONTROLS.ComponentBinder', [], function () {
       bindOperationPanel: function(hideCheckBoxes, operationPanel) {
          var view = this._options.view;
          operationPanel = operationPanel || this._options.operationPanel;
-         operationPanel._addItemOptions = function(options) {
-            options.linkedView = view;
+         //TODO: После перехода на новую идеалогию, кнопки ни чего знать о view не будут, и этот костыль уйдёт.
+         operationPanel.addItemOptions = function(instance) {
+            if ($ws.helpers.instanceOfModule(instance, 'SBIS3.CONTROLS.OperationsMark')) {
+               instance.setLinkedView(view);
+            } else {
+               instance._options.linkedView = view;
+            }
          };
          toggleCheckBoxes(operationPanel, view, hideCheckBoxes);
          view.subscribe('onSelectedItemsChange', function(event, idArray) {
-            operationPanel.setPanelState(idArray.length);
+            operationPanel.onSelectedItemsChange(idArray);
          });
          operationPanel.subscribe('onToggle', function() {
             toggleCheckBoxes(operationPanel, view, hideCheckBoxes);
@@ -379,7 +389,7 @@ define('js!SBIS3.CONTROLS.ComponentBinder', [], function () {
       /**
        * Метод для связывания истории фильтров с представлением данных
        */
-      bindFilterHistory: function(filterButton, fastDataFilter, historyId, controller, browser) {
+      bindFilterHistory: function(filterButton, fastDataFilter, searchParam, historyId, controller, browser) {
          var view = browser.getView(),
              historyController = new controller({
                 historyId: historyId,
@@ -387,14 +397,23 @@ define('js!SBIS3.CONTROLS.ComponentBinder', [], function () {
                 fastDataFilter: fastDataFilter,
                 view: view
              }),
-             filter = historyController.getActiveFilter();
+             filter = historyController.getActiveFilter(), viewFilter;
 
          filterButton.setHistoryController(historyController);
          setTimeout($ws.helpers.forAliveOnly(function() {
             if(filter) {
+               viewFilter = filter.viewFilter;
+
+               //TODO убрать работу с фильтром, всё делать через filterStructure
+               //Задача в разработку от 03.02.2016 №1172574951
+               //Убрать работу с фильтром в HistoryController'e, всё делать через filterStructure
+               //https://inside.tensor.ru/opendoc.html?guid=5f16d461-f56e-477d-a1ea-ae55751755ad
+               if(searchParam && viewFilter[searchParam]) {
+                  delete viewFilter[searchParam];
+               }
                /* Надо вмерживать структуру, полученную из истории, т.к. мы не сохраняем в историю шаблоны строки фильтров */
                filterButton._updateFilterStructure($ws.core.merge(filterButton.getFilterStructure(), filter.filter));
-               view.setFilter($ws.core.merge(view.getFilter(), filter.viewFilter), true);
+               view.setFilter($ws.core.merge(view.getFilter(), viewFilter), true);
             }
             browser._notifyOnFiltersReady();
          }, view), 0);

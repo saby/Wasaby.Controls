@@ -49,6 +49,7 @@ define('js!SBIS3.CONTROLS.TextBox', ['js!SBIS3.CONTROLS.TextBoxBase','html!SBIS3
          _inputField : null,
          _compatPlaceholder: null,
          _tooltipText: null,
+         _fromTab: true,
          _options: {
             beforeFieldWrapper: null,
             afterFieldWrapper: null,
@@ -62,6 +63,7 @@ define('js!SBIS3.CONTROLS.TextBox', ['js!SBIS3.CONTROLS.TextBoxBase','html!SBIS3
              * @variant lowercase Все символы нижним регистром.
              * @variant none Без изменений.
              * @see setTextTransform
+             *
              */
             textTransform: 'none',
             /**
@@ -87,6 +89,7 @@ define('js!SBIS3.CONTROLS.TextBox', ['js!SBIS3.CONTROLS.TextBoxBase','html!SBIS3
              *     <option name="placeholder">Введите ФИО полностью</option>
              * </pre>
              * @see setPlaceholder
+             * @translatable
              */
             placeholder: '',
             /**
@@ -135,10 +138,15 @@ define('js!SBIS3.CONTROLS.TextBox', ['js!SBIS3.CONTROLS.TextBoxBase','html!SBIS3
             }
          });
 
+         $(this._inputField).on('mousedown', function(){
+            self._fromTab = false;
+         });
+
          this._inputField.bind('focusin', function (e) {
-            if (self._options.selectOnClick){
+            if (self._options.selectOnClick || self._fromTab){
                self._inputField.select();
             }
+            self._fromTab = true;
             /* При получении фокуса полем ввода, сделаем контрол активным.
             *  Делать контрол надо активным по фокусу, т.к. при клике и уведении мыши,
             *  кусор поставится в поле ввода, но соыбтие click не произойдёт и контрол актвным не станет, а должен бы.*/
@@ -149,7 +157,11 @@ define('js!SBIS3.CONTROLS.TextBox', ['js!SBIS3.CONTROLS.TextBoxBase','html!SBIS3
          });
 
          this._inputField.bind('focusout', function(){
-            self.setText(self._formatText(self._inputField.val()));
+            var text = self._inputField.val();
+            if (self._options.trim) {
+               text = String.trim(text);
+            }
+            self.setText(text);
          });
 
          if (this._options.placeholder && !$ws._const.compatibility.placeholder) {

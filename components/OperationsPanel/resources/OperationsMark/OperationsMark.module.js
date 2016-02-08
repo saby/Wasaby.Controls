@@ -30,6 +30,7 @@ define('js!SBIS3.CONTROLS.OperationsMark', [
               * <pre>
               *     <option name="caption">Операции отметки</option>
               * </pre>
+              * @translatable
               */
             caption: undefined,
             /**
@@ -62,7 +63,6 @@ define('js!SBIS3.CONTROLS.OperationsMark', [
       $constructor: function() {
          this._createMarkCheckBox();
          this._setCaptionRender();
-         this.setLinkedView(this._options.linkedView);
       },
       _initItems: function(items) {
          var self = this;
