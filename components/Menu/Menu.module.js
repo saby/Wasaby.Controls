@@ -34,7 +34,7 @@ define('js!SBIS3.CONTROLS.Menu', [
        * <pre>
        *     menu.subscribe('onMenuItemActivate', function (event, id) {
        *        comboBox.setSelectedItem(id);
-       *     }); 
+       *     });
        * </pre>
        */
       _dotTplFn : dot,
@@ -112,7 +112,7 @@ define('js!SBIS3.CONTROLS.Menu', [
 
          return '<component data-component="SBIS3.CONTROLS.MenuItem">' +
             '<option name="caption" type="string">' + caption + '</option>' +
-            '<option name="allowChangeEnable">' + this._options.allowChangeEnable + '</option>' + icon + className + tooltip + enabled +
+            '<option name="allowChangeEnable" type="boolean">' + (item.get('allowChangeEnable') !== undefined ? item.get('allowChangeEnable') : this._options.allowChangeEnable) + '</option>' + icon + className + tooltip + enabled +
             '</component>';
       },
 
