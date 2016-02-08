@@ -17,11 +17,57 @@ define('js!SBIS3.CONTROLS.MoveDialogTemplate', [
             autoHeight: false,
             width: '400px',
             height: '400px',
-            resizable: false
-         }
+            resizable: false,
+            linkedView: undefined,
+            records: undefined,
+            cssClassName: 'controls-MoveDialog'
+         },
+         treeView: undefined
       },
       $constructor: function() {
+         this._publish('onPrepareFilterOnMove');
          this._container.removeClass('ws-area');
+         this.subscribe('onReady', this._onReady.bind(this));
+      },
+      _onReady: function() {
+         var
+             linkedView = this._options.linkedView,
+             filter;
+         this._treeView = this.getChildControlByName('MoveDialogTemplate-TreeDataGridView');
+         //TODO: Избавиться от этого события в .100 версии. Придрот для выпуска .20 чтобы подменить фильтр в диалоге перемещения. Необходимо придумать другой механизм.
+         filter = this._notify('onPrepareFilterOnMove', this._options.records) || {};
+         if ($ws.helpers.instanceOfModule(linkedView._dataSource, 'SBIS3.CONTROLS.SbisServiceSource') || $ws.helpers.instanceOfModule(linkedView._dataSource,'SBIS3.CONTROLS.Data.Source.SbisService')) {
+            filter['ВидДерева'] = "Только узлы";
+            //TODO: костыль написан специально для нуменклатуры, чтобы не возвращалась выборка всех элементов при заходе в пустую папку
+            filter['folderChanged'] = true;
+         }
+         this._treeView.setFilter(filter, true);
+         this._treeView.setDataSource(linkedView._dataSource);
+      },
+      _onMoveButtonActivated: function() {
+         var
+             self = this.getParent(),
+             moveTo = self._treeView.getSelectedKey();
+         if (moveTo !== null) {
+            moveTo = self._treeView._dataSet.getRecordByKey(moveTo);
+         }
+         if (self._treeView._checkRecordsForMove(self._options.records, moveTo)) {
+            self._options.linkedView._move(self._options.records, moveTo);
+         }
+         this.sendCommand('close');
+      },
+      _createRoot: function() {
+         var
+             self = this,
+             rootBlock = $('<tr class="controls-DataGridView__tr controls-ListView__item controls-ListView__folder" style="" data-id="null"><td class="controls-DataGridView__td controls-MoveDialog__root"><div class="controls-TreeView__expand js-controls-TreeView__expand has-child controls-TreeView__expand__open"></div>Корень</td></tr>');
+         rootBlock.bind('click', function(event) {
+            self._container.find('.controls-ListView__item').toggleClass('ws-hidden');
+            rootBlock.toggleClass('ws-hidden').find('.controls-TreeView__expand').toggleClass('controls-TreeView__expand__open');
+            self.setSelectedKey(null);
+            event.stopPropagation();
+         });
+         rootBlock.prependTo(self._container.find('tbody'));
+         self.setSelectedKey(null);
       }
    });
 
