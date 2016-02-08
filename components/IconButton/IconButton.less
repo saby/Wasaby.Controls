@@ -1,9 +1,6 @@
 .round-button-mixin(@border-color) {
    border: 1px solid @border-color;
    border-radius: 14px;
-   height: 28px;
-   width: 28px;
-   line-height: 26px!important;
    text-align: center;
    &:hover{
       border-color: @default-color;
@@ -34,6 +31,15 @@
    }
    &.controls-IconButton__round-border{
       .round-button-mixin(@gray-ccc-color);
+      height: 28px;
+      width: 28px;
+      line-height: 26px!important;
+   }
+   &.controls-IconButton__round-border-24{
+      .round-button-mixin(@gray-ccc-color);
+      height: 24px !important;
+      width: 24px !important;
+      line-height: 24px !important;
    }
    &.ws-disabled {
       cursor: default;

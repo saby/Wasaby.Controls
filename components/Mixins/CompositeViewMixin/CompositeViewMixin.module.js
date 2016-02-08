@@ -10,10 +10,6 @@ define('js!SBIS3.CONTROLS.CompositeViewMixin', ['html!SBIS3.CONTROLS.CompositeVi
       $protected: {
          _tileWidth: null,
          _folderWidth: null,
-         _itemActionsAlign:{
-            horizontal: function () { this.removeClass('controls-ItemActions-verAlign') },
-            vertical: function() { this.addClass('controls-ItemActions-verAlign') }
-         },
          _options: {
             /**
              * @cfg {Object} Режим отображения
@@ -173,35 +169,6 @@ define('js!SBIS3.CONTROLS.CompositeViewMixin', ['html!SBIS3.CONTROLS.CompositeVi
             if(this.getViewMode() === 'table') {
                parentFunc.call(this, key);
             }
-         },
-         _getItemActionsAlign: function(viewMode, hoveredItem) {
-            if (hoveredItem.container.hasClass('js-controls-CompositeView__verticalItemActions')){
-               return 'vertical'; 
-            } else {
-               return 'horizontal';
-            }
-         },
-
-         _getItemActionsPosition: function(parentFunc, hoveredItem) {
-            var itemActions = this.getItemsActions().getContainer(),
-                viewMode = this.getViewMode(),
-                actionsAlign = this._getItemActionsAlign(viewMode, hoveredItem),
-                height;
-
-            this._itemActionsAlign[actionsAlign].call(itemActions);
-            if(viewMode === 'table') return parentFunc.call(this, hoveredItem);
-
-            height = itemActions[0].offsetHeight || itemActions.height();
-            var position = {
-               top: actionsAlign === 'horizontal' ?
-                  hoveredItem.position.top + ((hoveredItem.size.height > height) ? hoveredItem.size.height - height : 0 ) :
-                  hoveredItem.position.top,
-               right: this._container[0].offsetWidth - (hoveredItem.position.left + hoveredItem.size.width)
-            };
-            if (this._touchSupport){
-               position.top = hoveredItem.position.top;
-            }
-            return position;
          },
 
          _getItemsContainer: function(parentFnc){
