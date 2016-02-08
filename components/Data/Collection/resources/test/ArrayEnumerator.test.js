@@ -160,6 +160,50 @@ define([
                   enumerator.getItemByPropertyValue('Ид', 0)
                );
             });
+            it('should work fine with names from Object.prototype', function() {
+               var items = [{
+                     'constructor': 'a'
+                  }, {
+                     'hasOwnProperty': 1
+                  }, {
+                     'toString': false
+                  }, {
+                     'isPrototypeOf': null
+                  }],
+                  enumerator = new ArrayEnumerator({
+                     items: items
+                  });
+               for (var i = 0; i < items.length; i++) {
+                  for (var k in items[i]) {
+                     if (Object.prototype.hasOwnProperty.call(items[i], k)) {
+                        assert.strictEqual(
+                           items[i],
+                           enumerator.getItemByPropertyValue(k, items[i][k])
+                        );
+                     }
+                  }
+               }
+            });
+            it('should work fine with values from Object.prototype', function() {
+               var items = [{
+                     id: 'constructor'
+                  }, {
+                     id: 'hasOwnProperty'
+                  }, {
+                     id: 'toString'
+                  }, {
+                     id: 'isPrototypeOf'
+                  }],
+                  enumerator = new ArrayEnumerator({
+                     items: items
+                  });
+               for (var i = 0; i < items.length; i++) {
+                  assert.strictEqual(
+                     items[i],
+                     enumerator.getItemByPropertyValue('id', items[i].id)
+                  );
+               }
+            });
          });
 
          describe('.getItemsByPropertyValue()', function() {
