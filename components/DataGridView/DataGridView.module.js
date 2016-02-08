@@ -122,7 +122,21 @@ define('js!SBIS3.CONTROLS.DataGridView',
              * Массив имен столбцов, по которым строится лесенка
              */
             ladder: undefined,
-            resultsTpl: resultsTpl
+            resultsTpl: resultsTpl,
+            /**
+             * @cfg {Boolean} Производить ли преобразование колонок в шапке
+             * Если опция включена, то колонки в шапке будут преобразованы следующим образом:
+             *  <ul>
+             *    <li>Колонки с одинаковым title будут объединены</li>
+             *    <li>Для колонок, title которых задан через разделитель "точка", т.е. вида выводимоеОбщееИмя.выводимоеИмяДаннойКолонки,
+             *        будет отрисован двустрочный заголовок
+             * </ul>
+             * @example
+             * <pre>
+             *     <option name="transformHead">true</option>
+             * </pre>
+             */
+            transformHead: false
          }
       },
 
@@ -624,9 +638,10 @@ define('js!SBIS3.CONTROLS.DataGridView',
             },
             value,
             column;
+         this._prepareHeadColumns(rowData);
 
-         for (var i = 0; i < rowData.columns.length; i++) {
-                column = rowData.columns[i];
+         for (var i = 0; i < rowData.content[0].length; i++) {
+            column = rowData.content[0][i];
 
             if (column.headTemplate) {
                value = MarkupTransformer(TemplateUtil.prepareTemplate(column.headTemplate)({
@@ -638,6 +653,57 @@ define('js!SBIS3.CONTROLS.DataGridView',
             column.value = value;
          }
          return this._headTpl(rowData);
+      },
+
+      _prepareHeadColumns: function(rowData){
+         var columns = $ws.core.clone(this._options.columns),
+            supportUnion = $ws.core.clone(columns[0]),
+            supportDouble,
+            curCol,
+            nextCol,
+            curColSplitTitle,
+            nextColSplitTitle;
+
+         rowData.countRows = 1;
+         rowData.content = [[], []];
+
+         if (!this._options.transformHead){
+            rowData.content[0] = columns;
+            return;
+         }
+
+         for (var i = 0, l = columns.length; i < l; i++){
+            curCol = columns[i];
+            nextCol = columns[i + 1];
+            curColSplitTitle = curCol.title.split('.');
+            nextColSplitTitle = nextCol && nextCol.title.split('.');
+
+            if (!supportDouble){
+               supportDouble = $ws.core.clone(curCol);
+            }
+            if (nextCol && (curColSplitTitle.length == nextColSplitTitle.length) && (curColSplitTitle.length == 2) && (curColSplitTitle[0] == nextColSplitTitle[0])){
+               supportDouble.value = curColSplitTitle[0];
+               supportDouble.colspan = ++supportDouble.colspan || 2;
+               curCol.title = curColSplitTitle[1];
+               nextCol.title = nextColSplitTitle[1];
+               rowData.countRows = 2;
+            }
+            else{
+               rowData.content[1].push(supportDouble);
+               supportDouble = null;
+            }
+
+            if (!supportUnion){
+               supportUnion = $ws.core.clone(curCol);
+            }
+            if (nextCol && (supportUnion.title == nextCol.title)){
+               supportUnion.colspan = ++supportUnion.colspan || 2;
+            }
+            else{
+               rowData.content[0].push(supportUnion);
+               supportUnion = null;
+            }
+         }
       },
 
       _showItemActions: function(item) {
@@ -685,7 +751,6 @@ define('js!SBIS3.CONTROLS.DataGridView',
          this._addResultsMethod = isPositionTop ? 'append' : 'prepend';
          return this._options.resultsPosition == 'top' ? this._thead : this._tfoot;
       },
-
       destroy: function() {
          if (this.hasPartScroll()) {
             this._thumb.unbind('click');
@@ -698,7 +763,6 @@ define('js!SBIS3.CONTROLS.DataGridView',
          }
          DataGridView.superclass.destroy.call(this);
       }
-
    });
 
    return DataGridView;
