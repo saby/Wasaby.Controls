@@ -14,10 +14,8 @@ define('js!SBIS3.CONTROLS.DataGridView',
    ],
    function(ListView, dotTplFn, rowTpl, colgroupTpl, headTpl, resultsTpl, MarkupTransformer, DragAndDropMixin, groupByTpl, LadderDecorator, TemplateUtil) {
    'use strict';
-      /* TODO: Надо считать высоту один раз, а не делать константой */
-      var
-         ITEMS_ACTIONS_HEIGHT = 20,
-         ANIMATION_DURATION = 500; //Продолжительность анимации скролла заголовков
+
+      var ANIMATION_DURATION = 500; //Продолжительность анимации скролла заголовков
    /**
     * Контрол, отображающий набор данных в виде таблицы с несколькими колонками.
     * @class SBIS3.CONTROLS.DataGridView
@@ -231,8 +229,8 @@ define('js!SBIS3.CONTROLS.DataGridView',
       },
 
       _editFieldFocusHandler: function(focusedCtrl) {
-         if(this.getItemsActions()) {
-            this._hideItemActions()
+         if(this._itemsToolbar) {
+            this._hideItemsToolbar()
          }
 
          if(this._isPartScrollVisible) {
@@ -640,12 +638,6 @@ define('js!SBIS3.CONTROLS.DataGridView',
             column.value = value;
          }
          return this._headTpl(rowData);
-      },
-
-      _getItemActionsPosition: function(hoveredItem){
-         var position = DataGridView.superclass._getItemActionsPosition.call(this, hoveredItem);
-         position.right = 0;
-         return position;
       },
 
       _showItemActions: function(item) {
