@@ -1,175 +1,108 @@
 /* global define, $ws */
 define('js!SBIS3.CONTROLS.Data.Projection.TreeEnumerator', [
-   'js!SBIS3.CONTROLS.Data.Collection.IEnumerator',
-   'js!SBIS3.CONTROLS.Data.Projection.IEnumerator',
-   'js!SBIS3.CONTROLS.Data.Collection.IndexedEnumeratorMixin'
-], function (IEnumerator, IProjectionEnumerator, IndexedEnumeratorMixin) {
+   'js!SBIS3.CONTROLS.Data.Projection.CollectionEnumerator',
+   'js!SBIS3.CONTROLS.Data.Utils'
+], function (CollectionEnumerator, Utils) {
    'use strict';
 
    /**
-    * Энумератор для проекции коллекции
+    * Энумератор для проекции дерева
     * @class SBIS3.CONTROLS.Data.Projection.TreeEnumerator
-    * @mixes SBIS3.CONTROLS.Data.Collection.IEnumerator
-    * @mixes SBIS3.CONTROLS.Data.Projection.IEnumerator
-    * @mixes SBIS3.CONTROLS.Data.Collection.IndexedEnumeratorMixin
+    * @extends SBIS3.CONTROLS.Data.Projection.CollectionEnumerator
     * @public
     * @author Мальцев Алексей
     */
 
-   var TreeEnumerator = $ws.core.extend({}, [IEnumerator, IProjectionEnumerator, IndexedEnumeratorMixin], /** @lends SBIS3.CONTROLS.Data.Projection.TreeEnumerator.prototype */{
+   var TreeEnumerator = CollectionEnumerator.extend(/** @lends SBIS3.CONTROLS.Data.Projection.TreeEnumerator.prototype */{
       _moduleName: 'SBIS3.CONTROLS.Data.Projection.TreeEnumerator',
       $protected: {
          _options: {
             /**
-             * @cfg {SBIS3.CONTROLS.Data.Projection.Tree} Проекция дерева
-             * @name SBIS3.CONTROLS.Data.Projection.TreeEnumerator#tree
+             * @cfg {SBIS3.CONTROLS.Data.Collection.IEnumerable} Исходная коллекция
              */
-         },
+            collection: null,
 
-         /**
-          * @member {SBIS3.CONTROLS.Data.Projection.Tree} Проекция дерева
-          */
-         tree: null,
+            /**
+             * @cfg {String} Название свойства, содержащего идентификатор узла.
+             */
+            idProperty: '',
 
-         /**
-          * @member {SBIS3.CONTROLS.Data.Projection.TreeItem} Текущий элемент
-          */
-         _сurrent: undefined,
-
-         /**
-          * @member {Number} Текущая позиция (в исходной коллекции)
-          */
-         _currentPosition: -1,
-
-         /**
-          * @member {Array} Соответствие позиций и элементов
-          */
-         _positions: []
-      },
-
-      $constructor: function (cfg) {
-         cfg = cfg || {};
-         this._tree = cfg.tree;
+            /**
+             * @cfg {String} Название свойства, содержащего идентификатор родительского узла.
+             */
+            parentProperty: ''
+         }
       },
 
       //region SBIS3.CONTROLS.Data.Collection.IEnumerator
 
-      getNext: function () {
-         var next = this._getNextAfter(this.getCurrent());
-
-         if (next) {
-            this._сurrent = next;
-            this._currentPosition++;
-            this._positions[this._currentPosition] = this._сurrent;
-            return this._сurrent;
+      /*getNext: function () {
+         var children = this._getChildren(this._сurrent);
+         if (children.length) {
+            return children[0];
+         } else {
+            return CollectionEnumerator.superclass.getNext.call(this);
          }
-      },
-
-      getCurrent: function () {
-         return this._сurrent;
-      },
-
-      reset: function () {
-         this._сurrent = undefined;
-         this._currentPosition = -1;
-      },
+      },*/
 
       //endregion SBIS3.CONTROLS.Data.Collection.IEnumerator
 
       //region SBIS3.CONTROLS.Data.Projection.IEnumerator
 
-      at: function (index) {
-         return this._positions[index];
-      },
-
-      setCurrent: function(item) {
-         this._сurrent = item;
-         this._currentPosition = Array.indexOf(this._positions, item);
-      },
-
-      getPosition: function() {
-         return this._currentPosition;
-      },
-
-      setPosition: function(internal) {
-         this._currentPosition = internal;
-         this._сurrent = this.at(internal);
-      },
-
-      getPrevious: function () {
-         var prev = this._getPreviousBefore(this.getCurrent());
-
-         if (prev) {
-            this._сurrent = prev;
-            this._currentPosition--;
-            this._positions[this._currentPosition] = this._сurrent;
-            return this._сurrent;
-         }
-      },
-
-      getInternalBySource: function (source) {
-         return source;
-      },
-
       //endregion SBIS3.CONTROLS.Data.Projection.IEnumerator
 
       //region SBIS3.CONTROLS.Data.Collection.IndexedEnumeratorMixin
-
-      reIndex: function () {
-         IndexedEnumeratorMixin.reIndex.call(this);
-      },
-
-      _createIndex: function (property) {
-         var savedItem = this._current,
-            savedPosition = this._currentPosition,
-            result = TreeEnumerator.superclass._createIndex.call(this, property);
-
-         this._current = savedItem;
-         this._currentPosition = savedPosition;
-
-         return result;
-      },
 
       //endregion SBIS3.CONTROLS.Data.Collection.IndexedEnumeratorMixin
 
       //region Protected methods
 
-      _getNextAfter: function (item) {
-         if (!item) {
-            item = this._tree.getRoot();
-         }
-         if (item.isNode()) {
-            var children = this._tree.getChildren(item);
-            if (children.getCount() > 0) {
-               return children.at(0);
-            }
-         }
+      /*_getChildren: function (item) {
+         return $ws.helpers.map(this._options.collection.getIndiciesByValue(
+            this._options.parentProperty,
+            Utils.getItemPropertyValue(
+               item ? item.getContents() : null,
+               this._options.idProperty
+            )
+         ), (function(index) {
+            return this._options.itemsMap[index];
+         }).bind(this));
+      },*/
 
-         var parent = item.isRoot() ? null : item.getParent(),
-            siblings = parent ? this._tree.getChildren(parent) : null,
-            index = siblings ? siblings.getIndex(item) : -1;
-         if (!siblings) {
-            return;
-         }
-         if (index >= siblings.getCount() - 1) {
-            return parent.isRoot() ? null : this._getNextAfter(parent);
-         }
+      _buildInternalMap: function () {
+         var idProperty = this._options.idProperty,
+            parentProperty = this._options.parentProperty,
+            collection = this._options.collection,
+            itemsMap = this._options.itemsMap,
+            buildHierarchy = function(parent) {
+               var result = [],
+                  parentId = Utils.getItemPropertyValue(
+                     parent ? parent.getContents() : null,
+                     idProperty
+                  ),
+                  children = $ws.helpers.map(collection.getIndiciesByValue(
+                     parentProperty,
+                     parentId
+                  ), function(index) {
+                     return itemsMap[index];
+                  });
 
-         return siblings.at(index + 1);
-      },
+               for (var i = 0; i < children.length; i++) {
+                  result.push(children[i]);
+                  result.concat(buildHierarchy(children[i]));
+               }
+               return result;
+            };
 
-      _getPreviousBefore: function(item) {
-         if (!item) {
-            return null;
-         }
-         var parent = item.getParent(),
-            siblings = this._tree.getChildren(parent),
-            index = item ? siblings.getIndex(item) : -1;
-         if (index <= 0) {
-            return parent.isRoot() ? null : parent;
-         }
+         var hierarchy = buildHierarchy();
+         this._internalMap = [];
+         this._currentPosition = -1;
 
-         return siblings.at(index - 1);
+         $ws.helpers.map(hierarchy, function(item, index){
+            this._addToInternalMap(index);
+         }, this);
+
+         this._storeSourceCurrent();
       }
 
       //endregion Protected methods

@@ -21,7 +21,7 @@ define('js!SBIS3.CONTROLS.Data.Projection.CollectionEnumerator', [
       $protected: {
          _options: {
             /**
-             * @member {Array.<SBIS3.CONTROLS.Data.Projection.CollectionItem>} Индекс проекции коллекции
+             * @cfg {Array.<SBIS3.CONTROLS.Data.Projection.CollectionItem>} Индекс проекции коллекции
              */
             itemsMap: [],
 
@@ -141,8 +141,8 @@ define('js!SBIS3.CONTROLS.Data.Projection.CollectionEnumerator', [
          return Array.indexOf(this._internalMap, source);
       },
 
-      getSourceByInternal: function (internal) {
-         throw new Error('Method getSourceByInternal is no more available. I\'m so sorry.');
+      getSourceByInternal: function () {
+         throw new Error('Method getSourceByInternal is no more available, sorry.');
       },
 
       //endregion SBIS3.CONTROLS.Data.Projection.IEnumerator
@@ -187,26 +187,30 @@ define('js!SBIS3.CONTROLS.Data.Projection.CollectionEnumerator', [
          this._internalMap = [];
          this._currentPosition = -1;
 
-         var processItem = function(sourceIndex) {
-            if (this._options.filterMap[sourceIndex]) {
-               this._internalMap.push(sourceIndex);
-               if (this._сurrent && this._сurrent === this._options.itemsMap[sourceIndex]) {
-                  this._currentPosition = sourceIndex;
-               }
-            }
-         };
-
          if (this._options.sortMap.length) {
             $ws.helpers.map(this._options.sortMap, function(index){
-               processItem.call(this, index);
+               this._addToInternalMap(index);
             }, this);
          } else {
             $ws.helpers.map(this._options.itemsMap, function(item, index){
-               processItem.call(this, index);
+               this._addToInternalMap(index);
             }, this);
          }
 
          this._storeSourceCurrent();
+      },
+
+      /**
+       * Добавляет соответствие позиций проекции и исходной коллекции с учетом фильтра
+       * @protected
+       */
+      _addToInternalMap: function (sourceIndex) {
+         if (this._options.filterMap[sourceIndex]) {
+            this._internalMap.push(sourceIndex);
+            if (this._сurrent && this._сurrent === this._options.itemsMap[sourceIndex]) {
+               this._currentPosition = sourceIndex;
+            }
+         }
       },
 
       /**

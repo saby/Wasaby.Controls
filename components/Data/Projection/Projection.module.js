@@ -21,13 +21,13 @@ define('js!SBIS3.CONTROLS.Data.Projection.Projection', [
     */
    var _static = {
       /**
-       * @var {Object[]} Массив соответствия индексов проекций и коллекций
+       * @member {Object[]} Массив соответствия индексов проекций и коллекций
        * @static
        */
       projectionsToCollections: [],
 
       /**
-       * @var {Object[]} Массив соответствия индексов проекций и их инстансов
+       * @member {Object[]} Массив соответствия индексов проекций и их инстансов
        * @static
        */
       projectionsToInstances: []

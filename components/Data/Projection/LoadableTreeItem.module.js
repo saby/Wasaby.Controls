@@ -21,17 +21,17 @@ define('js!SBIS3.CONTROLS.Data.Projection.LoadableTreeItem', [
       $protected: {
 
          /**
-          * @var {Boolean} Содержимое узла было загружено через load()
+          * @member {Boolean} Содержимое узла было загружено через load()
           */
          _loaded: false,
 
          /**
-          * @var {SBIS3.CONTROLS.Data.Query.Query} Сформированный запрос
+          * @member {SBIS3.CONTROLS.Data.Query.Query} Сформированный запрос
           */
          _query: undefined,
 
          /**
-          * @var {Boolean} Запрос был изменен с момента последнего load
+          * @member {Boolean} Запрос был изменен с момента последнего load
           */
          _queryChanged: false
       },

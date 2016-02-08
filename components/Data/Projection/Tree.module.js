@@ -4,8 +4,6 @@ define('js!SBIS3.CONTROLS.Data.Projection.Tree', [
    'js!SBIS3.CONTROLS.Data.Projection.Collection',
    'js!SBIS3.CONTROLS.Data.Projection.TreeEnumerator',
    'js!SBIS3.CONTROLS.Data.Projection.TreeChildren',
-   'js!SBIS3.CONTROLS.Data.Projection.TreeChildrenByItemPropertyStrategy',
-   'js!SBIS3.CONTROLS.Data.Projection.TreeChildrenByParentIdStrategy',
    'js!SBIS3.CONTROLS.Data.Di',
    'js!SBIS3.CONTROLS.Data.Utils',
    'js!SBIS3.CONTROLS.Data.Projection.LoadableTreeItem'
@@ -14,8 +12,6 @@ define('js!SBIS3.CONTROLS.Data.Projection.Tree', [
    CollectionProjection,
    TreeEnumerator,
    TreeChildren,
-   TreeChildrenByItemPropertyStrategy,
-   TreeChildrenByParentIdStrategy,
    Di,
    Utils
 ) {
@@ -29,6 +25,7 @@ define('js!SBIS3.CONTROLS.Data.Projection.Tree', [
     * @public
     * @author Мальцев Алексей
     */
+   //TODO: ordering
 
    var TreeProjection = CollectionProjection.extend([ITreeProjection], /** @lends SBIS3.CONTROLS.Data.Projection.Tree.prototype */{
       _moduleName: 'SBIS3.CONTROLS.Data.Projection.Tree',
@@ -36,17 +33,12 @@ define('js!SBIS3.CONTROLS.Data.Projection.Tree', [
          _itemModule: 'projection.tree-item',
 
          /**
-          * @var {SBIS3.CONTROLS.Data.Projection.TreeItem} Корневой элемент дерева
+          * @member {SBIS3.CONTROLS.Data.Projection.TreeItem} Корневой элемент дерева
           */
          _root: null,
 
          /**
-          * @var {Object} Стратегия получения дочерних элементов узла
-          */
-         _childrenStrategy: null,
-
-         /**
-          * @var {Object.<String, SBIS3.CONTROLS.Data.Projection.Collection>} Соответствие элементов и их дочерних узлов
+          * @member {Object.<String, SBIS3.CONTROLS.Data.Projection.Collection>} Соответствие элементов и их дочерних узлов
           */
          _childrenMap: {}
       },
@@ -56,13 +48,9 @@ define('js!SBIS3.CONTROLS.Data.Projection.Tree', [
             throw new Error('Option "idProperty" is required.');
          }
 
-         if ($ws.helpers.instanceOfMixin(this._options.collection, 'SBIS3.CONTROLS.Data.Collection.ISourceLoadable')) {
+         /*if ($ws.helpers.instanceOfMixin(this._options.collection, 'SBIS3.CONTROLS.Data.Collection.ISourceLoadable')) {
             this._itemModule = 'projection.loadable-tree-item';
-         }
-
-         this._initChildrenStrategy();
-
-         //TODO: filtering, ordering
+         }*/
       },
 
       destroy: function () {
@@ -126,18 +114,24 @@ define('js!SBIS3.CONTROLS.Data.Projection.Tree', [
        * @returns {SBIS3.CONTROLS.Data.Projection.TreeEnumerator}
        */
       getEnumerator: function () {
+         /*if (this._options.childrenProperty) {
+          Enumerator = TreeChildrenByItemPropertyEnumerator;
+         } else {
+          Enumerator = TreeChildrenByParentIdEnumerator;
+         }*/
          return new TreeEnumerator({
-            tree: this
+            itemsMap: this._itemsMap,
+            filterMap: this._filterMap,
+            sortMap: this._sortMap,
+            collection: this._options.collection,
+            idProperty: this._options.idProperty,
+            parentProperty: this._options.parentProperty
          });
       },
 
       //endregion SBIS3.CONTROLS.Data.Collection.IEnumerable
 
       //region SBIS3.CONTROLS.Data.Projection.ICollection
-
-      setFilter: function () {
-         throw new Error('Tree projection doesn\'t support filtering');
-      },
 
       //endregion SBIS3.CONTROLS.Data.Projection.ICollection
 
@@ -157,7 +151,6 @@ define('js!SBIS3.CONTROLS.Data.Projection.Tree', [
 
       setParentProperty: function (name) {
          this._options.parentProperty = name;
-         this._initChildrenStrategy();
       },
 
       getNodeProperty: function () {
@@ -174,12 +167,11 @@ define('js!SBIS3.CONTROLS.Data.Projection.Tree', [
 
       setChildrenProperty: function (name) {
          this._options.childrenProperty = name;
-         this._initChildrenStrategy();
       },
 
       getRoot: function () {
          if (this._root === null) {
-            if (this._options.root && $ws.helpers.instanceOfModule(this._options.root, this._itemModule)) {
+            if (this._options.root && $ws.helpers.instanceOfMixin(this._options.root, 'SBIS3.CONTROLS.Data.Projection.ICollectionItem')) {
                this._root = this._options.root;
             } else {
                var contents = this._options.root;
@@ -201,15 +193,24 @@ define('js!SBIS3.CONTROLS.Data.Projection.Tree', [
 
       getChildren: function (parent) {
          this._checkItem(parent);
+
          var hash = parent.getHash();
          if (!(hash in this._childrenMap)) {
-            this._childrenMap[hash] = new CollectionProjection({
-               collection: new TreeChildren({
-                  owner: parent,
-                  items: this._childrenStrategy.getChildren(parent) || []
-               }),
-               itemModule: this._itemModule,
-               convertToItem: this._childrenStrategy.getItemConverter(parent).bind(this)
+            var children = [],
+               enumerator = this.getEnumerator();
+            enumerator.setCurrent(parent);
+            if (enumerator.getCurrent() === parent || parent.isRoot()) {
+               var item;
+               while ((item = enumerator.getNext())) {
+                  if (item.getParent() === parent) {
+                     children.push(item);
+                  }
+               }
+            }
+
+            this._childrenMap[hash] = new TreeChildren({
+               owner: parent,
+               items: children
             });
          }
 
@@ -266,8 +267,11 @@ define('js!SBIS3.CONTROLS.Data.Projection.Tree', [
             parent;
          if (parentIndex > -1) {
             //FIXME: оптимизировать переиндексацию
-            this._getServiceEnumerator().reIndex();
-            parent = this.at(parentIndex);
+            var enumerator = this._getServiceEnumerator();
+            enumerator.reIndex();
+            parent = enumerator.at(
+               enumerator.getInternalBySource(parentIndex)
+            );
          } else {
             parent = this.getRoot();
          }
@@ -281,30 +285,13 @@ define('js!SBIS3.CONTROLS.Data.Projection.Tree', [
       },
 
       /**
-       * Инициализирует стратегию получения дочерних элементов узла
-       * @protected
-       */
-      _initChildrenStrategy: function() {
-         var Strategy;
-         if (this._options.childrenProperty) {
-            Strategy = TreeChildrenByItemPropertyStrategy;
-         } else {
-            Strategy = TreeChildrenByParentIdStrategy;
-         }
-         this._childrenStrategy = new Strategy({
-            source: this.getCollection(),
-            settings: this._options
-         });
-      },
-
-      /**
        * Проверяет валидность элемента коллекции
        * @param {*} item Элемент коллекции
        * @protected
        */
       _checkItem: function (item) {
-         if (!item && !$ws.helpers.instanceOfModule(item, this._itemModule)) {
-            throw new Error('Item should be an instance of ' + this._itemModule);
+         if (!item && !$ws.helpers.instanceOfMixin(item, 'SBIS3.CONTROLS.Data.Projection.ICollectionItem')) {
+            throw new Error('Item should implement SBIS3.CONTROLS.Data.Projection.ICollectionItem');
          }
       }
 

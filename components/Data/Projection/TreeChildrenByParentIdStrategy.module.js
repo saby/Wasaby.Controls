@@ -5,8 +5,7 @@ define('js!SBIS3.CONTROLS.Data.Projection.TreeChildrenByParentIdStrategy', [
 ], function (ITreeChildrenStrategy, Utils) {
    'use strict';
 
-
-      /**
+   /**
     * Стратегия получения дочерних элементов по идентификатору родителя
     * @class SBIS3.CONTROLS.Data.Projection.TreeChildrenByParentIdStrategy
     * @mixes SBIS3.CONTROLS.Data.Projection.ITreeChildrenStrategy

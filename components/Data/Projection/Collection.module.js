@@ -413,8 +413,7 @@ define('js!SBIS3.CONTROLS.Data.Projection.Collection', [
             index = -1,
             item;
          while ((item = enumerator.getNext())) {
-            index++;
-            this._itemsMap.push(this._convertToItem(item));
+            this._itemsMap.push(this._convertToItem(item, index++));
             this._filterMap.push(true);
          }
 
@@ -466,7 +465,7 @@ define('js!SBIS3.CONTROLS.Data.Projection.Collection', [
                      );
                   }
                   this._filterMap[index] = match;
-                  this._getServiceEnumerator().reIndex();
+                  enumerator.reIndex();
                }
             }
          }
@@ -637,8 +636,8 @@ define('js!SBIS3.CONTROLS.Data.Projection.Collection', [
       _addItems: function (start, items) {
          var isFalseMirror = this._isFalseMirror();
          Array.prototype.splice.apply(this._itemsMap, [start, 0].concat(
-            $ws.helpers.map(items, (function(item) {
-               return this._convertToItem(item);
+            $ws.helpers.map(items, (function(item, index) {
+               return this._convertToItem(item, start + index);
             }), this)
          ));
          Array.prototype.splice.apply(this._filterMap, [start, 0].concat($ws.helpers.map(items, function() {
@@ -695,8 +694,8 @@ define('js!SBIS3.CONTROLS.Data.Projection.Collection', [
       _getItemsProjection: function (items, start, newContainers) {
          if (!this._isFalseMirror()) {
             if (newContainers) {
-               return $ws.helpers.map(items, (function(item) {
-                  return this._convertToItem(item);
+               return $ws.helpers.map(items, (function(item, index) {
+                  return this._convertToItem(item, start + index);
                }), this);
             } else {
                return this._itemsMap.slice(start, start + items.length);
@@ -711,7 +710,7 @@ define('js!SBIS3.CONTROLS.Data.Projection.Collection', [
             itemIndex = this._isSorted() ? this._sortMap[index] : index;
             if (!this._isFiltered() || this._filterMap[index]) {
                if (newContainers) {
-                  result.push(this._convertToItem(items[i]));
+                  result.push(this._convertToItem(items[i], index));
                } else {
                   result.push(this._itemsMap[itemIndex]);
                }
