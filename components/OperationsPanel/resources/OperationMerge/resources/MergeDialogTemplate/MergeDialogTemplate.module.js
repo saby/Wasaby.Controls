@@ -38,6 +38,7 @@ define('js!SBIS3.CONTROLS.MergeDialogTemplate', [
                  * @cfg {String} Сообщение с предупреждением
                  */
                 warning: rk('Внимание! Операция необратима'),
+                errorMessage: 'Итоги операции: "Объединения"',
                 testMergeMethodName: undefined,
                 queryMethodName: undefined,
                 dataSource: undefined,
@@ -107,7 +108,22 @@ define('js!SBIS3.CONTROLS.MergeDialogTemplate', [
                 mergeTo = this._treeView.getSelectedKey(),
                 mergeKeys = this._getMergedKeys(mergeTo, true);
             this._showIndicator();
-            this._options.dataSource.merge(mergeTo, mergeKeys).addBoth(function() {
+            this._options.dataSource.merge(mergeTo, mergeKeys).addErrback(function(errors) {
+                var
+                    errorsTexts = [],
+                    count = mergeKeys.length,
+                    errorsRecordSet = errors.addinfo;
+                //TODO: переделать на создание recordSet
+                $ws.helpers.forEach(errorsRecordSet.d, function(item) {
+                    errorsTexts.push(item[1]);
+                });
+                $ws.helpers.openErrorsReportDialog({
+                    'numSelected': count,
+                    'numSuccess': count - errorsRecordSet.d.length,
+                    'errors': errorsTexts,
+                    'title': self._options.errorMessage
+                });
+            }).addBoth(function() {
                 self.sendCommand('close', { mergeTo: mergeTo, mergeKeys: mergeKeys });
                 self._hideIndicator();
             });
