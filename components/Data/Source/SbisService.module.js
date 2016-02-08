@@ -158,11 +158,17 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
          cfg = cfg || {};
          if ('strategy' in cfg && !('adapter' in cfg)) {
             this._options.adapter = cfg.strategy;
-            $ws.single.ioc.resolve('ILogger').log('SBIS3.CONTROLS.Data.Collection.RecordSet', 'option "strategy" is deprecated and will be removed in 3.7.4. Use "adapter" instead.');
+            $ws.single.ioc.resolve('ILogger').log('SBIS3.CONTROLS.Data.Source.SbisService', 'option "strategy" is deprecated and will be removed in 3.7.4. Use "adapter" instead.');
          }
          if ('keyField' in cfg && !('idProperty' in cfg)) {
             this._options.idProperty = cfg.keyField;
-            $ws.single.ioc.resolve('ILogger').log('SBIS3.CONTROLS.Data.Collection.RecordSet', 'option "keyField" is deprecated and will be removed in 3.7.4. Use "idProperty" instead.');
+            $ws.single.ioc.resolve('ILogger').log('SBIS3.CONTROLS.Data.Source.SbisService', 'option "keyField" is deprecated and will be removed in 3.7.4. Use "idProperty" instead.');
+         }
+         //FIXME: сейчас опция service от Remote пересекается со старыми source-ами, но т.к. Костя все равно хочет по другому назвать, то пока оставляем режим совместимости
+         if ('service' in cfg && !('resource' in cfg)) {
+            this._options.resource = cfg.service;
+            this._options.service = '';
+            $ws.single.ioc.resolve('ILogger').log('SBIS3.CONTROLS.Data.Source.SbisService', 'option "service" is deprecated and will be removed in 3.7.4. Use "resource" instead.');
          }
          if (this._options.resource && typeof this._options.resource === 'object') {
             this._options.service = this._options.resource.serviceUrl || '';

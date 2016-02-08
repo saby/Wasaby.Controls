@@ -118,12 +118,14 @@ define('js!SBIS3.CONTROLS.OperationsPanel', [
             this.reload();
          }
          if (this.isVisible() !== show) {
-            this._container.removeClass('ws-hidden');
+            this._isVisible = show;
+            show && this._container.removeClass('ws-hidden');
             this._blocks.wrapper.animate({'margin-top': show ? 0 : '-30px'}, {
                duration: 150,
                easing: 'linear',
+               queue: false,
                complete: function () {
-                  OperationsPanel.superclass._setVisibility.apply(self, [show]);
+                  self._container.toggleClass('ws-hidden', !show);
                   self._notify('onToggle');
                }
             });
@@ -161,7 +163,7 @@ define('js!SBIS3.CONTROLS.OperationsPanel', [
         */
       setEnabled: function(enabled) {
          if (!enabled) {
-            this.close();
+            this.hide();
          }
          OperationsPanel.superclass.setEnabled.apply(this, arguments);
          this._notify('onChangeEnabled');
@@ -171,20 +173,24 @@ define('js!SBIS3.CONTROLS.OperationsPanel', [
        * @returns {Array}
        */
       getItemInstances: function() {
-         var args = arguments;
-         return this.reload().addCallback(function() {
-            return OperationsPanel.superclass.getItemInstances.apply(this, args);
-         }.bind(this));
+         return OperationsPanel.superclass.getItemInstances.apply(this, arguments);
       },
       getItemInstance: function() {
-         var args = arguments;
-         return this.reload().addCallback(function() {
-            return OperationsPanel.superclass.getItemInstance.apply(this, args);
-         }.bind(this));
+         return OperationsPanel.superclass.getItemInstance.apply(this, arguments);
       },
       onSelectedItemsChange: function(idArray) {
          this._blocks.wrapper.toggleClass('controls-operationsPanel__massMode', !idArray.length)
                              .toggleClass('controls-operationsPanel__selectionMode', !!idArray.length);
+      },
+      //TODO: методя для совместимости в .30 версии. В .100 избавиться!
+      isOpen: function() {
+         return this.isVisible();
+      },
+      open: function() {
+         this.show();
+      },
+      close: function() {
+         this.hide();
       },
       destroy: function() {
          this._blocks = null;

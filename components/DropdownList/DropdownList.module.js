@@ -74,7 +74,7 @@ define('js!SBIS3.CONTROLS.DropdownList',
                 */
                showSelectedInList : false,
                pickerClassName: 'controls-DropdownList__picker',
-               allowEmptySelection: false
+               allowEmptyMultiSelection: false
             },
             _dotTplFn: dotTplFn,
             _text: null,

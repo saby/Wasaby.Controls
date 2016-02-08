@@ -12,7 +12,7 @@ define('js!SBIS3.CONTROLS.ListView',
       'js!SBIS3.CONTROLS.DataBindMixin',
       'js!SBIS3.CONTROLS.DecorableMixin',
       'js!SBIS3.CONTROLS.DragNDropMixin',
-      'js!SBIS3.CONTROLS.ItemActionsGroup',
+      'js!SBIS3.CONTROLS.ItemsToolbar',
       'js!SBIS3.CORE.MarkupTransformer',
       'html!SBIS3.CONTROLS.ListView',
       'js!SBIS3.CONTROLS.Utils.TemplateUtil',
@@ -29,14 +29,13 @@ define('js!SBIS3.CONTROLS.ListView',
       'browser!js!SBIS3.CONTROLS.ListView/resources/SwipeHandlers'
    ],
    function (CompoundControl, CompoundActiveFixMixin, DSMixin, MultiSelectable,
-             Selectable, DataBindMixin, DecorableMixin, DragNDropMixin, ItemActionsGroup, MarkupTransformer, dotTplFn,
+             Selectable, DataBindMixin, DecorableMixin, DragNDropMixin, ItemsToolbar, MarkupTransformer, dotTplFn,
              TemplateUtil, CommonHandlers, MoveHandlers, Pager, EditInPlaceHoverController, EditInPlaceClickController,
              Link, ScrollWatcher, rk,  groupByTpl, emptyDataTpl) {
 
       'use strict';
 
       var
-         ITEMS_ACTIONS_HEIGHT = 20,
          DRAG_AVATAR_OFFSET = 5,
          START_NEXT_LOAD_OFFSET = 180;
 
@@ -152,6 +151,11 @@ define('js!SBIS3.CONTROLS.ListView',
           * </ol>
           */
          /**
+          * @event onAfterBeginEdit Возникает после начала редактирования (при непосредственном его начале)
+          * @param {$ws.proto.EventObject} eventObject Дескриптор события.
+          * @param {Object} model Редактируемая модель
+          */
+         /**
           * @event onEndEdit Возникает перед окончанием редактирования (и перед валидацией области редактирования)
           * @param {$ws.proto.EventObject} eventObject Дескриптор события.
           * @param {Object} model Редактируемая модель
@@ -199,7 +203,7 @@ define('js!SBIS3.CONTROLS.ListView',
                $ws._const.key.m,
                $ws._const.key.o
             ],
-            _itemActionsGroup: null,
+            _itemsToolbar: null,
             _editingItem: {
                target: null,
                model: null
@@ -368,11 +372,14 @@ define('js!SBIS3.CONTROLS.ListView',
                 * @cfg {String} Режим редактирования по месту
                 * @variant "" Редактирование по месту отлючено
                 * @variant click Отображение редактирования по клику
-                * @variant click|autoadd Отображение редактирования по клику и включение режима автоматического добавления
                 * @variant hover Отображение редактирования по наведению мыши
-                * @variant hover|autoadd Отображение редактирования по наведению мыши и включение режима автоматического добавления
+                * @variant autoadd Включение режима автоматического добавления
+                * @variant toolbar Отображение панели инструментов при входе в режим редактирования записи
                 * @remark
-                * Режим автоматического добавления позволяет при завершении редактирования последнего элемента автоматически создавать новый
+                * Режим автоматического добавления позволяет при завершении редактирования последнего элемента автоматически создавать новый.
+                * Режимы можно группировать и таким образом получать совмещенное поведение, например:
+                *     <opt name="editMode">click|toolbar</opt>
+                * задает редактирование по клику и отображает панель инструментов при входе в режим редактирования записи.
                 * @example
                 * <pre>
                 *     <opt name="editMode">click</opt>
@@ -418,7 +425,9 @@ define('js!SBIS3.CONTROLS.ListView',
          },
 
          $constructor: function () {
-            this._publish('onChangeHoveredItem', 'onItemClick', 'onItemActivate', 'onDataMerge', 'onItemValueChanged', 'onBeginEdit', 'onEndEdit', 'onBeginAdd', 'onAfterEndEdit', 'onPrepareFilterOnMove');
+            //TODO временно смотрим на TopParent, чтобы понять, где скролл. С внедрением ScrallWatcher этот функционал уберем
+            var topParent = this.getTopParent();
+            this._publish('onChangeHoveredItem', 'onItemClick', 'onItemActivate', 'onDataMerge', 'onItemValueChanged', 'onBeginEdit', 'onAfterBeginEdit', 'onEndEdit', 'onBeginAdd', 'onAfterEndEdit', 'onPrepareFilterOnMove');
             this._container.on('mousemove', this._mouseMoveHandler.bind(this))
                            .on('mouseleave', this._mouseLeaveHandler.bind(this));
 
@@ -445,10 +454,10 @@ define('js!SBIS3.CONTROLS.ListView',
             this.reload();
             this._touchSupport = $ws._const.browser.isMobilePlatform;
             if (this._touchSupport){
-            	this._getItemActionsContainer().addClass('controls-ItemsActions__touch-actions');
-            	this._container.bind('swipe', this._swipeHandler.bind(this))
-                               .bind('tap', this._tapHandler.bind(this))
-                               .bind('touchmove',this._mouseMoveHandler.bind(this));
+            	this._getItemsContainer()
+                  .bind('swipe', this._swipeHandler.bind(this))
+                  .bind('tap', this._tapHandler.bind(this))
+                  .bind('touchmove',this._mouseMoveHandler.bind(this));
             }
          },
          _modifyOptions : function(opts){
@@ -574,7 +583,7 @@ define('js!SBIS3.CONTROLS.ListView',
          /**
           *
           * @param id - идентификатор элемента
-          * @param isNext - если true вернет следующий элемент, пердыдущий
+          * @param isNext - если true вернет следующий элемент, false - предыдущий, undefined - текущий
           * @returns {jQuery}
           * @private
           */
@@ -590,13 +599,15 @@ define('js!SBIS3.CONTROLS.ListView',
                   siblingItem = items.eq(index + 1);
                }
             }
-            else {
+            else if (isNext === false) {
                if (index > 0) {
                   siblingItem = items.eq(index - 1);
                }
+            } else {
+               siblingItem = items.eq(index);
             }
             if (siblingItem)
-               return this._dataSet.getRecordByKey(siblingItem.data('id')) ? siblingItem : this._getHtmlItem(siblingItem.data('id'), isNext);
+               return this._dataSet.getRecordByKey(siblingItem.data('id')) ? siblingItem : this._getHtmlItemByDOM(siblingItem.data('id'), isNext);
             else
                return undefined;
          },
@@ -631,16 +642,11 @@ define('js!SBIS3.CONTROLS.ListView',
 
             if (target.length) {
                targetKey = target[0].getAttribute('data-id');
-               hoveredItem = this.getHoveredItem();
-               if (targetKey !== undefined && hoveredItem.key !== targetKey) {
-                  this._clearHoveredItem();
-                  this._setHoveredItem(hoveredItem = this._getElementData(target));
-
-                  /* Надо делать клон и отдавать наружу только клон объекта, иначе,
-                     если его кто-то испортит, испортится он у всех, в том числе и у нас */
-                  hoveredItemClone = $ws.core.clone(hoveredItem);
-                  this._notify('onChangeHoveredItem', hoveredItemClone);
-                  this._onChangeHoveredItem(hoveredItemClone);
+               if (targetKey !== undefined && this._hoveredItem.key !== targetKey) {
+                  this._hoveredItem.container && this._hoveredItem.container.removeClass('controls-ListView__hoveredItem');
+                  target.addClass('controls-ListView__hoveredItem');
+                  this._hoveredItem = this._getElementData(target);
+                  this._notifyOnChangeHoveredItem();
                }
             } else if (!this._isHoverControl($target)) {
                this._mouseLeaveHandler();
@@ -675,6 +681,14 @@ define('js!SBIS3.CONTROLS.ListView',
             }
          },
 
+         _notifyOnChangeHoveredItem: function() {
+            /* Надо делать клон и отдавать наружу только клон объекта, иначе,
+               если его кто-то испортит, испортится он у всех, в том числе и у нас */
+            var hoveredItemClone = $ws.core.clone(this._hoveredItem);
+            this._notify('onChangeHoveredItem', hoveredItemClone);
+            this._onChangeHoveredItem(hoveredItemClone);
+         },
+
          /**
           * Проверяет, относится ли переданный элемент,
           * к контролам которые отображаются по ховеру.
@@ -683,9 +697,8 @@ define('js!SBIS3.CONTROLS.ListView',
           * @private
           */
          _isHoverControl: function ($target) {
-            var itemsActions = this.getItemsActions(),
-                itemsActionsContainer = itemsActions && itemsActions.getContainer();
-            return itemsActionsContainer && (itemsActionsContainer[0] === $target[0] || $.contains(itemsActionsContainer[0], $target[0]) || itemsActions.isItemActionsMenuVisible());
+            var itemsToolbarContainer = this._itemsToolbar && this._itemsToolbar.getContainer();
+            return itemsToolbarContainer && (itemsToolbarContainer[0] === $target[0] || $.contains(itemsToolbarContainer[0], $target[0]));
          },
          /**
           * Обрабатывает уведение мышки с элемента представления
@@ -708,11 +721,11 @@ define('js!SBIS3.CONTROLS.ListView',
           * @private
           */
          _onChangeHoveredItem: function (target) {
-            if (this._options.itemsActions.length) {
+            if (this._isSupportedItemsToolbar()) {
          		if (target.container && !this._touchSupport){
-                  this._showItemActions(target);
+                  this._showItemsToolbar(target);
                } else {
-                  this._hideItemActions();
+                  this._hideItemsToolbar();
                }
             }
          },
@@ -806,7 +819,10 @@ define('js!SBIS3.CONTROLS.ListView',
             if (!id) {
                var items = this.getItems();
                if (items) {
-                  selId = items.at(index).getId()
+                  var selItem = items.at(index);
+                  if (selItem) {
+                     selId = selItem.getId();
+                  }
                }
             }
             else {
@@ -832,7 +848,7 @@ define('js!SBIS3.CONTROLS.ListView',
             this._reloadInfiniteScrollParams();
             this._previousGroupBy = undefined;
             this._firstScrollTop = true;
-            this._hideItemActions();
+            this._hideItemsToolbar();
             this._destroyEditInPlace();
             return ListView.superclass.reload.apply(this, arguments);
          },
@@ -873,8 +889,8 @@ define('js!SBIS3.CONTROLS.ListView',
             var handler = this._notifyOnItemClick;
             return function() {
                var args = arguments;
-               if (this._editInPlace) {
-                  this._editInPlace.endEdit(true).addCallback(function() {
+               if (this._hasEditInPlace()) {
+                  this._getEditInPlace().endEdit(true).addCallback(function() {
                      handler.apply(this, args)
                   }.bind(this));
                } else {
@@ -883,17 +899,17 @@ define('js!SBIS3.CONTROLS.ListView',
             }
          },
          setEditMode: function(editMode) {
-            if (editMode !== this._options.editMode && (editMode === '' || editMode === 'click' || editMode === 'hover')) {
-               if (this._options.editMode === 'click') {
+            if (editMode ==='' || editMode !== this._options.editMode) {
+               if (this._options.editMode.indexOf('click') !== -1) {
                   this.unsubscribe('onItemClick', this._onItemClickHandler);
-               } else if (this._options.editMode === 'hover') {
+               } else if (this._options.editMode.indexOf('hover') !== -1) {
                   this.unsubscribe('onChangeHoveredItem', this._onChangeHoveredItemHandler);
                }
                this._destroyEditInPlace();
                this._options.editMode = editMode;
-               if (this._options.editMode === 'click') {
+               if (this._options.editMode.indexOf('click') !== -1) {
                   this.subscribe('onItemClick', this._onItemClickHandler);
-               } else if (this._options.editMode === 'hover') {
+               } else if (this._options.editMode.indexOf('hover') !== -1) {
                   this.subscribe('onChangeHoveredItem', this._onChangeHoveredItemHandler);
                }
             }
@@ -931,26 +947,29 @@ define('js!SBIS3.CONTROLS.ListView',
           * @private
           */
          _getEditInPlace: function() {
-            if (!this._editInPlace) {
+            if (!this._hasEditInPlace()) {
                this._createEditInPlace();
             }
             return this._editInPlace;
          },
 
+         _hasEditInPlace: function() {
+            return !!this._editInPlace;
+         },
+
          _createEditInPlace: function() {
             var
-               hoverMode = !$ws._const.isMobilePlatform && (this._options.editMode === 'hover|autoadd' || this._options.editMode === 'hover'),
+               hoverMode = !this._touchSupport && (this._options.editMode.indexOf('hover') !== -1),
                controller = hoverMode ? EditInPlaceHoverController : EditInPlaceClickController;
             this._editInPlace = new controller(this._getEditInPlaceConfig(hoverMode));
          },
 
          _destroyEditInPlace: function() {
-            if (this._editInPlace) {
+            if (this._hasEditInPlace()) {
                this._editInPlace.destroy();
                this._editInPlace = null;
             }
          },
-
          _getEditInPlaceConfig: function(hoverMode) {
             //todo Герасимов, Сухоручкин: для hover-режима надо передать в опции метод
             //options.editFieldFocusHandler = this._editFieldFocusHandler.bind(this) - подумать, как это сделать
@@ -965,13 +984,24 @@ define('js!SBIS3.CONTROLS.ListView',
                   itemsContainer: this._getItemsContainer(),
                   element: $('<div>'),
                   opener: this,
-                  modeAutoAdd: this._options.editMode === 'click|autoadd' || this._options.editMode === 'hover|autoadd',
+                  modeAutoAdd: this._options.editMode.indexOf('autoadd') !== -1,
                   handlers: {
                      onItemValueChanged: function(event, difference, model) {
                         event.setResult(this._notify('onItemValueChanged', difference, model));
                      }.bind(this),
                      onBeginEdit: function(event, model) {
                         event.setResult(this._notify('onBeginEdit', model));
+                     }.bind(this),
+                     onAfterBeginEdit: function(event, model) {
+                        if (this._options.editMode.indexOf('toolbar') !== -1) {
+                           this._getItemsToolbar().unlockToolbar();
+                           //Отображаем кнопки редактирования
+                           this._getItemsToolbar().showEditActions();
+                           //Отображаем itemsToolbar для редактируемого элемента и фиксируем его
+                           this._showItemsToolbar(this._getElementData(this._editingItem.target));
+                           this._getItemsToolbar().lockToolbar();
+                        }
+                        event.setResult(this._notify('onAfterBeginEdit', model));
                      }.bind(this),
                      onBeginAdd: function(event, options) {
                         event.setResult(this._notify('onBeginAdd', options));
@@ -983,6 +1013,12 @@ define('js!SBIS3.CONTROLS.ListView',
                         if (withSaving) {
                            target.attr('data-id', model.getKey());
                            this.redrawItem(model);
+                        }
+                        if (this._options.editMode.indexOf('toolbar') !== -1) {
+                           //Скрываем кнопки редактирования
+                           this._getItemsToolbar().unlockToolbar();
+                           this._getItemsToolbar().hideEditActions();
+                           this._hideItemsToolbar();
                         }
                         event.setResult(this._notify('onAfterEndEdit', model, target, withSaving));
                      }.bind(this)
@@ -1000,16 +1036,19 @@ define('js!SBIS3.CONTROLS.ListView',
          //********************************//
          //   БЛОК ОПЕРАЦИЙ НАД ЗАПИСЬЮ    //
          //*******************************//
-
+         _isSupportedItemsToolbar: function() {
+            return this._options.itemsActions.length || this._options.editMode.indexOf('toolbar') !== -1;
+         },
          _swipeHandler: function(e){
-            var target = this._findItemByElement($(e.target)),
+            var
+               target = this._findItemByElement($(e.target)),
                item = this._getElementData(target);
-            if (this._options.itemsActions.length) {
-               if (e.direction == 'left'){
-            		item.container ? this._showItemActions(item) : this._hideItemActions();
-                  this._setHoveredItem(item)
+            if (this._isSupportedItemsToolbar()) {
+               if (e.direction == 'left') {
+            		item.container ? this._showItemsToolbar(item) : this._hideItemsToolbar();
+                  this._hoveredItem = item;
                } else {
-                  this._hideItemActions(true);
+                  this._hideItemsToolbar();
                }
             }
          },
@@ -1037,76 +1076,25 @@ define('js!SBIS3.CONTROLS.ListView',
           * Показывает оперцаии над записью для элемента
           * @private
           */
-         _showItemActions: function (item) {
-            //Если происходит перемещение записей, не нужно показывать операции над записями
-            if (this._isShifted) {
-               return;
-            }
-            //Создадим операции над записью, если их нет
-            var itemsActions = this.getItemsActions();
-            itemsActions.applyItemActions();
-
-            //Если показывается меню, то не надо позиционировать операции над записью
-            if (itemsActions.isItemActionsMenuVisible()) {
-               return;
-            }
-            itemsActions.showItemActions(item, this._getItemActionsPosition(item));
-            if (this._touchSupport){
-               this._trackMove = $ws.helpers.trackElement(item.container, true);
-               this._trackMove.subscribe('onMove', this._moveItemActions, this);
+         _showItemsToolbar: function(target) {
+            this._getItemsToolbar().show(target, this._touchSupport);
+         },
+         _hideItemsToolbar: function (animate) {
+            if (this._itemsToolbar) {
+               this._itemsToolbar.hide(animate);
             }
          },
-         _hideItemActions: function (animate) {
-            var itemsActions = this.getItemsActions();
-            if (itemsActions && !itemsActions.isItemActionsMenuVisible()) {
-               itemsActions.hideItemActions(animate);
+         _getItemsToolbar: function() {
+            if (!this._itemsToolbar) {
+               this._itemsToolbar = new ItemsToolbar({
+                  element: $('<div class="controls-ListView__ItemsToolbar-container"/>').appendTo(this.getContainer()),
+                  parent: this,
+                  touchMode: this._touchSupport,
+                  itemsActions: this._options.itemsActions,
+                  showEditActions: this._options.editMode.indexOf('toolbar') !== -1
+               });
             }
-            if (this._trackMove) {
-               this._trackMove.unsubscribe('onMove', this._moveItemActions);
-               this._trackMove = null;
-            }
-         },
-         _moveItemActions: function(event, offset){
-            this._getItemActionsContainer()[0].style.top = offset.top - this._container.offset().top + 'px';
-         },
-         _getItemActionsPosition: function (item) {
-            var cfg = {
-               top : item.position.top + ((item.size.height > ITEMS_ACTIONS_HEIGHT) ? item.size.height - ITEMS_ACTIONS_HEIGHT : 0 ),
-               right : this._container[0].offsetWidth - (item.position.left + item.size.width)
-            };
-            if (this._touchSupport){
-               cfg.top = item.position.top;
-            }
-            return cfg;
-         },
-         /**
-          * Создаёт операции над записью
-          * @private
-          */
-         _drawItemActions: function () {
-            return new ItemActionsGroup({
-               items: this._options.itemsActions,
-               element: this._getItemActionsContainer(),
-               keyField: 'name',
-               parent: this
-            });
-         },
-         /**
-          * Возвращает контейнер для операций над записью
-          * @returns {*}
-          * @private
-          */
-         _getItemActionsContainer: function() {
-            var actionsContainer = this._container.find('> .controls-ListView__itemActions-container');
-
-            return actionsContainer.length ? actionsContainer : $('<div class="controls-ListView__itemActions-container"/>').appendTo(this._container);
-         },
-         /**
-          * Инициализирует операции над записью
-          * @private
-          */
-         _initItemsActions: function () {
-            this._itemActionsGroup = this._drawItemActions();
+            return this._itemsToolbar;
          },
          /**
           * Метод получения операций над записью.
@@ -1126,26 +1114,23 @@ define('js!SBIS3.CONTROLS.ListView',
           *     });
           * </pre>
           * @see itemsActions
-          * @see setItemActions
+          * @see setItemsActions
           */
          getItemsActions: function () {
-            if (!this._itemActionsGroup && this._options.itemsActions.length) {
-               this._initItemsActions();
-            }
-            return this._itemActionsGroup;
+            return this._getItemsToolbar().getItemsActions();
          },
          /**
           * Метод установки или замены кнопок операций над записью, заданных в опции {@link itemsActions}
           * @remark
           * В метод нужно передать массив обьектов.
-          * @param {Array} items Объект формата {name: ..., icon: ..., caption: ..., onActivated: ..., isMainOption: ...}
-          * @param {String} items.name Имя кнопки операции над записью.
-          * @param {String} items.icon Иконка кнопки.
-          * @param {String} items.caption Текст на кнопке.
-          * @param {String} items.onActivated Обработчик клика по кнопке.
-          * @param {String} items.tooltip Всплывающая подсказка.
-          * @param {String} items.title Текст кнопки в выпадающем меню.
-          * @param {String} items.isMainOption На строке ли кнопка (или в меню).
+          * @param {Array} itemsActions Объект формата {name: ..., icon: ..., caption: ..., onActivated: ..., isMainOption: ...}
+          * @param {String} itemsActions.name Имя кнопки операции над записью.
+          * @param {String} itemsActions.icon Иконка кнопки.
+          * @param {String} itemsActions.caption Текст на кнопке.
+          * @param {String} itemsActions.onActivated Обработчик клика по кнопке.
+          * @param {String} itemsActions.tooltip Всплывающая подсказка.
+          * @param {String} itemsActions.title Текст кнопки в выпадающем меню.
+          * @param {String} itemsActions.isMainOption На строке ли кнопка (или в меню).
           * @example
           * <pre>
           *     DataGridView.setItemsActions([{
@@ -1171,9 +1156,12 @@ define('js!SBIS3.CONTROLS.ListView',
           * @see getItemsActions
           * @see getHoveredItem
           */
-         setItemsActions: function (items) {
-            this._options.itemsActions = items;
-            this._itemActionsGroup ? this._itemActionsGroup.setItems(items) : this._initItemsActions();
+         setItemsActions: function (itemsActions) {
+            this._options.itemsActions = itemsActions;
+            this._getItemsToolbar().setItemsActions(this._options.itemsActions);
+            if(this.getHoveredItem().container) {
+               this._notifyOnChangeHoveredItem()
+            }
          },
          //**********************************//
          //КОНЕЦ БЛОКА ОПЕРАЦИЙ НАД ЗАПИСЬЮ //
@@ -1395,7 +1383,7 @@ define('js!SBIS3.CONTROLS.ListView',
           *     })
           * </pre>
           * @see itemsActions
-          * @see getItemActions
+          * @see getItemsActions
           */
          getHoveredItem: function () {
             return this._hoveredItem;
