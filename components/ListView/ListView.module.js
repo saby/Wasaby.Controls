@@ -1040,9 +1040,9 @@ define('js!SBIS3.CONTROLS.ListView',
          _showItemsToolbar: function(target) {
             this._getItemsToolbar().show(target, this._touchSupport);
          },
-         _hideItemsToolbar: function (animate) {
+         _hideItemsToolbar: function () {
             if (this._itemsToolbar) {
-               this._itemsToolbar.hide(animate);
+               this._itemsToolbar.hide(this._touchSupport);
             }
          },
          _getItemsToolbar: function() {
