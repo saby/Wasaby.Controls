@@ -160,15 +160,24 @@ define('js!SBIS3.CONTROLS.FastDataFilter',
             //TODO Во-первых этого здесь бюыть не должно, но привязки не завелись из-за того, что dropDown не смог связаться по контексту и выставить свое значение
             //TODO во-вторых возможнны проблемы с value array||number. Пока обратим внимание на instances.second._options.multiselect
             var instances = this.getItemsInstances();
-            for (var i in instances) {
-               if (instances.hasOwnProperty(i)){
-                  var fsObject = this._filterStructure[this._getFilterSctructureItemIndex(i)],
-                        value = (fsObject.hasOwnProperty('value') && fsObject.value !== undefined) ?  instances[i]._options.multiselect ?  fsObject.value : [fsObject.value]: [instances[i].getDefaultId()];
-                  if (!this._isSimilarArrays(instances[i].getSelectedKeys(), value)) {
-                     instances[i].setSelectedKeys(value);
+            //Если компоненты еще не построились, подождем когда они будут готовы, чтобы поставить в соответсвие с фильтром
+            if (Object.isEmpty(instances)) {
+               this.once('onDrawItems', this._setSelectionToItemsInstances.bind(this));
+            } else {
+               this._setSelectionToItemsInstances();
+            }
+         },
+         _setSelectionToItemsInstances : function(){
+            var instances = this.getItemsInstances();
+               for (var i in instances) {
+                  if (instances.hasOwnProperty(i)){
+                     var fsObject = this._filterStructure[this._getFilterSctructureItemIndex(i)],
+                           value = (fsObject.hasOwnProperty('value') && fsObject.value !== undefined) ?  instances[i]._options.multiselect ?  fsObject.value : [fsObject.value]: [instances[i].getDefaultId()];
+                     if (!this._isSimilarArrays(instances[i].getSelectedKeys(), value)) {
+                        instances[i].setSelectedKeys(value);
+                     }
                   }
                }
-            }
          },
          //TODO это дублЬ! нужно вынести в хелпер!!!
          _isSimilarArrays : function(arr1, arr2){
