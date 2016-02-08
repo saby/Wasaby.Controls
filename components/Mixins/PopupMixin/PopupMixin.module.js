@@ -233,6 +233,10 @@ define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManag
 
                this._notifyOnAlignmentChange();
 
+               if (this._fixed){
+                  offset.left -= this._targetSizes.offset.left - this._targetSizes.boundingClientRect.left;
+               }
+
                this._container.css({
                   'top': offset.top + 'px',
                   'left': offset.left + 'px'
@@ -419,6 +423,7 @@ define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManag
             //сравнение boundingClientRect и offset позволяет увидеть лежит ли таргет в фиксированном контейнере (может быть где-то выше)
             if (this._targetSizes.boundingClientRect.top != this._targetSizes.offset.top) { //таргет в фиксированном контейнере
                this._targetSizes.offset.top = this._targetSizes.boundingClientRect.top;
+               this._fixed = true;
                this._container.css('position', 'fixed'); //фиксируем выпадающую часть, если таргет был зафиксирован
             }
          }
