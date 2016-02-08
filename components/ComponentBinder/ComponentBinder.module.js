@@ -299,7 +299,7 @@ define('js!SBIS3.CONTROLS.ComponentBinder', [], function () {
                self._currentRoot = hier[0];
                self._path = hier.reverse();
             } else {
-               if (id === null){
+               if (id === view._options.root){
                    self._currentRoot = null;
                    self._path = [];
                }
@@ -324,7 +324,6 @@ define('js!SBIS3.CONTROLS.ComponentBinder', [], function () {
                }
             }
 
-            breadCrumbs._toggleHomeIcon(!self._currentRoot);
             breadCrumbs.setItems(self._path);
             backButton.setCaption(self._currentRoot ? $ws.helpers.escapeHtml(self._currentRoot.title) : '');
          });
