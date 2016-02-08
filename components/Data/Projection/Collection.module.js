@@ -1,13 +1,14 @@
 /* global define, require, $ws */
 define('js!SBIS3.CONTROLS.Data.Projection.Collection', [
    'js!SBIS3.CONTROLS.Data.Collection.IEnumerable',
+   'js!SBIS3.CONTROLS.Data.Collection.IList',
    'js!SBIS3.CONTROLS.Data.Projection.ICollection',
    'js!SBIS3.CONTROLS.Data.Bind.ICollectionProjection',
    'js!SBIS3.CONTROLS.Data.Projection.CollectionEnumerator',
    'js!SBIS3.CONTROLS.Data.Projection.Projection',
    'js!SBIS3.CONTROLS.Data.Di',
    'js!SBIS3.CONTROLS.Data.Projection.CollectionItem'
-], function (IEnumerable, ICollectionProjection, IBindCollectionProjection, CollectionProjectionEnumerator, Projection, Di) {
+], function (IEnumerable, IList, ICollectionProjection, IBindCollectionProjection, CollectionProjectionEnumerator, Projection, Di) {
    'use strict';
 
    /**
@@ -15,6 +16,7 @@ define('js!SBIS3.CONTROLS.Data.Projection.Collection', [
     * @class SBIS3.CONTROLS.Data.Projection.Collection
     * @extends SBIS3.CONTROLS.Data.Projection.Projection
     * @mixes SBIS3.CONTROLS.Data.Collection.IEnumerable
+    * @mixes SBIS3.CONTROLS.Data.Collection.IList
     * @mixes SBIS3.CONTROLS.Data.Projection.ICollection
     * @mixes SBIS3.CONTROLS.Data.Bind.ICollectionProjection
     * @ignoreMethods notifyItemChange
@@ -22,7 +24,7 @@ define('js!SBIS3.CONTROLS.Data.Projection.Collection', [
     * @author Мальцев Алексей
     */
 
-   var CollectionProjection = Projection.extend([IEnumerable, ICollectionProjection, IBindCollectionProjection], /** @lends SBIS3.CONTROLS.Data.Projection.Collection.prototype */{
+   var CollectionProjection = Projection.extend([IEnumerable, IList, ICollectionProjection, IBindCollectionProjection], /** @lends SBIS3.CONTROLS.Data.Projection.Collection.prototype */{
       _moduleName: 'SBIS3.CONTROLS.Data.Projection.Collection',
       $protected: {
          /**
@@ -38,7 +40,7 @@ define('js!SBIS3.CONTROLS.Data.Projection.Collection', [
          /**
           * @member {SBIS3.CONTROLS.Data.Projection.CollectionEnumerator} Служебный энумератор проекции - для отслеживания текущего элемента и поиска по свойствам
           */
-         _serviceEnumerator: undefined,
+         _serviceEnumerator: null,
 
          /**
           * @member {Function(*, Number} Фильтр элементов проекции
@@ -108,7 +110,7 @@ define('js!SBIS3.CONTROLS.Data.Projection.Collection', [
             this.unsubscribeFrom(this._options.collection, 'onCollectionItemChange', this._onSourceCollectionItemChange);
          }
 
-         this._serviceEnumerator = undefined;
+         this._serviceEnumerator = null;
 
          CollectionProjection.superclass.destroy.call(this);
       },
@@ -137,37 +139,6 @@ define('js!SBIS3.CONTROLS.Data.Projection.Collection', [
          return this._getServiceEnumerator().getIndexByValue('hash', hash);
       },
 
-      /**
-       * Возвращает элемент по индексу
-       * @param {Number} index Индекс
-       * @returns {SBIS3.CONTROLS.Data.Projection.CollectionItem}
-       * @state mutable
-       */
-      at: function (index) {
-         return this._getServiceEnumerator().at(index);
-      },
-
-      /**
-       * Возвращает индекс элемента
-       * @param {SBIS3.CONTROLS.Data.Projection.CollectionItem} item Элемент
-       * @returns {Number}
-       * @state mutable
-       */
-      getIndex: function (item) {
-         return this.getIndexByHash(item.getHash());
-      },
-
-      /**
-       * Возвращает кол-во элементов проекции
-       * @returns {Number}
-       * @state mutable
-       */
-      getCount: function () {
-         return $ws.helpers.reduce(this._filterMap, function(prev, current) {
-            return prev + (current ? 1 : 0);
-         }, 0);
-      },
-
       //endregion mutable
 
       //region SBIS3.CONTROLS.Data.Collection.IEnumerable
@@ -194,6 +165,56 @@ define('js!SBIS3.CONTROLS.Data.Projection.Collection', [
       },
 
       //endregion SBIS3.CONTROLS.Data.Collection.IEnumerable
+
+      //region SBIS3.CONTROLS.Data.Collection.IList
+
+      assign: function () {
+         throw new Error(MESSAGE_READ_ONLY);
+      },
+
+      append: function () {
+         throw new Error(MESSAGE_READ_ONLY);
+      },
+
+      prepend: function () {
+         throw new Error(MESSAGE_READ_ONLY);
+      },
+
+      clear: function () {
+         throw new Error(MESSAGE_READ_ONLY);
+      },
+
+      add: function () {
+         throw new Error(MESSAGE_READ_ONLY);
+      },
+
+      at: function (index) {
+         return this._getServiceEnumerator().at(index);
+      },
+
+      remove: function () {
+         throw new Error(MESSAGE_READ_ONLY);
+      },
+
+      removeAt: function () {
+         throw new Error(MESSAGE_READ_ONLY);
+      },
+
+      replace: function () {
+         throw new Error(MESSAGE_READ_ONLY);
+      },
+
+      getIndex: function (item) {
+         return this.getIndexByHash(item.getHash());
+      },
+
+      getCount: function () {
+         return $ws.helpers.reduce(this._filterMap, function(prev, current) {
+            return prev + (current ? 1 : 0);
+         }, 0);
+      },
+
+      //endregion SBIS3.CONTROLS.Data.Collection.IList
 
       //region SBIS3.CONTROLS.Data.Projection.ICollection
 
@@ -764,6 +785,8 @@ define('js!SBIS3.CONTROLS.Data.Projection.Collection', [
 
    });
 
+   var MESSAGE_READ_ONLY = 'The projection is read only. You should modify the source collection instead.',
+
    /**
     * Обрабатывает событие об изменении исходной коллекции
     * @param {$ws.proto.EventObject} event Дескриптор события.
@@ -774,7 +797,7 @@ define('js!SBIS3.CONTROLS.Data.Projection.Collection', [
     * @param {Number} oldItemsIndex Индекс, в котором удалены элементы.
     * @private
     */
-   var onSourceCollectionChange = function (event, action, newItems, newItemsIndex, oldItems, oldItemsIndex) {
+   onSourceCollectionChange = function (event, action, newItems, newItemsIndex, oldItems, oldItemsIndex) {
       var notifyStandard = (function() {
          this._notifyCollectionChange(
             action,

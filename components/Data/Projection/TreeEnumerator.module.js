@@ -23,6 +23,11 @@ define('js!SBIS3.CONTROLS.Data.Projection.TreeEnumerator', [
             collection: null,
 
             /**
+             * @cfg {SBIS3.CONTROLS.Data.Projection.TreeItem} Корневой элемент дерева
+             */
+            root: null,
+
+            /**
              * @cfg {String} Название свойства, содержащего идентификатор узла.
              */
             idProperty: '',
@@ -80,26 +85,30 @@ define('js!SBIS3.CONTROLS.Data.Projection.TreeEnumerator', [
                      parent ? parent.getContents() : null,
                      idProperty
                   ),
-                  children = $ws.helpers.map(collection.getIndiciesByValue(
+                  children = collection.getIndiciesByValue(
                      parentProperty,
                      parentId
-                  ), function(index) {
-                     return itemsMap[index];
-                  });
+                  );
 
-               for (var i = 0; i < children.length; i++) {
+               var i, child;
+               for (i = 0; i < children.length; i++) {
+                  child = itemsMap[children[i]];
+                  child.setParent(parent);
                   result.push(children[i]);
-                  result.concat(buildHierarchy(children[i]));
+                  Array.prototype.push.apply(
+                     result,
+                     buildHierarchy(child)
+                  );
                }
                return result;
             };
 
-         var hierarchy = buildHierarchy();
+         var hierarchy = buildHierarchy(this._options.root);
          this._internalMap = [];
          this._currentPosition = -1;
 
-         $ws.helpers.map(hierarchy, function(item, index){
-            this._addToInternalMap(index);
+         $ws.helpers.map(hierarchy, function(sourceIndex) {
+            this._addToInternalMap(sourceIndex);
          }, this);
 
          this._storeSourceCurrent();
