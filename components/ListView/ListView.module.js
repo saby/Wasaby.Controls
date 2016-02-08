@@ -1737,7 +1737,7 @@ define('js!SBIS3.CONTROLS.ListView',
             this.setSelectedKey(this.getCurrentElement().targetId);
             this._isShifted = true;
             this._createAvatar(e);
-            this._hideItemActions();
+            this._hideItemsToolbar();
          },
          _clearDragHighlight: function() {
             this.getCurrentElement().target.removeClass('controls-DragNDrop__insertBefore controls-DragNDrop__insertAfter');
