@@ -140,7 +140,6 @@ define('js!SBIS3.CONTROLS.EditAtPlaceGroup',
             this._picker._container.bind('keydown', function (e) {
                self._keyPressHandler(e);
             });
-            this._picker._loadChildControls();
 
             this._iterateChildEditAtPlaces(function(child){
                child.setInPlaceEditMode(true);

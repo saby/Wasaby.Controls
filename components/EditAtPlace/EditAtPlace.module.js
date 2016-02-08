@@ -38,7 +38,7 @@ define('js!SBIS3.CONTROLS.EditAtPlace',
                multiline: false,
                displayAsEditor: false,
                editInPopup: false,
-               enableControlPanel: true
+               enableControlPanel: false
             }
          },
 
@@ -52,9 +52,6 @@ define('js!SBIS3.CONTROLS.EditAtPlace',
             this._container.removeClass('ws-area');
             if (this._options.displayAsEditor || !this._options.editInPopup) {
                $('[data-component]', this._container).width(this._container.width());
-               if (this._container.attr('data-bind')) {
-                  $('[data-component]', this._container).attr('data-bind', this._container.attr('data-bind'));
-               }
             }
             this.subscribe('onTextChange', function(event, text){
                self._requireDialog = text != self._oldText;
@@ -163,7 +160,6 @@ define('js!SBIS3.CONTROLS.EditAtPlace',
          _setPickerContent: function () {
             var self = this;
             this._picker.getContainer().addClass('controls-EditAtPlace__editorOverlay');
-            $('[data-component]', this._picker.getContainer()).attr('data-bind', this._container.attr('data-bind'));
             $('[data-component]', this._picker.getContainer()).width(this._container.width());
             this._picker.reviveComponents();
             this._addControlPanel(this._picker._container);
