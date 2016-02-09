@@ -173,7 +173,7 @@ define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManag
       },
 
       _onTargetMove: function(){
-         if (this.isVisible()) {
+         if (this.isVisible() && !this._fixed) {
             this.recalcPosition();
             this._checkTargetPosition();
          } else {
@@ -386,7 +386,7 @@ define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManag
          //Таймаут для того что бы не пересчитывать размеры пока меняется размер окна,
          //а перестчитать только один раз, когда размер меняться перестанет.
          this._resizeTimeout = setTimeout(function() {
-            if (self.isVisible()) {
+            if (self.isVisible() && !self._fixed) {
                self.recalcPosition(false);
             } else {
                self._initSizes();
