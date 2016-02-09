@@ -365,7 +365,7 @@ define('js!SBIS3.CONTROLS.ComponentBinder', [], function () {
          operationPanel = operationPanel || this._options.operationPanel;
          //TODO: После перехода на новую идеалогию, кнопки ни чего знать о view не будут, и этот костыль уйдёт.
          operationPanel.addItemOptions = function(instance) {
-            if ($ws.helpers.instanceOfModule(instance, 'SBIS3.CONTROLS.OperationsMark')) {
+            if (typeof instance.setLinkedView === 'function') {
                instance.setLinkedView(view);
             } else {
                instance._options.linkedView = view;
