@@ -127,6 +127,25 @@ define([
             it('should return a tree enumerator', function() {
                assert.instanceOf(tree.getEnumerator(), TreeEnumerator);
             });
+            it('should traverse items in hierarchical order', function() {
+               var enumerator = tree.getEnumerator(),
+                  expect = ['A', 'AA', 'AB', 'AC', 'ACA', 'ACB', 'ACC', 'B', 'BA', 'BAA', 'BAAA', 'C', 'D'],
+                  index = 0,
+                  item;
+               while ((item = enumerator.getNext())) {
+                  assert.strictEqual(item.getContents().title, expect[index]);
+                  index++;
+               }
+            });
+            it('should traverse all items', function() {
+               var enumerator = tree.getEnumerator(),
+                  index = 0;
+               while (enumerator.getNext()) {
+                  index++;
+               }
+               assert.strictEqual(tree.getCount(), index);
+               assert.strictEqual(tree.getCollection().getCount(), index);
+            });
          });
 
          describe('.getIdProperty()', function() {
