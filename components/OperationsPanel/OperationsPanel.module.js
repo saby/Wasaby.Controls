@@ -105,6 +105,12 @@ define('js!SBIS3.CONTROLS.OperationsPanel', [
          this._publish('onToggle', 'onChangeEnabled');
          this._container.removeClass('ws-area');
       },
+      init: function() {
+         //Отрисуем элементы если панель изначально показана
+         if (this.isVisible()) {
+            this.reload();
+         }
+      },
       _drawItemsCallback: function() {
          this._itemsDrawn = true;
          //TODO: После перехода на новую идеалогию, кнопки ни чего знать о view не будут, и этот костыль уйдёт.
@@ -114,6 +120,7 @@ define('js!SBIS3.CONTROLS.OperationsPanel', [
       },
       _setVisibility: function(show) {
          var self = this;
+         this._initBlocks();
          if (!this._itemsDrawn && show) {
             this.reload();
          }
@@ -131,14 +138,14 @@ define('js!SBIS3.CONTROLS.OperationsPanel', [
             });
          }
       },
-      _initContainer: function() {
-         OperationsPanel.superclass._initContainer.apply(this, arguments);
-         this._container.removeClass('ws-area');
-         this._blocks = {
-            markOperations: this._container.find('.controls-operationsPanel__actionMark'),
-            allOperations: this._container.find('.controls-operationsPanel__actions'),
-            wrapper: this._container.find('.controls-operationsPanel__wrapper')
-         };
+      _initBlocks: function() {
+         if (!this._blocks) {
+            this._blocks = {
+               markOperations: this._container.find('.controls-operationsPanel__actionMark'),
+               allOperations: this._container.find('.controls-operationsPanel__actions'),
+               wrapper: this._container.find('.controls-operationsPanel__wrapper')
+            };
+         }
       },
       _getTargetContainer: function(item) {
          return this._blocks[item.get('type').mark ? 'markOperations' : 'allOperations'];
@@ -168,29 +175,9 @@ define('js!SBIS3.CONTROLS.OperationsPanel', [
          OperationsPanel.superclass.setEnabled.apply(this, arguments);
          this._notify('onChangeEnabled');
       },
-      /**
-       * Получить инстансы всех элементов панели массовых операций.
-       * @returns {Array}
-       */
-      getItemInstances: function() {
-         return OperationsPanel.superclass.getItemInstances.apply(this, arguments);
-      },
-      getItemInstance: function() {
-         return OperationsPanel.superclass.getItemInstance.apply(this, arguments);
-      },
       onSelectedItemsChange: function(idArray) {
          this._blocks.wrapper.toggleClass('controls-operationsPanel__massMode', !idArray.length)
                              .toggleClass('controls-operationsPanel__selectionMode', !!idArray.length);
-      },
-      //TODO: методя для совместимости в .30 версии. В .100 избавиться!
-      isOpen: function() {
-         return this.isVisible();
-      },
-      open: function() {
-         this.show();
-      },
-      close: function() {
-         this.hide();
       },
       destroy: function() {
          this._blocks = null;
