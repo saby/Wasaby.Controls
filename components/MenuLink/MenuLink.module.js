@@ -61,7 +61,6 @@ define('js!SBIS3.CONTROLS.MenuLink', ['js!SBIS3.CONTROLS.Link', 'js!SBIS3.CONTRO
       },
 
       init : function(){
-         this._container.addClass('controls-MenuLink');
          this.reload();
          MenuLink.superclass.init.call(this);
       },
@@ -79,6 +78,12 @@ define('js!SBIS3.CONTROLS.MenuLink', ['js!SBIS3.CONTROLS.Link', 'js!SBIS3.CONTRO
          this._picker.getContainer().css({
             'min-width': self._container.outerWidth() + 10 // + ширина стрелки
          });
+      },
+
+      _modifyOptions : function(options) {
+         //чтобы класс уже в верстке был, иначе сначала одни стили применяются, затем другие
+         options.className += ' controls-MenuLink';
+         return MenuLink.superclass._modifyOptions.apply(this, arguments);
       },
 
       _dataLoadedCallback: function () {
