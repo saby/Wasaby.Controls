@@ -5,7 +5,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
    'js!SBIS3.CONTROLS.Data.Query.Query',
    'js!SBIS3.CORE.MarkupTransformer',
    'js!SBIS3.CONTROLS.Data.Collection.ObservableList',
-   'js!SBIS3.CONTROLS.Data.Projection',
+   'js!SBIS3.CONTROLS.Data.Projection.Projection',
    'js!SBIS3.CONTROLS.Data.Bind.ICollection',
    'js!SBIS3.CONTROLS.Data.Projection.Collection',
    'js!SBIS3.CONTROLS.Utils.TemplateUtil'
@@ -278,7 +278,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
             this._items = null;
          }
          else if (itemsOpt) {
-            if ($ws.helpers.instanceOfModule(itemsOpt, 'SBIS3.CONTROLS.Data.Projection')) {
+            if ($ws.helpers.instanceOfModule(itemsOpt, 'SBIS3.CONTROLS.Data.Projection.Projection')) {
                this._itemsProjection = itemsOpt;
                this._items = this._convertItems(this._itemsProjection.getCollection());
                this._setItemsEventHandlers();
