@@ -389,7 +389,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
             то отрисовываться он не будет и покажется троеточие, однако хотя бы один элемент в поле связи должен поместиться */
          if(this._checkWidth) {
             inputWidth = this._getInputWidth();
-            needDrawItem = $ws.helpers.getTextWidth(item[0].outerHTML) + isMultiSelect ? INPUT_MIN_WIDTH : 0 < inputWidth + SHOW_ALL_LINK_WIDTH;
+            needDrawItem = ($ws.helpers.getTextWidth(item[0].outerHTML) + (isMultiSelect ? INPUT_MIN_WIDTH : 0)) < inputWidth + SHOW_ALL_LINK_WIDTH;
 
             if(!needDrawItem) {
                if(!this._linkCollection.getContainer().find('.controls-FieldLink__linkItem').length) {
