@@ -80,21 +80,42 @@ define([
          describe('.$constructor()', function () {
             it('should take limited time', function() {
                this.timeout(5000);
-               if (window) window['console'].time('BatchCreating');
-               for (var i = 0; i < 10000; i++) {
-                  var item = {};
-                  for (var j = 0; j < 200; j++) {
-                     item['f' + j] = j;
-                  }
-                  item.id = i;
-                  item.title = 'Item ' + i;
 
-                  var model = new Model({
-                     idProperty: 'id',
-                     rawData: item
-                  });
+               var testFor = function(factory) {
+                     var start = Date.now(),
+                        i,
+                        obj;
+                     for (i = 0; i < count; i++) {
+                        obj = factory(getRawData());
+                     }
+                     obj = undefined;
+                     return Date.now() - start;
+                  },
+                  getRawData = function() {
+                     var data = {};
+                     for (var j = 0; j < fields; j++) {
+                        data['f' + j] = j;
+                     }
+                     return data;
+                  },
+                  count = 10000,
+                  fields = 100;
+
+               var mine = testFor(function(data) {
+                     return new Model({
+                        rawData: data
+                     });
+                  }),
+                  native = testFor(function(data) {
+                     return new Object({
+                        data: data
+                     });
+                  }),
+                  rel = mine / native;
+               if (window) {
+                  window.console.log('Model batch creating: ' + [mine, native, rel].join(', '));
                }
-               if (window) window['console'].timeEnd('BatchCreating');
+               assert.isBelow(rel, 5);
             });
          });
 
