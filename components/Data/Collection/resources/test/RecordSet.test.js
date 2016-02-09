@@ -48,6 +48,55 @@ define([
             items = undefined;
          });
 
+         describe('.$constructor()', function () {
+            it('should take limited time', function() {
+               this.timeout(5000);
+
+               var testFor = function(factory) {
+                     var start = Date.now(),
+                        obj;
+                     obj = factory(getItems());
+                     obj = undefined;
+                     return Date.now() - start;
+                  },
+                  getItems = function() {
+                     var items = [],
+                        item,
+                        i,
+                        j;
+                     for (i = 0; i < count; i++) {
+                        item = {};
+                        for (j = 0; j < fields; j++) {
+                           item['f' + j] = j;
+                        }
+                        items.push(item);
+                     }
+                     return items;
+                  },
+                  count = 10000,
+                  fields = 100;
+
+               var mine = testFor(function(items) {
+                     return new RecordSet({
+                        rawData: items
+                     });
+                  }),
+                  native = testFor(function(items) {
+                     var arr = [],
+                        i;
+                     for (i = 0; i < items.length; i++) {
+                        arr.push(items[i]);
+                     }
+                     return arr;
+                  }),
+                  rel = mine / native;
+               if (window) {
+                  window.console.log('RecordSet batch creating: ' + [mine, native, rel].join(', '));
+               }
+               assert.isBelow(rel, 5);
+            });
+         });
+
          describe('.isEqual()', function () {
             it('should accept an invalid argument', function () {
                var rs = new RecordSet();
