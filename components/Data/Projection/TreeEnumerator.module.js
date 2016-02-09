@@ -75,6 +75,7 @@ define('js!SBIS3.CONTROLS.Data.Projection.TreeEnumerator', [
       },*/
 
       _buildInternalMap: function () {
+         //TODO: user order support
          var idProperty = this._options.idProperty,
             parentProperty = this._options.parentProperty,
             collection = this._options.collection,

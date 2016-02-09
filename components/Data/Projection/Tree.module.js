@@ -25,7 +25,6 @@ define('js!SBIS3.CONTROLS.Data.Projection.Tree', [
     * @public
     * @author Мальцев Алексей
     */
-   //TODO: ordering
 
    var TreeProjection = CollectionProjection.extend([ITreeProjection], /** @lends SBIS3.CONTROLS.Data.Projection.Tree.prototype */{
       _moduleName: 'SBIS3.CONTROLS.Data.Projection.Tree',
