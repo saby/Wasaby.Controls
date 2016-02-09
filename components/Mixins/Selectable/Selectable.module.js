@@ -82,7 +82,7 @@ define('js!SBIS3.CONTROLS.Selectable', ['js!SBIS3.CONTROLS.Data.Utils'], functio
 
       _prepareSelectedConfig: function(index, key) {
          if ((typeof index == 'undefined') || (index === null)) {
-            if (key) {
+            if ((typeof key != 'undefined') && (key !== null)) {
                this._selectMode = 'key';
                this._options.selectedIndex = this._getItemIndexByKey(key);
             }
@@ -124,6 +124,9 @@ define('js!SBIS3.CONTROLS.Selectable', ['js!SBIS3.CONTROLS.Data.Utils'], functio
          },
          _itemsReadyCallback: function() {
             this._prepareSelectedConfig(this._options.selectedIndex, this._options.selectedKey);
+            if ((typeof this._options.selectedIndex != 'undefined') && (this._options.selectedIndex !== null)) {
+               this._itemsProjection.setCurrentPosition(this._options.selectedIndex);
+            }
          }
       },
 
@@ -158,13 +161,17 @@ define('js!SBIS3.CONTROLS.Selectable', ['js!SBIS3.CONTROLS.Data.Utils'], functio
        */
       setSelectedKey : function(id) {
          this._options.selectedKey = id;
-         this._prepareSelectedConfig(undefined, id);
-         this._itemsProjection.setCurrentPosition(this._options.selectedIndex);
+         if (this._itemsProjection) {
+            this._prepareSelectedConfig(undefined, id);
+            this._itemsProjection.setCurrentPosition(this._options.selectedIndex);
+         }
       },
 
       setSelectedIndex: function(index) {
-         this._itemsProjection.setCurrentPosition(index);
-         this._prepareSelectedConfig(index);
+         if (this._itemsProjection) {
+            this._prepareSelectedConfig(index);
+            this._itemsProjection.setCurrentPosition(index);
+         }
       },
       /**
        * Возвращает идентификатор выбранного элемента.
