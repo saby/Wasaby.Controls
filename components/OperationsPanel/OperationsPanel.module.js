@@ -40,6 +40,7 @@ define('js!SBIS3.CONTROLS.OperationsPanel', [
     * @extends $ws.proto.CompoundControl
     * @control
     * @public
+    * @demo SBIS3.CONTROLS.Demo.MyOperationsPanel
     * @author Крайнов Дмитрий Олегович
     * @ignoreOptions contextRestriction independentContext
     * @initial
