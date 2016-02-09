@@ -1104,7 +1104,7 @@ define('js!SBIS3.CONTROLS.ListView',
          },
          /**
           * Метод получения операций над записью.
-          * @returns {Array} Массив операций над записью.
+          * @returns {Object} Компонент "операции над записью".
           * @example
           * <pre>
           *     DataGridView.subscribe('onChangeHoveredItem', function(hoveredItem) {
