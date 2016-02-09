@@ -5,13 +5,17 @@ define([
    ], function (Record, SbisAdapter) {
       'use strict';
       describe('SBIS3.CONTROLS.Data.Record', function () {
-         var record, recordData;
+         var record,
+            recordData,
+            getRecordData = function() {
+               return {
+                  max: 10,
+                  title: 'A',
+                  id: 1
+               };
+            };
          beforeEach(function () {
-            recordData = {
-               max: 10,
-               title: 'A',
-               id: 1
-            },
+            recordData = getRecordData();
             record = new Record({
                rawData: recordData
             });
@@ -151,6 +155,42 @@ define([
                record.set('aaa', 321);
                assert.isTrue(record.isChanged('aaa'));
                assert.isTrue(record.isChanged());
+            });
+         });
+
+         describe('.isEqual()', function () {
+            it('should accept an invalid argument', function () {
+               assert.isFalse(record.isEqual());
+               assert.isFalse(record.isEqual(null));
+               assert.isFalse(record.isEqual(false));
+               assert.isFalse(record.isEqual(true));
+               assert.isFalse(record.isEqual(0));
+               assert.isFalse(record.isEqual(1));
+               assert.isFalse(record.isEqual({}));
+               assert.isFalse(record.isEqual([]));
+            });
+            it('should return true for the same record', function () {
+               var same = new Record({
+                  rawData: getRecordData()
+               });
+               assert.isTrue(record.isEqual(same));
+            });
+            it('should return true for itself', function () {
+               assert.isTrue(record.isEqual(record));
+            });
+            it('should return true for the clone', function () {
+               assert.isTrue(record.isEqual(record.clone()));
+            });
+            it('should return true for empties', function () {
+               var record = new Record();
+               assert.isTrue(record.isEqual(new Record()));
+            });
+            it('should return false if field changed', function () {
+               var same = new Record({
+                  rawData: getRecordData()
+               });
+               same.set('title', 'B');
+               assert.isFalse(record.isEqual(same));
             });
          });
 

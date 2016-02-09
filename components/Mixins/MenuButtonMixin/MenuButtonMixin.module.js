@@ -36,7 +36,7 @@ define('js!SBIS3.CONTROLS.MenuButtonMixin', ['js!SBIS3.CONTROLS.ContextMenu'], f
          if (this._container.hasClass('controls-Menu__hide-menu-header')){
             this._options.pickerClassName += ' controls-Menu__hide-menu-header';
          }
-         this._checkItemsIcons();
+         this._checkItemsIcons(this._options.items);
       },
 
       //TODO: Можно будет выпилить когда меню будет сделано через таблицу

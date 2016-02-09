@@ -139,7 +139,11 @@ define('js!SBIS3.CONTROLS.hierarchyMixin', [], function () {
             filter[this._options.hierField] = key;
          }
          else {
-            delete(filter[this._options.hierField]);
+            if (this._options.root){
+               filter[this._options.hierField] = this._options.root;
+            } else {
+               delete(filter[this._options.hierField]);
+            }
          }
          this.setFilter(filter, true);
          this._hier = this._getHierarchy(this._dataSet, key);
@@ -147,7 +151,7 @@ define('js!SBIS3.CONTROLS.hierarchyMixin', [], function () {
          this._offset = 0;
          //TODO: нужно избавиться от флага когда будут готовы биндинги
          this._rootChanged = this._curRoot !== key;
-         this._curRoot = key;
+         this._curRoot = key || this._options.root;
          this.setSelectedKey(null);
       },
       after : {

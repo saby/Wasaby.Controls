@@ -41,14 +41,9 @@ define('js!SBIS3.CONTROLS.ActiveMultiSelectable', [], function() {
             throw new Error('setSelectedItems called with invalid argument');
          }
 
-         var selKeys = [];
-
          /* надо обязательно делать клон массива, чтобы порвать ссылку и не портить значения в контексте */
          this._options.selectedItems = this._makeList((this._options.multiselect ? list.toArray() : list.getCount() > 1 ? [list.at(0)] : list.toArray()).slice());
-         this._options.selectedItems.each(function(rec) {
-            selKeys.push(rec.getId());
-         });
-         this.setSelectedKeys(selKeys);
+         this.setSelectedKeys(this._convertToKeys(this._options.selectedItems));
          this._notifyOnPropertyChanged('selectedItems');
       }),
 
@@ -59,30 +54,42 @@ define('js!SBIS3.CONTROLS.ActiveMultiSelectable', [], function() {
          this.setSelectedItems([]);
       },
 
-
       /**
        * Добавляет переданные элементы к набору выбранных
        * @param {Array | SBIS3.CONTROLS.Data.Collection.List} items
        */
       addSelectedItems: propertyUpdateWrapper(function(items) {
          var self = this,
-             selKeys = [],
              newItems = items instanceof Array ? this._makeList(items) : items,
              selItems = this._options.selectedItems;
 
-         /* Не добавляем уже выбранные элементы */
-         newItems.each(function(rec) {
-            if(self._isItemSelected(rec)) {
-               newItems.remove(rec)
-            }
-         });
-         selItems.concat(newItems);
-         selItems.each(function(rec) {
-            selKeys.push(rec.getId());
-         });
-         this.setSelectedKeys(selKeys);
+         /* Если добавляемых элементов нет, то ничего не делаем */
+         if(!newItems.getCount()) return;
+
+         if(this._options.multiselect) {
+            newItems.each(function(rec) {
+               if(!self._isItemSelected(rec)) {
+                  selItems.add(rec);
+               }
+            });
+         } else {
+            selItems[selItems.getCount() ? 'replace' : 'add'](newItems.at(0), 0);
+         }
+
+         this.setSelectedKeys(this._convertToKeys(selItems));
          this._notifyOnPropertyChanged('selectedItems');
-      })
+      }),
+
+      _convertToKeys: function(list) {
+         var keys = [];
+
+         list.each(function(rec) {
+            keys.push(rec.getId());
+         });
+
+         return keys;
+
+      }
    };
 
    return ActiveMultiSelectable;

@@ -14,6 +14,9 @@ define('js!SBIS3.CONTROLS.MergeDialogTemplate', [
     'html!SBIS3.CONTROLS.MergeDialogTemplate/resources/cellCommentTpl'
 ], function(Control, dotTplFn, SbisServiceSource, MemorySource, SbisAdapter, rk) {
 
+    var COMMENT_FIELD_NAME = 'Comment',
+        AVAILABLE_FIELD_NAME = 'Available';
+
     var MergeDialogTemplate = Control.extend({
         _dotTplFn: dotTplFn,
 
@@ -35,6 +38,7 @@ define('js!SBIS3.CONTROLS.MergeDialogTemplate', [
                  * @cfg {String} Сообщение с предупреждением
                  */
                 warning: rk('Внимание! Операция необратима'),
+                errorMessage: 'Итоги операции: "Объединения"',
                 testMergeMethodName: undefined,
                 queryMethodName: undefined,
                 dataSource: undefined,
@@ -51,7 +55,7 @@ define('js!SBIS3.CONTROLS.MergeDialogTemplate', [
             this.subscribe('onReady', this._onReady);
         },
         addUserItemAttributes: function(row, record) {
-            if (record.get('Available') === false) {
+            if (record.get(AVAILABLE_FIELD_NAME) === false) {
                 row.addClass('controls-MergeDialogTemplate__notMergeAvailable');
             }
         },
@@ -69,15 +73,23 @@ define('js!SBIS3.CONTROLS.MergeDialogTemplate', [
             this._treeView = this.getChildControlByName('MergeDialogTemplate__treeDataGridView');
             this._treeView.subscribe('onSelectedItemChange', this.onSelectedItemChange.bind(this));
             this._treeView.setGroupBy(this._treeView.getSearchGroupBy(), false);
-            dataSource = this._options.queryMethodName ? new SbisServiceSource($ws.core.merge(this._options.dataSource._options, {
-                queryMethodName: this._options.queryMethodName
-            })) : this._options.dataSource;
+            dataSource = new SbisServiceSource(this._options.dataSource._options);
+            dataSource.setQueryMethodName(this._options.queryMethodName ? this._options.queryMethodName : this._options.dataSource.getQueryMethodName());
             this._treeView.setDataSource(dataSource, true);
             this._treeView.reload({
                 'Разворот': 'С разворотом',
                 'usePages': 'full',
                 'mergeIds': this._options.items
             }).addCallback(function(ds) {
+                //TODO: Данный костыль нужен для того, чтобы добавить в dataSet колонки, выпилить когда необходимое api появится у dataSet'а
+                var rawData = ds.getRawData();
+                rawData.s.push({n: COMMENT_FIELD_NAME, t: 'Строка'}, {n: AVAILABLE_FIELD_NAME, t: 'Логическое'});
+                self._treeView.setFilter({});
+                self._treeView.setDataSource(new MemorySource({
+                    data: rawData,
+                    adapter: new SbisAdapter()
+                }));
+
                 //Получим ключи всех записей которые хотим объединять.
                 //Не берём папки, которые присутствуют в датасете для построения структуры.
                 ds.each(function(rec) {
@@ -96,7 +108,22 @@ define('js!SBIS3.CONTROLS.MergeDialogTemplate', [
                 mergeTo = this._treeView.getSelectedKey(),
                 mergeKeys = this._getMergedKeys(mergeTo, true);
             this._showIndicator();
-            this._options.dataSource.merge(mergeTo, mergeKeys).addBoth(function() {
+            this._options.dataSource.merge(mergeTo, mergeKeys).addErrback(function(errors) {
+                var
+                    errorsTexts = [],
+                    count = mergeKeys.length,
+                    errorsRecordSet = errors.addinfo;
+                //TODO: переделать на создание recordSet
+                $ws.helpers.forEach(errorsRecordSet.d, function(item) {
+                    errorsTexts.push(item[1]);
+                });
+                $ws.helpers.openErrorsReportDialog({
+                    'numSelected': count,
+                    'numSuccess': count - errorsRecordSet.d.length,
+                    'errors': errorsTexts,
+                    'title': self._options.errorMessage
+                });
+            }).addBoth(function() {
                 self.sendCommand('close', { mergeTo: mergeTo, mergeKeys: mergeKeys });
                 self._hideIndicator();
             });
@@ -106,7 +133,7 @@ define('js!SBIS3.CONTROLS.MergeDialogTemplate', [
             Array.remove(keys, keys.indexOf(withoutKey));
             if (onlyAvailable) {
                 for (var i = keys.length - 1; i >= 0; i--) {
-                    if (!this._treeView.getDataSet().getRecordByKey(keys[i]).get('Available')) {
+                    if (!this._treeView.getDataSet().getRecordByKey(keys[i]).get(AVAILABLE_FIELD_NAME)) {
                         Array.remove(keys, i);
                     }
                 }
@@ -114,18 +141,28 @@ define('js!SBIS3.CONTROLS.MergeDialogTemplate', [
             return keys;
         },
         onSelectedItemChange: function(event, key) {
-            var self = this;
+            var
+                record,
+                self = this,
+                isAvailable,
+                showMergeButton,
+                treeView = this._treeView,
+                dataSet = treeView.getDataSet();
             this._showIndicator();
-            this._applyContainer.removeClass('ws-hidden');
             this._options.dataSource.call(this._options.testMergeMethodName, {
                 'target': key,
                 'merged': this._getMergedKeys(key)
             }).addCallback(function (data) {
-                self._treeView.setDataSource(new MemorySource({
-                    data: data.getRawData(),
-                    adapter: new SbisAdapter()
-                }));
-                self._treeView.reload({});
+                //TODO: Данный костыль нужен для того, чтобы добавить в dataSet колонки, выпилить когда необходимое api появится у dataSet'а
+                data.getAll().each(function(rec) {
+                    record = dataSet.getRecordByKey(rec.getKey());
+                    isAvailable = rec.get(AVAILABLE_FIELD_NAME);
+                    showMergeButton = showMergeButton || isAvailable;
+                    record.set(AVAILABLE_FIELD_NAME, isAvailable);
+                    record.set(COMMENT_FIELD_NAME, rec.get(COMMENT_FIELD_NAME));
+                }, self);
+                treeView.reload();
+                self._applyContainer.toggleClass('ws-hidden', !showMergeButton);
             }).addBoth(function() {
                 self._hideIndicator();
             });

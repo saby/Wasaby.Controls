@@ -63,12 +63,19 @@ define('js!SBIS3.CONTROLS.FieldLinkItemsCollection', [
          },
 
          setItems: function(list) {
+            var item;
+
             FieldLinkItemsCollection.superclass.setItems.call(
                 this,
                 $ws.helpers.reduce(list.toArray(), function(result, rec) {
-                   result.push(rec.toObject());
+                   /* Для поддержки работы поля связи с несколькими справочниками,
+                      первичный ключ записи (неважно откуда она пришла) запишем в поле,
+                      в котором должны лежать первичные ключи по мнению поля связи */
+                   item = rec.toObject();
+                   item[this._options.keyField] = rec.getId();
+                   result.push(item);
                    return result
-                }, [])
+                }, [], this)
             );
          },
 
@@ -84,6 +91,11 @@ define('js!SBIS3.CONTROLS.FieldLinkItemsCollection', [
          setActive: function() {
             var fieldLink = this.getParent();
             fieldLink.setActive.apply(fieldLink, arguments);
+         },
+
+
+         canAcceptFocus: function() {
+            return false;
          },
          /**
           * Обработчик клика на крестик

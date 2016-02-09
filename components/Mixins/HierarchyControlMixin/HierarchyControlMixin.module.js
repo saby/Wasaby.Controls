@@ -83,7 +83,7 @@ define('js!SBIS3.CONTROLS.HierarchyControlMixin', [
 
       around: {
          _setItems: function (prevFn, items) {
-            if (!$ws.helpers.instanceOfModule(items, 'SBIS3.CONTROLS.Data.Projection')) {
+            if (!$ws.helpers.instanceOfModule(items, 'SBIS3.CONTROLS.Data.Projection.Projection')) {
                items = new TreeProjection({
                   collection: this._convertItems(items),
                   idProperty: this._options.idProperty || (this._options.dataSource ? this._options.dataSource.getIdProperty() : ''),

@@ -81,13 +81,6 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
              * @cfg {Boolean} Автоматически показывать варианты при приходе фокуса
              */
             autoShow: false,
-
-            /**
-             * @cfg {Boolean} Оставлять фокус на контроле при выборе элемента
-             * <wiTag group="Данные">
-             */
-            saveFocusOnSelect: false,
-
             /**
              * @cfg {Boolean} Использовать выпадающий блок
              * <wiTag group="Данные">
@@ -260,13 +253,14 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
       setListFilter: function(filter) {
          var self = this,
              changedFields = [],
-             ds;
+             dataSet = this._getListDataSet();
 
          /* Если в контролах, которые мы отслеживаем, нет фокуса,
             то почистим датасет, т.к. фильтр сменился и больше ничего делать не будем */
          if(!this._isObservableControlFocused()) {
-            ds = this.getList().getDataSet();
-            ds && ds.fill(); //TODO в 3.7.3.100 поменять на clear
+            if(dataSet) {
+               dataSet.fill();//TODO в 3.7.3.100 поменять на clear
+            }
             this._options.listFilter = filter;
             this._notifyOnPropertyChanged('listFilter');
             return;
@@ -335,6 +329,13 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
             this.subscribeTo(control, 'onFocusIn', function() {
                if(self._options.autoShow) {
                   self._checkPickerState() ? self.showPicker() : self._startSearch();
+               }
+            });
+            /* Если фокус уходит на список - вернём его обратно в контрол, с которого фокус ушёл */
+            this.subscribeTo(control, 'onFocusOut', function(e, destroyed, focusedControl) {
+               if(self.getList() === focusedControl) {
+                  focusedControl.setActive(false, false, false, this);
+                  this.setActive(true);
                }
             });
          }, this);
@@ -465,8 +466,17 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
 
             /* Изменяем видимость кнопки в зависимости от, того, есть ли ещё записи */
             this._showAllButton.getContainer()
-                .toggleClass('ws-hidden', !list._hasNextPage(list.getDataSet().getMetaData().more));
+                .toggleClass('ws-hidden', !list._hasNextPage(this._getListDataSet().getMetaData().more));
          }
+      },
+
+      /**
+       * Возвращает dataSet списка, если список уже инициализирован
+       * @returns {SBIS3.CONTROLS.Data.Collection.List|undefined}
+       * @private
+       */
+      _getListDataSet: function() {
+         return this._list ? this._list.getDataSet() : undefined;
       },
 
       /**
@@ -491,16 +501,6 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
 
          if (id === null || id === undefined) {
             return;
-         }
-
-         if (!this._options.saveFocusOnSelect) {
-            var activeFound = false;
-            $ws.helpers.forEach(this._options.observableControls, function (control) {
-               if (!activeFound && control.isActive()) {
-                  control.setActive(false);
-                  activeFound = true;
-               }
-            }, this);
          }
 
          if(item) {

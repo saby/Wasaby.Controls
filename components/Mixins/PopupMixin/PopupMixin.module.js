@@ -198,14 +198,16 @@ define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManag
                horizontalAlign : this._options.horizontalAlign,
                corner : this._options.corner
             };
+            // Пересчитать оригинальные размеры, флаг true если размеры контейнера поменялись
             if (recalcFlag) {
                var scrollWidth = this._container.get(0).scrollWidth,
                   scrollHeight = this._container.get(0).scrollHeight,
                   maxWidth = parseFloat(this._container.css('max-width'), 10),
-                  maxHeight = parseFloat(this._container.css('max-height'), 10);
+                  maxHeight = parseFloat(this._container.css('max-height'), 10),
+                  border = (this._container.outerWidth() - this._container.innerWidth());
 
-               this._containerSizes.originWidth = scrollWidth > maxWidth ? maxWidth : scrollWidth;
-               this._containerSizes.originHeight = scrollHeight > maxHeight ? maxHeight : scrollHeight;
+               this._containerSizes.originWidth = scrollWidth > maxWidth ? maxWidth : scrollWidth + border ;
+               this._containerSizes.originHeight = scrollHeight > maxHeight ? maxHeight : scrollHeight + border;
             }
             this._initSizes();
             if (this._options.target) {
@@ -230,6 +232,10 @@ define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManag
                offset.left += sign * (this._margins.left - this._margins.right + (this._options.horizontalAlign.offset || 0));
 
                this._notifyOnAlignmentChange();
+
+               if (this._fixed){
+                  offset.left -= this._targetSizes.offset.left - this._targetSizes.boundingClientRect.left;
+               }
 
                this._container.css({
                   'top': offset.top + 'px',
@@ -417,6 +423,7 @@ define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManag
             //сравнение boundingClientRect и offset позволяет увидеть лежит ли таргет в фиксированном контейнере (может быть где-то выше)
             if (this._targetSizes.boundingClientRect.top != this._targetSizes.offset.top) { //таргет в фиксированном контейнере
                this._targetSizes.offset.top = this._targetSizes.boundingClientRect.top;
+               this._fixed = true;
                this._container.css('position', 'fixed'); //фиксируем выпадающую часть, если таргет был зафиксирован
             }
          }

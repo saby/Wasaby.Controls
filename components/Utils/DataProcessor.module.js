@@ -18,7 +18,11 @@ define('js!SBIS3.CONTROLS.Utils.DataProcessor', [
             openedPath : {},
             root : undefined,
             filter: {},
-            offset: 0
+            offset: 0,
+            /**
+             * @cfg (number) Минимальная ширина предварительного окна печати
+             */
+            minWidth : 0
          },
          _reportPrinter : null,
          _loadIndicator: undefined
@@ -31,6 +35,7 @@ define('js!SBIS3.CONTROLS.Utils.DataProcessor', [
          this._prepareSerializer('Печать записей...').addCallback(function(reportText){
             $ws.helpers.showHTMLForPrint({
                htmlText: reportText,
+               minWidth : self._options.minWidth,
                //opener: self,
                handlers: {
                   onAfterClose: function() {

@@ -61,6 +61,7 @@ define('js!SBIS3.CONTROLS.TextBoxBase',
              * @see getText
              * @see setValue
              * @see getValue
+             * @translatable
              */
             text: '',
             /**
@@ -81,12 +82,13 @@ define('js!SBIS3.CONTROLS.TextBoxBase',
              */
             trim: false,
             /**
-             * @cfg {Number} Максимальное количество символов, которое может содержать значение
+             * @cfg {Number} Максимальное количество символов, которое может содержать значение при вводе.
              * @example
              * <pre class="brush:xml">
              *     <option name="maxLength">40</option>
              * </pre>
              * @remark
+             * Применяется для ввода значения.
              * В случае превышения количества символов ввод не будет осуществлён.
              * @see setMaxLength
              * @see trim
@@ -99,6 +101,10 @@ define('js!SBIS3.CONTROLS.TextBoxBase',
              * setActive(true), поскольку это вызовет появление клавиатуры, что неудобно - она нужна тогда, когда пользователь
              * сам тыкнул в поле ввода, или в исключительных случаях - когда есть какой-то модальный диалог с полем ввода, и
              * ему точно ничего другого, как писать в это поле ввода, не остаётся.
+             * @example
+             * <pre class="brush:xml">
+             *    <option name="focusOnActivatedOnMobiles">true</option>
+             * </pre>
              * <wiTag group="Управление">
              */
             focusOnActivatedOnMobiles: false
@@ -129,12 +135,13 @@ define('js!SBIS3.CONTROLS.TextBoxBase',
        * @see setValue
        * @see getValue
        */
-      setText:function(text){
-         text = (text !== null && text !== undefined && text == text) ? text.toString() : '';
-         if (text !== this._options.text) {
-            this._drawText(text);
-            this._options.text = text;
-            this._notify('onTextChange', text);
+      setText: function(text){
+         //null, NaN, undefined оставляем как есть, но выводим их как пустую строку
+         var newText = (text === null || text !== text || typeof text === "undefined") ? text : this._formatText(text.toString());
+         if (newText !== this._options.text) {
+            this._options.text = newText;
+            this._drawText(newText);
+            this._notify('onTextChange', newText);
             this._notifyOnPropertyChanged('text');
          }
       },
@@ -173,11 +180,7 @@ define('js!SBIS3.CONTROLS.TextBoxBase',
       },
 
       _formatText : function(text) {
-         text = text || ''; // так как есть датабиндинг может прийти undefined
-         if (this._options.trim) {
-            text = String.trim(text);
-         }
-         return text;
+         return text || ''; // так как есть датабиндинг может прийти undefined
       },
 
       _drawText: function() {

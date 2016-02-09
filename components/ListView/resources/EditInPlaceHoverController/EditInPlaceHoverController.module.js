@@ -46,8 +46,8 @@ define('js!SBIS3.CONTROLS.EditInPlaceHoverController',
             _getNextTarget: function(editNextRow) {
                return this._getEditingEip().getTarget()[editNextRow ? 'next' : 'prev']('.js-controls-ListView__item:not(".controls-editInPlace")');
             },
-            showEip: function(target, record, isEdit) {
-               if (isEdit === false) {
+            showEip: function(target, record, options) {
+               if (options && options.isEdit === false) {
                   this.show(target, record)
                } else {
                   EditInPlaceHoverController.superclass.showEip.apply(this, arguments)
@@ -64,6 +64,10 @@ define('js!SBIS3.CONTROLS.EditInPlaceHoverController',
                      this._hoveredEip = this._eip.isEdit() ? this._secondEip : this._eip;
                   }
                   this._hoveredEip.show(target, record);
+               } else {
+                  if (this._hoveredEip) {
+                     this._hoveredEip.hide();
+                  }
                }
             },
             /**

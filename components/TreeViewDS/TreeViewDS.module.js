@@ -5,8 +5,7 @@ define('js!SBIS3.CONTROLS.TreeViewDS', [
    'js!SBIS3.CORE.MarkupTransformer'
 ], function (ListView, hierarchyMixin, TreeMixinDS, MarkupTransformer) {
    'use strict';
-   var ITEMS_ACTIONS_HEIGHT = 20;
-   
+
    /**
     * Контрол, отображающий данные имеющие иерархическую структуру. Позволяет отобразить данные в произвольном виде с возможностью открыть или закрыть отдельные узлы
     * @class SBIS3.CONTROLS.TreeViewDS
@@ -27,9 +26,8 @@ define('js!SBIS3.CONTROLS.TreeViewDS', [
          }
       },
 
-      init : function() {
+      init: function () {
          TreeViewDS.superclass.init.apply(this, arguments);
-         //TODO чтоб не переопределять верстку навешиваем класс
          this._container.addClass('controls-TreeView');
       },
 
@@ -38,7 +36,8 @@ define('js!SBIS3.CONTROLS.TreeViewDS', [
             parentKey = this._dataSet.getParentKey(record, this._options.hierField),
             curList;
 
-         if (parentKey && (parentKey !== this._curRoot)) {
+         //TODO убрать, когда ключи будут 100% строками
+         if (parentKey && ((parentKey + '') !== (this._curRoot + ''))) {
             var parentItem = $('.controls-ListView__item[data-id="' + parentKey + '"]', this.getContainer().get(0));
             curList = $('.controls-TreeView__childContainer', parentItem.get(0)).first();
             if (!curList.length) {
@@ -60,16 +59,6 @@ define('js!SBIS3.CONTROLS.TreeViewDS', [
          }
 
          return curList;
-      },
-
-      _getItemActionsPosition: function(item) {
-         var treeItem = item.container.find('.js-controls-TreeView-itemContent'),
-             parentResult = TreeViewDS.superclass._getItemActionsPosition.apply(this, arguments);
-
-         return {
-            top: item.position.top + (treeItem.length ? treeItem[0].offsetHeight : item.size.height) - ITEMS_ACTIONS_HEIGHT,
-            right: parentResult.right
-         }
       },
 
       _drawLoadedNode : function(key) {

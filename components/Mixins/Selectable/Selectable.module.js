@@ -2,7 +2,7 @@
  * Created by iv.cheremushkin on 14.08.2014.
  */
 
-define('js!SBIS3.CONTROLS.Selectable', [], function() {
+define('js!SBIS3.CONTROLS.Selectable', ['js!SBIS3.CONTROLS.Data.Utils'], function(Utils) {
 
    /**
     * Миксин, добавляющий поведение хранения выбранного элемента. Всегда только одного.
@@ -28,22 +28,34 @@ define('js!SBIS3.CONTROLS.Selectable', [], function() {
         * @see SBIS3.CONTROLS.DSMixin#keyField
         */
       $protected: {
-         _options: {
-            /**
-             * @cfg {String} Идентификатор выбранного элемента
-             * @remark
-             * Для задания выбранного элемента необходимо указать значение {@link SBIS3.CONTROLS.DSMixin#keyField ключевого поля} элемента коллекции.
-             * @example
-             * <pre>
-             *     <option name="selectedKey">3</option>
-             * </pre>
-             * @see setSelectedKey
-             * @see getSelectedKey
-             * @see allowEmptySelection
-             * @see SBIS3.CONTROLS.DSMixin#keyField
-             * @see onSelectedItemChange
-             */
-            selectedKey: null,
+         _selectMode: 'index',
+          _options: {
+             /**
+              * @cfg {String} Индекс(номер) выбранного элемента
+              * @remark
+              * Для задания выбранного элемента необходимо указать номер элемента коллекции.
+              * @example
+              * <pre>
+              *     <option name="selectedIndex">1</option>
+              * </pre>
+              * @see setSelectedIndex
+              * @see getSelectedIndex
+              * @see onSelectedItemChange
+              */
+             selectedIndex: null,
+             /**
+              * @cfg {String} Идентификатор выбранного элемента
+              * @remark
+              * Для задания выбранного элемента необходимо указать значение {@link SBIS3.CONTROLS.DSMixin#keyField ключевого поля} элемента коллекции.
+              * @example
+              * <pre>
+              *     <option name="selectedKey">3</option>
+              * </pre>
+              * @see setSelectedKey
+              * @see getSelectedKey
+              * @see onSelectedItemChange
+              */
+             selectedKey: null,
              /**
               * @cfg {Boolean} Разрешить отсутствие выбранного элемента в группе
               * @example
@@ -65,15 +77,69 @@ define('js!SBIS3.CONTROLS.Selectable', [], function() {
 
       $constructor: function() {
          this._publish('onSelectedItemChange');
-         if (this._options.allowEmptySelection == false) {
-            this._setFirstItemAsSelected();
+      },
+
+
+      _prepareSelectedConfig: function(index, key) {
+         if ((typeof index == 'undefined') || (index === null)) {
+            if (key) {
+               this._selectMode = 'key';
+               this._options.selectedIndex = this._getItemIndexByKey(key);
+            }
+            else if (!this._options.allowEmptySelection) {
+               this._selectMode = 'index';
+               this._options.selectedIndex = 0;
+            }
+         }
+         else {
+            this._selectMode = 'index';
+            this._options.selectedIndex = index;
+         }
+      },
+
+      before : {
+         destroy: function () {
+            if (this._utilityEnumerator) {
+               this._utilityEnumerator.unsetObservableCollection(
+                  this._itemsProjection
+               );
+            }
          }
       },
 
       after : {
-         init : function() {
-            this._drawSelectedItem(this._options.selectedKey);
+         _setItemsEventHandlers : function() {
+            if (!this._onProjectionCurrentChange) {
+               this._onProjectionCurrentChange = onProjectionCurrentChange.bind(this);
+            }
+            this.subscribeTo(this._itemsProjection, 'onCurrentChange', this._onProjectionCurrentChange);
+         },
+         _drawItemsCallback: function() {
+            this._drawSelectedItem(this._options.selectedKey, this._options.selectedIndex);
+         },
+         _unsetItemsEventHandlers : function() {
+            if (this._itemsProjection && this._onProjectionCurrentChange) {
+               this.unsubscribeFrom(this._itemsProjection, 'onCurrentChange', this._onProjectionCurrentChange);
+            }
+         },
+         _itemsReadyCallback: function() {
+            this._prepareSelectedConfig(this._options.selectedIndex, this._options.selectedKey);
          }
+      },
+
+      _getUtilityEnumerator: function() {
+         if (!this._utilityEnumerator) {
+            this._utilityEnumerator = this._itemsProjection.getEnumerator();
+            this._utilityEnumerator.setObservableCollection(this._itemsProjection);
+         }
+         return this._utilityEnumerator;
+      },
+
+
+      //TODO переписать метод
+      _setSelectedIndex: function(index, id) {
+         this._drawSelectedItem(id, index);
+         this._notifySelectedItem(id, index)
       },
       /**
        * Установить выбранный элемент по идентификатору
@@ -92,14 +158,16 @@ define('js!SBIS3.CONTROLS.Selectable', [], function() {
        */
       setSelectedKey : function(id) {
          this._options.selectedKey = id;
-         if (this._options.allowEmptySelection == false) {
-            this._setFirstItemAsSelected();
-         }
-         this._drawSelectedItem(this._options.selectedKey);
-         this._notifySelectedItem(this._options.selectedKey);
+         this._prepareSelectedConfig(undefined, id);
+         this._itemsProjection.setCurrentPosition(this._options.selectedIndex);
+      },
+
+      setSelectedIndex: function(index) {
+         this._itemsProjection.setCurrentPosition(index);
+         this._prepareSelectedConfig(index);
       },
       /**
-       * Получить идентификатор выбранного элемента.
+       * Возвращает идентификатор выбранного элемента.
        * @example
        * <pre>
        *     var key = myComboBox.getSelectedKey();
@@ -116,35 +184,56 @@ define('js!SBIS3.CONTROLS.Selectable', [], function() {
          return this._options.selectedKey;
       },
 
+      /**
+       * Возвращает индекс выбранного элемента.
+       * @see selectedIndex
+       * @see setselectedIndex
+       * @see onSelectedItemChange
+       */
+      getSelectedIndex : function() {
+         return this._options.selectedIndex;
+      },
+
       _drawSelectedItem : function() {
          /*Method must be implemented*/
       },
 
-      _notifySelectedItem : function(id) {
-         //TODO: может тут указать, что метод надо переопредить чтобы текст передавать и пр.?
-         this._notifyOnPropertyChanged('selectedKey');
-         this._notify('onSelectedItemChange', id);
-      },
-
-      _dataLoadedCallback : function(){
-         if (this._options.allowEmptySelection == false) {
-            this._setFirstItemAsSelected();
+      _getItemValue: function(value, keyField) {
+         if(value && typeof value === 'object') {
+            return Utils.getItemPropertyValue(value, keyField );
          }
+         return value;
       },
 
-      _setFirstItemAsSelected : function() {
-         if (this._dataSet) {
-            var selKey = this._options.selectedKey;
-
-            if(selKey === null || (selKey !== null && !this._dataSet.getRecordByKey(selKey))) {
-               var rec = this._dataSet.at(0);
-
-               if (rec) {
-                  this._options.selectedKey = rec.getKey();
+      _getItemIndexByKey: function(id) {
+         if(this._options.keyField) {
+            return this._getUtilityEnumerator().getIndexByValue(
+               this._options.keyField,
+               id
+            );
+         } else {
+            var index;
+            this._itemsProjection.each(function(value, i){
+               if(value.getContents() === id){
+                  index = i;
                }
-            }
+            });
+            return index;
          }
+      },
+
+      _notifySelectedItem : function(id, index) {
+         this._notifyOnPropertyChanged('selectedKey');
+         this._notifyOnPropertyChanged('selectedIndex');
+         this._notify('onSelectedItemChange', id, index);
       }
+   };
+
+   var onProjectionCurrentChange = function (event, newCurrent, oldCurrent, newPosition) {
+      this._setSelectedIndex(
+         newPosition,
+         this._getItemValue(newCurrent ? newCurrent.getContents() : null, this._options.keyField)
+      );
    };
 
    return Selectable;

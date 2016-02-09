@@ -148,6 +148,7 @@ define('js!SBIS3.CONTROLS.Image',
                    *       <option name="title">Редактирование фото</option>
                    *    </option>
                    * </pre>
+                   * @translatable title
                    */
                   editConfig: {
                      title: 'Редактирование изображения'
@@ -337,8 +338,6 @@ define('js!SBIS3.CONTROLS.Image',
                if (this._options.sizeMode === 'stretch') {
                   this._image.css(image.naturalHeight > image.naturalWidth ? 'height': 'width', '100%');
                }
-               //По готовности изображения пересчитываем высоту image-bar (даже если его не нужно показывать - потом пригодится!)
-               this._recalculateImageBar();
                if (this._options.imageBar) {
                   this._buttonReset.toggle(showButtons);
                   this._buttonEdit.toggle(this._options.edit && showButtons);
@@ -377,18 +376,6 @@ define('js!SBIS3.CONTROLS.Image',
                //Из-за проблем, связанных с кэшированием - перезагружаем картинку специальным хелпером
                $ws.helpers.reloadImage(this._image, url, this._boundEvents.onErrorLoad);
                this._imageUrl = url;
-            },
-            _recalculateImageBar: function(){
-               var
-                  position =  this._image.position();
-               if (this._options.imageBar) {
-                  this._imageBar.css({
-                     height: this._image.height(),
-                     width: this._image.width(),
-                     left: position.left,
-                     top: position.top
-                  });
-               }
             },
             _showEditDialog: function(imageType) {
                var

@@ -16,7 +16,7 @@ define('js!SBIS3.CONTROLS.ItemActionsGroup',
       'use strict';
 
       var VERTICAL_OFFSET = -21;
-      var HORIZONTAL_OFFSET = 6;
+      var HORIZONTAL_OFFSET = 3;
 
       var ItemActionsGroup = ButtonGroupBaseDS.extend( /** @lends SBIS3.CONTROLS.ItemActionsGroup.prototype */ {
          $protected: {
@@ -24,29 +24,25 @@ define('js!SBIS3.CONTROLS.ItemActionsGroup',
             _itemActionsButtons: {},
             _itemActionsMenu: undefined,
             _itemActionsMenuButton: undefined,
-            _itemActionsMenuVisible: false,
             _itemActionsHiddenButton: [],
             _activeItem: undefined,
-            _touchActions: false,
             _options: {
-
+               touchMode: false,
+               linkedControl: undefined
             }
          },
 
          $constructor: function() {
-            var self = this;
+            this._publish('onShowMenu', 'onHideMenu');
+            $ws.single.CommandDispatcher.declareCommand(this, 'showMenu', this.showItemActionsMenu);
+
+            this.once('onInit', function() {
+               this._itemActionsMenuButton = this._container.find('.controls-ItemActions__menu-button');
+            }.bind(this));
 
             if(this._options.items.length && this._options.items[0].title) {
                $ws.single.ioc.resolve('ILogger').log('title', 'C 3.8.0 свойство операции над записью title перестанет работать. Используйте свойство caption');
             }
-
-            this._itemActionsMenuButton = this._container
-               .find('.controls-ItemActions__menu-button')
-               .click(function() {
-                  self.showItemActionsMenu();
-               });
-
-            this._touchActions = $ws._const.browser.isMobilePlatform;
          },
          /**
           * Изменяет операции над строкой до нужного состояния - скрывает / показывает кнопки
@@ -75,7 +71,7 @@ define('js!SBIS3.CONTROLS.ItemActionsGroup',
                   }
                }
             }
-            this._itemActionsMenuButton.toggleClass('ws-hidden', onlyMain);
+            this._itemActionsMenuButton[onlyMain ? 'addClass' : 'removeClass']('ws-hidden');
          },
          /**
           * Создаёт меню для операций над записью
@@ -83,7 +79,6 @@ define('js!SBIS3.CONTROLS.ItemActionsGroup',
           */
          _createItemActionMenu: function() {
             var self = this,
-                menuCont = $('> .controls-ItemActions__menu-container', this._getItemsContainer()[0]),
                 verticalAlign = {
                   side: 'top',
                   offset: VERTICAL_OFFSET
@@ -94,10 +89,10 @@ define('js!SBIS3.CONTROLS.ItemActionsGroup',
                },
                target = this._itemActionsMenuButton,
                corner = 'br',
-               items = this.getItems();
+                // TODO перевести на проекции
+               items = this._options.items;
 
-            if (this._touchActions) {
-               menuCont.addClass('controls-ItemsActions__touch-actions');
+            if (this._options.touchMode) {
                verticalAlign.offset = 0;
                horizontalAlign.offset = 0;
                target = this._container;
@@ -105,7 +100,7 @@ define('js!SBIS3.CONTROLS.ItemActionsGroup',
             }
 
             this._itemActionsMenu = new ContextMenu({
-               element: menuCont.show(),
+               element: $('> .controls-ItemActions__menu-container', this._getItemsContainer()[0]).show(),
                items: items,
                keyField: this._options.keyField,
                //FIXME для обратной совместимости
@@ -120,21 +115,8 @@ define('js!SBIS3.CONTROLS.ItemActionsGroup',
                closeByExternalClick: true,
                handlers: {
                   onClose: function() {
-                     var parent = self.getParent(),
-                         hoveredItem = parent.getHoveredItem();
-
-                     self._itemActionsMenuVisible = false;
                      self._activeItem.container.removeClass('controls-ItemActions__activeItem');
-                     self._menuVisibilityHandler(false);
-
-                     if (self._touchActions) {
-                        self._container[0].style.visibility = 'visible';
-                        self.hideItemActions();
-                     } else if(hoveredItem.container) {
-                        parent._showItemActions(hoveredItem)
-                     } else {
-                        self.hideItemActions();
-                     }
+                     self._notify('onHideMenu');
                   },
                   onMenuItemActivate: function(e, id) {
                      self._itemActivatedHandler(id);
@@ -151,21 +133,10 @@ define('js!SBIS3.CONTROLS.ItemActionsGroup',
                this._createItemActionMenu();
             }
 
-            this._itemActionsMenuVisible = true;
             this._onBeforeMenuShowHandler();
-            this._menuVisibilityHandler(true);
             this._itemActionsMenu.show();
             this._activeItem.container.addClass('controls-ItemActions__activeItem');
             this._itemActionsMenu.recalcPosition(true);
-         },
-
-         /** Обработчик на смену видимости меню
-          * Устанавливает операциям видимость на время показа меню
-          * @param isVisible
-          * @private
-          */
-         _menuVisibilityHandler: function(isVisible) {
-            this._container.toggleClass('ws-invisible', isVisible);
          },
 
          /**
@@ -177,45 +148,28 @@ define('js!SBIS3.CONTROLS.ItemActionsGroup',
             var menuInstances = this._itemActionsMenu.getItemsInstances(),
                 itemActionsInstances = this.getItemsInstances();
 
-            if (this._touchActions){
-               //Нельзя сделать hide так как display:none ломает позиционирование меню
-               this._container[0].style.visibility = 'hidden';
-            }
-
             for(var i in menuInstances) {
                if(menuInstances.hasOwnProperty(i)) {
                   menuInstances[i].getContainer()[itemActionsInstances.hasOwnProperty(i) && itemActionsInstances[i].isVisible() ? 'show' : 'hide']();
                }
             }
+
+            this._notify('onShowMenu');
+         },
+
+         hasVisibleActions: function() {
+            return $ws.helpers.find(this.getItemsInstances(), function(instance) {
+               return instance.isVisible();
+            });
          },
          /**
           * Показывает операции над записью
           */
-         showItemActions: function(hoveredItem, position) {
-            var cont = this._container[0],
-                hasVisibleOptions = $ws.helpers.find(this.getItemsInstances(), function(instance) {
-                   return instance.isVisible();
-                });
-
-            /* Если нет видимых операций над записью, то не будем вообще показывать блок с операциями */
-            if(!hasVisibleOptions) return;
-
+         show: function(hoveredItem) {
             this._activeItem = hoveredItem;
-            cont.style.right = position.right + 'px';
-            cont.style.display = 'block';
-
-            if (this._touchActions){
-               var itemHeight = hoveredItem.size.height,
-                   itemsContainer = this._getItemsContainer();
-
-               itemsContainer[0].style.right = - cont.offsetWidth + 'px';
-               cont.style.height = itemHeight + 'px';
-               itemsContainer.animate({right : position.right}, 350);
-            }
-
-            cont.style.top = position.top + 'px';
+            ItemActionsGroup.superclass.show.call(this);
          },
-         /***
+         /**
           * Задаёт новые операции над записью
           * Как в меню, так и на строке
           * @param items Массив новых items
@@ -226,30 +180,11 @@ define('js!SBIS3.CONTROLS.ItemActionsGroup',
             ItemActionsGroup.superclass.setItems.apply(this, arguments);
          },
          /**
-          * Скрывает операции над записью
-          * @private
-          */
-         hideItemActions: function(animate) {
-            if (this._touchActions && animate){
-               var itemsContainer = this._getItemsContainer(),
-                  contWidth = this._container.width(),
-                  self = this;
-               itemsContainer.animate({right: -contWidth}, {
-                  duration: 350,
-                  complete: function(){
-                     self._container[0].style.display = 'none';
-                  }
-               });
-            } else {
-               this._container[0].style.display = 'none';
-            }
-         },
-         /**
           * Возвращает признак того, открыто ли сейчас меню операций над записью
           * @returns {boolean|*}
           */
          isItemActionsMenuVisible: function() {
-            return this._itemActionsMenuVisible;
+            return this._itemActionsMenu && this._itemActionsMenu.isVisible();
          },
          /**
           * Обработчик нажатия на кнопку операций над записью
@@ -257,8 +192,11 @@ define('js!SBIS3.CONTROLS.ItemActionsGroup',
           * @private
           */
          _itemActivatedHandler: function(item) {
-            this.hideItemActions();
-            this._itemActionsButtons[item]['handler'].apply(this.getParent(), [this._activeItem.container, this._activeItem.key, this._activeItem.record]);
+            this._itemActionsButtons[item]['handler'].call(this._options.linkedControl,
+                this._activeItem.container,
+                this._activeItem.key,
+                this._activeItem.record);
+            this.hide();
          },
 
          _getItemsContainer: function(){
@@ -282,7 +220,6 @@ define('js!SBIS3.CONTROLS.ItemActionsGroup',
          destroy: function() {
             this._itemActionsButtons = {};
             this._activeItem = undefined;
-            this._itemActionsMenuButton.unbind('click');
             this._itemActionsMenuButton = undefined;
             ItemActionsGroup.superclass.destroy.apply(this, arguments);
          }

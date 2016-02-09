@@ -85,6 +85,7 @@ define('js!SBIS3.CONTROLS.FilterButton',
                  * @cfg {String} Текст, который будет отображаться рядом с иконкой фильтра
                  * <wiTag group="Управление">
                  * Опция устанавливает текст, который будет отображаться рядом с иконкой фильтра
+                 * @translatable
                  */
                 resetLinkText: '',
                 /**

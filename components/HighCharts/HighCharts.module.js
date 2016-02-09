@@ -1,7 +1,7 @@
 define('js!SBIS3.CONTROLS.HighCharts', [
    'js!SBIS3.CORE.Control',
    'html!SBIS3.CONTROLS.HighCharts',
-   'is!browser?cdn!/highcharts/4.0.3/highcharts-more-min.js',
+   'browser!cdn!/highcharts/4.0.3/highcharts-more-min.js',
    'css!SBIS3.CONTROLS.HighCharts'
 ],
 function(BaseControl, dotTpl){

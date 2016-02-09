@@ -8,16 +8,14 @@ define('js!SBIS3.CONTROLS.DataGridView',
       'html!SBIS3.CONTROLS.DataGridView/resources/ResultsTpl',
       'js!SBIS3.CORE.MarkupTransformer',
       'js!SBIS3.CONTROLS.DragAndDropMixin',
-      'is!browser?html!SBIS3.CONTROLS.DataGridView/resources/DataGridViewGroupBy',
+      'browser!html!SBIS3.CONTROLS.DataGridView/resources/DataGridViewGroupBy',
       'js!SBIS3.CONTROLS.Utils.HtmlDecorators/LadderDecorator',
       'js!SBIS3.CONTROLS.Utils.TemplateUtil'
    ],
    function(ListView, dotTplFn, rowTpl, colgroupTpl, headTpl, resultsTpl, MarkupTransformer, DragAndDropMixin, groupByTpl, LadderDecorator, TemplateUtil) {
    'use strict';
-      /* TODO: Надо считать высоту один раз, а не делать константой */
-      var
-         ITEMS_ACTIONS_HEIGHT = 20,
-         ANIMATION_DURATION = 500; //Продолжительность анимации скролла заголовков
+
+      var ANIMATION_DURATION = 500; //Продолжительность анимации скролла заголовков
    /**
     * Контрол, отображающий набор данных в виде таблицы с несколькими колонками.
     * @class SBIS3.CONTROLS.DataGridView
@@ -124,7 +122,21 @@ define('js!SBIS3.CONTROLS.DataGridView',
              * Массив имен столбцов, по которым строится лесенка
              */
             ladder: undefined,
-            resultsTpl: resultsTpl
+            resultsTpl: resultsTpl,
+            /**
+             * @cfg {Boolean} Производить ли преобразование колонок в шапке
+             * Если опция включена, то колонки в шапке будут преобразованы следующим образом:
+             *  <ul>
+             *    <li>Колонки с одинаковым title будут объединены</li>
+             *    <li>Для колонок, title которых задан через разделитель "точка", т.е. вида выводимоеОбщееИмя.выводимоеИмяДаннойКолонки,
+             *        будет отрисован двустрочный заголовок
+             * </ul>
+             * @example
+             * <pre>
+             *     <option name="transformHead">true</option>
+             * </pre>
+             */
+            transformHead: false
          }
       },
 
@@ -138,7 +150,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
       init: function() {
          this._buildHead();
          DataGridView.superclass.init.call(this);
-         if(this._options.startScrollColumn !== undefined) {
+         if(this.hasPartScroll()) {
             this._initPartScroll();
          }
       },
@@ -216,7 +228,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
       },
 
       _drawItemsCallback: function () {
-         if(this._options.startScrollColumn !== undefined) {
+         if (this.hasPartScroll()) {
             var needShowScroll = this._isTableWide();
 
             this._isPartScrollVisible ?
@@ -231,8 +243,8 @@ define('js!SBIS3.CONTROLS.DataGridView',
       },
 
       _editFieldFocusHandler: function(focusedCtrl) {
-         if(this.getItemsActions()) {
-            this._hideItemActions()
+         if(this._itemsToolbar) {
+            this._hideItemsToolbar()
          }
 
          if(this._isPartScrollVisible) {
@@ -269,6 +281,10 @@ define('js!SBIS3.CONTROLS.DataGridView',
       /************************/
       /*   Частичный скролл   */
       /***********************/
+      hasPartScroll: function() {
+         return this._options.startScrollColumn !== undefined;
+      },
+
       _initPartScroll: function() {
          (this._arrowLeft = this._thead.find('.controls-DataGridView__PartScroll__arrowLeft')).click(this._arrowClickHandler.bind(this, true));
          (this._arrowRight = this._thead.find('.controls-DataGridView__PartScroll__arrowRight')).click(this._arrowClickHandler.bind(this, false));
@@ -597,7 +613,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
          this._colgroup && this._colgroup.remove();
          this._colgroup = $(this._getColgroupTemplate()).insertBefore(this._thead || body);
 
-         if(this._options.startScrollColumn !== undefined) {
+         if(this.hasPartScroll()) {
             this._initPartScroll();
             this.updateDragAndDrop();
 
@@ -622,9 +638,10 @@ define('js!SBIS3.CONTROLS.DataGridView',
             },
             value,
             column;
+         this._prepareHeadColumns(rowData);
 
-         for (var i = 0; i < rowData.columns.length; i++) {
-                column = rowData.columns[i];
+         for (var i = 0; i < rowData.content[0].length; i++) {
+            column = rowData.content[0][i];
 
             if (column.headTemplate) {
                value = MarkupTransformer(TemplateUtil.prepareTemplate(column.headTemplate)({
@@ -638,15 +655,60 @@ define('js!SBIS3.CONTROLS.DataGridView',
          return this._headTpl(rowData);
       },
 
-      _getItemActionsPosition: function(hoveredItem){
-         var position = DataGridView.superclass._getItemActionsPosition.call(this, hoveredItem);
-         position.right = 0;
-         return position;
+      _prepareHeadColumns: function(rowData){
+         var columns = $ws.core.clone(this._options.columns),
+            supportUnion = $ws.core.clone(columns[0]),
+            supportDouble,
+            curCol,
+            nextCol,
+            curColSplitTitle,
+            nextColSplitTitle;
+
+         rowData.countRows = 1;
+         rowData.content = [[], []];
+
+         if (!this._options.transformHead){
+            rowData.content[0] = columns;
+            return;
+         }
+
+         for (var i = 0, l = columns.length; i < l; i++){
+            curCol = columns[i];
+            nextCol = columns[i + 1];
+            curColSplitTitle = curCol.title.split('.');
+            nextColSplitTitle = nextCol && nextCol.title.split('.');
+
+            if (!supportDouble){
+               supportDouble = $ws.core.clone(curCol);
+            }
+            if (nextCol && (curColSplitTitle.length == nextColSplitTitle.length) && (curColSplitTitle.length == 2) && (curColSplitTitle[0] == nextColSplitTitle[0])){
+               supportDouble.value = curColSplitTitle[0];
+               supportDouble.colspan = ++supportDouble.colspan || 2;
+               curCol.title = curColSplitTitle[1];
+               nextCol.title = nextColSplitTitle[1];
+               rowData.countRows = 2;
+            }
+            else{
+               rowData.content[1].push(supportDouble);
+               supportDouble = null;
+            }
+
+            if (!supportUnion){
+               supportUnion = $ws.core.clone(curCol);
+            }
+            if (nextCol && (supportUnion.title == nextCol.title)){
+               supportUnion.colspan = ++supportUnion.colspan || 2;
+            }
+            else{
+               rowData.content[0].push(supportUnion);
+               supportUnion = null;
+            }
+         }
       },
 
-      _showItemActions: function(item) {
+      _showItemsToolbar: function(item) {
          if(!this.isNowScrollingPartScroll()) {
-            DataGridView.superclass._showItemActions.call(this, item);
+            DataGridView.superclass._showItemsToolbar.call(this, item);
          }
       },
 
@@ -689,9 +751,8 @@ define('js!SBIS3.CONTROLS.DataGridView',
          this._addResultsMethod = isPositionTop ? 'append' : 'prepend';
          return this._options.resultsPosition == 'top' ? this._thead : this._tfoot;
       },
-
       destroy: function() {
-         if(this._options.startScrollColumn !== undefined) {
+         if (this.hasPartScroll()) {
             this._thumb.unbind('click');
             this._thumb = undefined;
             this._arrowLeft.unbind('click');
@@ -702,7 +763,6 @@ define('js!SBIS3.CONTROLS.DataGridView',
          }
          DataGridView.superclass.destroy.call(this);
       }
-
    });
 
    return DataGridView;

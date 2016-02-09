@@ -5,7 +5,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
    'js!SBIS3.CONTROLS.Data.Query.Query',
    'js!SBIS3.CORE.MarkupTransformer',
    'js!SBIS3.CONTROLS.Data.Collection.ObservableList',
-   'js!SBIS3.CONTROLS.Data.Projection',
+   'js!SBIS3.CONTROLS.Data.Projection.Projection',
    'js!SBIS3.CONTROLS.Data.Bind.ICollection',
    'js!SBIS3.CONTROLS.Data.Projection.Collection',
    'js!SBIS3.CONTROLS.Utils.TemplateUtil'
@@ -271,24 +271,38 @@ define('js!SBIS3.CONTROLS.DSMixin', [
          var
             keyField = this._options.keyField;
          if (!keyField) {
-            $ws.single.ioc.resolve('ILogger').error('Option keyField is required');
+            $ws.single.ioc.resolve('ILogger').log('Option keyField is required');
          }
          if (sourceOpt) {
             this._dataSource = this._prepareSource(sourceOpt);
             this._items = null;
          }
          else if (itemsOpt) {
-            if ($ws.helpers.instanceOfModule(itemsOpt, 'SBIS3.CONTROLS.Data.Projection')) {
+            if ($ws.helpers.instanceOfModule(itemsOpt, 'SBIS3.CONTROLS.Data.Projection.Projection')) {
                this._itemsProjection = itemsOpt;
                this._items = this._convertItems(this._itemsProjection.getCollection());
                this._setItemsEventHandlers();
+               this._itemsReadyCallback();
             }
             else if (itemsOpt instanceof Array) {
+               /*TODO уменьшаем количество ошибок с key*/
+               if (!this._options.keyField) {
+                  var itemFirst = itemsOpt[0];
+                  if (itemFirst) {
+                     this._options.keyField = Object.keys(itemFirst)[0];
+                  }
+               }
+
                /*TODO для совеместимости пока создадим сорс*/
                this._dataSource = new MemorySource({
                   data: itemsOpt,
                   idProperty: this._options.keyField
                });
+            }
+            else {
+               this._items = itemsOpt;
+               this._createDefaultProjection(this._items);
+               this._itemsReadyCallback();
             }
          }
       },
@@ -300,6 +314,10 @@ define('js!SBIS3.CONTROLS.DSMixin', [
                opts.footerTpl = require(tpl);
             }
             return opts;
+         },
+         destroy : function() {
+            this._unsetItemsEventHandlers();
+            this._clearItems();
          }
       },
 
@@ -479,6 +497,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
                       self._items = list;
                       self._createDefaultProjection(self._items);
                       self._setItemsEventHandlers();
+                      self._itemsReadyCallback();
                       self._dataLoadedCallback();
                       self._notify('onDataLoad', list);
                       self.redraw();
@@ -669,7 +688,10 @@ define('js!SBIS3.CONTROLS.DSMixin', [
       _drawItemsCallback: function () {
          /*Method must be implemented*/
       },
-      redraw: function(){
+      /**
+       * Метод перерисвоки списка без повторного получения данных
+       */
+      redraw: function() {
          this._redraw();
       },
       _redraw: function () {
@@ -685,7 +707,11 @@ define('js!SBIS3.CONTROLS.DSMixin', [
       _destroySearchBreadCrumbs: function(){
       },
       _getRecordsForRedraw : function() {
-         return this.getItems().toArray();
+         var records = [];
+         this._itemsProjection.each(function(item){
+            records.push(item.getContents());
+         });
+         return records;
       },
 
       _drawItems: function (records, at) {
@@ -762,7 +788,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
       redrawItem: function(item) {
          var
             targetElement = this._getElementByModel(item),
-            newElement = this._drawItem(item).addClass(targetElement.attr('class'));
+            newElement = this._drawItem(item);
          targetElement.after(newElement).remove();
          this.reviveComponents();
       },
@@ -1015,10 +1041,13 @@ define('js!SBIS3.CONTROLS.DSMixin', [
       _dataLoadedCallback: function () {
 
       },
+      _itemsReadyCallback: function() {
+
+      },
 
       _addItem: function (item, at) {
          var ladderDecorator = this._decorators.getByName('ladder');
-         ladderDecorator.setEnabled(false);
+         ladderDecorator && ladderDecorator.setEnabled(false);
          item = item.getContents();
          var target = this._getTargetContainer(item),
             nextSibling = at > -1 ? this._getItemContainerByIndex(target, at) : null,
@@ -1033,7 +1062,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
             newItemContainer.appendTo(target);
             rows = [newItemContainer.prev(), newItemContainer];
          }
-         ladderDecorator.setEnabled(true);
+         ladderDecorator && ladderDecorator.setEnabled(true);
          this._ladderCompare(rows);
       },
       _ladderCompare: function(rows){
