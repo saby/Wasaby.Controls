@@ -7,6 +7,7 @@ define('js!SBIS3.CONTROLS.Data.Adapter.SbisTable', [
     * Адаптер для таблицы данных в формате СБиС
     * @class SBIS3.CONTROLS.Data.Adapter.SbisTable
     * @mixes SBIS3.CONTROLS.Data.Adapter.ITable
+    * @public
     * @author Мальцев Алексей
     */
    var SbisTable = $ws.core.extend({}, [ITable], /** @lends SBIS3.CONTROLS.Data.Adapter.SbisTable.prototype */{

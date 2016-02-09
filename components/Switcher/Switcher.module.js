@@ -1,21 +1,21 @@
 
-define('js!SBIS3.CONTROLS.Switcher', ['js!SBIS3.CONTROLS.SwitcherBase', 'html!SBIS3.CONTROLS.Switcher'], function(SwitcherBase, dotTplFn) {
+define('js!SBIS3.CONTROLS.Switcher', ['js!SBIS3.CORE.Control', 'html!SBIS3.CONTROLS.Switcher', 'js!SBIS3.CONTROLS.Checkable', 'js!SBIS3.CONTROLS.Clickable'], function(Control, dotTplFn, Checkable, Clickable) {
 
    'use strict';
 
    /**
     * Контрол, отображающий обычный переключатель.
     * @class SBIS3.CONTROLS.Switcher
-    * @extends SBIS3.CONTROLS.SwitcherBase
-    * @mixes SBIS3.CONTROLS.FormWidgetMixin
+    * @extends $ws.proto.Control
+    * @mixes SBIS3.CONTROLS.Checkable
+    * @mixes SBIS3.CONTROLS.Clickable
     * @control
     * @author Крайнов Дмитрий Олегович
     * @demo SBIS3.CONTROLS.Demo.MySwitcher
     * @public
     * @initial
     * <component data-component='SBIS3.CONTROLS.Switcher'>
-    *     <option name='stateOn'>Вкл</option>
-    *     <option name='stateOff'>Выкл</option>
+    *     <option name='checked' type="boolean">true</option>
     * </component>
     *
     * @ignoreOptions validators independentContext contextRestriction extendedTooltip element linkedContext handlers
@@ -32,46 +32,12 @@ define('js!SBIS3.CONTROLS.Switcher', ['js!SBIS3.CONTROLS.SwitcherBase', 'html!SB
     * @ignoreEvents onFocusIn onFocusOut onKeyPressed onReady
     */
 
-   var Switcher = SwitcherBase.extend( /** @lends SBIS3.CONTROLS.Switcher.prototype */ {
+   var Switcher = Control.Control.extend([Checkable, Clickable], /** @lends SBIS3.CONTROLS.Switcher.prototype */ {
       _dotTplFn: dotTplFn,
-      $protected: {
-         _options: {
-
-         }
-      },
-
-      $constructor: function() {
-
-      },
-
-      setState: function(state) {
-         Switcher.superclass.setState.call(this,state);
-         if (state == 'on'){
-            this._switcher.addClass('controls-Switcher__toggle__position-on');
-            this._position.html(this._options.stateOn || '&nbsp;');
-         } else {
-            if (state == 'off') {
-               this._switcher.removeClass('controls-Switcher__toggle__position-on');
-               this._position.html(this._options.stateOff || '&nbsp');
-            }
-         }
-      },
-
-      setStateOn: function(text){
-         var self = this;
-         Switcher.superclass.setStateOn.call(self,text);
-         if (this._options.state == 'on'){
-            this._position.html(self._options.stateOn);
-         }
-      },
-
-      setStateOff: function(text){
-         var self = this;
-         Switcher.superclass.setStateOff.call(self,text);
-         if (this._options.state == 'off'){
-            this._position.html(self._options.stateOff);
-         }
+      _clickHandler : function() {
+         this.setChecked(!this._options.checked);
       }
+
    });
 
    return Switcher;

@@ -7,6 +7,27 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', ['js!SBIS3.CORE.Control'], function (Con
     */
 
    var TreeMixinDS = /** @lends SBIS3.CONTROLS.TreeMixinDS.prototype */{
+      /**
+       * @event onNodeExpand После разворачивания ветки
+       * @param {$ws.proto.EventObject} eventObject Дескриптор события.
+       * @param {String} key ключ разворачиваемой ветки
+       * @example
+       * <pre>
+       *    onNodeExpand: function(event){
+       *       $ws.helpers.question('Продолжить?');
+       *    }
+       * </pre>
+       *
+       * @event onNodeCollapse После сворачивания ветки
+       * @param {$ws.proto.EventObject} eventObject Дескриптор события.
+       * @param {String} key ключ разворачиваемой ветки
+       * @example
+       * <pre>
+       *    onNodeCollapse: function(event){
+       *       $ws.helpers.question('Продолжить?');
+       *    }
+       * </pre>
+       */
       $protected: {
          _folderOffsets : {},
          _folderHasMore : {},
@@ -15,17 +36,21 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', ['js!SBIS3.CORE.Control'], function (Con
          _options: {
             /**
              * @cfg {Boolean} При открытия узла закрывать другие
-             * @noShow
              */
-            singleExpand: '',
+            singleExpand: false,
 
             /**
-             * Опция задаёт режим разворота.
-             * @Boolean false Без разворота
+             * @cfg {Boolean} Опция задаёт режим разворота. false Без разворота
              */
             expand: false,
             openedPath : {},
-            folderFooterTpl: undefined
+            folderFooterTpl: undefined,
+            /**
+             * @cfg {Boolean}
+             * Разрешить проваливаться в папки
+             * Если выключено, то папки можно открывать только в виде дерева, проваливаться в них нельзя
+             */
+            allowEnterToFolder: true
          },
          _foldersFooters: {}
       },
@@ -67,10 +92,16 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', ['js!SBIS3.CORE.Control'], function (Con
        * @param {String} key Идентификатор раскрываемого узла
        */
       collapseNode: function (key) {
+         /* Закроем узел, только если он раскрыт */
+         if(!this.getOpenedPath()[key]) {
+            return;
+         }
+
          this._drawExpandArrow(key, false);
          this._collapseChilds(key);
          delete(this._options.openedPath[key]);
          this._nodeClosed(key);
+         this._notify('onNodeCollapse', key);
       },
 
       //Рекурсивно удаляем из индекса открытых узлов все дочерние узлы закрываемого узла
@@ -90,14 +121,7 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', ['js!SBIS3.CORE.Control'], function (Con
        */
 
       toggleNode: function (key) {
-         var
-            itemCont = $('.controls-ListView__item[data-id="' + key + '"]', this.getContainer().get(0));
-         if ($('.js-controls-TreeView__expand', itemCont).hasClass('controls-TreeView__expand__open')) {
-            this.collapseNode(key);
-         }
-         else {
-            this.expandNode(key);
-         }
+         this[this.getOpenedPath()[key] ? 'collapseNode' : 'expandNode'](key);
       },
 
       _findExpandByElement: function(elem){
@@ -127,9 +151,22 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', ['js!SBIS3.CORE.Control'], function (Con
       },
 
       expandNode: function (key) {
+         /* Если узел уже открыт, то ничего делать не надо*/
+         if(this.getOpenedPath()[key]) {
+            return;
+         }
+
          var self = this,
-         tree = this._dataSet.getTreeIndex(this._options.hierField, true);
+             tree = this._dataSet.getTreeIndex(this._options.hierField, true);
+
          this._folderOffsets[key || 'null'] = 0;
+         if (this._options.singleExpand){
+            $.each(this._options.openedPath, function(openedKey, _value){
+               if (key != openedKey){
+                  self.collapseNode(openedKey);
+               }
+            });
+         }
          if (!tree[key]){
             this._toggleIndicator(true);
             return this._callQuery(this._createTreeFilter(key), this.getSorting(), 0, this._limit).addCallback(function (dataSet) {
@@ -139,16 +176,18 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', ['js!SBIS3.CORE.Control'], function (Con
                self._notify('onDataMerge', dataSet);
                self._toggleIndicator(false);
                self._nodeDataLoaded(key, dataSet);
+               self._notify('onNodeExpand', key);
             });
          } else {
             var child = tree[key];
             var records = [];
             if (child){
                for (var i = 0; i < child.length; i++){
-                  records.push(this._dataSet.getRecordByKey(child[i]));
+                  records.push(this._dataSet.getRecordById(child[i]));
                }
                this._options.openedPath[key] = true;
                this._drawLoadedNode(key, records, this._folderHasMore[key]);
+               this._notify('onNodeExpand', key);
             }
          }
       },
@@ -157,7 +196,7 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', ['js!SBIS3.CORE.Control'], function (Con
        */
       getOpenedPath: function(){
          return this._options.openedPath;
-      }, 
+      },
 
       _drawLoadedNode: function(key, records){
          this._drawExpandArrow(key);
@@ -334,6 +373,13 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', ['js!SBIS3.CORE.Control'], function (Con
          reload : function() {
             this._folderOffsets['null'] = 0;
          },
+         _keyboardHover: function(e) {
+            switch(e.which) {
+               case $ws._const.key.m:
+                  e.ctrlKey && this.moveRecordsWithDialog();
+                  break;
+            }
+         },
          _dataLoadedCallback: function () {
             //this._options.openedPath = {};
             if (this._options.expand) {
@@ -387,7 +433,7 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', ['js!SBIS3.CORE.Control'], function (Con
          }
       }
    };
-    
+
    var TreePagingLoader = Control.Control.extend({
       $protected :{
          _options : {
