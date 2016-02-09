@@ -718,6 +718,7 @@ define(
       _updateText:function() {
          //TODO неодинаковое поведение получается для разного text. Но нельзя this._options.text не обновлять, т.к. его getText() использует
          this._options.text = (this.formatModel._settedText !== null && typeof this.formatModel._settedText !== "undefined") ? this.formatModel.getText(this._maskReplacer) : this.formatModel._settedText;
+         this._notifyOnPropertyChanged('text');
       },
 
       /**
@@ -937,7 +938,7 @@ define(
          //обновить html
          this._inputField.html(this._getHtmlMask());
          this._notify('onTextChange', this._options.text);
-         this._notifyOnPropertyChanged('text');
+         //this._notifyOnPropertyChanged('text'); зовется в _updateText()
       },
 
       /**
