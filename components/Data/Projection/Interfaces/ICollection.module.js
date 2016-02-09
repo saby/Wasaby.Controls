@@ -27,7 +27,7 @@ define('js!SBIS3.CONTROLS.Data.Projection.ICollection', [
             /**
              * @cfg {SBIS3.CONTROLS.Data.Collection.IEnumerable} Исходная коллекция
              */
-            collection: undefined
+            collection: null
          }
       },
 
