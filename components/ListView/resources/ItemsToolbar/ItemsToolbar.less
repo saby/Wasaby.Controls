@@ -14,7 +14,7 @@
 
       &.controls-ItemsToolbar__vertical {
          margin: 1px 1px 0 0;
-         
+
          .controls-ItemActions {
             height: auto;
             width: @list-view-actions-verAlign-width;
@@ -110,20 +110,18 @@
    .controls-ListView {
       .controls-ItemsToolbar__container {
          position: relative;
+
+         .controls-ItemActions .controls-ItemActions__itemsContainer {
+            & > * {
+               margin-top: 0;
+            }
+         }
       }
       .controls-ItemsToolbar__vertical {
          .controls-ItemActions {
             margin: 2px 3px 0 0;
             .controls-ItemActions__menu-button {
                margin-right: -10px;
-            }
-         }
-      }
-      :not(.controls-ItemsToolbar__vertical){
-         .controls-ItemActions {
-            .controls-ItemActions__itemsContainer {
-               top: 50%;
-               margin-top: -@list-view-actions-menu-touch-height / 2;
             }
          }
       }
