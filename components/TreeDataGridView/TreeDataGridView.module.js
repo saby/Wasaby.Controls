@@ -3,6 +3,11 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
    'js!SBIS3.CONTROLS.TreeMixinDS',
    'html!SBIS3.CONTROLS.TreeDataGridView/resources/rowTpl'
 ], function(HierarchyDataGridView, TreeMixinDS, rowTpl) {
+
+   var HIER_WRAPPER_WIDTH = 16,
+       //Число 17 это сумма padding'ов, margin'ов элементов которые составляют отступ у первого поля, по которому строится лесенка отступов в дереве
+       ADDITIONAL_LEVEL_OFFSET = 17;
+
    'use strict';
 
    /**
@@ -100,31 +105,64 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
          self._drawItemsCallback();
       },
 
-      _drawLoadedNode : function(key, records, more) {
+      _drawLoadedNode : function(key, records) {
          this._drawExpandArrow(key);
          this._drawItemsFolder(records);
-
-         //TODO пока не очень общо создаем внутренние пэйджинги
-         var allContainers = $('.controls-ListView__item[data-parent="' + key + '"]', this._getItemsContainer().get(0));
-         var row = $('<tr class="controls-TreeDataGridView__folderToolbar">' +
-            '<td colspan="' + (this._options.columns.length + (this._options.multiselect ? 1 : 0)) + '"><div style="overflow:hidden" class="controls-TreeDataGridView__folderToolbarContainer"><div class="controls-TreePager-container"></div></div></td>' +
-            '</tr>').attr('data-parent', key);
-         $(allContainers.last()).after(row);
-         this._resizeFolderToolbars();
-         var elem = $('.controls-TreePager-container', row.get(0));
-
-         this._createFolderPager(key, elem, more);
+         this._createFolderFooter(key);
       },
-
+      _createFolderFooter: function(key) {
+         TreeDataGridView.superclass._createFolderFooter.apply(this, arguments);
+         var
+             container,
+             lastContainer,
+             level = this._getTreeLevel(key);
+         this._foldersFooters[key].css('padding-left', level * HIER_WRAPPER_WIDTH);
+         container = $('<tr class="controls-TreeDataGridView__folderFooter" "data-parent"="' + key + '">\
+            <td colspan="' + (this._options.columns.length + (this._options.multiselect ? 1 : 0)) + '"></td>\
+         </tr>').attr('data-parent', key);
+         container.find('td').append(this._foldersFooters[key]);
+         this._foldersFooters[key] = container;
+         lastContainer = $('.controls-ListView__item[data-parent="' + key + '"]', this._getItemsContainer().get(0)).last();
+         this._foldersFooters[key].insertAfter(lastContainer.length ? lastContainer : $('.controls-ListView__item[data-id="' + key + '"]', this._getItemsContainer().get(0)));
+         this.reviveComponents();
+      },
+      _getFolderFooterOptions: function(key) {
+         return {
+            item: this.getDataSet().getRecordByKey(key),
+            more: this._folderHasMore[key],
+            level: this._getTreeLevel(key)
+         }
+      },
+      //Временное решение, пока не перейдём на проекции
+      _getTreeLevel: function(key) {
+         var
+             level = 0,
+             dataSet = this.getDataSet(),
+             item = dataSet.getRecordByKey(key);
+         while (key != this.getCurrentRoot()) {
+            key = dataSet.getParentKey(item, this._options.hierField);
+            item = dataSet.getRecordByKey(key);
+            level++;
+         }
+         return level;
+      },
+      _getEditorOffset: function(model) {
+         var
+             offset,
+             parentKey = model.get(this._options.hierField),
+             treeLevel = this._getTreeLevel(parentKey);
+         offset = treeLevel * HIER_WRAPPER_WIDTH + ADDITIONAL_LEVEL_OFFSET;
+         return offset;
+      },
       _onResizeHandler: function() {
          TreeDataGridView.superclass._onResizeHandler.apply(this, arguments);
-         this._resizeFolderToolbars();
+         this._resizeFoldersFooters();
       },
 
-      _resizeFolderToolbars: function() {
-         var toolbars = $('.controls-TreeDataGridView__folderToolbarContainer', this._container.get(0));
+      _resizeFoldersFooters: function() {
+         var footers = $('.controls-TreeDataGridView__folderFooterContainer', this._container.get(0));
          var width = this._container.width();
-         toolbars.width(width);
+         footers.width(width);
       },
 
       _keyboardHover: function(e) {
@@ -176,37 +214,14 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
          $('.js-controls-TreeView__expand', itemCont).toggleClass('controls-TreeView__expand__open', flag);
       },
 
-      destroyFolderToolbar: function(id) {
-         var
-            container = $('.controls-TreeDataGridView__folderToolbar' + (id ? '[data-parent="' + id + '"]' : ''), this._container.get(0));
-            container.remove();
-
-         if (id) {
-            if (this._treePagers[id]) {
-               this._treePagers[id].destroy();
-            }
-         }
-         else {
-            for (var i in this._treePagers) {
-               if (this._treePagers.hasOwnProperty(i)) {
-                  this._treePagers[i].destroy();
-               }
-            }
-         }
-      },
-
       _nodeClosed : function(key) {
          var childKeys = this._dataSet.getChildItems(key, true, this._options.hierField);
          for (var i = 0; i < childKeys.length; i++) {
             $('.controls-ListView__item[data-id="' + childKeys[i] + '"]', this._getItemsContainer().get(0)).remove();
             delete(this._options.openedPath[childKeys[i]]);
          }
-         /*TODO кажется как то нехорошо*/
-         $('.controls-TreeDataGridView__folderToolbar[data-parent="'+key+'"]').remove();
-         if (this._treePagers[key]) {
-            this._treePagers[key].destroy();
-         }
-
+         //Уничтожим все дочерние footer'ы и footer текущего узла
+         this._destroyFolderFooter(childKeys.concat(key));
       },
 
       _addItemAttributes : function(container, item) {
@@ -311,6 +326,11 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
             return false;
          }
          return TreeDataGridView.superclass._groupByDefaultMethod.apply(this, arguments);
+      },
+      _getEditInPlaceConfig: function() {
+         var config = TreeDataGridView.superclass._getEditInPlaceConfig.apply(this, arguments);
+         config.getEditorOffset = this._getEditorOffset.bind(this);
+         return config;
       }
    });
 

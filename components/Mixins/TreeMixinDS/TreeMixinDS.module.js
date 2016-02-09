@@ -24,8 +24,10 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', ['js!SBIS3.CORE.Control'], function (Con
              * @Boolean false Без разворота
              */
             expand: false,
-            openedPath : {}
-         }
+            openedPath : {},
+            folderFooterTpl: undefined
+         },
+         _foldersFooters: {}
       },
 
       $constructor : function() {
@@ -36,7 +38,6 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', ['js!SBIS3.CORE.Control'], function (Con
          }
          this.setFilter(filter, true);
       },
-
       _getRecordsForRedraw: function() {
          /*Получаем только рекорды с parent = curRoot*/
          var
@@ -113,7 +114,6 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', ['js!SBIS3.CORE.Control'], function (Con
             }
          }
       },
-
       _createTreeFilter: function(key) {
          var
             filter = $ws.core.clone(this.getFilter()) || {};
@@ -299,7 +299,36 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', ['js!SBIS3.CORE.Control'], function (Con
             return typeof (more) !== 'boolean' ? more > (this._folderOffsets[id] + this._options.pageSize) : !!more;
          }
       },
-
+      _createFolderFooter: function(key) {
+         var
+             footerTpl = this._options.folderFooterTpl,
+             options = this._getFolderFooterOptions(key),
+             container = $('<div class="controls-TreeView__folderFooterContainer">' + (footerTpl ? footerTpl(options) : '') + '</div>');
+         this._destroyFolderFooter([key]);
+         this._createFolderPager(key, $('<div class="controls-TreePager-container">').appendTo(container), options.more);
+         this._foldersFooters[key] = container;
+      },
+      _getFolderFooterOptions: function(key) {
+         return {
+            keys: key,
+            more: this._folderHasMore[key]
+         };
+      },
+      _destroyFolderFooter: function(items) {
+         var
+             controls,
+             self = this;
+         $ws.helpers.forEach(items, function(item) {
+            if (self._foldersFooters[item]) {
+               controls = self._foldersFooters[item].find('.ws-component');
+               for (var i = 0; i < controls.length; i++) {
+                  controls[i].wsControl.destroy();
+               }
+               self._foldersFooters[item].remove();
+               delete self._foldersFooters[item];
+            }
+         });
+      },
 
       before: {
          reload : function() {
@@ -322,12 +351,20 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', ['js!SBIS3.CORE.Control'], function (Con
             }
          },
          _clearItems: function() {
-            for (var i in this._treePagers) {
-               if (this._treePagers.hasOwnProperty(i)) {
-                  this._treePagers[i].destroy();
-               }
+            var self = this;
+            $ws.helpers.forEach(this._foldersFooters, function(val, key) {
+               self._destroyFolderFooter([key]);
+            });
+         }
+      },
+      after : {
+         _modifyOptions: function (opts) {
+            var tpl = opts.folderFooterTpl;
+            //Если нам передали шаблон как строку вида !html, то нужно из нее сделать функцию
+            if (tpl && typeof tpl === 'string' && tpl.match(/^html!/)) {
+               opts.folderFooterTpl = require(tpl);
             }
-            this.destroyFolderToolbar && this.destroyFolderToolbar();
+            return opts;
          }
       },
 
