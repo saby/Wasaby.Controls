@@ -152,7 +152,6 @@ define('js!SBIS3.CONTROLS.hierarchyMixin', [], function () {
          //TODO: нужно избавиться от флага когда будут готовы биндинги
          this._rootChanged = this._curRoot !== key;
          this._curRoot = key || this._options.root;
-         this.setSelectedKey(null);
       },
       after : {
          //TODO:После каждого релоада проверяется флаг _rootChanged и если флаг взведен,
