@@ -1047,7 +1047,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
 
       _addItem: function (item, at) {
          var ladderDecorator = this._decorators.getByName('ladder');
-         ladderDecorator.setEnabled(false);
+         ladderDecorator && ladderDecorator.setEnabled(false);
          item = item.getContents();
          var target = this._getTargetContainer(item),
             nextSibling = at > -1 ? this._getItemContainerByIndex(target, at) : null,
@@ -1062,7 +1062,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
             newItemContainer.appendTo(target);
             rows = [newItemContainer.prev(), newItemContainer];
          }
-         ladderDecorator.setEnabled(true);
+         ladderDecorator && ladderDecorator.setEnabled(true);
          this._ladderCompare(rows);
       },
       _ladderCompare: function(rows){

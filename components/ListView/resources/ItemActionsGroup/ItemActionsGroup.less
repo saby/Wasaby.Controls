@@ -1,80 +1,18 @@
-/* �������� ����� ��� ����� ������ */
 .controls-ListView {
-  .controls-ItemActions {
-    background-color: transparent;
-    box-shadow: none;
-  }
-  &.controls-DataGridView {
-
-    .controls-ItemActions {
-      background-color: @list-view-actions-bg;
-      .controls-ItemActions__itemsContainer {
-			background-color: @list-view-actions-bg;
-      }
-      box-shadow: @list-view-actions-box-shadow;
-    }
-    .controls-ItemActions__activeItem {
-      background-color: @list-view-actions-active-bg;
-
-      .controls-DataGrid__notScrolledCell {
-        background-color: @list-view-actions-active-bg !important;
-      }
-    }
-  }
-}
-
-@bottomStyle-item-actions-height:         30px;
-@bottomStyle-item-actions-margin-top:     20px;
-@bottomStyle-item-actions-border-color:   #F3F3F3;
-
-.controls-ListView.controls-ListView__bottomStyle {
-   padding-bottom: @bottomStyle-item-actions-height;
-   .controls-ItemActions, &.controls-DataGridView .controls-ItemActions {
-      box-shadow: none;
-      background-color: #F0F5FB;
-      margin-top: @bottomStyle-item-actions-margin-top;
-      height: @bottomStyle-item-actions-height - 1;
-      border-bottom: 1px solid @bottomStyle-item-actions-border-color;
-      &:before {
-         content: '';
-         position: absolute;
-         display: block;
-         background: url('img/items-actions-bottom-style-background.png') no-repeat 0 0;
-         width: 24px;
-         height: @bottomStyle-item-actions-height;
-         left: -24px;
-      }
-      &:after {
-         content: '';
-         position: absolute;
-         display: block;
-         background: url('img/items-actions-bottom-style-background.png') no-repeat 100% 0;
-         width: 3px;
-         height: @bottomStyle-item-actions-height;
-         right: -3px;
-         top: 0;
-      }
-   }
-   .controls-ItemActions .controls-ItemActions__itemsContainer {
-      height: @bottomStyle-item-actions-height - 1;
-      & > * {
-         top: 8px;
-         &.controls-IconButton__round-border {
-            height: @list-view-actions-icon-round-height;
-            vertical-align: top;
-            top: @list-view-actions-icon-round-top;
-         }
-         &.controls-Link {
-            top: @list-view-actions-link-top;
-         }
-         &.controls-ItemActions__menu-button {
-            margin-top: 7px;
-         }
-      }
-
-   }
-   &.controls-DataGridView .controls-ItemActions .controls-ItemActions__itemsContainer {
+   .controls-ItemActions {
       background-color: transparent;
+      box-shadow: none;
+      display: inline-block;
+      margin-bottom: 3px;
+   }
+   &.controls-DataGridView {
+      .controls-ItemActions__activeItem {
+         background-color: @list-view-actions-active-bg;
+
+         .controls-DataGrid__notScrolledCell {
+            background-color: @list-view-actions-active-bg !important;
+         }
+      }
    }
 }
 
@@ -87,18 +25,6 @@
    .controls-ItemActions{
       padding-left: 6px;
       overflow: hidden;
-      &.controls-ItemActions-verAlign {
-         margin: 2px 3px 0 0;
-         .controls-ItemActions__menu-button {
-            margin-right: -10px;
-         }
-      }
-      &:not(.controls-ItemActions-verAlign){
-         .controls-ItemActions__itemsContainer{
-            top: 50%;
-            margin-top: -@list-view-actions-menu-touch-height / 2;
-         }
-      }
       .controls-ItemActions__itemsContainer{
          > * {
             line-height: @list-view-actions-menu-touch-height!important;
@@ -107,8 +33,8 @@
                height: 24px;
             }
          }
-      	background: @list-view-actions-bg;
-      	position: relative;
+         background: @list-view-actions-bg;
+         position: relative;
          .controls-Link{
             font-size: 16px;
          }
@@ -145,8 +71,8 @@
          position: absolute;
          top: @controls-Popup-closeButton-top;
          right: @controls-Popup-closeButton-right;
-         width: @controls-Popup-closeButton-width;
-         height: @controls-Popup-closeButton-height;
+         width: @closeButtonWidth;
+         height: @closeButtonHeight;
          cursor: pointer;
          background: @closeButtonImage;
          &:hover {
@@ -160,54 +86,24 @@
 }
 
 .controls-ItemActions {
-   position: absolute;
-   height: @list-view-actions-height;
-   z-index: @list-view-actions-zindex;
-   display: none;
-   margin-right: @list-view-actions-margin-right;
-
-   &.controls-ItemActions-verAlign {
-      height: auto;
-      width: @list-view-actions-verAlign-width;
-      margin: @list-view-actions-verAlign-margin;
-
-      .controls-ItemActions__itemsContainer {
-         & > * {
-            margin: @list-view-actions-margin-action-multiView;
-         }
-      }
-
-      .controls-ItemActions__menu-button {
-         float: @list-view-actions-float-multiView;
-         margin-left: @list-view-actions-marginLeft-menu-multiView;
-      }
-   }
-
    .controls-ItemActions__itemsContainer{
-
       > * {
-         display: inline-block;
+         float: left;
          cursor: @list-view-actions-cursor;
          margin: @list-view-actions-margin;
-         vertical-align: baseline;
          height: @list-view-actions-item-height;
          padding: 0;
 
          &.controls-ItemActions__menu-button {
-            display: inline-block;
             z-index: 11;
             background: @list-view-actions-menu-icon;
             width: @list-view-actions-menu-icon-width;
             float: right;
 
             &:hover {
-              background: @list-view-actions-menu-icon-hover;
+               background: @list-view-actions-menu-icon-hover;
             }
          }
-      }
-      > .controls-Link {
-         display: inline;
-         top: -@list-view-actions-link-top;
       }
    }
 }
@@ -236,10 +132,4 @@
          top: @list-view-actions-menu-close-revVert-top;
       }
    }
-}
-.controls-ItemActions__activeItem {
-  background-color: @list-view-actions-active-bg;
-  .controls-DataGridView__notScrolledCell {
-     background-color: @list-view-actions-active-bg !important;
-  }
 }
