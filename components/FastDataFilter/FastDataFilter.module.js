@@ -127,7 +127,7 @@ define('js!SBIS3.CONTROLS.FastDataFilter',
                   text = [], ds,
                //Если выбрали дефолтное значение, то нужно взять из resetValue
                //TODO может быть всегда отдавать массивом?
-                   filterValue =  idArray.length === 1 && idArray[0] === this.getDefaultId() ? self._filterStructure[idx].resetValue :
+                   filterValue =  idArray.length === 1 && (idArray[0] === this.getDefaultId()) && self._filterStructure[idx] ? self._filterStructure[idx].resetValue :
                          (this._options.multiselect ?  idArray : idArray[0]);
                //TODO Непонятно как это сделать в обратную сторону (когда из контекста кришло значение его нужно поставить в dropdownList)
                //В контексте текуший DropdownList, у него задавали поле с фильтром
