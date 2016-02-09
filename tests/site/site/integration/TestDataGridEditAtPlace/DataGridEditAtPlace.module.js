@@ -66,7 +66,7 @@ define('js!TestDataGridEditAtPlace',
             }
          }
          var   arrayStrategy = new ArrayStrategy(),
-               ds1 = new SbisServiceSource({service: 'ЗаметкаРедактированиеПоМесту'}),
+               ds1 = new SbisServiceSource({resource: 'ЗаметкаРедактированиеПоМесту'}),
                ds2 = new StaticSource({
                   data: bigColls,
                   keyField: '@ЗаметкаРедактированиеПоМесту',
