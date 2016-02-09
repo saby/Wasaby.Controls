@@ -182,13 +182,12 @@ define('js!SBIS3.CONTROLS.BreadCrumbs', [
             i = points.length - 1;
 
          if (points.length){
-            //20px - ширина блока с домиком
             //Добавляем троеточие если пункты не убираются в контейнер
-            if ((targetContainer.width() + 20 >= containerWidth) && points.length > 2) {
+            if ((targetContainer.width() + this._homeIconWidth >= containerWidth) && points.length > 2) {
                $(points[i - 1]).before(dots);
                //скрываем пункты левее троеточия пока не уберемся в контейнер
                for (i; i > 1; i--) {
-                  if (targetContainer.width() + 20 < containerWidth || i == 1) {
+                  if (targetContainer.width() + this._homeIconWidth < containerWidth || i == 1) {
                      break;
                   }
                   points[i - 1].className += ' ws-hidden';
@@ -199,7 +198,7 @@ define('js!SBIS3.CONTROLS.BreadCrumbs', [
             points = $('.controls-BreadCrumbs__crumb:not(.ws-hidden)', targetContainer);
 
             //Минимум остается первая и последняя хлебная крошка
-            if ((targetContainer.width() + this._arrowWidth >= containerWidth)) {
+            if (targetContainer.width() + this._homeIconWidth >= containerWidth) {
                //ширина декоротивных элементов -  блок с домиком, троеточие, стрелки 
                var width = this._homeIconWidth + this._dotsWidth + this._arrowWidth * 2;
                var halfWidth = Math.floor((containerWidth - width) / 2);

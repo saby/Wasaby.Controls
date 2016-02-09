@@ -1040,9 +1040,9 @@ define('js!SBIS3.CONTROLS.ListView',
          _showItemsToolbar: function(target) {
             this._getItemsToolbar().show(target, this._touchSupport);
          },
-         _hideItemsToolbar: function (animate) {
+         _hideItemsToolbar: function () {
             if (this._itemsToolbar) {
-               this._itemsToolbar.hide(animate);
+               this._itemsToolbar.hide(this._touchSupport);
             }
          },
          _getItemsToolbar: function() {
@@ -1687,7 +1687,7 @@ define('js!SBIS3.CONTROLS.ListView',
             this.setSelectedKey(this.getCurrentElement().targetId);
             this._isShifted = true;
             this._createAvatar(e);
-            this._hideItemActions();
+            this._hideItemsToolbar();
          },
          _clearDragHighlight: function() {
             this.getCurrentElement().target.removeClass('controls-DragNDrop__insertBefore controls-DragNDrop__insertAfter');
@@ -1699,7 +1699,7 @@ define('js!SBIS3.CONTROLS.ListView',
             this._avatar.remove();
             this._isShifted = false;
             if (this.getItemsActions() && hoveredItem.container) {
-               this._showItemActions(hoveredItem);
+               this._showItemsToolbar(hoveredItem);
             }
          },
          _drawResults: function(){
