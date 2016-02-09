@@ -5,9 +5,10 @@
 define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
    [
       'js!SBIS3.CORE.CompoundControl',
-      'js!SBIS3.CONTROLS.EditInPlace'
+      'js!SBIS3.CONTROLS.EditInPlace',
+      'js!SBIS3.CONTROLS.Data.Model'
    ],
-   function (CompoundControl, EditInPlace) {
+   function (CompoundControl, EditInPlace, Model) {
 
       'use strict';
 
@@ -40,7 +41,8 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                   editFieldFocusHandler: undefined,
                   dataSource: undefined,
                   dataSet: undefined,
-                  itemsContainer: undefined
+                  itemsContainer: undefined,
+                  getEditorOffset: undefined
                },
                _eip: undefined,
                // Используется для хранения Deferred при сохранении в редактировании по месту.
@@ -71,6 +73,7 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                   context: this._getContextForEip(),
                   focusCatch: this._focusCatch.bind(this),
                   editingItem: this._options.editingItem,
+                  getEditorOffset: this._options.getEditorOffset,
                   parent: this,
                   handlers: {
                      onItemValueChanged: function(event, difference, model) {
@@ -127,11 +130,11 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                var currentTarget = this._eip.getTarget();
                return currentTarget[editNextRow ? 'next' : 'prev']('.js-controls-ListView__item:not(".controls-editInPlace")');
             },
-            showEip: function(target, record) {
-               if (target && record) {
-                  return this.edit(target, record)
+            showEip: function(target, model, options) {
+               if (options.isEdit) {
+                  return this.edit(target, model, options)
                } else {
-                  return this.add();
+                  return this.add(model, options);
                }
             },
             edit: function (target, record) {
@@ -238,17 +241,27 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                   this._notify('onAfterEndEdit', eipRecord, target, withSaving);
                }
             },
-            add: function() {
-               var options,
-                   self = this;
+            add: function(model, options) {
+               var
+                   self = this,
+                   target = this._createAddTarget(options);
+               model = model || this._notify('onBeginAdd');
+               target.attr('data-id', '' + model.getKey());
                return this.endEdit(true).addCallback(function() {
-                  options = self._notify('onBeginAdd');
-                  return self._options.dataSource.create(options).addCallback(function (record) {
-                     var target = $('<div class="js-controls-ListView__item"></div>').appendTo(self._options.itemsContainer);
+                  return self._options.dataSource.create(model).addCallback(function (record) {
                      self._eip.edit(target, record);
                      return record;
                   });
                });
+            },
+            _createAddTarget: function(options) {
+               var
+                   footer,
+                   target = $('<div class="js-controls-ListView__item"></div>');
+               if (options && options.initiator) {
+                  footer = options.initiator.closest('.controls-TreeDataGridView__folderFooter');
+               }
+               return footer ? target.insertBefore(footer) : target.appendTo(this._options.itemsContainer);
             },
             /**
              * Обработчик потери фокуса областью редактирования по месту
@@ -283,7 +296,7 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
             _isCurrentTarget: function(control) {
                var currentTarget = this._getEditingEip().getTarget(),
                    newTarget  = control.getContainer().closest('.js-controls-ListView__item');
-               return currentTarget.attr('data-id') === newTarget.attr('data-id');
+               return currentTarget.attr('data-id') == newTarget.attr('data-id');
             },
             destroy: function() {
                this.endEdit();
