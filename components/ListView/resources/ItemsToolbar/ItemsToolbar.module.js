@@ -103,11 +103,11 @@ define('js!SBIS3.CONTROLS.ItemsToolbar',
              });
           },
           /**
-           * Метод получения операций над записью.
-           * @returns {Array} Массив операций над записью.
+           * Метод получения компонента операций над записью.
+           * @returns {Object} Компонент "операции над записью".
            */
           getItemsActions: function() {
-             return this.getItemsActionsGroup().getItems();
+             return this.getItemsActionsGroup();
           },
           /**
            * Создает или возвращает уже созданные опции записи
