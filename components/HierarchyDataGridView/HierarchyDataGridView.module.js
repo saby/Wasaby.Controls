@@ -189,7 +189,8 @@ define('js!SBIS3.CONTROLS.HierarchyDataGridView', [
                highlightText: this._options.highlightText,
                colorMarkEnabled: this._options.colorMarkEnabled,
                colorField: this._options.colorField,
-               className : 'controls-BreadCrumbs__smallItems'
+               className : 'controls-BreadCrumbs__smallItems',
+               enable: this._options.allowEnterToFolder
             };
             if (groupBy.hasOwnProperty('breadCrumbsTpl')){
                cfg.itemTemplate = groupBy.breadCrumbsTpl
@@ -198,7 +199,8 @@ define('js!SBIS3.CONTROLS.HierarchyDataGridView', [
             ps.once('onItemClick', function(event, id){
                //Таблицу нужно связывать только с тем PS, в который кликнули. Хорошо, что сначала идет _notify('onBreadCrumbClick'), а вотом выполняется setCurrentRoot
                event.setResult(false);
-               if (self._notify('onSearchPathClick', id) !== false ) {
+               //TODO Выпилить в .100 проверку на задизабленность, ибо событие вообще не должно стрелять и мы сюда не попадем, если крошки задизаблены
+               if (this.isEnabled() && self._notify('onSearchPathClick', id) !== false ) {
                   //TODO в будущем нужно отдать уже dataSet крошек, ведь здесь уже все построено
                   /*TODO для Алены. Временный фикс, потому что так удалось починить*/
                   var filter = $ws.core.merge(self.getFilter(), {
