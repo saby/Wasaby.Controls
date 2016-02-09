@@ -90,6 +90,9 @@ define('js!SBIS3.CONTROLS.Selectable', ['js!SBIS3.CONTROLS.Data.Utils'], functio
                this._selectMode = 'index';
                this._options.selectedIndex = 0;
             }
+            else {
+               this._options.selectedIndex = undefined;
+            }
          }
          else {
             this._selectMode = 'index';
@@ -127,6 +130,9 @@ define('js!SBIS3.CONTROLS.Selectable', ['js!SBIS3.CONTROLS.Data.Utils'], functio
             if ((typeof this._options.selectedIndex != 'undefined') && (this._options.selectedIndex !== null)) {
                this._itemsProjection.setCurrentPosition(this._options.selectedIndex);
             }
+            else {
+               this._itemsProjection.setCurrentPosition(-1);
+            }
          }
       },
 
@@ -163,7 +169,12 @@ define('js!SBIS3.CONTROLS.Selectable', ['js!SBIS3.CONTROLS.Data.Utils'], functio
          this._options.selectedKey = id;
          if (this._itemsProjection) {
             this._prepareSelectedConfig(undefined, id);
-            this._itemsProjection.setCurrentPosition(this._options.selectedIndex);
+            if ((typeof this._options.selectedIndex != 'undefined') && (this._options.selectedIndex !== null)) {
+               this._itemsProjection.setCurrentPosition(this._options.selectedIndex);
+            }
+            else {
+               this._itemsProjection.setCurrentPosition(-1);
+            }
          }
       },
 
