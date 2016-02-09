@@ -213,7 +213,7 @@ define('js!SBIS3.CONTROLS.TreeCompositeView', ['js!SBIS3.CONTROLS.TreeDataGridVi
                   self.redrawItem(record);
                } else { //Иначе - удаляем запись
                   currentDataSet.removeRecord(row.key);
-                  self.destroyFolderToolbar(row.key);
+                  self._destroyFolderFooter([row.key]);
                   self._ladderCompare(environment);
                   row.$row.remove();
                   //Если количество записей в текущем DataSet меньше, чем в обновленном, то добавляем в него недостающую запись
