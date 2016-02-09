@@ -2,8 +2,9 @@
 define('js!SBIS3.CONTROLS.Data.Projection.CollectionItem', [
    'js!SBIS3.CONTROLS.Data.Projection.ICollectionItem',
    'js!SBIS3.CONTROLS.Data.IHashable',
-   'js!SBIS3.CONTROLS.Data.HashableMixin'
-], function (ICollectionItem, IHashable, HashableMixin) {
+   'js!SBIS3.CONTROLS.Data.HashableMixin',
+   'js!SBIS3.CONTROLS.Data.Di'
+], function (ICollectionItem, IHashable, HashableMixin, Di) {
    'use strict';
 
    /**
@@ -83,9 +84,7 @@ define('js!SBIS3.CONTROLS.Data.Projection.CollectionItem', [
       }
    });
 
-   $ws.single.ioc.bind('SBIS3.CONTROLS.Data.Projection.CollectionItem', function(config) {
-      return new CollectionItem(config);
-   });
+   Di.register('projection.collection-item', CollectionItem);
 
    return CollectionItem;
 });
