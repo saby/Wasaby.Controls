@@ -87,8 +87,10 @@ define('js!SBIS3.CONTROLS.Selectable', ['js!SBIS3.CONTROLS.Data.Utils'], functio
                this._options.selectedIndex = this._getItemIndexByKey(key);
             }
             else if (!this._options.allowEmptySelection) {
-               this._selectMode = 'index';
-               this._options.selectedIndex = 0;
+               if (this._itemsProjection.getCount()) {
+                  this._selectMode = 'index';
+                  this._options.selectedIndex = 0;
+               }
             }
             else {
                this._options.selectedIndex = undefined;
