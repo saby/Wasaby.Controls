@@ -32,7 +32,8 @@ define('js!SBIS3.CONTROLS.EditInPlace',
                   applyOnFieldChange: true,
                   itemsContainer: undefined,
                   visible: false,
-                  editingItem: undefined
+                  editingItem: undefined,
+                  getEditorOffset: undefined
                },
                _record: undefined,
                _target: null,
@@ -135,6 +136,7 @@ define('js!SBIS3.CONTROLS.EditInPlace',
                this.updateFields(record);
                this._record.subscribe(this._useModel() ? 'onPropertyChange' : 'onChange', this._onRecordChangeHandler);
                this.getContainer().attr('data-id', record.getKey());
+               this.setOffset(record);
 
                this.setTarget(target);
                EditInPlace.superclass.show.apply(this, arguments);
@@ -198,6 +200,15 @@ define('js!SBIS3.CONTROLS.EditInPlace',
                this.getEditingItem().target.removeClass('controls-editInPlace__editing');
                this._editing = false;
                this.hide();
+            },
+            setOffset: function(model) {
+               var container = this.getContainer();
+               if (this._options.getEditorOffset) {
+                  if (!this._options.editingTemplate) {
+                     container = container.children().get(this._options.ignoreFirstColumn ? 1 : 0);
+                  }
+                  $(container).find('.controls-editInPlace__editor').css('padding-left', this._options.getEditorOffset(model));
+               }
             },
             setTarget: function(target) {
                var editorTop;

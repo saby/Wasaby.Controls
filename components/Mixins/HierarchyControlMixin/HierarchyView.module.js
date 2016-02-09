@@ -50,7 +50,7 @@ define('js!SBIS3.CONTROLS.HierarchyControl.HierarchyView', [
       //region SBIS3.CONTROLS.ListControl.IView
 
       render: function (items) {
-         this._levelOffset = items.getCollection().getOwner().getLevel();
+         this._levelOffset = items.getOwner().getLevel();
          HierarchyView.superclass.render.call(this, items);
       },
 
@@ -74,7 +74,7 @@ define('js!SBIS3.CONTROLS.HierarchyControl.HierarchyView', [
 
       _getRenderData: function(items) {
          var data = HierarchyView.superclass._getRenderData.call(this, items);
-         data.id = items.getCollection().getOwner().getHash() + this._childrenContainerSuffix;
+         data.id = items.getOwner().getHash() + this._childrenContainerSuffix;
          return data;
       },
 
