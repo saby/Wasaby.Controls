@@ -1,8 +1,8 @@
 /* global define, require, $ws */
 define('js!SBIS3.CONTROLS.Data.Projection.Enum', [
    'js!SBIS3.CONTROLS.Data.Projection.Collection',
-   'js!SBIS3.CONTROLS.Data.Projection.CollectionItem'
-], function (Projection) {
+   'js!SBIS3.CONTROLS.Data.Di'
+], function (CollectionProjection, Di) {
    'use strict';
 
    /**
@@ -13,20 +13,12 @@ define('js!SBIS3.CONTROLS.Data.Projection.Enum', [
     * @author Ганшнин Ярослав
     */
 
-   var EnumProjection = Projection.extend([], /** @lends SBIS3.CONTROLS.Data.Projection.Collection.prototype */{
+   var EnumProjection = CollectionProjection.extend([], /** @lends SBIS3.CONTROLS.Data.Projection.Collection.prototype */{
       _moduleName: 'SBIS3.CONTROLS.Data.Projection.Enum',
-      $protected: {
-         _itemModule: 'SBIS3.CONTROLS.Data.Projection.CollectionItem'
-      },
-
-      $constructor: function (cfg) {
-         //console.log(cfg);
-
-      },
 
       _convertItem: function(item) {
          if (!$ws.helpers.instanceOfModule(item, this._itemModule)) {
-            item = $ws.single.ioc.resolve(this._itemModule, {
+            item = Di.resolve(this._itemModule, {
                owner: this,
                contents: item
             });
@@ -52,9 +44,7 @@ define('js!SBIS3.CONTROLS.Data.Projection.Enum', [
 
    });
 
-   $ws.single.ioc.bind('SBIS3.CONTROLS.Data.Projection.Enum', function(config) {
-      return new EnumProjection(config);
-   });
+   Di.register('projection.enum', EnumProjection);
 
    return EnumProjection;
 });
