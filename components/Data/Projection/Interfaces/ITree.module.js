@@ -57,26 +57,10 @@ define('js!SBIS3.CONTROLS.Data.Projection.ITree', [
       },
 
       /**
-       * Устанавливает название свойства, содержащего идентификатор узла
-       * @param {String} name Название свойства, содержащего идентификатор узла
-       */
-      setIdProperty: function (name) {
-         throw new Error('Method must be implemented');
-      },
-
-      /**
        * Возвращает название свойства, содержащего идентификатор родительского узла
        * @returns {String}
        */
       getParentProperty: function () {
-         throw new Error('Method must be implemented');
-      },
-
-      /**
-       * Устанавливает название свойства, содержащего идентификатор родительского узла
-       * @param {String} name Название свойства, содержащего идентификатор родительского узла
-       */
-      setParentProperty: function (name) {
          throw new Error('Method must be implemented');
       },
 
@@ -89,26 +73,10 @@ define('js!SBIS3.CONTROLS.Data.Projection.ITree', [
       },
 
       /**
-       * Устанавливает название свойства, содержащего признак узла
-       * @param {String} name Название свойства, содержащего признак узла
-       */
-      setNodeProperty: function (name) {
-         throw new Error('Method must be implemented');
-      },
-
-      /**
        * Возвращает название свойства, содержащего дочерние элементы узла
        * @returns {String}
        */
       getChildrenProperty: function () {
-         throw new Error('Method must be implemented');
-      },
-
-      /**
-       * Устанавливает название свойства, содержащего дочерние элементы узла
-       * @param {String} name Название свойства, содержащего дочерние элементы узла
-       */
-      setChildrenProperty: function (name) {
          throw new Error('Method must be implemented');
       },
 

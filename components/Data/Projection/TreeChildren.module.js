@@ -1,8 +1,9 @@
 /* global define, require, $ws */
 define('js!SBIS3.CONTROLS.Data.Projection.TreeChildren', [
    'js!SBIS3.CONTROLS.Data.Projection.ITreeChildren',
-   'js!SBIS3.CONTROLS.Data.Collection.List'
-], function (ITreeChildren, List) {
+   'js!SBIS3.CONTROLS.Data.Collection.List',
+   'js!SBIS3.CONTROLS.Data.Di'
+], function (ITreeChildren, List, Di) {
    'use strict';
 
    /**
@@ -50,9 +51,7 @@ define('js!SBIS3.CONTROLS.Data.Projection.TreeChildren', [
 
    });
 
-   $ws.single.ioc.bind('SBIS3.CONTROLS.Data.Projection.TreeChildren', function(config) {
-      return new TreeChildren(config);
-   });
+   Di.register('projection.tree-children', TreeChildren);
 
    return TreeChildren;
 });
