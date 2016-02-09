@@ -131,7 +131,7 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                return currentTarget[editNextRow ? 'next' : 'prev']('.js-controls-ListView__item:not(".controls-editInPlace")');
             },
             showEip: function(target, model, options) {
-               if (options.isEdit) {
+               if (options && options.isEdit) {
                   return this.edit(target, model, options)
                } else {
                   return this.add(model, options);
@@ -246,9 +246,9 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                    self = this,
                    target = this._createAddTarget(options);
                model = model || this._notify('onBeginAdd');
-               target.attr('data-id', '' + model.getKey());
                return this.endEdit(true).addCallback(function() {
                   return self._options.dataSource.create(model).addCallback(function (record) {
+                     target.attr('data-id', '' + record.getKey());
                      self._eip.edit(target, record);
                      return record;
                   });
