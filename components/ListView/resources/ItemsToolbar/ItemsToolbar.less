@@ -108,12 +108,27 @@
 }
 .ws-is-mobile-platform {
    .controls-ListView {
-      .controls-ItemsToolbar__container {
-         position: relative;
+      &:not(.controls-ListView__bottomStyle) {
+         .controls-ItemsToolbar:not(.controls-ItemsToolbar__vertical){
+            margin: 0;
+            .controls-ItemsToolbar__container {
+               top: 50%;
+               margin-top: -@list-view-actions-menu-touch-height / 2;
+            }
+         }
+         .controls-ItemsToolbar {
+            overflow: hidden;
+         }
+      }
+      .controls-ItemsToolbar {
+         box-shadow: none;
+         .controls-ItemsToolbar__container {
+            position: relative;
 
-         .controls-ItemActions .controls-ItemActions__itemsContainer {
-            & > * {
-               margin-top: 0;
+            .controls-ItemActions .controls-ItemActions__itemsContainer {
+               & > * {
+                  margin-top: 0;
+               }
             }
          }
       }
