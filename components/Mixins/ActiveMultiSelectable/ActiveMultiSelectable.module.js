@@ -64,6 +64,10 @@ define('js!SBIS3.CONTROLS.ActiveMultiSelectable', [], function() {
              selItems = this._options.selectedItems;
 
          /* Если добавляемых элементов нет, то ничего не делаем */
+         /* TODO в 3.7.3.100 добавить проверку, надо ли вообще что-то добавлять, возможно уже что все переданные записи есть
+            Задача в разработку от 09.02.2016 №1172587090
+            Добавить проверку в ActiveMultiSelectable на добавляемость элементов, чтобы уменьшить возможно ко...
+            https://inside.tensor.ru/opendoc.html?guid=f206f51b-f653-4337-acdb-7472ccee8a9c */
          if(!newItems.getCount()) return;
 
          if(this._options.multiselect) {
