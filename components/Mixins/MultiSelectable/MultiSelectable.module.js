@@ -448,14 +448,17 @@ define('js!SBIS3.CONTROLS.MultiSelectable', ['js!SBIS3.CONTROLS.Data.Collection.
       },
 
       _isItemSelected : function(id) {
-         //TODO пока нет определенности ключ - строка или число - надо избавиться
-         var index = this._options.selectedKeys.indexOf(id);
+         var
+            keys = this._options.selectedKeys,
+            index = Array.indexOf(keys, id);
          if (index < 0) {
-            index = this._options.selectedKeys.indexOf(id + '')
+            index = Array.indexOf(keys, parseInt(id, 10));
+         }
+         if (index < 0) {
+            index = Array.indexOf(keys, String(id));
          }
          return index;
       },
-
       _drawSelectedItems : function() {
          /*Method must be implemented*/
       },
