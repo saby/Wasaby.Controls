@@ -201,6 +201,10 @@ define('js!SBIS3.CONTROLS.Data.Projection.Tree', [
          return this._childrenMap[hash];
       },
 
+      /**
+       * Устанавливает текущим следующий элемент родительского узла.
+       * @returns {Boolean} Есть ли следующий элемент в родительском узле
+       */
       moveToNext: function () {
          //TODO: отлеживать по level, что вышли "выше"
          var enumerator = this._getServiceEnumerator(),
@@ -224,6 +228,10 @@ define('js!SBIS3.CONTROLS.Data.Projection.Tree', [
          return hasMove;
       },
 
+      /**
+       * Устанавливает текущим предыдущий элемент родительского узла
+       * @returns {Boolean} Есть ли предыдущий элемент в родительском узле
+       */
       moveToPrevious: function () {
          //TODO: отлеживать по level, что вышли "выше"
          var enumerator = this._getServiceEnumerator(),
@@ -265,9 +273,6 @@ define('js!SBIS3.CONTROLS.Data.Projection.Tree', [
          var current = this.getCurrent();
          if (!current || !current.isNode()) {
             return false;
-         }
-         if (!current.isExpanded()) {
-            current.setExpanded(true);
          }
          var children = this.getChildren(current);
          if (children.getCount() === 0) {

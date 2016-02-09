@@ -195,6 +195,11 @@ define([
                   assert.strictEqual(child.getContents().title, expect[index]);
                });
             });
+            it('should cache previous result', function() {
+               var childrenA = tree.getChildren(tree.at(0)),
+                  childrenB = tree.getChildren(tree.at(0));
+               assert.strictEqual(childrenA, childrenB);
+            });
             it('should throw an error for invalid node', function() {
                assert.throw(function() {
                   tree.getChildren();
@@ -207,21 +212,19 @@ define([
 
          describe('.moveToNext()', function() {
             it('should move current through direct children of the root', function() {
-               assert.isUndefined(tree.getCurrent());
-
-               tree.moveToNext();
+               assert.isTrue(tree.moveToNext());
                assert.strictEqual(tree.getCurrent().getContents().title, 'A');
 
-               tree.moveToNext();
+               assert.isTrue(tree.moveToNext());
                assert.strictEqual(tree.getCurrent().getContents().title, 'B');
 
-               tree.moveToNext();
+               assert.isTrue(tree.moveToNext());
                assert.strictEqual(tree.getCurrent().getContents().title, 'C');
 
-               tree.moveToNext();
+               assert.isTrue(tree.moveToNext());
                assert.strictEqual(tree.getCurrent().getContents().title, 'D');
 
-               tree.moveToNext();
+               assert.isFalse(tree.moveToNext());
                assert.strictEqual(tree.getCurrent().getContents().title, 'D');
             });
             it('should move current through direct children of the given node', function() {
@@ -229,34 +232,32 @@ define([
 
                assert.strictEqual(tree.getCurrent().getContents().title, 'AA');
 
-               tree.moveToNext();
+               assert.isTrue(tree.moveToNext());
                assert.strictEqual(tree.getCurrent().getContents().title, 'AB');
 
-               tree.moveToNext();
+               assert.isTrue(tree.moveToNext());
                assert.strictEqual(tree.getCurrent().getContents().title, 'AC');
 
-               tree.moveToNext();
+               assert.isFalse(tree.moveToNext());
                assert.strictEqual(tree.getCurrent().getContents().title, 'AC');
             });
          });
 
          describe('.moveToPrevious()', function() {
             it('should move current through direct children of the root', function() {
-               assert.isUndefined(tree.getCurrent());
-
                tree.setCurrentPosition(tree.getCount() - 1);
                assert.strictEqual(tree.getCurrent().getContents().title, 'D');
 
-               tree.moveToPrevious();
+               assert.isTrue(tree.moveToPrevious());
                assert.strictEqual(tree.getCurrent().getContents().title, 'C');
 
-               tree.moveToPrevious();
+               assert.isTrue(tree.moveToPrevious());
                assert.strictEqual(tree.getCurrent().getContents().title, 'B');
 
-               tree.moveToPrevious();
+               assert.isTrue(tree.moveToPrevious());
                assert.strictEqual(tree.getCurrent().getContents().title, 'A');
 
-               tree.moveToPrevious();
+               assert.isFalse(tree.moveToPrevious());
                assert.strictEqual(tree.getCurrent().getContents().title, 'A');
             });
             it('should move current through direct children of the given node', function() {
@@ -264,21 +265,78 @@ define([
 
                assert.strictEqual(tree.getCurrent().getContents().title, 'AC');
 
-               tree.moveToPrevious();
+               assert.isTrue(tree.moveToPrevious());
                assert.strictEqual(tree.getCurrent().getContents().title, 'AB');
 
-               tree.moveToPrevious();
+               assert.isTrue(tree.moveToPrevious());
                assert.strictEqual(tree.getCurrent().getContents().title, 'AA');
 
-               tree.moveToPrevious();
+               assert.isFalse(tree.moveToPrevious());
                assert.strictEqual(tree.getCurrent().getContents().title, 'AA');
             });
          });
 
          describe('.moveToAbove()', function() {
-            it('should move current to the parent', function() {
+            it('should keep current undefined', function() {
+               assert.isFalse(tree.moveToAbove());
+               assert.isUndefined(tree.getCurrent());
+            });
+            it('should not move if parent is the root', function() {
                tree.moveToNext();
-               tree.moveToNext();
+               var current = tree.getCurrent();
+               assert.isFalse(tree.moveToAbove());
+               assert.strictEqual(tree.getCurrent(), current);
+            });
+            it('should move to the parent', function() {
+               tree.setCurrentPosition(4);
+
+               assert.isTrue(tree.moveToAbove());
+               assert.strictEqual(tree.getCurrent().getContents().title, 'AC');
+
+               assert.isTrue(tree.moveToAbove());
+               assert.strictEqual(tree.getCurrent().getContents().title, 'A');
+
+               assert.isFalse(tree.moveToAbove());
+               assert.strictEqual(tree.getCurrent().getContents().title, 'A');
+            });
+         });
+
+         describe('.moveToBelow()', function() {
+            it('should keep current undefined', function() {
+               assert.isFalse(tree.moveToBelow());
+               assert.isUndefined(tree.getCurrent());
+            });
+            it('should not move if current is not a node', function() {
+               tree.setCurrentPosition(tree.getCount() - 1);
+               var current = tree.getCurrent();
+               assert.isFalse(current.isNode());
+               assert.isFalse(tree.moveToBelow());
+               assert.strictEqual(tree.getCurrent(), current);
+            });
+            it('should not move if current has no children', function() {
+               tree.setCurrentPosition(11);
+               assert.strictEqual(tree.getCurrent().getContents().title, 'C');
+
+               var current = tree.getCurrent();
+               assert.strictEqual(tree.getChildren(current).getCount(), 0);
+               assert.isFalse(tree.moveToBelow());
+               assert.strictEqual(tree.getCurrent(), current);
+            });
+            it('should move to the first child', function() {
+               tree.setCurrentPosition(7);
+               assert.strictEqual(tree.getCurrent().getContents().title, 'B');
+
+               assert.isTrue(tree.moveToBelow());
+               assert.strictEqual(tree.getCurrent().getContents().title, 'BA');
+
+               assert.isTrue(tree.moveToBelow());
+               assert.strictEqual(tree.getCurrent().getContents().title, 'BAA');
+
+               assert.isTrue(tree.moveToBelow());
+               assert.strictEqual(tree.getCurrent().getContents().title, 'BAAA');
+
+               assert.isFalse(tree.moveToBelow());
+               assert.strictEqual(tree.getCurrent().getContents().title, 'BAAA');
             });
          });
       });
