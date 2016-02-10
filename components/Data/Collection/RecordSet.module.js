@@ -386,7 +386,12 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
          return this.getAdapter();
       },
 
-      merge: function (dataSetMergeFrom, options) {
+      merge: function (recordSetMergeFrom) {
+         this.clear();
+         this.setRawData(recordSetMergeFrom.getRawData());
+      },
+
+      mergeOld: function (dataSetMergeFrom, options) {
          /*TODO какая то лажа с ключами*/
          if ((!this._keyField) && (dataSetMergeFrom._keyField)) {
             this._keyField = dataSetMergeFrom._keyField;
