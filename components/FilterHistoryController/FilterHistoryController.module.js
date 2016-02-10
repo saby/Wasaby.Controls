@@ -65,7 +65,8 @@ define('js!SBIS3.CONTROLS.FilterHistoryController',
              }
 
              /* Запишем новую историю */
-             this._listHistory.fill(newHistory.toArray());
+             /* Надо обязательно клонировать историю, чтобы по ссылке не передавались изменения */
+             this._listHistory.fill($ws.core.clone(newHistory.toArray()));
              this._saveParamsDeferred = saveDeferred;
              this._options.filterButton[activeFilter ? 'setFilterStructure' : '_resetFilter'](activeFilter.filter);
              this._updateFilterButtonHistoryView();
