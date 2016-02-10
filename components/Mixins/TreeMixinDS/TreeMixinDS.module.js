@@ -1,4 +1,4 @@
-define('js!SBIS3.CONTROLS.TreeMixinDS', ['js!SBIS3.CORE.Control'], function (Control) {
+define('js!SBIS3.CONTROLS.TreeMixinDS', ['js!SBIS3.CORE.Control', 'js!SBIS3.CONTROLS.Data.Projection.Tree'], function (Control, TreeProjection) {
    /**
     * Позволяет контролу отображать данные имеющие иерархическую структуру и работать с ними.
     * @mixin SBIS3.CONTROLS.TreeMixinDS
@@ -63,6 +63,17 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', ['js!SBIS3.CORE.Control'], function (Con
          }
          this.setFilter(filter, true);
       },
+
+      _createDefaultProjection : function(items) {
+         this._itemsProjection = new TreeProjection({
+            collection: items,
+            idProperty: this._options.keyField || (this._options.dataSource ? this._options.dataSource.getIdProperty() : ''),
+            parentProperty: this._options.hierField,
+            nodeProperty: this._options.hierField + '@',
+            root: (typeof this._options.root != 'undefined') ? this._options.root : null
+         });
+      },
+      
       _getRecordsForRedraw: function() {
          /*Получаем только рекорды с parent = curRoot*/
          var
