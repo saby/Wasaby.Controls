@@ -115,7 +115,7 @@ define('js!SBIS3.CONTROLS.Data.Record', [
          }
 
          var oldValue = this._getRawDataValue(name);
-         if (oldValue !== value) {
+         if (!this._isEqualValues(oldValue, value)) {
             this._setRawDataValue(name, value);
             if (!this.has(name)) {
                this._addRawDataField(name);
@@ -363,6 +363,34 @@ define('js!SBIS3.CONTROLS.Data.Record', [
        */
       _isFieldValueCacheable: function(value) {
          return value && typeof value === 'object';
+      },
+
+      /**
+       * Сравнивает два значения на эквивалентность (в том числе через интерфейс сравнения)
+       * @param {Boolean} a Значение A
+       * @param {Boolean} b Значение B
+       * @returns {Boolean}
+       * @protected
+       */
+      _isEqualValues: function(a, b) {
+         return a === b || (
+            this._isComparable(a) &&
+            this._isComparable(b) &&
+            a.isEqual(b)
+         );
+      },
+
+      /**
+       * Проверяет наличие интерфейса сравнения у объекта
+       * @param {Object} value
+       * @returns {Boolean}
+       * @protected
+       */
+      _isComparable: function(value) {
+         if (!value) {
+            return false;
+         }
+         return $ws.helpers.instanceOfModule(value, 'SBIS3.CONTROLS.Data.Model');
       },
 
       /**
