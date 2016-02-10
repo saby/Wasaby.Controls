@@ -194,9 +194,9 @@ define('js!SBIS3.CONTROLS.ComponentBinder', [], function () {
       bindSearchGrid : function(searchParamName, searchCrumbsTpl, searchForm) {
          var self = this,
             view = this._options.view,
-            hierarchy = $ws.helpers.instanceOfModule(view, 'SBIS3.CONTROLS.HierarchyDataGridView');
+            isTree = $ws.helpers.instanceOfMixin(view, 'SBIS3.CONTROLS.TreeMixinDS');
          searchForm = searchForm || this._options.searchForm;
-         if (hierarchy){
+         if (isTree){
             this._lastRoot = view.getCurrentRoot();
             //searchForm.subscribe('onReset', resetGroup);
             view.subscribe('onSetRoot', function(){
@@ -216,7 +216,7 @@ define('js!SBIS3.CONTROLS.ComponentBinder', [], function () {
 
          searchForm.subscribe('onTextChange', function(event, text){
             if (text.length < searchForm.getProperty('startCharacter')) {
-               if (hierarchy) {
+               if (isTree) {
                   resetGroup.call(self, searchParamName);
                } else {
                   resetSearch.call(self, searchParamName);
@@ -225,7 +225,7 @@ define('js!SBIS3.CONTROLS.ComponentBinder', [], function () {
          });
 
          searchForm.subscribe('onSearch', function(event, text) {
-            if (hierarchy) {
+            if (isTree) {
                startHierSearch.call(self, text, searchParamName);
             } else {
                startSearch.call(self, text, searchParamName);
