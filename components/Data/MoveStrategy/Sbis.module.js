@@ -59,7 +59,7 @@ define('js!SBIS3.CONTROLS.Data.MoveStrategy.Sbis', [
             method = this._options.moveMethodPrefix + suffix,
             params = this._getMoveParams(to, after);
          if (!this._orderProvider) {
-            this._orderProvider = new SbisServiceBLO(this._options.moveResource);
+            this._orderProvider = new SbisServiceBLO({resource: this._options.moveResource});
          }
          $ws.helpers.forEach(from, function(record){
             params['ИдО'] = [String.prototype.split.call(self._getId(record))[0], self._options.resource];
