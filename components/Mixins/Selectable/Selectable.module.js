@@ -109,6 +109,7 @@ define('js!SBIS3.CONTROLS.Selectable', ['js!SBIS3.CONTROLS.Data.Utils'], functio
                   this._itemsProjection
                );
             }
+            this._utilityEnumerator = undefined;
          }
       },
 
@@ -123,6 +124,12 @@ define('js!SBIS3.CONTROLS.Selectable', ['js!SBIS3.CONTROLS.Data.Utils'], functio
             this._drawSelectedItem(this._options.selectedKey, this._options.selectedIndex);
          },
          _unsetItemsEventHandlers : function() {
+            if (this._utilityEnumerator) {
+               this._utilityEnumerator.unsetObservableCollection(
+                  this._itemsProjection
+               );
+            }
+            this._utilityEnumerator = undefined;
             if (this._itemsProjection && this._onProjectionCurrentChange) {
                this.unsubscribeFrom(this._itemsProjection, 'onCurrentChange', this._onProjectionCurrentChange);
             }
