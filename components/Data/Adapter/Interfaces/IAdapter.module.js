@@ -12,7 +12,7 @@ define('js!SBIS3.CONTROLS.Data.Adapter.IAdapter', [], function () {
    return /** @lends SBIS3.CONTROLS.Data.Adapter.IAdapter.prototype */{
       /**
        * Возвращает интерфейс доступа к данным в виде таблицы
-       * @param {*} [data] Сырые данные
+       * @param {*} data Сырые данные
        * @returns {SBIS3.CONTROLS.Data.Adapter.ITable}
        */
       forTable: function (data) {
@@ -21,7 +21,7 @@ define('js!SBIS3.CONTROLS.Data.Adapter.IAdapter', [], function () {
 
       /**
        * Возвращает интерфейс доступа к данным в виде записи
-       * @param {*} [data] Сырые данные
+       * @param {*} data Сырые данные
        * @returns {SBIS3.CONTROLS.Data.Adapter.IRecord}
        */
       forRecord: function (data) {
@@ -29,12 +29,11 @@ define('js!SBIS3.CONTROLS.Data.Adapter.IAdapter', [], function () {
       },
 
       /**
-       * Сериализует данные - переводит из внешнего формата в формат адаптера
-       * @param {*} data Сериализуемые данные
-       * @returns {Object} Сериализованные данные
-       * @static
+       * Возвращает название поля, которое является первичным ключем
+       * @param {*} data Сырые данные
+       * @returns {String}
        */
-      serialize: function (data) {
+      getKeyField: function () {
          throw new Error('Method must be implemented');
       },
 
@@ -55,6 +54,16 @@ define('js!SBIS3.CONTROLS.Data.Adapter.IAdapter', [], function () {
        * @param {*} value Значение свойства
        */
       setProperty: function (data, property, value) {
+         throw new Error('Method must be implemented');
+      },
+
+      /**
+       * Сериализует данные - переводит из внешнего формата в формат адаптера
+       * @param {*} data Сериализуемые данные
+       * @returns {Object} Сериализованные данные
+       * @static
+       */
+      serialize: function (data) {
          throw new Error('Method must be implemented');
       }
    };

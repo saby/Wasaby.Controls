@@ -1,43 +1,22 @@
+/* global define, $ws */
 define('js!SBIS3.CONTROLS.Data.Adapter.SbisTable', [
-   'js!SBIS3.CONTROLS.Data.Adapter.ITable'
-], function (ITable) {
+   'js!SBIS3.CONTROLS.Data.Adapter.ITable',
+   'js!SBIS3.CONTROLS.Data.Adapter.SbisFormatMixin'
+], function (ITable, SbisFormatMixin) {
    'use strict';
 
    /**
     * Адаптер для таблицы данных в формате СБиС
     * @class SBIS3.CONTROLS.Data.Adapter.SbisTable
     * @mixes SBIS3.CONTROLS.Data.Adapter.ITable
+    * @mixes SBIS3.CONTROLS.Data.Adapter.SbisFormatMixin
     * @public
     * @author Мальцев Алексей
     */
-   var SbisTable = $ws.core.extend({}, [ITable], /** @lends SBIS3.CONTROLS.Data.Adapter.SbisTable.prototype */{
+   var SbisTable = $ws.core.extend({}, [ITable, SbisFormatMixin], /** @lends SBIS3.CONTROLS.Data.Adapter.SbisTable.prototype */{
       _moduleName: 'SBIS3.CONTROLS.Data.Adapter.SbisTable',
-      $protected: {
-         /**
-          * @var {Object} Сырые данные
-          */
-         _data: undefined
-      },
 
-      $constructor: function (data) {
-         if (!(data instanceof Object)) {
-            data = {};
-         }
-         if (!(data.s instanceof Array)) {
-            data.s = [];
-         }
-         if (!(data.d instanceof Array)) {
-            data.d = [];
-         }
-         this._data = data;
-      },
-
-      getEmpty: function () {
-         return {
-            d: [],
-            s: $ws.core.clone(this._data.s || [])
-         };
-      },
+      //region Public methods
 
       getCount: function () {
          return this._data.d.length;
@@ -50,7 +29,7 @@ define('js!SBIS3.CONTROLS.Data.Adapter.SbisTable', [
          if (at === undefined) {
             this._data.d.push(record.d);
          } else {
-            this._checkPosition(at);
+            this._checkFieldIndex(at, true);
             this._data.d.splice(at, 0, record.d);
          }
       },
@@ -63,12 +42,12 @@ define('js!SBIS3.CONTROLS.Data.Adapter.SbisTable', [
       },
 
       remove: function (at) {
-         this._checkPosition(at);
+         this._checkFieldIndex(at);
          this._data.d.splice(at, 1);
       },
 
       replace: function (record, at) {
-         this._checkPosition(at);
+         this._checkFieldIndex(at);
          if (!this._data.s.length) {
             this._data.s = record.s || [];
          }
@@ -92,21 +71,51 @@ define('js!SBIS3.CONTROLS.Data.Adapter.SbisTable', [
       },
 
       copy: function(index){
-         this._checkPosition(index);
+         this._checkFieldIndex(index);
          var source = this._data.d[index],
             clone = $ws.core.clone(source);
          this._data.d.splice(index, 0, clone);
       },
 
-      getData: function () {
-         return this._data;
+      getFormat: function (name) {
+         if (!this.has(name)) {
+            throw new ReferenceError('Field "' + name + '" is not exists');
+         }
+         if (!this._format.hasOwnProperty(name)) {
+            this._format[name] = new StringField({
+               name: name
+            });
+         }
+         return this._format[name].clone();
       },
 
-      _checkPosition: function (at) {
-         if (at < 0 || at > this._data.d.length) {
-            throw new Error('Out of bounds');
+      addField: function(format, at) {
+         if (this.has(name)) {
+            throw new Error('Field "' + name + '" already exists');
          }
+         if (!format || !$ws.helpers.instanceOfModule(format, 'SBIS3.CONTROLS.Data.Format.Field')) {
+            throw new TypeError('Format should be an instance of SBIS3.CONTROLS.Data.Format.Field');
+         }
+         if (at >= 0) {
+            $ws.single.ioc.resolve('ILogger').log('SBIS3.CONTROLS.Data.Adapter.JsonRecord::addField()', 'Argument "at" is not supported.');
+         }
+         this._format[format.getName()] = format;
+         this.set(format.getName(), undefined);
+      },
+
+      removeField: function(name) {
+         if (!this.has(name)) {
+            throw new ReferenceError('Field "' + name + '" is not exists');
+         }
+         delete this._format[name];
+         delete this._data[name];
+      },
+
+      removeFieldAt: function(index) {
+         throw new Error('SBIS3.CONTROLS.Data.Adapter.JsonRecord::removeFieldAt() is not supported');
       }
+
+      //endregion Public methods
    });
 
    return SbisTable;

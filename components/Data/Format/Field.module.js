@@ -47,6 +47,14 @@ define('js!SBIS3.CONTROLS.Data.Format.Field', [
        * @variant ArrayIdentity Массив идентификаторов
        */
 
+      /**
+       * @typedef {Object} FieldDeclaration
+       * @property {String} name Имя поля
+       * @property {FieldType} type Тип поля
+       * @property {*} defaultValue Значение поля по умолчанию
+       * @property {Boolean} nullable Значение может быть null
+       */
+
       _moduleName: 'SBIS3.CONTROLS.Data.Format.Field',
       $protected: {
          _options: {
@@ -247,7 +255,7 @@ define('js!SBIS3.CONTROLS.Data.Format.Field', [
 
    /**
     * Конструирует формат поля по декларативному описанию
-    * @param {Object} declaration Декларативное описание
+    * @param {FieldDeclaration|FieldType} declaration Декларативное описание
     * @returns {SBIS3.CONTROLS.Data.Format.Field}
     * @static
     */

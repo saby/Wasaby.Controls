@@ -110,12 +110,6 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
 
       //region SBIS3.CONTROLS.Data.FormattableMixin
 
-      /**
-       * Устанавливает сырые данные
-       * @param rawData {Object} Сырые данные
-       * @see getRawData
-       * @see rawData
-       */
       setRawData: function(data) {
          this._assignRawData(data);
          this._createFromRawData();
@@ -127,7 +121,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
        */
       _assignRawData: function(data) {
          RecordSet.superclass.setRawData.call(this, data);
-         this._resetTableAdapter();
+         this._tableAdapter = null;
       },
 
       //endregion SBIS3.CONTROLS.Data.FormattableMixin
@@ -585,14 +579,6 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
        */
       _getTableAdapter: function () {
          return this._tableAdapter || (this._tableAdapter = this.getAdapter().forTable(this._options.rawData));
-      },
-
-      /**
-       * Сбрасывает созданный адаптер для сырых данных
-       * @protected
-       */
-      _resetTableAdapter: function () {
-         this._tableAdapter = null;
       },
 
       /**

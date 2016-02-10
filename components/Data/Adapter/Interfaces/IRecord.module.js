@@ -38,10 +38,49 @@ define('js!SBIS3.CONTROLS.Data.Adapter.IRecord', [], function () {
       },
 
       /**
+       * Возвращает данные записи в формате адаптера
+       * @returns {*}
+       */
+      getData: function () {
+         throw new Error('Method must be implemented');
+      },
+
+      /**
+       * Возвращает пустую запись
+       * @returns {*}
+       */
+      getEmpty: function () {
+         throw new Error('Method must be implemented');
+      },
+
+      /**
        * Возвращает массив названий полей
        * @returns {Array.<String>} Названия полей
        */
       getFields: function () {
+         throw new Error('Method must be implemented');
+      },
+
+      /**
+       * Возвращает объект содержащий название типа и мета данные
+       * @param {String} name Поле записи
+       * @returns {Object} Объект вида {type: Название, meta: Мета данные типа }
+       * @deprecated Метод getInfo() не рекомендуется к использованию и будет удален в 3.7.4. Используйте метод getFormat().
+       */
+      getInfo: function (name) {
+         throw new Error('Method must be implemented');
+      },
+
+      getKeyField: function () {
+         throw new Error('Method must be implemented');
+      },
+
+      /**
+       * Возвращает формат поля (в режиме только для чтения)
+       * @param {String} name Поле записи
+       * @returns {SBIS3.CONTROLS.Data.Format.Field}
+       */
+      getFormat: function (name) {
          throw new Error('Method must be implemented');
       },
 
@@ -70,39 +109,6 @@ define('js!SBIS3.CONTROLS.Data.Adapter.IRecord', [], function () {
        * @param {String} index Позиция поля
        */
       removeFieldAt: function(index) {
-         throw new Error('Method must be implemented');
-      },
-
-      /**
-       * Возвращает пустую запись
-       * @returns {*}
-       */
-      getEmpty: function () {
-         throw new Error('Method must be implemented');
-      },
-
-      /**
-       * Возвращает объект содержащий название типа и мета данные
-       * @param {String} name Поле записи
-       * @returns {Object} Объект вида {type: Название, meta: Мета данные типа }
-       */
-      getInfo: function (name) {
-         throw new Error('Method must be implemented');
-      },
-
-      /**
-       * Возвращает название поля, которое является первичным ключем
-       * @returns {String}
-       */
-      getKeyField: function () {
-         throw new Error('Method must be implemented');
-      },
-
-      /**
-       * Возвращает данные записи в формате адаптера
-       * @returns {*}
-       */
-      getData: function () {
          throw new Error('Method must be implemented');
       }
    };

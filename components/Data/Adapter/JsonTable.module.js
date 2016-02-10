@@ -1,23 +1,25 @@
 /* global define, $ws */
 define('js!SBIS3.CONTROLS.Data.Adapter.JsonTable', [
    'js!SBIS3.CONTROLS.Data.Adapter.ITable',
+   'js!SBIS3.CONTROLS.Data.Adapter.JsonFormatMixin',
    'js!SBIS3.CONTROLS.Data.Adapter.JsonRecord'
-], function (ITable, JsonRecord) {
+], function (ITable, JsonFormatMixin, JsonRecord) {
    'use strict';
 
    /**
     * Адаптер для таблицы данных в формате JSON
     * @class SBIS3.CONTROLS.Data.Adapter.JsonTable
     * @mixes SBIS3.CONTROLS.Data.Adapter.ITable
+    * @mixes SBIS3.CONTROLS.Data.Adapter.JsonFormatMixin
     * @public
     * @author Мальцев Алексей
     */
 
-   var JsonTable = $ws.core.extend({}, [ITable], /** @lends SBIS3.CONTROLS.Data.Adapter.JsonTable.prototype */{
+   var JsonTable = $ws.core.extend({}, [ITable, JsonFormatMixin], /** @lends SBIS3.CONTROLS.Data.Adapter.JsonTable.prototype */{
       _moduleName: 'SBIS3.CONTROLS.Data.Adapter.JsonTable',
       $protected: {
          /**
-          * @var {Array} Сырые данные
+          * @member {Array.<Object>} Сырые данные
           */
          _data: []
       },
@@ -28,6 +30,30 @@ define('js!SBIS3.CONTROLS.Data.Adapter.JsonTable', [
          }
          this._data = data;
       },
+
+      //region SBIS3.CONTROLS.Data.Adapter.JsonFormatMixin
+
+      addField: function(format, at) {
+         JsonRecord.superclass.addField.call(this, format, at);
+         var name = format.getName(),
+            i;
+         for (i = 0; i < this._data.length; i++) {
+            this._data[i][name] = undefined;
+         }
+      },
+
+      removeField: function(name) {
+         JsonRecord.superclass.removeField.call(this, name);
+         var name = format.getName(),
+            i;
+         for (i = 0; i < this._data.length; i++) {
+            delete this._data[i];
+         }
+      },
+
+      //endregion SBIS3.CONTROLS.Data.Adapter.JsonFormatMixin
+
+      //region Public methods
 
       getEmpty: function () {
          return [];
@@ -82,10 +108,6 @@ define('js!SBIS3.CONTROLS.Data.Adapter.JsonTable', [
          var source = this.at(index),
             clone = $ws.core.clone(source);
          this.add(clone, index);
-      },
-
-      getData: function () {
-         return this._data;
       },
 
       _checkPosition: function (at) {

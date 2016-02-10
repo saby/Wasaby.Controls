@@ -1,9 +1,10 @@
 /* global define, $ws */
 define('js!SBIS3.CONTROLS.Data.FormattableMixin', [
    'js!SBIS3.CONTROLS.Data.Format.Format',
+   'js!SBIS3.CONTROLS.Data.Format.Field',
    'js!SBIS3.CONTROLS.Data.Di',
    'js!SBIS3.CONTROLS.Data.Adapter.Json'
-], function (Format, Di) {
+], function (Format, Field, Di) {
    'use strict';
 
    /**
@@ -57,12 +58,16 @@ define('js!SBIS3.CONTROLS.Data.FormattableMixin', [
             adapter: 'adapter.json',
 
             /**
-             * @cfg {SBIS3.CONTROLS.Data.Format.Format|Object} Формат полей
+             * @cfg {SBIS3.CONTROLS.Data.Format.Format|Array.<SBIS3.CONTROLS.Data.Format.Field/FieldDeclaration>} Формат полей
              * @see getFormat
              * @example
              * <pre>
-             *    var user = new Record({
-             *       format: new UserFormat
+             *    define('js!My.Module', [
+             *       'js!My.Format.User'
+             *    ], function (UserFormat) {
+             *       var user = new Record({
+             *          format: new UserFormat
+             *       });
              *    });
              * </pre>
              * @example
@@ -111,7 +116,11 @@ define('js!SBIS3.CONTROLS.Data.FormattableMixin', [
        * @see setAdapter
        */
       getAdapter: function () {
-         if (!this._options.adapter) {
+         if (
+            typeof this._options.adapter === 'string' &&
+            FormattableMixin._getDefaultAdapter !== this._getDefaultAdapter
+         ) {
+            $ws.single.ioc.resolve('ILogger').log('SBIS3.CONTROLS.Data.FormattableMixin', 'Method _getDefaultAdapter() is deprecated and will be removed in 3.7.4. Use \'adapter\' option instead.');
             this._options.adapter = this._getDefaultAdapter();
          }
          if (typeof this._options.adapter === 'string') {
@@ -143,14 +152,27 @@ define('js!SBIS3.CONTROLS.Data.FormattableMixin', [
        * Добавляет поле в формат.
        * Если позиция не указана (или указана как -1), поле добавляется в конец формата.
        * Если поле с таким форматом уже есть, генерирует исключение.
-       * @param {SBIS3.CONTROLS.Data.Format.Field} format Формат поля
+       * @param {SBIS3.CONTROLS.Data.Format.Field|SBIS3.CONTROLS.Data.Format.Field/FieldDeclaration} format Формат поля
        * @param {Number} [at] Позиция поля
        * @see format
        * @see removeField
+       * @example
+       * <pre>
+       *    var record = new Record();
+       *    record.addField({name: 'login', type: 'String'});
+       *    record.addField({name: 'amount', type: 'Money'});
+       * </pre>
+       * @example
+       * <pre>
+       *    var recordset = new RecordSet();
+       *    recordset.addField(new StringField({name: 'login'}));
+       *    recordset.addField(new MoneyField({name: 'amount'}));
+       * </pre>
        */
       addField: function(format, at) {
-         this._getFormat().add(format, at);
+         format = this._buildField(format);
          this.getAdapter().addField(format, at);
+         this._getFormat().add(format, at);
       },
 
       /**
@@ -160,11 +182,14 @@ define('js!SBIS3.CONTROLS.Data.FormattableMixin', [
        * @see format
        * @see addField
        * @see removeFieldAt
+       * @example
+       * <pre>
+       *    record.removeField('login');
+       * </pre>
        */
       removeField: function(name) {
-         this.removeFieldAt(
-            this._getFormat().getFieldndex(name)
-         );
+         this.getAdapter().removeField(name);
+         this._getFormat().removeField(name);
       },
 
       /**
@@ -174,10 +199,14 @@ define('js!SBIS3.CONTROLS.Data.FormattableMixin', [
        * @see format
        * @see addField
        * @see removeField
+       * @example
+       * <pre>
+       *    record.removeFieldAt(0);
+       * </pre>
        */
       removeFieldAt: function(at) {
-         this._getFormat().removeAt(at);
          this.getAdapter().removeFieldAt(at);
+         this._getFormat().removeAt(at);
       },
 
       //endregion Public methods
@@ -185,14 +214,11 @@ define('js!SBIS3.CONTROLS.Data.FormattableMixin', [
       //region Protected methods
 
       /**
-       * Возвращает адаптер по-умолчанию (можно переопределять в наследниках)
+       * Возвращает адаптер по-умолчанию
        * @protected
        * @deprecated Метод _getDefaultAdapter() не рекомендуется к использованию и будет удален в 3.7.4. Используйте опцию adapter.
        */
       _getDefaultAdapter: function() {
-         if (FormattableMixin._getDefaultAdapter !== this._getDefaultAdapter) {
-            $ws.single.ioc.resolve('ILogger').log('SBIS3.CONTROLS.Data.Record', 'Method _getDefaultAdapter() is deprecated and will be removed in 3.7.4. Use \'adapter\' option instead.');
-         }
          return 'adapter.json';
       },
 
@@ -202,24 +228,51 @@ define('js!SBIS3.CONTROLS.Data.FormattableMixin', [
        * @protected
        */
       _getFormat: function () {
-         this._buildFormat();
+         if (
+            !this.options.format ||
+            !$ws.helpers.instanceOfModule(this.options.format, 'SBIS3.CONTROLS.Data.Format.Format')
+         ) {
+            this.options.format = this._buildFormat(this.options.format);
+         }
          return this._options.format;
       },
 
       /**
-       * Строит формат (если еще не был построен)
+       * Строит формат по описанию
+       * @param {SBIS3.CONTROLS.Data.Format.Format|Array.<SBIS3.CONTROLS.Data.Format.Field/FieldDeclaration>} format Описание формата
+       * @returns {SBIS3.CONTROLS.Data.Format.Format}
        * @protected
        */
-      _buildFormat: function() {
-         if (!this.options.format) {
-            this.options.format = new Format();
+      _buildFormat: function(format) {
+         if (!format) {
+            format = new Format();
          }
-         if (Object.getPrototypeOf(this.options.format) === Object.prototype) {
-            this.options.format = Format.fromDeclaration(this.options.format);
+         if (Object.getPrototypeOf(format) === Array.prototype) {
+            format = Format.fromDeclaration(format);
          }
-         if (!$ws.helpers.instanceOfModule(this.options.format, 'SBIS3.CONTROLS.Data.Format.Format')) {
-            throw new TypeError('Format should be instance of SBIS3.CONTROLS.Data.Format.Format');
+         if (!$ws.helpers.instanceOfModule(format, 'SBIS3.CONTROLS.Data.Format.Format')) {
+            throw new TypeError('Format should be an instance of SBIS3.CONTROLS.Data.Format.Format');
          }
+         return format;
+      },
+
+      /**
+       * Строит формат поля по описанию
+       * @param {SBIS3.CONTROLS.Data.Format.Field|SBIS3.CONTROLS.Data.Format.Field/FieldDeclaration} format Описание формата поля
+       * @returns {SBIS3.CONTROLS.Data.Format.Field}
+       * @protected
+       */
+      _buildField: function(format) {
+         if (
+            typeof format === 'string' ||
+            Object.getPrototypeOf(format) === Object.prototype
+         ) {
+            format = Field.fromDeclaration(format);
+         }
+         if (!format || !$ws.helpers.instanceOfModule(format, 'SBIS3.CONTROLS.Data.Format.Field')) {
+            throw new TypeError('Format should be an instance of SBIS3.CONTROLS.Data.Format.Field');
+         }
+         return format;
       }
 
       //endregion Protected methods

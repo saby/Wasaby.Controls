@@ -27,6 +27,14 @@ define('js!SBIS3.CONTROLS.Data.Adapter.ITable', [], function () {
       },
 
       /**
+       * Возвращает данные таблицы в формате адаптера
+       * @returns {*}
+       */
+      getData: function () {
+         throw new Error('Method must be implemented');
+      },
+
+      /**
        * Добавляет запись в таблицу
        * @param {*} record Запись
        * @param {Number} [at] Позиция, в которую добавляется запись (по умолчанию - в конец)
@@ -92,6 +100,15 @@ define('js!SBIS3.CONTROLS.Data.Adapter.ITable', [], function () {
       },
 
       /**
+       * Возвращает формат поля (в режиме только для чтения)
+       * @param {String} name Поле записи
+       * @returns {SBIS3.CONTROLS.Data.Format.Field}
+       */
+      getFormat: function (name) {
+         throw new Error('Method must be implemented');
+      },
+
+      /**
        * Добавляет поле в таблицу.
        * Если позиция не указана (или указана как -1), поле добавляется в конец.
        * Если поле с таким форматом уже есть, генерирует исключение.
@@ -116,14 +133,6 @@ define('js!SBIS3.CONTROLS.Data.Adapter.ITable', [], function () {
        * @param {String} index Позиция поля
        */
       removeFieldAt: function(index) {
-         throw new Error('Method must be implemented');
-      },
-
-      /**
-       * Возвращает данные таблицы в формате адаптера
-       * @returns {*}
-       */
-      getData: function () {
          throw new Error('Method must be implemented');
       }
    };

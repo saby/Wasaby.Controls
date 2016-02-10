@@ -172,20 +172,10 @@ define('js!SBIS3.CONTROLS.Data.Record', [
 
       setAdapter: function (adapter) {
          Record.superclass.setAdapter.call(this, adapter);
+         this._recordAdapter = null;
          this._propertiesCache = {};
       },
 
-      /**
-       * Добавляет поле в формат.
-       * Если позиция не указана (или указана как -1), поле добавляется в конец формата.
-       * Если поле с таким форматом уже есть, генерирует исключение.
-       * Если запись принадлежит рекордсету, генерирует исключение.
-       * @param {SBIS3.CONTROLS.Data.Format.Field} format Формат поля
-       * @param {Number} [at] Позиция поля
-       * @param {*} [value] Значение поля
-       * @see format
-       * @see removeField
-       */
       addField: function(format, at, value) {
          this._checkFormatIsWritable();
          Record.superclass.addField.apply(this, arguments);
@@ -194,29 +184,11 @@ define('js!SBIS3.CONTROLS.Data.Record', [
          }
       },
 
-      /**
-       * Удаляет поле из формата по имени.
-       * Если поля с таким именем нет, генерирует исключение.
-       * Если запись принадлежит рекордсету, генерирует исключение.
-       * @param {String} name Имя поля
-       * @see format
-       * @see addField
-       * @see removeFieldAt
-       */
       removeField: function(name) {
          this._checkFormatIsWritable();
          Record.superclass.removeField.apply(this, arguments);
       },
 
-      /**
-       * Удаляет поле из формата по позиции.
-       * Если позиция выходит за рамки допустимого индекса, генерирует исключение.
-       * Если запись принадлежит рекордсету, генерирует исключение.
-       * @param {Number} at Позиция поля
-       * @see format
-       * @see addField
-       * @see removeField
-       */
       removeFieldAt: function(at) {
          this._checkFormatIsWritable();
          Record.superclass.removeFieldAt.apply(this, arguments);
