@@ -157,16 +157,11 @@ define('js!SBIS3.CONTROLS.Data.Projection.Tree', [
             if (this._options.root && $ws.helpers.instanceOfMixin(this._options.root, 'SBIS3.CONTROLS.Data.Projection.ICollectionItem')) {
                this._root = this._options.root;
             } else {
-               var contents = this._options.root;
-               if (typeof contents !== 'object') {
-                  contents = {};
-                  contents[this._options.idProperty] = this._options.root;
-               }
                this._root = Di.resolve(this._itemModule, {
                   owner: this,
                   node: true,
                   expanded: true,
-                  contents: contents
+                  contents: this._options.root
                });
             }
          }
