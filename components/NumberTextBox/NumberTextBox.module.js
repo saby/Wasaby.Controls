@@ -161,10 +161,16 @@ define('js!SBIS3.CONTROLS.NumberTextBox', ['js!SBIS3.CONTROLS.TextBox', 'html!SB
 
          this._inputField.bind('blur', function(){
             // Прятать нулевую дробную часть при потере фокуса
-            if (self._options.hideEmptyDecimals) {
-               self._options.text = self._formatText(self._options.text, true);
-               $(this).val(self._options.text);
+            var value = $(this).val();
+            if (self._options.hideEmptyDecimals && (value && value.indexOf('.') != -1)){
+               while (value[value.length - 1] == '0' || value[value.length - 1] == '.'){
+                  value = value.substr(0, value.length - 1);
+                  if (value.indexOf('.') == -1) { // удаляем только дробную часть
+                     break;
+                  }
+               }
             }
+            $(this).val(value);
          }).bind('focus', function(){
             // Показывать нулевую дробную часть при фокусировки не зависимо от опции hideEmptyDecimals
             if (self._options.hideEmptyDecimals) {
@@ -234,7 +240,7 @@ define('js!SBIS3.CONTROLS.NumberTextBox', ['js!SBIS3.CONTROLS.TextBox', 'html!SB
          return this._options.decimals;
       },
 
-      _formatText: function(value, fromFocusOut){
+      _formatText: function(value){
          var decimals = this._options.onlyInteger ? 0 : this._options.decimals;
          if (value == '-') {
             return value;
@@ -247,14 +253,6 @@ define('js!SBIS3.CONTROLS.NumberTextBox', ['js!SBIS3.CONTROLS.TextBox', 'html!SB
             this._options.onlyPositive,
             this._options.maxLength
          );
-         if (this._options.hideEmptyDecimals && (value && value.indexOf('.') != -1) && fromFocusOut ){
-            while (value[value.length - 1] == '0' || value[value.length - 1] == '.'){
-               value = value.substr(0, value.length - 1);
-               if (value.indexOf('.') == -1) { // удаляем только дробную часть
-                  break;
-               }
-            }
-         }
          return value || '';
       },
 
