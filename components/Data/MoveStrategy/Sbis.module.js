@@ -1,8 +1,9 @@
-/* global define */
+/* global define, $ws*/
 define('js!SBIS3.CONTROLS.Data.MoveStrategy.Sbis', [
    'js!SBIS3.CONTROLS.Data.MoveStrategy.Base',
+   'js!SBIS3.CONTROLS.Data.Di',
    'js!SBIS3.CONTROLS.Data.Source.Provider.SbisBusinessLogic'
-], function (BaseMoveStrategy, SbisServiceBLO) {
+], function (BaseMoveStrategy, DI) {
    'use strict';
    /**
     * Стандартная стратегия перемещения записей
@@ -11,8 +12,6 @@ define('js!SBIS3.CONTROLS.Data.MoveStrategy.Sbis', [
     * @public
     * @author Ганшин Ярослав
     * @example
-    * <pre>
-    * </pre
     */
 
    return BaseMoveStrategy.extend([],/** @lends SBIS3.CONTROLS.Data.MoveStrategy.Sbis.prototype */{
@@ -59,10 +58,10 @@ define('js!SBIS3.CONTROLS.Data.MoveStrategy.Sbis', [
             method = this._options.moveMethodPrefix + suffix,
             params = this._getMoveParams(to, after);
          if (!this._orderProvider) {
-            this._orderProvider = new SbisServiceBLO(this._options.moveResource);
+            this._orderProvider = DI.resolve('source.provider.sbis-business-logic', {resource: this._options.moveResource});
          }
-         $ws.helpers.forEach(from, function(record){
-            params['ИдО'] = [String.prototype.split.call(self._getId(record))[0], self._options.resource];
+         $ws.helpers.forEach(from, function(record) {
+            params['ИдО'] = [String.prototype.split.call(record.getId(), ',')[0], self._options.resource];
             def.push(self._orderProvider.call(method, params, $ws.proto.BLObject.RETURN_TYPE_ASIS).addErrback(function (error) {
                $ws.single.ioc.resolve('ILogger').log('SBIS3.CONTROLS.Data.MoveStrategy.Sbis::move()', error);
                return error;
@@ -85,7 +84,7 @@ define('js!SBIS3.CONTROLS.Data.MoveStrategy.Sbis', [
                'Иерархия': null,
                'Объект': this._options.resource
             },
-            id = String.prototype.split.call(this._getId(to), ',')[0];
+            id = String.prototype.split.call(to.getId(), ',')[0];
 
          if (after) {
             params['ИдОПосле'] = [id, objectName];
