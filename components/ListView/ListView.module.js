@@ -494,7 +494,9 @@ define('js!SBIS3.CONTROLS.ListView',
                   topParent.once('onAfterShow', function(){
                      self._isLoadBeforeScrollAppears = true;
                      self._firstScrollTop = true;
-                     self._preScrollLoading();
+                     if (self._dataSet) {
+                        self._preScrollLoading();
+                     }
                   });
                }
 
