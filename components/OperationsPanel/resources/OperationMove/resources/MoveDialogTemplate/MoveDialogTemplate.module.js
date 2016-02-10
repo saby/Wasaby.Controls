@@ -48,9 +48,7 @@ define('js!SBIS3.CONTROLS.MoveDialogTemplate', [
          var
              self = this.getParent(),
              moveTo = self._treeView.getSelectedKey();
-         if (moveTo !== null) {
-            moveTo = self._treeView._dataSet.getRecordByKey(moveTo);
-         }
+         moveTo = moveTo !== 'null' ? self._treeView._dataSet.getRecordByKey(moveTo) : null;
          if (self._treeView._checkRecordsForMove(self._options.records, moveTo)) {
             self._options.linkedView._move(self._options.records, moveTo);
          }
@@ -63,11 +61,12 @@ define('js!SBIS3.CONTROLS.MoveDialogTemplate', [
          rootBlock.bind('click', function(event) {
             self._container.find('.controls-ListView__item').toggleClass('ws-hidden');
             rootBlock.toggleClass('ws-hidden').find('.controls-TreeView__expand').toggleClass('controls-TreeView__expand__open');
-            self.setSelectedKey(null);
+            self.setSelectedKey('null');
+            self._drawSelectedItem('null');
             event.stopPropagation();
          });
          rootBlock.prependTo(self._container.find('tbody'));
-         self.setSelectedKey(null);
+         self.setSelectedKey('null');
       }
    });
 
