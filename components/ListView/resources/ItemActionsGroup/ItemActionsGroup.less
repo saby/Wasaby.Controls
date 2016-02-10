@@ -27,7 +27,9 @@
       overflow: hidden;
       .controls-ItemActions__itemsContainer{
          > * {
-            line-height: @list-view-actions-menu-touch-height!important;
+            &:not(.controls-IconButton__round-border-24) {
+               line-height: @list-view-actions-menu-touch-height !important;
+            }
             &.controls-IconButton{
                top: 1px;
                height: 24px;
@@ -43,7 +45,6 @@
             height: @list-view-actions-menu-touch-height;
             width: @list-view-actions-menu-touch-width;
             background-size: @list-view-actions-menu-touch-size;
-            vertical-align: middle;
             background-position: center;
          }
       }
