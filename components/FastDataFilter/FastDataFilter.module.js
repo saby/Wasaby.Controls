@@ -127,7 +127,7 @@ define('js!SBIS3.CONTROLS.FastDataFilter',
                   text = [], ds,
                //Если выбрали дефолтное значение, то нужно взять из resetValue
                //TODO может быть всегда отдавать массивом?
-                   filterValue =  idArray.length === 1 && idArray[0] === this.getDefaultId() ? self._filterStructure[idx].resetValue :
+                   filterValue =  idArray.length === 1 && (idArray[0] === this.getDefaultId()) && self._filterStructure[idx] ? self._filterStructure[idx].resetValue :
                          (this._options.multiselect ?  idArray : idArray[0]);
                //TODO Непонятно как это сделать в обратную сторону (когда из контекста кришло значение его нужно поставить в dropdownList)
                //В контексте текуший DropdownList, у него задавали поле с фильтром
@@ -162,15 +162,24 @@ define('js!SBIS3.CONTROLS.FastDataFilter',
             //TODO Во-первых этого здесь бюыть не должно, но привязки не завелись из-за того, что dropDown не смог связаться по контексту и выставить свое значение
             //TODO во-вторых возможнны проблемы с value array||number. Пока обратим внимание на instances.second._options.multiselect
             var instances = this.getItemsInstances();
-            for (var i in instances) {
-               if (instances.hasOwnProperty(i)){
-                  var fsObject = this._filterStructure[this._getFilterSctructureItemIndex(i)],
-                        value = (fsObject.hasOwnProperty('value') && fsObject.value !== undefined) ?  instances[i]._options.multiselect ?  fsObject.value : [fsObject.value]: [instances[i].getDefaultId()];
-                  if (!this._isSimilarArrays(instances[i].getSelectedKeys(), value)) {
-                     instances[i].setSelectedKeys(value);
+            //Если компоненты еще не построились, подождем когда они будут готовы, чтобы поставить в соответсвие с фильтром
+            if (Object.isEmpty(instances)) {
+               this.once('onDrawItems', this._setSelectionToItemsInstances.bind(this));
+            } else {
+               this._setSelectionToItemsInstances();
+            }
+         },
+         _setSelectionToItemsInstances : function(){
+            var instances = this.getItemsInstances();
+               for (var i in instances) {
+                  if (instances.hasOwnProperty(i)){
+                     var fsObject = this._filterStructure[this._getFilterSctructureItemIndex(i)],
+                           value = (fsObject.hasOwnProperty('value') && fsObject.value !== undefined) ?  instances[i]._options.multiselect ?  fsObject.value : [fsObject.value]: [instances[i].getDefaultId()];
+                     if (!this._isSimilarArrays(instances[i].getSelectedKeys(), value)) {
+                        instances[i].setSelectedKeys(value);
+                     }
                   }
                }
-            }
          },
          //TODO это дублЬ! нужно вынести в хелпер!!!
          _isSimilarArrays : function(arr1, arr2){

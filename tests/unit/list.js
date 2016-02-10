@@ -10,6 +10,7 @@ define([
 '../../components/Data/Projection/resources/test/Collection.test',
 '../../components/Data/Projection/resources/test/CollectionEnumerator.test',
 '../../components/Data/Projection/resources/test/Projection.test',
+'../../components/Data/Projection/resources/test/Tree.test',
 '../../components/Data/resources/test/Di.test',
 '../../components/Data/resources/test/Factory.test',
 '../../components/Data/resources/test/helpers.test',

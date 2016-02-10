@@ -18,7 +18,7 @@
    }
 
   .controls-TreeView__editArrow{
-    display: none;
+    display: inline-block;
     visibility: hidden;
     position: relative;
     top: 2px;
@@ -30,9 +30,16 @@
     }
   }
 }
-
+.controls-CompositeView-table.controls-TreeView-big {
+   .controls-ListView__item-type-node{
+      font-size: @tree-view-big-node-font-size;
+   }
+   .controls-ListView__item-type-leaf{
+      font-size: @tree-view-big-leaf-font-size;
+   }
+}
 .controls-ListView__item-type-node {
-
+   font-size: @font-folder-size;
    &.controls-ListView__item__multiSelected {
       .controls-DataGridView__td {
          .controls-TreeView__ellipsis-copyArrow {
@@ -90,13 +97,12 @@
   }
 }
 
-.controls-TreeDataGridView__folderToolbarContainer {
+.controls-TreeDataGridView__folderFooterContainer {
    overflow: hidden;
 }
 
 .controls-ListView__hoveredItem{
    .controls-TreeView__editArrow {
-      display: inline-block;
       visibility: visible;
    }
 }

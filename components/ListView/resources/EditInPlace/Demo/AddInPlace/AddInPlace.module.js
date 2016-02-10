@@ -33,7 +33,7 @@ define('js!SBIS3.CONTROLS.DEMO.AddInPlace',
          var view = this.getChildControlByName('ДобавлениеПоМесту'),
              // инициализируем источник данных БЛ
              dataSource = new SbisService({
-                 service: 'Ноутбуки',
+                 resource: 'Ноутбуки',
                  formatMethodName: 'Создать'
              });
          

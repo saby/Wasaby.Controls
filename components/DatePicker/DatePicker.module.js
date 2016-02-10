@@ -450,7 +450,14 @@ define(
             //new Date от старой даты делаем, чтобы контекст увидел новый объект
             date = (DateUtil.isValidDate(oldDate)) ? new Date(oldDate.getTime())  : new Date(),
             item,
-            value;
+            value,
+            yyyy = 0,
+            mm   = 0,
+            dd   = 1,
+            hh   = 0,
+            ii   = 0,
+            ss   = 0,
+            uuu  = 0;
          for (var i = 0; i < this.formatModel.model.length; i++) {
             item = this.formatModel.model[i];
             if ( !item.isGroup) {
@@ -464,32 +471,32 @@ define(
                case 'YY' :
                   //сохраняем век для года, чтобы дата 1986 не превращалась в 2086, после правки дня или месяца
                   var baseYear = date.getFullYear() - date.getFullYear() % 100;
-                  date.setYear(baseYear + parseInt(value));
+                  yyyy = baseYear + parseInt(value);
                   break;
                case 'YYYY' :
-                  date.setYear(value);
+                  yyyy = value;
                   break;
                case 'MM' :
-                  date.setMonth(value - 1);
+                  mm = value - 1;
                   break;
                case 'DD' :
-                  date.setDate(value);
+                  dd = value;
                   break;
                case 'HH' :
-                  date.setHours(value);
+                  hh = value;
                   break;
                case 'II' :
-                  date.setMinutes(value);
+                  ii = value;
                   break;
                case 'SS' :
-                  date.setSeconds(value);
+                  ss = value;
                   break;
                case 'UUU' :
-                  date.setMilliseconds(value);
+                  uuu = value;
                   break;
             }
          }
-         return date;
+         return new Date(yyyy, mm, dd, hh, mm, ss, uuu);
       },
 
       /**

@@ -74,6 +74,7 @@ define('js!SBIS3.CONTROLS.Link', ['js!SBIS3.CONTROLS.ButtonBase', 'html!SBIS3.CO
 
       setCaption: function(caption){
          Link.superclass.setCaption.call(this, caption);
+         caption = this._options.caption;
          var $caption = $('.controls-Link__field', this._container);
          if (this._options.icon) {
             if ($caption.length){
