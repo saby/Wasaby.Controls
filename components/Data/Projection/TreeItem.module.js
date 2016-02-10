@@ -107,7 +107,7 @@ define('js!SBIS3.CONTROLS.Data.Projection.TreeItem', [
          TreeItem.superclass._notifyItemChangeToOwner.call(this, property);
 
          var rootOwner = this.getRoot().getOwner();
-         if (rootOwner !== this._options.owner) {
+         if (rootOwner && rootOwner !== this._options.owner) {
             rootOwner.notifyItemChange(this, property);
          }
       }

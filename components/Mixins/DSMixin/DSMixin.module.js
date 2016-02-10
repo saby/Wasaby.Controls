@@ -72,6 +72,20 @@ define('js!SBIS3.CONTROLS.DSMixin', [
        *    });
        * </pre>
        */
+      /**
+       * @event onBeforeDataLoad Перед загрузкой данных
+       * @remark
+       * Событие сработает перед запросом к источнику данных
+       * @param {$ws.proto.EventObject} eventObject Дескриптор события.
+       * @example
+       * <pre>
+       *    myView.subscribe('onBeforeDataLoad', function(event, error){
+       *       var filter = this.getFilter();
+       *       filter['myParam'] = myValue;
+       *       this.setFilter(filter, true)
+       *    });
+       * </pre>
+       */
       $protected: {
          _itemsProjection: null,
          _items : null,
@@ -259,7 +273,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
       },
 
       $constructor: function () {
-         this._publish('onDrawItems', 'onDataLoad', 'onDataLoadError');
+         this._publish('onDrawItems', 'onDataLoad', 'onDataLoadError', 'onBeforeDataLoad');
          if (typeof this._options.pageSize === 'string') {
             this._options.pageSize = this._options.pageSize * 1;
          }
@@ -533,6 +547,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
          if (!this._dataSource) {
             return;
          }
+         this._notify('onBeforeDataLoad');
 
          var query = new Query();
          query.where(filter)
@@ -906,7 +921,11 @@ define('js!SBIS3.CONTROLS.DSMixin', [
       },
 
       _addItemAttributes: function (container, item) {
-         container.attr('data-id', item.getKey()).addClass('controls-ListView__item');
+         var strKey = item.getKey();
+         if (strKey == null) {
+            strKey += '';
+         }
+         container.attr('data-id', strKey).addClass('controls-ListView__item');
          if (this._options.userItemAttributes && this._options.userItemAttributes instanceof Function) {
             this._options.userItemAttributes(container, item);
          }

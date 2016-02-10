@@ -173,8 +173,8 @@ define([
          });
 
          describe('.getRoot()', function() {
-            it('should return given root id from string', function() {
-               assert.strictEqual(tree.getRoot().getContents().id, 0);
+            it('should return given root from string', function() {
+               assert.strictEqual(tree.getRoot().getContents(), 0);
             });
             it('should return given root id from object', function() {
                var tree = new Tree({
