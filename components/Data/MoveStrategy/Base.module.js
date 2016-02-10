@@ -57,7 +57,7 @@ define('js!SBIS3.CONTROLS.Data.MoveStrategy.Base', [
             throw new Error('Hierrarhy Field is not defined.');
          }
          var def = new $ws.proto.ParallelDeferred(),
-            newParent = to.getId(),
+            newParent = to ? to.getId() : null,
             self = this;
          $ws.helpers.forEach(from, function(record){
             record.set(self._options.hierField, newParent);

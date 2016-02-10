@@ -921,7 +921,11 @@ define('js!SBIS3.CONTROLS.DSMixin', [
       },
 
       _addItemAttributes: function (container, item) {
-         container.attr('data-id', item.getKey()).addClass('controls-ListView__item');
+         var strKey = item.getKey();
+         if (strKey == null) {
+            strKey += '';
+         }
+         container.attr('data-id', strKey).addClass('controls-ListView__item');
          if (this._options.userItemAttributes && this._options.userItemAttributes instanceof Function) {
             this._options.userItemAttributes(container, item);
          }
