@@ -215,7 +215,10 @@ define('js!SBIS3.CONTROLS.NumberTextBox', ['js!SBIS3.CONTROLS.TextBox', 'html!SB
       },
 
       setNumericValue: function(value) {
-         this.setText(value + '')
+         if (value !== this._options.numericValue){
+            this._options.numericValue = value;
+            this.setText(value + '');
+         }
       },
       /**
        * Установить количество знаков после запятой
@@ -247,6 +250,11 @@ define('js!SBIS3.CONTROLS.NumberTextBox', ['js!SBIS3.CONTROLS.TextBox', 'html!SB
             this._options.onlyPositive,
             this._options.maxLength
          );
+         if (this._options.onlyInteger) {
+            this._options.numericValue = parseInt(value);
+         } else {
+            this._options.numericValue = parseFloat(value);
+         }
          if (this._options.hideEmptyDecimals && (value && value.indexOf('.') != -1) && fromFocusOut ){
             while (value[value.length - 1] == '0' || value[value.length - 1] == '.'){
                value = value.substr(0, value.length - 1);
