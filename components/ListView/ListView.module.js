@@ -1054,7 +1054,7 @@ define('js!SBIS3.CONTROLS.ListView',
             		item.container ? this._showItemsToolbar(item) : this._hideItemsToolbar();
                   this._hoveredItem = item;
                } else {
-                  this._hideItemsToolbar();
+                  this._hideItemsToolbar(true);
                }
             }
          },
@@ -1085,9 +1085,9 @@ define('js!SBIS3.CONTROLS.ListView',
          _showItemsToolbar: function(target) {
             this._getItemsToolbar().show(target, this._touchSupport);
          },
-         _hideItemsToolbar: function () {
+         _hideItemsToolbar: function (animate) {
             if (this._itemsToolbar) {
-               this._itemsToolbar.hide(this._touchSupport);
+               this._itemsToolbar.hide(animate);
             }
          },
          _getItemsToolbar: function() {
