@@ -70,7 +70,7 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', ['js!SBIS3.CORE.Control', 'js!SBIS3.CONT
             idProperty: this._options.keyField || (this._options.dataSource ? this._options.dataSource.getIdProperty() : ''),
             parentProperty: this._options.hierField,
             nodeProperty: this._options.hierField + '@',
-            root: this._options.root
+            root: (typeof this._options.root != 'undefined') ? this._options.root : null
          });
       },
       
