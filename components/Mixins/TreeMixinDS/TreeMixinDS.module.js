@@ -334,6 +334,13 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', ['js!SBIS3.CORE.Control'], function (Con
          reload : function() {
             this._folderOffsets['null'] = 0;
          },
+         _keyboardHover: function(e) {
+            switch(e.which) {
+               case $ws._const.key.m:
+                  e.ctrlKey && this.moveRecordsWithDialog();
+                  break;
+            }
+         },
          _dataLoadedCallback: function () {
             //this._options.openedPath = {};
             if (this._options.expand) {
