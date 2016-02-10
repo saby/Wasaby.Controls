@@ -268,22 +268,6 @@ define('js!SBIS3.CONTROLS.Data.Record', [
       },
 
       /**
-       * Проверяет эквивалентность формата и данных другой записи
-       * @param {SBIS3.CONTROLS.Data.Record} record Запись, с которой сравнить
-       * @returns {Boolean}
-       */
-      isEqual: function (record) {
-         return !!(record &&
-            record.$constructor &&
-            this.$constructor.prototype === record.$constructor.prototype &&
-            $ws.helpers.isEqualObject(
-               this._options.rawData,
-               record.getRawData()
-            )
-         );
-      },
-
-      /**
        * Возвращает "сырые" данные записи
        * @returns {Object}
        */

@@ -358,13 +358,13 @@ define([
                record.set('max', 1 + record.get('max'));
                assert.isTrue(record.isEqual(record));
             });
-            it('should return true for same module and false for different module', function () {
+            it('should return true for same module and submodule', function () {
                var MyRecord = Record.extend({}),
                   recordA = new Record(),
                   recordB = new Record(),
                   recordC = new MyRecord();
                assert.isTrue(recordA.isEqual(recordB));
-               assert.isFalse(recordA.isEqual(recordC));
+               assert.isTrue(recordA.isEqual(recordC));
             });
             it('should work fine with invalid argument', function () {
                assert.isFalse(record.isEqual());
