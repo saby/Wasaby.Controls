@@ -82,14 +82,22 @@ define('js!SBIS3.CONTROLS.Data.Projection.TreeEnumerator', [
             itemsMap = this._options.itemsMap,
             buildHierarchy = function(parent) {
                var result = [],
-                  parentId = Utils.getItemPropertyValue(
-                     parent ? parent.getContents() : null,
+                  parentData = parent.getContents(),
+                  parentId = parentData instanceof Object ? Utils.getItemPropertyValue(
+                     parentData,
                      idProperty
-                  ),
+                  ) : parentData,
                   children = collection.getIndiciesByValue(
                      parentProperty,
                      parentId
                   );
+
+               //FIXME: для совместимости с логикой контролов - корневые записи дерева могут вообще не иметь поля с именем idProperty
+               if (!children.length && parentId === null && parent.isRoot()) {
+                  children = collection.getIndiciesByValue(
+                     parentProperty
+                  );
+               }
 
                var i, child;
                for (i = 0; i < children.length; i++) {

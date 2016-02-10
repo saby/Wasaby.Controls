@@ -82,7 +82,7 @@ define('js!SBIS3.CONTROLS.Selectable', ['js!SBIS3.CONTROLS.Data.Utils'], functio
 
       _prepareSelectedConfig: function(index, key) {
          if ((typeof index == 'undefined') || (index === null)) {
-            if ((typeof key != 'undefined') && (key !== null)) {
+            if (typeof key != 'undefined') {
                this._selectMode = 'key';
                this._options.selectedIndex = this._getItemIndexByKey(key);
             }
