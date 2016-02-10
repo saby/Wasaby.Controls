@@ -194,9 +194,12 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
             endEdit: function(withSaving) {
                var
                   eip = this._getEditingEip(),
+                  record,
                   endEditResult;
                if (eip) {
-                  endEditResult = this._notify('onEndEdit', eip.getEditingRecord(), withSaving);
+                  record = eip.getEditingRecord();
+                  withSaving = withSaving && record.isChanged();
+                  endEditResult = this._notify('onEndEdit', record, withSaving);
                   if (endEditResult !== undefined) {
                      withSaving = endEditResult;
                   }
