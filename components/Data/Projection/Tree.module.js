@@ -324,9 +324,7 @@ define('js!SBIS3.CONTROLS.Data.Projection.Tree', [
     */
    var onSourceCollectionChange = function (prevFn, event, action, newItems, newItemsIndex, oldItems, oldItemsIndex) {
          this._childrenMap = {};
-
-         Array.prototype.shift.call(arguments);
-         prevFn.apply(this, arguments);
+         prevFn.call(this, event, action, newItems, newItemsIndex, oldItems, oldItemsIndex);
    },
 
    /**
@@ -339,8 +337,8 @@ define('js!SBIS3.CONTROLS.Data.Projection.Tree', [
     * @private
     */
    onSourceCollectionItemChange = function (prevFn, event, item, index, property) {
-      Array.prototype.shift.call(arguments);
-      prevFn.apply(this, arguments);
+      this._childrenMap = {};
+      prevFn.call(this, event, item, index, property);
    };
 
    Di.register('projection.tree', TreeProjection);

@@ -116,13 +116,10 @@ define('js!SBIS3.CONTROLS.Data.Projection.TreeEnumerator', [
                return result;
             };
 
-         var hierarchy = buildHierarchy(this._options.root),
-            i;
-         for (i = 0; i < hierarchy.length; i++) {
-            this._addToInternalMap(result, hierarchy[i]);
-         }
+         this._options.sortMap.length = 0;
+         Array.prototype.push.apply(this._options.sortMap, buildHierarchy(this._options.root));
 
-         return result;
+         return TreeEnumerator.superclass._buildInternalMap.call(this);
       }
 
       //endregion Protected methods

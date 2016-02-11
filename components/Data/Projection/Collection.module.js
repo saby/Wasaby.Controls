@@ -38,11 +38,6 @@ define('js!SBIS3.CONTROLS.Data.Projection.Collection', [
          _itemsMap: [],
 
          /**
-          * @member {SBIS3.CONTROLS.Data.Projection.CollectionEnumerator} Служебный энумератор проекции - для отслеживания текущего элемента и поиска по свойствам
-          */
-         _serviceEnumerator: null,
-
-         /**
           * @member {Function(*, Number} Фильтр элементов проекции
           */
          _filter: undefined,
@@ -58,14 +53,19 @@ define('js!SBIS3.CONTROLS.Data.Projection.Collection', [
          _group: undefined,
 
          /**
-          * @member {Array.<Function>} Метод сортировки элементов проекции
+          * @member {Array.<Function>} Пользовательские методы сортировки элементов
           */
-         _sort: [],
+         _userSort: [],
 
          /**
           * @member {Array.<Number>} Результат применения сортировки
           */
          _sortMap: [],
+
+         /**
+          * @member {SBIS3.CONTROLS.Data.Projection.CollectionEnumerator} Служебный энумератор проекции - для отслеживания текущего элемента и поиска по свойствам
+          */
+         _serviceEnumerator: null,
 
          /**
           * @member {Function} Обработчик события об изменении исходной коллекции
@@ -332,14 +332,14 @@ define('js!SBIS3.CONTROLS.Data.Projection.Collection', [
       },
 
       getSort: function () {
-         return this._sort.length > 1 ? this._sort : this._sort[0];
+         return this._userSort.length > 1 ? this._userSort : this._userSort[0];
       },
 
       setSort: function () {
-         if (this._sort.length === arguments.length) {
+         if (this._userSort.length === arguments.length) {
             var changed = false;
             for (var i = 0; i < arguments.length; i++) {
-               if (this._sort[i] !== arguments[i]) {
+               if (this._userSort[i] !== arguments[i]) {
                   changed = true;
                }
             }
@@ -349,7 +349,7 @@ define('js!SBIS3.CONTROLS.Data.Projection.Collection', [
             }
          }
 
-         this._sort = $ws.helpers.filter(Array.prototype.slice.call(arguments), function(item) {
+         this._userSort = $ws.helpers.filter(Array.prototype.slice.call(arguments), function(item) {
             return typeof item === 'function';
          });
 
@@ -498,11 +498,6 @@ define('js!SBIS3.CONTROLS.Data.Projection.Collection', [
        * @protected
        */
       _reSort: function (silent) {
-         //Проверяем, есть ли смысл сортировать
-         if (!this._isSorted() && !this._sortMap.length) {
-            return;
-         }
-
          var getIndexes = function(arr) {
                return $ws.helpers.map(arr, function(item, index) {
                   return index;
@@ -514,7 +509,7 @@ define('js!SBIS3.CONTROLS.Data.Projection.Collection', [
             count;
 
          this._sortMap.length = 0;
-         if (this._isSorted()) {
+         if (this._userSort.length) {
             //Создаем служебный массив
             var items = [];
 
@@ -527,20 +522,19 @@ define('js!SBIS3.CONTROLS.Data.Projection.Collection', [
             }
 
             //Выполняем сортировку служебного массива
-            for (var i = this._sort.length - 1; i >= 0; i--) {
-               items.sort(this._sort[i]);
+            for (var i = this._userSort.length - 1; i >= 0; i--) {
+               items.sort(this._userSort[i]);
             }
 
             //Заполняем индекс сортировки по служебному массиву
             for (index = 0, count = items.length; index < count; index++) {
                this._sortMap.push(items[index].collectionIndex);
             }
-            newSortMap = this._sortMap;
-         } else {
-            newSortMap = getIndexes(this._itemsMap);
          }
 
          this._getServiceEnumerator().reIndex();
+         this._getServiceEnumerator().getCurrent();
+         newSortMap = this._sortMap.length ? this._sortMap : getIndexes(this._itemsMap);
 
          if (!silent) {
             //Анализируем новый порядок элементов - идем по новому индексу сортировки и сопоставляем ее со старой.
@@ -645,7 +639,16 @@ define('js!SBIS3.CONTROLS.Data.Projection.Collection', [
        * @protected
        */
       _isSorted: function () {
-         return this._sort.length > 0;
+         return this._sortMap.length > 0;
+      },
+
+      /**
+       * Проверяет, что используется пользовательская сортировка
+       * @returns {Boolean}
+       * @protected
+       */
+      _isUserSorted: function () {
+         return this._userSort.length > 0;
       },
 
       /**
@@ -724,16 +727,14 @@ define('js!SBIS3.CONTROLS.Data.Projection.Collection', [
          }
 
          var result = [],
-            index,
-            itemIndex;
+            index;
          for (var i = 0, count = items.length; i < count; i++) {
             index = i + start;
-            itemIndex = this._isSorted() ? this._sortMap[index] : index;
             if (!this._isFiltered() || this._filterMap[index]) {
                if (newContainers) {
                   result.push(this._convertToItem(items[i], index));
                } else {
-                  result.push(this._itemsMap[itemIndex]);
+                  result.push(this._itemsMap[index]);
                }
             }
          }
@@ -888,7 +889,9 @@ define('js!SBIS3.CONTROLS.Data.Projection.Collection', [
          'contents'
       );
       this._reFilter(index, 1);
-      this._reSort();
+      if (this._isSorted()) {
+         this._reSort();
+      }
    };
 
    Di.register('projection.collection', CollectionProjection);
