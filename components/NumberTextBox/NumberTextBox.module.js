@@ -186,12 +186,6 @@ define('js!SBIS3.CONTROLS.NumberTextBox', ['js!SBIS3.CONTROLS.TextBox', 'html!SB
          this._inputField.val(this._options.text);
       },
 
-
-      setText: function(text){
-         text = this._formatText(text);
-         NumberTextBox.superclass.setText.call(this, text);
-      },
-
       _setText: function(text){
          this._setNumericValue(text);
          if (text !== '-' && text !== '.' && text !== ''){
@@ -210,6 +204,7 @@ define('js!SBIS3.CONTROLS.NumberTextBox', ['js!SBIS3.CONTROLS.TextBox', 'html!SB
 
       setText: function(text){
          this._setNumericValue(text);
+         text = this._formatText(text);
          NumberTextBox.superclass.setText.call(this, text);
       },
 
