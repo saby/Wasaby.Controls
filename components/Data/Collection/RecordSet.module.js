@@ -185,6 +185,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
          syncCompleteDef.done(true);
          return syncCompleteDef.getResult(true).addCallback(function(){
             $ws.helpers.map(willRemove, self.remove, self);
+            self._getServiceEnumerator().reIndex();
          });
       },
 
