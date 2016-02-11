@@ -5,20 +5,23 @@ define([
    ], function (Record, SbisAdapter) {
       'use strict';
       describe('SBIS3.CONTROLS.Data.Record', function () {
-         var record,
-            recordData,
-            getRecordData = function() {
+         var getRecordData = function() {
                return {
                   max: 10,
                   title: 'A',
                   id: 1
                };
-            };
+            },
+            getRecord = function(data) {
+               return new Record({
+                  rawData: data || getRecordData()
+               });
+            },
+            record,
+            recordData;
          beforeEach(function () {
             recordData = getRecordData();
-            record = new Record({
-               rawData: recordData
-            });
+            record = getRecord(recordData);
          });
 
          describe('.get()', function () {
@@ -48,6 +51,71 @@ define([
             it('should set value', function () {
                record.set('max', 13);
                assert.strictEqual(record.get('max'), 13);
+            });
+            it('should trigger onPropertyChange if value changed', function () {
+               var name,
+                  newV;
+               record.subscribe('onPropertyChange', function(e, field, value) {
+                  name = field;
+                  newV = value;
+               });
+               record.set('max', 13);
+               assert.strictEqual(name, 'max');
+               assert.strictEqual(newV, 13);
+            });
+            it('should not trigger onPropertyChange if value not changed', function () {
+               var name,
+                  newV;
+               record.subscribe('onPropertyChange', function(e, field, value) {
+                  name = field;
+                  newV = value;
+               });
+               record.set('max', record.get('max'));
+               assert.isUndefined(name);
+               assert.isUndefined(newV);
+            });
+            it('should trigger onPropertyChange if value is not equal', function () {
+               var name,
+                  newV;
+               record.subscribe('onPropertyChange', function(e, field, value) {
+                  name = field;
+                  newV = value;
+               });
+               var val = new Record();
+               record.set('rec', val);
+               assert.strictEqual(name, 'rec');
+               assert.strictEqual(newV, val);
+            });
+            it('should not trigger onPropertyChange if value is equal clone', function () {
+               var name,
+                  newV;
+               var val = new Record();
+               val.set('a', 'b');
+               record.set('rec', val);
+               record.subscribe('onPropertyChange', function(e, field, value) {
+                  name = field;
+                  newV = value;
+               });
+               val = val.clone();
+               record.set('rec', val);
+               assert.isUndefined(name);
+               assert.isUndefined(newV);
+            });
+            it('should trigger onPropertyChange if value is not equal clone', function () {
+               var name,
+                  newV;
+               var val = new Record();
+               val.set('a', 'b');
+               record.set('rec', val);
+               record.subscribe('onPropertyChange', function(e, field, value) {
+                  name = field;
+                  newV = value;
+               });
+               val = val.clone();
+               val.set('a', 'c');
+               record.set('rec', val);
+               assert.strictEqual(name, 'rec');
+               assert.strictEqual(newV, val);
             });
          });
 
@@ -248,6 +316,67 @@ define([
                assert.equal(cloneA.get('max'), cloneB.get('max'));
                cloneA.set('max', 1);
                assert.notEqual(cloneA.get('max'), cloneB.get('max'));
+            });
+         });
+
+         describe('.isEqual()', function () {
+            it('should return true with shared raw data', function () {
+               var anotherRecord = getRecord();
+               assert.isTrue(record.isEqual(anotherRecord));
+            });
+            it('should return true with same raw data', function () {
+               var anotherRecord = getRecord(getRecordData());
+               assert.isTrue(record.isEqual(anotherRecord));
+            });
+            it('should return false with different raw data', function () {
+               var data = getRecordData();
+               data.someField = 'someValue';
+               var anotherRecord = getRecord(data);
+               assert.isFalse(record.isEqual(anotherRecord));
+
+               data = getRecordData();
+               for (var key in data) {
+                  if (data.hasOwnProperty(key)) {
+                     delete data[key];
+                     break;
+                  }
+               }
+               anotherRecord = getRecord(data);
+               assert.isFalse(record.isEqual(anotherRecord));
+            });
+            it('should return false for changed and true for reverted back record', function () {
+               var anotherRecord = getRecord(getRecordData());
+               anotherRecord.set('max', 1 + record.get('max'));
+               assert.isFalse(record.isEqual(anotherRecord));
+
+               anotherRecord.set('max', record.get('max'));
+               assert.isTrue(record.isEqual(anotherRecord));
+            });
+            it('should return true with itself', function () {
+               assert.isTrue(record.isEqual(record));
+
+               record.set('max', 1 + record.get('max'));
+               assert.isTrue(record.isEqual(record));
+            });
+            it('should return true for same module and submodule', function () {
+               var MyRecord = Record.extend({}),
+                  recordA = new Record(),
+                  recordB = new Record(),
+                  recordC = new MyRecord();
+               assert.isTrue(recordA.isEqual(recordB));
+               assert.isTrue(recordA.isEqual(recordC));
+            });
+            it('should work fine with invalid argument', function () {
+               assert.isFalse(record.isEqual());
+               assert.isFalse(record.isEqual(null));
+               assert.isFalse(record.isEqual(false));
+               assert.isFalse(record.isEqual(true));
+               assert.isFalse(record.isEqual(0));
+               assert.isFalse(record.isEqual(1));
+               assert.isFalse(record.isEqual(''));
+               assert.isFalse(record.isEqual('a'));
+               assert.isFalse(record.isEqual([]));
+               assert.isFalse(record.isEqual({}));
             });
          });
 

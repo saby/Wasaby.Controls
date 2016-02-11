@@ -35,6 +35,8 @@ define('js!SBIS3.CONTROLS.hierarchyMixin', [], function () {
       $constructor: function () {
          var
             filter = this.getFilter() || {};
+         //Внимание! Событие очень нужно иерархическому поиску. Подписано в ComponentBinder
+         this._publish('onSetRoot');
          if (typeof this._options.root != 'undefined') {
             this._curRoot = this._options.root;
             filter[this._options.hierField] = this._options.root;

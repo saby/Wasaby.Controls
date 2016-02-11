@@ -81,16 +81,15 @@ define('js!SBIS3.CONTROLS.Selectable', ['js!SBIS3.CONTROLS.Data.Utils'], functio
 
 
       _prepareSelectedConfig: function(index, key) {
+
+
+
+
+
          if ((typeof index == 'undefined') || (index === null)) {
             if (typeof key != 'undefined') {
                this._selectMode = 'key';
                this._options.selectedIndex = this._getItemIndexByKey(key);
-            }
-            else if (!this._options.allowEmptySelection) {
-               if (this._itemsProjection.getCount()) {
-                  this._selectMode = 'index';
-                  this._options.selectedIndex = 0;
-               }
             }
             else {
                this._options.selectedIndex = undefined;
@@ -99,6 +98,12 @@ define('js!SBIS3.CONTROLS.Selectable', ['js!SBIS3.CONTROLS.Data.Utils'], functio
          else {
             this._selectMode = 'index';
             this._options.selectedIndex = index;
+         }
+         if (!this._options.allowEmptySelection && (this._options.selectedIndex === null || typeof this._options.selectedIndex == 'undefined' || this._options.selectedIndex == -1)) {
+            if (this._itemsProjection.getCount()) {
+               this._selectMode = 'index';
+               this._options.selectedIndex = 0;
+            }
          }
       },
 
@@ -109,6 +114,7 @@ define('js!SBIS3.CONTROLS.Selectable', ['js!SBIS3.CONTROLS.Data.Utils'], functio
                   this._itemsProjection
                );
             }
+            this._utilityEnumerator = undefined;
          }
       },
 
@@ -123,6 +129,12 @@ define('js!SBIS3.CONTROLS.Selectable', ['js!SBIS3.CONTROLS.Data.Utils'], functio
             this._drawSelectedItem(this._options.selectedKey, this._options.selectedIndex);
          },
          _unsetItemsEventHandlers : function() {
+            if (this._utilityEnumerator) {
+               this._utilityEnumerator.unsetObservableCollection(
+                  this._itemsProjection
+               );
+            }
+            this._utilityEnumerator = undefined;
             if (this._itemsProjection && this._onProjectionCurrentChange) {
                this.unsubscribeFrom(this._itemsProjection, 'onCurrentChange', this._onProjectionCurrentChange);
             }
