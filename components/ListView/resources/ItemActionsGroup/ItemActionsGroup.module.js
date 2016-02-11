@@ -89,7 +89,8 @@ define('js!SBIS3.CONTROLS.ItemActionsGroup',
                },
                target = this._itemActionsMenuButton,
                corner = 'br',
-               items = this.getItems();
+                // TODO перевести на проекции
+               items = this._options.items;
 
             if (this._options.touchMode) {
                verticalAlign.offset = 0;

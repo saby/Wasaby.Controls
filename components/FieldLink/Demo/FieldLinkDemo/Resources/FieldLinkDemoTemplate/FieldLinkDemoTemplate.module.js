@@ -4,12 +4,12 @@
 define('js!SBIS3.CONTROLS.Demo.FieldLinkDemoTemplate', [
    'js!SBIS3.CORE.CompoundControl',
    'html!SBIS3.CONTROLS.Demo.FieldLinkDemoTemplate',
-   'js!SBIS3.CONTROLS.SbisJSONStrategy',
-   'js!SBIS3.CONTROLS.StaticSource',
+   'js!SBIS3.CONTROLS.Data.Adapter.Sbis',
+   'js!SBIS3.CONTROLS.Data.Source.Memory',
    'js!SBIS3.CONTROLS.DataGridView',
    'js!SBIS3.CONTROLS.Button',
    'css!SBIS3.CONTROLS.Demo.FieldLinkDemoTemplate'
-], function (CompoundControl, dotTplFn, SbisJSONStrategy, StaticSource) {
+], function (CompoundControl, dotTplFn, AdapterSbis, StaticSource) {
    /**
     * SBIS3.CONTROLS.Demo.MySuggestTextBoxDS
     * @class SBIS3.CONTROLS.Demo.MySuggestTextBoxDS
@@ -46,8 +46,8 @@ define('js!SBIS3.CONTROLS.Demo.FieldLinkDemoTemplate', [
                   {n: 'Название', t: 'Текст'}
                ]
             },
-            keyField: 'Ид',
-            strategy: new SbisJSONStrategy()
+            idProperty: 'Ид',
+            adapter: new AdapterSbis()
          });
 
          dataGrid.setDataSource(dataSource);

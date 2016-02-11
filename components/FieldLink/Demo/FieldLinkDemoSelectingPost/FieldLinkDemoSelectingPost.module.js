@@ -4,12 +4,12 @@
 define('js!SBIS3.CONTROLS.Demo.FieldLinkDemoSelectingPost', [
    'js!SBIS3.CORE.CompoundControl',
    'html!SBIS3.CONTROLS.Demo.FieldLinkDemoSelectingPost',
-   'js!SBIS3.CONTROLS.SbisJSONStrategy',
-   'js!SBIS3.CONTROLS.StaticSource',
+   'js!SBIS3.CONTROLS.Data.Source.Memory',
+   'js!SBIS3.CONTROLS.Data.Adapter.Sbis',
    'js!SBIS3.CONTROLS.DataGridView',
    'js!SBIS3.CONTROLS.Button',
    'css!SBIS3.CONTROLS.Demo.FieldLinkDemoSelectingPost'
-], function (CompoundControl, dotTplFn, SbisJSONStrategy, StaticSource) {
+], function (CompoundControl, dotTplFn, MemorySource, AdapterSbis) {
    /**
     * SBIS3.CONTROLS.Demo.FieldLinkDemoSelectingPost
     * @class SBIS3.CONTROLS.Demo.FieldLinkDemoSelectingPost
@@ -30,7 +30,7 @@ define('js!SBIS3.CONTROLS.Demo.FieldLinkDemoSelectingPost', [
          moduleClass.superclass.init.call(this);
          var self = this;
          var dataGrid = this.getChildControlByName('Таблица');
-         var dataSource = new StaticSource({
+         var dataSource = new MemorySource({
             data: {
                _type: 'recordset',
                d: [
@@ -46,8 +46,8 @@ define('js!SBIS3.CONTROLS.Demo.FieldLinkDemoSelectingPost', [
                   {n: 'Название', t: 'Текст'}
                ]
             },
-            keyField: 'Ид',
-            strategy: new SbisJSONStrategy()
+            idProperty: 'Ид',
+            adapter: new AdapterSbis()
          });
 
          dataGrid.setDataSource(dataSource);
