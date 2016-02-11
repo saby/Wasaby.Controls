@@ -111,8 +111,13 @@ define('js!SBIS3.CONTROLS.BaseSource', [], function () {
        */
       _syncDataSet: function (dataSet) {
          var self = this,
+             createdRecords = [],
              syncCompleteDef = new $ws.proto.ParallelDeferred();
+
          dataSet.each(function(record) {
+            if (!record.isCreated()) {
+               createdRecords.push(record);
+            }
             var syncResult = self._syncRecord(record);
             if (syncResult !== undefined) {
                syncCompleteDef.push(syncResult);
@@ -120,7 +125,12 @@ define('js!SBIS3.CONTROLS.BaseSource', [], function () {
          }, 'all');
          syncCompleteDef.done(true);
 
-         return syncCompleteDef.getResult();
+         return syncCompleteDef.getResult().addCallback(function() {
+            //Обновляем записи, у которых изменился ключ
+            for (var i = 0; i < createdRecords.length; i++) {
+               dataSet._addReference(createdRecords[i]);
+            }
+         });
       },
 
       /**
