@@ -921,9 +921,7 @@ define('js!SBIS3.CONTROLS.ListView',
 
          showEip: function(target, model, options) {
             if (this.isEnabled()) {
-               return this._getEditInPlace().showEip(target, model, options);
-            } else {
-               return $ws.proto.Deferred.fail();
+               this._getEditInPlace().showEip(target, model, options);
             }
          },
 
