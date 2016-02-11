@@ -25,7 +25,7 @@ define('js!SBIS3.TestTreeCompositeViewTable',
 
                 var multiView1 = this.getChildControlByName('TreeCompositeView 1');
                 var multiView2 = this.getChildControlByName('TreeCompositeView 2');
-                var multiViewSource = new SbisServiceSource({service: 'TreeCompositeViewTable'});
+                var multiViewSource = new SbisServiceSource({resource: 'TreeCompositeViewTable'});
                 multiView1.setDataSource(multiViewSource);
 
 

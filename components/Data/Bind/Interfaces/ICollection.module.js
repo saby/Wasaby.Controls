@@ -11,9 +11,18 @@ define('js!SBIS3.CONTROLS.Data.Bind.ICollection', [], function () {
 
    var ICollection = /** @lends SBIS3.CONTROLS.Data.Bind.ICollection.prototype */{
       /**
+       * @typedef {String} ChangeAction
+       * @variant a Добавлены элементы
+       * @variant rm Удалены элементы
+       * @variant rp Заменены элементы
+       * @variant m Перемещены элементы
+       * @variant rs Значительное изменение
+       */
+
+      /**
        * @event onCollectionChange После изменения коллекции
        * @param {$ws.proto.EventObject} event Дескриптор события.
-       * @param {String} action Действие, приведшее к изменению.
+       * @param {ChangeAction} action Действие, приведшее к изменению.
        * @param {Array} newItems Новые элементы коллеции.
        * @param {Number} newItemsIndex Индекс, в котором появились новые элементы.
        * @param {Array} oldItems Удаленные элементы коллекции.

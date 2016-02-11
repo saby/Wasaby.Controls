@@ -5,7 +5,7 @@
  * Time: 10:50
  * To change this template use File | Settings | File Templates.
  */
-define('js!SBIS3.CONTROLS.Pager', ['js!SBIS3.CORE.CompoundControl', 'html!SBIS3.CONTROLS.Pager', 'js!SBIS3.CORE.FieldDropdown',  'js!SBIS3.CORE.Paging'], function(CompoundControl, dotTplFn, Combobox, Paging) {
+define('js!SBIS3.CONTROLS.Pager', ['js!SBIS3.CORE.CompoundControl', 'html!SBIS3.CONTROLS.Pager', 'js!SBIS3.CONTROLS.DropdownList',  'js!SBIS3.CORE.Paging'], function(CompoundControl, dotTplFn, Combobox, Paging) {
 
    'use strict';
 
@@ -32,9 +32,9 @@ define('js!SBIS3.CONTROLS.Pager', ['js!SBIS3.CORE.CompoundControl', 'html!SBIS3.
          _options: {
             pagingOptions: {}
          },
-         _fddDataKeys: [10, 20, 25, 50, 100, 200, 500, 1000],
+         _dropdDataKeys: [10, 20, 25, 50, 100, 200, 500, 1000],
          _paging : undefined,
-         _fdd: undefined,
+         _dropd: undefined,
          _lastNumRecords: undefined,
          _lastNextPage: undefined
       },
@@ -47,26 +47,30 @@ define('js!SBIS3.CONTROLS.Pager', ['js!SBIS3.CORE.CompoundControl', 'html!SBIS3.
                sortNumber = function(a, b) {
                   return a - b;
                },
-               fddData = {},
+               fddData = [],
                opener;
          Pager.superclass.init.call(this);
-         this._fdd = this.getChildControlByName('controls-Pager_comboBox');
+         this._dropd = this.getChildControlByName('controls-Pager_comboBox');
          //Если переданный pageSize не входит в стандартный набор - добавим и отсортируем по возрастанию
-         if (Array.indexOf(this._fddDataKeys, numPageSize) < 0){
-            this._fddDataKeys.push(numPageSize);
-            this._fddDataKeys.sort(sortNumber);
+         if (Array.indexOf(this._dropdDataKeys, numPageSize) < 0){
+            this._dropdDataKeys.push(numPageSize);
+            this._dropdDataKeys.sort(sortNumber);
          }
-         fddData.keys = this._fddDataKeys;
-         fddData.values = this._fddDataKeys;
+         for (var i = 0; i < this._dropdDataKeys.length; i++) {
+            fddData.push({
+               'id' : this._dropdDataKeys[i],
+               'value' :  this._dropdDataKeys[i]
+            });
+         }
          //TODO подписаться на изменение проперти в контексте. Пока Витя не допилил - подписываюсь на комбобокс
-         this._fdd.setData(fddData);
-         this._fdd.setValue(numPageSize);
-         this._fdd.subscribe('onValueChange', function(event, value){
+         this._dropd.setItems(fddData);
+         this._dropd.setSelectedKeys([numPageSize]);
+         this._dropd.subscribe('onSelectedItemsChange', function(event, arr){
             //TODO может менять pageSize модно будет в фильтре?
+            var value = arr[0];
             self._options.pageSize = value;
             self.getPaging().setPageSize(value);
             self.getOpener().setPageSize(value);
-            self._updateLocalStorageValue();
          });
          this._paging = this.getChildControlByName('controls-Pager_paging');
          this._paging.subscribe('onPageChange', function(event, pageNum, deferred){
@@ -88,7 +92,7 @@ define('js!SBIS3.CONTROLS.Pager', ['js!SBIS3.CORE.CompoundControl', 'html!SBIS3.
          if (typeof hasNextPage === 'boolean'){
             var strEnd = '',//typeof hasNextPage !== 'boolean' && hasNextPage ? (' из ' + hasNextPage) : '',
                   page = this.getPaging().getPage() - 1,
-                  startRecord = page * this._fdd.getValue() + 1;
+                  startRecord = page * this._dropd.getSelectedKeys()[0] + 1;
             if(numRecords === 0){
                pagerStr = '';
             }

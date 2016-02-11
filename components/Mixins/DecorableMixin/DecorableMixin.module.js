@@ -26,6 +26,7 @@ define('js!SBIS3.CONTROLS.DecorableMixin', [
              * @cfg {String} Фраза для подсветки
              * @see getHighlightText
              * @see setHighlightText
+             * @translatable
              */
             highlightText: '',
 

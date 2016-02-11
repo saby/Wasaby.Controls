@@ -35,7 +35,7 @@ define('js!SBIS3.CONTROLS.TabButton',
             this.setIcon(this._options.icon);
          }
       },
-      _drawIcon: function(icon) {
+      _drawIcon: function() {
          var newIcon = $('<span></span>').addClass(this._options._iconClass);
          this.getContainer().find('.controls-TabButton__icon').html(newIcon);
       }

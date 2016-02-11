@@ -226,6 +226,42 @@ define([
             });
          });
 
+         describe('.isEqual()', function () {
+            it('should accept an invalid argument', function () {
+               assert.isFalse(record.isEqual());
+               assert.isFalse(record.isEqual(null));
+               assert.isFalse(record.isEqual(false));
+               assert.isFalse(record.isEqual(true));
+               assert.isFalse(record.isEqual(0));
+               assert.isFalse(record.isEqual(1));
+               assert.isFalse(record.isEqual({}));
+               assert.isFalse(record.isEqual([]));
+            });
+            it('should return true for the same record', function () {
+               var same = new Record({
+                  rawData: getRecordData()
+               });
+               assert.isTrue(record.isEqual(same));
+            });
+            it('should return true for itself', function () {
+               assert.isTrue(record.isEqual(record));
+            });
+            it('should return true for the clone', function () {
+               assert.isTrue(record.isEqual(record.clone()));
+            });
+            it('should return true for empties', function () {
+               var record = new Record();
+               assert.isTrue(record.isEqual(new Record()));
+            });
+            it('should return false if field changed', function () {
+               var same = new Record({
+                  rawData: getRecordData()
+               });
+               same.set('title', 'B');
+               assert.isFalse(record.isEqual(same));
+            });
+         });
+
          describe('.clone()', function () {
             it('should not be same as original', function () {
                assert.notEqual(record.clone(), record);
@@ -322,13 +358,13 @@ define([
                record.set('max', 1 + record.get('max'));
                assert.isTrue(record.isEqual(record));
             });
-            it('should return true for same module and false for different module', function () {
+            it('should return true for same module and submodule', function () {
                var MyRecord = Record.extend({}),
                   recordA = new Record(),
                   recordB = new Record(),
                   recordC = new MyRecord();
                assert.isTrue(recordA.isEqual(recordB));
-               assert.isFalse(recordA.isEqual(recordC));
+               assert.isTrue(recordA.isEqual(recordC));
             });
             it('should work fine with invalid argument', function () {
                assert.isFalse(record.isEqual());

@@ -2,8 +2,9 @@
  * Created by as.suhoruchkin on 02.04.2015.
  */
 define('js!SBIS3.CONTROLS.OperationMove', [
-   'js!SBIS3.CONTROLS.Link'
-], function(Link) {
+   'js!SBIS3.CONTROLS.Link',
+   'i18n!SBIS3.CONTROLS.OperationMove'
+], function(Link, rk) {
    /**
     * Операция перемещения.
     *
@@ -33,16 +34,22 @@ define('js!SBIS3.CONTROLS.OperationMove', [
             icon: 'sprite:icon-24 icon-Move icon-primary action-hover',
             /**
              * @cfg {String} Всплывающая подсказка кнопки перемещения
+             * @example
+             *  <pre>
+             *     <option name="title">Перенести отмеченные записи</option>
+             * </pre>
+             * @translatable
              */
-            title: 'Перенести отмеченные',
+            title: rk('Перенести отмеченные'),
             /**
              * @cfg {String} Текст на кнопке
              * @example
              * <pre>
              *     <option name="caption">Перенести записи</option>
              * </pre>
+             * @translatable
              */
-            caption: 'Перенести'
+            caption: rk('Перенести')
          }
       },
 

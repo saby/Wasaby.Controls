@@ -1,6 +1,6 @@
 define('js!SBIS3.CONTROLS.TreeMixinDS', ['js!SBIS3.CORE.Control',
    'js!SBIS3.CONTROLS.BreadCrumbs',
-   'browser!html!SBIS3.CONTROLS.DataGridView/resources/DataGridViewGroupBy'], function (Control, BreadCrumbs, groupByTpl) {
+   'browser!html!SBIS3.CONTROLS.DataGridView/resources/DataGridViewGroupBy', 'js!SBIS3.CONTROLS.Data.Projection.Tree'], function (Control, BreadCrumbs, groupByTpl, TreeProjection) {
    /**
     * Позволяет контролу отображать данные имеющие иерархическую структуру и работать с ними.
     * @mixin SBIS3.CONTROLS.TreeMixinDS
@@ -9,6 +9,19 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', ['js!SBIS3.CORE.Control',
     */
 
    var TreeMixinDS = /** @lends SBIS3.CONTROLS.TreeMixinDS.prototype */{
+      /**
+       * @event onSearchPathClick При клике по хлебным крошкам в режиме поиска.
+       * Событие, происходящее после клика по хлебным крошкам, отображающим результаты поиска
+       * @param {$ws.proto.EventObject} eventObject Дескриптор события.
+       * @param {number} id ключ узла, по которму кликнули
+       * @return Если вернуть false - загрузка узла не произойдет
+       * @example
+       * <pre>
+       *    DataGridView.subscribe('onSearchPathClick', function(event){
+       *      searchForm.clearSearch();
+       *    });
+       * </pre>
+       */
       /**
        * @event onNodeExpand После разворачивания ветки
        * @param {$ws.proto.EventObject} eventObject Дескриптор события.
@@ -84,6 +97,17 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', ['js!SBIS3.CORE.Control',
          }
          this.setFilter(filter, true);
       },
+
+      _createDefaultProjection : function(items) {
+         this._itemsProjection = new TreeProjection({
+            collection: items,
+            idProperty: this._options.keyField || (this._options.dataSource ? this._options.dataSource.getIdProperty() : ''),
+            parentProperty: this._options.hierField,
+            nodeProperty: this._options.hierField + '@',
+            root: (typeof this._options.root != 'undefined') ? this._options.root : null
+         });
+      },
+
       _getRecordsForRedraw: function() {
          /*Получаем только рекорды с parent = curRoot*/
          var
@@ -252,6 +276,16 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', ['js!SBIS3.CORE.Control',
          });
          this._options.openedPath[key] = true;
          self._drawLoadedNode(key, records, self._folderHasMore[key]);
+      },
+
+      around : {
+         _addItem: function (parentFnc, item, at) {
+            //TODO придрот, чтоб не отрисовывались данные в дереве при первом открытии узла
+            var parent = item.getContents().get(this._options.hierField);
+            if (this._options.openedPath[parent] || (parent == this._curRoot)) {
+               parentFnc.call(this, item, at);
+            }
+         }
       },
 
       _nodeClosed : function(key) {
