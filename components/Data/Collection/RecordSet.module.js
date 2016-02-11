@@ -551,7 +551,6 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
                this.assign(newItems);
             }
          }
-         console.log({merged:l,added:l1});
       },
 
       _reindexTree: function (field) {
