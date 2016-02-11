@@ -235,11 +235,6 @@ define('js!SBIS3.CONTROLS.BreadCrumbs', [
 
       _appendItemTemplate: function(item, targetContainer, itemBuildedTpl) {
          targetContainer.append(itemBuildedTpl);
-      },
-
-      destroy: function() {
-         BreadCrumbs.superclass.destroy.call(this);
-         $ws.single.EventBus.channel('WindowChangeChannel').unsubscribe('onWindowResize', this._resizeHandler, this);
       }
    });
 
