@@ -193,11 +193,7 @@ define('js!SBIS3.CONTROLS.NumberTextBox', ['js!SBIS3.CONTROLS.TextBox', 'html!SB
       },
 
       _setText: function(text){
-         if (this._options.onlyInteger) {
-            this._options.numericValue = parseInt(text);
-         } else {
-            this._options.numericValue = parseFloat(text);
-         }
+         this._setNumericValue(text);
          if (text !== '-' && text !== '.' && text !== ''){
             if (text.indexOf('.') === text.length - 1) {
                text = this._formatText(text) + '.';
@@ -211,6 +207,12 @@ define('js!SBIS3.CONTROLS.NumberTextBox', ['js!SBIS3.CONTROLS.TextBox', 'html!SB
          this._inputField.val(text);
          this._setCaretPosition(this._caretPosition[0], this._caretPosition[1]);
       },
+
+      setText: function(text){
+         this._setNumericValue(text);
+         NumberTextBox.superclass.setText.call(this, text);
+      },
+
        /**
         * Возвращает текущее числовое значение поля ввода.
         * @returns {Number} Текущее значение поля ввода числа.
@@ -230,6 +232,14 @@ define('js!SBIS3.CONTROLS.NumberTextBox', ['js!SBIS3.CONTROLS.TextBox', 'html!SB
          if (value !== this._options.numericValue){
             this._options.numericValue = value;
             this.setText(value + '');
+         }
+      },
+
+      _setNumericValue: function(value){
+         if (this._options.onlyInteger) {
+            this._options.numericValue = parseInt(value);
+         } else {
+            this._options.numericValue = parseFloat(value);
          }
       },
       /**
@@ -266,12 +276,12 @@ define('js!SBIS3.CONTROLS.NumberTextBox', ['js!SBIS3.CONTROLS.TextBox', 'html!SB
       },
 
       _arrowUpClick: function(){
-         this.setText(this._getSibling(1));
+         this._setText(this._getSibling(1).toString());
       },
 
       _arrowDownClick: function(){
          if (!(this._options.onlyPositive && this.getNumericValue() < 1)) {
-            this.setText(this._getSibling(-1));
+            this._setText(this._getSibling(-1).toString());
          }
       },
 
