@@ -19,125 +19,23 @@ define('js!SBIS3.CONTROLS.Data.ContextField', [
        * @static
        */
       registerRecord: function (name, module, changeEvent) {
-         $ws.proto.Context.registerFieldType({
-            name: name,
-
-            is: function (value) {
-               return value instanceof module;
-            },
-
-            get: function (value, keyPath) {
-               var
-                   Context = $ws.proto.Context,
-                   NonExistentValue = Context.NonExistentValue,
-
-                   key, result, subValue, subType;
-
-               if (keyPath.length !== 0) {
-                  key = keyPath[0];
-                  subValue = value.get(key);
-                  if (subValue !== undefined) {
-                     subType = Context.getValueType(subValue);
-                     result = subType.get(subValue, keyPath.slice(1));
-                  } else {
-                     result = NonExistentValue;
-                  }
-               } else {
-                  result = value;
-               }
-
-               return result;
-            },
-
-            setWillChange: function (oldValue, keyPath, value) {
-               var
-                   Context = $ws.proto.Context,
-                   result, subValue, key, subType;
-
-               if (keyPath.length !== 0) {
-                  key = keyPath[0];
-                  subValue = oldValue.get(key);
-                  result = subValue !== undefined;
-                  if (result) {
-                     subType = Context.getValueType(subValue);
-                     result = subType.setWillChange(subValue, keyPath.slice(1), value);
-                  }
-               } else {
-                  result = oldValue !== value;
-               }
-
-               return result;
-            },
-
-            set: function (oldValue, keyPath, value) {
-               var
-                   Context = $ws.proto.Context,
-                   result, subValue, key, subType;
-
-               if (keyPath.length !== 0) {
-                  key = keyPath[0];
-                  subValue = oldValue.get(key);
-                  if (subValue !== undefined) {
-                     if (keyPath.length === 1) {
-                        oldValue.set(key, value);
-                     }
-                     else {
-                        subType = Context.getValueType(subValue);
-                        subType.set(subValue, keyPath.slice(1), value);
-                     }
-                  }
-                  result = oldValue;
-               } else {
-                  result = value;
-               }
-
-               return result;
-            },
-
-            remove: function (oldValue, keyPath) {
-               var
-                   key, subValue, subType,
-                   newValue, length, i, changed,
-                   Context = $ws.proto.Context,
-                   record = oldValue;
-
-               changed = keyPath.length !== 0;
-               if (changed) {
-                  key = keyPath[0];
-                  changed = record.has(key);
-                  if (changed) {
-                     subValue = record.get(key);
-                     changed = keyPath.length === 1;
-                     if (changed) {
-                        //TODO Сделать нормальную работу с полями типа "Enum" и "флаги"
-                        changed = subValue !== null;
-                        if (changed) {
-                           record.set(key, null);
-                        }
-                     } else {
-                        subType = Context.getValueType(subValue);
-                        changed = subType.remove(subValue, keyPath.slice(1)).changed;
-                     }
+         $ws.proto.Context.registerFieldType(
+            $ws.core.merge(
+               getControlsDataRecord(name, module, changeEvent), {
+                  toJSON: function (value, deep) {
+                     return deep ? value.toObject() : value;
+                  },
+                  subscribe: function (value, fn) {
+                     value.subscribe(changeEvent, fn);
+                     return function () {
+                        value.unsubscribe(changeEvent, fn);
+                     };
                   }
                }
-               return {
-                  value: record,
-                  changed: changed
-               };
-            },
-
-            toJSON: function (value, deep) {
-               return deep ? value.toObject() : value;
-            },
-
-            subscribe: function (value, fn) {
-               value.subscribe(changeEvent, fn);
-               return function () {
-                  value.unsubscribe(changeEvent, fn);
-               };
-            }
-         });
+            )
+         );
       },
+
       registerDataSet: function (name, module, changeEvent) {
          $ws.proto.Context.registerFieldType({
             name: name,
@@ -268,6 +166,7 @@ define('js!SBIS3.CONTROLS.Data.ContextField', [
             }
          });
       },
+
       registerEnum: function(name, module) {
          var EnumFieldType = {
             name: name,
@@ -287,10 +186,10 @@ define('js!SBIS3.CONTROLS.Data.ContextField', [
             },
 
             setWillChange: function (oldValue, keyPath, value) {
-               var result, subValue, subType, key;
+               var result;
 
                if (keyPath.length === 0) {
-                  result = !SimpleFieldType.equals(oldValue, value);
+                  result = oldValue.equals(value);
                } else  {
                   result = false;
                }
@@ -299,17 +198,12 @@ define('js!SBIS3.CONTROLS.Data.ContextField', [
             },
 
             set: function (oldValue, keyPath, value) {
-               var subValue, newSubValue, subType, key, result,
-                  isEqual, equals = SimpleFieldType.equals;
-
                if (keyPath.length === 0) {
-                  result = value;
+                  return value;
                }
                else {
-                  result = oldValue;
+                  return oldValue;
                }
-
-               return result;
             },
 
             remove: function (value, keyPath) {
@@ -320,12 +214,12 @@ define('js!SBIS3.CONTROLS.Data.ContextField', [
             },
 
             toJSON: function (value, deep) {
-               if(deep){
+               if (deep) {
                   var result = [];
                   value.each(function (name ){
                      result.push(name);
                   });
-                  return  result
+                  return result;
                }
 
                return value.get();
@@ -333,12 +227,126 @@ define('js!SBIS3.CONTROLS.Data.ContextField', [
 
          };
          $ws.proto.Context.registerFieldType(EnumFieldType);
+      },
+
+      registerFlags: function (name, module, changeEvent) {
+         $ws.proto.Context.registerFieldType(
+            $ws.core.merge(
+               getControlsDataRecord(name, module, changeEvent), {
+                  toJSON: function (value, deep) {
+                     return deep ? value.toObject() : value;
+                  }
+               }
+            )
+         );
       }
    },
 
    getRsIdx = function(id) {
       return String.prototype.split.call(id, ',')[0];
    };
+
+   function getControlsDataRecord(name, module, changeEvent) {
+      return {
+         name: name,
+         is: function (value) {
+            return value instanceof module;
+         },
+         get: function (value, keyPath) {
+            var
+               Context = $ws.proto.Context,
+               NonExistentValue = Context.NonExistentValue,
+               key, result, subValue, subType;
+            if (keyPath.length !== 0) {
+               key = keyPath[0];
+               subValue = value.get(key);
+               if (subValue !== undefined) {
+                  subType = Context.getValueType(subValue);
+                  result = subType.get(subValue, keyPath.slice(1));
+               }
+               else {
+                  result = NonExistentValue;
+               }
+            }
+            else {
+               result = value;
+            }
+            return result;
+         },
+         setWillChange: function (oldValue, keyPath, value) {
+            var
+               Context = $ws.proto.Context,
+               result, subValue, key, subType;
+            if (keyPath.length !== 0) {
+               key = keyPath[0];
+               subValue = oldValue.get(key);
+               result = subValue !== undefined;
+               if (result) {
+                  subType = Context.getValueType(subValue);
+                  result = subType.setWillChange(subValue, keyPath.slice(1), value);
+               }
+            }
+            else {
+               result = oldValue !== value;
+            }
+            return result;
+         },
+         set: function (oldValue, keyPath, value) {
+            var
+               Context = $ws.proto.Context,
+               result, subValue, key, subType;
+            if (keyPath.length !== 0) {
+               key = keyPath[0];
+               subValue = oldValue.get(key);
+               if (subValue !== undefined) {
+                  if (keyPath.length === 1) {
+                     oldValue.set(key, value);
+                  }
+                  else {
+                     subType = Context.getValueType(subValue);
+                     subType.set(subValue, keyPath.slice(1), value);
+                  }
+               }
+               result = oldValue;
+            }
+            else {
+               result = value;
+            }
+            return result;
+         },
+         remove: function (oldValue, keyPath) {
+            var
+               key, subValue, subType,
+               newValue, length, i, changed,
+               Context = $ws.proto.Context,
+               record = oldValue;
+            changed = keyPath.length !== 0;
+            if (changed) {
+               key = keyPath[0];
+               changed = record.has(key);
+               if (changed) {
+                  subValue = record.get(key);
+                  changed = keyPath.length === 1;
+                  if (changed) {
+                     //TODO Сделать нормальную работу с полями типа "Enum" и "флаги"
+                     changed = subValue !== null;
+                     if (changed) {
+                        record.set(key, null);
+                     }
+                  }
+                  else {
+                     subType = Context.getValueType(subValue);
+                     changed = subType.remove(subValue, keyPath.slice(1)).changed;
+                  }
+               }
+            }
+            return {
+               value: record,
+               changed: changed
+            };
+         }
+      };
+   }
 
    return ContextField;
 });

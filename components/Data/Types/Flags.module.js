@@ -1,8 +1,9 @@
 /* global define, $ws */
 define('js!SBIS3.CONTROLS.Data.Types.Flags', [
    'js!SBIS3.CONTROLS.Data.Collection.IEnumerable',
-   'js!SBIS3.CONTROLS.Data.Collection.ArrayEnumerator'
-], function (IEnumerable, ArrayEnumerator) {
+   'js!SBIS3.CONTROLS.Data.Collection.ArrayEnumerator',
+   'js!SBIS3.CONTROLS.Data.ContextField'
+], function (IEnumerable, ArrayEnumerator, ContextField) {
    'use strict';
    /**
     * Интерфейс флагов
@@ -166,5 +167,6 @@ define('js!SBIS3.CONTROLS.Data.Types.Flags', [
          }
       }
    });
+   ContextField.registerFlags('ControlsFieldTypeFlags', Flags);
    return Flags;
 });
