@@ -266,7 +266,7 @@ define('js!SBIS3.CONTROLS.ComboBox', [
             var item, def;
             def = new $ws.proto.Deferred();
             if (this._dataSet) {
-               if (typeof key !== 'undefined') {
+               if ((index !== null) && (typeof index != 'undefined') && (index != '-1')) {
                   item = this.getItems().at(index);
                   def.callback(item);
                }
