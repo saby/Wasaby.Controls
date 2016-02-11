@@ -49,7 +49,7 @@ define('js!SBIS3.CONTROLS.Data.Projection.CollectionEnumerator', [
          /**
           * @member {Array.<Number>} Соответствие позиций проекции и исходной коллекции
           */
-         _internalMap: []
+         _internalMap: null
       },
 
       $constructor: function () {
@@ -62,13 +62,12 @@ define('js!SBIS3.CONTROLS.Data.Projection.CollectionEnumerator', [
          if (!(this._options.sortMap instanceof Array)) {
             throw new Error('Sort map should be instance of an Array');
          }
-
-         this._buildInternalMap();
       },
 
       //region SBIS3.CONTROLS.Data.Collection.IEnumerator
 
       getNext: function () {
+         this._initInternalMap();
          var internalPosition = this.getInternalBySource(this._currentPosition);
          internalPosition++;
          var newPosition = this._getSourceByInternal(internalPosition);
@@ -78,18 +77,19 @@ define('js!SBIS3.CONTROLS.Data.Projection.CollectionEnumerator', [
          }
 
          this._currentPosition = newPosition;
-         this._storeSourceCurrent();
+         this._setCurrentByPosition();
          return this._сurrent;
       },
 
       getCurrent: function () {
-         this._storeSourceCurrent();
+         this._initInternalMap();
+         this._setCurrentByPosition();
          return this._сurrent;
       },
 
       reset: function () {
          this._currentPosition = -1;
-         this._storeSourceCurrent();
+         this._setCurrentByPosition();
       },
 
       //endregion SBIS3.CONTROLS.Data.Collection.IEnumerator
@@ -104,10 +104,11 @@ define('js!SBIS3.CONTROLS.Data.Projection.CollectionEnumerator', [
 
       setCurrent: function(item) {
          this._currentPosition = Array.indexOf(this._options.itemsMap, item);
-         this._storeSourceCurrent();
+         this._setCurrentByPosition();
       },
 
       getPosition: function() {
+         this._initInternalMap();
          return this.getInternalBySource(this._currentPosition);
       },
 
@@ -117,10 +118,11 @@ define('js!SBIS3.CONTROLS.Data.Projection.CollectionEnumerator', [
          this._checkPosition(position);
 
          this._currentPosition = position;
-         this._storeSourceCurrent();
+         this._setCurrentByPosition();
       },
 
       getPrevious: function () {
+         this._initInternalMap();
          var internalPosition = this.getInternalBySource(this._currentPosition);
          internalPosition--;
          var newPosition = this._getSourceByInternal(internalPosition);
@@ -130,7 +132,7 @@ define('js!SBIS3.CONTROLS.Data.Projection.CollectionEnumerator', [
          }
 
          this._currentPosition = newPosition;
-         this._storeSourceCurrent();
+         this._setCurrentByPosition();
          return this._сurrent;
       },
 
@@ -138,6 +140,7 @@ define('js!SBIS3.CONTROLS.Data.Projection.CollectionEnumerator', [
          if (source === undefined) {
             return source;
          }
+         this._initInternalMap();
          return Array.indexOf(this._internalMap, source);
       },
 
@@ -151,7 +154,7 @@ define('js!SBIS3.CONTROLS.Data.Projection.CollectionEnumerator', [
 
       reIndex: function () {
          IndexedEnumeratorMixin.reIndex.call(this);
-         this._buildInternalMap();
+         this._internalMap = null;
       },
 
       _createIndex: function (property) {
@@ -176,37 +179,50 @@ define('js!SBIS3.CONTROLS.Data.Projection.CollectionEnumerator', [
          if (internal === undefined || internal === -1 || internal === null) {
             return internal;
          }
+         this._initInternalMap();
          return this._internalMap[internal];
       },
 
       /**
-       * Строит соответствие позиций проекции и исходной коллекции
+       * Инициализирует массив соответствия позиций проекции и исходной коллекции
+       * @protected
+       */
+      _initInternalMap: function () {
+         if (this._internalMap === null) {
+            this._currentPosition = -1;
+            this._internalMap = this._buildInternalMap();
+            this._setCurrentByPosition();
+         }
+      },
+
+      /**
+       * Строит массив соответствия позиций проекции и исходной коллекции
+       * @return {Array}
        * @protected
        */
       _buildInternalMap: function () {
-         this._internalMap = [];
-         this._currentPosition = -1;
+         var result = [],
+            sortMap = this._options.sortMap.length ?
+               this._options.sortMap :
+               $ws.helpers.map(this._options.itemsMap, function(item, index){
+                  return index;
+               }),
+            i;
 
-         if (this._options.sortMap.length) {
-            $ws.helpers.map(this._options.sortMap, function(index){
-               this._addToInternalMap(index);
-            }, this);
-         } else {
-            $ws.helpers.map(this._options.itemsMap, function(item, index){
-               this._addToInternalMap(index);
-            }, this);
+         for (i = 0; i < sortMap.length; i++) {
+            this._addToInternalMap(result, sortMap[i]);
          }
 
-         this._storeSourceCurrent();
+         return result;
       },
 
       /**
        * Добавляет соответствие позиций проекции и исходной коллекции с учетом фильтра
        * @protected
        */
-      _addToInternalMap: function (sourceIndex) {
+      _addToInternalMap: function (map, sourceIndex) {
          if (this._options.filterMap[sourceIndex]) {
-            this._internalMap.push(sourceIndex);
+            map.push(sourceIndex);
             if (this._сurrent && this._сurrent === this._options.itemsMap[sourceIndex]) {
                this._currentPosition = sourceIndex;
             }
@@ -214,10 +230,10 @@ define('js!SBIS3.CONTROLS.Data.Projection.CollectionEnumerator', [
       },
 
       /**
-       * Запоминает текущий элемент
+       * Запоминает текущий элемент исходя из текущей позиции
        * @protected
        */
-      _storeSourceCurrent: function () {
+      _setCurrentByPosition: function () {
          this._сurrent = this._options.itemsMap[this._currentPosition];
       },
 
@@ -228,7 +244,7 @@ define('js!SBIS3.CONTROLS.Data.Projection.CollectionEnumerator', [
        */
       _checkPosition: function (position) {
          if (!this._isValidPosition(position)) {
-            throw new Error('Index is out of bounds');
+            throw new Error('Position is out of bounds');
          }
       },
 
