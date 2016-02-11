@@ -103,15 +103,16 @@ define('js!SBIS3.CONTROLS.Data.Projection.TreeEnumerator', [
                var i, child;
                for (i = 0; i < children.length; i++) {
                   child = itemsMap[children[i]];
-                  if (!child) {
-                     throw new Error('Cannot find child instance');
+                  if (child) {
+                     child.setParent(parent);
                   }
-                  child.setParent(parent);
                   result.push(children[i]);
-                  Array.prototype.push.apply(
-                     result,
-                     buildHierarchy(child)
-                  );
+                  if (child) {
+                     Array.prototype.push.apply(
+                        result,
+                        buildHierarchy(child)
+                     );
+                  }
                }
                return result;
             };
