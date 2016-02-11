@@ -77,8 +77,10 @@ define('js!SBIS3.CONTROLS.BreadCrumbs', [
          this._dataSet._keyField = this._options.keyField; 
       },
 
-      //TODO: придрот что бы фэйковый див не ломал :first-child стили
-      _moveFocusToFakeDiv: function() {},
+      //Переопределяю метод getElementToFocus для того, чтобы не создавался fake focus div
+      _getElementToFocus: function() {
+         return this._container;
+      },
 
       _setPickerConfig: function() {
          return {
