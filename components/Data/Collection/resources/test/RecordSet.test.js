@@ -166,6 +166,24 @@ define([
                   done();
                });
             });
+            it('should return record by updated id', function() {
+               var source = new MemorySource({
+                     idProperty: 'Ид'
+                  }),
+                  rs = new RecordSet({
+                     idProperty: 'Ид',
+                     rawData: items.slice()
+                  }),
+                  rec = new Model({
+                     idProperty: 'Ид'
+                  }),
+                  byKeyRec;
+               rs.add(rec);
+               byKeyRec = rs.getRecordById(rec.getId());
+               rs.saveChanges(source);
+               assert.strictEqual(rec, byKeyRec);
+               assert.strictEqual(rec, rs.getRecordById(rec.getId()));
+            });
          });
 
       });
