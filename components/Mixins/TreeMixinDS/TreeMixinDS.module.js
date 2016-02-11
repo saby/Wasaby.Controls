@@ -43,6 +43,19 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', ['js!SBIS3.CORE.Control',
        *    }
        * </pre>
        */
+      /**
+       * @event onSearchPathClick При клике по хлебным крошкам в режиме поиска.
+       * Событие, происходящее после клика по хлебным крошкам, отображающим результаты поиска
+       * @param {$ws.proto.EventObject} eventObject Дескриптор события.
+       * @param {number} id ключ узла, по которму кликнули
+       * @return Если вернуть false - загрузка узла не произойдет
+       * @example
+       * <pre>
+       *    DataGridView.subscribe('onSearchPathClick', function(event){
+       *      searchForm.clearSearch();
+       *    });
+       * </pre>
+       */
       $protected: {
          _folderOffsets : {},
          _folderHasMore : {},
@@ -94,7 +107,7 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', ['js!SBIS3.CORE.Control',
             root: (typeof this._options.root != 'undefined') ? this._options.root : null
          });
       },
-      
+
       _getRecordsForRedraw: function() {
          /*Получаем только рекорды с parent = curRoot*/
          var
