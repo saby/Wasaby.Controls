@@ -62,11 +62,11 @@ define('js!SBIS3.CONTROLS.EditInPlace',
                   result,
                   difference,
                   loadingIndicator;
-               // Будем стрелять событие только в том случае, если редактирование по месту видимо. Это обусловлено тем, что при
+               // Будем стрелять событие только если запущено редактирование по месту. Это обусловлено тем, что при
                // клике вне области редактирования стрельнет событие onChildFocusOut в контроллере и редактирование начнет
                // завершаться. Завершение редактирования приведет к вызову метода EditInPlace.hide, в котором происходит
                // расфокусировка поля ввода и нельзя допустить изменения рекорда и стрельбы событием onItemValueChanged.
-               if (this.isVisible()) {
+               if (this.isEdit()) {
                   difference = this._getRecordsDifference(); // Получаем разницу
                   if (difference.length) { //Если есть разница, то нотифицируем об этом в событии
                      result = this._notify('onItemValueChanged', difference, this._editingRecord);
