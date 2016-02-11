@@ -21,14 +21,6 @@ define('js!SBIS3.CONTROLS.BreadCrumbs', [
     * @mixes SBIS3.CONTROLS.DecorableMixin
     */
    'use strict';
-
-   if (typeof window !== 'undefined') {
-      var eventsChannel = $ws.single.EventBus.channel('BreadCrumbsChannel');
-
-      $(window).bind('resize', function() {
-         eventsChannel.notify('onWindowResize');
-      });
-   }
    //TODO: Переписать все к чертям 
    var BreadCrumbs = CompoundControl.extend([DSMixin, PickerMixin, DecorableMixin], {
       $protected: {
@@ -50,20 +42,11 @@ define('js!SBIS3.CONTROLS.BreadCrumbs', [
 
       $constructor: function() {
          this._publish('onItemClick');
-         $ws.single.EventBus.channel('BreadCrumbsChannel').subscribe('onWindowResize', this._resizeHandler, this);
          this._homeIcon = $('.controls-BreadCrumbs__crumb-home', this._container);
          this._container.toggleClass('ws-hidden', (this._options.items && this._options.items.length == 0));
          this._homeIcon.data('id', null); //клик по домику ведет в корень TODO: придрочено под null
          //инициализируем dataSet
          this.setItems(this._options.items || []);
-      },
-
-      _resizeHandler: function() {
-         clearTimeout(this._resizeTimeout);
-         var self = this;
-         this._resizeTimeout = setTimeout(function() {
-            self._redraw();
-         }, 100);
       },
 
       _onClickHandler: function(e) {
