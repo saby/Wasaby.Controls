@@ -75,8 +75,9 @@ define('js!SBIS3.CONTROLS.Data.Projection.TreeEnumerator', [
       },*/
 
       _buildInternalMap: function () {
-         //TODO: user order support
-         var idProperty = this._options.idProperty,
+         //TODO: user defined order support
+         var result = [],
+            idProperty = this._options.idProperty,
             parentProperty = this._options.parentProperty,
             collection = this._options.collection,
             itemsMap = this._options.itemsMap,
@@ -102,25 +103,24 @@ define('js!SBIS3.CONTROLS.Data.Projection.TreeEnumerator', [
                var i, child;
                for (i = 0; i < children.length; i++) {
                   child = itemsMap[children[i]];
-                  child.setParent(parent);
+                  if (child) {
+                     child.setParent(parent);
+                  }
                   result.push(children[i]);
-                  Array.prototype.push.apply(
-                     result,
-                     buildHierarchy(child)
-                  );
+                  if (child) {
+                     Array.prototype.push.apply(
+                        result,
+                        buildHierarchy(child)
+                     );
+                  }
                }
                return result;
             };
 
-         var hierarchy = buildHierarchy(this._options.root);
-         this._internalMap = [];
-         this._currentPosition = -1;
+         this._options.sortMap.length = 0;
+         Array.prototype.push.apply(this._options.sortMap, buildHierarchy(this._options.root));
 
-         $ws.helpers.map(hierarchy, function(sourceIndex) {
-            this._addToInternalMap(sourceIndex);
-         }, this);
-
-         this._storeSourceCurrent();
+         return TreeEnumerator.superclass._buildInternalMap.call(this);
       }
 
       //endregion Protected methods
