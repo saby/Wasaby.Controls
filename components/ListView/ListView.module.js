@@ -454,7 +454,7 @@ define('js!SBIS3.CONTROLS.ListView',
             this.reload();
             this._touchSupport = $ws._const.browser.isMobilePlatform;
             if (this._touchSupport){
-            	this._getItemsContainer()
+            	this._container
                   .bind('swipe', this._swipeHandler.bind(this))
                   .bind('tap', this._tapHandler.bind(this))
                   .bind('touchmove',this._mouseMoveHandler.bind(this));
@@ -1003,12 +1003,17 @@ define('js!SBIS3.CONTROLS.ListView',
             return this._options.itemsActions.length || this._options.editMode.indexOf('toolbar') !== -1;
          },
          _swipeHandler: function(e){
-            var
-               target = this._findItemByElement($(e.target)),
-               item = this._getElementData(target);
+            var target = this._findItemByElement($(e.target)),
+                item;
+
+            if(!target.length) {
+               return;
+            }
+
             if (this._isSupportedItemsToolbar()) {
+               item = this._getElementData(target);
                if (e.direction == 'left') {
-            		item.container ? this._showItemsToolbar(item) : this._hideItemsToolbar();
+                  item.container ? this._showItemsToolbar(item) : this._hideItemsToolbar();
                   this._hoveredItem = item;
                } else {
                   this._hideItemsToolbar(true);
@@ -1018,7 +1023,10 @@ define('js!SBIS3.CONTROLS.ListView',
 
          _tapHandler: function(e){
             var target = this._findItemByElement($(e.target));
-            this.setSelectedKey(target.data('id'));
+
+            if(target.length) {
+               this.setSelectedKey(target.data('id'));
+            }
          },
 
          _findItemByElement: function(target){
