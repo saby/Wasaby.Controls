@@ -106,6 +106,22 @@ define('js!SBIS3.CONTROLS.Data.Adapter.SbisTable', [
          if (at < 0 || at > this._data.d.length) {
             throw new Error('Out of bounds');
          }
+      },
+
+      getKeyField: function () {
+         var s = this._data.s,
+            index;
+         for (var i = 0, l = s.length; i < l; i++) {
+            if (s[i].n[0] === '@') {
+               index = i;
+               break;
+            }
+         }
+         if (index === undefined && s.length) {
+            index = 0;
+         }
+
+         return index === undefined ? undefined : s[index].n;
       }
    });
 

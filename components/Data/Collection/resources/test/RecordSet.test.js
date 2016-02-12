@@ -5,8 +5,9 @@ define([
       'js!SBIS3.CONTROLS.Data.Bind.ICollection',
       'js!SBIS3.CONTROLS.Data.Model',
       'js!SBIS3.CONTROLS.Data.Source.Memory',
-      'js!SBIS3.CONTROLS.Data.Adapter.Json'
-   ], function (RecordSet, List, IBindCollection, Model, MemorySource, JsonAdapter) {
+      'js!SBIS3.CONTROLS.Data.Adapter.Json',
+      'js!SBIS3.CONTROLS.Data.Adapter.Sbis',
+   ], function (RecordSet, List, IBindCollection, Model, MemorySource, JsonAdapter, SbisAdapter) {
       'use strict';
 
       describe('SBIS3.CONTROLS.Data.Collection.RecordSet', function() {
@@ -46,6 +47,31 @@ define([
 
          afterEach(function() {
             items = undefined;
+         });
+
+         describe('$constructor()', function () {
+            it('should define idproperty for rawdata', function () {
+               rs = new RecordSet({
+                  rawData: {
+                     d: [
+                        0,
+                        ''
+                     ],
+                     s: [
+                        {
+                           'n': '@Ид',
+                           't': 'Число целое'
+                        },
+                        {
+                           'n': 'Фамилия',
+                           't': 'Строка'
+                        }
+                     ]
+                  },
+                  adapter: new SbisAdapter()
+               });
+               assert.equal(rs.getIdProperty(), '@Ид');
+            });
          });
 
          describe('.isEqual()', function () {

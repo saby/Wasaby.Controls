@@ -92,6 +92,10 @@ define('js!SBIS3.CONTROLS.Data.Adapter.JsonTable', [
          if (at < 0 || at > this._data.length) {
             throw new Error('Out of bounds');
          }
+      },
+
+      getKeyField: function () {
+         return undefined;
       }
    });
 
