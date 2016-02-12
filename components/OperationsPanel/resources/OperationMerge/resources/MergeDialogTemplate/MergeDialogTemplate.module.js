@@ -7,11 +7,12 @@ define('js!SBIS3.CONTROLS.MergeDialogTemplate', [
     'js!SBIS3.CONTROLS.Data.Source.SbisService',
     'js!SBIS3.CONTROLS.Data.Source.Memory',
     'js!SBIS3.CONTROLS.Data.Adapter.Sbis',
+    'i18n!SBIS3.CONTROLS.MergeDialogTemplate',
     'js!SBIS3.CONTROLS.Button',
     'js!SBIS3.CONTROLS.TreeDataGridView',
     'html!SBIS3.CONTROLS.MergeDialogTemplate/resources/cellNameTpl',
     'html!SBIS3.CONTROLS.MergeDialogTemplate/resources/cellCommentTpl'
-], function(Control, dotTplFn, SbisServiceSource, MemorySource, SbisAdapter) {
+], function(Control, dotTplFn, SbisServiceSource, MemorySource, SbisAdapter, rk) {
 
     var COMMENT_FIELD_NAME = 'Comment',
         AVAILABLE_FIELD_NAME = 'Available';
@@ -27,16 +28,16 @@ define('js!SBIS3.CONTROLS.MergeDialogTemplate', [
                 /**
                  * @cfg {String} Заголовок диалог
                  */
-                title: 'Объединение наименований',
+                title: rk('Объединение наименований'),
                 /**
                  * @cfg {String} Подсказка отображаемая в диалоге
                  */
-                hint: 'Выберите наименование, с которым объединятся остальные. Все основные сведения возьмутся с него.\
-                       На выбранное наименование перенесутся все связанные записи (документы, отчеты). Остальные наименования будут удалены.',
+                hint: rk('Выберите наименование, с которым объединятся остальные. Все основные сведения возьмутся с него.\
+                       На выбранное наименование перенесутся все связанные записи (документы, отчеты). Остальные наименования будут удалены.'),
                 /**
                  * @cfg {String} Сообщение с предупреждением
                  */
-                warning: 'Внимание! Операция необратима',
+                warning: rk('Внимание! Операция необратима'),
                 errorMessage: 'Итоги операции: "Объединения"',
                 testMergeMethodName: undefined,
                 queryMethodName: undefined,

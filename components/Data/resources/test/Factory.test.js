@@ -179,7 +179,7 @@ define([
          });
          it('should cast value to money', function () {
             var val = sbisModel.get('money');
-            assert.strictEqual(val, $ws.helpers.bigNum(val).toString(20));
+            assert.strictEqual(val, $ws.helpers.prepareMoneyByPrecision(val, 20));
          });
          it('should cast dateTime to Date', function () {
             assert.instanceOf(sbisModel.get('dateTime'), Date);
@@ -350,7 +350,7 @@ define([
                      var model = getModel(type),
                         value = 12.003;
                      model.set('money', value);
-                     assert.strictEqual(getData(model, 8), $ws.helpers.bigNum(value).toString(20));
+                     assert.strictEqual(getData(model, 8), $ws.helpers.prepareMoneyByPrecision(value, 20));
                   });
                   it('should store date and time', function () {
                      var model = getModel(type),

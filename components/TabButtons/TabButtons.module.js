@@ -7,9 +7,11 @@ define(
       'js!SBIS3.CONTROLS.RadioGroupBase',
       'html!SBIS3.CONTROLS.TabButtons',
       'html!SBIS3.CONTROLS.TabButtons/ItemTpl',
+      'js!SBIS3.CORE.MarkupTransformer',
+      'js!SBIS3.CONTROLS.Utils.TemplateUtil',
       'js!SBIS3.CONTROLS.TabButton'
    ],
-   function (RadioGroupBase, TabButtonsTpl, itemTpl) {
+   function (RadioGroupBase, TabButtonsTpl, itemTpl, MarkupTransformer, TemplateUtil) {
 
    'use strict';
 
@@ -45,7 +47,8 @@ define(
              *     </div>
              * </pre>
              */
-            itemTemplate: itemTpl
+            itemTemplate: itemTpl,
+            tabSpaceTemplate: undefined
          }
       },
       _dotTplFn: TabButtonsTpl,
@@ -74,6 +77,13 @@ define(
                caption: item.get(displayField)
             }
          );
+      },
+      _modifyOptions: function (opts) {
+         opts = TabButtons.superclass._modifyOptions.call(this, opts);
+         if (opts.tabSpaceTemplate) {
+            opts.tabSpaceTemplate = MarkupTransformer(TemplateUtil.prepareTemplate(opts.tabSpaceTemplate));
+         }
+         return opts;
       }
    });
    return TabButtons;

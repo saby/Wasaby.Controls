@@ -61,7 +61,7 @@ define('js!TestDataGrid',
                     }
                 }
                 var arrayStrategy = new ArrayStrategy(),
-                    ds1 = new SbisServiceSource({service: 'Заметка'}),
+                    ds1 = new SbisServiceSource({resource: 'Заметка'}),
                     ds2 = new StaticSource({
                         data: bigColls,
                         keyField: '@Заметка',

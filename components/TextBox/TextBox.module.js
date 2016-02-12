@@ -63,6 +63,7 @@ define('js!SBIS3.CONTROLS.TextBox', ['js!SBIS3.CONTROLS.TextBoxBase','html!SBIS3
              * @variant lowercase Все символы нижним регистром.
              * @variant none Без изменений.
              * @see setTextTransform
+             *
              */
             textTransform: 'none',
             /**
@@ -88,6 +89,7 @@ define('js!SBIS3.CONTROLS.TextBox', ['js!SBIS3.CONTROLS.TextBoxBase','html!SBIS3
              *     <option name="placeholder">Введите ФИО полностью</option>
              * </pre>
              * @see setPlaceholder
+             * @translatable
              */
             placeholder: '',
             /**
