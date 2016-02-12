@@ -389,11 +389,27 @@ define('js!SBIS3.CONTROLS.Data.Record', [
        * @protected
        */
       _isEqualValues: function(a, b) {
-         return a === b || (
-            this._isComparable(a) &&
-            this._isComparable(b) &&
-            a.isEqual(b)
-         );
+         if (a === b) {
+            return true;
+         }
+
+         if (this._isComparable(a) && this._isComparable(b)) {
+            return a.isEqual(b);
+         }
+
+         if (a && $ws.helpers.instanceOfModule(a, 'SBIS3.CONTROLS.Data.Types.Enum') &&
+            b && $ws.helpers.instanceOfModule(b, 'SBIS3.CONTROLS.Data.Types.Enum')
+         ) {
+            return a.equals(b);
+         }
+
+         if (a && $ws.helpers.instanceOfModule(a, 'SBIS3.CONTROLS.Data.Types.Flags') &&
+            b && $ws.helpers.instanceOfModule(b, 'SBIS3.CONTROLS.Data.Types.Flags')
+         ) {
+            return a.equals(b);
+         }
+
+         return false;
       },
 
       /**
