@@ -1,9 +1,9 @@
 /* global define, $ws */
 define('js!SBIS3.CONTROLS.Data.ContextField.List', [
-   'js!SBIS3.CONTROLS.Data.ContextField.ContextFieldMixin'
-], function ( ContextFieldMixin) {
+   'js!SBIS3.CONTROLS.Data.ContextField.Base'
+], function (ContextFieldBase) {
    'use strict';
-   var ContextFieldRecordSet =  $ws.core.extend({},[ContextFieldMixin], {
+   var ContextFieldRecordSet =  $ws.core.extend(ContextFieldBase, [], {
       $protected: {
          _options: {
             module: undefined

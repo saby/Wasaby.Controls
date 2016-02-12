@@ -1,7 +1,7 @@
 /* global define, $ws */
-define('js!SBIS3.CONTROLS.Data.ContextField.ContextFieldMixin', [], function () {
+define('js!SBIS3.CONTROLS.Data.ContextField.Base', [], function () {
    'use strict';
-   return {
+   return $ws.core.extend({}, {
       $protected: {
          _options: {
             module: undefined
@@ -15,6 +15,6 @@ define('js!SBIS3.CONTROLS.Data.ContextField.ContextFieldMixin', [], function () 
       toJSON: function (value, deep) {
          return deep ? value.toObject() : value;
       }
-   };
+   });
 
 });

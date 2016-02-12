@@ -1,10 +1,10 @@
 /* global define, $ws */
 define('js!SBIS3.CONTROLS.Data.ContextField.Enum', [
-   'js!SBIS3.CONTROLS.Data.ContextField.ContextFieldMixin'
-], function (ContextFieldMixin) {
+   'js!SBIS3.CONTROLS.Data.ContextField.Base'
+], function (ContextFieldBase) {
    'use strict';
 
-   return $ws.core.extend({},[ContextFieldMixin], {
+   return $ws.core.extend(ContextFieldBase, [], {
       $protected: {
          _options: {
             module: undefined

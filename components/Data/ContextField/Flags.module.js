@@ -1,11 +1,11 @@
 /* global define, $ws */
 define('js!SBIS3.CONTROLS.Data.ContextField.Flags', [
    'js!SBIS3.CONTROLS.Data.ContextField.RecordMixin',
-   'js!SBIS3.CONTROLS.Data.ContextField.ContextFieldMixin'
-], function (RecordMixin, ContextFieldMixin) {
+   'js!SBIS3.CONTROLS.Data.ContextField.Base'
+], function (RecordMixin, ContextFieldBase) {
    'use strict';
 
-   return $ws.core.extend({}, [ContextFieldMixin, RecordMixin], {
+   return $ws.core.extend(ContextFieldBase, [RecordMixin], {
       $protected: {
          _options: {
             module: undefined
