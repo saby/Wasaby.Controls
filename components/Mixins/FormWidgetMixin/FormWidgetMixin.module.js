@@ -48,6 +48,8 @@ define('js!SBIS3.CONTROLS.FormWidgetMixin', ['js!SBIS3.CORE.Infobox'], function 
             /**
              * @cfg {Validator[]} Валидаторы контрола
              * Массив объектов, описывающих функции валидации.
+             * Подробнее о валидации можно прочесть в {@link https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/validator/ руководстве разработчика,}
+             * там же приведен список платформенных валидаторов.
              * @group Validation
              * @see validators
              * @see getValidators
@@ -123,7 +125,7 @@ define('js!SBIS3.CONTROLS.FormWidgetMixin', ['js!SBIS3.CORE.Infobox'], function 
                res = false;
 
             try {
-               res = currValidator.validator.apply(this, [this._options[currValidator.option]]);
+               res = currValidator.validator.apply(this, [this.getProperty(currValidator.option)]);
             } catch (e) {
                $ws.single.ioc.resolve('ILogger').log('FieldAbstract', 'Exception while validating ' + e.message);
             }
