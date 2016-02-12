@@ -7,9 +7,9 @@ define('js!SBIS3.CONTROLS.Data.Record', [
    'js!SBIS3.CONTROLS.Data.Serializer',
    'js!SBIS3.CONTROLS.Data.Di',
    'js!SBIS3.CONTROLS.Data.Factory',
-   'js!SBIS3.CONTROLS.Data.ContextField',
+   'js!SBIS3.CONTROLS.Data.ContextField.Record',
    'js!SBIS3.CONTROLS.Data.Adapter.Json'
-], function (IPropertyAccess, IEnumerable, ArrayEnumerator, SerializableMixin, Serializer, Di, Factory, ContextField) {
+], function (IPropertyAccess, IEnumerable, ArrayEnumerator, SerializableMixin, Serializer, Di, Factory, ContextFieldRecord) {
    'use strict';
 
    /**
@@ -398,7 +398,7 @@ define('js!SBIS3.CONTROLS.Data.Record', [
 
    Di.register('record', Record);
 
-   ContextField.registerRecord('ControlsDataRecord', Record, 'onPropertyChange');
+   $ws.proto.Context.registerFieldType(new ContextFieldRecord({module: Record}));
 
    return Record;
 });

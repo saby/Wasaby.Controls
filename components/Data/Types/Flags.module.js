@@ -2,8 +2,9 @@
 define('js!SBIS3.CONTROLS.Data.Types.Flags', [
    'js!SBIS3.CONTROLS.Data.Collection.IEnumerable',
    'js!SBIS3.CONTROLS.Data.Collection.ArrayEnumerator',
-   'js!SBIS3.CONTROLS.Data.ContextField'
-], function (IEnumerable, ArrayEnumerator, ContextField) {
+   'js!SBIS3.CONTROLS.Data.ContextField.Flags',
+   'js!SBIS3.CONTROLS.Data.Di'
+], function (IEnumerable, ArrayEnumerator, ContextFieldFlags, Di) {
    'use strict';
    /**
     * Интерфейс флагов
@@ -167,6 +168,7 @@ define('js!SBIS3.CONTROLS.Data.Types.Flags', [
          }
       }
    });
-   ContextField.registerFlags('ControlsFieldTypeFlags', Flags);
+   Di.register('data.types.flags', Flags);
+   $ws.proto.Context.registerFieldType(new ContextFieldFlags({module: Flags}));
    return Flags;
 });

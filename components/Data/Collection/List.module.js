@@ -6,8 +6,8 @@ define('js!SBIS3.CONTROLS.Data.Collection.List', [
    'js!SBIS3.CONTROLS.Data.Collection.IIndexedCollection',
    'js!SBIS3.CONTROLS.Data.Collection.ArrayEnumerator',
    'js!SBIS3.CONTROLS.Data.Di',
-   'js!SBIS3.CONTROLS.Data.ContextField'
-], function (SerializableMixin, IEnumerable, IList, IIndexedCollection, ArrayEnumerator, Di, ContextField) {
+   'js!SBIS3.CONTROLS.Data.ContextField.List'
+], function (SerializableMixin, IEnumerable, IList, IIndexedCollection, ArrayEnumerator, Di, ContextFieldList) {
    'use strict';
 
    /**
@@ -334,7 +334,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.List', [
 
    //Регистрируем класс ObservableList для работы с контекстами $ws.proto.Context
    //в новой версии ядра нужно будет сделать, чтобы привязыки данных к этим типам работали "из коробки"
-   ContextField.registerDataSet('ControlsFieldTypeList', List, 'onCollectionItemChange');
+   $ws.proto.Context.registerFieldType(new ContextFieldList({module: List}));
 
    return List;
 });
