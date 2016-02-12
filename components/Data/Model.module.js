@@ -678,11 +678,16 @@ define('js!SBIS3.CONTROLS.Data.Model', [
        * @protected
        */
       _isEqualValues: function(a, b) {
-         return a === b || (
-               this._isComparable(a) &&
-               this._isComparable(b) &&
-               a.isEqual(b)
-            );
+         if (a === b) {
+            return true;
+         }
+         if (this._isComparable(a) && this._isComparable(b)) {
+            return a.isEqual(b);
+         }
+         if (a instanceof $ws.proto.Enum && b instanceof $ws.proto.Enum) {
+            return a.equals(b);
+         }
+         return false;
       },
 
       /**
