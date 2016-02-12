@@ -90,10 +90,10 @@ define('js!SBIS3.CONTROLS.Data.Projection.Collection', [
             this._convertToItem = cfg.convertToItem;
          }
          if (!this._options.collection) {
-            throw new Error('Source collection is undefined');
+            throw new Error(this._moduleName + ': source collection is undefined');
          }
          if (!$ws.helpers.instanceOfMixin(this._options.collection, 'SBIS3.CONTROLS.Data.Collection.IEnumerable')) {
-            throw new Error('Source collection should implement SBIS3.CONTROLS.Data.Collection.IEnumerable');
+            throw new Error(this._moduleName + ': source collection should implement SBIS3.CONTROLS.Data.Collection.IEnumerable');
          }
 
          this._init();
@@ -328,7 +328,7 @@ define('js!SBIS3.CONTROLS.Data.Projection.Collection', [
       setGroup: function (group) {
          this._group = group;
          //TODO: implement it
-         throw new Error('setGroup() is under construction');
+         throw new Error(this._moduleName + '::setGroup(): is under construction');
       },
 
       getSort: function () {

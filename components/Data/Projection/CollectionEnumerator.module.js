@@ -54,13 +54,13 @@ define('js!SBIS3.CONTROLS.Data.Projection.CollectionEnumerator', [
 
       $constructor: function () {
          if (!(this._options.itemsMap instanceof Array)) {
-            throw new Error('Items map should be instance of an Array');
+            throw new Error(this._moduleName + ': items map should be instance of an Array');
          }
          if (!(this._options.filterMap instanceof Array)) {
-            throw new Error('Filter map should be instance of an Array');
+            throw new Error(this._moduleName + ': filter map should be instance of an Array');
          }
          if (!(this._options.sortMap instanceof Array)) {
-            throw new Error('Sort map should be instance of an Array');
+            throw new Error(this._moduleName + ': sort map should be instance of an Array');
          }
       },
 
@@ -145,7 +145,7 @@ define('js!SBIS3.CONTROLS.Data.Projection.CollectionEnumerator', [
       },
 
       getSourceByInternal: function () {
-         throw new Error('Method getSourceByInternal is no more available, sorry.');
+         throw new Error(this._moduleName + ': method getSourceByInternal is no more available, sorry.');
       },
 
       //endregion SBIS3.CONTROLS.Data.Projection.IEnumerator
@@ -244,7 +244,7 @@ define('js!SBIS3.CONTROLS.Data.Projection.CollectionEnumerator', [
        */
       _checkPosition: function (position) {
          if (!this._isValidPosition(position)) {
-            throw new Error('Position is out of bounds');
+            throw new Error(this._moduleName + ': position is out of bounds');
          }
       },
 

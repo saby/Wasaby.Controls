@@ -44,7 +44,7 @@ define('js!SBIS3.CONTROLS.Data.Projection.Tree', [
 
       $constructor: function () {
          if (!this._options.idProperty) {
-            throw new Error('Option "idProperty" is required.');
+            throw new Error(this._moduleName + ': option "idProperty" is required.');
          }
 
          /*if ($ws.helpers.instanceOfMixin(this._options.collection, 'SBIS3.CONTROLS.Data.Collection.ISourceLoadable')) {
@@ -303,7 +303,7 @@ define('js!SBIS3.CONTROLS.Data.Projection.Tree', [
        */
       _checkItem: function (item) {
          if (!item || !$ws.helpers.instanceOfMixin(item, 'SBIS3.CONTROLS.Data.Projection.ICollectionItem')) {
-            throw new Error('Item should implement SBIS3.CONTROLS.Data.Projection.ICollectionItem');
+            throw new Error(this._moduleName + '::_checkItem(): item should implement SBIS3.CONTROLS.Data.Projection.ICollectionItem');
          }
       }
 
