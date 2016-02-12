@@ -231,6 +231,7 @@ define('js!SBIS3.CONTROLS.NumberTextBox', ['js!SBIS3.CONTROLS.TextBox', 'html!SB
       },
 
       _setNumericValue: function(value){
+         value = value.replace(/\s+/g,"");
          if (this._options.onlyInteger) {
             this._options.numericValue = parseInt(value);
          } else {
