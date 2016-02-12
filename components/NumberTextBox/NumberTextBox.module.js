@@ -203,7 +203,7 @@ define('js!SBIS3.CONTROLS.NumberTextBox', ['js!SBIS3.CONTROLS.TextBox', 'html!SB
       },
 
       setText: function(text){
-         this._setNumericValue(text.replace(/\s+/g,""));
+         this._setNumericValue(text);
          NumberTextBox.superclass.setText.call(this, text);
       },
 
@@ -230,6 +230,7 @@ define('js!SBIS3.CONTROLS.NumberTextBox', ['js!SBIS3.CONTROLS.TextBox', 'html!SB
       },
 
       _setNumericValue: function(value){
+         value = value.replace(/\s+/g,"");
          if (this._options.onlyInteger) {
             this._options.numericValue = parseInt(value);
          } else {
