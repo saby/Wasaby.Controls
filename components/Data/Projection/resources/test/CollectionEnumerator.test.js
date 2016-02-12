@@ -48,7 +48,7 @@ define([
 
             filterMap = [true, true, true, true, true];
 
-            sortMap = [];
+            sortMap = [0, 1, 2, 3, 4];
 
             enumerator = new ProjectionEnumerator({
                itemsMap: itemsMap,
@@ -652,6 +652,11 @@ define([
                               var sortIndex = Array.indexOf(sortMap, index);
                               if (sortIndex > -1) {
                                  sortMap.splice(sortIndex, 1);
+                                 for (var i = 0; i < sortMap.length; i++) {
+                                    if (sortMap[i] > index) {
+                                       sortMap[i]--;
+                                    }
+                                 }
                               }
                            }
                         }

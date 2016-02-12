@@ -4,6 +4,7 @@ define('js!SBIS3.CONTROLS.Data.Projection.Tree', [
    'js!SBIS3.CONTROLS.Data.Projection.Collection',
    'js!SBIS3.CONTROLS.Data.Projection.TreeEnumerator',
    'js!SBIS3.CONTROLS.Data.Projection.TreeChildren',
+   'js!SBIS3.CONTROLS.Data.Bind.ICollectionProjection',
    'js!SBIS3.CONTROLS.Data.Di',
    'js!SBIS3.CONTROLS.Data.Utils',
    'js!SBIS3.CONTROLS.Data.Projection.LoadableTreeItem'
@@ -12,6 +13,7 @@ define('js!SBIS3.CONTROLS.Data.Projection.Tree', [
    CollectionProjection,
    TreeEnumerator,
    TreeChildren,
+   IBindCollectionProjection,
    Di,
    Utils
 ) {
@@ -312,7 +314,7 @@ define('js!SBIS3.CONTROLS.Data.Projection.Tree', [
    });
 
    /**
-    * Обрабатывает событие об изменении потомков узла дерева исходного дерева
+    * Обрабатывает событие об изменении исходной коллекции
     * @param {Function} prevFn Оборачиваемый метод
     * @param {$ws.proto.EventObject} event Дескриптор события.
     * @param {String} action Действие, приведшее к изменению.
@@ -323,6 +325,32 @@ define('js!SBIS3.CONTROLS.Data.Projection.Tree', [
     * @private
     */
    var onSourceCollectionChange = function (prevFn, event, action, newItems, newItemsIndex, oldItems, oldItemsIndex) {
+         switch (action) {
+            case IBindCollectionProjection.ACTION_ADD:
+               break;
+
+            case IBindCollectionProjection.ACTION_REMOVE:
+               /*var oldItemsProjection = this._getItemsProjection(oldItems, oldItemsIndex),
+                  appendItem = function(item) {
+                     oldItems.push(item.getContents());
+                  },
+                  children;
+               for (var i = 0; i < oldItemsProjection.length; i++) {
+                  children = this.getChildren(oldItemsProjection[i]);
+                  children.each(appendItem);
+               }*/
+               break;
+
+            case IBindCollectionProjection.ACTION_REPLACE:
+               break;
+
+            case IBindCollectionProjection.ACTION_MOVE:
+               break;
+
+            case IBindCollectionProjection.ACTION_RESET:
+               break;
+         }
+
          this._childrenMap = {};
          prevFn.call(this, event, action, newItems, newItemsIndex, oldItems, oldItemsIndex);
    },

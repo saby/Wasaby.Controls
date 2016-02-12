@@ -202,11 +202,7 @@ define('js!SBIS3.CONTROLS.Data.Projection.CollectionEnumerator', [
        */
       _buildInternalMap: function () {
          var result = [],
-            sortMap = this._options.sortMap.length ?
-               this._options.sortMap :
-               $ws.helpers.map(this._options.itemsMap, function(item, index){
-                  return index;
-               }),
+            sortMap = this._options.sortMap,
             i;
 
          for (i = 0; i < sortMap.length; i++) {
