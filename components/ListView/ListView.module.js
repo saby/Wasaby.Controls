@@ -454,7 +454,10 @@ define('js!SBIS3.CONTROLS.ListView',
             this.reload();
             this._touchSupport = $ws._const.browser.isMobilePlatform;
             if (this._touchSupport){
-            	this._container
+               /* События нужно вешать на контейнер контрола,
+                  т.к. getItemsContainer возвращает текущий активный контейнер,
+                  а в случае плиточного реестра их два, поэтому в одном из режимов могут не работать обработчики */
+               this._container
                   .bind('swipe', this._swipeHandler.bind(this))
                   .bind('tap', this._tapHandler.bind(this))
                   .bind('touchmove',this._mouseMoveHandler.bind(this));
