@@ -204,6 +204,7 @@ define('js!SBIS3.CONTROLS.NumberTextBox', ['js!SBIS3.CONTROLS.TextBox', 'html!SB
 
       setText: function(text){
          this._setNumericValue(text);
+         text = this._formatText(text);
          NumberTextBox.superclass.setText.call(this, text);
       },
 

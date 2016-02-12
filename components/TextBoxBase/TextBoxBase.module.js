@@ -174,11 +174,7 @@ define('js!SBIS3.CONTROLS.TextBoxBase',
       },
 
       _formatText : function(text) {
-         text = text || ''; // так как есть датабиндинг может прийти undefined
-         if (this._options.trim) {
-            text = String.trim(text);
-         }
-         return text;
+         return text || ''; // так как есть датабиндинг может прийти undefined
       },
 
       _drawText: function() {
@@ -192,7 +188,7 @@ define('js!SBIS3.CONTROLS.TextBoxBase',
 
       setValue : function(txt) {
          $ws.single.ioc.resolve('ILogger').log('setValue()', 'setValue is deprecated. Use setText()');
-         this.setText(txt)
+         this.setText(txt);
       }
    });
 

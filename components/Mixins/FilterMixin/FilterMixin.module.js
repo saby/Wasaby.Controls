@@ -39,8 +39,19 @@ define('js!SBIS3.CONTROLS.FilterMixin', [
    var FilterMixin = /**@lends SBIS3.CONTROLS.FilterMixin.prototype  */{
       $protected: {
          _options: {
-            /***
-             * при установке структуры меняется значение св-ва filter (строится по полям value у структуры)
+            /**
+             * @typedef {Array} filterStructure
+             * @property {String} internalValueField Название поля, которое хранит значение элемента. По-умолчанию null.
+             * @property {String} internalCaptionField Название поля, которое хранит текстовое отображение значения. По-умолчанию null.
+             * @property {String} caption Текущее текстовое отображение значения. Может быть не определено.
+             * @property {Object} value Текущее значение элемента. Может быть не определено.
+             * @property {Object} resetValue Значение поля при сбрасывании фильтра, или при пустом значении в value. Может быть не определено.
+             * @property {String} resetCaption Текст по умолчанию. Если задали, то при пустом (или заданном в resetValue) значении будет
+             * отображаться заданный здесь текст. Может быть не определено.
+             */
+            /**
+             * @cfg {filterStructure[]} Структура элемента фильтра
+             * @remark Важно! все, что задано в filterStructure влияет на объекты в контексе - filter и filterDescr(строится по полям value у структуры)
              */
             filterStructure: [ /*filterStructureElementDef*/ ],
             /**
