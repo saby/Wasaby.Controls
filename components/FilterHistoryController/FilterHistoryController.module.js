@@ -312,7 +312,7 @@ define('js!SBIS3.CONTROLS.FilterHistoryController',
           _sortHistory: function() {
              /* Сортирует историю по флагу отмеченности и активности.
                 Приоритет: отмеченные > активный > обычные. */
-             this.getHistoryArr().sort(function(a, b) {
+             this._listHistory.assign(this.getHistoryArr().sort(function(a, b) {
                 if(a.isMarked && b.isMarked) {
                    return 0;
                 } else if(a.isMarked) {
@@ -326,7 +326,7 @@ define('js!SBIS3.CONTROLS.FilterHistoryController',
                 } else if(b.isActiveFilter) {
                    return 1;
                 }
-             });
+             }));
           },
 
           destroy: function() {
