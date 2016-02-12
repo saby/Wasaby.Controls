@@ -452,7 +452,10 @@ define('js!SBIS3.CONTROLS.ListView',
             this.reload();
             this._touchSupport = $ws._const.browser.isMobilePlatform;
             if (this._touchSupport){
-            	this._getItemsContainer()
+               /* События нужно вешать на контейнер контрола,
+                  т.к. getItemsContainer возвращает текущий активный контейнер,
+                  а в случае плиточного реестра их два, поэтому в одном из режимов могут не работать обработчики */
+               this._container
                   .bind('swipe', this._swipeHandler.bind(this))
                   .bind('tap', this._tapHandler.bind(this))
                   .bind('touchmove',this._mouseMoveHandler.bind(this));
@@ -862,12 +865,18 @@ define('js!SBIS3.CONTROLS.ListView',
          //********************************//
          //   БЛОК РЕДАКТИРОВАНИЯ ПО МЕСТУ //
          //*******************************//
+         _isHoverEditMode: function() {
+            return !this._touchSupport && this._options.editMode.indexOf('hover') !== -1;
+         },
+         _isClickEditMode: function() {
+            return this._options.editMode.indexOf('click') !== -1 || (this._touchSupport && this._options.editMode.indexOf('hover') !== -1);
+         },
          initEditInPlace: function() {
             this._notifyOnItemClick = this.beforeNotifyOnItemClick();
-            if (this._options.editMode.indexOf('click') !== -1) {
-               this.subscribe('onItemClick', this._onItemClickHandler);
-            } else if (this._options.editMode.indexOf('hover') !== -1) {
+            if (this._isHoverEditMode()) {
                this.subscribe('onChangeHoveredItem', this._onChangeHoveredItemHandler);
+            } else if (this._isClickEditMode()) {
+               this.subscribe('onItemClick', this._onItemClickHandler);
             }
          },
          beforeNotifyOnItemClick: function() {
@@ -885,17 +894,17 @@ define('js!SBIS3.CONTROLS.ListView',
          },
          setEditMode: function(editMode) {
             if (editMode ==='' || editMode !== this._options.editMode) {
-               if (this._options.editMode.indexOf('click') !== -1) {
-                  this.unsubscribe('onItemClick', this._onItemClickHandler);
-               } else if (this._options.editMode.indexOf('hover') !== -1) {
+               if (this._isHoverEditMode()) {
                   this.unsubscribe('onChangeHoveredItem', this._onChangeHoveredItemHandler);
+               } else if (this._isClickEditMode()) {
+                  this.unsubscribe('onItemClick', this._onItemClickHandler);
                }
                this._destroyEditInPlace();
                this._options.editMode = editMode;
-               if (this._options.editMode.indexOf('click') !== -1) {
-                  this.subscribe('onItemClick', this._onItemClickHandler);
-               } else if (this._options.editMode.indexOf('hover') !== -1) {
+               if (this._isHoverEditMode()) {
                   this.subscribe('onChangeHoveredItem', this._onChangeHoveredItemHandler);
+               } else if (this._isClickEditMode()) {
+                  this.subscribe('onItemClick', this._onItemClickHandler);
                }
             }
          },
@@ -950,9 +959,8 @@ define('js!SBIS3.CONTROLS.ListView',
 
          _createEditInPlace: function() {
             var
-               hoverMode = !this._touchSupport && (this._options.editMode.indexOf('hover') !== -1),
-               controller = hoverMode ? EditInPlaceHoverController : EditInPlaceClickController;
-            this._editInPlace = new controller(this._getEditInPlaceConfig(hoverMode));
+               controller = this._isHoverEditMode() ? EditInPlaceHoverController : EditInPlaceClickController;
+            this._editInPlace = new controller(this._getEditInPlaceConfig());
          },
 
          _destroyEditInPlace: function() {
@@ -961,7 +969,7 @@ define('js!SBIS3.CONTROLS.ListView',
                this._editInPlace = null;
             }
          },
-         _getEditInPlaceConfig: function(hoverMode) {
+         _getEditInPlaceConfig: function() {
             //todo Герасимов, Сухоручкин: для hover-режима надо передать в опции метод
             //options.editFieldFocusHandler = this._editFieldFocusHandler.bind(this) - подумать, как это сделать
             var
@@ -1031,12 +1039,17 @@ define('js!SBIS3.CONTROLS.ListView',
             return this._options.itemsActions.length || this._options.editMode.indexOf('toolbar') !== -1;
          },
          _swipeHandler: function(e){
-            var
-               target = this._findItemByElement($(e.target)),
-               item = this._getElementData(target);
+            var target = this._findItemByElement($(e.target)),
+                item;
+
+            if(!target.length) {
+               return;
+            }
+
             if (this._isSupportedItemsToolbar()) {
+               item = this._getElementData(target);
                if (e.direction == 'left') {
-            		item.container ? this._showItemsToolbar(item) : this._hideItemsToolbar();
+                  item.container ? this._showItemsToolbar(item) : this._hideItemsToolbar();
                   this._hoveredItem = item;
                } else {
                   this._hideItemsToolbar(true);
@@ -1046,7 +1059,10 @@ define('js!SBIS3.CONTROLS.ListView',
 
          _tapHandler: function(e){
             var target = this._findItemByElement($(e.target));
-            this.setSelectedKey(target.data('id'));
+
+            if(target.length) {
+               this.setSelectedKey(target.data('id'));
+            }
          },
 
          _findItemByElement: function(target){
