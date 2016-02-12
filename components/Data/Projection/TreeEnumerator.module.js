@@ -75,52 +75,6 @@ define('js!SBIS3.CONTROLS.Data.Projection.TreeEnumerator', [
       },*/
 
       _buildInternalMap: function () {
-         //TODO: user defined order support
-         var idProperty = this._options.idProperty,
-            parentProperty = this._options.parentProperty,
-            collection = this._options.collection,
-            itemsMap = this._options.itemsMap,
-            sortMap = this._options.sortMap,
-            buildHierarchy = function(parent) {
-               var result = [],
-                  parentData = parent.getContents(),
-                  parentId = parentData instanceof Object ? Utils.getItemPropertyValue(
-                     parentData,
-                     idProperty
-                  ) : parentData,
-                  children = collection.getIndiciesByValue(
-                     parentProperty,
-                     parentId
-                  );
-
-               //FIXME: для совместимости с логикой контролов - корневые записи дерева могут вообще не иметь поля с именем parentProperty
-               if (!children.length && parentId === null && parent.isRoot()) {
-                  //Считаем, что элементы коллекции без поля parentProperty находятся в корне
-                  children = collection.getIndiciesByValue(
-                     parentProperty
-                  );
-               }
-
-               var i, child;
-               for (i = 0; i < children.length; i++) {
-                  child = itemsMap[children[i]];
-                  if (child) {
-                     child.setParent(parent);
-                  }
-                  result.push(children[i]);
-                  if (child) {
-                     Array.prototype.push.apply(
-                        result,
-                        buildHierarchy(child)
-                     );
-                  }
-               }
-               return result;
-            };
-
-         sortMap.length = 0;
-         Array.prototype.push.apply(sortMap, buildHierarchy(this._options.root));
-
          return TreeEnumerator.superclass._buildInternalMap.call(this);
       }
 

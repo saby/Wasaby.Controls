@@ -286,8 +286,8 @@ define('js!SBIS3.CONTROLS.Data.Projection.Tree', [
       _bindHandlers: function() {
          TreeProjection.superclass._bindHandlers.call(this);
 
-         this._onSourceCollectionChange = this._onSourceCollectionChange.callAround(onSourceCollectionChange.bind(this));
-         this._onSourceCollectionItemChange = this._onSourceCollectionItemChange.callAround(onSourceCollectionItemChange.bind(this));
+         this._onSourceCollectionChange = this._onSourceCollectionChange.callAround(_private.onSourceCollectionChange.bind(this));
+         this._onSourceCollectionItemChange = this._onSourceCollectionItemChange.callAround(_private.onSourceCollectionItemChange.bind(this));
       },
 
       _convertToItem: function (item) {
@@ -307,66 +307,132 @@ define('js!SBIS3.CONTROLS.Data.Projection.Tree', [
          if (!item || !$ws.helpers.instanceOfMixin(item, 'SBIS3.CONTROLS.Data.Projection.ICollectionItem')) {
             throw new Error(this._moduleName + '::_checkItem(): item should implement SBIS3.CONTROLS.Data.Projection.ICollectionItem');
          }
+      },
+
+      /**
+       * Производит построение _sortMap
+       * @protected
+       */
+      _buildSortMap: function () {
+         return _private.sorters.tree(
+            this._itemsMap,
+            TreeProjection.superclass._buildSortMap.call(this),
+            {
+               idProperty: this._options.idProperty,
+               parentProperty: this._options.parentProperty,
+               collection: this._options.collection,
+               root: this.getRoot()
+            }
+         );
       }
 
       //endregion Protected methods
 
    });
 
-   /**
-    * Обрабатывает событие об изменении исходной коллекции
-    * @param {Function} prevFn Оборачиваемый метод
-    * @param {$ws.proto.EventObject} event Дескриптор события.
-    * @param {String} action Действие, приведшее к изменению.
-    * @param {*[]} newItems Новые элементы коллеции.
-    * @param {Number} newItemsIndex Индекс, в котором появились новые элементы.
-    * @param {*[]} oldItems Удаленные элементы коллекции.
-    * @param {Number} oldItemsIndex Индекс, в котором удалены элементы.
-    * @private
-    */
-   var onSourceCollectionChange = function (prevFn, event, action, newItems, newItemsIndex, oldItems, oldItemsIndex) {
-         switch (action) {
-            case IBindCollectionProjection.ACTION_ADD:
-               break;
+   var _private = {
+      sorters: {
+         tree: function (itemsMap, currentMap, options) {
+            //TODO: enumeration with currentMap order
+            var idProperty = options.idProperty,
+               parentProperty = options.parentProperty,
+               collection = options.collection,
+               buildHierarchy = function(parent) {
+                  var result = [],
+                     parentData = parent.getContents(),
+                     parentId = parentData instanceof Object ? Utils.getItemPropertyValue(
+                        parentData,
+                        idProperty
+                     ) : parentData,
+                     children = collection.getIndiciesByValue(
+                        parentProperty,
+                        parentId
+                     );
 
-            case IBindCollectionProjection.ACTION_REMOVE:
-               /*var oldItemsProjection = this._getItemsProjection(oldItems, oldItemsIndex),
-                  appendItem = function(item) {
-                     oldItems.push(item.getContents());
-                  },
-                  children;
-               for (var i = 0; i < oldItemsProjection.length; i++) {
-                  children = this.getChildren(oldItemsProjection[i]);
-                  children.each(appendItem);
-               }*/
-               break;
+                  //FIXME: для совместимости с логикой контролов - корневые записи дерева могут вообще не иметь поля с именем parentProperty
+                  if (!children.length && parentId === null && parent.isRoot()) {
+                     //Считаем, что элементы коллекции без поля parentProperty находятся в корне
+                     children = collection.getIndiciesByValue(
+                        parentProperty
+                     );
+                  }
 
-            case IBindCollectionProjection.ACTION_REPLACE:
-               break;
+                  var i, child;
+                  for (i = 0; i < children.length; i++) {
+                     child = itemsMap[children[i]];
+                     if (child) {
+                        child.setParent(parent);
+                     }
+                     result.push(children[i]);
+                     if (child) {
+                        Array.prototype.push.apply(
+                           result,
+                           buildHierarchy(child)
+                        );
+                     }
+                  }
+                  return result;
+               };
 
-            case IBindCollectionProjection.ACTION_MOVE:
-               break;
-
-            case IBindCollectionProjection.ACTION_RESET:
-               break;
+            return buildHierarchy(options.root);
          }
+      },
 
+      /**
+       * Обрабатывает событие об изменении исходной коллекции
+       * @param {Function} prevFn Оборачиваемый метод
+       * @param {$ws.proto.EventObject} event Дескриптор события.
+       * @param {String} action Действие, приведшее к изменению.
+       * @param {*[]} newItems Новые элементы коллеции.
+       * @param {Number} newItemsIndex Индекс, в котором появились новые элементы.
+       * @param {*[]} oldItems Удаленные элементы коллекции.
+       * @param {Number} oldItemsIndex Индекс, в котором удалены элементы.
+       * @private
+       */
+      onSourceCollectionChange: function (prevFn, event, action, newItems, newItemsIndex, oldItems, oldItemsIndex) {
+            switch (action) {
+               case IBindCollectionProjection.ACTION_ADD:
+                  break;
+
+               case IBindCollectionProjection.ACTION_REMOVE:
+                  /*var oldItemsProjection = this._getItemsProjection(oldItems, oldItemsIndex),
+                     appendItem = function(item) {
+                        oldItems.push(item.getContents());
+                     },
+                     children;
+                  for (var i = 0; i < oldItemsProjection.length; i++) {
+                     children = this.getChildren(oldItemsProjection[i]);
+                     children.each(appendItem);
+                  }*/
+                  break;
+
+               case IBindCollectionProjection.ACTION_REPLACE:
+                  break;
+
+               case IBindCollectionProjection.ACTION_MOVE:
+                  break;
+
+               case IBindCollectionProjection.ACTION_RESET:
+                  break;
+            }
+
+            this._childrenMap = {};
+            prevFn.call(this, event, action, newItems, newItemsIndex, oldItems, oldItemsIndex);
+      },
+
+      /**
+       * Обрабатывает событие об изменении элемента исходной коллекции
+       * @param {Function} prevFn Оборачиваемый метод
+       * @param {$ws.proto.EventObject} event Дескриптор события.
+       * @param {*} item Измененный элемент коллеции.
+       * @param {Integer} index Индекс измененного элемента.
+       * @param {String} [property] Измененное свойство элемента
+       * @private
+       */
+      onSourceCollectionItemChange: function (prevFn, event, item, index, property) {
          this._childrenMap = {};
-         prevFn.call(this, event, action, newItems, newItemsIndex, oldItems, oldItemsIndex);
-   },
-
-   /**
-    * Обрабатывает событие об изменении элемента исходной коллекции
-    * @param {Function} prevFn Оборачиваемый метод
-    * @param {$ws.proto.EventObject} event Дескриптор события.
-    * @param {*} item Измененный элемент коллеции.
-    * @param {Integer} index Индекс измененного элемента.
-    * @param {String} [property] Измененное свойство элемента
-    * @private
-    */
-   onSourceCollectionItemChange = function (prevFn, event, item, index, property) {
-      this._childrenMap = {};
-      prevFn.call(this, event, item, index, property);
+         prevFn.call(this, event, item, index, property);
+      }
    };
 
    Di.register('projection.tree', TreeProjection);

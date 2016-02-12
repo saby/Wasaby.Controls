@@ -179,23 +179,23 @@ define('js!SBIS3.CONTROLS.Data.Projection.Collection', [
       //region SBIS3.CONTROLS.Data.Collection.IList
 
       assign: function () {
-         throw new Error(MESSAGE_READ_ONLY);
+         throw new Error(_private.MESSAGE_READ_ONLY);
       },
 
       append: function () {
-         throw new Error(MESSAGE_READ_ONLY);
+         throw new Error(_private.MESSAGE_READ_ONLY);
       },
 
       prepend: function () {
-         throw new Error(MESSAGE_READ_ONLY);
+         throw new Error(_private.MESSAGE_READ_ONLY);
       },
 
       clear: function () {
-         throw new Error(MESSAGE_READ_ONLY);
+         throw new Error(_private.MESSAGE_READ_ONLY);
       },
 
       add: function () {
-         throw new Error(MESSAGE_READ_ONLY);
+         throw new Error(_private.MESSAGE_READ_ONLY);
       },
 
       at: function (index) {
@@ -203,15 +203,15 @@ define('js!SBIS3.CONTROLS.Data.Projection.Collection', [
       },
 
       remove: function () {
-         throw new Error(MESSAGE_READ_ONLY);
+         throw new Error(_private.MESSAGE_READ_ONLY);
       },
 
       removeAt: function () {
-         throw new Error(MESSAGE_READ_ONLY);
+         throw new Error(_private.MESSAGE_READ_ONLY);
       },
 
       replace: function () {
-         throw new Error(MESSAGE_READ_ONLY);
+         throw new Error(_private.MESSAGE_READ_ONLY);
       },
 
       getIndex: function (item) {
@@ -404,8 +404,8 @@ define('js!SBIS3.CONTROLS.Data.Projection.Collection', [
        * @protected
        */
       _bindHandlers: function() {
-         this._onSourceCollectionChange = onSourceCollectionChange.bind(this);
-         this._onSourceCollectionItemChange = onSourceCollectionItemChange.bind(this);
+         this._onSourceCollectionChange = _private.onSourceCollectionChange.bind(this);
+         this._onSourceCollectionItemChange = _private.onSourceCollectionItemChange.bind(this);
       },
 
       _unbindHandlers: function() {
@@ -514,54 +514,22 @@ define('js!SBIS3.CONTROLS.Data.Projection.Collection', [
        * @protected
        */
       _reSort: function (silent) {
-         var getIndexes = function(arr) {
-               return $ws.helpers.map(arr, function(item, index) {
-                  return index;
-               });
-            },
-            oldSortMap = this._sortMap.slice(),
-            newSortMap,
-            index,
-            count;
-
+         var oldSortMap = this._sortMap.slice(),
+            newSortMap;
          this._sortMap.length = 0;
-         if (this._userSort.length) {
-            //Создаем служебный массив
-            var items = [];
-
-            for (index = 0, count = this._itemsMap.length; index < count; index++) {
-               items.push({
-                  item: this._itemsMap[index].getContents(),
-                  index: index,
-                  collectionIndex: index
-               });
-            }
-
-            //Выполняем сортировку служебного массива
-            for (var i = this._userSort.length - 1; i >= 0; i--) {
-               items.sort(this._userSort[i]);
-            }
-
-            //Заполняем индекс сортировки по служебному массиву
-            for (index = 0, count = items.length; index < count; index++) {
-               this._sortMap.push(items[index].collectionIndex);
-            }
-         } else {
-            for (index = 0, count = this._itemsMap.length; index < count; index++) {
-               this._sortMap.push(index);
-            }
-         }
+         Array.prototype.push.apply(this._sortMap, this._buildSortMap());
+         newSortMap = this._sortMap;
 
          this._isSortedCache = undefined;
          this._getServiceEnumerator().reIndex();
-         this._getServiceEnumerator().getCurrent();
-         newSortMap = this._sortMap;
+         //this._getServiceEnumerator().getCurrent();
 
          if (this._eventsEnabled && !silent) {
             //Анализируем новый порядок элементов - идем по новому индексу сортировки и сопоставляем ее со старой.
             //Если на очередной позиции находится не тот элемент, то ищем его старую позицию и перемещаем на новую
             var newIndex,
                oldIndex,
+               count,
                sourceIndex;
             for (newIndex = 0, count = newSortMap.length; newIndex < count; newIndex++) {
                if (newSortMap[newIndex] === oldSortMap[newIndex]) {
@@ -586,6 +554,19 @@ define('js!SBIS3.CONTROLS.Data.Projection.Collection', [
                   oldIndex
                );
             }
+         }
+      },
+
+      /**
+       * Производит построение sortMap
+       * @return {Array.<Number>}
+       * @protected
+       */
+      _buildSortMap: function () {
+         if (this._userSort.length) {
+            return _private.sorters.user(this._itemsMap, this._userSort);
+         } else {
+            return _private.sorters.natural(this._itemsMap);
          }
       },
 
@@ -805,114 +786,152 @@ define('js!SBIS3.CONTROLS.Data.Projection.Collection', [
 
    });
 
-   var MESSAGE_READ_ONLY = 'The projection is read only. You should modify the source collection instead.',
+   var _private = {
+      MESSAGE_READ_ONLY: 'The projection is read only. You should modify the source collection instead.',
 
-   /**
-    * Обрабатывает событие об изменении исходной коллекции
-    * @param {$ws.proto.EventObject} event Дескриптор события.
-    * @param {String} action Действие, приведшее к изменению.
-    * @param {Array.<*>} newItems Новые элементы коллеции.
-    * @param {Number} newItemsIndex Индекс, в котором появились новые элементы.
-    * @param {Array.<*>} oldItems Удаленные элементы коллекции.
-    * @param {Number} oldItemsIndex Индекс, в котором удалены элементы.
-    * @private
-    */
-   onSourceCollectionChange = function (event, action, newItems, newItemsIndex, oldItems, oldItemsIndex) {
-      var notifyStandard = function() {
-         this._notifyCollectionChange(
-            action,
-            newItems,
-            newItemsIndex,
-            oldItems,
-            oldItemsIndex
-         );
-      };
+      sorters: {
+         natural: function(itemsMap) {
+            var map = [];
+            for (var index = 0, count = itemsMap.length; index < count; index++) {
+               map.push(index);
+            }
+            return map;
+         },
 
-      switch (action) {
-         case IBindCollectionProjection.ACTION_ADD:
-            this._addItems(newItemsIndex, newItems);
-            this._getServiceEnumerator().reIndex();
-            if (this._isSorted()) {
-               this._reFilter(newItemsIndex, newItems.length);
-               this._reSort();
-            } else {
+         user: function(itemsMap, handlers) {
+            var map = [],
+               items = [];
+
+            //Создаем служебный массив
+            for (var index = 0, count = itemsMap.length; index < count; index++) {
+               items.push({
+                  item: itemsMap[index].getContents(),
+                  index: index,
+                  collectionIndex: index
+               });
+            }
+
+            //Выполняем сортировку служебного массива
+            for (var i = handlers.length - 1; i >= 0; i--) {
+               items.sort(handlers[i]);
+            }
+
+            //Заполняем индекс сортировки по служебному массиву
+            for (index = 0, count = items.length; index < count; index++) {
+               map.push(items[index].collectionIndex);
+            }
+
+            return map;
+         }
+      },
+
+      /**
+       * Обрабатывает событие об изменении исходной коллекции
+       * @param {$ws.proto.EventObject} event Дескриптор события.
+       * @param {String} action Действие, приведшее к изменению.
+       * @param {Array.<*>} newItems Новые элементы коллеции.
+       * @param {Number} newItemsIndex Индекс, в котором появились новые элементы.
+       * @param {Array.<*>} oldItems Удаленные элементы коллекции.
+       * @param {Number} oldItemsIndex Индекс, в котором удалены элементы.
+       * @private
+       */
+      onSourceCollectionChange: function (event, action, newItems, newItemsIndex, oldItems, oldItemsIndex) {
+         var notifyStandard = function() {
+            this._notifyCollectionChange(
+               action,
+               newItems,
+               newItemsIndex,
+               oldItems,
+               oldItemsIndex
+            );
+         };
+
+         switch (action) {
+            case IBindCollectionProjection.ACTION_ADD:
+               this._addItems(newItemsIndex, newItems);
+               this._getServiceEnumerator().reIndex();
+               if (this._isSorted()) {
+                  this._reFilter(newItemsIndex, newItems.length);
+                  this._reSort();
+               } else {
+                  this._reFilter(newItemsIndex, newItems.length, true);
+                  newItems = this._getItemsProjection(newItems, newItemsIndex);
+                  oldItems = this._getItemsProjection(oldItems, oldItemsIndex);
+                  notifyStandard.call(this);
+               }
+               break;
+
+            case IBindCollectionProjection.ACTION_REMOVE:
+               newItems = this._getItemsProjection(newItems, newItemsIndex);
+               oldItems = this._getItemsProjection(oldItems, oldItemsIndex);
+               this._removeItems(oldItemsIndex, oldItems.length);
+               notifyStandard.call(this);
+               this._getServiceEnumerator().reIndex();
+               break;
+
+            case IBindCollectionProjection.ACTION_REPLACE:
+               if (this._isFalseMirror()) {
+                  this._removeItems(oldItemsIndex, oldItems.length);
+                  this._reSort();
+
+                  this._addItems(newItemsIndex, newItems);
+                  this._reFilter(newItemsIndex, newItems.length);
+                  this._reSort();
+               } else {
+                  this._replaceItems(newItemsIndex, newItems);
+                  newItems = this._getItemsProjection(newItems, newItemsIndex);
+                  oldItems = this._getItemsProjection(oldItems, oldItemsIndex, true);
+                  notifyStandard.call(this);
+                  this._getServiceEnumerator().reIndex();
+               }
+               break;
+
+            case IBindCollectionProjection.ACTION_MOVE:
+               this._removeItems(oldItemsIndex, oldItems.length);
+               this._addItems(newItemsIndex, newItems);
+               if (this._isSorted()) {
+                  this._reSort();
+               } else {
+                  newItems = this._getItemsProjection(newItems, newItemsIndex);
+                  oldItems = this._getItemsProjection(oldItems, oldItemsIndex);
+                  notifyStandard.call(this);
+                  this._getServiceEnumerator().reIndex();
+               }
+               break;
+
+            case IBindCollectionProjection.ACTION_RESET:
+               oldItems = this._getItemsProjection(oldItems, oldItemsIndex);
+               this._reBuild();
                this._reFilter(newItemsIndex, newItems.length, true);
                newItems = this._getItemsProjection(newItems, newItemsIndex);
-               oldItems = this._getItemsProjection(oldItems, oldItemsIndex);
-               notifyStandard.call(this);
-            }
-            break;
-
-         case IBindCollectionProjection.ACTION_REMOVE:
-            newItems = this._getItemsProjection(newItems, newItemsIndex);
-            oldItems = this._getItemsProjection(oldItems, oldItemsIndex);
-            this._removeItems(oldItemsIndex, oldItems.length);
-            notifyStandard.call(this);
-            this._getServiceEnumerator().reIndex();
-            break;
-
-         case IBindCollectionProjection.ACTION_REPLACE:
-            if (this._isFalseMirror()) {
-               this._removeItems(oldItemsIndex, oldItems.length);
-               this._reSort();
-
-               this._addItems(newItemsIndex, newItems);
-               this._reFilter(newItemsIndex, newItems.length);
-               this._reSort();
-            } else {
-               this._replaceItems(newItemsIndex, newItems);
-               newItems = this._getItemsProjection(newItems, newItemsIndex);
-               oldItems = this._getItemsProjection(oldItems, oldItemsIndex, true);
                notifyStandard.call(this);
                this._getServiceEnumerator().reIndex();
-            }
-            break;
+               break;
+         }
+      },
 
-         case IBindCollectionProjection.ACTION_MOVE:
-            this._removeItems(oldItemsIndex, oldItems.length);
-            this._addItems(newItemsIndex, newItems);
-            if (this._isSorted()) {
-               this._reSort();
-            } else {
-               newItems = this._getItemsProjection(newItems, newItemsIndex);
-               oldItems = this._getItemsProjection(oldItems, oldItemsIndex);
-               notifyStandard.call(this);
-               this._getServiceEnumerator().reIndex();
-            }
-            break;
-
-         case IBindCollectionProjection.ACTION_RESET:
-            oldItems = this._getItemsProjection(oldItems, oldItemsIndex);
-            this._reBuild();
-            this._reFilter(newItemsIndex, newItems.length, true);
-            newItems = this._getItemsProjection(newItems, newItemsIndex);
-            notifyStandard.call(this);
-            this._getServiceEnumerator().reIndex();
-            break;
-      }
-   },
-
-   /**
-    * Обрабатывает событие об изменении элемента исходной коллекции
-    * @param {$ws.proto.EventObject} event Дескриптор события.
-    * @param {*} item Измененный элемент коллеции.
-    * @param {Integer} index Индекс измененного элемента.
-    * @param {String} [property] Измененное свойство элемента
-    * @private
-    */
-   onSourceCollectionItemChange = function (event, item, index) {
-      if (!this._eventsEnabled) {
-         return;
-      }
-      this._notify(
-         'onCollectionItemChange',
-         this._itemsMap[index],
-         this._getServiceEnumerator().getInternalBySource(index),
-         'contents'
-      );
-      this._reFilter(index, 1);
-      if (this._isSorted()) {
-         this._reSort();
+      /**
+       * Обрабатывает событие об изменении элемента исходной коллекции
+       * @param {$ws.proto.EventObject} event Дескриптор события.
+       * @param {*} item Измененный элемент коллеции.
+       * @param {Integer} index Индекс измененного элемента.
+       * @param {String} [property] Измененное свойство элемента
+       * @private
+       */
+      onSourceCollectionItemChange: function (event, item, index) {
+         if (!this._eventsEnabled) {
+            return;
+         }
+         this._notify(
+            'onCollectionItemChange',
+            this._itemsMap[index],
+            this._getServiceEnumerator().getInternalBySource(index),
+            'contents'
+         );
+         this._reFilter(index, 1);
+         if (this._isSorted()) {
+            this._reSort();
+         }
       }
    };
 
