@@ -239,17 +239,44 @@ define('js!SBIS3.CONTROLS.DataGridView',
       //********************************//
       //   БЛОК РЕДАКТИРОВАНИЯ ПО МЕСТУ //
       //*******************************//
-      _updateEditInPlaceDisplay: function() {
-         if (!this.isNowScrollingPartScroll()) {
-            DataGridView.superclass._updateEditInPlaceDisplay.apply(this, arguments);
+      redrawItem: function() {
+         DataGridView.superclass.redrawItem.apply(this, arguments);
+
+         /* При перерисовке элемента, надо обновить стили для частичного скрола */
+         if(this.hasPartScroll()) {
+            this.updateScrollAndColumns();
          }
       },
       _getEditInPlaceConfig: function() {
+         var self = this;
+
          return $ws.core.merge(DataGridView.superclass._getEditInPlaceConfig.apply(this, arguments), {
             getCellTemplate: function(item, column) {
                return this._getCellTemplate(item, column);
-            }.bind(this)
-         });
+            }.bind(this),
+            handlers: {
+               onInitEditInPlace: function(e, eip) {
+                  var tds;
+
+                  if(!self._options.editingTemplate && self.hasPartScroll()) {
+                     tds = eip.getContainer().find('td');
+
+                     /* Развесим классы для частичного скрола при инициализации редактирования по месту */
+                     for (var i = 0, len = tds.length; i < len; i++) {
+                        tds.eq(i).addClass(self._options.startScrollColumn <= i ? 'controls-DataGridView__scrolledCell' : 'controls-DataGridView__notScrolledCell');
+                     }
+                     /* Подпишемся у рекдатирования по месту на смену фокуса дочерних элементов,
+                        чтобы правильно позиционировать частичный скролл при изменении фокуса */
+                     eip.subscribe('onChildControlFocusIn', function(e, control) {
+                        self._scrollToEditControl(control);
+                     });
+
+                     /* При инициализации надо проскрлить редактируемые колонки */
+                     self.updateScrollAndColumns();
+                  }
+               }
+            }
+         }, {preferSource: true});
       },
       //********************************//
       // <editor-fold desc="PartScrollBlock">
@@ -270,7 +297,6 @@ define('js!SBIS3.CONTROLS.DataGridView',
          this._partScrollRow = this._thead.find('.controls-DataGridView__PartScroll__row');
          this.initializeDragAndDrop();
       },
-
       /**
        * Обрабатывает переход фокуса в редатировании по месту, проставляет позицию элементам в таблице
        */
@@ -290,7 +316,6 @@ define('js!SBIS3.CONTROLS.DataGridView',
 
          if(leftOffset) {
             this._moveThumbAndColumns({left: leftOffset});
-            this._updateEditInPlaceDisplay(undefined, true);
          }
       },
 
