@@ -387,12 +387,8 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
          return this.getAdapter();
       },
 
-      merge: function (dataSetMergeFrom, options) {
-         /*TODO какая то лажа с ключами*/
-         if ((!this._keyField) && (dataSetMergeFrom._keyField)) {
-            this._keyField = dataSetMergeFrom._keyField;
-         }
-         this._setRecords(dataSetMergeFrom._getRecords(), options);
+      merge: function (recordSetMergeFrom, options) {
+         this._setRecords(recordSetMergeFrom._getRecords(), options);
       },
 
       push: function (record) {
@@ -517,34 +513,43 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
          options = options || {};
          options = $ws.core.merge(options, {add: true, remove: true, merge: true}, {preferSource: true});
 
-         var self = this,
+         var id, i, length,
             recordsMap = {},
-            record,
-            key;
-         for (var i = 0, length = records.length; i < length; i++) {
-            key = records[i].getKey();
-            recordsMap[key] = true;
-
-            if ((record = self.getRecordById(key))) {
-               if (options.merge) {
-                  record.merge(records[i]);
-               }
-            } else if (options.add) {
-               this.add(records[i]);
+            toAdd = [],
+            toReplace = {};
+         var l = 0, l1 = 0;
+         for (i = 0, length = records.length; i < length; i++) {
+            id = records[i].getId();
+            recordsMap[id] = true;
+            var index = this.getIndexByValue(this._options.idProperty, id);
+            if (index > -1) {
+               toReplace[index] = records[i];
+               l++;
+            } else {
+               toAdd.push(records[i]);
+               l1++;
             }
          }
-
+         if(options.merge) {
+            for(i in toReplace){
+               if (toReplace.hasOwnProperty(i)) {
+                  this.replace(toReplace[i], +i);
+               }
+            }
+         }
+         if (options.add) {
+            this.append(toAdd);
+         }
          if (options.remove) {
-            var toRemove = [];
+            var newItems = [];
             this.each(function (record) {
-               var key = record.getKey();
-               if (!recordsMap[key]) {
-                  toRemove.push(key);
+               var key = record.getId();
+               if (recordsMap[key]) {
+                  newItems.push(record);
                }
             }, 'all');
-
-            if (toRemove.length) {
-               this.removeRecord(toRemove);
+            if(newItems.length < this.getCount()) {
+               this.assign(newItems);
             }
          }
       },
