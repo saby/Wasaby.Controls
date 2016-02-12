@@ -76,11 +76,11 @@ define('js!SBIS3.CONTROLS.Data.Projection.TreeEnumerator', [
 
       _buildInternalMap: function () {
          //TODO: user defined order support
-         var result = [],
-            idProperty = this._options.idProperty,
+         var idProperty = this._options.idProperty,
             parentProperty = this._options.parentProperty,
             collection = this._options.collection,
             itemsMap = this._options.itemsMap,
+            sortMap = this._options.sortMap,
             buildHierarchy = function(parent) {
                var result = [],
                   parentData = parent.getContents(),
@@ -93,8 +93,9 @@ define('js!SBIS3.CONTROLS.Data.Projection.TreeEnumerator', [
                      parentId
                   );
 
-               //FIXME: для совместимости с логикой контролов - корневые записи дерева могут вообще не иметь поля с именем idProperty
+               //FIXME: для совместимости с логикой контролов - корневые записи дерева могут вообще не иметь поля с именем parentProperty
                if (!children.length && parentId === null && parent.isRoot()) {
+                  //Считаем, что элементы коллекции без поля parentProperty находятся в корне
                   children = collection.getIndiciesByValue(
                      parentProperty
                   );
@@ -117,8 +118,8 @@ define('js!SBIS3.CONTROLS.Data.Projection.TreeEnumerator', [
                return result;
             };
 
-         this._options.sortMap.length = 0;
-         Array.prototype.push.apply(this._options.sortMap, buildHierarchy(this._options.root));
+         sortMap.length = 0;
+         Array.prototype.push.apply(sortMap, buildHierarchy(this._options.root));
 
          return TreeEnumerator.superclass._buildInternalMap.call(this);
       }

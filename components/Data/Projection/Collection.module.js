@@ -399,7 +399,7 @@ define('js!SBIS3.CONTROLS.Data.Projection.Collection', [
       },
 
       /**
-       * Превращает объект в элемент коллекции
+       * Возвращает служебный энумератор
        * @returns {SBIS3.CONTROLS.Data.Projection.CollectionEnumerator}
        * @protected
        */
@@ -408,7 +408,7 @@ define('js!SBIS3.CONTROLS.Data.Projection.Collection', [
       },
 
       /**
-       * Превращает объект в элемент коллекции
+       * Превращает объект в элемент проекции
        * @param {*} item Объект
        * @param {Number} index Индекс объекта
        * @returns {SBIS3.CONTROLS.Data.Projection.CollectionItem}
@@ -569,7 +569,7 @@ define('js!SBIS3.CONTROLS.Data.Projection.Collection', [
       },
 
       /**
-       * Добавляет в индекс сортировки элементы
+       * Добавляет в индекс сортировки срез элементов
        * @param {Number} start Начальный индекс (в исходной коллекци)
        * @param {Number} count Кол-во элементов
        * @protected
@@ -616,7 +616,7 @@ define('js!SBIS3.CONTROLS.Data.Projection.Collection', [
       },
 
       /**
-       * Проверяет, что исходная коллекция искажается
+       * Проверяет, что исходная коллекция искажается проекцией
        * @returns {Boolean}
        * @protected
        */
@@ -660,9 +660,9 @@ define('js!SBIS3.CONTROLS.Data.Projection.Collection', [
       _addItems: function (start, items) {
          var isFalseMirror = this._isFalseMirror();
          Array.prototype.splice.apply(this._itemsMap, [start, 0].concat(
-            $ws.helpers.map(items, (function(item, index) {
+            $ws.helpers.map(items, function(item, index) {
                return this._convertToItem(item, start + index);
-            }), this)
+            }, this)
          ));
          Array.prototype.splice.apply(this._filterMap, [start, 0].concat($ws.helpers.map(items, function() {
             return !isFalseMirror;
@@ -792,14 +792,14 @@ define('js!SBIS3.CONTROLS.Data.Projection.Collection', [
     * Обрабатывает событие об изменении исходной коллекции
     * @param {$ws.proto.EventObject} event Дескриптор события.
     * @param {String} action Действие, приведшее к изменению.
-    * @param {*[]} newItems Новые элементы коллеции.
+    * @param {Array.<*>} newItems Новые элементы коллеции.
     * @param {Number} newItemsIndex Индекс, в котором появились новые элементы.
-    * @param {*[]} oldItems Удаленные элементы коллекции.
+    * @param {Array.<*>} oldItems Удаленные элементы коллекции.
     * @param {Number} oldItemsIndex Индекс, в котором удалены элементы.
     * @private
     */
    onSourceCollectionChange = function (event, action, newItems, newItemsIndex, oldItems, oldItemsIndex) {
-      var notifyStandard = (function() {
+      var notifyStandard = function() {
          this._notifyCollectionChange(
             action,
             newItems,
@@ -807,7 +807,7 @@ define('js!SBIS3.CONTROLS.Data.Projection.Collection', [
             oldItems,
             oldItemsIndex
          );
-      });
+      };
 
       switch (action) {
          case IBindCollectionProjection.ACTION_ADD:
