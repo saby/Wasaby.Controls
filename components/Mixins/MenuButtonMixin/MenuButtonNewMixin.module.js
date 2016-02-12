@@ -75,7 +75,7 @@ define('js!SBIS3.CONTROLS.MenuButtonNewMixin', ['js!SBIS3.CONTROLS.ContextMenuNe
       _getHeader: function(){
          var header = $('<div class="controls-Menu__header">');
          if (this._options.icon) {
-            header.append('<i class="' + this._options.iconTemplate(this._options) + '"></i>');
+            header.append('<i class="' + this._iconTemplate(this._options) + '"></i>');
          }
          header.append('<span class="controls-Menu__header-caption">' + (this._options.caption || '')  + '</span>');
          return header;

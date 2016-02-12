@@ -29,6 +29,8 @@ define('js!SBIS3.CONTROLS.Data.Record', [
          _options: {
             /**
              * @cfg {Object} Данные в "сыром" виде
+             * @see getRawData
+             * @see setRawData
              * @example
              * <pre>
              *    var user = new Record({
@@ -41,21 +43,26 @@ define('js!SBIS3.CONTROLS.Data.Record', [
              *    user.get('id');//5
              *    user.get('firstName');//John
              * </pre>
-             * @see getRawData
-             * @see setRawData
              */
             rawData: null,
 
             /**
              * @cfg {String|SBIS3.CONTROLS.Data.Adapter.IAdapter} Адаптер для работы с данными в "сыром" виде, по умолчанию {@link SBIS3.CONTROLS.Data.Adapter.Json}
+             * @see getAdapter
+             * @see setAdapter
+             * @see SBIS3.CONTROLS.Data.Di
              * @example
              * <pre>
              *    var user = new Record({
              *       adapter: 'adapter.sbis'
              *    });
              * </pre>
-             * @see getAdapter
-             * @see setAdapter
+             * @example
+             * <pre>
+             *    var user = new Record({
+             *       adapter: new SbisAdapter()
+             *    });
+             * </pre>
              */
             adapter: ''
          },
@@ -131,7 +138,7 @@ define('js!SBIS3.CONTROLS.Data.Record', [
       },
 
       has: function (name) {
-         return this._getRawDataFields().indexOf(name) > -1;
+         return Array.indexOf(this._getRawDataFields(), name) > -1;
       },
 
       // endregion SBIS3.CONTROLS.Data.IPropertyAccess
@@ -227,6 +234,28 @@ define('js!SBIS3.CONTROLS.Data.Record', [
       },
 
       /**
+       * Проверяет эквивалентность формата и данных другой записи.
+       * @param {SBIS3.CONTROLS.Data.Record} record Запись, эквивалентность которой проверяется
+       * @returns {Boolean}
+       */
+      isEqual: function (record) {
+         if (record === this) {
+            return true;
+         }
+         if (!record) {
+            return false;
+         }
+         if (!$ws.helpers.instanceOfModule(record, 'SBIS3.CONTROLS.Data.Record')) {
+            return false;
+         }
+         //TODO: когда появятся форматы, сделать через сравнение форматов
+         return $ws.helpers.isEqualObject(
+            this.getRawData(),
+            record.getRawData()
+         );
+      },
+
+      /**
        * Клонирует запись
        * @returns {SBIS3.CONTROLS.Data.Record}
        */
@@ -235,22 +264,6 @@ define('js!SBIS3.CONTROLS.Data.Record', [
          return JSON.parse(
             JSON.stringify(this, serializer.serialize),
             serializer.deserialize
-         );
-      },
-
-      /**
-       * Проверяет эквивалентность формата и данных другой записи
-       * @param {SBIS3.CONTROLS.Data.Record} record Запись, с которой сравнить
-       * @returns {Boolean}
-       */
-      isEqual: function (record) {
-         return !!(record &&
-            record.$constructor &&
-            this.$constructor.prototype === record.$constructor.prototype &&
-            $ws.helpers.isEqualObject(
-               this._options.rawData,
-               record.getRawData()
-            )
          );
       },
 

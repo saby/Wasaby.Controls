@@ -1,18 +1,19 @@
 /* global define, require, $ws */
-define('js!SBIS3.CONTROLS.Data.Projection', [
-], function () {
+define('js!SBIS3.CONTROLS.Data.Projection.Projection', [
+   'js!SBIS3.CONTROLS.Data.Di'
+], function (Di) {
    'use strict';
 
    /**
     * Абстрактная проекция данных
-    * @class SBIS3.CONTROLS.Data.Projection
+    * @class SBIS3.CONTROLS.Data.Projection.Projection
     * @extends $ws.proto.Abstract
     * @public
     * @author Мальцев Алексей
     */
 
-   var Projection = $ws.proto.Abstract.extend(/** @lends SBIS3.CONTROLS.Data.Projection */{
-      _moduleName: 'SBIS3.CONTROLS.Data.Projection'
+   var Projection = $ws.proto.Abstract.extend(/** @lends SBIS3.CONTROLS.Data.Projection.Projection */{
+      _moduleName: 'SBIS3.CONTROLS.Data.Projection.Projection'
    });
 
    /**
@@ -20,13 +21,13 @@ define('js!SBIS3.CONTROLS.Data.Projection', [
     */
    var _static = {
       /**
-       * @var {Object[]} Массив соответствия индексов проекций и коллекций
+       * @member {Object[]} Массив соответствия индексов проекций и коллекций
        * @static
        */
       projectionsToCollections: [],
 
       /**
-       * @var {Object[]} Массив соответствия индексов проекций и их инстансов
+       * @member {Object[]} Массив соответствия индексов проекций и их инстансов
        * @static
        */
       projectionsToInstances: []
@@ -35,7 +36,7 @@ define('js!SBIS3.CONTROLS.Data.Projection', [
    /**
     * Возвращает проекцию по умолчанию
     * @param {Object} object Объект, для которого требуется получить проекцию
-    * @returns {SBIS3.CONTROLS.Data.Projection}
+    * @returns {SBIS3.CONTROLS.Data.Projection.Projection}
     * @static
     */
    Projection.getDefaultProjection = function (object) {
@@ -43,11 +44,11 @@ define('js!SBIS3.CONTROLS.Data.Projection', [
       if (index === -1) {
          var instance;
          if ($ws.helpers.instanceOfMixin(object, 'SBIS3.CONTROLS.Data.Types.IEnum')) {
-            instance = $ws.single.ioc.resolve('SBIS3.CONTROLS.Data.Projection.Enum', {
+            instance = Di.resolve('projection.enum', {
                collection: object
             });
          } else if ($ws.helpers.instanceOfMixin(object, 'SBIS3.CONTROLS.Data.Collection.IEnumerable')) {
-            instance = $ws.single.ioc.resolve('SBIS3.CONTROLS.Data.Projection.Collection', {
+            instance = Di.resolve('projection.collection', {
                collection: object
             });
          } else {
@@ -61,13 +62,6 @@ define('js!SBIS3.CONTROLS.Data.Projection', [
          return _static.projectionsToInstances[index];
       }
    };
-
-   $ws.single.ioc.bind('SBIS3.CONTROLS.Data.Projection', function(config) {
-      return new Projection(config);
-   });
-   $ws.single.ioc.bind('SBIS3.CONTROLS.Data.ProjectionConstructor', function() {
-      return Projection;
-   });
 
    return Projection;
 });

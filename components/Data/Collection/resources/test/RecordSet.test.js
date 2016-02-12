@@ -10,159 +10,239 @@ define([
       'use strict';
 
       describe('SBIS3.CONTROLS.Data.Collection.RecordSet', function() {
-         var items, sbisList;
+         var rs,
+            items,
+            getItems = function() {
+               return [{
+                  'Ид': 1,
+                  'Фамилия': 'Иванов'
+               }, {
+                  'Ид': 2,
+                  'Фамилия': 'Петров'
+               }, {
+                  'Ид': 3,
+                  'Фамилия': 'Сидоров'
+               }, {
+                  'Ид': 4,
+                  'Фамилия': 'Пухов'
+               }, {
+                  'Ид': 5,
+                  'Фамилия': 'Молодцов'
+               }, {
+                  'Ид': 6,
+                  'Фамилия': 'Годолцов'
+               }, {
+                  'Ид': 7,
+                  'Фамилия': 'Арбузнов'
+               }];
+            };
 
          beforeEach(function() {
-            items = [{
-               'Ид': 1,
-               'Фамилия': 'Иванов'
-            }, {
-               'Ид': 2,
-               'Фамилия': 'Петров'
-            }, {
-               'Ид': 3,
-               'Фамилия': 'Сидоров'
-            }, {
-               'Ид': 4,
-               'Фамилия': 'Пухов'
-            }, {
-               'Ид': 5,
-               'Фамилия': 'Молодцов'
-            }, {
-               'Ид': 6,
-               'Фамилия': 'Годолцов'
-            }, {
-               'Ид': 7,
-               'Фамилия': 'Арбузнов'
-            }];
+            items = getItems();
+            rs = new RecordSet({
+               rawData: getItems()
+            });
          });
 
          afterEach(function() {
             items = undefined;
          });
 
+         describe('.isEqual()', function () {
+            it('should accept an invalid argument', function () {
+               var rs = new RecordSet();
+               assert.isFalse(rs.isEqual());
+               assert.isFalse(rs.isEqual(null));
+               assert.isFalse(rs.isEqual(false));
+               assert.isFalse(rs.isEqual(true));
+               assert.isFalse(rs.isEqual(0));
+               assert.isFalse(rs.isEqual(1));
+               assert.isFalse(rs.isEqual({}));
+               assert.isFalse(rs.isEqual([]));
+            });
+            it('should return true for the same recordset', function () {
+               var same = new RecordSet({
+                  rawData: getItems()
+               });
+               assert.isTrue(rs.isEqual(same));
+            });
+            it('should return true for itself', function () {
+               assert.isTrue(rs.isEqual(rs));
+            });
+            it('should return true for the clone', function () {
+               assert.isTrue(rs.isEqual(rs.clone()));
+            });
+            it('should return true for empties', function () {
+               var rs = new RecordSet();
+               assert.isTrue(rs.isEqual(new RecordSet()));
+            });
+            it('should return false if record added', function () {
+               var same = new RecordSet({
+                  rawData: getItems()
+               });
+               same.add(rs.at(0).clone());
+               assert.isFalse(rs.isEqual(same));
+            });
+            it('should return true if same record replaced', function () {
+               var same = new RecordSet({
+                  rawData: getItems()
+               });
+               same.replace(rs.at(0).clone(), 0);
+               assert.isTrue(rs.isEqual(same));
+            });
+            it('should return false if not same record replaced', function () {
+               var same = new RecordSet({
+                  rawData: getItems()
+               });
+               same.replace(rs.at(1).clone(), 0);
+               assert.isFalse(rs.isEqual(same));
+            });
+            it('should return false if record removed', function () {
+               var same = new RecordSet({
+                  rawData: getItems()
+               });
+               same.removeAt(0);
+               assert.isFalse(rs.isEqual(same));
+            });
+            it('should return false if record updated', function () {
+               var same = new RecordSet({
+                  rawData: getItems()
+               });
+               same.at(0).set('Фамилия', 'Aaa');
+               assert.isFalse(rs.isEqual(same));
+            });
+         });
+
          describe('.append()', function() {
             it('should change raw data', function() {
-               var rd = [{ 'Ид': 50, 'Фамилия': '50'},{ 'Ид': 51, 'Фамилия': '51'}],
-                  list = new RecordSet({
-                     rawData: items.slice()
-                  });
-               list.append(new RecordSet({
+               var rd = [{
+                  'Ид': 50,
+                  'Фамилия': '50'
+               }, {
+                  'Ид': 51,
+                  'Фамилия': '51'
+               }];
+               rs.append(new RecordSet({
                   rawData: rd
                }));
                Array.prototype.push.apply(items,rd);
-               assert.deepEqual(list.getRawData(), items);
+               assert.deepEqual(rs.getRawData(), items);
+               assert.deepEqual(rs.getCount(), items.length);
+               $ws.helpers.forEach(items, function (item, i) {
+                  assert.deepEqual(rs.at(i).getRawData(), item);
+               });
             });
 
          });
 
          describe('.prepend', function (){
             it('should change raw data', function() {
-               var rd = [{ 'Ид': 50, 'Фамилия': '50'},{ 'Ид': 51, 'Фамилия': '51'}],
-                  list = new RecordSet({
-                     rawData: items.slice()
-                  });
-               list.prepend(new RecordSet({
+               var rd = [{
+                  'Ид': 50,
+                  'Фамилия': '50'
+               }, {
+                  'Ид': 51,
+                  'Фамилия': '51'
+               }];
+               rs.prepend(new RecordSet({
                   rawData: rd
                }));
                Array.prototype.splice.apply(items,([0, 0].concat(rd)));
-               assert.deepEqual(list.getRawData(), items);
+               assert.deepEqual(rs.getRawData(), items);
+               assert.deepEqual(rs.getCount(), items.length);
+               $ws.helpers.forEach(items, function (item, i) {
+                  assert.deepEqual(rs.at(i).getRawData(), item);
+               });
             });
          });
 
          describe('.assign()', function() {
-            it('should change raw data', function() {
-               var items = [{id:1},{id:2}],
-                  list = new RecordSet({
-                     rawData: items.slice()
-                  });
-               var addItem = new Model({
-                  rawData: {id: 3}
-               });
-               list.add(addItem);
-               items.push({id: 3});
-               assert.deepEqual(list.getRawData(), items);
+            it('should change raw data and count', function() {
+               var rs = new RecordSet({
+                     rawData: [{id: 1}, {id: 2}, {id: 3}]
+                  }),
+                  data4 = {id: 4},
+                  data5 = {id: 5};
+
+               rs.assign([new Model({
+                  rawData: data4
+               }), new Model({
+                  rawData: data5
+               })]);
+               assert.deepEqual(rs.getRawData()[0], data4);
+               assert.deepEqual(rs.getRawData()[1], data5);
+               assert.deepEqual(rs.at(0).getRawData(), data4);
+               assert.deepEqual(rs.at(1).getRawData(), data5);
+               assert.strictEqual(rs.getCount(), 2);
             });
          });
 
          describe('.clear()', function() {
             it('should change raw data', function() {
-               var items = [{id:1},{id:2}],
-                  list = new RecordSet({
-                     rawData: items.slice()
-                  });
-               list.clear();
-               assert.deepEqual(list.getRawData(), []);
+               rs.clear();
+               assert.deepEqual(rs.getRawData(), []);
             });
          });
 
          describe('.add()', function() {
             it('should change raw data', function() {
-               var list = new RecordSet({
-                     rawData: items.slice()
-                  });
-               var rd =  { 'Ид': 502, 'Фамилия': '502'},
+               var rd = {
+                     'Ид': 502,
+                     'Фамилия': '502'
+                  },
                   addItem = new Model({
-                  rawData: rd
-               });
-               list.add(addItem);
+                     rawData: rd
+                  });
+               rs.add(addItem);
                items.push(rd);
-               assert.deepEqual(list.getRawData(), items);
+               assert.deepEqual(rs.getRawData(), items);
             });
          });
 
          describe('.removeAt()', function() {
             it('should change raw data', function() {
-               var list = new RecordSet({
-                     rawData: items.slice()
-                  });
-               list.removeAt(0);
-               assert.deepEqual(list.getRawData(),items.slice(1))
+               rs.removeAt(0);
+               assert.deepEqual(rs.getRawData(), items.slice(1));
             });
 
          });
 
          describe('.replace()', function() {
             it('should change raw data', function() {
-               var rd = { 'Ид': 50, 'Фамилия': '50'},
-                  list = new RecordSet({
-                     rawData: items.slice()
-                  }),
-                  newItem = new Model({rawData:rd});
-               list.replace(newItem, 0);
+               var rd = {
+                     'Ид': 50,
+                     'Фамилия': '50'
+                  },
+                  newItem = new Model({rawData: rd});
+               rs.replace(newItem, 0);
                items[0] = rd;
-               assert.deepEqual(list.getRawData(), items);
+               assert.deepEqual(rs.getRawData(), items);
             });
          });
 
          describe('.getIndex()', function (){
             it('should return an index of given item', function() {
-               var list = new RecordSet({
-                     rawData: items.slice()
-                  });
-
                for (var i = 0; i < items.length; i++){
-                  assert.equal(i, list.getIndex(list.at(i)));
+                  assert.equal(i, rs.getIndex(rs.at(i)));
                }
-
             });
          });
 
          describe('.saveChanges()', function (){
             it('should return an index of given item', function(done) {
                var source = new MemorySource({
-                  data: items.slice(),
+                  data: getItems(),
                   idProperty: 'Ид'
                });
                source.query().addCallback(function(ds){
-                  var list = ds.getAll(),
-                     length = list.getCount(),
-                     item_2 = $ws.core.clone(list.at(0));
-                  list.at(2).setDeleted(true);
-                  list.at(6).setDeleted(true);
-                  list.saveChanges(source);
-                  assert.equal(list.getCount(), length-2);
-                  assert.notDeepEqual(item_2, list.at(2));
+                  var rs = ds.getAll(),
+                     length = rs.getCount(),
+                     item_2 = $ws.core.clone(rs.at(0));
+                  rs.at(2).setDeleted(true);
+                  rs.at(6).setDeleted(true);
+                  rs.saveChanges(source);
+                  assert.equal(rs.getCount(), length-2);
+                  assert.notDeepEqual(item_2, rs.at(2));
                   done();
                });
             });
@@ -186,6 +266,77 @@ define([
             });
          });
 
+         describe('.merge()', function (){
+            it('should merge two recordsets with default params', function() {
+               var rs = new RecordSet({
+                  rawData: getItems(),
+                  idProperty: "Ид"
+               }), rs2 =  new RecordSet({
+                  rawData: [{
+                     'Ид': 1000,
+                     'Фамилия': 'Карпов'
+                  }, {
+                     'Ид': 2,
+                     'Фамилия': 'Пушкин'
+                  }],
+                  idProperty: "Ид"
+               });
+               rs.merge(rs2);
+               assert.equal(rs.getCount(), 2);
+               assert.equal(rs.getRecordById(2).get('Фамилия'), 'Пушкин');
+               assert.equal(rs.getRecordById(1000).get('Фамилия'), 'Карпов');
+
+            });
+
+            it('should merge two recordsets without remove', function() {
+               var rs = new RecordSet({
+                  rawData: getItems(),
+                  idProperty: "Ид"
+               }), rs2 =  new RecordSet({
+                  rawData: [{
+                     'Ид': 2,
+                     'Фамилия': 'Пушкин'
+                  }],
+                  idProperty: "Ид"
+               });
+               rs.merge(rs2, {remove: false});
+               assert.equal(getItems().length, rs.getCount());
+               assert.equal(rs.getRecordById(2).get('Фамилия'), 'Пушкин');
+
+            });
+
+            it('should merge two recordsets without merge', function() {
+               var rs = new RecordSet({
+                  rawData: getItems(),
+                  idProperty: "Ид"
+               }), rs2 =  new RecordSet({
+                  rawData: [{
+                     'Ид': 2,
+                     'Фамилия': 'Пушкин'
+                  }],
+                  idProperty: "Ид"
+               });
+               rs.merge(rs2, {merge: false});
+               assert.notEqual(rs.getRecordById(2).get('Фамилия'), 'Пушкин');
+
+            });
+
+            it('should merge two recordsets without add', function() {
+               var rs = new RecordSet({
+                  rawData: getItems(),
+                  idProperty: "Ид"
+               }), rs2 =  new RecordSet({
+                  rawData: [{
+                     'Ид': 1000,
+                     'Фамилия': 'Пушкин'
+                  }],
+                  idProperty: "Ид"
+               });
+               rs.merge(rs2, {add: false});
+               assert.isUndefined(rs.getRecordById(1000));
+
+            });
+         });
       });
    }
 );

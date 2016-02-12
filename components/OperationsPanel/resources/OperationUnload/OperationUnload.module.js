@@ -3,8 +3,9 @@
  */
 define('js!SBIS3.CONTROLS.OperationUnload', [
    'js!SBIS3.CONTROLS.PrintUnloadBase',
-   'js!SBIS3.CONTROLS.Utils.DataProcessor'
-], function(PrintUnloadBase, Unloader) {
+   'js!SBIS3.CONTROLS.Utils.DataProcessor',
+   'i18n!SBIS3.CONTROLS.OperationUnload'
+], function(PrintUnloadBase, Unloader, rk) {
    //TODO Идея! нужно просто вызвать у view.unload, он в свою очередь поднимает событие onUnload, а событие подхыватит выгрузчик. тогда в кнопке вообще только визуализация будет
 
    var OperationUnload = PrintUnloadBase.extend({
@@ -29,20 +30,20 @@ define('js!SBIS3.CONTROLS.OperationUnload', [
       $protected: {
          _options: {
             icon: 'sprite:icon-24 action-hover icon-Save icon-primary',
-            title: 'Выгрузить',
-            linkText: 'Выгрузить',
-            caption: 'Выгрузить',
+            title: rk('Выгрузить'),
+            linkText: rk('Выгрузить'),
+            caption: rk('Выгрузить'),
             //TODO перенести настройку опции в item. Чтобы можно было отдельно выгружать либо Excel, либо PDF
             serverSideUnload : false,
             items: [
                {
                   id : 'PDF',
-                  title : 'Список в PDF',
+                  title : rk('Список в PDF'),
                   icon : 'sprite:icon-24 icon-PDF2 icon-multicolor action-hover'
                },
                {
                   id : 'Excel',
-                  title : 'Список в Excel',
+                  title : rk('Список в Excel'),
                   icon : 'sprite:icon-24 icon-Excel icon-multicolor action-hover',
                   unloadMethod: 'Excel.Сохранить'
                }

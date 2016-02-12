@@ -131,13 +131,13 @@ define('js!SBIS3.CONTROLS.TreeControl.TreeView', [
 
       _getRenderData: function(items) {
          var data = TreeView.superclass._getRenderData.call(this, items),
-            level = items.getCollection().getOwner().getLevel() - this._levelOffset;
+            level = items.getOwner().getLevel() - this._levelOffset;
 
          data['class'] += ' ' + this._сssPrefix + this._treeChildrenСssPrefix;
          data['class'] += ' ' + this._сssPrefix + this._treeLevelСssPrefix;
          data['class'] += ' ' + this._сssPrefix + this._treeLevelСssPrefix + '-' + level;
 
-         data.hash = items.getCollection().getOwner().getHash();
+         data.hash = items.getOwner().getHash();
          data.level = level;
 
          return data;

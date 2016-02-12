@@ -4,8 +4,9 @@
 define('js!SBIS3.CONTROLS.OperationPrint', [
    'js!SBIS3.CONTROLS.PrintUnloadBase',
    'js!SBIS3.CORE.Dialog',
-   'js!SBIS3.CONTROLS.Utils.DataProcessor'
-], function(PrintUnloadBase, Dialog, Printer) {
+   'js!SBIS3.CONTROLS.Utils.DataProcessor',
+   'i18n!SBIS3.CONTROLS.OperationPrint'
+], function(PrintUnloadBase, Dialog, Printer, rk) {
 
    var OperationPrint = PrintUnloadBase.extend({
 
@@ -14,15 +15,15 @@ define('js!SBIS3.CONTROLS.OperationPrint', [
             items: [
                {
                   icon: 'sprite:icon-24 action-hover icon-Print icon-primary',
-                  title: 'Распечатать',
-                  linkText: 'Распечатать',
-                  caption: 'Распечатать'
+                  title: rk('Распечатать'),
+                  linkText: rk('Распечатать'),
+                  caption: rk('Распечатать')
                }
             ],
             icon: 'sprite:icon-24 action-hover icon-Print icon-primary',
-            title: 'Распечатать',
-            linkText: 'Распечатать',
-            caption: 'Распечатать',
+            title: rk('Распечатать'),
+            linkText:  rk('Распечатать'),
+            caption: rk('Распечатать'),
             xsl : undefined,
             /**
              * @cfg (number) Минимальная ширина предварительного окна печати

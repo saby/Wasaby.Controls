@@ -7,11 +7,12 @@ define('js!SBIS3.CONTROLS.Demo.MyDropdownListFilter',
       'js!SBIS3.CONTROLS.DropdownList',
       'js!SBIS3.CONTROLS.Demo.FilterButtonMain',
       'html!SBIS3.CONTROLS.Demo.MyDropdownListFilter',
+      'i18n!SBIS3.CONTROLS.Demo.MyDropdownListFilter',
       'js!SBIS3.CONTROLS.DataGridView',
       'css!SBIS3.CONTROLS.Demo.MyDropdownListFilter'
    ],
 
-   function(CompoundControl, DropdownList, FilterButtonMainDemo, dotTplFn) {
+   function(CompoundControl, DropdownList, FilterButtonMainDemo, dotTplFn, rk) {
       'use strict';
       var MyDropdownList = CompoundControl.extend([],{
          $protected: {
@@ -20,27 +21,27 @@ define('js!SBIS3.CONTROLS.Demo.MyDropdownListFilter',
                data: [
                   {
                      key : 0,
-                     title : 'Заголовок'
+                     title : rk('Заголовок')
                   },
                   {
                      key : 1,
-                     title : 'Один'
+                     title : rk('Один')
                   },
                   {
                      key : 2,
-                     title : 'Два'
+                     title : rk('Два')
                   },
                   {
                      key : 3,
-                     title : 'Три'
+                     title : rk('Три')
                   },
                   {
                      key : 4,
-                     title : 'Четыре'
+                     title : rk('Четыре')
                   },
                   {
                      key : 5,
-                     title : 'Пять'
+                     title : rk('Пять')
                   }
                ]
             }
