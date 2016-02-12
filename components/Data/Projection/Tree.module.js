@@ -2,7 +2,6 @@
 define('js!SBIS3.CONTROLS.Data.Projection.Tree', [
    'js!SBIS3.CONTROLS.Data.Projection.ITree',
    'js!SBIS3.CONTROLS.Data.Projection.Collection',
-   'js!SBIS3.CONTROLS.Data.Projection.TreeEnumerator',
    'js!SBIS3.CONTROLS.Data.Projection.TreeChildren',
    'js!SBIS3.CONTROLS.Data.Bind.ICollectionProjection',
    'js!SBIS3.CONTROLS.Data.Di',
@@ -11,7 +10,6 @@ define('js!SBIS3.CONTROLS.Data.Projection.Tree', [
 ], function (
    ITreeProjection,
    CollectionProjection,
-   TreeEnumerator,
    TreeChildren,
    IBindCollectionProjection,
    Di,
@@ -108,27 +106,6 @@ define('js!SBIS3.CONTROLS.Data.Projection.Tree', [
       //endregion mutable
 
       //region SBIS3.CONTROLS.Data.Collection.IEnumerable
-
-      /**
-       * Возвращает энумератор для перебора элементов проекции
-       * @returns {SBIS3.CONTROLS.Data.Projection.TreeEnumerator}
-       */
-      getEnumerator: function () {
-         /*if (this._options.childrenProperty) {
-          Enumerator = TreeChildrenByItemPropertyEnumerator;
-         } else {
-          Enumerator = TreeChildrenByParentIdEnumerator;
-         }*/
-         return new TreeEnumerator({
-            itemsMap: this._itemsMap,
-            filterMap: this._filterMap,
-            sortMap: this._sortMap,
-            collection: this._options.collection,
-            root: this.getRoot(),
-            idProperty: this._options.idProperty,
-            parentProperty: this._options.parentProperty
-         });
-      },
 
       //endregion SBIS3.CONTROLS.Data.Collection.IEnumerable
 
@@ -290,6 +267,19 @@ define('js!SBIS3.CONTROLS.Data.Projection.Tree', [
          this._onSourceCollectionItemChange = this._onSourceCollectionItemChange.callAround(_private.onSourceCollectionItemChange.bind(this));
       },
 
+      _buildSortMap: function () {
+         return _private.sorters.tree(
+            this._itemsMap,
+            TreeProjection.superclass._buildSortMap.call(this),
+            {
+               idProperty: this._options.idProperty,
+               parentProperty: this._options.parentProperty,
+               collection: this._options.collection,
+               root: this.getRoot()
+            }
+         );
+      },
+
       _convertToItem: function (item) {
          return Di.resolve(this._itemModule, {
             contents: item,
@@ -307,23 +297,6 @@ define('js!SBIS3.CONTROLS.Data.Projection.Tree', [
          if (!item || !$ws.helpers.instanceOfMixin(item, 'SBIS3.CONTROLS.Data.Projection.ICollectionItem')) {
             throw new Error(this._moduleName + '::_checkItem(): item should implement SBIS3.CONTROLS.Data.Projection.ICollectionItem');
          }
-      },
-
-      /**
-       * Производит построение _sortMap
-       * @protected
-       */
-      _buildSortMap: function () {
-         return _private.sorters.tree(
-            this._itemsMap,
-            TreeProjection.superclass._buildSortMap.call(this),
-            {
-               idProperty: this._options.idProperty,
-               parentProperty: this._options.parentProperty,
-               collection: this._options.collection,
-               root: this.getRoot()
-            }
-         );
       }
 
       //endregion Protected methods

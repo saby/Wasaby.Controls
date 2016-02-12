@@ -2,9 +2,8 @@
 define([
    'js!SBIS3.CONTROLS.Data.Projection.Tree',
    'js!SBIS3.CONTROLS.Data.Collection.List',
-   'js!SBIS3.CONTROLS.Data.Projection.TreeEnumerator',
    'js!SBIS3.CONTROLS.Data.Projection.TreeItem'
-], function (Tree, List, TreeEnumerator, TreeItem) {
+], function (Tree, List, TreeItem) {
       'use strict';
 
       describe('SBIS3.CONTROLS.Data.Projection.Tree', function() {
@@ -124,9 +123,6 @@ define([
          });
 
          describe('.getEnumerator()', function() {
-            it('should return a tree enumerator', function() {
-               assert.instanceOf(tree.getEnumerator(), TreeEnumerator);
-            });
             it('should traverse items in hierarchical order', function() {
                var enumerator = tree.getEnumerator(),
                   expect = ['A', 'AA', 'AB', 'AC', 'ACA', 'ACB', 'ACC', 'B', 'BA', 'BAA', 'BAAA', 'C', 'D'],

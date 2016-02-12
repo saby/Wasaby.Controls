@@ -441,7 +441,6 @@ define('js!SBIS3.CONTROLS.Data.Projection.Collection', [
       _reBuild: function () {
          this._itemsMap.length = 0;
          this._filterMap.length = 0;
-         this._sortMap.length = 0;
          this._isSortedCache = undefined;
 
          var enumerator = this._options.collection.getEnumerator(),
@@ -450,11 +449,10 @@ define('js!SBIS3.CONTROLS.Data.Projection.Collection', [
          while ((item = enumerator.getNext())) {
             this._itemsMap.push(this._convertToItem(item, index));
             this._filterMap.push(true);
-            this._sortMap.push(index);
             index++;
          }
 
-         this._getServiceEnumerator().reIndex();
+         this._reSort();
       },
 
       /**
