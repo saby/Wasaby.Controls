@@ -1,0 +1,28 @@
+<tr class="controls-DataGridView__tr {{=it.containerClass}}" data-hash="{{=it.hash}}" data-parent-hash="{{=it.parentHash}}">
+    {{?it.multiselect}}
+       <td class="controls-DataGridView__td js-controls-ListView__itemCheckBox controls-DataGridView__td__checkBox">
+          <span class="controls-ListView__itemCheckBox js-controls-ListView__itemCheckBox"/>
+       </td>
+    {{?}}
+    {{~it.cells :cell:index}}
+       <td class="controls-DataGridView__td {{=it.contentsClass}}
+             {{? !!cell.editor}} controls-DataGridView__edited-td{{?}}
+             {{?cell.className}} {{=cell.className}}{{?}}"
+          >
+           {{?index === 0}}
+              {{~it.levels :level}}
+                 <span class="controls-TreeView__hierWrapper"></span>
+              {{~}}
+              {{?it.isNode}}
+                 <span class="{{=it.leverageClass}}" data-hash="{{=it.hash}}"></span>
+              {{?}}
+           {{?}}
+          {{=cell.template(cell)}}
+       </td>
+    {{~}}
+</tr>
+{{?it.isNode && it.childrenTemplate}}
+    {{~it.children.items :child}}
+        {{=it.childrenTemplate(child)}}
+    {{~}}
+{{?}}

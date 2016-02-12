@@ -1,0 +1,28 @@
+<div class="{{=it.class}}" data-hash="{{=it.hash}}" id="{{=it.id}}">
+    {{?it.items.length}}
+        {{~it.items :item}}
+            {{?item.containerTag}}
+                <{{=item.containerTag}} class="{{=item.containerClass}}" data-hash="{{=item.hash}}">
+            {{?}}
+
+            <div class="{{=item.contentsClass}}">
+                {{?item.isNode}}
+                    <span class="{{=item.leverageClass}}" data-hash="{{=item.hash}}"></span>
+                {{?}}
+                {{=item.template(item)}}
+            </div>
+
+            {{?item.isNode}}
+                {{=item.childrenTemplate(item.children)}}
+            {{?}}
+
+            {{?item.containerTag}}
+                </{{=item.containerTag}}>
+            {{?}}
+        {{~}}
+    {{?}}
+
+    {{?it.emptyHTML}}
+        <div class="{{=it.emptyClass}}{{=it.items.length ? ' ws-hidden' : ''}}">{{=it.emptyHTML}}</div>
+    {{?}}
+</div>

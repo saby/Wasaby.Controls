@@ -157,9 +157,7 @@ define('js!SBIS3.CONTROLS.TextArea', ['js!SBIS3.CONTROLS.TextBoxBase', 'html!SBI
                   if (w != self._cachedW || h != self._cachedH) {
                      self._cachedW = w;
                      self._cachedH = h;
-                     self._inputField.autosize({
-                        callback: self._textAreaResize.bind(self)
-                     });
+                     self._inputField.resize();
                   }
                }
             });
