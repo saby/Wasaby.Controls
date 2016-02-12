@@ -496,7 +496,7 @@ define(
                   break;
             }
          }
-         return new Date(yyyy, mm, dd, hh, mm, ss, uuu);
+         return new Date(yyyy, mm, dd, hh, ii, ss, uuu);
       },
 
       /**
