@@ -21,7 +21,8 @@ define('js!SBIS3.CONTROLS.PickerMixin', ['js!SBIS3.CONTROLS.FloatArea'], functio
               * !Важно: при написании css-селекторов необходимо учитывать, что выпадающий блок располагается в body,
               * а не в конейнере контрола.
               */
-            pickerClassName : ''
+            pickerClassName : '',
+            pickerConfig: undefined
          }
       },
 
@@ -59,6 +60,11 @@ define('js!SBIS3.CONTROLS.PickerMixin', ['js!SBIS3.CONTROLS.FloatArea'], functio
 
       _createPicker: function(pickerContainer){
          var pickerConfig = this._setPickerConfig();
+         if (this._options.pickerConfig){
+            $ws.helpers.forEach(this._options.pickerConfig, function(val, key) {
+               pickerConfig[key] = val;
+            });
+         }
          pickerConfig.parent = pickerConfig.parent || this.getParent();
          pickerConfig.opener = this;
          if (!pickerConfig.context) {

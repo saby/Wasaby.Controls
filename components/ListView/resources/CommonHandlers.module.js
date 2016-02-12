@@ -11,10 +11,10 @@ define('js!SBIS3.CONTROLS.CommonHandlers',[],
                self = this;
 
             return $ws.helpers.question(message).addCallback(function(res) {
-               if(res) {
-                  self._dataSet.removeRecord(idArray);
+               if (res) {
+                  self._items.removeRecord(idArray);
                   self.removeItemsSelection(isArray ? idArray : [idArray]);
-                  return self._dataSource.sync(self._dataSet).addCallback(function () {
+                  return self._dataSource.sync(self._items).addCallback(function () {
                      if ($ws.helpers.instanceOfModule(self, 'SBIS3.CONTROLS.TreeCompositeView') && self.getViewMode() === 'table') {
                         self.partialyReload(isArray ? idArray : [idArray]);
                      } else {
@@ -22,7 +22,7 @@ define('js!SBIS3.CONTROLS.CommonHandlers',[],
                      }
                   });
                }
-            })
+            });
          },
          editItems: function(tr, id) {
             this.sendCommand('activateItem', id);

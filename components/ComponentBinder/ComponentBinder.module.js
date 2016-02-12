@@ -5,7 +5,7 @@ define('js!SBIS3.CONTROLS.ComponentBinder', [], function () {
     * @class SBIS3.CONTROLS.ComponentBinder
     * @extends $ws.proto.Abstract
     * @public
-    * @param backButton объект книпоки назад
+    * @param backButton объект кнопки назад
     */
    /*методы для поиска*/
    function startHierSearch(text, searchParamName, searchCrumbsTpl) {
@@ -26,7 +26,7 @@ define('js!SBIS3.CONTROLS.ComponentBinder', [], function () {
          view.setGroupBy(groupBy);
          if (this._firstSearch) {
             this._lastRoot = view.getCurrentRoot();
-            if (this._options.breadCrumbs){
+            if (this._options.breadCrumbs && this._options.breadCrumbs.getDataSet()){
                this._pathDSRawData = $ws.core.clone(this._options.breadCrumbs.getDataSet().getRawData());
             }
          }

@@ -3,17 +3,14 @@
    <table class="controls-Pager__table">
       <tr>
          <td class="controls-Pager-block-amount">
-            <component  data-component="SBIS3.CORE.FieldDropdown" class="controls-Pager-block controls-Pager__pageSize-container">
-               <options name="data" type="array">
-                  <options name="keys" type="array"></options>
-                  <options name="values" type="array"></options>
-               </options>
+            <component  data-component="SBIS3.CONTROLS.DropdownList" class="controls-Pager-block controls-Pager__pageSize-container controls-DropdownList__withoutArrow controls-DropdownList__withoutCross controls-DropdownList__linkStyle">
                <option name="name" value="controls-Pager_comboBox"></option>
                <option name="showSelectedInList" value="false" type="boolean"></option>
-               <option name="flipVertical" value="true" type="boolean"></option>
-               <option name="wordWrap" value="false" type="boolean"></option>
                <option name="enabled" value="true" type="boolean"></option>
-               <option name="renderStyle" value="simple" ></option>
+               <option name="multiselect" value="false" type="boolean"></option>
+               <option name="mode" value="click"></option>
+               <option name="keyField">id</option>
+               <option name="displayField">value</option>
             </component>
             <span class="controls-Pager-block  controls-text controls-text-extra">, по</span>
             <div class="controls-Pager-block controls-text controls-Amount-text controls-Amount-text_js"></div>

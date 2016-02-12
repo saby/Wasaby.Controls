@@ -37,13 +37,19 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
       $protected: {
          _options: {
             /**
-             * @typedef {Object} ResourceConfig
-             * @property {String} name Имя объекта бизнес-логики
-             * @property {Object} [serviceUrl] Точка входа
+             * @cfg {String} Адрес удаленного сервиса, с которым работает источник (хост, путь, название)
+             * @name {SBIS3.CONTROLS.Data.Source.SbisService#service}
+             * @see getService
+             * <pre>
+             *    var dataSource = new SbisService({
+             *       service: '/service/url/',
+             *       resource: 'Сотрудник',
+             *    });
+             * </pre>
              */
 
             /**
-             * @cfg {String|ResourceConfig} Имя объекта бизнес-логики или его параметры
+             * @cfg {String} Имя объекта бизнес-логики
              * @name {SBIS3.CONTROLS.Data.Source.SbisService#resource}
              * @see getResource
              * <pre>
@@ -54,7 +60,8 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
              */
 
             /**
-             * @cfg {SBIS3.CONTROLS.Data.Adapter.IAdapter} Адаптер для работы с данными, по умолчанию {@link SBIS3.CONTROLS.Data.Adapter.Sbis}
+             * @cfg {String|SBIS3.CONTROLS.Data.Adapter.IAdapter} Адаптер для работы с данными, по умолчанию {@link SBIS3.CONTROLS.Data.Adapter.Sbis}
+             * @see SBIS3.CONTROLS.Data.Source.ISource#adapter
              * @see getAdapter
              * @see setAdapter
              * @see SBIS3.CONTROLS.Data.Adapter.Sbis
@@ -63,17 +70,24 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
             adapter: 'adapter.sbis',
 
             /**
-             * @cfg {String|Object} Объект, реализующий сетевой протокол для обмена в режиме клиент-сервер, по умолчанию {@link SBIS3.CONTROLS.Data.Source.Provider.SbisBusinessLogic}
+             * @cfg {String|SBIS3.CONTROLS.Data.Source.Provider.IRpc} Объект, реализующий сетевой протокол для обмена в режиме клиент-сервер, по умолчанию {@link SBIS3.CONTROLS.Data.Source.Provider.SbisBusinessLogic}
+             * @see SBIS3.CONTROLS.Data.Source.Rpc#provider
              * @see getProvider
              * @see SBIS3.CONTROLS.Data.Di
              * @example
              * <pre>
-             *    var dataSource = new RemoteSource({
+             *    var dataSource = new SbisService({
              *       resource: 'Сотрудник',
              *       provider: 'source.provider.sbis-plugin'
              *    });
              * </pre>
-             * @name SBIS3.CONTROLS.Data.Source.ISource#adapter
+             * @example
+             * <pre>
+             *    var dataSource = new SbisService({
+             *       resource: 'Сотрудник',
+             *       provider: new SbisPluginProvider()
+             *    });
+             * </pre>
              */
             provider: 'source.provider.sbis-business-logic',
 
@@ -144,20 +158,21 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
          cfg = cfg || {};
          if ('strategy' in cfg && !('adapter' in cfg)) {
             this._options.adapter = cfg.strategy;
-            $ws.single.ioc.resolve('ILogger').log('SBIS3.CONTROLS.Data.Collection.RecordSet', 'option "strategy" is deprecated and will be removed in 3.7.4. Use "adapter" instead.');
+            $ws.single.ioc.resolve('ILogger').log('SBIS3.CONTROLS.Data.Source.SbisService', 'option "strategy" is deprecated and will be removed in 3.7.4. Use "adapter" instead.');
          }
          if ('keyField' in cfg && !('idProperty' in cfg)) {
             this._options.idProperty = cfg.keyField;
-            $ws.single.ioc.resolve('ILogger').log('SBIS3.CONTROLS.Data.Collection.RecordSet', 'option "keyField" is deprecated and will be removed in 3.7.4. Use "idProperty" instead.');
+            $ws.single.ioc.resolve('ILogger').log('SBIS3.CONTROLS.Data.Source.SbisService', 'option "keyField" is deprecated and will be removed in 3.7.4. Use "idProperty" instead.');
          }
-         if ('service' in cfg && !cfg.resource) {
-            this._options.resource = cfg.resource = cfg.service;
+         //FIXME: сейчас опция service от Remote пересекается со старыми source-ами, но т.к. Костя все равно хочет по другому назвать, то пока оставляем режим совместимости
+         if ('service' in cfg && !('resource' in cfg)) {
+            this._options.resource = cfg.service;
+            this._options.service = '';
+            $ws.single.ioc.resolve('ILogger').log('SBIS3.CONTROLS.Data.Source.SbisService', 'option "service" is deprecated and will be removed in 3.7.4. Use "resource" instead.');
          }
-
-         if (this._options.resource && typeof this._options.resource !== 'object') {
-            this._options.resource = {
-               name: this._options.resource
-            };
+         if (this._options.resource && typeof this._options.resource === 'object') {
+            this._options.service = this._options.resource.serviceUrl || '';
+            this._options.resource = this._options.resource.name || '';
          }
 
       },
@@ -170,17 +185,7 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
        * @see resource
        */
       getResource: function () {
-         return this._options.resource.name;
-      },
-
-      getAdapter: function () {
-         var adapter = SbisService.superclass.getAdapter.call(this);
-
-         if (!adapter || !$ws.helpers.instanceOfModule(adapter, 'SBIS3.CONTROLS.Data.Adapter.Sbis')) {
-            throw new Error('Data adapter should extend SBIS3.CONTROLS.Data.Adapter.Sbis');
-         }
-
-         return adapter;
+         return this._options.resource;
       },
 
       /**
@@ -200,7 +205,7 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
        * </pre>
        */
       create: function(meta) {
-         //TODO: вместо 'ИмяМетода' может предаваться 'Расширение'
+         //TODO: вместо 'ИмяМетода' может передаваться 'Расширение'
          var args = {
             'Фильтр': this.getAdapter().serialize(meta || {
                'ВызовИзБраузера': true
@@ -262,16 +267,16 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
          if (meta && !Object.isEmpty(meta)) {
             args['ДопПоля'] = this.getAdapter().serialize(meta);
          }
-         this._detectIdProperty(model.getRawData());
 
          return this.getProvider().call(
             this._options.updateMethodName,
             args
          ).addCallbacks((function (key) {
-            if (!model.isStored()) {
-               model.set(this._options.idProperty, key);
+            if (key && !model.isStored() && this.getIdProperty()) {
+               model.set(this.getIdProperty(), key);
             }
             model.setStored(true);
+            model.applyChanges();
             return key;
          }).bind(this), function (error) {
             $ws.single.ioc.resolve('ILogger').log('SBIS3.CONTROLS.Data.Source.SbisService::update()', error);
@@ -477,7 +482,7 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
             var ido = String(id).split(',');
             return ido[1];
          }
-         return this._options.resource.name;
+         return this._options.resource;
       },
       /**
        * вызвает метод удаления
@@ -491,12 +496,12 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
          var args = {
             'ИдО': id
          };
-         if (!Object.isEmpty(meta)) {
+         if (meta && !Object.isEmpty(meta)) {
             args['ДопПоля'] = this.getAdapter().serialize(meta);
          }
          var provider = this.getProvider();
-         if (BLObjName && this._options.resource.name !== BLObjName) {
-            provider = Di.resolve('source.provider.sbis-business-logic', {name: BLObjName});
+         if (BLObjName && this._options.resource !== BLObjName) {
+            provider = Di.resolve('source.provider.sbis-business-logic', {resource: BLObjName});
          }
          return provider.call(
             this._options.destroyMethodName,

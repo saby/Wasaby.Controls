@@ -1,7 +1,8 @@
 /* global define */
 define('js!SBIS3.CONTROLS.ListControl.ItemActions', [
-   'js!SBIS3.CONTROLS.ItemActionsGroup'
-], function(ItemActionsGroup) {
+   'js!SBIS3.CONTROLS.ItemActionsGroup',
+   'i18n!SBIS3.CONTROLS.ListControl.ItemActions'
+], function(ItemActionsGroup, rk) {
    'use strict';
 
    var ITEMS_ACTIONS_HEIGHT = 20;
@@ -57,8 +58,8 @@ define('js!SBIS3.CONTROLS.ListControl.ItemActions', [
             itemsActions: [{
                name: 'delete',
                icon: 'sprite:icon-16 icon-Erase icon-error',
-               tooltip: 'Удалить',
-               title: 'Удалить',
+               tooltip: rk('Удалить'),
+               title: rk('Удалить'),
                isMainAction: true,
                onActivated: function (item) {
                   this.deleteRecords(item.data('hash'));
@@ -66,8 +67,8 @@ define('js!SBIS3.CONTROLS.ListControl.ItemActions', [
             },{
                name: 'move',
                icon: 'sprite:icon-16 icon-Move icon-primary action-hover',
-               tooltip: 'Перенести',
-               title: 'Перенести',
+               tooltip: rk('Перенести'),
+               title: rk('Перенести'),
                isMainAction: false,
                onActivated: function (item) {
                   this.selectedMoveTo(item.data('hash'));
