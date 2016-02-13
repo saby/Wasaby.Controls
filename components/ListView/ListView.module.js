@@ -423,6 +423,7 @@ define('js!SBIS3.CONTROLS.ListView',
          },
 
          $constructor: function () {
+            this._touchSupport = $ws._const.browser.isMobilePlatform;
             //TODO временно смотрим на TopParent, чтобы понять, где скролл. С внедрением ScrallWatcher этот функционал уберем
             var topParent = this.getTopParent();
             this._publish('onChangeHoveredItem', 'onItemClick', 'onItemActivate', 'onDataMerge', 'onItemValueChanged', 'onBeginEdit', 'onAfterBeginEdit', 'onEndEdit', 'onBeginAdd', 'onAfterEndEdit', 'onPrepareFilterOnMove');
@@ -450,7 +451,6 @@ define('js!SBIS3.CONTROLS.ListView',
             this._prepareInfiniteScroll();
             ListView.superclass.init.call(this);
             this.reload();
-            this._touchSupport = $ws._const.browser.isMobilePlatform;
             if (this._touchSupport){
                /* События нужно вешать на контейнер контрола,
                   т.к. getItemsContainer возвращает текущий активный контейнер,
