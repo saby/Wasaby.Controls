@@ -337,6 +337,19 @@ define([
 
             });
          });
+         describe('.setRawData()', function (){
+            it('should return elem by index', function () {
+               var rs = new RecordSet({
+                  rawData: getItems(),
+                  idProperty: "Ид"
+               });
+               rs.setRawData([{
+                  'Ид': 1000,
+                  'Фамилия': 'Пушкин'
+               }]);
+               assert.equal(rs.getIndex(rs.at(0)), 0);
+            });
+         });
       });
    }
 );
