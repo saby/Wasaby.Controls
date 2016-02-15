@@ -49,7 +49,12 @@ define('js!SBIS3.CONTROLS.Data.Projection.CollectionEnumerator', [
          /**
           * @member {Array.<Number>} Соответствие позиций проекции и исходной коллекции
           */
-         _internalMap: null
+         _internalMap: null,
+
+         /**
+          * @member {Array.<Number>} Кэш соответствия позиций исходной коллекции и проекции
+          */
+         _sourceToInternal: []
       },
 
       $constructor: function () {
@@ -141,7 +146,11 @@ define('js!SBIS3.CONTROLS.Data.Projection.CollectionEnumerator', [
             return source;
          }
          this._initInternalMap();
-         return Array.indexOf(this._internalMap, source);
+
+         if (this._sourceToInternal[source] === undefined) {
+            this._sourceToInternal[source] = Array.indexOf(this._internalMap, source);
+         }
+         return this._sourceToInternal[source];
       },
 
       getSourceByInternal: function () {
@@ -155,6 +164,7 @@ define('js!SBIS3.CONTROLS.Data.Projection.CollectionEnumerator', [
       reIndex: function () {
          IndexedEnumeratorMixin.reIndex.call(this);
          this._internalMap = null;
+         this._sourceToInternal = [];
       },
 
       _createIndex: function (property) {
