@@ -29,7 +29,8 @@ define('js!SBIS3.CONTROLS.OpenDialogAction', ['js!SBIS3.CONTROLS.DialogActionBas
       _buildComponentConfig: function(meta) {
          return {
             key : meta.id,
-            initValues : meta.filter
+            initValues : meta.filter,
+            record: meta.item
          }
       }
    });
