@@ -32,7 +32,7 @@ define('js!SBIS3.CONTROLS.FieldLinkItemsCollection', [
          },
 
          $constructor: function() {
-            this._publish('onCrossClick', 'onItemActivate');
+            this._publish('onCrossClick', 'onItemActivate', 'onShowPicker', 'onClosePicker');
             /* Запомним контейнер поля связи */
             this._flContainer = this.getParent().getContainer();
          },
@@ -162,9 +162,12 @@ define('js!SBIS3.CONTROLS.FieldLinkItemsCollection', [
                handlers: {
                   /* Надо сообщить о закрытии пикера полю связи, а так же перерисовать элементы, но только после закрытия */
                   onClose: function() {
-                     self._options.handlers.onClose();
+                     self._notify('onClosePicker');
                      self._clearItems();
                      setTimeout(self.reload.bind(self), 0);
+                  },
+                  onShow: function() {
+                     self._notify('onShowPicker');
                   }
                }
             };
