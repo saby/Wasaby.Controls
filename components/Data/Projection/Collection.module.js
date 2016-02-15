@@ -898,8 +898,8 @@ define('js!SBIS3.CONTROLS.Data.Projection.Collection', [
                if (this._isFalseMirror()) {
                   oldItemsIndex = enumerator.getInternalBySource(oldItemsIndex);
                }
-               this._removeItems(oldItemsIndexOriginal, oldItems.length);
                notifyStandard.call(this);
+               this._removeItems(oldItemsIndexOriginal, oldItems.length);
                enumerator.reIndex();
                break;
 
