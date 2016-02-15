@@ -52,7 +52,7 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                _eipHandlers: null
             },
             $constructor: function () {
-               this._publish('onItemValueChanged', 'onBeginEdit', 'onAfterBeginEdit', 'onEndEdit', 'onBeginAdd', 'onAfterEndEdit');
+               this._publish('onItemValueChanged', 'onBeginEdit', 'onAfterBeginEdit', 'onEndEdit', 'onBeginAdd', 'onAfterEndEdit', 'onInitEditInPlace');
                this._eipHandlers = {
                   onKeyDown: this._onKeyDown.bind(this)
                };
@@ -63,6 +63,8 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
             },
 
             _getEditInPlaceConfig: function() {
+               var
+                   self = this;
                return {
                   editingTemplate: this._options.editingTemplate,
                   columns: this._options.columns,
@@ -77,9 +79,12 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                   parent: this,
                   handlers: {
                      onItemValueChanged: function(event, difference, model) {
-                        event.setResult(this._notify('onItemValueChanged', difference, model));
-                     }.bind(this),
-                     onChildFocusOut: this._onChildFocusOut.bind(this)
+                        event.setResult(self._notify('onItemValueChanged', difference, model));
+                     },
+                     onChildFocusOut: this._onChildFocusOut.bind(this),
+                     onInit: function() {
+                        self._notify('onInitEditInPlace', this);
+                     }
                   }
                };
             },
@@ -142,6 +147,7 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                   if (preparedRecord) {
                      this._eip.edit(target, preparedRecord);
                      this._notify('onAfterBeginEdit', preparedRecord);
+                     return preparedRecord;
                   }
                }.bind(this));
             },
