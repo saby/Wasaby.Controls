@@ -305,6 +305,14 @@ define('js!SBIS3.CONTROLS.Data.Projection.Tree', [
 
    var _private = {
       sorters: {
+         /**
+          * Создает индекс сортировки в порядке иерархического индекса "родитель - дети"
+          * @param {Array.<SBIS3.CONTROLS.Data.Projection.CollectionItem>} items Элементы проекции.
+          * @param {Array.<Number>} currentMap Текущий индекс сортировки
+          * @param {Object} options Опции для определения иерархических отношений
+          * @return {Array.<Number>}
+          * @private
+          */
          tree: function (items, currentMap, options) {
             //TODO: enumeration with currentMap order
             var push = Array.prototype.push,

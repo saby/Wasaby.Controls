@@ -789,6 +789,12 @@ define('js!SBIS3.CONTROLS.Data.Projection.Collection', [
       MESSAGE_READ_ONLY: 'The projection is read only. You should modify the source collection instead.',
 
       sorters: {
+         /**
+          * Создает индекс сортировки в том же порядке, что и исходная коллекция
+          * @param {Array.<SBIS3.CONTROLS.Data.Projection.CollectionItem>} items Элементы проекции.
+          * @return {Array.<Number>}
+          * @private
+          */
          natural: function(items) {
             var map = [];
             for (var index = 0, count = items.length; index < count; index++) {
@@ -797,6 +803,13 @@ define('js!SBIS3.CONTROLS.Data.Projection.Collection', [
             return map;
          },
 
+         /**
+          * Создает индекс сортировки в порядке, определенном набором пользовательских обработчиков
+          * @param {Array.<SBIS3.CONTROLS.Data.Projection.CollectionItem>} items Элементы проекции.
+          * @param {Array.<Function>} handlers Пользовательские обработчики для Array.prototype.sort
+          * @return {Array.<Number>}
+          * @private
+          */
          user: function(items, handlers) {
             var map = [],
                sorted = [];
