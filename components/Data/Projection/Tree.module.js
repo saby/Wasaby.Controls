@@ -335,7 +335,7 @@ define('js!SBIS3.CONTROLS.Data.Projection.Tree', [
                   for (i = 0; i < children.length; i++) {
                      child = items[children[i]];
                      if (child) {
-                        child.setParent(parent);
+                        child.setParent(parent, true);
                      }
                      result.push(children[i]);
                      if (child) {
