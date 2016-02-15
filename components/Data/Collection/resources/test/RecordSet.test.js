@@ -346,8 +346,11 @@ define([
                rs.setRawData([{
                   'Ид': 1000,
                   'Фамилия': 'Пушкин'
+               }, {
+                  'Ид': 1001,
+                  'Фамилия': 'Пушкин1'
                }]);
-               assert.equal(rs.getIndex(rs.at(0)), 0);
+               assert.equal(rs.getIndex(rs.at(1)), 1);
             });
          });
       });
