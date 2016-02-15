@@ -509,15 +509,9 @@ define([
                   step,
                   handler = function(event, newCurrent, oldCurrent, newPosition, oldPosition) {
                      try {
-                        if (newPosition !== position) {
-                           throw new Error('Invalid newPosition');
-                        }
-                        if (oldPosition !== prevPosition) {
-                           throw new Error('Invalid oldPosition');
-                        }
-                        if (oldCurrent !== prevCurrent) {
-                           throw new Error('Invalid oldCurrent');
-                        }
+                        assert.strictEqual(newPosition, position, 'Invalid newPosition');
+                        assert.strictEqual(oldPosition, prevPosition, 'Invalid oldPosition');
+                        assert.strictEqual(oldCurrent, prevCurrent, 'Invalid oldCurrent');
                         if (andDone) {
                            done();
                         }
@@ -557,12 +551,11 @@ define([
                var andDone = false,
                   handler = function(event, newCurrent, oldCurrent, newPosition, oldPosition) {
                      try {
-                        if (newPosition !== oldPosition + 1) {
-                           throw new Error('Invalid newPosition');
+                        assert.strictEqual(newPosition, oldPosition + 1, 'Invalid newPosition');
+                        if (oldCurrent) {
+                           assert.strictEqual(oldCurrent.getContents(), items[oldPosition], 'Invalid oldCurrent');
                         }
-                        if (oldCurrent && oldCurrent.getContents() !== items[oldPosition]) {
-                           throw new Error('Invalid oldCurrent');
-                        }
+
                         if (andDone) {
                            done();
                         }
@@ -597,11 +590,9 @@ define([
                var andDone = false,
                   handler = function(event, newCurrent, oldCurrent, newPosition, oldPosition) {
                      try {
-                        if (newPosition !== oldPosition - 1) {
-                           throw new Error('Invalid newPosition');
-                        }
-                        if (oldCurrent && oldCurrent.getContents() !== items[oldPosition]) {
-                           throw new Error('Invalid oldCurrent');
+                        assert.strictEqual(newPosition, oldPosition - 1, 'Invalid newPosition');
+                        if (oldCurrent) {
+                           assert.strictEqual(oldCurrent.getContents(), items[oldPosition], 'Invalid oldCurrent');
                         }
                         if (andDone) {
                            done();
@@ -650,21 +641,11 @@ define([
                   }),
                   handler = function(event, action, newItems, newItemsIndex, oldItems, oldItemsIndex) {
                      try {
-                        if (action !== IBindCollectionProjection.ACTION_ADD) {
-                           throw new Error('Invalid action');
-                        }
-                        if (newItems[0].getContents() !== 5) {
-                           throw new Error('Invalid newItems');
-                        }
-                        if (newItemsIndex !== items.length - 1) {
-                           throw new Error('Invalid newItemsIndex');
-                        }
-                        if (oldItems.length > 0) {
-                           throw new Error('Invalid oldItems');
-                        }
-                        if (oldItemsIndex > 0) {
-                           throw new Error('Invalid oldItemsIndex');
-                        }
+                        assert.strictEqual(action, IBindCollectionProjection.ACTION_ADD, 'Invalid action');
+                        assert.strictEqual(newItems[0].getContents(), 5, 'Invalid newItems');
+                        assert.strictEqual(newItemsIndex, items.length - 1, 'Invalid newItemsIndex');
+                        assert.strictEqual(oldItems.length, 0, 'Invalid oldItems');
+                        assert.strictEqual(oldItemsIndex, 0, 'Invalid oldItemsIndex');
                         done();
                      } catch (err) {
                         done(err);
@@ -685,21 +666,11 @@ define([
                   }),
                   handler = function(event, action, newItems, newItemsIndex, oldItems, oldItemsIndex) {
                      try {
-                        if (action !== IBindCollectionProjection.ACTION_REMOVE) {
-                           throw new Error('Invalid action');
-                        }
-                        if (newItems.length > 0) {
-                           throw new Error('Invalid newItems');
-                        }
-                        if (newItemsIndex > 0) {
-                           throw new Error('Invalid newItemsIndex');
-                        }
-                        if (oldItems[0].getContents() !== 2) {
-                           throw new Error('Invalid oldItems');
-                        }
-                        if (oldItemsIndex !== 1) {
-                           throw new Error('Invalid oldItemsIndex');
-                        }
+                        assert.strictEqual(action, IBindCollectionProjection.ACTION_REMOVE, 'Invalid action');
+                        assert.strictEqual(newItems.length, 0, 'Invalid newItems');
+                        assert.strictEqual(newItemsIndex, 0, 'Invalid newItemsIndex');
+                        assert.strictEqual(oldItems[0].getContents(), 2, 'Invalid oldItems');
+                        assert.strictEqual(oldItemsIndex, 1, 'Invalid oldItemsIndex');
                         done();
                      } catch (err) {
                         done(err);
@@ -720,21 +691,11 @@ define([
                   }),
                   handler = function(event, action, newItems, newItemsIndex, oldItems, oldItemsIndex) {
                      try {
-                        if (action !== IBindCollectionProjection.ACTION_REPLACE) {
-                           throw new Error('Invalid action');
-                        }
-                        if (newItems[0].getContents() !== 33) {
-                           throw new Error('Invalid newItems');
-                        }
-                        if (newItemsIndex !== 2) {
-                           throw new Error('Invalid newItemsIndex');
-                        }
-                        if (oldItems[0].getContents() !== 3) {
-                           throw new Error('Invalid oldItems');
-                        }
-                        if (oldItemsIndex !== 2) {
-                           throw new Error('Invalid oldItemsIndex');
-                        }
+                        assert.strictEqual(action, IBindCollectionProjection.ACTION_REPLACE, 'Invalid action');
+                        assert.strictEqual(newItems[0].getContents(), 33, 'Invalid newItems');
+                        assert.strictEqual(newItemsIndex, 2, 'Invalid newItemsIndex');
+                        assert.strictEqual(oldItems[0].getContents(), 3, 'Invalid oldItems');
+                        assert.strictEqual(oldItemsIndex, 2, 'Invalid oldItemsIndex');
                         done();
                      } catch (err) {
                         done(err);
@@ -759,33 +720,22 @@ define([
                   (function(theCase) {
                      it('should fire after ' + theCase.method, function(done) {
                         var handler = function(event, action, newItems, newItemsIndex, oldItems, oldItemsIndex) {
+                              var i;
                               try {
-                                 var i;
-                                 if (action !== theCase.action) {
-                                    throw new Error('Invalid action ' + action + ' - ' + theCase.action + ' expected');
-                                 }
-                                 if (newItems.length !== theCase.newItems.length) {
-                                    throw new Error('Invalid newItems length ' + newItems.length + ' - ' + theCase.newItems.length + ' expected');
-                                 }
+                                 assert.strictEqual(action, theCase.action, 'Invalid action');
+
+                                 assert.strictEqual(newItems.length, theCase.newItems.length, 'Invalid newItems length');
                                  for (i = 0; i < theCase.newItems.length; i++) {
-                                    if (newItems[i].getContents() !== theCase.newItems[i]) {
-                                       throw new Error('Invalid newItems at ' + i);
-                                    }
+                                    assert.strictEqual(newItems[i].getContents(), theCase.newItems[i], 'Invalid newItems[' + i + ']');
                                  }
-                                 if (newItemsIndex !== theCase.newAt) {
-                                    throw new Error('Invalid newItemsIndex ' + newItemsIndex + ' - ' + theCase.newAt + ' expected');
-                                 }
-                                 if (oldItems.length !== theCase.oldItems.length) {
-                                    throw new Error('Invalid oldItems length ' + oldItems.length + ' - ' + theCase.oldItems.length + ' expected');
-                                 }
+                                 assert.strictEqual(newItemsIndex, theCase.newAt, 'Invalid newItemsIndex');
+
+                                 assert.strictEqual(oldItems.length, theCase.oldItems.length, 'Invalid oldItems length');
                                  for (i = 0; i < theCase.oldItems.length; i++) {
-                                    if (oldItems[i].getContents() !== theCase.oldItems[i]) {
-                                       throw new Error('Invalid oldItems at ' + i);
-                                    }
+                                    assert.strictEqual(oldItems[i].getContents(), theCase.oldItems[i], 'Invalid oldItems[' + i + ']');
                                  }
-                                 if (oldItemsIndex !== theCase.oldAt) {
-                                    throw new Error('Invalid oldItemsIndex ' + oldItemsIndex + ' - ' + theCase.oldAt + ' expected');
-                                 }
+                                 assert.strictEqual(oldItemsIndex, theCase.oldAt, 'Invalid oldItemsIndex');
+
                                  done();
                               } catch (err) {
                                  done(err);
@@ -816,21 +766,11 @@ define([
                   }),
                   handler = function(event, action, newItems, newItemsIndex, oldItems, oldItemsIndex) {
                      try {
-                        if (action !== IBindCollectionProjection.ACTION_MOVE) {
-                           throw new Error('Invalid action');
-                        }
-                        if (newItems[0].getContents() !== sortedItems[fireId]) {
-                           throw new Error('Invalid newItems');
-                        }
-                        if (newItemsIndex !== fireId) {
-                           throw new Error('Invalid newItemsIndex');
-                        }
-                        if (oldItems[0].getContents() !== sortedItems[fireId]) {
-                           throw new Error('Invalid oldItems');
-                        }
-                        if (oldItemsIndex !== sortedItems.length - 1) {
-                           throw new Error('Invalid oldItemsIndex');
-                        }
+                        assert.strictEqual(action, IBindCollectionProjection.ACTION_MOVE, 'Invalid action');
+                        assert.strictEqual(newItems[0].getContents(), sortedItems[fireId], 'Invalid newItems');
+                        assert.strictEqual(newItemsIndex, fireId, 'Invalid newItemsIndex');
+                        assert.strictEqual(oldItems[0].getContents(), sortedItems[fireId], 'Invalid oldItems');
+                        assert.strictEqual(oldItemsIndex, sortedItems.length - 1, 'Invalid oldItemsIndex');
                         if (fireId === firesToBeDone) {
                            done();
                         }
@@ -856,21 +796,11 @@ define([
                   }),
                   handler = function(event, action, newItems, newItemsIndex, oldItems, oldItemsIndex) {
                      try {
-                        if (action !== IBindCollectionProjection.ACTION_REMOVE) {
-                           throw new Error('Invalid action');
-                        }
-                        if (newItems.length > 0) {
-                           throw new Error('Invalid newItems');
-                        }
-                        if (newItemsIndex > 0) {
-                           throw new Error('Invalid newItemsIndex');
-                        }
-                        if (outsideItems.indexOf(oldItems[0].getContents()) === -1) {
-                           throw new Error('Invalid oldItems');
-                        }
-                        if (oldItemsIndex !== fireId) {
-                           throw new Error('Invalid oldItemsIndex');
-                        }
+                        assert.strictEqual(action, IBindCollectionProjection.ACTION_REMOVE, 'Invalid action');
+                        assert.strictEqual(newItems.length, 0, 'Invalid newItems');
+                        assert.strictEqual(newItemsIndex, 0, 'Invalid newItemsIndex');
+                        assert.notEqual(outsideItems.indexOf(oldItems[0].getContents()), -1, 'Invalid oldItems');
+                        assert.strictEqual(oldItemsIndex, fireId, 'Invalid oldItemsIndex');
                         if (fireId === firesToBeDone) {
                            done();
                         }

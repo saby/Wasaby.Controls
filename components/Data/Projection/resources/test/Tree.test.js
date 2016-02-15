@@ -2,17 +2,16 @@
 define([
    'js!SBIS3.CONTROLS.Data.Projection.Tree',
    'js!SBIS3.CONTROLS.Data.Collection.List',
-   'js!SBIS3.CONTROLS.Data.Projection.TreeItem'
-], function (Tree, List, TreeItem) {
+   'js!SBIS3.CONTROLS.Data.Collection.ObservableList',
+   'js!SBIS3.CONTROLS.Data.Projection.TreeItem',
+   'js!SBIS3.CONTROLS.Data.Bind.ICollectionProjection'
+], function (Tree, List, ObservableList, TreeItem, IBindCollectionProjection) {
       'use strict';
 
       describe('SBIS3.CONTROLS.Data.Projection.Tree', function() {
-         var items,
-            tree;
-
-         beforeEach(function() {
-            items = new List({
-               items: [{
+         var firstNodeItemIndex = 6,
+            getData = function() {
+               return [{
                   id: 10,
                   pid: 1,
                   node: true,
@@ -75,16 +74,42 @@ define([
                   id: 4,
                   pid: 0,
                   title: 'D'
-               }]
-            });
+               }];
+            },
+            getItems = function() {
+               return new List({
+                  items: getData()
+               });
+            },
+            getObservableItems = function() {
+               return new ObservableList({
+                  items: getData()
+               });
+            },
+            getTree = function(items) {
+               return new Tree({
+                  collection: items || getItems(),
+                  root: 0,
+                  idProperty: 'id',
+                  parentProperty: 'pid',
+                  nodeProperty: 'node'
+               });
+            },
+            getObservableTree = function(items) {
+               return new Tree({
+                  collection: items || getObservableItems(),
+                  root: 0,
+                  idProperty: 'id',
+                  parentProperty: 'pid',
+                  nodeProperty: 'node'
+               });
+            },
+            items,
+            tree;
 
-            tree = new Tree({
-               collection: items,
-               root: 0,
-               idProperty: 'id',
-               parentProperty: 'pid',
-               nodeProperty: 'node'
-            });
+         beforeEach(function() {
+            items = getItems();
+            tree = getTree(items);
          });
 
          afterEach(function() {
@@ -169,10 +194,18 @@ define([
          });
 
          describe('.getRoot()', function() {
-            it('should return given root from string', function() {
+            it('should return given root from a number', function() {
                assert.strictEqual(tree.getRoot().getContents(), 0);
             });
-            it('should return given root id from object', function() {
+            it('should return given root from a string', function() {
+               var tree = new Tree({
+                  collection: items,
+                  root: '',
+                  idProperty: 'id'
+               });
+               assert.strictEqual(tree.getRoot().getContents(), '');
+            });
+            it('should return given root from an object', function() {
                var tree = new Tree({
                   collection: items,
                   root: {id: 1, title: 'Root'},
@@ -181,7 +214,7 @@ define([
                assert.strictEqual(tree.getRoot().getContents().id, 1);
                assert.strictEqual(tree.getRoot().getContents().title, 'Root');
             });
-            it('should return given root as ICollectionItem', function() {
+            it('should return given root from a TreeItem', function() {
                var root = new TreeItem({contents: {
                      id: null,
                      title: 'Root'
@@ -352,6 +385,78 @@ define([
 
                assert.isFalse(tree.moveToBelow());
                assert.strictEqual(tree.getCurrent().getContents().title, 'BAAA');
+            });
+         });
+
+         describe('[onCollectionChange]', function() {
+            /*it('should fire with all of children add a node', function(done) {
+               var tree = getObservableTree(),
+                  expect = ['D', 'DA', 'DB', 'DBA', 'DC'],
+                  handler = function(event, action, newItems, newItemsIndex, oldItems, oldItemsIndex) {
+                     try {
+                        assert.strictEqual(action, IBindCollectionProjection.ACTION_ADD, 'Invalid action');
+
+                        assert.strictEqual(newItems.length, expect.length, 'Invalid newItems length');
+                        for (var i = 0; i < newItems.length; i++) {
+                           assert.strictEqual(newItems[i].getContents().title, expect[i], 'Invalid newItems[' + i + ']');
+                        }
+                        assert.strictEqual(newItemsIndex, 0, 'Invalid newItemsIndex');
+
+                        assert.strictEqual(oldItems.length, 0, 'Invalid oldItems length');
+                        assert.strictEqual(oldItemsIndex, 0, 'Invalid oldItemsIndex');
+                        done();
+                     } catch (err) {
+                        done(err);
+                     }
+                  };
+               tree.getCollection().append([{
+                  id: 51,
+                  pid: 5,
+                  title: 'EA'
+               }, {
+                  id: 52,
+                  pid: 5,
+                  title: 'EB'
+               }, {
+                  id: 521,
+                  pid: 52,
+                  title: 'EBA'
+               }, {
+                  id: 53,
+                  pid: 5,
+                  title: 'EC'
+               }]);
+               tree.subscribe('onCollectionChange', handler);
+               tree.getCollection().add({
+                  id: 5,
+                  pid: 0,
+                  title: 'E'
+               });
+               tree.unsubscribe('onCollectionChange', handler);
+            });*/
+            it('should fire with all of children after remove a node', function(done) {
+               var tree = getObservableTree(),
+                  expect = ['A', 'AA', 'AB', 'AC', 'ACA', 'ACB', 'ACC'],
+                  handler = function(event, action, newItems, newItemsIndex, oldItems, oldItemsIndex) {
+                     try {
+                        assert.strictEqual(action, IBindCollectionProjection.ACTION_REMOVE, 'Invalid action');
+
+                        assert.strictEqual(newItems.length, 0, 'Invalid newItems length');
+                        assert.strictEqual(newItemsIndex, 0, 'Invalid newItemsIndex');
+
+                        assert.strictEqual(oldItems.length, expect.length, 'Invalid oldItems length');
+                        for (var i = 0; i < oldItems.length; i++) {
+                           assert.strictEqual(oldItems[i].getContents().title, expect[i], 'Invalid oldItems[' + i + ']');
+                        }
+                        assert.strictEqual(oldItemsIndex, 0, 'Invalid oldItemsIndex');
+                        done();
+                     } catch (err) {
+                        done(err);
+                     }
+                  };
+               tree.subscribe('onCollectionChange', handler);
+               tree.getCollection().removeAt(firstNodeItemIndex);
+               tree.unsubscribe('onCollectionChange', handler);
             });
          });
       });

@@ -297,6 +297,50 @@ define('js!SBIS3.CONTROLS.Data.Projection.Tree', [
          if (!item || !$ws.helpers.instanceOfMixin(item, 'SBIS3.CONTROLS.Data.Projection.ICollectionItem')) {
             throw new Error(this._moduleName + '::_checkItem(): item should implement SBIS3.CONTROLS.Data.Projection.ICollectionItem');
          }
+      },
+
+      /**
+       * Обработчик события об изменении исходной коллекции
+       * @param {String} action Действие, приведшее к изменению.
+       * @param {Array.<SBIS3.CONTROLS.Data.Projection.ICollectionItem>} newItems Новые элементы исходной коллеции.
+       * @param {Number} newItemsIndex Индекс исходной коллеции, в котором появились новые элементы.
+       * @param {Array.<SBIS3.CONTROLS.Data.Projection.ICollectionItem>} oldItems Удаленные элементы исходной коллеции.
+       * @param {Number} oldItemsIndex Индекс исходной коллеции, в котором удалены элементы.
+       * @protected
+       */
+      _notifyCollectionChange: function (action, newItems, newItemsIndex, oldItems, oldItemsIndex) {
+         var appendChildren = function(items) {
+            var appendItem = function(item, itemIndex) {
+                  items.splice(1 + index + itemIndex, 0, item);
+               },
+               index,
+               children;
+            for (index = 0; index < items.length; index++) {
+               children = this.getChildren(items[index]);
+               children.each(appendItem);
+            }
+         };
+
+         switch (action) {
+            case IBindCollectionProjection.ACTION_ADD:
+               appendChildren.call(this, newItems);
+               break;
+
+            case IBindCollectionProjection.ACTION_REMOVE:
+               appendChildren.call(this, oldItems);
+               break;
+
+            case IBindCollectionProjection.ACTION_REPLACE:
+               break;
+
+            case IBindCollectionProjection.ACTION_MOVE:
+               break;
+
+            case IBindCollectionProjection.ACTION_RESET:
+               break;
+         }
+
+         TreeProjection.superclass._notifyCollectionChange.call(this, action, newItems, newItemsIndex, oldItems, oldItemsIndex);
       }
 
       //endregion Protected methods
@@ -372,34 +416,8 @@ define('js!SBIS3.CONTROLS.Data.Projection.Tree', [
        * @private
        */
       onSourceCollectionChange: function (prevFn, event, action, newItems, newItemsIndex, oldItems, oldItemsIndex) {
-            switch (action) {
-               case IBindCollectionProjection.ACTION_ADD:
-                  break;
-
-               case IBindCollectionProjection.ACTION_REMOVE:
-                  /*var oldItemsProjection = this._getItemsProjection(oldItems, oldItemsIndex),
-                     appendItem = function(item) {
-                        oldItems.push(item.getContents());
-                     },
-                     children;
-                  for (var i = 0; i < oldItemsProjection.length; i++) {
-                     children = this.getChildren(oldItemsProjection[i]);
-                     children.each(appendItem);
-                  }*/
-                  break;
-
-               case IBindCollectionProjection.ACTION_REPLACE:
-                  break;
-
-               case IBindCollectionProjection.ACTION_MOVE:
-                  break;
-
-               case IBindCollectionProjection.ACTION_RESET:
-                  break;
-            }
-
-            this._childrenMap = {};
-            prevFn.call(this, event, action, newItems, newItemsIndex, oldItems, oldItemsIndex);
+         this._childrenMap = {};
+         prevFn.call(this, event, action, newItems, newItemsIndex, oldItems, oldItemsIndex);
       },
 
       /**
