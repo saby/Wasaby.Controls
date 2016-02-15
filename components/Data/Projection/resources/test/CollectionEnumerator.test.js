@@ -5,7 +5,7 @@ define([
       'use strict';
 
       describe('SBIS3.CONTROLS.Data.Projection.CollectionEnumerator', function() {
-         var itemsMap,
+         var items,
             sourceMap,
             filterMap,
             sortMap,
@@ -18,7 +18,7 @@ define([
             };
 
          beforeEach(function() {
-            itemsMap = [{
+            items = [{
                index: 0
             }, {
                index: 1
@@ -51,7 +51,7 @@ define([
             sortMap = [0, 1, 2, 3, 4];
 
             enumerator = new ProjectionEnumerator({
-               itemsMap: itemsMap,
+               items: items,
                sourceMap: sourceMap,
                filterMap: filterMap,
                sortMap: sortMap
@@ -60,7 +60,7 @@ define([
 
          afterEach(function() {
             enumerator = undefined;
-            itemsMap = undefined;
+            items = undefined;
             sourceMap = undefined;
             filterMap = undefined;
             sortMap = undefined;
@@ -70,7 +70,7 @@ define([
             it('should throw an error on invalid argument', function() {
                assert.throw(function() {
                   var enumerator = new ProjectionEnumerator({
-                     itemsMap: {},
+                     items: {},
                      sourceMap: {},
                      filterMap: {},
                      sortMap: {}
@@ -78,7 +78,7 @@ define([
                });
                assert.throw(function() {
                   var enumerator = new ProjectionEnumerator({
-                     itemsMap: '',
+                     items: '',
                      sourceMap: '',
                      filterMap: '',
                      sortMap: ''
@@ -86,7 +86,7 @@ define([
                });
                assert.throw(function() {
                   var enumerator = new ProjectionEnumerator({
-                     itemsMap: 0,
+                     items: 0,
                      sourceMap: 0,
                      filterMap: 1,
                      sortMap: 2
@@ -94,7 +94,7 @@ define([
                });
                assert.throw(function() {
                   var enumerator = new ProjectionEnumerator({
-                     itemsMap: undefined,
+                     items: undefined,
                      sourceMap: undefined,
                      filterMap: undefined,
                      sortMap: undefined
@@ -102,7 +102,7 @@ define([
                });
                assert.throw(function() {
                   var enumerator = new ProjectionEnumerator({
-                     itemsMap: [],
+                     items: [],
                      sourceMap: [],
                      filterMap: undefined,
                      sortMap: undefined
@@ -110,7 +110,7 @@ define([
                });
                assert.throw(function() {
                   var enumerator = new ProjectionEnumerator({
-                     itemsMap: [],
+                     items: [],
                      sourceMap: [],
                      filterMap: [],
                      sortMap: undefined
@@ -128,9 +128,9 @@ define([
                var index = -1;
                while (enumerator.getNext()) {
                   index++;
-                  assert.strictEqual(itemsMap[index], enumerator.getCurrent());
+                  assert.strictEqual(items[index], enumerator.getCurrent());
                }
-               assert.strictEqual(itemsMap[itemsMap.length - 1], enumerator.getCurrent());
+               assert.strictEqual(items[items.length - 1], enumerator.getCurrent());
             });
          });
 
@@ -145,7 +145,7 @@ define([
                   item;
                while ((item = enumerator.getNext())) {
                   index++;
-                  assert.strictEqual(itemsMap[index], item);
+                  assert.strictEqual(items[index], item);
                }
                assert.isUndefined(enumerator.getNext());
             });
@@ -163,7 +163,7 @@ define([
                enumerator.setPosition(index);
                while ((item = enumerator.getPrevious())) {
                   index--;
-                  assert.strictEqual(itemsMap[index], item);
+                  assert.strictEqual(items[index], item);
                }
                assert.isUndefined(enumerator.getPrevious());
             });
@@ -190,14 +190,14 @@ define([
                index = -1;
                while ((item = enumerator.getNext())) {
                   index++;
-                  assert.strictEqual(itemsMap[index], item);
+                  assert.strictEqual(items[index], item);
                }
 
                enumerator.reset();
                index = -1;
                while (enumerator.getNext()) {
                   index++;
-                  assert.strictEqual(itemsMap[index], enumerator.getCurrent());
+                  assert.strictEqual(items[index], enumerator.getCurrent());
                }
             });
          });
@@ -213,7 +213,7 @@ define([
                   index++;
                   assert.strictEqual(index, enumerator.getPosition());
                }
-               assert.strictEqual(itemsMap.length - 1, enumerator.getPosition());
+               assert.strictEqual(items.length - 1, enumerator.getPosition());
 
                while (enumerator.getPrevious()) {
                   index--;
@@ -238,7 +238,7 @@ define([
             it('should change the current item', function() {
                for (var i = 0; i < sourceMap.length; i++) {
                   enumerator.setPosition(i);
-                  assert.strictEqual(itemsMap[i], enumerator.getCurrent());
+                  assert.strictEqual(items[i], enumerator.getCurrent());
                }
             });
 
@@ -627,7 +627,7 @@ define([
                      (test.remove.length ? 'remove [' + test.remove.join(',') + ']' : ''),
                   function() {
                      beforeEach(function() {
-                        original = itemsMap.slice();
+                        original = items.slice();
 
                         if (test['goto'] > -1) {
                            enumerator.setPosition(test['goto']);
@@ -646,7 +646,7 @@ define([
                         if (test.remove.length) {
                            for (var removeNum = 0; removeNum < test.remove.length; removeNum++) {
                               var index = test.remove[removeNum];
-                              itemsMap.splice(index, 1);
+                              items.splice(index, 1);
                               sourceMap.splice(index, 1);
                               filterMap.splice(index, 1);
                               var sortIndex = Array.indexOf(sortMap, index);

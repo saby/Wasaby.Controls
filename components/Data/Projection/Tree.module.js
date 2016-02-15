@@ -269,7 +269,7 @@ define('js!SBIS3.CONTROLS.Data.Projection.Tree', [
 
       _buildSortMap: function () {
          return _private.sorters.tree(
-            this._itemsMap,
+            this._items,
             TreeProjection.superclass._buildSortMap.call(this),
             {
                idProperty: this._options.idProperty,
@@ -305,9 +305,10 @@ define('js!SBIS3.CONTROLS.Data.Projection.Tree', [
 
    var _private = {
       sorters: {
-         tree: function (itemsMap, currentMap, options) {
+         tree: function (items, currentMap, options) {
             //TODO: enumeration with currentMap order
-            var idProperty = options.idProperty,
+            var push = Array.prototype.push,
+               idProperty = options.idProperty,
                parentProperty = options.parentProperty,
                collection = options.collection,
                buildHierarchy = function(parent) {
@@ -332,13 +333,13 @@ define('js!SBIS3.CONTROLS.Data.Projection.Tree', [
 
                   var i, child;
                   for (i = 0; i < children.length; i++) {
-                     child = itemsMap[children[i]];
+                     child = items[children[i]];
                      if (child) {
                         child.setParent(parent);
                      }
                      result.push(children[i]);
                      if (child) {
-                        Array.prototype.push.apply(
+                        push.apply(
                            result,
                            buildHierarchy(child)
                         );

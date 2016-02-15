@@ -23,7 +23,7 @@ define('js!SBIS3.CONTROLS.Data.Projection.CollectionEnumerator', [
             /**
              * @cfg {Array.<SBIS3.CONTROLS.Data.Projection.CollectionItem>} Индекс проекции коллекции
              */
-            itemsMap: [],
+            items: [],
 
             /**
              * @cfg {Array.<Boolean>} Результат применения фильтра
@@ -53,8 +53,8 @@ define('js!SBIS3.CONTROLS.Data.Projection.CollectionEnumerator', [
       },
 
       $constructor: function () {
-         if (!(this._options.itemsMap instanceof Array)) {
-            throw new Error(this._moduleName + ': items map should be instance of an Array');
+         if (!(this._options.items instanceof Array)) {
+            throw new Error(this._moduleName + ': items should be instance of an Array');
          }
          if (!(this._options.filterMap instanceof Array)) {
             throw new Error(this._moduleName + ': filter map should be instance of an Array');
@@ -72,7 +72,7 @@ define('js!SBIS3.CONTROLS.Data.Projection.CollectionEnumerator', [
          internalPosition++;
          var newPosition = this._getSourceByInternal(internalPosition);
 
-         if (newPosition === undefined || newPosition > this._options.itemsMap.length - 1) {
+         if (newPosition === undefined || newPosition > this._options.items.length - 1) {
             return;
          }
 
@@ -99,11 +99,11 @@ define('js!SBIS3.CONTROLS.Data.Projection.CollectionEnumerator', [
       at: function (index) {
          return index === undefined ?
             undefined :
-            this._options.itemsMap[this._getSourceByInternal(index)];
+            this._options.items[this._getSourceByInternal(index)];
       },
 
       setCurrent: function(item) {
-         this._currentPosition = Array.indexOf(this._options.itemsMap, item);
+         this._currentPosition = Array.indexOf(this._options.items, item);
          this._setCurrentByPosition();
       },
 
@@ -219,7 +219,7 @@ define('js!SBIS3.CONTROLS.Data.Projection.CollectionEnumerator', [
       _addToInternalMap: function (map, sourceIndex) {
          if (this._options.filterMap[sourceIndex]) {
             map.push(sourceIndex);
-            if (this._сurrent && this._сurrent === this._options.itemsMap[sourceIndex]) {
+            if (this._сurrent && this._сurrent === this._options.items[sourceIndex]) {
                this._currentPosition = sourceIndex;
             }
          }
@@ -230,7 +230,7 @@ define('js!SBIS3.CONTROLS.Data.Projection.CollectionEnumerator', [
        * @protected
        */
       _setCurrentByPosition: function () {
-         this._сurrent = this._options.itemsMap[this._currentPosition];
+         this._сurrent = this._options.items[this._currentPosition];
       },
 
       /**
@@ -251,7 +251,7 @@ define('js!SBIS3.CONTROLS.Data.Projection.CollectionEnumerator', [
        * @protected
        */
       _isValidPosition: function (position) {
-         return position >= -1 && position < this._options.itemsMap.length;
+         return position >= -1 && position < this._options.items.length;
       }
 
       //endregion Protected methods
