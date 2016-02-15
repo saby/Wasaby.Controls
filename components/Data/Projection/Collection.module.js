@@ -512,20 +512,18 @@ define('js!SBIS3.CONTROLS.Data.Projection.Collection', [
        * @protected
        */
       _reSort: function (silent) {
-         var oldSortMap = this._sortMap.slice(),
-            newSortMap;
+         var oldSortMap = this._sortMap.slice();
          this._sortMap.length = 0;
          Array.prototype.push.apply(this._sortMap, this._buildSortMap());
-         newSortMap = this._sortMap;
 
          this._isSortedCache = undefined;
          this._getServiceEnumerator().reIndex();
-         //this._getServiceEnumerator().getCurrent();
 
          if (this._eventsEnabled && !silent) {
             //Анализируем новый порядок элементов - идем по новому индексу сортировки и сопоставляем ее со старой.
             //Если на очередной позиции находится не тот элемент, то ищем его старую позицию и перемещаем на новую
-            var newIndex,
+            var newSortMap = this._sortMap,
+               newIndex,
                oldIndex,
                count,
                sourceIndex;
@@ -630,7 +628,6 @@ define('js!SBIS3.CONTROLS.Data.Projection.Collection', [
                return this._convertToItem(item, start + index);
             }, this);
 
-
          splice.apply(this._items, [start, 0].concat(items));
          splice.apply(this._filterMap, [start, 0].concat(filterMap));
          splice.apply(this._sortMap, [start, 0].concat(sortMap));
@@ -675,6 +672,7 @@ define('js!SBIS3.CONTROLS.Data.Projection.Collection', [
                this._sortMap[index] -= count;
             }
          }
+
          this._isSortedCache = undefined;
       },
 

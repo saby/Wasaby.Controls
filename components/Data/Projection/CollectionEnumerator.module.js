@@ -226,6 +226,19 @@ define('js!SBIS3.CONTROLS.Data.Projection.CollectionEnumerator', [
       },
 
       /**
+       * Производит построение invertedMap
+       * @return {Array.<Number>}
+       * @protected
+       */
+      _buildInvertedMap: function () {
+         var result = [];
+         for (var i = 0; i < this._internalMap.length; i++) {
+            result[this._internalMap[i]] = i;
+         }
+         return result;
+      },
+
+      /**
        * Запоминает текущий элемент исходя из текущей позиции
        * @protected
        */
