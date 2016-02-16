@@ -1,173 +1,168 @@
 /* global define, describe, context, it, assert, $ws */
-
-/* Dummy for SBIS3.CONTROLS.Data.Source.Provider.SbisBusinessLogic */
-define('js!Test.SbisBusinessLogic', [
-   'js!SBIS3.CONTROLS.Data.Source.Provider.IRpc'
-], function (IRpc) {
+define([
+   'js!SBIS3.CONTROLS.Data.Source.SbisService',
+   'js!SBIS3.CONTROLS.Data.Di',
+   'js!SBIS3.CONTROLS.Data.Source.Provider.IRpc',
+   'js!SBIS3.CONTROLS.Data.Source.DataSet',
+   'js!SBIS3.CONTROLS.Data.Model',
+   'js!SBIS3.CONTROLS.Data.Collection.List',
+   'js!SBIS3.CONTROLS.Data.Adapter.Sbis',
+   'js!SBIS3.CONTROLS.Data.Query.Query'
+], function (SbisService, Di, IRpc, DataSet, Model, List, SbisAdapter, Query) {
       'use strict';
 
-      var existsId = 7,
-         existsTooId = 987,
-         notExistsId = 99,
-         textId = 'uuid';
+      //Mock of SBIS3.CONTROLS.Data.Source.Provider.SbisBusinessLogic
+      var SbisBusinessLogic = (function() {
+         var existsId = 7,
+            existsTooId = 987,
+            notExistsId = 99,
+            textId = 'uuid';
 
-      var SbisBusinessLogic = $ws.core.extend({}, [IRpc], {
-         _cfg: {},
-         $constructor: function (cfg) {
-            this._cfg = cfg;
-         },
-         call: function (method, args) {
-            var def = new $ws.proto.Deferred(),
-               meta = [
-                  {'n': 'Ид', 't': 'Число целое'},
-                  {'n': 'Фамилия', 't': 'Строка'},
-                  {'n': 'Имя', 't': 'Строка'},
-                  {'n': 'Отчество', 't': 'Строка'},
-                  {'n': 'Должность', 't': 'Строка'},
-                  {'n': 'В штате', 't': 'Логическое'}
-               ],
-               error = '',
-               data;
+         var Mock = $ws.core.extend({}, [IRpc], {
+            _cfg: {},
+            $constructor: function (cfg) {
+               this._cfg = cfg;
+            },
+            call: function (method, args) {
+               var def = new $ws.proto.Deferred(),
+                  meta = [
+                     {'n': 'Фамилия', 't': 'Строка'},
+                     {'n': 'Имя', 't': 'Строка'},
+                     {'n': 'Отчество', 't': 'Строка'},
+                     {'n': '@Ид', 't': 'Число целое'},
+                     {'n': 'Должность', 't': 'Строка'},
+                     {'n': 'В штате', 't': 'Логическое'}
+                  ],
+                  idPosition = 3,
+                  error = '',
+                  data;
 
-            switch (this._cfg.name) {
-               case 'Товар':
-               case 'Продукт':
-                  switch (method) {
-                     case 'Создать':
-                        data = {
-                           d: [
-                              0,
-                              '',
-                              '',
-                              '',
-                              '',
-                              false
-                           ],
-                           s: meta
-                        };
-                        break;
-
-                     case 'Прочитать':
-                        if (args['ИдО'] === existsId) {
+               switch (this._cfg.resource) {
+                  case 'Товар':
+                  case 'Продукт':
+                     switch (method) {
+                        case 'Создать':
                            data = {
                               d: [
-                                 existsId,
-                                 'Иванов',
-                                 'Иван',
-                                 'Иванович',
-                                 'Инженер',
-                                 true
+                                 '',
+                                 '',
+                                 '',
+                                 0,
+                                 '',
+                                 false
                               ],
                               s: meta
                            };
-                        } else {
-                           error = 'Model is not found';
-                        }
-                        break;
+                           break;
 
-                     case 'Записать':
-                        if (args['Запись'].d && args['Запись'].d[0]) {
-                           data = args['Запись'].d[0];
-                        } else {
-                           data = 99;
-                        }
-                        break;
+                        case 'Прочитать':
+                           if (args['ИдО'] === existsId) {
+                              data = {
+                                 d: [
+                                    'Иванов',
+                                    'Иван',
+                                    'Иванович',
+                                    existsId,
+                                    'Инженер',
+                                    true
+                                 ],
+                                 s: meta
+                              };
+                           } else {
+                              error = 'Model is not found';
+                           }
+                           break;
 
-                     case 'Удалить':
-                        if (args['ИдО'] === existsId ||args['ИдО'] == textId|| ($ws.helpers.type(args['ИдО']) === 'array' && Array.indexOf(args['ИдО'], String(existsId)) !== -1)) {
-                           data = existsId;
-                        } else if (args['ИдО'] === existsTooId || ($ws.helpers.type(args['ИдО']) === 'array' && Array.indexOf(args['ИдО'],String(existsTooId)) !== -1)) {
+                        case 'Записать':
+                           if (args['Запись'].d && args['Запись'].d[idPosition]) {
+                              data = args['Запись'].d[idPosition];
+                           } else {
+                              data = 99;
+                           }
+                           break;
+
+                        case 'Удалить':
+                           if (args['ИдО'] === existsId ||args['ИдО'] == textId|| ($ws.helpers.type(args['ИдО']) === 'array' && Array.indexOf(args['ИдО'], String(existsId)) !== -1)) {
+                              data = existsId;
+                           } else if (args['ИдО'] === existsTooId || ($ws.helpers.type(args['ИдО']) === 'array' && Array.indexOf(args['ИдО'],String(existsTooId)) !== -1)) {
                               data = existsTooId;
-                        } else {
-                           error = 'Model is not found';
-                        }
-                        break;
+                           } else {
+                              error = 'Model is not found';
+                           }
+                           break;
 
-                     case 'Список':
-                        data = {
-                           d: [
-                              [
-                                 existsId,
-                                 'Иванов',
-                                 'Иван',
-                                 'Иванович',
-                                 'Инженер',
-                                 true
+                        case 'Список':
+                           data = {
+                              d: [
+                                 [
+                                    'Иванов',
+                                    'Иван',
+                                    'Иванович',
+                                    existsId,
+                                    'Инженер',
+                                    true
+                                 ],
+                                 [
+                                    'Петров',
+                                    'Петр',
+                                    'Петрович',
+                                    1 + existsId,
+                                    'Специалист',
+                                    true
+                                 ]
                               ],
-                              [
-                                 1 + existsId,
-                                 'Петров',
-                                 'Петр',
-                                 'Петрович',
-                                 'Специалист',
-                                 true
-                              ]
-                           ],
-                           s: meta
-                        };
-                        break;
+                              s: meta
+                           };
+                           break;
 
-                     case 'ВставитьДо':
-                     case 'ВставитьПосле':
-                     case 'Произвольный':
-                        break;
+                        case 'ВставитьДо':
+                        case 'ВставитьПосле':
+                        case 'Произвольный':
+                           break;
 
-                     default:
-                        error = 'Method ' + this._cfg.name + ' is undefined';
-                  }
-                  break;
+                        default:
+                           error = 'Method "' + method + '" is undefined';
+                     }
+                     break;
 
-               case 'ПорядковыйНомер':
-                  switch (method) {
-                     case 'ВставитьДо':
-                     case 'ВставитьПосле':
-                        break;
-                  }
-                  break;
+                  case 'ПорядковыйНомер':
+                     switch (method) {
+                        case 'ВставитьДо':
+                        case 'ВставитьПосле':
+                           break;
+                     }
+                     break;
 
-               default:
-                  error = 'Service is not found';
-            }
-
-            setTimeout(function () {
-               SbisBusinessLogic.lastRequest = {
-                  cfg: this._cfg,
-                  method: method,
-                  args: args
-               };
-
-               if (error) {
-                  return def.errback(error);
+                  default:
+                     error = 'Service "' + this._cfg.resource + '" is not found';
                }
 
-               def.callback(data);
-            }.bind(this), 1);
+               setTimeout(function () {
+                  Mock.lastRequest = {
+                     cfg: this._cfg,
+                     method: method,
+                     args: args
+                  };
 
-            return def;
-         }
-      });
+                  if (error) {
+                     return def.errback(error);
+                  }
 
-      SbisBusinessLogic.lastRequest = {};
-      SbisBusinessLogic.existsId = existsId;
-      SbisBusinessLogic.notExistsId = notExistsId;
+                  def.callback(data);
+               }.bind(this), 1);
 
-      return SbisBusinessLogic;
-   }
-);
+               return def;
+            }
+         });
 
-define([
-      'js!SBIS3.CONTROLS.Data.Source.SbisService',
-      'js!SBIS3.CONTROLS.Data.Di',
-      'js!Test.SbisBusinessLogic',
-      'js!SBIS3.CONTROLS.Data.Source.DataSet',
-      'js!SBIS3.CONTROLS.Data.Model',
-      'js!SBIS3.CONTROLS.Data.Collection.List',
-      'js!SBIS3.CONTROLS.Data.Adapter.Sbis',
-      'js!SBIS3.CONTROLS.Data.Query.Query'
-   ], function (SbisService, Di, SbisBusinessLogic, DataSet, Model, List, SbisAdapter, Query) {
-      'use strict';
+         Mock.lastRequest = {};
+         Mock.existsId = existsId;
+         Mock.notExistsId = notExistsId;
 
-      //Replacing of standard implementation
+         return Mock;
+      })();
+
+      //Replace of standard with mock
       Di.register('source.provider.sbis-business-logic', SbisBusinessLogic);
 
       describe('SBIS3.CONTROLS.Data.Source.SbisService', function () {
@@ -180,11 +175,11 @@ define([
                         ''
                      ],
                      s: [
-                        {'n': 'Ид', 't': 'Число целое'},
+                        {'n': '@Ид', 't': 'Число целое'},
                         {'n': 'Фамилия', 't': 'Строка'}
                      ]
                   },
-                  idProperty: 'Ид'
+                  idProperty: '@Ид'
                });
             },
             testArgIsModel = function(arg, model) {
@@ -500,8 +495,8 @@ define([
                               if (!success) {
                                  throw new Error('Unsuccessful update');
                               }
-                              if (!model.isChanged()) {
-                                 throw new Error('The model should stay changed');
+                              if (model.isChanged()) {
+                                 throw new Error('The model should become unchanged');
                               }
                               if (model.get('Фамилия') !== 'Петров') {
                                  throw new Error('The model contains wrong data');
@@ -527,8 +522,8 @@ define([
                      if (!model.isStored()) {
                         throw new Error('The model should become stored');
                      }
-                     if (!model.isChanged()) {
-                        throw new Error('The model should stay changed');
+                     if (model.isChanged()) {
+                        throw new Error('The model should become unchanged');
                      }
                      if (!model.getId()) {
                         throw new Error('The model should become having a id');
@@ -542,7 +537,8 @@ define([
                context('and the model was not stored', function () {
                   it('should create the model by 1st way', function (done) {
                      var service = new SbisService({
-                        resource: 'Товар'
+                        resource: 'Товар',
+                        idProperty: '@Ид'
                      });
                      service.create().addCallbacks(function (model) {
                         service.update(model).addCallbacks(function (success) {
@@ -557,7 +553,8 @@ define([
 
                   it('should create the model by 2nd way', function (done) {
                      var service = new SbisService({
-                           resource: 'Товар'
+                           resource: 'Товар',
+                           idProperty: '@Ид'
                         }),
                         model = getSampleModel();
 
@@ -702,7 +699,7 @@ define([
                      try {
                         var args = SbisBusinessLogic.lastRequest.args;
 
-                        if ($ws.helpers.type(args['ИдО']) != 'array' ||  args['ИдО'] != SbisBusinessLogic.existsId) {
+                        if ($ws.helpers.type(args['ИдО']) != 'array' || args['ИдО'] != SbisBusinessLogic.existsId) {
                            throw new Error('Wrong argument ИдО');
                         }
 
@@ -784,7 +781,7 @@ define([
                   service.destroy([SbisBusinessLogic.existsId + ',Товар', '987,Продукт']).addCallbacks(function (success) {
                      try {
                         var cfg = SbisBusinessLogic.lastRequest.cfg;
-                        if (cfg.name != 'Продукт') {
+                        if (cfg.resource != 'Продукт') {
                            throw new Error('Wrong service name');
                         }
 
@@ -861,6 +858,24 @@ define([
                         }
                         if (ds.getAll().getCount() !== 2) {
                            throw new Error('Wrong models count');
+                        }
+                        done();
+                     } catch (err) {
+                        done(err);
+                     }
+                  }, function (err) {
+                     done(err);
+                  });
+               });
+
+               it('should take idProperty for dataset  from raw data', function (done) {
+                  var service = new SbisService({
+                     resource: 'Товар'
+                  });
+                  service.query(new Query()).addCallbacks(function (ds) {
+                     try {
+                        if (ds.getIdProperty() !== '@Ид') {
+                           throw new Error('Wrong idProperty');
                         }
                         done();
                      } catch (err) {
@@ -1114,7 +1129,7 @@ define([
                               [5, true]
                            ],
                            s: [
-                              {'n': 'Ид', 't': 'Идентификатор'},
+                              {'n': '@Ид', 't': 'Идентификатор'},
                               {'n': 'Флаг', 't': 'Логическое'}
                            ]
                         }

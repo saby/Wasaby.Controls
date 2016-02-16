@@ -22,7 +22,7 @@ define('js!SBIS3.CONTROLS.ButtonGroupBaseDS', ['js!SBIS3.CORE.CompoundControl', 
             captionField : ''
          },
          /**
-          * Элементы были задаты в верстке
+          * Элементы были заданы в верстке
           */
          _hasItems: null
       },
@@ -40,12 +40,8 @@ define('js!SBIS3.CONTROLS.ButtonGroupBaseDS', ['js!SBIS3.CORE.CompoundControl', 
 
       init : function() {
          ButtonGroupBase.superclass.init.call(this);
-         //Если элементы были заданы в верстке (используем в CONTROLS.TabButtons), то не перезагружаем
-         if (this._hasItems) {
-            this._drawItemsCallback();
-         } else {
-            this.reload();
-         }
+         //чтобы items построить
+         this.reload();
       },
 
       setEnabled: function (enabled) {
@@ -56,6 +52,16 @@ define('js!SBIS3.CONTROLS.ButtonGroupBaseDS', ['js!SBIS3.CORE.CompoundControl', 
                itemsInstances[i].setEnabled(enabled);
             }
          }
+      },
+
+      //TODO заплатка из-за отрисовки на сервере
+      redraw: function(){
+         if ( ! this._hasItems) {
+            this._redraw();
+         } else {
+            this._drawItemsCallback();
+         }
+         this._hasItems = false;
       },
 
       _drawItemsCallback : function(){

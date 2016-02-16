@@ -79,6 +79,7 @@ define([
 
          describe('.$constructor()', function () {
             it('should take limited time', function() {
+               this.timeout(5000);
                if (window) window['console'].time('BatchCreating');
                for (var i = 0; i < 10000; i++) {
                   var item = {};

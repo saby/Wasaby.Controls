@@ -1,6 +1,6 @@
 /* global define, beforeEach, afterEach, describe, context, it, assert, $ws */
 define([
-      'js!SBIS3.CONTROLS.Data.Projection',
+      'js!SBIS3.CONTROLS.Data.Projection.Projection',
       'js!SBIS3.CONTROLS.Data.Projection.Collection',
       'js!SBIS3.CONTROLS.Data.Collection.ObservableList',
       'js!SBIS3.CONTROLS.Data.Collection.List',
@@ -227,6 +227,26 @@ define([
                   count++;
                });
                assert.equal(count, 1);
+            });
+
+            it('should filter projection after assign an items', function() {
+               var list = new ObservableList({
+                     items: getItems()
+                  }),
+                  filter = function(item){
+                     return item === 5 || item === 6;
+                  };
+               var projection = new CollectionProjection({
+                  collection: list
+               });
+               projection.setFilter(filter);
+               list.assign([4, 5, 6, 7]);
+               var count = 0;
+               projection.each(function(item){
+                  assert.equal(item.getContents(), 5 + count);
+                  count++;
+               });
+               assert.equal(count, 2);
             });
 
             it('should filter projection after add item', function() {

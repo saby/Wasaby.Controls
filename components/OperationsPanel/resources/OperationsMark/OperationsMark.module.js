@@ -3,8 +3,9 @@
  */
 define('js!SBIS3.CONTROLS.OperationsMark', [
    'js!SBIS3.CONTROLS.MenuLink',
-   'js!SBIS3.CONTROLS.CheckBox'
-], function(MenuLink, CheckBox) {
+   'js!SBIS3.CONTROLS.CheckBox',
+   'i18n!SBIS3.CONTROLS.OperationsMark'
+], function(MenuLink, CheckBox, rk) {
    /**
     * Операции выделения.
     *
@@ -29,6 +30,7 @@ define('js!SBIS3.CONTROLS.OperationsMark', [
               * <pre>
               *     <option name="caption">Операции отметки</option>
               * </pre>
+              * @translatable
               */
             caption: undefined,
             /**
@@ -50,9 +52,9 @@ define('js!SBIS3.CONTROLS.OperationsMark', [
               * @cfg {OperationsMarkItems[]} Операции отметки.
               */
             items: [
-               { name: 'selectCurrentPage', title: 'Всю страницу' },
-               { name: 'removeSelection', title: 'Снять' },
-               { name: 'invertSelection', title: 'Инвертировать' }
+               { name: 'selectCurrentPage', title: rk('Всю страницу') },
+               { name: 'removeSelection', title: rk('Снять') },
+               { name: 'invertSelection', title: rk('Инвертировать') }
             ],
             keyField: 'name'
          },
