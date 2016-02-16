@@ -1,0 +1,28 @@
+.controls-ListView__loading {
+   background: none repeat scroll 0 0 rgba(255, 255, 255, 0.7);
+   bottom: 0;
+   left: 0;
+   position: absolute;
+   right: 0;
+   top: 0;
+   z-index: 1;
+   
+   &:before {
+      background: @list-view-scroll-bg;
+      content: '';
+      display: block;
+      height: 36px;
+      left: 50%;
+      margin: -18px 0 0 -18px;
+      position: absolute;
+      top: 50%;
+      width: 36px;
+   }
+   
+   &-more {
+      bottom: auto;
+      height: 36px;
+      position: relative;
+      right: auto;
+   }
+}

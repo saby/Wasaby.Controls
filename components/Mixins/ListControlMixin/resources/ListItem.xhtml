@@ -1,0 +1,9 @@
+{{?it.item.containerTag}}
+    <{{=it.item.containerTag}} class="{{=it.item.containerClass}}" data-hash="{{=it.item.hash}}">
+{{?}}
+
+{{=it.item.template(it.item)}}
+
+{{?it.item.containerTag}}
+    </{{=it.item.containerTag}}>
+{{?}}
