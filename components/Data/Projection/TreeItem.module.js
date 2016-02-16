@@ -52,6 +52,9 @@ define('js!SBIS3.CONTROLS.Data.Projection.TreeItem', [
       },
 
       getRoot: function () {
+         if (this._options.parent === this) {
+            return;
+         }
          return this._options.parent ? this._options.parent.getRoot() : this;
       },
 
