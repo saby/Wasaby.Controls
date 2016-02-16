@@ -437,6 +437,7 @@ define('js!SBIS3.CONTROLS.ListView',
                this._getItemsContainer().bind('mousedown', this._dragStartHandler);
             }
             this.initEditInPlace();
+            this.setItemsDragNDrop(this._options.itemsDragNDrop);
             $ws.single.CommandDispatcher.declareCommand(this, 'activateItem', this._activateItem);
             $ws.single.CommandDispatcher.declareCommand(this, 'beginAdd', this._beginAdd);
             $ws.single.CommandDispatcher.declareCommand(this, 'beginEdit', this._beginEdit);
@@ -1671,6 +1672,16 @@ define('js!SBIS3.CONTROLS.ListView',
             }
          },
          /*DRAG_AND_DROP START*/
+         setItemsDragNDrop: function(allowDragNDrop) {
+            this._options.itemsDragNDrop = allowDragNDrop;
+            if (!this._dragStartHandler) {
+               this._dragStartHandler = this._onDragStart.bind(this);
+            }
+            this._getItemsContainer()[allowDragNDrop ? 'bind' : 'unbind']('mousedown', this._dragStartHandler);
+         },
+         getItemsDragNDrop: function() {
+            return this._options.itemsDragNDrop;
+         },
          _findDragDropContainer: function() {
             return this._getItemsContainer();
          },
