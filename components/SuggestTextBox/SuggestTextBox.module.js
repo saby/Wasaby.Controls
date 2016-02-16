@@ -17,11 +17,11 @@ define('js!SBIS3.CONTROLS.SuggestTextBox', [
     * @extends SBIS3.CONTROLS.TextBox
     * @mixes SBIS3.CONTROLS.PickerMixin
     * @mixes SBIS3.CONTROLS.SuggestMixin
+    * @mixes SBIS3.CONTROLS.ChooserMixin
     * @control
     * @public
     * @category Inputs
     * @demo SBIS3.CONTROLS.Demo.MySuggestTextBox Поле ввода с автодополнением
-    * @demo SBIS3.CONTROLS.Demo.MySuggestTextBoxDS Поле ввода с автодополнением, использующим DataSource
     * @author Алексей Мальцев
     */
    var SuggestTextBox = TextBox.extend([PickerMixin, SuggestMixin, ChooserMixin], /** @lends SBIS3.CONTROLS.SuggestTextBox.prototype */ {
