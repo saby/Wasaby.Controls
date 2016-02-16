@@ -86,6 +86,7 @@ define('js!SBIS3.CONTROLS.MergeDialogTemplate', [
                 rawData.s.push({n: COMMENT_FIELD_NAME, t: 'Строка'}, {n: AVAILABLE_FIELD_NAME, t: 'Логическое'});
                 self._treeView.setFilter({});
                 self._treeView.setDataSource(new MemorySource({
+                    idProperty: dataSource.getIdProperty(),
                     data: rawData,
                     adapter: new SbisAdapter()
                 }));
