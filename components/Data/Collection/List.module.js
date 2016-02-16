@@ -112,14 +112,17 @@ define('js!SBIS3.CONTROLS.Data.Collection.List', [
       assign: function (items) {
          this._items.length = 0;
          this._splice(items || [], 0, 0);
+         this._reindex();
       },
 
       append: function (items) {
          this._splice(items, this.getCount(), 0);
+         this._reindex();
       },
 
       prepend: function (items) {
          this._splice(items, 0, 0);
+         this._reindex();
       },
 
       clear: function () {
