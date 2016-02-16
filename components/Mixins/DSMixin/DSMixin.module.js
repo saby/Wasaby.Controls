@@ -87,6 +87,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
        * </pre>
        */
       $protected: {
+         _isDrawn: false,
          _itemsProjection: null,
          _items : null,
          _itemsInstances: {},
@@ -514,8 +515,8 @@ define('js!SBIS3.CONTROLS.DSMixin', [
                       self._itemsReadyCallback();
                       self._dataLoadedCallback();
                       self._notify('onDataLoad', list);
-                      self.redraw();
                    }
+                   self.redraw();
                    //self._notify('onBeforeRedraw');
                    return list;
                 }, self))
@@ -714,9 +715,11 @@ define('js!SBIS3.CONTROLS.DSMixin', [
 
          if (this._items) {
             this._clearItems();
+            this._isDrawn = false;
             records = this._getRecordsForRedraw();
             this._toggleEmptyData(!records.length && this._options.emptyHTML);
             this._drawItems(records);
+            this._isDrawn = true;
          }
       },
       _destroySearchBreadCrumbs: function(){
@@ -1095,7 +1098,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
          }
       },
       _isNeedToRedraw: function(){
-      	return !!this._getItemsContainer();
+      	return this._isDrawn && !!this._getItemsContainer();
       },
 
       _removeItem: function (item) {
@@ -1135,7 +1138,9 @@ define('js!SBIS3.CONTROLS.DSMixin', [
 
    var
       onCollectionItemChange = function(eventObject, item, index, property){
-         this._updateItem(item);
+         if (this._isNeedToRedraw()) {
+            this._updateItem(item);
+         }
       },
       /**
        * Обрабатывает событие об изменении коллекции
