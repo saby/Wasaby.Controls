@@ -57,7 +57,7 @@ define('js!SBIS3.CONTROLS.SelectorMixin', [],
 
             this._changeSelectionHandler = function (event, result) {
                if(!self._options.multiSelect) {
-                  self.close(result);
+                  self.close([result.item]);
                }
             };
 
@@ -78,7 +78,7 @@ define('js!SBIS3.CONTROLS.SelectorMixin', [],
          _toggleLinkedViewEvents: function(sub) {
             this._options.multiSelect ?
                this[sub ? 'subscribeOnceTo' : 'unsubscribeFrom'](this._linkedView, 'onDrawItems', this._linkedView.setSelectedKeys.bind(this._linkedView, this._options.currentSelectedKeys)) :
-               this[sub ? 'subscribeTo' : 'unsubscribeFrom'](this._linkedView, 'onSelectedItemsChange', this._changeSelectionHandler);
+               this[sub ? 'subscribeTo' : 'unsubscribeFrom'](this._linkedView, 'onItemActivate', this._changeSelectionHandler);
          },
 
          setLinkedView: function (linkedView) {
