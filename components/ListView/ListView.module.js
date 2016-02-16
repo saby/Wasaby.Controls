@@ -430,10 +430,6 @@ define('js!SBIS3.CONTROLS.ListView',
             this._container.on('mousemove', this._mouseMoveHandler.bind(this))
                            .on('mouseleave', this._mouseLeaveHandler.bind(this));
 
-            if (this._options.itemsDragNDrop) {
-               this._dragStartHandler = this._onDragStart.bind(this);
-               this._getItemsContainer().bind('mousedown', this._dragStartHandler);
-            }
             this.initEditInPlace();
             this.setItemsDragNDrop(this._options.itemsDragNDrop);
             $ws.single.CommandDispatcher.declareCommand(this, 'activateItem', this._activateItem);
