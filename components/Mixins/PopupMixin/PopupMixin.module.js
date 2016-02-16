@@ -191,12 +191,13 @@ define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManag
 
       _checkFixed: function(element){
          element = $(element);
-         if (element.parent().length){
+         while (element.parent().length){
             if (element.css('position') == 'fixed'){
                $(this._container).css({position : 'fixed'});
                this._fixed = true;
+               break;
             } else {
-               this._checkFixed(element.parent());
+               element = element.parent();
             }
          }
       },
@@ -226,8 +227,8 @@ define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManag
             this._initSizes();
             if (this._options.target) {
                var offset = {
-                     top: this._targetSizes.offset.top,
-                     left: this._targetSizes.offset.left
+                     top: this._fixed ? this._targetSizes.boundingClientRect.top : this._targetSizes.offset.top,
+                     left: this._fixed ? this._targetSizes.boundingClientRect.left : this._targetSizes.offset.left
                   },
                   buff = this._getGeneralOffset(this._options.verticalAlign.side, this._options.horizontalAlign.side, this._options.corner);
 
