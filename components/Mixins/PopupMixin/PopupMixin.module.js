@@ -124,6 +124,8 @@ define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManag
             'left': '-10000px'
          });
 
+         this._checkFixed(this._options.target || $('body'));
+
          //TODO: Придрот
          container.removeClass('ws-area');
          container.addClass('ws-hidden');
@@ -185,6 +187,18 @@ define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManag
          if (!visible){
            this.hide();
          }   
+      },
+
+      _checkFixed: function(element){
+         element = $(element);
+         if (element.parent().length){
+            if (element.css('position') == 'fixed'){
+               $(this._container).css({position : 'fixed'});
+               this._fixed = true;
+            } else {
+               this._checkFixed(element.parent());
+            }
+         }
       },
 
       /**
@@ -253,6 +267,7 @@ define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManag
        */
       setTarget: function (target) {
          this._options.target = target;
+         this._checkFixed(target);
          this._subscribeTargetMove();
          this.recalcPosition(true);
       },
@@ -420,12 +435,6 @@ define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManag
                border: (target.outerWidth() - target.innerWidth()) / 2,
                boundingClientRect: target.get(0).getBoundingClientRect()
             };
-            //сравнение boundingClientRect и offset позволяет увидеть лежит ли таргет в фиксированном контейнере (может быть где-то выше)
-            if (this._targetSizes.boundingClientRect.top != this._targetSizes.offset.top) { //таргет в фиксированном контейнере
-               this._targetSizes.offset.top = this._targetSizes.boundingClientRect.top;
-               this._fixed = true;
-               this._container.css('position', 'fixed'); //фиксируем выпадающую часть, если таргет был зафиксирован
-            }
          }
          this._containerSizes.border = (container.outerWidth() - container.innerWidth()) / 2;
          var buff = this._getGeneralOffset(this._defaultVerticalAlignSide, this._defaultHorizontalAlignSide, this._defaultCorner, true);
