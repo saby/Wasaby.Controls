@@ -118,19 +118,6 @@ define([
             items = undefined;
          });
 
-         describe('$constructor', function() {
-            it('should throw an error if option idProperty is not defined', function() {
-               assert.throw(function() {
-                  var tree = new Tree({
-                     collection: items
-                  });
-               });
-               assert.throw(function() {
-                  var tree = new Tree();
-               });
-            });
-         });
-
          describe('.getByHash()', function() {
             it('should return an item by hash', function() {
                tree.moveToNext();

@@ -43,10 +43,6 @@ define('js!SBIS3.CONTROLS.Data.Projection.Tree', [
       },
 
       $constructor: function () {
-         if (!this._options.idProperty) {
-            throw new Error(this._moduleName + ': option "idProperty" is required.');
-         }
-
          /*if ($ws.helpers.instanceOfMixin(this._options.collection, 'SBIS3.CONTROLS.Data.Collection.ISourceLoadable')) {
             this._itemModule = 'projection.loadable-tree-item';
          }*/
