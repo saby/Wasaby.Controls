@@ -498,6 +498,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
 
           if (this._dataSource) {
              this._toggleIndicator(true);
+             this._notify('onBeforeDataLoad');
              def = this._callQuery(this._options.filter, this.getSorting(), this._offset, this._limit)
                 .addCallback($ws.helpers.forAliveOnly(function (list) {
                    self._toggleIndicator(false);
@@ -548,8 +549,6 @@ define('js!SBIS3.CONTROLS.DSMixin', [
          if (!this._dataSource) {
             return;
          }
-         this._notify('onBeforeDataLoad');
-
          var query = new Query();
          query.where(filter)
             .offset(offset)
