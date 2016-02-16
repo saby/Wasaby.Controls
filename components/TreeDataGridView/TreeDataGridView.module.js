@@ -111,11 +111,11 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
          this._createFolderFooter(key);
       },
       _createFolderFooter: function(key) {
-         TreeDataGridView.superclass._createFolderFooter.apply(this, arguments);
-         var
-             container,
+         var container,
              lastContainer,
              level = this._getTreeLevel(key);
+
+         TreeDataGridView.superclass._createFolderFooter.apply(this, arguments);
          this._foldersFooters[key].css('padding-left', level * HIER_WRAPPER_WIDTH);
          container = $('<tr class="controls-TreeDataGridView__folderFooter" "data-parent"="' + key + '">\
             <td colspan="' + (this._options.columns.length + (this._options.multiselect ? 1 : 0)) + '"></td>\
@@ -125,6 +125,7 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
          lastContainer = $('.controls-ListView__item[data-parent="' + key + '"]', this._getItemsContainer().get(0)).last();
          this._foldersFooters[key].insertAfter(lastContainer.length ? lastContainer : $('.controls-ListView__item[data-id="' + key + '"]', this._getItemsContainer().get(0)));
          this.reviveComponents();
+         this._updateItemsToolbar();
       },
       _getFolderFooterOptions: function(key) {
          return {
@@ -222,6 +223,7 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
          }
          //Уничтожим все дочерние footer'ы и footer текущего узла
          this._destroyFolderFooter(childKeys.concat(key));
+         this._updateItemsToolbar();
       },
 
       _addItemAttributes : function(container, item) {
