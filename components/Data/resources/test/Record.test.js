@@ -435,6 +435,20 @@ define([
                assert.deepEqual(json.state._options, record._options);
                assert.deepEqual(json.state._changedFields, record._changedFields);
             });
+            it('should hide type signature in rawData', function () {
+               var record = new Record({
+                     rawData: {
+                        _type: 'record',
+                        s: [1],
+                        d: [2]
+                     }
+                  }),
+                  json = record.toJSON();
+               assert.isUndefined(json.state._options.rawData._type);
+               assert.strictEqual(json.state._options.rawData.$type, 'record');
+               assert.deepEqual(json.state._options.rawData.s, [1]);
+               assert.deepEqual(json.state._options.rawData.d, [2]);
+            });
          });
       });
    }

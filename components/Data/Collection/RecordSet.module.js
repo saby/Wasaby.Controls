@@ -577,6 +577,32 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
 
       //endregion SBIS3.CONTROLS.DataSet
 
+      // region SBIS3.CONTROLS.Data.SerializableMixin
+
+      _getSerializableState: function() {
+         var state = RecordSet.superclass._getSerializableState.call(this);
+
+         //Prevent core reviver for rawData
+         if (state._options && state._options.rawData && state._options.rawData._type) {
+            state._options.rawData.$type = state._options.rawData._type;
+            delete state._options.rawData._type;
+         }
+
+         return state;
+      },
+
+      _setSerializableState: function(state) {
+         return RecordSet.superclass._setSerializableState(state).callNext(function() {
+            //Restore value hidden from core reviver
+            if (this._options && this._options.rawData && this._options.rawData.$type) {
+               this._options.rawData._type = this._options.rawData.$type;
+               delete this._options.rawData.$type;
+            }
+         });
+      },
+
+      // endregion SBIS3.CONTROLS.Data.SerializableMixin
+
       //region SBIS3.CONTROLS.Data.Collection.List
 
       clear: function () {

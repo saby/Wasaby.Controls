@@ -337,6 +337,30 @@ define([
 
             });
          });
+
+         describe('.toJSON()', function () {
+            it('should serialize a RecordSet', function () {
+               var json = rs.toJSON();
+               assert.strictEqual(json.module, 'SBIS3.CONTROLS.Data.Collection.RecordSet');
+               assert.isNumber(json.id);
+               assert.isTrue(json.id > 0);
+               assert.deepEqual(json.state._options, rs._options);
+            });
+            it('should hide type signature in rawData', function () {
+               var rs = new RecordSet({
+                     rawData: {
+                        _type: 'recordset',
+                        s: [1],
+                        d: [2]
+                     }
+                  }),
+                  json = rs.toJSON();
+               assert.isUndefined(json.state._options.rawData._type);
+               assert.strictEqual(json.state._options.rawData.$type, 'recordset');
+               assert.deepEqual(json.state._options.rawData.s, [1]);
+               assert.deepEqual(json.state._options.rawData.d, [2]);
+            });
+         });
       });
    }
 );
