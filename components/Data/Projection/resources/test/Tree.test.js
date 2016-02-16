@@ -389,7 +389,7 @@ define([
          });
 
          describe('[onCollectionChange]', function() {
-            /*it('should fire with all of children add a node', function(done) {
+            it('should fire with all of children add a node', function(done) {
                var tree = getObservableTree(),
                   expect = ['D', 'DA', 'DB', 'DBA', 'DC'],
                   handler = function(event, action, newItems, newItemsIndex, oldItems, oldItemsIndex) {
@@ -433,7 +433,7 @@ define([
                   title: 'E'
                });
                tree.unsubscribe('onCollectionChange', handler);
-            });*/
+            });
             it('should fire with all of children after remove a node', function(done) {
                var tree = getObservableTree(),
                   expect = ['A', 'AA', 'AB', 'AC', 'ACA', 'ACB', 'ACC'],

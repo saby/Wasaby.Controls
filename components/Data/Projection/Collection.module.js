@@ -542,7 +542,7 @@ define('js!SBIS3.CONTROLS.Data.Projection.Collection', [
                   oldSortMap.splice(newIndex + (oldIndex > newIndex ? 0 : 1), 0, sourceIndex);
                }
 
-               if (oldIndex === -1) {
+               if (oldIndex === -1 && sourceIndex !== undefined) {
                   //раньше такого элемента не было
                   this._notifyCollectionChange(
                      IBindCollectionProjection.ACTION_ADD,
@@ -551,16 +551,7 @@ define('js!SBIS3.CONTROLS.Data.Projection.Collection', [
                      [],
                      0
                   );
-               } else if (sourceIndex === undefined) {
-                  //элементы был и исчез
-                  this._notifyCollectionChange(
-                     IBindCollectionProjection.ACTION_REMOVE,
-                     [],
-                     0,
-                     [this._items[sourceIndex]],
-                     oldIndex
-                  );
-               } else {
+               } else if(oldIndex !== -1 && sourceIndex !== undefined) {
                   //элементы был перемещен
                   this._notifyCollectionChange(
                      IBindCollectionProjection.ACTION_MOVE,
