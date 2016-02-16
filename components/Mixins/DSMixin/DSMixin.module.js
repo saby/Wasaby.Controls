@@ -1107,8 +1107,6 @@ define('js!SBIS3.CONTROLS.DSMixin', [
          if (container.length) {
             this._clearItems(container);
             container.remove();
-         } else {
-            $ws.single.ioc.resolve('ILogger').error('SBIS3.CONTROLS.DSMixin::removeItem()', 'Item is not found');
          }
       },
 
@@ -1122,8 +1120,6 @@ define('js!SBIS3.CONTROLS.DSMixin', [
             this._addItemAttributes(newItemContainer, item);
             this._clearItems(container);
             container.replaceWith(newItemContainer);
-         } else {
-            $ws.single.ioc.resolve('ILogger').error('SBIS3.CONTROLS.DSMixin::updateItem()', 'Item at this position is not found');
          }
       },
 
