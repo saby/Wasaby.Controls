@@ -175,6 +175,7 @@ define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManag
       },
 
       _onTargetMove: function(){
+         // Если fixed не надо двигаться за таргетом
          if (this.isVisible() && !this._fixed) {
             this.recalcPosition();
             this._checkTargetPosition();
@@ -247,10 +248,6 @@ define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManag
                offset.left += sign * (this._margins.left - this._margins.right + (this._options.horizontalAlign.offset || 0));
 
                this._notifyOnAlignmentChange();
-
-               if (this._fixed){
-                  offset.left -= this._targetSizes.offset.left - this._targetSizes.boundingClientRect.left;
-               }
 
                this._container.css({
                   'top': offset.top + 'px',
@@ -402,6 +399,7 @@ define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManag
          //Таймаут для того что бы не пересчитывать размеры пока меняется размер окна,
          //а перестчитать только один раз, когда размер меняться перестанет.
          this._resizeTimeout = setTimeout(function() {
+            // Если fixed то при ресайзе положение пересчитывать не надо - оно неизменно
             if (self.isVisible() && !self._fixed) {
                self.recalcPosition(false);
             } else {
