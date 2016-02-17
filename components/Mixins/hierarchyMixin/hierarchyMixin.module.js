@@ -168,7 +168,6 @@ define('js!SBIS3.CONTROLS.hierarchyMixin', [], function () {
             }
             if (this._previousRoot !== this._curRoot) {
                this._previousRoot = this._curRoot;
-               this._scrollTo(this.getContainer());
                this._notify('onSetRoot', this._curRoot, hierarchy);
                this._rootChanged = false;
             }
