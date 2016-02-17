@@ -7,6 +7,7 @@ define('js!SBIS3.CONTROLS.SuggestShowAll',
        'js!SBIS3.CONTROLS.DataGridView'
     ], function (CompoundControl, dotTplFn) {
 
+       var optionsToSet = ['columns', 'itemTemplate', 'filter', 'keyField'];
        /**
         * SBIS3.CORE.SuggestShowAll
         * @extends $ws.proto.CompoundControl
@@ -33,7 +34,9 @@ define('js!SBIS3.CONTROLS.SuggestShowAll',
              var list = this.getParent().getOpener().getList(),
                  view = this.getChildControlByName('controls-showAllView');
 
-             view.setProperties(list._options);
+             $ws.helpers.forEach(optionsToSet, function(opt) {
+                view.setProperty(opt, list.getProperty(opt));
+             });
              view.setDataSource(list.getDataSource());
 
           }
