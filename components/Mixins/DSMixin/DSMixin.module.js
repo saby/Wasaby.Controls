@@ -1046,6 +1046,9 @@ define('js!SBIS3.CONTROLS.DSMixin', [
          //Если offset отрицательный, значит запрашивали последнюю страницу
          return offset < 0 ? false : (typeof (hasMore) !== 'boolean' ? hasMore > (offset + this._options.pageSize) : !!hasMore);
       },
+      _scrollToItem: function(itemId) {
+         $(".controls-ListView__item[data-id='" + itemId + "']", this._getItemsContainer()).attr('tabindex', '-1').focus();
+      },
       /**
        * Установить что отображается при отсутствии записей.
        * @param html Содержимое блока.
