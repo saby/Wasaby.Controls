@@ -1292,14 +1292,6 @@ define('js!SBIS3.CONTROLS.ListView',
          _isAllowInfiniteScroll : function(){
             return this._allowInfiniteScroll;
          },
-         _scrollTo: function (container) {
-            var containerOffset = $(container).offset(),
-               body = $('body'),
-               needScroll = (body.scrollTop() >= containerOffset.top) || (containerOffset.top - body.scrollTop()) > $ws._const.$win.height() / 2;
-            if (needScroll) {
-               window.scrollTo(window.scrollX, containerOffset.top);
-            }
-         },
          /**
           * Функция догрузки данных пока не появится скролл.Если появился и мы грузили и дорисовывали вверх, нужно поуправлять скроллом.
           * @private
