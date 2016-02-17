@@ -5,8 +5,8 @@ define([
       'js!SBIS3.CONTROLS.Data.Bind.ICollection',
       'js!SBIS3.CONTROLS.Data.Model',
       'js!SBIS3.CONTROLS.Data.Source.Memory',
-      'js!SBIS3.CONTROLS.Data.Adapter.Json'
-   ], function (RecordSet, List, IBindCollection, Model, MemorySource, JsonAdapter) {
+      'js!SBIS3.CONTROLS.Data.Adapter.Sbis'
+   ], function (RecordSet, List, IBindCollection, Model, MemorySource, AdapterSbis) {
       'use strict';
 
       describe('SBIS3.CONTROLS.Data.Collection.RecordSet', function() {
@@ -94,6 +94,34 @@ define([
                   window.console.log('RecordSet batch creating: ' + [mine, native, rel].join(', '));
                }
                assert.isBelow(rel, 5);
+            });
+            it('should get adapter in strategy', function (){
+               var rs = new RecordSet({
+                  strategy: new AdapterSbis(),
+                  rawData: {
+                     d: [
+                        [1, 'Иванов'],
+                        [2, 'Петров'],
+                        [3, 'Сидоров'],
+                        [4, 'Пухов'],
+                        [5, 'Молодцов'],
+                        [6, 'Годолцов'],
+                        [7, 'Арбузнов']
+                     ],
+                     s: [
+                        {'n': 'Ид', 't': 'Число целое'},
+                        {'n': 'Фамилия', 't': 'Строка'}
+                     ]
+                  }
+               });
+               assert.equal(rs.at(1).get('Ид'), 2);
+            });
+
+            it('should get adapter in strategy', function (){
+               var rs = new RecordSet({
+                  items: getItems()
+               });
+               assert.equal(rs.at(1).get('Ид'), 2);
             });
          });
 
