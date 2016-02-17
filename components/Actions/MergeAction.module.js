@@ -62,6 +62,7 @@ define('js!SBIS3.CONTROLS.MergeAction', [
              queryMethodName: this._options.queryMethodName,
              hierField: this._options.hierField,
              dataSource: this._options.dataSource,
+             keyField: this._options.dataSource.getIdProperty(),
              testMergeMethodName: this._options.testMergeMethodName
           });
        }
