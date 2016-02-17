@@ -323,8 +323,11 @@ define('js!SBIS3.CONTROLS.Data.Projection.Collection', [
          if (this._filter === filter) {
             return;
          }
+         
+         var session = this._startUpdateSession();
          this._filter = filter;
          this._reFilter();
+         this._finishUpdateSession(session);
       },
 
       getGroup: function () {
@@ -359,7 +362,9 @@ define('js!SBIS3.CONTROLS.Data.Projection.Collection', [
             return typeof item === 'function';
          });
 
+         var session = this._startUpdateSession();
          this._reSort();
+         this._finishUpdateSession(session);
       },
 
       //endregion SBIS3.CONTROLS.Data.Projection.ICollection
@@ -528,15 +533,18 @@ define('js!SBIS3.CONTROLS.Data.Projection.Collection', [
        * @protected
        */
       _startUpdateSession: function () {
-         var enumerator = this._getEnumerator(true),
+         //Индексируем состояние элементов до изменений
+         var enumerator = this._getServiceEnumerator(),
             items = [],
+            contents = [],
             item;
          while ((item = enumerator.getNext())) {
-            items.push(item.getContents());
+            items.push(item);
+            contents.push(item.getContents());
          }
          return {
-            before: enumerator,
-            beforeItems: items
+            before: items,
+            beforeContents: contents
          };
       },
 
@@ -546,39 +554,35 @@ define('js!SBIS3.CONTROLS.Data.Projection.Collection', [
        * @protected
        */
       _finishUpdateSession: function (session) {
-         var afterIndex,//индекс элемента после изменений
-            afterItem,//элемент после изменений
-            beforeIndex,//индекс элемента до изменений
-            beforeItem,//элемент до изменений
-            hash;//хэш
-
-         //Индексируем состояние элементов до изменений
-         var before = [],
-            beforeContents = [];//содержимое элемента до изменений
-         session.before.reset();
-         while ((beforeItem = session.before.getNext())) {
-            before.push(beforeItem);
-            beforeContents.push(beforeItem.getContents());
-         }
+         var enumerator = this._getServiceEnumerator(),
+            afterItem;
 
          //Индексируем состояние элементов после изменений
-         session.after = this._getServiceEnumerator();
-         session.after.reIndex();
-         session.after.reset();
-         var after = [];
-         while ((afterItem = session.after.getNext())) {
-            after.push(afterItem);
+         enumerator.reIndex();
+         enumerator.reset();
+         session.after = [];
+         while ((afterItem = enumerator.getNext())) {
+            session.after.push(afterItem);
          }
 
-         var groups = ['added', 'removed', 'replaced', 'moved'],//группы изменений
-            groupName,//имя группы изменений
-            changes;//изменения в группе
+         var groups = ['added', 'removed', 'replaced', 'moved'],
+            changes;
 
-         //Информируем об изменениях по группам изменений
+         //Информируем об изменениях по группам
          for (var groupIndex = 0; groupIndex < groups.length; groupIndex++) {
-            groupName = groups[groupIndex];
-            changes = this._getGroupChanges(groupName, before, after, beforeContents);
-            this._applyGroupChanges(groupName, changes, before, after, beforeContents);
+            changes = this._getGroupChanges(
+               groups[groupIndex],
+               session.before,
+               session.after,
+               session.beforeContents
+            );
+            this._applyGroupChanges(
+               groups[groupIndex],
+               changes,
+               session.before,
+               session.after,
+               session.beforeContents
+            );
          }
       },
 
@@ -587,24 +591,28 @@ define('js!SBIS3.CONTROLS.Data.Projection.Collection', [
        * @param {String} groupName Название группы
        * @param {Array.<SBIS3.CONTROLS.Data.Projection.CollectionItem>} before Элементы до изменений
        * @param {Array.<SBIS3.CONTROLS.Data.Projection.CollectionItem>} after Элементы после изменений
-       * @param {Array.<*>} beforeContents Содержиоме элементов до изменений
+       * @param {Array.<*>} beforeContents Содержимое элементов до изменений
        * @return {Object}
        * @protected
        */
       _getGroupChanges: function (groupName, before, after, beforeContents) {
-         var newItems = [];
-         var newItemsIndex = 0;
-         var oldItems = [];
-         var oldItemsIndex = 0;
-         var beforeItem;
-         var afterItem;
-         var afterIndex;
-         var beforeIndex;
-         for (var index = 0, count = Math.max(before.length, after.length); index < count; index++) {
+         var newItems = [],
+            newItemsIndex = 0,
+            oldItems = [],
+            oldItemsIndex = 0,
+            beforeItem,//элемент до изменений
+            beforeIndex,//индекс элемента до изменений
+            afterItem,//элемент после изменений
+            afterIndex,//индекс элемента после изменений
+            index,
+            count = Math.max(before.length, after.length);
+         
+         for (index = 0; index < count; index++) {
             beforeItem = before[index];
             afterItem = after[index];
             switch(groupName) {
                case 'added':
+                  //собираем добавленные элементы
                   if (!afterItem) {
                      continue;
                   }
@@ -616,6 +624,7 @@ define('js!SBIS3.CONTROLS.Data.Projection.Collection', [
                   }
                   break;
                case 'removed':
+                  //собираем удаленные элементы
                   if (!beforeItem) {
                      continue;
                   }
@@ -627,18 +636,20 @@ define('js!SBIS3.CONTROLS.Data.Projection.Collection', [
                   }
                   break;
                case 'replaced':
+                  //собираем замененные элементы
                   if (!afterItem) {
                      continue;
                   }
                   afterIndex = index;
                   beforeIndex = Array.indexOf(before, afterItem);
                   if (beforeIndex === afterIndex && beforeContents[index] !== afterItem.getContents()) {
-                     oldItems.push(beforeItem);
+                     oldItems.push(this._convertToItem(beforeContents[index], index));
                      newItems.push(afterItem);
                      oldItemsIndex = newItemsIndex = oldItems.length === 1 ? beforeIndex : oldItemsIndex;
                   }
                   break;
                case 'moved':
+                  //собираем перемещенные элементы
                   if (!beforeItem) {
                      continue;
                   }
@@ -696,6 +707,7 @@ define('js!SBIS3.CONTROLS.Data.Projection.Collection', [
                changes.oldItems,
                changes.oldItemsIndex
             );
+            
             switch (groupName) {
                case 'added':
                   Array.prototype.splice.apply(before, [changes.newItemsIndex, 0].concat(changes.newItems));
@@ -1005,8 +1017,7 @@ define('js!SBIS3.CONTROLS.Data.Projection.Collection', [
        * @private
        */
       onSourceCollectionChange: function (event, action, newItems, newItemsIndex, oldItems, oldItemsIndex) {
-         var enumerator = this._getServiceEnumerator(),
-            session = this._startUpdateSession();
+         var session = this._startUpdateSession();
 
          switch (action) {
             case IBindCollectionProjection.ACTION_ADD:
@@ -1046,7 +1057,7 @@ define('js!SBIS3.CONTROLS.Data.Projection.Collection', [
                this._reBuild();
                this._reFilter(newItemsIndex, newItems.length);
                newItems = this._getItemsProjection(newItems, newItemsIndex);
-               enumerator.reIndex();
+               this._getServiceEnumerator().reIndex();
                //notifyStandard.call(this);
                break;
          }
