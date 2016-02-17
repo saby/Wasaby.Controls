@@ -1660,16 +1660,6 @@ define('js!SBIS3.CONTROLS.ListView',
             }
             this._ladderCompare(rows);
          },
-         _ladderCompare: function(rows){
-            //TODO придрот - метод нужен только для адекватной работы лесенки при перемещении элементов местами
-            for (var i = 1; i < rows.length; i++){
-               var upperRow = $('.controls-ladder', rows[i - 1]),
-                  lowerRow = $('.controls-ladder', rows[i]);
-               for (var j = 0; j < lowerRow.length; j++){
-                  lowerRow.eq(j).toggleClass('ws-invisible', upperRow.eq(j).html() == lowerRow.eq(j).html());
-               }
-            }
-         },
          /*DRAG_AND_DROP START*/
          _findDragDropContainer: function() {
             return this._getItemsContainer();
