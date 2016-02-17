@@ -109,6 +109,7 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
          this._drawExpandArrow(key);
          this._drawItemsFolder(records);
          this._createFolderFooter(key);
+         this._updateItemsToolbar();
       },
       _createFolderFooter: function(key) {
          var container,
@@ -125,7 +126,6 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
          lastContainer = $('.controls-ListView__item[data-parent="' + key + '"]', this._getItemsContainer().get(0)).last();
          this._foldersFooters[key].insertAfter(lastContainer.length ? lastContainer : $('.controls-ListView__item[data-id="' + key + '"]', this._getItemsContainer().get(0)));
          this.reviveComponents();
-         this._updateItemsToolbar();
       },
       _getFolderFooterOptions: function(key) {
          return {
@@ -223,7 +223,6 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
          }
          //Уничтожим все дочерние footer'ы и footer текущего узла
          this._destroyFolderFooter(childKeys.concat(key));
-         this._updateItemsToolbar();
       },
 
       _addItemAttributes : function(container, item) {
