@@ -566,23 +566,29 @@ define('js!SBIS3.CONTROLS.Data.Projection.Collection', [
          }
 
          var groups = ['added', 'removed', 'replaced', 'moved'],
-            changes;
+            changes,
+            startFrom;
 
          //Информируем об изменениях по группам
          for (var groupIndex = 0; groupIndex < groups.length; groupIndex++) {
-            changes = this._getGroupChanges(
-               groups[groupIndex],
-               session.before,
-               session.after,
-               session.beforeContents
-            );
-            this._applyGroupChanges(
-               groups[groupIndex],
-               changes,
-               session.before,
-               session.after,
-               session.beforeContents
-            );
+            startFrom = 0;
+            while(startFrom !== -1) {
+               changes = this._getGroupChanges(
+                  groups[groupIndex],
+                  session.before,
+                  session.after,
+                  session.beforeContents,
+                  startFrom
+               );
+               this._applyGroupChanges(
+                  groups[groupIndex],
+                  changes,
+                  session.before,
+                  session.after,
+                  session.beforeContents
+               );
+               startFrom = changes.endAt;
+            }
          }
       },
 
@@ -592,10 +598,11 @@ define('js!SBIS3.CONTROLS.Data.Projection.Collection', [
        * @param {Array.<SBIS3.CONTROLS.Data.Projection.CollectionItem>} before Элементы до изменений
        * @param {Array.<SBIS3.CONTROLS.Data.Projection.CollectionItem>} after Элементы после изменений
        * @param {Array.<*>} beforeContents Содержимое элементов до изменений
+       * @param {Naumber} [startFrom=0] Начать с элемента номер
        * @return {Object}
        * @protected
        */
-      _getGroupChanges: function (groupName, before, after, beforeContents) {
+      _getGroupChanges: function (groupName, before, after, beforeContents, startFrom) {
          var newItems = [],
             newItemsIndex = 0,
             oldItems = [],
@@ -604,10 +611,12 @@ define('js!SBIS3.CONTROLS.Data.Projection.Collection', [
             beforeIndex,//индекс элемента до изменений
             afterItem,//элемент после изменений
             afterIndex,//индекс элемента после изменений
+            exit = false,
             index,
             count = Math.max(before.length, after.length);
          
-         for (index = 0; index < count; index++) {
+         startFrom = startFrom || 0;
+         for (index = startFrom; index < count; index++) {
             beforeItem = before[index];
             afterItem = after[index];
             switch(groupName) {
@@ -619,8 +628,12 @@ define('js!SBIS3.CONTROLS.Data.Projection.Collection', [
                   afterIndex = index;
                   beforeIndex = Array.indexOf(before, afterItem);
                   if (beforeIndex === -1) {
-                     newItems.push(afterItem);
-                     newItemsIndex = newItems.length === 1 ? afterIndex : newItemsIndex;
+                     if (newItems.length && afterIndex > newItemsIndex + newItems.length) {
+                        exit = true;
+                     } else {
+                        newItems.push(afterItem);
+                        newItemsIndex = newItems.length === 1 ? afterIndex : newItemsIndex;
+                     }
                   }
                   break;
                case 'removed':
@@ -631,8 +644,12 @@ define('js!SBIS3.CONTROLS.Data.Projection.Collection', [
                   beforeIndex = index;
                   afterIndex = Array.indexOf(after, beforeItem);
                   if (afterIndex === -1) {
-                     oldItems.push(beforeItem);
-                     oldItemsIndex = oldItems.length === 1 ? beforeIndex : oldItemsIndex;
+                     if (oldItems.length && beforeIndex > oldItemsIndex + oldItems.length) {
+                        exit = true;
+                     } else {
+                        oldItems.push(beforeItem);
+                        oldItemsIndex = oldItems.length === 1 ? beforeIndex : oldItemsIndex;
+                     }
                   }
                   break;
                case 'replaced':
@@ -643,9 +660,13 @@ define('js!SBIS3.CONTROLS.Data.Projection.Collection', [
                   afterIndex = index;
                   beforeIndex = Array.indexOf(before, afterItem);
                   if (beforeIndex === afterIndex && beforeContents[index] !== afterItem.getContents()) {
-                     oldItems.push(this._convertToItem(beforeContents[index], index));
-                     newItems.push(afterItem);
-                     oldItemsIndex = newItemsIndex = oldItems.length === 1 ? beforeIndex : oldItemsIndex;
+                     if (newItems.length && afterIndex > newItemsIndex + newItems.length) {
+                        exit = true;
+                     } else {
+                        oldItems.push(this._convertToItem(beforeContents[index], index));
+                        newItems.push(afterItem);
+                        oldItemsIndex = newItemsIndex = oldItems.length === 1 ? beforeIndex : oldItemsIndex;
+                     }
                   }
                   break;
                case 'moved':
@@ -656,12 +677,19 @@ define('js!SBIS3.CONTROLS.Data.Projection.Collection', [
                   beforeIndex = index;
                   afterIndex = Array.indexOf(after, beforeItem);
                   if (afterIndex !== -1 && beforeIndex !== afterIndex) {
-                     oldItems.push(beforeItem);
-                     oldItemsIndex = oldItems.length === 1 ? beforeIndex : oldItemsIndex;
-                     newItems.push(afterItem);
-                     newItemsIndex = newItems.length === 1 ? afterIndex : newItemsIndex;
+                     if (oldItems.length && beforeIndex > oldItemsIndex + oldItems.length) {
+                        exit = true;
+                     } else {
+                        oldItems.push(beforeItem);
+                        oldItemsIndex = oldItems.length === 1 ? beforeIndex : oldItemsIndex;
+                        newItems.push(afterItem);
+                        newItemsIndex = newItems.length === 1 ? afterIndex : newItemsIndex;
+                     }
                   }
                   break;
+            }
+            if (exit) {
+               break;
             }
          }
 
@@ -669,7 +697,8 @@ define('js!SBIS3.CONTROLS.Data.Projection.Collection', [
             newItems: newItems,
             newItemsIndex: newItemsIndex,
             oldItems: oldItems,
-            oldItemsIndex: oldItemsIndex
+            oldItemsIndex: oldItemsIndex,
+            endAt: exit ? index : -1
          };
       },
 
@@ -714,10 +743,16 @@ define('js!SBIS3.CONTROLS.Data.Projection.Collection', [
                   Array.prototype.splice.apply(beforeContents, [changes.newItemsIndex, 0].concat($ws.helpers.map(changes.newItems, function(item) {
                      return item.getContents();
                   })));
+                  if (changes.endAt !== -1) {
+                     changes.endAt += changes.newItems.length
+                  }
                   break;
                case 'removed':
                   before.splice(changes.oldItemsIndex, changes.oldItems.length);
                   beforeContents.splice(changes.oldItemsIndex, changes.oldItems.length);
+                  if (changes.endAt !== -1) {
+                     changes.endAt -= changes.oldItems.length
+                  }
                   break;
                case 'replaced':
                   Array.prototype.splice.apply(before, [changes.oldItemsIndex, changes.oldItems.length].concat(changes.newItems));
