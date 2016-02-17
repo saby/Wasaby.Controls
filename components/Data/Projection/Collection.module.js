@@ -528,8 +528,15 @@ define('js!SBIS3.CONTROLS.Data.Projection.Collection', [
        * @protected
        */
       _startUpdateSession: function () {
+         var enumerator = this._getEnumerator(true),
+            items = [],
+            item;
+         while ((item = enumerator.getNext())) {
+            items.push(item.getContents());
+         }
          return {
-            before: this._getEnumerator(true)
+            before: enumerator,
+            beforeItems: items
          };
       },
 
@@ -539,133 +546,172 @@ define('js!SBIS3.CONTROLS.Data.Projection.Collection', [
        * @protected
        */
       _finishUpdateSession: function (session) {
+         var afterIndex,//индекс элемента после изменений
+            afterItem,//элемент после изменений
+            beforeIndex,//индекс элемента до изменений
+            beforeItem,//элемент до изменений
+            hash;//хэш
+
+         //Индексируем состояние элементов до изменений
+         var before = [],
+            beforeContents = [];//содержимое элемента до изменений
          session.before.reset();
-
-         session.now = this._getServiceEnumerator();
-         session.now.reIndex();
-         session.now.reset();
-
-         var changes = {
-               added: [],
-               removed: [],
-               replaced: [],
-               moved: []
-            },
-            nowIndex,
-            nowItem,
-            beforeItems = {},
-            beforeIndex,
-            beforeItem,
-            hash;
-
-         beforeIndex = 0;
          while ((beforeItem = session.before.getNext())) {
-            beforeItems[beforeItem.getHash()] = [beforeIndex, beforeItem];
-            beforeIndex++;
+            before.push(beforeItem);
+            beforeContents.push(beforeItem.getContents());
          }
 
-         nowIndex = 0;
-         while ((nowItem = session.now.getNext())) {
-            hash = nowItem.getHash();
-            if (beforeItems.hasOwnProperty(hash)) {
-               beforeIndex = beforeItems[hash][0];
-               beforeItem = beforeItems[hash][1];
-               delete beforeItems[hash];
-            } else {
-               beforeIndex = -1;
-               beforeItem = undefined;
-            }
+         //Индексируем состояние элементов после изменений
+         session.after = this._getServiceEnumerator();
+         session.after.reIndex();
+         session.after.reset();
+         var after = [];
+         while ((afterItem = session.after.getNext())) {
+            after.push(afterItem);
+         }
 
-            if (beforeItem) {
-               if (nowIndex === beforeIndex) {
-                  if (nowItem.getContents() !== beforeItem.getContents()) {
-                     changes.replaced.push([nowIndex, nowItem, beforeIndex, beforeItem]);
-                  }
-               } else {
-                  changes.moved.push([nowIndex, nowItem, beforeIndex, beforeItem]);
+         var groups = ['added', 'removed', 'replaced', 'moved'],//группы изменений
+            groupName,//имя группы изменений
+            action,//действие, соответствующее группе
+            newItems,
+            newItemsIndex,
+            oldItems,
+            oldItemsIndex;
+
+         //Информируем об изменениях по группам изменений
+         for (var groupIndex = 0; groupIndex < groups.length; groupIndex++) {
+            groupName = groups[groupIndex];
+            newItems = [];
+            newItemsIndex = 0;
+            oldItems = [];
+            oldItemsIndex = 0;
+
+            if (newItems.length || oldItems.length) {
+               switch(groupName) {
+                  case 'added':
+                     action = IBindCollectionProjection.ACTION_ADD;
+                     break;
+                  case 'removed':
+                     action = IBindCollectionProjection.ACTION_REMOVE;
+                     break;
+                  case 'replaced':
+                     action = IBindCollectionProjection.ACTION_REPLACE;
+                     break;
+                  case 'moved':
+                     action = IBindCollectionProjection.ACTION_MOVE;
+                     break;
                }
-            } else {
-               changes.added.push([nowIndex, nowItem]);
-            }
-
-            nowIndex++;
-         }
-
-         for (hash in beforeItems) {
-            if (beforeItems.hasOwnProperty(hash)) {
-               changes.removed[beforeItems[hash][0]] = [undefined, undefined, beforeIndex, beforeItem];
-            }
-         }
-
-         var groups = ['added'],
-            groupName,
-            group,
-            packBegin,
-            index,
-            prevIndex,
-            count,
-            action,
-            newItemsIndexBegin,
-            newItemsIndexEnd,
-            oldItemsIndexBegin,
-            oldItemsIndexEnd;
-
-         for (var i = 0; i < groups.length; i++) {
-            groupName = groups[i];
-            group = changes[groupName];
-            packBegin = 0;
-            prevIndex = -1;
-            for (index = 0, count = group.length; index < count; index++) {
-               nowIndex = group[index][0];
-               nowItem = group[index][1];
-               beforeIndex = group[index][2];
-               beforeItem = group[index][3];
-
-               if ((prevIndex > -1 && nowIndex - prevIndex > 1) || index === count - 1) {
-                  switch(groupName) {
-                     case 'added':
-                        action = IBindCollectionProjection.ACTION_ADD;
-                        newItemsIndexBegin = packBegin;
-                        newItemsIndexEnd = 1 + nowIndex;
-                        oldItemsIndexBegin = 0;
-                        oldItemsIndexEnd = 0;
-                        break;
-                     case 'removed':
-                        action = IBindCollectionProjection.ACTION_REMOVE;
-                        newItemsIndexBegin = 0;
-                        newItemsIndexEnd = 0;
-                        oldItemsIndexBegin = packBegin;
-                        oldItemsIndexEnd = 1 + nowIndex;
-                        break;
-                     case 'replaced':
-                        action = IBindCollectionProjection.ACTION_REPLACE;
-                        newItemsIndexBegin = oldItemsIndexBegin = packBegin;
-                        newItemsIndexEnd = oldItemsIndexEnd = 1 + nowIndex;
-                        break;
-                     case 'moved':
-                        action = IBindCollectionProjection.ACTION_MOVE;
-                        newItemsIndexBegin = packBegin;
-                        newItemsIndexEnd = 1 + nowIndex;
-                        oldItemsIndexBegin = 0;
-                        oldItemsIndexEnd = 0;
-                        break;
-                  }
-                  this._notifyCollectionChange(
-                     action,
-                     $ws.helpers.map(group.slice(newItemsIndexBegin, newItemsIndexEnd), function(item) {
-                        return item[1];
-                     }, this),
-                     newItemsIndexBegin,
-                     $ws.helpers.map(group.slice(oldItemsIndexBegin, oldItemsIndexEnd), function(item) {
-                        return item[2];
-                     }, this),
-                     oldItemsIndexBegin
-                  );
-                  packBegin = nowIndex;
+               this._notifyCollectionChange(
+                  action,
+                  newItems,
+                  newItemsIndex,
+                  oldItems,
+                  oldItemsIndex
+               );
+               switch (groupName) {
+                  case 'added':
+                     Array.prototype.splice.apply(before, [newItemsIndex, 0].concat(newItems));
+                     Array.prototype.splice.apply(beforeContents, [newItemsIndex, 0].concat($ws.helpers.map(newItems, function(item) {
+                        return item.getContents();
+                     })));
+                     break;
+                  case 'removed':
+                     before.splice(oldItemsIndex, oldItems.length);
+                     beforeContents.splice(oldItemsIndex, oldItems.length);
+                     break;
+                  case 'replaced':
+                     Array.prototype.splice.apply(before, [oldItemsIndex, oldItems.length].concat(newItems));
+                     Array.prototype.splice.apply(beforeContents, [oldItemsIndex, oldItems.length].concat($ws.helpers.map(newItems, function(item) {
+                        return item.getContents();
+                     })));
+                     break;
+                  case 'moved':
+                     before.splice(oldItemsIndex, oldItems.length);
+                     Array.prototype.splice.apply(before, [newItemsIndex, 0].concat(newItems));
+                     beforeContents.splice(oldItemsIndex, oldItems.length);
+                     Array.prototype.splice.apply(beforeContents, [newItemsIndex, 0].concat($ws.helpers.map(newItems, function(item) {
+                        return item.getContents();
+                     })));
+                     break;
                }
-               prevIndex = nowIndex;
             }
          }
+      },
+
+      /**
+       * Завершает серию обновлений, генерирует события об изменениях
+       * @param {Object} session Серия обновлений
+       * @protected
+       */
+      _getGroupChanges: function (groupName, before, after) {
+         var newItems = [];
+         var newItemsIndex = 0;
+         var oldItems = [];
+         var oldItemsIndex = 0;
+         var beforeItem;
+         var afterItem;
+         var afterIndex;
+         var beforeIndex;
+         for (var index = 0, count = Math.max(before.length, after.length); index < count; index++) {
+            beforeItem = before[index];
+            afterItem = after[index];
+            switch(groupName) {
+               case 'added':
+                  if (!afterItem) {
+                     continue;
+                  }
+                  afterIndex = index;
+                  beforeIndex = Array.indexOf(before, afterItem);
+                  if (beforeIndex === -1) {
+                     newItems.push(afterItem);
+                     newItemsIndex = newItems.length === 1 ? afterIndex : newItemsIndex;
+                  }
+                  break;
+               case 'removed':
+                  if (!beforeItem) {
+                     continue;
+                  }
+                  beforeIndex = index;
+                  afterIndex = Array.indexOf(after, beforeItem);
+                  if (afterIndex === -1) {
+                     oldItems.push(beforeItem);
+                     oldItemsIndex = oldItems.length === 1 ? beforeIndex : oldItemsIndex;
+                  }
+                  break;
+               case 'replaced':
+                  if (!afterItem) {
+                     continue;
+                  }
+                  afterIndex = index;
+                  beforeIndex = Array.indexOf(before, afterItem);
+                  if (beforeIndex === afterIndex && beforeContents[index] !== afterItem.getContents()) {
+                     oldItems.push(beforeItem);
+                     newItems.push(afterItem);
+                     oldItemsIndex = newItemsIndex = oldItems.length === 1 ? beforeIndex : oldItemsIndex;
+                  }
+                  break;
+               case 'moved':
+                  if (!beforeItem) {
+                     continue;
+                  }
+                  beforeIndex = index;
+                  afterIndex = Array.indexOf(after, beforeItem);
+                  if (afterIndex !== -1 && beforeIndex !== afterIndex) {
+                     oldItems.push(beforeItem);
+                     oldItemsIndex = oldItems.length === 1 ? beforeIndex : oldItemsIndex;
+                     newItems.push(afterItem);
+                     newItemsIndex = newItems.length === 1 ? afterIndex : newItemsIndex;
+                  }
+                  break;
+            }
+         }
+
+         return {
+            newItems: newItems,
+            newItemsIndex: newItemsIndex,
+            oldItems: oldItems,
+            oldItemsIndex: oldItemsIndex
+         };
       },
 
       /**
@@ -963,11 +1009,23 @@ define('js!SBIS3.CONTROLS.Data.Projection.Collection', [
                break;
 
             case IBindCollectionProjection.ACTION_REMOVE:
-               this._removeItems(oldItemsIndexOriginal, oldItems.length);
+               this._removeItems(oldItemsIndex, oldItems.length);
+               if (this._isSorted()) {
+                  this._reSort();
+               }
+               if (this._isFiltered()) {
+                  this._reFilter(oldItemsIndex, oldItems.length);
+               }
                break;
 
             case IBindCollectionProjection.ACTION_REPLACE:
                this._replaceItems(newItemsIndex, newItems);
+               if (this._isSorted()) {
+                  this._reSort();
+               }
+               if (this._isFiltered()) {
+                  this._reFilter(newItemsIndex, newItems.length);
+               }
                break;
 
             case IBindCollectionProjection.ACTION_MOVE:
