@@ -572,78 +572,26 @@ define('js!SBIS3.CONTROLS.Data.Projection.Collection', [
 
          var groups = ['added', 'removed', 'replaced', 'moved'],//группы изменений
             groupName,//имя группы изменений
-            action,//действие, соответствующее группе
-            newItems,
-            newItemsIndex,
-            oldItems,
-            oldItemsIndex;
+            changes;//изменения в группе
 
          //Информируем об изменениях по группам изменений
          for (var groupIndex = 0; groupIndex < groups.length; groupIndex++) {
             groupName = groups[groupIndex];
-            newItems = [];
-            newItemsIndex = 0;
-            oldItems = [];
-            oldItemsIndex = 0;
-
-            if (newItems.length || oldItems.length) {
-               switch(groupName) {
-                  case 'added':
-                     action = IBindCollectionProjection.ACTION_ADD;
-                     break;
-                  case 'removed':
-                     action = IBindCollectionProjection.ACTION_REMOVE;
-                     break;
-                  case 'replaced':
-                     action = IBindCollectionProjection.ACTION_REPLACE;
-                     break;
-                  case 'moved':
-                     action = IBindCollectionProjection.ACTION_MOVE;
-                     break;
-               }
-               this._notifyCollectionChange(
-                  action,
-                  newItems,
-                  newItemsIndex,
-                  oldItems,
-                  oldItemsIndex
-               );
-               switch (groupName) {
-                  case 'added':
-                     Array.prototype.splice.apply(before, [newItemsIndex, 0].concat(newItems));
-                     Array.prototype.splice.apply(beforeContents, [newItemsIndex, 0].concat($ws.helpers.map(newItems, function(item) {
-                        return item.getContents();
-                     })));
-                     break;
-                  case 'removed':
-                     before.splice(oldItemsIndex, oldItems.length);
-                     beforeContents.splice(oldItemsIndex, oldItems.length);
-                     break;
-                  case 'replaced':
-                     Array.prototype.splice.apply(before, [oldItemsIndex, oldItems.length].concat(newItems));
-                     Array.prototype.splice.apply(beforeContents, [oldItemsIndex, oldItems.length].concat($ws.helpers.map(newItems, function(item) {
-                        return item.getContents();
-                     })));
-                     break;
-                  case 'moved':
-                     before.splice(oldItemsIndex, oldItems.length);
-                     Array.prototype.splice.apply(before, [newItemsIndex, 0].concat(newItems));
-                     beforeContents.splice(oldItemsIndex, oldItems.length);
-                     Array.prototype.splice.apply(beforeContents, [newItemsIndex, 0].concat($ws.helpers.map(newItems, function(item) {
-                        return item.getContents();
-                     })));
-                     break;
-               }
-            }
+            changes = this._getGroupChanges(groupName, before, after, beforeContents);
+            this._applyGroupChanges(groupName, changes, before, after, beforeContents);
          }
       },
 
       /**
-       * Завершает серию обновлений, генерирует события об изменениях
-       * @param {Object} session Серия обновлений
+       * Возвращает изменения группы
+       * @param {String} groupName Название группы
+       * @param {Array.<SBIS3.CONTROLS.Data.Projection.CollectionItem>} before Элементы до изменений
+       * @param {Array.<SBIS3.CONTROLS.Data.Projection.CollectionItem>} after Элементы после изменений
+       * @param {Array.<*>} beforeContents Содержиоме элементов до изменений
+       * @return {Object}
        * @protected
        */
-      _getGroupChanges: function (groupName, before, after) {
+      _getGroupChanges: function (groupName, before, after, beforeContents) {
          var newItems = [];
          var newItemsIndex = 0;
          var oldItems = [];
@@ -712,6 +660,69 @@ define('js!SBIS3.CONTROLS.Data.Projection.Collection', [
             oldItems: oldItems,
             oldItemsIndex: oldItemsIndex
          };
+      },
+
+      /**
+       * Применяет изменения группы
+       * @param {String} groupName Название группы
+       * @param {Object} changes Изменения группы
+       * @param {Array.<SBIS3.CONTROLS.Data.Projection.CollectionItem>} before Элементы до изменений
+       * @param {Array.<SBIS3.CONTROLS.Data.Projection.CollectionItem>} after Элементы после изменений
+       * @param {Array.<*>} beforeContents Содержиоме элементов до изменений
+       * @protected
+       */
+      _applyGroupChanges: function (groupName, changes, before, after, beforeContents) {
+         var action;//действие, соответствующее группе
+
+         if (changes.newItems.length || changes.oldItems.length) {
+            switch(groupName) {
+               case 'added':
+                  action = IBindCollectionProjection.ACTION_ADD;
+                  break;
+               case 'removed':
+                  action = IBindCollectionProjection.ACTION_REMOVE;
+                  break;
+               case 'replaced':
+                  action = IBindCollectionProjection.ACTION_REPLACE;
+                  break;
+               case 'moved':
+                  action = IBindCollectionProjection.ACTION_MOVE;
+                  break;
+            }
+            this._notifyCollectionChange(
+               action,
+               changes.newItems,
+               changes.newItemsIndex,
+               changes.oldItems,
+               changes.oldItemsIndex
+            );
+            switch (groupName) {
+               case 'added':
+                  Array.prototype.splice.apply(before, [changes.newItemsIndex, 0].concat(changes.newItems));
+                  Array.prototype.splice.apply(beforeContents, [changes.newItemsIndex, 0].concat($ws.helpers.map(changes.newItems, function(item) {
+                     return item.getContents();
+                  })));
+                  break;
+               case 'removed':
+                  before.splice(changes.oldItemsIndex, changes.oldItems.length);
+                  beforeContents.splice(changes.oldItemsIndex, changes.oldItems.length);
+                  break;
+               case 'replaced':
+                  Array.prototype.splice.apply(before, [changes.oldItemsIndex, changes.oldItems.length].concat(changes.newItems));
+                  Array.prototype.splice.apply(beforeContents, [changes.oldItemsIndex, changes.oldItems.length].concat($ws.helpers.map(changes.newItems, function(item) {
+                     return item.getContents();
+                  })));
+                  break;
+               case 'moved':
+                  before.splice(changes.oldItemsIndex, changes.oldItems.length);
+                  Array.prototype.splice.apply(before, [changes.newItemsIndex, 0].concat(changes.newItems));
+                  beforeContents.splice(changes.oldItemsIndex, changes.oldItems.length);
+                  Array.prototype.splice.apply(beforeContents, [changes.newItemsIndex, 0].concat($ws.helpers.map(changes.newItems, function(item) {
+                     return item.getContents();
+                  })));
+                  break;
+            }
+         }
       },
 
       /**
@@ -1012,9 +1023,6 @@ define('js!SBIS3.CONTROLS.Data.Projection.Collection', [
                this._removeItems(oldItemsIndex, oldItems.length);
                if (this._isSorted()) {
                   this._reSort();
-               }
-               if (this._isFiltered()) {
-                  this._reFilter(oldItemsIndex, oldItems.length);
                }
                break;
 
