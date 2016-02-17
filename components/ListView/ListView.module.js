@@ -170,6 +170,12 @@ define('js!SBIS3.CONTROLS.ListView',
           * @param {$ws.proto.EventObject} eventObject Дескриптор события.
           * @param {Object} model Отредактированная модель
           */
+         /**
+          * @event onPrepareFilterOnMove При определении фильтра, с которым будет показан диалог перемещения.
+          * @param {$ws.proto.EventObject} eventObject Дескриптор события.
+          * @param {Array} records Список перемещаемых записей.
+          * @returns {Object} filter Фильтр который будет помещёт в диалог перемещения.
+          */
          $protected: {
             _floatCheckBox: null,
             _dotItemTpl: null,
