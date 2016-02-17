@@ -1076,7 +1076,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
 
       _addItem: function (item, at) {
          var ladderDecorator = this._decorators.getByName('ladder');
-         ladderDecorator && ladderDecorator.setEnabled(false);
+         ladderDecorator && ladderDecorator.setMarkLadderColumn(true);
          item = item.getContents();
          var target = this._getTargetContainer(item),
             nextSibling = at > -1 ? this._getItemContainerByIndex(target, at) : null,
@@ -1086,21 +1086,25 @@ define('js!SBIS3.CONTROLS.DSMixin', [
          this._addItemAttributes(newItemContainer, item);
          if (nextSibling && nextSibling.length) {
             newItemContainer.insertBefore(nextSibling);
-            rows = [newItemContainer.prev(), newItemContainer, nextSibling];
+            rows = [newItemContainer.prev().prev(), newItemContainer.prev(), newItemContainer, nextSibling, nextSibling.next()];
          } else {
             newItemContainer.appendTo(target);
-            rows = [newItemContainer.prev(), newItemContainer];
+            rows = [newItemContainer.prev().prev(), newItemContainer.prev(), newItemContainer, newItemContainer.next()];
          }
-         ladderDecorator && ladderDecorator.setEnabled(true);
+         ladderDecorator && ladderDecorator.setMarkLadderColumn(false);
          this._ladderCompare(rows);
       },
       _ladderCompare: function(rows){
          //TODO придрот - метод нужен только для адекватной работы лесенки при перемещении элементов местами
          for (var i = 1; i < rows.length; i++){
-            var upperRow = $('.controls-ladder', rows[i - 1]),
-               lowerRow = $('.controls-ladder', rows[i]);
-            for (var j = 0; j < lowerRow.length; j++){
-               lowerRow.eq(j).toggleClass('ws-invisible', upperRow.eq(j).html() == lowerRow.eq(j).html());
+            var upperRow = rows[i - 1].length ? $('.controls-ladder', rows[i - 1]) : undefined,
+                lowerRow = rows[i].length ? $('.controls-ladder', rows[i]) : undefined,
+               needHide;
+            if (lowerRow) {
+               for (var j = 0; j < lowerRow.length; j++) {
+                  needHide = upperRow ? (upperRow.eq(j).html() == lowerRow.eq(j).html()) : false;
+                  lowerRow.eq(j).toggleClass('ws-invisible', needHide);
+               }
             }
          }
       },
