@@ -1,7 +1,7 @@
 /**
  * Created by as.suhoruchkin on 21.07.2015.
  */
-define('js!SBIS3.CONTROLS.MoveHandlers', ['js!SBIS3.CORE.Dialog','js!SBIS3.CONTROLS.Data.SbisMoveStrategy', 'js!SBIS3.CONTROLS.Data.BaseMoveStrategy'], function(Dialog, SbisMoveStrategy, BaseMoveStrategy) {
+define('js!SBIS3.CONTROLS.MoveHandlers', ['js!SBIS3.CORE.Dialog','js!SBIS3.CONTROLS.Data.MoveStrategy.Sbis', 'js!SBIS3.CONTROLS.Data.MoveStrategy.Base'], function(Dialog, SbisMoveStrategy, BaseMoveStrategy) {
    var MoveHandlers = {
       $protected: {
         _moveStrategy: undefined
@@ -48,11 +48,11 @@ define('js!SBIS3.CONTROLS.MoveHandlers', ['js!SBIS3.CORE.Dialog','js!SBIS3.CONTR
             isChangeOrder = insertAfter !== undefined;
 
          if (moveTo !== null) {
-            if ($ws.helpers.instanceOfModule(moveTo, 'SBIS3.CONTROLS.Record') || $ws.helpers.instanceOfModule(moveTo, 'SBIS3.CONTROLS.Data.Model')) {
+            if ($ws.helpers.instanceOfModule(moveTo, 'SBIS3.CONTROLS.Data.Model')) {
                recordTo = moveTo;
                moveTo = recordTo.getKey();
             } else {
-               recordTo = this._dataSet.getRecordByKey(moveTo);
+               recordTo = this._items.getRecordById(moveTo);
             }
             if (recordTo) {
                isNodeTo = recordTo.get(this._options.hierField + '@');
@@ -63,7 +63,9 @@ define('js!SBIS3.CONTROLS.MoveHandlers', ['js!SBIS3.CORE.Dialog','js!SBIS3.CONTR
 
          if (this._checkRecordsForMove(records, recordTo, isChangeOrder)) {
             for (var i = 0; i < records.length; i++) {
-               records[i] = ($ws.helpers.instanceOfModule(records[i], 'SBIS3.CONTROLS.Record') || $ws.helpers.instanceOfModule(records[i], 'SBIS3.CONTROLS.Data.Model')) ? records[i] : this._dataSet.getRecordByKey(records[i]);
+               records[i] = $ws.helpers.instanceOfModule(records[i], 'SBIS3.CONTROLS.Data.Model') ?
+                  records[i] :
+                  this._items.getRecordById(records[i]);
             }
             if (isNodeTo && !isChangeOrder) {
                deferred = this.getMoveStrategy().hierarhyMove(records, recordTo);
@@ -135,15 +137,15 @@ define('js!SBIS3.CONTROLS.MoveHandlers', ['js!SBIS3.CORE.Dialog','js!SBIS3.CONTR
       },
       /**
        * Возвращает стратегию перемещения
-       * @see SBIS3.CONTROLS.Data.IMoveStrategy
-       * @returns {SBIS3.CONTROLS.Data.IMoveStrategy}
+       * @see SBIS3.CONTROLS.Data.MoveStrategy.IMoveStrategy
+       * @returns {SBIS3.CONTROLS.Data.MoveStrategy.IMoveStrategy}
        */
       getMoveStrategy: function () {
          return this._moveStrategy || (this._moveStrategy = this._makeMoveStrategy());
       },
       /**
        * Создает стратегию перемещения в зависимости от источника данных
-       * @returns {SBIS3.CONTROLS.Data.IMoveStrategy}
+       * @returns {SBIS3.CONTROLS.Data.MoveStrategy.IMoveStrategy}
        * @private
        */
       _makeMoveStrategy: function () {
@@ -163,12 +165,12 @@ define('js!SBIS3.CONTROLS.MoveHandlers', ['js!SBIS3.CORE.Dialog','js!SBIS3.CONTR
       },
       /**
        * Устанавливает стратегию перемещения
-       * @see SBIS3.CONTROLS.Data.IMoveStrategy
-       * @param {SBIS3.CONTROLS.Data.IMoveStrategy} strategy - стратегия перемещения
+       * @see SBIS3.CONTROLS.Data.MoveStrategy.IMoveStrategy
+       * @param {SBIS3.CONTROLS.Data.MoveStrategy.IMoveStrategy} strategy - стратегия перемещения
        */
       setMoveStrategy: function (strategy){
-         if(!$ws.helpers.instanceOfMixin(strategy,'SBIS3.CONTROLS.Data.IMoveStrategy')){
-            throw new Error('The strategy must implemented interfaces the SBIS3.CONTROLS.Data.IMoveStrategy.')
+         if(!$ws.helpers.instanceOfMixin(strategy,'SBIS3.CONTROLS.Data.MoveStrategy.IMoveStrategy')){
+            throw new Error('The strategy must implemented interfaces the SBIS3.CONTROLS.Data.MoveStrategy.IMoveStrategy.')
          }
          this._moveStrategy = strategy;
       },
@@ -187,18 +189,23 @@ define('js!SBIS3.CONTROLS.MoveHandlers', ['js!SBIS3.CORE.Dialog','js!SBIS3.CONTR
          }
       }
    };
-   function moveRecord(itemRecord, moveTo, current, up){
+
+   function moveRecord(item, moveToId, current, up) {
       var self = this,
-         item = this._dataSet.getRecordByKey(moveTo);
-      this.getMoveStrategy().move([itemRecord], item, !up).addCallback(function(){
-         self._dataSet.remove(itemRecord);
-         var index = self._dataSet.getIndex(item);
-         index = up ? index : ++index;
-         self._dataSet.add(itemRecord, index < self._dataSet.getCount() ? index : undefined);
-      }).addErrback(function(e){
+         moveToItem = this._items.getRecordById(moveToId);
+      this.getMoveStrategy().move([item], moveToItem, !up).addCallback(function() {
+         self._items.remove(item);
+
+         var moveToIndex = self._items.getIndex(moveToItem);
+         moveToIndex = up ? moveToIndex : ++moveToIndex;
+         self._items.add(
+            item,
+            moveToIndex < self._items.getCount() ? moveToIndex : undefined
+         );
+      }).addErrback(function(e) {
          $ws.core.alert(e.message);
       });
-
    }
+
    return MoveHandlers;
 });

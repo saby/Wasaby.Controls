@@ -183,6 +183,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
          syncCompleteDef.done(true);
          return syncCompleteDef.getResult(true).addCallback(function(){
             $ws.helpers.map(willRemove, self.remove, self);
+            self._getServiceEnumerator().reIndex();
          });
       },
 
@@ -243,6 +244,43 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
          this.each((function(item) {
             item.setIdProperty(this._options.idProperty);
          }).bind(this));
+      },
+
+      /**
+       * Проверяет эквивалентность формата и записей другого рекордсета.
+       * @param {SBIS3.CONTROLS.Data.Record} record Рекордсет, эквивалентность которого проверяется
+       * @returns {Boolean}
+       */
+      isEqual: function (recordset) {
+         if (recordset === this) {
+            return true;
+         }
+         if (!recordset) {
+            return false;
+         }
+         if (!$ws.helpers.instanceOfModule(recordset, 'SBIS3.CONTROLS.Data.Collection.RecordSet')) {
+            return false;
+         }
+         //TODO: когда появятся форматы, сделать через сравнение форматов и записей
+         return $ws.helpers.isEqualObject(
+            this.getRawData(),
+            recordset.getRawData()
+         );
+      },
+
+      /**
+       * Возвращает копию рекордсета
+       * @public
+       * @returns {SBIS3.CONTROLS.Data.Collection.RecordSet}
+       */
+      clone: function () {
+         //TODO: сделать через сериализатор
+         return new RecordSet({
+            adapter: this._options.adapter,
+            data: this._options.rawData,
+            meta: this._options.meta,
+            keyField: this._options.keyField
+         });
       },
 
       /**
@@ -338,20 +376,6 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
       getIndexById: function (id) {
          return this.getIndexByValue(this._options.idProperty, id);
       },
-      /**
-       * Возвращает копию рекордсета
-       * @public
-       * @returns {SBIS3.CONTROLS.Data.Collection.RecordSet}
-       */
-      clone: function () {
-         //TODO: сделать через сериализатор
-         return new RecordSet({
-            strategy: this._options.strategy,
-            data: this._options.rawData,
-            meta: this._options.meta,
-            keyField: this._options.keyField
-         });
-      },
 
       getRecordKeyByIndex: function (index) {
          var item = this.at(index);
@@ -363,12 +387,8 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
          return this.getAdapter();
       },
 
-      merge: function (dataSetMergeFrom, options) {
-         /*TODO какая то лажа с ключами*/
-         if ((!this._keyField) && (dataSetMergeFrom._keyField)) {
-            this._keyField = dataSetMergeFrom._keyField;
-         }
-         this._setRecords(dataSetMergeFrom._getRecords(), options);
+      merge: function (recordSetMergeFrom, options) {
+         this._setRecords(recordSetMergeFrom._getRecords(), options);
       },
 
       push: function (record) {
@@ -493,34 +513,43 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
          options = options || {};
          options = $ws.core.merge(options, {add: true, remove: true, merge: true}, {preferSource: true});
 
-         var self = this,
+         var id, i, length,
             recordsMap = {},
-            record,
-            key;
-         for (var i = 0, length = records.length; i < length; i++) {
-            key = records[i].getKey();
-            recordsMap[key] = true;
-
-            if ((record = self.getRecordById(key))) {
-               if (options.merge) {
-                  record.merge(records[i]);
-               }
-            } else if (options.add) {
-               this.add(records[i]);
+            toAdd = [],
+            toReplace = {};
+         var l = 0, l1 = 0;
+         for (i = 0, length = records.length; i < length; i++) {
+            id = records[i].getId();
+            recordsMap[id] = true;
+            var index = this.getIndexByValue(this._options.idProperty, id);
+            if (index > -1) {
+               toReplace[index] = records[i];
+               l++;
+            } else {
+               toAdd.push(records[i]);
+               l1++;
             }
          }
-
+         if(options.merge) {
+            for(i in toReplace){
+               if (toReplace.hasOwnProperty(i)) {
+                  this.replace(toReplace[i], +i);
+               }
+            }
+         }
+         if (options.add) {
+            this.append(toAdd);
+         }
          if (options.remove) {
-            var toRemove = [];
+            var newItems = [];
             this.each(function (record) {
-               var key = record.getKey();
-               if (!recordsMap[key]) {
-                  toRemove.push(key);
+               var key = record.getId();
+               if (recordsMap[key]) {
+                  newItems.push(record);
                }
             }, 'all');
-
-            if (toRemove.length) {
-               this.removeRecord(toRemove);
+            if(newItems.length < this.getCount()) {
+               this.assign(newItems);
             }
          }
       },

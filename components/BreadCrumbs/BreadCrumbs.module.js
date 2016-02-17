@@ -21,14 +21,6 @@ define('js!SBIS3.CONTROLS.BreadCrumbs', [
     * @mixes SBIS3.CONTROLS.DecorableMixin
     */
    'use strict';
-
-   if (typeof window !== 'undefined') {
-      var eventsChannel = $ws.single.EventBus.channel('BreadCrumbsChannel');
-
-      $(window).bind('resize', function() {
-         eventsChannel.notify('onWindowResize');
-      });
-   }
    //TODO: Переписать все к чертям 
    var BreadCrumbs = CompoundControl.extend([DSMixin, PickerMixin, DecorableMixin], {
       $protected: {
@@ -50,19 +42,11 @@ define('js!SBIS3.CONTROLS.BreadCrumbs', [
 
       $constructor: function() {
          this._publish('onItemClick');
-         $ws.single.EventBus.channel('BreadCrumbsChannel').subscribe('onWindowResize', this._resizeHandler, this);
          this._homeIcon = $('.controls-BreadCrumbs__crumb-home', this._container);
+         this._container.toggleClass('ws-hidden', (this._options.items && this._options.items.length == 0));
          this._homeIcon.data('id', null); //клик по домику ведет в корень TODO: придрочено под null
          //инициализируем dataSet
          this.reload();
-      },
-
-      _resizeHandler: function() {
-         clearTimeout(this._resizeTimeout);
-         var self = this;
-         this._resizeTimeout = setTimeout(function() {
-            self._redraw();
-         }, 100);
       },
 
       _onClickHandler: function(e) {
@@ -89,13 +73,14 @@ define('js!SBIS3.CONTROLS.BreadCrumbs', [
       },
 
       setItems: function(items){
-         this._toggleHomeIcon(items.length <= 0);
          BreadCrumbs.superclass.setItems.call(this, items);
          this._dataSet._keyField = this._options.keyField; 
       },
 
-      //TODO: придрот что бы фэйковый див не ломал :first-child стили
-      _moveFocusToFakeDiv: function() {},
+      //Переопределяю метод getElementToFocus для того, чтобы не создавался fake focus div
+      _getElementToFocus: function() {
+         return this._container;
+      },
 
       _setPickerConfig: function() {
          return {
@@ -182,13 +167,12 @@ define('js!SBIS3.CONTROLS.BreadCrumbs', [
             i = points.length - 1;
 
          if (points.length){
-            //20px - ширина блока с домиком
             //Добавляем троеточие если пункты не убираются в контейнер
-            if ((targetContainer.width() + 20 >= containerWidth) && points.length > 2) {
+            if ((targetContainer.width() + this._homeIconWidth >= containerWidth) && points.length > 2) {
                $(points[i - 1]).before(dots);
                //скрываем пункты левее троеточия пока не уберемся в контейнер
                for (i; i > 1; i--) {
-                  if (targetContainer.width() + 20 < containerWidth || i == 1) {
+                  if (targetContainer.width() + this._homeIconWidth < containerWidth || i == 1) {
                      break;
                   }
                   points[i - 1].className += ' ws-hidden';
@@ -199,7 +183,7 @@ define('js!SBIS3.CONTROLS.BreadCrumbs', [
             points = $('.controls-BreadCrumbs__crumb:not(.ws-hidden)', targetContainer);
 
             //Минимум остается первая и последняя хлебная крошка
-            if ((targetContainer.width() + this._arrowWidth >= containerWidth)) {
+            if (targetContainer.width() + this._homeIconWidth >= containerWidth) {
                //ширина декоротивных элементов -  блок с домиком, троеточие, стрелки 
                var width = this._homeIconWidth + this._dotsWidth + this._arrowWidth * 2;
                var halfWidth = Math.floor((containerWidth - width) / 2);
@@ -213,7 +197,9 @@ define('js!SBIS3.CONTROLS.BreadCrumbs', [
       },
 
       _redraw: function(){
-         this._toggleHomeIcon(this.getItems().getCount() <= 0);
+         var isEmpty = (!!this._dataSet && (this._dataSet.getCount() == 0));
+         this._toggleHomeIcon(isEmpty);
+         this._container.toggleClass('ws-hidden', isEmpty);
          BreadCrumbs.superclass._redraw.call(this);
          this._calculateSizes();
       },
@@ -251,11 +237,6 @@ define('js!SBIS3.CONTROLS.BreadCrumbs', [
 
       _appendItemTemplate: function(item, targetContainer, itemBuildedTpl) {
          targetContainer.append(itemBuildedTpl);
-      },
-
-      destroy: function() {
-         BreadCrumbs.superclass.destroy.call(this);
-         $ws.single.EventBus.channel('WindowChangeChannel').unsubscribe('onWindowResize', this._resizeHandler, this);
       }
    });
 

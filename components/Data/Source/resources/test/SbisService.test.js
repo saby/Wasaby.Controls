@@ -1,174 +1,168 @@
 /* global define, describe, context, it, assert, $ws */
-
-/* Dummy for SBIS3.CONTROLS.Data.Source.Provider.SbisBusinessLogic */
-define('js!Test.SbisBusinessLogic', [
-   'js!SBIS3.CONTROLS.Data.Source.Provider.IRpc'
-], function (IRpc) {
+define([
+   'js!SBIS3.CONTROLS.Data.Source.SbisService',
+   'js!SBIS3.CONTROLS.Data.Di',
+   'js!SBIS3.CONTROLS.Data.Source.Provider.IRpc',
+   'js!SBIS3.CONTROLS.Data.Source.DataSet',
+   'js!SBIS3.CONTROLS.Data.Model',
+   'js!SBIS3.CONTROLS.Data.Collection.List',
+   'js!SBIS3.CONTROLS.Data.Adapter.Sbis',
+   'js!SBIS3.CONTROLS.Data.Query.Query'
+], function (SbisService, Di, IRpc, DataSet, Model, List, SbisAdapter, Query) {
       'use strict';
 
-      var existsId = 7,
-         existsTooId = 987,
-         notExistsId = 99,
-         textId = 'uuid';
+      //Mock of SBIS3.CONTROLS.Data.Source.Provider.SbisBusinessLogic
+      var SbisBusinessLogic = (function() {
+         var existsId = 7,
+            existsTooId = 987,
+            notExistsId = 99,
+            textId = 'uuid';
 
-      var SbisBusinessLogic = $ws.core.extend({}, [IRpc], {
-         _cfg: {},
-         $constructor: function (cfg) {
-            this._cfg = cfg;
-         },
-         call: function (method, args) {
-            var def = new $ws.proto.Deferred(),
-               meta = [
-                  {'n': 'Фамилия', 't': 'Строка'},
-                  {'n': 'Имя', 't': 'Строка'},
-                  {'n': 'Отчество', 't': 'Строка'},
-                  {'n': '@Ид', 't': 'Число целое'},
-                  {'n': 'Должность', 't': 'Строка'},
-                  {'n': 'В штате', 't': 'Логическое'}
-               ],
-               idPosition = 3,
-               error = '',
-               data;
+         var Mock = $ws.core.extend({}, [IRpc], {
+            _cfg: {},
+            $constructor: function (cfg) {
+               this._cfg = cfg;
+            },
+            call: function (method, args) {
+               var def = new $ws.proto.Deferred(),
+                  meta = [
+                     {'n': 'Фамилия', 't': 'Строка'},
+                     {'n': 'Имя', 't': 'Строка'},
+                     {'n': 'Отчество', 't': 'Строка'},
+                     {'n': '@Ид', 't': 'Число целое'},
+                     {'n': 'Должность', 't': 'Строка'},
+                     {'n': 'В штате', 't': 'Логическое'}
+                  ],
+                  idPosition = 3,
+                  error = '',
+                  data;
 
-            switch (this._cfg.name) {
-               case 'Товар':
-               case 'Продукт':
-                  switch (method) {
-                     case 'Создать':
-                        data = {
-                           d: [
-                              '',
-                              '',
-                              '',
-                              0,
-                              '',
-                              false
-                           ],
-                           s: meta
-                        };
-                        break;
-
-                     case 'Прочитать':
-                        if (args['ИдО'] === existsId) {
+               switch (this._cfg.resource) {
+                  case 'Товар':
+                  case 'Продукт':
+                     switch (method) {
+                        case 'Создать':
                            data = {
                               d: [
-                                 'Иванов',
-                                 'Иван',
-                                 'Иванович',
-                                 existsId,
-                                 'Инженер',
-                                 true
+                                 '',
+                                 '',
+                                 '',
+                                 0,
+                                 '',
+                                 false
                               ],
                               s: meta
                            };
-                        } else {
-                           error = 'Model is not found';
-                        }
-                        break;
+                           break;
 
-                     case 'Записать':
-                        if (args['Запись'].d && args['Запись'].d[idPosition]) {
-                           data = args['Запись'].d[idPosition];
-                        } else {
-                           data = 99;
-                        }
-                        break;
+                        case 'Прочитать':
+                           if (args['ИдО'] === existsId) {
+                              data = {
+                                 d: [
+                                    'Иванов',
+                                    'Иван',
+                                    'Иванович',
+                                    existsId,
+                                    'Инженер',
+                                    true
+                                 ],
+                                 s: meta
+                              };
+                           } else {
+                              error = 'Model is not found';
+                           }
+                           break;
 
-                     case 'Удалить':
-                        if (args['ИдО'] === existsId ||args['ИдО'] == textId|| ($ws.helpers.type(args['ИдО']) === 'array' && Array.indexOf(args['ИдО'], String(existsId)) !== -1)) {
-                           data = existsId;
-                        } else if (args['ИдО'] === existsTooId || ($ws.helpers.type(args['ИдО']) === 'array' && Array.indexOf(args['ИдО'],String(existsTooId)) !== -1)) {
+                        case 'Записать':
+                           if (args['Запись'].d && args['Запись'].d[idPosition]) {
+                              data = args['Запись'].d[idPosition];
+                           } else {
+                              data = 99;
+                           }
+                           break;
+
+                        case 'Удалить':
+                           if (args['ИдО'] === existsId ||args['ИдО'] == textId|| ($ws.helpers.type(args['ИдО']) === 'array' && Array.indexOf(args['ИдО'], String(existsId)) !== -1)) {
+                              data = existsId;
+                           } else if (args['ИдО'] === existsTooId || ($ws.helpers.type(args['ИдО']) === 'array' && Array.indexOf(args['ИдО'],String(existsTooId)) !== -1)) {
                               data = existsTooId;
-                        } else {
-                           error = 'Model is not found';
-                        }
-                        break;
+                           } else {
+                              error = 'Model is not found';
+                           }
+                           break;
 
-                     case 'Список':
-                        data = {
-                           d: [
-                              [
-                                 'Иванов',
-                                 'Иван',
-                                 'Иванович',
-                                 existsId,
-                                 'Инженер',
-                                 true
+                        case 'Список':
+                           data = {
+                              d: [
+                                 [
+                                    'Иванов',
+                                    'Иван',
+                                    'Иванович',
+                                    existsId,
+                                    'Инженер',
+                                    true
+                                 ],
+                                 [
+                                    'Петров',
+                                    'Петр',
+                                    'Петрович',
+                                    1 + existsId,
+                                    'Специалист',
+                                    true
+                                 ]
                               ],
-                              [
-                                 'Петров',
-                                 'Петр',
-                                 'Петрович',
-                                 1 + existsId,
-                                 'Специалист',
-                                 true
-                              ]
-                           ],
-                           s: meta
-                        };
-                        break;
+                              s: meta
+                           };
+                           break;
 
-                     case 'ВставитьДо':
-                     case 'ВставитьПосле':
-                     case 'Произвольный':
-                        break;
+                        case 'ВставитьДо':
+                        case 'ВставитьПосле':
+                        case 'Произвольный':
+                           break;
 
-                     default:
-                        error = 'Method ' + this._cfg.name + ' is undefined';
-                  }
-                  break;
+                        default:
+                           error = 'Method "' + method + '" is undefined';
+                     }
+                     break;
 
-               case 'ПорядковыйНомер':
-                  switch (method) {
-                     case 'ВставитьДо':
-                     case 'ВставитьПосле':
-                        break;
-                  }
-                  break;
+                  case 'ПорядковыйНомер':
+                     switch (method) {
+                        case 'ВставитьДо':
+                        case 'ВставитьПосле':
+                           break;
+                     }
+                     break;
 
-               default:
-                  error = 'Service is not found';
-            }
-
-            setTimeout(function () {
-               SbisBusinessLogic.lastRequest = {
-                  cfg: this._cfg,
-                  method: method,
-                  args: args
-               };
-
-               if (error) {
-                  return def.errback(error);
+                  default:
+                     error = 'Service "' + this._cfg.resource + '" is not found';
                }
 
-               def.callback(data);
-            }.bind(this), 1);
+               setTimeout(function () {
+                  Mock.lastRequest = {
+                     cfg: this._cfg,
+                     method: method,
+                     args: args
+                  };
 
-            return def;
-         }
-      });
+                  if (error) {
+                     return def.errback(error);
+                  }
 
-      SbisBusinessLogic.lastRequest = {};
-      SbisBusinessLogic.existsId = existsId;
-      SbisBusinessLogic.notExistsId = notExistsId;
+                  def.callback(data);
+               }.bind(this), 1);
 
-      return SbisBusinessLogic;
-   }
-);
+               return def;
+            }
+         });
 
-define([
-      'js!SBIS3.CONTROLS.Data.Source.SbisService',
-      'js!SBIS3.CONTROLS.Data.Di',
-      'js!Test.SbisBusinessLogic',
-      'js!SBIS3.CONTROLS.Data.Source.DataSet',
-      'js!SBIS3.CONTROLS.Data.Model',
-      'js!SBIS3.CONTROLS.Data.Collection.List',
-      'js!SBIS3.CONTROLS.Data.Adapter.Sbis',
-      'js!SBIS3.CONTROLS.Data.Query.Query'
-   ], function (SbisService, Di, SbisBusinessLogic, DataSet, Model, List, SbisAdapter, Query) {
-      'use strict';
+         Mock.lastRequest = {};
+         Mock.existsId = existsId;
+         Mock.notExistsId = notExistsId;
 
-      //Replacing of standard implementation
+         return Mock;
+      })();
+
+      //Replace of standard with mock
       Di.register('source.provider.sbis-business-logic', SbisBusinessLogic);
 
       describe('SBIS3.CONTROLS.Data.Source.SbisService', function () {
@@ -787,7 +781,7 @@ define([
                   service.destroy([SbisBusinessLogic.existsId + ',Товар', '987,Продукт']).addCallbacks(function (success) {
                      try {
                         var cfg = SbisBusinessLogic.lastRequest.cfg;
-                        if (cfg.name != 'Продукт') {
+                        if (cfg.resource != 'Продукт') {
                            throw new Error('Wrong service name');
                         }
 

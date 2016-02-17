@@ -14,7 +14,7 @@ define('js!SBIS3.CONTROLS.hierarchyMixin', [], function () {
          //по хорошему мы должны выносить запрос данных в некий контроллер, который разложит состояние
          //в представление данных и в хлебные кношки.
          //В таком случае этот флаг будет не нужен
-         _rootChanged: false,
+         _previousRoot: undefined,
          _curRoot: null,
          _hier: [],
          _options: {
@@ -35,6 +35,8 @@ define('js!SBIS3.CONTROLS.hierarchyMixin', [], function () {
       $constructor: function () {
          var
             filter = this.getFilter() || {};
+         //Внимание! Событие очень нужно иерархическому поиску. Подписано в ComponentBinder
+         this._publish('onSetRoot', 'onBeforeSetRoot');
          if (typeof this._options.root != 'undefined') {
             this._curRoot = this._options.root;
             filter[this._options.hierField] = this._options.root;
@@ -139,16 +141,19 @@ define('js!SBIS3.CONTROLS.hierarchyMixin', [], function () {
             filter[this._options.hierField] = key;
          }
          else {
-            delete(filter[this._options.hierField]);
+            if (this._options.root){
+               filter[this._options.hierField] = this._options.root;
+            } else {
+               delete(filter[this._options.hierField]);
+            }
          }
          this.setFilter(filter, true);
          this._hier = this._getHierarchy(this._dataSet, key);
          //узел грузим с 0-ой страницы
          this._offset = 0;
-         //TODO: нужно избавиться от флага когда будут готовы биндинги
-         this._rootChanged = this._curRoot !== key;
-         this._curRoot = key;
-         this.setSelectedKey(null);
+         //Если добавить проверку на rootChanged, то при переносе в ту же папку, из которой искали ничего не произойдет
+         this._notify('onBeforeSetRoot', key);
+         this._curRoot = key || this._options.root;
       },
       after : {
          //TODO:После каждого релоада проверяется флаг _rootChanged и если флаг взведен,
@@ -161,7 +166,8 @@ define('js!SBIS3.CONTROLS.hierarchyMixin', [], function () {
             if (!hierarchy.length && path) {
                hierarchy = this._getHierarchy(path, this._curRoot);
             }
-            if (this._rootChanged) {
+            if (this._previousRoot !== this._curRoot) {
+               this._previousRoot = this._curRoot;
                this._scrollTo(this.getContainer());
                this._notify('onSetRoot', this._curRoot, hierarchy);
                this._rootChanged = false;

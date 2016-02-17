@@ -22,9 +22,13 @@ define('js!SBIS3.CONTROLS.OperationPrint', [
             ],
             icon: 'sprite:icon-24 action-hover icon-Print icon-primary',
             title: rk('Распечатать'),
-            linkText: rk('Распечатать'),
+            linkText:  rk('Распечатать'),
             caption: rk('Распечатать'),
-            xsl : undefined
+            xsl : undefined,
+            /**
+             * @cfg (number) Минимальная ширина предварительного окна печати
+             */
+            minPrintWindowWidth: 0
          }
       },
 
@@ -41,8 +45,9 @@ define('js!SBIS3.CONTROLS.OperationPrint', [
          return this._notify('onApplyOperation', 'print', columns);
       },
       applyOperation: function(dataSet, cfg){
-
-         var p = new Printer(cfg);
+         var p;
+         cfg.minWidth = this._options.minPrintWindowWidth;
+         p = new Printer(cfg);
          p.print();
       }
    });

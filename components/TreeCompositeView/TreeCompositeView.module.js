@@ -144,12 +144,6 @@ define('js!SBIS3.CONTROLS.TreeCompositeView', ['js!SBIS3.CONTROLS.TreeDataGridVi
             }
             return resultTpl;
       },
-      //TODO Авраменко:EIP редактирование по месту должно правильно работать во всех режимах отображения, а не только в таблице.
-      _updateEditInPlaceDisplay: function() {
-         if(this.getViewMode() === 'table') {
-            TreeCompositeView.superclass._updateEditInPlaceDisplay.apply(this, arguments);
-         }
-      },
 
       _getTargetContainer: function (item) {
          if (this.getViewMode() != 'table' && item.get(this._options.hierField + '@')) {
@@ -192,7 +186,7 @@ define('js!SBIS3.CONTROLS.TreeCompositeView', ['js!SBIS3.CONTROLS.TreeDataGridVi
                      if (parentKey !== undefined) {
                         result.parentKey = parentKey;
                      }
-                     if (result.$row.hasClass('controls-ListView__folder') || result.$row.hasClass('controls-DataGridView__tr__type-false')) {
+                     if (result.$row.hasClass('controls-ListView__item-type-node') || result.$row.hasClass('controls-ListView__item-type-leaf')) {
                         container.find('.controls-ListView__item[data-parent="' + key + '"]').each(function (idx, row) {
                            var rowKey = row.getAttribute('data-id');
                            result.childs.push(findDependents(rowKey, key));
@@ -213,7 +207,7 @@ define('js!SBIS3.CONTROLS.TreeCompositeView', ['js!SBIS3.CONTROLS.TreeDataGridVi
                   self.redrawItem(record);
                } else { //Иначе - удаляем запись
                   currentDataSet.removeRecord(row.key);
-                  self.destroyFolderToolbar(row.key);
+                  self._destroyFolderFooter([row.key]);
                   self._ladderCompare(environment);
                   row.$row.remove();
                   //Если количество записей в текущем DataSet меньше, чем в обновленном, то добавляем в него недостающую запись
@@ -303,7 +297,7 @@ define('js!SBIS3.CONTROLS.TreeCompositeView', ['js!SBIS3.CONTROLS.TreeDataGridVi
       //Переопределим метод определения направления изменения порядкового номера, так как если элементы отображаются в плиточном режиме,
       //нужно подвести DragNDrop объект не к верхней(нижней) части элемента, а к левой(правой)
       _getDirectionOrderChange: function(e, target) {
-         if (this.getViewMode() === 'tile' || (this.getViewMode() === 'list' && target.hasClass('controls-ListView__folder'))) {
+         if (this.getViewMode() === 'tile' || (this.getViewMode() === 'list' && target.hasClass('controls-ListView__item-type-node'))) {
             if (target.length) {
                return this._getOrderPosition(e.pageX - target.offset().left, target.width());
             }

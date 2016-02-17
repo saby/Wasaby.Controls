@@ -32,7 +32,8 @@ define('js!SBIS3.CONTROLS.EditInPlace',
                   applyOnFieldChange: true,
                   itemsContainer: undefined,
                   visible: false,
-                  editingItem: undefined
+                  editingItem: undefined,
+                  getEditorOffset: undefined
                },
                _record: undefined,
                _target: null,
@@ -55,21 +56,29 @@ define('js!SBIS3.CONTROLS.EditInPlace',
             _onChildControlFocusOut: function() {
                var
                   result,
-                  difference = this._getRecordsDifference(),
+                  difference,
                   loadingIndicator;
-               if (difference.length) {
-                  result = this._notify('onItemValueChanged', difference, this._editingRecord);
-                  if (result instanceof $ws.proto.Deferred) {
-                     loadingIndicator = setTimeout(function () {
-                        $ws.helpers.toggleIndicator(true);
-                     }, 100);
-                     this._editingDeferred = result.addBoth(function () {
-                        clearTimeout(loadingIndicator);
+               // Будем стрелять событие только в том случае, если редактирование по месту видимо. Это обусловлено тем, что при
+               // клике вне области редактирования стрельнет событие onChildFocusOut в контроллере и редактирование начнет
+               // завершаться. Завершение редактирования приведет к вызову метода EditInPlace.hide, в котором происходит
+               // расфокусировка поля ввода и нельзя допустить изменения рекорда и стрельбы событием onItemValueChanged.
+               if (this.isVisible()) {
+                  difference = this._getRecordsDifference(); // Получаем разницу
+                  if (difference.length) { //Если есть разница, то нотифицируем об этом в событии
+                     result = this._notify('onItemValueChanged', difference, this._editingRecord);
+                     //Результат может быть деферредом (потребуется обработка на бизнес логике)
+                     if (result instanceof $ws.proto.Deferred) {
+                        loadingIndicator = setTimeout(function () { //Если обработка изменения значения поля длится более 100мс, то показываем индикатор
+                           $ws.helpers.toggleIndicator(true);
+                        }, 100);
+                        this._editingDeferred = result.addBoth(function () {
+                           clearTimeout(loadingIndicator);
+                           this._previousRecordState = this._editingRecord.clone();
+                           $ws.helpers.toggleIndicator(false);
+                        }.bind(this));
+                     } else {
                         this._previousRecordState = this._editingRecord.clone();
-                        $ws.helpers.toggleIndicator(false);
-                     }.bind(this));
-                  } else {
-                     this._previousRecordState = this._editingRecord.clone()
+                     }
                   }
                }
             },
@@ -135,6 +144,7 @@ define('js!SBIS3.CONTROLS.EditInPlace',
                this.updateFields(record);
                this._record.subscribe(this._useModel() ? 'onPropertyChange' : 'onChange', this._onRecordChangeHandler);
                this.getContainer().attr('data-id', record.getKey());
+               this.setOffset(record);
 
                this.setTarget(target);
                EditInPlace.superclass.show.apply(this, arguments);
@@ -168,10 +178,10 @@ define('js!SBIS3.CONTROLS.EditInPlace',
                if (this._record) {
                   this._record.unsubscribe(this._useModel() ? 'onPropertyChange' : 'onChange', this._onRecordChangeHandler);
                }
-               this._deactivateActiveChildControl();
-               this.getContainer().removeAttr('data-id');
-               this.setActive(false);
                EditInPlace.superclass.hide.apply(this, arguments);
+               this.getContainer().removeAttr('data-id');
+               this._deactivateActiveChildControl();
+               this.setActive(false);
             },
             //TODO: выпилить когда откажемся от SBIS3.Controls.Record
             _useModel: function() {
@@ -198,6 +208,15 @@ define('js!SBIS3.CONTROLS.EditInPlace',
                this.getEditingItem().target.removeClass('controls-editInPlace__editing');
                this._editing = false;
                this.hide();
+            },
+            setOffset: function(model) {
+               var container = this.getContainer();
+               if (this._options.getEditorOffset) {
+                  if (!this._options.editingTemplate) {
+                     container = container.children().get(this._options.ignoreFirstColumn ? 1 : 0);
+                  }
+                  $(container).find('.controls-editInPlace__editor').css('padding-left', this._options.getEditorOffset(model));
+               }
             },
             setTarget: function(target) {
                var editorTop;

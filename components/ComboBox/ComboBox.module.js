@@ -266,12 +266,14 @@ define('js!SBIS3.CONTROLS.ComboBox', [
             var item, def;
             def = new $ws.proto.Deferred();
             if (this._dataSet) {
-               item = this.getItems().at(index);
-               def.callback(item);
+               if ((index !== null) && (typeof index != 'undefined') && (index != '-1')) {
+                  item = this.getItems().at(index);
+                  def.callback(item);
+               }
             }
             else {
                if (this._dataSource) {
-                  if ((key != undefined) && (key != null)) {
+                  if ((key != undefined) && (key !== null)) {
                      this._dataSource.read(key).addCallback(function (item) {
                         def.callback(item);
                      });
@@ -323,7 +325,11 @@ define('js!SBIS3.CONTROLS.ComboBox', [
          this._picker.getContainer().mouseup(function (e) {
             var row = $(e.target).closest('.js-controls-ComboBox__itemRow');
             if (row.length) {
-               self.setSelectedKey($(row).attr('data-id'));
+               var strKey = $(row).attr('data-id');
+               if (strKey == 'null') {
+                  strKey = null;
+               }
+               self.setSelectedKey(strKey);
                self.hidePicker();
             }
             e.stopPropagation();

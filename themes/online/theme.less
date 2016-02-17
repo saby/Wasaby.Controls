@@ -7,8 +7,8 @@
    position: absolute;
    top: @controls-Popup-closeButton-top;
    right: @controls-Popup-closeButton-right;
-   width: @controls-Popup-closeButton-width;
-   height: @controls-Popup-closeButton-height;
+   width: @closeButtonWidth;
+   height: @closeButtonHeight;
    cursor: pointer;
    background: @closeButtonImage;
    &:hover {
@@ -20,6 +20,17 @@
    z-index: 1;
 }
 
+.controls-Button__closeButton {
+   width: @closeButtonWidth;
+   height: @closeButtonHeight;
+   background: @closeButtonImage;
+   &:hover {
+      background: @closeButtonImageHover;
+   }
+   &:active {
+      background: @closeButtonImageHover;
+   }
+}
 
 .controls-ListView__item__selected {
    .controls-DataGridView__td:first-child {
@@ -30,12 +41,13 @@
 }
 
 &.controls-ListView__withoutMarker {
-   .controls-ListView__item__selected {
+   .controls-ListView__item__selected,
+   .controls-ListView__item__multiSelected {
       .controls-DataGridView__td:first-child,
       .controls-CompositeView__tileTitle,
       .controls-ListView__item-title,
       &:not(.controls-CompositeView__verticalItemActions),
-      &:not(.controls-ListView__folder) {
+      &:not(.controls-ListView__item-type-node) {
          background-image: none !important;
       }
       &.controls-ListView__item {
@@ -60,6 +72,12 @@
 .controls-TreePager:hover {
    text-decoration: underline;
    color: @link-hover-text-color;
+}
+
+.controls-ListView__multiselect:not(.controls-ListView__hideCheckBoxes) {
+   .controls-TreeDataGridView__folderFooterContainer {
+      padding-left: @data-grid-td-checkbox-width-without-marker;
+   }
 }
 
 .controls-Popup-border{

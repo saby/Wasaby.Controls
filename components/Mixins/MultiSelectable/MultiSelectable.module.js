@@ -44,7 +44,8 @@ define('js!SBIS3.CONTROLS.MultiSelectable', ['js!SBIS3.CONTROLS.Data.Collection.
              * @cfg {Boolean} Разрешить множественный выбор
              * @example
              * <pre>
-             *     <option name="multiselect">false</option>
+             *    <option name="multiselect">false</option>
+             *    <option name="multiselect" type="boolean" value="false"></option>
              * </pre>
              * @see selectedKeys
              */
@@ -253,6 +254,7 @@ define('js!SBIS3.CONTROLS.MultiSelectable', ['js!SBIS3.CONTROLS.Data.Collection.
          if (Array.isArray(idArray)) {
             if (idArray.length) {
                if (this._options.multiselect) {
+                  this._options.selectedKeys = Array.clone(this._options.selectedKeys);
                   for (var i = 0; i < idArray.length; i++) {
                      if (!this._isItemSelected(idArray[i])) {
                         this._options.selectedKeys.push(idArray[i]);
@@ -293,6 +295,7 @@ define('js!SBIS3.CONTROLS.MultiSelectable', ['js!SBIS3.CONTROLS.Data.Collection.
          var removedKeys = [];
 
          if (Array.isArray(idArray)) {
+            this._options.selectedKeys = Array.clone(this._options.selectedKeys);
             for (var i = idArray.length - 1; i >= 0; i--) {
                if (this._isItemSelected(idArray[i])) {
                   Array.remove(this._options.selectedKeys, this._getSelectedIndex(idArray[i]));

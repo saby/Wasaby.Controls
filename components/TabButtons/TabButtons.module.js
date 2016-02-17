@@ -7,14 +7,17 @@ define(
       'js!SBIS3.CONTROLS.RadioGroupBase',
       'html!SBIS3.CONTROLS.TabButtons',
       'html!SBIS3.CONTROLS.TabButtons/ItemTpl',
+      'js!SBIS3.CORE.MarkupTransformer',
+      'js!SBIS3.CONTROLS.Utils.TemplateUtil',
       'js!SBIS3.CONTROLS.TabButton'
    ],
-   function (RadioGroupBase, TabButtonsTpl, itemTpl) {
+   function (RadioGroupBase, TabButtonsTpl, itemTpl, MarkupTransformer, TemplateUtil) {
 
    'use strict';
 
    /**
     * Контрол, отображающий корешки закладок
+    * Для корректной работы необходимо задание свойсв {@link keyField} и {@link displayField}
     * Для оформления компонентов внутри вкладки, можно использовать следующие классы:
     * <ol>
     *    <li><strong>controls-TabButton__mainText</strong> - параметры текста, как у главной вкладки</li>
@@ -45,7 +48,8 @@ define(
              *     </div>
              * </pre>
              */
-            itemTemplate: itemTpl
+            itemTemplate: itemTpl,
+            tabSpaceTemplate: undefined
          }
       },
       _dotTplFn: TabButtonsTpl,
@@ -74,6 +78,13 @@ define(
                caption: item.get(displayField)
             }
          );
+      },
+      _modifyOptions: function (opts) {
+         opts = TabButtons.superclass._modifyOptions.call(this, opts);
+         if (opts.tabSpaceTemplate) {
+            opts.tabSpaceTemplate = MarkupTransformer(TemplateUtil.prepareTemplate(opts.tabSpaceTemplate));
+         }
+         return opts;
       }
    });
    return TabButtons;

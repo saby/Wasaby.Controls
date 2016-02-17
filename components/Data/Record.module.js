@@ -122,7 +122,7 @@ define('js!SBIS3.CONTROLS.Data.Record', [
          }
 
          var oldValue = this._getRawDataValue(name);
-         if (oldValue !== value) {
+         if (!this._isEqualValues(oldValue, value)) {
             this._setRawDataValue(name, value);
             if (!this.has(name)) {
                this._addRawDataField(name);
@@ -231,6 +231,28 @@ define('js!SBIS3.CONTROLS.Data.Record', [
          return name ?
             this._changedFields.hasOwnProperty(name) :
             !Object.isEmpty(this._changedFields);
+      },
+
+      /**
+       * Проверяет эквивалентность формата и данных другой записи.
+       * @param {SBIS3.CONTROLS.Data.Record} record Запись, эквивалентность которой проверяется
+       * @returns {Boolean}
+       */
+      isEqual: function (record) {
+         if (record === this) {
+            return true;
+         }
+         if (!record) {
+            return false;
+         }
+         if (!$ws.helpers.instanceOfModule(record, 'SBIS3.CONTROLS.Data.Record')) {
+            return false;
+         }
+         //TODO: когда появятся форматы, сделать через сравнение форматов
+         return $ws.helpers.isEqualObject(
+            this.getRawData(),
+            record.getRawData()
+         );
       },
 
       /**
@@ -370,6 +392,50 @@ define('js!SBIS3.CONTROLS.Data.Record', [
        */
       _isFieldValueCacheable: function(value) {
          return value && typeof value === 'object';
+      },
+
+      /**
+       * Сравнивает два значения на эквивалентность (в том числе через интерфейс сравнения)
+       * @param {Boolean} a Значение A
+       * @param {Boolean} b Значение B
+       * @returns {Boolean}
+       * @protected
+       */
+      _isEqualValues: function(a, b) {
+         if (a === b) {
+            return true;
+         }
+
+         if (this._isComparable(a) && this._isComparable(b)) {
+            return a.isEqual(b);
+         }
+
+         if (a && $ws.helpers.instanceOfModule(a, 'SBIS3.CONTROLS.Data.Types.Enum') &&
+            b && $ws.helpers.instanceOfModule(b, 'SBIS3.CONTROLS.Data.Types.Enum')
+         ) {
+            return a.equals(b);
+         }
+
+         if (a && $ws.helpers.instanceOfModule(a, 'SBIS3.CONTROLS.Data.Types.Flags') &&
+            b && $ws.helpers.instanceOfModule(b, 'SBIS3.CONTROLS.Data.Types.Flags')
+         ) {
+            return a.equals(b);
+         }
+
+         return false;
+      },
+
+      /**
+       * Проверяет наличие интерфейса сравнения у объекта
+       * @param {Object} value
+       * @returns {Boolean}
+       * @protected
+       */
+      _isComparable: function(value) {
+         if (!value) {
+            return false;
+         }
+         return $ws.helpers.instanceOfModule(value, 'SBIS3.CONTROLS.Data.Record');
       },
 
       /**

@@ -19,6 +19,7 @@ define('js!SBIS3.CONTROLS.Tooltip', ['js!SBIS3.CORE.Control'], function(Control)
          _options: {
             /**
              * @cfg {String}  Текст на кнопке
+             * @translatable
              */
             text: ''
          }

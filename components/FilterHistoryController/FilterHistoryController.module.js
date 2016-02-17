@@ -65,7 +65,8 @@ define('js!SBIS3.CONTROLS.FilterHistoryController',
              }
 
              /* Запишем новую историю */
-             this._listHistory.fill(newHistory.toArray());
+             /* Надо обязательно клонировать историю, чтобы по ссылке не передавались изменения */
+             this._listHistory.fill($ws.core.clone(newHistory.toArray()));
              this._saveParamsDeferred = saveDeferred;
              this._options.filterButton[activeFilter ? 'setFilterStructure' : '_resetFilter'](activeFilter.filter);
              this._updateFilterButtonHistoryView();
@@ -311,7 +312,7 @@ define('js!SBIS3.CONTROLS.FilterHistoryController',
           _sortHistory: function() {
              /* Сортирует историю по флагу отмеченности и активности.
                 Приоритет: отмеченные > активный > обычные. */
-             this.getHistoryArr().sort(function(a, b) {
+             this._listHistory.assign(this.getHistoryArr().sort(function(a, b) {
                 if(a.isMarked && b.isMarked) {
                    return 0;
                 } else if(a.isMarked) {
@@ -325,7 +326,7 @@ define('js!SBIS3.CONTROLS.FilterHistoryController',
                 } else if(b.isActiveFilter) {
                    return 1;
                 }
-             });
+             }));
           },
 
           destroy: function() {
