@@ -285,6 +285,9 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', ['js!SBIS3.CORE.Control',
             if (this._options.openedPath[parent] || (parent == this._curRoot)) {
                parentFnc.call(this, item, at);
             }
+         },
+         _isViewElement: function(parentFunc, elem) {
+            return  parentFunc.call(this, elem) && !elem.hasClass('controls-HierarchyDataGridView__path') && !(elem.wsControl() instanceof BreadCrumbs);
          }
       },
 
@@ -464,12 +467,6 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', ['js!SBIS3.CORE.Control',
                self._destroyFolderFooter([key]);
             });
          }
-      },
-      around: {
-         _isViewElement: function(parentFunc, elem) {
-            return  parentFunc.call(this, elem) && !elem.hasClass('controls-HierarchyDataGridView__path') && !(elem.wsControl() instanceof BreadCrumbs);
-         }
-
       },
       after : {
          _modifyOptions: function (opts) {
