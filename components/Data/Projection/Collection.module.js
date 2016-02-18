@@ -538,6 +538,7 @@ define('js!SBIS3.CONTROLS.Data.Projection.Collection', [
             items = [],
             contents = [],
             item;
+         enumerator.reset();
          while ((item = enumerator.getNext())) {
             items.push(item);
             contents.push(item.getContents());
@@ -554,6 +555,7 @@ define('js!SBIS3.CONTROLS.Data.Projection.Collection', [
        * @protected
        */
       _finishUpdateSession: function (session) {
+         //TODO: порефактроить тут всё, оптимизировать Array.indexOf
          var enumerator = this._getServiceEnumerator(),
             afterItem;
 
@@ -1064,14 +1066,30 @@ define('js!SBIS3.CONTROLS.Data.Projection.Collection', [
        * @private
        */
       onSourceCollectionChange: function (event, action, newItems, newItemsIndex, oldItems, oldItemsIndex) {
+         if (action === IBindCollectionProjection.ACTION_RESET) {
+            oldItems = this._getItemsProjection(oldItems, oldItemsIndex, true);
+            this._reBuild();
+            if (this._isFiltered()) {
+               this._reFilter();
+            }
+            newItems = this._getItemsProjection(newItems, newItemsIndex);
+            this._getServiceEnumerator().reIndex();
+            this._notifyCollectionChange(
+               action,
+               newItems,
+               newItemsIndex,
+               oldItems,
+               oldItemsIndex
+            );
+            return;
+         }
+
          var session = this._startUpdateSession();
 
          switch (action) {
             case IBindCollectionProjection.ACTION_ADD:
                this._addItems(newItemsIndex, newItems);
-               if (this._isSorted()) {
-                  this._reSort();
-               }
+               this._reSort();
                if (this._isFiltered()) {
                   this._reFilter(newItemsIndex, newItems.length);
                }
@@ -1079,16 +1097,12 @@ define('js!SBIS3.CONTROLS.Data.Projection.Collection', [
 
             case IBindCollectionProjection.ACTION_REMOVE:
                this._removeItems(oldItemsIndex, oldItems.length);
-               if (this._isSorted()) {
-                  this._reSort();
-               }
+               this._reSort();
                break;
 
             case IBindCollectionProjection.ACTION_REPLACE:
                this._replaceItems(newItemsIndex, newItems);
-               if (this._isSorted()) {
-                  this._reSort();
-               }
+               this._reSort();
                if (this._isFiltered()) {
                   this._reFilter(newItemsIndex, newItems.length);
                }
@@ -1097,15 +1111,6 @@ define('js!SBIS3.CONTROLS.Data.Projection.Collection', [
             case IBindCollectionProjection.ACTION_MOVE:
                this._removeItems(oldItemsIndex, oldItems.length);
                this._addItems(newItemsIndex, newItems);
-               break;
-
-            case IBindCollectionProjection.ACTION_RESET:
-               oldItems = this._getItemsProjection(oldItems, oldItemsIndex);
-               this._reBuild();
-               this._reFilter(newItemsIndex, newItems.length);
-               newItems = this._getItemsProjection(newItems, newItemsIndex);
-               this._getServiceEnumerator().reIndex();
-               //notifyStandard.call(this);
                break;
          }
 

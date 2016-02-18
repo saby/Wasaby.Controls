@@ -378,16 +378,17 @@ define([
          describe('[onCollectionChange]', function() {
             it('should fire with all of children add a node', function(done) {
                var tree = getObservableTree(),
-                  expect = ['D', 'DA', 'DB', 'DBA', 'DC'],
+                  expectNewItems = ['E', 'EA', 'EB', 'EBA', 'EC'],
+                  expectNewItemsIndex = 13,
                   handler = function(event, action, newItems, newItemsIndex, oldItems, oldItemsIndex) {
                      try {
                         assert.strictEqual(action, IBindCollectionProjection.ACTION_ADD, 'Invalid action');
 
-                        assert.strictEqual(newItems.length, expect.length, 'Invalid newItems length');
+                        assert.strictEqual(newItems.length, expectNewItems.length, 'Invalid newItems length');
                         for (var i = 0; i < newItems.length; i++) {
-                           assert.strictEqual(newItems[i].getContents().title, expect[i], 'Invalid newItems[' + i + ']');
+                           assert.strictEqual(newItems[i].getContents().title, expectNewItems[i], 'Invalid newItems[' + i + ']');
                         }
-                        assert.strictEqual(newItemsIndex, 0, 'Invalid newItemsIndex');
+                        assert.strictEqual(newItemsIndex, expectNewItemsIndex, 'Invalid newItemsIndex');
 
                         assert.strictEqual(oldItems.length, 0, 'Invalid oldItems length');
                         assert.strictEqual(oldItemsIndex, 0, 'Invalid oldItemsIndex');
@@ -423,7 +424,8 @@ define([
             });
             it('should fire with all of children after remove a node', function(done) {
                var tree = getObservableTree(),
-                  expect = ['A', 'AA', 'AB', 'AC', 'ACA', 'ACB', 'ACC'],
+                  expectOldItems = ['A', 'AA', 'AB', 'AC', 'ACA', 'ACB', 'ACC'],
+                  expectOldItemsIndex = 0,
                   handler = function(event, action, newItems, newItemsIndex, oldItems, oldItemsIndex) {
                      try {
                         assert.strictEqual(action, IBindCollectionProjection.ACTION_REMOVE, 'Invalid action');
@@ -431,11 +433,11 @@ define([
                         assert.strictEqual(newItems.length, 0, 'Invalid newItems length');
                         assert.strictEqual(newItemsIndex, 0, 'Invalid newItemsIndex');
 
-                        assert.strictEqual(oldItems.length, expect.length, 'Invalid oldItems length');
+                        assert.strictEqual(oldItems.length, expectOldItems.length, 'Invalid oldItems length');
                         for (var i = 0; i < oldItems.length; i++) {
-                           assert.strictEqual(oldItems[i].getContents().title, expect[i], 'Invalid oldItems[' + i + ']');
+                           assert.strictEqual(oldItems[i].getContents().title, expectOldItems[i], 'Invalid oldItems[' + i + ']');
                         }
-                        assert.strictEqual(oldItemsIndex, 0, 'Invalid oldItemsIndex');
+                        assert.strictEqual(oldItemsIndex, expectOldItemsIndex, 'Invalid oldItemsIndex');
                         done();
                      } catch (err) {
                         done(err);
