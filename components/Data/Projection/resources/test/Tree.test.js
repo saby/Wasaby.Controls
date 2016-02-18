@@ -118,22 +118,6 @@ define([
             items = undefined;
          });
 
-         describe('.getByHash()', function() {
-            it('should return an item by hash', function() {
-               tree.moveToNext();
-               var item = tree.getCurrent();
-               assert.strictEqual(tree.getByHash(item.getHash()), item);
-            });
-         });
-
-         describe('.getIndexByHash()', function() {
-            it('should return an index by hash', function() {
-               tree.moveToNext();
-               var item = tree.getCurrent();
-               assert.strictEqual(tree.getIndexByHash(item.getHash()), tree.getIndex(item));
-            });
-         });
-
          describe('.getEnumerator()', function() {
             it('should traverse items in hierarchical order', function() {
                var enumerator = tree.getEnumerator(),
