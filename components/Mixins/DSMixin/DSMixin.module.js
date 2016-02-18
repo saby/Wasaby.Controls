@@ -1117,6 +1117,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
          var container = this._getItemContainer(this._getTargetContainer(item), item);
          if (container.length) {
             this._clearItems(container);
+            this._ladderCompare([container.prev(), container.next()]);
             container.remove();
          }
       },
@@ -1131,6 +1132,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
             this._addItemAttributes(newItemContainer, item);
             this._clearItems(container);
             container.replaceWith(newItemContainer);
+            this._ladderCompare([container.prev(), container, container.next()]);
          }
       },
 
