@@ -11,36 +11,38 @@ define([
 
       describe('SBIS3.CONTROLS.Data.Collection.RecordSet', function() {
          var rs,
-            items,
-            getItems = function() {
-               return [{
-                  'Ид': 1,
-                  'Фамилия': 'Иванов'
-               }, {
-                  'Ид': 2,
-                  'Фамилия': 'Петров'
-               }, {
-                  'Ид': 3,
-                  'Фамилия': 'Сидоров'
-               }, {
-                  'Ид': 4,
-                  'Фамилия': 'Пухов'
-               }, {
-                  'Ид': 5,
-                  'Фамилия': 'Молодцов'
-               }, {
-                  'Ид': 6,
-                  'Фамилия': 'Годолцов'
-               }, {
-                  'Ид': 7,
-                  'Фамилия': 'Арбузнов'
-               }];
-            };
+            items;
+
 
          beforeEach(function() {
-            items = getItems();
+            items = [{
+               'Ид': 1,
+               'Фамилия': 'Иванов'
+            }, {
+               'Ид': 2,
+               'Фамилия': 'Петров'
+            }, {
+               'Ид': 3,
+               'Фамилия': 'Сидоров'
+            }, {
+               'Ид': 4,
+               'Фамилия': 'Пухов'
+            }, {
+               'Ид': 5,
+               'Фамилия': 'Молодцов'
+            }, {
+               'Ид': 6,
+               'Фамилия': 'Годолцов'
+            }, {
+               'Ид': 7,
+               'Фамилия': 'Арбузнов'
+            }, {
+               'Ид': 8,
+               'Фамилия': 'Арбузнов'
+            }];
             rs = new RecordSet({
-               rawData: getItems()
+               rawData: $ws.core.clone(items),
+               idProperty: 'Ид'
             });
          });
 
@@ -118,9 +120,6 @@ define([
             });
 
             it('should get adapter in strategy', function (){
-               var rs = new RecordSet({
-                  items: getItems()
-               });
                assert.equal(rs.at(1).get('Ид'), 2);
             });
          });
@@ -139,7 +138,7 @@ define([
             });
             it('should return true for the same recordset', function () {
                var same = new RecordSet({
-                  rawData: getItems()
+                  rawData: $ws.core.clone(items)
                });
                assert.isTrue(rs.isEqual(same));
             });
@@ -155,35 +154,35 @@ define([
             });
             it('should return false if record added', function () {
                var same = new RecordSet({
-                  rawData: getItems()
+                  rawData: $ws.core.clone(items)
                });
                same.add(rs.at(0).clone());
                assert.isFalse(rs.isEqual(same));
             });
             it('should return true if same record replaced', function () {
                var same = new RecordSet({
-                  rawData: getItems()
+                  rawData: $ws.core.clone(items)
                });
                same.replace(rs.at(0).clone(), 0);
                assert.isTrue(rs.isEqual(same));
             });
             it('should return false if not same record replaced', function () {
                var same = new RecordSet({
-                  rawData: getItems()
+                  rawData: $ws.core.clone(items)
                });
                same.replace(rs.at(1).clone(), 0);
                assert.isFalse(rs.isEqual(same));
             });
             it('should return false if record removed', function () {
                var same = new RecordSet({
-                  rawData: getItems()
+                  rawData: $ws.core.clone(items)
                });
                same.removeAt(0);
                assert.isFalse(rs.isEqual(same));
             });
             it('should return false if record updated', function () {
                var same = new RecordSet({
-                  rawData: getItems()
+                  rawData: $ws.core.clone(items)
                });
                same.at(0).set('Фамилия', 'Aaa');
                assert.isFalse(rs.isEqual(same));
@@ -228,6 +227,16 @@ define([
                });
             });
 
+            it('should throw an error', function() {
+               var data4 = {id: 4},
+                  data5 = {id: 5};
+               assert.throw(function (){
+                  rs.append([new Model({
+                     rawData: data4
+                  }), data5]);
+               });
+            });
+
          });
 
          describe('.prepend', function (){
@@ -249,6 +258,18 @@ define([
                   assert.deepEqual(rs.at(i).getRawData(), item);
                });
             });
+
+
+            it('should throw an error', function() {
+               var  data4 = {id: 4},
+                  data5 = {id: 5};
+               assert.throw(function (){
+                  rs.prepend([new Model({
+                     rawData: data4
+                  }), data5]);
+               });
+            });
+
          });
 
          describe('.assign()', function() {
@@ -269,6 +290,16 @@ define([
                assert.deepEqual(rs.at(0).getRawData(), data4);
                assert.deepEqual(rs.at(1).getRawData(), data5);
                assert.strictEqual(rs.getCount(), 2);
+            });
+
+            it('should throw an error', function() {
+               var data4 = {id: 4},
+                  data5 = {id: 5};
+               assert.throw(function (){
+                  rs.assign([new Model({
+                     rawData: data4
+                  }), data5]);
+               });
             });
          });
 
@@ -292,6 +323,16 @@ define([
                items.push(rd);
                assert.deepEqual(rs.getRawData(), items);
             });
+
+            it('should throw an error', function() {
+               var rd = {
+                     'Ид': 502,
+                     'Фамилия': '502'
+                  };
+               assert.throw(function (){
+                  rs.add(rd);
+               });
+            });
          });
 
          describe('.removeAt()', function() {
@@ -313,6 +354,19 @@ define([
                items[0] = rd;
                assert.deepEqual(rs.getRawData(), items);
             });
+
+            it('should throw an error', function() {
+               var rd = {
+                     'Ид': 50,
+                     'Фамилия': '50'
+                  },
+                  newItem = new Model({rawData: rd});
+               assert.throw(function (){
+                  rs.append([new Model({
+                     rawData: data4
+                  }), data5]);
+               });
+            });
          });
 
          describe('.getIndex()', function (){
@@ -326,7 +380,7 @@ define([
          describe('.saveChanges()', function (){
             it('should return an index of given item', function(done) {
                var source = new MemorySource({
-                  data: getItems(),
+                  data: items,
                   idProperty: 'Ид'
                });
                source.query().addCallback(function(ds){
@@ -341,32 +395,26 @@ define([
                   done();
                });
             });
-            it('should return record by updated id', function() {
+
+            it('should update record', function() {
                var source = new MemorySource({
                      idProperty: 'Ид'
                   }),
-                  rs = new RecordSet({
-                     idProperty: 'Ид',
-                     rawData: items.slice()
-                  }),
-                  rec = new Model({
-                     idProperty: 'Ид'
-                  }),
-                  byKeyRec;
-               rs.add(rec);
-               byKeyRec = rs.getRecordById(rec.getId());
+                  rec = rs.at(2);
+               source.update = function (model){
+                  assert.equal(rec, model);
+                  return new $ws.proto.Deferred().callback(model);
+               };
+
+               rec.set('Фамилия', 'Зернов');
                rs.saveChanges(source);
-               assert.strictEqual(rec, byKeyRec);
-               assert.strictEqual(rec, rs.getRecordById(rec.getId()));
+               assert.isFalse(rec.isChanged());
             });
          });
 
          describe('.merge()', function (){
             it('should merge two recordsets with default params', function() {
-               var rs = new RecordSet({
-                  rawData: getItems(),
-                  idProperty: "Ид"
-               }), rs2 =  new RecordSet({
+               var rs2 =  new RecordSet({
                   rawData: [{
                      'Ид': 1000,
                      'Фамилия': 'Карпов'
@@ -384,10 +432,7 @@ define([
             });
 
             it('should merge two recordsets without remove', function() {
-               var rs = new RecordSet({
-                  rawData: getItems(),
-                  idProperty: "Ид"
-               }), rs2 =  new RecordSet({
+               var rs2 =  new RecordSet({
                   rawData: [{
                      'Ид': 2,
                      'Фамилия': 'Пушкин'
@@ -395,16 +440,13 @@ define([
                   idProperty: "Ид"
                });
                rs.merge(rs2, {remove: false});
-               assert.equal(getItems().length, rs.getCount());
+               assert.equal(items.length, rs.getCount());
                assert.equal(rs.getRecordById(2).get('Фамилия'), 'Пушкин');
 
             });
 
             it('should merge two recordsets without merge', function() {
-               var rs = new RecordSet({
-                  rawData: getItems(),
-                  idProperty: "Ид"
-               }), rs2 =  new RecordSet({
+               var  rs2 =  new RecordSet({
                   rawData: [{
                      'Ид': 2,
                      'Фамилия': 'Пушкин'
@@ -417,10 +459,7 @@ define([
             });
 
             it('should merge two recordsets without add', function() {
-               var rs = new RecordSet({
-                  rawData: getItems(),
-                  idProperty: "Ид"
-               }), rs2 =  new RecordSet({
+               var  rs2 =  new RecordSet({
                   rawData: [{
                      'Ид': 1000,
                      'Фамилия': 'Пушкин'
@@ -472,6 +511,150 @@ define([
                assert.deepEqual(json.state._options.rawData.d, [2]);
             });
          });
+
+         describe('.getIdProperty()', function (){
+            it('should return id property', function() {
+               assert.equal("Ид", rs.getIdProperty());
+            });
+
+            it('should return false', function() {
+               var  rs2 =  new RecordSet({
+                  rawData: [{
+                     'Ид': 1000,
+                     'Фамилия': 'Пушкин'
+                  }]
+               });
+               assert.isTrue(!rs2.getIdProperty());
+            });
+         });
+
+         describe('.setIdProperty()', function (){
+            it('should set id property', function() {
+               rs.setIdProperty('Фамилия');
+               assert.equal("Фамилия", rs.getIdProperty());
+            });
+
+            it('shouldnt set id property', function() {
+               rs.setIdProperty('Лицо');
+               assert.equal("Ид", rs.getIdProperty());
+            });
+         });
+
+         describe('.removeRecord()', function (){
+            it('should mark record as remove', function() {
+               rs.removeRecord(1);
+               assert.isTrue(rs.getRecordById(1).isDeleted());
+            });
+
+            it('should mark records as remove', function() {
+               rs.removeRecord([1,2]);
+               assert.isTrue(rs.getRecordById(1).isDeleted());
+               assert.isTrue(rs.getRecordById(2).isDeleted());
+            });
+         });
+
+         describe('.getRecordById()', function (){
+            it('should return record by id', function() {
+               assert.equal(rs.getRecordById(2).get('Фамилия'), 'Петров');
+               assert.equal(rs.getRecordById(3).get('Фамилия'), 'Сидоров');
+            });
+         });
+
+         describe('.getRecordBykey()', function (){
+            it('should return record by id', function() {
+               assert.equal(rs.getRecordByKey(2).get('Фамилия'), 'Петров');
+               assert.equal(rs.getRecordByKey(3).get('Фамилия'), 'Сидоров');
+            });
+         });
+
+         describe('.getIndexById()', function (){
+            it('should return record by id', function() {
+               assert.equal(rs.getIndexById(2), 1);
+            });
+         });
+
+         describe('.getRecordKeyByIndex()', function (){
+            it('should return record by id', function() {
+               assert.equal(rs.getRecordKeyByIndex(1), 2);
+            });
+         });
+
+         describe('.getStrategy()', function (){
+            it('should return adapter', function() {
+               $ws.helpers.instanceOfModule(rs.getStrategy(), 'SBIS3.CONTROLS.Data.Adapter.JSON');
+            });
+         });
+
+         describe('.getAdapter()', function (){
+            it('should return adapter', function() {
+               $ws.helpers.instanceOfModule(rs.getStrategy(), 'SBIS3.CONTROLS.Data.Adapter.JSON');
+            });
+         });
+
+         describe('.push()', function (){
+            it('should append record', function() {
+               var m =new Model({
+                  rawData: {'Ид':100, 'Фамилия':'Карпов'}
+               });
+               rs.push(m);
+               assert.equal(rs.getRecordById('100').get('Фамилия'),'Карпов');
+            });
+
+            it('should make record and append in recordset', function() {
+               var m =  {'Ид':100, 'Фамилия':'Карпов'};
+               rs.push(m);
+               assert.equal(rs.getRecordById('100').get('Фамилия'),'Карпов');
+            });
+         });
+
+         describe('.filter()', function (){
+            it('should return fitered record set', function() {
+               var newRs = rs.filter(function (model){
+                  return model.get('Фамилия') === 'Арбузнов';
+               });
+               assert.equal(newRs.getCount(), 2);
+               assert.equal(newRs.at(0).get('Фамилия'), 'Арбузнов');
+            });
+         });
+
+         describe('.insert()', function (){
+            it('should insert record in recordset', function() {
+               var m = new Model({
+                  rawData: {'Ид':100, 'Фамилия':'Карпов'}
+               });
+               rs.insert(m, 0);
+               assert.equal(rs.at(0).get('Фамилия'), 'Карпов');
+               var length = rs.getCount();
+               rs.insert(m, 5);
+               assert.equal(rs.getCount(), length);
+            });
+
+
+         });
+
+         describe('.setMetaData()', function (){
+            it('should set meta data', function() {
+               var meta = {'test': true};
+               rs.setMetaData(meta);
+               assert.equal(meta, rs.getMetaData());
+            });
+         });
+
+         describe('.getMetaData()', function (){
+            it('should return meta data path', function() {
+               rs.setMetaData({'path':[{'s':1}]});
+               var meta = rs.getMetaData();
+               assert.equal(meta.path.at(0).get('s'), 1);
+            });
+
+            it('should return meta data results', function() {
+               rs.setMetaData({'results':{'s':1}});
+               var meta = rs.getMetaData();
+               assert.equal(meta.results.get('s'), 1);
+            });
+         });
+
+
       });
    }
 );
