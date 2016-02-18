@@ -16,7 +16,8 @@ define(['js!SBIS3.CONTROLS.Utils.HtmlDecorators/AbstractDecorator'], function (A
          _ladderLastWords: {},
          _columnName: undefined,
          _parentId: undefined,
-         _isCheckCondition: false
+         _isCheckCondition: false,
+         _markLadderColumn: false
       },
 
       $constructor: function () {
@@ -59,6 +60,12 @@ define(['js!SBIS3.CONTROLS.Utils.HtmlDecorators/AbstractDecorator'], function (A
          return this.setLadder(text);
       },
 
+      setMarkLadderColumn: function(enable){
+         this._markLadderColumn = !!enable;
+      },
+      isMarkLadderColumn: function(){
+         return this._markLadderColumn;
+      },
       /**
        * Обновляет настройки декоратора
        * @param {Object} control Экземпляр контрола
@@ -86,14 +93,15 @@ define(['js!SBIS3.CONTROLS.Utils.HtmlDecorators/AbstractDecorator'], function (A
          if (!this._isLadderColumn()){
             return text;
          }
-
-         if (!this._ladderLastWords[this._parentId]) {
-            this._ladderLastWords[this._parentId] = {};
+         if (!this.isMarkLadderColumn()){
+            if (!this._ladderLastWords[this._parentId]) {
+               this._ladderLastWords[this._parentId] = {};
+            }
+            else if (this._ladderLastWords[this._parentId][this._columnName] == text) {
+               return '<span class="controls-ladder ws-invisible">' + text + '</span>';
+            }
+            this._ladderLastWords[this._parentId][this._columnName] = text;
          }
-         else if (this._ladderLastWords[this._parentId][this._columnName] == text) {
-            return '<span class="controls-ladder ws-invisible">' + text + '</span>';
-         }
-         this._ladderLastWords[this._parentId][this._columnName] = text;
 
          return '<span class="controls-ladder">' + text + '</span>';
       }

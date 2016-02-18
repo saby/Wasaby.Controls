@@ -87,6 +87,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
        * </pre>
        */
       $protected: {
+         _isDrawn: false,
          _itemsProjection: null,
          _items : null,
          _itemsInstances: {},
@@ -243,7 +244,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
              */
             filter: {},
             /**
-             * @cfg {Array} Сортировка данных. Задается массивом объектов, в котором ключ - это имя поля, а значение ASC - по-возрастанию, DESC  - по-убыванию
+             * @cfg {Array} Сортировка данных. Задается массивом объектов, в котором ключ - это имя поля, а значение ASC - по возрастанию, DESC  - по убыванию
              * @example
              * <pre class="brush:xml">
              *     <options name="sorting" type="Array">
@@ -322,11 +323,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
       },
       after : {
          _modifyOptions: function (opts) {
-            var tpl = opts.footerTpl;
-            //Если нам передали шаблон как строку вида !html, то нужно из нее сделать функцию
-            if (tpl && typeof tpl === 'string' && tpl.match(/^html!/)) {
-               opts.footerTpl = require(tpl);
-            }
+            opts.footerTpl = TemplateUtil.prepareTemplate(opts.footerTpl);
             return opts;
          },
          destroy : function() {
@@ -497,6 +494,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
 
           if (this._dataSource) {
              this._toggleIndicator(true);
+             this._notify('onBeforeDataLoad');
              def = this._callQuery(this._options.filter, this.getSorting(), this._offset, this._limit)
                 .addCallback($ws.helpers.forAliveOnly(function (list) {
                    self._toggleIndicator(false);
@@ -514,8 +512,8 @@ define('js!SBIS3.CONTROLS.DSMixin', [
                       self._itemsReadyCallback();
                       self._dataLoadedCallback();
                       self._notify('onDataLoad', list);
-                      self.redraw();
                    }
+                   self.redraw();
                    //self._notify('onBeforeRedraw');
                    return list;
                 }, self))
@@ -547,8 +545,6 @@ define('js!SBIS3.CONTROLS.DSMixin', [
          if (!this._dataSource) {
             return;
          }
-         this._notify('onBeforeDataLoad');
-
          var query = new Query();
          query.where(filter)
             .offset(offset)
@@ -624,15 +620,14 @@ define('js!SBIS3.CONTROLS.DSMixin', [
          }
       },
       /**
-       * Получить текущую сортировку
+       * Получает текущую сортировку
        * @returns {Array}
        */
       getSorting: function() {
          return this._options.sorting;
       },
       /**
-       * Получить текущую сортировку
-       * @returns {Array}
+       * Устанавливает текущую сортировку
        */
       setSorting: function(sorting, noLoad) {
          this._options.sorting = sorting;
@@ -640,6 +635,19 @@ define('js!SBIS3.CONTROLS.DSMixin', [
          if (this._dataSource && !noLoad) {
             this.reload(this._options.filter, this.getSorting(), 0, this.getPageSize());
          }
+      },
+      /**
+       * Получить текущий сдвиг навигации
+       * @returns {Integer}
+       */
+      getOffset: function() {
+         return this._offset;
+      },
+      /**
+       * Устанавливает текущий сдвиг навигации
+       */
+      setOffset: function(offset) {
+         this._offset = offset;
       },
       //переопределяется в HierarchyMixin
       _setPageSave: function(pageNum){
@@ -714,9 +722,11 @@ define('js!SBIS3.CONTROLS.DSMixin', [
 
          if (this._items) {
             this._clearItems();
+            this._isDrawn = false;
             records = this._getRecordsForRedraw();
             this._toggleEmptyData(!records.length && this._options.emptyHTML);
             this._drawItems(records);
+            this._isDrawn = true;
          }
       },
       _destroySearchBreadCrumbs: function(){
@@ -1066,7 +1076,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
 
       _addItem: function (item, at) {
          var ladderDecorator = this._decorators.getByName('ladder');
-         ladderDecorator && ladderDecorator.setEnabled(false);
+         ladderDecorator && ladderDecorator.setMarkLadderColumn(true);
          item = item.getContents();
          var target = this._getTargetContainer(item),
             nextSibling = at > -1 ? this._getItemContainerByIndex(target, at) : null,
@@ -1076,26 +1086,30 @@ define('js!SBIS3.CONTROLS.DSMixin', [
          this._addItemAttributes(newItemContainer, item);
          if (nextSibling && nextSibling.length) {
             newItemContainer.insertBefore(nextSibling);
-            rows = [newItemContainer.prev(), newItemContainer, nextSibling];
+            rows = [newItemContainer.prev().prev(), newItemContainer.prev(), newItemContainer, nextSibling, nextSibling.next()];
          } else {
             newItemContainer.appendTo(target);
-            rows = [newItemContainer.prev(), newItemContainer];
+            rows = [newItemContainer.prev().prev(), newItemContainer.prev(), newItemContainer, newItemContainer.next()];
          }
-         ladderDecorator && ladderDecorator.setEnabled(true);
+         ladderDecorator && ladderDecorator.setMarkLadderColumn(false);
          this._ladderCompare(rows);
       },
       _ladderCompare: function(rows){
          //TODO придрот - метод нужен только для адекватной работы лесенки при перемещении элементов местами
          for (var i = 1; i < rows.length; i++){
-            var upperRow = $('.controls-ladder', rows[i - 1]),
-               lowerRow = $('.controls-ladder', rows[i]);
-            for (var j = 0; j < lowerRow.length; j++){
-               lowerRow.eq(j).toggleClass('ws-invisible', upperRow.eq(j).html() == lowerRow.eq(j).html());
+            var upperRow = rows[i - 1].length ? $('.controls-ladder', rows[i - 1]) : undefined,
+                lowerRow = rows[i].length ? $('.controls-ladder', rows[i]) : undefined,
+               needHide;
+            if (lowerRow) {
+               for (var j = 0; j < lowerRow.length; j++) {
+                  needHide = upperRow ? (upperRow.eq(j).html() == lowerRow.eq(j).html()) : false;
+                  lowerRow.eq(j).toggleClass('ws-invisible', needHide);
+               }
             }
          }
       },
       _isNeedToRedraw: function(){
-      	return !!this._getItemsContainer();
+      	return this._isDrawn && !!this._getItemsContainer();
       },
 
       _removeItem: function (item) {
@@ -1104,8 +1118,6 @@ define('js!SBIS3.CONTROLS.DSMixin', [
          if (container.length) {
             this._clearItems(container);
             container.remove();
-         } else {
-            $ws.single.ioc.resolve('ILogger').error('SBIS3.CONTROLS.DSMixin::removeItem()', 'Item is not found');
          }
       },
 
@@ -1119,8 +1131,6 @@ define('js!SBIS3.CONTROLS.DSMixin', [
             this._addItemAttributes(newItemContainer, item);
             this._clearItems(container);
             container.replaceWith(newItemContainer);
-         } else {
-            $ws.single.ioc.resolve('ILogger').error('SBIS3.CONTROLS.DSMixin::updateItem()', 'Item at this position is not found');
          }
       },
 
@@ -1135,7 +1145,9 @@ define('js!SBIS3.CONTROLS.DSMixin', [
 
    var
       onCollectionItemChange = function(eventObject, item, index, property){
-         this._updateItem(item);
+         if (this._isNeedToRedraw()) {
+            this._updateItem(item);
+         }
       },
       /**
        * Обрабатывает событие об изменении коллекции

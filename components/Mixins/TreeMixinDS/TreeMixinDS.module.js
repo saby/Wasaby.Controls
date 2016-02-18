@@ -101,7 +101,7 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', ['js!SBIS3.CORE.Control',
       _createDefaultProjection : function(items) {
          this._itemsProjection = new TreeProjection({
             collection: items,
-            idProperty: this._options.keyField || (this._options.dataSource ? this._options.dataSource.getIdProperty() : ''),
+            idProperty: this._options.keyField || (this._dataSource ? this._dataSource.getIdProperty() : ''),
             parentProperty: this._options.hierField,
             nodeProperty: this._options.hierField + '@',
             root: (typeof this._options.root != 'undefined') ? this._options.root : null

@@ -1,8 +1,10 @@
 /* global define, beforeEach, afterEach, describe, context, it, assert, $ws */
 define([
       'js!SBIS3.CONTROLS.Data.Record',
-      'js!SBIS3.CONTROLS.Data.Adapter.Sbis'
-   ], function (Record, SbisAdapter) {
+      'js!SBIS3.CONTROLS.Data.Adapter.Sbis',
+      'js!SBIS3.CONTROLS.Data.Types.Enum',
+      'js!SBIS3.CONTROLS.Data.Types.Flags'
+   ], function (Record, SbisAdapter, Enum, Flags) {
       'use strict';
       describe('SBIS3.CONTROLS.Data.Record', function () {
          var getRecordData = function() {
@@ -74,22 +76,10 @@ define([
                assert.isUndefined(name);
                assert.isUndefined(newV);
             });
-            it('should trigger onPropertyChange if value is not equal', function () {
+            it('should not trigger onPropertyChange if value is equal record', function () {
                var name,
-                  newV;
-               record.subscribe('onPropertyChange', function(e, field, value) {
-                  name = field;
-                  newV = value;
-               });
-               var val = new Record();
-               record.set('rec', val);
-               assert.strictEqual(name, 'rec');
-               assert.strictEqual(newV, val);
-            });
-            it('should not trigger onPropertyChange if value is equal clone', function () {
-               var name,
-                  newV;
-               var val = new Record();
+                  newV,
+                  val = new Record();
                val.set('a', 'b');
                record.set('rec', val);
                record.subscribe('onPropertyChange', function(e, field, value) {
@@ -101,10 +91,10 @@ define([
                assert.isUndefined(name);
                assert.isUndefined(newV);
             });
-            it('should trigger onPropertyChange if value is not equal clone', function () {
+            it('should trigger onPropertyChange if value is not equal record', function () {
                var name,
-                  newV;
-               var val = new Record();
+                  newV,
+                  val = new Record();
                val.set('a', 'b');
                record.set('rec', val);
                record.subscribe('onPropertyChange', function(e, field, value) {
@@ -116,6 +106,62 @@ define([
                record.set('rec', val);
                assert.strictEqual(name, 'rec');
                assert.strictEqual(newV, val);
+            });
+            it('should not trigger onPropertyChange if value is equal enum', function () {
+               var name,
+                  newV,
+                  val1 = new Enum({data: ['a', 'b', 'c']}),
+                  val2 = new Enum({data: ['a', 'b', 'c']});
+               record.set('enum', val1);
+               record.subscribe('onPropertyChange', function(e, field, value) {
+                  name = field;
+                  newV = value;
+               });
+               record.set('enum', val2);
+               assert.isUndefined(name);
+               assert.isUndefined(newV);
+            });
+            it('should trigger onPropertyChange if value is not equal enum', function () {
+               var name,
+                  newV,
+                  val1 = new Enum({data: ['a', 'b']}),
+                  val2 = new Enum({data: ['a', 'b', 'c']});
+               record.set('enum', val1);
+               record.subscribe('onPropertyChange', function(e, field, value) {
+                  name = field;
+                  newV = value;
+               });
+               record.set('enum', val2);
+               assert.strictEqual(name, 'enum');
+               assert.strictEqual(newV, val2);
+            });
+            it('should not trigger onPropertyChange if value is equal flags', function () {
+               var name,
+                  newV,
+                  val1 = new Flags({data: {a: true, b: false}}),
+                  val2 = new Flags({data: {a: true, b: false}});
+               record.set('flags', val1);
+               record.subscribe('onPropertyChange', function(e, field, value) {
+                  name = field;
+                  newV = value;
+               });
+               record.set('flags', val2);
+               assert.isUndefined(name);
+               assert.isUndefined(newV);
+            });
+            it('should trigger onPropertyChange if value is not equal flags', function () {
+               var name,
+                  newV,
+                  val1 = new Flags({data: {a: true, b: false}}),
+                  val2 = new Flags({data: {a: true, b: true}});
+               record.set('flags', val1);
+               record.subscribe('onPropertyChange', function(e, field, value) {
+                  name = field;
+                  newV = value;
+               });
+               record.set('flags', val2);
+               assert.strictEqual(name, 'flags');
+               assert.strictEqual(newV, val2);
             });
          });
 
