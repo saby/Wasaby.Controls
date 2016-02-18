@@ -37,7 +37,7 @@ define('js!SBIS3.CONTROLS.Data.Projection.Tree', [
          _root: null,
 
          /**
-          * @member {Object.<String, SBIS3.CONTROLS.Data.Projection.TreeChildren>} Соответствие узлов и их потомков
+          * @member {Object.<String, Array.<SBIS3.CONTROLS.Data.Projection.TreeItem>>} Соответствие узлов и их потомков
           */
          _childrenMap: {}
       },
@@ -47,59 +47,6 @@ define('js!SBIS3.CONTROLS.Data.Projection.Tree', [
             this._itemModule = 'projection.loadable-tree-item';
          }*/
       },
-
-      //region mutable
-
-      /**
-       * Возвращает дочерний элемент узла с указанным хэшем
-       * @param {String} hash Хеш элемента
-       * @param {SBIS3.CONTROLS.Data.Projection.CollectionItem} [parent] Родительский элемент, в котором искать. Если не указан, ищется от корня
-       * @returns {SBIS3.CONTROLS.Data.Projection.CollectionItem}
-       * @state mutable
-       */
-      getByHash: function(hash, parent) {
-         var children = this.getChildren(parent || this.getRoot()),
-            index = children.getIndexByValue('hash', hash);
-         if (index !== -1) {
-            return children.at(index);
-         }
-
-         var enumerator = children.getEnumerator(),
-            child,
-            item;
-         while((child = enumerator.getNext())) {
-            item = this.getByHash(hash, child);
-            if (item !== undefined) {
-               return item;
-            }
-         }
-      },
-
-      /**
-       * Возвращает индекс дочернего элемента узла с указанным хэшем
-       * @param {String} hash Хеш элемента
-       * @param {SBIS3.CONTROLS.Data.Projection.CollectionItem} [parent] Родительский элемент, в котором искать. Если не указан, ищется от корня
-       * @returns {Number}
-       * @state mutable
-       */
-      getIndexByHash: function (hash, parent) {
-         var children = this.getChildren(parent || this.getRoot()),
-            index = children.getIndexByValue('hash', hash);
-         if (index !== -1) {
-            return index;
-         }
-
-         var enumerator = children.getEnumerator(),
-            child;
-         while((child = enumerator.getNext())) {
-            index = this.getIndexByHash(hash, child);
-            if (index !== -1) {
-               return index;
-            }
-         }
-      },
-
-      //endregion mutable
 
       //region SBIS3.CONTROLS.Data.Collection.IEnumerable
 
@@ -199,29 +146,10 @@ define('js!SBIS3.CONTROLS.Data.Projection.Tree', [
       },
 
       getChildren: function (parent) {
-         this._checkItem(parent);
-
-         var hash = parent.getHash();
-         if (!(hash in this._childrenMap)) {
-            var children = [],
-               enumerator = this.getEnumerator();
-            enumerator.setCurrent(parent);
-            if (enumerator.getCurrent() === parent || parent.isRoot()) {
-               var item;
-               while ((item = enumerator.getNext())) {
-                  if (item.getParent() === parent) {
-                     children.push(item);
-                  }
-               }
-            }
-
-            this._childrenMap[hash] = new TreeChildren({
-               owner: parent,
-               items: children
-            });
-         }
-
-         return this._childrenMap[hash];
+         return new TreeChildren({
+            owner: parent,
+            items: this._getChildrenArray(parent)
+         });
       },
 
       moveToAbove: function () {
@@ -243,12 +171,12 @@ define('js!SBIS3.CONTROLS.Data.Projection.Tree', [
          if (!current || !current.isNode()) {
             return false;
          }
-         var children = this.getChildren(current);
-         if (children.getCount() === 0) {
+         var children = this._getChildrenArray(current);
+         if (children.length === 0) {
             return false;
          }
 
-         this.setCurrent(children.at(0));
+         this.setCurrent(children[0]);
          return true;
       },
 
@@ -293,6 +221,35 @@ define('js!SBIS3.CONTROLS.Data.Projection.Tree', [
          if (!item || !$ws.helpers.instanceOfMixin(item, 'SBIS3.CONTROLS.Data.Projection.ICollectionItem')) {
             throw new Error(this._moduleName + '::_checkItem(): item should implement SBIS3.CONTROLS.Data.Projection.ICollectionItem');
          }
+      },
+
+      /**
+       * Возвращает массив детей для указанного родителя
+       * @param {SBIS3.CONTROLS.Data.Projection.ITreeItem} parent Родительский узел
+       * @returns {Array.<SBIS3.CONTROLS.Data.Projection.TreeItem>}
+       * @protected
+       */
+      _getChildrenArray: function (parent) {
+         this._checkItem(parent);
+
+         var hash = parent.getHash();
+         if (!(hash in this._childrenMap)) {
+            var children = [],
+               enumerator = this.getEnumerator();
+            enumerator.setCurrent(parent);
+            if (enumerator.getCurrent() === parent || parent.isRoot()) {
+               var item;
+               while ((item = enumerator.getNext())) {
+                  if (item.getParent() === parent) {
+                     children.push(item);
+                  }
+               }
+            }
+
+            this._childrenMap[hash] = children;
+         }
+
+         return this._childrenMap[hash];
       }
 
       //endregion Protected methods

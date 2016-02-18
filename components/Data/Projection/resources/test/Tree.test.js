@@ -230,11 +230,6 @@ define([
                   assert.strictEqual(child.getContents().title, expect[index]);
                });
             });
-            it('should cache previous result', function() {
-               var childrenA = tree.getChildren(tree.at(0)),
-                  childrenB = tree.getChildren(tree.at(0));
-               assert.strictEqual(childrenA, childrenB);
-            });
             it('should throw an error for invalid node', function() {
                assert.throw(function() {
                   tree.getChildren();

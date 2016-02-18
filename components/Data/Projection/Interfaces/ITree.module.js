@@ -90,7 +90,7 @@ define('js!SBIS3.CONTROLS.Data.Projection.ITree', [
 
       /**
        * Возвращает коллекцию потомков элемента коллеции
-       * @param {SBIS3.CONTROLS.Data.Projection.ITreeItem} parent Элемент коллекции
+       * @param {SBIS3.CONTROLS.Data.Projection.ITreeItem} parent Родительский узел
        * @returns {SBIS3.CONTROLS.Data.Projection.ITreeChildren}
        */
       getChildren: function (parent) {
