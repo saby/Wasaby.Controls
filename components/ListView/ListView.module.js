@@ -1687,6 +1687,9 @@ define('js!SBIS3.CONTROLS.ListView',
          _callMoveOutHandler: function() {
          },
          _callMoveHandler: function(e) {
+            this._updateDragTarget(e);
+         },
+         _updateDragTarget: function(e) {
             var
                 insertAfter,
                 isCorrectDrop,
@@ -1734,9 +1737,15 @@ define('js!SBIS3.CONTROLS.ListView',
          },
          _callDropHandler: function(e) {
             var
+                targetId,
                 clickHandler,
-                currentElement = this.getCurrentElement(),
-                targetId = currentElement.target.data('id');
+                currentElement;
+            //После опускания мыши, ещё раз позовём обработку перемещения, т.к. в момент перед отпусканием мог произойти
+            //переход границы между сменой порядкового номера и перемещением в папку, а обработчик перемещения не вызваться,
+            //т.к. он срабатывают так часто, насколько это позволяет внутренняя система взаимодействия с мышью браузера.
+            this._updateDragTarget(e);
+            currentElement = this.getCurrentElement();
+            targetId = currentElement.target.data('id');
             //TODO придрот для того, чтобы если перетащить элемент сам на себя не отработал его обработчик клика
             if (this.getSelectedKey() == targetId) {
                clickHandler = this._elemClickHandler;
