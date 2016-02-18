@@ -760,18 +760,28 @@ define([
                var list = new ObservableList({
                      items: getItems()
                   }),
-                  sortedItems = getSortedItems(),
+                  expectedNewItems = [[1], [2], [4]],
+                  expectedNewIndexes = [3, 2, 0],
+                  expectedOldItems = expectedNewItems,
+                  expectedOldIndexes = [0, 0, 1],
                   projection = new CollectionProjection({
                      collection: list
                   }),
                   handler = function(event, action, newItems, newItemsIndex, oldItems, oldItemsIndex) {
                      try {
                         assert.strictEqual(action, IBindCollectionProjection.ACTION_MOVE, 'Invalid action');
-                        assert.strictEqual(newItems[0].getContents(), sortedItems[fireId], 'Invalid newItems');
-                        assert.strictEqual(newItemsIndex, fireId, 'Invalid newItemsIndex');
-                        assert.strictEqual(oldItems[0].getContents(), sortedItems[fireId], 'Invalid oldItems');
-                        assert.strictEqual(oldItemsIndex, sortedItems.length - 1, 'Invalid oldItemsIndex');
-                        if (fireId === firesToBeDone) {
+
+                        assert.deepEqual($ws.helpers.map(newItems, function(item) {
+                           return item.getContents();
+                        }), expectedNewItems[fireId], 'Invalid newItems');
+                        assert.strictEqual(newItemsIndex, expectedNewIndexes[fireId], 'Invalid newItemsIndex');
+
+                        assert.deepEqual($ws.helpers.map(oldItems, function(item) {
+                           return item.getContents();
+                        }), expectedOldItems[fireId], 'Invalid oldItems');
+                        assert.strictEqual(oldItemsIndex, expectedOldIndexes[fireId], 'Invalid oldItemsIndex');
+
+                        if (fireId === expectedNewItems.length - 1) {
                            done();
                         }
                      } catch (err) {
@@ -779,8 +789,7 @@ define([
                      }
                      fireId++;
                   },
-                  fireId = 0,
-                  firesToBeDone = 2;
+                  fireId = 0;
                projection.subscribe('onCollectionChange', handler);
                projection.setSort(sort);
                projection.unsubscribe('onCollectionChange', handler);

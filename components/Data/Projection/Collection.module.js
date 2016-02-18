@@ -571,6 +571,7 @@ define('js!SBIS3.CONTROLS.Data.Projection.Collection', [
 
          //Информируем об изменениях по группам
          for (var groupIndex = 0; groupIndex < groups.length; groupIndex++) {
+            //Собираем изменения в пачки (следующие подряд наборы)
             startFrom = 0;
             while(startFrom !== -1) {
                changes = this._getGroupChanges(
@@ -677,12 +678,15 @@ define('js!SBIS3.CONTROLS.Data.Projection.Collection', [
                   beforeIndex = index;
                   afterIndex = Array.indexOf(after, beforeItem);
                   if (afterIndex !== -1 && beforeIndex !== afterIndex) {
-                     if (oldItems.length && beforeIndex > oldItemsIndex + oldItems.length) {
+                     if (
+                        oldItems.length && beforeIndex !== oldItemsIndex + oldItems.length ||
+                        newItems.length && afterIndex !== newItemsIndex + newItems.length
+                     ) {
                         exit = true;
                      } else {
                         oldItems.push(beforeItem);
                         oldItemsIndex = oldItems.length === 1 ? beforeIndex : oldItemsIndex;
-                        newItems.push(afterItem);
+                        newItems.push(beforeItem);
                         newItemsIndex = newItems.length === 1 ? afterIndex : newItemsIndex;
                      }
                   }
@@ -729,6 +733,7 @@ define('js!SBIS3.CONTROLS.Data.Projection.Collection', [
                   action = IBindCollectionProjection.ACTION_MOVE;
                   break;
             }
+            //Генерируем событие
             this._notifyCollectionChange(
                action,
                changes.newItems,
@@ -736,7 +741,8 @@ define('js!SBIS3.CONTROLS.Data.Projection.Collection', [
                changes.oldItems,
                changes.oldItemsIndex
             );
-            
+
+            //Производим с before действия согласно событию (синхронизируем изменения)
             switch (groupName) {
                case 'added':
                   Array.prototype.splice.apply(before, [changes.newItemsIndex, 0].concat(changes.newItems));
@@ -744,14 +750,14 @@ define('js!SBIS3.CONTROLS.Data.Projection.Collection', [
                      return item.getContents();
                   })));
                   if (changes.endAt !== -1) {
-                     changes.endAt += changes.newItems.length
+                     changes.endAt += changes.newItems.length;
                   }
                   break;
                case 'removed':
                   before.splice(changes.oldItemsIndex, changes.oldItems.length);
                   beforeContents.splice(changes.oldItemsIndex, changes.oldItems.length);
                   if (changes.endAt !== -1) {
-                     changes.endAt -= changes.oldItems.length
+                     changes.endAt -= changes.oldItems.length;
                   }
                   break;
                case 'replaced':
@@ -761,12 +767,18 @@ define('js!SBIS3.CONTROLS.Data.Projection.Collection', [
                   })));
                   break;
                case 'moved':
+                  var afterSpliceIndex = changes.oldItemsIndex > changes.newItemsIndex ?
+                     changes.newItemsIndex :
+                     changes.newItemsIndex - changes.oldItems.length + 1;
                   before.splice(changes.oldItemsIndex, changes.oldItems.length);
-                  Array.prototype.splice.apply(before, [changes.newItemsIndex, 0].concat(changes.newItems));
+                  Array.prototype.splice.apply(before, [afterSpliceIndex, 0].concat(changes.newItems));
                   beforeContents.splice(changes.oldItemsIndex, changes.oldItems.length);
-                  Array.prototype.splice.apply(beforeContents, [changes.newItemsIndex, 0].concat($ws.helpers.map(changes.newItems, function(item) {
+                  Array.prototype.splice.apply(beforeContents, [afterSpliceIndex, 0].concat($ws.helpers.map(changes.newItems, function(item) {
                      return item.getContents();
                   })));
+                  if (changes.endAt !== -1 && changes.oldItemsIndex < changes.newItemsIndex) {
+                     changes.endAt -= changes.oldItems.length;
+                  }
                   break;
             }
          }
