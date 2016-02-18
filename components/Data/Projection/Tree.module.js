@@ -198,7 +198,6 @@ define('js!SBIS3.CONTROLS.Data.Projection.Tree', [
             {
                idProperty: this._options.idProperty,
                parentProperty: this._options.parentProperty,
-               collection: this._options.collection,
                root: this.getRoot()
             }
          );
@@ -271,7 +270,7 @@ define('js!SBIS3.CONTROLS.Data.Projection.Tree', [
             var push = Array.prototype.push,
                idProperty = options.idProperty,
                parentProperty = options.parentProperty,
-               collection = options.collection,
+               hierIndex = {},
                buildHierarchy = function(parent) {
                   var result = [],
                      parentData = parent.getContents(),
@@ -279,17 +278,12 @@ define('js!SBIS3.CONTROLS.Data.Projection.Tree', [
                         parentData,
                         idProperty
                      ) : parentData,
-                     children = collection.getIndiciesByValue(
-                        parentProperty,
-                        parentId
-                     );
+                     children = hierIndex[parentId] || [];
 
                   //FIXME: для совместимости с логикой контролов - корневые записи дерева могут вообще не иметь поля с именем parentProperty
                   if (!children.length && parentId === null && parent.isRoot()) {
                      //Считаем, что элементы коллекции без поля parentProperty находятся в корне
-                     children = collection.getIndiciesByValue(
-                        parentProperty
-                     );
+                     children = hierIndex[undefined] || [];
                   }
 
                   var i, child;
@@ -308,6 +302,18 @@ define('js!SBIS3.CONTROLS.Data.Projection.Tree', [
                   }
                   return result;
                };
+
+            var index, count, parentId;
+            for (index = 0, count = items.length; index < count; index++) {
+               parentId = Utils.getItemPropertyValue(
+                  items[index].getContents(),
+                  parentProperty
+               );
+               if (!hierIndex.hasOwnProperty(parentId)) {
+                  hierIndex[parentId] = [];
+               }
+               hierIndex[parentId].push(index);
+            }
 
             return buildHierarchy(options.root);
          }

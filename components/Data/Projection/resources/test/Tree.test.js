@@ -129,6 +129,7 @@ define([
                   index++;
                }
             });
+
             it('should traverse all items', function() {
                var enumerator = tree.getEnumerator(),
                   index = 0;
@@ -168,6 +169,7 @@ define([
             it('should return given root from a number', function() {
                assert.strictEqual(tree.getRoot().getContents(), 0);
             });
+
             it('should return given root from a string', function() {
                var tree = new Tree({
                   collection: items,
@@ -176,6 +178,7 @@ define([
                });
                assert.strictEqual(tree.getRoot().getContents(), '');
             });
+
             it('should return given root from an object', function() {
                var tree = new Tree({
                   collection: items,
@@ -185,6 +188,7 @@ define([
                assert.strictEqual(tree.getRoot().getContents().id, 1);
                assert.strictEqual(tree.getRoot().getContents().title, 'Root');
             });
+
             it('should return given root from a TreeItem', function() {
                var root = new TreeItem({contents: {
                      id: null,
@@ -207,6 +211,7 @@ define([
                   assert.strictEqual(child.getContents().title, expect[index]);
                });
             });
+
             it('should return children of the first node', function() {
                var children = tree.getChildren(tree.at(0)),
                   expect = ['AA', 'AB', 'AC'];
@@ -214,6 +219,7 @@ define([
                   assert.strictEqual(child.getContents().title, expect[index]);
                });
             });
+
             it('should throw an error for invalid node', function() {
                assert.throw(function() {
                   tree.getChildren();
@@ -241,6 +247,7 @@ define([
                assert.isFalse(tree.moveToNext());
                assert.strictEqual(tree.getCurrent().getContents().title, 'D');
             });
+
             it('should move current through direct children of the given node', function() {
                tree.setCurrentPosition(1);
 
@@ -274,6 +281,7 @@ define([
                assert.isFalse(tree.moveToPrevious());
                assert.strictEqual(tree.getCurrent().getContents().title, 'A');
             });
+
             it('should move current through direct children of the given node', function() {
                tree.setCurrentPosition(3);
 
@@ -295,12 +303,14 @@ define([
                assert.isFalse(tree.moveToAbove());
                assert.isUndefined(tree.getCurrent());
             });
+
             it('should not move if parent is the root', function() {
                tree.moveToNext();
                var current = tree.getCurrent();
                assert.isFalse(tree.moveToAbove());
                assert.strictEqual(tree.getCurrent(), current);
             });
+
             it('should move to the parent', function() {
                tree.setCurrentPosition(4);
 
@@ -320,6 +330,7 @@ define([
                assert.isFalse(tree.moveToBelow());
                assert.isUndefined(tree.getCurrent());
             });
+
             it('should not move if current is not a node', function() {
                tree.setCurrentPosition(tree.getCount() - 1);
                var current = tree.getCurrent();
@@ -327,6 +338,7 @@ define([
                assert.isFalse(tree.moveToBelow());
                assert.strictEqual(tree.getCurrent(), current);
             });
+
             it('should not move if current has no children', function() {
                tree.setCurrentPosition(11);
                assert.strictEqual(tree.getCurrent().getContents().title, 'C');
@@ -336,6 +348,7 @@ define([
                assert.isFalse(tree.moveToBelow());
                assert.strictEqual(tree.getCurrent(), current);
             });
+
             it('should move to the first child', function() {
                tree.setCurrentPosition(7);
                assert.strictEqual(tree.getCurrent().getContents().title, 'B');
@@ -371,6 +384,7 @@ define([
 
                         assert.strictEqual(oldItems.length, 0, 'Invalid oldItems length');
                         assert.strictEqual(oldItemsIndex, 0, 'Invalid oldItemsIndex');
+
                         done();
                      } catch (err) {
                         done(err);
@@ -401,6 +415,7 @@ define([
                });
                tree.unsubscribe('onCollectionChange', handler);
             });
+
             it('should fire with all of children after remove a node', function(done) {
                var tree = getObservableTree(),
                   expectOldItems = ['A', 'AA', 'AB', 'AC', 'ACA', 'ACB', 'ACC'],
@@ -417,6 +432,7 @@ define([
                            assert.strictEqual(oldItems[i].getContents().title, expectOldItems[i], 'Invalid oldItems[' + i + ']');
                         }
                         assert.strictEqual(oldItemsIndex, expectOldItemsIndex, 'Invalid oldItemsIndex');
+
                         done();
                      } catch (err) {
                         done(err);
