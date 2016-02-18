@@ -241,19 +241,22 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
             _afterEndEdit: function(eip, withSaving) {
                var
                   target = eip.getTarget(),
-                  eipRecord = eip.getEditingRecord();
+                  eipRecord = eip.getEditingRecord(),
+                  isAdd = !eipRecord.isStored();
                if (this._editingRecord) {
                   this._editingRecord.merge(eipRecord);
                   this._editingRecord = undefined;
                }
-               if (!this._options.dataSet.getRecordByKey(eipRecord.getKey())) {
-                  withSaving ? this._options.dataSet.push(eipRecord) : target.remove();
-               }
+               isAdd && target.remove();
                if (withSaving) {
-                  this._options.dataSource.sync(this._options.dataSet).addCallback(function() {
-                     this._notifyOnAfterEndEdit(this._options.dataSet.getRecordByKey(eipRecord.getKey()), target, withSaving);
+                  this._options.dataSource.update(eipRecord).addCallback(function() {
+                     isAdd && this._options.dataSet.push(eipRecord);
+                  }.bind(this)).addBoth(function() {
+                     eip.endEdit();
+                     this._notifyOnAfterEndEdit(eipRecord, target, withSaving);
                   }.bind(this));
                } else {
+                  eip.endEdit();
                   this._notifyOnAfterEndEdit(eipRecord, target, withSaving);
                }
             },
