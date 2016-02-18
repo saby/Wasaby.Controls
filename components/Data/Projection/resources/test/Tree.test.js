@@ -372,7 +372,9 @@ define([
                var tree = getObservableTree(),
                   expectNewItems = ['E', 'EA', 'EB', 'EBA', 'EC'],
                   expectNewItemsIndex = 13,
+                  firesCount = 0,
                   handler = function(event, action, newItems, newItemsIndex, oldItems, oldItemsIndex) {
+                     firesCount++;
                      try {
                         assert.strictEqual(action, IBindCollectionProjection.ACTION_ADD, 'Invalid action');
 
@@ -384,8 +386,6 @@ define([
 
                         assert.strictEqual(oldItems.length, 0, 'Invalid oldItems length');
                         assert.strictEqual(oldItemsIndex, 0, 'Invalid oldItemsIndex');
-
-                        done();
                      } catch (err) {
                         done(err);
                      }
@@ -414,13 +414,18 @@ define([
                   title: 'E'
                });
                tree.unsubscribe('onCollectionChange', handler);
+               if (firesCount === 1) {
+                  done();
+               }
             });
 
             it('should fire with all of children after remove a node', function(done) {
                var tree = getObservableTree(),
                   expectOldItems = ['A', 'AA', 'AB', 'AC', 'ACA', 'ACB', 'ACC'],
                   expectOldItemsIndex = 0,
+                  firesCount = 0,
                   handler = function(event, action, newItems, newItemsIndex, oldItems, oldItemsIndex) {
+                     firesCount++;
                      try {
                         assert.strictEqual(action, IBindCollectionProjection.ACTION_REMOVE, 'Invalid action');
 
@@ -432,8 +437,6 @@ define([
                            assert.strictEqual(oldItems[i].getContents().title, expectOldItems[i], 'Invalid oldItems[' + i + ']');
                         }
                         assert.strictEqual(oldItemsIndex, expectOldItemsIndex, 'Invalid oldItemsIndex');
-
-                        done();
                      } catch (err) {
                         done(err);
                      }
@@ -441,6 +444,9 @@ define([
                tree.subscribe('onCollectionChange', handler);
                tree.getCollection().removeAt(firstNodeItemIndex);
                tree.unsubscribe('onCollectionChange', handler);
+               if (firesCount === 1) {
+                  done();
+               }
             });
          });
       });
