@@ -82,6 +82,9 @@ define([
       }, {
          "n":"arrayTime",
          "t":{"n":"Массив","t":"Время"}
+      }, {
+         n: 'moneyShort',
+         t: {n: 'Деньги', p: '2'}
       }];
       dataValues = [
          4,
@@ -104,7 +107,8 @@ define([
          [15,19],
          [1.2,1.3],
          ["text","text2"],
-         ["12:30:00+03"]
+         ["12:30:00+03"],
+         '7.2'
       ];
       dataEmpty = [
          null,
@@ -181,6 +185,11 @@ define([
             var val = sbisModel.get('money');
             assert.strictEqual(val, $ws.helpers.prepareMoneyByPrecision(val, 20));
          });
+         it('should cast value to moneyShort', function () {
+            var val = sbisModel.get('moneyShort');
+            assert.strictEqual(val, '7.2');
+         });
+
          it('should cast dateTime to Date', function () {
             assert.instanceOf(sbisModel.get('dateTime'), Date);
          });
@@ -211,6 +220,19 @@ define([
          it('should cast timeInterval', function () {
             var val = sbisModel.get('TimeInterval');
             assert.equal(val, 'P10DT0H0M0S');
+         });
+         it('should cast timeInterval when value instance of TimeInterval', function () {
+            var sbisModel = new Model({
+               adapter: new AdapterSbis(),
+               rawData: {
+                  d:[new $ws.proto.TimeInterval('P10DT0H0M0S')],
+                  s:[{
+                     n: 'TimeInterval',
+                     t: 'Временной интервал'
+                  }]
+               }
+            });
+            assert.equal(sbisModel.get('TimeInterval'), 'P10DT0H0M0S');
          });
          it('should cast flags', function () {
             var val = sbisModel.get('flags');
@@ -252,6 +274,41 @@ define([
             var val = sbisModel.get('arrayTime');
             assert.deepEqual([Date.fromSQL(dataValues[20][0])], val);
          });
+
+         it('should cast to array when value is null', function (){
+            var sbisModel = new Model({
+               adapter: new AdapterSbis(),
+               rawData: {
+                  d:[null],
+                  s:[{
+                     "n":"arrayBool",
+                     "t":{"n":"Массив","t":"Логическое"}
+                  }]
+               }
+            });
+            assert.equal(sbisModel.get('arrayBool'), null);
+         });
+
+         it('should cast to array when value is null', function (){
+            var
+               enumNew = new Enum({data:['one', 'tt'], 'currentValue':1}),
+               enumOld = new $ws.proto.Enum({'availableValues':{'0': 'one', '1': 'tt'}, 'currentValue':0});
+               sbisModel = new Model({
+               adapter: new AdapterSbis(),
+               rawData: {
+                  d:[enumNew, enumOld],
+                  s:[{
+                     n: 'enumNew',
+                     t: {n: 'Перечисляемое', s: {'0': 'one', '1': 'tt'}}
+                  },{
+                     n: 'enumOld',
+                     t: {n: 'Перечисляемое', s: {'0': 'one', '1': 'tt'}}
+                  }]
+               }
+            });
+            assert.equal(sbisModel.get('enumNew'), 1);
+            assert.equal(sbisModel.get('enumOld'), 0);
+         });
       });
 
       describe('.serialize()', function () {
@@ -291,6 +348,11 @@ define([
                         });
                      model.set('record', record);
                      assert.deepEqual(getData(model, 3), record.getRawData());
+                  });
+                  it('should store model from object', function () {
+                     var model = getModel(type);
+                     model.set('record', {'id':502});
+                     assert.equal(model.get('record').get('id'), 502);
                   });
                   it('should store record', function () {
                      var model = getModel(type),
