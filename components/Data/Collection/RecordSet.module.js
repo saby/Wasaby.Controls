@@ -643,7 +643,13 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
        * @private
        */
       _getTableAdapter: function () {
-         return this._tableAdapter || (this._tableAdapter = this.getAdapter().forTable(this._options.rawData));
+         if (!this._tableAdapter) {
+            this._tableAdapter = this.getAdapter().forTable(this._options.rawData);
+            if (this._tableAdapter.getData() !== this._options.rawData) {
+               this._options.rawData = this._tableAdapter.getData();
+            }
+         }
+         return this._tableAdapter;
       },
 
       /**
