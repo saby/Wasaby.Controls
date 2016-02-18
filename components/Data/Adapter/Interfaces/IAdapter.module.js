@@ -33,7 +33,7 @@ define('js!SBIS3.CONTROLS.Data.Adapter.IAdapter', [], function () {
        * @param {*} data Сырые данные
        * @returns {String}
        */
-      getKeyField: function () {
+      getKeyField: function (data) {
          throw new Error('Method must be implemented');
       },
 

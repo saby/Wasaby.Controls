@@ -71,10 +71,6 @@ define('js!SBIS3.CONTROLS.Data.Adapter.IRecord', [], function () {
          throw new Error('Method must be implemented');
       },
 
-      getKeyField: function () {
-         throw new Error('Method must be implemented');
-      },
-
       /**
        * Возвращает формат поля (в режиме только для чтения)
        * @param {String} name Поле записи
