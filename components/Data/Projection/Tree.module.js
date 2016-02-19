@@ -145,6 +145,11 @@ define('js!SBIS3.CONTROLS.Data.Projection.Tree', [
          return this._root;
       },
 
+      setRoot: function (root) {
+         this._options.root = root;
+         this._root = null;
+      },
+
       getChildren: function (parent) {
          return new TreeChildren({
             owner: parent,
