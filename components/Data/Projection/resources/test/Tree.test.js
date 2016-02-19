@@ -2,18 +2,16 @@
 define([
    'js!SBIS3.CONTROLS.Data.Projection.Tree',
    'js!SBIS3.CONTROLS.Data.Collection.List',
-   'js!SBIS3.CONTROLS.Data.Projection.TreeEnumerator',
-   'js!SBIS3.CONTROLS.Data.Projection.TreeItem'
-], function (Tree, List, TreeEnumerator, TreeItem) {
+   'js!SBIS3.CONTROLS.Data.Collection.ObservableList',
+   'js!SBIS3.CONTROLS.Data.Projection.TreeItem',
+   'js!SBIS3.CONTROLS.Data.Bind.ICollectionProjection'
+], function (Tree, List, ObservableList, TreeItem, IBindCollectionProjection) {
       'use strict';
 
       describe('SBIS3.CONTROLS.Data.Projection.Tree', function() {
-         var items,
-            tree;
-
-         beforeEach(function() {
-            items = new List({
-               items: [{
+         var firstNodeItemIndex = 6,
+            getData = function() {
+               return [{
                   id: 10,
                   pid: 1,
                   node: true,
@@ -76,16 +74,42 @@ define([
                   id: 4,
                   pid: 0,
                   title: 'D'
-               }]
-            });
+               }];
+            },
+            getItems = function() {
+               return new List({
+                  items: getData()
+               });
+            },
+            getObservableItems = function() {
+               return new ObservableList({
+                  items: getData()
+               });
+            },
+            getTree = function(items) {
+               return new Tree({
+                  collection: items || getItems(),
+                  root: 0,
+                  idProperty: 'id',
+                  parentProperty: 'pid',
+                  nodeProperty: 'node'
+               });
+            },
+            getObservableTree = function(items) {
+               return new Tree({
+                  collection: items || getObservableItems(),
+                  root: 0,
+                  idProperty: 'id',
+                  parentProperty: 'pid',
+                  nodeProperty: 'node'
+               });
+            },
+            items,
+            tree;
 
-            tree = new Tree({
-               collection: items,
-               root: 0,
-               idProperty: 'id',
-               parentProperty: 'pid',
-               nodeProperty: 'node'
-            });
+         beforeEach(function() {
+            items = getItems();
+            tree = getTree(items);
          });
 
          afterEach(function() {
@@ -94,39 +118,7 @@ define([
             items = undefined;
          });
 
-         describe('$constructor', function() {
-            it('should throw an error if option idProperty is not defined', function() {
-               assert.throw(function() {
-                  var tree = new Tree({
-                     collection: items
-                  });
-               });
-               assert.throw(function() {
-                  var tree = new Tree();
-               });
-            });
-         });
-
-         describe('.getByHash()', function() {
-            it('should return an item by hash', function() {
-               tree.moveToNext();
-               var item = tree.getCurrent();
-               assert.strictEqual(tree.getByHash(item.getHash()), item);
-            });
-         });
-
-         describe('.getIndexByHash()', function() {
-            it('should return an index by hash', function() {
-               tree.moveToNext();
-               var item = tree.getCurrent();
-               assert.strictEqual(tree.getIndexByHash(item.getHash()), tree.getIndex(item));
-            });
-         });
-
          describe('.getEnumerator()', function() {
-            it('should return a tree enumerator', function() {
-               assert.instanceOf(tree.getEnumerator(), TreeEnumerator);
-            });
             it('should traverse items in hierarchical order', function() {
                var enumerator = tree.getEnumerator(),
                   expect = ['A', 'AA', 'AB', 'AC', 'ACA', 'ACB', 'ACC', 'B', 'BA', 'BAA', 'BAAA', 'C', 'D'],
@@ -137,6 +129,7 @@ define([
                   index++;
                }
             });
+
             it('should traverse all items', function() {
                var enumerator = tree.getEnumerator(),
                   index = 0;
@@ -173,10 +166,20 @@ define([
          });
 
          describe('.getRoot()', function() {
-            it('should return given root from string', function() {
+            it('should return given root from a number', function() {
                assert.strictEqual(tree.getRoot().getContents(), 0);
             });
-            it('should return given root id from object', function() {
+
+            it('should return given root from a string', function() {
+               var tree = new Tree({
+                  collection: items,
+                  root: '',
+                  idProperty: 'id'
+               });
+               assert.strictEqual(tree.getRoot().getContents(), '');
+            });
+
+            it('should return given root from an object', function() {
                var tree = new Tree({
                   collection: items,
                   root: {id: 1, title: 'Root'},
@@ -185,7 +188,8 @@ define([
                assert.strictEqual(tree.getRoot().getContents().id, 1);
                assert.strictEqual(tree.getRoot().getContents().title, 'Root');
             });
-            it('should return given root as ICollectionItem', function() {
+
+            it('should return given root from a TreeItem', function() {
                var root = new TreeItem({contents: {
                      id: null,
                      title: 'Root'
@@ -207,6 +211,7 @@ define([
                   assert.strictEqual(child.getContents().title, expect[index]);
                });
             });
+
             it('should return children of the first node', function() {
                var children = tree.getChildren(tree.at(0)),
                   expect = ['AA', 'AB', 'AC'];
@@ -214,11 +219,7 @@ define([
                   assert.strictEqual(child.getContents().title, expect[index]);
                });
             });
-            it('should cache previous result', function() {
-               var childrenA = tree.getChildren(tree.at(0)),
-                  childrenB = tree.getChildren(tree.at(0));
-               assert.strictEqual(childrenA, childrenB);
-            });
+
             it('should throw an error for invalid node', function() {
                assert.throw(function() {
                   tree.getChildren();
@@ -246,6 +247,7 @@ define([
                assert.isFalse(tree.moveToNext());
                assert.strictEqual(tree.getCurrent().getContents().title, 'D');
             });
+
             it('should move current through direct children of the given node', function() {
                tree.setCurrentPosition(1);
 
@@ -279,6 +281,7 @@ define([
                assert.isFalse(tree.moveToPrevious());
                assert.strictEqual(tree.getCurrent().getContents().title, 'A');
             });
+
             it('should move current through direct children of the given node', function() {
                tree.setCurrentPosition(3);
 
@@ -300,12 +303,14 @@ define([
                assert.isFalse(tree.moveToAbove());
                assert.isUndefined(tree.getCurrent());
             });
+
             it('should not move if parent is the root', function() {
                tree.moveToNext();
                var current = tree.getCurrent();
                assert.isFalse(tree.moveToAbove());
                assert.strictEqual(tree.getCurrent(), current);
             });
+
             it('should move to the parent', function() {
                tree.setCurrentPosition(4);
 
@@ -325,6 +330,7 @@ define([
                assert.isFalse(tree.moveToBelow());
                assert.isUndefined(tree.getCurrent());
             });
+
             it('should not move if current is not a node', function() {
                tree.setCurrentPosition(tree.getCount() - 1);
                var current = tree.getCurrent();
@@ -332,6 +338,7 @@ define([
                assert.isFalse(tree.moveToBelow());
                assert.strictEqual(tree.getCurrent(), current);
             });
+
             it('should not move if current has no children', function() {
                tree.setCurrentPosition(11);
                assert.strictEqual(tree.getCurrent().getContents().title, 'C');
@@ -341,6 +348,7 @@ define([
                assert.isFalse(tree.moveToBelow());
                assert.strictEqual(tree.getCurrent(), current);
             });
+
             it('should move to the first child', function() {
                tree.setCurrentPosition(7);
                assert.strictEqual(tree.getCurrent().getContents().title, 'B');
@@ -356,6 +364,89 @@ define([
 
                assert.isFalse(tree.moveToBelow());
                assert.strictEqual(tree.getCurrent().getContents().title, 'BAAA');
+            });
+         });
+
+         describe('[onCollectionChange]', function() {
+            it('should fire with all of children add a node', function(done) {
+               var tree = getObservableTree(),
+                  expectNewItems = ['E', 'EA', 'EB', 'EBA', 'EC'],
+                  expectNewItemsIndex = 13,
+                  firesCount = 0,
+                  handler = function(event, action, newItems, newItemsIndex, oldItems, oldItemsIndex) {
+                     firesCount++;
+                     try {
+                        assert.strictEqual(action, IBindCollectionProjection.ACTION_ADD, 'Invalid action');
+
+                        assert.strictEqual(newItems.length, expectNewItems.length, 'Invalid newItems length');
+                        for (var i = 0; i < newItems.length; i++) {
+                           assert.strictEqual(newItems[i].getContents().title, expectNewItems[i], 'Invalid newItems[' + i + ']');
+                        }
+                        assert.strictEqual(newItemsIndex, expectNewItemsIndex, 'Invalid newItemsIndex');
+
+                        assert.strictEqual(oldItems.length, 0, 'Invalid oldItems length');
+                        assert.strictEqual(oldItemsIndex, 0, 'Invalid oldItemsIndex');
+                     } catch (err) {
+                        done(err);
+                     }
+                  };
+               tree.getCollection().append([{
+                  id: 51,
+                  pid: 5,
+                  title: 'EA'
+               }, {
+                  id: 52,
+                  pid: 5,
+                  title: 'EB'
+               }, {
+                  id: 521,
+                  pid: 52,
+                  title: 'EBA'
+               }, {
+                  id: 53,
+                  pid: 5,
+                  title: 'EC'
+               }]);
+               tree.subscribe('onCollectionChange', handler);
+               tree.getCollection().add({
+                  id: 5,
+                  pid: 0,
+                  title: 'E'
+               });
+               tree.unsubscribe('onCollectionChange', handler);
+               if (firesCount === 1) {
+                  done();
+               }
+            });
+
+            it('should fire with all of children after remove a node', function(done) {
+               var tree = getObservableTree(),
+                  expectOldItems = ['A', 'AA', 'AB', 'AC', 'ACA', 'ACB', 'ACC'],
+                  expectOldItemsIndex = 0,
+                  firesCount = 0,
+                  handler = function(event, action, newItems, newItemsIndex, oldItems, oldItemsIndex) {
+                     firesCount++;
+                     try {
+                        assert.strictEqual(action, IBindCollectionProjection.ACTION_REMOVE, 'Invalid action');
+
+                        assert.strictEqual(newItems.length, 0, 'Invalid newItems length');
+                        assert.strictEqual(newItemsIndex, 0, 'Invalid newItemsIndex');
+
+                        assert.strictEqual(oldItems.length, expectOldItems.length, 'Invalid oldItems length');
+                        for (var i = 0; i < oldItems.length; i++) {
+                           assert.strictEqual(oldItems[i].getContents().title, expectOldItems[i], 'Invalid oldItems[' + i + ']');
+                        }
+                        assert.strictEqual(oldItemsIndex, expectOldItemsIndex, 'Invalid oldItemsIndex');
+                     } catch (err) {
+                        done(err);
+                     }
+                  };
+               tree.subscribe('onCollectionChange', handler);
+               tree.getCollection().removeAt(firstNodeItemIndex);
+               tree.unsubscribe('onCollectionChange', handler);
+               if (firesCount === 1) {
+                  done();
+               }
             });
          });
       });
