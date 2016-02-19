@@ -84,6 +84,7 @@ define('js!SBIS3.CONTROLS.ComboBox', [
          _delayedSettingTextByKey: false,
          _keysWeHandle: [$ws._const.key.up, $ws._const.key.down, $ws._const.key.enter],
          _options: {
+            focusOnActivatedOnMobiles: false,
             /**
              * @cfg {String} Шаблон отображения каждого элемента коллекции
              * Шаблон отображения элемента коллекции - это отдельный XHTML-файл.
