@@ -64,6 +64,6 @@ define('js!SBIS3.CONTROLS.Data.Adapter.IAdapter', [], function () {
        */
       getKeyField: function (data) {
          throw new Error('Method must be implemented');
-      },
+      }
    };
 });
