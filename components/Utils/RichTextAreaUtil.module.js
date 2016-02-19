@@ -26,7 +26,7 @@ define('js!SBIS3.CONTROLS.Utils.RichTextAreaUtil',[], function () {
                e.preventDefault();
                //рассчет родительского window элемента
                while (window.frames[i]){
-                  if (_isDescendant(window.frames[i].document.body, e.target)) {
+                  if (_isDescendant(window.frames[i].document.body, event.target)) {
                      currentWindow = window.frames[i];
                   }
                   i++;
