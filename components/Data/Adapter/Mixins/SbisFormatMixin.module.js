@@ -129,6 +129,16 @@ define('js!SBIS3.CONTROLS.Data.Adapter.SbisFormatMixin', [
          if (!(index >= 0 && index < max)) {
             throw new TypeError('Index is out of bounds.');
          }
+      },
+
+      _buildS: function(format) {
+         return {
+            n: format.getName()
+         };
+      },
+
+      _buildD: function(value) {
+         throw new Error('Method must be implemented');
       }
 
       //endregion Protected methods

@@ -93,6 +93,10 @@ define('js!SBIS3.CONTROLS.Data.Adapter.SbisRecord', [
 
       //region Protected methods
 
+      _buildD: function(value) {
+         return value;
+      },
+
       _getType: function (meta, value, key) {
          key = key || 't';
          var typeSbis = meta[key],

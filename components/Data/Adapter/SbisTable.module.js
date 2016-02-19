@@ -91,9 +91,20 @@ define('js!SBIS3.CONTROLS.Data.Adapter.SbisTable', [
          var source = this._data.d[index],
             clone = $ws.core.clone(source);
          this._data.d.splice(index, 0, clone);
-      }
+      },
 
       //endregion Public methods
+
+      //region Protected methods
+
+      _buildD: function(value) {
+         return $ws.helpers.map(this._data.s, function() {
+            return value;
+         });
+      }
+
+      //endregion Protected methods
+
    });
 
    return SbisTable;
