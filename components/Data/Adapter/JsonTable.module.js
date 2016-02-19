@@ -93,7 +93,6 @@ define('js!SBIS3.CONTROLS.Data.Adapter.JsonTable', [
             throw new Error('Out of bounds');
          }
       }
-
    });
 
    return JsonTable;

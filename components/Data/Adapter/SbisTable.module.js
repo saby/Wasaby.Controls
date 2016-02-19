@@ -107,7 +107,6 @@ define('js!SBIS3.CONTROLS.Data.Adapter.SbisTable', [
             throw new Error('Out of bounds');
          }
       }
-
    });
 
    return SbisTable;
