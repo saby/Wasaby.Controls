@@ -64,7 +64,7 @@ define('js!TestDataGridPartScroll',
                     }
                 }
                 var arrayStrategy = new ArrayStrategy(),
-                    ds1 = new SbisServiceSource({service: 'ЗаметкаЧастичныйСкролл'}),
+                    ds1 = new SbisServiceSource({resource: 'ЗаметкаЧастичныйСкролл'}),
                     ds2 = new StaticSource({
                         data: bigColls,
                         keyField: '@ЗаметкаЧастичныйСкролл',

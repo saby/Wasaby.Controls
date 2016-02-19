@@ -41,14 +41,9 @@ define('js!SBIS3.CONTROLS.ActiveMultiSelectable', [], function() {
             throw new Error('setSelectedItems called with invalid argument');
          }
 
-         var selKeys = [];
-
          /* надо обязательно делать клон массива, чтобы порвать ссылку и не портить значения в контексте */
          this._options.selectedItems = this._makeList((this._options.multiselect ? list.toArray() : list.getCount() > 1 ? [list.at(0)] : list.toArray()).slice());
-         this._options.selectedItems.each(function(rec) {
-            selKeys.push(rec.getId());
-         });
-         this.setSelectedKeys(selKeys);
+         this.setSelectedKeys(this._convertToKeys(this._options.selectedItems));
          this._notifyOnPropertyChanged('selectedItems');
       }),
 
@@ -59,33 +54,46 @@ define('js!SBIS3.CONTROLS.ActiveMultiSelectable', [], function() {
          this.setSelectedItems([]);
       },
 
-
       /**
        * Добавляет переданные элементы к набору выбранных
        * @param {Array | SBIS3.CONTROLS.Data.Collection.List} items
        */
       addSelectedItems: propertyUpdateWrapper(function(items) {
          var self = this,
-             selKeys = [],
              newItems = items instanceof Array ? this._makeList(items) : items,
              selItems = this._options.selectedItems;
 
-         /* Не добавляем уже выбранные элементы */
-         newItems.each(function(rec) {
-            if(self._isItemSelected(rec)) {
-               newItems.remove(rec)
-            }
+         /* Если добавляемых элементов нет, то ничего не делаем */
+         /* TODO в 3.7.3.100 добавить проверку, надо ли вообще что-то добавлять, возможно уже что все переданные записи есть
+            Задача в разработку от 09.02.2016 №1172587090
+            Добавить проверку в ActiveMultiSelectable на добавляемость элементов, чтобы уменьшить возможно ко...
+            https://inside.tensor.ru/opendoc.html?guid=f206f51b-f653-4337-acdb-7472ccee8a9c */
+         if(!newItems.getCount()) return;
+
+         if(this._options.multiselect) {
+            newItems.each(function(rec) {
+               if(!self._isItemSelected(rec)) {
+                  selItems.add(rec);
+               }
+            });
+         } else {
+            selItems[selItems.getCount() ? 'replace' : 'add'](newItems.at(0), 0);
+         }
+
+         this.setSelectedKeys(this._convertToKeys(selItems));
+         this._notifyOnPropertyChanged('selectedItems');
+      }),
+
+      _convertToKeys: function(list) {
+         var keys = [];
+
+         list.each(function(rec) {
+            keys.push(rec.getId());
          });
 
-         if(newItems.getCount()) {
-            selItems.concat(newItems);
-            selItems.each(function (rec) {
-               selKeys.push(rec.getId());
-            });
-            this.setSelectedKeys(selKeys);
-            this._notifyOnPropertyChanged('selectedItems');
-         }
-      })
+         return keys;
+
+      }
    };
 
    return ActiveMultiSelectable;

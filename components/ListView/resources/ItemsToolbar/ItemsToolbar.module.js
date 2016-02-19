@@ -103,11 +103,11 @@ define('js!SBIS3.CONTROLS.ItemsToolbar',
              });
           },
           /**
-           * Метод получения операций над записью.
-           * @returns {Array} Массив операций над записью.
+           * Метод получения компонента операций над записью.
+           * @returns {Object} Компонент "операции над записью".
            */
           getItemsActions: function() {
-             return this.getItemsActionsGroup().getItems();
+             return this.getItemsActionsGroup();
           },
           /**
            * Создает или возвращает уже созданные опции записи
@@ -229,10 +229,12 @@ define('js!SBIS3.CONTROLS.ItemsToolbar',
              var position = target.position,
                  size = target.size,
                  parentContainer = this.getParent().getContainer()[0],
-                 isVertical = target.container.hasClass('js-controls-CompositeView__verticalItemActions');
+                 isVertical = target.container.hasClass('js-controls-CompositeView__verticalItemActions'),
+                 rightPosition = parentContainer.offsetWidth - (position.left + size.width);
+
              this.getContainer()[isVertical ? 'addClass' : 'removeClass']('controls-ItemsToolbar__vertical');
              return {
-                right : parentContainer.offsetWidth - (position.left + size.width),
+                right : rightPosition >= 0 ? rightPosition : 0,
                 top : isVertical ? position.top : 'auto',
                 bottom : isVertical ? 'auto' : parentContainer.offsetHeight - (position.top + size.height)
              };

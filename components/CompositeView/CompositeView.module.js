@@ -23,7 +23,7 @@ define('js!SBIS3.CONTROLS.CompositeView', ['js!SBIS3.CONTROLS.DataGridView', 'js
        * </component>
        *
        * @demo SBIS3.CONTROLS.Demo.MyCompositeView
-       * 
+       * @cssModifier controls-TreeView-big У папок размер текста 16px, у листьев 15px. Только в режиме список (table)
        */   
       
    var CompositeView = DataGridView.extend([CompositeViewMixin],/** @lends SBIS3.CONTROLS.CompositeView.prototype*/ {

@@ -173,7 +173,7 @@ define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManag
       },
 
       _onTargetMove: function(){
-         if (this.isVisible()) {
+         if (this.isVisible() && !this._fixed) {
             this.recalcPosition();
             this._checkTargetPosition();
          } else {
@@ -232,6 +232,10 @@ define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManag
                offset.left += sign * (this._margins.left - this._margins.right + (this._options.horizontalAlign.offset || 0));
 
                this._notifyOnAlignmentChange();
+
+               if (this._fixed){
+                  offset.left -= this._targetSizes.offset.left - this._targetSizes.boundingClientRect.left;
+               }
 
                this._container.css({
                   'top': offset.top + 'px',
@@ -382,7 +386,7 @@ define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManag
          //Таймаут для того что бы не пересчитывать размеры пока меняется размер окна,
          //а перестчитать только один раз, когда размер меняться перестанет.
          this._resizeTimeout = setTimeout(function() {
-            if (self.isVisible()) {
+            if (self.isVisible() && !self._fixed) {
                self.recalcPosition(false);
             } else {
                self._initSizes();
@@ -419,6 +423,7 @@ define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManag
             //сравнение boundingClientRect и offset позволяет увидеть лежит ли таргет в фиксированном контейнере (может быть где-то выше)
             if (this._targetSizes.boundingClientRect.top != this._targetSizes.offset.top) { //таргет в фиксированном контейнере
                this._targetSizes.offset.top = this._targetSizes.boundingClientRect.top;
+               this._fixed = true;
                this._container.css('position', 'fixed'); //фиксируем выпадающую часть, если таргет был зафиксирован
             }
          }

@@ -1,4 +1,4 @@
-/* global define */
+/* global define, $ws  */
 define('js!SBIS3.CONTROLS.Data.MoveStrategy.Base', [
    'js!SBIS3.CONTROLS.Data.MoveStrategy.IMoveStrategy'
 ], function (IMoveStrategy) {
@@ -42,7 +42,7 @@ define('js!SBIS3.CONTROLS.Data.MoveStrategy.Base', [
 
       move: function (from, to, after) {
          var def = new $ws.proto.ParallelDeferred(),
-            self =this;
+            self = this;
          $ws.helpers.forEach(from, function(record){
             def.push(self._options.dataSource.call('move', {from: record, to: to, details: {after: after}}));
          });
@@ -57,7 +57,7 @@ define('js!SBIS3.CONTROLS.Data.MoveStrategy.Base', [
             throw new Error('Hierrarhy Field is not defined.');
          }
          var def = new $ws.proto.ParallelDeferred(),
-            newParent = this._getId(to),
+            newParent = to ? to.getId() : null,
             self = this;
          $ws.helpers.forEach(from, function(record){
             record.set(self._options.hierField, newParent);
@@ -65,18 +65,6 @@ define('js!SBIS3.CONTROLS.Data.MoveStrategy.Base', [
          });
          return def.done().getResult();
 
-      },
-
-
-      //TODO убрать метод когда не станет SBIS3.CONTROLS.Record
-      _getId: function(model){
-         if ($ws.helpers.instanceOfModule(model, 'SBIS3.CONTROLS.Data.Model')) {
-            return model.getId();
-         } else if($ws.helpers.instanceOfModule(model, 'SBIS3.CONTROLS.Record')) {
-            return model.getKey()
-         }
-         return null;
       }
-
    });
 });

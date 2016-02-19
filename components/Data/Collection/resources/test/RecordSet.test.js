@@ -246,8 +246,97 @@ define([
                   done();
                });
             });
+            it('should return record by updated id', function() {
+               var source = new MemorySource({
+                     idProperty: 'Ид'
+                  }),
+                  rs = new RecordSet({
+                     idProperty: 'Ид',
+                     rawData: items.slice()
+                  }),
+                  rec = new Model({
+                     idProperty: 'Ид'
+                  }),
+                  byKeyRec;
+               rs.add(rec);
+               byKeyRec = rs.getRecordById(rec.getId());
+               rs.saveChanges(source);
+               assert.strictEqual(rec, byKeyRec);
+               assert.strictEqual(rec, rs.getRecordById(rec.getId()));
+            });
          });
 
+         describe('.merge()', function (){
+            it('should merge two recordsets with default params', function() {
+               var rs = new RecordSet({
+                  rawData: getItems(),
+                  idProperty: "Ид"
+               }), rs2 =  new RecordSet({
+                  rawData: [{
+                     'Ид': 1000,
+                     'Фамилия': 'Карпов'
+                  }, {
+                     'Ид': 2,
+                     'Фамилия': 'Пушкин'
+                  }],
+                  idProperty: "Ид"
+               });
+               rs.merge(rs2);
+               assert.equal(rs.getCount(), 2);
+               assert.equal(rs.getRecordById(2).get('Фамилия'), 'Пушкин');
+               assert.equal(rs.getRecordById(1000).get('Фамилия'), 'Карпов');
+
+            });
+
+            it('should merge two recordsets without remove', function() {
+               var rs = new RecordSet({
+                  rawData: getItems(),
+                  idProperty: "Ид"
+               }), rs2 =  new RecordSet({
+                  rawData: [{
+                     'Ид': 2,
+                     'Фамилия': 'Пушкин'
+                  }],
+                  idProperty: "Ид"
+               });
+               rs.merge(rs2, {remove: false});
+               assert.equal(getItems().length, rs.getCount());
+               assert.equal(rs.getRecordById(2).get('Фамилия'), 'Пушкин');
+
+            });
+
+            it('should merge two recordsets without merge', function() {
+               var rs = new RecordSet({
+                  rawData: getItems(),
+                  idProperty: "Ид"
+               }), rs2 =  new RecordSet({
+                  rawData: [{
+                     'Ид': 2,
+                     'Фамилия': 'Пушкин'
+                  }],
+                  idProperty: "Ид"
+               });
+               rs.merge(rs2, {merge: false});
+               assert.notEqual(rs.getRecordById(2).get('Фамилия'), 'Пушкин');
+
+            });
+
+            it('should merge two recordsets without add', function() {
+               var rs = new RecordSet({
+                  rawData: getItems(),
+                  idProperty: "Ид"
+               }), rs2 =  new RecordSet({
+                  rawData: [{
+                     'Ид': 1000,
+                     'Фамилия': 'Пушкин'
+                  }],
+                  idProperty: "Ид"
+               });
+               rs.merge(rs2, {add: false});
+               assert.isUndefined(rs.getRecordById(1000));
+
+            });
+         });
       });
    }
 );

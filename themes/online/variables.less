@@ -18,6 +18,7 @@
 @font-basic-name:                         'TensorFont Regular', 'TensorFont', sans-serif;
 @font-basic-size:                         14px;
 @font-popup-size:                         15px;
+@font-folder-size:                        15px;
 @font-basic-line-height:                  20px;
 
 @closeButtonImage:                        url('img/areaCloseButton.png') -30px 0;
@@ -361,14 +362,14 @@
 @radio-button-height:                           24px;
 @radio-button-lineheight:                       @radio-button-height;
 
-@radio-button-text-color:                       @black-color;
+@radio-button-text-color:                       @gray-color;
 @radio-button-hover-text-color:                 @primary-color;
 @radio-button-hover-text-decoration:            underline;
 @radio-button-hover-text-decoration-checked:    none;
 @radio-button-hover-text-decoration-disabled:   none;
 
-@radio-button-checked-text-color:               @radio-button-text-color;
-@radio-button-checked-hover-text-color:         @radio-button-text-color;
+@radio-button-checked-text-color:               @black-color;
+@radio-button-checked-hover-text-color:         @black-color;
 
 @radio-button-disabled-text-color:              @gray-light-color;
 @radio-button-disabled-hover-text-color:        @gray-light-color;
@@ -1295,6 +1296,8 @@
 @tree-view-hier-wrapper-height: 						20px;
 
 @tree-view-folder-title-display:                inline-block;
+@tree-view-big-node-font-size:                  16px;
+@tree-view-big-leaf-font-size:                  15px;
 
 // --------- //
 // Data grid //
@@ -1360,6 +1363,7 @@
 @data-grid-cell-hover-bg:                       @data-grid-cell-bg;
 
 @data-grid-td-checkbox-width:                   24px;
+@data-grid-td-checkbox-width-without-marker:    20px;
 @data-grid-checkbox-margin:                     1px 0 0 5px;
 
 @data-grid-table-layot: 								fixed;
@@ -1467,7 +1471,7 @@
 // ----------------------- //
 //      EditInPlace        //
 // ----------------------- //
-@controls-editInPlace-editor-margin-top:            4px;
+@controls-editInPlace-editor-margin-top:            3px;
 @controls-editInPlace-editor-padding:               0 1px;
 
 
@@ -1515,6 +1519,7 @@
 @DropdownList-picker-list-border-radius:      0 0 5px 5px;
 @DropdownList-picker-list-right-border-radius:0 0 5px 5px;
 @DropdownList-picker-list-left-border-radius: 0 0 5px 5px;
+@DropdownList-picker-menu-font-size:          15px;
 @DropdownList-picker-menu-item-padding:       4px 8px;
 @DropdownList-picker-menu-item-margin:        0;
 @DropdownList-picker-menu-item-color:         @white-color;

@@ -66,6 +66,7 @@ define('js!SBIS3.CONTROLS.MenuButtonMixin', ['js!SBIS3.CONTROLS.ContextMenu'], f
             target : this.getContainer(),
             items: this._options.items,
             corner : 'tl',
+            filter: this._options.filter,
             enabled: this.isEnabled(),
             hierField: this._options.hierField,
             keyField: this._options.keyField,

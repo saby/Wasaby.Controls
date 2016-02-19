@@ -81,19 +81,29 @@ define('js!SBIS3.CONTROLS.Selectable', ['js!SBIS3.CONTROLS.Data.Utils'], functio
 
 
       _prepareSelectedConfig: function(index, key) {
+
+
+
+
+
          if ((typeof index == 'undefined') || (index === null)) {
-            if (key) {
+            if (typeof key != 'undefined') {
                this._selectMode = 'key';
                this._options.selectedIndex = this._getItemIndexByKey(key);
             }
-            else if (!this._options.allowEmptySelection) {
-               this._selectMode = 'index';
-               this._options.selectedIndex = 0;
+            else {
+               this._options.selectedIndex = undefined;
             }
          }
          else {
             this._selectMode = 'index';
             this._options.selectedIndex = index;
+         }
+         if (!this._options.allowEmptySelection && (this._options.selectedIndex === null || typeof this._options.selectedIndex == 'undefined' || this._options.selectedIndex == -1)) {
+            if (this._itemsProjection.getCount()) {
+               this._selectMode = 'index';
+               this._options.selectedIndex = 0;
+            }
          }
       },
 
@@ -104,6 +114,7 @@ define('js!SBIS3.CONTROLS.Selectable', ['js!SBIS3.CONTROLS.Data.Utils'], functio
                   this._itemsProjection
                );
             }
+            this._utilityEnumerator = undefined;
          }
       },
 
@@ -118,12 +129,24 @@ define('js!SBIS3.CONTROLS.Selectable', ['js!SBIS3.CONTROLS.Data.Utils'], functio
             this._drawSelectedItem(this._options.selectedKey, this._options.selectedIndex);
          },
          _unsetItemsEventHandlers : function() {
+            if (this._utilityEnumerator) {
+               this._utilityEnumerator.unsetObservableCollection(
+                  this._itemsProjection
+               );
+            }
+            this._utilityEnumerator = undefined;
             if (this._itemsProjection && this._onProjectionCurrentChange) {
                this.unsubscribeFrom(this._itemsProjection, 'onCurrentChange', this._onProjectionCurrentChange);
             }
          },
          _itemsReadyCallback: function() {
             this._prepareSelectedConfig(this._options.selectedIndex, this._options.selectedKey);
+            if ((typeof this._options.selectedIndex != 'undefined') && (this._options.selectedIndex !== null)) {
+               this._itemsProjection.setCurrentPosition(this._options.selectedIndex);
+            }
+            else {
+               this._itemsProjection.setCurrentPosition(-1);
+            }
          }
       },
 
@@ -158,13 +181,22 @@ define('js!SBIS3.CONTROLS.Selectable', ['js!SBIS3.CONTROLS.Data.Utils'], functio
        */
       setSelectedKey : function(id) {
          this._options.selectedKey = id;
-         this._prepareSelectedConfig(undefined, id);
-         this._itemsProjection.setCurrentPosition(this._options.selectedIndex);
+         if (this._itemsProjection) {
+            this._prepareSelectedConfig(undefined, id);
+            if ((typeof this._options.selectedIndex != 'undefined') && (this._options.selectedIndex !== null)) {
+               this._itemsProjection.setCurrentPosition(this._options.selectedIndex);
+            }
+            else {
+               this._itemsProjection.setCurrentPosition(-1);
+            }
+         }
       },
 
       setSelectedIndex: function(index) {
-         this._itemsProjection.setCurrentPosition(index);
-         this._prepareSelectedConfig(index);
+         if (this._itemsProjection) {
+            this._prepareSelectedConfig(index);
+            this._itemsProjection.setCurrentPosition(index);
+         }
       },
       /**
        * Возвращает идентификатор выбранного элемента.
