@@ -122,6 +122,7 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', ['js!SBIS3.CORE.Control',
          this._collapseChilds(key);
          delete(this._options.openedPath[key]);
          this._nodeClosed(key);
+         this._updateItemsToolbar()
          this._notify('onNodeCollapse', key);
       },
 
@@ -235,6 +236,7 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', ['js!SBIS3.CORE.Control',
                }
             }
          }
+         this._updateItemsToolbar();
       },
 
       _drawExpandArrow: function(key, flag){
