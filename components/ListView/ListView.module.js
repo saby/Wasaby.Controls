@@ -1668,6 +1668,12 @@ define('js!SBIS3.CONTROLS.ListView',
             }
          },
          /*DRAG_AND_DROP START*/
+         /**
+          * Установить возможность перемещения элементов с помощью DragNDrop.
+          * @param allowDragNDrop возможность перемещения элементов.
+          * @see itemsDragNDrop
+          * @see getItemsDragNDrop
+          */
          setItemsDragNDrop: function(allowDragNDrop) {
             this._options.itemsDragNDrop = allowDragNDrop;
             if (!this._dragStartHandler) {
@@ -1675,6 +1681,11 @@ define('js!SBIS3.CONTROLS.ListView',
             }
             this._getItemsContainer()[allowDragNDrop ? 'bind' : 'unbind']('mousedown', this._dragStartHandler);
          },
+         /**
+          * Получить текущую конфигурацию перемещения элементов с помощью DragNDrop.
+          * @see itemsDragNDrop
+          * @see setItemsDragNDrop
+          */
          getItemsDragNDrop: function() {
             return this._options.itemsDragNDrop;
          },
