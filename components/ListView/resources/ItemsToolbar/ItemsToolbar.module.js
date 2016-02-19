@@ -114,7 +114,7 @@ define('js!SBIS3.CONTROLS.ItemsToolbar',
            * @returns {null|SBIS3.CONTROLS.ItemsToolbar.$protected._itemsActions|ItemActionsGroup|SBIS3.CONTROLS.ItemsToolbar._itemsActions}
            */
           getItemsActionsGroup: function() {
-             if (!this._itemsActions) {
+             if (!this._itemsActions && this._options.itemsActions.length) {
                 this._initItemsActions();
              }
              return this._itemsActions;

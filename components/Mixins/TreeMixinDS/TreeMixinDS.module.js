@@ -92,6 +92,7 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', ['js!SBIS3.CORE.Control',
          this._collapseChilds(key);
          delete(this._options.openedPath[key]);
          this._nodeClosed(key);
+         this._updateItemsToolbar()
       },
 
       //Рекурсивно удаляем из индекса открытых узлов все дочерние узлы закрываемого узла
@@ -178,7 +179,7 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', ['js!SBIS3.CORE.Control',
        */
       getOpenedPath: function(){
          return this._options.openedPath;
-      }, 
+      },
 
       _drawLoadedNode: function(key, records){
          this._drawExpandArrow(key);
@@ -196,6 +197,7 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', ['js!SBIS3.CORE.Control',
                }
             }
          }
+         this._updateItemsToolbar();
       },
 
       _drawExpandArrow: function(key, flag){
@@ -594,7 +596,7 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', ['js!SBIS3.CORE.Control',
          this._breadCrumbs = [];
       }
    };
-    
+
    var TreePagingLoader = Control.Control.extend({
       $protected :{
          _options : {
