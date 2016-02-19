@@ -97,6 +97,5 @@ define('js!SBIS3.CONTROLS.Data.Adapter.ITable', [], function () {
       getData: function () {
          throw new Error('Method must be implemented');
       }
-
    };
 });
