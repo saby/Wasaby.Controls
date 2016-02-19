@@ -1048,6 +1048,15 @@ define('js!SBIS3.CONTROLS.ListView',
          _isSupportedItemsToolbar: function() {
             return this._options.itemsActions.length || this._options.editMode.indexOf('toolbar') !== -1;
          },
+
+         _updateItemsToolbar: function() {
+            var hoveredItem = this.getHoveredItem();
+
+            if(hoveredItem.container && this._isSupportedItemsToolbar()) {
+               this._showItemsToolbar(hoveredItem);
+            }
+         },
+
          _swipeHandler: function(e){
             var target = this._findItemByElement($(e.target)),
                 item;
@@ -1765,9 +1774,7 @@ define('js!SBIS3.CONTROLS.ListView',
             this._clearDragHighlight();
             this._avatar.remove();
             this._isShifted = false;
-            if (this.getItemsActions() && hoveredItem.container) {
-               this._showItemsToolbar(hoveredItem);
-            }
+            this._updateItemsToolbar();
          },
          /*DRAG_AND_DROP END*/
          _drawResults: function(){
