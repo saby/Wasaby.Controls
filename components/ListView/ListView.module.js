@@ -922,7 +922,9 @@ define('js!SBIS3.CONTROLS.ListView',
 
          showEip: function(target, model, options) {
             if (this.isEnabled()) {
-               this._getEditInPlace().showEip(target, model, options);
+               return this._getEditInPlace().showEip(target, model, options);
+            } else {
+               return $ws.proto.Deferred.fail();
             }
          },
 
@@ -1016,10 +1018,6 @@ define('js!SBIS3.CONTROLS.ListView',
                         event.setResult(this._notify('onEndEdit', model, withSaving));
                      }.bind(this),
                      onAfterEndEdit: function(event, model, target, withSaving) {
-                        if (withSaving) {
-                           target.attr('data-id', model.getKey());
-                           this.redrawItem(model);
-                        }
                         if (this._options.editMode.indexOf('toolbar') !== -1) {
                            //Скрываем кнопки редактирования
                            this._getItemsToolbar().unlockToolbar();
@@ -1661,6 +1659,27 @@ define('js!SBIS3.CONTROLS.ListView',
             }
             this._getItemsContainer()[allowDragNDrop ? 'bind' : 'unbind']('mousedown', this._dragStartHandler);
          },
+         getItemsDragNDrop: function() {
+            return this._options.itemsDragNDrop;
+         },
+         /**
+          * Установить возможность перемещения элементов с помощью DragNDrop.
+          * @param allowDragNDrop возможность перемещения элементов.
+          * @see itemsDragNDrop
+          * @see getItemsDragNDrop
+          */
+         setItemsDragNDrop: function(allowDragNDrop) {
+            this._options.itemsDragNDrop = allowDragNDrop;
+            if (!this._dragStartHandler) {
+               this._dragStartHandler = this._onDragStart.bind(this);
+            }
+            this._getItemsContainer()[allowDragNDrop ? 'bind' : 'unbind']('mousedown', this._dragStartHandler);
+         },
+         /**
+          * Получить текущую конфигурацию перемещения элементов с помощью DragNDrop.
+          * @see itemsDragNDrop
+          * @see setItemsDragNDrop
+          */
          getItemsDragNDrop: function() {
             return this._options.itemsDragNDrop;
          },
