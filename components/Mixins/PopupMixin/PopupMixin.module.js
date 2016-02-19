@@ -762,7 +762,7 @@ define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManag
       },
 
       _getZIndex: function(){
-         this._zIndex = $ws.single.WindowManager.acquireZIndex(this._options.isModal);
+         this._zIndex = $ws.single.WindowManager.acquireZIndex(this._options.isModal, false, true);
          $ws.single.WindowManager.setVisible(this._zIndex);
       },
 
