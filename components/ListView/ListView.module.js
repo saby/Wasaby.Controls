@@ -1656,16 +1656,6 @@ define('js!SBIS3.CONTROLS.ListView',
             this._ladderCompare(rows);
          },
          /*DRAG_AND_DROP START*/
-         setItemsDragNDrop: function(allowDragNDrop) {
-            this._options.itemsDragNDrop = allowDragNDrop;
-            if (!this._dragStartHandler) {
-               this._dragStartHandler = this._onDragStart.bind(this);
-            }
-            this._getItemsContainer()[allowDragNDrop ? 'bind' : 'unbind']('mousedown', this._dragStartHandler);
-         },
-         getItemsDragNDrop: function() {
-            return this._options.itemsDragNDrop;
-         },
          /**
           * Установить возможность перемещения элементов с помощью DragNDrop.
           * @param allowDragNDrop возможность перемещения элементов.
