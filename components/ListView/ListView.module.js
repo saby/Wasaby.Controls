@@ -1715,13 +1715,22 @@ define('js!SBIS3.CONTROLS.ListView',
             var
                 insertAfter,
                 isCorrectDrop,
+                neighborItem,
                 currentElement = this.getCurrentElement(),
-                target = $(e.target).closest('.js-controls-ListView__item');
+                target = $(e.target).closest('.js-controls-ListView__item'),
+                targetId = target.data('id');
             this._clearDragHighlight();
-            if (target.length && target.data('id') != currentElement.targetId) {
+            if (target.length && targetId != currentElement.targetId) {
                insertAfter = this._getDirectionOrderChange(e, target);
+               //Отказываемся от смены порядкового номера, если переместили либо под себя либо над себя.
+               if (insertAfter !== undefined) {
+                  neighborItem = this[insertAfter ? 'getNextItemById' : 'getPrevItemById'](targetId);
+                  if (neighborItem && neighborItem.data('id') == currentElement.targetId) {
+                     insertAfter = undefined;
+                  }
+               }
             }
-            isCorrectDrop = this._notify('onDragMove', currentElement.keys, target.data('id'), insertAfter);
+            isCorrectDrop = this._notify('onDragMove', currentElement.keys, targetId, insertAfter);
             if (isCorrectDrop !== false) {
                this._setDragTarget(target, insertAfter);
             }
