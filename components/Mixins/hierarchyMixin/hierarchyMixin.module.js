@@ -149,6 +149,7 @@ define('js!SBIS3.CONTROLS.hierarchyMixin', [], function () {
          }
          this.setFilter(filter, true);
          this._notify('onBeforeSetRoot');
+         this._itemsProjection.setRoot(key || this._options.root);
          this._hier = this._getHierarchy(this._dataSet, key);
          //узел грузим с 0-ой страницы
          this._offset = 0;

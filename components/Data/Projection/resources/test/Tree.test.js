@@ -203,6 +203,26 @@ define([
             });
          });
 
+         describe('.setRoot()', function() {
+            it('should set root as scalar', function() {
+               tree.setRoot(1);
+               assert.strictEqual(tree.getRoot().getContents(), 1);
+            });
+            it('should set root as object', function() {
+               var root = {id: 1};
+               tree.setRoot(root);
+               assert.strictEqual(tree.getRoot().getContents(), root);
+            });
+            it('should set root as tree item', function() {
+               var root = new TreeItem({contents: {
+                  id: null,
+                  title: 'Root'
+               }});
+               tree.setRoot(root);
+               assert.strictEqual(tree.getRoot(), root);
+            });
+         });
+
          describe('.getChildren()', function() {
             it('should return children of a root', function() {
                var children = tree.getChildren(tree.getRoot()),
