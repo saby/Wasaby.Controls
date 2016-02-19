@@ -252,9 +252,11 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                   this._options.dataSource.update(eipRecord).addCallback(function() {
                      isAdd && this._options.dataSet.push(eipRecord);
                   }.bind(this)).addBoth(function() {
+                     eip.endEdit();
                      this._notifyOnAfterEndEdit(eipRecord, target, withSaving);
                   }.bind(this));
                } else {
+                  eip.endEdit();
                   this._notifyOnAfterEndEdit(eipRecord, target, withSaving);
                }
             },
