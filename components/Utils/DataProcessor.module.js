@@ -89,10 +89,11 @@ define('js!SBIS3.CONTROLS.Utils.DataProcessor', [
       },
       /**
        * Выгрузить данные с помощью готовой HTML-верстки
-       * @param fileName - имя файла
-       * @param fileType
-       * @param [methodName] - имя метода для выгрузки данных
-       * @param [cfg] - {FileName : имя файла, html: html верстка ввиде строки}
+       * @param fileName
+       * @param {String} fileType PDF или Excel
+       * @param [methodName] - имя метода объекта fileType
+       * @param {Object} cfg - параметры метода methodName {FileName : имя файла, html: html верстка ввиде строки}
+       * @param {number} pageOrientation 1 - потртетная, 2 - альбомная
        */
       exportHTML: function(fileName, fileType, methodName, cfg, pageOrientation){
          var self = this;
@@ -116,8 +117,9 @@ define('js!SBIS3.CONTROLS.Utils.DataProcessor', [
        * Выгрузить данные в Excel или PDF по фильтру списочного метода
        * @param fileName
        * @param {String} fileType PDF или Excel
-       * @param [methodName]
-       * @param {Object} cfg
+       * @param [methodName] имя метода объекта fileType
+       * @param {Object} cfg - параметры метода methodName
+       * @param {number} pageOrientation 1 - потртетная, 2 - альбомная
        */
       exportList: function(fileName, fileType, methodName, cfg, pageOrientation){
          var self = this;
@@ -133,6 +135,14 @@ define('js!SBIS3.CONTROLS.Utils.DataProcessor', [
             self._destroyLoadIndicator();
          });
       },
+      /**
+       * Выгрузить данные в Excel или PDF по набору данных
+       * @param fileName
+       * @param {String} fileType PDF или Excel
+       * @param [methodName] - имя метода объекта fileType
+       * @param {Object} cfg - параметры метода methodName
+       * @param {number} pageOrientation 1 - потртетная, 2 - альбомная
+       */
       exportDataSet: function(fileName, fileType, methodName, cfg, pageOrientation){
          var self = this,
             columns  = $ws.core.clone(this._options.columns),
@@ -145,7 +155,8 @@ define('js!SBIS3.CONTROLS.Utils.DataProcessor', [
                titles.push(columns[i].title || columns[i].field);
             }
 
-            //TODO после метода filter сейчас dataSet возвращает getRawData = null, ошибка выписана, после исправдения заюзать getRawData
+            //TODO после метода filter сейчас dataSet возвращает getRawData = null, ошибка выписана, после исправления просто передать рекордсет
+            //и перевести на SbisService.call
             records = this._options.dataSet.toArray();
             for (i = 0; i < records.length; i++) {
                var raw = records[i].getRaw();
@@ -182,6 +193,19 @@ define('js!SBIS3.CONTROLS.Utils.DataProcessor', [
             blob = new $ws.proto.BLObject({
                name: object
             });
+         //TODO поменять, когда рекордсеты заработают
+         //var dataSource = new Source({
+         //   resource: {
+         //      name: object
+         //   }
+         //});
+         //return dataSource.call(methodName, cfg).addCallback(function(ds){
+         //   self.downloadFile(ds.getScalar());
+         //   return ds;
+         //}).addErrback(function (error){
+         //   $ws.single.ioc.resolve('ILogger').log('DataProcessor. Ошибка выгрузки данных', error.details);
+         //   return error;
+         //});
          return blob.call(methodName, cfg, $ws.proto.BLObject.RETURN_TYPE_ASIS).addCallback(function(id){
             self.downloadFile(id);
          }).addErrback(function (error){
