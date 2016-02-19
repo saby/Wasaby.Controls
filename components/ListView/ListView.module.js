@@ -1018,10 +1018,6 @@ define('js!SBIS3.CONTROLS.ListView',
                         event.setResult(this._notify('onEndEdit', model, withSaving));
                      }.bind(this),
                      onAfterEndEdit: function(event, model, target, withSaving) {
-                        if (withSaving) {
-                           target.attr('data-id', model.getKey());
-                           this.redrawItem(model);
-                        }
                         if (this._options.editMode.indexOf('toolbar') !== -1) {
                            //Скрываем кнопки редактирования
                            this._getItemsToolbar().unlockToolbar();
