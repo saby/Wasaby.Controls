@@ -149,28 +149,31 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', ['js!SBIS3.CORE.Control',
       },
 
       expandNode: function (key) {
-         var self = this,
-         tree = this._dataSet.getTreeIndex(this._options.hierField, true);
-         this._folderOffsets[key || 'null'] = 0;
-         if (!tree[key]){
-            this._toggleIndicator(true);
-            return this._callQuery(this._createTreeFilter(key), this.getSorting(), 0, this._limit).addCallback(function (dataSet) {
-               // TODO: Отдельное событие при загрузке данных узла. Сделано так как тут нельзя нотифаить onDataLoad,
-               // так как на него много всего завязано. (пользуется Янис)
-               self._folderHasMore[key] = dataSet.getMetaData().more;
-               self._notify('onDataMerge', dataSet);
-               self._toggleIndicator(false);
-               self._nodeDataLoaded(key, dataSet);
-            });
-         } else {
-            var child = tree[key];
-            var records = [];
-            if (child){
-               for (var i = 0; i < child.length; i++){
-                  records.push(this._dataSet.getRecordByKey(child[i]));
+         if (!this._options.openedPath[key]) {
+            var self = this,
+               tree = this._dataSet.getTreeIndex(this._options.hierField, true);
+            this._folderOffsets[key || 'null'] = 0;
+            this._options.openedPath[key] = true;
+            if (!tree[key]) {
+               this._toggleIndicator(true);
+               return this._callQuery(this._createTreeFilter(key), this.getSorting(), 0, this._limit).addCallback(function (dataSet) {
+                  // TODO: Отдельное событие при загрузке данных узла. Сделано так как тут нельзя нотифаить onDataLoad,
+                  // так как на него много всего завязано. (пользуется Янис)
+                  self._folderHasMore[key] = dataSet.getMetaData().more;
+                  self._notify('onDataMerge', dataSet);
+                  self._toggleIndicator(false);
+                  self._nodeDataLoaded(key, dataSet);
+               });
+            } else {
+               var child = tree[key];
+               var records = [];
+               if (child) {
+                  for (var i = 0; i < child.length; i++) {
+                     records.push(this._dataSet.getRecordByKey(child[i]));
+                  }
+
+                  this._drawLoadedNode(key, records, this._folderHasMore[key]);
                }
-               this._options.openedPath[key] = true;
-               this._drawLoadedNode(key, records, this._folderHasMore[key]);
             }
          }
       },
@@ -213,7 +216,6 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', ['js!SBIS3.CORE.Control',
          dataSet.each(function (record) {
             records.push(record);
          });
-         this._options.openedPath[key] = true;
          self._drawLoadedNode(key, records, self._folderHasMore[key]);
       },
 
