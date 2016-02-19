@@ -38,16 +38,15 @@ define('js!SBIS3.CONTROLS.Data.Adapter.JsonTable', [
          var name = format.getName(),
             i;
          for (i = 0; i < this._data.length; i++) {
-            this._data[i][name] = undefined;
+            this._data[i][name] = format.getDefaultValue();
          }
       },
 
       removeField: function(name) {
          JsonRecord.superclass.removeField.call(this, name);
-         var name = format.getName(),
-            i;
+         var i;
          for (i = 0; i < this._data.length; i++) {
-            delete this._data[i];
+            delete this._data[i][name];
          }
       },
 
@@ -110,11 +109,17 @@ define('js!SBIS3.CONTROLS.Data.Adapter.JsonTable', [
          this.add(clone, index);
       },
 
+      //endregion Public methods
+
+      //region Protected methods
+
       _checkPosition: function (at) {
          if (at < 0 || at > this._data.length) {
             throw new Error('Out of bounds');
          }
       }
+
+      //endregion Protected methods
    });
 
    return JsonTable;

@@ -17,6 +17,22 @@ define('js!SBIS3.CONTROLS.Data.Adapter.SbisRecord', [
    var SbisRecord = $ws.core.extend({}, [IRecord, SbisFormatMixin], /** @lends SBIS3.CONTROLS.Data.Adapter.SbisRecord.prototype */{
       _moduleName: 'SBIS3.CONTROLS.Data.Adapter.SbisRecord',
 
+      //region SBIS3.CONTROLS.Data.Adapter.JsonFormatMixin
+
+      addField: function(format, at) {
+         SbisRecord.superclass.addField.call(this, format, at);
+      },
+
+      removeField: function(name) {
+         SbisRecord.superclass.addField.call(this, name);
+      },
+
+      removeFieldAt: function(index) {
+         SbisRecord.superclass.removeFieldAt.call(this, index);
+      },
+
+      //endregion SBIS3.CONTROLS.Data.Adapter.JsonFormatMixin
+
       //region Public methods
 
       has: function (name) {

@@ -37,7 +37,7 @@ define('js!SBIS3.CONTROLS.Data.Adapter.JsonRecord', [
             throw new Error('Field "' + name + '" already exists');
          }
          JsonRecord.superclass.addField.call(this, format, at);
-         this.set(format.getName(), undefined);
+         this.set(format.getName(), format.getDefaultValue());
       },
 
       removeField: function(name) {

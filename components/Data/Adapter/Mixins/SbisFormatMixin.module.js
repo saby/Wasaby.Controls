@@ -20,7 +20,12 @@ define('js!SBIS3.CONTROLS.Data.Adapter.SbisFormatMixin', [
          /**
           * @member {Object<String, Number>} Название поля -> индекс в d
           */
-         _fieldIndexes: null
+         _fieldIndexes: null,
+
+         /**
+          * @member {Object.<String, SBIS3.CONTROLS.Data.Format.Field>} Форматы полей
+          */
+         _format: {}
       },
 
       $constructor: function (data) {
@@ -73,9 +78,13 @@ define('js!SBIS3.CONTROLS.Data.Adapter.SbisFormatMixin', [
          this._checkFieldIndex(at);
 
          this._format[format.getName()] = format;
-         this._data.s.splice(at, 0, this._buildS(format));
-         this._data.d.splice(at, 0, undefined);
          this._fieldIndexes = null;
+         this._data.s.splice(at, 0, this._buildS(format));
+         this._data.d.splice(
+            at,
+            0,
+            this._buildD(format.getDefaultValue())
+         );
       },
 
       removeField: function(name) {
@@ -84,18 +93,18 @@ define('js!SBIS3.CONTROLS.Data.Adapter.SbisFormatMixin', [
             throw new ReferenceError('Field "' + name + '" is not exists');
          }
          delete this._format[name];
+         this._fieldIndexes = null;
          this._data.s.splice(index, 1);
          this._data.d.splice(index, 1);
-         this._fieldIndexes = null;
       },
 
       removeFieldAt: function(index) {
          this._checkFieldIndex(index);
          var name = this._data.s[index].n;
          delete this._format[name];
+         this._fieldIndexes = null;
          this._data.s.splice(index, 1);
          this._data.d.splice(index, 1);
-         this._fieldIndexes = null;
       },
 
       //endregion Public methods

@@ -16,6 +16,22 @@ define('js!SBIS3.CONTROLS.Data.Adapter.SbisTable', [
    var SbisTable = $ws.core.extend({}, [ITable, SbisFormatMixin], /** @lends SBIS3.CONTROLS.Data.Adapter.SbisTable.prototype */{
       _moduleName: 'SBIS3.CONTROLS.Data.Adapter.SbisTable',
 
+      //region SBIS3.CONTROLS.Data.Adapter.JsonFormatMixin
+
+      addField: function(format, at) {
+         SbisTable.superclass.addField.call(this, format, at);
+      },
+
+      removeField: function(name) {
+         SbisTable.superclass.addField.call(this, name);
+      },
+
+      removeFieldAt: function(index) {
+         SbisTable.superclass.removeFieldAt.call(this, index);
+      },
+
+      //endregion SBIS3.CONTROLS.Data.Adapter.JsonFormatMixin
+
       //region Public methods
 
       getCount: function () {
@@ -75,44 +91,6 @@ define('js!SBIS3.CONTROLS.Data.Adapter.SbisTable', [
          var source = this._data.d[index],
             clone = $ws.core.clone(source);
          this._data.d.splice(index, 0, clone);
-      },
-
-      getFormat: function (name) {
-         if (!this.has(name)) {
-            throw new ReferenceError('Field "' + name + '" is not exists');
-         }
-         if (!this._format.hasOwnProperty(name)) {
-            this._format[name] = new StringField({
-               name: name
-            });
-         }
-         return this._format[name].clone();
-      },
-
-      addField: function(format, at) {
-         if (this.has(name)) {
-            throw new Error('Field "' + name + '" already exists');
-         }
-         if (!format || !$ws.helpers.instanceOfModule(format, 'SBIS3.CONTROLS.Data.Format.Field')) {
-            throw new TypeError('Format should be an instance of SBIS3.CONTROLS.Data.Format.Field');
-         }
-         if (at >= 0) {
-            $ws.single.ioc.resolve('ILogger').log('SBIS3.CONTROLS.Data.Adapter.JsonRecord::addField()', 'Argument "at" is not supported.');
-         }
-         this._format[format.getName()] = format;
-         this.set(format.getName(), undefined);
-      },
-
-      removeField: function(name) {
-         if (!this.has(name)) {
-            throw new ReferenceError('Field "' + name + '" is not exists');
-         }
-         delete this._format[name];
-         delete this._data[name];
-      },
-
-      removeFieldAt: function(index) {
-         throw new Error('SBIS3.CONTROLS.Data.Adapter.JsonRecord::removeFieldAt() is not supported');
       }
 
       //endregion Public methods
