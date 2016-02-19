@@ -743,6 +743,14 @@ function(BaseControl, dotTpl){
          if (this._sourceData.firstRequest !== false) {
             this.reload();
          }
+
+         //перерисовываем график, если он стал видимым. без этого график не занимает всю ширину контейнера, если был скрыт
+         var trg = $ws.helpers.trackElement(this._container, true);
+         trg.subscribe('onVisible', function (event, visible) {
+            if (self._chartObj && visible) {
+               self._chartObj.reflow();
+            }
+         });
       },
 
       canAcceptFocus : function() {
