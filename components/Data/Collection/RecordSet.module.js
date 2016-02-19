@@ -144,7 +144,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
             $ws.single.ioc.resolve('ILogger').log('SBIS3.CONTROLS.Data.Collection.RecordSet', 'option "keyField" is deprecated and will be removed in 3.7.4. Use "idProperty" instead.');
          }
          if (!this._options.idProperty) {
-            this._options.idProperty = this._getTableAdapter().getKeyField();
+            this._options.idProperty = this.getAdapter().getKeyField(this._options.rawData);
          }
          if ('items' in cfg) {
             $ws.single.ioc.resolve('ILogger').log('SBIS3.CONTROLS.Data.Collection.RecordSet', 'option "items" is not acceptable. Use "rawData" instead.');

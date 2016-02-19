@@ -130,7 +130,7 @@ define('js!SBIS3.CONTROLS.Data.Model', [
 
          this._options.idProperty = this._options.idProperty || '';
          if (!this._options.idProperty) {
-            this._options.idProperty = this._getRecordAdapter().getKeyField();
+            this._options.idProperty = this.getAdapter().getKeyField(this._options.rawData);
          }
       },
 
