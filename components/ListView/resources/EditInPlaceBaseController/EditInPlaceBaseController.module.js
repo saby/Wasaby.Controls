@@ -241,13 +241,17 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                }
                if (withSaving) {
                   this._options.dataSource.sync(this._options.dataSet).addCallback(function() {
-                     this._savingDeferred.callback();
-                     this._notify('onAfterEndEdit', this._options.dataSet.getRecordByKey(eipRecord.getKey()), target, withSaving);
+                     this._notifyOnAfterEndEdit(this._options.dataSet.getRecordByKey(eipRecord.getKey()), target, withSaving);
                   }.bind(this));
                } else {
-                  this._savingDeferred.callback();
-                  this._notify('onAfterEndEdit', eipRecord, target, withSaving);
+                  this._notifyOnAfterEndEdit(eipRecord, target, withSaving);
                }
+            },
+            _notifyOnAfterEndEdit: function(eipRecord, target, withSaving) {
+               if (!this._savingDeferred.isReady()) {
+                  this._savingDeferred.callback();
+               }
+               this._notify('onAfterEndEdit', eipRecord, target, withSaving);
             },
             add: function(model, options) {
                var
