@@ -108,8 +108,13 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
       _drawLoadedNode : function(key, records) {
          this._drawExpandArrow(key);
          this._drawItemsFolder(records);
-         this._createFolderFooter(key);
          this._updateItemsToolbar();
+      },
+      _drawItemsCallback: function() {
+         $ws.helpers.forEach(this._options.openedPath, function(val, key) {
+            this._createFolderFooter(key);
+         }, this);
+         TreeDataGridView.superclass._drawItemsCallback.apply(this, arguments);
       },
       _createFolderFooter: function(key) {
          var container,
