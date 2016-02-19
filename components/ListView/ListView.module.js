@@ -191,7 +191,7 @@ define('js!SBIS3.CONTROLS.ListView',
             _pageChangeDeferred : undefined,
             _pager : undefined,
             _previousGroupBy : undefined,
-
+            _checkClickByTap: true,
             _keysWeHandle: [
                $ws._const.key.up,
                $ws._const.key.down,
