@@ -11,6 +11,9 @@ define('js!SBIS3.CONTROLS.EditInPlace',
    ],
    function(Control, dotTplFn, CompoundActiveFixMixin, CompoundFocusMixin) {
 
+      //Высота отступа у редакторов от верхнего края редактируемого элемента
+      var EDITOR_MARGINS = 3;
+
       'use strict';
 
       /**
@@ -165,7 +168,7 @@ define('js!SBIS3.CONTROLS.EditInPlace',
                   if (self._lastHeight !== newHeight) {
                      self._lastHeight = newHeight;
                      self._notify('onChangeHeight');
-                     self.getEditingItem().target.height(newHeight);
+                     self.getEditingItem().target.height(newHeight + EDITOR_MARGINS);
                   }
                }, 50);
             },
