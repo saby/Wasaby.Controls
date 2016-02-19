@@ -272,6 +272,7 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                   return self._options.dataSource.create(model).addCallback(function (record) {
                      target.attr('data-id', '' + record.getKey());
                      self._eip.edit(target, record);
+                     self._notify('onAfterBeginEdit', record);
                      return record;
                   });
                });
@@ -279,7 +280,8 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
             _createAddTarget: function(options) {
                var
                    footer,
-                   target = $('<div class="js-controls-ListView__item"></div>');
+                   target = this._options.columns ? $('<tr>') : $('<div>');
+               target.addClass("js-controls-ListView__item");
                if (options && options.initiator) {
                   footer = options.initiator.closest('.controls-TreeDataGridView__folderFooter');
                }
