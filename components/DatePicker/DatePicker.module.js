@@ -332,8 +332,9 @@ define(
        * @param date новое значение даты, объект типа Date
        */
       _setDate: function (date) {
-         var isCorrect = false;
-         if (date === null || typeof date === "undefined") {
+         var isCorrect = false,
+             oldText   = this._options.text;
+         if (date === null || typeof date === 'undefined') {
             this._options.date = date;
             this._options.text = this.formatModel.getStrMask(this._maskReplacer);
             isCorrect = true;
@@ -349,6 +350,9 @@ define(
                this._options.text = this._getTextByDate( this._options.date );
                isCorrect = true;
             }
+         }
+         if (oldText !== this._options.text) {
+            this._notify('onTextChange', this._options.text);
          }
          if ( ! isCorrect) {
             this._options.date = null;
