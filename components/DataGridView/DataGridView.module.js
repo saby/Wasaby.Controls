@@ -36,6 +36,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
     *    </options>
     * </component>
     * @cssModifier controls-DataGridView__hasSeparator Включает линии разделители между строками
+    * @cssModifier controls-DataGridView__td__textAlignRight Стиль задается колонке, выравнивает текст во всех ячейках этой колонки по правой стороне
     */
    var DataGridView = ListView.extend([DragAndDropMixin],/** @lends SBIS3.CONTROLS.DataGridView.prototype*/ {
       _dotTplFn : dotTplFn,

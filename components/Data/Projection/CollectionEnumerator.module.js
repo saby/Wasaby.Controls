@@ -23,7 +23,7 @@ define('js!SBIS3.CONTROLS.Data.Projection.CollectionEnumerator', [
             /**
              * @cfg {Array.<SBIS3.CONTROLS.Data.Projection.CollectionItem>} Индекс проекции коллекции
              */
-            itemsMap: [],
+            items: [],
 
             /**
              * @cfg {Array.<Boolean>} Результат применения фильтра
@@ -49,18 +49,23 @@ define('js!SBIS3.CONTROLS.Data.Projection.CollectionEnumerator', [
          /**
           * @member {Array.<Number>} Соответствие позиций проекции и исходной коллекции
           */
-         _internalMap: null
+         _internalMap: null,
+
+         /**
+          * @member {Array.<Number>} Кэш соответствия позиций исходной коллекции и проекции
+          */
+         _sourceToInternal: []
       },
 
       $constructor: function () {
-         if (!(this._options.itemsMap instanceof Array)) {
-            throw new Error('Items map should be instance of an Array');
+         if (!(this._options.items instanceof Array)) {
+            throw new Error(this._moduleName + ': items should be instance of an Array');
          }
          if (!(this._options.filterMap instanceof Array)) {
-            throw new Error('Filter map should be instance of an Array');
+            throw new Error(this._moduleName + ': filter map should be instance of an Array');
          }
          if (!(this._options.sortMap instanceof Array)) {
-            throw new Error('Sort map should be instance of an Array');
+            throw new Error(this._moduleName + ': sort map should be instance of an Array');
          }
       },
 
@@ -72,7 +77,7 @@ define('js!SBIS3.CONTROLS.Data.Projection.CollectionEnumerator', [
          internalPosition++;
          var newPosition = this._getSourceByInternal(internalPosition);
 
-         if (newPosition === undefined || newPosition > this._options.itemsMap.length - 1) {
+         if (newPosition === undefined || newPosition > this._options.items.length - 1) {
             return;
          }
 
@@ -99,11 +104,11 @@ define('js!SBIS3.CONTROLS.Data.Projection.CollectionEnumerator', [
       at: function (index) {
          return index === undefined ?
             undefined :
-            this._options.itemsMap[this._getSourceByInternal(index)];
+            this._options.items[this._getSourceByInternal(index)];
       },
 
       setCurrent: function(item) {
-         this._currentPosition = Array.indexOf(this._options.itemsMap, item);
+         this._currentPosition = Array.indexOf(this._options.items, item);
          this._setCurrentByPosition();
       },
 
@@ -141,11 +146,15 @@ define('js!SBIS3.CONTROLS.Data.Projection.CollectionEnumerator', [
             return source;
          }
          this._initInternalMap();
-         return Array.indexOf(this._internalMap, source);
+
+         if (this._sourceToInternal[source] === undefined) {
+            this._sourceToInternal[source] = Array.indexOf(this._internalMap, source);
+         }
+         return this._sourceToInternal[source];
       },
 
       getSourceByInternal: function () {
-         throw new Error('Method getSourceByInternal is no more available, sorry.');
+         throw new Error(this._moduleName + ': method getSourceByInternal is no more available, sorry.');
       },
 
       //endregion SBIS3.CONTROLS.Data.Projection.IEnumerator
@@ -155,6 +164,7 @@ define('js!SBIS3.CONTROLS.Data.Projection.CollectionEnumerator', [
       reIndex: function () {
          IndexedEnumeratorMixin.reIndex.call(this);
          this._internalMap = null;
+         this._sourceToInternal = [];
       },
 
       _createIndex: function (property) {
@@ -202,11 +212,7 @@ define('js!SBIS3.CONTROLS.Data.Projection.CollectionEnumerator', [
        */
       _buildInternalMap: function () {
          var result = [],
-            sortMap = this._options.sortMap.length ?
-               this._options.sortMap :
-               $ws.helpers.map(this._options.itemsMap, function(item, index){
-                  return index;
-               }),
+            sortMap = this._options.sortMap,
             i;
 
          for (i = 0; i < sortMap.length; i++) {
@@ -223,10 +229,23 @@ define('js!SBIS3.CONTROLS.Data.Projection.CollectionEnumerator', [
       _addToInternalMap: function (map, sourceIndex) {
          if (this._options.filterMap[sourceIndex]) {
             map.push(sourceIndex);
-            if (this._сurrent && this._сurrent === this._options.itemsMap[sourceIndex]) {
+            if (this._сurrent && this._сurrent === this._options.items[sourceIndex]) {
                this._currentPosition = sourceIndex;
             }
          }
+      },
+
+      /**
+       * Производит построение invertedMap
+       * @return {Array.<Number>}
+       * @protected
+       */
+      _buildInvertedMap: function () {
+         var result = [];
+         for (var i = 0; i < this._internalMap.length; i++) {
+            result[this._internalMap[i]] = i;
+         }
+         return result;
       },
 
       /**
@@ -234,7 +253,7 @@ define('js!SBIS3.CONTROLS.Data.Projection.CollectionEnumerator', [
        * @protected
        */
       _setCurrentByPosition: function () {
-         this._сurrent = this._options.itemsMap[this._currentPosition];
+         this._сurrent = this._options.items[this._currentPosition];
       },
 
       /**
@@ -244,7 +263,7 @@ define('js!SBIS3.CONTROLS.Data.Projection.CollectionEnumerator', [
        */
       _checkPosition: function (position) {
          if (!this._isValidPosition(position)) {
-            throw new Error('Position is out of bounds');
+            throw new Error(this._moduleName + ': position is out of bounds');
          }
       },
 
@@ -255,7 +274,7 @@ define('js!SBIS3.CONTROLS.Data.Projection.CollectionEnumerator', [
        * @protected
        */
       _isValidPosition: function (position) {
-         return position >= -1 && position < this._options.itemsMap.length;
+         return position >= -1 && position < this._options.items.length;
       }
 
       //endregion Protected methods

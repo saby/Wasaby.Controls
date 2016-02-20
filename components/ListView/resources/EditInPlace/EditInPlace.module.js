@@ -11,6 +11,9 @@ define('js!SBIS3.CONTROLS.EditInPlace',
    ],
    function(Control, dotTplFn, CompoundActiveFixMixin, CompoundFocusMixin) {
 
+      //Высота отступа у редакторов от верхнего края редактируемого элемента
+      var EDITOR_MARGINS = 3;
+
       'use strict';
 
       /**
@@ -53,6 +56,7 @@ define('js!SBIS3.CONTROLS.EditInPlace',
                this._editors = this.getContainer().find('.controls-editInPlace__editor');
                this._onRecordChangeHandler = this._onRecordChange.bind(this);
             },
+
             _onChildControlFocusOut: function() {
                var
                   result,
@@ -128,6 +132,9 @@ define('js!SBIS3.CONTROLS.EditInPlace',
             _onRecordChange: function() {
                this._editingRecord.merge(this._record);
             },
+            _toggleOnRecordChangeHandler: function(toggle) {
+               this._record[toggle ? 'subscribe' : 'unsubscribe']('onPropertyChange', this._onRecordChangeHandler);
+            },
             canAcceptFocus: function () {
                return false;
             },
@@ -136,13 +143,14 @@ define('js!SBIS3.CONTROLS.EditInPlace',
              */
             applyChanges: function() {
                this._deactivateActiveChildControl();
+               this._toggleOnRecordChangeHandler(false);
                return (this._editingDeferred || $ws.proto.Deferred.success()).addCallback(function() {
                   this._record.merge(this._editingRecord);
                }.bind(this))
             },
             show: function(target, record) {
                this.updateFields(record);
-               this._record.subscribe(this._useModel() ? 'onPropertyChange' : 'onChange', this._onRecordChangeHandler);
+               this._toggleOnRecordChangeHandler(true);
                this.getContainer().attr('data-id', record.getKey());
                this.setOffset(record);
 
@@ -165,7 +173,7 @@ define('js!SBIS3.CONTROLS.EditInPlace',
                   if (self._lastHeight !== newHeight) {
                      self._lastHeight = newHeight;
                      self._notify('onChangeHeight');
-                     self.getEditingItem().target.height(newHeight);
+                     self.getEditingItem().target.height(newHeight + EDITOR_MARGINS);
                   }
                }, 50);
             },
@@ -175,17 +183,10 @@ define('js!SBIS3.CONTROLS.EditInPlace',
                this.getEditingItem().target.height('');
             },
             hide: function() {
-               if (this._record) {
-                  this._record.unsubscribe(this._useModel() ? 'onPropertyChange' : 'onChange', this._onRecordChangeHandler);
-               }
                EditInPlace.superclass.hide.apply(this, arguments);
                this.getContainer().removeAttr('data-id');
                this._deactivateActiveChildControl();
                this.setActive(false);
-            },
-            //TODO: выпилить когда откажемся от SBIS3.Controls.Record
-            _useModel: function() {
-               return $ws.helpers.instanceOfMixin(this._record, 'SBIS3.CONTROLS.Data.IPropertyAccess');
             },
             edit: function(target, record) {
                if (!this.isVisible()) {
