@@ -506,9 +506,6 @@ define('js!SBIS3.CONTROLS.ListView',
                });
             }
          },
-         _scrollToItem: function(itemId) {
-            $(".controls-ListView__item[data-id='" + itemId + "']", this._container).attr('tabindex', '-1').focus();
-         },
          _keyboardHover: function (e) {
             var
                selectedKey = this.getSelectedKey(),
