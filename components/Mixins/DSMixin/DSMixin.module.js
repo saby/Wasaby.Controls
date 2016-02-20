@@ -789,7 +789,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
 
       _destroyControls: function(container){
          $('[data-component]', container).each(function (i, item) {
-            var inst = $(item).wsControl();
+            var inst = item.wsControl;
             if (inst) {
                inst.destroy();
             }
