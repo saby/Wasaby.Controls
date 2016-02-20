@@ -1596,7 +1596,19 @@ define('js!SBIS3.CONTROLS.ListView',
             this._destroyEditInPlace();
             ListView.superclass.setDataSource.apply(this, arguments);
          },
-
+         /**
+          * Выбирает элемент коллекции (модель/запись) по переданному идентификатору.
+          * На выбранный элемент устанавливается маркер (оранжевая вертикальная черта) и изменяется фон.
+          * При выполнении команды происходит события {@link onItemActivate} и {@link onSelectedItemChange}.
+          * @param id Идентификатор элемента коллекции, который нужно выбрать.
+          * @example
+          * <pre>
+          *    myListView.sendCommand('activateItem', myId);
+          * </pre>
+          * @private
+          * @command activateItem
+          * @see sendCommand
+          */
          _activateItem : function(id) {
             var
                item = this._dataSet.getRecordByKey(id);
@@ -1605,13 +1617,54 @@ define('js!SBIS3.CONTROLS.ListView',
          _beginAdd: function(options, model) {
             return this.showEip(null, model, options);
          },
+         /**
+          * Запускает редактирования по месту.
+          * Используется для запуска редактирования без клика пользователя по элементу коллекции.
+          * При выполнении команды происходят события {@link onBeginEdit} и {@link onAfterBeginEdit}.
+          * @param record Модель(элемент коллекции), для которой требуется запустить редактирование по месту.
+          * @example
+          * <pre>
+          *    myListView.sendCommand('beginEdit', record);
+          * </pre>
+          * @private
+          * @command beginEdit
+          * @see sendCommand
+          * @see cancelEdit
+          * @see commitEdit
+          */
          _beginEdit: function(record) {
             var target = this._getItemsContainer().find('.js-controls-ListView__item[data-id="' + record.getKey() + '"]:first');
             return this.showEip(target, record, { isEdit: true });
          },
+         /**
+          * Завершает редактирования по месту без сохранения измений.
+          * При выполнении команды происходят события {@link onEndEdit} и {@link onAfterEndEdit}.
+          * @example
+          * <pre>
+          *    myListView.sendCommand('cancelEdit');
+          * </pre>
+          * @private
+          * @command cancelEdit
+          * @see sendCommand
+          * @see beginEdit
+          * @see commitEdit
+          */
          _cancelEdit: function() {
             return this._getEditInPlace().endEdit();
          },
+         /**
+          * Завершает редактирования по месту с сохранением измений.
+          * При выполнении команды происходят события {@link onEndEdit} и {@link onAfterEndEdit}.
+          * @example
+          * <pre>
+          *    myListView.sendCommand('commitEdit');
+          * </pre>
+          * @private
+          * @command commitEdit
+          * @see sendCommand
+          * @see beginEdit
+          * @see cancelEdit
+          */
          _commitEdit: function() {
             return this._getEditInPlace().endEdit(true);
          },
