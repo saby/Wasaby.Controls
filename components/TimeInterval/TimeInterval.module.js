@@ -225,7 +225,7 @@ define(
             var values = this.timeInterval.toObject();
             values[section] = value;
             this.timeInterval.set(values);
-            this._updateTextByTimeInterval();
+            this._updateTextByTimeInterval(true);
          },
 
          /**
@@ -264,9 +264,15 @@ define(
           * @see onChangeInterval
           */
          setInterval: function ( interval ) {
+            if (interval == undefined){
+               this.setText(this._getEmptyText());
+               return;
+            }
             this.timeInterval.set(interval);
-            this._updateTextByTimeInterval();
-            this._notify('onChangeInterval', this.timeInterval.toString());
+            this._updateTextByTimeInterval(true);
+         },
+         _getEmptyText: function(){
+            return this.formatModel.getStrMask(this._maskReplacer);
          },
          /**
           * Метод получения интервала, заданного либо опцией {@link interval}, либо методом {@link setInterval} возвращает
@@ -311,10 +317,14 @@ define(
 
          setText: function(text){
             text = this._getTextCorrespondingToMask(text);
-            TimeInterval.superclass.setText.apply(this, [text]);
             this._updateIntervalByText(text);
-            this._options.text = this._getTextByTimeInterval();
-            this._notify('onChangeInterval', this._options.interval);
+            if (text == this._getEmptyText()){
+               this._options.text = text;
+            }
+            else{
+               this._options.text = this._getTextByTimeInterval();
+            }
+            TimeInterval.superclass.setText.apply(this, [text]);
          },
          /**
           * Получить текст по текущему значению timeInterval.
@@ -391,8 +401,11 @@ define(
           * Обновить текст по текущему значению timeInterval.
           * @private
           */
-         _updateTextByTimeInterval: function(){
-            this.setText(this._getTextByTimeInterval());
+         _updateTextByTimeInterval: function(needUpdate){
+            var currentText = this.formatModel.getText(this._maskReplacer);
+            if ((needUpdate === true) || (currentText !== this._getEmptyText() && currentText !== this.getText())){
+               this.setText(this._getTextByTimeInterval());
+            }
          },
          /**
           * Обновляяет значения this._options.text и interval (вызывается в _replaceCharacter из FormattedTextBoxBase). Переопределённый метод.
@@ -411,8 +424,8 @@ define(
 
             // Если дата изменилась -- генерировать событие.
             if ( oldDate !== this.timeInterval.toString()) {
+               this.getLinkedContext().setValue('interval', this.timeInterval);
                this._notify('onChangeInterval', this.timeInterval.toString());
-               this._notifyOnPropertyChanged('interval');
             }
          }
       });
