@@ -581,6 +581,68 @@ define([
                assert.isFalse(model.isSynced());
             });
          });
+
+
+         describe('.getType()', function (){
+            it('should return type data', function() {
+               var model =  new Model({
+                  adapter: new SbisAdapter(),
+                  rawData: {
+                     s:[{
+                        n: 'id',
+                        t: 'Число целое'
+                     }],
+                     d:[1]
+                  }
+               });
+               assert.equal(model.getType('id'), 'Число целое');
+            });
+         });
+
+         describe('.isCreated()', function (){
+            it('sould return flag usingDataSetAsList', function (){
+               model.setCreated(true);
+               assert.isTrue(model.isCreated());
+               model.setCreated(false);
+               assert.isFalse(model.isCreated());
+            });
+         });
+
+         describe('.isDeleted()', function (){
+            it('sould return flag usingDataSetAsList', function (){
+               model.setDeleted(true);
+               assert.isTrue(model.isDeleted());
+               model.setDeleted(false);
+               assert.isFalse(model.isDeleted());
+            });
+         });
+
+         describe('.isChanged()', function (){
+            it('sould return flag usingDataSetAsList', function (){
+               model.setChanged(true);
+               assert.isTrue(model.isChanged());
+               model.setChanged(false);
+               assert.isFalse(model.isChanged());
+            });
+         });
+
+         describe('.getKey()', function (){
+            it('should return id property', function() {
+               assert.equal(model.getKey(), model.getId());
+            });
+         });
+
+         describe('.getKeyField()', function (){
+            it('should return name id property', function() {
+               assert.equal(model.getKeyField(), 'id');
+            });
+         });
+
+         describe('.getRaw()', function (){
+            it('should return name id property', function() {
+               assert.equal(model.getRaw(), model.getRawData());
+            });
+         });
       });
    }
 );
