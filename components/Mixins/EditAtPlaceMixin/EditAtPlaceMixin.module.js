@@ -22,7 +22,7 @@ define('js!SBIS3.CONTROLS.EditAtPlaceMixin', ['js!SBIS3.CONTROLS.IconButton'], f
                /**
                 * @cfg {Boolean} отображать кнопки отмены и применения редактирования или нет
                 */
-               enableControlPanel: true
+               enableControlPanel: false
             }
          },
 
