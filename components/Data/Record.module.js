@@ -177,16 +177,30 @@ define('js!SBIS3.CONTROLS.Data.Record', [
       // region SBIS3.CONTROLS.Data.SerializableMixin
 
       _getSerializableState: function() {
-         return $ws.core.merge(
+         var state = $ws.core.merge(
             Record.superclass._getSerializableState.call(this), {
                _changedFields: this._changedFields
             }
          );
+
+         //Prevent core reviver for rawData
+         if (state._options && state._options.rawData && state._options.rawData._type) {
+            state._options.rawData.$type = state._options.rawData._type;
+            delete state._options.rawData._type;
+         }
+
+         return state;
       },
 
       _setSerializableState: function(state) {
          return Record.superclass._setSerializableState(state).callNext(function() {
             this._changedFields = state._changedFields;
+
+            //Restore value hidden from core reviver
+            if (this._options && this._options.rawData && this._options.rawData.$type) {
+               this._options.rawData._type = this._options.rawData.$type;
+               delete this._options.rawData.$type;
+            }
          });
       },
 
