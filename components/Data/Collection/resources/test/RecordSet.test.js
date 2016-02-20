@@ -113,6 +113,24 @@ define([
             });
          });
 
+         describe('.getRawData()', function() {
+            it('should return the value that was passed to the constructor', function() {
+               var data = [{}],
+                  rs = new RecordSet({
+                     rawData: data
+                  });
+               assert.strictEqual(rs.getRawData(), data);
+            });
+            it('should return the changed value after add a new record', function() {
+               var rs = new RecordSet(),
+                  data = {'a': 1};
+               rs.add(new Model({
+                  rawData: data
+               }));
+               assert.strictEqual(rs.getRawData()[0], data);
+            });
+         });
+
          describe('.append()', function() {
             it('should change raw data', function() {
                var rd = [{
