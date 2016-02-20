@@ -20,6 +20,7 @@ define('js!SBIS3.CONTROLS.EditAtPlaceGroup',
        * @category Inputs
        * @mixes SBIS3.CONTROLS.PickerMixin
        * @author Крайнов Дмитрий Олегович
+       * @demo SBIS3.CONTROLS.Demo.MyEditAtPlace
        */
 
       var EditAtPlaceGroup = CompoundControl.extend([PickerMixin, EditAtPlaceMixin, CompoundActiveFixMixin], /** @lends SBIS3.CONTROLS.EditAtPlaceGroup.prototype */{
