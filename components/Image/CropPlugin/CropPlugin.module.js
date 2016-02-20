@@ -158,7 +158,12 @@ define('js!SBIS3.CONTROLS.Image.CropPlugin',
             this._dropCrop();
          },
          _dropCrop: function() {
-            var jCropApi = this._options.image.data('Jcrop');
+            var
+               jCropApi = this._options.image.data('Jcrop'),
+            $image = this._options.image;
+            if (typeof($image) === "object") {
+               $image.css({visibility: "visible", display: 'inline-block'});
+            }
             if (jCropApi && jCropApi.destroy) {
                jCropApi.destroy();
             }
