@@ -7,34 +7,35 @@ define([
    ],
    function (SbisMoveStrategy, Di, IRpc, RecordSet) {
       'use strict';
-      var SbisBusinessLogic, moveStrategy;
+
+      var SbisBusinessLogic = (function() {
+            var Mock = $ws.core.extend({}, [IRpc], {
+               _cfg: {},
+               $constructor: function (cfg) {
+                  this._cfg = cfg;
+               },
+               call: function (method, args) {
+                  var def = new $ws.proto.Deferred();
+                  setTimeout(function () {
+                     def.callback(true);
+                  }.bind(this), 1);
+                  Mock.lastRequest = {method:method, args:args};
+                  return def;
+               }
+            });
+
+            Mock.lastRequest = {};
+
+            return Mock;
+         })(),
+         moveStrategy;
+
       describe('SBIS3.CONTROLS.Data.MoveStrategy.Sbis', function() {
-
          beforeEach(function() {
-            SbisBusinessLogic = (function() {
-               var Mock = $ws.core.extend({}, [IRpc], {
-                  _cfg: {},
-                  $constructor: function (cfg) {
-                     this._cfg = cfg;
-                  },
-                  call: function (method, args) {
-                     var def = new $ws.proto.Deferred();
-                     setTimeout(function () {
-                        def.callback(true);
-                     }.bind(this), 1);
-                     Mock.lastRequest = {method:method, args:args};
-                     return def;
-                  }
-               });
-
-               Mock.lastRequest = {};
-
-               return Mock;
-            })();
+            moveStrategy = new SbisMoveStrategy({resource: 'test'});
 
             //Replace of standard with mock
             Di.register('source.provider.sbis-business-logic', SbisBusinessLogic);
-            moveStrategy = new SbisMoveStrategy({resource: 'test'});
          });
 
          describe('move()', function() {
