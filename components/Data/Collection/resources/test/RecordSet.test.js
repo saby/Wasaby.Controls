@@ -113,6 +113,24 @@ define([
             });
          });
 
+         describe('.getRawData()', function() {
+            it('should return the value that was passed to the constructor', function() {
+               var data = [{}],
+                  rs = new RecordSet({
+                     rawData: data
+                  });
+               assert.strictEqual(rs.getRawData(), data);
+            });
+            it('should return the changed value after add a new record', function() {
+               var rs = new RecordSet(),
+                  data = {'a': 1};
+               rs.add(new Model({
+                  rawData: data
+               }));
+               assert.strictEqual(rs.getRawData()[0], data);
+            });
+         });
+
          describe('.append()', function() {
             it('should change raw data', function() {
                var rd = [{
@@ -351,6 +369,30 @@ define([
                   'Фамилия': 'Пушкин1'
                }]);
                assert.equal(rs.getIndex(rs.at(1)), 1);
+            });
+         });
+
+         describe('.toJSON()', function () {
+            it('should serialize a RecordSet', function () {
+               var json = rs.toJSON();
+               assert.strictEqual(json.module, 'SBIS3.CONTROLS.Data.Collection.RecordSet');
+               assert.isNumber(json.id);
+               assert.isTrue(json.id > 0);
+               assert.deepEqual(json.state._options, rs._options);
+            });
+            it('should hide type signature in rawData', function () {
+               var rs = new RecordSet({
+                     rawData: {
+                        _type: 'recordset',
+                        s: [1],
+                        d: [2]
+                     }
+                  }),
+                  json = rs.toJSON();
+               assert.isUndefined(json.state._options.rawData._type);
+               assert.strictEqual(json.state._options.rawData.$type, 'recordset');
+               assert.deepEqual(json.state._options.rawData.s, [1]);
+               assert.deepEqual(json.state._options.rawData.d, [2]);
             });
          });
       });

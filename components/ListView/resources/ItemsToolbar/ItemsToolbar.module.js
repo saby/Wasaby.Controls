@@ -114,7 +114,7 @@ define('js!SBIS3.CONTROLS.ItemsToolbar',
            * @returns {null|SBIS3.CONTROLS.ItemsToolbar.$protected._itemsActions|ItemActionsGroup|SBIS3.CONTROLS.ItemsToolbar._itemsActions}
            */
           getItemsActionsGroup: function() {
-             if (!this._itemsActions) {
+             if (!this._itemsActions && this._options.itemsActions.length) {
                 this._initItemsActions();
              }
              return this._itemsActions;
@@ -158,6 +158,7 @@ define('js!SBIS3.CONTROLS.ItemsToolbar',
            */
           lockToolbar: function() {
              this._lockingToolbar = true;
+             this.getContainer().addClass('controls-ItemsToolbar__locked');
              this._trackingTarget();
           },
           /**
@@ -165,6 +166,7 @@ define('js!SBIS3.CONTROLS.ItemsToolbar',
            */
           unlockToolbar: function() {
              this._lockingToolbar = false;
+             this.getContainer().removeClass('controls-ItemsToolbar__locked');
              this._untrackingTarget();
           },
           /**

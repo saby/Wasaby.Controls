@@ -24,7 +24,7 @@ define('js!SBIS3.CONTROLS.SyncSelectionMixin', ['js!SBIS3.CONTROLS.Data.Model'],
             !item || Object.isEmpty(item.getProperties()) ?
                 this.clearSelectedItems() :
                 this.setSelectedItems([item]);
-            parentFunc.apply(this, arguments);
+            parentFunc.apply(this, Array.prototype.slice.call(arguments, 1));
          }),
 
          _afterSelectionHandler: function(parentFunc) {
@@ -37,7 +37,7 @@ define('js!SBIS3.CONTROLS.SyncSelectionMixin', ['js!SBIS3.CONTROLS.Data.Model'],
                self._notifySelectedItem(self._options.selectedKey);
                return list;
             });
-            parentFunc.apply(this, arguments);
+            parentFunc.apply(this, Array.prototype.slice.call(arguments, 1));
          },
 
          _drawSelectedItem: function(parentFunc, key) {

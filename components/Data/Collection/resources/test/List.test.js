@@ -201,6 +201,32 @@ define(
                   list.append();
                });
             });
+
+            it('should rebuild index for hashable item', function() {
+               var list = new List({
+                     items: [new Model({
+                        idProperty:'Ид',
+                        rawData: {
+                           'Ид': 1
+                        }
+                     })]
+                  }),
+                  moreItems = [new Model({
+                     idProperty:'Ид',
+                     rawData: {
+                        'Ид': 2
+                     }
+                  }), new Model({
+                     idProperty:'Ид',
+                     rawData: {
+                        'Ид': 3
+                     }
+                  })];
+               list.getIndex(list.at(0));
+               list.append(moreItems);
+
+               assert.equal(list.getIndex(list.at(2)), 2);
+            });
          });
 
          describe('.prepend()', function() {
@@ -269,6 +295,32 @@ define(
                   var list = new List();
                   list.prepend();
                });
+            });
+
+            it('should rebuild index for hashable item', function() {
+               var list = new List({
+                     items: [new Model({
+                        idProperty:'Ид',
+                        rawData: {
+                           'Ид': 1
+                        }
+                     })]
+                  }),
+                  moreItems = [new Model({
+                     idProperty:'Ид',
+                     rawData: {
+                        'Ид': 2
+                     }
+                  }), new Model({
+                     idProperty:'Ид',
+                     rawData: {
+                        'Ид': 3
+                     }
+                  })];
+               list.getIndex(list.at(0));
+               list.prepend(moreItems);
+
+               assert.equal(list.getIndex(list.at(2)), 2);
             });
          });
 
@@ -348,6 +400,33 @@ define(
                   list.assign(1);
                });
             });
+
+            it('should rebuild index for hashable item', function() {
+               var list = new List({
+                     items: [new Model({
+                        idProperty:'Ид',
+                        rawData: {
+                           'Ид': 1
+                        }
+                     })]
+                  }),
+                  moreItems = [new Model({
+                     idProperty:'Ид',
+                     rawData: {
+                        'Ид': 2
+                     }
+                  }), new Model({
+                     idProperty:'Ид',
+                     rawData: {
+                        'Ид': 3
+                     }
+                  })];
+               list.getIndex(list.at(0));
+               list.assign(moreItems);
+
+               assert.equal(list.getIndex(list.at(1)), 1);
+            });
+
          });
 
          describe('.clear()', function() {
@@ -373,6 +452,21 @@ define(
                list.each(function() {
                   throw new Error('Callback was called');
                });
+            });
+
+            it('should rebuild index for hashable item', function() {
+               var model = new Model({
+                     idProperty:'Ид',
+                     rawData: {
+                        'Ид': 1
+                     }
+                  }),
+                  list = new List({
+                     items: [model]
+                  });
+               assert.strictEqual(list.getIndex(model), 0);
+               list.clear();
+               assert.strictEqual(list.getIndex(model), -1);
             });
          });
 
@@ -423,6 +517,27 @@ define(
                   list.add({}, items.length);
                });
             });
+
+            it('should rebuild index for hashable item', function() {
+               var list = new List({
+                     items: [new Model({
+                        idProperty:'Ид',
+                        rawData: {
+                           'Ид': 1
+                        }
+                     })]
+                  }),
+                  moreItem = new Model({
+                     idProperty:'Ид',
+                     rawData: {
+                        'Ид': 2
+                     }
+                  });
+               list.getIndex(list.at(0));
+               list.add(moreItem);
+               assert.equal(list.getIndex(list.at(1)), 1);
+            });
+
          });
 
          describe('.at()', function() {
@@ -460,6 +575,26 @@ define(
                assert.isFalse(list.remove({}));
                assert.isFalse(list.remove(10));
             });
+
+            it('should rebuild index for hashable item', function() {
+               var model = new Model({
+                     idProperty:'Ид',
+                     rawData: {
+                        'Ид': 2
+                     }
+                  }),
+                  list = new List({
+                  items: [new Model({
+                     idProperty:'Ид',
+                     rawData: {
+                        'Ид': 1
+                     }
+                  }), model]
+               });
+               assert.notEqual(list.getIndex(model), -1);
+               list.remove(model);
+               assert.strictEqual(list.getIndex(model), -1);
+            });
          });
 
          describe('.removeAt()', function() {
@@ -489,6 +624,26 @@ define(
                   });
                   list.removeAt(items.length);
                });
+            });
+
+            it('should rebuild index for hashable item', function() {
+               var model = new Model({
+                     idProperty:'Ид',
+                     rawData: {
+                        'Ид': 2
+                     }
+                  }),
+                  list = new List({
+                     items: [new Model({
+                        idProperty:'Ид',
+                        rawData: {
+                           'Ид': 1
+                        }
+                     }), model]
+                  });
+               assert.notEqual(list.getIndex(model), -1);
+               list.removeAt(1);
+               assert.strictEqual(list.getIndex(model), -1);
             });
          });
 
@@ -520,6 +675,34 @@ define(
                   });
                   list.replace({}, items.length);
                });
+            });
+
+            it('should rebuild index for hashable item', function() {
+               var model = new Model({
+                     idProperty:'Ид',
+                     rawData: {
+                        'Ид': 2
+                     }
+                  }),
+                  model2 = new Model({
+                     idProperty:'Ид',
+                     rawData: {
+                        'Ид': 3
+                     }
+                  }),
+                  list = new List({
+                     items: [new Model({
+                        idProperty:'Ид',
+                        rawData: {
+                           'Ид': 1
+                        }
+                     }), model]
+                  });
+               assert.notEqual(list.getIndex(model), -1);
+               assert.strictEqual(list.getIndex(model2), -1);
+               list.replace(model2, 1);
+               assert.strictEqual(list.getIndex(model), -1);
+               assert.notEqual(list.getIndex(model2), -1);
             });
          });
 

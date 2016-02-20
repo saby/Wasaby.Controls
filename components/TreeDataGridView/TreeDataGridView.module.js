@@ -102,14 +102,20 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
       _drawLoadedNode : function(key, records) {
          this._drawExpandArrow(key);
          this._drawItemsFolder(records);
-         this._createFolderFooter(key);
+         this._updateItemsToolbar();
+      },
+      _drawItemsCallback: function() {
+         $ws.helpers.forEach(this._options.openedPath, function(val, key) {
+            this._createFolderFooter(key);
+         }, this);
+         TreeDataGridView.superclass._drawItemsCallback.apply(this, arguments);
       },
       _createFolderFooter: function(key) {
-         TreeDataGridView.superclass._createFolderFooter.apply(this, arguments);
-         var
-             container,
+         var container,
              lastContainer,
              level = this._getTreeLevel(key);
+
+         TreeDataGridView.superclass._createFolderFooter.apply(this, arguments);
          this._foldersFooters[key].css('padding-left', level * HIER_WRAPPER_WIDTH);
          container = $('<tr class="controls-TreeDataGridView__folderFooter" "data-parent"="' + key + '">\
             <td colspan="' + (this._options.columns.length + (this._options.multiselect ? 1 : 0)) + '"></td>\

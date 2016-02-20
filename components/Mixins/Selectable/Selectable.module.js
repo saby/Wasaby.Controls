@@ -2,7 +2,7 @@
  * Created by iv.cheremushkin on 14.08.2014.
  */
 
-define('js!SBIS3.CONTROLS.Selectable', ['js!SBIS3.CONTROLS.Data.Utils'], function(Utils) {
+define('js!SBIS3.CONTROLS.Selectable', ['js!SBIS3.CONTROLS.Data.Utils', 'js!SBIS3.CONTROLS.Data.Bind.ICollection'], function(Utils, IBindCollection) {
 
    /**
     * Миксин, добавляющий поведение хранения выбранного элемента. Всегда только одного.
@@ -124,6 +124,11 @@ define('js!SBIS3.CONTROLS.Selectable', ['js!SBIS3.CONTROLS.Data.Utils'], functio
                this._onProjectionCurrentChange = onProjectionCurrentChange.bind(this);
             }
             this.subscribeTo(this._itemsProjection, 'onCurrentChange', this._onProjectionCurrentChange);
+
+            if (!this._onProjectionChange) {
+               this._onProjectionChange = onCollectionChange.bind(this);
+            }
+            this.subscribeTo(this._itemsProjection, 'onCollectionChange', this._onProjectionChange);
          },
          _drawItemsCallback: function() {
             this._drawSelectedItem(this._options.selectedKey, this._options.selectedIndex);
@@ -137,6 +142,9 @@ define('js!SBIS3.CONTROLS.Selectable', ['js!SBIS3.CONTROLS.Data.Utils'], functio
             this._utilityEnumerator = undefined;
             if (this._itemsProjection && this._onProjectionCurrentChange) {
                this.unsubscribeFrom(this._itemsProjection, 'onCurrentChange', this._onProjectionCurrentChange);
+            }
+            if (this._itemsProjection && this._onProjectionChange) {
+               this.unsubscribeFrom(this._itemsProjection, 'onCollectionChange', this._onProjectionChange);
             }
          },
          _itemsReadyCallback: function() {
@@ -258,6 +266,16 @@ define('js!SBIS3.CONTROLS.Selectable', ['js!SBIS3.CONTROLS.Data.Utils'], functio
          this._notifyOnPropertyChanged('selectedKey');
          this._notifyOnPropertyChanged('selectedIndex');
          this._notify('onSelectedItemChange', id, index);
+      }
+   };
+
+   var onCollectionChange = function (event, action, newItems, newItemsIndex, oldItems) {
+      switch (action) {
+         case IBindCollection.ACTION_ADD:
+         case IBindCollection.ACTION_REMOVE:
+         case IBindCollection.ACTION_MOVE:
+         case IBindCollection.ACTION_REPLACE:
+            this._options.selectedKey = this._itemsProjection.at(this._options.selectedIndex).getContents().getId();
       }
    };
 

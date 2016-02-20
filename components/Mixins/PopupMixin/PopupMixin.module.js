@@ -124,6 +124,8 @@ define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManag
             'left': '-10000px'
          });
 
+         this._checkFixed(this._options.target || $('body'));
+
          //TODO: Придрот
          container.removeClass('ws-area');
          container.addClass('ws-hidden');
@@ -173,6 +175,7 @@ define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManag
       },
 
       _onTargetMove: function(){
+         // Если fixed не надо двигаться за таргетом
          if (this.isVisible() && !this._fixed) {
             this.recalcPosition();
             this._checkTargetPosition();
@@ -185,6 +188,19 @@ define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManag
          if (!visible){
            this.hide();
          }   
+      },
+
+      _checkFixed: function(element){
+         element = $(element);
+         while (element.parent().length){
+            if (element.css('position') == 'fixed'){
+               $(this._container).css({position : 'fixed'});
+               this._fixed = true;
+               break;
+            } else {
+               element = element.parent();
+            }
+         }
       },
 
       /**
@@ -212,8 +228,8 @@ define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManag
             this._initSizes();
             if (this._options.target) {
                var offset = {
-                     top: this._targetSizes.offset.top,
-                     left: this._targetSizes.offset.left
+                     top: this._fixed ? this._targetSizes.boundingClientRect.top : this._targetSizes.offset.top,
+                     left: this._fixed ? this._targetSizes.boundingClientRect.left : this._targetSizes.offset.left
                   },
                   buff = this._getGeneralOffset(this._options.verticalAlign.side, this._options.horizontalAlign.side, this._options.corner);
 
@@ -233,10 +249,6 @@ define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManag
 
                this._notifyOnAlignmentChange();
 
-               if (this._fixed){
-                  offset.left -= this._targetSizes.offset.left - this._targetSizes.boundingClientRect.left;
-               }
-
                this._container.css({
                   'top': offset.top + 'px',
                   'left': offset.left + 'px'
@@ -253,6 +265,7 @@ define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManag
        */
       setTarget: function (target) {
          this._options.target = target;
+         this._checkFixed(target);
          this._subscribeTargetMove();
          this.recalcPosition(true);
       },
@@ -386,6 +399,7 @@ define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManag
          //Таймаут для того что бы не пересчитывать размеры пока меняется размер окна,
          //а перестчитать только один раз, когда размер меняться перестанет.
          this._resizeTimeout = setTimeout(function() {
+            // Если fixed то при ресайзе положение пересчитывать не надо - оно неизменно
             if (self.isVisible() && !self._fixed) {
                self.recalcPosition(false);
             } else {
@@ -420,12 +434,6 @@ define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManag
                border: (target.outerWidth() - target.innerWidth()) / 2,
                boundingClientRect: target.get(0).getBoundingClientRect()
             };
-            //сравнение boundingClientRect и offset позволяет увидеть лежит ли таргет в фиксированном контейнере (может быть где-то выше)
-            if (this._targetSizes.boundingClientRect.top != this._targetSizes.offset.top) { //таргет в фиксированном контейнере
-               this._targetSizes.offset.top = this._targetSizes.boundingClientRect.top;
-               this._fixed = true;
-               this._container.css('position', 'fixed'); //фиксируем выпадающую часть, если таргет был зафиксирован
-            }
          }
          this._containerSizes.border = (container.outerWidth() - container.innerWidth()) / 2;
          var buff = this._getGeneralOffset(this._defaultVerticalAlignSide, this._defaultHorizontalAlignSide, this._defaultCorner, true);
@@ -591,9 +599,9 @@ define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManag
 
       _getOffsetByWindowSize: function (offset) {
          var buf = this._targetSizes.offset;
-         //Проверяем убираемся ли в экран снизу
+         //Проверяем убираемся ли в экран снизу. Если позиционируем нижней стороной, не нужно менять положение если не влезаем снизу
          var requredOffsetTop = Math.floor(offset.top + this._containerSizes.originHeight + (this._options.verticalAlign.offset || 0) + this._margins.top - this._margins.bottom);
-         if (requredOffsetTop > this._windowSizes.height && !this._isMovedV) {
+         if (requredOffsetTop > this._windowSizes.height && !this._isMovedV && this._options.verticalAlign.bottom !== 'top') {
             this._isMovedV = true;
             offset.top = this._getOppositeOffset(this._options.corner, 'vertical').top;
             offset.top = this._addOffset(offset, buf).top;
@@ -607,9 +615,9 @@ define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManag
          }
 
          //TODO Избавиться от дублирования
-         //Проверяем убираемся ли в экран справа
-         var requredOffsetLift = Math.floor(offset.left + this._containerSizes.originWidth + (this._options.horizontalAlign.offset || 0) + this._margins.left - this._margins.right);
-         if (requredOffsetLift > this._windowSizes.width && !this._isMovedH) {
+         //Проверяем убираемся ли в экран справа. Если позиционируем правой стороной, не нужно менять положение если не влезаем справа
+         var requredOffsetLeft = Math.floor(offset.left + this._containerSizes.originWidth + (this._options.horizontalAlign.offset || 0) + this._margins.left - this._margins.right);
+         if (requredOffsetLeft > this._windowSizes.width && !this._isMovedH && this._options.horizontalAlign.side !== 'right') {
             this._isMovedH = true;
             offset.left = this._getOppositeOffset(this._options.corner, 'horizontal').left;
             offset.left = this._addOffset(offset, buf).left;
@@ -754,7 +762,7 @@ define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManag
       },
 
       _getZIndex: function(){
-         this._zIndex = $ws.single.WindowManager.acquireZIndex(this._options.isModal);
+         this._zIndex = $ws.single.WindowManager.acquireZIndex(this._options.isModal, false, true);
          $ws.single.WindowManager.setVisible(this._zIndex);
       },
 

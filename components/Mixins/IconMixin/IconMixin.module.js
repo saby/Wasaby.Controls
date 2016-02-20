@@ -60,6 +60,7 @@ define('js!SBIS3.CONTROLS.IconMixin', ['html!SBIS3.CONTROLS.IconMixin/IconTempla
          this._oldIcon = this._options._iconClass;
          this._options._iconClass = this._iconTemplate(this._options);
          this._drawIcon(icon);
+         this._notifyOnPropertyChanged('icon');
       },
       /**
        * Получить изображение на кнопке.

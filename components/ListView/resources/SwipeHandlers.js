@@ -20,8 +20,8 @@
       },
 
       stop: function(event) {
-         var data = event.originalEvent.touches ?
-            event.originalEvent.touches[0] : event,
+         var data = (event.originalEvent && event.originalEvent.touches) ?
+            event.originalEvent.touches[0] : event.touches[0],
             location = $.event.special.swipe.getLocation(data);
          return {
             time: (new Date()).getTime(),
@@ -74,7 +74,7 @@
                emitted = false;
 
             context.move = function(event) {
-               if (!start || event.isDefaultPrevented()) {
+               if (!start || event.defaultPrevented) {
                   return;
                }
                stop = $.event.special.swipe.stop(event);
@@ -91,10 +91,10 @@
             context.stop = function() {
                emitted = true;
                $.event.special.swipe.eventInProgress = false;
-               $(document).off('touchmove', context.move);
+               document.removeEventListener('touchmove', context.move);
             };
 
-            $(document).on('touchmove', context.move);
+            document.addEventListener('touchmove', context.move, true);
             $(document).one('touchend', context.stop);
          };
 
