@@ -229,6 +229,7 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', ['js!SBIS3.CORE.Control',
                   for (var i = 0; i < child.length; i++) {
                      records.push(this._dataSet.getRecordById(child[i]));
                   }
+                  this._drawLoadedNode(key, records, this._folderHasMore[key]);
                   this._notify('onNodeExpand', key);
                }
             }
