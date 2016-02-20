@@ -78,6 +78,7 @@ define('js!SBIS3.CONTROLS.EditAtPlaceGroup',
 
             this._iterateChildEditAtPlaces(function(child){
                child.setInPlaceEditMode(true);
+               child._setKeyPressHandler(self._keyPressHandler.bind(self));
             }, this._picker);
             this._addControlPanel(this._picker._container);
          },

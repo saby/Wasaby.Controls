@@ -60,13 +60,6 @@ define('js!SBIS3.CONTROLS.EditAtPlace',
             });
          },
 
-         init: function(){
-            EditAtPlace.superclass.init.call(this);
-            if (this._options.text){
-
-            }
-         },
-
          _saveOldText: function () {
             this._oldText = this._options.text;
          },
