@@ -276,6 +276,7 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
       _notifyOnItemClick: function(id, data, target) {
          var
              res,
+             self = this,
              elClickHandler = this._options.elemClickHandler,
              nodeID = $(target).closest('.controls-ListView__item').data('id'),
              closestExpand = this._findExpandByElement($(target));
@@ -285,7 +286,14 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
          }
          else {
             res = this._notify('onItemClick', id, data, target);
-            if (res !== false) {
+            if (res instanceof $ws.proto.Deferred) {
+               res.addCallback(function(result) {
+                  if (!result) {
+                     self._elemClickHandlerInternal(data, id, target);
+                     elClickHandler && elClickHandler.call(self, id, data, target);
+                  }
+               });
+            } else if (res !== false) {
                this._elemClickHandlerInternal(data, id, target);
                elClickHandler && elClickHandler.call(this, id, data, target);
             }

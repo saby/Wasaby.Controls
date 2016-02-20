@@ -757,9 +757,17 @@ define('js!SBIS3.CONTROLS.ListView',
          },
          _notifyOnItemClick: function(id, data, target) {
             var
+                self = this,
                 elClickHandler = this._options.elemClickHandler,
                 res = this._notify('onItemClick', id, data, target);
-            if (res !== false) {
+            if (res instanceof $ws.proto.Deferred) {
+               res.addCallback(function(result) {
+                  if (!result) {
+                     self._elemClickHandlerInternal(data, id, target);
+                     elClickHandler && elClickHandler.call(self, id, data, target);
+                  }
+               });
+            } else if (res !== false) {
                this._elemClickHandlerInternal(data, id, target);
                elClickHandler && elClickHandler.call(this, id, data, target);
             }
@@ -889,8 +897,8 @@ define('js!SBIS3.CONTROLS.ListView',
          },
 
          _onItemClickHandler: function(event, id, record, target) {
-            this.showEip($(target).closest('.js-controls-ListView__item'), record, { isEdit: true });
-            event.setResult(false);
+            var result = this.showEip($(target).closest('.js-controls-ListView__item'), record, { isEdit: true });
+            event.setResult(result);
          },
 
          _onChangeHoveredItemHandler: function(event, hoveredItem) {
