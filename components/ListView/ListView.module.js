@@ -1212,7 +1212,7 @@ define('js!SBIS3.CONTROLS.ListView',
 
             this._notifyOnSizeChanged(true);
             this._drawResults();
-            this._isDrawn = true;
+            this._needToRedraw = true;
          },
          //-----------------------------------infiniteScroll------------------------
          //TODO (?) избавиться от _allowInfiniteScroll - пусть все будет завязано на опцию infiniteScroll
@@ -1269,7 +1269,7 @@ define('js!SBIS3.CONTROLS.ListView',
                   //Если данные пришли, нарисуем
                   if (dataSet.getCount()) {
                      //Поддерживаем новый флаг для рисования элементов
-                     self._isDrawn = true;
+                     self._needToRedraw = true;
                      //TODO перевести на each
                      records = dataSet.toArray();
                      if (self._options.infiniteScroll === 'up') {
