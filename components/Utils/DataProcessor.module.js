@@ -31,6 +31,9 @@ define('js!SBIS3.CONTROLS.Utils.DataProcessor', [
 
       $constructor: function() {
       },
+      /**
+       * Отправить на печать готовый dataSet
+       */
       print: function () {
          var self = this;
          this._prepareSerializer('Печать записей...').addCallback(function(reportText){
@@ -60,7 +63,7 @@ define('js!SBIS3.CONTROLS.Utils.DataProcessor', [
          this.exportData(fileType, methodName, fileName, cfg, useGET);
       },
       /**
-       * Выгрузить данные
+       * Выгрузить данные, создав HTML на клиенте через xslt-преобразоование
        * @param fileType - Имя объекта выгрузки (Например Excel)
        * @param methodName - Име метода объекта выгрцзки (например Сохранить)
        * @param fileName - Имя файла
@@ -182,7 +185,7 @@ define('js!SBIS3.CONTROLS.Utils.DataProcessor', [
          });
       },
       /**
-       *
+       * Универсальная выгрузка данных через сервис file-transfer
        * @param object
        * @param methodName
        * @param cfg
