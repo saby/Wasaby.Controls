@@ -560,25 +560,21 @@ define('js!SBIS3.CONTROLS.ListView',
          },
 
          _getNextItemByDOM: function(id) {
-            return this._getHtmlItemByDOM(id, true)
+            return this._getHtmlItemByDOM(id, true);
          },
 
          _getPrevItemByDOM: function(id) {
-            return this._getHtmlItemByDOM(id, false)
+            return this._getHtmlItemByDOM(id, false);
          },
 
          _getItem: function(id, isNext) {
-            if($ws.helpers.instanceOfMixin(this._dataSet, 'SBIS3.CONTROLS.Data.Collection.IList')) {
-               var index = this._dataSet.getIndex(this._dataSet.getRecordByKey(id)),
-                  item;
-               item = this._dataSet.at(isNext ? ++index : --index);
-               if (item)
-                  return $('.js-controls-ListView__item[data-id="' + item.getId() + '"]', this._getItemsContainer());
-               else
-                  return undefined;
-            } else {
-               this._getHtmlItemByDOM(id, isNext);
+            var index = this._itemsProjection.getEnumerator().getIndexByValue(this._options.keyField, id),
+               item;
+            item = this._itemsProjection.at(isNext ? ++index : --index);
+            if (item) {
+               return $('.js-controls-ListView__item[data-id="' + item.getContents().getId() + '"]', this._getItemsContainer());
             }
+            return undefined;
          },
          /**
           *
