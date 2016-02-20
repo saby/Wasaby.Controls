@@ -134,6 +134,23 @@ define([
             it('should return the property value', function () {
                assert.strictEqual(model.get('internal'), 'internalDefault');
             });
+
+            it('should return the property value', function () {
+               var model = new Model({
+                  properties: {
+                     rand: {
+                        def:0,
+                        get:function (){
+                           return {'val': Math.random()};
+                        }
+                     }
+                  }
+               });
+               assert.equal(model.get('rand'), model.get('rand'));
+               //assert.strictEqual(model.get('internal'), 'internalDefault');
+            });
+
+
          });
 
          describe('.set()', function () {
@@ -535,6 +552,33 @@ define([
                assert.strictEqual(json.state._isDeleted, model.isDeleted());
                assert.deepEqual(json.state._defaultPropertiesValues, model._defaultPropertiesValues);
                assert.deepEqual(json.state._changedFields, model._changedFields);
+            });
+         });
+
+         describe('.toString()', function () {
+            it('should serialize a model', function () {
+               var model = new Model({
+                  rawData : {'to': 'String'}
+               });
+               assert.equal(model.toString(), '{"to":"String"}');
+            });
+         });
+
+         describe('.isUsingDataSetAsList()', function (){
+            it('sould return flag usingDataSetAsList', function (){
+               model.setUsingDataSetAsList(true);
+               assert.isTrue(model.isUsingDataSetAsList());
+               model.setUsingDataSetAsList(false);
+               assert.isFalse(model.isUsingDataSetAsList());
+            });
+         });
+
+         describe('.isSynced()', function (){
+            it('sould return flag usingDataSetAsList', function (){
+               model.setSynced(true);
+               assert.isTrue(model.isSynced());
+               model.setSynced(false);
+               assert.isFalse(model.isSynced());
             });
          });
       });

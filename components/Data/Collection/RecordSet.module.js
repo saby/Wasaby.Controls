@@ -483,9 +483,6 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
          return this._indexTree.hasOwnProperty(parentKey);
       },
 
-      getParent: function () {
-      },
-
       getParentKey: function (record, field) {
          return record.get(field);
       },

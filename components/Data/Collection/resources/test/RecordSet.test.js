@@ -536,7 +536,7 @@ define([
 
             it('shouldnt set id property', function() {
                rs.setIdProperty('Лицо');
-               assert.equal("Ид", rs.getIdProperty());
+               assert.equal("Лицо", rs.getIdProperty());
             });
          });
 
@@ -653,6 +653,23 @@ define([
                assert.equal(meta.results.get('s'), 1);
             });
          });
+
+         describe('.getTreeIndex()', function (){
+            it('should set meta data', function() {
+               var rs =  new RecordSet({
+                  rawData: [{
+                     'Ид': 1,
+                     'Раздел': null
+                  }, {
+                     'Ид': 2,
+                     'Раздел': 1
+                  }]
+               });
+               var index = rs.getTreeIndex('Раздел');
+               assert.equal(index.null)
+            });
+         });
+
 
 
       });

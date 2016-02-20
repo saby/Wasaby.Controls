@@ -1,4 +1,4 @@
-/* global beforeEach, afterEach, describe, context, it */
+/* global beforeEach, afterEach, describe, context, it, assert, define, $ws */
 define([
       'js!SBIS3.CONTROLS.Data.Types.Enum'
    ], function (Enum) {
@@ -17,14 +17,39 @@ define([
          testEnum = undefined;
       });
       describe('SBIS3.CONTROLS.Data.Types.Enum', function () {
-         it('should create Enum', function () {
-            if (!$ws.helpers.instanceOfModule(testEnum, 'SBIS3.CONTROLS.Data.Types.Enum')) {
-               assert.fail("Type doesn't of instances Enum");
-            }
+         describe('$constructor', function(){
+            it('should create Enum', function () {
+               if (!$ws.helpers.instanceOfModule(testEnum, 'SBIS3.CONTROLS.Data.Types.Enum')) {
+                  assert.fail("Type doesn't of instances Enum");
+               }
+            });
+            it('should init Enums current value', function () {
+               assert.equal(testEnum.get(), 1);
+            });
+            it('should throw an error', function () {
+               assert.throw(function(){
+                  testEnum = new Enum({
+                     data: {'1':'one', '2':'two', '3':'three'},
+                     currentValue: 1
+                  });
+               });
+            });
          });
-         it('should init Enums current value', function () {
-            assert.equal(testEnum.get(), 1);
+
+         describe('.get()', function (){
+            it('should return current value', function (){
+               assert.equal(testEnum.get(), 1);
+               assert.equal(testEnum.getCurrentValue(), 1);
+            });
          });
+
+         describe('.getValues()', function (){
+            it('should return values', function (){
+               assert.deepEqual(testEnum.getValues(), data);
+            });
+         });
+
+
          describe('.set()', function () {
             it('should changes enums current value by index', function () {
                testEnum.set(2);
@@ -96,6 +121,14 @@ define([
                if (testEnum.equals(e)) {
                   assert.fail('testEnum equals to new enum');
                }
+            });
+         });
+         describe('.getEnumerator', function (){
+            it('should return enumerator', function (){
+               assert.isTrue($ws.helpers.instanceOfModule(
+                  testEnum.getEnumerator(),
+                  'SBIS3.CONTROLS.Data.Collection.ArrayEnumerator')
+               );
             });
          });
       });

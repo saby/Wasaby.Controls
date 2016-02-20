@@ -131,6 +131,7 @@ define([
          null,
          null,
          null,
+         null,
          null
       ];
       sbisModel = new Model({
@@ -167,12 +168,15 @@ define([
 
          });
          it('should cast value to List', function () {
+            sbisModel.setUsingDataSetAsList(true);
             assert.instanceOf(sbisModel.get('recordSet'), List);
          });
          it('should cast value to RecordSet', function () {
             sbisModel.setUsingDataSetAsList(false);
             assert.instanceOf(sbisModel.get('recordSet'), RecordSet);
          });
+
+
          it('should cast link to integer', function () {
             var val = sbisModel.get('link');
             assert.strictEqual(val, 6);
@@ -289,7 +293,7 @@ define([
             assert.equal(sbisModel.get('arrayBool'), null);
          });
 
-         it('should cast to array when value is null', function (){
+         it('should get value from enum', function (){
             var
                enumNew = new Enum({data:['one', 'tt'], 'currentValue':1}),
                enumOld = new $ws.proto.Enum({'availableValues':{'0': 'one', '1': 'tt'}, 'currentValue':0});
@@ -306,8 +310,10 @@ define([
                   }]
                }
             });
-            assert.equal(sbisModel.get('enumNew'), 1);
-            assert.equal(sbisModel.get('enumOld'), 0);
+            sbisModel.set('enumNew', enumNew);
+            sbisModel.set('enumOld', enumOld);
+            assert.equal(sbisModel.get('enumNew').get(), 1);
+            assert.equal(sbisModel.get('enumOld').get(), 0);
          });
       });
 
@@ -386,6 +392,43 @@ define([
                         assert.deepEqual(getData(model, 4).s, item.getRawData().s);
                      });
                   });
+
+                  it('should store a old record set', function () {
+                     var model = getModel(type),
+                        coldef = {
+                           "keyColumnName": {
+                              index: 0,
+                              title: "key",
+                              type: "Идентификатор"
+                           },
+                           "Название": {
+                              index: 1,
+                              title: "name",
+                              type: "Строка"
+                           }
+                        },
+                        recordset = new $ws.proto.RecordSetStatic({
+                           defaultColumns: coldef,
+                           records: [
+                              new $ws.proto.Record({
+                                 row: [0, 'b'],
+                                 colDef: coldef,
+                                 pkValue: 0
+                              }),
+                              new $ws.proto.Record({
+                                 row: [1, 'c'],
+                                 colDef: coldef,
+                                 pkValue: 1
+                              })
+                           ]
+                        });
+                     model.set('recordSet', recordset);
+                     model.get('recordSet').each(function(item, index) {
+                        assert.deepEqual(getData(model, 4).d[index], item.getRawData().d);
+                        assert.deepEqual(getData(model, 4).s, item.getRawData().s);
+                     });
+                  });
+
                   it('should store dataSet', function () {
                      var model = getModel(type),
                         data = {
@@ -445,6 +488,32 @@ define([
                      model.set('flags', testModel);
                      assert.deepEqual(getData(model, 5), d);
                   });
+
+                  it('should store flags from array', function () {
+                     var model = getModel(type);
+                     var d = [true, true, false];
+                     model.set('flags', [true, true, false]);
+                     assert.deepEqual(getData(model, 5), d);
+                  });
+
+                  it('should store flags from $ws record', function () {
+                     var model = getModel(type);
+                     var record = new $ws.proto.Record();
+                     record.addColumn('one', $ws.proto.Record.FIELD_TYPE_BOOLEAN);
+                     record.addColumn('two', $ws.proto.Record.FIELD_TYPE_BOOLEAN);
+                     record.addColumn('three', $ws.proto.Record.FIELD_TYPE_BOOLEAN);
+                     record.set('one', true);
+                     record.set('two', false);
+                     model.set('flags', record);
+                     assert.deepEqual(getData(model, 5), [true, false, null]);
+                  });
+
+                  it('should store flags from null', function () {
+                     var model = getModel(type);
+                     model.set('flags', null);
+                     assert.deepEqual(getData(model, 5), null);
+                  });
+
                   it('should store null for not Identity', function () {
                      var model = getModel(type);
                      for (var i = 0; i < dataScheme.length; i++) {
