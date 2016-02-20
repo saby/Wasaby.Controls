@@ -1269,7 +1269,7 @@ define('js!SBIS3.CONTROLS.ListView',
                   //Если данные пришли, нарисуем
                   if (dataSet.getCount()) {
                      //Поддерживаем новый флаг для рисования элементов
-                     self._isDrawn = false;
+                     self._isDrawn = true;
                      //TODO перевести на each
                      records = dataSet.toArray();
                      if (self._options.infiniteScroll === 'up') {
