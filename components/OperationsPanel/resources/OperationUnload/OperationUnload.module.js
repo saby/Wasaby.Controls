@@ -87,7 +87,9 @@ define('js!SBIS3.CONTROLS.OperationUnload', [
       },
       _menuItemActivated: function(event, itemId){
          this._currentItem = itemId;
-         this._prepareOperation('Что сохранить в ' + this._controlsId[itemId].objectName);
+         if (this._controlsId[itemId]) {
+            this._prepareOperation('Что сохранить в ' + this._controlsId[itemId].objectName);
+         }
       },
       _isSelectedState: function(){
          return this._getView().getSelectedKeys().length > 0;
