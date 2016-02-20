@@ -142,7 +142,7 @@ define('js!SBIS3.CONTROLS.Image.CropPlugin',
                } else if (beginCropResult) {
                   filter = beginCropResult;
                }
-               new $ws.proto.BLObject({name: dataSource.getResource(), serviceUrl: dataSource.getService()})
+               new $ws.proto.BLObject(dataSource._options.resource)
                   .call(dataSource.getUpdateMethodName(), filter, $ws.proto.BLObject.RETURN_TYPE_ASIS).addBoth(function(result) {
                      self.finishCrop();
                      self._notify('onEndSave', result);
