@@ -48,6 +48,16 @@ define('js!SBIS3.CONTROLS.TextBoxBase',
         */
 
       $protected: {
+         _keysWeHandle: [
+            $ws._const.key.del,
+            $ws._const.key.backspace,
+            $ws._const.key.left,
+            $ws._const.key.right,
+            $ws._const.key.minus,
+            $ws._const.key.space,
+            $ws._const.key.m,
+            $ws._const.key.o
+         ],
          _options: {
             /**
              * @cfg {String} Текст в поле ввода
@@ -185,6 +195,13 @@ define('js!SBIS3.CONTROLS.TextBoxBase',
 
       _drawText: function() {
 
+      },
+
+      _keyboardHover: function(event){
+         if (event.which in this._keysWeHandle) {
+            event.stopPropagation();
+         }
+         return true;
       },
 
       getValue : function() {
