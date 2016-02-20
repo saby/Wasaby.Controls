@@ -106,7 +106,6 @@ define('js!SBIS3.CONTROLS.TextArea', ['js!SBIS3.CONTROLS.TextBoxBase', 'html!SBI
          });
 
          this._inputField.bind('keydown', function(event){
-            TextArea.superclass._keyboardHover.call(self, event);
             if(event.shiftKey || event.altKey || event.ctrlKey || event.which == $ws._const.key.esc || event.which == $ws._const.key.tab)
                return true;
             event.stopPropagation();

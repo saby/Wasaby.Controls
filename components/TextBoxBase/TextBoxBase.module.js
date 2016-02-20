@@ -198,9 +198,7 @@ define('js!SBIS3.CONTROLS.TextBoxBase',
       },
 
       _keyboardHover: function(event){
-         if (event.which in this._keysWeHandle) {
-            event.stopPropagation();
-         }
+         event.stopPropagation();
          return true;
       },
 
