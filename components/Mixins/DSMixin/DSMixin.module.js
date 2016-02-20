@@ -726,7 +726,6 @@ define('js!SBIS3.CONTROLS.DSMixin', [
             records = this._getRecordsForRedraw();
             this._toggleEmptyData(!records.length && this._options.emptyHTML);
             this._drawItems(records);
-            this._isDrawn = true;
          }
       },
       _destroySearchBreadCrumbs: function(){
