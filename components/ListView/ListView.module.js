@@ -151,6 +151,11 @@ define('js!SBIS3.CONTROLS.ListView',
           * </ol>
           */
          /**
+          * @event onBeginAdd Возникает перед началом добавления записи по месту
+          * @param {$ws.proto.EventObject} eventObject Дескриптор события.
+          * @returns {Object|SBIS3.CONTROLS.Data.Model} Данные которые попадут в поля созданного элемента.
+          */
+         /**
           * @event onAfterBeginEdit Возникает после начала редактирования (при непосредственном его начале)
           * @param {$ws.proto.EventObject} eventObject Дескриптор события.
           * @param {Object} model Редактируемая модель
