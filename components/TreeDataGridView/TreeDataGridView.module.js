@@ -43,7 +43,19 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
              * @cfg {Function}
              * Обработчик нажатия на стрелку у папок. Если не задан, стрелка показана не будет
              */
-            arrowActivatedHandler: undefined
+            arrowActivatedHandler: undefined,
+            /**
+             * @cfg {String} Разрешено или нет перемещение элементов "Drag-and-Drop"
+             * @variant "" Запрещено
+             * @variant allow Разрешено
+             * @variant onlyChangeOrder Разрешено только изменение порядка
+             * @variant onlyChangeParent Разрешено только перемещение в папку
+             * @example
+             * <pre>
+             *     <option name="itemsDragNDrop">onlyChangeParent</option>
+             * </pre>
+             */
+            itemsDragNDrop: 'allow'
          },
          _dragStartHandler: undefined
       },
@@ -322,6 +334,12 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
             else {
                this._activateItem(id);
             }
+         }
+      },
+      _notifyOnDragMove: function(target, insertAfter) {
+         //Если происходит изменение порядкового номера и оно разрешено или если происходит смена родителся и она разрешена, стрельнём событием
+         if (typeof insertAfter === 'boolean' && this._options.itemsDragNDrop !== 'onlyChangeParent' || insertAfter === undefined && this._options.itemsDragNDrop !== 'onlyChangeOrder') {
+            return this._notify('onDragMove', this.getCurrentElement().keys, target.data('id'), insertAfter) !== false;
          }
       },
       /**

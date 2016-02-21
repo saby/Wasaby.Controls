@@ -316,13 +316,15 @@ define('js!SBIS3.CONTROLS.ListView',
                   }
                }],
                /**
-                * @cfg {Boolean} Разрешено или нет перемещение элементов "Drag-and-Drop"
+                * @cfg {String} Разрешено или нет перемещение элементов "Drag-and-Drop"
+                * @variant "" Запрещено
+                * @variant allow Разрешено
                 * @example
                 * <pre>
-                *     <option name="itemsDragNDrop">true</option>
+                *     <option name="itemsDragNDrop">allow</option>
                 * </pre>
                 */
-               itemsDragNDrop: true,
+               itemsDragNDrop: 'allow',
                elemClickHandler: null,
                /**
                 * @cfg {Boolean} Разрешить выбор нескольких строк
@@ -478,6 +480,11 @@ define('js!SBIS3.CONTROLS.ListView',
                lvOpts.infiniteScroll = typeof lvOpts.infiniteScroll === 'boolean' ?
                   (lvOpts.infiniteScroll ? 'down' : null) :
                   lvOpts.infiniteScroll;
+            }
+            if (lvOpts.hasOwnProperty('itemsDragNDrop')) {
+               if (typeof lvOpts.itemsDragNDrop === 'boolean') {
+                  lvOpts.itemsDragNDrop = lvOpts.itemsDragNDrop ? 'allow' : '';
+               }
             }
             return lvOpts;
          },
@@ -1761,7 +1768,7 @@ define('js!SBIS3.CONTROLS.ListView',
                return;
             }
             var
-                target = $(e.target).closest('.controls-ListView__item'),
+                target = this._findItemByElement($(e.target)),
                 id = target.data('id');
             if (id) {
                this.setCurrentElement(e, {
@@ -1780,43 +1787,46 @@ define('js!SBIS3.CONTROLS.ListView',
          },
          _callMoveHandler: function(e) {
             this._updateDragTarget(e);
+            this._setAvatarPosition(e);
          },
          _updateDragTarget: function(e) {
             var
                 insertAfter,
-                isCorrectDrop,
                 neighborItem,
                 currentElement = this.getCurrentElement(),
-                target = $(e.target).closest('.js-controls-ListView__item'),
-                targetId = target.data('id');
-            this._clearDragHighlight();
-            if (target.length && targetId != currentElement.targetId) {
+                target = this._findItemByElement($(e.target));
+
+            this._clearDragHighlight(currentElement.target);
+            if (target.length && target.data('id') != currentElement.targetId) {
                insertAfter = this._getDirectionOrderChange(e, target);
-               //Отказываемся от смены порядкового номера, если переместили либо под себя либо над себя.
                if (insertAfter !== undefined) {
                   neighborItem = this[insertAfter ? 'getNextItemById' : 'getPrevItemById'](targetId);
                   if (neighborItem && neighborItem.data('id') == currentElement.targetId) {
                      insertAfter = undefined;
                   }
                }
-            }
-            isCorrectDrop = this._notify('onDragMove', currentElement.keys, targetId, insertAfter);
-            if (isCorrectDrop !== false) {
-               this._setDragTarget(target, insertAfter);
-            }
-            this._setAvatarPosition(e);
-         },
-         _setDragTarget: function(target, insertAfter) {
-            var currentElement = this.getCurrentElement();
-            if (target.length) {
-               if (insertAfter === true && target.next().data('id') !== currentElement.targetId) {
-                  target.addClass('controls-DragNDrop__insertAfter');
-               } else if (insertAfter === false && target.prev().data('id') !== currentElement.targetId) {
-                  target.addClass('controls-DragNDrop__insertBefore');
+               if (this._notifyOnDragMove(target, insertAfter)) {
+                  currentElement.insertAfter = insertAfter;
+                  currentElement.target = target;
+                  this._drawDragHighlight(target, insertAfter);
+               } else {
+                  currentElement.insertAfter = currentElement.target = null;
                }
+            } else {
+               currentElement.insertAfter = currentElement.target = null;
             }
-            currentElement.insertAfter = insertAfter;
-            currentElement.target = target;
+         },
+         _notifyOnDragMove: function(target, insertAfter) {
+            if (typeof insertAfter === 'boolean') {
+               return this._notify('onDragMove', this.getCurrentElement().keys, target.data('id'), insertAfter) !== false;
+            }
+         },
+         _clearDragHighlight: function(target) {
+            target && target.removeClass('controls-DragNDrop__insertBefore controls-DragNDrop__insertAfter');
+         },
+         _drawDragHighlight: function(target, insertAfter) {
+            target.toggleClass('controls-DragNDrop__insertAfter', insertAfter === true);
+            target.toggleClass('controls-DragNDrop__insertBefore', insertAfter === false);
          },
          _getDirectionOrderChange: function(e, target) {
             return this._getOrderPosition(e.pageY - target.offset().top, target.height());
@@ -1846,24 +1856,23 @@ define('js!SBIS3.CONTROLS.ListView',
             //т.к. он срабатывают так часто, насколько это позволяет внутренняя система взаимодействия с мышью браузера.
             this._updateDragTarget(e);
             currentElement = this.getCurrentElement();
-            targetId = currentElement.target.data('id');
-            //TODO придрот для того, чтобы если перетащить элемент сам на себя не отработал его обработчик клика
-            if (this.getSelectedKey() == targetId) {
-               clickHandler = this._elemClickHandler;
-               this._elemClickHandler = function() {
-                  this._elemClickHandler = clickHandler;
+            if (currentElement.target) {
+               targetId = currentElement.target.data('id');
+               //TODO придрот для того, чтобы если перетащить элемент сам на себя не отработал его обработчик клика
+               if (this.getSelectedKey() == targetId) {
+                  clickHandler = this._elemClickHandler;
+                  this._elemClickHandler = function () {
+                     this._elemClickHandler = clickHandler;
+                  }
                }
+               this._move(currentElement.keys, targetId, currentElement.insertAfter);
             }
-            this._move(currentElement.keys, targetId, currentElement.insertAfter);
          },
          _beginDropDown: function(e) {
             this.setSelectedKey(this.getCurrentElement().targetId);
             this._isShifted = true;
             this._createAvatar(e);
             this._hideItemsToolbar();
-         },
-         _clearDragHighlight: function() {
-            this.getCurrentElement().target.removeClass('controls-DragNDrop__insertBefore controls-DragNDrop__insertAfter');
          },
          _endDropDown: function() {
             var hoveredItem = this.getHoveredItem();
