@@ -841,11 +841,10 @@ define('js!SBIS3.CONTROLS.ListView',
 
          _drawSelectedItem: function (id, index) {
             var selId;
-            var items = this.getItems();
-            if (items) {
-               var selItem = items.at(index);
+            if (this._itemsProjection) {
+               var selItem = this._itemsProjection.at(index);
                if (selItem) {
-                  selId = selItem.getId();
+                  selId = selItem.getContents().getId();
                }
             }
             $(".controls-ListView__item", this._container).removeClass('controls-ListView__item__selected');

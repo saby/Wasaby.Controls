@@ -54,6 +54,7 @@ define('js!SBIS3.CONTROLS.MoveDialogTemplate', [
          }
          this.sendCommand('close');
       },
+      //TODO: в 3.7.4 переделать на фейковую запись, а не тупо подпихивать tr.
       _createRoot: function() {
          var
              self = this,
@@ -62,7 +63,7 @@ define('js!SBIS3.CONTROLS.MoveDialogTemplate', [
             self._container.find('.controls-ListView__item').toggleClass('ws-hidden');
             rootBlock.toggleClass('ws-hidden').find('.controls-TreeView__expand').toggleClass('controls-TreeView__expand__open');
             self.setSelectedKey('null');
-            self._drawSelectedItem('null');
+            rootBlock.addClass('controls-ListView__item__selected');
             event.stopPropagation();
          });
          rootBlock.prependTo(self._container.find('tbody'));
