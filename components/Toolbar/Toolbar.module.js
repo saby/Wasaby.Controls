@@ -36,16 +36,20 @@ define('js!SBIS3.CONTROLS.Toolbar', [
          this._setMenuItems(this._options.items);
       },
 
-      setItems: function() {
+      setItems: function(items) {
          //TODO подготовка списка меню
          console.log('setItems');
-         this._setMenuItems(this._options.items);
+         this._setMenuItems(items);
          Toolbar.superclass.setItems.apply(this, arguments);
       },
 
       _setMenuItems: function(items) {
          this._menuIcon.setItems(items);
       },
+
+      /* $0.wsControl.setItems([{id:1, name:'B1', componentType: 'js!SBIS3.CONTROLS.Button', caption: 'новый текст'}, {id:2, name:'B2', componentType: 'js!SBIS3.CONTROLS.Button', caption: 'текст2'}])
+         $0.wsControl.setItems([{id:1, name:'B1', componentType: 'js!SBIS3.CONTROLS.Button', caption: 'новый текст', isMainAction: true}, {id:2, name:'B2', componentType: 'js!SBIS3.CONTROLS.Button', caption: 'текст2'}])
+       */
 
       /* Создаем карту элементов, которые нужно отобразить */
       /*_createItemsMap: function() {
@@ -64,16 +68,22 @@ define('js!SBIS3.CONTROLS.Toolbar', [
          //this._currentItemNum ++;
          //console.log(this._currentItemNum);
          //return (this._itemsMap && this._itemsMap[item]) ? this._itemsContainer : this._garbageContainer;
-         return !!item.get('isMainAction') ? this._itemsContainer : null;
+         return this._itemsContainer;
+         //return !!item.get('isMainAction') ? this._itemsContainer : null;
       },
 
       _getItemTemplate: function(item) {
-         // config="' + $ws.helpers.encodeCfgAttr(options) + '"
-         var icon = item.get('icon') ? '<option name="icon">' + item.get('icon') + '</option>' : '',
-             className = item.get('className') ? item.get('className') : '';
-         return '<component data-component="' + item.get('componentType').substr(3) + '" class="controls-ToolBar__item ' + className + '">' +
-                  '<opt name="caption">' + item.get('caption') + '</opt>' +
-                  icon +
+         var icon        = item.get('icon')        ? '<option name="icon">' + item.get('icon') + '</option>' : '',
+             className   = item.get('className')   ? item.get('className') : '',
+             options = item.get('options') || {},
+             caption = item.get('caption') ? '<opt name="caption">' + item.get('caption') + '</opt>' : '',
+             //visible = item.get('isMainAction')
+             command = item.get('command') ? '<opt name="command">' + item.get('command') + '</opt>' : '';
+             //handlers = item.get('handlers') ? '<options name="handlers">' + item.get('handlers') + '</options>' : '';
+         return '<component data-component="' + item.get('componentType').substr(3) + '" config="' + $ws.helpers.encodeCfgAttr(options) + '" class="controls-ToolBar__item ' + className + '">' +
+                  '<opt name="visible" type="boolean">' + !!item.get('isMainAction') + '</opt>' +
+                  //'<opt name="caption">' + item.get('caption') + '</opt>' +
+                  caption + icon + command +
                 '</component>';
       }
 

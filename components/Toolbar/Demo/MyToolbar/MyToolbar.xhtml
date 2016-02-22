@@ -5,48 +5,64 @@
          <options>
             <option name="id">1</option>
             <option name="componentType">js!SBIS3.CONTROLS.Button</option>
-            <option name="name">Button</option>
             <option name="className" >ButtonClass</option>
-            <option name="caption">text aaa</option>
             <option name="isMainAction" type="boolean">true</option>
-            <!--TODO order - порядок отображения элементов (от малых к большим слева направо или сверху вниз)-->
-            <option name="order">2</option>
-            <!--TODO command-->
-            <option name="command"></option>
-            <!--TODO -->
-            <option name="onActivated" value="js!SBIS3.CONTROLS.CommonHandlers:editItems" type="function"></option>
+            <option name="name">Button</option>
+            <option name="caption">text aaa</option>
+            <option name="command">testCommand</option>
          </options>
          <options>
-            <!--<option name="id">2</option>-->
             <option name="id">2</option>
             <option name="componentType">js!SBIS3.CONTROLS.IconButton</option>
-            <option name="name">IconButton2</option>
             <option name="className" >IconButton2</option>
+            <option name="isMainAction" bind="iconIsMain" type="boolean" >true</option><!--bind="iconIsMain"-->
+            <option name="name">IconButton2</option>
             <option name="caption">IconButton 2</option>
-            <option name="isMainAction" type="boolean">true</option>
-            <option name="icon">sprite:icon-24 icon-Link icon-primary</option>
+            <option name="icon">sprite:icon-16 icon-Link icon-primary</option>
+            <option name="command">iconCommand</option>
          </options>
-
          <options>
-            <!--<option name="id">3</option>-->
             <option name="id">3</option>
-            <option name="componentType">js!SBIS3.CONTROLS.Button</option>
-            <option name="name">Button</option>
-            <option name="className" >ButtonClass</option>
-            <option name="caption">text 3</option>
+            <option name="componentType">js!SBIS3.CONTROLS.IconButton</option>
+            <option name="className" >IconButton3</option>
             <option name="isMainAction" type="boolean">true</option>
+            <option name="name">IconButton3</option>
+            <option name="caption">IconButton 3</option>
+            <option name="icon">sprite:icon-16 icon-Admin icon-primary</option>
+            <option name="command">iconCommandAdmin</option>
          </options>
          <options>
-            <!--<option name="id">2</option>-->
             <option name="id">4</option>
-            <option name="componentType">js!SBIS3.CONTROLS.IconButton</option>
-            <option name="name">IconButton2</option>
-            <option name="className" >IconButton2</option>
-            <option name="caption">IconButton 2</option>
-            <!--<option name="isMainAction" type="boolean">true</option>-->
-            <option name="icon">sprite:icon-24 icon-Time icon-primary</option>
-            <option name="parent" type="string">2</option>
+            <option name="componentType">js!SBIS3.CONTROLS.Button</option>
+            <option name="className" >ButtonClass</option>
+            <option name="isMainAction" type="boolean">true</option>
+            <option name="name">Button</option>
+            <option name="caption">text 4</option>
          </options>
+         <options>
+            <option name="id">5</option>
+            <option name="componentType">js!SBIS3.CONTROLS.IconButton</option>
+            <option name="name">IconButton5</option>
+            <option name="className" >IconButton2</option>
+            <option name="caption">IconButton 5</option>
+            <option name="parent" type="string">5</option>
+            <!--<option name="isMainAction" type="boolean">true</option>-->
+         </options>
+      </options>
+   </component>
+
+   <br/>
+   <component data-component="SBIS3.CONTROLS.CheckBox" name="CheckBox 1"  class="position">
+      <option name="caption">Вкл</option>
+      <option name="checked" bind="iconIsMain">false</option>
+   </component>
+
+   <br/>
+   <component data-component="SBIS3.CONTROLS.TextArea" name="TextArea" style="width:300px;">
+      <option name="minLinesCount">10</option>
+      <options name="autoResize">
+         <option name="maxLinesCount">10</option>
+         <option name="state">true</option>
       </options>
    </component>
 </div>
