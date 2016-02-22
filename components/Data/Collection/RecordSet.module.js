@@ -725,6 +725,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
             record = this._getModelInstance(adapter.at(i));
             RecordSet.superclass.add.call(this, record);
          }
+         this._reindex();
       },
 
       /**
