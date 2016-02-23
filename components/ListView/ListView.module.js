@@ -941,11 +941,21 @@ define('js!SBIS3.CONTROLS.ListView',
          },
 
          showEip: function(target, model, options) {
-            if (this.isEnabled()) {
+            if (this._canShowEip()) {
                return this._getEditInPlace().showEip(target, model, options);
             } else {
                return $ws.proto.Deferred.fail();
             }
+         },
+
+         _canShowEip: function() {
+            // Отображаем редактирование только если enabled
+            return this.isEnabled();
+         },
+
+         _setEnabled : function(enabled) {
+            ListView.superclass._setEnabled.call(this, enabled);
+            this._destroyEditInPlace();
          },
 
          _onItemClickHandler: function(event, id, record, target) {
@@ -1006,7 +1016,6 @@ define('js!SBIS3.CONTROLS.ListView',
                   dataSet: this._dataSet,
                   editingItem: this._editingItem,
                   ignoreFirstColumn: this._options.multiselect,
-                  columns: this._options.columns,
                   dataSource: this._dataSource,
                   editingTemplate: this._options.editingTemplate,
                   itemsContainer: this._getItemsContainer(),
