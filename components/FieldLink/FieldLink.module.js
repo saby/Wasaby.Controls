@@ -142,6 +142,17 @@ define('js!SBIS3.CONTROLS.FieldLink',
             this._options.showAllConfig = this._options.dictionaries[0];
          }
 
+         this.subscribe('onPropertyChanged', function(e, propName) {
+            /* При изменении выбранных элементов в поле связи - сотрём текст,
+             для этого достаточно просто отслеживать опцию selectedKeys,
+             т.к. она гарантированно изменится.
+             Это всё актуально для поля связи без велючённой опции alwaysShowTextBox,
+             если она включена, то логика стирания текста обрабатывается по-другому. */
+            if(propName === 'selectedKeys' && !this._options.alwaysShowTextBox && this.getText()) {
+               this.setText('');
+            }
+         });
+
          if(this._options.oldViews) {
             $ws.single.ioc.resolve('ILogger').log('FieldLink', 'В 3.8.0 будет удалена опция oldViews, а так же поддержка старых представлений данных на диалогах выбора.');
          }
@@ -205,7 +216,6 @@ define('js!SBIS3.CONTROLS.FieldLink',
             $ws.helpers.instanceOfModule(result[0], 'SBIS3.CONTROLS.Data.Model') ?
                 this.addSelectedItems(result) :
                 this.addItemsSelection(result);
-            this.setText('');
          }
       },
 
