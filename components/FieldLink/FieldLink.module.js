@@ -142,6 +142,17 @@ define('js!SBIS3.CONTROLS.FieldLink',
             this._options.showAllConfig = this._options.dictionaries[0];
          }
 
+         /* При изменении выбранных элементов в поле связи - сотрём текст.
+            Достаточно отслеживать изменение массива ключей,
+            т.к. это событие гарантирует изменение выбранных элементов
+            Это всё актуально для поля связи без включенной опции alwaysShowTextBox,
+            если она включена, то логика стирания текста обрабатывается по-другому. */
+         this.subscribe('onSelectedItemsChange', function() {
+            if(this.getText()) {
+               this.setText('');
+            }
+         }.bind(this));
+
          if(this._options.oldViews) {
             $ws.single.ioc.resolve('ILogger').log('FieldLink', 'В 3.8.0 будет удалена опция oldViews, а так же поддержка старых представлений данных на диалогах выбора.');
          }
@@ -304,13 +315,6 @@ define('js!SBIS3.CONTROLS.FieldLink',
          }
 
          if(!this._options.alwaysShowTextBox) {
-
-            /* При изменении выбранных элементов в поле связи - сотрём текст.
-               Это всё актуально для поля связи без включенной опции alwaysShowTextBox,
-               если она включена, то логика стирания текста обрабатывается по-другому. */
-            if(this.getText()) {
-               this.setText('');
-            }
 
             if(!this._options.multiselect) {
                this._inputWrapper.toggleClass('ws-hidden', Boolean(keysArrLen));
