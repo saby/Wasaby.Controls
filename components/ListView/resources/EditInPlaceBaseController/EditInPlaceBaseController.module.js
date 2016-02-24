@@ -214,6 +214,7 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                      return this._endEdit(eip, withSaving, endEditResult);
                   }
                }
+               //TODO: Надо обсудить c Витей, почему в стрельнувшем Deferred и если результат тоже был Deferred - нельзя делать addCallback.
                return this._savingDeferred.isReady() ? $ws.proto.Deferred.success() : this._savingDeferred;
             },
             _endEdit: function(eip, withSaving, endEditResult) {
@@ -255,6 +256,7 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                   this._notifyOnAfterEndEdit(eip, eipRecord, withSaving, isAdd);
                }
             },
+            //TODO: Нужно переименовать метод
             _notifyOnAfterEndEdit: function(eip, eipRecord, withSaving, isAdd) {
                var target = eip.getTarget();
                eip.endEdit();
@@ -281,6 +283,8 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
             _createAddTarget: function(options) {
                var
                    footer,
+                   //Данный элемент будет служить как точка позиционирования добавления по месту, и как блок, который будет расширять браузер.
+                   //Используется div т.к он растянется по все ширине контейнера, и может иметь background-color, в отличии от tr.
                    target = $('<div class="js-controls-ListView__item controls-ListView__item">');
                if (options && options.initiator) {
                   footer = options.initiator.closest('.controls-TreeDataGridView__folderFooter');

@@ -1144,7 +1144,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
       },
 
       _getItemContainer: function(parent, item) {
-         return parent.find('>[data-id="' + item.getKey() + '"]:not(".controls-editInPlace")');
+         return parent.find('>[data-id="' + item.getKey() + '"]');
       }
    };
 

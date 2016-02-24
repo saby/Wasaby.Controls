@@ -783,7 +783,9 @@ define('js!SBIS3.CONTROLS.ListView',
          _getItemsContainer: function () {
             return $('.controls-ListView__itemsContainer', this._container.get(0)).first();
          },
-
+         _getItemContainer: function(parent, item) {
+            return parent.find('>[data-id="' + item.getKey() + '"]:not(".controls-editInPlace")');
+         },
          _addItemAttributes: function(container) {
             container.addClass('js-controls-ListView__item');
             ListView.superclass._addItemAttributes.apply(this, arguments);
