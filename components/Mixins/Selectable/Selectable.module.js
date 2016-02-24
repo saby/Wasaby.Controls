@@ -285,8 +285,11 @@ define('js!SBIS3.CONTROLS.Selectable', ['js!SBIS3.CONTROLS.Data.Utils', 'js!SBIS
             if (this._options.selectedIndex > this._itemsProjection.getCount() - 1) {
                this._options.selectedIndex = (count > 0) ? count - 1 : -1;
             }
-            this._options.selectedKey = this._itemsProjection.at(this._options.selectedIndex).getContents().getId();
-            this._setSelectedIndex(this._options.selectedIndex, this._options.selectedKey);
+            var item = this._itemsProjection.at(this._options.selectedIndex);
+            if (item) {
+               this._options.selectedKey = item.getContents().getId();
+               this._setSelectedIndex(this._options.selectedIndex, this._options.selectedKey);
+            }
       }
    };
 
