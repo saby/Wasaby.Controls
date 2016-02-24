@@ -306,7 +306,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
          if(!this._options.alwaysShowTextBox) {
 
             /* При изменении выбранных элементов в поле связи - сотрём текст.
-               Это всё актуально для поля связи без велючённой опции alwaysShowTextBox,
+               Это всё актуально для поля связи без включенной опции alwaysShowTextBox,
                если она включена, то логика стирания текста обрабатывается по-другому. */
             if(this.getText()) {
                this.setText('');
