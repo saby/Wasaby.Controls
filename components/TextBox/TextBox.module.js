@@ -110,11 +110,9 @@ define('js!SBIS3.CONTROLS.TextBox', ['js!SBIS3.CONTROLS.TextBoxBase','html!SBIS3
       $constructor: function() {
          var self = this;
          this._inputField = $('.js-controls-TextBox__field', this.getContainer().get(0));
-         this._container.bind('keypress', this._keyPressBind.bind(this));
-
-         this._container.bind('keyup',function(e){
-            self._keyUpBind(e);
-         });
+         this._container.bind('keypress', this._keyPressBind.bind(this))
+                        .bind('keydown', this._keyDownBind.bind(this))
+                        .bind('keyup', this._keyUpBind.bind(this));
 
          this._inputField.bind('paste', function(){
             self._pasteProcessing++;
@@ -259,6 +257,10 @@ define('js!SBIS3.CONTROLS.TextBox', ['js!SBIS3.CONTROLS.TextBoxBase','html!SBIS3
                this._inputField.removeClass('controls-TextBox__field-uppercase')
                   .removeClass('controls-TextBox__field-lowercase');
          }
+      },
+
+      _keyDownBind: function(){
+
       },
 
       _keyUpBind: function(event) {
