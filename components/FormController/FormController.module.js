@@ -19,6 +19,7 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl'],
       _dotTplFn: dotTpl,
       $protected: {
          _record: null,
+         _saving: false,
          _options: {
             /**
              * @cfg {DataSource} Источник данных для диалога редактирования записи
@@ -88,6 +89,15 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl'],
          } else {
             this._setContextRecord(this._options.record);
          }
+
+         this.getTopParent().subscribe('onBeforeClose', function(event){
+            if (this._saving || !this._options.record.isChanged()){
+               this._saving = false;
+               return;
+            }
+            event.setResult(false);
+            this._saveRecord();
+         }.bind(this));
       },
       /**
        * Сохраняет редактируемую или создаваемую запись
@@ -102,19 +112,43 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl'],
        * </pre>
        */
       submit: function(){
-         var
-            def,
-            self = this,
-            submitResult = this._notify('onBeforeSubmit');
+         this._saveRecord();
+      },
 
-         if (submitResult instanceof $ws.proto.Deferred) {
-            def = submitResult;
-         }
-         else {
-            def = this._options.dataSource.update(this._options.record);
-         }
-         def.addCallback(function(){
-            self.getTopParent().ok();
+      _saveRecord: function(){
+         var self = this,
+             questionConfig,
+             submitResult,
+             def;
+
+         questionConfig = {
+            useCancelButton: true,
+            invertDefaultButton: true,
+            detail: 'Чтобы продолжить редактирование, нажмите "Отмена".'
+         };
+
+         $ws.helpers.question('Сохранить изменения?', questionConfig, this).addCallback(function(result){
+            if (typeof result === 'string'){
+               self._saving = false;
+               return;
+            }
+            self._saving = true;
+            submitResult = self._notify('onBeforeSubmit');
+            if (submitResult instanceof $ws.proto.Deferred) {
+               def = submitResult;
+            }
+            else {
+               def = self._options.dataSource.update(self._options.record);
+            }
+            def.addCallback(function(){
+               if (result){
+                  self.getTopParent().ok();
+               }
+               else{
+                  self.getTopParent().cancel();
+               }
+               self._saving = false;
+            });
          });
       },
 
