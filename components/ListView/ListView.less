@@ -99,7 +99,7 @@
    right: 0;
    width: 100%;
    height: 100%;
-   z-index: 1;
+   z-index: 2;
    overflow: hidden;
    min-height: 32px;
    .controls-AjaxLoader__outer{
@@ -146,14 +146,6 @@
 }
 
 .dragdropBody {
-  .controls-ListView__item-type-node.controls-ListView__hoveredItem {
-    &:not(.controls-ListView__item__selected):not(.controls-DragNDrop__insertAfter):not(.controls-DragNDrop__insertBefore) {
-      background: @drag-and-drop-hover-bg;
-      > td {
-        background: @drag-and-drop-hover-bg;
-      }
-    }
-  }
   .controls-DragNDrop__insertBefore{
     &, > td {
       border-top: @drag-and-drop-border;

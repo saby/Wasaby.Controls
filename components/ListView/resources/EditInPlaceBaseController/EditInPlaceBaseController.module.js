@@ -147,6 +147,7 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                   if (preparedRecord) {
                      this._eip.edit(target, preparedRecord);
                      this._notify('onAfterBeginEdit', preparedRecord);
+                     return preparedRecord;
                   }
                }.bind(this));
             },

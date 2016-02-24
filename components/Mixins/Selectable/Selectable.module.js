@@ -97,7 +97,12 @@ define('js!SBIS3.CONTROLS.Selectable', ['js!SBIS3.CONTROLS.Data.Utils', 'js!SBIS
          }
          else {
             this._selectMode = 'index';
-            this._options.selectedIndex = index;
+            if (this._itemsProjection.getCount()) {
+               this._options.selectedIndex = index;
+            }
+            else {
+               this._options.selectedIndex = undefined;
+            }
          }
          if (!this._options.allowEmptySelection && (this._options.selectedIndex === null || typeof this._options.selectedIndex == 'undefined' || this._options.selectedIndex == -1)) {
             if (this._itemsProjection.getCount()) {
@@ -275,7 +280,13 @@ define('js!SBIS3.CONTROLS.Selectable', ['js!SBIS3.CONTROLS.Data.Utils', 'js!SBIS
          case IBindCollection.ACTION_REMOVE:
          case IBindCollection.ACTION_MOVE:
          case IBindCollection.ACTION_REPLACE:
+         case IBindCollection.ACTION_RESET:
+            var count = this._itemsProjection.getCount();
+            if (this._options.selectedIndex > this._itemsProjection.getCount() - 1) {
+               this._options.selectedIndex = (count > 0) ? count - 1 : -1;
+            }
             this._options.selectedKey = this._itemsProjection.at(this._options.selectedIndex).getContents().getId();
+            this._setSelectedIndex(this._options.selectedIndex, this._options.selectedKey);
       }
    };
 
