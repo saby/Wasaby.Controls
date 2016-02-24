@@ -1795,7 +1795,7 @@ define('js!SBIS3.CONTROLS.ListView',
             if (target.length && target.data('id') != currentElement.targetId) {
                insertAfter = this._getDirectionOrderChange(e, target);
                if (insertAfter !== undefined) {
-                  neighborItem = this[insertAfter ? 'getNextItemById' : 'getPrevItemById'](targetId);
+                  neighborItem = this[insertAfter ? 'getNextItemById' : 'getPrevItemById'](target.data('id'));
                   if (neighborItem && neighborItem.data('id') == currentElement.targetId) {
                      insertAfter = undefined;
                   }
@@ -1843,24 +1843,22 @@ define('js!SBIS3.CONTROLS.ListView',
          },
          _callDropHandler: function(e) {
             var
-                targetId,
                 clickHandler,
-                currentElement;
+                currentElement = this.getCurrentElement(),
+                currentTarget = this._findItemByElement($(e.target));
             //После опускания мыши, ещё раз позовём обработку перемещения, т.к. в момент перед отпусканием мог произойти
             //переход границы между сменой порядкового номера и перемещением в папку, а обработчик перемещения не вызваться,
             //т.к. он срабатывают так часто, насколько это позволяет внутренняя система взаимодействия с мышью браузера.
             this._updateDragTarget(e);
-            currentElement = this.getCurrentElement();
-            if (currentElement.target) {
-               targetId = currentElement.target.data('id');
-               //TODO придрот для того, чтобы если перетащить элемент сам на себя не отработал его обработчик клика
-               if (this.getSelectedKey() == targetId) {
-                  clickHandler = this._elemClickHandler;
-                  this._elemClickHandler = function () {
-                     this._elemClickHandler = clickHandler;
-                  }
+            //TODO придрот для того, чтобы если перетащить элемент сам на себя не отработал его обработчик клика
+            if (currentTarget.length && currentTarget.data('id') == this.getSelectedKey()) {
+               clickHandler = this._elemClickHandler;
+               this._elemClickHandler = function () {
+                  this._elemClickHandler = clickHandler;
                }
-               this._move(currentElement.keys, targetId, currentElement.insertAfter);
+            }
+            if (currentElement.target) {
+               this._move(currentElement.keys, currentElement.target.data('id'), currentElement.insertAfter);
             }
          },
          _beginDropDown: function(e) {
