@@ -142,17 +142,6 @@ define('js!SBIS3.CONTROLS.FieldLink',
             this._options.showAllConfig = this._options.dictionaries[0];
          }
 
-         this.subscribe('onPropertyChanged', function(e, propName) {
-            /* При изменении выбранных элементов в поле связи - сотрём текст,
-             для этого достаточно просто отслеживать опцию selectedKeys,
-             т.к. она гарантированно изменится.
-             Это всё актуально для поля связи без велючённой опции alwaysShowTextBox,
-             если она включена, то логика стирания текста обрабатывается по-другому. */
-            if(propName === 'selectedKeys' && !this._options.alwaysShowTextBox && this.getText()) {
-               this.setText('');
-            }
-         });
-
          if(this._options.oldViews) {
             $ws.single.ioc.resolve('ILogger').log('FieldLink', 'В 3.8.0 будет удалена опция oldViews, а так же поддержка старых представлений данных на диалогах выбора.');
          }
@@ -314,8 +303,18 @@ define('js!SBIS3.CONTROLS.FieldLink',
             this._toggleShowAllLink(false);
          }
 
-         if(!this._options.multiselect && !this._options.alwaysShowTextBox) {
-            this._inputWrapper.toggleClass('ws-hidden', Boolean(keysArrLen))
+         if(!this._options.alwaysShowTextBox) {
+
+            /* При изменении выбранных элементов в поле связи - сотрём текст.
+               Это всё актуально для поля связи без велючённой опции alwaysShowTextBox,
+               если она включена, то логика стирания текста обрабатывается по-другому. */
+            if(this.getText()) {
+               this.setText('');
+            }
+
+            if(!this._options.multiselect) {
+               this._inputWrapper.toggleClass('ws-hidden', Boolean(keysArrLen));
+            }
          }
 
          if(keysArrLen) {
