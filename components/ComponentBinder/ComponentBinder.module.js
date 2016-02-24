@@ -183,8 +183,7 @@ define('js!SBIS3.CONTROLS.ComponentBinder', [], function () {
       setPath: function(path){
          this._path = path;
          if (path.length){
-            this._currentRoot = path[path.length - 1];
-            this._path = path.splice(0, path.length - 1);
+            this._currentRoot = this._path.pop();
          }
          this._options.breadCrumbs.setItems(this._path || []);
          this._options.backButton.setCaption(this._currentRoot.title || '');
