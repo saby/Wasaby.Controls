@@ -52,7 +52,7 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                _eipHandlers: null
             },
             $constructor: function () {
-               this._publish('onItemValueChanged', 'onBeginEdit', 'onAfterBeginEdit', 'onEndEdit', 'onBeginAdd', 'onAfterEndEdit');
+               this._publish('onItemValueChanged', 'onBeginEdit', 'onAfterBeginEdit', 'onEndEdit', 'onBeginAdd', 'onAfterEndEdit', 'onInitEditInPlace');
                this._eipHandlers = {
                   onKeyDown: this._onKeyDown.bind(this)
                };
@@ -63,6 +63,8 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
             },
 
             _getEditInPlaceConfig: function() {
+               var
+                   self = this;
                return {
                   editingTemplate: this._options.editingTemplate,
                   columns: this._options.columns,
@@ -77,9 +79,12 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                   parent: this,
                   handlers: {
                      onItemValueChanged: function(event, difference, model) {
-                        event.setResult(this._notify('onItemValueChanged', difference, model));
-                     }.bind(this),
-                     onChildFocusOut: this._onChildFocusOut.bind(this)
+                        event.setResult(self._notify('onItemValueChanged', difference, model));
+                     },
+                     onChildFocusOut: this._onChildFocusOut.bind(this),
+                     onInit: function() {
+                        self._notify('onInitEditInPlace', this);
+                     }
                   }
                };
             },
@@ -142,6 +147,7 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                   if (preparedRecord) {
                      this._eip.edit(target, preparedRecord);
                      this._notify('onAfterBeginEdit', preparedRecord);
+                     return preparedRecord;
                   }
                }.bind(this));
             },
@@ -200,49 +206,66 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                   record = eip.getEditingRecord();
                   withSaving = withSaving && record.isChanged();
                   endEditResult = this._notify('onEndEdit', record, withSaving);
-                  if (endEditResult !== undefined) {
-                     withSaving = endEditResult;
+                  if (endEditResult instanceof $ws.proto.Deferred) {
+                     return endEditResult.addCallback(function(result) {
+                        return this._endEdit(eip, withSaving, result);
+                     }.bind(this));
+                  } else {
+                     return this._endEdit(eip, withSaving, endEditResult);
                   }
-                  if (!withSaving || eip.validate()) {
-                     eip.endEdit();
-                     this._savingDeferred = new $ws.proto.Deferred();
-                     this._sendLockCommand(this._savingDeferred);
-                     if (withSaving) {
-                        eip.applyChanges().addCallback(function() {
-                           this._endEdit(eip, withSaving);
-                        }.bind(this))
-                     } else {
-                        this._endEdit(eip, withSaving);
-                     }
-                     return this._savingDeferred;
-                  }
-                  return $ws.proto.Deferred.fail();
+
                }
                return this._savingDeferred;
+            },
+            _endEdit: function(eip, withSaving, endEditResult) {
+               if (endEditResult !== undefined) {
+                  withSaving = endEditResult;
+               }
+               if (!withSaving || eip.validate()) {
+                  eip.endEdit();
+                  this._savingDeferred = new $ws.proto.Deferred();
+                  this._sendLockCommand(this._savingDeferred);
+                  if (withSaving) {
+                     eip.applyChanges().addCallback(function() {
+                        this._afterEndEdit(eip, withSaving);
+                     }.bind(this))
+                  } else {
+                     this._afterEndEdit(eip, withSaving);
+                  }
+                  return this._savingDeferred;
+               }
+               return $ws.proto.Deferred.fail();
             },
             _getEditingEip: function() {
                return this._eip.isEdit() ? this._eip : null;
              },
-            _endEdit: function(eip, withSaving) {
+            _afterEndEdit: function(eip, withSaving) {
                var
                   target = eip.getTarget(),
-                  eipRecord = eip.getEditingRecord();
+                  eipRecord = eip.getEditingRecord(),
+                  isAdd = !eipRecord.isStored();
                if (this._editingRecord) {
                   this._editingRecord.merge(eipRecord);
                   this._editingRecord = undefined;
                }
-               if (!this._options.dataSet.getRecordByKey(eipRecord.getKey())) {
-                  withSaving ? this._options.dataSet.push(eipRecord) : target.remove();
-               }
+               isAdd && target.remove();
                if (withSaving) {
-                  this._options.dataSource.sync(this._options.dataSet).addCallback(function() {
-                     this._savingDeferred.callback();
-                     this._notify('onAfterEndEdit', this._options.dataSet.getRecordByKey(eipRecord.getKey()), target, withSaving);
+                  this._options.dataSource.update(eipRecord).addCallback(function() {
+                     isAdd && this._options.dataSet.push(eipRecord);
+                  }.bind(this)).addBoth(function() {
+                     eip.endEdit();
+                     this._notifyOnAfterEndEdit(eipRecord, target, withSaving);
                   }.bind(this));
                } else {
-                  this._savingDeferred.callback();
-                  this._notify('onAfterEndEdit', eipRecord, target, withSaving);
+                  eip.endEdit();
+                  this._notifyOnAfterEndEdit(eipRecord, target, withSaving);
                }
+            },
+            _notifyOnAfterEndEdit: function(eipRecord, target, withSaving) {
+               if (!this._savingDeferred.isReady()) {
+                  this._savingDeferred.callback();
+               }
+               this._notify('onAfterEndEdit', eipRecord, target, withSaving);
             },
             add: function(model, options) {
                var
@@ -253,6 +276,7 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                   return self._options.dataSource.create(model).addCallback(function (record) {
                      target.attr('data-id', '' + record.getKey());
                      self._eip.edit(target, record);
+                     self._notify('onAfterBeginEdit', record);
                      return record;
                   });
                });
@@ -260,7 +284,8 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
             _createAddTarget: function(options) {
                var
                    footer,
-                   target = $('<div class="js-controls-ListView__item"></div>');
+                   target = this._options.columns ? $('<tr>') : $('<div>');
+               target.addClass("js-controls-ListView__item");
                if (options && options.initiator) {
                   footer = options.initiator.closest('.controls-TreeDataGridView__folderFooter');
                }

@@ -84,6 +84,7 @@ define('js!SBIS3.CONTROLS.ComboBox', [
          _delayedSettingTextByKey: false,
          _keysWeHandle: [$ws._const.key.up, $ws._const.key.down, $ws._const.key.enter],
          _options: {
+            focusOnActivatedOnMobiles: false,
             /**
              * @cfg {String} Шаблон отображения каждого элемента коллекции
              * @example
@@ -168,19 +169,23 @@ define('js!SBIS3.CONTROLS.ComboBox', [
       _keyboardHover: function (e) {
          var
             selectedKey = this.getSelectedKey(),
-            selectedItem, nextItem, previousItem;
+            selectedItem, newSelectedItem, newSelectedItemId;
          if (this._picker) {
             var
                items = $('.controls-ListView__item', this._picker.getContainer().get(0));
 
             selectedItem = $('.controls-ComboBox__itemRow__selected', this._picker.getContainer());
-            nextItem = (selectedKey) ? selectedItem.next('.controls-ListView__item') : items.eq(0);
-            previousItem = (selectedKey) ? selectedItem.prev('.controls-ListView__item') : items.eq(0);
             //навигация по стрелкам
             if (e.which === $ws._const.key.up) {
-               previousItem.length ? this.setSelectedKey(previousItem.data('id')) : this.setSelectedKey(selectedKey);
+               newSelectedItem = selectedKey ? selectedItem.prev('.controls-ListView__item') : items.eq(0);
             } else if (e.which === $ws._const.key.down) {
-               nextItem.length ? this.setSelectedKey(nextItem.data('id')) : this.setSelectedKey(selectedKey);
+               newSelectedItem = selectedKey ? selectedItem.next('.controls-ListView__item') : items.eq(0);
+            }
+            if (newSelectedItem && newSelectedItem.length) {
+               newSelectedItemId = newSelectedItem.data('id');
+               this.setSelectedKey(newSelectedItemId);
+               this._scrollToItem(newSelectedItemId);
+               this.setActive(true); // После подскролливания возвращаем фокус в контейнер компонента
             }
          }
          else {

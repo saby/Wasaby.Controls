@@ -14,7 +14,7 @@ define('js!SBIS3.CONTROLS.ControlsValidators', [],function() {
                isEmpty = !Boolean(option);
                break;
             case 'number' :
-               isEmpty = false;
+               isEmpty = isNaN(option);
                break;
             case 'object' :
                if(option instanceof $ws.proto.Enum) {

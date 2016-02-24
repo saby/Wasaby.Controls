@@ -89,8 +89,17 @@ define('js!SBIS3.CONTROLS.Data.Projection.ITree', [
       },
 
       /**
+       * Устанавливает корневой узел дерева
+       * @param {SBIS3.CONTROLS.Data.Projection.ITreeItem|*} root Корневой узел или его содержимое
+       * @returns {SBIS3.CONTROLS.Data.Projection.ITreeItem}
+       */
+      setRoot: function (root) {
+         throw new Error('Method must be implemented');
+      },
+
+      /**
        * Возвращает коллекцию потомков элемента коллеции
-       * @param {SBIS3.CONTROLS.Data.Projection.ITreeItem} parent Элемент коллекции
+       * @param {SBIS3.CONTROLS.Data.Projection.ITreeItem} parent Родительский узел
        * @returns {SBIS3.CONTROLS.Data.Projection.ITreeChildren}
        */
       getChildren: function (parent) {

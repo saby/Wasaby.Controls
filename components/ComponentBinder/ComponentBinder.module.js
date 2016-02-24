@@ -32,7 +32,7 @@ define('js!SBIS3.CONTROLS.ComponentBinder', [], function () {
          }
          this._firstSearch = false;
          this._searchReload = true;
-         // TODO нафиг это надо
+         //Это нужно чтобы поиск был от корня, а крошки при этом отображаться не должны
          if (this._options.breadCrumbs) {
             this._options.breadCrumbs.setItems([]);
          }
@@ -114,7 +114,7 @@ define('js!SBIS3.CONTROLS.ComponentBinder', [], function () {
 
    function breakSearch(searchForm, withReload){
       this._searchReload = !!withReload;
-      this._firstSearch = true;
+      this._firstSearch = !!withReload;
       //Если в строке поиска что-то есть, очистим и сбросим Фильтр
       if (searchForm.getText()) {
          searchForm.setText('');
@@ -198,16 +198,24 @@ define('js!SBIS3.CONTROLS.ComponentBinder', [], function () {
          searchForm = searchForm || this._options.searchForm;
          if (isTree){
             this._lastRoot = view.getCurrentRoot();
-            //searchForm.subscribe('onReset', resetGroup);
-            view.subscribe('onSetRoot', function(){
-               self._lastRoot = view.getCurrentRoot();
+            view.subscribe('onBeforeSetRoot', function(ev, newRoot){
+               self._lastRoot = newRoot;
+               breakSearch.call(self, searchForm, false);
+            });
+            view.subscribe('onSetRoot', function(event, curRoot, hierarchy){
+               self._lastRoot = curRoot;
+               if (self._options.breadCrumbs){
+                  self._pathDSRawData = $ws.core.clone(hierarchy);
+               }
                if (self._options.backButton) {
                   self._options.backButton.getContainer().css({'visibility': 'visible'});
                }
             });
             //Перед переключением в крошках в режиме поиска сбросим фильтр поиска
-            view.subscribe('onSearchPathClick', function(){
-               breakSearch.call(self, searchForm, true);
+            view.subscribe('onSearchPathClick', function(ev, id){
+               //Теперь весь функционал переключения находится здесь, из HierarchyDGView только оповещение о действии
+               view.setCurrentRoot(id);
+               view.reload();
             });
          }
 

@@ -81,7 +81,7 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl'],
       },
       
       $constructor: function() {
-         this._publish('onSubmit');
+         this._publish('onBeforeSubmit', 'onSubmit');
          $ws.single.CommandDispatcher.declareCommand(this, 'submit', this.submit);
          if (this._options.dataSource){
             this._runQuery();
@@ -102,8 +102,18 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl'],
        * </pre>
        */
       submit: function(){
-         var self = this;
-         this._options.dataSource.update(this._options.record).addCallback(function(){
+         var
+            def,
+            self = this,
+            submitResult = this._notify('onBeforeSubmit');
+
+         if (submitResult instanceof $ws.proto.Deferred) {
+            def = submitResult;
+         }
+         else {
+            def = this._options.dataSource.update(this._options.record);
+         }
+         def.addCallback(function(){
             self.getTopParent().ok();
          });
       },
@@ -114,6 +124,12 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl'],
 
       _setContextRecord: function(record){
          this.getLinkedContext().setValue('record', record);               
+      },
+      /**
+       * Получает источник данных диалога редактирования
+       */
+      getDataSource: function(){
+         return this._options.dataSource;
       },
       /**
        * Устанавливает источник данных диалогу редактирования

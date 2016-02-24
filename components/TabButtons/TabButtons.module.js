@@ -17,6 +17,7 @@ define(
 
    /**
     * Контрол, отображающий корешки закладок
+    * Для корректной работы необходимо задание свойсв {@link keyField} и {@link displayField}
     * Для оформления компонентов внутри вкладки, можно использовать следующие классы:
     * <ol>
     *    <li><strong>controls-TabButton__mainText</strong> - параметры текста, как у главной вкладки</li>
@@ -48,6 +49,17 @@ define(
              * </pre>
              */
             itemTemplate: itemTpl,
+            /**
+             * @cfg {Content} содержимое между вкладками
+             * @example
+             * <pre>
+             *     <option name="tabSpaceTemplate">
+             *        <component data-component="SBIS3.CONTROLS.Button" name="Button 1">
+             *           <option name="caption">Кнопка между вкладками</option>
+             *        </component>
+             *     </option>
+             * </pre>
+             */
             tabSpaceTemplate: undefined
          }
       },

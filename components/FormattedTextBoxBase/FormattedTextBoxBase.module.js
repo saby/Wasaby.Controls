@@ -102,6 +102,9 @@ define(
             case 'l':
                regexp = '[А-ЯA-Zа-яa-zёЁ]';
                break;
+            case 'X':
+               regexp = '[A-Za-z0-9]';
+               break;
             case 'x':
             default:
                regexp = '[А-ЯA-Zа-яa-z0-9ёЁ]';
@@ -201,7 +204,7 @@ define(
          var group = [],
             groupInner = [],
             separator = [],
-            groupCharactersRegExp = /[Lldx]/,
+            groupCharactersRegExp = /[LldxX]/,
             maskChar,
             innerChar;
 
@@ -593,6 +596,7 @@ define(
             'd': 'd',
             'L': 'L',
             'l': 'l',
+            'X': 'X',
             'x': 'x'
          },
          /**

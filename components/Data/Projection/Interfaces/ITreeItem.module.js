@@ -41,8 +41,9 @@ define('js!SBIS3.CONTROLS.Data.Projection.ITreeItem', [
       /**
        * Устанавливает родительский узел
        * @param {SBIS3.CONTROLS.Data.Projection.ITreeItem} parent Родительский узел
+       * @param {Boolean} [silent=false] Не генерировать событие
        */
-      setParent: function (parent) {
+      setParent: function (parent, silent) {
          throw new Error('Method must be implemented');
       },
 

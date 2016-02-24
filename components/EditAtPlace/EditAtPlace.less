@@ -38,6 +38,11 @@
     border-width: @edit-at-place-wrapper-border-width;
     border-style: @edit-at-place-wrapper-border-style;
     border-color: @edit-at-place-wrapper-border-color;
+    height: auto;
+
+    .controls-EditAtPlace__placeholder{
+      color: @gray-ccc-color;
+    }
 
     &.controls-EditAtPlace__textAreaWrapper {
       display: block;
@@ -47,7 +52,6 @@
 
     .controls-EditAtPlace__textField {
       display: inline-block;
-      font: inherit;
       width: auto;
       cursor: @edit-at-place-field-cursor;
       border-width: @edit-at-place-field-border-width;
@@ -63,16 +67,11 @@
     border-color: @edit-at-place-editor-border-color;
 
     .controls-TextBox {
-      .controls-TextBox__fieldWrapper {
-        .controls-TextBox__field {
-          font: @edit-at-place-text-box-editor-font;
-        }
-      }
+      line-height: 24px;
     }
 
     .controls-TextArea {
       .controls-TextArea__inputField {
-        font: @edit-at-place-text-area-editor-font;
       }
     }
   }
@@ -95,7 +94,6 @@
   padding: @edit-at-place-editor-overlay-padding;
   border: @edit-at-place-editor-overlay-border;
   .border-radius(@edit-at-place-editor-overlay-border-radius);
-  .box-shadow(@edit-at-place-editor-overlay-shadow);
   background: @edit-at-place-editor-overlay-bg;
 
   .controls-TextBox {

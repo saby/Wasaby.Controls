@@ -144,12 +144,6 @@ define('js!SBIS3.CONTROLS.TreeCompositeView', ['js!SBIS3.CONTROLS.TreeDataGridVi
             }
             return resultTpl;
       },
-      //TODO Авраменко:EIP редактирование по месту должно правильно работать во всех режимах отображения, а не только в таблице.
-      _updateEditInPlaceDisplay: function() {
-         if(this.getViewMode() === 'table') {
-            TreeCompositeView.superclass._updateEditInPlaceDisplay.apply(this, arguments);
-         }
-      },
 
       _getTargetContainer: function (item) {
          if (this.getViewMode() != 'table' && item.get(this._options.hierField + '@')) {
@@ -192,7 +186,7 @@ define('js!SBIS3.CONTROLS.TreeCompositeView', ['js!SBIS3.CONTROLS.TreeDataGridVi
                      if (parentKey !== undefined) {
                         result.parentKey = parentKey;
                      }
-                     if (result.$row.hasClass('controls-ListView__item-type-node') || result.$row.hasClass('controls-ListView__item-type-leaf')) {
+                     if (result.$row.hasClass('controls-ListView__item-type-node') || result.$row.hasClass('controls-ListView__item-type-hidden')) {
                         container.find('.controls-ListView__item[data-parent="' + key + '"]').each(function (idx, row) {
                            var rowKey = row.getAttribute('data-id');
                            result.childs.push(findDependents(rowKey, key));
@@ -262,6 +256,7 @@ define('js!SBIS3.CONTROLS.TreeCompositeView', ['js!SBIS3.CONTROLS.TreeDataGridVi
                   } else if (self._limit !== undefined) {
                      limit = (self._folderOffsets.hasOwnProperty(branchId) ? self._folderOffsets[branchId] : 0) + self._limit;
                   }
+                  self._notify('onBeforeDataLoad');
                   return self._callQuery(filter, self.getSorting(), self._offset, limit)
                      .addCallback(function(dataSet) {
                         branchesData[branchId] = dataSet;
