@@ -498,15 +498,15 @@ define('js!SBIS3.CONTROLS.DSMixin', [
              def = this._callQuery(this._options.filter, this.getSorting(), this._offset, this._limit)
                 .addCallback($ws.helpers.forAliveOnly(function (list) {
                    self._toggleIndicator(false);
-                   self._dataSet = list;
-
                    if (self._items) {
                       self._dataLoadedCallback();
                       self._notify('onDataLoad', list);
                       self._items.assign(list);
+                      self._dataSet.assign(list);
                    }
                    else {
                       self._items = list;
+                      self._dataSet = list;
                       self._createDefaultProjection(self._items);
                       self._setItemsEventHandlers();
                       self._itemsReadyCallback();
