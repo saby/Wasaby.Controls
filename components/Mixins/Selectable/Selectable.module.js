@@ -97,7 +97,12 @@ define('js!SBIS3.CONTROLS.Selectable', ['js!SBIS3.CONTROLS.Data.Utils', 'js!SBIS
          }
          else {
             this._selectMode = 'index';
-            this._options.selectedIndex = index;
+            if (this._itemsProjection.getCount()) {
+               this._options.selectedIndex = index;
+            }
+            else {
+               this._options.selectedIndex = undefined;
+            }
          }
          if (!this._options.allowEmptySelection && (this._options.selectedIndex === null || typeof this._options.selectedIndex == 'undefined' || this._options.selectedIndex == -1)) {
             if (this._itemsProjection.getCount()) {
