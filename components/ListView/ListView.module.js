@@ -562,10 +562,12 @@ define('js!SBIS3.CONTROLS.ListView',
          /**
           * Возвращает следующий элемент
           * @param id
-          * @returns {*}
+          * @returns {jQuery}
           */
          getNextItemById: function (id) {
-            return this._getItem(id, true);
+            return this._getHtmlItemByProjectionItem(
+               this._getProjectionItem(id, true)
+            );
          },
          /**
           * Возвращает предыдущий элемент
@@ -573,7 +575,9 @@ define('js!SBIS3.CONTROLS.ListView',
           * @returns {jQuery}
           */
          getPrevItemById: function (id) {
-            return this._getItem(id, false);
+            return this._getHtmlItemByProjectionItem(
+               this._getProjectionItem(id, false)
+            );
          },
 
          _getNextItemByDOM: function(id) {
@@ -584,10 +588,12 @@ define('js!SBIS3.CONTROLS.ListView',
             return this._getHtmlItemByDOM(id, false);
          },
 
-         _getItem: function(id, isNext) {
-            var index = this._itemsProjection.getEnumerator().getIndexByValue(this._options.keyField, id),
-               item;
-            item = this._itemsProjection.at(isNext ? ++index : --index);
+         _getProjectionItem: function(id, isNext) {
+            var index = this._itemsProjection.getEnumerator().getIndexByValue(this._options.keyField, id);
+            return this._itemsProjection.at(isNext ? ++index : --index);
+         },
+
+         _getHtmlItemByProjectionItem: function (item) {
             if (item) {
                return $('.js-controls-ListView__item[data-id="' + item.getContents().getId() + '"]', this._getItemsContainer());
             }
