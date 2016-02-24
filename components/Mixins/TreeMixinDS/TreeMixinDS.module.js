@@ -58,6 +58,11 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', ['js!SBIS3.CORE.Control',
              * @cfg {Boolean} Опция задаёт режим разворота. false Без разворота
              */
             expand: false,
+            /**
+             * @cfg {Boolean} Запрашивать записи для папки если в текущем наборе данных их нет
+             * @noShow
+             */
+            loadEmptyFolders: false,
             openedPath : {},
             folderFooterTpl: undefined,
             /**
@@ -187,7 +192,7 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', ['js!SBIS3.CORE.Control',
                   }
                });
             }
-            if (!tree[key]) {
+            if (!tree[key] && this._options.loadEmptyFolders) {
                this._toggleIndicator(true);
                return this._callQuery(this._createTreeFilter(key), this.getSorting(), 0, this._limit).addCallback(function (dataSet) {
                   // TODO: Отдельное событие при загрузке данных узла. Сделано так как тут нельзя нотифаить onDataLoad,
@@ -205,8 +210,8 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', ['js!SBIS3.CORE.Control',
                   for (var i = 0; i < child.length; i++) {
                      records.push(this._dataSet.getRecordById(child[i]));
                   }
-                  this._notify('onNodeExpand', key);
                }
+               this._notify('onNodeExpand', key);
             }
          }
       },
