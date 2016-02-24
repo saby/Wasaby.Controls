@@ -184,6 +184,8 @@ define('js!SBIS3.CONTROLS.ComponentBinder', [], function () {
          this._path = path;
          if (path.length){
             this._currentRoot = this._path.pop();
+         } else {
+            this._currentRoot = {};
          }
          this._options.breadCrumbs.setItems(this._path || []);
          this._options.backButton.setCaption(this._currentRoot.title || '');
