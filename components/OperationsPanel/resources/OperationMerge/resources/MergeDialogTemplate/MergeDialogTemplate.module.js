@@ -110,23 +110,26 @@ define('js!SBIS3.CONTROLS.MergeDialogTemplate', [
                 mergeKeys = this._getMergedKeys(mergeTo, true);
             this._showIndicator();
             this._options.dataSource.merge(mergeTo, mergeKeys).addErrback(function(errors) {
-                var
-                    errorsTexts = [],
-                    count = mergeKeys.length,
-                    errorsRecordSet = errors.addinfo;
-                //TODO: переделать на создание recordSet
-                $ws.helpers.forEach(errorsRecordSet.d, function(item) {
-                    errorsTexts.push(item[1]);
-                });
-                $ws.helpers.openErrorsReportDialog({
-                    'numSelected': count,
-                    'numSuccess': count - errorsRecordSet.d.length,
-                    'errors': errorsTexts,
-                    'title': self._options.errorMessage
-                });
-            }).addBoth(function() {
-                self.sendCommand('close', { mergeTo: mergeTo, mergeKeys: mergeKeys });
+                self._showErrorDialog(mergeKeys, errors);
+            }).addBoth(function(result) {
+                self.sendCommand('close', { mergeTo: mergeTo, mergeKeys: mergeKeys, mergeResult: result });
                 self._hideIndicator();
+            });
+        },
+        _showErrorDialog: function(mergeKeys, errors) {
+            var
+                errorsTexts = [],
+                count = mergeKeys.length,
+                errorsRecordSet = errors.addinfo;
+            //TODO: переделать на создание recordSet
+            $ws.helpers.forEach(errorsRecordSet.d, function (item) {
+                errorsTexts.push(item[1]);
+            });
+            $ws.helpers.openErrorsReportDialog({
+                'numSelected': count,
+                'numSuccess': count - errorsRecordSet.d.length,
+                'errors': errorsTexts,
+                'title': this._options.errorMessage
             });
         },
         _getMergedKeys: function(withoutKey, onlyAvailable) {
@@ -162,7 +165,7 @@ define('js!SBIS3.CONTROLS.MergeDialogTemplate', [
                     record.set(AVAILABLE_FIELD_NAME, isAvailable);
                     record.set(COMMENT_FIELD_NAME, rec.get(COMMENT_FIELD_NAME));
                 }, self);
-                treeView.reload();
+                treeView.redraw();
                 self._applyContainer.toggleClass('ws-hidden', !showMergeButton);
             }).addBoth(function() {
                 self._hideIndicator();
