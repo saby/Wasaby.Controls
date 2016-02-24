@@ -107,6 +107,8 @@ define('js!SBIS3.CONTROLS.OperationsPanel', [
          this._container.removeClass('ws-area');
       },
       init: function() {
+         OperationsPanel.superclass.init.call(this);
+
          //Отрисуем элементы если панель изначально показана
          if (this.isVisible()) {
             this.reload();
