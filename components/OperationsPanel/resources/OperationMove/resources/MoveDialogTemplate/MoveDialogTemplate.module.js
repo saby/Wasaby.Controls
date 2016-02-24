@@ -68,6 +68,12 @@ define('js!SBIS3.CONTROLS.MoveDialogTemplate', [
          });
          rootBlock.prependTo(self._container.find('tbody'));
          self.setSelectedKey('null');
+         //TODO: Установим марке отметки на фейковый корень по таймауту т.к. сначала стреляет событие onDrawItems по которому
+         //вызывается данный метод, а потом отрабатывает метод _drawItemsCallback который в Selectable.module.js
+         //убирает маркер т.к. не находит запись с id='null' в наборе данных.
+         setTimeout(function() {
+            rootBlock.addClass('controls-ListView__item__selected');
+         }, 0);
       }
    });
 
