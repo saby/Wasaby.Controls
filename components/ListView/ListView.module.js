@@ -1005,7 +1005,7 @@ define('js!SBIS3.CONTROLS.ListView',
             //options.editFieldFocusHandler = this._editFieldFocusHandler.bind(this) - подумать, как это сделать
             var
                config = {
-                  dataSet: this._dataSet,
+                  dataSet: this._items,
                   editingItem: this._editingItem,
                   ignoreFirstColumn: this._options.multiselect,
                   columns: this._options.columns,
