@@ -13,7 +13,7 @@ define('js!SBIS3.CONTROLS.Data.Projection.Enum', [
     * @author Ганшнин Ярослав
     */
 
-   var EnumProjection = CollectionProjection.extend([], /** @lends SBIS3.CONTROLS.Data.Projection.Collection.prototype */{
+   var EnumProjection = CollectionProjection.extend([], /** @lends SBIS3.CONTROLS.Data.Projection.Enum.prototype */{
       _moduleName: 'SBIS3.CONTROLS.Data.Projection.Enum',
 
       _convertItem: function(item) {
