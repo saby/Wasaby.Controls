@@ -4,7 +4,13 @@ define('js!SBIS3.CONTROLS.Data.ContextField.Enum', [
 ], function (ContextFieldBase) {
    'use strict';
 
-   return $ws.core.extend(ContextFieldBase, [], {
+   /**
+    * Поддержка типа перечисляемое в контексте
+    * @class SBIS3.CONTROLS.Data.ContextField.Enum
+    * @extends SBIS3.CONTROLS.Data.ContextField.Base
+    * @author Мальцев Алексей
+    */
+   return $ws.core.extend(ContextFieldBase, [], /** @lends SBIS3.CONTROLS.Data.ContextField.Enum.prototype*/{
       $protected: {
          _options: {
             module: undefined

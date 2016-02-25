@@ -5,7 +5,14 @@ define('js!SBIS3.CONTROLS.Data.ContextField.Flags', [
 ], function (RecordMixin, ContextFieldBase) {
    'use strict';
 
-   return $ws.core.extend(ContextFieldBase, [RecordMixin], {
+   /**
+    * Поддержка типа флаги в контексте
+    * @class SBIS3.CONTROLS.Data.ContextField.Flags
+    * @mixes SBIS3.CONTROLS.Data.ContextField.RecordMixin
+    * @extends SBIS3.CONTROLS.Data.ContextField.Base
+    * @author Мальцев Алексей
+    */
+   return $ws.core.extend(ContextFieldBase, [RecordMixin], /** @lends SBIS3.CONTROLS.Data.ContextField.Flags.prototype*/{
       $protected: {
          _options: {
             module: undefined
