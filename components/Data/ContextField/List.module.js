@@ -3,7 +3,14 @@ define('js!SBIS3.CONTROLS.Data.ContextField.List', [
    'js!SBIS3.CONTROLS.Data.ContextField.Base'
 ], function (ContextFieldBase) {
    'use strict';
-   var ContextFieldRecordSet =  $ws.core.extend(ContextFieldBase, [], {
+
+   /**
+    * Поддержка типа список в контексте
+    * @class SBIS3.CONTROLS.Data.ContextField.List
+    * @extends SBIS3.CONTROLS.Data.ContextField.Base
+    * @author Мальцев Алексей
+    */
+   var ContextFieldRecordSet =  $ws.core.extend(ContextFieldBase, [], /** @lends SBIS3.CONTROLS.Data.ContextField.List.prototype*/{
       $protected: {
          _options: {
             module: undefined

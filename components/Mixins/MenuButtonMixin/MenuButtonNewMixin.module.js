@@ -2,13 +2,13 @@
 define('js!SBIS3.CONTROLS.MenuButtonNewMixin', ['js!SBIS3.CONTROLS.ContextMenuNew'], function(ContextMenu) {
    /**
     * Миксин, добавляющий поведение хранения одного или нескольких выбранных элементов
-    * @mixin SBIS3.CONTROLS.MenuButtonMixin
+    * @mixin SBIS3.CONTROLS.MenuButtonNewMixin
     * @public
     * @author Крайнов Дмитрий Олегович
     */
    'use strict';
 
-   var MenuButtonMixin = /**@lends SBIS3.CONTROLS.MenuButtonMixin.prototype  */{
+   var MenuButtonMixin = /**@lends SBIS3.CONTROLS.MenuButtonNewMixin.prototype  */{
        /**
         * @event onMenuItemActivate При активации пункта меню
         * @param {$ws.proto.EventObject} eventObject Дескриптор события.

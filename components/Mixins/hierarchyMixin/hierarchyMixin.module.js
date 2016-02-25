@@ -149,13 +149,15 @@ define('js!SBIS3.CONTROLS.hierarchyMixin', [], function () {
          }
          this.setFilter(filter, true);
          this._notify('onBeforeSetRoot');
-         this._itemsProjection.setRoot(key || this._options.root || null);
          this._hier = this._getHierarchy(this._dataSet, key);
          //узел грузим с 0-ой страницы
          this._offset = 0;
          //Если добавить проверку на rootChanged, то при переносе в ту же папку, из которой искали ничего не произойдет
          this._notify('onBeforeSetRoot', key);
          this._curRoot = key || this._options.root;
+         if (this._itemsProjection) {
+            this._itemsProjection.setRoot(this._curRoot || null);
+         }
       },
       after : {
          //TODO:После каждого релоада проверяется флаг _rootChanged и если флаг взведен,
