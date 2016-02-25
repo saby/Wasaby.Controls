@@ -290,7 +290,9 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', ['js!SBIS3.CORE.Control',
 
       _nodeDataLoaded : function(key, dataSet) {
          var self = this;
+         this._needToRedraw = false;
          this._dataSet.merge(dataSet, {remove: false});
+         this._needToRedraw = true;
          this._dataSet.getTreeIndex(this._options.hierField, true);
          var records = [];
          dataSet.each(function (record) {
