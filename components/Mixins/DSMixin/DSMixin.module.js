@@ -1116,6 +1116,15 @@ define('js!SBIS3.CONTROLS.DSMixin', [
       	return this._isDrawn && !!this._getItemsContainer();
       },
 
+      _moveItem: function(item, to){
+         var targetNode = this._getTargetContainer(item),
+            fromContainer = this._getItemContainer(targetNode, item),
+            toContainer = this._getItemContainerByIndex(targetNode, to);
+         if (fromContainer.length && toContainer.length) {
+            fromContainer.insertBefore(toContainer);
+         }
+      },
+
       _removeItem: function (item) {
          item = item.getContents();
          var container = this._getItemContainer(this._getTargetContainer(item), item);
@@ -1179,7 +1188,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
 	               for (i = 0; i < newItems.length; i++) {
 	                  this._addItem(
 	                     newItems[i],
-	                        newItemsIndex + i
+                        newItemsIndex + i
 	                  );
 	               }
 	               //this._view.checkEmpty(); toggleEmtyData
@@ -1189,13 +1198,13 @@ define('js!SBIS3.CONTROLS.DSMixin', [
 
 	            case IBindCollection.ACTION_MOVE:
 	               for (i = 0; i < newItems.length; i++) {
-	                  this._view.moveItem(
+	                  this._moveItem(
 	                     newItems[i],
-	                        newItemsIndex + i
+	                     newItemsIndex + i
 	                  );
 	               }
 	               this.reviveComponents();
-                   this._drawItemsCallback();
+                  this._drawItemsCallback();
 	               break;
 
 	            case IBindCollection.ACTION_REPLACE:
@@ -1204,12 +1213,8 @@ define('js!SBIS3.CONTROLS.DSMixin', [
 	                     newItems[i]
 	                  );
 	               }
-	               this._view.selectItem(
-	                  this._itemsProjection.getCurrent(),
-	                  this._itemsProjection.getCurrentPosition()
-	               );
 	               this.reviveComponents();
-                   this._drawItemsCallback();
+                  this._drawItemsCallback();
 	               break;
 
 	            case IBindCollection.ACTION_RESET:
