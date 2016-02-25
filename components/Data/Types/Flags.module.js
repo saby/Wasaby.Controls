@@ -8,7 +8,8 @@ define('js!SBIS3.CONTROLS.Data.Types.Flags', [
    'use strict';
    /**
     * Тип данных набор флагов
-    * @mixin SBIS3.CONTROLS.Data.Collection.IEnumerable
+    * @class SBIS3.CONTROLS.Data.Types.Flags
+    * @mixes SBIS3.CONTROLS.Data.Collection.IEnumerable
     * @public
     * @author Ганшин Ярослав
     */
