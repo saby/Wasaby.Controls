@@ -15,8 +15,14 @@ define('js!SBIS3.CONTROLS.MenuButton', ['js!SBIS3.CONTROLS.Button', 'js!SBIS3.CO
     * <component data-component='SBIS3.CONTROLS.MenuButton'>
     *    <option name='caption' value='Кнопка с меню'></option>
     *    <options name="items" type="array">
-    *       <option value="Пункт 1"></option>
-    *       <option value="Пункт 2"></option>
+    *        <options>
+    *            <option name="id">1</option>
+    *            <option name="title">Пункт1</option>
+    *        </options>
+    *        <options>
+    *            <option name="id">2</option>
+    *            <option name="title">Пункт2</option>
+    *        </options>
     *    </options>
     * </component>
     * @public
