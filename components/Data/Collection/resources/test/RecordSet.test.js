@@ -15,33 +15,36 @@ define([
 
 
          beforeEach(function() {
-            items = [{
-               'Ид': 1,
-               'Фамилия': 'Иванов'
-            }, {
-               'Ид': 2,
-               'Фамилия': 'Петров'
-            }, {
-               'Ид': 3,
-               'Фамилия': 'Сидоров'
-            }, {
-               'Ид': 4,
-               'Фамилия': 'Пухов'
-            }, {
-               'Ид': 5,
-               'Фамилия': 'Молодцов'
-            }, {
-               'Ид': 6,
-               'Фамилия': 'Годолцов'
-            }, {
-               'Ид': 7,
-               'Фамилия': 'Арбузнов'
-            }, {
-               'Ид': 8,
-               'Фамилия': 'Арбузнов'
-            }];
+            getItems = function (){
+               return [{
+                  'Ид': 1,
+                  'Фамилия': 'Иванов'
+               }, {
+                  'Ид': 2,
+                  'Фамилия': 'Петров'
+               }, {
+                  'Ид': 3,
+                  'Фамилия': 'Сидоров'
+               }, {
+                  'Ид': 4,
+                  'Фамилия': 'Пухов'
+               }, {
+                  'Ид': 5,
+                  'Фамилия': 'Молодцов'
+               }, {
+                  'Ид': 6,
+                  'Фамилия': 'Годолцов'
+               }, {
+                  'Ид': 7,
+                  'Фамилия': 'Арбузнов'
+               }, {
+                  'Ид': 8,
+                  'Фамилия': 'Арбузнов'
+               }];
+            };
+            items = getItems();
             rs = new RecordSet({
-               rawData: $ws.core.clone(items),
+               rawData: getItems(),
                idProperty: 'Ид'
             });
          });
@@ -138,7 +141,7 @@ define([
             });
             it('should return true for the same recordset', function () {
                var same = new RecordSet({
-                  rawData: $ws.core.clone(items)
+                  rawData: getItems()
                });
                assert.isTrue(rs.isEqual(same));
             });
@@ -154,35 +157,35 @@ define([
             });
             it('should return false if record added', function () {
                var same = new RecordSet({
-                  rawData: $ws.core.clone(items)
+                  rawData: items
                });
                same.add(rs.at(0).clone());
                assert.isFalse(rs.isEqual(same));
             });
             it('should return true if same record replaced', function () {
                var same = new RecordSet({
-                  rawData: $ws.core.clone(items)
+                  rawData: getItems(items)
                });
                same.replace(rs.at(0).clone(), 0);
                assert.isTrue(rs.isEqual(same));
             });
             it('should return false if not same record replaced', function () {
                var same = new RecordSet({
-                  rawData: $ws.core.clone(items)
+                  rawData: getItems(items)
                });
                same.replace(rs.at(1).clone(), 0);
                assert.isFalse(rs.isEqual(same));
             });
             it('should return false if record removed', function () {
                var same = new RecordSet({
-                  rawData: $ws.core.clone(items)
+                  rawData: getItems(items)
                });
                same.removeAt(0);
                assert.isFalse(rs.isEqual(same));
             });
             it('should return false if record updated', function () {
                var same = new RecordSet({
-                  rawData: $ws.core.clone(items)
+                  rawData: getItems(items)
                });
                same.at(0).set('Фамилия', 'Aaa');
                assert.isFalse(rs.isEqual(same));
@@ -386,7 +389,7 @@ define([
                source.query().addCallback(function(ds){
                   var rs = ds.getAll(),
                      length = rs.getCount(),
-                     item_2 = $ws.core.clone(rs.at(0));
+                     item_2 = getItems(rs.at(0));
                   rs.at(2).setDeleted(true);
                   rs.at(6).setDeleted(true);
                   rs.saveChanges(source);
@@ -484,30 +487,6 @@ define([
                   'Фамилия': 'Пушкин1'
                }]);
                assert.equal(rs.getIndex(rs.at(1)), 1);
-            });
-         });
-
-         describe('.toJSON()', function () {
-            it('should serialize a RecordSet', function () {
-               var json = rs.toJSON();
-               assert.strictEqual(json.module, 'SBIS3.CONTROLS.Data.Collection.RecordSet');
-               assert.isNumber(json.id);
-               assert.isTrue(json.id > 0);
-               assert.deepEqual(json.state._options, rs._options);
-            });
-            it('should hide type signature in rawData', function () {
-               var rs = new RecordSet({
-                     rawData: {
-                        _type: 'recordset',
-                        s: [1],
-                        d: [2]
-                     }
-                  }),
-                  json = rs.toJSON();
-               assert.isUndefined(json.state._options.rawData._type);
-               assert.strictEqual(json.state._options.rawData.$type, 'recordset');
-               assert.deepEqual(json.state._options.rawData.s, [1]);
-               assert.deepEqual(json.state._options.rawData.d, [2]);
             });
          });
 
@@ -654,7 +633,7 @@ define([
          });
 
          describe('.getTreeIndex()', function (){
-            it('should set meta data', function() {
+            it('should return TreeIndex', function() {
                var rs =  new RecordSet({
                   rawData: [{
                      'Ид': 1,
@@ -662,15 +641,13 @@ define([
                   }, {
                      'Ид': 2,
                      'Раздел': 1
-                  }]
+                  }],
+                  idProperty: 'Ид'
                });
                var index = rs.getTreeIndex('Раздел');
-               assert.equal(index.null);
+               assert.deepEqual(index.null, [1]);
             });
          });
-
-
-
       });
    }
 );
