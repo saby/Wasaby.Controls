@@ -59,20 +59,19 @@ define('js!SBIS3.CONTROLS.MoveDialogTemplate', [
       _onDataLoad: function(event, data) {
          var
              root = {},
-             newData = data.clone(),
              self = this.getParent(),
              hierField = this.getHierField();
          //Установим всем записям в родителя фейковый корень
-         newData.each(function(item) {
+         data.each(function(item) {
             item.set(hierField, self._options.rootNodeId);
          });
          //Создадим и подкинем фейковый корень
+         root[this._options.keyField] = self._options.rootNodeId;
          root[hierField] = null;
          root[hierField + '@'] = true;
-         root[this._options.keyField] = self._options.rootNodeId;
          root[this._options.displayField] = self._options.rootNodeName;
-         newData.push(root);
-         event.setResult(newData);
+         data.push(root);
+         event.setResult(data);
       },
       //TODO: после второго создания диалога начинает падать ошибка: SBIS3.CONTROLS.Data.Projection.CollectionEnumerator: position is out of bounds
       //Разобраться с Мальцевым в чём проблема и поправить в 3.7.4 задав опцию selectedKey через шаблон.
