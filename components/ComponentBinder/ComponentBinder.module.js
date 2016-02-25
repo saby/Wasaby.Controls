@@ -88,7 +88,7 @@ define('js!SBIS3.CONTROLS.ComponentBinder', [], function () {
       if (this._firstSearch) {
          return;
       }
-      view.getItemsProjection().setParentProperty(this._lastParentProperty);
+      view._itemsProjection.setParentProperty(this._lastParentProperty);
       view.setInfiniteScroll(this._isInfiniteScroll, true);
       view.setGroupBy(this._lastGroup);
       view.setHighlightText('', false);
