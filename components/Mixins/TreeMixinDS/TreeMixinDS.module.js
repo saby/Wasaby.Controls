@@ -43,7 +43,7 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', ['js!SBIS3.CORE.Control',
              * @cfg {Boolean} Запрашивать записи для папки если в текущем наборе данных их нет
              * @noShow
              */
-            partialyReload: false,
+            partialyReload: true,
             openedPath : {},
             folderFooterTpl: undefined
          },
