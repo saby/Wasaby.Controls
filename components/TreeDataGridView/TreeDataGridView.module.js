@@ -43,7 +43,19 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
              * @cfg {Function}
              * Обработчик нажатия на стрелку у папок. Если не задан, стрелка показана не будет
              */
-            arrowActivatedHandler: undefined
+            arrowActivatedHandler: undefined,
+            /**
+             * @cfg {String} Разрешено или нет перемещение элементов "Drag-and-Drop"
+             * @variant "" Запрещено
+             * @variant allow Разрешено
+             * @variant onlyChangeOrder Разрешено только изменение порядка
+             * @variant onlyChangeParent Разрешено только перемещение в папку
+             * @example
+             * <pre>
+             *     <option name="itemsDragNDrop">onlyChangeParent</option>
+             * </pre>
+             */
+            itemsDragNDrop: 'allow'
          },
          _dragStartHandler: undefined
       },
@@ -270,6 +282,7 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
       _notifyOnItemClick: function(id, data, target) {
          var
              res,
+             self = this,
              elClickHandler = this._options.elemClickHandler,
              nodeID = $(target).closest('.controls-ListView__item').data('id'),
              closestExpand = this._findExpandByElement($(target));
@@ -279,7 +292,14 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
          }
          else {
             res = this._notify('onItemClick', id, data, target);
-            if (res !== false) {
+            if (res instanceof $ws.proto.Deferred) {
+               res.addCallback(function(result) {
+                  if (!result) {
+                     self._elemClickHandlerInternal(data, id, target);
+                     elClickHandler && elClickHandler.call(self, id, data, target);
+                  }
+               });
+            } else if (res !== false) {
                this._elemClickHandlerInternal(data, id, target);
                elClickHandler && elClickHandler.call(this, id, data, target);
             }
@@ -314,6 +334,12 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
             else {
                this._activateItem(id);
             }
+         }
+      },
+      _notifyOnDragMove: function(target, insertAfter) {
+         //Если происходит изменение порядкового номера и оно разрешено или если происходит смена родителся и она разрешена, стрельнём событием
+         if (typeof insertAfter === 'boolean' && this._options.itemsDragNDrop !== 'onlyChangeParent' || insertAfter === undefined && this._options.itemsDragNDrop !== 'onlyChangeOrder') {
+            return this._notify('onDragMove', this.getCurrentElement().keys, target.data('id'), insertAfter) !== false;
          }
       },
       /**
