@@ -499,19 +499,20 @@ define('js!SBIS3.CONTROLS.DSMixin', [
                 .addCallback($ws.helpers.forAliveOnly(function (list) {
                    self._toggleIndicator(false);
                    if (self._items) {
-                      self._dataLoadedCallback();
                       self._notify('onDataLoad', list);
                       self._items.assign(list);
                       self._dataSet.assign(list);
+                      self._dataLoadedCallback();
                    }
                    else {
+                      self._notify('onDataLoad', list);
                       self._items = list;
                       self._dataSet = list;
                       self._createDefaultProjection(self._items);
                       self._setItemsEventHandlers();
                       self._itemsReadyCallback();
                       self._dataLoadedCallback();
-                      self._notify('onDataLoad', list);
+
                    }
                    self.redraw();
                    //self._notify('onBeforeRedraw');
