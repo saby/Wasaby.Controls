@@ -1,7 +1,7 @@
 /* global define, $ws */
 define('js!SBIS3.CONTROLS.Data.Adapter.JsonFormatMixin', [
-   'js!SBIS3.CONTROLS.Data.Format.StringField'
-], function (StringField) {
+   'js!SBIS3.CONTROLS.Data.Format.FieldsFactory'
+], function (FieldsFactory) {
    'use strict';
 
    /**
@@ -35,9 +35,7 @@ define('js!SBIS3.CONTROLS.Data.Adapter.JsonFormatMixin', [
             throw new ReferenceError(this._moduleName + '::getFormat(): field "' + name + '" is not exists');
          }
          if (!this._format.hasOwnProperty(name)) {
-            this._format[name] = new StringField({
-               name: name
-            });
+            this._format[name] = this._buildFormat(name);
          }
          return this._format[name].clone();
       },
@@ -62,11 +60,18 @@ define('js!SBIS3.CONTROLS.Data.Adapter.JsonFormatMixin', [
 
       removeFieldAt: function() {
          throw new Error(this._moduleName + '::removeFieldAt() is not supported');
-      }
+      },
 
       //endregion Public methods
 
       //region Protected methods
+      
+      _buildFormat: function(name) {
+         return FieldsFactory.create({
+            name: name,
+            type: 'string'
+         });
+      }
 
       //endregion Protected methods
 

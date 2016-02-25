@@ -13,7 +13,7 @@ define('js!SBIS3.CONTROLS.Data.Format.StringField', [
     */
 
    var StringField = Field.extend(/** @lends SBIS3.CONTROLS.Data.Format.StringField.prototype */{
-      _moduleName: 'SBIS3.CONTROLS.Data.Format.Field',
+      _moduleName: 'SBIS3.CONTROLS.Data.Format.StringField',
       $protected: {
          _options: {
             /**

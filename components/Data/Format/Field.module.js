@@ -11,50 +11,6 @@ define('js!SBIS3.CONTROLS.Data.Format.Field', [
     */
 
    var Field = $ws.core.extend({}, /** @lends SBIS3.CONTROLS.Data.Format.Field.prototype */{
-      /**
-       * @typedef {String} FieldType
-       * @variant Integer Число целое
-       * @variant Double Число вещественное
-       * @variant String Строка
-       * @variant Text Текст
-       * @variant Money Деньги
-       * @variant Date Дата
-       * @variant DateTime Дата и время
-       * @variant Time Время
-       * @variant Boolean Логическое
-       * @variant Hierarchy Иерархия
-       * @variant Identity Идентификатор
-       * @variant Enum Перечисляемое
-       * @variant Flags Флаги
-       * @variant Link Связь
-       * @variant RecordSet Выборка
-       * @variant Record Запись
-       * @variant Binary Двоичное
-       * @variant UUID UUID
-       * @variant RpcFile Файл-RPC
-       * @variant TimeInterval Временной интервал
-       * @variant XML Строка в формате XML
-       * @variant ArrayInteger Массив целых чисел
-       * @variant ArrayDouble Массив вещественных чисел
-       * @variant ArrayString Массив строк
-       * @variant ArrayText Массив текста
-       * @variant ArrayMoney Массив денег
-       * @variant ArrayDate Массив дат
-       * @variant ArrayDateTime Массив дата/время
-       * @variant ArrayTime Массив время
-       * @variant ArrayBoolean Массив логических
-       * @variant ArrayHierarchy Массив иерархий
-       * @variant ArrayIdentity Массив идентификаторов
-       */
-
-      /**
-       * @typedef {Object} FieldDeclaration
-       * @property {String} name Имя поля
-       * @property {FieldType} type Тип поля
-       * @property {*} defaultValue Значение поля по умолчанию
-       * @property {Boolean} nullable Значение может быть null
-       */
-
       _moduleName: 'SBIS3.CONTROLS.Data.Format.Field',
       $protected: {
          _options: {
@@ -63,7 +19,7 @@ define('js!SBIS3.CONTROLS.Data.Format.Field', [
              * @see getDefaultValue
              * @see setDefaultValue
              */
-            defaultValue: undefined,
+            defaultValue: null,
 
             /**
              * @cfg {String} Имя поля
@@ -77,28 +33,7 @@ define('js!SBIS3.CONTROLS.Data.Format.Field', [
              * @see isNullable
              * @see setNullable
              */
-            nullable: false,
-
-            /**
-             * @cfg {Boolean} Поле является первичным ключом
-             * @see isPrimaryKey
-             * @see setPrimaryKey
-             */
-            primaryKey: false,
-
-            /**
-             * @cfg {Boolean} Запрещено изменять значение поля после создания записи
-             * @see isReadOnly
-             * @see setReadOnly
-             */
-            readOnly: false,
-
-            /**
-             * @cfg {FieldType} Тип поля
-             * @see getType
-             * @see setType
-             */
-            type: ''
+            nullable: false
          }
       },
 
@@ -165,66 +100,6 @@ define('js!SBIS3.CONTROLS.Data.Format.Field', [
       },
 
       /**
-       * Возвращает признак, что поле является первичным ключом
-       * @returns {Boolean}
-       * @see primaryKey
-       * @see setPrimaryKey
-       */
-      isPrimaryKey: function () {
-         return this._options.primaryKey;
-      },
-
-      /**
-       * Устанавливает признак, что поле является первичным ключом
-       * @param {Boolean} primaryKey Поле является первичным ключом
-       * @see primaryKey
-       * @see isPrimaryKey
-       */
-      setPrimaryKey: function (primaryKey) {
-         this._options.primaryKey = primaryKey;
-      },
-
-      /**
-       * Возвращает признак, что Запрещено изменять значение поля после создания записи
-       * @returns {Boolean}
-       * @see readOnly
-       * @see setReadOnly
-       */
-      isReadOnly: function () {
-         return this._options.readOnly;
-      },
-
-      /**
-       * Устанавливает признак, что запрещено изменять значение поля после создания записи
-       * @param {Boolean} readOnly Запрещено изменять значение поля после создания записи
-       * @see readOnly
-       * @see isReadOnly
-       */
-      setReadOnly: function (readOnly) {
-         this._options.readOnly = readOnly;
-      },
-
-      /**
-       * Возвращает тип поля
-       * @returns {Boolean}
-       * @see type
-       * @see setType
-       */
-      getType: function () {
-         return this._options.type;
-      },
-
-      /**
-       * Устанавливает Тип поля
-       * @param {Boolean} type Тип поля
-       * @see type
-       * @see getType
-       */
-      setType: function (type) {
-         this._options.type = type;
-      },
-
-      /**
        * Клонирует формат поля
        * @returns {SBIS3.CONTROLS.Data.Format.Field}
        */
@@ -252,16 +127,6 @@ define('js!SBIS3.CONTROLS.Data.Format.Field', [
       //endregion Public methods
 
    });
-
-   /**
-    * Конструирует формат поля по декларативному описанию
-    * @param {FieldDeclaration|FieldType} declaration Декларативное описание
-    * @returns {SBIS3.CONTROLS.Data.Format.Field}
-    * @static
-    */
-   Field.fromDeclaration = function(declaration) {
-      throw new Error('Under construction');
-   };
-
+   
    return Field;
 });

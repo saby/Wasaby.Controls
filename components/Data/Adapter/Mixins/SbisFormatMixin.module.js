@@ -1,6 +1,8 @@
 /* global define, $ws */
 define('js!SBIS3.CONTROLS.Data.Adapter.SbisFormatMixin', [
-], function () {
+   'js!SBIS3.CONTROLS.Data.Format.FieldsFactory',
+   'js!SBIS3.CONTROLS.Data.Adapter.FieldType'
+], function (FieldsFactory, FIELD_TYPE) {
    'use strict';
 
    /**
@@ -130,6 +132,39 @@ define('js!SBIS3.CONTROLS.Data.Adapter.SbisFormatMixin', [
          if (!(index >= 0 && index < max)) {
             throw new TypeError(this._moduleName + ': index is out of bounds.');
          }
+      },
+
+      _getFieldType: function (index) {
+         var typeName = this._data.s[index].t;
+         if (typeName && typeof typeName === 'object') {
+            typeName = typeName.n;
+         }
+         for (var typeCode in FIELD_TYPE) {
+            if (FIELD_TYPE.hasOwnProperty(typeCode) && FIELD_TYPE[typeCode] === typeName) {
+               return typeCode;
+            }
+         }
+         return undfined;
+      },
+
+      _getFieldMeta: function (index, type) {
+         var info =this._data.s[index],
+            meta = {};
+         switch (type) {
+            case 'Money':
+               meta.precision = info.p;
+               break;
+         }
+         return meta;
+      },
+      
+      _buildFormat: function(name) {
+         var index = this._getFieldIndex(name),
+            type = this._getFieldType(index),
+            declaration = this._getFieldMeta(index, type);
+         declaration.name = name;
+         declaration.type = type;
+         return FieldsFactory.create(declaration);
       },
 
       _buildS: function(format) {
