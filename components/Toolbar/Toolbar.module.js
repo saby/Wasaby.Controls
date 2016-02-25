@@ -38,8 +38,9 @@ define('js!SBIS3.CONTROLS.Toolbar', [
 
       setItems: function(items) {
          //TODO подготовка списка меню
-         console.log('setItems');
+         console.log('Toolbar.setItems');
          this._setMenuItems(items);
+         //this._setMenuItems(this.getItemsInstances());
          Toolbar.superclass.setItems.apply(this, arguments);
       },
 

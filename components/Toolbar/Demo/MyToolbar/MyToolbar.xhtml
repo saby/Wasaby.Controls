@@ -9,13 +9,17 @@
             <option name="isMainAction" type="boolean">true</option>
             <option name="name">Button</option>
             <option name="caption">text aaa</option>
+            <!--<component data-component="SBIS3.CONTROLS.CheckBox" name="CheckBox 1111"  class="position">
+               <option name="caption">Вкл</option>
+               &lt;!&ndash;<option name="checked" bind="iconIsMain">false</option>&ndash;&gt;
+            </component>-->
             <option name="command">testCommand</option>
          </options>
          <options>
             <option name="id">2</option>
             <option name="componentType">js!SBIS3.CONTROLS.IconButton</option>
             <option name="className" >IconButton2</option>
-            <option name="isMainAction" <!--bind="iconIsMain"--> type="boolean" >true</option><!--bind="iconIsMain"-->
+            <option name="isMainAction" bind="iconIsMain" type="boolean" >true</option><!--bind="iconIsMain"-->
             <option name="name">IconButton2</option>
             <option name="caption">IconButton 2</option>
             <option name="icon">sprite:icon-16 icon-Link icon-primary</option>
@@ -89,6 +93,10 @@
             <!--<option name="isMainAction" type="boolean">true</option>-->
             <option name="name">createItemMenu</option>
             <option name="caption">+ Доброска</option>
+            <!--<component data-component="SBIS3.CONTROLS.CheckBox" name="CheckBox 1"  class="position">
+               <option name="caption">Вкл</option>
+               <option name="checked" bind="iconIsMain">false</option>
+            </component>-->
             <option name="command">createItemMenu</option>
             <option name="parent" type="string">linkedDocs</option>
             <option name="className">specialItem</option>
