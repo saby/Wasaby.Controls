@@ -1,7 +1,13 @@
 /* global define, $ws */
 define('js!SBIS3.CONTROLS.Data.ContextField.RecordMixin', [], function () {
    'use strict';
-   return {
+
+   /**
+    * Миксин, определяющий работу с рекордом в контексте
+    * @mixin SBIS3.CONTROLS.Data.ContextField.RecordMixin
+    * @author Мальцев Алексей
+    */
+   return /** @lends SBIS3.CONTROLS.Data.ContextField.RecordMixin.prototype*/{
       name: name,
 
       get: function (value, keyPath) {
