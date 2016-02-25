@@ -15,7 +15,7 @@
             <option name="id">2</option>
             <option name="componentType">js!SBIS3.CONTROLS.IconButton</option>
             <option name="className" >IconButton2</option>
-            <option name="isMainAction" bind="iconIsMain" type="boolean" >true</option><!--bind="iconIsMain"-->
+            <option name="isMainAction" <!--bind="iconIsMain"--> type="boolean" >true</option><!--bind="iconIsMain"-->
             <option name="name">IconButton2</option>
             <option name="caption">IconButton 2</option>
             <option name="icon">sprite:icon-16 icon-Link icon-primary</option>
@@ -45,8 +45,53 @@
             <option name="name">IconButton5</option>
             <option name="className" >IconButton2</option>
             <option name="caption">IconButton 5</option>
-            <option name="parent" type="string">5</option>
+            <option name="parent" type="string">3</option>
             <!--<option name="isMainAction" type="boolean">true</option>-->
+         </options>
+         <options>
+            <option name="id">edoSaveDocumentOnDisk</option>
+            <option name="componentType">js!SBIS3.CONTROLS.MenuIcon</option>
+            <option name="isMainAction" type="boolean">true</option>
+            <option name="name">edoSaveDocumentOnDisk</option>
+            <option name="caption">Скачать</option>
+            <option name="icon">sprite:icon-24 icon-Save icon-primary</option>
+         </options>
+         <options>
+            <option name="id">edoSaveDocumentOnDisk_zip</option>
+            <option name="componentType">js!SBIS3.CONTROLS.Link</option>
+            <!--<option name="isMainAction" type="boolean">true</option>-->
+            <option name="name">edoSaveDocumentOnDisk_zip</option>
+            <option name="caption">Скачать</option>
+            <option name="command">edoSaveDocumentOnDisk</option>
+            <option name="parent" type="string">edoSaveDocumentOnDisk</option>
+         </options>
+         <options>
+            <option name="id">edoSaveDocumentOnDisk_PDF</option>
+            <option name="componentType">js!SBIS3.CONTROLS.Link</option>
+            <!--<option name="isMainAction" type="boolean">true</option>-->
+            <option name="name">edoSaveDocumentOnDisk_PDF</option>
+            <option name="caption">Скачать PDF</option>
+            <option name="command">edoSaveDocumentOnDisk</option>
+            <option name="parent" type="string">edoSaveDocumentOnDisk</option>
+         </options>
+         <options>
+            <option name="id">linkedDocs</option>
+            <option name="componentType">js!SBIS3.CONTROLS.Link</option>
+            <!--<option name="isMainAction" type="boolean">true</option>-->
+            <option name="name">linkedDocs</option>
+            <option name="caption">Связанные документы</option>
+            <option name="command">linkedDocs</option>
+            <option name="icon">sprite:icon-24 icon-Linked icon-primary</option>
+         </options>
+         <options>
+            <option name="id">linkedDocs.createItemMenu</option>
+            <option name="componentType">js!SBIS3.CONTROLS.Link</option>
+            <!--<option name="isMainAction" type="boolean">true</option>-->
+            <option name="name">createItemMenu</option>
+            <option name="caption">+ Доброска</option>
+            <option name="command">createItemMenu</option>
+            <option name="parent" type="string">linkedDocs</option>
+            <option name="className">specialItem</option>
          </options>
       </options>
    </component>

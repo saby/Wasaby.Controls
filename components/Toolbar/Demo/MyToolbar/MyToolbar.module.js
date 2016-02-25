@@ -1,6 +1,7 @@
 define('js!SBIS3.CONTROLS.Demo.MyToolbar', [
    'js!SBIS3.CORE.CompoundControl',
    'html!SBIS3.CONTROLS.Demo.MyToolbar',
+   'css!SBIS3.CONTROLS.Demo.MyToolbar',
    'js!SBIS3.CONTROLS.Toolbar',
    'js!SBIS3.CONTROLS.TextArea',
    'js!SBIS3.CONTROLS.SwitcherDouble',
