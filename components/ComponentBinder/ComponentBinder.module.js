@@ -24,8 +24,10 @@ define('js!SBIS3.CONTROLS.ComponentBinder', [], function () {
          view.setHighlightEnabled(true);
          view.setInfiniteScroll(true, true);
          view.setGroupBy(groupBy);
+         view._itemsProjection.setParentProperty(null);
          if (this._firstSearch) {
             this._lastRoot = view.getCurrentRoot();
+            this._lastParentProperty = view._itemsProjection.getParentProperty();
             if (this._options.breadCrumbs && this._options.breadCrumbs.getDataSet()){
                this._pathDSRawData = $ws.core.clone(this._options.breadCrumbs.getDataSet().getRawData());
             }
@@ -86,6 +88,7 @@ define('js!SBIS3.CONTROLS.ComponentBinder', [], function () {
       if (this._firstSearch) {
          return;
       }
+      view.getItemsProjection().setParentProperty(this._lastParentProperty);
       view.setInfiniteScroll(this._isInfiniteScroll, true);
       view.setGroupBy(this._lastGroup);
       view.setHighlightText('', false);
@@ -143,6 +146,7 @@ define('js!SBIS3.CONTROLS.ComponentBinder', [], function () {
          _searchForm : undefined,
          _lastRoot : undefined,
          _lastGroup: {},
+         _lastParentProperty: null,
          _currentRoot: null,
          _pathDSRawData : [],
          _firstSearch: true,
