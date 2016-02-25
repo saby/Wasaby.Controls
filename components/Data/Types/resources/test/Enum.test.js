@@ -45,7 +45,7 @@ define([
 
          describe('.getValues()', function (){
             it('should return values', function (){
-               assert.deepEqual(testEnum.getValues(), data);
+               assert.deepEqual(testEnum.getValues(), {0: "one", 1: "two", 2: "three"});
             });
          });
 

@@ -11,7 +11,7 @@ define([
 
       describe('SBIS3.CONTROLS.Data.Collection.RecordSet', function() {
          var rs,
-            items;
+            items, getItems;
 
 
          beforeEach(function() {
@@ -468,7 +468,6 @@ define([
                });
                rs.merge(rs2, {add: false});
                assert.isUndefined(rs.getRecordById(1000));
-
             });
          });
          describe('.setRawData()', function (){
@@ -666,7 +665,7 @@ define([
                   }]
                });
                var index = rs.getTreeIndex('Раздел');
-               assert.equal(index.null)
+               assert.equal(index.null);
             });
          });
 

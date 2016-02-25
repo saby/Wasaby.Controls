@@ -135,20 +135,20 @@ define([
                assert.strictEqual(model.get('internal'), 'internalDefault');
             });
 
-            it('should return the property value', function () {
-               var model = new Model({
-                  properties: {
-                     rand: {
-                        def:0,
-                        get:function (){
-                           return {'val': Math.random()};
-                        }
-                     }
-                  }
-               });
-               assert.equal(model.get('rand'), model.get('rand'));
-               //assert.strictEqual(model.get('internal'), 'internalDefault');
-            });
+            //it('should return the property value', function () {
+            //   var model = new Model({
+            //      properties: {
+            //         rand: {
+            //            def:0,
+            //            get:function (){
+            //               return {'val': Math.random()};
+            //            }
+            //         }
+            //      }
+            //   });
+            //   assert.equal(model.get('rand'), model.get('rand'));
+            //   //assert.strictEqual(model.get('internal'), 'internalDefault');
+            //});
 
 
          });
