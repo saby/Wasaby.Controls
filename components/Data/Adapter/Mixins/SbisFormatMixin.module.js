@@ -56,7 +56,7 @@ define('js!SBIS3.CONTROLS.Data.Adapter.SbisFormatMixin', [
 
       getFormat: function (name) {
          if (!this.has(name)) {
-            throw new ReferenceError('Field "' + name + '" is not exists');
+            throw new ReferenceError(this._moduleName + '::getFormat(): field "' + name + '" is not exists');
          }
          if (!this._format.hasOwnProperty(name)) {
             this._format[name] = this._buildFormat(name);
@@ -65,19 +65,20 @@ define('js!SBIS3.CONTROLS.Data.Adapter.SbisFormatMixin', [
       },
 
       addField: function(format, at) {
-         if (this.has(name)) {
-            throw new Error('Field "' + name + '" already exists');
-         }
          if (!format || !$ws.helpers.instanceOfModule(format, 'SBIS3.CONTROLS.Data.Format.Field')) {
-            throw new TypeError('Format should be an instance of SBIS3.CONTROLS.Data.Format.Field');
+            throw new TypeError(this._moduleName + '::addField(): format should be an instance of SBIS3.CONTROLS.Data.Format.Field');
+         }
+         var name = format.getName();
+         if (this.has(name)) {
+            throw new Error(this._moduleName + '::addField(): field "' + name + '" already exists');
          }
 
          if (at === undefined) {
-            at = this._data.s.length - 1;
+            at = this._data.s.length;
          }
-         this._checkFieldIndex(at);
+         this._checkFieldIndex(at, true);
 
-         this._format[format.getName()] = format;
+         this._format[name] = format;
          this._fieldIndexes = null;
          this._data.s.splice(at, 0, this._buildS(format));
          this._data.d.splice(
@@ -90,7 +91,7 @@ define('js!SBIS3.CONTROLS.Data.Adapter.SbisFormatMixin', [
       removeField: function(name) {
          var index = this._getFieldIndex(name);
          if (index === -1) {
-            throw new ReferenceError('Field "' + name + '" is not exists');
+            throw new ReferenceError(this._moduleName + '::removeField(): field "' + name + '" is not exists');
          }
          delete this._format[name];
          this._fieldIndexes = null;
@@ -122,12 +123,12 @@ define('js!SBIS3.CONTROLS.Data.Adapter.SbisFormatMixin', [
       },
 
       _checkFieldIndex: function(index, appendMode) {
-         var max = this._data.s.length;
+         var max = this._data.s.length - 1;
          if (appendMode) {
             max++;
          }
          if (!(index >= 0 && index < max)) {
-            throw new TypeError('Index is out of bounds.');
+            throw new TypeError(this._moduleName + ': index is out of bounds.');
          }
       },
 

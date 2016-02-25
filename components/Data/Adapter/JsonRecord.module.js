@@ -33,11 +33,12 @@ define('js!SBIS3.CONTROLS.Data.Adapter.JsonRecord', [
       //region SBIS3.CONTROLS.Data.Adapter.JsonFormatMixin
 
       addField: function(format, at) {
+         var name = format.getName();
          if (this.has(name)) {
             throw new Error('Field "' + name + '" already exists');
          }
          JsonRecord.superclass.addField.call(this, format, at);
-         this.set(format.getName(), format.getDefaultValue());
+         this.set(name, format.getDefaultValue());
       },
 
       removeField: function(name) {

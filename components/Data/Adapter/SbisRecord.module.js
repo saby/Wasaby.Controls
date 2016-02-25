@@ -19,16 +19,8 @@ define('js!SBIS3.CONTROLS.Data.Adapter.SbisRecord', [
 
       //region SBIS3.CONTROLS.Data.Adapter.JsonFormatMixin
 
-      addField: function(format, at) {
-         SbisRecord.superclass.addField.call(this, format, at);
-      },
-
-      removeField: function(name) {
-         SbisRecord.superclass.addField.call(this, name);
-      },
-
-      removeFieldAt: function(index) {
-         SbisRecord.superclass.removeFieldAt.call(this, index);
+      _buildD: function(value) {
+         return value;
       },
 
       //endregion SBIS3.CONTROLS.Data.Adapter.JsonFormatMixin
@@ -47,7 +39,7 @@ define('js!SBIS3.CONTROLS.Data.Adapter.SbisRecord', [
       set: function (name, value) {
          var index = this._getFieldIndex(name);
          if (index < 0) {
-            throw new ReferenceError('Property is not defined');
+            throw new ReferenceError(this._moduleName + '::set(): field "' + name + '" is not defined');
          }
          this._data.d[index] = value;
       },
@@ -61,7 +53,7 @@ define('js!SBIS3.CONTROLS.Data.Adapter.SbisRecord', [
       },
 
       getInfo: function (name) {
-         $ws.single.ioc.resolve('ILogger').log('SBIS3.CONTROLS.Data.Adapter.SbisRecord', 'Method getInfo() is deprecated and will be removed in 3.7.4. Use \'getFormat\' instead.');
+         $ws.single.ioc.resolve('ILogger').log(this._moduleName + '::getInfo()', 'Method is deprecated and will be removed in 3.7.4. Use \'getFormat\' instead.');
          var index = this._getFieldIndex(name),
             meta = index >= 0 ? this._data.s[index] : undefined,
             fieldData = {meta: undefined, type: undefined};
@@ -92,10 +84,6 @@ define('js!SBIS3.CONTROLS.Data.Adapter.SbisRecord', [
       //endregion Public methods
 
       //region Protected methods
-
-      _buildD: function(value) {
-         return value;
-      },
 
       _getType: function (meta, value, key) {
          key = key || 't';

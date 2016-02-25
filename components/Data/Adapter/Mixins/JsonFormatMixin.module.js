@@ -32,7 +32,7 @@ define('js!SBIS3.CONTROLS.Data.Adapter.JsonFormatMixin', [
 
       getFormat: function (name) {
          if (!this.has(name)) {
-            throw new ReferenceError('Field "' + name + '" is not exists');
+            throw new ReferenceError(this._moduleName + '::getFormat(): field "' + name + '" is not exists');
          }
          if (!this._format.hasOwnProperty(name)) {
             this._format[name] = new StringField({
@@ -44,15 +44,16 @@ define('js!SBIS3.CONTROLS.Data.Adapter.JsonFormatMixin', [
 
       addField: function(format, at) {
          if (!format || !$ws.helpers.instanceOfModule(format, 'SBIS3.CONTROLS.Data.Format.Field')) {
-            throw new TypeError('Format should be an instance of SBIS3.CONTROLS.Data.Format.Field');
+            throw new TypeError(this._moduleName + '::addField(): format should be an instance of SBIS3.CONTROLS.Data.Format.Field');
          }
-         if (!this._format.hasOwnProperty(format.getName())) {
-            throw new Error('Field "' + name + '" already exists');
+         var name = format.getName();
+         if (this._format.hasOwnProperty(name)) {
+            throw new Error(this._moduleName + '::addField(): field "' + name + '" already exists');
          }
          if (at >= 0) {
-            $ws.single.ioc.resolve('ILogger').log('SBIS3.CONTROLS.Data.Adapter.JsonRecord::addField()', 'Argument "at" is not supported.');
+            $ws.single.ioc.resolve('ILogger').log(this._moduleName + '::addField()', 'Argument "at" is not supported and will be ignored.');
          }
-         this._format[format.getName()] = format;
+         this._format[name] = format;
       },
 
       removeField: function(name) {
@@ -60,7 +61,7 @@ define('js!SBIS3.CONTROLS.Data.Adapter.JsonFormatMixin', [
       },
 
       removeFieldAt: function() {
-         throw new Error('SBIS3.CONTROLS.Data.Adapter.JsonRecord::removeFieldAt() is not supported');
+         throw new Error(this._moduleName + '::removeFieldAt() is not supported');
       }
 
       //endregion Public methods

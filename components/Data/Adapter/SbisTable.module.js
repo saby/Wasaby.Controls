@@ -18,16 +18,10 @@ define('js!SBIS3.CONTROLS.Data.Adapter.SbisTable', [
 
       //region SBIS3.CONTROLS.Data.Adapter.JsonFormatMixin
 
-      addField: function(format, at) {
-         SbisTable.superclass.addField.call(this, format, at);
-      },
-
-      removeField: function(name) {
-         SbisTable.superclass.addField.call(this, name);
-      },
-
-      removeFieldAt: function(index) {
-         SbisTable.superclass.removeFieldAt.call(this, index);
+      _buildD: function(value) {
+         return $ws.helpers.map(this._data.s, function() {
+            return value;
+         });
       },
 
       //endregion SBIS3.CONTROLS.Data.Adapter.JsonFormatMixin
@@ -91,17 +85,11 @@ define('js!SBIS3.CONTROLS.Data.Adapter.SbisTable', [
          var source = this._data.d[index],
             clone = $ws.core.clone(source);
          this._data.d.splice(index, 0, clone);
-      },
+      }
 
       //endregion Public methods
 
       //region Protected methods
-
-      _buildD: function(value) {
-         return $ws.helpers.map(this._data.s, function() {
-            return value;
-         });
-      }
 
       //endregion Protected methods
 
