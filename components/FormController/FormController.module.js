@@ -82,7 +82,7 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl'],
       },
       
       $constructor: function() {
-         this._publish('onBeforeSubmit', 'onSubmit');
+         this._publish('onSubmit');
          $ws.single.CommandDispatcher.declareCommand(this, 'submit', this.submit);
          if (this._options.dataSource){
             this._runQuery();
@@ -90,7 +90,10 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl'],
             this._setContextRecord(this._options.record);
          }
 
+         //Выписал задачу, чтобы при событии onBeforeClose стрелял метод у floatArea, который мы бы переопределили здесь,
+         //чтобы не дергать getTopParent
          this.getTopParent().subscribe('onBeforeClose', function(event){
+            //Если попали сюда из метода _saveRecord, то this._saving = true и мы просто закрываем панель
             if (this._saving || !this._options.record.isChanged()){
                this._saving = false;
                return;
@@ -118,7 +121,6 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl'],
       _saveRecord: function(){
          var self = this,
              questionConfig,
-             submitResult,
              def;
 
          questionConfig = {
@@ -133,22 +135,15 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl'],
                return;
             }
             self._saving = true;
-            submitResult = self._notify('onBeforeSubmit');
-            if (submitResult instanceof $ws.proto.Deferred) {
-               def = submitResult;
-            }
-            else {
+            if (result){
                def = self._options.dataSource.update(self._options.record);
-            }
-            def.addCallback(function(){
-               if (result){
+               def.addCallback(function(){
                   self.getTopParent().ok();
-               }
-               else{
-                  self.getTopParent().cancel();
-               }
-               self._saving = false;
-            });
+               });
+            }
+            else{
+               self.getTopParent().cancel();
+            }
          });
       },
 
