@@ -41,7 +41,6 @@ define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManag
          _margins: null,
          _marginsInited: false,
          _zIndex: null,
-         _resizeTimeout: null,
          _currentAlignment: {},
          _options: {
             /**
@@ -395,17 +394,6 @@ define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManag
             this._initSizes();
          }
          this._checkTargetPosition();
-      },
-
-      _windowChangeHandler: function () {
-         clearTimeout(this._resizeTimeout);
-         var self = this;
-         //Таймаут для того что бы не пересчитывать размеры пока меняется размер окна,
-         //а перестчитать только один раз, когда размер меняться перестанет.
-         this._resizeTimeout = setTimeout(function() {
-            // Если fixed то при ресайзе положение пересчитывать не надо - оно неизменно
-            
-         }, 100);
       },
 
       _checkTargetPosition: function () {
