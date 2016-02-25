@@ -964,14 +964,14 @@ function(BaseControl, dotTpl){
             var BL = this._options.sourceData.methodBL.split(".");
             if (BL.length > 1) {
                // запускаем запрос на получение данных
-               $ws.proto.BLObject(BL[0]).query(BL[1], this._filters).addCallbacks(function (rs) {
+               $ws.proto.BLObject(BL[0]).query(BL[1], this._filters).addCallback($ws.helpers.forAliveOnly(function (rs) {
                   /*результат метода пишем в data*/
                   self._sourceData.data = rs;
                   resultDef.callback();
-               }, function (err) {
+               }, self)).addErrback($ws.helpers.forAliveOnly(function (err) {
                   self.hide();
                   resultDef.errback(err);
-               });
+               }, self));
             }
             else {
                resultDef.errback('Ошибка в параметрах метода БЛ')
@@ -1064,7 +1064,7 @@ function(BaseControl, dotTpl){
          }
          this._notify("onFilterChange", changedFilters, this._filters);
 
-         this._getData().addCallback(function(){
+         this._getData().addCallback($ws.helpers.forAliveOnly(function(){
             /*обновим текущие примененные фильтры*/
             self._updateLoadedFilters();
 
@@ -1081,9 +1081,9 @@ function(BaseControl, dotTpl){
             self._loadingIndicator.addClass('ws-hidden');
             self._drawHighChart();
             def.callback();
-         }).addErrback(function(){
+         }, self)).addErrback($ws.helpers.forAliveOnly(function(){
             throw new Error('Ошибка получения данных для диаграммы');
-         });
+         }, self));
 
          return def;
       },

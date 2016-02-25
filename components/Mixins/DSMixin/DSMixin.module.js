@@ -498,20 +498,21 @@ define('js!SBIS3.CONTROLS.DSMixin', [
              def = this._callQuery(this._options.filter, this.getSorting(), this._offset, this._limit)
                 .addCallback($ws.helpers.forAliveOnly(function (list) {
                    self._toggleIndicator(false);
-                   self._dataSet = list;
-
                    if (self._items) {
-                      self._dataLoadedCallback();
                       self._notify('onDataLoad', list);
                       self._items.assign(list);
+                      self._dataSet.assign(list);
+                      self._dataLoadedCallback();
                    }
                    else {
+                      self._notify('onDataLoad', list);
                       self._items = list;
+                      self._dataSet = list;
                       self._createDefaultProjection(self._items);
                       self._setItemsEventHandlers();
                       self._itemsReadyCallback();
                       self._dataLoadedCallback();
-                      self._notify('onDataLoad', list);
+
                    }
                    self.redraw();
                    //self._notify('onBeforeRedraw');
@@ -1044,6 +1045,9 @@ define('js!SBIS3.CONTROLS.DSMixin', [
          //n - приходит true, false || общее количество записей в списочном методе
          //Если offset отрицательный, значит запрашивали последнюю страницу
          return offset < 0 ? false : (typeof (hasMore) !== 'boolean' ? hasMore > (offset + this._options.pageSize) : !!hasMore);
+      },
+      _scrollToItem: function(itemId) {
+         $(".controls-ListView__item[data-id='" + itemId + "']", this._getItemsContainer()).attr('tabindex', '-1').focus();
       },
       /**
        * Установить что отображается при отсутствии записей.

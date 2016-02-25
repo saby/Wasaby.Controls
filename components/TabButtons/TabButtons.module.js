@@ -49,6 +49,17 @@ define(
              * </pre>
              */
             itemTemplate: itemTpl,
+            /**
+             * @cfg {Content} содержимое между вкладками
+             * @example
+             * <pre>
+             *     <option name="tabSpaceTemplate">
+             *        <component data-component="SBIS3.CONTROLS.Button" name="Button 1">
+             *           <option name="caption">Кнопка между вкладками</option>
+             *        </component>
+             *     </option>
+             * </pre>
+             */
             tabSpaceTemplate: undefined
          }
       },

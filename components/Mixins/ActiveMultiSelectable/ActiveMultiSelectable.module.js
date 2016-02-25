@@ -61,27 +61,29 @@ define('js!SBIS3.CONTROLS.ActiveMultiSelectable', [], function() {
       addSelectedItems: propertyUpdateWrapper(function(items) {
          var self = this,
              newItems = items instanceof Array ? this._makeList(items) : items,
-             selItems = this._options.selectedItems;
+             selItems = this._options.selectedItems,
+             itemsToAdd = [];
 
-         /* Если добавляемых элементов нет, то ничего не делаем */
-         /* TODO в 3.7.3.100 добавить проверку, надо ли вообще что-то добавлять, возможно уже что все переданные записи есть
-            Задача в разработку от 09.02.2016 №1172587090
-            Добавить проверку в ActiveMultiSelectable на добавляемость элементов, чтобы уменьшить возможно ко...
-            https://inside.tensor.ru/opendoc.html?guid=f206f51b-f653-4337-acdb-7472ccee8a9c */
-         if(!newItems.getCount()) return;
-
-         if(this._options.multiselect) {
-            newItems.each(function(rec) {
-               if(!self._isItemSelected(rec)) {
-                  selItems.add(rec);
-               }
-            });
-         } else {
-            selItems[selItems.getCount() ? 'replace' : 'add'](newItems.at(0), 0);
+         /* Функция проверяет запись на выбранность, если не выбрана, то добавляет в массив для добавления */
+         function checkAndPushItem(rec) {
+            if(!self._isItemSelected(rec)) {
+               itemsToAdd.push(rec);
+            }
          }
 
-         this.setSelectedKeys(this._convertToKeys(selItems));
-         this._notifyOnPropertyChanged('selectedItems');
+         /* Если добавляемых элементов нет, то ничего не делаем */
+         if(!newItems.getCount()) return;
+
+         /* Если включён множественный выбор, то добавим все, иначе добавим первый */
+         this._options.multiselect ?
+             newItems.each(checkAndPushItem) :
+             checkAndPushItem(newItems.at(0));
+
+         if(itemsToAdd.length) {
+            selItems.concat(itemsToAdd);
+            this.setSelectedKeys(this._convertToKeys(selItems));
+            this._notifyOnPropertyChanged('selectedItems');
+         }
       }),
 
       _convertToKeys: function(list) {

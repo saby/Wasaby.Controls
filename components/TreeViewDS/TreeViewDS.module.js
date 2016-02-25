@@ -6,6 +6,8 @@ define('js!SBIS3.CONTROLS.TreeViewDS', [
 ], function (ListView, hierarchyMixin, TreeMixinDS, MarkupTransformer) {
    'use strict';
 
+   var ITEMS_TOOLBAR_HOVERED_ITEM_FIX_FIELDS = ['record', 'key'];
+
    /**
     * Контрол, отображающий данные имеющие иерархическую структуру. Позволяет отобразить данные в произвольном виде с возможностью открыть или закрыть отдельные узлы
     * @class SBIS3.CONTROLS.TreeViewDS
@@ -60,6 +62,21 @@ define('js!SBIS3.CONTROLS.TreeViewDS', [
 
          return curList;
       },
+      _showItemsToolbar: function(target) {
+         var item = target.container.find('.js-controls-TreeView-itemContent'),
+             newTargetData;
+
+         /* Так как TreeViewDS имеет сложную вложенную структуру, то надо элемент
+            и его кординаты скорректировать перед отображением тулбара */
+         if(item.length) {
+            newTargetData = this._getElementData(item);
+            $ws.helpers.forEach(ITEMS_TOOLBAR_HOVERED_ITEM_FIX_FIELDS, function(key) {
+               delete newTargetData[key];
+            });
+            $ws.core.merge(target, newTargetData);
+         }
+         TreeViewDS.superclass._showItemsToolbar.call(this, target);
+      },
 
       _drawLoadedNode : function(key) {
          TreeViewDS.superclass._drawLoadedNode.apply(this, arguments);
@@ -73,7 +90,7 @@ define('js!SBIS3.CONTROLS.TreeViewDS', [
       },
 
       _drawSelectedItems : function(idArray) {
-         $('.controls-ListView__itemCheckBox__multi').removeClass('controls-ListView__itemCheckBox__multi');
+         $('.controls-ListView__itemCheckBox__multi', this._container).removeClass('controls-ListView__itemCheckBox__multi');
          for (var i = 0; i < idArray.length; i++) {
             $(".controls-ListView__item[data-id='" + idArray[i] + "']", this._container).find('.js-controls-ListView__itemCheckBox').first().addClass('controls-ListView__itemCheckBox__multi');
          }
