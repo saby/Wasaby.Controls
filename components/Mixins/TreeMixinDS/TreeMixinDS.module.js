@@ -104,12 +104,24 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', ['js!SBIS3.CORE.Control',
       },
 
       _createDefaultProjection : function(items) {
+         var root;
+         if (typeof this._curRoot != 'undefined') {
+            root = this._curRoot;
+         }
+         else {
+            if (typeof this._options.root != 'undefined') {
+               root = this._options.root;
+            }
+            else {
+               root = null;
+            }
+         }
          this._itemsProjection = new TreeProjection({
             collection: items,
             idProperty: this._options.keyField || (this._dataSource ? this._dataSource.getIdProperty() : ''),
             parentProperty: this._options.hierField,
             nodeProperty: this._options.hierField + '@',
-            root: (typeof this._options.root != 'undefined') ? this._options.root : null
+            root: root
          });
       },
 
