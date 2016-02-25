@@ -16,12 +16,8 @@
       <option name="showHead" type="boolean">false</option>
       <option name="expand" type="boolean">false</option>
       <option name="displayType" type="string">folders</option>
-      <option name="displayField" type="string">{{=it.linkedView._options.displayField}}</option>
       <option name="showPaging" type="boolean">false</option>
-      <options name="openedPath">
-         <option name="{{=it.rootNodeId}}" type="boolean">true</option>
-      </options>
-      <option name="itemsDragNDrop" type="boolean">false</option>
+      <option name="allowDragNDropMove" type="boolean">false</option>
       <option name="allowEmptySelection" type="boolean">true</option>
       <options name="columns" type="array">
          <options>
@@ -33,8 +29,7 @@
       <option name="keyField" type="boolean">{{=it.linkedView._options.keyField}}</option>
       <option name="hierField" type="boolean">{{=it.linkedView.getHierField()}}</option>
       <options name="handlers">
-         <option name="onDrawItems" type="function">js!SBIS3.CONTROLS.MoveDialogTemplate:prototype._onDrawItems</option>
-         <option name="onDataLoad" type="function">js!SBIS3.CONTROLS.MoveDialogTemplate:prototype._onDataLoad</option>
+         <option name="onDrawItems" type="function">js!SBIS3.CONTROLS.MoveDialogTemplate:prototype._createRoot</option>
       </options>
    </component>
 </div>

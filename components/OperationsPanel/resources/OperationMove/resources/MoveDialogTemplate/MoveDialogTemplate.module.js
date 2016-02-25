@@ -20,8 +20,6 @@ define('js!SBIS3.CONTROLS.MoveDialogTemplate', [
             resizable: false,
             linkedView: undefined,
             records: undefined,
-            rootNodeName: 'Корень',
-            rootNodeId: 'moveDialog_rootNode',
             cssClassName: 'controls-MoveDialog'
          },
          treeView: undefined
@@ -50,35 +48,26 @@ define('js!SBIS3.CONTROLS.MoveDialogTemplate', [
          var
              self = this.getParent(),
              moveTo = self._treeView.getSelectedKey();
-         moveTo = moveTo !== self._options.rootNodeId ? self._treeView._dataSet.getRecordByKey(moveTo) : null;
+         moveTo = moveTo !== 'null' ? self._treeView._dataSet.getRecordByKey(moveTo) : null;
          if (self._treeView._checkRecordsForMove(self._options.records, moveTo)) {
             self._options.linkedView._move(self._options.records, moveTo);
          }
          this.sendCommand('close');
       },
-      _onDataLoad: function(event, data) {
+      //TODO: в 3.7.4 переделать на фейковую запись, а не тупо подпихивать tr.
+      _createRoot: function() {
          var
-             root = {},
-             newData = data.clone(),
-             self = this.getParent(),
-             hierField = this.getHierField();
-         //Установим всем записям в родителя фейковый корень
-         newData.each(function(item) {
-            item.set(hierField, self._options.rootNodeId);
+             self = this,
+             rootBlock = $('<tr class="controls-DataGridView__tr controls-ListView__item controls-ListView__folder" style="" data-id="null"><td class="controls-DataGridView__td controls-MoveDialog__root"><div class="controls-TreeView__expand js-controls-TreeView__expand has-child controls-TreeView__expand__open"></div>Корень</td></tr>');
+         rootBlock.bind('click', function(event) {
+            self._container.find('.controls-ListView__item').toggleClass('ws-hidden');
+            rootBlock.toggleClass('ws-hidden').find('.controls-TreeView__expand').toggleClass('controls-TreeView__expand__open');
+            self.setSelectedKey('null');
+            rootBlock.addClass('controls-ListView__item__selected');
+            event.stopPropagation();
          });
-         //Создадим и подкинем фейковый корень
-         root[hierField] = null;
-         root[hierField + '@'] = true;
-         root[this._options.keyField] = self._options.rootNodeId;
-         root[this._options.displayField] = self._options.rootNodeName;
-         newData.push(root);
-         event.setResult(newData);
-      },
-      //TODO: после второго создания диалога начинает падать ошибка: SBIS3.CONTROLS.Data.Projection.CollectionEnumerator: position is out of bounds
-      //Разобраться с Мальцевым в чём проблема и поправить в 3.7.4 задав опцию selectedKey через шаблон.
-      _onDrawItems: function() {
-         var self = this.getParent();
-         this.setSelectedKey(self._options.rootNodeId);
+         rootBlock.prependTo(self._container.find('tbody'));
+         self.setSelectedKey('null');
       }
    });
 
