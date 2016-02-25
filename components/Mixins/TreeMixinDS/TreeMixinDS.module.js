@@ -75,7 +75,7 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', ['js!SBIS3.CORE.Control',
              * @cfg {Boolean} Запрашивать записи для папки если в текущем наборе данных их нет
              * @noShow
              */
-            loadEmptyFolders: false,
+            partialyReload: true,
             openedPath : {},
             folderFooterTpl: undefined,
             /**
@@ -210,7 +210,7 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', ['js!SBIS3.CORE.Control',
             this._folderOffsets[key || 'null'] = 0;
             this._options.openedPath[key] = true;
             this._closeAllExpandedNode(key);
-            if (!tree[key] && this._options.loadEmptyFolders) {
+            if (!tree[key] && this._options.partialyReload) {
                this._toggleIndicator(true);
                this._notify('onBeforeDataLoad');
                return this._callQuery(this._createTreeFilter(key), this.getSorting(), 0, this._limit).addCallback(function (dataSet) {
