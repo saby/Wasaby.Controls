@@ -8,8 +8,6 @@ define('js!SBIS3.CONTROLS.Data.ContextField.RecordMixin', [], function () {
     * @author Мальцев Алексей
     */
    return /** @lends SBIS3.CONTROLS.Data.ContextField.RecordMixin.prototype*/{
-      name: name,
-
       get: function (value, keyPath) {
          var
             Context = $ws.proto.Context,
