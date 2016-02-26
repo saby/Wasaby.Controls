@@ -268,48 +268,49 @@ define('js!SBIS3.CONTROLS.ComboBox', [
 
       _drawSelectedItem: function (key, index) {
 
-            var item, def;
-            def = new $ws.proto.Deferred();
-            if (this._dataSet) {
-               if ((index !== null) && (typeof index != 'undefined') && (index != '-1')) {
-                  item = this.getItems().at(index);
-                  def.callback(item);
+         var item, def;
+         def = new $ws.proto.Deferred();
+         if (this._dataSet) {
+            if ((index !== null) && (typeof index != 'undefined') && (index != '-1')) {
+               item = this.getItems().at(index);
+               def.callback(item);
+            }
+         }
+         else {
+            if (this._dataSource) {
+               if ((key != undefined) && (key !== null)) {
+                  this._dataSource.read(key).addCallback(function (item) {
+                     def.callback(item);
+                  });
                }
             }
-            else {
-               if (this._dataSource) {
-                  if ((key != undefined) && (key !== null)) {
-                     this._dataSource.read(key).addCallback(function (item) {
-                        def.callback(item);
-                     });
-                  }
-               }
-            }
-            var self = this;
-            def.addCallback(function(item){
-               if (item) {
-                  var newText = item.get(self._options.displayField);
-                  if (newText != self._options.text) {
-                     ComboBox.superclass.setText.call(self, newText);
-                     self._drawNotEditablePlaceholder(newText);
-                     $('.js-controls-ComboBox__fieldNotEditable', self._container.get(0)).text(newText);
-                  }
-               }
-               else {
-                  ComboBox.superclass.setText.call(self, '');
-                  self._drawNotEditablePlaceholder('');
-                  $('.js-controls-ComboBox__fieldNotEditable', self._container.get(0)).text('');
-               }
-               if (self._picker) {
-                  $('.controls-ComboBox__itemRow__selected', self._picker.getContainer().get(0)).removeClass('controls-ComboBox__itemRow__selected');
-                  $('.controls-ComboBox__itemRow[data-id=\'' + key + '\']', self._picker.getContainer().get(0)).addClass('controls-ComboBox__itemRow__selected');
-               }
-            });
-
-
+         }
          if (this._picker) {
             $('.controls-ComboBox__itemRow__selected', this._picker.getContainer().get(0)).removeClass('controls-ComboBox__itemRow__selected');
          }
+         var self = this;
+         def.addCallback(function (item) {
+            if (item) {
+               var newText = item.get(self._options.displayField);
+               if (newText != self._options.text) {
+                  ComboBox.superclass.setText.call(self, newText);
+                  self._drawNotEditablePlaceholder(newText);
+                  $('.js-controls-ComboBox__fieldNotEditable', self._container.get(0)).text(newText);
+               }
+            }
+            else {
+               ComboBox.superclass.setText.call(self, '');
+               self._drawNotEditablePlaceholder('');
+               $('.js-controls-ComboBox__fieldNotEditable', self._container.get(0)).text('');
+            }
+            if (self._picker) {
+               $('.controls-ComboBox__itemRow__selected', self._picker.getContainer().get(0)).removeClass('controls-ComboBox__itemRow__selected');
+               $('.controls-ComboBox__itemRow[data-id=\'' + key + '\']', self._picker.getContainer().get(0)).addClass('controls-ComboBox__itemRow__selected');
+            }
+         });
+
+
+
 
       },
 
