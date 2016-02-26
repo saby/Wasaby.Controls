@@ -1,10 +1,11 @@
 /* global define, $ws */
 define('js!SBIS3.CONTROLS.Data.FormattableMixin', [
    'js!SBIS3.CONTROLS.Data.Format.Format',
-   'js!SBIS3.CONTROLS.Data.Format.Field',
+   'js!SBIS3.CONTROLS.Data.Format.FormatsFactory',
+   'js!SBIS3.CONTROLS.Data.Format.FieldsFactory',
    'js!SBIS3.CONTROLS.Data.Di',
    'js!SBIS3.CONTROLS.Data.Adapter.Json'
-], function (Format, Field, Di) {
+], function (Format, FormatsFactory, FieldsFactory, Di) {
    'use strict';
 
    /**
@@ -58,7 +59,7 @@ define('js!SBIS3.CONTROLS.Data.FormattableMixin', [
             adapter: 'adapter.json',
 
             /**
-             * @cfg {SBIS3.CONTROLS.Data.Format.Format|Array.<SBIS3.CONTROLS.Data.Format.Field/FieldDeclaration>} Формат полей
+             * @cfg {SBIS3.CONTROLS.Data.Format.Format|Array.<SBIS3.CONTROLS.Data.Format.FieldsFactory/FieldDeclaration>} Формат полей
              * @see getFormat
              * @example
              * <pre>
@@ -75,10 +76,10 @@ define('js!SBIS3.CONTROLS.Data.FormattableMixin', [
              *    var users = new RecordSet({
              *       format: [{
              *          name: 'id'
-             *          type: 'Integer'
+             *          type: 'integer'
              *       }, {
              *          name: 'login'
-             *          type: 'String'
+             *          type: 'string'
              *       }]
              *    });
              * </pre>
@@ -152,15 +153,15 @@ define('js!SBIS3.CONTROLS.Data.FormattableMixin', [
        * Добавляет поле в формат.
        * Если позиция не указана (или указана как -1), поле добавляется в конец формата.
        * Если поле с таким форматом уже есть, генерирует исключение.
-       * @param {SBIS3.CONTROLS.Data.Format.Field|SBIS3.CONTROLS.Data.Format.Field/FieldDeclaration} format Формат поля
+       * @param {SBIS3.CONTROLS.Data.Format.Field|SBIS3.CONTROLS.Data.Format.FieldsFactory/FieldDeclaration} format Формат поля
        * @param {Number} [at] Позиция поля
        * @see format
        * @see removeField
        * @example
        * <pre>
        *    var record = new Record();
-       *    record.addField({name: 'login', type: 'String'});
-       *    record.addField({name: 'amount', type: 'Money'});
+       *    record.addField({name: 'login', type: 'string'});
+       *    record.addField({name: 'amount', type: 'money'});
        * </pre>
        * @example
        * <pre>
@@ -239,7 +240,7 @@ define('js!SBIS3.CONTROLS.Data.FormattableMixin', [
 
       /**
        * Строит формат по описанию
-       * @param {SBIS3.CONTROLS.Data.Format.Format|Array.<SBIS3.CONTROLS.Data.Format.Field/FieldDeclaration>} format Описание формата
+       * @param {SBIS3.CONTROLS.Data.Format.Format|Array.<SBIS3.CONTROLS.Data.Format.FieldsFactory/FieldDeclaration>} format Описание формата
        * @returns {SBIS3.CONTROLS.Data.Format.Format}
        * @protected
        */
@@ -248,7 +249,7 @@ define('js!SBIS3.CONTROLS.Data.FormattableMixin', [
             format = new Format();
          }
          if (Object.getPrototypeOf(format) === Array.prototype) {
-            format = Format.fromDeclaration(format);
+            format = FormatsFactory.create(format);
          }
          if (!$ws.helpers.instanceOfModule(format, 'SBIS3.CONTROLS.Data.Format.Format')) {
             throw new TypeError('Format should be an instance of SBIS3.CONTROLS.Data.Format.Format');
@@ -258,7 +259,7 @@ define('js!SBIS3.CONTROLS.Data.FormattableMixin', [
 
       /**
        * Строит формат поля по описанию
-       * @param {SBIS3.CONTROLS.Data.Format.Field|SBIS3.CONTROLS.Data.Format.Field/FieldDeclaration} format Описание формата поля
+       * @param {SBIS3.CONTROLS.Data.Format.Field|SBIS3.CONTROLS.Data.Format.FieldsFactory/FieldDeclaration} format Описание формата поля
        * @returns {SBIS3.CONTROLS.Data.Format.Field}
        * @protected
        */
@@ -267,7 +268,7 @@ define('js!SBIS3.CONTROLS.Data.FormattableMixin', [
             typeof format === 'string' ||
             Object.getPrototypeOf(format) === Object.prototype
          ) {
-            format = Field.fromDeclaration(format);
+            format = FieldsFactory.create(format);
          }
          if (!format || !$ws.helpers.instanceOfModule(format, 'SBIS3.CONTROLS.Data.Format.Field')) {
             throw new TypeError('Format should be an instance of SBIS3.CONTROLS.Data.Format.Field');

@@ -98,6 +98,10 @@ define('js!SBIS3.CONTROLS.Data.Format.FieldsFactory', [
        * @static
        */
       create: function(declaration) {
+         if (Object.getPrototypeOf(declaration) !== Object.prototype) {
+            throw new TypeError(this._moduleName + '::create(): declaration should be an instance of Object');
+         }
+
          var type = ('' + declaration.type).toLowerCase();
          switch (type) {
             case 'boolean':

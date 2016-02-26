@@ -29,46 +29,51 @@ define('js!SBIS3.CONTROLS.Data.Format.Format', [
          _items: []
       },
 
-      //region SBIS3.CONTROLS.Data.Collection.List
-
-      clear: function () {
-         //Format.superclass.clear.call(this);
-         throw new Error('Under construction');
+      $constructor: function () {
+         for (var i = 0, len = this._items.length; i < len; i++) {
+            this._checkItem(this._items[i]);
+         }
       },
 
+      //region SBIS3.CONTROLS.Data.Collection.List
+
       add: function (item, at) {
-         //Format.superclass.add.apply(this, arguments);
-         throw new Error('Under construction');
+         this._checkItem(item);
+         Format.superclass.add.apply(this, arguments);
       },
 
       remove: function (item) {
-         //return Format.superclass.remove.apply(this, arguments);
-         throw new Error('Under construction');
-      },
-
-      removeAt: function (index) {
-         //Format.superclass.removeAt.apply(this, arguments);
-         throw new Error('Under construction');
+         this._checkItem(item);
+         return Format.superclass.remove.apply(this, arguments);
       },
 
       replace: function (item, at) {
-         //Format.superclass.replace.apply(this, arguments);
-         throw new Error('Under construction');
+         this._checkItem(item);
+         Format.superclass.replace.apply(this, arguments);
       },
 
       assign: function (items) {
-         //Format.superclass.assign.call(this, items);
-         throw new Error('Under construction');
+         items = this._itemsToArray(items);
+         for (var i = 0, len = items.length; i < len; i++) {
+            this._checkItem(items[i]);
+         }
+         Format.superclass.assign.call(this, items);
       },
 
       append: function (items) {
-         //Format.superclass.append.call(this, items);
-         throw new Error('Under construction');
+         items = this._itemsToArray(items);
+         for (var i = 0, len = items.length; i < len; i++) {
+            this._checkItem(items[i]);
+         }
+         Format.superclass.append.call(this, items);
       },
 
       prepend: function (items) {
-         //Format.superclass.prepend.call(this, items);
-         throw new Error('Under construction');
+         items = this._itemsToArray(items);
+         for (var i = 0, len = items.length; i < len; i++) {
+            this._checkItem(items[i]);
+         }
+         Format.superclass.prepend.call(this, items);
       },
 
       //endregion SBIS3.CONTROLS.Data.Collection.List
@@ -79,23 +84,16 @@ define('js!SBIS3.CONTROLS.Data.Format.Format', [
       //region Public methods
 
       /**
-       * Добавляет поле в формат.
-       * Если поле с таким именем уже есть, генерирует исключение.
-       * @param {String} name Имя поля
-       * @param {SBIS3.CONTROLS.Data.Format.FieldType} type Тип поля
-       * @returns {SBIS3.CONTROLS.Data.Format.Field}
-       */
-      addField: function (name, type) {
-         throw new Error('Under construction');
-      },
-
-      /**
        * Удаляет поле из формата по имени.
        * Если поля с таким именем нет, генерирует исключение.
        * @param {String} name Имя поля
        */
       removeField: function (name) {
-         throw new Error('Under construction');
+         var index = this.getIndexByValue('name', name);
+         if (index === -1) {
+            throw new ReferenceError(this._moduleName + '::removeField(): field "' + name + '" is not found');
+         }
+         this.removeAt(index);
       },
 
       /**
@@ -105,7 +103,7 @@ define('js!SBIS3.CONTROLS.Data.Format.Format', [
        * @returns {Number}
        */
       getFieldndex: function (name) {
-         throw new Error('Under construction');
+         return this.getIndexByValue('name', name);
       },
 
       /**
@@ -115,7 +113,7 @@ define('js!SBIS3.CONTROLS.Data.Format.Format', [
        * @returns {String}
        */
       getFieldName: function (at) {
-         throw new Error('Under construction');
+         return this.at(at).getName();
       },
 
       /**
@@ -128,21 +126,25 @@ define('js!SBIS3.CONTROLS.Data.Format.Format', [
             JSON.stringify(this, serializer.serialize),
             serializer.deserialize
          );
-      }
+      },
 
       //endregion Public methods
 
-   });
+      //region Protected methods
 
-   /**
-    * Конструирует формат полей по декларативному описанию
-    * @param {Array.<SBIS3.CONTROLS.Data.Format.Field/FieldDeclaration>} declaration Декларативное описание
-    * @returns {SBIS3.CONTROLS.Data.Format.Format}
-    * @static
-    */
-   Format.fromDeclaration = function(declaration) {
-      throw new Error('Under construction');
-   };
+      /**
+       * Проверяет, что переданный элемент - модель
+       * @protected
+       */
+      _checkItem: function (item) {
+         if(!item || !$ws.helpers.instanceOfModule(item, 'SBIS3.CONTROLS.Data.Format.Field')){
+            throw new TypeError('Item should be an instance of SBIS3.CONTROLS.Data.Format.Field');
+         }
+      }
+
+      //endregion Protected methods
+
+   });
 
    return Format;
 });
