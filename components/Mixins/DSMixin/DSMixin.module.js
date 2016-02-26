@@ -541,7 +541,6 @@ define('js!SBIS3.CONTROLS.DSMixin', [
                 .addErrback($ws.helpers.forAliveOnly(function (error) {
                    if (!error.canceled) {
                       self._toggleIndicator(false);
-                      this._redraw();
                       if (self._notify('onDataLoadError', error) !== true) {
                          $ws.helpers.message(error.message.toString().replace('Error: ', ''));
                       }
@@ -550,7 +549,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
                 }, self));
              this._loader = def;
           } else {
-
+             this._redraw();
              def = new $ws.proto.Deferred();
              def.callback();
           }
