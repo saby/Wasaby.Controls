@@ -86,6 +86,21 @@ define('js!SBIS3.CONTROLS.DSMixin', [
        *    });
        * </pre>
        */
+      /**
+       * @event onItemsReady при готовности экземпляра коллекции iList
+       * @remark
+       * Например когда представлению задается Source и нужно подписаться на события List, который вернется в результате запроса
+       * @param {$ws.proto.EventObject} eventObject Дескриптор события.
+       * @example
+       * <pre>
+       *    myView.subscribe('onItemsReady', function(event){
+       *       var items = this.getItems();
+       *       items.subscribe('onCollectionChange', function(){
+       *          alert('Collection is changed')
+       *       })
+       *    });
+       * </pre>
+       */
       $protected: {
          _needToRedraw: false,
          _itemsProjection: null,
@@ -297,6 +312,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
                this._itemsProjection = itemsOpt;
                this._items = this._convertItems(this._itemsProjection.getCollection());
                this._setItemsEventHandlers();
+               this._notify('onItemsReady');
                this._itemsReadyCallback();
             }
             else if (itemsOpt instanceof Array) {
@@ -318,6 +334,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
                this._items = itemsOpt;
                this._createDefaultProjection(this._items);
                this._itemsReadyCallback();
+               this._notify('onItemsReady');
             }
          }
       },
@@ -511,6 +528,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
                       self._dataSet = list;
                       self._createDefaultProjection(self._items);
                       self._setItemsEventHandlers();
+                      this._notify('onItemsReady');
                       self._itemsReadyCallback();
                       self._dataLoadedCallback();
 
