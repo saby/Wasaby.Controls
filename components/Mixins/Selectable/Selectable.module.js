@@ -113,6 +113,9 @@ define('js!SBIS3.CONTROLS.Selectable', ['js!SBIS3.CONTROLS.Data.Utils', 'js!SBIS
       },
 
       before : {
+         setItems: function() {
+            this._options.selectedIndex = -1;
+         },
          destroy: function () {
             if (this._utilityEnumerator) {
                this._utilityEnumerator.unsetObservableCollection(
