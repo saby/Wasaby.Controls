@@ -289,7 +289,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
       },
 
       $constructor: function () {
-         this._publish('onDrawItems', 'onDataLoad', 'onDataLoadError', 'onBeforeDataLoad');
+         this._publish('onDrawItems', 'onDataLoad', 'onDataLoadError', 'onBeforeDataLoad', 'onItemsReady');
          if (typeof this._options.pageSize === 'string') {
             this._options.pageSize = this._options.pageSize * 1;
          }
