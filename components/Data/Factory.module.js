@@ -48,7 +48,7 @@ define('js!SBIS3.CONTROLS.Data.Factory', [
       cast: function (value, type, adapter, meta) {
          //TODO: вместо type + meta принимать fieldInfo
          if (value === undefined || value === null) {
-            return value;
+            return null;
          }
 
          switch (type) {
