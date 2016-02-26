@@ -1117,6 +1117,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
       },
 
       _moveItem: function(item, to){
+         item = item.getContents();
          var targetNode = this._getTargetContainer(item),
             fromContainer = this._getItemContainer(targetNode, item),
             toContainer = this._getItemContainerByIndex(targetNode, to);
