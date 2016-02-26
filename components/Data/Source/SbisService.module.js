@@ -168,13 +168,15 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
          if ('service' in cfg && !('resource' in cfg)) {
             this._options.resource = cfg.service;
             this._options.service = '';
-            $ws.single.ioc.resolve('ILogger').log('SBIS3.CONTROLS.Data.Source.SbisService', 'option "service" is deprecated and will be removed in 3.7.4. Use "resource" instead.');
+         }
+         if (this._options.service && typeof this._options.service === 'object') {
+            this._options.resource = this._options.service.name || '';
+            this._options.service = this._options.service.serviceUrl || '';
          }
          if (this._options.resource && typeof this._options.resource === 'object') {
             this._options.service = this._options.resource.serviceUrl || '';
             this._options.resource = this._options.resource.name || '';
          }
-
       },
 
       //region SBIS3.CONTROLS.Data.Source.ISource
