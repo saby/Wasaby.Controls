@@ -106,8 +106,14 @@ define('js!SBIS3.CONTROLS.FilterHistory',
        * @private
        */
       toggleHistoryBlock: function(closed) {
+         var isBooleanArg = typeof closed === 'boolean';
+
          this._container.find('.controls-filterButton__historyView-wrapper')
-                        .toggleClass('controls-filterButton__historyView-maxHeight', typeof closed === 'boolean' ? closed : undefined);
+                        .toggleClass('controls-filterButton__historyView-maxHeight', isBooleanArg ? closed : undefined);
+
+         if(isBooleanArg) {
+            this._toggleHistoryButton.setChecked(!closed);
+         }
       },
 
       /**

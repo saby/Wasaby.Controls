@@ -80,21 +80,42 @@ define([
          describe('.$constructor()', function () {
             it('should take limited time', function() {
                this.timeout(5000);
-               if (window) window['console'].time('BatchCreating');
-               for (var i = 0; i < 10000; i++) {
-                  var item = {};
-                  for (var j = 0; j < 200; j++) {
-                     item['f' + j] = j;
-                  }
-                  item.id = i;
-                  item.title = 'Item ' + i;
 
-                  var model = new Model({
-                     idProperty: 'id',
-                     rawData: item
-                  });
+               var testFor = function(factory) {
+                     var start = Date.now(),
+                        i,
+                        obj;
+                     for (i = 0; i < count; i++) {
+                        obj = factory(getRawData());
+                     }
+                     obj = undefined;
+                     return Date.now() - start;
+                  },
+                  getRawData = function() {
+                     var data = {};
+                     for (var j = 0; j < fields; j++) {
+                        data['f' + j] = j;
+                     }
+                     return data;
+                  },
+                  count = 10000,
+                  fields = 100;
+
+               var mine = testFor(function(data) {
+                     return new Model({
+                        rawData: data
+                     });
+                  }),
+                  native = testFor(function(data) {
+                     return new Object({
+                        data: data
+                     });
+                  }),
+                  rel = mine / native;
+               if (window) {
+                  window.console.log('Model batch creating: ' + [mine, native, rel].join(', '));
                }
-               if (window) window['console'].timeEnd('BatchCreating');
+               assert.isBelow(rel, 5);
             });
          });
 
@@ -499,67 +520,6 @@ define([
                anotherModel._isDeleted = true;
                model.merge(anotherModel);
                assert.isTrue(model.isDeleted());
-            });
-         });
-
-         describe('.isEqual()', function () {
-            it('should return true with shared raw data', function () {
-               var anotherModel = getModel(modelData);
-               assert.isTrue(model.isEqual(anotherModel));
-            });
-            it('should return true with same raw data', function () {
-               var anotherModel = getModel(getModelData());
-               assert.isTrue(model.isEqual(anotherModel));
-            });
-            it('should return false with different raw data', function () {
-               var data = getModelData();
-               data.someField = 'someValue';
-               var anotherModel = getModel(data);
-               assert.isFalse(model.isEqual(anotherModel));
-
-               data = getModelData();
-               for (var key in data) {
-                  if (data.hasOwnProperty(key)) {
-                     delete data[key];
-                     break;
-                  }
-               }
-               anotherModel = getModel(data);
-               assert.isFalse(model.isEqual(anotherModel));
-            });
-            it('should return false for changed and true for reverted back model', function () {
-               var anotherModel = getModel(getModelData());
-               anotherModel.set('max', 1 + model.get('max'));
-               assert.isFalse(model.isEqual(anotherModel));
-
-               anotherModel.set('max', model.get('max'));
-               assert.isTrue(model.isEqual(anotherModel));
-            });
-            it('should return true with itself', function () {
-               assert.isTrue(model.isEqual(model));
-
-               model.set('max', 1 + model.get('max'));
-               assert.isTrue(model.isEqual(model));
-            });
-            it('should return true for same module and false for different module', function () {
-               var MyModel = Model.extend({}),
-                  modelA = new Model(),
-                  modelB = new Model(),
-                  modelC = new MyModel();
-               assert.isTrue(modelA.isEqual(modelB));
-               assert.isFalse(modelA.isEqual(modelC));
-            });
-            it('should work fine with invalid argument', function () {
-               assert.isFalse(model.isEqual());
-               assert.isFalse(model.isEqual(null));
-               assert.isFalse(model.isEqual(false));
-               assert.isFalse(model.isEqual(true));
-               assert.isFalse(model.isEqual(0));
-               assert.isFalse(model.isEqual(1));
-               assert.isFalse(model.isEqual(''));
-               assert.isFalse(model.isEqual('a'));
-               assert.isFalse(model.isEqual([]));
-               assert.isFalse(model.isEqual({}));
             });
          });
 

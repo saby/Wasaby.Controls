@@ -14,7 +14,7 @@
 
       &.controls-ItemsToolbar__vertical {
          margin: 1px 1px 0 0;
-         
+
          .controls-ItemActions {
             height: auto;
             width: @list-view-actions-verAlign-width;
@@ -42,6 +42,9 @@
       .controls-ItemsToolbar {
          background-color: @list-view-items-toolbar-bg;
          box-shadow: @list-view-items-toolbar-box-shadow;
+         &.controls-ItemsToolbar__locked {
+            background-color: @list-view-items-toolbar-locked-bg;
+         }
          &.controls-ItemsToolbar__vertical {
             box-shadow: @list-view-items-toolbar-vertical-box-shadow;
          }
@@ -63,8 +66,17 @@
    &.controls-ListView__bottomStyle {
       padding-bottom: @bottomStyle-items-toolbar-height;
       .controls-ItemsToolbar {
+         background-color: @list-view-items-toolbar-bg;
          box-shadow: none;
-         background-color: #F0F5FB;
+         &.controls-ItemsToolbar__locked {
+            background-color: @list-view-items-toolbar-locked-bg;
+            &:before {
+               background: url('img/items-toolbar-bottom-style-background.png') no-repeat 0 -30px;
+            }
+            &:after {
+               background: url('img/items-toolbar-bottom-style-background.png') no-repeat -24px -30px;
+            }
+         }
          margin-bottom: @bottomStyle-items-toolbar-margin-bottom;
          height: @bottomStyle-items-toolbar-height - 1;
          border-bottom: 1px solid @bottomStyle-items-toolbar-border-color;
@@ -72,7 +84,7 @@
             content: '';
             position: absolute;
             display: block;
-            background: url('img/items-actions-bottom-style-background.png') no-repeat 0 0;
+            background: url('img/items-toolbar-bottom-style-background.png') no-repeat 0 0;
             width: 24px;
             height: @bottomStyle-items-toolbar-height;
             left: -24px;
@@ -81,7 +93,7 @@
             content: '';
             position: absolute;
             display: block;
-            background: url('img/items-actions-bottom-style-background.png') no-repeat 100% 0;
+            background: url('img/items-toolbar-bottom-style-background.png') no-repeat -24px 0;
             width: 3px;
             height: @bottomStyle-items-toolbar-height;
             right: -3px;
@@ -108,22 +120,35 @@
 }
 .ws-is-mobile-platform {
    .controls-ListView {
-      .controls-ItemsToolbar__container {
-         position: relative;
+      &:not(.controls-ListView__bottomStyle) {
+         .controls-ItemsToolbar:not(.controls-ItemsToolbar__vertical){
+            margin: 0;
+            .controls-ItemsToolbar__container {
+               top: 50%;
+               margin-top: -@list-view-actions-menu-touch-height / 2;
+            }
+         }
+         .controls-ItemsToolbar {
+            overflow: hidden;
+         }
+      }
+      .controls-ItemsToolbar {
+         box-shadow: none;
+         .controls-ItemsToolbar__container {
+            position: relative;
+
+            .controls-ItemActions .controls-ItemActions__itemsContainer {
+               & > * {
+                  margin-top: 0;
+               }
+            }
+         }
       }
       .controls-ItemsToolbar__vertical {
          .controls-ItemActions {
             margin: 2px 3px 0 0;
             .controls-ItemActions__menu-button {
                margin-right: -10px;
-            }
-         }
-      }
-      :not(.controls-ItemsToolbar__vertical){
-         .controls-ItemActions {
-            .controls-ItemActions__itemsContainer {
-               top: 50%;
-               margin-top: -@list-view-actions-menu-touch-height / 2;
             }
          }
       }

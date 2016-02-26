@@ -8,8 +8,8 @@ define('js!SBIS3.CONTROLS.Data.Record', [
    'js!SBIS3.CONTROLS.Data.FormattableMixin',
    'js!SBIS3.CONTROLS.Data.Di',
    'js!SBIS3.CONTROLS.Data.Factory',
-   'js!SBIS3.CONTROLS.Data.ContextField'
-], function (IPropertyAccess, IEnumerable, ArrayEnumerator, SerializableMixin, Serializer, FormattableMixin, Di, Factory, ContextField) {
+   'js!SBIS3.CONTROLS.Data.ContextField.Record'
+], function (IPropertyAccess, IEnumerable, ArrayEnumerator, SerializableMixin, Serializer, FormattableMixin, Di, Factory, ContextFieldRecord) {
    'use strict';
 
    /**
@@ -91,7 +91,7 @@ define('js!SBIS3.CONTROLS.Data.Record', [
          }
 
          var oldValue = this._getRawDataValue(name);
-         if (oldValue !== value) {
+         if (!this._isEqualValues(oldValue, value)) {
             this._setRawDataValue(name, value);
             if (!this.has(name)) {
                this._addRawDataField(name);
@@ -146,16 +146,30 @@ define('js!SBIS3.CONTROLS.Data.Record', [
       //region SBIS3.CONTROLS.Data.SerializableMixin
 
       _getSerializableState: function() {
-         return $ws.core.merge(
+         var state = $ws.core.merge(
             Record.superclass._getSerializableState.call(this), {
                _changedFields: this._changedFields
             }
          );
+
+         //Prevent core reviver for rawData
+         if (state._options && state._options.rawData && state._options.rawData._type) {
+            state._options.rawData.$type = state._options.rawData._type;
+            delete state._options.rawData._type;
+         }
+
+         return state;
       },
 
       _setSerializableState: function(state) {
          return Record.superclass._setSerializableState(state).callNext(function() {
             this._changedFields = state._changedFields;
+
+            //Restore value hidden from core reviver
+            if (this._options && this._options.rawData && this._options.rawData.$type) {
+               this._options.rawData._type = this._options.rawData.$type;
+               delete this._options.rawData.$type;
+            }
          });
       },
 
@@ -363,6 +377,50 @@ define('js!SBIS3.CONTROLS.Data.Record', [
       },
 
       /**
+       * Сравнивает два значения на эквивалентность (в том числе через интерфейс сравнения)
+       * @param {Boolean} a Значение A
+       * @param {Boolean} b Значение B
+       * @returns {Boolean}
+       * @protected
+       */
+      _isEqualValues: function(a, b) {
+         if (a === b) {
+            return true;
+         }
+
+         if (this._isComparable(a) && this._isComparable(b)) {
+            return a.isEqual(b);
+         }
+
+         if (a && $ws.helpers.instanceOfModule(a, 'SBIS3.CONTROLS.Data.Types.Enum') &&
+            b && $ws.helpers.instanceOfModule(b, 'SBIS3.CONTROLS.Data.Types.Enum')
+         ) {
+            return a.equals(b);
+         }
+
+         if (a && $ws.helpers.instanceOfModule(a, 'SBIS3.CONTROLS.Data.Types.Flags') &&
+            b && $ws.helpers.instanceOfModule(b, 'SBIS3.CONTROLS.Data.Types.Flags')
+         ) {
+            return a.equals(b);
+         }
+
+         return false;
+      },
+
+      /**
+       * Проверяет наличие интерфейса сравнения у объекта
+       * @param {Object} value
+       * @returns {Boolean}
+       * @protected
+       */
+      _isComparable: function(value) {
+         if (!value) {
+            return false;
+         }
+         return $ws.helpers.instanceOfModule(value, 'SBIS3.CONTROLS.Data.Record');
+      },
+
+      /**
        * Устанавливает признак изменения поля
        * @param {String} name Название поля
        * @param {Boolean} value Старое значение поля
@@ -388,7 +446,7 @@ define('js!SBIS3.CONTROLS.Data.Record', [
 
    Di.register('record', Record);
 
-   ContextField.registerRecord('ControlsDataRecord', Record, 'onPropertyChange');
+   $ws.proto.Context.registerFieldType(new ContextFieldRecord({module: Record}));
 
    return Record;
 });

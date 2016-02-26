@@ -48,14 +48,13 @@ define('js!SBIS3.CONTROLS.MoveDialogTemplate', [
          var
              self = this.getParent(),
              moveTo = self._treeView.getSelectedKey();
-         if (moveTo !== null) {
-            moveTo = self._treeView._dataSet.getRecordByKey(moveTo);
-         }
+         moveTo = moveTo !== 'null' ? self._treeView._dataSet.getRecordByKey(moveTo) : null;
          if (self._treeView._checkRecordsForMove(self._options.records, moveTo)) {
             self._options.linkedView._move(self._options.records, moveTo);
          }
          this.sendCommand('close');
       },
+      //TODO: в 3.7.4 переделать на фейковую запись, а не тупо подпихивать tr.
       _createRoot: function() {
          var
              self = this,
@@ -63,11 +62,18 @@ define('js!SBIS3.CONTROLS.MoveDialogTemplate', [
          rootBlock.bind('click', function(event) {
             self._container.find('.controls-ListView__item').toggleClass('ws-hidden');
             rootBlock.toggleClass('ws-hidden').find('.controls-TreeView__expand').toggleClass('controls-TreeView__expand__open');
-            self.setSelectedKey(null);
+            self.setSelectedKey('null');
+            rootBlock.addClass('controls-ListView__item__selected');
             event.stopPropagation();
          });
          rootBlock.prependTo(self._container.find('tbody'));
-         self.setSelectedKey(null);
+         self.setSelectedKey('null');
+         //TODO: Установим марке отметки на фейковый корень по таймауту т.к. сначала стреляет событие onDrawItems по которому
+         //вызывается данный метод, а потом отрабатывает метод _drawItemsCallback который в Selectable.module.js
+         //убирает маркер т.к. не находит запись с id='null' в наборе данных.
+         setTimeout(function() {
+            rootBlock.addClass('controls-ListView__item__selected');
+         }, 0);
       }
    });
 

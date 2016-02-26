@@ -60,7 +60,8 @@ define('js!SBIS3.CONTROLS.FieldLink',
     * @mixes SBIS3.CONTROLS.FormWidgetMixin
     * @demo SBIS3.CONTROLS.Demo.FieldLinkWithEditInPlace Поле связи с редактированием по месту
     * @demo SBIS3.CONTROLS.Demo.FieldLinkDemo
-    * @cssModifier controls-FieldLink__itemsEdited При наведении на выделенные элементы, они подчёркиваются.
+    * @cssModifier controls-FieldLink__itemsEdited При наведении на выбранные элементы в поле связи, они подчёркиваются.
+    * @cssModifier controls-FieldLink__itemsBold Текст выбранных элементов в поле связи отображается жирным.
     * @control
     * @public
     * @author Крайнов Дмитрий Олегович
@@ -246,7 +247,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
       _onResizeHandler: function() {
          FieldLink.superclass._onResizeHandler.apply(this, arguments);
          if(!this._linkCollection.isPickerVisible()) {
-            this._linkCollection.reload();
+            this.updateInputWidth();
          }
       },
 
@@ -389,7 +390,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
             то отрисовываться он не будет и покажется троеточие, однако хотя бы один элемент в поле связи должен поместиться */
          if(this._checkWidth) {
             inputWidth = this._getInputWidth();
-            needDrawItem = $ws.helpers.getTextWidth(item[0].outerHTML) + isMultiSelect ? INPUT_MIN_WIDTH : 0 < inputWidth + SHOW_ALL_LINK_WIDTH;
+            needDrawItem = ($ws.helpers.getTextWidth(item[0].outerHTML) + (isMultiSelect ? INPUT_MIN_WIDTH : 0)) < inputWidth + SHOW_ALL_LINK_WIDTH;
 
             if(!needDrawItem) {
                if(!this._linkCollection.getContainer().find('.controls-FieldLink__linkItem').length) {

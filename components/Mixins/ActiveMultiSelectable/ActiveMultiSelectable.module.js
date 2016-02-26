@@ -61,23 +61,29 @@ define('js!SBIS3.CONTROLS.ActiveMultiSelectable', [], function() {
       addSelectedItems: propertyUpdateWrapper(function(items) {
          var self = this,
              newItems = items instanceof Array ? this._makeList(items) : items,
-             selItems = this._options.selectedItems;
+             selItems = this._options.selectedItems,
+             itemsToAdd = [];
+
+         /* Функция проверяет запись на выбранность, если не выбрана, то добавляет в массив для добавления */
+         function checkAndPushItem(rec) {
+            if(!self._isItemSelected(rec)) {
+               itemsToAdd.push(rec);
+            }
+         }
 
          /* Если добавляемых элементов нет, то ничего не делаем */
          if(!newItems.getCount()) return;
 
-         if(this._options.multiselect) {
-            newItems.each(function(rec) {
-               if(!self._isItemSelected(rec)) {
-                  selItems.add(rec);
-               }
-            });
-         } else {
-            selItems[selItems.getCount() ? 'replace' : 'add'](newItems.at(0), 0);
-         }
+         /* Если включён множественный выбор, то добавим все, иначе добавим первый */
+         this._options.multiselect ?
+             newItems.each(checkAndPushItem) :
+             checkAndPushItem(newItems.at(0));
 
-         this.setSelectedKeys(this._convertToKeys(selItems));
-         this._notifyOnPropertyChanged('selectedItems');
+         if(itemsToAdd.length) {
+            selItems.concat(itemsToAdd);
+            this.setSelectedKeys(this._convertToKeys(selItems));
+            this._notifyOnPropertyChanged('selectedItems');
+         }
       }),
 
       _convertToKeys: function(list) {

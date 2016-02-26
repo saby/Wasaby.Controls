@@ -1,4 +1,6 @@
-define('js!SBIS3.CONTROLS.TreeMixinDS', ['js!SBIS3.CORE.Control'], function (Control) {
+define('js!SBIS3.CONTROLS.TreeMixinDS', ['js!SBIS3.CORE.Control',
+   'js!SBIS3.CONTROLS.BreadCrumbs',
+   'browser!html!SBIS3.CONTROLS.DataGridView/resources/DataGridViewGroupBy', 'js!SBIS3.CONTROLS.Data.Projection.Tree'], function (Control, BreadCrumbs, groupByTpl, TreeProjection) {
    /**
     * Позволяет контролу отображать данные имеющие иерархическую структуру и работать с ними.
     * @mixin SBIS3.CONTROLS.TreeMixinDS
@@ -7,6 +9,19 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', ['js!SBIS3.CORE.Control'], function (Con
     */
 
    var TreeMixinDS = /** @lends SBIS3.CONTROLS.TreeMixinDS.prototype */{
+      /**
+       * @event onSearchPathClick При клике по хлебным крошкам в режиме поиска.
+       * Событие, происходящее после клика по хлебным крошкам, отображающим результаты поиска
+       * @param {$ws.proto.EventObject} eventObject Дескриптор события.
+       * @param {number} id ключ узла, по которму кликнули
+       * @return Если вернуть false - загрузка узла не произойдет
+       * @example
+       * <pre>
+       *    DataGridView.subscribe('onSearchPathClick', function(event){
+       *      searchForm.clearSearch();
+       *    });
+       * </pre>
+       */
       /**
        * @event onNodeExpand После разворачивания ветки
        * @param {$ws.proto.EventObject} eventObject Дескриптор события.
@@ -28,6 +43,19 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', ['js!SBIS3.CORE.Control'], function (Con
        *    }
        * </pre>
        */
+      /**
+       * @event onSearchPathClick При клике по хлебным крошкам в режиме поиска.
+       * Событие, происходящее после клика по хлебным крошкам, отображающим результаты поиска
+       * @param {$ws.proto.EventObject} eventObject Дескриптор события.
+       * @param {number} id ключ узла, по которму кликнули
+       * @return Если вернуть false - загрузка узла не произойдет
+       * @example
+       * <pre>
+       *    DataGridView.subscribe('onSearchPathClick', function(event){
+       *      searchForm.clearSearch();
+       *    });
+       * </pre>
+       */
       $protected: {
          _folderOffsets : {},
          _folderHasMore : {},
@@ -43,6 +71,11 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', ['js!SBIS3.CORE.Control'], function (Con
              * @cfg {Boolean} Опция задаёт режим разворота. false Без разворота
              */
             expand: false,
+            /**
+             * @cfg {Boolean} Запрашивать записи для папки если в текущем наборе данных их нет
+             * @noShow
+             */
+            partialyReload: true,
             openedPath : {},
             folderFooterTpl: undefined,
             /**
@@ -52,17 +85,46 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', ['js!SBIS3.CORE.Control'], function (Con
              */
             allowEnterToFolder: true
          },
-         _foldersFooters: {}
+         _foldersFooters: {},
+         _breadCrumbs : [],
+         _lastParent : undefined,
+         _lastDrawn : undefined,
+         _lastPath : []
       },
 
       $constructor : function() {
          var filter = this.getFilter() || {};
+         this._publish('onSearchPathClick', 'onNodeExpand');
+
          if (this._options.expand) {
             filter['Разворот'] = 'С разворотом';
             filter['ВидДерева'] = 'Узлы и листья';
          }
          this.setFilter(filter, true);
       },
+
+      _createDefaultProjection : function(items) {
+         var root;
+         if (typeof this._curRoot != 'undefined') {
+            root = this._curRoot;
+         }
+         else {
+            if (typeof this._options.root != 'undefined') {
+               root = this._options.root;
+            }
+            else {
+               root = null;
+            }
+         }
+         this._itemsProjection = new TreeProjection({
+            collection: items,
+            idProperty: this._options.keyField || (this._dataSource ? this._dataSource.getIdProperty() : ''),
+            parentProperty: this._options.hierField,
+            nodeProperty: this._options.hierField + '@',
+            root: root
+         });
+      },
+
       _getRecordsForRedraw: function() {
          /*Получаем только рекорды с parent = curRoot*/
          var
@@ -101,6 +163,7 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', ['js!SBIS3.CORE.Control'], function (Con
          this._collapseChilds(key);
          delete(this._options.openedPath[key]);
          this._nodeClosed(key);
+         this._updateItemsToolbar()
          this._notify('onNodeCollapse', key);
       },
 
@@ -151,44 +214,47 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', ['js!SBIS3.CORE.Control'], function (Con
       },
 
       expandNode: function (key) {
-         /* Если узел уже открыт, то ничего делать не надо*/
-         if(this.getOpenedPath()[key]) {
-            return;
+
+         if(!this._options.openedPath[key]) {
+            var self = this,
+               tree = this._dataSet.getTreeIndex(this._options.hierField, true);
+
+            this._folderOffsets[key || 'null'] = 0;
+            this._options.openedPath[key] = true;
+            this._closeAllExpandedNode(key);
+            if (!tree[key] && this._options.partialyReload) {
+               this._toggleIndicator(true);
+               this._notify('onBeforeDataLoad');
+               return this._callQuery(this._createTreeFilter(key), this.getSorting(), 0, this._limit).addCallback(function (dataSet) {
+                  // TODO: Отдельное событие при загрузке данных узла. Сделано так как тут нельзя нотифаить onDataLoad,
+                  // так как на него много всего завязано. (пользуется Янис)
+                  self._folderHasMore[key] = dataSet.getMetaData().more;
+                  self._notify('onDataMerge', dataSet);
+                  self._toggleIndicator(false);
+                  self._nodeDataLoaded(key, dataSet);
+                  self._notify('onNodeExpand', key);
+               });
+            } else {
+               var child = tree[key];
+               var records = [];
+               if (child) {
+                  for (var i = 0; i < child.length; i++) {
+                     records.push(this._dataSet.getRecordById(child[i]));
+                  }
+               }
+               this._drawLoadedNode(key, records, this._folderHasMore[key]);
+               this._notify('onNodeExpand', key);
+            }
          }
-
-         var self = this,
-             tree = this._dataSet.getTreeIndex(this._options.hierField, true);
-
-         this._folderOffsets[key || 'null'] = 0;
+      },
+      _closeAllExpandedNode: function(key){
+         var self = this;
          if (this._options.singleExpand){
             $.each(this._options.openedPath, function(openedKey, _value){
                if (key != openedKey){
                   self.collapseNode(openedKey);
                }
             });
-         }
-         if (!tree[key]){
-            this._toggleIndicator(true);
-            return this._callQuery(this._createTreeFilter(key), this.getSorting(), 0, this._limit).addCallback(function (dataSet) {
-               // TODO: Отдельное событие при загрузке данных узла. Сделано так как тут нельзя нотифаить onDataLoad,
-               // так как на него много всего завязано. (пользуется Янис)
-               self._folderHasMore[key] = dataSet.getMetaData().more;
-               self._notify('onDataMerge', dataSet);
-               self._toggleIndicator(false);
-               self._nodeDataLoaded(key, dataSet);
-               self._notify('onNodeExpand', key);
-            });
-         } else {
-            var child = tree[key];
-            var records = [];
-            if (child){
-               for (var i = 0; i < child.length; i++){
-                  records.push(this._dataSet.getRecordById(child[i]));
-               }
-               this._options.openedPath[key] = true;
-               this._drawLoadedNode(key, records, this._folderHasMore[key]);
-               this._notify('onNodeExpand', key);
-            }
          }
       },
       /**
@@ -214,6 +280,7 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', ['js!SBIS3.CORE.Control'], function (Con
                }
             }
          }
+         this._updateItemsToolbar();
       },
 
       _drawExpandArrow: function(key, flag){
@@ -223,13 +290,14 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', ['js!SBIS3.CORE.Control'], function (Con
 
       _nodeDataLoaded : function(key, dataSet) {
          var self = this;
+         this._needToRedraw = false;
          this._dataSet.merge(dataSet, {remove: false});
+         this._needToRedraw = true;
          this._dataSet.getTreeIndex(this._options.hierField, true);
          var records = [];
          dataSet.each(function (record) {
             records.push(record);
          });
-         this._options.openedPath[key] = true;
          self._drawLoadedNode(key, records, self._folderHasMore[key]);
       },
 
@@ -240,6 +308,9 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', ['js!SBIS3.CORE.Control'], function (Con
             if (this._options.openedPath[parent] || (parent == this._curRoot)) {
                parentFnc.call(this, item, at);
             }
+         },
+         _isViewElement: function(parentFunc, elem) {
+            return  parentFunc.call(this, elem) && !elem.hasClass('controls-HierarchyDataGridView__path') && !(elem.wsControl() instanceof BreadCrumbs);
          }
       },
 
@@ -278,6 +349,7 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', ['js!SBIS3.CORE.Control'], function (Con
          var
             self = this,
             filter = id ? this._createTreeFilter(id) : this.getFilter();
+         this._notify('onBeforeDataLoad');
          this._loader = this._callQuery(filter, this.getSorting(), (id ? this._folderOffsets[id] : this._folderOffsets['null']) + this._limit, this._limit).addCallback($ws.helpers.forAliveOnly(function (dataSet) {
             //ВНИМАНИЕ! Здесь стрелять onDataLoad нельзя! Либо нужно определить событие, которое будет
             //стрелять только в reload, ибо между полной перезагрузкой и догрузкой данных есть разница!
@@ -382,6 +454,9 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', ['js!SBIS3.CORE.Control'], function (Con
       before: {
          reload : function() {
             this._folderOffsets['null'] = 0;
+            this._lastParent = undefined;
+            this._lastDrawn = undefined;
+            this._lastPath = [];
          },
          _keyboardHover: function(e) {
             switch(e.which) {
@@ -408,6 +483,10 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', ['js!SBIS3.CORE.Control'], function (Con
          },
          _clearItems: function() {
             var self = this;
+            this._lastParent = this._curRoot;
+            this._lastDrawn = undefined;
+            this._lastPath = [];
+            this._destroySearchBreadCrumbs();
             $ws.helpers.forEach(this._foldersFooters, function(val, key) {
                self._destroyFolderFooter([key]);
             });
@@ -441,6 +520,172 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', ['js!SBIS3.CORE.Control'], function (Con
                this._activateItem(id);
             }
          }
+      },
+      /*----------------HierarchySearchGroupBy-----------------*/
+      getSearchGroupBy: function(field){
+         return {
+            field: field,
+            template : groupByTpl,
+            method : this._searchMethod.bind(this),
+            render : this._searchRender.bind(this)
+         }
+      },
+      //----------------- defaultSearch group
+      /**
+       * Метод поиска по умолчанию
+       * @param record
+       * @param at
+       * @returns {{drawItem: boolean, drawGroup: boolean}}
+       */
+      _searchMethod: function(record, at, last){
+         //TODO lastParent - curRoot - правильно?. 2. Данные всегда приходят в правильном порядке?
+         var key,
+               curRecRoot,
+               drawItem = false,
+               kInd = -1;
+         if (this._lastParent === undefined) {
+            this._lastParent = this._curRoot;
+         }
+         key = record.getKey();
+         curRecRoot = record.get(this._options.hierField);
+         //TODO для SBISServiceSource в ключе находится массив, а теперь он еще и к строке приводится...
+         curRecRoot = curRecRoot instanceof Array ? curRecRoot[0] : curRecRoot;
+         if (curRecRoot == this._lastParent){
+            //Лист
+            if (record.get(this._options.hierField + '@') !== true){
+               //Нарисуем путь до листа, если пришли из папки
+               if (this._lastDrawn !== 'leaf' && this._lastPath.length) {
+                  this._drawGroup(record, at);
+               }
+               this._lastDrawn = 'leaf';
+               drawItem = true;
+            } else { //папка
+               this._lastDrawn = undefined;
+               this._lastPath.push(record);
+               this._lastParent = key;
+               //Если мы уже в последней записи в иерархии, то нужно отрисовать крошки и сбросить сохраненный путь
+               if (last) {
+                  this._drawGroup(record, at);
+                  this._lastPath = [];
+                  this._lastParent = this._curRoot;
+               }
+            }
+         } else {//другой кусок иерархии
+            //Если текущий раздел у записи есть в lastPath, то возьмем все элементы до этого ключа
+            kInd = -1;
+            for (var k = 0; k < this._lastPath.length; k++) {
+               if (this._lastPath[k].getKey() == curRecRoot){
+                  kInd = k;
+                  break;
+               }
+            }
+            //Если текущий раздел есть в this._lastPath его надо нарисовать
+            if (  this._lastDrawn !== 'leaf' && this._lastPath.length) {
+               this._drawGroup(record, at);
+            }
+            this._lastDrawn = undefined;
+            this._lastPath = kInd >= 0 ? this._lastPath.slice(0, kInd + 1) : [];
+            //Лист
+            if (record.get(this._options.hierField + '@') !== true){
+               if ( this._lastPath.length) {
+                  this._drawGroup(record, at);
+               }
+               drawItem = true;
+               this._lastDrawn = 'leaf';
+               this._lastParent = curRecRoot;
+            } else {//папка
+               this._lastDrawn = undefined;
+               this._lastPath.push(record);
+               this._lastParent = key;
+               //Если мы уже в последней записи в иерархии, то нужно отрисовать крошки и сбросить сохраненный путь
+               if (last) {
+                  this._drawGroup(record, at);
+                  this._lastPath = [];
+                  this._lastParent = this._curRoot;
+               }
+            }
+         }
+         return {
+            drawItem : drawItem,
+            drawGroup: false
+         };
+      },
+      _searchRender: function(item, container){
+         this._drawBreadCrumbs(this._lastPath, item, container);
+         return container;
+      },
+      _drawBreadCrumbs:function(path, record, container){
+         if (path.length) {
+            var self = this,
+                  elem,
+                  groupBy = this._options.groupBy,
+                  cfg,
+                  td = container.find('td');
+            td.append(elem = $('<div style="width:'+ td.width() +'px"></div>'));
+            cfg = {
+               element : elem,
+               items: this._createPathItemsDS(path),
+               parent: this.getTopParent(),
+               highlightEnabled: this._options.highlightEnabled,
+               highlightText: this._options.highlightText,
+               colorMarkEnabled: this._options.colorMarkEnabled,
+               colorField: this._options.colorField,
+               className : 'controls-BreadCrumbs__smallItems',
+               enable: this._options.allowEnterToFolder
+            };
+            if (groupBy.hasOwnProperty('breadCrumbsTpl')){
+               cfg.itemTemplate = groupBy.breadCrumbsTpl
+            }
+            var ps = new BreadCrumbs(cfg);
+            ps.once('onItemClick', function(event, id){
+               //Таблицу нужно связывать только с тем PS, в который кликнули. Хорошо, что сначала идет _notify('onBreadCrumbClick'), а вотом выполняется setCurrentRoot
+               event.setResult(false);
+               //TODO Выпилить в .100 проверку на задизабленность, ибо событие вообще не должно стрелять и мы сюда не попадем, если крошки задизаблены
+               if (this.isEnabled() && self._notify('onSearchPathClick', id) !== false ) {
+                  //TODO в будущем нужно отдать уже dataSet крошек, ведь здесь уже все построено
+                  /*TODO для Алены. Временный фикс, потому что так удалось починить*/
+                  var filter = $ws.core.merge(self.getFilter(), {
+                     'Разворот' : 'Без разворота'
+                  });
+                  if (self._options.groupBy.field) {
+                     filter[self._options.groupBy.field] = undefined;
+                  }
+                  //Если бесконечный скролл был установлен в опции - вернем его
+                  self.setInfiniteScroll(self._options.infiniteScroll, true);
+                  self.setGroupBy({});
+                  self.setHighlightText('', false);
+                  self.setFilter(filter, true);
+                  self.setCurrentRoot(id);
+                  self.reload();
+               }
+            });
+            this._breadCrumbs.push(ps);
+         } else{
+            //если пути нет, то группировку надо бы убить...
+            container.remove();
+         }
+
+      },
+      _createPathItemsDS: function(pathRecords){
+         var dsItems = [],
+               parentID;
+         for (var i = 0; i < pathRecords.length; i++){
+            //TODO для SBISServiceSource в ключе находится массив
+            parentID = pathRecords[i].get(this._options.hierField);
+            dsItems.push({
+               id: pathRecords[i].getKey(),
+               title: pathRecords[i].get(this._options.displayField),
+               parentId: parentID instanceof Array ? parentID[0] : parentID,
+               data: pathRecords[i]
+            });
+         }
+         return dsItems;
+      },
+      _destroySearchBreadCrumbs: function(){
+         for (var i =0; i < this._breadCrumbs.length; i++){
+            this._breadCrumbs[i].destroy();
+         }
+         this._breadCrumbs = [];
       }
    };
 

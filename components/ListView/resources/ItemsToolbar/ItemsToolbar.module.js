@@ -103,18 +103,18 @@ define('js!SBIS3.CONTROLS.ItemsToolbar',
              });
           },
           /**
-           * Метод получения операций над записью.
-           * @returns {Array} Массив операций над записью.
+           * Метод получения компонента операций над записью.
+           * @returns {Object} Компонент "операции над записью".
            */
           getItemsActions: function() {
-             return this.getItemsActionsGroup().getItems();
+             return this.getItemsActionsGroup();
           },
           /**
            * Создает или возвращает уже созданные опции записи
            * @returns {null|SBIS3.CONTROLS.ItemsToolbar.$protected._itemsActions|ItemActionsGroup|SBIS3.CONTROLS.ItemsToolbar._itemsActions}
            */
           getItemsActionsGroup: function() {
-             if (!this._itemsActions) {
+             if (!this._itemsActions && this._options.itemsActions.length) {
                 this._initItemsActions();
              }
              return this._itemsActions;
@@ -158,6 +158,7 @@ define('js!SBIS3.CONTROLS.ItemsToolbar',
            */
           lockToolbar: function() {
              this._lockingToolbar = true;
+             this.getContainer().addClass('controls-ItemsToolbar__locked');
              this._trackingTarget();
           },
           /**
@@ -165,6 +166,7 @@ define('js!SBIS3.CONTROLS.ItemsToolbar',
            */
           unlockToolbar: function() {
              this._lockingToolbar = false;
+             this.getContainer().removeClass('controls-ItemsToolbar__locked');
              this._untrackingTarget();
           },
           /**
@@ -229,10 +231,12 @@ define('js!SBIS3.CONTROLS.ItemsToolbar',
              var position = target.position,
                  size = target.size,
                  parentContainer = this.getParent().getContainer()[0],
-                 isVertical = target.container.hasClass('js-controls-CompositeView__verticalItemActions');
+                 isVertical = target.container.hasClass('js-controls-CompositeView__verticalItemActions'),
+                 rightPosition = parentContainer.offsetWidth - (position.left + size.width);
+
              this.getContainer()[isVertical ? 'addClass' : 'removeClass']('controls-ItemsToolbar__vertical');
              return {
-                right : parentContainer.offsetWidth - (position.left + size.width),
+                right : rightPosition >= 0 ? rightPosition : 0,
                 top : isVertical ? position.top : 'auto',
                 bottom : isVertical ? 'auto' : parentContainer.offsetHeight - (position.top + size.height)
              };

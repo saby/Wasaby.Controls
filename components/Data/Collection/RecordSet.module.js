@@ -158,6 +158,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
          syncCompleteDef.done(true);
          return syncCompleteDef.getResult(true).addCallback(function(){
             $ws.helpers.map(willRemove, self.remove, self);
+            self._getServiceEnumerator().reIndex();
          });
       },
 
@@ -327,12 +328,8 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
          return this.getAdapter();
       },
 
-      merge: function (dataSetMergeFrom, options) {
-         /*TODO какая то лажа с ключами*/
-         if ((!this._keyField) && (dataSetMergeFrom._keyField)) {
-            this._keyField = dataSetMergeFrom._keyField;
-         }
-         this._setRecords(dataSetMergeFrom._getRecords(), options);
+      merge: function (recordSetMergeFrom, options) {
+         this._setRecords(recordSetMergeFrom._getRecords(), options);
       },
 
       push: function (record) {
@@ -457,34 +454,43 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
          options = options || {};
          options = $ws.core.merge(options, {add: true, remove: true, merge: true}, {preferSource: true});
 
-         var self = this,
+         var id, i, length,
             recordsMap = {},
-            record,
-            key;
-         for (var i = 0, length = records.length; i < length; i++) {
-            key = records[i].getKey();
-            recordsMap[key] = true;
-
-            if ((record = self.getRecordById(key))) {
-               if (options.merge) {
-                  record.merge(records[i]);
-               }
-            } else if (options.add) {
-               this.add(records[i]);
+            toAdd = [],
+            toReplace = {};
+         var l = 0, l1 = 0;
+         for (i = 0, length = records.length; i < length; i++) {
+            id = records[i].getId();
+            recordsMap[id] = true;
+            var index = this.getIndexByValue(this._options.idProperty, id);
+            if (index > -1) {
+               toReplace[index] = records[i];
+               l++;
+            } else {
+               toAdd.push(records[i]);
+               l1++;
             }
          }
-
+         if(options.merge) {
+            for(i in toReplace){
+               if (toReplace.hasOwnProperty(i)) {
+                  this.replace(toReplace[i], +i);
+               }
+            }
+         }
+         if (options.add) {
+            this.append(toAdd);
+         }
          if (options.remove) {
-            var toRemove = [];
+            var newItems = [];
             this.each(function (record) {
-               var key = record.getKey();
-               if (!recordsMap[key]) {
-                  toRemove.push(key);
+               var key = record.getId();
+               if (recordsMap[key]) {
+                  newItems.push(record);
                }
             }, 'all');
-
-            if (toRemove.length) {
-               this.removeRecord(toRemove);
+            if(newItems.length < this.getCount()) {
+               this.assign(newItems);
             }
          }
       },
@@ -511,6 +517,32 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
       },
 
       //endregion SBIS3.CONTROLS.DataSet
+
+      // region SBIS3.CONTROLS.Data.SerializableMixin
+
+      _getSerializableState: function() {
+         var state = RecordSet.superclass._getSerializableState.call(this);
+
+         //Prevent core reviver for rawData
+         if (state._options && state._options.rawData && state._options.rawData._type) {
+            state._options.rawData.$type = state._options.rawData._type;
+            delete state._options.rawData._type;
+         }
+
+         return state;
+      },
+
+      _setSerializableState: function(state) {
+         return RecordSet.superclass._setSerializableState(state).callNext(function() {
+            //Restore value hidden from core reviver
+            if (this._options && this._options.rawData && this._options.rawData.$type) {
+               this._options.rawData._type = this._options.rawData.$type;
+               delete this._options.rawData.$type;
+            }
+         });
+      },
+
+      // endregion SBIS3.CONTROLS.Data.SerializableMixin
 
       //region SBIS3.CONTROLS.Data.Collection.List
 
@@ -578,7 +610,13 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
        * @protected
        */
       _getTableAdapter: function () {
-         return this._tableAdapter || (this._tableAdapter = this.getAdapter().forTable(this._options.rawData));
+         if (!this._tableAdapter) {
+            this._tableAdapter = this.getAdapter().forTable(this._options.rawData);
+            if (this._tableAdapter.getData() !== this._options.rawData) {
+               this._options.rawData = this._tableAdapter.getData();
+            }
+         }
+         return this._tableAdapter;
       },
 
       /**
@@ -611,6 +649,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
             record = this._getModelInstance(adapter.at(i));
             RecordSet.superclass.add.call(this, record);
          }
+         this._reindex();
       },
 
       /**

@@ -27,16 +27,16 @@ function(CompoundControl, dotTplFn, SbisServiceSource) {
             self._view.reload();
          });
          //Будем показывать кнопку объединения в ПМО, только если объединение доступно
-         this._view.subscribe('onSelectedItemsChange', function(event, keys) {
+         this._view.subscribe('onSelectedItemsChange', function() {
             var mergeButton = this._operationsPanel.getItemInstance('merge');
-            mergeButton && mergeButton.toggle(this._isMoveAvailable(keys));
+            mergeButton && mergeButton.toggle(this._isMoveAvailable());
          }.bind(this));
          this._setSbisServiceSource();
       },
       
       _mergeItems: function(items) {
          //Тут можно изменить набор объединяемых записей, по умолчанию в items приходят выделенные записи
-         if (this._isMoveAvailable(items)) {
+         if (this._isMoveAvailable()) {
             this._mergeAction.execute({
                items: items
                //Можно предустановить целевую запись
@@ -44,21 +44,23 @@ function(CompoundControl, dotTplFn, SbisServiceSource) {
             });
          }
       },
-      _isMoveAvailable: function(keys) {
+      _isMoveAvailable: function() {
          //Тут проверим что в браузере выбрано хотя бы 2 листа, тогда операция объединения доступна
-         var recordsCount = 0,
-            dataset = this._view.getDataSet();
-         for (var i = 0; i < keys.length; i++) {
-            if (dataset.getRecordByKey(keys[i]).get('parent@') !== true) {
+         var
+            recordsCount = 0,
+            selectedItems = this._view.getSelectedItems();
+         selectedItems.each(function(item) {
+            if (item.get('parent@') !== true) {
                recordsCount++;
             }
-         }
+         });
          return recordsCount  > 1;
       },
       _setSbisServiceSource: function() {
          //Создадим DataSource и установим в браузер и в action объединения
          var ds = new SbisServiceSource({
             resource: 'Товар',
+            idProperty: '@Product',
             queryMethodName: 'СписокЗаписей',
             //'Объединить' используется по умолчанию
             mergeMethodName: 'Объединить'

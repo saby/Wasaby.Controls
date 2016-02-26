@@ -2,16 +2,16 @@
 define('js!SBIS3.CONTROLS.Data.Projection.Tree', [
    'js!SBIS3.CONTROLS.Data.Projection.ITree',
    'js!SBIS3.CONTROLS.Data.Projection.Collection',
-   'js!SBIS3.CONTROLS.Data.Projection.TreeEnumerator',
    'js!SBIS3.CONTROLS.Data.Projection.TreeChildren',
+   'js!SBIS3.CONTROLS.Data.Bind.ICollectionProjection',
    'js!SBIS3.CONTROLS.Data.Di',
    'js!SBIS3.CONTROLS.Data.Utils',
    'js!SBIS3.CONTROLS.Data.Projection.LoadableTreeItem'
 ], function (
    ITreeProjection,
    CollectionProjection,
-   TreeEnumerator,
    TreeChildren,
+   IBindCollectionProjection,
    Di,
    Utils
 ) {
@@ -37,168 +37,22 @@ define('js!SBIS3.CONTROLS.Data.Projection.Tree', [
          _root: null,
 
          /**
-          * @member {Object.<String, SBIS3.CONTROLS.Data.Projection.TreeChildren>} Соответствие узлов и их потомков
+          * @member {Object.<String, Array.<SBIS3.CONTROLS.Data.Projection.TreeItem>>} Соответствие узлов и их потомков
           */
          _childrenMap: {}
       },
 
       $constructor: function () {
-         if (!this._options.idProperty) {
-            throw new Error('Option "idProperty" is required.');
-         }
-
          /*if ($ws.helpers.instanceOfMixin(this._options.collection, 'SBIS3.CONTROLS.Data.Collection.ISourceLoadable')) {
             this._itemModule = 'projection.loadable-tree-item';
          }*/
       },
 
-      //region mutable
-
-      /**
-       * Возвращает дочерний элемент узла с указанным хэшем
-       * @param {String} hash Хеш элемента
-       * @param {SBIS3.CONTROLS.Data.Projection.CollectionItem} [parent] Родительский элемент, в котором искать. Если не указан, ищется от корня
-       * @returns {SBIS3.CONTROLS.Data.Projection.CollectionItem}
-       * @state mutable
-       */
-      getByHash: function(hash, parent) {
-         var children = this.getChildren(parent || this.getRoot()),
-            index = children.getIndexByValue('hash', hash);
-         if (index !== -1) {
-            return children.at(index);
-         }
-
-         var enumerator = children.getEnumerator(),
-            child,
-            item;
-         while((child = enumerator.getNext())) {
-            item = this.getByHash(hash, child);
-            if (item !== undefined) {
-               return item;
-            }
-         }
-      },
-
-      /**
-       * Возвращает индекс дочернего элемента узла с указанным хэшем
-       * @param {String} hash Хеш элемента
-       * @param {SBIS3.CONTROLS.Data.Projection.CollectionItem} [parent] Родительский элемент, в котором искать. Если не указан, ищется от корня
-       * @returns {Number}
-       * @state mutable
-       */
-      getIndexByHash: function (hash, parent) {
-         var children = this.getChildren(parent || this.getRoot()),
-            index = children.getIndexByValue('hash', hash);
-         if (index !== -1) {
-            return index;
-         }
-
-         var enumerator = children.getEnumerator(),
-            child;
-         while((child = enumerator.getNext())) {
-            index = this.getIndexByHash(hash, child);
-            if (index !== -1) {
-               return index;
-            }
-         }
-      },
-
-      //endregion mutable
-
       //region SBIS3.CONTROLS.Data.Collection.IEnumerable
-
-      /**
-       * Возвращает энумератор для перебора элементов проекции
-       * @returns {SBIS3.CONTROLS.Data.Projection.TreeEnumerator}
-       */
-      getEnumerator: function () {
-         /*if (this._options.childrenProperty) {
-          Enumerator = TreeChildrenByItemPropertyEnumerator;
-         } else {
-          Enumerator = TreeChildrenByParentIdEnumerator;
-         }*/
-         return new TreeEnumerator({
-            itemsMap: this._itemsMap,
-            filterMap: this._filterMap,
-            sortMap: this._sortMap,
-            collection: this._options.collection,
-            root: this.getRoot(),
-            idProperty: this._options.idProperty,
-            parentProperty: this._options.parentProperty
-         });
-      },
 
       //endregion SBIS3.CONTROLS.Data.Collection.IEnumerable
 
       //region SBIS3.CONTROLS.Data.Projection.ICollection
-
-      //endregion SBIS3.CONTROLS.Data.Projection.ICollection
-
-      //region SBIS3.CONTROLS.Data.Projection.ITree
-
-      getIdProperty: function () {
-         return this._options.idProperty;
-      },
-
-      getParentProperty: function () {
-         return this._options.parentProperty;
-      },
-
-      getNodeProperty: function () {
-         return this._options.nodeProperty;
-      },
-
-      getChildrenProperty: function () {
-         return this._options.childrenProperty;
-      },
-
-      getRoot: function () {
-         if (this._root === null) {
-            if (this._options.root && $ws.helpers.instanceOfMixin(this._options.root, 'SBIS3.CONTROLS.Data.Projection.ICollectionItem')) {
-               this._root = this._options.root;
-            } else {
-               var contents = this._options.root;
-               if (typeof contents !== 'object') {
-                  contents = {};
-                  contents[this._options.idProperty] = this._options.root;
-               }
-               this._root = Di.resolve(this._itemModule, {
-                  owner: this,
-                  node: true,
-                  expanded: true,
-                  contents: contents
-               });
-            }
-         }
-
-         return this._root;
-      },
-
-      getChildren: function (parent) {
-         this._checkItem(parent);
-
-         var hash = parent.getHash();
-         if (!(hash in this._childrenMap)) {
-            var children = [],
-               enumerator = this.getEnumerator();
-            enumerator.setCurrent(parent);
-            if (enumerator.getCurrent() === parent || parent.isRoot()) {
-               var item;
-               while ((item = enumerator.getNext())) {
-                  if (item.getParent() === parent) {
-                     children.push(item);
-                  }
-               }
-            }
-
-            this._childrenMap[hash] = new TreeChildren({
-               owner: parent,
-               items: children
-            });
-         }
-
-         return this._childrenMap[hash];
-      },
 
       /**
        * Устанавливает текущим следующий элемент родительского узла.
@@ -254,6 +108,60 @@ define('js!SBIS3.CONTROLS.Data.Projection.Tree', [
          return hasMove;
       },
 
+      //endregion SBIS3.CONTROLS.Data.Projection.ICollection
+
+      //region SBIS3.CONTROLS.Data.Projection.ITree
+
+      getIdProperty: function () {
+         return this._options.idProperty;
+      },
+
+      getParentProperty: function () {
+         return this._options.parentProperty;
+      },
+
+      setParentProperty: function (name) {
+         this._options.parentProperty = name;
+         this._childrenMap = {};
+      },
+
+      getNodeProperty: function () {
+         return this._options.nodeProperty;
+      },
+
+      getChildrenProperty: function () {
+         return this._options.childrenProperty;
+      },
+
+      getRoot: function () {
+         if (this._root === null) {
+            if (this._options.root && $ws.helpers.instanceOfMixin(this._options.root, 'SBIS3.CONTROLS.Data.Projection.ICollectionItem')) {
+               this._root = this._options.root;
+            } else {
+               this._root = Di.resolve(this._itemModule, {
+                  owner: this,
+                  node: true,
+                  expanded: true,
+                  contents: this._options.root
+               });
+            }
+         }
+
+         return this._root;
+      },
+
+      setRoot: function (root) {
+         this._options.root = root;
+         this._root = null;
+      },
+
+      getChildren: function (parent) {
+         return new TreeChildren({
+            owner: parent,
+            items: this._getChildrenArray(parent)
+         });
+      },
+
       moveToAbove: function () {
          var current = this.getCurrent();
          if (!current) {
@@ -273,12 +181,12 @@ define('js!SBIS3.CONTROLS.Data.Projection.Tree', [
          if (!current || !current.isNode()) {
             return false;
          }
-         var children = this.getChildren(current);
-         if (children.getCount() === 0) {
+         var children = this._getChildrenArray(current);
+         if (children.length === 0) {
             return false;
          }
 
-         this.setCurrent(children.at(0));
+         this.setCurrent(children[0]);
          return true;
       },
 
@@ -289,8 +197,20 @@ define('js!SBIS3.CONTROLS.Data.Projection.Tree', [
       _bindHandlers: function() {
          TreeProjection.superclass._bindHandlers.call(this);
 
-         this._onSourceCollectionChange = this._onSourceCollectionChange.callAround(onSourceCollectionChange.bind(this));
-         this._onSourceCollectionItemChange = this._onSourceCollectionItemChange.callAround(onSourceCollectionItemChange.bind(this));
+         this._onSourceCollectionChange = this._onSourceCollectionChange.callAround(_private.onSourceCollectionChange.bind(this));
+         this._onSourceCollectionItemChange = this._onSourceCollectionItemChange.callAround(_private.onSourceCollectionItemChange.bind(this));
+      },
+
+      _buildSortMap: function () {
+         return _private.sorters.tree(
+            this._items,
+            TreeProjection.superclass._buildSortMap.call(this),
+            {
+               idProperty: this._options.idProperty,
+               parentProperty: this._options.parentProperty,
+               root: this.getRoot()
+            }
+         );
       },
 
       _convertToItem: function (item) {
@@ -302,50 +222,142 @@ define('js!SBIS3.CONTROLS.Data.Projection.Tree', [
       },
 
       /**
-       * Проверяет валидность элемента коллекции
-       * @param {*} item Элемент коллекции
+       * Проверяет валидность элемента проекции
+       * @param {*} item Элемент проекции
        * @protected
        */
       _checkItem: function (item) {
          if (!item || !$ws.helpers.instanceOfMixin(item, 'SBIS3.CONTROLS.Data.Projection.ICollectionItem')) {
-            throw new Error('Item should implement SBIS3.CONTROLS.Data.Projection.ICollectionItem');
+            throw new Error(this._moduleName + '::_checkItem(): item should implement SBIS3.CONTROLS.Data.Projection.ICollectionItem');
          }
+      },
+
+      /**
+       * Возвращает массив детей для указанного родителя
+       * @param {SBIS3.CONTROLS.Data.Projection.ITreeItem} parent Родительский узел
+       * @returns {Array.<SBIS3.CONTROLS.Data.Projection.TreeItem>}
+       * @protected
+       */
+      _getChildrenArray: function (parent) {
+         this._checkItem(parent);
+
+         var hash = parent.getHash();
+         if (!(hash in this._childrenMap)) {
+            var children = [],
+               enumerator = this.getEnumerator();
+            enumerator.setCurrent(parent);
+            if (enumerator.getCurrent() === parent || parent.isRoot()) {
+               var item;
+               while ((item = enumerator.getNext())) {
+                  if (item.getParent() === parent) {
+                     children.push(item);
+                  }
+               }
+            }
+
+            this._childrenMap[hash] = children;
+         }
+
+         return this._childrenMap[hash];
       }
 
       //endregion Protected methods
 
    });
 
-   /**
-    * Обрабатывает событие об изменении потомков узла дерева исходного дерева
-    * @param {Function} prevFn Оборачиваемый метод
-    * @param {$ws.proto.EventObject} event Дескриптор события.
-    * @param {String} action Действие, приведшее к изменению.
-    * @param {*[]} newItems Новые элементы коллеции.
-    * @param {Number} newItemsIndex Индекс, в котором появились новые элементы.
-    * @param {*[]} oldItems Удаленные элементы коллекции.
-    * @param {Number} oldItemsIndex Индекс, в котором удалены элементы.
-    * @private
-    */
-   var onSourceCollectionChange = function (prevFn, event, action, newItems, newItemsIndex, oldItems, oldItemsIndex) {
+   var _private = {
+      sorters: {
+         /**
+          * Создает индекс сортировки в порядке иерархического индекса "родитель - дети"
+          * @param {Array.<SBIS3.CONTROLS.Data.Projection.CollectionItem>} items Элементы проекции.
+          * @param {Array.<Number>} currentMap Текущий индекс сортировки
+          * @param {Object} options Опции для определения иерархических отношений
+          * @return {Array.<Number>}
+          * @private
+          */
+         tree: function (items, currentMap, options) {
+            //TODO: enumeration with currentMap order
+            var push = Array.prototype.push,
+               idProperty = options.idProperty,
+               parentProperty = options.parentProperty,
+               hierIndex = {},
+               buildHierarchy = function(parent) {
+                  var result = [],
+                     parentData = parent.getContents(),
+                     parentId = parentData instanceof Object ? Utils.getItemPropertyValue(
+                        parentData,
+                        idProperty
+                     ) : parentData,
+                     children = hierIndex[parentId] || [];
+
+                  //FIXME: для совместимости с логикой контролов - корневые записи дерева могут вообще не иметь поля с именем parentProperty
+                  if (!children.length && parentId === null && parent.isRoot()) {
+                     //Считаем, что элементы коллекции без поля parentProperty находятся в корне
+                     children = hierIndex[undefined] || [];
+                  }
+
+                  var i, child;
+                  for (i = 0; i < children.length; i++) {
+                     child = items[children[i]];
+                     if (child) {
+                        child.setParent(parent, true);
+                     }
+                     result.push(children[i]);
+                     if (child) {
+                        push.apply(
+                           result,
+                           buildHierarchy(child)
+                        );
+                     }
+                  }
+                  return result;
+               };
+
+            var index, count, parentId;
+            for (index = 0, count = items.length; index < count; index++) {
+               parentId = Utils.getItemPropertyValue(
+                  items[index].getContents(),
+                  parentProperty
+               );
+               if (!hierIndex.hasOwnProperty(parentId)) {
+                  hierIndex[parentId] = [];
+               }
+               hierIndex[parentId].push(index);
+            }
+
+            return buildHierarchy(options.root);
+         }
+      },
+
+      /**
+       * Обрабатывает событие об изменении исходной коллекции
+       * @param {Function} prevFn Оборачиваемый метод
+       * @param {$ws.proto.EventObject} event Дескриптор события.
+       * @param {String} action Действие, приведшее к изменению.
+       * @param {*[]} newItems Новые элементы коллеции.
+       * @param {Number} newItemsIndex Индекс, в котором появились новые элементы.
+       * @param {*[]} oldItems Удаленные элементы коллекции.
+       * @param {Number} oldItemsIndex Индекс, в котором удалены элементы.
+       * @private
+       */
+      onSourceCollectionChange: function (prevFn, event, action, newItems, newItemsIndex, oldItems, oldItemsIndex) {
          this._childrenMap = {};
+         prevFn.call(this, event, action, newItems, newItemsIndex, oldItems, oldItemsIndex);
+      },
 
-         Array.prototype.shift.call(arguments);
-         prevFn.apply(this, arguments);
-   },
-
-   /**
-    * Обрабатывает событие об изменении элемента исходной коллекции
-    * @param {Function} prevFn Оборачиваемый метод
-    * @param {$ws.proto.EventObject} event Дескриптор события.
-    * @param {*} item Измененный элемент коллеции.
-    * @param {Integer} index Индекс измененного элемента.
-    * @param {String} [property] Измененное свойство элемента
-    * @private
-    */
-   onSourceCollectionItemChange = function (prevFn, event, item, index, property) {
-      Array.prototype.shift.call(arguments);
-      prevFn.apply(this, arguments);
+      /**
+       * Обрабатывает событие об изменении элемента исходной коллекции
+       * @param {Function} prevFn Оборачиваемый метод
+       * @param {$ws.proto.EventObject} event Дескриптор события.
+       * @param {*} item Измененный элемент коллеции.
+       * @param {Integer} index Индекс измененного элемента.
+       * @param {String} [property] Измененное свойство элемента
+       * @private
+       */
+      onSourceCollectionItemChange: function (prevFn, event, item, index, property) {
+         this._childrenMap = {};
+         prevFn.call(this, event, item, index, property);
+      }
    };
 
    Di.register('projection.tree', TreeProjection);

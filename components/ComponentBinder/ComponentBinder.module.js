@@ -24,15 +24,17 @@ define('js!SBIS3.CONTROLS.ComponentBinder', [], function () {
          view.setHighlightEnabled(true);
          view.setInfiniteScroll(true, true);
          view.setGroupBy(groupBy);
+         view._itemsProjection.setParentProperty(null);
          if (this._firstSearch) {
             this._lastRoot = view.getCurrentRoot();
+            this._lastParentProperty = view._itemsProjection.getParentProperty();
             if (this._options.breadCrumbs && this._options.breadCrumbs.getDataSet()){
                this._pathDSRawData = $ws.core.clone(this._options.breadCrumbs.getDataSet().getRawData());
             }
          }
          this._firstSearch = false;
          this._searchReload = true;
-         // TODO нафиг это надо
+         //Это нужно чтобы поиск был от корня, а крошки при этом отображаться не должны
          if (this._options.breadCrumbs) {
             this._options.breadCrumbs.setItems([]);
          }
@@ -86,6 +88,7 @@ define('js!SBIS3.CONTROLS.ComponentBinder', [], function () {
       if (this._firstSearch) {
          return;
       }
+      view._itemsProjection.setParentProperty(this._lastParentProperty);
       view.setInfiniteScroll(this._isInfiniteScroll, true);
       view.setGroupBy(this._lastGroup);
       view.setHighlightText('', false);
@@ -114,7 +117,7 @@ define('js!SBIS3.CONTROLS.ComponentBinder', [], function () {
 
    function breakSearch(searchForm, withReload){
       this._searchReload = !!withReload;
-      this._firstSearch = true;
+      this._firstSearch = !!withReload;
       //Если в строке поиска что-то есть, очистим и сбросим Фильтр
       if (searchForm.getText()) {
          searchForm.setText('');
@@ -143,6 +146,7 @@ define('js!SBIS3.CONTROLS.ComponentBinder', [], function () {
          _searchForm : undefined,
          _lastRoot : undefined,
          _lastGroup: {},
+         _lastParentProperty: null,
          _currentRoot: null,
          _pathDSRawData : [],
          _firstSearch: true,
@@ -177,6 +181,21 @@ define('js!SBIS3.CONTROLS.ComponentBinder', [], function () {
       },
 
       /**
+       * Установить отображение нового пути для хлебных крошек и кнопки назад
+       * @param {Array} path новый путь, последний элемент попадает в BackButton, остальные в хлебные крошки
+       */
+      setPath: function(path){
+         this._path = path;
+         if (path.length){
+            this._currentRoot = this._path.pop();
+         } else {
+            this._currentRoot = {};
+         }
+         this._options.breadCrumbs.setItems(this._path || []);
+         this._options.backButton.setCaption(this._currentRoot.title || '');
+      },
+
+      /**
        * Метод для связывания формы строки поиска с представлением данных.
        * для работы необходимо задать опциию view
        * @param {String} searchParamName параметр фильтрации для поиска
@@ -194,20 +213,28 @@ define('js!SBIS3.CONTROLS.ComponentBinder', [], function () {
       bindSearchGrid : function(searchParamName, searchCrumbsTpl, searchForm) {
          var self = this,
             view = this._options.view,
-            hierarchy = $ws.helpers.instanceOfModule(view, 'SBIS3.CONTROLS.HierarchyDataGridView');
+            isTree = $ws.helpers.instanceOfMixin(view, 'SBIS3.CONTROLS.TreeMixinDS');
          searchForm = searchForm || this._options.searchForm;
-         if (hierarchy){
+         if (isTree){
             this._lastRoot = view.getCurrentRoot();
-            //searchForm.subscribe('onReset', resetGroup);
-            view.subscribe('onSetRoot', function(){
-               self._lastRoot = view.getCurrentRoot();
+            view.subscribe('onBeforeSetRoot', function(ev, newRoot){
+               self._lastRoot = newRoot;
+               breakSearch.call(self, searchForm, false);
+            });
+            view.subscribe('onSetRoot', function(event, curRoot, hierarchy){
+               self._lastRoot = curRoot;
+               if (self._options.breadCrumbs){
+                  self._pathDSRawData = $ws.core.clone(hierarchy);
+               }
                if (self._options.backButton) {
                   self._options.backButton.getContainer().css({'visibility': 'visible'});
                }
             });
             //Перед переключением в крошках в режиме поиска сбросим фильтр поиска
-            view.subscribe('onSearchPathClick', function(){
-               breakSearch.call(self, searchForm, true);
+            view.subscribe('onSearchPathClick', function(ev, id){
+               //Теперь весь функционал переключения находится здесь, из HierarchyDGView только оповещение о действии
+               view.setCurrentRoot(id);
+               view.reload();
             });
          }
 
@@ -216,7 +243,7 @@ define('js!SBIS3.CONTROLS.ComponentBinder', [], function () {
 
          searchForm.subscribe('onTextChange', function(event, text){
             if (text.length < searchForm.getProperty('startCharacter')) {
-               if (hierarchy) {
+               if (isTree) {
                   resetGroup.call(self, searchParamName);
                } else {
                   resetSearch.call(self, searchParamName);
@@ -225,7 +252,7 @@ define('js!SBIS3.CONTROLS.ComponentBinder', [], function () {
          });
 
          searchForm.subscribe('onSearch', function(event, text) {
-            if (hierarchy) {
+            if (isTree) {
                startHierSearch.call(self, text, searchParamName);
             } else {
                startSearch.call(self, text, searchParamName);

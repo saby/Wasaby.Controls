@@ -362,14 +362,14 @@
 @radio-button-height:                           24px;
 @radio-button-lineheight:                       @radio-button-height;
 
-@radio-button-text-color:                       @black-color;
+@radio-button-text-color:                       @gray-color;
 @radio-button-hover-text-color:                 @primary-color;
 @radio-button-hover-text-decoration:            underline;
 @radio-button-hover-text-decoration-checked:    none;
 @radio-button-hover-text-decoration-disabled:   none;
 
-@radio-button-checked-text-color:               @radio-button-text-color;
-@radio-button-checked-hover-text-color:         @radio-button-text-color;
+@radio-button-checked-text-color:               @black-color;
+@radio-button-checked-hover-text-color:         @black-color;
 
 @radio-button-disabled-text-color:              @gray-light-color;
 @radio-button-disabled-hover-text-color:        @gray-light-color;
@@ -1175,10 +1175,9 @@
 
 @edit-at-place-editor-overlay-margin:           -4px 0 0 -4px;
 @edit-at-place-editor-overlay-padding:          4px;
-@edit-at-place-editor-overlay-border:           none;
-@edit-at-place-editor-overlay-border-radius:    3px;
-@edit-at-place-editor-overlay-shadow:           0 0 3px #b2b2b2;
-@edit-at-place-editor-overlay-bg:               #f8f3f1 !important;
+@edit-at-place-editor-overlay-border:           1px solid #e4e4e4;
+@edit-at-place-editor-overlay-border-radius:    4px;
+@edit-at-place-editor-overlay-bg:               #f3f3f3 !important;
 
 @edit-at-place-control-margin:                  0 0 0 8px;
 @edit-at-place-group-control-margin:            4px;
@@ -1203,7 +1202,7 @@
 @list-view-actions-right-offset:                1px;
 @list-view-actions-margin:                      0 4px;
 @list-view-actions-margin-multiView:            8px 3px 0 0;
-@list-view-actions-margin-action-multiView:     0 6px 4px 0;
+@list-view-actions-margin-action-multiView:     0 2px 4px 2px;
 @list-view-actions-height-multiView:            auto;
 @list-view-actions-float-multiView:             none;
 @list-view-actions-marginLeft-menu-multiView:   -1px;
@@ -1218,6 +1217,7 @@
 @list-view-items-toolbar-box-shadow:            -2px -2px 5px @data-grid-row-hover-bg;
 @list-view-items-toolbar-vertical-box-shadow:   -2px  2px 5px @data-grid-row-hover-bg;
 @list-view-items-toolbar-bg:                    @data-grid-row-hover-bg;
+@list-view-items-toolbar-locked-bg:             #F3F3F3;
 
 @list-view-actions-verAlign-margin:             8px 3px 0 0;
 @list-view-actions-verAlign-width:              20px;
@@ -1296,6 +1296,8 @@
 @tree-view-hier-wrapper-height: 						20px;
 
 @tree-view-folder-title-display:                inline-block;
+@tree-view-big-node-font-size:                  16px;
+@tree-view-big-leaf-font-size:                  15px;
 
 // --------- //
 // Data grid //
@@ -1469,7 +1471,7 @@
 // ----------------------- //
 //      EditInPlace        //
 // ----------------------- //
-@controls-editInPlace-editor-margin-top:            4px;
+@controls-editInPlace-editor-margin-top:            3px;
 @controls-editInPlace-editor-padding:               0 1px;
 
 
@@ -1576,7 +1578,7 @@
 @controls-filterButton-history-maxHeight-padding: 3px;
 @controls-filterButton-history-actions-right:     auto !important;
 @controls-filterButton-history-actions-left:      -4px !important;
-@controls-filterButton-history-actions-margin:    -2px;
+@controls-filterButton-history-actions-margin:    3px;
 
 @controls-filterButton-history-item-min-height:   24px;
 

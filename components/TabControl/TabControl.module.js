@@ -70,6 +70,18 @@ define('js!SBIS3.CONTROLS.TabControl', [
              */
             keyField: null,
             /**
+             * @cfg {Content} содержимое между вкладками
+             * @example
+             * <pre>
+             *     <option name="tabSpaceTemplate">
+             *        <component data-component="SBIS3.CONTROLS.Button" name="Button 1">
+             *           <option name="caption">Кнопка между вкладками</option>
+             *        </component>
+             *     </option>
+             * </pre>
+             */
+            tabSpaceTemplate: undefined,
+            /**
              * @cfg {String} Режим загрузки дочерних контролов в области под вкладками
              * @example
              * <pre>

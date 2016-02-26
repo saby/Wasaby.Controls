@@ -81,7 +81,7 @@ define('js!SBIS3.CONTROLS.Data.Model', [
              * @see getIdProperty
              * @see setIdProperty
              */
-            idProperty: '',
+            idProperty: undefined,
 
             /**
              * @cfg {Boolean} Использовать вложенные рекордсеты как List, а не как DataSet. По умолчанию - true
@@ -127,11 +127,6 @@ define('js!SBIS3.CONTROLS.Data.Model', [
 
          //TODO: убрать после перехода на ISource
          this._compatibleMode = cfg.compatibleMode;
-
-         this._options.idProperty = this._options.idProperty || '';
-         if (!this._options.idProperty) {
-            this._options.idProperty = this._getRecordAdapter().getKeyField();
-         }
       },
 
       // region SBIS3.CONTROLS.Data.IPropertyAccess
@@ -297,22 +292,6 @@ define('js!SBIS3.CONTROLS.Data.Model', [
       },
 
       /**
-       * Проверяет эквивалентность формата и данных другой модели
-       * @param {SBIS3.CONTROLS.Data.Model} model Модель, с которой сравнить
-       * @returns {Boolean}
-       */
-      isEqual: function (model) {
-         return !!(model &&
-            model.$constructor &&
-            this.$constructor.prototype === model.$constructor.prototype &&
-            $ws.helpers.isEqualObject(
-               this._options.rawData,
-               model.getRawData()
-            )
-         );
-      },
-
-      /**
        * Возвращает признак, что модель удалена
        * @returns {Boolean}
        */
@@ -341,11 +320,12 @@ define('js!SBIS3.CONTROLS.Data.Model', [
        * @returns {*}
        */
       getId: function () {
-         if (!this._options.idProperty) {
-            $ws.single.ioc.resolve('ILogger').log('SBIS3.CONTROLS.Data.Model::getId()', 'Option idProperty is not defined');
+         var idProperty = this._getIdProperty();
+         if (!idProperty) {
+            $ws.single.ioc.resolve('ILogger').log('SBIS3.CONTROLS.Data.Model::getId()', 'Option idProperty is empty');
             return undefined;
          }
-         return this.get(this._options.idProperty);
+         return this.get(idProperty);
       },
 
       /**
@@ -353,7 +333,7 @@ define('js!SBIS3.CONTROLS.Data.Model', [
        * @returns {String}
        */
       getIdProperty: function () {
-         return this._options.idProperty;
+         return this._getIdProperty();
       },
 
       /**
@@ -404,6 +384,18 @@ define('js!SBIS3.CONTROLS.Data.Model', [
       // endregion Public methods
 
       //region Protected methods
+
+      /**
+       * Возвращает значение idProperty, при этом, если оно не задано явно, пытается втащить его через адаптер
+       * @returns {String}
+       * @protected
+       */
+      _getIdProperty: function () {
+         if (this._options.idProperty === undefined) {
+            this._options.idProperty = this._getRecordAdapter().getKeyField() || '';
+         }
+         return this._options.idProperty;
+      },
 
       /**
        * Возвращает массив названий всех свойств (включая поля в "сырых" данных)

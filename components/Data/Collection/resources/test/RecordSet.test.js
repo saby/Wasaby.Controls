@@ -5,8 +5,9 @@ define([
       'js!SBIS3.CONTROLS.Data.Bind.ICollection',
       'js!SBIS3.CONTROLS.Data.Model',
       'js!SBIS3.CONTROLS.Data.Source.Memory',
-      'js!SBIS3.CONTROLS.Data.Adapter.Json'
-   ], function (RecordSet, List, IBindCollection, Model, MemorySource, JsonAdapter) {
+      'js!SBIS3.CONTROLS.Data.Adapter.Json',
+      'js!SBIS3.CONTROLS.Data.Adapter.Sbis'
+   ], function (RecordSet, List, IBindCollection, Model, MemorySource, JsonAdapter, SbisAdapter) {
       'use strict';
 
       describe('SBIS3.CONTROLS.Data.Collection.RecordSet', function() {
@@ -46,6 +47,55 @@ define([
 
          afterEach(function() {
             items = undefined;
+         });
+
+         describe('.$constructor()', function () {
+            it('should take limited time', function() {
+               this.timeout(5000);
+
+               var testFor = function(factory) {
+                     var start = Date.now(),
+                        obj;
+                     obj = factory(getItems());
+                     obj = undefined;
+                     return Date.now() - start;
+                  },
+                  getItems = function() {
+                     var items = [],
+                        item,
+                        i,
+                        j;
+                     for (i = 0; i < count; i++) {
+                        item = {};
+                        for (j = 0; j < fields; j++) {
+                           item['f' + j] = j;
+                        }
+                        items.push(item);
+                     }
+                     return items;
+                  },
+                  count = 10000,
+                  fields = 100;
+
+               var mine = testFor(function(items) {
+                     return new RecordSet({
+                        rawData: items
+                     });
+                  }),
+                  native = testFor(function(items) {
+                     var arr = [],
+                        i;
+                     for (i = 0; i < items.length; i++) {
+                        arr.push(items[i]);
+                     }
+                     return arr;
+                  }),
+                  rel = mine / native;
+               if (window) {
+                  window.console.log('RecordSet batch creating: ' + [mine, native, rel].join(', '));
+               }
+               assert.isBelow(rel, 5);
+            });
          });
 
          describe('.isEqual()', function () {
@@ -110,6 +160,24 @@ define([
                });
                same.at(0).set('Фамилия', 'Aaa');
                assert.isFalse(rs.isEqual(same));
+            });
+         });
+
+         describe('.getRawData()', function() {
+            it('should return the value that was passed to the constructor', function() {
+               var data = [{}],
+                  rs = new RecordSet({
+                     rawData: data
+                  });
+               assert.strictEqual(rs.getRawData(), data);
+            });
+            it('should return the changed value after add a new record', function() {
+               var rs = new RecordSet(),
+                  data = {'a': 1};
+               rs.add(new Model({
+                  rawData: data
+               }));
+               assert.strictEqual(rs.getRawData()[0], data);
             });
          });
 
@@ -246,8 +314,138 @@ define([
                   done();
                });
             });
+            it('should return record by updated id', function() {
+               var source = new MemorySource({
+                     idProperty: 'Ид'
+                  }),
+                  rs = new RecordSet({
+                     idProperty: 'Ид',
+                     rawData: items.slice()
+                  }),
+                  rec = new Model({
+                     idProperty: 'Ид'
+                  }),
+                  byKeyRec;
+               rs.add(rec);
+               byKeyRec = rs.getRecordById(rec.getId());
+               rs.saveChanges(source);
+               assert.strictEqual(rec, byKeyRec);
+               assert.strictEqual(rec, rs.getRecordById(rec.getId()));
+            });
          });
 
+         describe('.merge()', function (){
+            it('should merge two recordsets with default params', function() {
+               var rs = new RecordSet({
+                  rawData: getItems(),
+                  idProperty: "Ид"
+               }), rs2 =  new RecordSet({
+                  rawData: [{
+                     'Ид': 1000,
+                     'Фамилия': 'Карпов'
+                  }, {
+                     'Ид': 2,
+                     'Фамилия': 'Пушкин'
+                  }],
+                  idProperty: "Ид"
+               });
+               rs.merge(rs2);
+               assert.equal(rs.getCount(), 2);
+               assert.equal(rs.getRecordById(2).get('Фамилия'), 'Пушкин');
+               assert.equal(rs.getRecordById(1000).get('Фамилия'), 'Карпов');
+
+            });
+
+            it('should merge two recordsets without remove', function() {
+               var rs = new RecordSet({
+                  rawData: getItems(),
+                  idProperty: "Ид"
+               }), rs2 =  new RecordSet({
+                  rawData: [{
+                     'Ид': 2,
+                     'Фамилия': 'Пушкин'
+                  }],
+                  idProperty: "Ид"
+               });
+               rs.merge(rs2, {remove: false});
+               assert.equal(getItems().length, rs.getCount());
+               assert.equal(rs.getRecordById(2).get('Фамилия'), 'Пушкин');
+
+            });
+
+            it('should merge two recordsets without merge', function() {
+               var rs = new RecordSet({
+                  rawData: getItems(),
+                  idProperty: "Ид"
+               }), rs2 =  new RecordSet({
+                  rawData: [{
+                     'Ид': 2,
+                     'Фамилия': 'Пушкин'
+                  }],
+                  idProperty: "Ид"
+               });
+               rs.merge(rs2, {merge: false});
+               assert.notEqual(rs.getRecordById(2).get('Фамилия'), 'Пушкин');
+
+            });
+
+            it('should merge two recordsets without add', function() {
+               var rs = new RecordSet({
+                  rawData: getItems(),
+                  idProperty: "Ид"
+               }), rs2 =  new RecordSet({
+                  rawData: [{
+                     'Ид': 1000,
+                     'Фамилия': 'Пушкин'
+                  }],
+                  idProperty: "Ид"
+               });
+               rs.merge(rs2, {add: false});
+               assert.isUndefined(rs.getRecordById(1000));
+
+            });
+         });
+         describe('.setRawData()', function (){
+            it('should return elem by index', function () {
+               var rs = new RecordSet({
+                  rawData: getItems(),
+                  idProperty: "Ид"
+               });
+               rs.setRawData([{
+                  'Ид': 1000,
+                  'Фамилия': 'Пушкин'
+               }, {
+                  'Ид': 1001,
+                  'Фамилия': 'Пушкин1'
+               }]);
+               assert.equal(rs.getIndex(rs.at(1)), 1);
+            });
+         });
+
+         describe('.toJSON()', function () {
+            it('should serialize a RecordSet', function () {
+               var json = rs.toJSON();
+               assert.strictEqual(json.module, 'SBIS3.CONTROLS.Data.Collection.RecordSet');
+               assert.isNumber(json.id);
+               assert.isTrue(json.id > 0);
+               assert.deepEqual(json.state._options, rs._options);
+            });
+            it('should hide type signature in rawData', function () {
+               var rs = new RecordSet({
+                     adapter: new SbisAdapter(),
+                     rawData: {
+                        _type: 'recordset',
+                        s: [1],
+                        d: [2]
+                     }
+                  }),
+                  json = rs.toJSON();
+               assert.isUndefined(json.state._options.rawData._type);
+               assert.strictEqual(json.state._options.rawData.$type, 'recordset');
+               assert.deepEqual(json.state._options.rawData.s, [1]);
+               assert.deepEqual(json.state._options.rawData.d, [2]);
+            });
+         });
       });
    }
 );

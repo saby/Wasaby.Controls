@@ -21,14 +21,6 @@ define('js!SBIS3.CONTROLS.BreadCrumbs', [
     * @mixes SBIS3.CONTROLS.DecorableMixin
     */
    'use strict';
-
-   if (typeof window !== 'undefined') {
-      var eventsChannel = $ws.single.EventBus.channel('BreadCrumbsChannel');
-
-      $(window).bind('resize', function() {
-         eventsChannel.notify('onWindowResize');
-      });
-   }
    //TODO: Переписать все к чертям 
    var BreadCrumbs = CompoundControl.extend([DSMixin, PickerMixin, DecorableMixin], {
       $protected: {
@@ -50,20 +42,11 @@ define('js!SBIS3.CONTROLS.BreadCrumbs', [
 
       $constructor: function() {
          this._publish('onItemClick');
-         $ws.single.EventBus.channel('BreadCrumbsChannel').subscribe('onWindowResize', this._resizeHandler, this);
          this._homeIcon = $('.controls-BreadCrumbs__crumb-home', this._container);
          this._container.toggleClass('ws-hidden', (this._options.items && this._options.items.length == 0));
          this._homeIcon.data('id', null); //клик по домику ведет в корень TODO: придрочено под null
          //инициализируем dataSet
          this.reload();
-      },
-
-      _resizeHandler: function() {
-         clearTimeout(this._resizeTimeout);
-         var self = this;
-         this._resizeTimeout = setTimeout(function() {
-            self._redraw();
-         }, 100);
       },
 
       _onClickHandler: function(e) {
@@ -94,8 +77,10 @@ define('js!SBIS3.CONTROLS.BreadCrumbs', [
          this._dataSet._keyField = this._options.keyField; 
       },
 
-      //TODO: придрот что бы фэйковый див не ломал :first-child стили
-      _moveFocusToFakeDiv: function() {},
+      //Переопределяю метод getElementToFocus для того, чтобы не создавался fake focus div
+      _getElementToFocus: function() {
+         return this._container;
+      },
 
       _setPickerConfig: function() {
          return {
@@ -212,7 +197,7 @@ define('js!SBIS3.CONTROLS.BreadCrumbs', [
       },
 
       _redraw: function(){
-         var isEmpty = (this._dataSet && (this._dataSet.getCount() == 0));
+         var isEmpty = (!!this._dataSet && (this._dataSet.getCount() == 0));
          this._toggleHomeIcon(isEmpty);
          this._container.toggleClass('ws-hidden', isEmpty);
          BreadCrumbs.superclass._redraw.call(this);
@@ -252,11 +237,6 @@ define('js!SBIS3.CONTROLS.BreadCrumbs', [
 
       _appendItemTemplate: function(item, targetContainer, itemBuildedTpl) {
          targetContainer.append(itemBuildedTpl);
-      },
-
-      destroy: function() {
-         BreadCrumbs.superclass.destroy.call(this);
-         $ws.single.EventBus.channel('WindowChangeChannel').unsubscribe('onWindowResize', this._resizeHandler, this);
       }
    });
 
