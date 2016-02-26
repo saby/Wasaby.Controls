@@ -172,7 +172,6 @@ define('js!SBIS3.CONTROLS.Data.FormattableMixin', [
        */
       addField: function(format, at) {
          format = this._buildField(format);
-         this.getAdapter().addField(format, at);
          this._getFormat().add(format, at);
       },
 
@@ -189,7 +188,6 @@ define('js!SBIS3.CONTROLS.Data.FormattableMixin', [
        * </pre>
        */
       removeField: function(name) {
-         this.getAdapter().removeField(name);
          this._getFormat().removeField(name);
       },
 
@@ -206,7 +204,6 @@ define('js!SBIS3.CONTROLS.Data.FormattableMixin', [
        * </pre>
        */
       removeFieldAt: function(at) {
-         this.getAdapter().removeFieldAt(at);
          this._getFormat().removeAt(at);
       },
 

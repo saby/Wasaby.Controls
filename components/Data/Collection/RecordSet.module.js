@@ -115,6 +115,22 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
          this._createFromRawData();
       },
 
+      addField: function(format, at, value) {
+         format = this._buildField(format);
+         this._getTableAdapter().addField(format, at);
+         RecordSet.superclass.addField.call(this, format, at, value);
+      },
+
+      removeField: function(name) {
+         this._getTableAdapter().removeField(name);
+         RecordSet.superclass.removeField.call(this, name);
+      },
+
+      removeFieldAt: function(at) {
+         this._getTableAdapter().removeFieldAt(at);
+         RecordSet.superclass.removeFieldAt.call(this, at);
+      },
+
       /**
        * Переустанавливает сырые данные
        * @protected
