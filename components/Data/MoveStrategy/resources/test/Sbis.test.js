@@ -3,9 +3,10 @@ define([
       'js!SBIS3.CONTROLS.Data.MoveStrategy.Sbis',
       'js!SBIS3.CONTROLS.Data.Di',
       'js!SBIS3.CONTROLS.Data.Source.Provider.IRpc',
-      'js!SBIS3.CONTROLS.Data.Collection.RecordSet'
+      'js!SBIS3.CONTROLS.Data.Collection.RecordSet',
+      'js!SBIS3.CONTROLS.Data.Source.SbisService'
    ],
-   function (SbisMoveStrategy, Di, IRpc, RecordSet) {
+   function (SbisMoveStrategy, Di, IRpc, RecordSet, SbisService) {
       'use strict';
 
       var SbisBusinessLogic = (function() {
@@ -17,7 +18,11 @@ define([
                call: function (method, args) {
                   var def = new $ws.proto.Deferred();
                   setTimeout(function () {
-                     def.callback(true);
+                     if (args.ИдОПосле && args.ИдОПосле[0] == 3) {
+                        def.errback(new Error('error'));
+                     } else {
+                        def.callback(true);
+                     }
                   }.bind(this), 1);
                   Mock.lastRequest = {method:method, args:args};
                   return def;
@@ -38,7 +43,25 @@ define([
             Di.register('source.provider.sbis-business-logic', SbisBusinessLogic);
          });
 
-         describe('move()', function() {
+         describe('.$constructor', function (){
+            it('should throw error when create with empty params', function() {
+               assert.throw(function(){
+                  moveStrategy = new SbisMoveStrategy({});
+               });
+            });
+            it('should get resource from data source', function() {
+               var service = new SbisService({
+                  resource: 'Товар'
+               });
+               moveStrategy = new SbisMoveStrategy({
+                  dataSource: service
+               });
+               assert.equal(moveStrategy._options.resource, 'Товар');
+            });
+
+         });
+
+         describe('.move()', function() {
             var  id1 = 1, id2 = 2, rs, rsComplex;
             beforeEach(function(){
                rs = new RecordSet({
@@ -57,6 +80,9 @@ define([
                      'name': 'Иванов'
                   }, {
                      'id': id2+',A',
+                     'name': 'Петров'
+                  }, {
+                     'id': '3,A',
                      'name': 'Петров'
                   }],
                   idProperty: 'id'
@@ -86,6 +112,13 @@ define([
                assert.equal(SbisBusinessLogic.lastRequest.args.ИдОПосле[0], id2);
                assert.equal(SbisBusinessLogic.lastRequest.args.ИдО[0], id1);
             });
+
+            it('should return error when move method return error', function(done) {
+               moveStrategy.move([rsComplex.at(0)], rsComplex.at(2), true).addErrback(function (){
+                  done();
+               });
+            });
+
          });
       });
    }

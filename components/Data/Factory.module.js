@@ -48,7 +48,7 @@ define('js!SBIS3.CONTROLS.Data.Factory', [
       cast: function (value, type, adapter, meta) {
          //TODO: вместо type + meta принимать fieldInfo
          if (value === undefined || value === null) {
-            return null;
+            return value;
          }
 
          switch (type) {
@@ -73,7 +73,7 @@ define('js!SBIS3.CONTROLS.Data.Factory', [
                if (meta && meta.precision > 3) {
                   return $ws.helpers.prepareMoneyByPrecision(value, meta.precision);
                }
-               return value;
+               return value === undefined ? null : value;
             case 'Enum':
                return new Enum({
                   data: meta.source, //массив строк

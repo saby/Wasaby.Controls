@@ -5,9 +5,8 @@ define([
       'js!SBIS3.CONTROLS.Data.Bind.ICollection',
       'js!SBIS3.CONTROLS.Data.Model',
       'js!SBIS3.CONTROLS.Data.Source.Memory',
-      'js!SBIS3.CONTROLS.Data.Adapter.Json',
       'js!SBIS3.CONTROLS.Data.Adapter.Sbis'
-   ], function (RecordSet, List, IBindCollection, Model, MemorySource, JsonAdapter, SbisAdapter) {
+   ], function (RecordSet, List, IBindCollection, Model, MemorySource, AdapterSbis) {
       'use strict';
 
       describe('SBIS3.CONTROLS.Data.Collection.RecordSet', function() {
@@ -533,7 +532,7 @@ define([
             });
             it('should hide type signature in rawData', function () {
                var rs = new RecordSet({
-                     adapter: new SbisAdapter(),
+                     adapter: new AdapterSbis(),
                      rawData: {
                         _type: 'recordset',
                         s: [1],
