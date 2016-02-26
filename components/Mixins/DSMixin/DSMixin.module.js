@@ -332,6 +332,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
             }
             else {
                this._items = itemsOpt;
+               this._dataSource = null;
                this._createDefaultProjection(this._items);
                this._itemsReadyCallback();
                this._notify('onItemsReady');
@@ -540,7 +541,6 @@ define('js!SBIS3.CONTROLS.DSMixin', [
                 .addErrback($ws.helpers.forAliveOnly(function (error) {
                    if (!error.canceled) {
                       self._toggleIndicator(false);
-
                       if (self._notify('onDataLoadError', error) !== true) {
                          $ws.helpers.message(error.message.toString().replace('Error: ', ''));
                       }
@@ -549,6 +549,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
                 }, self));
              this._loader = def;
           } else {
+             this._redraw();
              def = new $ws.proto.Deferred();
              def.callback();
           }
