@@ -1,7 +1,49 @@
 /* global define, $ws */
 define('js!SBIS3.CONTROLS.Data.Format.FieldsFactory', [
-   'js!SBIS3.CONTROLS.Data.Format.StringField'
-], function (StringField) {
+   'js!SBIS3.CONTROLS.Data.Format.BooleanField',
+   'js!SBIS3.CONTROLS.Data.Format.IntegerField',
+   'js!SBIS3.CONTROLS.Data.Format.RealField',
+   'js!SBIS3.CONTROLS.Data.Format.MoneyField',
+   'js!SBIS3.CONTROLS.Data.Format.StringField',
+   'js!SBIS3.CONTROLS.Data.Format.TextField',
+   'js!SBIS3.CONTROLS.Data.Format.XmlField',
+   'js!SBIS3.CONTROLS.Data.Format.DateTimeField',
+   'js!SBIS3.CONTROLS.Data.Format.DateField',
+   'js!SBIS3.CONTROLS.Data.Format.TimeField',
+   'js!SBIS3.CONTROLS.Data.Format.TimeIntervalField',
+   'js!SBIS3.CONTROLS.Data.Format.IdentityField',
+   'js!SBIS3.CONTROLS.Data.Format.EnumField',
+   'js!SBIS3.CONTROLS.Data.Format.FlagsField',
+   'js!SBIS3.CONTROLS.Data.Format.RecordField',
+   'js!SBIS3.CONTROLS.Data.Format.RecordSetField',
+   'js!SBIS3.CONTROLS.Data.Format.BinaryField',
+   'js!SBIS3.CONTROLS.Data.Format.UuidField',
+   'js!SBIS3.CONTROLS.Data.Format.RpcFileField',
+   'js!SBIS3.CONTROLS.Data.Format.HierarchyField',
+   'js!SBIS3.CONTROLS.Data.Format.ArrayField'
+], function (
+   BooleanField,
+   IntegerField,
+   RealField,
+   MoneyField,
+   StringField,
+   TextField,
+   XmlField,
+   DateTimeField,
+   DateField,
+   TimeField,
+   TimeIntervalField,
+   IdentityField,
+   EnumField,
+   FlagsField,
+   RecordField,
+   RecordSetField,
+   BinaryField,
+   UuidField,
+   RpcFileField,
+   HierarchyField,
+   ArrayField
+) {
    'use strict';
 
    /**
@@ -14,38 +56,27 @@ define('js!SBIS3.CONTROLS.Data.Format.FieldsFactory', [
    var FieldsFactory = /** @lends SBIS3.CONTROLS.Data.Format.FieldsFactory.prototype */{
       /**
        * @typedef {String} FieldType
-       * @variant Integer Число целое
-       * @variant Double Число вещественное
-       * @variant String Строка
-       * @variant Text Текст
-       * @variant Money Деньги
-       * @variant Date Дата
-       * @variant DateTime Дата и время
-       * @variant Time Время
-       * @variant Boolean Логическое
-       * @variant Hierarchy Иерархия
-       * @variant Identity Идентификатор
-       * @variant Enum Перечисляемое
-       * @variant Flags Флаги
-       * @variant Link Связь
-       * @variant RecordSet Выборка
-       * @variant Record Запись
-       * @variant Binary Двоичное
-       * @variant UUID UUID
-       * @variant RpcFile Файл-RPC
-       * @variant TimeInterval Временной интервал
-       * @variant XML Строка в формате XML
-       * @variant ArrayInteger Массив целых чисел
-       * @variant ArrayDouble Массив вещественных чисел
-       * @variant ArrayString Массив строк
-       * @variant ArrayText Массив текста
-       * @variant ArrayMoney Массив денег
-       * @variant ArrayDate Массив дат
-       * @variant ArrayDateTime Массив дата/время
-       * @variant ArrayTime Массив время
-       * @variant ArrayBoolean Массив логических
-       * @variant ArrayHierarchy Массив иерархий
-       * @variant ArrayIdentity Массив идентификаторов
+       * @variant boolean Логическое
+       * @variant integer Число целое
+       * @variant real Число вещественное
+       * @variant money Деньги
+       * @variant string Строка
+       * @variant text Текст
+       * @variant xml Строка в формате XML
+       * @variant datetime Дата и время
+       * @variant date Дата
+       * @variant time Время
+       * @variant timeinterval Временной интервал
+       * @variant identity Идентификатор
+       * @variant enum Перечисляемое
+       * @variant flags Флаги
+       * @variant record Запись
+       * @variant recordset Выборка
+       * @variant binary Двоичное
+       * @variant uuid UUID
+       * @variant rpcfile Файл-RPC
+       * @variant hierarchy Иерархия
+       * @variant array Массив
        */
 
       /**
@@ -69,8 +100,48 @@ define('js!SBIS3.CONTROLS.Data.Format.FieldsFactory', [
       create: function(declaration) {
          var type = ('' + declaration.type).toLowerCase();
          switch (type) {
+            case 'boolean':
+               return new BooleanField(declaration);
+            case 'integer':
+               return new IntegerField(declaration);
+            case 'real':
+               return new RealField(declaration);
+            case 'money':
+               return new MoneyField(declaration);
             case 'string':
                return new StringField(declaration);
+            case 'text':
+               return new TextField(declaration);
+            case 'xml':
+               return new XmlField(declaration);
+            case 'datetime':
+               return new DateTimeField(declaration);
+            case 'date':
+               return new DateField(declaration);
+            case 'time':
+               return new TimeField(declaration);
+            case 'timeinterval':
+               return new TimeIntervalField(declaration);
+            case 'identity':
+               return new IdentityField(declaration);
+            case 'enum':
+               return new EnumField(declaration);
+            case 'flags':
+               return new FlagsField(declaration);
+            case 'record':
+               return new RecordField(declaration);
+            case 'recordset':
+               return new RecordSetField(declaration);
+            case 'binary':
+               return new BinaryField(declaration);
+            case 'uuid':
+               return new UuidField(declaration);
+            case 'rpcfile':
+               return new RpcFileField(declaration);
+            case 'hierarchy':
+               return new HierarchyField(declaration);
+            case 'array':
+               return new ArrayField(declaration);
             default:
                throw new TypeError(this._moduleName + '::create(): unsupported field type "' + type + '"');
          }

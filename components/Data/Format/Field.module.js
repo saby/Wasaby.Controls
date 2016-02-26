@@ -4,7 +4,7 @@ define('js!SBIS3.CONTROLS.Data.Format.Field', [
    'use strict';
 
    /**
-    * Формат поля записи
+    * Прототип поля записи (абстрактный класс)
     * @class SBIS3.CONTROLS.Data.Format.Field
     * @public
     * @author Мальцев Алексей
@@ -104,7 +104,7 @@ define('js!SBIS3.CONTROLS.Data.Format.Field', [
        * @returns {SBIS3.CONTROLS.Data.Format.Field}
        */
       clone: function () {
-         throw new Error('Under construction');
+         return new this.prototype.$constructor(this._options);
       },
 
       /**
@@ -112,16 +112,22 @@ define('js!SBIS3.CONTROLS.Data.Format.Field', [
        * @param {SBIS3.CONTROLS.Data.Format.Field} format Формат поля, который надо скопировать
        */
       copyFrom: function (format) {
-         throw new Error('Under construction');
+         $ws.core.merge(this._options, format._options);
       },
 
       /**
-       * Сравнивает 2 формата поля на идентичность: совпадает набор названий и порядок полей. Для полей со словарем - словарь.
+       * Сравнивает 2 формата поля на идентичность: совпадает тип, название, значение по умолчанию, признак isNullable. Для полей со словарем - словарь.
        * @param {SBIS3.CONTROLS.Data.Format.Field} format Формат поля, с которым сравнить
        * @returns {Boolean}
        */
       isEqual: function (format) {
-         throw new Error('Under construction');
+         if (format === this) {
+            return true;
+         }
+         return this.prototype.$constructor === format.prototype.$constructor &&
+            this.getDefaultValue() === format.getDefaultValue() &&
+            this.getName() === format.getName() &&
+            this.isNullable() === format.isNullable();
       }
 
       //endregion Public methods
