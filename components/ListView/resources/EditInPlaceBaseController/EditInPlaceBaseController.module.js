@@ -316,9 +316,10 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
              * @private
              */
             _isAnotherTarget: function(target, control) {
-               while (target && target !== control) {
+               do {
                   target = target.getParent() || target.getOpener();
                }
+               while (target && target !== control);
                return target !== control;
             },
             _isCurrentTarget: function(control) {
