@@ -7,8 +7,9 @@ define('js!SBIS3.CONTROLS.EditAtPlace',
       'js!SBIS3.CONTROLS.PickerMixin',
       'js!SBIS3.CORE.Dialog',
       'js!SBIS3.CONTROLS.EditAtPlaceMixin',
+      'js!SBIS3.CONTROLS.Utils.HtmlDecorators/DateFormatDecorator',
       'html!SBIS3.CONTROLS.EditAtPlace'],
-   function (CompoundControl, TextBox, PickerMixin, Dialog, EditAtPlaceMixin, dotTplFn) {
+   function (CompoundControl, TextBox, PickerMixin, Dialog, EditAtPlaceMixin, DateFormatDecorator, dotTplFn) {
       'use strict';
       /**
        * @noShow
@@ -29,6 +30,7 @@ define('js!SBIS3.CONTROLS.EditAtPlace',
             _okButton: null,
             _oldText: '',
             _requireDialog: false,
+            _dateDecorator: null,
             _options: {
                text: '',
                placeholder: '',
@@ -151,16 +153,16 @@ define('js!SBIS3.CONTROLS.EditAtPlace',
             if (oldText !== this._options.text) {
                this._notify('onTextChange', this._options.text);
             }
-            if (text) {
-               this._textField.html(text);
-               this._textField.css('display', 'inline');
-            } else {
-               this._textField.html('&nbsp;');
-               this._textField.css({
-                  display: 'inline-block',
-                  width: '100%'
-               });
+            
+            //TODO: Декоратор даты, временно применяется здесь до лучших времен (ждем virtualDOM'a) 
+            if (text instanceof(Date)){
+               if (!this._dateDecorator) {
+                  this._dateDecorator = new DateFormatDecorator();
+               }
+               text = this._dateDecorator.apply(text, 'DD.MM.YY');
             }
+
+            this._textField.html(text || '&nbsp;');
          },
 
          getText: function () {
