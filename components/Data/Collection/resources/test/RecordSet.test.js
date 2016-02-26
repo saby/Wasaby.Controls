@@ -5,8 +5,9 @@ define([
       'js!SBIS3.CONTROLS.Data.Bind.ICollection',
       'js!SBIS3.CONTROLS.Data.Model',
       'js!SBIS3.CONTROLS.Data.Source.Memory',
+      'js!SBIS3.CONTROLS.Data.Adapter.Json',
       'js!SBIS3.CONTROLS.Data.Adapter.Sbis'
-   ], function (RecordSet, List, IBindCollection, Model, MemorySource, AdapterSbis) {
+   ], function (RecordSet, List, IBindCollection, Model, MemorySource, JsonAdapter, SbisAdapter) {
       'use strict';
 
       describe('SBIS3.CONTROLS.Data.Collection.RecordSet', function() {
@@ -157,35 +158,35 @@ define([
             });
             it('should return false if record added', function () {
                var same = new RecordSet({
-                  rawData: items
+                  rawData: getItems()
                });
                same.add(rs.at(0).clone());
                assert.isFalse(rs.isEqual(same));
             });
             it('should return true if same record replaced', function () {
                var same = new RecordSet({
-                  rawData: getItems(items)
+                  rawData: getItems()
                });
                same.replace(rs.at(0).clone(), 0);
                assert.isTrue(rs.isEqual(same));
             });
             it('should return false if not same record replaced', function () {
                var same = new RecordSet({
-                  rawData: getItems(items)
+                  rawData: getItems()
                });
                same.replace(rs.at(1).clone(), 0);
                assert.isFalse(rs.isEqual(same));
             });
             it('should return false if record removed', function () {
                var same = new RecordSet({
-                  rawData: getItems(items)
+                  rawData: getItems()
                });
                same.removeAt(0);
                assert.isFalse(rs.isEqual(same));
             });
             it('should return false if record updated', function () {
                var same = new RecordSet({
-                  rawData: getItems(items)
+                  rawData: getItems()
                });
                same.at(0).set('Фамилия', 'Aaa');
                assert.isFalse(rs.isEqual(same));
@@ -383,13 +384,13 @@ define([
          describe('.saveChanges()', function (){
             it('should return an index of given item', function(done) {
                var source = new MemorySource({
-                  data: items,
+                  data: getItems(),
                   idProperty: 'Ид'
                });
                source.query().addCallback(function(ds){
                   var rs = ds.getAll(),
                      length = rs.getCount(),
-                     item_2 = getItems(rs.at(0));
+                     item_2 = $ws.core.clone(rs.at(0));
                   rs.at(2).setDeleted(true);
                   rs.at(6).setDeleted(true);
                   rs.saveChanges(source);
@@ -413,11 +414,33 @@ define([
                rs.saveChanges(source);
                assert.isFalse(rec.isChanged());
             });
+
+            it('should return record by updated id', function() {
+               var source = new MemorySource({
+                     idProperty: 'Ид'
+                  }),
+                  rs = new RecordSet({
+                     idProperty: 'Ид',
+                     rawData: items.slice()
+                  }),
+                  rec = new Model({
+                     idProperty: 'Ид'
+                  }),
+                  byKeyRec;
+               rs.add(rec);
+               byKeyRec = rs.getRecordById(rec.getId());
+               rs.saveChanges(source);
+               assert.strictEqual(rec, byKeyRec);
+               assert.strictEqual(rec, rs.getRecordById(rec.getId()));
+            });
          });
 
          describe('.merge()', function (){
             it('should merge two recordsets with default params', function() {
-               var rs2 =  new RecordSet({
+               var rs = new RecordSet({
+                  rawData: getItems(),
+                  idProperty: "Ид"
+               }), rs2 =  new RecordSet({
                   rawData: [{
                      'Ид': 1000,
                      'Фамилия': 'Карпов'
@@ -435,7 +458,10 @@ define([
             });
 
             it('should merge two recordsets without remove', function() {
-               var rs2 =  new RecordSet({
+               var rs = new RecordSet({
+                  rawData: getItems(),
+                  idProperty: "Ид"
+               }), rs2 =  new RecordSet({
                   rawData: [{
                      'Ид': 2,
                      'Фамилия': 'Пушкин'
@@ -443,13 +469,16 @@ define([
                   idProperty: "Ид"
                });
                rs.merge(rs2, {remove: false});
-               assert.equal(items.length, rs.getCount());
+               assert.equal(getItems().length, rs.getCount());
                assert.equal(rs.getRecordById(2).get('Фамилия'), 'Пушкин');
 
             });
 
             it('should merge two recordsets without merge', function() {
-               var  rs2 =  new RecordSet({
+               var rs = new RecordSet({
+                  rawData: getItems(),
+                  idProperty: "Ид"
+               }), rs2 =  new RecordSet({
                   rawData: [{
                      'Ид': 2,
                      'Фамилия': 'Пушкин'
@@ -462,7 +491,10 @@ define([
             });
 
             it('should merge two recordsets without add', function() {
-               var  rs2 =  new RecordSet({
+               var rs = new RecordSet({
+                  rawData: getItems(),
+                  idProperty: "Ид"
+               }), rs2 =  new RecordSet({
                   rawData: [{
                      'Ид': 1000,
                      'Фамилия': 'Пушкин'
@@ -471,6 +503,7 @@ define([
                });
                rs.merge(rs2, {add: false});
                assert.isUndefined(rs.getRecordById(1000));
+
             });
          });
          describe('.setRawData()', function (){
@@ -487,6 +520,31 @@ define([
                   'Фамилия': 'Пушкин1'
                }]);
                assert.equal(rs.getIndex(rs.at(1)), 1);
+            });
+         });
+
+         describe('.toJSON()', function () {
+            it('should serialize a RecordSet', function () {
+               var json = rs.toJSON();
+               assert.strictEqual(json.module, 'SBIS3.CONTROLS.Data.Collection.RecordSet');
+               assert.isNumber(json.id);
+               assert.isTrue(json.id > 0);
+               assert.deepEqual(json.state._options, rs._options);
+            });
+            it('should hide type signature in rawData', function () {
+               var rs = new RecordSet({
+                     adapter: new SbisAdapter(),
+                     rawData: {
+                        _type: 'recordset',
+                        s: [1],
+                        d: [2]
+                     }
+                  }),
+                  json = rs.toJSON();
+               assert.isUndefined(json.state._options.rawData._type);
+               assert.strictEqual(json.state._options.rawData.$type, 'recordset');
+               assert.deepEqual(json.state._options.rawData.s, [1]);
+               assert.deepEqual(json.state._options.rawData.d, [2]);
             });
          });
 

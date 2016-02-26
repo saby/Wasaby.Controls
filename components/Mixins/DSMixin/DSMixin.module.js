@@ -87,7 +87,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
        * </pre>
        */
       $protected: {
-         _isDrawn: false,
+         _needToRedraw: false,
          _itemsProjection: null,
          _items : null,
          _itemsInstances: {},
@@ -499,19 +499,21 @@ define('js!SBIS3.CONTROLS.DSMixin', [
                 .addCallback($ws.helpers.forAliveOnly(function (list) {
                    self._toggleIndicator(false);
                    if (self._items) {
-                      self._dataLoadedCallback();
                       self._notify('onDataLoad', list);
                       self._items.assign(list);
                       self._dataSet.assign(list);
+                      self._dataSet.setMetaData(list.getMetaData());
+                      self._dataLoadedCallback();
                    }
                    else {
+                      self._notify('onDataLoad', list);
                       self._items = list;
                       self._dataSet = list;
                       self._createDefaultProjection(self._items);
                       self._setItemsEventHandlers();
                       self._itemsReadyCallback();
                       self._dataLoadedCallback();
-                      self._notify('onDataLoad', list);
+
                    }
                    self.redraw();
                    //self._notify('onBeforeRedraw');
@@ -722,11 +724,10 @@ define('js!SBIS3.CONTROLS.DSMixin', [
 
          if (this._items) {
             this._clearItems();
-            this._isDrawn = false;
+            this._needToRedraw = false;
             records = this._getRecordsForRedraw();
             this._toggleEmptyData(!records.length && this._options.emptyHTML);
             this._drawItems(records);
-            this._isDrawn = true;
          }
       },
       _destroySearchBreadCrumbs: function(){
@@ -1112,7 +1113,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
          }
       },
       _isNeedToRedraw: function(){
-      	return this._isDrawn && !!this._getItemsContainer();
+      	return this._needToRedraw && !!this._getItemsContainer();
       },
 
       _removeItem: function (item) {
