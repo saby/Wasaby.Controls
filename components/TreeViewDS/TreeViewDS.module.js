@@ -24,7 +24,21 @@ define('js!SBIS3.CONTROLS.TreeViewDS', [
       $protected: {
          _options: {
             //FixME: так как приходит набор от листвью. пока он не нужен
-            itemsActions: []
+            itemsActions: [],
+            //TODO: Копипаст из TreeDataGridView, временное решение т.к. в TreeMixinDS пока разместить нельзя по причине
+             //отсутствия необходимости переносит элементы в менюшках
+            /**
+             * @cfg {String} Разрешено или нет перемещение элементов "Drag-and-Drop"
+             * @variant "" Запрещено
+             * @variant allow Разрешено
+             * @variant onlyChangeOrder Разрешено только изменение порядка
+             * @variant onlyChangeParent Разрешено только перемещение в папку
+             * @example
+             * <pre>
+             *     <option name="itemsDragNDrop">onlyChangeParent</option>
+             * </pre>
+             */
+            itemsDragNDrop: 'allow'
          }
       },
 
@@ -94,7 +108,14 @@ define('js!SBIS3.CONTROLS.TreeViewDS', [
          for (var i = 0; i < idArray.length; i++) {
             $(".controls-ListView__item[data-id='" + idArray[i] + "']", this._container).find('.js-controls-ListView__itemCheckBox').first().addClass('controls-ListView__itemCheckBox__multi');
          }
-      }
+      },
+
+      _notifyOnDragMove: function(target, insertAfter) {
+         //Если происходит изменение порядкового номера и оно разрешено или если происходит смена родителся и она разрешена, стрельнём событием
+         if (typeof insertAfter === 'boolean' && this._options.itemsDragNDrop !== 'onlyChangeParent' || insertAfter === undefined && this._options.itemsDragNDrop !== 'onlyChangeOrder') {
+            return this._notify('onDragMove', this.getCurrentElement().keys, target.data('id'), insertAfter) !== false;
+         }
+      },
    });
 
    return TreeViewDS;
