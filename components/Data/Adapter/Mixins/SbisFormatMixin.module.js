@@ -129,8 +129,8 @@ define('js!SBIS3.CONTROLS.Data.Adapter.SbisFormatMixin', [
          if (appendMode) {
             max++;
          }
-         if (!(index >= 0 && index < max)) {
-            throw new TypeError(this._moduleName + ': index is out of bounds.');
+         if (!(index >= 0 && index <= max)) {
+            throw new RangeError(this._moduleName + ': field index ' + index + ' is out of bounds.');
          }
       },
 

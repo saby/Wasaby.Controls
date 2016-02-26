@@ -509,9 +509,9 @@ define([
                   data.d[2][0]
                );
 
-               adapterInstance.remove(5);
+               adapterInstance.remove(4);
                assert.isUndefined(
-                  data.d[5]
+                  data.d[4]
                );
             });
 

@@ -39,7 +39,7 @@ define('js!SBIS3.CONTROLS.Data.Adapter.SbisTable', [
          if (at === undefined) {
             this._data.d.push(record.d);
          } else {
-            this._checkFieldIndex(at, true);
+            this._checkRowIndex(at);
             this._data.d.splice(at, 0, record.d);
          }
       },
@@ -52,12 +52,12 @@ define('js!SBIS3.CONTROLS.Data.Adapter.SbisTable', [
       },
 
       remove: function (at) {
-         this._checkFieldIndex(at);
+         this._checkRowIndex(at);
          this._data.d.splice(at, 1);
       },
 
       replace: function (record, at) {
-         this._checkFieldIndex(at);
+         this._checkRowIndex(at);
          if (!this._data.s.length) {
             this._data.s = record.s || [];
          }
@@ -81,15 +81,22 @@ define('js!SBIS3.CONTROLS.Data.Adapter.SbisTable', [
       },
 
       copy: function(index){
-         this._checkFieldIndex(index);
+         this._checkRowIndex(index);
          var source = this._data.d[index],
             clone = $ws.core.clone(source);
          this._data.d.splice(index, 0, clone);
-      }
+      },
 
       //endregion Public methods
 
       //region Protected methods
+
+      _checkRowIndex: function(index) {
+         var max = this._data.d.length - 1;
+         if (!(index >= 0 && index <= max)) {
+            throw new RangeError(this._moduleName + ': row index ' + index + ' is out of bounds.');
+         }
+      }
 
       //endregion Protected methods
 
