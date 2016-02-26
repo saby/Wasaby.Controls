@@ -117,8 +117,15 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
          this._updateItemsToolbar();
       },
       _drawItemsCallback: function() {
+         var
+            dataSet = this._dataSet,
+            tree = dataSet.getTreeIndex(this._options.hierField);
          $ws.helpers.forEach(this._options.openedPath, function(val, key) {
-            this._createFolderFooter(key);
+            //TODO: Проверим что данный элемент присутствует в текущем наборе элементов, и дополнительно проверим если
+            //все данные в браузере загружены изначально, что элемент для которого хотим создать футер присутствует на текущей странице
+             if (tree[key] && this._getElementByModel(dataSet.getRecordByKey(key)).length) {
+                this._createFolderFooter(key);
+             }
          }, this);
          TreeDataGridView.superclass._drawItemsCallback.apply(this, arguments);
       },
@@ -251,6 +258,9 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
             var tree = this._dataSet.getTreeIndex(this._options.hierField);
             if (tree[key]) {
                $('.js-controls-TreeView__expand', container).addClass('controls-TreeView__expand__open');
+            } else {
+               /*TODO придрот*/
+               delete this._options.openedPath[key];
             }
          }
          /*TODO пока придрот*/
