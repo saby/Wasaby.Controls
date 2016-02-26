@@ -66,8 +66,7 @@ define('js!SBIS3.CONTROLS.SelectorButton',
       },
       _drawSelectedItems: function(keysArr) {
          var self = this,
-             isSelected = Boolean(keysArr.length),
-             caption;
+             isSelected = Boolean(keysArr.length);
 
          $('.controls-SelectorButton__cross', this._container[0]).toggleClass('ws-hidden', !isSelected);
          if(isSelected) {
@@ -77,11 +76,11 @@ define('js!SBIS3.CONTROLS.SelectorButton',
                list.each(function(item) {
                   linkTextArray.push(item.get(self._options.displayField));
                });
-               caption = linkTextArray.join(', ');
-               return list;
+               self._setCaption(linkTextArray.join(', '));
             });
+         } else {
+            this._setCaption(this._options.defaultCaption);
          }
-         this._setCaption(caption);
       },
 
       setCaption: function(caption) {
