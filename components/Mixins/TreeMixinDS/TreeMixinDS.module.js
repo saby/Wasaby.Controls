@@ -71,6 +71,11 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', ['js!SBIS3.CORE.Control',
              * @cfg {Boolean} Опция задаёт режим разворота. false Без разворота
              */
             expand: false,
+            /**
+             * @cfg {Boolean} Запрашивать записи для папки если в текущем наборе данных их нет
+             * @noShow
+             */
+            partialyReload: true,
             openedPath : {},
             folderFooterTpl: undefined,
             /**
@@ -99,12 +104,24 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', ['js!SBIS3.CORE.Control',
       },
 
       _createDefaultProjection : function(items) {
+         var root;
+         if (typeof this._curRoot != 'undefined') {
+            root = this._curRoot;
+         }
+         else {
+            if (typeof this._options.root != 'undefined') {
+               root = this._options.root;
+            }
+            else {
+               root = null;
+            }
+         }
          this._itemsProjection = new TreeProjection({
             collection: items,
             idProperty: this._options.keyField || (this._dataSource ? this._dataSource.getIdProperty() : ''),
             parentProperty: this._options.hierField,
             nodeProperty: this._options.hierField + '@',
-            root: (typeof this._options.root != 'undefined') ? this._options.root : null
+            root: root
          });
       },
 
@@ -204,15 +221,10 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', ['js!SBIS3.CORE.Control',
 
             this._folderOffsets[key || 'null'] = 0;
             this._options.openedPath[key] = true;
-            if (this._options.singleExpand) {
-               $.each(this._options.openedPath, function (openedKey, _value) {
-                  if (key != openedKey) {
-                     self.collapseNode(openedKey);
-                  }
-               });
-            }
-            if (!tree[key]) {
+            this._closeAllExpandedNode(key);
+            if (!tree[key] && this._options.partialyReload) {
                this._toggleIndicator(true);
+               this._notify('onBeforeDataLoad');
                return this._callQuery(this._createTreeFilter(key), this.getSorting(), 0, this._limit).addCallback(function (dataSet) {
                   // TODO: Отдельное событие при загрузке данных узла. Сделано так как тут нельзя нотифаить onDataLoad,
                   // так как на него много всего завязано. (пользуется Янис)
@@ -229,9 +241,20 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', ['js!SBIS3.CORE.Control',
                   for (var i = 0; i < child.length; i++) {
                      records.push(this._dataSet.getRecordById(child[i]));
                   }
-                  this._notify('onNodeExpand', key);
                }
+               this._drawLoadedNode(key, records, this._folderHasMore[key]);
+               this._notify('onNodeExpand', key);
             }
+         }
+      },
+      _closeAllExpandedNode: function(key){
+         var self = this;
+         if (this._options.singleExpand){
+            $.each(this._options.openedPath, function(openedKey, _value){
+               if (key != openedKey){
+                  self.collapseNode(openedKey);
+               }
+            });
          }
       },
       /**
@@ -267,7 +290,9 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', ['js!SBIS3.CORE.Control',
 
       _nodeDataLoaded : function(key, dataSet) {
          var self = this;
+         this._needToRedraw = false;
          this._dataSet.merge(dataSet, {remove: false});
+         this._needToRedraw = true;
          this._dataSet.getTreeIndex(this._options.hierField, true);
          var records = [];
          dataSet.each(function (record) {
@@ -283,6 +308,9 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', ['js!SBIS3.CORE.Control',
             if (this._options.openedPath[parent] || (parent == this._curRoot)) {
                parentFnc.call(this, item, at);
             }
+         },
+         _isViewElement: function(parentFunc, elem) {
+            return  parentFunc.call(this, elem) && !elem.hasClass('controls-HierarchyDataGridView__path') && !(elem.wsControl() instanceof BreadCrumbs);
          }
       },
 
@@ -321,6 +349,7 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', ['js!SBIS3.CORE.Control',
          var
             self = this,
             filter = id ? this._createTreeFilter(id) : this.getFilter();
+         this._notify('onBeforeDataLoad');
          this._loader = this._callQuery(filter, this.getSorting(), (id ? this._folderOffsets[id] : this._folderOffsets['null']) + this._limit, this._limit).addCallback($ws.helpers.forAliveOnly(function (dataSet) {
             //ВНИМАНИЕ! Здесь стрелять onDataLoad нельзя! Либо нужно определить событие, которое будет
             //стрелять только в reload, ибо между полной перезагрузкой и догрузкой данных есть разница!
@@ -462,12 +491,6 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', ['js!SBIS3.CORE.Control',
                self._destroyFolderFooter([key]);
             });
          }
-      },
-      around: {
-         _isViewElement: function(parentFunc, elem) {
-            return  parentFunc.call(this, elem) && !elem.hasClass('controls-HierarchyDataGridView__path') && !(elem.wsControl() instanceof BreadCrumbs);
-         }
-
       },
       after : {
          _modifyOptions: function (opts) {

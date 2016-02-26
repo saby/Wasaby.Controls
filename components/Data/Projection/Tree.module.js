@@ -120,6 +120,11 @@ define('js!SBIS3.CONTROLS.Data.Projection.Tree', [
          return this._options.parentProperty;
       },
 
+      setParentProperty: function (name) {
+         this._options.parentProperty = name;
+         this._childrenMap = {};
+      },
+
       getNodeProperty: function () {
          return this._options.nodeProperty;
       },
@@ -143,6 +148,11 @@ define('js!SBIS3.CONTROLS.Data.Projection.Tree', [
          }
 
          return this._root;
+      },
+
+      setRoot: function (root) {
+         this._options.root = root;
+         this._root = null;
       },
 
       getChildren: function (parent) {

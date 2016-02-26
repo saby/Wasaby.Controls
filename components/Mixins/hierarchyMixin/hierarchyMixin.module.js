@@ -155,6 +155,9 @@ define('js!SBIS3.CONTROLS.hierarchyMixin', [], function () {
          //Если добавить проверку на rootChanged, то при переносе в ту же папку, из которой искали ничего не произойдет
          this._notify('onBeforeSetRoot', key);
          this._curRoot = key || this._options.root;
+         if (this._itemsProjection) {
+            this._itemsProjection.setRoot(this._curRoot || null);
+         }
       },
       after : {
          //TODO:После каждого релоада проверяется флаг _rootChanged и если флаг взведен,

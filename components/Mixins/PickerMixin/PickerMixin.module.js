@@ -22,6 +22,17 @@ define('js!SBIS3.CONTROLS.PickerMixin', ['js!SBIS3.CONTROLS.FloatArea'], functio
               * а не в конейнере контрола.
               */
             pickerClassName : '',
+            /**
+             * @cfg {Object} Дополнительные настройки для выпадающего блока {@link SBIS3.CONTROLS.PopupMixin}
+             * @example
+             * <pre class="brush:xml">
+             *    <options name="pickerConfig">
+             *       <options name="verticalAlign">
+             *          <option name="side">top<option>
+             *        </options>
+             *    </options>
+             * </pre>
+             */
             pickerConfig: undefined
          }
       },
@@ -31,45 +42,50 @@ define('js!SBIS3.CONTROLS.PickerMixin', ['js!SBIS3.CONTROLS.FloatArea'], functio
       },
 
       _initializePicker: function () {
-         var
-            self = this,
-            pickerContainer = $('<div></div>'),
-            container = self._container;
+         var self = this,
+             container = this.getContainer(),
+             pickerContainer = $('<div></div>');
 
          if (this._options.pickerClassName) {
             pickerContainer.addClass(this._options.pickerClassName);
          }
 
          // чтобы не нарушать выравнивание по базовой линии
-         $('body').append(pickerContainer);
-         self._picker = this._createPicker(pickerContainer);
-         this._picker.subscribe('onAlignmentChange', function(event, alignment){
-            self._onAlignmentChangeHandler(alignment);
-         });
-         self._picker.subscribe('onClose', function(){
-            self._container.removeClass('controls-Picker__show');
-         });
-         container.hover(function(){
-            self._picker.getContainer().addClass('controls-Picker__owner__hover');
-         }, function () {
-            self._picker.getContainer().removeClass('controls-Picker__owner__hover');
-         });
-         self._border = self._container.outerWidth() - self._container.innerWidth();
+         $ws._const.$body.append(pickerContainer);
+         self._picker = self._createPicker(pickerContainer);
+         self._picker
+             .subscribe('onAlignmentChange', function(event, alignment){
+                self._onAlignmentChangeHandler(alignment);
+             })
+             .subscribe('onClose', function(){
+                container.removeClass('controls-Picker__show');
+             });
+
+         container
+             .hover(function(){
+                pickerContainer.addClass('controls-Picker__owner__hover');
+             }, function () {
+                pickerContainer.removeClass('controls-Picker__owner__hover');
+             });
+
+         self._border = container.outerWidth() - container.innerWidth();
          self._setPickerContent();
+         pickerContainer.addClass('js-controls-Picker__initialized')
       },
 
       _createPicker: function(pickerContainer){
-         var pickerConfig = this._setPickerConfig();
+         var pickerConfig = this._setPickerConfig(),
+             parent = this.getParent();
+
          if (this._options.pickerConfig){
             $ws.helpers.forEach(this._options.pickerConfig, function(val, key) {
                pickerConfig[key] = val;
             });
          }
-         pickerConfig.parent = pickerConfig.parent || this.getParent();
+
+         pickerConfig.parent = pickerConfig.parent || parent;
          pickerConfig.opener = this;
-         if (!pickerConfig.context) {
-            pickerConfig.context = this.getParent() ? this.getParent().getLinkedContext() : {};
-         }
+         pickerConfig.context = pickerConfig.context || (parent && parent.getLinkedContext());
          pickerConfig.target = pickerConfig.target || this._container;
          pickerConfig.element = pickerContainer;
          return new FloatArea(pickerConfig);

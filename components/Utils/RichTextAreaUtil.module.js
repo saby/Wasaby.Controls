@@ -20,22 +20,31 @@ define('js!SBIS3.CONTROLS.Utils.RichTextAreaUtil',[], function () {
                   selectionRange, selectionContent, textRange, bodyElement, tempElement,
                   selectionNode = document.createElement('div'),
                   clipboardData = event.clipboardData ? event.clipboardData : window.clipboardData,
-                  label = document.createComment('content=SBIS.FRE'); // по этой метке будем определять что контент вставляется из FieldRichEditor
+                  currentWindow = window,
+                  label = document.createComment('content=SBIS.FRE'), // по этой метке будем определять что контент вставляется из FieldRichEditor
+                  i = 0;
                e.preventDefault();
+               //рассчет родительского window элемента
+               while (window.frames[i]){
+                  if (_isDescendant(window.frames[i].document.body, event.target)) {
+                     currentWindow = window.frames[i];
+                  }
+                  i++;
+               }
                // webkit && ie>9
-               if (window.getSelection) {
-                  selectionRange = window.getSelection().getRangeAt(0);
+               if (currentWindow.getSelection) {
+                  selectionRange = currentWindow.getSelection().getRangeAt(0);
                   selectionContent = event.type == 'cut' ? selectionRange.extractContents() : selectionRange.cloneContents();
                }
                // ie8
                else {
-                  selectionRange = document.selection.createRange();
+                  selectionRange = currentWindow.document.selection.createRange();
                   selectionContent = selectionRange.duplicate().htmlText;
                   if (event.type == 'cut') {
                      //вырезать выделенное если событие cut
                      selectionRange.pasteHTML('');
                   }
-                  tempElement = document.createElement('div');
+                  tempElement = currentWindow.document.createElement('div');
                   tempElement.innerHTML = selectionContent;
                   selectionContent = tempElement;
                }
@@ -60,7 +69,17 @@ define('js!SBIS3.CONTROLS.Utils.RichTextAreaUtil',[], function () {
                      bodyElement.removeChild(selectionNode);
                   },0);
                }
-            }
+            },
+            _isDescendant = function(parent, child) {
+               var node = child;
+               while (node != null) {
+                  if (node == parent) {
+                     return true;
+                  }
+                  node = node.parentNode;
+               }
+               return false;
+            };
 
          target.on( 'cut copy',function(e){
             markingRichContent(e);

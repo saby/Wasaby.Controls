@@ -41,6 +41,9 @@ define('js!SBIS3.CONTROLS.ButtonBase', ['js!SBIS3.CORE.CompoundControl', 'js!SBI
    var ButtonBase = Control.extend([Clickable, FormWidgetMixin, DataBindMixin, IconMixin],/** @lends SBIS3.CONTROLS.ButtonBase.prototype*/ {
 
       $protected: {
+         _tooltipSettings: {
+            handleFocus: false
+         },
          _options: {
             /**
              * @cfg {String}  Текст на кнопке

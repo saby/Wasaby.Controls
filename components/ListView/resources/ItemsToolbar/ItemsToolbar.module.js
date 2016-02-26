@@ -158,6 +158,7 @@ define('js!SBIS3.CONTROLS.ItemsToolbar',
            */
           lockToolbar: function() {
              this._lockingToolbar = true;
+             this.getContainer().addClass('controls-ItemsToolbar__locked');
              this._trackingTarget();
           },
           /**
@@ -165,6 +166,7 @@ define('js!SBIS3.CONTROLS.ItemsToolbar',
            */
           unlockToolbar: function() {
              this._lockingToolbar = false;
+             this.getContainer().removeClass('controls-ItemsToolbar__locked');
              this._untrackingTarget();
           },
           /**

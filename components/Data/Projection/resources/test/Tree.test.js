@@ -153,6 +153,13 @@ define([
             });
          });
 
+         describe('.setParentProperty()', function() {
+            it('should change the value', function() {
+               tree.setParentProperty('uid');
+               assert.equal(tree.getParentProperty(), 'uid');
+            });
+         });
+
          describe('.getNodeProperty()', function() {
             it('should return given value', function() {
                assert.equal(tree.getNodeProperty(), 'node');
@@ -199,6 +206,26 @@ define([
                      root: root,
                      idProperty: 'id'
                   });
+               assert.strictEqual(tree.getRoot(), root);
+            });
+         });
+
+         describe('.setRoot()', function() {
+            it('should set root as scalar', function() {
+               tree.setRoot(1);
+               assert.strictEqual(tree.getRoot().getContents(), 1);
+            });
+            it('should set root as object', function() {
+               var root = {id: 1};
+               tree.setRoot(root);
+               assert.strictEqual(tree.getRoot().getContents(), root);
+            });
+            it('should set root as tree item', function() {
+               var root = new TreeItem({contents: {
+                  id: null,
+                  title: 'Root'
+               }});
+               tree.setRoot(root);
                assert.strictEqual(tree.getRoot(), root);
             });
          });
