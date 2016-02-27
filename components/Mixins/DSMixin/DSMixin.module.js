@@ -1211,6 +1211,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
                         newItemsIndex + i
 	                  );
 	               }
+                  this._toggleEmptyData(!!this._itemsProjection.getCount());
 	               //this._view.checkEmpty(); toggleEmtyData
 	               this.reviveComponents(); //надо?
                    this._drawItemsCallback();
