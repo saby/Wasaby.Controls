@@ -781,7 +781,9 @@ define('js!SBIS3.CONTROLS.ListView',
          _getItemsContainer: function () {
             return $('.controls-ListView__itemsContainer', this._container.get(0)).first();
          },
-
+         _getItemContainer: function(parent, item) {
+            return parent.find('>[data-id="' + item.getKey() + '"]:not(".controls-editInPlace")');
+         },
          _addItemAttributes: function(container) {
             container.addClass('js-controls-ListView__item');
             ListView.superclass._addItemAttributes.apply(this, arguments);
@@ -1011,7 +1013,7 @@ define('js!SBIS3.CONTROLS.ListView',
             //options.editFieldFocusHandler = this._editFieldFocusHandler.bind(this) - подумать, как это сделать
             var
                config = {
-                  dataSet: this._dataSet,
+                  dataSet: this._items,
                   editingItem: this._editingItem,
                   ignoreFirstColumn: this._options.multiselect,
                   dataSource: this._dataSource,
