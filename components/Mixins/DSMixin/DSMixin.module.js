@@ -1182,6 +1182,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
       onCollectionItemChange = function(eventObject, item, index, property){
          if (this._isNeedToRedraw()) {
             this._updateItem(item);
+            this._drawItemsCallback();
          }
       },
       /**
