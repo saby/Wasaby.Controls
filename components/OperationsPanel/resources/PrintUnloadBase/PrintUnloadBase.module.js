@@ -5,7 +5,14 @@ define('js!SBIS3.CONTROLS.PrintUnloadBase', [
    'js!SBIS3.CONTROLS.MenuLink',
    'js!SBIS3.CORE.DialogSelector'
 ], function(MenuLink, Dialog) {
-
+   /**
+    * Базовый контрол для работы с ListView. Подготовливает данные для печати и выгрузки
+    * @class SBIS3.CONTROLS.PrintUnloadBase
+    * @extends SBIS3.CONTROLS.MenuLink
+    * @author Крайнов Дмитрий Олегович
+    * @control
+    * @public
+    */
    var PrintUnloadBase = MenuLink.extend({
       /**
        * @event onApplyOperation Перед обработкой операции
@@ -84,8 +91,8 @@ define('js!SBIS3.CONTROLS.PrintUnloadBase', [
                      //TODO Но пришлось сделать так:
                      this.getChildControlByName('controls-MassAmountSelector').getContext().setValue('NumOfRecords', numOfRecords);
                   },
-                  onChange: function(event, selectedNumRecords){
-                     self.processSelectedOperation(selectedNumRecords);
+                  onChange: function(event, pageSize){
+                     self.processSelectedPageSize(pageSize);
                   }
                }
             });
@@ -119,7 +126,7 @@ define('js!SBIS3.CONTROLS.PrintUnloadBase', [
          }
          //Снимем выделение
          this._getView().removeItemsSelectionAll();
-         this.applyOperation(dataSet, cfg);
+         this.applyOperation(cfg);
       },
       _prepareOperationColumns: function(){
          var columns = this._getView().getColumns(),
@@ -133,38 +140,57 @@ define('js!SBIS3.CONTROLS.PrintUnloadBase', [
       /**
        * Обрабатываем выбранные пользователем записи. Здесь подготавливаем dataSet либо подготавливаем
        * фильтр для выгрузки данных полностью на сервере
-       * @param selectedNumRecords
+       * @param pageSize - количество записей, есди передать undefined, то значит, что нужны вообще все записи
        */
-      processSelectedOperation: function(selectedNumRecords){
+      processSelectedPageSize: function(pageSize){
          var ds = this._getView()._dataSet,
             numOfRecords = ds.getCount(),
             num = 0,
             self = this;
-         if(selectedNumRecords > numOfRecords){
-            $ws.helpers.question('Операция займет продолжительное время. Провести операцию?', {}, self).addCallback(function(answer){
-               if (answer) {
-                  self._getView()._callQuery(self._getView().getFilter(), self._getView().getSorting(), 0, selectedNumRecords).addCallback(function (dataSet) {
-                     self._applyOperation(dataSet);
-                  });
-               }
+         if(pageSize > numOfRecords || !pageSize){
+            this._loadFullData(pageSize || undefined).addCallback(function(dataSet){
+               self._applyOperation(dataSet);
+            }).addErrback(function(err){
+              return err;
             });
          } else {
-            if (selectedNumRecords < numOfRecords) {
+            if (pageSize < numOfRecords) {
                num = 0;
                //TODO здесь должен быть не filter, а что-то типа .range - получение первых N записей
-               //Выберем selectedNumRecords записей из dataSet
+               //Выберем pageSize записей из dataSet
                ds = self._getView()._dataSet.filter(function(){
-                  return num++ < selectedNumRecords;
+                  return num++ < pageSize;
                });
             }
             self._applyOperation(ds);
          }
       },
+      _loadFullData: function(pageSize){
+         var deferred = new $ws.proto.Deferred(),
+            self = this;
+         $ws.helpers.question('Операция займет продолжительное время. Провести операцию?', {}, self).addCallback(function(answer){
+            if (answer) {
+               self._getView()._callQuery(self._getView().getFilter(), self._getView().getSorting(),0,  pageSize).addCallback(function (dataSet) {
+                  deferred.callback(dataSet)
+               });
+            } else{
+               deferred.errback();
+            }
+         });
+         return deferred;
+      },
+      /**
+       * @deprecated Переименован в processSelectedPageSize
+       * @param pageSize
+       */
+      processSelectedOperation: function(pageSize){
+         this.processSelectedPageSize(pageSize)
+      },
       /**
        * Must be implemented
        * @param dataSet
        */
-      applyOperation : function(dataSet){
+      applyOperation : function(){
 
       }
    });
