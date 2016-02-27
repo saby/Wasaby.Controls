@@ -19,6 +19,7 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl'],
       _dotTplFn: dotTpl,
       $protected: {
          _record: null,
+         _saving: false,
          _options: {
             /**
              * @cfg {DataSource} Источник данных для диалога редактирования записи
@@ -81,13 +82,25 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl'],
       },
       
       $constructor: function() {
-         this._publish('onBeforeSubmit', 'onSubmit');
+         this._publish('onSubmit');
          $ws.single.CommandDispatcher.declareCommand(this, 'submit', this.submit);
          if (this._options.dataSource){
             this._runQuery();
          } else {
             this._setContextRecord(this._options.record);
          }
+
+         //Выписал задачу, чтобы при событии onBeforeClose стрелял метод у floatArea, который мы бы переопределили здесь,
+         //чтобы не дергать getTopParent
+         this.getTopParent().subscribe('onBeforeClose', function(event){
+            //Если попали сюда из метода _saveRecord, то this._saving = true и мы просто закрываем панель
+            if (this._saving || !this._options.record.isChanged()){
+               this._saving = false;
+               return;
+            }
+            event.setResult(false);
+            this._saveRecord();
+         }.bind(this));
       },
       /**
        * Сохраняет редактируемую или создаваемую запись
@@ -102,19 +115,35 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl'],
        * </pre>
        */
       submit: function(){
-         var
-            def,
-            self = this,
-            submitResult = this._notify('onBeforeSubmit');
+         this._saveRecord();
+      },
 
-         if (submitResult instanceof $ws.proto.Deferred) {
-            def = submitResult;
-         }
-         else {
-            def = this._options.dataSource.update(this._options.record);
-         }
-         def.addCallback(function(){
-            self.getTopParent().ok();
+      _saveRecord: function(){
+         var self = this,
+             questionConfig,
+             def;
+
+         questionConfig = {
+            useCancelButton: true,
+            invertDefaultButton: true,
+            detail: 'Чтобы продолжить редактирование, нажмите "Отмена".'
+         };
+
+         $ws.helpers.question('Сохранить изменения?', questionConfig, this).addCallback(function(result){
+            if (typeof result === 'string'){
+               self._saving = false;
+               return;
+            }
+            self._saving = true;
+            if (result){
+               def = self._options.dataSource.update(self._options.record);
+               def.addCallback(function(){
+                  self.getTopParent().ok();
+               });
+            }
+            else{
+               self.getTopParent().cancel();
+            }
          });
       },
 
