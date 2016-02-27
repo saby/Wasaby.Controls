@@ -268,6 +268,9 @@ define(
                this.setText(this._getEmptyText());
                return;
             }
+            if (interval.toString() == this.getInterval()){
+               return;
+            }
             this.timeInterval.set(interval);
             this._updateTextByTimeInterval(true);
          },
@@ -424,7 +427,7 @@ define(
 
             // Если дата изменилась -- генерировать событие.
             if ( oldDate !== this.timeInterval.toString()) {
-               this.getLinkedContext().setValue('interval', this.timeInterval);
+               this._notifyOnPropertyChanged('interval');
                this._notify('onChangeInterval', this.timeInterval.toString());
             }
          }
