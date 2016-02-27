@@ -213,16 +213,15 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                   } else {
                      return this._endEdit(eip, withSaving, endEditResult);
                   }
-
                }
-               return this._savingDeferred;
+               //TODO: Надо обсудить c Витей, почему в стрельнувшем Deferred и если результат тоже был Deferred - нельзя делать addCallback.
+               return this._savingDeferred.isReady() ? $ws.proto.Deferred.success() : this._savingDeferred;
             },
             _endEdit: function(eip, withSaving, endEditResult) {
                if (endEditResult !== undefined) {
                   withSaving = endEditResult;
                }
                if (!withSaving || eip.validate()) {
-                  eip.endEdit();
                   this._savingDeferred = new $ws.proto.Deferred();
                   this._sendLockCommand(this._savingDeferred);
                   if (withSaving) {
@@ -238,34 +237,34 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
             },
             _getEditingEip: function() {
                return this._eip.isEdit() ? this._eip : null;
-             },
+            },
             _afterEndEdit: function(eip, withSaving) {
                var
-                  target = eip.getTarget(),
                   eipRecord = eip.getEditingRecord(),
                   isAdd = !eipRecord.isStored();
                if (this._editingRecord) {
                   this._editingRecord.merge(eipRecord);
                   this._editingRecord = undefined;
                }
-               isAdd && target.remove();
                if (withSaving) {
                   this._options.dataSource.update(eipRecord).addCallback(function() {
                      isAdd && this._options.dataSet.push(eipRecord);
                   }.bind(this)).addBoth(function() {
-                     eip.endEdit();
-                     this._notifyOnAfterEndEdit(eipRecord, target, withSaving);
+                     this._notifyOnAfterEndEdit(eip, eipRecord, withSaving, isAdd);
                   }.bind(this));
                } else {
-                  eip.endEdit();
-                  this._notifyOnAfterEndEdit(eipRecord, target, withSaving);
+                  this._notifyOnAfterEndEdit(eip, eipRecord, withSaving, isAdd);
                }
             },
-            _notifyOnAfterEndEdit: function(eipRecord, target, withSaving) {
+            //TODO: Нужно переименовать метод
+            _notifyOnAfterEndEdit: function(eip, eipRecord, withSaving, isAdd) {
+               var target = eip.getTarget();
+               eip.endEdit();
+               isAdd && target.remove();
+               this._notify('onAfterEndEdit', eipRecord, target, withSaving);
                if (!this._savingDeferred.isReady()) {
                   this._savingDeferred.callback();
                }
-               this._notify('onAfterEndEdit', eipRecord, target, withSaving);
             },
             add: function(model, options) {
                var
@@ -284,8 +283,9 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
             _createAddTarget: function(options) {
                var
                    footer,
-                   target = this._options.columns ? $('<tr>') : $('<div>');
-               target.addClass("js-controls-ListView__item");
+                   //Данный элемент будет служить как точка позиционирования добавления по месту, и как блок, который будет расширять браузер.
+                   //Используется div т.к он растянется по все ширине контейнера, и может иметь background-color, в отличии от tr.
+                   target = $('<div class="js-controls-ListView__item controls-ListView__item">');
                if (options && options.initiator) {
                   footer = options.initiator.closest('.controls-TreeDataGridView__folderFooter');
                }
