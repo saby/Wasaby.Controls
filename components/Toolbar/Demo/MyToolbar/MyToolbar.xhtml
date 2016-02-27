@@ -1,10 +1,10 @@
 <div>
-   <component data-component="SBIS3.CONTROLS.Toolbar" name="Toolbar" class="Toolbar">
-      <option name="displayField" value="id"></option>
+   <component data-component="SBIS3.CONTROLS.Toolbar" name="MyToolbar" class="Toolbar">
+      <option name="keyField">id</option>
       <options name="items" type="array">
          <options>
             <option name="id">1</option>
-            <option name="componentType">js!SBIS3.CONTROLS.Button</option>
+            <option name="componentType">js!SBIS3.CONTROLS.Link</option>
             <option name="className" >ButtonClass</option>
             <option name="isMainAction" type="boolean">true</option>
             <option name="name">Button</option>
@@ -13,6 +13,7 @@
                <option name="caption">Вкл</option>
                &lt;!&ndash;<option name="checked" bind="iconIsMain">false</option>&ndash;&gt;
             </component>-->
+            <!--Так можно задать команду без параметров-->
             <option name="command">testCommand</option>
          </options>
          <options>
@@ -41,7 +42,7 @@
             <option name="className" >ButtonClass</option>
             <option name="isMainAction" type="boolean">true</option>
             <option name="name">Button</option>
-            <option name="caption">text 4</option>
+            <option name="caption" <!--bind="toolbar\buttonText1"-->>Кнопка</option>
          </options>
          <options>
             <option name="id">5</option>
@@ -109,9 +110,12 @@
       <option name="caption">Вкл</option>
       <option name="checked" bind="iconIsMain">false</option>
    </component>
+   <component data-component="SBIS3.CONTROLS.TextBox" name="TextBox" class="TextBox">
+      <option name="text" bind="toolbar\buttonText1">Кнопка</option>
+   </component>
 
    <br/>
-   <component data-component="SBIS3.CONTROLS.TextArea" name="TextArea" style="width:300px;">
+   <component data-component="SBIS3.CONTROLS.TextArea" name="TextArea" style="width:500px;">
       <option name="minLinesCount">10</option>
       <options name="autoResize">
          <option name="maxLinesCount">10</option>

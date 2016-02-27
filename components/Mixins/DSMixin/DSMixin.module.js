@@ -506,6 +506,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
                       self._dataLoadedCallback();
                       self._notify('onDataLoad', list);
                       self._items.assign(list);
+                      self.redraw();
                    }
                    else {
                       self._items = list;
