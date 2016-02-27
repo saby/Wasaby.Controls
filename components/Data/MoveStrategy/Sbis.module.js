@@ -61,7 +61,7 @@ define('js!SBIS3.CONTROLS.Data.MoveStrategy.Sbis', [
             this._orderProvider = DI.resolve('source.provider.sbis-business-logic', {resource: this._options.moveResource});
          }
          $ws.helpers.forEach(from, function(record) {
-            params['ИдО'] = [String.prototype.split.call(record.getId(), ',')[0], self._options.resource];
+            params['ИдО'] = self._prepareComplexId(record.getId());
             def.push(self._orderProvider.call(method, params, $ws.proto.BLObject.RETURN_TYPE_ASIS).addErrback(function (error) {
                $ws.single.ioc.resolve('ILogger').log('SBIS3.CONTROLS.Data.MoveStrategy.Sbis::move()', error);
                return error;
@@ -78,23 +78,32 @@ define('js!SBIS3.CONTROLS.Data.MoveStrategy.Sbis', [
        * @private
        */
       _getMoveParams: function(to, after) {
-         var objectName = this._options.resource,
-            params = {
+         var params = {
                'ПорядковыйНомер': this._options.moveDefaultColumn,
                'Иерархия': null,
                'Объект': this._options.resource
             },
-            id = String.prototype.split.call(to.getId(), ',')[0];
+            id = this._prepareComplexId(to.getId());
 
          if (after) {
-            params['ИдОПосле'] = [id, objectName];
+            params['ИдОПосле'] = id;
          } else {
-            params['ИдОДо'] = [id, objectName];
+            params['ИдОДо'] = id;
 
          }
          return params;
+      },
+      /**
+       * подготавливает сложный идентификатор
+       * @param id
+       * @private
+       */
+      _prepareComplexId: function (id){
+         var preparedId = String.prototype.split.call(id, ',', 2);
+         if (preparedId.length < 2) {
+            preparedId.push(this._options.resource);
+         }
+         return preparedId;
       }
-
-
    });
 });
