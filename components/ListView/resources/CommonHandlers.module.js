@@ -6,20 +6,21 @@ define('js!SBIS3.CONTROLS.CommonHandlers',[],
       var CommonHandlers = {
          deleteRecords: function(idArray) {
             var
-               isArray = Array.isArray(idArray),
-               message = isArray &&  idArray.length !== 1 ? "Удалить записи?" : "Удалить текущую запись?",
+               idArray = Array.isArray(idArray) ? idArray : [idArray],
+               message = idArray.length !== 1 ? "Удалить записи?" : "Удалить текущую запись?",
                self = this;
 
             return $ws.helpers.question(message).addCallback(function(res) {
                if (res) {
-                  self._items.removeRecord(idArray);
-                  self.removeItemsSelection(isArray ? idArray : [idArray]);
-                  return self._dataSource.sync(self._items).addCallback(function () {
+                  return self._dataSource.destroy(idArray).addCallback(function () {
+                     self.removeItemsSelection(idArray);
                      if ($ws.helpers.instanceOfModule(self, 'SBIS3.CONTROLS.TreeCompositeView') && self.getViewMode() === 'table') {
-                        self.partialyReload(isArray ? idArray : [idArray]);
+                        self.partialyReload(idArray);
                      } else {
                         self.reload();
                      }
+                  }).addErrback(function(result) {
+                     $ws.helpers.alert(result)
                   });
                }
             });

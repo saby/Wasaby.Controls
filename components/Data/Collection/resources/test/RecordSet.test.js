@@ -96,28 +96,6 @@ define([
                }
                assert.isBelow(rel, 5);
             });
-            it('should define idproperty for rawdata', function () {
-               rs = new RecordSet({
-                  rawData: {
-                     d: [
-                        0,
-                        ''
-                     ],
-                     s: [
-                        {
-                           'n': '@Ид',
-                           't': 'Число целое'
-                        },
-                        {
-                           'n': 'Фамилия',
-                           't': 'Строка'
-                        }
-                     ]
-                  },
-                  adapter: new SbisAdapter()
-               });
-               assert.equal(rs.getIdProperty(), '@Ид');
-            });
          });
 
          describe('.isEqual()', function () {
@@ -454,6 +432,7 @@ define([
             });
             it('should hide type signature in rawData', function () {
                var rs = new RecordSet({
+                     adapter: new SbisAdapter(),
                      rawData: {
                         _type: 'recordset',
                         s: [1],

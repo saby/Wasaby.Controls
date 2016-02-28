@@ -24,10 +24,12 @@ define('js!SBIS3.CONTROLS.ComponentBinder', [], function () {
          view.setHighlightEnabled(true);
          view.setInfiniteScroll(true, true);
          view.setGroupBy(groupBy);
+         view._itemsProjection.setParentProperty(null);
          if (this._firstSearch) {
             this._lastRoot = view.getCurrentRoot();
-            if (this._options.breadCrumbs && this._options.breadCrumbs.getDataSet()){
-               this._pathDSRawData = $ws.core.clone(this._options.breadCrumbs.getDataSet().getRawData());
+            this._lastParentProperty = view._itemsProjection.getParentProperty();
+            if (this._options.breadCrumbs && this._options.breadCrumbs.getItems()){
+               this._pathDSRawData = $ws.core.clone(this._options.breadCrumbs.getItems().getRawData());
             }
          }
          this._firstSearch = false;
@@ -86,6 +88,7 @@ define('js!SBIS3.CONTROLS.ComponentBinder', [], function () {
       if (this._firstSearch) {
          return;
       }
+      view._itemsProjection.setParentProperty(this._lastParentProperty);
       view.setInfiniteScroll(this._isInfiniteScroll, true);
       view.setGroupBy(this._lastGroup);
       view.setHighlightText('', false);
@@ -100,7 +103,7 @@ define('js!SBIS3.CONTROLS.ComponentBinder', [], function () {
          view.reload(filter, view.getSorting(), 0);
          this._path = this._pathDSRawData || [];
          if (this._options.breadCrumbs){
-            this._options.breadCrumbs.getDataSet().setRawData(this._pathDSRawData);
+            this._options.breadCrumbs.getItems().setRawData(this._pathDSRawData);
             this._options.breadCrumbs._redraw();
          }
          if (this._options.backButton) {
@@ -143,6 +146,7 @@ define('js!SBIS3.CONTROLS.ComponentBinder', [], function () {
          _searchForm : undefined,
          _lastRoot : undefined,
          _lastGroup: {},
+         _lastParentProperty: null,
          _currentRoot: null,
          _pathDSRawData : [],
          _firstSearch: true,
@@ -177,6 +181,21 @@ define('js!SBIS3.CONTROLS.ComponentBinder', [], function () {
       },
 
       /**
+       * Установить отображение нового пути для хлебных крошек и кнопки назад
+       * @param {Array} path новый путь, последний элемент попадает в BackButton, остальные в хлебные крошки
+       */
+      setPath: function(path){
+         this._path = path;
+         if (path.length){
+            this._currentRoot = this._path.pop();
+         } else {
+            this._currentRoot = {};
+         }
+         this._options.breadCrumbs.setItems(this._path || []);
+         this._options.backButton.setCaption(this._currentRoot.title || '');
+      },
+
+      /**
        * Метод для связывания формы строки поиска с представлением данных.
        * для работы необходимо задать опциию view
        * @param {String} searchParamName параметр фильтрации для поиска
@@ -205,7 +224,7 @@ define('js!SBIS3.CONTROLS.ComponentBinder', [], function () {
             view.subscribe('onSetRoot', function(event, curRoot, hierarchy){
                self._lastRoot = curRoot;
                if (self._options.breadCrumbs){
-                  self._pathDSRawData = $ws.core.clone(hierarchy);
+                  self._pathDSRawData = $ws.core.clone(self._options.breadCrumbs.getItems().getRawData());
                }
                if (self._options.backButton) {
                   self._options.backButton.getContainer().css({'visibility': 'visible'});

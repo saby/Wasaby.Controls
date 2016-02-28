@@ -225,14 +225,6 @@ define('js!SBIS3.CONTROLS.ListView',
             _addResultsMethod: undefined,
             _options: {
                /**
-                * @cfg {Boolean} Разрешить отсутствие выбранного элемента
-                * @example
-                * <pre>
-                *     <option name="allowEmptySelection">false</option>
-                * </pre>
-                */
-               allowEmptySelection: false,
-               /**
                 * @faq Почему нет флажков при включенной опции {@link SBIS3.CONTROLS.ListView#multiselect multiselect}?
                 * Для отрисовки флажков необходимо в шаблоне отображания элемента прописать их место:
                 * <pre>
@@ -562,10 +554,12 @@ define('js!SBIS3.CONTROLS.ListView',
          /**
           * Возвращает следующий элемент
           * @param id
-          * @returns {*}
+          * @returns {jQuery}
           */
          getNextItemById: function (id) {
-            return this._getItem(id, true);
+            return this._getHtmlItemByProjectionItem(
+               this._getProjectionItem(id, true)
+            );
          },
          /**
           * Возвращает предыдущий элемент
@@ -573,7 +567,9 @@ define('js!SBIS3.CONTROLS.ListView',
           * @returns {jQuery}
           */
          getPrevItemById: function (id) {
-            return this._getItem(id, false);
+            return this._getHtmlItemByProjectionItem(
+               this._getProjectionItem(id, false)
+            );
          },
 
          _getNextItemByDOM: function(id) {
@@ -584,10 +580,12 @@ define('js!SBIS3.CONTROLS.ListView',
             return this._getHtmlItemByDOM(id, false);
          },
 
-         _getItem: function(id, isNext) {
-            var index = this._itemsProjection.getEnumerator().getIndexByValue(this._options.keyField, id),
-               item;
-            item = this._itemsProjection.at(isNext ? ++index : --index);
+         _getProjectionItem: function(id, isNext) {
+            var index = this._itemsProjection.getEnumerator().getIndexByValue(this._options.keyField, id);
+            return this._itemsProjection.at(isNext ? ++index : --index);
+         },
+
+         _getHtmlItemByProjectionItem: function (item) {
             if (item) {
                return $('.js-controls-ListView__item[data-id="' + item.getContents().getId() + '"]', this._getItemsContainer());
             }
@@ -783,7 +781,9 @@ define('js!SBIS3.CONTROLS.ListView',
          _getItemsContainer: function () {
             return $('.controls-ListView__itemsContainer', this._container.get(0)).first();
          },
-
+         _getItemContainer: function(parent, item) {
+            return parent.find('>[data-id="' + item.getKey() + '"]:not(".controls-editInPlace")');
+         },
          _addItemAttributes: function(container) {
             container.addClass('js-controls-ListView__item');
             ListView.superclass._addItemAttributes.apply(this, arguments);
@@ -941,11 +941,21 @@ define('js!SBIS3.CONTROLS.ListView',
          },
 
          showEip: function(target, model, options) {
-            if (this.isEnabled()) {
+            if (this._canShowEip()) {
                return this._getEditInPlace().showEip(target, model, options);
             } else {
                return $ws.proto.Deferred.fail();
             }
+         },
+
+         _canShowEip: function() {
+            // Отображаем редактирование только если enabled
+            return this.isEnabled();
+         },
+
+         _setEnabled : function(enabled) {
+            ListView.superclass._setEnabled.call(this, enabled);
+            this._destroyEditInPlace();
          },
 
          _onItemClickHandler: function(event, id, record, target) {
@@ -1003,10 +1013,9 @@ define('js!SBIS3.CONTROLS.ListView',
             //options.editFieldFocusHandler = this._editFieldFocusHandler.bind(this) - подумать, как это сделать
             var
                config = {
-                  dataSet: this._dataSet,
+                  dataSet: this._items,
                   editingItem: this._editingItem,
                   ignoreFirstColumn: this._options.multiselect,
-                  columns: this._options.columns,
                   dataSource: this._dataSource,
                   editingTemplate: this._options.editingTemplate,
                   itemsContainer: this._getItemsContainer(),
@@ -1232,6 +1241,7 @@ define('js!SBIS3.CONTROLS.ListView',
 
             this._notifyOnSizeChanged(true);
             this._drawResults();
+            this._needToRedraw = true;
          },
          //-----------------------------------infiniteScroll------------------------
          //TODO (?) избавиться от _allowInfiniteScroll - пусть все будет завязано на опцию infiniteScroll
@@ -1288,6 +1298,8 @@ define('js!SBIS3.CONTROLS.ListView',
                   self._notify('onDataMerge', dataSet);
                   //Если данные пришли, нарисуем
                   if (dataSet.getCount()) {
+                     //Поддерживаем новый флаг для рисования элементов
+                     self._needToRedraw = true;
                      //TODO перевести на each
                      records = dataSet.toArray();
                      if (self._options.infiniteScroll === 'up') {
@@ -1795,7 +1807,7 @@ define('js!SBIS3.CONTROLS.ListView',
             if (target.length && target.data('id') != currentElement.targetId) {
                insertAfter = this._getDirectionOrderChange(e, target);
                if (insertAfter !== undefined) {
-                  neighborItem = this[insertAfter ? 'getNextItemById' : 'getPrevItemById'](targetId);
+                  neighborItem = this[insertAfter ? 'getNextItemById' : 'getPrevItemById'](target.data('id'));
                   if (neighborItem && neighborItem.data('id') == currentElement.targetId) {
                      insertAfter = undefined;
                   }
@@ -1843,24 +1855,22 @@ define('js!SBIS3.CONTROLS.ListView',
          },
          _callDropHandler: function(e) {
             var
-                targetId,
                 clickHandler,
-                currentElement;
+                currentElement = this.getCurrentElement(),
+                currentTarget = this._findItemByElement($(e.target));
             //После опускания мыши, ещё раз позовём обработку перемещения, т.к. в момент перед отпусканием мог произойти
             //переход границы между сменой порядкового номера и перемещением в папку, а обработчик перемещения не вызваться,
             //т.к. он срабатывают так часто, насколько это позволяет внутренняя система взаимодействия с мышью браузера.
             this._updateDragTarget(e);
-            currentElement = this.getCurrentElement();
-            if (currentElement.target) {
-               targetId = currentElement.target.data('id');
-               //TODO придрот для того, чтобы если перетащить элемент сам на себя не отработал его обработчик клика
-               if (this.getSelectedKey() == targetId) {
-                  clickHandler = this._elemClickHandler;
-                  this._elemClickHandler = function () {
-                     this._elemClickHandler = clickHandler;
-                  }
+            //TODO придрот для того, чтобы если перетащить элемент сам на себя не отработал его обработчик клика
+            if (currentTarget.length && currentTarget.data('id') == this.getSelectedKey()) {
+               clickHandler = this._elemClickHandler;
+               this._elemClickHandler = function () {
+                  this._elemClickHandler = clickHandler;
                }
-               this._move(currentElement.keys, targetId, currentElement.insertAfter);
+            }
+            if (currentElement.target) {
+               this._move(currentElement.keys, currentElement.target.data('id'), currentElement.insertAfter);
             }
          },
          _beginDropDown: function(e) {

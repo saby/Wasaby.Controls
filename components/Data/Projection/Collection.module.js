@@ -769,7 +769,7 @@ define('js!SBIS3.CONTROLS.Data.Projection.Collection', [
                   })));
                   break;
                case 'moved':
-                  var afterSpliceIndex = changes.oldItemsIndex > changes.newItemsIndex ?
+                  var afterSpliceIndex = changes.oldItemsIndex + changes.oldItems.length > changes.newItemsIndex ?
                      changes.newItemsIndex :
                      changes.newItemsIndex - changes.oldItems.length + 1;
                   before.splice(changes.oldItemsIndex, changes.oldItems.length);

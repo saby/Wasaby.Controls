@@ -71,6 +71,11 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', ['js!SBIS3.CORE.Control',
              * @cfg {Boolean} Опция задаёт режим разворота. false Без разворота
              */
             expand: false,
+            /**
+             * @cfg {Boolean} Запрашивать записи для папки если в текущем наборе данных их нет
+             * @noShow
+             */
+            partialyReload: true,
             openedPath : {},
             folderFooterTpl: undefined,
             /**
@@ -99,12 +104,24 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', ['js!SBIS3.CORE.Control',
       },
 
       _createDefaultProjection : function(items) {
+         var root;
+         if (typeof this._curRoot != 'undefined') {
+            root = this._curRoot;
+         }
+         else {
+            if (typeof this._options.root != 'undefined') {
+               root = this._options.root;
+            }
+            else {
+               root = null;
+            }
+         }
          this._itemsProjection = new TreeProjection({
             collection: items,
             idProperty: this._options.keyField || (this._dataSource ? this._dataSource.getIdProperty() : ''),
             parentProperty: this._options.hierField,
             nodeProperty: this._options.hierField + '@',
-            root: (typeof this._options.root != 'undefined') ? this._options.root : null
+            root: root
          });
       },
 
@@ -205,7 +222,7 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', ['js!SBIS3.CORE.Control',
             this._folderOffsets[key || 'null'] = 0;
             this._options.openedPath[key] = true;
             this._closeAllExpandedNode(key);
-            if (!tree[key]) {
+            if (!tree[key] && this._options.partialyReload) {
                this._toggleIndicator(true);
                this._notify('onBeforeDataLoad');
                return this._callQuery(this._createTreeFilter(key), this.getSorting(), 0, this._limit).addCallback(function (dataSet) {
@@ -224,9 +241,9 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', ['js!SBIS3.CORE.Control',
                   for (var i = 0; i < child.length; i++) {
                      records.push(this._dataSet.getRecordById(child[i]));
                   }
-                  this._drawLoadedNode(key, records, this._folderHasMore[key]);
-                  this._notify('onNodeExpand', key);
                }
+               this._drawLoadedNode(key, records, this._folderHasMore[key]);
+               this._notify('onNodeExpand', key);
             }
          }
       },
@@ -273,7 +290,9 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', ['js!SBIS3.CORE.Control',
 
       _nodeDataLoaded : function(key, dataSet) {
          var self = this;
+         this._needToRedraw = false;
          this._dataSet.merge(dataSet, {remove: false});
+         this._needToRedraw = true;
          this._dataSet.getTreeIndex(this._options.hierField, true);
          var records = [];
          dataSet.each(function (record) {
