@@ -121,8 +121,11 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
             dataSet = this._dataSet,
             tree = dataSet.getTreeIndex(this._options.hierField);
          $ws.helpers.forEach(this._options.openedPath, function(val, key) {
-            //TODO: Проверим что данный элемент присутствует в текущем наборе элементов, и дополнительно проверим если
-            //все данные в браузере загружены изначально, что элемент для которого хотим создать футер присутствует на текущей странице
+            /*TODO: Прежде чем создавать футер у развёрнутого узла проверим что данный узел присутствует в наборе элементов.
+               Возможна такая ситуация что списочный метод вернул сразу все данные и узел может являться развёрнутым,
+               но не присутствовать на текущей странице, тогда для такого случая проверим необходимость создания футера
+               путём поиска узла среди теккущего набора элементов в DOM.
+            */
              if (tree[key] && this._getElementByModel(dataSet.getRecordByKey(key)).length) {
                 this._createFolderFooter(key);
              }
@@ -259,7 +262,7 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
             if (tree[key]) {
                $('.js-controls-TreeView__expand', container).addClass('controls-TreeView__expand__open');
             } else {
-               /*TODO придрот*/
+               /*TODO: Удалим узел из набора открытых узлов, если он не присутствует в текущем наборе элементов*/
                delete this._options.openedPath[key];
             }
          }
