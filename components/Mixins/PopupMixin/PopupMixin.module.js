@@ -128,7 +128,7 @@ define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManag
          this._initOppositeCorners();
 
          //Скрываем попап если при скролле таргет скрылся
-         $ws.single.EventBus.channel('WindowChangeChannel').subscribe('onWindowScroll', this._windowChangeHandler, this);
+         $ws.single.EventBus.channel('WindowChangeChannel').subscribe('onWindowScroll', this._onResizeHandler, this);
 
          if (this._options.closeByExternalOver) {
             $ws.single.EventBus.channel('WindowChangeChannel').subscribe('onDocumentMouseOver', this._clickHandler, this);
