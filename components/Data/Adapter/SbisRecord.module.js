@@ -53,7 +53,7 @@ define('js!SBIS3.CONTROLS.Data.Adapter.SbisRecord', [
       },
 
       getInfo: function (name) {
-         $ws.single.ioc.resolve('ILogger').log(this._moduleName + '::getInfo()', 'Method is deprecated and will be removed in 3.7.4. Use \'getFormat\' instead.');
+         //$ws.single.ioc.resolve('ILogger').log(this._moduleName + '::getInfo()', 'Method is deprecated and will be removed in 3.7.4. Use \'getFormat\' instead.');
          var index = this._getFieldIndex(name),
             meta = index >= 0 ? this._data.s[index] : undefined,
             fieldData = {meta: undefined, type: undefined};

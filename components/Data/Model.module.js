@@ -81,12 +81,7 @@ define('js!SBIS3.CONTROLS.Data.Model', [
              * @see getIdProperty
              * @see setIdProperty
              */
-            idProperty: undefined,
-
-            /**
-             * @cfg {Boolean} Использовать вложенные рекордсеты как List, а не как DataSet. По умолчанию - true
-             */
-            usingDataSetAsList: true
+            idProperty: undefined
          },
 
          _hashPrefix: 'model-',
@@ -144,14 +139,6 @@ define('js!SBIS3.CONTROLS.Data.Model', [
                   this._propertiesCache[name] = value;
                }
             }
-         }
-
-         if (this._options.usingDataSetAsList &&
-            this._isFieldValueCacheable(value) &&
-            $ws.helpers.instanceOfModule(value, 'SBIS3.CONTROLS.Data.Source.DataSet')
-         ) {
-            value = value.getAll();
-            this._propertiesCache[name] = value;
          }
 
          return value;
@@ -239,21 +226,20 @@ define('js!SBIS3.CONTROLS.Data.Model', [
       /**
        * Возвращает признак, что вложенные рекордсеты используются как List, а не как DataSet
        * @returns {Boolean}
-       * @see usingDataSetAsList
-       * @see setUsingDataSetAsList
+       * @deprecated метод будет удален в 3.7.4 - поле с типом выборка всегда возвращается как RecordSet
        */
       isUsingDataSetAsList: function () {
-         return this._options.usingDataSetAsList;
+         $ws.single.ioc.resolve('ILogger').log(this._moduleName + '::isUsingDataSetAsList()', 'Method is deprecated and will be removed in 3.7.4.');
+         return true;
       },
 
       /**
        * Устанавливает признак, что вложенные рекордсеты используются как List, а не как DataSet
        * @param {Boolean} usingDataSetAsList Вложенные рекордсеты использовать как List, а не как DataSet
-       * @see usingDataSetAsList
-       * @see isUsingDataSetAsList
+       * @deprecated метод будет удален в 3.7.4 - поле с типом выборка всегда возвращается как RecordSet
        */
-      setUsingDataSetAsList: function (usingDataSetAsList) {
-         this._options.usingDataSetAsList = usingDataSetAsList;
+      setUsingDataSetAsList: function () {
+         $ws.single.ioc.resolve('ILogger').log(this._moduleName + '::setUsingDataSetAsList()', 'Method is deprecated and will be removed in 3.7.4.');
       },
 
       //
