@@ -5,12 +5,6 @@ define([
       'use strict';
 
       describe('SBIS3.CONTROLS.Data.Format.FieldsFactory', function() {
-         beforeEach(function() {
-         });
-
-         afterEach(function() {
-         });
-
          describe('.create()', function() {
             it('should throw an error if not simple object passed', function() {
                assert.throw(function () {

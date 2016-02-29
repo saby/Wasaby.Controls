@@ -1,16 +1,18 @@
 /* global define, $ws */
 define('js!SBIS3.CONTROLS.Data.Format.Field', [
-], function () {
+   'js!SBIS3.CONTROLS.Data.SerializableMixin'
+], function (SerializableMixin) {
    'use strict';
 
    /**
     * Прототип поля записи (абстрактный класс)
     * @class SBIS3.CONTROLS.Data.Format.Field
+    * @mixes SBIS3.CONTROLS.Data.SerializableMixin
     * @public
     * @author Мальцев Алексей
     */
 
-   var Field = $ws.core.extend({}, /** @lends SBIS3.CONTROLS.Data.Format.Field.prototype */{
+   var Field = $ws.core.extend({}, [SerializableMixin], /** @lends SBIS3.CONTROLS.Data.Format.Field.prototype */{
       _moduleName: 'SBIS3.CONTROLS.Data.Format.Field',
       $protected: {
          _options: {
@@ -36,6 +38,9 @@ define('js!SBIS3.CONTROLS.Data.Format.Field', [
             nullable: false
          }
       },
+
+      //region SBIS3.CONTROLS.Data.SerializableMixin
+      //endregion SBIS3.CONTROLS.Data.SerializableMixin
 
       //region Public methods
 
