@@ -516,6 +516,8 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
          def.addCallback(function (item) {
             self._changedBySelf = true;
             self._notify('onListItemSelect', item, self._resultBindings);
+            /* Соберём все изменения в пачку,
+               чтобы контекст несколько раз не пересчитывался */
             for (var field in self._resultBindings) {
                if (self._resultBindings.hasOwnProperty(field)) {
                   toSet[field] = item.get(self._resultBindings[field]);
