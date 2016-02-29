@@ -795,6 +795,42 @@ define([
                projection.unsubscribe('onCollectionChange', handler);
             });
 
+            it('should fire after sort the projection if items moved forward', function(done) {
+               var list = new ObservableList({
+                     items: [1, 2, 4, 5, 6, 3, 7, 8, 9, 10]
+                  }),
+                  expectedNewItems = [[4, 5, 6]],
+                  expectedNewIndexes = [3],
+                  expectedOldIndexes = [2],
+                  projection = new CollectionProjection({
+                     collection: list
+                  }),
+                  handler = function(event, action, newItems, newItemsIndex, oldItems, oldItemsIndex) {
+                     try {
+                        assert.strictEqual(action, IBindCollectionProjection.ACTION_MOVE, 'Invalid action');
+
+                        assert.deepEqual($ws.helpers.map(newItems, function(item) {
+                           return item.getContents();
+                        }), expectedNewItems[fireId], 'Invalid newItems');
+                        assert.strictEqual(newItemsIndex, expectedNewIndexes[fireId], 'Invalid newItemsIndex');
+
+                        if (fireId === expectedNewItems.length - 1) {
+                           done();
+                        }
+                     } catch (err) {
+                        done(err);
+                     }
+                     fireId++;
+                  },
+                  fireId = 0;
+               projection.subscribe('onCollectionChange', handler);
+               projection.setSort(function(a, b) {
+                     return a.item >= b.item ? 1 : -1;
+                  }
+               );
+               projection.unsubscribe('onCollectionChange', handler);
+            });
+
             it('should fire after filter the projection', function(done) {
                var list = new ObservableList({
                      items: getItems()

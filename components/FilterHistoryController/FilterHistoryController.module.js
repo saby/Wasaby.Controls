@@ -5,10 +5,11 @@ define('js!SBIS3.CONTROLS.FilterHistoryController',
     [
        'js!SBIS3.CONTROLS.HistoryController',
        'js!SBIS3.CONTROLS.Data.Collection.List',
-       'js!SBIS3.CONTROLS.Utils.TemplateUtil'
+       'js!SBIS3.CONTROLS.Utils.TemplateUtil',
+       'js!SBIS3.CONTROLS.Utils.DateUtil'
     ],
 
-    function(HistoryController, List, TemplateUtil) {
+    function(HistoryController, List, TemplateUtil, DateUtil) {
 
        'use strict';
 
@@ -91,9 +92,54 @@ define('js!SBIS3.CONTROLS.FilterHistoryController',
              this.subscribeTo(this._options.fastDataFilter, 'onApplyFilter', this._applyHandlerDebounced);
           },
 
+          _prepareStructureElemToSave: function(structure) {
+             var dateFix;
+
+             $ws.helpers.forEach(structure, function(elem) {
+                /* Хак для испрвления даты, при записи на бл история приводится к строке через метод JSON.stringify,
+                  а метод stringify сериализует дату, учитывая сдвиг (GMT/UTC)
+                  и в итоге мы можем получить не ту дату */
+                if(elem.value) {
+                   if(elem.value instanceof Date) {
+                      dateFix = elem.value;
+                      dateFix.setHours(dateFix.getHours() - dateFix.getTimezoneOffset() / 60);
+                      elem.value = DateUtil.dateToIsoString(dateFix);
+                   }
+                }
+                /* Надо удалить из истории шаблоны, т.к. история сохраняется строкой */
+                if(elem.itemTemplate) {
+                   delete elem.itemTemplate;
+                }
+
+                if(elem.historyItemTemplate) {
+                   delete elem.historyItemTemplate;
+                }
+             });
+
+             return $ws.core.clone(structure);
+          },
+
+          _prepareStructureElemForApply: function(structure) {
+             var currentStructure = this._options.filterButton.getFilterStructure(),
+                 structureCopy = $ws.core.clone(structure);
+
+             if(structureCopy.length === currentStructure.length) {
+                $ws.helpers.forEach(structureCopy, function(elem, index) {
+                   if(currentStructure[index].itemTemplate) {
+                      structureCopy[index].itemTemplate = currentStructure[index].itemTemplate;
+                   }
+                   if(currentStructure[index].historyItemTemplate) {
+                      structureCopy[index].historyItemTemplate = currentStructure[index].historyItemTemplate;
+                   }
+                });
+             }
+
+             return structureCopy;
+          },
+
           _onApplyFilterHandler: function() {
              var fb = this._options.filterButton,
-                 structure = $ws.core.clone(fb.getFilterStructure()),
+                 structure = this._prepareStructureElemToSave(fb.getFilterStructure()),
                  self = this,
                  linkText, template, templateRes;
 
@@ -124,15 +170,6 @@ define('js!SBIS3.CONTROLS.FilterHistoryController',
                 return res;
              }, []).join(', ');
 
-             /* Надо удалить из истории шаблоны, т.к. история сохраняется строкой */
-             $ws.helpers.forEach(structure, function(elem) {
-                if(elem.itemTemplate) {
-                   delete elem.itemTemplate;
-                }
-                if(elem.historyItemTemplate) {
-                   delete elem.historyItemTemplate;
-                }
-             });
 
              self.saveToHistory({
                 linkText: linkText,
@@ -157,23 +194,8 @@ define('js!SBIS3.CONTROLS.FilterHistoryController',
              var filter = this.findFilterByKey(key),
                  fb = this._options.filterButton;
 
-             /* В фильтр, который был сохранён в историю надо смержить шаблоны из структуры */
-             function mergeTemplates(to, from) {
-                if(to.length === from.length) {
-                   for(var i = 0; i < to.length; i++) {
-                      if(from[i].itemTemplate && to[i]) {
-                         to[i].itemTemplate = from[i].itemTemplate;
-                      }
-                      if(from[i].historyItemTemplate && to[i]) {
-                         to[i].historyItemTemplate = from[i].historyItemTemplate
-                      }
-                   }
-                }
-                return to;
-             }
-
              /* Применим фильтр из истории*/
-             fb.setFilterStructure(mergeTemplates($ws.core.clone(filter.filter), fb.getFilterStructure()));
+             fb.setFilterStructure(this._prepareStructureElemForApply(filter.filter));
              fb.getChildControlByName('filterLine').getContext().setValue('linkText', filter.linkText);
              fb.hidePicker();
 
@@ -312,7 +334,7 @@ define('js!SBIS3.CONTROLS.FilterHistoryController',
           _sortHistory: function() {
              /* Сортирует историю по флагу отмеченности и активности.
                 Приоритет: отмеченные > активный > обычные. */
-             this._listHistory.assign(this.getHistoryArr().sort(function(a, b) {
+             this.getHistoryArr().sort(function(a, b) {
                 if(a.isMarked && b.isMarked) {
                    return 0;
                 } else if(a.isMarked) {
@@ -326,7 +348,7 @@ define('js!SBIS3.CONTROLS.FilterHistoryController',
                 } else if(b.isActiveFilter) {
                    return 1;
                 }
-             }));
+             });
           },
 
           destroy: function() {

@@ -60,6 +60,7 @@ function(CompoundControl, dotTplFn, SbisServiceSource) {
          //Создадим DataSource и установим в браузер и в action объединения
          var ds = new SbisServiceSource({
             resource: 'Товар',
+            idProperty: '@Product',
             queryMethodName: 'СписокЗаписей',
             //'Объединить' используется по умолчанию
             mergeMethodName: 'Объединить'

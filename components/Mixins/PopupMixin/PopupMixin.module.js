@@ -18,10 +18,6 @@ define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManag
       $(window).bind('scroll', function () {
          eventsChannel.notify('onWindowScroll');
       });
-
-      $(window).bind('resize', function () {
-         eventsChannel.notify('onWindowResize');
-      });
    }
 
    /**
@@ -45,7 +41,6 @@ define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManag
          _margins: null,
          _marginsInited: false,
          _zIndex: null,
-         _resizeTimeout: null,
          _currentAlignment: {},
          _options: {
             /**
@@ -124,8 +119,6 @@ define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManag
             'left': '-10000px'
          });
 
-         this._checkFixed(this._options.target || $('body'));
-
          //TODO: Придрот
          container.removeClass('ws-area');
          container.addClass('ws-hidden');
@@ -133,11 +126,9 @@ define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManag
          /********************************/
 
          this._initOppositeCorners();
-         //При ресайзе расчитываем размеры
-         $ws.single.EventBus.channel('WindowChangeChannel').subscribe('onWindowResize', this._windowChangeHandler, this);
 
          //Скрываем попап если при скролле таргет скрылся
-         $ws.single.EventBus.channel('WindowChangeChannel').subscribe('onWindowScroll', this._windowChangeHandler, this);
+         $ws.single.EventBus.channel('WindowChangeChannel').subscribe('onWindowScroll', this._onResizeHandler, this);
 
          if (this._options.closeByExternalOver) {
             $ws.single.EventBus.channel('WindowChangeChannel').subscribe('onDocumentMouseOver', this._clickHandler, this);
@@ -201,6 +192,8 @@ define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManag
                element = element.parent();
             }
          }
+         this._fixed = false;
+         $(this._container).css({position : 'absolute'});
       },
 
       /**
@@ -393,20 +386,14 @@ define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManag
          }
       },
 
-      _windowChangeHandler: function () {
-         clearTimeout(this._resizeTimeout);
-         var self = this;
-         //Таймаут для того что бы не пересчитывать размеры пока меняется размер окна,
-         //а перестчитать только один раз, когда размер меняться перестанет.
-         this._resizeTimeout = setTimeout(function() {
-            // Если fixed то при ресайзе положение пересчитывать не надо - оно неизменно
-            if (self.isVisible() && !self._fixed) {
-               self.recalcPosition(false);
-            } else {
-               self._initSizes();
-            }
-            self._checkTargetPosition();
-         }, 100);
+      _onResizeHandler: function(){
+         this._checkFixed(this._options.target || $('body'));
+         if (this.isVisible() && !this._fixed) {
+            this.recalcPosition(false);
+         } else {
+            this._initSizes();
+         }
+         this._checkTargetPosition();
       },
 
       _checkTargetPosition: function () {
