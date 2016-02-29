@@ -93,7 +93,7 @@ define('js!SBIS3.CONTROLS.EditInPlaceHoverController',
                         this._notify('onAfterBeginEdit', record);
                      }
                   } else {
-                     EditInPlaceHoverController.superclass.edit.apply(this, [target, record])
+                     return EditInPlaceHoverController.superclass.edit.apply(this, [target, record])
                   }
                }.bind(this));
             },
