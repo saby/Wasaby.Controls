@@ -6,7 +6,7 @@ define('js!SBIS3.CONTROLS.ListView',
    [
       'js!SBIS3.CORE.CompoundControl',
       'js!SBIS3.CORE.CompoundActiveFixMixin',
-      'js!SBIS3.CONTROLS.DSMixin',
+      'js!SBIS3.CONTROLS.ItemsControlMixin',
       'js!SBIS3.CONTROLS.MultiSelectable',
       'js!SBIS3.CONTROLS.Selectable',
       'js!SBIS3.CONTROLS.DataBindMixin',
@@ -24,15 +24,18 @@ define('js!SBIS3.CONTROLS.ListView',
       'js!SBIS3.CONTROLS.EditInPlaceClickController',
       'js!SBIS3.CONTROLS.Link',
       'js!SBIS3.CONTROLS.ScrollWatcher',
+      'i18n!SBIS3.CONTROLS.ListView',
       'browser!html!SBIS3.CONTROLS.ListView/resources/ListViewGroupBy',
       'browser!html!SBIS3.CONTROLS.ListView/resources/emptyData',
-      'browser!js!SBIS3.CONTROLS.ListView/resources/SwipeHandlers',
-      'i18n!SBIS3.CONTROLS.ListView'
+      'browser!html!SBIS3.CONTROLS.ListView/resources/ItemTemplate',
+      'browser!html!SBIS3.CONTROLS.ListView/resources/ItemContentTemplate',
+      'browser!html!SBIS3.CONTROLS.ListView/resources/GroupTemplate',
+      'browser!js!SBIS3.CONTROLS.ListView/resources/SwipeHandlers'
    ],
-   function (CompoundControl, CompoundActiveFixMixin, DSMixin, MultiSelectable,
+   function (CompoundControl, CompoundActiveFixMixin, ItemsControlMixin, MultiSelectable,
              Selectable, DataBindMixin, DecorableMixin, DragNDropMixin, FormWidgetMixin, ItemsToolbar, MarkupTransformer, dotTplFn,
              TemplateUtil, CommonHandlers, MoveHandlers, Pager, EditInPlaceHoverController, EditInPlaceClickController,
-             Link, ScrollWatcher,  groupByTpl, emptyDataTpl) {
+             Link, ScrollWatcher, rk, groupByTpl, emptyDataTpl, ItemTemplate, ItemContentTemplate, GroupTemplate) {
 
       'use strict';
 
@@ -46,7 +49,7 @@ define('js!SBIS3.CONTROLS.ListView',
        * @class SBIS3.CONTROLS.ListView
        * @extends $ws.proto.CompoundControl
        * @author Крайнов Дмитрий Олегович
-       * @mixes SBIS3.CONTROLS.DSMixin
+       * @mixes SBIS3.CONTROLS.ItemsControlMixin
        * @mixes SBIS3.CONTROLS.MultiSelectable
        * @mixes SBIS3.CONTROLS.Selectable
        * @mixes SBIS3.CONTROLS.DecorableMixin
@@ -63,7 +66,7 @@ define('js!SBIS3.CONTROLS.ListView',
        */
 
       /*TODO CommonHandlers MoveHandlers тут в наследовании не нужны*/
-      var ListView = CompoundControl.extend([CompoundActiveFixMixin, DSMixin, FormWidgetMixin, MultiSelectable, Selectable, DataBindMixin, DecorableMixin, DragNDropMixin, CommonHandlers, MoveHandlers], /** @lends SBIS3.CONTROLS.ListView.prototype */ {
+      var ListView = CompoundControl.extend([CompoundActiveFixMixin, ItemsControlMixin, FormWidgetMixin, MultiSelectable, Selectable, DataBindMixin, DecorableMixin, DragNDropMixin, CommonHandlers, MoveHandlers], /** @lends SBIS3.CONTROLS.ListView.prototype */ {
          _dotTplFn: dotTplFn,
          /**
           * @event onChangeHoveredItem При переводе курсора мыши на другую запись
@@ -185,6 +188,9 @@ define('js!SBIS3.CONTROLS.ListView',
           * @returns {Object} filter Фильтр который будет помещёт в диалог перемещения.
           */
          $protected: {
+            _defaultItemTemplate: ItemTemplate,
+            _defaultItemContentTemplate: ItemContentTemplate,
+            _defaultGroupTemplate: GroupTemplate,
             _floatCheckBox: null,
             _dotItemTpl: null,
             _itemsContainer: null,
@@ -510,7 +516,9 @@ define('js!SBIS3.CONTROLS.ListView',
             if (typeof this._options.pageSize === 'string') {
                this._options.pageSize = this._options.pageSize * 1;
             }
-            this.setGroupBy(this._options.groupBy, false);
+            if (this._isSlowDrawing()) {
+               this.setGroupBy(this._options.groupBy, false);
+            }
             this._drawEmptyData();
             this._prepareInfiniteScroll();
             ListView.superclass.init.call(this);
@@ -540,6 +548,14 @@ define('js!SBIS3.CONTROLS.ListView',
             }
             return lvOpts;
          },
+
+         _buildTplArgs : function() {
+            var args = ListView.superclass._buildTplArgs.apply(this, arguments);
+            args.multiselect = this._options.multiselect;
+            args.decorators = this._decorators;
+            return args;
+         },
+
          _prepareInfiniteScroll: function(){
             var topParent = this.getTopParent(),
                   self = this,
@@ -845,9 +861,6 @@ define('js!SBIS3.CONTROLS.ListView',
             var html = this._options.emptyHTML;
             this._emptyData = html && $(emptyDataTpl({emptyHTML: html})).appendTo(this._container);
          },
-         _getItemTemplate: function () {
-            return this._options.itemTemplate;
-         },
          /**
           * Устанавливает шаблон отображения элемента коллекции.
           * @param {String|Function} tpl Шаблон отображения каждого элемента коллекции.
@@ -1102,8 +1115,8 @@ define('js!SBIS3.CONTROLS.ListView',
             this._drawSelectedItems(this.getSelectedKeys());
             this._drawSelectedItem(this.getSelectedKey());
          },
-         _redraw: function () {
-            ListView.superclass._redraw.apply(this, arguments);
+         redraw: function () {
+            ListView.superclass.redraw.apply(this, arguments);
             this._checkScroll(); //todo Убрать в 150, когда будет правильный рендер изменившихся данных
          },
          /**
@@ -1373,6 +1386,14 @@ define('js!SBIS3.CONTROLS.ListView',
                }
             }
          },
+         /**
+          * todo Проверка на "searchParamName" - костыль. Убрать, когда будет адекватная перерисовка записей (до 150 версии, апрель 2016)
+          * @returns {boolean}
+          * @private
+          */
+         _isSearchMode: function() {
+            return this._searchParamName && !Object.isEmpty(this._options.groupBy) && this._options.groupBy.field === this._searchParamName;
+         },
          //**********************************//
          //КОНЕЦ БЛОКА ОПЕРАЦИЙ НАД ЗАПИСЬЮ //
          //*********************************//
@@ -1380,8 +1401,7 @@ define('js!SBIS3.CONTROLS.ListView',
             //Это реализовано здесь, потому что 1ый раз отрисовка вызвана не после подгрузки в
             // бесконечном скролле, а после первого получения данных!
             // проверка на режим поиска для того что бы при поиске отрисовывать записи в правильном порядке
-            var isSearch = !(this._options.groupBy.field !== this._searchParamName || !this._searchParamName);
-            if (this._options.infiniteScroll === 'up' && !at && !isSearch) {
+            if (this._options.infiniteScroll === 'up' && !at && !this._isSearchMode()) {
                at = {at : 0};
             }
             ListView.superclass._drawItems.apply(this, [records, at]);
@@ -1487,7 +1507,6 @@ define('js!SBIS3.CONTROLS.ListView',
                   if (dataSet.getCount()) {
                      //TODO вскрылась проблема  проекциями, когда нужно рисовать какие-то определенные элементы и записи
                      //Возвращаем самостоятельную отрисовку данных, пришедших в загрузке по скроллу
-                     self._needToRedraw = false;
                      //TODO перевести на each
                      records = dataSet.toArray();
                      if (self._options.infiniteScroll === 'up') {
@@ -1500,12 +1519,10 @@ define('js!SBIS3.CONTROLS.ListView',
                         self._items.append(records);
                      }
 
-                     self._drawItems(records);
                      //TODO Пытались оставить для совместимости со старыми данными, но вызывает onCollectionItemChange!!!
                      //self._dataSet.merge(dataSet, {remove: false});
                      self._dataLoadedCallback();
                      self._toggleEmptyData();
-                     self._needToRedraw = true;
                   }
 
                }, self)).addErrback(function (error) {
@@ -1819,7 +1836,7 @@ define('js!SBIS3.CONTROLS.ListView',
             }
          },
          //------------------------GroupBy---------------------
-         _groupByDefaultMethod: function (record) {
+         _oldGroupByDefaultMethod: function (record) {
             var curField = record.get(this._options.groupBy.field),
                result = curField !== this._previousGroupBy;
             this._previousGroupBy = curField;

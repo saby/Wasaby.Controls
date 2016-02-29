@@ -157,11 +157,11 @@ define('js!SBIS3.CONTROLS.CompositeViewMixin', ['html!SBIS3.CONTROLS.CompositeVi
       },
 
       around : {
-         _getItemTemplate: function(parentFnc, item) {
-            var resultTpl, dotTpl;
+         _getItemTemplate: function(parentFnc, projitem) {
+            var resultTpl, dotTpl, item = projitem.getContents();
             switch (this._options.viewMode) {
                case 'table':
-                  resultTpl = parentFnc.call(this, item);
+                  resultTpl = parentFnc.call(this, projitem);
                   break;
                case 'list':
                   {
@@ -240,6 +240,15 @@ define('js!SBIS3.CONTROLS.CompositeViewMixin', ['html!SBIS3.CONTROLS.CompositeVi
                case 'tile': container.addClass('controls-CompositeView__tileItem'); break;
             }
             parentFnc.call(this, container, key);
+         },
+
+         //TODO заглушка для CompositeView
+         _isSlowDrawing: function(parentFnc) {
+            var flag = parentFnc.call(this)
+            if (this._options.viewMode == 'list' || this._options.viewMode == 'tile') {
+               flag = true;
+            }
+            return flag;
          }
       }
 

@@ -125,7 +125,7 @@ define('js!SBIS3.CONTROLS.hierarchyMixin', [], function () {
          return this._curRoot;
       },
 
-		/**
+      /**
        * Раскрыть определенный узел
        * @param {String} key Идентификатор раскрываемого узла
        */

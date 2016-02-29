@@ -228,7 +228,7 @@ define('js!SBIS3.CONTROLS.ComponentBinder', [], function () {
       bindSearchGrid : function(searchParamName, searchCrumbsTpl, searchForm, searchMode) {
          var self = this,
             view = this._options.view,
-            isTree = $ws.helpers.instanceOfMixin(view, 'SBIS3.CONTROLS.TreeMixinDS');
+            isTree = $ws.helpers.instanceOfMixin(view, 'SBIS3.CONTROLS.TreeMixin');
          searchForm = searchForm || this._options.searchForm;
          //todo Проверка на "searchParamName" - костыль. Убрать, когда будет адекватная перерисовка записей (до 150 версии, апрель 2016)
          view._searchParamName = searchParamName;
@@ -454,7 +454,7 @@ define('js!SBIS3.CONTROLS.ComponentBinder', [], function () {
             noSaveFilters.push(searchParam);
          }
 
-         if($ws.helpers.instanceOfMixin(view, 'SBIS3.CONTROLS.hierarchyMixin')) {
+         if($ws.helpers.instanceOfMixin(view, 'SBIS3.CONTROLS.TreeMixin')) {
             noSaveFilters.push(view.getHierField());
          }
 

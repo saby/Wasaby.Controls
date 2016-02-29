@@ -89,9 +89,6 @@ define('js!SBIS3.CONTROLS.MoveHandlers', ['js!SBIS3.CORE.Dialog','js!SBIS3.CONTR
                      //в поле иерархии он сам этого не сделает
                      self._items._reindexTree(self._options.hierField);
                      self.removeItemsSelectionAll();
-                     //TODO: в .140 версии позовём redraw т.к. частичная перерисовка работает не во всех случаях
-                     //в .150 удалить redraw и сделать частичную перерисовку.
-                     self.redraw();
                   }
                }).addBoth(function() {
                   self._toggleIndicator(false);
@@ -108,7 +105,7 @@ define('js!SBIS3.CONTROLS.MoveHandlers', ['js!SBIS3.CORE.Dialog','js!SBIS3.CONTR
          if (recordTo === undefined) {
             return false;
          }
-         if (recordTo !== null && $ws.helpers.instanceOfMixin(this, 'SBIS3.CONTROLS.hierarchyMixin')) {
+         if (recordTo !== null && $ws.helpers.instanceOfMixin(this, 'SBIS3.CONTROLS.TreeMixin')) {
             toMap = this._getParentsMap(recordTo.getId());
             for (var i = 0; i < records.length; i++) {
                key = '' + (($ws.helpers.instanceOfModule(records[i], 'SBIS3.CONTROLS.Record')||$ws.helpers.instanceOfModule(records[i], 'SBIS3.CONTROLS.Data.Model')) ? records[i].getId() : records[i]);
@@ -125,7 +122,7 @@ define('js!SBIS3.CONTROLS.MoveHandlers', ['js!SBIS3.CORE.Dialog','js!SBIS3.CONTR
       },
       _getParentsMap: function(parentKey) {
          var
-            dataSet = this.getDataSet(),
+            dataSet = this.getItems(),
             hierField = this.getHierField(),
             /*
                TODO: проверяем, что не перемещаем папку саму в себя, либо в одного из своих детей.
