@@ -104,7 +104,8 @@ define('js!SBIS3.CONTROLS.Data.Format.Field', [
        * @returns {SBIS3.CONTROLS.Data.Format.Field}
        */
       clone: function () {
-         return new this.prototype.$constructor(this._options);
+         var Ctor = Object.getPrototypeOf(this).$constructor;
+         return new Ctor(this._options);
       },
 
       /**
@@ -124,9 +125,12 @@ define('js!SBIS3.CONTROLS.Data.Format.Field', [
          if (format === this) {
             return true;
          }
-         return this.prototype.$constructor === format.prototype.$constructor &&
-            this.getDefaultValue() === format.getDefaultValue() &&
+         var selfProto = Object.getPrototypeOf(this),
+            formatProto = Object.getPrototypeOf(format);
+
+         return selfProto === formatProto &&
             this.getName() === format.getName() &&
+            this.getDefaultValue() === format.getDefaultValue() &&
             this.isNullable() === format.isNullable();
       }
 
