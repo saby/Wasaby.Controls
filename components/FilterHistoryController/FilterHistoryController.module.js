@@ -139,7 +139,7 @@ define('js!SBIS3.CONTROLS.FilterHistoryController',
 
           _onApplyFilterHandler: function() {
              var fb = this._options.filterButton,
-                 structure = this._prepareStructureElemToSave(fb.getFilterStructure()),
+                 structure = fb.getFilterStructure(),
                  self = this,
                  linkText, template, templateRes;
 
@@ -173,7 +173,7 @@ define('js!SBIS3.CONTROLS.FilterHistoryController',
 
              self.saveToHistory({
                 linkText: linkText,
-                filter: structure
+                filter: this._prepareStructureElemToSave(structure)
              });
 
              self._updateFilterButtonHistoryView();
