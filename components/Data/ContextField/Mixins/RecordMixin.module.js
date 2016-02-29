@@ -49,8 +49,9 @@ define('js!SBIS3.CONTROLS.Data.ContextField.RecordMixin', [], function () {
       },
       set: function (oldValue, keyPath, value) {
          var
-            Context = $ws.proto.Context,
-            result, subValue, key, subType;
+             Context = $ws.proto.Context,
+             result, subValue, key, subType;
+
          if (keyPath.length !== 0) {
             key = keyPath[0];
             subValue = oldValue.get(key);
@@ -62,12 +63,18 @@ define('js!SBIS3.CONTROLS.Data.ContextField.RecordMixin', [], function () {
                   subType = Context.getValueType(subValue);
                   subType.set(subValue, keyPath.slice(1), value);
                }
+            } else if(subValue === undefined && keyPath.length === 1) {
+               try {
+                  oldValue.set(key, value);
+               } catch (e) {
+                  return value;
+               }
             }
             result = oldValue;
-         }
-         else {
+         } else {
             result = value;
          }
+
          return result;
       },
       remove: function (oldValue, keyPath) {
