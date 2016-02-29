@@ -643,7 +643,6 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
        */
       _getModelInstance: function (data) {
          var model = Di.resolve(this._options.model, {
-            compatibleMode: true,
             adapter: this.getAdapter(),
             rawData: data,
             idProperty: this._options.idProperty
