@@ -109,6 +109,11 @@ define([
                var other = new Field();
                assert.isTrue(field.isEqual(other));
             });
+            it('should return false for different module', function() {
+               var Ext = Field.extend({}),
+                  other = new Ext();
+               assert.isFalse(field.isEqual(other));
+            });
             it('should return false for different name', function() {
                var other = new Field({
                   name: 'a'
