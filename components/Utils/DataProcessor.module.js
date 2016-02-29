@@ -2,9 +2,10 @@
  * Created by ad.chistyakova on 14.04.2015.
  */
 define('js!SBIS3.CONTROLS.Utils.DataProcessor', [
+   'js!SBIS3.CONTROLS.Data.Source.SbisService',
    'js!SBIS3.CONTROLS.Utils.DataSetToXMLSerializer',
    'js!SBIS3.CORE.LoadingIndicator'
-], function(Serializer, LoadingIndicator) {
+], function(Source, Serializer, LoadingIndicator) {
 
    return $ws.core.extend({}, {
 
@@ -30,6 +31,9 @@ define('js!SBIS3.CONTROLS.Utils.DataProcessor', [
 
       $constructor: function() {
       },
+      /**
+       * Отправить на печать готовый dataSet
+       */
       print: function () {
          var self = this;
          this._prepareSerializer('Печать записей...').addCallback(function(reportText){
@@ -48,7 +52,7 @@ define('js!SBIS3.CONTROLS.Utils.DataProcessor', [
          });
       },
       /**
-       *
+       * @deprecated метод unload переименован в exportData
        * @param fileType - Имя объекта выгрузки (Например Excel)
        * @param methodName - Име метода объекта выгрцзки (например Сохранить)
        * @param fileName - Имя файла
@@ -56,8 +60,19 @@ define('js!SBIS3.CONTROLS.Utils.DataProcessor', [
        * @param useGET
        */
       unload: function (fileType, methodName, fileName, cfg, useGET) {
+         this.exportData(fileType, methodName, fileName, cfg, useGET);
+      },
+      /**
+       * Выгрузить данные, создав HTML на клиенте через xslt-преобразоование
+       * @param fileType - Имя объекта выгрузки (Например Excel)
+       * @param methodName - Име метода объекта выгрцзки (например Сохранить)
+       * @param fileName - Имя файла
+       * @param [cfg] Если задана конфигурация выгрузки, то в метод уйдет только заданная конфигурация (она же фильтр)
+       * @param useGET
+       */
+      exportData: function (fileType, methodName, fileName, cfg, useGET) {
          var self = this,
-             uniqueToken = ('' + Math.random()).substr(2)* 10;
+            uniqueToken = ('' + Math.random()).substr(2)* 10;
          //fileName = idReport ? idReport : (isSaveColumns ? 'Выбранные столбцы' : 'Как на экране'), ??
          if (!cfg) {
             this._prepareSerializer('Подождите, идет выгрузка данных в ' + fileType).addCallback(function(reportText){
@@ -74,7 +89,139 @@ define('js!SBIS3.CONTROLS.Utils.DataProcessor', [
          } else {
             $ws.helpers.saveToFile(fileType, methodName, cfg, undefined, true);
          }
+      },
+      /**
+       * Выгрузить данные с помощью готовой HTML-верстки
+       * @param fileName
+       * @param {String} fileType PDF или Excel
+       * @param [methodName] - имя метода объекта fileType
+       * @param {Object} cfg - параметры метода methodName {FileName : имя файла, html: html верстка ввиде строки}
+       * @param {number} pageOrientation 1 - потртетная, 2 - альбомная
+       */
+      exportHTML: function(fileName, fileType, methodName, cfg, pageOrientation){
+         var self = this;
+         this._prepareSerializer('Подождите, идет выгрузка данных в ' + fileType).addCallback(function(reportText){
+            var newCfg = {
+               'FileName': fileName,
+               'html': reportText
+            };
+            if (pageOrientation) {
+               newCfg.PageOrientation = pageOrientation;
+            }
+            self.exportFileTransfer(fileType, methodName || 'SaveHTML', cfg || newCfg).addErrback(function(error){
+               return error;
+            }).addBoth(function(){
+               self._destroyLoadIndicator();
+            });
 
+         });
+      },
+      /**
+       * Выгрузить данные в Excel или PDF по фильтру списочного метода
+       * @param fileName
+       * @param {String} fileType PDF или Excel
+       * @param [methodName] имя метода объекта fileType
+       * @param {Object} cfg - параметры метода methodName
+       * @param {number} pageOrientation 1 - потртетная, 2 - альбомная
+       */
+      exportList: function(fileName, fileType, methodName, cfg, pageOrientation){
+         var self = this;
+         cfg = cfg || {};
+         if (fileName) {
+            cfg.FileName = fileName;
+         }
+         if (pageOrientation) {
+            cfg.PageOrientation = pageOrientation;
+         }
+         this._createLoadIndicator('Подождите, идет выгрузка данных в ' + fileType);
+         this.exportFileTransfer(fileType, methodName || 'SaveList', cfg).addBoth(function(){
+            self._destroyLoadIndicator();
+         });
+      },
+      /**
+       * Выгрузить данные в Excel или PDF по набору данных
+       * @param fileName
+       * @param {String} fileType PDF или Excel
+       * @param [methodName] - имя метода объекта fileType
+       * @param {Object} cfg - параметры метода methodName
+       * @param {number} pageOrientation 1 - потртетная, 2 - альбомная
+       */
+      exportDataSet: function(fileName, fileType, methodName, cfg, pageOrientation){
+         var self = this,
+            columns  = $ws.core.clone(this._options.columns),
+            records,
+            rawData  = {s : [], d : []},
+            fields = [], titles = [];
+         if (!cfg) {
+            for (var i = 0; i < columns.length; i++) {
+               fields.push(columns[i].field);
+               titles.push(columns[i].title || columns[i].field);
+            }
+
+            //TODO после метода filter сейчас dataSet возвращает getRawData = null, ошибка выписана, после исправления просто передать рекордсет
+            //и перевести на SbisService.call
+            records = this._options.dataSet.toArray();
+            for (i = 0; i < records.length; i++) {
+               var raw = records[i].getRaw();
+               rawData.d.push(raw.d);
+            }
+            rawData.s = raw.s;
+            //--------------------------------
+
+            cfg = {
+               FileName : fileName,
+               Fields : fields,
+               Titles : titles,
+               Data : rawData
+            };
+            if (pageOrientation) {
+               cfg.PageOrientation = pageOrientation;
+            }
+         }
+
+         this._createLoadIndicator('Подождите, идет выгрузка данных в ' + fileType);
+         this.exportFileTransfer(fileType, methodName || 'SaveRecordSet', cfg).addBoth(function(){
+            self._destroyLoadIndicator();
+         });
+      },
+      /**
+       * Универсальная выгрузка данных через сервис file-transfer
+       * @param object
+       * @param methodName
+       * @param cfg
+       * @returns {$ws.proto.Deferred}
+       */
+      exportFileTransfer: function(object, methodName, cfg){
+         var self = this,
+            blob = new $ws.proto.BLObject({
+               name: object
+            });
+         //TODO поменять, когда рекордсеты заработают
+         //var dataSource = new Source({
+         //   resource: {
+         //      name: object
+         //   }
+         //});
+         //return dataSource.call(methodName, cfg).addCallback(function(ds){
+         //   self.downloadFile(ds.getScalar());
+         //   return ds;
+         //}).addErrback(function (error){
+         //   $ws.single.ioc.resolve('ILogger').log('DataProcessor. Ошибка выгрузки данных', error.details);
+         //   return error;
+         //});
+         return blob.call(methodName, cfg, $ws.proto.BLObject.RETURN_TYPE_ASIS).addCallback(function(id){
+            self.downloadFile(id);
+         }).addErrback(function (error){
+            $ws.single.ioc.resolve('ILogger').log('DataProcessor. Ошибка выгрузки данных', error.details);
+            return error;
+         });
+      },
+      /**
+       * Загрузить файл по готовому id
+       * @param id - уникальный идентификатор файла на сервисе file-transfer
+       */
+      downloadFile : function(id){
+         window.open($ws.helpers.prepareGetRPCInvocationURL( 'File','Download', {'id': id}, undefined, '/file-transfer/service/'), '_self');
       },
       /**
        * Метод для формирования параметров фильтрации выгружаемого на сервере файла.
@@ -84,7 +231,7 @@ define('js!SBIS3.CONTROLS.Utils.DataProcessor', [
        * <pre>
        *    //В своем прикладном модуле (myModule), отнаследованном от OperationUnload
        *    prepareGETOperationFilter: function(selectedNumRecords){
-       *       var cfg = myModule.superclass.processSelectedOperation.apply(this, arguments);
+       *       var cfg = myModule.superclass.processSelectedPageSize.apply(this, arguments);
        *       //Сформируем свой набор колонок для выгрузки
        *       cfg['Поля'] = this.getUserFields();
        *       cfg['Заголовки'] = this.getUserTitles();
@@ -92,9 +239,10 @@ define('js!SBIS3.CONTROLS.Utils.DataProcessor', [
        *    }
        * </pre>
        * @param selectedNumRecords сколько записей нужно выгружать
+       * @param {boolean} eng - заполнять специальный фильтр для file-transfer (на английском)
        * @returns {{}}
        */
-      getFullFilter : function(selectedNumRecords){
+      getFullFilter : function(selectedNumRecords, eng){
          var dataSource = this._options.dataSource,
             columns = $ws.core.clone(this._options.columns),
             fields = [],
@@ -113,7 +261,7 @@ define('js!SBIS3.CONTROLS.Utils.DataProcessor', [
          filter = $ws.core.clone(this._options.filter || {});
          if (this._options.hierField !== undefined){
             hierField = this._options.hierField;
-            cfg['Иерархия'] = hierField;
+            cfg[eng ? 'HierarchyField' : 'Иерархия'] = hierField;
             openedPath = this._options.openedPath;
             // - getOpenedPath - 'это работает только у дерева!!
             if (openedPath && !Object.isEmpty(openedPath)) {
@@ -128,17 +276,15 @@ define('js!SBIS3.CONTROLS.Utils.DataProcessor', [
             }
          }
          queryParams =  dataSource.prepareQueryParams(filter, null, this._options.offset , selectedNumRecords || this._options.dataSet.getCount(), false);
-         cfg = $ws.core.merge(cfg, {
-            //TODO дать настройку ?
-            'ИмяМетода' : dataSource._options.service + '.' + dataSource._options.queryMethodName,
-            'Фильтр': queryParams['Фильтр'],
-            'Сортировка' : queryParams['Сортировка'],
-            'Навигация' : queryParams['Навигация'],
-            'Поля': fields,
-            //TODO возможно стоит тоже дать настройку ?
-            'Заголовки' : titles,
-            'fileDownloadToken' : ('' + Math.random()).substr(2)* 1
-         });
+         cfg[eng ? 'MethodName': 'ИмяМетода'] = dataSource._options.resource + '.' + dataSource._options.queryMethodName;
+         cfg[eng ? 'Filter' : 'Фильтр'] = queryParams['Фильтр'];
+         cfg[eng ? 'Sorting' : 'Сортировка'] =  queryParams['Сортировка'];
+         cfg[eng ? 'Pagination' : 'Навигация'] = !selectedNumRecords ? null : queryParams['Навигация'];
+         cfg[eng ? 'Fields' : 'Поля'] = fields;
+         cfg[eng ? 'Titles' : 'Заголовки'] = titles;
+         if (!eng) {
+            cfg['fileDownloadToken'] = ('' + Math.random()).substr(2)* 1;
+         }
          return cfg;
       },
       _prepareSerializer: function(title){

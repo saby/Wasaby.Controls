@@ -2,6 +2,7 @@ define('js!SBIS3.CONTROLS.Demo.MyTabControl', [
    'js!SBIS3.CORE.CompoundControl',
    'html!SBIS3.CONTROLS.Demo.MyTabControl',
    'js!SBIS3.CONTROLS.TabControl',
+   'js!SBIS3.CONTROLS.Button',
    'js!SBIS3.CONTROLS.Link'
 ], function (CompoundControl, dotTplFn) {
    'use strict';

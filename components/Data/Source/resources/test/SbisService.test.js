@@ -1,4 +1,4 @@
-/* global define, describe, context, it, assert, $ws */
+/* global define, describe, context, beforeEach, it, assert, $ws */
 define([
    'js!SBIS3.CONTROLS.Data.Source.SbisService',
    'js!SBIS3.CONTROLS.Data.Di',
@@ -162,9 +162,6 @@ define([
          return Mock;
       })();
 
-      //Replace of standard with mock
-      Di.register('source.provider.sbis-business-logic', SbisBusinessLogic);
-
       describe('SBIS3.CONTROLS.Data.Source.SbisService', function () {
          var getSampleModel = function() {
                return new Model({
@@ -204,6 +201,11 @@ define([
                   throw new Error('Wrong value for argument s');
                }
             };
+
+         beforeEach(function() {
+            //Replace of standard with mock
+            Di.register('source.provider.sbis-business-logic', SbisBusinessLogic);
+         });
 
          describe('.create()', function () {
             context('when the service is exists', function () {

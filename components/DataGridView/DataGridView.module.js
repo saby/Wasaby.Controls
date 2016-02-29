@@ -36,6 +36,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
     *    </options>
     * </component>
     * @cssModifier controls-DataGridView__hasSeparator Включает линии разделители между строками
+    * @cssModifier controls-DataGridView__td__textAlignRight Стиль задается колонке, выравнивает текст во всех ячейках этой колонки по правой стороне
     */
    var DataGridView = ListView.extend([DragAndDropMixin],/** @lends SBIS3.CONTROLS.DataGridView.prototype*/ {
       _dotTplFn : dotTplFn,
@@ -69,6 +70,8 @@ define('js!SBIS3.CONTROLS.DataGridView',
              * @property {String} className Имя класса, который будет применён к каждой ячейке столбца
              * @property {String} headTemplate Шаблон отображения шапки колонки
              * @property {String} headTooltip Всплывающая подсказка шапки колонки
+             * @property {String} editor Редактор колонки для режима редактирования по месту
+             * @property {String} allowChangeEnable Доступность установки сотояния активности редактирования колонки в зависимости от состояния табличного представления
              * @property {String} cellTemplate Шаблон отображения ячейки
              * Данные, которые передаются в cellTemplate:
              * <ol>
@@ -269,10 +272,33 @@ define('js!SBIS3.CONTROLS.DataGridView',
             this.updateScrollAndColumns();
          }
       },
+      _canShowEip: function() {
+         // Отображаем редактирование по месту и для задизабленного DataGrid, но только если хоть у одиной колонки
+         // доступен редактор при текущем состоянии задизабленности DataGrid.
+         var
+            col = 0,
+            canShow = DataGridView.superclass._canShowEip.apply(this, arguments);
+         while (!canShow && col < this._options.columns.length) {
+            if (this._options.columns[col].allowChangeEnable === false) {
+               canShow = true;
+            } else {
+               col++;
+            }
+         }
+         return canShow;
+      },
       _getEditInPlaceConfig: function() {
-         var self = this;
+         var
+            self = this,
+            columns = this._options.enabled ? this._options.columns : [];
+         if (!this._options.enabled) {
+            $ws.helpers.forEach(this._options.columns, function(item) {
+               columns.push(item.allowChangeEnable === false ? item : {});
+            });
+         }
 
          return $ws.core.merge(DataGridView.superclass._getEditInPlaceConfig.apply(this, arguments), {
+            columns: columns,
             getCellTemplate: function(item, column) {
                return this._getCellTemplate(item, column);
             }.bind(this),

@@ -7,38 +7,39 @@ define([
    ],
    function (SbisMoveStrategy, Di, IRpc, RecordSet) {
       'use strict';
-      var SbisBusinessLogic, moveStrategy;
+
+      var SbisBusinessLogic = (function() {
+            var Mock = $ws.core.extend({}, [IRpc], {
+               _cfg: {},
+               $constructor: function (cfg) {
+                  this._cfg = cfg;
+               },
+               call: function (method, args) {
+                  var def = new $ws.proto.Deferred();
+                  setTimeout(function () {
+                     def.callback(true);
+                  }.bind(this), 1);
+                  Mock.lastRequest = {method:method, args:args};
+                  return def;
+               }
+            });
+
+            Mock.lastRequest = {};
+
+            return Mock;
+         })(),
+         moveStrategy;
+
       describe('SBIS3.CONTROLS.Data.MoveStrategy.Sbis', function() {
-
          beforeEach(function() {
-            SbisBusinessLogic = (function() {
-               var Mock = $ws.core.extend({}, [IRpc], {
-                  _cfg: {},
-                  $constructor: function (cfg) {
-                     this._cfg = cfg;
-                  },
-                  call: function (method, args) {
-                     var def = new $ws.proto.Deferred();
-                     setTimeout(function () {
-                        def.callback(true);
-                     }.bind(this), 1);
-                     Mock.lastRequest = {method:method, args:args};
-                     return def;
-                  }
-               });
-
-               Mock.lastRequest = {};
-
-               return Mock;
-            })();
+            moveStrategy = new SbisMoveStrategy({resource: 'test'});
 
             //Replace of standard with mock
             Di.register('source.provider.sbis-business-logic', SbisBusinessLogic);
-            moveStrategy = new SbisMoveStrategy({resource: 'test'});
          });
 
          describe('move()', function() {
-            var  id1 = 1, id2 = 2, rs, rsComplex;
+            var  id1 = 1, id2 = 2, rs, rsComplex, objectName = 'newObj';
             beforeEach(function(){
                rs = new RecordSet({
                   rawData:[{
@@ -52,10 +53,10 @@ define([
                });
                rsComplex = new RecordSet({
                   rawData:[{
-                     'id': id1+',A',
+                     'id': id1+','+objectName,
                      'name': 'Иванов'
                   }, {
-                     'id': id2+',A',
+                     'id': id2+','+objectName,
                      'name': 'Петров'
                   }],
                   idProperty: 'id'
@@ -83,7 +84,9 @@ define([
             it('should move record with complex id to down', function() {
                moveStrategy.move([rsComplex.at(0)], rsComplex.at(1), true);
                assert.equal(SbisBusinessLogic.lastRequest.args.ИдОПосле[0], id2);
+               assert.equal(SbisBusinessLogic.lastRequest.args.ИдОПосле[1], objectName);
                assert.equal(SbisBusinessLogic.lastRequest.args.ИдО[0], id1);
+               assert.equal(SbisBusinessLogic.lastRequest.args.ИдО[1], objectName);
             });
          });
       });

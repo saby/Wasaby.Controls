@@ -1204,7 +1204,6 @@
 @edit-at-place-editor-overlay-padding:          10px;
 @edit-at-place-editor-overlay-border:           none;
 @edit-at-place-editor-overlay-border-radius:    3px;
-@edit-at-place-editor-overlay-shadow:           none;
 @edit-at-place-editor-overlay-bg:               darken(@secondary-color, 5%) !important;
 
 @edit-at-place-control-margin:                  0 0 0 8px;
@@ -1240,12 +1239,14 @@
 @list-view-actions-active-bg:                   #F3F3F3;
 @list-view-actions-bg:                          @data-grid-row-hover-bg;
 
-@list-view-items-toolbar-margin-right:          3px;
-@list-view-items-toolbar-zindex:                10;
-@list-view-items-toolbar-box-shadow:            -2px -2px 5px @data-grid-row-hover-bg;
-@list-view-items-toolbar-vertical-box-shadow:   -2px  2px 5px @data-grid-row-hover-bg;
-@list-view-items-toolbar-bg:                    @data-grid-row-hover-bg;
-@list-view-items-toolbar-locked-bg:             #F3F3F3;
+@list-view-items-toolbar-margin-right:               3px;
+@list-view-items-toolbar-zindex:                     10;
+@list-view-items-toolbar-box-shadow:                 -2px -2px 5px @data-grid-row-hover-bg;
+@list-view-items-toolbar-locked-box-shadow:          -2px -2px 5px @default-itemSelected-color;
+@list-view-items-toolbar-vertical-box-shadow:        -2px  2px 5px @data-grid-row-hover-bg;
+@list-view-items-toolbar-vertical-locked-box-shadow: -2px  2px 5px @default-itemSelected-color;
+@list-view-items-toolbar-bg:                         @data-grid-row-hover-bg;
+@list-view-items-toolbar-locked-bg:                  @default-itemSelected-color;
 
 @list-view-actions-verAlign-margin:             8px 3px 0 0;
 @list-view-actions-verAlign-width:              20px;
@@ -1375,7 +1376,8 @@
 @data-grid-cell-height:                         @data-grid-header-cell-height;
 @data-grid-cell-padding:                        @data-grid-header-cell-padding;
 @data-grid-cell-padding-side:                   @data-grid-header-cell-padding-side;
-@data-grid-cell-vertical-align: 						middle;
+@data-grid-cell-vertical-align: 				middle;
+@data-grid-cell-check-box-vertical-align: 		top !important;
 
 @data-grid-cell-border-width:                   1px 0 0;
 @data-grid-cell-separator-color:                #F5F5F5;
