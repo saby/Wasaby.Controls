@@ -199,7 +199,8 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
          _list: undefined,                      /* {SBIS3.CONTROLS.DSMixin}{SBIS3.CONTROLS.Selectable|SBIS3.CONTROLS.MultiSelectable} Контрол списка сущностей */
          _listContainer: undefined,             /* {jQuery} Контейнер для контрола списка сущностей */
          _loadDeferred: null,                   /* {$ws.proto.Deferred|null} Деферред загрузки данных для контрола списка сущностей */
-         _showAllButton: undefined              /* {$ws.proto.Control} Кнопка открытия всех записей */
+         _showAllButton: undefined,             /* {$ws.proto.Control} Кнопка открытия всех записей */
+         _changedBySelf: false                  /* {Boolean} Флаг, обозначающий, что изменения были вызваны не внешними действиями, а внтурненними */
       },
 
       $constructor: function () {
@@ -255,37 +256,35 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
              changedFields = [],
              dataSet = this._getListDataSet();
 
-         /* Если в контролах, которые мы отслеживаем, нет фокуса,
-            то почистим датасет, т.к. фильтр сменился и больше ничего делать не будем */
-         if(!this._isObservableControlFocused()) {
-            if(dataSet) {
-               dataSet.clear();
-            }
-            this._options.listFilter = filter;
-            this._notifyOnPropertyChanged('listFilter');
-            return;
-         }
-
          $ws.helpers.forEach(filter, function(value, key) {
             if(value !== self._options.listFilter[key]) {
                changedFields.push(key);
             }
          });
 
-         if(changedFields.length) {
-            this._options.listFilter = filter;
-            for(var i = 0, len = changedFields.length; i < len; i++) {
-               if(String(this._options.listFilter[changedFields[i]]).length >= this._options.startChar) {
-                  this._startSearch();
-                  this._notifyOnPropertyChanged('listFilter');
-                  return;
-               }
-            }
-            /* Если введено меньше символов чем указано в startChar, то скроем автодополнение */
-            this._resetSearch();
-            this.hidePicker();
-            this._notifyOnPropertyChanged('listFilter');
+         if(!changedFields.length) {
+            return;
          }
+
+         this._options.listFilter = filter;
+         this._notifyOnPropertyChanged('listFilter');
+
+         /* Если в контролах, которые мы отслеживаем, нет фокуса или изменение фильтра произошло после внуренних изменений
+           то почистим датасет, т.к. фильтр сменился и больше ничего делать не будем */
+         if(!this._isObservableControlFocused() || this._changedBySelf) {
+            dataSet && dataSet.clear();
+            return;
+         }
+
+         for(var i = 0, len = changedFields.length; i < len; i++) {
+            if(String(this._options.listFilter[changedFields[i]]).length >= this._options.startChar) {
+               this._startSearch();
+               return;
+            }
+         }
+         /* Если введено меньше символов чем указано в startChar, то скроем автодополнение */
+         this._resetSearch();
+         this.hidePicker();
       },
 
       // TODO использовать searchMixin 3.7.3.100
@@ -497,7 +496,8 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
          var def = new $ws.proto.Deferred(),
              dataSet = this._getListDataSet(),
              ctx = this._getBindingContext(),
-             self = this;
+             self = this,
+             toSet = {};
 
          if (id === null || id === undefined) {
             return;
@@ -514,17 +514,15 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
          }
 
          def.addCallback(function (item) {
+            self._changedBySelf = true;
             self._notify('onListItemSelect', item, self._resultBindings);
             for (var field in self._resultBindings) {
                if (self._resultBindings.hasOwnProperty(field)) {
-                  ctx.setValue(
-                     field,
-                     item.get(self._resultBindings[field]),
-                     false,
-                     self._list
-                  );
+                  toSet[field] = item.get(self._resultBindings[field]);
                }
             }
+            ctx.setValue(toSet, false, self._list);
+            self._changedBySelf = false;
          });
       },
 
