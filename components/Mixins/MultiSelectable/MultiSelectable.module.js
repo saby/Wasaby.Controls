@@ -404,7 +404,8 @@ define('js!SBIS3.CONTROLS.MultiSelectable', ['js!SBIS3.CONTROLS.Data.Collection.
       },
       /**
        * Возвращает набор выбранных элементов
-       * @param loadItems загружать ли записи, если их нет в текущем наборе выбранных и они отсутствуют в dataSet'e
+       * @param {Boolean} loadItems загружать ли записи, если их нет в текущем наборе выбранных и они отсутствуют в dataSet'e
+       * @param {Number} count Ограничение количества отдаваемых записей
        * @returns {SBIS3.CONTROLS.Data.Collection.List} Возвращает коллекцию элементов
        * @example
        * <pre>
@@ -414,13 +415,13 @@ define('js!SBIS3.CONTROLS.MultiSelectable', ['js!SBIS3.CONTROLS.Data.Collection.
        * </pre>
        * @see multiselect
        */
-      getSelectedItems: function(loadItems) {
+      getSelectedItems: function(loadItems, count) {
          var self = this,
              selKeys = this._options.selectedKeys,
              selItems = this._options.selectedItems,
              loadKeysArr = [],
-             itemKeysArr = [],
-             dMultiResult, item;
+             itemsKeysArr = this._convertToKeys(selItems),
+             dMultiResult, item, loadKeysAmount;
 
          this._syncSelectedItems();
 
@@ -433,23 +434,22 @@ define('js!SBIS3.CONTROLS.MultiSelectable', ['js!SBIS3.CONTROLS.Data.Collection.
          }
 
          this._loadItemsDeferred = new $ws.proto.Deferred();
-         /* Сфоримруем из массива выбранных записей, массив ключей этих записей */
-         selItems.each(function(rec){
-            itemKeysArr.push(rec.getKey());
-         });
 
          /* Сфоримруем массив ключей записей, которые требуется вычитать с бл или взять из dataSet'a*/
          for(var i = 0, keys = selKeys.length; i < keys; i++) {
-            if(Array.indexOf(itemKeysArr, selKeys[i]) === -1 && Array.indexOf(itemKeysArr, parseInt(selKeys[i], 10)) === -1) {
+            if(Array.indexOf(itemsKeysArr, selKeys[i]) === -1 && Array.indexOf(itemsKeysArr, parseInt(selKeys[i], 10)) === -1) {
                loadKeysArr.push(selKeys[i]);
             }
          }
 
-         if(loadKeysArr.length) {
+         loadKeysAmount = loadKeysArr.length;
+         if(loadKeysAmount) {
+            /* Если ограничили кол-во отдаваемых записей */
+            loadKeysAmount = count < loadKeysAmount ? count : loadKeysAmount;
             dMultiResult = new $ws.proto.ParallelDeferred({stopOnFirstError: false});
 
-            for (var j = 0; loadKeysArr.length > j; j++) {
-               item = this._dataSet && this._dataSet.getRecordById(loadKeysArr[j]);
+            for (var j = 0; loadKeysAmount > j; j++) {
+               item = this.getItems() && this.getItems().getRecordById(loadKeysArr[j]);
 
                /* если запись есть в датасете, то ничего не будем вычитывать */
                if(item) {
@@ -493,7 +493,7 @@ define('js!SBIS3.CONTROLS.MultiSelectable', ['js!SBIS3.CONTROLS.Data.Collection.
 
          /* Соберём элементы для удаления, т.к. в методе each не отслеживаются изменения IList'а */
          selItems.each(function(rec) {
-            if(!self._isItemSelected(rec.getKey())) {
+            if(!self._isItemSelected(rec.getId())) {
                delItems.push(rec);
             }
          });
@@ -515,7 +515,7 @@ define('js!SBIS3.CONTROLS.MultiSelectable', ['js!SBIS3.CONTROLS.Data.Collection.
              index;
 
          if($ws.helpers.instanceOfModule(item, 'SBIS3.CONTROLS.Data.Model')) {
-            index = this._options.selectedItems.getIndexByValue(item.getKeyField(), item.getKey());
+            index = this._options.selectedItems.getIndexByValue(item.getIdProperty(), item.getId());
          } else {
             index = Array.indexOf(keys, item);
             if (index < 0) {
@@ -575,7 +575,7 @@ define('js!SBIS3.CONTROLS.MultiSelectable', ['js!SBIS3.CONTROLS.Data.Collection.
       },
 
       _setSelectedItems: function() {
-         var dataSet = this.getDataSet(),
+         var dataSet = this.getItems(),
              self = this,
              record;
 
@@ -588,6 +588,22 @@ define('js!SBIS3.CONTROLS.MultiSelectable', ['js!SBIS3.CONTROLS.Data.Collection.
                }
             });
          }
+      },
+
+      /**
+       * Ковертирует набор записей в массив из ключей
+       * @param {SBIS3.CONTROLS.Data.Collection.List} list
+       * @returns {Array}
+       * @private
+       */
+      _convertToKeys: function(list) {
+         var keys = [];
+
+         list.each(function(rec) {
+            keys.push(rec.getId());
+         });
+
+         return keys;
       }
    };
 
