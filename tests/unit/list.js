@@ -1,6 +1,10 @@
 define([
 '../../components/Data/Adapter/resources/test/Json.test',
+'../../components/Data/Adapter/resources/test/JsonRecord.test',
+'../../components/Data/Adapter/resources/test/JsonTable.test',
 '../../components/Data/Adapter/resources/test/Sbis.test',
+'../../components/Data/Adapter/resources/test/SbisRecord.test',
+'../../components/Data/Adapter/resources/test/SbisTable.test',
 '../../components/Data/Collection/resources/test/ArrayEnumerator.test',
 '../../components/Data/Collection/resources/test/List.test',
 '../../components/Data/Collection/resources/test/ObservableList.test',
