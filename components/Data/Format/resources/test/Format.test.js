@@ -17,10 +17,21 @@ define([
          });
 
          describe('.$constructor()', function() {
-            it('should throw an error if items option contains not a field format', function() {
+            it('should throw an error if items contains not a field format', function() {
                assert.throw(function () {
                   var format = new Format({
                      items: [null]
+                  });
+               });
+            });
+            it('should throw an error if items contains fields with same names', function() {
+               assert.throw(function () {
+                  var format = new Format({
+                     items: [
+                        FieldsFactory.create({type: 'integer', 'name': 'f1'}),
+                        FieldsFactory.create({type: 'integer', 'name': 'f2'}),
+                        FieldsFactory.create({type: 'string', 'name': 'f1'})
+                     ]
                   });
                });
             });
@@ -30,6 +41,12 @@ define([
             it('should throw an error if not a field format passed', function() {
                assert.throw(function () {
                   format.add(0);
+               });
+            });
+            it('should throw an error if field with given name already exists', function() {
+               format.add(FieldsFactory.create({type: 'integer', 'name': 'f1'}));
+               assert.throw(function () {
+                  format.add(FieldsFactory.create({type: 'integer', 'name': 'f1'}));
                });
             });
          });
@@ -48,12 +65,31 @@ define([
                   format.replace(2, 0);
                });
             });
+            it('should throw an error if field with given name already exists', function() {
+               format.add(FieldsFactory.create({type: 'integer', 'name': 'f1'}));
+               format.add(FieldsFactory.create({type: 'integer', 'name': 'f2'}));
+               format.replace(FieldsFactory.create({type: 'integer', 'name': 'f2'}), 1);
+               assert.throw(function () {
+                  format.replace(FieldsFactory.create({type: 'integer', 'name': 'f1'}), 1);
+               });
+            });
          });
 
          describe('.assign()', function() {
             it('should throw an error if not a field format passed', function() {
                assert.throw(function () {
                   format.assign([3]);
+               });
+            });
+            it('should throw an error if field with given name already exists', function() {
+               format.add(FieldsFactory.create({type: 'integer', 'name': 'f1'}));
+               format.add(FieldsFactory.create({type: 'integer', 'name': 'f2'}));
+               assert.throw(function () {
+                  format.assign([
+                     FieldsFactory.create({type: 'integer', 'name': 'f1'}),
+                     FieldsFactory.create({type: 'integer', 'name': 'f2'}),
+                     FieldsFactory.create({type: 'integer', 'name': 'f1'})
+                  ]);
                });
             });
          });
@@ -64,12 +100,24 @@ define([
                   format.append([4]);
                });
             });
+            it('should throw an error if field with given name already exists', function() {
+               format.append([FieldsFactory.create({type: 'integer', 'name': 'f1'})]);
+               assert.throw(function () {
+                  format.append([FieldsFactory.create({type: 'integer', 'name': 'f1'})]);
+               });
+            });
          });
 
          describe('.prepend()', function() {
             it('should throw an error if not a field format passed', function() {
                assert.throw(function () {
                   format.prepend([5]);
+               });
+            });
+            it('should throw an error if field with given name already exists', function() {
+               format.prepend([FieldsFactory.create({type: 'integer', 'name': 'f1'})]);
+               assert.throw(function () {
+                  format.prepend([FieldsFactory.create({type: 'integer', 'name': 'f1'})]);
                });
             });
          });

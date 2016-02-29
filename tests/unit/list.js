@@ -11,6 +11,7 @@ define([
 '../../components/Data/Format/resources/test/Field.test',
 '../../components/Data/Format/resources/test/FieldsFactory.test',
 '../../components/Data/Format/resources/test/Format.test',
+'../../components/Data/Format/resources/test/FormatsFactory.test',
 '../../components/Data/Format/resources/test/IdentityField.test',
 '../../components/Data/Format/resources/test/IntegerField.test',
 '../../components/Data/Format/resources/test/MoneyField.test',

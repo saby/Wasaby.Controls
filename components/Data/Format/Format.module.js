@@ -32,6 +32,7 @@ define('js!SBIS3.CONTROLS.Data.Format.Format', [
       $constructor: function () {
          for (var i = 0, len = this._items.length; i < len; i++) {
             this._checkItem(this._items[i]);
+            this._checkName(this._items[i], i);
          }
       },
 
@@ -39,6 +40,7 @@ define('js!SBIS3.CONTROLS.Data.Format.Format', [
 
       add: function (item, at) {
          this._checkItem(item);
+         this._checkName(item);
          Format.superclass.add.apply(this, arguments);
       },
 
@@ -49,21 +51,27 @@ define('js!SBIS3.CONTROLS.Data.Format.Format', [
 
       replace: function (item, at) {
          this._checkItem(item);
+         this._checkName(item, at);
          Format.superclass.replace.apply(this, arguments);
       },
 
       assign: function (items) {
+         var i, len;
          items = this._itemsToArray(items);
-         for (var i = 0, len = items.length; i < len; i++) {
+         for (i = 0, len = items.length; i < len; i++) {
             this._checkItem(items[i]);
          }
          Format.superclass.assign.call(this, items);
+         for (i = 0, len = this._items.length; i < len; i++) {
+            this._checkName(this._items[i], i);
+         }
       },
 
       append: function (items) {
          items = this._itemsToArray(items);
          for (var i = 0, len = items.length; i < len; i++) {
             this._checkItem(items[i]);
+            this._checkName(items[i]);
          }
          Format.superclass.append.call(this, items);
       },
@@ -72,6 +80,7 @@ define('js!SBIS3.CONTROLS.Data.Format.Format', [
          items = this._itemsToArray(items);
          for (var i = 0, len = items.length; i < len; i++) {
             this._checkItem(items[i]);
+            this._checkName(items[i]);
          }
          Format.superclass.prepend.call(this, items);
       },
@@ -133,12 +142,23 @@ define('js!SBIS3.CONTROLS.Data.Format.Format', [
       //region Protected methods
 
       /**
-       * Проверяет, что переданный элемент - модель
+       * Проверяет, что переданный элемент - формат поля
        * @protected
        */
       _checkItem: function (item) {
-         if(!item || !$ws.helpers.instanceOfModule(item, 'SBIS3.CONTROLS.Data.Format.Field')){
+         if(!item || !$ws.helpers.instanceOfModule(item, 'SBIS3.CONTROLS.Data.Format.Field')) {
             throw new TypeError('Item should be an instance of SBIS3.CONTROLS.Data.Format.Field');
+         }
+      },
+
+      /**
+       * Проверяет, что формат поля не дублирует уже существующее имя поля
+       * @protected
+       */
+      _checkName: function (item, at) {
+         var exists = this.getFieldndex(item.getName());
+         if(exists > -1 && exists !== at) {
+            throw new ReferenceError(this._moduleName + ': field with name "' + item.getName() + '" already exists');
          }
       }
 
