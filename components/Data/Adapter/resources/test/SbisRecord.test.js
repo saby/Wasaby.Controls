@@ -4,7 +4,7 @@ define([
    ], function (SbisRecord) {
       'use strict';
 
-      describe('SBIS3.CONTROLS.Data.Adapter.SbisRecord)', function () {
+      describe('SBIS3.CONTROLS.Data.Adapter.SbisRecord', function () {
          var data,
             adapterInstance;
 
