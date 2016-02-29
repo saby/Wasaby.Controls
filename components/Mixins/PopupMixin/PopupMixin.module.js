@@ -804,8 +804,6 @@ define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManag
                ControlHierarchyManager.removeNode(this);
             }
             this._unsubscribeTargetMove();
-            $ws.single.EventBus.channel('WindowChangeChannel').unsubscribe('onWindowResize', this._windowChangeHandler, this);
-            $ws.single.EventBus.channel('WindowChangeChannel').unsubscribe('onWindowScroll', this._windowChangeHandler, this);
             if (this._options.closeByExternalOver) {
                $ws.single.EventBus.channel('WindowChangeChannel').unsubscribe('onDocumentMouseOver', this._clickHandler, this);
             }
