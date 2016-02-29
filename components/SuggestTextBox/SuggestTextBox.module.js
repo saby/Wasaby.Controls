@@ -25,6 +25,9 @@ define('js!SBIS3.CONTROLS.SuggestTextBox', [
     * @author Алексей Мальцев
     */
    var SuggestTextBox = TextBox.extend([PickerMixin, SuggestMixin, ChooserMixin], /** @lends SBIS3.CONTROLS.SuggestTextBox.prototype */ {
+      $protected: {
+         _changedByKeyboard: false  /* {Boolean} Флаг, обозначающий, что изменения были вызваны действиями с клавиатуры */
+      },
       $constructor: function () {
          this._options = $ws.core.merge({
             loadingContainer: this.getContainer().find('.controls-TextBox__fieldWrapper')
@@ -61,9 +64,15 @@ define('js!SBIS3.CONTROLS.SuggestTextBox', [
                }
                break;
          }
+         this._changedByKeyboard = false;
+      },
+
+      setListFilter: function(filter) {
+         SuggestTextBox.superclass.setListFilter.call(this, filter, !this._changedByKeyboard);
       },
 
       _keyDownBind: function(e) {
+         this._changedByKeyboard = true;
          SuggestTextBox.superclass._keyDownBind.apply(this, arguments);
 
          /* Запрещаем всплытие enter по событию keyDown,

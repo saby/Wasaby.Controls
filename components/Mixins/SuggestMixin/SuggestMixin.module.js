@@ -199,8 +199,7 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
          _list: undefined,                      /* {SBIS3.CONTROLS.DSMixin}{SBIS3.CONTROLS.Selectable|SBIS3.CONTROLS.MultiSelectable} Контрол списка сущностей */
          _listContainer: undefined,             /* {jQuery} Контейнер для контрола списка сущностей */
          _loadDeferred: null,                   /* {$ws.proto.Deferred|null} Деферред загрузки данных для контрола списка сущностей */
-         _showAllButton: undefined,             /* {$ws.proto.Control} Кнопка открытия всех записей */
-         _changedBySelf: false                  /* {Boolean} Флаг, обозначающий, что изменения были вызваны не внешними действиями, а внтурненними */
+         _showAllButton: undefined              /* {$ws.proto.Control} Кнопка открытия всех записей */
       },
 
       $constructor: function () {
@@ -250,8 +249,9 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
       /**
        * Устанавливает фильтр в список, при необходимости делает запрос на БЛ
        * @param {Object} filter
+       * @param {Boolean} silent "Тихая" установка св-ва, не вызывает запроса на БЛ, не изменяет состояние выпадающего блока
        */
-      setListFilter: function(filter) {
+      setListFilter: function(filter, silent) {
          var self = this,
              changedFields = [],
              dataSet = this._getListDataSet();
@@ -271,7 +271,7 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
 
          /* Если в контролах, которые мы отслеживаем, нет фокуса или изменение фильтра произошло после внуренних изменений
            то почистим датасет, т.к. фильтр сменился и больше ничего делать не будем */
-         if(!this._isObservableControlFocused() || this._changedBySelf) {
+         if(!this._isObservableControlFocused() || silent) {
             dataSet && dataSet.clear();
             return;
          }
@@ -514,7 +514,6 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
          }
 
          def.addCallback(function (item) {
-            self._changedBySelf = true;
             self._notify('onListItemSelect', item, self._resultBindings);
             /* Соберём все изменения в пачку,
                чтобы контекст несколько раз не пересчитывался */
@@ -524,7 +523,6 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
                }
             }
             ctx.setValue(toSet, false, self._list);
-            self._changedBySelf = false;
          });
       },
 
