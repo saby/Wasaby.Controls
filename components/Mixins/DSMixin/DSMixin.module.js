@@ -991,6 +991,10 @@ define('js!SBIS3.CONTROLS.DSMixin', [
          return tplOptions
       },
       _appendItemTemplate: function (item, targetContainer, itemBuildedTpl, at) {
+         //если контейнера нет, то не выводим
+         if ( ! targetContainer) {
+            return;
+         }
          if (at && (typeof at.at !== 'undefined')) {
             var atContainer = at.at !== 0 && $('.controls-ListView__item', this._getItemsContainer().get(0)).eq(at.at-1);
             if (atContainer.length) {
