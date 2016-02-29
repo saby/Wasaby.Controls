@@ -117,23 +117,30 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                } else if (key === $ws._const.key.enter || key === $ws._const.key.down || key === $ws._const.key.up) {
                   e.stopImmediatePropagation();
                   e.preventDefault();
-                  this._editNextTarget(key === $ws._const.key.down || key === $ws._const.key.enter);
+                  this._editNextTarget(this._getCurrentTarget(), key === $ws._const.key.down || key === $ws._const.key.enter);
                }
             },
-            _editNextTarget: function (editNextRow) {
+            _editNextTarget: function (currentTarget, editNextRow) {
                var
-                  nextTarget = this._getNextTarget(editNextRow);
+                  self = this,
+                  nextTarget = this._getNextTarget(currentTarget, editNextRow);
                if (nextTarget.length) {
-                  this.edit(nextTarget, this._options.dataSet.getRecordByKey(nextTarget.attr('data-id')));
+                  this.edit(nextTarget, this._options.dataSet.getRecordByKey(nextTarget.attr('data-id'))).addCallback(function(result) {
+                     if (!result) {
+                        self._editNextTarget(nextTarget, editNextRow);
+                     }
+                  });
                } else if (editNextRow && this._options.modeAutoAdd) {
                   this.add();
                } else {
                   this.endEdit(true);
                }
             },
-            _getNextTarget: function(editNextRow) {
-               var currentTarget = this._eip.getTarget();
+            _getNextTarget: function(currentTarget, editNextRow) {
                return currentTarget[editNextRow ? 'next' : 'prev']('.js-controls-ListView__item:not(".controls-editInPlace")');
+            },
+            _getCurrentTarget: function() {
+               return this._eip.getTarget();
             },
             showEip: function(target, model, options) {
                if (options && options.isEdit) {
@@ -149,6 +156,7 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                      this._notify('onAfterBeginEdit', preparedRecord);
                      return preparedRecord;
                   }
+                  return preparedRecord;
                }.bind(this));
             },
             _prepareEdit: function(record) {
@@ -298,7 +306,7 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
              */
             _focusCatch: function (event) {
                if (event.which === $ws._const.key.tab) {
-                  this._editNextTarget(!event.shiftKey);
+                  this._editNextTarget(this._getCurrentTarget(), !event.shiftKey);
                }
             },
             _onChildFocusOut: function (event, control) {

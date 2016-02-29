@@ -24,8 +24,8 @@
                     <opt name="field">Название</opt>
                 </opts>
             </opts>
+            <opt name="keyField" value="Ид"></opt>
         </opts>
-        <opt name="keyField" value="Ид"></opt>
     </opts>
     <opts name="listFilter">
         <opt name="Название" bind="myTextField" oneWay="true"/>
@@ -60,8 +60,8 @@
                     <opt name="field">Название</opt>
                 </opts>
             </opts>
+            <opt name="keyField" value="Ид"></opt>
         </opts>
-        <opt name="keyField" value="Ид"></opt>
     </opts>
     <opts name="listFilter">
         <opt name="Название" bind="myTextField2" oneWay="true"/>
@@ -69,6 +69,55 @@
     <opts name="handlers">
         <opt name="onInitComplete" type="function">js!SBIS3.CONTROLS.Demo.FieldLinkDemo:prototype.initFiledLink2</opt>
     </opts>
+    </component>
+    <h2>Поле связи единичный выбор + запись собирается и раскидывается по контексту</h2>
+    <component data-component="SBIS3.CONTROLS.FieldLink" style="width: 500px" name="FieldLinkSingleSelectContext">
+        <opt name="text" bind="myTextField3"></opt>
+        <opt name="multiselect" type="boolean" value="false"></opt>
+        <opt name="placeholder" value="Должность"></opt>
+        <opt name="displayField" value="Название"></opt>
+        <opts name="selectedItem" nonExistentValue="{}">
+            <opt name="Название" bind="НазваниеПолеСвязи"></opt>
+            <opt name="Ид" bind="КлючПолеСвязи"></opt>
+        </opts>
+        <opts name="dictionaries" type="array">
+            <opts>
+                <opt name="caption">Должности</opt>
+                <opt name="template">js!SBIS3.CONTROLS.Demo.FieldLinkDemoTemplate</opt>
+            </opts>
+        </opts>
+        <opt name="keyField" value="Ид"></opt>
+        <opts name="list">
+            <opt name="component" value="js!SBIS3.CONTROLS.DataGridView"/>
+            <opts name="options">
+                <opts name="columns" type="array">
+                    <opts>
+                        <opt name="title">Ид</opt>
+                        <opt name="field">Ид</opt>
+                    </opts>
+                    <opts>
+                        <opt name="title">Название</opt>
+                        <opt name="field">Название</opt>
+                    </opts>
+                </opts>
+                <opt name="keyField" value="Ид"></opt>
+            </opts>
+        </opts>
+        <opts name="listFilter">
+            <opt name="Название" bind="myTextField3" oneWay="true"/>
+        </opts>
+        <opts name="handlers">
+            <opt name="onInitComplete" type="function">js!SBIS3.CONTROLS.Demo.FieldLinkDemo:prototype.initFiledLink2</opt>
+        </opts>
+    </component>
+    <br/>
+    <span>Отображаемое поле: </span>
+    <component data-component="SBIS3.CONTROLS.TextBox">
+        <opt name="text" bind="НазваниеПолеСвязи" nonExistentValue="undefined"></opt>
+    </component>
+    <span>Ключ: </span>
+    <component data-component="SBIS3.CONTROLS.TextBox">
+        <opt name="text" bind="КлючПолеСвязи" nonExistentValue="undefined"></opt>
     </component>
     <h2>В виде ссылки</h2>
     <component data-component="SBIS3.CONTROLS.SelectorButton">

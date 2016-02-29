@@ -173,7 +173,7 @@ define('js!SBIS3.CONTROLS.EditAtPlaceMixin', ['js!SBIS3.CONTROLS.IconButton'], f
             if (this._options.enableControlPanel) {
                this._cntrlPanel.remove();
             }
-         },
+         }
       }
 
       return EditAtPlaceMixin;

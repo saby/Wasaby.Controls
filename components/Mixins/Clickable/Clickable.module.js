@@ -54,6 +54,7 @@ define('js!SBIS3.CONTROLS.Clickable', [], function() {
          if (this.isEnabled()) {
             this._clickHandler(event);
             this._notifyOnActivated(event);
+            return true;
          }
       },
 

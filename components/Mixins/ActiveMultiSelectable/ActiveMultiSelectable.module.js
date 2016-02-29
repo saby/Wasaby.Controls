@@ -28,74 +28,120 @@ define('js!SBIS3.CONTROLS.ActiveMultiSelectable', [], function() {
             throw new Error('MultiSelectable mixin is required');
          }
       },
+
       /**
-       * Устанавливает массив выбранных записей
+       * Устанавливает набор выбранных записей
        * @param {Array|SBIS3.CONTROLS.Data.Collection.List} list Выбранные элементы.
+       * @example
+       * <pre>
+       *    var selectedItems = myGrid.getSelectedItems();
+       *
+       *    if(selectedItems.getCount()) {
+       *       myFieldLink.setSelectedItems(selectedItems)
+       *    }
+       * </pre>
+       * @see selectedItems
+       * @see selectedKeys
+       * @see clearSelectedItems
+       * @see addSelectedItems
        */
       setSelectedItems: propertyUpdateWrapper(function(list) {
-         if(list instanceof Array) {
-            list = this._makeList(list);
+         var newItems = [];
+
+         list = this._prepareItems(list);
+
+         if(this._options.multiselect) {
+            list.each(function(rec) {
+               newItems.push(rec);
+            });
+         } else if(list.getCount()) {
+            newItems = [list.at(0)];
          }
 
-         if(!$ws.helpers.instanceOfModule(list, 'SBIS3.CONTROLS.Data.Collection.List')) {
-            throw new Error('setSelectedItems called with invalid argument');
-         }
-
-         /* надо обязательно делать клон массива, чтобы порвать ссылку и не портить значения в контексте */
-         this._options.selectedItems = this._makeList((this._options.multiselect ? list.toArray() : list.getCount() > 1 ? [list.at(0)] : list.toArray()).slice());
+         this._options.selectedItems = this._makeList(newItems);
          this.setSelectedKeys(this._convertToKeys(this._options.selectedItems));
          this._notifyOnPropertyChanged('selectedItems');
       }),
 
       /**
        * Очищает набор выбранных элементов
+       * @see selectedItems
+       * @see selectedKeys
+       * @see setSelectedItems
+       * @see addSelectedItems
+       * @example
+       * <pre>
+       *    var selectedItems = myGrid.getSelectedItems();
+       *
+       *    if(selectedItems.getCount()) {
+       *       myGrid.clearSelectedItems();
+       *    }
+       * </pre>
        */
       clearSelectedItems: function() {
          this.setSelectedItems([]);
       },
 
+      initializeSelectedItems: function() {
+        this._options.selectedItems =  new List();
+      },
+
+      _prepareItems: function(items) {
+         if(items instanceof Array) {
+            items = this._makeList(items);
+         }
+
+         if(!$ws.helpers.instanceOfModule(items, 'SBIS3.CONTROLS.Data.Collection.List')) {
+            throw new Error('setSelectedItems called with invalid argument');
+         }
+
+         return items;
+      },
+
       /**
        * Добавляет переданные элементы к набору выбранных
        * @param {Array | SBIS3.CONTROLS.Data.Collection.List} items
+       * @see selectedItems
+       * @see selectedKeys
+       * @see setSelectedItems
+       * @see clearSelectedItems
+       * @example
+       * <pre>
+       *    var selectedItems = myGrid.getSelectedItems();
+       *
+       *    if(selectedItems.getCount()) {
+       *       myFieldLink.addSelectedItems(selectedItems);
+       *    }
+       * </pre>
        */
       addSelectedItems: propertyUpdateWrapper(function(items) {
          var self = this,
-             newItems = items instanceof Array ? this._makeList(items) : items,
              selItems = this._options.selectedItems,
-             itemsToAdd = [];
+             newItems = [];
 
-         /* Функция проверяет запись на выбранность, если не выбрана, то добавляет в массив для добавления */
-         function checkAndPushItem(rec) {
-            if(!self._isItemSelected(rec)) {
-               itemsToAdd.push(rec);
-            }
+         items = this._prepareItems(items);
+
+         if(!items.getCount()) {
+            return;
          }
 
-         /* Если добавляемых элементов нет, то ничего не делаем */
-         if(!newItems.getCount()) return;
+         if(this._options.multiselect) {
+            items.each(function(rec) {
+               if(!self._isItemSelected(rec)) {
+                  newItems.push(rec);
+               }
+            });
+         } else if(!self._isItemSelected(items.at(0))) {
+            newItems.push(items.at(0));
+            selItems.clear();
+         }
 
-         /* Если включён множественный выбор, то добавим все, иначе добавим первый */
-         this._options.multiselect ?
-             newItems.each(checkAndPushItem) :
-             checkAndPushItem(newItems.at(0));
-
-         if(itemsToAdd.length) {
-            selItems.concat(itemsToAdd);
+         if(newItems.length) {
+            selItems.concat(newItems);
             this.setSelectedKeys(this._convertToKeys(selItems));
             this._notifyOnPropertyChanged('selectedItems');
          }
-      }),
-
-      _convertToKeys: function(list) {
-         var keys = [];
-
-         list.each(function(rec) {
-            keys.push(rec.getId());
-         });
-
-         return keys;
-
-      }
+      })
    };
 
    return ActiveMultiSelectable;
