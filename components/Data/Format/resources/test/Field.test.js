@@ -16,7 +16,7 @@ define([
          });
 
          describe('.getDefaultValue()', function() {
-            it('should return null', function() {
+            it('should return null by default', function() {
                assert.isNull(field.getDefaultValue());
             });
             it('should return the value passed to the constructor', function() {
@@ -37,7 +37,7 @@ define([
          });
 
          describe('.getName()', function() {
-            it('should return empty string', function() {
+            it('should return empty string by default', function() {
                assert.strictEqual(field.getName(), '');
             });
             it('should return the value passed to the constructor', function() {
@@ -58,7 +58,7 @@ define([
          });
 
          describe('.isNullable()', function() {
-            it('should return false', function() {
+            it('should return false by default', function() {
                assert.isFalse(field.isNullable());
             });
             it('should return the value passed to the constructor', function() {
