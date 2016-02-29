@@ -234,9 +234,9 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
          //TODO: сделать через сериализатор
          return new RecordSet({
             adapter: this._options.adapter,
-            data: this._options.rawData,
+            rawData: this._options.rawData,
             meta: this._options.meta,
-            keyField: this._options.keyField
+            idProperty: this._options.idProperty
          });
       },
 

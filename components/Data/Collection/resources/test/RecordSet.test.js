@@ -306,10 +306,10 @@ define([
                   var rs = ds.getAll(),
                      length = rs.getCount(),
                      item_2 = $ws.core.clone(rs.at(0));
-                  rs.at(2).setDeleted(true);
-                  rs.at(6).setDeleted(true);
+                  rs.removeAt(2);
+                  rs.removeAt(5);
                   rs.saveChanges(source);
-                  assert.equal(rs.getCount(), length-2);
+                  assert.equal(rs.getCount(), length - 2);
                   assert.notDeepEqual(item_2, rs.at(2));
                   done();
                });
