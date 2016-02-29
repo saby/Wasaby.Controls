@@ -28,7 +28,7 @@ define('js!SBIS3.CONTROLS.ActiveSelectable', ['js!SBIS3.CONTROLS.Data.Model'], f
              * @see setSelectedItem
              * @see getSelectedItem
              */
-            selectedItem : undefined
+            selectedItem : null
          }
       },
 
@@ -37,26 +37,34 @@ define('js!SBIS3.CONTROLS.ActiveSelectable', ['js!SBIS3.CONTROLS.Data.Model'], f
             throw new Error('Selectable mixin is required');
          }
 
-         this._options.selectedItem = $ws.helpers.instanceOfMixin(this, 'SBIS3.CONTROLS.Data.Model') ?
-             this._options.selectedItem :
-             new Model();
+         this._options.selectedItem = this._options.selectedItem instanceof Model ? this._options.selectedItem : null;
       },
       /**
-       * Устанавливает выбранную запись
+       * Устанавливает выбранный элемент
+       * @param {SBIS3.CONTROLS.Data.Model} item загружать ли запись, если о ней нет информации в dataSet
+       * @see selectedItem
+       * @see getSelectedItem
        */
       setSelectedItem: propertyUpdateWrapper(function(item) {
-         if($ws.helpers.instanceOfModule(item, 'SBIS3.CONTROLS.Data.Model')) {
-            this._options.selectedItem = item;
-            this.setSelectedKey(item.getIdProperty() ? item.getId() : null);
+         var isModel = item instanceof Model;
+
+         if(isModel || (!isModel && !this._options.selectedItem)) {
+            this._options.selectedItem = isModel ? item : null;
+            this.setSelectedKey(isModel ? item.getId() : null);
             this._notifyOnPropertyChanged('selectedItem');
          }
-
       }),
+
+      initializeSelectedItem: function() {
+         this._options.selectedItem = new Model();
+      },
 
       /**
        * Возвращает выбранную запись
        * @param loadItem загружать ли запись, если о ней нет информации в dataSet
-       * @returns {*}
+       * @see selectedItem
+       * @see setSelectedItem
+       * @returns {null|SBIS3.CONTROLS.Data.Model}
        */
       getSelectedItem: function(loadItem) {
          var dResult = new $ws.proto.Deferred(),
@@ -72,7 +80,7 @@ define('js!SBIS3.CONTROLS.ActiveSelectable', ['js!SBIS3.CONTROLS.Data.Model'], f
 
          if(selKey !== null) {
             if (!selItem) {
-               var item = this._dataSet && this._dataSet.getRecordByKey(selKey);
+               var item = this.getItems().getRecordById(selKey);
 
                if (item) {
                   dResult.callback(this._options.selectedItem = item);
@@ -98,11 +106,11 @@ define('js!SBIS3.CONTROLS.ActiveSelectable', ['js!SBIS3.CONTROLS.Data.Model'], f
          var selItem = this._options.selectedItem,
              selKey = this._options.selectedKey;
 
-         if(selKey === null && !selItem.getIdProperty()) {
+         if(selKey === null) {
             return;
          }
-         if(selKey !== selItem.get(selItem.getIdProperty())) {
-            this.setSelectedItem(new Model());
+         if(selKey !== selItem.getId()) {
+            this.setSelectedItem(null);
          }
       }
 
