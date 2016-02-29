@@ -7,7 +7,7 @@ define('js!SBIS3.CONTROLS.Demo.MyEditAtPlace', [
    'js!SBIS3.CONTROLS.NumberTextBox',
    'js!SBIS3.CONTROLS.DatePicker',
    'js!SBIS3.CONTROLS.EditAtPlaceGroup',
-   'js!SBIS3.CONTROLS.EditAtPlace',
+   'js!SBIS3.CONTROLS.EditAtPlace'
 ], function (CompoundControl, dotTplFn) {
    'use strict';
    /**
