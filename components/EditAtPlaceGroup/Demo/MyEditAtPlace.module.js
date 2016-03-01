@@ -24,7 +24,7 @@ define('js!SBIS3.CONTROLS.Demo.MyEditAtPlace', [
          this.getLinkedContext().setValue('tabs', {
             name: 'Имя',
             name2: 'Отчество',
-            date: '19.02.16',
+            date: new Date(),
             number: '228'
          });
 
