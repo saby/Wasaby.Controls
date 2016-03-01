@@ -7,7 +7,9 @@ define([
    beforeEach(function (){
       select = ['id'];
       query = new Query({
-         select: select
+         select: select,
+         as: 'prod',
+         resource: 'product'
       });
    });
    describe('SBIS3.CONTROLS.Data.Query.Query', function () {
@@ -38,8 +40,86 @@ define([
          });
       });
 
-      describe('.select', function (){
+      describe('.clear', function (){
+         it('should clear query', function () {
+            query.clear();
+            assert.deepEqual(query.getSelect(), {});
+         });
+      });
 
+      describe('.clone', function (){
+         it('should clone query', function (){
+            assert.deepEqual(query, query.clone());
+         });
+      });
+
+      describe('.as', function (){
+         it('should return as', function (){
+            assert.equal(query.getAs(), 'prod');
+         });
+      });
+
+      describe('.orderBy', function (){
+         it('should set order by', function (){
+            query.orderBy({
+               customerId: true,
+               date: false
+            });
+            assert.equal(query.getOrder().length, 2);
+         });
+      });
+
+      describe('.groupBy', function (){
+         it('should set group by from array', function (){
+            var groupBy = ['date', 'customerId'];
+            query.groupBy(groupBy);
+            assert.equal(query.getGroupBy(), groupBy);
+         });
+
+         it('should set group by from string', function (){
+            var groupBy = 'customerId';
+            query.groupBy(groupBy);
+            assert.deepEqual(query.getGroupBy(), [groupBy]);
+         });
+
+         it('should set group by from string', function (){
+            var groupBy = {'customerId':true};
+            assert.throw(function(){
+               query.groupBy(groupBy);
+            });
+         });
+      });
+
+      describe('.where', function (){
+         it('should set where', function (){
+            var where  = {
+                'id>': 10,
+                'date<=': new Date()
+            };
+            query.where(where);
+            assert.equal(query.getWhere(), where);
+         });
+
+         it('should throw an error', function (){
+            var where = 'where';
+            assert.throw(function(){
+               query.where(where);
+            });
+         });
+      });
+
+      describe('.join', function (){
+         it('should set join', function (){
+            query.join(
+               'Customers',
+               {id: 'customerId'},
+               {
+                  customerName: 'name',
+                  customerEmail: 'email'
+               }
+            );
+            assert.equal(query.getJoin().length, 1);
+         });
       });
    });
 });
