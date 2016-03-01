@@ -17,7 +17,7 @@ define('js!SBIS3.CONTROLS.Utils.DataProcessor', [
     * @author Крайнов Дмитрий Олегович
     * @public
     */
-   return $ws.core.extend({}, {
+   return $ws.core.extend(/** @lends SBIS3.CONTROLS.Utils.DataProcessor.prototype */{}, {
 
       $protected: {
          _options: {

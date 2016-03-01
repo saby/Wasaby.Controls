@@ -15,7 +15,7 @@ define('js!SBIS3.CONTROLS.OperationPrint', [
     * @control
     * @public
     */
-   var OperationPrint = PrintUnloadBase.extend({
+   var OperationPrint = PrintUnloadBase.extend(/** @lends SBIS3.CONTROLS.OperationPrint.prototype */{
 
       $protected: {
          _options: {
