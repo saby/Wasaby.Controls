@@ -136,7 +136,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.List', [
             this._items.push(item);
          } else {
             at = at || 0;
-            if (at !== 0 && !this._isValidIndex(at)) {
+            if (at !== 0 && !this._isValidIndex(at, true)) {
                throw new Error('Index is out of bounds');
             }
             this._items.splice(at, 0, item);
@@ -268,11 +268,16 @@ define('js!SBIS3.CONTROLS.Data.Collection.List', [
       /**
        * Проверяет корректность индекса
        * @param {Number} index Индекс
+       * @param {Boolean} [addMode=false] Режим добавления
        * @returns {Boolean}
        * @private
        */
-      _isValidIndex: function (index) {
-         return index >= 0 && index < this.getCount();
+      _isValidIndex: function (index, addMode) {
+         var max = this.getCount();
+         if (addMode) {
+            max++;
+         }
+         return index >= 0 && index < max;
       },
 
       _getItemIndexByHash: function (hash) {
