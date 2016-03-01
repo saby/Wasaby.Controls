@@ -65,6 +65,15 @@
          background: #ececec;
       }
 
+      a[href*=Engine]:after {
+         content: 'Engine';
+         color: orangered;
+         display: inline-block;
+         vertical-align: super;
+         font-size: 55%;
+         margin-left: 7px;
+      }
+
    </style>
    <script type="text/javascript" id="ws-include-css"></script>
    <link rel="stylesheet" type="text/css" href="sprites.css"/>
@@ -157,6 +166,9 @@
                 <li>
                     <div id="BrowserEngine"></div>
                 </li>
+               <li>
+                  <div id="BrowserTabs"></div>
+               </li>
 			   <li>
                   <div id="FieldLink"></div>
                </li>
@@ -471,7 +483,12 @@
                   element: "BrowserEngine",
                   caption: 'BrowserEngine',
                   href: '/pages/browserEngine.html'
-              })
+              });
+             new r({
+                element: "BrowserTabs",
+                caption: 'BrowserTabs',
+                href: '/pages/Engine.BrowserTabs.html'
+             });
           });
 		 require(["js!SBIS3.CONTROLS.Link"], function (r) {
             new r({
