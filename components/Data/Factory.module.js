@@ -68,6 +68,7 @@ define('js!SBIS3.CONTROLS.Data.Factory', [
             case 'Integer':
                return (typeof(value) === 'number') ? value : (isNaN(parseInt(value, 10)) ? null : parseInt(value, 10));
             case 'Real':
+            case 'Double':
                return (typeof(value) === 'number') ? value : (isNaN(parseFloat(value)) ? null : parseFloat(value));
             case 'Money':
                if (meta && meta.precision > 3) {

@@ -17,7 +17,7 @@ define('js!SBIS3.CONTROLS.Data.Format.DictionaryField', [
       $protected: {
          _options: {
             /**
-             * @cfg {SBIS3.CONTROLS.Data.Collection.IDictionary.<Integer, String>} Словарь возможных значений
+             * @cfg {Object.<Integer, String>} Словарь возможных значений
              * @see getDictionary
              */
             dictionary: null
