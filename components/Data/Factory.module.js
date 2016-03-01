@@ -29,7 +29,7 @@ define('js!SBIS3.CONTROLS.Data.Factory', [
        * DateTime - дата и время
        * Link - связь
        * Integer - число целое
-       * Double - число вещественное
+       * Real - число вещественное
        * Money - деьги
        * Enum  - перечисляемое
        * Flags - поле флагов
@@ -67,7 +67,7 @@ define('js!SBIS3.CONTROLS.Data.Factory', [
             case 'Link':
             case 'Integer':
                return (typeof(value) === 'number') ? value : (isNaN(parseInt(value, 10)) ? null : parseInt(value, 10));
-            case 'Double':
+            case 'Real':
                return (typeof(value) === 'number') ? value : (isNaN(parseFloat(value)) ? null : parseFloat(value));
             case 'Money':
                if (meta && meta.precision > 3) {

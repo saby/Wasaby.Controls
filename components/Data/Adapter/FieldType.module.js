@@ -4,6 +4,7 @@ define('js!SBIS3.CONTROLS.Data.Adapter.FieldType', [], function(){
       Boolean: 'Логическое',
       Integer: 'Число целое',
       Real: 'Число вещественное',
+      Double: 'Число вещественное',
       Money: 'Деньги',
       String: 'Строка',
       Text: 'Текст',

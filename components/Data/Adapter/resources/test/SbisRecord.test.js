@@ -97,12 +97,12 @@ define([
          });
 
          describe('.getFormat()', function () {
-            it('should return integer field format', function () {
+            it('should return Integer field format', function () {
                var format = adapter.getFormat('Ид');
                assert.isTrue($ws.helpers.instanceOfModule(format, 'SBIS3.CONTROLS.Data.Format.IntegerField'));
                assert.strictEqual(format.getName(), 'Ид');
             });
-            it('should return real field format', function () {
+            it('should return Real field format', function () {
                var data = {
                      d: [100.9999],
                      s: [{
@@ -115,7 +115,7 @@ define([
                assert.isTrue($ws.helpers.instanceOfModule(format, 'SBIS3.CONTROLS.Data.Format.RealField'));
                assert.strictEqual(format.getPrecision(), 20);
             });
-            it('should return money field format', function () {
+            it('should return Money field format', function () {
                var data = {
                      d: [100.9999],
                      s: [{
@@ -128,12 +128,12 @@ define([
                assert.isTrue($ws.helpers.instanceOfModule(format, 'SBIS3.CONTROLS.Data.Format.MoneyField'));
                assert.strictEqual(format.getPrecision(), 2);
             });
-            it('should return string field format', function () {
+            it('should return String field format', function () {
                var format = adapter.getFormat('Фамилия');
                assert.isTrue($ws.helpers.instanceOfModule(format, 'SBIS3.CONTROLS.Data.Format.StringField'));
                assert.strictEqual(format.getName(), 'Фамилия');
             });
-            it('should return text field format', function () {
+            it('should return Text field format', function () {
                var data = {
                      d: ['Text'],
                      s: [{
@@ -145,7 +145,7 @@ define([
                   format = adapter.getFormat('text');
                assert.isTrue($ws.helpers.instanceOfModule(format, 'SBIS3.CONTROLS.Data.Format.TextField'));
             });
-            it('should return xml field format', function () {
+            it('should return XML field format', function () {
                var data = {
                      d: ['<?xml version="1.1" encoding="UTF-8"?>'],
                      s: [{
@@ -157,7 +157,7 @@ define([
                   format = adapter.getFormat('xml');
                assert.isTrue($ws.helpers.instanceOfModule(format, 'SBIS3.CONTROLS.Data.Format.XmlField'));
             });
-            it('should return datetime field format', function () {
+            it('should return DateTime field format', function () {
                var data = {
                      d: [123],
                      s: [{
@@ -169,7 +169,7 @@ define([
                   format = adapter.getFormat('dt');
                assert.isTrue($ws.helpers.instanceOfModule(format, 'SBIS3.CONTROLS.Data.Format.DateTimeField'));
             });
-            it('should return date field format', function () {
+            it('should return Date field format', function () {
                var data = {
                      d: [123],
                      s: [{
@@ -181,7 +181,7 @@ define([
                   format = adapter.getFormat('date');
                assert.isTrue($ws.helpers.instanceOfModule(format, 'SBIS3.CONTROLS.Data.Format.DateField'));
             });
-            it('should return time field format', function () {
+            it('should return Time field format', function () {
                var data = {
                      d: [123],
                      s: [{
@@ -193,7 +193,7 @@ define([
                   format = adapter.getFormat('time');
                assert.isTrue($ws.helpers.instanceOfModule(format, 'SBIS3.CONTROLS.Data.Format.TimeField'));
             });
-            it('should return time interval field format', function () {
+            it('should return TimeInterval field format', function () {
                var data = {
                      d: [123],
                      s: [{
@@ -205,7 +205,7 @@ define([
                   format = adapter.getFormat('timeint');
                assert.isTrue($ws.helpers.instanceOfModule(format, 'SBIS3.CONTROLS.Data.Format.TimeIntervalField'));
             });
-            it('should return identity field format', function () {
+            it('should return Identity field format', function () {
                var data = {
                      d: [123],
                      s: [{
@@ -217,7 +217,7 @@ define([
                   format = adapter.getFormat('id');
                assert.isTrue($ws.helpers.instanceOfModule(format, 'SBIS3.CONTROLS.Data.Format.IdentityField'));
             });
-            it('should return enum field format', function () {
+            it('should return Enum field format', function () {
                var data = {
                      d: [1],
                      s: [{
@@ -236,7 +236,7 @@ define([
                assert.isTrue($ws.helpers.instanceOfModule(format, 'SBIS3.CONTROLS.Data.Format.EnumField'));
                assert.strictEqual(format.getDictionary(), data.s[0].t.s);
             });
-            it('should return flags field format', function () {
+            it('should return Flags field format', function () {
                var data = {
                      d: [1],
                      s: [{
@@ -255,7 +255,7 @@ define([
                assert.isTrue($ws.helpers.instanceOfModule(format, 'SBIS3.CONTROLS.Data.Format.FlagsField'));
                assert.strictEqual(format.getDictionary(), data.s[0].t.s);
             });
-            it('should return record field format', function () {
+            it('should return Record field format', function () {
                var data = {
                      d: [{d: [], s: []}],
                      s: [{
@@ -267,7 +267,7 @@ define([
                   format = adapter.getFormat('rec');
                assert.isTrue($ws.helpers.instanceOfModule(format, 'SBIS3.CONTROLS.Data.Format.RecordField'));
             });
-            it('should return recordset field format', function () {
+            it('should return RecordSet field format', function () {
                var data = {
                      d: [{d: [], s: []}],
                      s: [{
@@ -279,7 +279,7 @@ define([
                   format = adapter.getFormat('rs');
                assert.isTrue($ws.helpers.instanceOfModule(format, 'SBIS3.CONTROLS.Data.Format.RecordSetField'));
             });
-            it('should return binary field format', function () {
+            it('should return Binary field format', function () {
                var data = {
                      d: [''],
                      s: [{
@@ -315,7 +315,7 @@ define([
                   format = adapter.getFormat('file');
                assert.isTrue($ws.helpers.instanceOfModule(format, 'SBIS3.CONTROLS.Data.Format.RpcFileField'));
             });
-            it('should return hierarchy field format', function () {
+            it('should return Hierarchy field format', function () {
                var data = {
                      d: [''],
                      s: [{
@@ -327,7 +327,7 @@ define([
                   format = adapter.getFormat('hierarchy');
                assert.isTrue($ws.helpers.instanceOfModule(format, 'SBIS3.CONTROLS.Data.Format.HierarchyField'));
             });
-            it('should return array field format', function () {
+            it('should return Array field format', function () {
                var data = {
                      d: [''],
                      s: [{
@@ -351,7 +351,7 @@ define([
          });
 
          describe('.addField()', function () {
-            it('should add a boolean field', function () {
+            it('should add a Boolean field', function () {
                var fieldName = 'New',
                   fieldIndex = 1,
                   field = FieldsFactory.create({
@@ -364,7 +364,7 @@ define([
                assert.strictEqual(adapter.get(fieldName), false);
                assert.strictEqual(adapter.getData().s[fieldIndex].t, 'Логическое');
             });
-            it('should add an integer field', function () {
+            it('should add an Integer field', function () {
                var fieldName = 'New',
                   fieldIndex = 1,
                   field = FieldsFactory.create({
@@ -375,7 +375,7 @@ define([
                assert.strictEqual(adapter.get(fieldName), 0);
                assert.strictEqual(adapter.getData().s[fieldIndex].t, 'Число целое');
             });
-            it('should add a real field', function () {
+            it('should add a Real field', function () {
                var fieldName = 'New',
                   fieldIndex = 0,
                   precision = 3,
@@ -389,7 +389,7 @@ define([
                assert.strictEqual(adapter.getData().s[fieldIndex].t.n, 'Число вещественное');
                assert.strictEqual(adapter.getData().s[fieldIndex].t.p, precision);
             });
-            it('should add a money field', function () {
+            it('should add a Money field', function () {
                var fieldName = 'New',
                   fieldIndex = 0,
                   precision = 3,
@@ -403,7 +403,7 @@ define([
                assert.strictEqual(adapter.getData().s[fieldIndex].t.n, 'Деньги');
                assert.strictEqual(adapter.getData().s[fieldIndex].t.p, precision);
             });
-            it('should add a string field', function () {
+            it('should add a String field', function () {
                var fieldName = 'New',
                   fieldIndex = 2,
                   field = FieldsFactory.create({
@@ -414,7 +414,7 @@ define([
                assert.strictEqual(adapter.get(fieldName), '');
                assert.strictEqual(adapter.getData().s[fieldIndex].t, 'Строка');
             });
-            it('should add a text field', function () {
+            it('should add a Text field', function () {
                var fieldName = 'New',
                   fieldIndex = 2,
                   field = FieldsFactory.create({
@@ -425,7 +425,7 @@ define([
                assert.strictEqual(adapter.get(fieldName), '');
                assert.strictEqual(adapter.getData().s[fieldIndex].t, 'Текст');
             });
-            it('should add a xml field', function () {
+            it('should add a XML field', function () {
                var fieldName = 'New',
                   fieldIndex = 3,
                   field = FieldsFactory.create({
@@ -436,7 +436,7 @@ define([
                assert.strictEqual(adapter.get(fieldName), '');
                assert.strictEqual(adapter.getData().s[fieldIndex].t, 'XML-файл');
             });
-            it('should add a datetime field', function () {
+            it('should add a DateTime field', function () {
                var fieldName = 'New',
                   fieldIndex = 3,
                   field = FieldsFactory.create({
@@ -447,7 +447,7 @@ define([
                assert.strictEqual(adapter.get(fieldName), null);
                assert.strictEqual(adapter.getData().s[fieldIndex].t, 'Дата и время');
             });
-            it('should add a date field', function () {
+            it('should add a Date field', function () {
                var fieldName = 'New',
                   fieldIndex = 4,
                   field = FieldsFactory.create({
@@ -458,7 +458,7 @@ define([
                assert.strictEqual(adapter.get(fieldName), null);
                assert.strictEqual(adapter.getData().s[fieldIndex].t, 'Дата');
             });
-            it('should add a time field', function () {
+            it('should add a Time field', function () {
                var fieldName = 'New',
                   fieldIndex = 4,
                   field = FieldsFactory.create({
@@ -469,7 +469,7 @@ define([
                assert.strictEqual(adapter.get(fieldName), null);
                assert.strictEqual(adapter.getData().s[fieldIndex].t, 'Время');
             });
-            it('should add a timeinterval field', function () {
+            it('should add a TimeInterval field', function () {
                var fieldName = 'New',
                   fieldIndex = 4,
                   field = FieldsFactory.create({
@@ -480,7 +480,7 @@ define([
                assert.strictEqual(adapter.get(fieldName), 0);
                assert.strictEqual(adapter.getData().s[fieldIndex].t, 'Временной интервал');
             });
-            it('should add a identity field', function () {
+            it('should add a Identity field', function () {
                var fieldName = 'New',
                   fieldIndex = 4,
                   field = FieldsFactory.create({
@@ -491,7 +491,7 @@ define([
                assert.strictEqual(adapter.get(fieldName), 0);
                assert.strictEqual(adapter.getData().s[fieldIndex].t, 'Идентификатор');
             });
-            it('should add an enum field', function () {
+            it('should add an Enum field', function () {
                var fieldName = 'New',
                   fieldIndex = 0,
                   field = FieldsFactory.create({
@@ -505,7 +505,7 @@ define([
                assert.strictEqual(adapter.getData().s[fieldIndex].t.n, 'Перечисляемое');
                assert.strictEqual(adapter.getData().s[fieldIndex].t.s, field.getDictionary());
             });
-            it('should add a flags field', function () {
+            it('should add a Flags field', function () {
                var fieldName = 'New',
                   fieldIndex = 0,
                   field = FieldsFactory.create({
@@ -519,7 +519,7 @@ define([
                assert.strictEqual(adapter.getData().s[fieldIndex].t.n, 'Флаги');
                assert.strictEqual(adapter.getData().s[fieldIndex].t.s, field.getDictionary());
             });
-            it('should add a record field', function () {
+            it('should add a Record field', function () {
                var fieldName = 'New',
                   fieldIndex = 0,
                   field = FieldsFactory.create({
@@ -530,7 +530,7 @@ define([
                assert.strictEqual(adapter.get(fieldName), null);
                assert.strictEqual(adapter.getData().s[fieldIndex].t, 'Запись');
             });
-            it('should add a recordset field', function () {
+            it('should add a RecordSet field', function () {
                var fieldName = 'New',
                   fieldIndex = 0,
                   field = FieldsFactory.create({
@@ -541,7 +541,7 @@ define([
                assert.strictEqual(adapter.get(fieldName), null);
                assert.strictEqual(adapter.getData().s[fieldIndex].t, 'Выборка');
             });
-            it('should add a binary field', function () {
+            it('should add a Binary field', function () {
                var fieldName = 'New',
                   fieldIndex = 0,
                   field = FieldsFactory.create({
@@ -574,7 +574,7 @@ define([
                assert.strictEqual(adapter.get(fieldName), null);
                assert.strictEqual(adapter.getData().s[fieldIndex].t, 'Файл-rpc');
             });
-            it('should add a hierarchy field', function () {
+            it('should add a Hierarchy field', function () {
                var fieldName = 'New',
                   fieldIndex = 0,
                   field = FieldsFactory.create({
