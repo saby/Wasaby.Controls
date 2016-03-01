@@ -1301,8 +1301,9 @@ define('js!SBIS3.CONTROLS.ListView',
                   self._notify('onDataMerge', dataSet);
                   //Если данные пришли, нарисуем
                   if (dataSet.getCount()) {
-                     //Поддерживаем новый флаг для рисования элементов
-                     self._needToRedraw = true;
+                     //TODO вскрылась проблема  проекциями, когда нужно рисовать какие-то определенные элементы и записи
+                     //Возвращаем самостоятельную отрисовку данных, пришедших в загрузке по скроллу
+                     self._needToRedraw = false;
                      //TODO перевести на each
                      records = dataSet.toArray();
                      if (self._options.infiniteScroll === 'up') {
@@ -1312,10 +1313,12 @@ define('js!SBIS3.CONTROLS.ListView',
                         records = records.reverse();
                      }
                      self._items[self._options.infiniteScroll === 'up' ? 'prepend' : 'append'](records);
+                     self._drawItems(records);
                      //TODO Пытались оставить для совместимости со старыми данными, но вызывает onCollectionItemChange!!!
                      //self._dataSet.merge(dataSet, {remove: false});
                      self._dataLoadedCallback();
                      self._toggleEmptyData();
+                     self._needToRedraw = true;
                   }
 
                }, self)).addErrback(function (error) {
