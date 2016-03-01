@@ -139,16 +139,20 @@ define('js!SBIS3.CONTROLS.Data.Adapter.SbisFormatMixin', [
          if (typeName && typeof typeName === 'object') {
             typeName = typeName.n;
          }
-         return this._getFieldTypeName(typeName);
+         return this._getFieldTypeNameByInner(typeName);
       },
 
-      _getFieldTypeName: function (innerName) {
+      _getFieldTypeNameByInner: function (innerName) {
          for (var typeCode in FIELD_TYPE) {
             if (FIELD_TYPE.hasOwnProperty(typeCode) && FIELD_TYPE[typeCode] === innerName) {
                return typeCode;
             }
          }
          return undefined;
+      },
+
+      _getFieldInnerTypeNameByOuter: function (outerName) {
+         return FIELD_TYPE[outerName];
       },
 
       _getFieldMeta: function (index, type) {
@@ -169,7 +173,7 @@ define('js!SBIS3.CONTROLS.Data.Adapter.SbisFormatMixin', [
                   meta.dictionary = info.t.s;
                   break;
                case 'Array':
-                  meta.kind = this._getFieldTypeName(info.t.t);
+                  meta.kind = this._getFieldTypeNameByInner(info.t.t);
                   break;
             }
          } catch (e) {
@@ -206,6 +210,17 @@ define('js!SBIS3.CONTROLS.Data.Adapter.SbisFormatMixin', [
                return {
                   n: FIELD_TYPE[type],
                   p: format.getPrecision()
+               };
+            case 'Enum':
+            case 'Flags':
+               return {
+                  n: FIELD_TYPE[type],
+                  s: format.getDictionary()
+               };
+            case 'Array':
+               return {
+                  n: FIELD_TYPE[type],
+                  t: this._getFieldInnerTypeNameByOuter(format.getKind())
                };
             default:
                return FIELD_TYPE[type];

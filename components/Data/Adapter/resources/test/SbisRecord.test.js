@@ -362,15 +362,18 @@ define([
                assert.strictEqual(adapter.getFormat(fieldName).getName(), fieldName);
                assert.strictEqual(adapter.getFields()[fieldIndex], fieldName);
                assert.strictEqual(adapter.get(fieldName), false);
+               assert.strictEqual(adapter.getData().s[fieldIndex].t, 'Логическое');
             });
             it('should add an integer field', function () {
                var fieldName = 'New',
+                  fieldIndex = 1,
                   field = FieldsFactory.create({
                      type: 'integer',
                      name: fieldName
                   });
-               adapter.addField(field);
+               adapter.addField(field, fieldIndex);
                assert.strictEqual(adapter.get(fieldName), 0);
+               assert.strictEqual(adapter.getData().s[fieldIndex].t, 'Число целое');
             });
             it('should add a real field', function () {
                var fieldName = 'New',
@@ -383,6 +386,7 @@ define([
                   });
                adapter.addField(field, fieldIndex);
                assert.strictEqual(adapter.get(fieldName), 0);
+               assert.strictEqual(adapter.getData().s[fieldIndex].t.n, 'Число вещественное');
                assert.strictEqual(adapter.getData().s[fieldIndex].t.p, precision);
             });
             it('should add a money field', function () {
@@ -396,16 +400,203 @@ define([
                   });
                adapter.addField(field, fieldIndex);
                assert.strictEqual(adapter.get(fieldName), 0);
+               assert.strictEqual(adapter.getData().s[fieldIndex].t.n, 'Деньги');
                assert.strictEqual(adapter.getData().s[fieldIndex].t.p, precision);
             });
             it('should add a string field', function () {
                var fieldName = 'New',
+                  fieldIndex = 2,
                   field = FieldsFactory.create({
                      type: 'string',
                      name: fieldName
                   });
-               adapter.addField(field);
+               adapter.addField(field, fieldIndex);
                assert.strictEqual(adapter.get(fieldName), '');
+               assert.strictEqual(adapter.getData().s[fieldIndex].t, 'Строка');
+            });
+            it('should add a text field', function () {
+               var fieldName = 'New',
+                  fieldIndex = 2,
+                  field = FieldsFactory.create({
+                     type: 'text',
+                     name: fieldName
+                  });
+               adapter.addField(field, fieldIndex);
+               assert.strictEqual(adapter.get(fieldName), '');
+               assert.strictEqual(adapter.getData().s[fieldIndex].t, 'Текст');
+            });
+            it('should add a xml field', function () {
+               var fieldName = 'New',
+                  fieldIndex = 3,
+                  field = FieldsFactory.create({
+                     type: 'xml',
+                     name: fieldName
+                  });
+               adapter.addField(field, fieldIndex);
+               assert.strictEqual(adapter.get(fieldName), '');
+               assert.strictEqual(adapter.getData().s[fieldIndex].t, 'XML-файл');
+            });
+            it('should add a datetime field', function () {
+               var fieldName = 'New',
+                  fieldIndex = 3,
+                  field = FieldsFactory.create({
+                     type: 'datetime',
+                     name: fieldName
+                  });
+               adapter.addField(field, fieldIndex);
+               assert.strictEqual(adapter.get(fieldName), null);
+               assert.strictEqual(adapter.getData().s[fieldIndex].t, 'Дата и время');
+            });
+            it('should add a date field', function () {
+               var fieldName = 'New',
+                  fieldIndex = 4,
+                  field = FieldsFactory.create({
+                     type: 'date',
+                     name: fieldName
+                  });
+               adapter.addField(field, fieldIndex);
+               assert.strictEqual(adapter.get(fieldName), null);
+               assert.strictEqual(adapter.getData().s[fieldIndex].t, 'Дата');
+            });
+            it('should add a time field', function () {
+               var fieldName = 'New',
+                  fieldIndex = 4,
+                  field = FieldsFactory.create({
+                     type: 'time',
+                     name: fieldName
+                  });
+               adapter.addField(field, fieldIndex);
+               assert.strictEqual(adapter.get(fieldName), null);
+               assert.strictEqual(adapter.getData().s[fieldIndex].t, 'Время');
+            });
+            it('should add a timeinterval field', function () {
+               var fieldName = 'New',
+                  fieldIndex = 4,
+                  field = FieldsFactory.create({
+                     type: 'timeinterval',
+                     name: fieldName
+                  });
+               adapter.addField(field, fieldIndex);
+               assert.strictEqual(adapter.get(fieldName), 0);
+               assert.strictEqual(adapter.getData().s[fieldIndex].t, 'Временной интервал');
+            });
+            it('should add a identity field', function () {
+               var fieldName = 'New',
+                  fieldIndex = 4,
+                  field = FieldsFactory.create({
+                     type: 'identity',
+                     name: fieldName
+                  });
+               adapter.addField(field, fieldIndex);
+               assert.strictEqual(adapter.get(fieldName), 0);
+               assert.strictEqual(adapter.getData().s[fieldIndex].t, 'Идентификатор');
+            });
+            it('should add an enum field', function () {
+               var fieldName = 'New',
+                  fieldIndex = 0,
+                  field = FieldsFactory.create({
+                     type: 'enum',
+                     name: fieldName,
+                     defaultValue: 1,
+                     dictionary: {0: '1st', 1: '2nd'}
+                  });
+               adapter.addField(field, fieldIndex);
+               assert.strictEqual(adapter.get(fieldName), 1);
+               assert.strictEqual(adapter.getData().s[fieldIndex].t.n, 'Перечисляемое');
+               assert.strictEqual(adapter.getData().s[fieldIndex].t.s, field.getDictionary());
+            });
+            it('should add a flags field', function () {
+               var fieldName = 'New',
+                  fieldIndex = 0,
+                  field = FieldsFactory.create({
+                     type: 'flags',
+                     name: fieldName,
+                     defaultValue: [1],
+                     dictionary: {0: '1st', 1: '2nd'}
+                  });
+               adapter.addField(field, fieldIndex);
+               assert.deepEqual(adapter.get(fieldName), [1]);
+               assert.strictEqual(adapter.getData().s[fieldIndex].t.n, 'Флаги');
+               assert.strictEqual(adapter.getData().s[fieldIndex].t.s, field.getDictionary());
+            });
+            it('should add a record field', function () {
+               var fieldName = 'New',
+                  fieldIndex = 0,
+                  field = FieldsFactory.create({
+                     type: 'record',
+                     name: fieldName
+                  });
+               adapter.addField(field, fieldIndex);
+               assert.strictEqual(adapter.get(fieldName), null);
+               assert.strictEqual(adapter.getData().s[fieldIndex].t, 'Запись');
+            });
+            it('should add a recordset field', function () {
+               var fieldName = 'New',
+                  fieldIndex = 0,
+                  field = FieldsFactory.create({
+                     type: 'recordset',
+                     name: fieldName
+                  });
+               adapter.addField(field, fieldIndex);
+               assert.strictEqual(adapter.get(fieldName), null);
+               assert.strictEqual(adapter.getData().s[fieldIndex].t, 'Выборка');
+            });
+            it('should add a binary field', function () {
+               var fieldName = 'New',
+                  fieldIndex = 0,
+                  field = FieldsFactory.create({
+                     type: 'binary',
+                     name: fieldName
+                  });
+               adapter.addField(field, fieldIndex);
+               assert.strictEqual(adapter.get(fieldName), null);
+               assert.strictEqual(adapter.getData().s[fieldIndex].t, 'Двоичное');
+            });
+            it('should add a UUID field', function () {
+               var fieldName = 'New',
+                  fieldIndex = 0,
+                  field = FieldsFactory.create({
+                     type: 'uuid',
+                     name: fieldName
+                  });
+               adapter.addField(field, fieldIndex);
+               assert.strictEqual(adapter.get(fieldName), null);
+               assert.strictEqual(adapter.getData().s[fieldIndex].t, 'UUID');
+            });
+            it('should add a RPC-File field', function () {
+               var fieldName = 'New',
+                  fieldIndex = 0,
+                  field = FieldsFactory.create({
+                     type: 'rpcfile',
+                     name: fieldName
+                  });
+               adapter.addField(field, fieldIndex);
+               assert.strictEqual(adapter.get(fieldName), null);
+               assert.strictEqual(adapter.getData().s[fieldIndex].t, 'Файл-rpc');
+            });
+            it('should add a hierarchy field', function () {
+               var fieldName = 'New',
+                  fieldIndex = 0,
+                  field = FieldsFactory.create({
+                     type: 'hierarchy',
+                     name: fieldName
+                  });
+               adapter.addField(field, fieldIndex);
+               assert.strictEqual(adapter.get(fieldName), null);
+               assert.strictEqual(adapter.getData().s[fieldIndex].t, 'Иерархия');
+            });
+            it('should add an Array field', function () {
+               var fieldName = 'New',
+                  fieldIndex = 0,
+                  field = FieldsFactory.create({
+                     type: 'array',
+                     name: fieldName,
+                     kind: 'Boolean'
+                  });
+               adapter.addField(field, fieldIndex);
+               assert.strictEqual(adapter.get(fieldName), null);
+               assert.strictEqual(adapter.getData().s[fieldIndex].t.n, 'Массив');
+               assert.strictEqual(adapter.getData().s[fieldIndex].t.t, 'Логическое');
             });
             it('should use a field default value', function () {
                var fieldName = 'New',
