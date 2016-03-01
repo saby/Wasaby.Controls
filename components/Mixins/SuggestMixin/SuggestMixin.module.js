@@ -457,7 +457,7 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
        * Вызывается после загрузки данных контролом списка сущностей
        * @private
        */
-      _onListDataLoad: function() {
+      _onListDataLoad: function(e, dataSet) {
          this._hideLoadingIndicator();
 
          if(this._showAllButton) {
@@ -465,7 +465,7 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
 
             /* Изменяем видимость кнопки в зависимости от, того, есть ли ещё записи */
             this._showAllButton.getContainer()
-                .toggleClass('ws-hidden', !list._hasNextPage(this._getListDataSet().getMetaData().more));
+                .toggleClass('ws-hidden', !list._hasNextPage(dataSet.getMetaData().more));
          }
       },
 
