@@ -7,7 +7,14 @@ define('js!SBIS3.CONTROLS.OperationPrint', [
    'js!SBIS3.CONTROLS.Utils.DataProcessor',
    'i18n!SBIS3.CONTROLS.OperationPrint'
 ], function(PrintUnloadBase, Dialog, Printer, rk) {
-
+   /**
+    * Контрол для печати подготовленных данных
+    * @class SBIS3.CONTROLS.OperationPrint
+    * @extends SBIS3.CONTROLS.PrintUnloadBase
+    * @author Крайнов Дмитрий Олегович
+    * @control
+    * @public
+    */
    var OperationPrint = PrintUnloadBase.extend({
 
       $protected: {
@@ -44,7 +51,7 @@ define('js!SBIS3.CONTROLS.OperationPrint', [
       _notifyOnApply : function(columns){
          return this._notify('onApplyOperation', 'print', columns);
       },
-      applyOperation: function(dataSet, cfg){
+      applyOperation: function(cfg){
          var p;
          cfg.minWidth = this._options.minPrintWindowWidth;
          p = new Printer(cfg);

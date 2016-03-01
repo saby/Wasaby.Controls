@@ -225,14 +225,6 @@ define('js!SBIS3.CONTROLS.ListView',
             _addResultsMethod: undefined,
             _options: {
                /**
-                * @cfg {Boolean} Разрешить отсутствие выбранного элемента
-                * @example
-                * <pre>
-                *     <option name="allowEmptySelection">false</option>
-                * </pre>
-                */
-               allowEmptySelection: false,
-               /**
                 * @faq Почему нет флажков при включенной опции {@link SBIS3.CONTROLS.ListView#multiselect multiselect}?
                 * Для отрисовки флажков необходимо в шаблоне отображания элемента прописать их место:
                 * <pre>
@@ -789,7 +781,9 @@ define('js!SBIS3.CONTROLS.ListView',
          _getItemsContainer: function () {
             return $('.controls-ListView__itemsContainer', this._container.get(0)).first();
          },
-
+         _getItemContainer: function(parent, item) {
+            return parent.find('>[data-id="' + item.getKey() + '"]:not(".controls-editInPlace")');
+         },
          _addItemAttributes: function(container) {
             container.addClass('js-controls-ListView__item');
             ListView.superclass._addItemAttributes.apply(this, arguments);
@@ -947,11 +941,21 @@ define('js!SBIS3.CONTROLS.ListView',
          },
 
          showEip: function(target, model, options) {
-            if (this.isEnabled()) {
+            if (this._canShowEip()) {
                return this._getEditInPlace().showEip(target, model, options);
             } else {
                return $ws.proto.Deferred.fail();
             }
+         },
+
+         _canShowEip: function() {
+            // Отображаем редактирование только если enabled
+            return this.isEnabled();
+         },
+
+         _setEnabled : function(enabled) {
+            ListView.superclass._setEnabled.call(this, enabled);
+            this._destroyEditInPlace();
          },
 
          _onItemClickHandler: function(event, id, record, target) {
@@ -1009,10 +1013,9 @@ define('js!SBIS3.CONTROLS.ListView',
             //options.editFieldFocusHandler = this._editFieldFocusHandler.bind(this) - подумать, как это сделать
             var
                config = {
-                  dataSet: this._dataSet,
+                  dataSet: this._items,
                   editingItem: this._editingItem,
                   ignoreFirstColumn: this._options.multiselect,
-                  columns: this._options.columns,
                   dataSource: this._dataSource,
                   editingTemplate: this._options.editingTemplate,
                   itemsContainer: this._getItemsContainer(),

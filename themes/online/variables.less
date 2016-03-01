@@ -779,7 +779,7 @@
 @formatted-text-box-wrapper-padding:            @text-box-wrapper-padding;
 @formatted-text-box-wrapper-bg:                 transparent;
 
-@formatted-text-box-field-padding:              3px 0 0;
+@formatted-text-box-field-padding:              2px 0 0;
 @formatted-text-box-field-error-text-color:     @text-box-field-error-text-color;
 
 @formatted-text-box-error-border-width:         @text-box-error-border-width;
@@ -965,10 +965,10 @@
 @suggest-loading-right:                         3px;
 @suggest-loading-top:                           3px;
 
-@suggest-picker-border:                         1px solid @gray-color;
+@suggest-picker-border:                         1px solid #eaeaea;
 @suggest-picker-border-radius:                  0;
 @suggest-picker-box-shadow:                     0 4px 8px rgba(0, 0, 0, 0.2);
-@suggest-picker-margin:                         -1px;
+@suggest-picker-margin:                         -1px 0 0 0;
 @suggest-picker-standard-width:                 500px;
 
 @suggest-picker-item-font:                      @suggest-field-font;
@@ -1212,12 +1212,14 @@
 @list-view-actions-active-bg:                   @data-grid-row-hover-bg !important;
 @list-view-actions-bg:                          @data-grid-row-hover-bg;
 
-@list-view-items-toolbar-margin-right:          3px;
-@list-view-items-toolbar-zindex:                10;
-@list-view-items-toolbar-box-shadow:            -2px -2px 5px @data-grid-row-hover-bg;
-@list-view-items-toolbar-vertical-box-shadow:   -2px  2px 5px @data-grid-row-hover-bg;
-@list-view-items-toolbar-bg:                    @data-grid-row-hover-bg;
-@list-view-items-toolbar-locked-bg:             #F3F3F3;
+@list-view-items-toolbar-margin-right:               3px;
+@list-view-items-toolbar-zindex:                     10;
+@list-view-items-toolbar-box-shadow:                 -2px -2px 5px @data-grid-row-hover-bg;
+@list-view-items-toolbar-locked-box-shadow:          -2px -2px 5px @default-itemSelected-color;
+@list-view-items-toolbar-vertical-box-shadow:        -2px  2px 5px @data-grid-row-hover-bg;
+@list-view-items-toolbar-vertical-locked-box-shadow: -2px  2px 5px @default-itemSelected-color;
+@list-view-items-toolbar-bg:                         @data-grid-row-hover-bg;
+@list-view-items-toolbar-locked-bg:                  @default-itemSelected-color;
 
 @list-view-actions-verAlign-margin:             8px 3px 0 0;
 @list-view-actions-verAlign-width:              20px;

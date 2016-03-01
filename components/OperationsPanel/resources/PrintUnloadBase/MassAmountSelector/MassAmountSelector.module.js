@@ -47,7 +47,7 @@ define('js!SBIS3.CONTROLS.MassAmountSelector', [
          //TODO hotfix значения в контекст перестало проставляться, убрать когда биндинг начнёт нормально работать
          this.getContext().setValue('controls-RadioButtons', item);
          this._numberTextBoxValue = this._numberTextBoxValue || this._numberTextBox.getNumericValue();
-         this._numberTextBox.setText(item === 'all' ? 2000 : this._numberTextBoxValue);
+         this._numberTextBox.setText(item === 'all' ? 0 : this._numberTextBoxValue);
          //TODO может стоит заменить на onFieldChange у контекста? Ибо радио-кнопки теперь с data-bind'ом
          this._container.find('> .controls-MassAmountSelector__numberTextBox').toggleClass('ws-hidden', item !== 'pickNum');
       }

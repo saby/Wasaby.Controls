@@ -15,6 +15,42 @@ define('js!SBIS3.CONTROLS.Utils.DateUtil',[], function () {
          }
       },
       /**
+       * Получение строки из даты в ISO-формате.
+       * ужна для IE8, т.к. в нём нет метода toISOString.
+       * @param date
+       * @returns {string}
+       */
+      dateToIsoString: function (date) {
+         if(!(date instanceof Date)) {
+            return false;
+         }
+
+         if ($ws._const.browser.isIE8) {
+            return this._dateToIsoString(date); //IE8 only
+         } else {
+            return date.toISOString();
+         }
+      },
+
+      _dateToIsoString: function(date) {
+         function pad(number) {
+            if (number < 10) {
+               return '0' + number;
+            }
+            return number;
+         }
+
+         return date.getUTCFullYear() +
+             '-' + pad(date.getUTCMonth() + 1) +
+             '-' + pad(date.getUTCDate()) +
+             'T' + pad(date.getUTCHours()) +
+             ':' + pad(date.getUTCMinutes()) +
+             ':' + pad(date.getUTCSeconds()) +
+             '.' + (date.getUTCMilliseconds() / 1000).toFixed(3).slice(2, 5) +
+             'Z';
+      },
+
+      /**
        * Получение даты из строки в ISO-формате. Нужна для IE8, т.к. в нём не работает конструктор Date со строкой в ISO-формате
        * @param isoDate
        * @variant 'YYYY',

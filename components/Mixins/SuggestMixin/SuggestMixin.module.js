@@ -495,7 +495,7 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
        */
       _onListItemSelect: function (id, item) {
          var def = new $ws.proto.Deferred(),
-             dataSet = this._list.getItems(),
+             dataSet = this._getListDataSet(),
              ctx = this._getBindingContext(),
              self = this;
 
@@ -555,8 +555,12 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
        * @private
        */
       _checkPickerState: function () {
-         var dataSet = this._list && this._list.getItems();
-         return Boolean(this._options.usePicker && dataSet && dataSet.getCount());
+         var dataSet = this._getListDataSet();
+         return Boolean(
+             this._options.usePicker &&
+             dataSet && dataSet.getCount() &&
+             this._isObservableControlFocused()
+         );
       },
 
       _setPickerContent: function () {
