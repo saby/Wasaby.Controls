@@ -69,25 +69,33 @@
       }
    }
    &.controls-TabButton__main-item {
-      .controls-TabButton__inner {
+      .controls-TabButton__inner{
          font-size: @tab-button-large-inner-font-size;
          font-weight: @tab-button-large-inner-font-weight;
          line-height: @tab-button-large-inner-line-height;
       }
-      .controls-TabButton__additionalText1 {
+      .controls-TabButton__additionalText1 > *{
          color: @tab-button-large-firstAddText-color;
          font-size: @tab-button-large-firstAddText-font-size;
          font-weight: @tab-button-large-firstAddText-font-weight;
          &:hover {
             color: @tab-button-large-firstAddText-hover-color;
          }
+         .controls-EditAtPlace__editor{
+            color: @black-color;
+            font-size: @font-basic-size;
+         }
       }
-      .controls-TabButton__additionalText2 {
+      .controls-TabButton__additionalText2 > *{
          color: @tab-button-large-secondAddText-color;
          font-size: @tab-button-large-secondAddText-font-size;
          font-weight: @tab-button-large-secondAddText-font-weight;
          &:hover {
             color: @tab-button-large-secondAddText-hover-color;
+         }
+         .controls-EditAtPlace__editor{
+            color: @black-color;
+            font-size: @font-basic-size;
          }
       }
    }
