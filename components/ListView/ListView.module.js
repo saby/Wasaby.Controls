@@ -581,8 +581,11 @@ define('js!SBIS3.CONTROLS.ListView',
          },
 
          _getProjectionItem: function(id, isNext) {
-            var index = this._itemsProjection.getEnumerator().getIndexByValue(this._options.keyField, id);
-            return this._itemsProjection.at(isNext ? ++index : --index);
+            var enumerator = this._itemsProjection.getEnumerator(),
+               index = enumerator.getIndexByValue(this._options.keyField, id),
+               item = enumerator.at(index);
+
+            return this._itemsProjection[isNext ? 'getNext' : 'getPrevious'](item);
          },
 
          _getHtmlItemByProjectionItem: function (item) {
