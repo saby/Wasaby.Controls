@@ -1,12 +1,13 @@
-/* global define, beforeEach, afterEach, describe, context, it, assert */
+/* global define, beforeEach, afterEach, describe, context, it, assert, $ws */
 define([
-      'js!SBIS3.CONTROLS.Data.Adapter.SbisRecord'
-   ], function (SbisRecord) {
+   'js!SBIS3.CONTROLS.Data.Adapter.SbisRecord',
+   'js!SBIS3.CONTROLS.Data.Format.FieldsFactory'
+   ], function (SbisRecord, FieldsFactory) {
       'use strict';
 
       describe('SBIS3.CONTROLS.Data.Adapter.SbisRecord', function () {
          var data,
-            adapterInstance;
+            adapter;
 
          beforeEach(function () {
             data = {
@@ -19,29 +20,29 @@ define([
                ]
             };
 
-            adapterInstance = new SbisRecord(data);
+            adapter = new SbisRecord(data);
          });
 
          afterEach(function () {
             data = undefined;
-            adapterInstance = undefined;
+            adapter = undefined;
          });
 
          describe('.get()', function () {
             it('should return the property value', function () {
                assert.strictEqual(
                   1,
-                  adapterInstance.get('Ид')
+                  adapter.get('Ид')
                );
                assert.strictEqual(
                   'Иванов',
-                  adapterInstance.get('Фамилия')
+                  adapter.get('Фамилия')
                );
                assert.isUndefined(
-                  adapterInstance.get('Должность')
+                  adapter.get('Должность')
                );
                assert.isUndefined(
-                  adapterInstance.get()
+                  adapter.get()
                );
                assert.isUndefined(
                   new SbisRecord({}).get('Должность')
@@ -60,7 +61,7 @@ define([
 
          describe('.set()', function () {
             it('should set the property value', function () {
-               adapterInstance.set('Ид', 20);
+               adapter.set('Ид', 20);
                assert.strictEqual(
                   20,
                   data.d[0]
@@ -69,10 +70,10 @@ define([
 
             it('should throw an error on undefined property', function () {
                assert.throw(function () {
-                  adapterInstance.set('а', 5);
+                  adapter.set('а', 5);
                });
                assert.throw(function () {
-                  adapterInstance.set('б');
+                  adapter.set('б');
                });
             });
 
@@ -85,6 +86,123 @@ define([
                });
                assert.throw(function () {
                   new SbisRecord().set();
+               });
+            });
+         });
+
+         describe('.getData()', function () {
+            it('should return raw data', function () {
+               assert.strictEqual(adapter.getData(), data);
+            });
+         });
+
+         describe('.getFormat()', function () {
+            it('should return integer field format', function () {
+               var format = adapter.getFormat('Ид');
+               assert.isTrue($ws.helpers.instanceOfModule(format, 'SBIS3.CONTROLS.Data.Format.IntegerField'));
+               assert.strictEqual(format.getName(), 'Ид');
+            });
+            it('should return string field format', function () {
+               var format = adapter.getFormat('Фамилия');
+               assert.isTrue($ws.helpers.instanceOfModule(format, 'SBIS3.CONTROLS.Data.Format.StringField'));
+               assert.strictEqual(format.getName(), 'Фамилия');
+            });
+            it('should throw an error for not exists field', function () {
+               assert.throw(function () {
+                  adapter.getFormat('Some');
+               });
+            });
+         });
+
+         describe('.addField()', function () {
+            it('should add a new field', function () {
+               var fieldName = 'New',
+                  field = FieldsFactory.create({
+                     type: 'string',
+                     name: fieldName
+                  });
+               adapter.addField(field, 1);
+               assert.strictEqual(adapter.getFormat(fieldName).getName(), fieldName);
+               assert.strictEqual(adapter.getFields()[1], fieldName);
+            });
+            it('should use a field default value', function () {
+               var fieldName = 'New',
+                  def = 'abc';
+               adapter.addField(FieldsFactory.create({
+                  type: 'string',
+                  name: fieldName,
+                  defaultValue: def
+               }));
+               assert.strictEqual(adapter.get(fieldName), def);
+            });
+            it('should throw an error for already exists field', function () {
+               assert.throw(function () {
+                  adapter.addField(FieldsFactory.create({
+                     type: 'string',
+                     name: 'Ид'
+                  }));
+               });
+            });
+            it('should throw an error for not a field', function () {
+               assert.throw(function () {
+                  adapter.addField();
+               });
+               assert.throw(function () {
+                  adapter.addField(null);
+               });
+               assert.throw(function () {
+                  adapter.addField({
+                     type: 'string',
+                     name: 'New'
+                  });
+               });
+            });
+         });
+
+         describe('.removeField()', function () {
+            it('should remove exists field', function () {
+               var name = 'Ид',
+                  index = 0,
+                  newFields = adapter.getFields(),
+                  newData = adapter.getData().d.slice();
+               adapter.removeField(name);
+               newFields.splice(index, 1);
+               newData.splice(index, 1);
+
+               assert.isUndefined(adapter.get(name));
+               assert.deepEqual(adapter.getFields(), newFields);
+               assert.deepEqual(adapter.getData().d, newData);
+               assert.throw(function () {
+                  adapter.getFormat(name);
+               });
+            });
+            it('should throw an error for not exists field', function () {
+               assert.throw(function () {
+                  adapter.removeField('Some');
+               });
+            });
+         });
+
+         describe('.removeFieldAt()', function () {
+            it('should remove exists field', function () {
+               var name = 'Ид',
+                  index = 0,
+                  newFields = adapter.getFields(),
+                  newData = adapter.getData().d.slice();
+               adapter.removeFieldAt(0);
+               newFields.splice(index, 1);
+               newData.splice(index, 1);
+
+               assert.isUndefined(adapter.get(name));
+               assert.deepEqual(adapter.getFields(), newFields);
+               assert.deepEqual(adapter.getData().d, newData);
+               assert.throw(function () {
+                  adapter.getFormat(name);
+               });
+            });
+            it('should throw an error for not exists field', function () {
+               assert.throw(function () {
+                  adapter.removeFieldAt(9);
                });
             });
          });

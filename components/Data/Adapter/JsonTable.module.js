@@ -33,17 +33,32 @@ define('js!SBIS3.CONTROLS.Data.Adapter.JsonTable', [
 
       //region SBIS3.CONTROLS.Data.Adapter.JsonFormatMixin
 
+      getFormat: function (name) {
+         if (!this._has(name)) {
+            throw new ReferenceError(this._moduleName + '::getFormat(): field "' + name + '" is not exists');
+         }
+         return JsonTable.superclass.getFormat.call(this, name);
+      },
+
       addField: function(format, at) {
-         JsonRecord.superclass.addField.call(this, format, at);
-         var name = format.getName(),
-            i;
-         for (i = 0; i < this._data.length; i++) {
+         JsonTable.superclass.addField.call(this, format, at);
+
+         var name = format.getName();
+         if (this._has(name)) {
+            delete this._format[name];
+            throw new Error(this._moduleName + '::addField(): field "' + name + '" already exists');
+         }
+
+         for (var i = 0; i < this._data.length; i++) {
             this._data[i][name] = format.getDefaultValue();
          }
       },
 
       removeField: function(name) {
-         JsonRecord.superclass.removeField.call(this, name);
+         if (!this._has(name)) {
+            throw new Error(this._moduleName + '::removeField(): field "' + name + '" is not exists');
+         }
+         JsonTable.superclass.removeField.call(this, name);
          var i;
          for (i = 0; i < this._data.length; i++) {
             delete this._data[i][name];
@@ -112,6 +127,21 @@ define('js!SBIS3.CONTROLS.Data.Adapter.JsonTable', [
       //endregion Public methods
 
       //region Protected methods
+
+      _has: function (name) {
+         var count = this.getCount(),
+            has = false,
+            i,
+            item;
+         for (i = 0; i < count; i++) {
+            item = this.at(i);
+            if (item instanceof Object && item.hasOwnProperty(name)) {
+               has = true;
+               break;
+            }
+         }
+         return has;
+      },
 
       _checkPosition: function (at) {
          if (at < 0 || at > this._data.length) {

@@ -1,6 +1,6 @@
 /* global define, beforeEach, afterEach, describe, context, it, assert, $ws */
 define([
-      'js!SBIS3.CONTROLS.Data.Format.FieldsFactory'
+   'js!SBIS3.CONTROLS.Data.Format.FieldsFactory'
    ], function (FieldsFactory) {
       'use strict';
 

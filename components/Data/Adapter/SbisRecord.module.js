@@ -19,8 +19,12 @@ define('js!SBIS3.CONTROLS.Data.Adapter.SbisRecord', [
 
       //region SBIS3.CONTROLS.Data.Adapter.JsonFormatMixin
 
-      _buildD: function(value) {
-         return value;
+      _buildD: function(at, value) {
+         this._data.d.splice(at, 0, value);
+      },
+
+      _removeD: function(at) {
+         this._data.d.splice(at, 1);
       },
 
       //endregion SBIS3.CONTROLS.Data.Adapter.JsonFormatMixin
@@ -28,7 +32,7 @@ define('js!SBIS3.CONTROLS.Data.Adapter.SbisRecord', [
       //region Public methods
 
       has: function (name) {
-         return this._getFieldIndex(name) >= 0;
+         return this._has(name);
       },
 
       get: function (name) {

@@ -57,7 +57,7 @@ define('js!SBIS3.CONTROLS.Data.Adapter.SbisFormatMixin', [
       },
 
       getFormat: function (name) {
-         if (!this.has(name)) {
+         if (!this._has(name)) {
             throw new ReferenceError(this._moduleName + '::getFormat(): field "' + name + '" is not exists');
          }
          if (!this._format.hasOwnProperty(name)) {
@@ -71,7 +71,7 @@ define('js!SBIS3.CONTROLS.Data.Adapter.SbisFormatMixin', [
             throw new TypeError(this._moduleName + '::addField(): format should be an instance of SBIS3.CONTROLS.Data.Format.Field');
          }
          var name = format.getName();
-         if (this.has(name)) {
+         if (this._has(name)) {
             throw new Error(this._moduleName + '::addField(): field "' + name + '" already exists');
          }
 
@@ -83,11 +83,7 @@ define('js!SBIS3.CONTROLS.Data.Adapter.SbisFormatMixin', [
          this._format[name] = format;
          this._fieldIndexes = null;
          this._data.s.splice(at, 0, this._buildS(format));
-         this._data.d.splice(
-            at,
-            0,
-            this._buildD(format.getDefaultValue())
-         );
+         this._buildD(at, format.getDefaultValue());
       },
 
       removeField: function(name) {
@@ -98,7 +94,7 @@ define('js!SBIS3.CONTROLS.Data.Adapter.SbisFormatMixin', [
          delete this._format[name];
          this._fieldIndexes = null;
          this._data.s.splice(index, 1);
-         this._data.d.splice(index, 1);
+         this._removeD(index);
       },
 
       removeFieldAt: function(index) {
@@ -107,12 +103,16 @@ define('js!SBIS3.CONTROLS.Data.Adapter.SbisFormatMixin', [
          delete this._format[name];
          this._fieldIndexes = null;
          this._data.s.splice(index, 1);
-         this._data.d.splice(index, 1);
+         this._removeD(index);
       },
 
       //endregion Public methods
 
       //region Protected methods
+
+      _has: function (name) {
+         return this._getFieldIndex(name) >= 0;
+      },
 
       _getFieldIndex: function (name) {
          if (this._fieldIndexes === null) {
@@ -144,13 +144,14 @@ define('js!SBIS3.CONTROLS.Data.Adapter.SbisFormatMixin', [
                return typeCode;
             }
          }
-         return undfined;
+         return undefined;
       },
 
       _getFieldMeta: function (index, type) {
-         var info =this._data.s[index],
+         var info = this._data.s[index],
             meta = {};
          switch (type) {
+            case 'Real':
             case 'Money':
                meta.precision = info.p;
                break;
@@ -168,12 +169,22 @@ define('js!SBIS3.CONTROLS.Data.Adapter.SbisFormatMixin', [
       },
 
       _buildS: function(format) {
+         var type = format._moduleName
+            .split('.')
+            .pop()
+            .slice(0, -5);//*Field
+
          return {
-            n: format.getName()
+            n: format.getName(),
+            t: FIELD_TYPE[type]
          };
       },
 
-      _buildD: function(value) {
+      _buildD: function(at, value) {
+         throw new Error('Method must be implemented');
+      },
+
+      _removeD: function(at) {
          throw new Error('Method must be implemented');
       }
 

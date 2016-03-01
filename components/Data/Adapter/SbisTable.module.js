@@ -18,9 +18,15 @@ define('js!SBIS3.CONTROLS.Data.Adapter.SbisTable', [
 
       //region SBIS3.CONTROLS.Data.Adapter.JsonFormatMixin
 
-      _buildD: function(value) {
-         return $ws.helpers.map(this._data.s, function() {
-            return value;
+      _buildD: function(at, value) {
+         $ws.helpers.forEach(this._data.d, function(item) {
+            item.splice(at, 0, value);
+         });
+      },
+
+      _removeD: function(at) {
+         $ws.helpers.forEach(this._data.d, function(item) {
+            item.splice(at, 1);
          });
       },
 

@@ -31,9 +31,6 @@ define('js!SBIS3.CONTROLS.Data.Adapter.JsonFormatMixin', [
       },
 
       getFormat: function (name) {
-         if (!this.has(name)) {
-            throw new ReferenceError(this._moduleName + '::getFormat(): field "' + name + '" is not exists');
-         }
          if (!this._format.hasOwnProperty(name)) {
             this._format[name] = this._buildFormat(name);
          }
@@ -45,6 +42,9 @@ define('js!SBIS3.CONTROLS.Data.Adapter.JsonFormatMixin', [
             throw new TypeError(this._moduleName + '::addField(): format should be an instance of SBIS3.CONTROLS.Data.Format.Field');
          }
          var name = format.getName();
+         if (!name) {
+            throw new Error(this._moduleName + '::addField(): field name is empty');
+         }
          if (this._format.hasOwnProperty(name)) {
             throw new Error(this._moduleName + '::addField(): field "' + name + '" already exists');
          }

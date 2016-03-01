@@ -6,7 +6,7 @@ define(
 
       describe('SBIS3.CONTROLS.Data.Adapter.Json', function () {
          var data,
-            adapterInstance;
+            adapter;
 
          beforeEach(function () {
             data = [{
@@ -32,29 +32,29 @@ define(
                'Фамилия': 'Арбузнов'
             }];
 
-            adapterInstance = new JsonAdapter();
+            adapter = new JsonAdapter();
          });
 
          afterEach(function () {
             data = undefined;
-            adapterInstance = undefined;
+            adapter = undefined;
          });
 
          describe('.forTable()', function () {
             it('should return table adapter', function () {
-               var adapterInstance = new JsonAdapter();
+               var adapter = new JsonAdapter();
                assert.isTrue(
                   $ws.helpers.instanceOfModule(
-                     adapterInstance.forTable(),
+                     adapter.forTable(),
                      'SBIS3.CONTROLS.Data.Adapter.JsonTable'
                   )
                );
             });
             it('should pass data to the table adapter', function () {
                var data = [{a: 1}, {b: 2}],
-                  adapterInstance = new JsonAdapter();
+                  adapter = new JsonAdapter();
                assert.strictEqual(
-                  adapterInstance.forTable(data).getData(),
+                  adapter.forTable(data).getData(),
                   data
                );
             });
@@ -62,19 +62,19 @@ define(
 
          describe('.forRecord()', function () {
             it('should return record adapter', function () {
-               var adapterInstance = new JsonAdapter();
+               var adapter = new JsonAdapter();
                assert.isTrue(
                   $ws.helpers.instanceOfModule(
-                     adapterInstance.forRecord(),
+                     adapter.forRecord(),
                      'SBIS3.CONTROLS.Data.Adapter.JsonRecord'
                   )
                );
             });
             it('should pass data to the record adapter', function () {
                var data = {a: 1},
-                  adapterInstance = new JsonAdapter();
+                  adapter = new JsonAdapter();
                assert.strictEqual(
-                  adapterInstance.forRecord(data).getData(),
+                  adapter.forRecord(data).getData(),
                   data
                );
             });
@@ -84,14 +84,14 @@ define(
             it('should return the property value', function () {
                assert.strictEqual(
                   123,
-                  adapterInstance.getProperty({
+                  adapter.getProperty({
                      items: data,
                      total: 123
                   }, 'total')
                );
                assert.strictEqual(
                   456,
-                  adapterInstance.getProperty({
+                  adapter.getProperty({
                      employees: {
                         items: data,
                         total: 456
@@ -99,12 +99,12 @@ define(
                   }, 'employees.total')
                );
                assert.isUndefined(
-                  adapterInstance.getProperty({
+                  adapter.getProperty({
                      items: data
                   }, 'total')
                );
                assert.isUndefined(
-                  adapterInstance.getProperty({
+                  adapter.getProperty({
                      items: data
                   })
                );
@@ -112,16 +112,16 @@ define(
 
             it('should return undefined on invalid data', function () {
                assert.isUndefined(
-                  adapterInstance.getProperty({})
+                  adapter.getProperty({})
                );
                assert.isUndefined(
-                  adapterInstance.getProperty('')
+                  adapter.getProperty('')
                );
                assert.isUndefined(
-                  adapterInstance.getProperty(0)
+                  adapter.getProperty(0)
                );
                assert.isUndefined(
-                  adapterInstance.getProperty()
+                  adapter.getProperty()
                );
             });
          });
@@ -132,7 +132,7 @@ define(
                   items: data,
                   total: 123
                };
-               adapterInstance.setProperty(moreData, 'total', 456);
+               adapter.setProperty(moreData, 'total', 456);
                assert.strictEqual(
                   456,
                   moreData.total
@@ -156,7 +156,7 @@ define(
                      total: 789
                   }
                };
-               adapterInstance.setProperty(moreData, 'employees.total', 987);
+               adapter.setProperty(moreData, 'employees.total', 987);
                assert.strictEqual(
                   987,
                   moreData.employees.total
@@ -178,7 +178,7 @@ define(
                   a: 1,
                   b: 2
                };
-               adapterInstance.setProperty(moreData, 'c.d.e.f', 'g');
+               adapter.setProperty(moreData, 'c.d.e.f', 'g');
                assert.strictEqual(
                   'g',
                   moreData.c.d.e.f

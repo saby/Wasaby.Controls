@@ -1,12 +1,13 @@
-/* global define, beforeEach, afterEach, describe, context, it, assert */
+/* global define, beforeEach, afterEach, describe, context, it, assert, $ws */
 define([
-      'js!SBIS3.CONTROLS.Data.Adapter.SbisTable'
-   ], function (SbisTable) {
+   'js!SBIS3.CONTROLS.Data.Adapter.SbisTable',
+   'js!SBIS3.CONTROLS.Data.Format.FieldsFactory'
+   ], function (SbisTable, FieldsFactory) {
       'use strict';
 
       describe('SBIS3.CONTROLS.Data.Adapter.SbisTable', function () {
          var data,
-            adapterInstance;
+            adapter;
 
          beforeEach(function () {
             data = {
@@ -25,12 +26,12 @@ define([
                ]
             };
 
-            adapterInstance = new SbisTable(data);
+            adapter = new SbisTable(data);
          });
 
          afterEach(function () {
             data = undefined;
-            adapterInstance = undefined;
+            adapter = undefined;
          });
 
          describe('.getEmpty()', function () {
@@ -46,7 +47,7 @@ define([
             it('should return records count', function () {
                assert.strictEqual(
                   7,
-                  adapterInstance.getCount()
+                  adapter.getCount()
                );
                assert.strictEqual(
                   0,
@@ -73,7 +74,7 @@ define([
 
          describe('.add()', function () {
             it('should append a record', function () {
-               adapterInstance.add({d: [30, 'Огурцов']});
+               adapter.add({d: [30, 'Огурцов']});
                assert.strictEqual(
                   8,
                   data.d.length
@@ -89,7 +90,7 @@ define([
             });
 
             it('should prepend a record', function () {
-               adapterInstance.add({d: [40, 'Перцов']}, 0);
+               adapter.add({d: [40, 'Перцов']}, 0);
                assert.strictEqual(
                   8,
                   data.d.length
@@ -105,7 +106,7 @@ define([
             });
 
             it('should insert a record', function () {
-               adapterInstance.add({d: [50, 'Горохов']}, 2);
+               adapter.add({d: [50, 'Горохов']}, 2);
                assert.strictEqual(
                   8,
                   data.d.length
@@ -122,10 +123,10 @@ define([
 
             it('should throw an error on invalid position', function () {
                assert.throw(function () {
-                  adapterInstance.add({d: [30, 'aaa']}, 100);
+                  adapter.add({d: [30, 'aaa']}, 100);
                });
                assert.throw(function () {
-                  adapterInstance.add({d: [30, 'aaa']}, -1);
+                  adapter.add({d: [30, 'aaa']}, -1);
                });
             });
          });
@@ -134,20 +135,20 @@ define([
             it('should return valid record', function () {
                assert.strictEqual(
                   1,
-                  adapterInstance.at(0).d[0]
+                  adapter.at(0).d[0]
                );
                assert.strictEqual(
                   3,
-                  adapterInstance.at(2).d[0]
+                  adapter.at(2).d[0]
                );
             });
 
             it('should return undefined on invalid position', function () {
                assert.isUndefined(
-                  adapterInstance.at(-1)
+                  adapter.at(-1)
                );
                assert.isUndefined(
-                  adapterInstance.at(99)
+                  adapter.at(99)
                );
             });
 
@@ -169,19 +170,19 @@ define([
 
          describe('.remove()', function () {
             it('should remove the record', function () {
-               adapterInstance.remove(0);
+               adapter.remove(0);
                assert.strictEqual(
                   2,
                   data.d[0][0]
                );
 
-               adapterInstance.remove(2);
+               adapter.remove(2);
                assert.strictEqual(
                   5,
                   data.d[2][0]
                );
 
-               adapterInstance.remove(4);
+               adapter.remove(4);
                assert.isUndefined(
                   data.d[4]
                );
@@ -189,17 +190,17 @@ define([
 
             it('should throw an error on invalid position', function () {
                assert.throw(function () {
-                  adapterInstance.remove(-1);
+                  adapter.remove(-1);
                });
                assert.throw(function () {
-                  adapterInstance.remove(99);
+                  adapter.remove(99);
                });
             });
          });
 
          describe('.merge()', function () {
             it('should merge two records', function () {
-               adapterInstance.merge(0, 1, 'Ид');
+               adapter.merge(0, 1, 'Ид');
                assert.strictEqual(
                   'Петров',
                   data.d[0][1]
@@ -209,7 +210,7 @@ define([
 
          describe('.copy()', function () {
             it('should merge two records', function () {
-               adapterInstance.copy(0);
+               adapter.copy(0);
                assert.strictEqual(
                   'Иванов',
                   data.d[1][1]
@@ -219,13 +220,13 @@ define([
 
          describe('.replace()', function () {
             it('should replace the record', function () {
-               adapterInstance.replace({d: [11]}, 0);
+               adapter.replace({d: [11]}, 0);
                assert.strictEqual(
                   11,
                   data.d[0][0]
                );
 
-               adapterInstance.replace({d: [12]}, 4);
+               adapter.replace({d: [12]}, 4);
                assert.strictEqual(
                   12,
                   data.d[4][0]
@@ -235,17 +236,17 @@ define([
 
             it('should throw an error on invalid position', function () {
                assert.throw(function () {
-                  adapterInstance.replace({d: [13]}, -1);
+                  adapter.replace({d: [13]}, -1);
                });
                assert.throw(function () {
-                  adapterInstance.replace({d: [14]}, 99);
+                  adapter.replace({d: [14]}, 99);
                });
             });
          });
 
          describe('.move()', function () {
             it('should move Иванов instead Сидоров', function () {
-               adapterInstance.move(0, 2);
+               adapter.move(0, 2);
                assert.strictEqual(
                   'Петров',
                   data.d[0][1]
@@ -260,7 +261,7 @@ define([
                );
             });
             it('should move Сидоров instead Иванов', function () {
-               adapterInstance.move(2, 0);
+               adapter.move(2, 0);
                assert.strictEqual(
                   'Сидоров',
                   data.d[0][1]
@@ -275,7 +276,7 @@ define([
                );
             });
             it('should move Петров to the end', function () {
-               adapterInstance.move(1, 6);
+               adapter.move(1, 6);
                assert.strictEqual(
                   'Петров',
                   data.d[6][1]
@@ -284,6 +285,136 @@ define([
                   'Арбузнов',
                   data.d[5][1]
                );
+            });
+         });
+
+         describe('.getData()', function () {
+            it('should return raw data', function () {
+               assert.strictEqual(adapter.getData(), data);
+            });
+         });
+
+         describe('.getFormat()', function () {
+            it('should return integer field format', function () {
+               var format = adapter.getFormat('Ид');
+               assert.isTrue($ws.helpers.instanceOfModule(format, 'SBIS3.CONTROLS.Data.Format.IntegerField'));
+               assert.strictEqual(format.getName(), 'Ид');
+            });
+            it('should return string field format', function () {
+               var format = adapter.getFormat('Фамилия');
+               assert.isTrue($ws.helpers.instanceOfModule(format, 'SBIS3.CONTROLS.Data.Format.StringField'));
+               assert.strictEqual(format.getName(), 'Фамилия');
+            });
+            it('should throw an error for not exists field', function () {
+               assert.throw(function () {
+                  adapter.getFormat('Some');
+               });
+            });
+         });
+
+         describe('.addField()', function () {
+            it('should add a new field', function () {
+               var fieldName = 'New',
+                  fieldPos = 1,
+                  field = FieldsFactory.create({
+                     type: 'string',
+                     name: fieldName
+                  });
+               adapter.addField(field, fieldPos);
+               assert.strictEqual(adapter.getFormat(fieldName).getName(), fieldName);
+               for (var i = 0; i < adapter.getCount(); i++) {
+                  assert.strictEqual(adapter.at(i).s[fieldPos].n, fieldName);
+               }
+            });
+            it('should use a field default value', function () {
+               var fieldName = 'New',
+                  fieldPos = 1,
+                  def = 'abc';
+               adapter.addField(FieldsFactory.create({
+                  type: 'string',
+                  name: fieldName,
+                  defaultValue: def
+               }), fieldPos);
+               for (var i = 0; i < adapter.getCount(); i++) {
+                  assert.strictEqual(adapter.at(i).d[fieldPos], def);
+               }
+            });
+            it('should throw an error for already exists field', function () {
+               assert.throw(function () {
+                  adapter.addField(FieldsFactory.create({
+                     type: 'string',
+                     name: 'Ид'
+                  }));
+               });
+            });
+            it('should throw an error for not a field', function () {
+               assert.throw(function () {
+                  adapter.addField();
+               });
+               assert.throw(function () {
+                  adapter.addField(null);
+               });
+               assert.throw(function () {
+                  adapter.addField({
+                     type: 'string',
+                     name: 'New'
+                  });
+               });
+            });
+         });
+
+         describe('.removeField()', function () {
+            it('should remove exists field', function () {
+               var name = 'Ид',
+                  index = 0,
+                  newFields = adapter.getData().s.slice(),
+                  newData = adapter.getData().d.slice().map(function(item) {
+                     item.slice().splice(index, 1);
+                     return item;
+                  });
+
+               adapter.removeField(name);
+               newFields.splice(index, 1);
+
+               assert.deepEqual(adapter.getData().s, newFields);
+               assert.deepEqual(adapter.getData().d, newData);
+               for (var i = 0; i < adapter.getCount(); i++) {
+                  assert.deepEqual(adapter.at(i).s, newFields);
+               }
+               assert.throw(function () {
+                  adapter.getFormat(name);
+               });
+            });
+            it('should throw an error for not exists field', function () {
+               assert.throw(function () {
+                  adapter.removeField('Some');
+               });
+            });
+         });
+
+         describe('.removeFieldAt()', function () {
+            it('should remove exists field', function () {
+               var name = 'Ид',
+                  index = 0,
+                  newFields = adapter.getData().s.slice().splice(index - 1, 1),
+                  newData = adapter.getData().d.slice().map(function(item) {
+                     item.slice().splice(index, 1);
+                     return item;
+                  });
+               adapter.removeFieldAt(index);
+               assert.deepEqual(adapter.getData().s, newFields);
+               assert.deepEqual(adapter.getData().d, newData);
+               for (var i = 0; i < adapter.getCount(); i++) {
+                  assert.deepEqual(adapter.at(i).s, newFields);
+               }
+               assert.throw(function () {
+                  adapter.getFormat(name);
+               });
+            });
+            it('should throw an error for not exists field', function () {
+               assert.throw(function () {
+                  adapter.removeFieldAt(9);
+               });
             });
          });
       });
