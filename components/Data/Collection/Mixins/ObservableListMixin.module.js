@@ -184,28 +184,28 @@ define('js!SBIS3.CONTROLS.Data.Collection.ObservableListMixin', [
        * @public
        */
       notifyCollectionChange: function (action, newItems, newItemsIndex, oldItems, oldItemsIndex) {
-         if (
-            !this._eventsEnabled ||
-            !this._hasSubscription.onCollectionChange
-         ) {
+         if (!this._eventsEnabled) {
             return;
          }
-
-         this._notify(
-            'onCollectionChange',
-            action,
-            newItems,
-            newItemsIndex,
-            oldItems,
-            oldItemsIndex
-         );
-         this._checkWatchableOnCollectionChange(
-            action,
-            newItems,
-            newItemsIndex,
-            oldItems,
-            oldItemsIndex
-         );
+         if (this._hasSubscription.onCollectionChange) {
+            this._notify(
+               'onCollectionChange',
+               action,
+               newItems,
+               newItemsIndex,
+               oldItems,
+               oldItemsIndex
+            );
+         }
+         if (this._hasSubscription.onCollectionItemChange) {
+            this._checkWatchableOnCollectionChange(
+               action,
+               newItems,
+               newItemsIndex,
+               oldItems,
+               oldItemsIndex
+            );
+         }
       },
 
       /**
@@ -252,8 +252,8 @@ define('js!SBIS3.CONTROLS.Data.Collection.ObservableListMixin', [
                break;
             case IBindCollection.ACTION_RESET:
             case IBindCollection.ACTION_REPLACE:
-               this._setObservableItems(newItems);
                this._unsetObservableItems(oldItems);
+               this._setObservableItems(newItems);
                break;
          }
       },
