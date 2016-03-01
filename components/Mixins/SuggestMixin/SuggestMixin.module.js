@@ -249,22 +249,12 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
       /**
        * Устанавливает фильтр в список, при необходимости делает запрос на БЛ
        * @param {Object} filter
+       * @param {Boolean} silent "Тихая" установка св-ва, не вызывает запроса на БЛ, не изменяет состояние выпадающего блока
        */
-      setListFilter: function(filter) {
+      setListFilter: function(filter, silent) {
          var self = this,
              changedFields = [],
              dataSet = this._getListDataSet();
-
-         /* Если в контролах, которые мы отслеживаем, нет фокуса,
-            то почистим датасет, т.к. фильтр сменился и больше ничего делать не будем */
-         if(!this._isObservableControlFocused()) {
-            if(dataSet) {
-               dataSet.clear();
-            }
-            this._options.listFilter = filter;
-            this._notifyOnPropertyChanged('listFilter');
-            return;
-         }
 
          $ws.helpers.forEach(filter, function(value, key) {
             if(value !== self._options.listFilter[key]) {
@@ -272,20 +262,29 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
             }
          });
 
-         if(changedFields.length) {
-            this._options.listFilter = filter;
-            for(var i = 0, len = changedFields.length; i < len; i++) {
-               if(String(this._options.listFilter[changedFields[i]]).length >= this._options.startChar) {
-                  this._startSearch();
-                  this._notifyOnPropertyChanged('listFilter');
-                  return;
-               }
-            }
-            /* Если введено меньше символов чем указано в startChar, то скроем автодополнение */
-            this._resetSearch();
-            this.hidePicker();
-            this._notifyOnPropertyChanged('listFilter');
+         if(!changedFields.length) {
+            return;
          }
+
+         this._options.listFilter = filter;
+         this._notifyOnPropertyChanged('listFilter');
+
+         /* Если в контролах, которые мы отслеживаем, нет фокуса или изменение фильтра произошло после внуренних изменений
+           то почистим датасет, т.к. фильтр сменился и больше ничего делать не будем */
+         if(!this._isObservableControlFocused() || silent) {
+            dataSet && dataSet.clear();
+            return;
+         }
+
+         for(var i = 0, len = changedFields.length; i < len; i++) {
+            if(String(this._options.listFilter[changedFields[i]]).length >= this._options.startChar) {
+               this._startSearch();
+               return;
+            }
+         }
+         /* Если введено меньше символов чем указано в startChar, то скроем автодополнение */
+         this._resetSearch();
+         this.hidePicker();
       },
 
       // TODO использовать searchMixin 3.7.3.100
@@ -458,7 +457,7 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
        * Вызывается после загрузки данных контролом списка сущностей
        * @private
        */
-      _onListDataLoad: function() {
+      _onListDataLoad: function(e, dataSet) {
          this._hideLoadingIndicator();
 
          if(this._showAllButton) {
@@ -466,7 +465,7 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
 
             /* Изменяем видимость кнопки в зависимости от, того, есть ли ещё записи */
             this._showAllButton.getContainer()
-                .toggleClass('ws-hidden', !list._hasNextPage(this._getListDataSet().getMetaData().more));
+                .toggleClass('ws-hidden', !list._hasNextPage(dataSet.getMetaData().more));
          }
       },
 
@@ -497,7 +496,8 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
          var def = new $ws.proto.Deferred(),
              dataSet = this._getListDataSet(),
              ctx = this._getBindingContext(),
-             self = this;
+             self = this,
+             toSet = {};
 
          if (id === null || id === undefined) {
             return;
@@ -515,16 +515,14 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
 
          def.addCallback(function (item) {
             self._notify('onListItemSelect', item, self._resultBindings);
+            /* Соберём все изменения в пачку,
+               чтобы контекст несколько раз не пересчитывался */
             for (var field in self._resultBindings) {
                if (self._resultBindings.hasOwnProperty(field)) {
-                  ctx.setValue(
-                     field,
-                     item.get(self._resultBindings[field]),
-                     false,
-                     self._list
-                  );
+                  toSet[field] = item.get(self._resultBindings[field]);
                }
             }
+            ctx.setValue(toSet, false, self._list);
          });
       },
 

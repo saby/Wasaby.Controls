@@ -291,9 +291,13 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
             _createAddTarget: function(options) {
                var
                    footer,
-                   //Данный элемент будет служить как точка позиционирования добавления по месту, и как блок, который будет расширять браузер.
-                   //Используется div т.к он растянется по все ширине контейнера, и может иметь background-color, в отличии от tr.
-                   target = $('<div class="js-controls-ListView__item controls-ListView__item">');
+                   target;
+               if (this._options.columns) {
+                  target = $('<tr><td colspan="' + this._options.columns.length + (this._options.ignoreFirstColumn ? 1 : 0) + '"></td></tr>');
+               } else {
+                  target = $('<div>');
+               }
+               target.addClass("js-controls-ListView__item controls-ListView__item");
                if (options && options.initiator) {
                   footer = options.initiator.closest('.controls-TreeDataGridView__folderFooter');
                }
