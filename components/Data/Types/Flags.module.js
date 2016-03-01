@@ -1,12 +1,15 @@
 /* global define, $ws */
 define('js!SBIS3.CONTROLS.Data.Types.Flags', [
    'js!SBIS3.CONTROLS.Data.Collection.IEnumerable',
-   'js!SBIS3.CONTROLS.Data.Collection.ArrayEnumerator'
-], function (IEnumerable, ArrayEnumerator) {
+   'js!SBIS3.CONTROLS.Data.Collection.ArrayEnumerator',
+   'js!SBIS3.CONTROLS.Data.ContextField.Flags',
+   'js!SBIS3.CONTROLS.Data.Di'
+], function (IEnumerable, ArrayEnumerator, ContextFieldFlags, Di) {
    'use strict';
    /**
     * Тип данных набор флагов
-    * @mixin SBIS3.CONTROLS.Data.Collection.IEnumerable
+    * @class SBIS3.CONTROLS.Data.Types.Flags
+    * @mixes SBIS3.CONTROLS.Data.Collection.IEnumerable
     * @public
     * @author Ганшин Ярослав
     */
@@ -166,5 +169,7 @@ define('js!SBIS3.CONTROLS.Data.Types.Flags', [
          }
       }
    });
+   Di.register('data.types.flags', Flags);
+   $ws.proto.Context.registerFieldType(new ContextFieldFlags({module: Flags}));
    return Flags;
 });

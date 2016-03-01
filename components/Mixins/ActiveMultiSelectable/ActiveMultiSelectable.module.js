@@ -28,72 +28,120 @@ define('js!SBIS3.CONTROLS.ActiveMultiSelectable', [], function() {
             throw new Error('MultiSelectable mixin is required');
          }
       },
+
       /**
-       * Устанавливает массив выбранных записей
+       * Устанавливает набор выбранных записей
        * @param {Array|SBIS3.CONTROLS.Data.Collection.List} list Выбранные элементы.
+       * @example
+       * <pre>
+       *    var selectedItems = myGrid.getSelectedItems();
+       *
+       *    if(selectedItems.getCount()) {
+       *       myFieldLink.setSelectedItems(selectedItems)
+       *    }
+       * </pre>
+       * @see selectedItems
+       * @see selectedKeys
+       * @see clearSelectedItems
+       * @see addSelectedItems
        */
       setSelectedItems: propertyUpdateWrapper(function(list) {
-         if(list instanceof Array) {
-            list = this._makeList(list);
+         var newItems = [];
+
+         list = this._prepareItems(list);
+
+         if(this._options.multiselect) {
+            list.each(function(rec) {
+               newItems.push(rec);
+            });
+         } else if(list.getCount()) {
+            newItems = [list.at(0)];
          }
 
-         if(!$ws.helpers.instanceOfModule(list, 'SBIS3.CONTROLS.Data.Collection.List')) {
-            throw new Error('setSelectedItems called with invalid argument');
-         }
-
-         /* надо обязательно делать клон массива, чтобы порвать ссылку и не портить значения в контексте */
-         this._options.selectedItems = this._makeList((this._options.multiselect ? list.toArray() : list.getCount() > 1 ? [list.at(0)] : list.toArray()).slice());
+         this._options.selectedItems = this._makeList(newItems);
          this.setSelectedKeys(this._convertToKeys(this._options.selectedItems));
          this._notifyOnPropertyChanged('selectedItems');
       }),
 
       /**
        * Очищает набор выбранных элементов
+       * @see selectedItems
+       * @see selectedKeys
+       * @see setSelectedItems
+       * @see addSelectedItems
+       * @example
+       * <pre>
+       *    var selectedItems = myGrid.getSelectedItems();
+       *
+       *    if(selectedItems.getCount()) {
+       *       myGrid.clearSelectedItems();
+       *    }
+       * </pre>
        */
       clearSelectedItems: function() {
          this.setSelectedItems([]);
       },
 
+      initializeSelectedItems: function() {
+        this._options.selectedItems =  new List();
+      },
+
+      _prepareItems: function(items) {
+         if(items instanceof Array) {
+            items = this._makeList(items);
+         }
+
+         if(!$ws.helpers.instanceOfModule(items, 'SBIS3.CONTROLS.Data.Collection.List')) {
+            throw new Error('setSelectedItems called with invalid argument');
+         }
+
+         return items;
+      },
+
       /**
        * Добавляет переданные элементы к набору выбранных
        * @param {Array | SBIS3.CONTROLS.Data.Collection.List} items
+       * @see selectedItems
+       * @see selectedKeys
+       * @see setSelectedItems
+       * @see clearSelectedItems
+       * @example
+       * <pre>
+       *    var selectedItems = myGrid.getSelectedItems();
+       *
+       *    if(selectedItems.getCount()) {
+       *       myFieldLink.addSelectedItems(selectedItems);
+       *    }
+       * </pre>
        */
       addSelectedItems: propertyUpdateWrapper(function(items) {
          var self = this,
-             newItems = items instanceof Array ? this._makeList(items) : items,
-             selItems = this._options.selectedItems;
+             selItems = this._options.selectedItems,
+             newItems = [];
 
-         /* Если добавляемых элементов нет, то ничего не делаем */
-         /* TODO в 3.7.3.100 добавить проверку, надо ли вообще что-то добавлять, возможно уже что все переданные записи есть
-            Задача в разработку от 09.02.2016 №1172587090
-            Добавить проверку в ActiveMultiSelectable на добавляемость элементов, чтобы уменьшить возможно ко...
-            https://inside.tensor.ru/opendoc.html?guid=f206f51b-f653-4337-acdb-7472ccee8a9c */
-         if(!newItems.getCount()) return;
+         items = this._prepareItems(items);
 
-         if(this._options.multiselect) {
-            newItems.each(function(rec) {
-               if(!self._isItemSelected(rec)) {
-                  selItems.add(rec);
-               }
-            });
-         } else {
-            selItems[selItems.getCount() ? 'replace' : 'add'](newItems.at(0), 0);
+         if(!items.getCount()) {
+            return;
          }
 
-         this.setSelectedKeys(this._convertToKeys(selItems));
-         this._notifyOnPropertyChanged('selectedItems');
-      }),
+         if(this._options.multiselect) {
+            items.each(function(rec) {
+               if(!self._isItemSelected(rec)) {
+                  newItems.push(rec);
+               }
+            });
+         } else if(!self._isItemSelected(items.at(0))) {
+            newItems.push(items.at(0));
+            selItems.clear();
+         }
 
-      _convertToKeys: function(list) {
-         var keys = [];
-
-         list.each(function(rec) {
-            keys.push(rec.getId());
-         });
-
-         return keys;
-
-      }
+         if(newItems.length) {
+            selItems.concat(newItems);
+            this.setSelectedKeys(this._convertToKeys(selItems));
+            this._notifyOnPropertyChanged('selectedItems');
+         }
+      })
    };
 
    return ActiveMultiSelectable;

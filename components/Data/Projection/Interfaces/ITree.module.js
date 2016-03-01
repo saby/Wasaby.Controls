@@ -65,6 +65,14 @@ define('js!SBIS3.CONTROLS.Data.Projection.ITree', [
       },
 
       /**
+       * Устанавливает название свойства, содержащего идентификатор родительского узла
+       * @param {String} name
+       */
+      setParentProperty: function (name) {
+         throw new Error('Method must be implemented');
+      },
+
+      /**
        * Возвращает название свойства, содержащего признак узла
        * @returns {String}
        */

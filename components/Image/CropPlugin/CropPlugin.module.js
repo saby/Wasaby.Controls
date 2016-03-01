@@ -142,7 +142,7 @@ define('js!SBIS3.CONTROLS.Image.CropPlugin',
                } else if (beginCropResult) {
                   filter = beginCropResult;
                }
-               new $ws.proto.BLObject(dataSource.getResource())
+               new $ws.proto.BLObject(dataSource._options.resource)
                   .call(dataSource.getUpdateMethodName(), filter, $ws.proto.BLObject.RETURN_TYPE_ASIS).addBoth(function(result) {
                      self.finishCrop();
                      self._notify('onEndSave', result);
@@ -158,7 +158,12 @@ define('js!SBIS3.CONTROLS.Image.CropPlugin',
             this._dropCrop();
          },
          _dropCrop: function() {
-            var jCropApi = this._options.image.data('Jcrop');
+            var
+               jCropApi = this._options.image.data('Jcrop'),
+            $image = this._options.image;
+            if (typeof($image) === "object") {
+               $image.css({visibility: "visible", display: 'inline-block'});
+            }
             if (jCropApi && jCropApi.destroy) {
                jCropApi.destroy();
             }

@@ -147,6 +147,14 @@ define('js!SBIS3.CONTROLS.Browser', [
          return this._view;
       },
 
+      /**
+       * Установить отображение нового пути для хлебных крошек и кнопки назад
+       * @param {Array} path новый путь, последний элемент попадает в BackButton, остальные в хлебные крошки
+       */
+      setPath: function(path){
+         this._componentBinder.setPath(path);
+      },
+
       _notifyOnFiltersReady: function() {
          this._fastDataFilter && this._fastDataFilter.getContainer().removeClass('ws-hidden');
          this._notify('onFiltersReady');

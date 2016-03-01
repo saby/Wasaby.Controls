@@ -188,19 +188,23 @@ define('js!SBIS3.CONTROLS.ComboBox', [
       _keyboardHover: function (e) {
          var
             selectedKey = this.getSelectedKey(),
-            selectedItem, nextItem, previousItem;
+            selectedItem, newSelectedItem, newSelectedItemId;
          if (this._picker) {
             var
                items = $('.controls-ListView__item', this._picker.getContainer().get(0));
 
             selectedItem = $('.controls-ComboBox__itemRow__selected', this._picker.getContainer());
-            nextItem = (selectedKey) ? selectedItem.next('.controls-ListView__item') : items.eq(0);
-            previousItem = (selectedKey) ? selectedItem.prev('.controls-ListView__item') : items.eq(0);
             //навигация по стрелкам
             if (e.which === $ws._const.key.up) {
-               previousItem.length ? this.setSelectedKey(previousItem.data('id')) : this.setSelectedKey(selectedKey);
+               newSelectedItem = selectedKey ? selectedItem.prev('.controls-ListView__item') : items.eq(0);
             } else if (e.which === $ws._const.key.down) {
-               nextItem.length ? this.setSelectedKey(nextItem.data('id')) : this.setSelectedKey(selectedKey);
+               newSelectedItem = selectedKey ? selectedItem.next('.controls-ListView__item') : items.eq(0);
+            }
+            if (newSelectedItem && newSelectedItem.length) {
+               newSelectedItemId = newSelectedItem.data('id');
+               this.setSelectedKey(newSelectedItemId);
+               this._scrollToItem(newSelectedItemId);
+               this.setActive(true); // После подскролливания возвращаем фокус в контейнер компонента
             }
          }
          else {
@@ -398,7 +402,7 @@ define('js!SBIS3.CONTROLS.ComboBox', [
 
       _keyUpBind: function (e) {
          /*по изменению текста делаем то же что и в текстбоксе*/
-         ComboBox.superclass._keyUpBind.call(this);
+         ComboBox.superclass._keyUpBind.apply(this, arguments);
          /*не делаем смену значения при нажатии на стрелки вверх вниз. Иначе событие смены ключа срабатывает два раза*/
          if ((e.which != 40) && (e.which != 38)) {
             this._setKeyByText();
@@ -517,6 +521,8 @@ define('js!SBIS3.CONTROLS.ComboBox', [
       showPicker: function(){
          ComboBox.superclass.showPicker.call(this);
          this._setWidth();
+         //После отображения пикера подскроливаем до выбранного элемента
+         this._scrollToItem(this.getSelectedKey());
       },
 
       _initializePicker: function(){

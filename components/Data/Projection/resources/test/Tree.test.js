@@ -153,6 +153,13 @@ define([
             });
          });
 
+         describe('.setParentProperty()', function() {
+            it('should change the value', function() {
+               tree.setParentProperty('uid');
+               assert.equal(tree.getParentProperty(), 'uid');
+            });
+         });
+
          describe('.getNodeProperty()', function() {
             it('should return given value', function() {
                assert.equal(tree.getNodeProperty(), 'node');
