@@ -167,13 +167,6 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
              * </pre>
              */
 	        listFilter: {},
-
-            /**
-             * @cfg {jQuery|Element|String} Контейнер, в который будет вставлен индикатор загрузки
-             * <wiTag group="Отображение">
-             * Если не указан, то будет вставлен в контейнер компонента.
-             */
-            loadingContainer: undefined,
             /**
              * @typedef {Object} showAll
              * @property {String} template Шаблон, который отобразится в диалоге всех записей
@@ -348,7 +341,7 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
        */
       _showLoadingIndicator: function () {
          if (this._loadingIndicator === undefined) {
-            var holder = this._options.loadingContainer ? $(this._options.loadingContainer) : this.getContainer();
+            var holder = this._getLoadingContainer() || this.getContainer();
             this._loadingIndicator = $('<div class="controls-Suggest__loadingIndicator">').appendTo(holder.addClass('controls-Suggest__loadingContainer'));
          }
          this._loadingIndicator.removeClass('ws-hidden');
@@ -362,6 +355,14 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
          if (this._loadingIndicator) {
             this._loadingIndicator.addClass('ws-hidden');
          }
+      },
+
+      /**
+       * Метод должен возвращать контейнер для индикатора загрузки
+       * @private
+       */
+      _getLoadingContainer : function() {
+         /* Method must be implemented */
       },
 
       /**

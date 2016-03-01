@@ -26,13 +26,12 @@ define('js!SBIS3.CONTROLS.SuggestTextBox', [
     */
    var SuggestTextBox = TextBox.extend([PickerMixin, SuggestMixin, ChooserMixin], /** @lends SBIS3.CONTROLS.SuggestTextBox.prototype */ {
       $constructor: function () {
-         this._options = $ws.core.merge({
-            loadingContainer: this.getContainer().find('.controls-TextBox__fieldWrapper')
-         }, this._options);
-
          this._options.observableControls.unshift(this);
-
          this.getContainer().addClass('controls-SuggestTextBox');
+      },
+
+      _getLoadingContainer : function() {
+         return this.getContainer().find('.controls-TextBox__fieldWrapper');
       },
 
       /**
