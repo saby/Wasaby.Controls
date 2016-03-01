@@ -73,6 +73,11 @@ define('js!SBIS3.CONTROLS.Data.Projection.Collection', [
          _serviceEnumerator: null,
 
          /**
+          * @member {SBIS3.CONTROLS.Data.Projection.CollectionEnumerator} Служебный энумератор проекции - для поиска следующего или предыдущего элемента
+          */
+         _navigationEnumerator: null,
+
+         /**
           * @member {Boolean} Генерация событий включена
           */
          _eventsEnabled: true,
@@ -298,6 +303,14 @@ define('js!SBIS3.CONTROLS.Data.Projection.Collection', [
          return hasPrevious;
       },
 
+      getNext: function (item) {
+         return this._getNearbyItem(item, true);
+      },
+
+      getPrevious: function (item) {
+         return this._getNearbyItem(item, false);
+      },
+
       moveToFirst: function () {
          if (this.getCurrentPosition() === 0) {
             return false;
@@ -367,6 +380,13 @@ define('js!SBIS3.CONTROLS.Data.Projection.Collection', [
          this._finishUpdateSession(session);
       },
 
+      getInternalBySource: function (index) {
+         return this._getServiceEnumerator().getInternalBySource(index);
+      },
+
+      getSourceByInternal: function (index) {
+         return this._getServiceEnumerator().getSourceByInternal(index);
+      },
       //endregion SBIS3.CONTROLS.Data.Projection.ICollection
 
       //region Public methods
@@ -435,6 +455,10 @@ define('js!SBIS3.CONTROLS.Data.Projection.Collection', [
          return this._serviceEnumerator || (this._serviceEnumerator = this._getEnumerator());
       },
 
+      _getNavigationEnumerator: function() {
+         return this._navigationEnumerator || (this._navigationEnumerator = this._getEnumerator());
+      },
+
       /**
        * Превращает объект в элемент проекции
        * @param {*} item Объект
@@ -480,8 +504,7 @@ define('js!SBIS3.CONTROLS.Data.Projection.Collection', [
          start = start || 0;
          count = count || this._items.length - start;
 
-         var enumerator = this._getServiceEnumerator(),
-             finish = start + count,
+         var finish = start + count,
              item,
              match,
              oldMatch;
@@ -493,10 +516,10 @@ define('js!SBIS3.CONTROLS.Data.Projection.Collection', [
             if (match !== oldMatch) {
                if (match) {
                   this._filterMap[index] = match;
-                  enumerator.reIndex();
+                  this._reIndex();
                } else if (oldMatch !== undefined) {
                   this._filterMap[index] = match;
-                  enumerator.reIndex();
+                  this._reIndex();
                }
             }
          }
@@ -511,7 +534,7 @@ define('js!SBIS3.CONTROLS.Data.Projection.Collection', [
          Array.prototype.push.apply(this._sortMap, this._buildSortMap());
 
          this._isSortedCache = undefined;
-         this._getServiceEnumerator().reIndex();
+         this._reIndex();
       },
 
       /**
@@ -560,7 +583,7 @@ define('js!SBIS3.CONTROLS.Data.Projection.Collection', [
             afterItem;
 
          //Индексируем состояние элементов после изменений
-         enumerator.reIndex();
+         this._reIndex();
          enumerator.reset();
          session.after = [];
          while ((afterItem = enumerator.getNext())) {
@@ -997,6 +1020,31 @@ define('js!SBIS3.CONTROLS.Data.Projection.Collection', [
             newPosition,
             oldPosition
          );
+      },
+      /**
+       * вызывает reIndex у служебных энумераторов
+       * @private
+       */
+      _reIndex: function (){
+         this._getServiceEnumerator().reIndex();
+         this._getNavigationEnumerator().reIndex();
+      },
+
+      /**
+       * Возвращает соседний элемент проекции
+       * @param item{SBIS3.CONTROLS.Data.Projection.ICollectionItem} - Элемент проекции относительно которого искать
+       * @param isNext{Boolean} - Следующий или предыдущий элемент
+       * @returns {SBIS3.CONTROLS.Data.Projection.ICollectionItem}
+       * @private
+       */
+      _getNearbyItem: function (item, isNext) {
+         var enumerator = this._getNavigationEnumerator();
+         enumerator.setCurrent(item);
+         var nearbyItem = this._getNavigationEnumerator()[isNext ? 'getNext' : 'getPrevious'](item);
+         if(nearbyItem && $ws.helpers.instanceOfModule(nearbyItem.getContents(), 'SBIS3.CONTROLS.Data.Model') && nearbyItem.getContents().isDeleted()){
+            return this._getNearbyItem(nearbyItem, isNext);
+         }
+         return nearbyItem;
       }
 
       //endregion Protected methods
@@ -1073,7 +1121,7 @@ define('js!SBIS3.CONTROLS.Data.Projection.Collection', [
                this._reFilter();
             }
             newItems = this._getItemsProjection(newItems, newItemsIndex);
-            this._getServiceEnumerator().reIndex();
+            this._reIndex();
             this._notifyCollectionChange(
                action,
                newItems,

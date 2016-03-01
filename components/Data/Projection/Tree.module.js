@@ -59,26 +59,7 @@ define('js!SBIS3.CONTROLS.Data.Projection.Tree', [
        * @returns {Boolean} Есть ли следующий элемент в родительском узле
        */
       moveToNext: function () {
-         //TODO: отлеживать по level, что вышли "выше"
-         var enumerator = this._getServiceEnumerator(),
-            initial = this.getCurrent(),
-            current,
-            parent = initial && initial.getParent() || this.getRoot(),
-            hasNext = true,
-            hasMove = false,
-            sameParent = false;
-         while (hasNext && !sameParent) {
-            hasNext = !!enumerator.getNext();
-            current = enumerator.getCurrent();
-            sameParent = current.getParent() === parent;
-            hasMove = hasNext && sameParent;
-         }
-         if (hasMove) {
-            this.setCurrent(current);
-         } else {
-            enumerator.setCurrent(initial);
-         }
-         return hasMove;
+         return this._moveTo(true);
       },
 
       /**
@@ -86,28 +67,16 @@ define('js!SBIS3.CONTROLS.Data.Projection.Tree', [
        * @returns {Boolean} Есть ли предыдущий элемент в родительском узле
        */
       moveToPrevious: function () {
-         //TODO: отлеживать по level, что вышли "выше"
-         var enumerator = this._getServiceEnumerator(),
-            initial = this.getCurrent(),
-            current,
-            parent = initial && initial.getParent() || this.getRoot(),
-            hasPrevious = true,
-            hasMove = false,
-            sameParent = false;
-         while (hasPrevious && !sameParent) {
-            hasPrevious = !!enumerator.getPrevious();
-            current = enumerator.getCurrent();
-            sameParent = current.getParent() === parent;
-            hasMove = hasPrevious && sameParent;
-         }
-         if (hasMove) {
-            this.setCurrent(current);
-         } else {
-            enumerator.setCurrent(initial);
-         }
-         return hasMove;
+         return this._moveTo(false);
       },
 
+      getNext: function (item) {
+         return this._getNearbyItem(item, true, this._getNavigationEnumerator());
+      },
+
+      getPrevious: function (item) {
+         return this._getNearbyItem(item, false, this._getNavigationEnumerator());
+      },
       //endregion SBIS3.CONTROLS.Data.Projection.ICollection
 
       //region SBIS3.CONTROLS.Data.Projection.ITree
@@ -259,6 +228,43 @@ define('js!SBIS3.CONTROLS.Data.Projection.Tree', [
          }
 
          return this._childrenMap[hash];
+      },
+
+      _getNearbyItem: function (item, isNext, enumerator) {
+         var current,
+            parent = item && item.getParent() || this.getRoot(),
+            hasItem = true,
+            sameParent = false,
+            method = isNext ? 'getNext' : 'getPrevious';
+         //TODO: отлеживать по level, что вышли "выше"
+         enumerator.setCurrent(item);
+         while (hasItem && !sameParent) {
+            hasItem = !!enumerator[method]();
+            current = enumerator.getCurrent();
+            sameParent = current ? current.getParent() === parent : false;
+         }
+         if (hasItem && sameParent) {
+            if(current && $ws.helpers.instanceOfModule(current.getContents(), 'SBIS3.CONTROLS.Data.Model') && current.getContents().isDeleted()){
+               return this._getNearbyItem(current, isNext, enumerator);
+            } else {
+               return current;
+
+            }
+         }
+         return undefined;
+      },
+
+      _moveTo: function (isNext){
+         var enumerator = this._getServiceEnumerator(),
+            initial = this.getCurrent(),
+            item = this._getNearbyItem(initial, isNext, enumerator),
+            hasMove = !!item;
+         if (hasMove) {
+            this.setCurrent(item);
+         } else {
+            enumerator.setCurrent(initial);
+         }
+         return hasMove;
       }
 
       //endregion Protected methods
