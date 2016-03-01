@@ -106,7 +106,9 @@ define('js!SBIS3.CONTROLS.TextArea', ['js!SBIS3.CONTROLS.TextBoxBase', 'html!SBI
          });
 
          this._inputField.bind('keydown', function(event){
-            if(event.shiftKey || event.altKey || event.ctrlKey || event.which == $ws._const.key.esc || event.which == $ws._const.key.tab)
+            // Если тебя посетило желание добавить ниже в исключения кнопку "shift" - то напиши зачем тебе это и будь готов к тому, что
+            // благодаря keyboardHover-у где то перестанут нажиматься клавиши!
+            if (event.altKey || event.ctrlKey || event.which == $ws._const.key.esc || event.which == $ws._const.key.tab)
                return true;
             event.stopPropagation();
             return true;
