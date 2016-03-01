@@ -206,7 +206,7 @@ define('js!SBIS3.CONTROLS.TreeCompositeView', ['js!SBIS3.CONTROLS.TreeDataGridVi
                   currentDataSet.getRecordByKey(row.key).merge(record);
                   self.redrawItem(record);
                } else { //Иначе - удаляем запись
-                  currentDataSet.removeRecord(row.key);
+                  currentDataSet.removeAt(currentDataSet.getIndexById(row.key));
                   self._destroyFolderFooter([row.key]);
                   self._ladderCompare(environment);
                   row.$row.remove();
