@@ -139,8 +139,12 @@ define('js!SBIS3.CONTROLS.Data.Adapter.SbisFormatMixin', [
          if (typeName && typeof typeName === 'object') {
             typeName = typeName.n;
          }
+         return this._getFieldTypeName(typeName);
+      },
+
+      _getFieldTypeName: function (innerName) {
          for (var typeCode in FIELD_TYPE) {
-            if (FIELD_TYPE.hasOwnProperty(typeCode) && FIELD_TYPE[typeCode] === typeName) {
+            if (FIELD_TYPE.hasOwnProperty(typeCode) && FIELD_TYPE[typeCode] === innerName) {
                return typeCode;
             }
          }
@@ -150,12 +154,27 @@ define('js!SBIS3.CONTROLS.Data.Adapter.SbisFormatMixin', [
       _getFieldMeta: function (index, type) {
          var info = this._data.s[index],
             meta = {};
-         switch (type) {
-            case 'Real':
-            case 'Money':
-               meta.precision = info.p;
-               break;
+
+         try {
+            switch (type) {
+               case 'Real':
+               case 'Money':
+                  meta.precision = info.t.p;
+                  break;
+               case 'Identity':
+                  meta.separator = ',';
+                  break;
+               case 'Enum':
+               case 'Flags':
+                  meta.dictionary = info.t.s;
+                  break;
+               case 'Array':
+                  meta.kind = this._getFieldTypeName(info.t.t);
+                  break;
+            }
+         } catch (e) {
          }
+
          return meta;
       },
       
@@ -176,8 +195,21 @@ define('js!SBIS3.CONTROLS.Data.Adapter.SbisFormatMixin', [
 
          return {
             n: format.getName(),
-            t: FIELD_TYPE[type]
+            t: this._buildSType(format, type)
          };
+      },
+
+      _buildSType: function(format, type) {
+         switch (type) {
+            case 'Real':
+            case 'Money':
+               return {
+                  n: FIELD_TYPE[type],
+                  p: format.getPrecision()
+               };
+            default:
+               return FIELD_TYPE[type];
+         }
       },
 
       _buildD: function(at, value) {

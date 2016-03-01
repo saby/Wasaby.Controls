@@ -71,6 +71,7 @@ define('js!SBIS3.CONTROLS.Data.Format.FieldsFactory', [
        * @variant enum Перечисляемое
        * @variant flags Флаги
        * @variant record Запись
+       * @variant model Модель
        * @variant recordset Выборка
        * @variant binary Двоичное
        * @variant uuid UUID
@@ -133,6 +134,7 @@ define('js!SBIS3.CONTROLS.Data.Format.FieldsFactory', [
             case 'flags':
                return new FlagsField(declaration);
             case 'record':
+            case 'model':
                return new RecordField(declaration);
             case 'recordset':
                return new RecordSetField(declaration);
