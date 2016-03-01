@@ -3,37 +3,26 @@ define([
    'js!SBIS3.CONTROLS.Data.Query.Query'
 ], function (Query) {
    'use strict';
-   var query, select;
+   var query;
    beforeEach(function (){
-      select = ['id'];
-      query = new Query({
-         select: select,
-         as: 'prod',
-         resource: 'product'
-      });
+      query = new Query();
    });
    describe('SBIS3.CONTROLS.Data.Query.Query', function () {
-      describe('.getSelect()', function () {
-         it('should return select', function (){
-            assert.deepEqual(query.getSelect(), select);
-         });
-      });
-
       describe('.select', function (){
          it('should set select from array', function () {
             var fields = ['id', 'name'];
             query.select(fields);
-            assert.deepEqual(query.getSelect(), fields);
+            assert.deepEqual(query.getSelect(), {'id':'id', 'name': 'name'});
          });
 
          it('should set select from string', function () {
             var fields = ['id', 'name'];
             query.select(fields.join(','));
-            assert.deepEqual(query.getSelect(), fields);
+            assert.deepEqual(query.getSelect(), { id: 'id', name: 'name' });
          });
 
          it('should throw an error fields is a invalid', function () {
-            var fields = {1:'id', 2:'name'};
+            var fields = 12;
             assert.throw(function(){
                query.select(fields);
             });
@@ -53,9 +42,10 @@ define([
          });
       });
 
-      describe('.as', function (){
+      describe('.getAs', function (){
          it('should return as', function (){
-            assert.equal(query.getAs(), 'prod');
+            query.from('product', 'item');
+            assert.equal(query.getAs(), 'item');
          });
       });
 
@@ -65,7 +55,7 @@ define([
                customerId: true,
                date: false
             });
-            assert.equal(query.getOrder().length, 2);
+            assert.equal(query.getOrderBy().length, 2);
          });
       });
 

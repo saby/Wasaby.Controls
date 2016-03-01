@@ -21,7 +21,7 @@ define([
       describe('.getProvider()', function () {
          it('should return Provider', function (){
             var provider = dataSource.getProvider();
-            assert.isTrue($ws.helpers.instaceOfModule('SBIS3.CONTROLS.Data.Source.Provider.SbisBusinessLogic', provider));
+            assert.isTrue($ws.helpers.instanceOfModule(provider, 'SBIS3.CONTROLS.Data.Source.Provider.SbisBusinessLogic'));
          });
       });
 
