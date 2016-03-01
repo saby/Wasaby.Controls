@@ -168,6 +168,38 @@ define('js!SBIS3.CONTROLS.Data.Projection.ICollection', [
        */
       setSort: function (sort) {
          throw new Error('Method must be implemented');
+      },
+      /**
+       * Возвращает индекс элемента в проекции по индексу в исходной коллекции
+       * @param {Number} index Индекс элемента в исходной коллекции
+       * @returns {Number}
+       */
+      getInternalBySource: function (index) {
+         throw new Error('Method must be implemented');
+      },
+      /**
+       * Возвращает индекс элемента в исходной коллекции по индексу в проекции
+       * @param {Number} index Индекс элемента в проекции
+       * @returns {Number}
+       */
+      getSourceByInternal: function (index) {
+         throw new Error('Method must be implemented');
+      },
+      /**
+       * Возвращает следующий элемент относительно item
+       * @param {SBIS3.CONTROLS.Data.Projection.ICollectionItem} item элемент проекции
+       * @returns {SBIS3.CONTROLS.Data.Projection.ICollectionItem}
+       */
+      getNext: function (item) {
+         throw new Error('Method must be implemented');
+      },
+      /**
+       * Возвращает предыдущий элемент относительно item
+       * @param {SBIS3.CONTROLS.Data.Projection.ICollectionItem} index элемент проекции
+       * @returns {SBIS3.CONTROLS.Data.Projection.ICollectionItem}
+       */
+      getPrevious: function (item) {
+         throw new Error('Method must be implemented');
       }
    };
 });
