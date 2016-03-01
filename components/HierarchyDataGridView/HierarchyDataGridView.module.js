@@ -46,16 +46,6 @@ define('js!SBIS3.CONTROLS.HierarchyDataGridView', [
             this.setCurrentRoot(nodeID);
             this.reload();
          }
-      },
-
-      _getProjectionItem: function(id, isNext) {
-         var item = HierarchyDataGridView.superclass._getProjectionItem.apply(this, arguments),
-            currentItem = this.getItems().getRecordById(id);
-         if(item && (item.getContents().get(this._options.hierField) === currentItem.get(this._options.hierField))) {
-            //возвращаем следующий элемент только если он и текущий эелемент, находятся в одном узле
-            return item;
-         }
-         return undefined;
       }
    });
 
