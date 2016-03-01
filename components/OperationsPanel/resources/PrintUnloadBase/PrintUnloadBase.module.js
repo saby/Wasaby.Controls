@@ -13,7 +13,7 @@ define('js!SBIS3.CONTROLS.PrintUnloadBase', [
     * @control
     * @public
     */
-   var PrintUnloadBase = MenuLink.extend({
+   var PrintUnloadBase = MenuLink.extend(/** @lends SBIS3.CONTROLS.PrintUnloadBase.prototype */{
       /**
        * @event onApplyOperation Перед обработкой операции
        * Событие происходит при непосредственном выборе выгрузки или печати. Данные уже выбраны, но можно поменять колонки для выборки
