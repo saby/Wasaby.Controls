@@ -56,6 +56,14 @@ define('js!SBIS3.CONTROLS.Data.Adapter.IAdapter', [], function () {
        */
       setProperty: function (data, property, value) {
          throw new Error('Method must be implemented');
+      },
+      /**
+       * Возвращает название поля, которое является первичным ключем
+       * @param {*} data Сырые данные
+       * @returns {String}
+       */
+      getKeyField: function (data) {
+         throw new Error('Method must be implemented');
       }
    };
 });

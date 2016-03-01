@@ -63,14 +63,6 @@ define('js!SBIS3.CONTROLS.Data.Adapter.IRecord', [], function () {
       },
 
       /**
-       * Возвращает название поля, которое является первичным ключем
-       * @returns {String}
-       */
-      getKeyField: function () {
-         throw new Error('Method must be implemented');
-      },
-
-      /**
        * Возвращает данные
        * @returns {*}
        */
