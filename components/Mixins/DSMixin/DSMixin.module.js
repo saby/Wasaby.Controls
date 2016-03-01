@@ -770,12 +770,16 @@ define('js!SBIS3.CONTROLS.DSMixin', [
                   curAt.at++;
                }
             }
-            this.reviveComponents().addCallback(this._notifyOnDrawItems.bind(this)).addErrback(function(e){
-               throw e;
-            });
+            this._reviveItems();
          } else {
             this._notifyOnDrawItems();
          }
+      },
+
+      _reviveItems : function() {
+         this.reviveComponents().addCallback(this._notifyOnDrawItems.bind(this)).addErrback(function(e){
+            throw e;
+         });
       },
 
       /**
@@ -835,7 +839,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
             targetElement = this._getElementByModel(item),
             newElement = this._drawItem(item);
          targetElement.after(newElement).remove();
-         this.reviveComponents();
+         this._reviveItems();
       },
 
       _getElementByModel: function(item) {
@@ -1182,7 +1186,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
       onCollectionItemChange = function(eventObject, item, index, property){
          if (this._isNeedToRedraw()) {
             this._updateItem(item);
-            this._drawItemsCallback();
+            this._reviveItems();
          }
       },
       /**
@@ -1214,8 +1218,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
 	               }
                   this._toggleEmptyData(!!this._itemsProjection.getCount());
 	               //this._view.checkEmpty(); toggleEmtyData
-	               this.reviveComponents(); //надо?
-                   this._drawItemsCallback();
+	               this._reviveItems();
 	               break;
 
 	            case IBindCollection.ACTION_MOVE:
@@ -1225,8 +1228,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
 	                     newItemsIndex + i
 	                  );
 	               }
-	               this.reviveComponents();
-                  this._drawItemsCallback();
+	               this._reviveItems();
 	               break;
 
 	            case IBindCollection.ACTION_REPLACE:
@@ -1235,8 +1237,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
 	                     newItems[i]
 	                  );
 	               }
-	               this.reviveComponents();
-                  this._drawItemsCallback();
+	               this._reviveItems();
 	               break;
 
 	            case IBindCollection.ACTION_RESET:
