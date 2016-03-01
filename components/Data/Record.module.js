@@ -42,7 +42,7 @@ define('js!SBIS3.CONTROLS.Data.Record', [
          _recordAdapter: null,
 
          /**
-          * @member {Array} Описание всех полей, полученных из данных в "сыром" виде
+          * @member {Array.<String>} Описание всех полей, полученных из данных в "сыром" виде
           */
          _fields: null,
 
@@ -181,6 +181,7 @@ define('js!SBIS3.CONTROLS.Data.Record', [
          Record.superclass.setRawData.call(this, rawData);
          this._recordAdapter = null;
          this._propertiesCache = {};
+         this._fields = null;
          this._notify('onPropertyChange');
       },
 
@@ -195,6 +196,7 @@ define('js!SBIS3.CONTROLS.Data.Record', [
          format = this._buildField(format);
          this._getRecordAdapter().addField(format, at);
          Record.superclass.addField.call(this, format, at, value);
+         this._fields = null;
 
          if (value !== undefined) {
             this.set(format.getName(), value);
@@ -205,12 +207,22 @@ define('js!SBIS3.CONTROLS.Data.Record', [
          this._checkFormatIsWritable();
          this._getRecordAdapter().removeField(name);
          Record.superclass.removeField.call(this, name);
+         this._fields = null;
       },
 
       removeFieldAt: function(at) {
          this._checkFormatIsWritable();
          this._getRecordAdapter().removeFieldAt(at);
          Record.superclass.removeFieldAt.call(this, at);
+         this._fields = null;
+      },
+
+      _getRawDataFields: function() {
+         return this._fields || (this._fields = this._getRecordAdapter().getFields());
+      },
+
+      _getRawDataFormat: function(name) {
+         return this._getRecordAdapter().getFormat(name);
       },
 
       /**
@@ -308,15 +320,6 @@ define('js!SBIS3.CONTROLS.Data.Record', [
        */
       _getRecordAdapter: function() {
          return this._recordAdapter || (this._recordAdapter = this.getAdapter().forRecord(this._options.rawData));
-      },
-
-      /**
-       * Возвращает список полей записи, полученный из "сырых" данных
-       * @returns {Array.<String>}
-       * @protected
-       */
-      _getRawDataFields: function() {
-         return this._fields || (this._fields = this._getRecordAdapter().getFields());
       },
 
       /**

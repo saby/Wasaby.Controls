@@ -43,6 +43,15 @@ define([
             });
          });
 
+         describe('.getFields()', function () {
+            it('should return fields list', function () {
+               assert.deepEqual(
+                  adapter.getFields(),
+                  ['Ид', 'Фамилия']
+               );
+            });
+         });
+
          describe('.getCount()', function () {
             it('should return records count', function () {
                assert.strictEqual(

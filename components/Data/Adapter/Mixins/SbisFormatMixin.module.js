@@ -49,6 +49,14 @@ define('js!SBIS3.CONTROLS.Data.Adapter.SbisFormatMixin', [
          return this._data;
       },
 
+      getFields: function () {
+         var fields = [];
+         for (var i = 0, count = this._data.s.length; i < count; i++) {
+            fields.push(this._data.s[i].n);
+         }
+         return fields;
+      },
+
       getEmpty: function () {
          return {
             d: [],

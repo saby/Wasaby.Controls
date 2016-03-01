@@ -99,6 +99,15 @@ define([
             });
          });
 
+         describe('.getFields()', function () {
+            it('should return fields list', function () {
+               assert.deepEqual(
+                  adapter.getFields(),
+                  ['Ид', 'Фамилия', 'Имя', 'Отчество']
+               );
+            });
+         });
+
          describe('.getFormat()', function () {
             it('should return exists field format', function () {
                var format = adapter.getFormat('Ид');

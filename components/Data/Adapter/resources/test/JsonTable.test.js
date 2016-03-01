@@ -52,6 +52,14 @@ define([
             });
          });
 
+         describe('.getFields()', function () {
+            it('should throw an Error', function () {
+               assert.throw(function () {
+                  adapter.getFields();
+               });
+            });
+         });
+
          describe('.getCount()', function () {
             it('should return records count', function () {
                assert.strictEqual(

@@ -146,7 +146,7 @@ define('js!SBIS3.CONTROLS.Data.FormattableMixin', [
        * @see format
        */
       getFormat: function () {
-         return this._getFormat.clone();
+         return this._getFormat().clone();
       },
 
       /**
@@ -221,35 +221,59 @@ define('js!SBIS3.CONTROLS.Data.FormattableMixin', [
       },
 
       /**
+       * Возвращает список полей записи, полученный из "сырых" данных
+       * @returns {Array.<String>}
+       * @protected
+       */
+      _getRawDataFields: function() {
+         throw new Error('Method must be implemented');
+      },
+
+      /**
+       * Возвращает формат поля из адаптера сырых данных
+       * @param {String} name Имя поля
+       * @returns {SBIS3.CONTROLS.Data.Format.Field}
+       * @protected
+       */
+      _getRawDataFormat: function(name) {
+         throw new Error('Method must be implemented');
+      },
+
+      /**
        * Возвращает формат полей
        * @returns {SBIS3.CONTROLS.Data.Format.Format}
        * @protected
        */
       _getFormat: function () {
          if (
-            !this.options.format ||
-            !$ws.helpers.instanceOfModule(this.options.format, 'SBIS3.CONTROLS.Data.Format.Format')
+            !this._options.format ||
+            !$ws.helpers.instanceOfModule(this._options.format, 'SBIS3.CONTROLS.Data.Format.Format')
          ) {
-            this.options.format = this._buildFormat(this.options.format);
+            this._options.format = this._buildFormat(this._options.format);
          }
          return this._options.format;
       },
 
       /**
-       * Строит формат по описанию
+       * Строит формат полей по описанию
        * @param {SBIS3.CONTROLS.Data.Format.Format|Array.<SBIS3.CONTROLS.Data.Format.FieldsFactory/FieldDeclaration>} format Описание формата
        * @returns {SBIS3.CONTROLS.Data.Format.Format}
        * @protected
        */
       _buildFormat: function(format) {
          if (!format) {
+            var fields = this._getRawDataFields(),
+               i;
             format = new Format();
+            for (i = 0; i < fields.length; i++) {
+               format.add(this._getRawDataFormat(fields[i]));
+            }
          }
          if (Object.getPrototypeOf(format) === Array.prototype) {
             format = FormatsFactory.create(format);
          }
          if (!$ws.helpers.instanceOfModule(format, 'SBIS3.CONTROLS.Data.Format.Format')) {
-            throw new TypeError('Format should be an instance of SBIS3.CONTROLS.Data.Format.Format');
+            throw new TypeError(this._moduleName + ': format should be an instance of SBIS3.CONTROLS.Data.Format.Format');
          }
          return format;
       },
@@ -268,7 +292,7 @@ define('js!SBIS3.CONTROLS.Data.FormattableMixin', [
             format = FieldsFactory.create(format);
          }
          if (!format || !$ws.helpers.instanceOfModule(format, 'SBIS3.CONTROLS.Data.Format.Field')) {
-            throw new TypeError('Format should be an instance of SBIS3.CONTROLS.Data.Format.Field');
+            throw new TypeError(this._moduleName + ': format should be an instance of SBIS3.CONTROLS.Data.Format.Field');
          }
          return format;
       }

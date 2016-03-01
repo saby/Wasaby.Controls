@@ -33,6 +33,7 @@ define([
                assert.strictEqual(record.get('id'), recordData.id);
             });
          });
+
          describe('.getChanged()', function () {
             it('should return a changed value', function () {
                record.set('max', 15);
@@ -41,6 +42,7 @@ define([
                assert.include(record.getChanged(), 'title');
             });
          });
+
          describe('.applyChanges()', function () {
             it('shouldnt return a changed value', function () {
                record.set('max', 15);
@@ -49,6 +51,7 @@ define([
                assert.deepEqual(record.getChanged(), []);
             });
          });
+
          describe('.set()', function () {
             it('should set value', function () {
                record.set('max', 13);
@@ -249,6 +252,17 @@ define([
                   record = new Record();
                record.setAdapter(adapter);
                assert.deepEqual(record.getAdapter(), adapter);
+            });
+         });
+
+         describe('.getFormat()', function () {
+            it('should return a record format from raw data', function () {
+               var format = record.getFormat();
+               assert.strictEqual(format.getCount(), Object.keys(recordData).length);
+               format.each(function(item) {
+                  var name = item.getName();
+                  assert.isTrue(recordData.hasOwnProperty(name));
+               });
             });
          });
 

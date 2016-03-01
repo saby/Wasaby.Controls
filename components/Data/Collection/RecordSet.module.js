@@ -80,6 +80,11 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
          _indexTree: {},
 
          /**
+          * @member {Array.<String>} Описание всех полей, полученных из данных в "сыром" виде
+          */
+         _fields: null,
+
+         /**
           * @var {SBIS3.CONTROLS.Data.Adapter.ITable} Адаптер для набора записей
           */
          _tableAdapter: null
@@ -119,16 +124,27 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
          format = this._buildField(format);
          this._getTableAdapter().addField(format, at);
          RecordSet.superclass.addField.call(this, format, at, value);
+         this._fields = null;
       },
 
       removeField: function(name) {
          this._getTableAdapter().removeField(name);
          RecordSet.superclass.removeField.call(this, name);
+         this._fields = null;
       },
 
       removeFieldAt: function(at) {
          this._getTableAdapter().removeFieldAt(at);
          RecordSet.superclass.removeFieldAt.call(this, at);
+         this._fields = null;
+      },
+
+      _getRawDataFields: function() {
+         return this._fields || (this._fields = this._getTableAdapter().getFields());
+      },
+
+      _getRawDataFormat: function(name) {
+         return this._getTableAdapter().getFormat(name);
       },
 
       /**
@@ -138,6 +154,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
       _assignRawData: function(data) {
          RecordSet.superclass.setRawData.call(this, data);
          this._tableAdapter = null;
+         this._fields = null;
       },
 
       //endregion SBIS3.CONTROLS.Data.FormattableMixin

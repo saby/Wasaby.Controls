@@ -73,6 +73,10 @@ define('js!SBIS3.CONTROLS.Data.Adapter.JsonTable', [
          return [];
       },
 
+      getFields: function () {
+         throw new Error(this._moduleName + ': method getFields() is not supported');
+      },
+
       getCount: function () {
          return this._data.length;
       },

@@ -19,6 +19,14 @@ define('js!SBIS3.CONTROLS.Data.Adapter.ITable', [], function () {
       },
 
       /**
+       * Возвращает массив названий полей
+       * @returns {Array.<String>} Названия полей
+       */
+      getFields: function () {
+         throw new Error('Method must be implemented');
+      },
+
+      /**
        * Возвращает кол-во записей таблицы
        * @returns {Number}
        */

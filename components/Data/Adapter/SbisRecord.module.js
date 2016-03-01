@@ -48,14 +48,6 @@ define('js!SBIS3.CONTROLS.Data.Adapter.SbisRecord', [
          this._data.d[index] = value;
       },
 
-      getFields: function () {
-         var fields = [];
-         for (var i = 0, count = this._data.s.length; i < count; i++) {
-            fields.push(this._data.s[i].n);
-         }
-         return fields;
-      },
-
       getInfo: function (name) {
          //$ws.single.ioc.resolve('ILogger').log(this._moduleName + '::getInfo()', 'Method is deprecated and will be removed in 3.7.4. Use \'getFormat\' instead.');
          var index = this._getFieldIndex(name),
