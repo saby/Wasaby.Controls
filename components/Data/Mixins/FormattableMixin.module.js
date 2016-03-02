@@ -262,19 +262,28 @@ define('js!SBIS3.CONTROLS.Data.FormattableMixin', [
        */
       _buildFormat: function(format) {
          if (!format) {
-            var fields = this._getRawDataFields(),
-               i;
-            format = new Format();
-            for (i = 0; i < fields.length; i++) {
-               format.add(this._getRawDataFormat(fields[i]));
+            var fields = null;
+            try {
+               fields = this._getRawDataFields();
+            } catch (e) {
+            }
+            if (fields) {
+               var i;
+               format = new Format();
+               for (i = 0; i < fields.length; i++) {
+                  format.add(this._getRawDataFormat(fields[i]));
+               }
             }
          }
-         if (Object.getPrototypeOf(format) === Array.prototype) {
+
+         if (format && Object.getPrototypeOf(format) === Array.prototype) {
             format = FormatsFactory.create(format);
          }
-         if (!$ws.helpers.instanceOfModule(format, 'SBIS3.CONTROLS.Data.Format.Format')) {
-            throw new TypeError(this._moduleName + ': format should be an instance of SBIS3.CONTROLS.Data.Format.Format');
+
+         if (!format || !$ws.helpers.instanceOfModule(format, 'SBIS3.CONTROLS.Data.Format.Format')) {
+            format = new Format();
          }
+
          return format;
       },
 

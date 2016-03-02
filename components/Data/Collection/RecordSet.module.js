@@ -122,20 +122,26 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
 
       addField: function(format, at, value) {
          format = this._buildField(format);
+         RecordSet.superclass.addField.call(this, format, at);
          this._getTableAdapter().addField(format, at);
-         RecordSet.superclass.addField.call(this, format, at, value);
          this._fields = null;
+
+         if (value !== undefined) {
+            this.each(function(record) {
+               record.set(format.getName(), value);
+            });
+         }
       },
 
       removeField: function(name) {
-         this._getTableAdapter().removeField(name);
          RecordSet.superclass.removeField.call(this, name);
+         this._getTableAdapter().removeField(name);
          this._fields = null;
       },
 
       removeFieldAt: function(at) {
-         this._getTableAdapter().removeFieldAt(at);
          RecordSet.superclass.removeFieldAt.call(this, at);
+         this._getTableAdapter().removeFieldAt(at);
          this._fields = null;
       },
 

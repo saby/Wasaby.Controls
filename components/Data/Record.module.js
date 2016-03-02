@@ -194,8 +194,8 @@ define('js!SBIS3.CONTROLS.Data.Record', [
       addField: function(format, at, value) {
          this._checkFormatIsWritable();
          format = this._buildField(format);
+         Record.superclass.addField.call(this, format, at);
          this._getRecordAdapter().addField(format, at);
-         Record.superclass.addField.call(this, format, at, value);
          this._fields = null;
 
          if (value !== undefined) {
@@ -205,15 +205,15 @@ define('js!SBIS3.CONTROLS.Data.Record', [
 
       removeField: function(name) {
          this._checkFormatIsWritable();
-         this._getRecordAdapter().removeField(name);
          Record.superclass.removeField.call(this, name);
+         this._getRecordAdapter().removeField(name);
          this._fields = null;
       },
 
       removeFieldAt: function(at) {
          this._checkFormatIsWritable();
-         this._getRecordAdapter().removeFieldAt(at);
          Record.superclass.removeFieldAt.call(this, at);
+         this._getRecordAdapter().removeFieldAt(at);
          this._fields = null;
       },
 

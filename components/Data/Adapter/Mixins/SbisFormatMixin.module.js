@@ -200,14 +200,9 @@ define('js!SBIS3.CONTROLS.Data.Adapter.SbisFormatMixin', [
       },
 
       _buildS: function(format) {
-         var type = format._moduleName
-            .split('.')
-            .pop()
-            .slice(0, -5);//*Field
-
          return {
             n: format.getName(),
-            t: this._buildSType(format, type)
+            t: this._buildSType(format, format.getType())
          };
       },
 

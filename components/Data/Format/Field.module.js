@@ -17,18 +17,18 @@ define('js!SBIS3.CONTROLS.Data.Format.Field', [
       $protected: {
          _options: {
             /**
-             * @cfg {*} Значение поля по умолчанию
-             * @see getDefaultValue
-             * @see setDefaultValue
-             */
-            defaultValue: null,
-
-            /**
              * @cfg {String} Имя поля
              * @see getName
              * @see setName
              */
             name: '',
+
+            /**
+             * @cfg {*} Значение поля по умолчанию
+             * @see getDefaultValue
+             * @see setDefaultValue
+             */
+            defaultValue: null,
 
             /**
              * @cfg {Boolean} Значение может быть null
@@ -45,23 +45,14 @@ define('js!SBIS3.CONTROLS.Data.Format.Field', [
       //region Public methods
 
       /**
-       * Возвращает значение поля по умолчанию
-       * @returns {*}
-       * @see defaultValue
-       * @see setDefaultValue
+       * Возвращает тип поля
+       * @returns {String}
        */
-      getDefaultValue: function () {
-         return this._options.defaultValue;
-      },
-
-      /**
-       * Устанавливает значение поля по умолчанию
-       * @param {*} value Значение поля по умолчанию
-       * @see defaultValue
-       * @see getDefaultValue
-       */
-      setDefaultValue: function (value) {
-         this._options.defaultValue = value;
+      getType: function () {
+         return this._moduleName
+            .split('.')
+            .pop()
+            .slice(0, -5);//*Field
       },
 
       /**
@@ -82,6 +73,26 @@ define('js!SBIS3.CONTROLS.Data.Format.Field', [
        */
       setName: function (name) {
          this._options.name = name;
+      },
+
+      /**
+       * Возвращает значение поля по умолчанию
+       * @returns {*}
+       * @see defaultValue
+       * @see setDefaultValue
+       */
+      getDefaultValue: function () {
+         return this._options.defaultValue;
+      },
+
+      /**
+       * Устанавливает значение поля по умолчанию
+       * @param {*} value Значение поля по умолчанию
+       * @see defaultValue
+       * @see getDefaultValue
+       */
+      setDefaultValue: function (value) {
+         this._options.defaultValue = value;
       },
 
       /**
