@@ -2,8 +2,10 @@
 define([
    'js!SBIS3.CONTROLS.Data.Adapter.Sbis',
    'js!SBIS3.CONTROLS.Data.Model',
-   'js!SBIS3.CONTROLS.Data.Collection.RecordSet'
-], function (SbisAdapter, Model, RecordSet) {
+   'js!SBIS3.CONTROLS.Data.Collection.RecordSet',
+   'js!SBIS3.CONTROLS.Data.Record',
+   'js!SBIS3.CONTROLS.Data.Source.DataSet'
+], function (SbisAdapter, Model, RecordSet, Record, DataSet) {
       'use strict';
 
       describe('SBIS3.CONTROLS.Data.Adapter.Sbis', function () {
@@ -456,6 +458,13 @@ define([
                   adapterInstance.add({d: [30, 'aaa']}, -1);
                });
             });
+
+            it('should get s from new record', function () {
+               var adapter = new SbisAdapter().forTable({d: [], s: []}),
+                  s = [{'n': 'Ид', 't': 'Число целое'}];
+               adapter.add({d: [1], s:s});
+               assert.deepEqual(adapter.getData().s, s);
+            });
          });
 
          describe('.at()', function () {
@@ -569,6 +578,13 @@ define([
                   adapterInstance.replace({d: [14]}, 99);
                });
             });
+
+            it('should replace s in raw data', function () {
+               var s = [{'n': 'Ид', 't': 'Число целое'}],
+                  adapter = new SbisAdapter().forTable({d: [1], s: []});
+               adapter.replace({d: [11], s: s}, 0);
+               assert.strictEqual(adapter.getData().s,  s);
+            });
          });
 
          describe('.move()', function () {
@@ -610,6 +626,17 @@ define([
                );
                assert.strictEqual(
                   'Арбузнов',
+                  data.d[5][1]
+               );
+            });
+            it('should not move Петров', function () {
+               adapterInstance.move(1, 1);
+               assert.strictEqual(
+                  'Петров',
+                  data.d[1][1]
+               );
+               assert.strictEqual(
+                  'Годолцов',
                   data.d[5][1]
                );
             });
@@ -700,6 +727,25 @@ define([
                });
             });
          });
+
+         describe('.getEmpty()', function () {
+            it('should return empty raw data', function () {
+               assert.deepEqual(
+                  adapterInstance.getEmpty(),
+                  {d:[], s: data.s}
+               );
+            });
+         });
+
+         describe('.getData()', function () {
+            it('should return raw data', function () {
+               assert.deepEqual(
+                  adapterInstance.getData(),
+                  data
+               );
+            });
+         });
+
       });
    }
 );

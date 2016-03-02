@@ -163,6 +163,14 @@ define([
                assert.strictEqual(name, 'flags');
                assert.strictEqual(newV, val2);
             });
+            it('should change properties cache', function () {
+               record.set('obj', {val: 13});
+               record.get('obj');
+               assert.property(record._propertiesCache, 'obj');
+               record.set('obj', {val: 14});
+               record.get('obj');
+               assert.deepEqual(record._propertiesCache['obj'], {val: 14});
+            });
          });
 
          describe('.has()', function () {

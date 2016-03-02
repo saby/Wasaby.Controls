@@ -134,6 +134,23 @@ define([
             it('should return the property value', function () {
                assert.strictEqual(model.get('internal'), 'internalDefault');
             });
+
+            //it('should return the property value', function () {
+            //   var model = new Model({
+            //      properties: {
+            //         rand: {
+            //            def:0,
+            //            get:function (){
+            //               return {'val': Math.random()};
+            //            }
+            //         }
+            //      }
+            //   });
+            //   assert.equal(model.get('rand'), model.get('rand'));
+            //   //assert.strictEqual(model.get('internal'), 'internalDefault');
+            //});
+
+
          });
 
          describe('.set()', function () {
@@ -535,6 +552,95 @@ define([
                assert.strictEqual(json.state._isDeleted, model.isDeleted());
                assert.deepEqual(json.state._defaultPropertiesValues, model._defaultPropertiesValues);
                assert.deepEqual(json.state._changedFields, model._changedFields);
+            });
+         });
+
+         describe('.toString()', function () {
+            it('should serialize a model', function () {
+               var model = new Model({
+                  rawData : {'to': 'String'}
+               });
+               assert.equal(model.toString(), '{"to":"String"}');
+            });
+         });
+
+         describe('.isUsingDataSetAsList()', function (){
+            it('sould return flag usingDataSetAsList', function (){
+               model.setUsingDataSetAsList(true);
+               assert.isTrue(model.isUsingDataSetAsList());
+               model.setUsingDataSetAsList(false);
+               assert.isFalse(model.isUsingDataSetAsList());
+            });
+         });
+
+         describe('.isSynced()', function (){
+            it('sould return flag usingDataSetAsList', function (){
+               model.setSynced(true);
+               assert.isTrue(model.isSynced());
+               model.setSynced(false);
+               assert.isFalse(model.isSynced());
+            });
+         });
+
+
+         describe('.getType()', function (){
+            it('should return type data', function() {
+               var model =  new Model({
+                  adapter: new SbisAdapter(),
+                  rawData: {
+                     s:[{
+                        n: 'id',
+                        t: 'Число целое'
+                     }],
+                     d:[1]
+                  }
+               });
+               assert.equal(model.getType('id'), 'Число целое');
+            });
+         });
+
+         describe('.isCreated()', function (){
+            it('sould return flag usingDataSetAsList', function (){
+               model.setCreated(true);
+               assert.isTrue(model.isCreated());
+               model.setCreated(false);
+               assert.isFalse(model.isCreated());
+            });
+         });
+
+         describe('.isDeleted()', function (){
+            it('sould return flag usingDataSetAsList', function (){
+               model.setDeleted(true);
+               assert.isTrue(model.isDeleted());
+               model.setDeleted(false);
+               assert.isFalse(model.isDeleted());
+            });
+         });
+
+         describe('.isChanged()', function (){
+            it('sould return flag usingDataSetAsList', function (){
+               model.setChanged(true);
+               assert.isTrue(model.isChanged());
+               model.setChanged(false);
+               assert.isFalse(model.isChanged());
+            });
+         });
+
+         describe('.getKey()', function (){
+            it('should return id property', function() {
+               assert.equal(model.getKey(), model.getId());
+            });
+         });
+
+         describe('.getKeyField()', function (){
+            it('should return name id property', function() {
+               assert.equal(model.getKeyField(), 'id');
+            });
+         });
+
+         describe('.getRaw()', function (){
+            it('should return name id property', function() {
+               assert.equal(model.getRaw(), model.getRawData());
             });
          });
       });

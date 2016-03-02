@@ -5,15 +5,17 @@ define([
       'js!SBIS3.CONTROLS.Data.Bind.ICollection',
       'js!SBIS3.CONTROLS.Data.Model',
       'js!SBIS3.CONTROLS.Data.Source.Memory',
-      'js!SBIS3.CONTROLS.Data.Adapter.Json',
       'js!SBIS3.CONTROLS.Data.Adapter.Sbis'
-   ], function (RecordSet, List, IBindCollection, Model, MemorySource, JsonAdapter, SbisAdapter) {
+   ], function (RecordSet, List, IBindCollection, Model, MemorySource, AdapterSbis) {
       'use strict';
 
       describe('SBIS3.CONTROLS.Data.Collection.RecordSet', function() {
          var rs,
-            items,
-            getItems = function() {
+            items, getItems;
+
+
+         beforeEach(function() {
+            getItems = function (){
                return [{
                   'Ид': 1,
                   'Фамилия': 'Иванов'
@@ -35,13 +37,15 @@ define([
                }, {
                   'Ид': 7,
                   'Фамилия': 'Арбузнов'
+               }, {
+                  'Ид': 8,
+                  'Фамилия': 'Арбузнов'
                }];
             };
-
-         beforeEach(function() {
             items = getItems();
             rs = new RecordSet({
-               rawData: getItems()
+               rawData: getItems(),
+               idProperty: 'Ид'
             });
          });
 
@@ -95,6 +99,31 @@ define([
                   window.console.log('RecordSet batch creating: ' + [mine, native, rel].join(', '));
                }
                assert.isBelow(rel, 5);
+            });
+            it('should get adapter in strategy', function (){
+               var rs = new RecordSet({
+                  strategy: new AdapterSbis(),
+                  rawData: {
+                     d: [
+                        [1, 'Иванов'],
+                        [2, 'Петров'],
+                        [3, 'Сидоров'],
+                        [4, 'Пухов'],
+                        [5, 'Молодцов'],
+                        [6, 'Годолцов'],
+                        [7, 'Арбузнов']
+                     ],
+                     s: [
+                        {'n': 'Ид', 't': 'Число целое'},
+                        {'n': 'Фамилия', 't': 'Строка'}
+                     ]
+                  }
+               });
+               assert.equal(rs.at(1).get('Ид'), 2);
+            });
+
+            it('should get adapter in strategy', function (){
+               assert.equal(rs.at(1).get('Ид'), 2);
             });
          });
 
@@ -201,6 +230,16 @@ define([
                });
             });
 
+            it('should throw an error', function() {
+               var data4 = {id: 4},
+                  data5 = {id: 5};
+               assert.throw(function (){
+                  rs.append([new Model({
+                     rawData: data4
+                  }), data5]);
+               });
+            });
+
          });
 
          describe('.prepend', function (){
@@ -222,6 +261,18 @@ define([
                   assert.deepEqual(rs.at(i).getRawData(), item);
                });
             });
+
+
+            it('should throw an error', function() {
+               var  data4 = {id: 4},
+                  data5 = {id: 5};
+               assert.throw(function (){
+                  rs.prepend([new Model({
+                     rawData: data4
+                  }), data5]);
+               });
+            });
+
          });
 
          describe('.assign()', function() {
@@ -242,6 +293,16 @@ define([
                assert.deepEqual(rs.at(0).getRawData(), data4);
                assert.deepEqual(rs.at(1).getRawData(), data5);
                assert.strictEqual(rs.getCount(), 2);
+            });
+
+            it('should throw an error', function() {
+               var data4 = {id: 4},
+                  data5 = {id: 5};
+               assert.throw(function (){
+                  rs.assign([new Model({
+                     rawData: data4
+                  }), data5]);
+               });
             });
          });
 
@@ -265,6 +326,16 @@ define([
                items.push(rd);
                assert.deepEqual(rs.getRawData(), items);
             });
+
+            it('should throw an error', function() {
+               var rd = {
+                     'Ид': 502,
+                     'Фамилия': '502'
+                  };
+               assert.throw(function (){
+                  rs.add(rd);
+               });
+            });
          });
 
          describe('.removeAt()', function() {
@@ -285,6 +356,19 @@ define([
                rs.replace(newItem, 0);
                items[0] = rd;
                assert.deepEqual(rs.getRawData(), items);
+            });
+
+            it('should throw an error', function() {
+               var rd = {
+                     'Ид': 50,
+                     'Фамилия': '50'
+                  },
+                  newItem = new Model({rawData: rd});
+               assert.throw(function (){
+                  rs.append([new Model({
+                     rawData: data4
+                  }), data5]);
+               });
             });
          });
 
@@ -314,6 +398,22 @@ define([
                   done();
                });
             });
+
+            it('should update record', function() {
+               var source = new MemorySource({
+                     idProperty: 'Ид'
+                  }),
+                  rec = rs.at(2);
+               source.update = function (model){
+                  assert.equal(rec, model);
+                  return new $ws.proto.Deferred().callback(model);
+               };
+
+               rec.set('Фамилия', 'Зернов');
+               rs.saveChanges(source);
+               assert.isFalse(rec.isChanged());
+            });
+
             it('should return record by updated id', function() {
                var source = new MemorySource({
                      idProperty: 'Ид'
@@ -432,7 +532,7 @@ define([
             });
             it('should hide type signature in rawData', function () {
                var rs = new RecordSet({
-                     adapter: new SbisAdapter(),
+                     adapter: new AdapterSbis(),
                      rawData: {
                         _type: 'recordset',
                         s: [1],
@@ -445,6 +545,212 @@ define([
                assert.deepEqual(json.state._options.rawData.s, [1]);
                assert.deepEqual(json.state._options.rawData.d, [2]);
             });
+         });
+
+         describe('.getIdProperty()', function (){
+            it('should return id property', function() {
+               assert.equal("Ид", rs.getIdProperty());
+            });
+
+            it('should return false', function() {
+               var  rs2 =  new RecordSet({
+                  rawData: [{
+                     'Ид': 1000,
+                     'Фамилия': 'Пушкин'
+                  }]
+               });
+               assert.isTrue(!rs2.getIdProperty());
+            });
+         });
+
+         describe('.setIdProperty()', function (){
+            it('should set id property', function() {
+               rs.setIdProperty('Фамилия');
+               assert.equal("Фамилия", rs.getIdProperty());
+            });
+
+            it('shouldnt set id property', function() {
+               rs.setIdProperty('Лицо');
+               assert.equal("Лицо", rs.getIdProperty());
+            });
+         });
+
+         describe('.removeRecord()', function (){
+            it('should mark record as remove', function() {
+               rs.removeRecord(1);
+               assert.isTrue(rs.getRecordById(1).isDeleted());
+            });
+
+            it('should mark records as remove', function() {
+               rs.removeRecord([1,2]);
+               assert.isTrue(rs.getRecordById(1).isDeleted());
+               assert.isTrue(rs.getRecordById(2).isDeleted());
+            });
+         });
+
+         describe('.getRecordById()', function (){
+            it('should return record by id', function() {
+               assert.equal(rs.getRecordById(2).get('Фамилия'), 'Петров');
+               assert.equal(rs.getRecordById(3).get('Фамилия'), 'Сидоров');
+            });
+         });
+
+         describe('.getRecordBykey()', function (){
+            it('should return record by id', function() {
+               assert.equal(rs.getRecordByKey(2).get('Фамилия'), 'Петров');
+               assert.equal(rs.getRecordByKey(3).get('Фамилия'), 'Сидоров');
+            });
+         });
+
+         describe('.getIndexById()', function (){
+            it('should return record by id', function() {
+               assert.equal(rs.getIndexById(2), 1);
+            });
+         });
+
+         describe('.getRecordKeyByIndex()', function (){
+            it('should return record by id', function() {
+               assert.equal(rs.getRecordKeyByIndex(1), 2);
+            });
+         });
+
+         describe('.getStrategy()', function (){
+            it('should return adapter', function() {
+               $ws.helpers.instanceOfModule(rs.getStrategy(), 'SBIS3.CONTROLS.Data.Adapter.JSON');
+            });
+         });
+
+         describe('.getAdapter()', function (){
+            it('should return adapter', function() {
+               $ws.helpers.instanceOfModule(rs.getStrategy(), 'SBIS3.CONTROLS.Data.Adapter.JSON');
+            });
+         });
+
+         describe('.push()', function (){
+            it('should append record', function() {
+               var m =new Model({
+                  rawData: {'Ид':100, 'Фамилия':'Карпов'}
+               });
+               rs.push(m);
+               assert.equal(rs.getRecordById('100').get('Фамилия'),'Карпов');
+            });
+
+            it('should make record and append in recordset', function() {
+               var m =  {'Ид':100, 'Фамилия':'Карпов'};
+               rs.push(m);
+               assert.equal(rs.getRecordById('100').get('Фамилия'),'Карпов');
+            });
+         });
+
+         describe('.filter()', function (){
+            it('should return fitered record set', function() {
+               var newRs = rs.filter(function (model){
+                  return model.get('Фамилия') === 'Арбузнов';
+               });
+               assert.equal(newRs.getCount(), 2);
+               assert.equal(newRs.at(0).get('Фамилия'), 'Арбузнов');
+            });
+         });
+
+         describe('.insert()', function (){
+            it('should insert record in recordset', function() {
+               var m = new Model({
+                  rawData: {'Ид':100, 'Фамилия':'Карпов'}
+               });
+               rs.insert(m, 0);
+               assert.equal(rs.at(0).get('Фамилия'), 'Карпов');
+               var length = rs.getCount();
+               rs.insert(m, 5);
+               assert.equal(rs.getCount(), length);
+            });
+
+
+         });
+
+         describe('.setMetaData()', function (){
+            it('should set meta data', function() {
+               var meta = {'test': true};
+               rs.setMetaData(meta);
+               assert.equal(meta, rs.getMetaData());
+            });
+         });
+
+         describe('.getMetaData()', function (){
+            it('should return meta data path', function() {
+               rs.setMetaData({'path':[{'s':1}]});
+               var meta = rs.getMetaData();
+               assert.equal(meta.path.at(0).get('s'), 1);
+            });
+
+            it('should return meta data results', function() {
+               rs.setMetaData({'results':{'s':1}});
+               var meta = rs.getMetaData();
+               assert.equal(meta.results.get('s'), 1);
+            });
+         });
+
+         describe('.getTreeIndex()', function () {
+            it('should return TreeIndex', function() {
+               var rs =  new RecordSet({
+                  rawData: [{
+                     'Ид': 1,
+                     'Раздел': null
+                  }, {
+                     'Ид': 2,
+                     'Раздел': 1
+                  }],
+                  idProperty: 'Ид'
+               });
+               var index = rs.getTreeIndex('Раздел');
+               assert.deepEqual(index.null, [1]);
+            });
+         });
+
+         describe('.getChildItems()', function () {
+            it('should return child items', function() {
+               var rs =  new RecordSet({
+                  rawData: [{
+                     'Ид': 1,
+                     'Раздел': null
+                  }, {
+                     'Ид': 2,
+                     'Раздел': 1
+                  }, {
+                     'Ид': 3,
+                     'Раздел': 1
+                  }, {
+                     'Ид': 4,
+                     'Раздел': 2
+                  }],
+                  idProperty: 'Ид'
+               });
+               assert.deepEqual(rs.getChildItems(1, true, 'Раздел'), [2, 3, 4]);
+               assert.deepEqual(rs.getChildItems(4, true, 'Раздел'), []);
+               assert.deepEqual(rs.getChildItems(1, false, 'Раздел'), [2, 3]);
+            });
+         });
+      });
+
+      describe('.hasChild()', function (){
+         it('should check child', function() {
+            var rs =  new RecordSet({
+               rawData: [{
+                  'Ид': 1,
+                  'Раздел': null
+               }, {
+                  'Ид': 2,
+                  'Раздел': 1
+               }, {
+                  'Ид': 3,
+                  'Раздел': 1
+               }, {
+                  'Ид': 4,
+                  'Раздел': 2
+               }],
+               idProperty: 'Ид'
+            });
+            assert.isTrue(rs.hasChild(1,'Раздел'));
+            assert.isFalse(rs.hasChild(4,'Раздел'));
          });
       });
    }

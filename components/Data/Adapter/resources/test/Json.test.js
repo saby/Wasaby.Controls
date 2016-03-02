@@ -153,6 +153,13 @@ define(
                );
             });
          });
+
+         describe('.serialize()', function () {
+            it('should return data as is', function () {
+               assert.equal(adapterInstance.serialize(data), data);
+            });
+         });
+
       });
 
       describe('SBIS3.CONTROLS.Data.Adapter.Json::forTable()', function () {
@@ -423,6 +430,17 @@ define(
                );
                assert.strictEqual(
                   'Арбузнов',
+                  data[5]['Фамилия']
+               );
+            });
+            it('should not move Петров', function () {
+               adapterInstance.move(1, 1);
+               assert.strictEqual(
+                  'Петров',
+                  data[1]['Фамилия']
+               );
+               assert.strictEqual(
+                  'Годолцов',
                   data[5]['Фамилия']
                );
             });
