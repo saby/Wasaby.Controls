@@ -29,13 +29,12 @@ define('js!SBIS3.CONTROLS.SuggestTextBox', [
          _changedByKeyboard: false  /* {Boolean} Флаг, обозначающий, что изменения были вызваны действиями с клавиатуры */
       },
       $constructor: function () {
-         this._options = $ws.core.merge({
-            loadingContainer: this.getContainer().find('.controls-TextBox__fieldWrapper')
-         }, this._options);
-
          this._options.observableControls.unshift(this);
-
          this.getContainer().addClass('controls-SuggestTextBox');
+      },
+
+      _getLoadingContainer : function() {
+         return this.getContainer().find('.controls-TextBox__fieldWrapper');
       },
 
       /**
