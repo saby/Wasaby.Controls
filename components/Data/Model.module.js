@@ -118,6 +118,11 @@ define('js!SBIS3.CONTROLS.Data.Model', [
          if ('usingDataSetAsList' in cfg) {
             $ws.single.ioc.resolve('ILogger').log(this._moduleName + '::$constructor()', 'Option "usingDataSetAsList" is deprecated and will be removed in 3.7.4.');
          }
+
+         this._options.idProperty = this._options.idProperty || '';
+         if (!this._options.idProperty) {
+            this._options.idProperty = this.getAdapter().getKeyField(this._options.rawData);
+         }
       },
 
       // region SBIS3.CONTROLS.Data.IPropertyAccess

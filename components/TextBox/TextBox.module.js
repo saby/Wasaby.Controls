@@ -110,16 +110,9 @@ define('js!SBIS3.CONTROLS.TextBox', ['js!SBIS3.CONTROLS.TextBoxBase','html!SBIS3
       $constructor: function() {
          var self = this;
          this._inputField = $('.js-controls-TextBox__field', this.getContainer().get(0));
-         this._container.bind('keypress',function(e){
-            self._keyPressBind(e);
-         });
-         this._container.bind('keydown',function(e){
-            self._keyDownBind(e);
-         });
-
-         this._container.bind('keyup',function(e){
-            self._keyUpBind(e);
-         });
+         this._container.bind('keypress', this._keyPressBind.bind(this))
+                        .bind('keydown', this._keyDownBind.bind(this))
+                        .bind('keyup', this._keyUpBind.bind(this));
 
          this._inputField.bind('paste', function(){
             self._pasteProcessing++;
@@ -266,6 +259,10 @@ define('js!SBIS3.CONTROLS.TextBox', ['js!SBIS3.CONTROLS.TextBoxBase','html!SBIS3
          }
       },
 
+      _keyDownBind: function(){
+
+      },
+
       _keyUpBind: function(event) {
          var newText = this._inputField.val();
          this.setText(newText);
@@ -275,14 +272,10 @@ define('js!SBIS3.CONTROLS.TextBox', ['js!SBIS3.CONTROLS.TextBoxBase','html!SBIS3
          }
       },
 
-      _keyDownBind: function(event) {
-         if (this._options.inputRegExp !== '' && this._inputRegExp(event, new RegExp(this._options.inputRegExp))){
-            event.preventDefault();
+      _keyPressBind: function(event) {
+         if (this._options.inputRegExp){
+            return this._inputRegExp(event, new RegExp(this._options.inputRegExp));
          }
-      },
-
-      _keyPressBind: function() {
-
       },
 
       _getElementToFocus: function() {
@@ -300,21 +293,14 @@ define('js!SBIS3.CONTROLS.TextBox', ['js!SBIS3.CONTROLS.TextBoxBase','html!SBIS3
       },
 
       _inputRegExp: function (e, regexp) {
-         if (e.shiftKey) return true;
-         var keyCode = (e.which >= 96 && e.which <= 105) ? e.which - 48 : e.which;
-         if (keyCode < 32
-            || e.ctrlKey
-            || e.altKey
-            || e.which == $ws._const.key.left
-            || e.which == $ws._const.key.right
-            || e.which == $ws._const.key.end
-            || e.which == $ws._const.key.home
-            || e.which == $ws._const.key.del
-
-            ) {
+         var keyCode = e.which;
+         if (keyCode < 32 || e.ctrlKey || e.altKey) {
             return false;
          }
-         return (!regexp.test(String.fromCharCode(keyCode)));
+         if (!regexp.test(String.fromCharCode(keyCode))) {
+            return false;
+         }
+         return true;
       },
 
       _createCompatPlaceholder : function() {

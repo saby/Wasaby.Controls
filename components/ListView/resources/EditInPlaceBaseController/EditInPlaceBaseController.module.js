@@ -117,23 +117,30 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                } else if (key === $ws._const.key.enter || key === $ws._const.key.down || key === $ws._const.key.up) {
                   e.stopImmediatePropagation();
                   e.preventDefault();
-                  this._editNextTarget(key === $ws._const.key.down || key === $ws._const.key.enter);
+                  this._editNextTarget(this._getCurrentTarget(), key === $ws._const.key.down || key === $ws._const.key.enter);
                }
             },
-            _editNextTarget: function (editNextRow) {
+            _editNextTarget: function (currentTarget, editNextRow) {
                var
-                  nextTarget = this._getNextTarget(editNextRow);
+                  self = this,
+                  nextTarget = this._getNextTarget(currentTarget, editNextRow);
                if (nextTarget.length) {
-                  this.edit(nextTarget, this._options.dataSet.getRecordByKey(nextTarget.attr('data-id')));
+                  this.edit(nextTarget, this._options.dataSet.getRecordByKey(nextTarget.attr('data-id'))).addCallback(function(result) {
+                     if (!result) {
+                        self._editNextTarget(nextTarget, editNextRow);
+                     }
+                  });
                } else if (editNextRow && this._options.modeAutoAdd) {
                   this.add();
                } else {
                   this.endEdit(true);
                }
             },
-            _getNextTarget: function(editNextRow) {
-               var currentTarget = this._eip.getTarget();
+            _getNextTarget: function(currentTarget, editNextRow) {
                return currentTarget[editNextRow ? 'next' : 'prev']('.js-controls-ListView__item:not(".controls-editInPlace")');
+            },
+            _getCurrentTarget: function() {
+               return this._eip.getTarget();
             },
             showEip: function(target, model, options) {
                if (options && options.isEdit) {
@@ -149,6 +156,7 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                      this._notify('onAfterBeginEdit', preparedRecord);
                      return preparedRecord;
                   }
+                  return preparedRecord;
                }.bind(this));
             },
             _prepareEdit: function(record) {
@@ -213,16 +221,15 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                   } else {
                      return this._endEdit(eip, withSaving, endEditResult);
                   }
-
                }
-               return this._savingDeferred;
+               //TODO: Надо обсудить c Витей, почему в стрельнувшем Deferred и если результат тоже был Deferred - нельзя делать addCallback.
+               return this._savingDeferred.isReady() ? $ws.proto.Deferred.success() : this._savingDeferred;
             },
             _endEdit: function(eip, withSaving, endEditResult) {
                if (endEditResult !== undefined) {
                   withSaving = endEditResult;
                }
                if (!withSaving || eip.validate()) {
-                  eip.endEdit();
                   this._savingDeferred = new $ws.proto.Deferred();
                   this._sendLockCommand(this._savingDeferred);
                   if (withSaving) {
@@ -238,34 +245,34 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
             },
             _getEditingEip: function() {
                return this._eip.isEdit() ? this._eip : null;
-             },
+            },
             _afterEndEdit: function(eip, withSaving) {
                var
-                  target = eip.getTarget(),
                   eipRecord = eip.getEditingRecord(),
                   isAdd = !eipRecord.isStored();
                if (this._editingRecord) {
                   this._editingRecord.merge(eipRecord);
                   this._editingRecord = undefined;
                }
-               isAdd && target.remove();
                if (withSaving) {
                   this._options.dataSource.update(eipRecord).addCallback(function() {
                      isAdd && this._options.dataSet.push(eipRecord);
                   }.bind(this)).addBoth(function() {
-                     eip.endEdit();
-                     this._notifyOnAfterEndEdit(eipRecord, target, withSaving);
+                     this._notifyOnAfterEndEdit(eip, eipRecord, withSaving, isAdd);
                   }.bind(this));
                } else {
-                  eip.endEdit();
-                  this._notifyOnAfterEndEdit(eipRecord, target, withSaving);
+                  this._notifyOnAfterEndEdit(eip, eipRecord, withSaving, isAdd);
                }
             },
-            _notifyOnAfterEndEdit: function(eipRecord, target, withSaving) {
+            //TODO: Нужно переименовать метод
+            _notifyOnAfterEndEdit: function(eip, eipRecord, withSaving, isAdd) {
+               var target = eip.getTarget();
+               eip.endEdit();
+               isAdd && target.remove();
+               this._notify('onAfterEndEdit', eipRecord, target, withSaving);
                if (!this._savingDeferred.isReady()) {
                   this._savingDeferred.callback();
                }
-               this._notify('onAfterEndEdit', eipRecord, target, withSaving);
             },
             add: function(model, options) {
                var
@@ -284,8 +291,13 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
             _createAddTarget: function(options) {
                var
                    footer,
-                   target = this._options.columns ? $('<tr>') : $('<div>');
-               target.addClass("js-controls-ListView__item");
+                   target;
+               if (this._options.columns) {
+                  target = $('<tr><td colspan="' + this._options.columns.length + (this._options.ignoreFirstColumn ? 1 : 0) + '"></td></tr>');
+               } else {
+                  target = $('<div>');
+               }
+               target.addClass("js-controls-ListView__item controls-ListView__item");
                if (options && options.initiator) {
                   footer = options.initiator.closest('.controls-TreeDataGridView__folderFooter');
                }
@@ -298,7 +310,7 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
              */
             _focusCatch: function (event) {
                if (event.which === $ws._const.key.tab) {
-                  this._editNextTarget(!event.shiftKey);
+                  this._editNextTarget(this._getCurrentTarget(), !event.shiftKey);
                }
             },
             _onChildFocusOut: function (event, control) {
@@ -316,9 +328,10 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
              * @private
              */
             _isAnotherTarget: function(target, control) {
-               while (target && target !== control) {
+               do {
                   target = target.getParent() || target.getOpener();
                }
+               while (target && target !== control);
                return target !== control;
             },
             _isCurrentTarget: function(control) {

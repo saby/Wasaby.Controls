@@ -43,8 +43,8 @@ define('js!SBIS3.CONTROLS.EditInPlaceHoverController',
                   }
                })
             },
-            _getNextTarget: function(editNextRow) {
-               return this._getEditingEip().getTarget()[editNextRow ? 'next' : 'prev']('.js-controls-ListView__item:not(".controls-editInPlace")');
+            _getCurrentTarget: function() {
+               return this._getEditingEip().getTarget();
             },
             showEip: function(target, record, options) {
                if (options && options.isEdit === false) {
@@ -85,15 +85,16 @@ define('js!SBIS3.CONTROLS.EditInPlaceHoverController',
             },
             edit: function (target, record) {
                var hoveredEip = this._hoveredEip;
-               this.endEdit(true).addCallback(function() {
+               return this.endEdit(true).addCallback(function() {
                   if (hoveredEip && (hoveredEip.getTarget().get(0) === target.get(0))) {
                      if (this._notify('onBeginEdit', record) !== false) {
                         hoveredEip.edit(target, record);
                         this._hoveredEip = null;
                         this._notify('onAfterBeginEdit', record);
+                        return record;
                      }
                   } else {
-                     EditInPlaceHoverController.superclass.edit.apply(this, [target, record])
+                     return EditInPlaceHoverController.superclass.edit.apply(this, [target, record])
                   }
                }.bind(this));
             },

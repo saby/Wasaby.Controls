@@ -7,7 +7,7 @@ define([
       'js!SBIS3.CONTROLS.Data.Format.FieldsFactory',
       'js!SBIS3.CONTROLS.Data.Source.Memory',
       'js!SBIS3.CONTROLS.Data.Adapter.Json',
-      'js!SBIS3.CONTROLS.Data.Adapter.Sbis'
+      'js!SBIS3.CONTROLS.Data.Adapter.Sbis',
    ], function (RecordSet, List, IBindCollection, Model, FieldsFactory, MemorySource, JsonAdapter, SbisAdapter) {
       'use strict';
 

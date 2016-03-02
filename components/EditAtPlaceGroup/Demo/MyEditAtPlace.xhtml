@@ -86,11 +86,12 @@
                            </component>
                         </option>
                      </component>
-                     <component data-component="SBIS3.CONTROLS.EditAtPlace" name="pong" class="controls-TabButton__additionalText1">
+                     <component data-component="SBIS3.CONTROLS.EditAtPlace" name="pong" class="controls-TabButton__additionalText1" decorators="format:DD.MM">
                         <option name="text" bind="tabs/date"></option>
                         <option name="editorTpl" type="string">
                         <component data-component="SBIS3.CONTROLS.DatePicker" tabindex=4>
-                           <option name="text" bind="tabs/date"></option>
+                           <option name="date" bind="tabs/date"></option>
+                           <option name="mask">DD.MM.YYYY</option>
                         </component>
                      </option>
                      </component>
@@ -111,9 +112,6 @@
             <option name="id">b</option>
             <option name="title">Иконка</option>
             <option name="icon" value="icon-16 icon-EmoiconTongue icon-done"></option>
-            <option name="content">
-              <component data-component="SBIS3.CONTROLS.Link"><opt name="caption">testBtn D</opt></component>
-            </option>
          </options>
       </opts>
    </component>

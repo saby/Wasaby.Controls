@@ -86,6 +86,21 @@ define('js!SBIS3.CONTROLS.DSMixin', [
        *    });
        * </pre>
        */
+      /**
+       * @event onItemsReady при готовности экземпляра коллекции iList
+       * @remark
+       * Например когда представлению задается Source и нужно подписаться на события List, который вернется в результате запроса
+       * @param {$ws.proto.EventObject} eventObject Дескриптор события.
+       * @example
+       * <pre>
+       *    myView.subscribe('onItemsReady', function(event){
+       *       var items = this.getItems();
+       *       items.subscribe('onCollectionChange', function(){
+       *          alert('Collection is changed')
+       *       })
+       *    });
+       * </pre>
+       */
       $protected: {
          _needToRedraw: false,
          _itemsProjection: null,
@@ -274,7 +289,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
       },
 
       $constructor: function () {
-         this._publish('onDrawItems', 'onDataLoad', 'onDataLoadError', 'onBeforeDataLoad');
+         this._publish('onDrawItems', 'onDataLoad', 'onDataLoadError', 'onBeforeDataLoad', 'onItemsReady');
          if (typeof this._options.pageSize === 'string') {
             this._options.pageSize = this._options.pageSize * 1;
          }
@@ -297,6 +312,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
                this._itemsProjection = itemsOpt;
                this._items = this._convertItems(this._itemsProjection.getCollection());
                this._setItemsEventHandlers();
+               this._notify('onItemsReady');
                this._itemsReadyCallback();
             }
             else if (itemsOpt instanceof Array) {
@@ -316,8 +332,10 @@ define('js!SBIS3.CONTROLS.DSMixin', [
             }
             else {
                this._items = itemsOpt;
+               this._dataSource = null;
                this._createDefaultProjection(this._items);
                this._itemsReadyCallback();
+               this._notify('onItemsReady');
             }
          }
       },
@@ -511,6 +529,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
                       self._dataSet = list;
                       self._createDefaultProjection(self._items);
                       self._setItemsEventHandlers();
+                      this._notify('onItemsReady');
                       self._itemsReadyCallback();
                       self._dataLoadedCallback();
 
@@ -522,7 +541,6 @@ define('js!SBIS3.CONTROLS.DSMixin', [
                 .addErrback($ws.helpers.forAliveOnly(function (error) {
                    if (!error.canceled) {
                       self._toggleIndicator(false);
-
                       if (self._notify('onDataLoadError', error) !== true) {
                          $ws.helpers.message(error.message.toString().replace('Error: ', ''));
                       }
@@ -531,6 +549,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
                 }, self));
              this._loader = def;
           } else {
+             this._redraw();
              def = new $ws.proto.Deferred();
              def.callback();
           }
@@ -751,12 +770,16 @@ define('js!SBIS3.CONTROLS.DSMixin', [
                   curAt.at++;
                }
             }
-            this.reviveComponents().addCallback(this._notifyOnDrawItems.bind(this)).addErrback(function(e){
-               throw e;
-            });
+            this._reviveItems();
          } else {
             this._notifyOnDrawItems();
          }
+      },
+
+      _reviveItems : function() {
+         this.reviveComponents().addCallback(this._notifyOnDrawItems.bind(this)).addErrback(function(e){
+            throw e;
+         });
       },
 
       /**
@@ -790,7 +813,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
 
       _destroyControls: function(container){
          $('[data-component]', container).each(function (i, item) {
-            var inst = $(item).wsControl();
+            var inst = item.wsControl;
             if (inst) {
                inst.destroy();
             }
@@ -816,7 +839,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
             targetElement = this._getElementByModel(item),
             newElement = this._drawItem(item);
          targetElement.after(newElement).remove();
-         this.reviveComponents();
+         this._reviveItems();
       },
 
       _getElementByModel: function(item) {
@@ -1116,6 +1139,16 @@ define('js!SBIS3.CONTROLS.DSMixin', [
       	return this._needToRedraw && !!this._getItemsContainer();
       },
 
+      _moveItem: function(item, to){
+         item = item.getContents();
+         var targetNode = this._getTargetContainer(item),
+            fromContainer = this._getItemContainer(targetNode, item),
+            toContainer = this._getItemContainerByIndex(targetNode, to);
+         if (fromContainer.length && toContainer.length) {
+            fromContainer.insertBefore(toContainer);
+         }
+      },
+
       _removeItem: function (item) {
          item = item.getContents();
          var container = this._getItemContainer(this._getTargetContainer(item), item);
@@ -1153,6 +1186,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
       onCollectionItemChange = function(eventObject, item, index, property){
          if (this._isNeedToRedraw()) {
             this._updateItem(item);
+            this._reviveItems();
          }
       },
       /**
@@ -1179,23 +1213,22 @@ define('js!SBIS3.CONTROLS.DSMixin', [
 	               for (i = 0; i < newItems.length; i++) {
 	                  this._addItem(
 	                     newItems[i],
-	                        newItemsIndex + i
+                        newItemsIndex + i
 	                  );
 	               }
+                  this._toggleEmptyData(!!this._itemsProjection.getCount());
 	               //this._view.checkEmpty(); toggleEmtyData
-	               this.reviveComponents(); //надо?
-                   this._drawItemsCallback();
+	               this._reviveItems();
 	               break;
 
 	            case IBindCollection.ACTION_MOVE:
 	               for (i = 0; i < newItems.length; i++) {
-	                  this._view.moveItem(
+	                  this._moveItem(
 	                     newItems[i],
-	                        newItemsIndex + i
+	                     newItemsIndex + i
 	                  );
 	               }
-	               this.reviveComponents();
-                   this._drawItemsCallback();
+	               this._reviveItems();
 	               break;
 
 	            case IBindCollection.ACTION_REPLACE:
@@ -1204,12 +1237,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
 	                     newItems[i]
 	                  );
 	               }
-	               this._view.selectItem(
-	                  this._itemsProjection.getCurrent(),
-	                  this._itemsProjection.getCurrentPosition()
-	               );
-	               this.reviveComponents();
-                   this._drawItemsCallback();
+	               this._reviveItems();
 	               break;
 
 	            case IBindCollection.ACTION_RESET:

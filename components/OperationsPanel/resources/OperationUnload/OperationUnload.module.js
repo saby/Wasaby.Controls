@@ -5,9 +5,16 @@ define('js!SBIS3.CONTROLS.OperationUnload', [
    'js!SBIS3.CONTROLS.PrintUnloadBase',
    'js!SBIS3.CONTROLS.Utils.DataProcessor',
    'i18n!SBIS3.CONTROLS.OperationUnload'
-], function(PrintUnloadBase, Unloader, rk) {
-   //TODO Идея! нужно просто вызвать у view.unload, он в свою очередь поднимает событие onUnload, а событие подхыватит выгрузчик. тогда в кнопке вообще только визуализация будет
-
+], function(PrintUnloadBase, Exporter, rk) {
+   //TODO Идея! нужно просто вызвать у view.export, он в свою очередь поднимает событие onUnload, а событие подхыватит выгрузчик. тогда в кнопке вообще только визуализация будет
+   /**
+    * Контрол для экспорта в Excel, PDF  подготовленных данных
+    * @class SBIS3.CONTROLS.OperationUnload
+    * @extends SBIS3.CONTROLS.PrintUnloadBase
+    * @author Крайнов Дмитрий Олегович
+    * @control
+    * @public
+    */
    var OperationUnload = PrintUnloadBase.extend({
       /**
        * <pre>
@@ -22,7 +29,6 @@ define('js!SBIS3.CONTROLS.OperationUnload', [
        *     id : 'Excel',
        *     title : 'Список в Excel',
        *     icon : 'sprite:icon-24 icon-Excel icon-multicolor action-hover',
-       *     unloadMethod: 'Excel.Сохранить'
        *  }
        * ]
        *  </pre>
@@ -34,18 +40,18 @@ define('js!SBIS3.CONTROLS.OperationUnload', [
             linkText: rk('Выгрузить'),
             caption: rk('Выгрузить'),
             //TODO перенести настройку опции в item. Чтобы можно было отдельно выгружать либо Excel, либо PDF
-            serverSideUnload : false,
+            serverSideExport : true,
             items: [
                {
                   id : 'PDF',
                   title : rk('Список в PDF'),
+                  pageOrientation: 1,
                   icon : 'sprite:icon-24 icon-PDF2 icon-multicolor action-hover'
                },
                {
                   id : 'Excel',
                   title : rk('Список в Excel'),
-                  icon : 'sprite:icon-24 icon-Excel icon-multicolor action-hover',
-                  unloadMethod: 'Excel.Сохранить'
+                  icon : 'sprite:icon-24 icon-Excel icon-multicolor action-hover'
                }
             ]
          },
@@ -67,7 +73,7 @@ define('js!SBIS3.CONTROLS.OperationUnload', [
          this.subscribe('onMenuItemActivate', this._menuItemActivated);
          this._clickHandler = this._clickHandler.callNext(this._clickHandlerOverwritten);
          //Для IOS всегда будем выгружать через сервер. Android прекрасно умеет выгружать
-         this._options.serverSideUnload = this._options.serverSideUnload || $ws._const.browser.isMobileSafari;
+         this._options.serverSideExport = this._options.serverSideExport || $ws._const.browser.isMobileSafari;
       },
       _clickHandlerOverwritten: function() {
          var items = this._options.items,
@@ -99,14 +105,14 @@ define('js!SBIS3.CONTROLS.OperationUnload', [
        * @private
        */
       _notifyOnApply : function(columns){
-         return this._notify('onApplyOperation', 'unload', columns);
+         return this._notify('onApplyOperation', 'export', columns);
       },
       _applyMassOperation : function(ds){
          if (this._isClientUnload()) {
             this._applyOperation(ds);
             return;
          }
-         this.processSelectedOperation(ds.getCount());
+         this.processSelectedPageSize(ds.getCount());
       },
       /**
        * Обработка результатов выбора пользователя (после показа диалога выбора количества выгружаемых записей)
@@ -114,24 +120,39 @@ define('js!SBIS3.CONTROLS.OperationUnload', [
        * Если у нас возможно
        * @param {number} [pageSize] сколько записей нужно выгружать()
        */
-      processSelectedOperation: function(pageSize){
-         var record = this._dataSet.getRecordByKey(this._currentItem).getRaw(),
-             objectArr,
-             fullFilter,
-             unloader;
-         //TODO когда появится воможность выгружать в PDF надо убрать проверку на Excel
-         //Для Excel всегда выгружаем на сервере
-         if (this._isClientUnload() || !record.unloadMethod) {
-            OperationUnload.superclass.processSelectedOperation.apply(this, arguments);
+      processSelectedPageSize: function(pageSize){
+         var fullFilter,
+             exporter,
+             pageOrient = this._getPDFPageOrient();
+         if (this._isClientUnload()) {
+            OperationUnload.superclass.processSelectedPageSize.apply(this, arguments);
             return;
          }
-         unloader = new Unloader(this._prepareUnloaderConfig());
-         fullFilter = unloader.getFullFilter(pageSize);
-         fullFilter['Название'] = this._getUnloadFileName();
-         objectArr = record.unloadMethod.split('.');
-         unloader.unload(objectArr[0], objectArr[1], this._getUnloadFileName(), fullFilter, true );
+
+         exporter = new Exporter(this._prepareExporterConfig());
+         fullFilter = exporter.getFullFilter(pageSize, true);
+         fullFilter['FileName'] = this._getUnloadFileName();
+         if (this._currentItem === 'PDF'){
+            delete fullFilter.HierarchyField;
+         }
+         exporter.exportList(this._getUnloadFileName(), this._currentItem, 'SaveList', fullFilter, pageOrient );
       },
-      _prepareUnloaderConfig : function() {
+      _getPDFPageOrient: function(){
+         var pageOrient;
+         if (this._currentItem === 'PDF'){
+            pageOrient = this._dataSet.getRecordById(this._currentItem).getRaw().pageOrientation;
+         }
+         return pageOrient
+      },
+      /**
+       * @deprecated Переименован в _prepareExporterConfig
+       * @returns {*}
+       * @private
+       */
+      _prepareUnloaderConfig:function(){
+         return this._prepareExporterConfig();
+      },
+      _prepareExporterConfig : function() {
          var  view = this._getView(),
             cfg = {
                dataSet: view.getDataSet(),
@@ -147,17 +168,23 @@ define('js!SBIS3.CONTROLS.OperationUnload', [
          }
          return cfg;
       },
-      applyOperation: function(dataSet, cfg){
-         var p = new Unloader(cfg);
-         //TODO Если не задали имя файла в опции, то возьмем из 1ой колонки, а в 1ой пусто, Вставим текст
-         p.unload(this._controlsId[this._currentItem].objectName, this._controlsId[this._currentItem].method, this._getUnloadFileName() );
+      applyOperation: function(cfg){
+         var p = new Exporter(cfg),
+               pageOrient = this._getPDFPageOrient();
+
+         if (this._isClientUnload()) {
+            //TODO что делать, если метод шибко прикладной?
+            p.exportHTML(this._getUnloadFileName(), this._currentItem, undefined, undefined, pageOrient);
+         } else {
+            p.exportDataSet(this._getUnloadFileName(), this._currentItem, undefined, undefined, pageOrient);
+         }
+         //p.exportData(this._controlsId[this._currentItem].objectName, this._controlsId[this._currentItem].method, this._getUnloadFileName() );
       },
       _getUnloadFileName: function(){
          return  this._options.fileName || this._getView().getColumns()[0].title || 'Как на экране';
       },
       _isClientUnload : function(){
-         //Смотрим на наличие выбранных потому, что у нас есть ограничение по передаче количества символов в GET и это будет бесполезно выгружать на сервере.
-         return !this._options.serverSideUnload && this._controlsId[this._currentItem].objectName !== 'Excel' && !this._isSelectedState();
+         return !this._options.serverSideExport;
       }
    });
 

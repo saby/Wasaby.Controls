@@ -940,7 +940,7 @@
 @combo-box-arrow-hover-border-width:            @combo-box-arrow-border-width;
 @combo-box-arrow-hover-border-style:            @combo-box-arrow-border-style;
 @combo-box-arrow-hover-border-color:            @combo-box-arrow-border-color;
-@combo-box-arrow-hover-bg:                      @white-color url(@combo-box-arrow-spritesheet) 0 -16px no-repeat;
+@combo-box-arrow-hover-bg:                      @white-color url(@combo-box-arrow-spritesheet) 0 0 no-repeat;
 
 @combo-box-arrow-active-border-width:           @combo-box-arrow-border-width;
 @combo-box-arrow-active-border-style:           @combo-box-arrow-border-style;
@@ -960,7 +960,7 @@
 @combo-box-picker-border:                       1px solid @gray-light-color;
 @combo-box-picker-border-radius:                0 0 2px 2px;
 @combo-box-picker-margin:                       -2px 0 0;
-@combo-box-picker-item-padding:                 4px 7px;
+@combo-box-picker-item-padding:                 2px 7px;
 @combo-box-picker-item-font:                    inherit;
 
 @combo-box-picker-item-text-color:              @combo-box-field-text-color;
@@ -1284,12 +1284,14 @@
 @list-view-actions-active-bg:                   @data-grid-row-hover-bg !important;
 @list-view-actions-bg:                          @data-grid-row-hover-bg;
 
-@list-view-items-toolbar-margin-right:          3px;
-@list-view-items-toolbar-zindex:                10;
-@list-view-items-toolbar-box-shadow:            -2px -2px 5px @data-grid-row-hover-bg;
-@list-view-items-toolbar-vertical-box-shadow:   -2px  2px 5px @data-grid-row-hover-bg;
-@list-view-items-toolbar-bg:                    @data-grid-row-hover-bg;
-@list-view-items-toolbar-locked-bg:             #F3F3F3;
+@list-view-items-toolbar-margin-right:               3px;
+@list-view-items-toolbar-zindex:                     10;
+@list-view-items-toolbar-box-shadow:                 -2px -2px 5px @data-grid-row-hover-bg;
+@list-view-items-toolbar-locked-box-shadow:          -2px -2px 5px @default-itemSelected-color;
+@list-view-items-toolbar-vertical-box-shadow:        -2px  2px 5px @data-grid-row-hover-bg;
+@list-view-items-toolbar-vertical-locked-box-shadow: -2px  2px 5px @default-itemSelected-color;
+@list-view-items-toolbar-bg:                         @data-grid-row-hover-bg;
+@list-view-items-toolbar-locked-bg:                  @default-itemSelected-color;
 
 @list-view-actions-verAlign-margin:             8px 3px 0 0;
 @list-view-actions-verAlign-width:              20px;
@@ -1419,7 +1421,8 @@
 @data-grid-cell-line-height:                    21px;
 @data-grid-cell-padding:                        @data-grid-header-cell-padding;
 @data-grid-cell-padding-side:                   @data-grid-header-cell-padding-side;
-@data-grid-cell-vertical-align: 						middle;
+@data-grid-cell-vertical-align: 				middle;
+@data-grid-cell-check-box-vertical-align: 		top !important;
 
 @data-grid-cell-border-width:                   1px 0 0;
 @data-grid-cell-separator-color:                #F5F5F5;
@@ -1718,7 +1721,8 @@
 @drag-and-drop-count-margin:                       20px 0 0 11px;
 @drag-and-drop-count-font-size:                    10px;
 @drag-and-drop-hover-bg:                           @default-itemHover-color !important;
-@drag-and-drop-border:                             1px solid @drag-and-drop-hover-bg;
+@drag-and-drop-border-color:                       #8991A9 !important;
+@drag-and-drop-border:                             1px solid @drag-and-drop-border-color;
 
 //FieldLink
 @controls-FieldLink-picker-show-border:            1px solid;

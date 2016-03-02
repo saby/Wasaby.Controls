@@ -581,8 +581,11 @@ define('js!SBIS3.CONTROLS.ListView',
          },
 
          _getProjectionItem: function(id, isNext) {
-            var index = this._itemsProjection.getEnumerator().getIndexByValue(this._options.keyField, id);
-            return this._itemsProjection.at(isNext ? ++index : --index);
+            var enumerator = this._itemsProjection.getEnumerator(),
+               index = enumerator.getIndexByValue(this._options.keyField, id),
+               item = enumerator.at(index);
+
+            return this._itemsProjection[isNext ? 'getNext' : 'getPrevious'](item);
          },
 
          _getHtmlItemByProjectionItem: function (item) {
@@ -781,7 +784,9 @@ define('js!SBIS3.CONTROLS.ListView',
          _getItemsContainer: function () {
             return $('.controls-ListView__itemsContainer', this._container.get(0)).first();
          },
-
+         _getItemContainer: function(parent, item) {
+            return parent.find('>[data-id="' + item.getKey() + '"]:not(".controls-editInPlace")');
+         },
          _addItemAttributes: function(container) {
             container.addClass('js-controls-ListView__item');
             ListView.superclass._addItemAttributes.apply(this, arguments);
@@ -939,11 +944,21 @@ define('js!SBIS3.CONTROLS.ListView',
          },
 
          showEip: function(target, model, options) {
-            if (this.isEnabled()) {
+            if (this._canShowEip()) {
                return this._getEditInPlace().showEip(target, model, options);
             } else {
                return $ws.proto.Deferred.fail();
             }
+         },
+
+         _canShowEip: function() {
+            // Отображаем редактирование только если enabled
+            return this.isEnabled();
+         },
+
+         _setEnabled : function(enabled) {
+            ListView.superclass._setEnabled.call(this, enabled);
+            this._destroyEditInPlace();
          },
 
          _onItemClickHandler: function(event, id, record, target) {
@@ -1001,10 +1016,9 @@ define('js!SBIS3.CONTROLS.ListView',
             //options.editFieldFocusHandler = this._editFieldFocusHandler.bind(this) - подумать, как это сделать
             var
                config = {
-                  dataSet: this._dataSet,
+                  dataSet: this._items,
                   editingItem: this._editingItem,
                   ignoreFirstColumn: this._options.multiselect,
-                  columns: this._options.columns,
                   dataSource: this._dataSource,
                   editingTemplate: this._options.editingTemplate,
                   itemsContainer: this._getItemsContainer(),
@@ -1287,8 +1301,9 @@ define('js!SBIS3.CONTROLS.ListView',
                   self._notify('onDataMerge', dataSet);
                   //Если данные пришли, нарисуем
                   if (dataSet.getCount()) {
-                     //Поддерживаем новый флаг для рисования элементов
-                     self._needToRedraw = true;
+                     //TODO вскрылась проблема  проекциями, когда нужно рисовать какие-то определенные элементы и записи
+                     //Возвращаем самостоятельную отрисовку данных, пришедших в загрузке по скроллу
+                     self._needToRedraw = false;
                      //TODO перевести на each
                      records = dataSet.toArray();
                      if (self._options.infiniteScroll === 'up') {
@@ -1298,10 +1313,12 @@ define('js!SBIS3.CONTROLS.ListView',
                         records = records.reverse();
                      }
                      self._items[self._options.infiniteScroll === 'up' ? 'prepend' : 'append'](records);
+                     self._drawItems(records);
                      //TODO Пытались оставить для совместимости со старыми данными, но вызывает onCollectionItemChange!!!
                      //self._dataSet.merge(dataSet, {remove: false});
                      self._dataLoadedCallback();
                      self._toggleEmptyData();
+                     self._needToRedraw = true;
                   }
 
                }, self)).addErrback(function (error) {

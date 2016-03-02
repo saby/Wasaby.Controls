@@ -35,6 +35,10 @@ define('js!SBIS3.CONTROLS.Data.Adapter.Sbis', [
 
       serialize: function (data) {
          return serializer.serialize(data);
+      },
+
+      getKeyField: function (data) {
+         return (new SbisRecord(data)).getKeyField();
       }
    });
 

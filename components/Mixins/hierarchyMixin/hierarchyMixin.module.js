@@ -7,14 +7,6 @@ define('js!SBIS3.CONTROLS.hierarchyMixin', [], function () {
     */
    var hierarchyMixin = /** @lends SBIS3.CONTROLS.hierarchyMixin.prototype */{
       $protected: {
-         //TODO FixMe этот флаг был введен для синхронизации иерархического представления и хлебных крошек
-         //вместо того, чтобы рассылать событие о смене корня при проваливании в папку
-         //нам приходиться ждать загрузки данных, потом понимать причину загрузки данных(этот флаг)
-         //и после загрузки уже рассылать информацию о хлебных кношках, которые пришли в запросе с данными
-         //по хорошему мы должны выносить запрос данных в некий контроллер, который разложит состояние
-         //в представление данных и в хлебные кношки.
-         //В таком случае этот флаг будет не нужен
-         _previousRoot: undefined,
          _curRoot: null,
          _hier: [],
          _options: {
@@ -160,21 +152,16 @@ define('js!SBIS3.CONTROLS.hierarchyMixin', [], function () {
          }
       },
       after : {
-         //TODO:После каждого релоада проверяется флаг _rootChanged и если флаг взведен,
-         //то запускается перерисовка хлебных крошек. Это сделано для того, что изначально
-         //грид может открыться на какой то внутренней папке, где надо рисовать хлебные крошки
-         //Избавиться от всего этого когда будут готовы биндинги
          _dataLoadedCallback: function () {
             var path = this._dataSet.getMetaData().path,
                   hierarchy = this._hier;
             if (!hierarchy.length && path) {
                hierarchy = this._getHierarchy(path, this._curRoot);
             }
-            if (this._previousRoot !== this._curRoot) {
-               this._previousRoot = this._curRoot;
-               this._notify('onSetRoot', this._curRoot, hierarchy);
-               this._rootChanged = false;
-            }
+            // При каждой загрузке данных стреляем onSetRoot, не совсем правильно
+            // но есть случаи когда при reload присылают новый path,
+            // а хлебные крошки не перерисовываются так как корень не поменялся 
+            this._notify('onSetRoot', this._curRoot, hierarchy);
          }
       },
       _getHierarchy: function(dataSet, key){

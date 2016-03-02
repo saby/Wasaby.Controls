@@ -70,6 +70,8 @@ define('js!SBIS3.CONTROLS.DataGridView',
              * @property {String} className Имя класса, который будет применён к каждой ячейке столбца
              * @property {String} headTemplate Шаблон отображения шапки колонки
              * @property {String} headTooltip Всплывающая подсказка шапки колонки
+             * @property {String} editor Редактор колонки для режима редактирования по месту
+             * @property {String} allowChangeEnable Доступность установки сотояния активности редактирования колонки в зависимости от состояния табличного представления
              * @property {String} cellTemplate Шаблон отображения ячейки
              * Данные, которые передаются в cellTemplate:
              * <ol>
@@ -89,6 +91,9 @@ define('js!SBIS3.CONTROLS.DataGridView',
              *      ladder: it.field
              *    })}}
              * </pre>
+             * @remark
+             * Если в настройке колонки имя поля соответствует шаблону ['Name1.Name2'] то при подготовке полей для рендеринга
+             * строки считаем, что в .get('Name1') находится рекорд и значение получаем уже у этого рекорда через .get('Name2')
              * @property {Object.<String,String>} templateBinding соответствие опций шаблона полям в рекорде
              * @property {Object.<String,String>} includedTemplates подключаемые внешние шаблоны, ключу соответствует поле it.included.<...> которое будет функцией в шаблоне ячейки
              */
@@ -189,7 +194,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
       },
 
       _getCellTemplate: function(item, column) {
-         var value = item.get(column.field);
+         var value = this._getColumnValue(item, column.field);
          if (column.cellTemplate) {
             var cellTpl = TemplateUtil.prepareTemplate(column.cellTemplate);
             var tplOptions = {
@@ -226,6 +231,28 @@ define('js!SBIS3.CONTROLS.DataGridView',
             );
          }
          return value;
+      },
+
+      _getColumnValue: function(item, colName){
+         if (!colName || !this._isCompositeRecordValue(colName)){
+            return item.get(colName);
+         }
+         var colNameParts = colName.slice(2, -2).split('.'),
+            curItem = $ws.core.clone(item),
+            value;
+         for (var i = 0; i < colNameParts.length; i++){
+            if (i !== colNameParts.length - 1){
+               curItem = curItem.get(colNameParts[i]);
+            }
+            else{
+               value = curItem.get(colNameParts[i]);
+            }
+         }
+         return value;
+      },
+
+      _isCompositeRecordValue: function(colName){
+         return colName.indexOf("['") == 0 && colName.indexOf("']") == (colName.length - 2);
       },
 
       _drawItemsCallback: function () {
@@ -270,10 +297,33 @@ define('js!SBIS3.CONTROLS.DataGridView',
             this.updateScrollAndColumns();
          }
       },
+      _canShowEip: function() {
+         // Отображаем редактирование по месту и для задизабленного DataGrid, но только если хоть у одиной колонки
+         // доступен редактор при текущем состоянии задизабленности DataGrid.
+         var
+            col = 0,
+            canShow = DataGridView.superclass._canShowEip.apply(this, arguments);
+         while (!canShow && col < this._options.columns.length) {
+            if (this._options.columns[col].allowChangeEnable === false) {
+               canShow = true;
+            } else {
+               col++;
+            }
+         }
+         return canShow;
+      },
       _getEditInPlaceConfig: function() {
-         var self = this;
+         var
+            self = this,
+            columns = this._options.enabled ? this._options.columns : [];
+         if (!this._options.enabled) {
+            $ws.helpers.forEach(this._options.columns, function(item) {
+               columns.push(item.allowChangeEnable === false ? item : {});
+            });
+         }
 
          return $ws.core.merge(DataGridView.superclass._getEditInPlaceConfig.apply(this, arguments), {
+            columns: columns,
             getCellTemplate: function(item, column) {
                return this._getCellTemplate(item, column);
             }.bind(this),

@@ -2,7 +2,12 @@ define('js!SBIS3.CONTROLS.Demo.MyEditAtPlace', [
    'js!SBIS3.CORE.CompoundControl',
    'html!SBIS3.CONTROLS.Demo.MyEditAtPlace',
    'js!SBIS3.CONTROLS.TabControl',
-   'js!SBIS3.CONTROLS.SwitcherDouble'
+   'js!SBIS3.CONTROLS.SwitcherDouble',
+   'js!SBIS3.CONTROLS.TextBox',
+   'js!SBIS3.CONTROLS.NumberTextBox',
+   'js!SBIS3.CONTROLS.DatePicker',
+   'js!SBIS3.CONTROLS.EditAtPlaceGroup',
+   'js!SBIS3.CONTROLS.EditAtPlace'
 ], function (CompoundControl, dotTplFn) {
    'use strict';
    /**
@@ -19,7 +24,7 @@ define('js!SBIS3.CONTROLS.Demo.MyEditAtPlace', [
          this.getLinkedContext().setValue('tabs', {
             name: 'Имя',
             name2: 'Отчество',
-            date: '19.02.16',
+            date: new Date(),
             number: '228'
          });
 
