@@ -196,15 +196,20 @@ define('js!SBIS3.CONTROLS.MoveHandlers', ['js!SBIS3.CORE.Dialog','js!SBIS3.CONTR
          self._items.remove(item);
 
          var moveToIndex = self._items.getIndex(moveToItem);
-         moveToIndex = self._itemsProjection.getInternalBySource(moveToIndex);
          if(!up) {
-            moveToIndex = self._itemsProjection.getIndex(
-               self._itemsProjection.getNext(
-                  self._itemsProjection.at(moveToIndex)
-               )
+            moveToIndex = self._itemsProjection.getInternalBySource(moveToIndex);
+            var projectionItem = self._itemsProjection.getNext(
+               self._itemsProjection.at(moveToIndex)
             );
+            if(projectionItem) {
+               moveToIndex = self._itemsProjection.getSourceByInternal(
+                  self._itemsProjection.getIndex(projectionItem)
+               );
+            } else {
+               moveToIndex = self._items.getCount();
+            }
          }
-         moveToIndex = self._itemsProjection.getSourceByInternal(moveToIndex);
+
          self._items.add(
             item,
             moveToIndex < self._items.getCount() ? moveToIndex : undefined
