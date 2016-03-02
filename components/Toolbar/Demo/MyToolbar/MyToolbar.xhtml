@@ -1,7 +1,8 @@
 <div>
    <component data-component="SBIS3.CONTROLS.Toolbar" name="MyToolbar" class="Toolbar">
       <option name="keyField">id</option>
-      <options name="items" type="array">
+      <options name="items" bind="myContext/items" type="array"></options>
+      <!--<options name="items" type="array">
          <options>
             <option name="id">1</option>
             <option name="componentType">js!SBIS3.CONTROLS.Link</option>
@@ -9,18 +10,18 @@
             <option name="isMainAction" type="boolean">true</option>
             <option name="name">Button</option>
             <option name="caption">text aaa</option>
-            <!--<component data-component="SBIS3.CONTROLS.CheckBox" name="CheckBox 1111"  class="position">
+            &lt;!&ndash;<component data-component="SBIS3.CONTROLS.CheckBox" name="CheckBox 1111"  class="position">
                <option name="caption">Вкл</option>
                &lt;!&ndash;<option name="checked" bind="iconIsMain">false</option>&ndash;&gt;
-            </component>-->
-            <!--Так можно задать команду без параметров-->
+            </component>&ndash;&gt;
+            &lt;!&ndash;Так можно задать команду без параметров&ndash;&gt;
             <option name="command">testCommand</option>
          </options>
          <options>
             <option name="id">2</option>
             <option name="componentType">js!SBIS3.CONTROLS.IconButton</option>
             <option name="className" >IconButton2</option>
-            <option name="isMainAction" bind="iconIsMain" type="boolean" >true</option><!--bind="iconIsMain"-->
+            <option name="isMainAction" bind="iconIsMain" type="boolean" >true</option>&lt;!&ndash;bind="iconIsMain"&ndash;&gt;
             <option name="name">IconButton2</option>
             <option name="caption">IconButton 2</option>
             <option name="icon">sprite:icon-16 icon-Link icon-primary</option>
@@ -42,7 +43,7 @@
             <option name="className" >ButtonClass</option>
             <option name="isMainAction" type="boolean">true</option>
             <option name="name">Button</option>
-            <option name="caption" <!--bind="toolbar\buttonText1"-->>Кнопка</option>
+            <option name="caption" >Кнопка</option>&lt;!&ndash;bind="toolbar\buttonText1"&ndash;&gt;
          </options>
          <options>
             <option name="id">5</option>
@@ -51,7 +52,7 @@
             <option name="className" >IconButton2</option>
             <option name="caption">IconButton 5</option>
             <option name="parent" type="string">3</option>
-            <!--<option name="isMainAction" type="boolean">true</option>-->
+            &lt;!&ndash;<option name="isMainAction" type="boolean">true</option>&ndash;&gt;
          </options>
          <options>
             <option name="id">edoSaveDocumentOnDisk</option>
@@ -64,7 +65,7 @@
          <options>
             <option name="id">edoSaveDocumentOnDisk_zip</option>
             <option name="componentType">js!SBIS3.CONTROLS.Link</option>
-            <!--<option name="isMainAction" type="boolean">true</option>-->
+            &lt;!&ndash;<option name="isMainAction" type="boolean">true</option>&ndash;&gt;
             <option name="name">edoSaveDocumentOnDisk_zip</option>
             <option name="caption">Скачать</option>
             <option name="command">edoSaveDocumentOnDisk</option>
@@ -73,7 +74,7 @@
          <options>
             <option name="id">edoSaveDocumentOnDisk_PDF</option>
             <option name="componentType">js!SBIS3.CONTROLS.Link</option>
-            <!--<option name="isMainAction" type="boolean">true</option>-->
+            &lt;!&ndash;<option name="isMainAction" type="boolean">true</option>&ndash;&gt;
             <option name="name">edoSaveDocumentOnDisk_PDF</option>
             <option name="caption">Скачать PDF</option>
             <option name="command">edoSaveDocumentOnDisk</option>
@@ -82,7 +83,7 @@
          <options>
             <option name="id">linkedDocs</option>
             <option name="componentType">js!SBIS3.CONTROLS.Link</option>
-            <!--<option name="isMainAction" type="boolean">true</option>-->
+            &lt;!&ndash;<option name="isMainAction" type="boolean">true</option>&ndash;&gt;
             <option name="name">linkedDocs</option>
             <option name="caption">Связанные документы</option>
             <option name="command">linkedDocs</option>
@@ -91,18 +92,18 @@
          <options>
             <option name="id">linkedDocs.createItemMenu</option>
             <option name="componentType">js!SBIS3.CONTROLS.Link</option>
-            <!--<option name="isMainAction" type="boolean">true</option>-->
+            &lt;!&ndash;<option name="isMainAction" type="boolean">true</option>&ndash;&gt;
             <option name="name">createItemMenu</option>
             <option name="caption">+ Доброска</option>
-            <!--<component data-component="SBIS3.CONTROLS.CheckBox" name="CheckBox 1"  class="position">
+            &lt;!&ndash;<component data-component="SBIS3.CONTROLS.CheckBox" name="CheckBox 1"  class="position">
                <option name="caption">Вкл</option>
                <option name="checked" bind="iconIsMain">false</option>
-            </component>-->
+            </component>&ndash;&gt;
             <option name="command">createItemMenu</option>
             <option name="parent" type="string">linkedDocs</option>
             <option name="className">specialItem</option>
          </options>
-      </options>
+      </options>-->
    </component>
 
    <br/>
@@ -112,6 +113,9 @@
    </component>
    <component data-component="SBIS3.CONTROLS.TextBox" name="TextBox" class="TextBox">
       <option name="text" bind="toolbar\buttonText1">Кнопка</option>
+   </component>
+   <component data-component="SBIS3.CONTROLS.Button" name="ButtonContext" class="Button">
+      <option name="caption">Передать</option>
    </component>
 
    <br/>

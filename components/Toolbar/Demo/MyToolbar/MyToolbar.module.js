@@ -1,6 +1,8 @@
 define('js!SBIS3.CONTROLS.Demo.MyToolbar', [
    'js!SBIS3.CORE.CompoundControl',
    'html!SBIS3.CONTROLS.Demo.MyToolbar',
+   'js!SBIS3.CONTROLS.Data.Collection.List',
+   'js!SBIS3.CONTROLS.Data.Collection.RecordSet',
    'css!SBIS3.CONTROLS.Demo.MyToolbar',
    'js!SBIS3.CONTROLS.Toolbar',
    'js!SBIS3.CONTROLS.TextArea',
@@ -9,7 +11,7 @@ define('js!SBIS3.CONTROLS.Demo.MyToolbar', [
    'js!SBIS3.CONTROLS.Link',
    'js!SBIS3.CONTROLS.TextBox',
    'js!SBIS3.CONTROLS.Button'
-], function (CompoundControl, dotTplFn) {
+], function (CompoundControl, dotTplFn, List, RecordSet) {
    'use strict';
    /**
     * SBIS3.CONTROLS.Demo.MyToolbar
@@ -35,8 +37,10 @@ define('js!SBIS3.CONTROLS.Demo.MyToolbar', [
 
          this._MyToolbar = this.getChildControlByName('MyToolbar');
          this._MyToolbar.subscribe('onToolbarItemActivate', this._onToolbarItemActivate.bind(this) );
+         this._ButtonContext = this.getChildControlByName('ButtonContext');
+         this._ButtonContext.subscribe('onActivated', this._onActivatedButtonContext.bind(this));
 
-         var items = [
+         this.items = [
             {
                id: 'edoSendMessage',
                icon: 'sprite:icon-24 icon-EmptyMessage icon-primary',
@@ -132,6 +136,7 @@ define('js!SBIS3.CONTROLS.Demo.MyToolbar', [
                caption: 'Открыть в новой вкладке',
                weight: 90,
                visible: true,
+               parent: 'edoLinkedDocs',
                isMainAction: false,
                command: 'edoOpenInNewTab',
                componentType: 'js!SBIS3.CONTROLS.IconButton'
@@ -143,6 +148,7 @@ define('js!SBIS3.CONTROLS.Demo.MyToolbar', [
                caption: 'Получить ссылку на документ',
                weight: 100,
                visible: true,
+               parent: 'edoLinkedDocs',
                isMainAction: false,
                command: 'edoGetLink',
                componentType: 'js!SBIS3.CONTROLS.IconButton'
@@ -158,7 +164,18 @@ define('js!SBIS3.CONTROLS.Demo.MyToolbar', [
                command: 'edoShowHistory',
                componentType: 'js!SBIS3.CONTROLS.IconButton'
             }];
-         this._MyToolbar.setItems(items);
+
+         //this._MyToolbar.setItems(this.items);
+
+         /*var listItems = new List({items: items});
+         this._MyToolbar.setItems(listItems);*/
+
+         /*var rs = new RecordSet({
+            idProperty: 'id',
+            rawData: this.items
+         });*/
+         //this._MyToolbar.setItems(rs);
+         //this.getLinkedContext().setValue('myContext/items', rs);
       },
 
       addToArea: function(addingText) {
@@ -173,6 +190,15 @@ define('js!SBIS3.CONTROLS.Demo.MyToolbar', [
 
       _testCommand: function() {
          this.addToArea('testCommand');
+      },
+
+      _onActivatedButtonContext: function() {
+         //debugger;
+         var rs = new RecordSet({
+            idProperty: 'id',
+            rawData: this.items
+         });
+         this.getLinkedContext().setValue('myContext/items', rs);
       }
    });
    return MyToolbar;
