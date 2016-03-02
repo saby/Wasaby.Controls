@@ -224,7 +224,8 @@ define('js!SBIS3.CONTROLS.ComponentBinder', [], function () {
             view.subscribe('onSetRoot', function(event, curRoot, hierarchy){
                self._lastRoot = curRoot;
                if (self._options.breadCrumbs){
-                  self._pathDSRawData = $ws.core.clone(self._options.breadCrumbs.getItems().getRawData());
+                  var crumbsItems = self._options.breadCrumbs.getItems();
+                  self._pathDSRawData = $ws.core.clone(crumbsItems ? crumbsItems.getRawData() : []);
                }
                if (self._options.backButton) {
                   self._options.backButton.getContainer().css({'visibility': 'visible'});
