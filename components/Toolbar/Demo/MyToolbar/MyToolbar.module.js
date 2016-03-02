@@ -47,7 +47,7 @@ define('js!SBIS3.CONTROLS.Demo.MyToolbar', [
                caption: 'Сообщения',
                weight: 10,
                visible: true,
-               isMainAction: true,
+               showType: 1,
                command: 'edoSendMessage',
                componentType: 'js!SBIS3.CONTROLS.IconButton'
             },
@@ -59,7 +59,7 @@ define('js!SBIS3.CONTROLS.Demo.MyToolbar', [
                weight: 20,
 
                minRights: 2,
-               isMainAction: true,
+               showType: 1,
                command: 'edoDeleteDocument',
                componentType: 'js!SBIS3.CONTROLS.IconButton'
             },
@@ -70,7 +70,7 @@ define('js!SBIS3.CONTROLS.Demo.MyToolbar', [
                caption: 'Переместить в корзину',
                weight: 20,
                minRights: 2,
-               isMainAction: true,
+               showType: 0,
                command: 'edoDeleteToTrashDocument',
                componentType: 'js!SBIS3.CONTROLS.IconButton'
             },
@@ -81,7 +81,7 @@ define('js!SBIS3.CONTROLS.Demo.MyToolbar', [
                caption: 'Распечатать',
                weight: 30,
                visible: true,
-               isMainAction: false,
+               showType: 2,
                command: 'edoPrintDocument',
                componentType: 'js!SBIS3.CONTROLS.IconButton'
             },
@@ -92,7 +92,7 @@ define('js!SBIS3.CONTROLS.Demo.MyToolbar', [
                caption: 'Скачать',
                weight: 40,
                visible: true,
-               isMainAction: false,
+               showType: 0,
                command: 'edoSaveDocumentOnDisk',
                componentType: 'js!SBIS3.CONTROLS.IconButton'
             },
@@ -103,7 +103,7 @@ define('js!SBIS3.CONTROLS.Demo.MyToolbar', [
                visible: true,
                caption: 'Сделать важным',
                weight: 50,
-               isMainAction: true,
+               showType: 1,
                command: 'edoSetImportant',
                componentType: 'js!SBIS3.CONTROLS.IconButton'
             },
@@ -114,7 +114,7 @@ define('js!SBIS3.CONTROLS.Demo.MyToolbar', [
                caption: 'Поставить на контроль',
                weight: 60,
                visible: true,
-               isMainAction: false,
+               showType: 0,
                command: 'edoPutOnMonitoring',
                componentType: 'js!SBIS3.CONTROLS.IconButton'
             },
@@ -125,7 +125,7 @@ define('js!SBIS3.CONTROLS.Demo.MyToolbar', [
                caption: 'Связанные документы',
                visible: true,
                weight: 80,
-               isMainAction: false,
+               showType: 0,
                command: 'edoLinkedDocs',
                componentType: 'js!SBIS3.CONTROLS.IconButton'
             },
@@ -137,7 +137,7 @@ define('js!SBIS3.CONTROLS.Demo.MyToolbar', [
                weight: 90,
                visible: true,
                parent: 'edoLinkedDocs',
-               isMainAction: false,
+               showType: 0,
                command: 'edoOpenInNewTab',
                componentType: 'js!SBIS3.CONTROLS.IconButton'
             },
@@ -149,7 +149,7 @@ define('js!SBIS3.CONTROLS.Demo.MyToolbar', [
                weight: 100,
                visible: true,
                parent: 'edoLinkedDocs',
-               isMainAction: false,
+               showType: 0,
                command: 'edoGetLink',
                componentType: 'js!SBIS3.CONTROLS.IconButton'
             },
@@ -160,7 +160,7 @@ define('js!SBIS3.CONTROLS.Demo.MyToolbar', [
                caption: 'История',
                weight: 110,
                visible: true,
-               isMainAction: false,
+               showType: 0,
                command: 'edoShowHistory',
                componentType: 'js!SBIS3.CONTROLS.IconButton'
             }];

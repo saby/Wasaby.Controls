@@ -21,9 +21,14 @@ define('js!SBIS3.CONTROLS.Toolbar', [
          _options: {
 
          },
-         /* индекс текущего элемента */
-         _currentItemNum: -1,
-         _itemsMap: null
+         showType: {
+            //отображать только в меню, соответствует isMainAction = false
+            MENU: 0,
+            //отображать в меню и тулбаре, соответствует isMainAction = true
+            MENU_TOOLBAR: 1,
+            //отображать только в списке, не в меню
+            TOOLBAR: 2
+         }
       },
 
       $constructor: function() {
@@ -66,7 +71,9 @@ define('js!SBIS3.CONTROLS.Toolbar', [
          if ( ! this._menuIcon) {
             return;
          }
-         this._menuIcon.setItems(items);
+         //отправляем в меню обработанные элементы, в которых убраны с showType.TOOLBAR
+         var menuItems = this._getMenuItems(items);
+         this._menuIcon.setItems(menuItems);
       },
 
       //обработчик для меню
@@ -112,6 +119,33 @@ define('js!SBIS3.CONTROLS.Toolbar', [
          return tplOptions;
       },*/
 
+      // формируем список без элементов с showType.TOOLBAR
+      _getMenuItems: function(items) {
+         //var menuItems = items
+         if ( ! items) {
+            return [];
+         }
+         var rawData = null,
+             menuItems = [];
+         if (items instanceof Array) {
+            rawData = items;
+         }
+         if ( ! rawData && $ws.helpers.instanceOfModule(items,'SBIS3.CONTROLS.Data.Collection.RecordSet')) {
+            rawData = items.getRawData();
+         }
+         if ( ! rawData) {
+            $ws.single.ioc.resolve('ILogger').log('Toolbar:_getMenuItems. Неизвестный тип items');
+            return [];
+         }
+         //производный массив
+         for (var i = 0; i < rawData.length; i++) {
+            if (rawData[i].showType != this.showType.TOOLBAR) {
+               menuItems.push(rawData[i]);
+            }
+         }
+         return menuItems;
+      },
+
       _getItemTemplate: function(item) {
          var icon        = item.get('icon')        ? '<option name="icon">' + item.get('icon') + '</option>' : '',
              className   = item.get('className')   ? item.get('className') : '',
@@ -119,10 +153,11 @@ define('js!SBIS3.CONTROLS.Toolbar', [
             //+ Math.floor(Math.random()*1000).toString()
              caption = item.get('caption') ? '<opt name="caption">' + item.get('caption') + '</opt>' : '',
              //visible = item.get('isMainAction')
+             show = !!(item.get('showType') == this.showType.MENU_TOOLBAR || item.get('showType') == this.showType.TOOLBAR ),
              command = item.get('command') ? '<opt name="command">' + item.get('command') + '</opt>' : '';
              //handlers = item.get('handlers') ? '<options name="handlers">' + item.get('handlers') + '</options>' : '';
          return '<component data-component="' + item.get('componentType').substr(3) + '" config="' + $ws.helpers.encodeCfgAttr(options) + '" class="controls-ToolBar__item ' + className + '">' +
-                  '<opt name="visible" type="boolean">' + !!item.get('isMainAction') + '</opt>' +
+                  '<opt name="visible" type="boolean">' + show + '</opt>' +
                   caption + icon + command +
                   //для MenuIcon, MenuLink и т.д.
                   '<opt name="keyField">id</opt>'+
