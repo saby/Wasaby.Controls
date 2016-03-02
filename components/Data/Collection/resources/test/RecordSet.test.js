@@ -310,13 +310,13 @@ define([
             });
             it('should throw an error if the field is already defined', function () {
                assert.throw(function() {
-                  record.addField({name: 'title', type: 'string'});
+                  rs.addField({name: 'Фамилия', type: 'string'});
                });
             });
             it('should throw an error if add the field twice', function () {
-               record.addField({name: 'new', type: 'string'});
+               rs.addField({name: 'new', type: 'string'});
                assert.throw(function() {
-                  record.addField({name: 'new', type: 'string'});
+                  rs.addField({name: 'new', type: 'string'});
                });
             });
          });

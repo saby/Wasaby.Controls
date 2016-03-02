@@ -65,7 +65,7 @@ define('js!SBIS3.CONTROLS.Data.Adapter.SbisRecord', [
          var s = this._data.s,
             index;
          for (var i = 0, l = s.length; i < l; i++) {
-            if (s[i].n[0] === '@') {
+            if (s[i].n && s[i].n[0] === '@') {
                index = i;
                break;
             }
