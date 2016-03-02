@@ -3,7 +3,7 @@ define('js!SBIS3.CONTROLS.Toolbar', [
    'html!SBIS3.CONTROLS.Toolbar',
    'js!SBIS3.CONTROLS.TreeMixinDS',
    //'js!SBIS3.CONTROLS.Data.Collection.List',
-   'js!SBIS3.CONTROLS.MenuIcon'
+   'js!SBIS3.CONTROLS.CommandsButton'
 ], function(ButtonGroupBaseDS, dotTplFn, TreeMixinDS) {
 
    'use strict';
