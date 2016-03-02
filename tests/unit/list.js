@@ -19,6 +19,7 @@ define([
 '../../components/Data/resources/test/Model.test',
 '../../components/Data/resources/test/Record.test',
 '../../components/Data/resources/test/Serializer.test',
+'../../components/Data/Source/Provider/resources/test/SbisBusinessLogic.test',
 '../../components/Data/Source/resources/test/DataSet.test',
 '../../components/Data/Source/resources/test/Memory.test',
 '../../components/Data/Source/resources/test/Rpc.test',

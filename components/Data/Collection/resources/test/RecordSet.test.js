@@ -689,7 +689,7 @@ define([
             });
          });
 
-         describe('.getTreeIndex()', function (){
+         describe('.getTreeIndex()', function () {
             it('should return TreeIndex', function() {
                var rs =  new RecordSet({
                   rawData: [{
@@ -704,6 +704,53 @@ define([
                var index = rs.getTreeIndex('Раздел');
                assert.deepEqual(index.null, [1]);
             });
+         });
+
+         describe('.getChildItems()', function () {
+            it('should return child items', function() {
+               var rs =  new RecordSet({
+                  rawData: [{
+                     'Ид': 1,
+                     'Раздел': null
+                  }, {
+                     'Ид': 2,
+                     'Раздел': 1
+                  }, {
+                     'Ид': 3,
+                     'Раздел': 1
+                  }, {
+                     'Ид': 4,
+                     'Раздел': 2
+                  }],
+                  idProperty: 'Ид'
+               });
+               assert.deepEqual(rs.getChildItems(1, true, 'Раздел'), [2, 3, 4]);
+               assert.deepEqual(rs.getChildItems(4, true, 'Раздел'), []);
+               assert.deepEqual(rs.getChildItems(1, false, 'Раздел'), [2, 3]);
+            });
+         });
+      });
+
+      describe('.hasChild()', function (){
+         it('should check child', function() {
+            var rs =  new RecordSet({
+               rawData: [{
+                  'Ид': 1,
+                  'Раздел': null
+               }, {
+                  'Ид': 2,
+                  'Раздел': 1
+               }, {
+                  'Ид': 3,
+                  'Раздел': 1
+               }, {
+                  'Ид': 4,
+                  'Раздел': 2
+               }],
+               idProperty: 'Ид'
+            });
+            assert.isTrue(rs.hasChild(1,'Раздел'));
+            assert.isFalse(rs.hasChild(4,'Раздел'));
          });
       });
    }
