@@ -8,8 +8,9 @@ define('js!SBIS3.CONTROLS.Data.Record', [
    'js!SBIS3.CONTROLS.Data.FormattableMixin',
    'js!SBIS3.CONTROLS.Data.Di',
    'js!SBIS3.CONTROLS.Data.Factory',
+   'js!SBIS3.CONTROLS.Data.Format.StringField',
    'js!SBIS3.CONTROLS.Data.ContextField.Record'
-], function (IPropertyAccess, IEnumerable, ArrayEnumerator, SerializableMixin, Serializer, FormattableMixin, Di, Factory, ContextFieldRecord) {
+], function (IPropertyAccess, IEnumerable, ArrayEnumerator, SerializableMixin, Serializer, FormattableMixin, Di, Factory, StringField, ContextFieldRecord) {
    'use strict';
 
    /**
@@ -340,13 +341,20 @@ define('js!SBIS3.CONTROLS.Data.Record', [
       _getRawDataValue: function(name) {
          var adapter = this._getRecordAdapter(),
             rawValue = adapter.get(name),
-            fieldInfo = adapter.getInfo(name);
+            format;
+
+         try {
+            format = adapter.getFormat(name);
+         } catch (e) {
+            format = new StringField({
+               name: name
+            });
+         }
 
          return Factory.cast(
             rawValue,
-            fieldInfo.type,
-            this.getAdapter(),
-            fieldInfo.meta
+            format,
+            this.getAdapter()
          );
       },
 
@@ -358,15 +366,21 @@ define('js!SBIS3.CONTROLS.Data.Record', [
        */
       _setRawDataValue: function(name, value) {
          var adapter = this._getRecordAdapter(),
-            fieldInfo = adapter.getInfo(name);
+            format;
+         try {
+            format = adapter.getFormat(name);
+         } catch (e) {
+            format = new StringField({
+               name: name
+            });
+         }
 
          adapter.set(
             name,
             Factory.serialize(
                value,
-               fieldInfo.type,
-               this.getAdapter(),
-               fieldInfo.meta
+               format,
+               this.getAdapter()
             )
          );
 

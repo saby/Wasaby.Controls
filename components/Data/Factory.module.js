@@ -40,25 +40,24 @@ define('js!SBIS3.CONTROLS.Data.Factory', [
        * Boolean - логическое
        * Если передать тип не из списка, то значение не изменится.
        * @param {*} value Значение
-       * @param {String} type Тип значения
+       * @param {SBIS3.CONTROLS.Data.Format.Field} format Формат поля
        * @param {SBIS3.CONTROLS.Data.Adapter.IAdapter} adapter Адаптер для работы с сырыми данными
-       * @param {Object} meta Мета данные типа
        * @returns {*} Приведенные к нужному типу сырые данные
        */
-      cast: function (value, type, adapter, meta) {
-         //TODO: вместо type + meta принимать fieldInfo
+      cast: function (value, format, adapter) {
          if (value === undefined || value === null) {
             return value;
          }
 
-         switch (type) {
+         switch (format.getType()) {
             case 'Identity':
-               return meta.isArray ?
-                  value[0] === null ? null : value.join(meta.separator, value) :
+               format._isArray = value instanceof Array;
+               return format._isArray ?
+                  value[0] === null ? null : value.join(format.getSeparator(), value) :
                   value;
             case 'RecordSet':
                return this._makeRecordSet(value, adapter);
-            case 'Model':
+            case 'Record':
                return this._makeModel(value, adapter);
             case 'Time':
             case 'Date':
@@ -71,17 +70,17 @@ define('js!SBIS3.CONTROLS.Data.Factory', [
             case 'Double':
                return (typeof(value) === 'number') ? value : (isNaN(parseFloat(value)) ? null : parseFloat(value));
             case 'Money':
-               if (meta && meta.precision > 3) {
-                  return $ws.helpers.prepareMoneyByPrecision(value, meta.precision)
+               if (format.getPrecision() > 3) {
+                  return $ws.helpers.prepareMoneyByPrecision(value, format.getPrecision());
                }
                return value === undefined ? null : value;
             case 'Enum':
                return new Enum({
-                  data: meta.source, //массив строк
+                  data: format.getDictionary(), //массив строк
                   currentValue: value //число
                });
             case 'Flags':
-               return this._makeFlags(value, meta);
+               return this._makeFlags(value, format);
             case 'TimeInterval':
                if (value instanceof $ws.proto.TimeInterval) {
                   return value.toString();
@@ -98,7 +97,7 @@ define('js!SBIS3.CONTROLS.Data.Factory', [
                }
                var self = this;
                return $ws.helpers.map(value, function (val) {
-                  return self.cast(val, meta.elementsType, adapter, meta);
+                  return self.cast(val, format, adapter);
                });
             default:
                return value;
@@ -108,17 +107,17 @@ define('js!SBIS3.CONTROLS.Data.Factory', [
       /**
        * Переводит типизированное значение в сырые данные
        * @param {*} value Типизированное значение
-       * @param {String} type Тип значения
+       * @param {SBIS3.CONTROLS.Data.Format.Field} format Формат поля
        * @param {SBIS3.CONTROLS.Data.Adapter.IAdapter} adapter Адаптер для работы с сырыми данными
-       * @param {Object} meta Мета данные типа
        * @returns {*}
        */
-      serialize: function (value, type, adapter, meta) {
+      serialize: function (value, format, adapter) {
+         var type = format.getType();
          switch (type) {
             case 'Identity':
-               return meta.isArray ? (
+               return format._isArray ? (
                   typeof value === 'string' ?
-                     value.split(meta.separator) :
+                     value.split(format.getSeparator()) :
                      [value]
                ) : value;
          }
@@ -130,9 +129,8 @@ define('js!SBIS3.CONTROLS.Data.Factory', [
          switch (type) {
             case 'RecordSet':
                return this._serializeRecordSet(value, adapter);
-            case 'Model':
+            case 'Record':
                return this._serializeModel(value, adapter);
-
             case 'Date':
             case 'DateTime':
             case 'Time':
@@ -146,28 +144,22 @@ define('js!SBIS3.CONTROLS.Data.Factory', [
                      break;
                }
                return value instanceof Date ? value.toSQL(serializeMode) : value;
-
             case 'Flags':
                return this._serializeFlags(value);
-
             case 'Integer':
                return (typeof(value) === 'number') ? value : (isNaN(parseInt(value, 10)) ? null : parseInt(value, 10));
-
             case 'Link':
                return parseInt(value, 10);
-
             case 'Money':
-               if (meta && meta.precision > 3) {
-                  return $ws.helpers.prepareMoneyByPrecision(value, meta.precision)
+               if (format.getPrecision() > 3) {
+                  return $ws.helpers.prepareMoneyByPrecision(value, format.getPrecision());
                }
                return value;
-
             case 'TimeInterval':
                if (value instanceof $ws.proto.TimeInterval) {
                   return value.toString();
                }
                return $ws.proto.TimeInterval.toString(value);
-
             case 'Enum':
                if (value instanceof Enum) {
                   return value.get();
@@ -178,7 +170,7 @@ define('js!SBIS3.CONTROLS.Data.Factory', [
             case 'Array':
                var self = this;
                return $ws.helpers.map(value, function (val){
-                  return self.serialize(val, meta.elementsType, adapter, meta);
+                  return self.serialize(val, format, adapter);
                });
             default:
                return value;
@@ -224,13 +216,13 @@ define('js!SBIS3.CONTROLS.Data.Factory', [
       /**
        * Создает поле флагов по сырым данным
        * @param {Array} value Массив флагов
-       * @param {Object} meta Мета данные флагов
+       * @param {Object} format Формат поля
        * @returns {SBIS3.CONTROLS.Data.Model}
        * @private
        */
-      _makeFlags: function (value, meta) {
+      _makeFlags: function (value, format) {
          return new Flags ({
-            data: meta.makeData(value)
+            data: format.getDictionary()
          });
       },
 

@@ -365,6 +365,34 @@ define([
                   record.addField({name: 'new', type: 'string'});
                });
             });
+            it('should add the empty record field', function () {
+               var fieldName = 'rec';
+               record.addField({name: fieldName, type: 'record'});
+
+               assert.isNull(record.get(fieldName));
+               assert.isNull(record.getRawData()[fieldName]);
+            });
+            it('should add the filled record field', function () {
+               var fieldName = 'rec';
+               record.addField({name: fieldName, type: 'record'}, 0, {a: 1});
+
+               assert.strictEqual(record.get(fieldName).get('a'), 1);
+               assert.strictEqual(record.getRawData()[fieldName].a, 1);
+            });
+            it('should add the empty recordset field', function () {
+               var fieldName = 'rs';
+               record.addField({name: fieldName, type: 'recordset'});
+
+               assert.isNull(record.get(fieldName));
+               assert.isNull(record.getRawData()[fieldName]);
+            });
+            it('should add the filled recordset field', function () {
+               var fieldName = 'rs';
+               record.addField({name: fieldName, type: 'recordset'}, 0, [{a: 1}]);
+
+               assert.strictEqual(record.get(fieldName).at(0).get('a'), 1);
+               assert.strictEqual(record.getRawData()[fieldName][0].a, 1);
+            });
          });
 
          describe('.removeField()', function () {
