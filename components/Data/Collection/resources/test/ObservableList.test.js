@@ -152,6 +152,26 @@ define([
                list.unsubscribe('onCollectionChange', handler);
                list.destroy();
             });
+            it('should trigger onCollectionItemChange with changed item after several assigns', function(done) {
+               var list = new ObservableList(),
+                  items = [new Model(), new Model(), new Model()],
+                  firesToBeDone = 3,
+                  handler = function() {
+                     firesToBeDone--;
+                     if (firesToBeDone === 0) {
+                        done();
+                     }
+                  };
+               list.subscribe('onCollectionItemChange', handler);
+               list.assign(items);
+               list.at(1).set('a', 1);
+               list.assign(items);
+               list.at(1).set('a', 2);
+               list.assign(items);
+               list.at(1).set('a', 3);
+               list.unsubscribe('onCollectionItemChange', handler);
+               list.destroy();
+            });
          });
 
          describe('.clear()', function() {
@@ -335,8 +355,6 @@ define([
                list.unsubscribe('onCollectionItemChange', handler);
                list.destroy();
             });
-
-
          });
 
          describe('.removeAt()', function() {

@@ -83,7 +83,7 @@ define('js!SBIS3.CONTROLS.Data.Source.Base', [
        * @private
        */
       _getIdPropertyByData: function(data) {
-         return this.getAdapter().forRecord(data).getKeyField() || '';
+         return this.getAdapter().getKeyField(data) || '';
       },
 
       /**

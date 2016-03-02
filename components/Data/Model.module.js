@@ -127,6 +127,11 @@ define('js!SBIS3.CONTROLS.Data.Model', [
 
          //TODO: убрать после перехода на ISource
          this._compatibleMode = cfg.compatibleMode;
+
+         this._options.idProperty = this._options.idProperty || '';
+         if (!this._options.idProperty) {
+            this._options.idProperty = this.getAdapter().getKeyField(this._options.rawData);
+         }
       },
 
       // region SBIS3.CONTROLS.Data.IPropertyAccess
