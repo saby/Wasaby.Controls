@@ -234,7 +234,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
       },
 
       _getColumnValue: function(item, colName){
-         if (!this._isCompositeRecordValue(colName)){
+         if (!colName || !this._isCompositeRecordValue(colName)){
             return item.get(colName);
          }
          var colNameParts = colName.slice(2, -2).split('.'),
