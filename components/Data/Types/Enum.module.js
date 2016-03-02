@@ -22,11 +22,19 @@ define('js!SBIS3.CONTROLS.Data.Types.Enum', [
          },
          _enumerator: undefined
       },
+
       $constructor: function (cfg) {
-         if (!($ws.helpers.type(cfg.data) == 'array')) {
-            throw new Error('The data must be instance of an array');
+         if (cfg.data instanceof Object && $ws.helpers.type(cfg.data) !== 'array') {
+            var array = [];
+            for (var index in cfg.data){
+               if (cfg.data.hasOwnProperty(index)) {
+                  array[index] = cfg.data[index];
+               }
+            }
+            this._options.data = array;
          }
       },
+
       each: function (callback, context) {
          context = context || this;
          $ws.helpers.forEach(this._options.data, callback, context);
