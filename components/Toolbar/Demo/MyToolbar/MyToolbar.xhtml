@@ -1,6 +1,9 @@
 <div>
    <component data-component="SBIS3.CONTROLS.Toolbar" name="MyToolbar" class="Toolbar">
+      <!-- обязательные опции -->
       <option name="keyField">id</option>
+      <option name="hierField">parent</option>
+      <option name="displayField">caption</option>
       <options name="items" bind="myContext/items" type="array"></options>
       <!--<options name="items" type="array">
          <options>

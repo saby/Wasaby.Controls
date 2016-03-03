@@ -1,10 +1,11 @@
 define('js!SBIS3.CONTROLS.Toolbar', [
    'js!SBIS3.CONTROLS.ButtonGroupBaseDS',
    'html!SBIS3.CONTROLS.Toolbar',
-   'js!SBIS3.CONTROLS.TreeMixinDS',
+   /*'js!SBIS3.CONTROLS.TreeMixinDS',
+   'js!SBIS3.CONTROLS.hierarchyMixin',*/
    //'js!SBIS3.CONTROLS.Data.Collection.List',
    'js!SBIS3.CONTROLS.CommandsButton'
-], function(ButtonGroupBaseDS, dotTplFn, TreeMixinDS) {
+], function(ButtonGroupBaseDS, dotTplFn/*, TreeMixinDS, hierarchyMixin*/) {
 
    'use strict';
 
@@ -15,7 +16,7 @@ define('js!SBIS3.CONTROLS.Toolbar', [
     * @author Крайнов Дмитрий Олегович
     */
 
-   var Toolbar = ButtonGroupBaseDS.extend(/*[TreeMixinDS],*/ /** @lends SBIS3.CONTROLS.Toolbar.prototype */ {
+   var Toolbar = ButtonGroupBaseDS.extend(/*[TreeMixinDS, hierarchyMixin], *//** @lends SBIS3.CONTROLS.Toolbar.prototype */ {
       _dotTplFn: dotTplFn,
       $protected: {
          _options: {
@@ -28,7 +29,9 @@ define('js!SBIS3.CONTROLS.Toolbar', [
             MENU_TOOLBAR: 1,
             //отображать только в списке, не в меню
             TOOLBAR: 2
-         }
+         },
+         //список дочерних элементов
+         _itemsToSubItems: null
       },
 
       $constructor: function() {
@@ -36,7 +39,6 @@ define('js!SBIS3.CONTROLS.Toolbar', [
 
          this._itemsContainer   = this.getContainer().find('.controls-ToolBar__itemsContainer');
          //this._garbageContainer = this.getContainer().find('.controls-ToolBar__garbageContainer');
-
       },
 
       init: function() {
@@ -62,6 +64,9 @@ define('js!SBIS3.CONTROLS.Toolbar', [
          items = list;*/
 
          //this._setMenuItems(this.getItemsInstances());
+
+         //очищаем список найденных элементов
+         this._itemsToSubItems = null;
          Toolbar.superclass.setItems.apply(this, arguments);
          this._setMenuItems(items);
 
@@ -97,13 +102,6 @@ define('js!SBIS3.CONTROLS.Toolbar', [
 
       /* Переопределяем получение контейнера для элементов */
       _getTargetContainer: function(item) {
-         /*if ( ! this._itemsMap) {
-            this._createItemsMap();
-         }*/
-         //return item.get('align') === 'left' ? this._leftContainer : this._rightContainer;
-         //this._currentItemNum ++;
-         //console.log(this._currentItemNum);
-         //return (this._itemsMap && this._itemsMap[item]) ? this._itemsContainer : this._garbageContainer;
          return this._itemsContainer;
          //return !!item.get('isMainAction') ? this._itemsContainer : null;
       },
@@ -125,18 +123,8 @@ define('js!SBIS3.CONTROLS.Toolbar', [
          if ( ! items) {
             return [];
          }
-         var rawData = null,
+         var rawData = this._getArrayItems(items),//null,
              menuItems = [];
-         if (items instanceof Array) {
-            rawData = items;
-         }
-         if ( ! rawData && $ws.helpers.instanceOfModule(items,'SBIS3.CONTROLS.Data.Collection.RecordSet')) {
-            rawData = items.getRawData();
-         }
-         if ( ! rawData) {
-            $ws.single.ioc.resolve('ILogger').log('Toolbar:_getMenuItems. Неизвестный тип items');
-            return [];
-         }
          //производный массив
          for (var i = 0; i < rawData.length; i++) {
             if (rawData[i].showType != this.showType.TOOLBAR) {
@@ -146,21 +134,105 @@ define('js!SBIS3.CONTROLS.Toolbar', [
          return menuItems;
       },
 
+      _getArrayItems: function(items) {
+         var rawData = null;
+         if (items instanceof Array) {
+            rawData = items;
+         }
+         if ( ! rawData && $ws.helpers.instanceOfModule(items,'SBIS3.CONTROLS.Data.Collection.RecordSet')) {
+            rawData = items.getRawData();
+         }
+         if ( ! rawData) {
+            $ws.single.ioc.resolve('ILogger').log('Toolbar:_getArrayItems. Неизвестный тип items');
+            return [];
+         }
+         return rawData;
+      },
+
+      /*
+       * Собираем все дочерние элементы для каждого item-а
+       */
+      _collectSubItems: function() {
+         this._itemsToSubItems = {};
+
+         var rawData = this._getArrayItems(this._items),
+             subItems;
+         for (var i = 0; i < rawData.length; i++) {
+            var curItem = rawData[i];
+            var parentKey = curItem[this._options.hierField] ;
+            if ( ! parentKey) {
+               continue;
+            }
+            //находим или создаем записи для этого родителя
+            subItems = (this._itemsToSubItems.hasOwnProperty(parentKey)) ? this._itemsToSubItems[parentKey] : [];
+            subItems.push(curItem);
+            this._itemsToSubItems[parentKey] = subItems;
+         }
+      },
+
+      _getSubItems: function(key, arrKeys) {
+         //var childs = this._items.getChildItems(key, true, 'parent');/*this._options.hierField*/
+         if ( ! key) {
+            return [];
+         }
+         arrKeys = arrKeys || [];
+         if (Array.indexOf(arrKeys, key) >= 0) {
+            $ws.single.ioc.resolve('ILogger').error('Toolbar','_getSubItems. Зацикливание в дереве.');
+            return [];
+         }
+         arrKeys.push(key);
+         if (this._itemsToSubItems === null) {
+            this._collectSubItems();
+         }
+         var items = [],
+             subItems = [],
+             curItems;
+         if (this._itemsToSubItems.hasOwnProperty(key)) {
+            items = this._itemsToSubItems[key];
+            for (var i = 0; i < items.length; i++) {
+               curItems = this._getSubItems(items[i][this._options.keyField], arrKeys);
+               subItems.push.apply(subItems, curItems);
+            }
+            //добавляем к элементам полученные подпункты
+            items.push.apply(items, subItems);
+         }
+         return items;
+      },
+
+
       _getItemTemplate: function(item) {
          var icon        = item.get('icon')        ? '<option name="icon">' + item.get('icon') + '</option>' : '',
              className   = item.get('className')   ? item.get('className') : '',
              options = item.get('options') || {},
-            //+ Math.floor(Math.random()*1000).toString()
              caption = item.get('caption') ? '<opt name="caption">' + item.get('caption') + '</opt>' : '',
-             //visible = item.get('isMainAction')
-             show = !!(item.get('showType') == this.showType.MENU_TOOLBAR || item.get('showType') == this.showType.TOOLBAR ),
-             command = item.get('command') ? '<opt name="command">' + item.get('command') + '</opt>' : '';
-             //handlers = item.get('handlers') ? '<options name="handlers">' + item.get('handlers') + '</options>' : '';
+             visible = !!(item.get('showType') == this.showType.MENU_TOOLBAR || item.get('showType') == this.showType.TOOLBAR ),
+             command = item.get('command') ? '<opt name="command">' + item.get('command') + '</opt>' : '',
+             itemKey = item.get(this._options.keyField),
+             subItems;
+
+         //ищем подэлементы, только если элемент отображается в тулбаре
+         if (visible) {
+            subItems = this._getSubItems(itemKey);
+            //клонируем, чтобы не влиять на основное меню в тулбаре
+            subItems = $ws.core.clone(subItems);
+            //удаляем parent, чтобы элементы попали в список. Задание root не дает отображение элементов с несуществующими parent
+            for (var i = 0; i < subItems.length; i++) {
+               if (subItems[i].parent == itemKey ) {
+                  delete subItems[i].parent;
+               }
+            }
+            if (subItems.length) {
+               options.items = subItems;
+               //options.root = itemKey;
+               //для MenuIcon, MenuLink и т.д.
+               options.keyField = this._options.keyField;
+               options.hierField = this._options.hierField;
+               options.displayField = this._options.displayField;
+            }
+         }
          return '<component data-component="' + item.get('componentType').substr(3) + '" config="' + $ws.helpers.encodeCfgAttr(options) + '" class="controls-ToolBar__item ' + className + '">' +
-                  '<opt name="visible" type="boolean">' + show + '</opt>' +
+                  '<opt name="visible" type="boolean">' + visible + '</opt>' +
                   caption + icon + command +
-                  //для MenuIcon, MenuLink и т.д.
-                  '<opt name="keyField">id</opt>'+
                 '</component>';
       }
 

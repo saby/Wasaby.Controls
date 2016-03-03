@@ -43,6 +43,7 @@ define('js!SBIS3.CONTROLS.Demo.MyToolbar', [
          this.items = [
             {
                id: 'edoSendMessage',
+               //parent: 'xxx',
                icon: 'sprite:icon-24 icon-EmptyMessage icon-primary',
                caption: 'Сообщения',
                weight: 10,
@@ -99,6 +100,7 @@ define('js!SBIS3.CONTROLS.Demo.MyToolbar', [
 
             {
                id: 'edoSetImportant',
+               parent: 'edoOpenInNewTab',
                icon: 'icon-24 icon-Flag icon-hover',
                visible: true,
                caption: 'Сделать важным',
@@ -121,13 +123,15 @@ define('js!SBIS3.CONTROLS.Demo.MyToolbar', [
 
             {
                id: 'edoLinkedDocs',
+               //Тестовое зацикливание
+               //parent: 'edoSetImportant',
                icon: 'icon-24 icon-Linked icon-primary',
                caption: 'Связанные документы',
                visible: true,
                weight: 80,
-               showType: 0,
+               showType: 1,
                command: 'edoLinkedDocs',
-               componentType: 'js!SBIS3.CONTROLS.IconButton'
+               componentType: 'js!SBIS3.CONTROLS.MenuIcon'
             },
 
             {
