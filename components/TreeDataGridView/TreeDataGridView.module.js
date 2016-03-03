@@ -364,6 +364,10 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
             return this._notify('onDragMove', this.getCurrentElement().keys, target.data('id'), insertAfter) !== false;
          }
       },
+      _afterMoveHandler: function(isHierMove, moveTo) {
+         var needChaneRoot = isHierMove && this._options.allowEnterToFolder;
+         TreeDataGridView.superclass._afterMoveHandler.apply(this, [needChaneRoot, moveTo])
+      },
       /**
        * Говорят, что группировка должна быть только в текущем разделе. Поддерживаем
        * @param record
