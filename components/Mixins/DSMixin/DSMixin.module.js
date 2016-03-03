@@ -1071,7 +1071,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
          return offset < 0 ? false : (typeof (hasMore) !== 'boolean' ? hasMore > (offset + this._options.pageSize) : !!hasMore);
       },
       _scrollToItem: function(itemId) {
-         $(".controls-ListView__item[data-id='" + itemId + "']", this._getItemsContainer()).attr('tabindex', '-1').focus();
+         $(".controls-ListView__item[data-id='" + itemId + "']", this._getItemsContainer()).get(0).scrollIntoView();
       },
       /**
        * Установить что отображается при отсутствии записей.
