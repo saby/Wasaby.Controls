@@ -117,8 +117,20 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
          this._updateItemsToolbar();
       },
       _drawItemsCallback: function() {
+         var
+            dataSet = this._dataSet,
+            tree = dataSet.getTreeIndex(this._options.hierField);
          $ws.helpers.forEach(this._options.openedPath, function(val, key) {
-            this._createFolderFooter(key);
+            /*TODO:
+               Не нужно создавать футер у узла, если данный узел не отображается.
+               Прежде чем создавать футер у развёрнутого узла проверим что данный узел присутствует в наборе элементов.
+               Возможна такая ситуация что списочный метод вернул сразу все данные и узел может являться развёрнутым,
+               но не отображаться, тогда для такого случая проверим необходимость создания футера путём поиска узла
+               среди текущего набора элементов в DOM.
+            */
+             if (tree[key] && this._getElementByModel(dataSet.getRecordByKey(key)).length) {
+                this._createFolderFooter(key);
+             }
          }, this);
          TreeDataGridView.superclass._drawItemsCallback.apply(this, arguments);
       },
@@ -251,6 +263,16 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
             var tree = this._dataSet.getTreeIndex(this._options.hierField);
             if (tree[key]) {
                $('.js-controls-TreeView__expand', container).addClass('controls-TreeView__expand__open');
+            } else {
+               /*TODO:
+                  После перезагрузки у браузера в опции openedPath остаются значения с открытыми узлами,
+                  и если впоследствии попытаться открыть такой узел, то он не откроется, т.к. считается
+                  что он уже открыт. Единственный вариант проверить может ли быть открыт узел, посмотреть
+                  есть ли у него дочерние элементы, и если их нет значит необходимо удалить данный узел
+                  из набора открытых. В будущем когда будет определено поведение после перезагрузки (
+                  сохранять состояние открытых узлов или сбрасывать) данный костыль не понадобится.
+               */
+               delete this._options.openedPath[key];
             }
          }
          /*TODO пока придрот*/
