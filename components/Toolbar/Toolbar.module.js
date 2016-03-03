@@ -106,6 +106,20 @@ define('js!SBIS3.CONTROLS.Toolbar', [
          //return !!item.get('isMainAction') ? this._itemsContainer : null;
       },
 
+      _drawItemsCallback: function () {
+         Toolbar.superclass._drawItemsCallback.apply(this, arguments);
+
+         //TODO находим элементы, которые могут быть меню, чтобы подписаться на них
+         var itemsInstances = this.getItemsInstances();
+         for (var i in itemsInstances) {
+            if (itemsInstances.hasOwnProperty(i)) {
+               var item = itemsInstances[i];
+               if ($ws.helpers.instanceOfMixin(item, 'SBIS3.CONTROLS.MenuButtonMixin')) {
+                  item.subscribe('onMenuItemActivate', this._onMenuItemActivate.bind(this));
+               }
+            }
+         }
+      },
 
       /*_itemsReadyCallback: function() {
          console.log('_itemsReadyCallback');
