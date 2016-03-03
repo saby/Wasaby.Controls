@@ -86,23 +86,26 @@
                            </component>
                         </option>
                      </component>
-                     <component data-component="SBIS3.CONTROLS.EditAtPlace" name="pong" class="controls-TabButton__additionalText1" decorators="format:DD.MM">
-                        <option name="text" bind="tabs/date"></option>
-                        <option name="editorTpl" type="string">
-                        <component data-component="SBIS3.CONTROLS.DatePicker" tabindex=4>
-                           <option name="date" bind="tabs/date"></option>
-                           <option name="mask">DD.MM.YYYY</option>
-                        </component>
-                     </option>
-                     </component>
-                     <component data-component="SBIS3.CONTROLS.EditAtPlace" name="num" class="controls-TabButton__additionalText2">
-                        <option name="text" bind="tabs/number"></option>
-                        <option name="editorTpl" type="string">
-                           <component data-component="SBIS3.CONTROLS.NumberTextBox" style="width:60px;" tabindex=5>
-                              <option name="text" bind="tabs/number"></option>
+                     <span class="controls-TabButton__additionalText1">
+                        <component data-component="SBIS3.CONTROLS.EditAtPlace" name="pong">
+                           <option name="text" bind="tabs/date"></option>
+                           <option name="editorTpl" type="string">
+                           <component data-component="SBIS3.CONTROLS.DatePicker" tabindex=4>
+                              <option name="text" bind="tabs/date"></option>
                            </component>
                         </option>
-                     </component>
+                        </component>
+                     </span>
+                     <span class="controls-TabButton__additionalText2">
+                        <component data-component="SBIS3.CONTROLS.EditAtPlace" name="num">
+                           <option name="text" bind="tabs/number"></option>
+                           <option name="editorTpl" type="string">
+                              <component data-component="SBIS3.CONTROLS.NumberTextBox" style="width:60px;" tabindex=5>
+                                 <option name="text" bind="tabs/number"></option>
+                              </component>
+                           </option>
+                        </component>
+                     </span>
                   </option>
                </component>
             </option>
