@@ -512,7 +512,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
 
           if (this._dataSource) {
              this._toggleIndicator(true);
-             this._notify('onBeforeDataLoad');
+             this._notify('onBeforeDataLoad', this._options.filter, this.getSorting(), this._offset, this._limit);
              def = this._callQuery(this._options.filter, this.getSorting(), this._offset, this._limit)
                 .addCallback($ws.helpers.forAliveOnly(function (list) {
                    self._toggleIndicator(false);
