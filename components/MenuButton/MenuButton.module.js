@@ -136,15 +136,15 @@ define('js!SBIS3.CONTROLS.MenuButton', ['js!SBIS3.CONTROLS.Button', 'js!SBIS3.CO
          }
       },
       showPicker: function() {
-         MenuButton.superclass.showPicker.call(this);
          if (!this._header) {
             this._createHeader();
-            this._header.css({
-               left: (this._headerAlignment.horizontal == 'left') ? this._container.offset().left : this._container.offset().left - 12,
-               top: (this._headerAlignment.vertical == 'top') ? this._container.offset().top + 2 : this._container.offset().top - 7,
-               'z-index': parseInt(this._picker._container.css('z-index'), 10) + 1
-            });
          }
+         MenuButton.superclass.showPicker.call(this);
+         this._header.css({
+            left: (this._headerAlignment.horizontal == 'left') ? this._container.offset().left : this._container.offset().left - 12,
+            top: (this._headerAlignment.vertical == 'top') ? this._container.offset().top + 2 : this._container.offset().top - 7,
+            'z-index': parseInt(this._picker._container.css('z-index'), 10) + 1
+         });
          this._header.removeClass('ws-hidden');
       },
       _createHeader: function(){
