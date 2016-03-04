@@ -558,7 +558,7 @@ define('js!SBIS3.CONTROLS.Data.Projection.Collection', [
       _startUpdateSession: function () {
          //Индексируем состояние элементов до изменений
          var enumerator = this._getServiceEnumerator(),
-            sevedPosition = enumerator.getPosition(),
+            savedPosition = enumerator.getPosition(),
             items = [],
             contents = [],
             item;
@@ -567,7 +567,7 @@ define('js!SBIS3.CONTROLS.Data.Projection.Collection', [
             items.push(item);
             contents.push(item.getContents());
          }
-         enumerator.setPosition(sevedPosition);
+         enumerator.setPosition(savedPosition);
          return {
             before: items,
             beforeContents: contents
@@ -582,7 +582,7 @@ define('js!SBIS3.CONTROLS.Data.Projection.Collection', [
       _finishUpdateSession: function (session) {
          //TODO: порефактроить тут всё, оптимизировать Array.indexOf
          var enumerator = this._getServiceEnumerator(),
-            sevedPosition = enumerator.getPosition(),
+            savedPosition = enumerator.getPosition(),
             afterItem;
 
          //Индексируем состояние элементов после изменений
@@ -592,7 +592,7 @@ define('js!SBIS3.CONTROLS.Data.Projection.Collection', [
          while ((afterItem = enumerator.getNext())) {
             session.after.push(afterItem);
          }
-         enumerator.setPosition(sevedPosition);
+         enumerator.setPosition(savedPosition);
 
          var groups = ['added', 'removed', 'replaced', 'moved'],
             changes,
