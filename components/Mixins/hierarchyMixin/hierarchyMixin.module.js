@@ -156,7 +156,8 @@ define('js!SBIS3.CONTROLS.hierarchyMixin', [], function () {
       after : {
          _dataLoadedCallback: function () {
             var path = this._dataSet.getMetaData().path,
-                  hierarchy = this._hier;
+               hierarchy = this._hier,
+               item;
             if (!hierarchy.length && path) {
                hierarchy = this._getHierarchy(path, this._curRoot);
             }
@@ -168,7 +169,10 @@ define('js!SBIS3.CONTROLS.hierarchyMixin', [], function () {
             // Выпилить, когда это будет делать установка выделенного элемента
             if (this._previousRoot !== this._curRoot) {
                this._previousRoot = this._curRoot;
-               this._scrollToItem(this.getItems().at(0).getKey())
+               item = this.getItems() && this.getItems().at(0);
+               if (item){
+                  this._scrollToItem(item.getKey());
+               }
             }
          }
       },
