@@ -4,10 +4,11 @@ define([
       'js!SBIS3.CONTROLS.Data.Collection.List',
       'js!SBIS3.CONTROLS.Data.Bind.ICollection',
       'js!SBIS3.CONTROLS.Data.Model',
+      'js!SBIS3.CONTROLS.Data.Format.FieldsFactory',
       'js!SBIS3.CONTROLS.Data.Source.Memory',
       'js!SBIS3.CONTROLS.Data.Adapter.Json',
       'js!SBIS3.CONTROLS.Data.Adapter.Sbis'
-   ], function (RecordSet, List, IBindCollection, Model, MemorySource, JsonAdapter, SbisAdapter) {
+   ], function (RecordSet, List, IBindCollection, Model, FieldsFactory, MemorySource, JsonAdapter, SbisAdapter) {
       'use strict';
 
       describe('SBIS3.CONTROLS.Data.Collection.RecordSet', function() {
@@ -36,6 +37,26 @@ define([
                   'Ид': 7,
                   'Фамилия': 'Арбузнов'
                }];
+            },
+            getSbisItems = function() {
+               return {
+                  d: [
+                     [1, 'Иванов'],
+                     [2, 'Петров'],
+                     [3, 'Сидоров'],
+                     [4, 'Пухов'],
+                     [5, 'Молодцов'],
+                     [6, 'Годолцов'],
+                     [7, 'Арбузнов']
+                  ],
+                  s: [{
+                     n: 'Ид',
+                     t: 'Число целое'
+                  }, {
+                     n: 'Фамилия',
+                     t: 'Строка'
+                  }]
+               };
             };
 
          beforeEach(function() {
@@ -181,6 +202,205 @@ define([
             });
          });
 
+         describe('.setRawData()', function (){
+            it('should return elem by index', function () {
+               var rs = new RecordSet({
+                  rawData: getItems(),
+                  idProperty: "Ид"
+               });
+               rs.setRawData([{
+                  'Ид': 1000,
+                  'Фамилия': 'Пушкин'
+               }, {
+                  'Ид': 1001,
+                  'Фамилия': 'Пушкин1'
+               }]);
+               assert.equal(rs.getIndex(rs.at(1)), 1);
+            });
+         });
+
+         describe('.getFormat()', function () {
+            it('should build the empty format from json raw data', function () {
+               var format = rs.getFormat();
+               assert.strictEqual(format.getCount(), 0);
+            });
+            it('should build the format from sbis raw data', function () {
+               var data = getSbisItems(),
+                  rs = new RecordSet({
+                     rawData: data,
+                     adapter: 'adapter.sbis'
+                  }),
+                  format = rs.getFormat();
+               assert.strictEqual(format.getCount(), data.s.length);
+               format.each(function(item, index) {
+                  assert.strictEqual(item.getName(), data.s[index].n);
+               });
+            });
+            it('should build the record format from declarative option', function () {
+               var declaration = [{
+                     name: 'id',
+                     type: 'integer'
+                  }, {
+                     name: 'title',
+                     type: 'string'
+                  }, {
+                     name: 'max',
+                     type: 'integer'
+                  }, {
+                     name: 'main',
+                     type: 'boolean'
+                  }],
+                  rs = new RecordSet({
+                     format: declaration,
+                     rawData: items
+                  }),
+                  format = rs.getFormat();
+               assert.strictEqual(format.getCount(), declaration.length);
+               format.each(function(item, index) {
+                  assert.strictEqual(item.getName(), declaration[index].name);
+                  assert.strictEqual(item.getType().toLowerCase(), declaration[index].type);
+               });
+            });
+         });
+
+         describe('.addField()', function () {
+            it('should add the field from the declaration', function () {
+               var index = 0,
+                  fieldName = 'login',
+                  fieldDefault = 'user';
+               rs.addField({
+                  name: fieldName,
+                  type: 'string',
+                  defaultValue: fieldDefault
+               }, index);
+
+               assert.strictEqual(rs.getFormat().at(index).getName(), fieldName);
+               assert.strictEqual(rs.getFormat().at(index).getDefaultValue(), fieldDefault);
+               rs.each(function(record) {
+                  assert.strictEqual(record.get(fieldName), fieldDefault);
+                  assert.strictEqual(record.getRawData()[fieldName], fieldDefault);
+               });
+            });
+            it('should add the field from the instance', function () {
+               var fieldName = 'login',
+                  fieldDefault = 'username';
+               rs.addField(FieldsFactory.create({
+                  name: fieldName,
+                  type: 'string',
+                  defaultValue: fieldDefault
+               }));
+               var index = rs.getFormat().getCount() - 1;
+
+               assert.strictEqual(rs.getFormat().at(index).getName(), fieldName);
+               assert.strictEqual(rs.getFormat().at(index).getDefaultValue(), fieldDefault);
+               rs.each(function(record) {
+                  assert.strictEqual(record.get(fieldName), fieldDefault);
+                  assert.strictEqual(record.getRawData()[fieldName], fieldDefault);
+               });
+            });
+            it('should add the field with the value', function () {
+               var fieldName = 'login',
+                  fieldValue = 'root';
+               rs.addField({name: fieldName, type: 'string', defaultValue: 'user'}, 0, fieldValue);
+
+               rs.each(function(record) {
+                  assert.strictEqual(record.get(fieldName), fieldValue);
+                  assert.strictEqual(record.getRawData()[fieldName], fieldValue);
+               });
+            });
+            it('should throw an error if the field is already defined', function () {
+               assert.throw(function() {
+                  rs.addField({name: 'Фамилия', type: 'string'});
+               });
+            });
+            it('should throw an error if add the field twice', function () {
+               rs.addField({name: 'new', type: 'string'});
+               assert.throw(function() {
+                  rs.addField({name: 'new', type: 'string'});
+               });
+            });
+         });
+
+         describe('.removeField()', function () {
+            it('should remove the exists field', function () {
+               var fieldName = 'Фамилия',
+                  rs = new RecordSet({
+                     adapter: 'adapter.sbis',
+                     rawData: getSbisItems()
+                  });
+               rs.removeField(fieldName);
+
+               assert.strictEqual(rs.getFormat().getFieldndex(fieldName), -1);
+               assert.strictEqual(rs.getRawData().s.length, 1);
+               rs.each(function(record) {
+                  assert.isFalse(record.has(fieldName));
+                  assert.isUndefined(record.get(fieldName));
+                  assert.strictEqual(record.getRawData().s.length, 1);
+               });
+            });
+            it('should throw an error if adapter doesn\'t support fields detection', function () {
+               var fieldName = 'Фамилия';
+               rs.each(function(record) {
+                  assert.isTrue(record.has(fieldName));
+               });
+               assert.throw(function() {
+                  rs.removeField(fieldName);
+               });
+            });
+            it('should throw an error for not defined field', function () {
+               var rs = new RecordSet({
+                  adapter: 'adapter.sbis',
+                  rawData: getSbisItems()
+               });
+               assert.throw(function() {
+                  rs.removeField('some');
+               });
+            });
+            it('should throw an error if remove the field twice', function () {
+               var rs = new RecordSet({
+                  adapter: 'adapter.sbis',
+                  rawData: getSbisItems()
+               });
+               rs.removeField('Фамилия');
+               assert.throw(function() {
+                  rs.removeField('Фамилия');
+               });
+            });
+         });
+
+         describe('.removeFieldAt()', function () {
+            it('should throw an error if adapter doesn\'t support fields indexes', function () {
+               assert.throw(function() {
+                  rs.removeFieldAt(1);
+               });
+            });
+            it('should remove the exists field', function () {
+               var fieldIndex = 1,
+                  fieldName = 'title',
+                  rs = new RecordSet({
+                     adapter: 'adapter.sbis',
+                     rawData: getSbisItems()
+                  });
+               rs.removeFieldAt(fieldIndex);
+
+               assert.isUndefined(rs.getFormat().at(fieldIndex));
+               assert.strictEqual(rs.getRawData().s.length, 1);
+               rs.each(function(record) {
+                  assert.isFalse(record.has(fieldName));
+                  assert.isUndefined(record.get(fieldName));
+                  assert.strictEqual(record.getRawData().s.length, 1);
+               });
+            });
+            it('should throw an error for not exists index', function () {
+               assert.throw(function() {
+                  var rs = new Record({
+                     adapter: 'adapter.sbis'
+                  });
+                  rs.removeFieldAt(0);
+               });
+            });
+         });
+
          describe('.append()', function() {
             it('should change raw data', function() {
                var rd = [{
@@ -306,10 +526,10 @@ define([
                   var rs = ds.getAll(),
                      length = rs.getCount(),
                      item_2 = $ws.core.clone(rs.at(0));
-                  rs.at(2).setDeleted(true);
-                  rs.at(6).setDeleted(true);
+                  rs.removeAt(2);
+                  rs.removeAt(5);
                   rs.saveChanges(source);
-                  assert.equal(rs.getCount(), length-2);
+                  assert.equal(rs.getCount(), length - 2);
                   assert.notDeepEqual(item_2, rs.at(2));
                   done();
                });
@@ -403,22 +623,6 @@ define([
                rs.merge(rs2, {add: false});
                assert.isUndefined(rs.getRecordById(1000));
 
-            });
-         });
-         describe('.setRawData()', function (){
-            it('should return elem by index', function () {
-               var rs = new RecordSet({
-                  rawData: getItems(),
-                  idProperty: "Ид"
-               });
-               rs.setRawData([{
-                  'Ид': 1000,
-                  'Фамилия': 'Пушкин'
-               }, {
-                  'Ид': 1001,
-                  'Фамилия': 'Пушкин1'
-               }]);
-               assert.equal(rs.getIndex(rs.at(1)), 1);
             });
          });
 
