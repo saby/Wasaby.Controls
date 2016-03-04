@@ -127,14 +127,8 @@ define('js!SBIS3.CONTROLS.MenuButton', ['js!SBIS3.CONTROLS.Button', 'js!SBIS3.CO
          }
       },
       /**
-       * Скрывает/показывает меню у кнопки
+       * Показывает меню у кнопки
        */
-      togglePicker: function(){
-         MenuButton.superclass.togglePicker.call(this);
-         if (this._picker) {
-            this._setWidth();
-         }
-      },
       showPicker: function() {
          if (!this._header) {
             this._createHeader();
@@ -146,6 +140,9 @@ define('js!SBIS3.CONTROLS.MenuButton', ['js!SBIS3.CONTROLS.Button', 'js!SBIS3.CO
             'z-index': parseInt(this._picker._container.css('z-index'), 10) + 1
          });
          this._header.removeClass('ws-hidden');
+         if (this._picker) {
+            this._setWidth();
+         }
       },
       _createHeader: function(){
          this._header = $('<span class="controls-MenuButton__header ws-hidden">\
