@@ -4,7 +4,7 @@ define('js!SBIS3.CONTROLS.Data.Source.ISource', [
    'use strict';
 
    /**
-    * Интерфейс источника данных
+    * Интерфейс источника данных - объекта с CRUD архитектурой, предоставляющего доступ к типовым операциям, применяемым к объекту предметной области.
     * @mixin SBIS3.CONTROLS.Data.Source.ISource
     * @public
     * @author Мальцев Алексей
