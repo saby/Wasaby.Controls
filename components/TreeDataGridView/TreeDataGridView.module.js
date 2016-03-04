@@ -118,6 +118,7 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
       },
       _drawItemsCallback: function() {
          var
+            model,
             dataSet = this._dataSet,
             tree = dataSet.getTreeIndex(this._options.hierField);
          $ws.helpers.forEach(this._options.openedPath, function(val, key) {
@@ -128,7 +129,8 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
                но не отображаться, тогда для такого случая проверим необходимость создания футера путём поиска узла
                среди текущего набора элементов в DOM.
             */
-             if (tree[key] && this._getElementByModel(dataSet.getRecordByKey(key)).length) {
+            model = dataSet.getRecordByKey(key);
+             if (tree[key] && model && this._getElementByModel(model).length) {
                 this._createFolderFooter(key);
              }
          }, this);
