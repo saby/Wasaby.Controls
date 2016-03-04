@@ -7,8 +7,9 @@ define([
    'js!SBIS3.CONTROLS.Data.Source.DataSet',
    'js!SBIS3.CONTROLS.Data.Factory',
    'js!SBIS3.CONTROLS.Data.Types.Enum',
+   'js!SBIS3.CONTROLS.Data.Types.Flags',
    'js!SBIS3.CONTROLS.Data.Collection.RecordSet'
-], function (AdapterJson, AdapterSbis, Model, List, DataSet, Factory, Enum, RecordSet) {
+], function (AdapterJson, AdapterSbis, Model, List, DataSet, Factory, Enum, Flags, RecordSet) {
    'use strict';
 
    var dataScheme,
@@ -370,14 +371,31 @@ define([
                      model.set('time', date);
                      assert.equal(getData(model, 11), date.toSQL(false));
                   });
-                  it('should store flags', function () {
+                  it('should store flags as flags', function () {
+                     var model = getModel(type),
+                        d = [true, false, null],
+                        flags = new Flags({
+                           data: {
+                              one: true,
+                              two: false,
+                              three: null
+                           }
+                        });
+                     model.set('flags', flags);
+                     assert.deepEqual(getData(model, 5), d);
+                  });
+                  it('should store flags as model', function () {
                      var model = getModel(type),
                         d = [true, true, false],
                         testModel = new Model({
                            adapter: new AdapterSbis(),
                            rawData: {
                               d: d,
-                              s: [{n: 'id', t: 'Логическое'},{n: 'id1', t: 'Логическое'},{n: 'id2', t: 'Логическое'}]
+                              s: [
+                                 {n: 'id', t: 'Логическое'},
+                                 {n: 'id1', t: 'Логическое'},
+                                 {n: 'id2', t: 'Логическое'}
+                              ]
                            }
                         });
                      model.set('flags', testModel);
