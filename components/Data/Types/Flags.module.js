@@ -18,63 +18,83 @@ define('js!SBIS3.CONTROLS.Data.Types.Flags', [
       _moduleName: 'SBIS3.CONTROLS.Data.Types.Flags',
       $protected: {
          _options: {
-            data: {}
+            data: {},
+
+            /**
+             * @cfg {Array.<String>} Словарь возможных значений
+             */
+            dictionary: [],
+
+            /**
+             * @cfg {Array.<Boolean|Null>} Выбранные значения согласно словарю
+             */
+            values: []
          },
-         _selected: [],
-         _enumerator: undefined,
-         _indexed: [],
-         _length: undefined
+         _enumerator: undefined
       },
       $constructor: function (cfg) {
-         var data = cfg.data;
-         if (!(data instanceof Object)) {
-            throw new Error('Data must be instance of an object');
-         }
-         this._length = 0;
-         for (var key in data) {
-            if (data.hasOwnProperty(key)) {
-               data[key] = this._prepareValue(data[key]);
-               this._length++;
+         if ('data' in cfg && !('dictionary' in cfg) && !('values' in cfg)) {
+            $ws.single.ioc.resolve('ILogger').log(this._moduleName + '::$constructor()', 'Option "data" is deprecated and will be removed in 3.7.4. Use options "dictionary" and "values" instead.');
+
+            var data = cfg.data;
+            if (!(data instanceof Object)) {
+               throw new TypeError('Option "data" must be an instance of Object');
+            }
+            for (var key in data) {
+               if (data.hasOwnProperty(key)) {
+                  this._options.dictionary.push(key);
+                  this._options.values.push(data[key]);
+               }
             }
          }
-         if (!cfg.indexed) {
-            this._buildIndex(cfg);
+
+         if (this._options.dictionary instanceof Object && this._options.dictionary instanceof Array) {
+            var dictionary = [];
+            for (var index in this._options.dictionary){
+               if (this._options.dictionary.hasOwnProperty(index)) {
+                  dictionary[index] = this._options.dictionary[index];
+               }
+            }
+            this._options.dictionary = dictionary;
          }
       },
+
       /**
        * Возвращает значение флага по названию
        * @param name {String} Название флага
        * @returns {Boolean|Null}
        */
       get: function (name) {
-         var data = this._options.data;
-         if (data.hasOwnProperty(name)) {
-            return data[name];
+         var index = this._getIndex(name);
+         if (index > -1) {
+            return this._options.values[index];
          }
          return undefined;
       },
+
       /**
        * Устанавливает значение флага по названию
        * @param name {String} Название флага
        * @param value {Boolean|Null} Значение
        */
       set: function (name, value) {
-         var data = this._options.data;
-         if (data.hasOwnProperty(name)) {
-            data[name] = value === null ? null : !!value;
+         var index = this._getIndex(name);
+         if (index > -1) {
+            this._options.values[index] = value === null ? null : !!value;
          } else {
-            throw new Error('The name "'+name+'" doesnt found in dictionary');
+            throw new ReferenceError('The name "' + name + '" doesn\'t found in dictionary');
          }
       },
+
       /**
        * Возвращает значение флага по индексу
        * @param index {Number} Индекс флага
        * returns {Boolean|Null}
        */
       getByIndex: function (index) {
-         var key = this._getKeByIndex(index);
-         return this.get(key);
+         return this._options.values[index];
       },
+
       /**
        * Устанавливает значение флага по индексу
        * @param index {Number} - индекс флага
@@ -85,26 +105,30 @@ define('js!SBIS3.CONTROLS.Data.Types.Flags', [
          if(typeof key === 'undefined'){
             throw new Error('The index is out of range');
          }
-         this.set(key, value);
+         this._options.values[index] = value;
       },
+
       /**
        * Установить всем флагам false
        */
       setFalseAll: function () {
          this._setAll(false);
       },
+
       /**
        * Установить всем флагам true
        */
       setTrueAll: function () {
          this._setAll(true);
       },
+
       /**
        * Установить всем флагам null
        */
       setNullAll: function () {
          this._setAll(null);
       },
+
       /**
        * Сравнивает с флагами
        * @param obj {Flags} - Объект Flags
@@ -116,49 +140,50 @@ define('js!SBIS3.CONTROLS.Data.Types.Flags', [
                self = this,
                len = 0;
             value.each(function (key) {
-               if (result && self.get(key) === value.get(key))
+               if (result && self.get(key) === value.get(key)) {
                   len++;
-               else
+               } else {
                   result = false;
+               }
             });
-            if (result && this._length === len) {
+            if (result && this._options.dictionary === len) {
                return true;
             }
          }
          return false;
       },
+
       each: function (callback, context) {
          context = context || this;
          var enumerator = this.getEnumerator(),
             key, index = 0;
-         this._enumerator.reset();
+         enumerator.reset();
          while ((key = enumerator.getNext())) {
             callback.call(context, key, index++);
          }
       },
+
       getEnumerator: function () {
          if (!this._enumerator) {
             this._enumerator = new ArrayEnumerator({
-               items: this._indexed
+               items: this._options.dictionary
             });
          }
          return this._enumerator;
       },
+
+      _getIndex: function (name) {
+         return Array.indexOf(this._options.dictionary, name);
+      },
+
       _prepareValue: function (value) {
          return value === null ? null : !!value;
       },
-      _buildIndex: function () {
-         var data = this._options.data;
-         this._indexed = [];
-         for (var key in data) {
-            if (data.hasOwnProperty(key)) {
-               this._indexed.push(key);
-            }
-         }
-      },
+
       _getKeByIndex: function (index) {
-         return this._indexed[index];
+         return this._options.dictionary[index];
       },
+
       _setAll: function (value) {
          var data = this._options.data;
          value = this._prepareValue(value);
@@ -169,7 +194,9 @@ define('js!SBIS3.CONTROLS.Data.Types.Flags', [
          }
       }
    });
+
    Di.register('data.types.flags', Flags);
    $ws.proto.Context.registerFieldType(new ContextFieldFlags({module: Flags}));
+
    return Flags;
 });

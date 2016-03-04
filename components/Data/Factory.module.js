@@ -221,8 +221,9 @@ define('js!SBIS3.CONTROLS.Data.Factory', [
        * @private
        */
       _makeFlags: function (value, format) {
-         return new Flags ({
-            data: format.getDictionary()
+         return new Flags({
+            dictionary: format.getDictionary(),
+            values: value
          });
       },
 
