@@ -1,22 +1,22 @@
 define('js!SBIS3.CONTROLS.Toolbar', [
    'js!SBIS3.CONTROLS.ButtonGroupBaseDS',
    'html!SBIS3.CONTROLS.Toolbar',
-   /*'js!SBIS3.CONTROLS.TreeMixinDS',
-   'js!SBIS3.CONTROLS.hierarchyMixin',*/
-   //'js!SBIS3.CONTROLS.Data.Collection.List',
    'js!SBIS3.CONTROLS.CommandsButton'
-], function(ButtonGroupBaseDS, dotTplFn/*, TreeMixinDS, hierarchyMixin*/) {
+], function(ButtonGroupBaseDS, dotTplFn) {
 
    'use strict';
 
    /**
     * Контрол, отображающий панель с иконками.
     * @class SBIS3.CONTROLS.Toolbar
-    * @extends SBIS3.CONTROLS.ControlsListBase
+    * @extends SBIS3.CONTROLS.ButtonGroupBaseDS
+    * @control
+    * @public
+    * @demo SBIS3.CONTROLS.Demo.MyToolbar
     * @author Крайнов Дмитрий Олегович
     */
 
-   var Toolbar = ButtonGroupBaseDS.extend(/*[TreeMixinDS, hierarchyMixin], *//** @lends SBIS3.CONTROLS.Toolbar.prototype */ {
+   var Toolbar = ButtonGroupBaseDS.extend(/** @lends SBIS3.CONTROLS.Toolbar.prototype */ {
       _dotTplFn: dotTplFn,
       $protected: {
          _options: {
@@ -36,40 +36,21 @@ define('js!SBIS3.CONTROLS.Toolbar', [
 
       $constructor: function() {
          this._publish('onToolbarItemActivate');
-
          this._itemsContainer   = this.getContainer().find('.controls-ToolBar__itemsContainer');
-         //this._garbageContainer = this.getContainer().find('.controls-ToolBar__garbageContainer');
       },
 
       init: function() {
          Toolbar.superclass.init.call(this);
          this._menuIcon = this.getChildControlByName('controls-ToolBar__menuIcon');
          this._menuIcon.subscribe('onMenuItemActivate', this._onMenuItemActivate.bind(this));
-         /*if (! $ws.helpers.instanceOfModule(this._options.items, 'SBIS3.CONTROLS.Data.Collection.List')) {
-            this._options.items = new List({items: this._options.items});
-            console.log('Toolbar init.конвертнули в List');
-         }*/
          this._setMenuItems(this._options.items);
       },
 
       setItems: function(items) {
-         //TODO подготовка списка меню
-         console.log('Toolbar.setItems');
-         /*if (! $ws.helpers.instanceOfModule(items, 'SBIS3.CONTROLS.Data.Collection.List')) {
-            items = new List({items: items});
-            console.log('Toolbar.конвертнули в List');
-         }*/
-         /*var list = new List();
-         list.assign(items);
-         items = list;*/
-
-         //this._setMenuItems(this.getItemsInstances());
-
          //очищаем список найденных элементов
          this._itemsToSubItems = null;
          Toolbar.superclass.setItems.apply(this, arguments);
          this._setMenuItems(items);
-
       },
 
       _setMenuItems: function(items) {
@@ -83,7 +64,6 @@ define('js!SBIS3.CONTROLS.Toolbar', [
 
       //обработчик для меню
       _onMenuItemActivate: function(event, id) {
-         //console.log('_onMenuItemActivate ' + id);
          this._notifyItemActivate(id, 'menu');
       },
 
@@ -95,10 +75,6 @@ define('js!SBIS3.CONTROLS.Toolbar', [
       _notifyItemActivate: function(id, type) {
          this._notify('onToolbarItemActivate', id, type);
       },
-
-      /* $0.wsControl.setItems([{id:1, name:'B1', componentType: 'js!SBIS3.CONTROLS.Button', caption: 'новый текст'}, {id:2, name:'B2', componentType: 'js!SBIS3.CONTROLS.Button', caption: 'текст2'}])
-         $0.wsControl.setItems([{id:1, name:'B1', componentType: 'js!SBIS3.CONTROLS.Button', caption: 'новый текст', isMainAction: true}, {id:2, name:'B2', componentType: 'js!SBIS3.CONTROLS.Button', caption: 'текст2'}])
-       */
 
       /* Переопределяем получение контейнера для элементов */
       _getTargetContainer: function(item) {
@@ -120,16 +96,6 @@ define('js!SBIS3.CONTROLS.Toolbar', [
             }
          }
       },
-
-      /*_itemsReadyCallback: function() {
-         console.log('_itemsReadyCallback');
-         //this._setMenuItems(this._options.items);
-      },*/
-      /*_buildTplArgs: function(item) {
-         item._options.rawData.caption = item._options.rawData.caption + 'qwe';
-         var tplOptions = Toolbar.superclass._buildTplArgs.apply(this, arguments);
-         return tplOptions;
-      },*/
 
       // формируем список без элементов с showType.TOOLBAR
       _getMenuItems: function(items) {
@@ -165,6 +131,7 @@ define('js!SBIS3.CONTROLS.Toolbar', [
 
       /*
        * Собираем все дочерние элементы для каждого item-а
+       * TODO возможно стоит пределать на методы из TreeMixinDS, hierarchyMixin
        */
       _collectSubItems: function() {
          this._itemsToSubItems = {};
@@ -213,15 +180,14 @@ define('js!SBIS3.CONTROLS.Toolbar', [
          return items;
       },
 
-
       _getItemTemplate: function(item) {
-         var icon        = item.get('icon')        ? '<option name="icon">' + item.get('icon') + '</option>' : '',
-             className   = item.get('className')   ? item.get('className') : '',
-             options = item.get('options') || {},
-             caption = item.get('caption') ? '<opt name="caption">' + item.get('caption') + '</opt>' : '',
-             visible = !!(item.get('showType') == this.showType.MENU_TOOLBAR || item.get('showType') == this.showType.TOOLBAR ),
-             command = item.get('command') ? '<opt name="command">' + item.get('command') + '</opt>' : '',
-             itemKey = item.get(this._options.keyField),
+         var icon       = item.get('icon')      ? '<option name="icon">' + item.get('icon') + '</option>' : '',
+             className  = item.get('className') ? item.get('className') : '',
+             options    = item.get('options') || {},
+             caption    = item.get('caption')   ? '<opt name="caption">' + item.get('caption') + '</opt>' : '',
+             visible    = !!(item.get('showType') == this.showType.MENU_TOOLBAR || item.get('showType') == this.showType.TOOLBAR ),
+             command    = item.get('command') ? '<opt name="command">' + item.get('command') + '</opt>' : '',
+             itemKey    = item.get(this._options.keyField),
              subItems;
 
          //ищем подэлементы, только если элемент отображается в тулбаре
@@ -235,10 +201,10 @@ define('js!SBIS3.CONTROLS.Toolbar', [
                   delete subItems[i].parent;
                }
             }
+            //для MenuIcon, MenuLink и т.д.
             if (subItems.length) {
                options.items = subItems;
                //options.root = itemKey;
-               //для MenuIcon, MenuLink и т.д.
                options.keyField = this._options.keyField;
                options.hierField = this._options.hierField;
                options.displayField = this._options.displayField;

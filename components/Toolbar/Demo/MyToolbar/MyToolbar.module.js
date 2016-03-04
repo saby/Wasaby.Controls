@@ -6,10 +6,7 @@ define('js!SBIS3.CONTROLS.Demo.MyToolbar', [
    'css!SBIS3.CONTROLS.Demo.MyToolbar',
    'js!SBIS3.CONTROLS.Toolbar',
    'js!SBIS3.CONTROLS.TextArea',
-   'js!SBIS3.CONTROLS.SwitcherDouble',
-   'js!SBIS3.CONTROLS.CheckBox',
    'js!SBIS3.CONTROLS.Link',
-   'js!SBIS3.CONTROLS.TextBox',
    'js!SBIS3.CONTROLS.Button'
 ], function (CompoundControl, dotTplFn, List, RecordSet) {
    'use strict';
@@ -171,9 +168,6 @@ define('js!SBIS3.CONTROLS.Demo.MyToolbar', [
 
          //this._MyToolbar.setItems(this.items);
 
-         /*var listItems = new List({items: items});
-         this._MyToolbar.setItems(listItems);*/
-
          /*var rs = new RecordSet({
             idProperty: 'id',
             rawData: this.items
@@ -197,7 +191,6 @@ define('js!SBIS3.CONTROLS.Demo.MyToolbar', [
       },
 
       _onActivatedButtonContext: function() {
-         //debugger;
          var rs = new RecordSet({
             idProperty: 'id',
             rawData: this.items
