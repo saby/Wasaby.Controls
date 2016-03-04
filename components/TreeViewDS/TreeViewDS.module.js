@@ -115,7 +115,7 @@ define('js!SBIS3.CONTROLS.TreeViewDS', [
          if (typeof insertAfter === 'boolean' && this._options.itemsDragNDrop !== 'onlyChangeParent' || insertAfter === undefined && this._options.itemsDragNDrop !== 'onlyChangeOrder') {
             return this._notify('onDragMove', this.getCurrentElement().keys, target.data('id'), insertAfter) !== false;
          }
-      },
+      }
    });
 
    return TreeViewDS;
