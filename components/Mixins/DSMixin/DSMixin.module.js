@@ -512,7 +512,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
 
           if (this._dataSource) {
              this._toggleIndicator(true);
-             this._notify('onBeforeDataLoad');
+             this._notify('onBeforeDataLoad', this._options.filter, this.getSorting(), this._offset, this._limit);
              def = this._callQuery(this._options.filter, this.getSorting(), this._offset, this._limit)
                 .addCallback($ws.helpers.forAliveOnly(function (list) {
                    self._toggleIndicator(false);
@@ -770,12 +770,16 @@ define('js!SBIS3.CONTROLS.DSMixin', [
                   curAt.at++;
                }
             }
-            this.reviveComponents().addCallback(this._notifyOnDrawItems.bind(this)).addErrback(function(e){
-               throw e;
-            });
+            this._reviveItems();
          } else {
             this._notifyOnDrawItems();
          }
+      },
+
+      _reviveItems : function() {
+         this.reviveComponents().addCallback(this._notifyOnDrawItems.bind(this)).addErrback(function(e){
+            throw e;
+         });
       },
 
       /**
@@ -835,7 +839,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
             targetElement = this._getElementByModel(item),
             newElement = this._drawItem(item);
          targetElement.after(newElement).remove();
-         this.reviveComponents();
+         this._reviveItems();
       },
 
       _getElementByModel: function(item) {
@@ -1067,7 +1071,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
          return offset < 0 ? false : (typeof (hasMore) !== 'boolean' ? hasMore > (offset + this._options.pageSize) : !!hasMore);
       },
       _scrollToItem: function(itemId) {
-         $(".controls-ListView__item[data-id='" + itemId + "']", this._getItemsContainer()).attr('tabindex', '-1').focus();
+         $(".controls-ListView__item[data-id='" + itemId + "']", this._getItemsContainer()).get(0).scrollIntoView();
       },
       /**
        * Установить что отображается при отсутствии записей.
@@ -1182,7 +1186,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
       onCollectionItemChange = function(eventObject, item, index, property){
          if (this._isNeedToRedraw()) {
             this._updateItem(item);
-            this._drawItemsCallback();
+            this._reviveItems();
          }
       },
       /**
@@ -1212,10 +1216,9 @@ define('js!SBIS3.CONTROLS.DSMixin', [
                         newItemsIndex + i
 	                  );
 	               }
-                  this._toggleEmptyData(!!this._itemsProjection.getCount());
+                  this._toggleEmptyData(!this._itemsProjection.getCount());
 	               //this._view.checkEmpty(); toggleEmtyData
-	               this.reviveComponents(); //надо?
-                   this._drawItemsCallback();
+	               this._reviveItems();
 	               break;
 
 	            case IBindCollection.ACTION_MOVE:
@@ -1225,8 +1228,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
 	                     newItemsIndex + i
 	                  );
 	               }
-	               this.reviveComponents();
-                  this._drawItemsCallback();
+	               this._reviveItems();
 	               break;
 
 	            case IBindCollection.ACTION_REPLACE:
@@ -1235,8 +1237,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
 	                     newItems[i]
 	                  );
 	               }
-	               this.reviveComponents();
-                  this._drawItemsCallback();
+	               this._reviveItems();
 	               break;
 
 	            case IBindCollection.ACTION_RESET:

@@ -206,7 +206,7 @@ define('js!SBIS3.CONTROLS.TreeCompositeView', ['js!SBIS3.CONTROLS.TreeDataGridVi
                   currentDataSet.getRecordByKey(row.key).merge(record);
                   self.redrawItem(record);
                } else { //Иначе - удаляем запись
-                  currentDataSet.removeRecord(row.key);
+                  currentDataSet.removeAt(currentDataSet.getIndexById(row.key));
                   self._destroyFolderFooter([row.key]);
                   self._ladderCompare(environment);
                   row.$row.remove();
@@ -256,7 +256,7 @@ define('js!SBIS3.CONTROLS.TreeCompositeView', ['js!SBIS3.CONTROLS.TreeDataGridVi
                   } else if (self._limit !== undefined) {
                      limit = (self._folderOffsets.hasOwnProperty(branchId) ? self._folderOffsets[branchId] : 0) + self._limit;
                   }
-                  self._notify('onBeforeDataLoad');
+                  self._notify('onBeforeDataLoad', filter, self.getSorting(), self._offset, limit);
                   return self._callQuery(filter, self.getSorting(), self._offset, limit)
                      .addCallback(function(dataSet) {
                         branchesData[branchId] = dataSet;
