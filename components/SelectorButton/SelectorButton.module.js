@@ -39,8 +39,8 @@ define('js!SBIS3.CONTROLS.SelectorButton',
     */
 
    var SelectorButton = ButtonBase.extend([DSMixin, MultiSelectable, ActiveMultiSelectable, Selectable, ActiveSelectable, SyncSelectionMixin, ChooserMixin, IconMixin], /** @lends SBIS3.CONTROLS.SelectorButton.prototype */ {
+      _dotTplFn: dotTplFn,
       $protected: {
-         _dotTplFn: dotTplFn,
          _options: {
             /**
              * @cfg {String}  Текст на кнопке по-умолчанию, проставляется если нет выбранных элементов
