@@ -431,13 +431,6 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
          this._notify('onListReady', this._list);
       },
 
-      _chooseCallback: function(result) {
-         if(result && $ws.helpers.instanceOfModule(result[0], 'SBIS3.CONTROLS.Data.Model')) {
-            var item = result[0];
-            this._onListItemSelect(item.getId(), item);
-         }
-      },
-
       /**
        * Возвращает контейнер для контрола списка сущностей
        * @returns {jQuery}
