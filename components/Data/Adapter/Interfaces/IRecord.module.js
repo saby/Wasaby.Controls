@@ -38,10 +38,10 @@ define('js!SBIS3.CONTROLS.Data.Adapter.IRecord', [], function () {
       },
 
       /**
-       * Возвращает массив названий полей
-       * @returns {String[]} Названия полей
+       * Возвращает данные записи в формате адаптера
+       * @returns {*}
        */
-      getFields: function () {
+      getData: function () {
          throw new Error('Method must be implemented');
       },
 
@@ -54,19 +54,47 @@ define('js!SBIS3.CONTROLS.Data.Adapter.IRecord', [], function () {
       },
 
       /**
-       * Возвращает объект содержащий название типа и мета данные
-       * @param {String} name Поле записи
-       * @returns {Object} Объект вида {type: Название, meta: Мета данные типа }
+       * Возвращает массив названий полей
+       * @returns {Array.<String>} Названия полей
        */
-      getInfo: function (name) {
+      getFields: function () {
          throw new Error('Method must be implemented');
       },
 
       /**
-       * Возвращает данные
-       * @returns {*}
+       * Возвращает формат поля (в режиме только для чтения)
+       * @param {String} name Поле записи
+       * @returns {SBIS3.CONTROLS.Data.Format.Field}
        */
-      getData: function () {
+      getFormat: function (name) {
+         throw new Error('Method must be implemented');
+      },
+
+      /**
+       * Добавляет поле в запись.
+       * Если позиция не указана (или указана как -1), поле добавляется в конец.
+       * Если поле с таким форматом уже есть, генерирует исключение.
+       * @param {SBIS3.CONTROLS.Data.Format.Field} format Формат поля
+       * @param {Number} [at] Позиция поля
+       */
+      addField: function(format, at) {
+         throw new Error('Method must be implemented');
+      },
+
+      /**
+       * Удаляет поле из записи по имени.
+       * @param {String} name Имя поля
+       */
+      removeField: function(name) {
+         throw new Error('Method must be implemented');
+      },
+
+      /**
+       * Удаляет поле из записи по позиции.
+       * Если позиция выходит за рамки допустимого индекса, генерирует исключение.
+       * @param {String} index Позиция поля
+       */
+      removeFieldAt: function(index) {
          throw new Error('Method must be implemented');
       }
    };

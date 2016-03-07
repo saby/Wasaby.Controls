@@ -66,6 +66,13 @@ define('js!SBIS3.CONTROLS.SuggestTextBox', [
          this._changedByKeyboard = false;
       },
 
+      _chooseCallback: function(result) {
+         if(result && $ws.helpers.instanceOfModule(result[0], 'SBIS3.CONTROLS.Data.Model')) {
+            var item = result[0];
+            this._onListItemSelect(item.getId(), item);
+         }
+      },
+
       setListFilter: function(filter) {
          SuggestTextBox.superclass.setListFilter.call(this, filter, !this._changedByKeyboard);
       },

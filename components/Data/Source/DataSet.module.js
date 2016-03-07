@@ -375,8 +375,7 @@ define('js!SBIS3.CONTROLS.Data.Source.DataSet', [
          }
          return Di.resolve(this._options.model, {
             rawData: rawData,
-            adapter: this._options.adapter,
-            compatibleMode: true
+            adapter: this._options.adapter
          });
       },
 

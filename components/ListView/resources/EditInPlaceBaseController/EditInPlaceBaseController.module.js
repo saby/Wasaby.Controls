@@ -293,7 +293,7 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                    footer,
                    target;
                if (this._options.columns) {
-                  target = $('<tr><td colspan="' + this._options.columns.length + (this._options.ignoreFirstColumn ? 1 : 0) + '"></td></tr>');
+                  target = $('<tr><td colspan="' + (this._options.columns.length + (this._options.ignoreFirstColumn ? 1 : 0)) + '"></td></tr>');
                } else {
                   target = $('<div>');
                }

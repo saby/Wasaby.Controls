@@ -172,7 +172,7 @@ define('js!SBIS3.CONTROLS.EditAtPlace',
                }
                text = this._dateDecorator.decorator.apply(text, this._dateDecorator.mask);
             }
-
+            text = $ws.helpers.escapeHtml(text);
             this._textField.html(text || '&nbsp;');
          },
 
