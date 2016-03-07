@@ -22,17 +22,35 @@ define('js!SBIS3.CONTROLS.SyncSelectionMixin', ['js!SBIS3.CONTROLS.Data.Model'],
 
    var SyncSelectionMixin = /**@lends SBIS3.CONTROLS.SyncSelectionMixin.prototype  */{
       $constructor: function() {
+         /* Почему событие onPropertyChanged: если изменить св-во контрола в событии onPropertyChanged,
+            то корректно произойдёт синхронизация с контекстом  */
          this.subscribe('onPropertyChanged', function(e, propName) {
             var propValue, item;
 
             if (PROPS_TO_SYNC[propName]) {
                propValue = this.getProperty(propName);
 
+               /* При изменении свойств
+                     1) selectedItem
+                     2) selectedKey
+                  надо установить новый набор selectedItems, selectedKeys по правилу:
+                  selectedItem === selectedItems.at(0), selectedKey === selectedKeys[0]
+
+                     3)selectedItems
+                     4)selectedKeys
+                  надо установить новые selectedItem, selectedKey по правилу:
+                  selectedItems.at(0) === selectedItem, selectedKeys[0] === selectedKey
+                */
                switch (propName) {
                   case 'selectedItem':
                      $ws.helpers.instanceOfModule(propValue, 'SBIS3.CONTROLS.Data.Model') ?
                          this.setSelectedItems([propValue]) :
                          this.clearSelectedItems();
+                     break;
+                  case 'selectedKey':
+                     propValue === null ?
+                        this.clearSelectedItems() :
+                        this.setSelectedKeys([propValue]);
                      break;
                   case 'selectedItems':
                      item = propValue.at(0);
@@ -42,19 +60,15 @@ define('js!SBIS3.CONTROLS.SyncSelectionMixin', ['js!SBIS3.CONTROLS.Data.Model'],
                   case 'selectedKeys':
                      this._options.selectedKey = propValue.length ? propValue[0] : null;
                      break;
-                  case 'selectedKey':
-                     this._options.selectedKeys = propValue === null ? [] : [propValue];
-                     break;
                }
             }
          });
       },
 
       around: {
-         _drawSelectedItem: function(parentFunc, key) {
-            this._options.selectedKeys = key === null ? [] : [key];
-            this._drawSelectedItems(key === null ? [] : [key]);
-         }
+         /* Заглушка для отрисовки selectedKey,
+            вся отрисовка идёт через selectedKeys */
+         _drawSelectedItem: $ws.helpers.nop
       }
    };
 
