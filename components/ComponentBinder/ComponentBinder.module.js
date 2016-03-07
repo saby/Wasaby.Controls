@@ -223,7 +223,7 @@ define('js!SBIS3.CONTROLS.ComponentBinder', [], function () {
             });
             view.subscribe('onSetRoot', function(event, curRoot, hierarchy){
                self._lastRoot = curRoot;
-               if (self._options.breadCrumbs){
+               if (self._options.breadCrumbs && self._options.breadCrumbs.getItems()){
                   var crumbsItems = self._options.breadCrumbs.getItems();
                   self._pathDSRawData = $ws.core.clone(crumbsItems ? crumbsItems.getRawData() : []);
                }
