@@ -52,6 +52,8 @@ define('js!SBIS3.CONTROLS.SyncSelectionMixin', ['js!SBIS3.CONTROLS.Data.Model'],
                         this.clearSelectedItems() :
                         this.setSelectedKeys([propValue]);
                      break;
+                  /* При изменении selectedItems и selectedKeys св-ва selectedItem и selectedKey меняются напрямую,
+                     иначе будет зацикливание. */
                   case 'selectedItems':
                      item = propValue.at(0);
                      this._options.selectedItem = item ? item : null;
