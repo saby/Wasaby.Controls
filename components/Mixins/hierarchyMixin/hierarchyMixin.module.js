@@ -158,7 +158,7 @@ define('js!SBIS3.CONTROLS.hierarchyMixin', [], function () {
             var path = this._dataSet.getMetaData().path,
                hierarchy = this._hier,
                item;
-            if (!hierarchy.length && path) {
+            if (path) {
                hierarchy = this._getHierarchy(path, this._curRoot);
             }
             // При каждой загрузке данных стреляем onSetRoot, не совсем правильно
