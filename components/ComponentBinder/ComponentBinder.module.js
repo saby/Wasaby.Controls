@@ -28,13 +28,16 @@ define('js!SBIS3.CONTROLS.ComponentBinder', [], function () {
          if (this._firstSearch) {
             this._lastRoot = view.getCurrentRoot();
             this._lastParentProperty = view._itemsProjection.getParentProperty();
+            //Запомнили путь в хлебных крошках перед тем как их сбросить для режима поиска
             if (this._options.breadCrumbs && this._options.breadCrumbs.getItems()){
                this._pathDSRawData = $ws.core.clone(this._options.breadCrumbs.getItems().getRawData());
             }
          }
          this._firstSearch = false;
+         //Флаг обозначает, что ввод был произведен пользователем
          this._searchReload = true;
          //Это нужно чтобы поиск был от корня, а крошки при этом отображаться не должны
+         //Почему тут просто не скрыть их через css?
          if (this._options.breadCrumbs) {
             this._options.breadCrumbs.setItems([]);
          }
@@ -94,14 +97,18 @@ define('js!SBIS3.CONTROLS.ComponentBinder', [], function () {
       view.setHighlightText('', false);
       view.setHighlightEnabled(false);
       this._firstSearch = true;
-      if (this._searchReload ) {
+      if (this._searchReload) {
          //Нужно поменять фильтр и загрузить нужный корень.
          //TODO менять фильтр в контексте, когда появятся data-binding'и
          filter[view.getHierField()] = this._lastRoot;
          //DataGridView._filter = filter;
          //DataGridView.setCurrentRoot(self._lastRoot); - плохо, потому что ВСЕ крошки на странице получат изменения
+         //Релоад сделает то же самое, так как он стреляет onSetRoot даже если корень на самом деле не понменялся
          view.reload(filter, view.getSorting(), 0);
+         // TODO: Нужно оставить одно поле хранящее путь, сейчас в одно запоминается состояние хлебных крошек 
+         // перед тем как их сбросить, а в другом весь путь вместе с кнопкой назад
          this._path = this._pathDSRawData || [];
+         //Если сбросили поиск (по крестику) вернем путь в хлебные крошки и покажем кнопку назад 
          if (this._options.breadCrumbs){
             this._options.breadCrumbs.getItems().setRawData(this._pathDSRawData);
             this._options.breadCrumbs._redraw();
@@ -223,6 +230,8 @@ define('js!SBIS3.CONTROLS.ComponentBinder', [], function () {
             });
             view.subscribe('onSetRoot', function(event, curRoot, hierarchy){
                self._lastRoot = curRoot;
+               //Запоминаем путь в хлебных крошках при смене корня
+               //Похоже на то, что его достаточно запоминать только непосредственно перед началом поиска
                if (self._options.breadCrumbs && self._options.breadCrumbs.getItems()){
                   var crumbsItems = self._options.breadCrumbs.getItems();
                   self._pathDSRawData = $ws.core.clone(crumbsItems ? crumbsItems.getRawData() : []);
