@@ -40,24 +40,35 @@ define('js!SBIS3.CONTROLS.SyncSelectionMixin', ['js!SBIS3.CONTROLS.Data.Model'],
                      4)selectedKeys
                   надо установить новые selectedItem, selectedKey по правилу:
                   selectedItems.at(0) === selectedItem, selectedKeys[0] === selectedKey
+
+                  ВАЖНО: При изменении selectedItems и selectedKeys св-ва selectedItem и selectedKey устанавливаются напрямую,
+                  иначе будет зацикливание, поэтому для корректной отрисовки надо переопределять метод drawSelectedItems, а не
+                  drawSelectedItem.
                 */
                switch (propName) {
                   case 'selectedItem':
-                     $ws.helpers.instanceOfModule(propValue, 'SBIS3.CONTROLS.Data.Model') ?
-                         this.setSelectedItems([propValue]) :
-                         this.clearSelectedItems();
+                     if($ws.helpers.instanceOfModule(propValue, 'SBIS3.CONTROLS.Data.Model')) {
+                        this.setSelectedItems([propValue]);
+                     } else {
+                        this.clearSelectedItems();
+                     }
                      break;
                   case 'selectedKey':
-                     propValue === null ?
-                        this.clearSelectedItems() :
+                     if(propValue === null) {
+                        this.clearSelectedItems();
+                     } else {
                         this.setSelectedKeys([propValue]);
+                     }
                      break;
-                  /* При изменении selectedItems и selectedKeys св-ва selectedItem и selectedKey меняются напрямую,
-                     иначе будет зацикливание. */
                   case 'selectedItems':
                      item = propValue.at(0);
-                     this._options.selectedItem = item ? item : null;
-                     this._options.selectedKey = item ? item.getId() : null;
+                     if(item) {
+                        this._options.selectedItem = item;
+                        this._options.selectedKey = item.getId();
+                     } else {
+                        this._options.selectedItem = null;
+                        this._options.selectedKey = null;
+                     }
                      break;
                   case 'selectedKeys':
                      this._options.selectedKey = propValue.length ? propValue[0] : null;
@@ -65,12 +76,6 @@ define('js!SBIS3.CONTROLS.SyncSelectionMixin', ['js!SBIS3.CONTROLS.Data.Model'],
                }
             }
          });
-      },
-
-      around: {
-         /* Заглушка для отрисовки selectedKey,
-            вся отрисовка идёт через selectedKeys */
-         _drawSelectedItem: $ws.helpers.nop
       }
    };
 
