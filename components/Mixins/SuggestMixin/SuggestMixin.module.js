@@ -66,21 +66,33 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
       $protected: {
          _options: {
             /**
-             * @cfg {Number} Устанавливает задержку перед началом поиска. Значение задаётся в миллисекундах.
+             * @cfg {Number} Устанавливает время задержки перед выполнением поиска. Значение задаётся в миллисекундах.
+             * @remark
+             * Временная пауза перед началом поиска дается на формирование пользователем корректного запроса к списку значений
+             * для автодополнения и используется с целью предотвращения выполнения лишних запросов.
+             * Ввод или удаление символа вновь активирует режим задержки перед началом поиска.
+             * Чтобы настроить минимальное количество символов, с которого начинается поиск результатов,
+             * используйте опцию {@link startChar}.
+             * Подробнее о функционале автодополнения вы можете прочитать в описании к классу {@link SBIS3.CONTROLS.SuggestMixin}.
              * @example
              * <pre class="brush: xml">
              *     <!-- Установлена задержка в одну секунду -->
              *     <option name="delay">1000</option>
              * </pre>
+             * @see startChar
              */
             delay: 500,
 
             /**
-             * @cfg {Number} Устанавливает минимальную длину введенного значения, при которой следует начать поиск.
+             * @cfg {Number} Устанавливает минимальное количество введенных символов, которые необходимы для начала поиска результатов автодополнения.
+             * @remark
+             * После ввода минимального количества символов происходит временная задержка перед началом поиска,
+             * которая устанавливается через опцию {@link delay}.
              * @example
              * <pre class="brush: xml">
              *     <option name="startChar">1</option>
              * </pre>
+             * @see delay
              */
             startChar: 3,
             /**
@@ -92,11 +104,14 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
              * Выпадающий блок со списком значений настраивается с помощью опции {@link list},
              * список значений можно отфильтровать, настроив опцию {@link listFilter}.
              * Если список содержит большое количество значений, то он будет отображен с полосой прокрутки.
-             * Отображение списка с полосой прокрутки можно заменить на режим постраничной навигации, передав в настройки контрола
-             * выпадающего блока {@link list} опции {@link showPaging} и {@link pageSize}.
+             * Отображение списка с полосой прокрутки можно заменить на режим постраничной навигации, передав в настройки {@link list}
+             * контрола выпадающего блока опции {@link showPaging} и {@link pageSize}.
+             * @example
+             * <pre class="brush: xml">
+             *     <option name="autoShow">true</option>
+             * </pre>
              * @see list
              * @see listFilter
-             * @see text
              */
             autoShow: false,
             /**
@@ -140,32 +155,39 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
              */
             /**
              * @cfg {SBIS3.CONTROLS.DSMixin|ListControl} Конфигурация контрола списка сущностей
-             * <wiTag group="Отображение">
              * @var {SBIS3.CONTROLS.DSMixin} инстанс контрола, отображающего список сущностей.
              * Должен также иметь примеси {SBIS3.CONTROLS.Selectable|SBIS3.CONTROLS.MultiSelectable}.
              *
-             * @var {ListControl} Настройки контрола, отображающего список сущностей
+             * @var {ListControl} Настраивает выпадающий блок со списком значений для автодополнения.
              * @remark
-             * При передаче настроек инстанс создается лениво - при необходимости.
+             * Подробнее о функционале автодополнения вы можете прочитать в описании к классу {@link SBIS3.CONTROLS.SuggestMixin}.
+             * Для минимальной настройки указывается класс контрола, на основе которого будет построено автодополнение,
+             * ключевое поле (keyField) и поля (columns), которые нужно отобразить в выпадающем блоке.
+             * Опции конструктора контрола (options) передадут настройки для нужного отображения выпадающего блока.
+             * При передаче настроек экземпляр контрола создается лениво - при необходимости.
+             * Список значений выпадающего блока можно отфильтровать, настроив опцию {@link listFilter}.
              * @example
              * <pre class="brush:xml">
              *     <options name="list">
-             *        <option name="component" value="js!SBIS3.CONTROLS.DataGridView"></option>
-             *        <options name="options">
-             *           <option name="showHead" type="boolean" value="false">
-             *           <options name="columns" type="array">
-             *           <options>
-             *              <option name="title">Ид</option>
-             *              <option name="field">Ид</option>
-             *           </options>
-             *           <options>
-             *              <option name="title">Название</option>
-             *              <option name="field">Название</option>
-             *           </options>
-             *        </options>
+             *       <option name="component" value="js!SBIS3.CONTROLS.DataGridView"></option>
+             *       <options name="options">
+             *          <option name="keyField" value="@Пользователь"></option>
+             *          <options name="columns" type="array">
+             *             <options>
+             *                <option name="title">№</option>
+             *                <option name="field">@Пользователь</option>
+             *             </options>
+             *             <options>
+             *                <option name="title">Фамилия</option>
+             *                <option name="field">Фамилия</option>
+             *             </options>
+             *          </options>
+             *       </options>
              *     </options>
              * </pre>
              * @group Data
+             * @see listFilter
+             * @see autoShow
              */
             list: {
                component: 'js!SBIS3.CONTROLS.ListView',
