@@ -29,8 +29,13 @@ define('js!SBIS3.CONTROLS.SuggestShowAll',
           },
 
           _modifyOptions: function (opts) {
-             opts.autoHeight = opts.chooserMode === 'floatArea';
-             return opts;
+             var options = SuggestShowAllDialog.superclass._modifyOptions.call(this, opts);
+
+             if(options.chooserMode === 'floatArea') {
+                options.autoHeight = true;
+             }
+
+             return options;
           },
 
           init: function() {
