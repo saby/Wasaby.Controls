@@ -283,7 +283,11 @@ define('js!SBIS3.CONTROLS.DSMixin', [
              * Например для отрисовки кнопко +Документ, +Папка.
              * Если задан, то под всеми(!) элементами появится контейнер с содержимым этого шаблона
              */
-            footerTpl: undefined
+            footerTpl: undefined,
+            /**
+             * @cfg {Boolean} Автоперерисовка при изменении данных
+             */
+            autoRedraw: true
          },
          _loader: null
       },
@@ -1142,7 +1146,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
          }
       },
       _isNeedToRedraw: function(){
-      	return this._needToRedraw && !!this._getItemsContainer();
+      	return this._options.autoRedraw && this._needToRedraw && !!this._getItemsContainer();
       },
 
       _moveItem: function(item, to){
