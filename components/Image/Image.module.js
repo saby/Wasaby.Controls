@@ -362,7 +362,7 @@ define('js!SBIS3.CONTROLS.Image',
                }
             },
             _onImageMouseLeave: function(event) {
-               if (this._canDisplayImageBar() && event.relatedTarget !== this._imageBar[0]) {
+               if (this._canDisplayImageBar() && event.relatedTarget !== this._imageBar[0] && !$.contains(this._imageBar[0], event.relatedTarget)) {
                   this._imageBar.hide();
                }
             },
