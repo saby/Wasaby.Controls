@@ -344,11 +344,9 @@ define('js!SBIS3.CONTROLS.Data.Record', [
             format;
 
          try {
-            format = adapter.getFormat(name);
+            format = adapter.getSharedFormat(name);
          } catch (e) {
-            format = new StringField({
-               name: name
-            });
+            format = 'String';
          }
 
          return Factory.cast(
@@ -368,11 +366,9 @@ define('js!SBIS3.CONTROLS.Data.Record', [
          var adapter = this._getRecordAdapter(),
             format;
          try {
-            format = adapter.getFormat(name);
+            format = adapter.getSharedFormat(name);
          } catch (e) {
-            format = new StringField({
-               name: name
-            });
+            format = 'String';
          }
 
          adapter.set(

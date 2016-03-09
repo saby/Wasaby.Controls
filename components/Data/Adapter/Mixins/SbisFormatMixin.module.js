@@ -1,8 +1,9 @@
 /* global define, $ws */
 define('js!SBIS3.CONTROLS.Data.Adapter.SbisFormatMixin', [
    'js!SBIS3.CONTROLS.Data.Format.FieldsFactory',
+   'js!SBIS3.CONTROLS.Data.Format.UniversalField',
    'js!SBIS3.CONTROLS.Data.Adapter.FieldType'
-], function (FieldsFactory, FIELD_TYPE) {
+], function (FieldsFactory, UniversalField, FIELD_TYPE) {
    'use strict';
 
    /**
@@ -27,7 +28,17 @@ define('js!SBIS3.CONTROLS.Data.Adapter.SbisFormatMixin', [
          /**
           * @member {Object.<String, SBIS3.CONTROLS.Data.Format.Field>} Форматы полей
           */
-         _format: {}
+         _format: {},
+
+         /**
+          * @member {Object} Формат поля, отдаваемый через getSharedFormat()
+          */
+         _sharedFieldFormat: null,
+
+         /**
+          * @member {Object} Мета данные поля, отдаваемого через getSharedFormat()
+          */
+         _sharedFieldMeta: null
       },
 
       $constructor: function (data) {
@@ -72,6 +83,22 @@ define('js!SBIS3.CONTROLS.Data.Adapter.SbisFormatMixin', [
             this._format[name] = this._buildFormat(name);
          }
          return this._format[name].clone();
+      },
+
+      getSharedFormat: function (name) {
+         if (this._sharedFieldFormat === null) {
+            this._sharedFieldFormat = new UniversalField();
+         }
+         var format = this._sharedFieldFormat,
+            index = this._getFieldIndex(name);
+         if (index === -1) {
+            throw new ReferenceError(this._moduleName + '::getSharedFormat(): field "' + name + '" is not exists');
+         }
+         format.name = name;
+         format.type = this._getFieldType(index);
+         format.meta = this._getFieldMeta(index, format.type);
+
+         return format;
       },
 
       addField: function(format, at) {
@@ -164,8 +191,11 @@ define('js!SBIS3.CONTROLS.Data.Adapter.SbisFormatMixin', [
       },
 
       _getFieldMeta: function (index, type) {
+         if (this._sharedFieldMeta === null) {
+            this._sharedFieldMeta = {};
+         }
          var info = this._data.s[index],
-            meta = {};
+            meta = this._sharedFieldMeta;
 
          try {
             switch (type) {
@@ -173,12 +203,12 @@ define('js!SBIS3.CONTROLS.Data.Adapter.SbisFormatMixin', [
                case 'Money':
                   meta.precision = info.t.p;
                   break;
-               case 'Identity':
-                  meta.separator = ',';
-                  break;
                case 'Enum':
                case 'Flags':
                   meta.dictionary = info.t.s;
+                  break;
+               case 'Identity':
+                  meta.separator = ',';
                   break;
                case 'Array':
                   meta.kind = this._getFieldTypeNameByInner(info.t.t);
@@ -189,14 +219,20 @@ define('js!SBIS3.CONTROLS.Data.Adapter.SbisFormatMixin', [
 
          return meta;
       },
-      
-      _buildFormat: function(name) {
+
+      _buildFormatDeclaration: function(name) {
          var index = this._getFieldIndex(name),
             type = this._getFieldType(index),
             declaration = this._getFieldMeta(index, type);
          declaration.name = name;
          declaration.type = type;
-         return FieldsFactory.create(declaration);
+         return declaration;
+      },
+
+      _buildFormat: function(name) {
+         return FieldsFactory.create(
+            this._buildFormatDeclaration(name)
+         );
       },
 
       _buildS: function(format) {

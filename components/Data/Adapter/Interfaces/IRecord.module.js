@@ -6,6 +6,7 @@ define('js!SBIS3.CONTROLS.Data.Adapter.IRecord', [], function () {
     * Интерфейс адаптера для записи таблицы данных
     * @mixin SBIS3.CONTROLS.Data.Adapter.IRecord
     * @public
+    * @ignoreMethods getSharedFormat
     * @author Мальцев Алексей
     */
 
@@ -67,6 +68,17 @@ define('js!SBIS3.CONTROLS.Data.Adapter.IRecord', [], function () {
        * @returns {SBIS3.CONTROLS.Data.Format.Field}
        */
       getFormat: function (name) {
+         throw new Error('Method must be implemented');
+      },
+
+      /**
+       * Возвращает общий универсальный формат поля - его нельзя использовать в замыканиях и сохранять куда-либо.
+       * Метод каждый раз возвращает один и тот же объект, заменяя только его данные.
+       * Данный подход обеспечивает ускорение и уменьшение расхода памяти.
+       * @param {String} name Поле записи
+       * @returns {SBIS3.CONTROLS.Data.Format.UniversalField}
+       */
+      getSharedFormat: function (name) {
          throw new Error('Method must be implemented');
       },
 

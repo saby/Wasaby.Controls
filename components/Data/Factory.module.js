@@ -22,7 +22,7 @@ define('js!SBIS3.CONTROLS.Data.Factory', [
       /**
        * Переводит сырые данные в указанный формат
        * @param {*} value Значение в формате сырых данных
-       * @param {SBIS3.CONTROLS.Data.Format.Field|String} format Формат поля
+       * @param {SBIS3.CONTROLS.Data.Format.UniversalField|String} format Формат поля
        * @param {SBIS3.CONTROLS.Data.Adapter.IAdapter} adapter Адаптер для работы с сырыми данными
        * @returns {*} Приведенные к нужному формату сырые данные
        */
@@ -34,7 +34,7 @@ define('js!SBIS3.CONTROLS.Data.Factory', [
          switch (this._getType(format)) {
             case 'Identity':
                return value instanceof Array ?
-                  value[0] === null ? null : value.join(format.getSeparator(), value) :
+                  value[0] === null ? null : value.join(format.meta.separator, value) :
                   value;
             case 'RecordSet':
                return this._makeRecordSet(value, adapter);
@@ -54,18 +54,18 @@ define('js!SBIS3.CONTROLS.Data.Factory', [
             case 'Double':
                return (typeof(value) === 'number') ? value : (isNaN(parseFloat(value)) ? null : parseFloat(value));
             case 'Money':
-               if (format.getPrecision() > 3) {
-                  return $ws.helpers.prepareMoneyByPrecision(value, format.getPrecision());
+               if (format.meta.precision > 3) {
+                  return $ws.helpers.prepareMoneyByPrecision(value, format.meta.precision);
                }
                return value === undefined ? null : value;
             case 'Enum':
                return new Enum({
-                  data: format.getDictionary(),
+                  data: format.meta.dictionary,
                   currentValue: value
                });
             case 'Flags':
                return new Flags({
-                  dictionary: format.getDictionary(),
+                  dictionary: format.meta.dictionary,
                   values: value
                });
             case 'TimeInterval':
@@ -80,7 +80,7 @@ define('js!SBIS3.CONTROLS.Data.Factory', [
                return !!value;
             case 'Array':
                var self = this,
-                  kind = format.getKind();
+                  kind = format.meta.kind;
                return $ws.helpers.map(value, function (val) {
                   return self.cast(val, kind, adapter);
                });
@@ -92,7 +92,7 @@ define('js!SBIS3.CONTROLS.Data.Factory', [
       /**
        * Переводит обертку над сырыми данными в сырые данные
        * @param {*} value Обертка над сырыми данными
-       * @param {SBIS3.CONTROLS.Data.Format.Field|String} format Формат данных
+       * @param {SBIS3.CONTROLS.Data.Format.UniversalField|String} format Формат данных
        * @param {SBIS3.CONTROLS.Data.Adapter.IAdapter} adapter Адаптер для работы с сырыми данными
        * @returns {*}
        */
@@ -114,7 +114,7 @@ define('js!SBIS3.CONTROLS.Data.Factory', [
             case 'Identity':
                return (
                   typeof value === 'string' ?
-                     value.split(format.getSeparator()) :
+                     value.split(format.meta.separator) :
                      [value]
                );
             case 'RecordSet':
@@ -141,8 +141,8 @@ define('js!SBIS3.CONTROLS.Data.Factory', [
             case 'Link':
                return parseInt(value, 10);
             case 'Money':
-               if (format.getPrecision() > 3) {
-                  return $ws.helpers.prepareMoneyByPrecision(value, format.getPrecision());
+               if (format.meta.precision > 3) {
+                  return $ws.helpers.prepareMoneyByPrecision(value, format.meta.precision);
                }
                return value;
             case 'TimeInterval':
@@ -159,7 +159,7 @@ define('js!SBIS3.CONTROLS.Data.Factory', [
                return value;
             case 'Array':
                var self = this,
-                  kind = format.getKind();
+                  kind = format.meta.kind;
                return $ws.helpers.map(value, function (val){
                   return self.serialize(val, kind, adapter);
                });
@@ -170,13 +170,13 @@ define('js!SBIS3.CONTROLS.Data.Factory', [
 
       /**
        * Возвращает тип поля
-       * @param {SBIS3.CONTROLS.Data.Format.Field|String} format Формат поля
+       * @param {SBIS3.CONTROLS.Data.Format.UniversalField|String} format Формат поля
        * @returns {String}
        * @protected
        */
       _getType: function (format) {
          if (typeof format === 'object') {
-            return format.getType();
+            return format.type;
          } else {
             return format;
          }
