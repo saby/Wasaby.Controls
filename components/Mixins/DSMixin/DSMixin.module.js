@@ -1109,7 +1109,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
          ladderDecorator && ladderDecorator.setMarkLadderColumn(true);
          item = item.getContents();
          var target = this._getTargetContainer(item),
-            currentItemAt = at > -1 ? this._getItemContainerByIndex(target, at - 1) : null,
+            currentItemAt = at > 0 ? this._getItemContainerByIndex(target, at - 1) : null,
             template = this._getItemTemplate(item),
             newItemContainer = this._buildTplItem(item, template),
             rows;
@@ -1117,6 +1117,9 @@ define('js!SBIS3.CONTROLS.DSMixin', [
          if (currentItemAt && currentItemAt.length) {
             newItemContainer.insertAfter(currentItemAt);
             rows = [newItemContainer.prev().prev(), newItemContainer.prev(), newItemContainer, newItemContainer.next(), newItemContainer.next().next()];
+         } else if(at === 0) {
+            newItemContainer.insertBefore(this._getItemContainerByIndex(target, 0));
+            rows = [newItemContainer, newItemContainer.next(), newItemContainer.next().next()];
          } else {
             newItemContainer.appendTo(target);
             rows = [newItemContainer.prev().prev(), newItemContainer.prev(), newItemContainer, newItemContainer.next()];
