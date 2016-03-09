@@ -40,7 +40,7 @@ define('js!SBIS3.CONTROLS.Data.Factory', [
        * Boolean - логическое
        * Если передать тип не из списка, то значение не изменится.
        * @param {*} value Значение
-       * @param {SBIS3.CONTROLS.Data.Format.Field} format Формат поля
+       * @param {SBIS3.CONTROLS.Data.Format.Field|String} format Формат поля
        * @param {SBIS3.CONTROLS.Data.Adapter.IAdapter} adapter Адаптер для работы с сырыми данными
        * @returns {*} Приведенные к нужному типу сырые данные
        */
@@ -49,10 +49,9 @@ define('js!SBIS3.CONTROLS.Data.Factory', [
             return value;
          }
 
-         switch (format.getType()) {
+         switch (this._getType(format)) {
             case 'Identity':
-               format._isArray = value instanceof Array;
-               return format._isArray ?
+               return value instanceof Array ?
                   value[0] === null ? null : value.join(format.getSeparator(), value) :
                   value;
             case 'RecordSet':
@@ -92,12 +91,10 @@ define('js!SBIS3.CONTROLS.Data.Factory', [
             case 'Boolean':
                return !!value;
             case 'Array':
-               if (value === null) {
-                  return value;
-               }
-               var self = this;
+               var self = this,
+                  kind = format.getKind();
                return $ws.helpers.map(value, function (val) {
-                  return self.cast(val, format, adapter);
+                  return self.cast(val, kind, adapter);
                });
             default:
                return value;
@@ -107,19 +104,18 @@ define('js!SBIS3.CONTROLS.Data.Factory', [
       /**
        * Переводит типизированное значение в сырые данные
        * @param {*} value Типизированное значение
-       * @param {SBIS3.CONTROLS.Data.Format.Field} format Формат поля
+       * @param {SBIS3.CONTROLS.Data.Format.Field|String} format Формат поля
        * @param {SBIS3.CONTROLS.Data.Adapter.IAdapter} adapter Адаптер для работы с сырыми данными
        * @returns {*}
        */
       serialize: function (value, format, adapter) {
-         var type = format.getType();
+         var type = this._getType(format);
          switch (type) {
             case 'Identity':
-               return format._isArray ? (
-                  typeof value === 'string' ?
-                     value.split(format.getSeparator()) :
-                     [value]
-               ) : value;
+               if (value === null) {
+                  return [value];
+               }
+               break;
          }
 
          if (value === undefined || value === null) {
@@ -127,6 +123,12 @@ define('js!SBIS3.CONTROLS.Data.Factory', [
          }
 
          switch (type) {
+            case 'Identity':
+               return (
+                  typeof value === 'string' ?
+                     value.split(format.getSeparator()) :
+                     [value]
+               );
             case 'RecordSet':
                return this._serializeRecordSet(value, adapter);
             case 'Record':
@@ -168,12 +170,27 @@ define('js!SBIS3.CONTROLS.Data.Factory', [
                }
                return value;
             case 'Array':
-               var self = this;
+               var self = this,
+                  kind = format.getKind();
                return $ws.helpers.map(value, function (val){
-                  return self.serialize(val, format, adapter);
+                  return self.serialize(val, kind, adapter);
                });
             default:
                return value;
+         }
+      },
+
+      /**
+       * Возвращает тип поля
+       * @param {SBIS3.CONTROLS.Data.Format.Field|String} format Формат поля
+       * @returns {String}
+       * @protected
+       */
+      _getType: function (format) {
+         if (typeof format === 'object') {
+            return format.getType();
+         } else {
+            return format;
          }
       },
 
@@ -182,7 +199,7 @@ define('js!SBIS3.CONTROLS.Data.Factory', [
        * @param {*} data Сырые данные
        * @param {SBIS3.CONTROLS.Data.Adapter.IAdapter} adapter Адаптер для работы с сырыми данными
        * @returns {SBIS3.CONTROLS.Data.Model}
-       * @private
+       * @protected
        */
       _makeModel: function (data, adapter) {
          return Di.resolve('model', {
@@ -196,7 +213,7 @@ define('js!SBIS3.CONTROLS.Data.Factory', [
        * @param {*} data Сырые данные
        * @param {SBIS3.CONTROLS.Data.Adapter.IAdapter} adapter Адаптер для работы с сырыми данными
        * @returns {SBIS3.CONTROLS.Data.Collection.RecordSet}
-       * @private
+       * @protected
        */
       _makeRecordSet: function (data, adapter) {
          adapter.setProperty(
@@ -218,7 +235,7 @@ define('js!SBIS3.CONTROLS.Data.Factory', [
        * @param {Array} value Массив флагов
        * @param {Object} format Формат поля
        * @returns {SBIS3.CONTROLS.Data.Model}
-       * @private
+       * @protected
        */
       _makeFlags: function (value, format) {
          return new Flags({
@@ -232,7 +249,7 @@ define('js!SBIS3.CONTROLS.Data.Factory', [
        * @param {*} data Данные
        * @param {SBIS3.CONTROLS.Data.Adapter.IAdapter} adapter Адаптер для работы с сырыми данными
        * @returns {*}
-       * @private
+       * @protected
        */
       _serializeRecordSet: function (data, adapter) {
          if ($ws.helpers.instanceOfModule(data, 'SBIS3.CONTROLS.Data.Collection.RecordSet') || $ws.helpers.instanceOfModule(data, 'SBIS3.CONTROLS.Data.Source.DataSet') || $ws.helpers.instanceOfModule(data, 'SBIS3.CONTROLS.DataSet') ) {
@@ -254,7 +271,7 @@ define('js!SBIS3.CONTROLS.Data.Factory', [
        * @param {SBIS3.CONTROLS.Data.Collection.List} data Список
        * @param {SBIS3.CONTROLS.Data.Adapter.IAdapter} adapter Адаптер для работы с сырыми данными
        * @returns {*}
-       * @private
+       * @protected
        */
       _serializeList: function (data, adapter) {
          var items = data.toArray(),
@@ -293,7 +310,7 @@ define('js!SBIS3.CONTROLS.Data.Factory', [
        * @param {*} data Модель
        * @param {SBIS3.CONTROLS.Data.Adapter.IAdapter} adapter Адаптер для работы с сырыми данными
        * @returns {*}
-       * @private
+       * @protected
        */
       _serializeModel: function (data, adapter) {
          if ($ws.helpers.instanceOfModule(data, 'SBIS3.CONTROLS.Data.Model')) {
@@ -312,7 +329,7 @@ define('js!SBIS3.CONTROLS.Data.Factory', [
        * Сериализует поле флагов
        * @param {*} data
        * @returns {*}
-       * @private
+       * @protected
        */
       _serializeFlags: function (data) {
          if ($ws.helpers.instanceOfModule(data, 'SBIS3.CONTROLS.Data.Types.Flags') || $ws.helpers.instanceOfModule(data, 'SBIS3.CONTROLS.Data.Model')) {
