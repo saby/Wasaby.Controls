@@ -418,11 +418,18 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
             this._showAllButton = this._list.getChildControlByName('showAllButton');
 
             this.subscribeTo(this._showAllButton, 'onActivated', function() {
+               var showAllConfig;
 
                /* Если передали конфигурацию диалога, то используем его, иначе используем дефолтный */
-               var showAllConfig = Object.keys(self._options.showAllConfig).length ?
-                   self._options.showAllConfig :
-                   DEFAULT_SHOW_ALL_CONFIG;
+               if(Object.keys(self._options.showAllConfig).length) {
+                  showAllConfig = self._options.showAllConfig;
+               } else {
+                  showAllConfig = $ws.core.merge({
+                     componentOptions: {
+                        chooserMode: self._options.chooserMode
+                     }
+                  }, DEFAULT_SHOW_ALL_CONFIG);
+               }
 
                self._showChooser(showAllConfig.template, showAllConfig.componentOptions, null);
             });
