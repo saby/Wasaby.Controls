@@ -481,15 +481,17 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', ['js!SBIS3.CORE.Control',
                this._treePager.destroy();
             }
          },
-         _clearItems: function() {
-            var self = this;
-            this._lastParent = this._curRoot;
-            this._lastDrawn = undefined;
-            this._lastPath = [];
-            this._destroySearchBreadCrumbs();
-            $ws.helpers.forEach(this._foldersFooters, function(val, key) {
-               self._destroyFolderFooter([key]);
-            });
+         _clearItems: function(container) {
+            if (this._getItemsContainer().get(0) == $(container).get(0) || !container) {
+               var self = this;
+               this._lastParent = this._curRoot;
+               this._lastDrawn = undefined;
+               this._lastPath = [];
+               this._destroySearchBreadCrumbs();
+               $ws.helpers.forEach(this._foldersFooters, function(val, key) {
+                  self._destroyFolderFooter([key]);
+               });
+            }
          }
       },
       after : {
