@@ -5,6 +5,8 @@ define('js!SBIS3.CONTROLS.Data.Types.Enum', [
    'js!SBIS3.CONTROLS.Data.ContextField.Enum',
    'js!SBIS3.CONTROLS.Data.Di'
 ], function (IEnumerable, ArrayEnumerator, ContextFieldEnum, Di) {
+   'use strict';
+
    /**
     * Тип данных перечисляемое.
     * @class SBIS3.CONTROLS.Data.Types.Enum
@@ -12,7 +14,7 @@ define('js!SBIS3.CONTROLS.Data.Types.Enum', [
     * @public
     * @author Ганшнин Ярослав
     */
-   'use strict';
+
    var Enum = $ws.core.extend({}, [IEnumerable],/** @lends SBIS3.CONTROLS.Data.Types.Enum.prototype */ {
       _moduleName: 'SBIS3.CONTROLS.Data.Types.Enum',
       $protected: {

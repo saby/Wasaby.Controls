@@ -1,29 +1,24 @@
 /* global define, $ws */
 define('js!SBIS3.CONTROLS.Data.Types.Flags', [
-   'js!SBIS3.CONTROLS.Data.Collection.IEnumerable',
-   'js!SBIS3.CONTROLS.Data.Collection.ArrayEnumerator',
+   'js!SBIS3.CONTROLS.Data.Types.Dictionary',
    'js!SBIS3.CONTROLS.Data.ContextField.Flags',
    'js!SBIS3.CONTROLS.Data.Di'
-], function (IEnumerable, ArrayEnumerator, ContextFieldFlags, Di) {
+], function (Dictionary, ContextFieldFlags, Di) {
    'use strict';
+
    /**
     * Тип данных набор флагов
     * @class SBIS3.CONTROLS.Data.Types.Flags
-    * @mixes SBIS3.CONTROLS.Data.Collection.IEnumerable
+    * @extends SBIS3.CONTROLS.Data.Types.Dictionary
     * @public
     * @author Ганшин Ярослав
     */
 
-   var Flags = $ws.core.extend({}, [IEnumerable],/** @lends SBIS3.CONTROLS.Data.Types.Flags.prototype */ {
+   var Flags = Dictionary.extend(/** @lends SBIS3.CONTROLS.Data.Types.Flags.prototype */ {
       _moduleName: 'SBIS3.CONTROLS.Data.Types.Flags',
       $protected: {
          _options: {
             data: {},
-
-            /**
-             * @cfg {Array.<String>} Словарь возможных значений
-             */
-            dictionary: [],
 
             /**
              * @cfg {Array.<Boolean|Null>} Выбранные значения согласно словарю
@@ -47,37 +42,7 @@ define('js!SBIS3.CONTROLS.Data.Types.Flags', [
                }
             }
          }
-
-         if (this._options.dictionary instanceof Object && !(this._options.dictionary instanceof Array)) {
-            var dictionary = [];
-            for (var index in this._options.dictionary){
-               if (this._options.dictionary.hasOwnProperty(index)) {
-                  dictionary[index] = this._options.dictionary[index];
-               }
-            }
-            this._options.dictionary = dictionary;
-         }
       },
-
-      //region SBIS3.CONTROLS.Data.Collection.IEnumerable
-
-      each: function (callback, context) {
-         context = context || this;
-         var enumerator = this.getEnumerator(),
-            index = 0,
-            key;
-         while ((key = enumerator.getNext())) {
-            callback.call(context, key, index++);
-         }
-      },
-
-      getEnumerator: function () {
-         return new ArrayEnumerator({
-            items: this._options.dictionary
-         });
-      },
-
-      //endregion SBIS3.CONTROLS.Data.Collection.IEnumerable
 
       //region Public methods
 
@@ -157,38 +122,31 @@ define('js!SBIS3.CONTROLS.Data.Types.Flags', [
        * returns {Boolean}
        */
       equals: function (value) {
-         if (value instanceof Flags) {
-            var result = true,
-               self = this,
-               len = 0;
-            value.each(function (key) {
-               if (result && self.get(key) === value.get(key)) {
-                  len++;
-               } else {
-                  result = false;
-               }
-            });
-            if (result && this._options.dictionary.length === len) {
-               return true;
+         if (!(value instanceof Flags)) {
+            return false;
+         }
+
+         if (!Flags.superclass.equals.call(this, value)) {
+            return false;
+         }
+
+         var enumerator = this.getEnumerator(),
+            key;
+         while ((key = enumerator.getNext())) {
+            if (this.get(key) !== value.get(key)) {
+               return false;
             }
          }
-         return false;
+
+         return true;
       },
 
       //endregion Public methods
 
       //region Protected methods
 
-      _getIndex: function (name) {
-         return Array.indexOf(this._options.dictionary, name);
-      },
-
       _prepareValue: function (value) {
          return value === null ? null : !!value;
-      },
-
-      _getKeByIndex: function (index) {
-         return this._options.dictionary[index];
       },
 
       _setAll: function (value) {

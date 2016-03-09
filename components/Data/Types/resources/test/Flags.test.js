@@ -79,6 +79,7 @@ define([
                });
             });
          });
+
          describe('.setAll()', function () {
             it('should set false to all flags', function () {
                testFlags.setFalseAll();
@@ -99,6 +100,7 @@ define([
                });
             });
          });
+
          describe('.equals()', function () {
             it('should equals to shared data', function () {
                var e = new Flags({
