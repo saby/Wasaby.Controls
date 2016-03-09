@@ -75,14 +75,18 @@ define('js!SBIS3.CONTROLS.MoveHandlers', ['js!SBIS3.CORE.Dialog','js!SBIS3.CONTR
             deferred = deferred === true ? new $ws.proto.Deferred().callback(true) : deferred;
             if (deferred instanceof $ws.proto.Deferred) {//обновляем view если вернули true либо deferred
                deferred.addCallback(function() {
-                  self.removeItemsSelectionAll();
-                  if (isNodeTo && !isChangeOrder) {
-                     self.setCurrentRoot(moveTo);
-                  }
-                  self.reload();
+                  var isHierMove = isNodeTo && !isChangeOrder;
+                  self._afterMoveHandler(isHierMove, moveTo);
                });
             }
          }
+      },
+      _afterMoveHandler: function(isHierMove, moveTo) {
+         if (isHierMove) {
+            this.setCurrentRoot(moveTo);
+         }
+         this.removeItemsSelectionAll();
+         this.reload();
       },
       _checkRecordsForMove: function(records, recordTo, isChangeOrder) {
          var

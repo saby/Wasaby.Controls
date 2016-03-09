@@ -7,6 +7,7 @@ define('js!SBIS3.CONTROLS.hierarchyMixin', [], function () {
     */
    var hierarchyMixin = /** @lends SBIS3.CONTROLS.hierarchyMixin.prototype */{
       $protected: {
+         _previousRoot: null,
          _curRoot: null,
          _hier: [],
          _options: {
@@ -33,6 +34,7 @@ define('js!SBIS3.CONTROLS.hierarchyMixin', [], function () {
             this._curRoot = this._options.root;
             filter[this._options.hierField] = this._options.root;
          }
+         this._previousRoot = this._curRoot;
          this.setFilter(filter, true);
       },
 
@@ -154,14 +156,24 @@ define('js!SBIS3.CONTROLS.hierarchyMixin', [], function () {
       after : {
          _dataLoadedCallback: function () {
             var path = this._dataSet.getMetaData().path,
-                  hierarchy = this._hier;
-            if (!hierarchy.length && path) {
+               hierarchy = this._hier,
+               item;
+            if (path) {
                hierarchy = this._getHierarchy(path, this._curRoot);
             }
             // При каждой загрузке данных стреляем onSetRoot, не совсем правильно
             // но есть случаи когда при reload присылают новый path,
             // а хлебные крошки не перерисовываются так как корень не поменялся 
             this._notify('onSetRoot', this._curRoot, hierarchy);
+            //TODO Совсем быстрое и временное решение. Нужно скроллиться к первому элементу при проваливании в папку.
+            // Выпилить, когда это будет делать установка выделенного элемента
+            if (this._previousRoot !== this._curRoot) {
+               this._previousRoot = this._curRoot;
+               item = this.getItems() && this.getItems().at(0);
+               if (item){
+                  this._scrollToItem(item.getKey());
+               }
+            }
          }
       },
       _getHierarchy: function(dataSet, key){

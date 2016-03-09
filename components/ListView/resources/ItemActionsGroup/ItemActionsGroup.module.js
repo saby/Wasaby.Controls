@@ -41,7 +41,7 @@ define('js!SBIS3.CONTROLS.ItemActionsGroup',
             }.bind(this));
 
             if(this._options.items.length && this._options.items[0].title) {
-               $ws.single.ioc.resolve('ILogger').log('title', 'C 3.8.0 свойство операции над записью title перестанет работать. Используйте свойство caption');
+               $ws.single.ioc.resolve('ILogger').log('title', 'C 3.7.3.140 свойство операции над записью title перестанет работать. Используйте свойство caption');
             }
          },
          /**
@@ -90,7 +90,7 @@ define('js!SBIS3.CONTROLS.ItemActionsGroup',
                target = this._itemActionsMenuButton,
                corner = 'br',
                 // TODO перевести на проекции
-               items = this._options.items;
+               items = this.getItems().getRawData();
 
             if (this._options.touchMode) {
                verticalAlign.offset = 0;

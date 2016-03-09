@@ -91,13 +91,16 @@ define('js!SBIS3.CONTROLS.DecorableMixin', [
       /**
        * Включает/выключает подсветку фразы
        * @param {Boolean} enabled Включить/выключить
+       * @param {Boolean} [redraw=true] Отрисовать DOM
        */
-      setHighlightEnabled: function (enabled) {
+      setHighlightEnabled: function (enabled, redraw) {
          if (this._options.highlightEnabled === enabled) {
             return;
          }
          this._options.highlightEnabled = enabled;
-         this._redraw();
+         if (redraw) {
+            this._redraw();
+         }
       },
 
       /**

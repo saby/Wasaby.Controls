@@ -115,19 +115,23 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl'],
        * </pre>
        */
       submit: function(){
-         this._saveRecord();
+         this._saveRecord(true);
       },
 
-      _saveRecord: function(){
+      _saveRecord: function(hideQuestion){
          var self = this,
-             questionConfig,
-             def;
+             questionConfig;
 
          questionConfig = {
             useCancelButton: true,
             invertDefaultButton: true,
             detail: 'Чтобы продолжить редактирование, нажмите "Отмена".'
          };
+
+         if (hideQuestion){
+            this._updateRecord();
+            return;
+         }
 
          $ws.helpers.question('Сохранить изменения?', questionConfig, this).addCallback(function(result){
             if (typeof result === 'string'){
@@ -136,15 +140,19 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl'],
             }
             self._saving = true;
             if (result){
-               def = self._options.dataSource.update(self._options.record);
-               def.addCallback(function(){
-                  self.getTopParent().ok();
-               });
+               self._updateRecord();
             }
             else{
                self.getTopParent().cancel();
             }
          });
+      },
+
+      _updateRecord: function(){
+         var def = this._options.dataSource.update(this._options.record);
+         def.addCallback(function(){
+            this.getTopParent().ok();
+         }.bind(this));
       },
 
       _readRecord: function(key){

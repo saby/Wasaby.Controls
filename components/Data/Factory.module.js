@@ -315,7 +315,7 @@ define('js!SBIS3.CONTROLS.Data.Factory', [
        * @private
        */
       _serializeFlags: function (data) {
-         if ($ws.helpers.instanceOfModule(data, 'SBIS3.CONTROLS.Data.Flags') || $ws.helpers.instanceOfModule(data, 'SBIS3.CONTROLS.Data.Model')) {
+         if ($ws.helpers.instanceOfModule(data, 'SBIS3.CONTROLS.Data.Types.Flags') || $ws.helpers.instanceOfModule(data, 'SBIS3.CONTROLS.Data.Model')) {
             var d = [];
             data.each(function (name) {
                d.push(data.get(name));
