@@ -229,15 +229,19 @@ define('js!SBIS3.CONTROLS.ComponentBinder', [], function () {
                breakSearch.call(self, searchForm, false);
             });
             view.subscribe('onSetRoot', function(event, curRoot, hierarchy){
-               self._lastRoot = curRoot;
-               //Запоминаем путь в хлебных крошках при смене корня
-               //Похоже на то, что его достаточно запоминать только непосредственно перед началом поиска
-               if (self._options.breadCrumbs && self._options.breadCrumbs.getItems()){
-                  var crumbsItems = self._options.breadCrumbs.getItems();
-                  self._pathDSRawData = $ws.core.clone(crumbsItems ? crumbsItems.getRawData() : []);
-               }
-               if (self._options.backButton) {
-                  self._options.backButton.getContainer().css({'visibility': 'visible'});
+               //onSetRoot стреляет после того как перешли в режим поиска (так как он стреляет при каждом релоаде), 
+               //при этом не нужно запоминать текущий корень и делать видимым путь
+               if (!self._searchReload){
+                  self._lastRoot = curRoot;
+                  //Запоминаем путь в хлебных крошках при смене корня
+                  //Похоже на то, что его достаточно запоминать только непосредственно перед началом поиска
+                  if (self._options.breadCrumbs && self._options.breadCrumbs.getItems()){
+                     var crumbsItems = self._options.breadCrumbs.getItems();
+                     self._pathDSRawData = $ws.core.clone(crumbsItems ? crumbsItems.getRawData() : []);
+                  }
+                  if (self._options.backButton) {
+                     self._options.backButton.getContainer().css({'visibility': 'visible'});
+                  }
                }
             });
             //Перед переключением в крошках в режиме поиска сбросим фильтр поиска
@@ -325,44 +329,48 @@ define('js!SBIS3.CONTROLS.ComponentBinder', [], function () {
          }
 
          view.subscribe('onSetRoot', function(event, id, hier){
-            var i;
-            /*
-             TODO: Хак для того перерисовки хлебных крошек при переносе из папки в папку
-             Проверить совпадение родительского id и текущего единственный способ понять,
-             что в папку не провалились, а попали через перенос.
-             От этого нужно избавиться как только будут новые датасорсы и не нужно будет считать пути для крошек
-             */
-            if (self._currentRoot && hier.length && hier[hier.length - 1].parent != self._currentRoot.id){
-               self._currentRoot = hier[0];
-               self._path = hier.reverse();
-            } else {
-               if (id === view._options.root){
-                   self._currentRoot = null;
-                   self._path = [];
-               }
-               for (i = hier.length - 1; i >= 0; i--) {
-                  var rec = hier[i];
-                  if (rec){
-                     var c = createBreadCrumb(rec);
-                     if (self._currentRoot ) {
-                        self._path.push(self._currentRoot);
-                     } else {
+            //onSetRoot стреляет после того как перешли в режим поиска (так как он стреляет при каждом релоаде), 
+            //при этом не нужно пересчитывать хлебные крошки
+            if (!self._searchReload){
+               var i;
+               /*
+                TODO: Хак для того перерисовки хлебных крошек при переносе из папки в папку
+                Проверить совпадение родительского id и текущего единственный способ понять,
+                что в папку не провалились, а попали через перенос.
+                От этого нужно избавиться как только будут новые датасорсы и не нужно будет считать пути для крошек
+                */
+               if (self._currentRoot && hier.length && hier[hier.length - 1].parent != self._currentRoot.id){
+                  self._currentRoot = hier[0];
+                  self._path = hier.reverse();
+               } else {
+                  if (id === view._options.root){
+                      self._currentRoot = null;
+                      self._path = [];
+                  }
+                  for (i = hier.length - 1; i >= 0; i--) {
+                     var rec = hier[i];
+                     if (rec){
+                        var c = createBreadCrumb(rec);
+                        if (self._currentRoot ) {
+                           self._path.push(self._currentRoot);
+                        } else {
 
+                        }
+                        self._currentRoot = c;
                      }
-                     self._currentRoot = c;
                   }
                }
-            }
 
-            for (i = 0; i < self._path.length; i++){
-               if (self._path[i].id == id) {
-                  self._path.splice(i);
-                  break;
+               for (i = 0; i < self._path.length; i++){
+                  if (self._path[i].id == id) {
+                     self._path.splice(i);
+                     break;
+                  }
                }
-            }
 
-            breadCrumbs.setItems(self._path);
-            backButton.setCaption(self._currentRoot ? $ws.helpers.escapeHtml(self._currentRoot.title) : '');
+               breadCrumbs.setItems(self._path);
+               backButton.setCaption(self._currentRoot ? $ws.helpers.escapeHtml(self._currentRoot.title) : '');
+            }
          });
 
          view.subscribe('onKeyPressed', function(event, jqEvent) {
