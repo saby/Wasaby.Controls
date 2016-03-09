@@ -247,7 +247,7 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
       setListFilter: function(filter, silent) {
          var self = this,
              changedFields = [],
-             dataSet = this._getListDataSet();
+             items = this._getListItems();
 
          $ws.helpers.forEach(filter, function(value, key) {
             if(value !== self._options.listFilter[key]) {
@@ -265,7 +265,9 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
          /* Если в контролах, которые мы отслеживаем, нет фокуса или изменение фильтра произошло после внуренних изменений
            то почистим датасет, т.к. фильтр сменился и больше ничего делать не будем */
          if(!this._isObservableControlFocused() || silent) {
-            dataSet && dataSet.clear();
+            if(items && items.getCount()) {
+               items.clear();
+            }
             return;
          }
 
@@ -429,13 +431,6 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
          this._notify('onListReady', this._list);
       },
 
-      _chooseCallback: function(result) {
-         if(result && $ws.helpers.instanceOfModule(result[0], 'SBIS3.CONTROLS.Data.Model')) {
-            var item = result[0];
-            this._onListItemSelect(item.getId(), item);
-         }
-      },
-
       /**
        * Возвращает контейнер для контрола списка сущностей
        * @returns {jQuery}
@@ -475,7 +470,7 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
        * @returns {SBIS3.CONTROLS.Data.Collection.List|undefined}
        * @private
        */
-      _getListDataSet: function() {
+      _getListItems: function() {
          return this._list ? this._list.getItems() : undefined;
       },
 
@@ -495,7 +490,7 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
        */
       _onListItemSelect: function (id, item) {
          var def = new $ws.proto.Deferred(),
-             dataSet = this._getListDataSet(),
+             items = this._getListItems(),
              ctx = this._getBindingContext(),
              self = this,
              toSet = {};
@@ -506,10 +501,10 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
 
          if(item) {
             def.callback(item);
-         } else if (dataSet) {
-            def.callback(dataSet.getRecordById(id));
+         } else if (items) {
+            def.callback(items.getRecordById(id));
          } else {
-            this._list._dataSource.read(id).addCallback(function (item) {
+            this.getList().getDataSource().read(id).addCallback(function (item) {
                def.callback(item);
             });
          }
@@ -554,10 +549,10 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
        * @private
        */
       _checkPickerState: function () {
-         var dataSet = this._getListDataSet();
+         var items = this._getListItems();
          return Boolean(
              this._options.usePicker &&
-             dataSet && dataSet.getCount() &&
+             items && items.getCount() &&
              this._isObservableControlFocused()
          );
       },

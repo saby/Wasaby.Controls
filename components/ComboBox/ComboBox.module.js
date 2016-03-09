@@ -416,8 +416,10 @@ define('js!SBIS3.CONTROLS.ComboBox', [
 
                if (noItems) {
                   self._options.selectedKey = null;
-                  self._notifySelectedItem(null);
-                  self._drawSelectedItem(null);
+                  if (oldKey !== self._options.selectedKey) {
+                     self._notifySelectedItem(null);
+                     self._drawSelectedItem(null);
+                  }
                }
             });
          }

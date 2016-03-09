@@ -45,3 +45,45 @@
       cursor: default;
    }
 }
+
+.ws-enabled,
+.ws-disabled,
+.ws-disabled .ws-enabled,
+.ws-enabled .ws-disabled .ws-enabled,
+.ws-disabled .ws-enabled .ws-disabled .ws-enabled,
+.ws-enabled .ws-disabled .ws-enabled .ws-disabled .ws-enabled,
+.ws-disabled .ws-enabled .ws-disabled .ws-enabled .ws-disabled .ws-enabled
+{
+   .icon-primary{
+      &.controls-IconButton {
+         color: #587ab0 !important;
+         &:hover {
+            color: #ff7033 !important;
+         }
+      }
+   }
+   .icon-error{
+      &.controls-IconButton {
+         color: #ef463a !important;
+         &:hover {
+            color: #ff7033 !important;
+         }
+      }
+   }
+   .icon-done{
+      &.controls-IconButton {
+         color: #72be44 !important;
+         &:hover {
+            color: #ff7033 !important;
+         }
+      }
+   }
+   .icon-attention{
+      &.controls-IconButton {
+         color: #FEC63F !important;
+         &:hover {
+            color: #ff7033 !important;
+         }
+      }
+   }
+}
