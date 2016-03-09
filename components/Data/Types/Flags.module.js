@@ -18,8 +18,6 @@ define('js!SBIS3.CONTROLS.Data.Types.Flags', [
       _moduleName: 'SBIS3.CONTROLS.Data.Types.Flags',
       $protected: {
          _options: {
-            data: {},
-
             /**
              * @cfg {Array.<Boolean|Null>} Выбранные значения согласно словарю
              */
@@ -30,7 +28,6 @@ define('js!SBIS3.CONTROLS.Data.Types.Flags', [
       $constructor: function (cfg) {
          if ('data' in cfg && !('dictionary' in cfg) && !('values' in cfg)) {
             $ws.single.ioc.resolve('ILogger').log(this._moduleName + '::$constructor()', 'Option "data" is deprecated and will be removed in 3.7.4. Use options "dictionary" and "values" instead.');
-
             var data = cfg.data;
             if (!(data instanceof Object)) {
                throw new TypeError('Option "data" must be an instance of Object');
@@ -66,11 +63,10 @@ define('js!SBIS3.CONTROLS.Data.Types.Flags', [
        */
       set: function (name, value) {
          var index = this._getIndex(name);
-         if (index > -1) {
-            this._options.values[index] = value === null ? null : !!value;
-         } else {
-            throw new ReferenceError('The name "' + name + '" doesn\'t found in dictionary');
+         if (index === -1) {
+            throw new ReferenceError(this._moduleName + '::set(): the value "' + name + '" doesn\'t found in dictionary');
          }
+         this._options.values[index] = this._prepareValue(value);
       },
 
       /**
@@ -92,7 +88,7 @@ define('js!SBIS3.CONTROLS.Data.Types.Flags', [
          if(typeof key === 'undefined'){
             throw new Error('The index is out of range');
          }
-         this._options.values[index] = value;
+         this._options.values[index] = this._prepareValue(value);
       },
 
       /**
@@ -117,8 +113,8 @@ define('js!SBIS3.CONTROLS.Data.Types.Flags', [
       },
 
       /**
-       * Сравнивает с флагами
-       * @param obj {Flags} - Объект Flags
+       * Сравнивает с дргуим экземпляром флагов - должен полностью совпадать словарь и набор значений
+       * @param {SBIS3.CONTROLS.Data.Types.Flags} value Объект Flags
        * returns {Boolean}
        */
       equals: function (value) {

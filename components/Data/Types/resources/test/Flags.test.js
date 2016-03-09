@@ -1,4 +1,4 @@
-/* global beforeEach, afterEach, describe, context, it, assert */
+/* global beforeEach, afterEach, describe, context, it, assert, $ws */
 define([
       'js!SBIS3.CONTROLS.Data.Types.Flags'
    ], function (Flags) {
@@ -30,10 +30,10 @@ define([
       });
 
       describe('SBIS3.CONTROLS.Data.Types.Flags', function () {
-         it('should create Flags', function () {
-            if (!$ws.helpers.instanceOfModule(testFlags, 'SBIS3.CONTROLS.Data.Types.Flags')) {
-               assert.fail("Type doesn't of instances Flags");
-            }
+         describe('.$create()', function () {
+            it('should create Flags', function () {
+               assert.isTrue($ws.helpers.instanceOfModule(testFlags, 'SBIS3.CONTROLS.Data.Types.Flags'));
+            });
          });
 
          describe('.get()', function () {
@@ -133,6 +133,16 @@ define([
                   values: values
                });
                assert.isFalse(testFlags.equals(e));
+            });
+            it('should not equals when not flags', function () {
+               assert.isFalse(testFlags.equals());
+               assert.isFalse(testFlags.equals(null));
+               assert.isFalse(testFlags.equals(false));
+               assert.isFalse(testFlags.equals(true));
+               assert.isFalse(testFlags.equals(0));
+               assert.isFalse(testFlags.equals(1));
+               assert.isFalse(testFlags.equals({}));
+               assert.isFalse(testFlags.equals([]));
             });
          });
       });

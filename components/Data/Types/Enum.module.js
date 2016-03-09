@@ -1,135 +1,129 @@
 /* global define, $ws */
 define('js!SBIS3.CONTROLS.Data.Types.Enum', [
-   'js!SBIS3.CONTROLS.Data.Collection.IEnumerable',
-   'js!SBIS3.CONTROLS.Data.Collection.ArrayEnumerator',
+   'js!SBIS3.CONTROLS.Data.Types.Dictionary',
    'js!SBIS3.CONTROLS.Data.ContextField.Enum',
    'js!SBIS3.CONTROLS.Data.Di'
-], function (IEnumerable, ArrayEnumerator, ContextFieldEnum, Di) {
+], function (Dictionary, ContextFieldEnum, Di) {
    'use strict';
 
    /**
     * Тип данных перечисляемое.
     * @class SBIS3.CONTROLS.Data.Types.Enum
-    * @mixes SBIS3.CONTROLS.Data.Collection.IEnumerable
+    * @extends SBIS3.CONTROLS.Data.Types.Dictionary
     * @public
     * @author Ганшнин Ярослав
     */
 
-   var Enum = $ws.core.extend({}, [IEnumerable],/** @lends SBIS3.CONTROLS.Data.Types.Enum.prototype */ {
+   var Enum = Dictionary.extend(/** @lends SBIS3.CONTROLS.Data.Types.Enum.prototype */ {
       _moduleName: 'SBIS3.CONTROLS.Data.Types.Enum',
       $protected: {
          _options: {
-            data: [],
-            currentValue: undefined
-         },
-         _enumerator: undefined
+            /**
+             * @cfg {Number|Null} Текущее значение
+             */
+            currentValue: null
+         }
       },
 
       $constructor: function (cfg) {
-         if (cfg.data instanceof Object && $ws.helpers.type(cfg.data) !== 'array') {
-            var array = [];
-            for (var index in cfg.data){
-               if (cfg.data.hasOwnProperty(index)) {
-                  array[index] = cfg.data[index];
+         if ('data' in cfg && !('dictionary' in cfg)) {
+            $ws.single.ioc.resolve('ILogger').log(this._moduleName + '::$constructor()', 'Option "data" is deprecated and will be removed in 3.7.4. Use option "dictionary" instead.');
+            var data = cfg.data;
+            if (!(data instanceof Object)) {
+               throw new TypeError('Option "data" must be an instance of Object');
+            }
+            for (var key in data) {
+               if (data.hasOwnProperty(key)) {
+                  this._options.dictionary.push(data[key]);
                }
             }
-            this._options.data = array;
          }
       },
 
-      each: function (callback, context) {
-         context = context || this;
-         $ws.helpers.forEach(this._options.data, callback, context);
-      },
+      //region Public methods
 
-      getEnumerator: function () {
-         if (!this._enumerator) {
-            this._enumerator = new ArrayEnumerator({
-               items: this._options.data
-            });
-         }
-         return this._enumerator;
-      },
       /**
        * Возвращает текущее значение
-       * @returns {Number}
+       * @returns {Number|Null}
        */
       get: function () {
          return this._options.currentValue;
       },
+
       /**
        * Устанаваливает текущее значение
-       * @param index {index} Идентификатор записи
+       * @param {Number|Null} index Индекс значения в словаре
        */
       set: function (index) {
-         if (index in this._options.data || index === null) {
+         if (index === null || this._options.dictionary[index] !== undefined) {
             this._options.currentValue = index;
-         }
-         else {
-            throw 'The index is out of range';
+         } else {
+            throw new ReferenceError(this._moduleName + '::set(): the index "' + index + '" is out of range');
          }
       },
+
       /**
        * Возвращает текущее значение
-       * @deprecated Будет удалено с 3.8.0 Используйте {@link get}
+       * @deprecated Будет удалено с 3.7.4 Используйте {@link get}
        * @returns {Number}
        */
       getCurrentValue: function () {
-         $ws.single.ioc.resolve('ILogger').log('SBIS3.CONTROLS.Data.Types.Enum:getCurrentValue', 'Начиная с версии 3.7.3 метод getCurrentValue является устаревшим, используйте метод get.');
+         $ws.single.ioc.resolve('ILogger').log(this._moduleName + '::getCurrentValue()', 'Method is deprecated and will be removed in 3.7.4. Use get() instead.');
          return this.get();
       },
+
       /**
        * Устанаваливает элемент текущим по значению
        * @param value {String}
        */
       setByValue: function (value) {
-         var index = Array.indexOf(this._options.data, value);
-         if (index !== -1 || value === null) {
-            this._options.currentValue = index !== -1 ? index : null;
+         if (value === null) {
+            this._options.currentValue = value;
+            return;
          }
-         else {
-            throw "The value was not found in the dictionary";
+         var index = this._getIndex(value);
+         if (index === -1) {
+            throw new ReferenceError(this._moduleName + '::setByValue(): the value "' + value + '" doesn\'t found in dictionary');
          }
+         this._options.currentValue = index;
       },
 
       /**
-       * Возвращает представление Enum в виде объекта.
-       * @deprecated Будет удалено с 3.8.0 Используйте {@link each}
-       * @returns {Number}
+       * Возвращает представление Enum в виде массива.
+       * @deprecated Будет удалено с 3.7.4 Используйте {@link each}
+       * @returns {Array}
        */
       getValues: function () {
-         $ws.single.ioc.resolve('ILogger').log('SBIS3.CONTROLS.Data.Types.Enum:getValues', 'Начиная с версии 3.7.3 метод getCurrentValue является устаревшим, используйте метод toArray.');
-         var values = {};
+         $ws.single.ioc.resolve('ILogger').log(this._moduleName + '::getValues()', 'Method is deprecated and will be removed in 3.7.4. Use each() instead.');
+         var values = [];
          this.each(function (key, index) {
             values[index] = key;
          });
          return values;
       },
+
       /**
-       * Сравнивает переданный Enum c собой. True - если текущее значение и словарь полностью совпадают
+       * Сравнивает с дргуим экземпляром перечисляемого - должен полностью совпадать словарь и текущее значение
        * @param {SBIS3.CONTROLS.Data.Types.Enum} value
        * @returns {boolean}
        */
       equals: function (value) {
-         if (value instanceof Enum) {
-            if (this.get() !== value.get()) {
-               return false;
-            }
-            var equal = true,
-               data = this._options.data,
-               len = 0;
-            value.each(function (name, index) {
-               if (equal && name !== data[index]) {
-                  equal = false;
-               }
-               len++;
-            });
-            return equal && len == this._options.data.length;
+         if (!(value instanceof Enum)) {
+            return false;
          }
-         return false;
+
+         if (!Enum.superclass.equals.call(this, value)) {
+            return false;
+         }
+
+         return this.get() === value.get();
       }
+
+      //endregion Public methods
    });
+
    Di.register('data.types.enum', Enum);
    $ws.proto.Context.registerFieldType(new ContextFieldEnum({module: Enum}));
+
    return Enum;
 });

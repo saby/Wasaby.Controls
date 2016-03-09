@@ -16,8 +16,6 @@ define('js!SBIS3.CONTROLS.Data.Types.Dictionary', [
       _moduleName: 'SBIS3.CONTROLS.Data.Types.Dictionary',
       $protected: {
          _options: {
-            data: {},
-
             /**
              * @cfg {Array.<String>} Словарь возможных значений
              */
@@ -25,7 +23,7 @@ define('js!SBIS3.CONTROLS.Data.Types.Dictionary', [
          }
       },
 
-      $constructor: function (cfg) {
+      $constructor: function () {
          var dictionary = this._options.dictionary;
          if (dictionary instanceof Object && !(dictionary instanceof Array)) {
             var dictionaryArray = [];
