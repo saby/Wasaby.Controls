@@ -119,8 +119,7 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
       _drawItemsCallback: function() {
          var
             model,
-            dataSet = this._dataSet,
-            tree = dataSet.getTreeIndex(this._options.hierField);
+            dataSet = this._dataSet;
          $ws.helpers.forEach(this._options.openedPath, function(val, key) {
             /*TODO:
                Не нужно создавать футер у узла, если данный узел не отображается.
@@ -130,7 +129,7 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
                среди текущего набора элементов в DOM.
             */
             model = dataSet.getRecordByKey(key);
-             if (tree[key] && model && this._getElementByModel(model).length) {
+             if (model && this._getElementByModel(model).length) {
                 this._createFolderFooter(key);
              }
          }, this);
