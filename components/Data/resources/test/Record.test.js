@@ -129,8 +129,8 @@ define([
             it('should not trigger onPropertyChange if value is equal enum', function () {
                var name,
                   newV,
-                  val1 = new Enum({data: ['a', 'b', 'c']}),
-                  val2 = new Enum({data: ['a', 'b', 'c']});
+                  val1 = new Enum({dictionary: ['a', 'b', 'c']}),
+                  val2 = new Enum({dictionary: ['a', 'b', 'c']});
                record.set('enum', val1);
                record.subscribe('onPropertyChange', function(e, field, value) {
                   name = field;
@@ -143,8 +143,8 @@ define([
             it('should trigger onPropertyChange if value is not equal enum', function () {
                var name,
                   newV,
-                  val1 = new Enum({data: ['a', 'b']}),
-                  val2 = new Enum({data: ['a', 'b', 'c']});
+                  val1 = new Enum({dictionary: ['a', 'b']}),
+                  val2 = new Enum({dictionary: ['a', 'b', 'c']});
                record.set('enum', val1);
                record.subscribe('onPropertyChange', function(e, field, value) {
                   name = field;
@@ -157,8 +157,14 @@ define([
             it('should not trigger onPropertyChange if value is equal flags', function () {
                var name,
                   newV,
-                  val1 = new Flags({data: {a: true, b: false}}),
-                  val2 = new Flags({data: {a: true, b: false}});
+                  val1 = new Flags({
+                     dictionary: ['a', 'b'],
+                     values: [true, false]
+                  }),
+                  val2 = new Flags({
+                     dictionary: ['a', 'b'],
+                     values: [true, false]
+                  });
                record.set('flags', val1);
                record.subscribe('onPropertyChange', function(e, field, value) {
                   name = field;
@@ -171,8 +177,14 @@ define([
             it('should trigger onPropertyChange if value is not equal flags', function () {
                var name,
                   newV,
-                  val1 = new Flags({data: {a: true, b: false}}),
-                  val2 = new Flags({data: {a: true, b: true}});
+                  val1 = new Flags({
+                     dictionary: ['a', 'b'],
+                     values: [true, false]
+                  }),
+                  val2 = new Flags({
+                     dictionary: ['a', 'b'],
+                     values: [true, true]
+                  });
                record.set('flags', val1);
                record.subscribe('onPropertyChange', function(e, field, value) {
                   name = field;

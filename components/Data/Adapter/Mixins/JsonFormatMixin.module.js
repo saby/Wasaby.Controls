@@ -103,7 +103,7 @@ define('js!SBIS3.CONTROLS.Data.Adapter.JsonFormatMixin', [
             throw new Error(this._moduleName + '::addField(): field "' + name + '" already exists');
          }
          if (at >= 0) {
-            $ws.single.ioc.resolve('ILogger').log(this._moduleName + '::addField()', 'Argument "at" is not supported and will be ignored.');
+            $ws.single.ioc.resolve('ILogger').info(this._moduleName + '::addField()', 'Argument "at" is not supported and will be ignored.');
          }
          this._format[name] = format;
       },

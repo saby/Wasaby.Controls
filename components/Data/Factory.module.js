@@ -60,7 +60,7 @@ define('js!SBIS3.CONTROLS.Data.Factory', [
                return value === undefined ? null : value;
             case 'Enum':
                return new Enum({
-                  data: format.meta.dictionary,
+                  dictionary: format.meta.dictionary,
                   currentValue: value
                });
             case 'Flags':

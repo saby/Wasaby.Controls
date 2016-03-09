@@ -64,7 +64,7 @@ define('js!SBIS3.CONTROLS.Data.Record', [
 
          if ('data' in cfg && !('rawData' in cfg)) {
             this._options.rawData = cfg.data;
-            $ws.single.ioc.resolve('ILogger').log('SBIS3.CONTROLS.Data.Record', 'option "data" is deprecated and will be removed in 3.7.4. Use "rawData" instead.');
+            $ws.single.ioc.resolve('ILogger').info('SBIS3.CONTROLS.Data.Record', 'option "data" is deprecated and will be removed in 3.7.4. Use "rawData" instead.');
          }
          this.setRawData(this._options.rawData);
       },
@@ -88,7 +88,7 @@ define('js!SBIS3.CONTROLS.Data.Record', [
 
       set: function (name, value) {
          if (!name) {
-            $ws.single.ioc.resolve('ILogger').error('SBIS3.CONTROLS.Data.Record::set()', 'Property name is empty');
+            $ws.single.ioc.resolve('ILogger').error('SBIS3.CONTROLS.Data.Record::set()', 'Property name is empty, value can\'t be setted.');
          }
 
          var oldValue = this._getRawDataValue(name);

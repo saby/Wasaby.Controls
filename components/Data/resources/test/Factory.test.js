@@ -378,11 +378,8 @@ define([
                      var model = getModel(type),
                         d = [true, false, null],
                         flags = new Flags({
-                           data: {
-                              one: true,
-                              two: false,
-                              three: null
-                           }
+                           dictionary: ['one', 'two', 'three'],
+                           values: [true, false, null]
                         });
                      model.set('flags', flags);
                      assert.deepEqual(getData(model, 5), d);

@@ -27,7 +27,7 @@ define('js!SBIS3.CONTROLS.Data.Types.Enum', [
 
       $constructor: function (cfg) {
          if ('data' in cfg && !('dictionary' in cfg)) {
-            $ws.single.ioc.resolve('ILogger').log(this._moduleName + '::$constructor()', 'Option "data" is deprecated and will be removed in 3.7.4. Use option "dictionary" instead.');
+            $ws.single.ioc.resolve('ILogger').info(this._moduleName + '::$constructor()', 'Option "data" is deprecated and will be removed in 3.7.4. Use option "dictionary" instead.');
             var data = cfg.data;
             if (!(data instanceof Object)) {
                throw new TypeError('Option "data" must be an instance of Object');
@@ -68,7 +68,7 @@ define('js!SBIS3.CONTROLS.Data.Types.Enum', [
        * @returns {Number}
        */
       getCurrentValue: function () {
-         $ws.single.ioc.resolve('ILogger').log(this._moduleName + '::getCurrentValue()', 'Method is deprecated and will be removed in 3.7.4. Use get() instead.');
+         $ws.single.ioc.resolve('ILogger').info(this._moduleName + '::getCurrentValue()', 'Method is deprecated and will be removed in 3.7.4. Use get() instead.');
          return this.get();
       },
 
@@ -94,7 +94,7 @@ define('js!SBIS3.CONTROLS.Data.Types.Enum', [
        * @returns {Array}
        */
       getValues: function () {
-         $ws.single.ioc.resolve('ILogger').log(this._moduleName + '::getValues()', 'Method is deprecated and will be removed in 3.7.4. Use each() instead.');
+         $ws.single.ioc.resolve('ILogger').info(this._moduleName + '::getValues()', 'Method is deprecated and will be removed in 3.7.4. Use each() instead.');
          var values = [];
          this.each(function (key, index) {
             values[index] = key;
