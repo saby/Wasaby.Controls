@@ -773,6 +773,25 @@ define(
             });
          });
 
+         describe('.getIndiciesByValue', function (){
+            it('should return indiciesByValue', function() {
+
+               var newItems = [{
+                     'Ид': 70,
+                     'Фамилия': '12a'
+                  },{
+                     'Ид': 71,
+                     'Фамилия': '12a'
+                  }],
+                  len = items.length,
+                  list = new List({
+                     items: items.concat(newItems)
+                  });
+               var indicies = [len, len+1];
+               assert.deepEqual(list.getIndiciesByValue('Фамилия', '12a'), indicies);
+            });
+         });
+
          describe('.getCount()', function() {
             it('should return same count like initial collection', function() {
                var list = new List({
