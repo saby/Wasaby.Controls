@@ -1,4 +1,4 @@
-/* global beforeEach, afterEach, describe, context, it */
+/* global beforeEach, afterEach, describe, context, it, $ws, define, assert */
 define([
       'js!SBIS3.CONTROLS.Data.Types.Flags'
    ], function (Flags) {
@@ -20,10 +20,20 @@ define([
       });
 
       describe('SBIS3.CONTROLS.Data.Types.Flags', function () {
-         it('should create Flags', function () {
-            if (!$ws.helpers.instanceOfModule(testFlags, 'SBIS3.CONTROLS.Data.Types.Flags')) {
-               assert.fail("Type doesn't of instances Flags");
-            }
+         describe('.$constructor()', function (){
+            it('should create Flags', function () {
+               if (!$ws.helpers.instanceOfModule(testFlags, 'SBIS3.CONTROLS.Data.Types.Flags')) {
+                  assert.fail("Type doesn't of instances Flags");
+               }
+            });
+
+            it('should throw an error', function () {
+               assert.throw(function (){
+                  testFlags = new Flags({
+                     data: 'String'
+                  });
+               });
+            });
          });
 
          describe('.get()', function () {
