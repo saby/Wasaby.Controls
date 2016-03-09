@@ -6,19 +6,58 @@ define('js!SBIS3.CONTROLS.Utils.DataProcessor', [
    'js!SBIS3.CONTROLS.Utils.DataSetToXMLSerializer',
    'js!SBIS3.CORE.LoadingIndicator'
 ], function(Source, Serializer, LoadingIndicator) {
-
-   return $ws.core.extend({}, {
+   /**
+    * Обработчик данных для печати и выгрузки(экспорта) в Excel, PDF.
+    * Печать осуществляется по готову xsl шаблону через xslt-преобразование
+    * Экспорт в Excel и PDF можно выполнить несколькими способами:
+    * 1) подготовить данные на клиенте и через xslt преобразовать в HTML, а дальше отправить на сервер
+    * 2) Подготовить либо данные, либо просто фильтр для списочного метода и отправить на сервер, где будет происходить
+    * обработка данных и их преобразование в Excel или PDF. В данном случае будет использован сервис file-transfer
+    * @class SBIS3.CONTROLS.Utils.DataProcessor
+    * @author Крайнов Дмитрий Олегович
+    * @public
+    */
+   return $ws.core.extend(/** @lends SBIS3.CONTROLS.Utils.DataProcessor.prototype */{}, {
 
       $protected: {
          _options: {
+            /**
+             * @cfg DataSet - набор с данными
+             */
             dataSet: undefined,
+            /**
+             * @noShow
+             */
             report: undefined,
+            /**
+             * @cfg {String} Путь до файла xsl
+             */
             xsl : 'default-list-transform.xsl', //что делать с item  ?
+            /**
+             * @cfg {Array} Набор колонок датасета
+             */
             columns: [],
+            /**
+             * @cfg {String} Поле иерархии для обработки иерархических списков
+             */
             hierField: undefined,
+            /**
+             * @cfg {Object} Список раскрытых узлов дерева (если нужно выгружать )
+             */
             openedPath : {},
+            /**
+             * @cfg {String} Корень иерархии
+             */
             root : undefined,
+            /**
+             * Предустановленный фильтр для списочного метода
+             * @cfg {Object} поле иерархии для обработки иерархических списков
+             */
             filter: {},
+            /**
+             * Сдвиг навигации
+             * @cfg {Number}
+             */
             offset: 0,
             /**
              * @cfg (number) Минимальная ширина предварительного окна печати
