@@ -58,11 +58,29 @@ define([
 
          describe('.hierarhyMove()', function() {
             it('should move record to folder', function () {
-               ds.update = function (record){
+               ds.update = function (record) {
                   assert.equal(record.get('parent'), rs.at(1).getId());
                   return new $ws.proto.Deferred().callback(true);
                };
                moveStrategy.hierarhyMove([rs.at(0)], rs.at(1), false);
+            });
+
+            it('should throw an error hierarhy field is undefined', function () {
+               var moveStrategy = new BaseMoveStrategy({
+                  dataSource: ds
+               });
+               assert.throw(function () {
+                  moveStrategy.hierarhyMove([rs.at(0)], rs.at(1), false);
+               });
+            });
+
+            it('should throw an error data source is undefined', function () {
+               var moveStrategy = new BaseMoveStrategy({
+                  hierField: 'parent'
+               });
+               assert.throw(function () {
+                  moveStrategy.hierarhyMove([rs.at(0)], rs.at(1), false);
+               });
             });
          });
       });

@@ -116,6 +116,9 @@ define('js!SBIS3.CONTROLS.DropdownList',
                this._pickerHeadContainer.bind('mouseleave', this._pickerMouseLeaveHandler.bind(this, true));
                this._pickerBodyContainer.bind('mouseleave', this._pickerMouseLeaveHandler.bind(this, false));
             }
+            else if (this._options.mode === 'click'){
+               this._pickerHeadContainer.click(this.hidePicker.bind(this));
+            }
          },
          _buildTplArgs: function(item) {
             return {
