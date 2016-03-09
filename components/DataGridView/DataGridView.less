@@ -190,8 +190,7 @@
          line-height: @data-grid-cell-line-height;
 
         &.controls-DataGridView-cell-overflow-ellipsis{
-           /* TODO: решение для выпуска 3.7.3.100. Cмотри commit message */
-           & > div {
+           .controls-TreeView__columnValue, .controls-TreeView__folderTitle {
               display: inline;
            }
            overflow: @data-grid-cell-overflow;
