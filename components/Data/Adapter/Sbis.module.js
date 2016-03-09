@@ -29,12 +29,12 @@ define('js!SBIS3.CONTROLS.Data.Adapter.Sbis', [
          return new SbisRecord(data);
       },
 
-      serialize: function (data) {
-         return serializer.serialize(data);
-      },
-
       getKeyField: function (data) {
          return (new SbisRecord(data)).getKeyField();
+      },
+
+      serialize: function (data) {
+         return serializer.serialize(data);
       }
    });
 
@@ -117,7 +117,7 @@ define('js!SBIS3.CONTROLS.Data.Adapter.Sbis', [
                   if (val % 1 === 0) {
                      return Sbis.FIELD_TYPE.Integer;
                   }
-                  return Sbis.FIELD_TYPE.Double;
+                  return Sbis.FIELD_TYPE.Real;
                case 'string':
                   return Sbis.FIELD_TYPE.String;
                case 'object':

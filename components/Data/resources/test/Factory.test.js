@@ -167,7 +167,6 @@ define([
             assert.instanceOf(sbisModel.get('recordSet'), List);
          });
          it('should cast value to RecordSet', function () {
-            sbisModel.setUsingDataSetAsList(false);
             assert.instanceOf(sbisModel.get('recordSet'), RecordSet);
          });
          it('should cast link to integer', function () {
@@ -332,10 +331,9 @@ define([
                            s: [{n: 'id', t: 'Число целое'}]
                         },
                         adapter = new AdapterSbis(),
-                        dataSet = Factory._makeRecordSet(data, adapter);
-                     model.setUsingDataSetAsList(false);
-                     model.set('recordSet', dataSet);
-                     assert.deepEqual(getData(model, 4), dataSet.getRawData());
+                        rs = Factory._makeRecordSet(data, adapter);
+                     model.set('recordSet', rs);
+                     assert.deepEqual(getData(model, 4), rs.getRawData());
                   });
                   it('should store link', function () {
                      var model = getModel(type);
