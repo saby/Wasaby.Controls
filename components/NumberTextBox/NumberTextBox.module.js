@@ -508,7 +508,7 @@ define('js!SBIS3.CONTROLS.NumberTextBox', ['js!SBIS3.CONTROLS.TextBox', 'html!SB
             b,
             e,
             l;
-         if (document.selection){                        //IE
+         if ($ws._const.browser.isIE && $ws._const.browser.IEVersion < 9) { //IE
             var range = document.createRangeForIE();
             l = range.text.length;
             range.moveStart('textedit', -1);
@@ -531,7 +531,7 @@ define('js!SBIS3.CONTROLS.NumberTextBox', ['js!SBIS3.CONTROLS.TextBox', 'html!SB
       _setCaretPosition : function(pos, pos2){
          pos2 = pos2 || pos;
          var obj = this._inputField.get(0);
-         if(document.selection){              // IE
+         if ($ws._const.browser.isIE && $ws._const.browser.IEVersion < 9) { //IE
             var r = obj.createTextRange();
             r.collapse(true);
             r.moveStart("character", pos);
