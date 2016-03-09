@@ -210,7 +210,7 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                   eip = this._getEditingEip(),
                   record,
                   endEditResult;
-               if (eip) {
+               if (eip && this._savingDeferred.isReady()) {
                   record = eip.getEditingRecord();
                   withSaving = withSaving && record.isChanged();
                   endEditResult = this._notify('onEndEdit', record, withSaving);
