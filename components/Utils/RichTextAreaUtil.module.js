@@ -6,7 +6,7 @@ define('js!SBIS3.CONTROLS.Utils.RichTextAreaUtil',[], function () {
    /**
     * Утилиты для работы с контентом полученным из Богатого текстового редактора
     * @class SBIS3.CONTROLS.Utils.RichTextAreaUtil
-    * @author Борисов П.С.
+    * @author Авраменко А.С.
     * @public
     */
    var RichTextAreaUtil = /** @lends SBIS3.CONTROLS.Utils.RichTextAreaUtil.prototype */{
