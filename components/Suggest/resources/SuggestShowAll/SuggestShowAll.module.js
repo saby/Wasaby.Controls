@@ -7,7 +7,7 @@ define('js!SBIS3.CONTROLS.SuggestShowAll',
        'js!SBIS3.CONTROLS.DataGridView'
     ], function (CompoundControl, dotTplFn) {
 
-       var optionsToSet = ['columns', 'itemTemplate', 'keyField'];
+       var optionsToSet = ['columns', 'itemTemplate', 'keyField', 'filter'];
        /**
         * SBIS3.CORE.SuggestShowAll
         * @extends $ws.proto.CompoundControl
@@ -26,6 +26,11 @@ define('js!SBIS3.CONTROLS.SuggestShowAll',
              var window = this.getParent();
              window._options.resizable = false;
              window._options.caption = 'Все записи';
+          },
+
+          _modifyOptions: function (opts) {
+             opts.autoHeight = opts.chooserMode === 'floatArea';
+             return opts;
           },
 
           init: function() {
