@@ -64,33 +64,6 @@ define('js!SBIS3.CONTROLS.Data.Adapter.JsonFormatMixin', [
          return format;
       },
 
-      _getFieldMeta: function (name) {
-         if (this._sharedFieldMeta === null) {
-            this._sharedFieldMeta = {};
-         }
-         var format = this.getFormat(name),
-            meta = this._sharedFieldMeta;
-
-         switch (format.getType()) {
-            case 'Real':
-            case 'Money':
-               meta.precision = format.getPrecision();
-               break;
-            case 'Enum':
-            case 'Flags':
-               meta.dictionary = format.getDictionary();
-               break;
-            case 'Identity':
-               meta.separator = format.getSeparator();
-               break;
-            case 'Array':
-               meta.kind = format.getKind();
-               break;
-            }
-
-         return meta;
-      },
-
       addField: function(format, at) {
          if (!format || !$ws.helpers.instanceOfModule(format, 'SBIS3.CONTROLS.Data.Format.Field')) {
             throw new TypeError(this._moduleName + '::addField(): format should be an instance of SBIS3.CONTROLS.Data.Format.Field');
@@ -125,6 +98,33 @@ define('js!SBIS3.CONTROLS.Data.Adapter.JsonFormatMixin', [
             name: name,
             type: 'string'
          });
+      },
+
+      _getFieldMeta: function (name) {
+         if (this._sharedFieldMeta === null) {
+            this._sharedFieldMeta = {};
+         }
+         var format = this.getFormat(name),
+            meta = this._sharedFieldMeta;
+
+         switch (format.getType()) {
+            case 'Real':
+            case 'Money':
+               meta.precision = format.getPrecision();
+               break;
+            case 'Enum':
+            case 'Flags':
+               meta.dictionary = format.getDictionary();
+               break;
+            case 'Identity':
+               meta.separator = format.getSeparator();
+               break;
+            case 'Array':
+               meta.kind = format.getKind();
+               break;
+         }
+
+         return meta;
       }
 
       //endregion Protected methods
