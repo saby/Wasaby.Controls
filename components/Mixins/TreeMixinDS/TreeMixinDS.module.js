@@ -131,7 +131,7 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', ['js!SBIS3.CORE.Control',
             self = this,
             records = [];
          if (this._options.expand) {
-            this.hierIterate(this._dataSet, function (record) {
+            this.hierIterate(this._items, function (record) {
                if (self._options.displayType == 'folders') {
                   if (record.get(self._options.hierField + '@')) {
                      records.push(record);
@@ -169,7 +169,7 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', ['js!SBIS3.CORE.Control',
 
       //Рекурсивно удаляем из индекса открытых узлов все дочерние узлы закрываемого узла
       _collapseChilds: function(key){
-         var tree = this._dataSet._indexTree;
+         var tree = this._items._indexTree;
          if (tree[key]){
             for (var i = 0; i < tree[key].length; i++){
                this._collapseChilds(tree[key][i]);
@@ -217,7 +217,7 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', ['js!SBIS3.CORE.Control',
 
          if(!this._options.openedPath[key]) {
             var self = this,
-               tree = this._dataSet.getTreeIndex(this._options.hierField, true);
+               tree = this._items.getTreeIndex(this._options.hierField, true);
 
             this._folderOffsets[key || 'null'] = 0;
             this._options.openedPath[key] = true;
@@ -239,7 +239,7 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', ['js!SBIS3.CORE.Control',
                var records = [];
                if (child) {
                   for (var i = 0; i < child.length; i++) {
-                     records.push(this._dataSet.getRecordById(child[i]));
+                     records.push(this._items.getRecordById(child[i]));
                   }
                }
                this._drawLoadedNode(key, records, this._folderHasMore[key]);
@@ -291,9 +291,9 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', ['js!SBIS3.CORE.Control',
       _nodeDataLoaded : function(key, dataSet) {
          var self = this;
          this._needToRedraw = false;
-         this._dataSet.merge(dataSet, {remove: false});
+         this._items.merge(dataSet, {remove: false});
          this._needToRedraw = true;
-         this._dataSet.getTreeIndex(this._options.hierField, true);
+         this._items.getTreeIndex(this._options.hierField, true);
          var records = [];
          dataSet.each(function (record) {
             records.push(record);
@@ -375,8 +375,8 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', ['js!SBIS3.CORE.Control',
             //Если данные пришли, нарисуем
             if (dataSet.getCount()) {
                var records = dataSet._getRecords();
-               self._dataSet.merge(dataSet, {remove: false});
-               self._dataSet.getTreeIndex(self._options.hierField, true);
+               self._items.merge(dataSet, {remove: false});
+               self._items.getTreeIndex(self._options.hierField, true);
                self._drawItemsFolderLoad(records, id);
                self._dataLoadedCallback();
             }
@@ -468,7 +468,7 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', ['js!SBIS3.CORE.Control',
          _dataLoadedCallback: function () {
             //this._options.openedPath = {};
             if (this._options.expand) {
-               var tree = this._dataSet.getTreeIndex(this._options.hierField);
+               var tree = this._items.getTreeIndex(this._options.hierField);
                for (var i in tree) {
                   if (tree.hasOwnProperty(i) && i != 'null' && i != this._curRoot) {
                      this._options.openedPath[i] = true;
