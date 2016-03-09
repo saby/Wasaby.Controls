@@ -205,6 +205,8 @@ define('js!SBIS3.CONTROLS.Selectable', ['js!SBIS3.CONTROLS.Data.Utils', 'js!SBIS
             else {
                this._itemsProjection.setCurrentPosition(-1);
             }
+         } else {
+            this._setSelectedIndex(null, id);
          }
       },
 
