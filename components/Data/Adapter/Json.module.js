@@ -28,6 +28,10 @@ define('js!SBIS3.CONTROLS.Data.Adapter.Json', [
 
       serialize: function (data) {
          return data;
+      },
+
+      getKeyField: function () {
+         return undefined;
       }
    });
 

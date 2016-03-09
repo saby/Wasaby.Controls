@@ -512,7 +512,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
 
           if (this._dataSource) {
              this._toggleIndicator(true);
-             this._notify('onBeforeDataLoad');
+             this._notify('onBeforeDataLoad', this._options.filter, this.getSorting(), this._offset, this._limit);
              def = this._callQuery(this._options.filter, this.getSorting(), this._offset, this._limit)
                 .addCallback($ws.helpers.forAliveOnly(function (list) {
                    self._toggleIndicator(false);
@@ -1071,7 +1071,10 @@ define('js!SBIS3.CONTROLS.DSMixin', [
          return offset < 0 ? false : (typeof (hasMore) !== 'boolean' ? hasMore > (offset + this._options.pageSize) : !!hasMore);
       },
       _scrollToItem: function(itemId) {
-         $(".controls-ListView__item[data-id='" + itemId + "']", this._getItemsContainer()).attr('tabindex', '-1').focus();
+         var itemContainer  = $(".controls-ListView__item[data-id='" + itemId + "']", this._getItemsContainer());
+         if (itemContainer.length) {
+            itemContainer.get(0).scrollIntoView();
+         }
       },
       /**
        * Установить что отображается при отсутствии записей.
@@ -1106,14 +1109,14 @@ define('js!SBIS3.CONTROLS.DSMixin', [
          ladderDecorator && ladderDecorator.setMarkLadderColumn(true);
          item = item.getContents();
          var target = this._getTargetContainer(item),
-            nextSibling = at > -1 ? this._getItemContainerByIndex(target, at) : null,
+            currentItemAt = at > -1 ? this._getItemContainerByIndex(target, at - 1) : null,
             template = this._getItemTemplate(item),
             newItemContainer = this._buildTplItem(item, template),
             rows;
          this._addItemAttributes(newItemContainer, item);
-         if (nextSibling && nextSibling.length) {
-            newItemContainer.insertBefore(nextSibling);
-            rows = [newItemContainer.prev().prev(), newItemContainer.prev(), newItemContainer, nextSibling, nextSibling.next()];
+         if (currentItemAt && currentItemAt.length) {
+            newItemContainer.insertAfter(currentItemAt);
+            rows = [newItemContainer.prev().prev(), newItemContainer.prev(), newItemContainer, newItemContainer.next(), newItemContainer.next().next()];
          } else {
             newItemContainer.appendTo(target);
             rows = [newItemContainer.prev().prev(), newItemContainer.prev(), newItemContainer, newItemContainer.next()];
@@ -1216,7 +1219,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
                         newItemsIndex + i
 	                  );
 	               }
-                  this._toggleEmptyData(!!this._itemsProjection.getCount());
+                  this._toggleEmptyData(!this._itemsProjection.getCount());
 	               //this._view.checkEmpty(); toggleEmtyData
 	               this._reviveItems();
 	               break;
