@@ -7,7 +7,7 @@ define('js!SBIS3.CONTROLS.SuggestShowAll',
        'js!SBIS3.CONTROLS.DataGridView'
     ], function (CompoundControl, dotTplFn) {
 
-       var optionsToSet = ['columns', 'itemTemplate', 'filter', 'keyField'];
+       var optionsToSet = ['columns', 'itemTemplate', 'keyField'];
        /**
         * SBIS3.CORE.SuggestShowAll
         * @extends $ws.proto.CompoundControl

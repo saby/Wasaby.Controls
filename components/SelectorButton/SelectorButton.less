@@ -1,17 +1,14 @@
 .controls-SelectorButton {
    display: inline-block;
    cursor: @link-cursor;
-   text-align: @link-text-alignment;
-   line-height: @link-line-height;
-   box-sizing: border-box;
+   line-height: @controls-SelectorButton-line-height;
+   height: @controls-SelectorButton-height;
 
+   .controls-SelectorButton__text,
    .controls-SelectorButton__icon,
    .controls-SelectorButton__cross {
-      vertical-align: @link-icon-vertical-alignment;
-   }
-
-   .controls-SelectorButton__icon {
-      margin: @link-icon-margin;
+      vertical-align: @controls-SelectorButton-align;
+      margin: @controls-SelectorButton-margin;
    }
 
    &.ws-disabled {
