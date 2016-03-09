@@ -224,7 +224,7 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', ['js!SBIS3.CORE.Control',
             this._closeAllExpandedNode(key);
             if (!tree[key] && this._options.partialyReload) {
                this._toggleIndicator(true);
-               this._notify('onBeforeDataLoad');
+               this._notify('onBeforeDataLoad', this.getFilter(), this.getSorting(), 0, this._limit);
                return this._callQuery(this._createTreeFilter(key), this.getSorting(), 0, this._limit).addCallback(function (dataSet) {
                   // TODO: Отдельное событие при загрузке данных узла. Сделано так как тут нельзя нотифаить onDataLoad,
                   // так как на него много всего завязано. (пользуется Янис)
@@ -349,7 +349,7 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', ['js!SBIS3.CORE.Control',
          var
             self = this,
             filter = id ? this._createTreeFilter(id) : this.getFilter();
-         this._notify('onBeforeDataLoad');
+         this._notify('onBeforeDataLoad', filter, this.getSorting(), (id ? this._folderOffsets[id] : this._folderOffsets['null']) + this._limit, this._limit);
          this._loader = this._callQuery(filter, this.getSorting(), (id ? this._folderOffsets[id] : this._folderOffsets['null']) + this._limit, this._limit).addCallback($ws.helpers.forAliveOnly(function (dataSet) {
             //ВНИМАНИЕ! Здесь стрелять onDataLoad нельзя! Либо нужно определить событие, которое будет
             //стрелять только в reload, ибо между полной перезагрузкой и догрузкой данных есть разница!

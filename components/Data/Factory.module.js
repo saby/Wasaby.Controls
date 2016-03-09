@@ -29,7 +29,7 @@ define('js!SBIS3.CONTROLS.Data.Factory', [
        * DateTime - дата и время
        * Link - связь
        * Integer - число целое
-       * Double - число вещественное
+       * Real - число вещественное
        * Money - деьги
        * Enum  - перечисляемое
        * Flags - поле флагов
@@ -67,6 +67,7 @@ define('js!SBIS3.CONTROLS.Data.Factory', [
             case 'Link':
             case 'Integer':
                return (typeof(value) === 'number') ? value : (isNaN(parseInt(value, 10)) ? null : parseInt(value, 10));
+            case 'Real':
             case 'Double':
                return (typeof(value) === 'number') ? value : (isNaN(parseFloat(value)) ? null : parseFloat(value));
             case 'Money':
@@ -318,7 +319,7 @@ define('js!SBIS3.CONTROLS.Data.Factory', [
        * @private
        */
       _serializeFlags: function (data) {
-         if ($ws.helpers.instanceOfModule(data, 'SBIS3.CONTROLS.Data.Flags') || $ws.helpers.instanceOfModule(data, 'SBIS3.CONTROLS.Data.Model')) {
+         if ($ws.helpers.instanceOfModule(data, 'SBIS3.CONTROLS.Data.Types.Flags') || $ws.helpers.instanceOfModule(data, 'SBIS3.CONTROLS.Data.Model')) {
             var d = [];
             data.each(function (name) {
                d.push(data.get(name));

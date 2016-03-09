@@ -154,7 +154,9 @@ define('js!SBIS3.CONTROLS.TextBox', ['js!SBIS3.CONTROLS.TextBoxBase','html!SBIS3
             if (self._options.trim) {
                text = String.trim(text);
             }
-            self.setText(text);
+            if (text !== self._options.text){
+               self.setText(text);
+            }
          });
 
          if (this._options.placeholder && !$ws._const.compatibility.placeholder) {

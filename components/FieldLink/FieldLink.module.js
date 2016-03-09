@@ -268,7 +268,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
           _onResizeHandler: function() {
              FieldLink.superclass._onResizeHandler.apply(this, arguments);
              if(!this._getLinkCollection().isPickerVisible()) {
-                this.updateInputWidth();
+                this._updateInputWidth();
              }
           },
 
@@ -374,7 +374,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
                 itemCheckFunc: this._checkItemBeforeDraw.bind(this),
                 handlers: {
                    /* После окончания отрисовки, обновим размеры поля ввода */
-                   onDrawItems: this.updateInputWidth.bind(this),
+                   onDrawItems: this._updateInputWidth.bind(this),
 
                    /* При клике на крест, удалим ключ из выбранных */
                    onCrossClick: function(e, key){
@@ -528,7 +528,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
           /**
            * Обновляет ширину поля ввода
            */
-          updateInputWidth: function() {
+          _updateInputWidth: function() {
              this._checkWidth = true;
              this._inputField[0].style.width = this._getInputWidth() + 'px';
           },

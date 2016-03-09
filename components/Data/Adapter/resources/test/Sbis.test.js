@@ -10,7 +10,7 @@ define([
 
       describe('SBIS3.CONTROLS.Data.Adapter.Sbis', function () {
          var data,
-            adapterInstance;
+            adapter;
 
          beforeEach(function () {
             data = {
@@ -29,26 +29,66 @@ define([
                ]
             };
 
-            adapterInstance = new SbisAdapter();
+            adapter = new SbisAdapter();
          });
 
          afterEach(function () {
             data = undefined;
-            adapterInstance = undefined;
+            adapter = undefined;
+         });
+
+         describe('.forTable()', function () {
+            it('should return table adapter', function () {
+               var adapter = new SbisAdapter();
+               assert.isTrue(
+                  $ws.helpers.instanceOfModule(
+                     adapter.forTable(),
+                     'SBIS3.CONTROLS.Data.Adapter.SbisTable'
+                  )
+               );
+            });
+            it('should pass data to the table adapter', function () {
+               var data = {d: [], s: []},
+                  adapter = new SbisAdapter();
+               assert.strictEqual(
+                  adapter.forTable(data).getData(),
+                  data
+               );
+            });
+         });
+
+         describe('.forRecord()', function () {
+            it('should return record adapter', function () {
+               var adapter = new SbisAdapter();
+               assert.isTrue(
+                  $ws.helpers.instanceOfModule(
+                     adapter.forRecord(),
+                     'SBIS3.CONTROLS.Data.Adapter.SbisRecord'
+                  )
+               );
+            });
+            it('should pass data to the record adapter', function () {
+               var data = {d: [], s: []},
+                  adapter = new SbisAdapter();
+               assert.strictEqual(
+                  adapter.forRecord(data).getData(),
+                  data
+               );
+            });
          });
 
          describe('.getProperty()', function () {
             it('should return the property value', function () {
                assert.strictEqual(
                   123,
-                  adapterInstance.getProperty({
+                  adapter.getProperty({
                      items: data,
                      total: 123
                   }, 'total')
                );
                assert.strictEqual(
                   456,
-                  adapterInstance.getProperty({
+                  adapter.getProperty({
                      d: data.d,
                      s: data.s,
                      n: 456
@@ -56,7 +96,7 @@ define([
                );
                assert.strictEqual(
                   789,
-                  adapterInstance.getProperty({
+                  adapter.getProperty({
                      employees: {
                         d: data.d,
                         s: data.s,
@@ -65,25 +105,25 @@ define([
                   }, 'employees.n')
                );
                assert.isUndefined(
-                  adapterInstance.getProperty(data, 'total')
+                  adapter.getProperty(data, 'total')
                );
                assert.isUndefined(
-                  adapterInstance.getProperty(data)
+                  adapter.getProperty(data)
                );
             });
 
             it('should return undefined on invalid data', function () {
                assert.isUndefined(
-                  adapterInstance.getProperty({})
+                  adapter.getProperty({})
                );
                assert.isUndefined(
-                  adapterInstance.getProperty('')
+                  adapter.getProperty('')
                );
                assert.isUndefined(
-                  adapterInstance.getProperty(0)
+                  adapter.getProperty(0)
                );
                assert.isUndefined(
-                  adapterInstance.getProperty()
+                  adapter.getProperty()
                );
             });
          });
@@ -91,7 +131,7 @@ define([
 
          describe('.setProperty()', function () {
             it('should set the property value', function () {
-               adapterInstance.setProperty(data, 'n', 456);
+               adapter.setProperty(data, 'n', 456);
                assert.strictEqual(
                   456,
                   data.n
@@ -115,7 +155,7 @@ define([
                      total: 789
                   }
                };
-               adapterInstance.setProperty(moreData, 'employees.total', 987);
+               adapter.setProperty(moreData, 'employees.total', 987);
                assert.strictEqual(
                   987,
                   moreData.employees.total
@@ -133,7 +173,7 @@ define([
                   moreData.employees.items.d[5][1]
                );
 
-               adapterInstance.setProperty(data, 'c.d.e.f', 'g');
+               adapter.setProperty(data, 'c.d.e.f', 'g');
                assert.strictEqual(
                   'g',
                   data.c.d.e.f
