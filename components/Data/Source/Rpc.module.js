@@ -69,7 +69,7 @@ define('js!SBIS3.CONTROLS.Data.Source.Rpc', [
              * <pre>
              *    var usersSource = new RpcSource({
              *       resource: '/api/'
-             *       createMethodName: 'readUser'
+             *       readMethodName: 'readUser'
              *    });
              * </pre>
              */
@@ -84,7 +84,7 @@ define('js!SBIS3.CONTROLS.Data.Source.Rpc', [
              * <pre>
              *    var usersSource = new RpcSource({
              *       resource: '/api/'
-             *       createMethodName: 'updateUser'
+             *       updateMethodName: 'updateUser'
              *    });
              * </pre>
              */
@@ -99,7 +99,7 @@ define('js!SBIS3.CONTROLS.Data.Source.Rpc', [
              * <pre>
              *    var usersSource = new RpcSource({
              *       resource: '/api/'
-             *       createMethodName: 'deleteUser'
+             *       destroyMethodName: 'deleteUser'
              *    });
              * </pre>
              */
@@ -114,7 +114,7 @@ define('js!SBIS3.CONTROLS.Data.Source.Rpc', [
              * <pre>
              *    var usersSource = new RpcSource({
              *       resource: '/api/'
-             *       createMethodName: 'copyUser'
+             *       copyMethodName: 'copyUser'
              *    });
              * </pre>
              */
@@ -129,7 +129,7 @@ define('js!SBIS3.CONTROLS.Data.Source.Rpc', [
              * <pre>
              *    var usersSource = new RpcSource({
              *       resource: '/api/'
-             *       createMethodName: 'mergeUsers'
+             *       mergeMethodName: 'mergeUsers'
              *    });
              * </pre>
              */
