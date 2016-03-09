@@ -117,7 +117,6 @@ define('js!SBIS3.CONTROLS.MenuButton', ['js!SBIS3.CONTROLS.Button', 'js!SBIS3.CO
             if (this._dataSet.getCount() > 1) {
                this._container.addClass('controls-Checked__checked');
                this.togglePicker();
-               this._header.removeClass('ws-hidden');
                this._toggleTrackHeader(true);
             } else {
                if (this._dataSet.getCount() == 1) {
@@ -128,24 +127,21 @@ define('js!SBIS3.CONTROLS.MenuButton', ['js!SBIS3.CONTROLS.Button', 'js!SBIS3.CO
          }
       },
       /**
-       * Скрывает/показывает меню у кнопки
+       * Показывает меню у кнопки
        */
-      togglePicker: function(){
+      showPicker: function() {
          if (!this._header) {
             this._createHeader();
          }
-         MenuButton.superclass.togglePicker.call(this);
-         this._setWidth();
+         MenuButton.superclass.showPicker.call(this);
          this._header.css({
             left: (this._headerAlignment.horizontal == 'left') ? this._container.offset().left : this._container.offset().left - 12,
             top: (this._headerAlignment.vertical == 'top') ? this._container.offset().top + 2 : this._container.offset().top - 7,
             'z-index': parseInt(this._picker._container.css('z-index'), 10) + 1
          });
-         if (this._picker) {
-            this._setWidth();
-         }
+         this._header.removeClass('ws-hidden');
+         this._setWidth();
       },
-
       _createHeader: function(){
          this._header = $('<span class="controls-MenuButton__header ws-hidden">\
                                   <i class="controls-MenuButton__headerLeft"></i>\

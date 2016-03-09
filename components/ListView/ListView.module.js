@@ -1041,6 +1041,7 @@ define('js!SBIS3.CONTROLS.ListView',
                            this._showItemsToolbar(this._getElementData(this._editingItem.target));
                            this._getItemsToolbar().lockToolbar();
                         }
+                        this.setSelectedKey(model.getKey());
                         event.setResult(this._notify('onAfterBeginEdit', model));
                      }.bind(this),
                      onBeginAdd: function(event, options) {
@@ -1283,7 +1284,7 @@ define('js!SBIS3.CONTROLS.ListView',
             if (loadAllowed && $ws.helpers.isElementVisible(this.getContainer()) &&
                   this._hasNextPage(this._dataSet.getMetaData().more, this._infiniteScrollOffset) && this._hasScrollMore && !this._isLoading()) {
                this._showLoadingIndicator();
-               this._notify('onBeforeDataLoad');
+               this._notify('onBeforeDataLoad', this.getFilter(), this.getSorting(), this._infiniteScrollOffset + this._limit, this._limit);
                this._loader = this._callQuery(this.getFilter(), this.getSorting(), this._infiniteScrollOffset + this._limit, this._limit).addCallback($ws.helpers.forAliveOnly(function (dataSet) {
                   //ВНИМАНИЕ! Здесь стрелять onDataLoad нельзя! Либо нужно определить событие, которое будет
                   //стрелять только в reload, ибо между полной перезагрузкой и догрузкой данных есть разница!
