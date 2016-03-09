@@ -29,9 +29,9 @@ define('js!SBIS3.CONTROLS.Data.Types.Flags', [
              * @cfg {Array.<Boolean|Null>} Выбранные значения согласно словарю
              */
             values: []
-         },
-         _enumerator: undefined
+         }
       },
+
       $constructor: function (cfg) {
          if ('data' in cfg && !('dictionary' in cfg) && !('values' in cfg)) {
             $ws.single.ioc.resolve('ILogger').log(this._moduleName + '::$constructor()', 'Option "data" is deprecated and will be removed in 3.7.4. Use options "dictionary" and "values" instead.');
@@ -48,7 +48,7 @@ define('js!SBIS3.CONTROLS.Data.Types.Flags', [
             }
          }
 
-         if (this._options.dictionary instanceof Object && this._options.dictionary instanceof Array) {
+         if (this._options.dictionary instanceof Object && !(this._options.dictionary instanceof Array)) {
             var dictionary = [];
             for (var index in this._options.dictionary){
                if (this._options.dictionary.hasOwnProperty(index)) {
@@ -58,6 +58,28 @@ define('js!SBIS3.CONTROLS.Data.Types.Flags', [
             this._options.dictionary = dictionary;
          }
       },
+
+      //region SBIS3.CONTROLS.Data.Collection.IEnumerable
+
+      each: function (callback, context) {
+         context = context || this;
+         var enumerator = this.getEnumerator(),
+            index = 0,
+            key;
+         while ((key = enumerator.getNext())) {
+            callback.call(context, key, index++);
+         }
+      },
+
+      getEnumerator: function () {
+         return new ArrayEnumerator({
+            items: this._options.dictionary
+         });
+      },
+
+      //endregion SBIS3.CONTROLS.Data.Collection.IEnumerable
+
+      //region Public methods
 
       /**
        * Возвращает значение флага по названию
@@ -146,31 +168,16 @@ define('js!SBIS3.CONTROLS.Data.Types.Flags', [
                   result = false;
                }
             });
-            if (result && this._options.dictionary === len) {
+            if (result && this._options.dictionary.length === len) {
                return true;
             }
          }
          return false;
       },
 
-      each: function (callback, context) {
-         context = context || this;
-         var enumerator = this.getEnumerator(),
-            key, index = 0;
-         enumerator.reset();
-         while ((key = enumerator.getNext())) {
-            callback.call(context, key, index++);
-         }
-      },
+      //endregion Public methods
 
-      getEnumerator: function () {
-         if (!this._enumerator) {
-            this._enumerator = new ArrayEnumerator({
-               items: this._options.dictionary
-            });
-         }
-         return this._enumerator;
-      },
+      //region Protected methods
 
       _getIndex: function (name) {
          return Array.indexOf(this._options.dictionary, name);
@@ -185,14 +192,17 @@ define('js!SBIS3.CONTROLS.Data.Types.Flags', [
       },
 
       _setAll: function (value) {
-         var data = this._options.data;
-         value = this._prepareValue(value);
-         for (var key in data) {
-            if (data.hasOwnProperty(key)) {
-               data[key] = value;
+         var dictionary = this._options.dictionary,
+            values = this._options.values,
+            index;
+         for (index in dictionary) {
+            if (dictionary.hasOwnProperty(index)) {
+               values[index] = value;
             }
          }
       }
+
+      //endregion Protected methods
    });
 
    Di.register('data.types.flags', Flags);

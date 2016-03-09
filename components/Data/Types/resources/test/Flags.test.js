@@ -1,21 +1,31 @@
-/* global beforeEach, afterEach, describe, context, it */
+/* global beforeEach, afterEach, describe, context, it, assert */
 define([
       'js!SBIS3.CONTROLS.Data.Types.Flags'
    ], function (Flags) {
       'use strict';
 
-      var
-         data, testFlags;
+      var getDict = function() {
+            return ['one', 'two', 'three'];
+         },
+         getValues = function() {
+            return [true, false, null];
+         },
+         dict,
+         values,
+         testFlags;
 
       beforeEach(function () {
-         data = {'one':true, 'two':false, 'three':null};
+         dict = getDict();
+         values = getValues();
          testFlags = new Flags({
-            data: data
+            dictionary: dict,
+            values: values
          });
       });
 
       afterEach(function () {
-         data = undefined;
+         dict = undefined;
+         values = undefined;
          testFlags = undefined;
       });
 
@@ -90,23 +100,38 @@ define([
             });
          });
          describe('.equals()', function () {
-            it('should equals to testFlags', function () {
+            it('should equals to shared data', function () {
                var e = new Flags({
-                  data: data
+                  dictionary: dict,
+                  values: values
                });
-               if (!testFlags.equals(e)) {
-                  assert.fail('testFlags not equals to new flags');
-               }
+               assert.isTrue(testFlags.equals(e));
             });
-            it('should not equals to testEnum when data testFlags and new emun flags', function () {
+            it('should equals to equal data', function () {
                var e = new Flags({
-                  data: {'one':true, 'two':false, 'three':null, 'four': true}
+                  dictionary: getDict(),
+                  values: getValues()
                });
-               if (testFlags.equals(e)) {
-                  assert.fail('testFlags equals to new flags');
-               }
+               assert.isTrue(testFlags.equals(e));
             });
-
+            it('should not equals if dictionary is different', function () {
+               var dict = getDict();
+               dict[0] = 'uno';
+               var e = new Flags({
+                  dictionary: dict,
+                  values: values
+               });
+               assert.isFalse(testFlags.equals(e));
+            });
+            it('should not equals if values is different', function () {
+               var values = getValues();
+               values[1] = null;
+               var e = new Flags({
+                  dictionary: dict,
+                  values: values
+               });
+               assert.isFalse(testFlags.equals(e));
+            });
          });
       });
    }
