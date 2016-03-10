@@ -195,11 +195,15 @@
 
         &.controls-DataGridView-cell-overflow-ellipsis{
            .controls-TreeView__columnValue, .controls-TreeView__folderTitle {
-              display: inline;
+              display: inline-block;
+              width: 100%;
+              overflow: hidden;
+              text-overflow: ellipsis;
+              white-space: nowrap;
            }
-           overflow: @data-grid-cell-overflow;
-           text-overflow: @data-grid-cell-text-overflow;
-           white-space: @data-grid-cell-white-spaces;
+           overflow: hidden;
+           text-overflow: ellipsis;
+           white-space: nowrap;
         }
       }
    }
