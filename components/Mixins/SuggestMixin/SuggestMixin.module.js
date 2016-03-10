@@ -68,8 +68,8 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
             /**
              * @cfg {Number} Устанавливает время задержки перед выполнением поиска. Значение задаётся в миллисекундах.
              * @remark
-             * Временная пауза перед началом поиска дается на формирование пользователем корректного запроса к списку значений
-             * для автодополнения и используется с целью предотвращения выполнения лишних запросов.
+             * Временная пауза перед началом поиска дается на формирование пользователем корректного запроса к списку
+             * значений для автодополнения. Это позволяет предотвратить выполнение лишних запросов.
              * Ввод или удаление символа вновь активирует режим задержки перед началом поиска.
              * Чтобы настроить минимальное количество символов, с которого начинается поиск результатов,
              * используйте опцию {@link startChar}.
@@ -101,11 +101,11 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
              * @variant false Режим выключен.
              * @remark
              * Подробнее о функционале автодополнения вы можете прочитать в описании к классу {@link SBIS3.CONTROLS.SuggestMixin}.
-             * Выпадающий блок со списком значений настраивается с помощью опции {@link list},
-             * список значений можно отфильтровать, настроив опцию {@link listFilter}.
+             * Выпадающий блок со списком значений настраивается с помощью опции {@link list}.
+             * Список значений можно отфильтровать, настроив опцию {@link listFilter}.
              * Если список содержит большое количество значений, то он будет отображен с полосой прокрутки.
-             * Отображение списка с полосой прокрутки можно заменить на режим постраничной навигации, передав в настройки {@link list}
-             * контрола выпадающего блока опции {@link showPaging} и {@link pageSize}.
+             * Отображение списка с полосой прокрутки можно заменить на режим постраничной навигации. Для этого в опции {@link list}
+             * установите для настроек контрола выпадающего блока опции {@link showPaging} и {@link pageSize}.
              * @example
              * <pre class="brush: xml">
              *     <option name="autoShow">true</option>
@@ -116,7 +116,6 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
             autoShow: false,
             /**
              * @cfg {Boolean} Использовать выпадающий блок
-             * <wiTag group="Данные">
              * @variant true если контрол списка сущностей находится внутри выпадающего блока.
              * @variant false если контрол списка сущностей находится вне выпадающего блока.
              */
@@ -136,7 +135,6 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
                  *       itemField: 'РП.ФИО'
                  *    }]
              * </pre>
-             * @group Data
              * @editor InternalOptions?
              */
             resultBindings: [],
@@ -149,22 +147,17 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
 
             /**
              * @typedef {Object} ListControl
-             * @property {String} component Класс контрола, отображающего список сущностей
-             * Должен иметь примеси {SBIS3.CONTROLS.DSMixin}{SBIS3.CONTROLS.Selectable|SBIS3.CONTROLS.MultiSelectable}.
+             * @property {String} component Экземпляр класса контрола, отображающего список сущностей. Наследуется от {@link SBIS3.CONTROLS.DSMixin}.
+             * Должен иметь примеси {SBIS3.CONTROLS.Selectable|SBIS3.CONTROLS.MultiSelectable}.
              * @property {Object} options Опции конструктора контрола
              */
             /**
-             * @cfg {SBIS3.CONTROLS.DSMixin|ListControl} Конфигурация контрола списка сущностей
-             * @var {SBIS3.CONTROLS.DSMixin} Экземпляр класса контрола, отображающего список сущностей.
-             * Должен также иметь примеси {SBIS3.CONTROLS.Selectable|SBIS3.CONTROLS.MultiSelectable}.
-             *
-             * @var {ListControl} Настраивает выпадающий блок со списком значений для автодополнения.
+             * @cfg {ListControl} Настраивает выпадающий блок со списком значений для автодополнения.
              * @remark
              * Подробнее о функционале автодополнения вы можете прочитать в описании к классу {@link SBIS3.CONTROLS.SuggestMixin}.
              * Для минимальной настройки указывается класс контрола, на основе которого будет построено автодополнение,
-             * ключевое поле {@link SBIS3.CONTROLS.DSMixin#keyField) и поля (columns), которые нужно отобразить в выпадающем блоке.
-             * Опции конструктора контрола (options) передадут настройки для нужного отображения выпадающего блока.
-             * При передаче настроек экземпляр контрола создается лениво - при необходимости.
+             * ключевое поле {@link SBIS3.CONTROLS.DSMixin#keyField) и поля {@link SBIS3.CORE.FieldLink/Columns.typedef}, которые нужно отобразить в выпадающем блоке.
+             * Опции конструктора контрола передадут настройки для нужного отображения выпадающего блока.
              * Список значений выпадающего блока можно отфильтровать, настроив опцию {@link listFilter}.
              * @example
              * <pre class="brush:xml">
@@ -188,7 +181,6 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
              * @group Data
              * @see listFilter
              * @see autoShow
-             * @
              */
             list: {
                component: 'js!SBIS3.CONTROLS.ListView',
@@ -196,15 +188,22 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
             },
 
             /**
-             * @cfg {Object} Настраивает фильтр данных для автодополнения
+             * @cfg {Object} Настраивает фильтр для списка значений выпадающего блока автодополнения.
+             * @remark
+             * Подробнее о функционале автодополнения вы можете прочитать в описании к классу {@link SBIS3.CONTROLS.SuggestMixin}.
+             * Опция используется как дополнение опции {@link list} - настройки выпадающего блока.
+             * Опция настраивает фильтр списка значений по указанному полю.
+             * Для работы фильтра необходимо настроить опцию {@link SBIS3.CONTROLS.DropdownList#text}.
              * При изменении полей фильтра производится запрос к источнику данных.
              * @example
              * <pre class="brush:xml">
+             *     <option name="text" bind="myTextField" value=""></option> <!-- Привязываем значения поля связи к полю myTextField в контексте -->
              *     <options name="listFilter">
-             *        <option name="ФИО" bind="myTextField" oneWay="true"></option>
+             *        <option name="ФИО" bind="myTextField" oneWay="true"></option> <!-- Односторонняя привязка к полю myTextField по значениям из поля "ФИО" -->
              *     </options>
              * </pre>
              * @see list
+             * @see SBIS3.CONTROLS.DropdownList#text
              */
 	        listFilter: {},
             /**
