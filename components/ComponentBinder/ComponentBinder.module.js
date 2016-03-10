@@ -49,6 +49,7 @@ define('js!SBIS3.CONTROLS.ComponentBinder', [], function () {
          view.reload(filter, view.getSorting(), 0).addCallback(function(){
             view._container.addClass('controls-GridView__searchMode');
          });
+         this._searchMode = true;
       }
    }
 
@@ -87,6 +88,7 @@ define('js!SBIS3.CONTROLS.ComponentBinder', [], function () {
       view.once('onDataLoad', function(){
          view._container.removeClass('controls-GridView__searchMode');
       });
+      this._searchMode = false;
       //Если мы ничего не искали, то и сбрасывать нечего
       if (this._firstSearch) {
          return;
@@ -150,6 +152,7 @@ define('js!SBIS3.CONTROLS.ComponentBinder', [], function () {
    var ComponentBinder = $ws.proto.Abstract.extend(/**@lends SBIS3.CONTROLS.ComponentBinder.prototype*/{
       $protected : {
          _searchReload : true,
+         _searchMode: false,
          _searchForm : undefined,
          _lastRoot : undefined,
          _lastGroup: {},
@@ -231,7 +234,7 @@ define('js!SBIS3.CONTROLS.ComponentBinder', [], function () {
             view.subscribe('onSetRoot', function(event, curRoot, hierarchy){
                //onSetRoot стреляет после того как перешли в режим поиска (так как он стреляет при каждом релоаде), 
                //при этом не нужно запоминать текущий корень и делать видимым путь
-               if (!self._searchReload){
+               if (!self._searchMode){
                   self._lastRoot = curRoot;
                   //Запоминаем путь в хлебных крошках при смене корня
                   //Похоже на то, что его достаточно запоминать только непосредственно перед началом поиска
@@ -331,7 +334,7 @@ define('js!SBIS3.CONTROLS.ComponentBinder', [], function () {
          view.subscribe('onSetRoot', function(event, id, hier){
             //onSetRoot стреляет после того как перешли в режим поиска (так как он стреляет при каждом релоаде), 
             //при этом не нужно пересчитывать хлебные крошки
-            if (!self._searchReload){
+            if (!self._searchMode){
                var i;
                /*
                 TODO: Хак для того перерисовки хлебных крошек при переносе из папки в папку
