@@ -129,7 +129,7 @@ define('js!SBIS3.CONTROLS.Data.Adapter.Sbis', [
                   } else {
                      return Sbis.FIELD_TYPE.Record;
                   }
-                  return Sbis.FIELD_TYPE.Model;
+                  break;
                default:
                   return Sbis.FIELD_TYPE.String;
             }
