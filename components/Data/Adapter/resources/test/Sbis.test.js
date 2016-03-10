@@ -2,13 +2,15 @@
 define([
    'js!SBIS3.CONTROLS.Data.Adapter.Sbis',
    'js!SBIS3.CONTROLS.Data.Model',
-   'js!SBIS3.CONTROLS.Data.Collection.RecordSet'
-], function (SbisAdapter, Model, RecordSet) {
+   'js!SBIS3.CONTROLS.Data.Collection.RecordSet',
+   'js!SBIS3.CONTROLS.Data.Record',
+   'js!SBIS3.CONTROLS.Data.Source.DataSet'
+], function (SbisAdapter, Model, RecordSet, Record, DataSet) {
       'use strict';
 
       describe('SBIS3.CONTROLS.Data.Adapter.Sbis', function () {
          var data,
-            adapterInstance;
+            adapter;
 
          beforeEach(function () {
             data = {
@@ -27,26 +29,66 @@ define([
                ]
             };
 
-            adapterInstance = new SbisAdapter();
+            adapter = new SbisAdapter();
          });
 
          afterEach(function () {
             data = undefined;
-            adapterInstance = undefined;
+            adapter = undefined;
+         });
+
+         describe('.forTable()', function () {
+            it('should return table adapter', function () {
+               var adapter = new SbisAdapter();
+               assert.isTrue(
+                  $ws.helpers.instanceOfModule(
+                     adapter.forTable(),
+                     'SBIS3.CONTROLS.Data.Adapter.SbisTable'
+                  )
+               );
+            });
+            it('should pass data to the table adapter', function () {
+               var data = {d: [], s: []},
+                  adapter = new SbisAdapter();
+               assert.strictEqual(
+                  adapter.forTable(data).getData(),
+                  data
+               );
+            });
+         });
+
+         describe('.forRecord()', function () {
+            it('should return record adapter', function () {
+               var adapter = new SbisAdapter();
+               assert.isTrue(
+                  $ws.helpers.instanceOfModule(
+                     adapter.forRecord(),
+                     'SBIS3.CONTROLS.Data.Adapter.SbisRecord'
+                  )
+               );
+            });
+            it('should pass data to the record adapter', function () {
+               var data = {d: [], s: []},
+                  adapter = new SbisAdapter();
+               assert.strictEqual(
+                  adapter.forRecord(data).getData(),
+                  data
+               );
+            });
          });
 
          describe('.getProperty()', function () {
             it('should return the property value', function () {
                assert.strictEqual(
                   123,
-                  adapterInstance.getProperty({
+                  adapter.getProperty({
                      items: data,
                      total: 123
                   }, 'total')
                );
                assert.strictEqual(
                   456,
-                  adapterInstance.getProperty({
+                  adapter.getProperty({
                      d: data.d,
                      s: data.s,
                      n: 456
@@ -54,7 +96,7 @@ define([
                );
                assert.strictEqual(
                   789,
-                  adapterInstance.getProperty({
+                  adapter.getProperty({
                      employees: {
                         d: data.d,
                         s: data.s,
@@ -63,25 +105,25 @@ define([
                   }, 'employees.n')
                );
                assert.isUndefined(
-                  adapterInstance.getProperty(data, 'total')
+                  adapter.getProperty(data, 'total')
                );
                assert.isUndefined(
-                  adapterInstance.getProperty(data)
+                  adapter.getProperty(data)
                );
             });
 
             it('should return undefined on invalid data', function () {
                assert.isUndefined(
-                  adapterInstance.getProperty({})
+                  adapter.getProperty({})
                );
                assert.isUndefined(
-                  adapterInstance.getProperty('')
+                  adapter.getProperty('')
                );
                assert.isUndefined(
-                  adapterInstance.getProperty(0)
+                  adapter.getProperty(0)
                );
                assert.isUndefined(
-                  adapterInstance.getProperty()
+                  adapter.getProperty()
                );
             });
          });
@@ -89,7 +131,7 @@ define([
 
          describe('.setProperty()', function () {
             it('should set the property value', function () {
-               adapterInstance.setProperty(data, 'n', 456);
+               adapter.setProperty(data, 'n', 456);
                assert.strictEqual(
                   456,
                   data.n
@@ -113,7 +155,7 @@ define([
                      total: 789
                   }
                };
-               adapterInstance.setProperty(moreData, 'employees.total', 987);
+               adapter.setProperty(moreData, 'employees.total', 987);
                assert.strictEqual(
                   987,
                   moreData.employees.total
@@ -131,7 +173,7 @@ define([
                   moreData.employees.items.d[5][1]
                );
 
-               adapterInstance.setProperty(data, 'c.d.e.f', 'g');
+               adapter.setProperty(data, 'c.d.e.f', 'g');
                assert.strictEqual(
                   'g',
                   data.c.d.e.f
@@ -456,6 +498,13 @@ define([
                   adapterInstance.add({d: [30, 'aaa']}, -1);
                });
             });
+
+            it('should get s from new record', function () {
+               var adapter = new SbisAdapter().forTable({d: [], s: []}),
+                  s = [{'n': 'Ид', 't': 'Число целое'}];
+               adapter.add({d: [1], s:s});
+               assert.deepEqual(adapter.getData().s, s);
+            });
          });
 
          describe('.at()', function () {
@@ -569,6 +618,13 @@ define([
                   adapterInstance.replace({d: [14]}, 99);
                });
             });
+
+            it('should replace s in raw data', function () {
+               var s = [{'n': 'Ид', 't': 'Число целое'}],
+                  adapter = new SbisAdapter().forTable({d: [1], s: []});
+               adapter.replace({d: [11], s: s}, 0);
+               assert.strictEqual(adapter.getData().s,  s);
+            });
          });
 
          describe('.move()', function () {
@@ -610,6 +666,17 @@ define([
                );
                assert.strictEqual(
                   'Арбузнов',
+                  data.d[5][1]
+               );
+            });
+            it('should not move Петров', function () {
+               adapterInstance.move(1, 1);
+               assert.strictEqual(
+                  'Петров',
+                  data.d[1][1]
+               );
+               assert.strictEqual(
+                  'Годолцов',
                   data.d[5][1]
                );
             });
@@ -700,6 +767,25 @@ define([
                });
             });
          });
+
+         describe('.getEmpty()', function () {
+            it('should return empty raw data', function () {
+               assert.deepEqual(
+                  adapterInstance.getEmpty(),
+                  {d:[], s: data.s}
+               );
+            });
+         });
+
+         describe('.getData()', function () {
+            it('should return raw data', function () {
+               assert.deepEqual(
+                  adapterInstance.getData(),
+                  data
+               );
+            });
+         });
+
       });
    }
 );
