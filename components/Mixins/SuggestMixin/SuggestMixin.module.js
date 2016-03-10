@@ -155,14 +155,14 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
              */
             /**
              * @cfg {SBIS3.CONTROLS.DSMixin|ListControl} Конфигурация контрола списка сущностей
-             * @var {SBIS3.CONTROLS.DSMixin} инстанс контрола, отображающего список сущностей.
+             * @var {SBIS3.CONTROLS.DSMixin} Экземпляр класса контрола, отображающего список сущностей.
              * Должен также иметь примеси {SBIS3.CONTROLS.Selectable|SBIS3.CONTROLS.MultiSelectable}.
              *
              * @var {ListControl} Настраивает выпадающий блок со списком значений для автодополнения.
              * @remark
              * Подробнее о функционале автодополнения вы можете прочитать в описании к классу {@link SBIS3.CONTROLS.SuggestMixin}.
              * Для минимальной настройки указывается класс контрола, на основе которого будет построено автодополнение,
-             * ключевое поле (keyField) и поля (columns), которые нужно отобразить в выпадающем блоке.
+             * ключевое поле {@link SBIS3.CONTROLS.DSMixin#keyField) и поля (columns), которые нужно отобразить в выпадающем блоке.
              * Опции конструктора контрола (options) передадут настройки для нужного отображения выпадающего блока.
              * При передаче настроек экземпляр контрола создается лениво - при необходимости.
              * Список значений выпадающего блока можно отфильтровать, настроив опцию {@link listFilter}.
@@ -188,6 +188,7 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
              * @group Data
              * @see listFilter
              * @see autoShow
+             * @
              */
             list: {
                component: 'js!SBIS3.CONTROLS.ListView',
@@ -195,7 +196,7 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
             },
 
             /**
-             * @cfg {Object} Фильтр данных для автодополнения
+             * @cfg {Object} Настраивает фильтр данных для автодополнения
              * При изменении полей фильтра производится запрос к источнику данных.
              * @example
              * <pre class="brush:xml">
