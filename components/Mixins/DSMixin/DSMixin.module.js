@@ -113,9 +113,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
          _dotItemTpl: null,
          _options: {
             /**
-             * @cfg {String} Поле элемента коллекции, которое является идентификатором записи
-             * @remark
-             * Выбранный элемент в коллекции задаётся указанием ключа элемента.
+             * @cfg {String} Определяет поле элемента коллекции, которое является идентификатором записи.
              * @example
              * <pre class="brush:xml">
              *     <option name="keyField">Идентификатор</option>
@@ -129,23 +127,22 @@ define('js!SBIS3.CONTROLS.DSMixin', [
              */
             keyField : null,
             /**
-             * @cfg {String} Поле элемента коллекции, из которого отображать данные
-             * @example
-             * <pre class="brush:xml">
-             *     <option name="displayField">Название</option>
-             * </pre>
+             * @cfg {String} Определяет поле элемента коллекции, данные из которого нужно отображать.
              * @remark
-             * Данные задаются либо в опции {@link items}, либо методом {@link setDataSource}.
+             * Данные задаются либо с помощью опции {@link items}, либо методом {@link setDataSource}.
              * Источник данных может состоять из множества полей. В данной опции необходимо указать имя поля, данные
              * которого нужно отобразить в выпадающем списке.
+             * @example
+             * <pre class="brush:xml">
+             *     <option name="displayField">НазваниеПоля</option>
+             * </pre>
              * @see keyField
              * @see items
              * @see setDataSource
              */
             displayField: null,
              /**
-              * @cfg {Array.<Object.<String,String>>} Масив объектов. Набор исходных данных, по которому строится отображение
-              * @name SBIS3.CONTROLS.ListControlMixin#items
+              * @cfg {Array.<Object.<String,String>>} Определяет набор исходных данных, по которому строится отображение.
               * @remark
               * !Важно: данные для коллекции элементов можно задать либо в этой опции,
               * либо через источник данных методом {@link setDataSource}.
@@ -235,16 +232,16 @@ define('js!SBIS3.CONTROLS.DSMixin', [
              */
             userItemAttributes : null,
             /**
-             * @cfg {String|HTMLElement|jQuery} Отображаемый контент при отсутствии данных
+             * @cfg {String|HTMLElement|jQuery} Опция устанавливает текст, который будет отображаться как при отсутствии данных, так и в результате {@link groupBy фильтрации}.
              * @example
              * <pre class="brush:xml">
              *     <option name="emptyHTML">Нет данных</option>
              * </pre>
-             * @remark
-             * Опция задаёт текст, отображаемый как при абсолютном отсутствии данных, так и в результате {@link groupBy фильтрации}.
+             * @translatable
              * @see items
              * @see setDataSource
              * @see groupBy
+             * @see setEmptyHTML
              */
             emptyHTML: '',
             /**
@@ -1093,7 +1090,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
          }
       },
       /**
-       * Установить что отображается при отсутствии записей.
+       * Устанавливает текст, который будет отображаться при отсутствии записей.
        * @param html Содержимое блока.
        * @example
        * <pre>
