@@ -1756,7 +1756,7 @@ define('js!SBIS3.CONTROLS.ListView',
             if (!this._dragStartHandler) {
                this._dragStartHandler = this._onDragStart.bind(this);
             }
-            this._getItemsContainer()[allowDragNDrop ? 'bind' : 'unbind']('mousedown', this._dragStartHandler);
+            this._getItemsContainer()[allowDragNDrop ? 'on' : 'off']('mousedown', '.js-controls-ListView__item', this._dragStartHandler);
          },
          /**
           * Получить текущую конфигурацию перемещения элементов с помощью DragNDrop.
