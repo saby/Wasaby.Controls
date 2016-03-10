@@ -1782,9 +1782,10 @@ define('js!SBIS3.CONTROLS.ListView',
                return;
             }
             var
-                target = this._findItemByElement($(e.target)),
-                id = target.data('id');
-            if (id) {
+                id,
+                target = this._findItemByElement($(e.target));
+            if (target.length) {
+               id = target.data('id');
                this.setCurrentElement(e, {
                   keys: this._getDragItems(id),
                   targetId: id,
