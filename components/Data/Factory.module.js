@@ -73,9 +73,6 @@ define('js!SBIS3.CONTROLS.Data.Factory', [
                   return value.toString();
                }
                return $ws.proto.TimeInterval.toString(value);
-            case 'Text':
-            case 'String':
-               return value;
             case 'Boolean':
                return !!value;
             case 'Array':
