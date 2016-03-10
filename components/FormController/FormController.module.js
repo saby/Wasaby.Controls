@@ -77,7 +77,12 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl'],
              * </options>
              * </pre>
              */
-            initValues: null
+            initValues: null,
+            /**
+             * @cfg {Boolean} Закрывать панель после команды submit
+             * По умолчанию панель после сохранения закрывается.
+             */
+            closePanelAfterSubmit: true
          }
       },
       
@@ -115,44 +120,57 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl'],
        * </pre>
        */
       submit: function(){
-         this._saveRecord(true);
+         return this._saveRecord(true);
       },
 
       _saveRecord: function(hideQuestion){
          var self = this,
+             dResult = new $ws.proto.Deferred(),
              questionConfig;
 
          questionConfig = {
-            useCancelButton: true,
             invertDefaultButton: true,
             detail: 'Чтобы продолжить редактирование, нажмите "Отмена".'
          };
 
-         if (hideQuestion){
-            this._updateRecord();
-            return;
+         //Если closePanelAfterSubmit = false, кнопка "Отмена" эквивалентна кнопке "Нет", поэтому показываем ее только когда она нужна
+         if (this._options.closePanelAfterSubmit){
+            questionConfig.useCancelButton = true;
          }
 
-         $ws.helpers.question('Сохранить изменения?', questionConfig, this).addCallback(function(result){
-            if (typeof result === 'string'){
-               self._saving = false;
-               return;
-            }
-            self._saving = true;
-            if (result){
-               self._updateRecord();
-            }
-            else{
-               self.getTopParent().cancel();
-            }
-         });
+         if (hideQuestion){
+            this._saving = true;
+            this._updateRecord(dResult, this._options.closePanelAfterSubmit);
+         }
+         else{
+            $ws.helpers.question('Сохранить изменения?', questionConfig, this).addCallback(function(result){
+               if (typeof result === 'string'){
+                  self._saving = false;
+                  return;
+               }
+               self._saving = true;
+               if (result){
+                  self._updateRecord(dResult, true);
+               }
+               else{
+                  dResult.callback();
+                  self.getTopParent().cancel();
+               }
+            });
+         }
+         return dResult;
       },
 
-      _updateRecord: function(){
+      _updateRecord: function(dResult, closePanelAfterSubmit){
          var def = this._options.dataSource.update(this._options.record);
-         def.addCallback(function(){
-            this.getTopParent().ok();
-         }.bind(this));
+         dResult.dependOn(def.addCallback(function(){
+            if (closePanelAfterSubmit){
+               this.getTopParent().ok();
+            }
+            else{
+               this._saving = false;
+            }
+         }.bind(this)));
       },
 
       _readRecord: function(key){
