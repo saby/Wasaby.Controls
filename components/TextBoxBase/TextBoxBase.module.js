@@ -60,10 +60,17 @@ define('js!SBIS3.CONTROLS.TextBoxBase',
          ],
          _options: {
             /**
-             * @cfg {String} Текст в поле ввода
+             * @cfg {String} Устанавливает текст в поле ввода.
+             * @remark
+             * Помимо описания текста, который будет отображен в поле ввода, используется в настройке параметров фильтрации
+             * списка значений для автодополнения, с опцией {@link SBIS3.CONTROLS.SuggestMixin#listFilter}.
+             * Атрибут bind привязывает значение поля ввода к полю контекста.
              * @example
              * <pre class="brush:xml">
-             *     <option name="text">Какой-то текст, с которым построится поле ввода</option>
+             *     <!-- Устанавливаем текст в поле ввода -->
+             *        <option name="text">Текст, с которым построится поле ввода</option>
+             *     <!-- Привязываем значения поля связи к полю myTextField в контексте для настройки фильтрации списка значений автодополнения-->
+             *        <option name="text" bind="myTextField" value="">
              * </pre>
              * @see trim
              * @see maxLength
@@ -71,6 +78,7 @@ define('js!SBIS3.CONTROLS.TextBoxBase',
              * @see getText
              * @see setValue
              * @see getValue
+             * @see SBIS3.CONTROLS.SuggestMixin#listFilter
              * @translatable
              */
             text: '',
