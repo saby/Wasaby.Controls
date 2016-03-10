@@ -300,8 +300,14 @@ define([
 
          it('should get value from enum', function (){
             var
-               enumNew = new Enum({data:['one', 'tt'], 'currentValue':1}),
-               enumOld = new $ws.proto.Enum({'availableValues':{'0': 'one', '1': 'tt'}, 'currentValue':0});
+               enumNew = new Enum({
+                  dictionary: ['one', 'tt'],
+                  currentValue: 1
+               }),
+               enumOld = new $ws.proto.Enum({
+                  availableValues: {'0': 'one', '1': 'tt'},
+                  currentValue: 0
+               });
                sbisModel = new Model({
                adapter: new AdapterSbis(),
                rawData: {
