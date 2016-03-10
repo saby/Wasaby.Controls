@@ -158,6 +158,7 @@ define(
                this.setInterval(this._options.interval);
             }
 
+            this.setTooltip(this._options.tooltip);
             this.subscribe('onFocusOut', self._updateTextByTimeInterval);
             this.subscribe('onInputFinished',self._updateTextByTimeInterval);
          },
@@ -319,15 +320,10 @@ define(
          },
 
          setText: function(text){
-            text = this._getTextCorrespondingToMask(text);
-            this._updateIntervalByText(text);
-            if (text == this._getEmptyText()){
-               this._options.text = text;
-            }
-            else{
-               this._options.text = this._getTextByTimeInterval();
-            }
-            TimeInterval.superclass.setText.apply(this, [text]);
+            this.formatModel.setText(text, this._maskReplacer);
+            this._updateIntervalByText();
+            text = this._getTextByTimeInterval();
+            TimeInterval.superclass.setText.call(this, text);
          },
          /**
           * Получить текст по текущему значению timeInterval.
