@@ -536,9 +536,8 @@ define('js!SBIS3.CONTROLS.DSMixin', [
                       this._notify('onItemsReady');
                       self._itemsReadyCallback();
                       self._dataLoadedCallback();
-
+                      self.redraw();
                    }
-                   self.redraw();
                    //self._notify('onBeforeRedraw');
                    return list;
                 }, self))
@@ -743,14 +742,24 @@ define('js!SBIS3.CONTROLS.DSMixin', [
          this._redraw();
       },
       _redraw: function () {
-         var records;
+         var records,
+               self = this;
 
          if (this._items) {
             this._clearItems();
-            this._needToRedraw = false;
-            records = this._getRecordsForRedraw();
-            this._toggleEmptyData(!records.length && this._options.emptyHTML);
-            this._drawItems(records);
+            /**
+             * Проблема в том, что если не ждать, то браузер настолько быстрый, что не пересчитывает изменение scrollTop
+             * (а он на самом деле меняется после удаления всех элементов) - в результате остается какой был (или какой
+             * смог оставить, потому что высота сменилась) Ставим условную задержку, чтобы scrollTop у window изменился
+             * до 0
+             */
+            setTimeout(function(){
+               self._needToRedraw = false;
+               records = self._getRecordsForRedraw();
+               self._toggleEmptyData(!records.length && self._options.emptyHTML);
+               self._drawItems(records);
+            }, 42);
+
          }
       },
       _destroySearchBreadCrumbs: function(){
