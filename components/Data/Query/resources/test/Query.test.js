@@ -3,11 +3,18 @@ define([
    'js!SBIS3.CONTROLS.Data.Query.Query'
 ], function (Query) {
    'use strict';
-   var query;
-   beforeEach(function (){
-      query = new Query();
-   });
+
    describe('SBIS3.CONTROLS.Data.Query.Query', function () {
+      var query;
+
+      beforeEach(function () {
+         query = new Query();
+      });
+
+      afterEach(function () {
+         query = undefined;
+      });
+
       describe('.select', function (){
          it('should set select from array', function () {
             var fields = ['id', 'name'];
