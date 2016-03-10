@@ -524,7 +524,9 @@ define('js!SBIS3.CONTROLS.DSMixin', [
                       self._notify('onDataLoad', list);
                       self._dataSet.setMetaData(list.getMetaData());
                       self._items.assign(list);
-                      self._dataSet.assign(list);
+                      if (self._items !== self._dataSet) {
+                        self._dataSet.assign(list);
+                      }
                       self._dataLoadedCallback();
                    }
                    else {
