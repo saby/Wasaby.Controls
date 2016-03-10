@@ -210,6 +210,10 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                   eip = this._getEditingEip(),
                   record,
                   endEditResult;
+               //При начале редактирования строки(если до этого так же что-то редактировалось), данный метод вызывается два раза:
+               //первый по уходу фокуса с предидущей строки, второй при начале редактирования новой строки. Если второй вызов метода
+               //произойдёт раньше чем завершится первый, то мы два раза попытаемся завершить редактирование, что ведёт к 2 запросам
+               //на сохранения записи. Чтобы это предотвратить добавим проверку на то, что сейчас уже идёт сохранение(this._savingDeferred.isReady())
                if (eip && this._savingDeferred.isReady()) {
                   record = eip.getEditingRecord();
                   withSaving = withSaving && record.isChanged();
