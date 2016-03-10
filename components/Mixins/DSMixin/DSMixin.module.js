@@ -283,7 +283,11 @@ define('js!SBIS3.CONTROLS.DSMixin', [
              * Например для отрисовки кнопко +Документ, +Папка.
              * Если задан, то под всеми(!) элементами появится контейнер с содержимым этого шаблона
              */
-            footerTpl: undefined
+            footerTpl: undefined,
+            /**
+             * @cfg {Boolean} Автоперерисовка при изменении данных
+             */
+            autoRedraw: true
          },
          _loader: null
       },
@@ -518,9 +522,9 @@ define('js!SBIS3.CONTROLS.DSMixin', [
                    self._toggleIndicator(false);
                    if (self._items) {
                       self._notify('onDataLoad', list);
+                      self._dataSet.setMetaData(list.getMetaData());
                       self._items.assign(list);
                       self._dataSet.assign(list);
-                      self._dataSet.setMetaData(list.getMetaData());
                       self._dataLoadedCallback();
                    }
                    else {
@@ -532,9 +536,8 @@ define('js!SBIS3.CONTROLS.DSMixin', [
                       this._notify('onItemsReady');
                       self._itemsReadyCallback();
                       self._dataLoadedCallback();
-
+                      self.redraw();
                    }
-                   self.redraw();
                    //self._notify('onBeforeRedraw');
                    return list;
                 }, self))
@@ -739,14 +742,24 @@ define('js!SBIS3.CONTROLS.DSMixin', [
          this._redraw();
       },
       _redraw: function () {
-         var records;
+         var records,
+               self = this;
 
          if (this._items) {
             this._clearItems();
-            this._needToRedraw = false;
-            records = this._getRecordsForRedraw();
-            this._toggleEmptyData(!records.length && this._options.emptyHTML);
-            this._drawItems(records);
+            /**
+             * Проблема в том, что если не ждать, то браузер настолько быстрый, что не пересчитывает изменение scrollTop
+             * (а он на самом деле меняется после удаления всех элементов) - в результате остается какой был (или какой
+             * смог оставить, потому что высота сменилась) Ставим условную задержку, чтобы scrollTop у window изменился
+             * до 0
+             */
+            setTimeout(function(){
+               self._needToRedraw = false;
+               records = self._getRecordsForRedraw();
+               self._toggleEmptyData(!records.length && self._options.emptyHTML);
+               self._drawItems(records);
+            }, 42);
+
          }
       },
       _destroySearchBreadCrumbs: function(){
@@ -802,12 +815,20 @@ define('js!SBIS3.CONTROLS.DSMixin', [
          }
          this._itemsInstances = {};
          if (container.length){
-            var itemsContainers = $('.controls-ListView__item, .controls-GroupBy', container.get(0));
-            /*Удаляем вложенные компоненты*/
-            this._destroyControls(itemsContainers);
+            var itemsContainers;
+            //В случае, когда это полная перерисовка, надо дестроить контролы только в итемах и группировках
+            if (container.get(0) == this._getItemsContainer().get(0)) {
+               itemsContainers = $('.controls-ListView__item, .controls-GroupBy', container.get(0));
+               /*Удаляем вложенные компоненты*/
+               this._destroyControls(itemsContainers);
 
-            /*Удаляем сами items*/
-            itemsContainers.remove();
+               /*Удаляем сами items*/
+               itemsContainers.remove();
+            }
+            else {
+               this._destroyControls(container);
+            }
+
          }
       },
 
@@ -1109,7 +1130,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
          ladderDecorator && ladderDecorator.setMarkLadderColumn(true);
          item = item.getContents();
          var target = this._getTargetContainer(item),
-            currentItemAt = at > -1 ? this._getItemContainerByIndex(target, at - 1) : null,
+            currentItemAt = at > 0 ? this._getItemContainerByIndex(target, at - 1) : null,
             template = this._getItemTemplate(item),
             newItemContainer = this._buildTplItem(item, template),
             rows;
@@ -1117,6 +1138,9 @@ define('js!SBIS3.CONTROLS.DSMixin', [
          if (currentItemAt && currentItemAt.length) {
             newItemContainer.insertAfter(currentItemAt);
             rows = [newItemContainer.prev().prev(), newItemContainer.prev(), newItemContainer, newItemContainer.next(), newItemContainer.next().next()];
+         } else if(at === 0) {
+            newItemContainer.insertBefore(this._getItemContainerByIndex(target, 0));
+            rows = [newItemContainer, newItemContainer.next(), newItemContainer.next().next()];
          } else {
             newItemContainer.appendTo(target);
             rows = [newItemContainer.prev().prev(), newItemContainer.prev(), newItemContainer, newItemContainer.next()];
@@ -1139,7 +1163,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
          }
       },
       _isNeedToRedraw: function(){
-      	return this._needToRedraw && !!this._getItemsContainer();
+      	return this._options.autoRedraw && this._needToRedraw && !!this._getItemsContainer();
       },
 
       _moveItem: function(item, to){

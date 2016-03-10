@@ -3,7 +3,7 @@
         {{? it.itemTpl}}
             {{=it.itemTpl(it.item)}}
         {{??}}
-            {{=it.item.get(it.displayField)}}
+            {{= $ws.helpers.escapeHtml(it.item.get(it.displayField))}}
         {{?}}
     </span>
     <span class="controls-FieldLink__linkItem-cross"/>
