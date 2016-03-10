@@ -1091,7 +1091,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
       },
       /**
        * Устанавливает текст, который будет отображаться при отсутствии записей.
-       * @param html Содержимое блока.
+       * @param html Отображаемый текст.
        * @example
        * <pre>
        *     DataGridView.setEmptyHTML('Нет записей');
