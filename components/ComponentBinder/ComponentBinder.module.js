@@ -366,7 +366,7 @@ define('js!SBIS3.CONTROLS.ComponentBinder', [], function () {
 
                for (i = 0; i < self._path.length; i++){
                   if (self._path[i].id == id) {
-                     self._path.splice(i);
+                     self._path.splice(i, self._path.length - i);
                      break;
                   }
                }
