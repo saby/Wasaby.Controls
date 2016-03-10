@@ -88,14 +88,6 @@ define('js!SBIS3.CONTROLS.Data.Adapter.Sbis', [
                return $ws.core.merge({
                   _type: 'recordset'
                }, obj.getRawData() || {});
-            } else if ($ws.helpers.instanceOfModule(obj, 'SBIS3.CONTROLS.Record')) {
-               return $ws.core.merge({
-                  _type: 'record'
-               }, obj.getRaw() || {});
-            } else if ($ws.helpers.instanceOfModule(obj, 'SBIS3.CONTROLS.DataSet')) {
-               return $ws.core.merge({
-                  _type: 'recordset'
-               }, obj.getRawData() || {});
             } else if (obj instanceof Date) {
                return obj.toSQL();
             } else {
@@ -137,9 +129,11 @@ define('js!SBIS3.CONTROLS.Data.Adapter.Sbis', [
                   } else {
                      return Sbis.FIELD_TYPE.Record;
                   }
-                  break;
+                  return Sbis.FIELD_TYPE.Model;
+               default:
+                  return Sbis.FIELD_TYPE.String;
             }
-            return Sbis.FIELD_TYPE.String;
+
          },
 
          makeS = function (obj) {

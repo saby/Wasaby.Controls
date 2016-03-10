@@ -101,6 +101,14 @@ define([
                assert.isFalse(testEnum.equals([]));
             });
          });
+         describe('.getEnumerator', function (){
+            it('should return enumerator', function (){
+               assert.isTrue($ws.helpers.instanceOfModule(
+                  testEnum.getEnumerator(),
+                  'SBIS3.CONTROLS.Data.Collection.ArrayEnumerator')
+               );
+            });
+         });
       });
    }
 );

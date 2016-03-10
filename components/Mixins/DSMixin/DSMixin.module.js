@@ -283,7 +283,11 @@ define('js!SBIS3.CONTROLS.DSMixin', [
              * Например для отрисовки кнопко +Документ, +Папка.
              * Если задан, то под всеми(!) элементами появится контейнер с содержимым этого шаблона
              */
-            footerTpl: undefined
+            footerTpl: undefined,
+            /**
+             * @cfg {Boolean} Автоперерисовка при изменении данных
+             */
+            autoRedraw: true
          },
          _loader: null
       },
@@ -1109,14 +1113,17 @@ define('js!SBIS3.CONTROLS.DSMixin', [
          ladderDecorator && ladderDecorator.setMarkLadderColumn(true);
          item = item.getContents();
          var target = this._getTargetContainer(item),
-            nextSibling = at > -1 ? this._getItemContainerByIndex(target, at) : null,
+            currentItemAt = at > 0 ? this._getItemContainerByIndex(target, at - 1) : null,
             template = this._getItemTemplate(item),
             newItemContainer = this._buildTplItem(item, template),
             rows;
          this._addItemAttributes(newItemContainer, item);
-         if (nextSibling && nextSibling.length) {
-            newItemContainer.insertBefore(nextSibling);
-            rows = [newItemContainer.prev().prev(), newItemContainer.prev(), newItemContainer, nextSibling, nextSibling.next()];
+         if (currentItemAt && currentItemAt.length) {
+            newItemContainer.insertAfter(currentItemAt);
+            rows = [newItemContainer.prev().prev(), newItemContainer.prev(), newItemContainer, newItemContainer.next(), newItemContainer.next().next()];
+         } else if(at === 0) {
+            newItemContainer.insertBefore(this._getItemContainerByIndex(target, 0));
+            rows = [newItemContainer, newItemContainer.next(), newItemContainer.next().next()];
          } else {
             newItemContainer.appendTo(target);
             rows = [newItemContainer.prev().prev(), newItemContainer.prev(), newItemContainer, newItemContainer.next()];
@@ -1139,7 +1146,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
          }
       },
       _isNeedToRedraw: function(){
-      	return this._needToRedraw && !!this._getItemsContainer();
+      	return this._options.autoRedraw && this._needToRedraw && !!this._getItemsContainer();
       },
 
       _moveItem: function(item, to){

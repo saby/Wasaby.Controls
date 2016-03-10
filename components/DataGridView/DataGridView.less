@@ -188,10 +188,13 @@
          vertical-align: @data-grid-cell-vertical-align;
          box-sizing: @data-grid-cell-box-sizing;
          line-height: @data-grid-cell-line-height;
+         // Clearfix что бы была высота у folderTitle и columnValue
+         .controls-TreeView__folderTitle, .controls-TreeView__columnValue {
+            overflow: hidden;
+         }
 
         &.controls-DataGridView-cell-overflow-ellipsis{
-           /* TODO: решение для выпуска 3.7.3.100. Cмотри commit message */
-           & > div {
+           .controls-TreeView__columnValue, .controls-TreeView__folderTitle {
               display: inline;
            }
            overflow: @data-grid-cell-overflow;
