@@ -131,9 +131,9 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
              * @example
              * <pre>
              *    resultBindings: [{
-                 *       contextField: 'ФИО',
-                 *       itemField: 'РП.ФИО'
-                 *    }]
+             *       contextField: 'ФИО',
+             *       itemField: 'РП.ФИО'
+             *    }]
              * </pre>
              * @editor InternalOptions?
              */
@@ -147,25 +147,27 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
 
             /**
              * @typedef {Object} ListControl
-             * @property {String} component Экземпляр класса контрола, отображающего список сущностей. Наследуется от {@link SBIS3.CONTROLS.DSMixin}.
-             * Должен иметь примеси {SBIS3.CONTROLS.Selectable|SBIS3.CONTROLS.MultiSelectable}.
-             * @property {Object} options Опции конструктора контрола
+             * @property {String} component Класс контрола, который будет использоваться для отображения список сущностей.
+             * По умолчанию используется {@link SBIS3.CONTROLS.ListView}. Однако можно указать любой другой контрол, который
+             * наследует функционал {@link SBIS3.CONTROLS.DSMixin}, {@link SBIS3.CONTROLS.Selectable} и {@link SBIS3.CONTROLS.MultiSelectable}.
+             * @property {Object} options Опции контрола, которые будут использованы при его построении.
              */
             /**
-             * @cfg {ListControl} Настраивает выпадающий блок со списком значений для автодополнения.
+             * @cfg {ListControl} Настраивает выпадающий блок, отображающий список значений для автодополнения.
              * @remark
              * Подробнее о функционале автодополнения вы можете прочитать в описании к классу {@link SBIS3.CONTROLS.SuggestMixin}.
              * Для минимальной настройки указывается класс контрола, на основе которого будет построено автодополнение,
-             * ключевое поле {@link SBIS3.CONTROLS.DSMixin#keyField) и поля {@link SBIS3.CORE.FieldLink/Columns.typedef}, которые нужно отобразить в выпадающем блоке.
-             * Опции конструктора контрола передадут настройки для нужного отображения выпадающего блока.
+             * ключевое поле {@link SBIS3.CONTROLS.DSMixin#keyField) и список полей {@link SBIS3.CORE.FieldLink/Columns.typedef},
+             * которые нужно отобразить в выпадающем блоке.
              * Список значений выпадающего блока можно отфильтровать, настроив опцию {@link listFilter}.
+             * При работе с полем связи для построения результатов автодополнения используется класс {@link SBIS3.CONTROLS.DataGridView}
              * @example
              * <pre class="brush:xml">
              *     <options name="list">
-             *       <option name="component" value="js!SBIS3.CONTROLS.DataGridView"></option>
+             *       <option name="component" value="js!SBIS3.CONTROLS.DataGridView"></option> <!-- Указываем класс контрола, на его основе строятся результаты автодополнения -->
              *       <options name="options">
-             *          <option name="keyField" value="@Пользователь"></option>
-             *          <options name="columns" type="array">
+             *          <option name="keyField" value="@Пользователь"></option> <!-- Указываем ключевое поле -->
+             *          <options name="columns" type="array"> <!-- Производим настройку колонок -->
              *             <options>
              *                <option name="title">№</option>
              *                <option name="field">@Пользователь</option>
