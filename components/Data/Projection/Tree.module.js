@@ -284,9 +284,11 @@ define('js!SBIS3.CONTROLS.Data.Projection.Tree', [
          tree: function (items, currentMap, options) {
             //TODO: enumeration with currentMap order
             var push = Array.prototype.push,
+               logStamp = 'SBIS3.CONTROLS.Data.Projection.Tree::sorters.tree',
                idProperty = options.idProperty,
                parentProperty = options.parentProperty,
                hierIndex = {},
+               parentsProcessed = {},
                buildHierarchy = function(parent) {
                   var result = [],
                      parentData = parent.getContents(),
@@ -296,26 +298,32 @@ define('js!SBIS3.CONTROLS.Data.Projection.Tree', [
                      ) : parentData,
                      children = hierIndex[parentId] || [];
 
-                  //FIXME: для совместимости с логикой контролов - корневые записи дерева могут вообще не иметь поля с именем parentProperty
-                  if (!children.length && parentId === null && parent.isRoot()) {
-                     //Считаем, что элементы коллекции без поля parentProperty находятся в корне
-                     children = hierIndex[undefined] || [];
+                  if (parentsProcessed.hasOwnProperty(parentId)) {
+                     $ws.single.ioc.resolve('ILogger').error(logStamp, 'Recursive traverse detected: parent with id "' + parentId + '" has been already processed.');
+                  } else {
+                     parentsProcessed[parentId] = true;
+                     //FIXME: для совместимости с логикой контролов - корневые записи дерева могут вообще не иметь поля с именем parentProperty
+                     if (!children.length && parentId === null && parent.isRoot()) {
+                        //Считаем, что элементы коллекции без поля parentProperty находятся в корне
+                        children = hierIndex[undefined] || [];
+                     }
+
+                     var i, child;
+                     for (i = 0; i < children.length; i++) {
+                        child = items[children[i]];
+                        if (child) {
+                           child.setParent(parent, true);
+                        }
+                        result.push(children[i]);
+                        if (child && idProperty && parentProperty) {
+                           push.apply(
+                              result,
+                              buildHierarchy(child)
+                           );
+                        }
+                     }
                   }
 
-                  var i, child;
-                  for (i = 0; i < children.length; i++) {
-                     child = items[children[i]];
-                     if (child) {
-                        child.setParent(parent, true);
-                     }
-                     result.push(children[i]);
-                     if (child) {
-                        push.apply(
-                           result,
-                           buildHierarchy(child)
-                        );
-                     }
-                  }
                   return result;
                };
 

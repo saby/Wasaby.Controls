@@ -139,6 +139,21 @@ define([
                assert.strictEqual(tree.getCount(), index);
                assert.strictEqual(tree.getCollection().getCount(), index);
             });
+
+            it('should all items as flat list if no options given', function() {
+               var tree = new Tree({
+                     collection: items
+                  }),
+                  enumerator = tree.getEnumerator(),
+                  index = 0,
+                  item;
+               while ((item = enumerator.getNext())) {
+                  assert.strictEqual(item.getContents(), items.at(index));
+                  index++;
+               }
+               assert.strictEqual(tree.getCount(), index);
+               assert.strictEqual(tree.getCollection().getCount(), index);
+            });
          });
 
          describe('.getIdProperty()', function() {
