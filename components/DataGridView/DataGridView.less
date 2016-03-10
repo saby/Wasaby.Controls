@@ -188,14 +188,22 @@
          vertical-align: @data-grid-cell-vertical-align;
          box-sizing: @data-grid-cell-box-sizing;
          line-height: @data-grid-cell-line-height;
+         // Clearfix что бы была высота у folderTitle и columnValue
+         .controls-TreeView__folderTitle, .controls-TreeView__columnValue {
+            overflow: hidden;
+         }
 
         &.controls-DataGridView-cell-overflow-ellipsis{
            .controls-TreeView__columnValue, .controls-TreeView__folderTitle {
-              display: inline;
+              display: inline-block;
+              width: 100%;
+              overflow: hidden;
+              text-overflow: ellipsis;
+              white-space: nowrap;
            }
-           overflow: @data-grid-cell-overflow;
-           text-overflow: @data-grid-cell-text-overflow;
-           white-space: @data-grid-cell-white-spaces;
+           overflow: hidden;
+           text-overflow: ellipsis;
+           white-space: nowrap;
         }
       }
    }

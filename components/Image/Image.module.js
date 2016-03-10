@@ -197,7 +197,7 @@ define('js!SBIS3.CONTROLS.Image',
                    * @cfg {String} Изображение, используемое по умолчанию
                    * @example
                    * <pre>
-                   *     <option name="defaultImage">/sbis3-controls/components/Image/resources/default-image.png</option>
+                   *     <option name="defaultImage">/resources/SBIS3.CONTROLS/components/Image/resources/default-image.png</option>
                    * </pre>
                    */
                   defaultImage: $ws.helpers.processImagePath('js!SBIS3.CONTROLS.Image/resources/default-image.png'),
