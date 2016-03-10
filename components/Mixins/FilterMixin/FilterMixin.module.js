@@ -44,8 +44,8 @@ define('js!SBIS3.CONTROLS.FilterMixin', [
              * @property {String} internalValueField Название поля, которое хранит значение элемента. По-умолчанию null.
              * @property {String} internalCaptionField Название поля, которое хранит текстовое отображение значения. По-умолчанию null.
              * @property {String} caption Текущее текстовое отображение значения. Может быть не определено.
-             * @property {Object} value Текущее значение элемента. Может быть не определено.
-             * @property {Object} resetValue Значение поля при сбрасывании фильтра, или при пустом значении в value. Может быть не определено.
+             * @property {null|Object|String|Boolean|Number} value Текущее значение элемента. Может быть не определено.
+             * @property {null|Object|String|Boolean|Number} resetValue Значение поля при сбрасывании фильтра, или при пустом значении в value. Может быть не определено.
              * @property {String} resetCaption Текст по умолчанию. Если задали, то при пустом (или заданном в resetValue) значении будет
              * отображаться заданный здесь текст. Может быть не определено.
              */
