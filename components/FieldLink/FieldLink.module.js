@@ -59,6 +59,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
         * @mixes SBIS3.CONTROLS.ChooserMixin
         * @mixes SBIS3.CONTROLS.FormWidgetMixin
         * @mixes SBIS3.CONTROLS.SyncSelectionMixin
+        * @mixes SBIS3.CONTROLS.DSMixin
         * @demo SBIS3.CONTROLS.Demo.FieldLinkWithEditInPlace Поле связи с редактированием по месту
         * @demo SBIS3.CONTROLS.Demo.FieldLinkDemo
         * @cssModifier controls-FieldLink__itemsEdited При наведении на выделенные элементы, они подчёркиваются.
@@ -66,6 +67,8 @@ define('js!SBIS3.CONTROLS.FieldLink',
         * @control
         * @public
         * @author Крайнов Дмитрий Олегович
+        * @ignoreOptions observableControls resultBindings usePicker tooltip alwaysShowExtendedTooltip loadingContainer
+        * @ignoreOptions allowEmptySelection templateBinding includedTemplates filter pageSize
         */
 
        var FieldLink = SuggestTextBox.extend([MultiSelectable, ActiveMultiSelectable, Selectable, ActiveSelectable, SyncSelectionMixin, DSMixin, ITextValue],/** @lends SBIS3.CONTROLS.FieldLink.prototype */{
