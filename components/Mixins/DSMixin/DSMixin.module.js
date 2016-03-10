@@ -742,23 +742,14 @@ define('js!SBIS3.CONTROLS.DSMixin', [
          this._redraw();
       },
       _redraw: function () {
-         var records,
-               self = this;
+         var records;
 
          if (this._items) {
             this._clearItems();
-            /**
-             * Проблема в том, что если не ждать, то браузер настолько быстрый, что не пересчитывает изменение scrollTop
-             * (а он на самом деле меняется после удаления всех элементов) - в результате остается какой был (или какой
-             * смог оставить, потому что высота сменилась) Ставим условную задержку, чтобы scrollTop у window изменился
-             * до 0
-             */
-            setTimeout(function(){
-               self._needToRedraw = false;
-               records = self._getRecordsForRedraw();
-               self._toggleEmptyData(!records.length && self._options.emptyHTML);
-               self._drawItems(records);
-            }, 42);
+            this._needToRedraw = false;
+            records = this._getRecordsForRedraw();
+            this._toggleEmptyData(!records.length && this._options.emptyHTML);
+            this._drawItems(records);
 
          }
       },
@@ -1086,7 +1077,9 @@ define('js!SBIS3.CONTROLS.DSMixin', [
       _scrollToItem: function(itemId) {
          var itemContainer  = $(".controls-ListView__item[data-id='" + itemId + "']", this._getItemsContainer());
          if (itemContainer.length) {
-            itemContainer.get(0).scrollIntoView();
+            itemContainer
+               .attr('tabindex', -1)
+               .focus();
          }
       },
       /**
