@@ -9,6 +9,6 @@
                  {{? !!column.editor}} controls-DataGridView__edited-td{{?}}
                  {{?column.className}} {{=column.className}}{{?}}
                  {{?it.startScrollColumn!== undefined}}{{?it.startScrollColumn <= index}} controls-DataGridView__scrolledCell{{??}} controls-DataGridView__notScrolledCell{{?}}{{?}}"
-            >{{=column.value}}</td>
+            ><div class="controls-TreeView__columnValue">{{=column.value}}<div></td>
     {{~}}
 </tr>
