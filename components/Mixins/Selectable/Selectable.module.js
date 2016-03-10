@@ -113,6 +113,9 @@ define('js!SBIS3.CONTROLS.Selectable', ['js!SBIS3.CONTROLS.Data.Utils', 'js!SBIS
       },
 
       before : {
+         setDataSource: function() {
+            this._options.selectedIndex = -1;
+         },
          setItems: function() {
             this._options.selectedIndex = -1;
          },
