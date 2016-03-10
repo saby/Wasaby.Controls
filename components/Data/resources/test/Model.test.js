@@ -564,15 +564,6 @@ define([
             });
          });
 
-         describe('.isUsingDataSetAsList()', function (){
-            it('sould return flag usingDataSetAsList', function (){
-               model.setUsingDataSetAsList(true);
-               assert.isTrue(model.isUsingDataSetAsList());
-               model.setUsingDataSetAsList(false);
-               assert.isFalse(model.isUsingDataSetAsList());
-            });
-         });
-
          describe('.isSynced()', function (){
             it('sould return flag usingDataSetAsList', function (){
                model.setSynced(true);

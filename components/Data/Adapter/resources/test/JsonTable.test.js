@@ -285,6 +285,17 @@ define([
                   data[5]['Фамилия']
                );
             });
+            it('should not move Петров', function () {
+               adapter.move(1, 1);
+               assert.strictEqual(
+                  'Петров',
+                  data[1]['Фамилия']
+               );
+               assert.strictEqual(
+                  'Годолцов',
+                  data[5]['Фамилия']
+               );
+            });
          });
 
          describe('.getData()', function () {
