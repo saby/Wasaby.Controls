@@ -527,10 +527,10 @@ define('js!SBIS3.CONTROLS.DSMixin', [
                       if (self._items !== self._dataSet) {
                          self._dataSet.assign(list);
                       }
-                      self._dataLoadedCallback();
                       if (!this._options.autoRedraw) {
                          this.redraw();
                       }
+                      self._dataLoadedCallback();
                    }
                    else {
                       self._notify('onDataLoad', list);
