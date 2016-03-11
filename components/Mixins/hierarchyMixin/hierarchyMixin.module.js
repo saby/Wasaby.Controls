@@ -168,11 +168,24 @@ define('js!SBIS3.CONTROLS.hierarchyMixin', [], function () {
             //TODO Совсем быстрое и временное решение. Нужно скроллиться к первому элементу при проваливании в папку.
             // Выпилить, когда это будет делать установка выделенного элемента
             if (this._previousRoot !== this._curRoot) {
-               this._previousRoot = this._curRoot;
-               item = this.getItems() && this.getItems().at(0);
-               if (item){
-                  this._scrollToItem(item.getKey());
+
+               //TODO курсор
+               /*Если в текущем списке есть предыдущий путь, значит это выход из папки*/
+               if (this.getItems().getRecordById(this._previousRoot)) {
+                  this.setSelectedKey(this._previousRoot);
+                  this._scrollToItem(this._previousRoot);
                }
+               else {
+                  /*иначе вход в папку*/
+                  item = this.getItems() && this.getItems().at(0);
+                  if (item){
+                     this.setSelectedKey(item.getKey());
+                     this._scrollToItem(item.getKey());
+                  }
+               }
+
+               this._previousRoot = this._curRoot;
+
             }
          }
       },
