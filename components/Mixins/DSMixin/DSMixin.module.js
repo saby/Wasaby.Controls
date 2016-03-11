@@ -1126,6 +1126,20 @@ define('js!SBIS3.CONTROLS.DSMixin', [
       _addItem: function (item, at) {
          var ladderDecorator = this._decorators.getByName('ladder');
          ladderDecorator && ladderDecorator.setMarkLadderColumn(true);
+         /*TODO отдельно обрабатываем случай с группировкой*/
+         var flagAfter = false;
+         if (this._options.groupBy) {
+            var
+               meth = this._options.groupBy.method,
+               prev = this._itemsProjection.getPrevious(item),
+               next = this._itemsProjection.getNext(item);
+            meth.call(this, prev.getContents());
+            meth.call(this, item.getContents());
+            if (!meth.call(this, next.getContents())) {
+               flagAfter = true;
+            }
+         };
+         /**/
          item = item.getContents();
          var target = this._getTargetContainer(item),
             currentItemAt = at > 0 ? this._getItemContainerByIndex(target, at - 1) : null,
@@ -1133,7 +1147,10 @@ define('js!SBIS3.CONTROLS.DSMixin', [
             newItemContainer = this._buildTplItem(item, template),
             rows;
          this._addItemAttributes(newItemContainer, item);
-         if (currentItemAt && currentItemAt.length) {
+         if (flagAfter) {
+            newItemContainer.insertBefore(this._getItemContainerByIndex(target, at));
+            rows = [newItemContainer.prev().prev(), newItemContainer.prev(), newItemContainer, newItemContainer.next(), newItemContainer.next().next()];
+         } else if (currentItemAt && currentItemAt.length) {
             newItemContainer.insertAfter(currentItemAt);
             rows = [newItemContainer.prev().prev(), newItemContainer.prev(), newItemContainer, newItemContainer.next(), newItemContainer.next().next()];
          } else if(at === 0) {
