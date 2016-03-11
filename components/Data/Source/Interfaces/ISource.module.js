@@ -11,19 +11,43 @@ define('js!SBIS3.CONTROLS.Data.Source.ISource', [
     */
 
    return /** @lends SBIS3.CONTROLS.Data.Source.ISource.prototype */{
+      /**
+       * @typedef {Object} Endpoint
+       * @property {String} [address] Адрес - указывает место расположения сервиса, к которому будет осуществлено подключение
+       * @property {String} contract Контракт - определяет доступные операции
+       */
+
       $protected: {
          _options: {
             /**
-             * @cfg {String} Название ресурса, с которым работает источник (имя таблицы, объекта, файла, URL, path и т.п.)
-             * @see getResource
+             * @cfg {Endpoint|String} Конечная точка, обеспечивающая доступ клиента к функциональным возможностям источника данных
+             * @see getEndPoint
              * @example
              * <pre>
              *    var dataSource = new Source({
-             *       resource: '/users/'
+             *       endpoint: {
+             *          address: '/api/',
+             *          contract: 'users/'
+             *       }
+             *    });
+             * </pre>
+             * @example
+             * <pre>
+             *    var dataSource = new Source({
+             *       endpoint: '/users/'
+             *    });
+             * </pre>
+             * @example
+             * <pre>
+             *    var dataSource = new RpcSource({
+             *       endpoint: {
+             *          address: '//server.name/api/rpc/',
+             *          contract: 'Users'
+             *       }
              *    });
              * </pre>
              */
-            resource: '',
+            endpoint: {},
 
             /**
              * @cfg {String|SBIS3.CONTROLS.Data.Adapter.IAdapter} Адаптер для работы с данными, по умолчанию {@link SBIS3.CONTROLS.Data.Adapter.Json}
@@ -127,11 +151,11 @@ define('js!SBIS3.CONTROLS.Data.Source.ISource', [
       },
 
       /**
-       * Возвращает ресурс, с которым работает источник
-       * @returns {String}
-       * @see resource
+       * Возвращает конечную точку, обеспечивающую доступ клиента к функциональным возможностям источника данных
+       * @returns {Endpoint}
+       * @see endpoint
        */
-      getResource: function () {
+      getEndpoint: function () {
          throw new Error('Method must be implemented');
       },
 
