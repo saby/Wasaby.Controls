@@ -170,11 +170,13 @@ define('js!SBIS3.CONTROLS.hierarchyMixin', [], function () {
             if (this._previousRoot !== this._curRoot) {
 
                //TODO курсор
+               /*Если в текущем списке есть предыдущий путь, значит это выход из папки*/
                if (this.getItems().getRecordById(this._previousRoot)) {
                   this.setSelectedKey(this._previousRoot);
                   this._scrollToItem(this._previousRoot);
                }
                else {
+                  /*иначе вход в папку*/
                   item = this.getItems() && this.getItems().at(0);
                   if (item){
                      this.setSelectedIndex(0);
