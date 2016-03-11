@@ -158,24 +158,27 @@ define('js!SBIS3.CONTROLS.EditInPlace',
                EditInPlace.superclass.show.apply(this, arguments);
             },
             _beginTrackHeight: function() {
-               var self = this;
                this._lastHeight = 0;
-               this._trackerInterval = setInterval(function() {
-                  var
-                     newHeight = 0,
-                     editorHeight;
-                  $.each(self._editors, function(id, editor) {
-                     editorHeight = $(editor).height();
-                     if (editorHeight > newHeight) {
-                        newHeight = editorHeight;
-                     }
-                  });
-                  if (self._lastHeight !== newHeight) {
-                     self._lastHeight = newHeight;
-                     self._notify('onChangeHeight');
-                     self.getEditingItem().target.height(newHeight + EDITOR_MARGINS);
+               //При начале отслеживания высоты строки, один раз нужно пересчитать высоту синхронно, это нужно для добавления по месту,
+               //т.к. при добавлении создаётся новая tr у которой изначально нет высоты и опции записи не могут верно спозиционироваться.
+               this._recalculateHeight();
+               this._trackerInterval = setInterval(this._recalculateHeight.bind(this), 50);
+            },
+            _recalculateHeight: function() {
+               var
+                   newHeight = 0,
+                   editorHeight;
+               $.each(this._editors, function(id, editor) {
+                  editorHeight = $(editor).height();
+                  if (editorHeight > newHeight) {
+                     newHeight = editorHeight;
                   }
-               }, 50);
+               }.bind(this));
+               if (this._lastHeight !== newHeight) {
+                  this._lastHeight = newHeight;
+                  this._notify('onChangeHeight');
+                  this.getEditingItem().target.height(newHeight + EDITOR_MARGINS);
+               }
             },
             _endTrackHeight: function() {
                clearInterval(this._trackerInterval);
