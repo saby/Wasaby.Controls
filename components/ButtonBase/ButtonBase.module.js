@@ -44,6 +44,7 @@ define('js!SBIS3.CONTROLS.ButtonBase', ['js!SBIS3.CORE.CompoundControl', 'js!SBI
          _tooltipSettings: {
             handleFocus: false
          },
+         _checkClickByTap: true,
          _options: {
             /**
              * @cfg {String}  Текст на кнопке
