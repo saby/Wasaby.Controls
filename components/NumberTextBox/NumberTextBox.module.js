@@ -252,7 +252,11 @@ define('js!SBIS3.CONTROLS.NumberTextBox', ['js!SBIS3.CONTROLS.TextBox', 'html!SB
 
       _updateCompatPlaceholderVisibility: function() {
          if (this._compatPlaceholder) {
-            this._compatPlaceholder.toggle(typeof this._options.numericValue !== 'number' || isNaN(this._options.numericValue));
+            if (typeof this._options.numericValue === 'number' && !isNaN(this._options.numericValue)) {
+               this._compatPlaceholder.show();
+            } else {
+               NumberTextBox.superclass._updateCompatPlaceholderVisibility.apply(this, arguments);
+            }
          }
       },
 
