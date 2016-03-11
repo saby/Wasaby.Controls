@@ -179,7 +179,7 @@ define('js!SBIS3.CONTROLS.hierarchyMixin', [], function () {
                   /*иначе вход в папку*/
                   item = this.getItems() && this.getItems().at(0);
                   if (item){
-                     this.setSelectedIndex(0);
+                     this.setSelectedKey(item.getKey());
                      this._scrollToItem(item.getKey());
                   }
                }
