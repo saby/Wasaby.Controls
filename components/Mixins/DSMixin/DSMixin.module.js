@@ -1128,7 +1128,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
          ladderDecorator && ladderDecorator.setMarkLadderColumn(true);
          /*TODO отдельно обрабатываем случай с группировкой*/
          var flagAfter = false;
-         if (this._options.groupBy) {
+         if (!Object.isEmpty(this._options.groupBy)) {
             var
                meth = this._options.groupBy.method,
                prev = this._itemsProjection.getPrevious(item),
