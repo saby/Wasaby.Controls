@@ -305,7 +305,7 @@ define('js!SBIS3.CONTROLS.DropdownList',
                container.addClass('controls-ListView__defaultItem');
             }
 
-            if (this._options.multiSelect) {
+            if (this._options.multiselect) {
                addClass += ' controls-DropdownList__multiselect';
             }
             container.addClass(addClass);
