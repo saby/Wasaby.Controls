@@ -97,7 +97,9 @@ define('js!SBIS3.CONTROLS.DropdownList',
          },
          init : function () {
             DropdownList.superclass.init.apply(this, arguments);
-            this._initializePicker();
+            if (!this._picker) {
+               this._initializePicker();
+            }
          },
          _setPickerContent : function () {
             var self = this,
