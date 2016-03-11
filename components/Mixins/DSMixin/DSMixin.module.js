@@ -1126,7 +1126,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
       _addItem: function (item, at) {
          var ladderDecorator = this._decorators.getByName('ladder');
          ladderDecorator && ladderDecorator.setMarkLadderColumn(true);
-         /*придрот для группировки*/
+         /*TODO отдельно обрабатываем случай с группировкой*/
          var flagAfter = false;
          if (this._options.groupBy) {
             var
