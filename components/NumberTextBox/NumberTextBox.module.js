@@ -250,6 +250,12 @@ define('js!SBIS3.CONTROLS.NumberTextBox', ['js!SBIS3.CONTROLS.TextBox', 'html!SB
          }
       },
 
+      _updateCompatPlaceholderVisibility: function() {
+         if (this._compatPlaceholder) {
+            this._compatPlaceholder.toggle(typeof this._options.numericValue !== 'number' || isNaN(this._options.numericValue));
+         }
+      },
+
       /**
        * Получить количество знаков после запятой
        */
