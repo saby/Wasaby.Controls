@@ -48,8 +48,9 @@ define('js!SBIS3.CONTROLS.MultiSelectable', ['js!SBIS3.CONTROLS.Data.Collection.
              * Возможность выбора нескольких значений из списка для последующего одновременного выполнения определенной
              * последовательности операций с выбранными значениями. Режим множественного выбора работает независимо от
              * единичного; режим единичного выбора добавляется миксином {@link SBIS3.CONTROLS.Selectable}.
+             * В табличном представлении множественный выбор отображается как
              * Множественный выбор записей в {@link SBIS3.CONTROLS.FieldLink поле связи} позволяет связать с текущим диалогом
-             * определенное множество записей.
+             * определенное количество записей.
              * @example
              * <pre>
              *    <option name="multiselect">false</option>
@@ -61,11 +62,8 @@ define('js!SBIS3.CONTROLS.MultiSelectable', ['js!SBIS3.CONTROLS.Data.Collection.
             /**
              * @cfg {String[]} Массив идентификаторов выбранных элементов
              * @example
-             * <pre>
-             *     <options name="selectedKeys" type="array">
-             *        <option type="string">1</option>
-             *        <option type="string">2</option>
-             *     </options>
+             * <pre class="brush:xml">
+             *     this._getTable().setSelection(this.selectedKeys);
              * </pre>
              * @see multiselect
              * @see allowEmptyMultiSelection
@@ -92,7 +90,11 @@ define('js!SBIS3.CONTROLS.MultiSelectable', ['js!SBIS3.CONTROLS.Data.Collection.
               */
             allowEmptyMultiSelection : true,
             /**
-             * @cfg {SBIS3.CONTROLS.Data.Collection.List} Набор выбранных записей
+             * @cfg {SBIS3.CONTROLS.Data.Collection.List} Определяет набор выбранных записей с доступом по индексу.
+             * @example
+             * <pre>
+             *     var selItems = this._options.selectedItems;
+             * </pre>
              * @see getSelectedItems
              */
             selectedItems : undefined
