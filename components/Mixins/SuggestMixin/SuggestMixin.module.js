@@ -105,7 +105,7 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
              * Список значений можно отфильтровать, настроив опцию {@link listFilter}.
              * Если список содержит большое количество значений, то он будет отображен с полосой прокрутки.
              * Отображение списка с полосой прокрутки можно заменить на режим постраничной навигации. Для этого в опции {@link list}
-             * установите для настроек контрола выпадающего блока опции {@link showPaging} и {@link pageSize}.
+             * установите для настроек контрола выпадающего блока опции {@link SBIS3.CONTROLS.ListView#showPaging} и {@link SBIS3.CONTROLS.DSMixin#pageSize}.
              * Подробнее о функционале автодополнения вы можете прочитать в описании к классу {@link SBIS3.CONTROLS.SuggestMixin}.
              * @example
              * <pre class="brush: xml">
@@ -113,6 +113,8 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
              * </pre>
              * @see list
              * @see listFilter
+             * @see SBIS3.CONTROLS.ListView#showPaging
+             * @see SBIS3.CONTROLS.DSMixin#pageSize
              */
             autoShow: false,
             /**
