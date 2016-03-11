@@ -115,8 +115,10 @@ define('js!SBIS3.CONTROLS.DSMixin', [
             /**
              * @cfg {String} Определяет поле элемента коллекции, которое является идентификатором записи.
              * @remark
-             * Используется для определения элементов коллекции.
-             * Для поля связи используется в  {@link SBIS3.CONTROLS.SuggestMixin#list}
+             * Используется для определения элементов коллекции по ключевому полю.
+             * Для поля связи используется в {@link SBIS3.CONTROLS.SuggestMixin#list конфигурации} выпадающего блока,
+             * отображающего список значений для автодополнения.
+             * Данные задаются либо с помощью опции {@link items}, либо методом {@link setDataSource}.
              * @example
              * <pre class="brush:xml">
              *     <option name="keyField">Идентификатор</option>
@@ -133,9 +135,11 @@ define('js!SBIS3.CONTROLS.DSMixin', [
             /**
              * @cfg {String} Определяет поле элемента коллекции, данные из которого нужно отображать.
              * @remark
-             * Данные задаются либо с помощью опции {@link items}, либо методом {@link setDataSource}.
              * Источник данных может состоять из множества полей. В данной опции необходимо указать имя поля, данные
              * которого нужно отобразить в выпадающем списке.
+             * Для поля связи используется в {@link SBIS3.CONTROLS.SuggestMixin#list конфигурации} выпадающего блока,
+             * отображающего список значений для автодополнения.
+             * Данные задаются либо с помощью опции {@link items}, либо методом {@link setDataSource}.
              * @example
              * <pre class="brush:xml">
              *     <option name="displayField">НазваниеПоля</option>
@@ -143,6 +147,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
              * @see keyField
              * @see items
              * @see setDataSource
+             * @see SBIS3.CONTROLS.SuggestMixin#list
              */
             displayField: null,
              /**
