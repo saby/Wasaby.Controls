@@ -67,8 +67,8 @@ define('js!SBIS3.CONTROLS.FieldLink',
         * @control
         * @public
         * @author Крайнов Дмитрий Олегович
-        * @ignoreOptions observableControls resultBindings usePicker tooltip alwaysShowExtendedTooltip loadingContainer
-        * @ignoreOptions allowEmptySelection templateBinding includedTemplates filter pageSize
+        * @ignoreOptions observableControls resultBindings usePicker filter includedTemplates templateBinding
+        * @ignoreOptions allowEmptySelection pageSize alwaysShowExtendedTooltip tooltip loadingContainer
         */
 
        var FieldLink = SuggestTextBox.extend([MultiSelectable, ActiveMultiSelectable, Selectable, ActiveSelectable, SyncSelectionMixin, DSMixin, ITextValue],/** @lends SBIS3.CONTROLS.FieldLink.prototype */{
