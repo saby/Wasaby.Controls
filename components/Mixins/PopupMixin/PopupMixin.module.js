@@ -187,7 +187,7 @@ define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManag
             if (element.css('position') == 'fixed'){
                $(this._container).css({position : 'fixed'});
                this._fixed = true;
-               break;
+               return;
             } else {
                element = element.parent();
             }
