@@ -114,6 +114,9 @@ define('js!SBIS3.CONTROLS.DSMixin', [
          _options: {
             /**
              * @cfg {String} Определяет поле элемента коллекции, которое является идентификатором записи.
+             * @remark
+             * Используется для определения элементов коллекции.
+             * Для поля связи используется в  {@link SBIS3.CONTROLS.SuggestMixin#list}
              * @example
              * <pre class="brush:xml">
              *     <option name="keyField">Идентификатор</option>
@@ -124,6 +127,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
              * @see SBIS3.CONTROLS.Selectable#selectedKey
              * @see SBIS3.CONTROLS.Selectable#setSelectedKey
              * @see SBIS3.CONTROLS.Selectable#getSelectedKey
+             * @see SBIS3.CONTROLS.SuggestMixin#list
              */
             keyField : null,
             /**
