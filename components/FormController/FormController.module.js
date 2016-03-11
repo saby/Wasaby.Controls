@@ -77,12 +77,7 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl'],
              * </options>
              * </pre>
              */
-            initValues: null,
-            /**
-             * @cfg {Boolean} Закрывать панель после команды submit
-             * По умолчанию панель после сохранения закрывается.
-             */
-            closePanelAfterSubmit: true
+            initValues: null
          }
       },
       
@@ -119,28 +114,24 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl'],
        * });
        * </pre>
        */
-      submit: function(){
-         return this._saveRecord(true);
+      submit: function(closePanelAfterSubmit){
+         return this._saveRecord(true, closePanelAfterSubmit);
       },
 
-      _saveRecord: function(hideQuestion){
+      _saveRecord: function(hideQuestion, closePanelAfterSubmit){
          var self = this,
              dResult = new $ws.proto.Deferred(),
              questionConfig;
 
          questionConfig = {
+            useCancelButton: true,
             invertDefaultButton: true,
             detail: 'Чтобы продолжить редактирование, нажмите "Отмена".'
          };
 
-         //Если closePanelAfterSubmit = false, кнопка "Отмена" эквивалентна кнопке "Нет", поэтому показываем ее только когда она нужна
-         if (this._options.closePanelAfterSubmit){
-            questionConfig.useCancelButton = true;
-         }
-
          if (hideQuestion){
             this._saving = true;
-            this._updateRecord(dResult, this._options.closePanelAfterSubmit);
+            this._updateRecord(dResult, closePanelAfterSubmit);
          }
          else{
             $ws.helpers.question('Сохранить изменения?', questionConfig, this).addCallback(function(result){
