@@ -223,12 +223,14 @@ define('js!SBIS3.CONTROLS.DSMixin', [
              * перечислить названия полей, по которым лесенка будет организована.
              * Изменить группировку записей можно с помощью метода {@link setGroupBy}.
              * @example
+             * Пример 1. Простая группировка записей.
              * <pre class="brush:xml">
-             * <!-- Пример 1. Простая группировка записей. -->
              *    <options name="groupBy">
              *        <option name="field">ДатаВремя</option>
              *    </options>
-             * <!-- Пример 2. Группировка записей по типу "Лесенка" -->
+             * </pre>
+             * Пример 2. Группировка записей по типу "Лесенка".
+             * <pre class="brush:xml">
              *    <options name="groupBy">
              *        <option name="field">ДатаВремя</option>
              *        <option name="method" type="function">js!SBIS3.CONTROLS.Demo.MyListView:prototype.myGroupBy</option>
@@ -242,12 +244,45 @@ define('js!SBIS3.CONTROLS.DSMixin', [
              */
             groupBy : {},
             /**
-             * @cfg {Function} Пользовательский метод добавления атрибутов на элементы коллекции
-             *
+             * @typedef {Function} UserItem
+             * @property {String} container HTML-контейнер текущего элемента коллекции.
+             * @property {SBIS3.CONTROLS.Data.Model} item Текущий элемент коллекции.
+             */
+            /**
+             * @cfg {UserItem} Пользовательский метод добавления атрибутов на элементы коллекции.
+             * @remark
+             * В данной опции указывают функцию, которая будет применена ко всем элементам коллекции.
+             * Используется, когда выбранным элементам коллекции нужно добавить дополнительные атрибуты
+             * либо произвести необходимые изменения над элементами коллекции.
+             * Например, чтобы при наведении курсора на выбранные записи выводились их изображения.
+             * Аргументы функции:
+             * 1. container: HTML-контейнер текущего элемента коллекции, производя манипуляции с которым можно добавить/изменить атрибуты.
+             * 2. item: текущий элемент коллекции в виде экземпляра класса {@link SBIS3.CONTROLS.Data.Model}.
+             * @example
+             * Указываем функцию:
+             * <pre class="brush:xml">
+             *    <option name="userItemAttributes" type="function">js!SBIS3.Contacts.MessageViewBP:prototype.userItemAttributes</option>
+             * </pre>
+             * Описание функции:
+             * <pre>
+             *    userItemAttributes: function (container, item) {
+             *       var isFolder = item ? item.get('Раздел@') : false;
+             *       // если папка - убрать чекбокс
+             *       if (isFolder) {
+             *          // удаляем ячейку с чекбоксом
+             *          container.find('td.controls-DataGridView__td__checkBox').remove();
+             *          // меняем стиль соседней ячейке
+             *          container.find('td.controls-DataGridView__td').attr('colspan', 2);
+             *       }
+             *    },
+             * </pre>
              */
             userItemAttributes : null,
             /**
-             * @cfg {String|HTMLElement|jQuery} Устанавливает текст, который будет отображаться как при отсутствии данных, так и в результате {@link groupBy фильтрации}.
+             * @cfg {String|HTMLElement|jQuery} Устанавливает текст, который будет отображаться при отсутствии данных.
+             * @remark
+             * Устанавливает текст, который будет отображаться как при отсутствии данных, так и в результате {@link groupBy фильтрации}.
+             * Переопределить текст можно при помощи метода {@link setEmptyHTML}.
              * @example
              * <pre class="brush:xml">
              *     <option name="emptyHTML">Нет данных</option>
