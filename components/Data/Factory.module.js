@@ -34,7 +34,7 @@ define('js!SBIS3.CONTROLS.Data.Factory', [
          switch (this._getType(format)) {
             case 'Identity':
                return value instanceof Array ?
-                  value[0] === null ? null : value.join(format.meta.separator, value) :
+                  value[0] === null ? null : value.join(format.meta && format.meta.separator, value) :
                   value;
             case 'RecordSet':
                return this._makeRecordSet(value, adapter);
@@ -54,18 +54,18 @@ define('js!SBIS3.CONTROLS.Data.Factory', [
             case 'Double':
                return (typeof(value) === 'number') ? value : (isNaN(parseFloat(value)) ? null : parseFloat(value));
             case 'Money':
-               if (format.meta.precision > 3) {
+               if (format.meta && format.meta.precision > 3) {
                   return $ws.helpers.prepareMoneyByPrecision(value, format.meta.precision);
                }
                return value === undefined ? null : value;
             case 'Enum':
                return new Enum({
-                  dictionary: format.meta.dictionary,
+                  dictionary: format.meta && format.meta.dictionary || [],
                   currentValue: value
                });
             case 'Flags':
                return new Flags({
-                  dictionary: format.meta.dictionary,
+                  dictionary: format.meta && format.meta.dictionary || [],
                   values: value
                });
             case 'TimeInterval':
@@ -77,7 +77,7 @@ define('js!SBIS3.CONTROLS.Data.Factory', [
                return !!value;
             case 'Array':
                var self = this,
-                  kind = format.meta.kind;
+                  kind = format.meta && format.meta.kind;
                return $ws.helpers.map(value, function (val) {
                   return self.cast(val, kind, adapter);
                });
@@ -111,7 +111,7 @@ define('js!SBIS3.CONTROLS.Data.Factory', [
             case 'Identity':
                return (
                   typeof value === 'string' ?
-                     value.split(format.meta.separator) :
+                     value.split(format.meta && format.meta.separator) :
                      [value]
                );
             case 'RecordSet':
@@ -138,7 +138,7 @@ define('js!SBIS3.CONTROLS.Data.Factory', [
             case 'Link':
                return parseInt(value, 10);
             case 'Money':
-               if (format.meta.precision > 3) {
+               if (format.meta && format.meta.precision > 3) {
                   return $ws.helpers.prepareMoneyByPrecision(value, format.meta.precision);
                }
                return value;
@@ -156,7 +156,7 @@ define('js!SBIS3.CONTROLS.Data.Factory', [
                return value;
             case 'Array':
                var self = this,
-                  kind = format.meta.kind;
+                  kind = format.meta && format.meta.kind;
                return $ws.helpers.map(value, function (val){
                   return self.serialize(val, kind, adapter);
                });
