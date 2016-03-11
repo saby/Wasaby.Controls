@@ -1154,7 +1154,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
             newItemContainer.insertAfter(currentItemAt);
             rows = [newItemContainer.prev().prev(), newItemContainer.prev(), newItemContainer, newItemContainer.next(), newItemContainer.next().next()];
          } else if(at === 0) {
-            newItemContainer.insertBefore(this._getItemContainerByIndex(target, 0));
+            newItemContainer.prependTo(target);
             rows = [newItemContainer, newItemContainer.next(), newItemContainer.next().next()];
          } else {
             newItemContainer.appendTo(target);
