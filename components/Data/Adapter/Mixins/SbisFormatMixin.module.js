@@ -96,7 +96,7 @@ define('js!SBIS3.CONTROLS.Data.Adapter.SbisFormatMixin', [
          }
          format.name = name;
          format.type = this._getFieldType(index);
-         format.meta = this._getFieldMeta(index, format.type);
+         format.meta = this._getFieldMeta(index, format.type, true);
 
          return format;
       },
@@ -190,12 +190,12 @@ define('js!SBIS3.CONTROLS.Data.Adapter.SbisFormatMixin', [
          return FIELD_TYPE[outerName];
       },
 
-      _getFieldMeta: function (index, type) {
-         if (this._sharedFieldMeta === null) {
+      _getFieldMeta: function (index, type, singleton) {
+         if (singleton && this._sharedFieldMeta === null) {
             this._sharedFieldMeta = {};
          }
          var info = this._data.s[index],
-            meta = this._sharedFieldMeta;
+            meta = singleton ? this._sharedFieldMeta : {};
 
          try {
             switch (type) {
