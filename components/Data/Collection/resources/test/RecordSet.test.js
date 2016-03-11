@@ -157,7 +157,7 @@ define([
                   assert.isTrue($ws.helpers.instanceOfModule(record, 'SBIS3.CONTROLS.Data.Record'));
                }
             });
-            it('should return records owned by recordset', function() {
+            it('should return records owned by itself', function() {
                var enumerator = rs.getEnumerator(),
                   record;
                while((record = enumerator.getNext())) {
