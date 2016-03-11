@@ -288,7 +288,7 @@ define('js!SBIS3.CONTROLS.Data.Projection.Tree', [
                idProperty = options.idProperty,
                parentProperty = options.parentProperty,
                hierIndex = {},
-               parentsProcessed = {},
+               parentsProcessing = {},
                buildHierarchy = function(parent) {
                   var result = [],
                      parentData = parent.getContents(),
@@ -298,10 +298,9 @@ define('js!SBIS3.CONTROLS.Data.Projection.Tree', [
                      ) : parentData,
                      children = hierIndex[parentId] || [];
 
-                  if (parentsProcessed.hasOwnProperty(parentId)) {
-                     $ws.single.ioc.resolve('ILogger').error(logStamp, 'Recursive traverse detected: parent with id "' + parentId + '" has been already processed.');
+                  if (parentsProcessing[parentId]) {
+                     $ws.single.ioc.resolve('ILogger').error(logStamp, 'Recursive traversal  detected: parent with id "' + parentId + '" is already in progress.');
                   } else {
-                     parentsProcessed[parentId] = true;
                      //FIXME: для совместимости с логикой контролов - корневые записи дерева могут вообще не иметь поля с именем parentProperty
                      if (!children.length && parentId === null && parent.isRoot()) {
                         //Считаем, что элементы коллекции без поля parentProperty находятся в корне
@@ -316,10 +315,12 @@ define('js!SBIS3.CONTROLS.Data.Projection.Tree', [
                         }
                         result.push(children[i]);
                         if (child && idProperty && parentProperty) {
+                           parentsProcessing[parentId] = true;
                            push.apply(
                               result,
                               buildHierarchy(child)
                            );
+                           parentsProcessing[parentId] = false;
                         }
                      }
                   }
