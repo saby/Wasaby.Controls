@@ -140,7 +140,7 @@ define([
                assert.strictEqual(tree.getCollection().getCount(), index);
             });
 
-            it('should all items as flat list if no options given', function() {
+            it('should traverse all items as flat list if no options specified', function() {
                var tree = new Tree({
                      collection: items
                   }),
