@@ -1133,9 +1133,10 @@ define('js!SBIS3.CONTROLS.DSMixin', [
                meth = this._options.groupBy.method,
                prev = this._itemsProjection.getPrevious(item),
                next = this._itemsProjection.getNext(item);
-            meth.call(this, prev.getContents());
+            if(prev)
+                meth.call(this, prev.getContents());
             meth.call(this, item.getContents());
-            if (!meth.call(this, next.getContents())) {
+            if (next && !meth.call(this, next.getContents())) {
                flagAfter = true;
             }
          };
