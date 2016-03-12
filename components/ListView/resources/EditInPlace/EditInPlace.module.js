@@ -159,12 +159,9 @@ define('js!SBIS3.CONTROLS.EditInPlace',
             },
             _beginTrackHeight: function() {
                this._lastHeight = 0;
-               //При начале отслеживания высоты строки, один раз нужно пересчитать высоту синхронно, это нужно для добавления по месту,
-               //т.к. при добавлении создаётся новая tr у которой изначально нет высоты и опции записи не могут верно спозиционироваться.
-               this._recalculateHeight();
-               this._trackerInterval = setInterval(this._recalculateHeight.bind(this), 50);
+               this._trackerInterval = setInterval(this.recalculateHeight.bind(this), 50);
             },
-            _recalculateHeight: function() {
+            recalculateHeight: function() {
                var
                    newHeight = 0,
                    editorHeight;
