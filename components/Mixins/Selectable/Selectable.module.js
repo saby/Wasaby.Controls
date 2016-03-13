@@ -85,8 +85,9 @@ define('js!SBIS3.CONTROLS.Selectable', ['js!SBIS3.CONTROLS.Data.Utils', 'js!SBIS
 
 
 
-
-         if ((typeof index == 'undefined') || (index === null)) {
+         // FIXME key !== null && index === -1 - проверка для выпуска 3.7.3.100
+         // иначе, если сначала установить ключ, а потом сорс не будет отрисовываться выбранный эелемент
+         if ((typeof index == 'undefined') || (index === null) || (key !== null && index === -1)) {
             if (typeof key != 'undefined') {
                this._selectMode = 'key';
                this._options.selectedIndex = this._getItemIndexByKey(key);
