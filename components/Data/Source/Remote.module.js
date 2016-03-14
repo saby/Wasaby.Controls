@@ -71,7 +71,7 @@ define('js!SBIS3.CONTROLS.Data.Source.Remote', [
             throw new Error('Remote access provider is not defined');
          }
          if (typeof this._options.provider === 'string') {
-            //TODO: remove passing options 'service' and 'resource'
+            //TODO: remove pass options 'service' and 'resource'
             this._options.provider = Di.resolve(this._options.provider, {
                endpoint: this._options.endpoint,
                service: this._options.endpoint.address,

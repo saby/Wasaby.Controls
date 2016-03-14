@@ -18,12 +18,12 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
     * @example
     * <pre>
     *    var dataSource = new SbisService({
-    *       resource: 'СообщениеОтКлиента',
+    *       endpoint: 'СообщениеОтКлиента',
     *    });
     * </pre>
     * <pre>
     *    var dataSource = new SbisService({
-    *       resource: 'СообщениеОтКлиента',
+    *       endpoint: 'СообщениеОтКлиента',
     *       idProperty: '@СообщениеОтКлиента',
     *       queryMethodName: 'СписокОбщий',
     *       formatMethodName: 'Список'
@@ -37,27 +37,25 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
       $protected: {
          _options: {
             /**
-             * @cfg {String} Адрес удаленного сервиса, с которым работает источник (хост, путь, название)
-             * @name {SBIS3.CONTROLS.Data.Source.SbisService#service}
-             * @see getService
+             * @cfg {Endpoint|String} Конечная точка, обеспечивающая доступ клиента к функциональным возможностям источника данных
+             * @see getEndPoint
+             * @example
              * <pre>
              *    var dataSource = new SbisService({
-             *       service: '/service/url/',
-             *       resource: 'Сотрудник',
+             *       endpoint: 'Сотрудник'
+             *    });
+             * </pre>
+             * @example
+             * <pre>
+             *    var dataSource = new SbisService({
+             *       endpoint: {
+             *          address: '/service/',
+             *          contract: 'Сотрудник'
+             *       }
              *    });
              * </pre>
              */
-
-            /**
-             * @cfg {String} Имя объекта бизнес-логики
-             * @name {SBIS3.CONTROLS.Data.Source.SbisService#resource}
-             * @see getResource
-             * <pre>
-             *    var dataSource = new SbisService({
-             *       resource: 'СообщениеОтКлиента',
-             *    });
-             * </pre>
-             */
+            endpoint: {},
 
             /**
              * @cfg {String|SBIS3.CONTROLS.Data.Adapter.IAdapter} Адаптер для работы с данными, по умолчанию {@link SBIS3.CONTROLS.Data.Adapter.Sbis}
@@ -77,14 +75,14 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
              * @example
              * <pre>
              *    var dataSource = new SbisService({
-             *       resource: 'Сотрудник',
+             *       endpoint: 'Сотрудник',
              *       provider: 'source.provider.sbis-plugin'
              *    });
              * </pre>
              * @example
              * <pre>
              *    var dataSource = new SbisService({
-             *       resource: 'Сотрудник',
+             *       endpoint: 'Сотрудник',
              *       provider: new SbisPluginProvider()
              *    });
              * </pre>
@@ -164,31 +162,22 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
             this._options.idProperty = cfg.keyField;
             $ws.single.ioc.resolve('ILogger').log('SBIS3.CONTROLS.Data.Source.SbisService', 'option "keyField" is deprecated and will be removed in 3.7.4. Use "idProperty" instead.');
          }
-         //FIXME: сейчас опция service от Remote пересекается со старыми source-ами, но т.к. Костя все равно хочет по другому назвать, то пока оставляем режим совместимости
-         if ('service' in cfg && !('resource' in cfg)) {
-            this._options.resource = cfg.service;
-            this._options.service = '';
-         }
-         if (this._options.service && typeof this._options.service === 'object') {
-            this._options.resource = this._options.service.name || '';
-            this._options.service = this._options.service.serviceUrl || '';
-         }
-         if (this._options.resource && typeof this._options.resource === 'object') {
-            this._options.service = this._options.resource.serviceUrl || '';
-            this._options.resource = this._options.resource.name || '';
+         if (!('endpoint' in cfg)) {
+            if ('service' in cfg && typeof cfg.service === 'string' && !('resource' in cfg)) {
+               this._options.endpoint.contract = cfg.service;
+            }
+            if ('service' in cfg && typeof cfg.service === 'object') {
+               this._options.endpoint.contract = cfg.service.name || '';
+               this._options.endpoint.address = cfg.service.serviceUrl || '';
+            }
+            if ('resource' in cfg && typeof cfg.resource === 'object') {
+               this._options.endpoint.address = cfg.resource.serviceUrl || '';
+               this._options.endpoint.contract = cfg.resource.name || '';
+            }
          }
       },
 
       //region SBIS3.CONTROLS.Data.Source.ISource
-
-      /**
-       * Возвращает название объекта бизнес логики, с которым работает источник данных
-       * @returns {String}
-       * @see resource
-       */
-      getResource: function () {
-         return this._options.resource;
-      },
 
       /**
        * Создает пустую модель через источник данных
@@ -198,7 +187,7 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
        * @example
        * <pre>
        *     var dataSource = new SbisService({
-       *         resource: 'Сотрудник'
+       *         endpoint: 'Сотрудник'
        *         formatMethodName: 'СписокДляПрочитать'
        *     });
        *     dataSource.create().addCallback(function(model) {
@@ -484,7 +473,7 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
             var ido = String(id).split(',');
             return ido[1];
          }
-         return this._options.resource;
+         return this._options.endpoint.contract;
       },
       /**
        * вызвает метод удаления
@@ -502,8 +491,12 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
             args['ДопПоля'] = this.getAdapter().serialize(meta);
          }
          var provider = this.getProvider();
-         if (BLObjName && this._options.resource !== BLObjName) {
-            provider = Di.resolve('source.provider.sbis-business-logic', {resource: BLObjName});
+         if (BLObjName && this._options.endpoint.contract !== BLObjName) {
+            provider = Di.resolve('source.provider.sbis-business-logic', {
+               endpoint: {
+                  contract: BLObjName
+               }
+            });
          }
          return provider.call(
             this._options.destroyMethodName,

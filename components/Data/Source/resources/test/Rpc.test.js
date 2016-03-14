@@ -3,21 +3,28 @@ define([
    'js!SBIS3.CONTROLS.Data.Source.Rpc'
 ], function (RpcSource) {
    'use strict';
-   var dataSource;
-   beforeEach(function (){
-      dataSource = new RpcSource({
-         resource: '/users/',
-         provider: 'source.provider.sbis-business-logic',
-         queryMethodName: 'getUsers',
-         createMethodName: 'createUser',
-         readMethodName: 'readUser',
-         updateMethodName: 'updateUser',
-         destroyMethodName: 'deleteUser',
-         copyMethodName: 'copyUser',
-         mergeMethodName: 'mergeUsers'
-      });
-   });
+
    describe('SBIS3.CONTROLS.Data.Source.Rpc', function () {
+      var dataSource;
+
+      beforeEach(function (){
+         dataSource = new RpcSource({
+            resource: '/users/',
+            provider: 'source.provider.sbis-business-logic',
+            queryMethodName: 'getUsers',
+            createMethodName: 'createUser',
+            readMethodName: 'readUser',
+            updateMethodName: 'updateUser',
+            destroyMethodName: 'deleteUser',
+            copyMethodName: 'copyUser',
+            mergeMethodName: 'mergeUsers'
+         });
+      });
+
+      afterEach(function () {
+         dataSource = undefined;
+      });
+
       describe('.getProvider()', function () {
          it('should return Provider', function (){
             var provider = dataSource.getProvider();

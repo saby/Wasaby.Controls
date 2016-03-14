@@ -37,7 +37,7 @@ define([
                   error = '',
                   data;
 
-               switch (this._cfg.resource) {
+               switch (this._cfg.endpoint.contract) {
                   case 'Товар':
                   case 'Продукт':
                      switch (method) {
@@ -134,7 +134,7 @@ define([
                      break;
 
                   default:
-                     error = 'Service "' + this._cfg.resource + '" is not found';
+                     error = 'Contract "' + this._cfg.endpoint.contract + '" is not found';
                }
 
                setTimeout(function () {
@@ -200,19 +200,21 @@ define([
                if (arg.s !== dataSet.getRawData().s) {
                   throw new Error('Wrong value for argument s');
                }
-            };
+            },
+            service;
 
          beforeEach(function() {
             //Replace of standard with mock
             Di.register('source.provider.sbis-business-logic', SbisBusinessLogic);
+
+            service = new SbisService({
+               endpoint: 'Товар'
+            });
          });
 
          describe('.create()', function () {
             context('when the service is exists', function () {
                it('should return an empty model', function (done) {
-                  var service = new SbisService({
-                     resource: 'Товар'
-                  });
                   service.create().addCallbacks(function (model) {
                      try {
                         if (!(model instanceof Model)) {
@@ -237,9 +239,6 @@ define([
                });
 
                it('should generate a valid request', function (done) {
-                  var service = new SbisService({
-                     resource: 'Товар'
-                  });
                   service.create().addCallbacks(function () {
                      try {
                         var args = SbisBusinessLogic.lastRequest.args;
@@ -267,9 +266,6 @@ define([
                });
 
                it('should generate a request with valid meta data', function (done) {
-                  var service = new SbisService({
-                     resource: 'Товар'
-                  });
                   service.create({myParam: 'myValue'}).addCallbacks(function () {
                      try {
                         var args = SbisBusinessLogic.lastRequest.args;
@@ -294,7 +290,7 @@ define([
 
                it('should generate a request with custom method name in the filter', function (done) {
                   var service = new SbisService({
-                     resource: 'Товар',
+                     endpoint: 'Товар',
                      formatMethodName: 'ПрочитатьФормат'
                   });
                   service.create({myParam: 'myValue'}).addCallbacks(function () {
@@ -314,10 +310,7 @@ define([
                });
 
                it('should accept a model', function (done) {
-                  var service = new SbisService({
-                        resource: 'Товар'
-                     }),
-                     model = getSampleModel();
+                  var model = getSampleModel();
 
                   service.create(model).addCallbacks(function () {
                      try {
@@ -343,7 +336,7 @@ define([
             context('when the service isn\'t exists', function () {
                it('should return an error', function (done) {
                   var service = new SbisService({
-                     resource: 'Купец'
+                     endpoint: 'Купец'
                   });
                   service.create().addBoth(function (err) {
                      if (err instanceof Error) {
@@ -360,9 +353,6 @@ define([
             context('when the service is exists', function () {
                context('and the model is exists', function () {
                   it('should return valid model', function (done) {
-                     var service = new SbisService({
-                        resource: 'Товар'
-                     });
                      service.read(SbisBusinessLogic.existsId).addCallbacks(function (model) {
                         try {
                            if (!(model instanceof Model)) {
@@ -391,7 +381,7 @@ define([
 
                   it('should generate a valid request', function (done) {
                      var service = new SbisService({
-                        resource: 'Товар',
+                        endpoint: 'Товар',
                         formatMethodName: 'Формат'
                      });
                      service.read(
@@ -428,10 +418,7 @@ define([
                   });
 
                   it('should accept a model in meta argument', function (done) {
-                     var service = new SbisService({
-                           resource: 'Товар'
-                        }),
-                        model = getSampleModel();
+                     var model = getSampleModel();
                      service.read(
                         SbisBusinessLogic.existsId,
                         model
@@ -452,9 +439,6 @@ define([
 
                context('and the model isn\'t exists', function () {
                   it('should return an error', function (done) {
-                     var service = new SbisService({
-                        resource: 'Товар'
-                     });
                      service.read(SbisBusinessLogic.notExistsId).addBoth(function (err) {
                         if (err instanceof Error) {
                            done();
@@ -469,7 +453,7 @@ define([
             context('when the service isn\'t exists', function () {
                it('should return an error', function (done) {
                   var service = new SbisService({
-                     resource: 'Купец'
+                     endpoint: 'Купец'
                   });
                   service.read(SbisBusinessLogic.existsId).addBoth(function (err) {
                      if (err instanceof Error) {
@@ -486,10 +470,6 @@ define([
             context('when the service is exists', function () {
                context('and the model was stored', function () {
                   it('should update the model', function (done) {
-                     var service = new SbisService({
-                        resource: 'Товар'
-                     });
-
                      service.read(SbisBusinessLogic.existsId).addCallbacks(function (model) {
                         model.set('Фамилия', 'Петров');
                         service.update(model).addCallbacks(function (success) {
@@ -539,7 +519,7 @@ define([
                context('and the model was not stored', function () {
                   it('should create the model by 1st way', function (done) {
                      var service = new SbisService({
-                        resource: 'Товар',
+                        endpoint: 'Товар',
                         idProperty: '@Ид'
                      });
                      service.create().addCallbacks(function (model) {
@@ -555,7 +535,7 @@ define([
 
                   it('should create the model by 2nd way', function (done) {
                      var service = new SbisService({
-                           resource: 'Товар',
+                           endpoint: 'Товар',
                            idProperty: '@Ид'
                         }),
                         model = getSampleModel();
@@ -570,7 +550,7 @@ define([
 
                it('should generate a valid request', function (done) {
                   var service = new SbisService({
-                     resource: 'Товар',
+                     endpoint: 'Товар',
                      formatMethodName: 'Формат'
                   });
                   service.read(SbisBusinessLogic.existsId).addCallbacks(function (model) {
@@ -607,10 +587,7 @@ define([
                });
 
                it('should accept a model in meta argument', function (done) {
-                  var service = new SbisService({
-                        resource: 'Товар'
-                     }),
-                     modelA = getSampleModel(),
+                  var modelA = getSampleModel(),
                      modelB = getSampleModel();
                   service.update(
                      modelA,
@@ -632,11 +609,9 @@ define([
 
             context('when the service isn\'t exists', function () {
                it('should return an error', function (done) {
-                  new SbisService({
-                     resource: 'Товар'
-                  }).create().addCallbacks(function (model) {
+                  service.create().addCallbacks(function (model) {
                         var service = new SbisService({
-                           resource: 'Купец'
+                           endpoint: 'Купец'
                         });
                         service.update(model).addBoth(function (err) {
                            if (err instanceof Error) {
@@ -656,9 +631,6 @@ define([
             context('when the service is exists', function () {
                context('and the model is exists', function () {
                   it('should return success', function (done) {
-                     var service = new SbisService({
-                        resource: 'Товар'
-                     });
                      service.destroy(SbisBusinessLogic.existsId).addCallbacks(function (success) {
                         try {
                            if (!success) {
@@ -677,9 +649,6 @@ define([
 
                context('and the model isn\'t exists', function () {
                   it('should return an error', function (done) {
-                     var service = new SbisService({
-                        resource: 'Товар'
-                     });
                      service.destroy(SbisBusinessLogic.notExistsId).addBoth(function (err) {
                         if (err instanceof Error) {
                            done();
@@ -691,9 +660,6 @@ define([
                });
 
                it('should generate a valid request', function (done) {
-                  var service = new SbisService({
-                     resource: 'Товар'
-                  });
                   service.destroy(
                      SbisBusinessLogic.existsId,
                      {'ПолеОдин': true}
@@ -724,10 +690,7 @@ define([
                });
 
                it('should accept a model in meta argument', function (done) {
-                  var service = new SbisService({
-                        resource: 'Товар'
-                     }),
-                     model = getSampleModel();
+                  var model = getSampleModel();
                   service.destroy(
                      SbisBusinessLogic.existsId,
                      model
@@ -746,9 +709,6 @@ define([
                });
 
                it('should delete a few records', function (done) {
-                  var service = new SbisService({
-                     resource: 'Товар'
-                  });
                   service.destroy([0, SbisBusinessLogic.existsId, 1]).addCallbacks(function (success) {
                      try {
                         var args = SbisBusinessLogic.lastRequest.args;
@@ -777,13 +737,10 @@ define([
                });
 
                it('should delete records by a composite key', function (done) {
-                  var service = new SbisService({
-                     resource: 'Товар'
-                  });
                   service.destroy([SbisBusinessLogic.existsId + ',Товар', '987,Продукт']).addCallbacks(function (success) {
                      try {
                         var cfg = SbisBusinessLogic.lastRequest.cfg;
-                        if (cfg.resource != 'Продукт') {
+                        if (cfg.endpoint.contract != 'Продукт') {
                            throw new Error('Wrong service name');
                         }
 
@@ -806,9 +763,6 @@ define([
                });
 
                it('should delete records by text key', function (done) {
-                  var service = new SbisService({
-                     resource: 'Товар'
-                  });
                   service.destroy(['uuid']).addCallbacks(function (success) {
                      try {
                         var args = SbisBusinessLogic.lastRequest.args;
@@ -834,7 +788,7 @@ define([
             context('when the service isn\'t exists', function () {
                it('should return an error', function (done) {
                   var service = new SbisService({
-                     resource: 'Купец'
+                     endpoint: 'Купец'
                   });
                   service.destroy(SbisBusinessLogic.existsId).addBoth(function (err) {
                      if (err instanceof Error) {
@@ -850,9 +804,6 @@ define([
          describe('.query()', function () {
             context('when the service is exists', function () {
                it('should return a valid dataset', function (done) {
-                  var service = new SbisService({
-                     resource: 'Товар'
-                  });
                   service.query(new Query()).addCallbacks(function (ds) {
                      try {
                         if (!(ds instanceof DataSet)) {
@@ -871,9 +822,6 @@ define([
                });
 
                it('should take idProperty for dataset  from raw data', function (done) {
-                  var service = new SbisService({
-                     resource: 'Товар'
-                  });
                   service.query(new Query()).addCallbacks(function (ds) {
                      try {
                         if (ds.getIdProperty() !== '@Ид') {
@@ -889,9 +837,6 @@ define([
                });
 
                it('should work with no query', function (done) {
-                  var service = new SbisService({
-                     resource: 'Товар'
-                  });
                   service.query().addCallbacks(function (ds) {
                      try {
                         if (!(ds instanceof DataSet)) {
@@ -910,10 +855,7 @@ define([
                });
 
                it('should return a list instance of injected module', function (done) {
-                  var service = new SbisService({
-                        resource: 'Товар'
-                     }),
-                     MyList = List.extend({});
+                  var MyList = List.extend({});
                   service.setListModule(MyList);
                   service.query().addCallbacks(function (ds) {
                      try {
@@ -930,10 +872,7 @@ define([
                });
 
                it('should return a model instance of injected module', function (done) {
-                  var service = new SbisService({
-                        resource: 'Товар'
-                     }),
-                     MyModel = Model.extend({});
+                  var MyModel = Model.extend({});
                   service.setModel(MyModel);
                   service.query().addCallbacks(function (ds) {
                      try {
@@ -950,10 +889,7 @@ define([
                });
 
                it('should generate a valid request', function (done) {
-                  var service = new SbisService({
-                        resource: 'Товар'
-                     }),
-                     query = new Query();
+                  var query = new Query();
                   query
                      .select(['fieldOne', 'fieldTwo'])
                      .from('Goods')
@@ -1080,7 +1016,7 @@ define([
             context('when the service isn\'t exists', function () {
                it('should return an error', function (done) {
                   var service = new SbisService({
-                     resource: 'Купец'
+                     endpoint: 'Купец'
                   });
                   service.query(new Query()).addBoth(function (err) {
                      if (err instanceof Error) {
@@ -1096,10 +1032,7 @@ define([
          describe('.call()', function () {
             context('when the method is exists', function () {
                it('should accept a model', function (done) {
-                  var service = new SbisService({
-                        resource: 'Товар'
-                     }),
-                     model = getSampleModel();
+                  var model = getSampleModel();
 
                   service.call('Произвольный', model).addCallbacks(function () {
                      try {
@@ -1119,23 +1052,20 @@ define([
                   });
                });
                it('should accept a dataset', function (done) {
-                  var service = new SbisService({
-                        resource: 'Товар'
-                     }),
-                     dataSet = new DataSet({
-                        adapter: new SbisAdapter(),
-                        rawData: {
-                           d: [
-                              [1, true],
-                              [2, false],
-                              [5, true]
-                           ],
-                           s: [
-                              {'n': '@Ид', 't': 'Идентификатор'},
-                              {'n': 'Флаг', 't': 'Логическое'}
-                           ]
-                        }
-                     });
+                  var dataSet = new DataSet({
+                     adapter: new SbisAdapter(),
+                     rawData: {
+                        d: [
+                           [1, true],
+                           [2, false],
+                           [5, true]
+                        ],
+                        s: [
+                           {'n': '@Ид', 't': 'Идентификатор'},
+                           {'n': 'Флаг', 't': 'Логическое'}
+                        ]
+                     }
+                  });
 
                   service.call('Произвольный', dataSet).addCallbacks(function () {
                      try {
@@ -1158,9 +1088,6 @@ define([
 
             context('when the method isn\'t exists', function () {
                it('should return an error', function (done) {
-                  var service = new SbisService({
-                     resource: 'Товар'
-                  });
                   service.call('МойМетод').addBoth(function (err) {
                      if (err instanceof Error) {
                         done();

@@ -18,17 +18,24 @@ define('js!SBIS3.CONTROLS.Data.Source.Rpc', [
          _options: {
             /**
              * @cfg {String|SBIS3.CONTROLS.Data.Source.Provider.IRpc} Объект, реализующий сетевой протокол для обмена в режиме клиент-сервер
-             * @name {SBIS3.CONTROLS.Data.Source.Rpc#provider}
              * @see getProvider
              * @see SBIS3.CONTROLS.Data.Di
              * @example
              * <pre>
              *    var dataSource = new RpcSource({
              *       endpoint: 'Users',
-             *       provider: 'source.provider.rpc-json'
+             *       provider: 'source.provider.json-rpc'
+             *    });
+             * </pre>
+             * @example
+             * <pre>
+             *    var dataSource = new RpcSource({
+             *       endpoint: 'Users'
+             *       provider: new JsonRpcProvider()
              *    });
              * </pre>
              */
+            provider: null,
 
             /**
              * @cfg {String} Имя метода, который используется для получения выборки.

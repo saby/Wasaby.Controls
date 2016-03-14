@@ -27,7 +27,7 @@ define('js!SBIS3.CONTROLS.Data.Source.Memory', [
          /**
           * @var {SBIS3.CONTROLS.Data.Adapter.ITable} Адаптер для таблицы
           */
-         _tableAdapter: undefined,
+         _tableAdapter: null,
 
          /**
           * @var {Object} Индекс для быстрого поиска записи по ключу
@@ -216,8 +216,8 @@ define('js!SBIS3.CONTROLS.Data.Source.Memory', [
       },
 
       /**
-       * Применяет ресурс
-       * @param {String} [from] Ресурс
+       * Применяет источник выборки
+       * @param {String} [from] Источник выборки
        * @returns {*}
        * @private
        */
@@ -482,7 +482,7 @@ define('js!SBIS3.CONTROLS.Data.Source.Memory', [
     */
    var _static = {
       /**
-       * @var {Object} Хранилище контрактов
+       * @var {Object.<String, Object>} Хранилище контрактов
        * @static
        */
       contracts: {}
