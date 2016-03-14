@@ -34,7 +34,7 @@ define('js!SBIS3.CONTROLS.Data.Source.Base', [
          //Deprecated
          if ('resource' in cfg && !('endpoint' in cfg)) {
             $ws.single.ioc.resolve('ILogger').info(this._moduleName + '::$constructor()', 'Option "resource" is deprecated and will be removed in 3.7.4. Use "endpoint.contract" instead.');
-            this._options.endpoint.contract = this._options.resource;
+            this._options.endpoint.contract = cfg.resource;
          }
 
          //Shortcut support
@@ -49,6 +49,14 @@ define('js!SBIS3.CONTROLS.Data.Source.Base', [
 
       getEndpoint: function () {
          return this._options.endpoint;
+      },
+
+      getBinding: function () {
+         return this._options.binding;
+      },
+
+      setBinding: function (binding) {
+         this._options.binding = binding;
       },
 
       /**

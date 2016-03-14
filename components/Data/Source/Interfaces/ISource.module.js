@@ -17,6 +17,17 @@ define('js!SBIS3.CONTROLS.Data.Source.ISource', [
        * @property {String} contract Контракт - определяет доступные операции
        */
 
+      /**
+       * @typedef {Object} Binding
+       * @property {String} create Операция создания записи
+       * @property {String} read Операция чтения записи
+       * @property {String} update Операция обновления записи
+       * @property {String} destroy Операция удаления записи
+       * @property {String} query Операция получения списка записей
+       * @property {String} copy Операция копирования записей
+       * @property {String} merge Операция объединения записей
+       */
+
       $protected: {
          _options: {
             /**
@@ -48,6 +59,53 @@ define('js!SBIS3.CONTROLS.Data.Source.ISource', [
              * </pre>
              */
             endpoint: {},
+
+            /**
+             * @cfg {Binding} Соответствие методов CRUD+ контракту
+             * @see getBinding
+             * @see setBinding
+             * @example
+             * <pre>
+             *    var dataSource = new HttpSource({
+             *       endpoint: {
+             *          address: '//some.server/',
+             *          contract: 'users/'
+             *       },
+             *       binding: {
+             *          create: 'add/',//dataSource.create() calls //some.server/users/add/ via HTTP
+             *          read: 'load/',//dataSource.read() calls //some.server/users/load/ via HTTP
+             *          update: 'save/',//dataSource.update() calls //some.server/users/save/ via HTTP
+             *          destroy: 'delete/',//dataSource.destroy() calls //some.server/users/delete/ via HTTP
+             *          query: 'list/',//dataSource.query() calls //some.server/users/list/ via HTTP
+             *       }
+             *    });
+             * </pre>
+             * @example
+             * <pre>
+             *    var dataSource = new RpcSource({
+             *       endpoint: {
+             *          address: '//some.server/rpc-gate/',
+             *          contract: 'Users'
+             *       },
+             *       binding: {
+             *          create: 'Add',//dataSource.create() calls UsersAdd() via RPC
+             *          read: 'Load',//dataSource.read() calls UsersLoad() via RPC
+             *          update: 'Save',//dataSource.update() calls UsersSave() via RPC
+             *          destroy: 'Delete',//dataSource.destroy() calls UsersDelete() via RPC
+             *          query: 'List',//dataSource.query() calls UsersList() via RPC
+             *       }
+             *    });
+             * </pre>
+             */
+            binding: {
+               create: '',
+               read: '',
+               update: '',
+               destroy: '',
+               query: '',
+               copy: '',
+               merge: ''
+            },
 
             /**
              * @cfg {String|SBIS3.CONTROLS.Data.Adapter.IAdapter} Адаптер для работы с данными, по умолчанию {@link SBIS3.CONTROLS.Data.Adapter.Json}
@@ -156,6 +214,26 @@ define('js!SBIS3.CONTROLS.Data.Source.ISource', [
        * @see endpoint
        */
       getEndpoint: function () {
+         throw new Error('Method must be implemented');
+      },
+
+      /**
+       * Возвращает соответствие методов CRUD+ контракту
+       * @returns {Binding}
+       * @see binding
+       * @see setBinding
+       */
+      getBinding: function () {
+         throw new Error('Method must be implemented');
+      },
+
+      /**
+       * Возвращает соответствие методов CRUD+ контракту
+       * @param {Binding} binding
+       * @see binding
+       * @see getBinding
+       */
+      setBinding: function (binding) {
          throw new Error('Method must be implemented');
       },
 

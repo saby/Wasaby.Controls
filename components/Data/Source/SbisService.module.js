@@ -24,10 +24,12 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
     * <pre>
     *    var dataSource = new SbisService({
     *       endpoint: 'СообщениеОтКлиента',
-    *       idProperty: '@СообщениеОтКлиента',
-    *       queryMethodName: 'СписокОбщий',
-    *       formatMethodName: 'Список'
-    *       readMethodName: 'Прочитать'
+    *       binding: {
+    *          read: 'Прочитать',
+    *          query: 'СписокОбщий',
+    *          format: 'Список'
+    *       }
+    *       idProperty: '@СообщениеОтКлиента'
     *    });
     * </pre>
     */
@@ -56,6 +58,46 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
              * </pre>
              */
             endpoint: {},
+
+            /**
+             * @cfg {Binding} Соответствие методов CRUD+ методам БЛ. По умолчанию:
+             * <pre>
+             *    {
+             *       create: 'Создать',
+             *       read: 'Прочитать',
+             *       update: 'Записать',
+             *       destroy: 'Удалить',
+             *       query: 'Список',
+             *       copy: 'Копировать',
+             *       merge: 'Объединить',
+             *       format: undefined
+             *    }
+             * </pre>
+             * @see getBinding
+             * @see setBinding
+             * @example
+             * <pre>
+             *    var dataSource = new SbisService({
+             *       endpoint: 'Сотрудник',
+             *       binding: {
+             *          create: 'МойМетодСоздать',
+             *          read: 'МойМетодПрочитать',
+             *          update: 'МойМетодЗаписать',
+             *          destroy: 'МойМетодУдалить'
+             *       }
+             *    });
+             * </pre>
+             */
+            binding: {
+               create: 'Создать',
+               read: 'Прочитать',
+               update: 'Записать',
+               destroy: 'Удалить',
+               query: 'Список',
+               copy: 'Копировать',
+               merge: 'Объединить',
+               format: undefined
+            },
 
             /**
              * @cfg {String|SBIS3.CONTROLS.Data.Adapter.IAdapter} Адаптер для работы с данными, по умолчанию {@link SBIS3.CONTROLS.Data.Adapter.Sbis}
@@ -88,48 +130,6 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
              * </pre>
              */
             provider: 'source.provider.sbis-business-logic',
-
-            /**
-             * @cfg {String} Имя метода, который используется для получения выборки. По умолчанию 'Список'.
-             * @see SBIS3.CONTROLS.Data.Source.Rpc#queryMethodName
-             */
-            queryMethodName: 'Список',
-
-            /**
-             * @cfg {String} Имя метода, который используется для создания записи. По умолчанию 'Создать'.
-             * @see SBIS3.CONTROLS.Data.Source.Rpc#createMethodName
-             */
-            createMethodName: 'Создать',
-
-            /**
-             * @cfg {String} Имя метода, который используется для чтения записи. По умолчанию 'Прочитать'.
-             * @see SBIS3.CONTROLS.Data.Source.Rpc#readMethodName
-             */
-            readMethodName: 'Прочитать',
-
-            /**
-             * @cfg {String} Имя метода, который используется для обновления записи. По умолчанию 'Записать'.
-             * @see SBIS3.CONTROLS.Data.Source.Rpc#updateMethodName
-             */
-            updateMethodName: 'Записать',
-
-            /**
-             * @cfg {String} Имя метода, который используется для удаления записи . По умолчанию 'Удалить'.
-             * @see SBIS3.CONTROLS.Data.Source.Rpc#destroyMethodName
-             */
-            destroyMethodName: 'Удалить',
-
-            /**
-             * @cfg {String} Имя метода, который будет вызываться для копирования записей. По умолчанию 'Копировать'.
-             * @see SBIS3.CONTROLS.Data.Source.Rpc#copyMethodName
-             */
-            copyMethodName: 'Копировать',
-
-            /**
-             * @cfg {String} Имя метода, который будет вызываться для объединения записей. По умолчанию 'Объединить'.
-             * @see SBIS3.CONTROLS.Data.Source.Rpc#mergeMethodName
-             */
-            mergeMethodName: 'Объединить',
 
             /**
              * @cfg {String} Имя метода, который будет использоваться для получения формата записи в методах {@link create}, {@link read} и {@link copy}. Метод должен быть декларативным.
@@ -176,6 +176,12 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
                this._options.endpoint.contract = cfg.resource.name || '';
             }
          }
+         if (!('binding' in cfg)) {
+            if ('formatMethodName' in cfg) {
+               $ws.single.ioc.resolve('ILogger').info(this._moduleName + '::$constructor()', 'Option "formatMethodName" is deprecated and will be removed in 3.7.4. Use "binding.format" instead.');
+               this._options.binding.format = cfg.formatMethodName;
+            }
+         }
       },
 
       //region SBIS3.CONTROLS.Data.Source.ISource
@@ -202,7 +208,7 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
             'Фильтр': this.getAdapter().serialize(meta || {
                'ВызовИзБраузера': true
             }),
-            'ИмяМетода': this._options.formatMethodName || null
+            'ИмяМетода': this._options.binding.format || null
          };
 
          return this.getProvider().call(
@@ -226,7 +232,7 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
       read: function(key, meta) {
          var args = {
             'ИдО': key,
-            'ИмяМетода': this._options.formatMethodName || null
+            'ИмяМетода': this._options.binding.format || null
          };
          if (meta && !Object.isEmpty(meta)) {
             args['ДопПоля'] = this.getAdapter().serialize(meta);
@@ -326,7 +332,7 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
       copy: function(key, meta) {
          var args = {
             'ИдО': key,
-            'ИмяМетода': this._options.formatMethodName
+            'ИмяМетода': this._options.binding.format
          };
          if (meta && !Object.isEmpty(meta)) {
             args['ДопПоля'] = this.getAdapter().serialize(meta);

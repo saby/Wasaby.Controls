@@ -46,7 +46,7 @@ define('js!SBIS3.CONTROLS.Data.Source.Remote', [
          //Deprecated
          if ('service' in cfg && !('endpoint' in cfg)) {
             $ws.single.ioc.resolve('ILogger').info(this._moduleName + '::$constructor()', 'Option "service" is deprecated and will be removed in 3.7.4. Use "endpoint.address" instead.');
-            this._options.endpoint.address = this._options.service;
+            this._options.endpoint.address = cfg.service;
          }
       },
 
