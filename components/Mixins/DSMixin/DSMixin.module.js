@@ -1212,7 +1212,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
             this._addItemAttributes(newItemContainer, item);
             this._clearItems(container);
             container.replaceWith(newItemContainer);
-            this._ladderCompare([container.prev(), container, container.next()]);
+            this._ladderCompare([newItemContainer.prev(), newItemContainer, newItemContainer.next()]);
          }
       },
 
