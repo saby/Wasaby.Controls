@@ -57,7 +57,7 @@ define('js!SBIS3.CONTROLS.Data.Source.Base', [
        */
       getResource: function () {
          $ws.single.ioc.resolve('ILogger').info(this._moduleName + '::getResource()', 'Method is deprecated and will be removed in 3.7.4. Use "getEndpoint" instead.');
-         return this._options.resource || '';
+         return this._options.endpoint.contract || '';
       },
 
       getAdapter: function () {

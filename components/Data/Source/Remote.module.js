@@ -58,7 +58,7 @@ define('js!SBIS3.CONTROLS.Data.Source.Remote', [
        */
       getService: function () {
          $ws.single.ioc.resolve('ILogger').info(this._moduleName + '::getService()', 'Method is deprecated and will be removed in 3.7.4. Use "getEndpoint" instead.');
-         return this._options.service || '';
+         return this._options.endpoint.address || '';
       },
 
       /**

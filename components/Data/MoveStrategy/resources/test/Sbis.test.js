@@ -51,7 +51,7 @@ define([
             });
             it('should get resource from data source', function() {
                var service = new SbisService({
-                  resource: 'Товар'
+                  endpoint: 'Товар'
                });
                moveStrategy = new SbisMoveStrategy({
                   dataSource: service
