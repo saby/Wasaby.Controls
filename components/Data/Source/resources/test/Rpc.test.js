@@ -9,7 +9,7 @@ define([
 
       beforeEach(function (){
          dataSource = new RpcSource({
-            resource: '/users/',
+            endpoint: '/users/',
             provider: 'source.provider.sbis-business-logic',
             queryMethodName: 'getUsers',
             createMethodName: 'createUser',

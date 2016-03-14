@@ -1,4 +1,4 @@
-/* global define, describe, context, beforeEach, it, assert, $ws */
+/* global define, describe, context, beforeEach, afterEach, it, assert, $ws */
 define([
    'js!SBIS3.CONTROLS.Data.Source.SbisService',
    'js!SBIS3.CONTROLS.Data.Di',
@@ -210,6 +210,10 @@ define([
             service = new SbisService({
                endpoint: 'Товар'
             });
+         });
+
+         afterEach(function () {
+            service = undefined;
          });
 
          describe('.create()', function () {
@@ -554,7 +558,6 @@ define([
                      formatMethodName: 'Формат'
                   });
                   service.read(SbisBusinessLogic.existsId).addCallbacks(function (model) {
-                     var raw = model.getRawData();
                      service.update(
                         model,
                         {'ПолеОдин': '2'}
@@ -713,7 +716,7 @@ define([
                      try {
                         var args = SbisBusinessLogic.lastRequest.args;
 
-                        if (args['ИдО'][0] !== 0 && args['ИдО'][0] !== "0") {
+                        if (args['ИдО'][0] !== 0 && args['ИдО'][0] !== '0') {
                            throw new Error('Wrong argument ИдО[0]');
                         }
                         if (args['ИдО'][1] != SbisBusinessLogic.existsId) {

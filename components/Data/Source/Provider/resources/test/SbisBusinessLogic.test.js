@@ -1,4 +1,4 @@
-/* global define, beforeEach, afterEach, describe, context, it, assert, $ws */
+/* global define, beforeEach, afterEach, describe, it, assert */
 define([
    'js!SBIS3.CONTROLS.Data.Source.Provider.SbisBusinessLogic'
 ], function (SbisBusinessLogic) {
@@ -8,9 +8,15 @@ define([
    describe('SBIS3.CONTROLS.Data.Source.Provider.SbisBusinessLogic', function () {
       beforeEach(function (){
          provider = new SbisBusinessLogic({
-            resource: 'user',
-            service: '/users'
+            endpoint: {
+               address: '/users',
+               contract: 'user'
+            }
          });
+      });
+
+      afterEach(function () {
+         provider = undefined;
       });
 
       describe('.getEndpoint()', function () {
@@ -24,12 +30,19 @@ define([
 
       describe('.getService()', function () {
          it('should return service', function (){
+            var provider = new SbisBusinessLogic({
+               resource: 'user',
+               service: '/users'
+            });
             assert.equal(provider.getService(), '/users');
          });
       });
 
       describe('.getResource()', function () {
          it('should return resource', function (){
+            var provider = new SbisBusinessLogic({
+               resource: 'user'
+            });
             assert.equal(provider.getResource(), 'user');
          });
       });
