@@ -24,7 +24,7 @@ define('js!SBIS3.CONTROLS.Data.Source.Rpc', [
              * @example
              * <pre>
              *    var dataSource = new RpcSource({
-             *       resource: '/users/'
+             *       endpoint: 'Users',
              *       provider: 'source.provider.rpc-json'
              *    });
              * </pre>
@@ -38,7 +38,7 @@ define('js!SBIS3.CONTROLS.Data.Source.Rpc', [
              * @example
              * <pre>
              *    var usersSource = new RpcSource({
-             *       resource: '/api/'
+             *       endpoint: 'Users',
              *       queryMethodName: 'getUsers'
              *    });
              * </pre>
@@ -53,7 +53,7 @@ define('js!SBIS3.CONTROLS.Data.Source.Rpc', [
              * @example
              * <pre>
              *    var usersSource = new RpcSource({
-             *       resource: '/api/'
+             *       endpoint: 'Users',
              *       createMethodName: 'createUser'
              *    });
              * </pre>
@@ -68,7 +68,7 @@ define('js!SBIS3.CONTROLS.Data.Source.Rpc', [
              * @example
              * <pre>
              *    var usersSource = new RpcSource({
-             *       resource: '/api/'
+             *       endpoint: 'Users',
              *       readMethodName: 'readUser'
              *    });
              * </pre>
@@ -83,7 +83,7 @@ define('js!SBIS3.CONTROLS.Data.Source.Rpc', [
              * @example
              * <pre>
              *    var usersSource = new RpcSource({
-             *       resource: '/api/'
+             *       endpoint: 'Users',
              *       updateMethodName: 'updateUser'
              *    });
              * </pre>
@@ -98,7 +98,7 @@ define('js!SBIS3.CONTROLS.Data.Source.Rpc', [
              * @example
              * <pre>
              *    var usersSource = new RpcSource({
-             *       resource: '/api/'
+             *       endpoint: 'Users',
              *       destroyMethodName: 'deleteUser'
              *    });
              * </pre>
@@ -113,7 +113,7 @@ define('js!SBIS3.CONTROLS.Data.Source.Rpc', [
              * @example
              * <pre>
              *    var usersSource = new RpcSource({
-             *       resource: '/api/'
+             *       endpoint: 'Users',
              *       copyMethodName: 'copyUser'
              *    });
              * </pre>
@@ -128,7 +128,7 @@ define('js!SBIS3.CONTROLS.Data.Source.Rpc', [
              * @example
              * <pre>
              *    var usersSource = new RpcSource({
-             *       resource: '/api/'
+             *       endpoint: 'Users',
              *       mergeMethodName: 'mergeUsers'
              *    });
              * </pre>

@@ -27,14 +27,37 @@ define('js!SBIS3.CONTROLS.Data.Source.Base', [
 
       _moduleName: 'SBIS3.CONTROLS.Data.Source.Base',
 
-      $constructor: function () {
+      $constructor: function (cfg) {
          this._publish('onDataSync');
+
+         cfg = cfg || {};
+         if ('resource' in cfg && !('endpoint' in cfg)) {
+            $ws.single.ioc.resolve('ILogger').info(this._moduleName + '::$constructor()', 'Option "resource" is deprecated and will be removed in 3.7.4. Use "endpoint.contract" instead.');
+            this._options.endpoint.contract = this._options.resource;
+         }
+
+         //Shortcut support
+         if (typeof this._options.endpoint === 'string') {
+            this._options.endpoint = {
+               contract: this._options.endpoint
+            };
+         }
       },
 
       //region SBIS3.CONTROLS.Data.Source.ISource
 
+      getEndpoint: function () {
+         return this._options.endpoint;
+      },
+
+      /**
+       * Возвращает ресурс, с которым работает источник
+       * @deprecated Метод будет удален в 3.7.4, используйте getEndpoint
+       * @returns {String}
+       */
       getResource: function () {
-         return this._options.resource;
+         $ws.single.ioc.resolve('ILogger').info(this._moduleName + '::getResource()', 'Method is deprecated and will be removed in 3.7.4. Use "getEndpoint" instead.');
+         return this._options.resource || '';
       },
 
       getAdapter: function () {

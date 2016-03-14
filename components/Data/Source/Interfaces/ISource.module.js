@@ -1,4 +1,4 @@
-/* global define, $ws */
+/* global define */
 define('js!SBIS3.CONTROLS.Data.Source.ISource', [
 ], function () {
    'use strict';
@@ -24,7 +24,7 @@ define('js!SBIS3.CONTROLS.Data.Source.ISource', [
              * @see getEndPoint
              * @example
              * <pre>
-             *    var dataSource = new Source({
+             *    var dataSource = new HttpSource({
              *       endpoint: {
              *          address: '/api/',
              *          contract: 'users/'
@@ -33,7 +33,7 @@ define('js!SBIS3.CONTROLS.Data.Source.ISource', [
              * </pre>
              * @example
              * <pre>
-             *    var dataSource = new Source({
+             *    var dataSource = new HttpSource({
              *       endpoint: '/users/'
              *    });
              * </pre>
@@ -279,7 +279,7 @@ define('js!SBIS3.CONTROLS.Data.Source.ISource', [
        * @example
        * <pre>
        *    var dataSource = new RestSource({
-       *       resource: '/articles/'
+       *       endpoint: '/articles/'
        *    });
        *    dataSource.create().addCallback(function(model) {
        *       var id = model.get('Id'),//01c5151e-21fe-5316-d118-cb13216c9412
@@ -301,7 +301,7 @@ define('js!SBIS3.CONTROLS.Data.Source.ISource', [
        * @example
        * <pre>
        *    var dataSource = new RestSource({
-       *       resource: '/articles/'
+       *       endpoint: '/articles/'
        *    });
        *    dataSource.read('how-to-read-an-item').addCallback(function(model) {
        *       var id = model.get('Id'),//how-to-read-an-item
@@ -323,7 +323,7 @@ define('js!SBIS3.CONTROLS.Data.Source.ISource', [
        * @example
        * <pre>
        *    var dataSource = new RestSource({
-       *       resource: '/articles/'
+       *       endpoint: '/articles/'
        *    }),
        *    article = new Model({
        *       rawData: {
@@ -350,7 +350,7 @@ define('js!SBIS3.CONTROLS.Data.Source.ISource', [
        * @example
        * <pre>
        *    var dataSource = new RestSource({
-       *       resource: '/articles/'
+       *       endpoint: '/articles/'
        *    });
        *    dataSource.destroy('article-id-to-destroy').addCallback(function() {
        *       $ws.helpers.alert('The article was deleted successfully');
@@ -399,7 +399,7 @@ define('js!SBIS3.CONTROLS.Data.Source.ISource', [
        * @example
        * <pre>
        *    var dataSource = new Source({
-       *          resource: 'Employee'
+       *          endpoint: 'Employee'
        *       }),
        *       query = new Query();
        *    query.select([
@@ -433,7 +433,7 @@ define('js!SBIS3.CONTROLS.Data.Source.ISource', [
        * @example
        * <pre>
        *    var dataSource = new Source({
-       *       resource: 'Employee'
+       *       endpoint: 'Employee'
        *    });
        *    dataSource.call('GiveAGift', {
        *       birthDate: new Date()
