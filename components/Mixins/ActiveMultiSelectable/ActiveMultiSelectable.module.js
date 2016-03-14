@@ -50,12 +50,18 @@ define('js!SBIS3.CONTROLS.ActiveMultiSelectable', [], function() {
 
          list = this._prepareItems(list);
 
-         if(this._options.multiselect) {
-            list.each(function(rec) {
-               newItems.push(rec);
-            });
-         } else if(list.getCount()) {
-            newItems = [list.at(0)];
+         if(this._options.selectedItems.equals(list)) {
+            return;
+         }
+
+         if(list.getCount()) {
+            if(this._options.multiselect) {
+               list.each(function(rec) {
+                  newItems.push(rec);
+               });
+            } else {
+               newItems = [list.at(0)];
+            }
          }
 
          this._options.selectedItems = this._makeList(newItems);
@@ -92,7 +98,7 @@ define('js!SBIS3.CONTROLS.ActiveMultiSelectable', [], function() {
          }
 
          if(!$ws.helpers.instanceOfModule(items, 'SBIS3.CONTROLS.Data.Collection.List')) {
-            throw new Error('setSelectedItems called with invalid argument');
+            throw new Error('ActiveMultiSelectable::setSelectedItems called with invalid argument');
          }
 
          return items;
