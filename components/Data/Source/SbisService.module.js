@@ -154,6 +154,7 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
 
       $constructor: function(cfg) {
          cfg = cfg || {};
+         //Deprecated
          if ('strategy' in cfg && !('adapter' in cfg)) {
             this._options.adapter = cfg.strategy;
             $ws.single.ioc.resolve('ILogger').log('SBIS3.CONTROLS.Data.Source.SbisService', 'option "strategy" is deprecated and will be removed in 3.7.4. Use "adapter" instead.');
