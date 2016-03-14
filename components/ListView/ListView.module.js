@@ -254,6 +254,7 @@ define('js!SBIS3.CONTROLS.ListView',
                 * @property {String} name Имя кнопки.
                 * @property {String} icon Путь до иконки.
                 * @property {String} caption Текст на кнопке.
+                * @property {String} parent Идентификатор родительского пункта меню (name). Опция задаётся для подменю.
                 * @property {String} tooltip Всплывающая подсказка.
                 * @property {Boolean} isMainAction Отображать ли кнопку на строке или только выпадающем в меню.
                 * На строке кнопки отображаются в том же порядке, в каком они перечислены.
