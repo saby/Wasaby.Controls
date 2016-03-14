@@ -1776,25 +1776,30 @@ define('js!SBIS3.CONTROLS.ListView',
             }
             return keys;
          },
+         _canDragStart: function(e) {
+            //TODO: При попытке выделить текст в поле ввода, вместо выделения начинается перемещения элемента.
+            //Как временное решение добавлена проверка на SBIS3.CONTROLS.TextBoxBase.
+            //Необходимо разобраться можно ли на уровне TextBoxBase или Control для события mousedown
+            //сделать stopPropagation, тогда от данной проверки можно будет избавиться.
+            return !this._isShifted && this._options.enabled && !$ws.helpers.instanceOfModule($(e.target).wsControl(), 'SBIS3.CONTROLS.TextBoxBase');
+         },
          _onDragStart: function(e) {
-            //TODO: придумать как избавиться от второй проверки. За поля ввода DragNDrop происходить не должен.
-            if (this._isShifted || $ws.helpers.instanceOfModule($(e.target).wsControl(), 'SBIS3.CONTROLS.TextBoxBase')) {
-               return;
-            }
             var
-                target = this._findItemByElement($(e.target)),
-                id = target.data('id');
-            if (id) {
+                id,
+                target;
+            if (this._canDragStart(e)) {
+               target = this._findItemByElement($(e.target));
+               id = target.data('id');
                this.setCurrentElement(e, {
                   keys: this._getDragItems(id),
                   targetId: id,
                   target: target,
                   insertAfter: undefined
                });
-            }
-            //Предотвращаем нативное выделение текста на странице
-            if (!$ws._const.compatibility.touch) {
-               e.preventDefault();
+               //Предотвращаем нативное выделение текста на странице
+               if (!$ws._const.compatibility.touch) {
+                  e.preventDefault();
+               }
             }
          },
          _callMoveOutHandler: function() {
