@@ -24,7 +24,6 @@ define('js!SBIS3.CONTROLS.ComponentBinder', [], function () {
          view.setHighlightEnabled(true);
          view.setInfiniteScroll(true, true);
          view.setGroupBy(groupBy);
-         view._itemsProjection.setParentProperty(null);
          if (this._firstSearch) {
             this._lastRoot = view.getCurrentRoot();
             this._lastParentProperty = view._itemsProjection.getParentProperty();
@@ -33,6 +32,7 @@ define('js!SBIS3.CONTROLS.ComponentBinder', [], function () {
                this._pathDSRawData = $ws.core.clone(this._options.breadCrumbs.getItems().getRawData());
             }
          }
+         view._itemsProjection.setParentProperty(null);
          this._firstSearch = false;
          //Флаг обозначает, что ввод был произведен пользователем
          this._searchReload = true;
@@ -229,7 +229,9 @@ define('js!SBIS3.CONTROLS.ComponentBinder', [], function () {
             this._lastRoot = view.getCurrentRoot();
             view.subscribe('onBeforeSetRoot', function(ev, newRoot){
                self._lastRoot = newRoot;
-               breakSearch.call(self, searchForm, false);
+               if (self._searchMode) {
+                  breakSearch.call(self, searchForm, false);
+               }
             });
             view.subscribe('onSetRoot', function(event, curRoot, hierarchy){
                //onSetRoot стреляет после того как перешли в режим поиска (так как он стреляет при каждом релоаде), 
