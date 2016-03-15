@@ -46,17 +46,24 @@ define('js!SBIS3.CONTROLS.Utils.ImageUtil',[], function () {
                }
                return imgDimension < dialogDimensionMin ? dialogDimensionMin : imgDimension;
             },
+            //функция получение реального размера изображения тк в ie8 нет naturalHeight/width
+            getNatural = function(DOMelement) {
+               var img = new Image();
+               img.src = DOMelement.src;
+               return {width: img.width, height: img.height};
+            },
+            targetWidth = getNatural(target).width,
+            targetHeight =  getNatural(target).height,
          //процент уменьшения изображения
             perRatio = perMostSide({
                docW: docWidth,
                docH: docHeight,
-               imgW: target.naturalWidth,
-               imgH: target.naturalHeight
+               imgW: targetWidth,
+               imgH: targetHeight
             });
-
          return {
-            width: sideDimension(docWidth, target.naturalWidth, perRatio),
-            height: sideDimension(docHeight, target.naturalHeight, perRatio)
+            width: sideDimension(docWidth, targetWidth, perRatio),
+            height: sideDimension(docHeight, targetHeight, perRatio)
          };
       }
    };
