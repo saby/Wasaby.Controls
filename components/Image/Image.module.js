@@ -322,7 +322,7 @@ define('js!SBIS3.CONTROLS.Image',
                   imageInstance = this.getParent();
                if (response.hasOwnProperty('error')) {
                   $ws.helpers.toggleLocalIndicator(imageInstance._container, false);
-                  imageInstance._boundEvents.onErrorLoad(response.error);
+                  imageInstance._boundEvents.onErrorLoad(response.error, true);
                } else {
                   imageInstance._notify('onEndLoad');
                   if (imageInstance._options.edit) {
@@ -350,9 +350,9 @@ define('js!SBIS3.CONTROLS.Image',
                   this._notify('onChangeImage', this._imageUrl);
                }
             },
-            _onErrorLoad: function(error) {
+            _onErrorLoad: function(error, withoutReload) {
                this._notify('onErrorLoad', error);
-               if (this._imageUrl !== this._options.defaultImage) {
+               if (!withoutReload && this._imageUrl !== this._options.defaultImage) {
                   this._setImage(this._options.defaultImage);
                }
             },

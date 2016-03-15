@@ -1276,6 +1276,12 @@ define('js!SBIS3.CONTROLS.ListView',
                this._nextLoad();
             }
          },
+         _cancelLoading: function(){
+            ListView.superclass._dataLoadedCallback.apply(this, arguments);
+            if (this._isAllowInfiniteScroll()){
+               this._hideLoadingIndicator();
+            }
+         },
          _nextLoad: function () {
             var self = this,
                loadAllowed  = this._isAllowInfiniteScroll(),

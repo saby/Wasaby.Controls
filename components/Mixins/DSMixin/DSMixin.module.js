@@ -527,10 +527,10 @@ define('js!SBIS3.CONTROLS.DSMixin', [
                       if (self._items !== self._dataSet) {
                          self._dataSet.assign(list);
                       }
-                      self._dataLoadedCallback();
                       if (!this._options.autoRedraw) {
                          this.redraw();
                       }
+                      self._dataLoadedCallback();
                    }
                    else {
                       self._notify('onDataLoad', list);
@@ -1126,6 +1126,21 @@ define('js!SBIS3.CONTROLS.DSMixin', [
       _addItem: function (item, at) {
          var ladderDecorator = this._decorators.getByName('ladder');
          ladderDecorator && ladderDecorator.setMarkLadderColumn(true);
+         /*TODO отдельно обрабатываем случай с группировкой*/
+         var flagAfter = false;
+         if (!Object.isEmpty(this._options.groupBy)) {
+            var
+               meth = this._options.groupBy.method,
+               prev = this._itemsProjection.getPrevious(item),
+               next = this._itemsProjection.getNext(item);
+            if(prev)
+                meth.call(this, prev.getContents());
+            meth.call(this, item.getContents());
+            if (next && !meth.call(this, next.getContents())) {
+               flagAfter = true;
+            }
+         };
+         /**/
          item = item.getContents();
          var target = this._getTargetContainer(item),
             currentItemAt = at > 0 ? this._getItemContainerByIndex(target, at - 1) : null,
@@ -1133,11 +1148,14 @@ define('js!SBIS3.CONTROLS.DSMixin', [
             newItemContainer = this._buildTplItem(item, template),
             rows;
          this._addItemAttributes(newItemContainer, item);
-         if (currentItemAt && currentItemAt.length) {
+         if (flagAfter) {
+            newItemContainer.insertBefore(this._getItemContainerByIndex(target, at));
+            rows = [newItemContainer.prev().prev(), newItemContainer.prev(), newItemContainer, newItemContainer.next(), newItemContainer.next().next()];
+         } else if (currentItemAt && currentItemAt.length) {
             newItemContainer.insertAfter(currentItemAt);
             rows = [newItemContainer.prev().prev(), newItemContainer.prev(), newItemContainer, newItemContainer.next(), newItemContainer.next().next()];
          } else if(at === 0) {
-            newItemContainer.insertBefore(this._getItemContainerByIndex(target, 0));
+            newItemContainer.prependTo(target);
             rows = [newItemContainer, newItemContainer.next(), newItemContainer.next().next()];
          } else {
             newItemContainer.appendTo(target);

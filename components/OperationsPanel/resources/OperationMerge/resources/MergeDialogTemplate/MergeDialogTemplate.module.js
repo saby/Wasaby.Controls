@@ -84,7 +84,7 @@ define('js!SBIS3.CONTROLS.MergeDialogTemplate', [
                 //TODO: Данный костыль нужен для того, чтобы добавить в dataSet колонки, выпилить когда необходимое api появится у dataSet'а
                 var rawData = ds.getRawData();
                 rawData.s.push({n: COMMENT_FIELD_NAME, t: 'Строка'}, {n: AVAILABLE_FIELD_NAME, t: 'Логическое'});
-                self._treeView.setFilter({});
+                self._treeView.setFilter({}, true);
                 self._treeView.setDataSource(new MemorySource({
                     idProperty: dataSource.getIdProperty(),
                     data: rawData,
