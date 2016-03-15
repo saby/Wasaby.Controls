@@ -61,11 +61,11 @@ define('js!SBIS3.CONTROLS.Data.Source.Base', [
 
       /**
        * Возвращает ресурс, с которым работает источник
-       * @deprecated Метод будет удален в 3.7.4, используйте getEndpoint
+       * @deprecated Метод будет удален в 3.7.4, используйте getEndpoint().contract
        * @returns {String}
        */
       getResource: function () {
-         $ws.single.ioc.resolve('ILogger').info(this._moduleName + '::getResource()', 'Method is deprecated and will be removed in 3.7.4. Use "getEndpoint" instead.');
+         $ws.single.ioc.resolve('ILogger').info(this._moduleName + '::getResource()', 'Method is deprecated and will be removed in 3.7.4. Use "getEndpoint().contract" instead.');
          return this._options.endpoint.contract || '';
       },
 

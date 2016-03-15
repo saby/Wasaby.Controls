@@ -55,10 +55,10 @@ define('js!SBIS3.CONTROLS.Data.Source.Remote', [
       /**
        * Возвращает адрес удаленного сервиса, с которым работает источник (хост, путь, название)
        * @returns {String}
-       * @deprecated Метод будет удален в 3.7.4, используйте getEndpoint
+       * @deprecated Метод будет удален в 3.7.4, используйте getEndpoint().address
        */
       getService: function () {
-         $ws.single.ioc.resolve('ILogger').info(this._moduleName + '::getService()', 'Method is deprecated and will be removed in 3.7.4. Use "getEndpoint" instead.');
+         $ws.single.ioc.resolve('ILogger').info(this._moduleName + '::getService()', 'Method is deprecated and will be removed in 3.7.4. Use "getEndpoint().address" instead.');
          return this._options.endpoint.address || '';
       },
 
@@ -72,9 +72,9 @@ define('js!SBIS3.CONTROLS.Data.Source.Remote', [
             throw new Error('Remote access provider is not defined');
          }
          if (typeof this._options.provider === 'string') {
-            //TODO: remove pass options 'service' and 'resource'
             this._options.provider = Di.resolve(this._options.provider, {
                endpoint: this._options.endpoint,
+               //TODO: remove pass 'service' and 'resource'
                service: this._options.endpoint.address,
                resource: this._options.endpoint.contract
             });
