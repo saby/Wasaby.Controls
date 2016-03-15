@@ -74,7 +74,7 @@ define('js!SBIS3.CONTROLS.MergeDialogTemplate', [
             this._treeView.subscribe('onSelectedItemChange', this.onSelectedItemChange.bind(this));
             this._treeView.setGroupBy(this._treeView.getSearchGroupBy(), false);
             dataSource = new SbisServiceSource(this._options.dataSource._options);
-            dataSource.setQueryMethodName(this._options.queryMethodName ? this._options.queryMethodName : this._options.dataSource.getQueryMethodName());
+            dataSource.getBinding().query = this._options.queryMethodName ? this._options.queryMethodName : this._options.dataSource.getBinding().query;
             this._treeView.setDataSource(dataSource, true);
             this._treeView.reload({
                 'Разворот': 'С разворотом',

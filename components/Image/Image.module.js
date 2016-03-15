@@ -248,7 +248,7 @@ define('js!SBIS3.CONTROLS.Image',
                   this._fileLoader = this.getChildControlByName('FileLoader');
                   //todo Удалить, временная опция для поддержки смены логотипа компании
                   if (dataSource) {
-                     this._fileLoader.setMethod((this._options.linkedObject || dataSource.getEndpoint().contract) + '.' + dataSource.getCreateMethodName());
+                     this._fileLoader.setMethod((this._options.linkedObject || dataSource.getEndpoint().contract) + '.' + dataSource.getBinding().create);
                   }
                   this._bindToolbarEvents();
                }
@@ -267,7 +267,7 @@ define('js!SBIS3.CONTROLS.Image',
                   dataSource = this.getDataSource();
                if (dataSource) {
                   this._setImage($ws.helpers.prepareGetRPCInvocationURL(dataSource.getEndpoint().contract,
-                     dataSource.getReadMethodName(), this._options.filter, $ws.proto.BLObject.RETURN_TYPE_ASIS));
+                     dataSource.getBinding().read, this._options.filter, $ws.proto.BLObject.RETURN_TYPE_ASIS));
                } else {
                   this._setImage(this._options.defaultImage);
                }
@@ -468,7 +468,7 @@ define('js!SBIS3.CONTROLS.Image',
                         dataSource = self.getDataSource(),
                         sendFilter = filter && Object.prototype.toString.call(filter) === '[object Object]' ? filter : self.getFilter();
                      new $ws.proto.BLObject(dataSource.getEndpoint().contract)
-                        .call(dataSource.getDestroyMethodName(), sendFilter, $ws.proto.BLObject.RETURN_TYPE_ASIS)
+                        .call(dataSource.getBinding().destroy, sendFilter, $ws.proto.BLObject.RETURN_TYPE_ASIS)
                         .addBoth(function() {
                            self._setImage(self._options.defaultImage);
                         });
@@ -507,7 +507,7 @@ define('js!SBIS3.CONTROLS.Image',
                   this._options.dataSource = dataSource;
                   if (this._options.imageBar) {
                      //todo Удалить, временная опция для поддержки смены логотипа компании
-                     this._fileLoader.setMethod((this._options.linkedObject || dataSource.getEndpoint().contract) + '.' + dataSource.getCreateMethodName());
+                     this._fileLoader.setMethod((this._options.linkedObject || dataSource.getEndpoint().contract) + '.' + dataSource.getBinding().create);
                   }
                   if (!noReload) {
                      this.reload();

@@ -88,7 +88,7 @@ define('js!SBIS3.CONTROLS.Image.EditDialog', [
             this._cropPlugin.startCrop();
          }.bind(this));
          this._imageUrl = $ws.helpers.prepareGetRPCInvocationURL(this._options.dataSource.getEndpoint().contract,
-            this._options.dataSource.getReadMethodName(), this._options.filter, $ws.proto.BLObject.RETURN_TYPE_ASIS);
+            this._options.dataSource.getBinding().read, this._options.filter, $ws.proto.BLObject.RETURN_TYPE_ASIS);
          $ws.helpers.reloadImage(this._image, this._imageUrl);
       },
       onActivateSaveButton: function() {

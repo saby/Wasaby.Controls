@@ -61,9 +61,11 @@ function(CompoundControl, dotTplFn, SbisServiceSource) {
          var ds = new SbisServiceSource({
             endpoint: 'Товар',
             idProperty: '@Product',
-            queryMethodName: 'СписокЗаписей',
-            //'Объединить' используется по умолчанию
-            mergeMethodName: 'Объединить'
+            binding: {
+               query: 'СписокЗаписей',
+               //'Объединить' используется по умолчанию
+               merge: 'Объединить'
+            }
          });
          this._view.setDataSource(ds);
          this._mergeAction.setDataSource(ds);

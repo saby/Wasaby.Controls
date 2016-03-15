@@ -34,7 +34,9 @@ define('js!SBIS3.CONTROLS.DEMO.AddInPlace',
              // инициализируем источник данных БЛ
              dataSource = new SbisService({
                  endpoint: 'Ноутбуки',
-                 formatMethodName: 'Создать'
+                 binding: {
+                    format: 'Создать'
+                 }
              });
          
          view.setDataSource(dataSource); // устанавливаем источник данных для таблицы
