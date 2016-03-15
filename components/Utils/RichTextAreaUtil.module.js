@@ -82,8 +82,10 @@ define('js!SBIS3.CONTROLS.Utils.RichTextAreaUtil',[], function () {
             };
 
          target.on( 'cut copy',function(e){
-            markingRichContent(e);
-            target.focus();
+            if (!$ws._const.browser.isMobileIOS) {
+               markingRichContent(e);
+               target.focus();
+            }
          });
       },
       /**
