@@ -141,6 +141,8 @@ define('js!SBIS3.CONTROLS.DSMixin', [
              * Пример отображения в поле связи значений поля "ФИО" выбранных записей:
              * ![](/DSMixin01.png)
              * Данные задаются либо с помощью опции {@link items}, либо методом {@link setDataSource}.
+             * Для поля связи метод {@link setDataSource} задает источник данных для {@link SBIS3.CONTROLS.SuggestMixin#autoShow отображения}
+             * списка значений автодополнения.
              * @example
              * <pre class="brush:xml">
              *     <option name="displayField">НазваниеПоля</option>
@@ -221,28 +223,44 @@ define('js!SBIS3.CONTROLS.DSMixin', [
              * Внимание! Для правильной работы группировки данные должны прийти уже отсортированными по полю группировки
              * записей, указанному в (field).
              * Для группировки записей по типу {@link https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/list-settings/list-visual-display/ladder/ "Лесенка"} -
-             * когда одинаковые значения для сгруппированных записей будут скрыты, необходимо в опции {@link SBIS3.CONTROLS.DataGridView#ladder}
+             * когда одинаковые значения для записей будут скрыты, необходимо в опции {@link SBIS3.CONTROLS.DataGridView#ladder}
              * перечислить названия полей, по которым лесенка будет организована.
+             *
+             * Ниже проиллюстрирована работа опции на примерах настройки для поля связи выпадающего блока,
+             * отображающего список значений для автодополнения.
+             * Пример 1. Список значений без группировки:
+             * ![](/DSMixin03.png)
+             *
+             * Пример 2. Список значений с простой группировкой:
+             * данные с одинаковыми значениями поля "ФИО" сгруппированы в отдельные блоки;
+             * ![](/DSMixin04.png)
+             * настраиваем опцию:
+             * <pre class="brush:xml">
+             *     <options name="groupBy">
+             *        <option name="field">ФИО</option>
+             *     </options>
+             * </pre>
+             *
+             * Пример 3. Список значений, с использованием "Лесенки":
+             * одинаковые значения записей скрыты;
+             * ![](/DSMixin05.png)
+             * настраиваем опцию {@link SBIS3.CONTROLS.DataGridView#ladder}:
+             * <pre class="brush:xml">
+             *     <options name="ladder" type="array">
+             *         <option>ФИО</option>
+             *         <option>Должность</option>
+             *     </options>
+             * </pre>
+             *
+             * Пример 4. Группировка записей по типу "Лесенка":
+             * данные с одинаковыми значениями поля "ФИО" сгруппированы в отдельные блоки;
+             * одинаковые значения сгруппированных записей скрыты;
+             * ![](/DSMixin06.png)
+             * настраиваем обе опции: groupBy и ladder.
+             *
              * Изменить группировку записей можно с помощью метода {@link setGroupBy}.
-             * @example
-             * Пример 1. Простая группировка записей.
-             * <pre class="brush:xml">
-             *    <options name="groupBy">
-             *        <option name="field">ДатаВремя</option>
-             *    </options>
-             * </pre>
-             * Пример 2. Группировка записей по типу "Лесенка".
-             * <pre class="brush:xml">
-             *    <options name="groupBy">
-             *        <option name="field">ДатаВремя</option>
-             *        <option name="method" type="function">js!SBIS3.CONTROLS.Demo.MyListView:prototype.myGroupBy</option>
-             *    </options>
-             *    <options name="ladder" type="array">
-             *        <option>ФИО</option>
-             *        <option>Должность</option>
-             *    </options>
-             * </pre>
              * @see setGroupBy
+             * @see SBIS3.CONTROLS.DataGridView#ladder
              */
             groupBy : {},
             /**
