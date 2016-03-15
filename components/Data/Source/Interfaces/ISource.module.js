@@ -19,13 +19,13 @@ define('js!SBIS3.CONTROLS.Data.Source.ISource', [
 
       /**
        * @typedef {Object} Binding
-       * @property {String} create Операция создания записи
-       * @property {String} read Операция чтения записи
-       * @property {String} update Операция обновления записи
-       * @property {String} destroy Операция удаления записи
-       * @property {String} query Операция получения списка записей
-       * @property {String} copy Операция копирования записей
-       * @property {String} merge Операция объединения записей
+       * @property {String} create Операция создания записи через метод {@link create}
+       * @property {String} read Операция чтения записи через метод {@link read}
+       * @property {String} update Операция обновления записи через метод {@link update}
+       * @property {String} destroy Операция удаления записи через метод {@link destroy}
+       * @property {String} query Операция получения списка записей через метод {@link query}
+       * @property {String} copy Операция копирования записей через метод {@link copy}
+       * @property {String} merge Операция объединения записей через метод {@link merge}
        */
 
       $protected: {
@@ -64,6 +64,12 @@ define('js!SBIS3.CONTROLS.Data.Source.ISource', [
              * @cfg {Binding} Соответствие методов CRUD+ контракту
              * @see getBinding
              * @see setBinding
+             * @see create
+             * @see read
+             * @see destroy
+             * @see query
+             * @see copy
+             * @see merge
              * @example
              * <pre>
              *    var dataSource = new HttpSource({

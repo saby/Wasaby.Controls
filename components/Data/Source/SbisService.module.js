@@ -35,6 +35,18 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
     */
 
    var SbisService = Rpc.extend(/** @lends SBIS3.CONTROLS.Data.Source.SbisService.prototype */{
+      /**
+       * @typedef {Object} Binding
+       * @property {String} [create=Создать Имя метода для создания записи через {@link create}
+       * @property {String} [read=Прочитать] Имя метода для чтения записи через {@link read}
+       * @property {String} [update=Записать] Имя метода для обновления записи через {@link update}
+       * @property {String} [destroy=Удалить] Имя метода для удаления записи через {@link destroy}
+       * @property {String} [query=Список] Имя метода для получения списка записей через {@link query}
+       * @property {String} [copy=Копировать] Имя метода для копирования записей через {@link copy}
+       * @property {String} [merge=Объединить] Имя метода для объединения записей через {@link merge}
+       * @property {String} [format=undefined] Имя метода для получения формата записи через {@link create}, {@link read} и {@link copy}. Метод должен быть декларативным.
+       */
+
       _moduleName: 'SBIS3.CONTROLS.Data.Source.SbisService',
       $protected: {
          _options: {
@@ -60,21 +72,15 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
             endpoint: {},
 
             /**
-             * @cfg {Binding} Соответствие методов CRUD+ методам БЛ. По умолчанию:
-             * <pre>
-             *    {
-             *       create: 'Создать',
-             *       read: 'Прочитать',
-             *       update: 'Записать',
-             *       destroy: 'Удалить',
-             *       query: 'Список',
-             *       copy: 'Копировать',
-             *       merge: 'Объединить',
-             *       format: undefined
-             *    }
-             * </pre>
+             * @cfg {Binding} Соответствие методов CRUD+ методам БЛ.
              * @see getBinding
              * @see setBinding
+             * @see create
+             * @see read
+             * @see destroy
+             * @see query
+             * @see copy
+             * @see merge
              * @example
              * <pre>
              *    var dataSource = new SbisService({
