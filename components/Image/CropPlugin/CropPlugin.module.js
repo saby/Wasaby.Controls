@@ -144,7 +144,7 @@ define('js!SBIS3.CONTROLS.Image.CropPlugin',
                }
                new $ws.proto.BLObject({
                      name: dataSource.getEndpoint().contract,
-                     serviceUrl: dataSource.getService()
+                     serviceUrl: dataSource.getEndpoint().address
                   }).call(dataSource.getUpdateMethodName(), filter, $ws.proto.BLObject.RETURN_TYPE_ASIS).addBoth(function(result) {
                      self.finishCrop();
                      self._notify('onEndSave', result);
