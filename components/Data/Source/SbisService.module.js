@@ -135,21 +135,7 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
              *    });
              * </pre>
              */
-            provider: 'source.provider.sbis-business-logic',
-
-            /**
-             * @cfg {String} Имя метода, который будет использоваться для получения формата записи в методах {@link create}, {@link read} и {@link copy}. Метод должен быть декларативным.
-             * @example
-             * <pre>
-             *    <option name="formatMethodName">СписокДляПрочитать</option>
-             * </pre>
-             * @see getFormatMethodName
-             * @see setFormatMethodName
-             * @see create
-             * @see read
-             * @see copy
-             */
-            formatMethodName: undefined
+            provider: 'source.provider.sbis-business-logic'
          },
 
          /**
@@ -200,8 +186,19 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
        * @example
        * <pre>
        *     var dataSource = new SbisService({
-       *         endpoint: 'Сотрудник'
-       *         formatMethodName: 'СписокДляПрочитать'
+       *        endpoint: 'Сотрудник'
+       *     });
+       *     dataSource.create().addCallback(function(model) {
+       *         var name = model.get('Имя');
+       *     });
+       * </pre>
+       * @example
+       * <pre>
+       *     var dataSource = new SbisService({
+       *        endpoint: 'Сотрудник',
+       *        binding: {
+       *           format: 'СписокДляПрочитать'
+    *           }
        *     });
        *     dataSource.create().addCallback(function(model) {
        *         var name = model.get('Имя');
