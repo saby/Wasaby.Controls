@@ -1124,7 +1124,8 @@ define('js!SBIS3.CONTROLS.DSMixin', [
       },
 
       _addItem: function (item, at) {
-         var ladderDecorator = this._decorators.getByName('ladder');
+         var ladderDecorator = this._decorators.getByName('ladder'),
+            previousGroupBy = this._previousGroupBy;//После добавления записи восстанавливаем это значение, чтобы не сломалась группировка
          ladderDecorator && ladderDecorator.setMarkLadderColumn(true);
          /*TODO отдельно обрабатываем случай с группировкой*/
          var flagAfter = false;
@@ -1152,15 +1153,19 @@ define('js!SBIS3.CONTROLS.DSMixin', [
             newItemContainer.insertBefore(this._getItemContainerByIndex(target, at));
             rows = [newItemContainer.prev().prev(), newItemContainer.prev(), newItemContainer, newItemContainer.next(), newItemContainer.next().next()];
          } else if (currentItemAt && currentItemAt.length) {
+            meth && meth.call(this, prev.getContents());
             newItemContainer.insertAfter(currentItemAt);
             rows = [newItemContainer.prev().prev(), newItemContainer.prev(), newItemContainer, newItemContainer.next(), newItemContainer.next().next()];
          } else if(at === 0) {
+            this._previousGroupBy = undefined;
             newItemContainer.prependTo(target);
             rows = [newItemContainer, newItemContainer.next(), newItemContainer.next().next()];
          } else {
             newItemContainer.appendTo(target);
             rows = [newItemContainer.prev().prev(), newItemContainer.prev(), newItemContainer, newItemContainer.next()];
          }
+         this._group(item, {at: at});
+         this._previousGroupBy = previousGroupBy;
          ladderDecorator && ladderDecorator.setMarkLadderColumn(false);
          this._ladderCompare(rows);
       },
