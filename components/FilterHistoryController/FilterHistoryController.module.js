@@ -93,9 +93,11 @@ define('js!SBIS3.CONTROLS.FilterHistoryController',
           },
 
           _prepareStructureElemToSave: function(structure) {
-             var dateFix;
+             /* Все правки надо делать с копией, чтобы не портить оригинальную структуру */
+             var structureCopy = $ws.core.clone(structure),
+                 dateFix;
 
-             $ws.helpers.forEach(structure, function(elem) {
+             $ws.helpers.forEach(structureCopy, function(elem) {
                 /* Хак для испрвления даты, при записи на бл история приводится к строке через метод JSON.stringify,
                   а метод stringify сериализует дату, учитывая сдвиг (GMT/UTC)
                   и в итоге мы можем получить не ту дату */
@@ -116,7 +118,7 @@ define('js!SBIS3.CONTROLS.FilterHistoryController',
                 }
              });
 
-             return $ws.core.clone(structure);
+             return structureCopy;
           },
 
           _prepareStructureElemForApply: function(structure) {
