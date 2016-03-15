@@ -11,13 +11,15 @@ define([
          dataSource = new RpcSource({
             endpoint: '/users/',
             provider: 'source.provider.sbis-business-logic',
-            queryMethodName: 'getUsers',
-            createMethodName: 'createUser',
-            readMethodName: 'readUser',
-            updateMethodName: 'updateUser',
-            destroyMethodName: 'deleteUser',
-            copyMethodName: 'copyUser',
-            mergeMethodName: 'mergeUsers'
+            binding: {
+               query: 'getUsers',
+               create: 'createUser',
+               read: 'readUser',
+               update: 'updateUser',
+               destroy: 'deleteUser',
+               copy: 'copyUser',
+               merge: 'mergeUsers'
+            }
          });
       });
 

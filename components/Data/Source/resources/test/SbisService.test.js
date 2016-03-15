@@ -82,7 +82,10 @@ define([
                            break;
 
                         case 'Удалить':
-                           if (args['ИдО'] === existsId ||args['ИдО'] == textId|| ($ws.helpers.type(args['ИдО']) === 'array' && Array.indexOf(args['ИдО'], String(existsId)) !== -1)) {
+                           if (args['ИдО'] === existsId ||
+                              args['ИдО'] == textId ||
+                              ($ws.helpers.type(args['ИдО']) === 'array' && Array.indexOf(args['ИдО'], String(existsId)) !== -1)
+                           ) {
                               data = existsId;
                            } else if (args['ИдО'] === existsTooId || ($ws.helpers.type(args['ИдО']) === 'array' && Array.indexOf(args['ИдО'],String(existsTooId)) !== -1)) {
                               data = existsTooId;
@@ -149,7 +152,7 @@ define([
                   }
 
                   def.callback(data);
-               }.bind(this), 1);
+               }.bind(this), 0);
 
                return def;
             }
@@ -295,7 +298,9 @@ define([
                it('should generate a request with custom method name in the filter', function (done) {
                   var service = new SbisService({
                      endpoint: 'Товар',
-                     formatMethodName: 'ПрочитатьФормат'
+                     binding: {
+                        format: 'ПрочитатьФормат'
+                     }
                   });
                   service.create({myParam: 'myValue'}).addCallbacks(function () {
                      try {
@@ -386,7 +391,9 @@ define([
                   it('should generate a valid request', function (done) {
                      var service = new SbisService({
                         endpoint: 'Товар',
-                        formatMethodName: 'Формат'
+                        binding: {
+                           format: 'Формат'
+                        }
                      });
                      service.read(
                         SbisBusinessLogic.existsId,
@@ -555,7 +562,9 @@ define([
                it('should generate a valid request', function (done) {
                   var service = new SbisService({
                      endpoint: 'Товар',
-                     formatMethodName: 'Формат'
+                     binding: {
+                        format: 'Формат'
+                     }
                   });
                   service.read(SbisBusinessLogic.existsId).addCallbacks(function (model) {
                      service.update(

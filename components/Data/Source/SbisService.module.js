@@ -44,7 +44,7 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
        * @property {String} [query=Список] Имя метода для получения списка записей через {@link query}
        * @property {String} [copy=Копировать] Имя метода для копирования записей через {@link copy}
        * @property {String} [merge=Объединить] Имя метода для объединения записей через {@link merge}
-       * @property {String} [format=undefined] Имя метода для получения формата записи через {@link create}, {@link read} и {@link copy}. Метод должен быть декларативным.
+       * @property {String} [format] Имя метода для получения формата записи через {@link create}, {@link read} и {@link copy}. Метод должен быть декларативным.
        */
 
       _moduleName: 'SBIS3.CONTROLS.Data.Source.SbisService',
@@ -101,8 +101,7 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
                destroy: 'Удалить',
                query: 'Список',
                copy: 'Копировать',
-               merge: 'Объединить',
-               format: undefined
+               merge: 'Объединить'
             },
 
             /**
@@ -215,7 +214,7 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
          };
 
          return this.getProvider().call(
-            this._options.createMethodName,
+            this._options.binding.create,
             args
          ).addCallbacks((function (data) {
             return this._getModelInstance(data);
@@ -242,7 +241,7 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
          }
 
          return this.getProvider().call(
-            this._options.readMethodName,
+            this._options.binding.read,
             args
          ).addCallbacks((function (data) {
             var model = this._getModelInstance(data, true);
@@ -270,7 +269,7 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
          }
 
          return this.getProvider().call(
-            this._options.updateMethodName,
+            this._options.binding.update,
             args
          ).addCallbacks((function (key) {
             if (key && !model.isStored() && this.getIdProperty()) {
@@ -320,7 +319,7 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
 
       merge: function(first, second) {
          return this.getProvider().call(
-            this._options.mergeMethodName, {
+            this._options.binding.merge, {
                'ИдО' : first,
                'ИдОУд': second
             }
@@ -342,7 +341,7 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
          }
 
          return this.getProvider().call(
-            this._options.copyMethodName,
+            this._options.binding.copy,
             args
          ).addCallbacks(function (res) {
                return res;
@@ -354,7 +353,7 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
 
       query: function(query) {
          return this.getProvider().call(
-            this._options.queryMethodName, {
+            this._options.binding.query, {
                'Фильтр': !query || Object.isEmpty(query.getWhere()) ? null : this.getAdapter().serialize(query.getWhere()),
                'Сортировка': this.getAdapter().serialize(this._getSortingParams(query)),
                'Навигация': this.getAdapter().serialize(this._getPagingParams(query)),
@@ -509,7 +508,7 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
             });
          }
          return provider.call(
-            this._options.destroyMethodName,
+            this._options.binding.destroy,
             args
          ).addCallbacks(function (res) {
             return res;
