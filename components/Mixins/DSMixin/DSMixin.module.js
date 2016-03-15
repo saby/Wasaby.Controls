@@ -119,6 +119,8 @@ define('js!SBIS3.CONTROLS.DSMixin', [
              * В поле связи используется для выбора записей, а также в {@link SBIS3.CONTROLS.SuggestMixin#list конфигурации}
              * выпадающего блока, отображающего список значений для автодополнения.
              * Данные задаются либо с помощью опции {@link items}, либо методом {@link setDataSource}.
+             * Для поля связи метод {@link setDataSource} задает источник данных для {@link SBIS3.CONTROLS.SuggestMixin#autoShow отображения}
+             * списка значений автодополнения.
              * @example
              * <pre class="brush:xml">
              *     <option name="keyField">Идентификатор</option>
@@ -202,10 +204,16 @@ define('js!SBIS3.CONTROLS.DSMixin', [
               * количество записей считаются и узлы, и листья. Т.е. подсчёт идёт относительно полностью развёрнутого
               * представления данных. Например, узел с тремя листьями - это 4 записи.
               * @example
+              * Для {@link SBIS3.CONTROLS.SuggestMixin#list выпадающего блока} в поле связи, отображающего список значений
+              * для автодополнения, установим пять записей и {@link SBIS3.CONTROLS.ListView#showPaging режим постраничной навигации} :
               * <pre class="brush:xml">
-              *     <option name="pageSize">10</option>
+              *     <option name="pageSize">5</option>
+              *     <option name="showPaging">true</option>
               * </pre>
+              * результат настройки:
+              * ![](/DSMixin03.png)
               * @see setPageSize
+              * @see SBIS3.CONTROLS.ListView#showPaging
               */
             pageSize: undefined,
             /**
