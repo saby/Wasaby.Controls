@@ -54,15 +54,23 @@ define('js!SBIS3.CONTROLS.TextBox', ['js!SBIS3.CONTROLS.TextBoxBase','html!SBIS3
             beforeFieldWrapper: null,
             afterFieldWrapper: null,
             /**
-             * @cfg {String} Форматирование регистра текста
-             * @example
-             * <pre class="brush:xml">
-             *     <option name="textTransform">uppercase</option>
-             * </pre>
+             * @cfg {String} Устанавливает форматирование регистра текста в поле ввода.
              * @variant uppercase Все символы верхним регистром.
              * @variant lowercase Все символы нижним регистром.
              * @variant none Без изменений.
+             * @remark
+             * Опция используется в случаях, когда все символы текста в поле ввода нужно отобразить прописными
+             * (верхний регистр) или строчными (нижний регистр).
+             * Ниже приведен пример отображения в поле связи всех символов текста прописными
+             * для {@link placeholder текста подсказки внутри поля ввода}:
+             * ![](/TextBox02.png)
+             * описание опции:
+             * <pre class="brush:xml">
+             *     <option name="textTransform">uppercase</option>
+             * </pre>
+             * Заменить или установить регистр текста можно при помощи метода {@link setTextTransform}
              * @see setTextTransform
+             * @see placeholder
              *
              */
             textTransform: 'none',
