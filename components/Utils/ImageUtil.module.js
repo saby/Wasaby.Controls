@@ -52,8 +52,9 @@ define('js!SBIS3.CONTROLS.Utils.ImageUtil',[], function () {
                img.src = DOMelement.src;
                return {width: img.width, height: img.height};
             },
-            targetWidth = getNatural(target).width,
-            targetHeight =  getNatural(target).height,
+            naturalSizes = getNatural(target),
+            targetWidth = naturalSizes.width,
+            targetHeight =  naturalSizes.height,
          //процент уменьшения изображения
             perRatio = perMostSide({
                docW: docWidth,
