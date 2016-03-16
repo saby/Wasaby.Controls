@@ -23,9 +23,17 @@ define('js!SBIS3.CONTROLS.Data.Format.IdentityField', [
              */
             defaultValue: 0
          }
-      }
+      },
 
       //region Public methods
+
+      /**
+       * Возвращает разделитель
+       * @returns {String}
+       */
+      getSeparator: function () {
+         return ',';
+      }
 
       //endregion Public methods
 

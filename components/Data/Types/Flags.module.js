@@ -1,80 +1,83 @@
 /* global define, $ws */
 define('js!SBIS3.CONTROLS.Data.Types.Flags', [
-   'js!SBIS3.CONTROLS.Data.Collection.IEnumerable',
-   'js!SBIS3.CONTROLS.Data.Collection.ArrayEnumerator',
+   'js!SBIS3.CONTROLS.Data.Types.Dictionary',
    'js!SBIS3.CONTROLS.Data.ContextField.Flags',
    'js!SBIS3.CONTROLS.Data.Di'
-], function (IEnumerable, ArrayEnumerator, ContextFieldFlags, Di) {
+], function (Dictionary, ContextFieldFlags, Di) {
    'use strict';
+
    /**
     * Тип данных набор флагов
     * @class SBIS3.CONTROLS.Data.Types.Flags
-    * @mixes SBIS3.CONTROLS.Data.Collection.IEnumerable
+    * @extends SBIS3.CONTROLS.Data.Types.Dictionary
     * @public
     * @author Ганшин Ярослав
     */
 
-   var Flags = $ws.core.extend({}, [IEnumerable],/** @lends SBIS3.CONTROLS.Data.Types.Flags.prototype */ {
+   var Flags = Dictionary.extend(/** @lends SBIS3.CONTROLS.Data.Types.Flags.prototype */ {
       _moduleName: 'SBIS3.CONTROLS.Data.Types.Flags',
       $protected: {
          _options: {
-            data: {}
-         },
-         _selected: [],
-         _enumerator: undefined,
-         _indexed: [],
-         _length: undefined
-      },
-      $constructor: function (cfg) {
-         var data = cfg.data;
-         if (!(data instanceof Object)) {
-            throw new Error('Data must be instance of an object');
+            /**
+             * @cfg {Array.<Boolean|Null>} Выбранные значения согласно словарю
+             */
+            values: []
          }
-         this._length = 0;
-         for (var key in data) {
-            if (data.hasOwnProperty(key)) {
-               data[key] = this._prepareValue(data[key]);
-               this._length++;
+      },
+
+      $constructor: function (cfg) {
+         if ('data' in cfg && !('dictionary' in cfg) && !('values' in cfg)) {
+            $ws.single.ioc.resolve('ILogger').info(this._moduleName + '::$constructor()', 'Option "data" is deprecated and will be removed in 3.7.4. Use options "dictionary" and "values" instead.');
+            var data = cfg.data;
+            if (!(data instanceof Object)) {
+               throw new TypeError('Option "data" must be an instance of Object');
+            }
+            for (var key in data) {
+               if (data.hasOwnProperty(key)) {
+                  this._options.dictionary.push(key);
+                  this._options.values.push(data[key]);
+               }
             }
          }
-         if (!cfg.indexed) {
-            this._buildIndex(cfg);
-         }
       },
+
+      //region Public methods
+
       /**
        * Возвращает значение флага по названию
        * @param name {String} Название флага
        * @returns {Boolean|Null}
        */
       get: function (name) {
-         var data = this._options.data;
-         if (data.hasOwnProperty(name)) {
-            return data[name];
+         var index = this._getIndex(name);
+         if (index > -1) {
+            return this._options.values[index];
          }
          return undefined;
       },
+
       /**
        * Устанавливает значение флага по названию
        * @param name {String} Название флага
        * @param value {Boolean|Null} Значение
        */
       set: function (name, value) {
-         var data = this._options.data;
-         if (data.hasOwnProperty(name)) {
-            data[name] = value === null ? null : !!value;
-         } else {
-            throw new Error('The name "'+name+'" doesnt found in dictionary');
+         var index = this._getIndex(name);
+         if (index === -1) {
+            throw new ReferenceError(this._moduleName + '::set(): the value "' + name + '" doesn\'t found in dictionary');
          }
+         this._options.values[index] = this._prepareValue(value);
       },
+
       /**
        * Возвращает значение флага по индексу
        * @param index {Number} Индекс флага
        * returns {Boolean|Null}
        */
       getByIndex: function (index) {
-         var key = this._getKeByIndex(index);
-         return this.get(key);
+         return this._options.values[index];
       },
+
       /**
        * Устанавливает значение флага по индексу
        * @param index {Number} - индекс флага
@@ -85,91 +88,79 @@ define('js!SBIS3.CONTROLS.Data.Types.Flags', [
          if(typeof key === 'undefined'){
             throw new Error('The index is out of range');
          }
-         this.set(key, value);
+         this._options.values[index] = this._prepareValue(value);
       },
+
       /**
        * Установить всем флагам false
        */
       setFalseAll: function () {
          this._setAll(false);
       },
+
       /**
        * Установить всем флагам true
        */
       setTrueAll: function () {
          this._setAll(true);
       },
+
       /**
        * Установить всем флагам null
        */
       setNullAll: function () {
          this._setAll(null);
       },
+
       /**
-       * Сравнивает с флагами
-       * @param obj {Flags} - Объект Flags
+       * Сравнивает с дргуим экземпляром флагов - должен полностью совпадать словарь и набор значений
+       * @param {SBIS3.CONTROLS.Data.Types.Flags} value Объект Flags
        * returns {Boolean}
        */
       equals: function (value) {
-         if (value instanceof Flags) {
-            var result = true,
-               self = this,
-               len = 0;
-            value.each(function (key) {
-               if (result && self.get(key) === value.get(key))
-                  len++;
-               else
-                  result = false;
-            });
-            if (result && this._length === len) {
-               return true;
+         if (!(value instanceof Flags)) {
+            return false;
+         }
+
+         if (!Flags.superclass.equals.call(this, value)) {
+            return false;
+         }
+
+         var enumerator = this.getEnumerator(),
+            key;
+         while ((key = enumerator.getNext())) {
+            if (this.get(key) !== value.get(key)) {
+               return false;
             }
          }
-         return false;
+
+         return true;
       },
-      each: function (callback, context) {
-         context = context || this;
-         var enumerator = this.getEnumerator(),
-            key, index = 0;
-         this._enumerator.reset();
-         while ((key = enumerator.getNext())) {
-            callback.call(context, key, index++);
-         }
-      },
-      getEnumerator: function () {
-         if (!this._enumerator) {
-            this._enumerator = new ArrayEnumerator({
-               items: this._indexed
-            });
-         }
-         return this._enumerator;
-      },
+
+      //endregion Public methods
+
+      //region Protected methods
+
       _prepareValue: function (value) {
          return value === null ? null : !!value;
       },
-      _buildIndex: function () {
-         var data = this._options.data;
-         this._indexed = [];
-         for (var key in data) {
-            if (data.hasOwnProperty(key)) {
-               this._indexed.push(key);
-            }
-         }
-      },
-      _getKeByIndex: function (index) {
-         return this._indexed[index];
-      },
+
       _setAll: function (value) {
-         var data = this._options.data;
-         value = this._prepareValue(value);
-         for (var key in data) {
-            if (data.hasOwnProperty(key)) {
-               data[key] = value;
+         var dictionary = this._options.dictionary,
+            values = this._options.values,
+            index;
+         for (index in dictionary) {
+            if (dictionary.hasOwnProperty(index)) {
+               values[index] = value;
             }
          }
       }
+
+      //endregion Protected methods
    });
+
    Di.register('data.types.flags', Flags);
    $ws.proto.Context.registerFieldType(new ContextFieldFlags({module: Flags}));
+
    return Flags;
 });
