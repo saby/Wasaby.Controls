@@ -138,6 +138,13 @@ define([
                   adapter.add({d: [30, 'aaa']}, -1);
                });
             });
+
+            it('should get s from new record', function () {
+               var adapter = new SbisTable({d: [], s: []}),
+                  s = [{'n': 'Ид', 't': 'Число целое'}];
+               adapter.add({d: [1], s:s});
+               assert.deepEqual(adapter.getData().s, s);
+            });
          });
 
          describe('.at()', function () {
@@ -251,6 +258,13 @@ define([
                   adapter.replace({d: [14]}, 99);
                });
             });
+
+            it('should replace s in raw data', function () {
+               var s = [{'n': 'Ид', 't': 'Число целое'}],
+                  adapter = new SbisTable({d: [1], s: []});
+               adapter.replace({d: [11], s: s}, 0);
+               assert.strictEqual(adapter.getData().s,  s);
+            });
          });
 
          describe('.move()', function () {
@@ -292,6 +306,17 @@ define([
                );
                assert.strictEqual(
                   'Арбузнов',
+                  data.d[5][1]
+               );
+            });
+            it('should not move Петров', function () {
+               adapter.move(1, 1);
+               assert.strictEqual(
+                  'Петров',
+                  data.d[1][1]
+               );
+               assert.strictEqual(
+                  'Годолцов',
                   data.d[5][1]
                );
             });

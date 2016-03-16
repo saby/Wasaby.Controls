@@ -63,30 +63,31 @@ define([
          n: 'identity',
          t: 'Идентификатор'
       }, {
-         "n":"arrayBool",
-         "t":{"n":"Массив","t":"Логическое"}
+         n: 'arrayBool',
+         t: {n: 'Массив', t: 'Логическое'}
       }, {
-         "n":"arrayDate",
-         "t":{"n":"Массив","t":"Дата"}
+         n: 'arrayDate',
+         t: {n: 'Массив', t: 'Дата'}
       }, {
-         "n":"arrayDatetime",
-         "t":{"n":"Массив","t":"Дата и время"}
+         n: 'arrayDatetime',
+         t: {n: 'Массив', t: 'Дата и время'}
       }, {
-         "n":"arrayInt",
-         "t":{"n":"Массив","t":"Число целое"}
+         n: 'arrayInt',
+         t: {n: 'Массив', t: 'Число целое'}
       }, {
-         "n":"arrayFloat",
-         "t":{"n":"Массив","t":"Число вещественное"}
+         n: 'arrayFloat',
+         t: {n: 'Массив', t: 'Число вещественное'}
       }, {
-         "n":"arrayString",
-         "t":{"n":"Массив","t":"Текст"}
+         n: 'arrayString',
+         t: {n: 'Массив', t: 'Текст'}
       }, {
-         "n":"arrayTime",
-         "t":{"n":"Массив","t":"Время"}
+         n: 'arrayTime',
+         t: {n: 'Массив', t: 'Время'}
       }, {
          n: 'moneyShort',
          t: {n: 'Деньги', p: '2'}
       }];
+
       dataValues = [
          4,
          'Строка',
@@ -102,15 +103,16 @@ define([
          '15:54:28.981+03',
          'P10DT0H0M0S',//10 дней
          [22],
-         [true,false],
-         ["2015-12-25"],
-         ["2007-12-06 16:29:43.079+03"],
-         [15,19],
-         [1.2,1.3],
-         ["text","text2"],
-         ["12:30:00+03"],
+         [true, false],
+         ['2015-12-25'],
+         ['2007-12-06 16:29:43.079+03'],
+         [15, 19],
+         [1.2, 1.3],
+         ['text', 'text2'],
+         ['12:30:00+03'],
          '7.2'
       ];
+
       dataEmpty = [
          null,
          null,
@@ -135,6 +137,7 @@ define([
          null,
          null
       ];
+
       sbisModel = new Model({
          adapter: new AdapterSbis(),
          rawData: {
@@ -142,6 +145,7 @@ define([
             s: dataScheme
          }
       });
+
       sbisModelEmpty = new Model({
          adapter: (new AdapterSbis()),
          rawData: {
@@ -150,6 +154,7 @@ define([
          }
       });
    });
+
    describe('SBIS3.CONTROLS.Data.Factory', function () {
       describe('.cast()', function () {
          it('should cast value to integer', function () {
@@ -295,8 +300,14 @@ define([
 
          it('should get value from enum', function (){
             var
-               enumNew = new Enum({data:['one', 'tt'], 'currentValue':1}),
-               enumOld = new $ws.proto.Enum({'availableValues':{'0': 'one', '1': 'tt'}, 'currentValue':0});
+               enumNew = new Enum({
+                  dictionary: ['one', 'tt'],
+                  currentValue: 1
+               }),
+               enumOld = new $ws.proto.Enum({
+                  availableValues: {'0': 'one', '1': 'tt'},
+                  currentValue: 0
+               });
                sbisModel = new Model({
                adapter: new AdapterSbis(),
                rawData: {
@@ -478,11 +489,8 @@ define([
                      var model = getModel(type),
                         d = [true, false, null],
                         flags = new Flags({
-                           data: {
-                              one: true,
-                              two: false,
-                              three: null
-                           }
+                           dictionary: ['one', 'two', 'three'],
+                           values: [true, false, null]
                         });
                      model.set('flags', flags);
                      assert.deepEqual(getData(model, 5), d);
@@ -550,7 +558,7 @@ define([
          });
          it('should store Identity in empty model', function () {
             sbisModelEmpty.set('identity', 1);
-            assert.strictEqual(getData(sbisModelEmpty, identityIndex), 1);
+            assert.deepEqual(getData(sbisModelEmpty, identityIndex), [1]);
          });
          it('should store [null] for Identity in filled model', function () {
             sbisModel.set('identity', null);
