@@ -77,12 +77,15 @@ define('js!SBIS3.CONTROLS.TextBox', ['js!SBIS3.CONTROLS.TextBoxBase','html!SBIS3
             /**
              * @cfg {Boolean} Определяет режим выделения текста в поле ввода при получении фокуса.
              * @remark
-             *
+             * Используется в случаях, когда поле ввода нужно использовать в качестве источника текстовой информации:
+             * пользователю нужно скопировать строку в поле для каких-либо дальнейших действий.
              * Возможные значения при получении полем фокуса:
              * <ul>
              *    <li>true - выделять текст;</li>
              *    <li>false - не выделять.</li>
              * </ul>
+             * Иллюстрация выделения текста, переданного в поле связи опцией {@link SBIS3.CONTROLS.TextBoxBase#text}:
+             * ![](/TextBox03.png)
              * @example
              * <pre class="brush:xml">
              *     <option name="selectOnClick">true</option>
