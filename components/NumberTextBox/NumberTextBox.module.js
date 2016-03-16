@@ -179,7 +179,7 @@ define('js!SBIS3.CONTROLS.NumberTextBox', ['js!SBIS3.CONTROLS.TextBox', 'html!SB
             }
          });
 
-         if (this._options.numericValue) {
+         if (typeof this._options.numericValue === 'number' && !isNaN(this._options.numericValue)) {
             this._options.text = this._options.numericValue + '';
          }
          this._options.text = this._formatText(this._options.text, this._options.hideEmptyDecimals);
