@@ -81,14 +81,21 @@ define('js!SBIS3.CONTROLS.TextBox', ['js!SBIS3.CONTROLS.TextBoxBase','html!SBIS3
              */
             selectOnClick: false,
             /**
-             * @cfg {String} Текст подсказки внутри поля ввода
+             * @cfg {String} Устанавливает текст подсказки внутри поля ввода.
              * @remark
-             * Данный текст отображается внутри поля до момента получения фокуса.
-             * @example
+             * Данный текст отображается внутри поля ввода до момента получения фокуса.
+             * Может использоваться как подсказка для пользователя по вводу данных.
+             * Пример 1. Использование опции для поля связи:
+             * ![](/TextBox01.png)
+             * описание опции:
              * <pre class="brush:xml">
-             *     <option name="placeholder">Введите ФИО полностью</option>
+             *     <option name="placeholder">ФИО исполнителя или название рабочей зоны</option>
              * </pre>
+             * Пример 2. Использование опции с {@link textTransform форматированием регистра текста}:
+             * ![](/TextBox02.png)
+             * Заменить текст подсказки, заданный опцией, можно при помощи метода {@link setPlaceholder}
              * @see setPlaceholder
+             * @see textTransform
              * @translatable
              */
             placeholder: '',
