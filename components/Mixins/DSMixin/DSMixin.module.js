@@ -344,16 +344,34 @@ define('js!SBIS3.CONTROLS.DSMixin', [
              */
             filter: {},
             /**
-             * @cfg {Array} Сортировка данных. Задается массивом объектов, в котором ключ - это имя поля, а значение ASC - по возрастанию, DESC  - по убыванию
-             * @example
+             * @cfg {Object} Определяет сортировку данных, возвращаемых методом БЛ.
+             * @remark
+             * Опция устанавливает сортировку данных, необходимую пользователю.
+             * Переопределяет параметры сортировки, указанные в методе БЛ.
+             * В опции задается имя поля, по которому данные нужно отсортировать, и для поля - порядок сортировки:
+             * ASC - по возрастанию,
+             * DESC  - по убыванию.
+             * По умолчанию данные поля будут отсортированы по возрастанию.
+             * Для {@link SBIS3.CONTROLS.FieldLink поля связи} опция определяется в настройках
+             * {@link SBIS3.CONTROLS.SuggestMixin#list выпадающего блока}, отображающего список значений для автодополнения.
+             * Пример сортировки данных автодополнения. Данные будут отсортированы по возрастанию, по полям "ФИО" и "Город":
+             * ![](/DSMixin02.png)
+             * описание опции:
              * <pre class="brush:xml">
-             *     <options name="sorting" type="Array">
-             *        <option name="date" value="ASC"></option>
-             *        <option name="name" value="DESC"></option>
+             *     <options name="list">
+             *         <option name="component" value="js!SBIS3.CONTROLS.DataGridView"></option>
+             *         <options name="options">
+             *             <option name="keyField" value="@Пользователь"></option>
+             *             <options name="sorting">
+             *                <option name="ФИО" value=""></option>
+             *                <option name="Город" value=""></option>
+             *             </options>
+             *             . . .
+             *         </options>
              *     </options>
              * </pre>
              */
-            sorting: [],
+            sorting: {},
             /**
              * @cfg {Object.<String,String>} соответствие опций шаблона полям в рекорде
              */
