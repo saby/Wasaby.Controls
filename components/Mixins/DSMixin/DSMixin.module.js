@@ -188,11 +188,11 @@ define('js!SBIS3.CONTROLS.DSMixin', [
               *        . . .
               *     </options>
               * </pre>
+              * Опция {@link SBIS3.CONTROLS.hierarchyMixin#hierField} устанавливает поле, по которому будет построена иерархия.
               * @see keyField
               * @see displayField
               * @see setDataSource
-              * @see getDataSet
-              * @see hierField
+              * @see SBIS3.CONTROLS.hierarchyMixin#hierField
               */
             items: null,
             /**
