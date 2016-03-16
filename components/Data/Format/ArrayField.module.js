@@ -26,7 +26,7 @@ define('js!SBIS3.CONTROLS.Data.Format.ArrayField', [
 
       /**
        * Возвращает тип элементов
-       * @returns {*}
+       * @returns {String}
        * @see dictionary
        */
       getKind: function () {

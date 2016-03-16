@@ -121,7 +121,7 @@ define('js!SBIS3.CONTROLS.Data.FormattableMixin', [
             typeof this._options.adapter === 'string' &&
             FormattableMixin._getDefaultAdapter !== this._getDefaultAdapter
          ) {
-            $ws.single.ioc.resolve('ILogger').log('SBIS3.CONTROLS.Data.FormattableMixin', 'Method _getDefaultAdapter() is deprecated and will be removed in 3.7.4. Use \'adapter\' option instead.');
+            $ws.single.ioc.resolve('ILogger').info('SBIS3.CONTROLS.Data.FormattableMixin', 'Method _getDefaultAdapter() is deprecated and will be removed in 3.7.4. Use \'adapter\' option instead.');
             this._options.adapter = this._getDefaultAdapter();
          }
          if (typeof this._options.adapter === 'string') {
