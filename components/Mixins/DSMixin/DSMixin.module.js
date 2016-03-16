@@ -159,26 +159,34 @@ define('js!SBIS3.CONTROLS.DSMixin', [
               * @remark
               * Данные для коллекции элементов задаются либо с помощью этой опции,
               * либо через источник данных методом {@link setDataSource}.
-              * @example
+              * Пример. Задаем набор данных для отображения календаря; использован класс {@link SBIS3.CONTROLS.TreeDataGridView}:
+              * ![](/DSMixin01.png)
+              * описание опции (фрагмент):
               * <pre class="brush:xml">
+              *     <option name="keyField">id</option>
+              *     <option name="displayField">title</option>
+              *     <option name="hierField" value="parent"></option>
               *     <options name="items" type="array">
               *        <options>
-              *            <option name="id">1</option>
-              *            <option name="title">Пункт1</option>
-              *         </options>
-              *         <options>
-              *            <option name="id">2</option>
-              *            <option name="title">Пункт2</option>
-              *         </options>
-              *         <options>
-              *            <option name="id">3</option>
-              *            <option name="title">ПунктПодменю</option>
-              *            <!--необходимо указать это полем иерархии для корректной работы-->
-              *            <option name="parent">2</option>
-              *            <option name="icon">sprite:icon-16 icon-Birthday icon-primary</option>
-              *         </options>
-              *      </options>
-              *      <option name="hierField">parent</option>
+              *            <option name="id">I</option>
+              *            <option name="title">квартал 1</option>
+              *            <option name="parent" value="null" type="null"></option>
+              *            <option name="parent@" value="true" type="boolean"></option>
+              *        </options>
+              *        <options>
+              *            <option name="id">01</option>
+              *            <option name="title">январь</option>
+              *            <option name="parent" value="I"></option>
+              *            <option name="parent@" value="null" type="null"></option>
+              *        </options>
+              *        <options>
+              *            <option name="id">02</option>
+              *            <option name="title">февраль</option>
+              *            <option name="parent" value="I"></option>
+              *            <option name="parent@" value="null" type="null"></option>
+              *        </options>
+              *        . . .
+              *     </options>
               * </pre>
               * @see keyField
               * @see displayField
