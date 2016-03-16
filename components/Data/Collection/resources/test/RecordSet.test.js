@@ -6,15 +6,15 @@ define([
       'js!SBIS3.CONTROLS.Data.Model',
       'js!SBIS3.CONTROLS.Data.Format.FieldsFactory',
       'js!SBIS3.CONTROLS.Data.Source.Memory',
-      'js!SBIS3.CONTROLS.Data.Adapter.Json',
       'js!SBIS3.CONTROLS.Data.Adapter.Sbis'
-   ], function (RecordSet, List, IBindCollection, Model, FieldsFactory, MemorySource, JsonAdapter, SbisAdapter) {
+   ], function (RecordSet, List, IBindCollection, Model, FieldsFactory, MemorySource, SbisAdapter) {
       'use strict';
 
       describe('SBIS3.CONTROLS.Data.Collection.RecordSet', function() {
          var rs,
-            items, getItems;
-
+            items,
+            getItems,
+            getSbisItems;
 
          beforeEach(function() {
             getItems = function (){
@@ -53,7 +53,8 @@ define([
                      [4, 'Пухов'],
                      [5, 'Молодцов'],
                      [6, 'Годолцов'],
-                     [7, 'Арбузнов']
+                     [7, 'Арбузнов'],
+                     [8, 'Арбузнов']
                   ],
                   s: [{
                      n: 'Ид',
@@ -124,7 +125,7 @@ define([
             });
             it('should get adapter in strategy', function (){
                var rs = new RecordSet({
-                  strategy: new AdapterSbis(),
+                  strategy: new SbisAdapter(),
                   rawData: {
                      d: [
                         [1, 'Иванов'],
@@ -737,7 +738,7 @@ define([
             });
             it('should hide type signature in rawData', function () {
                var rs = new RecordSet({
-                     adapter: new AdapterSbis(),
+                     adapter: new SbisAdapter(),
                      rawData: {
                         _type: 'recordset',
                         s: [1],

@@ -90,6 +90,15 @@ define([
             });
          });
 
+         describe('.getEmpty()', function () {
+            it('should return empty raw data', function () {
+               assert.deepEqual(
+                  adapter.getEmpty(),
+                  {d:[], s: data.s}
+               );
+            });
+         });
+
          describe('.getData()', function () {
             it('should return raw data', function () {
                assert.strictEqual(adapter.getData(), data);
