@@ -75,7 +75,7 @@ define('js!SBIS3.CONTROLS.TextBox', ['js!SBIS3.CONTROLS.TextBoxBase','html!SBIS3
              */
             textTransform: 'none',
             /**
-             * @cfg {Boolean} Выделять или нет текст в поле при получении фокуса
+             * @cfg {Boolean} Определяет режим выделения текста в поле ввода при получении фокуса.
              * @remark
              * Возможные значения при получении полем фокуса:
              * <ul>
@@ -86,6 +86,7 @@ define('js!SBIS3.CONTROLS.TextBox', ['js!SBIS3.CONTROLS.TextBoxBase','html!SBIS3
              * <pre class="brush:xml">
              *     <option name="selectOnClick">true</option>
              * </pre>
+             * @see SBIS3.CONTROLS.TextBoxBase#text
              */
             selectOnClick: false,
             /**
@@ -110,8 +111,9 @@ define('js!SBIS3.CONTROLS.TextBox', ['js!SBIS3.CONTROLS.TextBoxBase','html!SBIS3
             /**
              * @cfg {String} Устанавливает регулярное выражение, в соответствии с которым будет осуществляться ввод.
              * @remark
-             * Каждый вводимый символ будет проверяться на соответствие указанному в этой опции регулярному выражению.
-             * Несоответсвующие символы ввести будет невозможно.
+             * Служит для фильтрации вводимых символов в поле ввода по установленному регулярным выражением условию.
+             * Каждый вводимый символ будет проверяться на соответствие указанному в этой опции регулярному выражению;
+             * несоответсвующие символы ввести будет невозможно.
              * @example
              * Разрешен ввод только цифр:
              * <pre class="brush:xml">
