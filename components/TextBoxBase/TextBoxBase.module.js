@@ -60,13 +60,13 @@ define('js!SBIS3.CONTROLS.TextBoxBase',
          ],
          _options: {
             /**
-             * @cfg {String} Устанавливает текст в поле ввода.
+             * @cfg {String} Устанавливает текстовое значение в поле ввода.
              * @remark
              * Используется, когда необходимо передать в поле ввода определенное текстовое значение.
              * С опцией {@link SBIS3.CONTROLS.SuggestMixin#listFilter} используется в настройке параметров фильтрации
              * списка значений для автодополнения. Атрибут bind привязывает значение поля ввода к полю контекста.
              * Длина текста, передаваемого в поле ввода, не зависит от настройки опции {@link maxLength}.
-             * Установить или изменить текст в поле ввода можно методом {@link setText}.
+             * Установить или изменить текстовое значение в поле ввода можно методом {@link setText}.
              * @example
              * Пример 1. Устанавливаем текст в поле ввода для поля связи:
              * <pre class="brush:xml">
@@ -106,6 +106,7 @@ define('js!SBIS3.CONTROLS.TextBoxBase',
              * </pre>
              * @see text
              * @see maxLength
+             * @see setMaxLength
              */
             trim: false,
             /**
@@ -170,8 +171,6 @@ define('js!SBIS3.CONTROLS.TextBoxBase',
        * </pre>
        * @see text
        * @see getText
-       * @see setValue
-       * @see getValue
        */
       setText: function(text){
          //null, NaN, undefined оставляем как есть, но выводим их как пустую строку
@@ -195,8 +194,6 @@ define('js!SBIS3.CONTROLS.TextBoxBase',
        * </pre>
        * @see text
        * @see setText
-       * @see setValue
-       * @see getValue
        */
       getText:function(){
          return this._options.text;
