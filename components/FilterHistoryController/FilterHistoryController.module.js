@@ -128,7 +128,8 @@ define('js!SBIS3.CONTROLS.FilterHistoryController',
              /* Алгоритм следующий:
                   1) Пробегаемся по структуре (она первична, в ней можно менять только фильтры, саму струкруту менять нельзя!!) и ищем
                      элементы в структуре из истории с таким же internalValueField
-                  2) Если нашли, то смержим эти элементы  */
+                  2) Если нашли, то смержим эти элементы
+                  3) Если не нашли, и есть значение в value, то сбросим этот фильтр */
              $ws.helpers.forEach(currentStructureCopy, function(elem) {
                 var elemFromHistory = $ws.helpers.find(structure, function(structureElem) {
                    return elem.internalValueField === structureElem.internalValueField;
@@ -136,6 +137,8 @@ define('js!SBIS3.CONTROLS.FilterHistoryController',
 
                 if(elemFromHistory) {
                    $ws.core.merge(elem, elemFromHistory);
+                } else if(elem.value && elem.resetValue && !$ws.helpers.isEqualObject(elem.value, elem.resetValue)) {
+                   elem.value = elem.resetValue;
                 }
              });
              return currentStructureCopy;
