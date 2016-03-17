@@ -53,11 +53,11 @@ define('js!SBIS3.CONTROLS.Data.MoveStrategy.Sbis', [
             this._options.moveContract = cfg.moveResource;
          }
 
-         if(!cfg.contract && !cfg.dataSource){
+         if(!this._options.contract && !this._options.dataSource){
             throw new Error('The Contract and the Data Source are not defined.');
          }
-         if (!cfg.contract) {
-            this._options.contract = cfg.dataSource.getEndpoint().contract;
+         if (!this._options.contract) {
+            this._options.contract = this._options.dataSource.getEndpoint().contract;
          }
       },
 
