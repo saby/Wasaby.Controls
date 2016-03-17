@@ -138,8 +138,6 @@ define('js!SBIS3.CONTROLS.TextBoxBase',
              * Если полей несколько, то, как правило, появление клавиатуры неуместно. Ожидается, что пользователь сам
              * выберет поле для ввода значения.
              * В других случаях, когда на странице или диалоге всего одно поле ввода, появления клавиатуры считается уместным.
-             * 
-             *
              * Установить или изменить фокус для поля ввода можно с помощью метода {@link $ws.proto.Control#setActive}.
              * @example
              * <pre class="brush:xml">
@@ -163,7 +161,7 @@ define('js!SBIS3.CONTROLS.TextBoxBase',
 
       /**
        * Устанавливает текстовое значение внутри поля ввода.
-       * @param {String} text Текст для установки в поле ввода.
+       * @param {String} text Текстовое значение, которое будет установлено в поле ввода.
        * @example
        * <pre>
        *     if (control.getText() == "Введите ФИО") {
@@ -210,6 +208,7 @@ define('js!SBIS3.CONTROLS.TextBoxBase',
        *    }
        * </pre>
        * @see maxLength
+       * @see text
        */
       setMaxLength: function(num) {
          this._options.maxLength = num;
