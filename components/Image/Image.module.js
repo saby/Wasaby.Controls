@@ -386,7 +386,7 @@ define('js!SBIS3.CONTROLS.Image',
                      self._boundEvents.onErrorLoad();
                   });
                this._imageUrl = url;
-            },
+            }.debounce(0), //Оборачиваем именно в debounce, т.к. могут последовательно задать filter, dataSource и тогда изображения загрузка произойдет дважды.
             _showEditDialog: function(imageType) {
                var
                   self = this,
