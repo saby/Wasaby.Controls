@@ -364,7 +364,7 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
                'Фильтр': this._buildRecord(query ? query.getWhere() : null),
                'Сортировка': this._buildRecordSet(this._getSortingParams(query)),
                'Навигация': this._buildRecord(this._getPagingParams(query)),
-               'ДопПоля': this._getMetaParams(query) || []
+               'ДопПоля': this._getMetaParams(query)
             };
 
          return this.getProvider().call(
@@ -552,11 +552,24 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
       /**
        * Возвращает мета данные
        * @param {SBIS3.CONTROLS.Data.Query.Query} query Запрос
-       * @returns {Object|null}
+       * @returns {Array}
        * @protected
        */
       _getMetaParams: function (query) {
-         return query && !Object.isEmpty(query.getMeta()) ? query.getMeta() : null;
+         var meta = [];
+         if (query) {
+            meta = query.getMeta();
+            if (!(meta instanceof Array)) {
+               var arr = [];
+               for (var key in meta) {
+                  if (meta.hasOwnProperty(key)) {
+                     arr.push(meta[key]);
+                  }
+               }
+               meta = arr;
+            }
+         }
+         return meta;
       },
 
       /**
@@ -642,7 +655,7 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
             'Фильтр': !query || Object.isEmpty(query.getWhere()) ? null : this.getAdapter().serialize(query.getWhere()),
             'Сортировка': this.getAdapter().serialize(this._getSortingParams(query)),
             'Навигация': preparePagingParam(offset, limit, hasMore),
-            'ДопПоля': !query || Object.isEmpty(query.getMeta()) ? [] : this.getAdapter().serialize(query.getMeta())
+            'ДопПоля': this.getAdapter().serialize(this._getMetaParams(query))
          };
       }
       //endregion SBIS3.CONTROLS.SbisServiceSource

@@ -273,18 +273,22 @@ define([
                });
 
                it('should generate a request with valid meta data', function (done) {
-                  service.create({myParam: 'myValue'}).addCallbacks(function () {
+                  var rec = new Model({
+                     adapter: 'adapter.sbis'
+                  });
+                  rec.addField({name: 'id', type: 'integer'}, 0, 1);
+                  service.create(rec).addCallbacks(function () {
                      try {
                         var args = SbisBusinessLogic.lastRequest.args;
 
-                        if (args['Фильтр'].d[0] !== 'myValue') {
-                           throw new Error('Wrong value for argument Фильтр.myParam');
+                        if (args['Фильтр'].s[0].n !== 'id') {
+                           throw new Error('Wrong name for argument Фильтр.id');
                         }
-                        if (args['Фильтр'].s[0].n !== 'myParam') {
-                           throw new Error('Wrong name for argument Фильтр.myParam');
+                        if (args['Фильтр'].s[0].t !== 'Число целое') {
+                           throw new Error('Wrong type for argument Фильтр.id');
                         }
-                        if (args['Фильтр'].s[0].t !== 'Строка') {
-                           throw new Error('Wrong type for argument Фильтр.myParam');
+                        if (args['Фильтр'].d[0] !== 1) {
+                           throw new Error('Wrong value for argument Фильтр.id');
                         }
                         done();
                      } catch (err) {
