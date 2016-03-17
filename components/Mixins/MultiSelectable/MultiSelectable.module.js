@@ -69,9 +69,20 @@ define('js!SBIS3.CONTROLS.MultiSelectable', ['js!SBIS3.CONTROLS.Data.Collection.
             multiselect : true,
             /**
              * @cfg {String[]} Определяет массив идентификаторов выбранных элементов.
+             * @remark
+             * Используется для построения контрола с определенным массивом элементов коллекции.
+             * Для задания выбранных элементов необходимо указать значения
+             * {@link SBIS3.CONTROLS.DSMixin#keyField ключевого поля} элементов коллекции.
+             * Работает в режиме множественного выбора {@link multiselect}.
+             * Установить новый массив идентификаторов можно с помощью метода {@link setSelectedKeys},
+             * получить массив идентивикаторов выбранных элементов можно с помощью метода  {@link getSelectedKeys}.
              * @example
-             * <pre class="brush:xml">
-             *     this._getTable().setSelection(this.selectedKeys);
+             * <pre class="brush: xml">
+             *     <options name="selectedKeys" type="array">
+             *         <option>5</option>
+             *         <option>8</option>
+             *         <option>12</option>
+             *     </options>
              * </pre>
              * @see multiselect
              * @see allowEmptyMultiSelection
@@ -87,7 +98,7 @@ define('js!SBIS3.CONTROLS.MultiSelectable', ['js!SBIS3.CONTROLS.Data.Collection.
              /**
               * @cfg {Boolean} Разрешить отсутствие выбранного элемента в группе
               * @example
-              * <pre>
+              * <pre class="brush: xml">
               *     <option name="allowEmptyMultiSelection">false</option>
               * </pre>
               * @see selectedKeys
@@ -247,8 +258,8 @@ define('js!SBIS3.CONTROLS.MultiSelectable', ['js!SBIS3.CONTROLS.Data.Collection.
       },
 
       /**
-       * Добавить указанные элементы в набор выбранных.
-       * @param {Array} idArray Массив идентификаторов добавляемых к выбранным элементов.
+       * Добавляет указанные элементы в набор выбранных.
+       * @param {Array} idArray Массив идентификаторов элементов, добавляемых к выбранным.
        * @example
        * <pre>
        *    var keys = checkBoxGroup.getSelectedKeys();
@@ -328,7 +339,7 @@ define('js!SBIS3.CONTROLS.MultiSelectable', ['js!SBIS3.CONTROLS.Data.Collection.
       },
 
       /**
-       * Убрать все элементы из набора выбранных.
+       * Убирает все элементы из набора выбранных.
        * @example
        * <pre>
        *     if (checkBoxGroup.getSelectedKeys().indexOf(3))  {
