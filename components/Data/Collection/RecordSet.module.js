@@ -165,6 +165,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
          RecordSet.superclass.setRawData.call(this, data);
          this._tableAdapter = null;
          this._fields = null;
+         this._clearFormat();
       },
 
       //endregion SBIS3.CONTROLS.Data.FormattableMixin
