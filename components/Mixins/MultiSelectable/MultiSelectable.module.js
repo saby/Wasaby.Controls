@@ -185,8 +185,8 @@ define('js!SBIS3.CONTROLS.MultiSelectable', ['js!SBIS3.CONTROLS.Data.Collection.
          }
       },
       /**
-       * Устанавливает массив идентификаторов выбранных элементов.
-       * @param {Array} idArray Массив идентификаторов выбранных элементов.
+       * Устанавливает массив идентификаторов выбранных элементов коллекции для контрола, который находится в режиме множественного выбора.
+       * @param {Array} idArray Массив идентификаторов выбранных элементов коллекции.
        * @example
        * <pre>
        *    if (!checkBoxGroup.getSelectedKeys().length) {
@@ -251,7 +251,7 @@ define('js!SBIS3.CONTROLS.MultiSelectable', ['js!SBIS3.CONTROLS.Data.Collection.
       },
 
       /**
-       * Устанавливает все элементы выбранными.
+       * Устанавливает все элементы коллекции выбранными для контрола, который находится в режиме множественного выбора.
        * @example
        * <pre>
        *     if (checkBox.isChecked()) {
@@ -278,7 +278,7 @@ define('js!SBIS3.CONTROLS.MultiSelectable', ['js!SBIS3.CONTROLS.Data.Collection.
       },
 
       /**
-       * Получает массив индентификаторов выбранных элементов.
+       * Получает массив индентификаторов выбранных элементов коллекции.
        * @example
        * <pre>
        *    if (!checkBoxGroup.getSelectedKeys().length) {
@@ -295,7 +295,8 @@ define('js!SBIS3.CONTROLS.MultiSelectable', ['js!SBIS3.CONTROLS.Data.Collection.
       },
 
       /**
-       * Добавляет указанные элементы в набор выбранных.
+       * Добавляет указанные элементы коллекции в набор уже выбранных элементов для контрола, который находится в режиме
+       * множественного выбора.
        * @param {Array} idArray Массив идентификаторов элементов, добавляемых к выбранным.
        * @example
        * <pre>
@@ -341,7 +342,8 @@ define('js!SBIS3.CONTROLS.MultiSelectable', ['js!SBIS3.CONTROLS.Data.Collection.
       },
 
       /**
-       * Удаляет указанные элементы из набора выбранных.
+       * Удаляет указанные элементы коллекции из набора выбранных элементов для контрола, который находится в режиме
+       * множественного выбора.
        * @param {Array} idArray Массив идентификаторов элементов к удалению из выбранных.
        * @example
        * <pre>
