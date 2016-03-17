@@ -4,18 +4,37 @@ define([
 ], function (QueryJoin) {
    'use strict';
    describe('SBIS3.CONTROLS.Data.Query.Join', function () {
-      var select = {'select':''},
-         on = {'on':''},
-         as = 'prod',
-         resource = 'product',
-         inner = true,
+      var select,
+         on,
+         as,
+         resource,
+         inner,
+         join;
+
+      beforeEach(function () {
+         select = {id: 'id', name: 'name'};
+         on = {id: 'productId'};
+         as = 'prod';
+         resource = 'product';
+         inner = true;
          join = new QueryJoin({
-         resource: resource,
-         as: as,
-         on: on,
-         select: select,
-         inner: inner
+            resource: resource,
+            as: as,
+            on: on,
+            select: select,
+            inner: inner
+         });
       });
+
+      afterEach(function () {
+         select = undefined;
+         on = undefined;
+         as = undefined;
+         resource = undefined;
+         inner = undefined;
+         join = undefined;
+      });
+
       describe('.getResource', function (){
          it('should return resource', function (){
             assert.equal(join.getResource(), resource);
@@ -28,12 +47,12 @@ define([
       });
       describe('.getOn', function (){
          it('should return on', function (){
-            assert.equal(join.getOn(), on);
+            assert.deepEqual(join.getOn(), on);
          });
       });
       describe('.getSelect', function (){
          it('should return select', function (){
-            assert.equal(join.getSelect(), select);
+            assert.deepEqual(join.getSelect(), select);
          });
       });
       describe('.isInner', function (){

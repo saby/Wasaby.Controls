@@ -20,7 +20,39 @@ define('js!SBIS3.CONTROLS.CompositeViewMixin', ['html!SBIS3.CONTROLS.CompositeVi
             viewMode : 'table',
 
             imageField : null,
+            /**
+             * @cfg {String} Шаблон отображения строки в режиме "Список".
+             * В шаблоне допускается использование директив шаблонизатора для доступа к значениям полей текущей записи.
+             * Шаблоны представляют собой обычные XHTML-файлы, которые помещают рядом с компонентом в директории resources.
+             * @example
+             * Шаблон для отображения только картинки, наименования и идентификатора.
+             * <pre>
+             *    <div>
+             *       <img class="docs-MyCompositeView__list-image" src="{{=it.item.get('Изображение')}}" />
+             *       <div class="docs-MyCompositeView__list-title">{{=it.item.get('Наименование')}}</div>
+             *       <div class="docs-MyCompositeView__list-id">{{=it.item.get('@СписокИмущества')}}</div>
+             *    </div>
+             * </pre>
+             * @see tileTemplate
+             * @see SBIS3.CONTROLS.ListView#itemTemplate
+             */
             listTemplate : null,
+            /**
+             * @cfg {String} Шаблон отображения строки в режиме "Плитка".
+             * В шаблоне допускается использование директив шаблонизатора для доступа к значениям полей текущей записи.
+             * Шаблоны представляют собой обычные XHTML-файлы, которые помещают рядом с компонентом в директории resources.
+             * @example
+             * Шаблон для отображения только картинки, наименования и идентификатора.
+             * <pre>
+             *    <div>
+             *       <img class="docs-MyCompositeView__tile-image" src="{{=it.item.get('Изображение')}}" />
+             *       <div class="docs-MyCompositeView__tile-title">{{=it.item.get('Наименование')}}</div>
+             *       <div class="docs-MyCompositeView__tile-id">{{=it.item.get('@СписокИмущества')}}</div>
+             *    </div>
+             * </pre>
+             * @see listTemplate
+             * @see SBIS3.CONTROLS.ListView#itemTemplate
+             */
             tileTemplate : null
          }
       },

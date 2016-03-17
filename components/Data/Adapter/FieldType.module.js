@@ -16,7 +16,6 @@ define('js!SBIS3.CONTROLS.Data.Adapter.FieldType', [], function(){
       Identity: 'Идентификатор',
       Enum: 'Перечисляемое',
       Flags: 'Флаги',
-      Model: 'Запись',
       Record: 'Запись',
       RecordSet: 'Выборка',
       Binary: 'Двоичное',

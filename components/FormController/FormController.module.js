@@ -15,7 +15,7 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl'],
     */
    'use strict';
 
-   var FormController = CompoundControl.extend([], {
+   var FormController = CompoundControl.extend([], /** @lends SBIS3.CONTROLS.FormController.prototype */ {
       _dotTplFn: dotTpl,
       $protected: {
          _record: null,
@@ -32,7 +32,7 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl'],
              * <pre>
              *    // инициализируем источник данных БЛ
              *    var dataSource = new SbisService ({
-             *       service: 'Товар'
+             *       endpoint: 'Товар'
              *    });
              *    this.setDataSource(dataSource); // устанавливаем источник данных
              * </pre>
@@ -177,7 +177,7 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl'],
        * <pre>
        *    // инициализируем источник данных БЛ
        *    var dataSource = new SbisService ({
-       *       service: 'Товар'
+       *       endpoint: 'Товар'
        *    });
        *    this.setDataSource(dataSource); // устанавливаем источник данных
        * </pre>

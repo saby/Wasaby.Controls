@@ -35,8 +35,10 @@ define('js!SBIS3.CONTROLS.DEMO.AddInPlaceInTree',
                 var view = this.getChildControlByName('Browser').getView(),
                 // инициализируем источник данных БЛ
                     dataSource = new SbisService({
-                        service: 'Product',
-                        formatMethodName: 'Создать'
+                        endpoint: 'Product',
+                        binding: {
+                            format: 'Создать'
+                        }
                     });
 
                 view.setDataSource(dataSource); // устанавливаем источник данных для таблицы

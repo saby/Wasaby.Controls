@@ -116,7 +116,7 @@ define('js!SBIS3.CONTROLS.Data.Adapter.Sbis', [
                   if (val === null) {
                      return Sbis.FIELD_TYPE.String;
                   } else if ($ws.helpers.instanceOfModule(val, 'SBIS3.CONTROLS.Data.Model') || $ws.helpers.instanceOfModule(val, 'SBIS3.CONTROLS.Record')) {
-                     return Sbis.FIELD_TYPE.Model;
+                     return Sbis.FIELD_TYPE.Record;
                   } else if ($ws.helpers.instanceOfModule(val, 'SBIS3.CONTROLS.Data.Collection.RecordSet') || $ws.helpers.instanceOfModule(val, 'SBIS3.CONTROLS.DataSet') || $ws.helpers.instanceOfModule(val, 'SBIS3.CONTROLS.Data.Source.DataSet')) {
                      return Sbis.FIELD_TYPE.RecordSet;
                   } else if (val instanceof Date) {
@@ -126,8 +126,10 @@ define('js!SBIS3.CONTROLS.Data.Adapter.Sbis', [
                         n: Sbis.FIELD_TYPE.Array,
                         t: getValueType(val[0])
                      };
+                  } else {
+                     return Sbis.FIELD_TYPE.Record;
                   }
-                  return Sbis.FIELD_TYPE.Model;
+                  break;
                default:
                   return Sbis.FIELD_TYPE.String;
             }

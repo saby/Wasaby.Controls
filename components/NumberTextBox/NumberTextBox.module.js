@@ -179,7 +179,7 @@ define('js!SBIS3.CONTROLS.NumberTextBox', ['js!SBIS3.CONTROLS.TextBox', 'html!SB
             }
          });
 
-         if (this._options.numericValue) {
+         if (typeof this._options.numericValue === 'number' && !isNaN(this._options.numericValue)) {
             this._options.text = this._options.numericValue + '';
          }
          this._options.text = this._formatText(this._options.text, this._options.hideEmptyDecimals);
@@ -253,7 +253,7 @@ define('js!SBIS3.CONTROLS.NumberTextBox', ['js!SBIS3.CONTROLS.TextBox', 'html!SB
       _updateCompatPlaceholderVisibility: function() {
          if (this._compatPlaceholder) {
             if (typeof this._options.numericValue === 'number' && !isNaN(this._options.numericValue)) {
-               this._compatPlaceholder.show();
+               this._compatPlaceholder.hide();
             } else {
                NumberTextBox.superclass._updateCompatPlaceholderVisibility.apply(this, arguments);
             }

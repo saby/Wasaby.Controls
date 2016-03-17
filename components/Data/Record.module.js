@@ -8,8 +8,9 @@ define('js!SBIS3.CONTROLS.Data.Record', [
    'js!SBIS3.CONTROLS.Data.FormattableMixin',
    'js!SBIS3.CONTROLS.Data.Di',
    'js!SBIS3.CONTROLS.Data.Factory',
+   'js!SBIS3.CONTROLS.Data.Format.StringField',
    'js!SBIS3.CONTROLS.Data.ContextField.Record'
-], function (IPropertyAccess, IEnumerable, ArrayEnumerator, SerializableMixin, Serializer, FormattableMixin, Di, Factory, ContextFieldRecord) {
+], function (IPropertyAccess, IEnumerable, ArrayEnumerator, SerializableMixin, Serializer, FormattableMixin, Di, Factory, StringField, ContextFieldRecord) {
    'use strict';
 
    /**
@@ -63,7 +64,7 @@ define('js!SBIS3.CONTROLS.Data.Record', [
 
          if ('data' in cfg && !('rawData' in cfg)) {
             this._options.rawData = cfg.data;
-            $ws.single.ioc.resolve('ILogger').log('SBIS3.CONTROLS.Data.Record', 'option "data" is deprecated and will be removed in 3.7.4. Use "rawData" instead.');
+            $ws.single.ioc.resolve('ILogger').info('SBIS3.CONTROLS.Data.Record', 'option "data" is deprecated and will be removed in 3.7.4. Use "rawData" instead.');
          }
          this.setRawData(this._options.rawData);
       },
@@ -87,7 +88,7 @@ define('js!SBIS3.CONTROLS.Data.Record', [
 
       set: function (name, value) {
          if (!name) {
-            $ws.single.ioc.resolve('ILogger').error('SBIS3.CONTROLS.Data.Record::set()', 'Property name is empty');
+            $ws.single.ioc.resolve('ILogger').error('SBIS3.CONTROLS.Data.Record::set()', 'Property name is empty, value can\'t be setted.');
          }
 
          var oldValue = this._getRawDataValue(name);
@@ -340,13 +341,18 @@ define('js!SBIS3.CONTROLS.Data.Record', [
       _getRawDataValue: function(name) {
          var adapter = this._getRecordAdapter(),
             rawValue = adapter.get(name),
-            fieldInfo = adapter.getInfo(name);
+            format;
+
+         try {
+            format = adapter.getSharedFormat(name);
+         } catch (e) {
+            format = 'String';
+         }
 
          return Factory.cast(
             rawValue,
-            fieldInfo.type,
-            this.getAdapter(),
-            fieldInfo.meta
+            format,
+            this.getAdapter()
          );
       },
 
@@ -358,15 +364,19 @@ define('js!SBIS3.CONTROLS.Data.Record', [
        */
       _setRawDataValue: function(name, value) {
          var adapter = this._getRecordAdapter(),
-            fieldInfo = adapter.getInfo(name);
+            format;
+         try {
+            format = adapter.getSharedFormat(name);
+         } catch (e) {
+            format = 'String';
+         }
 
          adapter.set(
             name,
             Factory.serialize(
                value,
-               fieldInfo.type,
-               this.getAdapter(),
-               fieldInfo.meta
+               format,
+               this.getAdapter()
             )
          );
 
