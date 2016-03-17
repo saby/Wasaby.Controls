@@ -74,8 +74,18 @@ define('js!SBIS3.CONTROLS.MultiSelectable', ['js!SBIS3.CONTROLS.Data.Collection.
              * Для задания выбранных элементов необходимо указать значения
              * {@link SBIS3.CONTROLS.DSMixin#keyField ключевого поля} элементов коллекции.
              * Работает в режиме множественного выбора {@link multiselect}.
-             * Установить новый массив идентификаторов можно с помощью метода {@link setSelectedKeys},
-             * получить массив идентивикаторов выбранных элементов можно с помощью метода  {@link getSelectedKeys}.
+             * Использование методов для работы с элементами коллекции в режиме множественного выбора позволяет:
+             * <ul>
+             *     <li>{@link setSelectedKeys} - установить новый массив идентификаторов;</li>
+             *     <li>{@link getSelectedKeys} - получить массив идентификаторов выбранных элементов;</li>
+             *     <li>{@link setSelectedItemsAll} - установить выбранными все элементы;</li>
+             *     <li>{@link addItemsSelection} - добавить указанные элементы в набор выбранных;</li>
+             *     <li>{@link removeItemsSelection} - удалить указанные элементы из набора выбранных;</li>
+             *     <li>{@link removeItemsSelectionAll} - удалить все выбранные элементы;</li>
+             *     <li>{@link toggleItemsSelection} - поменять состояние выбранности указанных элементов на противоположное;</li>
+             *     <li>{@link toggleItemsSelectionAll} - поменять состояние выбранности всех элементов на противоположное;</li>
+             *     <li>{@link getSelectedItems} - получить набор выбранных элементов.</li>
+             * </ul>
              * @example
              * <pre class="brush: xml">
              *     <options name="selectedKeys" type="array">
@@ -85,9 +95,10 @@ define('js!SBIS3.CONTROLS.MultiSelectable', ['js!SBIS3.CONTROLS.Data.Collection.
              *     </options>
              * </pre>
              * @see multiselect
-             * @see allowEmptyMultiSelection
              * @see setSelectedKeys
              * @see getSelectedKeys
+             * @see getSelectedItems
+             * @see setSelectedItemsAll
              * @see addItemsSelection
              * @see removeItemsSelection
              * @see removeItemsSelectionAll
@@ -96,7 +107,7 @@ define('js!SBIS3.CONTROLS.MultiSelectable', ['js!SBIS3.CONTROLS.Data.Collection.
              */
             selectedKeys : [],
              /**
-              * @cfg {Boolean} Разрешить отсутствие выбранного элемента в группе
+              * @cfg {Boolean} Разрешить отсутствие выбранных элементов в группе
               * @example
               * <pre class="brush: xml">
               *     <option name="allowEmptyMultiSelection">false</option>
