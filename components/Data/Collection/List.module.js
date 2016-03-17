@@ -230,6 +230,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.List', [
        * @deprecated метод будет удален в 3.7.4 используйте append() или prepend()
        */
       concat: function (items, prepend) {
+         $ws.single.ioc.resolve('ILogger').info(this._moduleName + '::concat()', 'Method is deprecated and will be removed in 3.7.4. Use append() or prepend() instead.');
          if (prepend) {
             this.prepend(items);
          } else {
