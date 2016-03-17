@@ -137,11 +137,13 @@ define('js!SBIS3.CONTROLS.TextBoxBase',
              * Если полей несколько, то, как правило, появление клавиатуры неуместно. Ожидается, что пользователь сам
              * выберет поле для ввода значения.
              * В других случаях, когда на странице или диалоге всего одно поле ввода, появления клавиатуры считается уместным.
+             *
              * Установить или изменить фокус для поля ввода можно с помощью метода {@link $ws.proto.Control#setActive}.
              * @example
              * <pre class="brush:xml">
              *    <option name="focusOnActivatedOnMobiles">true</option>
              * </pre>
+             * @see $ws.proto.Control#setActive
              */
             focusOnActivatedOnMobiles: false
          }
@@ -201,7 +203,7 @@ define('js!SBIS3.CONTROLS.TextBoxBase',
       },
 
       /**
-       * Устанавливает максимальное количество символов, которое можно ввести.
+       * Устанавливает максимальное количество символов, которое можно ввести в поле ввода.
        * @param {Number} num Количество символов.
        * @example
        * <pre>
