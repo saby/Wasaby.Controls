@@ -76,6 +76,7 @@ define('js!SBIS3.CONTROLS.TextBoxBase',
              * значений автодополнения. В этом примере проиллюстрирована фильтрация списка по переданному тексту в
              * поле связи.
              * ![](/TextBoxBase01.png)
+             * фрагмент верстки:
              * <pre class="brush:xml">
              *     <option name="text" bind="myTextField" value="Филиппов Павел"></option>
              *     <options name="listFilter">
