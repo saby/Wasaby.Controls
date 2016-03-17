@@ -33,8 +33,8 @@ define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManag
          _targetSizes: {},
          _containerSizes: {},
          _windowSizes: {},
-         _isMovedH: false,
-         _isMovedV: false,
+         _isMovedH: undefined, // Был ли горизонтальный сдвиг при позиционировании
+         _isMovedV: undefined, // Был ли вертикальный сдвиг при позиционировании
          _defaultCorner: '',
          _defaultHorizontalAlignSide: '',
          _defaultVerticalAlignSide: '',
@@ -147,6 +147,8 @@ define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManag
          this._defaultCorner = this._options.corner;
          this._defaultVerticalAlignSide = this._options.verticalAlign.side;
          this._defaultHorizontalAlignSide = this._options.horizontalAlign.side;
+
+         this._resetToDefault();
       },
       
       //Подписка на изменение состояния таргета
@@ -215,8 +217,8 @@ define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManag
                   maxHeight = parseFloat(this._container.css('max-height'), 10),
                   border = (this._container.outerWidth() - this._container.innerWidth());
 
-               this._isMovedV = false;
-               this._isMovedH = false;
+               this._resetToDefault();   
+               
                this._containerSizes.originWidth = scrollWidth > maxWidth ? maxWidth : scrollWidth + border ;
                this._containerSizes.originHeight = scrollHeight > maxHeight ? maxHeight : scrollHeight + border;
             }
@@ -257,6 +259,19 @@ define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManag
             }
          }
       },
+      /**
+       * Сброс параметров к исходным значениям
+       * необходимо при принудительном пересчете размеров
+       * и для рассчета непосредственно после отображения
+       */
+      _resetToDefault: function(){
+         this._isMovedV = false;
+         this._isMovedH = false;
+         this._options.corner = this._defaultCorner;
+         this._options.verticalAlign.side = this._defaultVerticalAlignSide;
+         this._options.horizontalAlign.side = this._defaultHorizontalAlignSide;
+      },
+
       /**
        * Установить новый таргет
        * @param target новый таргет
