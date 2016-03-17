@@ -52,7 +52,7 @@ define('js!SBIS3.CONTROLS.Utils.RichTextAreaUtil',[], function () {
                if (event.clipboardData) {
                   selectionNode.appendChild(selectionContent);
                   clipboardData.setData('text/html', '<!--' + label.data + '-->' + selectionNode.innerHTML);
-                  clipboardData.setData('text', selectionNode.textContent);
+                  clipboardData.setData('text', currentWindow.getSelection().toString());
                }
                // для ie
                else {
