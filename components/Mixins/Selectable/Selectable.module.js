@@ -44,9 +44,13 @@ define('js!SBIS3.CONTROLS.Selectable', ['js!SBIS3.CONTROLS.Data.Utils', 'js!SBIS
               */
              selectedIndex: null,
              /**
-              * @cfg {String} Идентификатор выбранного элемента
+              * @cfg {String} Определяет идентификатор выбранного элемента
               * @remark
-              * Для задания выбранного элемента необходимо указать значение {@link SBIS3.CONTROLS.DSMixin#keyField ключевого поля} элемента коллекции.
+              * Используется для построения контрола с определенным элементом коллекции.
+              * Для задания выбранного элемента необходимо указать значение
+              * {@link SBIS3.CONTROLS.DSMixin#keyField ключевого поля} элемента коллекции.
+              * Установить новый идентификатор элемента коллекции можно с помощью метода {@link setSelectedKey},
+              * получить идентификатор элемента коллекции можно с помощью метода {@link getSelectedKey}.
               * @example
               * <pre>
               *     <option name="selectedKey">3</option>

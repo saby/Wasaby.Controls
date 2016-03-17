@@ -68,7 +68,7 @@ define('js!SBIS3.CONTROLS.MultiSelectable', ['js!SBIS3.CONTROLS.Data.Collection.
              */
             multiselect : true,
             /**
-             * @cfg {String[]} Массив идентификаторов выбранных элементов
+             * @cfg {String[]} Определяет массив идентификаторов выбранных элементов.
              * @example
              * <pre class="brush:xml">
              *     this._getTable().setSelection(this.selectedKeys);
