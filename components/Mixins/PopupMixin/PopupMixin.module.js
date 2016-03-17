@@ -217,6 +217,8 @@ define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManag
                   maxHeight = parseFloat(this._container.css('max-height'), 10),
                   border = (this._container.outerWidth() - this._container.innerWidth());
 
+               this._resetToDefault();   
+               
                this._containerSizes.originWidth = scrollWidth > maxWidth ? maxWidth : scrollWidth + border ;
                this._containerSizes.originHeight = scrollHeight > maxHeight ? maxHeight : scrollHeight + border;
             }
