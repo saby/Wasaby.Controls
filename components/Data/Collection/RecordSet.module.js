@@ -637,7 +637,12 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
       },
 
       assign: function (items) {
-         this._assignRawData(this._getTableAdapter().getEmpty());
+         if ($ws.helpers.instanceOfModule(items, 'SBIS3.CONTROLS.Data.Collection.RecordSet')) {
+            var adapter = items.getAdapter().forTable(items.getRawData());
+            this._assignRawData(adapter.getEmpty());
+         } else {
+            this._assignRawData(this._getTableAdapter().getEmpty());
+         }
          items = this._itemsToArray(items);
          for (var i = 0, len = items.length; i < len; i++) {
             this._checkItem(items[i]);
