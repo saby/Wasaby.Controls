@@ -57,12 +57,7 @@ define('js!SBIS3.CONTROLS.ButtonBase', ['js!SBIS3.CORE.CompoundControl', 'js!SBI
              * @see setCaption
              * @see getCaption
              */
-            caption: undefined,
-
-            /**
-             * @cfg {String}  Команда
-             */
-            command: ''
+            caption: undefined
          }
       },
 
@@ -76,12 +71,6 @@ define('js!SBIS3.CONTROLS.ButtonBase', ['js!SBIS3.CORE.CompoundControl', 'js!SBI
          $('[data-component]', this._container.get(0)).mousedown(function(e){
             e.stopPropagation();
          });
-      },
-
-      _clickHandler : function() {
-         if (!!this._options.command) {
-            this.sendCommand(this._options.command);
-         }
       },
 
       /**
