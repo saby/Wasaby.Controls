@@ -37,7 +37,7 @@ define([
 
       describe('SBIS3.CONTROLS.Data.MoveStrategy.Sbis', function() {
          beforeEach(function() {
-            moveStrategy = new SbisMoveStrategy({resource: 'test'});
+            moveStrategy = new SbisMoveStrategy({contract: 'test'});
 
             //Replace of standard with mock
             Di.register('source.provider.sbis-business-logic', SbisBusinessLogic);
@@ -49,14 +49,14 @@ define([
                   moveStrategy = new SbisMoveStrategy({});
                });
             });
-            it('should get resource from data source', function() {
+            it('should get contract from data source', function() {
                var service = new SbisService({
-                  resource: 'Товар'
+                  endpoint: 'Товар'
                });
                moveStrategy = new SbisMoveStrategy({
                   dataSource: service
                });
-               assert.equal(moveStrategy._options.resource, 'Товар');
+               assert.equal(moveStrategy._options.contract, 'Товар');
             });
 
          });

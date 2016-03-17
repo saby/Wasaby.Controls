@@ -26,7 +26,7 @@ define('js!SBIS3.TestPathSelector',
                 var tree1 = this.getChildControlByName('TreeDataGrid 1');
                 var tree2 = this.getChildControlByName('TreeDataGrid 2');
 
-                var dataSource = new SbisServiceSource({resource: 'PathSelector'});
+                var dataSource = new SbisServiceSource({endpoint: 'PathSelector'});
                 tree1.setDataSource(dataSource);
 
                 var path1 = new PathSelector({

@@ -27,7 +27,7 @@ define('js!SBIS3.CONTROLS.Data.Source.Memory', [
          /**
           * @var {SBIS3.CONTROLS.Data.Adapter.ITable} Адаптер для таблицы
           */
-         _tableAdapter: undefined,
+         _tableAdapter: null,
 
          /**
           * @var {Object} Индекс для быстрого поиска записи по ключу
@@ -37,16 +37,16 @@ define('js!SBIS3.CONTROLS.Data.Source.Memory', [
 
       $constructor: function (cfg) {
          cfg = cfg || {};
-         if (_static.resources[this._options.resource] === undefined) {
-            _static.resources[this._options.resource] = this._options.data;
+         if (this._options.endpoint.contract && !_static.contracts.hasOwnProperty(this._options.endpoint.contract)) {
+            _static.contracts[this._options.endpoint.contract] = this._options.data;
          }
          if ('strategy' in cfg && !('adapter' in cfg)) {
             this._options.adapter = cfg.strategy;
-            $ws.single.ioc.resolve('ILogger').info('SBIS3.CONTROLS.Data.Collection.RecordSet', 'option "strategy" is deprecated and will be removed in 3.7.4. Use "adapter" instead.');
+            $ws.single.ioc.resolve('ILogger').info(this._moduleName + '::$constructor', 'option "strategy" is deprecated and will be removed in 3.7.4. Use "adapter" instead.');
          }
          if ('keyField' in cfg && !('idProperty' in cfg)) {
             this._options.idProperty = cfg.keyField;
-            $ws.single.ioc.resolve('ILogger').info('SBIS3.CONTROLS.Data.Collection.RecordSet', 'option "keyField" is deprecated and will be removed in 3.7.4. Use "idProperty" instead.');
+            $ws.single.ioc.resolve('ILogger').info(this._moduleName + '::$constructor', 'option "keyField" is deprecated and will be removed in 3.7.4. Use "idProperty" instead.');
          }
          this._reIndex();
       },
@@ -216,8 +216,8 @@ define('js!SBIS3.CONTROLS.Data.Source.Memory', [
       },
 
       /**
-       * Применяет ресурс
-       * @param {String} [from] Ресурс
+       * Применяет источник выборки
+       * @param {String} [from] Источник выборки
        * @returns {*}
        * @protected
        */
@@ -227,7 +227,7 @@ define('js!SBIS3.CONTROLS.Data.Source.Memory', [
             this._getTableAdapter().getEmpty()
          );
          this._each(
-            from === this._options.resource ? this._options.data : _static.resources[from],
+            from ? _static.contracts[from] : this._options.data,
             function(item) {
                adapter.add(item);
             }
@@ -482,10 +482,10 @@ define('js!SBIS3.CONTROLS.Data.Source.Memory', [
     */
    var _static = {
       /**
-       * @var {Object} Хранилище ресурсов
+       * @var {Object.<String, Object>} Хранилище контрактов
        * @static
        */
-      resources: {}
+      contracts: {}
    };
 
    Di.register('source.memory', Memory);

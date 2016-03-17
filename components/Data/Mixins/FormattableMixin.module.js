@@ -59,7 +59,7 @@ define('js!SBIS3.CONTROLS.Data.FormattableMixin', [
             adapter: 'adapter.json',
 
             /**
-             * @cfg {SBIS3.CONTROLS.Data.Format.Format|Array.<SBIS3.CONTROLS.Data.Format.FieldsFactory/FieldDeclaration>} Формат полей
+             * @cfg {SBIS3.CONTROLS.Data.Format.Format|Array.<SBIS3.CONTROLS.Data.Format.FieldsFactory/FieldDeclaration.typedef>} Формат полей
              * @see getFormat
              * @example
              * <pre>
@@ -153,7 +153,7 @@ define('js!SBIS3.CONTROLS.Data.FormattableMixin', [
        * Добавляет поле в формат.
        * Если позиция не указана (или указана как -1), поле добавляется в конец формата.
        * Если поле с таким форматом уже есть, генерирует исключение.
-       * @param {SBIS3.CONTROLS.Data.Format.Field|SBIS3.CONTROLS.Data.Format.FieldsFactory/FieldDeclaration} format Формат поля
+       * @param {SBIS3.CONTROLS.Data.Format.Field|SBIS3.CONTROLS.Data.Format.FieldsFactory/FieldDeclaration.typedef} format Формат поля
        * @param {Number} [at] Позиция поля
        * @see format
        * @see removeField
@@ -256,7 +256,7 @@ define('js!SBIS3.CONTROLS.Data.FormattableMixin', [
 
       /**
        * Строит формат полей по описанию
-       * @param {SBIS3.CONTROLS.Data.Format.Format|Array.<SBIS3.CONTROLS.Data.Format.FieldsFactory/FieldDeclaration>} format Описание формата
+       * @param {SBIS3.CONTROLS.Data.Format.Format|Array.<SBIS3.CONTROLS.Data.Format.FieldsFactory/FieldDeclaration.typedef>} format Описание формата
        * @returns {SBIS3.CONTROLS.Data.Format.Format}
        * @protected
        */
@@ -289,7 +289,7 @@ define('js!SBIS3.CONTROLS.Data.FormattableMixin', [
 
       /**
        * Строит формат поля по описанию
-       * @param {SBIS3.CONTROLS.Data.Format.Field|SBIS3.CONTROLS.Data.Format.FieldsFactory/FieldDeclaration} format Описание формата поля
+       * @param {SBIS3.CONTROLS.Data.Format.Field|SBIS3.CONTROLS.Data.Format.FieldsFactory/FieldDeclaration.typedef} format Описание формата поля
        * @returns {SBIS3.CONTROLS.Data.Format.Field}
        * @protected
        */

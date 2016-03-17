@@ -8,92 +8,92 @@ define([
    ], function (MemorySource, DataSet, Model, List, Query) {
       'use strict';
 
-      var existsId = 5,
-         existsPosition = 5,
-         existsId2 = 6,
-         existsPosition2 = 0,
-         notExistsId = 33,
-         data,
-         service;
-
-      beforeEach(function () {
-         data = [{
-            'Ид': 6,
-            'ПорНом': 3,
-            'Раздел': [null],
-            'Фамилия': 'Иванов',
-            'Имя': 'Иван',
-            'Отчество': 'Иванович',
-            'Должность': 'Инженер'
-         }, {
-            'Ид': 4,
-            'ПорНом': 1,
-            'Раздел': [null],
-            'Фамилия': 'Петров',
-            'Имя': 'Федор',
-            'Отчество': 'Иванович',
-            'Должность': 'Директор'
-         }, {
-            'ПорНом': null
-         }, {
-            'Ид': 7,
-            'ПорНом': 6,
-            'Раздел': [6],
-            'Фамилия': 'Аксенова',
-            'Имя': 'Федора',
-            'Отчество': 'Сергеевна',
-            'Должность': 'Инженер'
-         }, {
-            'Ид': 2,
-            'ПорНом': 0,
-            'Раздел': [4],
-            'Фамилия': 'Афанасьев',
-            'Имя': 'Иван',
-            'Отчество': 'Андреевич',
-            'Должность': 'Директор'
-         }, {
-            'Ид': null
-         }, {
-            'Ид': 5,
-            'ПорНом': 4,
-            'Раздел': [null],
-            'Фамилия': 'Баранов',
-            'Имя': 'Иванко',
-            'Отчество': 'Петрович',
-            'Должность': 'Карапуз'
-         }, {
-            'Ид': 1,
-            'ПорНом': 5,
-            'Раздел': [null],
-            'Фамилия': 'Годолцов',
-            'Имя': 'Иван',
-            'Отчество': 'Викторович',
-            'Должность': 'Директор'
-         }, {
-            'Ид': 3,
-            'ПорНом': 3,
-            'Раздел': [6],
-            'Фамилия': 'Иванов',
-            'Имя': 'Ян',
-            'Отчество': 'Яковлевич',
-            'Должность': 'Маркетолог'
-         }];
-
-         service = new MemorySource({
-            data: data,
-            idProperty: 'Ид'
-         });
-      });
-
-      afterEach(function () {
-         data = undefined;
-         service = undefined;
-      });
-
       describe('SBIS3.CONTROLS.Data.Source.Memory', function () {
+         var existsId = 5,
+            existsPosition = 5,
+            existsId2 = 6,
+            existsPosition2 = 0,
+            notExistsId = 33,
+            data,
+            source;
+
+         beforeEach(function () {
+            data = [{
+               'Ид': 6,
+               'ПорНом': 3,
+               'Раздел': [null],
+               'Фамилия': 'Иванов',
+               'Имя': 'Иван',
+               'Отчество': 'Иванович',
+               'Должность': 'Инженер'
+            }, {
+               'Ид': 4,
+               'ПорНом': 1,
+               'Раздел': [null],
+               'Фамилия': 'Петров',
+               'Имя': 'Федор',
+               'Отчество': 'Иванович',
+               'Должность': 'Директор'
+            }, {
+               'ПорНом': null
+            }, {
+               'Ид': 7,
+               'ПорНом': 6,
+               'Раздел': [6],
+               'Фамилия': 'Аксенова',
+               'Имя': 'Федора',
+               'Отчество': 'Сергеевна',
+               'Должность': 'Инженер'
+            }, {
+               'Ид': 2,
+               'ПорНом': 0,
+               'Раздел': [4],
+               'Фамилия': 'Афанасьев',
+               'Имя': 'Иван',
+               'Отчество': 'Андреевич',
+               'Должность': 'Директор'
+            }, {
+               'Ид': null
+            }, {
+               'Ид': 5,
+               'ПорНом': 4,
+               'Раздел': [null],
+               'Фамилия': 'Баранов',
+               'Имя': 'Иванко',
+               'Отчество': 'Петрович',
+               'Должность': 'Карапуз'
+            }, {
+               'Ид': 1,
+               'ПорНом': 5,
+               'Раздел': [null],
+               'Фамилия': 'Годолцов',
+               'Имя': 'Иван',
+               'Отчество': 'Викторович',
+               'Должность': 'Директор'
+            }, {
+               'Ид': 3,
+               'ПорНом': 3,
+               'Раздел': [6],
+               'Фамилия': 'Иванов',
+               'Имя': 'Ян',
+               'Отчество': 'Яковлевич',
+               'Должность': 'Маркетолог'
+            }];
+
+            source = new MemorySource({
+               data: data,
+               idProperty: 'Ид'
+            });
+         });
+
+         afterEach(function () {
+            data = undefined;
+            source = undefined;
+         });
+
          describe('.create()', function () {
             it('should return an empty model', function (done) {
-               service.create().addCallbacks(function (model) {
+               source.create().addCallbacks(function (model) {
                   try {
                      if (!(model instanceof Model)) {
                         throw new Error('That\'s no Model');
@@ -117,7 +117,7 @@ define([
             });
 
             it('should return an model with initial data', function (done) {
-               service.create({
+               source.create({
                   a: 1,
                   b: true
                }).addCallbacks(function (model) {
@@ -141,7 +141,7 @@ define([
          describe('.read()', function () {
             context('when the model is exists', function () {
                it('should return the valid model', function (done) {
-                  service.read(existsId).addCallbacks(function (model) {
+                  source.read(existsId).addCallbacks(function (model) {
                      try {
                         if (!(model instanceof Model)) {
                            throw new Error('That\'s no Model');
@@ -170,7 +170,7 @@ define([
 
             context('when the model isn\'t exists', function () {
                it('should return an error', function (done) {
-                  service.read(notExistsId).addBoth(function (err) {
+                  source.read(notExistsId).addBoth(function (err) {
                      if (err instanceof Error) {
                         done();
                      } else {
@@ -184,9 +184,9 @@ define([
          describe('.update()', function () {
             context('when the model was stored', function () {
                it('should update the model', function (done) {
-                  service.read(existsId).addCallbacks(function (model) {
+                  source.read(existsId).addCallbacks(function (model) {
                      model.set('Фамилия', 'Петров');
-                     service.update(model).addCallbacks(function (success) {
+                     source.update(model).addCallbacks(function (success) {
                         try {
                            if (!success) {
                               throw new Error('Unsuccessful update');
@@ -194,7 +194,7 @@ define([
                            if (model.isChanged()) {
                               throw new Error('The model should become unchanged');
                            }
-                           service.read(existsId).addCallbacks(function (model) {
+                           source.read(existsId).addCallbacks(function (model) {
                               if (model.get('Фамилия') !== 'Петров') {
                                  done(new Error('Still have an old data'));
                               } else {
@@ -233,7 +233,7 @@ define([
                      if (length !== data.length) {
                         throw new Error('The size of raw data expect to be ' + length + ' but ' + data.length + ' detected');
                      }
-                     service.read(model.getId()).addCallbacks(function (modelToo) {
+                     source.read(model.getId()).addCallbacks(function (modelToo) {
                         if (model.get('Фамилия') !== modelToo.get('Фамилия')) {
                            done(new Error('The source still have an old data'));
                         } else {
@@ -249,9 +249,9 @@ define([
 
                it('should create the model by 1st way', function (done) {
                   var oldLength = data.length;
-                  service.create().addCallbacks(function (model) {
+                  source.create().addCallbacks(function (model) {
                      model.set('Фамилия', 'Козлов');
-                     service.update(model).addCallbacks(function (success) {
+                     source.update(model).addCallbacks(function (success) {
                         testModel(success, model, 1 + oldLength, done);
                      }, function (err) {
                         done(err);
@@ -268,7 +268,7 @@ define([
                      });
 
                   model.set('Фамилия', 'Овечкин');
-                  service.update(model).addCallbacks(function (success) {
+                  source.update(model).addCallbacks(function (success) {
                      testModel(success, model, 1 + oldLength, done);
                   }, function (err) {
                      done(err);
@@ -280,7 +280,7 @@ define([
          describe('.destroy()', function () {
             context('when the model is exists', function () {
                it('should return success', function (done) {
-                  service.destroy(existsId).addCallbacks(function (success) {
+                  source.destroy(existsId).addCallbacks(function (success) {
                      try {
                         if (!success) {
                            throw new Error('Unsuccessful destroy');
@@ -296,8 +296,8 @@ define([
                });
 
                it('should really delete the model', function (done) {
-                  service.destroy(existsId).addCallbacks(function () {
-                     service.read(existsId).addCallbacks(function () {
+                  source.destroy(existsId).addCallbacks(function () {
+                     source.read(existsId).addCallbacks(function () {
                         done(new Error('The model still exists'));
                      }, function () {
                         //ok if err == Model is not found
@@ -310,7 +310,7 @@ define([
 
                it('should decrease the size of raw data', function (done) {
                   var targetLength = data.length - 1;
-                  service.destroy(existsId).addCallbacks(function () {
+                  source.destroy(existsId).addCallbacks(function () {
                      try {
                         if (targetLength !== data.length) {
                            throw new Error('The size of raw data expect to be ' + targetLength + ' but ' + data.length + ' detected');
@@ -326,7 +326,7 @@ define([
 
                it('should decrease the size of raw data when delete a few models', function (done) {
                   var targetLength = data.length - 2;
-                  service.destroy([existsId,existsId2]).addCallbacks(function () {
+                  source.destroy([existsId,existsId2]).addCallbacks(function () {
                      try {
                         if (targetLength !== data.length) {
                            throw new Error('The size of raw data expect to be ' + targetLength + ' but ' + data.length + ' detected');
@@ -343,7 +343,7 @@ define([
 
             context('when the model isn\'t exists', function () {
                it('should return an error', function (done) {
-                  service.destroy(notExistsId).addBoth(function (err) {
+                  source.destroy(notExistsId).addBoth(function (err) {
                      if (err instanceof Error) {
                         done();
                      } else {
@@ -357,7 +357,7 @@ define([
          describe('.merge()', function () {
             context('when the model isn\'t exists', function () {
                it('should return an error', function (done) {
-                  service.merge(notExistsId, existsId).addBoth(function (err) {
+                  source.merge(notExistsId, existsId).addBoth(function (err) {
                      if (err instanceof Error) {
                         done();
                      } else {
@@ -367,7 +367,7 @@ define([
                });
 
                it('should return an error', function (done) {
-                  service.merge(existsId, notExistsId).addBoth(function (err) {
+                  source.merge(existsId, notExistsId).addBoth(function (err) {
                      if (err instanceof Error) {
                         done();
                      } else {
@@ -378,9 +378,9 @@ define([
             });
 
             it('should merge models', function (done) {
-               service.merge(existsId, existsId2).addCallbacks(function () {
-                  service.read(existsId).addCallbacks(function () {
-                     service.read(existsId2).addCallbacks(function(){
+               source.merge(existsId, existsId2).addCallbacks(function () {
+                  source.read(existsId).addCallbacks(function () {
+                     source.read(existsId2).addCallbacks(function(){
                         done(new Error('Exists extention model.'));
                      },function(){
                         done();
@@ -397,7 +397,7 @@ define([
          describe('.copy()', function () {
             it('should copy model', function (done) {
                var oldLength = data.length;
-               service.copy(existsId).addCallbacks(function () {
+               source.copy(existsId).addCallbacks(function () {
                   if(data.length !== oldLength) {
                      done();
                   } else {
@@ -411,7 +411,7 @@ define([
 
          describe('.query()', function () {
             it('should return a valid dataset', function (done) {
-               service.query(new Query()).addCallbacks(function (ds) {
+               source.query(new Query()).addCallbacks(function (ds) {
                   try {
                      if (!(ds instanceof DataSet)) {
                         throw new Error('That\'s no dataset');
@@ -429,7 +429,7 @@ define([
             });
 
             it('should work with no query', function (done) {
-               service.query().addCallbacks(function (ds) {
+               source.query().addCallbacks(function (ds) {
                   try {
                      if (!(ds instanceof DataSet)) {
                         throw new Error('That\'s no dataset');
@@ -448,8 +448,8 @@ define([
 
             it('should return a list instance of injected module', function (done) {
                var MyList = List.extend({});
-               service.setListModule(MyList);
-               service.query().addCallbacks(function (ds) {
+               source.setListModule(MyList);
+               source.query().addCallbacks(function (ds) {
                   try {
                      if (!(ds.getAll() instanceof MyList)) {
                         throw new Error('Wrong list instance');
@@ -465,8 +465,8 @@ define([
 
             it('should return a model instance of injected module', function (done) {
                var MyModel = Model.extend({});
-               service.setModel(MyModel);
-               service.query().addCallbacks(function (ds) {
+               source.setModel(MyModel);
+               source.query().addCallbacks(function (ds) {
                   try {
                      if (!(ds.getAll().at(0) instanceof MyModel)) {
                         throw new Error('Wrong model instance');
@@ -581,7 +581,7 @@ define([
                            .where(test.filter)
                            .offset(test.offset)
                            .limit(test.limit);
-                        service.query(query).addCallbacks(function (ds) {
+                        source.query(query).addCallbacks(function (ds) {
                            if (ds.getAll().getCount() === test.expect) {
                               done();
                            } else {
@@ -683,7 +683,7 @@ define([
                            .orderBy(test.sorting)
                            .offset(test.offset)
                            .limit(test.limit);
-                        service.query(query).addCallbacks(function (ds) {
+                        source.query(query).addCallbacks(function (ds) {
                            var modelNum = 0,
                               failOn;
                            ds.getAll().each(function (model) {
@@ -721,9 +721,9 @@ define([
 
          describe('.move()', function () {
             it('should move ' + existsId + ' instead ' + existsId2, function (done) {
-               service.read(existsId).addCallback(function (model1) {
-                  service.read(existsId2).addCallback(function (model2) {
-                     service.call('move', {
+               source.read(existsId).addCallback(function (model1) {
+                  source.read(existsId2).addCallback(function (model2) {
+                     source.call('move', {
                         from: model1,
                         to: model2,
                         details: {after: false}
@@ -741,9 +741,9 @@ define([
             });
 
             it('should move ' + existsId2 + ' instead ' + existsId, function (done) {
-               service.read(existsId2).addCallback(function (model1) {
-                  service.read(existsId).addCallback(function (model2) {
-                     service.call('move', {
+               source.read(existsId2).addCallback(function (model1) {
+                  source.read(existsId).addCallback(function (model2) {
+                     source.call('move', {
                         from: model1,
                         to: model2,
                         details: {after: false}
@@ -762,9 +762,9 @@ define([
             });
 
             it('should move ' + existsId + ' after ' + existsId2, function (done) {
-               service.read(existsId).addCallback(function (model1) {
-                  service.read(existsId2).addCallback(function (model2) {
-                     service.call('move', {
+               source.read(existsId).addCallback(function (model1) {
+                  source.read(existsId2).addCallback(function (model2) {
+                     source.call('move', {
                         from: model1,
                         to: model2,
                         details: {after: true}
@@ -783,9 +783,9 @@ define([
             });
 
             it('should move ' + existsId2 + ' after ' + existsId, function (done) {
-               service.read(existsId2).addCallback(function (model1) {
-                  service.read(existsId).addCallback(function (model2) {
-                     service.call('move', {
+               source.read(existsId2).addCallback(function (model1) {
+                  source.read(existsId).addCallback(function (model2) {
+                     source.call('move', {
                         from: model1,
                         to: model2,
                         details: {after: true}
@@ -806,9 +806,9 @@ define([
             it('should move before record with ПорНом=6', function (done) {
                var pn = 6,
                   newPos = 3;
-               service.read(existsId).addCallback(function (model) {
-                  service.read(existsId2).addCallback(function (model2) {
-                     service.call('move', {
+               source.read(existsId).addCallback(function (model) {
+                  source.read(existsId2).addCallback(function (model2) {
+                     source.call('move', {
                         from: model,
                         to: model2,
                         details: {column: 'ПорНом', after: false}
@@ -828,9 +828,9 @@ define([
             it('should move after record with ПорНом=6', function (done) {
                var pn = 6,
                   newPos = 4;
-               service.read(existsId).addCallback(function (model) {
-                  service.read(existsId2).addCallback(function (model2) {
-                     service.call('move', {
+               source.read(existsId).addCallback(function (model) {
+                  source.read(existsId2).addCallback(function (model2) {
+                     source.call('move', {
                         from: model,
                         to: model2,
                         details: {column: 'ПорНом', after: true}
