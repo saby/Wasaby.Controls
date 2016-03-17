@@ -1,26 +1,27 @@
 define('js!SBIS3.CONTROLS.Data.Adapter.FieldType', [], function(){
    'use strict';
    return {
-      RecordSet: 'Выборка',
-      Model: 'Запись',
+      Boolean: 'Логическое',
       Integer: 'Число целое',
-      String: 'Строка',
-      Text: 'Текст',
+      Real: 'Число вещественное',
       Double: 'Число вещественное',
       Money: 'Деньги',
-      Date: 'Дата',
+      String: 'Строка',
+      Text: 'Текст',
+      Xml: 'XML-файл',
       DateTime: 'Дата и время',
+      Date: 'Дата',
       Time: 'Время',
-      Array: 'Массив',
-      Boolean: 'Логическое',
-      Hierarchy: 'Иерархия',
+      TimeInterval: 'Временной интервал',
       Identity: 'Идентификатор',
       Enum: 'Перечисляемое',
       Flags: 'Флаги',
-      Link: 'Связь',
+      Record: 'Запись',
+      RecordSet: 'Выборка',
       Binary: 'Двоичное',
-      UUID: 'UUID',
+      Uuid: 'UUID',
       RpcFile: 'Файл-rpc',
-      TimeInterval: 'Временной интервал'
+      Hierarchy: 'Иерархия',
+      Array: 'Массив'
    };
 });

@@ -2,9 +2,10 @@
 define([
       'js!SBIS3.CONTROLS.Data.Record',
       'js!SBIS3.CONTROLS.Data.Adapter.Sbis',
+      'js!SBIS3.CONTROLS.Data.Format.FieldsFactory',
       'js!SBIS3.CONTROLS.Data.Types.Enum',
       'js!SBIS3.CONTROLS.Data.Types.Flags'
-   ], function (Record, SbisAdapter, Enum, Flags) {
+   ], function (Record, SbisAdapter, FieldsFactory, Enum, Flags) {
       'use strict';
       describe('SBIS3.CONTROLS.Data.Record', function () {
          var getRecordData = function() {
@@ -12,6 +13,21 @@ define([
                   max: 10,
                   title: 'A',
                   id: 1
+               };
+            },
+            getRecordSbisData = function() {
+               return {
+                  d: [1, 'A', 10],
+                  s: [{
+                     n: 'id',
+                     t: 'Число целое'
+                  }, {
+                     n: 'title',
+                     t: 'Строка'
+                  }, {
+                     n: 'max',
+                     t: 'Число целое'
+                  }]
                };
             },
             getRecord = function(data) {
@@ -33,6 +49,7 @@ define([
                assert.strictEqual(record.get('id'), recordData.id);
             });
          });
+
          describe('.getChanged()', function () {
             it('should return a changed value', function () {
                record.set('max', 15);
@@ -41,6 +58,7 @@ define([
                assert.include(record.getChanged(), 'title');
             });
          });
+
          describe('.applyChanges()', function () {
             it('shouldnt return a changed value', function () {
                record.set('max', 15);
@@ -49,6 +67,7 @@ define([
                assert.deepEqual(record.getChanged(), []);
             });
          });
+
          describe('.set()', function () {
             it('should set value', function () {
                record.set('max', 13);
@@ -110,8 +129,8 @@ define([
             it('should not trigger onPropertyChange if value is equal enum', function () {
                var name,
                   newV,
-                  val1 = new Enum({data: ['a', 'b', 'c']}),
-                  val2 = new Enum({data: ['a', 'b', 'c']});
+                  val1 = new Enum({dictionary: ['a', 'b', 'c']}),
+                  val2 = new Enum({dictionary: ['a', 'b', 'c']});
                record.set('enum', val1);
                record.subscribe('onPropertyChange', function(e, field, value) {
                   name = field;
@@ -124,8 +143,8 @@ define([
             it('should trigger onPropertyChange if value is not equal enum', function () {
                var name,
                   newV,
-                  val1 = new Enum({data: ['a', 'b']}),
-                  val2 = new Enum({data: ['a', 'b', 'c']});
+                  val1 = new Enum({dictionary: ['a', 'b']}),
+                  val2 = new Enum({dictionary: ['a', 'b', 'c']});
                record.set('enum', val1);
                record.subscribe('onPropertyChange', function(e, field, value) {
                   name = field;
@@ -138,8 +157,14 @@ define([
             it('should not trigger onPropertyChange if value is equal flags', function () {
                var name,
                   newV,
-                  val1 = new Flags({data: {a: true, b: false}}),
-                  val2 = new Flags({data: {a: true, b: false}});
+                  val1 = new Flags({
+                     dictionary: ['a', 'b'],
+                     values: [true, false]
+                  }),
+                  val2 = new Flags({
+                     dictionary: ['a', 'b'],
+                     values: [true, false]
+                  });
                record.set('flags', val1);
                record.subscribe('onPropertyChange', function(e, field, value) {
                   name = field;
@@ -152,8 +177,14 @@ define([
             it('should trigger onPropertyChange if value is not equal flags', function () {
                var name,
                   newV,
-                  val1 = new Flags({data: {a: true, b: false}}),
-                  val2 = new Flags({data: {a: true, b: true}});
+                  val1 = new Flags({
+                     dictionary: ['a', 'b'],
+                     values: [true, false]
+                  }),
+                  val2 = new Flags({
+                     dictionary: ['a', 'b'],
+                     values: [true, true]
+                  });
                record.set('flags', val1);
                record.subscribe('onPropertyChange', function(e, field, value) {
                   name = field;
@@ -162,6 +193,14 @@ define([
                record.set('flags', val2);
                assert.strictEqual(name, 'flags');
                assert.strictEqual(newV, val2);
+            });
+            it('should change properties cache', function () {
+               record.set('obj', {val: 13});
+               record.get('obj');
+               assert.property(record._propertiesCache, 'obj');
+               record.set('obj', {val: 14});
+               record.get('obj');
+               assert.deepEqual(record._propertiesCache['obj'], {val: 14});
             });
          });
 
@@ -249,6 +288,202 @@ define([
                   record = new Record();
                record.setAdapter(adapter);
                assert.deepEqual(record.getAdapter(), adapter);
+            });
+         });
+
+         describe('.getFormat()', function () {
+            it('should build the format from raw data', function () {
+               var format = record.getFormat();
+               assert.strictEqual(format.getCount(), Object.keys(recordData).length);
+               format.each(function(item) {
+                  assert.isTrue(recordData.hasOwnProperty(item.getName()));
+               });
+            });
+            it('should build the record format from declarative option', function () {
+               var declaration = [{
+                     name: 'id',
+                     type: 'integer'
+                  }, {
+                     name: 'title',
+                     type: 'string'
+                  }, {
+                     name: 'max',
+                     type: 'integer'
+                  }, {
+                     name: 'main',
+                     type: 'boolean'
+                  }],
+                  record = new Record({
+                     format: declaration,
+                     rawData: recordData
+                  }),
+                  format = record.getFormat();
+               assert.strictEqual(format.getCount(), declaration.length);
+               format.each(function(item, index) {
+                  assert.strictEqual(item.getName(), declaration[index].name);
+                  assert.strictEqual(item.getType().toLowerCase(), declaration[index].type);
+               });
+            });
+         });
+
+         describe('.addField()', function () {
+            it('should add the field from the declaration', function () {
+               var index = 1,
+                  fieldName = 'login',
+                  fieldDefault = 'user';
+               record.addField({
+                  name: fieldName,
+                  type: 'string',
+                  defaultValue: fieldDefault
+               }, index);
+
+               assert.strictEqual(record.getFormat().at(index).getName(), fieldName);
+               assert.strictEqual(record.getFormat().at(index).getDefaultValue(), fieldDefault);
+               assert.strictEqual(record.get(fieldName), fieldDefault);
+               assert.strictEqual(record.getRawData()[fieldName], fieldDefault);
+            });
+            it('should add the field from the instance', function () {
+               var fieldName = 'login',
+                  fieldDefault = 'username';
+               record.addField(FieldsFactory.create({
+                  name: fieldName,
+                  type: 'string',
+                  defaultValue: fieldDefault
+               }));
+               var index = record.getFormat().getCount() - 1;
+
+               assert.strictEqual(record.getFormat().at(index).getName(), fieldName);
+               assert.strictEqual(record.getFormat().at(index).getDefaultValue(), fieldDefault);
+               assert.strictEqual(record.get(fieldName), fieldDefault);
+               assert.strictEqual(record.getRawData()[fieldName], fieldDefault);
+            });
+            it('should add the field with the value', function () {
+               var fieldName = 'login',
+                  fieldValue = 'root';
+               record.addField({name: fieldName, type: 'string', defaultValue: 'user'}, 0, fieldValue);
+
+               assert.strictEqual(record.get(fieldName), fieldValue);
+               assert.strictEqual(record.getRawData()[fieldName], fieldValue);
+            });
+            it('should throw an error if the field is already defined', function () {
+               assert.throw(function() {
+                  record.addField({name: 'title', type: 'string'});
+               });
+            });
+            it('should throw an error if add the field twice', function () {
+               record.addField({name: 'new', type: 'string'});
+               assert.throw(function() {
+                  record.addField({name: 'new', type: 'string'});
+               });
+            });
+            it('should throw an error if the record has an owner', function () {
+               record = new Record({
+                  rawData: recordData,
+                  owner: {}
+               });
+               assert.throw(function() {
+                  record.addField({name: 'new', type: 'string'});
+               });
+            });
+            it('should add the empty record field', function () {
+               var fieldName = 'rec';
+               record.addField({name: fieldName, type: 'record'});
+
+               assert.isNull(record.get(fieldName));
+               assert.isNull(record.getRawData()[fieldName]);
+            });
+            it('should add the filled record field', function () {
+               var fieldName = 'rec';
+               record.addField({name: fieldName, type: 'record'}, 0, {a: 1});
+
+               assert.strictEqual(record.get(fieldName).get('a'), 1);
+               assert.strictEqual(record.getRawData()[fieldName].a, 1);
+            });
+            it('should add the empty recordset field', function () {
+               var fieldName = 'rs';
+               record.addField({name: fieldName, type: 'recordset'});
+
+               assert.isNull(record.get(fieldName));
+               assert.isNull(record.getRawData()[fieldName]);
+            });
+            it('should add the filled recordset field', function () {
+               var fieldName = 'rs';
+               record.addField({name: fieldName, type: 'recordset'}, 0, [{a: 1}]);
+
+               assert.strictEqual(record.get(fieldName).at(0).get('a'), 1);
+               assert.strictEqual(record.getRawData()[fieldName][0].a, 1);
+            });
+         });
+
+         describe('.removeField()', function () {
+            it('should remove the exists field', function () {
+               var fieldName = 'title';
+               record.removeField(fieldName);
+
+               assert.strictEqual(record.getFormat().getFieldndex(fieldName), -1);
+               assert.isFalse(record.has(fieldName));
+               assert.isUndefined(record.get(fieldName));
+               assert.isUndefined(record.getRawData()[fieldName]);
+            });
+            it('should throw an error for not defined field', function () {
+               assert.throw(function() {
+                  record.removeField('some');
+               });
+            });
+            it('should throw an error if remove the field twice', function () {
+               record.removeField('title');
+               assert.throw(function() {
+                  record.removeField('title');
+               });
+            });
+            it('should throw an error if the record has an owner', function () {
+               record = new Record({
+                  rawData: recordData,
+                  owner: {}
+               });
+               assert.throw(function() {
+                  record.removeField('title');
+               });
+            });
+         });
+
+         describe('.removeFieldAt()', function () {
+            it('should throw an error if adapter doesn\'t support fields indexes', function () {
+               assert.throw(function() {
+                  record.removeFieldAt(1);
+               });
+            });
+            it('should remove the exists field', function () {
+               var fieldIndex = 1,
+                  fieldName = 'title',
+                  record = new Record({
+                     adapter: 'adapter.sbis',
+                     rawData: getRecordSbisData()
+                  });
+               record.removeFieldAt(fieldIndex);
+
+               assert.notEqual(record.getFormat().at(fieldIndex).getName(), fieldName);
+               assert.isFalse(record.has(fieldName));
+               assert.isUndefined(record.get(fieldName));
+               assert.isUndefined(record.getRawData()[fieldName]);
+            });
+            it('should throw an error for not exists index', function () {
+               assert.throw(function() {
+                  var record = new Record({
+                     adapter: 'adapter.sbis'
+                  });
+                  record.removeFieldAt(0);
+               });
+            });
+            it('should throw an error if the record has an owner', function () {
+               record = new Record({
+                  adapter: 'adapter.sbis',
+                  rawData: getRecordSbisData(),
+                  owner: {}
+               });
+               assert.throw(function() {
+                  record.removeFieldAt(1);
+               });
             });
          });
 

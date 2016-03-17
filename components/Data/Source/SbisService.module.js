@@ -18,46 +18,91 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
     * @example
     * <pre>
     *    var dataSource = new SbisService({
-    *       resource: 'СообщениеОтКлиента',
+    *       endpoint: 'СообщениеОтКлиента',
     *    });
     * </pre>
     * <pre>
     *    var dataSource = new SbisService({
-    *       resource: 'СообщениеОтКлиента',
-    *       idProperty: '@СообщениеОтКлиента',
-    *       queryMethodName: 'СписокОбщий',
-    *       formatMethodName: 'Список'
-    *       readMethodName: 'Прочитать'
+    *       endpoint: 'СообщениеОтКлиента',
+    *       binding: {
+    *          read: 'Прочитать',
+    *          query: 'СписокОбщий',
+    *          format: 'Список'
+    *       }
+    *       idProperty: '@СообщениеОтКлиента'
     *    });
     * </pre>
     */
 
    var SbisService = Rpc.extend(/** @lends SBIS3.CONTROLS.Data.Source.SbisService.prototype */{
+      /**
+       * @typedef {Object} Binding
+       * @property {String} [create=Создать Имя метода для создания записи через {@link create}
+       * @property {String} [read=Прочитать] Имя метода для чтения записи через {@link read}
+       * @property {String} [update=Записать] Имя метода для обновления записи через {@link update}
+       * @property {String} [destroy=Удалить] Имя метода для удаления записи через {@link destroy}
+       * @property {String} [query=Список] Имя метода для получения списка записей через {@link query}
+       * @property {String} [copy=Копировать] Имя метода для копирования записей через {@link copy}
+       * @property {String} [merge=Объединить] Имя метода для объединения записей через {@link merge}
+       * @property {String} [format] Имя метода для получения формата записи через {@link create}, {@link read} и {@link copy}. Метод должен быть декларативным.
+       */
+
       _moduleName: 'SBIS3.CONTROLS.Data.Source.SbisService',
       $protected: {
          _options: {
             /**
-             * @cfg {String} Адрес удаленного сервиса, с которым работает источник (хост, путь, название)
-             * @name {SBIS3.CONTROLS.Data.Source.SbisService#service}
-             * @see getService
+             * @cfg {Endpoint|String} Конечная точка, обеспечивающая доступ клиента к функциональным возможностям источника данных
+             * @see getEndPoint
+             * @example
              * <pre>
              *    var dataSource = new SbisService({
-             *       service: '/service/url/',
-             *       resource: 'Сотрудник',
+             *       endpoint: 'Сотрудник'
+             *    });
+             * </pre>
+             * @example
+             * <pre>
+             *    var dataSource = new SbisService({
+             *       endpoint: {
+             *          address: '/service/',
+             *          contract: 'Сотрудник'
+             *       }
              *    });
              * </pre>
              */
+            endpoint: {},
 
             /**
-             * @cfg {String} Имя объекта бизнес-логики
-             * @name {SBIS3.CONTROLS.Data.Source.SbisService#resource}
-             * @see getResource
+             * @cfg {Binding} Соответствие методов CRUD+ методам БЛ.
+             * @see getBinding
+             * @see setBinding
+             * @see create
+             * @see read
+             * @see destroy
+             * @see query
+             * @see copy
+             * @see merge
+             * @example
              * <pre>
              *    var dataSource = new SbisService({
-             *       resource: 'СообщениеОтКлиента',
+             *       endpoint: 'Сотрудник',
+             *       binding: {
+             *          create: 'МойМетодСоздать',
+             *          read: 'МойМетодПрочитать',
+             *          update: 'МойМетодЗаписать',
+             *          destroy: 'МойМетодУдалить'
+             *       }
              *    });
              * </pre>
              */
+            binding: {
+               create: 'Создать',
+               read: 'Прочитать',
+               update: 'Записать',
+               destroy: 'Удалить',
+               query: 'Список',
+               copy: 'Копировать',
+               merge: 'Объединить'
+            },
 
             /**
              * @cfg {String|SBIS3.CONTROLS.Data.Adapter.IAdapter} Адаптер для работы с данными, по умолчанию {@link SBIS3.CONTROLS.Data.Adapter.Sbis}
@@ -77,75 +122,19 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
              * @example
              * <pre>
              *    var dataSource = new SbisService({
-             *       resource: 'Сотрудник',
+             *       endpoint: 'Сотрудник',
              *       provider: 'source.provider.sbis-plugin'
              *    });
              * </pre>
              * @example
              * <pre>
              *    var dataSource = new SbisService({
-             *       resource: 'Сотрудник',
+             *       endpoint: 'Сотрудник',
              *       provider: new SbisPluginProvider()
              *    });
              * </pre>
              */
-            provider: 'source.provider.sbis-business-logic',
-
-            /**
-             * @cfg {String} Имя метода, который используется для получения выборки. По умолчанию 'Список'.
-             * @see SBIS3.CONTROLS.Data.Source.Rpc#queryMethodName
-             */
-            queryMethodName: 'Список',
-
-            /**
-             * @cfg {String} Имя метода, который используется для создания записи. По умолчанию 'Создать'.
-             * @see SBIS3.CONTROLS.Data.Source.Rpc#createMethodName
-             */
-            createMethodName: 'Создать',
-
-            /**
-             * @cfg {String} Имя метода, который используется для чтения записи. По умолчанию 'Прочитать'.
-             * @see SBIS3.CONTROLS.Data.Source.Rpc#readMethodName
-             */
-            readMethodName: 'Прочитать',
-
-            /**
-             * @cfg {String} Имя метода, который используется для обновления записи. По умолчанию 'Записать'.
-             * @see SBIS3.CONTROLS.Data.Source.Rpc#updateMethodName
-             */
-            updateMethodName: 'Записать',
-
-            /**
-             * @cfg {String} Имя метода, который используется для удаления записи . По умолчанию 'Удалить'.
-             * @see SBIS3.CONTROLS.Data.Source.Rpc#destroyMethodName
-             */
-            destroyMethodName: 'Удалить',
-
-            /**
-             * @cfg {String} Имя метода, который будет вызываться для копирования записей. По умолчанию 'Копировать'.
-             * @see SBIS3.CONTROLS.Data.Source.Rpc#copyMethodName
-             */
-            copyMethodName: 'Копировать',
-
-            /**
-             * @cfg {String} Имя метода, который будет вызываться для объединения записей. По умолчанию 'Объединить'.
-             * @see SBIS3.CONTROLS.Data.Source.Rpc#mergeMethodName
-             */
-            mergeMethodName: 'Объединить',
-
-            /**
-             * @cfg {String} Имя метода, который будет использоваться для получения формата записи в методах {@link create}, {@link read} и {@link copy}. Метод должен быть декларативным.
-             * @example
-             * <pre>
-             *    <option name="formatMethodName">СписокДляПрочитать</option>
-             * </pre>
-             * @see getFormatMethodName
-             * @see setFormatMethodName
-             * @see create
-             * @see read
-             * @see copy
-             */
-            formatMethodName: undefined
+            provider: 'source.provider.sbis-business-logic'
          },
 
          /**
@@ -156,39 +145,37 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
 
       $constructor: function(cfg) {
          cfg = cfg || {};
+         //Deprecated
          if ('strategy' in cfg && !('adapter' in cfg)) {
             this._options.adapter = cfg.strategy;
-            $ws.single.ioc.resolve('ILogger').log('SBIS3.CONTROLS.Data.Source.SbisService', 'option "strategy" is deprecated and will be removed in 3.7.4. Use "adapter" instead.');
+            $ws.single.ioc.resolve('ILogger').info('SBIS3.CONTROLS.Data.Source.SbisService', 'option "strategy" is deprecated and will be removed in 3.7.4. Use "adapter" instead.');
          }
          if ('keyField' in cfg && !('idProperty' in cfg)) {
             this._options.idProperty = cfg.keyField;
-            $ws.single.ioc.resolve('ILogger').log('SBIS3.CONTROLS.Data.Source.SbisService', 'option "keyField" is deprecated and will be removed in 3.7.4. Use "idProperty" instead.');
+            $ws.single.ioc.resolve('ILogger').info('SBIS3.CONTROLS.Data.Source.SbisService', 'option "keyField" is deprecated and will be removed in 3.7.4. Use "idProperty" instead.');
          }
-         //FIXME: сейчас опция service от Remote пересекается со старыми source-ами, но т.к. Костя все равно хочет по другому назвать, то пока оставляем режим совместимости
-         if ('service' in cfg && !('resource' in cfg)) {
-            this._options.resource = cfg.service;
-            this._options.service = '';
+         if (!('endpoint' in cfg)) {
+            if ('service' in cfg && typeof cfg.service === 'string' && !('resource' in cfg)) {
+               this._options.endpoint.contract = cfg.service;
+            }
+            if ('service' in cfg && typeof cfg.service === 'object') {
+               this._options.endpoint.contract = cfg.service.name || '';
+               this._options.endpoint.address = cfg.service.serviceUrl || '';
+            }
+            if ('resource' in cfg && typeof cfg.resource === 'object') {
+               this._options.endpoint.address = cfg.resource.serviceUrl || '';
+               this._options.endpoint.contract = cfg.resource.name || '';
+            }
          }
-         if (this._options.service && typeof this._options.service === 'object') {
-            this._options.resource = this._options.service.name || '';
-            this._options.service = this._options.service.serviceUrl || '';
-         }
-         if (this._options.resource && typeof this._options.resource === 'object') {
-            this._options.service = this._options.resource.serviceUrl || '';
-            this._options.resource = this._options.resource.name || '';
+         if (!('binding' in cfg)) {
+            if ('formatMethodName' in cfg) {
+               $ws.single.ioc.resolve('ILogger').info(this._moduleName + '::$constructor()', 'Option "formatMethodName" is deprecated and will be removed in 3.7.4. Use "binding.format" instead.');
+               this._options.binding.format = cfg.formatMethodName;
+            }
          }
       },
 
       //region SBIS3.CONTROLS.Data.Source.ISource
-
-      /**
-       * Возвращает название объекта бизнес логики, с которым работает источник данных
-       * @returns {String}
-       * @see resource
-       */
-      getResource: function () {
-         return this._options.resource;
-      },
 
       /**
        * Создает пустую модель через источник данных
@@ -198,8 +185,19 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
        * @example
        * <pre>
        *     var dataSource = new SbisService({
-       *         resource: 'Сотрудник'
-       *         formatMethodName: 'СписокДляПрочитать'
+       *        endpoint: 'Сотрудник'
+       *     });
+       *     dataSource.create().addCallback(function(model) {
+       *         var name = model.get('Имя');
+       *     });
+       * </pre>
+       * @example
+       * <pre>
+       *     var dataSource = new SbisService({
+       *        endpoint: 'Сотрудник',
+       *        binding: {
+       *           format: 'СписокДляПрочитать'
+    *           }
        *     });
        *     dataSource.create().addCallback(function(model) {
        *         var name = model.get('Имя');
@@ -212,11 +210,11 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
             'Фильтр': this.getAdapter().serialize(meta || {
                'ВызовИзБраузера': true
             }),
-            'ИмяМетода': this._options.formatMethodName || null
+            'ИмяМетода': this._options.binding.format || null
          };
 
          return this.getProvider().call(
-            this._options.createMethodName,
+            this._options.binding.create,
             args
          ).addCallbacks((function (data) {
             return this._getModelInstance(data);
@@ -236,14 +234,14 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
       read: function(key, meta) {
          var args = {
             'ИдО': key,
-            'ИмяМетода': this._options.formatMethodName || null
+            'ИмяМетода': this._options.binding.format || null
          };
          if (meta && !Object.isEmpty(meta)) {
             args['ДопПоля'] = this.getAdapter().serialize(meta);
          }
 
          return this.getProvider().call(
-            this._options.readMethodName,
+            this._options.binding.read,
             args
          ).addCallbacks((function (data) {
             var model = this._getModelInstance(data, true);
@@ -271,7 +269,7 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
          }
 
          return this.getProvider().call(
-            this._options.updateMethodName,
+            this._options.binding.update,
             args
          ).addCallbacks((function (key) {
             if (key && !model.isStored() && this.getIdProperty()) {
@@ -321,7 +319,7 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
 
       merge: function(first, second) {
          return this.getProvider().call(
-            this._options.mergeMethodName, {
+            this._options.binding.merge, {
                'ИдО' : first,
                'ИдОУд': second
             }
@@ -336,14 +334,14 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
       copy: function(key, meta) {
          var args = {
             'ИдО': key,
-            'ИмяМетода': this._options.formatMethodName
+            'ИмяМетода': this._options.binding.format
          };
          if (meta && !Object.isEmpty(meta)) {
             args['ДопПоля'] = this.getAdapter().serialize(meta);
          }
 
          return this.getProvider().call(
-            this._options.copyMethodName,
+            this._options.binding.copy,
             args
          ).addCallbacks(function (res) {
                return res;
@@ -355,7 +353,7 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
 
       query: function(query) {
          return this.getProvider().call(
-            this._options.queryMethodName, {
+            this._options.binding.query, {
                'Фильтр': !query || Object.isEmpty(query.getWhere()) ? null : this.getAdapter().serialize(query.getWhere()),
                'Сортировка': this.getAdapter().serialize(this._getSortingParams(query)),
                'Навигация': this.getAdapter().serialize(this._getPagingParams(query)),
@@ -484,7 +482,7 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
             var ido = String(id).split(',');
             return ido[1];
          }
-         return this._options.resource;
+         return this._options.endpoint.contract;
       },
       /**
        * вызвает метод удаления
@@ -502,11 +500,15 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
             args['ДопПоля'] = this.getAdapter().serialize(meta);
          }
          var provider = this.getProvider();
-         if (BLObjName && this._options.resource !== BLObjName) {
-            provider = Di.resolve('source.provider.sbis-business-logic', {resource: BLObjName});
+         if (BLObjName && this._options.endpoint.contract !== BLObjName) {
+            provider = Di.resolve('source.provider.sbis-business-logic', {
+               endpoint: {
+                  contract: BLObjName
+               }
+            });
          }
          return provider.call(
-            this._options.destroyMethodName,
+            this._options.binding.destroy,
             args
          ).addCallbacks(function (res) {
             return res;

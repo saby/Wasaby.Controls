@@ -63,7 +63,7 @@ define('js!TestDataGridOperationsPanel',
                     }
                 }
                 var arrayStrategy = new ArrayStrategy(),
-                    ds1 = new SbisServiceSource({resource: 'ЗаметкаПанельОпераций'}),
+                    ds1 = new SbisServiceSource({endpoint: 'ЗаметкаПанельОпераций'}),
                     ds2 = new StaticSource({
                         data: bigColls,
                         keyField: '@ЗаметкаПанельОпераций',

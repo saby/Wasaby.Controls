@@ -1,70 +1,27 @@
 /* global define, $ws */
+/* global define, $ws */
 define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
    'js!SBIS3.CONTROLS.Data.Collection.ObservableList',
-   'js!SBIS3.CONTROLS.Data.Adapter.Json',
+   'js!SBIS3.CONTROLS.Data.FormattableMixin',
    'js!SBIS3.CONTROLS.Data.Di',
    'js!SBIS3.CONTROLS.Data.Model'
-], function (ObservableList, JsonAdapter, Di) {
+], function (ObservableList, FormattableMixin, Di) {
    'use strict';
 
    /**
     * Список записей
     * @class SBIS3.CONTROLS.Data.Collection.RecordSet
     * @extends SBIS3.CONTROLS.Data.Collection.ObservableList
+    * @mixes SBIS3.CONTROLS.Data.FormattableMixin
     * @ignoreOptions items
     * @author Мальцев Алексей
     * @public
     */
 
-   var RecordSet = ObservableList.extend(/** @lends SBIS3.CONTROLS.Data.Collection.RecordSet.prototype */{
+   var RecordSet = ObservableList.extend([FormattableMixin], /** @lends SBIS3.CONTROLS.Data.Collection.RecordSet.prototype */{
       _moduleName: 'SBIS3.CONTROLS.Data.Collection.RecordSet',
       $protected: {
          _options: {
-            /**
-             * @cfg {String|SBIS3.CONTROLS.Data.Adapter.IAdapter} Адаптер для работы с данными, по умолчанию {@link SBIS3.CONTROLS.Data.Adapter.Json}
-             * @see getAdapter
-             * @see setAdapter
-             * @see SBIS3.CONTROLS.Data.Adapter.Json
-             * @see SBIS3.CONTROLS.Data.Di
-             * @example
-             * <pre>
-             *    var user = new RecordSet({
-             *       adapter: 'adapter.sbis'
-             *    });
-             * </pre>
-             * @example
-             * <pre>
-             *    var user = new RecordSet({
-             *       adapter: new SbisAdapter()
-             *    });
-             * </pre>
-             */
-            adapter: 'adapter.json',
-
-            /**
-             * @cfg {Object} Данные в "сыром" виде
-             * @example
-             * <pre>
-             *    var users = new RecordSet({
-             *       rawData: [{
-             *          id: 1,
-             *          firstName: 'John',
-             *          lastName: 'Smith'
-             *       },{
-             *          id: 2,
-             *          firstName: 'Sarah',
-             *          lastName: 'Connor'
-             *       }],
-             *       idProperty: 'id'
-             *    });
-             *    users.at(0).get('id');//1
-             *    users.getRecordById(2).get('firstName');//Sarah
-             * </pre>
-             * @see getRawData
-             * @see setRawData
-             */
-            rawData: null,
-
             /**
              * @cfg {String|Function} Конструктор модели
              * @see getModel
@@ -123,6 +80,11 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
          _indexTree: {},
 
          /**
+          * @member {Array.<String>} Описание всех полей, полученных из данных в "сыром" виде
+          */
+         _fields: null,
+
+         /**
           * @var {SBIS3.CONTROLS.Data.Adapter.ITable} Адаптер для набора записей
           */
          _tableAdapter: null
@@ -133,27 +95,80 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
 
          if ('data' in cfg && !('rawData' in cfg)) {
             this._options.rawData = cfg.data;
-            $ws.single.ioc.resolve('ILogger').log('SBIS3.CONTROLS.Data.Collection.RecordSet', 'option "data" is deprecated and will be removed in 3.7.4. Use "rawData" instead.');
+            $ws.single.ioc.resolve('ILogger').info('SBIS3.CONTROLS.Data.Collection.RecordSet', 'option "data" is deprecated and will be removed in 3.7.4. Use "rawData" instead.');
          }
          if ('strategy' in cfg && !('adapter' in cfg)) {
             this._options.adapter = cfg.strategy;
-            $ws.single.ioc.resolve('ILogger').log('SBIS3.CONTROLS.Data.Collection.RecordSet', 'option "strategy" is deprecated and will be removed in 3.7.4. Use "adapter" instead.');
+            $ws.single.ioc.resolve('ILogger').info('SBIS3.CONTROLS.Data.Collection.RecordSet', 'option "strategy" is deprecated and will be removed in 3.7.4. Use "adapter" instead.');
          }
          if ('keyField' in cfg && !('idProperty' in cfg)) {
             this._options.idProperty = cfg.keyField;
-            $ws.single.ioc.resolve('ILogger').log('SBIS3.CONTROLS.Data.Collection.RecordSet', 'option "keyField" is deprecated and will be removed in 3.7.4. Use "idProperty" instead.');
+            $ws.single.ioc.resolve('ILogger').info('SBIS3.CONTROLS.Data.Collection.RecordSet', 'option "keyField" is deprecated and will be removed in 3.7.4. Use "idProperty" instead.');
          }
          if (!this._options.idProperty) {
             this._options.idProperty = this.getAdapter().getKeyField(this._options.rawData);
          }
          if ('items' in cfg) {
-            $ws.single.ioc.resolve('ILogger').log('SBIS3.CONTROLS.Data.Collection.RecordSet', 'option "items" is not acceptable. Use "rawData" instead.');
+            $ws.single.ioc.resolve('ILogger').info('SBIS3.CONTROLS.Data.Collection.RecordSet', 'option "items" is not acceptable. Use "rawData" instead.');
          }
          if (this._options.rawData) {
             this.setRawData(this._options.rawData);
          }
 
       },
+
+      //region SBIS3.CONTROLS.Data.FormattableMixin
+
+      setRawData: function(data) {
+         this._assignRawData(data);
+         this._createFromRawData();
+      },
+
+      addField: function(format, at, value) {
+         format = this._buildField(format);
+         RecordSet.superclass.addField.call(this, format, at);
+         this._getTableAdapter().addField(format, at);
+         this._fields = null;
+
+         if (value !== undefined) {
+            this.each(function(record) {
+               record.set(format.getName(), value);
+            });
+         }
+      },
+
+      removeField: function(name) {
+         RecordSet.superclass.removeField.call(this, name);
+         this._getTableAdapter().removeField(name);
+         this._fields = null;
+      },
+
+      removeFieldAt: function(at) {
+         RecordSet.superclass.removeFieldAt.call(this, at);
+         this._getTableAdapter().removeFieldAt(at);
+         this._fields = null;
+      },
+
+      _getRawDataFields: function() {
+         return this._fields || (this._fields = this._getTableAdapter().getFields());
+      },
+
+      _getRawDataFormat: function(name) {
+         return this._getTableAdapter().getFormat(name);
+      },
+
+      /**
+       * Переустанавливает сырые данные
+       * @protected
+       */
+      _assignRawData: function(data) {
+         RecordSet.superclass.setRawData.call(this, data);
+         this._tableAdapter = null;
+         this._fields = null;
+         this._clearFormat();
+      },
+
+      //endregion SBIS3.CONTROLS.Data.FormattableMixin
 
       //region Public methods
 
@@ -189,40 +204,6 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
             $ws.helpers.map(willRemove, self.remove, self);
             self._getServiceEnumerator().reIndex();
          });
-      },
-
-      /**
-       * Возвращает адаптер для работы с данными
-       * @returns {String|SBIS3.CONTROLS.Data.Adapter.IAdapter}
-       * @see adapter
-       * @see SBIS3.CONTROLS.Data.Adapter.IAdapter
-       */
-      getAdapter: function (){
-         if (typeof this._options.adapter === 'string') {
-            this._options.adapter = Di.resolve(this._options.adapter);
-         }
-         return this._options.adapter;
-      },
-
-      /**
-       * Возвращает сырые данные
-       * @returns {Object}
-       * @see setRawData
-       * @see rawData
-       */
-      getRawData: function() {
-         return this._options.rawData;
-      },
-
-      /**
-       * Устанавливает сырые данные
-       * @param rawData {Object} Сырые данные
-       * @see getRawData
-       * @see rawData
-       */
-      setRawData: function(data) {
-         this._assignRawData(data);
-         this._createFromRawData();
       },
 
       /**
@@ -281,9 +262,9 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
          //TODO: сделать через сериализатор
          return new RecordSet({
             adapter: this._options.adapter,
-            data: this._options.rawData,
+            rawData: this._options.rawData,
             meta: this._options.meta,
-            keyField: this._options.keyField
+            idProperty: this._options.idProperty
          });
       },
 
@@ -387,7 +368,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
       },
 
       getStrategy: function () {
-         $ws.single.ioc.resolve('ILogger').log('SBIS3.CONTROLS.Data.Collection.RecordSet:getStrategy', 'method getStrategy is deprecated and will be removed in 3.7.4. Use "getAdapter" instead.');
+         $ws.single.ioc.resolve('ILogger').info('SBIS3.CONTROLS.Data.Collection.RecordSet:getStrategy', 'method getStrategy is deprecated and will be removed in 3.7.4. Use "getAdapter" instead.');
          return this.getAdapter();
       },
 
@@ -485,9 +466,6 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
             this._reindexTree(field);
          }
          return this._indexTree.hasOwnProperty(parentKey);
-      },
-
-      getParent: function () {
       },
 
       getParentKey: function (record, field) {
@@ -637,7 +615,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
       },
 
       assign: function (items) {
-         if ($ws.helpers.instanceOfModule(items, 'SBIS3.CONTROLS.Data.Collection.RecordSet')) {
+         if ($ws.helpers.instanceOfModule(items, 'SBIS3.CONTROLS.Data.Collection.RecordSet') && !this._isUsersFormat()) {
             var adapter = items.getAdapter().forTable(items.getRawData());
             this._assignRawData(adapter.getEmpty());
          } else {
@@ -675,7 +653,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
 
       /**
        * Возвращает адаптер для сырых данных (лениво создает)
-       * @private
+       * @protected
        */
       _getTableAdapter: function () {
          if (!this._tableAdapter) {
@@ -688,22 +666,13 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
       },
 
       /**
-       * Сбрасывает созданный адаптер для сырых данных
-       * @private
-       */
-      _resetTableAdapter: function () {
-         this._tableAdapter = null;
-      },
-
-      /**
        * Создает новый экземпляр модели
        * @param {*} model Данные модели
        * @returns {SBIS3.CONTROLS.Data.Model}
-       * @private
+       * @protected
        */
       _getModelInstance: function (data) {
          var model = Di.resolve(this._options.model, {
-            compatibleMode: true,
             adapter: this.getAdapter(),
             rawData: data,
             idProperty: this._options.idProperty
@@ -713,17 +682,8 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
       },
 
       /**
-       * Переустанавливает сырые данные
-       * @private
-       */
-      _assignRawData: function(data) {
-         this._options.rawData = data;
-         this._resetTableAdapter();
-      },
-
-      /**
        * Пересоздает элементы из сырых данных
-       * @private
+       * @protected
        */
       _createFromRawData: function(data) {
          RecordSet.superclass.clear.call(this);
@@ -739,11 +699,14 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
 
       /**
        * Проверяет, что переданный элемент - модель
-       * @private
+       * @protected
        */
       _checkItem: function (item) {
-         if(!item || !$ws.helpers.instanceOfModule(item, 'SBIS3.CONTROLS.Data.Model')){
-            throw new Error('Item should be an instance of SBIS3.CONTROLS.Data.Model');
+         if (!item || !$ws.helpers.instanceOfModule(item, 'SBIS3.CONTROLS.Data.Model') || !$ws.helpers.instanceOfModule(item, 'SBIS3.CONTROLS.Data.Record')) {
+            throw new Error('Item should be an instance of SBIS3.CONTROLS.Data.Model or SBIS3.CONTROLS.Data.Record');
+         }
+         if (!this._getFormat().equals(item.getFormat())) {
+            $ws.single.ioc.resolve('ILogger').error('SBIS3.CONTROLS.Data.FormattableMixin', 'Item format should be equals format record set.');
          }
          return true;
       }

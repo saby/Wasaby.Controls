@@ -107,12 +107,14 @@ define('js!SBIS3.CONTROLS.Menu', [
             caption = item.get(this._options.displayField),
             icon = item.get('icon') ? '<option name="icon">' + item.get('icon') + '</option>' : '',
             className = item.get('className') ? '<option name="className">' + item.get('className') + '</option>' : '',
+            command = item.get('command') ? '<option name="command">' + item.get('command') + '</option>' : '',
             tooltip = item.get('tooltip') ? '<option name="tooltip">' + item.get('tooltip') + '</option>' : '',
             enabled = item.get('enabled') !== undefined ? '<option name="enabled">' + item.get('enabled') + '</option>' : '';
 
          return '<component data-component="SBIS3.CONTROLS.MenuItem">' +
             '<option name="caption" type="string">' + caption + '</option>' +
-            '<option name="allowChangeEnable" type="boolean">' + (item.get('allowChangeEnable') !== undefined ? item.get('allowChangeEnable') : this._options.allowChangeEnable) + '</option>' + icon + className + tooltip + enabled +
+            '<option name="allowChangeEnable" type="boolean">' + (item.get('allowChangeEnable') !== undefined ? item.get('allowChangeEnable') : this._options.allowChangeEnable) + '</option>' +
+            icon + className + tooltip + enabled + command +
             '</component>';
       },
 
@@ -133,7 +135,7 @@ define('js!SBIS3.CONTROLS.Menu', [
             return this._container;
          }
          else {
-            var parId = this.getParentKey(this._dataSet, item);
+            var parId = this.getParentKey(this._items, item);
             if (parId === null || parId === undefined) {
                return this._container;
             }
@@ -159,14 +161,14 @@ define('js!SBIS3.CONTROLS.Menu', [
       //По нормальному можно было бы сделать через css, но имеются три различных отступа слева у пунктов
       //для разных меню и совершенно не ясно как это делать.
       _checkIcons: function() {
-         var tree = this._dataSet.getTreeIndex(this._options.hierField);
+         var tree = this._items.getTreeIndex(this._options.hierField);
          for (var i in tree) {
             if (tree.hasOwnProperty(i)) {
                var hasIcon = false,
                   icon = '',
                   childs = tree[i];
                for (var j = 0; j < childs.length; j++) {
-                  icon = this._dataSet.getRecordByKey(childs[j]).get('icon');
+                  icon = this._items.getRecordByKey(childs[j]).get('icon');
                   if (icon) {
                      if (icon.indexOf('icon-16') !== -1) { icon = 'sprite:icon-16'; } else { icon = 'sprite:icon-24'; }
                      hasIcon = true;
@@ -175,8 +177,8 @@ define('js!SBIS3.CONTROLS.Menu', [
                }
                if (hasIcon) {
                   for (var j = 0; j < childs.length; j++) {
-                     if (!this._dataSet.getRecordByKey(childs[j]).get('icon')) {
-                        this._dataSet.getRecordByKey(childs[j]).set('icon', icon);
+                     if (!this._items.getRecordByKey(childs[j]).get('icon')) {
+                        this._items.getRecordByKey(childs[j]).set('icon', icon);
                      }
                   }
                }
@@ -207,11 +209,11 @@ define('js!SBIS3.CONTROLS.Menu', [
                   var
                      isFirstLevel = false,
                      id = $(this).attr('data-id'),
-                     item = self._dataSet.getRecordByKey(id),
+                     item = self._items.getRecordByKey(id),
                      parId = null,
                      parent;
                   if (self._options.hierField) {
-                     parId = self.getParentKey(self._dataSet, item);
+                     parId = self.getParentKey(self._items, item);
                   }
                   if (parId) {
                      parent = self._subMenus[parId];

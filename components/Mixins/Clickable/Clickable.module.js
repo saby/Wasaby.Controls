@@ -26,7 +26,10 @@ define('js!SBIS3.CONTROLS.Clickable', [], function() {
        */
       $protected: {
          _options: {
-
+            /**
+             * @cfg {String}  Команда
+             */
+            command: ''
          },
          _keysWeHandle: [
             $ws._const.key.enter,
@@ -60,7 +63,9 @@ define('js!SBIS3.CONTROLS.Clickable', [], function() {
 
       before : {
          _clickHandler: function() {
-
+            if (!!this._options.command) {
+               this.sendCommand(this._options.command);
+            }
          }
       },
 

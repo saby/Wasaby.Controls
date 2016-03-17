@@ -1,30 +1,39 @@
-/* global beforeEach, afterEach, describe, context, it */
+/* global beforeEach, afterEach, describe, context, it, assert, $ws */
 define([
       'js!SBIS3.CONTROLS.Data.Types.Enum'
    ], function (Enum) {
       'use strict';
-      var
-         data, testEnum;
+
+      var getDict = function() {
+            return ['one', 'two', 'three'];
+         },
+         dict,
+         testEnum;
+
       beforeEach(function () {
-         data = ['one', 'two', 'three'];
+         dict = getDict();
          testEnum = new Enum({
-            data: data,
+            dictionary: dict,
             currentValue: 1
          });
       });
+
       afterEach(function () {
-         data = undefined;
+         dict = undefined;
          testEnum = undefined;
       });
+
       describe('SBIS3.CONTROLS.Data.Types.Enum', function () {
-         it('should create Enum', function () {
-            if (!$ws.helpers.instanceOfModule(testEnum, 'SBIS3.CONTROLS.Data.Types.Enum')) {
-               assert.fail("Type doesn't of instances Enum");
-            }
+         describe('.$create()', function () {
+            it('should create Enum', function () {
+               assert.isTrue($ws.helpers.instanceOfModule(testEnum, 'SBIS3.CONTROLS.Data.Types.Enum'));
+            });
          });
+
          it('should init Enums current value', function () {
             assert.equal(testEnum.get(), 1);
          });
+
          describe('.set()', function () {
             it('should changes enums current value by index', function () {
                testEnum.set(2);
@@ -40,62 +49,64 @@ define([
                });
             });
          });
-         describe('.setbyValue()', function () {
-            it('should changes enums current value by value', function () {
+
+         describe('.setByValue()', function () {
+            it('should change enums current value', function () {
                testEnum.setByValue('one');
                assert.equal(testEnum.get(), 0);
             });
-            it('should changes enums current value by value to null', function () {
+            it('should change enums current value to null', function () {
                testEnum.setByValue(null);
                assert.strictEqual(testEnum.get(), null);
             });
-            it('should trow exception the value was not found', function () {
+            it('should trow exception for not exists value', function () {
                assert.throw(function () {
                   testEnum.setByValue('doesntExistingValue');
                });
             });
          });
+
          describe('.equals()', function () {
-            it('should equals to testEnum', function () {
-               var data = [];
-               testEnum.each(function (val){
-                  data.push(val);
-               });
+            it('should equals to same dictionary', function () {
                var e = new Enum({
-                  data: data,
+                  dictionary: getDict(),
                   currentValue: testEnum.get()
                });
-               if (!testEnum.equals(e)) {
-                  assert.fail('testEnum dosnt equals to new enum');
-               }
+               assert.isTrue(testEnum.equals(e));
             });
-            it('should not equals to testEnum when data testEnum and new emun equals', function () {
-               var data = [];
-               testEnum.each(function (val){
-                  data.push(val);
-               });
+            it('should not equals to different value', function () {
                var e = new Enum({
-                  data: data,
+                  dictionary: getDict(),
                   currentValue: 0
                });
-               if (testEnum.equals(e)) {
-                  assert.fail('testEnum equals to new enum');
-               }
+               assert.isFalse(testEnum.equals(e));
             });
-            it('should not equals to testEnum when current value testEnum and new emun equals', function () {
+            it('should not equals to different dictionary', function () {
+               var dict = getDict();
+               dict[0] = 'uno';
                var e = new Enum({
-                  data: ['one', 'two'],
-                  currentValue: 1
+                  dictionary: dict,
+                  currentValue: testEnum.get()
                });
-               if (testEnum.equals(e)) {
-                  assert.fail('testEnum equals to new enum');
-               }
+               assert.isFalse(testEnum.equals(e));
             });
-            it('should not equals to testEnum when not enum', function () {
-               var e = 1;
-               if (testEnum.equals(e)) {
-                  assert.fail('testEnum equals to new enum');
-               }
+            it('should not equals when not enum', function () {
+               assert.isFalse(testEnum.equals());
+               assert.isFalse(testEnum.equals(null));
+               assert.isFalse(testEnum.equals(false));
+               assert.isFalse(testEnum.equals(true));
+               assert.isFalse(testEnum.equals(0));
+               assert.isFalse(testEnum.equals(1));
+               assert.isFalse(testEnum.equals({}));
+               assert.isFalse(testEnum.equals([]));
+            });
+         });
+         describe('.getEnumerator', function (){
+            it('should return enumerator', function (){
+               assert.isTrue($ws.helpers.instanceOfModule(
+                  testEnum.getEnumerator(),
+                  'SBIS3.CONTROLS.Data.Collection.ArrayEnumerator')
+               );
             });
          });
       });
