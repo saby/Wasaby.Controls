@@ -25,7 +25,7 @@ define('js!SBIS3.TestCompositeViewList',
 
                 var multiView1 = this.getChildControlByName('CompositeView 1');
                 var multiView2 = this.getChildControlByName('CompositeView 2');
-                var multiViewSource = new SbisServiceSource({resource: 'CompositeViewList'});
+                var multiViewSource = new SbisServiceSource({endpoint: 'CompositeViewList'});
                 multiView1.setDataSource(multiViewSource);
 
 

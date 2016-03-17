@@ -18,28 +18,19 @@ define('js!SBIS3.CONTROLS.Data.Source.Provider.SbisBusinessLogic', [
        $protected: {
           _options: {
              /**
-              * @cfg {String} Адрес удаленного сервиса
-              * @see getService
+              * @cfg {Endpoint} Конечная точка, обеспечивающая доступ клиента к БЛ
+              * @see getEndPoint
               * @example
               * <pre>
               *    var dataSource = new SbisBusinessLogic({
-             *       service: '/service/url/',
-             *    });
+              *       endpoint: {
+              *          address: '/service/url/',
+              *          contract: 'Сотрудник'
+              *       }
+              *    });
               * </pre>
               */
-             service: '',
-
-             /**
-              * @cfg {String} Имя объекта бизнес-логики
-              * @see getResource
-              * @example
-              * <pre>
-              *    var dataSource = new SbisBusinessLogic({
-             *       resource: 'Сотрудник',
-             *    });
-              * </pre>
-              */
-             resource: ''
+             endpoint: {}
           },
 
           /**
@@ -48,32 +39,55 @@ define('js!SBIS3.CONTROLS.Data.Source.Provider.SbisBusinessLogic', [
           _client: null
        },
 
-       $constructor: function () {
-          var config = {
-             name: this._options.resource
-          };
-          if (this._options.service) {
-             config.serviceUrl = this._options.service;
+       $constructor: function (cfg) {
+          cfg = cfg || {};
+          //Deprecated
+          if ('resource' in cfg && !('endpoint' in cfg)) {
+             $ws.single.ioc.resolve('ILogger').info(this._moduleName + '::$constructor()', 'Option "resource" is deprecated and will be removed in 3.7.4. Use "endpoint.contract" instead.');
+             this._options.endpoint.contract = this._options.resource;
+          }
+          if ('service' in cfg && !('endpoint' in cfg)) {
+             $ws.single.ioc.resolve('ILogger').info(this._moduleName + '::$constructor()', 'Option "service" is deprecated and will be removed in 3.7.4. Use "endpoint.address" instead.');
+             this._options.endpoint.address = this._options.service;
+          }
+
+          var config = {};
+          if (this._options.endpoint.contract) {
+             config.name = this._options.endpoint.contract;
+          }
+          if (this._options.endpoint.address) {
+             config.serviceUrl = this._options.endpoint.address;
           }
           this._client = new $ws.proto.ClientBLObject(config);
        },
 
        /**
+        * Возвращает конечную точку, обеспечивающую доступ клиента к функциональным возможностям БЛ
+        * @returns {Endpoint}
+        * @see endpoint
+        */
+       getEndpoint: function () {
+          return this._options.endpoint;
+       },
+
+       /**
         * Возвращает адрес удаленного сервиса
         * @returns {String}
-        * @see service
+        * @deprecated Метод будет удален в 3.7.4, используйте getEndpoint().address
         */
        getService: function () {
-          return this._options.service;
+          $ws.single.ioc.resolve('ILogger').info(this._moduleName + '::getService()', 'Method is deprecated and will be removed in 3.7.4. Use "getEndpoint().address" instead.');
+          return this._options.service || '';
        },
 
        /**
         * Возвращает ресурс, с которым работает источник
         * @returns {String}
-        * @see resource
+        * @deprecated Метод будет удален в 3.7.4, используйте getEndpoint().contract
         */
        getResource: function () {
-          return this._options.resource;
+          $ws.single.ioc.resolve('ILogger').info(this._moduleName + '::getResource()', 'Method is deprecated and will be removed in 3.7.4. Use "getEndpoint().contract" instead.');
+          return this._options.resource || '';
        },
 
        call: function(method, args) {
