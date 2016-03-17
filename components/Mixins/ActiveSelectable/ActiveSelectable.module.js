@@ -20,10 +20,14 @@ define('js!SBIS3.CONTROLS.ActiveSelectable', ['js!SBIS3.CONTROLS.Data.Model'], f
       $protected: {
          _options: {
             /**
-             * @cfg {String} Выбранное значение (запись)
+             * @cfg {SBIS3.CONTROLS.Data.Model} Определяет выбранный элемент коллекции.
+             * Определяет экземпляр класса {@link SBIS3.CONTROLS.Data.Model} с данными выбранной записи.
              * @example
-             * <pre class=”brush: xml”>
-             *    <option name="selectedItem">Выбранное значение</option>
+             * Вывод на консоль данных selectedItem:
+             * <pre>
+             *    this.getChildControlByName('myFieldLink').subscribe('onSelectedItemsChange', function(Дескриптор, idArray) {
+             *       console.log(this.selectedItem);
+             *    });
              * </pre>
              * @see setSelectedItem
              * @see getSelectedItem
@@ -40,7 +44,7 @@ define('js!SBIS3.CONTROLS.ActiveSelectable', ['js!SBIS3.CONTROLS.Data.Model'], f
          this._options.selectedItem = this._options.selectedItem instanceof Model ? this._options.selectedItem : null;
       },
       /**
-       * Устанавливает выбранный элемент
+       * Устанавливает выбранный элемент коллекции.
        * @param {SBIS3.CONTROLS.Data.Model} item загружать ли запись, если о ней нет информации в dataSet
        * @see selectedItem
        * @see getSelectedItem
@@ -60,7 +64,7 @@ define('js!SBIS3.CONTROLS.ActiveSelectable', ['js!SBIS3.CONTROLS.Data.Model'], f
       },
 
       /**
-       * Возвращает выбранную запись
+       * Возвращает выбранный элемент коллекции.
        * @param loadItem загружать ли запись, если о ней нет информации в dataSet
        * @see selectedItem
        * @see setSelectedItem
