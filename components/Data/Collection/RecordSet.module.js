@@ -614,7 +614,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
       },
 
       assign: function (items) {
-         if ($ws.helpers.instanceOfModule(items, 'SBIS3.CONTROLS.Data.Collection.RecordSet')) {
+         if ($ws.helpers.instanceOfModule(items, 'SBIS3.CONTROLS.Data.Collection.RecordSet') && !this._isUsersFormat()) {
             var adapter = items.getAdapter().forTable(items.getRawData());
             this._assignRawData(adapter.getEmpty());
          } else {
@@ -701,8 +701,11 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
        * @protected
        */
       _checkItem: function (item) {
-         if(!item || !$ws.helpers.instanceOfModule(item, 'SBIS3.CONTROLS.Data.Model')){
-            throw new Error('Item should be an instance of SBIS3.CONTROLS.Data.Model');
+         if (!item || !$ws.helpers.instanceOfModule(item, 'SBIS3.CONTROLS.Data.Model') || !$ws.helpers.instanceOfModule(item, 'SBIS3.CONTROLS.Data.Record')) {
+            throw new Error('Item should be an instance of SBIS3.CONTROLS.Data.Model or SBIS3.CONTROLS.Data.Record');
+         }
+         if (!this._getFormat().equals(item.getFormat())) {
+            $ws.single.ioc.resolve('ILogger').error('SBIS3.CONTROLS.Data.FormattableMixin', 'Item format should be equals format record set.');
          }
          return true;
       }
