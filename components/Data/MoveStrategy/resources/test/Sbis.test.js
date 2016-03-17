@@ -58,7 +58,14 @@ define([
                });
                assert.equal(moveStrategy._options.contract, 'Товар');
             });
-
+            it('should support deprecated options', function() {
+               moveStrategy = new SbisMoveStrategy({
+                  resource: 'Товар',
+                  moveResource: 'ТоварПеремещ'
+               });
+               assert.equal(moveStrategy._options.contract, 'Товар');
+               assert.equal(moveStrategy._options.moveContract, 'ТоварПеремещ');
+            });
          });
 
          describe('move()', function() {
