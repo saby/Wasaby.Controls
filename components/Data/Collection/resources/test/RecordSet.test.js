@@ -4,10 +4,10 @@ define([
       'js!SBIS3.CONTROLS.Data.Collection.List',
       'js!SBIS3.CONTROLS.Data.Bind.ICollection',
       'js!SBIS3.CONTROLS.Data.Model',
-      'js!SBIS3.CONTROLS.Data.Format.FieldsFactory',
       'js!SBIS3.CONTROLS.Data.Source.Memory',
+      'js!SBIS3.CONTROLS.Data.Format.FieldsFactory',
       'js!SBIS3.CONTROLS.Data.Adapter.Sbis'
-   ], function (RecordSet, List, IBindCollection, Model, FieldsFactory, MemorySource, SbisAdapter) {
+   ], function (RecordSet, List, IBindCollection, Model, MemorySource, FieldsFactory, SbisAdapter) {
       'use strict';
 
       describe('SBIS3.CONTROLS.Data.Collection.RecordSet', function() {
@@ -517,6 +517,37 @@ define([
                assert.strictEqual(rs.getCount(), 2);
             });
 
+            it('should get format from assigning recordset', function () {
+               var s = [
+                     {'n': 'Ид', 't': 'Число целое'},
+                     {'n': 'Фамилия', 't': 'Строка'},
+                     {'n': 'Количество', 't': 'Число целое'}
+                  ],
+                  rs = new RecordSet({
+                     rawData:  {
+                        d: [
+                           [7, 'Арбузнов']
+                        ],
+                        s: [
+                           {'n': 'Ид', 't': 'Число целое'},
+                           {'n': 'Фамилия', 't': 'Строка'}
+                        ]
+                     },
+                     adapter: new SbisAdapter()
+                  }),
+                  rs2 = new RecordSet({
+                     rawData: {
+                        d: [
+                           [7, 'Арбузнов','4']
+                        ],
+                        s: s
+                     },
+                     adapter: new SbisAdapter()
+                  });
+               rs.assign(rs2);
+               assert.deepEqual(rs.getRawData().s, s);
+            });
+
             it('should throw an error', function() {
                var data4 = {id: 4},
                   data5 = {id: 5};
@@ -525,6 +556,30 @@ define([
                      rawData: data4
                   }), data5]);
                });
+            });
+
+            it('should throw an error different formats', function() {
+               var rs = new RecordSet({
+                     rawData:  {
+                        d: [
+                           [7]
+                        ],
+                        s: [
+                           {'n': 'Ид', 't': 'Число целое'}
+                        ]
+                     },
+                     adapter: new SbisAdapter()
+                  }),
+                  rs2 = new RecordSet({
+                     rawData: {
+                        d: [['Арбузнов']],
+                        s: [{'n': 'Фамилия', 't': 'Строка'}]
+                     },
+                     adapter: new SbisAdapter()
+                  });
+               rs.addField({name: 'login', type: 'string'});
+               rs.assign(rs2);
+               assert.deepEqual(rs.getRawData().s, [{n: 'Ид', t: 'Число целое'}, {n: 'login', t: 'Строка'}]);
             });
          });
 
