@@ -4,6 +4,10 @@
       line-height: 13px !important;
    }
 
+   .controls-TreeView__folderTitle {
+      overflow: hidden;
+   }
+
    .controls-TreeView__ellipsis-wrapper {
       .controls-TreeView__folderTitle {
          display: @tree-view-folder-title-display;
@@ -20,8 +24,9 @@
   .controls-TreeView__editArrow{
     display: inline-block;
     visibility: hidden;
-    position: relative;
-    top: 2px;
+    position: @tree-view-editArrow-position;
+    top: @tree-view-editArrow-top;
+    vertical-align: @tree-view-editArrow-align;
   }
   &:hover {
     .controls-TreeView__expand--inside {
@@ -75,6 +80,7 @@
 
       .controls-TreeView__ellipsis-container {
          float: left;
+         height: @tree-view-ellipsis-wrapper-height;
       }
 
       .controls-TreeView__ellipsis-copyArrow {
