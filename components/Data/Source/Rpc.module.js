@@ -16,124 +16,71 @@ define('js!SBIS3.CONTROLS.Data.Source.Rpc', [
       _moduleName: 'SBIS3.CONTROLS.Data.Source.Rpc',
       $protected: {
          _options: {
+            binding: {
+               create: 'create',
+               read: 'read',
+               update: 'update',
+               destroy: 'delete',
+               query: 'query',
+               copy: 'copy',
+               merge: 'merge'
+            },
+
             /**
              * @cfg {String|SBIS3.CONTROLS.Data.Source.Provider.IRpc} Объект, реализующий сетевой протокол для обмена в режиме клиент-сервер
-             * @name {SBIS3.CONTROLS.Data.Source.Rpc#provider}
              * @see getProvider
              * @see SBIS3.CONTROLS.Data.Di
              * @example
              * <pre>
              *    var dataSource = new RpcSource({
-             *       resource: '/users/'
-             *       provider: 'source.provider.rpc-json'
+             *       endpoint: 'Users',
+             *       provider: 'source.provider.json-rpc'
              *    });
              * </pre>
-             */
-
-            /**
-             * @cfg {String} Имя метода, который используется для получения выборки.
-             * @see getQueryMethodName
-             * @see setQueryMethodName
-             * @see query
              * @example
              * <pre>
-             *    var usersSource = new RpcSource({
-             *       resource: '/api/'
-             *       queryMethodName: 'getUsers'
+             *    var dataSource = new RpcSource({
+             *       endpoint: 'Users'
+             *       provider: new JsonRpcProvider()
              *    });
              * </pre>
              */
-            queryMethodName: 'query',
+            provider: null
+         }
+      },
 
-            /**
-             * @cfg {String} Имя метода, который используется для создания записи.
-             * @see getCreateMethodName
-             * @see setCreateMethodName
-             * @see create
-             * @example
-             * <pre>
-             *    var usersSource = new RpcSource({
-             *       resource: '/api/'
-             *       createMethodName: 'createUser'
-             *    });
-             * </pre>
-             */
-            createMethodName: 'create',
-
-            /**
-             * @cfg {String} Имя метода, который используется для чтения записи.
-             * @see getReadMethodName
-             * @see setReadMethodName
-             * @see read
-             * @example
-             * <pre>
-             *    var usersSource = new RpcSource({
-             *       resource: '/api/'
-             *       readMethodName: 'readUser'
-             *    });
-             * </pre>
-             */
-            readMethodName: 'read',
-
-            /**
-             * @cfg {String} Имя метода, который используется для обновления записи.
-             * @see getUpdateMethodName
-             * @see setUpdateMethodName
-             * @see update
-             * @example
-             * <pre>
-             *    var usersSource = new RpcSource({
-             *       resource: '/api/'
-             *       updateMethodName: 'updateUser'
-             *    });
-             * </pre>
-             */
-            updateMethodName: 'update',
-
-            /**
-             * @cfg {String} Имя метода, который используется для удаления записи.
-             * @see getDestroyMethodName
-             * @see setDestroyMethodName
-             * @see destroy
-             * @example
-             * <pre>
-             *    var usersSource = new RpcSource({
-             *       resource: '/api/'
-             *       destroyMethodName: 'deleteUser'
-             *    });
-             * </pre>
-             */
-            destroyMethodName: 'delete',
-
-            /**
-             * @cfg {String} Имя метода, который будет вызываться для копирования записей.
-             * @see getCopyMethodName
-             * @see setCopyMethodName
-             * @see copy
-             * @example
-             * <pre>
-             *    var usersSource = new RpcSource({
-             *       resource: '/api/'
-             *       copyMethodName: 'copyUser'
-             *    });
-             * </pre>
-             */
-            copyMethodName: 'copy',
-
-            /**
-             * @cfg {String} Имя метода, который будет вызываться для объединения записей.
-             * @see getMergeMethodName
-             * @see setMergeMethodName
-             * @see merge
-             * @example
-             * <pre>
-             *    var usersSource = new RpcSource({
-             *       resource: '/api/'
-             *       mergeMethodName: 'mergeUsers'
-             *    });
-             * </pre>
-             */
-            mergeMethodName: 'merge'
+      $constructor: function (cfg) {
+         cfg = cfg || {};
+         //Deprecated
+         if (!('binding' in cfg)) {
+            if ('createMethodName' in cfg) {
+               $ws.single.ioc.resolve('ILogger').info(this._moduleName + '::$constructor()', 'Option "createMethodName" is deprecated and will be removed in 3.7.4. Use "binding.create" instead.');
+               this._options.binding.create = cfg.createMethodName;
+            }
+            if ('readMethodName' in cfg) {
+               $ws.single.ioc.resolve('ILogger').info(this._moduleName + '::$constructor()', 'Option "readMethodName" is deprecated and will be removed in 3.7.4. Use "binding.read" instead.');
+               this._options.binding.read = cfg.readMethodName;
+            }
+            if ('updateMethodName' in cfg) {
+               $ws.single.ioc.resolve('ILogger').info(this._moduleName + '::$constructor()', 'Option "updateMethodName" is deprecated and will be removed in 3.7.4. Use "binding.update" instead.');
+               this._options.binding.update = cfg.updateMethodName;
+            }
+            if ('destroyMethodName' in cfg) {
+               $ws.single.ioc.resolve('ILogger').info(this._moduleName + '::$constructor()', 'Option "destroyMethodName" is deprecated and will be removed in 3.7.4. Use "binding.destroy" instead.');
+               this._options.binding.destroy = cfg.destroyMethodName;
+            }
+            if ('queryMethodName' in cfg) {
+               $ws.single.ioc.resolve('ILogger').info(this._moduleName + '::$constructor()', 'Option "queryMethodName" is deprecated and will be removed in 3.7.4. Use "binding.query" instead.');
+               this._options.binding.query = cfg.queryMethodName;
+            }
+            if ('copyMethodName' in cfg) {
+               $ws.single.ioc.resolve('ILogger').info(this._moduleName + '::$constructor()', 'Option "copyMethodName" is deprecated and will be removed in 3.7.4. Use "binding.copy" instead.');
+               this._options.binding.copy = cfg.copyMethodName;
+            }
+            if ('mergeMethodName' in cfg) {
+               $ws.single.ioc.resolve('ILogger').info(this._moduleName + '::$constructor()', 'Option "mergeMethodName" is deprecated and will be removed in 3.7.4. Use "binding.merge" instead.');
+               this._options.binding.merge = cfg.mergeMethodName;
+            }
          }
       },
 
@@ -161,141 +108,127 @@ define('js!SBIS3.CONTROLS.Data.Source.Rpc', [
       /**
        * Возвращает имя метода, который используется для получения выборки
        * @returns {String}
-       * @see setQueryMethodName
-       * @see queryMethodName
+       * @deprecated Метод будет удален в 3.7.4, используйте getBinding().query
        */
       getQueryMethodName: function () {
-         return this._options.queryMethodName;
+         return this._options.binding.query;
       },
 
       /**
        * Устанавливает имя метода, который используется для получения выборки
        * @param {String} method
-       * @see getQueryMethodName
-       * @see queryMethodName
+       * @deprecated Метод будет удален в 3.7.4, используйте getBinding()/setBinding()
        */
       setQueryMethodName: function (method) {
-         this._options.queryMethodName = method;
+         this._options.binding.query = method;
       },
 
       /**
        * Возвращает имя метода, который используется для создания записи
        * @returns {String}
-       * @see setCreateMethodName
-       * @see createMethodName
+       * @deprecated Метод будет удален в 3.7.4, используйте getBinding().create
        */
       getCreateMethodName: function () {
-         return this._options.createMethodName;
+         return this._options.binding.create;
       },
 
       /**
        * Устанавливает имя метода, который используется для создания записи
        * @param {String} method
-       * @see getCreateMethodName
-       * @see createMethodName
+       * @deprecated Метод будет удален в 3.7.4, используйте getBinding()/setBinding()
        */
       setCreateMethodName: function (method) {
-         this._options.createMethodName = method;
+         this._options.binding.create = method;
       },
 
       /**
        * Возвращает имя метода, который используется для получения записи
        * @returns {String}
-       * @see setReadMethodName
-       * @see readMethodName
+       * @deprecated Метод будет удален в 3.7.4, используйте getBinding().read
        */
       getReadMethodName: function () {
-         return this._options.readMethodName;
+         return this._options.binding.read;
       },
 
       /**
        * Устанавливает имя метода, который используется для получения записи
        * @param {String} method
-       * @see getReadMethodName
-       * @see readMethodName
+       * @deprecated Метод будет удален в 3.7.4, используйте getBinding()/setBinding()
        */
       setReadMethodName: function (method) {
-         this._options.readMethodName = method;
+         this._options.binding.read = method;
       },
 
       /**
        * Возвращает имя метода, который используется для обновления записи
        * @returns {String}
-       * @see setUpdateMethodName
-       * @see updateMethodName
+       * @deprecated Метод будет удален в 3.7.4, используйте getBinding().update
        */
       getUpdateMethodName: function () {
-         return this._options.updateMethodName;
+         return this._options.binding.update;
       },
 
       /**
        * Устанавливает имя метода, который используется для обновления записи
        * @param {String} method
-       * @see getUpdateMethodName
-       * @see updateMethodName
+       * @deprecated Метод будет удален в 3.7.4, используйте getBinding()/setBinding()
        */
       setUpdateMethodName: function (method) {
-         this._options.updateMethodName = method;
+         this._options.binding.update = method;
       },
 
       /**
        * Возвращает имя метода, который используется для удаления записи
        * @returns {String}
-       * @see setDestroyMethodName
-       * @see destroyMethodName
+       * @deprecated Метод будет удален в 3.7.4, используйте getBinding().destroy
        */
       getDestroyMethodName: function () {
-         return this._options.destroyMethodName;
+         return this._options.binding.destroy;
       },
 
       /**
        * Устанавливает имя метода, который используется для удаления записи
        * @param {String} method
-       * @see getDestroyMethodName
-       * @see destroyMethodName
+       * @deprecated Метод будет удален в 3.7.4, используйте getBinding()/setBinding()
        */
       setDestroyMethodName: function (method) {
-         this._options.destroyMethodName = method;
+         this._options.binding.destroy = method;
       },
 
       /**
        * Возвращает имя метода, который используется для копирования записи
        * @returns {String}
-       * @see setCopyMethodName
-       * @see copyMethodName
+       * @deprecated Метод будет удален в 3.7.4, используйте getBinding().copy
        */
       getCopyMethodName: function () {
-         return this._options.copyMethodName;
+         return this._options.binding.copy;
       },
 
       /**
        * Устанавливает имя метода, который используется для копирования записи
        * @param {String} method
-       * @see getCopyMethodName
-       * @see copyMethodName
+       * @deprecated Метод будет удален в 3.7.4, используйте getBinding()/setBinding()
        */
       setCopyMethodName: function (method) {
-         this._options.copyMethodName = method;
+         this._options.binding.copy = method;
       },
 
       /**
        * Возвращает имя метода, который используется для объединения записей
        * @returns {String}
-       * @see setMergeMethodName
-       * @see mergeMethodName
+       * @deprecated Метод будет удален в 3.7.4, используйте getBinding().merge
        */
       getMergeMethodName: function () {
-         return this._options.mergeMethodName;
+         return this._options.binding.merge;
       },
 
       /**
        * Устанавливает имя метода, который используется для объединения записей
        * @param {String} method
-       * @see getMergeMethodName
-       * @see mergeMethodName
+       * @deprecated Метод будет удален в 3.7.4, используйте getBinding()/setBinding()
        */
       setMergeMethodName: function (method) {
-         this._options.mergeMethodName = method;
+         this._options.binding.merge = method;
       }
 
       //endregion Public methods
