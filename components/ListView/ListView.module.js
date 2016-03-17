@@ -1277,7 +1277,7 @@ define('js!SBIS3.CONTROLS.ListView',
             }
          },
          _cancelLoading: function(){
-            ListView.superclass._dataLoadedCallback.apply(this, arguments);
+            ListView.superclass._cancelLoading.apply(this, arguments);
             if (this._isAllowInfiniteScroll()){
                this._hideLoadingIndicator();
             }
