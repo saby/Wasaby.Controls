@@ -54,7 +54,7 @@ define('js!SBIS3.CONTROLS.TextBox', ['js!SBIS3.CONTROLS.TextBoxBase','html!SBIS3
             beforeFieldWrapper: null,
             afterFieldWrapper: null,
             /**
-             * @cfg {String} Устанавливает форматирование регистра текста в поле ввода.
+             * @cfg {String} Устанавливает форматирование регистра текстового значения в поле ввода.
              * @variant uppercase Все символы верхним регистром.
              * @variant lowercase Все символы нижним регистром.
              * @variant none Без изменений.
