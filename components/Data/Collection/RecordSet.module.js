@@ -165,6 +165,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
          RecordSet.superclass.setRawData.call(this, data);
          this._tableAdapter = null;
          this._fields = null;
+         this._clearFormat();
       },
 
       //endregion SBIS3.CONTROLS.Data.FormattableMixin
@@ -614,7 +615,12 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
       },
 
       assign: function (items) {
-         this._assignRawData(this._getTableAdapter().getEmpty());
+         if ($ws.helpers.instanceOfModule(items, 'SBIS3.CONTROLS.Data.Collection.RecordSet') && !this._isUsersFormat()) {
+            var adapter = items.getAdapter().forTable(items.getRawData());
+            this._assignRawData(adapter.getEmpty());
+         } else {
+            this._assignRawData(this._getTableAdapter().getEmpty());
+         }
          items = this._itemsToArray(items);
          for (var i = 0, len = items.length; i < len; i++) {
             this._checkItem(items[i]);
@@ -696,8 +702,11 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
        * @protected
        */
       _checkItem: function (item) {
-         if(!item || !$ws.helpers.instanceOfModule(item, 'SBIS3.CONTROLS.Data.Model')){
-            throw new Error('Item should be an instance of SBIS3.CONTROLS.Data.Model');
+         if (!item || !$ws.helpers.instanceOfModule(item, 'SBIS3.CONTROLS.Data.Model') || !$ws.helpers.instanceOfModule(item, 'SBIS3.CONTROLS.Data.Record')) {
+            throw new Error('Item should be an instance of SBIS3.CONTROLS.Data.Model or SBIS3.CONTROLS.Data.Record');
+         }
+         if (!this._getFormat().equals(item.getFormat())) {
+            $ws.single.ioc.resolve('ILogger').error('SBIS3.CONTROLS.Data.FormattableMixin', 'Item format should be equals format record set.');
          }
          return true;
       }

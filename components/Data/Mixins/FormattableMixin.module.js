@@ -85,11 +85,19 @@ define('js!SBIS3.CONTROLS.Data.FormattableMixin', [
              * </pre>
              */
             format: null
-         }
+         },
+         /**
+         *@var {Boolean} Флаг показывает был ли формат задан или изменен пользователем
+         */
+         _usersFormat: false
       },
 
       //region Public methods
-
+      $constructor: function (cfg) {
+         if(cfg && cfg.format) {
+            this._usersFormat = true;
+         }
+      },
       /**
        * Возвращает данные в "сыром" виде
        * @returns {Object}
@@ -171,6 +179,7 @@ define('js!SBIS3.CONTROLS.Data.FormattableMixin', [
        * </pre>
        */
       addField: function(format, at) {
+         this._usersFormat = true;
          format = this._buildField(format);
          this._getFormat().add(format, at);
       },
@@ -188,6 +197,7 @@ define('js!SBIS3.CONTROLS.Data.FormattableMixin', [
        * </pre>
        */
       removeField: function(name) {
+         this._usersFormat = true;
          this._getFormat().removeField(name);
       },
 
@@ -204,6 +214,7 @@ define('js!SBIS3.CONTROLS.Data.FormattableMixin', [
        * </pre>
        */
       removeFieldAt: function(at) {
+         this._usersFormat = true;
          this._getFormat().removeAt(at);
       },
 
@@ -254,6 +265,11 @@ define('js!SBIS3.CONTROLS.Data.FormattableMixin', [
          return this._options.format;
       },
 
+      _clearFormat: function (){
+         if (!this._usersFormat) {
+            this._options.format = null;
+         }
+      },
       /**
        * Строит формат полей по описанию
        * @param {SBIS3.CONTROLS.Data.Format.Format|Array.<SBIS3.CONTROLS.Data.Format.FieldsFactory/FieldDeclaration.typedef>} format Описание формата
@@ -304,8 +320,11 @@ define('js!SBIS3.CONTROLS.Data.FormattableMixin', [
             throw new TypeError(this._moduleName + ': format should be an instance of SBIS3.CONTROLS.Data.Format.Field');
          }
          return format;
-      }
+      },
 
+      _isUsersFormat: function () {
+         return this._usersFormat;
+      }
       //endregion Protected methods
    };
 
