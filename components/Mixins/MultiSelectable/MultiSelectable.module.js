@@ -112,6 +112,7 @@ define('js!SBIS3.CONTROLS.MultiSelectable', ['js!SBIS3.CONTROLS.Data.Collection.
               * <pre class="brush: xml">
               *     <option name="allowEmptyMultiSelection">false</option>
               * </pre>
+              * @see multiselect
               * @see selectedKeys
               * @see removeItemsSelectionAll
               * @see removeItemsSelection
@@ -136,8 +137,8 @@ define('js!SBIS3.CONTROLS.MultiSelectable', ['js!SBIS3.CONTROLS.Data.Collection.
              * </ul>
              * @example
              * <pre>
-             *     var selItems = this._options.selectedItems;
-             *     var CountMyData = view.getSelectedItems().getCount(); // определить количество выбранных элементов
+             *     var selItems = this._options.selectedItems; // передаем выбранные элементы selItems
+             *     var CountMyData = MyView.getSelectedItems().getCount(); // определить количество выбранных элементов
              * </pre>
              * @see multiselect
              * @see getSelectedItems
@@ -183,7 +184,7 @@ define('js!SBIS3.CONTROLS.MultiSelectable', ['js!SBIS3.CONTROLS.Data.Collection.
          }
       },
       /**
-       * Устанавливает выбранные элементы по id.
+       * Устанавливает массив идентификаторов выбранных элементов.
        * @param {Array} idArray Массив идентификаторов выбранных элементов.
        * @example
        * <pre>
@@ -191,6 +192,8 @@ define('js!SBIS3.CONTROLS.MultiSelectable', ['js!SBIS3.CONTROLS.Data.Collection.
        *       checkBoxGroup.setSelectedKeys([1,3]);
        *    }
        * </pre>
+       * @see multiselect
+       * @see selectedKeys
        * @see getSelectedKeys
        * @see removeItemsSelection
        * @see addItemsSelection
@@ -254,12 +257,13 @@ define('js!SBIS3.CONTROLS.MultiSelectable', ['js!SBIS3.CONTROLS.Data.Collection.
        *        checkBoxGroup.setSelectedItemsAll();
        *     }
        * </pre>
+       * @see multiselect
+       * @see getSelectedItems
        * @see selectedKeys
        * @see removeItemsSelection
        * @see removeItemsSelectionAll
        * @see getSelectedKeys
        * @see addItemsSelection
-       * @see multiselect
        */
       setSelectedItemsAll : function() {
          if (this._dataSet) {
@@ -273,17 +277,17 @@ define('js!SBIS3.CONTROLS.MultiSelectable', ['js!SBIS3.CONTROLS.Data.Collection.
       },
 
       /**
-       * Получает индентификаторы выбранных элементов.
+       * Получает массив индентификаторов выбранных элементов.
        * @example
        * <pre>
        *    if (!checkBoxGroup.getSelectedKeys().length) {
        *       checkBoxGroup.setSelectedKeys([1,3]);
        *    }
        * </pre>
+       * @see multiselect
        * @see selectedKeys
        * @see setSelectedKeys
        * @see addItemsSelection
-       * @see multiselect
        */
       getSelectedKeys : function() {
          return this._options.selectedKeys;
@@ -301,6 +305,7 @@ define('js!SBIS3.CONTROLS.MultiSelectable', ['js!SBIS3.CONTROLS.Data.Collection.
        * </pre>
        * @see setSelectedKeys
        * @see getSelectedKeys
+       * @see getSelectedItems
        * @see setSelectedItemsAll
        * @see removeItemsSelection
        * @see removeItemsSelectionAll
@@ -343,8 +348,12 @@ define('js!SBIS3.CONTROLS.MultiSelectable', ['js!SBIS3.CONTROLS.Data.Collection.
        *        checkBoxGroup.removeItemsSelection([2]);
        *     }
        * </pre>
+       * @see multiselect
+       * @see setSelectedItemsAll
        * @see removeItemsSelectionAll
        * @see getSelectedKeys
+       * @see getSelectedItems
+       * @see addItemsSelection
        * @see allowEmptyMultiSelection
        */
       removeItemsSelection : function(idArray) {
@@ -379,8 +388,12 @@ define('js!SBIS3.CONTROLS.MultiSelectable', ['js!SBIS3.CONTROLS.Data.Collection.
        *        checkBoxGroup.setSelectedKeys([3]);
        *     }
        * </pre>
+       * @see multiselect
        * @see removeItemsSelection
        * @see getSelectedKeys
+       * @see getSelectedItems
+       * @see setSelectedItemsAll
+       * @see addItemsSelection
        * @see toggleItemsSelectionAll
        * @see allowEmptyMultiSelection
        */
@@ -399,6 +412,11 @@ define('js!SBIS3.CONTROLS.MultiSelectable', ['js!SBIS3.CONTROLS.Data.Collection.
        * </pre>
        * @see getSelectedKeys
        * @see setSelectedKeys
+       * @see getSelectedItems
+       * @see setSelectedItemsAll
+       * @see addItemsSelection
+       * @see removeItemsSelection
+       * @see removeItemsSelectionAll
        * @see toggleItemsSelectionAll
        * @see multiselect
        */
@@ -449,9 +467,13 @@ define('js!SBIS3.CONTROLS.MultiSelectable', ['js!SBIS3.CONTROLS.Data.Collection.
        *        checkBoxGroup.toggleItemsSelectionAll();
        *     }
        * </pre>
-       * @see removeItemsSelectionAll
        * @see toggleItemsSelection
        * @see multiselect
+       * @see getSelectedItems
+       * @see setSelectedItemsAll
+       * @see addItemsSelection
+       * @see removeItemsSelection
+       * @see removeItemsSelectionAll
        * @see allowEmptyMultiSelection
        */
       toggleItemsSelectionAll : function() {
@@ -475,6 +497,12 @@ define('js!SBIS3.CONTROLS.MultiSelectable', ['js!SBIS3.CONTROLS.Data.Collection.
        *    }
        * </pre>
        * @see multiselect
+       * @see setSelectedItemsAll
+       * @see addItemsSelection
+       * @see removeItemsSelection
+       * @see removeItemsSelectionAll
+       * @see toggleItemsSelection
+       * @see toggleItemsSelectionAll
        */
       getSelectedItems: function(loadItems, count) {
          var self = this,
