@@ -41,8 +41,7 @@ define('js!SBIS3.CONTROLS.Data.Adapter.Sbis', [
    Sbis.FIELD_TYPE = FIELD_TYPE;
 
    var serializer = (function() {
-      var
-         serialize = function(data) {
+      var serialize = function(data) {
             if (data instanceof Array) {
                return serializeArray(data);
             } else if (data instanceof Object) {
@@ -51,111 +50,28 @@ define('js!SBIS3.CONTROLS.Data.Adapter.Sbis', [
                return data;
             }
          },
-
          serializeArray = function (arr) {
-            var i,
-               count,
-               result;
-            if (arr._type === 'recordset') {
-               result = {
-                  s: [],
-                  d: []
-               };
-               var mapper = function(val) {
-                  return arr[i][val.n];
-               };
-               for (i = 0, count = arr.length; i < count; i++) {
-                  if (i === 0) {
-                     result.s = makeS(arr[i]);
-                  }
-                  result.d.push($ws.helpers.map(result.s, mapper));
-               }
-            } else {
-               result = $ws.helpers.map(arr, function(item) {
-                  return serialize(item);
-               });
-            }
-
-            return result;
+            return $ws.helpers.map(arr, function(item) {
+               return serialize(item);
+            });
          },
-
          serializeObject = function (obj) {
-            if ($ws.helpers.instanceOfModule(obj, 'SBIS3.CONTROLS.Data.Model')) {
-               return $ws.core.merge({
-                  _type: 'record'
-               }, obj.getRawData() || {});
-            } else if ($ws.helpers.instanceOfModule(obj, 'SBIS3.CONTROLS.Data.Collection.RecordSet') || $ws.helpers.instanceOfModule(obj, 'SBIS3.CONTROLS.Data.Source.DataSet')) {
-               return $ws.core.merge({
-                  _type: 'recordset'
-               }, obj.getRawData() || {});
+            if ($ws.helpers.instanceOfModule(obj, 'SBIS3.CONTROLS.Data.Record' ||
+               $ws.helpers.instanceOfModule(obj, 'SBIS3.CONTROLS.Data.Collection.RecordSet') ||
+               $ws.helpers.instanceOfModule(obj, 'SBIS3.CONTROLS.Data.Source.DataSet')
+            )) {
+               return obj.getRawData();
             } else if (obj instanceof Date) {
                return obj.toSQL();
             } else {
-               var result = {
-                  d: [],
-                  s: []
-               };
-               result.s = makeS(obj);
-               result.d = makeD(obj, result.s);
+               var result = {};
+               for (var key in obj) {
+                  if (obj.hasOwnProperty(key)) {
+                     result[key] = serialize(obj[key]);
+                  }
+               }
                return result;
             }
-         },
-
-         getValueType = function (val) {
-            switch (typeof val) {
-               case 'boolean':
-                  return Sbis.FIELD_TYPE.Boolean;
-               case 'number':
-                  if (val % 1 === 0) {
-                     return Sbis.FIELD_TYPE.Integer;
-                  }
-                  return Sbis.FIELD_TYPE.Real;
-               case 'string':
-                  return Sbis.FIELD_TYPE.String;
-               case 'object':
-                  if (val === null) {
-                     return Sbis.FIELD_TYPE.String;
-                  } else if ($ws.helpers.instanceOfModule(val, 'SBIS3.CONTROLS.Data.Model') || $ws.helpers.instanceOfModule(val, 'SBIS3.CONTROLS.Record')) {
-                     return Sbis.FIELD_TYPE.Record;
-                  } else if ($ws.helpers.instanceOfModule(val, 'SBIS3.CONTROLS.Data.Collection.RecordSet') || $ws.helpers.instanceOfModule(val, 'SBIS3.CONTROLS.DataSet') || $ws.helpers.instanceOfModule(val, 'SBIS3.CONTROLS.Data.Source.DataSet')) {
-                     return Sbis.FIELD_TYPE.RecordSet;
-                  } else if (val instanceof Date) {
-                     return Sbis.FIELD_TYPE.DateTime;
-                  } else if (val instanceof Array) {
-                     return {
-                        n: Sbis.FIELD_TYPE.Array,
-                        t: getValueType(val[0])
-                     };
-                  } else {
-                     return Sbis.FIELD_TYPE.Record;
-                  }
-                  break;
-               default:
-                  return Sbis.FIELD_TYPE.String;
-            }
-
-         },
-
-         makeS = function (obj) {
-            var s = [];
-            for (var key in obj) {
-               if (!obj.hasOwnProperty(key)) {
-                  continue;
-               }
-               s.push({
-                  n: key,
-                  t: getValueType(obj[key])
-               });
-            }
-            return s;
-         },
-
-         makeD = function (obj, s) {
-            var d = [];
-            for (var i = 0, count = s.length; i < count; i++) {
-               d.push(serialize(obj[s[i].n]));
-            }
-            return d;
          };
 
       return {

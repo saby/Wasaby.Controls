@@ -209,7 +209,7 @@ define('js!SBIS3.CONTROLS.Data.Source.Memory', [
       /**
        * Возвращает адаптер для работы с таблицей
        * @returns {SBIS3.CONTROLS.Data.Adapter.ITable}
-       * @private
+       * @protected
        */
       _getTableAdapter: function () {
          return this._tableAdapter || (this._tableAdapter = this.getAdapter().forTable(this._options.data));
@@ -219,7 +219,7 @@ define('js!SBIS3.CONTROLS.Data.Source.Memory', [
        * Применяет ресурс
        * @param {String} [from] Ресурс
        * @returns {*}
-       * @private
+       * @protected
        */
       _applyFrom: function (from) {
          from = from || '';
@@ -240,7 +240,7 @@ define('js!SBIS3.CONTROLS.Data.Source.Memory', [
        * @param {*} data Данные
        * @param {SBIS3.CONTROLS.Data.Query.Join[]} join Выборки для объединения
        * @returns {*}
-       * @private
+       * @protected
        */
       _applyJoin: function (data, join) {
          if (join.length) {
@@ -254,7 +254,7 @@ define('js!SBIS3.CONTROLS.Data.Source.Memory', [
        * @param {*} data Данные
        * @param {Object} where Фильтр
        * @returns {*}
-       * @private
+       * @protected
        */
       _applyWhere: function (data, where) {
          where = where || {};
@@ -309,7 +309,7 @@ define('js!SBIS3.CONTROLS.Data.Source.Memory', [
        * @param {*} data Данные
        * @param {SBIS3.CONTROLS.Data.Query.Order[]} order Параметры сортировки
        * @returns {*}
-       * @private
+       * @protected
        */
       _applyOrderBy: function (data, order) {
          order = order || [];
@@ -385,7 +385,7 @@ define('js!SBIS3.CONTROLS.Data.Source.Memory', [
        * @param {Number} [offset=0] Смещение начала выборки
        * @param {Number} [limit] Количество записей выборки
        * @returns {*}
-       * @private
+       * @protected
        */
       _applyPaging: function (data, offset, limit) {
          offset = offset || 0;
@@ -421,7 +421,7 @@ define('js!SBIS3.CONTROLS.Data.Source.Memory', [
 
       /**
        * Перестраивает индекс
-       * @private
+       * @protected
        */
       _reIndex: function () {
          this._index = {};
@@ -438,7 +438,7 @@ define('js!SBIS3.CONTROLS.Data.Source.Memory', [
        * Возвращает данные модели с указанным ключом
        * @param {String} key Значение ключа
        * @returns {Array|undefined}
-       * @private
+       * @protected
        */
       _getModelByKey: function (key) {
          return this._getTableAdapter().at(
@@ -450,7 +450,7 @@ define('js!SBIS3.CONTROLS.Data.Source.Memory', [
        * Возвращает индекс модели с указанным ключом
        * @param {String} key Значение ключа
        * @returns {Number} -1 - не найден, >=0 - индекс
-       * @private
+       * @protected
        */
       _getIndexByKey: function (key) {
          var index = this._index[key];
@@ -461,7 +461,7 @@ define('js!SBIS3.CONTROLS.Data.Source.Memory', [
        * выполняет удаление записи
        * @param key - идентификатор записи
        * @returns {boolean}
-       * @private
+       * @protected
        */
       _destroy: function (key) {
          var index = this._getIndexByKey(key);

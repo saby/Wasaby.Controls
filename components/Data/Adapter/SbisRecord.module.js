@@ -17,6 +17,10 @@ define('js!SBIS3.CONTROLS.Data.Adapter.SbisRecord', [
    var SbisRecord = $ws.core.extend({}, [IRecord, SbisFormatMixin], /** @lends SBIS3.CONTROLS.Data.Adapter.SbisRecord.prototype */{
       _moduleName: 'SBIS3.CONTROLS.Data.Adapter.SbisRecord',
 
+      $constructor: function () {
+         this._data._type = 'record';
+      },
+
       //region SBIS3.CONTROLS.Data.Adapter.JsonFormatMixin
 
       _buildD: function(at, value) {
