@@ -18,26 +18,35 @@ define('js!SBIS3.CONTROLS.Data.MoveStrategy.Base', [
              * @cfg {String} Имя объекта бизнес-логики, у которго происходит перемещение записей.
              * @example
              * <pre>
-             *    <option name="moveResource">СвязьПапок</option>
+             *    <option name="contract">СвязьПапок</option>
              * </pre>
              * @see move
              */
-            resource: undefined,
+            contract: undefined,
+
             /**
              * @cfg {String} Имя поля, по которому строится иерархия.
              * @see hierarhyMove
              */
             hierField: undefined,
+
             /**
              * @cfg {SBIS3.CONTROLS.Data.Source.SbisService} Источник данных.
              */
-            dataSource:null
+            dataSource: null
 
          },
+
          _orderProvider: undefined
       },
-      $constructor: function (cfg){
 
+      $constructor: function (cfg){
+         cfg = cfg || {};
+         //Deprecated
+         if ('resource' in cfg && !('contract' in cfg)) {
+            $ws.single.ioc.resolve('ILogger').info(this._moduleName + '::$constructor()', 'Option "resource" is deprecated and will be removed in 3.7.4. Use "contract" instead.');
+            this._options.contract = cfg.resource;
+         }
       },
 
       move: function (from, to, after) {

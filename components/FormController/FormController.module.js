@@ -32,7 +32,7 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl'],
              * <pre>
              *    // инициализируем источник данных БЛ
              *    var dataSource = new SbisService ({
-             *       service: 'Товар'
+             *       endpoint: 'Товар'
              *    });
              *    this.setDataSource(dataSource); // устанавливаем источник данных
              * </pre>
@@ -177,7 +177,7 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl'],
        * <pre>
        *    // инициализируем источник данных БЛ
        *    var dataSource = new SbisService ({
-       *       service: 'Товар'
+       *       endpoint: 'Товар'
        *    });
        *    this.setDataSource(dataSource); // устанавливаем источник данных
        * </pre>

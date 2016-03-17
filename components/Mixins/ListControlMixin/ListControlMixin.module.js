@@ -226,7 +226,7 @@ define('js!SBIS3.CONTROLS.ListControlMixin', [
        * @example
        * <pre>
        *    myListView.setDataSource(new SbisSevice({
-       *       service: 'Сотрудники'
+       *       endpoint: 'Сотрудники'
        *    }));
        * </pre>
        */

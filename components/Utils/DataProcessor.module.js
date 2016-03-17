@@ -237,8 +237,8 @@ define('js!SBIS3.CONTROLS.Utils.DataProcessor', [
             });
          //TODO поменять, когда рекордсеты заработают
          //var dataSource = new Source({
-         //   resource: {
-         //      name: object
+         //   endpoint: {
+         //      contract: object
          //   }
          //});
          //return dataSource.call(methodName, cfg).addCallback(function(ds){
@@ -315,7 +315,7 @@ define('js!SBIS3.CONTROLS.Utils.DataProcessor', [
             }
          }
          queryParams =  dataSource.prepareQueryParams(filter, null, this._options.offset , selectedNumRecords || this._options.dataSet.getCount(), false);
-         cfg[eng ? 'MethodName': 'ИмяМетода'] = dataSource.getResource() + '.' + dataSource.getQueryMethodName();
+         cfg[eng ? 'MethodName': 'ИмяМетода'] = dataSource.getEndpoint().contract + '.' + dataSource.getBinding().query;
          cfg[eng ? 'Filter' : 'Фильтр'] = queryParams['Фильтр'];
          cfg[eng ? 'Sorting' : 'Сортировка'] =  queryParams['Сортировка'];
          cfg[eng ? 'Pagination' : 'Навигация'] = !selectedNumRecords ? null : queryParams['Навигация'];

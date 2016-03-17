@@ -25,7 +25,7 @@ define('js!SBIS3.TestTreeCompositeViewTile',
 
                 var multiView1 = this.getChildControlByName('TreeCompositeView 1');
                 var multiView2 = this.getChildControlByName('TreeCompositeView 2');
-                var multiViewSource = new SbisServiceSource({resource: 'TreeCompositeViewTile'});
+                var multiViewSource = new SbisServiceSource({endpoint: 'TreeCompositeViewTile'});
                 multiView1.setDataSource(multiViewSource);
 
 
