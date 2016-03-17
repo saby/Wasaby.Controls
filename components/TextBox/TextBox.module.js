@@ -99,13 +99,13 @@ define('js!SBIS3.CONTROLS.TextBox', ['js!SBIS3.CONTROLS.TextBoxBase','html!SBIS3
              * Может использоваться как подсказка для пользователя по вводу данных.
              * Заменить текст подсказки, заданный опцией, можно при помощи метода {@link setPlaceholder}.
              * @example
-             * Пример 1. Использование опции для поля связи:
+             * Пример 1. Текст подсказки в поле связи:
              * ![](/TextBox01.png)
              * фрагмент верстки:
              * <pre class="brush:xml">
              *     <option name="placeholder">ФИО исполнителя или название рабочей зоны</option>
              * </pre>
-             * Пример 2. Использование опции с {@link textTransform форматированием регистра текста}:
+             * Пример 2. Текст подсказки с {@link textTransform форматированием регистра}:
              * ![](/TextBox02.png)
              * @see setPlaceholder
              * @see textTransform
