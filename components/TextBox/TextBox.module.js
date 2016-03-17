@@ -61,14 +61,15 @@ define('js!SBIS3.CONTROLS.TextBox', ['js!SBIS3.CONTROLS.TextBoxBase','html!SBIS3
              * @remark
              * Опция используется в случаях, когда все символы текста в поле ввода нужно отобразить прописными
              * (верхний регистр) или строчными (нижний регистр).
-             * Ниже приведен пример отображения в поле связи всех символов текста прописными
+             * Заменить или установить регистр текста можно при помощи метода {@link setTextTransform}.
+             * @example
+             * Пример отображения в поле связи всех символов текста прописными
              * для {@link placeholder текста подсказки внутри поля ввода}:
              * ![](/TextBox02.png)
-             * описание опции:
+             * фрагмент верстки:
              * <pre class="brush:xml">
              *     <option name="textTransform">uppercase</option>
              * </pre>
-             * Заменить или установить регистр текста можно при помощи метода {@link setTextTransform}
              * @see setTextTransform
              * @see placeholder
              *
@@ -76,17 +77,15 @@ define('js!SBIS3.CONTROLS.TextBox', ['js!SBIS3.CONTROLS.TextBoxBase','html!SBIS3
             textTransform: 'none',
             /**
              * @cfg {Boolean} Определяет режим выделения текста в поле ввода при получении фокуса.
+             * @variant true Выделять текст.
+             * @variant false Не выделять текст.
              * @remark
              * Используется в случаях, когда поле ввода нужно использовать в качестве источника текстовой информации:
              * пользователю нужно скопировать строку в поле для каких-либо дальнейших действий.
-             * Возможные значения при получении полем фокуса:
-             * <ul>
-             *    <li>true - выделять текст;</li>
-             *    <li>false - не выделять.</li>
-             * </ul>
+             * @example
              * Иллюстрация выделения текста, переданного в поле связи опцией {@link SBIS3.CONTROLS.TextBoxBase#text}:
              * ![](/TextBox03.png)
-             * @example
+             * фрагмент верстки:
              * <pre class="brush:xml">
              *     <option name="selectOnClick">true</option>
              * </pre>
@@ -98,15 +97,16 @@ define('js!SBIS3.CONTROLS.TextBox', ['js!SBIS3.CONTROLS.TextBoxBase','html!SBIS3
              * @remark
              * Данный текст отображается внутри поля ввода до момента получения фокуса.
              * Может использоваться как подсказка для пользователя по вводу данных.
+             * Заменить текст подсказки, заданный опцией, можно при помощи метода {@link setPlaceholder}.
+             * @example
              * Пример 1. Использование опции для поля связи:
              * ![](/TextBox01.png)
-             * описание опции:
+             * фрагмент верстки:
              * <pre class="brush:xml">
              *     <option name="placeholder">ФИО исполнителя или название рабочей зоны</option>
              * </pre>
              * Пример 2. Использование опции с {@link textTransform форматированием регистра текста}:
              * ![](/TextBox02.png)
-             * Заменить текст подсказки, заданный опцией, можно при помощи метода {@link setPlaceholder}
              * @see setPlaceholder
              * @see textTransform
              * @translatable
@@ -233,8 +233,7 @@ define('js!SBIS3.CONTROLS.TextBox', ['js!SBIS3.CONTROLS.TextBoxBase','html!SBIS3
       },
 
       /**
-       * Устанавливает подсказку, отображаемую внутри поля.
-       * Метод установки или замены текста подсказки, заданного опцией {@link placeholder}.
+       * Устанавливает подсказку, отображаемую внутри поля ввода.
        * @param {String} text Текст подсказки.
        * @example
        * <pre>
