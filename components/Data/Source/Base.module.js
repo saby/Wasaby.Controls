@@ -133,9 +133,9 @@ define('js!SBIS3.CONTROLS.Data.Source.Base', [
       },
 
       /**
-       * Создает новый экземпляр модели
-       * @param {*} model Данные модели
-       * @returns {SBIS3.CONTROLS.Data.Model}
+       * Создает новый экземпляр списка
+       * @param {*} model Данные списка
+       * @returns {SBIS3.CONTROLS.Data.Collection.List}
        * @protected
        */
       _getListInstance: function (data) {
