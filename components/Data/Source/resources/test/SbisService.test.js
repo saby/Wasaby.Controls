@@ -167,42 +167,31 @@ define([
 
       describe('SBIS3.CONTROLS.Data.Source.SbisService', function () {
          var getSampleModel = function() {
-               return new Model({
-                  adapter: new SbisAdapter(),
-                  rawData: {
-                     d: [
-                        0,
-                        ''
-                     ],
-                     s: [
-                        {'n': '@Ид', 't': 'Число целое'},
-                        {'n': 'Фамилия', 't': 'Строка'}
-                     ]
-                  },
+               var model = new Model({
+                  adapter: 'adapter.sbis',
                   idProperty: '@Ид'
                });
+               model.addField({name: '@Ид', type: 'integer'}, undefined, 1);
+               model.addField({name: 'Фамилия', type: 'string'}, undefined, 'tst');
+
+               return model;
+            },
+            getSampleMeta = function() {
+               return {
+                  a: 1,
+                  b: 2,
+                  c: 3
+               };
             },
             testArgIsModel = function(arg, model) {
-               if (arg._type !== 'record') {
-                  throw new Error('Wrong value for argument ДопПоля._type');
-               }
-               if (arg.d !== model.getRawData().d) {
-                  throw new Error('Wrong argument value ДопПоля.d');
-               }
-               if (arg.s !== model.getRawData().s) {
-                  throw new Error('Wrong argument value ДопПоля.s');
-               }
+               assert.strictEqual(arg._type, 'record');
+               assert.deepEqual(arg.d, model.getRawData().d);
+               assert.deepEqual(arg.s, model.getRawData().s);
             },
             testArgIsDataSet = function(arg, dataSet) {
-               if (arg._type !== 'recordset') {
-                  throw new Error('Wrong value for argument _type');
-               }
-               if (arg.d !== dataSet.getRawData().d) {
-                  throw new Error('Wrong value for argument d');
-               }
-               if (arg.s !== dataSet.getRawData().s) {
-                  throw new Error('Wrong value for argument s');
-               }
+               assert.strictEqual(arg._type, 'recordset');
+               assert.deepEqual(arg.d, dataSet.getRawData().d);
+               assert.deepEqual(arg.s, dataSet.getRawData().s);
             },
             service;
 
@@ -224,18 +213,10 @@ define([
                it('should return an empty model', function (done) {
                   service.create().addCallbacks(function (model) {
                      try {
-                        if (!(model instanceof Model)) {
-                           throw new Error('That\'s no Model');
-                        }
-                        if (model.isStored()) {
-                           throw new Error('The model should be not stored');
-                        }
-                        if (model.getId()) {
-                           throw new Error('The model has not empty id');
-                        }
-                        if (model.get('Фамилия') !== '') {
-                           throw new Error('The model contains wrong data');
-                        }
+                        assert.isTrue(model instanceof Model);
+                        assert.isTrue(model.isStored());
+                        assert.isTrue(model.getId() > 0);
+                        assert.strictEqual(model.get('Фамилия'), '');
                         done();
                      } catch (err) {
                         done(err);
@@ -250,19 +231,11 @@ define([
                      try {
                         var args = SbisBusinessLogic.lastRequest.args;
 
-                        if (args['ИмяМетода'] !== null) {
-                           throw new Error('Wrong argument ИмяМетода');
-                        }
+                        assert.isFalse(args['ИмяМетода'] === null);
+                        assert.strictEqual(args['Фильтр'].d[0], true, 'Wrong value for argument Фильтр.ВызовИзБраузера');
+                        assert.strictEqual(args['Фильтр'].s[0].n, 'ВызовИзБраузера', 'Wrong name for argument Фильтр.ВызовИзБраузера');
+                        assert.strictEqual(args['Фильтр'].s[0].t, 'Логическое', 'Wrong type for argument Фильтр.ВызовИзБраузера');
 
-                        if (args['Фильтр'].d[0] !== true) {
-                           throw new Error('Wrong value for argument Фильтр.ВызовИзБраузера');
-                        }
-                        if (args['Фильтр'].s[0].n !== 'ВызовИзБраузера') {
-                           throw new Error('Wrong name for argument Фильтр.ВызовИзБраузера');
-                        }
-                        if (args['Фильтр'].s[0].t !== 'Логическое') {
-                           throw new Error('Wrong type for argument Фильтр.ВызовИзБраузера');
-                        }
                         done();
                      } catch (err) {
                         done(err);
@@ -272,24 +245,26 @@ define([
                   });
                });
 
-               it('should generate a request with valid meta data', function (done) {
-                  var rec = new Model({
-                     adapter: 'adapter.sbis'
-                  });
-                  rec.addField({name: 'id', type: 'integer'}, 0, 1);
-                  service.create(rec).addCallbacks(function () {
+               it('should generate a request with valid meta data from record', function (done) {
+                  var model = getSampleModel();
+                  service.create(model).addCallbacks(function () {
                      try {
                         var args = SbisBusinessLogic.lastRequest.args;
+                        testArgIsModel(args['Фильтр'], model);
+                        done();
+                     } catch (err) {
+                        done(err);
+                     }
+                  }, function (err) {
+                     done(err);
+                  });
+               });
 
-                        if (args['Фильтр'].s[0].n !== 'id') {
-                           throw new Error('Wrong name for argument Фильтр.id');
-                        }
-                        if (args['Фильтр'].s[0].t !== 'Число целое') {
-                           throw new Error('Wrong type for argument Фильтр.id');
-                        }
-                        if (args['Фильтр'].d[0] !== 1) {
-                           throw new Error('Wrong value for argument Фильтр.id');
-                        }
+               it('should generate a request with valid meta data from object', function (done) {
+                  service.create(getSampleMeta()).addCallbacks(function () {
+                     try {
+                        var args = SbisBusinessLogic.lastRequest.args;
+                        assert.deepEqual(args['Фильтр'], getSampleMeta());
                         done();
                      } catch (err) {
                         done(err);
@@ -306,36 +281,10 @@ define([
                         format: 'ПрочитатьФормат'
                      }
                   });
-                  service.create({myParam: 'myValue'}).addCallbacks(function () {
+                  service.create().addCallbacks(function () {
                      try {
                         var args = SbisBusinessLogic.lastRequest.args;
-
-                        if (args['ИмяМетода'] !== 'ПрочитатьФормат') {
-                           throw new Error('Wrong argument ИмяМетода');
-                        }
-                        done();
-                     } catch (err) {
-                        done(err);
-                     }
-                  }, function (err) {
-                     done(err);
-                  });
-               });
-
-               it('should accept a model', function (done) {
-                  var model = getSampleModel();
-
-                  service.create(model).addCallbacks(function () {
-                     try {
-                        var args = SbisBusinessLogic.lastRequest.args;
-
-                        if (args['Фильтр'].d !== model.getRawData().d) {
-                           throw new Error('Wrong value for argument Фильтр.d');
-                        }
-                        if (args['Фильтр'].s !== model.getRawData().s) {
-                           throw new Error('Wrong value for argument Фильтр.s');
-                        }
-
+                        assert.strictEqual(args['ИмяМетода'], 'ПрочитатьФормат');
                         done();
                      } catch (err) {
                         done(err);
@@ -368,12 +317,8 @@ define([
                   it('should return valid model', function (done) {
                      service.read(SbisBusinessLogic.existsId).addCallbacks(function (model) {
                         try {
-                           if (!(model instanceof Model)) {
-                              throw new Error('That\'s no Model');
-                           }
-                           if (!model.isStored()) {
-                              throw new Error('The model should be stored');
-                           }
+                           assert.isTrue(model instanceof Model);
+                           assert.isTrue(model.isStored());
                            if (!model.getId()) {
                               throw new Error('The model has empty id');
                            }
@@ -400,8 +345,7 @@ define([
                         }
                      });
                      service.read(
-                        SbisBusinessLogic.existsId,
-                        {'ПолеОдин': 1}
+                        SbisBusinessLogic.existsId
                      ).addCallbacks(function () {
                         try {
                            var args = SbisBusinessLogic.lastRequest.args;
@@ -413,16 +357,6 @@ define([
                               throw new Error('Wrong argument ИдО');
                            }
 
-                           if (args['ДопПоля'].d[0] !== 1) {
-                              throw new Error('Wrong argument value ДопПоля.ПолеОдин');
-                           }
-                           if (args['ДопПоля'].s[0].n !== 'ПолеОдин') {
-                              throw new Error('Wrong argument name Навигация.ПолеОдин');
-                           }
-                           if (args['ДопПоля'].s[0].t !== 'Число целое') {
-                              throw new Error('Wrong argument type Навигация.ПолеОдин');
-                           }
-
                            done();
                         } catch (err) {
                            done(err);
@@ -432,23 +366,39 @@ define([
                      });
                   });
 
-                  it('should accept a model in meta argument', function (done) {
-                     var model = getSampleModel();
+                  it('should generate a request with valid meta data from record', function (done) {
+                     var rec = getSampleModel();
                      service.read(
                         SbisBusinessLogic.existsId,
-                        model
+                        rec
                      ).addCallbacks(function () {
-                        try {
-                           var args = SbisBusinessLogic.lastRequest.args;
-                           testArgIsModel(args['ДопПоля'], model);
-
-                           done();
-                        } catch (err) {
+                           try {
+                              var args = SbisBusinessLogic.lastRequest.args;
+                              testArgIsModel(args['ДопПоля'], rec);
+                              done();
+                           } catch (err) {
+                              done(err);
+                           }
+                        }, function (err) {
                            done(err);
-                        }
-                     }, function (err) {
-                        done(err);
-                     });
+                        });
+                  });
+
+                  it('should generate a request with valid meta data from object', function (done) {
+                     service.read(
+                        SbisBusinessLogic.existsId,
+                        getSampleMeta()
+                     ).addCallbacks(function () {
+                           try {
+                              var args = SbisBusinessLogic.lastRequest.args;
+                              assert.deepEqual(args['ДопПоля'], getSampleMeta());
+                              done();
+                           } catch (err) {
+                              done(err);
+                           }
+                        }, function (err) {
+                           done(err);
+                        });
                   });
                });
 
