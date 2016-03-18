@@ -789,96 +789,42 @@ define([
                         try {
                            var args = SbisBusinessLogic.lastRequest.args;
 
-                           if (args['Фильтр'].d[0] !== 5) {
-                              throw new Error('Wrong argument value Фильтр.id');
-                           }
-                           if (args['Фильтр'].s[0].n !== 'id') {
-                              throw new Error('Wrong argument name Фильтр.id');
-                           }
-                           if (args['Фильтр'].s[0].t !== 'Число целое') {
-                              throw new Error('Wrong argument type Фильтр.id');
-                           }
+                           assert.strictEqual(args['Фильтр'].d[0], 5);
+                           assert.strictEqual(args['Фильтр'].s[0].n, 'id');
+                           assert.strictEqual(args['Фильтр'].s[0].t, 'Число целое');
 
-                           if (args['Фильтр'].d[1] !== true) {
-                              throw new Error('Wrong argument value Фильтр.enabled');
-                           }
-                           if (args['Фильтр'].s[1].n !== 'enabled') {
-                              throw new Error('Wrong argument name Фильтр.enabled');
-                           }
-                           if (args['Фильтр'].s[1].t !== 'Логическое') {
-                              throw new Error('Wrong argument type Фильтр.enabled');
-                           }
+                           assert.isTrue(args['Фильтр'].d[1]);
+                           assert.strictEqual(args['Фильтр'].s[1].n, 'enabled');
+                           assert.strictEqual(args['Фильтр'].s[1].t, 'Логическое');
 
-                           if (args['Фильтр'].d[2] !== 'abc*') {
-                              throw new Error('Wrong argument value Фильтр.title');
-                           }
-                           if (args['Фильтр'].s[2].n !== 'title') {
-                              throw new Error('Wrong argument name Фильтр.title');
-                           }
-                           if (args['Фильтр'].s[2].t !== 'Строка') {
-                              throw new Error('Wrong argument type Фильтр.title');
-                           }
+                           assert.strictEqual(args['Фильтр'].d[2], 'abc*');
+                           assert.strictEqual(args['Фильтр'].s[2].n, 'title');
+                           assert.strictEqual(args['Фильтр'].s[2].t, 'Строка');
 
-                           if (args['Сортировка'].d[0][0] !== 'id') {
-                              throw new Error('Wrong argument value Сортировка.id.n');
-                           }
-                           if (args['Сортировка'].d[0][1] !== true) {
-                              throw new Error('Wrong argument value Сортировка.id.o');
-                           }
-                           if (args['Сортировка'].d[0][2] !== false) {
-                              throw new Error('Wrong argument value Сортировка.id.l');
-                           }
+                           assert.strictEqual(args['Сортировка'].d[0][0], 'id');
+                           assert.isTrue(args['Сортировка'].d[0][1]);
+                           assert.isFalse(args['Сортировка'].d[0][2]);
 
-                           if (args['Сортировка'].d[1][0] !== 'enabled') {
-                              throw new Error('Wrong argument value Сортировка.enabled.n');
-                           }
-                           if (args['Сортировка'].d[1][1] !== false) {
-                              throw new Error('Wrong argument value Сортировка.enabled.o');
-                           }
-                           if (args['Сортировка'].d[1][2] !== true) {
-                              throw new Error('Wrong argument value Сортировка.enabled.l');
-                           }
+                           assert.strictEqual(args['Сортировка'].d[1][0], 'enabled');
+                           assert.isFalse(args['Сортировка'].d[1][1]);
+                           assert.isTrue(args['Сортировка'].d[1][2]);
 
-                           if (args['Сортировка'].s[0].n !== 'n') {
-                              throw new Error('Wrong argument name Сортировка.n');
-                           }
-                           if (args['Сортировка'].s[1].n !== 'o') {
-                              throw new Error('Wrong argument name Сортировка.o');
-                           }
-                           if (args['Сортировка'].s[2].n !== 'l') {
-                              throw new Error('Wrong argument name Сортировка.l');
-                           }
+                           assert.strictEqual(args['Сортировка'].s[0].n, 'n');
+                           assert.strictEqual(args['Сортировка'].s[1].n, 'o');
+                           assert.strictEqual(args['Сортировка'].s[2].n, 'l');
 
-                           if (args['Навигация'].d[0] !== 3) {
-                              throw new Error('Wrong argument value Навигация.Страница');
-                           }
-                           if (args['Навигация'].s[0].n !== 'Страница') {
-                              throw new Error('Wrong argument name Навигация.Страница');
-                           }
+                           assert.strictEqual(args['Навигация'].d[0], 3);
+                           assert.strictEqual(args['Навигация'].s[0].n, 'Страница');
 
-                           if (args['Навигация'].d[1] !== 33) {
-                              throw new Error('Wrong argument value Навигация.РазмерСтраницы');
-                           }
-                           if (args['Навигация'].s[1].n !== 'РазмерСтраницы') {
-                              throw new Error('Wrong argument name Навигация.РазмерСтраницы');
-                           }
+                           assert.strictEqual(args['Навигация'].d[1], 33);
+                           assert.strictEqual(args['Навигация'].s[1].n, 'РазмерСтраницы');
 
-                           if (args['Навигация'].d[2] !== true) {
-                              throw new Error('Wrong argument value Навигация.ЕстьЕще');
-                           }
-                           if (args['Навигация'].s[2].n !== 'ЕстьЕще') {
-                              throw new Error('Wrong argument name Навигация.ЕстьЕще');
-                           }
+                           assert.isTrue(args['Навигация'].d[2]);
+                           assert.strictEqual(args['Навигация'].s[2].n, 'ЕстьЕще');
 
-                           if (args['ДопПоля'].d[0] !== 4) {
-                              throw new Error('Wrong argument value ДопПоля.ПолеОдин');
-                           }
-                           if (args['ДопПоля'].s[0].n !== 'ПолеОдин') {
-                              throw new Error('Wrong argument name Навигация.ПолеОдин');
-                           }
-                           if (args['ДопПоля'].s[0].t !== 'Число целое') {
-                              throw new Error('Wrong argument type Навигация.ПолеОдин');
-                           }
+                           assert.strictEqual(args['ДопПоля'].d[0], 4);
+                           assert.strictEqual(args['ДопПоля'].s[0].n, 'ПолеОдин');
+                           assert.strictEqual(args['ДопПоля'].s[0].t, 'Число целое');
 
                            done();
                         } catch (err) {
@@ -913,13 +859,9 @@ define([
 
                   service.call('Произвольный', model).addCallbacks(function () {
                      try {
-                        if (SbisBusinessLogic.lastRequest.method !== 'Произвольный') {
-                           throw new Error('Method name "' + SbisBusinessLogic.lastRequest.method + '" expected to be "Произвольный"');
-                        }
-
+                        assert.strictEqual(SbisBusinessLogic.lastRequest.method, 'Произвольный');
                         var args = SbisBusinessLogic.lastRequest.args;
                         testArgIsModel(args, model);
-
                         done();
                      } catch (err) {
                         done(err);
@@ -946,13 +888,9 @@ define([
 
                   service.call('Произвольный', dataSet).addCallbacks(function () {
                      try {
-                        if (SbisBusinessLogic.lastRequest.method !== 'Произвольный') {
-                           throw new Error('Method name "' + SbisBusinessLogic.lastRequest.method + '" expected to be "Произвольный"');
-                        }
-
+                        assert.strictEqual(SbisBusinessLogic.lastRequest.method, 'Произвольный');
                         var args = SbisBusinessLogic.lastRequest.args;
                         testArgIsDataSet(args, dataSet);
-
                         done();
                      } catch (err) {
                         done(err);
