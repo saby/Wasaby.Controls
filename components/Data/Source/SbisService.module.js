@@ -148,11 +148,11 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
          //Deprecated
          if ('strategy' in cfg && !('adapter' in cfg)) {
             this._options.adapter = cfg.strategy;
-            $ws.single.ioc.resolve('ILogger').info('SBIS3.CONTROLS.Data.Source.SbisService', 'option "strategy" is deprecated and will be removed in 3.7.4. Use "adapter" instead.');
+            $ws.single.ioc.resolve('ILogger').info(this._moduleName + '::$constructor()', 'option "strategy" is deprecated and will be removed in 3.7.4. Use "adapter" instead.');
          }
          if ('keyField' in cfg && !('idProperty' in cfg)) {
             this._options.idProperty = cfg.keyField;
-            $ws.single.ioc.resolve('ILogger').info('SBIS3.CONTROLS.Data.Source.SbisService', 'option "keyField" is deprecated and will be removed in 3.7.4. Use "idProperty" instead.');
+            $ws.single.ioc.resolve('ILogger').info(this._moduleName + '::$constructor()', 'option "keyField" is deprecated and will be removed in 3.7.4. Use "idProperty" instead.');
          }
          if (!('endpoint' in cfg)) {
             if ('service' in cfg && typeof cfg.service === 'string' && !('resource' in cfg)) {
