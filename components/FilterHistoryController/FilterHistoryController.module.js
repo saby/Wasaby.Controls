@@ -5,11 +5,11 @@ define('js!SBIS3.CONTROLS.FilterHistoryController',
     [
        'js!SBIS3.CONTROLS.HistoryController',
        'js!SBIS3.CONTROLS.Data.Collection.List',
-       'js!SBIS3.CONTROLS.Utils.TemplateUtil',
+       'js!SBIS3.CONTROLS.FilterButton.FilterToStringUtil',
        'js!SBIS3.CONTROLS.Utils.DateUtil'
     ],
 
-    function(HistoryController, List, TemplateUtil, DateUtil) {
+    function(HistoryController, List, FilterToStringUtil, DateUtil) {
 
        'use strict';
 
@@ -144,8 +144,7 @@ define('js!SBIS3.CONTROLS.FilterHistoryController',
           _onApplyFilterHandler: function() {
              var fb = this._options.filterButton,
                  structure = fb.getFilterStructure(),
-                 self = this,
-                 linkText, template, templateRes;
+                 self = this;
 
              /* Если это дефолтный фильтр, то сохранять в историю не надо */
              if(!fb.getLinkedContext().getValue('filterChanged')) {
@@ -155,28 +154,8 @@ define('js!SBIS3.CONTROLS.FilterHistoryController',
                 return;
              }
 
-             linkText = $ws.helpers.reduce(structure, function(res, elem) {
-                template = TemplateUtil.prepareTemplate(elem.historyItemTemplate);
-
-                if(template) {
-                   templateRes = template(elem);
-                   if(templateRes) {
-                      res.push(template(elem));
-                   }
-                   return res;
-                } else if(template === null) {
-                   return res;
-                }
-
-                if (elem.caption && !$ws.helpers.isEqualObject(elem.value, elem.resetValue)) {
-                   res.push(elem.caption);
-                }
-                return res;
-             }, []).join(', ');
-
-
              self.saveToHistory({
-                linkText: linkText,
+                linkText: FilterToStringUtil.string(structure, 'historyItemTemplate'),
                 filter: this._prepareStructureElemToSave(structure)
              });
 
