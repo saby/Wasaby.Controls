@@ -572,7 +572,7 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
                meta = arr;
             }
             if (!(meta instanceof Array)) {
-               throw new TypeError(this._moduleName + '::_getAdditionalParams(): unsupported params type: only Array, SBIS3.CONTROLS.Data.Record or Object allowed');
+               throw new TypeError(this._moduleName + '::_getAdditionalParams(): unsupported metadata type: only Array, SBIS3.CONTROLS.Data.Record or Object allowed');
             }
          }
 
