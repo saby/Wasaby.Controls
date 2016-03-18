@@ -48,7 +48,9 @@ define('js!SBIS3.CONTROLS.FieldLink',
        var INPUT_MIN_WIDTH = 100;
 
        /**
-        * Поле связи. Можно выбирать значение из списка, можно из автодополнения
+        * Поле связи - это базовый контрол веб-фреймворка WS, который предназначен для выбора нескольких значений.
+        * Выбор значений можно производить из справочников, подробнее о которых вы можете прочитать в описании к опции {@link dictionaries}.
+        * Другой способ выбора значений - это использование автодополнения, подробнее о котором вы можете прочитать в опции {@link list}.
         * @class SBIS3.CONTROLS.FieldLink
         * @extends SBIS3.CONTROLS.SuggestTextBox
         * @category Inputs
@@ -73,11 +75,11 @@ define('js!SBIS3.CONTROLS.FieldLink',
 
        var FieldLink = SuggestTextBox.extend([MultiSelectable, ActiveMultiSelectable, Selectable, ActiveSelectable, SyncSelectionMixin, DSMixin, ITextValue],/** @lends SBIS3.CONTROLS.FieldLink.prototype */{
           /**
-           * @event onItemActivate При активации записи (клик с целью например редактирования)
+           * @event onItemActivate Происходит при клике по выбранному значению
            * @param {$ws.proto.EventObject} eventObject Дескриптор события.
-           * @param {Object} meta Объект
-           * @param {String} meta.id ключ элемента
-           * @param {SBIS3.CONTROLS.Record} meta.item запись
+           * @param {Object} meta Объект, описывающий метаданные события. В его свойствах передаются идентификатор и экземпляр выбранного значения.
+           * @param {String} meta.id Идентификатор выбранного значения.
+           * @param {SBIS3.CONTROLS.Record} meta.item Экземпляр класса выбранного значения.
            */
           $protected: {
              _inputWrapper: undefined,     /* Обертка инпута */
@@ -90,8 +92,27 @@ define('js!SBIS3.CONTROLS.FieldLink',
                 afterFieldWrapper: afterFieldWrapper,
                 beforeFieldWrapper: beforeFieldWrapper,
                 /**********************************************************************************************/
-
-                list: {
+                 /**
+                  * @typedef{Object} listObj Группа опций, описывающая настройку автодополнения для поля связи. Подробнее о функционале автодополнения вы можете прочитать в описании к миксину {@link SBIS3.CONTROLS.SuggestMixin}.
+                  * @property {String} component Компонент, который будет использован для построения результатов автодополнения. Здесь можно указать любой компонент, в который добавлен функционал миксина {@link SBIS3.CONTROLS.DSMixin}. По умолчанию указан SBIS3.CONTROLS.DataGridView.
+                  * @property {String} options Набор опций, которые будут переданы в компонент (см. опцию component).
+                  * @property {Object} keyField Поле с первичным ключом. Если значение не указано, то в качестве этого поля будет использоно первое найденное поле с символом '@' из источника данных компонента.
+                  * @editor component ExternalComponentChooser
+                  *
+                  */
+                 /**
+                  * @cfg {listObj} Устанавливает конфигурацию автодополнения
+                  * @remark
+                  * Конфигурацию автодополнения производят с помощью опций component, options и keyField, подробнее о которых вы можете прочитать в типе данных {@link https://wi.sbis.ru/docs/3-8-0/SBIS3/CONTROLS/FieldLink/typedefs/listObj/ listObj}.
+                  * @example
+                  * <pre>
+                  *     <options name="list">
+                  *         <option name="component" value="js!SBIS3.CONTROLS.DataGridView"></option>
+                  *         <options name="options">
+                  *             <option name="emptyHTML">Данных нет</option>
+                  *             <option name="showHead" type="boolean" value="true"></option>
+                  */
+                 list: {
                    component: 'js!SBIS3.CONTROLS.DataGridView',
                    options: {
                       showHead: false,
