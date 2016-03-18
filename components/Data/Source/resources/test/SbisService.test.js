@@ -319,15 +319,8 @@ define([
                         try {
                            assert.isTrue(model instanceof Model);
                            assert.isTrue(model.isStored());
-                           if (!model.getId()) {
-                              throw new Error('The model has empty id');
-                           }
-                           if (model.getId() !== SbisBusinessLogic.existsId) {
-                              throw new Error('The model has wrong id');
-                           }
-                           if (model.get('Фамилия') !== 'Иванов') {
-                              throw new Error('The model contains wrong data');
-                           }
+                           assert.strictEqual(model.getId(), SbisBusinessLogic.existsId);
+                           assert.strictEqual(model.get('Фамилия'), 'Иванов');
                            done();
                         } catch (err) {
                            done(err);
@@ -349,14 +342,8 @@ define([
                      ).addCallbacks(function () {
                         try {
                            var args = SbisBusinessLogic.lastRequest.args;
-
-                           if (args['ИмяМетода'] !== 'Формат') {
-                              throw new Error('Wrong argument ИмяМетода');
-                           }
-                           if (args['ИдО'] !== SbisBusinessLogic.existsId) {
-                              throw new Error('Wrong argument ИдО');
-                           }
-
+                           assert.strictEqual(args['ИмяМетода'], 'Формат');
+                           assert.strictEqual(args['ИдО'], SbisBusinessLogic.existsId);
                            done();
                         } catch (err) {
                            done(err);
@@ -367,14 +354,13 @@ define([
                   });
 
                   it('should generate a request with valid meta data from record', function (done) {
-                     var rec = getSampleModel();
                      service.read(
                         SbisBusinessLogic.existsId,
-                        rec
+                        getSampleModel()
                      ).addCallbacks(function () {
                            try {
                               var args = SbisBusinessLogic.lastRequest.args;
-                              testArgIsModel(args['ДопПоля'], rec);
+                              testArgIsModel(args['ДопПоля'], getSampleModel());
                               done();
                            } catch (err) {
                               done(err);
@@ -439,15 +425,9 @@ define([
                         model.set('Фамилия', 'Петров');
                         service.update(model).addCallbacks(function (success) {
                            try {
-                              if (!success) {
-                                 throw new Error('Unsuccessful update');
-                              }
-                              if (model.isChanged()) {
-                                 throw new Error('The model should become unchanged');
-                              }
-                              if (model.get('Фамилия') !== 'Петров') {
-                                 throw new Error('The model contains wrong data');
-                              }
+                              assert.isTrue(success);
+                              assert.isFalse(model.isChanged());
+                              assert.strictEqual(model.get('Фамилия'), 'Петров');
                               done();
                            } catch (err) {
                               done(err);
@@ -463,18 +443,10 @@ define([
 
                var testModel = function (success, model, done) {
                   try {
-                     if (!success) {
-                        throw new Error('Unsuccessful update');
-                     }
-                     if (!model.isStored()) {
-                        throw new Error('The model should become stored');
-                     }
-                     if (model.isChanged()) {
-                        throw new Error('The model should become unchanged');
-                     }
-                     if (!model.getId()) {
-                        throw new Error('The model should become having a id');
-                     }
+                     assert.isTrue(success);
+                     assert.isTrue(model.isStored());
+                     assert.isFalse(model.isChanged());
+                     assert.isTrue(model.getId() > 0);
                      done();
                   } catch (err) {
                      done(err);
@@ -527,19 +499,10 @@ define([
                      ).addCallbacks(function () {
                         try {
                            var args = SbisBusinessLogic.lastRequest.args;
-
                            testArgIsModel(args['Запись'], model);
-
-                           if (args['ДопПоля'].d[0] !== '2') {
-                              throw new Error('Wrong argument value ДопПоля.ПолеОдин');
-                           }
-                           if (args['ДопПоля'].s[0].n !== 'ПолеОдин') {
-                              throw new Error('Wrong argument name Навигация.ПолеОдин');
-                           }
-                           if (args['ДопПоля'].s[0].t !== 'Строка') {
-                              throw new Error('Wrong argument type Навигация.ПолеОдин');
-                           }
-
+                           assert.strictEqual(args['ДопПоля'].d[0], '2');
+                           assert.strictEqual(args['ДопПоля'].s[0].n, 'ПолеОдин');
+                           assert.strictEqual(args['ДопПоля'].s[0].t, 'Строка');
                            done();
                         } catch (err) {
                            done(err);
@@ -562,7 +525,6 @@ define([
                      try {
                         var args = SbisBusinessLogic.lastRequest.args;
                         testArgIsModel(args['ДопПоля'], modelB);
-
                         done();
                      } catch (err) {
                         done(err);
@@ -632,20 +594,10 @@ define([
                   ).addCallbacks(function () {
                      try {
                         var args = SbisBusinessLogic.lastRequest.args;
-
-                        if ($ws.helpers.type(args['ИдО']) != 'array' || args['ИдО'] != SbisBusinessLogic.existsId) {
-                           throw new Error('Wrong argument ИдО');
-                        }
-
-                        if (args['ДопПоля'].d[0] !== true) {
-                           throw new Error('Wrong argument value ДопПоля.ПолеОдин');
-                        }
-                        if (args['ДопПоля'].s[0].n !== 'ПолеОдин') {
-                           throw new Error('Wrong argument name Навигация.ПолеОдин');
-                        }
-                        if (args['ДопПоля'].s[0].t !== 'Логическое') {
-                           throw new Error('Wrong argument type Навигация.ПолеОдин');
-                        }
+                        assert.isTrue($ws.helpers.type(args['ИдО']) != 'array' || args['ИдО'] != SbisBusinessLogic.existsId);
+                        assert.isTrue(args['ДопПоля'].d[0]);
+                        assert.strictEqual(args['ДопПоля'].s[0].n, 'ПолеОдин');
+                        assert.strictEqual(args['ДопПоля'].s[0].t, 'Логическое');
                         done();
                      } catch (err) {
                         done(err);
@@ -664,7 +616,6 @@ define([
                      try {
                         var args = SbisBusinessLogic.lastRequest.args;
                         testArgIsModel(args['ДопПоля'], model);
-
                         done();
                      } catch (err) {
                         done(err);
@@ -678,22 +629,11 @@ define([
                   service.destroy([0, SbisBusinessLogic.existsId, 1]).addCallbacks(function (success) {
                      try {
                         var args = SbisBusinessLogic.lastRequest.args;
-
-                        if (args['ИдО'][0] !== 0 && args['ИдО'][0] !== '0') {
-                           throw new Error('Wrong argument ИдО[0]');
-                        }
-                        if (args['ИдО'][1] != SbisBusinessLogic.existsId) {
-                           throw new Error('Wrong argument ИдО[1]');
-                        }
-                        if (args['ИдО'][2] != 1) {
-                           throw new Error('Wrong argument ИдО[2]');
-                        }
-
-                        if (!success) {
-                           throw new Error('Unsuccessful destroy');
-                        } else {
-                           done();
-                        }
+                        assert.isTrue(args['ИдО'][0] !== 0 && args['ИдО'][0] !== '0');
+                        assert.strictEqual(args['ИдО'][1], SbisBusinessLogic.existsId);
+                        assert.strictEqual(args['ИдО'][2], 1);
+                        assert.isTrue(success);
+                        done();
                      } catch (err) {
                         done(err);
                      }
@@ -706,20 +646,11 @@ define([
                   service.destroy([SbisBusinessLogic.existsId + ',Товар', '987,Продукт']).addCallbacks(function (success) {
                      try {
                         var cfg = SbisBusinessLogic.lastRequest.cfg;
-                        if (cfg.endpoint.contract != 'Продукт') {
-                           throw new Error('Wrong service name');
-                        }
-
+                        assert.strictEqual(cfg.endpoint.contract, 'Продукт');
                         var args = SbisBusinessLogic.lastRequest.args;
-                        if (args['ИдО'] != 987) {
-                           throw new Error('Wrong argument ИдО');
-                        }
-
-                        if (!success) {
-                           throw new Error('Unsuccessful destroy');
-                        } else {
-                           done();
-                        }
+                        assert.equal(args['ИдО'], 987);
+                        assert.isTrue(success);
+                        done();
                      } catch (err) {
                         done(err);
                      }
@@ -732,15 +663,9 @@ define([
                   service.destroy(['uuid']).addCallbacks(function (success) {
                      try {
                         var args = SbisBusinessLogic.lastRequest.args;
-                        if (args['ИдО'] != 'uuid') {
-                           throw new Error('Wrong argument ИдО');
-                        }
-
-                        if (!success) {
-                           throw new Error('Unsuccessful destroy');
-                        } else {
-                           done();
-                        }
+                        assert.strictEqual(args['ИдО'], 'uuid');
+                        assert.isTrue(success);
+                        done();
                      } catch (err) {
                         done(err);
                      }
@@ -772,12 +697,8 @@ define([
                it('should return a valid dataset', function (done) {
                   service.query(new Query()).addCallbacks(function (ds) {
                      try {
-                        if (!(ds instanceof DataSet)) {
-                           throw new Error('That\'s no dataset');
-                        }
-                        if (ds.getAll().getCount() !== 2) {
-                           throw new Error('Wrong models count');
-                        }
+                        assert.isTrue(ds instanceof DataSet);
+                        assert.strictEqual(ds.getAll().getCount(), 2);
                         done();
                      } catch (err) {
                         done(err);
@@ -790,9 +711,7 @@ define([
                it('should take idProperty for dataset  from raw data', function (done) {
                   service.query(new Query()).addCallbacks(function (ds) {
                      try {
-                        if (ds.getIdProperty() !== '@Ид') {
-                           throw new Error('Wrong idProperty');
-                        }
+                        assert.strictEqual(ds.getIdProperty(), '@Ид');
                         done();
                      } catch (err) {
                         done(err);
@@ -805,12 +724,8 @@ define([
                it('should work with no query', function (done) {
                   service.query().addCallbacks(function (ds) {
                      try {
-                        if (!(ds instanceof DataSet)) {
-                           throw new Error('That\'s no dataset');
-                        }
-                        if (ds.getAll().getCount() !== 2) {
-                           throw new Error('Wrong models count');
-                        }
+                        assert.isTrue(ds instanceof DataSet);
+                        assert.strictEqual(ds.getAll().getCount(), 2);
                         done();
                      } catch (err) {
                         done(err);
@@ -825,9 +740,7 @@ define([
                   service.setListModule(MyList);
                   service.query().addCallbacks(function (ds) {
                      try {
-                        if (!(ds.getAll() instanceof MyList)) {
-                           throw new Error('Wrong list instance');
-                        }
+                        assert.isTrue(ds.getAll() instanceof MyList);
                         done();
                      } catch (err) {
                         done(err);
@@ -842,9 +755,7 @@ define([
                   service.setModel(MyModel);
                   service.query().addCallbacks(function (ds) {
                      try {
-                        if (!(ds.getAll().at(0) instanceof MyModel)) {
-                           throw new Error('Wrong model instance');
-                        }
+                        assert.isTrue(ds.getAll().at(0) instanceof MyModel);
                         done();
                      } catch (err) {
                         done(err);
