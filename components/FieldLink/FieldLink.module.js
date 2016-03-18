@@ -192,6 +192,18 @@ define('js!SBIS3.CONTROLS.FieldLink',
            * @see setDictionaries
            */
           showSelector: function(template, componentOptions) {
+             var oldRecArray = [],
+                 oldRec;
+
+             if(this._options.oldViews) {
+                this.getSelectedItems().each(function(rec) {
+                   oldRec = DialogOpener.convertRecord(rec);
+                   if(oldRec) {
+                      oldRecArray.push(oldRec);
+                   }
+                });
+             }
+
              this._showChooser(
                  template,
                  componentOptions,
@@ -200,13 +212,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
                     currentValue: this.getSelectedKeys(),
                     selectorFieldLink: true,
                     multiSelect: this._options.multiselect,
-                    selectedRecords: $ws.helpers.reduce(this.getSelectedItems().toArray(),
-                        function(result, rec) {
-                           if(this._options.oldViews) {
-                              result.push(DialogOpener.convertRecord(rec));
-                           }
-                           return result;
-                        }, [], this)
+                    selectedRecords: oldRecArray
                  });
           },
 
