@@ -364,7 +364,7 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
                'Фильтр': this._buildRecord(query ? query.getWhere() : null),
                'Сортировка': this._buildRecordSet(this._getSortingParams(query)),
                'Навигация': this._buildRecord(this._getPagingParams(query)),
-               'ДопПоля': this._getMetaParams(query)
+               'ДопПоля': this._getAdditionalParams(query)
             };
 
          return this.getProvider().call(
@@ -550,16 +550,19 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
       },
 
       /**
-       * Возвращает мета данные
+       * Возвращает дополнительные параметры
        * @param {SBIS3.CONTROLS.Data.Query.Query} query Запрос
        * @returns {Array}
        * @protected
        */
-      _getMetaParams: function (query) {
+      _getAdditionalParams: function (query) {
          var meta = [];
          if (query) {
             meta = query.getMeta();
-            if (!(meta instanceof Array)) {
+            if (meta && $ws.helpers.instanceOfModule(meta, 'SBIS3.CONTROLS.Data.Record')) {
+               meta = meta.toObject();
+            }
+            if (meta instanceof Object) {
                var arr = [];
                for (var key in meta) {
                   if (meta.hasOwnProperty(key)) {
@@ -568,7 +571,11 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
                }
                meta = arr;
             }
+            if (!(meta instanceof Array)) {
+               throw new TypeError(this._moduleName + '::_getAdditionalParams(): unsupported params type: only Array, SBIS3.CONTROLS.Data.Record or Object allowed');
+            }
          }
+
          return meta;
       },
 
@@ -655,7 +662,7 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
             'Фильтр': !query || Object.isEmpty(query.getWhere()) ? null : this.getAdapter().serialize(query.getWhere()),
             'Сортировка': this.getAdapter().serialize(this._getSortingParams(query)),
             'Навигация': preparePagingParam(offset, limit, hasMore),
-            'ДопПоля': this.getAdapter().serialize(this._getMetaParams(query))
+            'ДопПоля': this.getAdapter().serialize(this._getAdditionalParams(query))
          };
       }
       //endregion SBIS3.CONTROLS.SbisServiceSource

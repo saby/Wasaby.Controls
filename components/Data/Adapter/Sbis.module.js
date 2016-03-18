@@ -56,10 +56,10 @@ define('js!SBIS3.CONTROLS.Data.Adapter.Sbis', [
             });
          },
          serializeObject = function (obj) {
-            if ($ws.helpers.instanceOfModule(obj, 'SBIS3.CONTROLS.Data.Record' ||
+            if ($ws.helpers.instanceOfModule(obj, 'SBIS3.CONTROLS.Data.Record') ||
                $ws.helpers.instanceOfModule(obj, 'SBIS3.CONTROLS.Data.Collection.RecordSet') ||
                $ws.helpers.instanceOfModule(obj, 'SBIS3.CONTROLS.Data.Source.DataSet')
-            )) {
+            ) {
                return obj.getRawData();
             } else if (obj instanceof Date) {
                return obj.toSQL();

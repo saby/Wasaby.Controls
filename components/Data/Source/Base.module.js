@@ -138,7 +138,7 @@ define('js!SBIS3.CONTROLS.Data.Source.Base', [
        * @protected
        */
       _getListInstance: function (data) {
-         return Di.resolve(this._options.list, {
+         return Di.resolve(this._options.listModule, {
             rawData: data,
             adapter: this.getAdapter()
          });

@@ -5,15 +5,17 @@ define([
    'js!SBIS3.CONTROLS.Data.Source.Provider.IRpc',
    'js!SBIS3.CONTROLS.Data.Source.DataSet',
    'js!SBIS3.CONTROLS.Data.Model',
+      'js!SBIS3.CONTROLS.Data.Collection.RecordSet',
    'js!SBIS3.CONTROLS.Data.Collection.List',
    'js!SBIS3.CONTROLS.Data.Adapter.Sbis',
    'js!SBIS3.CONTROLS.Data.Query.Query'
-], function (SbisService, Di, IRpc, DataSet, Model, List, SbisAdapter, Query) {
+], function (SbisService, Di, IRpc, DataSet, Model, RecordSet, List, SbisAdapter, Query) {
       'use strict';
 
       //Mock of SBIS3.CONTROLS.Data.Source.Provider.SbisBusinessLogic
       var SbisBusinessLogic = (function() {
-         var existsId = 7,
+         var lastId = 0,
+            existsId = 7,
             existsTooId = 987,
             notExistsId = 99,
             textId = 'uuid';
@@ -47,7 +49,7 @@ define([
                                  '',
                                  '',
                                  '',
-                                 0,
+                                 ++lastId,
                                  '',
                                  false
                               ],
@@ -83,11 +85,16 @@ define([
 
                         case 'Удалить':
                            if (args['ИдО'] === existsId ||
-                              args['ИдО'] == textId ||
-                              ($ws.helpers.type(args['ИдО']) === 'array' && Array.indexOf(args['ИдО'], String(existsId)) !== -1)
+                              Array.indexOf(args['ИдО'], String(existsId)) !== -1
                            ) {
                               data = existsId;
-                           } else if (args['ИдО'] === existsTooId || ($ws.helpers.type(args['ИдО']) === 'array' && Array.indexOf(args['ИдО'],String(existsTooId)) !== -1)) {
+                           } else if (args['ИдО'] === textId ||
+                              Array.indexOf(args['ИдО'], String(textId)) !== -1
+                           ) {
+                              data = textId;
+                           } else if (args['ИдО'] === existsTooId ||
+                              Array.indexOf(args['ИдО'], String(existsTooId)) !== -1
+                           ) {
                               data = existsTooId;
                            } else {
                               error = 'Model is not found';
@@ -214,7 +221,7 @@ define([
                   service.create().addCallbacks(function (model) {
                      try {
                         assert.isTrue(model instanceof Model);
-                        assert.isTrue(model.isStored());
+                        assert.isFalse(model.isStored());
                         assert.isTrue(model.getId() > 0);
                         assert.strictEqual(model.get('Фамилия'), '');
                         done();
@@ -231,7 +238,7 @@ define([
                      try {
                         var args = SbisBusinessLogic.lastRequest.args;
 
-                        assert.isFalse(args['ИмяМетода'] === null);
+                        assert.isNull(args['ИмяМетода']);
                         assert.strictEqual(args['Фильтр'].d[0], true, 'Wrong value for argument Фильтр.ВызовИзБраузера');
                         assert.strictEqual(args['Фильтр'].s[0].n, 'ВызовИзБраузера', 'Wrong name for argument Фильтр.ВызовИзБраузера');
                         assert.strictEqual(args['Фильтр'].s[0].t, 'Логическое', 'Wrong type for argument Фильтр.ВызовИзБраузера');
@@ -425,7 +432,7 @@ define([
                         model.set('Фамилия', 'Петров');
                         service.update(model).addCallbacks(function (success) {
                            try {
-                              assert.isTrue(success);
+                              assert.isTrue(success > 0);
                               assert.isFalse(model.isChanged());
                               assert.strictEqual(model.get('Фамилия'), 'Петров');
                               done();
@@ -441,19 +448,19 @@ define([
                   });
                });
 
-               var testModel = function (success, model, done) {
-                  try {
-                     assert.isTrue(success);
-                     assert.isTrue(model.isStored());
-                     assert.isFalse(model.isChanged());
-                     assert.isTrue(model.getId() > 0);
-                     done();
-                  } catch (err) {
-                     done(err);
-                  }
-               };
-
                context('and the model was not stored', function () {
+                  var testModel = function (success, model, done) {
+                     try {
+                        assert.isTrue(success > 0);
+                        assert.isTrue(model.isStored());
+                        assert.isFalse(model.isChanged());
+                        assert.isTrue(model.getId() > 0);
+                        done();
+                     } catch (err) {
+                        done(err);
+                     }
+                  };
+
                   it('should create the model by 1st way', function (done) {
                      var service = new SbisService({
                         endpoint: 'Товар',
@@ -493,16 +500,10 @@ define([
                      }
                   });
                   service.read(SbisBusinessLogic.existsId).addCallbacks(function (model) {
-                     service.update(
-                        model,
-                        {'ПолеОдин': '2'}
-                     ).addCallbacks(function () {
+                     service.update(model).addCallbacks(function () {
                         try {
                            var args = SbisBusinessLogic.lastRequest.args;
                            testArgIsModel(args['Запись'], model);
-                           assert.strictEqual(args['ДопПоля'].d[0], '2');
-                           assert.strictEqual(args['ДопПоля'].s[0].n, 'ПолеОдин');
-                           assert.strictEqual(args['ДопПоля'].s[0].t, 'Строка');
                            done();
                         } catch (err) {
                            done(err);
@@ -515,16 +516,18 @@ define([
                   });
                });
 
-               it('should accept a model in meta argument', function (done) {
-                  var modelA = getSampleModel(),
-                     modelB = getSampleModel();
+               it('should generate a request with valid meta data from record', function (done) {
+                  var meta = new Model({
+                     adapter: 'adapter.sbis'
+                  });
+                  meta.addField({name: 'Тест', type: 'integer'}, undefined, 7);
                   service.update(
-                     modelA,
-                     modelB
+                     getSampleModel(),
+                     meta
                   ).addCallbacks(function () {
                      try {
                         var args = SbisBusinessLogic.lastRequest.args;
-                        testArgIsModel(args['ДопПоля'], modelB);
+                        testArgIsModel(args['ДопПоля'], meta);
                         done();
                      } catch (err) {
                         done(err);
@@ -532,6 +535,23 @@ define([
                   }, function (err) {
                      done(err);
                   });
+               });
+
+               it('should generate a request with valid meta data from object', function (done) {
+                  service.update(
+                     getSampleModel(),
+                     getSampleMeta()
+                  ).addCallbacks(function () {
+                        try {
+                           var args = SbisBusinessLogic.lastRequest.args;
+                           assert.deepEqual(args['ДопПоля'], getSampleMeta());
+                           done();
+                        } catch (err) {
+                           done(err);
+                        }
+                     }, function (err) {
+                        done(err);
+                     });
                });
             });
 
@@ -561,11 +581,8 @@ define([
                   it('should return success', function (done) {
                      service.destroy(SbisBusinessLogic.existsId).addCallbacks(function (success) {
                         try {
-                           if (!success) {
-                              throw new Error('Unsuccessful destroy');
-                           } else {
-                              done();
-                           }
+                           assert.strictEqual(success[0], SbisBusinessLogic.existsId);
+                           done();
                         } catch (err) {
                            done(err);
                         }
@@ -587,52 +604,14 @@ define([
                   });
                });
 
-               it('should generate a valid request', function (done) {
-                  service.destroy(
-                     SbisBusinessLogic.existsId,
-                     {'ПолеОдин': true}
-                  ).addCallbacks(function () {
-                     try {
-                        var args = SbisBusinessLogic.lastRequest.args;
-                        assert.isTrue($ws.helpers.type(args['ИдО']) != 'array' || args['ИдО'] != SbisBusinessLogic.existsId);
-                        assert.isTrue(args['ДопПоля'].d[0]);
-                        assert.strictEqual(args['ДопПоля'].s[0].n, 'ПолеОдин');
-                        assert.strictEqual(args['ДопПоля'].s[0].t, 'Логическое');
-                        done();
-                     } catch (err) {
-                        done(err);
-                     }
-                  }, function (err) {
-                     done(err);
-                  });
-               });
-
-               it('should accept a model in meta argument', function (done) {
-                  var model = getSampleModel();
-                  service.destroy(
-                     SbisBusinessLogic.existsId,
-                     model
-                  ).addCallbacks(function () {
-                     try {
-                        var args = SbisBusinessLogic.lastRequest.args;
-                        testArgIsModel(args['ДопПоля'], model);
-                        done();
-                     } catch (err) {
-                        done(err);
-                     }
-                  }, function (err) {
-                     done(err);
-                  });
-               });
-
                it('should delete a few records', function (done) {
                   service.destroy([0, SbisBusinessLogic.existsId, 1]).addCallbacks(function (success) {
                      try {
                         var args = SbisBusinessLogic.lastRequest.args;
-                        assert.isTrue(args['ИдО'][0] !== 0 && args['ИдО'][0] !== '0');
-                        assert.strictEqual(args['ИдО'][1], SbisBusinessLogic.existsId);
-                        assert.strictEqual(args['ИдО'][2], 1);
-                        assert.isTrue(success);
+                        assert.equal(args['ИдО'][0], 0);
+                        assert.equal(args['ИдО'][1], SbisBusinessLogic.existsId);
+                        assert.equal(args['ИдО'][2], 1);
+                        assert.equal(success[0], SbisBusinessLogic.existsId);
                         done();
                      } catch (err) {
                         done(err);
@@ -643,13 +622,15 @@ define([
                });
 
                it('should delete records by a composite key', function (done) {
-                  service.destroy([SbisBusinessLogic.existsId + ',Товар', '987,Продукт']).addCallbacks(function (success) {
+                  var anId = 987;
+                  service.destroy([SbisBusinessLogic.existsId + ',Товар', anId + ',Продукт']).addCallbacks(function (success) {
                      try {
                         var cfg = SbisBusinessLogic.lastRequest.cfg;
                         assert.strictEqual(cfg.endpoint.contract, 'Продукт');
                         var args = SbisBusinessLogic.lastRequest.args;
-                        assert.equal(args['ИдО'], 987);
-                        assert.isTrue(success);
+                        assert.equal(args['ИдО'], anId);
+                        assert.equal(success[0], SbisBusinessLogic.existsId);
+                        assert.equal(success[1], anId);
                         done();
                      } catch (err) {
                         done(err);
@@ -660,11 +641,12 @@ define([
                });
 
                it('should delete records by text key', function (done) {
-                  service.destroy(['uuid']).addCallbacks(function (success) {
+                  var anId = 'uuid';
+                  service.destroy([anId]).addCallbacks(function (success) {
                      try {
                         var args = SbisBusinessLogic.lastRequest.args;
-                        assert.strictEqual(args['ИдО'], 'uuid');
-                        assert.isTrue(success);
+                        assert.strictEqual(args['ИдО'][0], anId);
+                        assert.strictEqual(success[0], anId);
                         done();
                      } catch (err) {
                         done(err);
@@ -674,6 +656,55 @@ define([
                   });
                });
 
+               it('should generate a valid request', function (done) {
+                  service.destroy(
+                     SbisBusinessLogic.existsId
+                  ).addCallbacks(function () {
+                     try {
+                        var args = SbisBusinessLogic.lastRequest.args;
+                        assert.equal(args['ИдО'][0], SbisBusinessLogic.existsId);
+                        done();
+                     } catch (err) {
+                        done(err);
+                     }
+                  }, function (err) {
+                     done(err);
+                  });
+               });
+
+               it('should generate a request with valid meta data from record', function (done) {
+                  service.destroy(
+                     SbisBusinessLogic.existsId,
+                     getSampleModel()
+                  ).addCallbacks(function () {
+                     try {
+                        var args = SbisBusinessLogic.lastRequest.args;
+                        testArgIsModel(args['ДопПоля'], getSampleModel());
+                        done();
+                     } catch (err) {
+                        done(err);
+                     }
+                  }, function (err) {
+                     done(err);
+                  });
+               });
+
+               it('should generate a request with valid meta data from object', function (done) {
+                  service.destroy(
+                     SbisBusinessLogic.existsId,
+                     getSampleMeta()
+                  ).addCallbacks(function () {
+                        try {
+                           var args = SbisBusinessLogic.lastRequest.args;
+                           assert.deepEqual(args['ДопПоля'], getSampleMeta());
+                           done();
+                        } catch (err) {
+                           done(err);
+                        }
+                     }, function (err) {
+                        done(err);
+                     });
+               });
             });
 
             context('when the service isn\'t exists', function () {
@@ -780,10 +811,7 @@ define([
                         enabled: false
                      })
                      .offset(100)
-                     .limit(33)
-                     .meta({
-                        'ПолеОдин': 4
-                     });
+                     .limit(33);
 
                   service.query(query).addCallbacks(function () {
                         try {
@@ -822,9 +850,7 @@ define([
                            assert.isTrue(args['Навигация'].d[2]);
                            assert.strictEqual(args['Навигация'].s[2].n, 'ЕстьЕще');
 
-                           assert.strictEqual(args['ДопПоля'].d[0], 4);
-                           assert.strictEqual(args['ДопПоля'].s[0].n, 'ПолеОдин');
-                           assert.strictEqual(args['ДопПоля'].s[0].t, 'Число целое');
+                           assert.strictEqual(args['ДопПоля'].length, 0);
 
                            done();
                         } catch (err) {
@@ -833,6 +859,29 @@ define([
                      }, function (err) {
                         done(err);
                      });
+               });
+
+               it('should generate a request with valid meta data from record', function (done) {
+                  var query = new Query(),
+                     meta = getSampleModel();
+                  query.meta(meta);
+
+                  service.query(query).addCallbacks(function () {
+                     try {
+                        var args = SbisBusinessLogic.lastRequest.args,
+                           i = 0;
+                        meta.each(function(name, value) {
+                           assert.strictEqual(args['ДопПоля'][i], value);
+                           i++;
+                        });
+                        assert.strictEqual(args['ДопПоля'].length, i);
+                        done();
+                     } catch (err) {
+                        done(err);
+                     }
+                  }, function (err) {
+                     done(err);
+                  });
                });
             });
 
@@ -854,6 +903,46 @@ define([
 
          describe('.call()', function () {
             context('when the method is exists', function () {
+               it('should accept an object', function (done) {
+                  var rs = new RecordSet({
+                        rawData: [
+                           {f1: 1, f2: 2},
+                           {f1: 3, f2: 4}
+                        ]
+                     }),
+                     sent = {
+                        bool: false,
+                        intgr: 1,
+                        real: 1.01,
+                        string: 'test',
+                        obj: {a: 1, b: 2, c: 3},
+                        rec: getSampleModel(),
+                        rs: rs
+                     };
+
+                  service.call('Произвольный', sent).addCallbacks(function () {
+                     try {
+                        assert.strictEqual(SbisBusinessLogic.lastRequest.method, 'Произвольный');
+                        var args = SbisBusinessLogic.lastRequest.args;
+
+                        assert.deepEqual(args.rec, getSampleModel().getRawData());
+                        delete sent.rec;
+                        delete args.rec;
+
+                        assert.deepEqual(args.rs, rs.getRawData());
+                        delete sent.rs;
+                        delete args.rs;
+
+                        assert.deepEqual(args, sent);
+                        done();
+                     } catch (err) {
+                        done(err);
+                     }
+                  }, function (err) {
+                     done(err);
+                  });
+               });
+
                it('should accept a model', function (done) {
                   var model = getSampleModel();
 
@@ -870,10 +959,12 @@ define([
                      done(err);
                   });
                });
+
                it('should accept a dataset', function (done) {
                   var dataSet = new DataSet({
-                     adapter: new SbisAdapter(),
+                     adapter: 'adapter.sbis',
                      rawData: {
+                        _type: 'recordset',
                         d: [
                            [1, true],
                            [2, false],
