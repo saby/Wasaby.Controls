@@ -71,10 +71,10 @@ define('js!SBIS3.CONTROLS.MultiSelectable', ['js!SBIS3.CONTROLS.Data.Collection.
             /**
              * @cfg {String[]} Определяет массив идентификаторов выбранных элементов.
              * @remark
-             * Используется для построения контрола с определенным массивом элементов коллекции.
+             * Устанавливает массив идентификаторов выбранных элементов коллекции, которые будут по умолчанию выбраны
+             * для контрола, который находится в режиме множественного выбора значений {@link multiselect}.
              * Для задания выбранных элементов необходимо указать значения
              * {@link SBIS3.CONTROLS.DSMixin#keyField ключевого поля} элементов коллекции.
-             * Работает в режиме множественного выбора {@link multiselect}.
              * Использование методов для работы с элементами коллекции в режиме множественного выбора позволяет:
              * <ul>
              *     <li>{@link setSelectedKeys} - установить новый массив идентификаторов;</li>
@@ -88,11 +88,15 @@ define('js!SBIS3.CONTROLS.MultiSelectable', ['js!SBIS3.CONTROLS.Data.Collection.
              *     <li>{@link getSelectedItems} - получить набор выбранных элементов.</li>
              * </ul>
              * @example
+             * В контрол, отображающий набор данных в виде таблицы {@link SBIS3.CONTROLS.DataGridView},
+             * переданы три идентификатора элементов коллекции:
+             * ![](/MultiSelectable03.png)
+             * фрагмент верстки:
              * <pre class="brush: xml">
              *     <options name="selectedKeys" type="array">
-             *         <option>5</option>
-             *         <option>8</option>
-             *         <option>12</option>
+             *         <option>2</option>
+             *         <option>3</option>
+             *         <option>6</option>
              *     </options>
              * </pre>
              * @see multiselect
@@ -108,7 +112,14 @@ define('js!SBIS3.CONTROLS.MultiSelectable', ['js!SBIS3.CONTROLS.Data.Collection.
              */
             selectedKeys : [],
              /**
-              * @cfg {Boolean} Разрешает отсутствие выбранных элементов в группе.
+              * @cfg {Boolean} Устанавливает конфигурацию для режима множественного выбора, при которой допускается
+              * или не допускается отсутствие выбранных элементов коллекции.
+              * @variant true Отсутствие выбранных элементов коллекции разрешено.
+              * @variant false Отсутствие выбранных элементов коллекции запрещено.
+              * @remark
+              * Настройка режима множественного выбора, при которой запрещено отсутствие выбранных элементов коллекции
+              * гарантирует, что среди элементов коллекции всегда остаётся хотя бы один выбранный элемент.
+              * Также пользователь не сможет сбросить последнее выбранное значение через пользовательский интерфейс приложения.
               * @example
               * <pre class="brush: xml">
               *     <option name="allowEmptyMultiSelection">false</option>
@@ -122,7 +133,8 @@ define('js!SBIS3.CONTROLS.MultiSelectable', ['js!SBIS3.CONTROLS.Data.Collection.
               */
             allowEmptyMultiSelection : true,
             /**
-             * @cfg {SBIS3.CONTROLS.Data.Collection.List} Определяет набор выбранных записей с доступом по индексу.
+             * @cfg {SBIS3.CONTROLS.Data.Collection.List} Устанавливает набор элементов коллекции, которые будут по умолчанию
+             * выбраны  для контрола в режиме множественного выбора значений {@link multiselect}.
              * @remark
              * Определяет экземпляр класса {@link SBIS3.CONTROLS.Data.Collection.List} с данными выбранных записей.
              * Работает в режиме множественного выбора {@link multiselect}.
@@ -383,7 +395,8 @@ define('js!SBIS3.CONTROLS.MultiSelectable', ['js!SBIS3.CONTROLS.Data.Collection.
       },
 
       /**
-       * Убирает все элементы из набора выбранных.
+       * Убирает все элементы коллекции из набора выбранных для контрола, который находится в режиме
+       * множественного выбора.
        * @example
        * <pre>
        *     if (checkBoxGroup.getSelectedKeys().indexOf(3))  {
@@ -405,7 +418,7 @@ define('js!SBIS3.CONTROLS.MultiSelectable', ['js!SBIS3.CONTROLS.Data.Collection.
       },
 
       /**
-       * Меняет состояние выбранности указанных элементов на противоположное.
+       * Меняет состояние выбранности указанных элементов коллекции на противоположное.
        * @param {Array} idArray Массив идентификаторов элементов для инвертирования отметки.
        * @example
        * <pre>
@@ -463,7 +476,7 @@ define('js!SBIS3.CONTROLS.MultiSelectable', ['js!SBIS3.CONTROLS.Data.Collection.
       },
 
       /**
-       * Меняет состояние выбранности всех элементов на противоположное.
+       * Меняет состояние выбранности всех элементов коллекции на противоположное.
        * @example
        * <pre>
        *     if (checkBoxGroup.getSelectedKeys().count == 0) {
@@ -489,10 +502,11 @@ define('js!SBIS3.CONTROLS.MultiSelectable', ['js!SBIS3.CONTROLS.Data.Collection.
          }
       },
       /**
-       * Возвращает набор выбранных элементов
-       * @param {Boolean} loadItems загружать ли записи, если их нет в текущем наборе выбранных и они отсутствуют в dataSet'e
-       * @param {Number} count Ограничение количества отдаваемых записей
-       * @returns {SBIS3.CONTROLS.Data.Collection.List} Возвращает коллекцию элементов
+       * Возвращает набор выбранных элементов коллекции.
+       * @param {Boolean} loadItems Необходимость загрузки элементов коллекции, если их нет в текущем наборе выбранных элементов
+       * и они отсутствуют в наборе данных, полученных из источника.
+       * @param {Number} count Ограничение количества отдаваемых элементов коллекции.
+       * @returns {SBIS3.CONTROLS.Data.Collection.List} Возвращает коллекцию элементов.
        * @example
        * <pre>
        *    if (!checkBoxGroup.getSelectedItems().at(0).get('Текст') === 'Не выбрано') {
