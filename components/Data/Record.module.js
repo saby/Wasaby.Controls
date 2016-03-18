@@ -320,7 +320,13 @@ define('js!SBIS3.CONTROLS.Data.Record', [
        * @protected
        */
       _getRecordAdapter: function() {
-         return this._recordAdapter || (this._recordAdapter = this.getAdapter().forRecord(this._options.rawData));
+         if (!this._recordAdapter) {
+            this._recordAdapter = this.getAdapter().forRecord(this._options.rawData);
+            if (this._recordAdapter.getData() !== this._options.rawData) {
+               this._options.rawData = this._recordAdapter.getData();
+            }
+         }
+         return this._recordAdapter;
       },
 
       /**
