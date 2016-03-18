@@ -13,7 +13,7 @@ define('js!SBIS3.CONTROLS.Selectable', ['js!SBIS3.CONTROLS.Data.Utils', 'js!SBIS
 
    var Selectable = /**@lends SBIS3.CONTROLS.Selectable.prototype  */{
        /**
-        * @event onSelectedItemChange При смене выбранных элементов
+        * @event onSelectedItemChange При смене выбранных элементов коллекции.
         * @param {$ws.proto.EventObject} eventObject Дескриптор события.
         * @param {String} id Идентификатор выбранного пункта.
         * @example
@@ -31,9 +31,11 @@ define('js!SBIS3.CONTROLS.Selectable', ['js!SBIS3.CONTROLS.Data.Utils', 'js!SBIS
          _selectMode: 'index',
           _options: {
              /**
-              * @cfg {String} Индекс(номер) выбранного элемента
+              * @cfg {String} Определяет индекс (порядковый номер) выбранного элемента коллекции.
               * @remark
-              * Для задания выбранного элемента необходимо указать номер элемента коллекции.
+              * Любой элемент коллекции можно выбрать либо по его идентификатору {@link SBIS3.CONTROLS.DSMixin#keyField},
+              * либо его по индексу (порядковому номеру) в коллекции.
+              * Для определения выбранного элемента необходимо указать его порядковый номер в коллекции.
               * @example
               * <pre>
               *     <option name="selectedIndex">1</option>
@@ -44,7 +46,7 @@ define('js!SBIS3.CONTROLS.Selectable', ['js!SBIS3.CONTROLS.Data.Utils', 'js!SBIS
               */
              selectedIndex: null,
              /**
-              * @cfg {String} Определяет идентификатор выбранного элемента
+              * @cfg {String} Определяет идентификатор выбранного элемента коллекции.
               * @remark
               * Используется для построения контрола с определенным элементом коллекции.
               * Для задания выбранного элемента необходимо указать значение
@@ -188,7 +190,7 @@ define('js!SBIS3.CONTROLS.Selectable', ['js!SBIS3.CONTROLS.Data.Utils', 'js!SBIS
          this._notifySelectedItem(id, index)
       },
       /**
-       * Установить выбранный элемент по идентификатору
+       * Устанавливает выбранный элемент коллекции по его идентификатору.
        * @remark
        * Для возвращения коллекции к состоянию без выбранного элемента нужно передать null.
        * @param {String} id Идентификатор элемента, который нужно установить в качестве выбранного.
@@ -217,6 +219,12 @@ define('js!SBIS3.CONTROLS.Selectable', ['js!SBIS3.CONTROLS.Data.Utils', 'js!SBIS
          }
       },
 
+      /**
+       * Устанавливает индекс (порядковый номер) выбранного элемента коллекции.
+       * @param index Индекс выбранного элемента коллекции.
+       * @see selectedIndex
+       * @see getSelectedIndex
+       */
       setSelectedIndex: function(index) {
          if (this._itemsProjection) {
             this._prepareSelectedConfig(index);
@@ -224,7 +232,7 @@ define('js!SBIS3.CONTROLS.Selectable', ['js!SBIS3.CONTROLS.Data.Utils', 'js!SBIS
          }
       },
       /**
-       * Возвращает идентификатор выбранного элемента.
+       * Возвращает идентификатор выбранного элемента коллекции.
        * @example
        * <pre>
        *     var key = myComboBox.getSelectedKey();
@@ -242,7 +250,7 @@ define('js!SBIS3.CONTROLS.Selectable', ['js!SBIS3.CONTROLS.Data.Utils', 'js!SBIS
       },
 
       /**
-       * Возвращает индекс выбранного элемента.
+       * Возвращает индекс (порядковый номер) выбранного элемента коллекции.
        * @see selectedIndex
        * @see setselectedIndex
        * @see onSelectedItemChange
