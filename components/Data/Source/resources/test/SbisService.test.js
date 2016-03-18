@@ -219,6 +219,82 @@ define([
             service = undefined;
          });
 
+         describe('.$constructor', function () {
+            context('when use deprecated options', function () {
+               it('should use string "service" option without "resource" option as "endpoint.contract"', function () {
+                  var contract = 'Users',
+                     service = new SbisService({
+                        service: contract
+                     });
+                  assert.strictEqual(service.getEndpoint().contract, contract);
+                  assert.isUndefined(service.getEndpoint().address);
+                  assert.strictEqual(service.getResource(), contract);
+                  assert.strictEqual(service.getService(), '');
+               });
+
+               it('should use object "service" option without "resource" option as "endpoint.contract" and "endpoint.address"', function () {
+                  var contract = 'Users',
+                     address = '/users/',
+                     service = new SbisService({
+                        service: {
+                           name: contract
+                        }
+                     });
+                  assert.strictEqual(service.getEndpoint().contract, contract);
+                  assert.isUndefined(service.getEndpoint().address);
+                  assert.strictEqual(service.getResource(), contract);
+                  assert.strictEqual(service.getService(), '');
+
+                  service = new SbisService({
+                     service: {
+                        name: contract,
+                        serviceUrl: address
+                     }
+                  });
+                  assert.strictEqual(service.getEndpoint().contract, contract);
+                  assert.strictEqual(service.getEndpoint().address, address);
+                  assert.strictEqual(service.getResource(), contract);
+                  assert.strictEqual(service.getService(), address);
+               });
+               it('should use "service" option with "resource" option as "endpoint.address"', function () {
+                  var contract = 'Users',
+                     address = '/users/',
+                     service = new SbisService({
+                        resource: contract,
+                        service: address
+                     });
+                  assert.strictEqual(service.getEndpoint().contract, contract);
+                  assert.strictEqual(service.getEndpoint().address, address);
+                  assert.strictEqual(service.getResource(), contract);
+                  assert.strictEqual(service.getService(), address);
+               });
+               it('should use string "resource" option as "endpoint.contract"', function () {
+                  var contract = 'Users',
+                     service = new SbisService({
+                        resource: contract
+                     });
+                  assert.strictEqual(service.getEndpoint().contract, contract);
+                  assert.isUndefined(service.getEndpoint().address);
+                  assert.strictEqual(service.getResource(), contract);
+                  assert.strictEqual(service.getService(), '');
+               });
+               it('should use object "resource" option as "endpoint.contract" and "endpoint.address"', function () {
+                  var contract = 'Users',
+                     address = '/users/',
+                     service = new SbisService({
+                        resource: {
+                           name: contract,
+                           serviceUrl: address
+                        }
+                     });
+                  assert.strictEqual(service.getEndpoint().contract, contract);
+                  assert.strictEqual(service.getEndpoint().address, address);
+                  assert.strictEqual(service.getResource(), contract);
+                  assert.strictEqual(service.getService(), address);
+               });
+            });
+         });
+
          describe('.create()', function () {
             context('when the service is exists', function () {
                it('should return an empty model', function (done) {
