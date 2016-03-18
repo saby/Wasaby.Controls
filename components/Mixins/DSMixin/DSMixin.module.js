@@ -568,7 +568,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
          this.unsubscribeFrom(this._itemsProjection, 'onCollectionItemChange', this._onCollectionItemChange);
       },
        /**
-        * Метод установки источника данных.
+        * Устанавливает источник данных.
         * @remark
         * Данные могут быть заданы либо этим методом, либо опцией {@link items}.
         * @param source Новый источник данных.
@@ -594,6 +594,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
         *     })
         * </pre>
         * @see dataSource
+        * @see getDataSource
         * @see onDrawItems
         * @see onDataLoad
         */
@@ -1256,7 +1257,11 @@ define('js!SBIS3.CONTROLS.DSMixin', [
 
       /**
        * Возвращает источник данных.
+       * @remark
+       * Метод создает экземпляр класса источника данных. Экземпляр класса будет содержать данные,
+       * если источник данных - статический.
        * @returns {*}
+       * @see setDataSource
        */
       getDataSource: function(){
          return this._dataSource;
