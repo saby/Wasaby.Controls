@@ -92,6 +92,30 @@ define('js!SBIS3.CONTROLS.Data.FormattableMixin', [
          _usersFormat: false
       },
 
+      //region SBIS3.CONTROLS.Data.SerializableMixin
+
+      after: {
+         _getSerializableState: function(state) {
+            //Prevent core reviver for rawData
+            if (state._options && state._options.rawData && state._options.rawData._type) {
+               state._options.rawData.$type = state._options.rawData._type;
+               delete state._options.rawData._type;
+            }
+
+            return state;
+         },
+
+         _setSerializableState: function(state, initializer) {
+            //Restore value hidden from core reviver
+            return initializer.callNext(function() {
+               if (this._options && this._options.rawData && this._options.rawData.$type) {
+                  this._options.rawData._type = this._options.rawData.$type;
+                  delete this._options.rawData.$type;
+               }
+            });
+         }
+      },
+
       //region Public methods
       $constructor: function (cfg) {
          if(cfg && cfg.format) {
