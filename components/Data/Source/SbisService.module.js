@@ -156,13 +156,16 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
          }
          if (!('endpoint' in cfg)) {
             if ('service' in cfg && typeof cfg.service === 'string' && !('resource' in cfg)) {
+               $ws.single.ioc.resolve('ILogger').info(this._moduleName + '::$constructor()', 'Option "service" is deprecated and will be removed in 3.7.4. Use "endpoint.contract" instead.');
                this._options.endpoint.contract = cfg.service;
             }
             if ('service' in cfg && typeof cfg.service === 'object') {
+               $ws.single.ioc.resolve('ILogger').info(this._moduleName + '::$constructor()', 'Option "service" is deprecated and will be removed in 3.7.4. Use "endpoint.contract" and "endpoint.address" instead.');
                this._options.endpoint.contract = cfg.service.name || '';
-               this._options.endpoint.address = cfg.service.serviceUrl || '';
+               this._options.endpoint.address = cfg.service.serviceUrl || undefined;
             }
             if ('resource' in cfg && typeof cfg.resource === 'object') {
+               $ws.single.ioc.resolve('ILogger').info(this._moduleName + '::$constructor()', 'Option "resource" is deprecated and will be removed in 3.7.4. Use "endpoint.contract" and "endpoint.address" instead.');
                this._options.endpoint.address = cfg.resource.serviceUrl || '';
                this._options.endpoint.contract = cfg.resource.name || '';
             }
