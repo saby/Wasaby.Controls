@@ -127,7 +127,8 @@ define('js!SBIS3.CONTROLS.Data.Source.Base', [
       _getModelInstance: function (data) {
          return Di.resolve(this._options.model, {
             rawData: data,
-            adapter: this.getAdapter()
+            adapter: this.getAdapter(),
+            idProperty: this.getIdProperty()
          });
       },
 
@@ -140,7 +141,8 @@ define('js!SBIS3.CONTROLS.Data.Source.Base', [
       _getListInstance: function (data) {
          return Di.resolve(this._options.listModule, {
             rawData: data,
-            adapter: this.getAdapter()
+            adapter: this.getAdapter(),
+            idProperty: this.getIdProperty()
          });
       },
 
