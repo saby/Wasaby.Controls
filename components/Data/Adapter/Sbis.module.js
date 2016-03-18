@@ -31,53 +31,10 @@ define('js!SBIS3.CONTROLS.Data.Adapter.Sbis', [
 
       getKeyField: function (data) {
          return (new SbisRecord(data)).getKeyField();
-      },
-
-      serialize: function (data) {
-         return serializer.serialize(data);
       }
    });
 
    Sbis.FIELD_TYPE = FIELD_TYPE;
-
-   var serializer = (function() {
-      var serialize = function(data) {
-            if (data instanceof Array) {
-               return serializeArray(data);
-            } else if (data instanceof Object) {
-               return serializeObject(data);
-            } else {
-               return data;
-            }
-         },
-         serializeArray = function (arr) {
-            return $ws.helpers.map(arr, function(item) {
-               return serialize(item);
-            });
-         },
-         serializeObject = function (obj) {
-            if ($ws.helpers.instanceOfModule(obj, 'SBIS3.CONTROLS.Data.Record') ||
-               $ws.helpers.instanceOfModule(obj, 'SBIS3.CONTROLS.Data.Collection.RecordSet') ||
-               $ws.helpers.instanceOfModule(obj, 'SBIS3.CONTROLS.Data.Source.DataSet')
-            ) {
-               return obj.getRawData();
-            } else if (obj instanceof Date) {
-               return obj.toSQL();
-            } else {
-               var result = {};
-               for (var key in obj) {
-                  if (obj.hasOwnProperty(key)) {
-                     result[key] = serialize(obj[key]);
-                  }
-               }
-               return result;
-            }
-         };
-
-      return {
-         serialize: serialize
-      };
-   })();
 
    Di.register('adapter.sbis', Sbis);
 
