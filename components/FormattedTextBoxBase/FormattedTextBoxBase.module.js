@@ -936,13 +936,14 @@ define(
        * @see onInputFinished
        * @see setCursor
        */
-      setText: function(text) {
+      setText: function(text, withoutNotify) {
          this.formatModel.setText(text, this._maskReplacer);
          this._updateText();
          //обновить html
          this._inputField.html(this._getHtmlMask());
-         this._notify('onTextChange', this._options.text);
-         //this._notifyOnPropertyChanged('text'); зовется в _updateText()
+         if (!withoutNotify){
+            this._notify('onTextChange', this._options.text);
+         }
       },
 
       /**
