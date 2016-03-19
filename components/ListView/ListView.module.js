@@ -1906,28 +1906,36 @@ define('js!SBIS3.CONTROLS.ListView',
                return;
             }
             var resultRow = this._makeResultsTemplate(this._getResultsData());
-            this._appendResultsContainer(this._getResultsContainer(), resultRow);
+            if (resultRow){
+               this._appendResultsContainer(this._getResultsContainer(), resultRow);
+            }
          },
          _checkResults: function(){
-            return this._options.resultsPosition !== 'none' && this.getDataSet().getCount();
+            return this._options.resultsPosition !== 'none' && this._getResultsRecord() && this._options.resultsTpl;
          },
          _getResultsContainer: function(){
             return this._getItemsContainer();
          },
          _makeResultsTemplate: function(resultsData){
-            var self = this;
+            if (!resultsData){
+               return;
+            }
+            var item = this._getResultsRecord(),
+               self = this;
             return MarkupTransformer(TemplateUtil.prepareTemplate(this._options.resultsTpl)({
                results: resultsData,
+               item: item,
+               columns: $ws.core.clone(self._options.columns),
                multiselect: self._options.multiselect
             }));
          },
          _getResultsData: function(){
-            return this.getDataSet().getMetaData().results;
+            return this._getResultsRecord();
+         },
+         _getResultsRecord: function(){
+            return this.getItems().getMetaData().results;
          },
          _appendResultsContainer: function(container, resultRow){
-            if (!resultRow){
-               return;
-            }
             var position = this._addResultsMethod || (this._options.resultsPosition == 'top' ? 'prepend' : 'append'),
                drawnResults = $('.controls-DataGridView__results', container);
             if (drawnResults.length){
