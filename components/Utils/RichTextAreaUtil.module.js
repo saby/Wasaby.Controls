@@ -22,7 +22,8 @@ define('js!SBIS3.CONTROLS.Utils.RichTextAreaUtil',[], function () {
                   clipboardData = event.clipboardData ? event.clipboardData : window.clipboardData,
                   currentWindow = window,
                   label = document.createComment('content=SBIS.FRE'), // по этой метке будем определять что контент вставляется из FieldRichEditor
-                  i = 0;
+                  i = 0,
+                  canCut = event.type == 'cut' && target.is('[contenteditable="true"]');
                e.preventDefault();
                //рассчет родительского window элемента
                while (window.frames[i]){
@@ -34,13 +35,13 @@ define('js!SBIS3.CONTROLS.Utils.RichTextAreaUtil',[], function () {
                // webkit && ie>9
                if (currentWindow.getSelection) {
                   selectionRange = currentWindow.getSelection().getRangeAt(0);
-                  selectionContent = event.type == 'cut' ? selectionRange.extractContents() : selectionRange.cloneContents();
+                  selectionContent = canCut ? selectionRange.extractContents() : selectionRange.cloneContents();
                }
                // ie8
                else {
                   selectionRange = currentWindow.document.selection.createRange();
                   selectionContent = selectionRange.duplicate().htmlText;
-                  if (event.type == 'cut') {
+                  if (canCut) {
                      //вырезать выделенное если событие cut
                      selectionRange.pasteHTML('');
                   }
