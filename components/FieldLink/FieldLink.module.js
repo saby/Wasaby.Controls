@@ -84,7 +84,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
           $protected: {
              _inputWrapper: undefined,     /* Обертка инпута */
              _linksWrapper: undefined,     /* Контейнер для контрола выбранных элементов */
-             _dropAllButton: undefined,    /* Кнопка очисnки всех выбранных записей */
+             _dropAllButton: undefined,    /* Кнопка очистки всех выбранных записей */
              _showAllLink: undefined,      /* Кнопка показа всех записей в пикере */
              _linkCollection: undefined,   /* Контрол отображающий выбранные элементы */
              _options: {
