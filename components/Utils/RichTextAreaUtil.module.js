@@ -14,7 +14,7 @@ define('js!SBIS3.CONTROLS.Utils.RichTextAreaUtil',[], function () {
       markRichContentOnCopy: function(target){
 
          var
-            markingRichContent = function(e) {
+            markingRichContent = function(e, target) {
                var
                   event =  e.originalEvent ? e.originalEvent : e,
                   selectionRange, selectionContent, textRange, bodyElement, tempElement,
@@ -84,7 +84,7 @@ define('js!SBIS3.CONTROLS.Utils.RichTextAreaUtil',[], function () {
 
          target.on( 'cut copy',function(e){
             if (!$ws._const.browser.isMobileIOS) {
-               markingRichContent(e);
+               markingRichContent(e, target);
                target.focus();
             }
          });
