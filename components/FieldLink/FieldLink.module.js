@@ -92,27 +92,6 @@ define('js!SBIS3.CONTROLS.FieldLink',
                 afterFieldWrapper: afterFieldWrapper,
                 beforeFieldWrapper: beforeFieldWrapper,
                 /**********************************************************************************************/
-                 /**
-                  * @typedef{Object} listObj Группа опций, описывающая настройку автодополнения для поля связи. Подробнее о функционале автодополнения вы можете прочитать в описании к миксину {@link SBIS3.CONTROLS.SuggestMixin}.
-                  * @property {String} component Компонент, который будет использован для построения результатов автодополнения. Здесь можно указать любой компонент, в который добавлен функционал миксина {@link SBIS3.CONTROLS.DSMixin}. По умолчанию указан SBIS3.CONTROLS.DataGridView.
-                  * @property {String} options Набор опций, которые будут переданы в компонент (см. опцию component).
-                  * @property {Object} keyField Поле с первичным ключом. Если значение не указано, то в качестве этого поля будет использоно первое найденное поле с символом '@' из источника данных компонента.
-                  * @editor component ExternalComponentChooser
-                  *
-                  */
-                 /**
-                  * @cfg {listObj} Устанавливает конфигурацию автодополнения
-                  * @remark
-                  * Конфигурацию автодополнения производят с помощью опций component, options и keyField, подробнее о
-                  * которых вы можете прочитать в типе данных {@link https://wi.sbis.ru/docs/3-8-0/SBIS3/CONTROLS/FieldLink/typedefs/listObj/ listObj}.
-                  * @example
-                  * <pre>
-                  *     <options name="list">
-                  *         <option name="component" value="js!SBIS3.CONTROLS.DataGridView"></option>
-                  *         <options name="options">
-                  *             <option name="emptyHTML">Данных нет</option>
-                  *             <option name="showHead" type="boolean" value="true"></option>
-                  */
                  list: {
                    component: 'js!SBIS3.CONTROLS.DataGridView',
                    options: {
@@ -173,6 +152,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
                  *
                  * Открыть справочник через меню можно в новом диалоге или во всплывающей панели; нужный режим можно
                  * установить с помощью опции {@link SBIS3.CONTROLS.ChooserMixin#chooserMode}.
+                 * Установить набор справочников для поля связи можно с помощью метода {@link setDictionaries}.
                  * @example
                  * Настройка двух справочников для выбора в поле связи:
                  * ![](/FieldLink02.png)
@@ -306,9 +286,21 @@ define('js!SBIS3.CONTROLS.FieldLink',
           },
 
           /**
-           * Показывает диалог выбора
-           * @param {String} template Имя шаблона в виде 'js!SBIS3.CONTROLS.MyTemplate'
-           * @param {Object} componentOptions Опции которые прокинутся в компонент выбора
+           * Открывает справочник для выбора значения в поле связи.
+           * Метод  используется для открытия справочника из JS-кода компонента.
+           * Подробно о настройке и работе со справочниками можно прочесть в описании к опции {@link dictionaries}.
+           * @example
+           * @param {String} template Компонент, который будет использован для построения справочника.
+           * @param {Object} componentOptions Опции, которые будут использованы в компоненте при построении справочника.
+           * @example
+           * <pre>
+           *     this.showSelector(
+           *        'js!SBIS3.MyArea.MyDictionary',
+           *        {
+           *            title: 'Сотрудники предприятия'
+           *        }
+           *     );
+           * </pre>
            * @see dictionaries
            * @see setDictionaries
            */
@@ -352,7 +344,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
           },
 
           /**
-           * Возвращает выбранные элементы в виде текста
+           * Возвращает выбранные элементы в виде текста.
            * @deprecated Метод getCaption устарел, используйте getTextValue
            * @returns {string}
            */
@@ -361,6 +353,15 @@ define('js!SBIS3.CONTROLS.FieldLink',
              return this.getTextValue();
           },
 
+           /**
+            * Возвращает строку, сформированную из текстовых значений полей выбранных элементов коллекции, перечисленных через запятую.
+            * @remark
+            * Метод формирует строку из значений полей, отображаемых в поле связи. Отображаемые значения определяются
+            * с помощью опции {@link displayField} или {@link itemTemplate}.
+            * @returns {string} Строка, сформированная из отображаемых значений в поле связи.
+            * @see displayField
+            * @see itemTemplate
+            */
           getTextValue: function() {
              var displayFields = [],
                  self = this;
