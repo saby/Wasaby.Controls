@@ -164,7 +164,7 @@ define('js!SBIS3.CONTROLS.FieldLinkItemsCollection', [
                   onClose: function() {
                      self._notify('onClosePicker');
                      self._clearItems();
-                     setTimeout(self.reload.bind(self), 0);
+                     setTimeout(self.redraw.bind(self), 0);
                   },
                   onShow: function() {
                      self._notify('onShowPicker');
