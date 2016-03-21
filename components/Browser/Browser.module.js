@@ -14,6 +14,7 @@ define('js!SBIS3.CONTROLS.Browser', [
     * @extends $ws.proto.CompoundControl
     * @control
     * @public
+    * @designTime plugin /design/DesignPlugin
     * @demo SBIS3.CONTROLS.Demo.MyBrowser
     */
 
