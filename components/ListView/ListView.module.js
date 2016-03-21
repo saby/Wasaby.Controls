@@ -531,8 +531,10 @@ define('js!SBIS3.CONTROLS.ListView',
                   newSelectedItem = this._getNextItemByDOM(selectedKey);
                   break;
                case $ws._const.key.enter:
-                  var selectedItem = $('[data-id="' + selectedKey + '"]', this._getItemsContainer());
-                  this._elemClickHandler(selectedKey, this._dataSet.getRecordByKey(selectedKey), selectedItem);
+                  if(selectedKey) {
+                     var selectedItem = $('[data-id="' + selectedKey + '"]', this._getItemsContainer());
+                     this._elemClickHandler(selectedKey, this._dataSet.getRecordByKey(selectedKey), selectedItem);
+                  }
                   break;
                case $ws._const.key.space:
                   newSelectedItem = this._getNextItemByDOM(selectedKey);
