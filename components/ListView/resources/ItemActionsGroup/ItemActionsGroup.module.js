@@ -105,6 +105,7 @@ define('js!SBIS3.CONTROLS.ItemActionsGroup',
                keyField: this._options.keyField,
                //FIXME для обратной совместимости
                displayField: items[0].title ? 'title' : 'caption',
+               hierField: 'parent',
                parent: this,
                opener: this,
                target:  target,
