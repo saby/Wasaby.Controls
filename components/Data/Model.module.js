@@ -131,7 +131,7 @@ define('js!SBIS3.CONTROLS.Data.Model', [
          var value = Model.superclass.get.call(this, name),
             property = this.getProperties()[name];
          if (property) {
-            if ('def' in property && !this._getRecordAdapter().has(name)) {
+            if ('def' in property && !this._getRawDataAdapter().has(name)) {
                value = this.getDefault(name);
             }
             if (property.get) {
@@ -377,7 +377,7 @@ define('js!SBIS3.CONTROLS.Data.Model', [
        */
       _getIdProperty: function () {
          if (this._options.idProperty === undefined) {
-            this._options.idProperty = this._getRecordAdapter().getKeyField() || '';
+            this._options.idProperty = this._getRawDataAdapter().getKeyField() || '';
          }
          return this._options.idProperty;
       },
@@ -436,7 +436,7 @@ define('js!SBIS3.CONTROLS.Data.Model', [
 
       getType: function (field) {
          $ws.single.ioc.resolve('ILogger').info('SBIS3.CONTROLS.Data.Model', 'method getType() is deprecated and will be removed in 3.7.4');
-         var adapter = this._getRecordAdapter(),
+         var adapter = this._getRawDataAdapter(),
             info = adapter.getInfo(field);
          return info && info.meta && info.meta.t ?
             (typeof info.meta.t === 'object' ? info.meta.t.n : info.meta.t) :

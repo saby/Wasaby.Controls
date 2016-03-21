@@ -38,11 +38,6 @@ define('js!SBIS3.CONTROLS.Data.Record', [
          },
 
          /**
-          * @member {SBIS3.CONTROLS.Data.Adapter.IRecord} Адаптер для записи
-          */
-         _recordAdapter: null,
-
-         /**
           * @member {Array.<String>} Описание всех полей, полученных из данных в "сыром" виде
           */
          _fields: null,
@@ -76,7 +71,7 @@ define('js!SBIS3.CONTROLS.Data.Record', [
             return this._propertiesCache[name];
          }
 
-         var hasValue = this._getRecordAdapter().has(name),
+         var hasValue = this._getRawDataAdapter().has(name),
             value = hasValue ? this._getRawDataValue(name) : undefined;
 
          if (this._isFieldValueCacheable(value)) {
@@ -180,7 +175,7 @@ define('js!SBIS3.CONTROLS.Data.Record', [
 
       setRawData: function(rawData) {
          Record.superclass.setRawData.call(this, rawData);
-         this._recordAdapter = null;
+         this._resetRawDataAdapter();
          this._propertiesCache = {};
          this._fields = null;
          this._notify('onPropertyChange');
@@ -188,7 +183,7 @@ define('js!SBIS3.CONTROLS.Data.Record', [
 
       setAdapter: function (adapter) {
          Record.superclass.setAdapter.call(this, adapter);
-         this._recordAdapter = null;
+         this._resetRawDataAdapter();
          this._propertiesCache = {};
       },
 
@@ -196,7 +191,7 @@ define('js!SBIS3.CONTROLS.Data.Record', [
          this._checkFormatIsWritable();
          format = this._buildField(format);
          Record.superclass.addField.call(this, format, at);
-         this._getRecordAdapter().addField(format, at);
+         this._getRawDataAdapter().addField(format, at);
          this._fields = null;
 
          if (value !== undefined) {
@@ -207,23 +202,32 @@ define('js!SBIS3.CONTROLS.Data.Record', [
       removeField: function(name) {
          this._checkFormatIsWritable();
          Record.superclass.removeField.call(this, name);
-         this._getRecordAdapter().removeField(name);
+         this._getRawDataAdapter().removeField(name);
          this._fields = null;
       },
 
       removeFieldAt: function(at) {
          this._checkFormatIsWritable();
          Record.superclass.removeFieldAt.call(this, at);
-         this._getRecordAdapter().removeFieldAt(at);
+         this._getRawDataAdapter().removeFieldAt(at);
          this._fields = null;
       },
 
       _getRawDataFields: function() {
-         return this._fields || (this._fields = this._getRecordAdapter().getFields());
+         return this._fields || (this._fields = this._getRawDataAdapter().getFields());
       },
 
       _getRawDataFormat: function(name) {
-         return this._getRecordAdapter().getFormat(name);
+         return this._getRawDataAdapter().getFormat(name);
+      },
+
+      /**
+       * Создает адаптер для сырых данных
+       * @returns {SBIS3.CONTROLS.Data.Adapter.IRecord}
+       * @protected
+       */
+      _createRawDataAdapter: function () {
+         return this.getAdapter().forRecord(this._options.rawData);
       },
 
       /**
@@ -315,15 +319,6 @@ define('js!SBIS3.CONTROLS.Data.Record', [
       //region Protected methods
 
       /**
-       * Возвращает адаптер для работы с записью
-       * @returns {SBIS3.CONTROLS.Data.Adapter.IRecord}
-       * @protected
-       */
-      _getRecordAdapter: function() {
-         return this._recordAdapter || (this._recordAdapter = this.getAdapter().forRecord(this._options.rawData));
-      },
-
-      /**
        * Добавляет поле в список полей
        * @param {String} name Название поля
        * @protected
@@ -339,7 +334,7 @@ define('js!SBIS3.CONTROLS.Data.Record', [
        * @protected
        */
       _getRawDataValue: function(name) {
-         var adapter = this._getRecordAdapter(),
+         var adapter = this._getRawDataAdapter(),
             rawValue = adapter.get(name),
             format;
 
@@ -363,7 +358,7 @@ define('js!SBIS3.CONTROLS.Data.Record', [
        * @protected
        */
       _setRawDataValue: function(name, value) {
-         var adapter = this._getRecordAdapter(),
+         var adapter = this._getRawDataAdapter(),
             format;
          try {
             format = adapter.getSharedFormat(name);

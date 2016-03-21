@@ -82,12 +82,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
          /**
           * @member {Array.<String>} Описание всех полей, полученных из данных в "сыром" виде
           */
-         _fields: null,
-
-         /**
-          * @var {SBIS3.CONTROLS.Data.Adapter.ITable} Адаптер для набора записей
-          */
-         _tableAdapter: null
+         _fields: null
       },
 
       $constructor: function (cfg) {
@@ -127,7 +122,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
       addField: function(format, at, value) {
          format = this._buildField(format);
          RecordSet.superclass.addField.call(this, format, at);
-         this._getTableAdapter().addField(format, at);
+         this._getRawDataAdapter().addField(format, at);
          this._fields = null;
 
          if (value !== undefined) {
@@ -139,22 +134,31 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
 
       removeField: function(name) {
          RecordSet.superclass.removeField.call(this, name);
-         this._getTableAdapter().removeField(name);
+         this._getRawDataAdapter().removeField(name);
          this._fields = null;
       },
 
       removeFieldAt: function(at) {
          RecordSet.superclass.removeFieldAt.call(this, at);
-         this._getTableAdapter().removeFieldAt(at);
+         this._getRawDataAdapter().removeFieldAt(at);
          this._fields = null;
       },
 
       _getRawDataFields: function() {
-         return this._fields || (this._fields = this._getTableAdapter().getFields());
+         return this._fields || (this._fields = this._getRawDataAdapter().getFields());
       },
 
       _getRawDataFormat: function(name) {
-         return this._getTableAdapter().getFormat(name);
+         return this._getRawDataAdapter().getFormat(name);
+      },
+
+      /**
+       * Создает адаптер для сырых данных
+       * @returns {SBIS3.CONTROLS.Data.Adapter.ITable}
+       * @protected
+       */
+      _createRawDataAdapter: function () {
+         return this.getAdapter().forTable(this._options.rawData);
       },
 
       /**
@@ -163,7 +167,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
        */
       _assignRawData: function(data) {
          RecordSet.superclass.setRawData.call(this, data);
-         this._tableAdapter = null;
+         this._resetRawDataAdapter();
          this._fields = null;
          this._clearFormat();
       },
@@ -588,13 +592,13 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
       //region SBIS3.CONTROLS.Data.Collection.List
 
       clear: function () {
-         this._assignRawData(this._getTableAdapter().getEmpty());
+         this._assignRawData(this._getRawDataAdapter().getEmpty());
          RecordSet.superclass.clear.call(this);
       },
 
       add: function (item, at) {
          this._checkItem(item);
-         this._getTableAdapter().add(item.getRawData(), at);
+         this._getRawDataAdapter().add(item.getRawData(), at);
          RecordSet.superclass.add.apply(this, arguments);
       },
 
@@ -604,13 +608,13 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
       },
 
       removeAt: function (index) {
-         this._getTableAdapter().remove(index);
+         this._getRawDataAdapter().remove(index);
          RecordSet.superclass.removeAt.apply(this, arguments);
       },
 
       replace: function (item, at) {
          this._checkItem(item);
-         this._getTableAdapter().replace(item.getRawData(), at);
+         this._getRawDataAdapter().replace(item.getRawData(), at);
          RecordSet.superclass.replace.apply(this, arguments);
       },
 
@@ -619,12 +623,12 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
             var adapter = items.getAdapter().forTable(items.getRawData());
             this._assignRawData(adapter.getEmpty());
          } else {
-            this._assignRawData(this._getTableAdapter().getEmpty());
+            this._assignRawData(this._getRawDataAdapter().getEmpty());
          }
          items = this._itemsToArray(items);
          for (var i = 0, len = items.length; i < len; i++) {
             this._checkItem(items[i]);
-            this._getTableAdapter().add(items[i].getRawData());
+            this._getRawDataAdapter().add(items[i].getRawData());
          }
          RecordSet.superclass.assign.call(this, items);
       },
@@ -633,7 +637,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
          items = this._itemsToArray(items);
          for (var i = 0, len = items.length; i < len; i++) {
             this._checkItem(items[i]);
-            this._getTableAdapter().add(items[i].getRawData());
+            this._getRawDataAdapter().add(items[i].getRawData());
          }
          RecordSet.superclass.append.call(this, items);
       },
@@ -642,7 +646,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
          items = this._itemsToArray(items);
          for (var i = 0, len = items.length; i < len; i++) {
             this._checkItem(items[i]);
-            this._getTableAdapter().add(items[i].getRawData(), i);
+            this._getRawDataAdapter().add(items[i].getRawData(), i);
          }
          RecordSet.superclass.prepend.call(this, items);
       },
@@ -650,20 +654,6 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
       //endregion SBIS3.CONTROLS.Data.Collection.List
 
       //region Protected methods
-
-      /**
-       * Возвращает адаптер для сырых данных (лениво создает)
-       * @protected
-       */
-      _getTableAdapter: function () {
-         if (!this._tableAdapter) {
-            this._tableAdapter = this.getAdapter().forTable(this._options.rawData);
-            if (this._tableAdapter.getData() !== this._options.rawData) {
-               this._options.rawData = this._tableAdapter.getData();
-            }
-         }
-         return this._tableAdapter;
-      },
 
       /**
        * Создает новый экземпляр модели
@@ -685,9 +675,9 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
        * Пересоздает элементы из сырых данных
        * @protected
        */
-      _createFromRawData: function(data) {
+      _createFromRawData: function() {
          RecordSet.superclass.clear.call(this);
-         var adapter = this._getTableAdapter(),
+         var adapter = this._getRawDataAdapter(),
             count = adapter.getCount(),
             record;
          for (var i = 0; i < count; i++) {

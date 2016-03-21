@@ -123,6 +123,29 @@ define([
                }
                assert.isBelow(rel, 5);
             });
+
+            it('should add fields to raw data from declarative format', function () {
+               var declaration = [{
+                     name: 'Имя',
+                     type: 'string',
+                     defaultValue: 'test1'
+                  }, {
+                     name: 'День рождения',
+                     type: 'datetime',
+                     defaultValue: new Date()
+                  }],
+                  rs = new RecordSet({
+                     format: declaration,
+                     rawData: items
+                  });
+               rs.each(function(item) {
+                  for (var i = 0; i < declaration.length; i++) {
+                     assert.isTrue(item.has(declaration[i].name));
+                     assert.strictEqual(item.get(declaration[i].name), declaration[i].defaultValue);
+                  }
+               });
+            });
+
             it('should get adapter in strategy', function (){
                var rs = new RecordSet({
                   strategy: new SbisAdapter(),
