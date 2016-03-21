@@ -69,8 +69,8 @@ define('js!SBIS3.CONTROLS.DialogActionBase', ['js!SBIS3.CONTROLS.ActionBase', 'j
          mode = mode || this._options.mode;
          if (mode == 'floatArea'){
             Component = FloatArea;
-            config.isStack = meta.isStack || true;
-            config.autoHide = meta.autoHide || true;
+            config.isStack = meta.isStack !== undefined ? meta.isStack : true;
+            config.autoHide = meta.autoHide !== undefined ? meta.autoHide : true;
          } else if (mode == 'dialog'){
             Component = Dialog;
          }
