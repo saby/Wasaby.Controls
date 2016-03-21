@@ -1,8 +1,9 @@
 define('js!SBIS3.CONTROLS.TreeDataGridView', [
    'js!SBIS3.CONTROLS.HierarchyDataGridView',
    'js!SBIS3.CONTROLS.TreeMixinDS',
-   'html!SBIS3.CONTROLS.TreeDataGridView/resources/rowTpl'
-], function(HierarchyDataGridView, TreeMixinDS, rowTpl) {
+   'html!SBIS3.CONTROLS.TreeDataGridView/resources/rowTpl',
+   'html!SBIS3.CONTROLS.TreeDataGridView/resources/folderFooterTpl'
+], function(HierarchyDataGridView, TreeMixinDS, rowTpl, folderFooterTpl) {
 
    var HIER_WRAPPER_WIDTH = 16,
        //Число 17 это сумма padding'ов, margin'ов элементов которые составляют отступ у первого поля, по которому строится лесенка отступов в дереве
@@ -38,6 +39,7 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
    var TreeDataGridView = HierarchyDataGridView.extend([TreeMixinDS], /** @lends SBIS3.CONTROLS.TreeDataGridView.prototype*/ {
       $protected: {
          _rowTpl : rowTpl,
+         _footerTpl: folderFooterTpl,
          _options: {
             /**
              * @cfg {Function}
@@ -136,19 +138,26 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
          TreeDataGridView.superclass._drawItemsCallback.apply(this, arguments);
       },
       _createFolderFooter: function(key) {
-         var container,
-             lastContainer,
+         var
+             nextContainer,
+             currentContainer,
              level = this._getTreeLevel(key);
 
          TreeDataGridView.superclass._createFolderFooter.apply(this, arguments);
-         this._foldersFooters[key].css('padding-left', level * HIER_WRAPPER_WIDTH);
-         container = $('<tr class="controls-TreeDataGridView__folderFooter" "data-parent"="' + key + '">\
-            <td colspan="' + (this._options.columns.length + (this._options.multiselect ? 1 : 0)) + '"></td>\
-         </tr>').attr('data-parent', key);
-         container.find('td').append(this._foldersFooters[key]);
-         this._foldersFooters[key] = container;
-         lastContainer = $('.controls-ListView__item[data-parent="' + key + '"]', this._getItemsContainer().get(0)).last();
-         this._foldersFooters[key].insertAfter(lastContainer.length ? lastContainer : $('.controls-ListView__item[data-id="' + key + '"]', this._getItemsContainer().get(0)));
+         this._foldersFooters[key] = $(this._footerTpl({
+            key: key,
+            padding: level * HIER_WRAPPER_WIDTH,
+            colspan: this._options.columns.length + (this._options.multiselect ? 1 : 0),
+            template: this._foldersFooters[key].html()
+         }));
+
+         currentContainer = $('.controls-ListView__item[data-id="' + key + '"]', this._getItemsContainer().get(0));
+         while (currentContainer.length) {
+            nextContainer = currentContainer;
+            currentContainer =  $('.controls-ListView__item[data-parent="' + currentContainer.data('id') + '"]', this._getItemsContainer().get(0)).last();
+         }
+         this._foldersFooters[key].insertAfter(nextContainer);
+
          this.reviveComponents();
       },
       _getFolderFooterOptions: function(key) {
