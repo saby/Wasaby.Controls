@@ -23,6 +23,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
     * @control
     * @public
     * @demo SBIS3.CONTROLS.Demo.MyDataGridView
+    * @designTime plugin /design/DesignPlugin
     * @initial
     * <component data-component='SBIS3.CONTROLS.DataGridView'>
     *    <options name="columns" type="array">
