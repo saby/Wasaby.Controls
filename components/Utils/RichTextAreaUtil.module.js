@@ -13,12 +13,14 @@ define('js!SBIS3.CONTROLS.Utils.RichTextAreaUtil',[], function () {
        */
       markRichContentOnCopy: function(target){
          //На ipad`e нет аозможности задать clipboardData, форматное копирование с меткой не поддерживаем
-         if ( !$ws._const.browser.isMobileIOS) {
+         if (!$ws._const.browser.isMobileIOS) {
             target.on('cut copy', {target: target}, this._markingRichContent);
          }
       },
       unmarkRichContentOnCopy: function(target){
-         target.unbind('cut copy', this._markingRichContent);
+         if (!$ws._const.browser.isMobileIOS) {
+            target.unbind('cut copy', this._markingRichContent);
+         }
       },
       /**
        * Оборачивает контент в div с событием открывающим изображение в диалоговом окне
