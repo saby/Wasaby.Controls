@@ -605,20 +605,18 @@ define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManag
       },
 
       _getOffsetByWindowSize: function (offset) {
-         var buf = this._targetSizes.offset;
+         var buf = this._targetSizes.offset,
+            scrollY = window.scrollY,
+            scrollX = window.scrollX;
          //Проверяем убираемся ли в экран снизу. Если позиционируем нижней стороной, не нужно менять положение если не влезаем снизу
-         var requiredOffsetTop = Math.floor(offset.top + this._containerSizes.originHeight + (this._options.verticalAlign.offset || 0) + this._margins.top - this._margins.bottom);
-         if (this._fixed) {
-            requiredOffsetTop -= window.scrollY;
-         }
-         if (requiredOffsetTop > this._windowSizes.height && !this._isMovedV && this._options.verticalAlign.bottom !== 'top') {
+         if (this._containerSizes.requiredOffset.top > this._windowSizes.height + scrollY && !this._isMovedV && this._options.verticalAlign.side !== 'bottom') {
             this._isMovedV = true;
             offset.top = this._getOppositeOffset(this._options.corner, 'vertical').top;
             offset.top = this._addOffset(offset, buf).top;
          }
 
          //Возможно уже меняли положение и теперь хватает места что бы вернуться на нужную позицию по вертикали
-         if (this._containerSizes.requiredOffset.top < this._windowSizes.height && this._isMovedV) {
+         if (this._containerSizes.requiredOffset.top < this._windowSizes.height + scrollY && this._isMovedV) {
             this._isMovedV = false;
             offset.top = this._getOppositeOffset(this._options.corner, 'vertical').top;
             offset.top = this._addOffset(offset, buf).top;
@@ -626,18 +624,14 @@ define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManag
 
          //TODO Избавиться от дублирования
          //Проверяем убираемся ли в экран справа. Если позиционируем правой стороной, не нужно менять положение если не влезаем справа
-         var requiredOffsetLeft = Math.floor(offset.left + this._containerSizes.originWidth + (this._options.horizontalAlign.offset || 0) + this._margins.left - this._margins.right);
-         if (this._fixed) {
-            requiredOffsetLeft -= window.scrollX;
-         }         
-         if (requiredOffsetLeft > this._windowSizes.width && !this._isMovedH && this._options.horizontalAlign.side !== 'right') {
+         if (this._containerSizes.requiredOffset.left > this._windowSizes.width + scrollX && !this._isMovedH && this._options.horizontalAlign.side !== 'right') {
             this._isMovedH = true;
             offset.left = this._getOppositeOffset(this._options.corner, 'horizontal').left;
             offset.left = this._addOffset(offset, buf).left;
          }
 
          //Возможно уже меняли положение и теперь хватает места что бы вернуться на нужную позицию по горизонтали
-         if (this._containerSizes.requiredOffset.left < this._windowSizes.width && this._isMovedH) {
+         if (this._containerSizes.requiredOffset.left < this._windowSizes.width + scrollX && this._isMovedH) {
             this._isMovedH = false;
             offset.left = this._getOppositeOffset(this._options.corner, 'horizontal').left;
             offset.left = this._addOffset(offset, buf).left;
