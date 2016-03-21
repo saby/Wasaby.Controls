@@ -151,18 +151,13 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
             template: this._foldersFooters[key].html()
          }));
 
-         currentContainer = $('.controls-ListView__item[data-id="' + key + '"]', this._getItemsContainer().get(0)).last();
-         nextContainer = currentContainer.nextAll('.controls-ListView__item[data-id="' + currentContainer.data('id') + '"]').first();
-         if (nextContainer.length) {
-            this._foldersFooters[key].insertBefore(nextContainer);
-         } else {
-            this._foldersFooters[key].appendTo(this._getItemsContainer());
+         currentContainer = $('.controls-ListView__item[data-id="' + key + '"]', this._getItemsContainer().get(0));
+         while (currentContainer.length) {
+            nextContainer = currentContainer;
+            currentContainer =  $('.controls-ListView__item[data-parent="' + currentContainer.data('id') + '"]', this._getItemsContainer().get(0)).last();
          }
+         this._foldersFooters[key].insertAfter(nextContainer);
 
-         this._foldersFooters[key].insertAfter(lastContainer.length ? lastContainer : $('.controls-ListView__item[data-id="' + key + '"]', this._getItemsContainer().get(0)));
-
-
-         this._foldersFooters[key].insertAfter(lastContainer.length ? lastContainer : $('.controls-ListView__item[data-id="' + key + '"]', this._getItemsContainer().get(0)));
          this.reviveComponents();
       },
       _getFolderFooterOptions: function(key) {
