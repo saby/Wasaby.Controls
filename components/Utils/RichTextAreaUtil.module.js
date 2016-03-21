@@ -19,7 +19,7 @@ define('js!SBIS3.CONTROLS.Utils.RichTextAreaUtil',[], function () {
       },
       unmarkRichContentOnCopy: function(target){
          if (!$ws._const.browser.isMobileIOS) {
-            target.unbind('cut copy', this._markingRichContent);
+            target.off('cut copy', this._markingRichContent);
          }
       },
       /**
