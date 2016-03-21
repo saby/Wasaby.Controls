@@ -11,5 +11,14 @@ def copyReplace(folder):
       shutil.rmtree(myPath)
    shutil.copytree(folder, myPath)
 
+def copyThemesLess(file):
+   sourcePath = os.path.join("themes", file)
+   buildThemePath = os.path.join("SBIS3.CONTROLS","build", "buildSingleTheme", file)
+   shutil.copyfile(sourcePath, buildThemePath)
+
 copyReplace("components")
 copyReplace("themes")
+copyReplace("build")
+
+copyThemesLess("general.less")
+copyThemesLess("mixins.less")
