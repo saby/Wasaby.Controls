@@ -103,7 +103,8 @@ define('js!SBIS3.CONTROLS.FieldLink',
                  /**
                   * @cfg {listObj} Устанавливает конфигурацию автодополнения
                   * @remark
-                  * Конфигурацию автодополнения производят с помощью опций component, options и keyField, подробнее о которых вы можете прочитать в типе данных {@link https://wi.sbis.ru/docs/3-8-0/SBIS3/CONTROLS/FieldLink/typedefs/listObj/ listObj}.
+                  * Конфигурацию автодополнения производят с помощью опций component, options и keyField, подробнее о
+                  * которых вы можете прочитать в типе данных {@link https://wi.sbis.ru/docs/3-8-0/SBIS3/CONTROLS/FieldLink/typedefs/listObj/ listObj}.
                   * @example
                   * <pre>
                   *     <options name="list">
@@ -120,15 +121,76 @@ define('js!SBIS3.CONTROLS.FieldLink',
                    }
                 },
                 /**
-                 * @typedef {Array} dictionaries
-                 * @property {String} caption Текст в меню.
-                 * @property {String} template Шаблон, который отобразится в диалоге выбора.
-                 * @property {Object} componentOptions Опции, которые прокинутся в компонент на диалоге выбора.
+                 * @typedef {Array} dictionaries Группа опций, описывающая настройку одного или нескольких справочников для поля связи.
+                 * @property {String} caption Текст в меню выбора справочников. Опция актуальна, когда для поля связи установлено несколько справочников.
+                 * Открыть справочник можно через меню выбора справочников или с помощью метода {@link showSelector}.
+                 * Меню выбора справочников - это кнопка, которая расположена внутри поля связи с правого края:
+                 * ![](/FieldLink03.png)
+                 * Изменять положение этой кнопки нельзя. Когда для поля связи установлен только один справочник,
+                 * клик по данной кнопке производит открытие этого справочника. Когда для поля связи установлено несколько
+                 * справочников, клик по меню открывает подменю для выбора нужного справочника - опция caption определяет
+                 * название справочника в этом подменю:
+                 * ![](/FieldLink02.png)
+                 * @property {String} template Компонент, на основе которого организован справочник.
+                 * Список значений справочника строится на основе любого компонента, который можно использовать
+                 * для {@link https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/ отображения данных в списках}:
+                 * - использование компонента {@link SBIS3.CONTROLS.DataGridView}:
+                 * ![](/FieldLink00.png)
+                 * - использование компонента {@link SBIS3.CONTROLS.TreeDataGridView}:
+                 * ![](/FieldLink01.png)
+                 * @property {Object} componentOptions Группа опций, которые будут переданы в компонент справочника.
+                 * Группа опций, которые передаются в секцию _options компонента из опции template. На его основе строится справочник.
+                 * Значения опций можно использовать в дочерних компонентах справочника через инструкции шаблонизатора.
+                 * Например, передаём опции для построения справочника:
+                 * <pre class="brush: xml">
+                 *     <option name="template">js!SBIS3.MyArea.MyDatGridView</option>
+                 *     <options name="componentOptions" type="array">
+                 *         <option name="myShowHeadConfig" type="boolean">true</option>
+                 *         <option name="myPageSizeConfig" type="number">5</option>
+                 *     </options>
+                 * </pre>
+                 * При построении справочника на основе SBIS3.MyArea.MyDatGridView значения опций showHead и pageSize будут переданы в его секцию _options.
+                 * Они переопределят уже установленные значения опций, если такие есть.
+                 * Чтобы использовать значений опций в дочерних контролах компонента SBIS3.MyArea.MyDatGridView,
+                 * нужно использовать конструкции шаблонизатора в вёрстке компонента:
+                 * <pre class="brush: xml">
+                 *     <component data-component="SBIS3.CONTROLS.TreeCompositeView" name="browserView">
+                 *         <option name="showHead">{{=it.myShowHeadConfig}}</option>
+                 *         <option name="pageSize">{{=it.myPageSizeConfig}}</option>
+                 *     </component>
+                 * </pre>
                  */
                 /**
-                 * @cfg {dictionaries[]} Набор диалогов выбора для поля связи
+                 * @cfg {dictionaries[]} Устанавливает справочники для поля связи.
                  * @remark
-                 * Если передать всего один элемент, то дилог выбора откроется при клике на иконку меню.
+                 * Справочник - это диалог выбора значений. Список значений диалога строится на основе любого компонента, который можно
+                 * использовать для {@link https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/ отображения данных в списках}:
+                 * Компонент указывают в опции template.
+                 * С помощью опции componentOptions можно настроить группу опций, которые будут переданы в компонент справочника.
+                 * Опция caption используется для настройки меню диалога выбора справочников - если для поля связи используется
+                 * несколько справочников.
+                 * Подробнее об опциях справочника вы можете прочитать {@link SBIS3.CONTROLS.FieldLink/dictionaries.typedef здесь}.
+                 *
+                 * Открыть справочник через меню можно в новом диалоге или во всплывающей панели; нужный режим можно
+                 * установить с помощью опции {@link SBIS3.CONTROLS.ChooserMixin#chooserMode}.
+                 * @example
+                 * Настройка двух справочников для выбора в поле связи:
+                 * ![](/FieldLink02.png)
+                 * Фрагмент верстки:
+                 * <pre class="brush: xml">
+                 *     <options name="dictionaries" type="array">
+                 *         <options>
+                 *             <option name="caption">Сотрудники</option>
+                 *             <option name="template">js!SBIS3.MyArea.DictEmployees</option>
+                 *         </options>
+                 *         <options>
+                 *             <option name="caption">Партнеры</option>
+                 *             <option name="template">js!SBIS3.MyArea.DictPartners</option>
+                 *         </options>
+                 *     </options>
+                 * </pre>
+                 * @see setDictionaries
+                 * @see SBIS3.CONTROLS.ChooserMixin#chooserMode
                  */
                 dictionaries: [],
                 /**

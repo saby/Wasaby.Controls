@@ -34,15 +34,15 @@ define('js!SBIS3.CONTROLS.ChooserMixin', [
       $protected: {
          _options: {
             /**
-             * @cfg {Boolean} Поддерживать старые представления данных
+             * @cfg {Boolean} Поддерживает старые представления данных.
              * Данная опция требуется, если на диалоге выбора лежит старое представление данных.
              */
             oldViews: false,
             /**
-             * @cfg {String} Режим выбора записей. В новом диалоге или во всплывающей панели
-             * <wiTag group="Управление">
-             * @variant dialog в новом диалоге
-             * @variant floatArea во всплывающей панели
+             * @cfg {String} Устанавливает режим выбора записей в новом диалоге или во всплывающей панели.
+             * @variant dialog В новом диалоге.
+             * @variant floatArea Во всплывающей панели.
+             *
              */
             chooserMode: 'floatArea'
          },
