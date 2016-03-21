@@ -35,14 +35,27 @@ define('js!SBIS3.CONTROLS.ChooserMixin', [
          _options: {
             /**
              * @cfg {Boolean} Поддерживает старые представления данных.
-             * Данная опция требуется, если на диалоге выбора лежит старое представление данных.
+             * Данная опция требуется, если в диалоге выбора для отображения данных используются старые контролы.
+             * @example
+             * <pre class="brush: xml">
+             *     <option name="oldViews">true</option>
+             * </pre>
              */
             oldViews: false,
             /**
-             * @cfg {String} Устанавливает режим выбора записей в новом диалоге или во всплывающей панели.
+             * @cfg {String} Устанавливает режим выбора элементов коллекции в новом диалоге или во всплывающей панели.
+             * Опция применяется в компонентах в случаях использования окна выбора элементов коллекции.
              * @variant dialog В новом диалоге.
              * @variant floatArea Во всплывающей панели.
-             *
+             * @example
+             * Использование {@link SBIS3.CONTROLS.FieldLink#dictionaries справочника} для выбора значений в поле связи;
+             * окно выбора открывается в новом диалоге:
+             * ![](/ChooserMixin01.png)
+             * фрагмент верстки:
+             * <pre class="brush: xml">
+             *     <option name="chooserMode">dialog</option>
+             * </pre>
+             * @see SBIS3.CONTROLS.FieldLink#dictionaries
              */
             chooserMode: 'floatArea'
          },
