@@ -64,7 +64,8 @@ define('js!SBIS3.CONTROLS.MenuButtonMixin', ['js!SBIS3.CONTROLS.ContextMenu'], f
             context: this.getParent() ? this.getParent().getLinkedContext() : {},
             element: targetElement,
             target : this.getContainer(),
-            items: this._options.items,
+            //items могли задать через опцию или через setItems
+            items: this._options.items  ||  this._items,
             corner : 'tl',
             filter: this._options.filter,
             enabled: this.isEnabled(),
@@ -85,9 +86,6 @@ define('js!SBIS3.CONTROLS.MenuButtonMixin', ['js!SBIS3.CONTROLS.ContextMenu'], f
          menuconfig = this._modifyPickerOptions(menuconfig);
          if (this._dataSource) {
             menuconfig.dataSource = this._dataSource;
-         }
-         else {
-            menuconfig.items = this._options.items;
          }
          return new ContextMenu(menuconfig);
       },
@@ -127,12 +125,12 @@ define('js!SBIS3.CONTROLS.MenuButtonMixin', ['js!SBIS3.CONTROLS.ContextMenu'], f
       },
 
       _clickHandler: function (event) {
-         if (this._dataSet){
-            if (this._dataSet.getCount() > 1) {
+         if (this._items){
+            if (this._items.getCount() > 1) {
                this.togglePicker();
             } else {
-               if (this._dataSet.getCount() == 1) {
-                  var id = this._dataSet.at(0).getKey();
+               if (this._items.getCount() == 1) {
+                  var id = this._items.at(0).getKey();
                   this._notify('onMenuItemActivate', id, event);
                }
             }

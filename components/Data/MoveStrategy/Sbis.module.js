@@ -22,17 +22,18 @@ define('js!SBIS3.CONTROLS.Data.MoveStrategy.Sbis', [
              * @cfg {String} Имя объекта бизнес-логики, реализующего перемещение записей. По умолчанию 'ПорядковыйНомер'.
              * @example
              * <pre>
-             *    <option name="moveResource">ПорядковыйНомер</option>
+             *    <option name="moveContract">ПорядковыйНомер</option>
              * </pre>
              * @see move
              */
-            moveResource: 'ПорядковыйНомер',
+            moveContract: 'ПорядковыйНомер',
 
             /**
              * @cfg {String} Префикс имени метода, который используется для перемещения записи. По умолчанию 'Вставить'.
              * @see move
              */
             moveMethodPrefix: 'Вставить',
+
             /**
              * @cfg {String} Имя поля, по которому по умолчанию сортируются записи выборки. По умолчанию 'ПорНомер'.
              * @see move
@@ -40,14 +41,23 @@ define('js!SBIS3.CONTROLS.Data.MoveStrategy.Sbis', [
             moveDefaultColumn: 'ПорНомер'
 
          },
+
          _orderProvider: undefined
       },
       $constructor: function (cfg){
-         if(!cfg.resource && !cfg.dataSource){
-            throw new Error('The Resource and the Data Source are not defined.');
+         cfg = cfg || {};
+
+         //Deprecated
+         if ('moveResource' in cfg && !('moveContract' in cfg)) {
+            $ws.single.ioc.resolve('ILogger').info(this._moduleName + '::$constructor()', 'Option "moveResource" is deprecated and will be removed in 3.7.4. Use "moveContract" instead.');
+            this._options.moveContract = cfg.moveResource;
          }
-         if (!cfg.resource) {
-            this._options.resource = cfg.dataSource.getResource();
+
+         if(!this._options.contract && !this._options.dataSource){
+            throw new Error('The Contract and the Data Source are not defined.');
+         }
+         if (!this._options.contract) {
+            this._options.contract = this._options.dataSource.getEndpoint().contract;
          }
       },
 
@@ -58,7 +68,13 @@ define('js!SBIS3.CONTROLS.Data.MoveStrategy.Sbis', [
             method = this._options.moveMethodPrefix + suffix,
             params = this._getMoveParams(to, after);
          if (!this._orderProvider) {
-            this._orderProvider = DI.resolve('source.provider.sbis-business-logic', {resource: this._options.moveResource});
+            this._orderProvider = DI.resolve(
+               'source.provider.sbis-business-logic', {
+                  endpoint: {
+                     contract: this._options.moveContract
+                  }
+               }
+            );
          }
          $ws.helpers.forEach(from, function(record) {
             params['ИдО'] = self._prepareComplexId(record.getId());
@@ -81,7 +97,7 @@ define('js!SBIS3.CONTROLS.Data.MoveStrategy.Sbis', [
          var params = {
                'ПорядковыйНомер': this._options.moveDefaultColumn,
                'Иерархия': null,
-               'Объект': this._options.resource
+               'Объект': this._options.contract
             },
             id = this._prepareComplexId(to.getId());
 
@@ -101,7 +117,7 @@ define('js!SBIS3.CONTROLS.Data.MoveStrategy.Sbis', [
       _prepareComplexId: function (id){
          var preparedId = String.prototype.split.call(id, ',', 2);
          if (preparedId.length < 2) {
-            preparedId.push(this._options.resource);
+            preparedId.push(this._options.contract);
          }
          return preparedId;
       }

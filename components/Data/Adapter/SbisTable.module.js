@@ -1,43 +1,42 @@
+/* global define, $ws */
 define('js!SBIS3.CONTROLS.Data.Adapter.SbisTable', [
-   'js!SBIS3.CONTROLS.Data.Adapter.ITable'
-], function (ITable) {
+   'js!SBIS3.CONTROLS.Data.Adapter.ITable',
+   'js!SBIS3.CONTROLS.Data.Adapter.SbisFormatMixin'
+], function (ITable, SbisFormatMixin) {
    'use strict';
 
    /**
     * Адаптер для таблицы данных в формате СБиС
     * @class SBIS3.CONTROLS.Data.Adapter.SbisTable
     * @mixes SBIS3.CONTROLS.Data.Adapter.ITable
+    * @mixes SBIS3.CONTROLS.Data.Adapter.SbisFormatMixin
     * @public
     * @author Мальцев Алексей
     */
-   var SbisTable = $ws.core.extend({}, [ITable], /** @lends SBIS3.CONTROLS.Data.Adapter.SbisTable.prototype */{
+   var SbisTable = $ws.core.extend({}, [ITable, SbisFormatMixin], /** @lends SBIS3.CONTROLS.Data.Adapter.SbisTable.prototype */{
       _moduleName: 'SBIS3.CONTROLS.Data.Adapter.SbisTable',
-      $protected: {
-         /**
-          * @var {Object} Сырые данные
-          */
-         _data: undefined
+
+      $constructor: function () {
+         this._data._type = 'recordset';
       },
 
-      $constructor: function (data) {
-         if (!(data instanceof Object)) {
-            data = {};
-         }
-         if (!(data.s instanceof Array)) {
-            data.s = [];
-         }
-         if (!(data.d instanceof Array)) {
-            data.d = [];
-         }
-         this._data = data;
+      //region SBIS3.CONTROLS.Data.Adapter.JsonFormatMixin
+
+      _buildD: function(at, value) {
+         $ws.helpers.forEach(this._data.d, function(item) {
+            item.splice(at, 0, value);
+         });
       },
 
-      getEmpty: function () {
-         return {
-            d: [],
-            s: $ws.core.clone(this._data.s || [])
-         };
+      _removeD: function(at) {
+         $ws.helpers.forEach(this._data.d, function(item) {
+            item.splice(at, 1);
+         });
       },
+
+      //endregion SBIS3.CONTROLS.Data.Adapter.JsonFormatMixin
+
+      //region Public methods
 
       getCount: function () {
          return this._data.d.length;
@@ -50,7 +49,7 @@ define('js!SBIS3.CONTROLS.Data.Adapter.SbisTable', [
          if (at === undefined) {
             this._data.d.push(record.d);
          } else {
-            this._checkPosition(at);
+            this._checkRowIndex(at);
             this._data.d.splice(at, 0, record.d);
          }
       },
@@ -62,28 +61,13 @@ define('js!SBIS3.CONTROLS.Data.Adapter.SbisTable', [
          } : undefined;
       },
 
-      merge: function(one, two){
-         $ws.core.merge(
-            this._data.d[one],
-            this._data.d[two]
-         );
-         this.remove(two);
-      },
-
-      copy: function(index){
-         this._checkPosition(index);
-         var source = this._data.d[index],
-            clone = $ws.core.clone(source);
-         this._data.d.splice(index, 0, clone);
-      },
-
       remove: function (at) {
-         this._checkPosition(at);
+         this._checkRowIndex(at);
          this._data.d.splice(at, 1);
       },
 
       replace: function (record, at) {
-         this._checkPosition(at);
+         this._checkRowIndex(at);
          if (!this._data.s.length) {
             this._data.s = record.s || [];
          }
@@ -98,15 +82,34 @@ define('js!SBIS3.CONTROLS.Data.Adapter.SbisTable', [
          this._data.d.splice(target, 0, removed.shift());
       },
 
-      getData: function () {
-         return this._data;
+      merge: function(acceptor, donor){
+         $ws.core.merge(
+            this._data.d[acceptor],
+            this._data.d[donor]
+         );
+         this.remove(donor);
       },
 
-      _checkPosition: function (at) {
-         if (at < 0 || at > this._data.d.length) {
-            throw new Error('Out of bounds');
+      copy: function(index){
+         this._checkRowIndex(index);
+         var source = this._data.d[index],
+            clone = $ws.core.clone(source);
+         this._data.d.splice(index, 0, clone);
+      },
+
+      //endregion Public methods
+
+      //region Protected methods
+
+      _checkRowIndex: function(index) {
+         var max = this._data.d.length - 1;
+         if (!(index >= 0 && index <= max)) {
+            throw new RangeError(this._moduleName + ': row index ' + index + ' is out of bounds.');
          }
       }
+
+      //endregion Protected methods
+
    });
 
    return SbisTable;

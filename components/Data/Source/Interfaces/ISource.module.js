@@ -1,29 +1,117 @@
-/* global define, $ws */
+/* global define */
 define('js!SBIS3.CONTROLS.Data.Source.ISource', [
 ], function () {
    'use strict';
 
    /**
-    * Интерфейс источника данных
+    * Интерфейс источника данных - объекта с CRUD архитектурой, предоставляющего доступ к типовым операциям, применяемым к объекту предметной области.
     * @mixin SBIS3.CONTROLS.Data.Source.ISource
     * @public
     * @author Мальцев Алексей
     */
 
    return /** @lends SBIS3.CONTROLS.Data.Source.ISource.prototype */{
+      /**
+       * @typedef {Object} Endpoint
+       * @property {String} [address] Адрес - указывает место расположения сервиса, к которому будет осуществлено подключение
+       * @property {String} contract Контракт - определяет доступные операции
+       */
+
+      /**
+       * @typedef {Object} Binding
+       * @property {String} create Операция создания записи через метод {@link create}
+       * @property {String} read Операция чтения записи через метод {@link read}
+       * @property {String} update Операция обновления записи через метод {@link update}
+       * @property {String} destroy Операция удаления записи через метод {@link destroy}
+       * @property {String} query Операция получения списка записей через метод {@link query}
+       * @property {String} copy Операция копирования записей через метод {@link copy}
+       * @property {String} merge Операция объединения записей через метод {@link merge}
+       */
+
       $protected: {
          _options: {
             /**
-             * @cfg {String} Название ресурса, с которым работает источник (имя таблицы, объекта, файла, URL, path и т.п.)
-             * @see getResource
+             * @cfg {Endpoint|String} Конечная точка, обеспечивающая доступ клиента к функциональным возможностям источника данных
+             * @see getEndPoint
              * @example
              * <pre>
-             *    var dataSource = new Source({
-             *       resource: '/users/'
+             *    var dataSource = new HttpSource({
+             *       endpoint: {
+             *          address: '/api/',
+             *          contract: 'users/'
+             *       }
+             *    });
+             * </pre>
+             * @example
+             * <pre>
+             *    var dataSource = new HttpSource({
+             *       endpoint: '/users/'
+             *    });
+             * </pre>
+             * @example
+             * <pre>
+             *    var dataSource = new RpcSource({
+             *       endpoint: {
+             *          address: '//server.name/api/rpc/',
+             *          contract: 'Users'
+             *       }
              *    });
              * </pre>
              */
-            resource: '',
+            endpoint: {},
+
+            /**
+             * @cfg {Binding} Соответствие методов CRUD+ контракту
+             * @see getBinding
+             * @see setBinding
+             * @see create
+             * @see read
+             * @see destroy
+             * @see query
+             * @see copy
+             * @see merge
+             * @example
+             * <pre>
+             *    var dataSource = new HttpSource({
+             *       endpoint: {
+             *          address: '//some.server/',
+             *          contract: 'users/'
+             *       },
+             *       binding: {
+             *          create: 'add/',//dataSource.create() calls //some.server/users/add/ via HTTP
+             *          read: 'load/',//dataSource.read() calls //some.server/users/load/ via HTTP
+             *          update: 'save/',//dataSource.update() calls //some.server/users/save/ via HTTP
+             *          destroy: 'delete/',//dataSource.destroy() calls //some.server/users/delete/ via HTTP
+             *          query: 'list/',//dataSource.query() calls //some.server/users/list/ via HTTP
+             *       }
+             *    });
+             * </pre>
+             * @example
+             * <pre>
+             *    var dataSource = new RpcSource({
+             *       endpoint: {
+             *          address: '//some.server/rpc-gate/',
+             *          contract: 'Users'
+             *       },
+             *       binding: {
+             *          create: 'Add',//dataSource.create() calls UsersAdd() via RPC
+             *          read: 'Load',//dataSource.read() calls UsersLoad() via RPC
+             *          update: 'Save',//dataSource.update() calls UsersSave() via RPC
+             *          destroy: 'Delete',//dataSource.destroy() calls UsersDelete() via RPC
+             *          query: 'List',//dataSource.query() calls UsersList() via RPC
+             *       }
+             *    });
+             * </pre>
+             */
+            binding: {
+               create: '',
+               read: '',
+               update: '',
+               destroy: '',
+               query: '',
+               copy: '',
+               merge: ''
+            },
 
             /**
              * @cfg {String|SBIS3.CONTROLS.Data.Adapter.IAdapter} Адаптер для работы с данными, по умолчанию {@link SBIS3.CONTROLS.Data.Adapter.Json}
@@ -127,11 +215,31 @@ define('js!SBIS3.CONTROLS.Data.Source.ISource', [
       },
 
       /**
-       * Возвращает ресурс, с которым работает источник
-       * @returns {String}
-       * @see resource
+       * Возвращает конечную точку, обеспечивающую доступ клиента к функциональным возможностям источника данных
+       * @returns {Endpoint}
+       * @see endpoint
        */
-      getResource: function () {
+      getEndpoint: function () {
+         throw new Error('Method must be implemented');
+      },
+
+      /**
+       * Возвращает соответствие методов CRUD+ контракту
+       * @returns {Binding}
+       * @see binding
+       * @see setBinding
+       */
+      getBinding: function () {
+         throw new Error('Method must be implemented');
+      },
+
+      /**
+       * Устанавливает соответствие методов CRUD+ контракту
+       * @param {Binding} binding
+       * @see binding
+       * @see getBinding
+       */
+      setBinding: function (binding) {
          throw new Error('Method must be implemented');
       },
 
@@ -255,7 +363,7 @@ define('js!SBIS3.CONTROLS.Data.Source.ISource', [
        * @example
        * <pre>
        *    var dataSource = new RestSource({
-       *       resource: '/articles/'
+       *       endpoint: '/articles/'
        *    });
        *    dataSource.create().addCallback(function(model) {
        *       var id = model.get('Id'),//01c5151e-21fe-5316-d118-cb13216c9412
@@ -277,7 +385,7 @@ define('js!SBIS3.CONTROLS.Data.Source.ISource', [
        * @example
        * <pre>
        *    var dataSource = new RestSource({
-       *       resource: '/articles/'
+       *       endpoint: '/articles/'
        *    });
        *    dataSource.read('how-to-read-an-item').addCallback(function(model) {
        *       var id = model.get('Id'),//how-to-read-an-item
@@ -299,7 +407,7 @@ define('js!SBIS3.CONTROLS.Data.Source.ISource', [
        * @example
        * <pre>
        *    var dataSource = new RestSource({
-       *       resource: '/articles/'
+       *       endpoint: '/articles/'
        *    }),
        *    article = new Model({
        *       rawData: {
@@ -326,7 +434,7 @@ define('js!SBIS3.CONTROLS.Data.Source.ISource', [
        * @example
        * <pre>
        *    var dataSource = new RestSource({
-       *       resource: '/articles/'
+       *       endpoint: '/articles/'
        *    });
        *    dataSource.destroy('article-id-to-destroy').addCallback(function() {
        *       $ws.helpers.alert('The article was deleted successfully');
@@ -375,7 +483,7 @@ define('js!SBIS3.CONTROLS.Data.Source.ISource', [
        * @example
        * <pre>
        *    var dataSource = new Source({
-       *          resource: 'Employee'
+       *          endpoint: 'Employee'
        *       }),
        *       query = new Query();
        *    query.select([
@@ -409,7 +517,7 @@ define('js!SBIS3.CONTROLS.Data.Source.ISource', [
        * @example
        * <pre>
        *    var dataSource = new Source({
-       *       resource: 'Employee'
+       *       endpoint: 'Employee'
        *    });
        *    dataSource.call('GiveAGift', {
        *       birthDate: new Date()

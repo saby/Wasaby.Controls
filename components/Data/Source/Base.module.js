@@ -27,14 +27,46 @@ define('js!SBIS3.CONTROLS.Data.Source.Base', [
 
       _moduleName: 'SBIS3.CONTROLS.Data.Source.Base',
 
-      $constructor: function () {
+      $constructor: function (cfg) {
          this._publish('onDataSync');
+
+         cfg = cfg || {};
+         //Deprecated
+         if ('resource' in cfg && !('endpoint' in cfg)) {
+            $ws.single.ioc.resolve('ILogger').info(this._moduleName + '::$constructor()', 'Option "resource" is deprecated and will be removed in 3.7.4. Use "endpoint.contract" instead.');
+            this._options.endpoint.contract = cfg.resource;
+         }
+
+         //Shortcut support
+         if (typeof this._options.endpoint === 'string') {
+            this._options.endpoint = {
+               contract: this._options.endpoint
+            };
+         }
       },
 
       //region SBIS3.CONTROLS.Data.Source.ISource
 
+      getEndpoint: function () {
+         return this._options.endpoint;
+      },
+
+      getBinding: function () {
+         return this._options.binding;
+      },
+
+      setBinding: function (binding) {
+         this._options.binding = binding;
+      },
+
+      /**
+       * Возвращает ресурс, с которым работает источник
+       * @deprecated Метод будет удален в 3.7.4, используйте getEndpoint().contract
+       * @returns {String}
+       */
       getResource: function () {
-         return this._options.resource;
+         $ws.single.ioc.resolve('ILogger').info(this._moduleName + '::getResource()', 'Method is deprecated and will be removed in 3.7.4. Use "getEndpoint().contract" instead.');
+         return this._options.endpoint.contract || '';
       },
 
       getAdapter: function () {
@@ -80,7 +112,7 @@ define('js!SBIS3.CONTROLS.Data.Source.Base', [
        * Определяет название свойства с первичным ключем по данным
        * @param {*} data Сырые данные
        * @returns {String}
-       * @private
+       * @protected
        */
       _getIdPropertyByData: function(data) {
          return this.getAdapter().getKeyField(data) || '';
@@ -90,13 +122,27 @@ define('js!SBIS3.CONTROLS.Data.Source.Base', [
        * Создает новый экземпляр модели
        * @param {*} model Данные модели
        * @returns {SBIS3.CONTROLS.Data.Model}
-       * @private
+       * @protected
        */
       _getModelInstance: function (data) {
          return Di.resolve(this._options.model, {
             rawData: data,
             adapter: this.getAdapter(),
-            idProperty: this.getIdProperty() || this._getIdPropertyByData(data)
+            idProperty: this.getIdProperty()
+         });
+      },
+
+      /**
+       * Создает новый экземпляр списка
+       * @param {*} model Данные списка
+       * @returns {SBIS3.CONTROLS.Data.Collection.List}
+       * @protected
+       */
+      _getListInstance: function (data) {
+         return Di.resolve(this._options.listModule, {
+            rawData: data,
+            adapter: this.getAdapter(),
+            idProperty: this.getIdProperty()
          });
       },
 
@@ -104,7 +150,7 @@ define('js!SBIS3.CONTROLS.Data.Source.Base', [
        * Создает новый экземпляр dataSet
        * @param {Object} cfg Опции конструктора
        * @returns {SBIS3.CONTROLS.Data.Source.DataSet}
-       * @private
+       * @protected
        */
       _getDataSetInstance: function (cfg) {
          return new DataSet($ws.core.merge({
@@ -123,7 +169,7 @@ define('js!SBIS3.CONTROLS.Data.Source.Base', [
        * @param {*} data Выборка
        * @param {Function} callback Ф-я обратного вызова для каждой записи
        * @param {Object} context Конекст
-       * @private
+       * @protected
        */
       _each: function (data, callback, context) {
          var tableAdapter = this.getAdapter().forTable(data),
@@ -141,7 +187,7 @@ define('js!SBIS3.CONTROLS.Data.Source.Base', [
       //region SBIS3.CONTROLS.BaseSource
 
       sync: function (data) {
-         //$ws.single.ioc.resolve('ILogger').log('SBIS3.CONTROLS.Data.Source.Base', 'method sync() is deprecated and will be removed in 3.7.4. Use SBIS3.CONTROLS.Data.Model::sync() instead.');
+         //$ws.single.ioc.resolve('ILogger').info('SBIS3.CONTROLS.Data.Source.Base', 'method sync() is deprecated and will be removed in 3.7.4. Use SBIS3.CONTROLS.Data.Model::sync() instead.');
 
          var result;
          if ($ws.helpers.instanceOfModule(data, 'SBIS3.CONTROLS.Data.Model')) {

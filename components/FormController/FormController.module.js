@@ -1,5 +1,5 @@
-define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl'], 
-   function(CompoundControl, dotTpl) {
+define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js!SBIS3.CORE.LoadingIndicator'],
+   function(CompoundControl, LoadingIndicator) {
    /**
     * Компонент, на основе которого создают диалоги редактирования записей
     *
@@ -15,11 +15,39 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl'],
     */
    'use strict';
 
-   var FormController = CompoundControl.extend([], {
-      _dotTplFn: dotTpl,
+   var FormController = CompoundControl.extend([], /** @lends SBIS3.CONTROLS.FormController.prototype */ {
+      /**
+       * @event onFail При неудачном сохранении записи
+       * Событие, происходящее в случае неудачного сохранения записи.
+       * @param {$ws.proto.EventObject} eventObject Дескриптор события.
+       * @param {Object} error Ошибка.
+       * @example
+       * <pre>
+       *    //btn - кнопка на диалоге редактирования
+       *    btn.getTopParent().subscribe('onFail', function(event, error){
+       *       $ws.core.alert('Все сломалось потому, что ' + error.message);
+       *    });
+       * </pre>
+       */
+      /**
+       * @event onSuccess При успешном сохранении записи
+       * Событие в случае успешного сохранения записи.
+       * @param {$ws.proto.EventObject} eventObject Дескриптор события.
+       * @param {Boolean} result Результат выполнения операции.
+       * @example
+       * <pre>
+       *    //btn - кнопка на диалоге редактирования
+       *    btn.getTopParent().subscribe('onSuccess', function(event, result){
+       *      if (result)
+       *        $ws.core.message('Все хорошо!');
+       *    });
+       * </pre>
+       */
       $protected: {
          _record: null,
          _saving: false,
+         _loadingIndicator: undefined,
+         _panel: undefined,
          _options: {
             /**
              * @cfg {DataSource} Источник данных для диалога редактирования записи
@@ -32,7 +60,7 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl'],
              * <pre>
              *    // инициализируем источник данных БЛ
              *    var dataSource = new SbisService ({
-             *       service: 'Товар'
+             *       endpoint: 'Товар'
              *    });
              *    this.setDataSource(dataSource); // устанавливаем источник данных
              * </pre>
@@ -77,13 +105,22 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl'],
              * </options>
              * </pre>
              */
-            initValues: null
+            initValues: null,
+            /**
+             * @cfg {String} Текст рядом с индикатором сохранения записи
+             * @example
+             * <pre>
+             *     <option name="indicatorSavingMessage">Занят важным делом - сохраняю ваши данные.</option>
+             * </pre>
+             */
+            indicatorSavingMessage:  'Подождите, идёт сохранение'
          }
       },
       
       $constructor: function() {
-         this._publish('onSubmit');
+         this._publish('onSubmit', 'onFail', 'onSuccess');
          $ws.single.CommandDispatcher.declareCommand(this, 'submit', this.submit);
+         this._panel = this.getTopParent();
          if (this._options.dataSource){
             this._runQuery();
          } else {
@@ -92,7 +129,7 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl'],
 
          //Выписал задачу, чтобы при событии onBeforeClose стрелял метод у floatArea, который мы бы переопределили здесь,
          //чтобы не дергать getTopParent
-         this.getTopParent().subscribe('onBeforeClose', function(event){
+         this._panel.subscribe('onBeforeClose', function(event){
             //Если попали сюда из метода _saveRecord, то this._saving = true и мы просто закрываем панель
             if (this._saving || !this._options.record.isChanged()){
                this._saving = false;
@@ -114,12 +151,13 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl'],
        * });
        * </pre>
        */
-      submit: function(){
-         this._saveRecord(true);
+      submit: function(closePanelAfterSubmit){
+         return this._saveRecord(true, closePanelAfterSubmit);
       },
 
-      _saveRecord: function(hideQuestion){
+      _saveRecord: function(hideQuestion, closePanelAfterSubmit){
          var self = this,
+             dResult = new $ws.proto.Deferred(),
              questionConfig;
 
          questionConfig = {
@@ -128,31 +166,55 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl'],
             detail: 'Чтобы продолжить редактирование, нажмите "Отмена".'
          };
 
-         if (hideQuestion){
-            this._updateRecord();
+         if(!this._parent.validate()) {
+            dResult.errback('Некорректно заполнены обязательные для заполнения поля!');
             return;
          }
-
-         $ws.helpers.question('Сохранить изменения?', questionConfig, this).addCallback(function(result){
-            if (typeof result === 'string'){
-               self._saving = false;
-               return;
-            }
-            self._saving = true;
-            if (result){
-               self._updateRecord();
-            }
-            else{
-               self.getTopParent().cancel();
-            }
-         });
+         if (hideQuestion){
+            this._saving = true;
+            this._updateRecord(dResult, closePanelAfterSubmit);
+         }
+         else{
+            $ws.helpers.question('Сохранить изменения?', questionConfig, this).addCallback(function(result){
+               if (typeof result === 'string'){
+                  self._saving = false;
+                  return;
+               }
+               self._saving = true;
+               if (result){
+                  self._updateRecord(dResult, true);
+               }
+               else{
+                  dResult.callback();
+                  self._panel.cancel();
+               }
+            });
+         }
+         return dResult;
       },
 
-      _updateRecord: function(){
-         var def = this._options.dataSource.update(this._options.record);
-         def.addCallback(function(){
-            this.getTopParent().ok();
-         }.bind(this));
+      _updateRecord: function(dResult, closePanelAfterSubmit){
+         var def = this._options.dataSource.update(this._options.record),
+            self = this;
+         this._showLoadingIndicator();
+         dResult.dependOn(def.addCallbacks(function (result) {
+            self._notify('onSuccess', result);
+            if (closePanelAfterSubmit) {
+               self._panel.ok();
+            }
+            else {
+               self._saving = false;
+            }
+            return result;
+         }, function (error) {
+            self._processError(error);
+            self._saving = false;
+            return error;
+         }));
+         dResult.addBoth(function(r){
+            self._hideLoadingIndicator();
+            return r;
+         });
       },
 
       _readRecord: function(key){
@@ -161,6 +223,45 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl'],
 
       _setContextRecord: function(record){
          this.getLinkedContext().setValue('record', record);               
+      },
+      /**
+       * Показывает индикатор загрузки
+       */
+      _showLoadingIndicator: $ws.helpers.forAliveOnly(function(){
+         if(this._loadingIndicator && !this._loadingIndicator.isDestroyed()){
+            this._loadingIndicator.show(this._options.indicatorSavingMessage);
+         } else {
+            this._loadingIndicator = new LoadingIndicator({
+               parent: this._panel,
+               showInWindow: true,
+               modal: true,
+               message: this._options.indicatorSavingMessage,
+               name: this.getId() + '-LoadingIndicator'
+            });
+         }
+      }),
+      /**
+       * Скрывает индикатор загрузки
+       */
+      _hideLoadingIndicator: $ws.helpers.forAliveOnly(function(){
+         if(this._loadingIndicator) {
+            this._loadingIndicator.hide();
+         }
+      }),
+      _processError: function(e) {
+         var
+            eResult = this._notify('onFail', e),
+            eMessage = e && e.message;
+         if(eResult || eResult === undefined) { // string, undefined
+            if(typeof eResult == 'string') {
+               eMessage = eResult;
+            }
+            if(eMessage) {
+               $ws.helpers.message(eMessage);
+            }
+         }
+         e.processed = true;
+         return e;
       },
       /**
        * Получает источник данных диалога редактирования
@@ -177,7 +278,7 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl'],
        * <pre>
        *    // инициализируем источник данных БЛ
        *    var dataSource = new SbisService ({
-       *       service: 'Товар'
+       *       endpoint: 'Товар'
        *    });
        *    this.setDataSource(dataSource); // устанавливаем источник данных
        * </pre>

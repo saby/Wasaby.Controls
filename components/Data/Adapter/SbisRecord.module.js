@@ -1,45 +1,42 @@
+/* global define, $ws */
 define('js!SBIS3.CONTROLS.Data.Adapter.SbisRecord', [
    'js!SBIS3.CONTROLS.Data.Adapter.IRecord',
+   'js!SBIS3.CONTROLS.Data.Adapter.SbisFormatMixin',
    'js!SBIS3.CONTROLS.Data.Adapter.FieldType'
-], function (IRecord, FIELD_TYPE) {
+], function (IRecord, SbisFormatMixin, FIELD_TYPE) {
    'use strict';
 
    /**
     * Адаптер для записи таблицы данных в формате СБиС
     * @class SBIS3.CONTROLS.Data.Adapter.SbisRecord
     * @mixes SBIS3.CONTROLS.Data.Adapter.IRecord
+    * @mixes SBIS3.CONTROLS.Data.Adapter.SbisFormatMixin
     * @public
     * @author Мальцев Алексей
     */
-   var SbisRecord = $ws.core.extend({}, [IRecord], /** @lends SBIS3.CONTROLS.Data.Adapter.SbisRecord.prototype */{
+   var SbisRecord = $ws.core.extend({}, [IRecord, SbisFormatMixin], /** @lends SBIS3.CONTROLS.Data.Adapter.SbisRecord.prototype */{
       _moduleName: 'SBIS3.CONTROLS.Data.Adapter.SbisRecord',
-      $protected: {
-         /**
-          * @var {Object} Сырые данные
-          */
-         _data: undefined,
 
-         /**
-          * @var {Object<String, Number>} Название поля -> индекс в d
-          */
-         _fieldIndexes: undefined
+      $constructor: function () {
+         this._data._type = 'record';
       },
 
-      $constructor: function (data) {
-         if (!(data instanceof Object)) {
-            data = {};
-         }
-         if (!(data.s instanceof Array)) {
-            data.s = [];
-         }
-         if (!(data.d instanceof Array)) {
-            data.d = [];
-         }
-         this._data = data;
+      //region SBIS3.CONTROLS.Data.Adapter.JsonFormatMixin
+
+      _buildD: function(at, value) {
+         this._data.d.splice(at, 0, value);
       },
+
+      _removeD: function(at) {
+         this._data.d.splice(at, 1);
+      },
+
+      //endregion SBIS3.CONTROLS.Data.Adapter.JsonFormatMixin
+
+      //region Public methods
 
       has: function (name) {
-         return this._getFieldIndex(name) >= 0;
+         return this._has(name);
       },
 
       get: function (name) {
@@ -50,27 +47,13 @@ define('js!SBIS3.CONTROLS.Data.Adapter.SbisRecord', [
       set: function (name, value) {
          var index = this._getFieldIndex(name);
          if (index < 0) {
-            throw new ReferenceError('Property is not defined');
+            throw new ReferenceError(this._moduleName + '::set(): field "' + name + '" is not defined');
          }
          this._data.d[index] = value;
       },
 
-      getFields: function () {
-         var fields = [];
-         for (var i = 0, count = this._data.s.length; i < count; i++) {
-            fields.push(this._data.s[i].n);
-         }
-         return fields;
-      },
-
-      getEmpty: function () {
-         return {
-            d: [],
-            s: $ws.core.clone(this._data.s)
-         };
-      },
-
       getInfo: function (name) {
+         $ws.single.ioc.resolve('ILogger').info(this._moduleName + '::getInfo()', 'Method is deprecated and will be removed in 3.7.4. Use \'getFormat\' instead.');
          var index = this._getFieldIndex(name),
             meta = index >= 0 ? this._data.s[index] : undefined,
             fieldData = {meta: undefined, type: undefined};
@@ -86,7 +69,7 @@ define('js!SBIS3.CONTROLS.Data.Adapter.SbisRecord', [
          var s = this._data.s,
             index;
          for (var i = 0, l = s.length; i < l; i++) {
-            if (s[i].n[0] === '@') {
+            if (s[i].n && s[i].n[0] === '@') {
                index = i;
                break;
             }
@@ -98,9 +81,9 @@ define('js!SBIS3.CONTROLS.Data.Adapter.SbisRecord', [
          return index === undefined ? undefined : s[index].n;
       },
 
-      getData: function () {
-         return this._data;
-      },
+      //endregion Public methods
+
+      //region Protected methods
 
       _getType: function (meta, value, key) {
          key = key || 't';
@@ -131,8 +114,9 @@ define('js!SBIS3.CONTROLS.Data.Adapter.SbisRecord', [
             case 'Enum':
                meta.source = [];
                for (var index in  meta.s){
-                  if(meta.s.hasOwnProperty(index))
+                  if (meta.s.hasOwnProperty(index)) {
                      meta.source[index] = meta.s[index];
+                  }
                }
                break;
             case 'Money':
@@ -152,23 +136,15 @@ define('js!SBIS3.CONTROLS.Data.Adapter.SbisRecord', [
                };
                break;
             case 'Array':
-               var type = this._getType(meta);
-               meta.elementsType = type.name;
+               var metaType = this._getType(meta);
+               meta.elementsType = metaType.name;
                break;
 
          }
          return meta;
-      },
-
-      _getFieldIndex: function (name) {
-         if (this._fieldIndexes === undefined) {
-            this._fieldIndexes = {};
-            for (var i = 0, count = this._data.s.length; i < count; i++) {
-               this._fieldIndexes[this._data.s[i].n] = i;
-            }
-         }
-         return this._fieldIndexes.hasOwnProperty(name) ? this._fieldIndexes[name] : -1;
       }
+
+      //endregion Protected methods
    });
 
    return SbisRecord;

@@ -85,7 +85,7 @@ define('js!SBIS3.CONTROLS.Data.Source.DataSet', [
          cfg = cfg || {};
          if ('data' in cfg && !('rawData' in cfg)) {
             this._options.rawData = cfg.data;
-            $ws.single.ioc.resolve('ILogger').log('SBIS3.CONTROLS.Data.Source.DataSet', 'option "data" is deprecated and will be removed in 3.7.4. Use "rawData" instead.');
+            $ws.single.ioc.resolve('ILogger').info('SBIS3.CONTROLS.Data.Source.DataSet', 'option "data" is deprecated and will be removed in 3.7.4. Use "rawData" instead.');
          }
       },
 
@@ -354,7 +354,7 @@ define('js!SBIS3.CONTROLS.Data.Source.DataSet', [
        * Возвращает свойство данных
        * @param {String} property Свойство
        * @returns {*}
-       * @private
+       * @protected
        */
       _getDataProperty: function (property) {
          this._checkAdapter();
@@ -367,7 +367,7 @@ define('js!SBIS3.CONTROLS.Data.Source.DataSet', [
        * Возвращает инстанс модели
        * @param {*} rawData Данные модели
        * @returns {Function}
-       * @private
+       * @protected
        */
       _getModelInstance: function (rawData) {
          if (!this._options.model) {
@@ -375,14 +375,13 @@ define('js!SBIS3.CONTROLS.Data.Source.DataSet', [
          }
          return Di.resolve(this._options.model, {
             rawData: rawData,
-            adapter: this._options.adapter,
-            compatibleMode: true
+            adapter: this._options.adapter
          });
       },
 
       /**
        * Проверят наличие адаптера
-       * @private
+       * @protected
        */
       _checkAdapter: function () {
          if (!this.getAdapter()) {

@@ -6,6 +6,7 @@ define('js!SBIS3.CONTROLS.Data.Adapter.ITable', [], function () {
     * Интерфейс адаптера для таблицы данных
     * @mixin SBIS3.CONTROLS.Data.Adapter.ITable
     * @public
+    * @ignoreMethods getSharedFormat
     * @author Мальцев Алексей
     */
 
@@ -19,10 +20,26 @@ define('js!SBIS3.CONTROLS.Data.Adapter.ITable', [], function () {
       },
 
       /**
+       * Возвращает массив названий полей
+       * @returns {Array.<String>} Названия полей
+       */
+      getFields: function () {
+         throw new Error('Method must be implemented');
+      },
+
+      /**
        * Возвращает кол-во записей таблицы
        * @returns {Number}
        */
       getCount: function () {
+         throw new Error('Method must be implemented');
+      },
+
+      /**
+       * Возвращает данные таблицы в формате адаптера
+       * @returns {*}
+       */
+      getData: function () {
          throw new Error('Method must be implemented');
       },
 
@@ -63,8 +80,8 @@ define('js!SBIS3.CONTROLS.Data.Adapter.ITable', [], function () {
 
       /**
        * Перемещает запись
-       * @param {Number} from Позиция, откуда перемещаем
-       * @param {Number} to Позиция, в позицию которую перемещаем
+       * @param {Number} source Позиция, откуда перемещаем
+       * @param {Number} target Позиция, в позицию которую перемещаем
        * @returns {*}
        */
       move: function(source, target) {
@@ -73,28 +90,69 @@ define('js!SBIS3.CONTROLS.Data.Adapter.ITable', [], function () {
 
       /**
        * Объединяет две записи
-       * @param {Number} one Позиция записи в которую будет идти объединение
-       * @param {Number} two Позиция второй записи
+       * @param {Number} acceptor Позиция принимающей записи
+       * @param {Number} donor Позиция записи-донора
        * @param {String} idProperty  Название поля содержащего первичный ключ
        * @returns {*}
        */
-      merge: function(one, two, idProperty){
+      merge: function(acceptor, donor, idProperty) {
          throw new Error('Method must be implemented');
       },
+
       /**
        * Копирует запись по позиции
        * @param {Number} index Позиция, которая будет скопирована
        * @returns {*}
        */
-      copy: function(index){
+      copy: function(index) {
          throw new Error('Method must be implemented');
       },
 
       /**
-       * Возвращает данные
-       * @returns {*}
+       * Возвращает формат поля (в режиме только для чтения)
+       * @param {String} name Поле записи
+       * @returns {SBIS3.CONTROLS.Data.Format.Field}
        */
-      getData: function () {
+      getFormat: function (name) {
+         throw new Error('Method must be implemented');
+      },
+
+      /**
+       * Возвращает общий универсальный формат поля - его нельзя использовать в замыканиях и сохранять куда-либо.
+       * Метод каждый раз возвращает один и тот же объект, заменяя только его данные - подобный подход обеспечивает
+       * ускорение и уменьшение расхода памяти.
+       * @param {String} name Поле записи
+       * @returns {SBIS3.CONTROLS.Data.Format.UniversalField}
+       */
+      getSharedFormat: function (name) {
+         throw new Error('Method must be implemented');
+      },
+
+      /**
+       * Добавляет поле в таблицу.
+       * Если позиция не указана (или указана как -1), поле добавляется в конец.
+       * Если поле с таким форматом уже есть, генерирует исключение.
+       * @param {SBIS3.CONTROLS.Data.Format.Field} format Формат поля
+       * @param {Number} [at] Позиция поля
+       */
+      addField: function(format, at) {
+         throw new Error('Method must be implemented');
+      },
+
+      /**
+       * Удаляет поле из таблицы по имени.
+       * @param {String} name Имя поля
+       */
+      removeField: function(name) {
+         throw new Error('Method must be implemented');
+      },
+
+      /**
+       * Удаляет поле из таблицы по позиции.
+       * Если позиция выходит за рамки допустимого индекса, генерирует исключение.
+       * @param {String} index Позиция поля
+       */
+      removeFieldAt: function(index) {
          throw new Error('Method must be implemented');
       }
    };

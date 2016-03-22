@@ -5,11 +5,12 @@ define('js!SBIS3.CONTROLS.Data.Record', [
    'js!SBIS3.CONTROLS.Data.Collection.ArrayEnumerator',
    'js!SBIS3.CONTROLS.Data.SerializableMixin',
    'js!SBIS3.CONTROLS.Data.Serializer',
+   'js!SBIS3.CONTROLS.Data.FormattableMixin',
    'js!SBIS3.CONTROLS.Data.Di',
    'js!SBIS3.CONTROLS.Data.Factory',
-   'js!SBIS3.CONTROLS.Data.ContextField.Record',
-   'js!SBIS3.CONTROLS.Data.Adapter.Json'
-], function (IPropertyAccess, IEnumerable, ArrayEnumerator, SerializableMixin, Serializer, Di, Factory, ContextFieldRecord) {
+   'js!SBIS3.CONTROLS.Data.Format.StringField',
+   'js!SBIS3.CONTROLS.Data.ContextField.Record'
+], function (IPropertyAccess, IEnumerable, ArrayEnumerator, SerializableMixin, Serializer, FormattableMixin, Di, Factory, StringField, ContextFieldRecord) {
    'use strict';
 
    /**
@@ -19,71 +20,40 @@ define('js!SBIS3.CONTROLS.Data.Record', [
     * @mixes SBIS3.CONTROLS.Data.IPropertyAccess
     * @mixes SBIS3.CONTROLS.Data.Collection.IEnumerable
     * @mixes SBIS3.CONTROLS.Data.SerializableMixin
+    * @mixes SBIS3.CONTROLS.Data.FormattableMixin
     * @public
     * @author Мальцев Алексей
     */
 
-   var Record = $ws.proto.Abstract.extend([IPropertyAccess, IEnumerable, SerializableMixin], /** @lends SBIS3.CONTROLS.Data.Record.prototype */{
+   var Record = $ws.proto.Abstract.extend([IPropertyAccess, IEnumerable, SerializableMixin, FormattableMixin], /** @lends SBIS3.CONTROLS.Data.Record.prototype */{
       _moduleName: 'SBIS3.CONTROLS.Data.Record',
       $protected: {
          _options: {
-            /**
-             * @cfg {Object} Данные в "сыром" виде
-             * @see getRawData
-             * @see setRawData
-             * @example
-             * <pre>
-             *    var user = new Record({
-             *       rawData: {
-             *          id: 1,
-             *          firstName: 'John',
-             *          lastName: 'Smith'
-             *       }
-             *    });
-             *    user.get('id');//5
-             *    user.get('firstName');//John
-             * </pre>
-             */
-            rawData: null,
 
             /**
-             * @cfg {String|SBIS3.CONTROLS.Data.Adapter.IAdapter} Адаптер для работы с данными в "сыром" виде, по умолчанию {@link SBIS3.CONTROLS.Data.Adapter.Json}
-             * @see getAdapter
-             * @see setAdapter
-             * @see SBIS3.CONTROLS.Data.Di
-             * @example
-             * <pre>
-             *    var user = new Record({
-             *       adapter: 'adapter.sbis'
-             *    });
-             * </pre>
-             * @example
-             * <pre>
-             *    var user = new Record({
-             *       adapter: new SbisAdapter()
-             *    });
-             * </pre>
+             * @cfg {SBIS3.CONTROLS.Data.Collection.RecordSet} Рекордсет, которому принадлежит запись. Может не принадлежать рекордсету.
+             * @see getOwner
              */
-            adapter: ''
+            owner: null
          },
 
          /**
-          * @var {SBIS3.CONTROLS.Data.Adapter.IRecord} Адаптер для записи
+          * @member {SBIS3.CONTROLS.Data.Adapter.IRecord} Адаптер для записи
           */
          _recordAdapter: null,
 
          /**
-          * @var {Array} Описание всех полей, полученных из данных в "сыром" виде
+          * @member {Array.<String>} Описание всех полей, полученных из данных в "сыром" виде
           */
          _fields: null,
 
          /**
-          * @var {Object.<String, *>} Измененные поля и оригинальные значения
+          * @member {Object.<String, *>} Измененные поля и оригинальные значения
           */
          _changedFields: {},
 
          /**
-          * @var {Object} Объект содержащий закэшированные инстансы значений-объектов
+          * @member {Object} Объект содержащий закэшированные инстансы значений-объектов
           */
          _propertiesCache: {}
       },
@@ -94,12 +64,12 @@ define('js!SBIS3.CONTROLS.Data.Record', [
 
          if ('data' in cfg && !('rawData' in cfg)) {
             this._options.rawData = cfg.data;
-            $ws.single.ioc.resolve('ILogger').log('SBIS3.CONTROLS.Data.Record', 'option "data" is deprecated and will be removed in 3.7.4. Use "rawData" instead.');
+            $ws.single.ioc.resolve('ILogger').info('SBIS3.CONTROLS.Data.Record', 'option "data" is deprecated and will be removed in 3.7.4. Use "rawData" instead.');
          }
          this.setRawData(this._options.rawData);
       },
 
-      // region SBIS3.CONTROLS.Data.IPropertyAccess
+      //region SBIS3.CONTROLS.Data.IPropertyAccess
 
       get: function (name) {
          if (this._propertiesCache.hasOwnProperty(name)) {
@@ -118,7 +88,7 @@ define('js!SBIS3.CONTROLS.Data.Record', [
 
       set: function (name, value) {
          if (!name) {
-            $ws.single.ioc.resolve('ILogger').error('SBIS3.CONTROLS.Data.Record::set()', 'Property name is empty');
+            $ws.single.ioc.resolve('ILogger').error('SBIS3.CONTROLS.Data.Record::set()', 'Property name is empty, value can\'t be setted.');
          }
 
          var oldValue = this._getRawDataValue(name);
@@ -141,9 +111,9 @@ define('js!SBIS3.CONTROLS.Data.Record', [
          return Array.indexOf(this._getRawDataFields(), name) > -1;
       },
 
-      // endregion SBIS3.CONTROLS.Data.IPropertyAccess
+      //endregion SBIS3.CONTROLS.Data.IPropertyAccess
 
-      // region SBIS3.CONTROLS.Data.Collection.IEnumerable
+      //region SBIS3.CONTROLS.Data.Collection.IEnumerable
 
       /**
        * Возвращает энумератор для перебора названий полей записи
@@ -172,9 +142,9 @@ define('js!SBIS3.CONTROLS.Data.Record', [
          }
       },
 
-      // endregion SBIS3.CONTROLS.Data.Collection.IEnumerable
+      //endregion SBIS3.CONTROLS.Data.Collection.IEnumerable
 
-      // region SBIS3.CONTROLS.Data.SerializableMixin
+      //region SBIS3.CONTROLS.Data.SerializableMixin
 
       _getSerializableState: function() {
          var state = $ws.core.merge(
@@ -183,57 +153,80 @@ define('js!SBIS3.CONTROLS.Data.Record', [
             }
          );
 
-         //Prevent core reviver for rawData
-         if (state._options && state._options.rawData && state._options.rawData._type) {
-            state._options.rawData.$type = state._options.rawData._type;
-            delete state._options.rawData._type;
-         }
-
          return state;
       },
 
       _setSerializableState: function(state) {
          return Record.superclass._setSerializableState(state).callNext(function() {
             this._changedFields = state._changedFields;
-
-            //Restore value hidden from core reviver
-            if (this._options && this._options.rawData && this._options.rawData.$type) {
-               this._options.rawData._type = this._options.rawData.$type;
-               delete this._options.rawData.$type;
-            }
          });
       },
 
-      // endregion SBIS3.CONTROLS.Data.SerializableMixin
+      //endregion SBIS3.CONTROLS.Data.SerializableMixin
 
-      // region Public methods
+      //region SBIS3.CONTROLS.Data.FormattableMixin
 
-      /**
-       * Возвращает адаптер для работы с данными в "сыром" виде
-       * @returns {SBIS3.CONTROLS.Data.Adapter.IAdapter}
-       * @see adapter
-       * @see setAdapter
-       */
-      getAdapter: function () {
-         if (!this._options.adapter) {
-            this._options.adapter = this._getDefaultAdapter();
-         }
-         if (typeof this._options.adapter === 'string') {
-            this._options.adapter = Di.resolve(this._options.adapter);
-         }
-         return this._options.adapter;
+      setRawData: function(rawData) {
+         Record.superclass.setRawData.call(this, rawData);
+         this._recordAdapter = null;
+         this._propertiesCache = {};
+         this._fields = null;
+         this._notify('onPropertyChange');
       },
 
-      /**
-       * Устанавливает адаптер для работы с данными в "сыром" виде
-       * @param {String|SBIS3.CONTROLS.Data.Adapter.IAdapter} adapter
-       * @see adapter
-       * @see getAdapter
-       */
       setAdapter: function (adapter) {
-         this._options.adapter = adapter;
+         Record.superclass.setAdapter.call(this, adapter);
+         this._recordAdapter = null;
          this._propertiesCache = {};
       },
+
+      addField: function(format, at, value) {
+         this._checkFormatIsWritable();
+         format = this._buildField(format);
+         Record.superclass.addField.call(this, format, at);
+         this._getRecordAdapter().addField(format, at);
+         this._fields = null;
+
+         if (value !== undefined) {
+            this.set(format.getName(), value);
+         }
+      },
+
+      removeField: function(name) {
+         this._checkFormatIsWritable();
+         Record.superclass.removeField.call(this, name);
+         this._getRecordAdapter().removeField(name);
+         this._fields = null;
+      },
+
+      removeFieldAt: function(at) {
+         this._checkFormatIsWritable();
+         Record.superclass.removeFieldAt.call(this, at);
+         this._getRecordAdapter().removeFieldAt(at);
+         this._fields = null;
+      },
+
+      _getRawDataFields: function() {
+         return this._fields || (this._fields = this._getRecordAdapter().getFields());
+      },
+
+      _getRawDataFormat: function(name) {
+         return this._getRecordAdapter().getFormat(name);
+      },
+
+      /**
+       * Проверяет, что формат записи доступен для записи
+       * @protected
+       */
+      _checkFormatIsWritable: function() {
+         if (this._options.owner) {
+            throw new Error('Record format has read only access. You should change recordset format instead. See option "owner" for details.');
+         }
+      },
+
+      //endregion SBIS3.CONTROLS.Data.FormattableMixin
+
+      //region Public methods
 
       /**
        * Возвращает признак, что поле с указанным именем было изменено.
@@ -282,68 +275,46 @@ define('js!SBIS3.CONTROLS.Data.Record', [
       },
 
       /**
-       * Возвращает "сырые" данные записи
-       * @returns {Object}
+       * Возвращает рекордсет, которому принадлежит запись. Может не принадлежать рекордсету.
+       * @returns {SBIS3.CONTROLS.Data.Collection.RecordSet}
+       * @see owner
        */
-      getRawData: function () {
-         return this._options.rawData;
+      getOwner: function() {
+         return this._options.owner;
       },
 
-      /**
-       * Устанавливает "сырые" данные записи
-       * @param {Object} rawData Данные в "сыром" виде
-       */
-      setRawData: function (rawData) {
-         this._options.rawData = rawData;
-         this._recordAdapter = null;
-         this._propertiesCache = {};
-         this._notify('onPropertyChange');
-      },
       /**
        *  Возвращает массив названий измененных полей.
        *  @returns {Array}
        */
-      getChanged: function (){
+      getChanged: function() {
          return Object.keys(this._changedFields);
       },
+
       /**
-       * Забывет измененные поля.
+       * Забывает измененные поля.
        */
-      applyChanges: function (){
+      applyChanges: function() {
          this._changedFields = {};
       },
-      // endregion Public methods
+
+      //endregion Public methods
 
       //region Protected methods
-
-      /**
-       * Возвращает адаптер по-умолчанию (можно переопределять в наследниках)
-       * @private
-       * @deprecated Метод _getDefaultAdapter() не рекомендуется к использованию и будет удален в 3.7.4. Используйте опцию adapter.
-       */
-      _getDefaultAdapter: function() {
-         if (Record.prototype._getDefaultAdapter !== this._getDefaultAdapter) {
-            $ws.single.ioc.resolve('ILogger').log('SBIS3.CONTROLS.Data.Record', 'Method _getDefaultAdapter() is deprecated and will be removed in 3.7.4. Use \'adapter\' option instead.');
-         }
-         return 'adapter.json';
-      },
 
       /**
        * Возвращает адаптер для работы с записью
        * @returns {SBIS3.CONTROLS.Data.Adapter.IRecord}
        * @protected
        */
-      _getRecordAdapter: function () {
-         return this._recordAdapter || (this._recordAdapter = this.getAdapter().forRecord(this._options.rawData));
-      },
-
-      /**
-       * Возвращает список полей записи, полученный из "сырых" данных
-       * @returns {Array.<String>}
-       * @protected
-       */
-      _getRawDataFields: function () {
-         return this._fields || (this._fields = this._getRecordAdapter().getFields());
+      _getRecordAdapter: function() {
+         if (!this._recordAdapter) {
+            this._recordAdapter = this.getAdapter().forRecord(this._options.rawData);
+            if (this._recordAdapter.getData() !== this._options.rawData) {
+               this._options.rawData = this._recordAdapter.getData();
+            }
+         }
+         return this._recordAdapter;
       },
 
       /**
@@ -364,13 +335,18 @@ define('js!SBIS3.CONTROLS.Data.Record', [
       _getRawDataValue: function(name) {
          var adapter = this._getRecordAdapter(),
             rawValue = adapter.get(name),
-            fieldInfo = adapter.getInfo(name);
+            format;
+
+         try {
+            format = adapter.getSharedFormat(name);
+         } catch (e) {
+            format = 'String';
+         }
 
          return Factory.cast(
             rawValue,
-            fieldInfo.type,
-            this.getAdapter(),
-            fieldInfo.meta
+            format,
+            this.getAdapter()
          );
       },
 
@@ -382,15 +358,19 @@ define('js!SBIS3.CONTROLS.Data.Record', [
        */
       _setRawDataValue: function(name, value) {
          var adapter = this._getRecordAdapter(),
-            fieldInfo = adapter.getInfo(name);
+            format;
+         try {
+            format = adapter.getSharedFormat(name);
+         } catch (e) {
+            format = 'String';
+         }
 
          adapter.set(
             name,
             Factory.serialize(
                value,
-               fieldInfo.type,
-               this.getAdapter(),
-               fieldInfo.meta
+               format,
+               this.getAdapter()
             )
          );
 

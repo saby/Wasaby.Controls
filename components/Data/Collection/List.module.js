@@ -27,22 +27,23 @@ define('js!SBIS3.CONTROLS.Data.Collection.List', [
       $protected: {
          _options: {
             /**
-             * @cfg {Array} Элементы списка
+             * @cfg {Array.<*>} Элементы списка
              * @name SBIS3.CONTROLS.Data.Collection.List#items
              */
          },
 
          /**
-          * @var {*[]} Элементы списка
+          * @member {Array.<*>} Элементы списка
           */
          _items: [],
 
          /**
-          * @var {SBIS3.CONTROLS.Data.Collection.ArrayEnumerator} Служебный энумератор
+          * @member {SBIS3.CONTROLS.Data.Collection.ArrayEnumerator} Служебный энумератор
           */
          _serviceEnumerator: undefined,
+
          /**
-          * @var {SBIS3.CONTROLS.Data.Collection._hashIndex} Индекс хешей элементов
+          * @member {SBIS3.CONTROLS.Data.Collection._hashIndex} Индекс хешей элементов
           */
          _hashIndex: undefined
 
@@ -135,7 +136,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.List', [
             this._items.push(item);
          } else {
             at = at || 0;
-            if (at !== 0 && !this._isValidIndex(at)) {
+            if (at !== 0 && !this._isValidIndex(at, true)) {
                throw new Error('Index is out of bounds');
             }
             this._items.splice(at, 0, item);
@@ -187,25 +188,6 @@ define('js!SBIS3.CONTROLS.Data.Collection.List', [
          return this._items.length;
       },
 
-      equals: function (another) {
-         if (!another ||
-            typeof another !== 'object' ||
-            !$ws.helpers.instanceOfMixin(another, 'SBIS3.CONTROLS.Data.Collection.IList')
-         ) {
-            return false;
-         }
-
-         if (this._items.length !== another.getCount()) {
-            return false;
-         }
-         for (var i = 0, count = this._items.length; i < count; i++) {
-            if (this._items[i] !== another.at(i)) {
-               return false;
-            }
-         }
-         return true;
-      },
-
       //endregion SBIS3.CONTROLS.Data.Collection.IList
 
       //region SBIS3.CONTROLS.Data.Collection.IIndexedCollection
@@ -220,37 +202,63 @@ define('js!SBIS3.CONTROLS.Data.Collection.List', [
 
       //endregion SBIS3.CONTROLS.Data.Collection.IIndexedCollection
 
+      //region deprecated
+
       /**
        * Присоединяет другую коллекцию
        * @param {SBIS3.CONTROLS.Data.Collection.IEnumerable} items Коллекция, которая будет присоединена
        * @param {Boolean} [prepend=false] Присоединить в начало
-       * @deprecated используйте append или prepend
+       * @deprecated метод будет удален в 3.7.4 используйте append() или prepend()
        */
       concat: function (items, prepend) {
-         var isArray = items instanceof Array;
-         if (!isArray && !$ws.helpers.instanceOfMixin(items, 'SBIS3.CONTROLS.Data.Collection.IEnumerable')) {
-            throw new Error('Invalid argument');
-         }
-         if (!isArray) {
-            items = items.toArray();
-         }
-
+         $ws.single.ioc.resolve('ILogger').info(this._moduleName + '::concat()', 'Method is deprecated and will be removed in 3.7.4. Use append() or prepend() instead.');
          if (prepend) {
-            Array.prototype.splice.apply(this._items, [0, 0].concat(items));
+            this.prepend(items);
          } else {
-            Array.prototype.splice.apply(this._items, [this._items.length, 0].concat(items));
+            this.append(items);
          }
-
-         this._reindex();
       },
+
       /**
        * Возвращает коллекцию в виде массива
-       * @deprecated используйте each
        * @returns {Array}
+       * @deprecated метод не рекомендуется к использованию, используйте each()
        */
       toArray: function () {
          return this._items.slice();
       },
+
+      //endregion deprecated
+
+      //region Public methods
+
+      equals: function (another) {
+         $ws.single.ioc.resolve('ILogger').info(this._moduleName + '::equals()', 'Method is deprecated and will be removed in 3.7.4. Use isEqual() instead.');
+         return this.isEqual(another);
+      },
+
+      isEqual: function (list) {
+         if (list === this) {
+            return true;
+         }
+         if (!list ||
+            !$ws.helpers.instanceOfModule(list, 'SBIS3.CONTROLS.Data.Collection.List')
+         ) {
+            return false;
+         }
+
+         if (this.getCount() !== list.getCount()) {
+            return false;
+         }
+         for (var i = 0, count = this.getCount(); i < count; i++) {
+            if (this.at(i) !== list.at(i)) {
+               return false;
+            }
+         }
+         return true;
+      },
+
+      //endregion Public methods
 
       //region Protected methods
 
@@ -267,11 +275,16 @@ define('js!SBIS3.CONTROLS.Data.Collection.List', [
       /**
        * Проверяет корректность индекса
        * @param {Number} index Индекс
+       * @param {Boolean} [addMode=false] Режим добавления
        * @returns {Boolean}
        * @private
        */
-      _isValidIndex: function (index) {
-         return index >= 0 && index < this.getCount();
+      _isValidIndex: function (index, addMode) {
+         var max = this.getCount();
+         if (addMode) {
+            max++;
+         }
+         return index >= 0 && index < max;
       },
 
       _getItemIndexByHash: function (hash) {

@@ -27,7 +27,7 @@ define('js!SBIS3.TestTreeDataGrid',
                 var tree2 = this.getChildControlByName('TreeDataGrid 2');
 
                 var dataSource = new SbisServiceSource({
-                   resource: 'TreeDataGrid'
+                   endpoint: 'TreeDataGrid'
                 });
                 tree1.setDataSource(dataSource);
 

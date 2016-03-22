@@ -27,7 +27,7 @@ define('js!SBIS3.CONTROLS.Data.Source.Memory', [
          /**
           * @var {SBIS3.CONTROLS.Data.Adapter.ITable} Адаптер для таблицы
           */
-         _tableAdapter: undefined,
+         _tableAdapter: null,
 
          /**
           * @var {Object} Индекс для быстрого поиска записи по ключу
@@ -37,16 +37,16 @@ define('js!SBIS3.CONTROLS.Data.Source.Memory', [
 
       $constructor: function (cfg) {
          cfg = cfg || {};
-         if (_static.resources[this._options.resource] === undefined) {
-            _static.resources[this._options.resource] = this._options.data;
+         if (this._options.endpoint.contract && !_static.contracts.hasOwnProperty(this._options.endpoint.contract)) {
+            _static.contracts[this._options.endpoint.contract] = this._options.data;
          }
          if ('strategy' in cfg && !('adapter' in cfg)) {
             this._options.adapter = cfg.strategy;
-            $ws.single.ioc.resolve('ILogger').log('SBIS3.CONTROLS.Data.Collection.RecordSet', 'option "strategy" is deprecated and will be removed in 3.7.4. Use "adapter" instead.');
+            $ws.single.ioc.resolve('ILogger').info(this._moduleName + '::$constructor', 'option "strategy" is deprecated and will be removed in 3.7.4. Use "adapter" instead.');
          }
          if ('keyField' in cfg && !('idProperty' in cfg)) {
             this._options.idProperty = cfg.keyField;
-            $ws.single.ioc.resolve('ILogger').log('SBIS3.CONTROLS.Data.Collection.RecordSet', 'option "keyField" is deprecated and will be removed in 3.7.4. Use "idProperty" instead.');
+            $ws.single.ioc.resolve('ILogger').info(this._moduleName + '::$constructor', 'option "keyField" is deprecated and will be removed in 3.7.4. Use "idProperty" instead.');
          }
          this._reIndex();
       },
@@ -209,17 +209,17 @@ define('js!SBIS3.CONTROLS.Data.Source.Memory', [
       /**
        * Возвращает адаптер для работы с таблицей
        * @returns {SBIS3.CONTROLS.Data.Adapter.ITable}
-       * @private
+       * @protected
        */
       _getTableAdapter: function () {
          return this._tableAdapter || (this._tableAdapter = this.getAdapter().forTable(this._options.data));
       },
 
       /**
-       * Применяет ресурс
-       * @param {String} [from] Ресурс
+       * Применяет источник выборки
+       * @param {String} [from] Источник выборки
        * @returns {*}
-       * @private
+       * @protected
        */
       _applyFrom: function (from) {
          from = from || '';
@@ -227,7 +227,7 @@ define('js!SBIS3.CONTROLS.Data.Source.Memory', [
             this._getTableAdapter().getEmpty()
          );
          this._each(
-            from === this._options.resource ? this._options.data : _static.resources[from],
+            from ? _static.contracts[from] : this._options.data,
             function(item) {
                adapter.add(item);
             }
@@ -240,7 +240,7 @@ define('js!SBIS3.CONTROLS.Data.Source.Memory', [
        * @param {*} data Данные
        * @param {SBIS3.CONTROLS.Data.Query.Join[]} join Выборки для объединения
        * @returns {*}
-       * @private
+       * @protected
        */
       _applyJoin: function (data, join) {
          if (join.length) {
@@ -254,7 +254,7 @@ define('js!SBIS3.CONTROLS.Data.Source.Memory', [
        * @param {*} data Данные
        * @param {Object} where Фильтр
        * @returns {*}
-       * @private
+       * @protected
        */
       _applyWhere: function (data, where) {
          where = where || {};
@@ -309,7 +309,7 @@ define('js!SBIS3.CONTROLS.Data.Source.Memory', [
        * @param {*} data Данные
        * @param {SBIS3.CONTROLS.Data.Query.Order[]} order Параметры сортировки
        * @returns {*}
-       * @private
+       * @protected
        */
       _applyOrderBy: function (data, order) {
          order = order || [];
@@ -385,7 +385,7 @@ define('js!SBIS3.CONTROLS.Data.Source.Memory', [
        * @param {Number} [offset=0] Смещение начала выборки
        * @param {Number} [limit] Количество записей выборки
        * @returns {*}
-       * @private
+       * @protected
        */
       _applyPaging: function (data, offset, limit) {
          offset = offset || 0;
@@ -421,7 +421,7 @@ define('js!SBIS3.CONTROLS.Data.Source.Memory', [
 
       /**
        * Перестраивает индекс
-       * @private
+       * @protected
        */
       _reIndex: function () {
          this._index = {};
@@ -438,7 +438,7 @@ define('js!SBIS3.CONTROLS.Data.Source.Memory', [
        * Возвращает данные модели с указанным ключом
        * @param {String} key Значение ключа
        * @returns {Array|undefined}
-       * @private
+       * @protected
        */
       _getModelByKey: function (key) {
          return this._getTableAdapter().at(
@@ -450,7 +450,7 @@ define('js!SBIS3.CONTROLS.Data.Source.Memory', [
        * Возвращает индекс модели с указанным ключом
        * @param {String} key Значение ключа
        * @returns {Number} -1 - не найден, >=0 - индекс
-       * @private
+       * @protected
        */
       _getIndexByKey: function (key) {
          var index = this._index[key];
@@ -461,7 +461,7 @@ define('js!SBIS3.CONTROLS.Data.Source.Memory', [
        * выполняет удаление записи
        * @param key - идентификатор записи
        * @returns {boolean}
-       * @private
+       * @protected
        */
       _destroy: function (key) {
          var index = this._getIndexByKey(key);
@@ -482,10 +482,10 @@ define('js!SBIS3.CONTROLS.Data.Source.Memory', [
     */
    var _static = {
       /**
-       * @var {Object} Хранилище ресурсов
+       * @var {Object.<String, Object>} Хранилище контрактов
        * @static
        */
-      resources: {}
+      contracts: {}
    };
 
    Di.register('source.memory', Memory);
