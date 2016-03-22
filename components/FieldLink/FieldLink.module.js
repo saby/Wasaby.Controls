@@ -64,8 +64,8 @@ define('js!SBIS3.CONTROLS.FieldLink',
         * @mixes SBIS3.CONTROLS.DSMixin
         * @demo SBIS3.CONTROLS.Demo.FieldLinkWithEditInPlace Поле связи с редактированием по месту
         * @demo SBIS3.CONTROLS.Demo.FieldLinkDemo
-        * @cssModifier controls-FieldLink__itemsEdited При наведении на выделенные элементы, они подчёркиваются.
-        * @cssModifier controls-FieldLink__itemsBold Текст выбранных элементов в поле связи отображается жирным.
+        * @cssModifier controls-FieldLink__itemsEdited В поле связи при наведении курсора на выбранные значения применяется подчеркивание текста.
+        * @cssModifier controls-FieldLink__itemsBold В поле связи для текста выбранных значений применяется полужирное начертание.
         * @control
         * @public
         * @author Крайнов Дмитрий Олегович
@@ -75,7 +75,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
 
        var FieldLink = SuggestTextBox.extend([MultiSelectable, ActiveMultiSelectable, Selectable, ActiveSelectable, SyncSelectionMixin, DSMixin, ITextValue],/** @lends SBIS3.CONTROLS.FieldLink.prototype */{
           /**
-           * @event onItemActivate Происходит при клике по выбранному значению.
+           * @event onItemActivate Происходит при клике по выбранному элементу коллекции.
            * @param {$ws.proto.EventObject} eventObject Дескриптор события.
            * @param {Object} meta Объект, описывающий метаданные события. В его свойствах передаются идентификатор и экземпляр выбранного значения.
            * @param {String} meta.id Идентификатор выбранного значения.
