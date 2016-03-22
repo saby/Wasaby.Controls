@@ -22,10 +22,10 @@ define('js!SBIS3.CONTROLS.ChooserMixin', [
 
    var ChooserMixin = /**@lends SBIS3.CONTROLS.ChooserMixin.prototype  */{
           /**
-           * @event onChooserClick При клике на кнопку открытия диалога выбора
+           * @event onChooserClick Происходит при клике на кнопку открытия диалога выбора.
            * @return {$ws.proto.Deferred|Boolean|*} Возможные значения:
            * <ol>
-           *    <li>$ws.proto.Deferred - Деферед, результатом выполнения которого будут выбранные записи.</li>
+           *    <li>$ws.proto.Deferred - {@link $ws.proto.Deferred Деферед}, результатом выполнения которого будут выбранные записи.</li>
            *    <li>Если вернуть false - диалог выбора открыт не будет.</li>
            *    <li>Любой другой результат - диалог выбора будет открыт стандартным образом.</li>
            * </ol>
