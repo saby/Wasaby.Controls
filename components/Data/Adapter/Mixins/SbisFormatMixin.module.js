@@ -183,7 +183,7 @@ define('js!SBIS3.CONTROLS.Data.Adapter.SbisFormatMixin', [
                return typeCode;
             }
          }
-         return undefined;
+         return 'String';
       },
 
       _getFieldInnerTypeNameByOuter: function (outerName) {
