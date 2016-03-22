@@ -1,11 +1,12 @@
 /* global define, beforeEach, afterEach, describe, context, it, assert, $ws */
 define([
       'js!SBIS3.CONTROLS.Data.Record',
+      'js!SBIS3.CONTROLS.Data.Collection.RecordSet',
       'js!SBIS3.CONTROLS.Data.Adapter.Sbis',
       'js!SBIS3.CONTROLS.Data.Format.FieldsFactory',
       'js!SBIS3.CONTROLS.Data.Types.Enum',
       'js!SBIS3.CONTROLS.Data.Types.Flags'
-   ], function (Record, SbisAdapter, FieldsFactory, Enum, Flags) {
+   ], function (Record, RecordSet, SbisAdapter, FieldsFactory, Enum, Flags) {
       'use strict';
       describe('SBIS3.CONTROLS.Data.Record', function () {
          var getRecordData = function() {
@@ -17,6 +18,7 @@ define([
             },
             getRecordSbisData = function() {
                return {
+                  _type: 'record',
                   d: [1, 'A', 10],
                   s: [{
                      n: 'id',
@@ -394,7 +396,11 @@ define([
             });
             it('should add the filled record field', function () {
                var fieldName = 'rec';
-               record.addField({name: fieldName, type: 'record'}, 0, {a: 1});
+               record.addField(
+                  {name: fieldName, type: 'record'},
+                  0,
+                  new Record({rawData: {a: 1}})
+               );
 
                assert.strictEqual(record.get(fieldName).get('a'), 1);
                assert.strictEqual(record.getRawData()[fieldName].a, 1);
@@ -408,7 +414,11 @@ define([
             });
             it('should add the filled recordset field', function () {
                var fieldName = 'rs';
-               record.addField({name: fieldName, type: 'recordset'}, 0, [{a: 1}]);
+               record.addField(
+                  {name: fieldName, type: 'recordset'},
+                  0,
+                  new RecordSet({rawData: [{a: 1}]})
+               );
 
                assert.strictEqual(record.get(fieldName).at(0).get('a'), 1);
                assert.strictEqual(record.getRawData()[fieldName][0].a, 1);
@@ -460,6 +470,7 @@ define([
                      adapter: 'adapter.sbis',
                      rawData: getRecordSbisData()
                   });
+               var cl = record.clone();
                record.removeFieldAt(fieldIndex);
 
                assert.notEqual(record.getFormat().at(fieldIndex).getName(), fieldName);
@@ -683,6 +694,21 @@ define([
                assert.strictEqual(json.state._options.rawData.$type, 'record');
                assert.deepEqual(json.state._options.rawData.s, [1]);
                assert.deepEqual(json.state._options.rawData.d, [2]);
+            });
+         });
+         describe('.fromJSON()', function () {
+            it('should restore type signature in rawData', function () {
+               var record = new Record({
+                     rawData: {
+                        _type: 'record',
+                        s: [],
+                        d: []
+                     }
+                  }),
+                  json = record.toJSON(),
+                  clone = Record.prototype.fromJSON.call(Record, json);
+               assert.strictEqual(clone.getRawData()._type, 'record');
+               assert.isUndefined(clone.getRawData().$type);
             });
          });
       });

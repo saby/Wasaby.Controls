@@ -112,7 +112,7 @@ define('js!SBIS3.CONTROLS.Data.Source.Base', [
        * Определяет название свойства с первичным ключем по данным
        * @param {*} data Сырые данные
        * @returns {String}
-       * @private
+       * @protected
        */
       _getIdPropertyByData: function(data) {
          return this.getAdapter().getKeyField(data) || '';
@@ -122,13 +122,27 @@ define('js!SBIS3.CONTROLS.Data.Source.Base', [
        * Создает новый экземпляр модели
        * @param {*} model Данные модели
        * @returns {SBIS3.CONTROLS.Data.Model}
-       * @private
+       * @protected
        */
       _getModelInstance: function (data) {
          return Di.resolve(this._options.model, {
             rawData: data,
             adapter: this.getAdapter(),
-            idProperty: this.getIdProperty() || this._getIdPropertyByData(data)
+            idProperty: this.getIdProperty()
+         });
+      },
+
+      /**
+       * Создает новый экземпляр списка
+       * @param {*} model Данные списка
+       * @returns {SBIS3.CONTROLS.Data.Collection.List}
+       * @protected
+       */
+      _getListInstance: function (data) {
+         return Di.resolve(this._options.listModule, {
+            rawData: data,
+            adapter: this.getAdapter(),
+            idProperty: this.getIdProperty()
          });
       },
 
@@ -136,7 +150,7 @@ define('js!SBIS3.CONTROLS.Data.Source.Base', [
        * Создает новый экземпляр dataSet
        * @param {Object} cfg Опции конструктора
        * @returns {SBIS3.CONTROLS.Data.Source.DataSet}
-       * @private
+       * @protected
        */
       _getDataSetInstance: function (cfg) {
          return new DataSet($ws.core.merge({
@@ -155,7 +169,7 @@ define('js!SBIS3.CONTROLS.Data.Source.Base', [
        * @param {*} data Выборка
        * @param {Function} callback Ф-я обратного вызова для каждой записи
        * @param {Object} context Конекст
-       * @private
+       * @protected
        */
       _each: function (data, callback, context) {
          var tableAdapter = this.getAdapter().forTable(data),

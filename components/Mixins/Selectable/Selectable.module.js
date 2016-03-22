@@ -203,7 +203,8 @@ define('js!SBIS3.CONTROLS.Selectable', ['js!SBIS3.CONTROLS.Data.Utils', 'js!SBIS
          this._options.selectedKey = id;
          if (this._itemsProjection) {
             this._prepareSelectedConfig(undefined, id);
-            if ((typeof this._options.selectedIndex != 'undefined') && (this._options.selectedIndex !== null)) {
+            if ((typeof this._options.selectedIndex != 'undefined') && (this._options.selectedIndex !== null)
+               && (typeof this._itemsProjection.at(this._options.selectedIndex) != 'undefined')) {
                this._itemsProjection.setCurrentPosition(this._options.selectedIndex);
             }
             else {

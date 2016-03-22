@@ -85,10 +85,45 @@ define('js!SBIS3.CONTROLS.Data.FormattableMixin', [
              * </pre>
              */
             format: null
+         },
+
+         /**
+         *@member {Boolean} Формат был задан пользователем явно
+         */
+         _directFormat: false
+      },
+
+      //region SBIS3.CONTROLS.Data.SerializableMixin
+
+      after: {
+         _getSerializableState: function(state) {
+            //Prevent core reviver for rawData
+            if (state._options && state._options.rawData && state._options.rawData._type) {
+               state._options.rawData.$type = state._options.rawData._type;
+               delete state._options.rawData._type;
+            }
+
+            return state;
+         },
+
+         _setSerializableState: function(state, initializer) {
+            //Restore value hidden from core reviver
+            return initializer.callNext(function() {
+               if (this._options && this._options.rawData && this._options.rawData.$type) {
+                  this._options.rawData._type = this._options.rawData.$type;
+                  delete this._options.rawData.$type;
+               }
+            });
          }
       },
 
       //region Public methods
+
+      $constructor: function (cfg) {
+         if(cfg && cfg.format) {
+            this._directFormat = true;
+         }
+      },
 
       /**
        * Возвращает данные в "сыром" виде
@@ -102,7 +137,7 @@ define('js!SBIS3.CONTROLS.Data.FormattableMixin', [
 
       /**
        * Устанавливает данные в "сыром" виде
-       * @param rawData {Object} Данные в "сыром" виде
+       * @param data {Object} Данные в "сыром" виде
        * @see getRawData
        * @see rawData
        */
@@ -252,6 +287,26 @@ define('js!SBIS3.CONTROLS.Data.FormattableMixin', [
             this._options.format = this._buildFormat(this._options.format);
          }
          return this._options.format;
+      },
+
+      /**
+       * Очищает формат полей. Это можно сделать только если формат не был установлен явно.
+       * @protected
+       */
+      _clearFormat: function (){
+         if (this._directFormat) {
+            throw new Error(this._moduleName + ': format can\'t be cleared because it\'s defined directly.');
+         }
+         this._options.format = null;
+      },
+
+      /**
+       * Возвращает признак, что формат полей был установлен явно
+       * @returns {Boolean}
+       * @protected
+       */
+      _isDirectFormat: function () {
+         return this._directFormat;
       },
 
       /**
