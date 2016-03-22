@@ -10,7 +10,7 @@ define('js!SBIS3.CONTROLS.MergeDialogTemplate', [
     'i18n!SBIS3.CONTROLS.MergeDialogTemplate',
     'js!SBIS3.CONTROLS.Button',
     'js!SBIS3.CONTROLS.TreeDataGridView',
-    'html!SBIS3.CONTROLS.MergeDialogTemplate/resources/cellNameTpl',
+    'html!SBIS3.CONTROLS.MergeDialogTemplate/resources/cellRadioButtonTpl',
     'html!SBIS3.CONTROLS.MergeDialogTemplate/resources/cellCommentTpl'
 ], function(Control, dotTplFn, SbisServiceSource, MemorySource, SbisAdapter, rk) {
 
@@ -43,7 +43,8 @@ define('js!SBIS3.CONTROLS.MergeDialogTemplate', [
                 queryMethodName: undefined,
                 dataSource: undefined,
                 hierField: undefined,
-                displayField: undefined
+                displayField: undefined,
+                titleCellTemplate: undefined
             },
             _treeView: undefined,
             _treeViewKeys: [],
