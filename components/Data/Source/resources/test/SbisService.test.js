@@ -880,7 +880,8 @@ define([
                      .where({
                         id: 5,
                         enabled: true,
-                        title: 'abc*'
+                        title: 'abc*',
+                        path: [1, 2, 3]
                      })
                      .orderBy({
                         id: true,
@@ -904,6 +905,11 @@ define([
                            assert.strictEqual(args['Фильтр'].d[2], 'abc*');
                            assert.strictEqual(args['Фильтр'].s[2].n, 'title');
                            assert.strictEqual(args['Фильтр'].s[2].t, 'Строка');
+
+                           assert.deepEqual(args['Фильтр'].d[3], [1, 2, 3]);
+                           assert.strictEqual(args['Фильтр'].s[3].n, 'path');
+                           assert.strictEqual(args['Фильтр'].s[3].t.n, 'Массив');
+                           assert.strictEqual(args['Фильтр'].s[3].t.t, 'Число целое');
 
                            assert.strictEqual(args['Сортировка'].d[0][0], 'id');
                            assert.isTrue(args['Сортировка'].d[0][1]);
