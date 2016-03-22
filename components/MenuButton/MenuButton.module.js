@@ -54,10 +54,13 @@ define('js!SBIS3.CONTROLS.MenuButton', ['js!SBIS3.CONTROLS.Button', 'js!SBIS3.CO
          _headerAlignment: {
             horizontal: 'left',
             vertical: 'top'
-         },
-         _options: {
-            pickerClassName: 'controls-MenuButton__Menu'
          }
+      },
+
+      _modifyOptions : function() {
+         var opts = MenuButton.superclass._modifyOptions.apply(this, arguments);
+         opts.pickerClassName += ' controls-MenuButton__Menu';
+         return opts;
       },
 
       init: function(){
