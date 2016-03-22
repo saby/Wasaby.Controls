@@ -207,6 +207,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
              * @property {Function} method Метод группировки
              * @property {String} template Шаблон вёрстки
              * @property {Function} render Функция визуализации
+             * @property {Function} clickHandler Функция клика
              */
             /**
              * @cfg {GroupBy} Настройка группировки записей
