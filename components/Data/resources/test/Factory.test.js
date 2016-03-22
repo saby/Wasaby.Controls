@@ -4,12 +4,12 @@ define([
    'js!SBIS3.CONTROLS.Data.Adapter.Sbis',
    'js!SBIS3.CONTROLS.Data.Model',
    'js!SBIS3.CONTROLS.Data.Collection.List',
+   'js!SBIS3.CONTROLS.Data.Collection.RecordSet',
    'js!SBIS3.CONTROLS.Data.Source.DataSet',
    'js!SBIS3.CONTROLS.Data.Factory',
    'js!SBIS3.CONTROLS.Data.Types.Enum',
-   'js!SBIS3.CONTROLS.Data.Types.Flags',
-   'js!SBIS3.CONTROLS.Data.Collection.RecordSet'
-], function (AdapterJson, AdapterSbis, Model, List, DataSet, Factory, Enum, Flags, RecordSet) {
+   'js!SBIS3.CONTROLS.Data.Types.Flags'
+], function (AdapterJson, AdapterSbis, Model, List, RecordSet, DataSet, Factory, Enum, Flags) {
    'use strict';
 
    var dataScheme,
@@ -175,7 +175,7 @@ define([
          });
          it('should cast value to List', function () {
             sbisModel.setUsingDataSetAsList(true);
-            assert.instanceOf(sbisModel.get('recordSet'), List);
+            assert.isTrue($ws.helpers.instanceOfModule(sbisModel.get('recordSet'), 'SBIS3.CONTROLS.Data.Collection.List'));
          });
          it('should cast value to RecordSet', function () {
             assert.instanceOf(sbisModel.get('recordSet'), RecordSet);
@@ -366,10 +366,11 @@ define([
                      model.set('record', record);
                      assert.deepEqual(getData(model, 3), record.getRawData());
                   });
-                  it('should store model from object', function () {
+                  it('should throw an error if set model as not a model', function () {
                      var model = getModel(type);
-                     model.set('record', {'id':502});
-                     assert.equal(model.get('record').get('id'), 502);
+                     assert.throw(function() {
+                        model.set('record', {id: 502});
+                     });
                   });
                   it('should store record', function () {
                      var model = getModel(type),
@@ -379,31 +380,15 @@ define([
                      model.set('record', record);
                      assert.deepEqual(getData(model, 3), record.toJSON());
                   });
-                  it('should store a list', function () {
-                     var model = getModel(type),
-                        list = new List();
-                     list.add(new Model({
-                        adapter: new AdapterSbis(),
-                        rawData: {
-                           d: [2],
-                           s: [{n: 'id', t: 'Число целое'}]
-                        }
-                     }));
-                     list.add(new Model({
-                        adapter: new AdapterSbis(),
-                        rawData: {
-                           d: [3],
-                           s: [{n: 'id', t: 'Число целое'}]
-                        }
-                     }));
-                     model.set('recordSet', list);
-                     assert.strictEqual(2, model.get('recordSet').getCount());
-                     model.get('recordSet').each(function(item, index) {
-                        assert.deepEqual(getData(model, 4).d[index], item.getRawData().d);
-                        assert.deepEqual(getData(model, 4).s, item.getRawData().s);
+                  it('should throw an error if set recordset as not a recordset', function () {
+                     var model = getModel(type);
+                     assert.throw(function() {
+                        model.set('recordSet', [{id: 502}]);
+                     });
+                     assert.throw(function() {
+                        model.set('recordSet', new List());
                      });
                   });
-
                   it('should store a old record set', function () {
                      var model = getModel(type),
                         coldef = {
@@ -568,12 +553,14 @@ define([
             sbisModelEmpty.set('identity', null);
             assert.isNull(getData(sbisModelEmpty, identityIndex));
          });
-         it('should accept an empty list', function () {
-            var res = Factory.serialize(new List(), 'RecordSet', new AdapterJson());
+         it('should accept an empty recordset', function () {
+            var res = Factory.serialize(new RecordSet(), 'RecordSet', new AdapterJson());
+            assert.isNull(res);
+
+            res = Factory.serialize(new RecordSet({rawData: []}), 'RecordSet', new AdapterJson());
             assert.instanceOf(res, Array);
             assert.strictEqual(res.length, 0);
          });
-
          it('should serialize array of date', function (){
             var  date = new Date(2016,1,1);
             sbisModelEmpty.set('arrayDate',[date]);
