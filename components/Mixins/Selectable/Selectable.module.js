@@ -13,7 +13,7 @@ define('js!SBIS3.CONTROLS.Selectable', ['js!SBIS3.CONTROLS.Data.Utils', 'js!SBIS
 
    var Selectable = /**@lends SBIS3.CONTROLS.Selectable.prototype  */{
        /**
-        * @event onSelectedItemChange При смене выбранных элементов коллекции.
+        * @event onSelectedItemChange Происходит при смене выбранного элемента коллекции.
         * @param {$ws.proto.EventObject} eventObject Дескриптор события.
         * @param {String} id Идентификатор выбранного пункта.
         * @example
@@ -194,6 +194,7 @@ define('js!SBIS3.CONTROLS.Selectable', ['js!SBIS3.CONTROLS.Data.Utils', 'js!SBIS
        * @remark
        * Для возвращения коллекции к состоянию без выбранного элемента нужно передать null.
        * @param {String} id Идентификатор элемента, который нужно установить в качестве выбранного.
+       * Идентификатором элемента коллекции служит значение его {@link SBIS3.CONTROLS.DSMixin#keyField ключевого поля}.
        * @example
        * <pre>
        *     var newKey = (someValue > 0) ? 'positive' : 'negative';
@@ -222,6 +223,10 @@ define('js!SBIS3.CONTROLS.Selectable', ['js!SBIS3.CONTROLS.Data.Utils', 'js!SBIS
       /**
        * Устанавливает индекс (порядковый номер) выбранного элемента коллекции.
        * @param index Индекс выбранного элемента коллекции.
+       * @example
+       * <pre>
+       *    this._getControlOrdersList().setSelectedIndex(0);
+       * </pre>
        * @see selectedIndex
        * @see getSelectedIndex
        */
@@ -233,6 +238,7 @@ define('js!SBIS3.CONTROLS.Selectable', ['js!SBIS3.CONTROLS.Data.Utils', 'js!SBIS
       },
       /**
        * Возвращает идентификатор выбранного элемента коллекции.
+       * Идентификатором элемента коллекции служит значение его {@link SBIS3.CONTROLS.DSMixin#keyField ключевого поля}.
        * @example
        * <pre>
        *     var key = myComboBox.getSelectedKey();
@@ -251,6 +257,13 @@ define('js!SBIS3.CONTROLS.Selectable', ['js!SBIS3.CONTROLS.Data.Utils', 'js!SBIS
 
       /**
        * Возвращает индекс (порядковый номер) выбранного элемента коллекции.
+       * @example
+       * <pre>
+       *    index = list.getSelectedIndex();
+       *    if (index > -1 && index < items.getCount()) {
+       *       return items.at(index);
+       *    }
+       * </pre>
        * @see selectedIndex
        * @see setselectedIndex
        * @see onSelectedItemChange
