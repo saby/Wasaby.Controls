@@ -251,7 +251,14 @@ define([
          });
 
          describe('.getFormat()', function () {
-            it('should build the empty format from json raw data', function () {
+            it('should build the format from json raw data', function () {
+               var format = rs.getFormat();
+               assert.strictEqual(format.getCount(), 2);
+               assert.strictEqual(format.at(0).getName(), 'Ид');
+               assert.strictEqual(format.at(1).getName(), 'Фамилия');
+            });
+            it('should build the empty format from empty json raw data', function () {
+               var rs = new RecordSet();
                var format = rs.getFormat();
                assert.strictEqual(format.getCount(), 0);
             });
@@ -370,10 +377,8 @@ define([
                });
             });
             it('should throw an error if adapter doesn\'t support fields detection', function () {
-               var fieldName = 'Фамилия';
-               rs.each(function(record) {
-                  assert.isTrue(record.has(fieldName));
-               });
+               var rs = new RecordSet(),
+                  fieldName = 'Фамилия';
                assert.throw(function() {
                   rs.removeField(fieldName);
                });
@@ -548,7 +553,7 @@ define([
                assert.deepEqual(rs.getRawData().s, s);
             });
 
-            it('should throw an error', function() {
+            it('should throw an error if pass not a record', function() {
                var data4 = {id: 4},
                   data5 = {id: 5};
                assert.throw(function (){
@@ -558,28 +563,46 @@ define([
                });
             });
 
-            it('should throw an error different formats', function() {
+            it('should change format with new one', function() {
                var rs = new RecordSet({
                      rawData:  {
-                        d: [
-                           [7]
-                        ],
-                        s: [
-                           {'n': 'Ид', 't': 'Число целое'}
-                        ]
+                        d: [[7]],
+                        s: [{n: 'Ид', t: 'Число целое'}]
                      },
-                     adapter: new SbisAdapter()
+                     adapter: 'adapter.sbis'
                   }),
                   rs2 = new RecordSet({
                      rawData: {
                         d: [['Арбузнов']],
-                        s: [{'n': 'Фамилия', 't': 'Строка'}]
+                        s: [{n: 'Фамилия', t: 'Строка'}]
                      },
-                     adapter: new SbisAdapter()
+                     adapter: 'adapter.sbis'
                   });
                rs.addField({name: 'login', type: 'string'});
                rs.assign(rs2);
-               assert.deepEqual(rs.getRawData().s, [{n: 'Ид', t: 'Число целое'}, {n: 'login', t: 'Строка'}]);
+               assert.deepEqual(rs.getRawData().s, [{n: 'Фамилия', t: 'Строка'}]);
+            });
+
+            it('should throw an error if format is defined directly', function() {
+               var rs = new RecordSet({
+                     rawData:  {
+                        d: [[7]],
+                        s: [{n: 'Ид', t: 'Число целое'}]
+                     },
+                     adapter: 'adapter.sbis',
+                     format: [{name: 'Ид', type: 'Integer'}]
+                  }),
+                  rs2 = new RecordSet({
+                     rawData: {
+                        d: [['Арбузнов']],
+                        s: [{n: 'Фамилия', t: 'Строка'}]
+                     },
+                     adapter: 'adapter.sbis'
+                  });
+               rs.addField({name: 'login', type: 'string'});
+               assert.throw(function() {
+                  rs.assign(rs2);
+               });
             });
          });
 
@@ -604,7 +627,7 @@ define([
                assert.deepEqual(rs.getRawData(), items);
             });
 
-            it('should throw an error', function() {
+            it('should throw an error if pass not a record ', function() {
                var rd = {
                      'Ид': 502,
                      'Фамилия': '502'
