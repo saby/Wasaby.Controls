@@ -202,37 +202,33 @@ define('js!SBIS3.CONTROLS.Data.Collection.List', [
 
       //endregion SBIS3.CONTROLS.Data.Collection.IIndexedCollection
 
+      //region deprecated
+
       /**
        * Присоединяет другую коллекцию
        * @param {SBIS3.CONTROLS.Data.Collection.IEnumerable} items Коллекция, которая будет присоединена
        * @param {Boolean} [prepend=false] Присоединить в начало
-       * @deprecated используйте append или prepend
+       * @deprecated метод будет удален в 3.7.4 используйте append() или prepend()
        */
       concat: function (items, prepend) {
-         var isArray = items instanceof Array;
-         if (!isArray && !$ws.helpers.instanceOfMixin(items, 'SBIS3.CONTROLS.Data.Collection.IEnumerable')) {
-            throw new Error('Invalid argument');
-         }
-         if (!isArray) {
-            items = items.toArray();
-         }
-
+         $ws.single.ioc.resolve('ILogger').info(this._moduleName + '::concat()', 'Method is deprecated and will be removed in 3.7.4. Use append() or prepend() instead.');
          if (prepend) {
-            Array.prototype.splice.apply(this._items, [0, 0].concat(items));
+            this.prepend(items);
          } else {
-            Array.prototype.splice.apply(this._items, [this._items.length, 0].concat(items));
+            this.append(items);
          }
-
-         this._reindex();
       },
+
       /**
        * Возвращает коллекцию в виде массива
-       * @deprecated используйте each
        * @returns {Array}
+       * @deprecated метод не рекомендуется к использованию, используйте each()
        */
       toArray: function () {
          return this._items.slice();
       },
+
+      //endregion deprecated
 
       //region Public methods
 
