@@ -256,12 +256,9 @@ define('js!SBIS3.CONTROLS.TextBox', ['js!SBIS3.CONTROLS.TextBoxBase','html!SBIS3
       /**
        * Устанавливает форматирование регистра текста в поле ввода.
        * @param {String} textTransform Необходимое форматирование регистра текста.
-       * Возможные значения:
-       * <ul>
-       *    <li>uppercase - все символы верхним регистром;</li>
-       *    <li>lowercase - все символы нижним регистром;</li>
-       *    <li>none - без изменений.</li>
-       * </ul>
+       * @variant uppercase Все символы текста становятся прописными (верхний регистр).
+       * @variant lowercase Все символы текста становятся строчными (нижний регистр).
+       * @variant none Текст не меняется.
        * @example
        * <pre>
        *     control.setTextTransform("lowercase");
