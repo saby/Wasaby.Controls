@@ -1204,6 +1204,9 @@ define('js!SBIS3.CONTROLS.DSMixin', [
             this._clearItems(container);
             this._ladderCompare([container.prev(), container.next()]);
             container.remove();
+            if (!this._scrollWatcher.hasScroll()){
+               this._isLoadBeforeScrollAppears = true;
+            }
          }
       },
 
