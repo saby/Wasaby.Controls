@@ -115,9 +115,9 @@ define('js!SBIS3.CONTROLS.Data.Factory', [
                      [value]
                );
             case 'RecordSet':
-               return this._serializeRecordSet(value, adapter);
+               return this._serializeRecordSet(value);
             case 'Record':
-               return this._serializeRecord(value, adapter);
+               return this._serializeRecord(value);
             case 'Date':
             case 'DateTime':
             case 'Time':
@@ -203,78 +203,42 @@ define('js!SBIS3.CONTROLS.Data.Factory', [
       /**
        * Сериализует RecordSet
        * @param {*} data Данные
-       * @param {SBIS3.CONTROLS.Data.Adapter.IAdapter} adapter Адаптер для работы с сырыми данными
        * @returns {*}
        * @protected
        */
-      _serializeRecordSet: function (data, adapter) {
-         if ($ws.helpers.instanceOfModule(data, 'SBIS3.CONTROLS.Data.Collection.RecordSet') || $ws.helpers.instanceOfModule(data, 'SBIS3.CONTROLS.Data.Source.DataSet') ) {
+      _serializeRecordSet: function (data) {
+         if ($ws.helpers.instanceOfModule(data, 'SBIS3.CONTROLS.Data.Collection.RecordSet') ||
+            $ws.helpers.instanceOfModule(data, 'SBIS3.CONTROLS.Data.Source.DataSet')
+         ) {
             return data.getRawData();
-         } else if ($ws.helpers.instanceOfModule(data, 'SBIS3.CONTROLS.Data.Collection.List')) {
-            return this._serializeList(data, adapter);
-         } else if (data instanceof $ws.proto.RecordSet || data instanceof $ws.proto.RecordSetStatic) {
+         } else if (data instanceof $ws.proto.RecordSet ||
+            data instanceof $ws.proto.RecordSetStatic
+         ) {
             return data.toJSON();
-         } else if (adapter) {
-            return adapter.serialize(data);
          }
-         throw new Error('Adapter is not defined');
-      },
-
-      /**
-       * Сериализует List
-       * @param {SBIS3.CONTROLS.Data.Collection.List} data Список
-       * @param {SBIS3.CONTROLS.Data.Adapter.IAdapter} adapter Адаптер для работы с сырыми данными
-       * @returns {*}
-       * @protected
-       */
-      _serializeList: function (data, adapter) {
-         var items = data.toArray(),
-            otherData = [],
-            getTableAdapter = function(item) {
-               if (tableAdapter === undefined) {
-                  tableAdapter = adapter.forTable(
-                     adapter.forTable(item ? item.getRawData() : undefined).getEmpty()
-                  );
-               }
-               return tableAdapter;
-            },
-            tableAdapter,
-            item,
-            i,
-            length;
-
-         for (i = 0, length = items.length; i < length; i++) {
-            item = items[i];
-            if (typeof items === 'object' && $ws.helpers.instanceOfModule(item, 'SBIS3.CONTROLS.Data.Model')) {
-               getTableAdapter(item).add(item.getRawData());
-            } else {
-               otherData.push(item);
-            }
+         if ($ws.helpers.instanceOfModule(data, 'SBIS3.CONTROLS.Data.Collection.List')) {
+            $ws.single.ioc.resolve('ILogger').info('SBIS3.CONTROLS.Data.Factory::_serializeRecordSet()', 'Serialization of SBIS3.CONTROLS.Data.Collection.List is no more available. Use SBIS3.CONTROLS.Data.Collection.RecordSet instead.');
          }
 
-         if (otherData.length) {
-            adapter.setProperty(getTableAdapter().getData(), 'other', otherData);
-         }
-
-         return getTableAdapter().getData();
+         throw new TypeError('SBIS3.CONTROLS.Data.Factory::_serializeRecordSet(): data should be an instance of SBIS3.CONTROLS.Data.Collection.RecordSet or SBIS3.CONTROLS.Data.Source.DataSet');
       },
 
       /**
        * Сериализует запись
        * @param {*} data Запись
-       * @param {SBIS3.CONTROLS.Data.Adapter.IAdapter} adapter Адаптер для работы с сырыми данными
        * @returns {*}
        * @protected
        */
-      _serializeRecord: function (data, adapter) {
+      _serializeRecord: function (data) {
          if ($ws.helpers.instanceOfModule(data, 'SBIS3.CONTROLS.Data.Record')) {
             return data.getRawData();
          } else if (data instanceof $ws.proto.Record) {
             return data.toJSON();
-         } else if (adapter) {
-            return adapter.serialize(data);
          }
-         throw new TypeError('Adapter is not defined');
+         if (data instanceof Object) {
+            $ws.single.ioc.resolve('ILogger').info('SBIS3.CONTROLS.Data.Factory::_serializeRecord()', 'Serialization of plain Object is no more available. Use SBIS3.CONTROLS.Data.Record instead.');
+         }
+         throw new TypeError('SBIS3.CONTROLS.Data.Factory::_serializeRecord(): data should be an instance of SBIS3.CONTROLS.Data.Record');
       },
 
       /**

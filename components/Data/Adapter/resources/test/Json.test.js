@@ -196,7 +196,7 @@ define(
 
          describe('.serialize()', function () {
             it('should return data as is', function () {
-               assert.equal(adapter.serialize(data), data);
+               assert.deepEqual(adapter.serialize(data), data);
             });
          });
       });

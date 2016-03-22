@@ -2,10 +2,9 @@
 define([
    'js!SBIS3.CONTROLS.Data.Adapter.Sbis',
    'js!SBIS3.CONTROLS.Data.Model',
-   'js!SBIS3.CONTROLS.Data.Collection.RecordSet',
    'js!SBIS3.CONTROLS.Data.Record',
-   'js!SBIS3.CONTROLS.Data.Source.DataSet'
-], function (SbisAdapter, Model, RecordSet, Record, DataSet) {
+   'js!SBIS3.CONTROLS.Data.Collection.RecordSet'
+], function (SbisAdapter, Model, Record, RecordSet) {
       'use strict';
 
       describe('SBIS3.CONTROLS.Data.Adapter.Sbis', function () {
@@ -194,17 +193,36 @@ define([
          });
 
          describe('.serialize()', function () {
-            it('should create valid deep structure', function () {
-               var adapter = new SbisAdapter(),
+            it('should traverse an arbitrary object', function () {
+               var rec = new Record({
+                     adapter: 'adapter.sbis',
+                     rawData: {
+                        d: [
+                           true,
+                           1,
+                           2.5,
+                           'Пустой',
+                           new Date('2015-10-10')
+                        ],
+                        s: [
+                           {n: 'ВызовИзБраузера', t: 'Логическое'},
+                           {n: 'Количество', t: 'Число целое'},
+                           {n: 'Вес', t: 'Число вещественное'},
+                           {n: 'Тип', t: 'Строка'},
+                           {n: 'Дата', t: 'Дата и время'}
+                        ]
+                     }
+                  }),
+                  adapter = new SbisAdapter(),
                   result = adapter.serialize({
                      'null': null,
                      'false': false,
                      'true': true,
                      '0': 0,
                      '10': 10,
-                     'Строка': 'String',
-                     'Date': new Date('2015-12-03'),
-                     'Массив': [
+                     'string': 'String',
+                     'date': new Date('2015-12-03'),
+                     'array': [
                         false,
                         true,
                         0,
@@ -214,86 +232,59 @@ define([
                         [],
                         {}
                      ],
-                     'EmptyObject': {},
-                     'Запись': {
-                        'ВызовИзБраузера': true,
-                        'Количество': 1,
-                        'Вес': 2.5,
-                        'Тип': 'Пустой',
-                        'Дата': new Date('2015-10-10')
-                     }
+                     'emptyArray': [],
+                     'object': {
+                        a: false,
+                        b: true,
+                        c: 0,
+                        d: 1,
+                        e: 'S',
+                        f: new Date('2001-09-11'),
+                        g: [],
+                        h: {}
+                     },
+                     'emptyObject': {},
+                     'record': rec
                   }),
                   expect = {
-                     d: [
-                        0,
-                        10,
-                        null,
+                     'null': null,
+                     'false': false,
+                     'true': true,
+                     '0': 0,
+                     '10': 10,
+                     'string': 'String',
+                     'date': '2015-12-03',
+                     'array': [
                         false,
                         true,
-                        'String',
-                        '2015-12-03',
-                        [false, true, 0, 1, 'S', '2001-09-11', [], {d: [], s: []}],
-                        {
-                           d: [],
-                           s: []
-                        },
-                        {
-                           d: [true, 1, 2.5, 'Пустой', '2015-10-10'],
-                           s: [{
-                              n: 'ВызовИзБраузера',
-                              t: 'Логическое'
-                           }, {
-                              n: 'Количество',
-                              t: 'Число целое'
-                           }, {
-                              n: 'Вес',
-                              t: 'Число вещественное'
-                           }, {
-                              n: 'Тип',
-                              t: 'Строка'
-                           }, {
-                              n: 'Дата',
-                              t: 'Дата и время'
-                           }]
-                        }
+                        0,
+                        1,
+                        'S',
+                        '2001-09-11',
+                        [],
+                        {}
                      ],
-                     s: [{
-                        n: '0',
-                        t: 'Число целое'
-                     }, {
-                        n: '10',
-                        t: 'Число целое'
-                     }, {
-                        n: 'null',
-                        t: 'Строка'
-                     }, {
-                        n: 'false',
-                        t: 'Логическое'
-                     }, {
-                        n: 'true',
-                        t: 'Логическое'
-                     }, {
-                        n: 'Строка',
-                        t: 'Строка'
-                     }, {
-                        n: 'Date',
-                        t: 'Дата и время'
-                     }, {
-                        n: 'Массив',
-                        t: {
-                           n: 'Массив',
-                           t: 'Логическое'
-                        }
-                     }, {
-                        n: 'EmptyObject',
-                        t: 'Запись'
-                     }, {
-                        n: 'Запись',
-                        t: 'Запись'
-                     }]
-                  };
-               assert.sameDeepMembers(result.s, expect.s, 'wrong s');
-               assert.sameDeepMembers(result.d, expect.d, 'wrong d');
+                     'emptyArray': [],
+                     'object': {
+                        a: false,
+                        b: true,
+                        c: 0,
+                        d: 1,
+                        e: 'S',
+                        f: '2001-09-11',
+                        g: [],
+                        h: {}
+                     },
+                     'emptyObject': {},
+                     'record': rec.getRawData()
+                  },
+                  key;
+
+               for (key in expect) {
+                  if (expect.hasOwnProperty(key)) {
+                     assert.deepEqual(result[key], expect[key], 'Wrong ' + key);
+                  }
+               }
             });
 
             it('should serialize model', function () {
@@ -305,7 +296,6 @@ define([
                   }),
                   result = adapter.serialize(model),
                   expect = model.getRawData();
-               expect._type = 'record';
                assert.deepEqual(result, expect);
             });
 
@@ -319,56 +309,6 @@ define([
                   }),
                   result = adapter.serialize(ds),
                   expect = ds.getRawData();
-               expect._type = 'recordset';
-               assert.deepEqual(result, expect);
-            });
-
-            it('should serialize models and RecordSets in deep structure', function () {
-               var adapter = new SbisAdapter(),
-                  model = new Model({
-                     adapter: adapter,
-                     rawData: {}
-                  }),
-                  ds = new RecordSet({
-                     adapter: adapter,
-                     rawData: {}
-                  }),
-                  result = adapter.serialize({
-                     some: {
-                        model: model
-                     },
-                     and: {
-                        also: ds
-                     }
-                  }),
-                  expect = {
-                     d: [{
-                        d: [
-                           model.getRawData() || {}
-                        ],
-                        s: [{
-                           n: 'model',
-                           t: 'Запись'
-                        }]
-                     }, {
-                        d: [
-                           ds.getRawData() || {}
-                        ],
-                        s: [{
-                           n: 'also',
-                           t: 'Выборка'
-                        }]
-                     }],
-                     s: [{
-                        n: 'some',
-                        t: 'Запись'
-                     }, {
-                        n: 'and',
-                        t: 'Запись'
-                     }]
-                  };
-               expect.d[0].d[0]._type = 'record';
-               expect.d[1].d[0]._type = 'recordset';
                assert.deepEqual(result, expect);
             });
          });
