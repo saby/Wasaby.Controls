@@ -1,11 +1,12 @@
 /* global define, beforeEach, afterEach, describe, context, it, assert, $ws */
 define([
       'js!SBIS3.CONTROLS.Data.Record',
+      'js!SBIS3.CONTROLS.Data.Collection.RecordSet',
       'js!SBIS3.CONTROLS.Data.Adapter.Sbis',
       'js!SBIS3.CONTROLS.Data.Format.FieldsFactory',
       'js!SBIS3.CONTROLS.Data.Types.Enum',
       'js!SBIS3.CONTROLS.Data.Types.Flags'
-   ], function (Record, SbisAdapter, FieldsFactory, Enum, Flags) {
+   ], function (Record, RecordSet, SbisAdapter, FieldsFactory, Enum, Flags) {
       'use strict';
       describe('SBIS3.CONTROLS.Data.Record', function () {
          var getRecordData = function() {
@@ -17,6 +18,7 @@ define([
             },
             getRecordSbisData = function() {
                return {
+                  _type: 'record',
                   d: [1, 'A', 10],
                   s: [{
                      n: 'id',
@@ -129,8 +131,8 @@ define([
             it('should not trigger onPropertyChange if value is equal enum', function () {
                var name,
                   newV,
-                  val1 = new Enum({data: ['a', 'b', 'c']}),
-                  val2 = new Enum({data: ['a', 'b', 'c']});
+                  val1 = new Enum({dictionary: ['a', 'b', 'c']}),
+                  val2 = new Enum({dictionary: ['a', 'b', 'c']});
                record.set('enum', val1);
                record.subscribe('onPropertyChange', function(e, field, value) {
                   name = field;
@@ -143,8 +145,8 @@ define([
             it('should trigger onPropertyChange if value is not equal enum', function () {
                var name,
                   newV,
-                  val1 = new Enum({data: ['a', 'b']}),
-                  val2 = new Enum({data: ['a', 'b', 'c']});
+                  val1 = new Enum({dictionary: ['a', 'b']}),
+                  val2 = new Enum({dictionary: ['a', 'b', 'c']});
                record.set('enum', val1);
                record.subscribe('onPropertyChange', function(e, field, value) {
                   name = field;
@@ -157,8 +159,14 @@ define([
             it('should not trigger onPropertyChange if value is equal flags', function () {
                var name,
                   newV,
-                  val1 = new Flags({data: {a: true, b: false}}),
-                  val2 = new Flags({data: {a: true, b: false}});
+                  val1 = new Flags({
+                     dictionary: ['a', 'b'],
+                     values: [true, false]
+                  }),
+                  val2 = new Flags({
+                     dictionary: ['a', 'b'],
+                     values: [true, false]
+                  });
                record.set('flags', val1);
                record.subscribe('onPropertyChange', function(e, field, value) {
                   name = field;
@@ -171,8 +179,14 @@ define([
             it('should trigger onPropertyChange if value is not equal flags', function () {
                var name,
                   newV,
-                  val1 = new Flags({data: {a: true, b: false}}),
-                  val2 = new Flags({data: {a: true, b: true}});
+                  val1 = new Flags({
+                     dictionary: ['a', 'b'],
+                     values: [true, false]
+                  }),
+                  val2 = new Flags({
+                     dictionary: ['a', 'b'],
+                     values: [true, true]
+                  });
                record.set('flags', val1);
                record.subscribe('onPropertyChange', function(e, field, value) {
                   name = field;
@@ -181,6 +195,14 @@ define([
                record.set('flags', val2);
                assert.strictEqual(name, 'flags');
                assert.strictEqual(newV, val2);
+            });
+            it('should change properties cache', function () {
+               record.set('obj', {val: 13});
+               record.get('obj');
+               assert.property(record._propertiesCache, 'obj');
+               record.set('obj', {val: 14});
+               record.get('obj');
+               assert.deepEqual(record._propertiesCache['obj'], {val: 14});
             });
          });
 
@@ -365,6 +387,42 @@ define([
                   record.addField({name: 'new', type: 'string'});
                });
             });
+            it('should add the empty record field', function () {
+               var fieldName = 'rec';
+               record.addField({name: fieldName, type: 'record'});
+
+               assert.isNull(record.get(fieldName));
+               assert.isNull(record.getRawData()[fieldName]);
+            });
+            it('should add the filled record field', function () {
+               var fieldName = 'rec';
+               record.addField(
+                  {name: fieldName, type: 'record'},
+                  0,
+                  new Record({rawData: {a: 1}})
+               );
+
+               assert.strictEqual(record.get(fieldName).get('a'), 1);
+               assert.strictEqual(record.getRawData()[fieldName].a, 1);
+            });
+            it('should add the empty recordset field', function () {
+               var fieldName = 'rs';
+               record.addField({name: fieldName, type: 'recordset'});
+
+               assert.isNull(record.get(fieldName));
+               assert.isNull(record.getRawData()[fieldName]);
+            });
+            it('should add the filled recordset field', function () {
+               var fieldName = 'rs';
+               record.addField(
+                  {name: fieldName, type: 'recordset'},
+                  0,
+                  new RecordSet({rawData: [{a: 1}]})
+               );
+
+               assert.strictEqual(record.get(fieldName).at(0).get('a'), 1);
+               assert.strictEqual(record.getRawData()[fieldName][0].a, 1);
+            });
          });
 
          describe('.removeField()', function () {
@@ -412,6 +470,7 @@ define([
                      adapter: 'adapter.sbis',
                      rawData: getRecordSbisData()
                   });
+               var cl = record.clone();
                record.removeFieldAt(fieldIndex);
 
                assert.notEqual(record.getFormat().at(fieldIndex).getName(), fieldName);
@@ -635,6 +694,21 @@ define([
                assert.strictEqual(json.state._options.rawData.$type, 'record');
                assert.deepEqual(json.state._options.rawData.s, [1]);
                assert.deepEqual(json.state._options.rawData.d, [2]);
+            });
+         });
+         describe('.fromJSON()', function () {
+            it('should restore type signature in rawData', function () {
+               var record = new Record({
+                     rawData: {
+                        _type: 'record',
+                        s: [],
+                        d: []
+                     }
+                  }),
+                  json = record.toJSON(),
+                  clone = Record.prototype.fromJSON.call(Record, json);
+               assert.strictEqual(clone.getRawData()._type, 'record');
+               assert.isUndefined(clone.getRawData().$type);
             });
          });
       });

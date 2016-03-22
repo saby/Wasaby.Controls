@@ -177,11 +177,18 @@ define('js!SBIS3.CONTROLS.ScrollWatcher', [], function() {
        * Получить текущую высоту скролла отслеживаемого элемента
        * @returns {*}
        */
-      getScrollHeight: function(){
+      getScrollHeight: function(element){
+         var scrollable;
          if (this._inContainer()){
             return this._options.element[0].scrollHeight;
          }
          if (this._inWindow()){
+            if (element) {
+               scrollable = element.closest('.ws-scrolling-content');
+               if (scrollable.length) {
+                  return scrollable[0].scrollHeight;
+               }
+            }
             return document.body.scrollHeight;
          }
          if (this._inFloatArea()) {
@@ -206,10 +213,11 @@ define('js!SBIS3.CONTROLS.ScrollWatcher', [], function() {
       },
       /**
        * Есть ли у скроллируемого элемента скролл (т.е. данные, вылезшие за пределы контейнера по высоте)
+       * @param {jQuery} element блок элемента, в котором работает отслеживание скролла (контейнер контрола например)
        * @returns {boolean}
        */
-      hasScroll: function(){
-         var scrollHeight = this.getScrollHeight();
+      hasScroll: function(element){
+         var scrollHeight = this.getScrollHeight(element);
          return scrollHeight > this.getContainerHeight() || scrollHeight > $(window).height();
       },
       destroy: function(){

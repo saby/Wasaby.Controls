@@ -1,4 +1,4 @@
-/* global define, beforeEach, afterEach, describe, context, it, assert */
+/* global define, beforeEach, afterEach, describe, context, it, assert, $ws */
 define(
    ['js!SBIS3.CONTROLS.Data.Adapter.Json'],
    function (JsonAdapter) {
@@ -191,6 +191,12 @@ define(
                   2,
                   moreData.b
                );
+            });
+         });
+
+         describe('.serialize()', function () {
+            it('should return data as is', function () {
+               assert.deepEqual(adapter.serialize(data), data);
             });
          });
       });

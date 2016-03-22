@@ -85,8 +85,9 @@ define('js!SBIS3.CONTROLS.Selectable', ['js!SBIS3.CONTROLS.Data.Utils', 'js!SBIS
 
 
 
-
-         if ((typeof index == 'undefined') || (index === null)) {
+         // FIXME key !== null && index === -1 - проверка для выпуска 3.7.3.100
+         // иначе, если сначала установить ключ, а потом сорс не будет отрисовываться выбранный эелемент
+         if ((typeof index == 'undefined') || (index === null) || (key !== null && index === -1)) {
             if (typeof key != 'undefined') {
                this._selectMode = 'key';
                this._options.selectedIndex = this._getItemIndexByKey(key);
@@ -113,6 +114,9 @@ define('js!SBIS3.CONTROLS.Selectable', ['js!SBIS3.CONTROLS.Data.Utils', 'js!SBIS
       },
 
       before : {
+         setDataSource: function() {
+            this._options.selectedIndex = -1;
+         },
          setItems: function() {
             this._options.selectedIndex = -1;
          },
@@ -199,7 +203,8 @@ define('js!SBIS3.CONTROLS.Selectable', ['js!SBIS3.CONTROLS.Data.Utils', 'js!SBIS
          this._options.selectedKey = id;
          if (this._itemsProjection) {
             this._prepareSelectedConfig(undefined, id);
-            if ((typeof this._options.selectedIndex != 'undefined') && (this._options.selectedIndex !== null)) {
+            if ((typeof this._options.selectedIndex != 'undefined') && (this._options.selectedIndex !== null)
+               && (typeof this._itemsProjection.at(this._options.selectedIndex) != 'undefined')) {
                this._itemsProjection.setCurrentPosition(this._options.selectedIndex);
             }
             else {

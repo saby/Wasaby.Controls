@@ -53,7 +53,14 @@ define([
          });
 
          describe('.getFields()', function () {
-            it('should throw an Error', function () {
+            it('should return fields list', function () {
+               assert.deepEqual(
+                  adapter.getFields(),
+                  ['Ид', 'Фамилия']
+               );
+            });
+            it('should throw an Error for empty', function () {
+               var adapter = new JsonTable();
                assert.throw(function () {
                   adapter.getFields();
                });
@@ -282,6 +289,17 @@ define([
                );
                assert.strictEqual(
                   'Арбузнов',
+                  data[5]['Фамилия']
+               );
+            });
+            it('should not move Петров', function () {
+               adapter.move(1, 1);
+               assert.strictEqual(
+                  'Петров',
+                  data[1]['Фамилия']
+               );
+               assert.strictEqual(
+                  'Годолцов',
                   data[5]['Фамилия']
                );
             });

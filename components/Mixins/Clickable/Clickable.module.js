@@ -26,7 +26,10 @@ define('js!SBIS3.CONTROLS.Clickable', [], function() {
        */
       $protected: {
          _options: {
-
+            /**
+             * @cfg {String}  Команда
+             */
+            command: ''
          },
          _keysWeHandle: [
             $ws._const.key.enter,
@@ -60,7 +63,9 @@ define('js!SBIS3.CONTROLS.Clickable', [], function() {
 
       before : {
          _clickHandler: function() {
-
+            if (!!this._options.command) {
+               this.sendCommand(this._options.command);
+            }
          }
       },
 
@@ -71,7 +76,7 @@ define('js!SBIS3.CONTROLS.Clickable', [], function() {
                this._container.removeClass('controls-Click__active');
                //Установим фокус в контрол, чтобы у него стрельнул onFocusIn и у контрола с которого уходит фокус, стрельнул onFocusOut.
                //Такое поведение необходимо например в редактировании по месту, которое закрывается, когда у дочернего контрола стрельнул onFocusOut.
-               if (!this._isControlActive) {
+               if (!this._isControlActive && this._options.activableByClick) {
                   this.setActive(true);
                }
                this._clickHandler(e);

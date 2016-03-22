@@ -20,46 +20,29 @@ define('js!SBIS3.CONTROLS.Data.Factory', [
 
    var Factory = /** @lends SBIS3.CONTROLS.Data.Factory.prototype */{
       /**
-       * Приводит сырые данные к переданному типу.
-       * Возможные типы:
-       * RecordSet - набор записей
-       * Model - одна запись из выборки
-       * Time  - время
-       * Date - дата
-       * DateTime - дата и время
-       * Link - связь
-       * Integer - число целое
-       * Real - число вещественное
-       * Money - деьги
-       * Enum  - перечисляемое
-       * Flags - поле флагов
-       * Identity - иденификатор
-       * TimeInterval - временной интервал
-       * Text - текст
-       * String - строка
-       * Boolean - логическое
-       * Если передать тип не из списка, то значение не изменится.
-       * @param {*} value Значение
-       * @param {String} type Тип значения
+       * Переводит сырые данные в указанный формат
+       * @param {*} value Значение в формате сырых данных
+       * @param {SBIS3.CONTROLS.Data.Format.UniversalField|String} format Формат поля
        * @param {SBIS3.CONTROLS.Data.Adapter.IAdapter} adapter Адаптер для работы с сырыми данными
-       * @param {Object} meta Мета данные типа
-       * @returns {*} Приведенные к нужному типу сырые данные
+       * @returns {*} Приведенные к нужному формату сырые данные
        */
-      cast: function (value, type, adapter, meta) {
-         //TODO: вместо type + meta принимать fieldInfo
+      cast: function (value, format, adapter) {
          if (value === undefined || value === null) {
             return value;
          }
 
-         switch (type) {
+         switch (this._getType(format)) {
             case 'Identity':
-               return meta.isArray ?
-                  value[0] === null ? null : value.join(meta.separator, value) :
+               return value instanceof Array ?
+                  value[0] === null ? null : value.join(format.meta && format.meta.separator, value) :
                   value;
             case 'RecordSet':
                return this._makeRecordSet(value, adapter);
-            case 'Model':
-               return this._makeModel(value, adapter);
+            case 'Record':
+               return Di.resolve('model', {
+                  rawData: value,
+                  adapter: adapter
+               });
             case 'Time':
             case 'Date':
             case 'DateTime':
@@ -71,34 +54,32 @@ define('js!SBIS3.CONTROLS.Data.Factory', [
             case 'Double':
                return (typeof(value) === 'number') ? value : (isNaN(parseFloat(value)) ? null : parseFloat(value));
             case 'Money':
-               if (meta && meta.precision > 3) {
-                  return $ws.helpers.prepareMoneyByPrecision(value, meta.precision)
+               if (format.meta && format.meta.precision > 3) {
+                  return $ws.helpers.prepareMoneyByPrecision(value, format.meta.precision);
                }
                return value === undefined ? null : value;
             case 'Enum':
                return new Enum({
-                  data: meta.source, //массив строк
-                  currentValue: value //число
+                  dictionary: format.meta && format.meta.dictionary || [],
+                  currentValue: value
                });
             case 'Flags':
-               return this._makeFlags(value, meta);
+               return new Flags({
+                  dictionary: format.meta && format.meta.dictionary || [],
+                  values: value
+               });
             case 'TimeInterval':
                if (value instanceof $ws.proto.TimeInterval) {
                   return value.toString();
                }
                return $ws.proto.TimeInterval.toString(value);
-            case 'Text':
-            case 'String':
-               return value;
             case 'Boolean':
                return !!value;
             case 'Array':
-               if (value === null) {
-                  return value;
-               }
-               var self = this;
+               var self = this,
+                  kind = format.meta && format.meta.kind;
                return $ws.helpers.map(value, function (val) {
-                  return self.cast(val, meta.elementsType, adapter, meta);
+                  return self.cast(val, kind, adapter);
                });
             default:
                return value;
@@ -106,21 +87,20 @@ define('js!SBIS3.CONTROLS.Data.Factory', [
       },
 
       /**
-       * Переводит типизированное значение в сырые данные
-       * @param {*} value Типизированное значение
-       * @param {String} type Тип значения
+       * Переводит обертку над сырыми данными в сырые данные
+       * @param {*} value Обертка над сырыми данными
+       * @param {SBIS3.CONTROLS.Data.Format.UniversalField|String} format Формат данных
        * @param {SBIS3.CONTROLS.Data.Adapter.IAdapter} adapter Адаптер для работы с сырыми данными
-       * @param {Object} meta Мета данные типа
        * @returns {*}
        */
-      serialize: function (value, type, adapter, meta) {
+      serialize: function (value, format, adapter) {
+         var type = this._getType(format);
          switch (type) {
             case 'Identity':
-               return meta.isArray ? (
-                  typeof value === 'string' ?
-                     value.split(meta.separator) :
-                     [value]
-               ) : value;
+               if (value === null) {
+                  return [value];
+               }
+               break;
          }
 
          if (value === undefined || value === null) {
@@ -128,11 +108,16 @@ define('js!SBIS3.CONTROLS.Data.Factory', [
          }
 
          switch (type) {
+            case 'Identity':
+               return (
+                  typeof value === 'string' ?
+                     value.split(format.meta && format.meta.separator) :
+                     [value]
+               );
             case 'RecordSet':
-               return this._serializeRecordSet(value, adapter);
-            case 'Model':
-               return this._serializeModel(value, adapter);
-
+               return this._serializeRecordSet(value);
+            case 'Record':
+               return this._serializeRecord(value);
             case 'Date':
             case 'DateTime':
             case 'Time':
@@ -146,28 +131,22 @@ define('js!SBIS3.CONTROLS.Data.Factory', [
                      break;
                }
                return value instanceof Date ? value.toSQL(serializeMode) : value;
-
             case 'Flags':
                return this._serializeFlags(value);
-
             case 'Integer':
                return (typeof(value) === 'number') ? value : (isNaN(parseInt(value, 10)) ? null : parseInt(value, 10));
-
             case 'Link':
                return parseInt(value, 10);
-
             case 'Money':
-               if (meta && meta.precision > 3) {
-                  return $ws.helpers.prepareMoneyByPrecision(value, meta.precision)
+               if (format.meta && format.meta.precision > 3) {
+                  return $ws.helpers.prepareMoneyByPrecision(value, format.meta.precision);
                }
                return value;
-
             case 'TimeInterval':
                if (value instanceof $ws.proto.TimeInterval) {
                   return value.toString();
                }
                return $ws.proto.TimeInterval.toString(value);
-
             case 'Enum':
                if (value instanceof Enum) {
                   return value.get();
@@ -176,9 +155,10 @@ define('js!SBIS3.CONTROLS.Data.Factory', [
                }
                return value;
             case 'Array':
-               var self = this;
+               var self = this,
+                  kind = format.meta && format.meta.kind;
                return $ws.helpers.map(value, function (val){
-                  return self.serialize(val, meta.elementsType, adapter, meta);
+                  return self.serialize(val, kind, adapter);
                });
             default:
                return value;
@@ -186,17 +166,17 @@ define('js!SBIS3.CONTROLS.Data.Factory', [
       },
 
       /**
-       * Создает модель по сырым данным
-       * @param {*} data Сырые данные
-       * @param {SBIS3.CONTROLS.Data.Adapter.IAdapter} adapter Адаптер для работы с сырыми данными
-       * @returns {SBIS3.CONTROLS.Data.Model}
-       * @private
+       * Возвращает тип поля
+       * @param {SBIS3.CONTROLS.Data.Format.UniversalField|String} format Формат поля
+       * @returns {String}
+       * @protected
        */
-      _makeModel: function (data, adapter) {
-         return Di.resolve('model', {
-            rawData: data,
-            adapter: adapter
-         });
+      _getType: function (format) {
+         if (typeof format === 'object') {
+            return format.type;
+         } else {
+            return format;
+         }
       },
 
       /**
@@ -204,7 +184,7 @@ define('js!SBIS3.CONTROLS.Data.Factory', [
        * @param {*} data Сырые данные
        * @param {SBIS3.CONTROLS.Data.Adapter.IAdapter} adapter Адаптер для работы с сырыми данными
        * @returns {SBIS3.CONTROLS.Data.Collection.RecordSet}
-       * @private
+       * @protected
        */
       _makeRecordSet: function (data, adapter) {
          adapter.setProperty(
@@ -214,115 +194,64 @@ define('js!SBIS3.CONTROLS.Data.Factory', [
          );
 
          return Di.resolve('collection.recordset', {
-            model: 'model',
-            adapter: adapter,
             rawData: data,
+            adapter: adapter,
             totalProperty: 'total'
-         });
-      },
-
-      /**
-       * Создает поле флагов по сырым данным
-       * @param {Array} value Массив флагов
-       * @param {Object} meta Мета данные флагов
-       * @returns {SBIS3.CONTROLS.Data.Model}
-       * @private
-       */
-      _makeFlags: function (value, meta) {
-         return new Flags ({
-            data: meta.makeData(value)
          });
       },
 
       /**
        * Сериализует RecordSet
        * @param {*} data Данные
-       * @param {SBIS3.CONTROLS.Data.Adapter.IAdapter} adapter Адаптер для работы с сырыми данными
        * @returns {*}
-       * @private
+       * @protected
        */
-      _serializeRecordSet: function (data, adapter) {
-         if ($ws.helpers.instanceOfModule(data, 'SBIS3.CONTROLS.Data.Collection.RecordSet') || $ws.helpers.instanceOfModule(data, 'SBIS3.CONTROLS.Data.Source.DataSet') || $ws.helpers.instanceOfModule(data, 'SBIS3.CONTROLS.DataSet') ) {
+      _serializeRecordSet: function (data) {
+         if ($ws.helpers.instanceOfModule(data, 'SBIS3.CONTROLS.Data.Collection.RecordSet') ||
+            $ws.helpers.instanceOfModule(data, 'SBIS3.CONTROLS.Data.Source.DataSet')
+         ) {
             return data.getRawData();
-         } else if ($ws.helpers.instanceOfModule(data, 'SBIS3.CONTROLS.Data.Collection.List')) {
-            return this._serializeList(data, adapter);
-         } else if (data instanceof $ws.proto.RecordSet || data instanceof $ws.proto.RecordSetStatic) {
+         } else if (data instanceof $ws.proto.RecordSet ||
+            data instanceof $ws.proto.RecordSetStatic
+         ) {
             return data.toJSON();
-         } else {
-            if (adapter && adapter.serialize) {
-               return adapter.serialize(data);
-            }
          }
-         throw new Error('Adapter is not defined or doesn\'t have method serialize()');
+         if ($ws.helpers.instanceOfModule(data, 'SBIS3.CONTROLS.Data.Collection.List')) {
+            $ws.single.ioc.resolve('ILogger').info('SBIS3.CONTROLS.Data.Factory::_serializeRecordSet()', 'Serialization of SBIS3.CONTROLS.Data.Collection.List is no more available. Use SBIS3.CONTROLS.Data.Collection.RecordSet instead.');
+         }
+
+         throw new TypeError('SBIS3.CONTROLS.Data.Factory::_serializeRecordSet(): data should be an instance of SBIS3.CONTROLS.Data.Collection.RecordSet or SBIS3.CONTROLS.Data.Source.DataSet');
       },
 
       /**
-       * Сериализует List
-       * @param {SBIS3.CONTROLS.Data.Collection.List} data Список
-       * @param {SBIS3.CONTROLS.Data.Adapter.IAdapter} adapter Адаптер для работы с сырыми данными
+       * Сериализует запись
+       * @param {*} data Запись
        * @returns {*}
-       * @private
+       * @protected
        */
-      _serializeList: function (data, adapter) {
-         var items = data.toArray(),
-            otherData = [],
-            getTableAdapter = function(item) {
-               if (tableAdapter === undefined) {
-                  tableAdapter = adapter.forTable(
-                     adapter.forTable(item ? item.getRawData() : undefined).getEmpty()
-                  );
-               }
-               return tableAdapter;
-            },
-            tableAdapter,
-            item,
-            i,
-            length;
-
-         for (i = 0, length = items.length; i < length; i++) {
-            item = items[i];
-            if (typeof items === 'object' && $ws.helpers.instanceOfModule(item, 'SBIS3.CONTROLS.Data.Model')) {
-               getTableAdapter(item).add(item.getRawData());
-            } else {
-               otherData.push(item);
-            }
-         }
-
-         if (otherData.length) {
-            adapter.setProperty(getTableAdapter().getData(), 'other', otherData);
-         }
-
-         return getTableAdapter().getData();
-      },
-
-      /**
-       * Сериализует модель
-       * @param {*} data Модель
-       * @param {SBIS3.CONTROLS.Data.Adapter.IAdapter} adapter Адаптер для работы с сырыми данными
-       * @returns {*}
-       * @private
-       */
-      _serializeModel: function (data, adapter) {
-         if ($ws.helpers.instanceOfModule(data, 'SBIS3.CONTROLS.Data.Model')) {
+      _serializeRecord: function (data) {
+         if ($ws.helpers.instanceOfModule(data, 'SBIS3.CONTROLS.Data.Record')) {
             return data.getRawData();
          } else if (data instanceof $ws.proto.Record) {
             return data.toJSON();
-         } else {
-            if (adapter && adapter.serialize) {
-               return adapter.serialize(data);
-            }
          }
-         throw new Error('Adapter is not defined or doesn\'t have method serialize()');
+         if (data instanceof Object) {
+            $ws.single.ioc.resolve('ILogger').info('SBIS3.CONTROLS.Data.Factory::_serializeRecord()', 'Serialization of plain Object is no more available. Use SBIS3.CONTROLS.Data.Record instead.');
+         }
+         throw new TypeError('SBIS3.CONTROLS.Data.Factory::_serializeRecord(): data should be an instance of SBIS3.CONTROLS.Data.Record');
       },
 
       /**
        * Сериализует поле флагов
        * @param {*} data
        * @returns {*}
-       * @private
+       * @protected
        */
       _serializeFlags: function (data) {
-         if ($ws.helpers.instanceOfModule(data, 'SBIS3.CONTROLS.Data.Types.Flags') || $ws.helpers.instanceOfModule(data, 'SBIS3.CONTROLS.Data.Model')) {
+         if (
+            $ws.helpers.instanceOfModule(data, 'SBIS3.CONTROLS.Data.Types.Flags') ||
+            $ws.helpers.instanceOfModule(data, 'SBIS3.CONTROLS.Data.Model')
+         ) {
             var d = [];
             data.each(function (name) {
                d.push(data.get(name));

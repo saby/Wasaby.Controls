@@ -161,9 +161,11 @@ define('js!SBIS3.CONTROLS.ListView',
           * @param {Object} model Редактируемая модель
           */
          /**
-          * @event onEndEdit Возникает перед окончанием редактирования (и перед валидацией области редактирования)
+          * @event onEndEdit Возникает перед окончанием редактирования (и перед валидацией области редактирования).
           * @param {$ws.proto.EventObject} eventObject Дескриптор события.
-          * @param {Object} model Редактируемая модель
+          * @param {SBIS3.CONTROLS.Data.Model} model Редактируемая модель.
+          * @param {Boolean} withSaving Признак, по которому определяют тип завершения редактирования.
+          * true - редактирование завершается сохранением изменений; false - отмена сохранения изменений путём нажатия клавиши Esc или переводом фокуса на другой контрол.
           * @returns {*} Возможные значения:
           * <ol>
           *    <li>false - отменить редактирование;</li>
@@ -254,6 +256,7 @@ define('js!SBIS3.CONTROLS.ListView',
                 * @property {String} name Имя кнопки.
                 * @property {String} icon Путь до иконки.
                 * @property {String} caption Текст на кнопке.
+                * @property {String} parent Идентификатор родительского пункта меню (name). Опция задаётся для подменю.
                 * @property {String} tooltip Всплывающая подсказка.
                 * @property {Boolean} isMainAction Отображать ли кнопку на строке или только выпадающем в меню.
                 * На строке кнопки отображаются в том же порядке, в каком они перечислены.
@@ -531,8 +534,10 @@ define('js!SBIS3.CONTROLS.ListView',
                   newSelectedItem = this._getNextItemByDOM(selectedKey);
                   break;
                case $ws._const.key.enter:
-                  var selectedItem = $('[data-id="' + selectedKey + '"]', this._getItemsContainer());
-                  this._elemClickHandler(selectedKey, this._dataSet.getRecordByKey(selectedKey), selectedItem);
+                  if(selectedKey) {
+                     var selectedItem = $('[data-id="' + selectedKey + '"]', this._getItemsContainer());
+                     this._elemClickHandler(selectedKey, this._dataSet.getRecordByKey(selectedKey), selectedItem);
+                  }
                   break;
                case $ws._const.key.space:
                   newSelectedItem = this._getNextItemByDOM(selectedKey);
@@ -1276,6 +1281,12 @@ define('js!SBIS3.CONTROLS.ListView',
                this._nextLoad();
             }
          },
+         _cancelLoading: function(){
+            ListView.superclass._cancelLoading.apply(this, arguments);
+            if (this._isAllowInfiniteScroll()){
+               this._hideLoadingIndicator();
+            }
+         },
          _nextLoad: function () {
             var self = this,
                loadAllowed  = this._isAllowInfiniteScroll(),
@@ -1341,7 +1352,7 @@ define('js!SBIS3.CONTROLS.ListView',
              * Если же высота фиксированная, то подгружать данные в этой функции будем пока высота контейнера(ту, что фиксированно задали) не станет меньше высоты таблицы(table),
              * т.е. пока не появится скролл внутри контейнера
              */
-            if (this._isLoadBeforeScrollAppears && !this._scrollWatcher.hasScroll()){
+            if (this._isLoadBeforeScrollAppears && !this._scrollWatcher.hasScroll(this.getContainer())){
                this._nextLoad();
             } else {
                this._isLoadBeforeScrollAppears = false;
@@ -1756,7 +1767,7 @@ define('js!SBIS3.CONTROLS.ListView',
             if (!this._dragStartHandler) {
                this._dragStartHandler = this._onDragStart.bind(this);
             }
-            this._getItemsContainer()[allowDragNDrop ? 'bind' : 'unbind']('mousedown', this._dragStartHandler);
+            this._getItemsContainer()[allowDragNDrop ? 'on' : 'off']('mousedown', '.js-controls-ListView__item', this._dragStartHandler);
          },
          /**
           * Получить текущую конфигурацию перемещения элементов с помощью DragNDrop.

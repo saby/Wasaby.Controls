@@ -212,6 +212,9 @@ define([
                   delete expectObj.a;
                   delete expectObj.h.ha;
 
+                  //Chrome не создает undfined элемент, хотя индекс под него зарезерирован
+                  obj.g[0] = undefined;
+
                   assert.notEqual(expectObj, obj);
                   assert.deepEqual(expectObj, obj);
                });

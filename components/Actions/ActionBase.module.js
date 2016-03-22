@@ -38,8 +38,8 @@ define('js!SBIS3.CONTROLS.ActionBase', ['js!SBIS3.CORE.Control'], function(Contr
       execute: function() {
          this._notifyOnExecuted();
       },
-      _notifyOnExecuted: function() {
-         this._notify('onExecuted')
+      _notifyOnExecuted: function(meta, record) {
+         this._notify('onExecuted', meta, record)
       }
    });
    return ActionBase;

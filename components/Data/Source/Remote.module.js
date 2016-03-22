@@ -19,40 +19,20 @@ define('js!SBIS3.CONTROLS.Data.Source.Remote', [
       $protected: {
          _options: {
             /**
-             * @cfg {String} Адрес удаленного сервиса, с которым работает источник (хост, путь, название)
-             * @see getService
-             * @example
-             * <pre>
-             *    var dataSource = new RemoteSource({
-             *       service: 'http://my.host.name'
-             *       resource: '/users/'
-             *    });
-             * </pre>
-             * @example
-             * <pre>
-             *    var dataSource = new RemoteSource({
-             *       service: 'MyPlugin.v001'
-             *       resource: 'Users'
-             *    });
-             * </pre>
-             */
-            service: '',
-
-            /**
              * @cfg {String|Object} Объект, реализующий сетевой протокол для обмена в режиме клиент-сервер
              * @see getProvider
              * @see SBIS3.CONTROLS.Data.Di
              * @example
              * <pre>
              *    var dataSource = new RemoteSource({
-             *       resource: '/users/'
+             *       endpoint: '/users/'
              *       provider: 'source.provider.ajax'
              *    });
              * </pre>
              * @example
              * <pre>
              *    var dataSource = new RemoteSource({
-             *       resource: '/users/'
+             *       endpoint: '/users/'
              *       provider: new AjaxProvider()
              *    });
              * </pre>
@@ -61,15 +41,25 @@ define('js!SBIS3.CONTROLS.Data.Source.Remote', [
          }
       },
 
+      $constructor: function (cfg) {
+         cfg = cfg || {};
+         //Deprecated
+         if ('service' in cfg && 'resource' in cfg && !('endpoint' in cfg)) {
+            $ws.single.ioc.resolve('ILogger').info(this._moduleName + '::$constructor()', 'Option "service" is deprecated and will be removed in 3.7.4. Use "endpoint.address" instead.');
+            this._options.endpoint.address = cfg.service;
+         }
+      },
+
       //region Public methods
 
       /**
        * Возвращает адрес удаленного сервиса, с которым работает источник (хост, путь, название)
        * @returns {String}
-       * @see service
+       * @deprecated Метод будет удален в 3.7.4, используйте getEndpoint().address
        */
       getService: function () {
-         return this._options.service;
+         $ws.single.ioc.resolve('ILogger').info(this._moduleName + '::getService()', 'Method is deprecated and will be removed in 3.7.4. Use "getEndpoint().address" instead.');
+         return this._options.endpoint.address || '';
       },
 
       /**
@@ -83,8 +73,10 @@ define('js!SBIS3.CONTROLS.Data.Source.Remote', [
          }
          if (typeof this._options.provider === 'string') {
             this._options.provider = Di.resolve(this._options.provider, {
-               service: this._options.service,
-               resource: this._options.resource
+               endpoint: this._options.endpoint,
+               //TODO: remove pass 'service' and 'resource'
+               service: this._options.endpoint.address,
+               resource: this._options.endpoint.contract
             });
          }
          return this._options.provider;

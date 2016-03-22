@@ -137,6 +137,32 @@ define('js!SBIS3.CONTROLS.Data.Format.Format', [
          );
       },
 
+      /**
+       * Проверяет эквивалентность формата
+       * @param {SBIS3.CONTROLS.Data.Format.Format} format Формат, эквивалентность которого проверяется
+       * @returns {Boolean}
+       */
+      isEqual: function (format) {
+         if (format === this) {
+            return true;
+         }
+         if (!format) {
+            return false;
+         }
+         if (!$ws.helpers.instanceOfModule(format, 'SBIS3.CONTROLS.Data.Format.Format')) {
+            return false;
+         }
+         if (this.getCount() !== format.getCount()) {
+            return false;
+         }
+         for (var i = 0, count = this.getCount(); i < count; i++) {
+            if (!this.at(i).isEqual(format.at(i))) {
+               return false;
+            }
+         }
+         return true;
+      },
+
       //endregion Public methods
 
       //region Protected methods

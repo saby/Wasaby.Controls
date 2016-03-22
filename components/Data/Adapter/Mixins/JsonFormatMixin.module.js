@@ -1,7 +1,8 @@
 /* global define, $ws */
 define('js!SBIS3.CONTROLS.Data.Adapter.JsonFormatMixin', [
-   'js!SBIS3.CONTROLS.Data.Format.FieldsFactory'
-], function (FieldsFactory) {
+   'js!SBIS3.CONTROLS.Data.Format.FieldsFactory',
+   'js!SBIS3.CONTROLS.Data.Format.UniversalField'
+], function (FieldsFactory, UniversalField) {
    'use strict';
 
    /**
@@ -21,7 +22,17 @@ define('js!SBIS3.CONTROLS.Data.Adapter.JsonFormatMixin', [
          /**
           * @member {Object.<String, SBIS3.CONTROLS.Data.Format.Field>} Форматы полей
           */
-         _format: {}
+         _format: {},
+
+         /**
+          * @member {Object} Формат поля, отдаваемый через getSharedFormat()
+          */
+         _sharedFieldFormat: null,
+
+         /**
+          * @member {Object} Мета данные поля, отдаваемого через getSharedFormat()
+          */
+         _sharedFieldMeta: null
       },
 
       //region Public methods
@@ -31,10 +42,29 @@ define('js!SBIS3.CONTROLS.Data.Adapter.JsonFormatMixin', [
       },
 
       getFormat: function (name) {
+         if (!this._has(name)) {
+            throw new ReferenceError(this._moduleName + '::getFormat(): field "' + name + '" is not exists');
+         }
          if (!this._format.hasOwnProperty(name)) {
             this._format[name] = this._buildFormat(name);
          }
          return this._format[name].clone();
+      },
+
+      getSharedFormat: function (name) {
+         if (this._sharedFieldFormat === null) {
+            this._sharedFieldFormat = new UniversalField();
+         }
+         var format = this._sharedFieldFormat;
+         format.name = name;
+         if (this._format.hasOwnProperty(name)) {
+            format.type = this.getFormat(name).getType();
+            format.meta = this._getFieldMeta(name);
+         } else {
+            format.type = 'String';
+         }
+
+         return format;
       },
 
       addField: function(format, at) {
@@ -45,16 +75,19 @@ define('js!SBIS3.CONTROLS.Data.Adapter.JsonFormatMixin', [
          if (!name) {
             throw new Error(this._moduleName + '::addField(): field name is empty');
          }
-         if (this._format.hasOwnProperty(name)) {
+         if (this._has(name)) {
             throw new Error(this._moduleName + '::addField(): field "' + name + '" already exists');
          }
          if (at >= 0) {
-            $ws.single.ioc.resolve('ILogger').log(this._moduleName + '::addField()', 'Argument "at" is not supported and will be ignored.');
+            $ws.single.ioc.resolve('ILogger').info(this._moduleName + '::addField()', 'Argument "at" is not supported and will be ignored.');
          }
          this._format[name] = format;
       },
 
       removeField: function(name) {
+         if (!this._has(name)) {
+            throw new ReferenceError(this._moduleName + '::removeField(): field "' + name + '" is not exists');
+         }
          delete this._format[name];
       },
 
@@ -65,12 +98,43 @@ define('js!SBIS3.CONTROLS.Data.Adapter.JsonFormatMixin', [
       //endregion Public methods
 
       //region Protected methods
-      
+
+      _has: function (name) {
+         throw new Error('Method must be implemented');
+      },
+
       _buildFormat: function(name) {
          return FieldsFactory.create({
             name: name,
             type: 'string'
          });
+      },
+
+      _getFieldMeta: function (name) {
+         if (this._sharedFieldMeta === null) {
+            this._sharedFieldMeta = {};
+         }
+         var format = this.getFormat(name),
+            meta = this._sharedFieldMeta;
+
+         switch (format.getType()) {
+            case 'Real':
+            case 'Money':
+               meta.precision = format.getPrecision();
+               break;
+            case 'Enum':
+            case 'Flags':
+               meta.dictionary = format.getDictionary();
+               break;
+            case 'Identity':
+               meta.separator = format.getSeparator();
+               break;
+            case 'Array':
+               meta.kind = format.getKind();
+               break;
+         }
+
+         return meta;
       }
 
       //endregion Protected methods

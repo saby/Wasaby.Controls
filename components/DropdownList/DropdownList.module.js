@@ -97,7 +97,9 @@ define('js!SBIS3.CONTROLS.DropdownList',
          },
          init : function () {
             DropdownList.superclass.init.apply(this, arguments);
-            this._initializePicker();
+            if (!this._picker) {
+               this._initializePicker();
+            }
          },
          _setPickerContent : function () {
             var self = this,
@@ -115,6 +117,9 @@ define('js!SBIS3.CONTROLS.DropdownList',
             if(this._options.mode === 'hover') {
                this._pickerHeadContainer.bind('mouseleave', this._pickerMouseLeaveHandler.bind(this, true));
                this._pickerBodyContainer.bind('mouseleave', this._pickerMouseLeaveHandler.bind(this, false));
+            }
+            else if (this._options.mode === 'click'){
+               this._pickerHeadContainer.click(this.hidePicker.bind(this));
             }
          },
          _buildTplArgs: function(item) {
@@ -302,7 +307,7 @@ define('js!SBIS3.CONTROLS.DropdownList',
                container.addClass('controls-ListView__defaultItem');
             }
 
-            if (this._options.multiSelect) {
+            if (this._options.multiselect) {
                addClass += ' controls-DropdownList__multiselect';
             }
             container.addClass(addClass);

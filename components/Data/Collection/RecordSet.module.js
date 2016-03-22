@@ -95,24 +95,25 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
 
          if ('data' in cfg && !('rawData' in cfg)) {
             this._options.rawData = cfg.data;
-            $ws.single.ioc.resolve('ILogger').log('SBIS3.CONTROLS.Data.Collection.RecordSet', 'option "data" is deprecated and will be removed in 3.7.4. Use "rawData" instead.');
+            $ws.single.ioc.resolve('ILogger').info('SBIS3.CONTROLS.Data.Collection.RecordSet', 'option "data" is deprecated and will be removed in 3.7.4. Use "rawData" instead.');
          }
          if ('strategy' in cfg && !('adapter' in cfg)) {
             this._options.adapter = cfg.strategy;
-            $ws.single.ioc.resolve('ILogger').log('SBIS3.CONTROLS.Data.Collection.RecordSet', 'option "strategy" is deprecated and will be removed in 3.7.4. Use "adapter" instead.');
+            $ws.single.ioc.resolve('ILogger').info('SBIS3.CONTROLS.Data.Collection.RecordSet', 'option "strategy" is deprecated and will be removed in 3.7.4. Use "adapter" instead.');
          }
          if ('keyField' in cfg && !('idProperty' in cfg)) {
             this._options.idProperty = cfg.keyField;
-            $ws.single.ioc.resolve('ILogger').log('SBIS3.CONTROLS.Data.Collection.RecordSet', 'option "keyField" is deprecated and will be removed in 3.7.4. Use "idProperty" instead.');
+            $ws.single.ioc.resolve('ILogger').info('SBIS3.CONTROLS.Data.Collection.RecordSet', 'option "keyField" is deprecated and will be removed in 3.7.4. Use "idProperty" instead.');
          }
          if (!this._options.idProperty) {
             this._options.idProperty = this.getAdapter().getKeyField(this._options.rawData);
          }
          if ('items' in cfg) {
-            $ws.single.ioc.resolve('ILogger').log('SBIS3.CONTROLS.Data.Collection.RecordSet', 'option "items" is not acceptable. Use "rawData" instead.');
+            $ws.single.ioc.resolve('ILogger').info('SBIS3.CONTROLS.Data.Collection.RecordSet', 'option "items" is not acceptable. Use "rawData" instead.');
          }
          if (this._options.rawData) {
-            this.setRawData(this._options.rawData);
+            this._assignRawData(this._options.rawData, true);
+            this._createFromRawData();
          }
 
       },
@@ -159,10 +160,15 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
 
       /**
        * Переустанавливает сырые данные
+       * @param {Object} data Данные в "сыром" виде
+       * @param {Boolean} [keepFormat=false] Сохранить формат
        * @protected
        */
-      _assignRawData: function(data) {
+      _assignRawData: function(data, keepFormat) {
          RecordSet.superclass.setRawData.call(this, data);
+         if (!keepFormat) {
+            this._clearFormat();
+         }
          this._tableAdapter = null;
          this._fields = null;
       },
@@ -367,7 +373,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
       },
 
       getStrategy: function () {
-         $ws.single.ioc.resolve('ILogger').log('SBIS3.CONTROLS.Data.Collection.RecordSet:getStrategy', 'method getStrategy is deprecated and will be removed in 3.7.4. Use "getAdapter" instead.');
+         $ws.single.ioc.resolve('ILogger').info('SBIS3.CONTROLS.Data.Collection.RecordSet:getStrategy', 'method getStrategy is deprecated and will be removed in 3.7.4. Use "getAdapter" instead.');
          return this.getAdapter();
       },
 
@@ -467,9 +473,6 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
          return this._indexTree.hasOwnProperty(parentKey);
       },
 
-      getParent: function () {
-      },
-
       getParentKey: function (record, field) {
          return record.get(field);
       },
@@ -561,32 +564,6 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
 
       //endregion SBIS3.CONTROLS.DataSet
 
-      // region SBIS3.CONTROLS.Data.SerializableMixin
-
-      _getSerializableState: function() {
-         var state = RecordSet.superclass._getSerializableState.call(this);
-
-         //Prevent core reviver for rawData
-         if (state._options && state._options.rawData && state._options.rawData._type) {
-            state._options.rawData.$type = state._options.rawData._type;
-            delete state._options.rawData._type;
-         }
-
-         return state;
-      },
-
-      _setSerializableState: function(state) {
-         return RecordSet.superclass._setSerializableState(state).callNext(function() {
-            //Restore value hidden from core reviver
-            if (this._options && this._options.rawData && this._options.rawData.$type) {
-               this._options.rawData._type = this._options.rawData.$type;
-               delete this._options.rawData.$type;
-            }
-         });
-      },
-
-      // endregion SBIS3.CONTROLS.Data.SerializableMixin
-
       //region SBIS3.CONTROLS.Data.Collection.List
 
       clear: function () {
@@ -617,10 +594,20 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
       },
 
       assign: function (items) {
-         this._assignRawData(this._getTableAdapter().getEmpty());
+         var checkFormat = true,
+            adapter;
+         if (items && $ws.helpers.instanceOfModule(items, 'SBIS3.CONTROLS.Data.Collection.RecordSet')) {
+            adapter = items.getAdapter().forTable(items.getRawData());
+            checkFormat = false;
+         } else {
+            adapter = this._getTableAdapter();
+         }
+         this._assignRawData(adapter.getEmpty());
+
+         this._items.length = 0;
          items = this._itemsToArray(items);
          for (var i = 0, len = items.length; i < len; i++) {
-            this._checkItem(items[i]);
+            this._checkItem(items[i], checkFormat);
             this._getTableAdapter().add(items[i].getRawData());
          }
          RecordSet.superclass.assign.call(this, items);
@@ -680,6 +667,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
 
       /**
        * Пересоздает элементы из сырых данных
+       * @param {Object} data Сырые данные
        * @protected
        */
       _createFromRawData: function(data) {
@@ -695,12 +683,20 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
       },
 
       /**
-       * Проверяет, что переданный элемент - модель
+       * Проверяет, что переданный элемент - это запись с идентичным форматом
+       * @param {*} item Запись
+       * @param {Boolean} [checkFormat=true] Запись
        * @protected
        */
-      _checkItem: function (item) {
-         if(!item || !$ws.helpers.instanceOfModule(item, 'SBIS3.CONTROLS.Data.Model')){
-            throw new Error('Item should be an instance of SBIS3.CONTROLS.Data.Model');
+      _checkItem: function (item, checkFormat) {
+         if (!item || !$ws.helpers.instanceOfModule(item, 'SBIS3.CONTROLS.Data.Record')) {
+            throw new Error('Item should be an instance of SBIS3.CONTROLS.Data.Record');
+         }
+         if ((checkFormat === undefined || checkFormat === true) &&
+            this.getCount() > 0 &&
+            !this._getFormat().isEqual(item.getFormat())
+         ) {
+            $ws.single.ioc.resolve('ILogger').error(this._moduleName, 'Record format is not equal to recordset format.');
          }
          return true;
       }

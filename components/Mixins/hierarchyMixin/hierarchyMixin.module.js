@@ -60,7 +60,7 @@ define('js!SBIS3.CONTROLS.hierarchyMixin', [], function () {
             var
                childKeys = indexTree[root] || [];
             for (var i = 0; i < childKeys.length; i++) {
-               var record = self._dataSet.getRecordByKey(childKeys[i]);
+               var record = self._items.getRecordByKey(childKeys[i]);
                iterateCallback.call(this, record, root, curLvl);
                if (indexTree[childKeys[i]]) {
                   curLvl++;
@@ -83,12 +83,12 @@ define('js!SBIS3.CONTROLS.hierarchyMixin', [], function () {
             records = [],
             self = this;
          if (!Object.isEmpty(this._options.groupBy)) {
-            return this._dataSet._getRecords();
+            return this._items._getRecords();
          }
          var path = this._options.openedPath;
-         this.hierIterate(this._dataSet , function(record) {
+         this.hierIterate(this._items , function(record) {
             //Рисуем рекорд если он принадлежит текущей папке или если его родитель есть в openedPath
-            var parentKey = self._dataSet.getParentKey(record, self._options.hierField);
+            var parentKey = self._items.getParentKey(record, self._options.hierField);
             if (parentKey == self._curRoot || path[parentKey]) {
                if (self._options.displayType == 'folders') {
                   if (record.get(self._options.hierField + '@')) {
@@ -104,7 +104,7 @@ define('js!SBIS3.CONTROLS.hierarchyMixin', [], function () {
       },
 
       getParentKey: function (DataSet, record) {
-         return this._dataSet.getParentKey(record, this._options.hierField);
+         return this._items.getParentKey(record, this._options.hierField);
       },
 
       /* отображение */
@@ -143,7 +143,7 @@ define('js!SBIS3.CONTROLS.hierarchyMixin', [], function () {
          }
          this.setFilter(filter, true);
          this._notify('onBeforeSetRoot');
-         this._hier = this._getHierarchy(this._dataSet, key);
+         this._hier = this._getHierarchy(this._items, key);
          //узел грузим с 0-ой страницы
          this._offset = 0;
          //Если добавить проверку на rootChanged, то при переносе в ту же папку, из которой искали ничего не произойдет
@@ -155,7 +155,7 @@ define('js!SBIS3.CONTROLS.hierarchyMixin', [], function () {
       },
       after : {
          _dataLoadedCallback: function () {
-            var path = this._dataSet.getMetaData().path,
+            var path = this._items.getMetaData().path,
                hierarchy = this._hier,
                item;
             if (path) {
@@ -163,16 +163,29 @@ define('js!SBIS3.CONTROLS.hierarchyMixin', [], function () {
             }
             // При каждой загрузке данных стреляем onSetRoot, не совсем правильно
             // но есть случаи когда при reload присылают новый path,
-            // а хлебные крошки не перерисовываются так как корень не поменялся 
+            // а хлебные крошки не перерисовываются так как корень не поменялся
             this._notify('onSetRoot', this._curRoot, hierarchy);
             //TODO Совсем быстрое и временное решение. Нужно скроллиться к первому элементу при проваливании в папку.
             // Выпилить, когда это будет делать установка выделенного элемента
             if (this._previousRoot !== this._curRoot) {
-               this._previousRoot = this._curRoot;
-               item = this.getItems() && this.getItems().at(0);
-               if (item){
-                  this._scrollToItem(item.getKey());
+
+               //TODO курсор
+               /*Если в текущем списке есть предыдущий путь, значит это выход из папки*/
+               if (this.getItems().getRecordById(this._previousRoot)) {
+                  this.setSelectedKey(this._previousRoot);
+                  this._scrollToItem(this._previousRoot);
                }
+               else {
+                  /*иначе вход в папку*/
+                  item = this.getItems() && this.getItems().at(0);
+                  if (item){
+                     this.setSelectedKey(item.getKey());
+                     this._scrollToItem(item.getKey());
+                  }
+               }
+
+               this._previousRoot = this._curRoot;
+
             }
          }
       },
@@ -207,7 +220,7 @@ define('js!SBIS3.CONTROLS.hierarchyMixin', [], function () {
       //Переопределяем метод, чтоб передать тип записи
       _activateItem : function(id) {
          var
-            item = this._dataSet.getRecordByKey(id),
+            item = this._items.getRecordByKey(id),
             meta = {
                id: id,
                item: item,

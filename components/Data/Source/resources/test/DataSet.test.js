@@ -8,26 +8,26 @@ define([
 ], function (DataSet, MemorySource, JsonAdapter, Model, RecordSet) {
       'use strict';
 
-      var list;
-
-      beforeEach(function () {
-         list = [{
-            'Ид': 1,
-            'Фамилия': 'Иванов'
-         }, {
-            'Ид': 2,
-            'Фамилия': 'Петров'
-         }, {
-            'Ид': 3,
-            'Фамилия': 'Сидоров'
-         }];
-      });
-
-      afterEach(function () {
-         list = undefined;
-      });
-
       describe('SBIS3.CONTROLS.Data.Source.DataSet', function () {
+         var list;
+
+         beforeEach(function () {
+            list = [{
+               'Ид': 1,
+               'Фамилия': 'Иванов'
+            }, {
+               'Ид': 2,
+               'Фамилия': 'Петров'
+            }, {
+               'Ид': 3,
+               'Фамилия': 'Сидоров'
+            }];
+         });
+
+         afterEach(function () {
+            list = undefined;
+         });
+
          describe('.getSource()', function () {
             it('should return the source', function () {
                var source =  new MemorySource(),

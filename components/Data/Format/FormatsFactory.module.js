@@ -19,7 +19,7 @@ define('js!SBIS3.CONTROLS.Data.Format.FormatsFactory', [
 
       /**
        * Конструирует формат полей по декларативному описанию
-       * @param {Array.<SBIS3.CONTROLS.Data.Format.FieldsFactory/FieldDeclaration>} declaration Декларативное описание
+       * @param {Array.<SBIS3.CONTROLS.Data.Format.FieldsFactory/FieldDeclaration.typedef>} declaration Декларативное описание
        * @returns {SBIS3.CONTROLS.Data.Format.Format}
        * @static
        */

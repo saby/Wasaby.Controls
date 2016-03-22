@@ -283,7 +283,11 @@ define('js!SBIS3.CONTROLS.DSMixin', [
              * Например для отрисовки кнопко +Документ, +Папка.
              * Если задан, то под всеми(!) элементами появится контейнер с содержимым этого шаблона
              */
-            footerTpl: undefined
+            footerTpl: undefined,
+            /**
+             * @cfg {Boolean} Автоперерисовка при изменении данных
+             */
+            autoRedraw: true
          },
          _loader: null
       },
@@ -518,9 +522,14 @@ define('js!SBIS3.CONTROLS.DSMixin', [
                    self._toggleIndicator(false);
                    if (self._items) {
                       self._notify('onDataLoad', list);
-                      self._items.assign(list);
-                      self._dataSet.assign(list);
                       self._dataSet.setMetaData(list.getMetaData());
+                      self._items.assign(list);
+                      if (self._items !== self._dataSet) {
+                         self._dataSet.assign(list);
+                      }
+                      if (!this._options.autoRedraw) {
+                         this.redraw();
+                      }
                       self._dataLoadedCallback();
                    }
                    else {
@@ -532,9 +541,8 @@ define('js!SBIS3.CONTROLS.DSMixin', [
                       this._notify('onItemsReady');
                       self._itemsReadyCallback();
                       self._dataLoadedCallback();
-
+                      self.redraw();
                    }
-                   self.redraw();
                    //self._notify('onBeforeRedraw');
                    return list;
                 }, self))
@@ -747,6 +755,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
             records = this._getRecordsForRedraw();
             this._toggleEmptyData(!records.length && this._options.emptyHTML);
             this._drawItems(records);
+
          }
       },
       _destroySearchBreadCrumbs: function(){
@@ -802,12 +811,20 @@ define('js!SBIS3.CONTROLS.DSMixin', [
          }
          this._itemsInstances = {};
          if (container.length){
-            var itemsContainers = $('.controls-ListView__item, .controls-GroupBy', container.get(0));
-            /*Удаляем вложенные компоненты*/
-            this._destroyControls(itemsContainers);
+            var itemsContainers;
+            //В случае, когда это полная перерисовка, надо дестроить контролы только в итемах и группировках
+            if (container.get(0) == this._getItemsContainer().get(0)) {
+               itemsContainers = $('.controls-ListView__item, .controls-GroupBy', container.get(0));
+               /*Удаляем вложенные компоненты*/
+               this._destroyControls(itemsContainers);
 
-            /*Удаляем сами items*/
-            itemsContainers.remove();
+               /*Удаляем сами items*/
+               itemsContainers.remove();
+            }
+            else {
+               this._destroyControls(container);
+            }
+
          }
       },
 
@@ -1073,7 +1090,9 @@ define('js!SBIS3.CONTROLS.DSMixin', [
       _scrollToItem: function(itemId) {
          var itemContainer  = $(".controls-ListView__item[data-id='" + itemId + "']", this._getItemsContainer());
          if (itemContainer.length) {
-            itemContainer.get(0).scrollIntoView();
+            itemContainer
+               .attr('tabindex', -1)
+               .focus();
          }
       },
       /**
@@ -1105,22 +1124,48 @@ define('js!SBIS3.CONTROLS.DSMixin', [
       },
 
       _addItem: function (item, at) {
-         var ladderDecorator = this._decorators.getByName('ladder');
+         var ladderDecorator = this._decorators.getByName('ladder'),
+            previousGroupBy = this._previousGroupBy;//После добавления записи восстанавливаем это значение, чтобы не сломалась группировка
          ladderDecorator && ladderDecorator.setMarkLadderColumn(true);
+         /*TODO отдельно обрабатываем случай с группировкой*/
+         var flagAfter = false;
+         if (!Object.isEmpty(this._options.groupBy)) {
+            var
+               meth = this._options.groupBy.method,
+               prev = this._itemsProjection.getPrevious(item),
+               next = this._itemsProjection.getNext(item);
+            if(prev)
+                meth.call(this, prev.getContents());
+            meth.call(this, item.getContents());
+            if (next && !meth.call(this, next.getContents())) {
+               flagAfter = true;
+            }
+         };
+         /**/
          item = item.getContents();
          var target = this._getTargetContainer(item),
-            currentItemAt = at > -1 ? this._getItemContainerByIndex(target, at - 1) : null,
+            currentItemAt = at > 0 ? this._getItemContainerByIndex(target, at - 1) : null,
             template = this._getItemTemplate(item),
             newItemContainer = this._buildTplItem(item, template),
             rows;
          this._addItemAttributes(newItemContainer, item);
-         if (currentItemAt && currentItemAt.length) {
+         if (flagAfter) {
+            newItemContainer.insertBefore(this._getItemContainerByIndex(target, at));
+            rows = [newItemContainer.prev().prev(), newItemContainer.prev(), newItemContainer, newItemContainer.next(), newItemContainer.next().next()];
+         } else if (currentItemAt && currentItemAt.length) {
+            meth && meth.call(this, prev.getContents());
             newItemContainer.insertAfter(currentItemAt);
             rows = [newItemContainer.prev().prev(), newItemContainer.prev(), newItemContainer, newItemContainer.next(), newItemContainer.next().next()];
+         } else if(at === 0) {
+            this._previousGroupBy = undefined;
+            newItemContainer.prependTo(target);
+            rows = [newItemContainer, newItemContainer.next(), newItemContainer.next().next()];
          } else {
             newItemContainer.appendTo(target);
             rows = [newItemContainer.prev().prev(), newItemContainer.prev(), newItemContainer, newItemContainer.next()];
          }
+         this._group(item, {at: at});
+         this._previousGroupBy = previousGroupBy;
          ladderDecorator && ladderDecorator.setMarkLadderColumn(false);
          this._ladderCompare(rows);
       },
@@ -1139,7 +1184,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
          }
       },
       _isNeedToRedraw: function(){
-      	return this._needToRedraw && !!this._getItemsContainer();
+      	return this._options.autoRedraw && this._needToRedraw && !!this._getItemsContainer();
       },
 
       _moveItem: function(item, to){
@@ -1172,7 +1217,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
             this._addItemAttributes(newItemContainer, item);
             this._clearItems(container);
             container.replaceWith(newItemContainer);
-            this._ladderCompare([container.prev(), container, container.next()]);
+            this._ladderCompare([newItemContainer.prev(), newItemContainer, newItemContainer.next()]);
          }
       },
 
