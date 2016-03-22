@@ -299,7 +299,7 @@ define('js!SBIS3.CONTROLS.TextBox', ['js!SBIS3.CONTROLS.TextBoxBase','html!SBIS3
       },
 
       _inputRegExp: function (e, regexp) {
-         var keyCode = e.which;
+         var keyCode = e.which || event.keyCode;
          if (keyCode < 32 || e.ctrlKey || e.altKey) {
             return false;
          }
