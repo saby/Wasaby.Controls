@@ -188,25 +188,6 @@ define('js!SBIS3.CONTROLS.Data.Collection.List', [
          return this._items.length;
       },
 
-      equals: function (another) {
-         if (!another ||
-            typeof another !== 'object' ||
-            !$ws.helpers.instanceOfMixin(another, 'SBIS3.CONTROLS.Data.Collection.IList')
-         ) {
-            return false;
-         }
-
-         if (this._items.length !== another.getCount()) {
-            return false;
-         }
-         for (var i = 0, count = this._items.length; i < count; i++) {
-            if (this._items[i] !== another.at(i)) {
-               return false;
-            }
-         }
-         return true;
-      },
-
       //endregion SBIS3.CONTROLS.Data.Collection.IList
 
       //region SBIS3.CONTROLS.Data.Collection.IIndexedCollection
@@ -252,6 +233,36 @@ define('js!SBIS3.CONTROLS.Data.Collection.List', [
       toArray: function () {
          return this._items.slice();
       },
+
+      //region Public methods
+
+      equals: function (another) {
+         $ws.single.ioc.resolve('ILogger').info(this._moduleName + '::equals()', 'Method is deprecated and will be removed in 3.7.4. Use isEqual() instead.');
+         return this.isEqual(another);
+      },
+
+      isEqual: function (list) {
+         if (list === this) {
+            return true;
+         }
+         if (!list ||
+            !$ws.helpers.instanceOfModule(list, 'SBIS3.CONTROLS.Data.Collection.List')
+         ) {
+            return false;
+         }
+
+         if (this.getCount() !== list.getCount()) {
+            return false;
+         }
+         for (var i = 0, count = this.getCount(); i < count; i++) {
+            if (this.at(i) !== list.at(i)) {
+               return false;
+            }
+         }
+         return true;
+      },
+
+      //endregion Public methods
 
       //region Protected methods
 

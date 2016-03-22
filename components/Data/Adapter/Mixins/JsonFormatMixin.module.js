@@ -42,6 +42,9 @@ define('js!SBIS3.CONTROLS.Data.Adapter.JsonFormatMixin', [
       },
 
       getFormat: function (name) {
+         if (!this._has(name)) {
+            throw new ReferenceError(this._moduleName + '::getFormat(): field "' + name + '" is not exists');
+         }
          if (!this._format.hasOwnProperty(name)) {
             this._format[name] = this._buildFormat(name);
          }
@@ -72,7 +75,7 @@ define('js!SBIS3.CONTROLS.Data.Adapter.JsonFormatMixin', [
          if (!name) {
             throw new Error(this._moduleName + '::addField(): field name is empty');
          }
-         if (this._format.hasOwnProperty(name)) {
+         if (this._has(name)) {
             throw new Error(this._moduleName + '::addField(): field "' + name + '" already exists');
          }
          if (at >= 0) {
@@ -82,6 +85,9 @@ define('js!SBIS3.CONTROLS.Data.Adapter.JsonFormatMixin', [
       },
 
       removeField: function(name) {
+         if (!this._has(name)) {
+            throw new ReferenceError(this._moduleName + '::removeField(): field "' + name + '" is not exists');
+         }
          delete this._format[name];
       },
 
@@ -92,7 +98,11 @@ define('js!SBIS3.CONTROLS.Data.Adapter.JsonFormatMixin', [
       //endregion Public methods
 
       //region Protected methods
-      
+
+      _has: function (name) {
+         throw new Error('Method must be implemented');
+      },
+
       _buildFormat: function(name) {
          return FieldsFactory.create({
             name: name,

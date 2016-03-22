@@ -32,13 +32,6 @@ define('js!SBIS3.CONTROLS.Data.Adapter.JsonRecord', [
 
       //region SBIS3.CONTROLS.Data.Adapter.JsonFormatMixin
 
-      getFormat: function (name) {
-         if (!this.has(name)) {
-            throw new ReferenceError(this._moduleName + '::getFormat(): field "' + name + '" is not exists');
-         }
-         return JsonRecord.superclass.getFormat.call(this, name);
-      },
-
       addField: function(format, at) {
          if (!format || !$ws.helpers.instanceOfModule(format, 'SBIS3.CONTROLS.Data.Format.Field')) {
             throw new TypeError(this._moduleName + '::addField(): format should be an instance of SBIS3.CONTROLS.Data.Format.Field');
@@ -53,9 +46,6 @@ define('js!SBIS3.CONTROLS.Data.Adapter.JsonRecord', [
       },
 
       removeField: function(name) {
-         if (!this.has(name)) {
-            throw new ReferenceError(this._moduleName + '::removeField(): field "' + name + '" is not exists');
-         }
          JsonRecord.superclass.removeField.call(this, name);
          delete this._data[name];
       },
@@ -91,9 +81,17 @@ define('js!SBIS3.CONTROLS.Data.Adapter.JsonRecord', [
 
       getKeyField: function () {
          return undefined;
-      }
+      },
 
       //endregion Public methods
+
+      //region Protected methods
+
+      _has: function (name) {
+         return this.has(name);
+      }
+
+      //endregion Protected methods
    });
 
    return JsonRecord;
