@@ -13,7 +13,9 @@ define('js!SBIS3.CONTROLS.MultiSelectable', ['js!SBIS3.CONTROLS.Data.Collection.
         * @property {Array.<String>} added ключи, которые добавились
         * @property {Array.<String>} removed ключи, которые удалились
         *
-        * @event onSelectedItemsChange При смене выбранных элементов коллекции
+        * @event onSelectedItemsChange Происходит при смене выбранных элементов коллекции.
+        * Событие происходит сразу после изменения списка выбранных коллекции элементов, когда хотя бы один элемент был
+        * добавлен либо удален из списка.
         * @param {$ws.proto.EventObject} Дескриптор события.
         * @param {Array.<String>} idArray Массив ключей выбранных элементов.
         * @param {ChangedKeys} changedKeys Измененные ключи
@@ -198,6 +200,7 @@ define('js!SBIS3.CONTROLS.MultiSelectable', ['js!SBIS3.CONTROLS.Data.Collection.
       },
       /**
        * Устанавливает массив идентификаторов выбранных элементов коллекции для контрола, который находится в режиме множественного выбора.
+       * Идентификатором элемента коллекции служит значение его {@link SBIS3.CONTROLS.DSMixin#keyField ключевого поля}.
        * @param {Array} idArray Массив идентификаторов выбранных элементов коллекции.
        * @example
        * <pre>
@@ -208,8 +211,6 @@ define('js!SBIS3.CONTROLS.MultiSelectable', ['js!SBIS3.CONTROLS.Data.Collection.
        * @see multiselect
        * @see selectedKeys
        * @see getSelectedKeys
-       * @see removeItemsSelection
-       * @see addItemsSelection
        */
       setSelectedKeys : function(idArray) {
 
@@ -271,12 +272,16 @@ define('js!SBIS3.CONTROLS.MultiSelectable', ['js!SBIS3.CONTROLS.Data.Collection.
        *     }
        * </pre>
        * @see multiselect
+       * @see selectedItems
        * @see getSelectedItems
        * @see selectedKeys
+       * @see setSelectedKeys
+       * @see getSelectedKeys
        * @see removeItemsSelection
        * @see removeItemsSelectionAll
-       * @see getSelectedKeys
        * @see addItemsSelection
+       * @see toggleItemsSelection
+       * @see toggleItemsSelectionAll
        */
       setSelectedItemsAll : function() {
          if (this._dataSet) {
@@ -290,7 +295,8 @@ define('js!SBIS3.CONTROLS.MultiSelectable', ['js!SBIS3.CONTROLS.Data.Collection.
       },
 
       /**
-       * Получает массив индентификаторов выбранных элементов коллекции.
+       * Получает массив индентификаторов выбранных элементов коллекции контрола, который находится в режиме множественного выбора.
+       * Идентификатором элемента коллекции служит значение его {@link SBIS3.CONTROLS.DSMixin#keyField ключевого поля}.
        * @example
        * <pre>
        *    if (!checkBoxGroup.getSelectedKeys().length) {
@@ -300,7 +306,6 @@ define('js!SBIS3.CONTROLS.MultiSelectable', ['js!SBIS3.CONTROLS.Data.Collection.
        * @see multiselect
        * @see selectedKeys
        * @see setSelectedKeys
-       * @see addItemsSelection
        */
       getSelectedKeys : function() {
          return this._options.selectedKeys;
@@ -310,6 +315,7 @@ define('js!SBIS3.CONTROLS.MultiSelectable', ['js!SBIS3.CONTROLS.Data.Collection.
        * Добавляет указанные элементы коллекции в набор уже выбранных элементов для контрола, который находится в режиме
        * множественного выбора.
        * @param {Array} idArray Массив идентификаторов элементов, добавляемых к выбранным.
+       * Идентификатором элемента коллекции служит значение его {@link SBIS3.CONTROLS.DSMixin#keyField ключевого поля}.
        * @example
        * <pre>
        *    var keys = checkBoxGroup.getSelectedKeys();
@@ -317,13 +323,17 @@ define('js!SBIS3.CONTROLS.MultiSelectable', ['js!SBIS3.CONTROLS.Data.Collection.
        *       checkBoxGroup.addItemsSelection([2]);
        *    }
        * </pre>
+       * @see multiselect
+       * @see selectedItems
+       * @see selectedKeys
        * @see setSelectedKeys
        * @see getSelectedKeys
        * @see getSelectedItems
        * @see setSelectedItemsAll
        * @see removeItemsSelection
        * @see removeItemsSelectionAll
-       * @see multiselect
+       * @see toggleItemsSelection
+       * @see toggleItemsSelectionAll
        */
       addItemsSelection : function(idArray) {
          var addedKeys = this._addItemsSelection(idArray);
@@ -357,6 +367,7 @@ define('js!SBIS3.CONTROLS.MultiSelectable', ['js!SBIS3.CONTROLS.Data.Collection.
        * Удаляет указанные элементы коллекции из набора выбранных элементов для контрола, который находится в режиме
        * множественного выбора.
        * @param {Array} idArray Массив идентификаторов элементов к удалению из выбранных.
+       * Идентификатором элемента коллекции служит значение его {@link SBIS3.CONTROLS.DSMixin#keyField ключевого поля}.
        * @example
        * <pre>
        *     if (checkBox.isChecked()) {
@@ -364,11 +375,16 @@ define('js!SBIS3.CONTROLS.MultiSelectable', ['js!SBIS3.CONTROLS.Data.Collection.
        *     }
        * </pre>
        * @see multiselect
+       * @see selectedItems
+       * @see selectedKeys
+       * @see getSelectedItems
+       * @see getSelectedKeys
+       * @see setSelectedKeys
        * @see setSelectedItemsAll
        * @see removeItemsSelectionAll
-       * @see getSelectedKeys
-       * @see getSelectedItems
        * @see addItemsSelection
+       * @see toggleItemsSelection
+       * @see toggleItemsSelectionAll
        * @see allowEmptyMultiSelection
        */
       removeItemsSelection : function(idArray) {
@@ -405,11 +421,15 @@ define('js!SBIS3.CONTROLS.MultiSelectable', ['js!SBIS3.CONTROLS.Data.Collection.
        *     }
        * </pre>
        * @see multiselect
-       * @see removeItemsSelection
+       * @see selectedItems
+       * @see selectedKeys
        * @see getSelectedKeys
        * @see getSelectedItems
+       * @see removeItemsSelection
        * @see setSelectedItemsAll
+       * @see setSelectedKeys
        * @see addItemsSelection
+       * @see toggleItemsSelection
        * @see toggleItemsSelectionAll
        * @see allowEmptyMultiSelection
        */
@@ -418,23 +438,26 @@ define('js!SBIS3.CONTROLS.MultiSelectable', ['js!SBIS3.CONTROLS.Data.Collection.
       },
 
       /**
-       * Меняет состояние выбранности указанных элементов коллекции на противоположное.
+       * Меняет состояние выбранности указанных элементов коллекции на противоположное для контрола в режиме множественного выбора.
        * @param {Array} idArray Массив идентификаторов элементов для инвертирования отметки.
+       * Идентификатором элемента коллекции служит значение его {@link SBIS3.CONTROLS.DSMixin#keyField ключевого поля}.
        * @example
        * <pre>
        *     if (needToggle) {
        *        checkBoxGroup.toggleItemsSelection([2,3]);
        *     }
        * </pre>
+       * @see multiselect
+       * @see selectedItems
+       * @see selectedKeys
+       * @see addItemsSelection
+       * @see getSelectedItems
        * @see getSelectedKeys
        * @see setSelectedKeys
-       * @see getSelectedItems
        * @see setSelectedItemsAll
-       * @see addItemsSelection
        * @see removeItemsSelection
        * @see removeItemsSelectionAll
        * @see toggleItemsSelectionAll
-       * @see multiselect
        */
       toggleItemsSelection : function(idArray) {
          if (Array.isArray(idArray)) {
@@ -476,20 +499,24 @@ define('js!SBIS3.CONTROLS.MultiSelectable', ['js!SBIS3.CONTROLS.Data.Collection.
       },
 
       /**
-       * Меняет состояние выбранности всех элементов коллекции на противоположное.
+       * Меняет состояние выбранности всех элементов коллекции на противоположное для контрола в режиме множественного выбора.
        * @example
        * <pre>
        *     if (checkBoxGroup.getSelectedKeys().count == 0) {
        *        checkBoxGroup.toggleItemsSelectionAll();
        *     }
        * </pre>
-       * @see toggleItemsSelection
        * @see multiselect
-       * @see getSelectedItems
-       * @see setSelectedItemsAll
+       * @see selectedItems
+       * @see selectedKeys
        * @see addItemsSelection
+       * @see setSelectedKeys
+       * @see setSelectedItemsAll
+       * @see getSelectedKeys
+       * @see getSelectedItems
        * @see removeItemsSelection
        * @see removeItemsSelectionAll
+       * @see toggleItemsSelection
        * @see allowEmptyMultiSelection
        */
       toggleItemsSelectionAll : function() {
@@ -502,11 +529,11 @@ define('js!SBIS3.CONTROLS.MultiSelectable', ['js!SBIS3.CONTROLS.Data.Collection.
          }
       },
       /**
-       * Возвращает набор выбранных элементов коллекции.
+       * Возвращает набор выбранных элементов коллекции контрола в режиме множественного выбора.
        * @param {Boolean} loadItems Необходимость загрузки элементов коллекции, если их нет в текущем наборе выбранных элементов
        * и они отсутствуют в наборе данных, полученных из источника.
        * @param {Number} count Ограничение количества отдаваемых элементов коллекции.
-       * @returns {SBIS3.CONTROLS.Data.Collection.List} Возвращает коллекцию элементов.
+       * @returns {SBIS3.CONTROLS.Data.Collection.List} Коллекция элементов с доступом по индексу.
        * @example
        * <pre>
        *    if (!checkBoxGroup.getSelectedItems().at(0).get('Текст') === 'Не выбрано') {
@@ -514,8 +541,12 @@ define('js!SBIS3.CONTROLS.MultiSelectable', ['js!SBIS3.CONTROLS.Data.Collection.
        *    }
        * </pre>
        * @see multiselect
-       * @see setSelectedItemsAll
+       * @see selectedItems
+       * @see selectedKeys
        * @see addItemsSelection
+       * @see getSelectedKeys
+       * @see setSelectedKeys
+       * @see setSelectedItemsAll
        * @see removeItemsSelection
        * @see removeItemsSelectionAll
        * @see toggleItemsSelection
