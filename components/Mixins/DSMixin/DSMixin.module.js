@@ -26,7 +26,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
 
    var DSMixin = /**@lends SBIS3.CONTROLS.DSMixin.prototype  */{
        /**
-        * @event onDrawItems После отрисовки всех элементов коллекции
+        * @event onDrawItems Происходит после отрисовки всех элементов коллекции.
         * @param {$ws.proto.EventObject} eventObject Дескриптор события.
         * @example
         * <pre>
@@ -40,7 +40,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
         * @see displayField
         */
        /**
-        * @event onDataLoad При загрузке данных
+        * @event onDataLoad Происходит после загрузки данных.
         * @param {$ws.proto.EventObject} eventObject Дескриптор события.
         * @param {SBIS3.CONTROLS.DataSet} dataSet Набор данных.
         * @example
@@ -54,7 +54,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
         * @see getDataSource
         */
       /**
-       * @event onDataLoadError При ошибке загрузки данных
+       * @event onDataLoadError Происходит после загрузки данных, завершенной с ошибкой.
        * @remark
        * Событие сработает при получении ошибки от любого метода БЛ, вызванного стандартным способом.
        * @param {$ws.proto.EventObject} eventObject Дескриптор события.
@@ -73,9 +73,9 @@ define('js!SBIS3.CONTROLS.DSMixin', [
        * </pre>
        */
       /**
-       * @event onBeforeDataLoad Перед загрузкой данных
+       * @event onBeforeDataLoad Происходит перед загрузкой данных.
        * @remark
-       * Событие сработает перед запросом к источнику данных
+       * Событие сработает перед запросом к источнику данных.
        * @param {$ws.proto.EventObject} eventObject Дескриптор события.
        * @example
        * <pre>
@@ -87,7 +87,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
        * </pre>
        */
       /**
-       * @event onItemsReady при готовности экземпляра коллекции iList
+       * @event onItemsReady Происходит при готовности экземпляра коллекции iList.
        * @remark
        * Например когда представлению задается Source и нужно подписаться на события List, который вернется в результате запроса
        * @param {$ws.proto.EventObject} eventObject Дескриптор события.
