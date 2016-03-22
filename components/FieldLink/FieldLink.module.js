@@ -266,9 +266,14 @@ define('js!SBIS3.CONTROLS.FieldLink',
           },
 
           _onResizeHandler: function() {
+             var linkCollection = this._getLinkCollection();
+
              FieldLink.superclass._onResizeHandler.apply(this, arguments);
-             if(!this._getLinkCollection().isPickerVisible()) {
-                this._updateInputWidth();
+
+             if(!linkCollection.isPickerVisible()) {
+                /* Почему надо звать redraw: поле связи может быть скрыто, когда в него проставили выбранные записи,
+                   и просто пересчётом input'a тут не обойтись. Выполняться должно быстро, т.к. перерисовывается обычно всего 2-3 записи */
+                linkCollection.redraw();
              }
           },
 
