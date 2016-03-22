@@ -66,9 +66,13 @@ define('js!SBIS3.CONTROLS.ActiveSelectable', ['js!SBIS3.CONTROLS.Data.Model'], f
       /**
        * Возвращает выбранный элемент коллекции.
        * @param loadItem загружать ли запись, если о ней нет информации в dataSet
+       * @returns {null|SBIS3.CONTROLS.Data.Model}
+       * @example
+       * <pre>
+       *     var myItem = this.getChildControlByName('MyControl').getSelectedItem();
+       * </pre>
        * @see selectedItem
        * @see setSelectedItem
-       * @returns {null|SBIS3.CONTROLS.Data.Model}
        */
       getSelectedItem: function(loadItem) {
          var dResult = new $ws.proto.Deferred(),
