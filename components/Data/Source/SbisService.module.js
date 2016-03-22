@@ -430,7 +430,7 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
                } else if (val instanceof Array) {
                   return {
                      type: 'array',
-                     kind: getValueType(val[0])
+                     kind: this._getValueType(val[0])
                   };
                } else {
                   return 'record';
