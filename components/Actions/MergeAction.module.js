@@ -43,7 +43,11 @@ define('js!SBIS3.CONTROLS.MergeAction', [
                  * @cfg {String} Имя списочного метода, который будет вызван для получения записей,
                  * отображаемых в диалоге объединения
                  */
-                queryMethodName: undefined
+                queryMethodName: undefined,
+                /**
+                 * @cfg {String} Шаблон отображения ячеек с наименованием объединяемых элементов
+                 */
+                titleCellTemplate: undefined
             }
         },
 
@@ -63,7 +67,8 @@ define('js!SBIS3.CONTROLS.MergeAction', [
              hierField: this._options.hierField,
              dataSource: this._options.dataSource,
              keyField: this._options.dataSource.getIdProperty(),
-             testMergeMethodName: this._options.testMergeMethodName
+             testMergeMethodName: this._options.testMergeMethodName,
+             titleCellTemplate: this._options.titleCellTemplate
           });
        }
     });
