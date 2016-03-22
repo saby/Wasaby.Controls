@@ -234,7 +234,7 @@ define('js!SBIS3.CONTROLS.Data.Source.ISource', [
       },
 
       /**
-       * Возвращает соответствие методов CRUD+ контракту
+       * Устанавливает соответствие методов CRUD+ контракту
        * @param {Binding} binding
        * @see binding
        * @see getBinding
