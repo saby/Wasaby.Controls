@@ -248,6 +248,28 @@ define([
                }]);
                assert.equal(rs.getIndex(rs.at(1)), 1);
             });
+
+            it('should trigger an event with valid arguments', function() {
+               var firesCount = 0,
+                  handler = function() {
+                     firesCount++;
+                  };
+
+               rs.subscribe('onCollectionChange', handler);
+               rs.setRawData([{
+                  'Ид': 1,
+                  'Фамилия': 'Иванов'
+               }, {
+                  'Ид': 2,
+                  'Фамилия': 'Петров'
+               }, {
+                  'Ид': 13,
+                  'Фамилия': 'Сидоров'
+               }]);
+               rs.unsubscribe('onCollectionChange', handler);
+               rs.destroy();
+               assert.strictEqual(firesCount, 4);
+            });
          });
 
          describe('.getFormat()', function () {
@@ -467,6 +489,36 @@ define([
                });
             });
 
+            it('should trigger an event with valid arguments', function(done) {
+               var newItemsExpected = [13],
+                  newItemsIndexExpected = rs.getCount(),
+                  firesCount = 0,
+                  handler = function(event, action, newItems, newItemsIndex, oldItems, oldItemsIndex) {
+                     firesCount++;
+                     try {
+                        assert.strictEqual(action, IBindCollection.ACTION_ADD);
+                        assert.strictEqual(newItemsIndex, newItemsIndexExpected);
+                        assert.deepEqual($ws.helpers.map(newItems, function(item) {
+                           return item.get('Ид');
+                        }), newItemsExpected);
+                        assert.deepEqual(oldItems, []);
+                     } catch (err) {
+                        done(err);
+                     }
+                  };
+
+               rs.subscribe('onCollectionChange', handler);
+               rs.append(new RecordSet({
+                  rawData: [{
+                     'Ид': 13,
+                     'Фамилия': 'ООов'
+                  }]
+               }));
+               rs.unsubscribe('onCollectionChange', handler);
+               rs.destroy();
+               assert.strictEqual(firesCount, 1);
+               done();
+            });
          });
 
          describe('.prepend', function (){
@@ -489,7 +541,6 @@ define([
                });
             });
 
-
             it('should throw an error', function() {
                var  data4 = {id: 4},
                   data5 = {id: 5};
@@ -500,6 +551,35 @@ define([
                });
             });
 
+            it('should trigger an event with valid arguments', function(done) {
+               var newItemsExpected = [13],
+                  firesCount = 0,
+                  handler = function(event, action, newItems, newItemsIndex, oldItems, oldItemsIndex) {
+                     firesCount++;
+                     try {
+                        assert.strictEqual(action, IBindCollection.ACTION_ADD);
+                        assert.strictEqual(newItemsIndex, 0);
+                        assert.deepEqual($ws.helpers.map(newItems, function(item) {
+                           return item.get('Ид');
+                        }), newItemsExpected);
+                        assert.deepEqual(oldItems, []);
+                     } catch (err) {
+                        done(err);
+                     }
+                  };
+
+               rs.subscribe('onCollectionChange', handler);
+               rs.prepend(new RecordSet({
+                  rawData: [{
+                     'Ид': 13,
+                     'Фамилия': 'ООов'
+                  }]
+               }));
+               rs.unsubscribe('onCollectionChange', handler);
+               rs.destroy();
+               assert.strictEqual(firesCount, 1);
+               done();
+            });
          });
 
          describe('.assign()', function() {
@@ -603,6 +683,48 @@ define([
                assert.throw(function() {
                   rs.assign(rs2);
                });
+            });
+
+            it('should trigger an event with valid arguments', function(done) {
+               var newItemsExpected = [1, 2, 13],
+                  oldItemsExpected = $ws.helpers.map(rs.getRawData(), function(item) {
+                     return item['Ид'];
+                  }),
+                  firesCount = 0,
+                  handler = function(event, action, newItems, newItemsIndex, oldItems) {
+                     firesCount++;
+                     try {
+                        assert.strictEqual(action, IBindCollection.ACTION_RESET);
+                        assert.deepEqual($ws.helpers.map(newItems, function(item) {
+                           return item.get('Ид');
+                        }), newItemsExpected);
+                        assert.strictEqual(newItemsIndex, 0);
+                        assert.deepEqual($ws.helpers.map(oldItems, function(item) {
+                           return item.get('Ид');
+                        }), oldItemsExpected);
+                        assert.strictEqual(newItemsIndex, 0);
+                     } catch (err) {
+                        done(err);
+                     }
+                  };
+
+               rs.subscribe('onCollectionChange', handler);
+               rs.assign(new RecordSet({
+                  rawData: [{
+                     'Ид': 1,
+                     'Фамилия': 'Иванов'
+                  }, {
+                     'Ид': 2,
+                     'Фамилия': 'Петров'
+                  }, {
+                     'Ид': 13,
+                     'Фамилия': 'Сидоров'
+                  }]
+               }));
+               rs.unsubscribe('onCollectionChange', handler);
+               rs.destroy();
+               assert.strictEqual(firesCount, 1);
+               done();
             });
          });
 
