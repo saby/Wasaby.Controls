@@ -15,7 +15,7 @@ define('js!SBIS3.CONTROLS.OperationUnload', [
     * @control
     * @public
     */
-   var OperationUnload = PrintUnloadBase.extend({
+   var OperationUnload = PrintUnloadBase.extend(/** @lends SBIS3.CONTROLS.OperationUnload.prototype */{
       /**
        * <pre>
        *

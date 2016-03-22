@@ -4,17 +4,17 @@ define([
       'js!SBIS3.CONTROLS.Data.Collection.List',
       'js!SBIS3.CONTROLS.Data.Bind.ICollection',
       'js!SBIS3.CONTROLS.Data.Model',
-      'js!SBIS3.CONTROLS.Data.Format.FieldsFactory',
       'js!SBIS3.CONTROLS.Data.Source.Memory',
-      'js!SBIS3.CONTROLS.Data.Adapter.Json',
+      'js!SBIS3.CONTROLS.Data.Format.FieldsFactory',
       'js!SBIS3.CONTROLS.Data.Adapter.Sbis'
-   ], function (RecordSet, List, IBindCollection, Model, FieldsFactory, MemorySource, JsonAdapter, SbisAdapter) {
+   ], function (RecordSet, List, IBindCollection, Model, MemorySource, FieldsFactory, SbisAdapter) {
       'use strict';
 
       describe('SBIS3.CONTROLS.Data.Collection.RecordSet', function() {
          var rs,
-            items, getItems;
-
+            items,
+            getItems,
+            getSbisItems;
 
          beforeEach(function() {
             getItems = function (){
@@ -53,7 +53,8 @@ define([
                      [4, 'Пухов'],
                      [5, 'Молодцов'],
                      [6, 'Годолцов'],
-                     [7, 'Арбузнов']
+                     [7, 'Арбузнов'],
+                     [8, 'Арбузнов']
                   ],
                   s: [{
                      n: 'Ид',
@@ -124,7 +125,7 @@ define([
             });
             it('should get adapter in strategy', function (){
                var rs = new RecordSet({
-                  strategy: new AdapterSbis(),
+                  strategy: new SbisAdapter(),
                   rawData: {
                      d: [
                         [1, 'Иванов'],
@@ -250,7 +251,14 @@ define([
          });
 
          describe('.getFormat()', function () {
-            it('should build the empty format from json raw data', function () {
+            it('should build the format from json raw data', function () {
+               var format = rs.getFormat();
+               assert.strictEqual(format.getCount(), 2);
+               assert.strictEqual(format.at(0).getName(), 'Ид');
+               assert.strictEqual(format.at(1).getName(), 'Фамилия');
+            });
+            it('should build the empty format from empty json raw data', function () {
+               var rs = new RecordSet();
                var format = rs.getFormat();
                assert.strictEqual(format.getCount(), 0);
             });
@@ -369,10 +377,8 @@ define([
                });
             });
             it('should throw an error if adapter doesn\'t support fields detection', function () {
-               var fieldName = 'Фамилия';
-               rs.each(function(record) {
-                  assert.isTrue(record.has(fieldName));
-               });
+               var rs = new RecordSet(),
+                  fieldName = 'Фамилия';
                assert.throw(function() {
                   rs.removeField(fieldName);
                });
@@ -516,13 +522,86 @@ define([
                assert.strictEqual(rs.getCount(), 2);
             });
 
-            it('should throw an error', function() {
+            it('should get format from assigning recordset', function () {
+               var s = [
+                     {'n': 'Ид', 't': 'Число целое'},
+                     {'n': 'Фамилия', 't': 'Строка'},
+                     {'n': 'Количество', 't': 'Число целое'}
+                  ],
+                  rs = new RecordSet({
+                     rawData:  {
+                        d: [
+                           [7, 'Арбузнов']
+                        ],
+                        s: [
+                           {'n': 'Ид', 't': 'Число целое'},
+                           {'n': 'Фамилия', 't': 'Строка'}
+                        ]
+                     },
+                     adapter: new SbisAdapter()
+                  }),
+                  rs2 = new RecordSet({
+                     rawData: {
+                        d: [
+                           [7, 'Арбузнов','4']
+                        ],
+                        s: s
+                     },
+                     adapter: new SbisAdapter()
+                  });
+               rs.assign(rs2);
+               assert.deepEqual(rs.getRawData().s, s);
+            });
+
+            it('should throw an error if pass not a record', function() {
                var data4 = {id: 4},
                   data5 = {id: 5};
                assert.throw(function (){
                   rs.assign([new Model({
                      rawData: data4
                   }), data5]);
+               });
+            });
+
+            it('should change format with new one', function() {
+               var rs = new RecordSet({
+                     rawData:  {
+                        d: [[7]],
+                        s: [{n: 'Ид', t: 'Число целое'}]
+                     },
+                     adapter: 'adapter.sbis'
+                  }),
+                  rs2 = new RecordSet({
+                     rawData: {
+                        d: [['Арбузнов']],
+                        s: [{n: 'Фамилия', t: 'Строка'}]
+                     },
+                     adapter: 'adapter.sbis'
+                  });
+               rs.addField({name: 'login', type: 'string'});
+               rs.assign(rs2);
+               assert.deepEqual(rs.getRawData().s, [{n: 'Фамилия', t: 'Строка'}]);
+            });
+
+            it('should throw an error if format is defined directly', function() {
+               var rs = new RecordSet({
+                     rawData:  {
+                        d: [[7]],
+                        s: [{n: 'Ид', t: 'Число целое'}]
+                     },
+                     adapter: 'adapter.sbis',
+                     format: [{name: 'Ид', type: 'Integer'}]
+                  }),
+                  rs2 = new RecordSet({
+                     rawData: {
+                        d: [['Арбузнов']],
+                        s: [{n: 'Фамилия', t: 'Строка'}]
+                     },
+                     adapter: 'adapter.sbis'
+                  });
+               rs.addField({name: 'login', type: 'string'});
+               assert.throw(function() {
+                  rs.assign(rs2);
                });
             });
          });
@@ -548,7 +627,7 @@ define([
                assert.deepEqual(rs.getRawData(), items);
             });
 
-            it('should throw an error', function() {
+            it('should throw an error if pass not a record ', function() {
                var rd = {
                      'Ид': 502,
                      'Фамилия': '502'
@@ -737,7 +816,7 @@ define([
             });
             it('should hide type signature in rawData', function () {
                var rs = new RecordSet({
-                     adapter: new AdapterSbis(),
+                     adapter: new SbisAdapter(),
                      rawData: {
                         _type: 'recordset',
                         s: [1],

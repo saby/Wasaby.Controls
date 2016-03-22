@@ -122,13 +122,13 @@ define('js!SBIS3.CONTROLS.FieldLinkItemsCollection', [
          showPicker: function() {
             this._clearItems();
             FieldLinkItemsCollection.superclass.showPicker.apply(this, arguments);
-            this.reload();
+            this.redraw();
          },
 
          hidePicker: function() {
             this._clearItems();
             FieldLinkItemsCollection.superclass.hidePicker.apply(this, arguments);
-            this.reload();
+            this.redraw();
          },
 
          _setPickerContent: function () {

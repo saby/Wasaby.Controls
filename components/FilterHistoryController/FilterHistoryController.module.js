@@ -93,9 +93,11 @@ define('js!SBIS3.CONTROLS.FilterHistoryController',
           },
 
           _prepareStructureElemToSave: function(structure) {
-             var dateFix;
+             /* Все правки надо делать с копией, чтобы не портить оригинальную структуру */
+             var structureCopy = $ws.core.clone(structure),
+                 dateFix;
 
-             $ws.helpers.forEach(structure, function(elem) {
+             $ws.helpers.forEach(structureCopy, function(elem) {
                 /* Хак для испрвления даты, при записи на бл история приводится к строке через метод JSON.stringify,
                   а метод stringify сериализует дату, учитывая сдвиг (GMT/UTC)
                   и в итоге мы можем получить не ту дату */
@@ -116,25 +118,30 @@ define('js!SBIS3.CONTROLS.FilterHistoryController',
                 }
              });
 
-             return $ws.core.clone(structure);
+             return structureCopy;
           },
 
           _prepareStructureElemForApply: function(structure) {
-             var currentStructure = this._options.filterButton.getFilterStructure(),
-                 structureCopy = $ws.core.clone(structure);
+             /* Чтобы не портить текущую историю, сделаем копию (иначе не применится фильтр) */
+             var currentStructureCopy = $ws.core.clone(this._options.filterButton.getFilterStructure());
 
-             if(structureCopy.length === currentStructure.length) {
-                $ws.helpers.forEach(structureCopy, function(elem, index) {
-                   if(currentStructure[index].itemTemplate) {
-                      structureCopy[index].itemTemplate = currentStructure[index].itemTemplate;
-                   }
-                   if(currentStructure[index].historyItemTemplate) {
-                      structureCopy[index].historyItemTemplate = currentStructure[index].historyItemTemplate;
-                   }
-                });
-             }
+             /* Алгоритм следующий:
+                  1) Пробегаемся по структуре (она первична, в ней можно менять только фильтры, саму струкруту менять нельзя!!) и ищем
+                     элементы в структуре из истории с таким же internalValueField
+                  2) Если нашли, то смержим эти элементы
+                  3) Если не нашли, и есть значение в value, то сбросим этот фильтр */
+             $ws.helpers.forEach(currentStructureCopy, function(elem) {
+                var elemFromHistory = $ws.helpers.find(structure, function(structureElem) {
+                   return elem.internalValueField === structureElem.internalValueField;
+                }, false);
 
-             return structureCopy;
+                if(elemFromHistory) {
+                   $ws.core.merge(elem, elemFromHistory);
+                } else if(elem.value && elem.resetValue && !$ws.helpers.isEqualObject(elem.value, elem.resetValue)) {
+                   elem.value = elem.resetValue;
+                }
+             });
+             return currentStructureCopy;
           },
 
           _onApplyFilterHandler: function() {

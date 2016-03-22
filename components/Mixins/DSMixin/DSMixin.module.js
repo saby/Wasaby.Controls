@@ -524,7 +524,12 @@ define('js!SBIS3.CONTROLS.DSMixin', [
                       self._notify('onDataLoad', list);
                       self._dataSet.setMetaData(list.getMetaData());
                       self._items.assign(list);
-                      self._dataSet.assign(list);
+                      if (self._items !== self._dataSet) {
+                         self._dataSet.assign(list);
+                      }
+                      if (!this._options.autoRedraw) {
+                         this.redraw();
+                      }
                       self._dataLoadedCallback();
                    }
                    else {
@@ -742,23 +747,14 @@ define('js!SBIS3.CONTROLS.DSMixin', [
          this._redraw();
       },
       _redraw: function () {
-         var records,
-               self = this;
+         var records;
 
          if (this._items) {
             this._clearItems();
-            /**
-             * Проблема в том, что если не ждать, то браузер настолько быстрый, что не пересчитывает изменение scrollTop
-             * (а он на самом деле меняется после удаления всех элементов) - в результате остается какой был (или какой
-             * смог оставить, потому что высота сменилась) Ставим условную задержку, чтобы scrollTop у window изменился
-             * до 0
-             */
-            setTimeout(function(){
-               self._needToRedraw = false;
-               records = self._getRecordsForRedraw();
-               self._toggleEmptyData(!records.length && self._options.emptyHTML);
-               self._drawItems(records);
-            }, 42);
+            this._needToRedraw = false;
+            records = this._getRecordsForRedraw();
+            this._toggleEmptyData(!records.length && this._options.emptyHTML);
+            this._drawItems(records);
 
          }
       },
@@ -1094,7 +1090,9 @@ define('js!SBIS3.CONTROLS.DSMixin', [
       _scrollToItem: function(itemId) {
          var itemContainer  = $(".controls-ListView__item[data-id='" + itemId + "']", this._getItemsContainer());
          if (itemContainer.length) {
-            itemContainer.get(0).scrollIntoView();
+            itemContainer
+               .attr('tabindex', -1)
+               .focus();
          }
       },
       /**
@@ -1126,8 +1124,24 @@ define('js!SBIS3.CONTROLS.DSMixin', [
       },
 
       _addItem: function (item, at) {
-         var ladderDecorator = this._decorators.getByName('ladder');
+         var ladderDecorator = this._decorators.getByName('ladder'),
+            previousGroupBy = this._previousGroupBy;//После добавления записи восстанавливаем это значение, чтобы не сломалась группировка
          ladderDecorator && ladderDecorator.setMarkLadderColumn(true);
+         /*TODO отдельно обрабатываем случай с группировкой*/
+         var flagAfter = false;
+         if (!Object.isEmpty(this._options.groupBy)) {
+            var
+               meth = this._options.groupBy.method,
+               prev = this._itemsProjection.getPrevious(item),
+               next = this._itemsProjection.getNext(item);
+            if(prev)
+                meth.call(this, prev.getContents());
+            meth.call(this, item.getContents());
+            if (next && !meth.call(this, next.getContents())) {
+               flagAfter = true;
+            }
+         };
+         /**/
          item = item.getContents();
          var target = this._getTargetContainer(item),
             currentItemAt = at > 0 ? this._getItemContainerByIndex(target, at - 1) : null,
@@ -1135,16 +1149,23 @@ define('js!SBIS3.CONTROLS.DSMixin', [
             newItemContainer = this._buildTplItem(item, template),
             rows;
          this._addItemAttributes(newItemContainer, item);
-         if (currentItemAt && currentItemAt.length) {
+         if (flagAfter) {
+            newItemContainer.insertBefore(this._getItemContainerByIndex(target, at));
+            rows = [newItemContainer.prev().prev(), newItemContainer.prev(), newItemContainer, newItemContainer.next(), newItemContainer.next().next()];
+         } else if (currentItemAt && currentItemAt.length) {
+            meth && meth.call(this, prev.getContents());
             newItemContainer.insertAfter(currentItemAt);
             rows = [newItemContainer.prev().prev(), newItemContainer.prev(), newItemContainer, newItemContainer.next(), newItemContainer.next().next()];
          } else if(at === 0) {
-            newItemContainer.insertBefore(this._getItemContainerByIndex(target, 0));
+            this._previousGroupBy = undefined;
+            newItemContainer.prependTo(target);
             rows = [newItemContainer, newItemContainer.next(), newItemContainer.next().next()];
          } else {
             newItemContainer.appendTo(target);
             rows = [newItemContainer.prev().prev(), newItemContainer.prev(), newItemContainer, newItemContainer.next()];
          }
+         this._group(item, {at: at});
+         this._previousGroupBy = previousGroupBy;
          ladderDecorator && ladderDecorator.setMarkLadderColumn(false);
          this._ladderCompare(rows);
       },
@@ -1196,7 +1217,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
             this._addItemAttributes(newItemContainer, item);
             this._clearItems(container);
             container.replaceWith(newItemContainer);
-            this._ladderCompare([container.prev(), container, container.next()]);
+            this._ladderCompare([newItemContainer.prev(), newItemContainer, newItemContainer.next()]);
          }
       },
 

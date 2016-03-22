@@ -4,12 +4,12 @@ define([
    'js!SBIS3.CONTROLS.Data.Adapter.Sbis',
    'js!SBIS3.CONTROLS.Data.Model',
    'js!SBIS3.CONTROLS.Data.Collection.List',
+   'js!SBIS3.CONTROLS.Data.Collection.RecordSet',
    'js!SBIS3.CONTROLS.Data.Source.DataSet',
    'js!SBIS3.CONTROLS.Data.Factory',
    'js!SBIS3.CONTROLS.Data.Types.Enum',
-   'js!SBIS3.CONTROLS.Data.Types.Flags',
-   'js!SBIS3.CONTROLS.Data.Collection.RecordSet'
-], function (AdapterJson, AdapterSbis, Model, List, DataSet, Factory, Enum, Flags, RecordSet) {
+   'js!SBIS3.CONTROLS.Data.Types.Flags'
+], function (AdapterJson, AdapterSbis, Model, List, RecordSet, DataSet, Factory, Enum, Flags) {
    'use strict';
 
    var dataScheme,
@@ -63,30 +63,31 @@ define([
          n: 'identity',
          t: 'Идентификатор'
       }, {
-         "n":"arrayBool",
-         "t":{"n":"Массив","t":"Логическое"}
+         n: 'arrayBool',
+         t: {n: 'Массив', t: 'Логическое'}
       }, {
-         "n":"arrayDate",
-         "t":{"n":"Массив","t":"Дата"}
+         n: 'arrayDate',
+         t: {n: 'Массив', t: 'Дата'}
       }, {
-         "n":"arrayDatetime",
-         "t":{"n":"Массив","t":"Дата и время"}
+         n: 'arrayDatetime',
+         t: {n: 'Массив', t: 'Дата и время'}
       }, {
-         "n":"arrayInt",
-         "t":{"n":"Массив","t":"Число целое"}
+         n: 'arrayInt',
+         t: {n: 'Массив', t: 'Число целое'}
       }, {
-         "n":"arrayFloat",
-         "t":{"n":"Массив","t":"Число вещественное"}
+         n: 'arrayFloat',
+         t: {n: 'Массив', t: 'Число вещественное'}
       }, {
-         "n":"arrayString",
-         "t":{"n":"Массив","t":"Текст"}
+         n: 'arrayString',
+         t: {n: 'Массив', t: 'Текст'}
       }, {
-         "n":"arrayTime",
-         "t":{"n":"Массив","t":"Время"}
+         n: 'arrayTime',
+         t: {n: 'Массив', t: 'Время'}
       }, {
          n: 'moneyShort',
          t: {n: 'Деньги', p: '2'}
       }];
+
       dataValues = [
          4,
          'Строка',
@@ -102,15 +103,16 @@ define([
          '15:54:28.981+03',
          'P10DT0H0M0S',//10 дней
          [22],
-         [true,false],
-         ["2015-12-25"],
-         ["2007-12-06 16:29:43.079+03"],
-         [15,19],
-         [1.2,1.3],
-         ["text","text2"],
-         ["12:30:00+03"],
+         [true, false],
+         ['2015-12-25'],
+         ['2007-12-06 16:29:43.079+03'],
+         [15, 19],
+         [1.2, 1.3],
+         ['text', 'text2'],
+         ['12:30:00+03'],
          '7.2'
       ];
+
       dataEmpty = [
          null,
          null,
@@ -135,6 +137,7 @@ define([
          null,
          null
       ];
+
       sbisModel = new Model({
          adapter: new AdapterSbis(),
          rawData: {
@@ -142,6 +145,7 @@ define([
             s: dataScheme
          }
       });
+
       sbisModelEmpty = new Model({
          adapter: (new AdapterSbis()),
          rawData: {
@@ -150,6 +154,7 @@ define([
          }
       });
    });
+
    describe('SBIS3.CONTROLS.Data.Factory', function () {
       describe('.cast()', function () {
          it('should cast value to integer', function () {
@@ -170,7 +175,7 @@ define([
          });
          it('should cast value to List', function () {
             sbisModel.setUsingDataSetAsList(true);
-            assert.instanceOf(sbisModel.get('recordSet'), List);
+            assert.isTrue($ws.helpers.instanceOfModule(sbisModel.get('recordSet'), 'SBIS3.CONTROLS.Data.Collection.List'));
          });
          it('should cast value to RecordSet', function () {
             assert.instanceOf(sbisModel.get('recordSet'), RecordSet);
@@ -295,8 +300,14 @@ define([
 
          it('should get value from enum', function (){
             var
-               enumNew = new Enum({data:['one', 'tt'], 'currentValue':1}),
-               enumOld = new $ws.proto.Enum({'availableValues':{'0': 'one', '1': 'tt'}, 'currentValue':0});
+               enumNew = new Enum({
+                  dictionary: ['one', 'tt'],
+                  currentValue: 1
+               }),
+               enumOld = new $ws.proto.Enum({
+                  availableValues: {'0': 'one', '1': 'tt'},
+                  currentValue: 0
+               });
                sbisModel = new Model({
                adapter: new AdapterSbis(),
                rawData: {
@@ -355,10 +366,11 @@ define([
                      model.set('record', record);
                      assert.deepEqual(getData(model, 3), record.getRawData());
                   });
-                  it('should store model from object', function () {
+                  it('should throw an error if set model as not a model', function () {
                      var model = getModel(type);
-                     model.set('record', {'id':502});
-                     assert.equal(model.get('record').get('id'), 502);
+                     assert.throw(function() {
+                        model.set('record', {id: 502});
+                     });
                   });
                   it('should store record', function () {
                      var model = getModel(type),
@@ -368,31 +380,15 @@ define([
                      model.set('record', record);
                      assert.deepEqual(getData(model, 3), record.toJSON());
                   });
-                  it('should store a list', function () {
-                     var model = getModel(type),
-                        list = new List();
-                     list.add(new Model({
-                        adapter: new AdapterSbis(),
-                        rawData: {
-                           d: [2],
-                           s: [{n: 'id', t: 'Число целое'}]
-                        }
-                     }));
-                     list.add(new Model({
-                        adapter: new AdapterSbis(),
-                        rawData: {
-                           d: [3],
-                           s: [{n: 'id', t: 'Число целое'}]
-                        }
-                     }));
-                     model.set('recordSet', list);
-                     assert.strictEqual(2, model.get('recordSet').getCount());
-                     model.get('recordSet').each(function(item, index) {
-                        assert.deepEqual(getData(model, 4).d[index], item.getRawData().d);
-                        assert.deepEqual(getData(model, 4).s, item.getRawData().s);
+                  it('should throw an error if set recordset as not a recordset', function () {
+                     var model = getModel(type);
+                     assert.throw(function() {
+                        model.set('recordSet', [{id: 502}]);
+                     });
+                     assert.throw(function() {
+                        model.set('recordSet', new List());
                      });
                   });
-
                   it('should store a old record set', function () {
                      var model = getModel(type),
                         coldef = {
@@ -478,11 +474,8 @@ define([
                      var model = getModel(type),
                         d = [true, false, null],
                         flags = new Flags({
-                           data: {
-                              one: true,
-                              two: false,
-                              three: null
-                           }
+                           dictionary: ['one', 'two', 'three'],
+                           values: [true, false, null]
                         });
                      model.set('flags', flags);
                      assert.deepEqual(getData(model, 5), d);
@@ -550,7 +543,7 @@ define([
          });
          it('should store Identity in empty model', function () {
             sbisModelEmpty.set('identity', 1);
-            assert.strictEqual(getData(sbisModelEmpty, identityIndex), 1);
+            assert.deepEqual(getData(sbisModelEmpty, identityIndex), [1]);
          });
          it('should store [null] for Identity in filled model', function () {
             sbisModel.set('identity', null);
@@ -560,12 +553,14 @@ define([
             sbisModelEmpty.set('identity', null);
             assert.isNull(getData(sbisModelEmpty, identityIndex));
          });
-         it('should accept an empty list', function () {
-            var res = Factory.serialize(new List(), 'RecordSet', new AdapterJson());
+         it('should accept an empty recordset', function () {
+            var res = Factory.serialize(new RecordSet(), 'RecordSet', new AdapterJson());
+            assert.isNull(res);
+
+            res = Factory.serialize(new RecordSet({rawData: []}), 'RecordSet', new AdapterJson());
             assert.instanceOf(res, Array);
             assert.strictEqual(res.length, 0);
          });
-
          it('should serialize array of date', function (){
             var  date = new Date(2016,1,1);
             sbisModelEmpty.set('arrayDate',[date]);

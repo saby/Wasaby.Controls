@@ -59,7 +59,7 @@ define('js!SBIS3.CONTROLS.Data.FormattableMixin', [
             adapter: 'adapter.json',
 
             /**
-             * @cfg {SBIS3.CONTROLS.Data.Format.Format|Array.<SBIS3.CONTROLS.Data.Format.FieldsFactory/FieldDeclaration>} Формат полей
+             * @cfg {SBIS3.CONTROLS.Data.Format.Format|Array.<SBIS3.CONTROLS.Data.Format.FieldsFactory/FieldDeclaration.typedef>} Формат полей
              * @see getFormat
              * @example
              * <pre>
@@ -85,10 +85,45 @@ define('js!SBIS3.CONTROLS.Data.FormattableMixin', [
              * </pre>
              */
             format: null
+         },
+
+         /**
+         *@member {Boolean} Формат был задан пользователем явно
+         */
+         _directFormat: false
+      },
+
+      //region SBIS3.CONTROLS.Data.SerializableMixin
+
+      after: {
+         _getSerializableState: function(state) {
+            //Prevent core reviver for rawData
+            if (state._options && state._options.rawData && state._options.rawData._type) {
+               state._options.rawData.$type = state._options.rawData._type;
+               delete state._options.rawData._type;
+            }
+
+            return state;
+         },
+
+         _setSerializableState: function(state, initializer) {
+            //Restore value hidden from core reviver
+            return initializer.callNext(function() {
+               if (this._options && this._options.rawData && this._options.rawData.$type) {
+                  this._options.rawData._type = this._options.rawData.$type;
+                  delete this._options.rawData.$type;
+               }
+            });
          }
       },
 
       //region Public methods
+
+      $constructor: function (cfg) {
+         if(cfg && cfg.format) {
+            this._directFormat = true;
+         }
+      },
 
       /**
        * Возвращает данные в "сыром" виде
@@ -102,7 +137,7 @@ define('js!SBIS3.CONTROLS.Data.FormattableMixin', [
 
       /**
        * Устанавливает данные в "сыром" виде
-       * @param rawData {Object} Данные в "сыром" виде
+       * @param data {Object} Данные в "сыром" виде
        * @see getRawData
        * @see rawData
        */
@@ -121,7 +156,7 @@ define('js!SBIS3.CONTROLS.Data.FormattableMixin', [
             typeof this._options.adapter === 'string' &&
             FormattableMixin._getDefaultAdapter !== this._getDefaultAdapter
          ) {
-            $ws.single.ioc.resolve('ILogger').log('SBIS3.CONTROLS.Data.FormattableMixin', 'Method _getDefaultAdapter() is deprecated and will be removed in 3.7.4. Use \'adapter\' option instead.');
+            $ws.single.ioc.resolve('ILogger').info('SBIS3.CONTROLS.Data.FormattableMixin', 'Method _getDefaultAdapter() is deprecated and will be removed in 3.7.4. Use \'adapter\' option instead.');
             this._options.adapter = this._getDefaultAdapter();
          }
          if (typeof this._options.adapter === 'string') {
@@ -153,7 +188,7 @@ define('js!SBIS3.CONTROLS.Data.FormattableMixin', [
        * Добавляет поле в формат.
        * Если позиция не указана (или указана как -1), поле добавляется в конец формата.
        * Если поле с таким форматом уже есть, генерирует исключение.
-       * @param {SBIS3.CONTROLS.Data.Format.Field|SBIS3.CONTROLS.Data.Format.FieldsFactory/FieldDeclaration} format Формат поля
+       * @param {SBIS3.CONTROLS.Data.Format.Field|SBIS3.CONTROLS.Data.Format.FieldsFactory/FieldDeclaration.typedef} format Формат поля
        * @param {Number} [at] Позиция поля
        * @see format
        * @see removeField
@@ -255,8 +290,28 @@ define('js!SBIS3.CONTROLS.Data.FormattableMixin', [
       },
 
       /**
+       * Очищает формат полей. Это можно сделать только если формат не был установлен явно.
+       * @protected
+       */
+      _clearFormat: function (){
+         if (this._directFormat) {
+            throw new Error(this._moduleName + ': format can\'t be cleared because it\'s defined directly.');
+         }
+         this._options.format = null;
+      },
+
+      /**
+       * Возвращает признак, что формат полей был установлен явно
+       * @returns {Boolean}
+       * @protected
+       */
+      _isDirectFormat: function () {
+         return this._directFormat;
+      },
+
+      /**
        * Строит формат полей по описанию
-       * @param {SBIS3.CONTROLS.Data.Format.Format|Array.<SBIS3.CONTROLS.Data.Format.FieldsFactory/FieldDeclaration>} format Описание формата
+       * @param {SBIS3.CONTROLS.Data.Format.Format|Array.<SBIS3.CONTROLS.Data.Format.FieldsFactory/FieldDeclaration.typedef>} format Описание формата
        * @returns {SBIS3.CONTROLS.Data.Format.Format}
        * @protected
        */
@@ -289,7 +344,7 @@ define('js!SBIS3.CONTROLS.Data.FormattableMixin', [
 
       /**
        * Строит формат поля по описанию
-       * @param {SBIS3.CONTROLS.Data.Format.Field|SBIS3.CONTROLS.Data.Format.FieldsFactory/FieldDeclaration} format Описание формата поля
+       * @param {SBIS3.CONTROLS.Data.Format.Field|SBIS3.CONTROLS.Data.Format.FieldsFactory/FieldDeclaration.typedef} format Описание формата поля
        * @returns {SBIS3.CONTROLS.Data.Format.Field}
        * @protected
        */

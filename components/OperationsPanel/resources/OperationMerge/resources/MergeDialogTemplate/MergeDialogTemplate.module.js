@@ -10,7 +10,7 @@ define('js!SBIS3.CONTROLS.MergeDialogTemplate', [
     'i18n!SBIS3.CONTROLS.MergeDialogTemplate',
     'js!SBIS3.CONTROLS.Button',
     'js!SBIS3.CONTROLS.TreeDataGridView',
-    'html!SBIS3.CONTROLS.MergeDialogTemplate/resources/cellNameTpl',
+    'html!SBIS3.CONTROLS.MergeDialogTemplate/resources/cellRadioButtonTpl',
     'html!SBIS3.CONTROLS.MergeDialogTemplate/resources/cellCommentTpl'
 ], function(Control, dotTplFn, SbisServiceSource, MemorySource, SbisAdapter, rk) {
 
@@ -43,7 +43,8 @@ define('js!SBIS3.CONTROLS.MergeDialogTemplate', [
                 queryMethodName: undefined,
                 dataSource: undefined,
                 hierField: undefined,
-                displayField: undefined
+                displayField: undefined,
+                titleCellTemplate: undefined
             },
             _treeView: undefined,
             _treeViewKeys: [],
@@ -74,7 +75,7 @@ define('js!SBIS3.CONTROLS.MergeDialogTemplate', [
             this._treeView.subscribe('onSelectedItemChange', this.onSelectedItemChange.bind(this));
             this._treeView.setGroupBy(this._treeView.getSearchGroupBy(), false);
             dataSource = new SbisServiceSource(this._options.dataSource._options);
-            dataSource.setQueryMethodName(this._options.queryMethodName ? this._options.queryMethodName : this._options.dataSource.getQueryMethodName());
+            dataSource.getBinding().query = this._options.queryMethodName ? this._options.queryMethodName : this._options.dataSource.getBinding().query;
             this._treeView.setDataSource(dataSource, true);
             this._treeView.reload({
                 'Разворот': 'С разворотом',
@@ -84,7 +85,7 @@ define('js!SBIS3.CONTROLS.MergeDialogTemplate', [
                 //TODO: Данный костыль нужен для того, чтобы добавить в dataSet колонки, выпилить когда необходимое api появится у dataSet'а
                 var rawData = ds.getRawData();
                 rawData.s.push({n: COMMENT_FIELD_NAME, t: 'Строка'}, {n: AVAILABLE_FIELD_NAME, t: 'Логическое'});
-                self._treeView.setFilter({});
+                self._treeView.setFilter({}, true);
                 self._treeView.setDataSource(new MemorySource({
                     idProperty: dataSource.getIdProperty(),
                     data: rawData,

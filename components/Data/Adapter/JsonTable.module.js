@@ -33,31 +33,17 @@ define('js!SBIS3.CONTROLS.Data.Adapter.JsonTable', [
 
       //region SBIS3.CONTROLS.Data.Adapter.JsonFormatMixin
 
-      getFormat: function (name) {
-         if (!this._has(name)) {
-            throw new ReferenceError(this._moduleName + '::getFormat(): field "' + name + '" is not exists');
-         }
-         return JsonTable.superclass.getFormat.call(this, name);
-      },
-
       addField: function(format, at) {
          JsonTable.superclass.addField.call(this, format, at);
 
-         var name = format.getName();
-         if (this._has(name)) {
-            delete this._format[name];
-            throw new Error(this._moduleName + '::addField(): field "' + name + '" already exists');
-         }
-
+         var name = format.getName(),
+            value = format.getDefaultValue();
          for (var i = 0; i < this._data.length; i++) {
-            this._data[i][name] = format.getDefaultValue();
+            this._data[i][name] = value;
          }
       },
 
       removeField: function(name) {
-         if (!this._has(name)) {
-            throw new Error(this._moduleName + '::removeField(): field "' + name + '" is not exists');
-         }
          JsonTable.superclass.removeField.call(this, name);
          var i;
          for (i = 0; i < this._data.length; i++) {
@@ -74,7 +60,19 @@ define('js!SBIS3.CONTROLS.Data.Adapter.JsonTable', [
       },
 
       getFields: function () {
-         throw new Error(this._moduleName + ': method getFields() is not supported');
+         var count = this.getCount(),
+            i,
+            item;
+         if (count === 0) {
+            throw new Error(this._moduleName + ': method getFields() is not supported for empty table');
+         }
+         for (i = 0; i < count; i++) {
+            item = this.at(i);
+            if (item instanceof Object) {
+               return Object.keys(item);
+            }
+         }
+         return [];
       },
 
       getCount: function () {

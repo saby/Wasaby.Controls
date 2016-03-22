@@ -24,7 +24,6 @@ define('js!SBIS3.CONTROLS.ComponentBinder', [], function () {
          view.setHighlightEnabled(true);
          view.setInfiniteScroll(true, true);
          view.setGroupBy(groupBy);
-         view._itemsProjection.setParentProperty(null);
          if (this._firstSearch) {
             this._lastRoot = view.getCurrentRoot();
             this._lastParentProperty = view._itemsProjection.getParentProperty();
@@ -33,6 +32,7 @@ define('js!SBIS3.CONTROLS.ComponentBinder', [], function () {
                this._pathDSRawData = $ws.core.clone(this._options.breadCrumbs.getItems().getRawData());
             }
          }
+         view._itemsProjection.setParentProperty(null);
          this._firstSearch = false;
          //Флаг обозначает, что ввод был произведен пользователем
          this._searchReload = true;
@@ -107,10 +107,10 @@ define('js!SBIS3.CONTROLS.ComponentBinder', [], function () {
          //DataGridView.setCurrentRoot(self._lastRoot); - плохо, потому что ВСЕ крошки на странице получат изменения
          //Релоад сделает то же самое, так как он стреляет onSetRoot даже если корень на самом деле не понменялся
          view.reload(filter, view.getSorting(), 0);
-         // TODO: Нужно оставить одно поле хранящее путь, сейчас в одно запоминается состояние хлебных крошек 
+         // TODO: Нужно оставить одно поле хранящее путь, сейчас в одно запоминается состояние хлебных крошек
          // перед тем как их сбросить, а в другом весь путь вместе с кнопкой назад
          this._path = this._pathDSRawData || [];
-         //Если сбросили поиск (по крестику) вернем путь в хлебные крошки и покажем кнопку назад 
+         //Если сбросили поиск (по крестику) вернем путь в хлебные крошки и покажем кнопку назад
          if (this._options.breadCrumbs){
             this._options.breadCrumbs.getItems().setRawData(this._pathDSRawData);
             this._options.breadCrumbs._redraw();
@@ -229,10 +229,12 @@ define('js!SBIS3.CONTROLS.ComponentBinder', [], function () {
             this._lastRoot = view.getCurrentRoot();
             view.subscribe('onBeforeSetRoot', function(ev, newRoot){
                self._lastRoot = newRoot;
-               breakSearch.call(self, searchForm, false);
+               if (self._searchMode) {
+                  breakSearch.call(self, searchForm, false);
+               }
             });
             view.subscribe('onSetRoot', function(event, curRoot, hierarchy){
-               //onSetRoot стреляет после того как перешли в режим поиска (так как он стреляет при каждом релоаде), 
+               //onSetRoot стреляет после того как перешли в режим поиска (так как он стреляет при каждом релоаде),
                //при этом не нужно запоминать текущий корень и делать видимым путь
                if (!self._searchMode){
                   self._lastRoot = curRoot;
@@ -332,7 +334,7 @@ define('js!SBIS3.CONTROLS.ComponentBinder', [], function () {
          }
 
          view.subscribe('onSetRoot', function(event, id, hier){
-            //onSetRoot стреляет после того как перешли в режим поиска (так как он стреляет при каждом релоаде), 
+            //onSetRoot стреляет после того как перешли в режим поиска (так как он стреляет при каждом релоаде),
             //при этом не нужно пересчитывать хлебные крошки
             if (!self._searchMode){
                var i;
@@ -366,7 +368,7 @@ define('js!SBIS3.CONTROLS.ComponentBinder', [], function () {
 
                for (i = 0; i < self._path.length; i++){
                   if (self._path[i].id == id) {
-                     self._path.splice(i);
+                     self._path.splice(i, self._path.length - i);
                      break;
                   }
                }
@@ -459,7 +461,7 @@ define('js!SBIS3.CONTROLS.ComponentBinder', [], function () {
                   delete viewFilter[searchParam];
                }
                /* Надо вмерживать структуру, полученную из истории, т.к. мы не сохраняем в историю шаблоны строки фильтров */
-               filterButton._updateFilterStructure($ws.core.merge(filterButton.getFilterStructure(), filter.filter));
+               filterButton._updateFilterStructure(historyController._prepareStructureElemForApply(filter.filter));
                view.setFilter($ws.core.merge(view.getFilter(), viewFilter), true);
             }
             browser._notifyOnFiltersReady();

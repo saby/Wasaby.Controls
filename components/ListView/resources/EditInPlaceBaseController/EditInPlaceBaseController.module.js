@@ -210,7 +210,11 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                   eip = this._getEditingEip(),
                   record,
                   endEditResult;
-               if (eip) {
+               //При начале редактирования строки(если до этого так же что-то редактировалось), данный метод вызывается два раза:
+               //первый по уходу фокуса с предидущей строки, второй при начале редактирования новой строки. Если второй вызов метода
+               //произойдёт раньше чем завершится первый, то мы два раза попытаемся завершить редактирование, что ведёт к 2 запросам
+               //на сохранения записи. Чтобы это предотвратить добавим проверку на то, что сейчас уже идёт сохранение(this._savingDeferred.isReady())
+               if (eip && this._savingDeferred.isReady()) {
                   record = eip.getEditingRecord();
                   withSaving = withSaving && record.isChanged();
                   endEditResult = this._notify('onEndEdit', record, withSaving);
@@ -283,6 +287,10 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                   return self._options.dataSource.create(model).addCallback(function (record) {
                      target.attr('data-id', '' + record.getKey());
                      self._eip.edit(target, record);
+                     // Todo разобраться в целесообразности этого пересчёта вообще, почему на десктопе всё работает?
+                     // При начале отслеживания высоты строки, один раз нужно пересчитать высоту синхронно, это нужно для добавления по месту,
+                     //т.к. при добавлении создаётся новая tr у которой изначально нет высоты и опции записи не могут верно спозиционироваться.
+                     self._eip.recalculateHeight();
                      self._notify('onAfterBeginEdit', record);
                      return record;
                   });

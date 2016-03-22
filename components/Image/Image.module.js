@@ -248,7 +248,7 @@ define('js!SBIS3.CONTROLS.Image',
                   this._fileLoader = this.getChildControlByName('FileLoader');
                   //todo Удалить, временная опция для поддержки смены логотипа компании
                   if (dataSource) {
-                     this._fileLoader.setMethod((this._options.linkedObject || dataSource.getResource()) + '.' + dataSource.getCreateMethodName());
+                     this._fileLoader.setMethod((this._options.linkedObject || dataSource.getEndpoint().contract) + '.' + dataSource.getBinding().create);
                   }
                   this._bindToolbarEvents();
                }
@@ -266,8 +266,8 @@ define('js!SBIS3.CONTROLS.Image',
                var
                   dataSource = this.getDataSource();
                if (dataSource) {
-                  this._setImage($ws.helpers.prepareGetRPCInvocationURL(dataSource.getResource(),
-                     dataSource.getReadMethodName(), this._options.filter, $ws.proto.BLObject.RETURN_TYPE_ASIS));
+                  this._setImage($ws.helpers.prepareGetRPCInvocationURL(dataSource.getEndpoint().contract,
+                     dataSource.getBinding().read, this._options.filter, $ws.proto.BLObject.RETURN_TYPE_ASIS));
                } else {
                   this._setImage(this._options.defaultImage);
                }
@@ -322,7 +322,7 @@ define('js!SBIS3.CONTROLS.Image',
                   imageInstance = this.getParent();
                if (response.hasOwnProperty('error')) {
                   $ws.helpers.toggleLocalIndicator(imageInstance._container, false);
-                  imageInstance._boundEvents.onErrorLoad(response.error);
+                  imageInstance._boundEvents.onErrorLoad(response.error, true);
                } else {
                   imageInstance._notify('onEndLoad');
                   if (imageInstance._options.edit) {
@@ -350,9 +350,9 @@ define('js!SBIS3.CONTROLS.Image',
                   this._notify('onChangeImage', this._imageUrl);
                }
             },
-            _onErrorLoad: function(error) {
+            _onErrorLoad: function(error, withoutReload) {
                this._notify('onErrorLoad', error);
-               if (this._imageUrl !== this._options.defaultImage) {
+               if (!withoutReload && this._imageUrl !== this._options.defaultImage) {
                   this._setImage(this._options.defaultImage);
                }
             },
@@ -386,7 +386,7 @@ define('js!SBIS3.CONTROLS.Image',
                      self._boundEvents.onErrorLoad();
                   });
                this._imageUrl = url;
-            },
+            }.debounce(0), //Оборачиваем именно в debounce, т.к. могут последовательно задать filter, dataSource и тогда изображения загрузка произойдет дважды.
             _showEditDialog: function(imageType) {
                var
                   self = this,
@@ -467,8 +467,8 @@ define('js!SBIS3.CONTROLS.Image',
                      var
                         dataSource = self.getDataSource(),
                         sendFilter = filter && Object.prototype.toString.call(filter) === '[object Object]' ? filter : self.getFilter();
-                     new $ws.proto.BLObject(dataSource.getResource())
-                        .call(dataSource.getDestroyMethodName(), sendFilter, $ws.proto.BLObject.RETURN_TYPE_ASIS)
+                     new $ws.proto.BLObject(dataSource.getEndpoint().contract)
+                        .call(dataSource.getBinding().destroy, sendFilter, $ws.proto.BLObject.RETURN_TYPE_ASIS)
                         .addBoth(function() {
                            self._setImage(self._options.defaultImage);
                         });
@@ -507,7 +507,7 @@ define('js!SBIS3.CONTROLS.Image',
                   this._options.dataSource = dataSource;
                   if (this._options.imageBar) {
                      //todo Удалить, временная опция для поддержки смены логотипа компании
-                     this._fileLoader.setMethod((this._options.linkedObject || dataSource.getResource()) + '.' + dataSource.getCreateMethodName());
+                     this._fileLoader.setMethod((this._options.linkedObject || dataSource.getEndpoint().contract) + '.' + dataSource.getBinding().create);
                   }
                   if (!noReload) {
                      this.reload();
