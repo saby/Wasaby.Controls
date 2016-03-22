@@ -106,6 +106,8 @@ define('js!SBIS3.CONTROLS.Menu', [
          var options = item.getRawData();
          options.allowChangeEnable = item.get('allowChangeEnable') !== undefined ? item.get('allowChangeEnable') : this._options.allowChangeEnable;
          options.caption = item.get(this._options.displayField);
+         delete options.id;
+         delete options.parent;
          return '<component data-component="SBIS3.CONTROLS.MenuItem" config="' + $ws.helpers.encodeCfgAttr(options) + '"></component>';
       },
 
