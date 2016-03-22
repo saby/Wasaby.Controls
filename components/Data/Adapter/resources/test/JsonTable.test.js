@@ -53,7 +53,14 @@ define([
          });
 
          describe('.getFields()', function () {
-            it('should throw an Error', function () {
+            it('should return fields list', function () {
+               assert.deepEqual(
+                  adapter.getFields(),
+                  ['Ид', 'Фамилия']
+               );
+            });
+            it('should throw an Error for empty', function () {
+               var adapter = new JsonTable();
                assert.throw(function () {
                   adapter.getFields();
                });

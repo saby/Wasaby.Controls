@@ -112,7 +112,8 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
             $ws.single.ioc.resolve('ILogger').info('SBIS3.CONTROLS.Data.Collection.RecordSet', 'option "items" is not acceptable. Use "rawData" instead.');
          }
          if (this._options.rawData) {
-            this.setRawData(this._options.rawData);
+            this._assignRawData(this._options.rawData, true);
+            this._createFromRawData();
          }
 
       },
@@ -159,13 +160,17 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
 
       /**
        * Переустанавливает сырые данные
+       * @param {Object} data Данные в "сыром" виде
+       * @param {Boolean} [keepFormat=false] Сохранить формат
        * @protected
        */
-      _assignRawData: function(data) {
+      _assignRawData: function(data, keepFormat) {
          RecordSet.superclass.setRawData.call(this, data);
+         if (!keepFormat) {
+            this._clearFormat();
+         }
          this._tableAdapter = null;
          this._fields = null;
-         this._clearFormat();
       },
 
       //endregion SBIS3.CONTROLS.Data.FormattableMixin
@@ -615,15 +620,20 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
       },
 
       assign: function (items) {
-         if ($ws.helpers.instanceOfModule(items, 'SBIS3.CONTROLS.Data.Collection.RecordSet') && !this._isUsersFormat()) {
-            var adapter = items.getAdapter().forTable(items.getRawData());
-            this._assignRawData(adapter.getEmpty());
+         var checkFormat = true,
+            adapter;
+         if (items && $ws.helpers.instanceOfModule(items, 'SBIS3.CONTROLS.Data.Collection.RecordSet')) {
+            adapter = items.getAdapter().forTable(items.getRawData());
+            checkFormat = false;
          } else {
-            this._assignRawData(this._getTableAdapter().getEmpty());
+            adapter = this._getTableAdapter();
          }
+         this._assignRawData(adapter.getEmpty());
+
+         this._items.length = 0;
          items = this._itemsToArray(items);
          for (var i = 0, len = items.length; i < len; i++) {
-            this._checkItem(items[i]);
+            this._checkItem(items[i], checkFormat);
             this._getTableAdapter().add(items[i].getRawData());
          }
          RecordSet.superclass.assign.call(this, items);
@@ -683,6 +693,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
 
       /**
        * Пересоздает элементы из сырых данных
+       * @param {Object} data Сырые данные
        * @protected
        */
       _createFromRawData: function(data) {
@@ -698,15 +709,20 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
       },
 
       /**
-       * Проверяет, что переданный элемент - модель
+       * Проверяет, что переданный элемент - это запись с идентичным форматом
+       * @param {*} item Запись
+       * @param {Boolean} [checkFormat=true] Запись
        * @protected
        */
-      _checkItem: function (item) {
-         if (!item || !$ws.helpers.instanceOfModule(item, 'SBIS3.CONTROLS.Data.Model') || !$ws.helpers.instanceOfModule(item, 'SBIS3.CONTROLS.Data.Record')) {
-            throw new Error('Item should be an instance of SBIS3.CONTROLS.Data.Model or SBIS3.CONTROLS.Data.Record');
+      _checkItem: function (item, checkFormat) {
+         if (!item || !$ws.helpers.instanceOfModule(item, 'SBIS3.CONTROLS.Data.Record')) {
+            throw new Error('Item should be an instance of SBIS3.CONTROLS.Data.Record');
          }
-         if (!this._getFormat().equals(item.getFormat())) {
-            $ws.single.ioc.resolve('ILogger').error('SBIS3.CONTROLS.Data.FormattableMixin', 'Item format should be equals format record set.');
+         if ((checkFormat === undefined || checkFormat === true) &&
+            this.getCount() > 0 &&
+            !this._getFormat().isEqual(item.getFormat())
+         ) {
+            $ws.single.ioc.resolve('ILogger').error(this._moduleName, 'Record format is not equal to recordset format.');
          }
          return true;
       }
