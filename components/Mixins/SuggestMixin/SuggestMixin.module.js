@@ -40,7 +40,7 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
 
    var SuggestMixin = /** @lends SBIS3.CONTROLS.SuggestMixin.prototype */{
       /**
-       * @event onFilterBuild При построении фильтра
+       * @event onFilterBuild Происходит после построении фильтра
        * Событие, наступает после построения фильтра, который будет передан в контрол списка сущностей.
        * @param {$ws.proto.EventObject} eventObject Дескриптор события.
        * @param {Object} filter Собранный фильтр.
@@ -232,6 +232,7 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
              * @group Data
              * @see autoShow
              * @see listFilter
+             * @see getList
              * @see startChar
              * @see SBIS3.CONTROLS.DSMixin#keyField
              * @see SBIS3.CORE.FieldLink/Columns.typedef
@@ -253,7 +254,7 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
              * ![](/SuggestMixin03.png)
              * Значение поля ввода привязывается к полю контекста опцией {@link SBIS3.CONTROLS.TextBoxBase#text}, с помощью атрибута bind.
              * Минимальное количество введенных символов, необходимое для начала поиска результатов автодополнения, определяется опцией {@link startChar}.
-             *
+             * Установить фильтр для списка значений можно с помощью метода {@link setListFilter}
              * Подробнее о функционале автодополнения вы можете прочитать в описании к классу {@link SBIS3.CONTROLS.SuggestMixin}.
              * @example
              * <pre class="brush:xml">
@@ -262,6 +263,7 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
              *        <option name="ФИО" bind="myTextField" oneWay="true"></option> <!-- Односторонняя привязка к полю myTextField по значениям из поля "ФИО" -->
              *     </options>
              * </pre>
+             * @see setListFilter
              * @see list
              * @see startChar
              * @see SBIS3.CONTROLS.TextBoxBase#text
@@ -340,9 +342,11 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
       },
 
       /**
-       * Устанавливает фильтр в список, при необходимости делает запрос на БЛ
+       * Устанавливает фильтр для списка значений автодополнения, при необходимости делает запрос на БЛ.
        * @param {Object} filter
-       * @param {Boolean} silent "Тихая" установка св-ва, не вызывает запроса на БЛ, не изменяет состояние выпадающего блока
+       * @param {Boolean} silent "Тихая" установка, не вызывает запроса на БЛ, не изменяет состояние выпадающего блока.
+       * @see listFilter
+       * @see list
        */
       setListFilter: function(filter, silent) {
          var self = this,
@@ -467,8 +471,16 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
       },
 
       /**
-       * Возвращает контрол списка сущностей
+       * Возвращает экземпляр контрола, отображающего список значений для автодополнения.
        * @returns {$ws.proto.Control}
+       * @example
+       * <pre>
+       *     this.getList().setDataSource(new SbisSourse({
+       *       resource: 'Сотрудник',
+       *       queryMethodName: 'СписокПерсонала',
+       *       formatMethodName: 'Сотрудник.FieldLinkFormat'
+       *     }), true);
+       * </pre>
        * @see list
        */
       getList: function () {
