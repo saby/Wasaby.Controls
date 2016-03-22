@@ -32,7 +32,7 @@ define('js!SBIS3.CONTROLS.TextBoxBase',
    var TextBoxBase = CompoundControl.extend([FormWidgetMixin, DataBindMixin, CompoundActiveFixMixin], /** @lends SBIS3.CONTROLS.TextBoxBase.prototype*/ {
 
        /**
-        * @event onTextChange Срабатывает при изменении текста в поле ввода.
+        * @event onTextChange Происходит при изменении текста в поле ввода.
         * @param {$ws.proto.EventObject} eventObject Дескриптор события.
         * @param {String} text Текст в поле ввода.
         * @example
@@ -44,7 +44,6 @@ define('js!SBIS3.CONTROLS.TextBoxBase',
         *     };
         * </pre>
         * @see setText
-        * @see setValue
         */
 
       $protected: {
@@ -66,7 +65,8 @@ define('js!SBIS3.CONTROLS.TextBoxBase',
              * С опцией {@link SBIS3.CONTROLS.SuggestMixin#listFilter} используется в настройке параметров фильтрации
              * списка значений для автодополнения. Атрибут bind привязывает значение поля ввода к полю контекста.
              * Длина текста, передаваемого в поле ввода, не зависит от настройки опции {@link maxLength}.
-             * Установить или изменить текстовое значение в поле ввода можно методом {@link setText}.
+             * Установить или изменить текстовое значение в поле ввода можно с помощью метода {@link setText}.
+             * Получить текстовое значение поля ввода можно с помощью метода {@link getText}.
              * @example
              * Пример 1. Устанавливаем текст в поле ввода для поля связи:
              * <pre class="brush:xml">
