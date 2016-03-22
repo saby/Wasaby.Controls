@@ -99,8 +99,9 @@ define('js!SBIS3.CONTROLS.ActiveMultiSelectable', [], function() {
       },
 
       /**
-       * Добавляет переданные элементы к набору выбранных
+       * Добавляет переданные элементы коллекции к набору выбранных для контрола в режиме множественного выбора.
        * @param {Array | SBIS3.CONTROLS.Data.Collection.List} items
+       * @see SBIS3.CONTROLS.MultiSelectable#multiselect
        * @see selectedItems
        * @see selectedKeys
        * @see setSelectedItems

@@ -45,7 +45,15 @@ define('js!SBIS3.CONTROLS.ActiveSelectable', ['js!SBIS3.CONTROLS.Data.Model'], f
       },
       /**
        * Устанавливает выбранный элемент коллекции.
-       * @param {SBIS3.CONTROLS.Data.Model} item загружать ли запись, если о ней нет информации в dataSet
+       * @param {SBIS3.CONTROLS.Data.Model} item Выбранный элемент коллекции.
+       * @example
+       * <pre>
+       *     var selItem = this.getChildControlByName('MyControl').getSelectedItem();
+       *       . . .
+       *     if(selItem != '') {
+       *       NewControl.setSelectedItem(selItem);
+       *     }
+       * </pre>
        * @see selectedItem
        * @see getSelectedItem
        */
