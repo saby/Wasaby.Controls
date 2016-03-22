@@ -103,19 +103,10 @@ define('js!SBIS3.CONTROLS.Menu', [
       },
 
       _getItemTemplate: function(item) {
-         var
-            caption = item.get(this._options.displayField),
-            icon = item.get('icon') ? '<option name="icon">' + item.get('icon') + '</option>' : '',
-            className = item.get('className') ? '<option name="className">' + item.get('className') + '</option>' : '',
-            command = item.get('command') ? '<option name="command">' + item.get('command') + '</option>' : '',
-            tooltip = item.get('tooltip') ? '<option name="tooltip">' + item.get('tooltip') + '</option>' : '',
-            enabled = item.get('enabled') !== undefined ? '<option name="enabled">' + item.get('enabled') + '</option>' : '';
-
-         return '<component data-component="SBIS3.CONTROLS.MenuItem">' +
-            '<option name="caption" type="string">' + caption + '</option>' +
-            '<option name="allowChangeEnable" type="boolean">' + (item.get('allowChangeEnable') !== undefined ? item.get('allowChangeEnable') : this._options.allowChangeEnable) + '</option>' +
-            icon + className + tooltip + enabled + command +
-            '</component>';
+         var options = item.getRawData();
+         options.allowChangeEnable = item.get('allowChangeEnable') !== undefined ? item.get('allowChangeEnable') : this._options.allowChangeEnable;
+         options.caption = item.get(this._options.displayField);
+         return '<component data-component="SBIS3.CONTROLS.MenuItem" config="' + $ws.helpers.encodeCfgAttr(options) + '"></component>';
       },
 
       _itemActivatedHandler : function(id, event){
