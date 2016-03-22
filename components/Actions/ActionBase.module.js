@@ -30,6 +30,8 @@ define('js!SBIS3.CONTROLS.ActionBase', ['js!SBIS3.CORE.Control'], function(Contr
       /**
        * @event onExecuted После завершения работы действия
        * @param {$ws.proto.EventObject} eventObject Дескриптор события.
+       * @param {Boolean|Object} meta Результат работы
+       * @param {SBIS3.CONTROLS.Data.Model} record Редактируемая запись
        * @example
        */
       /**
