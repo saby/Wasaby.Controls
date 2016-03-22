@@ -17,6 +17,7 @@ define([
             },
             getRecordSbisData = function() {
                return {
+                  _type: 'record',
                   d: [1, 'A', 10],
                   s: [{
                      n: 'id',
@@ -460,6 +461,7 @@ define([
                      adapter: 'adapter.sbis',
                      rawData: getRecordSbisData()
                   });
+               var cl = record.clone();
                record.removeFieldAt(fieldIndex);
 
                assert.notEqual(record.getFormat().at(fieldIndex).getName(), fieldName);
@@ -683,6 +685,21 @@ define([
                assert.strictEqual(json.state._options.rawData.$type, 'record');
                assert.deepEqual(json.state._options.rawData.s, [1]);
                assert.deepEqual(json.state._options.rawData.d, [2]);
+            });
+         });
+         describe('.fromJSON()', function () {
+            it('should restore type signature in rawData', function () {
+               var record = new Record({
+                     rawData: {
+                        _type: 'record',
+                        s: [],
+                        d: []
+                     }
+                  }),
+                  json = record.toJSON(),
+                  clone = Record.prototype.fromJSON.call(Record, json);
+               assert.strictEqual(clone.getRawData()._type, 'record');
+               assert.isUndefined(clone.getRawData().$type);
             });
          });
       });
