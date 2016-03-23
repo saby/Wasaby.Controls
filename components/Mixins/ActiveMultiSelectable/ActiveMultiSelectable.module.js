@@ -30,7 +30,8 @@ define('js!SBIS3.CONTROLS.ActiveMultiSelectable', [], function() {
       },
 
       /**
-       * Устанавливает набор выбранных записей
+       * Устанавливает набор элементов коллекции, которые будут по умолчанию выбраны для контрола в режиме множественного
+       * выбора значений {@link SBIS3.CONTROLS.MultiSelectable#multiselect}.
        * @param {Array|SBIS3.CONTROLS.Data.Collection.List} list Выбранные элементы.
        * @example
        * <pre>
@@ -40,8 +41,8 @@ define('js!SBIS3.CONTROLS.ActiveMultiSelectable', [], function() {
        *       myFieldLink.setSelectedItems(selectedItems)
        *    }
        * </pre>
-       * @see selectedItems
-       * @see selectedKeys
+       * @see SBIS3.CONTROLS.MultiSelectable#selectedItems
+       * @see SBIS3.CONTROLS.MultiSelectable#selectedKeys
        * @see clearSelectedItems
        * @see addSelectedItems
        */
@@ -64,9 +65,9 @@ define('js!SBIS3.CONTROLS.ActiveMultiSelectable', [], function() {
       }),
 
       /**
-       * Очищает набор выбранных элементов
-       * @see selectedItems
-       * @see selectedKeys
+       * Очищает набор выбранных элементов коллекции для контрола в режиме множественного выбора.
+       * @see SBIS3.CONTROLS.MultiSelectable#selectedItems
+       * @see SBIS3.CONTROLS.MultiSelectable#selectedKeys
        * @see setSelectedItems
        * @see addSelectedItems
        * @example
@@ -82,6 +83,10 @@ define('js!SBIS3.CONTROLS.ActiveMultiSelectable', [], function() {
          this.setSelectedItems([]);
       },
 
+      /**
+       * Инициализирует опцию selectedItems
+       * @noShow
+       */
       initializeSelectedItems: function() {
         this._options.selectedItems =  new List();
       },
