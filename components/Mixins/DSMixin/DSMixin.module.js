@@ -1201,6 +1201,19 @@ define('js!SBIS3.CONTROLS.DSMixin', [
       _removeItem: function (item) {
          item = item.getContents();
          var container = this._getItemContainer(this._getTargetContainer(item), item);
+         /*TODO отдельно обрабатываем случай с группировкой*/
+         if (!Object.isEmpty(this._options.groupBy)) {
+            var
+               prevContainer = container.prev(),
+               nextContainer = container.next();
+            /*Если спереди группировка, а сзади группировка или конец, значит это последний элемент группы и надо удалить группировку*/
+            if (prevContainer.length && prevContainer.hasClass('controls-GroupBy')) {
+               if (!nextContainer.length || nextContainer.hasClass('controls-GroupBy')) {
+                  prevContainer.remove();
+               }
+            }
+         }
+         /**/
          if (container.length) {
             this._clearItems(container);
             this._ladderCompare([container.prev(), container.next()]);
