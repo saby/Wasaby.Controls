@@ -86,7 +86,16 @@ define('js!SBIS3.CONTROLS.TextArea', ['js!SBIS3.CONTROLS.TextBoxBase', 'html!SBI
              * появится вертикальная полоса прокрутки.
              * @see minLinesCount
              */
-            autoResize: {}
+            autoResize: {},
+            /**
+             * @cfg {String} Режим перехода на новую строку
+             * @variant enter По нажатию клавиши <enter>
+             * @variant shiftEnter По сочетанию клавиш <shift> + <enter>
+             * <pre>
+             *     <opt name="newLineMode">enter</opt>
+             * </pre>
+             */
+            newLineMode: 'enter'
          }
       },
 
@@ -108,10 +117,9 @@ define('js!SBIS3.CONTROLS.TextArea', ['js!SBIS3.CONTROLS.TextBoxBase', 'html!SBI
          this._inputField.bind('keydown', function(event){
             // Если тебя посетило желание добавить ниже в исключения кнопку "shift" - то напиши зачем тебе это и будь готов к тому, что
             // благодаря keyboardHover-у где то перестанут нажиматься клавиши!
-            if (event.altKey || event.ctrlKey || event.which == $ws._const.key.esc || event.which == $ws._const.key.tab)
-               return true;
-            event.stopPropagation();
-            return true;
+            if (!self._processNewLine(event) && !event.altKey && !event.ctrlKey && event.which !== $ws._const.key.esc && event.which !== $ws._const.key.tab) {
+               event.stopPropagation();
+            }
          });
 
          this._inputField.bind('paste', function(){
@@ -182,14 +190,26 @@ define('js!SBIS3.CONTROLS.TextArea', ['js!SBIS3.CONTROLS.TextBoxBase', 'html!SBI
          }
       },
 
+      _processNewLine: function(event) {
+         if (this._options.newLineMode === 'shiftEnter' && event.which === $ws._const.key.enter) {
+            if (event.shiftKey) {
+               event.stopPropagation();
+            } else {
+               event.preventDefault();
+            }
+            return true;
+         }
+      },
+
       _keyUpBind: function(event) {
-         var newText = this._inputField.val();
+         var
+            newText = this._inputField.val(),
+            key = event.which || event.keyCode;
          if (newText != this._options.text) {
             TextArea.superclass.setText.call(this, newText);
          }
-         var key = event.which || event.keyCode;
-         if ((key === $ws._const.key.enter && !event.ctrlKey) ||
-             Array.indexOf([$ws._const.key.up, $ws._const.key.down], key) >= 0) {
+         if (!this._processNewLine(event) && ((key === $ws._const.key.enter && !event.ctrlKey) ||
+             Array.indexOf([$ws._const.key.up, $ws._const.key.down], key) >= 0)) {
             event.stopPropagation();
          }
       },

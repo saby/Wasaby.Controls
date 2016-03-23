@@ -107,7 +107,8 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
             $ws.single.ioc.resolve('ILogger').info('SBIS3.CONTROLS.Data.Collection.RecordSet', 'option "items" is not acceptable. Use "rawData" instead.');
          }
          if (this._options.rawData) {
-            this.setRawData(this._options.rawData);
+            this._assignRawData(this._options.rawData, true);
+            this._createFromRawData();
          }
 
       },
@@ -163,13 +164,17 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
 
       /**
        * Переустанавливает сырые данные
+       * @param {Object} data Данные в "сыром" виде
+       * @param {Boolean} [keepFormat=false] Сохранить формат
        * @protected
        */
-      _assignRawData: function(data) {
+      _assignRawData: function(data, keepFormat) {
          RecordSet.superclass.setRawData.call(this, data);
-         this._resetRawDataAdapter();
+         if (!keepFormat) {
+            this._clearFormat();
+         }
+         this._resetRawDataAdapter();;
          this._fields = null;
-         this._clearFormat();
       },
 
       //endregion SBIS3.CONTROLS.Data.FormattableMixin
@@ -563,32 +568,6 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
 
       //endregion SBIS3.CONTROLS.DataSet
 
-      // region SBIS3.CONTROLS.Data.SerializableMixin
-
-      _getSerializableState: function() {
-         var state = RecordSet.superclass._getSerializableState.call(this);
-
-         //Prevent core reviver for rawData
-         if (state._options && state._options.rawData && state._options.rawData._type) {
-            state._options.rawData.$type = state._options.rawData._type;
-            delete state._options.rawData._type;
-         }
-
-         return state;
-      },
-
-      _setSerializableState: function(state) {
-         return RecordSet.superclass._setSerializableState(state).callNext(function() {
-            //Restore value hidden from core reviver
-            if (this._options && this._options.rawData && this._options.rawData.$type) {
-               this._options.rawData._type = this._options.rawData.$type;
-               delete this._options.rawData.$type;
-            }
-         });
-      },
-
-      // endregion SBIS3.CONTROLS.Data.SerializableMixin
-
       //region SBIS3.CONTROLS.Data.Collection.List
 
       clear: function () {
@@ -597,13 +576,13 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
       },
 
       add: function (item, at) {
-         this._checkItem(item);
+         this._checkItem(item, this.getCount() > 0);
          this._getRawDataAdapter().add(item.getRawData(), at);
          RecordSet.superclass.add.apply(this, arguments);
       },
 
       remove: function (item) {
-         this._checkItem(item);
+         this._checkItem(item, false);
          return RecordSet.superclass.remove.apply(this, arguments);
       },
 
@@ -619,33 +598,39 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
       },
 
       assign: function (items) {
-         if ($ws.helpers.instanceOfModule(items, 'SBIS3.CONTROLS.Data.Collection.RecordSet') && !this._isUsersFormat()) {
-            var adapter = items.getAdapter().forTable(items.getRawData());
-            this._assignRawData(adapter.getEmpty());
+         var checkFormat = true,
+            adapter;
+         if (items && $ws.helpers.instanceOfModule(items, 'SBIS3.CONTROLS.Data.Collection.RecordSet')) {
+            adapter = items.getAdapter().forTable(items.getRawData());
+            checkFormat = false;
          } else {
-            this._assignRawData(this._getRawDataAdapter().getEmpty());
+            adapter = this._getRawDataAdapter();
          }
+         this._assignRawData(adapter.getEmpty());
+
          items = this._itemsToArray(items);
          for (var i = 0, len = items.length; i < len; i++) {
-            this._checkItem(items[i]);
+            this._checkItem(items[i], i > 0 && checkFormat);
             this._getRawDataAdapter().add(items[i].getRawData());
          }
          RecordSet.superclass.assign.call(this, items);
       },
 
       append: function (items) {
+         var hasItems = this.getCount() > 0;
          items = this._itemsToArray(items);
          for (var i = 0, len = items.length; i < len; i++) {
-            this._checkItem(items[i]);
+            this._checkItem(items[i], hasItems || i > 0);
             this._getRawDataAdapter().add(items[i].getRawData());
          }
          RecordSet.superclass.append.call(this, items);
       },
 
       prepend: function (items) {
+         var hasItems = this.getCount() > 0;
          items = this._itemsToArray(items);
          for (var i = 0, len = items.length; i < len; i++) {
-            this._checkItem(items[i]);
+            this._checkItem(items[i], hasItems || i > 0);
             this._getRawDataAdapter().add(items[i].getRawData(), i);
          }
          RecordSet.superclass.prepend.call(this, items);
@@ -673,6 +658,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
 
       /**
        * Пересоздает элементы из сырых данных
+       * @param {Object} data Сырые данные
        * @protected
        */
       _createFromRawData: function() {
@@ -688,15 +674,19 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
       },
 
       /**
-       * Проверяет, что переданный элемент - модель
+       * Проверяет, что переданный элемент - это запись с идентичным форматом
+       * @param {*} item Запись
+       * @param {Boolean} [checkFormat=true] Запись
        * @protected
        */
-      _checkItem: function (item) {
-         if (!item || !$ws.helpers.instanceOfModule(item, 'SBIS3.CONTROLS.Data.Model') || !$ws.helpers.instanceOfModule(item, 'SBIS3.CONTROLS.Data.Record')) {
-            throw new Error('Item should be an instance of SBIS3.CONTROLS.Data.Model or SBIS3.CONTROLS.Data.Record');
+      _checkItem: function (item, checkFormat) {
+         if (!item || !$ws.helpers.instanceOfModule(item, 'SBIS3.CONTROLS.Data.Record')) {
+            throw new Error('Item should be an instance of SBIS3.CONTROLS.Data.Record');
          }
-         if (!this._getFormat().equals(item.getFormat())) {
-            $ws.single.ioc.resolve('ILogger').error('SBIS3.CONTROLS.Data.FormattableMixin', 'Item format should be equals format record set.');
+         if ((checkFormat === undefined || checkFormat === true) &&
+            !this._getFormat().isEqual(item.getFormat())
+         ) {
+            $ws.single.ioc.resolve('ILogger').error(this._moduleName, 'Record format is not equal to recordset format.');
          }
          return true;
       }

@@ -93,15 +93,40 @@ define('js!SBIS3.CONTROLS.Data.FormattableMixin', [
          _rawDataAdapter: null,
 
          /**
-         *@var {Boolean} Флаг показывает был ли формат задан или изменен пользователем
+         *@member {Boolean} Формат был задан пользователем явно
          */
-         _usersFormat: false
+         _directFormat: false
+      },
+
+      //region SBIS3.CONTROLS.Data.SerializableMixin
+
+      after: {
+         _getSerializableState: function(state) {
+            //Prevent core reviver for rawData
+            if (state._options && state._options.rawData && state._options.rawData._type) {
+               state._options.rawData.$type = state._options.rawData._type;
+               delete state._options.rawData._type;
+            }
+
+            return state;
+         },
+
+         _setSerializableState: function(state, initializer) {
+            //Restore value hidden from core reviver
+            return initializer.callNext(function() {
+               if (this._options && this._options.rawData && this._options.rawData.$type) {
+                  this._options.rawData._type = this._options.rawData.$type;
+                  delete this._options.rawData.$type;
+               }
+            });
+         }
       },
 
       //region Public methods
+
       $constructor: function (cfg) {
          if(cfg && cfg.format) {
-            this._usersFormat = true;
+            this._directFormat = true;
 
             this._getFormat().each(function(fieldFormat) {
                try {
@@ -112,6 +137,7 @@ define('js!SBIS3.CONTROLS.Data.FormattableMixin', [
             }, this);
          }
       },
+
       /**
        * Возвращает данные в "сыром" виде
        * @returns {Object}
@@ -124,7 +150,7 @@ define('js!SBIS3.CONTROLS.Data.FormattableMixin', [
 
       /**
        * Устанавливает данные в "сыром" виде
-       * @param rawData {Object} Данные в "сыром" виде
+       * @param data {Object} Данные в "сыром" виде
        * @see getRawData
        * @see rawData
        */
@@ -193,7 +219,6 @@ define('js!SBIS3.CONTROLS.Data.FormattableMixin', [
        * </pre>
        */
       addField: function(format, at) {
-         this._usersFormat = true;
          format = this._buildField(format);
          this._getFormat().add(format, at);
       },
@@ -211,7 +236,6 @@ define('js!SBIS3.CONTROLS.Data.FormattableMixin', [
        * </pre>
        */
       removeField: function(name) {
-         this._usersFormat = true;
          this._getFormat().removeField(name);
       },
 
@@ -228,7 +252,6 @@ define('js!SBIS3.CONTROLS.Data.FormattableMixin', [
        * </pre>
        */
       removeFieldAt: function(at) {
-         this._usersFormat = true;
          this._getFormat().removeAt(at);
       },
 
@@ -312,11 +335,26 @@ define('js!SBIS3.CONTROLS.Data.FormattableMixin', [
          return this._options.format;
       },
 
+      /**
+       * Очищает формат полей. Это можно сделать только если формат не был установлен явно.
+       * @protected
+       */
       _clearFormat: function (){
-         if (!this._usersFormat) {
-            this._options.format = null;
+         if (this._directFormat) {
+            throw new Error(this._moduleName + ': format can\'t be cleared because it\'s defined directly.');
          }
+         this._options.format = null;
       },
+
+      /**
+       * Возвращает признак, что формат полей был установлен явно
+       * @returns {Boolean}
+       * @protected
+       */
+      _isDirectFormat: function () {
+         return this._directFormat;
+      },
+
       /**
        * Строит формат полей по описанию
        * @param {SBIS3.CONTROLS.Data.Format.Format|Array.<SBIS3.CONTROLS.Data.Format.FieldsFactory/FieldDeclaration.typedef>} format Описание формата
@@ -367,11 +405,8 @@ define('js!SBIS3.CONTROLS.Data.FormattableMixin', [
             throw new TypeError(this._moduleName + ': format should be an instance of SBIS3.CONTROLS.Data.Format.Field');
          }
          return format;
-      },
-
-      _isUsersFormat: function () {
-         return this._usersFormat;
       }
+
       //endregion Protected methods
    };
 

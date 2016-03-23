@@ -69,16 +69,14 @@ define('js!SBIS3.CONTROLS.DialogActionBase', ['js!SBIS3.CONTROLS.ActionBase', 'j
          mode = mode || this._options.mode;
          if (mode == 'floatArea'){
             Component = FloatArea;
-            config.isStack = meta.isStack || true;
-            config.autoHide = meta.autoHide || true;
+            config.isStack = meta.isStack !== undefined ? meta.isStack : true;
+            config.autoHide = meta.autoHide !== undefined ? meta.autoHide : true;
          } else if (mode == 'dialog'){
             Component = Dialog;
          }
 
-         new Component(config).subscribe('onAfterClose', function(e, meta){
-            if (meta === true || Object.isValid(meta)) {
-               self._notifyOnExecuted(meta, self._options.record);
-            }
+         new Component(config).subscribe('onAfterClose', function (e, meta) {
+            self._notifyOnExecuted(meta, self._options.record);
          });
       },
 

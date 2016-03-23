@@ -16,6 +16,10 @@ define('js!SBIS3.CONTROLS.Data.Adapter.SbisTable', [
    var SbisTable = $ws.core.extend({}, [ITable, SbisFormatMixin], /** @lends SBIS3.CONTROLS.Data.Adapter.SbisTable.prototype */{
       _moduleName: 'SBIS3.CONTROLS.Data.Adapter.SbisTable',
 
+      $constructor: function () {
+         this._data._type = 'recordset';
+      },
+
       //region SBIS3.CONTROLS.Data.Adapter.JsonFormatMixin
 
       _buildD: function(at, value) {

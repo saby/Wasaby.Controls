@@ -361,6 +361,15 @@ define([
                assert.isTrue($ws.helpers.instanceOfModule(format, 'SBIS3.CONTROLS.Data.Format.ArrayField'));
                assert.strictEqual(format.getKind(), 'Boolean');
             });
+            it('should return String field format for unknown type', function () {
+               var adapter = new SbisRecord({
+                     d: [0],
+                     s: [{n: 'Ид', t: 'Связь'}]
+                  }),
+                  format = adapter.getFormat('Ид');
+               assert.isTrue($ws.helpers.instanceOfModule(format, 'SBIS3.CONTROLS.Data.Format.StringField'));
+               assert.strictEqual(format.getName(), 'Ид');
+            });
             it('should throw an error for not exists field', function () {
                assert.throw(function () {
                   adapter.getFormat('Some');

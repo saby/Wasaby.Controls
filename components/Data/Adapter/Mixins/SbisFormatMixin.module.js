@@ -183,11 +183,11 @@ define('js!SBIS3.CONTROLS.Data.Adapter.SbisFormatMixin', [
                return typeCode;
             }
          }
-         return undefined;
+         return 'String';
       },
 
       _getFieldInnerTypeNameByOuter: function (outerName) {
-         return FIELD_TYPE[outerName];
+         return NORMALIZED_FIELD_TYPE[(outerName + '').toLowerCase()];
       },
 
       _getFieldMeta: function (index, type, singleton) {
@@ -277,6 +277,16 @@ define('js!SBIS3.CONTROLS.Data.Adapter.SbisFormatMixin', [
       //endregion Protected methods
 
    };
+
+   /**
+    * @member {Object.<String, String>} Нормализованный набор типов полей
+    */
+   var NORMALIZED_FIELD_TYPE = {};
+   for (var typeName in FIELD_TYPE) {
+      if (FIELD_TYPE.hasOwnProperty(typeName)) {
+         NORMALIZED_FIELD_TYPE[typeName.toLowerCase()] = FIELD_TYPE[typeName];
+      }
+   }
 
    return SbisFormatMixin;
 });
