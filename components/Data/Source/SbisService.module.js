@@ -209,11 +209,14 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
        */
       create: function(meta) {
          //TODO: вместо 'ИмяМетода' может передаваться 'Расширение'
+         if (meta === undefined) {
+            meta = {
+               'ВызовИзБраузера': true
+            };
+         }
          var adapter = this.getAdapter(),
             args = {
-               'Фильтр': meta || this._buildRecord({
-                  'ВызовИзБраузера': true
-               }),
+               'Фильтр': this._buildRecord(meta),
                'ИмяМетода': this._options.binding.format || null
             };
 
