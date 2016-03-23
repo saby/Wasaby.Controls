@@ -134,7 +134,7 @@ define('js!SBIS3.CONTROLS.OperationsMark', [
          this.setVisible(hasMarkOptions);
       },
       _captionRender: function(selectedCount) {
-         return selectedCount ? 'Отмечено(' + selectedCount + ')' : 'Отметить';
+         return selectedCount ? rk('Отмечено') + '(' + selectedCount + ')' : rk('Отметить');
       },
       _setCaptionRender: function() {
          if (typeof this._options.caption !== 'string' && !this._options.captionRender) {

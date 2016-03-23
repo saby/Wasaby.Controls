@@ -241,6 +241,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
              * <pre class="brush:xml">
              *     <option name="emptyHTML">Нет данных</option>
              * </pre>
+             * @translatable
              * @remark
              * Опция задаёт текст, отображаемый как при абсолютном отсутствии данных, так и в результате {@link groupBy фильтрации}.
              * @see items
