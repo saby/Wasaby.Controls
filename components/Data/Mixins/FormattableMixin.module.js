@@ -88,6 +88,11 @@ define('js!SBIS3.CONTROLS.Data.FormattableMixin', [
          },
 
          /**
+          * @member {SBIS3.CONTROLS.Data.Adapter.ITable|SBIS3.CONTROLS.Data.Adapter.IRecord} Адаптер для cырых данных
+          */
+         _rawDataAdapter: null,
+
+         /**
          *@member {Boolean} Формат был задан пользователем явно
          */
          _directFormat: false
@@ -122,6 +127,14 @@ define('js!SBIS3.CONTROLS.Data.FormattableMixin', [
       $constructor: function (cfg) {
          if(cfg && cfg.format) {
             this._directFormat = true;
+
+            this._getFormat().each(function(fieldFormat) {
+               try {
+                  this._getRawDataAdapter().addField(fieldFormat);
+               } catch (e) {
+
+               }
+            }, this);
          }
       },
 
@@ -253,6 +266,39 @@ define('js!SBIS3.CONTROLS.Data.FormattableMixin', [
        */
       _getDefaultAdapter: function() {
          return 'adapter.json';
+      },
+
+      /**
+       * Возвращает адаптер для сырых данных
+       * @returns {SBIS3.CONTROLS.Data.Adapter.ITable|SBIS3.CONTROLS.Data.Adapter.IRecord}
+       * @protected
+       */
+      _getRawDataAdapter: function () {
+         if (!this._rawDataAdapter) {
+            this._rawDataAdapter = this._createRawDataAdapter();
+            if (this._options.rawData !== this._rawDataAdapter.getData()) {
+               this._options.rawData = this._rawDataAdapter.getData();
+            }
+         }
+
+         return this._rawDataAdapter;
+      },
+
+      /**
+       * Создает адаптер для сырых данных
+       * @returns {SBIS3.CONTROLS.Data.Adapter.ITable|SBIS3.CONTROLS.Data.Adapter.IRecord}
+       * @protected
+       */
+      _createRawDataAdapter: function () {
+         throw new Error('Method must be implemented');
+      },
+
+      /**
+       * Сбрасывает адаптер для сырых данных
+       * @protected
+       */
+      _resetRawDataAdapter: function () {
+         this._rawDataAdapter = null;
       },
 
       /**
