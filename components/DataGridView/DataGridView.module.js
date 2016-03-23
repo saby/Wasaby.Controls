@@ -66,13 +66,13 @@ define('js!SBIS3.CONTROLS.DataGridView',
              * @property {String} field Имя поля
              * @property {String} width Ширина колонки
              * Значение необходимо задавать для колонок с фиксированной шириной.
-             * @property {Boolean} highlight=true Подсвечивать фразу при поиске
+             * @property {Boolean} [highlight=true] Подсвечивать фразу при поиске
              * @property {String} resultTemplate Шаблон отображения колонки в строке результатов
              * @property {String} className Имя класса, который будет применён к каждой ячейке столбца
              * @property {String} headTemplate Шаблон отображения шапки колонки
              * @property {String} headTooltip Всплывающая подсказка шапки колонки
              * @property {String} editor Редактор колонки для режима редактирования по месту
-             * @property {String} allowChangeEnable Доступность установки сотояния активности редактирования колонки в зависимости от состояния табличного представления
+             * @property {Boolean} allowChangeEnable Доступность установки сотояния активности редактирования колонки в зависимости от состояния табличного представления
              * @property {String} cellTemplate Шаблон отображения ячейки
              * Данные, которые передаются в cellTemplate:
              * <ol>
@@ -97,6 +97,12 @@ define('js!SBIS3.CONTROLS.DataGridView',
              * строки считаем, что в .get('Name1') находится рекорд и значение получаем уже у этого рекорда через .get('Name2')
              * @property {Object.<String,String>} templateBinding соответствие опций шаблона полям в рекорде
              * @property {Object.<String,String>} includedTemplates подключаемые внешние шаблоны, ключу соответствует поле it.included.<...> которое будет функцией в шаблоне ячейки
+             * @editor headTemplate CloudFileChooser
+             * @editorConfig headTemplate extFilter xhtml
+             * @editor resultTemplate CloudFileChooser
+             * @editorConfig resultTemplate extFilter xhtml
+             * @editor cellTemplate CloudFileChooser
+             * @editorConfig cellTemplate extFilter xhtml
              */
             /**
              * @cfg {Columns[]} Набор колонок
