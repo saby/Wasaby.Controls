@@ -1191,11 +1191,12 @@ define('js!SBIS3.CONTROLS.DSMixin', [
 
       _moveItem: function(item, to){
          item = item.getContents();
-         var targetNode = this._getTargetContainer(item),
+         var
+            targetNode = this._getTargetContainer(item),
             fromContainer = this._getItemContainer(targetNode, item),
             toContainer = this._getItemContainerByIndex(targetNode, to);
          if (fromContainer.length && toContainer.length) {
-            fromContainer.insertBefore(toContainer);
+            fromContainer.insertAfter(toContainer);
          }
       },
 
@@ -1262,7 +1263,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
        * @param {Integer} oldItemsIndex Индекс, в котором удалены элементы.
        * @private
        */
-      onCollectionChange = function (event, action, newItems, newItemsIndex, oldItems) {
+      onCollectionChange = function (event, action, newItems, newItemsIndex, oldItems, oldItemsIndex) {
          var i;
          if (this._isNeedToRedraw()) {
 	         switch (action) {
@@ -1288,7 +1289,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
 	               for (i = 0; i < newItems.length; i++) {
 	                  this._moveItem(
 	                     newItems[i],
-	                     newItemsIndex + i
+	                     newItemsIndex + newItems.length - 1
 	                  );
 	               }
 	               this._reviveItems();
