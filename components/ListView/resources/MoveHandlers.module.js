@@ -67,6 +67,7 @@ define('js!SBIS3.CONTROLS.MoveHandlers', ['js!SBIS3.CORE.Dialog','js!SBIS3.CONTR
                   records[i] :
                   this._items.getRecordById(records[i]);
             }
+            this._toggleIndicator(true);
             if (isNodeTo && !isChangeOrder) {
                deferred = this.getMoveStrategy().hierarhyMove(records, recordTo);
             } else {
@@ -83,7 +84,9 @@ define('js!SBIS3.CONTROLS.MoveHandlers', ['js!SBIS3.CORE.Dialog','js!SBIS3.CONTR
                      self._items._reindexTree(self._options.hierField);
                      self.removeItemsSelectionAll();
                   }
-               });
+               }).addBoth(function() {
+                  self._toggleIndicator(false);
+               });;
             }
          }
       },
