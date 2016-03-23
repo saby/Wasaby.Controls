@@ -796,28 +796,30 @@ define('js!SBIS3.CONTROLS.DataGridView',
          return this._options.groupBy.template || groupByTpl;
       },
       _getResultsData: function(){
-         var resultsDS = this.getDataSet().getMetaData().results,
+         var resultsRecord = this._getResultsRecord(),
             self = this,
             value,
             data;
-         if (!resultsDS){
+         if (!resultsRecord){
             return;
          }
          data = $ws.helpers.map(this.getColumns(), function(col){
-            value = resultsDS.get(col.field);
+            value = resultsRecord.get(col.field);
             if (value == undefined){
                return '';
             }
-            return self._getColumnResultTemplate(col, $ws.render.defaultColumn.integer(value));
+            return self._getColumnResultTemplate(col, $ws.render.defaultColumn.integer(value), resultsRecord);
          });
          data[0] = this._options.resultsText;
          return data;
       },
-      _getColumnResultTemplate: function (column, result) {
+      _getColumnResultTemplate: function (column, result, item) {
          var columnTpl = result;
          if (column.resultTemplate) {
             columnTpl = MarkupTransformer(TemplateUtil.prepareTemplate(column.resultTemplate)({
-               result: result
+               result: result,
+               item: item,
+               column: column
             }));
          }
          return columnTpl;
