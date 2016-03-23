@@ -1,165 +1,150 @@
-<div>
-    <h2>Поле связи множественный выбор</h2>
-    <component data-component="SBIS3.CONTROLS.FieldLink" style="width: 500px" name="FieldLinkMultiSelect">
-    <opt name="text" bind="myTextField"></opt>
-    <opt name="placeholder" value="Должность"></opt>
-    <opt name="displayField" value="Название"></opt>
-    <opt name="keyField" value="Ид"></opt>
-    <opts name="dictionaries" type="array">
-        <opts>
-            <opt name="caption">Должности</opt>
-            <opt name="template">js!SBIS3.CONTROLS.Demo.FieldLinkDemoTemplate</opt>
-        </opts>
-    </opts>
-    <opts name="list">
-        <opt name="component" value="js!SBIS3.CONTROLS.DataGridView"/>
-        <opts name="options">
-            <opts name="columns" type="array">
-                <opts>
-                    <opt name="title">Ид</opt>
-                    <opt name="field">Ид</opt>
-                </opts>
-                <opts>
-                    <opt name="title">Название</opt>
-                    <opt name="field">Название</opt>
-                </opts>
-            </opts>
-            <opt name="keyField" value="Ид"></opt>
-        </opts>
-    </opts>
-    <opts name="listFilter">
-        <opt name="Название" bind="myTextField" oneWay="true"/>
-    </opts>
-    <opts name="handlers">
-        <opt name="onInitComplete" type="function">js!SBIS3.CONTROLS.Demo.FieldLinkDemo:prototype.initFiledLink1</opt>
-    </opts>
-    </component>
-    <h2>Поле связи единичный выбор</h2>
-    <component data-component="SBIS3.CONTROLS.FieldLink" style="width: 500px" name="FieldLinkSingleSelect">
-    <opt name="text" bind="myTextField2"></opt>
-    <opt name="multiselect" type="boolean" value="false"></opt>
-    <opt name="placeholder" value="Должность"></opt>
-    <opt name="displayField" value="Название"></opt>
-    <opts name="dictionaries" type="array">
-        <opts>
-            <opt name="caption">Должности</opt>
-            <opt name="template">js!SBIS3.CONTROLS.Demo.FieldLinkDemoTemplate</opt>
-        </opts>
-    </opts>
-    <opt name="keyField" value="Ид"></opt>
-    <opts name="list">
-        <opt name="component" value="js!SBIS3.CONTROLS.DataGridView"/>
-        <opts name="options">
-            <opts name="columns" type="array">
-                <opts>
-                    <opt name="title">Ид</opt>
-                    <opt name="field">Ид</opt>
-                </opts>
-                <opts>
-                    <opt name="title">Название</opt>
-                    <opt name="field">Название</opt>
-                </opts>
-            </opts>
-            <opt name="keyField" value="Ид"></opt>
-        </opts>
-    </opts>
-    <opts name="listFilter">
-        <opt name="Название" bind="myTextField2" oneWay="true"/>
-    </opts>
-    <opts name="handlers">
-        <opt name="onInitComplete" type="function">js!SBIS3.CONTROLS.Demo.FieldLinkDemo:prototype.initFiledLink2</opt>
-    </opts>
-    </component>
-    <h2>Поле связи единичный выбор + запись собирается и раскидывается по контексту</h2>
-    <component data-component="SBIS3.CONTROLS.FieldLink" style="width: 500px" name="FieldLinkSingleSelectContext">
-        <opt name="text" bind="myTextField3"></opt>
-        <opt name="multiselect" type="boolean" value="false"></opt>
-        <opt name="placeholder" value="Должность"></opt>
-        <opt name="displayField" value="Название"></opt>
-        <opts name="selectedItem" nonExistentValue="{}">
-            <opt name="Название" bind="НазваниеПолеСвязи"></opt>
-            <opt name="Ид" bind="КлючПолеСвязи"></opt>
-        </opts>
-        <opts name="dictionaries" type="array">
-            <opts>
-                <opt name="caption">Должности</opt>
-                <opt name="template">js!SBIS3.CONTROLS.Demo.FieldLinkDemoTemplate</opt>
-            </opts>
-        </opts>
-        <opt name="keyField" value="Ид"></opt>
-        <opts name="list">
-            <opt name="component" value="js!SBIS3.CONTROLS.DataGridView"/>
-            <opts name="options">
-                <opts name="columns" type="array">
-                    <opts>
-                        <opt name="title">Ид</opt>
-                        <opt name="field">Ид</opt>
-                    </opts>
-                    <opts>
-                        <opt name="title">Название</opt>
-                        <opt name="field">Название</opt>
-                    </opts>
-                </opts>
-                <opt name="keyField" value="Ид"></opt>
-            </opts>
-        </opts>
-        <opts name="listFilter">
-            <opt name="Название" bind="myTextField3" oneWay="true"/>
-        </opts>
-        <opts name="handlers">
-            <opt name="onInitComplete" type="function">js!SBIS3.CONTROLS.Demo.FieldLinkDemo:prototype.initFiledLink2</opt>
-        </opts>
-    </component>
-    <br/>
-    <span>Отображаемое поле: </span>
-    <component data-component="SBIS3.CONTROLS.TextBox">
-        <opt name="text" bind="НазваниеПолеСвязи" nonExistentValue="undefined"></opt>
-    </component>
-    <span>Ключ: </span>
-    <component data-component="SBIS3.CONTROLS.TextBox">
-        <opt name="text" bind="КлючПолеСвязи" nonExistentValue="undefined"></opt>
-    </component>
-    <h2>В виде ссылки</h2>
-    <component data-component="SBIS3.CONTROLS.SelectorButton">
-        <option name="icon">icon-16 icon-Erase icon-error</option>
-        <option name="caption">Кнопка</option>
-        <option name="multiselect" type="boolean">false</option>
-        <option name="defaultCaption" value=""></option>
-        <opt name="displayField" value="Название"></opt>
-        <opts name="dictionaries" type="array">
-            <opts>
-                <opt name="caption">Должности</opt>
-                <opt name="template">js!SBIS3.CONTROLS.Demo.FieldLinkDemoTemplate</opt>
-            </opts>
-        </opts>
-        <opts name="handlers">
-            <opt name="onInitComplete" type="function">js!SBIS3.CONTROLS.Demo.FieldLinkDemo:prototype.initFiledLink2</opt>
-        </opts>
-    </component>
-    <h2>В виде ссылки без иконки</h2>
-    <component data-component="SBIS3.CONTROLS.SelectorButton" class="controls-SelectorButton__asLink">
-        <option name="caption">Кнопка</option>
-        <option name="multiselect" type="boolean">false</option>
-        <option name="defaultCaption" value="Кнопка"></option>
-        <opt name="displayField" value="Название"></opt>
-        <opts name="dictionaries" type="array">
-            <opts>
-                <opt name="caption">Должности</opt>
-                <opt name="template">js!SBIS3.CONTROLS.Demo.FieldLinkDemoTemplate</opt>
-            </opts>
-        </opts>
-        <opts name="handlers">
-            <opt name="onInitComplete" type="function">js!SBIS3.CONTROLS.Demo.FieldLinkDemo:prototype.initFiledLink2</opt>
-        </opts>
-    </component>
-    <h2>Возможные значения для ввода:</h2>
-    <ul>
-        <li>Инженер-программист</li>
-        <li>Руководитель группы</li>
-        <li>Менеджер</li>
-        <li>Генерал армии</li>
-        <li>Министр обороны</li>
-        <li>Бухгалтер</li>
-    </ul>
+<div class="demo-FieldLink">
+
+   <div class="demo-FieldLink__div">
+      <span>Возможные значения для ввода в поле связи:</span> Инженер-программист, Руководитель группы, Менеджер, Генерал армии, Министр обороны, Бухгалтер.
+   </div>
+
+   <h3>1. Поле связи в режиме множественного выбора значений</h3>
+   <component data-component="SBIS3.CONTROLS.FieldLink" class="demo-FieldLink__firstDemo" name="FieldLinkMultiSelect">
+      <option name="text" bind="myTextField"></option> <!-- Связываем значение поля связи с полем контекста, это используется для работы автодополнения -->
+      <option name="placeholder">Должность</option> <!-- Устанавливаем текст подсказки внутри поля ввода -->
+      <option name="displayField">Название</option> <!-- Устанавливаем поле, значение которого будет использовано для отображения выбранного элемента -->
+      <option name="keyField">Ид</option> <!-- Устанавливаем ключевое поле -->
+      <options name="dictionaries" type="array"> <!-- Конфигурация справочника для поля связи -->
+         <options>
+            <option name="template">js!SBIS3.CONTROLS.Demo.FieldLinkDemoTemplate</option> <!-- Устанавливаем компонент, на основе которого будет построен справочник -->
+         </options>
+      </options>
+      <options name="list"> <!-- Настройка для автодополнения -->
+         <option name="component">js!SBIS3.CONTROLS.DataGridView</option> <!-- Компонент, который будет использован для построения списка значений автодополнения -->
+         <options name="options"> <!-- Опции компонента -->
+            <options name="columns" type="array"> <!-- Настройка колонок компонента -->
+               <options>
+                  <option name="title">Ид</option> <!-- Заголовок колонки -->
+                  <option name="field">Ид</option> <!-- Поле, значения которого будут использованы для отображения в колонке -->
+               </options>
+            <options>
+               <option name="title">Название</option>
+               <option name="field">Название</option>
+            </options>
+         </options>
+         <option name="keyField">Ид</option> <!-- Ключевое поле источника данных автодополнения -->
+      </options>
+      </options>
+      <options name="listFilter"> <!-- Параметры фильтрации автодополнения -->
+          <option name="Название" bind="myTextField" oneWay="true"></option> <!-- Фильтрация происходит по полю Название, значение для фильтрации берётся из контекста - поле myTextField. С ним же связано значение опции text -->
+      </options>
+   </component>
+
+   <h3>2. Поле связи в режиме единичного выбора значений</h3>
+
+   <component data-component="SBIS3.CONTROLS.FieldLink" class="demo-FieldLink__secondDemo" name="FieldLinkSingleSelect">
+      <option name="text" bind="myTextField2"></option> <!-- Связываем значение поля связи с полем контекста, это используется для работы автодополнения -->
+      <option name="multiselect">false</option> <!-- Устанавливаем режим единичного выбора элементов коллекции -->
+      <option name="placeholder">Должность</option> <!-- Устанавливаем текст подсказки внутри поля ввода -->
+      <option name="displayField">Название</option> <!-- Устанавливаем поле, значение которого будет использовано для отображения выбранного элемента -->
+      <option name="keyField">Ид</option> <!-- Устанавливаем ключевое поле -->
+      <options name="dictionaries" type="array"> <!-- Конфигурация справочника для поля связи -->
+         <options>
+            <option name="template">js!SBIS3.CONTROLS.Demo.FieldLinkDemoTemplate</option> <!-- Устанавливаем компонент, на основе которого будет построен справочник -->
+         </options>
+      </options>
+      <options name="list"> <!-- Настройка для автодополнения -->
+         <option name="component">js!SBIS3.CONTROLS.DataGridView</option> <!-- Компонент, который будет использован для построения списка значений автодополнения -->
+         <options name="options"> <!-- Опции компонента -->
+            <options name="columns" type="array"> <!-- Настройка колонок компонента -->
+               <options>
+                  <option name="title">Ид</option> <!-- Заголовок колонки -->
+                  <option name="field">Ид</option> <!-- Поле, значения которого будут использованы для отображения в колонке -->
+               </options>
+               <options>
+                  <option name="title">Название</option>
+                  <option name="field">Название</option>
+               </options>
+            </options>
+            <option name="keyField">Ид</option> <!-- Ключевое поле источника данных автодополнения -->
+         </options>
+      </options>
+      <options name="listFilter"> <!-- Параметры фильтрации автодополнения -->
+         <option name="Название" bind="myTextField2" oneWay="true"></option> <!-- Фильтрация происходит по полю Название, значение для фильтрации берётся из контекста - поле myTextField2. С ним же связано значение опции text -->
+      </options>
+   </component>
+
+   <h3>3. Поле связи с единичным выбором + элемент коллекции собирается и раскидывается по контексту</h3>
+
+   <component data-component="SBIS3.CONTROLS.FieldLink" class="demo-FieldLink__thirdDemo" name="FieldLinkSingleSelectContext">
+      <option name="text" bind="myTextField3"></option> <!-- Связываем значение поля связи с полем контекста, это используется для работы автодополнения -->
+      <option name="multiselect">false</option> <!-- Устанавливаем режим единичного выбора элементов коллекции -->
+      <option name="placeholder">Должность</option> <!-- Устанавливаем текст подсказки внутри поля ввода -->
+      <option name="displayField">Название</option> <!-- Устанавливаем поле, значение которого будет использовано для отображения выбранного элемента -->
+      <option name="keyField">Ид</option> <!-- Устанавливаем ключевое поле -->
+      <options name="selectedItem" nonExistentValue="{}"> <!-- Настройка выбранного элемента, его название и ключ формируется из значений полей контекста -->
+         <option name="Название" bind="НазваниеПолеСвязи"></option> <!-- Отображаемое название выбранного элемента будет взято из поля контекста НазваниеПолеСвязи, значение туда прописывается из первого поля ввода -->
+         <option name="Ид" bind="КлючПолеСвязи"></option> <!-- Идентификатор выбранного элемента будет взят из поля контекста КлючПолеСвязи, значение туда прописывается из второго поля ввода -->
+      </options>
+      <options name="dictionaries" type="array"> <!-- Конфигурация справочника для поля связи -->
+         <options>
+            <option name="template">js!SBIS3.CONTROLS.Demo.FieldLinkDemoTemplate</option> <!-- Устанавливаем компонент, на основе которого будет построен справочник -->
+         </options>
+      </options>
+      <options name="list"> <!-- Настройка для автодополнения -->
+         <option name="component">js!SBIS3.CONTROLS.DataGridView</option>
+         <options name="options"> <!-- Опции компонента -->
+            <options name="columns" type="array"> <!-- Компонент, который будет использован для построения списка значений автодополнения -->
+               <options>
+                  <option name="title">Ид</option> <!-- Заголовок колонки -->
+                  <option name="field">Ид</option> <!-- Поле, значения которого будут использованы для отображения в колонке -->
+               </options>
+               <options>
+                  <option name="title">Название</option>
+                  <option name="field">Название</option>
+               </options>
+            </options>
+            <option name="keyField">Ид</option> <!-- Ключевое поле источника данных автодополнения -->
+         </options>
+      </options>
+      <options name="listFilter"> <!-- Параметры фильтрации автодополнения -->
+         <option name="Название" bind="myTextField3" oneWay="true"></option> <!-- Фильтрация происходит по полю Название, значение для фильтрации берётся из контекста - поле myTextField3. С ним же связано значение опции text -->
+      </options>
+   </component>
+
+   <!-- Ниже находится вёрстка двух полей ввода. Они переопределяют значения полей контекста НазваниеПолеСвязи и КлючПолеСвязи -->
+   <br/>
+   <span>Отображаемое поле: </span>
+   <component data-component="SBIS3.CONTROLS.TextBox"> <!-- Настройка первого поля ввода -->
+      <option name="text" bind="НазваниеПолеСвязи" nonExistentValue="undefined"></option> <!-- Связываем значения этого поля ввода с полем контекста НазваниеПолеСвязи -->
+   </component>
+
+   <span>Ключ: </span>
+   <component data-component="SBIS3.CONTROLS.TextBox"> <!-- Настройка второго поля ввода -->
+      <option name="text" bind="КлючПолеСвязи" nonExistentValue="undefined"></option> <!-- Связываем значения этого поля ввода с полем контекста КлючПолеСвязи -->
+   </component>
+
+   <h3>4. Поле связи в виде ссылки с иконкой</h3>
+
+   <component data-component="SBIS3.CONTROLS.SelectorButton" name="FieldLinkSelectorButtonIcon"> <!-- Настройка контрола, который отображает выбранные записи в виде текстовых значений через запятую -->
+      <option name="icon">icon-16 icon-Erase icon-error</option> <!-- Устанавливаем иконку кнопки-->
+      <option name="caption">Кнопка</option> <!-- Устанавливаем подпись кнопки -->
+      <option name="multiselect">false</option> <!-- Устанавливаем режим единичного выбора элементов коллекции -->
+      <option name="displayField">Название</option> <!-- Устанавливаем поле, значение которого будет использовано для отображения выбранного элемента -->
+      <options name="dictionaries" type="array"> <!-- Конфигурация справочника для поля связи -->
+         <options>
+            <option name="template">js!SBIS3.CONTROLS.Demo.FieldLinkDemoTemplate</option> <!-- Устанавливаем компонент, на основе которого будет построен справочник -->
+         </options>
+      </options>
+   </component>
+
+   <h3>5. Поле связи в виде ссылки без иконки</h3>
+   <component data-component="SBIS3.CONTROLS.SelectorButton" class="controls-SelectorButton__asLink" name="FieldLinkSelectorButtonNoIcon"> <!-- Настройка контрола, который отображает выбранные записи в виде текстовых значений через запятую -->
+      <option name="caption">Кнопка</option> <!-- Устанавливаем подпись кнопки -->
+      <option name="multiselect">false</option> <!-- Устанавливаем режим единичного выбора элементов коллекции -->
+      <option name="defaultCaption">Кнопка</option> <!-- Устанавливаем текст, который будет отображен на кнопке по умолчанию -->
+      <option name="displayField">Название</option> <!-- Устанавливаем поле, значение которого будет использовано для отображения выбранного элемента -->
+      <options name="dictionaries" type="array"> <!-- Конфигурация справочника для поля связи -->
+         <options>
+            <option name="template">js!SBIS3.CONTROLS.Demo.FieldLinkDemoTemplate</option> <!-- Устанавливаем компонент, на основе которого будет построен справочник -->
+         </options>
+      </options>
+   </component>
 </div>
 
