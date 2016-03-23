@@ -572,13 +572,13 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
       },
 
       add: function (item, at) {
-         this._checkItem(item);
+         this._checkItem(item, this.getCount() > 0);
          this._getTableAdapter().add(item.getRawData(), at);
          RecordSet.superclass.add.apply(this, arguments);
       },
 
       remove: function (item) {
-         this._checkItem(item);
+         this._checkItem(item, false);
          return RecordSet.superclass.remove.apply(this, arguments);
       },
 
@@ -604,28 +604,29 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
          }
          this._assignRawData(adapter.getEmpty());
 
-         this._items.length = 0;
          items = this._itemsToArray(items);
          for (var i = 0, len = items.length; i < len; i++) {
-            this._checkItem(items[i], checkFormat);
+            this._checkItem(items[i], i > 0 && checkFormat);
             this._getTableAdapter().add(items[i].getRawData());
          }
          RecordSet.superclass.assign.call(this, items);
       },
 
       append: function (items) {
+         var hasItems = this.getCount() > 0;
          items = this._itemsToArray(items);
          for (var i = 0, len = items.length; i < len; i++) {
-            this._checkItem(items[i]);
+            this._checkItem(items[i], hasItems || i > 0);
             this._getTableAdapter().add(items[i].getRawData());
          }
          RecordSet.superclass.append.call(this, items);
       },
 
       prepend: function (items) {
+         var hasItems = this.getCount() > 0;
          items = this._itemsToArray(items);
          for (var i = 0, len = items.length; i < len; i++) {
-            this._checkItem(items[i]);
+            this._checkItem(items[i], hasItems || i > 0);
             this._getTableAdapter().add(items[i].getRawData(), i);
          }
          RecordSet.superclass.prepend.call(this, items);
@@ -693,7 +694,6 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
             throw new Error('Item should be an instance of SBIS3.CONTROLS.Data.Record');
          }
          if ((checkFormat === undefined || checkFormat === true) &&
-            this.getCount() > 0 &&
             !this._getFormat().isEqual(item.getFormat())
          ) {
             $ws.single.ioc.resolve('ILogger').error(this._moduleName, 'Record format is not equal to recordset format.');
