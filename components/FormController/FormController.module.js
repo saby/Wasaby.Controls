@@ -303,6 +303,7 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
       _runQuery: function() {
          var self = this,
             hdl;
+         this._showLoadingIndicator();
          if (this._options.key) {
             hdl = this._readRecord(this._options.key);
          }
@@ -313,7 +314,10 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
             self._options.record = record;
             self._setContextRecord(record);   
          });
-         
+         hdl.addBoth(function(r){
+            self._hideLoadingIndicator();
+            return r;
+         });
       }
    });
 
