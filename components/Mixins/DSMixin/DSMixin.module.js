@@ -1206,6 +1206,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
             var
                prevContainer = container.prev(),
                nextContainer = container.next();
+            /*Если спереди группировка, а сзади группировка или конец, значит это последний элемент группы и надо удалить группировку*/
             if (prevContainer.length && prevContainer.hasClass('controls-GroupBy')) {
                if (!nextContainer.length || nextContainer.hasClass('controls-GroupBy')) {
                   prevContainer.remove();
