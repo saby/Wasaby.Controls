@@ -14,7 +14,7 @@ define('js!SBIS3.CONTROLS.SelectorMixin', [],
        * @name SBIS3.CONTROLS.SelectorMixin
        * @public
        */
-      var SelectorMixin = {
+      var SelectorMixin = /**@lends SBIS3.CONTROLS.SelectorMixin.prototype  */{
          $protected: {
             _linkedView: null,
             _selectionConfirmHandler: undefined,
@@ -22,7 +22,6 @@ define('js!SBIS3.CONTROLS.SelectorMixin', [],
             _options: {
                /**
                 * @cfg {Boolean} Разрешить множественный выбор записей
-                * <wiTag group="Управление">
                 * Возможные значения:
                 * <ul>
                 *    <li>true - разрешён выбор нескольких записей одновременно;</li>
