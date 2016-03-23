@@ -344,10 +344,16 @@ define([
                });
 
                it('should generate a request with valid meta data from object', function (done) {
-                  service.create(getSampleMeta()).addCallbacks(function () {
+                  var meta = getSampleMeta();
+                  service.create(meta).addCallbacks(function () {
                      try {
-                        var args = SbisBusinessLogic.lastRequest.args;
-                        assert.deepEqual(args['Фильтр'], getSampleMeta());
+                        var args = SbisBusinessLogic.lastRequest.args,
+                           fields = Object.keys(meta);
+                        assert.strictEqual(args['Фильтр'].s.length, fields.length);
+                        for (var i = 0; i <args['Фильтр'].d.length; i++) {
+                           assert.strictEqual(args['Фильтр'].d[i], meta[fields[i]]);
+                           assert.strictEqual(args['Фильтр'].s[i].n, fields[i]);
+                        }
                         done();
                      } catch (err) {
                         done(err);
