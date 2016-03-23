@@ -165,26 +165,6 @@ define('js!SBIS3.CONTROLS.DataGridView',
          }
       },
 
-      /**
-       * Геттер для получения текущей выделенной колонки
-       * Возвращает оъект с двумя полями:
-       *    columnIndex - номер выделенной колонки
-       *    cells - ячейки этой колонки
-       * @returns {{columnIndex: null | number, cells: (null | jQuery)}}
-       * @example
-       * <pre>
-       *     editButton.bind('click', functions: (e) {
-          *        var hoveredItem = this.getHoveredItem();
-          *        if(hoveredItem.cells) {
-          *           myBigToolTip.showAt(cells.eq(0));
-          *        }
-          *     })
-       * </pre>
-       */
-      getHoveredColumn: function() {
-         return this._hoveredColumn;
-      },
-
       _mouseMoveHandler: function(e) {
          DataGridView.superclass._mouseMoveHandler.apply(this, arguments);
 
@@ -193,7 +173,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
 
          if(td.length) {
             index = td.index();
-            hoveredColumn = this.getHoveredColumn();
+            hoveredColumn = this._hoveredColumn;
 
             if (hoveredColumn.columnIndex !== index) {
                this._clearHoveredColumn();
@@ -211,12 +191,12 @@ define('js!SBIS3.CONTROLS.DataGridView',
       },
 
       _clearHoveredColumn: function() {
-         var hc = this.getHoveredColumn();
+         var hoveredColumn = this._hoveredColumn;
 
-         if(hc.columnIndex !== null) {
-            hc.cells.removeClass('controls-DataGridView__hoveredColumn__cell');
-            hc.cells = null;
-            hc.columnIndex = null;
+         if(hoveredColumn.columnIndex !== null) {
+            hoveredColumn.cells.removeClass('controls-DataGridView__hoveredColumn__cell');
+            hoveredColumn.cells = null;
+            hoveredColumn.columnIndex = null;
          }
       },
 
