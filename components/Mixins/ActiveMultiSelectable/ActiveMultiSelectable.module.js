@@ -30,9 +30,9 @@ define('js!SBIS3.CONTROLS.ActiveMultiSelectable', [], function() {
       },
 
       /**
-       * Устанавливает набор элементов коллекции, которые будут по умолчанию выбраны для контрола в режиме множественного
-       * выбора значений {@link SBIS3.CONTROLS.MultiSelectable#multiselect}.
-       * @param {Array|SBIS3.CONTROLS.Data.Collection.List} list Выбранные элементы.
+       * Устанавливает набор выбранных элементов коллекции.
+       * Опция актуальна, когда контрол находится в режиме {@link SBIS3.CONTROLS.MultiSelectable#multiselect множественного выбора значений}.
+       * @param {Array|SBIS3.CONTROLS.Data.Collection.List} list Выбранные элементы коллекции.
        * @example
        * <pre>
        *    var selectedItems = myGrid.getSelectedItems();
@@ -65,7 +65,9 @@ define('js!SBIS3.CONTROLS.ActiveMultiSelectable', [], function() {
       }),
 
       /**
-       * Очищает набор выбранных элементов коллекции для контрола в режиме множественного выбора.
+       * Очищает набор выбранных элементов коллекции.
+       * Опция актуальна, когда контрол находится в режиме {@link SBIS3.CONTROLS.MultiSelectable#multiselect множественного выбора значений}.
+       * @see SBIS3.CONTROLS.MultiSelectable#multiselect
        * @see SBIS3.CONTROLS.MultiSelectable#selectedItems
        * @see SBIS3.CONTROLS.MultiSelectable#selectedKeys
        * @see setSelectedItems
@@ -104,8 +106,9 @@ define('js!SBIS3.CONTROLS.ActiveMultiSelectable', [], function() {
       },
 
       /**
-       * Добавляет переданные элементы коллекции к набору выбранных для контрола в режиме множественного выбора.
-       * @param {Array | SBIS3.CONTROLS.Data.Collection.List} items
+       * Добавляет новые элементы коллекции к набору выбранных.
+       * Опция актуальна, когда контрол находится в режиме {@link SBIS3.CONTROLS.MultiSelectable#multiselect множественного выбора значений}.
+       * @param {Array | SBIS3.CONTROLS.Data.Collection.List} items Массив элементов, которые нужно добавить в набор.
        * @see SBIS3.CONTROLS.MultiSelectable#multiselect
        * @see selectedItems
        * @see selectedKeys

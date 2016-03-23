@@ -90,8 +90,6 @@ define('js!SBIS3.CONTROLS.Selectable', ['js!SBIS3.CONTROLS.Data.Utils', 'js!SBIS
 
 
 
-
-
          if ((typeof index == 'undefined') || (index === null)) {
             if (typeof key != 'undefined') {
                this._selectMode = 'key';
