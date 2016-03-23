@@ -5,7 +5,7 @@
    </div>
 
    <h3>1. Поле связи в режиме множественного выбора значений</h3>
-   <component data-component="SBIS3.CONTROLS.FieldLink" class="demo-FieldLink__firstDemo" name="FieldLinkMultiSelect">
+   <component data-component="SBIS3.CONTROLS.FieldLink" class="demo-FieldLink__firstDemo" name="FieldLinkMultiSelect"> <!-- Конфигурация первого поля связи -->
       <option name="text" bind="myTextField"></option> <!-- Связываем значение поля связи с полем контекста, это используется для работы автодополнения -->
       <option name="placeholder">Должность</option> <!-- Устанавливаем текст подсказки внутри поля ввода -->
       <option name="displayField">Название</option> <!-- Устанавливаем поле, значение которого будет использовано для отображения выбранного элемента -->
@@ -38,7 +38,7 @@
 
    <h3>2. Поле связи в режиме единичного выбора значений</h3>
 
-   <component data-component="SBIS3.CONTROLS.FieldLink" class="demo-FieldLink__secondDemo" name="FieldLinkSingleSelect">
+   <component data-component="SBIS3.CONTROLS.FieldLink" class="demo-FieldLink__secondDemo" name="FieldLinkSingleSelect"> <!-- Конфигурация второго поля связи -->
       <option name="text" bind="myTextField2"></option> <!-- Связываем значение поля связи с полем контекста, это используется для работы автодополнения -->
       <option name="multiselect">false</option> <!-- Устанавливаем режим единичного выбора элементов коллекции -->
       <option name="placeholder">Должность</option> <!-- Устанавливаем текст подсказки внутри поля ввода -->
@@ -72,7 +72,7 @@
 
    <h3>3. Поле связи с единичным выбором + элемент коллекции собирается и раскидывается по контексту</h3>
 
-   <component data-component="SBIS3.CONTROLS.FieldLink" class="demo-FieldLink__thirdDemo" name="FieldLinkSingleSelectContext">
+   <component data-component="SBIS3.CONTROLS.FieldLink" class="demo-FieldLink__thirdDemo" name="FieldLinkSingleSelectContext"> <!-- Конфигурация третьего поля связи -->
       <option name="text" bind="myTextField3"></option> <!-- Связываем значение поля связи с полем контекста, это используется для работы автодополнения -->
       <option name="multiselect">false</option> <!-- Устанавливаем режим единичного выбора элементов коллекции -->
       <option name="placeholder">Должность</option> <!-- Устанавливаем текст подсказки внутри поля ввода -->
@@ -122,7 +122,7 @@
 
    <h3>4. Поле связи в виде ссылки с иконкой</h3>
 
-   <component data-component="SBIS3.CONTROLS.SelectorButton" name="FieldLinkSelectorButtonIcon"> <!-- Настройка контрола, который отображает выбранные записи в виде текстовых значений через запятую -->
+   <component data-component="SBIS3.CONTROLS.SelectorButton" name="FieldLinkSelectorButtonIcon"> <!-- Конфигурация контрола, который отображает выбранные записи в виде текстовых значений через запятую -->
       <option name="icon">icon-16 icon-Erase icon-error</option> <!-- Устанавливаем иконку кнопки-->
       <option name="caption">Кнопка</option> <!-- Устанавливаем подпись кнопки -->
       <option name="multiselect">false</option> <!-- Устанавливаем режим единичного выбора элементов коллекции -->
@@ -135,7 +135,7 @@
    </component>
 
    <h3>5. Поле связи в виде ссылки без иконки</h3>
-   <component data-component="SBIS3.CONTROLS.SelectorButton" class="controls-SelectorButton__asLink" name="FieldLinkSelectorButtonNoIcon"> <!-- Настройка контрола, который отображает выбранные записи в виде текстовых значений через запятую -->
+   <component data-component="SBIS3.CONTROLS.SelectorButton" class="controls-SelectorButton__asLink" name="FieldLinkSelectorButtonNoIcon"> <!-- Конфигурация контрола, который отображает выбранные записи в виде текстовых значений через запятую -->
       <option name="caption">Кнопка</option> <!-- Устанавливаем подпись кнопки -->
       <option name="multiselect">false</option> <!-- Устанавливаем режим единичного выбора элементов коллекции -->
       <option name="defaultCaption">Кнопка</option> <!-- Устанавливаем текст, который будет отображен на кнопке по умолчанию -->

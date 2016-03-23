@@ -59,8 +59,8 @@ define('js!SBIS3.CONTROLS.FieldLink',
         * @mixes SBIS3.CONTROLS.ChooserMixin
         * @mixes SBIS3.CONTROLS.FormWidgetMixin
         * @mixes SBIS3.CONTROLS.SyncSelectionMixin
-        * @demo SBIS3.CONTROLS.Demo.FieldLinkWithEditInPlace Поле связи с редактированием по месту
-        * @demo SBIS3.CONTROLS.Demo.FieldLinkDemo
+        * @demo SBIS3.CONTROLS.Demo.FieldLinkWithEditInPlace Поле связи с редактированием по месту. Данные для источника передаются в JSON-RPC формате
+        * @demo SBIS3.CONTROLS.Demo.FieldLinkDemo Разные варианты конфигураций для поля связи
         * @cssModifier controls-FieldLink__itemsEdited При наведении на выделенные элементы, они подчёркиваются.
         * @cssModifier controls-FieldLink__itemsBold Текст выбранных элементов в поле связи отображается жирным.
         * @control
