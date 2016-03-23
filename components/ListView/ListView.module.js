@@ -1255,6 +1255,11 @@ define('js!SBIS3.CONTROLS.ListView',
             this._drawResults();
             this._needToRedraw = true;
          },
+         _removeItem: function(item){
+            ListView.superclass._removeItem.call(this, item);
+            this._isLoadBeforeScrollAppears = true;
+            this._preScrollLoading();
+         },
          //-----------------------------------infiniteScroll------------------------
          //TODO (?) избавиться от _allowInfiniteScroll - пусть все будет завязано на опцию infiniteScroll
          /**
