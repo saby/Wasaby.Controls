@@ -13,10 +13,11 @@ define('js!SBIS3.CONTROLS.EditAtPlaceMixin', ['js!SBIS3.CONTROLS.IconButton'], f
             _options: {
                /**
                 * @cfg {Boolean} отображать как редактор
+                * @see setInPlaceEditMode
                 */
                displayAsEditor: false,
                /**
-                * @cfg {Boolean} редактировать во всплывашке или в собственном контейнере
+                * @cfg {Boolean} редактировать во всплывающей панели или в собственном контейнере
                 */
                editInPopup: false,
                /**
