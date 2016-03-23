@@ -15,7 +15,7 @@ define('js!SBIS3.CONTROLS.Selectable', ['js!SBIS3.CONTROLS.Data.Utils', 'js!SBIS
        /**
         * @event onSelectedItemChange Происходит при смене выбранного элемента коллекции.
         * @param {$ws.proto.EventObject} eventObject Дескриптор события.
-        * @param {String} id Идентификатор выбранного пункта.
+        * @param {String} id Идентификатор выбранного элемента коллекции.
         * @example
         * <pre>
         *     RadioButtonGroup.subscribe('onSelectedItemChange', function(event, id){
@@ -31,7 +31,7 @@ define('js!SBIS3.CONTROLS.Selectable', ['js!SBIS3.CONTROLS.Data.Utils', 'js!SBIS
          _selectMode: 'index',
           _options: {
              /**
-              * @cfg {String} Определяет индекс (порядковый номер) выбранного элемента коллекции.
+              * @cfg {String} Определяет элемент коллекции по переданному индексу (порядковому номеру).
               * @remark
               * Любой элемент коллекции можно выбрать либо по его идентификатору {@link SBIS3.CONTROLS.DSMixin#keyField},
               * либо его по индексу (порядковому номеру) в коллекции.
@@ -46,7 +46,7 @@ define('js!SBIS3.CONTROLS.Selectable', ['js!SBIS3.CONTROLS.Data.Utils', 'js!SBIS
               */
              selectedIndex: null,
              /**
-              * @cfg {String} Определяет идентификатор выбранного элемента коллекции.
+              * @cfg {String} Определяет элемент коллекции по переданному идентификатору.
               * @remark
               * Используется для построения контрола с определенным элементом коллекции.
               * Для задания выбранного элемента необходимо указать значение
@@ -188,7 +188,7 @@ define('js!SBIS3.CONTROLS.Selectable', ['js!SBIS3.CONTROLS.Data.Utils', 'js!SBIS
          this._notifySelectedItem(id, index)
       },
       /**
-       * Устанавливает выбранный элемент коллекции по его идентификатору.
+       * Устанавливает выбранным элемент коллекции по переданному идентификатору.
        * @remark
        * Для возвращения коллекции к состоянию без выбранного элемента нужно передать null.
        * @param {String} id Идентификатор элемента, который нужно установить в качестве выбранного.
@@ -219,7 +219,7 @@ define('js!SBIS3.CONTROLS.Selectable', ['js!SBIS3.CONTROLS.Data.Utils', 'js!SBIS
       },
 
       /**
-       * Устанавливает индекс (порядковый номер) выбранного элемента коллекции.
+       * Устанавливает выбранным элемент коллекции по переданному индексу (порядковому номеру).
        * @param index Индекс выбранного элемента коллекции.
        * @example
        * <pre>
