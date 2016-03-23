@@ -166,7 +166,7 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
             detail: 'Чтобы продолжить редактирование, нажмите "Отмена".'
          };
 
-         if(!this._parent.validate()) {
+         if(!this.validate()) {
             dResult.errback('Некорректно заполнены обязательные для заполнения поля!');
             return;
          }
