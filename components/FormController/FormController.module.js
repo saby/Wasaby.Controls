@@ -165,13 +165,17 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
             invertDefaultButton: true,
             detail: 'Чтобы продолжить редактирование, нажмите "Отмена".'
          };
+         this._saving = true;
 
          if(!this._parent.validate()) {
             dResult.errback('Некорректно заполнены обязательные для заполнения поля!');
+            //Если нажимали крестик, то закроем панель
+            if (!hideQuestion){
+               this._panel.cancel();
+            }
             return;
          }
          if (hideQuestion){
-            this._saving = true;
             this._updateRecord(dResult, closePanelAfterSubmit);
          }
          else{
@@ -180,7 +184,6 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
                   self._saving = false;
                   return;
                }
-               self._saving = true;
                if (result){
                   self._updateRecord(dResult, true);
                }
