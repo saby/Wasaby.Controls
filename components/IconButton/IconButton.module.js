@@ -53,6 +53,15 @@ define('js!SBIS3.CONTROLS.IconButton', ['js!SBIS3.CONTROLS.ButtonBase', 'js!SBIS
          }
       },
 
+      $constructor: function() {
+         /*TODO оставляем добавку класса через jquery
+         * чтобы избавиться - надо убрать зависимость от icons.css
+         * в котором прописаны поведение и цвета для иконок по ховеру*/
+         if (this._container.hasClass('controls-IconButton__round-border')) {
+            this._container.removeClass('action-hover');
+         }
+      },
+
       _modifyOptions: function (opts) {
          var
             options = IconButton.superclass._modifyOptions.apply(this, arguments),
