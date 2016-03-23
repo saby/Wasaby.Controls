@@ -137,11 +137,15 @@
             overflow: hidden;
          }
       }
-      .controls-ItemsToolbar {
+      .controls-ItemsToolbar,
+      .controls-ItemsToolbar.controls-ItemsToolbar__locked {
          box-shadow: none;
          .controls-ItemsToolbar__container {
             position: relative;
 
+            .controls-ItemsToolbar__editActions {
+               margin-top: @list-view-actions-menu-touch-margin;
+            }
             .controls-ItemActions .controls-ItemActions__itemsContainer {
                & > * {
                   margin-top: 0;
