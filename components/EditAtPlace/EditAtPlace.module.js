@@ -1,6 +1,3 @@
-/**
- * Created by iv.cheremushkin on 11.11.2014.
- */
 define('js!SBIS3.CONTROLS.EditAtPlace',
    ['js!SBIS3.CORE.CompoundControl',
       'js!SBIS3.CONTROLS.TextBox',
@@ -12,13 +9,13 @@ define('js!SBIS3.CONTROLS.EditAtPlace',
    function (CompoundControl, TextBox, PickerMixin, Dialog, EditAtPlaceMixin, DateFormatDecorator, dotTplFn) {
       'use strict';
       /**
-       * @noShow
        * @class SBIS3.CONTROLS.EditAtPlace
        * @extends SBIS3.CONTROLS.CompoundControl
        * @control
        * @public
        * @category Inputs
        * @mixes SBIS3.CONTROLS.PickerMixin
+       * @mixes SBIS3.CONTROLS.EditAtPlaceMixin
        * @author Крайнов Дмитрий Олегович
        */
 
@@ -35,9 +32,37 @@ define('js!SBIS3.CONTROLS.EditAtPlace',
                mask: 'DD.MM.YY'
             },
             _options: {
+               /**
+                * @cfg {String} Текст в поле ввода
+                * @example
+                * <pre>
+                *     <option name="text">При нажатии на этот текст его можно будет редактировать</option>
+                * </pre>
+                * @see setText
+                * @see getText
+                */
                text: '',
+               /* @cfg {String} Текст подсказки внутри редактирования
+                * @remark
+                * Данный текст отображается внутри поля до момента получения фокуса 
+                * и как текст по нажатию на который начнется редактирование
+                * @example
+                * <pre>
+                *     <option name="placeholder">Фамилия</option>
+                * </pre>
+                * @see setPlaceholder
+                */
                placeholder: '',
+               /**
+                * Компонент которым будет редактируется текст
+                * @type {String}
+                */
                editorTpl: '<component data-component="SBIS3.CONTROLS.TextBox"></component>',
+               /**
+                * Будет ли многострочным редактируемый текст
+                * Если указано, текст будет переноситься, убираясь в ширину контейнера
+                * @type {Boolean}
+                */
                multiline: false
             }
          },
@@ -52,6 +77,7 @@ define('js!SBIS3.CONTROLS.EditAtPlace',
             /*FixMe: придрот, выпилить когда будет номральный CompoundControl*/
             this._container.removeClass('ws-area');
             
+            //TODO: Декораторы не должны разбираться тут (ждем virtualDOM'a) 
             var decorators = this._container.attr('decorators');
             if (decorators && decorators.indexOf('format:') !== -1) {
                decorators = decorators.split('format:');
@@ -134,6 +160,13 @@ define('js!SBIS3.CONTROLS.EditAtPlace',
             });
          },
 
+         /**
+          * Установить режим редактирования по месту
+          * @param {Boolean} inPlace 
+          * true - отображение только редактора
+          * false - отображение текста при клике по которому отображается редактор
+          * @see displayAsEditor
+          */
          setInPlaceEditMode: function (inPlace) {
             this._options.displayAsEditor = inPlace;
             this._container.toggleClass('controls-EditAtPlace__editorHidden', !inPlace).toggleClass('controls-EditAtPlace__fieldWrapperHidden', inPlace);
@@ -158,6 +191,12 @@ define('js!SBIS3.CONTROLS.EditAtPlace',
             return this._options.editorTpl;
          },
 
+         /**
+          * Установить текст внутри поля. Текст установиться и в редактор и в отображение.
+          * @param {String} text Текст для установки.
+          * @see text
+          * @see getText
+          */
          setText: function (text) {
             var oldText = this._options.text;
             this._options.text = text || '';
@@ -173,11 +212,24 @@ define('js!SBIS3.CONTROLS.EditAtPlace',
                text = this._dateDecorator.decorator.apply(text, this._dateDecorator.mask);
             }
             text = $ws.helpers.escapeHtml(text);
-            this._textField.html(text || '&nbsp;');
+            this._drawText(text);
          },
-
+         /**
+          * Получить текстовое значение контрола
+          * @returns {String} Текст - значение поля
+          * @example
+          * @see text
+          * @see setText
+          */
          getText: function () {
             return this._options.text;
+         },
+
+         _drawText: function(text){
+            if (!text){
+               text = '<span class="controls-EditAtPlace__placeholder">' + this._options.placeholder + '</span>';
+            }
+            this._textField.html(text || '&nbsp;');
          }
 
       });
