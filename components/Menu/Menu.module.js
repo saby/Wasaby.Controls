@@ -103,7 +103,7 @@ define('js!SBIS3.CONTROLS.Menu', [
       },
 
       _getItemTemplate: function(item) {
-         var options = item.getRawData();
+         var options = $ws.core.clone(item.getRawData());
          options.allowChangeEnable = item.get('allowChangeEnable') !== undefined ? item.get('allowChangeEnable') : this._options.allowChangeEnable;
          options.caption = item.get(this._options.displayField);
          delete options.id;
