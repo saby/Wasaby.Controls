@@ -163,9 +163,10 @@ define('js!SBIS3.CONTROLS.ComboBox', [
          });
 
          /*обрабочики кликов TODO mouseup!!*/
-         this._container.mouseup(function (e) {
+         this._container.click(function (e) {
             if ($(e.target).hasClass('js-controls-ComboBox__arrowDown') ||
-               $(e.target).hasClass('controls-TextBox__afterFieldWrapper')) {
+               $(e.target).hasClass('controls-TextBox__afterFieldWrapper') ||
+               self.isEditable() === false) {
                if (self.isEnabled()) {
                   self.togglePicker();
                }
