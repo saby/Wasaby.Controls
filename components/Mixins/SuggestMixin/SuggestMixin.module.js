@@ -384,9 +384,15 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
                //Набор "Сделай сам"
                options = $ws.core.clone(this._options.list.options);
                component = require(this._options.list.component);
+
                if (!options.element) {
                   options.element = this._getListContainer();
                }
+
+               if(options.itemsDragNDrop === undefined) {
+                  options.itemsDragNDrop = false;
+               }
+
                options.parent = this._picker;
                this._list = new component(options);
                this._initList();
