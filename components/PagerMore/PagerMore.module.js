@@ -2,7 +2,8 @@
 define('js!SBIS3.CONTROLS.PagerMore', [
    'js!SBIS3.CORE.CompoundControl',
    'js!SBIS3.CONTROLS.Data.Collection.ISourceLoadable',
-   'html!SBIS3.CONTROLS.PagerMore'
+   'html!SBIS3.CONTROLS.PagerMore',
+   'i18n!SBIS3.CONTROLS.PagerMore'
 ], function(CompoundControl, ISourceLoadable, dotTplFn) {
    'use strict';
 

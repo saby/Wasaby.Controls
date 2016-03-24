@@ -9,7 +9,8 @@ define('js!SBIS3.CONTROLS.FilterButton',
        'js!SBIS3.CONTROLS.Link',
        'js!SBIS3.CONTROLS.Button',
        'js!SBIS3.CONTROLS.FilterButton.FilterLine',
-       'js!SBIS3.CONTROLS.FilterHistory'
+       'js!SBIS3.CONTROLS.FilterHistory',
+       'i18n!SBIS3.CONTROLS.FilterButton'
     ],
     function(CompoundControl, dotTplFn, dotTplForPicker, FilterMixin, PickerMixin, ControlHierarchyManager) {
 

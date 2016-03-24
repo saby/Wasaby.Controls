@@ -16,14 +16,14 @@
                 <option name="width">30</option>
             </options>
             <options>
-                <option name="title">Наименование</option>
+                <option name="title">{[Наименование]}</option>
                 <option name="width">400</option>
                 <option name="field">{{=it.displayField}}</option>
                 <option name="cellTemplate">{{=it.titleCellTemplate}}</option>
                 <option name="className">controls-DataGridView-cell-overflow-ellipsis</option>
             </options>
             <options>
-                <option name="title">Комментарий</option>
+                <option name="title">{[Комментарий]}</option>
                 <option name="field">Comment</option>
                 <option name="cellTemplate">html!SBIS3.CONTROLS.MergeDialogTemplate/resources/cellCommentTpl</option>
                 <option name="className">controls-DataGridView-cell-overflow-ellipsis</option>
@@ -37,7 +37,7 @@
         <span class="controls-MergeDialogTemplate__warning">{{=it.warning}}</span>
         <component data-component="SBIS3.CONTROLS.Button" class="controls-MergeDialogTemplate__mergeButton">
             <option name="name" value="MergeDialogTemplate-mergeButton"></option>
-            <option name="caption" value="Объединить"></option>
+            <option name="caption" value="{[Объединить]}"></option>
             <option name="primary" type="boolean" value="true"></option>
         </component>
     </div>

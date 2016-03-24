@@ -2,7 +2,7 @@
    <div class="ws-window-titlebar-custom">
       <comment data-component="SBIS3.CONTROLS.Button" class="controls-Button__activatePrintMass">
          <option name="name" value="controls-buttonPrint"></option>
-         <option name="caption" value="Выполнить"></option>
+         <option name="caption" value="{[Выполнить]}"></option>
          <option name="primary" type="boolean" value="true"></option>
       </comment>
    </div>
@@ -10,15 +10,15 @@
       <options name="items" type="array">
          <options>
             <option name="id" value="current"></option>
-            <option name="title">Текущую страницу</option>
+            <option name="title">{[Текущую страницу]}</option>
          </options>
          <options>
             <option name="id" value="all"></option>
-            <option name="title">Все записи</option>
+            <option name="title">{[Все записи]}</option>
          </options>
          <options>
             <option name="id" value="pickNum"></option>
-            <option name="title">Количество записей</option>
+            <option name="title">{[Количество записей]}</option>
          </options>
       </options>
       <option name="displayField" value="title"></option>
@@ -29,7 +29,7 @@
 
    <div class="controls-MassAmountSelector__numberTextBox ws-hidden" id="numberTextBox">
       <br/>
-      <div class="ws-label controls-PrintMassDialog__label">Количество записей</div>
+      <div class="ws-label controls-PrintMassDialog__label">{[Количество записей]}</div>
       <component  data-component="SBIS3.CONTROLS.NumberTextBox" data-bind="{Text: NumOfRecords}">
          <option name="name" value="controls-numberTextBox"></option>
          <option name="onlyInteger" type="boolean" value="true"></option>

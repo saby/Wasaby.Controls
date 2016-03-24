@@ -15,7 +15,8 @@ define('js!SBIS3.CONTROLS.DropdownList',
       'html!SBIS3.CONTROLS.DropdownList',
       'html!SBIS3.CONTROLS.DropdownList/DropdownListHead',
       'html!SBIS3.CONTROLS.DropdownList/DropdownListItem',
-      'html!SBIS3.CONTROLS.DropdownList/DropdownListPicker'
+      'html!SBIS3.CONTROLS.DropdownList/DropdownListPicker',
+      'i18n!SBIS3.CONTROLS.DropdownList'
    ],
 
    function(Control, PickerMixin, DSMixin, MultiSelectable, DataBindMixin, DropdownListMixin, Button, Link, MarkupTransformer, dotTplFn, dotTplFnHead, dotTplFnForItem, dotTplFnPicker) {

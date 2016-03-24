@@ -8,7 +8,8 @@ define('js!SBIS3.CONTROLS.ItemsToolbar',
        'js!SBIS3.CONTROLS.IconButton',
        'js!SBIS3.CONTROLS.ItemActionsGroup',
        'html!SBIS3.CONTROLS.ItemsToolbar',
-       'html!SBIS3.CONTROLS.ItemsToolbar/editActions'
+       'html!SBIS3.CONTROLS.ItemsToolbar/editActions',
+       'i18n!SBIS3.CONTROLS.ListView'
     ],
     function(CompoundControl, IconButton, ItemActionsGroup, dotTplFn, editActionsTpl) {
 
