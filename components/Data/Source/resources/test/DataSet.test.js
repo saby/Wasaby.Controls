@@ -176,6 +176,20 @@ define([
                assert.strictEqual(ds.getRow().get('a'), 1);
                assert.strictEqual(ds.getRow().get('b'), 2);
             });
+            it('should return a model with sbis adapter', function () {
+               var data = {
+                     _type: 'record',
+                     d: ['Test'],
+                     s: [
+                        {n: 'Name', t: 'Строка'}
+                     ]
+                  },
+                  ds = new DataSet({
+                     adapter: 'adapter.sbis',
+                     rawData: data
+                  });
+               assert.equal(ds.getRow().get('Name'), 'Test');
+            });
 
             it('should return a model from given property', function () {
                var ds = new DataSet({
