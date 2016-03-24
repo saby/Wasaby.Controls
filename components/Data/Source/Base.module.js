@@ -22,7 +22,7 @@ define('js!SBIS3.CONTROLS.Data.Source.Base', [
       /**
        * @event onDataSync При изменении синхронизации данных с источником
        * @param {$ws.proto.EventObject} eventObject Дескриптор события.
-       * @param (Array.<SBIS3.CONTROLS.Data.Model>) records Измененные записи
+       * @param {Array.<SBIS3.CONTROLS.Data.Model>} records Измененные записи
        */
 
       _moduleName: 'SBIS3.CONTROLS.Data.Source.Base',
