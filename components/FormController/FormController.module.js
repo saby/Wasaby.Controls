@@ -231,8 +231,14 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
        * Показывает индикатор загрузки
        */
       _showLoadingIndicator: $ws.helpers.forAliveOnly(function(){
+         var self = this;
+         this._showedLoading = true;
          if(this._loadingIndicator && !this._loadingIndicator.isDestroyed()){
-            this._loadingIndicator.show(this._options.indicatorSavingMessage);
+            setTimeout(function(){
+               if (self._showedLoading) {
+                  self._loadingIndicator.show(self._options.indicatorSavingMessage);
+               }
+            }, 750);
          } else {
             this._loadingIndicator = new LoadingIndicator({
                parent: this._panel,
@@ -248,6 +254,7 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
        */
       _hideLoadingIndicator: $ws.helpers.forAliveOnly(function(){
          if(this._loadingIndicator) {
+            this._showedLoading = false;
             this._loadingIndicator.hide();
          }
       }),
