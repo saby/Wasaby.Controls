@@ -29,7 +29,6 @@ define('js!SBIS3.CONTROLS.DropdownList',
        * @author Крайнов Дмитрий Олегович
        * @mixes SBIS3.CONTROLS.DSMixin
        * @mixes SBIS3.CONTROLS.MultiSelectable
-       * @mixes SBIS3.CONTROLS.Selectable
        * @mixes SBIS3.CONTROLS.DropdownListMixin
        * @mixes SBIS3.CONTROLS.PickerMixin
        * @demo SBIS3.CONTROLS.Demo.MyDropdownList Простой пример работы контрола
