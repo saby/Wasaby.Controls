@@ -112,7 +112,7 @@ define('js!SBIS3.CONTROLS.Pager', ['js!SBIS3.CORE.CompoundControl', 'html!SBIS3.
                pagerStr = rk('Выбрана') + ' 1' + rk(' запись');
             } else {
                pagerStr = ws.helpers.wordCaseByNumber(selectedCount, rk('Выбрано'), rk('Выбрана'), rk('Выбраны')) +
-               ' ' + selectedCount + $ws.helpers.wordCaseByNumber(selectedCount, rk(' записей'), rk(' запись'), rk(' записи')) + '. ' + pagerStr;
+               ' ' + selectedCount + $ws.helpers.wordCaseByNumber(selectedCount, rk(' записей'), rk(' запись', 'множественное'), rk(' записи')) + '. ' + pagerStr;
             }
          }
          this.getContainer().find('.controls-Amount-text_js').text(pagerStr);
