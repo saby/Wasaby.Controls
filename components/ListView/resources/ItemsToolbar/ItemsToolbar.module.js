@@ -9,7 +9,8 @@ define('js!SBIS3.CONTROLS.ItemsToolbar',
        'js!SBIS3.CONTROLS.ItemActionsGroup',
        'html!SBIS3.CONTROLS.ItemsToolbar',
        'html!SBIS3.CONTROLS.ItemsToolbar/editActions',
-       'js!SBIS3.CORE.MarkupTransformer'
+       'js!SBIS3.CORE.MarkupTransformer',
+       'i18n!SBIS3.CONTROLS.ListView'
     ],
     function(CompoundControl, IconButton, ItemActionsGroup, dotTplFn, editActionsTpl, MarkupTransformer) {
 

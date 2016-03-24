@@ -11,7 +11,8 @@ define('js!SBIS3.CONTROLS.MergeDialogTemplate', [
     'js!SBIS3.CONTROLS.Button',
     'js!SBIS3.CONTROLS.TreeDataGridView',
     'html!SBIS3.CONTROLS.MergeDialogTemplate/resources/cellRadioButtonTpl',
-    'html!SBIS3.CONTROLS.MergeDialogTemplate/resources/cellCommentTpl'
+    'html!SBIS3.CONTROLS.MergeDialogTemplate/resources/cellCommentTpl',
+    'i18n!SBIS3.CONTROLS.OperationMerge'
 ], function(Control, dotTplFn, SbisServiceSource, MemorySource, SbisAdapter, rk) {
 
     var COMMENT_FIELD_NAME = 'Comment',
