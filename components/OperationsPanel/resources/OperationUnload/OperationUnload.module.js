@@ -161,8 +161,8 @@ define('js!SBIS3.CONTROLS.OperationUnload', [
                filter : view.getFilter(),
                offset: view._offset
             };
-         if (view._options.hasOwnProperty('hierField')) {
-            cfg.hierField = view._options.hierField;
+         if ($ws.helpers.instanceOfMixin(view, 'SBIS3.CONTROLS.TreeMixinDS')) {
+            cfg.hierField = view.getHierField();
             cfg.openedPath = view.getOpenedPath();
             cfg.root = view.getCurrentRoot();
          }
