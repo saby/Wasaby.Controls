@@ -13,6 +13,25 @@ define('js!SBIS3.CONTROLS.Data.Source.Rpc', [
     */
 
    var Rpc = Remote.extend(/** @lends SBIS3.CONTROLS.Data.Source.Rpc.prototype */{
+      /**
+       * @event onBeforeProviderCall Перед вызовом метода через провайдер
+       * @param {$ws.proto.EventObject} eventObject Дескриптор события.
+       * @param {String} method Имя метода
+       * @param {Object.<String, *>} [args] Аргументы метода (передаются по ссылке, можно модифицировать)
+       * @example
+       * <pre>
+       *    dataSource.subscribe('onBeforeProviderCall', function(eventObject, method, args){
+       *       switch (method){
+       *          case 'query':
+       *             //Select only records with enabled == true
+       *             args.filter = args.filter || {};
+       *             args.filter.enabled = true;
+       *             break;
+       *       }
+       *    });
+       * </pre>
+       */
+
       _moduleName: 'SBIS3.CONTROLS.Data.Source.Rpc',
       $protected: {
          _options: {
@@ -50,6 +69,8 @@ define('js!SBIS3.CONTROLS.Data.Source.Rpc', [
       },
 
       $constructor: function (cfg) {
+         this._publish('onBeforeProviderCall');
+
          cfg = cfg || {};
          //Deprecated
          if (!('binding' in cfg)) {
@@ -229,11 +250,41 @@ define('js!SBIS3.CONTROLS.Data.Source.Rpc', [
        */
       setMergeMethodName: function (method) {
          this._options.binding.merge = method;
-      }
+      },
 
       //endregion Public methods
 
       //region Protected methods
+
+      /**
+       * Вызывает удаленный метод через провайдер
+       * @param {String} method Имя метода
+       * @param {Object.<String, *>} [args] Аргументы метода
+       * @param {SBIS3.CONTROLS.Data.Source.Provider.IRpc} [provider] Провайдер, через который вызвать
+       * @returns {$ws.proto.Deferred} Асинхронный результат операции
+       * @protected
+       */
+      _callMethod: function(method, args, provider) {
+         provider = provider || this.getProvider();
+         return provider.call(
+            method,
+            this._prepareMethodArg(args)
+         ).addErrback((function (error) {
+            $ws.single.ioc.resolve('ILogger').log(this._moduleName, 'remote method "' + method + '" throws an error "' + error.message + '"');
+            return error;
+         }).bind(this));
+      },
+
+      /**
+       * Подготавливает аргументы метода к передаче в провайдер
+       * @param {Object.<String, *>} [args] Аргументы метода
+       * @returns {Object.<String, *>|undefined}
+       * @protected
+       */
+      _prepareMethodArg: function(args) {
+         return args;
+      }
+
       //endregion Protected methods
    });
 

@@ -214,21 +214,17 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
                'ВызовИзБраузера': true
             };
          }
-         var adapter = this.getAdapter(),
-            args = {
-               'Фильтр': this._buildRecord(meta),
-               'ИмяМетода': this._options.binding.format || null
-            };
+         var args = {
+            'Фильтр': this._buildRecord(meta),
+            'ИмяМетода': this._options.binding.format || null
+         };
 
-         return this.getProvider().call(
+         return this._callMethod(
             this._options.binding.create,
-            adapter.serialize(args)
-         ).addCallbacks((function (data) {
+            args
+         ).addCallback((function (data) {
             return this._getModelInstance(data);
-         }).bind(this), function (error) {
-            $ws.single.ioc.resolve('ILogger').log('SBIS3.CONTROLS.Data.Source.SbisService::create()', error);
-            return new Error('Cannot invoke create method');
-         });
+         }).bind(this));
       },
 
       /**
@@ -239,26 +235,22 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
        * @see SBIS3.CONTROLS.Data.Source.ISource#read
        */
       read: function(key, meta) {
-         var adapter = this.getAdapter(),
-            args = {
-               'ИдО': key,
-               'ИмяМетода': this._options.binding.format || null
-            };
+         var args = {
+            'ИдО': key,
+            'ИмяМетода': this._options.binding.format || null
+         };
          if (meta && !Object.isEmpty(meta)) {
             args['ДопПоля'] = meta;
          }
 
-         return this.getProvider().call(
+         return this._callMethod(
             this._options.binding.read,
-            adapter.serialize(args)
-         ).addCallbacks((function (data) {
+            args
+         ).addCallback((function (data) {
             var model = this._getModelInstance(data, true);
             model.setStored(true);
             return model;
-         }).bind(this), function (error) {
-            $ws.single.ioc.resolve('ILogger').log('SBIS3.CONTROLS.Data.Source.SbisService::read()', error);
-            return error;
-         });
+         }).bind(this));
       },
 
       /**
@@ -269,28 +261,24 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
        * @see SBIS3.CONTROLS.Data.Source.ISource#update
        */
       update: function(model, meta) {
-         var adapter = this.getAdapter(),
-            args = {
-               'Запись': model
-            };
+         var args = {
+            'Запись': model
+         };
          if (meta && !Object.isEmpty(meta)) {
             args['ДопПоля'] = meta;
          }
 
-         return this.getProvider().call(
+         return this._callMethod(
             this._options.binding.update,
-            adapter.serialize(args)
-         ).addCallbacks((function (key) {
+            args
+         ).addCallback((function (key) {
             if (key && !model.isStored() && this.getIdProperty()) {
                model.set(this.getIdProperty(), key);
             }
             model.setStored(true);
             model.applyChanges();
             return key;
-         }).bind(this), function (error) {
-            $ws.single.ioc.resolve('ILogger').log('SBIS3.CONTROLS.Data.Source.SbisService::update()', error);
-            return error;
-         });
+         }).bind(this));
       },
 
       /**
@@ -301,6 +289,29 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
        * @see SBIS3.CONTROLS.Data.Source.ISource#destroy
        */
       destroy: function(keys, meta) {
+         //Вызывает метод удаления для группы
+         var destroyGroup = function(id, BLObjName, meta) {
+            var args = {
+               'ИдО': id
+            };
+            if (meta && !Object.isEmpty(meta)) {
+               args['ДопПоля'] = meta;
+            }
+            var provider = this.getProvider();
+            if (BLObjName && this._options.endpoint.contract !== BLObjName) {
+               provider = Di.resolve('source.provider.sbis-business-logic', {
+                  endpoint: {
+                     contract: BLObjName
+                  }
+               });
+            }
+            return this._callMethod(
+               this._options.binding.destroy,
+               args,
+               provider
+            );
+         };
+
          if ($ws.helpers.type(keys) !== 'array') {
             keys = [keys];
          }
@@ -316,7 +327,8 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
          var pd = new $ws.proto.ParallelDeferred();
          for (providerName in groups) {
             if (groups.hasOwnProperty(providerName)) {
-               pd.push(this._destroy(
+               pd.push(destroyGroup.call(
+                  this,
                   groups[providerName],
                   providerName,
                   meta
@@ -327,84 +339,66 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
       },
 
       merge: function(first, second) {
-         var adapter = this.getAdapter();
-
-         return this.getProvider().call(
-            this._options.binding.merge,
-            adapter.serialize({
-               'ИдО' : first,
-               'ИдОУд': second
-            })
-         ).addCallbacks(function (res) {
-               return res;
-            }, function (error) {
-               $ws.single.ioc.resolve('ILogger').log('SBIS3.CONTROLS.Data.Source.SbisService::merge()', error);
-               return error;
-            });
+         return this._callMethod(this._options.binding.merge, {
+            'ИдО' : first,
+            'ИдОУд': second
+         });
       },
 
       copy: function(key, meta) {
-         var adapter = this.getAdapter(),
-            args = {
-               'ИдО': key,
-               'ИмяМетода': this._options.binding.format
-            };
+         var args = {
+            'ИдО': key,
+            'ИмяМетода': this._options.binding.format
+         };
          if (meta && !Object.isEmpty(meta)) {
             args['ДопПоля'] = meta;
          }
-
-         return this.getProvider().call(
+         return this._callMethod(
             this._options.binding.copy,
-            adapter.serialize(args)
-         ).addCallbacks(function (res) {
-               return res;
-            }, function (error) {
-               $ws.single.ioc.resolve('ILogger').log('SBIS3.CONTROLS.Data.Source.SbisService::copy()', error);
-               return error;
-            });
+            args
+         );
       },
 
       query: function(query) {
-         var adapter = this.getAdapter(),
-            args = {
-               'Фильтр': this._buildRecord(query ? query.getWhere() : null),
-               'Сортировка': this._buildRecordSet(this._getSortingParams(query)),
-               'Навигация': this._buildRecord(this._getPagingParams(query)),
-               'ДопПоля': this._getAdditionalParams(query)
-            };
+         var args = {
+            'Фильтр': this._buildRecord(query ? query.getWhere() : null),
+            'Сортировка': this._buildRecordSet(this._getSortingParams(query)),
+            'Навигация': this._buildRecord(this._getPagingParams(query)),
+            'ДопПоля': this._getAdditionalParams(query)
+         };
 
-         return this.getProvider().call(
+         return this._callMethod(
             this._options.binding.query,
-            adapter.serialize(args)
-         ).addCallbacks((function (res) {
+            args
+         ).addCallback((function (res) {
             return this._getDataSetInstance({
                rawData: res,
                totalProperty: 'n'
             });
-         }).bind(this), function (error) {
-            $ws.single.ioc.resolve('ILogger').log('SBIS3.CONTROLS.Data.Source.SbisService::query()', error);
-            return error;
-         });
+         }).bind(this));
       },
 
       call: function (command, data) {
-         var adapter = this.getAdapter();
-
-         return this.getProvider().call(
+         return this._callMethod(
             command,
-            adapter.serialize(data)
-         ).addCallbacks((function (res) {
+            data
+         ).addCallback((function (res) {
             return this._getDataSetInstance({
                rawData: res,
                totalProperty: 'n'
             });
-         }).bind(this), function (error) {
-            $ws.single.ioc.resolve('ILogger').log('SBIS3.CONTROLS.Data.Source.SbisService::call()', error);
-            return error;
-         });
+         }).bind(this));
       },
 
       //endregion SBIS3.CONTROLS.Data.Source.ISource
+
+      //region SBIS3.CONTROLS.Data.Source.Rpc
+
+      _prepareMethodArg: function(args) {
+         return this.getAdapter().serialize(args);
+      },
+
+      //endregion SBIS3.CONTROLS.Data.Source.Rpc
 
       //region Protected methods
 
@@ -597,41 +591,6 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
             return ido[1];
          }
          return this._options.endpoint.contract;
-      },
-
-      /**
-       * вызвает метод удаления
-       * @param {String|Array} id Идентификатор объекта
-       * @param {String} BLObjName  Название объекта бл у которго будет вызвано удаление
-       * @param {Object} meta  Дополнительные мета данные
-       * @returns {$ws.proto.Deferred}
-       * @protected
-       */
-      _destroy: function(id, BLObjName, meta) {
-         var adapter = this.getAdapter(),
-            args = {
-               'ИдО': id
-            };
-         if (meta && !Object.isEmpty(meta)) {
-            args['ДопПоля'] = meta;
-         }
-         var provider = this.getProvider();
-         if (BLObjName && this._options.endpoint.contract !== BLObjName) {
-            provider = Di.resolve('source.provider.sbis-business-logic', {
-               endpoint: {
-                  contract: BLObjName
-               }
-            });
-         }
-         return provider.call(
-            this._options.binding.destroy,
-            adapter.serialize(args)
-         ).addCallbacks(function (res) {
-            return res;
-         }, function (error) {
-            $ws.single.ioc.resolve('ILogger').log('SBIS3.CONTROLS.Data.Source.SbisService::destroy()', error);
-            return error;
-         });
       },
 
       //endregion Protected methods
