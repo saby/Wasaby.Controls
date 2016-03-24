@@ -1,70 +1,46 @@
 /**
- * Created by am.gerasimov on 20.11.2015.
+ * @author Быканов А.А.
  */
-define('js!SBIS3.CONTROLS.Demo.FieldLinkDemo', [
-       'js!SBIS3.CORE.CompoundControl',
-       'html!SBIS3.CONTROLS.Demo.FieldLinkDemo',
-       'js!SBIS3.CONTROLS.Demo.FieldLinkDemoMemory',
-       'js!SBIS3.CONTROLS.Data.Adapter.Sbis',
-       'js!SBIS3.CONTROLS.FieldLink',
-       'js!SBIS3.CONTROLS.DataGridView',
-       'js!SBIS3.CONTROLS.SelectorButton'
-    ],
-    function (CompoundControl, dotTplFn, Memory, Sbis) {
-   /**
-    * SBIS3.CONTROLS.Demo.FieldLinkWithEditInPlace
-    * @class SBIS3.CONTROLS.Demo.FieldLinkWithEditInPlace
-    * @extends $ws.proto.CompoundControl
-    * @control
-    */
-   var moduleClass = CompoundControl.extend(/** @lends SBIS3.CONTROLS.Demo.FieldLinkWithEditInPlace.prototype */{
-      _dotTplFn: dotTplFn,
-      $protected: {
-      },
-
-      initFiledLink1: function () {
-         this.setDataSource(new Memory({
-            data: {
-               _type: 'recordset',
-               d: [
-                  [0, 'Инженер-программист'],
-                  [1, 'Руководитель группы'],
-                  [2, 'Менеджер'],
-                  [3, 'Генерал армии'],
-                  [4, 'Министр обороны'],
-                  [5, 'Бухгалтер']
-               ],
-               s: [
-                  {n: 'Ид', t: 'ЧислоЦелое'},
-                  {n: 'Название', t: 'Текст'}
-               ]
-            },
-            idProperty: 'Ид',
-            adapter: new Sbis()
-         }));
-      },
-
-      initFiledLink2: function () {
-         this.setDataSource(new Memory({
-            data: {
-               _type: 'recordset',
-               d: [
-                  [0, 'Инженер-программист'],
-                  [1, 'Руководитель группы'],
-                  [2, 'Менеджер'],
-                  [3, 'Генерал армии'],
-                  [4, 'Министр обороны'],
-                  [5, 'Бухгалтер']
-               ],
-               s: [
-                  {n: 'Ид', t: 'ЧислоЦелое'},
-                  {n: 'Название', t: 'Текст'}
-               ]
-            },
-            idProperty: 'Ид',
-            adapter: new Sbis()
-         }));
-      }
-   });
-   return moduleClass;
-});
+define('js!SBIS3.CONTROLS.Demo.FieldLinkDemo', // Устанавливаем имя, по которому демо-компонент будет доступен в других компонентах
+   [ // Массив зависимостей компонента
+      'js!SBIS3.CORE.CompoundControl', // Подключаем базовый компонент, от которого далее будем наследовать свой демо-компонент
+      'html!SBIS3.CONTROLS.Demo.FieldLinkDemo', // Подключаем вёрстку демо-компонента
+      'js!SBIS3.CONTROLS.Data.Source.Memory', // Подключаем класс для работы со статическим источником данных
+      'css!SBIS3.CONTROLS.Demo.FieldLinkDemo', // Подключаем CSS-файл демо-компонента
+      'js!SBIS3.CONTROLS.FieldLink', // Подключаем контрол поля связи
+      'js!SBIS3.CONTROLS.DataGridView', // Подключаем контрол табличного представления данных
+      'js!SBIS3.CONTROLS.SelectorButton' // Подключаем кнопку для выбора
+   ],
+   function( // Подключенные в массиве зависимостей файлы будут доступны в следующих переменных
+      CompoundControl, // В эту переменную импортируется класс CompoundControl из файла CompoundControl.module.js
+      dotTplFn, // В эту переменную импортируется вёрстка демо-компонента из файла FieldLinkDemo.xhtml
+      Memory // В эту переменную импортируется класс для работы со статическим источником данных
+   ){
+      var moduleClass = CompoundControl.extend({ // Наследуемся от базового компонента
+         _dotTplFn: dotTplFn, // Устанавливаем шаблон, по которому будет построен демо-компонент
+         init: function() { // Инициализация компонента, здесь все дочерние компоненты готовы к использованию
+            moduleClass.superclass.init.call(this); // Обязательная конструкция, чтобы корректно работал указатель this
+            var myData = [ // Создаём "сырые" данные, из которых потом будет создан статический источник
+                   {'Ид': 1, 'Название': 'Инженер-программист'},
+                   {'Ид': 2, 'Название': 'Руководитель группы'},
+                   {'Ид': 3, 'Название': 'Менеджер'},
+                   {'Ид': 4, 'Название': 'Генерал армии'},
+                   {'Ид': 5, 'Название': 'Министр обороны'},
+                   {'Ид': 6, 'Название': 'Бухгалтер'}
+                ],
+                dataSource = new Memory({ // Производим инициализацию статического источника данных
+                   data: myData, // Передаём наши данные в качестве исходных для будущих записей
+                   idProperty: 'Ид' // Устанавливаем поле первичного ключа
+                });
+            // Устанавливаем источники данных для контролов
+            this.getChildControlByName('FieldLinkMultiSelect').setDataSource(dataSource);
+            this.getChildControlByName('FieldLinkSingleSelect').setDataSource(dataSource);
+            this.getChildControlByName('FieldLinkSingleSelectContext').setDataSource(dataSource);
+            this.getChildControlByName('FieldLinkSelectorButtonIcon').setDataSource(dataSource);
+            this.getChildControlByName('FieldLinkSelectorButtonNoIcon').setDataSource(dataSource);
+            $ws.helpers.message('В этом примере продемонстрированы разные варианты настроек для поля связи.');
+         }
+      });
+      return moduleClass;
+   }
+);

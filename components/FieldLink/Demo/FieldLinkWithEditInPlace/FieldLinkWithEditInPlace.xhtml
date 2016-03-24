@@ -1,49 +1,41 @@
-<div>
-   <component data-component="SBIS3.CONTROLS.DataGridView" name="DemoDataGrid">
-      <opts name="columns" type="array">
-         <opts>
-            <opt name="title">Ид</opt>
-            <opt name="field">Ид</opt>
-            <opt name="cellTemplate">html!SBIS3.CONTROLS.Demo.FieldLinkWithEditInPlace/resources/cellID</opt>
-         </opts>
-         <opts>
-            <opt name="title">ФИО</opt>
-            <opt name="field">ФИО</opt>
-            <opt name="className">controls-DataGridView-cell-overflow-ellipsis controls-demo-FieldLinkWithEditInPlace__topAlign</opt>
-            <opt name="editor">
-               <component data-component="SBIS3.CONTROLS.TextBox" style="margin-top: 9px; width: 100%;">
-                  <opt name="text" bind="ФИО"></opt>
-                  <opts name="validators" type="array">
-                     <opts>
-                        <opt name="validator" type="function">js!SBIS3.CORE.CoreValidators:required</opt>
-                     </opts>
-                  </opts>
+<div class="docs-FieldWithEditInPlace">
+   <component data-component="SBIS3.CONTROLS.DataGridView" name="DemoDataGrid"> <!-- Конфигурация представления данных -->
+      <option name="keyField">Ид</option> <!-- Устанавливаем ключевое поле источника данных -->
+      <options name="columns" type="array"> <!-- Конфигурация колонок -->
+         <options>
+            <option name="title">Ид</option> <!-- Заголовок первой колонки -->
+            <option name="field">Ид</option> <!-- Поле, значения которого будут использованы для отображения в первой колонке -->
+            <option name="cellTemplate">html!SBIS3.CONTROLS.Demo.FieldLinkWithEditInPlace/resources/cellID</option> <!-- Шаблон отображения первой колонки -->
+         </options>
+         <options>
+            <option name="title">ФИО</option>
+            <option name="field">ФИО</option>
+            <option name="className">controls-DataGridView-cell-overflow-ellipsis controls-demo-FieldLinkWithEditInPlace__topAlign</option> <!-- Дополнительный CSS-класс, который будет установлен для контейнера визуального отображения ячейки -->
+            <option name="editor"> <!-- Конфигурация редактора колонки для режима редактирования по месту -->
+               <component data-component="SBIS3.CONTROLS.TextBox" class="docs-FieldWithEditInPlace__textBox"> <!-- Конфигурация поля ввода -->
+                  <option name="text" bind="ФИО"></option> <!-- Связываем значения поля ввода с полем контекста ФИО -->
+                  <options name="validators" type="array"> <!-- Устанавливаем валидатор вводимого значения -->
+                     <options>
+                        <option name="validator" type="function">js!SBIS3.CORE.CoreValidators:required</option> <!-- Валидатор обязательного заполнения поля ввода -->
+                     </options>
+                  </options>
                </component>
-            </opt>
-            <opt name="cellTemplate">html!SBIS3.CONTROLS.Demo.FieldLinkWithEditInPlace/resources/cellFIO</opt>
-         </opts>
-         <opts>
-            <opt name="title">Место работы</opt>
-            <opt name="width" type="string">450</opt>
-            <opt name="field">МестоРаботы</opt>
-            <opt name="className">controls-demo-FieldLinkWithEditInPlace__topAlign</opt>
-            <opt name="editor">
-               <component data-component="SBIS3.CONTROLS.Demo.FieldLinkDemoArea" style="width: 100%; display: block; border: 1px solid transparent;">
-                  <opt name="dataSet" bind="ИнформацияПоСотруднику"></opt>
+            </option>
+            <option name="cellTemplate">html!SBIS3.CONTROLS.Demo.FieldLinkWithEditInPlace/resources/cellFIO</option>
+         </options>
+         <options>
+            <option name="title">Место работы</option>
+            <option name="width">450</option>
+            <option name="field">МестоРаботы</option>
+            <option name="className">controls-demo-FieldLinkWithEditInPlace__topAlign</option>
+            <option name="editor">
+               <component data-component="SBIS3.CONTROLS.Demo.FieldLinkDemoArea" class="docs-FieldWithEditInPlace__fieldLinkDemoArea">
+                  <option name="dataSet" bind="ИнформацияПоСотруднику"></option> <!-- Связываем значение опции dataSet (внутренняя опция контрола FieldLinkDemoArea) с полем контекста ИнформацияПоСотруднику -->
                </component>
-            </opt>
-            <opt name="cellTemplate">html!SBIS3.CONTROLS.Demo.FieldLinkWithEditInPlace/resources/cellWorkPlace</opt>
-         </opts>
-      </opts>
-      <opt name="emptyHTML">Нет записей</opt>
-      <opt name="multiselect">true</opt>
-      <opt name="editMode" value="click"/>
-   </component>
-   <component data-component="SBIS3.CONTROLS.Link" name="NewItem">
-      <opt name="caption">Новая запись</opt>
-      <opt name="icon">sprite: icon-16 icon-NewCategory icon-primary</opt>
-      <opts name="handlers">
-         <opt name="onActivated" type="function">js!SBIS3.CONTROLS.Demo.FieldLinkWithEditInPlace:prototype.sendAddItem</opt>
-      </opts>
+            </option>
+            <option name="cellTemplate">html!SBIS3.CONTROLS.Demo.FieldLinkWithEditInPlace/resources/cellWorkPlace</option>
+         </options>
+      </options>
+      <option name="editMode">click</option> <!-- Устанавливаем режим редактирования по месту: активация по клику -->
    </component>
 </div>
