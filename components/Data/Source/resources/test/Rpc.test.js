@@ -5,9 +5,14 @@ define([
    'use strict';
 
    describe('SBIS3.CONTROLS.Data.Source.Rpc', function () {
-      var dataSource;
+      var dataSource,
+         provider = new function() {
+            this.call = function() {
 
-      beforeEach(function (){
+            };
+         };
+
+      beforeEach(function () {
          dataSource = new RpcSource({
             endpoint: '/users/',
             provider: 'source.provider.sbis-business-logic',
@@ -31,6 +36,19 @@ define([
          it('should return Provider', function (){
             var provider = dataSource.getProvider();
             assert.isTrue($ws.helpers.instanceOfModule(provider, 'SBIS3.CONTROLS.Data.Source.Provider.SbisBusinessLogic'));
+         });
+      });
+
+      describe('.subscribe()', function () {
+         context('onBeforeProviderCall', function (){
+            it('should receive method name an arguments ', function () {
+               var handler = function(e, name, args) {
+                  assert.strictEqual(name, 'Произвольный');
+               };
+               dataSource.subscribe('onBeforeProviderCall', handler);
+               dataSource.call('Произвольный');
+               dataSource.unsubscribe('onBeforeProviderCall', handler);
+            });
          });
       });
 
