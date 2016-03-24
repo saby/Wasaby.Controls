@@ -113,6 +113,16 @@ define('js!SBIS3.CONTROLS.TabControl', [
          this._switchableArea.setItems(items);
       },
 
+      //TODO может сделать метод getTabButtons, позволяющий напрямую работать с вкладками,
+      //чтобы не инкапсулировать подобные методы?
+      setSelectedKey: function(key){
+         this._tabButtons.setSelectedKey(key);
+      },
+
+      getSelectedKey: function(){
+         return this._tabButtons.getSelectedKey();
+      },
+
       _onSelectedItemChange: function(event, id) {
          this._options.selectedKey = id;
          this._switchableArea._options.defaultArea = id;
