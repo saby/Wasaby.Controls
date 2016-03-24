@@ -397,7 +397,7 @@ define('js!SBIS3.CONTROLS.Data.FormattableMixin', [
       _buildField: function(format) {
          if (
             typeof format === 'string' ||
-            Object.getPrototypeOf(format) === Object.prototype
+            (format && !format.$constructor)
          ) {
             format = FieldsFactory.create(format);
          }
