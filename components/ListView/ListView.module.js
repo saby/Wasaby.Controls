@@ -763,8 +763,13 @@ define('js!SBIS3.CONTROLS.ListView',
           */
          setEmptyHTML: function (html) {
             ListView.superclass.setEmptyHTML.apply(this, arguments);
-            if(this._emptyData.length) {
-               html ? this._emptyData.empty().html(html) : this._emptyData.remove();
+            if(this._emptyData && this._emptyData.length) {
+               if(html) {
+                  this._emptyData.empty().html(html)
+               } else {
+                  this._emptyData.remove();
+                  this._emptyData = undefined;
+               }
             } else if(html) {
                this._drawEmptyData();
             }
