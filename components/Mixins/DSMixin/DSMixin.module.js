@@ -26,7 +26,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
 
    var DSMixin = /**@lends SBIS3.CONTROLS.DSMixin.prototype  */{
        /**
-        * @event onDrawItems После отрисовки всех элементов коллекции
+        * @event onDrawItems Происходит после отрисовки всех элементов коллекции.
         * @param {$ws.proto.EventObject} eventObject Дескриптор события.
         * @example
         * <pre>
@@ -40,7 +40,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
         * @see displayField
         */
        /**
-        * @event onDataLoad При загрузке данных
+        * @event onDataLoad Происходит после загрузки данных.
         * @param {$ws.proto.EventObject} eventObject Дескриптор события.
         * @param {SBIS3.CONTROLS.DataSet} dataSet Набор данных.
         * @example
@@ -54,7 +54,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
         * @see getDataSource
         */
       /**
-       * @event onDataLoadError При ошибке загрузки данных
+       * @event onDataLoadError Происходит после загрузки данных, завершенной с ошибкой.
        * @remark
        * Событие сработает при получении ошибки от любого метода БЛ, вызванного стандартным способом.
        * @param {$ws.proto.EventObject} eventObject Дескриптор события.
@@ -73,9 +73,9 @@ define('js!SBIS3.CONTROLS.DSMixin', [
        * </pre>
        */
       /**
-       * @event onBeforeDataLoad Перед загрузкой данных
+       * @event onBeforeDataLoad Происходит перед загрузкой данных.
        * @remark
-       * Событие сработает перед запросом к источнику данных
+       * Событие сработает перед запросом к источнику данных.
        * @param {$ws.proto.EventObject} eventObject Дескриптор события.
        * @example
        * <pre>
@@ -87,7 +87,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
        * </pre>
        */
       /**
-       * @event onItemsReady при готовности экземпляра коллекции iList
+       * @event onItemsReady Происходит при готовности экземпляра коллекции iList.
        * @remark
        * Например когда представлению задается Source и нужно подписаться на события List, который вернется в результате запроса
        * @param {$ws.proto.EventObject} eventObject Дескриптор события.
@@ -113,12 +113,14 @@ define('js!SBIS3.CONTROLS.DSMixin', [
          _dotItemTpl: null,
          _options: {
             /**
-             * @cfg {String} Поле элемента коллекции, которое является идентификатором записи
+             * @cfg {String} Определяет поле элемента коллекции, значения которого будут использованы в качестве первичного ключа.
              * @remark
-             * Выбранный элемент в коллекции задаётся указанием ключа элемента.
+             * Для данного поля справедливо ограничение уникальности. С помощью его значений можно однозначно
+             * идентифицировать любой элемент коллекции.
+             * Данные задаются либо с помощью опции {@link items}, либо методом {@link setDataSource}.
              * @example
              * <pre class="brush:xml">
-             *     <option name="keyField">Идентификатор</option>
+             *     <option name="keyField">@Идентификатор</option>
              * </pre>
              * @see items
              * @see displayField
@@ -126,55 +128,84 @@ define('js!SBIS3.CONTROLS.DSMixin', [
              * @see SBIS3.CONTROLS.Selectable#selectedKey
              * @see SBIS3.CONTROLS.Selectable#setSelectedKey
              * @see SBIS3.CONTROLS.Selectable#getSelectedKey
+             * @see SBIS3.CONTROLS.SuggestMixin#list
              */
             keyField : null,
             /**
-             * @cfg {String} Поле элемента коллекции, из которого отображать данные
-             * @example
-             * <pre class="brush:xml">
-             *     <option name="displayField">Название</option>
-             * </pre>
+             * @cfg {String} Определяет поле элемента коллекции, данные из которого будут использованы для отображения в контроле.
              * @remark
-             * Данные задаются либо в опции {@link items}, либо методом {@link setDataSource}.
-             * Источник данных может состоять из множества полей. В данной опции необходимо указать имя поля, данные
-             * которого нужно отобразить в выпадающем списке.
+             * В зависимости от типа контрола и режима его работы опция может быть как обязательной, так и необязательной
+             * к использованию.
+             * Для контрола {@link SBIS3.CONTROLS.CompositeView "Композитное представление"} и его наследников опция
+             * используется только для режимов отображения "Список" и "Плитка". Её значение необходимо для построения
+             * шаблонов отображения элементов коллекции. На следующем изображении три элемента построены по шаблону,
+             * где красным цветом выделено значение поля из displayField:
+             * ![](/DSMixin10.png)
+             * Для контрола {@link SBIS3.CONTROLS.FieldLink “Поле связи”} использование опции displayField обязательно,
+             * её значение используется для отображения выбранных элементов:
+             * ![](/DSMixin11.png)
+             * Для контрола {@link SBIS3.CONTROLS.ComboBox “Выпадающий список”} использование опции displayField также
+             * является обязательным и так же используется для отображения выбранных элементов:
+             * ![](/DSMixin12.png)
+             * Кроме опции displayField для контролов обязательно настраивают опцию {@link keyField}.
+             * @example
+             * Отображение в поле связи значений поля "ФИО" выбранных элементов коллекции:
+             * ![](/DSMixin01.png)
+             * фрагмент верстки:
+             * <pre class="brush:xml">
+             *     <option name="displayField">НазваниеПоля</option>
+             * </pre>
              * @see keyField
              * @see items
-             * @see setDataSource
              */
             displayField: null,
              /**
-              * @cfg {Array.<Object.<String,String>>} Масив объектов. Набор исходных данных, по которому строится отображение
-              * @name SBIS3.CONTROLS.ListControlMixin#items
+              * @cfg {Array.<Object.<String,String>>} Определяет набор исходных данных, по которому строится отображение.
               * @remark
-              * !Важно: данные для коллекции элементов можно задать либо в этой опции,
+              * Набор исходных данных - это данные определенного формата, которые будут преобразованы
+              * в элементы коллекции (экземпляры класса {@link SBIS3.CONTROLS.Data.Model Model}).
+              *
+              * Опция items описывает набор данных, который будет преобразован в статический источник данных.
+              * Изменять значение опции items можно с помощью метода {@link setItems}.
+              *
+              * Данные для коллекции элементов задаются либо с помощью этой опции,
               * либо через источник данных методом {@link setDataSource}.
+              * Опция {@link SBIS3.CONTROLS.hierarchyMixin#hierField} устанавливает поле,
+              * по которому будет построена иерархия.
               * @example
+              * Задаем набор данных для отображения календаря; использован класс {@link SBIS3.CONTROLS.TreeDataGridView}:
+              * ![](/DSMixin01.png)
+              * фрагмент верстки:
               * <pre class="brush:xml">
+              *     <option name="keyField">id</option>
+              *     <option name="displayField">title</option>
+              *     <option name="hierField" value="parent"></option>
               *     <options name="items" type="array">
               *        <options>
-              *            <option name="id">1</option>
-              *            <option name="title">Пункт1</option>
-              *         </options>
-              *         <options>
-              *            <option name="id">2</option>
-              *            <option name="title">Пункт2</option>
-              *         </options>
-              *         <options>
-              *            <option name="id">3</option>
-              *            <option name="title">ПунктПодменю</option>
-              *            <!--необходимо указать это полем иерархии для корректной работы-->
-              *            <option name="parent">2</option>
-              *            <option name="icon">sprite:icon-16 icon-Birthday icon-primary</option>
-              *         </options>
-              *      </options>
-              *      <option name="hierField">parent</option>
+              *            <option name="id">I</option>
+              *            <option name="title">квартал 1</option>
+              *            <option name="parent" value="null" type="null"></option>
+              *            <option name="parent@" value="true" type="boolean"></option>
+              *        </options>
+              *        <options>
+              *            <option name="id">01</option>
+              *            <option name="title">январь</option>
+              *            <option name="parent" value="I"></option>
+              *            <option name="parent@" value="null" type="null"></option>
+              *        </options>
+              *        <options>
+              *            <option name="id">02</option>
+              *            <option name="title">февраль</option>
+              *            <option name="parent" value="I"></option>
+              *            <option name="parent@" value="null" type="null"></option>
+              *        </options>
+              *     </options>
               * </pre>
+              * @see setItems
               * @see keyField
               * @see displayField
               * @see setDataSource
-              * @see getDataSet
-              * @see hierField
+              * @see SBIS3.CONTROLS.hierarchyMixin#hierField
               */
             items: null,
             /**
@@ -184,62 +215,149 @@ define('js!SBIS3.CONTROLS.DSMixin', [
              */
             dataSource: undefined,
              /**
-              * @cfg {Number} Количество записей, запрашиваемых с источника данных
+              * @cfg {Number} Устанавливает количество элементов коллекции, запрашиваемых с источника данных.
               * @remark
-              * Опция определяет количество запрашиваемых записей с источника даныых как при построении контрола, так и
-              * при осуществлении подгрузки.
-              * Для иерархических структур при пейджинге по скроллу опция также задаёт количество подгружаемых записей
-              * кликом по кнопке "Ещё".
-              * !Важно: в базе данных как листья, так и узлы являются записями. Поэтому необходимо учитывать, что в
-              * количество записей считаются и узлы, и листья. Т.е. подсчёт идёт относительно полностью развёрнутого
-              * представления данных. Например, узел с тремя листьями - это 4 записи.
-              * </ul>
+              * Опция определяет количество элементов коллекции, которые запрашиваются от источника данных.
+              * Это используется для функционала постраничной навигации {@link SBIS3.CONTROLS.ListView#showPaging} и
+              * бесконечной подгрузки данных по скроллу {@link SBIS3.CONTROLS.ListView#infiniteScroll}.
+              *
+              * При работе с коллекцией иерархической структуры следует учитывать, что в количество элементов коллекции
+              * считаются и узлы, и листья, т.е. подсчет идет относительно полностью развернутого представления данных.
+              * Поэтому визуально может показаться, что подгружается меньше элементов коллекции, чем указано в опции.
+              *
+              * Например, один узел и его четыре дочерних листа будут посчитаны как пять элементов коллекции.
+              * Если опция pageSize установлена в значение 5, а содержимое узла не раскрыто, то отображен будет только
+              * один элемент коллекции - узел.
               * @example
+              * Для {@link SBIS3.CONTROLS.SuggestMixin#list выпадающего блока} в поле связи, отображающего список значений
+              * для автодополнения, установим пять значений и {@link SBIS3.CONTROLS.ListView#showPaging режим постраничной навигации}:
+              * фрагмент верстки:
               * <pre class="brush:xml">
-              *     <option name="pageSize">10</option>
+              *     <option name="pageSize">5</option>
+              *     <option name="showPaging">true</option>
               * </pre>
+              * результат настройки:
+              * ![](/DSMixin03.png)
               * @see setPageSize
+              * @see SBIS3.CONTROLS.ListView#showPaging
+              * @see SBIS3.CONTROLS.ListView#infiniteScroll
               */
             pageSize: undefined,
             /**
-             * @typedef {Object} GroupBy
-             * @property {String} field Поле записи
-             * @property {Function} method Метод группировки
-             * @property {String} template Шаблон вёрстки
-             * @property {Function} render Функция визуализации
+             * @typedef {Object} GroupBy Группа опций для настройки группировки элементов коллекции по полю.
+             * Подробнее о группировках вы можете прочитать в {@link https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/list-settings/list-visual-display/groups/ этой статье}.
+             * @property {String} field Поле по которому нужно сгруппировать элементы коллекции.
+             * @property {Function} method Функция, которая определяет необходимость отрисовки перед текущим элементом коллекции заголовка группы.
+             * Если функция возвращает true, то заголовок будет отрисован.
+             * @property {String} template Шаблон, по которому будет строиться заголовок каждой группы.
+             * Это XHTML-файл, который нужно подключить в массив зависимостей компонента.
+             * @property {Function} render Функция для дополнительной обработки HTML-контейнера группируемого элемента коллекции.
              * @property {Function} clickHandler Функция клика
              */
             /**
-             * @cfg {GroupBy} Настройка группировки записей
+             * @cfg {GroupBy} Настраивает группировку элементов коллекции.
              * @remark
-             * Если задать только поле записи(field), то будет группировать по типу лесенки (Пример 1).
-             * Т.е. перед каждым блоком с одинаковыми данными будет создавать блок, для которого можно указать шаблон
-             * Внимание! Для правильной работы группировки данные уже должны прийти отсортированные!
+             * Механизм группировки позволяет группировать элементы коллекции в списках любых типов. Подробнее о группировках вы
+             * можете прочитать в {@link https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/list-settings/list-visual-display/groups/ этой статье}.
+             * Для правильной работы группировки данные должны прийти уже {@link sorting отсортированными} по полю группировки field.
+             * Если установить только поле группировки field, то все элементы будут просто сгруппированы по блокам с одинаковыми
+             * данными, без отрисовки заголовков групп:
+             * ![](/DSMixin09.png)
+             * Для группировки элементов коллекции по типу {@link https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/list-settings/list-visual-display/ladder/ "Лесенка"} -
+             * когда одинаковые значения будут скрыты, необходимо в опции {@link SBIS3.CONTROLS.DataGridView#ladder}
+             * перечислить названия полей, по которым лесенка будет организована.
              * @example
-             * 1:
+             * Ниже проиллюстрирована работа опции на примерах настройки для поля связи выпадающего блока,
+             * отображающего список значений для автодополнения.
+             *
+             * Пример 1. Список значений без группировки:
+             * ![](/DSMixin03.png)
+             *
+             * Пример 2. Список значений с простой группировкой:
+             * данные с одинаковыми значениями поля "ФИО" сгруппированы в отдельные блоки;
+             * ![](/DSMixin04.png)
+             * фрагмент верстки:
              * <pre class="brush:xml">
-             *    <options name="groupBy">
-             *        <option name="field">ДатаВремя</option>
-             *    </options>
+             *     <options name="groupBy">
+             *        <option name="field">ФИО</option>
+             *     </options>
              * </pre>
-             * Пример с указанием метода группировки:
+             *
+             * Пример 3. Список значений, с использованием "Лесенки"; одинаковые значения скрыты;
+             * ![](/DSMixin05.png)
+             * фрагмент верстки:
              * <pre class="brush:xml">
-             *    <options name="groupBy">
-             *        <option name="field">ДатаВремя</option>
-             *         <option name="method" type="function">js!SBIS3.CONTROLS.Demo.MyListView:prototype.myGroupBy</option>
-             *    </options>
+             *     <options name="ladder" type="array">
+             *         <option>ФИО</option>
+             *         <option>Должность</option>
+             *     </options>
              * </pre>
+             *
+             * Пример 4. Группировка списка значений по типу "Лесенка":
+             * данные с одинаковыми значениями поля "ФИО" сгруппированы в отдельные блоки;
+             * одинаковые значения сгруппированных элементов коллекции скрыты;
+             * ![](/DSMixin06.png)
+             * настраиваем обе опции: groupBy и ladder.
+             *
+             * Изменить группировку элементов коллекции можно с помощью метода {@link setGroupBy}.
+             * @see setGroupBy
+             * @see SBIS3.CONTROLS.DataGridView#ladder
+             * @see sorting
              */
             groupBy : {},
             /**
-             * @cfg {Function} Пользовательский метод добавления атрибутов на элементы коллекции
+             * @typedef {Function} UserItem
+             * @property {String} container Контейнер визуального отображения (DOM-элемент) текущего элемента коллекции.
+             * @property {SBIS3.CONTROLS.Data.Model} item Текущий элемент коллекции.
+             */
+            /**
+             * @cfg {UserItem} Устанавливает метод, с помощью которого можно производить манипуляции с контейнером
+             * визуального отображения элементов коллекции.
+             * @remark
+             * С помощью данного метода можно изменять контейнер визуального отображения (DOM-элемент) для каждого элемента
+             * коллекции. К манипуляциям над контейнером можно отнести, например, изменение CSS-классов, добавление новых
+             * атрибутов, преобразование содержимого контейнера или его полное удаление из DOM.
+             *
+             * Аргументы метода:
+             * 1. container: Контейнер визуального отображения (DOM-элемент) текущего элемента коллекции.
+             * 2. item: екущий элемент коллекции в виде экземпляра класса {@link SBIS3.CONTROLS.Data.Model Model}.
+             * @example
+             * Устанавливаем функцию из вёрстки компонента:
+             * <pre class="brush:xml">
+             *    <option name="userItemAttributes" type="function">js!SBIS3.Contacts.MessageViewBP:prototype.myUserItemAttributes</option>
+             * </pre>
+             * Создаём функцию в JS-коде компоненнта:
+             * <pre>
+             *    myUserItemAttributes: function (container, item) {
+             *       var isFolder = item ? item.get('Раздел@') : false; // проверяем признак: является ли текущий элемент папкой в иерархической структуре коллекции
+             *       if (isFolder) { // если текущий элемент это папка, то производим изменение DOM-элемента
+             *          container.find('td.controls-DataGridView__td__checkBox').remove(); // удаляем ячейку с чекбоксом
+             *          container.find('td.controls-DataGridView__td').attr('colspan', 2); // меняем стиль соседней ячейке
+             *       }
+             *    },
+             * </pre>
+             * @deprecated
              */
             userItemAttributes : null,
             /**
-             * @cfg {String|HTMLElement|jQuery} Отображаемый контент при отсутствии данных
+             * @cfg {String|HTMLElement|jQuery} Устанавливает текст, который будет отображаться при отсутствии данных.
+             * @remark
+             * Устанавливает текст, который будет отображаться при отсутствии данных после запроса к источнику, или в результате фильтрации.
+             * Применяется в компонентах, которые используются для отображения данных в списках.
+             * Переопределить текст можно при помощи метода {@link setEmptyHTML}.
              * @example
+             * Пример использования опции в {@link SBIS3.CONTROLS.FieldLink#dictionaries справочнике выбора значений}
+             * для поля связи:
+             * ![](/DSMixin02.png)
+             * В примере для отображения данных использован компонент класса {@link SBIS3.CONTROLS.DataGridView} -
+             * контрол, отображающий набор данных в виде таблицы с несколькими колонками.
+             *
+             * Для {@link SBIS3.CONTROLS.FieldLink поля связи} в настройке {@link SBIS3.CONTROLS.SuggestMixin#list выпадающего блока},
+             * отображающего список значений для автодополнения, описание опции не дает результата, подобного
+             * проиллюстрированному в примере. При отсутствии данных автодополнение работать не будет.
+             * фрагмент верстки:
              * <pre class="brush:xml">
-             *     <option name="emptyHTML">Нет данных</option>
+             *     <option name="emptyHTML">Данные для выбора отсутствуют</option>
              * </pre>
              * @translatable
              * @remark
@@ -247,6 +365,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
              * @see items
              * @see setDataSource
              * @see groupBy
+             * @see setEmptyHTML
              */
             emptyHTML: '',
             /**
@@ -261,12 +380,39 @@ define('js!SBIS3.CONTROLS.DSMixin', [
              */
             filter: {},
             /**
-             * @cfg {Array} Сортировка данных. Задается массивом объектов, в котором ключ - это имя поля, а значение ASC - по возрастанию, DESC  - по убыванию
-             * @example
+             * @cfg {Array} Определяет сортировку данных, возвращаемых методом БЛ.
+             * @remark
+             * Опция устанавливает сортировку данных, возвращаемых методом БЛ, необходимую пользователю.
+             * Задается массивом объектов, в котором ключ - это имя поля, а значение ASC - по возрастанию, DESC  - по убыванию.
+             * Порядок сортировки полей определяется порядком объектов в массиве: сортировка данных будет проведена
+             * сначала по полю, заданному в первом объекте, потом - по полю, заданному во втором объекте, и т.д.
+             * Предполагается, что один объект описывает сортировку по одному полю.
+             * Если задать в одном объекте описание сортировки для нескольких полей, то порядок сортировки
+             * не гарантируется.
+             * Переопределяет параметры сортировки, указанные в методе БЛ.
+             * В опции задается имя поля, по которому данные нужно отсортировать, и для поля - порядок сортировки:
+             * false - по возрастанию,
+             * true  - по убыванию.
+             * По умолчанию данные поля будут отсортированы по возрастанию.
+             * Для {@link SBIS3.CONTROLS.FieldLink поля связи} опция определяется в настройках
+             * {@link SBIS3.CONTROLS.SuggestMixin#list выпадающего блока}, отображающего список значений для автодополнения.
+             * Пример сортировки данных автодополнения. Данные будут отсортированы по возрастанию, по полям "ФИО" и "Город":
+             * ![](/DSMixin02.png)
+             * фрагмент верстки:
              * <pre class="brush:xml">
-             *     <options name="sorting" type="Array">
-             *        <option name="date" value="ASC"></option>
-             *        <option name="name" value="DESC"></option>
+             *     <options name="list">
+             *         <option name="component" value="js!SBIS3.CONTROLS.DataGridView"></option>
+             *         <options name="options">
+             *             <option name="keyField" value="@Пользователь"></option>
+             *             <options name="sorting" type="array">
+             *                 <options>
+             *                   <option name="ФИО" type="boolean">false</option>
+             *                 </options>
+             *                 <options>
+             *                   <option name="Город" type="boolean">false</option>
+             *                 </options>
+             *             </options>
+             *         </options>
              *     </options>
              * </pre>
              */
@@ -280,7 +426,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
              */
             includedTemplates: {},
             /**
-             * @cfg {String|function} Шаблон элементов, которые будт рисоваться под даннными.
+             * @cfg {String|function} Шаблон элементов, которые будут рисоваться под даннными.
              * @remark
              * Например для отрисовки кнопко +Документ, +Папка.
              * Если задан, то под всеми(!) элементами появится контейнер с содержимым этого шаблона
@@ -426,7 +572,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
          this.unsubscribeFrom(this._itemsProjection, 'onCollectionItemChange', this._onCollectionItemChange);
       },
        /**
-        * Метод установки источника данных.
+        * Устанавливает источник данных.
         * @remark
         * Данные могут быть заданы либо этим методом, либо опцией {@link items}.
         * @param source Новый источник данных.
@@ -452,6 +598,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
         *     })
         * </pre>
         * @see dataSource
+        * @see getDataSource
         * @see onDrawItems
         * @see onDataLoad
         */
@@ -604,18 +751,18 @@ define('js!SBIS3.CONTROLS.DSMixin', [
       },
        /**
         * Метод установки количества элементов на одной странице.
-        * @param {Number} pageSize Количество записей.
+        * @param {Number} pageSize Количество элементов.
         * @example
         * <pre>
         *     myListView.setPageSize(20);
         * </pre>
         * @remark
-        * Метод задаёт/меняет количество записей при построении представления данных.
+        * Метод задаёт/меняет количество элементов при построении представления данных.
         * В случае дерева и иерархии:
         * <ul>
-        *    <li>при пейджинге по скроллу опция также задаёт количество подгружаемых записей кликом по кнопке "Ещё";</li>
-        *    <li>как листья, так и узлы являются записями, количество записей считается относительно полностью
-        *    развёрнутого представления данных. Например, узел с тремя листьями - это 4 записи.</li>
+        *    <li>при пейджинге по скроллу опция также задаёт количество подгружаемых элементов кликом по кнопке "Ещё";</li>
+        *    <li>элементами являются и листья, и узлы; общее количество элементов считается относительно полностью
+        *    развёрнутого представления данных. Например, узел с тремя листьями - это 4 элемента.</li>
         * </ul>
         * @see pageSize
         */
@@ -743,7 +890,10 @@ define('js!SBIS3.CONTROLS.DSMixin', [
          /*Method must be implemented*/
       },
       /**
-       * Метод перерисвоки списка без повторного получения данных
+       * Метод перерисовки списка без запроса к источнику данных.
+       * @remark
+       * Используется в случаях, когда данные были изменены только на клиентской стороне приложения.
+       * Их не требуется изменять в БД, нужно только отобразить в текущем представлении.
        */
       redraw: function() {
          this._redraw();
@@ -850,8 +1000,8 @@ define('js!SBIS3.CONTROLS.DSMixin', [
       },
 
       /**
-       * Метод перерисовки определенной записи
-       * @param {Object} item Запись, которую необходимо перерисовать
+       * Метод перерисовки определенного элемента коллекции.
+       * @param {Object} item Элемент коллекции, который необходимо перерисовать.
        */
       redrawItem: function(item) {
          var
@@ -888,8 +1038,8 @@ define('js!SBIS3.CONTROLS.DSMixin', [
        *
        * Из метода группировки можно вернуть Boolean - рисовать ли группировку
        * или Объект - {
-       *    drawItem - рисовать ли текущую запись
-       *    drawGroup - рисовавть ли группировку перед текущей записью
+       *    drawItem - рисовать ли текущий элемент коллекции
+       *    drawGroup - рисовать ли группировку перед текущим элементом коллекции
        * }
        * @param item
        * @param at
@@ -934,9 +1084,11 @@ define('js!SBIS3.CONTROLS.DSMixin', [
 
       },
       /**
-       * Установка группировки элементов. Если нужно, чтобы стандартаная группировка для этого элемента не вызывалась -
-       * нужно обязательно переопределить(передать) все опции (field, method, template, render) иначе в группировку запишутся стандартные параметры.
-       * @remark Всем элементам группы добавляется css-класс controls-GroupBy
+       * Устанавливает группировку элементов.
+       * @remark
+       * Если нужно, чтобы стандартная группировка для этого элемента не вызывалась - нужно обязательно переопределить
+       * передать) все опции (field, method, template, render) иначе в группировку запишутся стандартные параметры.
+       * Всем элементам группы добавляется css-класс controls-GroupBy.
        * @param group
        * @param redraw
        */
@@ -1098,11 +1250,11 @@ define('js!SBIS3.CONTROLS.DSMixin', [
          }
       },
       /**
-       * Установить что отображается при отсутствии записей.
-       * @param html Содержимое блока.
+       * Устанавливает текст, который будет отображаться при отсутствии элементов коллекции.
+       * @param html Отображаемый текст.
        * @example
        * <pre>
-       *     DataGridView.setEmptyHTML('Нет записей');
+       *     DataGridView.setEmptyHTML('Данные отсутствуют');
        * </pre>
        * @see emptyHTML
        */
@@ -1112,7 +1264,11 @@ define('js!SBIS3.CONTROLS.DSMixin', [
 
       /**
        * Возвращает источник данных.
+       * @remark
+       * Метод создает экземпляр класса источника данных. Экземпляр класса будет содержать данные,
+       * если источник данных - статический.
        * @returns {*}
+       * @see setDataSource
        */
       getDataSource: function(){
          return this._dataSource;
@@ -1253,7 +1409,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
          }
       },
       /**
-       * Обрабатывает событие об изменении коллекции
+       * Обрабатывает событие об изменении коллекции.
        * @param {$ws.proto.EventObject} event Дескриптор события.
        * @param {String} action Действие, приведшее к изменению.
        * @param {SBIS3.CONTROLS.Data.Projection.ICollectionItem[]} newItems Новые элементы коллеции.
