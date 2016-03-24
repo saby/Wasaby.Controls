@@ -17,6 +17,7 @@ define('js!SBIS3.CONTROLS.EditAtPlace',
        * @mixes SBIS3.CONTROLS.PickerMixin
        * @mixes SBIS3.CONTROLS.EditAtPlaceMixin
        * @author Крайнов Дмитрий Олегович
+       * @cssModifier controls-EditAtPlace__ellipsis Текстовое поле обрезается троеточием, если не умещается в контейнере
        */
 
       var EditAtPlace = CompoundControl.extend([PickerMixin, EditAtPlaceMixin], /** @lends SBIS3.CONTROLS.EditAtPlace.prototype */{
