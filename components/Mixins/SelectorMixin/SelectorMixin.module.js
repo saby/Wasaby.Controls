@@ -46,7 +46,7 @@ define('js!SBIS3.CONTROLS.SelectorMixin', [],
                 */
                currentSelectedKeys: [],
                /**
-                * cfg {function} Устанавливает обработчик на закрытие диалога/всплывающей панели выбора элементов коллекции.
+                * cfg {Function} Устанавливает обработчик на закрытие диалога/всплывающей панели выбора элементов коллекции.
                 */
                closeCallback: undefined
             }
@@ -89,12 +89,12 @@ define('js!SBIS3.CONTROLS.SelectorMixin', [],
          },
 
          /**
-          * Устанавливает связанное представление данных для этого диалога выбора.
+          * Устанавливает связанное представление данных для диалога/всплывающей панели выбора элементов коллекции.
           * @param {SBIS3.CONTROLS.ListView} linkedView Экземпляр класса контрола представления данных.
           * @example
           * <pre>
           *     var dataView = this.getTopParent().getChildByName('myNewCreatedBrowser');
-          *         this.setLinkedView(dataView);
+          *     this.setLinkedView(dataView);
           * </pre>
           * @see getLinkedView
           */
@@ -111,7 +111,7 @@ define('js!SBIS3.CONTROLS.SelectorMixin', [],
          },
 
          /**
-          * Получает связанное представление данных для этого диалога выбора.
+          * Получает связанное представление данных для диалога/всплывающей панели выбора элементов коллекции.
           * @returns {SBIS3.CONTROLS.ListView} Экземпляр класса контрола представления данных.
           * @example
           * <pre>
