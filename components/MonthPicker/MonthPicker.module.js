@@ -11,7 +11,8 @@ define(
       'js!SBIS3.CONTROLS.PickerMixin',
       'js!SBIS3.CONTROLS.Utils.DateUtil',
       'html!SBIS3.CONTROLS.MonthPicker/resources/MonthPickerDropdown',
-      'html!SBIS3.CONTROLS.MonthPicker'
+      'html!SBIS3.CONTROLS.MonthPicker',
+      'i18n!SBIS3.CONTROLS.MonthPicker'
    ],
    function(Control, PickerMixin, DateUtil, DropdownTpl, dotTplFn){
 
@@ -99,8 +100,8 @@ define(
           * Массив месяцев
           */
          _months: [
-            'Январь', 'Февраль', 'Март', 'Апрель', 'Май', 'Июнь',
-            'Июль', 'Август', 'Сентябрь', 'Октябрь', 'Ноябрь', 'Декабрь'
+            rk('Январь'), rk('Февраль'), rk('Март'), rk('Апрель'), rk('Май'), rk('Июнь'),
+            rk('Июль'), rk('Август'), rk('Сентябрь'), rk('Октябрь'), rk('Ноябрь'), rk('Декабрь')
          ],
          /**
           * Управляющие клавиши
@@ -321,7 +322,7 @@ define(
          }
          if ( ! isCorrect) {
             this._options.date = null;
-            throw new Error('MonthPicker. Неверный формат даты');
+            throw new Error(rk('MonthPicker. Неверный формат даты'));
          }
 
          this._setDateByDateObject(this._options.date);

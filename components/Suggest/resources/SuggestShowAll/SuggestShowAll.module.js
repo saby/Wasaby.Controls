@@ -4,7 +4,8 @@
 define('js!SBIS3.CONTROLS.SuggestShowAll',
     [  'js!SBIS3.CORE.CompoundControl',
        'html!SBIS3.CONTROLS.SuggestShowAll',
-       'js!SBIS3.CONTROLS.DataGridView'
+       'js!SBIS3.CONTROLS.DataGridView',
+       'i18n!SBIS3.CONTROLS.SuggestShowAll'
     ], function (CompoundControl, dotTplFn) {
 
        var optionsToSet = ['columns', 'itemTemplate', 'keyField', 'filter'];
@@ -25,7 +26,7 @@ define('js!SBIS3.CONTROLS.SuggestShowAll',
           $constructor: function () {
              var window = this.getParent();
              window._options.resizable = false;
-             window._options.caption = 'Все записи';
+             window._options.caption = rk('Все записи');
           },
 
           _modifyOptions: function (opts) {

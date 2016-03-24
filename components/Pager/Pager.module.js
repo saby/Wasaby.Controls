@@ -5,7 +5,7 @@
  * Time: 10:50
  * To change this template use File | Settings | File Templates.
  */
-define('js!SBIS3.CONTROLS.Pager', ['js!SBIS3.CORE.CompoundControl', 'html!SBIS3.CONTROLS.Pager', 'js!SBIS3.CONTROLS.DropdownList',  'js!SBIS3.CORE.Paging'], function(CompoundControl, dotTplFn, Combobox, Paging) {
+define('js!SBIS3.CONTROLS.Pager', ['js!SBIS3.CORE.CompoundControl', 'html!SBIS3.CONTROLS.Pager', 'js!SBIS3.CONTROLS.DropdownList',  'js!SBIS3.CORE.Paging', 'i18n!SBIS3.CONTROLS.Pager'], function(CompoundControl, dotTplFn, Combobox, Paging) {
 
    'use strict';
 
@@ -97,22 +97,22 @@ define('js!SBIS3.CONTROLS.Pager', ['js!SBIS3.CORE.CompoundControl', 'html!SBIS3.
                pagerStr = '';
             }
             else if(numRecords === 1 && page === 0){
-               pagerStr = '1 запись';
+               pagerStr = '1' + rk(' запись');
             }
             else{
                pagerStr = startRecord + ' - ' + (startRecord + numRecords - 1) + strEnd;
             }
          } else {
-            pagerStr += pagerStr === '' ? 'Всего : ' : '. Всего : ';
+            pagerStr += pagerStr === '' ? rk('Всего :') + ' ' : '. ' + rk('Всего :') + ' ';
             pagerStr += numRecords;
          }
          
          if (selectedCount > 0) {
             if (numRecords == 1) {
-               pagerStr = 'Выбрана 1 запись';
+               pagerStr = rk('Выбрана') + ' 1' + rk(' запись');
             } else {
-               pagerStr = 'Выбра' + $ws.helpers.wordCaseByNumber(selectedCount, 'но', 'на', 'ны') +
-               ' ' + selectedCount + ' запис' + $ws.helpers.wordCaseByNumber(selectedCount, 'ей', 'ь', 'и') + '. ' + pagerStr;
+               pagerStr = ws.helpers.wordCaseByNumber(selectedCount, rk('Выбрано'), rk('Выбрана'), rk('Выбраны')) +
+               ' ' + selectedCount + $ws.helpers.wordCaseByNumber(selectedCount, rk(' записей'), rk(' запись'), rk(' записи')) + '. ' + pagerStr;
             }
          }
          this.getContainer().find('.controls-Amount-text_js').text(pagerStr);

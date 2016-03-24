@@ -2,7 +2,8 @@ define('js!SBIS3.CONTROLS.HighCharts', [
    'js!SBIS3.CORE.Control',
    'html!SBIS3.CONTROLS.HighCharts',
    'browser!cdn!/highcharts/4.2.3/highcharts-more-min.js',
-   'css!SBIS3.CONTROLS.HighCharts'
+   'css!SBIS3.CONTROLS.HighCharts',
+   'i18n!SBIS3.CONTROLS.HighCharts'
 ],
 function(BaseControl, dotTpl){
    'use strict';
@@ -623,9 +624,9 @@ function(BaseControl, dotTpl){
          Highcharts.setOptions({
             lang: {
                numericSymbols: ['', '', '', '', '', ''],
-               months : [ 'Январь' , 'Февраль' , 'Март' , 'Апрель' , 'Май' , 'Июнь' , 'Июль' , 'Август' , 'Сентябрь' , 'Октябрь' , 'Ноябрь' , 'Декабрь'],
-               shortMonths : [ 'Янв' , 'Фев' , 'Мар' , 'Апр' , 'Май' , 'Июн' , 'Июл' , 'Авг' , 'Сен' , 'Окт' , 'Ноя' , 'Дек'],
-               weekdays: ['Понедельник', 'Вторник', 'Среда', 'Четверг', 'Пятница', 'Суббота', 'Воскресение'],
+               months : [ rk('Январь') , rk('Февраль') , rk('Март') , rk('Апрель') , rk('Май') , rk('Июнь') , rk('Июль') , rk('Август') , rk('Сентябрь') , rk('Октябрь') , rk('Ноябрь') , rk('Декабрь')],
+               shortMonths : [ rk('Янв') , rk('Фев') , rk('Мар') , rk('Апр') , rk('Май') , rk('Июн') , rk('Июл') , rk('Авг') , rk('Сен') , rk('Окт') , rk('Ноя') , rk('Дек')],
+               weekdays: [rk('Понедельник'), rk('Вторник'), rk('Среда'), rk('Четверг'), rk('Пятница'), rk('Суббота'), rk('Воскресение')],
                thousandsSep : ' '
             }
          });
@@ -825,7 +826,7 @@ function(BaseControl, dotTpl){
                      Array.insert(lastDataElement, 2, rec.get(seriesOpts[i]).sourceField_3);
                   }
                   else {
-                     throw new Error ('Для графика-области надо определить 3 поля данных (ws-series.sourceField)');
+                     throw new Error (rk('Для графика-области надо определить 3 поля данных (ws-series.sourceField)'));
                   }
                }
 
@@ -975,7 +976,7 @@ function(BaseControl, dotTpl){
                }, self));
             }
             else {
-               resultDef.errback('Ошибка в параметрах метода БЛ')
+               resultDef.errback(rk('Ошибка в параметрах метода БЛ'))
             }
          }
          else {
@@ -997,7 +998,7 @@ function(BaseControl, dotTpl){
                }
             }
             else {
-               resultDef.errback('Пользовательский обработчик получения данных не является функцией')
+               resultDef.errback(rk('Пользовательский обработчик получения данных не является функцией'))
             }
          }
          return resultDef;
@@ -1033,7 +1034,7 @@ function(BaseControl, dotTpl){
             this._yAxis = parseAxis.yAxis;
          }
          else {
-            throw new Error ('Данные не загружены');
+            throw new Error (rk('Данные не загружены'));
          }
       },
 
@@ -1083,7 +1084,7 @@ function(BaseControl, dotTpl){
             self._drawHighChart();
             def.callback();
          }, self)).addErrback($ws.helpers.forAliveOnly(function(){
-            throw new Error('Ошибка получения данных для диаграммы');
+            throw new Error(rk('Ошибка получения данных для диаграммы'));
          }, self));
 
          return def;
