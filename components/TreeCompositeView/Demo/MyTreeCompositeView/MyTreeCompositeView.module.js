@@ -35,15 +35,15 @@ define('js!SBIS3.CONTROLS.Demo.MyTreeCompositeView',
          var items = [{'title': 'Медведь',          'id':1,  'parent@': true,  'image': 'http://amfoot.net/imgcache/1.png'},
                       {'title': 'Кот',              'id':2,  'parent@': true,  'image': 'http://amfoot.net/imgcache/2.png',  'parent' : 1 },
                       {'title': 'Котик', 				 'id':3,  'parent@': true,  'image': 'http://amfoot.net/imgcache/3.png',  'parent' : 2 },
-                      {'title': 'Собака с бровями', 'id':4,  'parent@': false, 'image': 'http://amfoot.net/imgcache/5.png',  'parent' : 3 },
-                      {'title': 'Собака',           'id':5,  'parent@': false, 'image': 'http://amfoot.net/imgcache/6.png',  'parent' : 1 },
+                      {'title': 'Собака с бровями', 'id':4,  'parent@': null, 'image': 'http://amfoot.net/imgcache/5.png',  'parent' : 3 },
+                      {'title': 'Собака',           'id':5,  'parent@': null, 'image': 'http://amfoot.net/imgcache/6.png',  'parent' : 1 },
                       {'title': 'Лягушка',          'id':6,  'parent@': true,  'image': 'http://amfoot.net/imgcache/8.png' },
-                      {'title': 'Козел', 				 'id':7,  'parent@': false, 'image': 'http://amfoot.net/imgcache/9.png',  'parent' : 6 },
-                      {'title': 'Горилла',          'id':8,  'parent@': false, 'image': 'http://amfoot.net/imgcache/10.png', 'parent' : 6 },
-                      {'title': 'Панда',            'id':9,  'parent@': false, 'image': 'http://amfoot.net/imgcache/15.png'},
-                      {'title': 'Голубь',           'id':10, 'parent@': false, 'image': 'http://amfoot.net/imgcache/16.png'},
-                      {'title': 'Мопс',             'id':11, 'parent@': false, 'image': 'http://amfoot.net/imgcache/18.png'},
-                      {'title': 'Енотик',           'id':12, 'parent@': false, 'image': 'http://amfoot.net/imgcache/19.png'}];
+                      {'title': 'Козел', 				 'id':7,  'parent@': null, 'image': 'http://amfoot.net/imgcache/9.png',  'parent' : 6 },
+                      {'title': 'Горилла',          'id':8,  'parent@': null, 'image': 'http://amfoot.net/imgcache/10.png', 'parent' : 6 },
+                      {'title': 'Панда',            'id':9,  'parent@': null, 'image': 'http://amfoot.net/imgcache/15.png'},
+                      {'title': 'Голубь',           'id':10, 'parent@': null, 'image': 'http://amfoot.net/imgcache/16.png'},
+                      {'title': 'Мопс',             'id':11, 'parent@': null, 'image': 'http://amfoot.net/imgcache/18.png'},
+                      {'title': 'Енотик',           'id':12, 'parent@': null, 'image': 'http://amfoot.net/imgcache/19.png'}];
 
          var source = new StaticSource({
                data: items,
