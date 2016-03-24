@@ -11,8 +11,8 @@ define('js!SBIS3.CONTROLS.SelectorMixin', [],
        * Описание логики выбора из диалога/панели.
        * SelectorMixin используется полем связи.
        * @mixin
-       * @name SBIS3.CONTROLS.SelectorMixin
        * @public
+       * @author Крайнов Дмитрий Олегович
        */
       var SelectorMixin = /**@lends SBIS3.CONTROLS.SelectorMixin.prototype  */{
          $protected: {
@@ -22,10 +22,9 @@ define('js!SBIS3.CONTROLS.SelectorMixin', [],
             _options: {
                /**
                 * @cfg {Boolean} Устанавливает режим множественного выбора элементов коллекции.
+                * Подробно режим множественного выбора описан {@link SBIS3.CONTROLS.MultiSelectable#multiselect здесь}.
                 * @variant true Режим множественного выбора элементов коллекции установлен.
                 * @variant false Режим множественного выбора элементов коллекции отменен.
-                * @remark
-                *
                 * @example
                 * <pre>
                 *     <option name="multiSelect">true</option>
@@ -33,7 +32,13 @@ define('js!SBIS3.CONTROLS.SelectorMixin', [],
                 */
                multiSelect: false,
                /**
-                * Записи, выбранные в связном представлении
+                * cfg {Array} Определяет массив первичных ключей выбранных элементов коллекции.
+                * @remark
+                * Устанавливает массив идентификаторов выбранных элементов коллекции, которые будут по умолчанию выбраны
+                * для контрола, который находится в режиме множественного выбора значений {@link SBIS3.CONTROLS.MultiSelectable#multiselect}.
+                * Для задания выбранных элементов необходимо указать значения
+                * {@link SBIS3.CONTROLS.DSMixin#keyField ключевого поля} элементов коллекции.
+                * @example
                 */
                currentSelectedKeys: [],
                /**
