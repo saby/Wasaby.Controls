@@ -1790,7 +1790,7 @@ define('js!SBIS3.CONTROLS.ListView',
          },
          _getDragItems: function(key) {
             var keys = this._options.multiselect ? $ws.core.clone(this.getSelectedKeys()) : [];
-            if ($.inArray(key, keys) < 0) {
+            if (Array.indexOf(key, keys) == -1 || Array.indexOf(String(key), keys) == -1) {
                keys.push(key);
             }
             return keys;
