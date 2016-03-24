@@ -276,12 +276,12 @@ define('js!SBIS3.CONTROLS.Data.Source.DataSet', [
             property = this._options.itemsProperty;
          }
          var data = this._getDataProperty(property),
-            adapter = this.getAdapter().forTable(data),
             type = this.getAdapter().getProperty(data, '_type');
          if (type === 'recordset') {
-            if (adapter.getCount() > 0) {
+            var tableAdapter = this.getAdapter().forTable(data);
+            if (tableAdapter.getCount() > 0) {
                return this._getModelInstance(
-                  adapter.at(0)
+                  tableAdapter.at(0)
                );
             }
          } else {
