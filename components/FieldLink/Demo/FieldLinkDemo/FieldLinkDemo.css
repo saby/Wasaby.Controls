@@ -1,0 +1,9 @@
+.demo-FieldLink__div {
+   margin-bottom: 20px;
+}
+.demo-FieldLink__div span{
+   font-weight: 700;
+}
+.demo-FieldLink__firstDemo, .demo-FieldLink__secondDemo, .demo-FieldLink__thirdDemo {
+   width: 500px;
+}
