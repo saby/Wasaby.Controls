@@ -8,9 +8,10 @@ define('js!SBIS3.CONTROLS.ItemsToolbar',
        'js!SBIS3.CONTROLS.IconButton',
        'js!SBIS3.CONTROLS.ItemActionsGroup',
        'html!SBIS3.CONTROLS.ItemsToolbar',
-       'html!SBIS3.CONTROLS.ItemsToolbar/editActions'
+       'html!SBIS3.CONTROLS.ItemsToolbar/editActions',
+       'js!SBIS3.CORE.MarkupTransformer'
     ],
-    function(CompoundControl, IconButton, ItemActionsGroup, dotTplFn, editActionsTpl) {
+    function(CompoundControl, IconButton, ItemActionsGroup, dotTplFn, editActionsTpl, MarkupTransformer) {
 
        'use strict';
 
@@ -46,7 +47,7 @@ define('js!SBIS3.CONTROLS.ItemsToolbar',
           _getEditActions: function() {
              var toolbarContent;
              if (!this._editActions) {
-                (toolbarContent = this._getToolbarContent()).append(editActionsTpl());
+                (toolbarContent = this._getToolbarContent()).append(MarkupTransformer(editActionsTpl()));
                 this.reviveComponents();
                 this._editActions = toolbarContent.find('.controls-ItemsToolbar__editActions');
              }
