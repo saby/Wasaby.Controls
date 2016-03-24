@@ -641,6 +641,9 @@ define(
          this._inputField.keyup(function (event) {
             event.preventDefault();
          });
+         this._inputField.bind('dragstart', function(e) {
+            e.preventDefault();
+         });
          this._inputField.keydown(function (event) {
             //keydown ловит управляющие символы, keypress - нет
             key = event.which || event.keyCode;
