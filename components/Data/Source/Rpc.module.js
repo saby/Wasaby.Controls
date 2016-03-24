@@ -105,6 +105,76 @@ define('js!SBIS3.CONTROLS.Data.Source.Rpc', [
          }
       },
 
+      //region SBIS3.CONTROLS.Data.Source.ISource
+
+      create: function(meta) {
+         return this._callMethod(
+            this._options.binding.create,
+            this._prepareCreateArguments(meta)
+         ).addCallback((function (data) {
+            return this._prepareCreateResult(data);
+         }).bind(this));
+      },
+
+      read: function(key, meta) {
+         return this._callMethod(
+            this._options.binding.read,
+            this._prepareReadArguments(key, meta)
+         ).addCallback((function (data) {
+            return this._prepareReadResult(data);
+         }).bind(this));
+      },
+
+      update: function(model, meta) {
+         return this._callMethod(
+            this._options.binding.update,
+            this._prepareUpdateArguments(model, meta)
+         ).addCallback((function (key) {
+            return this._prepareUpdateResult(model, key);
+         }).bind(this));
+      },
+
+      destroy: function(keys, meta) {
+         return this._callMethod(
+            this._options.binding.destroy,
+            this._prepareDestroyArguments(keys, meta)
+         );
+      },
+
+      merge: function(first, second) {
+         return this._callMethod(
+            this._options.binding.merge,
+            this._prepareDestroyArguments(first, second)
+         );
+      },
+
+      copy: function(key, meta) {
+         return this._callMethod(
+            this._options.binding.copy,
+            this._prepareCopyArguments(key, meta)
+         );
+      },
+
+      query: function(query) {
+         return this._callMethod(
+            this._options.binding.query,
+            this._prepareQueryArguments(query)
+         ).addCallback((function (data) {
+            return this._prepareQueryResult(data, 'n');
+         }).bind(this));
+      },
+
+      call: function (command, data) {
+         return this._callMethod(
+            command,
+            data
+         ).addCallback((function (data) {
+            return this._prepareCallResult(data, 'n');
+         }).bind(this));
+      },
+
+      //endregion SBIS3.CONTROLS.Data.Source.ISource
+
       //region SBIS3.CONTROLS.Data.Source.Remote
 
       /**
@@ -266,6 +336,9 @@ define('js!SBIS3.CONTROLS.Data.Source.Rpc', [
        */
       _callMethod: function(method, args, provider) {
          provider = provider || this.getProvider();
+
+         this._notify('onBeforeProviderCall', method, args);
+
          return provider.call(
             method,
             this._prepareMethodArg(args)

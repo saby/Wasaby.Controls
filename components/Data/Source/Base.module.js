@@ -108,6 +108,42 @@ define('js!SBIS3.CONTROLS.Data.Source.Base', [
 
       //region Protected methods
 
+      _prepareCreateResult: function(data) {
+         return this._getModelInstance(data);
+      },
+
+      _prepareReadResult: function(data) {
+         var model = this._getModelInstance(data);
+         model.setStored(true);
+         return model;
+      },
+
+      _prepareUpdateResult: function(model, key) {
+         var idProperty = this.getIdProperty();
+         if (key &&
+            idProperty &&
+            !model.isStored() &&
+            !model.get(idProperty)
+         ) {
+            model.set(idProperty, key);
+         }
+         model.setStored(true);
+         model.applyChanges();
+
+         return key;
+      },
+
+      _prepareQueryResult: function(data, totalProperty) {
+         return this._prepareCallResult(data, totalProperty);
+      },
+
+      _prepareCallResult: function(data, totalProperty) {
+         return this._getDataSetInstance({
+            rawData: data,
+            totalProperty: totalProperty
+         });
+      },
+
       /**
        * Определяет название свойства с первичным ключем по данным
        * @param {*} data Сырые данные
