@@ -29,15 +29,15 @@ define('js!SBIS3.CONTROLS.Demo.MyTreeDataGridView',
          var items = [{'title': 'Первый',       'id':1,  'parent@': true },
                       {'title': 'Второй',       'id':2,  'parent@': true,  'parent' : 1 },
                       {'title': 'Третий',       'id':3,  'parent@': true,  'parent' : 2 },
-                      {'title': 'Четвертый',    'id':4,  'parent@': false, 'parent' : 3 },
-                      {'title': 'Пятый',        'id':5,  'parent@': false, 'parent' : 1 },
+                      {'title': 'Четвертый',    'id':4,  'parent@': null, 'parent' : 3 },
+                      {'title': 'Пятый',        'id':5,  'parent@': null, 'parent' : 1 },
                       {'title': 'Шестой',       'id':6,  'parent@': true } ,
-                      {'title': 'Седьмой',      'id':7,  'parent@': false, 'parent' : 6 },
-                      {'title': 'Восьмой',      'id':8,  'parent@': false, 'parent' : 6 },
-                      {'title': 'Девятый',      'id':9,  'parent@': false },
-                      {'title': 'Десятый',      'id':10, 'parent@': false },
-                      {'title': 'Одиннадцатый', 'id':11, 'parent@': false },
-                      {'title': 'Двенадцатый',  'id':12, 'parent@': false }];
+                      {'title': 'Седьмой',      'id':7,  'parent@': null, 'parent' : 6 },
+                      {'title': 'Восьмой',      'id':8,  'parent@': null, 'parent' : 6 },
+                      {'title': 'Девятый',      'id':9,  'parent@': null },
+                      {'title': 'Десятый',      'id':10, 'parent@': null },
+                      {'title': 'Одиннадцатый', 'id':11, 'parent@': null },
+                      {'title': 'Двенадцатый',  'id':12, 'parent@': null }];
 
          var source = new StaticSource({
                data: items,
