@@ -78,13 +78,14 @@ define('js!SBIS3.CONTROLS.SuggestTextBox', [
       },
 
       _keyDownBind: function(e) {
-         this._changedByKeyboard = true;
          SuggestTextBox.superclass._keyDownBind.apply(this, arguments);
 
          /* Запрещаем всплытие enter по событию keyDown,
             т.к. Area тоже его слушает и закрывает floatArea */
          if(e.which === $ws._const.key.enter && this.isPickerVisible()) {
             stopEvent(e);
+         } else {
+            this._changedByKeyboard = true;
          }
       }
    });
