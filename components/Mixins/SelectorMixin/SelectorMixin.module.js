@@ -39,10 +39,17 @@ define('js!SBIS3.CONTROLS.SelectorMixin', [],
                 * Для задания выбранных элементов необходимо указать значения
                 * {@link SBIS3.CONTROLS.DSMixin#keyField ключевого поля} элементов коллекции.
                 * @example
+                * <pre class="brush: xml">
+                *     <options name="currentSelectedKeys" type="array">
+                *         <option>2</option>
+                *         <option>8</option>
+                *     </options>
+                * </pre>
                 */
                currentSelectedKeys: [],
                /**
-                * Обработчик на закрытие диалога/всплывающей панели
+                * cfg {function} Обработчик на закрытие диалога/всплывающей панели выбора элементов коллекции.
+                *
                 */
                closeCallback: undefined
             }
@@ -84,6 +91,16 @@ define('js!SBIS3.CONTROLS.SelectorMixin', [],
                this[sub ? 'subscribeTo' : 'unsubscribeFrom'](this._linkedView, 'onItemActivate', this._changeSelectionHandler);
          },
 
+         /**
+          * Устанавливает связанное представление данных для этого диалога выбора.
+          * @param {SBIS3.CONTROLS.ListView} linkedView Экземпляр класса контрола представления данных.
+          * @example
+          * <pre>
+          *     var dataView = this.getTopParent().getChildByName('myNewCreatedBrowser');
+          *         this.setLinkedView(dataView);
+          * </pre>
+          * @see getLinkedView
+          */
          setLinkedView: function (linkedView) {
             this._linkedView && this._toggleLinkedViewEvents(false);
             this._linkedView = linkedView;
@@ -97,8 +114,17 @@ define('js!SBIS3.CONTROLS.SelectorMixin', [],
          },
 
          /**
-          * Получить связное представление данных для этого диалога выбора
-          * @returns {SBIS3.CONTROLS.ListView}
+          * Получает связанное представление данных для этого диалога выбора.
+          * @returns {SBIS3.CONTROLS.ListView} Экземпляр класса контрола представления данных.
+          * @example
+          * <pre>
+          *     var dataView;
+          *     if (this.getLinkedView().getName() !== 'myNewCreatedBrowser') {
+          *         dataView = this.getTopParent().getChildByName('myNewCreatedBrowser');
+          *         this.setLinkedView(dataView);
+          *     }
+          * </pre>
+          * @see setLinkedView
           */
          getLinkedView: function () {
             return this._linkedView;
