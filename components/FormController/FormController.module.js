@@ -1,4 +1,4 @@
-define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js!SBIS3.CORE.LoadingIndicator'],
+define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js!SBIS3.CORE.LoadingIndicator', 'i18n!SBIS3.CONTROLS.FormController'],
    function(CompoundControl, LoadingIndicator) {
    /**
     * Компонент, на основе которого создают диалоги редактирования записей
@@ -113,7 +113,7 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
              *     <option name="indicatorSavingMessage">Занят важным делом - сохраняю ваши данные.</option>
              * </pre>
              */
-            indicatorSavingMessage:  'Подождите, идёт сохранение'
+            indicatorSavingMessage:  rk('Подождите, идёт сохранение')
          }
       },
       
@@ -163,12 +163,12 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
          questionConfig = {
             useCancelButton: true,
             invertDefaultButton: true,
-            detail: 'Чтобы продолжить редактирование, нажмите "Отмена".'
+            detail: rk('Чтобы продолжить редактирование, нажмите "Отмена".')
          };
          this._saving = true;
 
          if(!this._parent.validate()) {
-            dResult.errback('Некорректно заполнены обязательные для заполнения поля!');
+            dResult.errback(rk('Некорректно заполнены обязательные для заполнения поля!'));
             //Если нажимали крестик, то закроем панель
             if (!hideQuestion){
                this._panel.cancel();
@@ -179,7 +179,7 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
             this._updateRecord(dResult, closePanelAfterSubmit);
          }
          else{
-            $ws.helpers.question('Сохранить изменения?', questionConfig, this).addCallback(function(result){
+            $ws.helpers.question(rk('Сохранить изменения?'), questionConfig, this).addCallback(function(result){
                if (typeof result === 'string'){
                   self._saving = false;
                   return;
