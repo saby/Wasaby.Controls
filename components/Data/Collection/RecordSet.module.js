@@ -686,7 +686,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
          if ((checkFormat === undefined || checkFormat === true) &&
             !this._getFormat().isEqual(item.getFormat())
          ) {
-            $ws.single.ioc.resolve('ILogger').error(this._moduleName, 'Record format is not equal to recordset format.');
+            $ws.single.ioc.resolve('ILogger').log(this._moduleName, 'Record format is not equal to recordset format.');
          }
          return true;
       }
