@@ -114,7 +114,7 @@ define('js!SBIS3.CONTROLS.FieldLinkItemsCollection', [
          },
 
          _drawItemsCallback: function() {
-            if(this.isPickerVisible() && !this.getDataSet().getCount()) {
+            if(this.isPickerVisible() && !this.getItems().getCount()) {
                this.hidePicker()
             }
          },
