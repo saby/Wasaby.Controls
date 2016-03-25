@@ -1,11 +1,11 @@
-define([], function () {
+define('js!SBIS3.CONTROLS.Utils.HtmlDecorators/AbstractDecorator', [], function () {
    'use strict';
 
    /**
     * Абстрактный декоратор
     * @class SBIS3.CONTROLS.Utils.HtmlDecorators/AbstractDecorator
     * @public
-    * @author Мальцев Алексей Александрович
+    * @author Крайнов Дмитрий Олегович
     */
    var AbstractDecorator = $ws.core.extend({}, /** @lends SBIS3.CONTROLS.Utils.HtmlDecorators/AbstractDecorator.prototype */{
       $protected: {
