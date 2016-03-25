@@ -1,21 +1,25 @@
 /* global define, beforeEach, afterEach, describe, context, it, assert, $ws */
 define([
+   'js!SBIS3.CONTROLS.Data.Source.Provider.IRpc',
    'js!SBIS3.CONTROLS.Data.Source.Rpc'
-], function (RpcSource) {
+], function (IRpcProvider, RpcSource) {
    'use strict';
 
    describe('SBIS3.CONTROLS.Data.Source.Rpc', function () {
       var dataSource,
-         provider = new function() {
-            this.call = function() {
-
-            };
-         };
+         ProviderMock = $ws.core.extend({}, [IRpcProvider], {
+            call: function (method, args) {
+               this._lastMethod = method;
+               this._lastArgs = args;
+               return $ws.proto.Deferred.success(true);
+            }
+         }),
+         provider = new ProviderMock();
 
       beforeEach(function () {
          dataSource = new RpcSource({
             endpoint: '/users/',
-            provider: 'source.provider.sbis-business-logic',
+            provider: provider,
             binding: {
                query: 'getUsers',
                create: 'createUser',
@@ -34,20 +38,65 @@ define([
 
       describe('.getProvider()', function () {
          it('should return Provider', function (){
-            var provider = dataSource.getProvider();
-            assert.isTrue($ws.helpers.instanceOfModule(provider, 'SBIS3.CONTROLS.Data.Source.Provider.SbisBusinessLogic'));
+            assert.instanceOf(dataSource.getProvider(), ProviderMock);
          });
       });
 
       describe('.subscribe()', function () {
          context('onBeforeProviderCall', function (){
-            it('should receive method name an arguments ', function () {
-               var handler = function(e, name, args) {
-                  assert.strictEqual(name, 'Произвольный');
-               };
+            it('should receive method name', function (done) {
+               var handler = function(e, name) {
+                     try {
+                        assert.strictEqual(name, methodName);
+                        done();
+                     } catch (e) {
+                        done(e);
+                     }
+                  },
+                  methodName = 'Test';
                dataSource.subscribe('onBeforeProviderCall', handler);
-               dataSource.call('Произвольный');
+               dataSource.call(methodName);
                dataSource.unsubscribe('onBeforeProviderCall', handler);
+            });
+            it('should receive method name and arguments', function (done) {
+               var handler = function(e, name, args) {
+                     try {
+                        assert.strictEqual(name, methodName);
+                        assert.deepEqual(args, methodArgs);
+                        done();
+                     } catch (e) {
+                        done(e);
+                     }
+                  },
+                  methodName = 'Test',
+                  methodArgs = [{}, [], 'a', 1, 0, false, true, null];
+               dataSource.subscribe('onBeforeProviderCall', handler);
+               dataSource.call(methodName, methodArgs);
+               dataSource.unsubscribe('onBeforeProviderCall', handler);
+            });
+            it('should change method arguments as an object', function () {
+               var handler = function(e, name, args) {
+                     args.a = 9;
+                     delete args.b;
+                     args.c = 3;
+                  },
+                  methodArgs = {a: 1, b: 2},
+                  expectArgs = {a: 9, c: 3};
+               dataSource.subscribe('onBeforeProviderCall', handler);
+               dataSource.call('Test', methodArgs);
+               dataSource.unsubscribe('onBeforeProviderCall', handler);
+               assert.deepEqual(provider._lastArgs, expectArgs);
+            });
+            it('should change method arguments as an array', function () {
+               var handler = function(e, name, args) {
+                     args.push('new');
+                  },
+                  methodArgs = [1, 2],
+                  expectArgs = [1, 2, 'new'];
+               dataSource.subscribe('onBeforeProviderCall', handler);
+               dataSource.call('Test', methodArgs);
+               dataSource.unsubscribe('onBeforeProviderCall', handler);
+               assert.deepEqual(provider._lastArgs, expectArgs);
             });
          });
       });
