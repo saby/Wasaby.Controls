@@ -137,18 +137,25 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
       },
       _createFolderFooter: function(key) {
          var container,
-             lastContainer,
+             nextContainer,
+             currentContainer,
              level = this._getTreeLevel(key);
 
          TreeDataGridView.superclass._createFolderFooter.apply(this, arguments);
          this._foldersFooters[key].css('padding-left', level * HIER_WRAPPER_WIDTH);
          container = $('<tr class="controls-TreeDataGridView__folderFooter" "data-parent"="' + key + '">\
             <td colspan="' + (this._options.columns.length + (this._options.multiselect ? 1 : 0)) + '"></td>\
-         </tr>').attr('data-parent', key);
+         </tr>');
          container.find('td').append(this._foldersFooters[key]);
          this._foldersFooters[key] = container;
-         lastContainer = $('.controls-ListView__item[data-parent="' + key + '"]', this._getItemsContainer().get(0)).last();
-         this._foldersFooters[key].insertAfter(lastContainer.length ? lastContainer : $('.controls-ListView__item[data-id="' + key + '"]', this._getItemsContainer().get(0)));
+
+         currentContainer = $('.controls-ListView__item[data-id="' + key + '"]', this._getItemsContainer().get(0));
+         while (currentContainer.length) {
+            nextContainer = currentContainer;
+            currentContainer =  $('.controls-ListView__item[data-parent="' + currentContainer.data('id') + '"]', this._getItemsContainer().get(0)).last();
+         }
+         this._foldersFooters[key].insertAfter(nextContainer);
+
          this.reviveComponents();
       },
       _getFolderFooterOptions: function(key) {
