@@ -13,10 +13,16 @@ define('js!SBIS3.CONTROLS.ChooserMixin', [
     */
 
    function recordConverter(rec) {
+      var idProp;
+
+      if(rec.hasColumn(this._options.keyField)) {
+         idProp = this._options.keyField;
+      }
+
       return new Model({
          data: rec.toJSON(),
          adapter: new SbisAdapter(),
-         idProperty: rec.getKeyField() || this._options.keyField
+         idProperty: idProp ? idProp : rec.getKeyField()
       })
    }
 
