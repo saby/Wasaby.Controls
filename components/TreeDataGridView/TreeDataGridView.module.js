@@ -248,7 +248,14 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
          //Уничтожим все дочерние footer'ы и footer текущего узла
          this._destroyFolderFooter(childKeys.concat(key));
       },
-
+      _updateItem: function(item) {
+         var parentKey = this._items.getParentKey(item.getContents(), this._options.hierField);;
+         if (!this._options.openedPath[parentKey]) {
+            this._removeItem(item)
+         } else {
+            TreeDataGridView.superclass._updateItem.apply(this, arguments);
+         }
+      },
       _addItemAttributes : function(container, item) {
          TreeDataGridView.superclass._addItemAttributes.call(this, container, item);
          var hierType = item.get(this._options.hierField + '@'),
@@ -364,10 +371,6 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
          if (typeof insertAfter === 'boolean' && this._options.itemsDragNDrop !== 'onlyChangeParent' || insertAfter === undefined && this._options.itemsDragNDrop !== 'onlyChangeOrder') {
             return this._notify('onDragMove', this.getCurrentElement().keys, target.data('id'), insertAfter) !== false;
          }
-      },
-      _afterMoveHandler: function(isHierMove, moveTo) {
-         var needChaneRoot = isHierMove && this._options.allowEnterToFolder;
-         TreeDataGridView.superclass._afterMoveHandler.apply(this, [needChaneRoot, moveTo])
       },
       /**
        * Говорят, что группировка должна быть только в текущем разделе. Поддерживаем
