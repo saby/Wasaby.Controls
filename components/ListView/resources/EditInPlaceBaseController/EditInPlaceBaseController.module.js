@@ -38,6 +38,7 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                    */
                   modeAutoAdd: false,
                   ignoreFirstColumn: false,
+                  notEndEditClassName: undefined,
                   editFieldFocusHandler: undefined,
                   dataSource: undefined,
                   dataSet: undefined,
@@ -323,10 +324,13 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
             },
             _onChildFocusOut: function (event, control) {
                var
-                  endEdit = this._isAnotherTarget(control, this.getOpener()) && (this._isAnotherTarget(control, this) || this._isCurrentTarget(control));
+                  endEdit = this._allowEndEdit(control) && (this._isAnotherTarget(control, this) || this._isCurrentTarget(control));
                if (endEdit) {
                   this.endEdit(true);
                }
+            },
+            _allowEndEdit: function(control) {
+               return !control.getContainer().closest('.' + this._options.notEndEditClassName).length;
             },
             /**
              * Функция проверки, куда был переведен фокус
