@@ -1,11 +1,13 @@
-define(['js!SBIS3.CONTROLS.Utils.HtmlDecorators/AbstractDecorator'], function (AbstractDecorator) {
+define('js!SBIS3.CONTROLS.Utils.HtmlDecorators/DateFormatDecorator', [
+   'js!SBIS3.CONTROLS.Utils.HtmlDecorators/AbstractDecorator'
+], function (AbstractDecorator) {
    'use strict';
 
    /**
     * Декоратор текста, обеспечивающий отметку цветом
     * @class SBIS3.CONTROLS.Utils.HtmlDecorators/DateFormatDecorator
     * @public
-    * @author Мальцев Алексей Александрович
+    * @author Крайнов Дмитрий Олегович
     */
    var DateFormatDecorator = AbstractDecorator.extend(/** @lends SBIS3.CONTROLS.Utils.HtmlDecorators/DateFormatDecorator.prototype */{
       $protected: {
