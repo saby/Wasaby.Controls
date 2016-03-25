@@ -80,11 +80,50 @@ define('js!SBIS3.CONTROLS.Data.Source.Remote', [
             });
          }
          return this._options.provider;
-      }
+      },
 
       //endregion Public methods
 
       //region Protected methods
+
+      _prepareCreateArguments: function(meta) {
+         return [meta];
+      },
+
+      _prepareReadArguments: function(key, meta) {
+         return [key, meta];
+      },
+
+      _prepareUpdateArguments: function(model, meta) {
+         return [model, meta];
+      },
+
+      _prepareDestroyArguments: function(keys, meta) {
+         return [keys, meta];
+      },
+
+      _prepareMergeArguments: function(from, to) {
+         return [from, to];
+      },
+
+      _prepareCopyArguments: function(key, meta) {
+         return [key, meta];
+      },
+
+      _prepareQueryArguments: function(query) {
+         return [query];
+      },
+
+      /**
+       * Подготавливает аргументы метода к передаче в провайдер
+       * @param {Object.<String, *>} [args] Аргументы метода
+       * @returns {Object.<String, *>|undefined}
+       * @protected
+       */
+      _prepareMethodArguments: function(args) {
+         return this.getAdapter().serialize(args);
+      }
+
       //endregion Protected methods
    });
 

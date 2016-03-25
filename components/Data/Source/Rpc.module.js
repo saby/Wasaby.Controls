@@ -141,10 +141,10 @@ define('js!SBIS3.CONTROLS.Data.Source.Rpc', [
          );
       },
 
-      merge: function(first, second) {
+      merge: function(from, to) {
          return this._callMethod(
             this._options.binding.merge,
-            this._prepareDestroyArguments(first, second)
+            this._prepareMergeArguments(from, to)
          );
       },
 
@@ -160,7 +160,7 @@ define('js!SBIS3.CONTROLS.Data.Source.Rpc', [
             this._options.binding.query,
             this._prepareQueryArguments(query)
          ).addCallback((function (data) {
-            return this._prepareQueryResult(data, 'n');
+            return this._prepareQueryResult(data, 'total');
          }).bind(this));
       },
 
@@ -341,21 +341,11 @@ define('js!SBIS3.CONTROLS.Data.Source.Rpc', [
 
          return provider.call(
             method,
-            this._prepareMethodArg(args)
+            this._prepareMethodArguments(args)
          ).addErrback((function (error) {
             $ws.single.ioc.resolve('ILogger').log(this._moduleName, 'remote method "' + method + '" throws an error "' + error.message + '"');
             return error;
          }).bind(this));
-      },
-
-      /**
-       * Подготавливает аргументы метода к передаче в провайдер
-       * @param {Object.<String, *>} [args] Аргументы метода
-       * @returns {Object.<String, *>|undefined}
-       * @protected
-       */
-      _prepareMethodArg: function(args) {
-         return args;
       }
 
       //endregion Protected methods

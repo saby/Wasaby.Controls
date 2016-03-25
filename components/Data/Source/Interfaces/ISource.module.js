@@ -357,7 +357,7 @@ define('js!SBIS3.CONTROLS.Data.Source.ISource', [
 
       /**
        * Создает пустую модель через источник данных
-       * @param {Object} [meta] Дополнительные мета данные
+       * @param {Object|SBIS3.CONTROLS.Data.Model} [meta] Дополнительные мета данные
        * @returns {$ws.proto.Deferred} Асинхронный результат выполнения. В колбэке придет {@link SBIS3.CONTROLS.Data.Model}.
        * @see SBIS3.CONTROLS.Data.Model
        * @example
@@ -380,7 +380,7 @@ define('js!SBIS3.CONTROLS.Data.Source.ISource', [
       /**
        * Читает модель из источника данных
        * @param {String} key Первичный ключ модели
-       * @param {Object} [meta] Дополнительные мета данные
+       * @param {Object|SBIS3.CONTROLS.Data.Model} [meta] Дополнительные мета данные
        * @returns {$ws.proto.Deferred} Асинхронный результат выполнения. В колбэке придет {@link SBIS3.CONTROLS.Data.Model}.
        * @example
        * <pre>
@@ -429,7 +429,7 @@ define('js!SBIS3.CONTROLS.Data.Source.ISource', [
       /**
        * Удаляет модель из источника данных
        * @param {String|Array} keys Первичный ключ, или массив первичных ключей модели
-       * @param {Object} [meta] Дополнительные мета данные
+       * @param {Object|SBIS3.CONTROLS.Data.Model} [meta] Дополнительные мета данные
        * @returns {$ws.proto.Deferred} Асинхронный результат выполнения
        * @example
        * <pre>

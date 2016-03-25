@@ -200,7 +200,7 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
        *        endpoint: 'Сотрудник',
        *        binding: {
        *           format: 'СписокДляПрочитать'
-    *           }
+       *        }
        *     });
        *     dataSource.create().addCallback(function(model) {
        *         var name = model.get('Имя');
@@ -208,95 +208,12 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
        * </pre>
        */
       create: function(meta) {
-         //TODO: вместо 'ИмяМетода' может передаваться 'Расширение'
-         if (meta === undefined) {
-            meta = {
-               'ВызовИзБраузера': true
-            };
-         }
-         var args = {
-            'Фильтр': this._buildRecord(meta),
-            'ИмяМетода': this._options.binding.format || null
-         };
-
-         return this._callMethod(
-            this._options.binding.create,
-            args
-         ).addCallback((function (data) {
-            return this._getModelInstance(data);
-         }).bind(this));
+         return SbisService.superclass.create.call(this, meta);
       },
 
-      /**
-       * Читает модель из источника данных
-       * @param {String} key Первичный ключ модели
-       * @param {Object|SBIS3.CONTROLS.Data.Model} [meta] Дополнительные мета данные
-       * @returns {$ws.proto.Deferred} Асинхронный результат выполнения. В колбэке придет {@link SBIS3.CONTROLS.Data.Model}.
-       * @see SBIS3.CONTROLS.Data.Source.ISource#read
-       */
-      read: function(key, meta) {
-         var args = {
-            'ИдО': key,
-            'ИмяМетода': this._options.binding.format || null
-         };
-         if (meta && !Object.isEmpty(meta)) {
-            args['ДопПоля'] = meta;
-         }
-
-         return this._callMethod(
-            this._options.binding.read,
-            args
-         ).addCallback((function (data) {
-            var model = this._getModelInstance(data, true);
-            model.setStored(true);
-            return model;
-         }).bind(this));
-      },
-
-      /**
-       * Обновляет модель в источнике данных
-       * @param {SBIS3.CONTROLS.Data.Model} model Обновляемая модель
-       * @param {Object|SBIS3.CONTROLS.Data.Model} [meta] Дополнительные мета данные
-       * @returns {$ws.proto.Deferred} Асинхронный результат выполнения
-       * @see SBIS3.CONTROLS.Data.Source.ISource#update
-       */
-      update: function(model, meta) {
-         var args = {
-            'Запись': model
-         };
-         if (meta && !Object.isEmpty(meta)) {
-            args['ДопПоля'] = meta;
-         }
-
-         return this._callMethod(
-            this._options.binding.update,
-            args
-         ).addCallback((function (key) {
-            if (key && !model.isStored() && this.getIdProperty()) {
-               model.set(this.getIdProperty(), key);
-            }
-            model.setStored(true);
-            model.applyChanges();
-            return key;
-         }).bind(this));
-      },
-
-      /**
-       * Удаляет модель из источника данных
-       * @param {String|Array} keys Первичный ключ, или массив первичных ключей модели
-       * @param {Object|SBIS3.CONTROLS.Data.Model} [meta] Дополнительные мета данные
-       * @returns {$ws.proto.Deferred} Асинхронный результат выполнения
-       * @see SBIS3.CONTROLS.Data.Source.ISource#destroy
-       */
       destroy: function(keys, meta) {
          //Вызывает метод удаления для группы
          var destroyGroup = function(id, BLObjName, meta) {
-            var args = {
-               'ИдО': id
-            };
-            if (meta && !Object.isEmpty(meta)) {
-               args['ДопПоля'] = meta;
-            }
             var provider = this.getProvider();
             if (BLObjName && this._options.endpoint.contract !== BLObjName) {
                provider = Di.resolve('source.provider.sbis-business-logic', {
@@ -307,7 +224,7 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
             }
             return this._callMethod(
                this._options.binding.destroy,
-               args,
+               this._prepareDestroyArguments(id, meta),
                provider
             );
          };
@@ -338,14 +255,74 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
          return pd.done().getResult();
       },
 
-      merge: function(first, second) {
-         return this._callMethod(this._options.binding.merge, {
-            'ИдО' : first,
-            'ИдОУд': second
-         });
+      //endregion SBIS3.CONTROLS.Data.Source.ISource
+
+      //region SBIS3.CONTROLS.Data.Source.Base
+
+      _prepareCallResult: function(data) {
+         return SbisService.superclass._prepareCallResult.call(this, data, 'n');
       },
 
-      copy: function(key, meta) {
+      //endregion SBIS3.CONTROLS.Data.Source.Base
+
+      //region SBIS3.CONTROLS.Data.Source.Rpc
+
+      //endregion SBIS3.CONTROLS.Data.Source.Rpc
+
+      //region SBIS3.CONTROLS.Data.Source.Remote
+
+      _prepareCreateArguments: function(meta) {
+         //TODO: вместо 'ИмяМетода' может передаваться 'Расширение'
+         if (meta === undefined) {
+            meta = {
+               'ВызовИзБраузера': true
+            };
+         }
+         return {
+            'Фильтр': this._buildRecord(meta),
+            'ИмяМетода': this._options.binding.format || null
+         };
+      },
+
+      _prepareReadArguments: function(key, meta) {
+         var args = {
+            'ИдО': key,
+            'ИмяМетода': this._options.binding.format || null
+         };
+         if (meta && !Object.isEmpty(meta)) {
+            args['ДопПоля'] = meta;
+         }
+         return args;
+      },
+
+      _prepareUpdateArguments: function(model, meta) {
+         var args = {
+            'Запись': model
+         };
+         if (meta && !Object.isEmpty(meta)) {
+            args['ДопПоля'] = meta;
+         }
+         return args;
+      },
+
+      _prepareDestroyArguments: function(keys, meta) {
+         var args = {
+            'ИдО': keys
+         };
+         if (meta && !Object.isEmpty(meta)) {
+            args['ДопПоля'] = meta;
+         }
+         return args;
+      },
+
+      _prepareMergeArguments: function(from, to) {
+         return {
+            'ИдО' : from,
+            'ИдОУд': to
+         };
+      },
+
+      _prepareCopyArguments: function(key, meta) {
          var args = {
             'ИдО': key,
             'ИмяМетода': this._options.binding.format
@@ -353,52 +330,19 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
          if (meta && !Object.isEmpty(meta)) {
             args['ДопПоля'] = meta;
          }
-         return this._callMethod(
-            this._options.binding.copy,
-            args
-         );
+         return args;
       },
 
-      query: function(query) {
-         var args = {
+      _prepareQueryArguments: function(query) {
+         return {
             'Фильтр': this._buildRecord(query ? query.getWhere() : null),
             'Сортировка': this._buildRecordSet(this._getSortingParams(query)),
             'Навигация': this._buildRecord(this._getPagingParams(query)),
             'ДопПоля': this._getAdditionalParams(query)
          };
-
-         return this._callMethod(
-            this._options.binding.query,
-            args
-         ).addCallback((function (res) {
-            return this._getDataSetInstance({
-               rawData: res,
-               totalProperty: 'n'
-            });
-         }).bind(this));
       },
 
-      call: function (command, data) {
-         return this._callMethod(
-            command,
-            data
-         ).addCallback((function (res) {
-            return this._getDataSetInstance({
-               rawData: res,
-               totalProperty: 'n'
-            });
-         }).bind(this));
-      },
-
-      //endregion SBIS3.CONTROLS.Data.Source.ISource
-
-      //region SBIS3.CONTROLS.Data.Source.Rpc
-
-      _prepareMethodArg: function(args) {
-         return this.getAdapter().serialize(args);
-      },
-
-      //endregion SBIS3.CONTROLS.Data.Source.Rpc
+      //endregion SBIS3.CONTROLS.Data.Source.Remote
 
       //region Protected methods
 

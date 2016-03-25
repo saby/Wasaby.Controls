@@ -121,11 +121,11 @@ define('js!SBIS3.CONTROLS.Data.Source.Memory', [
          }
       },
 
-      merge: function(one, two) {
-         var indexOne = this._getIndexByKey(one),
-            indexTwo = this._getIndexByKey(two);
+      merge: function(from, to) {
+         var indexOne = this._getIndexByKey(from),
+            indexTwo = this._getIndexByKey(to);
          if (indexOne === -1 || indexTwo === -1) {
-            return $ws.proto.Deferred.fail('Model with key "' + one + '" or "' + two + '" isn\'t exists');
+            return $ws.proto.Deferred.fail('Model with key "' + from + '" or "' + to + '" isn\'t exists');
          } else {
             this._getTableAdapter().merge(
                indexOne,
