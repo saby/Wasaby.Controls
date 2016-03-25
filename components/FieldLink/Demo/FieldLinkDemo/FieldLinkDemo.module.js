@@ -5,7 +5,7 @@ define('js!SBIS3.CONTROLS.Demo.FieldLinkDemo', // Устанавливаем и�
    [ // Массив зависимостей компонента
       'js!SBIS3.CORE.CompoundControl', // Подключаем базовый компонент, от которого далее будем наследовать свой демо-компонент
       'html!SBIS3.CONTROLS.Demo.FieldLinkDemo', // Подключаем вёрстку демо-компонента
-      'js!SBIS3.CONTROLS.Data.Source.Memory', // Подключаем класс для работы со статическим источником данных
+      'js!SBIS3.CONTROLS.DemoMemory', // Подключаем класс для работы со статическим источником данных
       'css!SBIS3.CONTROLS.Demo.FieldLinkDemo', // Подключаем CSS-файл демо-компонента
       'js!SBIS3.CONTROLS.FieldLink', // Подключаем контрол поля связи
       'js!SBIS3.CONTROLS.DataGridView', // Подключаем контрол табличного представления данных
@@ -38,7 +38,6 @@ define('js!SBIS3.CONTROLS.Demo.FieldLinkDemo', // Устанавливаем и�
             this.getChildControlByName('FieldLinkSingleSelectContext').setDataSource(dataSource);
             this.getChildControlByName('FieldLinkSelectorButtonIcon').setDataSource(dataSource);
             this.getChildControlByName('FieldLinkSelectorButtonNoIcon').setDataSource(dataSource);
-            $ws.helpers.message('В этом примере продемонстрированы разные варианты настроек для поля связи.');
          }
       });
       return moduleClass;
