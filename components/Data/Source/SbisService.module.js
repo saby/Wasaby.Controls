@@ -14,6 +14,7 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
     * @class SBIS3.CONTROLS.Data.Source.SbisService
     * @extends SBIS3.CONTROLS.Data.Source.Rpc
     * @public
+    * @ignoreMethods prepareQueryParams
     * @author Мальцев Алексей
     * @example
     * <pre>
@@ -636,42 +637,32 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
 
       //endregion Protected methods
 
-      //TODO: совместимость с SBIS3.CONTROLS.SbisServiceSource - выплить после перехода на ISource
-      //region SBIS3.CONTROLS.SbisServiceSource
-      prepareQueryParams : function(filter, sorting, offset, limit, hasMore){
-         var preparePagingParam = function (offset, limit, hasMore) {
-            var pagingParam = null;
-            if (typeof(offset) !== 'undefined' && offset !== null && typeof(limit) !== 'undefined' && limit !== null) {
-               var numPage = Math.floor(offset / limit);
-               pagingParam = {
-                  'd': [
-                     numPage,
-                     limit,
-                     hasMore !== undefined ? hasMore : offset >= 0 //Если offset отрицательный, то грузится последняя страница
-                  ],
-                  's': [
-                     {'n': 'Страница', 't': 'Число целое'},
-                     {'n': 'РазмерСтраницы', 't': 'Число целое'},
-                     {'n': 'ЕстьЕще', 't': 'Логическое'}
-                  ]
-               };
-            }
-            return pagingParam;
-         };
+      //region Deprecated
 
-         var query = new Query();
+      /**
+       * Возвращает аргументы списочного метода
+       * @deprecated Метод будет удален в 3.7.4, используйте query()
+       */
+      prepareQueryParams : function(filter, sorting, offset, limit, hasMore){
+         var query = new Query(),
+            args;
+
          query.where(filter)
             .offset(hasMore === undefined ? offset : hasMore)
             .limit(limit)
             .orderBy(sorting);
-         return {
-            'Фильтр': !query || Object.isEmpty(query.getWhere()) ? null : this.getAdapter().serialize(query.getWhere()),
-            'Сортировка': this.getAdapter().serialize(this._getSortingParams(query)),
-            'Навигация': preparePagingParam(offset, limit, hasMore),
-            'ДопПоля': this.getAdapter().serialize(this._getAdditionalParams(query))
+
+         args = {
+            'Фильтр': this._buildRecord(query ? query.getWhere() : null),
+            'Сортировка': this._buildRecordSet(this._getSortingParams(query)),
+            'Навигация': this._buildRecord(this._getPagingParams(query)),
+            'ДопПоля': this._getAdditionalParams(query)
          };
+
+         return this.getAdapter().serialize(args);
       }
-      //endregion SBIS3.CONTROLS.SbisServiceSource
+
+      //endregion Deprecated
    });
 
    Di.register('source.sbis-service', SbisService);
