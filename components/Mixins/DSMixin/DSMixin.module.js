@@ -1087,7 +1087,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
       },
       //TODO Сделать публичным? И перенести в другое место
       _hasNextPage: function (hasMore, offset) {
-         offset = offset === undefined ? this._offset : offset;
+         offset = offset == undefined ? this._offset : offset;
          //n - приходит true, false || общее количество записей в списочном методе
          //Если offset отрицательный, значит запрашивали последнюю страницу
          return offset < 0 ? false : (typeof (hasMore) !== 'boolean' ? hasMore > (offset + this._options.pageSize) : !!hasMore);
