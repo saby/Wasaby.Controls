@@ -61,6 +61,8 @@ define('js!SBIS3.CONTROLS.Data.Source.Remote', [
       },
 
       $constructor: function (cfg) {
+         this._publish('onBeforeProviderCall');
+
          cfg = cfg || {};
          //Deprecated
          if ('service' in cfg && 'resource' in cfg && !('endpoint' in cfg)) {

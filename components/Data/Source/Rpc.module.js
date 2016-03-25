@@ -50,8 +50,6 @@ define('js!SBIS3.CONTROLS.Data.Source.Rpc', [
       },
 
       $constructor: function (cfg) {
-         this._publish('onBeforeProviderCall');
-
          cfg = cfg || {};
          //Deprecated
          if (!('binding' in cfg)) {
