@@ -127,15 +127,19 @@ define('js!SBIS3.CONTROLS.FieldLink',
           },
 
           $constructor: function() {
+             var commandDispatcher = $ws.single.CommandDispatcher;
+
              this.getContainer().addClass('controls-FieldLink');
              this._publish('onItemActivate');
 
-             /* Проиницализируем переменные и event'ы */
+             /* Проиницализируем переменные */
              this._setVariables();
-             this._initEvents();
 
              /* Создём контрол, который рисует выбранные элементы  */
              this._linkCollection = this._getLinkCollection();
+
+             commandDispatcher.declareCommand(this, 'clearAllItems', this._dropAllItems);
+             commandDispatcher.declareCommand(this, 'showAllItems', this._showAllItems);
 
              /* Если не передали конфигурацию диалога всех записей для автодополнения,
               то по-умолчанию возьмём конфигурацию первого словаря */
@@ -277,20 +281,26 @@ define('js!SBIS3.CONTROLS.FieldLink',
              }
           },
 
-          _initEvents: function() {
-             var self = this;
-
-             if(this._options.multiselect) {
-                /* Когда показываем пикер со всеми выбранными записями, скроем автодополнение и покажем выбранные записи*/
-                this._showAllLink.click(function() {
-                   /* Если открыто автодополнение, скроем его */
-                   if(self.isPickerVisible()) {
-                      self.hidePicker();
-                   }
-                   self._getLinkCollection().togglePicker();
-                });
-                this._dropAllLink.click(this.removeItemsSelectionAll.bind(this));
+          /**
+           * Показывает все элементы поля связи в выпадающем списке
+           * @private
+           */
+          _showAllItems: function() {
+             if(this.isPickerVisible()) {
+                this.hidePicker();
              }
+             this._getLinkCollection().togglePicker();
+          },
+
+          /**
+           * Удаляет все элементы поля связи,
+           * ставит курсор в поле ввода
+           * @private
+           */
+          _dropAllItems: function() {
+             this.removeItemsSelectionAll();
+             this._inputField.focus();
+             this._observableControlFocusHandler();
           },
 
           /**

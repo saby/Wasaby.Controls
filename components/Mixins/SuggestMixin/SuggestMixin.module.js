@@ -320,11 +320,8 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
 
          //Подписываемся на события в отслеживаемых контролах
          $ws.helpers.forEach(this._options.observableControls, function (control) {
-            this.subscribeTo(control, 'onFocusIn', function() {
-               if(self._options.autoShow) {
-                  self._checkPickerState() ? self.showPicker() : self._startSearch();
-               }
-            });
+            this.subscribeTo(control, 'onFocusIn', self._observableControlFocusHandler.bind(self));
+
             /* Если фокус уходит на список - вернём его обратно в контрол, с которого фокус ушёл */
             this.subscribeTo(control, 'onFocusOut', function(e, destroyed, focusedControl) {
                if(self.getList() === focusedControl) {
@@ -334,6 +331,15 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
             });
          }, this);
 
+      },
+
+      /**
+       * Обрабочик на приход фокуса в отслеживаемый компонент
+       */
+      _observableControlFocusHandler: function() {
+         if(this._options.autoShow) {
+            this._checkPickerState() ? this.showPicker() : this._startSearch();
+         }
       },
 
       /**

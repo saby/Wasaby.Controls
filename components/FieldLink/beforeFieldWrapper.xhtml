@@ -1,5 +1,13 @@
-<a class="controls-FieldLink__showAllLinks asLink ws-hidden" href="javascript:void(0)">&#133;</a>
-<a class="controls-FieldLink__dropAllLinks asLink ws-hidden" href="javascript:void(0)">Очистить все</a>
+{{? it.multiselect}}
+    <component data-component="SBIS3.CONTROLS.Link" class="controls-FieldLink__showAllLinks ws-hidden">
+        <opt name="caption">&#133;</opt>
+        <opt name="command">showAllItems</opt>
+    </component>
+    <component data-component="SBIS3.CONTROLS.Link" class="controls-FieldLink__dropAllLinks ws-hidden">
+        <opt name="caption">Очистить все</opt>
+        <opt name="command">clearAllItems</opt>
+    </component>
+{{?}}
 <div class="controls-FieldLink__linksWrapper">
     <div class="controls-FieldLink__linksContainer"></div>
 </div>
