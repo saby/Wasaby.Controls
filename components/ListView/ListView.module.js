@@ -201,7 +201,7 @@ define('js!SBIS3.CONTROLS.ListView',
             _infiniteScrollOffset: null,
             _allowInfiniteScroll: true,
             _scrollIndicatorHeight: 32,
-            _isLoadBeforeScrollAppears : true,
+            _isLoadBeforeScrollAppears : true, //Переменная хранит состояние, что загрузка произошла ПЕРЕД отображением скролла
             _pageChangeDeferred : undefined,
             _pager : undefined,
             _previousGroupBy : undefined,
