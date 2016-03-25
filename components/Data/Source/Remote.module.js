@@ -115,8 +115,8 @@ define('js!SBIS3.CONTROLS.Data.Source.Remote', [
       },
 
       /**
-       * Подготавливает аргументы метода к передаче в провайдер
-       * @param {Object.<String, *>} [args] Аргументы метода
+       * Подготавливает аргументы к передаче в удаленный сервис
+       * @param {Object.<String, *>} [args] Аргументы вызова
        * @returns {Object.<String, *>|undefined}
        * @protected
        */
