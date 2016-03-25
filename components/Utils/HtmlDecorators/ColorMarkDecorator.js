@@ -1,4 +1,6 @@
-define(['js!SBIS3.CONTROLS.Utils.HtmlDecorators/AbstractDecorator'], function (AbstractDecorator) {
+define('js!SBIS3.CONTROLS.Utils.HtmlDecorators/ColorMarkDecorator', [
+   'js!SBIS3.CONTROLS.Utils.HtmlDecorators/AbstractDecorator'
+], function (AbstractDecorator) {
    'use strict';
 
    var BOLD = 0x8000000,
@@ -10,7 +12,7 @@ define(['js!SBIS3.CONTROLS.Utils.HtmlDecorators/AbstractDecorator'], function (A
     * Декоратор текста, обеспечивающий отметку цветом
     * @class SBIS3.CONTROLS.Utils.HtmlDecorators/ColorMarkDecorator
     * @public
-    * @author Мальцев Алексей Александрович
+    * @author Крайнов Дмитрий Олегович
     */
    var ColorMarkDecorator = AbstractDecorator.extend(/** @lends SBIS3.CONTROLS.Utils.HtmlDecorators/ColorMarkDecorator.prototype */{
       $protected: {
