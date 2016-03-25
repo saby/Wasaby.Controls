@@ -1,10 +1,10 @@
 define('js!SBIS3.CONTROLS.FilterButton.FilterLine',
    [
       'js!SBIS3.CORE.CompoundControl',
-      'js!SBIS3.CONTROLS.Utils.TemplateUtil',
+      'js!SBIS3.CONTROLS.FilterButton.FilterToStringUtil',
       'html!SBIS3.CONTROLS.FilterButton.FilterLine'
    ],
-   function(CompoundControl, TemplateUtil, dotTplFn) {
+   function(CompoundControl, FilterToStringUtil, dotTplFn) {
 
       /**
        * Контрол, отображающий строку из применённых фильтров рядом с кнопкой фильтров.
@@ -23,31 +23,12 @@ define('js!SBIS3.CONTROLS.FilterButton.FilterLine',
             var context = this.getLinkedContext(),
                self = this,
                updateContext = function() {
-                  var linkText, textArr, template, templateRes;
+                  var linkText;
 
                   /* Проверяем, изменился ли фильтр */
                   if (context.getValue('filterChanged')) {
                      /* Пробежимся по структуре фильтров и склеим строку */
-                     textArr = $ws.helpers.reduce(context.getValue('filterStructure'), function(result, element) {
-                        template = TemplateUtil.prepareTemplate(element.itemTemplate);
-
-                        /* Если есть шаблон, строим строку по шаблону */
-                        if(template) {
-                           templateRes = template(element);
-                           if(templateRes) {
-                              result.push(template(element));
-                           }
-                           return result;
-                        } else if(template === null) {
-                           return result;
-                        }
-
-                        if (element.caption && !$ws.helpers.isEqualObject(element.value, element.resetValue)) {
-                           result.push(element.caption);
-                        }
-                        return result;
-                     }, []);
-                     linkText = textArr.join(', ');
+                     linkText = FilterToStringUtil.string(context.getValue('filterStructure'), 'itemTemplate');
                   } else {
                      linkText = context.getValue('filterResetLinkText');
                   }
