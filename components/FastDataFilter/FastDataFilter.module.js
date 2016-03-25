@@ -88,6 +88,7 @@ define('js!SBIS3.CONTROLS.FastDataFilter',
          },
          init: function () {
             FastDataFilter.superclass.init.apply(this, arguments);
+            this._container.removeClass('ws-area');
             //Непонятно, сейчас приходится делать setItems из прикладного кода
             //this.reload();
          },
