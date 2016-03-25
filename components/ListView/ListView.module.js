@@ -428,7 +428,8 @@ define('js!SBIS3.CONTROLS.ListView',
                resultsText : 'Итого',
                resultsTpl: undefined
             },
-            _scrollWatcher : undefined
+            _scrollWatcher : undefined,
+            _updateByReload: false //todo: Убрать в 150, когда будет правильный рендер изменившихся данных. Флаг, означающий то, что обновление происходит из-за перезагрузки данных.
          },
 
          $constructor: function () {
@@ -876,6 +877,7 @@ define('js!SBIS3.CONTROLS.ListView',
           * </pre>
           */
          reload: function () {
+            this._updateByReload = true; //todo Убрать в 150 когда будет правильный рендер изменившихся данных
             this._reloadInfiniteScrollParams();
             this._previousGroupBy = undefined;
             this._firstScrollTop = true;
@@ -997,7 +999,22 @@ define('js!SBIS3.CONTROLS.ListView',
             this._drawSelectedItems(this.getSelectedKeys());
             this._drawSelectedItem(this.getSelectedKey());
          },
-
+         _redraw: function () {
+            ListView.superclass._redraw.apply(this, arguments);
+            this._checkScroll(); //todo Убрать в 150, когда будет правильный рендер изменившихся данных
+         },
+         /**
+          * todo Убрать в 150, когда будет правильный рендер изменившихся данных
+          */
+         _checkScroll: function() {
+            //Если перерисовка случилась из-за reload, то прроверяем наличие скролла и догружаем ещё одну страницу если скролл есть
+            if (this._updateByReload) {
+               this._updateByReload = false;
+               if (this._scrollWatcher && this._scrollWatcher.hasScroll(this.getContainer())) {
+                  this._nextLoad();
+               }
+            }
+         },
          /**
           * @private
           */
