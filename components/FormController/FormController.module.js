@@ -167,7 +167,7 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
          };
          this._saving = true;
 
-         if(!this._parent.validate()) {
+         if(!this.validate()) {
             dResult.errback('Некорректно заполнены обязательные для заполнения поля!');
             //Если нажимали крестик, то закроем панель
             if (!hideQuestion){

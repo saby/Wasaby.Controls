@@ -167,13 +167,22 @@ define('js!SBIS3.CONTROLS.FormWidgetMixin', ['js!SBIS3.CORE.Infobox'], function 
             cont = this.getContainer(),
             previousStatus = this._prevValidationResult;
          this.clearMark();
-         if (this._validating || !this._canValidate() || !cont || cont.hasClass('ws-hidden') === true) {
+         if (this._validating || !cont || cont.hasClass('ws-hidden') === true) {
             return true;
          }
 
          try {
             this._validating = true;
             vResult = this._invokeValidation();
+            if (vResult.result) {
+               for (var i = 0, l = this._childControls.length; i < l; i++) {
+                  var childControl = this._childControls[i];
+                  if (childControl && !childControl.validate()) {
+                     vResult.result = false;
+                     break;
+                  }
+               }
+            }
          } catch (e) {
             vResult = {
                errors: [ e.message ],
