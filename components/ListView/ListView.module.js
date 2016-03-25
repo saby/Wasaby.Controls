@@ -1795,7 +1795,7 @@ define('js!SBIS3.CONTROLS.ListView',
          },
          _getDragItems: function(key) {
             var keys = this._options.multiselect ? $ws.core.clone(this.getSelectedKeys()) : [];
-            if (Array.indexOf(key, keys) == -1 || Array.indexOf(String(key), keys) == -1) {
+            if (Array.indexOf(keys, key) == -1 || Array.indexOf(keys, String(key)) == -1) {
                keys.push(key);
             }
             return keys;
