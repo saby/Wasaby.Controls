@@ -13,25 +13,6 @@ define('js!SBIS3.CONTROLS.Data.Source.Rpc', [
     */
 
    var Rpc = Remote.extend(/** @lends SBIS3.CONTROLS.Data.Source.Rpc.prototype */{
-      /**
-       * @event onBeforeProviderCall Перед вызовом метода через провайдер
-       * @param {$ws.proto.EventObject} eventObject Дескриптор события.
-       * @param {String} method Имя метода
-       * @param {Object.<String, *>} [args] Аргументы метода (передаются по ссылке, можно модифицировать)
-       * @example
-       * <pre>
-       *    dataSource.subscribe('onBeforeProviderCall', function(eventObject, method, args){
-       *       switch (method){
-       *          case 'query':
-       *             //Select only records with enabled == true
-       *             args.filter = args.filter || {};
-       *             args.filter.enabled = true;
-       *             break;
-       *       }
-       *    });
-       * </pre>
-       */
-
       _moduleName: 'SBIS3.CONTROLS.Data.Source.Rpc',
       $protected: {
          _options: {
@@ -104,76 +85,6 @@ define('js!SBIS3.CONTROLS.Data.Source.Rpc', [
             }
          }
       },
-
-      //region SBIS3.CONTROLS.Data.Source.ISource
-
-      create: function(meta) {
-         return this._callMethod(
-            this._options.binding.create,
-            this._prepareCreateArguments(meta)
-         ).addCallback((function (data) {
-            return this._prepareCreateResult(data);
-         }).bind(this));
-      },
-
-      read: function(key, meta) {
-         return this._callMethod(
-            this._options.binding.read,
-            this._prepareReadArguments(key, meta)
-         ).addCallback((function (data) {
-            return this._prepareReadResult(data);
-         }).bind(this));
-      },
-
-      update: function(model, meta) {
-         return this._callMethod(
-            this._options.binding.update,
-            this._prepareUpdateArguments(model, meta)
-         ).addCallback((function (key) {
-            return this._prepareUpdateResult(model, key);
-         }).bind(this));
-      },
-
-      destroy: function(keys, meta) {
-         return this._callMethod(
-            this._options.binding.destroy,
-            this._prepareDestroyArguments(keys, meta)
-         );
-      },
-
-      merge: function(from, to) {
-         return this._callMethod(
-            this._options.binding.merge,
-            this._prepareMergeArguments(from, to)
-         );
-      },
-
-      copy: function(key, meta) {
-         return this._callMethod(
-            this._options.binding.copy,
-            this._prepareCopyArguments(key, meta)
-         );
-      },
-
-      query: function(query) {
-         return this._callMethod(
-            this._options.binding.query,
-            this._prepareQueryArguments(query)
-         ).addCallback((function (data) {
-            return this._prepareQueryResult(data, 'total');
-         }).bind(this));
-      },
-
-      call: function (command, data) {
-         return this._callMethod(
-            command,
-            data
-         ).addCallback((function (data) {
-            return this._prepareCallResult(data, 'n');
-         }).bind(this));
-      },
-
-      //endregion SBIS3.CONTROLS.Data.Source.ISource
 
       //region SBIS3.CONTROLS.Data.Source.Remote
 
@@ -320,33 +231,11 @@ define('js!SBIS3.CONTROLS.Data.Source.Rpc', [
        */
       setMergeMethodName: function (method) {
          this._options.binding.merge = method;
-      },
+      }
 
       //endregion Public methods
 
       //region Protected methods
-
-      /**
-       * Вызывает удаленный метод через провайдер
-       * @param {String} method Имя метода
-       * @param {Object.<String, *>} [args] Аргументы метода
-       * @param {SBIS3.CONTROLS.Data.Source.Provider.IRpc} [provider] Провайдер, через который вызвать
-       * @returns {$ws.proto.Deferred} Асинхронный результат операции
-       * @protected
-       */
-      _callMethod: function(method, args, provider) {
-         provider = provider || this.getProvider();
-
-         this._notify('onBeforeProviderCall', method, args);
-
-         return provider.call(
-            method,
-            this._prepareMethodArguments(args)
-         ).addErrback((function (error) {
-            $ws.single.ioc.resolve('ILogger').log(this._moduleName, 'remote method "' + method + '" throws an error "' + error.message + '"');
-            return error;
-         }).bind(this));
-      }
 
       //endregion Protected methods
    });

@@ -222,7 +222,7 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
                   }
                });
             }
-            return this._callMethod(
+            return this._makeCall(
                this._options.binding.destroy,
                this._prepareDestroyArguments(id, meta),
                provider

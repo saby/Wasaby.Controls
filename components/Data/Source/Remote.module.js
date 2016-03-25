@@ -14,12 +14,31 @@ define('js!SBIS3.CONTROLS.Data.Source.Remote', [
     */
 
    var Remote = Base.extend(/** @lends SBIS3.CONTROLS.Data.Source.Remote.prototype */{
+      /**
+       * @event onBeforeProviderCall Перед вызовом метода через провайдер
+       * @param {$ws.proto.EventObject} eventObject Дескриптор события.
+       * @param {String} name Имя сервиса
+       * @param {Object.<String, *>} [args] Аргументы сервиса (передаются по ссылке, можно модифицировать)
+       * @example
+       * <pre>
+       *    dataSource.subscribe('onBeforeProviderCall', function(eventObject, name, args){
+       *       switch (name){
+       *          case 'query':
+       *             //Select only records with enabled == true
+       *             args.filter = args.filter || {};
+       *             args.filter.enabled = true;
+       *             break;
+       *       }
+       *    });
+       * </pre>
+       */
+
       _moduleName: 'SBIS3.CONTROLS.Data.Source.Remote',
 
       $protected: {
          _options: {
             /**
-             * @cfg {String|Object} Объект, реализующий сетевой протокол для обмена в режиме клиент-сервер
+             * @cfg {SBIS3.CONTROLS.Data.Source.Provider.IAbstract|String} Объект, реализующий сетевой протокол для обмена в режиме клиент-сервер
              * @see getProvider
              * @see SBIS3.CONTROLS.Data.Di
              * @example
@@ -50,6 +69,76 @@ define('js!SBIS3.CONTROLS.Data.Source.Remote', [
          }
       },
 
+      //region SBIS3.CONTROLS.Data.Source.ISource
+
+      create: function(meta) {
+         return this._makeCall(
+            this._options.binding.create,
+            this._prepareCreateArguments(meta)
+         ).addCallback((function (data) {
+            return this._prepareCreateResult(data);
+         }).bind(this));
+      },
+
+      read: function(key, meta) {
+         return this._makeCall(
+            this._options.binding.read,
+            this._prepareReadArguments(key, meta)
+         ).addCallback((function (data) {
+            return this._prepareReadResult(data);
+         }).bind(this));
+      },
+
+      update: function(model, meta) {
+         return this._makeCall(
+            this._options.binding.update,
+            this._prepareUpdateArguments(model, meta)
+         ).addCallback((function (key) {
+            return this._prepareUpdateResult(model, key);
+         }).bind(this));
+      },
+
+      destroy: function(keys, meta) {
+         return this._makeCall(
+            this._options.binding.destroy,
+            this._prepareDestroyArguments(keys, meta)
+         );
+      },
+
+      merge: function(from, to) {
+         return this._makeCall(
+            this._options.binding.merge,
+            this._prepareMergeArguments(from, to)
+         );
+      },
+
+      copy: function(key, meta) {
+         return this._makeCall(
+            this._options.binding.copy,
+            this._prepareCopyArguments(key, meta)
+         );
+      },
+
+      query: function(query) {
+         return this._makeCall(
+            this._options.binding.query,
+            this._prepareQueryArguments(query)
+         ).addCallback((function (data) {
+            return this._prepareQueryResult(data, 'total');
+         }).bind(this));
+      },
+
+      call: function (command, data) {
+         return this._makeCall(
+            command,
+            data
+         ).addCallback((function (data) {
+            return this._prepareCallResult(data, 'n');
+         }).bind(this));
+      },
+
+      //endregion SBIS3.CONTROLS.Data.Source.ISource
+
       //region Public methods
 
       /**
@@ -64,7 +153,7 @@ define('js!SBIS3.CONTROLS.Data.Source.Remote', [
 
       /**
        * Возвращает объект, реализующий сетевой протокол для обмена в режиме клиент-сервер
-       * @returns {Object}
+       * @returns {SBIS3.CONTROLS.Data.Source.Provider.IAbstract}
        * @see provider
        */
       getProvider: function () {
@@ -79,12 +168,45 @@ define('js!SBIS3.CONTROLS.Data.Source.Remote', [
                resource: this._options.endpoint.contract
             });
          }
+
          return this._options.provider;
       },
 
       //endregion Public methods
 
       //region Protected methods
+
+      /**
+       * Вызывает удаленный сервис через провайдер
+       * @param {String} name Имя сервиса
+       * @param {Object.<String, *>|Array} [args] Аргументы сервиса
+       * @param {SBIS3.CONTROLS.Data.Source.Provider.IRpc} [provider] Провайдер, через который вызвать
+       * @returns {$ws.proto.Deferred} Асинхронный результат операции
+       * @protected
+       */
+      _makeCall: function(name, args, provider) {
+         provider = provider || this.getProvider();
+
+         this._notify('onBeforeProviderCall', name, args);
+
+         return provider.call(
+            name,
+            this._prepareArgumentsForCall(args)
+         ).addErrback((function (error) {
+            $ws.single.ioc.resolve('ILogger').log(this._moduleName, 'remote service "' + name + '" throws an error "' + error.message + '"');
+            return error;
+         }).bind(this));
+      },
+
+      /**
+       * Подготавливает аргументы к передаче в удаленный сервис
+       * @param {Object.<String, *>} [args] Аргументы вызова
+       * @returns {Object.<String, *>|undefined}
+       * @protected
+       */
+      _prepareArgumentsForCall: function(args) {
+         return this.getAdapter().serialize(args);
+      },
 
       _prepareCreateArguments: function(meta) {
          return [meta];
@@ -112,16 +234,6 @@ define('js!SBIS3.CONTROLS.Data.Source.Remote', [
 
       _prepareQueryArguments: function(query) {
          return [query];
-      },
-
-      /**
-       * Подготавливает аргументы к передаче в удаленный сервис
-       * @param {Object.<String, *>} [args] Аргументы вызова
-       * @returns {Object.<String, *>|undefined}
-       * @protected
-       */
-      _prepareMethodArguments: function(args) {
-         return this.getAdapter().serialize(args);
       }
 
       //endregion Protected methods

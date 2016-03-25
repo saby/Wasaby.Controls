@@ -42,65 +42,6 @@ define([
          });
       });
 
-      describe('.subscribe()', function () {
-         context('onBeforeProviderCall', function (){
-            it('should receive method name', function (done) {
-               var handler = function(e, name) {
-                     try {
-                        assert.strictEqual(name, methodName);
-                        done();
-                     } catch (e) {
-                        done(e);
-                     }
-                  },
-                  methodName = 'Test';
-               dataSource.subscribe('onBeforeProviderCall', handler);
-               dataSource.call(methodName);
-               dataSource.unsubscribe('onBeforeProviderCall', handler);
-            });
-            it('should receive method name and arguments', function (done) {
-               var handler = function(e, name, args) {
-                     try {
-                        assert.strictEqual(name, methodName);
-                        assert.deepEqual(args, methodArgs);
-                        done();
-                     } catch (e) {
-                        done(e);
-                     }
-                  },
-                  methodName = 'Test',
-                  methodArgs = [{}, [], 'a', 1, 0, false, true, null];
-               dataSource.subscribe('onBeforeProviderCall', handler);
-               dataSource.call(methodName, methodArgs);
-               dataSource.unsubscribe('onBeforeProviderCall', handler);
-            });
-            it('should change method arguments as an object', function () {
-               var handler = function(e, name, args) {
-                     args.a = 9;
-                     delete args.b;
-                     args.c = 3;
-                  },
-                  methodArgs = {a: 1, b: 2},
-                  expectArgs = {a: 9, c: 3};
-               dataSource.subscribe('onBeforeProviderCall', handler);
-               dataSource.call('Test', methodArgs);
-               dataSource.unsubscribe('onBeforeProviderCall', handler);
-               assert.deepEqual(provider._lastArgs, expectArgs);
-            });
-            it('should change method arguments as an array', function () {
-               var handler = function(e, name, args) {
-                     args.push('new');
-                  },
-                  methodArgs = [1, 2],
-                  expectArgs = [1, 2, 'new'];
-               dataSource.subscribe('onBeforeProviderCall', handler);
-               dataSource.call('Test', methodArgs);
-               dataSource.unsubscribe('onBeforeProviderCall', handler);
-               assert.deepEqual(provider._lastArgs, expectArgs);
-            });
-         });
-      });
-
       describe('.getQueryMethodName()', function () {
          it('should return QueryMethodName', function (){
             assert.equal(dataSource.getQueryMethodName(), 'getUsers');
