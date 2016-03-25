@@ -329,7 +329,7 @@ define(
             }
             this._options.mask = this._options.mask.substr(0, length) + this._options.mask;
             TimeInterval.superclass.setMask.apply(this, [this._options.mask]);
-            this.setText(this._options.text, true);
+            this._setText(this._options.text);
             this.setCursor(this.formatModel._options.cursorPosition.group, this.formatModel._options.cursorPosition.position + 1);
          },
          /**
@@ -341,11 +341,18 @@ define(
             return this._options.mask.indexOf(section) > -1;
          },
 
-         setText: function(text, withoutNotify){
+         setText: function(text){
+            text = this._getCorrectText(text);
+            TimeInterval.superclass.setText.call(this, text);
+         },
+         _setText: function(text){
+            text = this._getCorrectText(text);
+            TimeInterval.superclass._setText.call(this, text);
+         },
+         _getCorrectText: function(text){
             this.formatModel.setText(text, this._maskReplacer);
             this._updateIntervalByText();
-            text = this._getTextByTimeInterval();
-            TimeInterval.superclass.setText.call(this, text, withoutNotify);
+            return this._getTextByTimeInterval();
          },
          /**
           * Получить текст по текущему значению timeInterval.
@@ -428,8 +435,8 @@ define(
           */
          _updateTextByTimeInterval: function(needUpdate){
             var currentText = this.formatModel.getText(this._maskReplacer);
-            if ((needUpdate === true) || (currentText !== this._getEmptyText() && currentText !== this.getText())){
-               this.setText(this._getTextByTimeInterval(), true);
+            if ((needUpdate === true) || (currentText !== this._getEmptyText())){
+               this._setText(this._getTextByTimeInterval());
             }
          },
          /**

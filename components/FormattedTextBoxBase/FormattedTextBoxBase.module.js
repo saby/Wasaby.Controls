@@ -936,16 +936,16 @@ define(
        * @see onInputFinished
        * @see setCursor
        */
-      setText: function(text, withoutNotify) {
+      setText: function(text) {
+         this._setText(text);
+         this._notify('onTextChange', this._options.text);
+      },
+      _setText: function(text){
          this.formatModel.setText(text, this._maskReplacer);
          this._updateText();
          //обновить html
          this._inputField.html(this._getHtmlMask());
-         if (!withoutNotify){
-            this._notify('onTextChange', this._options.text);
-         }
       },
-
       /**
        * Задает маску в модель и обновляет html.
        * @param {String} mask Маска строкой, например 'dd:dd', 'HH:MM'
