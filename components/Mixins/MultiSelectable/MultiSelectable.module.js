@@ -590,7 +590,7 @@ define('js!SBIS3.CONTROLS.MultiSelectable', ['js!SBIS3.CONTROLS.Data.Collection.
          }
       },
 
-
+      /* Для правильной работы биндингов, предполагаем, что масив [null] тоже является пустым выделением */
       _isEmptySelection: function() {
          var selectedKeys = this._options.selectedKeys;
          return !selectedKeys.length || $ws.helpers.isEqualObject(selectedKeys, EMPTY_SELECTION);
