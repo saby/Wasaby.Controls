@@ -1,4 +1,6 @@
-define('js!SBIS3.CONTROLS.Utils.HtmlDecorators', ['js!SBIS3.CONTROLS.Utils.HtmlDecorators/AbstractDecorator'], function (AbstractDecorator) {
+define('js!SBIS3.CONTROLS.Utils.HtmlDecorators', [
+   'js!SBIS3.CONTROLS.Utils.HtmlDecorators/AbstractDecorator'
+], function (AbstractDecorator) {
    'use strict';
 
    /** @constant {Object} Вид области декорирования: текст*/
@@ -10,7 +12,7 @@ define('js!SBIS3.CONTROLS.Utils.HtmlDecorators', ['js!SBIS3.CONTROLS.Utils.HtmlD
     * Декораторы для HTML - позволяют внедрять обёртки в разметку
     * @class SBIS3.CONTROLS.Utils.HtmlDecorators
     * @public
-    * @author Мальцев Алексей Александрович
+    * @author Крайнов Дмитрий Олегович
     */
    var HtmlDecorators = $ws.core.extend({}, /** @lends SBIS3.CONTROLS.Utils.HtmlDecorators.prototype */{
       $protected: {
