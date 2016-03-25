@@ -1187,10 +1187,12 @@ define('js!SBIS3.CONTROLS.Data.Projection.Collection', [
             this._getServiceEnumerator().getInternalBySource(index),
             'contents'
          );
+         var session = this._startUpdateSession();
          this._reFilter(index, 1);
          if (this._isSorted()) {
             this._reSort();
          }
+         this._finishUpdateSession(session);
       }
    };
 
