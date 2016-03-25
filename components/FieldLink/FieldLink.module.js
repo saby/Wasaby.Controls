@@ -229,10 +229,16 @@ define('js!SBIS3.CONTROLS.FieldLink',
            * @private
            */
           _chooseCallback: function(result) {
+             var isModel;
+
              if(result && result.length) {
-                $ws.helpers.instanceOfModule(result[0], 'SBIS3.CONTROLS.Data.Model') ?
-                    this.addSelectedItems(result) :
-                    this.addItemsSelection(result);
+                isModel = $ws.helpers.instanceOfModule(result[0], 'SBIS3.CONTROLS.Data.Model');
+
+                if(isModel) {
+                   this.addSelectedItems(result)
+                } else {
+                   this.addItemsSelection(result)
+                }
              }
           },
 
@@ -421,9 +427,14 @@ define('js!SBIS3.CONTROLS.FieldLink',
            */
           _checkItemBeforeDraw: function(item) {
              var needDrawItem = false,
-                 isMultiSelect = this._options.multiselect,
                  linkCollection = this._getLinkCollection(),
-                 inputWidth;
+                 inputMinWidth = INPUT_WRAPPER_PADDING,
+                 inputWidth, newItemWidth;
+
+             /* Для ситуаций, когда поле ввода не скрывается после выбора - минимальная ширина 100px (по стандарту) */
+             if(this._options.multiselect || this._options.alwaysShowTextBox) {
+                inputMinWidth += INPUT_MIN_WIDTH;
+             }
 
              /* Если элементы рисуются в пикере то ничего считать не надо */
              if(linkCollection.isPickerVisible()) {
@@ -434,15 +445,16 @@ define('js!SBIS3.CONTROLS.FieldLink',
               то отрисовываться он не будет и покажется троеточие, однако хотя бы один элемент в поле связи должен поместиться */
              if(this._checkWidth) {
                 inputWidth = this._getInputWidth();
+                newItemWidth = $ws.helpers.getTextWidth(item[0].outerHTML);
                 /* Считаем, нужно ли отрисовывать элемент по следующему правилу:
                    Ширина добавляемого элемента + минимальная ширина поля ввода (для мултивыбора) не должны быть больше ширины контейнера контрола */
-                needDrawItem = ($ws.helpers.getTextWidth(item[0].outerHTML) + (isMultiSelect ? INPUT_MIN_WIDTH : 0)) < inputWidth + SHOW_ALL_LINK_WIDTH;
+                needDrawItem = (newItemWidth + inputMinWidth) < (inputWidth + INPUT_WRAPPER_PADDING);
 
                 if(!needDrawItem) {
                    /* Если в поле связи не отрисовано ни одного элемента, то уменьшаем ширину добавляемого,
                       т.к. хотя бы один элемент должен быть отрисован (стандарт) */
                    if(!linkCollection.getContainer().find('.controls-FieldLink__linkItem').length) {
-                      item[0].style.width = inputWidth - ((isMultiSelect || this._options.alwaysShowTextBox) ? INPUT_MIN_WIDTH : INPUT_WRAPPER_PADDING) + 'px';
+                      item[0].style.width = inputWidth - inputMinWidth + 'px';
                       needDrawItem = true;
                    }
                    this._checkWidth = false;
@@ -531,10 +543,10 @@ define('js!SBIS3.CONTROLS.FieldLink',
            * @private
            */
           _getInputWidth: function() {
-             return this._container[0].offsetWidth  -
+             return this._container[0].clientWidth  -
                  (this._container.find('.controls-TextBox__afterFieldWrapper')[0].offsetWidth +
-                 this._container.find('.controls-TextBox__beforeFieldWrapper')[0].offsetWidth +
-                 INPUT_WRAPPER_PADDING);
+                  this._container.find('.controls-TextBox__beforeFieldWrapper')[0].offsetWidth +
+                  INPUT_WRAPPER_PADDING);
           },
           /**
            * Обновляет ширину поля ввода
