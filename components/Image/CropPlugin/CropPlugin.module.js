@@ -4,9 +4,10 @@
 define('js!SBIS3.CONTROLS.Image.CropPlugin',
    [
       'js!SBIS3.CONTROLS.Data.Source.SbisService',
+      'js!SBIS3.CONTROLS.Utils.ImageUtil',
       "browser!js!SBIS3.CORE.FieldImage/resources/ext/jcrop/jquery.Jcrop.min",
       "css!SBIS3.CORE.FieldImage/resources/ext/jcrop/jquery.Jcrop.min"
-   ], function(SbisService) {
+   ], function(SbisService, ImageUtil) {
       'use strict';
       /**
        * Контрол, позволяющий обрезать произвольное изображение.
@@ -82,13 +83,14 @@ define('js!SBIS3.CONTROLS.Image.CropPlugin',
                image = $image.get(0),
                min,
                startSelection = this._options.cropSelection,
-               storeCropCoords = this._storeCropCoords.bind(this);
+               storeCropCoords = this._storeCropCoords.bind(this),
+               naturalSizes =  ImageUtil.getNaturalSizes(image);
             this._imageProperties = {
                height: $image.height(),
                width: $image.width()
             };
-            this._imageProperties.realHeight = image.naturalHeight || image.height || this._imageProperties.height;
-            this._imageProperties.realWidth = image.naturalWidth || image.width || this._imageProperties.width;
+            this._imageProperties.realHeight = naturalSizes.height || image.height || this._imageProperties.height;
+            this._imageProperties.realWidth = naturalSizes.width || image.width || this._imageProperties.width;
             this._imageProperties.coefficient = Math.max(this._imageProperties.realHeight / this._imageProperties.height, this._imageProperties.realWidth / this._imageProperties.width);
             if (this._options.cropAutoSelectionMode) {
                min = Math.min(this._imageProperties.width, this._imageProperties.height);
