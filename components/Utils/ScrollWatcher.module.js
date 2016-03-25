@@ -179,7 +179,7 @@ define('js!SBIS3.CONTROLS.ScrollWatcher', [], function() {
        */
       getScrollHeight: function(element){
          var scrollable;
-         if (this._inContainer()){
+         if (this._inContainer() && this._options.element.length){
             return this._options.element[0].scrollHeight;
          }
          if (this._inWindow()){
@@ -201,7 +201,7 @@ define('js!SBIS3.CONTROLS.ScrollWatcher', [], function() {
        * @returns {Number}
        */
       getContainerHeight: function(){
-         if (this._inContainer()){
+         if (this._inContainer() && this._options.element.length){
             return this._options.element[0].offsetHeight;
          }
          if (this._inWindow()){
