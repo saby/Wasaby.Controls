@@ -15,7 +15,7 @@ define('js!SBIS3.CONTROLS.Data.Source.Remote', [
 
    var Remote = Base.extend(/** @lends SBIS3.CONTROLS.Data.Source.Remote.prototype */{
       /**
-       * @event onBeforeProviderCall Перед вызовом метода через провайдер
+       * @event onBeforeProviderCall Перед вызовом удаленного сервиса через провайдер
        * @param {$ws.proto.EventObject} eventObject Дескриптор события.
        * @param {String} name Имя сервиса
        * @param {Object.<String, *>} [args] Аргументы сервиса (передаются по ссылке, можно модифицировать)
