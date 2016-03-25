@@ -1333,12 +1333,12 @@ define('js!SBIS3.CONTROLS.ListView',
                      records = dataSet.toArray();
                      if (self._options.infiniteScroll === 'up') {
                         self._containerScrollHeight = self._scrollWatcher.getScrollHeight();
-                        //TODO Провести тесты с unshift и Array.insert
-                        //сортируем пришедшие данные в обратном порядке, чтобы красиво отрисовать
-                        records = records.reverse();
                      }
-                     self._items[self._options.infiniteScroll === 'up' ? 'prepend' : 'append'](records);
-                     self._drawItems(records);
+                     //TODO Провести тесты с unshift и Array.insert
+                     //сортируем пришедшие данные в обратном порядке
+                     self._items[self._options.infiniteScroll === 'up' ? 'prepend' : 'append'](records.reverse());
+                     //Но рисовать нуджно все равно по порядку сверху, поэтому перевернем обратно
+                     self._drawItems(records.reverse());
                      //TODO Пытались оставить для совместимости со старыми данными, но вызывает onCollectionItemChange!!!
                      //self._dataSet.merge(dataSet, {remove: false});
                      self._dataLoadedCallback();
