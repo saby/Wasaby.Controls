@@ -103,6 +103,7 @@ define('js!SBIS3.CONTROLS.OperationsPanel', [
          _itemsDrawn: false
       },
       $constructor: function() {
+         this._initBlocks();
          this._publish('onToggle', 'onChangeEnabled');
          this._container.removeClass('ws-area');
       },
