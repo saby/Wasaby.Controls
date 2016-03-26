@@ -213,7 +213,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
                  componentOptions,
                  /* Дополнительный конфиг, который нужно прокинуть в selector */
                  {
-                    currentValue: this.getSelectedKeys(),
+                    currentValue: this._isEmptySelection() ? [] : this.getSelectedKeys(),
                     selectorFieldLink: true,
                     multiSelect: this._options.multiselect,
                     selectedRecords: oldRecArray
@@ -363,7 +363,8 @@ define('js!SBIS3.CONTROLS.FieldLink',
           },
 
           _drawSelectedItems: function(keysArr) {
-             var keysArrLen = keysArr.length;
+             var isEmpty = this._isEmptySelection(),
+                 keysArrLen = isEmpty ? 0 : keysArr.length;
 
              /* Если удалили в пикере все записи, и он был открыт, то скроем его */
              if (!keysArrLen) {
@@ -532,8 +533,8 @@ define('js!SBIS3.CONTROLS.FieldLink',
              switch (e.which) {
                 /* Нажатие на backspace должно удалять последние значение, если нет набранного текста */
                 case $ws._const.key.backspace:
-                   var selectedKeys = this.getSelectedKeys();
-                   if(!this.getText() && selectedKeys.length) {
+                   if(!this.getText() && !this._isEmptySelection()) {
+                      var selectedKeys = this.getSelectedKeys();
                       this.removeItemsSelection([selectedKeys[selectedKeys.length - 1]]);
                    }
                    break;
