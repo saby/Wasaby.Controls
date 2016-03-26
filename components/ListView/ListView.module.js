@@ -1583,7 +1583,8 @@ define('js!SBIS3.CONTROLS.ListView',
                if (this._dataSet.getCount() === 0 && pageNum > 1) {
                   this._pager.getPaging().setPage(1); //чтобы не перезагружать поставим 1ую. было : pageNum - 1
                }
-               this._pager.getPaging().update(this.getPage(this.isInfiniteScroll() ? this._infiniteScrollOffset + this._options.pageSize : this._offset), more, nextPage);
+               //TODO Не понятно, для чего нам отдельная переменная _infiniteScrollOffset, когда есть _offset
+               this._pager.getPaging().update(this.getPage(this.isInfiniteScroll() ? this._infiniteScrollOffset : this._offset) + 1, more, nextPage);
                if (this._options.multiselect) {
                   numSelected = this.getSelectedKeys().length;
                }
