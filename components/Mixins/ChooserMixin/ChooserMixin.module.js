@@ -28,10 +28,10 @@ define('js!SBIS3.CONTROLS.ChooserMixin', [
 
    var ChooserMixin = /**@lends SBIS3.CONTROLS.ChooserMixin.prototype  */{
           /**
-           * @event onChooserClick При клике на кнопку открытия диалога выбора
+           * @event onChooserClick Происходит при клике на кнопку открытия диалога выбора.
            * @return {$ws.proto.Deferred|Boolean|*} Возможные значения:
            * <ol>
-           *    <li>$ws.proto.Deferred - Деферед, результатом выполнения которого будут выбранные записи.</li>
+           *    <li>$ws.proto.Deferred - {@link $ws.proto.Deferred Деферед}, результатом выполнения которого будут выбранные записи.</li>
            *    <li>Если вернуть false - диалог выбора открыт не будет.</li>
            *    <li>Любой другой результат - диалог выбора будет открыт стандартным образом.</li>
            * </ol>
@@ -40,15 +40,30 @@ define('js!SBIS3.CONTROLS.ChooserMixin', [
       $protected: {
          _options: {
             /**
-             * @cfg {Boolean} Поддерживать старые представления данных
-             * Данная опция требуется, если на диалоге выбора лежит старое представление данных.
+             * @cfg {Boolean} Поддерживает старые представления данных.
+             * Данная опция требуется, если в диалоге выбора для отображения данных используются старые контролы.
+             * @example
+             * <pre class="brush: xml">
+             *     <option name="oldViews">true</option>
+             * </pre>
              */
             oldViews: false,
             /**
-             * @cfg {String} Режим выбора записей. В новом диалоге или во всплывающей панели
-             * <wiTag group="Управление">
-             * @variant dialog в новом диалоге
-             * @variant floatArea во всплывающей панели
+             * @cfg {String} Устанавливает режим отображения диалога выбора элементов коллекции.
+             * @variant dialog Справочник отображается в новом диалоговом окне.
+             * @variant floatArea Справочник отображается во всплывающей панели.
+             * @remark
+             * Окно выбора будет отображаться в новом диалоге или во всплывающей панели.
+             * Подробно про диалог выбора элементов коллекции можно прочесть {@link SBIS3.CONTROLS.FieldLink#dictionaries здесь}.
+             * @example
+             * Устанавливаем режим отображения {@link SBIS3.CONTROLS.FieldLink#dictionaries справочника}для поля связи
+             * в новом диалоговом окне:
+             * ![](/ChooserMixin01.png)
+             * фрагмент верстки:
+             * <pre class="brush: xml">
+             *     <option name="chooserMode">dialog</option>
+             * </pre>
+             * @see SBIS3.CONTROLS.FieldLink#dictionaries
              */
             chooserMode: 'floatArea'
          },
