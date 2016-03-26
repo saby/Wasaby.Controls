@@ -64,10 +64,11 @@ define('js!SBIS3.CONTROLS.MoveHandlers', ['js!SBIS3.CORE.Dialog','js!SBIS3.CONTR
          if (this._checkRecordsForMove(records, recordTo, isChangeOrder)) {
             for (var i = 0; i < records.length; i++) {
                records[i] = $ws.helpers.instanceOfModule(records[i], 'SBIS3.CONTROLS.Data.Model') ?
-                  records[i] :
+                  this.getItems().getRecordById(records[i].getId()) : //todo может прийти рекорд инстанса которого нет в рекордсете замеять все рекорды для этого плохо.
                   this._items.getRecordById(records[i]);
             }
             this._toggleIndicator(true);
+
             if (isNodeTo && !isChangeOrder) {
                deferred = this.getMoveStrategy().hierarhyMove(records, recordTo);
             } else {
@@ -86,7 +87,7 @@ define('js!SBIS3.CONTROLS.MoveHandlers', ['js!SBIS3.CORE.Dialog','js!SBIS3.CONTR
                   }
                }).addBoth(function() {
                   self._toggleIndicator(false);
-               });;
+               });
             }
          }
       },
