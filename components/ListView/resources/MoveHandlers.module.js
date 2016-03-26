@@ -200,9 +200,11 @@ define('js!SBIS3.CONTROLS.MoveHandlers', ['js!SBIS3.CORE.Dialog','js!SBIS3.CONTR
          });
       },
       _afterOrderChange: function(items, moveToItem, up) {
-         var moveToIndex = this._items.getIndex(moveToItem);
+         var moveToIndex;
          $ws.helpers.forEach(items, function(item) {
             this._items.remove(item);
+
+            moveToIndex = this._items.getIndex(moveToItem);
             if(!up) {
                moveToIndex = this._itemsProjection.getInternalBySource(moveToIndex);
                var projectionItem = this._itemsProjection.getNext(
