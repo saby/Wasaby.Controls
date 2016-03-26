@@ -578,6 +578,8 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
 
       _setPickerContent: function () {
          this._picker.getContainer().addClass('controls-Suggest__picker');
+         /* Заглушка, picker автодополнения не должен вызывать расчёты авторазмеров, т.к. создаётся абсолютом в body */
+         this._picker._notifyOnSizeChanged = $ws.helpers.nop;
       },
 
       showPicker: function () {
