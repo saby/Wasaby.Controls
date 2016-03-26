@@ -80,6 +80,11 @@ define('js!SBIS3.CONTROLS.BackButton', ['js!SBIS3.CORE.CompoundControl', 'html!S
          });
       },
 
+
+      getCaption: function(){
+         return this._options.caption;
+      },
+
       /**
        * Устанавливает текст кнопки
        * @param caption Текси
