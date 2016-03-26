@@ -256,8 +256,18 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
          this._destroyFolderFooter(childKeys.concat(key));
       },
       _updateItem: function(item) {
-         var parentKey = this._items.getParentKey(item.getContents(), this._options.hierField);;
-         if (!this._options.openedPath[parentKey]) {
+         var
+             parentKey = this._items.getParentKey(item.getContents(), this._options.hierField),
+             parentItem = this._items.getRecordById(parentKey);
+         /*
+          Если элемент переместился в закрытую папку и она не не является текущим корнем, то его нужно просто удалить из
+          DOM'а т.к. его не должно быть видно. Так же возможна ситуация когда с помощью диалога перемещения запись переместили
+          в папку, которая является открытой но её нет в текущем наборе элементов(например текущий корень где-то глубоко в
+          иерархии, а ниже по иерархии были открытые папки), то такую запись тоже нужно просто удалить. Так же проверяем на
+          наличие папки в которую перемещаем в наборе DOM элементов с помощью _getElementByModel т.к. у некоторых людей все
+          данные сразу присутствуют и проверка в наборе данных даст неверный результат.
+          */
+         if ((!this._options.openedPath[parentKey] || !this._getElementByModel(parentItem).length) && parentKey != this.getCurrentRoot()) {
             this._removeItem(item)
          } else {
             TreeDataGridView.superclass._updateItem.apply(this, arguments);
