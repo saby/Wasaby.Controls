@@ -1394,6 +1394,8 @@ define('js!SBIS3.CONTROLS.DSMixin', [
             container.replaceWith(newItemContainer);
             this._ladderCompare([newItemContainer.prev(), newItemContainer, newItemContainer.next()]);
          } else if(this.getItems().getIndex(item) > -1) {
+            //todo если записи нет в доме но она есть в рекордстее  и ее кто то изменит, то она должна перерисоваться
+            //todo нужно когда запись перемещается из закрытой папки
             this.redraw();
          }
       },
