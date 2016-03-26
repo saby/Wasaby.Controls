@@ -430,7 +430,7 @@ define('js!SBIS3.CONTROLS.MultiSelectable', ['js!SBIS3.CONTROLS.Data.Collection.
 
          this._syncSelectedItems();
 
-         if(!loadItems) {
+         if(!loadItems || this._isEmptySelection()) {
             return this._getSelItemsClone();
          }
 
@@ -488,7 +488,7 @@ define('js!SBIS3.CONTROLS.MultiSelectable', ['js!SBIS3.CONTROLS.Data.Collection.
              delItems = [];
 
          /* Выбранных ключей нет - очистим IList */
-         if(!this.getSelectedKeys().length) {
+         if(this._isEmptySelection()) {
             if(selItems.getCount()) {
                selItems.clear();
                this._notifyOnPropertyChanged('selectedItems');
@@ -595,6 +595,12 @@ define('js!SBIS3.CONTROLS.MultiSelectable', ['js!SBIS3.CONTROLS.Data.Collection.
          }
       },
 
+      /* Для правильной работы биндингов, предполагаем, что масив [null] тоже является пустым выделением */
+      _isEmptySelection: function() {
+         var selectedKeys = this._options.selectedKeys;
+         return !selectedKeys.length || $ws.helpers.isEqualObject(selectedKeys, EMPTY_SELECTION);
+      },
+
       /**
        * Ковертирует набор записей в массив из ключей
        * @param {SBIS3.CONTROLS.Data.Collection.List} list
@@ -611,6 +617,8 @@ define('js!SBIS3.CONTROLS.MultiSelectable', ['js!SBIS3.CONTROLS.Data.Collection.
          return keys;
       }
    };
+
+   var EMPTY_SELECTION = [null];
 
    return MultiSelectable;
 
