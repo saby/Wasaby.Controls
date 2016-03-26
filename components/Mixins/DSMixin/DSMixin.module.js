@@ -1394,7 +1394,6 @@ define('js!SBIS3.CONTROLS.DSMixin', [
             container.replaceWith(newItemContainer);
             this._ladderCompare([newItemContainer.prev(), newItemContainer, newItemContainer.next()]);
          } else if(this.getItems().getIndex(item) > -1) {
-            this._options.autoRedraw = true;
             this.redraw();
          }
       },
