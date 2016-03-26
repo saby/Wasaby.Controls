@@ -46,16 +46,16 @@ define('js!SBIS3.CONTROLS.ActiveSelectable', ['js!SBIS3.CONTROLS.Data.Model'], f
        * @see getSelectedItem
        */
       setSelectedItem: propertyUpdateWrapper(function(item) {
-         var isModel = item instanceof Model,
-             selItem = this._options.selectedItem;
+         var isModel = item instanceof Model;
 
-         if( selItem === item || (!isModel && !selItem) || (isModel && item.isEqual(selItem)) ) {
+
+         if(!isModel && !this._options.selectedItem) {
             return;
          }
 
          this._options.selectedItem = isModel ? item : null;
-         this.setSelectedKey(isModel ? item.getId() : null);
          this._notifyOnPropertyChanged('selectedItem');
+         this.setSelectedKey(isModel ? item.getId() : null);
       }),
 
       initializeSelectedItem: function() {
