@@ -247,12 +247,11 @@ define('js!SBIS3.CONTROLS.DropdownList',
          },
          _drawItemsCallback: function() {
             //Надо вызвать просто для того, чтобы отрисовалось выбранное значение/значения
-            if (this._dataSet.getRawData().length) {
-               this.setSelectedKeys(this._options.selectedKeys);
-            }
+            this._drawSelectedItems(this._options.selectedKeys)
 
          },
          _dataLoadedCallback: function() {
+            DropdownList.superclass._dataLoadedCallback.apply(this, arguments);
             var item =  this._dataSet.at(0);
             if (item) {
                this._defaultId = item.getKey();
