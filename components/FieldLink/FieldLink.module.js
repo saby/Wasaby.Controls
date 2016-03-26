@@ -61,11 +61,16 @@ define('js!SBIS3.CONTROLS.FieldLink',
         * @mixes SBIS3.CONTROLS.SyncSelectionMixin
         * @demo SBIS3.CONTROLS.Demo.FieldLinkWithEditInPlace Поле связи с редактированием по месту. Данные для источника передаются в JSON-RPC формате
         * @demo SBIS3.CONTROLS.Demo.FieldLinkDemo Разные варианты конфигураций для поля связи
+        * @mixes SBIS3.CONTROLS.DSMixin
+        * @demo SBIS3.CONTROLS.Demo.FieldLinkWithEditInPlace Поле связи с редактированием по месту
+        * @demo SBIS3.CONTROLS.Demo.FieldLinkDemo
         * @cssModifier controls-FieldLink__itemsEdited При наведении на выделенные элементы, они подчёркиваются.
         * @cssModifier controls-FieldLink__itemsBold Текст выбранных элементов в поле связи отображается жирным.
         * @control
         * @public
         * @author Крайнов Дмитрий Олегович
+        * @ignoreOptions observableControls resultBindings usePicker filter includedTemplates templateBinding
+        * @ignoreOptions allowEmptySelection pageSize alwaysShowExtendedTooltip tooltip loadingContainer
         */
 
        var FieldLink = SuggestTextBox.extend([MultiSelectable, ActiveMultiSelectable, Selectable, ActiveSelectable, SyncSelectionMixin, DSMixin, ITextValue],/** @lends SBIS3.CONTROLS.FieldLink.prototype */{
