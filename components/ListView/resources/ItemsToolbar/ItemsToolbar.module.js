@@ -39,6 +39,9 @@ define('js!SBIS3.CONTROLS.ItemsToolbar',
              _currentTarget: null,     // Элемент, относительно которого сейчас отображается тулбар
              _lockingToolbar: false    // Состояние заблокированности тулбара
           },
+          $constructor: function() {
+             this._publish('onShowItemActionsMenu');
+          },
           /**
            * Создает или возвращает уже созданные кнопки редактирования
            * @returns {null|SBIS3.CONTROLS.ItemsToolbar.$protected._editActions|*|SBIS3.CONTROLS.ItemsToolbar._editActions}
@@ -92,6 +95,7 @@ define('js!SBIS3.CONTROLS.ItemsToolbar',
                    onShowMenu: function() {
                       this.getContainer().addClass('ws-invisible');
                       self.lockToolbar();
+                      self._notify('onShowItemActionsMenu');
                    },
                    onHideMenu: function() {
                       this.getContainer().removeClass('ws-invisible');
