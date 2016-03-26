@@ -40,7 +40,7 @@ define('js!SBIS3.CONTROLS.ItemsToolbar',
              _lockingToolbar: false    // Состояние заблокированности тулбара
           },
           $constructor: function() {
-             this._publish('onShowItemActionsMenu');
+             this._publish('onShowItemActionsMenu', 'onItemActionActivated');
           },
           /**
            * Создает или возвращает уже созданные кнопки редактирования
@@ -92,6 +92,9 @@ define('js!SBIS3.CONTROLS.ItemsToolbar',
                 linkedControl: this.getParent(),
                 touchMode: this._options.touchMode,
                 handlers : {
+                   onActionActivated: function(e, key) {
+                      self._notify('onItemActionActivated', key);
+                   },
                    onShowMenu: function() {
                       this.getContainer().addClass('ws-invisible');
                       self.lockToolbar();

@@ -1092,23 +1092,6 @@ define('js!SBIS3.CONTROLS.ListView',
             return this._options.itemsActions.length || this._options.editMode.indexOf('toolbar') !== -1;
          },
 
-         _prepareItemsActions: function(actions) {
-            var action;
-
-            for(var i = 0, len = actions.length; i < len; i++) {
-               if(actions[i].onActivated) {
-                  action = actions[i].onActivated;
-                  /* По стандарту, при нажатии на операцию,
-                     строка у которой находится опция должна стать активной */
-                  actions[i].onActivated = function(container, key) {
-                     this.setSelectedKey(key);
-                     action.apply(this, arguments);
-                  }
-               }
-            }
-            return actions;
-         },
-
          _updateItemsToolbar: function() {
             var hoveredItem = this.getHoveredItem();
 
@@ -1179,7 +1162,7 @@ define('js!SBIS3.CONTROLS.ListView',
                   parent: this,
                   touchMode: this._touchSupport,
                   className: this._notEndEditClassName,
-                  itemsActions: this._prepareItemsActions(this._options.itemsActions),
+                  itemsActions: this._options.itemsActions,
                   showEditActions: this._options.editMode.indexOf('toolbar') !== -1,
                   handlers: {
                      onShowItemActionsMenu: function() {
@@ -1190,7 +1173,11 @@ define('js!SBIS3.CONTROLS.ListView',
                         if(hoveredKey) {
                            self.setSelectedKey(hoveredKey);
                         }
+                     },
+                     onItemActionActivated: function(e, key) {
+                        self.setSelectedKey(key);
                      }
+
                   }
                });
             }
@@ -1257,7 +1244,7 @@ define('js!SBIS3.CONTROLS.ListView',
           * @see getHoveredItem
           */
          setItemsActions: function (itemsActions) {
-            this._options.itemsActions = this._prepareItemsActions(itemsActions);
+            this._options.itemsActions = itemsActions;
             this._getItemsToolbar().setItemsActions(this._options.itemsActions);
             if(this.getHoveredItem().container) {
                this._notifyOnChangeHoveredItem()
