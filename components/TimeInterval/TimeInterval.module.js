@@ -321,6 +321,7 @@ define(
           */
          _incMask: function (length) {
             var leftGroupMaskLength = this.formatModel.model[0].mask.length;
+            //Увеличиваем маску левой группы до размера не большего maxCharsAtLeftGroup
             if ((leftGroupMaskLength + length) > this._options.maxCharsAtLeftGroup){
                length = this._options.maxCharsAtLeftGroup - leftGroupMaskLength;
             }
@@ -361,6 +362,8 @@ define(
          _getTextByTimeInterval: function () {
             var valuesArray = this._getSectionValues(),
                result = valuesArray;
+            //Если значение в левой группе больше, чем предусмотрено в maxCharsAtLeftGroup,
+            //то выставляем максимальное значение, соответствующее максимально возможной маске (9999:00:00)
             if (valuesArray[0].toString().length > this._options.maxCharsAtLeftGroup){
                this._incMask(this._options.maxCharsAtLeftGroup);
                result[0] = this.formatModel.model[0].mask.replace(/[a-z]/ig, '9');
