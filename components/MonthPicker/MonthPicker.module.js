@@ -121,7 +121,7 @@ define(
          this._publish('onDateChange');
 
          // Установка первоначального значения
-         if ( this._options.date ) {
+         if (this._options.date) {
             this._setDate(this._options.date);
          }
          else {
@@ -129,36 +129,41 @@ define(
          }
 
          // Клик по стрелочкам
-         $('.js-controls-MonthPicker__arrowRight', this.getContainer().get(0)).click(function(){
+         $('.js-controls-MonthPicker__arrowRight', this.getContainer().get(0)).click(function () {
             self.setNext();
          });
-         $('.js-controls-MonthPicker__arrowLeft', this.getContainer().get(0)).click(function(){
+         $('.js-controls-MonthPicker__arrowLeft', this.getContainer().get(0)).click(function () {
             self.setPrev();
          });
-         $('.controls-MonthPicker__arrowWrapper', this.getContainer().get(0)).mousedown(function(e){
+         $('.controls-MonthPicker__arrowWrapper', this.getContainer().get(0)).mousedown(function (e) {
             e.stopPropagation();
          });
          // Клик по полю с датой
-         $('.js-controls-MonthPicker__field', this.getContainer().get(0)).click(function(){
+         $('.js-controls-MonthPicker__field', this.getContainer().get(0)).click(function () {
             self.togglePicker();
 
-            if ( self._options.mode == 'month' ) {
-               self._setText( self._composeText( self._options.date ) );
+            if (self._options.mode == 'month') {
+               self._setText(self._composeText(self._options.date));
             }
 
             // обновляем выпадающий блок только если пикер данным кликом открыт
-            if ( self._picker && self._picker.isVisible() ){
+            if (self._picker && self._picker.isVisible()) {
                self._drawElements();
             }
          });
 
          // Обработка нажатий клавиш
-         $(this.getContainer().get(0)).keydown(function(event){
-            if( event.which == self._KEYS.ARROW_RIGHT ){ self.setNext(); }
-            else if( event.which == self._KEYS.ARROW_LEFT ){ self.setPrev(); }
+         $(this.getContainer().get(0)).keydown(function (event) {
+            if (event.which == self._KEYS.ARROW_RIGHT) {
+               self.setNext();
+            }
+            else if (event.which == self._KEYS.ARROW_LEFT) {
+               self.setPrev();
+            }
          });
 
-
+         //TODO из-за Витиной ошибки прилетает класс ws-area, хотя наследуемся от контррла
+         this._container.removeClass('ws-area');
       },
 
       _initializePicker: function(){
