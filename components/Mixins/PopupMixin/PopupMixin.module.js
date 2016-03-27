@@ -43,6 +43,7 @@ define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManag
          _zIndex: null,
          _currentAlignment: {},
          _options: {
+            visible: false,
             /**
              * @typedef {Object} CornerEnum
              * @variant tl Верхний левый угол.
@@ -121,8 +122,6 @@ define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManag
 
          //TODO: Придрот
          container.removeClass('ws-area');
-         container.addClass('ws-hidden');
-         this._isVisible = false;
          /********************************/
 
          this._initOppositeCorners();
@@ -470,14 +469,17 @@ define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManag
       },
 
       _initMargins: function () {
-         var container = this._container;
-         this._margins = {
-            top: parseInt(container.css('margin-top'), 10) || 0,
-            left: parseInt(container.css('margin-left'), 10) || 0,
-            bottom: parseInt(container.css('margin-bottom'), 10) || 0,
-            right: parseInt(container.css('margin-right'), 10) || 0
-         };
-
+         if (!this._marginsInited) {
+            this._marginsInited = true;
+            var container = this._container;
+            this._margins = {
+               top: parseInt(container.css('margin-top'), 10) || 0,
+               left: parseInt(container.css('margin-left'), 10) || 0,
+               bottom: parseInt(container.css('margin-bottom'), 10) || 0,
+               right: parseInt(container.css('margin-right'), 10) || 0
+            };
+            this._container.css('margin', 0);
+         }
       },
 
       //Вычисляем сдвиг в зависимости от угла
@@ -774,14 +776,11 @@ define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManag
       after: {
          init: function () {
             ControlHierarchyManager.addNode(this, this.getParent());
+            this._initMargins();
          },
 
          show: function () {
-            if (!this._marginsInited) {
-               this._initMargins();
-               this._container.css('margin', 0);
-               this._marginsInited = true;
-            }
+            this._initMargins();
             this.recalcPosition(true);
             this.moveToTop();//пересчитываем, чтобы z-index был выше других панелей
 
