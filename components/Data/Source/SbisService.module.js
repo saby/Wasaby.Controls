@@ -429,6 +429,8 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
                   return 'string';
                } else if ($ws.helpers.instanceOfModule(val, 'SBIS3.CONTROLS.Data.Record')) {
                   return 'record';
+               } else if (val instanceof $ws.proto.Record) {
+                  return 'record';
                } else if ($ws.helpers.instanceOfModule(val, 'SBIS3.CONTROLS.Data.Collection.RecordSet')) {
                   return 'recordset';
                } else if (val instanceof Date) {
