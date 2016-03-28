@@ -173,7 +173,7 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
             if (!hideQuestion){
                this._panel.cancel();
             }
-            return;
+            return dResult;
          }
          if (hideQuestion){
             this._updateRecord(dResult, closePanelAfterSubmit);
