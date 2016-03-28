@@ -176,10 +176,10 @@ define('js!SBIS3.CONTROLS.TextBoxBase',
          var newText = (text === null || text !== text || typeof text === "undefined") ? text : this._formatText(text.toString());
          if (newText !== this._options.text) {
             this._options.text = newText;
-            this._drawText(newText);
             this._notify('onTextChange', newText);
             this._notifyOnPropertyChanged('text');
          }
+         this._drawText(newText);
       },
 
       /**
