@@ -708,7 +708,9 @@ define('js!SBIS3.CONTROLS.DSMixin', [
                 }, self));
              this._loader = def;
           } else {
-             this._redraw();
+             if (this._items) {
+                this._redraw();
+             }
              def = new $ws.proto.Deferred();
              def.callback();
           }
