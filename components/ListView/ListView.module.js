@@ -1299,8 +1299,10 @@ define('js!SBIS3.CONTROLS.ListView',
          },
          _removeItem: function(item){
             ListView.superclass._removeItem.call(this, item);
-            this._isLoadBeforeScrollAppears = true;
-            this._preScrollLoading();
+            if (this.isInfiniteScroll()) {
+               this._isLoadBeforeScrollAppears = true;
+               this._preScrollLoading();
+            }
          },
          //-----------------------------------infiniteScroll------------------------
          //TODO (?) избавиться от _allowInfiniteScroll - пусть все будет завязано на опцию infiniteScroll
