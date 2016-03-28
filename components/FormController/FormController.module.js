@@ -158,6 +158,7 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
       _saveRecord: function(hideQuestion, closePanelAfterSubmit){
          var self = this,
              dResult = new $ws.proto.Deferred(),
+             errorMessage = 'Некорректно заполнены обязательные для заполнения поля!',
              questionConfig;
 
          questionConfig = {
@@ -167,16 +168,16 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
          };
          this._saving = true;
 
-         if(!this.validate()) {
-            dResult.errback('Некорректно заполнены обязательные для заполнения поля!');
-            //Если нажимали крестик, то закроем панель
-            if (!hideQuestion){
-               this._panel.cancel();
-            }
-            return dResult;
-         }
+         //Если пришли из submit'a
          if (hideQuestion){
-            this._updateRecord(dResult, closePanelAfterSubmit);
+            if (this.validate()){
+               this._updateRecord(dResult, closePanelAfterSubmit);
+            }
+            else{
+               dResult.errback(errorMessage);
+               this._saving = false;
+               return dResult;
+            }
          }
          else{
             $ws.helpers.question('Сохранить изменения?', questionConfig, this).addCallback(function(result){
@@ -185,7 +186,13 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
                   return;
                }
                if (result){
-                  self._updateRecord(dResult, true);
+                  if (self.validate()){
+                     self._updateRecord(dResult, true);
+                  }
+                  else{
+                     dResult.errback(errorMessage);
+                     self._saving = false;
+                  }
                }
                else{
                   dResult.callback();
