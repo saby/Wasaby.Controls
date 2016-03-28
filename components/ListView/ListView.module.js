@@ -1606,9 +1606,8 @@ define('js!SBIS3.CONTROLS.ListView',
                nextPage = this._hasNextPage(more, this._infiniteScrollOffset),
                numSelected = 0;
             if (this._pager) {
+               //TODO Разобраться, почему работаем с pageNum ДО обновления номера страницы. т.е. сейчас не актуальный pageNum, а тот что был до переключения
                var pageNum = this._pager.getPaging().getPage();
-               //Если данных в папке нет, не рисуем Pager
-               this._pager.getContainer().toggleClass('ws-hidden', !nextPage && pageNum == 1);
                if (this._pageChangeDeferred) { // только когда меняли страницу
                   this._pageChangeDeferred.callback([this.getPage() + 1, nextPage, nextPage]);//смотреть в DataSet мб ?
                   this._pageChangeDeferred = undefined;
@@ -1619,6 +1618,9 @@ define('js!SBIS3.CONTROLS.ListView',
                }
                //TODO Не понятно, для чего нам отдельная переменная _infiniteScrollOffset, когда есть _offset
                this._pager.getPaging().update(this.getPage(this.isInfiniteScroll() ? this._infiniteScrollOffset : this._offset) + 1, more, nextPage);
+               pageNum = this._pager.getPaging().getPage();
+               //Если данных в папке нет, не рисуем Pager
+               this._pager.getContainer().toggleClass('ws-hidden', !nextPage && pageNum == 1);
                if (this._options.multiselect) {
                   numSelected = this.getSelectedKeys().length;
                }
