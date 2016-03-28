@@ -5,7 +5,7 @@ define([
    'js!SBIS3.CONTROLS.Data.Source.Provider.IRpc',
    'js!SBIS3.CONTROLS.Data.Source.DataSet',
    'js!SBIS3.CONTROLS.Data.Model',
-      'js!SBIS3.CONTROLS.Data.Collection.RecordSet',
+   'js!SBIS3.CONTROLS.Data.Collection.RecordSet',
    'js!SBIS3.CONTROLS.Data.Collection.List',
    'js!SBIS3.CONTROLS.Data.Adapter.Sbis',
    'js!SBIS3.CONTROLS.Data.Query.Query'
@@ -879,7 +879,15 @@ define([
                });
 
                it('should generate a valid request', function (done) {
-                  var query = new Query();
+                  var recData = {
+                        d: [1],
+                        s: [{n: 'Число целое'}]
+                     },
+                     rsData = {
+                        d: [[1], [2]],
+                        s: [{n: 'Число целое'}]
+                     },
+                     query = new Query();
                   query
                      .select(['fieldOne', 'fieldTwo'])
                      .from('Goods')
@@ -887,7 +895,15 @@ define([
                         id: 5,
                         enabled: true,
                         title: 'abc*',
-                        path: [1, 2, 3]
+                        path: [1, 2, 3],
+                        rec: new Model({
+                           adapter: 'adapter.sbis',
+                           rawData: recData
+                        }),
+                        rs: new RecordSet({
+                           adapter: 'adapter.sbis',
+                           rawData: rsData
+                        })
                      })
                      .orderBy({
                         id: true,
@@ -916,6 +932,16 @@ define([
                            assert.strictEqual(args['Фильтр'].s[3].n, 'path');
                            assert.strictEqual(args['Фильтр'].s[3].t.n, 'Массив');
                            assert.strictEqual(args['Фильтр'].s[3].t.t, 'Число целое');
+
+                           assert.deepEqual(args['Фильтр'].d[4].d, recData.d);
+                           assert.deepEqual(args['Фильтр'].d[4].s, recData.s);
+                           assert.strictEqual(args['Фильтр'].s[4].n, 'rec');
+                           assert.strictEqual(args['Фильтр'].s[4].t, 'Запись');
+
+                           assert.deepEqual(args['Фильтр'].d[5].d, rsData.d);
+                           assert.deepEqual(args['Фильтр'].d[5].s, rsData.s);
+                           assert.strictEqual(args['Фильтр'].s[5].n, 'rs');
+                           assert.strictEqual(args['Фильтр'].s[5].t, 'Выборка');
 
                            assert.strictEqual(args['Сортировка'].d[0][0], 'id');
                            assert.isTrue(args['Сортировка'].d[0][1]);
