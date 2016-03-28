@@ -2,8 +2,7 @@ define('js!SBIS3.CONTROLS.HighChartsLight', [
    'js!SBIS3.CORE.Control',
    'html!SBIS3.CONTROLS.HighChartsLight',
    'browser!cdn!/highcharts/4.2.3/highcharts-more-min.js',
-   'css!SBIS3.CONTROLS.HighChartsLight',
-   'i18n!SBIS3.CONTROLS.HighChartsLight'
+   'css!SBIS3.CONTROLS.HighChartsLight'
 ],
 function(BaseControl, dotTpl){
    'use strict';
@@ -507,9 +506,9 @@ function(BaseControl, dotTpl){
          Highcharts.setOptions({
             lang: {
                numericSymbols: ['', '', '', '', '', ''],
-               months : [ rk('Январь') , rk('Февраль') , rk('Март') , rk('Апрель') , rk('Май') , rk('Июнь') , rk('Июль') , rk('Август') , rk('Сентябрь') , rk('Октябрь') , rk('Ноябрь') , rk('Декабрь')],
-               shortMonths : [ rk('Янв') , rk('Фев') , rk('Мар') , rk('Апр') , rk('Май') , rk('Июн') , rk('Июл') , rk('Авг') , rk('Сен') , rk('Окт') , rk('Ноя') , rk('Дек')],
-               weekdays: [rk('Понедельник'), rk('Вторник'), rk('Среда'), rk('Четверг'), rk('Пятница'), rk('Суббота'), rk('Воскресение')],
+               months : $ws._const.Date.longMonths,
+               shortMonths : $ws._const.Date.months,
+               weekdays: $ws._const.Date.longDays,
                thousandsSep : ' '
             }
          });
