@@ -1,0 +1,7 @@
+{
+  "Для графика-области надо определить 3 поля данных (ws-series.sourceField)": "For graphics-area need to define 3 data fields (ws-series.sourceField)",
+  "Ошибка в параметрах метода БЛ": "Error in the parameters of the BL method",
+  "Пользовательский обработчик получения данных не является функцией": "Custom data acquisition handler is not a function",
+  "Данные не загружены": "Data are not loaded",
+  "Ошибка получения данных для диаграммы": "Failed to get the data for the chart"
+}

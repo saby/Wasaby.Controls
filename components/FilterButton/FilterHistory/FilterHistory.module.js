@@ -7,7 +7,8 @@ define('js!SBIS3.CONTROLS.FilterHistory',
        'html!SBIS3.CONTROLS.FilterHistory',
        'html!SBIS3.CONTROLS.FilterHistory/historyItemTpl',
        'js!SBIS3.CONTROLS.ToggleButton',
-       'js!SBIS3.CONTROLS.ListView'
+       'js!SBIS3.CONTROLS.ListView',
+       'i18n!SBIS3.CONTROLS.FilterButton'
     ],
     function(CompoundControl, dotTpl, dotTplForItem) {
 
