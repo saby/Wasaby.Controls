@@ -183,6 +183,7 @@ define('js!SBIS3.CONTROLS.NumberTextBox', ['js!SBIS3.CONTROLS.TextBox', 'html!SB
             this._options.text = this._options.numericValue + '';
          }
          this._options.text = this._formatText(this._options.text, this._options.hideEmptyDecimals);
+         this._setNumericValue(this._options.text);
          this._inputField.val(this._options.text);
       },
 
@@ -225,7 +226,7 @@ define('js!SBIS3.CONTROLS.NumberTextBox', ['js!SBIS3.CONTROLS.TextBox', 'html!SB
 
       setNumericValue: function(value) {
          if (value !== this._options.numericValue){
-            this._options.numericValue = value;
+            this._setNumericValue(value);
             this.setText(value + '');
          }
       },
@@ -294,6 +295,11 @@ define('js!SBIS3.CONTROLS.NumberTextBox', ['js!SBIS3.CONTROLS.TextBox', 'html!SB
       },
 
       _keyDownBind: function (event) {
+
+         if (!this.isEnabled()){
+            return false;
+         };
+
          this._caretPosition = this._getCaretPosition();
          if (event.shiftKey){
             this._SHIFT_KEY = true;
