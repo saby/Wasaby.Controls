@@ -330,6 +330,11 @@ define('js!SBIS3.CONTROLS.FieldLink',
                 });
              }
 
+             //FIXME и ещё один костыль до перевода пикера на фокусную систему
+             if(this.isPickerVisible()) {
+                this.hidePicker();
+             }
+
              this._showChooser(
                  template,
                  componentOptions,
