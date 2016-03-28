@@ -58,10 +58,18 @@ define('js!SBIS3.CONTROLS.FilterHistoryController',
           },
 
           _changeHistoryHandler: function(e, id, newHistory, activeFilter, saveDeferred) {
+             var isHistoryEqual = this._listHistory.isEqual(newHistory),
+                 fb = this._options.filterButton,
+                 currentActiveFilter = this.getActiveFilter();
+
              /* Если изменения произошло в истории с другим ID или история не изменилась, то ничего делать не будем */
-             if (this._options.historyId !== id ||
-                 this._listHistory.equals(newHistory) ||
-                 $ws.helpers.isEqualObject(this.getActiveFilter(), activeFilter))  {
+             if (this._options.historyId !== id || isHistoryEqual || $ws.helpers.isEqualObject(currentActiveFilter, activeFilter)) {
+
+                /* Если активных фильтров нет, но истории не одинаковые - сбросим фильтр. */
+                if(!isHistoryEqual && activeFilter === false && currentActiveFilter === false) {
+                   fb.sendCommand('reset-filter');
+                }
+
                 return;
              }
 
@@ -69,7 +77,13 @@ define('js!SBIS3.CONTROLS.FilterHistoryController',
              /* Надо обязательно клонировать историю, чтобы по ссылке не передавались изменения */
              this._listHistory.assign($ws.core.clone(newHistory.toArray()));
              this._saveParamsDeferred = saveDeferred;
-             this._options.filterButton[activeFilter ? 'setFilterStructure' : '_resetFilter'](activeFilter.filter);
+
+             if(activeFilter) {
+                fb.setFilterStructure(activeFilter.filter);
+             } else {
+                fb.sendCommand('reset-filter');
+             }
+
              this._updateFilterButtonHistoryView();
           },
 
