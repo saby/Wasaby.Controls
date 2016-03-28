@@ -208,7 +208,7 @@ define('js!SBIS3.CONTROLS.FormWidgetMixin', ['js!SBIS3.CORE.Infobox'], function 
          try {
             this._validating = true;
             vResult = this._invokeValidation();
-            if (vResult.result) {
+            if (vResult.result && this._childControls) {
                for (var i = 0, l = this._childControls.length; i < l; i++) {
                   var childControl = this._childControls[i];
                   if (childControl && !childControl.validate()) {
