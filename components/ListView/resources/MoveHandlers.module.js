@@ -12,7 +12,7 @@ define('js!SBIS3.CONTROLS.MoveHandlers', ['js!SBIS3.CORE.Dialog','js!SBIS3.CONTR
          if (records.length) {
             new Dialog({
                template: 'js!SBIS3.CONTROLS.MoveDialogTemplate',
-               title: rk('Перенести') + ' ' + records.length + $ws.helpers.wordCaseByNumber(records.length, rk(' записей'), rk(' запись', 'множественное'), rk(' записи')) + rk(' в'),
+               title: rk('Перенести') + ' ' + records.length + $ws.helpers.wordCaseByNumber(records.length, ' ' + rk('записей'), ' ' + rk('запись', 'множественное'), ' ' + rk('записи')) + ' ' + rk('в'),
                cssClassName: 'controls-moveDialog',
                componentOptions: {
                   linkedView: this,
