@@ -16,7 +16,7 @@ define('js!SBIS3.CONTROLS.RadioGroupNew', [
    /**
     * Контрол задающий оформление выбора одного из нескольких значений в виде классических радиокнопок
     * @class SBIS3.CONTROLS.RadioGroup
-    * @extends SBIS3.CONTROLS.RadioGroupBase
+    * @extends SBIS3.CONTROLS.RadioGroupBaseNew
     * @mixes SBIS3.CONTROLS.FormWidgetMixin
     * @control
     * @author Крайнов Дмитрий Олегович

@@ -11,7 +11,7 @@ define('js!SBIS3.CONTROLS.TextBoxBase',
    /**
     * Базовый класс для текстового поля
     * @class SBIS3.CONTROLS.TextBoxBase
-    * @extends $ws.proto.Control
+    * @extends $ws.proto.CompoundControl
     * @mixes SBIS3.CONTROLS.FormWidgetMixin
     * @public
     * @author Крайнов Дмитрий Олегович
