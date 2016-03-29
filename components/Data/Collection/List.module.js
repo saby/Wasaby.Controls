@@ -196,13 +196,25 @@ define('js!SBIS3.CONTROLS.Data.Collection.List', [
          return this._getServiceEnumerator().getIndexByValue(property, value);
       },
 
-      getIndiciesByValue: function (property, value) {
-         return this._getServiceEnumerator().getIndiciesByValue(property, value);
+      getIndicesByValue: function (property, value) {
+         return this._getServiceEnumerator().getIndicesByValue(property, value);
       },
 
       //endregion SBIS3.CONTROLS.Data.Collection.IIndexedCollection
 
       //region deprecated
+
+      /**
+       * Возвращает индексы всех элементов с указанным значением свойства.
+       * @param {String} property Название свойства элемента.
+       * @param {*} value Значение свойства элемента.
+       * @deprecated метод будет удален в 3.7.4 используйте getIndicesByValue()
+       * @returns {Array.<Number>}
+       */
+      getIndiciesByValue: function (property, value) {
+         $ws.single.ioc.resolve('ILogger').info(this._moduleName + '::getIndiciesByValue()', 'Method is deprecated and will be removed in 3.7.4. Use getIndicesByValue() instead.');
+         return this.getIndicesByValue(property, value);
+      },
 
       /**
        * Присоединяет другую коллекцию

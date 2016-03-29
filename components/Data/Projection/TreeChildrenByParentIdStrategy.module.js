@@ -13,7 +13,7 @@ define('js!SBIS3.CONTROLS.Data.Projection.TreeChildrenByParentIdStrategy', [
    return $ws.core.extend({}, [ITreeChildrenStrategy], /** @lends SBIS3.CONTROLS.Data.Projection.TreeChildrenByParentIdStrategy.prototype */{
       _moduleName: 'SBIS3.CONTROLS.Data.Projection.TreeChildrenByParentIdStrategy',
       getChildren: function(parent) {
-         return $ws.helpers.map(this._options.source.getIndiciesByValue(
+         return $ws.helpers.map(this._options.source.getIndicesByValue(
             this._options.settings.parentProperty,
             Utils.getItemPropertyValue(
                parent.getContents(),
