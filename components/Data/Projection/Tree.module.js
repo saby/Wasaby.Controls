@@ -46,6 +46,12 @@ define('js!SBIS3.CONTROLS.Data.Projection.Tree', [
          /*if ($ws.helpers.instanceOfMixin(this._options.collection, 'SBIS3.CONTROLS.Data.Collection.ISourceLoadable')) {
             this._itemModule = 'projection.loadable-tree-item';
          }*/
+         if (this._options.idProperty) {
+            this._setImportantProperty(this._options.idProperty);
+         }
+         if (this._options.parentProperty) {
+            this._setImportantProperty(this._options.parentProperty);
+         }
       },
 
       //region SBIS3.CONTROLS.Data.Collection.IEnumerable
@@ -77,6 +83,7 @@ define('js!SBIS3.CONTROLS.Data.Projection.Tree', [
       getPrevious: function (item) {
          return this._getNearbyItem(item, false, this._getNavigationEnumerator());
       },
+
       //endregion SBIS3.CONTROLS.Data.Projection.ICollection
 
       //region SBIS3.CONTROLS.Data.Projection.ITree
@@ -90,7 +97,9 @@ define('js!SBIS3.CONTROLS.Data.Projection.Tree', [
       },
 
       setParentProperty: function (name) {
+         this._unsetImportantProperty(this._options.parentProperty);
          this._options.parentProperty = name;
+         this._setImportantProperty(name);
          this._childrenMap = {};
       },
 

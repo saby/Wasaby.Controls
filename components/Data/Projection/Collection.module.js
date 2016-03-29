@@ -387,6 +387,7 @@ define('js!SBIS3.CONTROLS.Data.Projection.Collection', [
       getSourceByInternal: function (index) {
          return this._getServiceEnumerator().getSourceByInternal(index);
       },
+
       //endregion SBIS3.CONTROLS.Data.Projection.ICollection
 
       //region Public methods
@@ -523,6 +524,24 @@ define('js!SBIS3.CONTROLS.Data.Projection.Collection', [
                }
             }
          }
+      },
+
+      /**
+       * Вызывает фильтрацию и сортировку, производит анализ изменений
+       * @param {Number} [start=0] Начальный индекс
+       * @param {Number} [count] Кол-во элементов (по умолчанию - все элементы)
+       * @protected
+       */
+      _reAnalize: function (start, count) {
+         start = start || 0;
+         count = count || this._items.length - start;
+
+         var session = this._startUpdateSession();
+         this._reFilter(start, count);
+         if (this._isSorted()) {
+            this._reSort();
+         }
+         this._finishUpdateSession(session);
       },
 
       /**
@@ -1025,21 +1044,46 @@ define('js!SBIS3.CONTROLS.Data.Projection.Collection', [
             oldPosition
          );
       },
+
       /**
-       * вызывает reIndex у служебных энумераторов
-       * @private
+       * Вызывает переиндексацию служебных энумераторов
+       * @protected
        */
-      _reIndex: function (){
+      _reIndex: function () {
          this._getServiceEnumerator().reIndex();
          this._getNavigationEnumerator().reIndex();
       },
 
       /**
+       * Добавляет свойство в importantItemProperties, если его еще там нет
+       * @param {String} name Название свойства
+       * @protected
+       */
+      _setImportantProperty: function(name) {
+         var index = Array.indexOf(this._options.importantItemProperties, name);
+         if (index === -1) {
+            this._options.importantItemProperties.push(name);
+         }
+      },
+
+      /**
+       * Удаляет свойство из importantItemProperties, если оно там есть
+       * @param {String} name Название свойства
+       * @protected
+       */
+      _unsetImportantProperty: function(name) {
+         var index = Array.indexOf(this._options.importantItemProperties, name);
+         if (index !== -1) {
+            this._options.importantItemProperties.splice(index, 1);
+         }
+      },
+
+      /**
        * Возвращает соседний элемент проекции
-       * @param item{SBIS3.CONTROLS.Data.Projection.ICollectionItem} - Элемент проекции относительно которого искать
-       * @param isNext{Boolean} - Следующий или предыдущий элемент
+       * @param {SBIS3.CONTROLS.Data.Projection.ICollectionItem} item Элемент проекции относительно которого искать
+       * @param {Boolean} isNext Следующий или предыдущий элемент
        * @returns {SBIS3.CONTROLS.Data.Projection.ICollectionItem}
-       * @private
+       * @protected
        */
       _getNearbyItem: function (item, isNext) {
          var enumerator = this._getNavigationEnumerator();
@@ -1177,7 +1221,7 @@ define('js!SBIS3.CONTROLS.Data.Projection.Collection', [
        * @param {String} [property] Измененное свойство элемента
        * @private
        */
-      onSourceCollectionItemChange: function (event, item, index) {
+      onSourceCollectionItemChange: function (event, item, index, property) {
          if (!this._eventsEnabled) {
             return;
          }
@@ -1187,12 +1231,11 @@ define('js!SBIS3.CONTROLS.Data.Projection.Collection', [
             this._getServiceEnumerator().getInternalBySource(index),
             'contents'
          );
-         var session = this._startUpdateSession();
-         this._reFilter(index, 1);
-         if (this._isSorted()) {
-            this._reSort();
+
+         //Only changes of important properties can launch analysis
+         if (Array.indexOf(this._options.importantItemProperties, property) > -1) {
+            this._reAnalize(index, 1);
          }
-         this._finishUpdateSession(session);
       }
    };
 

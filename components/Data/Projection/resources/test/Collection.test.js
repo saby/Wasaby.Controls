@@ -173,10 +173,43 @@ define([
                });
             });
 
-            it('should sort projection after change item', function() {
+            it('should not resort projection after change item', function() {
                var
-                  adapter = new JsonAdapter(),
-                  changeModel = new Model({rawData:{max: 2}}),
+                  changeModel = new Model({
+                     rawData: {max: 2}
+                  }),
+                  list = new ObservableList({
+                     items: [
+                        new Model({
+                           rawData: {max: 1}
+                        }),
+                        new Model({
+                           rawData: {max: 3}
+                        }),
+                        new Model({
+                           rawData: {max: 4}
+                        }),
+                        changeModel
+                     ]
+                  }),
+                  sortedItems = [4, 3, 10, 1];
+               var projection = new CollectionProjection({
+                  collection: list
+               });
+               projection.setSort(function(a, b){
+                  return a.item.get('max') <= b.item.get('max') ? 1 : -1;
+               });
+               changeModel.set('max', 10);
+               projection.each(function(item, i) {
+                  assert.equal(sortedItems[i], item.getContents().get('max'));
+               });
+            });
+
+            it('should resort projection after change item', function() {
+               var
+                  changeModel = new Model({
+                     rawData: {max: 2}
+                  }),
                   list = new ObservableList({
                      items: [
                         new Model({
@@ -193,7 +226,8 @@ define([
                   }),
                   sortedItems = [10, 4, 3, 1];
                var projection = new CollectionProjection({
-                  collection: list
+                  collection: list,
+                  importantItemProperties: ['max']
                });
                projection.setSort(function(a ,b){
                   return a.item.get('max') <= b.item.get('max') ? 1 : -1;
@@ -310,36 +344,66 @@ define([
                assert.equal(count, 2);
             });
 
-            it('should filter projection after change item', function() {
+            it('should not refilter projection after change item', function() {
                var
-                  adapter = new JsonAdapter(),
                   changeModel = new Model({
-                     rawData: {max: 2},
-                     adapter: adapter
+                     rawData: {max: 2}
                   }),
                   list = new ObservableList({
                      items: [
                         new Model({
-                           rawData: {max: 1},
-                           adapter: adapter
+                           rawData: {max: 1}
                         }),
                         new Model({
-                           rawData: {max: 3},
-                           adapter: adapter
+                           rawData: {max: 3}
                         }),
                         new Model({
-                           rawData: {max: 4},
-                           adapter: adapter
+                           rawData: {max: 4}
                         }),
                         changeModel
                      ]
                   }),
-                  sortedItems = [10, 4, 3, 1],
                   filter = function(item) {
                      return item.get('max') === 3;
                   };
                var projection = new CollectionProjection({
                   collection: list
+               });
+               projection.setFilter(filter);
+               changeModel.set('max', 3);
+               var count = 0;
+               projection.each(function(item){
+                  assert.equal(item.getContents().get('max'), 3);
+                  count++;
+               });
+               assert.equal(count, 1);
+            });
+
+            it('should refilter projection after change item', function() {
+               var
+                  changeModel = new Model({
+                     rawData: {max: 2}
+                  }),
+                  list = new ObservableList({
+                     items: [
+                        new Model({
+                           rawData: {max: 1}
+                        }),
+                        new Model({
+                           rawData: {max: 3}
+                        }),
+                        new Model({
+                           rawData: {max: 4}
+                        }),
+                        changeModel
+                     ]
+                  }),
+                  filter = function(item) {
+                     return item.get('max') === 3;
+                  };
+               var projection = new CollectionProjection({
+                  collection: list,
+                  importantItemProperties: ['max']
                });
                projection.setFilter(filter);
                changeModel.set('max', 3);
