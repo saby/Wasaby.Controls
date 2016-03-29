@@ -143,7 +143,7 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
 
          TreeDataGridView.superclass._createFolderFooter.apply(this, arguments);
          this._foldersFooters[key].css('padding-left', level * HIER_WRAPPER_WIDTH);
-         container = $('<tr class="controls-TreeDataGridView__folderFooter" "data-parent"="' + key + '">\
+         container = $('<tr class="controls-TreeDataGridView__folderFooter" data-parent="' + key + '">\
             <td colspan="' + (this._options.columns.length + (this._options.multiselect ? 1 : 0)) + '"></td>\
          </tr>');
          container.find('td').append(this._foldersFooters[key]);
