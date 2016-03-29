@@ -115,7 +115,7 @@ define('js!SBIS3.CONTROLS.Utils.DataProcessor', [
             uniqueToken = ('' + Math.random()).substr(2)* 10;
          //fileName = idReport ? idReport : (isSaveColumns ? 'Выбранные столбцы' : 'Как на экране'), ??
          if (!cfg) {
-            this._prepareSerializer(rk('Подождите, идет выгрузка данных в ') + fileType).addCallback(function(reportText){
+            this._prepareSerializer(rk('Подождите, идет выгрузка данных в') + ' ' + fileType).addCallback(function(reportText){
                $ws.helpers.saveToFile(fileType, methodName, {
                   'html': reportText,
                   'Название': fileName,//idReport || Standart
@@ -140,7 +140,7 @@ define('js!SBIS3.CONTROLS.Utils.DataProcessor', [
        */
       exportHTML: function(fileName, fileType, methodName, cfg, pageOrientation){
          var self = this;
-         this._prepareSerializer(rk('Подождите, идет выгрузка данных в ') + fileType).addCallback(function(reportText){
+         this._prepareSerializer(rk('Подождите, идет выгрузка данных в') + ' ' + fileType).addCallback(function(reportText){
             var newCfg = {
                'FileName': fileName,
                'html': reportText
@@ -173,7 +173,7 @@ define('js!SBIS3.CONTROLS.Utils.DataProcessor', [
          if (pageOrientation) {
             cfg.PageOrientation = pageOrientation;
          }
-         this._createLoadIndicator(rk('Подождите, идет выгрузка данных в ') + fileType);
+         this._createLoadIndicator(rk('Подождите, идет выгрузка данных в') + ' ' + fileType);
          this.exportFileTransfer(fileType, methodName || 'SaveList', cfg).addBoth(function(){
             self._destroyLoadIndicator();
          });
@@ -219,7 +219,7 @@ define('js!SBIS3.CONTROLS.Utils.DataProcessor', [
             }
          }
 
-         this._createLoadIndicator(rk('Подождите, идет выгрузка данных в ') + fileType);
+         this._createLoadIndicator(rk('Подождите, идет выгрузка данных в') + ' ' + fileType);
          this.exportFileTransfer(fileType, methodName || 'SaveRecordSet', cfg).addBoth(function(){
             self._destroyLoadIndicator();
          });

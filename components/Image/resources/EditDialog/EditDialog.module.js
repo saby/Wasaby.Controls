@@ -7,7 +7,7 @@ define('js!SBIS3.CONTROLS.Image.EditDialog', [
    'js!SBIS3.CONTROLS.Image.CropPlugin',
    'js!SBIS3.CONTROLS.Utils.ImageUtil',
    'js!SBIS3.CONTROLS.Button',
-   'i18n!SBIS3.CONTROLS.Image'
+   'i18n!SBIS3.CONTROLS.Image.EditDialog'
 ], function(CompoundControl, dotTplFn, CropPlugin, ImageUtil) {
    /**
     * SBIS3.CONTROLS.Image.EditDialog
