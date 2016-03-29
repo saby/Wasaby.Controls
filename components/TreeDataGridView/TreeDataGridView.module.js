@@ -257,6 +257,7 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
       },
       _updateItem: function(item) {
          var
+             isMove = item.getContents().isChanged(this._options.hierField),
              parentKey = this._items.getParentKey(item.getContents(), this._options.hierField),
              parentItem = this._items.getRecordById(parentKey);
          /*
@@ -267,7 +268,7 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
           наличие папки в которую перемещаем в наборе DOM элементов с помощью _getElementByModel т.к. у некоторых людей все
           данные сразу присутствуют и проверка в наборе данных даст неверный результат.
           */
-         if ((!this._options.openedPath[parentKey] || !this._getElementByModel(parentItem).length) && parentKey != this.getCurrentRoot()) {
+         if (isMove && (!this._options.openedPath[parentKey] || !this._getElementByModel(parentItem).length) && parentKey != this.getCurrentRoot()) {
             this._removeItem(item)
          } else {
             TreeDataGridView.superclass._updateItem.apply(this, arguments);
