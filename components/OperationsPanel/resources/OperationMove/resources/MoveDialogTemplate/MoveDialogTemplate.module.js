@@ -6,7 +6,7 @@ define('js!SBIS3.CONTROLS.MoveDialogTemplate', [
    'html!SBIS3.CONTROLS.MoveDialogTemplate',
    'js!SBIS3.CONTROLS.Button',
    'js!SBIS3.CONTROLS.TreeDataGridView',
-   'i18n!SBIS3.CONTROLS.OperationMove'
+   'i18n!SBIS3.CONTROLS.MoveDialogTemplate'
 ], function(Control, dotTplFn) {
 
    var MoveDialogTemplate = Control.extend({
