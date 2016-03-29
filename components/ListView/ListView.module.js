@@ -1621,9 +1621,7 @@ define('js!SBIS3.CONTROLS.ListView',
                }
                //TODO Постараться избавиться от _infiniteScrollOffset, т.к. _offset уже выполняет необходимые функции
                this._pager.getPaging().update(this.getPage(this.isInfiniteScroll() ? this._infiniteScrollOffset : this._offset) + 1, more, nextPage);
-               pageNum = this._pager.getPaging().getPage();
-               //TODO Сейчас если кол-во страниц = 1 - пэйджинг рисуется неверно. Временно отключил отрисовку пэйджинга при кол-ве страниц = 1, нужно пофикстить
-               this._pager.getContainer().toggleClass('ws-hidden', !nextPage && pageNum == 1);
+               this._pager.getContainer().toggleClass('ws-hidden', !this._dataSet.getCount());
                if (this._options.multiselect) {
                   numSelected = this.getSelectedKeys().length;
                }
