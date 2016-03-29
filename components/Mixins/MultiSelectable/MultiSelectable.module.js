@@ -1,4 +1,4 @@
-define('js!SBIS3.CONTROLS.MultiSelectable', ['js!SBIS3.CONTROLS.Data.Collection.List'], function(List) {
+define('js!SBIS3.CONTROLS.MultiSelectable', ['js!SBIS3.CONTROLS.Data.Collection.RecordSet'], function(List) {
 
    /**
     * Миксин, добавляющий поведение хранения одного или нескольких выбранных элементов
