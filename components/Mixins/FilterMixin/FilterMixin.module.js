@@ -173,24 +173,30 @@ define('js!SBIS3.CONTROLS.FilterMixin', [
             filterResetLinkText: this.getProperty('resetLinkText')
          });
       },
-      _resetFilter: propertyUpdateWrapper(function(internalOnly) {
+      _resetFilter: function(internalOnly) {
          var resetFilter = this.getResetFilter(),
-               context = this._getCurrentContext();
+             context = this._getCurrentContext(),
+             self = this;
 
-         if (context) {
-            context.setValueSelf(this._options.internalContextFilterName + '/filter', resetFilter);
-         }
+         /* Синхронизация св-в должна происходить один раз, поэтому делаю обёртку */
+         propertyUpdateWrapper(function() {
+            if (context) {
+               context.setValueSelf(self._options.internalContextFilterName + '/filter', resetFilter);
+            }
 
-         if (!internalOnly) {
-            this._updateFilterStructure(undefined, resetFilter);
-            this._notifyFilterUpdate();
-         }
+            if (!internalOnly) {
+               self._updateFilterStructure(undefined, resetFilter);
+               self._notifyFilterUpdate();
+            }
+         }).call(this);
 
-	      this._notify('onResetFilter');
-      }),
+         this._notify('onResetFilter');
+      },
+
       _getCurrentContext : function(){
          /*Must be implemented!*/
       },
+
       setFilter: function() {
          throw new Error('Свойство "filter" работает только на чтение. Менять его надо через метод setFilterStructure');
       },
