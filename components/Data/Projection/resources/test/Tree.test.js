@@ -173,6 +173,19 @@ define([
                tree.setParentProperty('uid');
                assert.equal(tree.getParentProperty(), 'uid');
             });
+            it('should bring all items to the root', function() {
+               tree.setRoot(null);
+               tree.setParentProperty('');
+               tree._reAnalize();
+               var count = 0;
+               tree.each(function(item) {
+                  assert.equal(item.getContents(), tree.getCollection().at(count));
+                  count++;
+
+               });
+               assert.strictEqual(count, tree.getCollection().getCount());
+               assert.strictEqual(tree.getCount(), tree.getCollection().getCount());
+            });
          });
 
          describe('.getNodeProperty()', function() {
@@ -409,86 +422,88 @@ define([
             });
          });
 
-         describe('[onCollectionChange]', function() {
-            it('should fire with all of children add a node', function(done) {
-               var tree = getObservableTree(),
-                  expectNewItems = ['E', 'EA', 'EB', 'EBA', 'EC'],
-                  expectNewItemsIndex = 13,
-                  firesCount = 0,
-                  handler = function(event, action, newItems, newItemsIndex, oldItems, oldItemsIndex) {
-                     firesCount++;
-                     try {
-                        assert.strictEqual(action, IBindCollectionProjection.ACTION_ADD, 'Invalid action');
+         describe('subscribe', function() {
+            context('onCollectionChange', function() {
+               it('should fire with all of children add a node', function(done) {
+                  var tree = getObservableTree(),
+                     expectNewItems = ['E', 'EA', 'EB', 'EBA', 'EC'],
+                     expectNewItemsIndex = 13,
+                     firesCount = 0,
+                     handler = function(event, action, newItems, newItemsIndex, oldItems, oldItemsIndex) {
+                        firesCount++;
+                        try {
+                           assert.strictEqual(action, IBindCollectionProjection.ACTION_ADD, 'Invalid action');
 
-                        assert.strictEqual(newItems.length, expectNewItems.length, 'Invalid newItems length');
-                        for (var i = 0; i < newItems.length; i++) {
-                           assert.strictEqual(newItems[i].getContents().title, expectNewItems[i], 'Invalid newItems[' + i + ']');
+                           assert.strictEqual(newItems.length, expectNewItems.length, 'Invalid newItems length');
+                           for (var i = 0; i < newItems.length; i++) {
+                              assert.strictEqual(newItems[i].getContents().title, expectNewItems[i], 'Invalid newItems[' + i + ']');
+                           }
+                           assert.strictEqual(newItemsIndex, expectNewItemsIndex, 'Invalid newItemsIndex');
+
+                           assert.strictEqual(oldItems.length, 0, 'Invalid oldItems length');
+                           assert.strictEqual(oldItemsIndex, 0, 'Invalid oldItemsIndex');
+                        } catch (err) {
+                           done(err);
                         }
-                        assert.strictEqual(newItemsIndex, expectNewItemsIndex, 'Invalid newItemsIndex');
-
-                        assert.strictEqual(oldItems.length, 0, 'Invalid oldItems length');
-                        assert.strictEqual(oldItemsIndex, 0, 'Invalid oldItemsIndex');
-                     } catch (err) {
-                        done(err);
-                     }
-                  };
-               tree.getCollection().append([{
-                  id: 51,
-                  pid: 5,
-                  title: 'EA'
-               }, {
-                  id: 52,
-                  pid: 5,
-                  title: 'EB'
-               }, {
-                  id: 521,
-                  pid: 52,
-                  title: 'EBA'
-               }, {
-                  id: 53,
-                  pid: 5,
-                  title: 'EC'
-               }]);
-               tree.subscribe('onCollectionChange', handler);
-               tree.getCollection().add({
-                  id: 5,
-                  pid: 0,
-                  title: 'E'
+                     };
+                  tree.getCollection().append([{
+                     id: 51,
+                     pid: 5,
+                     title: 'EA'
+                  }, {
+                     id: 52,
+                     pid: 5,
+                     title: 'EB'
+                  }, {
+                     id: 521,
+                     pid: 52,
+                     title: 'EBA'
+                  }, {
+                     id: 53,
+                     pid: 5,
+                     title: 'EC'
+                  }]);
+                  tree.subscribe('onCollectionChange', handler);
+                  tree.getCollection().add({
+                     id: 5,
+                     pid: 0,
+                     title: 'E'
+                  });
+                  tree.unsubscribe('onCollectionChange', handler);
+                  if (firesCount === 1) {
+                     done();
+                  }
                });
-               tree.unsubscribe('onCollectionChange', handler);
-               if (firesCount === 1) {
-                  done();
-               }
-            });
 
-            it('should fire with all of children after remove a node', function(done) {
-               var tree = getObservableTree(),
-                  expectOldItems = ['A', 'AA', 'AB', 'AC', 'ACA', 'ACB', 'ACC'],
-                  expectOldItemsIndex = 0,
-                  firesCount = 0,
-                  handler = function(event, action, newItems, newItemsIndex, oldItems, oldItemsIndex) {
-                     firesCount++;
-                     try {
-                        assert.strictEqual(action, IBindCollectionProjection.ACTION_REMOVE, 'Invalid action');
+               it('should fire with all of children after remove a node', function(done) {
+                  var tree = getObservableTree(),
+                     expectOldItems = ['A', 'AA', 'AB', 'AC', 'ACA', 'ACB', 'ACC'],
+                     expectOldItemsIndex = 0,
+                     firesCount = 0,
+                     handler = function(event, action, newItems, newItemsIndex, oldItems, oldItemsIndex) {
+                        firesCount++;
+                        try {
+                           assert.strictEqual(action, IBindCollectionProjection.ACTION_REMOVE, 'Invalid action');
 
-                        assert.strictEqual(newItems.length, 0, 'Invalid newItems length');
-                        assert.strictEqual(newItemsIndex, 0, 'Invalid newItemsIndex');
+                           assert.strictEqual(newItems.length, 0, 'Invalid newItems length');
+                           assert.strictEqual(newItemsIndex, 0, 'Invalid newItemsIndex');
 
-                        assert.strictEqual(oldItems.length, expectOldItems.length, 'Invalid oldItems length');
-                        for (var i = 0; i < oldItems.length; i++) {
-                           assert.strictEqual(oldItems[i].getContents().title, expectOldItems[i], 'Invalid oldItems[' + i + ']');
+                           assert.strictEqual(oldItems.length, expectOldItems.length, 'Invalid oldItems length');
+                           for (var i = 0; i < oldItems.length; i++) {
+                              assert.strictEqual(oldItems[i].getContents().title, expectOldItems[i], 'Invalid oldItems[' + i + ']');
+                           }
+                           assert.strictEqual(oldItemsIndex, expectOldItemsIndex, 'Invalid oldItemsIndex');
+                        } catch (err) {
+                           done(err);
                         }
-                        assert.strictEqual(oldItemsIndex, expectOldItemsIndex, 'Invalid oldItemsIndex');
-                     } catch (err) {
-                        done(err);
-                     }
-                  };
-               tree.subscribe('onCollectionChange', handler);
-               tree.getCollection().removeAt(firstNodeItemIndex);
-               tree.unsubscribe('onCollectionChange', handler);
-               if (firesCount === 1) {
-                  done();
-               }
+                     };
+                  tree.subscribe('onCollectionChange', handler);
+                  tree.getCollection().removeAt(firstNodeItemIndex);
+                  tree.unsubscribe('onCollectionChange', handler);
+                  if (firesCount === 1) {
+                     done();
+                  }
+               });
             });
          });
       });
