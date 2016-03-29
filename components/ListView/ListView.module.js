@@ -24,15 +24,15 @@ define('js!SBIS3.CONTROLS.ListView',
       'js!SBIS3.CONTROLS.EditInPlaceClickController',
       'js!SBIS3.CONTROLS.Link',
       'js!SBIS3.CONTROLS.ScrollWatcher',
-      'i18n!SBIS3.CONTROLS.ListView',
       'browser!html!SBIS3.CONTROLS.ListView/resources/ListViewGroupBy',
       'browser!html!SBIS3.CONTROLS.ListView/resources/emptyData',
-      'browser!js!SBIS3.CONTROLS.ListView/resources/SwipeHandlers'
+      'browser!js!SBIS3.CONTROLS.ListView/resources/SwipeHandlers',
+      'i18n!SBIS3.CONTROLS.ListView'
    ],
    function (CompoundControl, CompoundActiveFixMixin, DSMixin, MultiSelectable,
              Selectable, DataBindMixin, DecorableMixin, DragNDropMixin, FormWidgetMixin, ItemsToolbar, MarkupTransformer, dotTplFn,
              TemplateUtil, CommonHandlers, MoveHandlers, Pager, EditInPlaceHoverController, EditInPlaceClickController,
-             Link, ScrollWatcher, rk,  groupByTpl, emptyDataTpl) {
+             Link, ScrollWatcher,  groupByTpl, emptyDataTpl) {
 
       'use strict';
 
@@ -471,7 +471,7 @@ define('js!SBIS3.CONTROLS.ListView',
                /**
                 * @cfg {String} Заголовок строки итогов
                 */
-               resultsText : 'Итого',
+               resultsText : rk('Итого'),
                resultsTpl: undefined
             },
             //Флаг обозначает необходимость компенсировать подгрузку по скроллу вверх, ее нельзя делать безусловно, так как при подгрузке вверх могут добавлятся элементы и вниз тоже

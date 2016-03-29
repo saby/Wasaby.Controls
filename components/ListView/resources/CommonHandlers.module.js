@@ -1,7 +1,7 @@
 /**
  * Created by am.gerasimov on 30.03.2015.
  */
-define('js!SBIS3.CONTROLS.CommonHandlers',['i18n!SBIS3.CONTROLS.ListView'],
+define('js!SBIS3.CONTROLS.CommonHandlers',['i18n!SBIS3.CONTROLS.CommonHandlers'],
    function() {
       var CommonHandlers = {
          deleteRecords: function(idArray) {

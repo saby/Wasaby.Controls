@@ -135,7 +135,7 @@ define('js!SBIS3.CONTROLS.Utils.DataSetToXMLSerializer', [
             tagName = this._wordsToTranslate[tagName] || tagName;
             var resultTest = cyrillicTest.test(tagName);
             if(resultTest) {
-               $ws.single.ioc.resolve('ILogger').error('XSLT', rk('Внимание! Кирилический тэг без замены: ') + tagName);
+               $ws.single.ioc.resolve('ILogger').error('XSLT', rk('Внимание! Кирилический тэг без замены') + ': ' + tagName);
             }
             element = document.createElement(tagName);
             if(fieldValue instanceof Date){
