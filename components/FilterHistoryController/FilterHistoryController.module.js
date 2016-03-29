@@ -62,7 +62,9 @@ define('js!SBIS3.CONTROLS.FilterHistoryController',
                  fb = this._options.filterButton,
                  currentActiveFilter = this.getActiveFilter();
 
-             /* Если изменения произошло в истории с другим ID или история не изменилась, то ничего делать не будем */
+             /* Если изменения произошло в истории с другим ID или история не изменилась,
+                то надо дополнительно проверить фильтр, возможно он был выставлен из контекста,
+                иначе ничего делать не будем */
              if (this._options.historyId !== id || isHistoryEqual || $ws.helpers.isEqualObject(currentActiveFilter, activeFilter)) {
 
                 /* Для случая, когда фильтр был синхронизирован из внешнего контекста (т.е. его в истории нет),
