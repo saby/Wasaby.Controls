@@ -10,7 +10,7 @@ define('js!SBIS3.CONTROLS.FloatArea', ['js!SBIS3.CORE.CompoundControl', 'js!SBIS
     * Контрол, отображающий вложенные компоненты в виде диалоговго окна
     * @class SBIS3.CONTROLS.FloatArea
     * @public
-    * @extends $ws.proto.Control
+    * @extends $ws.proto.CompoundControl
     * @mixes SBIS3.CONTROLS.PopupMixin
     * @author Крайнов Дмитрий Олегович
     */

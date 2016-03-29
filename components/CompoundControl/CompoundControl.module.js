@@ -11,7 +11,7 @@ define('js!SBIS3.CONTROLS.CompoundControl', ['js!SBIS3.CORE.CompoundControl'], f
     * Объединение помогает однозначно понимать от какого класса должны наследоваться все остальные контролы.
     * @class SBIS3.CONTROLS.CompoundControl
     * @author Крайнов Дмитрий Олегович
-    * @extends $ws.proto.Control
+    * @extends $ws.proto.CompoundControl
     */
 
    return Control.extend( /** @lends SBIS3.CONTROLS.CompoundControl.prototype */{

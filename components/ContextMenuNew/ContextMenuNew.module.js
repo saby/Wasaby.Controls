@@ -9,7 +9,7 @@ define('js!SBIS3.CONTROLS.ContextMenuNew', ['js!SBIS3.CONTROLS.MenuNew', 'js!SBI
     * @class SBIS3.CONTROLS.ContextMenu
     * @state mutable
     * @author Крайнов Дмитрий Олегович
-    * @extends $ws.proto.Control
+    * @extends SBIS3.CONTROLS.MenuNew
     * @mixes SBIS3.CONTROLS.CollectionMixin
     */
 

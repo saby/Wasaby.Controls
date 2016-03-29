@@ -10,7 +10,7 @@ define('js!SBIS3.CONTROLS.EditAtPlace',
       'use strict';
       /**
        * @class SBIS3.CONTROLS.EditAtPlace
-       * @extends SBIS3.CONTROLS.CompoundControl
+       * @extends $ws.proto.CompoundControl
        * @control
        * @public
        * @category Inputs

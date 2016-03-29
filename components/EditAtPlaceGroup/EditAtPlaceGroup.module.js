@@ -14,7 +14,7 @@ define('js!SBIS3.CONTROLS.EditAtPlaceGroup',
       /**
        * @noShow
        * @class SBIS3.CONTROLS.EditAtPlaceGroup
-       * @extends SBIS3.CORE.CompoundControl
+       * @extends $ws.proto.CompoundControl
        * @control
        * @public
        * @category Inputs

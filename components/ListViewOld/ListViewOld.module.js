@@ -16,7 +16,7 @@ define('js!SBIS3.CONTROLS.ListViewOld',
        * Контрол, отображающий внутри себя набор однотипных сущностей.
        * Умеет отображать данные списком по определенному шаблону, а так же фильтровать и сортировать их.
        * @class SBIS3.CONTROLS.ListViewOld
-       * @extends $ws.proto.Control
+       * @extends $ws.proto.CompoundControl
        * @mixes SBIS3.CONTROLS.CollectionMixin
        * @mixes SBIS3.CONTROLS.MultiSelectable
        * @control

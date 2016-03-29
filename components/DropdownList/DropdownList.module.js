@@ -25,7 +25,7 @@ define('js!SBIS3.CONTROLS.DropdownList',
        * Контрол, отображающий по клику или ховеру список однотипных сущностей.
        * Выпадающий список с разными вариантами отображения и возможностью задать для сущностей шаблон отображения.
        * @class SBIS3.CONTROLS.DropdownList
-       * @extends $ws.proto.Control
+       * @extends $ws.proto.CompoundControl
        * @author Крайнов Дмитрий Олегович
        * @mixes SBIS3.CONTROLS.DSMixin
        * @mixes SBIS3.CONTROLS.MultiSelectable

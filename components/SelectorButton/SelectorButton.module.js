@@ -21,7 +21,7 @@ define('js!SBIS3.CONTROLS.SelectorButton',
    /**
     * Контрол, отображающий выбранные записи в виде текстовых значений через запятую.
     * @class SBIS3.CONTROLS.SelectorButton
-    * @extends $ws.proto.Control
+    * @extends SBIS3.CONTROLS.ButtonBase
     * @control
     * @public
     * @author Крайнов Дмитрий Олегович
