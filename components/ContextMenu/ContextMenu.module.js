@@ -12,7 +12,7 @@ define('js!SBIS3.CONTROLS.ContextMenu', ['js!SBIS3.CONTROLS.Menu', 'js!SBIS3.CON
     * @control
     * @public
     * @author Крайнов Дмитрий Олегович
-    * @extends $ws.proto.Control
+    * @extends SBIS3.CONTROLS.Menu
     * @mixes SBIS3.CONTROLS.CollectionMixin
     */
 

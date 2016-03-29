@@ -16,7 +16,7 @@ define('js!SBIS3.CONTROLS.ListControl', [
     * Контрол, отображающий внутри себя список элементов.
     * Умеет отображать каждый элемента списка по определенному шаблону.
     * @class SBIS3.CONTROLS.ListControl
-    * @extends SBIS3.CORE.CompoundControl
+    * @extends $ws.proto.CompoundControl
     * @mixes SBIS3.CORE.CompoundActiveFixMixin
     * @mixes SBIS3.CONTROLS.ListControlMixin
     * @mixes SBIS3.CONTROLS.SelectableNew
