@@ -100,6 +100,7 @@ function(BaseControl, dotTpl){
              * @property {string} color Цвет
              * @property {Number} xAxis Номер связанной оси X
              * @property {Number} yAxis Номер связанной оси Y
+             * @translatable name
              */
             /**
              * @cfg {wsSerie[]} Набор графиков
@@ -126,6 +127,7 @@ function(BaseControl, dotTpl){
              * @property {Number} max Максимальное значение
              * @property {Boolean} opposite Располагать ось напротив стандартного расположения
              * @property {Number} linkedTo Номер связанной оси
+             * @translatable title
              */
             /**
              * @cfg {wsAxis[]} Набор осей координат

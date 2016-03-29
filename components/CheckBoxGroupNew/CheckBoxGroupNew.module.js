@@ -41,6 +41,7 @@ define('js!SBIS3.CONTROLS.CheckBoxGroupNew', [
            * @typedef {Object} GroupItems
            * @property {String} id Идентификатор.
            * @property {String} title Подпись.
+           * @translatable title
            */
           /**
            * @cfg {GroupItems[]} Набор исходных данных, по которому строится отображение
