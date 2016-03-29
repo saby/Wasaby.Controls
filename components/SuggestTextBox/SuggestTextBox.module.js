@@ -77,6 +77,12 @@ define('js!SBIS3.CONTROLS.SuggestTextBox', [
          SuggestTextBox.superclass.setListFilter.call(this, filter, !this._changedByKeyboard);
       },
 
+      // FIXME костыль до перехода на пикера по фокусную систему
+      _inputFocusInHandler: function() {
+         SuggestTextBox.superclass._inputFocusInHandler.apply(this, arguments);
+         this._observableControlFocusHandler();
+      },
+
       _keyDownBind: function(e) {
          SuggestTextBox.superclass._keyDownBind.apply(this, arguments);
 
