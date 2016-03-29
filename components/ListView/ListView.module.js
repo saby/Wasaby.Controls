@@ -1606,7 +1606,8 @@ define('js!SBIS3.CONTROLS.ListView',
                nextPage = this._hasNextPage(more, this._infiniteScrollOffset),
                numSelected = 0;
             if (this._pager) {
-               //TODO Разобраться, почему работаем с pageNum ДО обновления номера страницы. т.е. сейчас не актуальный pageNum, а тот что был до переключения
+               //TODO Сейчас берется не всегда актуальный pageNum, бывают случаи, что значение(при переключении по стрелкам)
+               //равно значению до переключения страницы. пофиксить чтобы всегда было 1 поведение
                var pageNum = this._pager.getPaging().getPage();
                if (this._pageChangeDeferred) { // только когда меняли страницу
                   this._pageChangeDeferred.callback([this.getPage() + 1, nextPage, nextPage]);//смотреть в DataSet мб ?
@@ -1616,10 +1617,10 @@ define('js!SBIS3.CONTROLS.ListView',
                if (this._dataSet.getCount() === 0 && pageNum > 1) {
                   this._pager.getPaging().setPage(1); //чтобы не перезагружать поставим 1ую. было : pageNum - 1
                }
-               //TODO Не понятно, для чего нам отдельная переменная _infiniteScrollOffset, когда есть _offset
+               //TODO Постараться избавиться от _infiniteScrollOffset, т.к. _offset уже выполняет необходимые функции
                this._pager.getPaging().update(this.getPage(this.isInfiniteScroll() ? this._infiniteScrollOffset : this._offset) + 1, more, nextPage);
                pageNum = this._pager.getPaging().getPage();
-               //Если данных в папке нет, не рисуем Pager
+               //TODO Сейчас если кол-во страниц = 1 - пэйджинг рисуется неверно. Временно отключил отрисовку пэйджинга при кол-ве страниц = 1, нужно пофикстить
                this._pager.getContainer().toggleClass('ws-hidden', !nextPage && pageNum == 1);
                if (this._options.multiselect) {
                   numSelected = this.getSelectedKeys().length;
