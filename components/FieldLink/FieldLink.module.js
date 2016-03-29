@@ -72,6 +72,8 @@ define('js!SBIS3.CONTROLS.FieldLink',
         * @author Крайнов Дмитрий Олегович
         * @ignoreOptions tooltip alwaysShowExtendedTooltip loadingContainer observableControls pageSize usePicker filter saveFocusOnSelect
         * @ignoreOptions allowEmptySelection allowEmptyMultiSelection templateBinding includedTemplates resultBindings showAllConfig
+        *
+        * ignoreEvents onDataLoad onDataLoadError onBeforeDataLoad onDrawItems
         */
 
        var FieldLink = SuggestTextBox.extend([MultiSelectable, ActiveMultiSelectable, Selectable, ActiveSelectable, SyncSelectionMixin, DSMixin, ITextValue],/** @lends SBIS3.CONTROLS.FieldLink.prototype */{
@@ -319,15 +321,19 @@ define('js!SBIS3.CONTROLS.FieldLink',
            */
           showSelector: function(template, componentOptions) {
              var oldRecArray = [],
-                 oldRec;
+                 selectedItems, oldRec;
 
              if(this._options.oldViews) {
-                this.getSelectedItems().each(function(rec) {
-                   oldRec = DialogOpener.convertRecord(rec);
-                   if(oldRec) {
-                      oldRecArray.push(oldRec);
-                   }
-                });
+                selectedItems = this.getSelectedItems();
+
+                if(selectedItems) {
+                   selectedItems.each(function(rec) {
+                      oldRec = DialogOpener.convertRecord(rec);
+                      if(oldRec) {
+                         oldRecArray.push(oldRec);
+                      }
+                   });
+                }
              }
 
              //FIXME и ещё один костыль до перевода пикера на фокусную систему
@@ -393,14 +399,17 @@ define('js!SBIS3.CONTROLS.FieldLink',
             * @see itemTemplate
             */
           getTextValue: function() {
-             var displayFields = [],
-                 self = this;
+              var displayFields = [],
+                  selectedItems = this.getSelectedItems(),
+                  self = this;
 
-             this.getSelectedItems().each(function(rec) {
-                displayFields.push($ws.helpers.escapeHtml(rec.get(self._options.displayField)));
-             });
+              if(selectedItems) {
+                 selectedItems.each(function(rec) {
+                    displayFields.push($ws.helpers.escapeHtml(rec.get(self._options.displayField)));
+                 });
+              }
 
-             return displayFields.join(', ');
+              return displayFields.join(', ');
           },
 
           /**
@@ -518,8 +527,12 @@ define('js!SBIS3.CONTROLS.FieldLink',
           },
 
           setListFilter: function() {
+             var selectedItems =  this.getSelectedItems();
+
              /* Если единичный выбор в поле связи, но textBox всё равно показывается(включена опция), запрещаем работу suggest'a */
-             if(!this._options.multiselect && this.getSelectedItems().getCount() && this._options.alwaysShowTextBox) {
+             if(!this._options.multiselect &&
+                 selectedItems && selectedItems.getCount() &&
+                 this._options.alwaysShowTextBox) {
                 return;
              }
              FieldLink.superclass.setListFilter.apply(this, arguments);

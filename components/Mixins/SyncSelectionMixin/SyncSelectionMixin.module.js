@@ -61,7 +61,7 @@ define('js!SBIS3.CONTROLS.SyncSelectionMixin', ['js!SBIS3.CONTROLS.Data.Model'],
                      }
                      break;
                   case 'selectedItems':
-                     item = propValue.at(0);
+                     item = propValue && propValue.at(0);
                      if(item) {
                         this._options.selectedItem = item;
                         this._options.selectedKey = item.getId();
