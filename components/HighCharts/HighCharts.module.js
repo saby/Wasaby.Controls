@@ -100,7 +100,6 @@ function(BaseControl, dotTpl){
              * @property {string} color Цвет
              * @property {Number} xAxis Номер связанной оси X
              * @property {Number} yAxis Номер связанной оси Y
-             * @translatable name
              */
             /**
              * @cfg {wsSerie[]} Набор графиков
