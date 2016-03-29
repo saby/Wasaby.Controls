@@ -206,22 +206,22 @@ define([
             });
          });
 
-         describe('.getIndiciesByValue()', function() {
+         describe('.getIndicesByValue()', function() {
             it('should return items indexes with given property', function() {
                var enumerator = new ArrayEnumerator({
                   items: items
                });
                assert.deepEqual(
                   [0],
-                  enumerator.getIndiciesByValue('Ид', 1)
+                  enumerator.getIndicesByValue('Ид', 1)
                );
                assert.deepEqual(
                   [0, 1, 3],
-                  enumerator.getIndiciesByValue('Пол', 'м')
+                  enumerator.getIndicesByValue('Пол', 'м')
                );
                assert.deepEqual(
                   [2],
-                  enumerator.getIndiciesByValue('Пол', 'ж')
+                  enumerator.getIndicesByValue('Пол', 'ж')
                );
             });
             it('should return no indexes with not exists property', function() {
@@ -230,7 +230,7 @@ define([
                });
                assert.strictEqual(
                   0,
-                  enumerator.getIndiciesByValue('Ид', 0).length
+                  enumerator.getIndicesByValue('Ид', 0).length
                );
             });
          });
