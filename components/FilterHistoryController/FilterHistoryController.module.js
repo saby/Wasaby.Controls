@@ -65,7 +65,9 @@ define('js!SBIS3.CONTROLS.FilterHistoryController',
              /* Если изменения произошло в истории с другим ID или история не изменилась, то ничего делать не будем */
              if (this._options.historyId !== id || isHistoryEqual || $ws.helpers.isEqualObject(currentActiveFilter, activeFilter)) {
 
-                /* Если активных фильтров нет, но истории не одинаковые - сбросим фильтр. */
+                /* Для случая, когда фильтр был синхронизирован из внешнего контекста (т.е. его в истории нет),
+                   при сбросе фильтра, мы должны синхронизировать и другие фильтры, которые подписаны на канал изменения с одинаковым id,
+                   т.е. вызвать у них сброс фильтра */
                 if(!isHistoryEqual && activeFilter === false && currentActiveFilter === false) {
                    fb.sendCommand('reset-filter');
                 }
