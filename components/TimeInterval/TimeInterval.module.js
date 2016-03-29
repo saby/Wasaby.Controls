@@ -121,6 +121,21 @@ define(
                 */
                mask: 'DD:HH',
                /**
+                * @cfg {Number} Максимальное количество символов в левой группе, до которых может увеличиться маска
+                * * @remark
+                * Допустимые значения:
+                * <ol>
+                *    <li>2</li>
+                *    <li>3</li>
+                *    <li>4</li>
+                * </ol>
+                * @example
+                * <pre>
+                *     <option name="maxCharsAtLeftGroup">3</option>
+                * </pre>
+               */
+               maxCharsAtLeftGroup: 4,
+               /**
                 * @cfg {String} Временной интервал
                 * @remark
                 * В качестве значения опция принимает строку вида: P*DT*H*M, где:
@@ -305,9 +320,17 @@ define(
           * @private
           */
          _incMask: function (length) {
+            var leftGroupMaskLength = this.formatModel.model[0].mask.length;
+            //Увеличиваем маску левой группы до размера не большего maxCharsAtLeftGroup
+            if ((leftGroupMaskLength + length) > this._options.maxCharsAtLeftGroup){
+               length = this._options.maxCharsAtLeftGroup - leftGroupMaskLength;
+            }
+            if (length < 1){
+               return;
+            }
             this._options.mask = this._options.mask.substr(0, length) + this._options.mask;
             TimeInterval.superclass.setMask.apply(this, [this._options.mask]);
-            this.setText(this._options.text);
+            this._setText(this._options.text);
             this.setCursor(this.formatModel._options.cursorPosition.group, this.formatModel._options.cursorPosition.position + 1);
          },
          /**
@@ -320,21 +343,33 @@ define(
          },
 
          setText: function(text){
+            text = this._getCorrectText(text);
+            TimeInterval.superclass.setText.call(this, text);
+         },
+         _setText: function(text){
+            text = this._getCorrectText(text);
+            TimeInterval.superclass._setText.call(this, text);
+         },
+         _getCorrectText: function(text){
             this.formatModel.setText(text, this._maskReplacer);
             this._updateIntervalByText();
-            text = this._getTextByTimeInterval();
-            TimeInterval.superclass.setText.call(this, text);
+            return this._getTextByTimeInterval();
          },
          /**
           * Получить текст по текущему значению timeInterval.
           * @private
           */
          _getTextByTimeInterval: function () {
-            var valuesArray = this._getSectionValues();
-            if (valuesArray[0] > 9999){
-               valuesArray[0] = 9999;
+            var valuesArray = this._getSectionValues(),
+               result = valuesArray;
+            //Если значение в левой группе больше, чем предусмотрено в maxCharsAtLeftGroup,
+            //то выставляем максимальное значение, соответствующее максимально возможной маске (9999:00:00)
+            if (valuesArray[0].toString().length > this._options.maxCharsAtLeftGroup){
+               this._incMask(this._options.maxCharsAtLeftGroup);
+               result[0] = this.formatModel.model[0].mask.replace(/[a-z]/ig, '9');
+               this.timeInterval.set([result[0], '00', '00']);
             }
-            return this._getTextCorrespondingToMask(valuesArray.join(':'));
+            return this._getTextCorrespondingToMask(result.join(':'));
          },
          /**
           * Получить текст, соответствующий маске
@@ -344,7 +379,8 @@ define(
           * @private
           */
          _getTextCorrespondingToMask: function(text){
-            while ((text.length < this._options.mask.length || (text[0] != this._maskReplacer && text[0] != "0" && text.length == this._options.mask.length)) && text.split(':')[0].length < 4){
+            while ((text.length < this._options.mask.length || (text[0] != this._maskReplacer && text[0] != "0" && text.length == this._options.mask.length))
+               && text.split(':')[0].length < this._options.maxCharsAtLeftGroup){
                text = this._maskReplacer + text;
             }
             if (text.length > this._options.mask.length){
@@ -402,8 +438,8 @@ define(
           */
          _updateTextByTimeInterval: function(needUpdate){
             var currentText = this.formatModel.getText(this._maskReplacer);
-            if ((needUpdate === true) || (currentText !== this._getEmptyText() && currentText !== this.getText())){
-               this.setText(this._getTextByTimeInterval());
+            if ((needUpdate === true) || (currentText !== this._getEmptyText())){
+               this._setText(this._getTextByTimeInterval());
             }
          },
          /**
@@ -415,8 +451,9 @@ define(
                 oldDate = this.timeInterval.toString();
 
             this._updateIntervalByText(text);
+            this._options.text = text;
 
-            if ((text.split(':')[0].length == this.formatModel.model[0].mask.length) && text.split(':')[0].indexOf(this._maskReplacer) == -1 && this.formatModel.model[0].mask.length < 4) {
+            if ((text.split(':')[0].length == this.formatModel.model[0].mask.length) && text.split(':')[0].indexOf(this._maskReplacer) == -1 && this.formatModel.model[0].mask.length < this._options.maxCharsAtLeftGroup) {
                this._options.text = this._maskReplacer + text;
                this._incMask(1);
             }
