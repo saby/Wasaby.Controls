@@ -39,6 +39,7 @@ define('js!SBIS3.CONTROLS.CheckBoxGroup', ['js!SBIS3.CONTROLS.CheckBoxGroupBase'
         * @typedef {Object} GroupItems
         * @property {String} id Идентификатор элемента группы.
         * @property {String} caption Заголовок элемента группы.
+        * @translatable caption
         */
        /**
         * @cfg {GroupItems[]} Набор исходных данных, по которому строится отображение группы

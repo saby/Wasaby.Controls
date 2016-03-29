@@ -50,6 +50,7 @@ define('js!SBIS3.CONTROLS.ComboBox', [
        * @typedef {Object} ItemsComboBox
        * @property {String} title Текст пункта меню.
        * @property {String} key Ключ пункта меню.
+       * @translatable title
        */
       /**
        * @cfg {ItemsComboBox[]} Набор исходных данных, по которому строится отображение

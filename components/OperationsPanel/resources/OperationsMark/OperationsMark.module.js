@@ -47,6 +47,7 @@ define('js!SBIS3.CONTROLS.OperationsMark', [
               * @property {String} name Имя кнопки операции.
               * @property {String} title Заголовок кнопки операции.
               * @property {String} handler Имя функции обработчика клика по пункту меню операций отметки.
+              * @translatable title
               */
              /**
               * @cfg {OperationsMarkItems[]} Операции отметки.

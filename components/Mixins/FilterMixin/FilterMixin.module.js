@@ -48,6 +48,7 @@ define('js!SBIS3.CONTROLS.FilterMixin', [
              * @property {null|Object|String|Boolean|Number} resetValue Значение поля при сбрасывании фильтра, или при пустом значении в value. Может быть не определено.
              * @property {String} resetCaption Текст по умолчанию. Если задали, то при пустом (или заданном в resetValue) значении будет
              * отображаться заданный здесь текст. Может быть не определено.
+             * @translatable caption resetCaption
              */
             /**
              * @cfg {filterStructure[]} Структура элемента фильтра

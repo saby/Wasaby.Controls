@@ -52,6 +52,7 @@ define('js!SBIS3.CONTROLS.CollectionMixin', ['js!SBIS3.CONTROLS.Collection', /*T
               * @property {String} icon Иконка пункта меню.
               * @property {String} parent Идентификатор родительского пункта меню. Опция задаётся для подменю.
               * @editor icon ImageEditor
+              * @translatable title
               */
             /**
              * @cfg {Items[]} Набор исходных данных, по которому строится отображение
