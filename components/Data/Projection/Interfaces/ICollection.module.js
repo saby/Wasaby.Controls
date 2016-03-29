@@ -27,7 +27,14 @@ define('js!SBIS3.CONTROLS.Data.Projection.ICollection', [
             /**
              * @cfg {SBIS3.CONTROLS.Data.Collection.IEnumerable} Исходная коллекция
              */
-            collection: null
+            collection: null,
+
+            /**
+             * @cfg {Array.<String>} Названия свойств элемента коллекции, от которых зависят фильтрация и/или сортировка.
+             * @remark
+             * Изменение любого из указанных свойств элемента коллекции приведет к перерасчету фильтации и сортировки.
+             */
+            importantItemProperties: []
          }
       },
 
