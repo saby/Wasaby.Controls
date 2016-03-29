@@ -49,10 +49,22 @@ define('js!SBIS3.CONTROLS.Data.Collection.IndexedEnumeratorMixin', [
        * @param {*} value Значение свойства элемента.
        * @returns {Array}
        */
-      getIndiciesByValue: function (property, value) {
+      getIndicesByValue: function (property, value) {
          return $ws.helpers.map(this._getIndexForPropertyValue(property, value), function(item) {
             return item[0];
          });
+      },
+
+      /**
+       * Возвращает индексы всех элементов с указанным значением свойства.
+       * @param {String} property Название свойства элемента.
+       * @param {*} value Значение свойства элемента.
+       * @returns {Array}
+       * @deprecated метод будет удален в 3.7.4 используйте getIndicesByValue()
+       */
+      getIndiciesByValue: function (property, value) {
+         $ws.single.ioc.resolve('ILogger').info(this._moduleName + '::getIndiciesByValue()', 'Method is deprecated and will be removed in 3.7.4. Use getIndicesByValue() instead.');
+         return this.getIndicesByValue(property, value);
       },
 
       /**
@@ -141,7 +153,6 @@ define('js!SBIS3.CONTROLS.Data.Collection.IndexedEnumeratorMixin', [
       _onCollectionChange: function () {
          this.reIndex();
       }
-
 
       //endregion Protected methods
    };
