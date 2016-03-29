@@ -160,19 +160,7 @@ define('js!SBIS3.CONTROLS.TextBox', ['js!SBIS3.CONTROLS.TextBoxBase','html!SBIS3
             self._fromTab = false;
          });
 
-         this._inputField.bind('focusin', function (e) {
-            if (self._options.selectOnClick || self._fromTab){
-               self._inputField.select();
-            }
-            self._fromTab = true;
-            /* При получении фокуса полем ввода, сделаем контрол активным.
-            *  Делать контрол надо активным по фокусу, т.к. при клике и уведении мыши,
-            *  кусор поставится в поле ввода, но соыбтие click не произойдёт и контрол актвным не станет, а должен бы.*/
-            if(!self.isActive()) {
-               self.setActive(true, false, true);
-               e.stopPropagation();
-            }
-         });
+         this._inputField.bind('focusin', this._inputFocusInHandler.bind(this));
 
          this._inputField.bind('focusout', function(){
             var text = self._inputField.val();
@@ -327,6 +315,20 @@ define('js!SBIS3.CONTROLS.TextBox', ['js!SBIS3.CONTROLS.TextBoxBase','html!SBIS3
             return false;
          }
          return true;
+      },
+
+      _inputFocusInHandler: function(e) {
+         if (this._options.selectOnClick || this._fromTab){
+            this._inputField.select();
+         }
+         this._fromTab = true;
+         /* При получении фокуса полем ввода, сделаем контрол активным.
+          *  Делать контрол надо активным по фокусу, т.к. при клике и уведении мыши,
+          *  кусор поставится в поле ввода, но соыбтие click не произойдёт и контрол актвным не станет, а должен бы.*/
+         if(!this.isActive()) {
+            this.setActive(true, false, true);
+            e.stopPropagation();
+         }
       },
 
       _createCompatPlaceholder : function() {
