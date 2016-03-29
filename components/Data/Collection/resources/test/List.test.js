@@ -773,8 +773,8 @@ define(
             });
          });
 
-         describe('.getIndiciesByValue', function (){
-            it('should return indiciesByValue', function() {
+         describe('.getIndicesByValue', function (){
+            it('should return indices by value', function() {
 
                var newItems = [{
                      'Ид': 70,
@@ -787,8 +787,8 @@ define(
                   list = new List({
                      items: items.concat(newItems)
                   });
-               var indicies = [len, len+1];
-               assert.deepEqual(list.getIndiciesByValue('Фамилия', '12a'), indicies);
+               var indices = [len, len+1];
+               assert.deepEqual(list.getIndicesByValue('Фамилия', '12a'), indices);
             });
          });
 
