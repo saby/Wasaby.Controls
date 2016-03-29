@@ -42,6 +42,7 @@ define('js!SBIS3.CONTROLS.DataGridControl', [
              * @property {String} headTemplate Шаблон отображения шапки колонки
              * @property {String} headTooltip Всплывающая подсказка шапки колонки
              * @property {String} cellTemplate Шаблон отображения ячейки
+             * @translatable title
              */
             /**
              * @cfg {Columns[]} Набор колонок

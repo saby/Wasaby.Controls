@@ -107,6 +107,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
              * @editorConfig resultTemplate extFilter xhtml
              * @editor cellTemplate CloudFileChooser
              * @editorConfig cellTemplate extFilter xhtml
+             * @translatable title
              */
             /**
              * @cfg {Columns[]} Набор колонок
