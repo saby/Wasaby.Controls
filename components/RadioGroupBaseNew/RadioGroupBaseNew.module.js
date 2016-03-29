@@ -13,7 +13,7 @@ define('js!SBIS3.CONTROLS.RadioGroupBaseNew', ['js!SBIS3.CONTROLS.ButtonGroupBas
     * *Это экспериментальный модуль, API будет меняться!*
     * @class SBIS3.CONTROLS.RadioGroupBaseNew
     * @mixes SBIS3.CONTROLS.SelectableNew
-    * @extends $ws.proto.Control
+    * @extends SBIS3.CONTROLS.ButtonGroupBaseDSNew
     * @state mutable
     * @author Крайнов Дмитрий Олегович
     */

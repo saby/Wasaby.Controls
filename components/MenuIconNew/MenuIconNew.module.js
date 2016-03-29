@@ -29,7 +29,7 @@ define('js!SBIS3.CONTROLS.MenuIconNew', [
     *         </options>
     *      </options>
     * </component>
-    * @extends SBIS3.CONTROLS.ToggleButton
+    * @extends SBIS3.CONTROLS.IconButton
     * @author Крайнов Дмитрий Олегович
     * @category Buttons
     *

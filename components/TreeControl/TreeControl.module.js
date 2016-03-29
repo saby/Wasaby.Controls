@@ -11,7 +11,7 @@ define('js!SBIS3.CONTROLS.TreeControl', [
     * Контрол дерева
     * *Это экспериментальный модуль, API будет меняться!*
     * @class SBIS3.CONTROLS.TreeControl
-    * @extends SBIS3.CORE.CompoundControl
+    * @extends $ws.proto.CompoundControl
     * @mixes SBIS3.CONTROLS.ListControlMixin
     * @mixes SBIS3.CONTROLS.HierarchyControlMixin
     * @mixes SBIS3.CONTROLS.TreeControlMixin
