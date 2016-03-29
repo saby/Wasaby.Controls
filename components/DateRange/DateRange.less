@@ -1,8 +1,17 @@
-.controls-DateRange__Button {
-   position: relative;
-   top: -1px;
-   border-radius: 0;
-   .controls-Button__text {
-      margin: 0 8px 0 8px;
+.controls-DateRange {
+   line-height: 24px;
+
+   &.ws-validation-error {
+      border-width: @formatted-text-box-error-border-width;
+      border-style: @formatted-text-box-error-border-style;
+      border-color: @formatted-text-box-error-border-color;
+   }
+
+   .controls-DateRange__Button {
+      position: relative;
+      border-radius: 0;
+      .controls-Button__text {
+         margin: 0 8px;
+      }
    }
 }
