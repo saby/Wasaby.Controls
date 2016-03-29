@@ -143,6 +143,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
                  *         . . .
                  *     </component>
                  * </pre>
+                 * @translatable caption
                  */
                 /**
                  * @cfg {dictionaries[]} Устанавливает справочники для поля связи.

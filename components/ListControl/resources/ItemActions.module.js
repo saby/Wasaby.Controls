@@ -28,7 +28,7 @@ define('js!SBIS3.CONTROLS.ListControl.ItemActions', [
              * На строке может быть только три кнопки, полный список будет в меню.
              * @property {Function} onActivated Действие кнопки.
              * @editor icon ImageEditor
-             * @translatable caption
+             * @translatable caption tooltip
              */
             /**
              * @cfg {ItemsActions[]} Набор действий над элементами, отображающийся в виде иконок
