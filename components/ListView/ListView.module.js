@@ -1177,6 +1177,7 @@ define('js!SBIS3.CONTROLS.ListView',
                this._itemsToolbar = new ItemsToolbar({
                   element: $('<div class="controls-ListView__ItemsToolbar-container"/>').appendTo(this.getContainer()),
                   parent: this,
+                  visible: false,
                   touchMode: this._touchSupport,
                   className: this._notEndEditClassName,
                   itemsActions: this._options.itemsActions,
