@@ -16,8 +16,8 @@ define([
          });
 
          describe('.getDefaultValue()', function() {
-            it('should return an empty string by default', function() {
-               assert.strictEqual(field.getDefaultValue(), '');
+            it('should return null by default', function() {
+               assert.isNull(field.getDefaultValue());
             });
          });
       });

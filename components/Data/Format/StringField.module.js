@@ -13,17 +13,7 @@ define('js!SBIS3.CONTROLS.Data.Format.StringField', [
     */
 
    var StringField = Field.extend(/** @lends SBIS3.CONTROLS.Data.Format.StringField.prototype */{
-      _moduleName: 'SBIS3.CONTROLS.Data.Format.StringField',
-      $protected: {
-         _options: {
-            /**
-             * @cfg {String} Значение поля по умолчанию
-             * @see getDefaultValue
-             * @see setDefaultValue
-             */
-            defaultValue: ''
-         }
-      }
+      _moduleName: 'SBIS3.CONTROLS.Data.Format.StringField'
 
       //region Public methods
 
