@@ -1011,7 +1011,7 @@ define('js!SBIS3.CONTROLS.ListView',
             //Если перерисовка случилась из-за reload, то прроверяем наличие скролла и догружаем ещё одну страницу если скролл есть
             if (this._updateByReload) {
                this._updateByReload = false;
-               if (this._scrollWatcher && this._scrollWatcher.hasScroll(this.getContainer())) {
+               if (this._scrollWatcher && !this._scrollWatcher.hasScroll(this.getContainer())) {
                   this._nextLoad();
                }
             }
