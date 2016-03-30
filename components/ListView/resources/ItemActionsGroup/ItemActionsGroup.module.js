@@ -53,8 +53,13 @@ define('js!SBIS3.CONTROLS.ItemActionsGroup',
                 isActionVisible,
                 isMain;
 
-            /* Если открыто меню, не меняем состояние кнопок */
-            if(this._itemActionsMenu && this._itemActionsMenu.isVisible()) return;
+            /* Если открыто меню, то надо скрыть кнопки, чтобы ничего не моргало */
+            if(this.isItemActionsMenuVisible()) {
+               $ws.helpers.forEach(itemsInstances, function(elem) {
+                  elem.hide();
+               });
+               return;
+            }
 
             for(var i in itemsInstances) {
                if(itemsInstances.hasOwnProperty(i)) {
