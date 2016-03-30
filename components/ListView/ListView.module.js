@@ -644,7 +644,7 @@ define('js!SBIS3.CONTROLS.ListView',
                id = target.data('id');
                this._elemClickHandler(id, this._dataSet.getRecordByKey(id), e.target);
             }
-            if (this._options.multiselect && $target.length && $target.hasClass('controls-DataGridView__th__checkBox')){
+            if (this._options.multiselect && $target.length && $target.hasClass('controls-DataGridView__th__checkBox') && this.isEnabled()){
                $target.hasClass('controls-DataGridView__th__checkBox__checked') ? this.setSelectedKeys([]) :this.setSelectedItemsAll();
                $target.toggleClass('controls-DataGridView__th__checkBox__checked');
             }
@@ -814,9 +814,8 @@ define('js!SBIS3.CONTROLS.ListView',
 
             this.setSelectedKey(id);
             if (this._options.multiselect) {
-               //TODO: оставить только js класс
-               if ($target.hasClass('js-controls-ListView__itemCheckBox') || $target.hasClass('controls-ListView__itemCheckBox')) {
-                  this.toggleItemsSelection([$target.closest('.controls-ListView__item').attr('data-id')]);
+               if ($target.hasClass('js-controls-ListView__itemCheckBox')) {
+                  this._onCheckBoxClick($target);
                }
                else {
                   this._notifyOnItemClick(id, data, target);
@@ -824,6 +823,11 @@ define('js!SBIS3.CONTROLS.ListView',
             }
             else {
                this._notifyOnItemClick(id, data, target);
+            }
+         },
+         _onCheckBoxClick: function(target) {
+            if (this.isEnabled()) {
+               this.toggleItemsSelection([target.closest('.controls-ListView__item').attr('data-id')]);
             }
          },
          _notifyOnItemClick: function(id, data, target) {
