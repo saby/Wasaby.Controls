@@ -165,7 +165,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
                  * нужного справочника.
                  *
                  * Открыть справочник через меню можно в новом диалоге или во всплывающей панели; нужный режим можно
-                 * установить с помощью опции {@link SBIS3.CONTROLS.ChooserMixin#chooserMode}.
+                 * установить с помощью опции {@link chooserMode}.
                  * Установить набор справочников для поля связи можно с помощью метода {@link setDictionaries}.
                  * @example
                  * Настройка двух справочников для выбора в поле связи:
@@ -184,7 +184,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
                  *     </options>
                  * </pre>
                  * @see setDictionaries
-                 * @see SBIS3.CONTROLS.ChooserMixin#chooserMode
+                 * @see chooserMode
                  */
                 dictionaries: [],
                 /**

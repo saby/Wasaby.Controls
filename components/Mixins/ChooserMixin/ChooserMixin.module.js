@@ -54,16 +54,16 @@ define('js!SBIS3.CONTROLS.ChooserMixin', [
              * * floatArea Справочник отображается во всплывающей панели.
              * @remark
              * Окно выбора будет отображаться в новом диалоге или во всплывающей панели.
-             * Подробно про диалог выбора элементов коллекции можно прочесть {@link SBIS3.CONTROLS.FieldLink#dictionaries здесь}.
+             * Подробно про диалог выбора элементов коллекции можно прочесть {@link dictionaries здесь}.
              * @example
-             * Устанавливаем режим отображения {@link SBIS3.CONTROLS.FieldLink#dictionaries справочника}для поля связи
+             * Устанавливаем режим отображения {@link dictionaries справочника}для поля связи
              * в новом диалоговом окне:
              * ![](/ChooserMixin01.png)
              * фрагмент верстки:
              * <pre class="brush: xml">
              *     <option name="chooserMode">dialog</option>
              * </pre>
-             * @see SBIS3.CONTROLS.FieldLink#dictionaries
+             * @see dictionaries
              */
             chooserMode: 'floatArea'
          },
