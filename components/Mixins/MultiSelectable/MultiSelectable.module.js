@@ -574,10 +574,12 @@ define('js!SBIS3.CONTROLS.MultiSelectable', ['js!SBIS3.CONTROLS.Data.Collection.
 
          this._syncSelectedItems();
 
-         if(!loadItems || this._isEmptySelection()) {
+         if(!loadItems) {
             return selItems;
          } else if (this._loadItemsDeferred && !this._loadItemsDeferred.isReady()) {
             return this._loadItemsDeferred;
+         } else if(this._isEmptySelection()) {
+            return new $ws.proto.Deferred().callback(selItems);
          }
 
          this._loadItemsDeferred = new $ws.proto.Deferred();
