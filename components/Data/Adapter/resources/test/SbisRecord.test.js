@@ -252,7 +252,7 @@ define([
                   adapter = new SbisRecord(data),
                   format = adapter.getFormat('enum');
                assert.isTrue($ws.helpers.instanceOfModule(format, 'SBIS3.CONTROLS.Data.Format.EnumField'));
-               assert.strictEqual(format.getDictionary(), data.s[0].t.s);
+               assert.deepEqual(format.getDictionary(), data.s[0].t.s);
             });
             it('should return Flags field format', function () {
                var data = {
@@ -271,7 +271,7 @@ define([
                   adapter = new SbisRecord(data),
                   format = adapter.getFormat('flags');
                assert.isTrue($ws.helpers.instanceOfModule(format, 'SBIS3.CONTROLS.Data.Format.FlagsField'));
-               assert.strictEqual(format.getDictionary(), data.s[0].t.s);
+               assert.deepEqual(format.getDictionary(), data.s[0].t.s);
             });
             it('should return Record field format', function () {
                var data = {
