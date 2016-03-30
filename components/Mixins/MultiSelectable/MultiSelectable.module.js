@@ -713,6 +713,14 @@ define('js!SBIS3.CONTROLS.MultiSelectable', ['js!SBIS3.CONTROLS.Data.Collection.
          this._notify('onSelectedItemsChange', idArray, changed);
       },
 
+      /**
+       * Инициализирует опцию selectedItems
+       * @noShow
+       */
+      initializeSelectedItems: function() {
+         this._options.selectedItems =  new List();
+      },
+
       _dataLoadedCallback : function(){
          if (this._checkEmptySelection()) {
             this._setFirstItemAsSelected();
@@ -744,6 +752,9 @@ define('js!SBIS3.CONTROLS.MultiSelectable', ['js!SBIS3.CONTROLS.Data.Collection.
             $ws.helpers.forEach(this.getSelectedKeys(), function (key) {
                record = dataSet.getRecordById(key);
                if (record && !self._isItemSelected(record)) {
+                  if(!self._options.selectedItems) {
+                     self.initializeSelectedItems();
+                  }
                   self._options.selectedItems.add(record);
                }
             });

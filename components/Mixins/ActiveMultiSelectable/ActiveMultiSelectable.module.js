@@ -99,13 +99,6 @@ define('js!SBIS3.CONTROLS.ActiveMultiSelectable', [], function() {
          this.setSelectedItems([]);
       },
 
-      /**
-       * Инициализирует опцию selectedItems
-       * @noShow
-       */
-      initializeSelectedItems: function() {
-        this._options.selectedItems =  new List();
-      },
 
       _prepareItems: function(items) {
          var preparedItems;
