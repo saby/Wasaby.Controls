@@ -559,6 +559,9 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
                   }, DEFAULT_SHOW_ALL_CONFIG);
                }
 
+               //FIXME и ещё один костыль до перевода пикера на фокусную систему
+               self.hidePicker();
+
                self._showChooser(showAllConfig.template, showAllConfig.componentOptions, null);
             });
          }
