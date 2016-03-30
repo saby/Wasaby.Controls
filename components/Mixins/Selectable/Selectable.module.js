@@ -167,12 +167,7 @@ define('js!SBIS3.CONTROLS.Selectable', ['js!SBIS3.CONTROLS.Data.Utils', 'js!SBIS
          },
          _itemsReadyCallback: function() {
             this._prepareSelectedConfig(this._options.selectedIndex, this._options.selectedKey);
-            if ((typeof this._options.selectedIndex != 'undefined') && (this._options.selectedIndex !== null)) {
-               this._itemsProjection.setCurrentPosition(this._options.selectedIndex);
-            }
-            else {
-               this._itemsProjection.setCurrentPosition(-1);
-            }
+            this._selectInProjection();
          }
       },
 
@@ -214,13 +209,7 @@ define('js!SBIS3.CONTROLS.Selectable', ['js!SBIS3.CONTROLS.Data.Utils', 'js!SBIS
          this._options.selectedKey = id;
          if (this._itemsProjection) {
             this._prepareSelectedConfig(undefined, id);
-            if ((typeof this._options.selectedIndex != 'undefined') && (this._options.selectedIndex !== null)
-               && (typeof this._itemsProjection.at(this._options.selectedIndex) != 'undefined')) {
-               this._itemsProjection.setCurrentPosition(this._options.selectedIndex);
-            }
-            else {
-               this._itemsProjection.setCurrentPosition(-1);
-            }
+            this._selectInProjection();
          } else {
             this._setSelectedIndex(null, id);
          }
@@ -310,6 +299,16 @@ define('js!SBIS3.CONTROLS.Selectable', ['js!SBIS3.CONTROLS.Data.Utils', 'js!SBIS
          this._notifyOnPropertyChanged('selectedKey');
          this._notifyOnPropertyChanged('selectedIndex');
          this._notify('onSelectedItemChange', id, index);
+      },
+
+      _selectInProjection: function (){
+         if ((typeof this._options.selectedIndex != 'undefined') && (this._options.selectedIndex !== null)
+            && (typeof this._itemsProjection.at(this._options.selectedIndex) != 'undefined')) {
+            this._itemsProjection.setCurrentPosition(this._options.selectedIndex);
+         }
+         else {
+            this._itemsProjection.setCurrentPosition(-1);
+         }
       }
    };
 
