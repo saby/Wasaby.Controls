@@ -19,14 +19,14 @@ define([
          describe('.$constructor()', function() {
             it('should throw an error if items contains not a field format', function() {
                assert.throw(function () {
-                  var format = new Format({
+                  new Format({
                      items: [null]
                   });
                });
             });
             it('should throw an error if items contains fields with same names', function() {
                assert.throw(function () {
-                  var format = new Format({
+                  new Format({
                      items: [
                         FieldsFactory.create({type: 'integer', 'name': 'f1'}),
                         FieldsFactory.create({type: 'integer', 'name': 'f2'}),
@@ -186,6 +186,7 @@ define([
                   ]
                });
                var clone = format.clone();
+               assert.instanceOf(clone, Format);
                assert.notEqual(format, clone);
                assert.strictEqual(format.getCount(), clone.getCount());
                for (var i = 0, count = format.getCount(); i < count; i++) {
