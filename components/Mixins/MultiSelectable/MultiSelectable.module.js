@@ -239,10 +239,6 @@ define('js!SBIS3.CONTROLS.MultiSelectable', ['js!SBIS3.CONTROLS.Data.Collection.
          var addedKeys = [], removedKeys = [];
          if (Array.isArray(idArray)) {
 
-            if($ws.helpers.isEqualObject(this._options.selectedKeys, idArray)) {
-               return;
-            }
-
             if (idArray.length) {
                if (this._options.multiselect) {
                   removedKeys = ArrayDifference(this._options.selectedKeys, idArray);
