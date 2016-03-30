@@ -72,6 +72,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
         * @author Крайнов Дмитрий Олегович
         * @ignoreOptions tooltip alwaysShowExtendedTooltip loadingContainer observableControls pageSize usePicker filter saveFocusOnSelect
         * @ignoreOptions allowEmptySelection allowEmptyMultiSelection templateBinding includedTemplates resultBindings showAllConfig
+        * @ignoreMehtods getTooltip setTooltip getExtendedTooltip setExtendedTooltip
         *
         * ignoreEvents onDataLoad onDataLoadError onBeforeDataLoad onDrawItems
         */
