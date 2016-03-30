@@ -58,7 +58,7 @@ define('js!SBIS3.CONTROLS.FilterHistoryController',
           },
 
           _changeHistoryHandler: function(e, id, newHistory, activeFilter, saveDeferred) {
-             var isHistoryEqual = this._listHistory.isEqual(newHistory),
+             var isHistoryEqual = $ws.helpers.isEqualObject(this._listHistory.toArray(), newHistory.toArray()),
                  fb = this._options.filterButton,
                  currentActiveFilter = this.getActiveFilter();
 
