@@ -16,8 +16,8 @@ define([
          });
 
          describe('.getDefaultValue()', function() {
-            it('should return false by default', function() {
-               assert.isFalse(field.getDefaultValue());
+            it('should return null by default', function() {
+               assert.isNull(field.getDefaultValue());
             });
          });
       });

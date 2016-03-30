@@ -13,17 +13,7 @@ define('js!SBIS3.CONTROLS.Data.Format.DateTimeField', [
     */
 
    var DateTimeField = Field.extend(/** @lends SBIS3.CONTROLS.Data.Format.DateTimeField.prototype */{
-      _moduleName: 'SBIS3.CONTROLS.Data.Format.DateTimeField',
-      $protected: {
-         _options: {
-            /**
-             * @cfg {Date} Значение поля по умолчанию
-             * @see getDefaultValue
-             * @see setDefaultValue
-             */
-            defaultValue: null
-         }
-      }
+      _moduleName: 'SBIS3.CONTROLS.Data.Format.DateTimeField'
 
       //region Public methods
 
