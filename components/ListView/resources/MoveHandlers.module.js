@@ -28,15 +28,20 @@ define('js!SBIS3.CONTROLS.MoveHandlers', ['js!SBIS3.CORE.Dialog','js!SBIS3.CONTR
       },
       _getRecordsForMove: function(records) {
          if (!Array.isArray(records) || !records.length) {
-            var selItems = this.getSelectedItems(false).toArray(),
+            var selItems = this.getSelectedItems(false),
                 key = this.getSelectedKey();
 
-            records = selItems.length ? selItems : key ? [key] : [];
+            if(selItems && selItems.getCount()) {
+               records = selItems.toArray();
+            } else {
+               records = key ? [key] : [];
+            }
          }
          return records;
       },
       selectedMoveTo: function(moveTo) {
-         this._move(this.getSelectedItems(false).toArray(), moveTo);
+         var selectedItems = this.getSelectedItems(false);
+         this._move(selectedItems ? selectedItems.toArray() : [], moveTo);
       },
       //TODO: Унифицировать параметр moveTo, чтобы в него всегда приходил record.
       _move: function(records, moveTo, insertAfter) {
