@@ -165,17 +165,13 @@ define('js!SBIS3.CONTROLS.MultiSelectable', ['js!SBIS3.CONTROLS.Data.Collection.
              * @see toggleItemsSelection
              * @see toggleItemsSelectionAll
              */
-            selectedItems : undefined
+            selectedItems : null
          },
          _loadItemsDeferred: undefined
       },
 
       $constructor: function() {
          this._publish('onSelectedItemsChange');
-
-         this._options.selectedItems = $ws.helpers.instanceOfModule(this._options.selectedItems, 'SBIS3.CONTROLS.Data.Collection.List') ?
-             this._options.selectedItems :
-             this._makeList(this._options.selectedItems);
 
          if (this._options.selectedKeys && this._options.selectedKeys.length) {
             if (Array.isArray(this._options.selectedKeys)) {
@@ -574,20 +570,18 @@ define('js!SBIS3.CONTROLS.MultiSelectable', ['js!SBIS3.CONTROLS.Data.Collection.
              selKeys = this._options.selectedKeys,
              selItems = this._options.selectedItems,
              loadKeysArr = [],
-             itemsKeysArr = this._convertToKeys(selItems),
-             dMultiResult, item, loadKeysAmount;
+             dMultiResult, item, loadKeysAmount, itemsKeysArr;
 
          this._syncSelectedItems();
 
          if(!loadItems || this._isEmptySelection()) {
-            return this._getSelItemsClone();
-         }
-
-         if(this._loadItemsDeferred && !this._loadItemsDeferred.isReady()) {
+            return selItems;
+         } else if (this._loadItemsDeferred && !this._loadItemsDeferred.isReady()) {
             return this._loadItemsDeferred;
          }
 
          this._loadItemsDeferred = new $ws.proto.Deferred();
+         itemsKeysArr = this._convertToKeys(selItems);
 
          /* Сфоримруем массив ключей записей, которые требуется вычитать с бл или взять из dataSet'a*/
          for(var i = 0, keys = selKeys.length; i < keys; i++) {
@@ -601,6 +595,10 @@ define('js!SBIS3.CONTROLS.MultiSelectable', ['js!SBIS3.CONTROLS.Data.Collection.
             /* Если ограничили кол-во отдаваемых записей */
             loadKeysAmount = count < loadKeysAmount ? count : loadKeysAmount;
             dMultiResult = new $ws.proto.ParallelDeferred({stopOnFirstError: false});
+
+            if(!selItems) {
+               this._options.selectedItem = selItems = this._makeList();
+            }
 
             for (var j = 0; loadKeysAmount > j; j++) {
                item = this.getItems() && this.getItems().getRecordById(loadKeysArr[j]);
@@ -617,12 +615,12 @@ define('js!SBIS3.CONTROLS.MultiSelectable', ['js!SBIS3.CONTROLS.Data.Collection.
             }
 
             dMultiResult.done().getResult().addCallback(function() {
-               self._loadItemsDeferred.callback(self._getSelItemsClone());
+               self._loadItemsDeferred.callback(selItems);
                self._notifyOnPropertyChanged('selectedItems');
             });
 
          } else {
-            self._loadItemsDeferred.callback(self._getSelItemsClone());
+            self._loadItemsDeferred.callback(selItems);
          }
          return this._loadItemsDeferred;
       },
@@ -635,6 +633,9 @@ define('js!SBIS3.CONTROLS.MultiSelectable', ['js!SBIS3.CONTROLS.Data.Collection.
          var self = this,
              selItems = this._options.selectedItems,
              delItems = [];
+
+         /* Из контекста может прийти null или undefined */
+         if(!selItems) return;
 
          /* Выбранных ключей нет - очистим IList */
          if(this._isEmptySelection()) {
@@ -666,10 +667,15 @@ define('js!SBIS3.CONTROLS.MultiSelectable', ['js!SBIS3.CONTROLS.Data.Collection.
 
       _getSelectedIndex: function(item) {
          var keys = this._options.selectedKeys,
+             selectedItems = this._options.selectedItems,
              index;
 
          if($ws.helpers.instanceOfModule(item, 'SBIS3.CONTROLS.Data.Model')) {
-            index = this._options.selectedItems.getIndexByValue(item.getIdProperty(), item.getId());
+            if(selectedItems) {
+               index = selectedItems.getIndexByValue(item.getIdProperty(), item.getId());
+            } else {
+               index = -1;
+            }
          } else {
             index = Array.indexOf(keys, item);
             if (index < 0) {
@@ -759,9 +765,11 @@ define('js!SBIS3.CONTROLS.MultiSelectable', ['js!SBIS3.CONTROLS.Data.Collection.
       _convertToKeys: function(list) {
          var keys = [];
 
-         list.each(function(rec) {
-            keys.push(rec.getId());
-         });
+         if(list) {
+            list.each(function (rec) {
+               keys.push(rec.getId());
+            });
+         }
 
          return keys;
       }

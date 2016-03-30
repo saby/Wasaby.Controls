@@ -47,25 +47,33 @@ define('js!SBIS3.CONTROLS.ActiveMultiSelectable', [], function() {
        * @see addSelectedItems
        */
       setSelectedItems: propertyUpdateWrapper(function(list) {
-         var newItems = [];
+         var newItems = [],
+             selItems = this._options.selectedItems,
+             newList;
 
-         list = this._prepareItems(list);
+         if(list) {
+            list = this._prepareItems(list);
 
-         if(this._options.selectedItems.equals(list)) {
-            return;
-         }
-
-         if(list.getCount()) {
-            if(this._options.multiselect) {
-               list.each(function(rec) {
-                  newItems.push(rec);
-               });
-            } else {
-               newItems = [list.at(0)];
+            if (selItems && selItems.equals(list)) {
+               return;
             }
+
+            if (list.getCount()) {
+               if (this._options.multiselect) {
+                  list.each(function (rec) {
+                     newItems.push(rec);
+                  });
+               } else {
+                  newItems = [list.at(0)];
+               }
+            }
+
+            newList = this._makeList(newItems);
+         } else {
+            newList = null;
          }
 
-         this._options.selectedItems = this._makeList(newItems);
+         this._options.selectedItems = newList;
          this.setSelectedKeys(this._convertToKeys(this._options.selectedItems));
          this._notifyOnPropertyChanged('selectedItems');
       }),
@@ -100,15 +108,19 @@ define('js!SBIS3.CONTROLS.ActiveMultiSelectable', [], function() {
       },
 
       _prepareItems: function(items) {
+         var preparedItems;
+
          if(items instanceof Array) {
-            items = this._makeList(items);
-         }
-
-         if(!$ws.helpers.instanceOfModule(items, 'SBIS3.CONTROLS.Data.Collection.List')) {
+            preparedItems = this._makeList(items);
+         } else if (items === null) {
+            preparedItems = this._makeList();
+         } else if(!$ws.helpers.instanceOfModule(items, 'SBIS3.CONTROLS.Data.Collection.List')) {
             throw new Error('ActiveMultiSelectable::setSelectedItems called with invalid argument');
+         } else {
+            preparedItems = items;
          }
 
-         return items;
+         return preparedItems;
       },
 
       /**
@@ -148,12 +160,16 @@ define('js!SBIS3.CONTROLS.ActiveMultiSelectable', [], function() {
             });
          } else if(!self._isItemSelected(items.at(0))) {
             newItems.push(items.at(0));
-            selItems.clear();
+            selItems && selItems.clear();
          }
 
          if(newItems.length) {
-            selItems.concat(newItems);
-            this.setSelectedKeys(this._convertToKeys(selItems));
+            if(selItems) {
+               selItems.concat(newItems);
+            } else {
+               this._options.selectedItems = this._makeList(newItems);
+            }
+            this.setSelectedKeys(this._convertToKeys(this._options.selectedItems));
             this._notifyOnPropertyChanged('selectedItems');
          }
       })
