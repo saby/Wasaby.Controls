@@ -35,7 +35,7 @@ define('js!SBIS3.CONTROLS.Data.Format.Field', [
              * @see isNullable
              * @see setNullable
              */
-            nullable: false
+            nullable: true
          }
       },
 

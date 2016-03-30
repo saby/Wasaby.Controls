@@ -388,7 +388,7 @@ define([
                adapter.addField(field, fieldIndex);
                assert.strictEqual(adapter.getFormat(fieldName).getName(), fieldName);
                assert.strictEqual(adapter.getFields()[fieldIndex], fieldName);
-               assert.strictEqual(adapter.get(fieldName), false);
+               assert.isNull(adapter.get(fieldName));
                assert.strictEqual(adapter.getData().s[fieldIndex].t, 'Логическое');
             });
             it('should add an Integer field', function () {
@@ -438,7 +438,7 @@ define([
                      name: fieldName
                   });
                adapter.addField(field, fieldIndex);
-               assert.strictEqual(adapter.get(fieldName), '');
+               assert.isNull(adapter.get(fieldName));
                assert.strictEqual(adapter.getData().s[fieldIndex].t, 'Строка');
             });
             it('should add a Text field', function () {
@@ -449,7 +449,7 @@ define([
                      name: fieldName
                   });
                adapter.addField(field, fieldIndex);
-               assert.strictEqual(adapter.get(fieldName), '');
+               assert.isNull(adapter.get(fieldName));
                assert.strictEqual(adapter.getData().s[fieldIndex].t, 'Текст');
             });
             it('should add a XML field', function () {

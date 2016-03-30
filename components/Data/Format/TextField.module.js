@@ -13,17 +13,7 @@ define('js!SBIS3.CONTROLS.Data.Format.TextField', [
     */
 
    var TextField = Field.extend(/** @lends SBIS3.CONTROLS.Data.Format.TextField.prototype */{
-      _moduleName: 'SBIS3.CONTROLS.Data.Format.TextField',
-      $protected: {
-         _options: {
-            /**
-             * @cfg {String} Значение поля по умолчанию
-             * @see getDefaultValue
-             * @see setDefaultValue
-             */
-            defaultValue: ''
-         }
-      }
+      _moduleName: 'SBIS3.CONTROLS.Data.Format.TextField'
 
       //region Public methods
 

@@ -58,8 +58,8 @@ define([
          });
 
          describe('.isNullable()', function() {
-            it('should return false by default', function() {
-               assert.isFalse(field.isNullable());
+            it('should return true by default', function() {
+               assert.isTrue(field.isNullable());
             });
             it('should return the value passed to the constructor', function() {
                var nullable = true,
@@ -128,7 +128,7 @@ define([
             });
             it('should return false for different nullable', function() {
                var other = new Field({
-                  nullable: true
+                  nullable: false
                });
                assert.isFalse(field.isEqual(other));
             });

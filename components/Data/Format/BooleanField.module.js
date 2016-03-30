@@ -13,17 +13,7 @@ define('js!SBIS3.CONTROLS.Data.Format.BooleanField', [
     */
 
    var BooleanField = Field.extend(/** @lends SBIS3.CONTROLS.Data.Format.BooleanField.prototype */{
-      _moduleName: 'SBIS3.CONTROLS.Data.Format.BooleanField',
-      $protected: {
-         _options: {
-            /**
-             * @cfg {Boolean} Значение поля по умолчанию
-             * @see getDefaultValue
-             * @see setDefaultValue
-             */
-            defaultValue: false
-         }
-      }
+      _moduleName: 'SBIS3.CONTROLS.Data.Format.BooleanField'
 
       //region Public methods
 
