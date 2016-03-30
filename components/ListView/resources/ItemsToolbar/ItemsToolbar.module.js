@@ -257,28 +257,19 @@ define('js!SBIS3.CONTROLS.ItemsToolbar',
           show: function(target, animate) {
              var container = this.getContainer()[0],
                  isActionsHidden = this._isItemsActionsHidden() && this._isEditActionsHidden(),
-                 hasItemsActions = this._options.itemsActions.length,
-                 itemsActions, position, toolbarContent;
+                 position,
+                 toolbarContent;
 
              this._target = target;
              //Если тулбар зафиксирован или отсутствуют опции записи и кнопки редактирования по месту, то ничего не делаем
              if (this._lockingToolbar || isActionsHidden) {
-
-                /* Если операций нет, то сроем тулбар */
                 if(isActionsHidden) {
                    this.hide();
-                } else if(hasItemsActions) {
-                   itemsActions = this.getItemsActions();
-
-                   /* Если показаны операции над записью и открыто меню, то надо обновить видимость */
-                   if(itemsActions.isItemActionsMenuVisible()) {
-                      this.getItemsActions().applyItemActions();
-                   }
                 }
                 return;
              }
              this._currentTarget = target;                  // Запоминаем таргет в качестве текущего
-             if (hasItemsActions) {       // Если имеются опции записи, то создаем их и отображаем
+             if (this._options.itemsActions.length) {       // Если имеются опции записи, то создаем их и отображаем
                 this.showItemsActions(target);
              }
              // Рассчитываем и устанавливаем позицию тулбара
