@@ -309,23 +309,6 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
          }
       },
 
-      _elemClickHandler: function (id, data, target) {
-         var $target = $(target);
-
-         this.setSelectedKey(id);
-         if (this._options.multiselect) {
-            //TODO: оставить только js класс
-            if ($target.hasClass('js-controls-ListView__itemCheckBox') || $target.hasClass('controls-ListView__itemCheckBox')) {
-               this.toggleItemsSelection([$target.closest('.controls-ListView__item').attr('data-id')]);
-            }
-            else {
-               this._notifyOnItemClick(id, data, target);
-            }
-         }
-         else {
-            this._notifyOnItemClick(id, data, target);
-         }
-      },
       _notifyOnItemClick: function(id, data, target) {
          var
              res,
