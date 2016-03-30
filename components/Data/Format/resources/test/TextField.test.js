@@ -20,6 +20,14 @@ define([
                assert.strictEqual(field.getDefaultValue(), '');
             });
          });
+
+         describe('.clone()', function() {
+            it('should return the clone', function() {
+               var clone = field.clone();
+               assert.instanceOf(clone, TextField);
+               assert.isTrue(field.isEqual(clone));
+            });
+         });
       });
    }
 );

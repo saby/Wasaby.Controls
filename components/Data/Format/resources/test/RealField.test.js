@@ -41,6 +41,15 @@ define([
                assert.strictEqual(field.getPrecision(), prec);
             });
          });
+
+         describe('.clone()', function() {
+            it('should return the clone', function() {
+               var clone = field.clone();
+               assert.instanceOf(clone, RealField);
+               assert.isTrue(field.isEqual(clone));
+               assert.strictEqual(field.getPrecision(), clone.getPrecision());
+            });
+         });
       });
    }
 );

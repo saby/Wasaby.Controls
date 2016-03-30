@@ -81,8 +81,13 @@ define([
          describe('.clone()', function() {
             it('should return the clone', function() {
                var clone = field.clone();
+               assert.instanceOf(clone, Field);
                assert.notEqual(field, clone);
-               assert.deepEqual(field, clone);
+               assert.strictEqual(field.getType(), clone.getType());
+               assert.strictEqual(field.getName(), clone.getName());
+               assert.strictEqual(field.getDefaultValue(), clone.getDefaultValue());
+               assert.strictEqual(field.isNullable(), clone.isNullable());
+               assert.isTrue(field.isEqual(clone));
             });
          });
 
