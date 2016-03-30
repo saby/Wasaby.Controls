@@ -278,7 +278,7 @@ define('js!SBIS3.CONTROLS.ItemsToolbar',
                 return;
              }
              this._currentTarget = target;                  // Запоминаем таргет в качестве текущего
-             if (this._options.itemsActions.length) {       // Если имеются опции записи, то создаем их и отображаем
+             if (hasItemsActions) {       // Если имеются опции записи, то создаем их и отображаем
                 this.showItemsActions(target);
              }
              // Рассчитываем и устанавливаем позицию тулбара
