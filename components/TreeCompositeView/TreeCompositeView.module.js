@@ -69,8 +69,8 @@ define('js!SBIS3.CONTROLS.TreeCompositeView', ['js!SBIS3.CONTROLS.TreeDataGridVi
          else {
             this.setSelectedKey(id);
             if (this._options.multiselect) {
-               if ($target.hasClass('js-controls-ListView__itemCheckBox') || $target.hasClass('controls-ListView__itemCheckBox')) {
-                  this.toggleItemsSelection([$target.closest('.controls-ListView__item').data('id')]);
+               if ($target.hasClass('js-controls-ListView__itemCheckBox')) {
+                  this._onCheckBoxClick($target);
                }
                else {
                   this._notifyOnItemClick(id, data, target);
