@@ -494,23 +494,18 @@ define('js!SBIS3.CONTROLS.FieldLink',
              var linkCollection = this._getLinkCollection(),
                  linkCollectionContainer = linkCollection.getContainer();
 
-             if(amount) {
-                /* Нужно скрыть контрол отображающий элементы, перед загрузкой, потому что часто бл может отвечать >500мс и
-                 отображаемое значение в поле связи долго не меняется, особенно заметно в редактировании по месту. */
-                linkCollectionContainer.addClass('ws-hidden');
-                this.getSelectedItems(true, amount).addCallback(function(list){
-                   linkCollectionContainer.removeClass('ws-hidden');
-                   linkCollection.setItems(list);
-                   return list;
-                });
-             } else {
-                linkCollection.setItems(this.getSelectedItems(false, amount));
-             }
+             /* Нужно скрыть контрол отображающий элементы, перед загрузкой, потому что часто бл может отвечать >500мс и
+              отображаемое значение в поле связи долго не меняется, особенно заметно в редактировании по месту. */
+             linkCollectionContainer.addClass('ws-hidden');
+             this.getSelectedItems(true, amount).addCallback(function(list){
+                linkCollectionContainer.removeClass('ws-hidden');
+                linkCollection.setItems(list);
+                return list;
+             });
           },
 
           _drawSelectedItems: function(keysArr) {
-             var isEmpty = this._isEmptySelection(),
-                 keysArrLen = isEmpty ? 0 : keysArr.length;
+             var keysArrLen = this._isEmptySelection() ? 0 : keysArr.length;
 
              /* Если удалили в пикере все записи, и он был открыт, то скроем его */
              if (!keysArrLen) {
@@ -705,6 +700,11 @@ define('js!SBIS3.CONTROLS.FieldLink',
            * @private
            */
           _getInputWidth: function() {
+             /* Для поля связи в задизейбленом состоянии считаем, ширина инпута - 0, т.к. он визуально не отображается */
+             if(!this.isEnabled()) {
+                return 0;
+             }
+
              return this._container[0].clientWidth  -
                  (this._container.find('.controls-TextBox__afterFieldWrapper')[0].offsetWidth +
                   this._container.find('.controls-TextBox__beforeFieldWrapper')[0].offsetWidth +
