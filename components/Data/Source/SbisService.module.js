@@ -139,7 +139,7 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
          },
 
          /**
-          * @var {SBIS3.CONTROLS.Data.Source.Provider.SbisBusinessLogic} Объект, который умеет ходить на бизнес-логику, для смены порядковых номеров
+          * @member {SBIS3.CONTROLS.Data.Source.Provider.SbisBusinessLogic} Объект, который умеет ходить на бизнес-логику, для смены порядковых номеров
           */
          _orderProvider: undefined
       },
