@@ -8,7 +8,7 @@ define('js!SBIS3.CONTROLS.ComponentBinder', [], function () {
     * @param backButton объект кнопки назад
     */
    /*методы для поиска*/
-   function startHierSearch(text, searchParamName, searchCrumbsTpl) {
+   function startHierSearch(text, searchParamName, searchCrumbsTpl, resetHierField) {
       if (text) {
          var filter = $ws.core.merge(this._options.view.getFilter(), {
                'Разворот': 'С разворотом',
@@ -44,6 +44,10 @@ define('js!SBIS3.CONTROLS.ComponentBinder', [], function () {
          //Скрываем кнопку назад, чтобы она не наслаивалась на колонки
          if (this._options.backButton) {
             this._options.backButton.getContainer().css({'visibility': 'hidden'});
+         }
+
+         if (resetHierField){
+            filter[view.getHierField()] = undefined;
          }
 
          view.reload(filter, view.getSorting(), 0).addCallback(function(){
@@ -220,7 +224,7 @@ define('js!SBIS3.CONTROLS.ComponentBinder', [], function () {
        *     myBinder.bindSearchGrid('СтрокаПоиска');
        * </pre>
        */
-      bindSearchGrid : function(searchParamName, searchCrumbsTpl, searchForm) {
+      bindSearchGrid : function(searchParamName, searchCrumbsTpl, searchForm, resetHierField) {
          var self = this,
             view = this._options.view,
             isTree = $ws.helpers.instanceOfMixin(view, 'SBIS3.CONTROLS.TreeMixinDS');
@@ -272,7 +276,7 @@ define('js!SBIS3.CONTROLS.ComponentBinder', [], function () {
 
          searchForm.subscribe('onSearch', function(event, text) {
             if (isTree) {
-               startHierSearch.call(self, text, searchParamName);
+               startHierSearch.call(self, text, searchParamName, undefined, resetHierField);
             } else {
                startSearch.call(self, text, searchParamName);
             }

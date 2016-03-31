@@ -62,6 +62,10 @@ define('js!SBIS3.CONTROLS.Browser', [
              */
             searchCrumbsTpl: undefined,
             /**
+             * @cfg {Boolean} Сбрасывать корень при поиске
+             */
+            searchResetHierField: false,
+            /**
              * @cfg {String} Id для работы с историей фильтров
              */
             historyId : '',
@@ -111,7 +115,7 @@ define('js!SBIS3.CONTROLS.Browser', [
 
          this._searchForm = this._getSearchForm();
          if (this._searchForm) {
-            this._componentBinder.bindSearchGrid(this._options.searchParam, this._options.searchCrumbsTpl, this._searchForm);
+            this._componentBinder.bindSearchGrid(this._options.searchParam, this._options.searchCrumbsTpl, this._searchForm, this._options.searchResetHierField);
          }
 
 
