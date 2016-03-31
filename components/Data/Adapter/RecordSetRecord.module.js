@@ -1,8 +1,9 @@
 /* global define, $ws */
 define('js!SBIS3.CONTROLS.Data.Adapter.RecordSetRecord', [
    'js!SBIS3.CONTROLS.Data.Adapter.IRecord',
-   'js!SBIS3.CONTROLS.Data.Adapter.GenericFormatMixin'
-], function (IRecord, GenericFormatMixin) {
+   'js!SBIS3.CONTROLS.Data.Adapter.GenericFormatMixin',
+   'js!SBIS3.CONTROLS.Data.Record'
+], function (IRecord, GenericFormatMixin, Record) {
    'use strict';
 
    /**
@@ -24,7 +25,10 @@ define('js!SBIS3.CONTROLS.Data.Adapter.RecordSetRecord', [
       },
 
       $constructor: function (data) {
-         if (!data || !$ws.helpers.instanceOfModule(data, 'SBIS3.CONTROLS.Data.Record')) {
+         if (!data) {
+            data = new Record();
+         }
+         if (!$ws.helpers.instanceOfModule(data, 'SBIS3.CONTROLS.Data.Record')) {
             throw new TypeError('Argument data should be an instance of SBIS3.CONTROLS.Data.Record');
          }
          this._data = data;

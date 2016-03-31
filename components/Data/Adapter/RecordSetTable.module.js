@@ -2,8 +2,8 @@
 define('js!SBIS3.CONTROLS.Data.Adapter.RecordSetTable', [
    'js!SBIS3.CONTROLS.Data.Adapter.ITable',
    'js!SBIS3.CONTROLS.Data.Adapter.GenericFormatMixin',
-   'js!SBIS3.CONTROLS.Data.Format.UniversalField'
-], function (ITable, GenericFormatMixin, UniversalField) {
+   'js!SBIS3.CONTROLS.Data.Collection.RecordSet'
+], function (ITable, GenericFormatMixin, RecordSet) {
    'use strict';
 
    /**
@@ -25,7 +25,10 @@ define('js!SBIS3.CONTROLS.Data.Adapter.RecordSetTable', [
       },
 
       $constructor: function (data) {
-         if (!data || !$ws.helpers.instanceOfModule(data, 'SBIS3.CONTROLS.Data.Collection.RecordSet')) {
+         if (!data) {
+            data = new RecordSet();
+         }
+         if (!$ws.helpers.instanceOfModule(data, 'SBIS3.CONTROLS.Data.Collection.RecordSet')) {
             throw new TypeError('Argument data should be an instance of SBIS3.CONTROLS.Data.Collection.RecordSet');
          }
          this._data = data;

@@ -3,8 +3,9 @@ define('js!SBIS3.CONTROLS.Data.Adapter.RecordSet', [
    'js!SBIS3.CONTROLS.Data.Adapter.Abstract',
    'js!SBIS3.CONTROLS.Data.Adapter.RecordSetTable',
    'js!SBIS3.CONTROLS.Data.Adapter.RecordSetRecord',
+   'js!SBIS3.CONTROLS.Data.Utils',
    'js!SBIS3.CONTROLS.Data.Di'
-], function (Abstract, RecordSetTable, RecordSetRecord, Di) {
+], function (Abstract, RecordSetTable, RecordSetRecord, Utils, Di) {
    'use strict';
 
    /**
@@ -34,6 +35,14 @@ define('js!SBIS3.CONTROLS.Data.Adapter.RecordSet', [
        */
       forRecord: function (data) {
          return new RecordSetRecord(data);
+      },
+
+      getProperty: function (data, property) {
+         return Utils.getItemPropertyValue(data, property);
+      },
+
+      setProperty: function (data, property, value) {
+         return Utils.setItemPropertyValue(data, property, value);
       },
 
       getKeyField: function (data) {
