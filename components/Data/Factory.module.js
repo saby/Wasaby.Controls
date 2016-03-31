@@ -201,23 +201,59 @@ define('js!SBIS3.CONTROLS.Data.Factory', [
       },
 
       /**
+       * Конвертирует список записей в рекордсет
+       * @param {SBIS3.CONTROLS.Data.Collection.List} list Список
+       * @returns {SBIS3.CONTROLS.Data.Collection.RecordSet}
+       * @protected
+       */
+      _convertListToRecordSet: function(list) {
+         var adapter = 'adapter.json',
+            record,
+            count = list.getCount(),
+            i;
+
+         for (i = 0; i < count; i++) {
+            record = list.at(i);
+            if (record && $ws.helpers.instanceOfModule(record, 'SBIS3.CONTROLS.Data.Record')) {
+               adapter = record.getAdapter();
+               break;
+            }
+         }
+
+         var rs = Di.resolve('collection.recordset', {
+            adapter: adapter
+         });
+         for (i = 0; i < count; i++) {
+            rs.add(list.at(i));
+         }
+
+         return rs;
+      },
+
+      /**
        * Сериализует RecordSet
        * @param {*} data Данные
        * @returns {*}
        * @protected
        */
       _serializeRecordSet: function (data) {
-         if ($ws.helpers.instanceOfModule(data, 'SBIS3.CONTROLS.Data.Collection.RecordSet') ||
-            $ws.helpers.instanceOfModule(data, 'SBIS3.CONTROLS.Data.Source.DataSet')
-         ) {
+         if (!data) {
+            return;
+         }
+         var itHaveRawData = $ws.helpers.instanceOfModule(data, 'SBIS3.CONTROLS.Data.Collection.RecordSet') ||
+            $ws.helpers.instanceOfModule(data, 'SBIS3.CONTROLS.Data.Source.DataSet');
+
+         if (!itHaveRawData && $ws.helpers.instanceOfModule(data, 'SBIS3.CONTROLS.Data.Collection.List')) {
+            data = this._convertListToRecordSet(data);
+            itHaveRawData = true;
+         }
+
+         if (itHaveRawData) {
             return data.getRawData();
          } else if (data instanceof $ws.proto.RecordSet ||
             data instanceof $ws.proto.RecordSetStatic
          ) {
             return data.toJSON();
-         }
-         if ($ws.helpers.instanceOfModule(data, 'SBIS3.CONTROLS.Data.Collection.List')) {
-            $ws.single.ioc.resolve('ILogger').info('SBIS3.CONTROLS.Data.Factory::_serializeRecordSet()', 'Serialization of SBIS3.CONTROLS.Data.Collection.List is no more available. Use SBIS3.CONTROLS.Data.Collection.RecordSet instead.');
          }
 
          throw new TypeError('SBIS3.CONTROLS.Data.Factory::_serializeRecordSet(): data should be an instance of SBIS3.CONTROLS.Data.Collection.RecordSet or SBIS3.CONTROLS.Data.Source.DataSet');
