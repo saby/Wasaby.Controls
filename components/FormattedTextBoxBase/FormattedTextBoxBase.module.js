@@ -155,22 +155,46 @@ define(
        * @param position
        * @return {Array} Массив [номер группы, номер символа]
        */
+       //TODO: Изначально данный метод был полностью скопирован из ws FieldFormatAbstract, затем после рефакторинга
+       //из него удалилась одна ветка. Иногда получается так что container приходит не em а conteneditable блок(например
+       //после перехода на tab в firefox, скорее всего есть ещё случаи). Выпилинная ветка как раз обробатывала данный случай.
+       //Нужно разобраться каким образом в разных браузерах работает window.getSelection() при различных условиях(переход на tab,
+       //переход мышью, setActive...) и написать более универсальный метод.
       _getCursorContainerAndPosition = function(container, position) {
          var
-            // [Number] индекс контейнера <em> во wrapper'е
-            buf = $(container.parentNode).index(),
-            // [Number] является ли контейнер разделителем (1) или вводимым блоком (0)
-            isSepCont = (buf + !this.formatModel.model[0].isGroup) % 2,
-            // [Number] если контейнер - разделитель, то возвращается положение следующего контейнера
-            cnt = isSepCont ? buf + 1 : buf,
-            // [Number] если контейнер - разделитель, то возвращается начальная позиция курсора в контейнере
-            pos = isSepCont ? 0 : position,
-            // поле ввода
-            input = this._inputField.get(0);
+            buf,// [Number] индекс контейнера <em> во wrapper'е
+            isSepCont,// [Number] является ли контейнер разделителем (1) или вводимым блоком (0)
+            cnt,// [Number] если контейнер - разделитель, то возвращается положение следующего контейнера
+            pos = position,// [Number] если контейнер - разделитель, то возвращается начальная позиция курсора в контейнере
+            sepFirst = !this.formatModel.model[0].isGroup,
+            input = this._inputField.get(0);// поле ввода
+         if (container.parentNode.childNodes.length > 1) {
+            for (var i = 0; i < container.parentNode.childNodes.length; i++){
+               if (container == container.parentNode.childNodes[i]){
+                  pos = (i + sepFirst) % 2 ? 0 : i ? container.firstChild.length : position ? container.firstChild.length : position;
+                  cnt = (i + sepFirst) % 2 ? i + 1 : i;
+                  buf = container.parentNode.childNodes[cnt];
+                  if (pos >= (buf.firstChild && buf.firstChild.length || 0)) {
+                     pos = buf.nextSibling ? 0 : pos;
+                     cnt = buf.nextSibling ? cnt + 2 : cnt;
+                  }
+               }
+            }
+         } else {
+            buf = $(container.parentNode).index();
+            isSepCont = (buf + !this.formatModel.model[0].isGroup) % 2;
+            cnt = isSepCont ? buf + 1 : buf;
+            pos = isSepCont ? 0 : position;
             // если контейнер - разделитель и он последний
-         if (cnt >= input.childNodes.length) {
-            cnt -= 2;
-            pos = input.childNodes[cnt].childNodes[0].length;
+            if (cnt >= input.childNodes.length) {
+               cnt -= 2;
+               pos = input.childNodes[cnt].childNodes[0].length;
+            }
+         }
+         if (container === input){
+            cnt = position ? position - 1 : 0;
+            pos = position ? input.childNodes[cnt].childNodes[0].length : 0;
+            return _getCursorContainerAndPosition.call(this, input.childNodes[cnt].childNodes[0], pos); // Вызывемся ещё раз с уточнёнными параметрами
          }
          return [cnt, pos];
       };
