@@ -90,6 +90,8 @@ define('js!SBIS3.CONTROLS.FieldLink',
              _dropAllButton: undefined,    /* Кнопка очистки всех выбранных записей */
              _showAllLink: undefined,      /* Кнопка показа всех записей в пикере */
              _linkCollection: undefined,   /* Контрол отображающий выбранные элементы */
+             _afterFieldWrapper: undefined,
+             _beforeFieldWrapper: undefined,
              _options: {
                 /* Служебные шаблоны поля связи (иконка открытия справочника, контейнер для выбранных записей */
                 afterFieldWrapper: afterFieldWrapper,
@@ -267,6 +269,9 @@ define('js!SBIS3.CONTROLS.FieldLink',
           init: function() {
              FieldLink.superclass.init.apply(this, arguments);
              this.getChildControlByName('fieldLinkMenu').setItems(this._options.dictionaries);
+
+             this._afterFieldWrapper = this._container.find('.controls-TextBox__afterFieldWrapper');
+             this._beforeFieldWrapper = this._container.find('.controls-TextBox__beforeFieldWrapper');
           },
 
           /**
@@ -706,8 +711,8 @@ define('js!SBIS3.CONTROLS.FieldLink',
              }
 
              return this._container[0].clientWidth  -
-                 (this._container.find('.controls-TextBox__afterFieldWrapper')[0].offsetWidth +
-                  this._container.find('.controls-TextBox__beforeFieldWrapper')[0].offsetWidth +
+                 (this._afterFieldWrapper[0].offsetWidth +
+                  this._beforeFieldWrapper[0].offsetWidth +
                   INPUT_WRAPPER_PADDING);
           },
           /**
