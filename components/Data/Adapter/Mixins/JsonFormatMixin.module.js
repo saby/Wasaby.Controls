@@ -6,7 +6,7 @@ define('js!SBIS3.CONTROLS.Data.Adapter.JsonFormatMixin', [
    'use strict';
 
    /**
-    * Миксин для работы с СБИС-форматом в адаптерах
+    * Миксин для работы с JSON-форматом в адаптерах
     * @mixin SBIS3.CONTROLS.Data.Adapter.JsonFormatMixin
     * @public
     * @author Мальцев Алексей
@@ -15,31 +15,12 @@ define('js!SBIS3.CONTROLS.Data.Adapter.JsonFormatMixin', [
    var JsonFormatMixin = /** @lends SBIS3.CONTROLS.Data.Adapter.JsonFormatMixin.prototype */{
       $protected: {
          /**
-          * @member {Object} Сырые данные
-          */
-         _data: null,
-
-         /**
           * @member {Object.<String, SBIS3.CONTROLS.Data.Format.Field>} Форматы полей
           */
-         _format: {},
-
-         /**
-          * @member {Object} Формат поля, отдаваемый через getSharedFormat()
-          */
-         _sharedFieldFormat: null,
-
-         /**
-          * @member {Object} Мета данные поля, отдаваемого через getSharedFormat()
-          */
-         _sharedFieldMeta: null
+         _format: {}
       },
 
       //region Public methods
-
-      getData: function () {
-         return this._data;
-      },
 
       getFormat: function (name) {
          if (!this._has(name)) {
@@ -108,33 +89,6 @@ define('js!SBIS3.CONTROLS.Data.Adapter.JsonFormatMixin', [
             name: name,
             type: 'string'
          });
-      },
-
-      _getFieldMeta: function (name) {
-         if (this._sharedFieldMeta === null) {
-            this._sharedFieldMeta = {};
-         }
-         var format = this.getFormat(name),
-            meta = this._sharedFieldMeta;
-
-         switch (format.getType()) {
-            case 'Real':
-            case 'Money':
-               meta.precision = format.getPrecision();
-               break;
-            case 'Enum':
-            case 'Flags':
-               meta.dictionary = format.getDictionary();
-               break;
-            case 'Identity':
-               meta.separator = format.getSeparator();
-               break;
-            case 'Array':
-               meta.kind = format.getKind();
-               break;
-         }
-
-         return meta;
       }
 
       //endregion Protected methods
