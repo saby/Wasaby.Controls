@@ -3,6 +3,7 @@ define([
 '../../components/Data/Adapter/resources/test/JsonRecord.test',
 '../../components/Data/Adapter/resources/test/JsonTable.test',
 '../../components/Data/Adapter/resources/test/RecordSet.test',
+'../../components/Data/Adapter/resources/test/RecordSetTable.test',
 '../../components/Data/Adapter/resources/test/Sbis.test',
 '../../components/Data/Adapter/resources/test/SbisRecord.test',
 '../../components/Data/Adapter/resources/test/SbisTable.test',

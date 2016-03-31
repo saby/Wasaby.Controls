@@ -43,10 +43,6 @@ define('js!SBIS3.CONTROLS.Data.Adapter.RecordSetTable', [
          return empty;
       },
 
-      getFields: function () {
-         return this._data.getFields();
-      },
-
       getCount: function () {
          return this._data.getCount();
       },
@@ -60,7 +56,7 @@ define('js!SBIS3.CONTROLS.Data.Adapter.RecordSetTable', [
       },
 
       remove: function (at) {
-         return this._data.remove(at);
+         return this._data.removeAt(at);
       },
 
       replace: function (record, at) {
@@ -70,7 +66,7 @@ define('js!SBIS3.CONTROLS.Data.Adapter.RecordSetTable', [
       move: function(source, target) {
          var rec = this._data.at(source);
          this._data.removeAt(source);
-         this._data.add(rec, source < target ? target : target - 1);
+         this._data.add(rec, target);
       },
 
       merge: function(acceptor, donor, idProperty) {
@@ -85,20 +81,19 @@ define('js!SBIS3.CONTROLS.Data.Adapter.RecordSetTable', [
          return this._data.at(index).clone();
       },
 
-      getFormat: function (name) {
-         return this._data.getFormat(name);
-      },
-
       addField: function(format, at) {
          this._data.addField(format, at);
+         this._format.add(format, at);
       },
 
       removeField: function(name) {
          this._data.removeField(name);
+         this._format.removeField(name);
       },
 
       removeFieldAt: function(index) {
          this._data.removeFieldAt(index);
+         this._format.removeAt(index);
       }
 
       //endregion SBIS3.CONTROLS.Data.Adapter.ITable
