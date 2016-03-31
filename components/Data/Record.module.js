@@ -29,7 +29,6 @@ define('js!SBIS3.CONTROLS.Data.Record', [
       _moduleName: 'SBIS3.CONTROLS.Data.Record',
       $protected: {
          _options: {
-
             /**
              * @cfg {SBIS3.CONTROLS.Data.Collection.RecordSet} Рекордсет, которому принадлежит запись. Может не принадлежать рекордсету.
              * @see getOwner

@@ -22,6 +22,8 @@ define('js!SBIS3.CONTROLS.Data.FormattableMixin', [
              * @cfg {Object} Данные в "сыром" виде
              * @see getRawData
              * @see setRawData
+             * @remark
+             * Данные должны быть в формате, поддерживаемом адаптером {@link adapter}.
              * @example
              * <pre>
              *    var user = new Record({
@@ -31,8 +33,34 @@ define('js!SBIS3.CONTROLS.Data.FormattableMixin', [
              *          lastName: 'Smith'
              *       }
              *    });
-             *    user.get('id');//5
+             *    user.get('id');//1
              *    user.get('firstName');//John
+             *    user.get('lastName');//Smith
+             * </pre>
+             * @example
+             * <pre>
+             *    var characters = new RecordSet({
+             *       rawData: [{
+             *          id: 1,
+             *          firstName: 'John',
+             *          lastName: 'Connor',
+             *          role: 'Savior'
+             *       }, {
+             *          id: 2,
+             *          firstName: 'Sarah',
+             *          lastName: 'Connor'
+             *          role: 'Mother'
+             *       }, {
+             *          id: 3,
+             *          firstName: '-',
+             *          lastName: 'T-800'
+             *          role: 'Terminator'
+             *       }]
+             *    });
+             *    characters.at(0).get('firstName');//John
+             *    characters.at(0).get('lastName');//Connor
+             *    characters.at(1).get('firstName');//Sarah
+             *    characters.at(1).get('lastName');//Connor
              * </pre>
              */
             rawData: null,
@@ -43,6 +71,9 @@ define('js!SBIS3.CONTROLS.Data.FormattableMixin', [
              * @see setAdapter
              * @see SBIS3.CONTROLS.Data.Adapter.Json
              * @see SBIS3.CONTROLS.Data.Di
+             * @remark
+             * Адапетер должен быть предназначен для формата, в котором описаны сырые данные {@link rawData}.
+             * По умолчанию обрабатываются данные в формате JSON (ключ -> значение).
              * @example
              * <pre>
              *    var user = new Record({
@@ -69,6 +100,28 @@ define('js!SBIS3.CONTROLS.Data.FormattableMixin', [
              *       var user = new Record({
              *          format: new UserFormat
              *       });
+             *    });
+             * </pre>
+             * @example
+             * <pre>
+             *    define('js!My.Module', [
+             *       'js!My.Format.User'
+             *    ], function (UserFormat) {
+             *       var users = new RecordSet({
+             *          format: new UserFormat
+             *       });
+             *    });
+             * </pre>
+             * @example
+             * <pre>
+             *    var user = new Record({
+             *       format: [{
+             *          name: 'id'
+             *          type: 'integer'
+             *       }, {
+             *          name: 'login'
+             *          type: 'string'
+             *       }]
              *    });
              * </pre>
              * @example
