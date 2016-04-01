@@ -89,6 +89,9 @@ define('js!SBIS3.CONTROLS.MoveHandlers', ['js!SBIS3.CORE.Dialog','js!SBIS3.CONTR
                      //в поле иерархии он сам этого не сделает
                      self._items._reindexTree(self._options.hierField);
                      self.removeItemsSelectionAll();
+                     //TODO: в .140 версии позовём redraw т.к. частичная перерисовка работает не во всех случаях
+                     //в .150 удалить redraw и сделать частичную перерисовку.
+                     self.redraw();
                   }
                }).addBoth(function() {
                   self._toggleIndicator(false);
