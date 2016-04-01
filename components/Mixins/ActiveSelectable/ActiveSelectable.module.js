@@ -129,7 +129,7 @@ define('js!SBIS3.CONTROLS.ActiveSelectable', ['js!SBIS3.CONTROLS.Data.Model'], f
          if(selKey === null) {
             return;
          }
-         if(selKey !== selItem.getId()) {
+         if(selItem && selKey !== selItem.getId()) {
             this.setSelectedItem(null);
          }
       }
