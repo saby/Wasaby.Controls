@@ -90,6 +90,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
              _dropAllButton: undefined,    /* Кнопка очистки всех выбранных записей */
              _showAllLink: undefined,      /* Кнопка показа всех записей в пикере */
              _linkCollection: undefined,   /* Контрол отображающий выбранные элементы */
+             _checkWidth: true,
              _afterFieldWrapper: undefined,
              _beforeFieldWrapper: undefined,
              _options: {
