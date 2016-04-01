@@ -65,6 +65,9 @@ define('js!SBIS3.CONTROLS.Data.Adapter.JsonRecord', [
       },
 
       set: function (name, value) {
+         if (!name) {
+            throw new ReferenceError(this._moduleName + '::set(): field name is not defined');
+         }
          this._data[name] = value;
       },
 

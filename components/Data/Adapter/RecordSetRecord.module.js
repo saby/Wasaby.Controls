@@ -32,6 +32,7 @@ define('js!SBIS3.CONTROLS.Data.Adapter.RecordSetRecord', [
             throw new TypeError('Argument data should be an instance of SBIS3.CONTROLS.Data.Record');
          }
          this._data = data;
+         this._format = data.getFormat();
       },
 
       //region SBIS3.CONTROLS.Data.Adapter.IRecord
@@ -45,6 +46,9 @@ define('js!SBIS3.CONTROLS.Data.Adapter.RecordSetRecord', [
       },
 
       set: function (name, value) {
+         if (!name) {
+            throw new ReferenceError(this._moduleName + '::set(): field name is not defined');
+         }
          return this._data.set(name, value);
       },
 
@@ -54,24 +58,19 @@ define('js!SBIS3.CONTROLS.Data.Adapter.RecordSetRecord', [
          return record;
       },
 
-      getFields: function () {
-         return this._data.getFields();
-      },
-
-      getFormat: function (name) {
-         return this._data.getFormat(name);
-      },
-
       addField: function(format, at) {
          this._data.addField(format, at);
+         this._format.add(format, at);
       },
 
       removeField: function(name) {
          this._data.removeField(name);
+         this._format.removeField(name);
       },
 
       removeFieldAt: function(index) {
          this._data.removeFieldAt(index);
+         this._format.removeAt(index);
       }
 
       //endregion SBIS3.CONTROLS.Data.Adapter.IRecord
