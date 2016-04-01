@@ -8,7 +8,7 @@ define('js!SBIS3.CONTROLS.ComponentBinder', [], function () {
     * @param backButton объект кнопки назад
     */
    /*методы для поиска*/
-   function startHierSearch(text, searchParamName, searchCrumbsTpl, resetHierField) {
+   function startHierSearch(text, searchParamName, searchCrumbsTpl, searchMode) {
       if (text) {
          var filter = $ws.core.merge(this._options.view.getFilter(), {
                'Разворот': 'С разворотом',
@@ -46,7 +46,7 @@ define('js!SBIS3.CONTROLS.ComponentBinder', [], function () {
             this._options.backButton.getContainer().css({'visibility': 'hidden'});
          }
 
-         if (resetHierField){
+         if (searchMode == 'root'){
             filter[view.getHierField()] = undefined;
          }
 
@@ -215,6 +215,7 @@ define('js!SBIS3.CONTROLS.ComponentBinder', [], function () {
        * @param {String} searchParamName параметр фильтрации для поиска
        * @param {String} searchCrumbsTpl шаблон отрисовки элемента пути в поиске
        * @param {SBIS3.CONROLS.SearchForm} [searchForm] объект формы поиска, если не передан используется тот, что задан в опциях
+       * @param {String} [searchMode] В каком узле ищем, в текущем или в корне
        * @example
        * <pre>
        *     myBinder = new ComponentBinder({
@@ -224,7 +225,7 @@ define('js!SBIS3.CONTROLS.ComponentBinder', [], function () {
        *     myBinder.bindSearchGrid('СтрокаПоиска');
        * </pre>
        */
-      bindSearchGrid : function(searchParamName, searchCrumbsTpl, searchForm, resetHierField) {
+      bindSearchGrid : function(searchParamName, searchCrumbsTpl, searchForm, searchMode) {
          var self = this,
             view = this._options.view,
             isTree = $ws.helpers.instanceOfMixin(view, 'SBIS3.CONTROLS.TreeMixinDS');
@@ -276,7 +277,7 @@ define('js!SBIS3.CONTROLS.ComponentBinder', [], function () {
 
          searchForm.subscribe('onSearch', function(event, text) {
             if (isTree) {
-               startHierSearch.call(self, text, searchParamName, undefined, resetHierField);
+               startHierSearch.call(self, text, searchParamName, undefined, searchMode);
             } else {
                startSearch.call(self, text, searchParamName);
             }
