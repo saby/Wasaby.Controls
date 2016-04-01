@@ -61,6 +61,13 @@ define('js!SBIS3.CONTROLS.Clickable', [], function() {
          }
       },
 
+      /*В корешке закладки (TabButton) нужно что бы клик по ней работал вне зависимости от ее состояния, для этого определен
+      этот метод, который позволяет сделать контрол и его детей (например редактирование по месту в закладке) disabled 
+      но клик по самому контролу будет обрабатываться*/
+      _checkEnabledByClick: function(){
+         return this.isEnabled();
+      },
+
       before : {
          _clickHandler: function() {
             if (!!this._options.command) {
@@ -72,7 +79,7 @@ define('js!SBIS3.CONTROLS.Clickable', [], function() {
       instead : {
          //TODO сделано через onClickHandler WS в базовом контроле
          _onClickHandler: function(e) {
-            if (this.isEnabled()) {
+            if (this._checkEnabledByClick()) {
                this._container.removeClass('controls-Click__active');
                //Установим фокус в контрол, чтобы у него стрельнул onFocusIn и у контрола с которого уходит фокус, стрельнул onFocusOut.
                //Такое поведение необходимо например в редактировании по месту, которое закрывается, когда у дочернего контрола стрельнул onFocusOut.
