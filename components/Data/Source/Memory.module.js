@@ -60,7 +60,7 @@ define('js!SBIS3.CONTROLS.Data.Source.Memory', [
              *    //Use {@link SBIS3.CONTROLS.Data.Adapter.RecordSet} as adapter
              *    var solarSystem = new MemorySource({
              *       data: solarData,
-             *       adapter: 'adapter.recorset',
+             *       adapter: 'adapter.recordset',
              *       idProperty: 'id'
              *    });
              * </pre>
