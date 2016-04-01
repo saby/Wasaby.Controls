@@ -1395,11 +1395,13 @@ define('js!SBIS3.CONTROLS.DSMixin', [
             this._clearItems(container);
             container.replaceWith(newItemContainer);
             this._ladderCompare([newItemContainer.prev(), newItemContainer, newItemContainer.next()]);
-         } else if(this.getItems().getIndex(item) > -1) {
+         }
+         //TODO: код понадобится для частичной перерисовки после перемещения
+         /*else if(this.getItems().getIndex(item) > -1) {
             //todo если записи нет в доме но она есть в рекордстее  и ее кто то изменит, то она должна перерисоваться
             //todo нужно когда запись перемещается из закрытой папки
             this.redraw();
-         }
+         }*/
       },
 
       _getItemContainerByIndex: function(parent, at) {
@@ -1451,13 +1453,14 @@ define('js!SBIS3.CONTROLS.DSMixin', [
 	               break;
 
 	            case IBindCollection.ACTION_MOVE:
-	               for (i = 0; i < newItems.length; i++) {
+                   //TODO: код понадобится для частичной перерисовки после перемещения
+	               /*for (i = 0; i < newItems.length; i++) {
 	                  this._moveItem(
 	                     newItems[i],
 	                     newItemsIndex + newItems.length - 1
 	                  );
 	               }
-	               this._reviveItems();
+	               this._reviveItems();*/
 	               break;
 
 	            case IBindCollection.ACTION_REPLACE:
