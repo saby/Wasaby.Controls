@@ -255,12 +255,13 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
          //Уничтожим все дочерние footer'ы и footer текущего узла
          this._destroyFolderFooter(childKeys.concat(key));
       },
-      _updateItem: function(item) {
+      //TODO: код понадобится для частичной перерисовки после перемещения
+      /*_updateItem: function(item) {
          var
              isMove = item.getContents().isChanged(this._options.hierField),
              parentKey = this._items.getParentKey(item.getContents(), this._options.hierField),
              parentItem = this._items.getRecordById(parentKey);
-         /*
+         *//*
           Если обновление вызвано не из того, что поменялось поле иерархии (произошло перемещение), то удалять его точно не надо.
           Если элемент переместился в закрытую папку и она не не является текущим корнем, то его нужно просто удалить из
           DOM'а т.к. его не должно быть видно. Так же возможна ситуация когда с помощью диалога перемещения запись переместили
@@ -268,13 +269,13 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
           иерархии, а ниже по иерархии были открытые папки), то такую запись тоже нужно просто удалить. Так же проверяем на
           наличие папки в которую перемещаем в наборе DOM элементов с помощью _getElementByModel т.к. у некоторых людей все
           данные сразу присутствуют и проверка в наборе данных даст неверный результат.
-          */
+          *//*
          if (isMove && (!this._options.openedPath[parentKey] || !this._getElementByModel(parentItem).length) && parentKey != this.getCurrentRoot()) {
             this._removeItem(item)
          } else {
             TreeDataGridView.superclass._updateItem.apply(this, arguments);
          }
-      },
+      },*/
       _addItemAttributes : function(container, item) {
          TreeDataGridView.superclass._addItemAttributes.call(this, container, item);
          var hierType = item.get(this._options.hierField + '@'),
