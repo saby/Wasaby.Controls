@@ -47,8 +47,7 @@ define('js!SBIS3.CONTROLS.ActiveMultiSelectable', [], function() {
        * @see addSelectedItems
        */
       setSelectedItems: propertyUpdateWrapper(function(list) {
-         var newItems = [],
-             selItems = this._options.selectedItems,
+         var selItems = this._options.selectedItems,
              newList;
 
          if(list) {
@@ -58,17 +57,11 @@ define('js!SBIS3.CONTROLS.ActiveMultiSelectable', [], function() {
                return;
             }
 
-            if (list.getCount()) {
-               if (this._options.multiselect) {
-                  list.each(function (rec) {
-                     newItems.push(rec);
-                  });
-               } else {
-                  newItems = [list.at(0)];
-               }
+            if (list.getCount() && !this._options.multiselect) {
+               newList = this._makeList([list.at(0)]);
+            } else {
+               newList = list;
             }
-
-            newList = this._makeList(newItems);
          } else {
             newList = null;
          }
