@@ -165,7 +165,11 @@ define('js!SBIS3.CONTROLS.Data.Source.Memory', [
             items = this._applyOrderBy(items, query.getOrderBy());
             var total = this.getAdapter().forTable(items).getCount();
             items = this._applyPaging(items, query.getOffset(), query.getLimit());
-            this.getAdapter().setProperty(items, 'total', total);
+            try {
+               this.getAdapter().setProperty(items, 'total', total);
+            } catch (error) {
+               $ws.single.ioc.resolve('ILogger').log(this._moduleName + '::query()', error);
+            }
          }
 
          return $ws.proto.Deferred.success(this._getDataSetInstance({

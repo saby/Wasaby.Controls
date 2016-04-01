@@ -72,13 +72,17 @@ define('js!SBIS3.CONTROLS.Data.Adapter.RecordSetTable', [
       merge: function(acceptor, donor, idProperty) {
          acceptor = this._data.at(acceptor);
          this._data.at(donor).each(function(name, value) {
-            acceptor.set(name, value);
+            if (name !== idProperty) {
+               acceptor.set(name, value);
+            }
          }, this);
          this._data.removeAt(donor);
       },
 
       copy: function(index) {
-         return this._data.at(index).clone();
+         var clone = this._data.at(index).clone();
+         this.add(clone, 1 + index);
+         return clone;
       },
 
       addField: function(format, at) {

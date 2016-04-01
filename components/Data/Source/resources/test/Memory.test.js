@@ -4,8 +4,9 @@ define([
       'js!SBIS3.CONTROLS.Data.Source.DataSet',
       'js!SBIS3.CONTROLS.Data.Model',
       'js!SBIS3.CONTROLS.Data.Collection.List',
+      'js!SBIS3.CONTROLS.Data.Collection.RecordSet',
       'js!SBIS3.CONTROLS.Data.Query.Query'
-   ], function (MemorySource, DataSet, Model, List, Query) {
+   ], function (MemorySource, DataSet, Model, List, RecordSet, Query) {
       'use strict';
 
       describe('SBIS3.CONTROLS.Data.Source.Memory', function () {
@@ -398,7 +399,7 @@ define([
             it('should copy model', function (done) {
                var oldLength = data.length;
                source.copy(existsId).addCallbacks(function () {
-                  if(data.length !== oldLength) {
+                  if(data.length === 1 + oldLength) {
                      done();
                   } else {
                      done(new Error('Model dosn\'t copied'));
@@ -846,6 +847,365 @@ define([
                   });
                });
 
+            });
+         });
+         
+         context('when use recordset as data', function () {
+            beforeEach(function () {
+               data = new RecordSet({
+                  rawData: data
+               });
+
+               source = new MemorySource({
+                  data: data,
+                  adapter: 'adapter.recordset',
+                  idProperty: 'Ид'
+               });
+            });
+            
+            describe('.create()', function () {
+               it('should return an empty model', function (done) {
+                  source.create().addCallbacks(function (model) {
+                     try {
+                        if (!(model instanceof Model)) {
+                           throw new Error('That\'s no Model');
+                        }
+                        done();
+                     } catch (err) {
+                        done(err);
+                     }
+                  }, function (err) {
+                     done(err);
+                  });
+               });
+
+               it('should return an model with initial data', function (done) {
+                  source.create(new Model({
+                     rawData: {
+                        a: 1,
+                        b: true
+                     }
+                  })).addCallbacks(function (model) {
+                     try {
+                        if (model.get('a') !== 1) {
+                           throw new Error('The model property "a" contains wrong data');
+                        }
+                        if (model.get('b') !== true) {
+                           throw new Error('The model property "b" contains wrong data');
+                        }
+                        done();
+                     } catch (err) {
+                        done(err);
+                     }
+                  }, function (err) {
+                     done(err);
+                  });
+               });
+            });
+            
+            describe('.read()', function () {
+               context('when the model is exists', function () {
+                  it('should return the valid model', function (done) {
+                     source.read(existsId).addCallbacks(function (model) {
+                        try {
+                           if (!(model instanceof Model)) {
+                              throw new Error('That\'s no Model');
+                           }
+                           if (model.getId() !== existsId) {
+                              throw new Error('The model has wrong key');
+                           }
+                           done();
+                        } catch (err) {
+                           done(err);
+                        }
+                     }, function (err) {
+                        done(err);
+                     });
+                  });
+               });
+
+               context('when the model isn\'t exists', function () {
+                  it('should return an error', function (done) {
+                     source.read(notExistsId).addBoth(function (err) {
+                        if (err instanceof Error) {
+                           done();
+                        } else {
+                           done(new Error('That\'s no Error'));
+                        }
+                     });
+                  });
+               });
+            });
+
+            describe('.update()', function () {
+               context('when the model was stored', function () {
+                  it('should update the model', function (done) {
+                     source.read(existsId).addCallbacks(function (model) {
+                        model.set('Фамилия', 'Петров');
+                        source.update(model).addCallbacks(function (success) {
+                           try {
+                              if (!success) {
+                                 throw new Error('Unsuccessful update');
+                              }
+                              source.read(existsId).addCallbacks(function (model) {
+                                 if (model.get('Фамилия') !== 'Петров') {
+                                    done(new Error('Still have an old data'));
+                                 } else {
+                                    done();
+                                 }
+                              }, function (err) {
+                                 done(err);
+                              });
+                           } catch (err) {
+                              done(err);
+                           }
+                        }, function (err) {
+                           done(err);
+                        });
+                     }, function (err) {
+                        done(err);
+                     });
+                  });
+               });
+
+               context('when the model was not stored', function () {
+                  var testModel = function (success, model, length, done) {
+                     try {
+                        if (!success) {
+                           throw new Error('Unsuccessful update');
+                        }
+                        if (length !== data.getCount()) {
+                           throw new Error('The size of raw data expect to be ' + length + ' but ' + data.length + ' detected');
+                        }
+                        source.read(model.getId()).addCallbacks(function (modelToo) {
+                           if (model.get('Фамилия') !== modelToo.get('Фамилия')) {
+                              done(new Error('The source still have an old data'));
+                           } else {
+                              done();
+                           }
+                        }, function (err) {
+                           done(err);
+                        });
+                     } catch (err) {
+                        done(err);
+                     }
+                  };
+
+                  it('should create the model by 1st way', function (done) {
+                     var oldLength = data.getCount();
+                     source.create().addCallbacks(function (model) {
+                        model.set('Фамилия', 'Козлов');
+                        source.update(model).addCallbacks(function (success) {
+                           testModel(success, model, 1 + oldLength, done);
+                        }, function (err) {
+                           done(err);
+                        });
+                     }, function (err) {
+                        done(err);
+                     });
+                  });
+
+                  it('should create the model by 2nd way', function (done) {
+                     var oldLength = data.getCount(),
+                        model = new Model({
+                           idProperty: 'Ид',
+                           adapter: 'adapter.recordset'
+                        });
+                     model.set('Фамилия', 'Овечкин');
+                     source.update(model).addCallbacks(function (success) {
+                        testModel(success, model, 1 + oldLength, done);
+                     }, function (err) {
+                        done(err);
+                     });
+                  });
+               });
+            });
+
+            describe('.destroy()', function () {
+               context('when the model is exists', function () {
+                  it('should return success', function (done) {
+                     source.destroy(existsId).addCallbacks(function (success) {
+                        try {
+                           if (!success) {
+                              throw new Error('Unsuccessful destroy');
+                           } else {
+                              done();
+                           }
+                        } catch (err) {
+                           done(err);
+                        }
+                     }, function (err) {
+                        done(err);
+                     });
+                  });
+
+                  it('should really delete the model', function (done) {
+                     source.destroy(existsId).addCallbacks(function () {
+                        source.read(existsId).addCallbacks(function () {
+                           done(new Error('The model still exists'));
+                        }, function () {
+                           done();
+                        });
+                     }, function (err) {
+                        done(err);
+                     });
+                  });
+
+                  it('should decrease the size of raw data', function (done) {
+                     var targetLength = data.getCount() - 1;
+                     source.destroy(existsId).addCallbacks(function () {
+                        try {
+                           if (targetLength !== data.getCount()) {
+                              throw new Error('The size of raw data expect to be ' + targetLength + ' but ' + data.length + ' detected');
+                           }
+                           done();
+                        } catch (err) {
+                           done(err);
+                        }
+                     }, function (err) {
+                        done(err);
+                     });
+                  });
+               });
+
+               context('when the model isn\'t exists', function () {
+                  it('should return an error', function (done) {
+                     source.destroy(notExistsId).addBoth(function (err) {
+                        if (err instanceof Error) {
+                           done();
+                        } else {
+                           done(new Error('That\'s no Error'));
+                        }
+                     });
+                  });
+               });
+            });
+
+            describe('.merge()', function () {
+               context('when the model isn\'t exists', function () {
+                  it('should return an error', function (done) {
+                     source.merge(notExistsId, existsId).addBoth(function (err) {
+                        if (err instanceof Error) {
+                           done();
+                        } else {
+                           done(new Error('That\'s no Error'));
+                        }
+                     });
+                  });
+
+                  it('should return an error', function (done) {
+                     source.merge(existsId, notExistsId).addBoth(function (err) {
+                        if (err instanceof Error) {
+                           done();
+                        } else {
+                           done(new Error('That\'s no Error'));
+                        }
+                     });
+                  });
+               });
+
+               it('should merge models', function (done) {
+                  source.merge(existsId, existsId2).addCallbacks(function () {
+                     source.read(existsId).addCallbacks(function () {
+                        source.read(existsId2).addCallbacks(function(){
+                           done(new Error('Exists extention model.'));
+                        },function(){
+                           done();
+                        });
+                     }, function (err) {
+                        done(err);
+                     });
+                  }, function(err){
+                     done(err);
+                  });
+               });
+            });
+
+            describe('.copy()', function () {
+               it('should copy model', function (done) {
+                  var oldLength = data.getCount();
+                  source.copy(existsId).addCallbacks(function () {
+                     if(data.getCount() === 1 + oldLength) {
+                        done();
+                     } else {
+                        done(new Error('Model dosn\'t copied'));
+                     }
+                  }, function(err){
+                     done(err);
+                  });
+               });
+            });
+
+            describe('.query()', function () {
+               it('should return a valid dataset', function (done) {
+                  source.query(new Query()).addCallbacks(function (ds) {
+                     try {
+                        if (!(ds instanceof DataSet)) {
+                           throw new Error('That\'s no dataset');
+                        }
+                        if (ds.getAll().getCount() !== data.getCount()) {
+                           throw new Error('Wrong models count');
+                        }
+                        done();
+                     } catch (err) {
+                        done(err);
+                     }
+                  }, function (err) {
+                     done(err);
+                  });
+               });
+
+               it('should work with no query', function (done) {
+                  source.query().addCallbacks(function (ds) {
+                     try {
+                        if (!(ds instanceof DataSet)) {
+                           throw new Error('That\'s no dataset');
+                        }
+                        if (ds.getAll().getCount() !== data.getCount()) {
+                           throw new Error('Wrong models count');
+                        }
+                        done();
+                     } catch (err) {
+                        done(err);
+                     }
+                  }, function (err) {
+                     done(err);
+                  });
+               });
+
+               it('should return a list instance of injected module', function (done) {
+                  var MyList = List.extend({});
+                  source.setListModule(MyList);
+                  source.query().addCallbacks(function (ds) {
+                     try {
+                        if (!(ds.getAll() instanceof MyList)) {
+                           throw new Error('Wrong list instance');
+                        }
+                        done();
+                     } catch (err) {
+                        done(err);
+                     }
+                  }, function (err) {
+                     done(err);
+                  });
+               });
+
+               it('should return a model instance of injected module', function (done) {
+                  var MyModel = Model.extend({});
+                  source.setModel(MyModel);
+                  source.query().addCallbacks(function (ds) {
+                     try {
+                        if (!(ds.getAll().at(0) instanceof MyModel)) {
+                           throw new Error('Wrong model instance');
+                        }
+                        done();
+                     } catch (err) {
+                        done(err);
+                     }
+                  }, function (err) {
+                     done(err);
+                  });
+               });
             });
          });
       });
