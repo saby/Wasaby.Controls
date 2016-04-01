@@ -1,20 +1,22 @@
 /* global define, $ws */
 define('js!SBIS3.CONTROLS.Data.Adapter.JsonRecord', [
    'js!SBIS3.CONTROLS.Data.Adapter.IRecord',
+   'js!SBIS3.CONTROLS.Data.Adapter.GenericFormatMixin',
    'js!SBIS3.CONTROLS.Data.Adapter.JsonFormatMixin'
-], function (IRecord, JsonFormatMixin) {
+], function (IRecord, GenericFormatMixin, JsonFormatMixin) {
    'use strict';
 
    /**
     * Адаптер для записи таблицы данных в формате JSON
     * @class SBIS3.CONTROLS.Data.Adapter.JsonRecord
     * @mixes SBIS3.CONTROLS.Data.Adapter.IRecord
+    * @mixes SBIS3.CONTROLS.Data.Adapter.GenericFormatMixin
     * @mixes SBIS3.CONTROLS.Data.Adapter.JsonFormatMixin
     * @public
     * @author Мальцев Алексей
     */
 
-   var JsonRecord = $ws.core.extend({}, [IRecord, JsonFormatMixin], /** @lends SBIS3.CONTROLS.Data.Adapter.JsonRecord.prototype */{
+   var JsonRecord = $ws.core.extend({}, [IRecord, GenericFormatMixin, JsonFormatMixin], /** @lends SBIS3.CONTROLS.Data.Adapter.JsonRecord.prototype */{
       _moduleName: 'SBIS3.CONTROLS.Data.Adapter.JsonRecord',
       $protected: {
          /**
@@ -63,6 +65,9 @@ define('js!SBIS3.CONTROLS.Data.Adapter.JsonRecord', [
       },
 
       set: function (name, value) {
+         if (!name) {
+            throw new ReferenceError(this._moduleName + '::set(): field name is not defined');
+         }
          this._data[name] = value;
       },
 
