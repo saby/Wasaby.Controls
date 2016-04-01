@@ -40,6 +40,30 @@ define('js!SBIS3.CONTROLS.Data.Source.Memory', [
              *       idProperty: 'id'
              *    });
              * </pre>
+             * @example
+             * <pre>
+             *    //Use {@link SBIS3.CONTROLS.Data.Collection.RecordSet} as data for the source
+             *    var solarData = new RecordSet({
+             *       rawData: [
+             *          {id: 1, name: 'Sun', kind: 'Star'},
+             *          {id: 2, name: 'Mercury', kind: 'Planet'},
+             *          {id: 3, name: 'Venus', kind: 'Planet'},
+             *          {id: 4, name: 'Earth', kind: 'Planet'},
+             *          {id: 5, name: 'Mars', kind: 'Planet'},
+             *          {id: 6, name: 'Jupiter', kind: 'Planet'},
+             *          {id: 7, name: 'Saturn', kind: 'Planet'},
+             *          {id: 8, name: 'Uranus', kind: 'Planet'},
+             *          {id: 9, name: 'Neptune', kind: 'Planet'}
+             *          {id: 10, name: 'Pluto', kind: 'Dwarf planet'}
+             *       ] 
+             *    });
+             *    //Use {@link SBIS3.CONTROLS.Data.Adapter.RecordSet} as adapter
+             *    var solarSystem = new MemorySource({
+             *       data: solarData,
+             *       adapter: 'adapter.recorset',
+             *       idProperty: 'id'
+             *    });
+             * </pre>
              */
             data: []
          },
