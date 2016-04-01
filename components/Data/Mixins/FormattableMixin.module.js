@@ -72,7 +72,7 @@ define('js!SBIS3.CONTROLS.Data.FormattableMixin', [
              * @see SBIS3.CONTROLS.Data.Adapter.Json
              * @see SBIS3.CONTROLS.Data.Di
              * @remark
-             * Адапетер должен быть предназначен для формата, в котором описаны сырые данные {@link rawData}.
+             * Адаптер должен быть предназначен для формата, в котором описаны сырые данные {@link rawData}.
              * По умолчанию обрабатываются данные в формате JSON (ключ -> значение).
              * @example
              * <pre>

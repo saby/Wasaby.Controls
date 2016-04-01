@@ -48,7 +48,7 @@ define('js!SBIS3.CONTROLS.Data.Adapter.RecordSet', [
       getKeyField: function (data) {
          if (data) {
             if ($ws.helpers.instanceOfModule(data, 'SBIS3.CONTROLS.Data.Collection.RecordSet') ||
-               $ws.helpers.instanceOfModule(data, 'SBIS3.CONTROLS.Data.Record')
+               $ws.helpers.instanceOfModule(data, 'SBIS3.CONTROLS.Data.Model')
             ) {
                return data.getIdProperty();
             }

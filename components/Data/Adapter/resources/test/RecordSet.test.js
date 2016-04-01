@@ -2,8 +2,9 @@
 define([
    'js!SBIS3.CONTROLS.Data.Adapter.RecordSet',
    'js!SBIS3.CONTROLS.Data.Collection.RecordSet',
-   'js!SBIS3.CONTROLS.Data.Record'
-], function (RecordSetAdapter, RecordSet, Record) {
+   'js!SBIS3.CONTROLS.Data.Record',
+   'js!SBIS3.CONTROLS.Data.Model'
+], function (RecordSetAdapter, RecordSet, Record, Model) {
    'use strict';
 
    describe('SBIS3.CONTROLS.Data.Adapter.RecordSet', function () {
@@ -64,6 +65,18 @@ define([
                adapter.forRecord(data).getData(),
                data
             );
+         });
+      });
+
+      describe('.getKeyField()', function () {
+         it('should return option idProperty for recordset', function () {
+            assert.strictEqual(adapter.getKeyField(data), data.getIdProperty());
+         });
+         it('should return option idProperty for model', function () {
+            var data = new Model({
+               idProperty: 'test'
+            });
+            assert.strictEqual(adapter.getKeyField(data), 'test');
          });
       });
 
