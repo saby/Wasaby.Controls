@@ -19,7 +19,12 @@ define([
             getRecordSbisData = function() {
                return {
                   _type: 'record',
-                  d: [1, 'A', 10],
+                  d: [
+                     1,
+                     'A',
+                     10,
+                     {d: [], s: []}
+                  ],
                   s: [{
                      n: 'id',
                      t: 'Число целое'
@@ -29,6 +34,9 @@ define([
                   }, {
                      n: 'max',
                      t: 'Число целое'
+                  }, {
+                     n: 'rec',
+                     t: 'Запись'
                   }]
                };
             },
@@ -49,6 +57,17 @@ define([
                assert.strictEqual(record.get('max'), recordData.max);
                assert.strictEqual(record.get('title'), recordData.title);
                assert.strictEqual(record.get('id'), recordData.id);
+            });
+            it('should return a single instance for Object', function () {
+               var record = new Record({
+                     adapter: 'adapter.sbis',
+                     rawData: getRecordSbisData()
+                  }),
+                  value = record.get('rec');
+               
+               assert.instanceOf(value, Record);
+               assert.strictEqual(record.get('rec'), value);
+               assert.strictEqual(record.get('rec'), value);
             });
          });
 
