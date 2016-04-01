@@ -1387,6 +1387,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
       _updateItem: function(item) {
          item = item.getContents();
          var container = this._getItemContainer(this._getTargetContainer(item), item),
+            lostFocus = document.activeElement === container.get(0),
             template = this._getItemTemplate(item);
 
          if (container.length) {
@@ -1394,6 +1395,10 @@ define('js!SBIS3.CONTROLS.DSMixin', [
             this._addItemAttributes(newItemContainer, item);
             this._clearItems(container);
             container.replaceWith(newItemContainer);
+            //если фокус ушёл на строку, которая была удалена то вернём фокус на контейнер контрола.
+            if (lostFocus) {
+               this.getContainer().focus();
+            }
             this._ladderCompare([newItemContainer.prev(), newItemContainer, newItemContainer.next()]);
          } else if(this.getItems().getIndex(item) > -1) {
             //todo если записи нет в доме но она есть в рекордстее  и ее кто то изменит, то она должна перерисоваться
