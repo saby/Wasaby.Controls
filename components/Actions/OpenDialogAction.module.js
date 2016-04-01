@@ -31,7 +31,8 @@ define('js!SBIS3.CONTROLS.OpenDialogAction', ['js!SBIS3.CONTROLS.DialogActionBas
          return {
             key : meta.id,
             initValues : meta.filter,
-            record: record
+            record: record,
+            contextRestriction: 'set'
          }
       }
    });
