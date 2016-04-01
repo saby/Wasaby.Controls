@@ -42,7 +42,6 @@ define(
 
          describe('.forTable()', function () {
             it('should return table adapter', function () {
-               var adapter = new JsonAdapter();
                assert.isTrue(
                   $ws.helpers.instanceOfModule(
                      adapter.forTable(),
@@ -51,8 +50,7 @@ define(
                );
             });
             it('should pass data to the table adapter', function () {
-               var data = [{a: 1}, {b: 2}],
-                  adapter = new JsonAdapter();
+               var data = [{a: 1}, {b: 2}];
                assert.strictEqual(
                   adapter.forTable(data).getData(),
                   data
@@ -62,7 +60,6 @@ define(
 
          describe('.forRecord()', function () {
             it('should return record adapter', function () {
-               var adapter = new JsonAdapter();
                assert.isTrue(
                   $ws.helpers.instanceOfModule(
                      adapter.forRecord(),
@@ -71,12 +68,17 @@ define(
                );
             });
             it('should pass data to the record adapter', function () {
-               var data = {a: 1},
-                  adapter = new JsonAdapter();
+               var data = {a: 1};
                assert.strictEqual(
                   adapter.forRecord(data).getData(),
                   data
                );
+            });
+         });
+
+         describe('.getKeyField()', function () {
+            it('should return undefined', function () {
+               assert.isUndefined(adapter.getKeyField(data));
             });
          });
 

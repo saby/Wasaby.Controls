@@ -19,18 +19,62 @@ define('js!SBIS3.CONTROLS.Data.Source.Memory', [
       $protected: {
          _options: {
             /**
-             * @cfg {Object} Данные, с которыми работает источник
+             * @cfg {Object|SBIS3.CONTROLS.Data.Collection.IList} Данные, с которыми работает источник.
+             * @remark
+             * Данные должны быть в формате, поддерживаемом адаптером {@link adapter}
+             * @example
+             * <pre>
+             *    var solarSystem = new MemorySource({
+             *       data: [
+             *          {id: 1, name: 'Sun', kind: 'Star'},
+             *          {id: 2, name: 'Mercury', kind: 'Planet'},
+             *          {id: 3, name: 'Venus', kind: 'Planet'},
+             *          {id: 4, name: 'Earth', kind: 'Planet'},
+             *          {id: 5, name: 'Mars', kind: 'Planet'},
+             *          {id: 6, name: 'Jupiter', kind: 'Planet'},
+             *          {id: 7, name: 'Saturn', kind: 'Planet'},
+             *          {id: 8, name: 'Uranus', kind: 'Planet'},
+             *          {id: 9, name: 'Neptune', kind: 'Planet'}
+             *          {id: 10, name: 'Pluto', kind: 'Dwarf planet'}
+             *       ],
+             *       idProperty: 'id'
+             *    });
+             * </pre>
+             * @example
+             * <pre>
+             *    //Use {@link SBIS3.CONTROLS.Data.Collection.RecordSet} as data for the source
+             *    var solarData = new RecordSet({
+             *       rawData: [
+             *          {id: 1, name: 'Sun', kind: 'Star'},
+             *          {id: 2, name: 'Mercury', kind: 'Planet'},
+             *          {id: 3, name: 'Venus', kind: 'Planet'},
+             *          {id: 4, name: 'Earth', kind: 'Planet'},
+             *          {id: 5, name: 'Mars', kind: 'Planet'},
+             *          {id: 6, name: 'Jupiter', kind: 'Planet'},
+             *          {id: 7, name: 'Saturn', kind: 'Planet'},
+             *          {id: 8, name: 'Uranus', kind: 'Planet'},
+             *          {id: 9, name: 'Neptune', kind: 'Planet'}
+             *          {id: 10, name: 'Pluto', kind: 'Dwarf planet'}
+             *       ] 
+             *    });
+             *    //Use {@link SBIS3.CONTROLS.Data.Adapter.RecordSet} as adapter
+             *    var solarSystem = new MemorySource({
+             *       data: solarData,
+             *       adapter: 'adapter.recordset',
+             *       idProperty: 'id'
+             *    });
+             * </pre>
              */
             data: []
          },
 
          /**
-          * @var {SBIS3.CONTROLS.Data.Adapter.ITable} Адаптер для таблицы
+          * @member {SBIS3.CONTROLS.Data.Adapter.ITable} Адаптер для таблицы
           */
          _tableAdapter: null,
 
          /**
-          * @var {Object} Индекс для быстрого поиска записи по ключу
+          * @member {Object} Индекс для быстрого поиска записи по ключу
           */
          _index: {}
       },
@@ -145,7 +189,11 @@ define('js!SBIS3.CONTROLS.Data.Source.Memory', [
             items = this._applyOrderBy(items, query.getOrderBy());
             var total = this.getAdapter().forTable(items).getCount();
             items = this._applyPaging(items, query.getOffset(), query.getLimit());
-            this.getAdapter().setProperty(items, 'total', total);
+            try {
+               this.getAdapter().setProperty(items, 'total', total);
+            } catch (error) {
+               $ws.single.ioc.resolve('ILogger').log(this._moduleName + '::query()', error);
+            }
          }
 
          return $ws.proto.Deferred.success(this._getDataSetInstance({
@@ -482,7 +530,7 @@ define('js!SBIS3.CONTROLS.Data.Source.Memory', [
     */
    var _static = {
       /**
-       * @var {Object.<String, Object>} Хранилище контрактов
+       * @member {Object.<String, Object>} Хранилище контрактов
        * @static
        */
       contracts: {}
