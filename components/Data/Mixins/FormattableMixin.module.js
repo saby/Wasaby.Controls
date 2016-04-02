@@ -12,6 +12,7 @@ define('js!SBIS3.CONTROLS.Data.FormattableMixin', [
     * Миксин, предоставляющий поведение владения форматом полей
     * @mixin SBIS3.CONTROLS.Data.FormattableMixin
     * @public
+    * @ignoreMethods notifyFormatChanged
     * @author Мальцев Алексей
     */
 
@@ -146,6 +147,11 @@ define('js!SBIS3.CONTROLS.Data.FormattableMixin', [
          _rawDataAdapter: null,
 
          /**
+          * @member {Array.<String>} Описание всех полей, полученных из данных в "сыром" виде
+          */
+         _rawDataFields: null,
+
+         /**
          *@member {Boolean} Формат был задан пользователем явно
          */
          _directFormat: false
@@ -209,6 +215,8 @@ define('js!SBIS3.CONTROLS.Data.FormattableMixin', [
        */
       setRawData: function(data) {
          this._options.rawData = data;
+         this._resetRawDataAdapter();
+         this._resetRawDataFields();
       },
 
       /**
@@ -239,6 +247,7 @@ define('js!SBIS3.CONTROLS.Data.FormattableMixin', [
        */
       setAdapter: function (adapter) {
          this._options.adapter = adapter;
+         this._resetRawDataAdapter();
       },
 
       /**
@@ -274,6 +283,8 @@ define('js!SBIS3.CONTROLS.Data.FormattableMixin', [
       addField: function(format, at) {
          format = this._buildField(format);
          this._getFormat().add(format, at);
+         this._getRawDataAdapter().addField(format, at);
+         this._resetRawDataFields();
       },
 
       /**
@@ -290,6 +301,8 @@ define('js!SBIS3.CONTROLS.Data.FormattableMixin', [
        */
       removeField: function(name) {
          this._getFormat().removeField(name);
+         this._getRawDataAdapter().removeField(name);
+         this._resetRawDataFields();
       },
 
       /**
@@ -306,6 +319,18 @@ define('js!SBIS3.CONTROLS.Data.FormattableMixin', [
        */
       removeFieldAt: function(at) {
          this._getFormat().removeAt(at);
+         this._getRawDataAdapter().removeFieldAt(at);
+         this._resetRawDataFields();
+      },
+      
+      /**
+       * Уведомляет об изменении формата при композиции/агрегации инстансов общим владельцем
+       * @param {String} methodName Имя метода, модифицировавшего формат
+       * @param {Array} args Аргументы метода, модифицировавшего формат
+       */
+      notifyFormatChanged: function (methodName, args) {
+         this._resetRawDataAdapter();
+         this._resetRawDataFields();
       },
 
       //endregion Public methods
@@ -360,7 +385,15 @@ define('js!SBIS3.CONTROLS.Data.FormattableMixin', [
        * @protected
        */
       _getRawDataFields: function() {
-         throw new Error('Method must be implemented');
+         return this._rawDataFields || (this._rawDataFields = this._getRawDataAdapter().getFields());
+      },
+      
+      /**
+       * Сбрасывает список полей записи, полученный из "сырых" данных
+       * @protected
+       */
+      _resetRawDataFields: function() {
+         this._rawDataFields = null;
       },
 
       /**
@@ -370,7 +403,7 @@ define('js!SBIS3.CONTROLS.Data.FormattableMixin', [
        * @protected
        */
       _getRawDataFormat: function(name) {
-         throw new Error('Method must be implemented');
+         return this._getRawDataAdapter().getFormat(name);
       },
 
       /**
