@@ -68,7 +68,7 @@ define('js!SBIS3.CONTROLS.TextBox', ['js!SBIS3.CONTROLS.TextBoxBase','html!SBIS3
              * ![](/TextBox02.png)
              * фрагмент верстки:
              * <pre class="brush:xml">
-             *     <option name="textTransform">uppercase</option>
+             *    <option name="textTransform">uppercase</option>
              * </pre>
              * @see setTextTransform
              * @see placeholder
@@ -253,7 +253,7 @@ define('js!SBIS3.CONTROLS.TextBox', ['js!SBIS3.CONTROLS.TextBoxBase','html!SBIS3
        * @variant none Текст не меняется.
        * @example
        * <pre>
-       *     control.setTextTransform("lowercase");
+       *    control.setTextTransform("lowercase");
        * </pre>
        * @see textTransform
        */

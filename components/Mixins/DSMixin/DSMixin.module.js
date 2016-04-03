@@ -182,22 +182,22 @@ define('js!SBIS3.CONTROLS.DSMixin', [
               *     <option name="hierField" value="parent"></option>
               *     <options name="items" type="array">
               *        <options>
-              *            <option name="id">I</option>
-              *            <option name="title">квартал 1</option>
-              *            <option name="parent" value="null" type="null"></option>
-              *            <option name="parent@" value="true" type="boolean"></option>
+              *           <option name="id">I</option>
+              *           <option name="title">квартал 1</option>
+              *           <option name="parent" value="null" type="null"></option>
+              *           <option name="parent@" value="true" type="boolean"></option>
               *        </options>
               *        <options>
-              *            <option name="id">01</option>
-              *            <option name="title">январь</option>
-              *            <option name="parent" value="I"></option>
-              *            <option name="parent@" value="null" type="null"></option>
+              *           <option name="id">01</option>
+              *           <option name="title">январь</option>
+              *           <option name="parent" value="I"></option>
+              *           <option name="parent@" value="null" type="null"></option>
               *        </options>
               *        <options>
-              *            <option name="id">02</option>
-              *            <option name="title">февраль</option>
-              *            <option name="parent" value="I"></option>
-              *            <option name="parent@" value="null" type="null"></option>
+              *           <option name="id">02</option>
+              *           <option name="title">февраль</option>
+              *           <option name="parent" value="I"></option>
+              *           <option name="parent@" value="null" type="null"></option>
               *        </options>
               *     </options>
               * </pre>
@@ -288,8 +288,8 @@ define('js!SBIS3.CONTROLS.DSMixin', [
              * фрагмент верстки:
              * <pre class="brush:xml">
              *     <options name="ladder" type="array">
-             *         <option>ФИО</option>
-             *         <option>Должность</option>
+             *        <option>ФИО</option>
+             *        <option>Должность</option>
              *     </options>
              * </pre>
              *
@@ -401,18 +401,18 @@ define('js!SBIS3.CONTROLS.DSMixin', [
              * фрагмент верстки:
              * <pre class="brush:xml">
              *     <options name="list">
-             *         <option name="component" value="js!SBIS3.CONTROLS.DataGridView"></option>
-             *         <options name="options">
-             *             <option name="keyField" value="@Пользователь"></option>
-             *             <options name="sorting" type="array">
-             *                 <options>
-             *                   <option name="ФИО" type="boolean">false</option>
-             *                 </options>
-             *                 <options>
-             *                   <option name="Город" type="boolean">false</option>
-             *                 </options>
-             *             </options>
-             *         </options>
+             *        <option name="component" value="js!SBIS3.CONTROLS.DataGridView"></option>
+             *        <options name="options">
+             *           <option name="keyField" value="@Пользователь"></option>
+             *           <options name="sorting" type="array">
+             *              <options>
+             *                 <option name="ФИО" type="boolean">false</option>
+             *              </options>
+             *              <options>
+             *                 <option name="Город" type="boolean">false</option>
+             *              </options>
+             *           </options>
+             *        </options>
              *     </options>
              * </pre>
              */
@@ -446,6 +446,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
              *     <option name="autoRedraw">true</option>
              * </pre>
              * @see redraw
+             * @noShow
              */
             autoRedraw: true
          },

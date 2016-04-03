@@ -52,7 +52,7 @@ define('js!SBIS3.CONTROLS.ActiveSelectable', ['js!SBIS3.CONTROLS.Data.Model'], f
        *     var selItem = this.getChildControlByName('MyControl').getSelectedItem();
        *       . . .
        *     if (selItem != '') {
-       *       NewControl.setSelectedItem(selItem);
+       *        NewControl.setSelectedItem(selItem);
        *     }
        * </pre>
        * @see selectedItem

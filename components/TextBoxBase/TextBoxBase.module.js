@@ -80,7 +80,7 @@ define('js!SBIS3.CONTROLS.TextBoxBase',
              * <pre class="brush:xml">
              *     <option name="text" bind="myTextField" value="Филиппов Павел"></option>
              *     <options name="listFilter">
-             *         <option name="ФИО" bind="myTextField" oneWay="true" value=""></option>
+             *        <option name="ФИО" bind="myTextField" oneWay="true" value=""></option>
              *     </options>
              * </pre>
              * @see trim

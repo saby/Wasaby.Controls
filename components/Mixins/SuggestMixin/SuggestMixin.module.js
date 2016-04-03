@@ -213,20 +213,20 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
              * @example
              * <pre class="brush:xml">
              *     <options name="list">
-             *       <option name="component" value="js!SBIS3.CONTROLS.DataGridView"></option> <!-- Указываем класс контрола, на его основе строятся результаты автодополнения -->
-             *       <options name="options">
-             *          <option name="keyField" value="@Пользователь"></option> <!-- Указываем ключевое поле -->
-             *          <options name="columns" type="array"> <!-- Производим настройку колонок -->
-             *             <options>
-             *                <option name="title">№</option>
-             *                <option name="field">@Пользователь</option>
-             *             </options>
-             *             <options>
-             *                <option name="title">Фамилия</option>
-             *                <option name="field">Фамилия</option>
-             *             </options>
-             *          </options>
-             *       </options>
+             *        <option name="component" value="js!SBIS3.CONTROLS.DataGridView"></option> <!-- Указываем класс контрола, на его основе строятся результаты автодополнения -->
+             *        <options name="options">
+             *           <option name="keyField" value="@Пользователь"></option> <!-- Указываем ключевое поле -->
+             *           <options name="columns" type="array"> <!-- Производим настройку колонок -->
+             *              <options>
+             *                 <option name="title">№</option>
+             *                 <option name="field">@Пользователь</option>
+             *              </options>
+             *              <options>
+             *                 <option name="title">Фамилия</option>
+             *                 <option name="field">Фамилия</option>
+             *              </options>
+             *           </options>
+             *        </options>
              *     </options>
              * </pre>
              * @group Data
@@ -486,9 +486,9 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
        * @example
        * <pre>
        *     this.getList().setDataSource(new SbisSourse({
-       *       resource: 'Сотрудник',
-       *       queryMethodName: 'СписокПерсонала',
-       *       formatMethodName: 'Сотрудник.FieldLinkFormat'
+       *        resource: 'Сотрудник',
+       *        queryMethodName: 'СписокПерсонала',
+       *        formatMethodName: 'Сотрудник.FieldLinkFormat'
        *     }), true);
        * </pre>
        * @see list

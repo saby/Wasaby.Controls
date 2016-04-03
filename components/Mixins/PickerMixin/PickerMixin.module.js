@@ -29,7 +29,7 @@ define('js!SBIS3.CONTROLS.PickerMixin', ['js!SBIS3.CONTROLS.FloatArea'], functio
              *    <options name="pickerConfig">
              *       <options name="verticalAlign">
              *          <option name="side">top<option>
-             *        </options>
+             *       </options>
              *    </options>
              * </pre>
              */
@@ -175,10 +175,10 @@ define('js!SBIS3.CONTROLS.PickerMixin', ['js!SBIS3.CONTROLS.FloatArea'], functio
        * @example
        * <pre>
        *    button.bind('click', function(){
-       *        if(self.isPickerVisible()) {
-       *           self.hidePicker();
-       *        }
-       *      })
+       *       if(self.isPickerVisible()) {
+       *          self.hidePicker();
+       *       }
+       *    })
        * </pre>
        */
       isPickerVisible: function() {

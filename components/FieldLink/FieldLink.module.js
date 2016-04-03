@@ -133,8 +133,8 @@ define('js!SBIS3.CONTROLS.FieldLink',
                  * <pre class="brush: xml">
                  *     <option name="template">js!SBIS3.MyArea.MyDatGridView</option>
                  *     <options name="componentOptions" type="array">
-                 *         <option name="myShowHeadConfig" type="boolean">true</option>
-                 *         <option name="myPageSizeConfig" type="number">5</option>
+                 *        <option name="myShowHeadConfig" type="boolean">true</option>
+                 *        <option name="myPageSizeConfig" type="number">5</option>
                  *     </options>
                  * </pre>
                  * При построении справочника на основе SBIS3.MyArea.MyDatGridView значения опций myShowHeadConfig и myPageSizeConfig
@@ -144,8 +144,8 @@ define('js!SBIS3.CONTROLS.FieldLink',
                  * нужно использовать инструкции шаблонизатора в вёрстке компонента:
                  * <pre class="brush: xml">
                  *     <component data-component="SBIS3.CONTROLS.TreeCompositeView" name="browserView">
-                 *         <option name="showHead">{{=it.myShowHeadConfig}}</option>
-                 *         <option name="pageSize">{{=it.myPageSizeConfig}}</option>
+                 *        <option name="showHead">{{=it.myShowHeadConfig}}</option>
+                 *        <option name="pageSize">{{=it.myPageSizeConfig}}</option>
                  *         . . .
                  *     </component>
                  * </pre>
@@ -173,14 +173,14 @@ define('js!SBIS3.CONTROLS.FieldLink',
                  * Фрагмент верстки:
                  * <pre class="brush: xml">
                  *     <options name="dictionaries" type="array">
-                 *         <options>
-                 *             <option name="caption">Сотрудники</option>
-                 *             <option name="template">js!SBIS3.MyArea.DictEmployees</option>
-                 *         </options>
-                 *         <options>
-                 *             <option name="caption">Партнеры</option>
-                 *             <option name="template">js!SBIS3.MyArea.DictPartners</option>
-                 *         </options>
+                 *        <options>
+                 *           <option name="caption">Сотрудники</option>
+                 *           <option name="template">js!SBIS3.MyArea.DictEmployees</option>
+                 *        </options>
+                 *        <options>
+                 *           <option name="caption">Партнеры</option>
+                 *           <option name="template">js!SBIS3.MyArea.DictPartners</option>
+                 *        </options>
                  *     </options>
                  * </pre>
                  * @see setDictionaries
@@ -223,7 +223,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
                  * Пример 2. Шаблон имеет простую структуру, поэтому его полностью описываем в качестве значения опции.
                  * <pre>
                  *     <option name="itemTemplate" type="string" value="
-                 *         <div class='fieldLinkText'>{{=it.item.get('title')}}</div>
+                 *        <div class='fieldLinkText'>{{=it.item.get('title')}}</div>
                  *     "></option>
                  * </pre>
                  */
@@ -291,7 +291,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
            * <pre>
            *     myFieldLink.setDictionaries(
            *        [{
-           *            'template': 'js!SBIS3.BUH.ChoiceAccount' // Компонент, на основе которого будет построен справочник поля связи
+           *           'template': 'js!SBIS3.BUH.ChoiceAccount' // Компонент, на основе которого будет построен справочник поля связи
            *        }]
            *     );
            * </pre>
@@ -317,7 +317,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
            *     this.showSelector(
            *        'js!SBIS3.MyArea.MyDictionary',
            *        {
-           *            title: 'Сотрудники предприятия'
+           *           title: 'Сотрудники предприятия'
            *        }
            *     );
            * </pre>

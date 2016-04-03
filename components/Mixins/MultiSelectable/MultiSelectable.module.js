@@ -97,9 +97,9 @@ define('js!SBIS3.CONTROLS.MultiSelectable', ['js!SBIS3.CONTROLS.Data.Collection.
              * фрагмент верстки:
              * <pre class="brush: xml">
              *     <options name="selectedKeys" type="array">
-             *         <option>2</option>
-             *         <option>3</option>
-             *         <option>6</option>
+             *        <option>2</option>
+             *        <option>3</option>
+             *        <option>6</option>
              *     </options>
              * </pre>
              * @see multiselect
