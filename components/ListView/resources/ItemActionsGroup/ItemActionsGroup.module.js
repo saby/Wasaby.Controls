@@ -195,8 +195,12 @@ define('js!SBIS3.CONTROLS.ItemActionsGroup',
                 this._activeItem.container,
                 this._activeItem.key,
                 this._activeItem.record);
-            this._notify('onActionActivated', this._activeItem.key);
-            this.hide();
+
+            /* В обработчике могут вызвать destroy */
+            if(!this.isDestroyed()) {
+               this._notify('onActionActivated', this._activeItem.key);
+               this.hide();
+            }
          },
 
          _getItemsContainer: function(){
