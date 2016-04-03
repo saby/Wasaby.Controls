@@ -112,7 +112,7 @@ define('js!SBIS3.CONTROLS.FilterMixin', [
 
                   if((hasResetValue && hasInternalValue && $ws.helpers.isEqualObject(element.resetValue, filter[field])) || (!hasResetValue && !hasInternalValue)) {
 
-                     if (hasResetValue) {
+                     if (element.hasOwnProperty('resetCaption')) {
                         newElement.caption = element.resetCaption;
                      } else {
                         delete newElement.caption;
