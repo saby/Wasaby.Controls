@@ -347,7 +347,7 @@ define([
          });
 
          describe('.addField()', function () {
-            it('should add the field from the declaration', function () {
+            it('should add the field from the declaration for JSON adapter', function () {
                var index = 0,
                   fieldName = 'login',
                   fieldDefault = 'user';
@@ -362,6 +362,33 @@ define([
                rs.each(function(record) {
                   assert.strictEqual(record.get(fieldName), fieldDefault);
                   assert.strictEqual(record.getRawData()[fieldName], fieldDefault);
+               });
+            });
+            it('should add the field from the declaration for SBIS adapter', function () {
+               var rs = new RecordSet({
+                     rawData: getSbisItems(),
+                     adapter: 'adapter.sbis',
+                     idProperty: 'Ид'
+                  }),
+                  index = 0,
+                  fieldName = 'login',
+                  fieldDefault = 'user';
+
+               //Just initiate for creating lazy indexes
+               rs.each(function(record) {
+                  record.getId();
+               });
+               
+               rs.addField({
+                  name: fieldName,
+                  type: 'string',
+                  defaultValue: fieldDefault
+               }, index);
+
+               assert.strictEqual(rs.getFormat().at(index).getName(), fieldName);
+               assert.strictEqual(rs.getFormat().at(index).getDefaultValue(), fieldDefault);
+               rs.each(function(record) {
+                  assert.strictEqual(record.get(fieldName), fieldDefault);
                });
             });
             it('should add the field from the instance', function () {
