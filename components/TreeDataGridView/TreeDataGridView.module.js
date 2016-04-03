@@ -304,10 +304,8 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
          }
          /*TODO пока придрот*/
          if (typeof parentKey != 'undefined' && parentKey !== null && parentContainer) {
-            var parentWrappersCount = $('.controls-TreeView__hierWrapper', parentContainer).length;
-            for (var i = 0; i <= parentWrappersCount; i++) {
-              $('.controls-TreeView__expand', container).before('<div class="controls-TreeView__hierWrapper"></div>');
-            }
+            var parentMargin = parseInt($('.controls-TreeView__expand', parentContainer).parent().css('padding-left'));
+            $('.controls-TreeView__expand', container).parent().css('padding-left', parentMargin + 16);
          }
       },
 
