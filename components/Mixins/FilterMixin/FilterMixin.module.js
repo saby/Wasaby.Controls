@@ -23,13 +23,6 @@ define('js!SBIS3.CONTROLS.FilterMixin', [
              */
          };
 
-   function isFieldResetValue(element, fieldName, filter) {
-      var result =
-            ('resetValue' in element && fieldName in filter && filter[fieldName] === element.resetValue) ||
-            (!('resetValue' in element) && !(fieldName in filter));
-
-      return result;
-   }
    function propertyUpdateWrapper(func) {
       return function() {
          return this.runInPropertiesUpdate(func, arguments);
@@ -110,15 +103,16 @@ define('js!SBIS3.CONTROLS.FilterMixin', [
          }
          if (filter) {
             this._filterStructure = $ws.helpers.map(this._filterStructure, function(element) {
-               var
-                     newElement = $ws.core.clone(element),
-                     field = newElement.internalValueField;
+               var newElement = $ws.core.clone(element),
+                   field = newElement.internalValueField;
 
                function setDescrWithReset(descr, deleteDescr) {
-                  if (('resetValue' in element && field in filter && element.resetValue === filter[field]) ||
-                        (!('resetValue' in element) && !(field in filter)))
-                  {
-                     if ('resetCaption' in element) {
+                  var hasResetValue = element.hasOwnProperty('resetValue'),
+                      hasInternalValue = filter.hasOwnProperty(field);
+
+                  if((hasResetValue && hasInternalValue && $ws.helpers.isEqualObject(element.resetValue, filter[field])) || (!hasResetValue && !hasInternalValue)) {
+
+                     if (element.hasOwnProperty('resetCaption')) {
                         newElement.caption = element.resetCaption;
                      } else {
                         delete newElement.caption;
