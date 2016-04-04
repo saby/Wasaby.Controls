@@ -286,7 +286,6 @@ define('js!SBIS3.CONTROLS.ItemsToolbar',
              //Если режим touch, то отображаем тулбар с анимацией.
              if (this._options.touchMode) {
                 this._trackingTarget();
-                this._currentTarget.container.addClass('controls-ItemsToolbar__swipe-show');
                 if (animate) {
                    toolbarContent = this._getToolbarContent();
                    toolbarContent[0].style.right = -container.offsetWidth + 'px';
@@ -309,12 +308,11 @@ define('js!SBIS3.CONTROLS.ItemsToolbar',
            */
           hide: function(animate) {
              var self = this,
-                 targetContainer, container, toolbarContent;
+                 container, toolbarContent;
 
              this._target = null;
              if (!this._lockingToolbar && this._isVisible) {
                 this._isVisible = false;
-                targetContainer = this._currentTarget.container;
                 container = this.getContainer();
 
                 if (this._options.touchMode || animate) {
@@ -328,13 +326,11 @@ define('js!SBIS3.CONTROLS.ItemsToolbar',
                       complete: function() {
                          container.addClass('ws-hidden');
                          self.hideItemsActions();
-                         targetContainer.removeClass('controls-ItemsToolbar__swipe-show');
                       }
                    });
                 } else {
                    container.addClass('ws-hidden');
                    this.hideItemsActions();
-                   targetContainer.removeClass('controls-ItemsToolbar__swipe-show');
                 }
                 this._currentTarget = null;
              }
