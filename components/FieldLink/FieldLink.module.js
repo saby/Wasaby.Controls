@@ -178,8 +178,8 @@ define('js!SBIS3.CONTROLS.FieldLink',
                  * 2. Для организованного компонента:
                  *    1) {@link https://wi.sbis.ru/doc/platform/developmentapl/workdata/binding-data-and-views/ определим} и {@link https://wi.sbis.ru/doc/platform/developmentapl/workdata/logicworkapl/logic/source/ зададим} источник данных;
                  *    2) если требуется режим множественного выбора записей:
-                 *       устанавливаем его с помощью опции {@link multiselect};
-                 *       добавляем кнопку, по клику на которую выбранные записи будут переданы в поле связи,
+                 *     - устанавливаем его с помощью опции {@link multiselect};
+                 *     - добавляем кнопку, по клику на которую выбранные записи будут переданы в поле связи,
                  *       например, для кнопки класса {@link SBIS3.CONTROLS.Button} создаем обработчик: по событию {@link SBIS3.CONTROLS.Clickable#onActivated onActivated}
                  *       (клике на кнопку) отправляем команду на закрытие справочника с сохранением массива идентификаторов выбранных элементов:
                  *       <pre>
@@ -187,6 +187,15 @@ define('js!SBIS3.CONTROLS.FieldLink',
                  *             self.sendCommand('close', MyDataGridView.getSelectedKeys());
                  *          });
                  *       </pre>
+                 *     - для кнопки устанавливаем CSS-класс, который прижмет ее к верху диалога выбора:
+                 *     <pre class="brush: xml">
+                 *        <div class="ws-window-titlebar-custom"> <!-- На данный элемент установлен служебный CSS-класс, который прижимает его к верху диалога выбора -->
+                 *           <component data-component="SBIS3.CONTROLS.Button" name="SelectButton" class="controls-demo-FieldLinkDemoTemplate__SelectButton"> <!-- Конфигурация кнопки, используется для подтверждения выбранных значений -->
+                 *              <option name="caption">Выбрать</option> <!-- Устанавливаем подпись на кнопке -->
+                 *           </component>
+                 *        </div>
+                 *     </pre>
+                 *
                  * Возможно, требуется выбор данных в поле связи из нескольких справочников.
                  * В этом случае нужно организовать несколько компонентов, и в настройках справочников для поля связи,
                  * в опции {@link SBIS3.CONTROLS.FieldLink/Dictionaries.typedef caption} для каждого компонента следует указать название,
