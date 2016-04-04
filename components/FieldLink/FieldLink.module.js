@@ -152,7 +152,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
                  * @translatable caption
                  */
                 /**
-                 * @cfg {dictionaries[]} Устанавливает справочники для поля связи.
+                 * @cfg {Dictionaries[]} Устанавливает справочники для поля связи.
                  * @remark
                  * Справочник - это диалог выбора значений. Набор значений диалога строится на основе любого компонента,
                  * который можно использовать для {@link https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/ отображения данных в списках}.
