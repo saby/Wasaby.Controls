@@ -77,12 +77,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
          /**
           * @var {Object} индексы
           */
-         _indexTree: {},
-
-         /**
-          * @member {Array.<String>} Описание всех полей, полученных из данных в "сыром" виде
-          */
-         _fields: null
+         _indexTree: {}
       },
 
       $constructor: function (cfg) {
@@ -123,34 +118,33 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
       addField: function(format, at, value) {
          format = this._buildField(format);
          RecordSet.superclass.addField.call(this, format, at);
-         this._getRawDataAdapter().addField(format, at);
-         this._fields = null;
 
-         if (value !== undefined) {
-            this.each(function(record) {
-               record.set(format.getName(), value);
-            });
-         }
+         var name = format.getName(),
+            methodName = 'addField';
+         this.each(function(record) {
+            record.notifyFormatChanged(methodName, arguments);
+            if (value !== undefined) {
+               record.set(name, value);
+            }
+         });
       },
 
       removeField: function(name) {
          RecordSet.superclass.removeField.call(this, name);
-         this._getRawDataAdapter().removeField(name);
-         this._fields = null;
+
+         var methodName = 'removeField';
+         this.each(function(record) {
+            record.notifyFormatChanged(methodName, arguments);
+         });
       },
 
       removeFieldAt: function(at) {
          RecordSet.superclass.removeFieldAt.call(this, at);
-         this._getRawDataAdapter().removeFieldAt(at);
-         this._fields = null;
-      },
 
-      _getRawDataFields: function() {
-         return this._fields || (this._fields = this._getRawDataAdapter().getFields());
-      },
-
-      _getRawDataFormat: function(name) {
-         return this._getRawDataAdapter().getFormat(name);
+         var methodName = 'removeFieldAt';
+         this.each(function(record) {
+            record.notifyFormatChanged(methodName, arguments);
+         });
       },
 
       /**
@@ -173,8 +167,6 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
          if (!keepFormat) {
             this._clearFormat();
          }
-         this._resetRawDataAdapter();
-         this._fields = null;
       },
 
       //endregion SBIS3.CONTROLS.Data.FormattableMixin

@@ -116,7 +116,7 @@ define('js!SBIS3.CONTROLS.Data.Adapter.SbisFormatMixin', [
          this._checkFieldIndex(at, true);
 
          this._format[name] = format;
-         this._fieldIndexes = null;
+         this._resetFieldIndexes();
          this._data.s.splice(at, 0, this._buildS(format));
          this._buildD(at, format.getDefaultValue());
       },
@@ -127,7 +127,7 @@ define('js!SBIS3.CONTROLS.Data.Adapter.SbisFormatMixin', [
             throw new ReferenceError(this._moduleName + '::removeField(): field "' + name + '" is not exists');
          }
          delete this._format[name];
-         this._fieldIndexes = null;
+         this._resetFieldIndexes();
          this._data.s.splice(index, 1);
          this._removeD(index);
       },
@@ -136,7 +136,7 @@ define('js!SBIS3.CONTROLS.Data.Adapter.SbisFormatMixin', [
          this._checkFieldIndex(index);
          var name = this._data.s[index].n;
          delete this._format[name];
-         this._fieldIndexes = null;
+         this._resetFieldIndexes();
          this._data.s.splice(index, 1);
          this._removeD(index);
       },
@@ -157,6 +157,10 @@ define('js!SBIS3.CONTROLS.Data.Adapter.SbisFormatMixin', [
             }
          }
          return this._fieldIndexes.hasOwnProperty(name) ? this._fieldIndexes[name] : -1;
+      },
+      
+      _resetFieldIndexes: function (name) {
+         this._fieldIndexes = null;
       },
 
       _checkFieldIndex: function(index, appendMode) {
