@@ -397,9 +397,13 @@ define([
                assert.strictEqual(model.getIdProperty(), clone.getIdProperty());
             });
             it('should give equal result of toObject', function () {
-               var clone = model.clone();
-               assert.notEqual(model.toObject(), clone.toObject());
-               assert.deepEqual(model.toObject(), clone.toObject());
+               var clone = model.clone(),
+                  modelObj = model.toObject(),
+                  cloneObj = clone.toObject();
+               //dates can be different
+               delete modelObj.date;
+               delete cloneObj.date;
+               assert.deepEqual(modelObj, cloneObj);
             });
             it('should give equal fields for not an Object', function () {
                var clone = model.clone();
