@@ -32,12 +32,12 @@ define('js!SBIS3.CONTROLS.ItemsToolbar',
                  */
                 itemsActions: []
              },
-             _trackMove: null,         // Следилка за перемещением target'a, относительно которого отображается тулбар
              _itemsActions: null,      // Инстанс опций записей
              _editActions: null,       // todo: Заменить на компонент "Toolbar" (когда тот будет)
              _target: null,            // Элемент - кандидат на отображение тулбара
              _currentTarget: null,     // Элемент, относительно которого сейчас отображается тулбар
-             _lockingToolbar: false    // Состояние заблокированности тулбара
+             _lockingToolbar: false,    // Состояние заблокированности тулбара
+             _isVisible: false
           },
           $constructor: function() {
              this._publish('onShowItemActionsMenu', 'onItemActionActivated');
@@ -134,7 +134,10 @@ define('js!SBIS3.CONTROLS.ItemsToolbar',
            */
           setItemsActions: function(itemsActions) {
              this._options.itemsActions = itemsActions;
-             this._itemsActions ? this._itemsActions.setItems(this._options.itemsActions) : this._initItemsActions();
+
+             if(this._itemsActions) {
+                this._itemsActions.setItems(this._options.itemsActions);
+             }
           },
           /**
            * Отображает операции над записью
@@ -182,20 +185,14 @@ define('js!SBIS3.CONTROLS.ItemsToolbar',
            * @private
            */
           _trackingTarget: function() {
-             if (!this._trackMove) {
-                this._trackMove = $ws.helpers.trackElement(this._currentTarget.container, true);
-                this._trackMove.subscribe('onMove', this._recalculatePosition, this);
-             }
+             $ws.helpers.trackElement(this._currentTarget.container, true);
           },
           /**
            * Отключает слежение за позицей currentTarget
            * @private
            */
           _untrackingTarget: function() {
-             if (this._trackMove) {
-                this._trackMove.unsubscribe('onMove', this._recalculatePosition);
-                this._trackMove = null;
-             }
+             $ws.helpers.trackElement(this._currentTarget.container, false);
           },
           /**
            * Пересчитывает позицию тулбара при изменении позиции currentTarget
@@ -285,6 +282,7 @@ define('js!SBIS3.CONTROLS.ItemsToolbar',
              position = this._getPosition(target);
              this._setPosition(position);
              this.getContainer().removeClass('ws-hidden');
+             this._isVisible = true;
              //Если режим touch, то отображаем тулбар с анимацией.
              if (this._options.touchMode) {
                 this._trackingTarget();
@@ -309,13 +307,19 @@ define('js!SBIS3.CONTROLS.ItemsToolbar',
            * @param {boolean} animate Анимировать ли скрытие
            */
           hide: function(animate) {
-             var container,
-                 toolbarContent,
-                 self = this;
+             var self = this,
+                 container, toolbarContent;
+
              this._target = null;
-             if (!this._lockingToolbar) {
+             if (!this._lockingToolbar && this._isVisible) {
+                this._isVisible = false;
+                container = this.getContainer();
+
+                if (this._options.touchMode || animate) {
+                   this._untrackingTarget();
+                }
+
                 if (this._options.touchMode && animate) {
-                   container = this.getContainer();
                    toolbarContent = this._getToolbarContent();
                    toolbarContent.animate({right: -container.width()}, {
                       duration: 350,
@@ -325,11 +329,8 @@ define('js!SBIS3.CONTROLS.ItemsToolbar',
                       }
                    });
                 } else {
-                   this.getContainer().addClass('ws-hidden');
+                   container.addClass('ws-hidden');
                    this.hideItemsActions();
-                   if (this._options.touchMode) {
-                      this._untrackingTarget();
-                   }
                 }
                 this._currentTarget = null;
              }

@@ -26,6 +26,7 @@ define('js!SBIS3.CONTROLS.ItemActionsGroup',
             _itemActionsMenuButton: undefined,
             _itemActionsHiddenButton: [],
             _activeItem: undefined,
+            _activeCls: 'controls-ItemActions__activeItem',
             _options: {
                touchMode: false,
                linkedControl: undefined
@@ -134,7 +135,7 @@ define('js!SBIS3.CONTROLS.ItemActionsGroup',
 
             this._onBeforeMenuShowHandler();
             this._itemActionsMenu.show();
-            this._activeItem.container.addClass('controls-ItemActions__activeItem');
+            this._activeItem.container.addClass(this._activeCls);
             this._itemActionsMenu.recalcPosition(true);
          },
 
@@ -165,8 +166,27 @@ define('js!SBIS3.CONTROLS.ItemActionsGroup',
           * Показывает операции над записью
           */
          show: function(hoveredItem) {
+            var activeItemContainer = this._activeItem && this._activeItem.container;
             this._activeItem = hoveredItem;
+
+            if(this._options.touchMode) {
+               if(activeItemContainer) {
+                  activeItemContainer.removeClass(this._activeCls);
+               }
+               hoveredItem.container.addClass(this._activeCls);
+            }
             ItemActionsGroup.superclass.show.call(this);
+         },
+
+         /**
+          * Скрывает операции над записью
+          */
+         hide: function() {
+            if(this._activeItem.container && this._options.touchMode) {
+               this._activeItem.container.removeClass(this._activeCls);
+            }
+
+            ItemActionsGroup.superclass.hide.call(this);
          },
          /**
           * Задаёт новые операции над записью
