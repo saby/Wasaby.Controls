@@ -308,6 +308,10 @@ define('js!SBIS3.CONTROLS.TextBox', ['js!SBIS3.CONTROLS.TextBoxBase','html!SBIS3
 
       _inputRegExp: function (e, regexp) {
          var keyCode = e.which || e.keyCode;
+         //Клавиши стрелок, delete, backspace и тд
+         if (!e.charCode){
+            return true;
+         }
          if (keyCode < 32 || e.ctrlKey || e.altKey) {
             return false;
          }
