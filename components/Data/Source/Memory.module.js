@@ -315,6 +315,15 @@ define('js!SBIS3.CONTROLS.Data.Source.Memory', [
                adapter.forTable(data).getEmpty()
             ),
             compare = function(given, expect) {
+               if (expect instanceof Array) {
+                  for (var i = 0; i < expect.length; i++) {
+                     if (compare(given, expect[i])) {
+                        return true;
+                     }
+                  }
+                  return false;
+               }
+
                if (given && given instanceof Array) {
                   //FIXME: если в поле хранится массив, то ищем совпадение по любому из элементов (требуется для поддержки типа "Иерархия"). Возможно поможет разделение иерархии на 2 поля.
                   return $ws.helpers.reduce(given, function(prev, current) {

@@ -38,7 +38,7 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
    var SbisService = Rpc.extend(/** @lends SBIS3.CONTROLS.Data.Source.SbisService.prototype */{
       /**
        * @typedef {Object} Binding
-       * @property {String} [create=Создать Имя метода для создания записи через {@link create}
+       * @property {String} [create=Создать] Имя метода для создания записи через {@link create}
        * @property {String} [read=Прочитать] Имя метода для чтения записи через {@link read}
        * @property {String} [update=Записать] Имя метода для обновления записи через {@link update}
        * @property {String} [destroy=Удалить] Имя метода для удаления записи через {@link destroy}
