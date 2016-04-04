@@ -11,16 +11,6 @@
             <option name="title">ФИО</option>
             <option name="field">ФИО</option>
             <option name="className">controls-DataGridView-cell-overflow-ellipsis controls-demo-FieldLinkWithEditInPlace__topAlign</option> <!-- Дополнительный CSS-класс, который будет установлен для контейнера визуального отображения ячейки -->
-            <option name="editor"> <!-- Конфигурация редактора колонки для режима редактирования по месту -->
-               <component data-component="SBIS3.CONTROLS.TextBox" class="docs-FieldWithEditInPlace__textBox"> <!-- Конфигурация поля ввода -->
-                  <option name="text" bind="ФИО"></option> <!-- Связываем значения поля ввода с полем контекста ФИО -->
-                  <options name="validators" type="array"> <!-- Устанавливаем валидатор вводимого значения -->
-                     <options>
-                        <option name="validator" type="function">js!SBIS3.CORE.CoreValidators:required</option> <!-- Валидатор обязательного заполнения поля ввода -->
-                     </options>
-                  </options>
-               </component>
-            </option>
             <option name="cellTemplate">html!SBIS3.CONTROLS.Demo.FieldLinkWithEditInPlace/resources/cellFIO</option>
          </options>
          <options>
