@@ -290,7 +290,7 @@ define('js!SBIS3.CONTROLS.ItemsToolbar',
                    toolbarContent = this._getToolbarContent();
                    toolbarContent[0].style.right = -container.offsetWidth + 'px';
                    container.style.height = target.size.height + 'px';
-                   toolbarContent.animate({right: position.right}, 350);
+                   toolbarContent.animate({right: 0}, 350);
                 }
              }
           },
