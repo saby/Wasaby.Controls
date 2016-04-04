@@ -149,7 +149,11 @@ define('js!SBIS3.CONTROLS.ComboBox', [
              * @cfg {String} Форматирование значений в списке
              * @noShow
              */
-            valueFormat: ''
+            valueFormat: '',
+            /*
+
+            */
+            autocomplete: false
          }
       },
 
@@ -166,8 +170,10 @@ define('js!SBIS3.CONTROLS.ComboBox', [
             return false;
          });
 
-         this.subscribe('onSearch', this._onSearch);
-         this.subscribe('onReset', this._onResetSearch);
+         if (this._options.autocomplete){
+            this.subscribe('onSearch', this._onSearch);
+            this.subscribe('onReset', this._onResetSearch);
+         }
 
          /*обрабочики кликов TODO mouseup!!*/
          this._container.click(function (e) {
@@ -296,13 +302,12 @@ define('js!SBIS3.CONTROLS.ComboBox', [
 
       _drawSelectedItem: function (key, index) {
 
-            var item, def;
-            def = new $ws.proto.Deferred();
-            if (this._dataSet) {
-               if ((index !== null) && (typeof index != 'undefined') && (index != '-1')) {
-                  item = this._itemsProjection.at(index).getContents();
-                  def.callback(item);
-               }
+         var item, def;
+         def = new $ws.proto.Deferred();
+         if (this._dataSet) {
+            if ((index !== null) && (typeof index != 'undefined') && (index != '-1')) {
+               item = this._itemsProjection.at(index).getContents();
+               def.callback(item);
             }
          }
          else {
@@ -364,8 +369,10 @@ define('js!SBIS3.CONTROLS.ComboBox', [
                if (strKey == 'null') {
                   strKey = null;
                }
-               self._itemsProjection.setFilter(null);
-               self.redraw();
+               if (this._options.autocomplete){
+                  self._itemsProjection.setFilter(null);
+                  self.redraw();
+               }
                self.setSelectedKey(strKey);
                self.hidePicker();
             }
