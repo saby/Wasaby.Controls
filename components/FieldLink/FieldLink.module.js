@@ -270,9 +270,6 @@ define('js!SBIS3.CONTROLS.FieldLink',
           init: function() {
              FieldLink.superclass.init.apply(this, arguments);
              this.getChildControlByName('fieldLinkMenu').setItems(this._options.dictionaries);
-
-             this._afterFieldWrapper = this._container.find('.controls-TextBox__afterFieldWrapper');
-             this._beforeFieldWrapper = this._container.find('.controls-TextBox__beforeFieldWrapper');
           },
 
           /**
@@ -328,6 +325,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
            */
           showSelector: function(template, componentOptions) {
              var oldRecArray = [],
+                 selectedKeys = this._isEmptySelection() ? [] : this.getSelectedKeys(),
                  selectedItems, oldRec;
 
              if(this._options.oldViews) {
@@ -353,7 +351,9 @@ define('js!SBIS3.CONTROLS.FieldLink',
                  componentOptions,
                  /* Дополнительный конфиг, который нужно прокинуть в selector */
                  {
-                    currentValue: this._isEmptySelection() ? [] : this.getSelectedKeys(),
+                    /* FIXME Для старых предствелений, удалить */
+                    currentValue: selectedKeys,
+                    currentSelectedKeys: selectedKeys,
                     selectorFieldLink: true,
                     multiSelect: this._options.multiselect,
                     selectedRecords: oldRecArray
@@ -426,6 +426,9 @@ define('js!SBIS3.CONTROLS.FieldLink',
           _setVariables: function() {
              this._linksWrapper = this._container.find('.controls-FieldLink__linksWrapper');
              this._inputWrapper = this._container.find('.controls-TextBox__fieldWrapper');
+
+             this._afterFieldWrapper = this._container.find('.controls-TextBox__afterFieldWrapper');
+             this._beforeFieldWrapper = this._container.find('.controls-TextBox__beforeFieldWrapper');
 
              if(this._options.multiselect) {
                 this._dropAllLink = this._container.find('.controls-FieldLink__dropAllLinks');

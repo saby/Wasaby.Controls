@@ -429,6 +429,8 @@ define('js!SBIS3.CONTROLS.ListView',
                resultsText : 'Итого',
                resultsTpl: undefined
             },
+            //Флаг обозначает необходимость компенсировать подгрузку по скроллу вверх, ее нельзя делать безусловно, так как при подгрузке вверх могут добавлятся элементы и вниз тоже
+            _needSrollTopCompensation: false,
             _scrollWatcher : undefined,
             _updateByReload: false //todo: Убрать в 150, когда будет правильный рендер изменившихся данных. Флаг, означающий то, что обновление происходит из-за перезагрузки данных.
          },
@@ -1377,6 +1379,7 @@ define('js!SBIS3.CONTROLS.ListView',
                      records = dataSet.toArray();
                      if (self._options.infiniteScroll === 'up') {
                         self._containerScrollHeight = self._scrollWatcher.getScrollHeight();
+                        self._needSrollTopCompensation = true;
                      }
                      //TODO Провести тесты с unshift и Array.insert
                      //сортируем пришедшие данные в обратном порядке
@@ -1425,8 +1428,9 @@ define('js!SBIS3.CONTROLS.ListView',
          _moveTopScroll : function(){
             var scrollAmount;
             //сюда попадем только когда уже точно есть скролл
-            if (this.isInfiniteScroll() && this._options.infiniteScroll == 'up'){
+            if (this.isInfiniteScroll() && this._options.infiniteScroll == 'up' && this._needSrollTopCompensation){
                scrollAmount = this._scrollWatcher.getScrollHeight() - this._containerScrollHeight;
+               this._needSrollTopCompensation = false;
                //Если запускаем 1ый раз, то нужно поскроллить в самый низ (ведь там "начало" данных), в остальных догрузках скроллим вниз на
                //разницы величины скролла (т.е. на сколько добавилось высоты, на столько и опустили). Получается плавно
                //Так же цчитываем то, что индикатор появляется только на время загрузки и добавляет свою высоту
