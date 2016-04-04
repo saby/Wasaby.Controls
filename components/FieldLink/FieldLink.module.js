@@ -166,7 +166,15 @@ define('js!SBIS3.CONTROLS.FieldLink',
                  *
                  * Опишем основные шаги в настройке справочника для поля связи.
                  * 1. Организуем компонент, на основе которого будет выстроен набор значений диалога выбора для поля связи,
-                 *    он будет указан в опции {@link SBIS3.CONTROLS.FieldLink/Dictionaries.typedef template} при настройке справочников.
+                 *    он будет указан в опции {@link SBIS3.CONTROLS.FieldLink/Dictionaries.typedef template} при настройке справочников:
+                 *    <pre class="brush: xml">
+                 *        <options name="dictionaries" type="array">
+                 *           <options>
+                 *              <option name="template">js!SBIS3.MyArea.MyDict01</option>
+                 *              . . .
+                 *           </options>
+                 *        </options>
+                 *    </pre>
                  * 2. Для организованного компонента:
                  *    1) {@link https://wi.sbis.ru/doc/platform/developmentapl/workdata/binding-data-and-views/ определим} и {@link https://wi.sbis.ru/doc/platform/developmentapl/workdata/logicworkapl/logic/source/ зададим} источник данных;
                  *    2) если требуется режим множественного выбора записей:
@@ -183,7 +191,20 @@ define('js!SBIS3.CONTROLS.FieldLink',
                  * В этом случае нужно организовать несколько компонентов, и в настройках справочников для поля связи,
                  * в опции {@link SBIS3.CONTROLS.FieldLink/Dictionaries.typedef caption} для каждого компонента следует указать название,
                  * которое определит его название в меню выбора нужного справочника:
-                 * ![](/FieldLink02.png)
+                 * <pre class="brush: xml">
+                 *     <options name="dictionaries" type="array">
+                 *        <options>
+                 *           <option name="caption">Филиал 1</option>
+                 *           <option name="template">js!SBIS3.MyArea.MyDict01</option>
+                 *           . . .
+                 *        </options>
+                 *        <options>
+                 *           <option name="caption">Филиал 2</option>
+                 *           <option name="template">js!SBIS3.MyArea.MyDict02</option>
+                 *           . . .
+                 *        </options>
+                 *     </options>
+                 * </pre>
                  *
                  * Открыть справочник через меню можно в новом диалоге или во всплывающей панели; нужный режим можно
                  * установить с помощью опции {@link chooserMode}.
