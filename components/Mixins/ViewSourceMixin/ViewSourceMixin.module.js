@@ -32,7 +32,7 @@ define('js!SBIS3.CONTROLS.ViewSourceMixin', [
             history = $ws.single.SessionStorage.get(historyId);
 
             if (history) {
-               serializedHistory = $ws.helper.deserializeURLData(history);
+               serializedHistory = $ws.helpers.deserializeURLData(history);
                if (serializedHistory && serializedHistory[0] && serializedHistory[0].isActiveFilter) {
                   historyFilter = serializedHistory[0].viewFilter;
                }

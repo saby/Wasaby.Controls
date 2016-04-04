@@ -809,6 +809,8 @@ define('js!SBIS3.CONTROLS.DSMixin', [
          this._dropPageSave();
          if (this._dataSource && !noLoad) {
             this.reload(this._options.filter, this.getSorting(), 0, this.getPageSize());
+         } else {
+            this._notifyOnPropertyChanged('filter');
          }
       },
       /**
@@ -897,7 +899,11 @@ define('js!SBIS3.CONTROLS.DSMixin', [
          this._unsetItemsEventHandlers();
          this._items = null;
          this._prepareConfig(undefined, items);
-         this.redraw();
+          if(items instanceof Array) {
+             this.reload();
+          } else {
+             this.redraw();
+          }
       },
 
       _drawItemsCallback: function () {
