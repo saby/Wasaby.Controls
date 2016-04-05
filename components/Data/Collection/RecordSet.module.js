@@ -77,12 +77,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
          /**
           * @var {Object} индексы
           */
-         _indexTree: {},
-
-         /**
-          * @member {Array.<String>} Описание всех полей, полученных из данных в "сыром" виде
-          */
-         _fields: null
+         _indexTree: {}
       },
 
       $constructor: function (cfg) {
@@ -123,34 +118,33 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
       addField: function(format, at, value) {
          format = this._buildField(format);
          RecordSet.superclass.addField.call(this, format, at);
-         this._getRawDataAdapter().addField(format, at);
-         this._fields = null;
 
-         if (value !== undefined) {
-            this.each(function(record) {
-               record.set(format.getName(), value);
-            });
-         }
+         var name = format.getName(),
+            methodName = 'addField';
+         this.each(function(record) {
+            record.notifyFormatChanged(methodName, arguments);
+            if (value !== undefined) {
+               record.set(name, value);
+            }
+         });
       },
 
       removeField: function(name) {
          RecordSet.superclass.removeField.call(this, name);
-         this._getRawDataAdapter().removeField(name);
-         this._fields = null;
+
+         var methodName = 'removeField';
+         this.each(function(record) {
+            record.notifyFormatChanged(methodName, arguments);
+         });
       },
 
       removeFieldAt: function(at) {
          RecordSet.superclass.removeFieldAt.call(this, at);
-         this._getRawDataAdapter().removeFieldAt(at);
-         this._fields = null;
-      },
 
-      _getRawDataFields: function() {
-         return this._fields || (this._fields = this._getRawDataAdapter().getFields());
-      },
-
-      _getRawDataFormat: function(name) {
-         return this._getRawDataAdapter().getFormat(name);
+         var methodName = 'removeFieldAt';
+         this.each(function(record) {
+            record.notifyFormatChanged(methodName, arguments);
+         });
       },
 
       /**
@@ -173,8 +167,6 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
          if (!keepFormat) {
             this._clearFormat();
          }
-         this._resetRawDataAdapter();;
-         this._fields = null;
       },
 
       //endregion SBIS3.CONTROLS.Data.FormattableMixin
@@ -241,6 +233,26 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
       },
 
       /**
+       * Возвращает запись по ключу
+       * @param id
+       * @returns {*}
+       */
+      getRecordById: function (id) {
+         return this.at(
+            this.getIndexByValue(this._options.idProperty, id)
+         );
+      },
+      /**
+       * Возвращает запись по ключу
+       * @param key
+       * @returns {*}
+       * @deprecated метод будет удален в 3.7.4 используйте getRecordById
+       */
+      getRecordByKey: function (key) {
+         return this.getRecordById(key);
+      },
+
+      /**
        * Проверяет эквивалентность формата и записей другого рекордсета.
        * @param {SBIS3.CONTROLS.Data.Record} record Рекордсет, эквивалентность которого проверяется
        * @returns {Boolean}
@@ -264,7 +276,6 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
 
       /**
        * Возвращает копию рекордсета
-       * @public
        * @returns {SBIS3.CONTROLS.Data.Collection.RecordSet}
        */
       clone: function () {
@@ -341,31 +352,12 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
             mark(key);
          }
       },
-      /**
-       * Возвращает запись по ключу
-       * @param id
-       * @public
-       * @returns {*}
-       */
-      getRecordById: function (id) {
-         return this.at(
-            this.getIndexByValue(this._options.idProperty, id)
-         );
-      },
-      /**
-       * @deprecated метод будет удален в 3.7.4 используйте getRecordById
-       * @param key
-       * @returns {*}
-       */
-      getRecordByKey: function (key) {
-         return this.getRecordById(key);
-      },
+
       /**
        * Возвращает индекс элемента по ключу
        * @param id
-       * @deprecated метод будет удален в 3.7.4 используйте getIndex(getRecordById())
-       * @public
        * @returns {*}
+       * @deprecated метод будет удален в 3.7.4 используйте getIndex(getRecordById())
        */
       getIndexById: function (id) {
          return this.getIndexByValue(this._options.idProperty, id);
@@ -598,47 +590,101 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
       },
 
       assign: function (items) {
-         var checkFormat = true,
-            adapter;
+         var adapter;
          if (items && $ws.helpers.instanceOfModule(items, 'SBIS3.CONTROLS.Data.Collection.RecordSet')) {
             adapter = items.getAdapter().forTable(items.getRawData());
-            checkFormat = false;
          } else {
             adapter = this._getRawDataAdapter();
          }
          this._assignRawData(adapter.getEmpty());
 
-         items = this._itemsToArray(items);
-         for (var i = 0, len = items.length; i < len; i++) {
-            this._checkItem(items[i], i > 0 && checkFormat);
-            this._getRawDataAdapter().add(items[i].getRawData());
-         }
+         items = this._addItemsToRawData(items, undefined, true);
          RecordSet.superclass.assign.call(this, items);
       },
 
       append: function (items) {
-         var hasItems = this.getCount() > 0;
-         items = this._itemsToArray(items);
-         for (var i = 0, len = items.length; i < len; i++) {
-            this._checkItem(items[i], hasItems || i > 0);
-            this._getRawDataAdapter().add(items[i].getRawData());
-         }
+         items = this._addItemsToRawData(items);
          RecordSet.superclass.append.call(this, items);
       },
 
       prepend: function (items) {
-         var hasItems = this.getCount() > 0;
-         items = this._itemsToArray(items);
-         for (var i = 0, len = items.length; i < len; i++) {
-            this._checkItem(items[i], hasItems || i > 0);
-            this._getRawDataAdapter().add(items[i].getRawData(), i);
-         }
+         items = this._addItemsToRawData(items, 0);
          RecordSet.superclass.prepend.call(this, items);
       },
 
       //endregion SBIS3.CONTROLS.Data.Collection.List
 
       //region Protected methods
+
+      /**
+       * Вставляет сырые данные записей в сырые данные рекордсета
+       * @param {SBIS3.CONTROLS.Data.Collection.IEnumerable|Array} items Коллекция записей
+       * @param {Number} [at] Позиция вставки
+       * @param {Boolean} [replace=false] Режим полной замены
+       * @returns {Array}
+       * @protected
+       */
+      _addItemsToRawData: function (items, at, replace) {
+         var isEqualFormat = this._isEqualItemsFormat(items, replace),
+            hasItems = replace ? false : this.getCount() > 0,
+            adapter = this._getRawDataAdapter(),
+            item;
+
+         items = this._itemsToArray(items);
+         for (var i = 0, len = items.length; i < len; i++) {
+            item = items[i];
+            if (!isEqualFormat) {
+               this._checkItem(
+                  item,
+                  hasItems || i > 0
+               );
+
+            }
+            adapter.add(
+               item.getRawData(),
+               at === undefined ? undefined : at + i
+            );
+         }
+
+         return items;
+      },
+
+      /**
+       * Возвращает признак, что коллекция является рекордсетом с эквивалентным форматом
+       * @param {SBIS3.CONTROLS.Data.Collection.IEnumerable|Array} [items] Коллекция
+       * @param {Boolean} [replace=false] Режим полной замены
+       * @returns {Boolean}
+       * @protected
+       */
+      _isEqualItemsFormat: function (items, replace) {
+         if (items && $ws.helpers.instanceOfModule(items, 'SBIS3.CONTROLS.Data.Collection.RecordSet')) {
+            if (replace) {
+               return true;
+            }
+            if (this._getFormat().isEqual(items.getFormat())) {
+               return true;
+            }
+            $ws.single.ioc.resolve('ILogger').log(this._moduleName, 'The outer recordset format is not equal to the recordset format.');
+         }
+         return false;
+      },
+
+      /**
+       * Проверяет, что переданный элемент - это запись с идентичным форматом
+       * @param {*} item Запись
+       * @param {Boolean} [checkFormat=true] Проверять формат
+       * @protected
+       */
+      _checkItem: function (item, checkFormat) {
+         if (!item || !$ws.helpers.instanceOfModule(item, 'SBIS3.CONTROLS.Data.Record')) {
+            throw new Error('Item should be an instance of SBIS3.CONTROLS.Data.Record');
+         }
+         if ((checkFormat === undefined || checkFormat === true) &&
+            !this._getFormat().isEqual(item.getFormat())
+         ) {
+            $ws.single.ioc.resolve('ILogger').log(this._moduleName, 'The record format is not equal to the recordset format.');
+         }
+      },
 
       /**
        * Создает новый экземпляр модели
@@ -671,24 +717,6 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
             RecordSet.superclass.add.call(this, record);
          }
          this._reindex();
-      },
-
-      /**
-       * Проверяет, что переданный элемент - это запись с идентичным форматом
-       * @param {*} item Запись
-       * @param {Boolean} [checkFormat=true] Запись
-       * @protected
-       */
-      _checkItem: function (item, checkFormat) {
-         if (!item || !$ws.helpers.instanceOfModule(item, 'SBIS3.CONTROLS.Data.Record')) {
-            throw new Error('Item should be an instance of SBIS3.CONTROLS.Data.Record');
-         }
-         if ((checkFormat === undefined || checkFormat === true) &&
-            !this._getFormat().isEqual(item.getFormat())
-         ) {
-            $ws.single.ioc.resolve('ILogger').error(this._moduleName, 'Record format is not equal to recordset format.');
-         }
-         return true;
       }
 
       //endregion Protected methods

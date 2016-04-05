@@ -89,7 +89,8 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', ['js!SBIS3.CORE.Control',
          _breadCrumbs : [],
          _lastParent : undefined,
          _lastDrawn : undefined,
-         _lastPath : []
+         _lastPath : [],
+         _loadedNodes: {}
       },
 
       $constructor : function() {
@@ -222,13 +223,14 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', ['js!SBIS3.CORE.Control',
             this._folderOffsets[key || 'null'] = 0;
             this._options.openedPath[key] = true;
             this._closeAllExpandedNode(key);
-            if (!tree[key] && this._options.partialyReload) {
+            if (!this._loadedNodes[key] && this._options.partialyReload) {
                this._toggleIndicator(true);
                this._notify('onBeforeDataLoad', this.getFilter(), this.getSorting(), 0, this._limit);
                return this._callQuery(this._createTreeFilter(key), this.getSorting(), 0, this._limit).addCallback(function (dataSet) {
                   // TODO: Отдельное событие при загрузке данных узла. Сделано так как тут нельзя нотифаить onDataLoad,
                   // так как на него много всего завязано. (пользуется Янис)
                   self._folderHasMore[key] = dataSet.getMetaData().more;
+                  self._loadedNodes[key] = true;
                   self._notify('onDataMerge', dataSet);
                   self._toggleIndicator(false);
                   self._nodeDataLoaded(key, dataSet);
@@ -457,6 +459,7 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', ['js!SBIS3.CORE.Control',
             this._lastParent = undefined;
             this._lastDrawn = undefined;
             this._lastPath = [];
+            this._loadedNodes = {};
          },
          _keyboardHover: function(e) {
             switch(e.which) {

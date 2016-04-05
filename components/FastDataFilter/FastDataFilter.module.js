@@ -16,7 +16,7 @@ define('js!SBIS3.CONTROLS.FastDataFilter',
       /**
        * Контрол, отображающий набор выпадающих списков SBIS3.CONTROLS.DropdownList и работающий с фильтром в контексте
        * @class SBIS3.CONTROLS.FastDataFilter
-       * @extends $ws.proto.Control
+       * @extends $ws.proto.CompoundControl
        * @author Крайнов Дмитрий Олегович
        * @mixes SBIS3.CONTROLS.DSMixin
        * @mixes SBIS3.CONTROLS.FilterMixin
@@ -88,6 +88,7 @@ define('js!SBIS3.CONTROLS.FastDataFilter',
          },
          init: function () {
             FastDataFilter.superclass.init.apply(this, arguments);
+            this._container.removeClass('ws-area');
             //Непонятно, сейчас приходится делать setItems из прикладного кода
             //this.reload();
          },

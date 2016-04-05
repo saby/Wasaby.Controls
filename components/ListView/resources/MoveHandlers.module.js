@@ -28,15 +28,20 @@ define('js!SBIS3.CONTROLS.MoveHandlers', ['js!SBIS3.CORE.Dialog','js!SBIS3.CONTR
       },
       _getRecordsForMove: function(records) {
          if (!Array.isArray(records) || !records.length) {
-            var selItems = this.getSelectedItems(false).toArray(),
+            var selItems = this.getSelectedItems(false),
                 key = this.getSelectedKey();
 
-            records = selItems.length ? selItems : key ? [key] : [];
+            if(selItems && selItems.getCount()) {
+               records = selItems.toArray();
+            } else {
+               records = key ? [key] : [];
+            }
          }
          return records;
       },
       selectedMoveTo: function(moveTo) {
-         this._move(this.getSelectedItems(false).toArray(), moveTo);
+         var selectedItems = this.getSelectedItems(false);
+         this._move(selectedItems ? selectedItems.toArray() : [], moveTo);
       },
       //TODO: Унифицировать параметр moveTo, чтобы в него всегда приходил record.
       _move: function(records, moveTo, insertAfter) {
@@ -64,9 +69,11 @@ define('js!SBIS3.CONTROLS.MoveHandlers', ['js!SBIS3.CORE.Dialog','js!SBIS3.CONTR
          if (this._checkRecordsForMove(records, recordTo, isChangeOrder)) {
             for (var i = 0; i < records.length; i++) {
                records[i] = $ws.helpers.instanceOfModule(records[i], 'SBIS3.CONTROLS.Data.Model') ?
-                  records[i] :
+                  this.getItems().getRecordById(records[i].getId()) : //todo может прийти рекорд инстанса которого нет в рекордсете замеять все рекорды для этого плохо.
                   this._items.getRecordById(records[i]);
             }
+            this._toggleIndicator(true);
+
             if (isNodeTo && !isChangeOrder) {
                deferred = this.getMoveStrategy().hierarhyMove(records, recordTo);
             } else {
@@ -75,18 +82,22 @@ define('js!SBIS3.CONTROLS.MoveHandlers', ['js!SBIS3.CORE.Dialog','js!SBIS3.CONTR
             deferred = deferred === true ? new $ws.proto.Deferred().callback(true) : deferred;
             if (deferred instanceof $ws.proto.Deferred) {//обновляем view если вернули true либо deferred
                deferred.addCallback(function() {
-                  var isHierMove = isNodeTo && !isChangeOrder;
-                  self._afterMoveHandler(isHierMove, moveTo);
+                  if (isChangeOrder) {
+                     self._afterOrderChange(records, recordTo, !insertAfter);
+                  } else {
+                     //TODO: пока дерево не перевели на проекции, нужно пересчитывать дерево индексов, т.к. после set
+                     //в поле иерархии он сам этого не сделает
+                     self._items._reindexTree(self._options.hierField);
+                     self.removeItemsSelectionAll();
+                     //TODO: в .140 версии позовём redraw т.к. частичная перерисовка работает не во всех случаях
+                     //в .150 удалить redraw и сделать частичную перерисовку.
+                     self.redraw();
+                  }
+               }).addBoth(function() {
+                  self._toggleIndicator(false);
                });
             }
          }
-      },
-      _afterMoveHandler: function(isHierMove, moveTo) {
-         if (isHierMove) {
-            this.setCurrentRoot(moveTo);
-         }
-         this.removeItemsSelectionAll();
-         this.reload();
       },
       _checkRecordsForMove: function(records, recordTo, isChangeOrder) {
          var
@@ -181,47 +192,52 @@ define('js!SBIS3.CONTROLS.MoveHandlers', ['js!SBIS3.CORE.Dialog','js!SBIS3.CONTR
       moveRecordDown: function(tr, id, record) {
          var nextItem = this.getNextItemById(id);
          if(nextItem) {
-            moveRecord.call(this, record, nextItem.data('id'), id, false);
+            this._moveRecord(record, nextItem.data('id'), id, false);
          }
       },
 
       moveRecordUp: function(tr, id, record) {
          var prevItem = this.getPrevItemById(id);
          if(prevItem) {
-            moveRecord.call(this, record, prevItem.data('id'), id, true);
+            this._moveRecord(record, prevItem.data('id'), id, true);
          }
+      },
+      _moveRecord: function(item, moveToId, current, up) {
+         var self = this,
+             moveToItem = this._items.getRecordById(moveToId);
+         this.getMoveStrategy().move([item], moveToItem, !up).addCallback(function() {
+            self._afterOrderChange([item], moveToItem, up);
+         }).addErrback(function(e) {
+            $ws.core.alert(e.message);
+         });
+      },
+      _afterOrderChange: function(items, moveToItem, up) {
+         var moveToIndex;
+         $ws.helpers.forEach(items, function(item) {
+            this._items.remove(item);
+
+            moveToIndex = this._items.getIndex(moveToItem);
+            if(!up) {
+               moveToIndex = this._itemsProjection.getInternalBySource(moveToIndex);
+               var projectionItem = this._itemsProjection.getNext(
+                   this._itemsProjection.at(moveToIndex)
+               );
+               if(projectionItem) {
+                  moveToIndex = this._itemsProjection.getSourceByInternal(
+                      this._itemsProjection.getIndex(projectionItem)
+                  );
+               } else {
+                  moveToIndex = this._items.getCount();
+               }
+            }
+
+            this._items.add(
+                item,
+                moveToIndex < this._items.getCount() ? moveToIndex : undefined
+            );
+         }.bind(this));
       }
    };
-
-   function moveRecord(item, moveToId, current, up) {
-      var self = this,
-         moveToItem = this._items.getRecordById(moveToId);
-      this.getMoveStrategy().move([item], moveToItem, !up).addCallback(function() {
-         self._items.remove(item);
-
-         var moveToIndex = self._items.getIndex(moveToItem);
-         if(!up) {
-            moveToIndex = self._itemsProjection.getInternalBySource(moveToIndex);
-            var projectionItem = self._itemsProjection.getNext(
-               self._itemsProjection.at(moveToIndex)
-            );
-            if(projectionItem) {
-               moveToIndex = self._itemsProjection.getSourceByInternal(
-                  self._itemsProjection.getIndex(projectionItem)
-               );
-            } else {
-               moveToIndex = self._items.getCount();
-            }
-         }
-
-         self._items.add(
-            item,
-            moveToIndex < self._items.getCount() ? moveToIndex : undefined
-         );
-      }).addErrback(function(e) {
-         $ws.core.alert(e.message);
-      });
-   }
 
    return MoveHandlers;
 });

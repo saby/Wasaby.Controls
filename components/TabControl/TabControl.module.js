@@ -11,7 +11,7 @@ define('js!SBIS3.CONTROLS.TabControl', [
     * Контрол, содержащий несколько областей содержащих контент.
     * В каждый момент времени отображается только одна область. Отображаемая область может переключаться при клике на корешки закладок.
     * @class SBIS3.CONTROLS.TabControl
-    * @extends SBIS3.CORE.CompoundControl
+    * @extends $ws.proto.CompoundControl
     * @control
     * @author Крайнов Дмитрий Олегович
     * @public
@@ -111,6 +111,16 @@ define('js!SBIS3.CONTROLS.TabControl', [
       setItems: function(items) {
          this._tabButtons.setItems(items);
          this._switchableArea.setItems(items);
+      },
+
+      //TODO может сделать метод getTabButtons, позволяющий напрямую работать с вкладками,
+      //чтобы не инкапсулировать подобные методы?
+      setSelectedKey: function(key){
+         this._tabButtons.setSelectedKey(key);
+      },
+
+      getSelectedKey: function(){
+         return this._tabButtons.getSelectedKey();
       },
 
       _onSelectedItemChange: function(event, id) {

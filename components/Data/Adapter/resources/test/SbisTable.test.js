@@ -129,7 +129,41 @@ define([
                   data.d[2][1]
                );
             });
-
+            
+            it('should insert the first record', function () {
+               var data = {
+                     d: [],
+                     s: [{'n': 'id', 't': 'Число целое'}]
+                  },
+                  adapter = new SbisTable(data);
+               adapter.add({d: [5]}, 0);
+               assert.strictEqual(
+                  1,
+                  data.d.length
+               );
+               assert.strictEqual(
+                  5,
+                  data.d[0][0]
+               );
+            });
+            
+            it('should insert the last record', function () {
+               var data = {
+                     d: [[1], [2]],
+                     s: [{'n': 'id', 't': 'Число целое'}]
+                  },
+                  adapter = new SbisTable(data);
+               adapter.add({d: [33]}, 2);
+               assert.strictEqual(
+                  3,
+                  data.d.length
+               );
+               assert.strictEqual(
+                  33,
+                  data.d[2][0]
+               );
+            });
+            
             it('should throw an error on invalid position', function () {
                assert.throw(function () {
                   adapter.add({d: [30, 'aaa']}, 100);
@@ -139,10 +173,10 @@ define([
                });
             });
 
-            it('should get s from new record', function () {
+            it('should inherit format from a new record', function () {
                var adapter = new SbisTable({d: [], s: []}),
                   s = [{'n': 'Ид', 't': 'Число целое'}];
-               adapter.add({d: [1], s:s});
+               adapter.add({d: [1], s: s});
                assert.deepEqual(adapter.getData().s, s);
             });
          });

@@ -13,9 +13,9 @@ define('js!SBIS3.CONTROLS.Selectable', ['js!SBIS3.CONTROLS.Data.Utils', 'js!SBIS
 
    var Selectable = /**@lends SBIS3.CONTROLS.Selectable.prototype  */{
        /**
-        * @event onSelectedItemChange При смене выбранных элементов
+        * @event onSelectedItemChange Происходит при смене выбранного элемента коллекции.
         * @param {$ws.proto.EventObject} eventObject Дескриптор события.
-        * @param {String} id Идентификатор выбранного пункта.
+        * @param {String} id Идентификатор выбранного элемента коллекции.
         * @example
         * <pre>
         *     RadioButtonGroup.subscribe('onSelectedItemChange', function(event, id){
@@ -31,9 +31,11 @@ define('js!SBIS3.CONTROLS.Selectable', ['js!SBIS3.CONTROLS.Data.Utils', 'js!SBIS
          _selectMode: 'index',
           _options: {
              /**
-              * @cfg {String} Индекс(номер) выбранного элемента
+              * @cfg {String} Определяет элемент коллекции по переданному индексу (порядковому номеру).
               * @remark
-              * Для задания выбранного элемента необходимо указать номер элемента коллекции.
+              * Любой элемент коллекции можно выбрать либо по его идентификатору {@link SBIS3.CONTROLS.DSMixin#keyField},
+              * либо его по индексу (порядковому номеру) в коллекции.
+              * Для определения выбранного элемента необходимо указать его порядковый номер в коллекции.
               * @example
               * <pre>
               *     <option name="selectedIndex">1</option>
@@ -44,9 +46,13 @@ define('js!SBIS3.CONTROLS.Selectable', ['js!SBIS3.CONTROLS.Data.Utils', 'js!SBIS
               */
              selectedIndex: null,
              /**
-              * @cfg {String} Идентификатор выбранного элемента
+              * @cfg {String} Определяет элемент коллекции по переданному идентификатору.
               * @remark
-              * Для задания выбранного элемента необходимо указать значение {@link SBIS3.CONTROLS.DSMixin#keyField ключевого поля} элемента коллекции.
+              * Используется для построения контрола с определенным элементом коллекции.
+              * Для задания выбранного элемента необходимо указать значение
+              * {@link SBIS3.CONTROLS.DSMixin#keyField ключевого поля} элемента коллекции.
+              * Установить новый идентификатор элемента коллекции можно с помощью метода {@link setSelectedKey},
+              * получить идентификатор элемента коллекции можно с помощью метода {@link getSelectedKey}.
               * @example
               * <pre>
               *     <option name="selectedKey">3</option>
@@ -161,12 +167,7 @@ define('js!SBIS3.CONTROLS.Selectable', ['js!SBIS3.CONTROLS.Data.Utils', 'js!SBIS
          },
          _itemsReadyCallback: function() {
             this._prepareSelectedConfig(this._options.selectedIndex, this._options.selectedKey);
-            if ((typeof this._options.selectedIndex != 'undefined') && (this._options.selectedIndex !== null)) {
-               this._itemsProjection.setCurrentPosition(this._options.selectedIndex);
-            }
-            else {
-               this._itemsProjection.setCurrentPosition(-1);
-            }
+            this._selectInProjection();
          }
       },
 
@@ -185,10 +186,11 @@ define('js!SBIS3.CONTROLS.Selectable', ['js!SBIS3.CONTROLS.Data.Utils', 'js!SBIS
          this._notifySelectedItem(id, index)
       },
       /**
-       * Установить выбранный элемент по идентификатору
+       * Устанавливает выбранным элемент коллекции по переданному идентификатору.
        * @remark
        * Для возвращения коллекции к состоянию без выбранного элемента нужно передать null.
        * @param {String} id Идентификатор элемента, который нужно установить в качестве выбранного.
+       * Идентификатором элемента коллекции служит значение его {@link SBIS3.CONTROLS.DSMixin#keyField ключевого поля}.
        * @example
        * <pre>
        *     var newKey = (someValue > 0) ? 'positive' : 'negative';
@@ -200,21 +202,29 @@ define('js!SBIS3.CONTROLS.Selectable', ['js!SBIS3.CONTROLS.Data.Utils', 'js!SBIS
        * @see onSelectedItemChange
        */
       setSelectedKey : function(id) {
+         if(this._options.selectedKey === id) {
+            return;
+         }
+
          this._options.selectedKey = id;
          if (this._itemsProjection) {
             this._prepareSelectedConfig(undefined, id);
-            if ((typeof this._options.selectedIndex != 'undefined') && (this._options.selectedIndex !== null)
-               && (typeof this._itemsProjection.at(this._options.selectedIndex) != 'undefined')) {
-               this._itemsProjection.setCurrentPosition(this._options.selectedIndex);
-            }
-            else {
-               this._itemsProjection.setCurrentPosition(-1);
-            }
+            this._selectInProjection();
          } else {
             this._setSelectedIndex(null, id);
          }
       },
 
+      /**
+       * Устанавливает выбранным элемент коллекции по переданному индексу (порядковому номеру).
+       * @param index Индекс выбранного элемента коллекции.
+       * @example
+       * <pre>
+       *    this._getControlOrdersList().setSelectedIndex(0);
+       * </pre>
+       * @see selectedIndex
+       * @see getSelectedIndex
+       */
       setSelectedIndex: function(index) {
          if (this._itemsProjection) {
             this._prepareSelectedConfig(index);
@@ -222,7 +232,8 @@ define('js!SBIS3.CONTROLS.Selectable', ['js!SBIS3.CONTROLS.Data.Utils', 'js!SBIS
          }
       },
       /**
-       * Возвращает идентификатор выбранного элемента.
+       * Возвращает идентификатор выбранного элемента коллекции.
+       * Идентификатором элемента коллекции служит значение его {@link SBIS3.CONTROLS.DSMixin#keyField ключевого поля}.
        * @example
        * <pre>
        *     var key = myComboBox.getSelectedKey();
@@ -240,7 +251,14 @@ define('js!SBIS3.CONTROLS.Selectable', ['js!SBIS3.CONTROLS.Data.Utils', 'js!SBIS
       },
 
       /**
-       * Возвращает индекс выбранного элемента.
+       * Возвращает индекс (порядковый номер) выбранного элемента коллекции.
+       * @example
+       * <pre>
+       *    index = list.getSelectedIndex();
+       *    if (index > -1 && index < items.getCount()) {
+       *       return items.at(index);
+       *    }
+       * </pre>
        * @see selectedIndex
        * @see setselectedIndex
        * @see onSelectedItemChange
@@ -281,6 +299,16 @@ define('js!SBIS3.CONTROLS.Selectable', ['js!SBIS3.CONTROLS.Data.Utils', 'js!SBIS
          this._notifyOnPropertyChanged('selectedKey');
          this._notifyOnPropertyChanged('selectedIndex');
          this._notify('onSelectedItemChange', id, index);
+      },
+
+      _selectInProjection: function (){
+         if ((typeof this._options.selectedIndex != 'undefined') && (this._options.selectedIndex !== null)
+            && (typeof this._itemsProjection.at(this._options.selectedIndex) != 'undefined')) {
+            this._itemsProjection.setCurrentPosition(this._options.selectedIndex);
+         }
+         else {
+            this._itemsProjection.setCurrentPosition(-1);
+         }
       }
    };
 

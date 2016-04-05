@@ -25,11 +25,10 @@ define('js!SBIS3.CONTROLS.DropdownList',
        * Контрол, отображающий по клику или ховеру список однотипных сущностей.
        * Выпадающий список с разными вариантами отображения и возможностью задать для сущностей шаблон отображения.
        * @class SBIS3.CONTROLS.DropdownList
-       * @extends $ws.proto.Control
+       * @extends $ws.proto.CompoundControl
        * @author Крайнов Дмитрий Олегович
        * @mixes SBIS3.CONTROLS.DSMixin
        * @mixes SBIS3.CONTROLS.MultiSelectable
-       * @mixes SBIS3.CONTROLS.Selectable
        * @mixes SBIS3.CONTROLS.DropdownListMixin
        * @mixes SBIS3.CONTROLS.PickerMixin
        * @demo SBIS3.CONTROLS.Demo.MyDropdownList Простой пример работы контрола
@@ -248,12 +247,11 @@ define('js!SBIS3.CONTROLS.DropdownList',
          },
          _drawItemsCallback: function() {
             //Надо вызвать просто для того, чтобы отрисовалось выбранное значение/значения
-            if (this._dataSet.getRawData().length) {
-               this.setSelectedKeys(this._options.selectedKeys);
-            }
+            this._drawSelectedItems(this._options.selectedKeys)
 
          },
          _dataLoadedCallback: function() {
+            DropdownList.superclass._dataLoadedCallback.apply(this, arguments);
             var item =  this._dataSet.at(0);
             if (item) {
                this._defaultId = item.getKey();

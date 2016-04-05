@@ -1,7 +1,8 @@
 /* global define, $ws */
 define('js!SBIS3.CONTROLS.Data.Format.Field', [
-   'js!SBIS3.CONTROLS.Data.SerializableMixin'
-], function (SerializableMixin) {
+   'js!SBIS3.CONTROLS.Data.SerializableMixin',
+   'js!SBIS3.CONTROLS.Data.Serializer'
+], function (SerializableMixin, Serializer) {
    'use strict';
 
    /**
@@ -35,7 +36,7 @@ define('js!SBIS3.CONTROLS.Data.Format.Field', [
              * @see isNullable
              * @see setNullable
              */
-            nullable: false
+            nullable: true
          }
       },
 
@@ -120,8 +121,11 @@ define('js!SBIS3.CONTROLS.Data.Format.Field', [
        * @returns {SBIS3.CONTROLS.Data.Format.Field}
        */
       clone: function () {
-         var Ctor = Object.getPrototypeOf(this).$constructor;
-         return new Ctor(this._options);
+         var serializer = new Serializer();
+         return JSON.parse(
+            JSON.stringify(this, serializer.serialize),
+            serializer.deserialize
+         );
       },
 
       /**

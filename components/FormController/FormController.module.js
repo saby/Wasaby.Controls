@@ -1,5 +1,5 @@
-define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js!SBIS3.CORE.LoadingIndicator'],
-   function(CompoundControl, LoadingIndicator) {
+define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js!SBIS3.CORE.LoadingIndicator', 'i18n!SBIS3.CONTROLS.FormController'],
+   function(CompoundControl, LoadingIndicator, rk) {
    /**
     * Компонент, на основе которого создают диалоги редактирования записей
     *
@@ -112,8 +112,9 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
              * <pre>
              *     <option name="indicatorSavingMessage">Занят важным делом - сохраняю ваши данные.</option>
              * </pre>
+             * @translatable
              */
-            indicatorSavingMessage:  'Подождите, идёт сохранение'
+            indicatorSavingMessage:  rk('Подождите, идёт сохранение')
          }
       },
       
@@ -163,23 +164,16 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
          questionConfig = {
             useCancelButton: true,
             invertDefaultButton: true,
-            detail: 'Чтобы продолжить редактирование, нажмите "Отмена".'
+            detail: rk('Чтобы продолжить редактирование, нажмите "Отмена".')
          };
          this._saving = true;
 
-         if(!this._parent.validate()) {
-            dResult.errback('Некорректно заполнены обязательные для заполнения поля!');
-            //Если нажимали крестик, то закроем панель
-            if (!hideQuestion){
-               this._panel.cancel();
-            }
-            return;
-         }
+         //Если пришли из submit'a
          if (hideQuestion){
-            this._updateRecord(dResult, closePanelAfterSubmit);
+            return this._updateRecord(dResult, closePanelAfterSubmit);
          }
          else{
-            $ws.helpers.question('Сохранить изменения?', questionConfig, this).addCallback(function(result){
+            $ws.helpers.question(rk('Сохранить изменения?'), questionConfig, this).addCallback(function(result){
                if (typeof result === 'string'){
                   self._saving = false;
                   return;
@@ -197,27 +191,36 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
       },
 
       _updateRecord: function(dResult, closePanelAfterSubmit){
-         var def = this._options.dataSource.update(this._options.record),
-            self = this;
-         this._showLoadingIndicator();
-         dResult.dependOn(def.addCallbacks(function (result) {
-            self._notify('onSuccess', result);
-            if (closePanelAfterSubmit) {
-               self._panel.ok();
-            }
-            else {
+         var errorMessage = rk('Некорректно заполнены обязательные для заполнения поля!'),
+             self = this,
+             def;
+         if (this.validate()) {
+            def = this._options.dataSource.update(this._options.record);
+            this._showLoadingIndicator();
+            dResult.dependOn(def.addCallbacks(function (result) {
+               self._notify('onSuccess', result);
+               if (closePanelAfterSubmit) {
+                  self._panel.ok();
+               }
+               else {
+                  self._saving = false;
+               }
+               return result;
+            }, function (error) {
+               self._processError(error);
                self._saving = false;
-            }
-            return result;
-         }, function (error) {
-            self._processError(error);
-            self._saving = false;
-            return error;
-         }));
-         dResult.addBoth(function(r){
-            self._hideLoadingIndicator();
-            return r;
-         });
+               return error;
+            }));
+            dResult.addBoth(function (r) {
+               self._hideLoadingIndicator();
+               return r;
+            });
+         }
+         else {
+            dResult.errback(errorMessage);
+            this._saving = false;
+         }
+         return dResult;
       },
 
       _readRecord: function(key){
@@ -231,8 +234,14 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
        * Показывает индикатор загрузки
        */
       _showLoadingIndicator: $ws.helpers.forAliveOnly(function(){
+         var self = this;
+         this._showedLoading = true;
          if(this._loadingIndicator && !this._loadingIndicator.isDestroyed()){
-            this._loadingIndicator.show(this._options.indicatorSavingMessage);
+            setTimeout(function(){
+               if (self._showedLoading) {
+                  self._loadingIndicator.show(self._options.indicatorSavingMessage);
+               }
+            }, 750);
          } else {
             this._loadingIndicator = new LoadingIndicator({
                parent: this._panel,
@@ -248,6 +257,7 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
        */
       _hideLoadingIndicator: $ws.helpers.forAliveOnly(function(){
          if(this._loadingIndicator) {
+            this._showedLoading = false;
             this._loadingIndicator.hide();
          }
       }),
@@ -303,6 +313,7 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
       _runQuery: function() {
          var self = this,
             hdl;
+         this._showLoadingIndicator();
          if (this._options.key) {
             hdl = this._readRecord(this._options.key);
          }
@@ -313,7 +324,10 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
             self._options.record = record;
             self._setContextRecord(record);   
          });
-         
+         hdl.addBoth(function(r){
+            self._hideLoadingIndicator();
+            return r;
+         });
       }
    });
 

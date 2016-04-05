@@ -5,7 +5,7 @@ define('js!SBIS3.CONTROLS.OpenDialogAction', ['js!SBIS3.CONTROLS.DialogActionBas
     * Действие открытия окна с заданным шаблоном
     * @class SBIS3.CONTROLS.OpenDialogAction
     * @public
-    * @extends SBIS3.CONTROLS.ActionBase
+    * @extends SBIS3.CONTROLS.DialogActionBase
     * @author Крайнов Дмитрий Олегович
     *
     * @ignoreOptions validators independentContext contextRestriction extendedTooltip
@@ -31,7 +31,8 @@ define('js!SBIS3.CONTROLS.OpenDialogAction', ['js!SBIS3.CONTROLS.DialogActionBas
          return {
             key : meta.id,
             initValues : meta.filter,
-            record: record
+            record: record,
+            contextRestriction: 'set'
          }
       }
    });

@@ -16,8 +16,16 @@ define([
          });
 
          describe('.getDefaultValue()', function() {
-            it('should return an empty string by default', function() {
-               assert.strictEqual(field.getDefaultValue(), '');
+            it('should return null by default', function() {
+               assert.isNull(field.getDefaultValue());
+            });
+         });
+
+         describe('.clone()', function() {
+            it('should return the clone', function() {
+               var clone = field.clone();
+               assert.instanceOf(clone, TextField);
+               assert.isTrue(field.isEqual(clone));
             });
          });
       });

@@ -79,13 +79,13 @@ define([
 
             it('should throw an error on invalid data', function () {
                assert.throw(function () {
-                  new SbisRecord('').set();
+                  adapter.set();
                });
                assert.throw(function () {
-                  new SbisRecord(0).set(0);
+                  adapter.set('');
                });
                assert.throw(function () {
-                  new SbisRecord().set();
+                  adapter.set(0);
                });
             });
          });
@@ -252,7 +252,7 @@ define([
                   adapter = new SbisRecord(data),
                   format = adapter.getFormat('enum');
                assert.isTrue($ws.helpers.instanceOfModule(format, 'SBIS3.CONTROLS.Data.Format.EnumField'));
-               assert.strictEqual(format.getDictionary(), data.s[0].t.s);
+               assert.deepEqual(format.getDictionary(), data.s[0].t.s);
             });
             it('should return Flags field format', function () {
                var data = {
@@ -271,7 +271,7 @@ define([
                   adapter = new SbisRecord(data),
                   format = adapter.getFormat('flags');
                assert.isTrue($ws.helpers.instanceOfModule(format, 'SBIS3.CONTROLS.Data.Format.FlagsField'));
-               assert.strictEqual(format.getDictionary(), data.s[0].t.s);
+               assert.deepEqual(format.getDictionary(), data.s[0].t.s);
             });
             it('should return Record field format', function () {
                var data = {
@@ -388,7 +388,7 @@ define([
                adapter.addField(field, fieldIndex);
                assert.strictEqual(adapter.getFormat(fieldName).getName(), fieldName);
                assert.strictEqual(adapter.getFields()[fieldIndex], fieldName);
-               assert.strictEqual(adapter.get(fieldName), false);
+               assert.isNull(adapter.get(fieldName));
                assert.strictEqual(adapter.getData().s[fieldIndex].t, 'Логическое');
             });
             it('should add an Integer field', function () {
@@ -438,7 +438,7 @@ define([
                      name: fieldName
                   });
                adapter.addField(field, fieldIndex);
-               assert.strictEqual(adapter.get(fieldName), '');
+               assert.isNull(adapter.get(fieldName));
                assert.strictEqual(adapter.getData().s[fieldIndex].t, 'Строка');
             });
             it('should add a Text field', function () {
@@ -449,7 +449,7 @@ define([
                      name: fieldName
                   });
                adapter.addField(field, fieldIndex);
-               assert.strictEqual(adapter.get(fieldName), '');
+               assert.isNull(adapter.get(fieldName));
                assert.strictEqual(adapter.getData().s[fieldIndex].t, 'Текст');
             });
             it('should add a XML field', function () {

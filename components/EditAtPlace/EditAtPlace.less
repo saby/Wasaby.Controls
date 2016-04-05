@@ -13,9 +13,14 @@
    }
    &.controls-EditAtPlace__ellipsis {
       .controls-EditAtPlace__fieldWrapper {
-         overflow: hidden;
-         white-space: nowrap;
-         text-overflow: ellipsis;
+        height: inherit;
+        .controls-EditAtPlace__textField {
+          overflow: hidden;
+          white-space: nowrap;
+          text-overflow: ellipsis;
+          width: 100%;
+          vertical-align: middle;
+        }
       }
    }
    &.controls-EditAtPlace__multiline {
@@ -44,6 +49,7 @@
          .box-sizing(border-box);
       }
       .controls-EditAtPlace__textField {
+         overflow: visible;
          display: inline-block;
          width: auto;
          cursor: @edit-at-place-field-cursor;

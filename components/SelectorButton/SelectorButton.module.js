@@ -21,7 +21,7 @@ define('js!SBIS3.CONTROLS.SelectorButton',
    /**
     * Контрол, отображающий выбранные записи в виде текстовых значений через запятую.
     * @class SBIS3.CONTROLS.SelectorButton
-    * @extends $ws.proto.Control
+    * @extends SBIS3.CONTROLS.ButtonBase
     * @control
     * @public
     * @author Крайнов Дмитрий Олегович
@@ -55,6 +55,7 @@ define('js!SBIS3.CONTROLS.SelectorButton',
              * @property {String} caption Текст в меню.
              * @property {String} template Шаблон, который отобразится в диалоге выбора.
              * @property {Object} componentsOptions Опции, которые прокинутся в компонент на диалоге выбора.
+             * @translatable caption
              */
             /**
              * @cfg {dictionaries[]} Набор диалогов выбора для поля связи

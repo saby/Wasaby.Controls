@@ -63,26 +63,39 @@ define('js!SBIS3.CONTROLS.FieldLinkItemsCollection', [
          },
 
          setItems: function(list) {
-            var item;
+            var item, result;
 
-            FieldLinkItemsCollection.superclass.setItems.call(
-                this,
-                $ws.helpers.reduce(list.toArray(), function(result, rec) {
-                   /* Для поддержки работы поля связи с несколькими справочниками,
-                      первичный ключ записи (неважно откуда она пришла) запишем в поле,
-                      в котором должны лежать первичные ключи по мнению поля связи */
-                   item = rec.toObject();
-                   item[this._options.keyField] = rec.getId();
-                   result.push(item);
-                   return result
-                }, [], this)
-            );
+            if(list) {
+               result = $ws.helpers.reduce(list.toArray(), function(result, rec) {
+                  /* Для поддержки работы поля связи с несколькими справочниками,
+                   первичный ключ записи (неважно откуда она пришла) запишем в поле,
+                   в котором должны лежать первичные ключи по мнению поля связи */
+                  item = rec.toObject();
+                  item[this._options.keyField] = rec.getId();
+                  result.push(item);
+                  return result
+               }, [], this)
+            } else {
+               result = []
+            }
+
+            FieldLinkItemsCollection.superclass.setItems.call(this, result);
          },
 
          _appendItemTemplate:function(item, targetContainer, itemInstance) {
             if(this._options.itemCheckFunc(itemInstance)) {
                FieldLinkItemsCollection.superclass._appendItemTemplate.apply(this, arguments);
             }
+         },
+
+         redraw: function() {
+            /* Не отрисовываем элементы поля связи, если контейнер контрола скрыт,
+               т.к. для поля связи нужны расчёты, а в скрытом состоянии их не сделать,
+               ie8 вообще падает при расчётах */
+            if(!this.isPickerVisible() && !this.isVisibleWithParents()) {
+               return false;
+            }
+            FieldLinkItemsCollection.superclass.redraw.apply(this, arguments);
          },
 
          /**
@@ -114,7 +127,7 @@ define('js!SBIS3.CONTROLS.FieldLinkItemsCollection', [
          },
 
          _drawItemsCallback: function() {
-            if(this.isPickerVisible() && !this.getDataSet().getCount()) {
+            if(this.isPickerVisible() && !this.getItems().getCount()) {
                this.hidePicker()
             }
          },

@@ -20,10 +20,15 @@ define('js!SBIS3.CONTROLS.ActiveSelectable', ['js!SBIS3.CONTROLS.Data.Model'], f
       $protected: {
          _options: {
             /**
-             * @cfg {String} Выбранное значение (запись)
+             * @cfg {SBIS3.CONTROLS.Data.Model} Устанавливает выбранный элемент коллекции.
+             * Устанавливает экземпляр класса {@link SBIS3.CONTROLS.Data.Model} с данными выбранной записи.
+             * Опция актуальна, когда контрол находится в режиме единичного выбора значений.
              * @example
-             * <pre class=”brush: xml”>
-             *    <option name="selectedItem">Выбранное значение</option>
+             * Вывести в консоль выбранное значение:
+             * <pre>
+             *    this.getChildControlByName('myFieldLink').subscribe('onSelectedItemsChange', function(Дескриптор, idArray) {
+             *       console.log(this.selectedItem);
+             *    });
              * </pre>
              * @see setSelectedItem
              * @see getSelectedItem
@@ -40,19 +45,30 @@ define('js!SBIS3.CONTROLS.ActiveSelectable', ['js!SBIS3.CONTROLS.Data.Model'], f
          this._options.selectedItem = this._options.selectedItem instanceof Model ? this._options.selectedItem : null;
       },
       /**
-       * Устанавливает выбранный элемент
-       * @param {SBIS3.CONTROLS.Data.Model} item загружать ли запись, если о ней нет информации в dataSet
+       * Устанавливает выбранный элемент коллекции.
+       * @param {SBIS3.CONTROLS.Data.Model} item Выбранный элемент коллекции.
+       * @example
+       * <pre>
+       *     var selItem = this.getChildControlByName('MyControl').getSelectedItem();
+       *       . . .
+       *     if (selItem != '') {
+       *       NewControl.setSelectedItem(selItem);
+       *     }
+       * </pre>
        * @see selectedItem
        * @see getSelectedItem
        */
       setSelectedItem: propertyUpdateWrapper(function(item) {
          var isModel = item instanceof Model;
 
-         if(isModel || (!isModel && !this._options.selectedItem)) {
-            this._options.selectedItem = isModel ? item : null;
-            this.setSelectedKey(isModel ? item.getId() : null);
-            this._notifyOnPropertyChanged('selectedItem');
+
+         if(!isModel && !this._options.selectedItem) {
+            return;
          }
+
+         this._options.selectedItem = isModel ? item : null;
+         this._notifyOnPropertyChanged('selectedItem');
+         this.setSelectedKey(isModel ? item.getId() : null);
       }),
 
       initializeSelectedItem: function() {
@@ -60,11 +76,15 @@ define('js!SBIS3.CONTROLS.ActiveSelectable', ['js!SBIS3.CONTROLS.Data.Model'], f
       },
 
       /**
-       * Возвращает выбранную запись
+       * Возвращает выбранный элемент коллекции.
        * @param loadItem загружать ли запись, если о ней нет информации в dataSet
+       * @returns {null|SBIS3.CONTROLS.Data.Model}
+       * @example
+       * <pre>
+       *     var myItem = this.getChildControlByName('MyControl').getSelectedItem();
+       * </pre>
        * @see selectedItem
        * @see setSelectedItem
-       * @returns {null|SBIS3.CONTROLS.Data.Model}
        */
       getSelectedItem: function(loadItem) {
          var dResult = new $ws.proto.Deferred(),
@@ -109,7 +129,7 @@ define('js!SBIS3.CONTROLS.ActiveSelectable', ['js!SBIS3.CONTROLS.Data.Model'], f
          if(selKey === null) {
             return;
          }
-         if(selKey !== selItem.getId()) {
+         if(selItem && selKey !== selItem.getId()) {
             this.setSelectedItem(null);
          }
       }

@@ -137,18 +137,25 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
       },
       _createFolderFooter: function(key) {
          var container,
-             lastContainer,
+             nextContainer,
+             currentContainer,
              level = this._getTreeLevel(key);
 
          TreeDataGridView.superclass._createFolderFooter.apply(this, arguments);
          this._foldersFooters[key].css('padding-left', level * HIER_WRAPPER_WIDTH);
-         container = $('<tr class="controls-TreeDataGridView__folderFooter" "data-parent"="' + key + '">\
+         container = $('<tr class="controls-TreeDataGridView__folderFooter" data-parent="' + key + '">\
             <td colspan="' + (this._options.columns.length + (this._options.multiselect ? 1 : 0)) + '"></td>\
-         </tr>').attr('data-parent', key);
+         </tr>');
          container.find('td').append(this._foldersFooters[key]);
          this._foldersFooters[key] = container;
-         lastContainer = $('.controls-ListView__item[data-parent="' + key + '"]', this._getItemsContainer().get(0)).last();
-         this._foldersFooters[key].insertAfter(lastContainer.length ? lastContainer : $('.controls-ListView__item[data-id="' + key + '"]', this._getItemsContainer().get(0)));
+
+         currentContainer = $('.controls-ListView__item[data-id="' + key + '"]', this._getItemsContainer().get(0));
+         while (currentContainer.length) {
+            nextContainer = currentContainer;
+            currentContainer =  $('.controls-ListView__item[data-parent="' + currentContainer.data('id') + '"]', this._getItemsContainer().get(0)).last();
+         }
+         this._foldersFooters[key].insertAfter(nextContainer);
+
          this.reviveComponents();
       },
       _getFolderFooterOptions: function(key) {
@@ -248,7 +255,27 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
          //Уничтожим все дочерние footer'ы и footer текущего узла
          this._destroyFolderFooter(childKeys.concat(key));
       },
-
+      //TODO: код понадобится для частичной перерисовки после перемещения
+      /*_updateItem: function(item) {
+         var
+             isMove = item.getContents().isChanged(this._options.hierField),
+             parentKey = this._items.getParentKey(item.getContents(), this._options.hierField),
+             parentItem = this._items.getRecordById(parentKey);
+         *//*
+          Если обновление вызвано не из того, что поменялось поле иерархии (произошло перемещение), то удалять его точно не надо.
+          Если элемент переместился в закрытую папку и она не не является текущим корнем, то его нужно просто удалить из
+          DOM'а т.к. его не должно быть видно. Так же возможна ситуация когда с помощью диалога перемещения запись переместили
+          в папку, которая является открытой но её нет в текущем наборе элементов(например текущий корень где-то глубоко в
+          иерархии, а ниже по иерархии были открытые папки), то такую запись тоже нужно просто удалить. Так же проверяем на
+          наличие папки в которую перемещаем в наборе DOM элементов с помощью _getElementByModel т.к. у некоторых людей все
+          данные сразу присутствуют и проверка в наборе данных даст неверный результат.
+          *//*
+         if (isMove && (!this._options.openedPath[parentKey] || !this._getElementByModel(parentItem).length) && parentKey != this.getCurrentRoot()) {
+            this._removeItem(item)
+         } else {
+            TreeDataGridView.superclass._updateItem.apply(this, arguments);
+         }
+      },*/
       _addItemAttributes : function(container, item) {
          TreeDataGridView.superclass._addItemAttributes.call(this, container, item);
          var hierType = item.get(this._options.hierField + '@'),
@@ -285,23 +312,6 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
          }
       },
 
-      _elemClickHandler: function (id, data, target) {
-         var $target = $(target);
-
-         this.setSelectedKey(id);
-         if (this._options.multiselect) {
-            //TODO: оставить только js класс
-            if ($target.hasClass('js-controls-ListView__itemCheckBox') || $target.hasClass('controls-ListView__itemCheckBox')) {
-               this.toggleItemsSelection([$target.closest('.controls-ListView__item').attr('data-id')]);
-            }
-            else {
-               this._notifyOnItemClick(id, data, target);
-            }
-         }
-         else {
-            this._notifyOnItemClick(id, data, target);
-         }
-      },
       _notifyOnItemClick: function(id, data, target) {
          var
              res,
@@ -364,10 +374,6 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
          if (typeof insertAfter === 'boolean' && this._options.itemsDragNDrop !== 'onlyChangeParent' || insertAfter === undefined && this._options.itemsDragNDrop !== 'onlyChangeOrder') {
             return this._notify('onDragMove', this.getCurrentElement().keys, target.data('id'), insertAfter) !== false;
          }
-      },
-      _afterMoveHandler: function(isHierMove, moveTo) {
-         var needChaneRoot = isHierMove && this._options.allowEnterToFolder;
-         TreeDataGridView.superclass._afterMoveHandler.apply(this, [needChaneRoot, moveTo])
       },
       /**
        * Говорят, что группировка должна быть только в текущем разделе. Поддерживаем

@@ -17,7 +17,7 @@ define('js!SBIS3.CONTROLS.Button', ['js!SBIS3.CONTROLS.ButtonBase', 'html!SBIS3.
     * @class SBIS3.CONTROLS.Button
     * @extends SBIS3.CONTROLS.ButtonBase
     * @control
-	* @demo SBIS3.CONTROLS.Demo.MyButton
+	 * @demo SBIS3.CONTROLS.Demo.MyButton
     * @initial
     * <component data-component='SBIS3.CONTROLS.Button'>
     *    <option name='caption' value='Кнопка'></option>
@@ -49,6 +49,7 @@ define('js!SBIS3.CONTROLS.Button', ['js!SBIS3.CONTROLS.ButtonBase', 'html!SBIS3.
     * @cssModifier controls-Button__filled непрозрачный фон кнопки
     * @cssModifier controls-Button__big Большая кнопка.
     * @cssModifier controls-Button__ellipsis Кнопка, на которой в тексте появляется многоточие при нехватке ширины.
+    * @cssModifier controls-Button__withoutCaption Кнопка, без заголовка
     * !Важно: при добавлении этого класса сломается "Базовая линия".
     *
     * @css controls-Button__icon Класс для изменения отображения иконки кнопки.

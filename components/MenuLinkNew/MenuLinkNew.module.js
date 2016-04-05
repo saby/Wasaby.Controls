@@ -11,7 +11,7 @@ define('js!SBIS3.CONTROLS.MenuLinkNew', ['js!SBIS3.CONTROLS.Link', 'js!SBIS3.CON
     * Контрол, отображающий кнопку в виде ссылки и выпадающее из нее меню
     * @class SBIS3.CONTROLS.MenuLinkNew
     * @demo SBIS3.CONTROLS.Demo.MyMenuLink
-    * @extends SBIS3.CONTROLS.ButtonBase
+    * @extends SBIS3.CONTROLS.Link
     * @author Крайнов Дмитрий Олегович
     * @initial
     * <component data-component='SBIS3.CONTROLS.MenuLink'>

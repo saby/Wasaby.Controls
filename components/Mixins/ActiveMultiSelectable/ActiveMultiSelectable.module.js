@@ -30,8 +30,9 @@ define('js!SBIS3.CONTROLS.ActiveMultiSelectable', [], function() {
       },
 
       /**
-       * Устанавливает набор выбранных записей
-       * @param {Array|SBIS3.CONTROLS.Data.Collection.List} list Выбранные элементы.
+       * Устанавливает набор выбранных элементов коллекции.
+       * Опция актуальна, когда контрол находится в режиме {@link SBIS3.CONTROLS.MultiSelectable#multiselect множественного выбора значений}.
+       * @param {Array|SBIS3.CONTROLS.Data.Collection.List} list Выбранные элементы коллекции.
        * @example
        * <pre>
        *    var selectedItems = myGrid.getSelectedItems();
@@ -40,33 +41,42 @@ define('js!SBIS3.CONTROLS.ActiveMultiSelectable', [], function() {
        *       myFieldLink.setSelectedItems(selectedItems)
        *    }
        * </pre>
-       * @see selectedItems
-       * @see selectedKeys
+       * @see SBIS3.CONTROLS.MultiSelectable#selectedItems
+       * @see SBIS3.CONTROLS.MultiSelectable#selectedKeys
        * @see clearSelectedItems
        * @see addSelectedItems
        */
       setSelectedItems: propertyUpdateWrapper(function(list) {
-         var newItems = [];
+         var selItems = this._options.selectedItems,
+             newList;
 
-         list = this._prepareItems(list);
+         if(list) {
+            list = this._prepareItems(list);
 
-         if(this._options.multiselect) {
-            list.each(function(rec) {
-               newItems.push(rec);
-            });
-         } else if(list.getCount()) {
-            newItems = [list.at(0)];
+            if (selItems && selItems.equals(list)) {
+               return;
+            }
+
+            if (list.getCount() && !this._options.multiselect) {
+               newList = this._makeList([list.at(0)]);
+            } else {
+               newList = list;
+            }
+         } else {
+            newList = null;
          }
 
-         this._options.selectedItems = this._makeList(newItems);
+         this._options.selectedItems = newList;
          this.setSelectedKeys(this._convertToKeys(this._options.selectedItems));
          this._notifyOnPropertyChanged('selectedItems');
       }),
 
       /**
-       * Очищает набор выбранных элементов
-       * @see selectedItems
-       * @see selectedKeys
+       * Очищает набор выбранных элементов коллекции.
+       * Опция актуальна, когда контрол находится в режиме {@link SBIS3.CONTROLS.MultiSelectable#multiselect множественного выбора значений}.
+       * @see SBIS3.CONTROLS.MultiSelectable#multiselect
+       * @see SBIS3.CONTROLS.MultiSelectable#selectedItems
+       * @see SBIS3.CONTROLS.MultiSelectable#selectedKeys
        * @see setSelectedItems
        * @see addSelectedItems
        * @example
@@ -82,25 +92,28 @@ define('js!SBIS3.CONTROLS.ActiveMultiSelectable', [], function() {
          this.setSelectedItems([]);
       },
 
-      initializeSelectedItems: function() {
-        this._options.selectedItems =  new List();
-      },
 
       _prepareItems: function(items) {
+         var preparedItems;
+
          if(items instanceof Array) {
-            items = this._makeList(items);
+            preparedItems = this._makeList(items);
+         } else if (items === null) {
+            preparedItems = this._makeList();
+         } else if(!$ws.helpers.instanceOfModule(items, 'SBIS3.CONTROLS.Data.Collection.List')) {
+            throw new Error('ActiveMultiSelectable::setSelectedItems called with invalid argument');
+         } else {
+            preparedItems = items;
          }
 
-         if(!$ws.helpers.instanceOfModule(items, 'SBIS3.CONTROLS.Data.Collection.List')) {
-            throw new Error('setSelectedItems called with invalid argument');
-         }
-
-         return items;
+         return preparedItems;
       },
 
       /**
-       * Добавляет переданные элементы к набору выбранных
-       * @param {Array | SBIS3.CONTROLS.Data.Collection.List} items
+       * Добавляет новые элементы коллекции к набору выбранных.
+       * Опция актуальна, когда контрол находится в режиме {@link SBIS3.CONTROLS.MultiSelectable#multiselect множественного выбора значений}.
+       * @param {Array | SBIS3.CONTROLS.Data.Collection.List} items Массив элементов, которые нужно добавить в набор.
+       * @see SBIS3.CONTROLS.MultiSelectable#multiselect
        * @see selectedItems
        * @see selectedKeys
        * @see setSelectedItems
@@ -133,12 +146,16 @@ define('js!SBIS3.CONTROLS.ActiveMultiSelectable', [], function() {
             });
          } else if(!self._isItemSelected(items.at(0))) {
             newItems.push(items.at(0));
-            selItems.clear();
+            selItems && selItems.clear();
          }
 
          if(newItems.length) {
-            selItems.concat(newItems);
-            this.setSelectedKeys(this._convertToKeys(selItems));
+            if(selItems) {
+               selItems.concat(newItems);
+            } else {
+               this._options.selectedItems = this._makeList(newItems);
+            }
+            this.setSelectedKeys(this._convertToKeys(this._options.selectedItems));
             this._notifyOnPropertyChanged('selectedItems');
          }
       })

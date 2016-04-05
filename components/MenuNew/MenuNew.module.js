@@ -48,6 +48,7 @@ define('js!SBIS3.CONTROLS.MenuNew', [
        * @property {String} icon Иконка пункта меню.
        * @property {String} parent Идентификатор родительского пункта меню. Опция задаётся для подменю.
        * @editor icon ImageEditor
+       * @translatable title
        */
       /**
        * @cfg {ItemsMenu[]} Набор исходных данных, по которому строится отображение

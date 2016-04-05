@@ -3,10 +3,11 @@ define('js!SBIS3.CONTROLS.DateRange', [
    'js!SBIS3.CORE.CompoundControl',
    'html!SBIS3.CONTROLS.DateRange',
    'js!SBIS3.CONTROLS.Utils.DateUtil',
+   'js!SBIS3.CONTROLS.FormWidgetMixin',
    'js!SBIS3.CONTROLS.DatePicker',
    'js!SBIS3.CONTROLS.Button',
    'js!SBIS3.CORE.DateRangeChoose'
-], function (CompoundControl, dotTplFn, DateUtil) {
+], function (CompoundControl, dotTplFn, DateUtil, FormWidgetMixin) {
    'use strict';
    /**
     * SBIS3.CONTROLS.DateRange
@@ -16,7 +17,7 @@ define('js!SBIS3.CONTROLS.DateRange', [
     * @public
     * @demo SBIS3.CONTROLS.Demo.MyDateRange
     */
-   var DateRange = CompoundControl.extend(/** @lends SBIS3.CONTROLS.DateRange.prototype */{
+   var DateRange = CompoundControl.extend([FormWidgetMixin], /** @lends SBIS3.CONTROLS.DateRange.prototype */{
       _dotTplFn: dotTplFn,
       $protected: {
          _options: {

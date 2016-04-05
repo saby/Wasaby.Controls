@@ -87,6 +87,7 @@ define('js!SBIS3.CONTROLS.SelectorMixin', [],
 
             if (linkedView) {
                this._linkedView.setProperty('multiselect', this._options.multiSelect);
+               this._linkedView.setSelectedKeys(this._options.currentSelectedKeys);
                this._toggleLinkedViewEvents(true);
                this._linkedView.reload();
             }

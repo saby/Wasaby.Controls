@@ -23,13 +23,6 @@ define('js!SBIS3.CONTROLS.FilterMixin', [
              */
          };
 
-   function isFieldResetValue(element, fieldName, filter) {
-      var result =
-            ('resetValue' in element && fieldName in filter && filter[fieldName] === element.resetValue) ||
-            (!('resetValue' in element) && !(fieldName in filter));
-
-      return result;
-   }
    function propertyUpdateWrapper(func) {
       return function() {
          return this.runInPropertiesUpdate(func, arguments);
@@ -48,6 +41,7 @@ define('js!SBIS3.CONTROLS.FilterMixin', [
              * @property {null|Object|String|Boolean|Number} resetValue Значение поля при сбрасывании фильтра, или при пустом значении в value. Может быть не определено.
              * @property {String} resetCaption Текст по умолчанию. Если задали, то при пустом (или заданном в resetValue) значении будет
              * отображаться заданный здесь текст. Может быть не определено.
+             * @translatable caption resetCaption
              */
             /**
              * @cfg {filterStructure[]} Структура элемента фильтра
@@ -109,15 +103,16 @@ define('js!SBIS3.CONTROLS.FilterMixin', [
          }
          if (filter) {
             this._filterStructure = $ws.helpers.map(this._filterStructure, function(element) {
-               var
-                     newElement = $ws.core.clone(element),
-                     field = newElement.internalValueField;
+               var newElement = $ws.core.clone(element),
+                   field = newElement.internalValueField;
 
                function setDescrWithReset(descr, deleteDescr) {
-                  if (('resetValue' in element && field in filter && element.resetValue === filter[field]) ||
-                        (!('resetValue' in element) && !(field in filter)))
-                  {
-                     if ('resetCaption' in element) {
+                  var hasResetValue = element.hasOwnProperty('resetValue'),
+                      hasInternalValue = filter.hasOwnProperty(field);
+
+                  if((hasResetValue && hasInternalValue && $ws.helpers.isEqualObject(element.resetValue, filter[field])) || (!hasResetValue && !hasInternalValue)) {
+
+                     if (element.hasOwnProperty('resetCaption')) {
                         newElement.caption = element.resetCaption;
                      } else {
                         delete newElement.caption;
@@ -173,24 +168,30 @@ define('js!SBIS3.CONTROLS.FilterMixin', [
             filterResetLinkText: this.getProperty('resetLinkText')
          });
       },
-      _resetFilter: propertyUpdateWrapper(function(internalOnly) {
+      _resetFilter: function(internalOnly) {
          var resetFilter = this.getResetFilter(),
-               context = this._getCurrentContext();
+             context = this._getCurrentContext(),
+             self = this;
 
-         if (context) {
-            context.setValueSelf(this._options.internalContextFilterName + '/filter', resetFilter);
-         }
+         /* Синхронизация св-в должна происходить один раз, поэтому делаю обёртку */
+         propertyUpdateWrapper(function() {
+            if (context) {
+               context.setValueSelf(self._options.internalContextFilterName + '/filter', resetFilter);
+            }
 
-         if (!internalOnly) {
-            this._updateFilterStructure(undefined, resetFilter);
-            this._notifyFilterUpdate();
-         }
+            if (!internalOnly) {
+               self._updateFilterStructure(undefined, resetFilter);
+               self._notifyFilterUpdate();
+            }
+         }).call(this);
 
-	      this._notify('onResetFilter');
-      }),
+         this._notify('onResetFilter');
+      },
+
       _getCurrentContext : function(){
          /*Must be implemented!*/
       },
+
       setFilter: function() {
          throw new Error('Свойство "filter" работает только на чтение. Менять его надо через метод setFilterStructure');
       },

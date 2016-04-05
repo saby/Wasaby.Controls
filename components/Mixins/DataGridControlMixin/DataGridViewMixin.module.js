@@ -25,6 +25,7 @@ define('js!SBIS3.CONTROLS.DataGridControl.DataGridViewMixin', [
              * @property {String} headTemplate Шаблон отображения шапки колонки
              * @property {String} headTooltip Всплывающая подсказка шапки колонки
              * @property {String|Function} cellTemplate Шаблон отображения ячейки
+             * @translatable title headTooltip
              */
 
             /**

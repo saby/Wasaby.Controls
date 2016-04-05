@@ -26,7 +26,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.IIndexedCollection', [], function () {
        * @param {*} value Значение свойства элемента.
        * @returns {Array.<Number>}
        */
-      getIndiciesByValue: function (property, value) {
+      getIndicesByValue: function (property, value) {
          throw new Error('Method must be implemented');
       }
    };

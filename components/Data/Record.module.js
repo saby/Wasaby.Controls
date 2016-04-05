@@ -29,18 +29,12 @@ define('js!SBIS3.CONTROLS.Data.Record', [
       _moduleName: 'SBIS3.CONTROLS.Data.Record',
       $protected: {
          _options: {
-
             /**
              * @cfg {SBIS3.CONTROLS.Data.Collection.RecordSet} Рекордсет, которому принадлежит запись. Может не принадлежать рекордсету.
              * @see getOwner
              */
             owner: null
          },
-
-         /**
-          * @member {Array.<String>} Описание всех полей, полученных из данных в "сыром" виде
-          */
-         _fields: null,
 
          /**
           * @member {Object.<String, *>} Измененные поля и оригинальные значения
@@ -163,15 +157,12 @@ define('js!SBIS3.CONTROLS.Data.Record', [
 
       setRawData: function(rawData) {
          Record.superclass.setRawData.call(this, rawData);
-         this._resetRawDataAdapter();
          this._propertiesCache = {};
-         this._fields = null;
          this._notify('onPropertyChange');
       },
 
       setAdapter: function (adapter) {
          Record.superclass.setAdapter.call(this, adapter);
-         this._resetRawDataAdapter();
          this._propertiesCache = {};
       },
 
@@ -179,8 +170,6 @@ define('js!SBIS3.CONTROLS.Data.Record', [
          this._checkFormatIsWritable();
          format = this._buildField(format);
          Record.superclass.addField.call(this, format, at);
-         this._getRawDataAdapter().addField(format, at);
-         this._fields = null;
 
          if (value !== undefined) {
             this.set(format.getName(), value);
@@ -190,23 +179,11 @@ define('js!SBIS3.CONTROLS.Data.Record', [
       removeField: function(name) {
          this._checkFormatIsWritable();
          Record.superclass.removeField.call(this, name);
-         this._getRawDataAdapter().removeField(name);
-         this._fields = null;
       },
 
       removeFieldAt: function(at) {
          this._checkFormatIsWritable();
          Record.superclass.removeFieldAt.call(this, at);
-         this._getRawDataAdapter().removeFieldAt(at);
-         this._fields = null;
-      },
-
-      _getRawDataFields: function() {
-         return this._fields || (this._fields = this._getRawDataAdapter().getFields());
-      },
-
-      _getRawDataFormat: function(name) {
-         return this._getRawDataAdapter().getFormat(name);
       },
 
       /**

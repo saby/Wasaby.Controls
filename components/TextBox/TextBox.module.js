@@ -54,53 +54,78 @@ define('js!SBIS3.CONTROLS.TextBox', ['js!SBIS3.CONTROLS.TextBoxBase','html!SBIS3
             beforeFieldWrapper: null,
             afterFieldWrapper: null,
             /**
-             * @cfg {String} Форматирование регистра текста
-             * @example
-             * <pre class="brush:xml">
-             *     <option name="textTransform">uppercase</option>
-             * </pre>
+             * @cfg {String} Устанавливает форматирование регистра текстового значения в поле ввода.
              * @variant uppercase Все символы верхним регистром.
              * @variant lowercase Все символы нижним регистром.
              * @variant none Без изменений.
+             * @remark
+             * Опция используется в случаях, когда все символы текста в поле ввода нужно отобразить прописными
+             * (верхний регистр) или строчными (нижний регистр).
+             * Заменить или установить регистр текста можно при помощи метода {@link setTextTransform}.
+             * @example
+             * Пример отображения в поле связи всех символов текста прописными
+             * для {@link placeholder текста подсказки внутри поля ввода}:
+             * ![](/TextBox02.png)
+             * фрагмент верстки:
+             * <pre class="brush:xml">
+             *     <option name="textTransform">uppercase</option>
+             * </pre>
              * @see setTextTransform
+             * @see placeholder
              *
              */
             textTransform: 'none',
             /**
-             * @cfg {Boolean} Выделять или нет текст в поле при получении фокуса
+             * @cfg {Boolean} Определяет режим выделения текста в поле ввода при получении фокуса.
+             * @variant true Выделять текст.
+             * @variant false Не выделять текст.
              * @remark
-             * Возможные значения при получении полем фокуса:
-             * <ul>
-             *    <li>true - выделять текст;</li>
-             *    <li>false - не выделять.</li>
-             * </ul>
+             * Используется в случаях, когда поле ввода нужно использовать в качестве источника текстовой информации:
+             * пользователю требуется скопировать строку в поле для каких-либо дальнейших действий.
              * @example
+             * Иллюстрация выделения текста, переданного в поле связи опцией {@link SBIS3.CONTROLS.TextBoxBase#text}:
+             * ![](/TextBox03.png)
+             * фрагмент верстки:
              * <pre class="brush:xml">
              *     <option name="selectOnClick">true</option>
              * </pre>
+             * @see SBIS3.CONTROLS.TextBoxBase#text
              */
             selectOnClick: false,
             /**
-             * @cfg {String} Текст подсказки внутри поля ввода
+             * @cfg {String} Устанавливает текст подсказки внутри поля ввода.
              * @remark
-             * Данный текст отображается внутри поля до момента получения фокуса.
+             * Данный текст отображается внутри поля ввода до момента получения фокуса.
+             * Заменить текст подсказки, заданный опцией, можно при помощи метода {@link setPlaceholder}.
              * @example
+             * Пример 1. Текст подсказки в поле связи:
+             * ![](/TextBox01.png)
+             * фрагмент верстки:
              * <pre class="brush:xml">
-             *     <option name="placeholder">Введите ФИО полностью</option>
+             *     <option name="placeholder">ФИО исполнителя или название рабочей зоны</option>
              * </pre>
+             * Пример 2. Текст подсказки с {@link textTransform форматированием регистра}:
+             * ![](/TextBox02.png)
              * @see setPlaceholder
+             * @see textTransform
              * @translatable
              */
             placeholder: '',
             /**
-             * @cfg {String} Регулярное выражение, в соответствии с которым будет осуществляться ввод
+             * @cfg {String} Устанавливает регулярное выражение, в соответствии с которым будет осуществляться валидация
+             * вводимых символов.
              * @remark
-             * Каждый вводимый символ будет проверяться на соответсвие указанному в этой опции регулярному выражению.
-             * Несоответсвующие символы невозможно напечатать.
+             * Служит для фильтрации вводимых символов в поле ввода по условию, установленному регулярным выражением.
+             * Каждый вводимый символ будет проверяться на соответствие указанному в этой опции регулярному выражению;
+             * несоответствующие символы ввести будет невозможно.
              * @example
-             * Разрешим ввод только цифр:
+             * Разрешен ввод только цифр:
              * <pre class="brush:xml">
-             *     <option name="inputRegExp">/^\d+$/</option>
+             *     <option name="inputRegExp">[0-9]</option>
+             * </pre>
+             * Разрешен ввод только кириллицы:
+             * <pre class="brush:xml">
+             *     <option name="inputRegExp">[а-яА-ЯёЁ]</option>
              * </pre>
              */
             inputRegExp : ''
@@ -135,19 +160,7 @@ define('js!SBIS3.CONTROLS.TextBox', ['js!SBIS3.CONTROLS.TextBoxBase','html!SBIS3
             self._fromTab = false;
          });
 
-         this._inputField.bind('focusin', function (e) {
-            if (self._options.selectOnClick || self._fromTab){
-               self._inputField.select();
-            }
-            self._fromTab = true;
-            /* При получении фокуса полем ввода, сделаем контрол активным.
-            *  Делать контрол надо активным по фокусу, т.к. при клике и уведении мыши,
-            *  кусор поставится в поле ввода, но соыбтие click не произойдёт и контрол актвным не станет, а должен бы.*/
-            if(!self.isActive()) {
-               self.setActive(true, false, true);
-               e.stopPropagation();
-            }
-         });
+         this._inputField.bind('focusin', this._inputFocusInHandler.bind(this));
 
          this._inputField.bind('focusout', function(){
             var text = self._inputField.val();
@@ -212,8 +225,7 @@ define('js!SBIS3.CONTROLS.TextBox', ['js!SBIS3.CONTROLS.TextBoxBase','html!SBIS3
       },
 
       /**
-       * Установить подсказку, отображаемую внутри поля.
-       * Метод установки или замены текста подсказки, заданного опцией {@link placeholder}.
+       * Устанавливает подсказку, отображаемую внутри поля ввода.
        * @param {String} text Текст подсказки.
        * @example
        * <pre>
@@ -234,15 +246,11 @@ define('js!SBIS3.CONTROLS.TextBox', ['js!SBIS3.CONTROLS.TextBoxBase','html!SBIS3
       },
 
       /**
-       * Установить форматирование текста.
-       * Метод установки или замены форматирования регистра текста, заданного опцией {@link textTransform}.
+       * Устанавливает форматирование регистра текста в поле ввода.
        * @param {String} textTransform Необходимое форматирование регистра текста.
-       * Возможные значения:
-       * <ul>
-       *    <li>uppercase - все символы верхним регистром;</li>
-       *    <li>lowercase - все символы нижним регистром;</li>
-       *    <li>none - без изменений.</li>
-       * </ul>
+       * @variant uppercase Все символы текста становятся прописными (верхний регистр).
+       * @variant lowercase Все символы текста становятся строчными (нижний регистр).
+       * @variant none Текст не меняется.
        * @example
        * <pre>
        *     control.setTextTransform("lowercase");
@@ -299,7 +307,7 @@ define('js!SBIS3.CONTROLS.TextBox', ['js!SBIS3.CONTROLS.TextBoxBase','html!SBIS3
       },
 
       _inputRegExp: function (e, regexp) {
-         var keyCode = e.which || event.keyCode;
+         var keyCode = e.which || e.keyCode;
          if (keyCode < 32 || e.ctrlKey || e.altKey) {
             return false;
          }
@@ -307,6 +315,20 @@ define('js!SBIS3.CONTROLS.TextBox', ['js!SBIS3.CONTROLS.TextBoxBase','html!SBIS3
             return false;
          }
          return true;
+      },
+
+      _inputFocusInHandler: function(e) {
+         if (this._options.selectOnClick || this._fromTab){
+            this._inputField.select();
+         }
+         this._fromTab = true;
+         /* При получении фокуса полем ввода, сделаем контрол активным.
+          *  Делать контрол надо активным по фокусу, т.к. при клике и уведении мыши,
+          *  кусор поставится в поле ввода, но соыбтие click не произойдёт и контрол актвным не станет, а должен бы.*/
+         if(!this.isActive()) {
+            this.setActive(true, false, true);
+            e.stopPropagation();
+         }
       },
 
       _createCompatPlaceholder : function() {

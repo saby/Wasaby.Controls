@@ -8,9 +8,10 @@ define('js!SBIS3.CONTROLS.ItemsToolbar',
        'js!SBIS3.CONTROLS.IconButton',
        'js!SBIS3.CONTROLS.ItemActionsGroup',
        'html!SBIS3.CONTROLS.ItemsToolbar',
-       'html!SBIS3.CONTROLS.ItemsToolbar/editActions'
+       'html!SBIS3.CONTROLS.ItemsToolbar/editActions',
+       'js!SBIS3.CORE.MarkupTransformer'
     ],
-    function(CompoundControl, IconButton, ItemActionsGroup, dotTplFn, editActionsTpl) {
+    function(CompoundControl, IconButton, ItemActionsGroup, dotTplFn, editActionsTpl, MarkupTransformer) {
 
        'use strict';
 
@@ -38,6 +39,9 @@ define('js!SBIS3.CONTROLS.ItemsToolbar',
              _currentTarget: null,     // Элемент, относительно которого сейчас отображается тулбар
              _lockingToolbar: false    // Состояние заблокированности тулбара
           },
+          $constructor: function() {
+             this._publish('onShowItemActionsMenu', 'onItemActionActivated');
+          },
           /**
            * Создает или возвращает уже созданные кнопки редактирования
            * @returns {null|SBIS3.CONTROLS.ItemsToolbar.$protected._editActions|*|SBIS3.CONTROLS.ItemsToolbar._editActions}
@@ -46,7 +50,7 @@ define('js!SBIS3.CONTROLS.ItemsToolbar',
           _getEditActions: function() {
              var toolbarContent;
              if (!this._editActions) {
-                (toolbarContent = this._getToolbarContent()).append(editActionsTpl());
+                (toolbarContent = this._getToolbarContent()).append(MarkupTransformer(editActionsTpl()));
                 this.reviveComponents();
                 this._editActions = toolbarContent.find('.controls-ItemsToolbar__editActions');
              }
@@ -88,9 +92,13 @@ define('js!SBIS3.CONTROLS.ItemsToolbar',
                 linkedControl: this.getParent(),
                 touchMode: this._options.touchMode,
                 handlers : {
+                   onActionActivated: function(e, key) {
+                      self._notify('onItemActionActivated', key);
+                   },
                    onShowMenu: function() {
                       this.getContainer().addClass('ws-invisible');
                       self.lockToolbar();
+                      self._notify('onShowItemActionsMenu');
                    },
                    onHideMenu: function() {
                       this.getContainer().removeClass('ws-invisible');
@@ -248,16 +256,29 @@ define('js!SBIS3.CONTROLS.ItemsToolbar',
            */
           show: function(target, animate) {
              var container = this.getContainer()[0],
-                 position,
-                 toolbarContent;
+                 isActionsHidden = this._isItemsActionsHidden() && this._isEditActionsHidden(),
+                 hasItemsActions = this._options.itemsActions.length,
+                 itemsActions, position, toolbarContent;
 
              this._target = target;
              //Если тулбар зафиксирован или отсутствуют опции записи и кнопки редактирования по месту, то ничего не делаем
-             if (this._lockingToolbar || (this._isItemsActionsHidden() && this._isEditActionsHidden())) {
+             if (this._lockingToolbar || isActionsHidden) {
+
+                /* Если операций нет, то сроем тулбар */
+                if(isActionsHidden) {
+                   this.hide();
+                } else if(hasItemsActions) {
+                   itemsActions = this.getItemsActions();
+
+                   /* Если показаны операции над записью и открыто меню, то надо обновить видимость */
+                   if(itemsActions.isItemActionsMenuVisible()) {
+                      this.getItemsActions().applyItemActions();
+                   }
+                }
                 return;
              }
              this._currentTarget = target;                  // Запоминаем таргет в качестве текущего
-             if (this._options.itemsActions.length) {       // Если имеются опции записи, то создаем их и отображаем
+             if (hasItemsActions) {       // Если имеются опции записи, то создаем их и отображаем
                 this.showItemsActions(target);
              }
              // Рассчитываем и устанавливаем позицию тулбара

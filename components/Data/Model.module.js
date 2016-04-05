@@ -128,6 +128,10 @@ define('js!SBIS3.CONTROLS.Data.Model', [
       // region SBIS3.CONTROLS.Data.IPropertyAccess
 
       get: function (name) {
+         if (this._propertiesCache.hasOwnProperty(name)) {
+            return this._propertiesCache[name];
+         }
+
          var value = Model.superclass.get.call(this, name),
             property = this.getProperties()[name];
          if (property) {

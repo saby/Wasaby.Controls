@@ -81,20 +81,14 @@ define('js!SBIS3.CONTROLS.MergeDialogTemplate', [
                 'Разворот': 'С разворотом',
                 'usePages': 'full',
                 'mergeIds': this._options.items
-            }).addCallback(function(ds) {
-                //TODO: Данный костыль нужен для того, чтобы добавить в dataSet колонки, выпилить когда необходимое api появится у dataSet'а
-                var rawData = ds.getRawData();
-                rawData.s.push({n: COMMENT_FIELD_NAME, t: 'Строка'}, {n: AVAILABLE_FIELD_NAME, t: 'Логическое'});
-                self._treeView.setFilter({}, true);
-                self._treeView.setDataSource(new MemorySource({
-                    idProperty: dataSource.getIdProperty(),
-                    data: rawData,
-                    adapter: new SbisAdapter()
-                }));
+            }).addCallback(function(recordSet) {
+                //Добавим колонки с полями доступности объединения и комментарием
+                recordSet.addField({name: COMMENT_FIELD_NAME, type: 'string'});
+                recordSet.addField({name: AVAILABLE_FIELD_NAME, type: 'boolean'});
 
                 //Получим ключи всех записей которые хотим объединять.
                 //Не берём папки, которые присутствуют в датасете для построения структуры.
-                ds.each(function(rec) {
+                recordSet.each(function(rec) {
                     if (!rec.get(self._options.hierField + '@')) {
                         self._treeViewKeys.push(rec.getKey());
                     }

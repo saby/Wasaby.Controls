@@ -10,13 +10,14 @@ define('js!SBIS3.CONTROLS.EditAtPlace',
       'use strict';
       /**
        * @class SBIS3.CONTROLS.EditAtPlace
-       * @extends SBIS3.CONTROLS.CompoundControl
+       * @extends $ws.proto.CompoundControl
        * @control
        * @public
        * @category Inputs
        * @mixes SBIS3.CONTROLS.PickerMixin
        * @mixes SBIS3.CONTROLS.EditAtPlaceMixin
        * @author Крайнов Дмитрий Олегович
+       * @cssModifier controls-EditAtPlace__ellipsis Текстовое поле обрезается троеточием, если не умещается в контейнере
        */
 
       var EditAtPlace = CompoundControl.extend([PickerMixin, EditAtPlaceMixin], /** @lends SBIS3.CONTROLS.EditAtPlace.prototype */{
@@ -204,15 +205,28 @@ define('js!SBIS3.CONTROLS.EditAtPlace',
                this._notify('onTextChange', this._options.text);
             }
             
-            //TODO: Декоратор даты, временно применяется здесь до лучших времен (ждем virtualDOM'a) 
+            //TODO: Декоратор даты, временно применяется здесь до лучших времен (ждем virtualDOM'a)
             if (text instanceof(Date)){
-               if (!this._dateDecorator.decorator) {
-                  this._dateDecorator.decorator = new DateFormatDecorator();
-               }
-               text = this._dateDecorator.decorator.apply(text, this._dateDecorator.mask);
+               text = this._getTextFromDate(text);
+            }
+            //Если пришел период - склеиваем из дат строку
+            else if (text instanceof Object && text.startDate && text.endDate){
+               text = this._getTextByDateRange(text);
             }
             text = $ws.helpers.escapeHtml(text);
             this._drawText(text);
+         },
+         _getTextFromDate: function(date){
+            if (date instanceof(Date)) {
+               if (!this._dateDecorator.decorator) {
+                  this._dateDecorator.decorator = new DateFormatDecorator();
+               }
+               return this._dateDecorator.decorator.apply(date, this._dateDecorator.mask);
+            }
+            return date;
+         },
+         _getTextByDateRange: function(range){
+            return 'c ' + this._getTextFromDate(range.startDate) + ' по ' + this._getTextFromDate(range.endDate);
          },
          /**
           * Получить текстовое значение контрола

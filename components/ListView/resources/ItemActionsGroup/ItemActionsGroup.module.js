@@ -15,8 +15,8 @@ define('js!SBIS3.CONTROLS.ItemActionsGroup',
 
       'use strict';
 
-      var VERTICAL_OFFSET = -21;
-      var HORIZONTAL_OFFSET = 3;
+      var VERTICAL_OFFSET = -5;
+      var HORIZONTAL_OFFSET = 5;
 
       var ItemActionsGroup = ButtonGroupBaseDS.extend( /** @lends SBIS3.CONTROLS.ItemActionsGroup.prototype */ {
          $protected: {
@@ -33,7 +33,7 @@ define('js!SBIS3.CONTROLS.ItemActionsGroup',
          },
 
          $constructor: function() {
-            this._publish('onShowMenu', 'onHideMenu');
+            this._publish('onShowMenu', 'onHideMenu', 'onActionActivated');
             $ws.single.CommandDispatcher.declareCommand(this, 'showMenu', this.showItemActionsMenu);
 
             this.once('onInit', function() {
@@ -53,9 +53,6 @@ define('js!SBIS3.CONTROLS.ItemActionsGroup',
                 isActionVisible,
                 isMain;
 
-            /* Если открыто меню, не меняем состояние кнопок */
-            if(this._itemActionsMenu && this._itemActionsMenu.isVisible()) return;
-
             for(var i in itemsInstances) {
                if(itemsInstances.hasOwnProperty(i)) {
                   isMain = this._itemActionsButtons[i]['isMainAction'];
@@ -71,6 +68,9 @@ define('js!SBIS3.CONTROLS.ItemActionsGroup',
                   }
                }
             }
+            /* Если открыто меню, то не меняем состояние кнопки меню */
+            if(this.isItemActionsMenuVisible()) return;
+
             this._itemActionsMenuButton[onlyMain ? 'addClass' : 'removeClass']('ws-hidden');
          },
          /**
@@ -88,7 +88,6 @@ define('js!SBIS3.CONTROLS.ItemActionsGroup',
                   offset: HORIZONTAL_OFFSET
                },
                target = this._itemActionsMenuButton,
-               corner = 'br',
                 // TODO перевести на проекции
                items = this.getItems().getRawData();
 
@@ -96,7 +95,6 @@ define('js!SBIS3.CONTROLS.ItemActionsGroup',
                verticalAlign.offset = 0;
                horizontalAlign.offset = 0;
                target = this._container;
-               corner = 'tr';
             }
 
             this._itemActionsMenu = new ContextMenu({
@@ -109,7 +107,7 @@ define('js!SBIS3.CONTROLS.ItemActionsGroup',
                parent: this,
                opener: this,
                target:  target,
-               corner: corner,
+               corner: 'tr',
                closeButton: true,
                verticalAlign: verticalAlign,
                horizontalAlign: horizontalAlign,
@@ -197,7 +195,12 @@ define('js!SBIS3.CONTROLS.ItemActionsGroup',
                 this._activeItem.container,
                 this._activeItem.key,
                 this._activeItem.record);
-            this.hide();
+
+            /* В обработчике могут вызвать destroy */
+            if(!this.isDestroyed()) {
+               this._notify('onActionActivated', this._activeItem.key);
+               this.hide();
+            }
          },
 
          _getItemsContainer: function(){

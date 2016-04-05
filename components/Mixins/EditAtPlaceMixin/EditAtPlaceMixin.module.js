@@ -31,7 +31,7 @@ define('js!SBIS3.CONTROLS.EditAtPlaceMixin', ['js!SBIS3.CONTROLS.IconButton'], f
          },
 
          _applyEdit: function () {
-            if (this.validate()) {
+            if (this.validate(undefined, undefined, true)) {
                var values = {};
                this._inEditMode = false;
                if (this._options.editInPopup) {

@@ -11,7 +11,7 @@ define('js!SBIS3.CONTROLS.TextBoxBase',
    /**
     * Базовый класс для текстового поля
     * @class SBIS3.CONTROLS.TextBoxBase
-    * @extends $ws.proto.Control
+    * @extends $ws.proto.CompoundControl
     * @mixes SBIS3.CONTROLS.FormWidgetMixin
     * @public
     * @author Крайнов Дмитрий Олегович
@@ -32,7 +32,7 @@ define('js!SBIS3.CONTROLS.TextBoxBase',
    var TextBoxBase = CompoundControl.extend([FormWidgetMixin, DataBindMixin, CompoundActiveFixMixin], /** @lends SBIS3.CONTROLS.TextBoxBase.prototype*/ {
 
        /**
-        * @event onTextChange Срабатывает при изменении текста в поле ввода.
+        * @event onTextChange Происходит при изменении текста в поле ввода.
         * @param {$ws.proto.EventObject} eventObject Дескриптор события.
         * @param {String} text Текст в поле ввода.
         * @example
@@ -44,7 +44,6 @@ define('js!SBIS3.CONTROLS.TextBoxBase',
         *     };
         * </pre>
         * @see setText
-        * @see setValue
         */
 
       $protected: {
@@ -60,62 +59,91 @@ define('js!SBIS3.CONTROLS.TextBoxBase',
          ],
          _options: {
             /**
-             * @cfg {String} Текст в поле ввода
+             * @cfg {String} Устанавливает текстовое значение в поле ввода.
+             * @remark
+             * Используется, когда необходимо передать в поле ввода определенное текстовое значение.
+             * С опцией {@link SBIS3.CONTROLS.SuggestMixin#listFilter} используется в настройке параметров фильтрации
+             * списка значений для автодополнения. Атрибут bind привязывает значение поля ввода к полю контекста.
+             * Длина текста, передаваемого в поле ввода, не зависит от настройки опции {@link maxLength}.
+             * Установить или изменить текстовое значение в поле ввода можно с помощью метода {@link setText}.
+             * Получить текстовое значение поля ввода можно с помощью метода {@link getText}.
              * @example
+             * Пример 1. Устанавливаем текст в поле ввода для поля связи:
              * <pre class="brush:xml">
-             *     <option name="text">Какой-то текст, с которым построится поле ввода</option>
+             *    <option name="text">Филиппов Павел</option>
+             * </pre>
+             * Пример 2. Привязываем значения поля связи к полю myTextField в контексте для настройки фильтрации списка
+             * значений автодополнения. В этом примере проиллюстрирована фильтрация списка по переданному тексту в
+             * поле связи.
+             * ![](/TextBoxBase01.png)
+             * фрагмент верстки:
+             * <pre class="brush:xml">
+             *     <option name="text" bind="myTextField" value="Филиппов Павел"></option>
+             *     <options name="listFilter">
+             *         <option name="ФИО" bind="myTextField" oneWay="true" value=""></option>
+             *     </options>
              * </pre>
              * @see trim
              * @see maxLength
              * @see setText
              * @see getText
-             * @see setValue
-             * @see getValue
+             * @see SBIS3.CONTROLS.SuggestMixin#listFilter
              * @translatable
              */
             text: '',
             /**
-             * @cfg {Boolean} Обрезать ли пробелы при вставке
+             * @cfg {Boolean} Устанавливает режим обрезки пробелов в начале и конце добавляемого текста.
+             * @variant true Обрезать пробелы.
+             * @variant false Не обрезать пробелы.
              * @remark
-             * При включённой опции обрезаются пробелы в начале и в конце текста.
-             * Возможные значения:
-             * <ul>
-             *    <li>true - обрезать пробелы;</li>
-             *    <li>false - не обрезать.</li>
-             * </ul>
+             * Опцию применяют для исключения ситуаций, при которых в начале и конце текста образуются пробелы.
+             * При включённом режиме пробелы в начале и конце введенного текста будут обрезаны.
+             * Будет возвращена новая, усеченная строка. Это следует учитывать при определении {@link maxLength} -
+             * максимального количества символов, которое может содержать текст при вводе.
              * @example
              * <pre class="brush:xml">
              *     <option name="trim">true</option>
              * </pre>
              * @see text
              * @see maxLength
+             * @see setMaxLength
              */
             trim: false,
             /**
-             * @cfg {Number} Максимальное количество символов, которое может содержать значение при вводе.
+             * @cfg {Number} Определяет максимальное количество символов, которое может содержать поле ввода.
+             * @remark
+             * Применяется для ограничения длины вводимого текста. Значение равно допустимому для ввода количеству символов.
+             * В случае превышения количества символов ввод не будет осуществлён.
+             * Следует учитывать, что при включенной опции {@link trim} длина текста может измениться.
+             * Опция не влияет на длину текста, переданного в поле ввода опцией {@link text}.
+             * Установить или переопределить максимальное количество символов можно с помощью метода {@link setMaxLength}.
              * @example
              * <pre class="brush:xml">
              *     <option name="maxLength">40</option>
              * </pre>
-             * @remark
-             * Применяется для ввода значения.
-             * В случае превышения количества символов ввод не будет осуществлён.
              * @see setMaxLength
              * @see trim
              * @see text
              */
             maxLength: null,
             /**
-             * @cfg {Boolean} Устанавливать фокус по активации контрола в мобильных устройствах.
-             * Обычное поведение для полей ввода на мобильных устройствах - не устанавливать фокус при вызове
-             * setActive(true), поскольку это вызовет появление клавиатуры, что неудобно - она нужна тогда, когда пользователь
-             * сам тыкнул в поле ввода, или в исключительных случаях - когда есть какой-то модальный диалог с полем ввода, и
-             * ему точно ничего другого, как писать в это поле ввода, не остаётся.
+             * @cfg {Boolean} Определяет поведение приложения на мобильных устройствах, когда фокус по умолчанию при
+             * открытии страницы или диалога установлен на поле ввода.
+             * @variant true Установить фокус.
+             * @variant false Не устанавливать фокус.
+             * @remark
+             * Установленный в поле ввода фокус (курсор) на мобильных устройствах инициирует появление диалога с клавиатурой
+             * для ввода значения. Опция позволяет изменить это поведение при открытии новых страниц или диалогов, когда
+             * в них фокус установлен на одном из полей ввода.
+             * Если полей несколько, то, как правило, появление клавиатуры неуместно. Ожидается, что пользователь сам
+             * выберет поле для ввода значения.
+             * В других случаях, когда на странице или диалоге всего одно поле ввода, появления клавиатуры считается уместным.
+             * Установить или изменить фокус для поля ввода можно с помощью метода {@link $ws.proto.Control#setActive}.
              * @example
              * <pre class="brush:xml">
              *    <option name="focusOnActivatedOnMobiles">true</option>
              * </pre>
-             * <wiTag group="Управление">
+             * @see $ws.proto.Control#setActive
              */
             focusOnActivatedOnMobiles: false
          }
@@ -132,8 +160,8 @@ define('js!SBIS3.CONTROLS.TextBoxBase',
       },
 
       /**
-       * Установить текст внутри поля.
-       * @param {String} text Текст для установки в поле ввода.
+       * Устанавливает текстовое значение внутри поля ввода.
+       * @param {String} text Текстовое значение, которое будет установлено в поле ввода.
        * @example
        * <pre>
        *     if (control.getText() == "Введите ФИО") {
@@ -142,8 +170,6 @@ define('js!SBIS3.CONTROLS.TextBoxBase',
        * </pre>
        * @see text
        * @see getText
-       * @see setValue
-       * @see getValue
        */
       setText: function(text){
          //null, NaN, undefined оставляем как есть, но выводим их как пустую строку
@@ -157,7 +183,7 @@ define('js!SBIS3.CONTROLS.TextBoxBase',
       },
 
       /**
-       * Получить текст внутри поля.
+       * Получает текстовое значение поля ввода.
        * @returns {String} Текст - значение поля ввода.
        * @example
        * <pre>
@@ -167,15 +193,13 @@ define('js!SBIS3.CONTROLS.TextBoxBase',
        * </pre>
        * @see text
        * @see setText
-       * @see setValue
-       * @see getValue
        */
       getText:function(){
          return this._options.text;
       },
 
       /**
-       * Установить максимальное количество символов, которое можно ввести.
+       * Устанавливает максимальное количество символов, которое можно ввести в поле ввода.
        * @param {Number} num Количество символов.
        * @example
        * <pre>
@@ -184,6 +208,7 @@ define('js!SBIS3.CONTROLS.TextBoxBase',
        *    }
        * </pre>
        * @see maxLength
+       * @see text
        */
       setMaxLength: function(num) {
          this._options.maxLength = num;

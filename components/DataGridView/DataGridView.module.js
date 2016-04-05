@@ -50,6 +50,10 @@ define('js!SBIS3.CONTROLS.DataGridView',
          _arrowLeft: undefined,                       //Контейнер для левой стрелки
          _arrowRight: undefined,                      //Контейнер для правой стрелки
          _thumb: undefined,                           //Контейнер для ползунка
+         _hoveredColumn: {
+            cells: null,
+            columnIndex: null
+         },
          _stopMovingCords: {
             left: 0,
             right: 0
@@ -103,6 +107,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
              * @editorConfig resultTemplate extFilter xhtml
              * @editor cellTemplate CloudFileChooser
              * @editorConfig cellTemplate extFilter xhtml
+             * @translatable title
              */
             /**
              * @cfg {Columns[]} Набор колонок
@@ -165,6 +170,41 @@ define('js!SBIS3.CONTROLS.DataGridView',
          DataGridView.superclass.init.call(this);
          if(this.hasPartScroll()) {
             this._initPartScroll();
+         }
+      },
+
+      _mouseMoveHandler: function(e) {
+         DataGridView.superclass._mouseMoveHandler.apply(this, arguments);
+
+         var td = $(e.target).closest('.controls-DataGridView__td', this._container[0]),
+             index, hoveredColumn;
+
+         if(td.length) {
+            index = td.index();
+            hoveredColumn = this._hoveredColumn;
+
+            if (hoveredColumn.columnIndex !== index) {
+               this._clearHoveredColumn();
+               hoveredColumn.columnIndex = index;
+               hoveredColumn.cells = this._getItemsContainer().find('> .controls-DataGridView__tr').map(function (id, elem) {
+                  return elem.children[index];
+               }).addClass('controls-DataGridView__hoveredColumn__cell');
+            }
+         }
+      },
+
+      _mouseLeaveHandler: function() {
+         DataGridView.superclass._mouseLeaveHandler.apply(this, arguments);
+         this._clearHoveredColumn();
+      },
+
+      _clearHoveredColumn: function() {
+         var hoveredColumn = this._hoveredColumn;
+
+         if(hoveredColumn.columnIndex !== null) {
+            hoveredColumn.cells.removeClass('controls-DataGridView__hoveredColumn__cell');
+            hoveredColumn.cells = null;
+            hoveredColumn.columnIndex = null;
          }
       },
 
