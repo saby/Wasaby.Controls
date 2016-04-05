@@ -1,24 +1,34 @@
 define('js!SBIS3.CONTROLS.CompositeViewMixin', ['html!SBIS3.CONTROLS.CompositeViewMixin'], function(dotTplFn) {
    'use strict';
    /**
-    * Позволяет контролу отображать данные в виде плитки/списка/таблицы
+    * Миксин добавляет функционал, который позволяет контролу устанавливать режимы отображения элементов коллекции по типу "Таблица", "Плитка" и "Список".
     * @mixin SBIS3.CONTROLS.CompositeViewMixin
     * @public
+    * @author Крайнов Дмитрий Олегович
     */
-   var MultiView = {
+   var MultiView = /** @lends SBIS3.CONTROLS.CompositeViewMixin.prototype */{
       _dotTplFn : dotTplFn,
       $protected: {
          _tileWidth: null,
          _folderWidth: null,
          _options: {
             /**
-             * @cfg {Object} Режим отображения
-             * @variant table таблица
-             * @variant list список
-             * @variant tile плитка
+             * @cfg {String} Устанавливает режим отображения элементов коллекции
+             * @variant table Режим отображения "Таблица"
+             * @variant list Режим отображения "Список"
+             * @variant tile Режим отображения "Плитка"
              */
             viewMode : 'table',
-
+            /**
+             * @cfg {String} Устанавливает файловое поле элемента коллекции, которое предназначено для хранения изображений.
+             * @remark
+             * Файловое поле используется в шаблоне для построения отображения элементов коллекции.
+             * Использование опции актуально для режимов отображения "Список" и "Плитка".
+             * Если для этих режимов используется пользовательский шаблон (задаётся опциями {@link listTemplate} и {@link tileTemplate}), то опция также неактуальна.
+             * @see SBIS3.CONTROLS.DSMixin#displayField
+             * @see tileTemplate
+             * @see listTemplate
+             */
             imageField : null,
             /**
              * @cfg {String} Шаблон отображения строки в режиме "Список".
