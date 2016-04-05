@@ -127,12 +127,7 @@ define('js!SBIS3.CONTROLS.Selectable', ['js!SBIS3.CONTROLS.Data.Utils', 'js!SBIS
             this._options.selectedIndex = -1;
          },
          destroy: function () {
-            if (this._utilityEnumerator) {
-               this._utilityEnumerator.unsetObservableCollection(
-                  this._itemsProjection
-               );
-            }
-            this._utilityEnumerator = undefined;
+            this._resetUtilityEnumerator();
          }
       },
 
@@ -179,6 +174,14 @@ define('js!SBIS3.CONTROLS.Selectable', ['js!SBIS3.CONTROLS.Data.Utils', 'js!SBIS
          return this._utilityEnumerator;
       },
 
+      _resetUtilityEnumerator: function(){
+         if (this._utilityEnumerator) {
+            this._utilityEnumerator.unsetObservableCollection(
+               this._itemsProjection
+            );
+         }
+         this._utilityEnumerator = undefined;
+      },
 
       //TODO переписать метод
       _setSelectedIndex: function(index, id) {
@@ -319,15 +322,21 @@ define('js!SBIS3.CONTROLS.Selectable', ['js!SBIS3.CONTROLS.Data.Utils', 'js!SBIS
          case IBindCollection.ACTION_MOVE:
          case IBindCollection.ACTION_REPLACE:
          case IBindCollection.ACTION_RESET:
-            var count = this._itemsProjection.getCount();
-            if (this._options.selectedIndex > this._itemsProjection.getCount() - 1) {
-               this._options.selectedIndex = (count > 0) ? count - 1 : -1;
+            this._resetUtilityEnumerator();
+
+            var indexByKey = this._getItemIndexByKey(this._options.selectedKey);
+            if (indexByKey >= 0) {
+               this._options.selectedIndex = indexByKey;
             }
-            var item = this._itemsProjection.at(this._options.selectedIndex);
-            if (item) {
-               this._options.selectedKey = item.getContents().getId();
-               this._setSelectedIndex(this._options.selectedIndex, this._options.selectedKey);
+            else {
+               var count = this._itemsProjection.getCount();
+               if (this._options.selectedIndex > this._itemsProjection.getCount() - 1) {
+                  this._options.selectedIndex = (count > 0) ? 0 : -1;
+                  var item = this._itemsProjection.at(this._options.selectedIndex);
+                  this._options.selectedKey = item.getContents().getKey();
+               }
             }
+            this._setSelectedIndex(this._options.selectedIndex, this._options.selectedKey);
       }
    };
 

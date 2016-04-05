@@ -860,13 +860,8 @@ define('js!SBIS3.CONTROLS.ListView',
          },
 
          _drawSelectedItem: function (id, index) {
-            var selId;
-            if (this._itemsProjection) {
-               var selItem = this._itemsProjection.at(index);
-               if (selItem) {
-                  selId = selItem.getContents().getId();
-               }
-            }
+            //рисуем от ключа
+            var selId = id;
             $(".controls-ListView__item", this._container).removeClass('controls-ListView__item__selected');
             $(".controls-ListView__item[data-id='" + selId + "']", this._container).addClass('controls-ListView__item__selected');
          },
