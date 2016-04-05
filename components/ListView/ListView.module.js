@@ -941,10 +941,10 @@ define('js!SBIS3.CONTROLS.ListView',
                var args = arguments;
                if (this._hasEditInPlace()) {
                   this._getEditInPlace().endEdit(true).addCallback(function() {
-                     handler.apply(this, args)
+                     return handler.apply(this, args)
                   }.bind(this));
                } else {
-                  handler.apply(this, args)
+                  return handler.apply(this, args)
                }
             }
          },
