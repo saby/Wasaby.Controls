@@ -14,7 +14,7 @@ define('js!SBIS3.CONTROLS.Data.Projection.ITreeChildren', [
       $protected: {
          _options: {
             /**
-             * @cfg {SBIS3.CONTROLS.Data.Projection.ITreeItem} Узел-владелец
+             * @cfg {SBIS3.CONTROLS.Data.Projection.TreeItem} Узел-владелец
              */
             owner: false
          }
@@ -22,7 +22,7 @@ define('js!SBIS3.CONTROLS.Data.Projection.ITreeChildren', [
 
       /**
        * Возвращает узел-владелец
-       * @returns {SBIS3.CONTROLS.Data.Projection.ITreeItem}
+       * @returns {SBIS3.CONTROLS.Data.Projection.TreeItem}
        */
       getOwner: function () {
          throw new Error('Method must be implemented');

@@ -113,7 +113,7 @@ define('js!SBIS3.CONTROLS.Data.Projection.Tree', [
 
       getRoot: function () {
          if (this._root === null) {
-            if (this._options.root && $ws.helpers.instanceOfMixin(this._options.root, 'SBIS3.CONTROLS.Data.Projection.ICollectionItem')) {
+            if (this._options.root && $ws.helpers.instanceOfModule(this._options.root, 'SBIS3.CONTROLS.Data.Projection.CollectionItem')) {
                this._root = this._options.root;
             } else {
                this._root = Di.resolve(this._itemModule, {
@@ -205,14 +205,14 @@ define('js!SBIS3.CONTROLS.Data.Projection.Tree', [
        * @protected
        */
       _checkItem: function (item) {
-         if (!item || !$ws.helpers.instanceOfMixin(item, 'SBIS3.CONTROLS.Data.Projection.ICollectionItem')) {
-            throw new Error(this._moduleName + '::_checkItem(): item should implement SBIS3.CONTROLS.Data.Projection.ICollectionItem');
+         if (!item || !$ws.helpers.instanceOfModule(item, 'SBIS3.CONTROLS.Data.Projection.CollectionItem')) {
+            throw new Error(this._moduleName + '::_checkItem(): item should be in instance of SBIS3.CONTROLS.Data.Projection.CollectionItem');
          }
       },
 
       /**
        * Возвращает массив детей для указанного родителя
-       * @param {SBIS3.CONTROLS.Data.Projection.ITreeItem} parent Родительский узел
+       * @param {SBIS3.CONTROLS.Data.Projection.TreeItem} parent Родительский узел
        * @returns {Array.<SBIS3.CONTROLS.Data.Projection.TreeItem>}
        * @protected
        */

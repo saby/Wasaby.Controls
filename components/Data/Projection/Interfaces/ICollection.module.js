@@ -16,8 +16,8 @@ define('js!SBIS3.CONTROLS.Data.Projection.ICollection', [
       /**
        * @event onCurrentChange При изменении текущего элемента
        * @param {$ws.proto.EventObject} eventObject Дескриптор события.
-       * @param {SBIS3.CONTROLS.Data.Projection.ICollectionItem} newCurrent Новый текущий элемент
-       * @param {SBIS3.CONTROLS.Data.Projection.ICollectionItem} oldCurrent Старый текущий элемент
+       * @param {SBIS3.CONTROLS.Data.Projection.CollectionItem} newCurrent Новый текущий элемент
+       * @param {SBIS3.CONTROLS.Data.Projection.CollectionItem} oldCurrent Старый текущий элемент
        * @param {Number} newPosition Новая позиция
        * @param {Number} oldPosition Старая позиция
        */
@@ -48,7 +48,7 @@ define('js!SBIS3.CONTROLS.Data.Projection.ICollection', [
 
       /**
        * Возвращает текущий элемент
-       * @returns {SBIS3.CONTROLS.Data.Projection.ICollectionItem}
+       * @returns {SBIS3.CONTROLS.Data.Projection.CollectionItem}
        */
       getCurrent: function () {
          throw new Error('Method must be implemented');
@@ -56,7 +56,7 @@ define('js!SBIS3.CONTROLS.Data.Projection.ICollection', [
 
       /**
        * Устанавливает текущий элемент
-       * @param {SBIS3.CONTROLS.Data.Projection.ICollectionItem} item Новый текущий элемент
+       * @param {SBIS3.CONTROLS.Data.Projection.CollectionItem} item Новый текущий элемент
        * @param {Boolean} [silent=false] Не генерировать событие onCurrentChange
        */
       setCurrent: function (item, silent) {
@@ -194,16 +194,16 @@ define('js!SBIS3.CONTROLS.Data.Projection.ICollection', [
       },
       /**
        * Возвращает следующий элемент относительно item
-       * @param {SBIS3.CONTROLS.Data.Projection.ICollectionItem} item элемент проекции
-       * @returns {SBIS3.CONTROLS.Data.Projection.ICollectionItem}
+       * @param {SBIS3.CONTROLS.Data.Projection.CollectionItem} item элемент проекции
+       * @returns {SBIS3.CONTROLS.Data.Projection.CollectionItem}
        */
       getNext: function (item) {
          throw new Error('Method must be implemented');
       },
       /**
        * Возвращает предыдущий элемент относительно item
-       * @param {SBIS3.CONTROLS.Data.Projection.ICollectionItem} index элемент проекции
-       * @returns {SBIS3.CONTROLS.Data.Projection.ICollectionItem}
+       * @param {SBIS3.CONTROLS.Data.Projection.CollectionItem} index элемент проекции
+       * @returns {SBIS3.CONTROLS.Data.Projection.CollectionItem}
        */
       getPrevious: function (item) {
          throw new Error('Method must be implemented');

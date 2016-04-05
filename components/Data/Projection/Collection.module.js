@@ -969,7 +969,7 @@ define('js!SBIS3.CONTROLS.Data.Projection.Collection', [
        * @param {Array} items Элементы исходной коллеции
        * @param {Number} start Начальный индекс (в исходной коллекци)
        * @param {Boolean} [newContainers=false] Создать новые контейнеры (потому что в старых уже другие элементы)
-       * @returns {Array.<SBIS3.CONTROLS.Data.Projection.ICollectionItem>}
+       * @returns {Array.<SBIS3.CONTROLS.Data.Projection.CollectionItem>}
        * @protected
        */
       _getItemsProjection: function (items, start, newContainers) {
@@ -1002,9 +1002,9 @@ define('js!SBIS3.CONTROLS.Data.Projection.Collection', [
       /**
        * Обработчик события об изменении исходной коллекции
        * @param {String} action Действие, приведшее к изменению.
-       * @param {Array.<SBIS3.CONTROLS.Data.Projection.ICollectionItem>} newItems Новые элементы исходной коллеции.
+       * @param {Array.<SBIS3.CONTROLS.Data.Projection.CollectionItem>} newItems Новые элементы исходной коллеции.
        * @param {Number} newItemsIndex Индекс исходной коллеции, в котором появились новые элементы.
-       * @param {Array.<SBIS3.CONTROLS.Data.Projection.ICollectionItem>} oldItems Удаленные элементы исходной коллеции.
+       * @param {Array.<SBIS3.CONTROLS.Data.Projection.CollectionItem>} oldItems Удаленные элементы исходной коллеции.
        * @param {Number} oldItemsIndex Индекс исходной коллеции, в котором удалены элементы.
        * @protected
        */
@@ -1026,8 +1026,8 @@ define('js!SBIS3.CONTROLS.Data.Projection.Collection', [
 
       /**
        * Генерирует событие об изменении текущего элемента проекции коллекции
-       * @param {SBIS3.CONTROLS.Data.Projection.ICollectionItem} newCurrent Новый текущий элемент
-       * @param {SBIS3.CONTROLS.Data.Projection.ICollectionItem} oldCurrent Старый текущий элемент
+       * @param {SBIS3.CONTROLS.Data.Projection.CollectionItem} newCurrent Новый текущий элемент
+       * @param {SBIS3.CONTROLS.Data.Projection.CollectionItem} oldCurrent Старый текущий элемент
        * @param {Number} newPosition Новая позиция
        * @param {Number} oldPosition Старая позиция
        * @protected
@@ -1080,9 +1080,9 @@ define('js!SBIS3.CONTROLS.Data.Projection.Collection', [
 
       /**
        * Возвращает соседний элемент проекции
-       * @param {SBIS3.CONTROLS.Data.Projection.ICollectionItem} item Элемент проекции относительно которого искать
+       * @param {SBIS3.CONTROLS.Data.Projection.CollectionItem} item Элемент проекции относительно которого искать
        * @param {Boolean} isNext Следующий или предыдущий элемент
-       * @returns {SBIS3.CONTROLS.Data.Projection.ICollectionItem}
+       * @returns {SBIS3.CONTROLS.Data.Projection.CollectionItem}
        * @protected
        */
       _getNearbyItem: function (item, isNext) {

@@ -5,11 +5,15 @@ define('js!SBIS3.CONTROLS.Data.Projection.ICollectionItem', [
 
    /**
     * Интерфейс элемента коллекции
-    * @mixin SBIS3.CONTROLS.Data.Projection.ICollectionItem
+    * @mixin SBIS3.CONTROLS.Data.Projection.CollectionItem
     * @implements SBIS3.CONTROLS.Data.IHashable
     * @public
+    * @deprecated интерфейс будет удален в 3.7.4, используйте SBIS3.CONTROLS.Data.Projection.CollectionItem
     * @author Мальцев Алексей
     */
+
+   $ws.single.ioc.resolve('ILogger').info('SBIS3.CONTROLS.Data.Projection.ICollectionItem', 'Interface is deprecated and will be removed in 3.7.4. Use SBIS3.CONTROLS.Data.Projection.CollectionItem instead.');
+
    return /** @lends SBIS3.CONTROLS.Data.Projection.ICollectionItem.prototype */{
       $protected: {
          _options: {

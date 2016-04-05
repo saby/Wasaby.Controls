@@ -14,8 +14,8 @@ define('js!SBIS3.CONTROLS.Data.Projection.ITree', [
       /**
        * @event onCurrentChange При изменении текущего элемента
        * @param {$ws.proto.EventObject} eventObject Дескриптор события.
-       * @param {SBIS3.CONTROLS.Data.Projection.ITreeItem} newCurrent Новый текущий элемент
-       * @param {SBIS3.CONTROLS.Data.Projection.ITreeItem} oldCurrent Старый текущий элемент
+       * @param {SBIS3.CONTROLS.Data.Projection.TreeItem} newCurrent Новый текущий элемент
+       * @param {SBIS3.CONTROLS.Data.Projection.TreeItem} oldCurrent Старый текущий элемент
        * @param {Number} newPosition Новая позиция
        * @param {Number} oldPosition Старая позиция
        */
@@ -42,7 +42,7 @@ define('js!SBIS3.CONTROLS.Data.Projection.ITree', [
             childrenProperty: '',
 
             /**
-             * @cfg {SBIS3.CONTROLS.Data.Projection.ITreeItem|*} Корневой узел или его содержимое
+             * @cfg {SBIS3.CONTROLS.Data.Projection.TreeItem|*} Корневой узел или его содержимое
              */
             root: undefined
          }
@@ -90,7 +90,7 @@ define('js!SBIS3.CONTROLS.Data.Projection.ITree', [
 
       /**
        * Возвращает корневой узел дерева
-       * @returns {SBIS3.CONTROLS.Data.Projection.ITreeItem}
+       * @returns {SBIS3.CONTROLS.Data.Projection.TreeItem}
        */
       getRoot: function () {
          throw new Error('Method must be implemented');
@@ -98,8 +98,8 @@ define('js!SBIS3.CONTROLS.Data.Projection.ITree', [
 
       /**
        * Устанавливает корневой узел дерева
-       * @param {SBIS3.CONTROLS.Data.Projection.ITreeItem|*} root Корневой узел или его содержимое
-       * @returns {SBIS3.CONTROLS.Data.Projection.ITreeItem}
+       * @param {SBIS3.CONTROLS.Data.Projection.TreeItem|*} root Корневой узел или его содержимое
+       * @returns {SBIS3.CONTROLS.Data.Projection.TreeItem}
        */
       setRoot: function (root) {
          throw new Error('Method must be implemented');
@@ -107,8 +107,8 @@ define('js!SBIS3.CONTROLS.Data.Projection.ITree', [
 
       /**
        * Возвращает коллекцию потомков элемента коллеции
-       * @param {SBIS3.CONTROLS.Data.Projection.ITreeItem} parent Родительский узел
-       * @returns {SBIS3.CONTROLS.Data.Projection.ITreeChildren}
+       * @param {SBIS3.CONTROLS.Data.Projection.TreeItem} parent Родительский узел
+       * @returns {SBIS3.CONTROLS.Data.Projection.TreeChildren}
        */
       getChildren: function (parent) {
          throw new Error('Method must be implemented');

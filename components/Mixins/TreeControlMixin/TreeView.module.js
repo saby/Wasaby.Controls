@@ -148,7 +148,7 @@ define('js!SBIS3.CONTROLS.TreeControl.TreeView', [
 
          itemData.contentsClass = this._сssPrefix + this._treeItemContentsСssClass;
 
-         if ($ws.helpers.instanceOfMixin(item, 'SBIS3.CONTROLS.Data.Projection.ITreeItem')) {
+         if ($ws.helpers.instanceOfModule(item, 'SBIS3.CONTROLS.Data.Projection.TreeItem')) {
             itemData.level = item.getLevel() - this._levelOffset;
             if (item.isNode()) {
                itemData.containerClass += ' ' + this._сssPrefix + (item.isExpanded() ? this._treeExpandedСssClass : this._treeCollapsedСssClass);

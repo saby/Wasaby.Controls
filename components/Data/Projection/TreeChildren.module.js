@@ -1,22 +1,28 @@
 /* global define, require, $ws */
 define('js!SBIS3.CONTROLS.Data.Projection.TreeChildren', [
-   'js!SBIS3.CONTROLS.Data.Projection.ITreeChildren',
    'js!SBIS3.CONTROLS.Data.Collection.List',
    'js!SBIS3.CONTROLS.Data.Di'
-], function (ITreeChildren, List, Di) {
+], function (List, Di) {
    'use strict';
 
    /**
     * Список дочерних элементов узла дерева.
     * @class SBIS3.CONTROLS.Data.Projection.TreeChildren
     * @extends SBIS3.CONTROLS.Data.Collection.List
-    * @mixes SBIS3.CONTROLS.Data.Projection.ITreeChildren
     * @public
     * @author Мальцев Алексей
     */
 
-   var TreeChildren = List.extend([ITreeChildren], /** @lends SBIS3.CONTROLS.Data.Projection.TreeChildren.prototype */{
+   var TreeChildren = List.extend(/** @lends SBIS3.CONTROLS.Data.Projection.TreeChildren.prototype */{
       _moduleName: 'SBIS3.CONTROLS.Data.Projection.TreeChildren',
+      $protected: {
+         _options: {
+            /**
+             * @cfg {SBIS3.CONTROLS.Data.Projection.TreeItem} Узел-владелец
+             */
+            owner: false
+         }
+      },
 
       $constructor: function (cfg) {
          cfg = cfg || {};
@@ -37,13 +43,17 @@ define('js!SBIS3.CONTROLS.Data.Projection.TreeChildren', [
 
       //endregion SBIS3.CONTROLS.Data.Collection.IList
 
-      //region SBIS3.CONTROLS.Data.Projection.ITreeChildren
+      //region Public methods
 
+      /**
+       * Возвращает узел-владелец
+       * @returns {SBIS3.CONTROLS.Data.Projection.TreeItem}
+       */
       getOwner: function () {
          return this._options.owner;
       }
 
-      //endregion SBIS3.CONTROLS.Data.Projection.ITreeChildren
+      //endregion Public methods
 
       //region Protected methods
 

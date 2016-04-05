@@ -3,11 +3,15 @@ define('js!SBIS3.CONTROLS.Data.Projection.ITreeItem', [
 ], function () {
    'use strict';
 
+
+   $ws.single.ioc.resolve('ILogger').info('SBIS3.CONTROLS.Data.Projection.ITreeItem', 'Interface is deprecated and will be removed in 3.7.4. Use SBIS3.CONTROLS.Data.Projection.TreeItem instead.');
+
    /**
     * Интерфейс элемента дерева
     * @mixin SBIS3.CONTROLS.Data.Projection.ITreeItem
     * @implements SBIS3.CONTROLS.Data.Projection.ICollectionItem
     * @public
+    * @deprecated интерфейс будет удален в 3.7.4, используйте SBIS3.CONTROLS.Data.Projection.TreeItem
     * @author Мальцев Алексей
     */
    return /** @lends SBIS3.CONTROLS.Data.Projection.ITreeItem.prototype */{

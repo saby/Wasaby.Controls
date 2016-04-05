@@ -1,23 +1,36 @@
 /* global define, require, $ws */
 define('js!SBIS3.CONTROLS.Data.Projection.TreeItem', [
    'js!SBIS3.CONTROLS.Data.Projection.CollectionItem',
-   'js!SBIS3.CONTROLS.Data.Projection.ITreeItem',
    'js!SBIS3.CONTROLS.Data.Di'
-], function (CollectionItem, ITreeItem, Di) {
+], function (CollectionItem, Di) {
    'use strict';
 
    /**
     * Элемент дерева
     * @class SBIS3.CONTROLS.Data.Projection.TreeItem
     * @extends SBIS3.CONTROLS.Data.Projection.CollectionItem
-    * @mixes SBIS3.CONTROLS.Data.Projection.ITreeItem
     * @public
     * @author Мальцев Алексей
     */
-   var TreeItem = CollectionItem.extend([ITreeItem], /** @lends SBIS3.CONTROLS.Data.Projection.TreeItem.prototype */{
+   var TreeItem = CollectionItem.extend(/** @lends SBIS3.CONTROLS.Data.Projection.TreeItem.prototype */{
       _moduleName: 'SBIS3.CONTROLS.Data.Projection.TreeItem',
       $protected: {
          _options: {
+            /**
+             * @cfg {SBIS3.CONTROLS.Data.Projection.TreeItem} Родительский узел
+             */
+            parent: undefined,
+
+            /**
+             * @cfg {Boolean} Является узлом
+             */
+            node: false,
+
+            /**
+             * @cfg {Boolean} Развернут или свернут узел. По умолчанию свернут.
+             */
+            expanded: false,
+
             /**
              * @cfg {String} Название свойства, содержащего дочерние элементы узла. Используется для анализа на наличие дочерних элементов.
              */
@@ -35,12 +48,21 @@ define('js!SBIS3.CONTROLS.Data.Projection.TreeItem', [
          }
       },
 
-      //region SBIS3.CONTROLS.Data.Projection.ITreeItem
+      //region Public methods
 
+      /**
+       * Возвращает родительский узел
+       * @returns {SBIS3.CONTROLS.Data.Projection.TreeItem}
+       */
       getParent: function () {
          return this._options.parent;
       },
 
+      /**
+       * Устанавливает родительский узел
+       * @param {SBIS3.CONTROLS.Data.Projection.TreeItem} parent Родительский узел
+       * @param {Boolean} [silent=false] Не генерировать событие
+       */
       setParent: function (parent, silent) {
          if (this._options.parent === parent) {
             return;
@@ -51,6 +73,10 @@ define('js!SBIS3.CONTROLS.Data.Projection.TreeItem', [
          }
       },
 
+      /**
+       * Возвращает корневой элемент дерева
+       * @returns {SBIS3.CONTROLS.Data.Projection.TreeItem}
+       */
       getRoot: function () {
          if (this._options.parent === this) {
             return;
@@ -58,22 +84,42 @@ define('js!SBIS3.CONTROLS.Data.Projection.TreeItem', [
          return this._options.parent ? this._options.parent.getRoot() : this;
       },
 
+      /**
+       * Является ли корнем дерева
+       * @returns {Boolean}
+       */
       isRoot: function () {
          return !this._options.parent;
       },
 
+      /**
+       * Возвращает уровень вложенности относительно корня
+       * @returns {Number}
+       */
       getLevel: function () {
          return 1 + (this._options.parent ? this._options.parent.getLevel() : 0);
       },
 
+      /**
+       * Является ли элемент узлом
+       * @returns {Boolean}
+       */
       isNode: function () {
          return this._options.node;
       },
 
+      /**
+       * Возвращает признак, что узел развернут
+       * @returns {Boolean}
+       */
       isExpanded: function () {
          return this._options.expanded;
       },
 
+      /**
+       * Устанавливает признак, что узел развернут или свернут
+       * @param {Boolean} expanded Развернут или свернут узел
+       */
       setExpanded: function (expanded) {
          if (this._options.expanded === expanded) {
             return;
@@ -82,13 +128,12 @@ define('js!SBIS3.CONTROLS.Data.Projection.TreeItem', [
          this._notifyItemChangeToOwner('expanded');
       },
 
+      /**
+       * Переключает признак, что узел развернут или свернут
+       */
       toggleExpanded: function () {
          this.setExpanded(!this.isExpanded());
       },
-
-      //endregion SBIS3.CONTROLS.Data.Projection.ITreeItem
-
-      //region Public methods
 
       /**
        * Возвращает название свойства, содержащего дочерние элементы узла

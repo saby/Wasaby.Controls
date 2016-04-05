@@ -297,8 +297,8 @@ define('js!SBIS3.CONTROLS.SelectableNew', [
     * Обработчк события изменения текущего элемента проекции
     * @param {$ws.proto.EventObject} event Дескриптор события.
     * @param {$ws.proto.EventObject} eventObject Дескриптор события.
-    * @param {SBIS3.CONTROLS.Data.Projection.ICollectionItem} newCurrent Новый текущий элемент
-    * @param {SBIS3.CONTROLS.Data.Projection.ICollectionItem} oldCurrent Старый текущий элемент
+    * @param {SBIS3.CONTROLS.Data.Projection.CollectionItem} newCurrent Новый текущий элемент
+    * @param {SBIS3.CONTROLS.Data.Projection.CollectionItem} oldCurrent Старый текущий элемент
     * @param {Number} newPosition Новая позиция
     * @param {Number} oldPosition Старая позиция
     */

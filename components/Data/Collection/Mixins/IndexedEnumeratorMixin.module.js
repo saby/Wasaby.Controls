@@ -119,10 +119,10 @@ define('js!SBIS3.CONTROLS.Data.Collection.IndexedEnumeratorMixin', [
          while ((item = this.getNext())) {
             value = Utils.getItemPropertyValue(item, property);
 
-            //FIXME: для проекций решить проблему, кода поиск осущетвляется как по ITreeItem, так и по его contents
+            //FIXME: для проекций решить проблему, кода поиск осущетвляется как по CollectionItem, так и по его contents
             if (value === undefined &&
                item instanceof Object &&
-               $ws.helpers.instanceOfMixin(item, 'SBIS3.CONTROLS.Data.Projection.ICollectionItem')
+               $ws.helpers.instanceOfModule(item, 'SBIS3.CONTROLS.Data.Projection.CollectionItem')
             ) {
                value = Utils.getItemPropertyValue(item.getContents(), property);
             }

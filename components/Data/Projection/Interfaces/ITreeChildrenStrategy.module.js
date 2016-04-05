@@ -24,7 +24,7 @@ define('js!SBIS3.CONTROLS.Data.Projection.ITreeChildrenStrategy', [
 
       /**
        * Возвращает коллекцию потомков для родителя
-       * @param {SBIS3.CONTROLS.Data.Projection.ITreeItem} parent Родитель
+       * @param {SBIS3.CONTROLS.Data.Projection.TreeItem} parent Родитель
        * @returns {Array}
        */
       getChildren: function(parent) {
@@ -33,7 +33,7 @@ define('js!SBIS3.CONTROLS.Data.Projection.ITreeChildrenStrategy', [
 
       /**
        * Возвращает метод конвертации элемета коллеции в элемент проекции
-       * @param {SBIS3.CONTROLS.Data.Projection.ITreeItem} parent Родитель
+       * @param {SBIS3.CONTROLS.Data.Projection.TreeItem} parent Родитель
        * @returns {Function}
        */
       getItemConverter: function(parent) {
