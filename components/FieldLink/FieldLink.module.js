@@ -258,11 +258,12 @@ define('js!SBIS3.CONTROLS.FieldLink',
                  * До момента ввода комментария справа от выбранного значения в поле связи будет отображаться текст, настраиваемый в опции {@link placeholder}.
                  * @example
                  * Пример настройки режима добавления комментария в поле связи:
-                 * ![](/FieldLink04.png)
                  * фрагмент верстки:
                  * <pre class="brush: xml">
                  *     <option name="alwaysShowTextBox">true</option>
                  * </pre>
+                 * иллюстрация работы:
+                 * ![](/FieldLink04.png)
                  * @deprecated
                  */
                 alwaysShowTextBox: false,
