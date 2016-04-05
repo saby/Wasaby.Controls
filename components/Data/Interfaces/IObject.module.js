@@ -1,15 +1,15 @@
 /* global define */
-define('js!SBIS3.CONTROLS.Data.IPropertyAccess', [], function () {
+define('js!SBIS3.CONTROLS.Data.IObject', [], function () {
    'use strict';
 
    /**
     * Интерфейс доступа к свойствам объекта
-    * @mixin SBIS3.CONTROLS.Data.IPropertyAccess
+    * @mixin SBIS3.CONTROLS.Data.IObject
     * @public
     * @author Мальцев Алексей
     */
 
-   return /** @lends SBIS3.CONTROLS.Data.IPropertyAccess.prototype */{
+   return /** @lends SBIS3.CONTROLS.Data.IObject.prototype */{
       /**
        * @event onPropertyChange После изменения свойства
        * @param {$ws.proto.EventObject} event Дескриптор события.
