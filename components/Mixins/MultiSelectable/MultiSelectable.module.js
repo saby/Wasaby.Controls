@@ -72,7 +72,7 @@ define('js!SBIS3.CONTROLS.MultiSelectable', ['js!SBIS3.CONTROLS.Data.Collection.
              */
             multiselect : true,
             /**
-             * @cfg {String[]} Определяет массив идентификаторов выбранных элементов.
+             * @cfg {String[]} Устанавливает массив идентификаторов, по которым будет установлен набор выбранных элементов коллекции.
              * @remark
              * Устанавливает массив идентификаторов выбранных элементов коллекции, которые будут по умолчанию выбраны
              * для контрола, который находится в режиме множественного выбора значений {@link multiselect}.
@@ -136,8 +136,7 @@ define('js!SBIS3.CONTROLS.MultiSelectable', ['js!SBIS3.CONTROLS.Data.Collection.
               */
             allowEmptyMultiSelection : true,
             /**
-             * @cfg {SBIS3.CONTROLS.Data.Collection.List} Устанавливает набор элементов коллекции, которые будут по умолчанию
-             * выбраны для контрола в режиме множественного выбора значений {@link multiselect}.
+             * @cfg {SBIS3.CONTROLS.Data.Collection.List} Устанавливает набор элементов коллекции, которые будут по умолчанию выбраны для контрола в режиме множественного выбора значений {@link multiselect}.
              * @remark
              * Определяет экземпляр класса {@link SBIS3.CONTROLS.Data.Collection.List} с данными выбранных записей.
              * Работает в режиме множественного выбора {@link multiselect}.
@@ -151,11 +150,6 @@ define('js!SBIS3.CONTROLS.MultiSelectable', ['js!SBIS3.CONTROLS.Data.Collection.
              *     <li>{@link toggleItemsSelection} - поменять состояние выбранности указанных элементов на противоположное;</li>
              *     <li>{@link toggleItemsSelectionAll} - поменять состояние выбранности всех элементов на противоположное;</li>
              * </ul>
-             * @example
-             * <pre>
-             *     var selItems = this._options.selectedItems; // передаем выбранные элементы selItems
-             *     var CountMyData = MyView.getSelectedItems().getCount(); // определить количество выбранных элементов
-             * </pre>
              * @see multiselect
              * @see getSelectedItems
              * @see setSelectedItemsAll
