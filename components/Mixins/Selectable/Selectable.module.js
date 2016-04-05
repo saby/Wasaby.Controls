@@ -31,14 +31,14 @@ define('js!SBIS3.CONTROLS.Selectable', ['js!SBIS3.CONTROLS.Data.Utils', 'js!SBIS
          _selectMode: 'index',
           _options: {
              /**
-              * @cfg {String} Определяет элемент коллекции по переданному индексу (порядковому номеру).
+              * @cfg {String} Устанавливает выбранным элемент коллекции по переданному индексу (порядковому номеру).
               * @remark
-              * Любой элемент коллекции можно выбрать либо по его идентификатору {@link SBIS3.CONTROLS.DSMixin#keyField},
+              * Любой элемент коллекции можно выбрать либо по его {@link SBIS3.CONTROLS.DSMixin#keyField идентификатору},
               * либо его по индексу (порядковому номеру) в коллекции.
               * Для определения выбранного элемента необходимо указать его порядковый номер в коллекции.
               * @example
               * <pre>
-              *     <option name="selectedIndex">1</option>
+              *     <option name="selectedIndex">1</option><!-- Устанавливаем выбранным элемент коллекции, который идет первым в списке -->
               * </pre>
               * @see setSelectedIndex
               * @see getSelectedIndex
@@ -46,11 +46,8 @@ define('js!SBIS3.CONTROLS.Selectable', ['js!SBIS3.CONTROLS.Data.Utils', 'js!SBIS
               */
              selectedIndex: null,
              /**
-              * @cfg {String} Определяет элемент коллекции по переданному идентификатору.
+              * @cfg {String} Устанавливает выбранным элемент коллекции по переданному идентификатору - {@link SBIS3.CONTROLS.DSMixin#keyField ключевому полю} элемента коллекции.
               * @remark
-              * Используется для построения контрола с определенным элементом коллекции.
-              * Для задания выбранного элемента необходимо указать значение
-              * {@link SBIS3.CONTROLS.DSMixin#keyField ключевого поля} элемента коллекции.
               * Установить новый идентификатор элемента коллекции можно с помощью метода {@link setSelectedKey},
               * получить идентификатор элемента коллекции можно с помощью метода {@link getSelectedKey}.
               * @example
