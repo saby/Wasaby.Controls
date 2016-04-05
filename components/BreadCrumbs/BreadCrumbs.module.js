@@ -45,8 +45,13 @@ define('js!SBIS3.CONTROLS.BreadCrumbs', [
          this._homeIcon = $('.controls-BreadCrumbs__crumb-home', this._container);
          this._container.toggleClass('ws-hidden', (this._options.items && this._options.items.length == 0));
          this._homeIcon.data('id', null); //клик по домику ведет в корень TODO: придрочено под null
+         this.getContainer().on('mousedown', this._onMousedownHandler);
          //инициализируем dataSet
          this.reload();
+      },
+
+      _onMousedownHandler: function(event) {
+         event.stopPropagation();
       },
 
       _onClickHandler: function(e) {
@@ -238,6 +243,11 @@ define('js!SBIS3.CONTROLS.BreadCrumbs', [
 
       _appendItemTemplate: function(item, targetContainer, itemBuildedTpl) {
          targetContainer.append(itemBuildedTpl);
+      },
+
+      destroy: function() {
+         this.getContainer().off('mousedown', this._onMousedownHandler);
+         BreadCrumbs.superclass.destroy.apply(this, arguments);
       }
    });
 
