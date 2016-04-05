@@ -229,24 +229,32 @@ define('js!SBIS3.CONTROLS.ListView',
             _options: {
                /**
                 * @faq Почему нет флажков при включенной опции {@link SBIS3.CONTROLS.ListView#multiselect multiselect}?
-                * Для отрисовки флажков необходимо в шаблоне отображания элемента прописать их место:
+                * Для отрисовки флажков необходимо в шаблоне отображения элемента коллекции обозначить их место.
+                * Это делают с помощью CSS-класса "js-controls-ListView__itemCheckBox".
+                * В следующем примере место отображения флажков обозначено тегом span:
                 * <pre>
-                *     <div class="listViewItem" style="height: 30px;">\
-                *        <span class="controls-ListView__itemCheckBox"></span>\
-                *        {{=it.item.get("title")}}\
+                *     <div class="listViewItem" style="height: 30px;">
+                *        <span class="js-controls-ListView__itemCheckBox"></span>
+                *        {{=it.item.get("title")}}
                 *     </div>
                 * </pre>
                 * @bind SBIS3.CONTROLS.ListView#itemTemplate
                 * @bind SBIS3.CONTROLS.ListView#multiselect
                 */
                /**
-                * @cfg {String} Шаблон отображения каждого элемента коллекции
+                * @cfg {String} Шаблон отображения каждого элемента коллекции.
                 * @remark
                 * !Важно: опция обязательна к заполнению!
+                * Шаблон может быть создан в отдельном XHTML-файле, когда вёрстка шаблона большая или требуется использовать его в разных компонентах.
+                * Чтобы использовать такой шаблон, он должен быть сначала подключен в массив зависимостей компонента, и после на него можно сослаться из опции.
+                *
+                * Для доступа к полям записи в шаблоне подразумевается использование конструкций шаблонизатора.
+                * Подробнее о шаблонизаторе вы можете прочитать в разделе {@link https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/core/component/xhtml/template/ Шаблонизация верстки компонента}.
                 * @example
+                * Далее приведён шаблон, который выводит в пользовательском HTML-контейнере значение поля title.
                 * <pre>
-                *     <div class="listViewItem" style="height: 30px;">\
-                *        {{=it.item.get("title")}}\
+                *     <div class="listViewItem" style="height: 30px;">
+                *        {{=it.item.get("title")}}
                 *     </div>
                 * </pre>
                 * @see multiselect
