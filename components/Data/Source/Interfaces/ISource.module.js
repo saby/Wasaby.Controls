@@ -28,6 +28,11 @@ define('js!SBIS3.CONTROLS.Data.Source.ISource', [
        * @property {String} merge Операция объединения записей через метод {@link merge}
        */
 
+      /**
+       * @typedef {Object} Options
+       * @property {Boolean} [debug=false] Режим отладки
+       */
+
       $protected: {
          _options: {
             /**
@@ -210,7 +215,14 @@ define('js!SBIS3.CONTROLS.Data.Source.ISource', [
              *    });
              * </pre>
              */
-            idProperty: ''
+            idProperty: '',
+
+            /**
+             * @cfg {Options} Опции
+             */
+            options: {
+               debug: false
+            }
          }
       },
 
