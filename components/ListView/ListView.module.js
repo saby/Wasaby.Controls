@@ -228,7 +228,7 @@ define('js!SBIS3.CONTROLS.ListView',
             _addResultsMethod: undefined,
             _options: {
                /**
-                * @faq Почему нет флажков при включенной опции {@link SBIS3.CONTROLS.ListView#multiselect multiselect}?
+                * @faq Почему нет флажков в режиме множественного выбора значений (активация режима производится опцией {@link SBIS3.CONTROLS.ListView#multiselect multiselect})?
                 * Для отрисовки флажков необходимо в шаблоне отображения элемента коллекции обозначить их место.
                 * Это делают с помощью CSS-класса "js-controls-ListView__itemCheckBox".
                 * В следующем примере место отображения флажков обозначено тегом span:
