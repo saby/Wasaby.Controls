@@ -998,7 +998,7 @@ define([
                   });
                });
 
-               it('should generate a request with value from given meta property', function (done) {
+               it('should generate a request with "hasMore" from given meta property', function (done) {
                   var hasMore = 'test',
                      query = new Query();
                   query
