@@ -15,7 +15,6 @@
       white-space: nowrap;
       text-align: left;
       max-width: calc(~"100% - 8px");
-      margin-left: -4px;
    }
    &:before {
       width: 8px;
@@ -23,8 +22,6 @@
       font-weight: normal;
       content: '\e003';
       float: left;
-      display: inline-block;
-      vertical-align: top;
    }
 
 
@@ -64,10 +61,21 @@
       .controls-BackButton__caption {
          max-width: calc(~"100% - 7px");
       }
+      &:before {
+         float: left;
+      }
    }
 }
 
 //Баг в мозилле плохо работает с before и float:left
 @-moz-document url-prefix() {
-
+   .controls-BackButton {
+      .controls-BackButton__caption {
+         margin-left: -4px;
+      }
+      &:before {
+         display: inline-block;
+         vertical-align: top;
+      }
+   }
 }
