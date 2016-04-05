@@ -126,11 +126,9 @@ define('js!SBIS3.CONTROLS.ActiveSelectable', ['js!SBIS3.CONTROLS.Data.Model'], f
          var selItem = this._options.selectedItem,
              selKey = this._options.selectedKey;
 
-         if(selKey === null) {
-            return;
-         }
-         if(selItem && selKey !== selItem.getId()) {
-            this.setSelectedItem(null);
+         if(selItem && (selKey === null || selKey !== selItem.getId())) {
+            this._options.selectedItem = null;
+            this._notifyOnPropertyChanged('selectedItem');
          }
       }
 
