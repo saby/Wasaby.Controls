@@ -335,6 +335,7 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
                elClickHandler && elClickHandler.call(this, id, data, target);
             }
          }
+         return res;
       },
       _elemClickHandlerInternal: function(data, id, target) {
          var nodeID = $(target).closest('.controls-ListView__item').data('id');

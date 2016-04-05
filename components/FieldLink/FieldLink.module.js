@@ -10,7 +10,6 @@ define('js!SBIS3.CONTROLS.FieldLink',
        'js!SBIS3.CONTROLS.FieldLinkItemsCollection',
        'html!SBIS3.CONTROLS.FieldLink/afterFieldWrapper',
        'html!SBIS3.CONTROLS.FieldLink/beforeFieldWrapper',
-       'js!SBIS3.CONTROLS.Data.Model',
        'js!SBIS3.CONTROLS.Utils.DialogOpener',
        'js!SBIS3.CONTROLS.ITextValue',
        'js!SBIS3.CONTROLS.Utils.TemplateUtil',
@@ -35,7 +34,6 @@ define('js!SBIS3.CONTROLS.FieldLink',
         FieldLinkItemsCollection,
         afterFieldWrapper,
         beforeFieldWrapper,
-        Model,
         DialogOpener,
         ITextValue,
         TemplateUtil
@@ -618,14 +616,22 @@ define('js!SBIS3.CONTROLS.FieldLink',
           },
 
           setSelectedItem: function(item) {
-             /* Проверяем запись на наличие ключевых полей */
-             if(item && item.get(this._options.displayField) && item.get(this._options.keyField)) {
+             var hasRequiredFields, needSet;
 
-                /* Если запись собралась из контекста, в ней может не быть поля с первичным ключем */
-                if(!item.getIdProperty()) {
-                   item.setIdProperty(this._options.keyField);
+             if(item  && $ws.helpers.instanceOfModule(item, 'SBIS3.CONTROLS.Data.Model')) {
+                /* Проверяем запись на наличие ключевых полей */
+                hasRequiredFields = item.get(this._options.displayField) && item.get(this._options.keyField);
+
+                if(hasRequiredFields) {
+                   /* Если запись собралась из контекста, в ней может не быть поля с первичным ключем */
+                   if (!item.getIdProperty()) {
+                      item.setIdProperty(this._options.keyField);
+                   }
                 }
+             }
 
+             /* Вызываем родительский метод, если передали запись с обязательными полями или null */
+             if(hasRequiredFields || item === null) {
                 FieldLink.superclass.setSelectedItem.apply(this, arguments);
              }
           },

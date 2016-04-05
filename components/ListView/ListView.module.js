@@ -829,19 +829,22 @@ define('js!SBIS3.CONTROLS.ListView',
          /* +++++++++++++++++++++++++++ */
 
          _elemClickHandler: function (id, data, target) {
-            var $target = $(target);
+            var $target = $(target),
+                onItemClickResult;
 
-            this.setSelectedKey(id);
             if (this._options.multiselect) {
                if ($target.hasClass('js-controls-ListView__itemCheckBox')) {
                   this._onCheckBoxClick($target);
                }
                else {
-                  this._notifyOnItemClick(id, data, target);
+                  onItemClickResult = this._notifyOnItemClick(id, data, target);
                }
             }
             else {
-               this._notifyOnItemClick(id, data, target);
+               onItemClickResult = this._notifyOnItemClick(id, data, target);
+            }
+            if (onItemClickResult !== false){
+               this.setSelectedKey(id);
             }
          },
          _onCheckBoxClick: function(target) {
@@ -865,6 +868,7 @@ define('js!SBIS3.CONTROLS.ListView',
                this._elemClickHandlerInternal(data, id, target);
                elClickHandler && elClickHandler.call(this, id, data, target);
             }
+            return res;
          },
          _elemClickHandlerInternal: function (data, id, target) {
             this._activateItem(id);
@@ -949,10 +953,10 @@ define('js!SBIS3.CONTROLS.ListView',
                var args = arguments;
                if (this._hasEditInPlace()) {
                   this._getEditInPlace().endEdit(true).addCallback(function() {
-                     handler.apply(this, args)
+                     return handler.apply(this, args)
                   }.bind(this));
                } else {
-                  handler.apply(this, args)
+                  return handler.apply(this, args)
                }
             }
          },
