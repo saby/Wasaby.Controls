@@ -336,7 +336,9 @@ define('js!SBIS3.CONTROLS.Selectable', ['js!SBIS3.CONTROLS.Data.Utils', 'js!SBIS
                   this._options.selectedKey = item.getContents().getKey();
                }
             }
-            this._setSelectedIndex(this._options.selectedIndex, this._options.selectedKey);
+            if (action !== IBindCollection.ACTION_REPLACE){
+               this._setSelectedIndex(this._options.selectedIndex, this._options.selectedKey);
+            }
       }
    };
 
