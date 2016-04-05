@@ -86,6 +86,7 @@ define([
                dataSource.call('Test', serviceArgs);
                dataSource.unsubscribe('onBeforeProviderCall', handler);
                assert.deepEqual(provider._lastArgs, expectArgs);
+               assert.deepEqual(serviceArgs, expectArgs);
             });
             it('should change service arguments as an array', function () {
                var handler = function(e, name, args) {
@@ -97,6 +98,23 @@ define([
                dataSource.call('Test', serviceArgs);
                dataSource.unsubscribe('onBeforeProviderCall', handler);
                assert.deepEqual(provider._lastArgs, expectArgs);
+               assert.deepEqual(serviceArgs, expectArgs);
+            });
+            it('should change service arguments and leave original untouched', function () {
+               var handler = function(e, name, args) {
+                     args = $ws.core.clone(args);
+                     args.a = 9;
+                     delete args.b;
+                     args.c = 3;
+                     e.setResult(args);
+                  },
+                  serviceArgs = {a: 1, b: 2},
+                  expectArgs = {a: 9, c: 3};
+               dataSource.subscribe('onBeforeProviderCall', handler);
+               dataSource.call('Test', serviceArgs);
+               dataSource.unsubscribe('onBeforeProviderCall', handler);
+               assert.deepEqual(provider._lastArgs, expectArgs);
+               assert.notDeepEqual(serviceArgs, expectArgs);
             });
          });
       });

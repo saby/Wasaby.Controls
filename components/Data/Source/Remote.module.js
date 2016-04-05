@@ -18,8 +18,9 @@ define('js!SBIS3.CONTROLS.Data.Source.Remote', [
        * @event onBeforeProviderCall Перед вызовом удаленного сервиса через провайдер
        * @param {$ws.proto.EventObject} eventObject Дескриптор события.
        * @param {String} name Имя сервиса
-       * @param {Object.<String, *>} [args] Аргументы сервиса (передаются по ссылке, можно модифицировать)
+       * @param {Object.<String, *>} [args] Аргументы сервиса (передаются по ссылке, можно модифицировать, но при этом следует учитывать, что изменяется оригинальный объект)
        * @example
+       * Добавляем в фильтр выборки поле enabled со значением true:
        * <pre>
        *    dataSource.subscribe('onBeforeProviderCall', function(eventObject, name, args){
        *       switch (name){
@@ -29,6 +30,20 @@ define('js!SBIS3.CONTROLS.Data.Source.Remote', [
        *             args.filter.enabled = true;
        *             break;
        *       }
+       *    });
+       * </pre>
+       * Передаем в вызов удаленного сервиса клон аргументов, чтобы не "портить" оригинал:
+       * <pre>
+       *    dataSource.subscribe('onBeforeProviderCall', function(eventObject, name, args){
+       *       args = $ws.core.clone(args);
+       *       switch (name){
+       *          case 'getUsersList':
+       *             //Select only actice users
+       *             args.filter = args.filter || {};
+       *             args.filter.active = true;
+       *             break;
+       *       }
+       *       eventObject.setResult(args);
        *    });
        * </pre>
        */
@@ -189,7 +204,10 @@ define('js!SBIS3.CONTROLS.Data.Source.Remote', [
       _makeCall: function(name, args, provider) {
          provider = provider || this.getProvider();
 
-         this._notify('onBeforeProviderCall', name, args);
+         var eventResult = this._notify('onBeforeProviderCall', name, args);
+         if (eventResult !== undefined) {
+            args = eventResult;
+         }
 
          return provider.call(
             name,
