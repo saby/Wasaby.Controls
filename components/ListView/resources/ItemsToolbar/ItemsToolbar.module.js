@@ -243,7 +243,7 @@ define('js!SBIS3.CONTROLS.ItemsToolbar',
 
              this.getContainer()[isVertical ? 'addClass' : 'removeClass']('controls-ItemsToolbar__vertical');
              return {
-                right : rightPosition >= 0 ? rightPosition : 0,
+                right : rightPosition >= 0 || isVertical ? rightPosition : 0,
                 top : isVertical ? position.top : 'auto',
                 bottom : isVertical ? 'auto' : parentContainer.offsetHeight - (position.top + size.height)
              };
