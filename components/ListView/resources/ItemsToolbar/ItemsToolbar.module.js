@@ -192,7 +192,9 @@ define('js!SBIS3.CONTROLS.ItemsToolbar',
            * @private
            */
           _untrackingTarget: function() {
-             $ws.helpers.trackElement(this._currentTarget.container, false);
+             if(this._currentTarget) {
+                $ws.helpers.trackElement(this._currentTarget.container, false);
+             }
           },
           /**
            * Пересчитывает позицию тулбара при изменении позиции currentTarget
