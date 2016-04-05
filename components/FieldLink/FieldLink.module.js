@@ -71,7 +71,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
         * @public
         * @author Крайнов Дмитрий Олегович
         * @ignoreOptions tooltip alwaysShowExtendedTooltip loadingContainer observableControls pageSize usePicker filter saveFocusOnSelect
-        * @ignoreOptions allowEmptySelection allowEmptyMultiSelection templateBinding includedTemplates resultBindings showAllConfig
+        * @ignoreOptions allowEmptySelection allowEmptyMultiSelection templateBinding includedTemplates resultBindings showAllConfig footerTpl
         * @ignoreMehtods getTooltip setTooltip getExtendedTooltip setExtendedTooltip
         *
         * ignoreEvents onDataLoad onDataLoadError onBeforeDataLoad onDrawItems
@@ -107,7 +107,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
                    }
                 },
                 /**
-                 * @typedef {Array} Dictionaries Группа опций, описывающая настройку одного или нескольких справочников для поля связи.
+                 * @typedef {Object} Dictionaries Группа опций, описывающая настройку одного или нескольких справочников для поля связи.
                  * Справочник - это диалог выбора значений. Список значений диалога строится на основе любого компонента, который можно
                  * использовать для {@link https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/ отображения данных в списках}.
                  * @property {String} caption Текст в меню выбора справочников. Опция актуальна, когда для поля связи установлено несколько справочников.
@@ -152,7 +152,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
                  * @translatable caption
                  */
                 /**
-                 * @cfg {Dictionaries[]} Устанавливает справочники для поля связи.
+                 * @cfg {Array.<Dictionaries>} Устанавливает справочники для поля связи.
                  * @remark
                  * Справочник - это диалог выбора значений. Набор значений диалога строится на основе любого компонента,
                  * который можно использовать для {@link https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/ отображения данных в списках}.
@@ -271,8 +271,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
                  * @cfg {String} Устанавливает шаблон, по которому будет построено отображение каждого выбранного значения в поле связи.
                  * @remark
                  * Шаблон - это вёрстка, по которой будет построено отображение каждого выбранного значения в поле связи.
-                 * Внутри шаблона допускается использование конструкций шаблонизатора. Подробнее про шаблоны можно
-                 * прочитать в {@link https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/core/component/xhtml/template документации}.
+                 * Внутри шаблона допускается использование {@link https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/core/component/xhtml/template конструкций шаблонизатора}.
                  * Шаблон может быть реализован отдельным XHTML-файлом.
                  * В этом случае чтобы передать его содержимое в опцию, он должен быть подключен в массив зависимостей компонента (см. примеры).
                  * @example
