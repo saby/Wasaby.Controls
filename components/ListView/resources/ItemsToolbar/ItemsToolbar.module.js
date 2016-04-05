@@ -239,13 +239,24 @@ define('js!SBIS3.CONTROLS.ItemsToolbar',
                  size = target.size,
                  parentContainer = this.getParent().getContainer()[0],
                  isVertical = target.container.hasClass('js-controls-CompositeView__verticalItemActions'),
-                 rightPosition = parentContainer.offsetWidth - (position.left + size.width);
+                 rightPosition = parentContainer.offsetWidth - (position.left + size.width),
+                 topPosition = 'auto',
+                 bottomPosition = parentContainer.offsetHeight - (position.top + size.height);
+
+             if(rightPosition < 0 && !isVertical) {
+                rightPosition = 0;
+             }
+
+             if(isVertical) {
+                topPosition = position.top;
+                bottomPosition = 'auto';
+             }
 
              this.getContainer()[isVertical ? 'addClass' : 'removeClass']('controls-ItemsToolbar__vertical');
              return {
-                right : rightPosition >= 0 ? rightPosition : 0,
-                top : isVertical ? position.top : 'auto',
-                bottom : isVertical ? 'auto' : parentContainer.offsetHeight - (position.top + size.height)
+                right : rightPosition,
+                top : topPosition,
+                bottom : bottomPosition
              };
           },
           /**
