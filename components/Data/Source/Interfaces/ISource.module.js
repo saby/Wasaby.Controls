@@ -33,6 +33,9 @@ define('js!SBIS3.CONTROLS.Data.Source.ISource', [
             /**
              * @cfg {Endpoint|String} Конечная точка, обеспечивающая доступ клиента к функциональным возможностям источника данных
              * @see getEndPoint
+             * @remark
+             * Можно успользовать сокращенную запись, передав значение в виде строки - в этом случае оно будет
+             * интерпретироваться как контракт (endpoint.contract)
              * @example
              * Подключаем пользователей через HTTP API:
              * <pre>
@@ -43,7 +46,7 @@ define('js!SBIS3.CONTROLS.Data.Source.ISource', [
              *       }
              *    });
              * </pre>
-             * Подключаем пользователей через HTTP API без указания адреса:
+             * Подключаем пользователей через HTTP API с использованием сокращенной нотации:
              * <pre>
              *    var dataSource = new HttpSource({
              *       endpoint: '/users/'
