@@ -55,31 +55,31 @@ define('js!SBIS3.CONTROLS.FormWidgetMixin', ['js!SBIS3.CORE.Infobox'], function 
              * Пример массива, описывающего валидаторы:
              * <pre class="brush: xml">
              *     <options name="validators" type="array">
-             *         <options>
-             *             <option name="validator" type="function" value="js!SBIS3.CORE.CoreValidators:required"></option>
-             *             <option name='errorMessage'>Пожалуйста, введите в данное поле ваше имя!</option>
-             *         </options>
-             *         <options>
-             *             <option name="validator" type="function" value="js!SBIS3.CORE.CoreValidators:length"></option>
-             *         </options>
+             *        <options>
+             *           <option name="validator" type="function" value="js!SBIS3.CORE.CoreValidators:required"></option>
+             *           <option name='errorMessage'>Пожалуйста, введите в данное поле ваше имя!</option>
+             *        </options>
+             *        <options>
+             *           <option name="validator" type="function" value="js!SBIS3.CORE.CoreValidators:length"></option>
+             *        </options>
              *     </options>
              * </pre>
              * Пример пользовательского валидатора:
              * <pre>
              *     define('js!SBIS3.MySite.MyComponent.Validators', [], function() {
-             *       'use strict';
-             *       return {
-             *          myValidator: function() {
-             *             var value = this.getValue();
-             *             if (value.length < 3) {
-             *             // если число введённых символов меньше 4-х, то возвращается сообщение об ошибке - валидация не пройдена
-             *             return 'Название товара должно состоять из 4-х или более символов';
-             *             }
-             *             // если количество введённых символов соответствует требованиям, возвращаем true - валидация пройдена
-             *             return true;
-             *          }
-             *       }
-             *    });
+             *        'use strict';
+             *        return {
+             *           myValidator: function() {
+             *              var value = this.getValue();
+             *              if (value.length < 3) {
+             *                 // если число введённых символов меньше 4-х, то возвращается сообщение об ошибке - валидация не пройдена
+             *                 return 'Название товара должно состоять из 4-х или более символов';
+             *              }
+             *              // если количество введённых символов соответствует требованиям, возвращаем true - валидация пройдена
+             *              return true;
+             *           }
+             *        }
+             *     });
              * </pre>
              * @group Validation
              * @see validators
@@ -325,7 +325,7 @@ define('js!SBIS3.CONTROLS.FormWidgetMixin', ['js!SBIS3.CORE.Infobox'], function 
        *    fieldString.subscribe('onChange', function(eventObject, value) {
        *       //создаём объект бизнес-логики
        *       var bl = new $ws.proto.BLObject('Пользователи'),
-       *           self = this;
+       *          self = this;
        *       //вызываем метод бизнес-логики с нужными нам параметрами
        *       bl.call('ПолучитьСписокПользователей', {'Логин': value}, $ws.proto.BLObject.RETURN_TYPE_RECORDSET).addCallback(function(recordSet) {
        *          //проверяем число принятых записей
