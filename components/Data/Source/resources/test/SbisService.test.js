@@ -1003,8 +1003,8 @@ define([
                      query = new Query();
                   query
                      .offset(0)
-                     .limit(10);
-                     query.meta({
+                     .limit(10)
+                     .meta({
                         hasMore: hasMore
                      });
                   service.query(query).addCallbacks(function () {
