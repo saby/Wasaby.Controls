@@ -5,9 +5,10 @@ define('js!SBIS3.CONTROLS.Data.Collection.List', [
    'js!SBIS3.CONTROLS.Data.Collection.IList',
    'js!SBIS3.CONTROLS.Data.Collection.IIndexedCollection',
    'js!SBIS3.CONTROLS.Data.Collection.ArrayEnumerator',
+   'js!SBIS3.CONTROLS.Data.Serializer',
    'js!SBIS3.CONTROLS.Data.Di',
    'js!SBIS3.CONTROLS.Data.ContextField.List'
-], function (SerializableMixin, IEnumerable, IList, IIndexedCollection, ArrayEnumerator, Di, ContextFieldList) {
+], function (SerializableMixin, IEnumerable, IList, IIndexedCollection, ArrayEnumerator, Serializer, Di, ContextFieldList) {
    'use strict';
 
    /**
@@ -244,11 +245,28 @@ define('js!SBIS3.CONTROLS.Data.Collection.List', [
 
       //region Public methods
 
+      /**
+       * Клонирует список
+       * @returns {SBIS3.CONTROLS.Data.Collection.List}
+       */
+      clone: function () {
+         var serializer = new Serializer();
+         return JSON.parse(
+            JSON.stringify(this, serializer.serialize),
+            serializer.deserialize
+         );
+      },
+
       equals: function (another) {
          $ws.single.ioc.resolve('ILogger').info(this._moduleName + '::equals()', 'Method is deprecated and will be removed in 3.7.4. Use isEqual() instead.');
          return this.isEqual(another);
       },
 
+      /**
+       * Проверяет эквивалентность элементов другого списка (должно совпадать количество элементов и сами элементы (строгое сравнение))
+       * @param {SBIS3.CONTROLS.Data.Collection.List} list Список, эквивалентность которого проверяется
+       * @returns {Boolean}
+       */
       isEqual: function (list) {
          if (list === this) {
             return true;
