@@ -121,7 +121,7 @@ define('js!SBIS3.CONTROLS.FilterHistoryController',
                   и в итоге мы можем получить не ту дату */
                 if(elem.value) {
                    if(elem.value instanceof Date) {
-                      dateFix = elem.value;
+                      dateFix = new Date(elem.value);
                       dateFix.setHours(dateFix.getHours() - dateFix.getTimezoneOffset() / 60);
                       elem.value = DateUtil.dateToIsoString(dateFix);
                    }
