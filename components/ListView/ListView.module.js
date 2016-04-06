@@ -12,6 +12,7 @@ define('js!SBIS3.CONTROLS.ListView',
       'js!SBIS3.CONTROLS.DataBindMixin',
       'js!SBIS3.CONTROLS.DecorableMixin',
       'js!SBIS3.CONTROLS.DragNDropMixin',
+      'js!SBIS3.CONTROLS.FormWidgetMixin',
       'js!SBIS3.CONTROLS.ItemsToolbar',
       'js!SBIS3.CORE.MarkupTransformer',
       'html!SBIS3.CONTROLS.ListView',
@@ -29,7 +30,7 @@ define('js!SBIS3.CONTROLS.ListView',
       'browser!js!SBIS3.CONTROLS.ListView/resources/SwipeHandlers'
    ],
    function (CompoundControl, CompoundActiveFixMixin, DSMixin, MultiSelectable,
-             Selectable, DataBindMixin, DecorableMixin, DragNDropMixin, ItemsToolbar, MarkupTransformer, dotTplFn,
+             Selectable, DataBindMixin, DecorableMixin, DragNDropMixin, FormWidgetMixin, ItemsToolbar, MarkupTransformer, dotTplFn,
              TemplateUtil, CommonHandlers, MoveHandlers, Pager, EditInPlaceHoverController, EditInPlaceClickController,
              Link, ScrollWatcher, rk,  groupByTpl, emptyDataTpl) {
 
@@ -62,7 +63,7 @@ define('js!SBIS3.CONTROLS.ListView',
        */
 
       /*TODO CommonHandlers MoveHandlers тут в наследовании не нужны*/
-      var ListView = CompoundControl.extend([CompoundActiveFixMixin, DSMixin, MultiSelectable, Selectable, DataBindMixin, DecorableMixin, DragNDropMixin, CommonHandlers, MoveHandlers], /** @lends SBIS3.CONTROLS.ListView.prototype */ {
+      var ListView = CompoundControl.extend([CompoundActiveFixMixin, DSMixin, FormWidgetMixin, MultiSelectable, Selectable, DataBindMixin, DecorableMixin, DragNDropMixin, CommonHandlers, MoveHandlers], /** @lends SBIS3.CONTROLS.ListView.prototype */ {
          _dotTplFn: dotTplFn,
          /**
           * @event onChangeHoveredItem При переводе курсора мыши на другую запись
