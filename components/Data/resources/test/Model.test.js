@@ -145,20 +145,22 @@ define([
                assert.strictEqual(model.get('date'), value);
                assert.strictEqual(model.get('date'), value);
             });
-            //it('should return the property value', function () {
-            //   var model = new Model({
-            //      properties: {
-            //         rand: {
-            //            def:0,
-            //            get:function (){
-            //               return {'val': Math.random()};
-            //            }
-            //         }
-            //      }
-            //   });
-            //   assert.equal(model.get('rand'), model.get('rand'));
-            //   //assert.strictEqual(model.get('internal'), 'internalDefault');
-            //});
+            it('should prevent caching for overridden property', function () {
+               var model = new Model({
+                  rawData: {
+                     test: {a: 1}
+                  },
+                  properties: {
+                     test: {
+                        get: function() {
+                           return 2;
+                        }
+                     }
+                  }
+               });
+               assert.strictEqual(model.get('test'), 2);
+               assert.strictEqual(model.get('test'), 2);
+            });
          });
 
          describe('.set()', function () {

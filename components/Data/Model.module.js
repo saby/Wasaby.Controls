@@ -15,6 +15,7 @@ define('js!SBIS3.CONTROLS.Data.Model', [
     * @mixes SBIS3.CONTROLS.Data.IHashable
     * @mixes SBIS3.CONTROLS.Data.HashableMixin
     * @public
+    * @ignoreMethods getDefault
     * @author Мальцев Алексей
     */
 
@@ -142,6 +143,8 @@ define('js!SBIS3.CONTROLS.Data.Model', [
                value = this._processCalculatedValue(name, value, property, true);
                if (this._isFieldValueCacheable(value)) {
                   this._propertiesCache[name] = value;
+               } else if (this._propertiesCache.hasOwnProperty(name)) {
+                  delete this._propertiesCache[name];
                }
             }
          }
@@ -245,11 +248,11 @@ define('js!SBIS3.CONTROLS.Data.Model', [
          $ws.single.ioc.resolve('ILogger').info(this._moduleName + '::setUsingDataSetAsList()', 'Method is deprecated and will be removed in 3.7.4.');
       },
 
-      //
-      // * Возвращает значение свойства по умолчанию
-      // * @param {String} name Название свойства
-      // * @returns {*}
-      // */
+      /**
+       * Возвращает значение свойства по умолчанию
+       * @param {String} name Название свойства
+       * @returns {*}
+       */
       getDefault: function (name) {
          if (!this._defaultPropertiesValues.hasOwnProperty(name)) {
             var property = this._options.properties[name];
