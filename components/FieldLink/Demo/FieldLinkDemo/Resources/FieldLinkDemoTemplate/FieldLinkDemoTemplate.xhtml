@@ -1,24 +1,22 @@
-<div>
-    <div class="ws-window-titlebar-custom">
-        <component data-component="SBIS3.CONTROLS.Button" name="SelectButton" class="controls-demo-FieldLinkDemoTemplate__SelectButton">
-            <option name="caption">Выбрать</option>
+<div class="dialog-FieldLink">
+    <div class="ws-window-titlebar-custom"> <!-- На данный элемент установлен служебный CSS-класс, который прижимает его к верхей части диалога выбора -->
+        <component data-component="SBIS3.CONTROLS.Button" name="SelectButton" class="controls-demo-FieldLinkDemoTemplate__SelectButton"> <!-- Конфигурация кнопки, используется для подтверждения выбранных значений -->
+            <option name="caption">Выбрать</option> <!-- Устанавливаем подпись на кнопке -->
         </component>
     </div>
-    <component data-component="SBIS3.CONTROLS.DataGridView" name="Таблица">
-        <options name="columns" type="array">
+    <component data-component="SBIS3.CONTROLS.DataGridView" name="Таблица" class="dialog-FieldLink__tableView"> <!-- Конфигурация представления данных -->
+        <options name="columns" type="array"> <!-- Конфигурация колонок -->
             <options>
-                <option name="title">Ид</option>
-                <option name="width" type="string">20</option>
-                <option name="field">Ид</option>
+                <option name="title">№</option> <!-- Устанавливаем заголовок колонки -->
+                <option name="width" type="string">50</option> <!-- Устанавливае ширину колонки -->
+                <option name="field">Ид</option> <!-- Устанавливаем поле источника данных, значения которого будут использованы для отображения в колонке -->
             </options>
             <options>
                 <option name="title">Название</option>
-                <option name="width" type="string">100</option>
+                <option name="width" type="string">200</option>
                 <option name="field">Название</option>
             </options>
         </options>
-        <options name="itemsActions" type="array"></options>
-        <option name="emptyHTML">Нет записей</option>
-        <option name="multiselect">true</option>
+        <option name="multiselect">true</option> <!-- Устанавливаем режим множественного выбора значений -->
     </component>
 </div>
