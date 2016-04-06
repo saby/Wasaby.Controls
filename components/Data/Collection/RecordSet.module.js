@@ -1,5 +1,4 @@
 /* global define, $ws */
-/* global define, $ws */
 define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
    'js!SBIS3.CONTROLS.Data.Collection.ObservableList',
    'js!SBIS3.CONTROLS.Data.FormattableMixin',
@@ -253,8 +252,8 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
       },
 
       /**
-       * Проверяет эквивалентность формата и записей другого рекордсета.
-       * @param {SBIS3.CONTROLS.Data.Record} record Рекордсет, эквивалентность которого проверяется
+       * Проверяет эквивалентность формата и записей другого рекордсета (должны совпадать данные каждой записи).
+       * @param {SBIS3.CONTROLS.Data.Collection.RecordSet} recordset Рекордсет, эквивалентность которого проверяется
        * @returns {Boolean}
        */
       isEqual: function (recordset) {
@@ -272,20 +271,6 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
             this.getRawData(),
             recordset.getRawData()
          );
-      },
-
-      /**
-       * Возвращает копию рекордсета
-       * @returns {SBIS3.CONTROLS.Data.Collection.RecordSet}
-       */
-      clone: function () {
-         //TODO: сделать через сериализатор
-         return new RecordSet({
-            adapter: this._options.adapter,
-            rawData: this._options.rawData,
-            meta: this._options.meta,
-            idProperty: this._options.idProperty
-         });
       },
 
       /**
@@ -563,7 +548,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
       //region SBIS3.CONTROLS.Data.Collection.List
 
       clear: function () {
-         this._assignRawData(this._getRawDataAdapter().getEmpty());
+         this._assignRawData(this._getRawDataAdapter().getEmpty(), true);
          RecordSet.superclass.clear.call(this);
       },
 
