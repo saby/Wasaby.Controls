@@ -151,9 +151,9 @@ define('js!SBIS3.CONTROLS.ComboBox', [
              */
             valueFormat: '',
             /*
-
+               @cfg {Boolean} Автоматически фильтровать пункты выпадающего списка по введеной строке 
             */
-            autocomplete: false
+            autocomplete: true
          }
       },
 
