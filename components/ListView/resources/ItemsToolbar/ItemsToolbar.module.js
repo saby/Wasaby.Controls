@@ -185,7 +185,7 @@ define('js!SBIS3.CONTROLS.ItemsToolbar',
            * @private
            */
           _trackingTarget: function() {
-             $ws.helpers.trackElement(this._currentTarget.container, true);
+             $ws.helpers.trackElement(this._currentTarget.container, true).subscribe('onMove', this._recalculatePosition, this);
           },
           /**
            * Отключает слежение за позицей currentTarget
