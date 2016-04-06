@@ -115,9 +115,9 @@ define('js!SBIS3.CONTROLS.Data.Factory', [
                      [value]
                );
             case 'RecordSet':
-               return this._serializeRecordSet(value);
+               return this._serializeRecordSet(value, adapter);
             case 'Record':
-               return this._serializeRecord(value);
+               return this._serializeRecord(value, adapter);
             case 'Date':
             case 'DateTime':
             case 'Time':
@@ -233,10 +233,11 @@ define('js!SBIS3.CONTROLS.Data.Factory', [
       /**
        * Сериализует RecordSet
        * @param {*} data Данные
+       * @param {SBIS3.CONTROLS.Data.Adapter.IAdapter} adapter Адаптер для работы с сырыми данными
        * @returns {*}
        * @protected
        */
-      _serializeRecordSet: function (data) {
+      _serializeRecordSet: function (data, adapter) {
          if (!data) {
             return;
          }
@@ -249,6 +250,7 @@ define('js!SBIS3.CONTROLS.Data.Factory', [
          }
 
          if (itHaveRawData) {
+            this._checkAdapters(data.getAdapter(), adapter);
             return data.getRawData();
          } else if (data instanceof $ws.proto.RecordSet ||
             data instanceof $ws.proto.RecordSetStatic
@@ -262,11 +264,13 @@ define('js!SBIS3.CONTROLS.Data.Factory', [
       /**
        * Сериализует запись
        * @param {*} data Запись
+       * @param {SBIS3.CONTROLS.Data.Adapter.IAdapter} adapter Адаптер для работы с сырыми данными
        * @returns {*}
        * @protected
        */
-      _serializeRecord: function (data) {
+      _serializeRecord: function (data, adapter) {
          if ($ws.helpers.instanceOfModule(data, 'SBIS3.CONTROLS.Data.Record')) {
+            this._checkAdapters(data.getAdapter(), adapter);
             return data.getRawData();
          } else if (data instanceof $ws.proto.Record) {
             return data.toJSON();
@@ -310,6 +314,19 @@ define('js!SBIS3.CONTROLS.Data.Factory', [
             return data;
          } else {
             return null;
+         }
+      },
+
+      /**
+       * Проверяет совместимость адаптеров
+       * @param {SBIS3.CONTROLS.Data.Adapter.IAdapter} source Адаптер источника
+       * @param {SBIS3.CONTROLS.Data.Adapter.IAdapter} target Адаптер приемника
+       * @protected
+       */
+      _checkAdapters: function (source, target) {
+         var targetProto = Object.getPrototypeOf(target);
+         if (!targetProto.isPrototypeOf(source)) {
+            throw new TypeError('The source adapter "' + source._moduleName + '" is incompatible with the target adapter "' + target._moduleName + '"');
          }
       }
    };

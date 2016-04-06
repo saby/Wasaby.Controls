@@ -380,6 +380,13 @@ define([
                      model.set('record', record);
                      assert.deepEqual(getData(model, 3), record.toJSON());
                   });
+                  it('should throw an error if the record adapter is incompatible', function () {
+                     var model = getModel(type),
+                        record = new Model();
+                     assert.throw(function() {
+                        model.set('record', record);
+                     });
+                  });
                   it('should store a recordset', function () {
                      var model = getModel(type),
                         recordset = new RecordSet({
@@ -392,6 +399,13 @@ define([
                      model.set('recordSet', recordset);
                      assert.deepEqual(getData(model, 4).d, recordset.getRawData().d);
                      assert.deepEqual(getData(model, 4).s, recordset.getRawData().s);
+                  });
+                  it('should throw an error if the recordset adapter is incompatible', function () {
+                     var model = getModel(type),
+                        recordset = new RecordSet();
+                     assert.throw(function() {
+                        model.set('recordSet', recordset);
+                     });
                   });
                   it('should store a list of records', function () {
                      var model = getModel(type),
