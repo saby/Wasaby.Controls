@@ -36,7 +36,6 @@ define('js!SBIS3.CONTROLS.MenuButtonMixin', ['js!SBIS3.CONTROLS.ContextMenu'], f
          if (this._container.hasClass('controls-Menu__hide-menu-header')){
             this._options.pickerClassName += ' controls-Menu__hide-menu-header';
          }
-         this._checkItemsIcons(this._options.items);
       },
 
       //TODO: Можно будет выпилить когда меню будет сделано через таблицу
@@ -51,7 +50,7 @@ define('js!SBIS3.CONTROLS.MenuButtonMixin', ['js!SBIS3.CONTROLS.ContextMenu'], f
             }
             for (var i = 0; i < items.length; i++){
                //отступы нужны только в основном меню, но не в сабменю
-               if (!items[i].icon && !items[i][this._options.hierField]) { items[i].icon = icon;}
+               if (!items[i].get('icon') && !items[i].get(this._options.hierField)) { items[i].set('icon', icon);}
             }
          }
       },
@@ -145,6 +144,10 @@ define('js!SBIS3.CONTROLS.MenuButtonMixin', ['js!SBIS3.CONTROLS.ContextMenu'], f
          //Установить ширину меню
       },
       after : {
+         redraw: function(){
+            this._checkItemsIcons(this.getItems().toArray());
+         },
+
          _initializePicker : function() {
             var self = this;
             this._picker.subscribe('onMenuItemActivate', function(e, id, mEvent) {
@@ -158,9 +161,6 @@ define('js!SBIS3.CONTROLS.MenuButtonMixin', ['js!SBIS3.CONTROLS.ContextMenu'], f
             if (this._picker) {
                this._picker.setEnabled(enabled);
             }
-         },
-         setItems: function(items){
-            this._checkItemsIcons(items);
          },
          _drawIcon: function(icon){
             if (this._picker){
