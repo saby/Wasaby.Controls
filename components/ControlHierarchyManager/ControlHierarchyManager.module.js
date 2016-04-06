@@ -53,7 +53,7 @@ define('js!SBIS3.CONTROLS.ControlHierarchyManager', [], function () {
                }
             }
          }
-         delete this._index[id];
+         delete this._index[component.getId()];
       },
 
       //Проверить является ли target jQuery элементом component или его детей
