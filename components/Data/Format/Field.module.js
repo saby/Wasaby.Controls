@@ -150,7 +150,7 @@ define('js!SBIS3.CONTROLS.Data.Format.Field', [
 
          return selfProto === formatProto &&
             this.getName() === format.getName() &&
-            this.getDefaultValue() === format.getDefaultValue() &&
+            $ws.helpers.isEqualObject(this.getDefaultValue(), format.getDefaultValue()) &&
             this.isNullable() === format.isNullable();
       }
 
