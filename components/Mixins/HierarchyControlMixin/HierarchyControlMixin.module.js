@@ -24,19 +24,19 @@ define('js!SBIS3.CONTROLS.HierarchyControlMixin', [
             idProperty: '',
 
             /**
-             * @cfg {String} Название свойства, содержащего идентификатор родительского узла. Используется только в случае, если {@link items} не реализует {@link SBIS3.CONTROLS.Data.Projection.ITree}.
+             * @cfg {String} Название свойства, содержащего идентификатор родительского узла. Используется только в случае, если {@link items} не реализует {@link SBIS3.CONTROLS.Data.Projection.Tree}.
              * @remark Нужно только для того, чтобы передать в конструктор {@link SBIS3.CONTROLS.Data.Projection.Tree}
              */
             parentProperty: '',
 
             /**
-             * @cfg {String} Название свойства, содержащего признак узла. Используется только в случае, если {@link items} не реализует {@link SBIS3.CONTROLS.Data.Projection.ITree}.
+             * @cfg {String} Название свойства, содержащего признак узла. Используется только в случае, если {@link items} не реализует {@link SBIS3.CONTROLS.Data.Projection.Tree}.
              * @remark Нужно только для того, чтобы передать в конструктор {@link SBIS3.CONTROLS.Data.Projection.Tree}
              */
             nodeProperty: '',
 
             /**
-             * @cfg {String} Название свойства, содержащего дочерние элементы узла. Используется только в случае, если {@link items} является массивом и не реализует {@link SBIS3.CONTROLS.Data.Projection.ITree}.
+             * @cfg {String} Название свойства, содержащего дочерние элементы узла. Используется только в случае, если {@link items} является массивом и не реализует {@link SBIS3.CONTROLS.Data.Projection.Tree}.
              * @remark Нужно только для того, чтобы передать в конструктор {@link SBIS3.CONTROLS.Data.Projection.Tree}
              */
             childrenProperty: '',
