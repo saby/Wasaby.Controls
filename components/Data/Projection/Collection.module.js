@@ -381,11 +381,69 @@ define('js!SBIS3.CONTROLS.Data.Projection.Collection', [
       },
 
       getInternalBySource: function (index) {
-         return this._getServiceEnumerator().getInternalBySource(index);
+         return this.getIndexBySourceIndex(index);
       },
 
       getSourceByInternal: function (index) {
+         return this.getSourceByInternal(index);
+      },
+
+      /**
+       * Возвращает индекс элемента в исходной коллекции по его индексу в проекции
+       * @param {Number} index Индекс элемента в проекции
+       * @returns {Number} Индекс элемента в исходной коллекции
+       */
+      getSourceIndexByIndex: function (index) {
          return this._getServiceEnumerator().getSourceByInternal(index);
+      },
+
+      /**
+       * Возвращает индекс элемента проекции в исходной коллекции
+       * @param {SBIS3.CONTROLS.Data.Projection.CollectionItem} item Элемент проекции
+       * @returns {Number} Индекс элемента проекции в исходной коллекции
+       */
+      getSourceIndexByItem: function (item) {
+         var index = this.getIndex(item);
+         return index == -1 ? -1 : this.getSourceIndexByIndex(index);
+      },
+
+      /**
+       * Возвращает индекс элемента в проекции по индексу в исходной коллекции
+       * @param {Number} index Индекс элемента в исходной коллекции
+       * @returns {Number} Индекс элемента в проекции
+       */
+      getIndexBySourceIndex: function (index) {
+         return this._getServiceEnumerator().getInternalBySource(index);
+      },
+
+      /**
+       * Возвращает позицию элемента исходной коллекции в проекции.
+       * @param {*} item Элемент исходной коллеции
+       * @returns {Number} Позвиция элемента в проекции или -1, если не входит в проекцию
+       */
+      getIndexBySourceItem: function (item) {
+         var sourceIndex = this.getCollection().getIndex(item);
+         return sourceIndex === -1 ? -1 : this.getIndexBySourceIndex(sourceIndex);
+      },
+
+      /**
+       * Возвращает элемент проекции по индексу исходной коллекции.
+       * @param {Number} index Индекс элемента в исходной коллекции
+       * @returns {SBIS3.CONTROLS.Data.Projection.CollectionItem} Элемент проекции или undefined, если index не входит в проекцию
+       */
+      getItemBySourceIndex: function (index) {
+         index = this.getIndexBySourceIndex(index);
+         return index == -1 ? undefined : this.at(index);
+      },
+
+      /**
+       * Возвращает элемент проекции для элемента исходной коллекции.
+       * @param {*} item Элемент исходной коллеции
+       * @returns {SBIS3.CONTROLS.Data.Projection.CollectionItem} Элемент проекции или undefined, если item не входит в проекцию
+       */
+      getItemBySourceItem: function (item) {
+         var index = this.getIndexBySourceItem(item);
+         return index == -1 ? undefined : this.at(index);
       },
 
       //endregion SBIS3.CONTROLS.Data.Projection.ICollection
