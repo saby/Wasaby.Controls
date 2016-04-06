@@ -1379,16 +1379,13 @@ define('js!SBIS3.CONTROLS.ListView',
                      if (self._options.infiniteScroll === 'up') {
                         self._containerScrollHeight = self._scrollWatcher.getScrollHeight();
                         self._needSrollTopCompensation = true;
-                     }
-                     //TODO Провести тесты с unshift и Array.insert
-                     //добавляем данные в начало или в конец в зависимости от того мы скроллим вверх или вниз
-                     if (self._options.infiniteScroll === 'up'){
+                        //добавляем данные в начало или в конец в зависимости от того мы скроллим вверх или вниз
                         self._items.prepend(records.reverse());
                         records.reverse();
                      } else {
                         self._items.append(records);
                      }
-                     //Но рисовать нуджно все равно по порядку сверху, поэтому перевернем обратно
+
                      self._drawItems(records);
                      //TODO Пытались оставить для совместимости со старыми данными, но вызывает onCollectionItemChange!!!
                      //self._dataSet.merge(dataSet, {remove: false});
