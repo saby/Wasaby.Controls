@@ -385,7 +385,7 @@ define('js!SBIS3.CONTROLS.Data.Projection.Collection', [
       },
 
       getSourceByInternal: function (index) {
-         return this.getSourceByInternal(index);
+         return this.getSourceIndexByIndex(index);
       },
 
       /**
