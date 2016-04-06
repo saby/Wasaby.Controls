@@ -69,9 +69,7 @@ define('js!SBIS3.CONTROLS.IconButton', ['js!SBIS3.CONTROLS.ButtonBase', 'js!SBIS
          if (iconClass) {
             options._moreClass = '';
             if ((iconClass.indexOf('icon-error') < 0) && (iconClass.indexOf('icon-done') < 0)) {
-               if (!this._container.hasClass('controls-IconButton__round-border')) {
-                  options._moreClass += ' action-hover';
-               }
+               options._moreClass += ' action-hover';
             }
             else {
                if (iconClass.indexOf('icon-error') >= 0) {
