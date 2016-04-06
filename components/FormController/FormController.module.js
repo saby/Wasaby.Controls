@@ -132,7 +132,7 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
          //чтобы не дергать getTopParent
          this._panel.subscribe('onBeforeClose', function(event){
             //Если попали сюда из метода _saveRecord, то this._saving = true и мы просто закрываем панель
-            if (this._saving || !this._options.record.isChanged()){
+            if (this._saving || !(this._options.record && this._options.record.isChanged())){
                this._saving = false;
                return;
             }
