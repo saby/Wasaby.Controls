@@ -91,7 +91,7 @@ define('js!SBIS3.CONTROLS.ComboBox', [
              * @example
              * <pre class="brush:xml">
              *     <option name="itemTemplate">
-             *         <div data-key="{{=it.item.getKey()}}" class="controls-ComboBox__itemRow js-controls-ComboBox__itemRow">
+             *         <div data-key="{{=it.item.getId()}}" class="controls-ComboBox__itemRow js-controls-ComboBox__itemRow">
              *             <div class="genie-colorComboBox__itemTitle">
              *                 {{=it.displayField}}
              *             </div>
@@ -196,7 +196,7 @@ define('js!SBIS3.CONTROLS.ComboBox', [
                if (this._dataSet.getCount()) {
                   if (selectedKey) {
                      this._dataSet.each(function (rec) {
-                        if (rec.getKey() == selectedKey) {
+                        if (rec.getId() == selectedKey) {
                            num = i;
                         }
                         i++;
@@ -221,9 +221,9 @@ define('js!SBIS3.CONTROLS.ComboBox', [
                      nextRec = this._dataSet.at(0);
                   }
                   if (e.which === $ws._const.key.up) {
-                     this.setSelectedKey(prevRec.getKey());
+                     this.setSelectedKey(prevRec.getId());
                   } else if (e.which === $ws._const.key.down) {
-                     this.setSelectedKey(nextRec.getKey());
+                     this.setSelectedKey(nextRec.getId());
                   }
                }
             }
@@ -375,7 +375,7 @@ define('js!SBIS3.CONTROLS.ComboBox', [
           newItem = self.getItems().getPreviousItem(current);
           }
           if (newItem) {
-          self.setSelectedKey(this._items.getKey(newItem));
+          self.setSelectedKey(this._items.getId(newItem));
           }
           if (e.which == 13) {
           this.hidePicker();
@@ -407,7 +407,7 @@ define('js!SBIS3.CONTROLS.ComboBox', [
                var noItems = true;
                DataSet.each(function (item) {
                   noItems = false;
-                  selKey = item.getKey();
+                  selKey = item.getId();
                   self._options.selectedKey = (selKey !== null && selKey !== undefined && selKey == selKey) ? selKey : null;
                   //TODO: переделать на setSelectedItem, чтобы была запись в контекст и валидация если надо. Учесть проблемы с первым выделением
                   if (oldKey !== self._options.selectedKey) { // при повторном индексе null не стреляет событием

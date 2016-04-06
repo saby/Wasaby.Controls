@@ -539,7 +539,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
             if (!this._indexTree.hasOwnProperty(parentKey)) {
                this._indexTree[parentKey] = [];
             }
-            this._indexTree[parentKey].push(record.getKey());
+            this._indexTree[parentKey].push(record.getId());
          }, 'all');
       },
 

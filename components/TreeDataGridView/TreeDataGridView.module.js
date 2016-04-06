@@ -68,7 +68,7 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
          for (var j = 0; j < records.length; j++) {
             var record = records[j];
             var
-               recKey = record.getKey(),
+               recKey = record.getId(),
                parKey = self._dataSet.getParentKey(record, self._options.hierField),
                childKeys = this._dataSet.getChildItems(parKey, true),
                targetContainer = self._getTargetContainer(record);
@@ -282,7 +282,7 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
             itemType = hierType == null ? 'leaf' : hierType == true ? 'node' : 'hidden';
          container.addClass('controls-ListView__item-type-' + itemType);
          var
-            key = item.getKey(),
+            key = item.getId(),
             parentKey = this._dataSet.getParentKey(item, this._options.hierField),
          	parentContainer = $('.controls-ListView__item[data-id="' + parentKey + '"]', this._getItemsContainer().get(0)).get(0);
          container.attr('data-parent', parentKey);

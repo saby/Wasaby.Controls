@@ -67,7 +67,7 @@ define('js!SBIS3.CONTROLS.PrintUnloadBase', [
                selectedItemsObj[selectedItems[i]] = true;
             }
             ds = this._getView()._dataSet.filter(function(item){
-               return selectedItemsObj[item.getKey()];
+               return selectedItemsObj[item.getId()];
             });
             this._applyOperation(ds);
          }

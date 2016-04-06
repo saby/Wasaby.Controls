@@ -803,7 +803,7 @@ define('js!SBIS3.CONTROLS.ListView',
             return $('.controls-ListView__itemsContainer', this._container.get(0)).first();
          },
          _getItemContainer: function(parent, item) {
-            return parent.find('>[data-id="' + item.getKey() + '"]:not(".controls-editInPlace")');
+            return parent.find('>[data-id="' + item.getId() + '"]:not(".controls-editInPlace")');
          },
          _addItemAttributes: function(container) {
             container.addClass('js-controls-ListView__item');
@@ -999,7 +999,7 @@ define('js!SBIS3.CONTROLS.ListView',
 
          redrawItem: function(item) {
             ListView.superclass.redrawItem.apply(this, arguments);
-            if (this._editingItem.model && this._editingItem.model.getKey() === item.getKey()) {
+            if (this._editingItem.model && this._editingItem.model.getId() === item.getId()) {
                this._editingItem.target = this._getElementByModel(item);
             }
             //TODO: Временное решение для .100.  В .30 состояния выбранности элемента должны добавляться в шаблоне.
@@ -1079,7 +1079,7 @@ define('js!SBIS3.CONTROLS.ListView',
                            this._showItemsToolbar(this._getElementData(this._editingItem.target));
                            this._getItemsToolbar().lockToolbar();
                         }
-                        this.setSelectedKey(model.getKey());
+                        this.setSelectedKey(model.getId());
                         event.setResult(this._notify('onAfterBeginEdit', model));
                      }.bind(this),
                      onBeginAdd: function(event, options) {
@@ -1105,7 +1105,7 @@ define('js!SBIS3.CONTROLS.ListView',
          _getElementByModel: function(item) {
             // Даже не думать удалять ":not(...)". Это связано с тем, что при редактировании по месту может возникнуть задача перерисовать строку
             // DataGridView. В виду одинакового атрибута "data-id", это единственный способ отличить строку DataGridView от строки EditInPlace.
-            return this._getItemsContainer().find('.js-controls-ListView__item[data-id="' + item.getKey() + '"]:not(".controls-editInPlace")');
+            return this._getItemsContainer().find('.js-controls-ListView__item[data-id="' + item.getId() + '"]:not(".controls-editInPlace")');
          },
 
          //********************************//
@@ -1749,7 +1749,7 @@ define('js!SBIS3.CONTROLS.ListView',
           * @see commitEdit
           */
          _beginEdit: function(record) {
-            var target = this._getItemsContainer().find('.js-controls-ListView__item[data-id="' + record.getKey() + '"]:first');
+            var target = this._getItemsContainer().find('.js-controls-ListView__item[data-id="' + record.getId() + '"]:first');
             return this.showEip(target, record, { isEdit: true });
          },
          /**
