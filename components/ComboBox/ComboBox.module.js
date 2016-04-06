@@ -5,8 +5,9 @@ define('js!SBIS3.CONTROLS.ComboBox', [
    'js!SBIS3.CONTROLS.DSMixin',
    'js!SBIS3.CONTROLS.Selectable',
    'js!SBIS3.CONTROLS.DataBindMixin',
+   'js!SBIS3.CONTROLS.SearchMixin',
    'html!SBIS3.CONTROLS.ComboBox/resources/ComboBoxArrowDown'
-], function (TextBox, dotTplFn, PickerMixin, DSMixin, Selectable, DataBindMixin, arrowTpl) {
+], function (TextBox, dotTplFn, PickerMixin, DSMixin, Selectable, DataBindMixin, SearchMixin, arrowTpl) {
    'use strict';
    /**
     * Выпадающий список с выбором значений из набора.
@@ -44,7 +45,7 @@ define('js!SBIS3.CONTROLS.ComboBox', [
     * @mixes SBIS3.CONTROLS.Selectable
     */
 
-   var ComboBox = TextBox.extend([PickerMixin, DSMixin, Selectable, DataBindMixin], /** @lends SBIS3.CONTROLS.ComboBox.prototype */{
+   var ComboBox = TextBox.extend([PickerMixin, DSMixin, Selectable, DataBindMixin, SearchMixin], /** @lends SBIS3.CONTROLS.ComboBox.prototype */{
       _dotTplFn: dotTplFn,
       /**
        * @typedef {Object} ItemsComboBox
@@ -85,6 +86,8 @@ define('js!SBIS3.CONTROLS.ComboBox', [
          _delayedSettingTextByKey: false,
          _keysWeHandle: [$ws._const.key.up, $ws._const.key.down, $ws._const.key.enter],
          _options: {
+            searchDelay: 0,
+            startCharacter: 1,
             focusOnActivatedOnMobiles: false,
             /**
              * @cfg {String} Шаблон отображения каждого элемента коллекции
@@ -146,7 +149,11 @@ define('js!SBIS3.CONTROLS.ComboBox', [
              * @cfg {String} Форматирование значений в списке
              * @noShow
              */
-            valueFormat: ''
+            valueFormat: '',
+            /*
+               @cfg {Boolean} Автоматически фильтровать пункты выпадающего списка по введеной строке 
+            */
+            autocomplete: true
          }
       },
 
@@ -162,6 +169,11 @@ define('js!SBIS3.CONTROLS.ComboBox', [
             e.stopPropagation();
             return false;
          });
+
+         if (this._options.autocomplete){
+            this.subscribe('onSearch', this._onSearch);
+            this.subscribe('onReset', this._onResetSearch);
+         }
 
          /*обрабочики кликов TODO mouseup!!*/
          this._container.click(function (e) {
@@ -185,6 +197,26 @@ define('js!SBIS3.CONTROLS.ComboBox', [
                this._setKeyByText();
             }
          }
+      },
+
+      _searchFilter: function(model){
+         if (model.get(this._options.displayField).match(this.getText())){
+            return true;
+         }
+         return false;
+      },
+
+      _onSearch: function(){
+         this.setSelectedIndex(-1);
+         this._itemsProjection.setFilter(this._searchFilter.bind(this));
+         this.redraw();
+         this.showPicker();
+      },
+
+      _onResetSearch: function(){
+         this.setSelectedIndex(-1);
+         this._itemsProjection.setFilter(null);
+         this.redraw();
       },
 
       _keyboardHover: function (e) {
@@ -274,7 +306,7 @@ define('js!SBIS3.CONTROLS.ComboBox', [
          def = new $ws.proto.Deferred();
          if (this._dataSet) {
             if ((index !== null) && (typeof index != 'undefined') && (index != '-1')) {
-               item = this.getItems().at(index);
+               item = this._itemsProjection.at(index).getContents();
                def.callback(item);
             }
          }
@@ -336,6 +368,10 @@ define('js!SBIS3.CONTROLS.ComboBox', [
                var strKey = $(row).attr('data-id');
                if (strKey == 'null') {
                   strKey = null;
+               }
+               if (this._options.autocomplete){
+                  self._itemsProjection.setFilter(null);
+                  self.redraw();
                }
                self.setSelectedKey(strKey);
                self.hidePicker();
