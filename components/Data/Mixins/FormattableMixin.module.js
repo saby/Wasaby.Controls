@@ -426,7 +426,7 @@ define('js!SBIS3.CONTROLS.Data.FormattableMixin', [
        * @protected
        */
       _clearFormat: function (){
-         if (this._directFormat) {
+         if (this._isDirectFormat()) {
             throw new Error(this._moduleName + ': format can\'t be cleared because it\'s defined directly.');
          }
          this._options.format = null;

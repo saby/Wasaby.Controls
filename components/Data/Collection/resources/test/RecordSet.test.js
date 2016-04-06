@@ -785,6 +785,32 @@ define([
             });
          });
 
+         describe('.clone()', function () {
+            it('should not be same as original', function () {
+               assert.instanceOf(rs.clone(), RecordSet);
+               assert.notEqual(rs.clone(), rs);
+            });
+            it('should not be same as previous clone', function () {
+               assert.notEqual(rs.clone(), rs.clone());
+            });
+            it('should clone rawData', function () {
+               var clone = rs.clone();
+               assert.notEqual(rs.getRawData(), clone.getRawData());
+               assert.deepEqual(rs.getRawData(), clone.getRawData());
+            });
+            it('should make raw data unlinked from original', function () {
+               var cloneA = rs.clone();
+               assert.deepEqual(cloneA.getRawData(), rs.getRawData());
+               cloneA.removeAt(0);
+               assert.notEqual(cloneA.getRawData(), rs.getRawData());
+
+               var cloneB = rs.clone();
+               assert.deepEqual(cloneB.getRawData(), rs.getRawData());
+               cloneB.at(0).set('Фамилия', 'test');
+               assert.notEqual(cloneB.getRawData(), rs.getRawData());
+            });
+         });
+
          describe('.add()', function() {
             it('should change raw data', function() {
                var rd = {
