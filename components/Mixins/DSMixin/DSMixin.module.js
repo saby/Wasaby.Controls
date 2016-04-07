@@ -662,7 +662,10 @@ define('js!SBIS3.CONTROLS.DSMixin', [
                        self.redraw();
                     }
                     if (self._options.infiniteScroll === 'up'){
-                        self._scrollToItem(self._itemsProjection.at(0).getContents().getId());
+                       var firstItem = self._itemsProjection.at(0);
+                       if (firstItem) {
+                           self._scrollToItem(firstItem.getContents().getId());
+                       }
                     }
                     //self._notify('onBeforeRedraw');
                     return list;
