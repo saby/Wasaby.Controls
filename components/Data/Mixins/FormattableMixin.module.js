@@ -4,8 +4,9 @@ define('js!SBIS3.CONTROLS.Data.FormattableMixin', [
    'js!SBIS3.CONTROLS.Data.Format.FormatsFactory',
    'js!SBIS3.CONTROLS.Data.Format.FieldsFactory',
    'js!SBIS3.CONTROLS.Data.Di',
+   'js!SBIS3.CONTROLS.Data.Utils',
    'js!SBIS3.CONTROLS.Data.Adapter.Json'
-], function (Format, FormatsFactory, FieldsFactory, Di) {
+], function (Format, FormatsFactory, FieldsFactory, Di, Utils) {
    'use strict';
 
    /**
@@ -230,7 +231,7 @@ define('js!SBIS3.CONTROLS.Data.FormattableMixin', [
             typeof this._options.adapter === 'string' &&
             FormattableMixin._getDefaultAdapter !== this._getDefaultAdapter
          ) {
-            $ws.single.ioc.resolve('ILogger').info('SBIS3.CONTROLS.Data.FormattableMixin', 'Method _getDefaultAdapter() is deprecated and will be removed in 3.7.4. Use \'adapter\' option instead.');
+            Utils.logger.info('SBIS3.CONTROLS.Data.FormattableMixin: method _getDefaultAdapter() is deprecated and will be removed in 3.7.4. Use \'adapter\' option instead.');
             this._options.adapter = this._getDefaultAdapter();
          }
          if (typeof this._options.adapter === 'string') {

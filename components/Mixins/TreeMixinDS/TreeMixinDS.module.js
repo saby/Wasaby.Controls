@@ -559,7 +559,7 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', ['js!SBIS3.CORE.Control',
          if (this._lastParent === undefined) {
             this._lastParent = this._curRoot;
          }
-         key = record.getKey();
+         key = record.getId();
          curRecRoot = record.get(this._options.hierField);
          //TODO для SBISServiceSource в ключе находится массив, а теперь он еще и к строке приводится...
          curRecRoot = curRecRoot instanceof Array ? curRecRoot[0] : curRecRoot;
@@ -587,7 +587,7 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', ['js!SBIS3.CORE.Control',
             //Если текущий раздел у записи есть в lastPath, то возьмем все элементы до этого ключа
             kInd = -1;
             for (var k = 0; k < this._lastPath.length; k++) {
-               if (this._lastPath[k].getKey() == curRecRoot){
+               if (this._lastPath[k].getId() == curRecRoot){
                   kInd = k;
                   break;
                }
@@ -686,7 +686,7 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', ['js!SBIS3.CORE.Control',
             //TODO для SBISServiceSource в ключе находится массив
             parentID = pathRecords[i].get(this._options.hierField);
             dsItems.push({
-               id: pathRecords[i].getKey(),
+               id: pathRecords[i].getId(),
                title: pathRecords[i].get(this._options.displayField),
                parentId: parentID instanceof Array ? parentID[0] : parentID,
                data: pathRecords[i]

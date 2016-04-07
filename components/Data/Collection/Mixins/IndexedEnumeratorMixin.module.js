@@ -63,7 +63,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.IndexedEnumeratorMixin', [
        * @deprecated метод будет удален в 3.7.4 используйте getIndicesByValue()
        */
       getIndiciesByValue: function (property, value) {
-         $ws.single.ioc.resolve('ILogger').info(this._moduleName + '::getIndiciesByValue()', 'Method is deprecated and will be removed in 3.7.4. Use getIndicesByValue() instead.');
+         Utils.logger.stack(this._moduleName + '::getIndiciesByValue(): method is deprecated and will be removed in 3.7.4. Use getIndicesByValue() instead.');
          return this.getIndicesByValue(property, value);
       },
 
