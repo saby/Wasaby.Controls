@@ -2,8 +2,9 @@
 define('js!SBIS3.CONTROLS.Data.Types.Flags', [
    'js!SBIS3.CONTROLS.Data.Types.Dictionary',
    'js!SBIS3.CONTROLS.Data.ContextField.Flags',
-   'js!SBIS3.CONTROLS.Data.Di'
-], function (Dictionary, ContextFieldFlags, Di) {
+   'js!SBIS3.CONTROLS.Data.Di',
+   'js!SBIS3.CONTROLS.Data.Utils'
+], function (Dictionary, ContextFieldFlags, Di, Utils) {
    'use strict';
 
    /**
@@ -27,7 +28,7 @@ define('js!SBIS3.CONTROLS.Data.Types.Flags', [
 
       $constructor: function (cfg) {
          if ('data' in cfg && !('dictionary' in cfg) && !('values' in cfg)) {
-            $ws.single.ioc.resolve('ILogger').info(this._moduleName + '::$constructor()', 'Option "data" is deprecated and will be removed in 3.7.4. Use options "dictionary" and "values" instead.');
+            Utils.logger.stack(this._moduleName + '::$constructor(): option "data" is deprecated and will be removed in 3.7.4. Use options "dictionary" and "values" instead.', 1);
             var data = cfg.data;
             if (!(data instanceof Object)) {
                throw new TypeError('Option "data" must be an instance of Object');

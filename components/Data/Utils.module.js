@@ -71,6 +71,69 @@ define('js!SBIS3.CONTROLS.Data.Utils', [], function () {
          throw new ReferenceError('Object doesn\'t have setter for property "' + property + '".');
       },
 
+      logger: {
+         /**
+          * Пишет в лог сообщение
+          * @param {String} message Сообщение
+          * @static
+          */
+         log: function () {
+            var logger = $ws.single.ioc.resolve('ILogger');
+            logger.log.apply(logger, arguments);
+         },
+
+         /**
+          * Пишет в лог сообщение об ошибке
+          * @param {String} message Сообщение
+          * @static
+          */
+         error: function () {
+            var logger = $ws.single.ioc.resolve('ILogger');
+            logger.error.apply(logger, arguments);
+         },
+
+         /**
+          * Пишет в лог информационное сообщение
+          * @param {String} message Сообщение
+          * @static
+          */
+         info: function () {
+            var logger = $ws.single.ioc.resolve('ILogger');
+            logger.info.apply(logger, arguments);
+         },
+
+         /**
+          * Пишет в лог предупреждение с указанием файла, спровоцировавшего это предупреждение.
+          * Для каждой точки файла предупреждение выводится только один раз.
+          * @param {String} message Сообщение
+          * @param {Number} [offset=0] Смещение по стеку
+          * @param {String} [level=info] Уровень логирования
+          * @static
+          */
+         stack: function (message, offset, level) {
+            offset = offset || 0;
+            level = level || 'info';
+            var at = 3 + offset,//текст ошибки -> текщий контекст -> вызвавший logStack -> вызвавший ошибку
+               script = '',
+               hash = '';
+
+            try {
+               throw new Error(message);
+            } catch (e) {
+               if (e.hasOwnProperty('stack')) {
+                  script = (e.stack + '').split('\n').splice(at, 1).join('').trim();
+                  hash = message + script;
+                  this._points = this._points || {};
+                  if (this._points.hasOwnProperty(hash)) {
+                     return;
+                  }
+                  this._points[hash] = true;
+               }
+               $ws.single.ioc.resolve('ILogger')[level](e.message + (script ? ' [' + script + ']' : ''));
+            }
+         }
+      },
+
       _getPropertyMethodName: function (property, prefix) {
          return prefix + property.substr(0, 1).toUpperCase() + property.substr(1);
       }
