@@ -1358,9 +1358,14 @@ define('js!SBIS3.CONTROLS.ListView',
             this._drawSelectedItems(this._options.selectedKeys);
 
             /* Если после перерисовки выделенный элемент удалился из DOM дерава,
-               то событие mouseLeave не сработает, поэтому вызовем руками метод */
-            if(hoveredItem && !$.contains(this._getItemsContainer()[0], hoveredItem[0])) {
-               this._mouseLeaveHandler();
+               то событие mouseLeave не сработает, поэтому вызовем руками метод,
+               если же он остался, то обновим положение кнопки опций*/
+            if(hoveredItem){
+               if(!$.contains(this._getItemsContainer()[0], hoveredItem[0])) {
+                  this._mouseLeaveHandler();
+               }else {
+                  this._updateItemsToolbar();
+               }
             }
 
             this._notifyOnSizeChanged(true);
