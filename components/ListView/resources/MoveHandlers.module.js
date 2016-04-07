@@ -96,6 +96,8 @@ define('js!SBIS3.CONTROLS.MoveHandlers', ['js!SBIS3.CORE.Dialog','js!SBIS3.CONTR
                }).addBoth(function() {
                   self._toggleIndicator(false);
                });
+            } else {
+               self._toggleIndicator(false);
             }
          }
       },
