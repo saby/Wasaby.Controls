@@ -33,8 +33,13 @@
    &.controls-EditAtPlace__autoHeight {
       height: auto;
    }
-   &.controls-TextBox.ws-has-focus {
-      border: none;
+   &.controls-TextBox{
+     &.ws-has-focus {
+       border: none;
+     }
+     .controls-TextBox__fieldWrapper .controls-TextBox__placeholder{
+       padding: 0;
+     }
    }
    .controls-EditAtPlace__fieldWrapper {
       height: auto;
