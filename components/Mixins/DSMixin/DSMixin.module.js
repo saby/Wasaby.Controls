@@ -1430,9 +1430,9 @@ define('js!SBIS3.CONTROLS.DSMixin', [
        * Обрабатывает событие об изменении коллекции.
        * @param {$ws.proto.EventObject} event Дескриптор события.
        * @param {String} action Действие, приведшее к изменению.
-       * @param {SBIS3.CONTROLS.Data.Projection.ICollectionItem[]} newItems Новые элементы коллеции.
+       * @param {SBIS3.CONTROLS.Data.Projection.CollectionItem[]} newItems Новые элементы коллеции.
        * @param {Integer} newItemsIndex Индекс, в котором появились новые элементы.
-       * @param {SBIS3.CONTROLS.Data.Projection.ICollectionItem[]} oldItems Удаленные элементы коллекции.
+       * @param {SBIS3.CONTROLS.Data.Projection.CollectionItem[]} oldItems Удаленные элементы коллекции.
        * @param {Integer} oldItemsIndex Индекс, в котором удалены элементы.
        * @private
        */
