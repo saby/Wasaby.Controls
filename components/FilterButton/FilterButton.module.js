@@ -65,6 +65,8 @@ define('js!SBIS3.CONTROLS.FilterButton',
                  *    <li>left - открывается влево;</li>
                  *    <li>right - открывается вправо.</li>
                  * </ol>
+                 * @variant 'left'
+                 * @variant 'right'
                  */
                 filterAlign: 'left',
                 /**
