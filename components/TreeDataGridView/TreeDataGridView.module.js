@@ -57,6 +57,7 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
              */
             itemsDragNDrop: 'allow'
          },
+         _paddingSize: 16,
          _dragStartHandler: undefined
       },
 
@@ -109,6 +110,13 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
             }
          }
          self._drawItemsCallback();
+      },
+
+      init: function(){
+         TreeDataGridView.superclass.init.call(this);
+         if (this._container.hasClass('controls-TreeDataGridView__withPhoto')){
+            this._paddingSize = 30;
+         }
       },
 
       _drawLoadedNode : function(key, records) {
@@ -306,7 +314,7 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
          /*TODO пока придрот*/
          if (typeof parentKey != 'undefined' && parentKey !== null && parentContainer) {
             var parentMargin = parseInt($('.controls-TreeView__expand', parentContainer).parent().css('padding-left'));
-            $('.controls-TreeView__expand', container).parent().css('padding-left', parentMargin + 16);
+            $('.controls-TreeView__expand', container).parent().css('padding-left', parentMargin + this._paddingSize);
          }
       },
 
