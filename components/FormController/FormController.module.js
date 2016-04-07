@@ -12,6 +12,7 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
     * @extends $ws.proto.CompoundControl
     * @control
     * @public
+    * @author Крайнов Дмитрий Олегович
     */
    'use strict';
 
