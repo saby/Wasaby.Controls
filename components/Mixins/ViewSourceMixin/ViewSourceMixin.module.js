@@ -76,10 +76,9 @@ define('js!SBIS3.CONTROLS.ViewSourceMixin', [
                   path: dataSet.getProperty('p')
                });
 
-               resultDef.callback(recordSet);
-
                view.setDataSource(source, true);
                view.setFilter(queryFilter, true);
+               resultDef.callback(recordSet);
                view.setItems(recordSet);
 
                return recordSet;
