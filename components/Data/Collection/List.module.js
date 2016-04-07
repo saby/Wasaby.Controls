@@ -304,7 +304,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.List', [
       },
 
       _clearServiceEnumerator: function () {
-          this._serviceEnumerator = null;
+          this._serviceEnumerator = undefined;
       },
       /**
        * Проверяет корректность индекса
