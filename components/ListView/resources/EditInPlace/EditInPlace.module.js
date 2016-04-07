@@ -151,7 +151,7 @@ define('js!SBIS3.CONTROLS.EditInPlace',
             show: function(target, record) {
                this.updateFields(record);
                this._toggleOnRecordChangeHandler(true);
-               this.getContainer().attr('data-id', record.getKey());
+               this.getContainer().attr('data-id', record.getId());
                this.setOffset(record);
 
                this.setTarget(target);

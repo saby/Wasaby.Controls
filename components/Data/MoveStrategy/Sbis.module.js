@@ -2,8 +2,9 @@
 define('js!SBIS3.CONTROLS.Data.MoveStrategy.Sbis', [
    'js!SBIS3.CONTROLS.Data.MoveStrategy.Base',
    'js!SBIS3.CONTROLS.Data.Di',
+   'js!SBIS3.CONTROLS.Data.Utils',
    'js!SBIS3.CONTROLS.Data.Source.Provider.SbisBusinessLogic'
-], function (BaseMoveStrategy, DI) {
+], function (BaseMoveStrategy, DI, Utils) {
    'use strict';
    /**
     * Стандартная стратегия перемещения записей
@@ -15,6 +16,7 @@ define('js!SBIS3.CONTROLS.Data.MoveStrategy.Sbis', [
     */
 
    return BaseMoveStrategy.extend([],/** @lends SBIS3.CONTROLS.Data.MoveStrategy.Sbis.prototype */{
+      _moduleName: 'SBIS3.CONTROLS.Data.MoveStrategy.Sbis',
       $protected: {
          _options:{
 
@@ -49,7 +51,7 @@ define('js!SBIS3.CONTROLS.Data.MoveStrategy.Sbis', [
 
          //Deprecated
          if ('moveResource' in cfg && !('moveContract' in cfg)) {
-            $ws.single.ioc.resolve('ILogger').info(this._moduleName + '::$constructor()', 'Option "moveResource" is deprecated and will be removed in 3.7.4. Use "moveContract" instead.');
+            Utils.logger.stack(this._moduleName + '::$constructor(): option "moveResource" is deprecated and will be removed in 3.7.4. Use "moveContract" instead.', 1);
             this._options.moveContract = cfg.moveResource;
          }
 
