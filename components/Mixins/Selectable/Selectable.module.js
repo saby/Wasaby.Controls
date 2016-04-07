@@ -327,10 +327,16 @@ define('js!SBIS3.CONTROLS.Selectable', ['js!SBIS3.CONTROLS.Data.Utils', 'js!SBIS
             }
             else {
                var count = this._itemsProjection.getCount();
-               if (this._options.selectedIndex > this._itemsProjection.getCount() - 1) {
-                  this._options.selectedIndex = (count > 0) ? 0 : -1;
-                  var item = this._itemsProjection.at(this._options.selectedIndex);
-                  this._options.selectedKey = item.getContents().getKey();
+               if (count > 0) {
+                  if (this._options.selectedIndex > this._itemsProjection.getCount() - 1) {
+                     this._options.selectedIndex = (count > 0) ? 0 : -1;
+                     var item = this._itemsProjection.at(this._options.selectedIndex);
+                     this._options.selectedKey = item.getContents().getKey();
+                  }
+               }
+               else {
+                  this._options.selectedIndex = -1;
+                  this._options.selectedKey = null;
                }
             }
             if (action !== IBindCollection.ACTION_REPLACE){
