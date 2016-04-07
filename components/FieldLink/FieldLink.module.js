@@ -582,8 +582,9 @@ define('js!SBIS3.CONTROLS.FieldLink',
                  inputMinWidth = INPUT_WRAPPER_PADDING,
                  inputWidth, newItemWidth;
 
-             /* Для ситуаций, когда поле ввода не скрывается после выбора - минимальная ширина 100px (по стандарту) */
-             if(this._options.multiselect || this._options.alwaysShowTextBox) {
+             /* Для ситуаций, когда поле ввода не скрывается после выбора - минимальная ширина 100px (по стандарту),
+                однако в задизейбленом состоянии это учитывать не надо, т.к. поле ввода визуально не отображается */
+             if((this._options.multiselect || this._options.alwaysShowTextBox) && this.isEnabled()) {
                 inputMinWidth += INPUT_MIN_WIDTH;
              }
 
@@ -703,11 +704,6 @@ define('js!SBIS3.CONTROLS.FieldLink',
            * @private
            */
           _getInputWidth: function() {
-             /* Для поля связи в задизейбленом состоянии считаем, ширина инпута - 0, т.к. он визуально не отображается */
-             if(!this.isEnabled()) {
-                return 0;
-             }
-
              return this._container[0].clientWidth  -
                  (this._afterFieldWrapper[0].offsetWidth +
                   this._beforeFieldWrapper[0].offsetWidth +
@@ -717,8 +713,16 @@ define('js!SBIS3.CONTROLS.FieldLink',
            * Обновляет ширину поля ввода
            */
           _updateInputWidth: function() {
+             var inputWidth;
              this._checkWidth = true;
-             this._inputField[0].style.width = this._getInputWidth() + 'px';
+
+             /* Для поля связи в задизейбленом состоянии считаем, ширина инпута - 0, т.к. он визуально не отображается */
+             if(this.isEnabled()) {
+                inputWidth = this._getInputWidth();
+             } else  {
+                inputWidth = 0;
+             }
+             this._inputField[0].style.width = inputWidth + 'px';
           },
 
           /* Заглушка, само поле связи не занимается отрисовкой */
