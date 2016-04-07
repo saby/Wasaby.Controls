@@ -171,3 +171,20 @@
       opacity: @tab-button-overlay-opacity;
    }
 }
+
+.ws-disabled{
+   &.controls-TabButton{
+      &.controls-TabButton__main-item{
+         .controls-TabButton__additionalText1, .controls-TabButton__additionalText1 > *{
+            &:hover{
+               color: @tab-button-large-firstAddText-color;
+            }
+         }
+         .controls-TabButton__additionalText2, .controls-TabButton__additionalText2 > * {
+            &:hover{
+               color: @tab-button-large-secondAddText-color;
+            }
+         }
+      }
+   }
+}
