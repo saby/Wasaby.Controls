@@ -82,7 +82,8 @@ define('js!SBIS3.CONTROLS.hierarchyMixin', [], function () {
          var
             records = [],
             self = this;
-         if (!Object.isEmpty(this._options.groupBy)) {
+         //todo Проверка на "searchParamName" - костыль. Убрать, когда будет адекватная перерисовка записей (до 150 версии, апрель 2016)
+         if (!Object.isEmpty(this._options.groupBy) && this._options.groupBy.field === this._searchParamName) {
             return this._items._getRecords();
          }
          var path = this._options.openedPath;
