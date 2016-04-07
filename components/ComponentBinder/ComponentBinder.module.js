@@ -230,6 +230,8 @@ define('js!SBIS3.CONTROLS.ComponentBinder', [], function () {
             view = this._options.view,
             isTree = $ws.helpers.instanceOfMixin(view, 'SBIS3.CONTROLS.TreeMixinDS');
          searchForm = searchForm || this._options.searchForm;
+         //todo Проверка на "searchParamName" - костыль. Убрать, когда будет адекватная перерисовка записей (до 150 версии, апрель 2016)
+         view._searchParamName = searchParamName;
          if (isTree){
             this._lastRoot = view.getCurrentRoot();
             view.subscribe('onBeforeSetRoot', function(ev, newRoot){
