@@ -346,6 +346,19 @@ define([
             });
          });
 
+         describe('.getIndexByValue()', function(){
+            it('should return records index from recordset by value', function(){
+               var data = getSbisItems(),
+                  rs = new RecordSet({
+                     rawData: data,
+                     adapter: 'adapter.sbis'
+                  });
+               for(var i= data.d.length; i<=0;i-- ) {
+                  assert.equal(rs.getIndexByValue('Фамилия', data.d[i][1]), i);
+               }
+            });
+         });
+
          describe('.addField()', function () {
             it('should add the field from the declaration for JSON adapter', function () {
                var index = 0,
@@ -808,6 +821,15 @@ define([
                assert.deepEqual(cloneB.getRawData(), rs.getRawData());
                cloneB.at(0).set('Фамилия', 'test');
                assert.notEqual(cloneB.getRawData(), rs.getRawData());
+            });
+            it('should equals recordsets items to service enumerators items ', function(){
+               var data = getSbisItems(),
+                  rs = new RecordSet({
+                     rawData: data,
+                     adapter: 'adapter.sbis'
+                  }),
+                  clone = rs.clone();
+               assert.strictEqual(clone._items, clone._getServiceEnumerator()._options.items);
             });
          });
 
