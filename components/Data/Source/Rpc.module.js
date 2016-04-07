@@ -235,6 +235,7 @@ define('js!SBIS3.CONTROLS.Data.Source.Rpc', [
       //endregion Public methods
 
       //region Protected methods
+
       //endregion Protected methods
    });
 

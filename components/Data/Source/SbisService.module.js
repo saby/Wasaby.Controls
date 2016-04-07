@@ -202,7 +202,7 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
        *        endpoint: 'Сотрудник',
        *        binding: {
        *           format: 'СписокДляПрочитать'
-    *           }
+       *        }
        *     });
        *     dataSource.create().addCallback(function(model) {
        *         var name = model.get('Имя');
@@ -210,99 +210,27 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
        * </pre>
        */
       create: function(meta) {
-         //TODO: вместо 'ИмяМетода' может передаваться 'Расширение'
-         if (meta === undefined) {
-            meta = {
-               'ВызовИзБраузера': true
-            };
-         }
-         var adapter = this.getAdapter(),
-            args = {
-               'Фильтр': this._buildRecord(meta),
-               'ИмяМетода': this._options.binding.format || null
-            };
-
-         return this.getProvider().call(
-            this._options.binding.create,
-            adapter.serialize(args)
-         ).addCallbacks((function (data) {
-            return this._getModelInstance(data);
-         }).bind(this), function (error) {
-            $ws.single.ioc.resolve('ILogger').log('SBIS3.CONTROLS.Data.Source.SbisService::create()', error);
-            return new Error('Cannot invoke create method');
-         });
+         return SbisService.superclass.create.call(this, meta);
       },
 
-      /**
-       * Читает модель из источника данных
-       * @param {String} key Первичный ключ модели
-       * @param {Object|SBIS3.CONTROLS.Data.Model} [meta] Дополнительные мета данные
-       * @returns {$ws.proto.Deferred} Асинхронный результат выполнения. В колбэке придет {@link SBIS3.CONTROLS.Data.Model}.
-       * @see SBIS3.CONTROLS.Data.Source.ISource#read
-       */
-      read: function(key, meta) {
-         var adapter = this.getAdapter(),
-            args = {
-               'ИдО': key,
-               'ИмяМетода': this._options.binding.format || null
-            };
-         if (meta && !Object.isEmpty(meta)) {
-            args['ДопПоля'] = meta;
-         }
-
-         return this.getProvider().call(
-            this._options.binding.read,
-            adapter.serialize(args)
-         ).addCallbacks((function (data) {
-            var model = this._getModelInstance(data, true);
-            model.setStored(true);
-            return model;
-         }).bind(this), function (error) {
-            $ws.single.ioc.resolve('ILogger').log('SBIS3.CONTROLS.Data.Source.SbisService::read()', error);
-            return error;
-         });
-      },
-
-      /**
-       * Обновляет модель в источнике данных
-       * @param {SBIS3.CONTROLS.Data.Model} model Обновляемая модель
-       * @param {Object|SBIS3.CONTROLS.Data.Model} [meta] Дополнительные мета данные
-       * @returns {$ws.proto.Deferred} Асинхронный результат выполнения
-       * @see SBIS3.CONTROLS.Data.Source.ISource#update
-       */
-      update: function(model, meta) {
-         var adapter = this.getAdapter(),
-            args = {
-               'Запись': model
-            };
-         if (meta && !Object.isEmpty(meta)) {
-            args['ДопПоля'] = meta;
-         }
-
-         return this.getProvider().call(
-            this._options.binding.update,
-            adapter.serialize(args)
-         ).addCallbacks((function (key) {
-            if (key && !model.isStored() && this.getIdProperty()) {
-               model.set(this.getIdProperty(), key);
-            }
-            model.setStored(true);
-            model.applyChanges();
-            return key;
-         }).bind(this), function (error) {
-            $ws.single.ioc.resolve('ILogger').log('SBIS3.CONTROLS.Data.Source.SbisService::update()', error);
-            return error;
-         });
-      },
-
-      /**
-       * Удаляет модель из источника данных
-       * @param {String|Array} keys Первичный ключ, или массив первичных ключей модели
-       * @param {Object|SBIS3.CONTROLS.Data.Model} [meta] Дополнительные мета данные
-       * @returns {$ws.proto.Deferred} Асинхронный результат выполнения
-       * @see SBIS3.CONTROLS.Data.Source.ISource#destroy
-       */
       destroy: function(keys, meta) {
+         //Вызывает метод удаления для группы
+         var destroyGroup = function(id, BLObjName, meta) {
+            var provider = this.getProvider();
+            if (BLObjName && this._options.endpoint.contract !== BLObjName) {
+               provider = Di.resolve('source.provider.sbis-business-logic', {
+                  endpoint: {
+                     contract: BLObjName
+                  }
+               });
+            }
+            return this._makeCall(
+               this._options.binding.destroy,
+               this._prepareDestroyArguments(id, meta),
+               provider
+            );
+         };
+
          if ($ws.helpers.type(keys) !== 'array') {
             keys = [keys];
          }
@@ -318,7 +246,8 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
          var pd = new $ws.proto.ParallelDeferred();
          for (providerName in groups) {
             if (groups.hasOwnProperty(providerName)) {
-               pd.push(this._destroy(
+               pd.push(destroyGroup.call(
+                  this,
                   groups[providerName],
                   providerName,
                   meta
@@ -328,85 +257,94 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
          return pd.done().getResult();
       },
 
-      merge: function(first, second) {
-         var adapter = this.getAdapter();
+      //endregion SBIS3.CONTROLS.Data.Source.ISource
 
-         return this.getProvider().call(
-            this._options.binding.merge,
-            adapter.serialize({
-               'ИдО' : first,
-               'ИдОУд': second
-            })
-         ).addCallbacks(function (res) {
-               return res;
-            }, function (error) {
-               $ws.single.ioc.resolve('ILogger').log('SBIS3.CONTROLS.Data.Source.SbisService::merge()', error);
-               return error;
-            });
+      //region SBIS3.CONTROLS.Data.Source.Base
+
+      _prepareCallResult: function(data) {
+         return SbisService.superclass._prepareCallResult.call(this, data, 'n');
       },
 
-      copy: function(key, meta) {
-         var adapter = this.getAdapter(),
-            args = {
-               'ИдО': key,
-               'ИмяМетода': this._options.binding.format
+      //endregion SBIS3.CONTROLS.Data.Source.Base
+
+      //region SBIS3.CONTROLS.Data.Source.Rpc
+
+      //endregion SBIS3.CONTROLS.Data.Source.Rpc
+
+      //region SBIS3.CONTROLS.Data.Source.Remote
+
+      _prepareCreateArguments: function(meta) {
+         //TODO: вместо 'ИмяМетода' может передаваться 'Расширение'
+         if (meta === undefined) {
+            meta = {
+               'ВызовИзБраузера': true
             };
+         }
+         return {
+            'Фильтр': this._buildRecord(meta),
+            'ИмяМетода': this._options.binding.format || null
+         };
+      },
+
+      _prepareReadArguments: function(key, meta) {
+         var args = {
+            'ИдО': key,
+            'ИмяМетода': this._options.binding.format || null
+         };
          if (meta && !Object.isEmpty(meta)) {
             args['ДопПоля'] = meta;
          }
-
-         return this.getProvider().call(
-            this._options.binding.copy,
-            adapter.serialize(args)
-         ).addCallbacks(function (res) {
-               return res;
-            }, function (error) {
-               $ws.single.ioc.resolve('ILogger').log('SBIS3.CONTROLS.Data.Source.SbisService::copy()', error);
-               return error;
-            });
+         return args;
       },
 
-      query: function(query) {
-         var adapter = this.getAdapter(),
-            args = {
-               'Фильтр': this._buildRecord(query ? query.getWhere() : null),
-               'Сортировка': this._buildRecordSet(this._getSortingParams(query)),
-               'Навигация': this._buildRecord(this._getPagingParams(query)),
-               'ДопПоля': this._getAdditionalParams(query)
-            };
-
-         return this.getProvider().call(
-            this._options.binding.query,
-            adapter.serialize(args)
-         ).addCallbacks((function (res) {
-            return this._getDataSetInstance({
-               rawData: res,
-               totalProperty: 'n'
-            });
-         }).bind(this), function (error) {
-            $ws.single.ioc.resolve('ILogger').log('SBIS3.CONTROLS.Data.Source.SbisService::query()', error);
-            return error;
-         });
+      _prepareUpdateArguments: function(model, meta) {
+         var args = {
+            'Запись': model
+         };
+         if (meta && !Object.isEmpty(meta)) {
+            args['ДопПоля'] = meta;
+         }
+         return args;
       },
 
-      call: function (command, data) {
-         var adapter = this.getAdapter();
-
-         return this.getProvider().call(
-            command,
-            adapter.serialize(data)
-         ).addCallbacks((function (res) {
-            return this._getDataSetInstance({
-               rawData: res,
-               totalProperty: 'n'
-            });
-         }).bind(this), function (error) {
-            $ws.single.ioc.resolve('ILogger').log('SBIS3.CONTROLS.Data.Source.SbisService::call()', error);
-            return error;
-         });
+      _prepareDestroyArguments: function(keys, meta) {
+         var args = {
+            'ИдО': keys
+         };
+         if (meta && !Object.isEmpty(meta)) {
+            args['ДопПоля'] = meta;
+         }
+         return args;
       },
 
-      //endregion SBIS3.CONTROLS.Data.Source.ISource
+      _prepareMergeArguments: function(from, to) {
+         return {
+            'ИдО' : from,
+            'ИдОУд': to
+         };
+      },
+
+      _prepareCopyArguments: function(key, meta) {
+         var args = {
+            'ИдО': key,
+            'ИмяМетода': this._options.binding.format
+         };
+         if (meta && !Object.isEmpty(meta)) {
+            args['ДопПоля'] = meta;
+         }
+         return args;
+      },
+
+      _prepareQueryArguments: function(query) {
+         return {
+            'Фильтр': this._buildRecord(query ? query.getWhere() : null),
+            'Сортировка': this._buildRecordSet(this._getSortingParams(query)),
+            'Навигация': this._buildRecord(this._getPagingParams(query)),
+            'ДопПоля': this._getAdditionalParams(query)
+         };
+      },
+
+      //endregion SBIS3.CONTROLS.Data.Source.Remote
 
       //region Protected methods
 
@@ -603,41 +541,6 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
             return ido[1];
          }
          return this._options.endpoint.contract;
-      },
-
-      /**
-       * вызвает метод удаления
-       * @param {String|Array} id Идентификатор объекта
-       * @param {String} BLObjName  Название объекта бл у которго будет вызвано удаление
-       * @param {Object} meta  Дополнительные мета данные
-       * @returns {$ws.proto.Deferred}
-       * @protected
-       */
-      _destroy: function(id, BLObjName, meta) {
-         var adapter = this.getAdapter(),
-            args = {
-               'ИдО': id
-            };
-         if (meta && !Object.isEmpty(meta)) {
-            args['ДопПоля'] = meta;
-         }
-         var provider = this.getProvider();
-         if (BLObjName && this._options.endpoint.contract !== BLObjName) {
-            provider = Di.resolve('source.provider.sbis-business-logic', {
-               endpoint: {
-                  contract: BLObjName
-               }
-            });
-         }
-         return provider.call(
-            this._options.binding.destroy,
-            adapter.serialize(args)
-         ).addCallbacks(function (res) {
-            return res;
-         }, function (error) {
-            $ws.single.ioc.resolve('ILogger').log('SBIS3.CONTROLS.Data.Source.SbisService::destroy()', error);
-            return error;
-         });
       },
 
       //endregion Protected methods

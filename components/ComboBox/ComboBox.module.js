@@ -300,7 +300,7 @@ define('js!SBIS3.CONTROLS.ComboBox', [
                }
             }
             var self = this;
-            def.addCallback(function(item){
+            def.addCallback(function (item) {
                if (item) {
                   var newText = item.get(self._options.displayField);
                   if (newText != self._options.text) {
@@ -319,7 +319,7 @@ define('js!SBIS3.CONTROLS.ComboBox', [
                   $('.controls-ComboBox__itemRow[data-id=\'' + key + '\']', self._picker.getContainer().get(0)).addClass('controls-ComboBox__itemRow__selected');
                }
             });
-
+         }
 
          if (this._picker) {
             $('.controls-ComboBox__itemRow__selected', this._picker.getContainer().get(0)).removeClass('controls-ComboBox__itemRow__selected');
@@ -348,7 +348,7 @@ define('js!SBIS3.CONTROLS.ComboBox', [
                if (strKey == 'null') {
                   strKey = null;
                }
-               if (this._options.autocomplete){
+               if (self._options.autocomplete){
                   self._itemsProjection.setFilter(null);
                   self.redraw();
                }

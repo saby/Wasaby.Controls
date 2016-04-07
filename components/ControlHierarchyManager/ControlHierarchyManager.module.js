@@ -44,12 +44,16 @@ define('js!SBIS3.CONTROLS.ControlHierarchyManager', [], function () {
       },
 
       removeNode: function(component){
-         var parent = component.getParent() || (component.getOpener instanceof Function ? component.getOpener() : null),
-             id = component.getId();
-         if (parent && parent.getId instanceof Function && this._index[parent.getId()]) {
-             this.removeNode(parent);
+         var childs;
+         if (component && component.getChildControls instanceof Function && component.getChildControls()){
+            childs = component.getChildControls();
+            for (var i = 0; i < childs.length; i++){
+               if (this._index[childs[i].getId()]){
+                  delete this._index[childs[i.getId()]];
+               }
+            }
          }
-         delete this._index[id];
+         delete this._index[component.getId()];
       },
 
       //Проверить является ли target jQuery элементом component или его детей

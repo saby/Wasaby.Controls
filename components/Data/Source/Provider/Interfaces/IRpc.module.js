@@ -14,7 +14,7 @@ define('js!SBIS3.CONTROLS.Data.Source.Provider.IRpc', [
       /**
        * Вызывает удаленный метод
        * @param {String} method Имя метода
-       * @param {Object} [args] Аргументы метода
+       * @param {Object.<String, *>|Array} [args] Аргументы метода
        * @returns {$ws.proto.Deferred} Асинхронный результат операции
        */
       call: function(method, args) {

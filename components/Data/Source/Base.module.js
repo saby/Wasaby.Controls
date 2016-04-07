@@ -23,7 +23,7 @@ define('js!SBIS3.CONTROLS.Data.Source.Base', [
       /**
        * @event onDataSync При изменении синхронизации данных с источником
        * @param {$ws.proto.EventObject} eventObject Дескриптор события.
-       * @param (Array.<SBIS3.CONTROLS.Data.Model>) records Измененные записи
+       * @param {Array.<SBIS3.CONTROLS.Data.Model>} records Измененные записи
        */
 
       _moduleName: 'SBIS3.CONTROLS.Data.Source.Base',
@@ -108,6 +108,42 @@ define('js!SBIS3.CONTROLS.Data.Source.Base', [
       //endregion SBIS3.CONTROLS.Data.Source.ISource
 
       //region Protected methods
+
+      _prepareCreateResult: function(data) {
+         return this._getModelInstance(data);
+      },
+
+      _prepareReadResult: function(data) {
+         var model = this._getModelInstance(data);
+         model.setStored(true);
+         return model;
+      },
+
+      _prepareUpdateResult: function(model, key) {
+         var idProperty = this.getIdProperty();
+         if (key &&
+            idProperty &&
+            !model.isStored() &&
+            !model.get(idProperty)
+         ) {
+            model.set(idProperty, key);
+         }
+         model.setStored(true);
+         model.applyChanges();
+
+         return key;
+      },
+
+      _prepareQueryResult: function(data, totalProperty) {
+         return this._prepareCallResult(data, totalProperty);
+      },
+
+      _prepareCallResult: function(data, totalProperty) {
+         return this._getDataSetInstance({
+            rawData: data,
+            totalProperty: totalProperty
+         });
+      },
 
       /**
        * Определяет название свойства с первичным ключем по данным

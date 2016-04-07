@@ -99,32 +99,32 @@ define('js!SBIS3.CONTROLS.Data.Source.Memory', [
       //region SBIS3.CONTROLS.Data.Source.ISource
 
       create: function (meta) {
-         return $ws.proto.Deferred.success(this._getModelInstance(
-            meta || this.getAdapter().forRecord().getEmpty()
-         ));
+         return $ws.proto.Deferred.success(
+            this._prepareCreateResult(meta)
+         );
       },
 
       read: function (key) {
          var data = this._getModelByKey(key);
          if (data) {
-            var model = this._getModelInstance(data);
-            model.setStored(true);
-            return $ws.proto.Deferred.success(model);
+            return $ws.proto.Deferred.success(
+               this._prepareReadResult(data)
+            );
          } else {
-            return $ws.proto.Deferred.fail('Model instance is not exists');
+            return $ws.proto.Deferred.fail(
+               'Record with key "' + key + '" is not exists'
+            );
          }
       },
 
       update: function (model) {
-         if (!model.isStored() && this._options.idProperty && !model.get(this._options.idProperty)) {
-            model.set(
-               this._options.idProperty,
-               $ws.helpers.randomId('k')
-            );
+         var idProperty = this.getIdProperty(),
+            key = idProperty ? model.get(idProperty) : null;
+         if (!key) {
+            key = $ws.helpers.randomId('k');
          }
 
          var adapter = this._getTableAdapter(),
-             key = model.get(this._options.idProperty),
              index = this._getIndexByKey(key);
          if (index === -1) {
             adapter.add(
@@ -137,10 +137,10 @@ define('js!SBIS3.CONTROLS.Data.Source.Memory', [
                index
             );
          }
-         model.setStored(true);
-         model.applyChanges();
 
-         return $ws.proto.Deferred.success(true);
+         return $ws.proto.Deferred.success(
+            this._prepareUpdateResult(model, key)
+         );
       },
 
       destroy: function (keys) {
@@ -166,11 +166,11 @@ define('js!SBIS3.CONTROLS.Data.Source.Memory', [
          }
       },
 
-      merge: function(one, two) {
-         var indexOne = this._getIndexByKey(one),
-            indexTwo = this._getIndexByKey(two);
+      merge: function(from, to) {
+         var indexOne = this._getIndexByKey(from),
+            indexTwo = this._getIndexByKey(to);
          if (indexOne === -1 || indexTwo === -1) {
-            return $ws.proto.Deferred.fail('Model with key "' + one + '" or "' + two + '" isn\'t exists');
+            return $ws.proto.Deferred.fail('Model with key "' + from + '" or "' + to + '" isn\'t exists');
          } else {
             this._getTableAdapter().merge(
                indexOne,
@@ -197,11 +197,23 @@ define('js!SBIS3.CONTROLS.Data.Source.Memory', [
             }
          }
 
-         return $ws.proto.Deferred.success(this._getDataSetInstance({
-            rawData: items,
-            totalProperty: 'total'
-         }));
+         return $ws.proto.Deferred.success(
+            this._prepareQueryResult(items, 'total')
+         );
       },
+
+      call: function (command, data) {
+         data = data || {};
+         switch(command) {
+            case 'move':
+               return this._move(data.from, data.to, data.details);
+         }
+         throw new Error('Not supported');
+      },
+
+      //endregion SBIS3.CONTROLS.Data.Source.ISource
+
+      //region Protected methods
 
       _move: function (from, to, details) {
          details = details || {};
@@ -241,19 +253,6 @@ define('js!SBIS3.CONTROLS.Data.Source.Memory', [
          }
          return new $ws.proto.Deferred().callback(true);
       },
-
-      call: function (command, data) {
-         data = data||{};
-         switch(command) {
-            case 'move':
-               return this._move(data.from, data.to, data.details);
-         }
-         throw new Error('Not supported');
-      },
-
-      //endregion SBIS3.CONTROLS.Data.Source.ISource
-
-      //region Protected methods
 
       /**
        * Возвращает адаптер для работы с таблицей
