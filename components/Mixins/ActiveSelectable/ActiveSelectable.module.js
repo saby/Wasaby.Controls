@@ -20,16 +20,9 @@ define('js!SBIS3.CONTROLS.ActiveSelectable', ['js!SBIS3.CONTROLS.Data.Model'], f
       $protected: {
          _options: {
             /**
-             * @cfg {SBIS3.CONTROLS.Data.Model} Устанавливает выбранный элемент коллекции.
+             * @cfg {SBIS3.CONTROLS.Data.Model} Устанавливает выбранным элемент коллекции по переданному экземпляру класса.
              * Устанавливает экземпляр класса {@link SBIS3.CONTROLS.Data.Model} с данными выбранной записи.
              * Опция актуальна, когда контрол находится в режиме единичного выбора значений.
-             * @example
-             * Вывести в консоль выбранное значение:
-             * <pre>
-             *    this.getChildControlByName('myFieldLink').subscribe('onSelectedItemsChange', function(Дескриптор, idArray) {
-             *       console.log(this.selectedItem);
-             *    });
-             * </pre>
              * @see setSelectedItem
              * @see getSelectedItem
              */
@@ -52,7 +45,7 @@ define('js!SBIS3.CONTROLS.ActiveSelectable', ['js!SBIS3.CONTROLS.Data.Model'], f
        *     var selItem = this.getChildControlByName('MyControl').getSelectedItem();
        *       . . .
        *     if (selItem != '') {
-       *       NewControl.setSelectedItem(selItem);
+       *        NewControl.setSelectedItem(selItem);
        *     }
        * </pre>
        * @see selectedItem

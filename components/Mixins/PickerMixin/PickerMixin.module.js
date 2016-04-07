@@ -12,18 +12,19 @@ define('js!SBIS3.CONTROLS.PickerMixin', ['js!SBIS3.CONTROLS.FloatArea'], functio
          _border : 0,
          _options: {
              /**
-              * @cfg {String} Имя css-класса, который будет применён к контейнеру выпадающего блока.
+              * @cfg {String} Устанавливает имя CSS-класса, который будет применён к HTML-контейнеру выпадающего блока.
               * @example
               * <pre class="brush:xml">
               *     <option name="pickerClassName">control-MyComboBox__ComboBox__position</option>
               * </pre>
               * @remark
-              * !Важно: при написании css-селекторов необходимо учитывать, что выпадающий блок располагается в body,
+              * !Важно: при написании CSS-селекторов необходимо учитывать, что выпадающий блок располагается в body,
               * а не в конейнере контрола.
               */
             pickerClassName : '',
             /**
-             * @cfg {Object} Дополнительные настройки для выпадающего блока {@link SBIS3.CONTROLS.PopupMixin}
+             * @cfg {Object} Устанавливает дополнительные настройки для выпадающего блока {@link SBIS3.CONTROLS.PopupMixin}.
+             * Опции, значения которых будут использованы при построении выпадающего блока.
              * @example
              * <pre class="brush:xml">
              *    <options name="pickerConfig">
@@ -175,10 +176,10 @@ define('js!SBIS3.CONTROLS.PickerMixin', ['js!SBIS3.CONTROLS.FloatArea'], functio
        * @example
        * <pre>
        *    button.bind('click', function(){
-       *        if(self.isPickerVisible()) {
-       *           self.hidePicker();
-       *        }
-       *      })
+       *       if(self.isPickerVisible()) {
+       *          self.hidePicker();
+       *       }
+       *     })
        * </pre>
        */
       isPickerVisible: function() {

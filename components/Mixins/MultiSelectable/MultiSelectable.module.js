@@ -45,24 +45,9 @@ define('js!SBIS3.CONTROLS.MultiSelectable', ['js!SBIS3.CONTROLS.Data.Collection.
          _options: {
             /**
              * @cfg {Boolean} Устанавливает режим множественного выбора элементов коллекции.
-             * @variant true Режим множественного выбора элементов коллекции установлен.
-             * @variant false Режим множественного выбора элементов коллекции отменен.
-             * @remark
-             * Режим множественного выбора - это режим работы контрола, который позволяет выбрать несколько значений
-             * из элементов коллекции.
-             * Установленный режим множественного выбора для поля связи означает, что очередной выбранный элемент коллекции
-             * будет добавляться к предыдущему выбранному элементу, а не заменять его.
-             * Режим множественного выбора работает независимо от единичного;
-             * режим единичного выбора добавляется миксином {@link SBIS3.CONTROLS.Selectable}.
-             *
-             * Отображение множественного выбора будет различаться в зависимости от контрола,
-             * в котором может быть использован данный режим:
-             * - в табличном представлении это будет некоторое количество записей таблицы, выделенных флагами:
-             * ![](/MultiSelectable01.png)
-             * - для поля связи это будет строка, содержащая текстовые значения полей выбранных записей, соединенных запятой:
-             * ![](/MultiSelectable02.png)
-             * Множественный выбор записей в {@link SBIS3.CONTROLS.FieldLink поле связи} позволяет связать с текущим диалогом
-             * определенное количество записей.
+             * * true Режим множественного выбора элементов коллекции установлен.
+             * * false Режим множественного выбора элементов коллекции отменен.
+             * @remark file MultiSelectable-multiselect.md
              * @example
              * <pre>
              *    <option name="multiselect">false</option>
@@ -72,24 +57,8 @@ define('js!SBIS3.CONTROLS.MultiSelectable', ['js!SBIS3.CONTROLS.Data.Collection.
              */
             multiselect : true,
             /**
-             * @cfg {String[]} Определяет массив идентификаторов выбранных элементов.
-             * @remark
-             * Устанавливает массив идентификаторов выбранных элементов коллекции, которые будут по умолчанию выбраны
-             * для контрола, который находится в режиме множественного выбора значений {@link multiselect}.
-             * Для задания выбранных элементов необходимо указать значения
-             * {@link SBIS3.CONTROLS.DSMixin#keyField ключевого поля} элементов коллекции.
-             * Использование методов для работы с элементами коллекции в режиме множественного выбора позволяет:
-             * <ul>
-             *     <li>{@link setSelectedKeys} - установить новый массив идентификаторов;</li>
-             *     <li>{@link getSelectedKeys} - получить массив идентификаторов выбранных элементов;</li>
-             *     <li>{@link setSelectedItemsAll} - установить выбранными все элементы;</li>
-             *     <li>{@link addItemsSelection} - добавить указанные элементы в набор выбранных;</li>
-             *     <li>{@link removeItemsSelection} - удалить указанные элементы из набора выбранных;</li>
-             *     <li>{@link removeItemsSelectionAll} - удалить все выбранные элементы;</li>
-             *     <li>{@link toggleItemsSelection} - поменять состояние выбранности указанных элементов на противоположное;</li>
-             *     <li>{@link toggleItemsSelectionAll} - поменять состояние выбранности всех элементов на противоположное;</li>
-             *     <li>{@link getSelectedItems} - получить набор выбранных элементов.</li>
-             * </ul>
+             * @cfg {String[]} Устанавливает массив идентификаторов, по которым будет установлен набор выбранных элементов коллекции.
+             * @remark file MultiSelectable-selectedKeys.md
              * @example
              * В контрол, отображающий набор данных в виде таблицы {@link SBIS3.CONTROLS.DataGridView},
              * переданы три идентификатора элементов коллекции:
@@ -97,9 +66,9 @@ define('js!SBIS3.CONTROLS.MultiSelectable', ['js!SBIS3.CONTROLS.Data.Collection.
              * фрагмент верстки:
              * <pre class="brush: xml">
              *     <options name="selectedKeys" type="array">
-             *         <option>2</option>
-             *         <option>3</option>
-             *         <option>6</option>
+             *        <option>2</option>
+             *        <option>3</option>
+             *        <option>6</option>
              *     </options>
              * </pre>
              * @see multiselect
@@ -117,8 +86,8 @@ define('js!SBIS3.CONTROLS.MultiSelectable', ['js!SBIS3.CONTROLS.Data.Collection.
              /**
               * @cfg {Boolean} Устанавливает конфигурацию для режима множественного выбора, при которой
               * разрешается/запрещается отсутствие выбранных элементов коллекции.
-              * @variant true Отсутствие выбранных элементов коллекции разрешено.
-              * @variant false Отсутствие выбранных элементов коллекции запрещено.
+              * * true Отсутствие выбранных элементов коллекции разрешено.
+              * * false Отсутствие выбранных элементов коллекции запрещено.
               * @remark
               * Настройка режима множественного выбора, при которой запрещено отсутствие выбранных элементов коллекции
               * гарантирует, что среди элементов коллекции всегда остаётся хотя бы один выбранный элемент.
@@ -136,26 +105,8 @@ define('js!SBIS3.CONTROLS.MultiSelectable', ['js!SBIS3.CONTROLS.Data.Collection.
               */
             allowEmptyMultiSelection : true,
             /**
-             * @cfg {SBIS3.CONTROLS.Data.Collection.List} Устанавливает набор элементов коллекции, которые будут по умолчанию
-             * выбраны для контрола в режиме множественного выбора значений {@link multiselect}.
-             * @remark
-             * Определяет экземпляр класса {@link SBIS3.CONTROLS.Data.Collection.List} с данными выбранных записей.
-             * Работает в режиме множественного выбора {@link multiselect}.
-             * Использование методов для работы с элементами коллекции в режиме множественного выбора позволяет:
-             * <ul>
-             *     <li>{@link getSelectedItems} - получить набор выбранных элементов.</li>
-             *     <li>{@link setSelectedItemsAll} - установить выбранными все элементы;</li>
-             *     <li>{@link addItemsSelection} - добавить указанные элементы в набор выбранных;</li>
-             *     <li>{@link removeItemsSelection} - удалить указанные элементы из набора выбранных;</li>
-             *     <li>{@link removeItemsSelectionAll} - удалить все выбранные элементы;</li>
-             *     <li>{@link toggleItemsSelection} - поменять состояние выбранности указанных элементов на противоположное;</li>
-             *     <li>{@link toggleItemsSelectionAll} - поменять состояние выбранности всех элементов на противоположное;</li>
-             * </ul>
-             * @example
-             * <pre>
-             *     var selItems = this._options.selectedItems; // передаем выбранные элементы selItems
-             *     var CountMyData = MyView.getSelectedItems().getCount(); // определить количество выбранных элементов
-             * </pre>
+             * @cfg {SBIS3.CONTROLS.Data.Collection.List} Устанавливает набор элементов коллекции, которые будут по умолчанию выбраны для контрола в режиме множественного выбора значений {@link multiselect}.
+             * @remark file MultiSelectable-selectedItems.md
              * @see multiselect
              * @see getSelectedItems
              * @see setSelectedItemsAll

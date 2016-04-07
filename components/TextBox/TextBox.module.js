@@ -68,7 +68,7 @@ define('js!SBIS3.CONTROLS.TextBox', ['js!SBIS3.CONTROLS.TextBoxBase','html!SBIS3
              * ![](/TextBox02.png)
              * фрагмент верстки:
              * <pre class="brush:xml">
-             *     <option name="textTransform">uppercase</option>
+             *    <option name="textTransform">uppercase</option>
              * </pre>
              * @see setTextTransform
              * @see placeholder
@@ -77,8 +77,8 @@ define('js!SBIS3.CONTROLS.TextBox', ['js!SBIS3.CONTROLS.TextBoxBase','html!SBIS3
             textTransform: 'none',
             /**
              * @cfg {Boolean} Определяет режим выделения текста в поле ввода при получении фокуса.
-             * @variant true Выделять текст.
-             * @variant false Не выделять текст.
+             * * true Выделять текст.
+             * * false Не выделять текст.
              * @remark
              * Используется в случаях, когда поле ввода нужно использовать в качестве источника текстовой информации:
              * пользователю требуется скопировать строку в поле для каких-либо дальнейших действий.
@@ -256,7 +256,7 @@ define('js!SBIS3.CONTROLS.TextBox', ['js!SBIS3.CONTROLS.TextBoxBase','html!SBIS3
        * @variant none Текст не меняется.
        * @example
        * <pre>
-       *     control.setTextTransform("lowercase");
+       *    control.setTextTransform("lowercase");
        * </pre>
        * @see textTransform
        */
@@ -282,11 +282,15 @@ define('js!SBIS3.CONTROLS.TextBox', ['js!SBIS3.CONTROLS.TextBoxBase','html!SBIS3
 
       _keyUpBind: function(event) {
          var newText = this._inputField.val();
-         this.setText(newText);
+         this._setTextByKeyboard(newText);
          var key = event.which || event.keyCode;
          if (Array.indexOf([$ws._const.key.up, $ws._const.key.down], key) >= 0) {
             event.stopPropagation();
          }
+      },
+
+      _setTextByKeyboard: function(newText){
+         this.setText(newText);
       },
 
       _keyPressBind: function(event) {

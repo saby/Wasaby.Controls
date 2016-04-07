@@ -229,25 +229,33 @@ define('js!SBIS3.CONTROLS.ListView',
             _addResultsMethod: undefined,
             _options: {
                /**
-                * @faq Почему нет флажков при включенной опции {@link SBIS3.CONTROLS.ListView#multiselect multiselect}?
-                * Для отрисовки флажков необходимо в шаблоне отображания элемента прописать их место:
+                * @faq Почему нет флажков в режиме множественного выбора значений (активация режима производится опцией {@link SBIS3.CONTROLS.ListView#multiselect multiselect})?
+                * Для отрисовки флажков необходимо в шаблоне отображения элемента коллекции обозначить их место.
+                * Это делают с помощью CSS-класса "js-controls-ListView__itemCheckBox".
+                * В следующем примере место отображения флажков обозначено тегом span:
                 * <pre>
-                *     <div class="listViewItem" style="height: 30px;">\
-                *        <span class="controls-ListView__itemCheckBox"></span>\
-                *        {{=it.item.get("title")}}\
+                *     <div class="listViewItem" style="height: 30px;">
+                *        <span class="js-controls-ListView__itemCheckBox"></span>
+                *        {{=it.item.get("title")}}
                 *     </div>
                 * </pre>
                 * @bind SBIS3.CONTROLS.ListView#itemTemplate
                 * @bind SBIS3.CONTROLS.ListView#multiselect
                 */
                /**
-                * @cfg {String} Шаблон отображения каждого элемента коллекции
+                * @cfg {String} Шаблон отображения каждого элемента коллекции.
                 * @remark
                 * !Важно: опция обязательна к заполнению!
+                * Шаблон может быть создан в отдельном XHTML-файле, когда вёрстка шаблона большая или требуется использовать его в разных компонентах.
+                * Чтобы использовать такой шаблон, он должен быть сначала подключен в массив зависимостей компонента, и после на него можно сослаться из опции.
+                *
+                * Для доступа к полям записи в шаблоне подразумевается использование конструкций шаблонизатора.
+                * Подробнее о шаблонизаторе вы можете прочитать в разделе {@link https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/core/component/xhtml/template/ Шаблонизация верстки компонента}.
                 * @example
+                * Далее приведён шаблон, который выводит в пользовательском HTML-контейнере значение поля title.
                 * <pre>
-                *     <div class="listViewItem" style="height: 30px;">\
-                *        {{=it.item.get("title")}}\
+                *     <div class="listViewItem" style="height: 30px;">
+                *        {{=it.item.get("title")}}
                 *     </div>
                 * </pre>
                 * @see multiselect
@@ -378,21 +386,30 @@ define('js!SBIS3.CONTROLS.ListView',
                 */
                showPaging: false,
                /**
-                * @cfg {String} Режим редактирования по месту
-                * @variant "" Редактирование по месту отлючено
-                * @variant click Отображение редактирования по клику
-                * @variant hover Отображение редактирования по наведению мыши
-                * @variant autoadd Включение режима автоматического добавления
-                * @variant toolbar Отображение панели инструментов при входе в режим редактирования записи
+                * @cfg {String} Устанавливает режим редактирования по месту.
                 * @remark
-                * Режим автоматического добавления позволяет при завершении редактирования последнего элемента автоматически создавать новый.
-                * Режимы можно группировать и таким образом получать совмещенное поведение, например:
-                *     <opt name="editMode">click|toolbar</opt>
-                * задает редактирование по клику и отображает панель инструментов при входе в режим редактирования записи.
-                * @example
+                * Возможные значения:
+                * <ul>
+                *    <li>"" - редактирование по месту отключено;</li>
+                *    <li>click - режим редактирования по клику;</li>
+                *    <li>hover - режим редактирования по наведению курсора;</li>
+                *    <li>autoadd - режим автоматического добавления новых элементов коллекции;
+                *    Этот режим позволяет при завершении редактирования последнего элемента автоматически создавать новый.</li>
+                *    <li>toolbar - отображение панели инструментов при входе в режим редактирования записи.</li>
+                * </ul>
+                *
+                * Режимы редактирования можно группировать и получать совмещенное поведение.
+                * Например, задать редактирование по клику и отобразить панель инструментов при входе в режим редактирования записи можно такой конфигурацией:
                 * <pre>
-                *     <opt name="editMode">click</opt>
+                *    <option name="editMode">click|toolbar</option>
                 * </pre>
+                * @example
+                * Установлен режим редактирования по клику на элемент коллекции.
+                * <pre>
+                *     <option name="editMode">click</option>
+                * </pre>
+                * @see getEditMode
+                * @see setEditMode
                 */
                editMode: '',
                /**
@@ -944,6 +961,12 @@ define('js!SBIS3.CONTROLS.ListView',
                }
             }
          },
+         /**
+          * Устанавливает режим редактирования по месту.
+          * @param {String} editMode Режим редактирования по месту. Подробнее о возможных значениях вы можете прочитать в описании к опции {@link editMode}.
+          * @see editMode
+          * @see getEditMode
+          */
          setEditMode: function(editMode) {
             if (editMode ==='' || editMode !== this._options.editMode) {
                if (this._isHoverEditMode()) {
@@ -960,7 +983,12 @@ define('js!SBIS3.CONTROLS.ListView',
                }
             }
          },
-
+         /**
+          * Возвращает признак, по которому можно определить установленный режим редактирования по месту.
+          * @returns {String} Режим редактирования по месту. Подробнее о возможных значениях вы можете прочитать в описании к опции {@link editMode}.
+          * @see editMode
+          * @see setEditMode
+          */
          getEditMode: function() {
             return this._options.editMode;
          },
@@ -1713,10 +1741,11 @@ define('js!SBIS3.CONTROLS.ListView',
             ListView.superclass.setDataSource.apply(this, arguments);
          },
          /**
-          * Выбирает элемент коллекции (модель/запись) по переданному идентификатору.
+          * Выбирает элемент коллекции по переданному идентификатору.
+          * @remark
           * На выбранный элемент устанавливается маркер (оранжевая вертикальная черта) и изменяется фон.
           * При выполнении команды происходит события {@link onItemActivate} и {@link onSelectedItemChange}.
-          * @param id Идентификатор элемента коллекции, который нужно выбрать.
+          * @param {Number} id Идентификатор элемента коллекции, который нужно выбрать.
           * @example
           * <pre>
           *    myListView.sendCommand('activateItem', myId);
@@ -1724,20 +1753,45 @@ define('js!SBIS3.CONTROLS.ListView',
           * @private
           * @command activateItem
           * @see sendCommand
+          * @see beginAdd
+          * @see cancelEdit
+          * @see commitEdit
           */
          _activateItem : function(id) {
             var
                item = this._dataSet.getRecordByKey(id);
             this._notify('onItemActivate', {id: id, item: item});
          },
+         /**
+          * @typedef {Object} BeginEditOptions В этом типе данных сейчас определена всего одна опция. В дальнейшем набор опций может быть расширен.
+          * @property {jQuery} initiator Элемент, по которому определяется позиция добавления нового элемента коллекции в иерархическом представлении данных.
+          * Как правило, таким элементом является кнопка, инициирующая добавление нового элемента. Такую кнопку помещают в футер (см. опцию SBIS3.CONTROLS.DSMixin#footerTpl) узла иерархии.
+          */
+         /**
+          * Добавляет новый элемента коллекции.
+          * @remark
+          * Команда применяется для создания нового элемента коллекции без использования диалога редактирования.
+          * Схожим функционалом обладает автоматическое добавление по месту представлений данных (см. {@link editMode}).
+          * @param {BeginEditOptions} [options] Инициатор создания нового элемента коллекции в иерархическом представлении данных.
+          * @param {SBIS3.CONTROLS.Data.Model} [model] Модель элемента коллекции, значения полей которой будут использованы при создании нового элемента.
+          * @returns {*|$ws.proto.Deferred} В случае ошибки, вернёт Deferred с текстом ошибки.
+          * @private
+          * @command beginAdd
+          * @see sendCommand
+          * @see activateItem
+          * @see beginEdit
+          * @see cancelEdit
+          * @see commitEdit
+          */
          _beginAdd: function(options, model) {
             return this.showEip(null, model, options);
          },
          /**
-          * Запускает редактирования по месту.
-          * Используется для запуска редактирования без клика пользователя по элементу коллекции.
+          * Запускает редактирование по месту.
+          * @remark
+          * Используется для активации редактирования по месту без клика пользователя по элементу коллекции.
           * При выполнении команды происходят события {@link onBeginEdit} и {@link onAfterBeginEdit}.
-          * @param record Модель(элемент коллекции), для которой требуется запустить редактирование по месту.
+          * @param {SBIS3.CONTROLS.Data.Model} record Элемент коллекции, для которого требуется активировать редактирование по месту.
           * @example
           * <pre>
           *    myListView.sendCommand('beginEdit', record);
@@ -1747,13 +1801,16 @@ define('js!SBIS3.CONTROLS.ListView',
           * @see sendCommand
           * @see cancelEdit
           * @see commitEdit
+          * @see beginAdd
+          * @see activateItem
           */
          _beginEdit: function(record) {
             var target = this._getItemsContainer().find('.js-controls-ListView__item[data-id="' + record.getKey() + '"]:first');
             return this.showEip(target, record, { isEdit: true });
          },
          /**
-          * Завершает редактирования по месту без сохранения измений.
+          * Завершает редактирование по месту без сохранения изменений.
+          * @remark
           * При выполнении команды происходят события {@link onEndEdit} и {@link onAfterEndEdit}.
           * @example
           * <pre>
@@ -1764,12 +1821,15 @@ define('js!SBIS3.CONTROLS.ListView',
           * @see sendCommand
           * @see beginEdit
           * @see commitEdit
+          * @see beginAdd
+          * @see activateItem
           */
          _cancelEdit: function() {
             return this._getEditInPlace().endEdit();
          },
          /**
-          * Завершает редактирования по месту с сохранением измений.
+          * Завершает редактирование по месту с сохранением изменений.
+          * @remark
           * При выполнении команды происходят события {@link onEndEdit} и {@link onAfterEndEdit}.
           * @example
           * <pre>
@@ -1780,6 +1840,8 @@ define('js!SBIS3.CONTROLS.ListView',
           * @see sendCommand
           * @see beginEdit
           * @see cancelEdit
+          * @see beginAdd
+          * @see activateItem
           */
          _commitEdit: function() {
             return this._getEditInPlace().endEdit(true);

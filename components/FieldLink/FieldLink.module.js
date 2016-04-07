@@ -69,7 +69,8 @@ define('js!SBIS3.CONTROLS.FieldLink',
         * @public
         * @author Крайнов Дмитрий Олегович
         * @ignoreOptions tooltip alwaysShowExtendedTooltip loadingContainer observableControls pageSize usePicker filter saveFocusOnSelect
-        * @ignoreOptions allowEmptySelection allowEmptyMultiSelection templateBinding includedTemplates resultBindings showAllConfig
+        * @ignoreOptions allowEmptySelection allowEmptyMultiSelection templateBinding includedTemplates resultBindings showAllConfig footerTpl
+        * @ignoreMehtods getTooltip setTooltip getExtendedTooltip setExtendedTooltip
         *
         * ignoreEvents onDataLoad onDataLoadError onBeforeDataLoad onDrawItems
         */
@@ -104,7 +105,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
                    }
                 },
                 /**
-                 * @typedef {Array} dictionaries Группа опций, описывающая настройку одного или нескольких справочников для поля связи.
+                 * @typedef {Object} Dictionaries Группа опций, описывающая настройку одного или нескольких справочников для поля связи.
                  * Справочник - это диалог выбора значений. Список значений диалога строится на основе любого компонента, который можно
                  * использовать для {@link https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/ отображения данных в списках}.
                  * @property {String} caption Текст в меню выбора справочников. Опция актуальна, когда для поля связи установлено несколько справочников.
@@ -130,8 +131,8 @@ define('js!SBIS3.CONTROLS.FieldLink',
                  * <pre class="brush: xml">
                  *     <option name="template">js!SBIS3.MyArea.MyDatGridView</option>
                  *     <options name="componentOptions" type="array">
-                 *         <option name="myShowHeadConfig" type="boolean">true</option>
-                 *         <option name="myPageSizeConfig" type="number">5</option>
+                 *        <option name="myShowHeadConfig" type="boolean">true</option>
+                 *        <option name="myPageSizeConfig" type="number">5</option>
                  *     </options>
                  * </pre>
                  * При построении справочника на основе SBIS3.MyArea.MyDatGridView значения опций myShowHeadConfig и myPageSizeConfig
@@ -141,53 +142,40 @@ define('js!SBIS3.CONTROLS.FieldLink',
                  * нужно использовать инструкции шаблонизатора в вёрстке компонента:
                  * <pre class="brush: xml">
                  *     <component data-component="SBIS3.CONTROLS.TreeCompositeView" name="browserView">
-                 *         <option name="showHead">{{=it.myShowHeadConfig}}</option>
-                 *         <option name="pageSize">{{=it.myPageSizeConfig}}</option>
+                 *        <option name="showHead">{{=it.myShowHeadConfig}}</option>
+                 *        <option name="pageSize">{{=it.myPageSizeConfig}}</option>
                  *         . . .
                  *     </component>
                  * </pre>
                  * @translatable caption
                  */
                 /**
-                 * @cfg {dictionaries[]} Устанавливает справочники для поля связи.
-                 * @remark
-                 * Справочник - это диалог выбора значений. Список значений диалога строится на основе любого компонента, который можно
-                 * использовать для {@link https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/ отображения данных в списках}.
-                 * Подробнее об опциях справочника вы можете прочитать {@link SBIS3.CONTROLS.FieldLink/dictionaries.typedef здесь}.
-                 *
-                 * Открыть справочник можно через меню выбора справочников или с помощью метода {@link showSelector}.
-                 * Подробно про меню выбора справочников можно прочитать {@link SBIS3.CONTROLS.FieldLink/dictionaries.typedef здесь}.
-                 * Когда для поля связи установлен только один справочник, клик по кнопке меню производит его открытие.
-                 * Когда для поля связи установлено несколько справочников, клик по кнопке меню открывает подменю для выбора
-                 * нужного справочника.
-                 *
-                 * Открыть справочник через меню можно в новом диалоге или во всплывающей панели; нужный режим можно
-                 * установить с помощью опции {@link SBIS3.CONTROLS.ChooserMixin#chooserMode}.
-                 * Установить набор справочников для поля связи можно с помощью метода {@link setDictionaries}.
+                 * @cfg {Array.<Dictionaries>} Устанавливает справочники для поля связи.
+                 * @remark file FieldLink-dictionaries.md
                  * @example
                  * Настройка двух справочников для выбора в поле связи:
                  * ![](/FieldLink02.png)
                  * Фрагмент верстки:
                  * <pre class="brush: xml">
                  *     <options name="dictionaries" type="array">
-                 *         <options>
-                 *             <option name="caption">Сотрудники</option>
-                 *             <option name="template">js!SBIS3.MyArea.DictEmployees</option>
-                 *         </options>
-                 *         <options>
-                 *             <option name="caption">Партнеры</option>
-                 *             <option name="template">js!SBIS3.MyArea.DictPartners</option>
-                 *         </options>
+                 *        <options>
+                 *           <option name="caption">Сотрудники</option>
+                 *           <option name="template">js!SBIS3.MyArea.DictEmployees</option>
+                 *        </options>
+                 *        <options>
+                 *           <option name="caption">Партнеры</option>
+                 *           <option name="template">js!SBIS3.MyArea.DictPartners</option>
+                 *        </options>
                  *     </options>
                  * </pre>
                  * @see setDictionaries
-                 * @see SBIS3.CONTROLS.ChooserMixin#chooserMode
+                 * @see chooserMode
                  */
                 dictionaries: [],
                 /**
                  * @cfg {Boolean}  Устанавливает режим добавления комментариев в поле связи.
-                 * @variant true Разрешается ввод комментариев в поле связи.
-                 * @variant false Запрещается ввод комментариев в поле связи.
+                 * * true Разрешается ввод комментариев в поле связи.
+                 * * false Запрещается ввод комментариев в поле связи.
                  * @remark
                  * Опция позволяет установить режим работы поля связи, в котором после выбора значения допускается добавление комментариев внутри поля ввода.
                  * Добавление комментариев поддерживается только, когда поле связи установлено в режим единичного выбора значений.
@@ -195,11 +183,12 @@ define('js!SBIS3.CONTROLS.FieldLink',
                  * До момента ввода комментария справа от выбранного значения в поле связи будет отображаться текст, настраиваемый в опции {@link placeholder}.
                  * @example
                  * Пример настройки режима добавления комментария в поле связи:
-                 * ![](/FieldLink04.png)
                  * фрагмент верстки:
                  * <pre class="brush: xml">
                  *     <option name="alwaysShowTextBox">true</option>
                  * </pre>
+                 * иллюстрация работы:
+                 * ![](/FieldLink04.png)
                  * @deprecated
                  */
                 alwaysShowTextBox: false,
@@ -207,8 +196,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
                  * @cfg {String} Устанавливает шаблон, по которому будет построено отображение каждого выбранного значения в поле связи.
                  * @remark
                  * Шаблон - это вёрстка, по которой будет построено отображение каждого выбранного значения в поле связи.
-                 * Внутри шаблона допускается использование конструкций шаблонизатора. Подробнее про шаблоны можно
-                 * прочитать в {@link https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/core/component/xhtml/template документации}.
+                 * Внутри шаблона допускается использование {@link https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/core/component/xhtml/template конструкций шаблонизатора}.
                  * Шаблон может быть реализован отдельным XHTML-файлом.
                  * В этом случае чтобы передать его содержимое в опцию, он должен быть подключен в массив зависимостей компонента (см. примеры).
                  * @example
@@ -220,7 +208,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
                  * Пример 2. Шаблон имеет простую структуру, поэтому его полностью описываем в качестве значения опции.
                  * <pre>
                  *     <option name="itemTemplate" type="string" value="
-                 *         <div class='fieldLinkText'>{{=it.item.get('title')}}</div>
+                 *        <div class='fieldLinkText'>{{=it.item.get('title')}}</div>
                  *     "></option>
                  * </pre>
                  */
@@ -288,7 +276,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
            * <pre>
            *     myFieldLink.setDictionaries(
            *        [{
-           *            'template': 'js!SBIS3.BUH.ChoiceAccount' // Компонент, на основе которого будет построен справочник поля связи
+           *           'template': 'js!SBIS3.BUH.ChoiceAccount' // Компонент, на основе которого будет построен справочник поля связи
            *        }]
            *     );
            * </pre>
@@ -314,7 +302,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
            *     this.showSelector(
            *        'js!SBIS3.MyArea.MyDictionary',
            *        {
-           *            title: 'Сотрудники предприятия'
+           *           title: 'Сотрудники предприятия'
            *        }
            *     );
            * </pre>
@@ -710,7 +698,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
           },
 
           /**
-           * Расщитывает ширину поля ввода, учитывая всевозможные wrapper'ы и отступы
+           * Рассчитывает ширину поля ввода, учитывая всевозможные wrapper'ы и отступы
            * @returns {number}
            * @private
            */

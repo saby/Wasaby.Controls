@@ -35,8 +35,14 @@ define(
 
    var DatePicker = FormattedTextBoxBase.extend([PickerMixin], /** @lends SBIS3.CONTROLS.DatePicker.prototype */{
        /**
-        * @event onDateChange
+        * @event onDateChange Происходит при изменении даты.
+        * @remark
+        * Изменение даты производится одним из трёх способов:
+        * 1. через выбор в календаре;
+        * 2. через установку нового значения в поле ввода с клавиатуры;
+        * 3. методами {@link setText} или {@link setDate}.
         * @param {$ws.proto.EventObject} eventObject Дескриптор события.
+        * @param {Date} date Дата, которую установили.
         * @example
         * <pre>
         *    var dateChangeFn = function(event) {
