@@ -1,6 +1,5 @@
 /* global define, $ws */
 define('js!SBIS3.CONTROLS.Data.Projection.Tree', [
-   'js!SBIS3.CONTROLS.Data.Projection.ITree',
    'js!SBIS3.CONTROLS.Data.Projection.Collection',
    'js!SBIS3.CONTROLS.Data.Projection.TreeChildren',
    'js!SBIS3.CONTROLS.Data.Bind.ICollectionProjection',
@@ -8,7 +7,6 @@ define('js!SBIS3.CONTROLS.Data.Projection.Tree', [
    'js!SBIS3.CONTROLS.Data.Utils',
    'js!SBIS3.CONTROLS.Data.Projection.LoadableTreeItem'
 ], function (
-   ITreeProjection,
    CollectionProjection,
    TreeChildren,
    IBindCollectionProjection,
@@ -21,14 +19,40 @@ define('js!SBIS3.CONTROLS.Data.Projection.Tree', [
     * Проекция в виде дерева - предоставляет методы навигации, фильтрации и сортировки, не меняя при этом исходную коллецию
     * @class SBIS3.CONTROLS.Data.Projection.Tree
     * @extends SBIS3.CONTROLS.Data.Projection.Collection
-    * @mixes SBIS3.CONTROLS.Data.Projection.ITree
     * @public
     * @author Мальцев Алексей
     */
 
-   var TreeProjection = CollectionProjection.extend([ITreeProjection], /** @lends SBIS3.CONTROLS.Data.Projection.Tree.prototype */{
+   var TreeProjection = CollectionProjection.extend(/** @lends SBIS3.CONTROLS.Data.Projection.Tree.prototype */{
       _moduleName: 'SBIS3.CONTROLS.Data.Projection.Tree',
       $protected: {
+         _options: {
+            /**
+             * @cfg {String} Название свойства, содержащего идентификатор узла.
+             */
+            idProperty: '',
+
+            /**
+             * @cfg {String} Название свойства, содержащего идентификатор родительского узла.
+             */
+            parentProperty: '',
+
+            /**
+             * @cfg {String} Название свойства, содержащего признак узла.
+             */
+            nodeProperty: '',
+
+            /**
+             * @cfg {String} Название свойства, содержащего дочерние элементы узла.
+             */
+            childrenProperty: '',
+
+            /**
+             * @cfg {SBIS3.CONTROLS.Data.Projection.TreeItem|*} Корневой узел или его содержимое
+             */
+            root: undefined
+         },
+
          _itemModule: 'projection.tree-item',
 
          /**
@@ -58,7 +82,7 @@ define('js!SBIS3.CONTROLS.Data.Projection.Tree', [
 
       //endregion SBIS3.CONTROLS.Data.Collection.IEnumerable
 
-      //region SBIS3.CONTROLS.Data.Projection.ICollection
+      //region SBIS3.CONTROLS.Data.Projection.Collection
 
       /**
        * Устанавливает текущим следующий элемент родительского узла.
@@ -84,18 +108,30 @@ define('js!SBIS3.CONTROLS.Data.Projection.Tree', [
          return this._getNearbyItem(item, false, this._getNavigationEnumerator());
       },
 
-      //endregion SBIS3.CONTROLS.Data.Projection.ICollection
+      //endregion SBIS3.CONTROLS.Data.Projection.Collection
 
-      //region SBIS3.CONTROLS.Data.Projection.ITree
+      //region Public methods
 
+      /**
+       * Возвращает название свойства, содержащего идентификатор узла
+       * @returns {String}
+       */
       getIdProperty: function () {
          return this._options.idProperty;
       },
 
+      /**
+       * Возвращает название свойства, содержащего идентификатор родительского узла
+       * @returns {String}
+       */
       getParentProperty: function () {
          return this._options.parentProperty;
       },
 
+      /**
+       * Устанавливает название свойства, содержащего идентификатор родительского узла
+       * @param {String} name
+       */
       setParentProperty: function (name) {
          this._unsetImportantProperty(this._options.parentProperty);
          this._options.parentProperty = name;
@@ -103,17 +139,29 @@ define('js!SBIS3.CONTROLS.Data.Projection.Tree', [
          this._childrenMap = {};
       },
 
+      /**
+       * Возвращает название свойства, содержащего признак узла
+       * @returns {String}
+       */
       getNodeProperty: function () {
          return this._options.nodeProperty;
       },
 
+      /**
+       * Возвращает название свойства, содержащего дочерние элементы узла
+       * @returns {String}
+       */
       getChildrenProperty: function () {
          return this._options.childrenProperty;
       },
 
+      /**
+       * Возвращает корневой узел дерева
+       * @returns {SBIS3.CONTROLS.Data.Projection.TreeItem}
+       */
       getRoot: function () {
          if (this._root === null) {
-            if (this._options.root && $ws.helpers.instanceOfMixin(this._options.root, 'SBIS3.CONTROLS.Data.Projection.ICollectionItem')) {
+            if (this._options.root && $ws.helpers.instanceOfModule(this._options.root, 'SBIS3.CONTROLS.Data.Projection.CollectionItem')) {
                this._root = this._options.root;
             } else {
                this._root = Di.resolve(this._itemModule, {
@@ -128,11 +176,21 @@ define('js!SBIS3.CONTROLS.Data.Projection.Tree', [
          return this._root;
       },
 
+      /**
+       * Устанавливает корневой узел дерева
+       * @param {SBIS3.CONTROLS.Data.Projection.TreeItem|*} root Корневой узел или его содержимое
+       * @returns {SBIS3.CONTROLS.Data.Projection.TreeItem}
+       */
       setRoot: function (root) {
          this._options.root = root;
          this._root = null;
       },
 
+      /**
+       * Возвращает коллекцию потомков элемента коллеции
+       * @param {SBIS3.CONTROLS.Data.Projection.TreeItem} parent Родительский узел
+       * @returns {SBIS3.CONTROLS.Data.Projection.TreeChildren}
+       */
       getChildren: function (parent) {
          return new TreeChildren({
             owner: parent,
@@ -140,6 +198,10 @@ define('js!SBIS3.CONTROLS.Data.Projection.Tree', [
          });
       },
 
+      /**
+       * Устанавливает текущим родителя текущего элемента
+       * @returns {Boolean} Есть ли родитель
+       */
       moveToAbove: function () {
          var current = this.getCurrent();
          if (!current) {
@@ -154,6 +216,10 @@ define('js!SBIS3.CONTROLS.Data.Projection.Tree', [
          return true;
       },
 
+      /**
+       * Устанавливает текущим первого непосредственного потомка текущего элемента
+       * @returns {Boolean} Есть ли первый потомок
+       */
       moveToBelow: function () {
          var current = this.getCurrent();
          if (!current || !current.isNode()) {
@@ -168,7 +234,7 @@ define('js!SBIS3.CONTROLS.Data.Projection.Tree', [
          return true;
       },
 
-      //endregion SBIS3.CONTROLS.Data.Projection.ITree
+      //endregion Public methods
 
       //region Protected methods
 
@@ -205,14 +271,14 @@ define('js!SBIS3.CONTROLS.Data.Projection.Tree', [
        * @protected
        */
       _checkItem: function (item) {
-         if (!item || !$ws.helpers.instanceOfMixin(item, 'SBIS3.CONTROLS.Data.Projection.ICollectionItem')) {
-            throw new Error(this._moduleName + '::_checkItem(): item should implement SBIS3.CONTROLS.Data.Projection.ICollectionItem');
+         if (!item || !$ws.helpers.instanceOfModule(item, 'SBIS3.CONTROLS.Data.Projection.CollectionItem')) {
+            throw new Error(this._moduleName + '::_checkItem(): item should be in instance of SBIS3.CONTROLS.Data.Projection.CollectionItem');
          }
       },
 
       /**
        * Возвращает массив детей для указанного родителя
-       * @param {SBIS3.CONTROLS.Data.Projection.ITreeItem} parent Родительский узел
+       * @param {SBIS3.CONTROLS.Data.Projection.TreeItem} parent Родительский узел
        * @returns {Array.<SBIS3.CONTROLS.Data.Projection.TreeItem>}
        * @protected
        */

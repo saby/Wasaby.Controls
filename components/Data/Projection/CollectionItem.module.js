@@ -1,41 +1,72 @@
 /* global define, require, $ws */
 define('js!SBIS3.CONTROLS.Data.Projection.CollectionItem', [
-   'js!SBIS3.CONTROLS.Data.Projection.ICollectionItem',
    'js!SBIS3.CONTROLS.Data.IHashable',
    'js!SBIS3.CONTROLS.Data.HashableMixin',
    'js!SBIS3.CONTROLS.Data.Di'
-], function (ICollectionItem, IHashable, HashableMixin, Di) {
+], function (IHashable, HashableMixin, Di) {
    'use strict';
 
    /**
     * Элемент коллекции
     * @class SBIS3.CONTROLS.Data.Projection.CollectionItem
     * @mixes SBIS3.CONTROLS.Data.IHashable
-    * @mixes SBIS3.CONTROLS.Data.Projection.ICollectionItem
     * @mixes SBIS3.CONTROLS.Data.HashableMixin
     * @public
     * @author Мальцев Алексей
     */
-   var CollectionItem = $ws.core.extend({}, [IHashable, ICollectionItem, HashableMixin], /** @lends SBIS3.CONTROLS.Data.Projection.CollectionItem.prototype */{
+   var CollectionItem = $ws.core.extend({}, [IHashable, HashableMixin], /** @lends SBIS3.CONTROLS.Data.Projection.CollectionItem.prototype */{
       _moduleName: 'SBIS3.CONTROLS.Data.Projection.CollectionItem',
       $protected: {
+         _options: {
+            /**
+             * @cfg {SBIS3.CONTROLS.Data.Collection.IEnumerable} Коллекция, которой принадлежит элемент
+             */
+            owner: undefined,
+
+            /**
+             * @cfg {*} Содержимое элемента коллекции
+             */
+            contents: undefined,
+
+            /**
+             * @cfg {*} Элемент выбран
+             */
+            selected: false
+         },
+
          _hashPrefix: 'collection-item-'
       },
 
-      //region SBIS3.CONTROLS.Data.Projection.ICollectionItem
+      //region Public methods
 
+      /**
+       * Возвращает коллекцию, которой принадлежит элемент
+       * @returns {SBIS3.CONTROLS.Data.Collection.IList}
+       */
       getOwner: function () {
          return this._options.owner;
       },
 
+      /**
+       * Устанавливает коллекцию, которой принадлежит элемент
+       * @param {SBIS3.CONTROLS.Data.Collection.IList} owner Коллекция, которой принадлежит элемент
+       */
       setOwner: function (owner) {
          this._options.owner = owner;
       },
 
+      /**
+       * Возвращает содержимое элемента коллекции
+       * @returns {*}
+       */
       getContents: function () {
          return this._options.contents;
       },
 
+      /**
+       * Устанавливает содержимое элемента коллекции
+       * @param {*} contents Новое содержимое
+       */
       setContents: function (contents, silent) {
          if (this._options.contents === contents) {
             return;
@@ -46,10 +77,18 @@ define('js!SBIS3.CONTROLS.Data.Projection.CollectionItem', [
          }
       },
 
+      /**
+       * Возвращает признак, что элемент выбран
+       * @returns {*}
+       */
       isSelected: function () {
          return this._options.selected;
       },
 
+      /**
+       * Устанавливает признак, что элемент выбран
+       * @param {Boolean} selected Элемент выбран
+       */
       setSelected: function (selected) {
          if (this._options.selected === selected) {
             return;
@@ -58,7 +97,9 @@ define('js!SBIS3.CONTROLS.Data.Projection.CollectionItem', [
          this._notifyItemChangeToOwner('selected');
       },
 
-      //endregion SBIS3.CONTROLS.Data.Projection.ICollectionItem
+      //endregion Public methods
+
+      //region Protected methods
 
       /**
        * Возвращает исходную коллекцию проекции
@@ -82,6 +123,8 @@ define('js!SBIS3.CONTROLS.Data.Projection.CollectionItem', [
             );
          }
       }
+
+      //endregion Protected methods
    });
 
    Di.register('projection.collection-item', CollectionItem);
