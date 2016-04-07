@@ -73,6 +73,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.List', [
       _setSerializableState: function(state) {
          return SerializableMixin._setSerializableState(state).callNext(function() {
             this._items = state._items;
+            this._clearServiceEnumerator();
          });
       },
 
@@ -302,6 +303,9 @@ define('js!SBIS3.CONTROLS.Data.Collection.List', [
          }));
       },
 
+      _clearServiceEnumerator: function () {
+          this._serviceEnumerator = null;
+      },
       /**
        * Проверяет корректность индекса
        * @param {Number} index Индекс
