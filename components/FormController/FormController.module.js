@@ -306,7 +306,7 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
        * @see record
        */
       setRecord: function(record){
-         this._options.record = record;
+         this._options.record = this._panel._record = record;
          this._setContextRecord(record);
       },
 
@@ -321,8 +321,7 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
             hdl = this._options.dataSource.create(this._options.initValues);
          }
          hdl.addCallback(function(record){
-            self._options.record = record;
-            self._setContextRecord(record);   
+            self.setRecord(record);
          });
          hdl.addBoth(function(r){
             self._hideLoadingIndicator();
