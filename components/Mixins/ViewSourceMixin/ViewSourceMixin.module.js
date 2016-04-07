@@ -23,6 +23,7 @@ define('js!SBIS3.CONTROLS.ViewSourceMixin', [
       setViewDataSource: function(source, browserName, filter, offset, limit, sorting, historyId) {
          var query = new Query(),
              historyFilter = {},
+             resultDef = new $ws.proto.Deferred(),
              queryDef, history, serializedHistory, queryFilter;
 
          historyId = historyId || this._options.historyId;
@@ -33,8 +34,13 @@ define('js!SBIS3.CONTROLS.ViewSourceMixin', [
 
             if (history) {
                serializedHistory = $ws.helpers.deserializeURLData(history);
-               if (serializedHistory && serializedHistory[0] && serializedHistory[0].isActiveFilter) {
-                  historyFilter = serializedHistory[0].viewFilter;
+               if (serializedHistory) {
+                  for(var i = 0, len = serializedHistory.length; i < len; i++) {
+                     if(serializedHistory[i].isActiveFilter) {
+                        historyFilter = serializedHistory[i].viewFilter;
+                        break;
+                     }
+                  }
                }
             }
          }
@@ -52,7 +58,7 @@ define('js!SBIS3.CONTROLS.ViewSourceMixin', [
 
          /* По готовности компонента установим данные */
          this.subscribe('onInit', function() {
-            var browser = $ws.helpers.instanceOfModule(this, 'SBIS3.CONTROLS.Browser') ? this : this.getChildControlByName(browserName),
+            var browser = browserName ? this.getChildControlByName(browserName) : this,
                 view = browser.getView();
 
             queryDef.addCallback(function(dataSet) {
@@ -70,12 +76,16 @@ define('js!SBIS3.CONTROLS.ViewSourceMixin', [
                   path: dataSet.getProperty('p')
                });
 
+               resultDef.callback(recordSet);
+
                view.setDataSource(source, true);
                view.setFilter(queryFilter, true);
                view.setItems(recordSet);
 
                return recordSet;
             });
+
+            return resultDef;
          });
       }
    };
