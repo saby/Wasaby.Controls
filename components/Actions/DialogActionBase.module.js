@@ -77,7 +77,7 @@ define('js!SBIS3.CONTROLS.DialogActionBase', ['js!SBIS3.CONTROLS.ActionBase', 'j
          }
 
          new Component(config).subscribe('onAfterClose', function (e, meta) {
-            self._notifyOnExecuted(meta, self._options.record);
+            self._notifyOnExecuted(meta, this._record);
          });
       },
 
