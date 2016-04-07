@@ -1443,7 +1443,7 @@ define('js!SBIS3.CONTROLS.ListView',
              * Если же высота фиксированная, то подгружать данные в этой функции будем пока высота контейнера(ту, что фиксированно задали) не станет меньше высоты таблицы(table),
              * т.е. пока не появится скролл внутри контейнера
              */
-            if (this._isLoadBeforeScrollAppears && !this._scrollWatcher.hasScroll(this.getContainer())){
+            if (this._scrollWatcher && this._isLoadBeforeScrollAppears && !this._scrollWatcher.hasScroll(this.getContainer())){
                this._nextLoad();
             } else {
                this._isLoadBeforeScrollAppears = false;
