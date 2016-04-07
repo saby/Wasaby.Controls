@@ -7,7 +7,7 @@ define('js!SBIS3.CONTROLS.IMenuNewView', [
     * Интерфейс представления меню
     * @mixin SBIS3.CONTROLS.IMenuNewView
     * @implements SBIS3.CONTROLS.Data.Collection.IEnumerable
-    * @implements [SBIS3.CONTROLS.Data.Projection.ITreeItem]
+    * @implements [SBIS3.CONTROLS.Data.Projection.TreeItem]
     * @implements [SBIS3.CONTROLS.Data.Collection.ISourceLoadable]
     * @author Крайнов Дмитрий Олегович
     */

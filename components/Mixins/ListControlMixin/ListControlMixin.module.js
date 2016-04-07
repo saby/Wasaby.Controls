@@ -23,7 +23,7 @@ define('js!SBIS3.CONTROLS.ListControlMixin', [
        * @event onItemAction Уведомляет о необходимости выполнить действие по умолчанию для выбранного элемента
        * @param {$ws.proto.EventObject} eventObject Дескриптор события.
        * @param {*} item Выбранный элемент
-       * @param {SBIS3.CONTROLS.Data.Projection.ICollectionItem} collectionItem Обертка выбранного элемента
+       * @param {SBIS3.CONTROLS.Data.Projection.CollectionItem} collectionItem Обертка выбранного элемента
        */
 
       $protected: {
@@ -737,7 +737,7 @@ define('js!SBIS3.CONTROLS.ListControlMixin', [
 
       /**
        * Производит действие по умолчанию для выбранного элемента
-       * @param {SBIS3.CONTROLS.Data.Projection.ICollectionItem} item Выбранный элемент
+       * @param {SBIS3.CONTROLS.Data.Projection.CollectionItem} item Выбранный элемент
        * @private
        */
       _itemAction: function(item) {
@@ -748,7 +748,7 @@ define('js!SBIS3.CONTROLS.ListControlMixin', [
 
       /**
        * Вызывает действие по умолчанию для выбранного элемента
-       * @param {SBIS3.CONTROLS.Data.Projection.ICollectionItem} item Выбранный элемент
+       * @param {SBIS3.CONTROLS.Data.Projection.CollectionItem} item Выбранный элемент
        * @private
        */
       _callItemAction: function(item) {
@@ -777,8 +777,8 @@ define('js!SBIS3.CONTROLS.ListControlMixin', [
    /**
     * Обрабатывает событие об изменении позиции текущего элемента коллекции
     * @param {$ws.proto.EventObject} eventObject Дескриптор события.
-    * @param {SBIS3.CONTROLS.Data.Projection.ICollectionItem} newCurrent Новый текущий элемент
-    * @param {SBIS3.CONTROLS.Data.Projection.ICollectionItem} oldCurrent Старый текущий элемент
+    * @param {SBIS3.CONTROLS.Data.Projection.CollectionItem} newCurrent Новый текущий элемент
+    * @param {SBIS3.CONTROLS.Data.Projection.CollectionItem} oldCurrent Старый текущий элемент
     * @param {Number} newPosition Новая позиция
     * @param {Number} oldPosition Старая позиция
     * @private
@@ -795,9 +795,9 @@ define('js!SBIS3.CONTROLS.ListControlMixin', [
     * Обрабатывает событие об изменении коллекции
     * @param {$ws.proto.EventObject} event Дескриптор события.
     * @param {String} action Действие, приведшее к изменению.
-    * @param {SBIS3.CONTROLS.Data.Projection.ICollectionItem[]} newItems Новые элементы коллеции.
+    * @param {SBIS3.CONTROLS.Data.Projection.CollectionItem[]} newItems Новые элементы коллеции.
     * @param {Integer} newItemsIndex Индекс, в котором появились новые элементы.
-    * @param {SBIS3.CONTROLS.Data.Projection.ICollectionItem[]} oldItems Удаленные элементы коллекции.
+    * @param {SBIS3.CONTROLS.Data.Projection.CollectionItem[]} oldItems Удаленные элементы коллекции.
     * @param {Integer} oldItemsIndex Индекс, в котором удалены элементы.
     * @private
     */
@@ -856,7 +856,7 @@ define('js!SBIS3.CONTROLS.ListControlMixin', [
    /**
     * Обрабатывает событие об изменении элемента коллекции
     * @param {$ws.proto.EventObject} event Дескриптор события.
-    * @param {SBIS3.CONTROLS.Data.Projection.ICollectionItem} item Измененный элемент коллеции.
+    * @param {SBIS3.CONTROLS.Data.Projection.CollectionItem} item Измененный элемент коллеции.
     * @param {Integer} index Индекс измененного элемента.
     * @param {String} [property] Измененное свойство элемента
     * @private

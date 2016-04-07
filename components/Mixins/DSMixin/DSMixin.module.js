@@ -662,7 +662,10 @@ define('js!SBIS3.CONTROLS.DSMixin', [
                        self.redraw();
                     }
                     if (self._options.infiniteScroll === 'up'){
-                        self._scrollToItem(self._itemsProjection.at(0).getContents().getId());
+                       var firstItem = self._itemsProjection.at(0);
+                       if (firstItem) {
+                           self._scrollToItem(firstItem.getContents().getId());
+                       }
                     }
                     //self._notify('onBeforeRedraw');
                     return list;
@@ -1427,9 +1430,9 @@ define('js!SBIS3.CONTROLS.DSMixin', [
        * Обрабатывает событие об изменении коллекции.
        * @param {$ws.proto.EventObject} event Дескриптор события.
        * @param {String} action Действие, приведшее к изменению.
-       * @param {SBIS3.CONTROLS.Data.Projection.ICollectionItem[]} newItems Новые элементы коллеции.
+       * @param {SBIS3.CONTROLS.Data.Projection.CollectionItem[]} newItems Новые элементы коллеции.
        * @param {Integer} newItemsIndex Индекс, в котором появились новые элементы.
-       * @param {SBIS3.CONTROLS.Data.Projection.ICollectionItem[]} oldItems Удаленные элементы коллекции.
+       * @param {SBIS3.CONTROLS.Data.Projection.CollectionItem[]} oldItems Удаленные элементы коллекции.
        * @param {Integer} oldItemsIndex Индекс, в котором удалены элементы.
        * @private
        */
