@@ -122,7 +122,7 @@ define('js!SBIS3.CONTROLS.MergeDialogTemplate', [
             });
             $ws.helpers.openErrorsReportDialog({
                 'numSelected': count,
-                'numSuccess': count - errorsRecordSet.d.length,
+                'numSuccess': errorsRecordSet ? count - errorsRecordSet.d.length : 0,
                 'errors': errorsTexts,
                 'title': this._options.errorMessage
             });
