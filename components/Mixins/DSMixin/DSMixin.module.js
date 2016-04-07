@@ -661,6 +661,9 @@ define('js!SBIS3.CONTROLS.DSMixin', [
                     } else {
                        self.redraw();
                     }
+                    if (self._options.infiniteScroll === 'up'){
+                        self._scrollToItem(self._itemsProjection.at(0).getContents().getId());
+                    }
                     //self._notify('onBeforeRedraw');
                     return list;
                 }, self))
