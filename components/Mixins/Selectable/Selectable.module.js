@@ -112,6 +112,8 @@ define('js!SBIS3.CONTROLS.Selectable', ['js!SBIS3.CONTROLS.Data.Utils', 'js!SBIS
             if (this._itemsProjection.getCount()) {
                this._selectMode = 'index';
                this._options.selectedIndex = 0;
+               var item = this._itemsProjection.at(this._options.selectedIndex);
+               this._options.selectedKey = item.getContents().getKey();
             }
          }
       },
