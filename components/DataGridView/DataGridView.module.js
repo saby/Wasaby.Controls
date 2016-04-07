@@ -804,6 +804,9 @@ define('js!SBIS3.CONTROLS.DataGridView',
             if (!supportDouble){
                supportDouble = $ws.core.clone(curCol);
             }
+            else {
+               curColSplitTitle = [supportDouble.value, curColSplitTitle];
+            }
             if (nextCol && (curColSplitTitle.length == nextColSplitTitle.length) && (curColSplitTitle.length == 2) && (curColSplitTitle[0] == nextColSplitTitle[0])){
                supportDouble.value = curColSplitTitle[0];
                supportDouble.colspan = ++supportDouble.colspan || 2;
