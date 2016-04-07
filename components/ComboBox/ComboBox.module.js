@@ -91,34 +91,15 @@ define('js!SBIS3.CONTROLS.ComboBox', [
             focusOnActivatedOnMobiles: false,
             /**
              * @cfg {String} Шаблон отображения каждого элемента коллекции
-             * Шаблон отображения элемента коллекции - это отдельный XHTML-файл.
-             * Чтобы его можно было использовать, шаблон подключают в массив зависимостей компонента.
-             * Внутри шаблона доступ к полям каждого элемента коллекции можно получить через инструкции шаблонизатора типа {{=it.item.get('ИмяПоля')}}.
              * @example
-             * Для отрисовки каждого элемента коллекции используется шаблон:
-             * <pre class="brush:html">
-             *     <div class="myarea-MyComponent__itemTemplate">
-             *       {{=it.item.get('НазваниеДокумента')}}
-             *    </div>
-             * </pre>
-             * Шаблон подключен в массив зависимостей компонента:
-             * <pre class="brush: js">
-             *    define('js!SBIS3.MyArea.MyComponent',
-             *       [
-             *          'js!SBIS3.CORE.CompoundControl',
-             *          'html!SBIS3.MyArea.MyComponent',
-             *          ...
-             *          'html!SBIS3.MyArea.MyComponent/itemTemplate'  // подключаем шаблон в массив зависимостей компонента
-             *       ],
-             *       ...
-             *    });
-             * </pre>
-             * Шаблон указан для опции itemTemplate:
-             * <pre class="brush:html">
-             *    <component data-component="SBIS3.CONTROLS.ComboBox" name="ComboBox 1" class="control-MyComboBoxDS__position">
-             *       ...
-             *       <option name="itemTemplate">html!SBIS3.MyArea.MyComponent/itemTemplate</option>
-             *    </component>
+             * <pre class="brush:xml">
+             *     <option name="itemTemplate">
+             *         <div data-key="{{=it.item.getKey()}}" class="controls-ComboBox__itemRow js-controls-ComboBox__itemRow">
+             *             <div class="genie-colorComboBox__itemTitle">
+             *                 {{=it.displayField}}
+             *             </div>
+             *         </div>
+             *     </option>
              * </pre>
              */
             itemTemplate: '',
@@ -309,42 +290,40 @@ define('js!SBIS3.CONTROLS.ComboBox', [
                item = this._itemsProjection.at(index).getContents();
                def.callback(item);
             }
-         }
-         else {
-            if (this._dataSource) {
-               if ((key != undefined) && (key !== null)) {
-                  this._dataSource.read(key).addCallback(function (item) {
-                     def.callback(item);
-                  });
+            else {
+               if (this._dataSource) {
+                  if ((key != undefined) && (key !== null)) {
+                     this._dataSource.read(key).addCallback(function (item) {
+                        def.callback(item);
+                     });
+                  }
                }
             }
+            var self = this;
+            def.addCallback(function (item) {
+               if (item) {
+                  var newText = item.get(self._options.displayField);
+                  if (newText != self._options.text) {
+                     ComboBox.superclass.setText.call(self, newText);
+                     self._drawNotEditablePlaceholder(newText);
+                     $('.js-controls-ComboBox__fieldNotEditable', self._container.get(0)).text(newText);
+                  }
+               }
+               else {
+                  ComboBox.superclass.setText.call(self, '');
+                  self._drawNotEditablePlaceholder('');
+                  $('.js-controls-ComboBox__fieldNotEditable', self._container.get(0)).text('');
+               }
+               if (self._picker) {
+                  $('.controls-ComboBox__itemRow__selected', self._picker.getContainer().get(0)).removeClass('controls-ComboBox__itemRow__selected');
+                  $('.controls-ComboBox__itemRow[data-id=\'' + key + '\']', self._picker.getContainer().get(0)).addClass('controls-ComboBox__itemRow__selected');
+               }
+            });
          }
+
          if (this._picker) {
             $('.controls-ComboBox__itemRow__selected', this._picker.getContainer().get(0)).removeClass('controls-ComboBox__itemRow__selected');
          }
-         var self = this;
-         def.addCallback(function (item) {
-            if (item) {
-               var newText = item.get(self._options.displayField);
-               if (newText != self._options.text) {
-                  ComboBox.superclass.setText.call(self, newText);
-                  self._drawNotEditablePlaceholder(newText);
-                  $('.js-controls-ComboBox__fieldNotEditable', self._container.get(0)).text(newText);
-               }
-            }
-            else {
-               ComboBox.superclass.setText.call(self, '');
-               self._drawNotEditablePlaceholder('');
-               $('.js-controls-ComboBox__fieldNotEditable', self._container.get(0)).text('');
-            }
-            if (self._picker) {
-               $('.controls-ComboBox__itemRow__selected', self._picker.getContainer().get(0)).removeClass('controls-ComboBox__itemRow__selected');
-               $('.controls-ComboBox__itemRow[data-id=\'' + key + '\']', self._picker.getContainer().get(0)).addClass('controls-ComboBox__itemRow__selected');
-            }
-         });
-
-
-
 
       },
 
@@ -369,7 +348,7 @@ define('js!SBIS3.CONTROLS.ComboBox', [
                if (strKey == 'null') {
                   strKey = null;
                }
-               if (this._options.autocomplete){
+               if (self._options.autocomplete){
                   self._itemsProjection.setFilter(null);
                   self.redraw();
                }
