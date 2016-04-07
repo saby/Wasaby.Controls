@@ -7,6 +7,8 @@ define('js!SBIS3.CONTROLS.Data.Model', [
    'js!SBIS3.CONTROLS.Data.Utils',
    'js!SBIS3.CONTROLS.Data.Collection.ArrayEnumerator'
 ], function (Record, IHashable, HashableMixin, Di, Utils, ArrayEnumerator) {
+   'use strict';
+
    /**
     * Модель - обеспечивает доступ к данным объекта предметной области
     * @class SBIS3.CONTROLS.Data.Model
