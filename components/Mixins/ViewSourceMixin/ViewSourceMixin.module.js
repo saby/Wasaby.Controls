@@ -84,9 +84,8 @@ define('js!SBIS3.CONTROLS.ViewSourceMixin', [
 
                return recordSet;
             });
-
-            return resultDef;
          });
+         return resultDef;
       }
    };
 
