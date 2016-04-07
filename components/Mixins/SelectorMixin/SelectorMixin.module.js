@@ -11,23 +11,20 @@ define('js!SBIS3.CONTROLS.SelectorMixin', [],
        * Описание логики выбора из диалога/панели.
        * SelectorMixin используется полем связи.
        * @mixin
-       * @name SBIS3.CONTROLS.SelectorMixin
        * @public
+       * @author Крайнов Дмитрий Олегович
        */
-      var SelectorMixin = {
+      var SelectorMixin = /**@lends SBIS3.CONTROLS.SelectorMixin.prototype  */{
          $protected: {
             _linkedView: null,
             _selectionConfirmHandler: undefined,
             _dRender: null,
             _options: {
                /**
-                * @cfg {Boolean} Разрешить множественный выбор записей
-                * <wiTag group="Управление">
-                * Возможные значения:
-                * <ul>
-                *    <li>true - разрешён выбор нескольких записей одновременно;</li>
-                *    <li>false - выбор только одной записи.</li>
-                * </ul>
+                * @cfg {Boolean} Устанавливает режим множественного выбора элементов коллекции.
+                * Подробно режим множественного выбора описан {@link SBIS3.CONTROLS.MultiSelectable#multiselect здесь}.
+                * @variant true Режим множественного выбора элементов коллекции установлен.
+                * @variant false Режим множественного выбора элементов коллекции отменен.
                 * @example
                 * <pre>
                 *     <option name="multiSelect">true</option>
@@ -35,11 +32,21 @@ define('js!SBIS3.CONTROLS.SelectorMixin', [],
                 */
                multiSelect: false,
                /**
-                * Записи, выбранные в связном представлении
+                * cfg {Array} Устанавливает выбранными элементы коллекции по переданным первичным ключам.
+                * @remark
+                * Устанавливает выбранными элементы коллекции, которым соответствуют переданные в массиве идентификаторы.
+                * Опция актуальна для контрола, который находится в режиме множественного выбора значений (см. опцию {@link SBIS3.CONTROLS.MultiSelectable#multiselect}).
+                * @example
+                * <pre class="brush: xml">
+                *     <options name="currentSelectedKeys" type="array">
+                *         <option>2</option>
+                *         <option>8</option>
+                *     </options>
+                * </pre>
                 */
                currentSelectedKeys: [],
                /**
-                * Обработчик на закрытие диалога/всплывающей панели
+                * cfg {Function} Устанавливает обработчик на закрытие диалога/всплывающей панели выбора элементов коллекции.
                 */
                closeCallback: undefined
             }
@@ -81,6 +88,16 @@ define('js!SBIS3.CONTROLS.SelectorMixin', [],
                this[sub ? 'subscribeTo' : 'unsubscribeFrom'](this._linkedView, 'onItemActivate', this._changeSelectionHandler);
          },
 
+         /**
+          * Устанавливает связанное представление данных для диалога/всплывающей панели выбора элементов коллекции.
+          * @param {SBIS3.CONTROLS.ListView} linkedView Экземпляр класса контрола представления данных.
+          * @example
+          * <pre>
+          *     var dataView = this.getTopParent().getChildByName('myNewCreatedBrowser');
+          *     this.setLinkedView(dataView);
+          * </pre>
+          * @see getLinkedView
+          */
          setLinkedView: function (linkedView) {
             this._linkedView && this._toggleLinkedViewEvents(false);
             this._linkedView = linkedView;
@@ -94,8 +111,17 @@ define('js!SBIS3.CONTROLS.SelectorMixin', [],
          },
 
          /**
-          * Получить связное представление данных для этого диалога выбора
-          * @returns {SBIS3.CONTROLS.ListView}
+          * Получает связанное представление данных для диалога/всплывающей панели выбора элементов коллекции.
+          * @returns {SBIS3.CONTROLS.ListView} Экземпляр класса контрола представления данных.
+          * @example
+          * <pre>
+          *     var dataView;
+          *     if (this.getLinkedView().getName() !== 'myNewCreatedBrowser') {
+          *         dataView = this.getTopParent().getChildByName('myNewCreatedBrowser');
+          *         this.setLinkedView(dataView);
+          *     }
+          * </pre>
+          * @see setLinkedView
           */
          getLinkedView: function () {
             return this._linkedView;
