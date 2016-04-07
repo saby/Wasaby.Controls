@@ -46,7 +46,7 @@ define('js!SBIS3.CONTROLS.ActiveMultiSelectable', [], function() {
        * @see clearSelectedItems
        * @see addSelectedItems
        */
-      setSelectedItems: propertyUpdateWrapper(function(list) {
+      setSelectedItems: function(list) {
          var selItems = this._options.selectedItems,
              newList;
 
@@ -69,7 +69,7 @@ define('js!SBIS3.CONTROLS.ActiveMultiSelectable', [], function() {
          this._options.selectedItems = newList;
          this.setSelectedKeys(this._convertToKeys(this._options.selectedItems));
          this._notifyOnPropertyChanged('selectedItems');
-      }),
+      },
 
       /**
        * Очищает набор выбранных элементов коллекции.
