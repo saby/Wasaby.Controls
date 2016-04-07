@@ -121,18 +121,18 @@ define('js!SBIS3.CONTROLS.Data.Utils', [], function () {
                throw new Error(message);
             } catch (e) {
                if ('stack' in e) {
-                  var stack = (e.stack + '').split('\n'),
-                     reg = /:[0-9]+:[0-9]+/;
-                  if (!reg.test(stack[0])) {
+                  var stack = (e.stack + '').split('\n');
+                  this._stackReg = this._stackReg || /:[0-9]+:[0-9]+/;
+                  if (!this._stackReg.test(stack[0])) {
                      at++;//первой строкой может идти текст ошибки
                   }
                   script = stack.splice(at, 1).join('').trim();
                   hash = message + script;
-                  this._points = this._points || {};
-                  if (this._points.hasOwnProperty(hash)) {
+                  this._stackPoints = this._stackPoints || {};
+                  if (this._stackPoints.hasOwnProperty(hash)) {
                      return;
                   }
-                  this._points[hash] = true;
+                  this._stackPoints[hash] = true;
                }
                $ws.single.ioc.resolve('ILogger')[level](e.message + (script ? ' [' + script + ']' : ''));
             }
