@@ -2,8 +2,9 @@
 define('js!SBIS3.CONTROLS.Data.Source.Memory', [
    'js!SBIS3.CONTROLS.Data.Source.Local',
    'js!SBIS3.CONTROLS.Data.Source.DataSet',
-   'js!SBIS3.CONTROLS.Data.Di'
-], function (Local, DataSet, Di) {
+   'js!SBIS3.CONTROLS.Data.Di',
+   'js!SBIS3.CONTROLS.Data.Utils'
+], function (Local, DataSet, Di, Utils) {
    'use strict';
 
    /**
@@ -86,11 +87,11 @@ define('js!SBIS3.CONTROLS.Data.Source.Memory', [
          }
          if ('strategy' in cfg && !('adapter' in cfg)) {
             this._options.adapter = cfg.strategy;
-            $ws.single.ioc.resolve('ILogger').info(this._moduleName + '::$constructor', 'option "strategy" is deprecated and will be removed in 3.7.4. Use "adapter" instead.');
+            Utils.logger.stack(this._moduleName + '::$constructor(): option "strategy" is deprecated and will be removed in 3.7.4. Use "adapter" instead.', 1);
          }
          if ('keyField' in cfg && !('idProperty' in cfg)) {
             this._options.idProperty = cfg.keyField;
-            $ws.single.ioc.resolve('ILogger').info(this._moduleName + '::$constructor', 'option "keyField" is deprecated and will be removed in 3.7.4. Use "idProperty" instead.');
+            Utils.logger.stack(this._moduleName + '::$constructor(): option "keyField" is deprecated and will be removed in 3.7.4. Use "idProperty" instead.', 1);
          }
          this._reIndex();
       },
@@ -192,7 +193,7 @@ define('js!SBIS3.CONTROLS.Data.Source.Memory', [
             try {
                this.getAdapter().setProperty(items, 'total', total);
             } catch (error) {
-               $ws.single.ioc.resolve('ILogger').log(this._moduleName + '::query()', error);
+               Utils.logger.log(this._moduleName + '::query(): ' + error);
             }
          }
 

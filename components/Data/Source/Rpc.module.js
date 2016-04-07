@@ -1,7 +1,8 @@
 /* global define, $ws */
 define('js!SBIS3.CONTROLS.Data.Source.Rpc', [
-   'js!SBIS3.CONTROLS.Data.Source.Remote'
-], function (Remote) {
+   'js!SBIS3.CONTROLS.Data.Source.Remote',
+   'js!SBIS3.CONTROLS.Data.Utils'
+], function (Remote, Utils) {
    'use strict';
 
    /**
@@ -54,31 +55,31 @@ define('js!SBIS3.CONTROLS.Data.Source.Rpc', [
          //Deprecated
          if (!('binding' in cfg)) {
             if ('createMethodName' in cfg) {
-               $ws.single.ioc.resolve('ILogger').info(this._moduleName + '::$constructor()', 'Option "createMethodName" is deprecated and will be removed in 3.7.4. Use "binding.create" instead.');
+               Utils.logger.stack(this._moduleName + '::$constructor(): option "createMethodName" is deprecated and will be removed in 3.7.4. Use "binding.create" instead.', 2);
                this._options.binding.create = cfg.createMethodName;
             }
             if ('readMethodName' in cfg) {
-               $ws.single.ioc.resolve('ILogger').info(this._moduleName + '::$constructor()', 'Option "readMethodName" is deprecated and will be removed in 3.7.4. Use "binding.read" instead.');
+               Utils.logger.stack(this._moduleName + '::$constructor(): option "readMethodName" is deprecated and will be removed in 3.7.4. Use "binding.read" instead.', 2);
                this._options.binding.read = cfg.readMethodName;
             }
             if ('updateMethodName' in cfg) {
-               $ws.single.ioc.resolve('ILogger').info(this._moduleName + '::$constructor()', 'Option "updateMethodName" is deprecated and will be removed in 3.7.4. Use "binding.update" instead.');
+               Utils.logger.stack(this._moduleName + '::$constructor(): option "updateMethodName" is deprecated and will be removed in 3.7.4. Use "binding.update" instead.', 2);
                this._options.binding.update = cfg.updateMethodName;
             }
             if ('destroyMethodName' in cfg) {
-               $ws.single.ioc.resolve('ILogger').info(this._moduleName + '::$constructor()', 'Option "destroyMethodName" is deprecated and will be removed in 3.7.4. Use "binding.destroy" instead.');
+               Utils.logger.stack(this._moduleName + '::$constructor(): option "destroyMethodName" is deprecated and will be removed in 3.7.4. Use "binding.destroy" instead.', 2);
                this._options.binding.destroy = cfg.destroyMethodName;
             }
             if ('queryMethodName' in cfg) {
-               $ws.single.ioc.resolve('ILogger').info(this._moduleName + '::$constructor()', 'Option "queryMethodName" is deprecated and will be removed in 3.7.4. Use "binding.query" instead.');
+               Utils.logger.stack(this._moduleName + '::$constructor(): option "queryMethodName" is deprecated and will be removed in 3.7.4. Use "binding.query" instead.', 2);
                this._options.binding.query = cfg.queryMethodName;
             }
             if ('copyMethodName' in cfg) {
-               $ws.single.ioc.resolve('ILogger').info(this._moduleName + '::$constructor()', 'Option "copyMethodName" is deprecated and will be removed in 3.7.4. Use "binding.copy" instead.');
+               Utils.logger.stack(this._moduleName + '::$constructor(): option "copyMethodName" is deprecated and will be removed in 3.7.4. Use "binding.copy" instead.', 2);
                this._options.binding.copy = cfg.copyMethodName;
             }
             if ('mergeMethodName' in cfg) {
-               $ws.single.ioc.resolve('ILogger').info(this._moduleName + '::$constructor()', 'Option "mergeMethodName" is deprecated and will be removed in 3.7.4. Use "binding.merge" instead.');
+               Utils.logger.stack(this._moduleName + '::$constructor(): option "mergeMethodName" is deprecated and will be removed in 3.7.4. Use "binding.merge" instead.', 2);
                this._options.binding.merge = cfg.mergeMethodName;
             }
          }

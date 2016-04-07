@@ -254,7 +254,7 @@ define('js!SBIS3.CONTROLS.DropdownList',
             DropdownList.superclass._dataLoadedCallback.apply(this, arguments);
             var item =  this._dataSet.at(0);
             if (item) {
-               this._defaultId = item.getKey();
+               this._defaultId = item.getId();
                /* Пока закомментирую, не уверена, что DataSet  сможет правильно  работать с more и так же не уверена, должно ли оно вообще зависеть от more
                if (this._buttonHasMore) {
                   this._buttonHasMore[this._hasNextPage(this._dataSet.getMetaData().more, 0) ? 'show' : 'hide']();
@@ -301,7 +301,7 @@ define('js!SBIS3.CONTROLS.DropdownList',
             /*implemented from DSMixin*/
             var addClass = 'controls-DropdownList__item';
             DropdownList.superclass._addItemAttributes.apply(this, arguments);
-            if (item.getKey() == this.getDefaultId()) {
+            if (item.getId() == this.getDefaultId()) {
                container.addClass('controls-ListView__defaultItem');
             }
 

@@ -7,8 +7,9 @@ define('js!SBIS3.CONTROLS.Data.Projection.Collection', [
    'js!SBIS3.CONTROLS.Data.Projection.CollectionEnumerator',
    'js!SBIS3.CONTROLS.Data.Projection.Projection',
    'js!SBIS3.CONTROLS.Data.Di',
+   'js!SBIS3.CONTROLS.Data.Utils',
    'js!SBIS3.CONTROLS.Data.Projection.CollectionItem'
-], function (IEnumerable, IList, ICollectionProjection, IBindCollectionProjection, CollectionProjectionEnumerator, Projection, Di) {
+], function (IEnumerable, IList, ICollectionProjection, IBindCollectionProjection, CollectionProjectionEnumerator, Projection, Di, Utils) {
    'use strict';
 
    /**
@@ -958,7 +959,7 @@ define('js!SBIS3.CONTROLS.Data.Projection.Collection', [
                replaced.push(item.getContents());
                item.setContents(items[i], true);
             } else {
-               $ws.single.ioc.resolve('ILogger').log('SBIS3.CONTROLS.Data.Projection.Collection::_replaceItems', 'Item for replace is not exists');
+               Utils.logger.log('SBIS3.CONTROLS.Data.Projection.Collection::_replaceItems(): item for replace is not exists');
             }
          }
          return replaced;
