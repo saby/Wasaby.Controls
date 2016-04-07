@@ -1,5 +1,6 @@
 {
   "Некорректно заполнены обязательные для заполнения поля!": "Incorrect values in required fields",
   "Сохранить изменения?": "Save changes?",
-  "Чтобы продолжить редактирование, нажмите 'Отмена'." : "For continue editing tap 'Cancel'."
+  "Чтобы продолжить редактирование, нажмите 'Отмена'." : "For continue editing tap 'Cancel'.",
+  "Загрузка" : "Loading"
 }

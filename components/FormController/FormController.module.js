@@ -139,6 +139,8 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
             event.setResult(false);
             this._saveRecord();
          }.bind(this));
+
+         this._panel.subscribe('onAfterShow', this._updateIndicatorZIndex.bind(this));
       },
       /**
        * Сохраняет редактируемую или создаваемую запись
@@ -233,7 +235,7 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
       /**
        * Показывает индикатор загрузки
        */
-      _showLoadingIndicator: $ws.helpers.forAliveOnly(function(){
+      _showLoadingIndicator: $ws.helpers.forAliveOnly(function(message){
          var self = this;
          this._showedLoading = true;
          if(this._loadingIndicator && !this._loadingIndicator.isDestroyed()){
@@ -247,7 +249,7 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
                parent: this._panel,
                showInWindow: true,
                modal: true,
-               message: this._options.indicatorSavingMessage,
+               message: message !== undefined ? message : this._options.indicatorSavingMessage,
                name: this.getId() + '-LoadingIndicator'
             });
          }
@@ -261,6 +263,12 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
             this._loadingIndicator.hide();
          }
       }),
+      _updateIndicatorZIndex: function(){
+         var indicatorWindow = this._loadingIndicator && this._loadingIndicator.getWindow();
+         if (indicatorWindow && this._loadingIndicator.isVisible()){
+            indicatorWindow._updateZIndex();
+         }
+      },
       _processError: function(e) {
          var
             eResult = this._notify('onFail', e),
@@ -313,7 +321,7 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
       _runQuery: function() {
          var self = this,
             hdl;
-         this._showLoadingIndicator();
+         this._showLoadingIndicator(rk('Загрузка'));
          if (this._options.key) {
             hdl = this._readRecord(this._options.key);
          }
