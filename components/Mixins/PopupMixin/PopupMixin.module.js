@@ -149,7 +149,7 @@ define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManag
 
          this._resetToDefault();
       },
-      
+
       //Подписка на изменение состояния таргета
       _subscribeTargetMove: function(){
          this._targetChanges = $ws.helpers.trackElement(this._options.target, true);
@@ -179,7 +179,7 @@ define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManag
       _onTargetChangeVisibility: function(event, visible){
          if (!visible){
            this.hide();
-         }   
+         }
       },
 
       _checkFixed: function(element){
@@ -216,8 +216,8 @@ define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManag
                   maxHeight = parseFloat(this._container.css('max-height'), 10),
                   border = (this._container.outerWidth() - this._container.innerWidth());
 
-               this._resetToDefault();   
-               
+               this._resetToDefault();
+
                this._containerSizes.originWidth = scrollWidth > maxWidth ? maxWidth : scrollWidth + border ;
                this._containerSizes.originHeight = scrollHeight > maxHeight ? maxHeight : scrollHeight + border;
             }
@@ -403,16 +403,6 @@ define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManag
                }
             }
          }
-      },
-
-      _onResizeHandler: function(){
-         this._checkFixed(this._options.target || $('body'));
-         if (this.isVisible() && !this._fixed) {
-            this.recalcPosition(false);
-         } else {
-            this._initSizes();
-         }
-         this._checkTargetPosition();
       },
 
       _checkTargetPosition: function () {
@@ -793,6 +783,16 @@ define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManag
             if (this._options.isModal) {
                this._setModal(false);
             }
+         },
+
+         _onResizeHandler: function(){
+            this._checkFixed(this._options.target || $('body'));
+            if (this.isVisible() && !this._fixed) {
+               this.recalcPosition(false);
+            } else {
+               this._initSizes();
+            }
+            this._checkTargetPosition();
          }
       },
 
