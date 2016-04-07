@@ -2,8 +2,9 @@
 define('js!SBIS3.CONTROLS.Data.Adapter.JsonRecord', [
    'js!SBIS3.CONTROLS.Data.Adapter.IRecord',
    'js!SBIS3.CONTROLS.Data.Adapter.GenericFormatMixin',
-   'js!SBIS3.CONTROLS.Data.Adapter.JsonFormatMixin'
-], function (IRecord, GenericFormatMixin, JsonFormatMixin) {
+   'js!SBIS3.CONTROLS.Data.Adapter.JsonFormatMixin',
+   'js!SBIS3.CONTROLS.Data.Utils'
+], function (IRecord, GenericFormatMixin, JsonFormatMixin, Utils) {
    'use strict';
 
    /**
@@ -80,7 +81,7 @@ define('js!SBIS3.CONTROLS.Data.Adapter.JsonRecord', [
       },
 
       getInfo: function() {
-         $ws.single.ioc.resolve('ILogger').info(this._moduleName + '::getInfo()', 'Method is deprecated and will be removed in 3.7.4. Use \'getFormat\' instead.');
+         Utils.logger.stack(this._moduleName + '::getInfo(): method is deprecated and will be removed in 3.7.4. Use \'getFormat\' instead.');
          return {};
       },
 

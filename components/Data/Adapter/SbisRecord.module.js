@@ -2,8 +2,9 @@
 define('js!SBIS3.CONTROLS.Data.Adapter.SbisRecord', [
    'js!SBIS3.CONTROLS.Data.Adapter.IRecord',
    'js!SBIS3.CONTROLS.Data.Adapter.SbisFormatMixin',
-   'js!SBIS3.CONTROLS.Data.Adapter.FieldType'
-], function (IRecord, SbisFormatMixin, FIELD_TYPE) {
+   'js!SBIS3.CONTROLS.Data.Adapter.FieldType',
+   'js!SBIS3.CONTROLS.Data.Utils'
+], function (IRecord, SbisFormatMixin, FIELD_TYPE, Utils) {
    'use strict';
 
    /**
@@ -53,7 +54,7 @@ define('js!SBIS3.CONTROLS.Data.Adapter.SbisRecord', [
       },
 
       getInfo: function (name) {
-         $ws.single.ioc.resolve('ILogger').info(this._moduleName + '::getInfo()', 'Method is deprecated and will be removed in 3.7.4. Use \'getFormat\' instead.');
+         Utils.logger.stack(this._moduleName + '::getInfo(): method is deprecated and will be removed in 3.7.4. Use \'getFormat\' instead.');
          var index = this._getFieldIndex(name),
             meta = index >= 0 ? this._data.s[index] : undefined,
             fieldData = {meta: undefined, type: undefined};

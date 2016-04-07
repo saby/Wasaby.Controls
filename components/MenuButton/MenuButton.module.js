@@ -123,7 +123,7 @@ define('js!SBIS3.CONTROLS.MenuButton', ['js!SBIS3.CONTROLS.Button', 'js!SBIS3.CO
                this._toggleTrackHeader(true);
             } else {
                if (this._dataSet.getCount() == 1) {
-                  var id = this._dataSet.at(0).getKey();
+                  var id = this._dataSet.at(0).getId();
                   this._notify('onMenuItemActivate', id);
                }
             }

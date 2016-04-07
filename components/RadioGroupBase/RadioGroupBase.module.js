@@ -32,7 +32,7 @@ define('js!SBIS3.CONTROLS.RadioGroupBase', ['js!SBIS3.CONTROLS.ButtonGroupBaseDS
             item = this.getItems().at(index),
             key;
          if (item) {
-            key = item.getKey();
+            key = item.getId();
             var controls = this.getItemsInstances();
             for (var i in controls) {
                if (controls.hasOwnProperty(i)) {

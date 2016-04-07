@@ -2,8 +2,9 @@
 define('js!SBIS3.CONTROLS.Data.Factory', [
    'js!SBIS3.CONTROLS.Data.Di',
    'js!SBIS3.CONTROLS.Data.Types.Flags',
-   'js!SBIS3.CONTROLS.Data.Types.Enum'
-], function (Di, Flags, Enum) {
+   'js!SBIS3.CONTROLS.Data.Types.Enum',
+   'js!SBIS3.CONTROLS.Data.Utils'
+], function (Di, Flags, Enum, Utils) {
    'use strict';
 
    /**
@@ -276,7 +277,7 @@ define('js!SBIS3.CONTROLS.Data.Factory', [
             return data.toJSON();
          }
          if (data instanceof Object) {
-            $ws.single.ioc.resolve('ILogger').info('SBIS3.CONTROLS.Data.Factory::_serializeRecord()', 'Serialization of plain Object is no more available. Use SBIS3.CONTROLS.Data.Record instead.');
+            Utils.logger.info('SBIS3.CONTROLS.Data.Factory::_serializeRecord(): serialization of plain Object is no more available. Use SBIS3.CONTROLS.Data.Record instead.');
          }
          throw new TypeError('SBIS3.CONTROLS.Data.Factory::_serializeRecord(): data should be an instance of SBIS3.CONTROLS.Data.Record');
       },
