@@ -113,15 +113,20 @@ define('js!SBIS3.CONTROLS.Data.Utils', [], function () {
          stack: function (message, offset, level) {
             offset = offset || 0;
             level = level || 'info';
-            var at = 3 + offset,//текст ошибки -> текщий контекст -> вызвавший logStack -> вызвавший ошибку
+            var at = 2 + offset,//текщий контекст -> вызвавший logStack -> вызвавший ошибку
                script = '',
                hash = '';
 
             try {
                throw new Error(message);
             } catch (e) {
-               if (e.hasOwnProperty('stack')) {
-                  script = (e.stack + '').split('\n').splice(at, 1).join('').trim();
+               if ('stack' in e) {
+                  var stack = (e.stack + '').split('\n'),
+                     reg = /:[0-9]+:[0-9]+/;
+                  if (!reg.test(stack[0])) {
+                     at++;//первой строкой может идти текст ошибки
+                  }
+                  script = stack.splice(at, 1).join('').trim();
                   hash = message + script;
                   this._points = this._points || {};
                   if (this._points.hasOwnProperty(hash)) {
