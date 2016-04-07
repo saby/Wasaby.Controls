@@ -50,6 +50,9 @@ define('js!SBIS3.CONTROLS.MenuButtonMixin', ['js!SBIS3.CONTROLS.ContextMenu'], f
             }
             for (var i = 0; i < items.length; i++){
                //отступы нужны только в основном меню, но не в сабменю
+               if (!items[i].has('icon')){
+                  items[i].addField({name: 'icon', type: 'string'});
+               }
                if (!items[i].get('icon') && !items[i].get(this._options.hierField)) { items[i].set('icon', icon);}
             }
          }
@@ -145,7 +148,7 @@ define('js!SBIS3.CONTROLS.MenuButtonMixin', ['js!SBIS3.CONTROLS.ContextMenu'], f
       },
       after : {
          redraw: function(){
-            this._checkItemsIcons(this.getItems().toArray());
+            this.getItems() && this._checkItemsIcons(this.getItems().toArray());
          },
 
          _initializePicker : function() {
