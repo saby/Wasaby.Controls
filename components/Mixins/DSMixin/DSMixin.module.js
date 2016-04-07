@@ -1018,7 +1018,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
       },
 
       _getElementByModel: function(item) {
-         return this._getItemsContainer().find('.js-controls-ListView__item[data-id="' + item.getKey() + '"]');
+         return this._getItemsContainer().find('.js-controls-ListView__item[data-id="' + item.getId() + '"]');
       },
 
       _drawItem: function (item, at, last) {
@@ -1132,7 +1132,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
       },
 
       _addItemAttributes: function (container, item) {
-         var strKey = item.getKey();
+         var strKey = item.getId();
          if (strKey == null) {
             strKey += '';
          }
@@ -1415,7 +1415,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
       },
 
       _getItemContainer: function(parent, item) {
-         return parent.find('>[data-id="' + item.getKey() + '"]');
+         return parent.find('>[data-id="' + item.getId() + '"]');
       }
    };
 

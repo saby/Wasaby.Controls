@@ -1,8 +1,9 @@
 /* global define, $ws */
 define('js!SBIS3.CONTROLS.Data.Source.Remote', [
    'js!SBIS3.CONTROLS.Data.Source.Base',
-   'js!SBIS3.CONTROLS.Data.Di'
-], function (Base, Di) {
+   'js!SBIS3.CONTROLS.Data.Di',
+   'js!SBIS3.CONTROLS.Data.Utils'
+], function (Base, Di, Utils) {
    'use strict';
 
    /**
@@ -81,7 +82,7 @@ define('js!SBIS3.CONTROLS.Data.Source.Remote', [
          cfg = cfg || {};
          //Deprecated
          if ('service' in cfg && 'resource' in cfg && !('endpoint' in cfg)) {
-            $ws.single.ioc.resolve('ILogger').info(this._moduleName + '::$constructor()', 'Option "service" is deprecated and will be removed in 3.7.4. Use "endpoint.address" instead.');
+            Utils.logger.stack(this._moduleName + '::$constructor(): option "service" is deprecated and will be removed in 3.7.4. Use "endpoint.address" instead.', 1);
             this._options.endpoint.address = cfg.service;
          }
       },
@@ -164,7 +165,7 @@ define('js!SBIS3.CONTROLS.Data.Source.Remote', [
        * @deprecated Метод будет удален в 3.7.4, используйте getEndpoint().address
        */
       getService: function () {
-         $ws.single.ioc.resolve('ILogger').info(this._moduleName + '::getService()', 'Method is deprecated and will be removed in 3.7.4. Use "getEndpoint().address" instead.');
+         Utils.logger.stack(this._moduleName + '::getService(): method is deprecated and will be removed in 3.7.4. Use "getEndpoint().address" instead.');
          return this._options.endpoint.address || '';
       },
 

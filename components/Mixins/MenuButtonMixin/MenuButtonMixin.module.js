@@ -129,7 +129,7 @@ define('js!SBIS3.CONTROLS.MenuButtonMixin', ['js!SBIS3.CONTROLS.ContextMenu'], f
                this.togglePicker();
             } else {
                if (this._items.getCount() == 1) {
-                  var id = this._items.at(0).getKey();
+                  var id = this._items.at(0).getId();
                   this._notify('onMenuItemActivate', id, event);
                }
             }

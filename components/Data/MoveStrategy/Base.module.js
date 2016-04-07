@@ -1,7 +1,8 @@
 /* global define, $ws  */
 define('js!SBIS3.CONTROLS.Data.MoveStrategy.Base', [
-   'js!SBIS3.CONTROLS.Data.MoveStrategy.IMoveStrategy'
-], function (IMoveStrategy) {
+   'js!SBIS3.CONTROLS.Data.MoveStrategy.IMoveStrategy',
+   'js!SBIS3.CONTROLS.Data.Utils'
+], function (IMoveStrategy, Utils) {
    'use strict';
    /**
     * Базовый класс для стратегий перемещения
@@ -12,6 +13,7 @@ define('js!SBIS3.CONTROLS.Data.MoveStrategy.Base', [
     */
 
    return $ws.proto.Abstract.extend([IMoveStrategy],/** @lends SBIS3.CONTROLS.Data.MoveStrategy.Base.prototype */{
+      _moduleName: 'SBIS3.CONTROLS.Data.MoveStrategy.Base',
       $protected: {
          _options:{
             /**
@@ -44,7 +46,7 @@ define('js!SBIS3.CONTROLS.Data.MoveStrategy.Base', [
          cfg = cfg || {};
          //Deprecated
          if ('resource' in cfg && !('contract' in cfg)) {
-            $ws.single.ioc.resolve('ILogger').info(this._moduleName + '::$constructor()', 'Option "resource" is deprecated and will be removed in 3.7.4. Use "contract" instead.');
+            Utils.logger.stack(this._moduleName + '::$constructor(): option "resource" is deprecated and will be removed in 3.7.4. Use "contract" instead.', 2);
             this._options.contract = cfg.resource;
          }
       },

@@ -1,8 +1,9 @@
 /* global define, $ws */
 define('js!SBIS3.CONTROLS.Data.Adapter.JsonFormatMixin', [
    'js!SBIS3.CONTROLS.Data.Format.FieldsFactory',
-   'js!SBIS3.CONTROLS.Data.Format.UniversalField'
-], function (FieldsFactory, UniversalField) {
+   'js!SBIS3.CONTROLS.Data.Format.UniversalField',
+   'js!SBIS3.CONTROLS.Data.Utils'
+], function (FieldsFactory, UniversalField, Utils) {
    'use strict';
 
    /**
@@ -60,7 +61,7 @@ define('js!SBIS3.CONTROLS.Data.Adapter.JsonFormatMixin', [
             throw new Error(this._moduleName + '::addField(): field "' + name + '" already exists');
          }
          if (at >= 0) {
-            $ws.single.ioc.resolve('ILogger').info(this._moduleName + '::addField()', 'Argument "at" is not supported and will be ignored.');
+            Utils.logger.stack(this._moduleName + '::addField(): argument "at" is not supported and will be ignored.');
          }
          this._format[name] = format;
       },

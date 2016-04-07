@@ -102,7 +102,7 @@ define('js!SBIS3.CONTROLS.Utils.DataSetToXMLSerializer', [
 
          }
          else if (object && (typeof object.getRaw === 'function') && object.getRaw()){
-            var key = object.getKey();
+            var key = object.getId();
             if(key === null){
                key = 'null';
             }
