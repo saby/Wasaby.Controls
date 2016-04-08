@@ -1,15 +1,15 @@
-define('js!SBIS3.CONTROLS.Utils.HtmlDecorators/LadderDecorator', [
-   'js!SBIS3.CONTROLS.Utils.HtmlDecorators/AbstractDecorator'
+define('js!SBIS3.CONTROLS.Utils.HtmlDecorator.LadderDecorator', [
+   'js!SBIS3.CONTROLS.Utils.HtmlDecorators.AbstractDecorator'
 ], function (AbstractDecorator) {
    'use strict';
 
    /**
     * Декоратор текста, обеспечивающий построение лесенки
-    * @class SBIS3.CONTROLS.Utils.HtmlDecorators/LadderDecorator
+    * @class SBIS3.CONTROLS.Utils.HtmlDecorator.LadderDecorator
     * @public
     * @author Крайнов Дмитрий Олегович
     */
-   var LadderDecorator = AbstractDecorator.extend(/** @lends SBIS3.CONTROLS.Utils.HtmlDecorators/LadderDecorator.prototype */{
+   var LadderDecorator = AbstractDecorator.extend(/** @lends SBIS3.CONTROLS.Utils.HtmlDecorator.LadderDecorator.prototype */{
       $protected: {
          _name: 'ladder',
          _options: {
