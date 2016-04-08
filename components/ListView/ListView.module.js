@@ -12,6 +12,7 @@ define('js!SBIS3.CONTROLS.ListView',
       'js!SBIS3.CONTROLS.DataBindMixin',
       'js!SBIS3.CONTROLS.DecorableMixin',
       'js!SBIS3.CONTROLS.DragNDropMixin',
+      'js!SBIS3.CONTROLS.FormWidgetMixin',
       'js!SBIS3.CONTROLS.ItemsToolbar',
       'js!SBIS3.CORE.MarkupTransformer',
       'html!SBIS3.CONTROLS.ListView',
@@ -29,7 +30,7 @@ define('js!SBIS3.CONTROLS.ListView',
       'browser!js!SBIS3.CONTROLS.ListView/resources/SwipeHandlers'
    ],
    function (CompoundControl, CompoundActiveFixMixin, DSMixin, MultiSelectable,
-             Selectable, DataBindMixin, DecorableMixin, DragNDropMixin, ItemsToolbar, MarkupTransformer, dotTplFn,
+             Selectable, DataBindMixin, DecorableMixin, DragNDropMixin, FormWidgetMixin, ItemsToolbar, MarkupTransformer, dotTplFn,
              TemplateUtil, CommonHandlers, MoveHandlers, Pager, EditInPlaceHoverController, EditInPlaceClickController,
              Link, ScrollWatcher, rk,  groupByTpl, emptyDataTpl) {
 
@@ -62,7 +63,7 @@ define('js!SBIS3.CONTROLS.ListView',
        */
 
       /*TODO CommonHandlers MoveHandlers тут в наследовании не нужны*/
-      var ListView = CompoundControl.extend([CompoundActiveFixMixin, DSMixin, MultiSelectable, Selectable, DataBindMixin, DecorableMixin, DragNDropMixin, CommonHandlers, MoveHandlers], /** @lends SBIS3.CONTROLS.ListView.prototype */ {
+      var ListView = CompoundControl.extend([CompoundActiveFixMixin, DSMixin, FormWidgetMixin, MultiSelectable, Selectable, DataBindMixin, DecorableMixin, DragNDropMixin, CommonHandlers, MoveHandlers], /** @lends SBIS3.CONTROLS.ListView.prototype */ {
          _dotTplFn: dotTplFn,
          /**
           * @event onChangeHoveredItem При переводе курсора мыши на другую запись
@@ -228,25 +229,33 @@ define('js!SBIS3.CONTROLS.ListView',
             _addResultsMethod: undefined,
             _options: {
                /**
-                * @faq Почему нет флажков при включенной опции {@link SBIS3.CONTROLS.ListView#multiselect multiselect}?
-                * Для отрисовки флажков необходимо в шаблоне отображания элемента прописать их место:
+                * @faq Почему нет флажков в режиме множественного выбора значений (активация режима производится опцией {@link SBIS3.CONTROLS.ListView#multiselect multiselect})?
+                * Для отрисовки флажков необходимо в шаблоне отображения элемента коллекции обозначить их место.
+                * Это делают с помощью CSS-класса "js-controls-ListView__itemCheckBox".
+                * В следующем примере место отображения флажков обозначено тегом span:
                 * <pre>
-                *     <div class="listViewItem" style="height: 30px;">\
-                *        <span class="controls-ListView__itemCheckBox"></span>\
-                *        {{=it.item.get("title")}}\
+                *     <div class="listViewItem" style="height: 30px;">
+                *        <span class="js-controls-ListView__itemCheckBox"></span>
+                *        {{=it.item.get("title")}}
                 *     </div>
                 * </pre>
                 * @bind SBIS3.CONTROLS.ListView#itemTemplate
                 * @bind SBIS3.CONTROLS.ListView#multiselect
                 */
                /**
-                * @cfg {String} Шаблон отображения каждого элемента коллекции
+                * @cfg {String} Шаблон отображения каждого элемента коллекции.
                 * @remark
                 * !Важно: опция обязательна к заполнению!
+                * Шаблон может быть создан в отдельном XHTML-файле, когда вёрстка шаблона большая или требуется использовать его в разных компонентах.
+                * Чтобы использовать такой шаблон, он должен быть сначала подключен в массив зависимостей компонента, и после на него можно сослаться из опции.
+                *
+                * Для доступа к полям записи в шаблоне подразумевается использование конструкций шаблонизатора.
+                * Подробнее о шаблонизаторе вы можете прочитать в разделе {@link https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/core/component/xhtml/template/ Шаблонизация верстки компонента}.
                 * @example
+                * Далее приведён шаблон, который выводит в пользовательском HTML-контейнере значение поля title.
                 * <pre>
-                *     <div class="listViewItem" style="height: 30px;">\
-                *        {{=it.item.get("title")}}\
+                *     <div class="listViewItem" style="height: 30px;">
+                *        {{=it.item.get("title")}}
                 *     </div>
                 * </pre>
                 * @see multiselect
@@ -377,21 +386,30 @@ define('js!SBIS3.CONTROLS.ListView',
                 */
                showPaging: false,
                /**
-                * @cfg {String} Режим редактирования по месту
-                * @variant "" Редактирование по месту отлючено
-                * @variant click Отображение редактирования по клику
-                * @variant hover Отображение редактирования по наведению мыши
-                * @variant autoadd Включение режима автоматического добавления
-                * @variant toolbar Отображение панели инструментов при входе в режим редактирования записи
+                * @cfg {String} Устанавливает режим редактирования по месту.
                 * @remark
-                * Режим автоматического добавления позволяет при завершении редактирования последнего элемента автоматически создавать новый.
-                * Режимы можно группировать и таким образом получать совмещенное поведение, например:
-                *     <opt name="editMode">click|toolbar</opt>
-                * задает редактирование по клику и отображает панель инструментов при входе в режим редактирования записи.
-                * @example
+                * Возможные значения:
+                * <ul>
+                *    <li>"" - редактирование по месту отключено;</li>
+                *    <li>click - режим редактирования по клику;</li>
+                *    <li>hover - режим редактирования по наведению курсора;</li>
+                *    <li>autoadd - режим автоматического добавления новых элементов коллекции;
+                *    Этот режим позволяет при завершении редактирования последнего элемента автоматически создавать новый.</li>
+                *    <li>toolbar - отображение панели инструментов при входе в режим редактирования записи.</li>
+                * </ul>
+                *
+                * Режимы редактирования можно группировать и получать совмещенное поведение.
+                * Например, задать редактирование по клику и отобразить панель инструментов при входе в режим редактирования записи можно такой конфигурацией:
                 * <pre>
-                *     <opt name="editMode">click</opt>
+                *    <option name="editMode">click|toolbar</option>
                 * </pre>
+                * @example
+                * Установлен режим редактирования по клику на элемент коллекции.
+                * <pre>
+                *     <option name="editMode">click</option>
+                * </pre>
+                * @see getEditMode
+                * @see setEditMode
                 */
                editMode: '',
                /**
@@ -432,6 +450,7 @@ define('js!SBIS3.CONTROLS.ListView',
             //Флаг обозначает необходимость компенсировать подгрузку по скроллу вверх, ее нельзя делать безусловно, так как при подгрузке вверх могут добавлятся элементы и вниз тоже
             _needSrollTopCompensation: false,
             _scrollWatcher : undefined,
+            _searchParamName: undefined, //todo Проверка на "searchParamName" - костыль. Убрать, когда будет адекватная перерисовка записей (до 150 версии, апрель 2016)
             _updateByReload: false //todo: Убрать в 150, когда будет правильный рендер изменившихся данных. Флаг, означающий то, что обновление происходит из-за перезагрузки данных.
          },
 
@@ -802,7 +821,7 @@ define('js!SBIS3.CONTROLS.ListView',
             return $('.controls-ListView__itemsContainer', this._container.get(0)).first();
          },
          _getItemContainer: function(parent, item) {
-            return parent.find('>[data-id="' + item.getKey() + '"]:not(".controls-editInPlace")');
+            return parent.find('>[data-id="' + item.getId() + '"]:not(".controls-editInPlace")');
          },
          _addItemAttributes: function(container) {
             container.addClass('js-controls-ListView__item');
@@ -812,19 +831,22 @@ define('js!SBIS3.CONTROLS.ListView',
          /* +++++++++++++++++++++++++++ */
 
          _elemClickHandler: function (id, data, target) {
-            var $target = $(target);
+            var $target = $(target),
+                onItemClickResult;
 
-            this.setSelectedKey(id);
             if (this._options.multiselect) {
                if ($target.hasClass('js-controls-ListView__itemCheckBox')) {
                   this._onCheckBoxClick($target);
                }
                else {
-                  this._notifyOnItemClick(id, data, target);
+                  onItemClickResult = this._notifyOnItemClick(id, data, target);
                }
             }
             else {
-               this._notifyOnItemClick(id, data, target);
+               onItemClickResult = this._notifyOnItemClick(id, data, target);
+            }
+            if (onItemClickResult !== false){
+               this.setSelectedKey(id);
             }
          },
          _onCheckBoxClick: function(target) {
@@ -848,6 +870,7 @@ define('js!SBIS3.CONTROLS.ListView',
                this._elemClickHandlerInternal(data, id, target);
                elClickHandler && elClickHandler.call(this, id, data, target);
             }
+            return res;
          },
          _elemClickHandlerInternal: function (data, id, target) {
             this._activateItem(id);
@@ -860,13 +883,8 @@ define('js!SBIS3.CONTROLS.ListView',
          },
 
          _drawSelectedItem: function (id, index) {
-            var selId;
-            if (this._itemsProjection) {
-               var selItem = this._itemsProjection.at(index);
-               if (selItem) {
-                  selId = selItem.getContents().getId();
-               }
-            }
+            //рисуем от ключа
+            var selId = id;
             $(".controls-ListView__item", this._container).removeClass('controls-ListView__item__selected');
             $(".controls-ListView__item[data-id='" + selId + "']", this._container).addClass('controls-ListView__item__selected');
          },
@@ -937,13 +955,19 @@ define('js!SBIS3.CONTROLS.ListView',
                var args = arguments;
                if (this._hasEditInPlace()) {
                   this._getEditInPlace().endEdit(true).addCallback(function() {
-                     handler.apply(this, args)
+                     return handler.apply(this, args)
                   }.bind(this));
                } else {
-                  handler.apply(this, args)
+                  return handler.apply(this, args)
                }
             }
          },
+         /**
+          * Устанавливает режим редактирования по месту.
+          * @param {String} editMode Режим редактирования по месту. Подробнее о возможных значениях вы можете прочитать в описании к опции {@link editMode}.
+          * @see editMode
+          * @see getEditMode
+          */
          setEditMode: function(editMode) {
             if (editMode ==='' || editMode !== this._options.editMode) {
                if (this._isHoverEditMode()) {
@@ -960,7 +984,12 @@ define('js!SBIS3.CONTROLS.ListView',
                }
             }
          },
-
+         /**
+          * Возвращает признак, по которому можно определить установленный режим редактирования по месту.
+          * @returns {String} Режим редактирования по месту. Подробнее о возможных значениях вы можете прочитать в описании к опции {@link editMode}.
+          * @see editMode
+          * @see setEditMode
+          */
          getEditMode: function() {
             return this._options.editMode;
          },
@@ -999,7 +1028,7 @@ define('js!SBIS3.CONTROLS.ListView',
 
          redrawItem: function(item) {
             ListView.superclass.redrawItem.apply(this, arguments);
-            if (this._editingItem.model && this._editingItem.model.getKey() === item.getKey()) {
+            if (this._editingItem.model && this._editingItem.model.getId() === item.getId()) {
                this._editingItem.target = this._getElementByModel(item);
             }
             //TODO: Временное решение для .100.  В .30 состояния выбранности элемента должны добавляться в шаблоне.
@@ -1079,7 +1108,7 @@ define('js!SBIS3.CONTROLS.ListView',
                            this._showItemsToolbar(this._getElementData(this._editingItem.target));
                            this._getItemsToolbar().lockToolbar();
                         }
-                        this.setSelectedKey(model.getKey());
+                        this.setSelectedKey(model.getId());
                         event.setResult(this._notify('onAfterBeginEdit', model));
                      }.bind(this),
                      onBeginAdd: function(event, options) {
@@ -1105,7 +1134,7 @@ define('js!SBIS3.CONTROLS.ListView',
          _getElementByModel: function(item) {
             // Даже не думать удалять ":not(...)". Это связано с тем, что при редактировании по месту может возникнуть задача перерисовать строку
             // DataGridView. В виду одинакового атрибута "data-id", это единственный способ отличить строку DataGridView от строки EditInPlace.
-            return this._getItemsContainer().find('.js-controls-ListView__item[data-id="' + item.getKey() + '"]:not(".controls-editInPlace")');
+            return this._getItemsContainer().find('.js-controls-ListView__item[data-id="' + item.getId() + '"]:not(".controls-editInPlace")');
          },
 
          //********************************//
@@ -1380,12 +1409,14 @@ define('js!SBIS3.CONTROLS.ListView',
                      if (self._options.infiniteScroll === 'up') {
                         self._containerScrollHeight = self._scrollWatcher.getScrollHeight();
                         self._needSrollTopCompensation = true;
+                        //добавляем данные в начало или в конец в зависимости от того мы скроллим вверх или вниз
+                        self._items.prepend(records.reverse());
+                        records.reverse();
+                     } else {
+                        self._items.append(records);
                      }
-                     //TODO Провести тесты с unshift и Array.insert
-                     //сортируем пришедшие данные в обратном порядке
-                     self._items[self._options.infiniteScroll === 'up' ? 'prepend' : 'append'](records.reverse());
-                     //Но рисовать нуджно все равно по порядку сверху, поэтому перевернем обратно
-                     self._drawItems(records.reverse());
+
+                     self._drawItems(records);
                      //TODO Пытались оставить для совместимости со старыми данными, но вызывает onCollectionItemChange!!!
                      //self._dataSet.merge(dataSet, {remove: false});
                      self._dataLoadedCallback();
@@ -1412,7 +1443,7 @@ define('js!SBIS3.CONTROLS.ListView',
              * Если же высота фиксированная, то подгружать данные в этой функции будем пока высота контейнера(ту, что фиксированно задали) не станет меньше высоты таблицы(table),
              * т.е. пока не появится скролл внутри контейнера
              */
-            if (this._isLoadBeforeScrollAppears && !this._scrollWatcher.hasScroll(this.getContainer())){
+            if (this._scrollWatcher && this._isLoadBeforeScrollAppears && !this._scrollWatcher.hasScroll(this.getContainer())){
                this._nextLoad();
             } else {
                this._isLoadBeforeScrollAppears = false;
@@ -1571,6 +1602,7 @@ define('js!SBIS3.CONTROLS.ListView',
          _toggleEmptyData: function(show) {
             if(this._emptyData) {
                this._emptyData.toggleClass('ws-hidden', !show);
+               this._thead.toggleClass('ws-hidden', show);
             }
          },
          //------------------------Paging---------------------
@@ -1711,10 +1743,11 @@ define('js!SBIS3.CONTROLS.ListView',
             ListView.superclass.setDataSource.apply(this, arguments);
          },
          /**
-          * Выбирает элемент коллекции (модель/запись) по переданному идентификатору.
+          * Выбирает элемент коллекции по переданному идентификатору.
+          * @remark
           * На выбранный элемент устанавливается маркер (оранжевая вертикальная черта) и изменяется фон.
           * При выполнении команды происходит события {@link onItemActivate} и {@link onSelectedItemChange}.
-          * @param id Идентификатор элемента коллекции, который нужно выбрать.
+          * @param {Number} id Идентификатор элемента коллекции, который нужно выбрать.
           * @example
           * <pre>
           *    myListView.sendCommand('activateItem', myId);
@@ -1722,20 +1755,45 @@ define('js!SBIS3.CONTROLS.ListView',
           * @private
           * @command activateItem
           * @see sendCommand
+          * @see beginAdd
+          * @see cancelEdit
+          * @see commitEdit
           */
          _activateItem : function(id) {
             var
                item = this._dataSet.getRecordByKey(id);
             this._notify('onItemActivate', {id: id, item: item});
          },
+         /**
+          * @typedef {Object} BeginEditOptions В этом типе данных сейчас определена всего одна опция. В дальнейшем набор опций может быть расширен.
+          * @property {jQuery} initiator Элемент, по которому определяется позиция добавления нового элемента коллекции в иерархическом представлении данных.
+          * Как правило, таким элементом является кнопка, инициирующая добавление нового элемента. Такую кнопку помещают в футер (см. опцию SBIS3.CONTROLS.DSMixin#footerTpl) узла иерархии.
+          */
+         /**
+          * Добавляет новый элемента коллекции.
+          * @remark
+          * Команда применяется для создания нового элемента коллекции без использования диалога редактирования.
+          * Схожим функционалом обладает автоматическое добавление по месту представлений данных (см. {@link editMode}).
+          * @param {BeginEditOptions} [options] Инициатор создания нового элемента коллекции в иерархическом представлении данных.
+          * @param {SBIS3.CONTROLS.Data.Model} [model] Модель элемента коллекции, значения полей которой будут использованы при создании нового элемента.
+          * @returns {*|$ws.proto.Deferred} В случае ошибки, вернёт Deferred с текстом ошибки.
+          * @private
+          * @command beginAdd
+          * @see sendCommand
+          * @see activateItem
+          * @see beginEdit
+          * @see cancelEdit
+          * @see commitEdit
+          */
          _beginAdd: function(options, model) {
             return this.showEip(null, model, options);
          },
          /**
-          * Запускает редактирования по месту.
-          * Используется для запуска редактирования без клика пользователя по элементу коллекции.
+          * Запускает редактирование по месту.
+          * @remark
+          * Используется для активации редактирования по месту без клика пользователя по элементу коллекции.
           * При выполнении команды происходят события {@link onBeginEdit} и {@link onAfterBeginEdit}.
-          * @param record Модель(элемент коллекции), для которой требуется запустить редактирование по месту.
+          * @param {SBIS3.CONTROLS.Data.Model} record Элемент коллекции, для которого требуется активировать редактирование по месту.
           * @example
           * <pre>
           *    myListView.sendCommand('beginEdit', record);
@@ -1745,13 +1803,16 @@ define('js!SBIS3.CONTROLS.ListView',
           * @see sendCommand
           * @see cancelEdit
           * @see commitEdit
+          * @see beginAdd
+          * @see activateItem
           */
          _beginEdit: function(record) {
-            var target = this._getItemsContainer().find('.js-controls-ListView__item[data-id="' + record.getKey() + '"]:first');
+            var target = this._getItemsContainer().find('.js-controls-ListView__item[data-id="' + record.getId() + '"]:first');
             return this.showEip(target, record, { isEdit: true });
          },
          /**
-          * Завершает редактирования по месту без сохранения измений.
+          * Завершает редактирование по месту без сохранения изменений.
+          * @remark
           * При выполнении команды происходят события {@link onEndEdit} и {@link onAfterEndEdit}.
           * @example
           * <pre>
@@ -1762,12 +1823,15 @@ define('js!SBIS3.CONTROLS.ListView',
           * @see sendCommand
           * @see beginEdit
           * @see commitEdit
+          * @see beginAdd
+          * @see activateItem
           */
          _cancelEdit: function() {
             return this._getEditInPlace().endEdit();
          },
          /**
-          * Завершает редактирования по месту с сохранением измений.
+          * Завершает редактирование по месту с сохранением изменений.
+          * @remark
           * При выполнении команды происходят события {@link onEndEdit} и {@link onAfterEndEdit}.
           * @example
           * <pre>
@@ -1778,6 +1842,8 @@ define('js!SBIS3.CONTROLS.ListView',
           * @see sendCommand
           * @see beginEdit
           * @see cancelEdit
+          * @see beginAdd
+          * @see activateItem
           */
          _commitEdit: function() {
             return this._getEditInPlace().endEdit(true);

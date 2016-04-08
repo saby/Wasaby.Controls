@@ -84,7 +84,13 @@ define('js!SBIS3.CONTROLS.CompositeViewMixin', ['html!SBIS3.CONTROLS.CompositeVi
             }
          });
       },
-
+      /**
+       * Устанавливает режим отображения данных.
+       * @param {String} mode Режим отображения данных: table (таблица), list (список) и tile (плитка).
+       * Подробнее о каждом режиме отображения вы можете прочитать в описании к опции {@link viewMode}.
+       * @see viewMode
+       * @see getViewMode
+       */
       setViewMode: function(mode) {
          this._getItemsContainer().unbind('mousedown', this._dragStartHandler);
          this._options.viewMode = mode;
@@ -92,7 +98,13 @@ define('js!SBIS3.CONTROLS.CompositeViewMixin', ['html!SBIS3.CONTROLS.CompositeVi
          this._options.openedPath = [];
          this._drawViewMode(mode);
       },
-
+      /**
+       * Возвращает признак, по которому можно определить установленный режим отображения данных.
+       * @returns {String} Режим отображения данных: table (таблица), list (список) и tile (плитка).
+       * Подробнее о каждом режиме отображения вы можете прочитать в описании к опции {@link viewMode}.
+       * @see viewMode
+       * @see setViewMode
+       */
       getViewMode: function(){
          return this._options.viewMode;
       },

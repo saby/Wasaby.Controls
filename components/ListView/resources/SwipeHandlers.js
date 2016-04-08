@@ -2,8 +2,8 @@
 
    $.event.special.swipe = {
 
-      xTreshold: 50,
-      yTreshold: 15,
+      xTreshold: 40,
+      yTreshold: 25,
       scrollTreshold: 30,
       durTreshold: 600,
       eventInProgress: false,

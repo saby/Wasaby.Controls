@@ -12,6 +12,7 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
     * @extends $ws.proto.CompoundControl
     * @control
     * @public
+    * @author Крайнов Дмитрий Олегович
     */
    'use strict';
 
@@ -132,13 +133,15 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
          //чтобы не дергать getTopParent
          this._panel.subscribe('onBeforeClose', function(event){
             //Если попали сюда из метода _saveRecord, то this._saving = true и мы просто закрываем панель
-            if (this._saving || !this._options.record.isChanged()){
+            if (this._saving || !(this._options.record && this._options.record.isChanged())){
                this._saving = false;
                return;
             }
             event.setResult(false);
             this._saveRecord();
          }.bind(this));
+
+         this._panel.subscribe('onAfterShow', this._updateIndicatorZIndex.bind(this));
       },
       /**
        * Сохраняет редактируемую или создаваемую запись
@@ -233,7 +236,7 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
       /**
        * Показывает индикатор загрузки
        */
-      _showLoadingIndicator: $ws.helpers.forAliveOnly(function(){
+      _showLoadingIndicator: $ws.helpers.forAliveOnly(function(message){
          var self = this;
          this._showedLoading = true;
          if(this._loadingIndicator && !this._loadingIndicator.isDestroyed()){
@@ -247,7 +250,7 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
                parent: this._panel,
                showInWindow: true,
                modal: true,
-               message: this._options.indicatorSavingMessage,
+               message: message !== undefined ? message : this._options.indicatorSavingMessage,
                name: this.getId() + '-LoadingIndicator'
             });
          }
@@ -261,6 +264,12 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
             this._loadingIndicator.hide();
          }
       }),
+      _updateIndicatorZIndex: function(){
+         var indicatorWindow = this._loadingIndicator && this._loadingIndicator.getWindow();
+         if (indicatorWindow && this._loadingIndicator.isVisible()){
+            indicatorWindow._updateZIndex();
+         }
+      },
       _processError: function(e) {
          var
             eResult = this._notify('onFail', e),
@@ -306,14 +315,14 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
        * @see record
        */
       setRecord: function(record){
-         this._options.record = record;
+         this._options.record = this._panel._record = record;
          this._setContextRecord(record);
       },
 
       _runQuery: function() {
          var self = this,
             hdl;
-         this._showLoadingIndicator();
+         this._showLoadingIndicator(rk('Загрузка'));
          if (this._options.key) {
             hdl = this._readRecord(this._options.key);
          }
@@ -321,8 +330,7 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
             hdl = this._options.dataSource.create(this._options.initValues);
          }
          hdl.addCallback(function(record){
-            self._options.record = record;
-            self._setContextRecord(record);   
+            self.setRecord(record);
          });
          hdl.addBoth(function(r){
             self._hideLoadingIndicator();

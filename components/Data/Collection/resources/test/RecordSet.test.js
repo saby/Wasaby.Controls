@@ -346,6 +346,19 @@ define([
             });
          });
 
+         describe('.getIndexByValue()', function(){
+            it('should return records index from recordset by value', function(){
+               var data = getSbisItems(),
+                  rs = new RecordSet({
+                     rawData: data,
+                     adapter: 'adapter.sbis'
+                  });
+               for(var i= data.d.length; i<=0;i-- ) {
+                  assert.equal(rs.getIndexByValue('Фамилия', data.d[i][1]), i);
+               }
+            });
+         });
+
          describe('.addField()', function () {
             it('should add the field from the declaration for JSON adapter', function () {
                var index = 0,
@@ -782,6 +795,41 @@ define([
             it('should change raw data', function() {
                rs.clear();
                assert.deepEqual(rs.getRawData(), []);
+            });
+         });
+
+         describe('.clone()', function () {
+            it('should not be same as original', function () {
+               assert.instanceOf(rs.clone(), RecordSet);
+               assert.notEqual(rs.clone(), rs);
+            });
+            it('should not be same as previous clone', function () {
+               assert.notEqual(rs.clone(), rs.clone());
+            });
+            it('should clone rawData', function () {
+               var clone = rs.clone();
+               assert.notEqual(rs.getRawData(), clone.getRawData());
+               assert.deepEqual(rs.getRawData(), clone.getRawData());
+            });
+            it('should make raw data unlinked from original', function () {
+               var cloneA = rs.clone();
+               assert.deepEqual(cloneA.getRawData(), rs.getRawData());
+               cloneA.removeAt(0);
+               assert.notEqual(cloneA.getRawData(), rs.getRawData());
+
+               var cloneB = rs.clone();
+               assert.deepEqual(cloneB.getRawData(), rs.getRawData());
+               cloneB.at(0).set('Фамилия', 'test');
+               assert.notEqual(cloneB.getRawData(), rs.getRawData());
+            });
+            it('should equals recordsets items to service enumerators items ', function(){
+               var data = getSbisItems(),
+                  rs = new RecordSet({
+                     rawData: data,
+                     adapter: 'adapter.sbis'
+                  }),
+                  clone = rs.clone();
+               assert.strictEqual(clone._items, clone._getServiceEnumerator()._options.items);
             });
          });
 

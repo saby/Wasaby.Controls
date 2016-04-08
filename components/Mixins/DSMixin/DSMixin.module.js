@@ -113,7 +113,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
          _dotItemTpl: null,
          _options: {
             /**
-             * @cfg {String} Определяет поле элемента коллекции, значения которого будут использованы в качестве первичного ключа.
+             * @cfg {String} Устанавливает поле элемента коллекции, значения которого будут использованы в качестве первичного ключа.
              * @remark
              * Для данного поля справедливо ограничение уникальности. С помощью его значений можно однозначно
              * идентифицировать любой элемент коллекции.
@@ -133,21 +133,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
             keyField : null,
             /**
              * @cfg {String} Определяет поле элемента коллекции, данные из которого будут использованы для отображения в контроле.
-             * @remark
-             * В зависимости от типа контрола и режима его работы опция может быть как обязательной, так и необязательной
-             * к использованию.
-             * Для контрола {@link SBIS3.CONTROLS.CompositeView "Композитное представление"} и его наследников опция
-             * используется только для режимов отображения "Список" и "Плитка". Её значение необходимо для построения
-             * шаблонов отображения элементов коллекции. На следующем изображении три элемента построены по шаблону,
-             * где красным цветом выделено значение поля из displayField:
-             * ![](/DSMixin10.png)
-             * Для контрола {@link SBIS3.CONTROLS.FieldLink “Поле связи”} использование опции displayField обязательно,
-             * её значение используется для отображения выбранных элементов:
-             * ![](/DSMixin11.png)
-             * Для контрола {@link SBIS3.CONTROLS.ComboBox “Выпадающий список”} использование опции displayField также
-             * является обязательным и так же используется для отображения выбранных элементов:
-             * ![](/DSMixin12.png)
-             * Кроме опции displayField для контролов обязательно настраивают опцию {@link keyField}.
+             * @remark file DSMixin-displayField.md
              * @example
              * Отображение в поле связи значений поля "ФИО" выбранных элементов коллекции:
              * ![](/DSMixin01.png)
@@ -160,7 +146,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
              */
             displayField: null,
              /**
-              * @cfg {Array.<Object.<String,String>>} Определяет набор исходных данных, по которому строится отображение.
+              * @cfg {Array.<Object.<String,String>>} Устанавливает набор исходных данных, по которому строится отображение.
               * @remark
               * Набор исходных данных - это данные определенного формата, которые будут преобразованы
               * в элементы коллекции (экземпляры класса {@link SBIS3.CONTROLS.Data.Model Model}).
@@ -182,22 +168,22 @@ define('js!SBIS3.CONTROLS.DSMixin', [
               *     <option name="hierField" value="parent"></option>
               *     <options name="items" type="array">
               *        <options>
-              *            <option name="id">I</option>
-              *            <option name="title">квартал 1</option>
-              *            <option name="parent" value="null" type="null"></option>
-              *            <option name="parent@" value="true" type="boolean"></option>
+              *           <option name="id">I</option>
+              *           <option name="title">квартал 1</option>
+              *           <option name="parent" value="null" type="null"></option>
+              *           <option name="parent@" value="true" type="boolean"></option>
               *        </options>
               *        <options>
-              *            <option name="id">01</option>
-              *            <option name="title">январь</option>
-              *            <option name="parent" value="I"></option>
-              *            <option name="parent@" value="null" type="null"></option>
+              *           <option name="id">01</option>
+              *           <option name="title">январь</option>
+              *           <option name="parent" value="I"></option>
+              *           <option name="parent@" value="null" type="null"></option>
               *        </options>
               *        <options>
-              *            <option name="id">02</option>
-              *            <option name="title">февраль</option>
-              *            <option name="parent" value="I"></option>
-              *            <option name="parent@" value="null" type="null"></option>
+              *           <option name="id">02</option>
+              *           <option name="title">февраль</option>
+              *           <option name="parent" value="I"></option>
+              *           <option name="parent@" value="null" type="null"></option>
               *        </options>
               *     </options>
               * </pre>
@@ -255,17 +241,8 @@ define('js!SBIS3.CONTROLS.DSMixin', [
              * @property {Function} clickHandler Функция клика
              */
             /**
-             * @cfg {GroupBy} Настраивает группировку элементов коллекции.
-             * @remark
-             * Механизм группировки позволяет группировать элементы коллекции в списках любых типов. Подробнее о группировках вы
-             * можете прочитать в {@link https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/list-settings/list-visual-display/groups/ этой статье}.
-             * Для правильной работы группировки данные должны прийти уже {@link sorting отсортированными} по полю группировки field.
-             * Если установить только поле группировки field, то все элементы будут просто сгруппированы по блокам с одинаковыми
-             * данными, без отрисовки заголовков групп:
-             * ![](/DSMixin09.png)
-             * Для группировки элементов коллекции по типу {@link https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/list-settings/list-visual-display/ladder/ "Лесенка"} -
-             * когда одинаковые значения будут скрыты, необходимо в опции {@link SBIS3.CONTROLS.DataGridView#ladder}
-             * перечислить названия полей, по которым лесенка будет организована.
+             * @cfg {GroupBy} Устанавливает группировку элементов коллекции.
+             * @remark file DSMixin-groupBy.md
              * @example
              * Ниже проиллюстрирована работа опции на примерах настройки для поля связи выпадающего блока,
              * отображающего список значений для автодополнения.
@@ -288,8 +265,8 @@ define('js!SBIS3.CONTROLS.DSMixin', [
              * фрагмент верстки:
              * <pre class="brush:xml">
              *     <options name="ladder" type="array">
-             *         <option>ФИО</option>
-             *         <option>Должность</option>
+             *        <option>ФИО</option>
+             *        <option>Должность</option>
              *     </options>
              * </pre>
              *
@@ -355,7 +332,8 @@ define('js!SBIS3.CONTROLS.DSMixin', [
              * Для {@link SBIS3.CONTROLS.FieldLink поля связи} в настройке {@link SBIS3.CONTROLS.SuggestMixin#list выпадающего блока},
              * отображающего список значений для автодополнения, описание опции не дает результата, подобного
              * проиллюстрированному в примере. При отсутствии данных автодополнение работать не будет.
-             * фрагмент верстки:
+             *
+             * Фрагмент верстки:
              * <pre class="brush:xml">
              *     <option name="emptyHTML">Данные для выбора отсутствуют</option>
              * </pre>
@@ -380,39 +358,26 @@ define('js!SBIS3.CONTROLS.DSMixin', [
              */
             filter: {},
             /**
-             * @cfg {Array} Определяет сортировку данных, возвращаемых методом БЛ.
-             * @remark
-             * Опция устанавливает сортировку данных, возвращаемых методом БЛ, необходимую пользователю.
-             * Задается массивом объектов, в котором ключ - это имя поля, а значение ASC - по возрастанию, DESC  - по убыванию.
-             * Порядок сортировки полей определяется порядком объектов в массиве: сортировка данных будет проведена
-             * сначала по полю, заданному в первом объекте, потом - по полю, заданному во втором объекте, и т.д.
-             * Предполагается, что один объект описывает сортировку по одному полю.
-             * Если задать в одном объекте описание сортировки для нескольких полей, то порядок сортировки
-             * не гарантируется.
-             * Переопределяет параметры сортировки, указанные в методе БЛ.
-             * В опции задается имя поля, по которому данные нужно отсортировать, и для поля - порядок сортировки:
-             * false - по возрастанию,
-             * true  - по убыванию.
-             * По умолчанию данные поля будут отсортированы по возрастанию.
-             * Для {@link SBIS3.CONTROLS.FieldLink поля связи} опция определяется в настройках
-             * {@link SBIS3.CONTROLS.SuggestMixin#list выпадающего блока}, отображающего список значений для автодополнения.
+             * @cfg {Array} Устанавливает сортировку данных, возвращаемых методом БЛ.
+             * @remark file DSMixin-sorting.md
+             * @example
              * Пример сортировки данных автодополнения. Данные будут отсортированы по возрастанию, по полям "ФИО" и "Город":
              * ![](/DSMixin02.png)
              * фрагмент верстки:
              * <pre class="brush:xml">
              *     <options name="list">
-             *         <option name="component" value="js!SBIS3.CONTROLS.DataGridView"></option>
-             *         <options name="options">
-             *             <option name="keyField" value="@Пользователь"></option>
-             *             <options name="sorting" type="array">
-             *                 <options>
-             *                   <option name="ФИО" type="boolean">false</option>
-             *                 </options>
-             *                 <options>
-             *                   <option name="Город" type="boolean">false</option>
-             *                 </options>
-             *             </options>
-             *         </options>
+             *        <option name="component" value="js!SBIS3.CONTROLS.DataGridView"></option>
+             *        <options name="options">
+             *           <option name="keyField" value="@Пользователь"></option>
+             *           <options name="sorting" type="array">
+             *              <options>
+             *                 <option name="ФИО">ASC</option>
+             *              </options>
+             *              <options>
+             *                 <option name="Город">ASC</option>
+             *              </options>
+             *           </options>
+             *        </options>
              *     </options>
              * </pre>
              */
@@ -433,7 +398,20 @@ define('js!SBIS3.CONTROLS.DSMixin', [
              */
             footerTpl: undefined,
             /**
-             * @cfg {Boolean} Автоперерисовка при изменении данных
+             * @cfg {Boolean} Устанавливает режим автоматической перерисовки набора элементов коллекции при их изменении.
+             * * true Режим автоперерисовки набора элементов коллекции установлен.
+             * * false Режим автоперерисовки набора элементов коллекции отменен.
+             * @remark
+             * Опция используется для тех случаев, при которых элементы коллекции будут изменены только на клиентской
+             * стороне приложения. Их не требуется изменять в БД, нужно только отобразить в текущем представлении.
+             * Режим автоперерисовки можно установить или изменить при помощи метода {@link redraw}
+             * @example
+             * Пример. Режим автоперерисовки установлен:
+             * <pre class="brush:xml">
+             *     <option name="autoRedraw">true</option>
+             * </pre>
+             * @see redraw
+             * @noShow
              */
             autoRedraw: true
          },
@@ -450,24 +428,25 @@ define('js!SBIS3.CONTROLS.DSMixin', [
       },
 
       _prepareConfig : function(sourceOpt, itemsOpt) {
-         var
-            keyField = this._options.keyField;
+         var keyField = this._options.keyField;
+
          if (!keyField) {
             $ws.single.ioc.resolve('ILogger').log('Option keyField is required');
          }
+
          if (sourceOpt) {
             this._dataSource = this._prepareSource(sourceOpt);
             this._items = null;
-         }
-         else if (itemsOpt) {
+         } else if (itemsOpt) {
             if ($ws.helpers.instanceOfModule(itemsOpt, 'SBIS3.CONTROLS.Data.Projection.Projection')) {
                this._itemsProjection = itemsOpt;
                this._items = this._convertItems(this._itemsProjection.getCollection());
                this._setItemsEventHandlers();
                this._notify('onItemsReady');
                this._itemsReadyCallback();
-            }
-            else if (itemsOpt instanceof Array) {
+            } else if($ws.helpers.instanceOfModule(itemsOpt, 'SBIS3.CONTROLS.Data.Collection.RecordSet')) {
+               this._processingData(itemsOpt);
+            } else if (itemsOpt instanceof Array) {
                /*TODO уменьшаем количество ошибок с key*/
                if (!this._options.keyField) {
                   var itemFirst = itemsOpt[0];
@@ -481,8 +460,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
                   data: itemsOpt,
                   idProperty: this._options.keyField
                });
-            }
-            else {
+            } else {
                this._items = itemsOpt;
                this._dataSource = null;
                this._createDefaultProjection(this._items);
@@ -670,32 +648,27 @@ define('js!SBIS3.CONTROLS.DSMixin', [
              this._container.removeClass('controls-ListView__dataLoaded');
              def = this._callQuery(this._options.filter, this.getSorting(), this._offset, this._limit)
                 .addCallback($ws.helpers.forAliveOnly(function (list) {
-                   self._toggleIndicator(false);
-                   if (self._items) {
-                      self._notify('onDataLoad', list);
-                      self._dataSet.setMetaData(list.getMetaData());
-                      self._items.assign(list);
-                      if (self._items !== self._dataSet) {
-                         self._dataSet.assign(list);
-                      }
-                      if (!this._options.autoRedraw) {
-                         this.redraw();
-                      }
-                      self._dataLoadedCallback();
-                   }
-                   else {
-                      self._notify('onDataLoad', list);
-                      self._items = list;
-                      self._dataSet = list;
-                      self._createDefaultProjection(self._items);
-                      self._setItemsEventHandlers();
-                      this._notify('onItemsReady');
-                      self._itemsReadyCallback();
-                      self._dataLoadedCallback();
-                      self.redraw();
-                   }
-                   //self._notify('onBeforeRedraw');
-                   return list;
+                    var hasItems = !!this._items;
+
+                    self._toggleIndicator(false);
+                    self._notify('onDataLoad', list);
+                    self._processingData(list);
+
+                    if(hasItems) {
+                       if(!self._options.autoRedraw) {
+                          self.redraw();
+                       }
+                    } else {
+                       self.redraw();
+                    }
+                    if (self._options.infiniteScroll === 'up'){
+                       var firstItem = self._itemsProjection.at(0);
+                       if (firstItem) {
+                           self._scrollToItem(firstItem.getContents().getId());
+                       }
+                    }
+                    //self._notify('onBeforeRedraw');
+                    return list;
                 }, self))
                 .addErrback($ws.helpers.forAliveOnly(function (error) {
                    if (!error.canceled) {
@@ -722,6 +695,27 @@ define('js!SBIS3.CONTROLS.DSMixin', [
 
          return this._loader;
       }),
+
+      _processingData: function(list) {
+         var hasItems = !!this._items;
+
+         if (hasItems) {
+            this._dataSet.setMetaData(list.getMetaData());
+            this._items.assign(list);
+            if (this._items !== this._dataSet) {
+               this._dataSet.assign(list);
+            }
+         } else {
+            this._items = list;
+            this._dataSet = list;
+            this._createDefaultProjection(this._items);
+            this._setItemsEventHandlers();
+            this._notify('onItemsReady');
+            this._itemsReadyCallback();
+         }
+
+         this._dataLoadedCallback();
+      },
 
       _callQuery: function (filter, sorting, offset, limit) {
          if (!this._dataSource) {
@@ -799,6 +793,8 @@ define('js!SBIS3.CONTROLS.DSMixin', [
          this._dropPageSave();
          if (this._dataSource && !noLoad) {
             this.reload(this._options.filter, this.getSorting(), 0, this.getPageSize());
+         } else {
+            this._notifyOnPropertyChanged('filter');
          }
       },
       /**
@@ -887,17 +883,22 @@ define('js!SBIS3.CONTROLS.DSMixin', [
          this._unsetItemsEventHandlers();
          this._items = null;
          this._prepareConfig(undefined, items);
-         this.reload();
+          if(items instanceof Array) {
+             this.reload();
+          } else {
+             this.redraw();
+          }
       },
 
       _drawItemsCallback: function () {
          /*Method must be implemented*/
       },
       /**
-       * Метод перерисовки списка без запроса к источнику данных.
+       * Метод перерисовки набора элементов коллекции без запроса к источнику данных.
        * @remark
        * Используется в случаях, когда данные были изменены только на клиентской стороне приложения.
        * Их не требуется изменять в БД, нужно только отобразить в текущем представлении.
+       * @see autoRedraw
        */
       redraw: function() {
          this._redraw();
@@ -1017,7 +1018,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
       },
 
       _getElementByModel: function(item) {
-         return this._getItemsContainer().find('.js-controls-ListView__item[data-id="' + item.getKey() + '"]');
+         return this._getItemsContainer().find('.js-controls-ListView__item[data-id="' + item.getId() + '"]');
       },
 
       _drawItem: function (item, at, last) {
@@ -1131,7 +1132,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
       },
 
       _addItemAttributes: function (container, item) {
-         var strKey = item.getKey();
+         var strKey = item.getId();
          if (strKey == null) {
             strKey += '';
          }
@@ -1303,7 +1304,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
             if (next && !meth.call(this, next.getContents())) {
                flagAfter = true;
             }
-         };
+         }
          /**/
          item = item.getContents();
          var target = this._getTargetContainer(item),
@@ -1414,7 +1415,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
       },
 
       _getItemContainer: function(parent, item) {
-         return parent.find('>[data-id="' + item.getKey() + '"]');
+         return parent.find('>[data-id="' + item.getId() + '"]');
       }
    };
 
@@ -1429,9 +1430,9 @@ define('js!SBIS3.CONTROLS.DSMixin', [
        * Обрабатывает событие об изменении коллекции.
        * @param {$ws.proto.EventObject} event Дескриптор события.
        * @param {String} action Действие, приведшее к изменению.
-       * @param {SBIS3.CONTROLS.Data.Projection.ICollectionItem[]} newItems Новые элементы коллеции.
+       * @param {SBIS3.CONTROLS.Data.Projection.CollectionItem[]} newItems Новые элементы коллеции.
        * @param {Integer} newItemsIndex Индекс, в котором появились новые элементы.
-       * @param {SBIS3.CONTROLS.Data.Projection.ICollectionItem[]} oldItems Удаленные элементы коллекции.
+       * @param {SBIS3.CONTROLS.Data.Projection.CollectionItem[]} oldItems Удаленные элементы коллекции.
        * @param {Integer} oldItemsIndex Индекс, в котором удалены элементы.
        * @private
        */

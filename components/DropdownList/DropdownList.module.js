@@ -103,9 +103,15 @@ define('js!SBIS3.CONTROLS.DropdownList',
          _setPickerContent : function () {
             var self = this,
                 pickerContainer = this._getPickerContainer(),
-                header = pickerContainer.find('.controls-DropdownList__header');
+                header = pickerContainer.find('.controls-DropdownList__header'),
+                classes = this._container.attr('class');
+            //Убираем прикладные стили с шапки
+            //В 374 выписал задачу, чтобы шапку можно было задавать без this._container.clone(), тогда и фильтровать классы не придется
+            classes = $ws.helpers.filter(classes.split(' '), function(value){
+               return value.indexOf('ws-') > -1 || value.indexOf('controls-') > -1
+            }).join(' ');
             //смешно, но reviveComponents может найти в верстек config и другие атрибуты компонентов и тогда всё зациклится
-            header.append(this._container.clone().removeAttr('style data-component config id').removeClass('ws-hidden'));
+            header.append(this._container.clone().removeAttr('style data-component config id class').removeClass('ws-hidden').addClass(classes));
             this._setVariables();
             this.reload();
             this._bindItemSelect();
@@ -254,7 +260,7 @@ define('js!SBIS3.CONTROLS.DropdownList',
             DropdownList.superclass._dataLoadedCallback.apply(this, arguments);
             var item =  this._dataSet.at(0);
             if (item) {
-               this._defaultId = item.getKey();
+               this._defaultId = item.getId();
                /* Пока закомментирую, не уверена, что DataSet  сможет правильно  работать с more и так же не уверена, должно ли оно вообще зависеть от more
                if (this._buttonHasMore) {
                   this._buttonHasMore[this._hasNextPage(this._dataSet.getMetaData().more, 0) ? 'show' : 'hide']();
@@ -301,7 +307,7 @@ define('js!SBIS3.CONTROLS.DropdownList',
             /*implemented from DSMixin*/
             var addClass = 'controls-DropdownList__item';
             DropdownList.superclass._addItemAttributes.apply(this, arguments);
-            if (item.getKey() == this.getDefaultId()) {
+            if (item.getId() == this.getDefaultId()) {
                container.addClass('controls-ListView__defaultItem');
             }
 

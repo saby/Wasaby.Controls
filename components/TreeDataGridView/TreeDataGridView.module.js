@@ -57,6 +57,7 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
              */
             itemsDragNDrop: 'allow'
          },
+         _paddingSize: 16,
          _dragStartHandler: undefined
       },
 
@@ -68,7 +69,7 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
          for (var j = 0; j < records.length; j++) {
             var record = records[j];
             var
-               recKey = record.getKey(),
+               recKey = record.getId(),
                parKey = self._dataSet.getParentKey(record, self._options.hierField),
                childKeys = this._dataSet.getChildItems(parKey, true),
                targetContainer = self._getTargetContainer(record);
@@ -109,6 +110,13 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
             }
          }
          self._drawItemsCallback();
+      },
+
+      init: function(){
+         TreeDataGridView.superclass.init.call(this);
+         if (this._container.hasClass('controls-TreeDataGridView__withPhoto')){
+            this._paddingSize = 30;
+         }
       },
 
       _drawLoadedNode : function(key, records) {
@@ -282,7 +290,7 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
             itemType = hierType == null ? 'leaf' : hierType == true ? 'node' : 'hidden';
          container.addClass('controls-ListView__item-type-' + itemType);
          var
-            key = item.getKey(),
+            key = item.getId(),
             parentKey = this._dataSet.getParentKey(item, this._options.hierField),
          	parentContainer = $('.controls-ListView__item[data-id="' + parentKey + '"]', this._getItemsContainer().get(0)).get(0);
          container.attr('data-parent', parentKey);
@@ -305,10 +313,8 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
          }
          /*TODO пока придрот*/
          if (typeof parentKey != 'undefined' && parentKey !== null && parentContainer) {
-            var parentWrappersCount = $('.controls-TreeView__hierWrapper', parentContainer).length;
-            for (var i = 0; i <= parentWrappersCount; i++) {
-              $('.controls-TreeView__expand', container).before('<div class="controls-TreeView__hierWrapper"></div>');
-            }
+            var parentMargin = parseInt($('.controls-TreeView__expand', parentContainer).parent().css('padding-left'));
+            $('.controls-TreeView__expand', container).parent().css('padding-left', parentMargin + this._paddingSize);
          }
       },
 
@@ -337,6 +343,7 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
                elClickHandler && elClickHandler.call(this, id, data, target);
             }
          }
+         return res;
       },
       _elemClickHandlerInternal: function(data, id, target) {
          var nodeID = $(target).closest('.controls-ListView__item').data('id');

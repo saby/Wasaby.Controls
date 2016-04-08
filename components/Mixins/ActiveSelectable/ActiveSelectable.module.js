@@ -2,13 +2,6 @@
  * Created by am.gerasimov on 24.11.2015.
  */
 define('js!SBIS3.CONTROLS.ActiveSelectable', ['js!SBIS3.CONTROLS.Data.Model'], function(Model) {
-
-   function propertyUpdateWrapper(func) {
-      return function() {
-         return this.runInPropertiesUpdate(func, arguments);
-      };
-   }
-
    /**
     * Миксин, добавляющий поведение хранения выбранного элемента
     * @mixin SBIS3.CONTROLS.ActiveSelectable
@@ -20,16 +13,9 @@ define('js!SBIS3.CONTROLS.ActiveSelectable', ['js!SBIS3.CONTROLS.Data.Model'], f
       $protected: {
          _options: {
             /**
-             * @cfg {SBIS3.CONTROLS.Data.Model} Устанавливает выбранный элемент коллекции.
+             * @cfg {SBIS3.CONTROLS.Data.Model} Устанавливает выбранным элемент коллекции по переданному экземпляру класса.
              * Устанавливает экземпляр класса {@link SBIS3.CONTROLS.Data.Model} с данными выбранной записи.
              * Опция актуальна, когда контрол находится в режиме единичного выбора значений.
-             * @example
-             * Вывести в консоль выбранное значение:
-             * <pre>
-             *    this.getChildControlByName('myFieldLink').subscribe('onSelectedItemsChange', function(Дескриптор, idArray) {
-             *       console.log(this.selectedItem);
-             *    });
-             * </pre>
              * @see setSelectedItem
              * @see getSelectedItem
              */
@@ -52,13 +38,13 @@ define('js!SBIS3.CONTROLS.ActiveSelectable', ['js!SBIS3.CONTROLS.Data.Model'], f
        *     var selItem = this.getChildControlByName('MyControl').getSelectedItem();
        *       . . .
        *     if (selItem != '') {
-       *       NewControl.setSelectedItem(selItem);
+       *        NewControl.setSelectedItem(selItem);
        *     }
        * </pre>
        * @see selectedItem
        * @see getSelectedItem
        */
-      setSelectedItem: propertyUpdateWrapper(function(item) {
+      setSelectedItem: function(item) {
          var isModel = item instanceof Model;
 
 
@@ -67,12 +53,12 @@ define('js!SBIS3.CONTROLS.ActiveSelectable', ['js!SBIS3.CONTROLS.Data.Model'], f
          }
 
          this._options.selectedItem = isModel ? item : null;
-         this._notifyOnPropertyChanged('selectedItem');
          this.setSelectedKey(isModel ? item.getId() : null);
-      }),
+         this._notifyOnPropertyChanged('selectedItem');
+      },
 
       initializeSelectedItem: function() {
-         this._options.selectedItem = new Model();
+         this._options.selectedItem = new Model({idProperty: this._options.keyField});
       },
 
       /**
@@ -126,11 +112,11 @@ define('js!SBIS3.CONTROLS.ActiveSelectable', ['js!SBIS3.CONTROLS.Data.Model'], f
          var selItem = this._options.selectedItem,
              selKey = this._options.selectedKey;
 
-         if(selKey === null) {
-            return;
-         }
-         if(selItem && selKey !== selItem.getId()) {
-            this.setSelectedItem(null);
+         /* Когда пустая модель, считаем,
+            что ничего не выбрано, т.к. её может например создать контекст */
+         if(selItem && selItem.getRawData() && (selKey === null || selKey !== selItem.getId())) {
+            this._options.selectedItem = null;
+            this._notifyOnPropertyChanged('selectedItem');
          }
       }
 

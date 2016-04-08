@@ -31,14 +31,14 @@ define('js!SBIS3.CONTROLS.Selectable', ['js!SBIS3.CONTROLS.Data.Utils', 'js!SBIS
          _selectMode: 'index',
           _options: {
              /**
-              * @cfg {String} Определяет элемент коллекции по переданному индексу (порядковому номеру).
+              * @cfg {String} Устанавливает выбранным элемент коллекции по переданному индексу (порядковому номеру).
               * @remark
-              * Любой элемент коллекции можно выбрать либо по его идентификатору {@link SBIS3.CONTROLS.DSMixin#keyField},
+              * Любой элемент коллекции можно выбрать либо по его {@link SBIS3.CONTROLS.DSMixin#keyField идентификатору},
               * либо его по индексу (порядковому номеру) в коллекции.
               * Для определения выбранного элемента необходимо указать его порядковый номер в коллекции.
               * @example
               * <pre>
-              *     <option name="selectedIndex">1</option>
+              *     <option name="selectedIndex">1</option><!-- Устанавливаем выбранным элемент коллекции, который идет первым в списке -->
               * </pre>
               * @see setSelectedIndex
               * @see getSelectedIndex
@@ -46,11 +46,8 @@ define('js!SBIS3.CONTROLS.Selectable', ['js!SBIS3.CONTROLS.Data.Utils', 'js!SBIS
               */
              selectedIndex: null,
              /**
-              * @cfg {String} Определяет элемент коллекции по переданному идентификатору.
+              * @cfg {String} Устанавливает выбранным элемент коллекции по переданному идентификатору - {@link SBIS3.CONTROLS.DSMixin#keyField ключевому полю} элемента коллекции.
               * @remark
-              * Используется для построения контрола с определенным элементом коллекции.
-              * Для задания выбранного элемента необходимо указать значение
-              * {@link SBIS3.CONTROLS.DSMixin#keyField ключевого поля} элемента коллекции.
               * Установить новый идентификатор элемента коллекции можно с помощью метода {@link setSelectedKey},
               * получить идентификатор элемента коллекции можно с помощью метода {@link getSelectedKey}.
               * @example
@@ -115,6 +112,8 @@ define('js!SBIS3.CONTROLS.Selectable', ['js!SBIS3.CONTROLS.Data.Utils', 'js!SBIS
             if (this._itemsProjection.getCount()) {
                this._selectMode = 'index';
                this._options.selectedIndex = 0;
+               var item = this._itemsProjection.at(this._options.selectedIndex);
+               this._options.selectedKey = item.getContents().getKey();
             }
          }
       },
@@ -127,12 +126,7 @@ define('js!SBIS3.CONTROLS.Selectable', ['js!SBIS3.CONTROLS.Data.Utils', 'js!SBIS
             this._options.selectedIndex = -1;
          },
          destroy: function () {
-            if (this._utilityEnumerator) {
-               this._utilityEnumerator.unsetObservableCollection(
-                  this._itemsProjection
-               );
-            }
-            this._utilityEnumerator = undefined;
+            this._resetUtilityEnumerator();
          }
       },
 
@@ -179,6 +173,14 @@ define('js!SBIS3.CONTROLS.Selectable', ['js!SBIS3.CONTROLS.Data.Utils', 'js!SBIS
          return this._utilityEnumerator;
       },
 
+      _resetUtilityEnumerator: function(){
+         if (this._utilityEnumerator) {
+            this._utilityEnumerator.unsetObservableCollection(
+               this._itemsProjection
+            );
+         }
+         this._utilityEnumerator = undefined;
+      },
 
       //TODO переписать метод
       _setSelectedIndex: function(index, id) {
@@ -319,13 +321,27 @@ define('js!SBIS3.CONTROLS.Selectable', ['js!SBIS3.CONTROLS.Data.Utils', 'js!SBIS
          case IBindCollection.ACTION_MOVE:
          case IBindCollection.ACTION_REPLACE:
          case IBindCollection.ACTION_RESET:
-            var count = this._itemsProjection.getCount();
-            if (this._options.selectedIndex > this._itemsProjection.getCount() - 1) {
-               this._options.selectedIndex = (count > 0) ? count - 1 : -1;
+            this._resetUtilityEnumerator();
+
+            var indexByKey = this._getItemIndexByKey(this._options.selectedKey);
+            if (indexByKey >= 0) {
+               this._options.selectedIndex = indexByKey;
             }
-            var item = this._itemsProjection.at(this._options.selectedIndex);
-            if (item) {
-               this._options.selectedKey = item.getContents().getId();
+            else {
+               var count = this._itemsProjection.getCount();
+               if (count > 0) {
+                  if (this._options.selectedIndex > this._itemsProjection.getCount() - 1) {
+                     this._options.selectedIndex = (count > 0) ? 0 : -1;
+                     var item = this._itemsProjection.at(this._options.selectedIndex);
+                     this._options.selectedKey = item.getContents().getId();
+                  }
+               }
+               else {
+                  this._options.selectedIndex = -1;
+                  this._options.selectedKey = null;
+               }
+            }
+            if (action !== IBindCollection.ACTION_REPLACE){
                this._setSelectedIndex(this._options.selectedIndex, this._options.selectedKey);
             }
       }

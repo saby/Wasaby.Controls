@@ -38,6 +38,7 @@ define([
 '../../components/Data/Source/Provider/resources/test/SbisBusinessLogic.test',
 '../../components/Data/Source/resources/test/DataSet.test',
 '../../components/Data/Source/resources/test/Memory.test',
+'../../components/Data/Source/resources/test/Remote.test',
 '../../components/Data/Source/resources/test/Rpc.test',
 '../../components/Data/Source/resources/test/SbisService.test',
 '../../components/Data/Types/resources/test/Enum.test',

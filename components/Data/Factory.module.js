@@ -2,8 +2,9 @@
 define('js!SBIS3.CONTROLS.Data.Factory', [
    'js!SBIS3.CONTROLS.Data.Di',
    'js!SBIS3.CONTROLS.Data.Types.Flags',
-   'js!SBIS3.CONTROLS.Data.Types.Enum'
-], function (Di, Flags, Enum) {
+   'js!SBIS3.CONTROLS.Data.Types.Enum',
+   'js!SBIS3.CONTROLS.Data.Utils'
+], function (Di, Flags, Enum, Utils) {
    'use strict';
 
    /**
@@ -115,9 +116,9 @@ define('js!SBIS3.CONTROLS.Data.Factory', [
                      [value]
                );
             case 'RecordSet':
-               return this._serializeRecordSet(value);
+               return this._serializeRecordSet(value, adapter);
             case 'Record':
-               return this._serializeRecord(value);
+               return this._serializeRecord(value, adapter);
             case 'Date':
             case 'DateTime':
             case 'Time':
@@ -233,10 +234,11 @@ define('js!SBIS3.CONTROLS.Data.Factory', [
       /**
        * Сериализует RecordSet
        * @param {*} data Данные
+       * @param {SBIS3.CONTROLS.Data.Adapter.IAdapter} adapter Адаптер для работы с сырыми данными
        * @returns {*}
        * @protected
        */
-      _serializeRecordSet: function (data) {
+      _serializeRecordSet: function (data, adapter) {
          if (!data) {
             return;
          }
@@ -249,6 +251,7 @@ define('js!SBIS3.CONTROLS.Data.Factory', [
          }
 
          if (itHaveRawData) {
+            this._checkAdapters(data.getAdapter(), adapter);
             return data.getRawData();
          } else if (data instanceof $ws.proto.RecordSet ||
             data instanceof $ws.proto.RecordSetStatic
@@ -262,17 +265,19 @@ define('js!SBIS3.CONTROLS.Data.Factory', [
       /**
        * Сериализует запись
        * @param {*} data Запись
+       * @param {SBIS3.CONTROLS.Data.Adapter.IAdapter} adapter Адаптер для работы с сырыми данными
        * @returns {*}
        * @protected
        */
-      _serializeRecord: function (data) {
+      _serializeRecord: function (data, adapter) {
          if ($ws.helpers.instanceOfModule(data, 'SBIS3.CONTROLS.Data.Record')) {
+            this._checkAdapters(data.getAdapter(), adapter);
             return data.getRawData();
          } else if (data instanceof $ws.proto.Record) {
             return data.toJSON();
          }
          if (data instanceof Object) {
-            $ws.single.ioc.resolve('ILogger').info('SBIS3.CONTROLS.Data.Factory::_serializeRecord()', 'Serialization of plain Object is no more available. Use SBIS3.CONTROLS.Data.Record instead.');
+            Utils.logger.info('SBIS3.CONTROLS.Data.Factory::_serializeRecord(): serialization of plain Object is no more available. Use SBIS3.CONTROLS.Data.Record instead.');
          }
          throw new TypeError('SBIS3.CONTROLS.Data.Factory::_serializeRecord(): data should be an instance of SBIS3.CONTROLS.Data.Record');
       },
@@ -310,6 +315,19 @@ define('js!SBIS3.CONTROLS.Data.Factory', [
             return data;
          } else {
             return null;
+         }
+      },
+
+      /**
+       * Проверяет совместимость адаптеров
+       * @param {SBIS3.CONTROLS.Data.Adapter.IAdapter} source Адаптер источника
+       * @param {SBIS3.CONTROLS.Data.Adapter.IAdapter} target Адаптер приемника
+       * @protected
+       */
+      _checkAdapters: function (source, target) {
+         var targetProto = Object.getPrototypeOf(target);
+         if (!targetProto.isPrototypeOf(source)) {
+            throw new TypeError('The source adapter "' + source._moduleName + '" is incompatible with the target adapter "' + target._moduleName + '"');
          }
       }
    };

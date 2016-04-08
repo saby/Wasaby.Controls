@@ -1,22 +1,20 @@
 /* global define, $ws */
 define('js!SBIS3.CONTROLS.Data.Projection.CollectionEnumerator', [
    'js!SBIS3.CONTROLS.Data.Collection.IEnumerator',
-   'js!SBIS3.CONTROLS.Data.Projection.IEnumerator',
    'js!SBIS3.CONTROLS.Data.Collection.IndexedEnumeratorMixin'
-], function (IEnumerator, IProjectionEnumerator, IndexedEnumeratorMixin) {
+], function (IEnumerator, IndexedEnumeratorMixin) {
    'use strict';
 
    /**
     * Энумератор для проекции коллекции
     * @class SBIS3.CONTROLS.Data.Projection.CollectionEnumerator
     * @mixes SBIS3.CONTROLS.Data.Collection.IEnumerator
-    * @mixes SBIS3.CONTROLS.Data.Projection.IEnumerator
     * @mixes SBIS3.CONTROLS.Data.Collection.IndexedEnumeratorMixin
     * @public
     * @author Мальцев Алексей
     */
 
-   var CollectionEnumerator = $ws.core.extend({}, [IEnumerator, IProjectionEnumerator, IndexedEnumeratorMixin], /** @lends SBIS3.CONTROLS.Data.Projection.CollectionEnumerator.prototype */{
+   var CollectionEnumerator = $ws.core.extend({}, [IEnumerator, IndexedEnumeratorMixin], /** @lends SBIS3.CONTROLS.Data.Projection.CollectionEnumerator.prototype */{
       _moduleName: 'SBIS3.CONTROLS.Data.Projection.CollectionEnumerator',
       $protected: {
          _options: {
@@ -84,24 +82,61 @@ define('js!SBIS3.CONTROLS.Data.Projection.CollectionEnumerator', [
 
       //endregion SBIS3.CONTROLS.Data.Collection.IEnumerator
 
-      //region SBIS3.CONTROLS.Data.Projection.IEnumerator
+      //region SBIS3.CONTROLS.Data.Collection.IndexedEnumeratorMixin
 
+      reIndex: function () {
+         IndexedEnumeratorMixin.reIndex.call(this);
+         this._internalMap = null;
+         this._sourceToInternal = [];
+      },
+
+      _createIndex: function (property) {
+         var savedPosition = this._currentPosition,
+            result = CollectionEnumerator.superclass._createIndex.call(this, property);
+
+         this._currentPosition = savedPosition;
+         return result;
+      },
+
+      //endregion SBIS3.CONTROLS.Data.Collection.IndexedEnumeratorMixin
+
+      //region Public methods
+
+      /**
+       * Возвращает элемент по индексу
+       * @param {Number} index Индекс
+       * @returns {SBIS3.CONTROLS.Data.Projection.CollectionItem}
+       * @state mutable
+       */
       at: function (index) {
          return index === undefined ?
             undefined :
             this._options.items[this.getSourceByInternal(index)];
       },
 
+      /**
+       * Устанавливает текущий элемент
+       * @param {SBIS3.CONTROLS.Data.Projection.CollectionItem} item Текущий элемент
+       */
       setCurrent: function(item) {
          this._currentPosition = Array.indexOf(this._options.items, item);
          this._setCurrentByPosition();
       },
 
+      /**
+       * Возвращает текущую позицию в проекции
+       * @returns {Number}
+       */
       getPosition: function() {
          this._initInternalMap();
          return this.getInternalBySource(this._currentPosition);
       },
 
+      /**
+       * Устанавливает текущую позицию
+       * @param {Number} internal Позиция в проекции
+       * @returns {Boolean}
+       */
       setPosition: function(internal) {
          var position = this.getSourceByInternal(internal);
 
@@ -111,6 +146,10 @@ define('js!SBIS3.CONTROLS.Data.Projection.CollectionEnumerator', [
          this._setCurrentByPosition();
       },
 
+      /**
+       * Возвращает предыдущий элемент
+       * @returns {*}
+       */
       getPrevious: function () {
          this._initInternalMap();
          var internalPosition = this.getInternalBySource(this._currentPosition);
@@ -126,6 +165,10 @@ define('js!SBIS3.CONTROLS.Data.Projection.CollectionEnumerator', [
          return this._сurrent;
       },
 
+      /**
+       * Возвращает следующий элемент
+       * @returns {*}
+       */
       getNext: function () {
          this._initInternalMap();
          var internalPosition = this.getInternalBySource(this._currentPosition);
@@ -141,6 +184,11 @@ define('js!SBIS3.CONTROLS.Data.Projection.CollectionEnumerator', [
          return this._сurrent;
       },
 
+      /**
+       * Вычисляет позицию в проекции относительно позиции в исходной коллекции
+       * @param {Number} source Позиция в исходной коллекции
+       * @returns {Number}
+       */
       getInternalBySource: function (source) {
          if (source === undefined) {
             return source;
@@ -167,29 +215,9 @@ define('js!SBIS3.CONTROLS.Data.Projection.CollectionEnumerator', [
          return this._internalMap[internal];
       },
 
-      //endregion SBIS3.CONTROLS.Data.Projection.IEnumerator
-
-      //region SBIS3.CONTROLS.Data.Collection.IndexedEnumeratorMixin
-
-      reIndex: function () {
-         IndexedEnumeratorMixin.reIndex.call(this);
-         this._internalMap = null;
-         this._sourceToInternal = [];
-      },
-
-      _createIndex: function (property) {
-         var savedPosition = this._currentPosition,
-            result = CollectionEnumerator.superclass._createIndex.call(this, property);
-
-         this._currentPosition = savedPosition;
-         return result;
-      },
-
-      //endregion SBIS3.CONTROLS.Data.Collection.IndexedEnumeratorMixin
+      //endregion Public methods
 
       //region Protected methods
-
-      
 
       /**
        * Инициализирует массив соответствия позиций проекции и исходной коллекции
