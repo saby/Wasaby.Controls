@@ -480,7 +480,7 @@ define('js!SBIS3.CONTROLS.ListView',
                 */
                resultsPosition: 'none',
                /**
-                * @cfg {String} Устанавливает заголовок строки итогов.
+                * @cfg {String} Устанавливает заголовок итоговой строки.
                 * @example
                 * <pre class="brush: xml">
                 *    <option name="resultsText">Итого</option>
