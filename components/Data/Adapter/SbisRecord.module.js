@@ -67,6 +67,7 @@ define('js!SBIS3.CONTROLS.Data.Adapter.SbisRecord', [
       },
 
       getKeyField: function () {
+         //TODO: имя поля с ПК может лежать в this._data.k (при этом может принимать значение -1)
          var s = this._data.s,
             index;
          for (var i = 0, l = s.length; i < l; i++) {
