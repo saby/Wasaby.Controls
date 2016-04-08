@@ -26,37 +26,41 @@ define('js!SBIS3.CONTROLS.Data.Record', [
     * @author Мальцев Алексей
     */
 
-   var Record = $ws.proto.Abstract.extend([IPropertyAccess, IEnumerable, SerializableMixin, FormattableMixin], /** @lends SBIS3.CONTROLS.Data.Record.prototype */{
+   var Record = Utils.extend([IPropertyAccess, IEnumerable/*, SerializableMixin, FormattableMixin*/], /** @lends SBIS3.CONTROLS.Data.Record.prototype */{
       _moduleName: 'SBIS3.CONTROLS.Data.Record',
-      $protected: {
-         _options: {
-            /**
-             * @cfg {SBIS3.CONTROLS.Data.Collection.RecordSet} Рекордсет, которому принадлежит запись. Может не принадлежать рекордсету.
-             * @see getOwner
-             */
-            owner: null
-         },
+      /**
+       * @cfg {SBIS3.CONTROLS.Data.Collection.RecordSet} Рекордсет, которому принадлежит запись. Может не принадлежать рекордсету.
+       * @name SBIS3.CONTROLS.Data.Record#owner
+       * @see getOwner
+       */
+      _owner: null,
 
-         /**
-          * @member {Object.<String, *>} Измененные поля и оригинальные значения
-          */
-         _changedFields: {},
+      /**
+       * @member {Object.<String, *>} Измененные поля и оригинальные значения
+       */
+      _changedFields: {},
 
-         /**
-          * @member {Object} Объект содержащий закэшированные инстансы значений-объектов
-          */
-         _propertiesCache: {}
-      },
+      /**
+       * @member {Object} Объект содержащий закэшированные инстансы значений-объектов
+       */
+      _propertiesCache: {},
 
-      $constructor: function (cfg) {
+      constructor: function Record$ (cfg) {
+         Record.superclass.constructor.apply(this, arguments);
+
          cfg = cfg || {};
-         this._publish('onPropertyChange');
 
-         if ('data' in cfg && !('rawData' in cfg)) {
-            this._options.rawData = cfg.data;
-            Utils.logger.stack('SBIS3.CONTROLS.Data.Record: option "data" is deprecated and will be removed in 3.7.4. Use "rawData" instead.', 1);
+         //this._publish('onPropertyChange');
+
+         if (cfg) {
+            if ('data' in cfg && !('rawData' in cfg)) {
+               cfg.rawData = cfg.data;
+               Utils.logger.stack('SBIS3.CONTROLS.Data.Record: option "data" is deprecated and will be removed in 3.7.4. Use "rawData" instead.', 1);
+            }
+
+            this._owner = cfg.owner;
          }
-         this.setRawData(this._options.rawData);
+         //this.setRawData(this._options.rawData);
       },
 
       //region SBIS3.CONTROLS.Data.IPropertyAccess

@@ -20,101 +20,100 @@ define('js!SBIS3.CONTROLS.Data.Model', [
     * @author Мальцев Алексей
     */
 
-   var Model = Record.extend([IHashable, HashableMixin], /** @lends SBIS3.CONTROLS.Data.Model.prototype */{
+   var Model = Utils.extend(Record, [IHashable, HashableMixin], /** @lends SBIS3.CONTROLS.Data.Model.prototype */{
       _moduleName: 'SBIS3.CONTROLS.Data.Model',
-      $protected: {
-         _options: {
-            /**
-             * @typedef {Object} Property
-             * @property {*|Function} [def] Значение по умолчанию (используется, если свойства нет в сырых данных)
-             * @property {Function} [get] Метод, возвращающий значение свойства. Первым аргументом придет значение свойства в сырых данных.
-             * @property {Function} [set] Метод, устанавливающий значение свойства.
-             */
 
-            /**
-             * @cfg {Object.<String, Property>} Описание свойств модели. Дополняет/уточняет свойства, уже существующие в сырых данных.
-             * @example
-             * <pre>
-             *    var User = Model.extend({
-             *       $protected: {
-             *          _options: {
-             *             properties: {
-             *                id: {
-             *                   get: function(value) {
-             *                      return '№' + value;
-             *                   }
-             *                },
-             *                guid: {
-             *                   def: function() {
-             *                      return $ws.helpers.createGUID();
-             *                   }
-             *                },
-             *                displayName: {
-             *                   get: function() {
-             *                      return this.get('firstName') + ' a.k.a "' + this.get('login') + '" ' + this.get('lastName');
-             *                   }
-             *                }
-             *             }
-             *          }
-             *       }
-             *    });
-             *    var user = new User({
-             *       rawData: {
-             *          id: 5,
-             *          login: 'Keanu',
-             *          firstName: 'Johnny',
-             *          lastName: 'Mnemonic',
-             *          job: 'Memory stick'
-             *       }
-             *    });
-             *    user.get('id');//№5
-             *    user.get('guid');//010a151c-1160-d31d-11b3-18189155cc13
-             *    user.get('displayName');//Johnny a.k.a "Keanu" Mnemonic
-             *    user.get('job');//Memory stick
-             *    user.get('uptime');//undefined
-             * </pre>
-             * @see getProperties
-             * @see Property
-             */
-            properties: {},
+      /**
+       * @typedef {Object} Property
+       * @property {*|Function} [def] Значение по умолчанию (используется, если свойства нет в сырых данных)
+       * @property {Function} [get] Метод, возвращающий значение свойства. Первым аргументом придет значение свойства в сырых данных.
+       * @property {Function} [set] Метод, устанавливающий значение свойства.
+       */
 
-            /**
-             * @cfg {String} Поле, содержащее первичный ключ
-             * @see getIdProperty
-             * @see setIdProperty
-             */
-            idProperty: undefined
-         },
+      /**
+       * @cfg {Object.<String, Property>} Описание свойств модели. Дополняет/уточняет свойства, уже существующие в сырых данных.
+       * @example
+       * <pre>
+       *    var User = Model.extend({
+       *       $protected: {
+       *          _options: {
+       *             properties: {
+       *                id: {
+       *                   get: function(value) {
+       *                      return '№' + value;
+       *                   }
+       *                },
+       *                guid: {
+       *                   def: function() {
+       *                      return $ws.helpers.createGUID();
+       *                   }
+       *                },
+       *                displayName: {
+       *                   get: function() {
+       *                      return this.get('firstName') + ' a.k.a "' + this.get('login') + '" ' + this.get('lastName');
+       *                   }
+       *                }
+       *             }
+       *          }
+       *       }
+       *    });
+       *    var user = new User({
+       *       rawData: {
+       *          id: 5,
+       *          login: 'Keanu',
+       *          firstName: 'Johnny',
+       *          lastName: 'Mnemonic',
+       *          job: 'Memory stick'
+       *       }
+       *    });
+       *    user.get('id');//№5
+       *    user.get('guid');//010a151c-1160-d31d-11b3-18189155cc13
+       *    user.get('displayName');//Johnny a.k.a "Keanu" Mnemonic
+       *    user.get('job');//Memory stick
+       *    user.get('uptime');//undefined
+       * </pre>
+       * @see getProperties
+       * @see Property
+       */
+      properties: {},
 
-         _hashPrefix: 'model-',
+      /**
+       * @cfg {String} Поле, содержащее первичный ключ
+       * @see getIdProperty
+       * @see setIdProperty
+       */
+      idProperty: undefined,
 
-         /**
-          * @var {Boolean} Признак, что модель существует в источнике данных
-          */
-         _isStored: false,
+      _hashPrefix: 'model-',
 
-         /**
-          * @var {Boolean} Признак, что модель удалена из источника данных
-          */
-         _isDeleted: false,
+      /**
+       * @var {Boolean} Признак, что модель существует в источнике данных
+       */
+      _isStored: false,
 
-         /**
-          * @var {Object.<String, *>} Объект содержащий вычисленные значения свойств по умолчанию
-          */
-         _defaultPropertiesValues: {},
+      /**
+       * @var {Boolean} Признак, что модель удалена из источника данных
+       */
+      _isDeleted: false,
 
-         /**
-          * @var {Object.<String, Boolean>} Объект содержащий названия свойств, для которых сейчас выполняется вычисление значения
-          */
-         _nowCalculatingProperties: {},
+      /**
+       * @var {Object.<String, *>} Объект содержащий вычисленные значения свойств по умолчанию
+       */
+      _defaultPropertiesValues: {},
 
-         /**
-          * @var {Object} Флаг показывающий была ли модель синхронизирована
-          */
-         _synced: false
-      },
+      /**
+       * @var {Object.<String, Boolean>} Объект содержащий названия свойств, для которых сейчас выполняется вычисление значения
+       */
+      _nowCalculatingProperties: {},
 
-      $constructor: function (cfg) {
+      /**
+       * @var {Object} Флаг показывающий была ли модель синхронизирована
+       */
+      _synced: false,
+
+      constructor: function Model$ (cfg) {
+         Model.superclass.constructor.apply(this, arguments);
+
          cfg = cfg || {};
 
          if ('usingDataSetAsList' in cfg) {
