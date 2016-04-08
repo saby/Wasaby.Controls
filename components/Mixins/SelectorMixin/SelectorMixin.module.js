@@ -102,11 +102,15 @@ define('js!SBIS3.CONTROLS.SelectorMixin', [],
             this._linkedView && this._toggleLinkedViewEvents(false);
             this._linkedView = linkedView;
 
-            if (linkedView) {
+            if (linkedView && this._options.currentSelectedKeys.length !== 0){
+               if(this._options.multiSelect){
+                  this._linkedView.setSelectedKeys(this._options.currentSelectedKeys);
+               }else {
+                  this._linkedView.setSelectedKey(this._options.currentSelectedKeys[0]);
+               }
                this._linkedView.setProperty('multiselect', this._options.multiSelect);
-               this._linkedView.setSelectedKeys(this._options.currentSelectedKeys);
                this._toggleLinkedViewEvents(true);
-               this._linkedView.reload();
+               this._linkedView.redraw();
             }
          },
 
