@@ -111,19 +111,13 @@ define('js!SBIS3.CONTROLS.MergeDialogTemplate', [
                 self._hideIndicator();
             });
         },
-        _showErrorDialog: function(mergeKeys, errors) {
+        _showErrorDialog: function(mergeKeys, error) {
             var
-                errorsTexts = [],
-                count = mergeKeys.length,
-                errorsRecordSet = errors.addinfo;
-            //TODO: переделать на создание recordSet
-            $ws.helpers.forEach(errorsRecordSet.d, function (item) {
-                errorsTexts.push(item[1]);
-            });
+                count = mergeKeys.length;
             $ws.helpers.openErrorsReportDialog({
                 'numSelected': count,
-                'numSuccess': errorsRecordSet ? count - errorsRecordSet.d.length : 0,
-                'errors': errorsTexts,
+                'numSuccess': 0,
+                'errors': [error.message],
                 'title': this._options.errorMessage
             });
         },
