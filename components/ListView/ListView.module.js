@@ -469,24 +469,54 @@ define('js!SBIS3.CONTROLS.ListView',
                 */
                editingTemplate: undefined,
                /**
-                * @cfg {String} Позиция отображения строки итогов
-                * Данная опция позволяет отображать строку итогов в случае отсутствия записей.
+                * @cfg {String} Устанавливает позицию отображения строки итогов.
+                * @remark
+                * Отображение строки итогов конфигурируется тремя опциями: resultsPosition, {@link resultsText} и {@link resultsTpl}.
+                * Данная опция определяет расположение строки итогов, а также дает возможность отображения строки в случае отсутствия записей.
                 * Возможные значения:
                 * <ol>
                 *    <li>'none' - Не отображать строку итогов</li>
                 *    <li>'top' - вверху</li>
                 *    <li>'bottom' - внизу</li>
                 * </ol>
+                * С подробным описанием можно ознакомиться в статье {@link https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/list-settings/list-visual-display/results/ Строка итогов}.
+                * @example
+                * <pre class="brush: xml">
+                *     <option name="resultsPosition">bottom</option>
+                * </pre>
+                * @see resultsText
+                * @see resultsTpl
                 */
                resultsPosition: 'none',
                /**
-                * @cfg {String} Устанавливает заголовок итоговой строки.
+                * @cfg {String} Устанавливает заголовок строки итогов.
+                * @remark
+                * Отображение строки итогов конфигурируется тремя опциями: resultsText, {@link resultsPosition} и {@link resultsTpl}.
+                * В данную опцию передается заголовок строки итогов.
+                * С подробным описанием можно ознакомиться в статье {@link https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/list-settings/list-visual-display/results/ Строка итогов}.
                 * @example
                 * <pre class="brush: xml">
-                *    <option name="resultsText">Итого</option>
+                *    <option name="resultsText">Итого: </option>
                 * </pre>
+                * @see resultsPosition
+                * @see resultsTpl
                 */
                resultsText : rk('Итого'),
+               /**
+                * @cfg {String} Устанавливает шаблон отображения строки итогов.
+                * @remark
+                * Отображение строки итогов конфигурируется тремя опциями: resultsTpl, {@link resultsPosition} и {@link resultsText}.
+                * В данную опцию передается имя шаблона, в котором описана конфигурация строки итогов.
+                * Опция позволяет пользователю выводить в строку требуемые данные и задать для нее определенное
+                * стилевое оформление. Подсчет каких-либо итоговых сумм в строке не предусмотрен.
+                * С подробным описанием можно ознакомиться в статье {@link https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/list-settings/list-visual-display/results/ Строка итогов}.
+                * @example
+                * <pre class="brush: xml">
+                *     <option name="resultsTpl" value="html!SBIS3.Demo.nDataGridView/resources/resultTemplate"></option>
+                * </pre>
+                * @see resultsPosition
+                * @see resultsText
+                */
                resultsTpl: undefined
             },
             //Флаг обозначает необходимость компенсировать подгрузку по скроллу вверх, ее нельзя делать безусловно, так как при подгрузке вверх могут добавлятся элементы и вниз тоже

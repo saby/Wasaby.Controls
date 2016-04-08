@@ -149,6 +149,21 @@ define('js!SBIS3.CONTROLS.DataGridView',
              * Массив имен столбцов, по которым строится лесенка
              */
             ladder: undefined,
+            /**
+             * @cfg {String} Устанавливает шаблон отображения строки итогов.
+             * @remark
+             * Отображение строки итогов конфигурируется тремя опциями: resultsTpl, {@link resultsPosition} и {@link resultsText}.
+             * В данную опцию передается имя шаблона, в котором описана конфигурация строки итогов.
+             * Опция позволяет пользователю выводить в строку требуемые данные и задать для нее определенное
+             * стилевое оформление. Подсчет каких-либо итоговых сумм в строке не предусмотрен.
+             * С подробным описанием можно ознакомиться в статье {@link https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/list-settings/list-visual-display/results/ Строка итогов}.
+             * @example
+             * <pre class="brush: xml">
+             *     <option name="resultsTpl" value="html!SBIS3.Demo.nDataGridView/resources/resultTemplate"></option>
+             * </pre>
+             * @see resultsPosition
+             * @see resultsText
+             */
             resultsTpl: resultsTpl,
             /**
              * @cfg {Boolean} Производить ли преобразование колонок в шапке
