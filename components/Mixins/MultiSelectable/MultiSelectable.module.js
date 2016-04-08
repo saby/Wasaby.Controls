@@ -237,7 +237,7 @@ define('js!SBIS3.CONTROLS.MultiSelectable', ['js!SBIS3.CONTROLS.Data.Collection.
          if (this._dataSet) {
             var items = [];
             this._dataSet.each(function(rec){
-               items.push(rec.getKey())
+               items.push(rec.getId())
             });
             this.setSelectedKeys(items);
          }
@@ -483,7 +483,7 @@ define('js!SBIS3.CONTROLS.MultiSelectable', ['js!SBIS3.CONTROLS.Data.Collection.
          if (this._dataSet) {
             var items = [];
             this._dataSet.each(function(rec){
-               items.push(rec.getKey())
+               items.push(rec.getId())
             });
             this.toggleItemsSelection(items);
          }
@@ -493,7 +493,7 @@ define('js!SBIS3.CONTROLS.MultiSelectable', ['js!SBIS3.CONTROLS.Data.Collection.
        * @param {Boolean} loadItems Необходимость загрузки элементов коллекции, если их нет в текущем наборе выбранных элементов
        * и они отсутствуют в наборе данных, полученных из источника.
        * @param {Number} count Ограничение количества отдаваемых элементов коллекции.
-       * @returns {SBIS3.CONTROLS.Data.Collection.List|$ws.proto.Deferred} Коллекция элементов с доступом по индексу.
+       * @returns {SBIS3.CONTROLS.Data.Collection.List|$ws.proto.Deferred|null} Коллекция элементов с доступом по индексу.
        * @example
        * <pre>
        *    if (!checkBoxGroup.getSelectedItems().at(0).get('Текст') === 'Не выбрано') {
@@ -679,7 +679,7 @@ define('js!SBIS3.CONTROLS.MultiSelectable', ['js!SBIS3.CONTROLS.Data.Collection.
 
       _setFirstItemAsSelected : function() {
          if (this._dataSet) {
-            this._options.selectedKeys = [this._dataSet.at(0).getKey()];
+            this._options.selectedKeys = [this._dataSet.at(0).getId()];
          }
       },
 

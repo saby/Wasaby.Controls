@@ -1,16 +1,25 @@
 /* global define, beforeEach, afterEach, describe, context, it, assert, $ws */
 define([
+   'js!SBIS3.CONTROLS.Data.Source.Provider.IRpc',
    'js!SBIS3.CONTROLS.Data.Source.Rpc'
-], function (RpcSource) {
+], function (IRpcProvider, RpcSource) {
    'use strict';
 
    describe('SBIS3.CONTROLS.Data.Source.Rpc', function () {
-      var dataSource;
+      var dataSource,
+         ProviderMock = $ws.core.extend({}, [IRpcProvider], {
+            call: function (method, args) {
+               this._lastMethod = method;
+               this._lastArgs = args;
+               return $ws.proto.Deferred.success(true);
+            }
+         }),
+         provider = new ProviderMock();
 
-      beforeEach(function (){
+      beforeEach(function () {
          dataSource = new RpcSource({
             endpoint: '/users/',
-            provider: 'source.provider.sbis-business-logic',
+            provider: provider,
             binding: {
                query: 'getUsers',
                create: 'createUser',
@@ -29,8 +38,7 @@ define([
 
       describe('.getProvider()', function () {
          it('should return Provider', function (){
-            var provider = dataSource.getProvider();
-            assert.isTrue($ws.helpers.instanceOfModule(provider, 'SBIS3.CONTROLS.Data.Source.Provider.SbisBusinessLogic'));
+            assert.instanceOf(dataSource.getProvider(), ProviderMock);
          });
       });
 

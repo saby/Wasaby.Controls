@@ -7,8 +7,9 @@ define('js!SBIS3.CONTROLS.Data.Collection.List', [
    'js!SBIS3.CONTROLS.Data.Collection.ArrayEnumerator',
    'js!SBIS3.CONTROLS.Data.Serializer',
    'js!SBIS3.CONTROLS.Data.Di',
+   'js!SBIS3.CONTROLS.Data.Utils',
    'js!SBIS3.CONTROLS.Data.ContextField.List'
-], function (SerializableMixin, IEnumerable, IList, IIndexedCollection, ArrayEnumerator, Serializer, Di, ContextFieldList) {
+], function (SerializableMixin, IEnumerable, IList, IIndexedCollection, ArrayEnumerator, Serializer, Di, Utils, ContextFieldList) {
    'use strict';
 
    /**
@@ -73,6 +74,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.List', [
       _setSerializableState: function(state) {
          return SerializableMixin._setSerializableState(state).callNext(function() {
             this._items = state._items;
+            this._clearServiceEnumerator();
          });
       },
 
@@ -213,7 +215,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.List', [
        * @returns {Array.<Number>}
        */
       getIndiciesByValue: function (property, value) {
-         $ws.single.ioc.resolve('ILogger').info(this._moduleName + '::getIndiciesByValue()', 'Method is deprecated and will be removed in 3.7.4. Use getIndicesByValue() instead.');
+         Utils.logger.stack(this._moduleName + '::getIndiciesByValue(): method is deprecated and will be removed in 3.7.4. Use getIndicesByValue() instead.');
          return this.getIndicesByValue(property, value);
       },
 
@@ -224,7 +226,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.List', [
        * @deprecated метод будет удален в 3.7.4 используйте append() или prepend()
        */
       concat: function (items, prepend) {
-         $ws.single.ioc.resolve('ILogger').info(this._moduleName + '::concat()', 'Method is deprecated and will be removed in 3.7.4. Use append() or prepend() instead.');
+         Utils.logger.stack(this._moduleName + '::concat(): method is deprecated and will be removed in 3.7.4. Use append() or prepend() instead.');
          if (prepend) {
             this.prepend(items);
          } else {
@@ -258,7 +260,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.List', [
       },
 
       equals: function (another) {
-         $ws.single.ioc.resolve('ILogger').info(this._moduleName + '::equals()', 'Method is deprecated and will be removed in 3.7.4. Use isEqual() instead.');
+         Utils.logger.stack(this._moduleName + '::equals(): method is deprecated and will be removed in 3.7.4. Use isEqual() instead.');
          return this.isEqual(another);
       },
 
@@ -302,6 +304,9 @@ define('js!SBIS3.CONTROLS.Data.Collection.List', [
          }));
       },
 
+      _clearServiceEnumerator: function () {
+          this._serviceEnumerator = undefined;
+      },
       /**
        * Проверяет корректность индекса
        * @param {Number} index Индекс

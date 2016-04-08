@@ -63,7 +63,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.IndexedEnumeratorMixin', [
        * @deprecated метод будет удален в 3.7.4 используйте getIndicesByValue()
        */
       getIndiciesByValue: function (property, value) {
-         $ws.single.ioc.resolve('ILogger').info(this._moduleName + '::getIndiciesByValue()', 'Method is deprecated and will be removed in 3.7.4. Use getIndicesByValue() instead.');
+         Utils.logger.stack(this._moduleName + '::getIndiciesByValue(): method is deprecated and will be removed in 3.7.4. Use getIndicesByValue() instead.');
          return this.getIndicesByValue(property, value);
       },
 
@@ -119,10 +119,10 @@ define('js!SBIS3.CONTROLS.Data.Collection.IndexedEnumeratorMixin', [
          while ((item = this.getNext())) {
             value = Utils.getItemPropertyValue(item, property);
 
-            //FIXME: для проекций решить проблему, кода поиск осущетвляется как по ITreeItem, так и по его contents
+            //FIXME: для проекций решить проблему, кода поиск осущетвляется как по CollectionItem, так и по его contents
             if (value === undefined &&
                item instanceof Object &&
-               $ws.helpers.instanceOfMixin(item, 'SBIS3.CONTROLS.Data.Projection.ICollectionItem')
+               $ws.helpers.instanceOfModule(item, 'SBIS3.CONTROLS.Data.Projection.CollectionItem')
             ) {
                value = Utils.getItemPropertyValue(item.getContents(), property);
             }

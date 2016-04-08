@@ -251,7 +251,7 @@ define('js!SBIS3.CONTROLS.CollectionMixin', ['js!SBIS3.CONTROLS.Collection', /*T
 
       _drawItem : function(item, targetContainer) {
          var
-            key = this._items.getKey(item),
+            key = this._items.getId(item),
             self = this;
          return this._createItemInstance(item, targetContainer).addCallback(function(container){
             self._addItemClasses(container, key);
@@ -297,7 +297,7 @@ define('js!SBIS3.CONTROLS.CollectionMixin', ['js!SBIS3.CONTROLS.Collection', /*T
                   config.element = ctrlWrapper;
                   config.parent = self;
                   var ctrl = new ctor(config);
-                  self._itemsInstances[self._items.getKey(item)] = ctrl;
+                  self._itemsInstances[self._items.getId(item)] = ctrl;
                   def.callback(ctrl.getContainer());
                })
             }

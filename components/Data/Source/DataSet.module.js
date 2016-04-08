@@ -1,9 +1,10 @@
 /* global define, $ws */
 define('js!SBIS3.CONTROLS.Data.Source.DataSet', [
    'js!SBIS3.CONTROLS.Data.Di',
+   'js!SBIS3.CONTROLS.Data.Utils',
    'js!SBIS3.CONTROLS.Data.Model',
    'js!SBIS3.CONTROLS.Data.Collection.RecordSet'
-], function (Di) {
+], function (Di, Utils) {
    'use strict';
 
    /**
@@ -85,7 +86,7 @@ define('js!SBIS3.CONTROLS.Data.Source.DataSet', [
          cfg = cfg || {};
          if ('data' in cfg && !('rawData' in cfg)) {
             this._options.rawData = cfg.data;
-            $ws.single.ioc.resolve('ILogger').info('SBIS3.CONTROLS.Data.Source.DataSet', 'option "data" is deprecated and will be removed in 3.7.4. Use "rawData" instead.');
+            Utils.logger.stack('SBIS3.CONTROLS.Data.Source.DataSet::$constructor(): option "data" is deprecated and will be removed in 3.7.4. Use "rawData" instead.', 1);
          }
       },
 

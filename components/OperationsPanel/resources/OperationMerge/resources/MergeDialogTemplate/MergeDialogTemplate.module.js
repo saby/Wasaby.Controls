@@ -90,7 +90,7 @@ define('js!SBIS3.CONTROLS.MergeDialogTemplate', [
                 //Не берём папки, которые присутствуют в датасете для построения структуры.
                 recordSet.each(function(rec) {
                     if (!rec.get(self._options.hierField + '@')) {
-                        self._treeViewKeys.push(rec.getKey());
+                        self._treeViewKeys.push(rec.getId());
                     }
                 });
                 //TODO: пока таким образом установит выбранное значение, иначе не стрельнёт onSelectedItemChange
@@ -122,7 +122,7 @@ define('js!SBIS3.CONTROLS.MergeDialogTemplate', [
             });
             $ws.helpers.openErrorsReportDialog({
                 'numSelected': count,
-                'numSuccess': count - errorsRecordSet.d.length,
+                'numSuccess': errorsRecordSet ? count - errorsRecordSet.d.length : 0,
                 'errors': errorsTexts,
                 'title': this._options.errorMessage
             });
@@ -154,7 +154,7 @@ define('js!SBIS3.CONTROLS.MergeDialogTemplate', [
             }).addCallback(function (data) {
                 //TODO: Данный костыль нужен для того, чтобы добавить в dataSet колонки, выпилить когда необходимое api появится у dataSet'а
                 data.getAll().each(function(rec) {
-                    record = dataSet.getRecordByKey(rec.getKey());
+                    record = dataSet.getRecordByKey(rec.getId());
                     isAvailable = rec.get(AVAILABLE_FIELD_NAME);
                     showMergeButton = showMergeButton || isAvailable;
                     record.set(AVAILABLE_FIELD_NAME, isAvailable);

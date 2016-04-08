@@ -2,13 +2,13 @@
 define('js!SBIS3.CONTROLS.Data.Projection.Collection', [
    'js!SBIS3.CONTROLS.Data.Collection.IEnumerable',
    'js!SBIS3.CONTROLS.Data.Collection.IList',
-   'js!SBIS3.CONTROLS.Data.Projection.ICollection',
    'js!SBIS3.CONTROLS.Data.Bind.ICollectionProjection',
    'js!SBIS3.CONTROLS.Data.Projection.CollectionEnumerator',
    'js!SBIS3.CONTROLS.Data.Projection.Projection',
    'js!SBIS3.CONTROLS.Data.Di',
+   'js!SBIS3.CONTROLS.Data.Utils',
    'js!SBIS3.CONTROLS.Data.Projection.CollectionItem'
-], function (IEnumerable, IList, ICollectionProjection, IBindCollectionProjection, CollectionProjectionEnumerator, Projection, Di) {
+], function (IEnumerable, IList, IBindCollectionProjection, CollectionProjectionEnumerator, Projection, Di, Utils) {
    'use strict';
 
    /**
@@ -17,16 +17,29 @@ define('js!SBIS3.CONTROLS.Data.Projection.Collection', [
     * @extends SBIS3.CONTROLS.Data.Projection.Projection
     * @mixes SBIS3.CONTROLS.Data.Collection.IEnumerable
     * @mixes SBIS3.CONTROLS.Data.Collection.IList
-    * @mixes SBIS3.CONTROLS.Data.Projection.ICollection
     * @mixes SBIS3.CONTROLS.Data.Bind.ICollectionProjection
     * @ignoreMethods notifyItemChange
     * @public
     * @author Мальцев Алексей
     */
 
-   var CollectionProjection = Projection.extend([IEnumerable, IList, ICollectionProjection, IBindCollectionProjection], /** @lends SBIS3.CONTROLS.Data.Projection.Collection.prototype */{
+   var CollectionProjection = Projection.extend([IEnumerable, IList, IBindCollectionProjection], /** @lends SBIS3.CONTROLS.Data.Projection.Collection.prototype */{
       _moduleName: 'SBIS3.CONTROLS.Data.Projection.Collection',
       $protected: {
+         _options: {
+            /**
+             * @cfg {SBIS3.CONTROLS.Data.Collection.IEnumerable} Исходная коллекция
+             */
+            collection: null,
+
+            /**
+             * @cfg {Array.<String>} Названия свойств элемента коллекции, от которых зависят фильтрация и/или сортировка.
+             * @remark
+             * Изменение любого из указанных свойств элемента коллекции приведет к перерасчету фильтации и сортировки.
+             */
+            importantItemProperties: []
+         },
+
          /**
           * @member {String} Модуль элемента проекции
           */
@@ -227,16 +240,29 @@ define('js!SBIS3.CONTROLS.Data.Projection.Collection', [
 
       //endregion SBIS3.CONTROLS.Data.Collection.IList
 
-      //region SBIS3.CONTROLS.Data.Projection.ICollection
+      //region Public methods
 
+      /**
+       * Возвращает исходную коллекцию, для которой построена проекция
+       * @returns {SBIS3.CONTROLS.Data.Collection.IEnumerable}
+       */
       getCollection: function () {
          return this._options.collection;
       },
 
+      /**
+       * Возвращает текущий элемент
+       * @returns {SBIS3.CONTROLS.Data.Projection.CollectionItem}
+       */
       getCurrent: function () {
          return this._getServiceEnumerator().getCurrent();
       },
 
+      /**
+       * Устанавливает текущий элемент
+       * @param {SBIS3.CONTROLS.Data.Projection.CollectionItem} item Новый текущий элемент
+       * @param {Boolean} [silent=false] Не генерировать событие onCurrentChange
+       */
       setCurrent: function (item, silent) {
          var oldCurrent = this.getCurrent();
          if (oldCurrent !== item) {
@@ -253,10 +279,19 @@ define('js!SBIS3.CONTROLS.Data.Projection.Collection', [
          }
       },
 
+      /**
+       * Возвращает позицию текущего элемента
+       * @returns {Number}
+       */
       getCurrentPosition: function () {
          return this._getServiceEnumerator().getPosition();
       },
 
+      /**
+       * Устанавливает позицию текущего элемента
+       * @param {Number} position Позиция текущего элемента. Значение -1 указывает, что текущий элемент не выбран.
+       * @param {Boolean} [silent=false] Не генерировать событие onCurrentChange
+       */
       setCurrentPosition: function (position, silent) {
          var oldPosition = this.getCurrentPosition();
          if (position !== oldPosition) {
@@ -273,6 +308,28 @@ define('js!SBIS3.CONTROLS.Data.Projection.Collection', [
          }
       },
 
+      /**
+       * Возвращает следующий элемент относительно item
+       * @param {SBIS3.CONTROLS.Data.Projection.CollectionItem} item элемент проекции
+       * @returns {SBIS3.CONTROLS.Data.Projection.CollectionItem}
+       */
+      getNext: function (item) {
+         return this._getNearbyItem(item, true);
+      },
+
+      /**
+       * Возвращает предыдущий элемент относительно item
+       * @param {SBIS3.CONTROLS.Data.Projection.CollectionItem} index элемент проекции
+       * @returns {SBIS3.CONTROLS.Data.Projection.CollectionItem}
+       */
+      getPrevious: function (item) {
+         return this._getNearbyItem(item, false);
+      },
+
+      /**
+       * Устанавливает текущим следующий элемент
+       * @returns {Boolean} Есть ли следующий элемент
+       */
       moveToNext: function () {
          var oldCurrent = this.getCurrent(),
              oldCurrentPosition = this.getCurrentPosition(),
@@ -288,6 +345,10 @@ define('js!SBIS3.CONTROLS.Data.Projection.Collection', [
          return hasNext;
       },
 
+      /**
+       * Устанавливает текущим предыдущий элемент
+       * @returns {Boolean} Есть ли предыдущий элемент
+       */
       moveToPrevious: function () {
          var oldCurrent = this.getCurrent(),
              oldCurrentPosition = this.getCurrentPosition(),
@@ -303,14 +364,10 @@ define('js!SBIS3.CONTROLS.Data.Projection.Collection', [
          return hasPrevious;
       },
 
-      getNext: function (item) {
-         return this._getNearbyItem(item, true);
-      },
-
-      getPrevious: function (item) {
-         return this._getNearbyItem(item, false);
-      },
-
+      /**
+       * Устанавливает текущим первый элемент
+       * @returns {Boolean} Есть ли первый элемент
+       */
       moveToFirst: function () {
          if (this.getCurrentPosition() === 0) {
             return false;
@@ -319,6 +376,10 @@ define('js!SBIS3.CONTROLS.Data.Projection.Collection', [
          return this._getServiceEnumerator().getPosition() === 0;
       },
 
+      /**
+       * Устанавливает текущим последний элемент
+       * @returns {Boolean} Есть ли последний элемент
+       */
       moveToLast: function () {
          var position = this.getCount() - 1;
          if (this.getCurrentPosition() === position) {
@@ -328,10 +389,18 @@ define('js!SBIS3.CONTROLS.Data.Projection.Collection', [
          return this.getCurrentPosition() === position;
       },
 
+      /**
+       * Возвращает фильтр элементов проекции
+       * @returns {Function}
+       */
       getFilter: function () {
          return this._filter;
       },
 
+      /**
+       * Устанавливает фильтр элементов проекции. Для сброса ранее установленного фильтра вызвать этот метод без параметров.
+       * @param {Function} [filter] Фильтр элементов: аргументами приходят элемент и его позиция, должен вернуть Boolean
+       */
       setFilter: function (filter) {
          if (this._filter === filter) {
             return;
@@ -343,20 +412,53 @@ define('js!SBIS3.CONTROLS.Data.Projection.Collection', [
          this._finishUpdateSession(session);
       },
 
+      /**
+       * Возвращает способ группировки элементов проекции
+       * @returns {Function}
+       */
       getGroup: function () {
          return this._group;
       },
 
+      /**
+       * Устанавливает способ группировки элементов проекции. Для сброса ранее установленного способа группировки вызвать этот метод без параметров.
+       * @param {Function} [group] Способ группировки элементов: аргументами приходят элемент и его позиция, должен вернуть Object - группу, в которую входит элемент
+       */
       setGroup: function (group) {
          this._group = group;
          //TODO: implement it
          throw new Error(this._moduleName + '::setGroup(): is under construction');
       },
 
+      /**
+       * Возвращает способ сортировки элементов проекции
+       * @returns {Function|Array.<Function>}
+       */
       getSort: function () {
          return this._userSort.length > 1 ? this._userSort : this._userSort[0];
       },
 
+      /**
+       * Устанавливает способ сортировки элементов проекции. Для сброса ранее установленного способа сортировки вызвать этот метод без параметров.
+       * Можно передать набор аргументов - тогда будет произведена множественная сортировка.
+       * @param {Function} [sort] Способ сортировки элементов: аргументами приходят 2 объекта (a, b) вида {item: item, index: index}, должен вернуть -1|0|1 (см. Array.prototype.sort())
+       * @example
+       * <pre>
+       *     var projection = new CollectionProjection({...});
+       *
+       *     //получаем коллекию, отсортированную по возрастанию id
+       *     projection.setSort(function(a, b) {
+       *       return a.item.id - b.item.id
+       *     });
+       *
+       *     //получаем коллекию, отсортированную сначала по title, а потом - по id
+       *     projection.setSort(function(a, b) {
+       *       return a.item.title > b.item.title
+       *     }, function(a, b) {
+       *       return a.item.id - b.item.id
+       *     });
+       * </pre>
+       */
       setSort: function () {
          if (this._userSort.length === arguments.length) {
             var changed = false;
@@ -380,11 +482,25 @@ define('js!SBIS3.CONTROLS.Data.Projection.Collection', [
          this._finishUpdateSession(session);
       },
 
+      /**
+       * Возвращает индекс элемента в проекции по индексу в исходной коллекции
+       * @param {Number} index Индекс элемента в исходной коллекции
+       * @returns {Number}
+       * @deprecated метод будет удален в 3.7.4 используйте getIndexBySourceIndex()
+       */
       getInternalBySource: function (index) {
+         Utils.logger.stack(this._moduleName + '::getInternalBySource(): method is deprecated and will be removed in 3.7.4. Use getIndexBySourceIndex() instead.');
          return this.getIndexBySourceIndex(index);
       },
 
+      /**
+       * Возвращает индекс элемента в исходной коллекции по индексу в проекции
+       * @param {Number} index Индекс элемента в проекции
+       * @returns {Number}
+       * @deprecated метод будет удален в 3.7.4 используйте getSourceIndexByIndex()
+       */
       getSourceByInternal: function (index) {
+         Utils.logger.stack(this._moduleName + '::getSourceByInternal(): method is deprecated and will be removed in 3.7.4. Use getSourceIndexByIndex() instead.');
          return this.getSourceIndexByIndex(index);
       },
 
@@ -1016,7 +1132,7 @@ define('js!SBIS3.CONTROLS.Data.Projection.Collection', [
                replaced.push(item.getContents());
                item.setContents(items[i], true);
             } else {
-               $ws.single.ioc.resolve('ILogger').log('SBIS3.CONTROLS.Data.Projection.Collection::_replaceItems', 'Item for replace is not exists');
+               Utils.logger.log('SBIS3.CONTROLS.Data.Projection.Collection::_replaceItems(): item for replace is not exists');
             }
          }
          return replaced;
@@ -1027,7 +1143,7 @@ define('js!SBIS3.CONTROLS.Data.Projection.Collection', [
        * @param {Array} items Элементы исходной коллеции
        * @param {Number} start Начальный индекс (в исходной коллекци)
        * @param {Boolean} [newContainers=false] Создать новые контейнеры (потому что в старых уже другие элементы)
-       * @returns {Array.<SBIS3.CONTROLS.Data.Projection.ICollectionItem>}
+       * @returns {Array.<SBIS3.CONTROLS.Data.Projection.CollectionItem>}
        * @protected
        */
       _getItemsProjection: function (items, start, newContainers) {
@@ -1060,9 +1176,9 @@ define('js!SBIS3.CONTROLS.Data.Projection.Collection', [
       /**
        * Обработчик события об изменении исходной коллекции
        * @param {String} action Действие, приведшее к изменению.
-       * @param {Array.<SBIS3.CONTROLS.Data.Projection.ICollectionItem>} newItems Новые элементы исходной коллеции.
+       * @param {Array.<SBIS3.CONTROLS.Data.Projection.CollectionItem>} newItems Новые элементы исходной коллеции.
        * @param {Number} newItemsIndex Индекс исходной коллеции, в котором появились новые элементы.
-       * @param {Array.<SBIS3.CONTROLS.Data.Projection.ICollectionItem>} oldItems Удаленные элементы исходной коллеции.
+       * @param {Array.<SBIS3.CONTROLS.Data.Projection.CollectionItem>} oldItems Удаленные элементы исходной коллеции.
        * @param {Number} oldItemsIndex Индекс исходной коллеции, в котором удалены элементы.
        * @protected
        */
@@ -1084,8 +1200,8 @@ define('js!SBIS3.CONTROLS.Data.Projection.Collection', [
 
       /**
        * Генерирует событие об изменении текущего элемента проекции коллекции
-       * @param {SBIS3.CONTROLS.Data.Projection.ICollectionItem} newCurrent Новый текущий элемент
-       * @param {SBIS3.CONTROLS.Data.Projection.ICollectionItem} oldCurrent Старый текущий элемент
+       * @param {SBIS3.CONTROLS.Data.Projection.CollectionItem} newCurrent Новый текущий элемент
+       * @param {SBIS3.CONTROLS.Data.Projection.CollectionItem} oldCurrent Старый текущий элемент
        * @param {Number} newPosition Новая позиция
        * @param {Number} oldPosition Старая позиция
        * @protected
@@ -1138,9 +1254,9 @@ define('js!SBIS3.CONTROLS.Data.Projection.Collection', [
 
       /**
        * Возвращает соседний элемент проекции
-       * @param {SBIS3.CONTROLS.Data.Projection.ICollectionItem} item Элемент проекции относительно которого искать
+       * @param {SBIS3.CONTROLS.Data.Projection.CollectionItem} item Элемент проекции относительно которого искать
        * @param {Boolean} isNext Следующий или предыдущий элемент
-       * @returns {SBIS3.CONTROLS.Data.Projection.ICollectionItem}
+       * @returns {SBIS3.CONTROLS.Data.Projection.CollectionItem}
        * @protected
        */
       _getNearbyItem: function (item, isNext) {

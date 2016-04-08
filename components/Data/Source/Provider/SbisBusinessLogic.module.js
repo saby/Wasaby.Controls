@@ -1,8 +1,9 @@
 /* global define, $ws */
 define('js!SBIS3.CONTROLS.Data.Source.Provider.SbisBusinessLogic', [
    'js!SBIS3.CONTROLS.Data.Source.Provider.IRpc',
-   'js!SBIS3.CONTROLS.Data.Di'
-], function (IRpc, Di) {
+   'js!SBIS3.CONTROLS.Data.Di',
+   'js!SBIS3.CONTROLS.Data.Utils'
+], function (IRpc, Di, Utils) {
     'use strict';
 
     /**
@@ -43,11 +44,11 @@ define('js!SBIS3.CONTROLS.Data.Source.Provider.SbisBusinessLogic', [
           cfg = cfg || {};
           //Deprecated
           if ('resource' in cfg && !('endpoint' in cfg)) {
-             $ws.single.ioc.resolve('ILogger').info(this._moduleName + '::$constructor()', 'Option "resource" is deprecated and will be removed in 3.7.4. Use "endpoint.contract" instead.');
+             Utils.logger.stack(this._moduleName + '::$constructor(): option "resource" is deprecated and will be removed in 3.7.4. Use "endpoint.contract" instead.', 1);
              this._options.endpoint.contract = this._options.resource;
           }
           if ('service' in cfg && !('endpoint' in cfg)) {
-             $ws.single.ioc.resolve('ILogger').info(this._moduleName + '::$constructor()', 'Option "service" is deprecated and will be removed in 3.7.4. Use "endpoint.address" instead.');
+             Utils.logger.stack(this._moduleName + '::$constructor(): option "service" is deprecated and will be removed in 3.7.4. Use "endpoint.address" instead.', 1);
              this._options.endpoint.address = this._options.service;
           }
 
@@ -76,7 +77,7 @@ define('js!SBIS3.CONTROLS.Data.Source.Provider.SbisBusinessLogic', [
         * @deprecated Метод будет удален в 3.7.4, используйте getEndpoint().address
         */
        getService: function () {
-          $ws.single.ioc.resolve('ILogger').info(this._moduleName + '::getService()', 'Method is deprecated and will be removed in 3.7.4. Use "getEndpoint().address" instead.');
+          Utils.logger.stack(this._moduleName + '::getService(): method is deprecated and will be removed in 3.7.4. Use "getEndpoint().address" instead.');
           return this._options.service || '';
        },
 
@@ -86,7 +87,7 @@ define('js!SBIS3.CONTROLS.Data.Source.Provider.SbisBusinessLogic', [
         * @deprecated Метод будет удален в 3.7.4, используйте getEndpoint().contract
         */
        getResource: function () {
-          $ws.single.ioc.resolve('ILogger').info(this._moduleName + '::getResource()', 'Method is deprecated and will be removed in 3.7.4. Use "getEndpoint().contract" instead.');
+          Utils.logger.stack(this._moduleName + '::getResource(): method is deprecated and will be removed in 3.7.4. Use "getEndpoint().contract" instead.');
           return this._options.resource || '';
        },
 

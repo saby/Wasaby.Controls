@@ -3,10 +3,11 @@ define('js!SBIS3.CONTROLS.Data.Source.Base', [
    'js!SBIS3.CONTROLS.Data.Source.ISource',
    'js!SBIS3.CONTROLS.Data.Source.DataSet',
    'js!SBIS3.CONTROLS.Data.Di',
+   'js!SBIS3.CONTROLS.Data.Utils',
    'js!SBIS3.CONTROLS.Data.Model',
    'js!SBIS3.CONTROLS.Data.Collection.RecordSet',
    'js!SBIS3.CONTROLS.Data.Adapter.Json'
-], function (ISource, DataSet, Di) {
+], function (ISource, DataSet, Di, Utils) {
    'use strict';
 
    /**
@@ -22,7 +23,7 @@ define('js!SBIS3.CONTROLS.Data.Source.Base', [
       /**
        * @event onDataSync При изменении синхронизации данных с источником
        * @param {$ws.proto.EventObject} eventObject Дескриптор события.
-       * @param (Array.<SBIS3.CONTROLS.Data.Model>) records Измененные записи
+       * @param {Array.<SBIS3.CONTROLS.Data.Model>} records Измененные записи
        */
 
       _moduleName: 'SBIS3.CONTROLS.Data.Source.Base',
@@ -33,7 +34,7 @@ define('js!SBIS3.CONTROLS.Data.Source.Base', [
          cfg = cfg || {};
          //Deprecated
          if ('resource' in cfg && !('endpoint' in cfg)) {
-            $ws.single.ioc.resolve('ILogger').info(this._moduleName + '::$constructor()', 'Option "resource" is deprecated and will be removed in 3.7.4. Use "endpoint.contract" instead.');
+            Utils.logger.stack(this._moduleName + '::$constructor(): option "resource" is deprecated and will be removed in 3.7.4. Use "endpoint.contract" instead.', 3);
             this._options.endpoint.contract = cfg.resource;
          }
 
@@ -65,7 +66,7 @@ define('js!SBIS3.CONTROLS.Data.Source.Base', [
        * @returns {String}
        */
       getResource: function () {
-         $ws.single.ioc.resolve('ILogger').info(this._moduleName + '::getResource()', 'Method is deprecated and will be removed in 3.7.4. Use "getEndpoint().contract" instead.');
+         Utils.logger.stack(this._moduleName + '::getResource(): method is deprecated and will be removed in 3.7.4. Use "getEndpoint().contract" instead.');
          return this._options.endpoint.contract || '';
       },
 
@@ -107,6 +108,42 @@ define('js!SBIS3.CONTROLS.Data.Source.Base', [
       //endregion SBIS3.CONTROLS.Data.Source.ISource
 
       //region Protected methods
+
+      _prepareCreateResult: function(data) {
+         return this._getModelInstance(data);
+      },
+
+      _prepareReadResult: function(data) {
+         var model = this._getModelInstance(data);
+         model.setStored(true);
+         return model;
+      },
+
+      _prepareUpdateResult: function(model, key) {
+         var idProperty = this.getIdProperty();
+         if (key &&
+            idProperty &&
+            !model.isStored() &&
+            !model.get(idProperty)
+         ) {
+            model.set(idProperty, key);
+         }
+         model.setStored(true);
+         model.applyChanges();
+
+         return key;
+      },
+
+      _prepareQueryResult: function(data, totalProperty) {
+         return this._prepareCallResult(data, totalProperty);
+      },
+
+      _prepareCallResult: function(data, totalProperty) {
+         return this._getDataSetInstance({
+            rawData: data,
+            totalProperty: totalProperty
+         });
+      },
 
       /**
        * Определяет название свойства с первичным ключем по данным
@@ -187,7 +224,7 @@ define('js!SBIS3.CONTROLS.Data.Source.Base', [
       //region SBIS3.CONTROLS.BaseSource
 
       sync: function (data) {
-         //$ws.single.ioc.resolve('ILogger').info('SBIS3.CONTROLS.Data.Source.Base', 'method sync() is deprecated and will be removed in 3.7.4. Use SBIS3.CONTROLS.Data.Model::sync() instead.');
+         //Utils.logger.stack('SBIS3.CONTROLS.Data.Source.Base: method sync() is deprecated and will be removed in 3.7.4. Use SBIS3.CONTROLS.Data.Model::sync() instead.');
 
          var result;
          if ($ws.helpers.instanceOfModule(data, 'SBIS3.CONTROLS.Data.Model')) {

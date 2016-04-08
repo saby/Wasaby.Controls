@@ -2,8 +2,9 @@
 define('js!SBIS3.CONTROLS.Data.Types.Enum', [
    'js!SBIS3.CONTROLS.Data.Types.Dictionary',
    'js!SBIS3.CONTROLS.Data.ContextField.Enum',
-   'js!SBIS3.CONTROLS.Data.Di'
-], function (Dictionary, ContextFieldEnum, Di) {
+   'js!SBIS3.CONTROLS.Data.Di',
+   'js!SBIS3.CONTROLS.Data.Utils'
+], function (Dictionary, ContextFieldEnum, Di, Utils) {
    'use strict';
 
    /**
@@ -27,7 +28,7 @@ define('js!SBIS3.CONTROLS.Data.Types.Enum', [
 
       $constructor: function (cfg) {
          if ('data' in cfg && !('dictionary' in cfg)) {
-            $ws.single.ioc.resolve('ILogger').info(this._moduleName + '::$constructor()', 'Option "data" is deprecated and will be removed in 3.7.4. Use option "dictionary" instead.');
+            Utils.logger.stack(this._moduleName + '::$constructor(): option "data" is deprecated and will be removed in 3.7.4. Use option "dictionary" instead.', 1);
             var data = cfg.data;
             if (!(data instanceof Object)) {
                throw new TypeError('Option "data" must be an instance of Object');
@@ -68,7 +69,7 @@ define('js!SBIS3.CONTROLS.Data.Types.Enum', [
        * @returns {Number}
        */
       getCurrentValue: function () {
-         $ws.single.ioc.resolve('ILogger').info(this._moduleName + '::getCurrentValue()', 'Method is deprecated and will be removed in 3.7.4. Use get() instead.');
+         Utils.logger.stack(this._moduleName + '::getCurrentValue(): method is deprecated and will be removed in 3.7.4. Use get() instead.');
          return this.get();
       },
 
@@ -94,7 +95,7 @@ define('js!SBIS3.CONTROLS.Data.Types.Enum', [
        * @returns {Array}
        */
       getValues: function () {
-         $ws.single.ioc.resolve('ILogger').info(this._moduleName + '::getValues()', 'Method is deprecated and will be removed in 3.7.4. Use each() instead.');
+         Utils.logger.stack(this._moduleName + '::getValues(): method is deprecated and will be removed in 3.7.4. Use each() instead.');
          var values = [];
          this.each(function (key, index) {
             values[index] = key;

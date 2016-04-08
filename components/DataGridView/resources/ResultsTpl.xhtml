@@ -2,7 +2,7 @@
     {{?it.multiselect}}
         <td class="controls-DataGridView__td"></td>
     {{?}}
-    {{~it.results :result:index}}
-        <td class="controls-DataGridView__td">{{=result}}</td>
+    {{~it.columns :column:index}}
+        <td class="controls-DataGridView__td {{=column.className}}">{{=it.results[index]}}</td>
     {{~}}
 </tr>
