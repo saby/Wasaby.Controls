@@ -3,10 +3,17 @@ define('js!SBIS3.CONTROLS.Data.Model', [
    'js!SBIS3.CONTROLS.Data.Record',
    'js!SBIS3.CONTROLS.Data.IHashable',
    'js!SBIS3.CONTROLS.Data.HashableMixin',
+   'js!SBIS3.CONTROLS.Data.Collection.ArrayEnumerator',
    'js!SBIS3.CONTROLS.Data.Di',
-   'js!SBIS3.CONTROLS.Data.Utils',
-   'js!SBIS3.CONTROLS.Data.Collection.ArrayEnumerator'
-], function (Record, IHashable, HashableMixin, Di, Utils, ArrayEnumerator) {
+   'js!SBIS3.CONTROLS.Data.Utils'
+], function (
+   Record,
+   IHashable,
+   HashableMixin,
+   ArrayEnumerator,
+   Di,
+   Utils
+) {
    'use strict';
 
    /**
@@ -20,7 +27,7 @@ define('js!SBIS3.CONTROLS.Data.Model', [
     * @author Мальцев Алексей
     */
 
-   var Model = Utils.extend(Record, [IHashable, HashableMixin], /** @lends SBIS3.CONTROLS.Data.Model.prototype */{
+   var Model = Record.extend([IHashable, HashableMixin], /** @lends SBIS3.CONTROLS.Data.Model.prototype */{
       _moduleName: 'SBIS3.CONTROLS.Data.Model',
 
       /**
@@ -75,39 +82,39 @@ define('js!SBIS3.CONTROLS.Data.Model', [
        * @see getProperties
        * @see Property
        */
-      properties: {},
+      $properties: {},
 
       /**
        * @cfg {String} Поле, содержащее первичный ключ
        * @see getIdProperty
        * @see setIdProperty
        */
-      idProperty: undefined,
+      $idProperty: undefined,
 
       _hashPrefix: 'model-',
 
       /**
-       * @var {Boolean} Признак, что модель существует в источнике данных
+       * @member {Boolean} Признак, что модель существует в источнике данных
        */
       _isStored: false,
 
       /**
-       * @var {Boolean} Признак, что модель удалена из источника данных
+       * @member {Boolean} Признак, что модель удалена из источника данных
        */
       _isDeleted: false,
 
       /**
-       * @var {Object.<String, *>} Объект содержащий вычисленные значения свойств по умолчанию
+       * @member {Object.<String, *>} Объект содержащий вычисленные значения свойств по умолчанию
        */
       _defaultPropertiesValues: {},
 
       /**
-       * @var {Object.<String, Boolean>} Объект содержащий названия свойств, для которых сейчас выполняется вычисление значения
+       * @member {Object.<String, Boolean>} Объект содержащий названия свойств, для которых сейчас выполняется вычисление значения
        */
       _nowCalculatingProperties: {},
 
       /**
-       * @var {Object} Флаг показывающий была ли модель синхронизирована
+       * @member {Object} Флаг показывающий была ли модель синхронизирована
        */
       _synced: false,
 
@@ -115,14 +122,13 @@ define('js!SBIS3.CONTROLS.Data.Model', [
          Model.superclass.constructor.apply(this, arguments);
 
          cfg = cfg || {};
-
          if ('usingDataSetAsList' in cfg) {
             Utils.logger.stack(this._moduleName + '::$constructor(): option "usingDataSetAsList" is deprecated and will be removed in 3.7.4', 1);
          }
 
-         this._options.idProperty = this._options.idProperty || '';
-         if (!this._options.idProperty) {
-            this._options.idProperty = this.getAdapter().getKeyField(this._options.rawData);
+         this.$idProperty = this.$idProperty || '';
+         if (!this.$idProperty) {
+            this.$idProperty = this.getAdapter().getKeyField(this.$rawData);
          }
       },
 
@@ -226,7 +232,7 @@ define('js!SBIS3.CONTROLS.Data.Model', [
        * @see Property
        */
       getProperties: function () {
-         return this._options.properties;
+         return this.$properties;
       },
 
       /**
@@ -255,7 +261,7 @@ define('js!SBIS3.CONTROLS.Data.Model', [
        */
       getDefault: function (name) {
          if (!this._defaultPropertiesValues.hasOwnProperty(name)) {
-            var property = this._options.properties[name];
+            var property = this.$properties[name];
             if (property && 'def' in property) {
                this._defaultPropertiesValues[name] = [typeof property.def === 'function' ? property.def.call(this) : property.def];
             } else {
@@ -337,7 +343,7 @@ define('js!SBIS3.CONTROLS.Data.Model', [
             Utils.logger.info('SBIS3.CONTROLS.Data.Model::setIdProperty(): property "' + idProperty + '" is not defined');
             return;
          }
-         this._options.idProperty = idProperty;
+         this.$idProperty = idProperty;
       },
 
       /**
@@ -373,6 +379,7 @@ define('js!SBIS3.CONTROLS.Data.Model', [
       setSynced: function (synced) {
          this._synced = synced;
       },
+
       // endregion Public methods
 
       //region Protected methods
@@ -383,10 +390,10 @@ define('js!SBIS3.CONTROLS.Data.Model', [
        * @protected
        */
       _getIdProperty: function () {
-         if (this._options.idProperty === undefined) {
-            this._options.idProperty = this._getRawDataAdapter().getKeyField() || '';
+         if (this.$idProperty === undefined) {
+            this.$idProperty = this._getRawDataAdapter().getKeyField() || '';
          }
-         return this._options.idProperty;
+         return this.$idProperty;
       },
 
       /**

@@ -6,7 +6,13 @@ define('js!SBIS3.CONTROLS.Data.FormattableMixin', [
    'js!SBIS3.CONTROLS.Data.Di',
    'js!SBIS3.CONTROLS.Data.Utils',
    'js!SBIS3.CONTROLS.Data.Adapter.Json'
-], function (Format, FormatsFactory, FieldsFactory, Di, Utils) {
+], function (
+   Format,
+   FormatsFactory,
+   FieldsFactory,
+   Di,
+   Utils
+) {
    'use strict';
 
    /**
@@ -18,154 +24,150 @@ define('js!SBIS3.CONTROLS.Data.FormattableMixin', [
     */
 
    var FormattableMixin = /**@lends SBIS3.CONTROLS.Data.FormattableMixin.prototype */{
-      $protected: {
-         _options: {
-            /**
-             * @cfg {Object} Данные в "сыром" виде
-             * @see getRawData
-             * @see setRawData
-             * @remark
-             * Данные должны быть в формате, поддерживаемом адаптером {@link adapter}.
-             * @example
-             * <pre>
-             *    var user = new Record({
-             *       rawData: {
-             *          id: 1,
-             *          firstName: 'John',
-             *          lastName: 'Smith'
-             *       }
-             *    });
-             *    user.get('id');//1
-             *    user.get('firstName');//John
-             *    user.get('lastName');//Smith
-             * </pre>
-             * @example
-             * <pre>
-             *    var characters = new RecordSet({
-             *       rawData: [{
-             *          id: 1,
-             *          firstName: 'John',
-             *          lastName: 'Connor',
-             *          role: 'Savior'
-             *       }, {
-             *          id: 2,
-             *          firstName: 'Sarah',
-             *          lastName: 'Connor'
-             *          role: 'Mother'
-             *       }, {
-             *          id: 3,
-             *          firstName: '-',
-             *          lastName: 'T-800'
-             *          role: 'Terminator'
-             *       }]
-             *    });
-             *    characters.at(0).get('firstName');//John
-             *    characters.at(0).get('lastName');//Connor
-             *    characters.at(1).get('firstName');//Sarah
-             *    characters.at(1).get('lastName');//Connor
-             * </pre>
-             */
-            rawData: null,
+      /**
+       * @cfg {Object} Данные в "сыром" виде
+       * @see getRawData
+       * @see setRawData
+       * @remark
+       * Данные должны быть в формате, поддерживаемом адаптером {@link adapter}.
+       * @example
+       * <pre>
+       *    var user = new Record({
+       *       rawData: {
+       *          id: 1,
+       *          firstName: 'John',
+       *          lastName: 'Smith'
+       *       }
+       *    });
+       *    user.get('id');//1
+       *    user.get('firstName');//John
+       *    user.get('lastName');//Smith
+       * </pre>
+       * @example
+       * <pre>
+       *    var characters = new RecordSet({
+       *       rawData: [{
+       *          id: 1,
+       *          firstName: 'John',
+       *          lastName: 'Connor',
+       *          role: 'Savior'
+       *       }, {
+       *          id: 2,
+       *          firstName: 'Sarah',
+       *          lastName: 'Connor'
+       *          role: 'Mother'
+       *       }, {
+       *          id: 3,
+       *          firstName: '-',
+       *          lastName: 'T-800'
+       *          role: 'Terminator'
+       *       }]
+       *    });
+       *    characters.at(0).get('firstName');//John
+       *    characters.at(0).get('lastName');//Connor
+       *    characters.at(1).get('firstName');//Sarah
+       *    characters.at(1).get('lastName');//Connor
+       * </pre>
+       */
+      $rawData: null,
 
-            /**
-             * @cfg {String|SBIS3.CONTROLS.Data.Adapter.IAdapter} Адаптер для работы с данными, по умолчанию {@link SBIS3.CONTROLS.Data.Adapter.Json}
-             * @see getAdapter
-             * @see setAdapter
-             * @see SBIS3.CONTROLS.Data.Adapter.Json
-             * @see SBIS3.CONTROLS.Data.Di
-             * @remark
-             * Адаптер должен быть предназначен для формата, в котором описаны сырые данные {@link rawData}.
-             * По умолчанию обрабатываются данные в формате JSON (ключ -> значение).
-             * @example
-             * <pre>
-             *    var user = new Record({
-             *       adapter: 'adapter.sbis'
-             *    });
-             * </pre>
-             * @example
-             * <pre>
-             *    var user = new Record({
-             *       adapter: new SbisAdapter()
-             *    });
-             * </pre>
-             */
-            adapter: 'adapter.json',
+      /**
+       * @cfg {String|SBIS3.CONTROLS.Data.Adapter.IAdapter} Адаптер для работы с данными, по умолчанию {@link SBIS3.CONTROLS.Data.Adapter.Json}
+       * @see getAdapter
+       * @see setAdapter
+       * @see SBIS3.CONTROLS.Data.Adapter.Json
+       * @see SBIS3.CONTROLS.Data.Di
+       * @remark
+       * Адаптер должен быть предназначен для формата, в котором описаны сырые данные {@link rawData}.
+       * По умолчанию обрабатываются данные в формате JSON (ключ -> значение).
+       * @example
+       * <pre>
+       *    var user = new Record({
+       *       adapter: 'adapter.sbis'
+       *    });
+       * </pre>
+       * @example
+       * <pre>
+       *    var user = new Record({
+       *       adapter: new SbisAdapter()
+       *    });
+       * </pre>
+       */
+      $adapter: 'adapter.json',
 
-            /**
-             * @cfg {SBIS3.CONTROLS.Data.Format.Format|Array.<SBIS3.CONTROLS.Data.Format.FieldsFactory/FieldDeclaration.typedef>} Формат полей
-             * @see getFormat
-             * @example
-             * <pre>
-             *    define('js!My.Module', [
-             *       'js!My.Format.User'
-             *    ], function (UserFormat) {
-             *       var user = new Record({
-             *          format: new UserFormat
-             *       });
-             *    });
-             * </pre>
-             * @example
-             * <pre>
-             *    define('js!My.Module', [
-             *       'js!My.Format.User'
-             *    ], function (UserFormat) {
-             *       var users = new RecordSet({
-             *          format: new UserFormat
-             *       });
-             *    });
-             * </pre>
-             * @example
-             * <pre>
-             *    var user = new Record({
-             *       format: [{
-             *          name: 'id'
-             *          type: 'integer'
-             *       }, {
-             *          name: 'login'
-             *          type: 'string'
-             *       }]
-             *    });
-             * </pre>
-             * @example
-             * <pre>
-             *    var users = new RecordSet({
-             *       format: [{
-             *          name: 'id'
-             *          type: 'integer'
-             *       }, {
-             *          name: 'login'
-             *          type: 'string'
-             *       }]
-             *    });
-             * </pre>
-             */
-            format: null
-         },
+      /**
+       * @cfg {SBIS3.CONTROLS.Data.Format.Format|Array.<SBIS3.CONTROLS.Data.Format.FieldsFactory/FieldDeclaration.typedef>} Формат полей
+       * @see getFormat
+       * @example
+       * <pre>
+       *    define('js!My.Module', [
+       *       'js!My.Format.User'
+       *    ], function (UserFormat) {
+       *       var user = new Record({
+       *          format: new UserFormat
+       *       });
+       *    });
+       * </pre>
+       * @example
+       * <pre>
+       *    define('js!My.Module', [
+       *       'js!My.Format.User'
+       *    ], function (UserFormat) {
+       *       var users = new RecordSet({
+       *          format: new UserFormat
+       *       });
+       *    });
+       * </pre>
+       * @example
+       * <pre>
+       *    var user = new Record({
+       *       format: [{
+       *          name: 'id'
+       *          type: 'integer'
+       *       }, {
+       *          name: 'login'
+       *          type: 'string'
+       *       }]
+       *    });
+       * </pre>
+       * @example
+       * <pre>
+       *    var users = new RecordSet({
+       *       format: [{
+       *          name: 'id'
+       *          type: 'integer'
+       *       }, {
+       *          name: 'login'
+       *          type: 'string'
+       *       }]
+       *    });
+       * </pre>
+       */
+      $format: null,
 
-         /**
-          * @member {SBIS3.CONTROLS.Data.Adapter.ITable|SBIS3.CONTROLS.Data.Adapter.IRecord} Адаптер для cырых данных
-          */
-         _rawDataAdapter: null,
+      /**
+       * @member {SBIS3.CONTROLS.Data.Adapter.ITable|SBIS3.CONTROLS.Data.Adapter.IRecord} Адаптер для cырых данных
+       */
+      _rawDataAdapter: null,
 
-         /**
-          * @member {Array.<String>} Описание всех полей, полученных из данных в "сыром" виде
-          */
-         _rawDataFields: null,
+      /**
+       * @member {Array.<String>} Описание всех полей, полученных из данных в "сыром" виде
+       */
+      _rawDataFields: null,
 
-         /**
-         *@member {Boolean} Формат был задан пользователем явно
-         */
-         _directFormat: false
-      },
+      /**
+       *@member {Boolean} Формат был задан пользователем явно
+       */
+      _directFormat: false,
 
       //region SBIS3.CONTROLS.Data.SerializableMixin
 
       after: {
          _getSerializableState: function(state) {
             //Prevent core reviver for rawData
-            if (state._options && state._options.rawData && state._options.rawData._type) {
-               state._options.rawData.$type = state._options.rawData._type;
-               delete state._options.rawData._type;
+            if (state._options && state.$rawData && state.$rawData._type) {
+               state.$rawData.$type = state.$rawData._type;
+               delete state.$rawData._type;
             }
 
             return state;
@@ -174,9 +176,9 @@ define('js!SBIS3.CONTROLS.Data.FormattableMixin', [
          _setSerializableState: function(state, initializer) {
             //Restore value hidden from core reviver
             return initializer.callNext(function() {
-               if (this._options && this._options.rawData && this._options.rawData.$type) {
-                  this._options.rawData._type = this._options.rawData.$type;
-                  delete this._options.rawData.$type;
+               if (this._options && this.$rawData && this.$rawData.$type) {
+                  this.$rawData._type = this.$rawData.$type;
+                  delete this.$rawData.$type;
                }
             });
          }
@@ -205,7 +207,7 @@ define('js!SBIS3.CONTROLS.Data.FormattableMixin', [
        * @see rawData
        */
       getRawData: function() {
-         return this._options.rawData;
+         return this.$rawData;
       },
 
       /**
@@ -215,7 +217,7 @@ define('js!SBIS3.CONTROLS.Data.FormattableMixin', [
        * @see rawData
        */
       setRawData: function(data) {
-         this._options.rawData = data;
+         this.$rawData = data;
          this._resetRawDataAdapter();
          this._resetRawDataFields();
       },
@@ -228,16 +230,16 @@ define('js!SBIS3.CONTROLS.Data.FormattableMixin', [
        */
       getAdapter: function () {
          if (
-            typeof this._options.adapter === 'string' &&
+            typeof this.$adapter === 'string' &&
             FormattableMixin._getDefaultAdapter !== this._getDefaultAdapter
          ) {
             Utils.logger.info('SBIS3.CONTROLS.Data.FormattableMixin: method _getDefaultAdapter() is deprecated and will be removed in 3.7.4. Use \'adapter\' option instead.');
-            this._options.adapter = this._getDefaultAdapter();
+            this.$adapter = this._getDefaultAdapter();
          }
-         if (typeof this._options.adapter === 'string') {
-            this._options.adapter = Di.resolve(this._options.adapter);
+         if (typeof this.$adapter === 'string') {
+            this.$adapter = Di.resolve(this.$adapter);
          }
-         return this._options.adapter;
+         return this.$adapter;
       },
 
       /**
@@ -247,7 +249,7 @@ define('js!SBIS3.CONTROLS.Data.FormattableMixin', [
        * @see getAdapter
        */
       setAdapter: function (adapter) {
-         this._options.adapter = adapter;
+         this.$adapter = adapter;
          this._resetRawDataAdapter();
       },
 
@@ -355,8 +357,8 @@ define('js!SBIS3.CONTROLS.Data.FormattableMixin', [
       _getRawDataAdapter: function () {
          if (!this._rawDataAdapter) {
             this._rawDataAdapter = this._createRawDataAdapter();
-            if (this._options.rawData !== this._rawDataAdapter.getData()) {
-               this._options.rawData = this._rawDataAdapter.getData();
+            if (this.$rawData !== this._rawDataAdapter.getData()) {
+               this.$rawData = this._rawDataAdapter.getData();
             }
          }
 
@@ -414,12 +416,12 @@ define('js!SBIS3.CONTROLS.Data.FormattableMixin', [
        */
       _getFormat: function () {
          if (
-            !this._options.format ||
-            !$ws.helpers.instanceOfModule(this._options.format, 'SBIS3.CONTROLS.Data.Format.Format')
+            !this.$format ||
+            !$ws.helpers.instanceOfModule(this.$format, 'SBIS3.CONTROLS.Data.Format.Format')
          ) {
-            this._options.format = this._buildFormat(this._options.format);
+            this.$format = this._buildFormat(this.$format);
          }
-         return this._options.format;
+         return this.$format;
       },
 
       /**
@@ -430,7 +432,7 @@ define('js!SBIS3.CONTROLS.Data.FormattableMixin', [
          if (this._isDirectFormat()) {
             throw new Error(this._moduleName + ': format can\'t be cleared because it\'s defined directly.');
          }
-         this._options.format = null;
+         this.$format = null;
       },
 
       /**

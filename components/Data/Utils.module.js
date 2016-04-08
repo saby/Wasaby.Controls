@@ -8,7 +8,10 @@ define('js!SBIS3.CONTROLS.Data.Utils', [], function () {
     * @author Мальцев Алексей
     */
 
-   return /** @lends SBIS3.CONTROLS.Data.Utils.prototype */{
+   var _private = {
+   };
+
+   var Utils = /** @lends SBIS3.CONTROLS.Data.Utils.prototype */{
       _moduleName: 'SBIS3.CONTROLS.Data.Utils',
 
       /**
@@ -65,6 +68,10 @@ define('js!SBIS3.CONTROLS.Data.Utils', [], function () {
             this.override(Child.prototype, overrides);
          }
 
+         Child.extend = function(Parent, mixins, overrides) {
+            return Utils.extend(Child, Parent, mixins, overrides);
+         };
+
          return Child;
       },
 
@@ -100,13 +107,7 @@ define('js!SBIS3.CONTROLS.Data.Utils', [], function () {
          if (source instanceof Object) {
             for (var key in source) {
                if (source.hasOwnProperty(key)) {
-                  if (target.hasOwnProperty(key) &&
-                     target[key] instanceof Function
-                  ) {
-                     target[key] = target[key].callAround(source[key]);
-                  } else {
-                     target[key] = source[key];
-                  }
+                  target[key] = source[key];
                }
             }
          }
@@ -243,4 +244,6 @@ define('js!SBIS3.CONTROLS.Data.Utils', [], function () {
          return prefix + property.substr(0, 1).toUpperCase() + property.substr(1);
       }
    };
+
+   return Utils;
 });

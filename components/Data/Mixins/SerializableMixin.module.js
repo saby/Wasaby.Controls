@@ -1,6 +1,5 @@
 /* global define, $ws */
-define('js!SBIS3.CONTROLS.Data.SerializableMixin', [
-], function () {
+define('js!SBIS3.CONTROLS.Data.SerializableMixin', function () {
    'use strict';
 
    /**
@@ -11,12 +10,10 @@ define('js!SBIS3.CONTROLS.Data.SerializableMixin', [
     */
 
    var SerializableMixin = /**@lends SBIS3.CONTROLS.Data.SerializableMixin.prototype */{
-      $protected: {
-         /**
-          * @var {Number} Уникальный номер инстанса
-          */
-         _instanceId: 0
-      },
+      /**
+       * @member {Number} Уникальный номер инстанса
+       */
+      _instanceId: 0,
 
       //region Public methods
 
@@ -46,7 +43,7 @@ define('js!SBIS3.CONTROLS.Data.SerializableMixin', [
       fromJSON: function(data) {
          var instance,
             initializer = this.prototype._setSerializableState(data.state);
-         instance = new this(data.state._options);
+         instance = new this(data.state.$options);
          if (initializer) {
             initializer.call(instance);
          }
@@ -60,28 +57,28 @@ define('js!SBIS3.CONTROLS.Data.SerializableMixin', [
       /**
        * Возвращает всё, что нужно сложить в состояние объекта при сериализации, чтобы при десериализации вернуть его в это же состояние
        * @returns {Object}
-       * @private
+       * @protected
        */
       _getSerializableState: function() {
          return {
-            _options: this._options
+            $options: this._getOptions()
          };
       },
 
       /**
        * Проверяет сериализованное состояние перед созданием инстанса. Возвращает метод, востанавливающий состояние объекта после создания инстанса.
        * @returns {Function|undefined}
-       * @private
+       * @protected
        */
       _setSerializableState: function(state) {
-         state._options = state._options || {};
+         state.$options = state.$options || {};
          return function() {};
       },
 
       /**
        * Возвращает уникальный номер инстанса
        * @returns {Number}
-       * @private
+       * @protected
        */
       _getInstanceId: function() {
          return this._instanceId || (this._instanceId = ++_instanceCounter);
