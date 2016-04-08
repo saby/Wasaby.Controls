@@ -39,6 +39,11 @@ define('js!SBIS3.CONTROLS.Data.Utils', [], function () {
             overrides = mixins;
             mixins = undefined;
          }
+         if (!(Parent instanceof Function)) {
+            overrides = Parent;
+            mixins = undefined;
+            Parent = undefined;
+         }
 
          if (Child === undefined) {
             this._defaultConstructor = this._defaultConstructor || function() {
