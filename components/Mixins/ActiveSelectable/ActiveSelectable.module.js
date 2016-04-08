@@ -112,9 +112,9 @@ define('js!SBIS3.CONTROLS.ActiveSelectable', ['js!SBIS3.CONTROLS.Data.Model'], f
          var selItem = this._options.selectedItem,
              selKey = this._options.selectedKey;
 
-         /* Когда пустая модель, считаем,
-            что ничего не выбрано, т.к. её может например создать контекст */
-         if(selItem && selItem.getRawData() && (selKey === null || selKey !== selItem.getId())) {
+         /* При синхронизации запись без ключа считаем невыбранной, т.к. с помощью метода set такую запись установить нельзя,
+          т.е. она может только проинициализироваться из контекста */
+         if(selItem && selItem.getId() && (selKey === null || selKey !== selItem.getId())) {
             this._options.selectedItem = null;
             this._notifyOnPropertyChanged('selectedItem');
          }
