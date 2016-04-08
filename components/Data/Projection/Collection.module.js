@@ -229,6 +229,9 @@ define('js!SBIS3.CONTROLS.Data.Projection.Collection', [
       },
 
       getIndex: function (item) {
+         if (!$ws.helpers.instanceOfModule(item, 'SBIS3.CONTROLS.Data.Projection.CollectionItem')) {
+            return -1;
+         }
          return this.getIndexByHash(item.getHash());
       },
 
@@ -510,7 +513,8 @@ define('js!SBIS3.CONTROLS.Data.Projection.Collection', [
        * @returns {Number} Индекс элемента в исходной коллекции
        */
       getSourceIndexByIndex: function (index) {
-         return this._getServiceEnumerator().getSourceByInternal(index);
+         var sourceIndex = this._getServiceEnumerator().getSourceByInternal(index);
+         return sourceIndex === undefined || sourceIndex === null ? -1 : sourceIndex;
       },
 
       /**
@@ -529,7 +533,8 @@ define('js!SBIS3.CONTROLS.Data.Projection.Collection', [
        * @returns {Number} Индекс элемента в проекции
        */
       getIndexBySourceIndex: function (index) {
-         return this._getServiceEnumerator().getInternalBySource(index);
+         var selfIndex = this._getServiceEnumerator().getInternalBySource(index);
+         return selfIndex === undefined || selfIndex === null ? -1 : selfIndex;
       },
 
       /**
@@ -1263,7 +1268,11 @@ define('js!SBIS3.CONTROLS.Data.Projection.Collection', [
          var enumerator = this._getNavigationEnumerator();
          enumerator.setCurrent(item);
          var nearbyItem = this._getNavigationEnumerator()[isNext ? 'getNext' : 'getPrevious'](item);
-         if(nearbyItem && $ws.helpers.instanceOfModule(nearbyItem.getContents(), 'SBIS3.CONTROLS.Data.Model') && nearbyItem.getContents().isDeleted()){
+         //FIXME: не должны тут ничего знать про isDeleted
+         if(nearbyItem &&
+            $ws.helpers.instanceOfModule(nearbyItem.getContents(), 'SBIS3.CONTROLS.Data.Model') &&
+            nearbyItem.getContents().isDeleted()
+         ){
             return this._getNearbyItem(nearbyItem, isNext);
          }
          return nearbyItem;

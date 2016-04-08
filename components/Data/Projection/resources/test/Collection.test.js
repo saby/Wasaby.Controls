@@ -11,33 +11,36 @@ define([
       'use strict';
 
       describe('SBIS3.CONTROLS.Data.Projection.Collection', function() {
-         var items,
+         var getItems = function() {
+               return [{
+                  'Ид': 1,
+                  'Фамилия': 'Иванов'
+               }, {
+                  'Ид': 2,
+                  'Фамилия': 'Петров'
+               }, {
+                  'Ид': 3,
+                  'Фамилия': 'Сидоров'
+               }, {
+                  'Ид': 4,
+                  'Фамилия': 'Пухов'
+               }, {
+                  'Ид': 5,
+                  'Фамилия': 'Молодцов'
+               }, {
+                  'Ид': 6,
+                  'Фамилия': 'Годолцов'
+               }, {
+                  'Ид': 7,
+                  'Фамилия': 'Арбузнов'
+               }];
+            },
+            items,
             list,
             projection;
 
          beforeEach(function() {
-            items = [{
-               'Ид': 1,
-               'Фамилия': 'Иванов'
-            }, {
-               'Ид': 2,
-               'Фамилия': 'Петров'
-            }, {
-               'Ид': 3,
-               'Фамилия': 'Сидоров'
-            }, {
-               'Ид': 4,
-               'Фамилия': 'Пухов'
-            }, {
-               'Ид': 5,
-               'Фамилия': 'Молодцов'
-            }, {
-               'Ид': 6,
-               'Фамилия': 'Годолцов'
-            }, {
-               'Ид': 7,
-               'Фамилия': 'Арбузнов'
-            }];
+            items = getItems();
 
             list = new ObservableList({
                items: items
@@ -92,150 +95,42 @@ define([
             });
          });
 
-         describe('.setSort()', function() {
-            var getItems = function() {
-                 return [1, 2, 3, 4];
-               },
-               getSortedItems = function() {
-                  return [4, 3, 2, 1];
-               },
-               sort = function(a, b){
-                  return a.item <= b.item ? 1 : -1;
-               };
-
-            it('should sort projection', function() {
-               var list = new ObservableList({
-                     items: getItems()
-                  }),
-                  sortedItems = getSortedItems();
-               var projection = Projection.getDefaultProjection(list);
-               projection.setSort(sort);
-               projection.each(function(item, i){
-                  assert.equal(sortedItems[i], item.getContents());
+         describe('.each()', function() {
+            it('should return every item in original order', function() {
+               var ok = true,
+                  index = 0;
+               projection.each(function(item) {
+                  if (item.getContents() !== items[index]) {
+                     ok = false;
+                  }
+                  index++;
                });
+               assert.isTrue(ok);
             });
 
-            it('should reset a sort projection', function() {
-               var list = new ObservableList({
-                     items: getItems()
-                  }),
-                  sortedItems = getItems();
-               var projection = Projection.getDefaultProjection(list);
-               projection.setSort(sort);
-               projection.setSort();
-               projection.each(function(item, i){
-                  assert.equal(sortedItems[i], item.getContents());
+            it('should return every item index in original order', function() {
+               var ok = true,
+                  index = 0;
+               projection.each(function(item, innerIndex) {
+                  if (index !== innerIndex) {
+                     ok = false;
+                  }
+                  index++;
                });
+               assert.isTrue(ok);
             });
 
-            it('should sort projection after add item', function() {
-               var list = new ObservableList({
-                     items: getItems()
-                  }),
-                  sortedItems = [5, 4, 3, 2, 1];
-               var projection = new CollectionProjection({
-                  collection: list
-               });
-               projection.setSort(sort);
-               projection.getCollection().add(5);
-               projection.each(function(item, i) {
-                  assert.equal(sortedItems[i], item.getContents());
-               });
-            });
-
-            it('should sort projection after remove item', function() {
-               var list = new ObservableList({
-                     items: [1, 2, 10, 3, 4]
-                  }),
-                  sortedItems = getSortedItems();
-               var projection = new CollectionProjection({
-                  collection: list
-               });
-               projection.setSort(sort);
-               projection.getCollection().removeAt(2);
-               projection.each(function(item, i){
-                  assert.equal(sortedItems[i], item.getContents());
-               });
-            });
-
-            it('should sort projection after replace item', function() {
-               var list = new ObservableList({
-                     items: [1, 2, 2, 3, 5]
-                  }),
-                  sortedItems = [5, 4, 3, 2, 1];
-               var projection = new CollectionProjection({
-                  collection: list
-               });
-               projection.setSort(sort);
-               projection.getCollection().replace(4, 2);
-               projection.each(function(item, i) {
-                  assert.equal(sortedItems[i], item.getContents());
-               });
-            });
-
-            it('should not resort projection after change item', function() {
-               var
-                  changeModel = new Model({
-                     rawData: {max: 2}
-                  }),
-                  list = new ObservableList({
-                     items: [
-                        new Model({
-                           rawData: {max: 1}
-                        }),
-                        new Model({
-                           rawData: {max: 3}
-                        }),
-                        new Model({
-                           rawData: {max: 4}
-                        }),
-                        changeModel
-                     ]
-                  }),
-                  sortedItems = [4, 3, 10, 1];
-               var projection = new CollectionProjection({
-                  collection: list
-               });
-               projection.setSort(function(a, b){
-                  return a.item.get('max') <= b.item.get('max') ? 1 : -1;
-               });
-               changeModel.set('max', 10);
-               projection.each(function(item, i) {
-                  assert.equal(sortedItems[i], item.getContents().get('max'));
-               });
-            });
-
-            it('should resort projection after change item', function() {
-               var
-                  changeModel = new Model({
-                     rawData: {max: 2}
-                  }),
-                  list = new ObservableList({
-                     items: [
-                        new Model({
-                           rawData: {max: 1}
-                        }),
-                        new Model({
-                           rawData: {max: 3}
-                        }),
-                        new Model({
-                           rawData: {max: 4}
-                        }),
-                        changeModel
-                     ]
-                  }),
-                  sortedItems = [10, 4, 3, 1];
-               var projection = new CollectionProjection({
-                  collection: list,
-                  importantItemProperties: ['max']
-               });
-               projection.setSort(function(a ,b){
-                  return a.item.get('max') <= b.item.get('max') ? 1 : -1;
-               });
-               changeModel.set('max', 10);
-               projection.each(function(item, i) {
-                  assert.equal(sortedItems[i], item.getContents().get('max'));
-               });
+            it('should use the given context', function() {
+               var ok = true,
+                  context = {
+                     'blah': 'blah'
+                  };
+               projection.each(function() {
+                  if (this !== context) {
+                     ok = false;
+                  }
+               }, context);
+               assert.isTrue(ok);
             });
          });
 
@@ -430,6 +325,154 @@ define([
                assert.equal(filter, projection.getFilter());
             });
          });
+
+         describe('.setSort()', function() {
+            var getItems = function() {
+                 return [1, 2, 3, 4];
+               },
+               getSortedItems = function() {
+                  return [4, 3, 2, 1];
+               },
+               sort = function(a, b){
+                  return a.item <= b.item ? 1 : -1;
+               };
+
+            it('should sort projection', function() {
+               var list = new ObservableList({
+                     items: getItems()
+                  }),
+                  sortedItems = getSortedItems();
+               var projection = Projection.getDefaultProjection(list);
+               projection.setSort(sort);
+               projection.each(function(item, i){
+                  assert.equal(sortedItems[i], item.getContents());
+               });
+            });
+
+            it('should reset a sort projection', function() {
+               var list = new ObservableList({
+                     items: getItems()
+                  }),
+                  sortedItems = getItems();
+               var projection = Projection.getDefaultProjection(list);
+               projection.setSort(sort);
+               projection.setSort();
+               projection.each(function(item, i){
+                  assert.equal(sortedItems[i], item.getContents());
+               });
+            });
+
+            it('should sort projection after add item', function() {
+               var list = new ObservableList({
+                     items: getItems()
+                  }),
+                  sortedItems = [5, 4, 3, 2, 1];
+               var projection = new CollectionProjection({
+                  collection: list
+               });
+               projection.setSort(sort);
+               projection.getCollection().add(5);
+               projection.each(function(item, i) {
+                  assert.equal(sortedItems[i], item.getContents());
+               });
+            });
+
+            it('should sort projection after remove item', function() {
+               var list = new ObservableList({
+                     items: [1, 2, 10, 3, 4]
+                  }),
+                  sortedItems = getSortedItems();
+               var projection = new CollectionProjection({
+                  collection: list
+               });
+               projection.setSort(sort);
+               projection.getCollection().removeAt(2);
+               projection.each(function(item, i){
+                  assert.equal(sortedItems[i], item.getContents());
+               });
+            });
+
+            it('should sort projection after replace item', function() {
+               var list = new ObservableList({
+                     items: [1, 2, 2, 3, 5]
+                  }),
+                  sortedItems = [5, 4, 3, 2, 1];
+               var projection = new CollectionProjection({
+                  collection: list
+               });
+               projection.setSort(sort);
+               projection.getCollection().replace(4, 2);
+               projection.each(function(item, i) {
+                  assert.equal(sortedItems[i], item.getContents());
+               });
+            });
+
+            it('should not resort projection after change item', function() {
+               var
+                  changeModel = new Model({
+                     rawData: {max: 2}
+                  }),
+                  list = new ObservableList({
+                     items: [
+                        new Model({
+                           rawData: {max: 1}
+                        }),
+                        new Model({
+                           rawData: {max: 3}
+                        }),
+                        new Model({
+                           rawData: {max: 4}
+                        }),
+                        changeModel
+                     ]
+                  }),
+                  sortedItems = [4, 3, 10, 1];
+               var projection = new CollectionProjection({
+                  collection: list
+               });
+               projection.setSort(function(a, b){
+                  return a.item.get('max') <= b.item.get('max') ? 1 : -1;
+               });
+               changeModel.set('max', 10);
+               projection.each(function(item, i) {
+                  assert.equal(sortedItems[i], item.getContents().get('max'));
+               });
+            });
+
+            it('should resort projection after change item', function() {
+               var
+                  changeModel = new Model({
+                     rawData: {max: 2}
+                  }),
+                  list = new ObservableList({
+                     items: [
+                        new Model({
+                           rawData: {max: 1}
+                        }),
+                        new Model({
+                           rawData: {max: 3}
+                        }),
+                        new Model({
+                           rawData: {max: 4}
+                        }),
+                        changeModel
+                     ]
+                  }),
+                  sortedItems = [10, 4, 3, 1];
+               var projection = new CollectionProjection({
+                  collection: list,
+                  importantItemProperties: ['max']
+               });
+               projection.setSort(function(a ,b){
+                  return a.item.get('max') <= b.item.get('max') ? 1 : -1;
+               });
+               changeModel.set('max', 10);
+               projection.each(function(item, i) {
+                  assert.equal(sortedItems[i], item.getContents().get('max'));
+               });
+            });
+         });
+
          describe('.getSort()', function(){
             it('should return a projection sort', function() {
                var projection = new CollectionProjection({
@@ -443,42 +486,150 @@ define([
             });
          });
 
-         describe('.each()', function() {
-            it('should return every item in original order', function() {
-               var ok = true,
-                   index = 0;
-               projection.each(function(item) {
-                  if (item.getContents() !== items[index]) {
-                     ok = false;
-                  }
-                  index++;
+         context('shortcuts', function() {
+            beforeEach(function() {
+               list = new ObservableList({
+                  items: [1, 2, 3, 4]
                });
-               assert.isTrue(ok);
+               projection = new CollectionProjection({
+                  collection: list
+               });
             });
 
-            it('should return every item index in original order', function() {
-               var ok = true,
-                  index = 0;
-               projection.each(function(item, innerIndex) {
-                  if (index !== innerIndex) {
-                     ok = false;
-                  }
-                  index++;
+            describe('.getSourceIndexByIndex()', function() {
+
+               it('should return equal indexes', function() {
+                  projection.each(function(item, index) {
+                     assert.equal(projection.getSourceIndexByIndex(index), index);
+                  });
                });
-               assert.isTrue(ok);
+               it('should return inverted indexes', function() {
+                  var max = projection.getCount() - 1;
+                  projection.setSort(function(a, b){
+                     return a.item <= b.item ? 1 : -1;
+                  });
+                  projection.each(function(item, index) {
+                     assert.equal(projection.getSourceIndexByIndex(index), max - index);
+                  });
+               });
+               it('should return -1', function() {
+                  assert.equal(projection.getSourceIndexByIndex(-1), -1);
+                  assert.equal(projection.getSourceIndexByIndex(99), -1);
+                  assert.equal(projection.getSourceIndexByIndex(null), -1);
+                  assert.equal(projection.getSourceIndexByIndex(), -1);
+               });
             });
 
-            it('should use the given context', function() {
-               var ok = true,
-                  context = {
-                     'blah': 'blah'
-                  };
-               projection.each(function() {
-                  if (this !== context) {
-                     ok = false;
-                  }
-               }, context);
-               assert.isTrue(ok);
+            describe('.getSourceIndexByItem()', function() {
+               it('should return equal indexes', function() {
+                  projection.each(function(item, index) {
+                     assert.equal(projection.getSourceIndexByItem(item), index);
+                  });
+               });
+               it('should return inverted indexes', function() {
+                  var max = projection.getCount() - 1;
+                  projection.setSort(function(a, b){
+                     return a.item <= b.item ? 1 : -1;
+                  });
+                  projection.each(function(item, index) {
+                     assert.equal(projection.getSourceIndexByItem(item), max - index);
+                  });
+               });
+               it('should return -1', function() {
+                  assert.equal(projection.getSourceIndexByItem({}), -1);
+                  assert.equal(projection.getSourceIndexByItem(null), -1);
+                  assert.equal(projection.getSourceIndexByItem(), -1);
+               });
+            });
+
+            describe('.getIndexBySourceIndex()', function() {
+               it('should return equal indexes', function() {
+                  projection.getCollection().each(function(item, index) {
+                     assert.equal(projection.getIndexBySourceIndex(index), index);
+                  });
+               });
+               it('should return inverted indexes', function() {
+                  var max = projection.getCount() - 1;
+                  projection.setSort(function(a, b){
+                     return a.item <= b.item ? 1 : -1;
+                  });
+                  projection.getCollection().each(function(item, index) {
+                     assert.equal(projection.getIndexBySourceIndex(index), max - index);
+                  });
+               });
+               it('should return -1', function() {
+                  assert.equal(projection.getIndexBySourceIndex(-1), -1);
+                  assert.equal(projection.getIndexBySourceIndex(99), -1);
+                  assert.equal(projection.getIndexBySourceIndex(null), -1);
+                  assert.equal(projection.getIndexBySourceIndex(), -1);
+               });
+            });
+
+            describe('.getIndexBySourceItem()', function() {
+               it('should return equal indexes', function() {
+                  projection.getCollection().each(function(item, index) {
+                     assert.equal(projection.getIndexBySourceItem(item), index);
+                  });
+               });
+               it('should return inverted indexes', function() {
+                  var max = projection.getCount() - 1;
+                  projection.setSort(function(a, b){
+                     return a.item <= b.item ? 1 : -1;
+                  });
+                  projection.getCollection().each(function(item, index) {
+                     assert.equal(projection.getIndexBySourceItem(item), max - index);
+                  });
+               });
+               it('should return -1', function() {
+                  assert.equal(projection.getIndexBySourceItem({}), -1);
+                  assert.equal(projection.getIndexBySourceItem(null), -1);
+                  assert.equal(projection.getIndexBySourceItem(), -1);
+               });
+            });
+
+            describe('.getItemBySourceIndex()', function() {
+               it('should return equal indexes', function() {
+                  projection.getCollection().each(function(item, index) {
+                     assert.strictEqual(projection.getItemBySourceIndex(index), projection.at(index));
+                  });
+               });
+               it('should return inverted indexes', function() {
+                  var max = projection.getCount() - 1;
+                  projection.setSort(function(a, b){
+                     return a.item <= b.item ? 1 : -1;
+                  });
+                  projection.getCollection().each(function(item, index) {
+                     assert.strictEqual(projection.getItemBySourceIndex(index), projection.at(max - index));
+                  });
+               });
+               it('should return undefined', function() {
+                  assert.isUndefined(projection.getItemBySourceIndex(-1));
+                  assert.isUndefined(projection.getItemBySourceIndex(99));
+                  assert.isUndefined(projection.getItemBySourceIndex(null));
+                  assert.isUndefined(projection.getItemBySourceIndex());
+               });
+            });
+
+            describe('.getItemBySourceItem()', function() {
+               it('should return equal indexes', function() {
+                  projection.getCollection().each(function(item, index) {
+                     assert.strictEqual(projection.getItemBySourceItem(item), projection.at(index));
+                  });
+               });
+               it('should return inverted indexes', function() {
+                  var max = projection.getCount() - 1;
+                  projection.setSort(function(a, b){
+                     return a.item <= b.item ? 1 : -1;
+                  });
+                  projection.getCollection().each(function(item, index) {
+                     assert.strictEqual(projection.getItemBySourceItem(item), projection.at(max - index));
+                  });
+               });
+               it('should return undefined', function() {
+                  assert.isUndefined(projection.getItemBySourceItem({}));
+                  assert.isUndefined(projection.getItemBySourceItem(null));
+                  assert.isUndefined(projection.getItemBySourceItem());
+               });
             });
          });
 
