@@ -398,7 +398,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
 
               if(selectedItems) {
                  selectedItems.each(function(rec) {
-                    displayFields.push($ws.helpers.escapeHtml(rec.get(self._options.displayField)));
+                    displayFields.push($ws.helpers.htmlToText(rec.get(self._options.displayField)));
                  });
               }
 
