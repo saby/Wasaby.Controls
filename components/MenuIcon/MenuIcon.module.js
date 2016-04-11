@@ -51,14 +51,10 @@ define('js!SBIS3.CONTROLS.MenuIcon', ['js!SBIS3.CONTROLS.IconButton', 'js!SBIS3.
 
    var MenuIcon = IconButton.extend( [PickerMixin, DSMixin, MenuButtonMixin], /** @lends SBIS3.CONTROLS.MenuIcon.prototype */ {
       _hasHeader: false,
-      $protected: {
-         _options: {
-            pickerClassName: 'controls-MenuIcon__Menu'
-         }
-      },
 
       init: function(){
          this._container.addClass('controls-MenuIcon');
+         this._options.pickerClassName += ' controls-MenuIcon__Menu';
          if (this._container.hasClass('controls-IconButton__round-border')){
             this._options.pickerClassName += ' controls-IconButton__round-border';
          }
