@@ -65,6 +65,9 @@ define('js!SBIS3.CONTROLS.DialogActionBase', ['js!SBIS3.CONTROLS.ActionBase', 'j
             template: dialogComponent,
             componentOptions: compOptions
          };
+         if (meta.title) {
+            config.title = meta.title;
+         }
 
          mode = mode || this._options.mode;
          if (mode == 'floatArea'){
@@ -72,7 +75,7 @@ define('js!SBIS3.CONTROLS.DialogActionBase', ['js!SBIS3.CONTROLS.ActionBase', 'j
             config.isStack = meta.isStack !== undefined ? meta.isStack : true;
             config.autoHide = meta.autoHide !== undefined ? meta.autoHide : true;
             config.autoCloseOnHide = meta.autoCloseOnHide !== undefined ? meta.autoCloseOnHide : true;
-         } else if (mode == 'dialog'){
+         } else if (mode == 'dialog') {
             Component = Dialog;
          }
 
