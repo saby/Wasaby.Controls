@@ -4,18 +4,21 @@ define('js!SBIS3.CONTROLS.Data.Collection.List', [
    'js!SBIS3.CONTROLS.Data.Collection.IEnumerable',
    'js!SBIS3.CONTROLS.Data.Collection.IList',
    'js!SBIS3.CONTROLS.Data.Collection.IIndexedCollection',
+   'js!SBIS3.CONTROLS.Data.Entity.Options',
+   'js!SBIS3.CONTROLS.Data.ObservableMixin',
    'js!SBIS3.CONTROLS.Data.Collection.ArrayEnumerator',
    'js!SBIS3.CONTROLS.Data.Serializer',
    'js!SBIS3.CONTROLS.Data.Di',
    'js!SBIS3.CONTROLS.Data.Utils',
    'js!SBIS3.CONTROLS.Data.ContextField.List'
-], function (SerializableMixin, IEnumerable, IList, IIndexedCollection, ArrayEnumerator, Serializer, Di, Utils, ContextFieldList) {
+], function (SerializableMixin, IEnumerable, IList, IIndexedCollection, Options, ObservableMixin, ArrayEnumerator, Serializer, Di, Utils, ContextFieldList) {
    'use strict';
 
    /**
     * Список - коллекция c доступом по порядковому индексу
     * @class SBIS3.CONTROLS.Data.Collection.List
-    * @extends $ws.proto.Abstract
+    * @extends SBIS3.CONTROLS.Entity.Options
+    * @mixes SBIS3.CONTROLS.Data.ObservableMixin
     * @mixes SBIS3.CONTROLS.Data.SerializableMixin
     * @mixes SBIS3.CONTROLS.Data.Collection.IEnumerable
     * @mixes SBIS3.CONTROLS.Data.Collection.IList
@@ -24,56 +27,50 @@ define('js!SBIS3.CONTROLS.Data.Collection.List', [
     * @author Мальцев Алексей
     */
 
-   var List = $ws.proto.Abstract.extend([SerializableMixin, IEnumerable, IList, IIndexedCollection], /** @lends SBIS3.CONTROLS.Data.Collection.List.prototype */{
+   var List = Options.extend([ObservableMixin, SerializableMixin, IEnumerable, IList, IIndexedCollection], /** @lends SBIS3.CONTROLS.Data.Collection.List.prototype */{
       _moduleName: 'SBIS3.CONTROLS.Data.Collection.List',
-      $protected: {
-         _options: {
-            /**
-             * @cfg {Array.<*>} Элементы списка
-             * @name SBIS3.CONTROLS.Data.Collection.List#items
-             */
-         },
 
-         /**
-          * @member {Array.<*>} Элементы списка
-          */
-         _items: [],
+      /**
+       * @cfg {Array.<*>} Элементы списка
+       * @name SBIS3.CONTROLS.Data.Collection.List#items
+       */
+      $items: null,
 
-         /**
-          * @member {SBIS3.CONTROLS.Data.Collection.ArrayEnumerator} Служебный энумератор
-          */
-         _serviceEnumerator: undefined,
+      /**
+       * @member {SBIS3.CONTROLS.Data.Collection.ArrayEnumerator} Служебный энумератор
+       */
+      _serviceEnumerator: undefined,
 
-         /**
-          * @member {SBIS3.CONTROLS.Data.Collection._hashIndex} Индекс хешей элементов
-          */
-         _hashIndex: undefined
+      /**
+       * @member {SBIS3.CONTROLS.Data.Collection._hashIndex} Индекс хешей элементов
+       */
+      _hashIndex: undefined,
 
-      },
+      constructor: function $List(cfg) {
+         this.$items = [];
 
-      $constructor: function (cfg) {
          cfg = cfg || {};
          if ('items' in cfg) {
             if (!(cfg.items instanceof Array)) {
-               throw new Error('Invalid argument');
+               throw new TypeError('Option "items" should be an instance of Array');
             }
-            this._items = cfg.items;
          }
+         List.superclass.constructor.apply(this, arguments);
       },
 
       // region SBIS3.CONTROLS.Data.SerializableMixin
 
-      _getSerializableState: function() {
+      /*_getSerializableState: function() {
          return $ws.core.merge(
             List.superclass._getSerializableState.call(this), {
-               _items: this._items
+               $items: this.$items
             }
          );
-      },
+      },*/
 
       _setSerializableState: function(state) {
          return SerializableMixin._setSerializableState(state).callNext(function() {
-            this._items = state._items;
+            //this.$items = state.$items;
             this._clearServiceEnumerator();
          });
       },
@@ -88,7 +85,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.List', [
        */
       getEnumerator: function () {
          return new ArrayEnumerator({
-            items: this._items
+            items: this.$items
          });
       },
 
@@ -100,10 +97,10 @@ define('js!SBIS3.CONTROLS.Data.Collection.List', [
        */
       each: function (callback, context) {
          //так быстрее, чем по правильному - через enumerator
-         for (var i = 0, count = this._items.length; i < count; i++) {
+         for (var i = 0, count = this.$items.length; i < count; i++) {
             callback.call(
                context || this,
-               this._items[i],
+               this.$items[i],
                i
             );
          }
@@ -114,7 +111,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.List', [
       //region SBIS3.CONTROLS.Data.Collection.IList
 
       assign: function (items) {
-         this._items.length = 0;
+         this.$items.length = 0;
          this._splice(items || [], 0, 0);
          this._reindex();
       },
@@ -130,26 +127,26 @@ define('js!SBIS3.CONTROLS.Data.Collection.List', [
       },
 
       clear: function () {
-         this._items.length = 0;
+         this.$items.length = 0;
          this._reindex();
       },
 
       add: function (item, at) {
          if (at === undefined) {
-            this._items.push(item);
+            this.$items.push(item);
          } else {
             at = at || 0;
             if (at !== 0 && !this._isValidIndex(at, true)) {
                throw new Error('Index is out of bounds');
             }
-            this._items.splice(at, 0, item);
+            this.$items.splice(at, 0, item);
          }
 
          this._reindex();
       },
 
       at: function (index) {
-         return this._items[index];
+         return this.$items[index];
       },
 
       remove: function (item) {
@@ -165,7 +162,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.List', [
          if (!this._isValidIndex(index)) {
             throw new Error('Index is out of bounds');
          }
-         this._items.splice(index, 1);
+         this.$items.splice(index, 1);
 
          this._reindex();
       },
@@ -174,7 +171,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.List', [
          if (!this._isValidIndex(at)) {
             throw new Error('Index is out of bounds');
          }
-         this._items[at] = item;
+         this.$items[at] = item;
 
          this._reindex();
       },
@@ -184,11 +181,11 @@ define('js!SBIS3.CONTROLS.Data.Collection.List', [
             return this._getItemIndexByHash(item.getHash());
          }
 
-         return Array.indexOf(this._items, item);
+         return Array.indexOf(this.$items, item);
       },
 
       getCount: function () {
-         return this._items.length;
+         return this.$items.length;
       },
 
       //endregion SBIS3.CONTROLS.Data.Collection.IList
@@ -240,7 +237,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.List', [
        * @deprecated метод не рекомендуется к использованию, используйте each()
        */
       toArray: function () {
-         return this._items.slice();
+         return this.$items.slice();
       },
 
       //endregion deprecated
@@ -300,7 +297,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.List', [
        */
       _getServiceEnumerator: function () {
          return this._serviceEnumerator || (this._serviceEnumerator = new ArrayEnumerator({
-            items: this._items
+            items: this.$items
          }));
       },
 
@@ -331,8 +328,8 @@ define('js!SBIS3.CONTROLS.Data.Collection.List', [
 
       _createHashIndex: function () {
          this._hashIndex = {};
-         for (var i = 0, count = this._items.length; i < count; i++) {
-            var item = this._items[i];
+         for (var i = 0, count = this.$items.length; i < count; i++) {
+            var item = this.$items[i];
             if ($ws.helpers.instanceOfMixin(item, 'SBIS3.CONTROLS.Data.IHashable')) {
                this._hashIndex[item.getHash()] = i;
             }
@@ -352,8 +349,8 @@ define('js!SBIS3.CONTROLS.Data.Collection.List', [
        * @private
        */
       _splice: function (items, start){
-         Array.prototype.splice.apply(this._items,([start, 0].concat(
-            this._itemsToArray(items)
+         Array.prototype.splice.apply(this.$items,([start, 0].concat(
+            this.$itemsToArray(items)
          )));
          this._getServiceEnumerator().reIndex();
       },
@@ -382,8 +379,6 @@ define('js!SBIS3.CONTROLS.Data.Collection.List', [
 
    Di.register('collection.list', List);
 
-   //Регистрируем класс ObservableList для работы с контекстами $ws.proto.Context
-   //в новой версии ядра нужно будет сделать, чтобы привязыки данных к этим типам работали "из коробки"
    $ws.proto.Context.registerFieldType(new ContextFieldList({module: List}));
 
    return List;

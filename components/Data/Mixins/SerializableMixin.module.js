@@ -56,23 +56,27 @@ define('js!SBIS3.CONTROLS.Data.SerializableMixin', function () {
 
       /**
        * Возвращает всё, что нужно сложить в состояние объекта при сериализации, чтобы при десериализации вернуть его в это же состояние
+       * @param {Object} state Cостояние
        * @returns {Object}
        * @protected
        */
-      _getSerializableState: function() {
-         return {
-            $options: this._getOptions()
-         };
+      _getSerializableState: function(state) {
+         state = state || {};
+         state.$options = this._getOptions ? this._getOptions() : this._options
+         return state;
       },
 
       /**
        * Проверяет сериализованное состояние перед созданием инстанса. Возвращает метод, востанавливающий состояние объекта после создания инстанса.
+       * @param {Object} state Cостояние
+       * @param {Object} initializer Метод, устанавливающий состояние объекта после десериализации
        * @returns {Function|undefined}
        * @protected
        */
-      _setSerializableState: function(state) {
+      _setSerializableState: function(state, initializer) {
          state.$options = state.$options || {};
-         return function() {};
+         initializer = initializer || function() {};
+         return initializer;
       },
 
       /**

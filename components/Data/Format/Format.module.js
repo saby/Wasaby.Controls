@@ -15,24 +15,17 @@ define('js!SBIS3.CONTROLS.Data.Format.Format', [
 
    var Format = List.extend(/** @lends SBIS3.CONTROLS.Data.Format.Format.prototype */{
       _moduleName: 'SBIS3.CONTROLS.Data.Format.Format',
-      $protected: {
-         _options: {
-            /**
-             * @cfg {Array.<SBIS3.CONTROLS.Data.Format.Field>} Элементы списка
-             * @name SBIS3.CONTROLS.Data.Format.Format#items
-             */
-         },
 
-         /**
-          * @member {Array.<SBIS3.CONTROLS.Data.Format.Field>} Элементы списка
-          */
-         _items: []
-      },
+      /**
+       * @cfg {Array.<SBIS3.CONTROLS.Data.Format.Field>} Элементы списка
+       * @name SBIS3.CONTROLS.Data.Format.Format#items
+       */
 
-      $constructor: function () {
-         for (var i = 0, len = this._items.length; i < len; i++) {
-            this._checkItem(this._items[i]);
-            this._checkName(this._items[i], i);
+      constructor: function $Format() {
+         Format.superclass.constructor.apply(this, arguments);
+         for (var i = 0, len = this.$items.length; i < len; i++) {
+            this._checkItem(this.$items[i]);
+            this._checkName(this.$items[i], i);
          }
       },
 
@@ -57,13 +50,13 @@ define('js!SBIS3.CONTROLS.Data.Format.Format', [
 
       assign: function (items) {
          var i, len;
-         items = this._itemsToArray(items);
+         items = this.$itemsToArray(items);
          for (i = 0, len = items.length; i < len; i++) {
             this._checkItem(items[i]);
          }
          Format.superclass.assign.call(this, items);
-         for (i = 0, len = this._items.length; i < len; i++) {
-            this._checkName(this._items[i], i);
+         for (i = 0, len = this.$items.length; i < len; i++) {
+            this._checkName(this.$items[i], i);
          }
       },
 

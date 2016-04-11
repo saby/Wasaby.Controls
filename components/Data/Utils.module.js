@@ -4,119 +4,11 @@ define('js!SBIS3.CONTROLS.Data.Utils', [], function () {
     * Утилиты для коллекций
     * @class SBIS3.CONTROLS.Data.Utils
     * @public
-    * @ignoreMethods extend override
     * @author Мальцев Алексей
     */
 
-   var _private = {
-   };
-
    var Utils = /** @lends SBIS3.CONTROLS.Data.Utils.prototype */{
       _moduleName: 'SBIS3.CONTROLS.Data.Utils',
-
-      /**
-       * Наследует один модуль от другого
-       * @param {Function} [child=Object] Конструктор потомка
-       * @param {Function} parent Конструктор родителя
-       * @param {Array.<Object>} mixins Миксины
-       * @param {Object} overrides Переназначенные свойства и методы
-       * @return {Function} Конструктор потомка
-       * @static
-       */
-      extend: function (Child, Parent, mixins, overrides) {
-         if (Child instanceof Array) {
-            overrides = Parent;
-            mixins = Child;
-            Parent = undefined;
-            Child = undefined;
-         } else if (Parent instanceof Array) {
-            overrides = mixins;
-            mixins = Parent;
-            Parent = Child;
-            Child = undefined;
-         }
-         if (!mixins instanceof Array) {
-            overrides = mixins;
-            mixins = undefined;
-         }
-         if (!(Parent instanceof Function)) {
-            overrides = Parent;
-            mixins = undefined;
-            Parent = undefined;
-         }
-
-         if (Child === undefined) {
-            this._defaultConstructor = this._defaultConstructor || function() {
-               Parent && Parent.prototype.constructor.apply(this, arguments);
-            };
-            Child = overrides.hasOwnProperty('constructor') ? overrides.constructor : this._defaultConstructor ;
-         }
-
-         if (Parent === undefined) {
-            Parent = Object;
-         }
-
-         var Proxy = function () {};
-         Proxy.prototype = Parent.prototype;
-         Child.prototype = new Proxy();
-         Child.prototype.constructor = Child;
-         Child.superclass = Parent.prototype;
-
-         if (mixins) {
-            for (var i = 0, count = mixins.length; i < count; i++) {
-               this.mixin(Child.prototype, mixins[i]);
-            }
-         }
-
-         if (overrides) {
-            delete overrides.constructor;
-            this.override(Child.prototype, overrides);
-         }
-
-         Child.extend = function(Parent, mixins, overrides) {
-            return Utils.extend(Child, Parent, mixins, overrides);
-         };
-
-         return Child;
-      },
-
-      /**
-       * Добавляет примесь в модуль
-       * @param {Object} target Прототип модуля
-       * @param {Object} mixin Примесь
-       * @static
-       */
-      mixin: function (target, mixin) {
-         if (mixin instanceof Object) {
-            for (var key in mixin) {
-               if (mixin.hasOwnProperty(key)) {
-                  if (target.hasOwnProperty(key) &&
-                     target[key] instanceof Function
-                  ) {
-                     target[key] = target[key].callAround(mixin[key]);
-                  } else {
-                     target[key] = mixin[key];
-                  }
-               }
-            }
-         }
-      },
-
-      /**
-       * Перезаписывает свойства одного объекта свойствами другого
-       * @param {Object} target Объект, в которые пишем
-       * @param {Object} source Объект, из которого получаем
-       * @static
-       */
-      override: function (target, source) {
-         if (source instanceof Object) {
-            for (var key in source) {
-               if (source.hasOwnProperty(key)) {
-                  target[key] = source[key];
-               }
-            }
-         }
-      },
 
       /**
        * Возвращает значение свойства элемента

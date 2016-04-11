@@ -106,26 +106,27 @@ define('js!SBIS3.CONTROLS.Data.Model', [
       /**
        * @member {Object.<String, *>} Объект содержащий вычисленные значения свойств по умолчанию
        */
-      _defaultPropertiesValues: {},
+      _defaultPropertiesValues: null,
 
       /**
        * @member {Object.<String, Boolean>} Объект содержащий названия свойств, для которых сейчас выполняется вычисление значения
        */
-      _nowCalculatingProperties: {},
+      _nowCalculatingProperties: null,
 
       /**
        * @member {Object} Флаг показывающий была ли модель синхронизирована
        */
       _synced: false,
 
-      constructor: function Model$ (cfg) {
-         Model.superclass.constructor.apply(this, arguments);
-
+      constructor: function $Model (cfg) {
          cfg = cfg || {};
          if ('usingDataSetAsList' in cfg) {
             Utils.logger.stack(this._moduleName + '::$constructor(): option "usingDataSetAsList" is deprecated and will be removed in 3.7.4', 1);
          }
 
+         Model.superclass.constructor.apply(this, arguments);
+         this._defaultPropertiesValues = {};
+         this._nowCalculatingProperties = {};
          this.$idProperty = this.$idProperty || '';
          if (!this.$idProperty) {
             this.$idProperty = this.getAdapter().getKeyField(this.$rawData);

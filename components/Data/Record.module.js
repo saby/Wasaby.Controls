@@ -34,9 +34,9 @@ define('js!SBIS3.CONTROLS.Data.Record', [
     * Запись - обертка над данными.
     * @class SBIS3.CONTROLS.Data.Record
     * @extends SBIS3.CONTROLS.Entity.Options
-    * @mixes SBIS3.CONTROLS.Data.ObservableMixin
     * @mixes SBIS3.CONTROLS.Data.IPropertyAccess
     * @mixes SBIS3.CONTROLS.Data.Collection.IEnumerable
+    * @mixes SBIS3.CONTROLS.Data.ObservableMixin
     * @mixes SBIS3.CONTROLS.Data.SerializableMixin
     * @mixes SBIS3.CONTROLS.Data.FormattableMixin
     * @public
@@ -56,14 +56,14 @@ define('js!SBIS3.CONTROLS.Data.Record', [
       /**
        * @member {Object.<String, *>} Измененные поля и оригинальные значения
        */
-      _changedFields: {},
+      _changedFields: null,
 
       /**
        * @member {Object} Объект содержащий закэшированные инстансы значений-объектов
        */
-      _propertiesCache: {},
+      _propertiesCache: null,
 
-      constructor: function Record$ (cfg) {
+      constructor: function $Record(cfg) {
          cfg = cfg || {};
          if (cfg) {
             if ('data' in cfg && !('rawData' in cfg)) {
@@ -73,9 +73,11 @@ define('js!SBIS3.CONTROLS.Data.Record', [
          }
 
          Record.superclass.constructor.apply(this, arguments);
-
-         //this._publish('onPropertyChange');
-
+         ObservableMixin.constructor.apply(this, arguments);
+         FormattableMixin.constructor.apply(this, arguments);
+         this._changedFields = {};
+         this._propertiesCache = {};
+         this._publish('onPropertyChange');
          this.setRawData(this.$rawData);
       },
 
@@ -156,18 +158,17 @@ define('js!SBIS3.CONTROLS.Data.Record', [
 
       //region SBIS3.CONTROLS.Data.SerializableMixin
 
-      _getSerializableState: function() {
-         var state = $ws.core.merge(
-            SerializableMixin._getSerializableState.call(this), {
-               _changedFields: this._changedFields
-            }
-         );
-
+      _getSerializableState: function(state) {
+         state = SerializableMixin._getSerializableState.call(this, state);
+         state = FormattableMixin._getSerializableState.call(this, state);
+         state._changedFields = this._changedFields;
          return state;
       },
 
-      _setSerializableState: function(state) {
-         return SerializableMixin._setSerializableState(state).callNext(function() {
+      _setSerializableState: function(state, initializer) {
+         initializer = SerializableMixin._setSerializableState(state, initializer);
+         initializer = FormattableMixin._setSerializableState(state, initializer);
+         return initializer.callNext(function() {
             this._changedFields = state._changedFields;
          });
       },

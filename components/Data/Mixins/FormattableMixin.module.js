@@ -162,31 +162,29 @@ define('js!SBIS3.CONTROLS.Data.FormattableMixin', [
 
       //region SBIS3.CONTROLS.Data.SerializableMixin
 
-      after: {
-         _getSerializableState: function(state) {
-            //Prevent core reviver for rawData
-            if (state._options && state.$rawData && state.$rawData._type) {
-               state.$rawData.$type = state.$rawData._type;
-               delete state.$rawData._type;
-            }
-
-            return state;
-         },
-
-         _setSerializableState: function(state, initializer) {
-            //Restore value hidden from core reviver
-            return initializer.callNext(function() {
-               if (this._options && this.$rawData && this.$rawData.$type) {
-                  this.$rawData._type = this.$rawData.$type;
-                  delete this.$rawData.$type;
-               }
-            });
+      _getSerializableState: function(state) {
+         //Prevent core reviver for rawData
+         if (state.$options.rawData && state.$options.rawData._type) {
+            state.$options.rawData.$type = state.$options.rawData._type;
+            delete state.$options.rawData._type;
          }
+
+         return state;
+      },
+
+      _setSerializableState: function(state, initializer) {
+         //Restore value hidden from core reviver
+         return initializer.callNext(function() {
+            if (this.$rawData && this.$rawData.$type) {
+               this.$rawData._type = this.$rawData.$type;
+               delete this.$rawData.$type;
+            }
+         });
       },
 
       //region Public methods
 
-      $constructor: function (cfg) {
+      constructor: function $FormattableMixin(cfg) {
          if(cfg && cfg.format) {
             this._directFormat = true;
 
@@ -194,7 +192,7 @@ define('js!SBIS3.CONTROLS.Data.FormattableMixin', [
                try {
                   this._getRawDataAdapter().addField(fieldFormat);
                } catch (e) {
-
+                  Utils.logger.info(this._moduleName + '::constructor(): can\'t add raw data field (' + e.message + ')');
                }
             }, this);
          }
