@@ -7,12 +7,13 @@ define('js!SBIS3.CONTROLS.MergeDialogTemplate', [
     'js!SBIS3.CONTROLS.Data.Source.SbisService',
     'js!SBIS3.CONTROLS.Data.Source.Memory',
     'js!SBIS3.CONTROLS.Data.Adapter.Sbis',
+    'js!SBIS3.CONTROLS.Data.Collection.RecordSet',
     'i18n!SBIS3.CONTROLS.MergeDialogTemplate',
     'js!SBIS3.CONTROLS.Button',
     'js!SBIS3.CONTROLS.TreeDataGridView',
     'html!SBIS3.CONTROLS.MergeDialogTemplate/resources/cellRadioButtonTpl',
     'html!SBIS3.CONTROLS.MergeDialogTemplate/resources/cellCommentTpl'
-], function(Control, dotTplFn, SbisServiceSource, MemorySource, SbisAdapter, rk) {
+], function(Control, dotTplFn, SbisServiceSource, MemorySource, SbisAdapter, RecordSet, rk) {
 
     var COMMENT_FIELD_NAME = 'Comment',
         AVAILABLE_FIELD_NAME = 'Available';
@@ -111,13 +112,21 @@ define('js!SBIS3.CONTROLS.MergeDialogTemplate', [
                 self._hideIndicator();
             });
         },
-        _showErrorDialog: function(mergeKeys, error) {
+        _showErrorDialog: function(mergeKeys, errors) {
             var
-                count = mergeKeys.length;
+                errorsTexts = [],
+                count = mergeKeys.length,
+                errorsRecordSet = new RecordSet({
+                    rawData: errors.addinfo,
+                    adapter: 'adapter.sbis'
+                });
+            errorsRecordSet.each(function(item) {
+                errorsTexts.push(item.get('error'));
+            });
             $ws.helpers.openErrorsReportDialog({
                 'numSelected': count,
-                'numSuccess': 0,
-                'errors': [error.message],
+                'numSuccess': count - errorsRecordSet.getCount(),
+                'errors': errorsTexts,
                 'title': this._options.errorMessage
             });
         },
