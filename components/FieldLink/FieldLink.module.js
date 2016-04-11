@@ -658,8 +658,8 @@ define('js!SBIS3.CONTROLS.FieldLink',
              };
              // Придрот для айпада. Выезжающая клавиатура может скрывать выпадашку, так как та влезает под нее. Поэтому на айпаде всегда открываем автодополнение вверх
              if ($ws._const.browser.isMobileIOS){
-               cfg.corner = 'tl';
-               cfg.side = 'bottom';
+                cfg.corner = 'tl';
+                cfg.verticalAlign.side = 'bottom';
              }
              return cfg;
           },
