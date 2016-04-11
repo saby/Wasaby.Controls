@@ -115,17 +115,20 @@ define('js!SBIS3.CONTROLS.MergeDialogTemplate', [
         _showErrorDialog: function(mergeKeys, errors) {
             var
                 errorsTexts = [],
-                count = mergeKeys.length,
-                errorsRecordSet = new RecordSet({
+                count = mergeKeys.length;
+            if (errors.addinfo) {
+                new RecordSet({
                     rawData: errors.addinfo,
                     adapter: 'adapter.sbis'
+                }).each(function(item) {
+                    errorsTexts.push(item.get('error'));
                 });
-            errorsRecordSet.each(function(item) {
-                errorsTexts.push(item.get('error'));
-            });
+            } else {
+                errorsTexts = [error.message];
+            }
             $ws.helpers.openErrorsReportDialog({
                 'numSelected': count,
-                'numSuccess': count - errorsRecordSet.getCount(),
+                'numSuccess': count - errorsTexts.length,
                 'errors': errorsTexts,
                 'title': this._options.errorMessage
             });
