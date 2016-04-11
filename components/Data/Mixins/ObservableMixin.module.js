@@ -20,17 +20,12 @@ define('js!SBIS3.CONTROLS.Data.ObservableMixin', function () {
        */
       _publishedEvents: null,
 
-      constructor: function $ObservableMixin() {
-         this._publishedEvents = [];
-      },
-
-      /**
-       * Разрушает экземпляр
-       */
-      destroy: function() {
-         if (this._eventBusChannel) {
-            this._eventBusChannel.unsubscribeAll();
-            this._eventBusChannel.destroy();
+      $after: {
+         destroy: function() {
+            if (this._eventBusChannel) {
+               this._eventBusChannel.unsubscribeAll();
+               this._eventBusChannel.destroy();
+            }
          }
       },
 
@@ -44,8 +39,10 @@ define('js!SBIS3.CONTROLS.Data.ObservableMixin', function () {
          if (!this._eventBusChannel) {
             this._eventBusChannel = new $ws.proto.EventBusChannel();
 
-            for (var i = 0; i < this._publishedEvents.length; i++) {
-               this._eventBusChannel.publish(this._publishedEvents[i]);
+            if (this._publishedEvents) {
+               for (var i = 0; i < this._publishedEvents.length; i++) {
+                  this._eventBusChannel.publish(this._publishedEvents[i]);
+               }
             }
          }
 
@@ -71,11 +68,30 @@ define('js!SBIS3.CONTROLS.Data.ObservableMixin', function () {
       },
 
       /**
+       * Проверяет наличие подписки на событие
+       * @param {String} event Имя события
+       * @return {Array.<$ws.proto.EventObject>}
+       */
+      getEventHandlers: function(event) {
+         return this._eventBusChannel ? this._eventBusChannel.getEventHandlers(event) : [];
+      },
+
+      /**
+       * Проверяет наличие подписки на событие
+       * @param {String} event Имя события
+       * @return {Boolean}
+       */
+      hasEventHandlers: function(event) {
+         return this._eventBusChannel && this._eventBusChannel.hasEventHandlers(event);
+      },
+
+      /**
        * Деклариует наличие события
        * @param {String} event Имя события
        * @protected
        */
       _publish: function(event) {
+         this._publishedEvents = this._publishedEvents || [];
          this._publishedEvents.push(event);
 
          if (this._eventBusChannel) {
@@ -84,24 +100,15 @@ define('js!SBIS3.CONTROLS.Data.ObservableMixin', function () {
       },
 
       /**
-       * Проверяет наличие подписки на событие
-       * @param {String} event Имя события
-       * @return {Boolean}
-       * @protected
-       */
-      _hasEventHandlers: function(event) {
-         this._eventBusChannel && this._eventBusChannel.hasEventHandlers(event);
-      },
-
-      /**
        * Извещает подписчиков о наступлении события
        * @param {String} event Имя события
        * @param [arg1, [...]] Аргументы события
        * @protected
        */
-      _notify: function () {
+      _notify: function (event) {
          if (this._eventBusChannel) {
-            this._eventBusChannel.notify.apply(this._eventBusChannel, arguments);
+            var args = Array.prototype.slice.call(arguments, 1);
+            this._eventBusChannel._notifyWithTarget(event, this, args);
          }
       }
    };

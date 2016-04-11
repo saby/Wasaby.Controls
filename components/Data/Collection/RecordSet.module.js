@@ -1,24 +1,28 @@
 /* global define, $ws */
 define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
-   'js!SBIS3.CONTROLS.Data.Collection.ObservableList',
+   'js!SBIS3.CONTROLS.Data.Collection.List',
+   'js!SBIS3.CONTROLS.Data.Bind.ICollection',
+   'js!SBIS3.CONTROLS.Data.Collection.ObservableListMixin',
    'js!SBIS3.CONTROLS.Data.FormattableMixin',
    'js!SBIS3.CONTROLS.Data.Di',
    'js!SBIS3.CONTROLS.Data.Utils',
    'js!SBIS3.CONTROLS.Data.Model'
-], function (ObservableList, FormattableMixin, Di, Utils) {
+], function (List, IBindCollection, ObservableListMixin, FormattableMixin, Di, Utils) {
    'use strict';
 
    /**
     * Список записей
     * @class SBIS3.CONTROLS.Data.Collection.RecordSet
-    * @extends SBIS3.CONTROLS.Data.Collection.ObservableList
+    * @extends SBIS3.CONTROLS.Data.Collection.List
+    * @mixes SBIS3.CONTROLS.Data.Bind.ICollection
+    * @mixes SBIS3.CONTROLS.Data.Collection.ObservableListMixin
     * @mixes SBIS3.CONTROLS.Data.FormattableMixin
     * @ignoreOptions items
     * @author Мальцев Алексей
     * @public
     */
 
-   var RecordSet = ObservableList.extend([FormattableMixin], /** @lends SBIS3.CONTROLS.Data.Collection.RecordSet.prototype */{
+   var RecordSet = List.extend([IBindCollection, ObservableListMixin, FormattableMixin], /** @lends SBIS3.CONTROLS.Data.Collection.RecordSet.prototype */{
       _moduleName: 'SBIS3.CONTROLS.Data.Collection.RecordSet',
 
       /**
@@ -99,14 +103,34 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
             Utils.logger.stack('SBIS3.CONTROLS.Data.Collection.RecordSet: option "items" is not acceptable. Use "rawData" instead.', 1);
          }
 
-         RecordSet.superclass.constructor.apply(this, arguments);
-         FormattableMixin.constructor.apply(this, arguments);
          this.$meta = {};
          this._indexTree = {};
+         RecordSet.superclass.constructor.apply(this, arguments);
+         ObservableListMixin.constructor.apply(this, arguments);
+         FormattableMixin.constructor.apply(this, arguments);
          if (this.$rawData) {
             this._assignRawData(this.$rawData, true);
             this._createFromRawData();
          }
+      },
+
+      // region SBIS3.CONTROLS.Data.SerializableMixin
+
+      _getSerializableState: function(state) {
+         state = RecordSet.superclass._getSerializableState.call(this, state);
+         state = FormattableMixin._getSerializableState.call(this, state);
+         delete state.$options.items;
+         return state;
+      },
+
+      _setSerializableState: function(state) {
+         return RecordSet.superclass._setSerializableState(state)
+            .callNext(
+               FormattableMixin._setSerializableState(state)
+            )
+            .callNext(function() {
+               this._clearServiceEnumerator();
+            });
       },
 
       //region SBIS3.CONTROLS.Data.FormattableMixin

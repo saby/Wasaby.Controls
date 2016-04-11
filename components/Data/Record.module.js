@@ -2,7 +2,8 @@
 define('js!SBIS3.CONTROLS.Data.Record', [
    'js!SBIS3.CONTROLS.Data.IPropertyAccess',
    'js!SBIS3.CONTROLS.Data.Collection.IEnumerable',
-   'js!SBIS3.CONTROLS.Data.Entity.Options',
+   'js!SBIS3.CONTROLS.Data.Entity.Abstract',
+   'js!SBIS3.CONTROLS.Data.OptionsMixin',
    'js!SBIS3.CONTROLS.Data.ObservableMixin',
    'js!SBIS3.CONTROLS.Data.SerializableMixin',
    'js!SBIS3.CONTROLS.Data.FormattableMixin',
@@ -16,7 +17,8 @@ define('js!SBIS3.CONTROLS.Data.Record', [
 ], function (
    IPropertyAccess,
    IEnumerable,
-   Options,
+   Abstract,
+   OptionsMixin,
    ObservableMixin,
    SerializableMixin,
    FormattableMixin,
@@ -33,9 +35,10 @@ define('js!SBIS3.CONTROLS.Data.Record', [
    /**
     * Запись - обертка над данными.
     * @class SBIS3.CONTROLS.Data.Record
-    * @extends SBIS3.CONTROLS.Entity.Options
+    * @extends SBIS3.CONTROLS.Entity.Abstract
     * @mixes SBIS3.CONTROLS.Data.IPropertyAccess
     * @mixes SBIS3.CONTROLS.Data.Collection.IEnumerable
+    * @mixes SBIS3.CONTROLS.Data.OptionsMixin
     * @mixes SBIS3.CONTROLS.Data.ObservableMixin
     * @mixes SBIS3.CONTROLS.Data.SerializableMixin
     * @mixes SBIS3.CONTROLS.Data.FormattableMixin
@@ -43,7 +46,7 @@ define('js!SBIS3.CONTROLS.Data.Record', [
     * @author Мальцев Алексей
     */
 
-   var Record = Options.extend([IPropertyAccess, IEnumerable, ObservableMixin, SerializableMixin, FormattableMixin], /** @lends SBIS3.CONTROLS.Data.Record.prototype */{
+   var Record = Abstract.extend([IPropertyAccess, IEnumerable, OptionsMixin, ObservableMixin, SerializableMixin, FormattableMixin], /** @lends SBIS3.CONTROLS.Data.Record.prototype */{
       _moduleName: 'SBIS3.CONTROLS.Data.Record',
 
       /**
@@ -72,11 +75,11 @@ define('js!SBIS3.CONTROLS.Data.Record', [
             }
          }
 
-         Record.superclass.constructor.apply(this, arguments);
-         ObservableMixin.constructor.apply(this, arguments);
-         FormattableMixin.constructor.apply(this, arguments);
          this._changedFields = {};
          this._propertiesCache = {};
+         Record.superclass.constructor.apply(this, arguments);
+         OptionsMixin.constructor.apply(this, arguments);
+         FormattableMixin.constructor.apply(this, arguments);
          this._publish('onPropertyChange');
          this.setRawData(this.$rawData);
       },
@@ -165,12 +168,14 @@ define('js!SBIS3.CONTROLS.Data.Record', [
          return state;
       },
 
-      _setSerializableState: function(state, initializer) {
-         initializer = SerializableMixin._setSerializableState(state, initializer);
-         initializer = FormattableMixin._setSerializableState(state, initializer);
-         return initializer.callNext(function() {
-            this._changedFields = state._changedFields;
-         });
+      _setSerializableState: function(state) {
+         return SerializableMixin._setSerializableState(state)
+            .callNext(
+               FormattableMixin._setSerializableState(state)
+            )
+            .callNext(function() {
+               this._changedFields = state._changedFields;
+            });
       },
 
       //endregion SBIS3.CONTROLS.Data.SerializableMixin

@@ -172,14 +172,14 @@ define('js!SBIS3.CONTROLS.Data.FormattableMixin', [
          return state;
       },
 
-      _setSerializableState: function(state, initializer) {
+      _setSerializableState: function(state) {
          //Restore value hidden from core reviver
-         return initializer.callNext(function() {
+         return function() {
             if (this.$rawData && this.$rawData.$type) {
                this.$rawData._type = this.$rawData.$type;
                delete this.$rawData.$type;
             }
-         });
+         };
       },
 
       //region Public methods

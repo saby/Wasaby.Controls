@@ -30,17 +30,19 @@ define('js!SBIS3.CONTROLS.Data.Collection.ObservableListMixin', [
          this._setObservableItems(this.$items);
       },
 
-      subscribe: function(event) {
-         if (this._eventBusChannel.getEventHandlers(event).length == 1) {
-            this._setObservableItems(this.$items);
+      $after: {
+         subscribe: function(event) {
+            if (this._eventBusChannel.getEventHandlers(event).length == 1) {
+               this._setObservableItems(this.$items);
+            }
+         },
+
+         destroy: function() {
+            this._unsetObservableItems(this.$items);
          }
       },
 
-      destroy: function() {
-         this._unsetObservableItems(this.$items);
-      },
-
-      around: {
+      $around: {
 
          //region SBIS3.CONTROLS.Data.Collection.List
 
@@ -164,7 +166,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.ObservableListMixin', [
          if (!this._eventsEnabled) {
             return;
          }
-         if (this._hasEventHandlers('onCollectionChange')) {
+         if (this.hasEventHandlers('onCollectionChange')) {
             this._notify(
                'onCollectionChange',
                action,
@@ -174,7 +176,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.ObservableListMixin', [
                oldItemsIndex
             );
          }
-         if (this._hasEventHandlers('onCollectionItemChange')) {
+         if (this.hasEventHandlers('onCollectionItemChange')) {
             this._checkWatchableOnCollectionChange(
                action,
                newItems,
@@ -194,7 +196,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.ObservableListMixin', [
       notifyItemChange: function (item, property) {
          if (
             !this._eventsEnabled ||
-            !this._hasEventHandlers('onCollectionItemChange')
+            !this.hasEventHandlers('onCollectionItemChange')
          ) {
             return;
          }
@@ -241,7 +243,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.ObservableListMixin', [
        * @protected
        */
       _setObservableItems: function(items) {
-         if (this._hasEventHandlers('onCollectionItemChange')) {
+         if (this.hasEventHandlers('onCollectionItemChange')) {
             $ws.helpers.forEach(items, this._watchForChanges, this);
          }
       },

@@ -1,19 +1,16 @@
 /* global define, $ws */
-define('js!SBIS3.CONTROLS.Data.Entity.Options', [
-   'js!SBIS3.CONTROLS.Data.Core',
-   'js!SBIS3.CONTROLS.Data.Di'
-], function (Core, Di) {
+define('js!SBIS3.CONTROLS.Data.OptionsMixin', function () {
    'use strict';
 
    /**
     * Cущность, свойства которой передаются в конструктор в виде опций (объекта ключ - значение)
-    * @class SBIS3.CONTROLS.Data.Entity.Options
+    * @class SBIS3.CONTROLS.Data.OptionsMixin
     * @public
     * @author Мальцев Алексей
     */
 
-   var Options = Core.extend(/** @lends SBIS3.CONTROLS.Entity.Options.prototype */{
-      constructor: function $Options (cfg){
+   var OptionsMixin = /** @lends SBIS3.CONTROLS.OptionsMixin.prototype */{
+      constructor: function $Options(cfg){
          if (cfg instanceof Object) {
             var option, property;
             for (option in cfg) {
@@ -35,9 +32,7 @@ define('js!SBIS3.CONTROLS.Data.Entity.Options', [
          }
          return options;
       }
-   });
+   };
 
-   Di.register('entity.options', Options);
-
-   return Options;
+   return OptionsMixin;
 });

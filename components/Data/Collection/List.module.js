@@ -4,20 +4,22 @@ define('js!SBIS3.CONTROLS.Data.Collection.List', [
    'js!SBIS3.CONTROLS.Data.Collection.IEnumerable',
    'js!SBIS3.CONTROLS.Data.Collection.IList',
    'js!SBIS3.CONTROLS.Data.Collection.IIndexedCollection',
-   'js!SBIS3.CONTROLS.Data.Entity.Options',
+   'js!SBIS3.CONTROLS.Data.Entity.Abstract',
+   'js!SBIS3.CONTROLS.Data.OptionsMixin',
    'js!SBIS3.CONTROLS.Data.ObservableMixin',
    'js!SBIS3.CONTROLS.Data.Collection.ArrayEnumerator',
    'js!SBIS3.CONTROLS.Data.Serializer',
    'js!SBIS3.CONTROLS.Data.Di',
    'js!SBIS3.CONTROLS.Data.Utils',
    'js!SBIS3.CONTROLS.Data.ContextField.List'
-], function (SerializableMixin, IEnumerable, IList, IIndexedCollection, Options, ObservableMixin, ArrayEnumerator, Serializer, Di, Utils, ContextFieldList) {
+], function (SerializableMixin, IEnumerable, IList, IIndexedCollection, Abstract, OptionsMixin, ObservableMixin, ArrayEnumerator, Serializer, Di, Utils, ContextFieldList) {
    'use strict';
 
    /**
     * Список - коллекция c доступом по порядковому индексу
     * @class SBIS3.CONTROLS.Data.Collection.List
-    * @extends SBIS3.CONTROLS.Entity.Options
+    * @extends SBIS3.CONTROLS.Entity.Abstract
+    * @mixes SBIS3.CONTROLS.Data.OptionsMixin
     * @mixes SBIS3.CONTROLS.Data.ObservableMixin
     * @mixes SBIS3.CONTROLS.Data.SerializableMixin
     * @mixes SBIS3.CONTROLS.Data.Collection.IEnumerable
@@ -27,7 +29,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.List', [
     * @author Мальцев Алексей
     */
 
-   var List = Options.extend([ObservableMixin, SerializableMixin, IEnumerable, IList, IIndexedCollection], /** @lends SBIS3.CONTROLS.Data.Collection.List.prototype */{
+   var List = Abstract.extend([OptionsMixin, ObservableMixin, SerializableMixin, IEnumerable, IList, IIndexedCollection], /** @lends SBIS3.CONTROLS.Data.Collection.List.prototype */{
       _moduleName: 'SBIS3.CONTROLS.Data.Collection.List',
 
       /**
@@ -56,21 +58,17 @@ define('js!SBIS3.CONTROLS.Data.Collection.List', [
             }
          }
          List.superclass.constructor.apply(this, arguments);
+         OptionsMixin.constructor.apply(this, arguments);
       },
 
       // region SBIS3.CONTROLS.Data.SerializableMixin
 
-      /*_getSerializableState: function() {
-         return $ws.core.merge(
-            List.superclass._getSerializableState.call(this), {
-               $items: this.$items
-            }
-         );
-      },*/
+      _getSerializableState: function(state) {
+         return SerializableMixin._getSerializableState.call(this, state);
+      },
 
       _setSerializableState: function(state) {
          return SerializableMixin._setSerializableState(state).callNext(function() {
-            //this.$items = state.$items;
             this._clearServiceEnumerator();
          });
       },
@@ -177,7 +175,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.List', [
       },
 
       getIndex: function (item) {
-         if ($ws.helpers.instanceOfMixin(item, 'SBIS3.CONTROLS.Data.IHashable')) {
+         if (item && $ws.helpers.instanceOfMixin(item, 'SBIS3.CONTROLS.Data.IHashable')) {
             return this._getItemIndexByHash(item.getHash());
          }
 
@@ -350,7 +348,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.List', [
        */
       _splice: function (items, start){
          Array.prototype.splice.apply(this.$items,([start, 0].concat(
-            this.$itemsToArray(items)
+            this._itemsToArray(items)
          )));
          this._getServiceEnumerator().reIndex();
       },
@@ -370,7 +368,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.List', [
             });
             return result;
          } else {
-            throw new Error('Arguments must be an array or implemenst SBIS3.CONTROLS.Data.Collection.IEnumerable.');
+            throw new TypeError('Argument "items" must be an instance of Array or implement SBIS3.CONTROLS.Data.Collection.IEnumerable.');
          }
       }
       //endregion Protected methods

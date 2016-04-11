@@ -50,7 +50,7 @@ define('js!SBIS3.CONTROLS.Data.Format.Format', [
 
       assign: function (items) {
          var i, len;
-         items = this.$itemsToArray(items);
+         items = this._itemsToArray(items);
          for (i = 0, len = items.length; i < len; i++) {
             this._checkItem(items[i]);
          }

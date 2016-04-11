@@ -11,6 +11,11 @@ define('js!SBIS3.CONTROLS.Data.Core', [], function () {
    var _private = {
       contextualExtend: function(mixins, overrides) {
          return Core.extend(this, mixins, overrides);
+      },
+      mixinWrappers: {
+         $around: 'callAround',
+         $after: 'callNext',
+         $before: 'callBefore'
       }
    };
 
@@ -72,14 +77,32 @@ define('js!SBIS3.CONTROLS.Data.Core', [], function () {
        */
       mixin: function (target, mixin) {
          if (mixin instanceof Object) {
-            for (var key in mixin) {
+            if (!target._mixins) {
+               target._mixins = [];
+            }
+            target._mixins.push(mixin);
+
+            var wrappers = _private.mixinWrappers,
+               item,
+               key,
+               wrapperMethod,
+               wrapperKey;
+            for (key in mixin) {
                if (mixin.hasOwnProperty(key)) {
-                  if (target.hasOwnProperty(key) &&
-                     target[key] instanceof Function
-                  ) {
-                     target[key] = target[key].callNext(mixin[key]);
+                  item = mixin[key];
+                  if (wrappers.hasOwnProperty(key)) {
+                     wrapperMethod = wrappers[key];
+                     for (wrapperKey in item) {
+                        if (item.hasOwnProperty(wrapperKey)) {
+                           if (target[wrapperKey] instanceof Function) {
+                              target[wrapperKey] = target[wrapperKey][wrapperMethod](item[wrapperKey]);
+                           } else {
+                              target[wrapperKey] = item[wrapperKey];
+                           }
+                        }
+                     }
                   } else {
-                     target[key] = mixin[key];
+                     target[key] = item;
                   }
                }
             }
