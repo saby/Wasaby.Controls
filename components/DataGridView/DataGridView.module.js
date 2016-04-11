@@ -831,7 +831,12 @@ define('js!SBIS3.CONTROLS.DataGridView',
             }
          }
       },
-
+      _toggleEmptyData: function(show) {
+         DataGridView.superclass._toggleEmptyData.apply(this, arguments);
+         if(this._emptyData) {
+            this._thead.toggleClass('ws-hidden', show);
+         }
+      },
       _showItemsToolbar: function(item) {
          if(!this.isNowScrollingPartScroll()) {
             DataGridView.superclass._showItemsToolbar.call(this, item);
