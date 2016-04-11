@@ -1168,6 +1168,7 @@ define('js!SBIS3.CONTROLS.ListView',
                } else {
                   this._hideItemsToolbar(true);
                }
+               e.stopPropagation();
             }
          },
 
