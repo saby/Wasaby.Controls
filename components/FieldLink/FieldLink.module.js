@@ -653,7 +653,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
            * Конфигурация пикера
            */
           _setPickerConfig: function () {
-             return {
+             var cfg = {
                 corner: 'bl',
                 target: this._container,
                 opener: this,
@@ -668,6 +668,12 @@ define('js!SBIS3.CONTROLS.FieldLink',
                    side: 'left'
                 }
              };
+             // Придрот для айпада. Выезжающая клавиатура может скрывать выпадашку, так как та влезает под нее. Поэтому на айпаде всегда открываем автодополнение вверх
+             if ($ws._const.browser.isMobileIOS){
+                cfg.corner = 'tl';
+                cfg.verticalAlign.side = 'bottom';
+             }
+             return cfg;
           },
           /**
            * Обрабатывает нажатие клавиш, специфичных для поля связи
