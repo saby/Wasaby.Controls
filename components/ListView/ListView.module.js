@@ -1936,10 +1936,14 @@ define('js!SBIS3.CONTROLS.ListView',
                   target: target,
                   insertAfter: undefined
                });
-               //Предотвращаем нативное выделение текста на странице
-               if (!$ws._const.compatibility.touch) {
-                  e.preventDefault();
-               }
+               //TODO: Сейчас появилась проблема, что если к компьютеру подключен touch-телевизор он не вызывает
+               //preventDefault и при таскании элементов мышкой происходит выделение текста.
+               //Раньше тут была проверка !$ws._const.compatibility.touch и preventDefault не вызывался для touch устройств
+               //данная проверка была добавлена, потому что когда в строке были отрендерены кнопки, при нажатии на них
+               //и выполнении preventDefault впоследствии не вызывался click. Написал демку https://jsfiddle.net/9uwphct4/
+               //с воспроизведением сценария, на iPad и Android click отрабатывает. Возможно причина была ещё в какой-то
+               //ошибке. При возникновении ошибок на мобильных устройствах нужно будет добавить проверку !$ws._const.browser.isMobilePlatform.
+               e.preventDefault();
             }
          },
          _callMoveOutHandler: function() {
