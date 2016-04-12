@@ -382,6 +382,13 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
             return this._notify('onDragMove', this.getCurrentElement().keys, target.data('id'), insertAfter) !== false;
          }
       },
+
+      _getDirectionOrderChange: function() {
+         if (this._options.itemsDragNDrop !== 'onlyChangeParent') {
+            return TreeDataGridView.superclass._getDirectionOrderChange.apply(this, arguments);
+         }
+      },
+
       /**
        * Говорят, что группировка должна быть только в текущем разделе. Поддерживаем
        * @param record
