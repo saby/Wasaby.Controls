@@ -309,24 +309,22 @@ define('js!SBIS3.CONTROLS.Data.Projection.Tree', [
          var current,
             parent = item && item.getParent() || this.getRoot(),
             hasItem = true,
+            initial = initial || enumerator.getCurrent(),
             sameParent = false,
             method = isNext ? 'getNext' : 'getPrevious';
          //TODO: отлеживать по level, что вышли "выше"
          enumerator.setCurrent(item);
          while (hasItem && !sameParent) {
             hasItem = !!enumerator[method]();
-            current = enumerator.getCurrent();
-            sameParent = current ? current.getParent() === parent : false;
+            var nearbyItem = enumerator.getCurrent();
+            sameParent = nearbyItem ? nearbyItem.getParent() === parent : false;
+            current = (hasItem && sameParent) ? nearbyItem : undefined;
          }
-         if (hasItem && sameParent) {
-            if(current && $ws.helpers.instanceOfModule(current.getContents(), 'SBIS3.CONTROLS.Data.Model') && current.getContents().isDeleted()){
-               return this._getNearbyItem(current, isNext, enumerator);
-            } else {
-               return current;
-
-            }
+         if (current && $ws.helpers.instanceOfModule(current.getContents(), 'SBIS3.CONTROLS.Data.Model') && current.getContents().isDeleted()) {
+            current = this._getNearbyItem(current, isNext, enumerator, initial);
          }
-         return undefined;
+         enumerator.setCurrent(initial);
+         return current;
       },
 
       _moveTo: function (isNext){
