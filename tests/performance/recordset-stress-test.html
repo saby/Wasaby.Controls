@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:ws="ws-component">
+   <head>
+      <title>RecordSet stress test</title>
+      <script type="text/javascript">
+         window.wsConfig = {
+            WSRootPath: '/sbis3-ws/ws/',
+            wsRoot: '/sbis3-ws/ws/',
+            WSTheme: 'wi_scheme',
+            resourceRoot: '/components',
+            nostyle: true,
+            globalConfigSupport: false
+         };
+         window.WSTheme = 'wi_scheme';
+      </script>
+      <script type="text/javascript" data-pack-name="contents" src="/components/contents.js"></script>
+      <script type="text/javascript" data-pack-name="ws" src="/sbis3-ws/ws/ext/jquery-min.js"></script>
+      <script type="text/javascript" data-pack-name="ws" src="/sbis3-ws/ws/ext/jquery-cookie-min.js"></script>
+      <script type="text/javascript" src="/sbis3-ws/ws/ext/requirejs/require.js"></script>
+      <script type="text/javascript" src="/sbis3-ws/ws/ext/requirejs/config.js"></script>
+      <script type="text/javascript" src="/sbis3-ws/ws/lib/core.js"></script>
+      <script type="text/javascript" src="/sbis3-ws/ws/lib/Source.js"></script>
+      <script type="text/javascript" data-pack-name="ws" src="/sbis3-ws/ws/res/js/bootup.js"></script>
+   </head>
+   <body>
+      <h1>RecordSet stress test</h1>
+      <script type="text/javascript">
+         $ws.core.withComponents('Source').addCallback(function() {
+            require([
+               'js!SBIS3.CONTROLS.Data.Collection.RecordSet'
+            ], function (
+               RecordSet
+            ) {
+               console.time('total');
+
+               var createData = function() {
+                     var items = [],
+                        item,
+                        i,
+                        j;
+                     for (i = 0; i < recordsCount; i++) {
+                        item = {};
+                        for (j = 0; j < fieldsCount; j++) {
+                           item['field' + j] = i +':' + j;
+                        }
+                        items.push(item);
+                     }
+                     return items;
+                  },
+                  recordsCount = 100000,
+                  fieldsCount = 25,
+                  data;
+
+               console.time('createData');
+               data = createData();
+               console.timeEnd('createData');
+
+               console.time('traverseData');
+               var recordset = new RecordSet({
+                     rawData: data
+                  }),
+                  count = recordset.getCount(),
+                  i,
+                  enumerator,
+                  name,
+                  value;
+               for (i = 0; i < count; i++) {
+                  record = recordset.at(i);
+                  enumerator = record.getEnumerator();
+                  while ((name = enumerator.getNext())) {
+                     value = record.get(name);
+                     //console.log([name, value]);
+                  }
+               }
+               console.timeEnd('traverseData');
+
+               console.timeEnd('total');
+            });
+         });
+      </script>
+   </body>
+</html>
