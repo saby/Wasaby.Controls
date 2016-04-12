@@ -829,7 +829,7 @@ define([
                      adapter: 'adapter.sbis'
                   }),
                   clone = rs.clone();
-               assert.strictEqual(clone._items, clone._getServiceEnumerator()._options.items);
+               assert.strictEqual(clone.$items, clone._getServiceEnumerator()._options.items);
             });
          });
 
@@ -1012,13 +1012,13 @@ define([
             it('should merge two recordsets without add', function() {
                var rs = new RecordSet({
                   rawData: getItems(),
-                  idProperty: "Ид"
+                  idProperty: 'Ид'
                }), rs2 =  new RecordSet({
                   rawData: [{
                      'Ид': 1000,
                      'Фамилия': 'Пушкин'
                   }],
-                  idProperty: "Ид"
+                  idProperty: 'Ид'
                });
                rs.merge(rs2, {add: false});
                assert.isUndefined(rs.getRecordById(1000));
@@ -1028,11 +1028,13 @@ define([
 
          describe('.toJSON()', function () {
             it('should serialize a RecordSet', function () {
-               var json = rs.toJSON();
+               var json = rs.toJSON(),
+                  options = rs._getOptions();
+               delete options.items;
                assert.strictEqual(json.module, 'SBIS3.CONTROLS.Data.Collection.RecordSet');
                assert.isNumber(json.id);
                assert.isTrue(json.id > 0);
-               assert.deepEqual(json.state._options, rs._options);
+               assert.deepEqual(json.state.$options, options);
             });
             it('should hide type signature in rawData', function () {
                var rs = new RecordSet({
@@ -1044,10 +1046,27 @@ define([
                      }
                   }),
                   json = rs.toJSON();
-               assert.isUndefined(json.state._options.rawData._type);
-               assert.strictEqual(json.state._options.rawData.$type, 'recordset');
-               assert.deepEqual(json.state._options.rawData.s, [1]);
-               assert.deepEqual(json.state._options.rawData.d, [2]);
+               assert.isUndefined(json.state.$options.rawData._type);
+               assert.strictEqual(json.state.$options.rawData.$type, 'recordset');
+               assert.deepEqual(json.state.$options.rawData.s, [1]);
+               assert.deepEqual(json.state.$options.rawData.d, [2]);
+            });
+         });
+
+         describe('.fromJSON()', function () {
+            it('should restore type signature in rawData', function () {
+               var rs = new RecordSet({
+                     adapter: new SbisAdapter(),
+                     rawData: {
+                        _type: 'recordset',
+                        s: [1],
+                        d: [2]
+                     }
+                  }),
+                  json = rs.toJSON(),
+                  clone = RecordSet.prototype.fromJSON.call(RecordSet, json);
+               assert.strictEqual(clone.getRawData()._type, 'recordset');
+               assert.isUndefined(clone.getRawData().$type);
             });
          });
 

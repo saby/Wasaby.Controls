@@ -1,28 +1,24 @@
 /* global define, $ws */
 define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
-   'js!SBIS3.CONTROLS.Data.Collection.List',
-   'js!SBIS3.CONTROLS.Data.Bind.ICollection',
-   'js!SBIS3.CONTROLS.Data.Collection.ObservableListMixin',
+   'js!SBIS3.CONTROLS.Data.Collection.ObservableList',
    'js!SBIS3.CONTROLS.Data.FormattableMixin',
    'js!SBIS3.CONTROLS.Data.Di',
    'js!SBIS3.CONTROLS.Data.Utils',
    'js!SBIS3.CONTROLS.Data.Model'
-], function (List, IBindCollection, ObservableListMixin, FormattableMixin, Di, Utils) {
+], function (ObservableList, FormattableMixin, Di, Utils) {
    'use strict';
 
    /**
     * Список записей
     * @class SBIS3.CONTROLS.Data.Collection.RecordSet
-    * @extends SBIS3.CONTROLS.Data.Collection.List
-    * @mixes SBIS3.CONTROLS.Data.Bind.ICollection
-    * @mixes SBIS3.CONTROLS.Data.Collection.ObservableListMixin
+    * @extends SBIS3.CONTROLS.Data.Collection.ObservableList
     * @mixes SBIS3.CONTROLS.Data.FormattableMixin
     * @ignoreOptions items
     * @author Мальцев Алексей
     * @public
     */
 
-   var RecordSet = List.extend([IBindCollection, ObservableListMixin, FormattableMixin], /** @lends SBIS3.CONTROLS.Data.Collection.RecordSet.prototype */{
+   var RecordSet = ObservableList.extend([FormattableMixin], /** @lends SBIS3.CONTROLS.Data.Collection.RecordSet.prototype */{
       _moduleName: 'SBIS3.CONTROLS.Data.Collection.RecordSet',
 
       /**
@@ -106,7 +102,6 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
          this.$meta = {};
          this._indexTree = {};
          RecordSet.superclass.constructor.apply(this, arguments);
-         ObservableListMixin.constructor.apply(this, arguments);
          FormattableMixin.constructor.apply(this, arguments);
          if (this.$rawData) {
             this._assignRawData(this.$rawData, true);

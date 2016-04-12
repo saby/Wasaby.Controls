@@ -715,6 +715,7 @@ define([
                assert.deepEqual(json.state.$options.rawData.d, [2]);
             });
          });
+
          describe('.fromJSON()', function () {
             it('should restore type signature in rawData', function () {
                var record = new Record({
