@@ -17,7 +17,7 @@ define('js!SBIS3.CONTROLS.Demo.FieldLinkDemoTemplate', // Устанавлива
       AdapterSbis, // В эту переменную импортируется класс для работы с данными в формате JSON-RPC
       StaticSource // В эту переменную импортируется класс для работы со статическим источником данных
    ){
-      var moduleClass = CompoundControl.extend(/{
+      var moduleClass = CompoundControl.extend({
          _dotTplFn: dotTplFn, // Устанавливаем шаблон, по которому будет построена вёрстку диалога выбора
          init: function() { // Инициализация компонента, здесь все дочерние компоненты готовы к использованию
             moduleClass.superclass.init.call(this); // Обязательная конструкция, чтобы корректно работал указатель this
