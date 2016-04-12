@@ -4,7 +4,8 @@
 define('js!SBIS3.CONTROLS.Utils.DataProcessor', [
    'js!SBIS3.CONTROLS.Data.Source.SbisService',
    'js!SBIS3.CONTROLS.Utils.DataSetToXMLSerializer',
-   'js!SBIS3.CORE.LoadingIndicator'
+   'js!SBIS3.CORE.LoadingIndicator',
+   'i18n!SBIS3.CONTROLS.Utils.DataProcessor'
 ], function(Source, Serializer, LoadingIndicator) {
    /**
     * Обработчик данных для печати и выгрузки(экспорта) в Excel, PDF.
@@ -75,7 +76,7 @@ define('js!SBIS3.CONTROLS.Utils.DataProcessor', [
        */
       print: function () {
          var self = this;
-         this._prepareSerializer('Печать записей...').addCallback(function(reportText){
+         this._prepareSerializer(rk('Печать записей...')).addCallback(function(reportText){
             $ws.helpers.showHTMLForPrint({
                htmlText: reportText,
                minWidth : self._options.minWidth,
@@ -114,7 +115,7 @@ define('js!SBIS3.CONTROLS.Utils.DataProcessor', [
             uniqueToken = ('' + Math.random()).substr(2)* 10;
          //fileName = idReport ? idReport : (isSaveColumns ? 'Выбранные столбцы' : 'Как на экране'), ??
          if (!cfg) {
-            this._prepareSerializer('Подождите, идет выгрузка данных в ' + fileType).addCallback(function(reportText){
+            this._prepareSerializer(rk('Подождите, идет выгрузка данных в') + ' ' + fileType).addCallback(function(reportText){
                $ws.helpers.saveToFile(fileType, methodName, {
                   'html': reportText,
                   'Название': fileName,//idReport || Standart
@@ -139,7 +140,7 @@ define('js!SBIS3.CONTROLS.Utils.DataProcessor', [
        */
       exportHTML: function(fileName, fileType, methodName, cfg, pageOrientation){
          var self = this;
-         this._prepareSerializer('Подождите, идет выгрузка данных в ' + fileType).addCallback(function(reportText){
+         this._prepareSerializer(rk('Подождите, идет выгрузка данных в') + ' ' + fileType).addCallback(function(reportText){
             var newCfg = {
                'FileName': fileName,
                'html': reportText
@@ -172,7 +173,7 @@ define('js!SBIS3.CONTROLS.Utils.DataProcessor', [
          if (pageOrientation) {
             cfg.PageOrientation = pageOrientation;
          }
-         this._createLoadIndicator('Подождите, идет выгрузка данных в ' + fileType);
+         this._createLoadIndicator(rk('Подождите, идет выгрузка данных в') + ' ' + fileType);
          this.exportFileTransfer(fileType, methodName || 'SaveList', cfg).addBoth(function(){
             self._destroyLoadIndicator();
          });
@@ -218,7 +219,7 @@ define('js!SBIS3.CONTROLS.Utils.DataProcessor', [
             }
          }
 
-         this._createLoadIndicator('Подождите, идет выгрузка данных в ' + fileType);
+         this._createLoadIndicator(rk('Подождите, идет выгрузка данных в') + ' ' + fileType);
          this.exportFileTransfer(fileType, methodName || 'SaveRecordSet', cfg).addBoth(function(){
             self._destroyLoadIndicator();
          });
@@ -251,7 +252,7 @@ define('js!SBIS3.CONTROLS.Utils.DataProcessor', [
          return blob.call(methodName, cfg, $ws.proto.BLObject.RETURN_TYPE_ASIS).addCallback(function(id){
             self.downloadFile(id);
          }).addErrback(function (error){
-            $ws.single.ioc.resolve('ILogger').log('DataProcessor. Ошибка выгрузки данных', error.details);
+            $ws.single.ioc.resolve('ILogger').log(rk('DataProcessor. Ошибка выгрузки данных'), error.details);
             return error;
          });
       },

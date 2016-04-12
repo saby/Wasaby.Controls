@@ -9,7 +9,8 @@ define('js!SBIS3.CONTROLS.Image',
       'js!SBIS3.CORE.FileLoader',
       'js!SBIS3.CORE.Dialog',
       'js!SBIS3.CORE.LoadingIndicator',
-      'js!SBIS3.CONTROLS.Link'
+      'js!SBIS3.CONTROLS.Link',
+      'i18n!SBIS3.CONTROLS.Image'
    ], function(CompoundControl, SbisService, dotTplFn, FileLoader, Dialog, LoadingIndicator) {
       'use strict';
       var
@@ -151,7 +152,7 @@ define('js!SBIS3.CONTROLS.Image',
                    * @translatable title
                    */
                   editConfig: {
-                     title: 'Редактирование изображения'
+                     title: rk('Редактирование изображения')
                   },
                   /**
                    * @cfg {Number} Соотношение сторон в выделяемой области
@@ -437,7 +438,7 @@ define('js!SBIS3.CONTROLS.Image',
                if (state) {
                   if (!this._saveIndicator) {
                      this._saveIndicator = new LoadingIndicator({
-                        'message': 'Сохранение',
+                        'message': rk('Сохранение'),
                         'name': 'ws-load-indicator'
                      });
                   } else {
