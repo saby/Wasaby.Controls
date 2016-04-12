@@ -13,7 +13,8 @@ define('js!SBIS3.CONTROLS.FieldLink',
        'js!SBIS3.CONTROLS.Utils.DialogOpener',
        'js!SBIS3.CONTROLS.ITextValue',
        'js!SBIS3.CONTROLS.Utils.TemplateUtil',
-       'js!SBIS3.CONTROLS.MenuIcon'
+       'js!SBIS3.CONTROLS.MenuIcon',
+       'i18n!SBIS3.CONTROLS.FieldLink'
 
     ],
     function (

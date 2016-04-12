@@ -1,5 +1,5 @@
 define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js!SBIS3.CORE.LoadingIndicator', 'i18n!SBIS3.CONTROLS.FormController'],
-   function(CompoundControl, LoadingIndicator, rk) {
+   function(CompoundControl, LoadingIndicator) {
    /**
     * Компонент, на основе которого создают диалоги редактирования записей
     *

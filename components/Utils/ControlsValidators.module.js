@@ -1,7 +1,7 @@
 /**
  * Created by am.gerasimov on 01.02.2016.
  */
-define('js!SBIS3.CONTROLS.ControlsValidators', [],function() {
+define('js!SBIS3.CONTROLS.ControlsValidators', ['i18n!SBIS3.CONTROLS.ControlsValidators'],function() {
 
    'use strict';
 
@@ -38,7 +38,7 @@ define('js!SBIS3.CONTROLS.ControlsValidators', [],function() {
          }
 
          return isEmpty ?
-             'Поле обязательно для заполнения' :
+             rk('Поле обязательно для заполнения') :
              true;
       }
    };
