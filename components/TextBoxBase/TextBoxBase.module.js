@@ -152,10 +152,6 @@ define('js!SBIS3.CONTROLS.TextBoxBase',
          this._publish('onTextChange');
          this._container.removeClass('ws-area');
          this._options.text = (this._options.text) ? this._options.text.toString() : '';
-         this.subscribe('onTextChange', function () {
-            //снимаем выделение валидатора на время ввода
-            this.clearMark();
-         });
       },
 
       /**
@@ -176,6 +172,8 @@ define('js!SBIS3.CONTROLS.TextBoxBase',
          if (newText !== this._options.text) {
             this._options.text = newText;
             this._drawText(newText);
+            //снимаем выделение валидатора на время ввода
+            this.clearMark();
             this._notify('onTextChange', newText);
             this._notifyOnPropertyChanged('text');
          }
