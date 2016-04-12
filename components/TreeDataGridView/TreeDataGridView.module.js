@@ -40,8 +40,39 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
          _rowTpl : rowTpl,
          _options: {
             /**
-             * @cfg {Function} Устанавливает функцию, которая будет выполнена при клике по стрелке справа от названия папки или скрытого узла.
-             * По умолчанию стрелка скрыта. Она становится видна при наведении курсора мыши на папку пока для опции не установлена функция.
+             * @cfg {Function} Устанавливает функцию, которая будет выполнена при клике по кнопке справа от названия узла (папки) или скрытого узла.
+             * @remark
+             * По умолчанию кнопка скрыта. Она будет отображена при наведении курсора мыши, когда установлена опция arrowActivatedHandler.
+             * Кнопка отображается в виде иконки с классом icon-16 icon-View icon-primary (синяя двойная стрелочка). Изменение иконки не поддерживается.
+             *
+             * Как правило, эта функция выполняет открытие диалога редактирования узла или скрытого узла.
+             * Подробнее о настройке диалогов вы можете прочитать в разделе {@link https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/list-settings/records-editing/editing-dialog/ Диалоги редактирования}.
+             *
+             * Аргументы функции:
+             * <ol>
+             *    <li>item - элемент коллекции (узел или скрытый узел), по кнопке которого был произведён клик. Экземпляр класса {@link SBIS3.CONTROLS.Data.Model}.</li>
+             *    <li>id - идентификатор элемента коллекции (узел или скрытый узел), по кнопке которого был произведён клик.</li>
+             *    <li>target - контейнер визуального отображения (DOM-элемент) кнопки, по которой произвели клик.</li>
+             * </ol>
+             * Указатель this внутри функции обработчика возвращает экземпляр класса элемента коллекции.
+             * @example
+             * В JS-коде компонента создаём функцию для обработки клика по кнопке:
+             * <pre>
+             * init: function() {
+             *    ...
+             * },
+             * myButtonHandler: function(item, id, target) {
+             *    this.sendCommand('activateItem', id); // Команда будет отправлена представлению данных, инициировав событие onItemActivate
+             *    // В обработчике на событие onItemActivate устанавливается открытие нужного диалога редактирования, подробнее о которых можно прочитать по ссылке из раздела "Примечание".
+             * }
+             * </pre>
+             * Устанавливаем опцию в вёрстке компонента:
+             * <pre>
+             *    <option name="arrowActivatedHandler" type="function">js!SBIS3.MyArea.MyComponent:prototype.myButtonHandler</option>
+             * </pre>
+             * @see $ws.proto.Control#sendCommand
+             * @see SBIS3.CONTROLS.ListView#onItemActivate
+             * @see SBIS3.CONTROLS.ListView#activateItem
              */
             arrowActivatedHandler: undefined,
             /**

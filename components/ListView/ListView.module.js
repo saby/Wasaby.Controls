@@ -403,6 +403,7 @@ define('js!SBIS3.CONTROLS.ListView',
                 * <pre>
                 *    <option name="editMode">click|toolbar</option>
                 * </pre>
+                * Подробное описание каждого режима редактирования и их демонстрационные примеры вы можете найти в разделе документации {@link https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/list-settings/records-editing/edit-in-place/ Редактирование по месту}.
                 * @example
                 * Установлен режим редактирования по клику на элемент коллекции.
                 * <pre>
@@ -410,6 +411,7 @@ define('js!SBIS3.CONTROLS.ListView',
                 * </pre>
                 * @see getEditMode
                 * @see setEditMode
+                * @see editingTemplate
                 */
                editMode: '',
                /**
@@ -428,6 +430,7 @@ define('js!SBIS3.CONTROLS.ListView',
                 *       </component>
                 *     </opt>
                 * </pre>
+                * @see editMode
                 */
                editingTemplate: undefined,
                /**
