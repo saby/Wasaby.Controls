@@ -3,8 +3,8 @@ define('js!SBIS3.CONTROLS.Data.Record', [
    'js!SBIS3.CONTROLS.Data.IPropertyAccess',
    'js!SBIS3.CONTROLS.Data.Collection.IEnumerable',
    'js!SBIS3.CONTROLS.Data.Entity.Abstract',
-   'js!SBIS3.CONTROLS.Data.OptionsMixin',
-   'js!SBIS3.CONTROLS.Data.ObservableMixin',
+   'js!SBIS3.CONTROLS.Data.Entity.OptionsMixin',
+   'js!SBIS3.CONTROLS.Data.Entity.ObservableMixin',
    'js!SBIS3.CONTROLS.Data.SerializableMixin',
    'js!SBIS3.CONTROLS.Data.FormattableMixin',
    'js!SBIS3.CONTROLS.Data.Serializer',
@@ -38,8 +38,8 @@ define('js!SBIS3.CONTROLS.Data.Record', [
     * @extends SBIS3.CONTROLS.Entity.Abstract
     * @mixes SBIS3.CONTROLS.Data.IPropertyAccess
     * @mixes SBIS3.CONTROLS.Data.Collection.IEnumerable
-    * @mixes SBIS3.CONTROLS.Data.OptionsMixin
-    * @mixes SBIS3.CONTROLS.Data.ObservableMixin
+    * @mixes SBIS3.CONTROLS.Data.Entity.OptionsMixin
+    * @mixes SBIS3.CONTROLS.Data.Entity.ObservableMixin
     * @mixes SBIS3.CONTROLS.Data.SerializableMixin
     * @mixes SBIS3.CONTROLS.Data.FormattableMixin
     * @public

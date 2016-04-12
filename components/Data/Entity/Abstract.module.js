@@ -14,10 +14,13 @@ define('js!SBIS3.CONTROLS.Data.Entity.Abstract', [
 
    var Abstract = Core.extend(/** @lends SBIS3.CONTROLS.Entity.Abstract.prototype */{
       /**
-       * @member {Boolean} Объект был разрушен
+       * @member {Boolean} Экземпляр был разрушен
        */
       _destroyed: false,
 
+      /**
+       * Разрушает экземпляр
+       */
       destroy: function() {
          this._destroyed = true;
       }

@@ -1,15 +1,15 @@
 /* global define, $ws */
-define('js!SBIS3.CONTROLS.Data.ObservableMixin', function () {
+define('js!SBIS3.CONTROLS.Data.Entity.ObservableMixin', function () {
    'use strict';
 
    /**
-    * Дает модулю возможность использовать события
-    * @class SBIS3.CONTROLS.Data.ObservableMixin
+    * Примесь, позволяющая сущности возможность использовать события
+    * @class SBIS3.CONTROLS.Data.Entity.ObservableMixin
     * @public
     * @author Мальцев Алексей
     */
 
-   var ObservableMixin = /**@lends SBIS3.CONTROLS.Data.ObservableMixin.prototype */{
+   var ObservableMixin = /**@lends SBIS3.CONTROLS.Data.Entity.ObservableMixin.prototype */{
       /**
        * @member {$ws.proto.EventBusChannel} Канал событий
        */
@@ -25,6 +25,7 @@ define('js!SBIS3.CONTROLS.Data.ObservableMixin', function () {
             if (this._eventBusChannel) {
                this._eventBusChannel.unsubscribeAll();
                this._eventBusChannel.destroy();
+               this._eventBusChannel = null;
             }
          }
       },
@@ -36,6 +37,10 @@ define('js!SBIS3.CONTROLS.Data.ObservableMixin', function () {
        * @param {Object} [ctx] Контекст выполнения
        */
       subscribe: function (event, handler, ctx) {
+         if (this._destroyed) {
+            return;
+         }
+
          if (!this._eventBusChannel) {
             this._eventBusChannel = new $ws.proto.EventBusChannel();
 
@@ -68,7 +73,7 @@ define('js!SBIS3.CONTROLS.Data.ObservableMixin', function () {
       },
 
       /**
-       * Проверяет наличие подписки на событие
+       * Возвращет массив подписчиков на событие
        * @param {String} event Имя события
        * @return {Array.<$ws.proto.EventObject>}
        */

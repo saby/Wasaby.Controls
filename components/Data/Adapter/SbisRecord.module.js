@@ -1,24 +1,28 @@
 /* global define, $ws */
 define('js!SBIS3.CONTROLS.Data.Adapter.SbisRecord', [
+   'js!SBIS3.CONTROLS.Data.Entity.Abstract',
    'js!SBIS3.CONTROLS.Data.Adapter.IRecord',
    'js!SBIS3.CONTROLS.Data.Adapter.SbisFormatMixin',
    'js!SBIS3.CONTROLS.Data.Adapter.FieldType',
    'js!SBIS3.CONTROLS.Data.Utils'
-], function (IRecord, SbisFormatMixin, FIELD_TYPE, Utils) {
+], function (Abstract, IRecord, SbisFormatMixin, FIELD_TYPE, Utils) {
    'use strict';
 
    /**
     * Адаптер для записи таблицы данных в формате СБиС
     * @class SBIS3.CONTROLS.Data.Adapter.SbisRecord
+    * @extends SBIS3.CONTROLS.Entity.Abstract
     * @mixes SBIS3.CONTROLS.Data.Adapter.IRecord
     * @mixes SBIS3.CONTROLS.Data.Adapter.SbisFormatMixin
     * @public
     * @author Мальцев Алексей
     */
-   var SbisRecord = $ws.core.extend({}, [IRecord, SbisFormatMixin], /** @lends SBIS3.CONTROLS.Data.Adapter.SbisRecord.prototype */{
+   var SbisRecord = Abstract.extend([IRecord, SbisFormatMixin], /** @lends SBIS3.CONTROLS.Data.Adapter.SbisRecord.prototype */{
       _moduleName: 'SBIS3.CONTROLS.Data.Adapter.SbisRecord',
 
-      $constructor: function () {
+      constructor: function (data) {
+         SbisRecord.superclass.constructor.call(this, data);
+         SbisFormatMixin.constructor.call(this, data);
          this._data._type = 'record';
       },
 

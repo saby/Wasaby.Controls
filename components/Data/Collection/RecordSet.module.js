@@ -23,6 +23,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
 
       /**
        * @cfg {String|Function} Конструктор модели
+       * @name SBIS3.CONTROLS.Data.Collection.RecordSet#model
        * @see getModel
        * @see SBIS3.CONTROLS.Data.Model
        * @see SBIS3.CONTROLS.Data.Di
@@ -54,6 +55,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
 
       /**
        * @cfg {String} Поле модели, содержащее первичный ключ
+       * @name SBIS3.CONTROLS.Data.Collection.RecordSet#idProperty
        * @see getIdProperty
        * @see SBIS3.CONTROLS.Data.Model#idProperty
        * @example
@@ -67,6 +69,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
 
       /**
        * @cfg {Object} Метаданные
+       * @name SBIS3.CONTROLS.Data.Collection.RecordSet#meta
        * @see getMetaData
        * @see setMetaData
        */

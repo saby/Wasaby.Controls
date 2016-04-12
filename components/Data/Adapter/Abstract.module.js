@@ -1,27 +1,28 @@
 /* global define, $ws */
 define('js!SBIS3.CONTROLS.Data.Adapter.Abstract', [
+   'js!SBIS3.CONTROLS.Data.Entity.Abstract',
    'js!SBIS3.CONTROLS.Data.Adapter.IAdapter',
    'js!SBIS3.CONTROLS.Data.SerializableMixin'
-], function (IAdapter, SerializableMixin) {
+], function (AbstractEntity, IAdapter, SerializableMixin) {
    'use strict';
 
    /**
     * Абстрактный адаптер для данных
     * @class SBIS3.CONTROLS.Data.Adapter.Abstract
+    * @extends SBIS3.CONTROLS.Entity.Abstract
     * @mixes SBIS3.CONTROLS.Data.Adapter.IAdapter
     * @mixes SBIS3.CONTROLS.Data.SerializableMixin
     * @public
     * @author Мальцев Алексей
     */
 
-   var Abstract = $ws.core.extend({}, [IAdapter, SerializableMixin], /** @lends SBIS3.CONTROLS.Data.Adapter.Abstract.prototype */{
+   var Abstract = AbstractEntity.extend([IAdapter, SerializableMixin], /** @lends SBIS3.CONTROLS.Data.Adapter.Abstract.prototype */{
       _moduleName: 'SBIS3.CONTROLS.Data.Adapter.Abstract',
-      $protected: {
-         /**
-          * @member {String} Разделитель для обозначения пути в данных
-          */
-         _pathSeparator: '.'
-      },
+
+      /**
+       * @member {String} Разделитель для обозначения пути в данных
+       */
+      _pathSeparator: '.',
 
       getProperty: function (data, property) {
          property = property || '';

@@ -14,34 +14,32 @@ define('js!SBIS3.CONTROLS.Data.Adapter.SbisFormatMixin', [
     */
 
    var SbisFormatMixin = /** @lends SBIS3.CONTROLS.Data.Adapter.SbisFormatMixin.prototype */{
-      $protected: {
-         /**
-          * @member {Object} Сырые данные
-          */
-         _data: null,
+      /**
+       * @member {Object} Сырые данные
+       */
+      _data: null,
 
-         /**
-          * @member {Object<String, Number>} Название поля -> индекс в d
-          */
-         _fieldIndexes: null,
+      /**
+       * @member {Object<String, Number>} Название поля -> индекс в d
+       */
+      _fieldIndexes: null,
 
-         /**
-          * @member {Object.<String, SBIS3.CONTROLS.Data.Format.Field>} Форматы полей
-          */
-         _format: {},
+      /**
+       * @member {Object.<String, SBIS3.CONTROLS.Data.Format.Field>} Форматы полей
+       */
+      _format: null,
 
-         /**
-          * @member {Object} Формат поля, отдаваемый через getSharedFormat()
-          */
-         _sharedFieldFormat: null,
+      /**
+       * @member {Object} Формат поля, отдаваемый через getSharedFormat()
+       */
+      _sharedFieldFormat: null,
 
-         /**
-          * @member {Object} Мета данные поля, отдаваемого через getSharedFormat()
-          */
-         _sharedFieldMeta: null
-      },
+      /**
+       * @member {Object} Мета данные поля, отдаваемого через getSharedFormat()
+       */
+      _sharedFieldMeta: null,
 
-      $constructor: function (data) {
+      constructor: function (data) {
          if (!(data instanceof Object)) {
             data = {};
          }
@@ -52,6 +50,7 @@ define('js!SBIS3.CONTROLS.Data.Adapter.SbisFormatMixin', [
             data.d = [];
          }
          this._data = data;
+         this._format = {};
       },
 
       //region Public methods

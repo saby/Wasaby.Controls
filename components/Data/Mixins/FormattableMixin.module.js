@@ -26,6 +26,7 @@ define('js!SBIS3.CONTROLS.Data.FormattableMixin', [
    var FormattableMixin = /**@lends SBIS3.CONTROLS.Data.FormattableMixin.prototype */{
       /**
        * @cfg {Object} Данные в "сыром" виде
+       * @name SBIS3.CONTROLS.Data.FormattableMixin#rawData
        * @see getRawData
        * @see setRawData
        * @remark
@@ -73,6 +74,7 @@ define('js!SBIS3.CONTROLS.Data.FormattableMixin', [
 
       /**
        * @cfg {String|SBIS3.CONTROLS.Data.Adapter.IAdapter} Адаптер для работы с данными, по умолчанию {@link SBIS3.CONTROLS.Data.Adapter.Json}
+       * @name SBIS3.CONTROLS.Data.FormattableMixin#adapter
        * @see getAdapter
        * @see setAdapter
        * @see SBIS3.CONTROLS.Data.Adapter.Json
@@ -97,6 +99,7 @@ define('js!SBIS3.CONTROLS.Data.FormattableMixin', [
 
       /**
        * @cfg {SBIS3.CONTROLS.Data.Format.Format|Array.<SBIS3.CONTROLS.Data.Format.FieldsFactory/FieldDeclaration.typedef>} Формат полей
+       * @name SBIS3.CONTROLS.Data.FormattableMixin#format
        * @see getFormat
        * @example
        * <pre>

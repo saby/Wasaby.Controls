@@ -39,6 +39,7 @@ define('js!SBIS3.CONTROLS.Data.Model', [
 
       /**
        * @cfg {Object.<String, Property>} Описание свойств модели. Дополняет/уточняет свойства, уже существующие в сырых данных.
+       * @name SBIS3.CONTROLS.Data.Mode#properties
        * @example
        * <pre>
        *    var User = Model.extend({
@@ -82,14 +83,15 @@ define('js!SBIS3.CONTROLS.Data.Model', [
        * @see getProperties
        * @see Property
        */
-      $properties: {},
+      $properties: null,
 
       /**
        * @cfg {String} Поле, содержащее первичный ключ
+       * @name SBIS3.CONTROLS.Data.Mode#idProperty
        * @see getIdProperty
        * @see setIdProperty
        */
-      $idProperty: undefined,
+      $idProperty: '',
 
       _hashPrefix: 'model-',
 
@@ -124,9 +126,9 @@ define('js!SBIS3.CONTROLS.Data.Model', [
             Utils.logger.stack(this._moduleName + '::$constructor(): option "usingDataSetAsList" is deprecated and will be removed in 3.7.4', 1);
          }
 
+         this.$properties = {};
          this._defaultPropertiesValues = {};
          this._nowCalculatingProperties = {};
-         this.$idProperty = this.$idProperty || '';
          Model.superclass.constructor.apply(this, arguments);
          if (!this.$idProperty) {
             this.$idProperty = this.getAdapter().getKeyField(this.$rawData);

@@ -1,15 +1,17 @@
 /* global define, $ws */
 define('js!SBIS3.CONTROLS.Data.Adapter.JsonTable', [
+   'js!SBIS3.CONTROLS.Data.Entity.Abstract',
    'js!SBIS3.CONTROLS.Data.Adapter.ITable',
    'js!SBIS3.CONTROLS.Data.Adapter.GenericFormatMixin',
    'js!SBIS3.CONTROLS.Data.Adapter.JsonFormatMixin',
    'js!SBIS3.CONTROLS.Data.Adapter.JsonRecord'
-], function (ITable, GenericFormatMixin, JsonFormatMixin, JsonRecord) {
+], function (Abstract, ITable, GenericFormatMixin, JsonFormatMixin, JsonRecord) {
    'use strict';
 
    /**
     * Адаптер для таблицы данных в формате JSON
     * @class SBIS3.CONTROLS.Data.Adapter.JsonTable
+    * @extends SBIS3.CONTROLS.Entity.Abstract
     * @mixes SBIS3.CONTROLS.Data.Adapter.ITable
     * @mixes SBIS3.CONTROLS.Data.Adapter.GenericFormatMixin
     * @mixes SBIS3.CONTROLS.Data.Adapter.JsonFormatMixin
@@ -17,26 +19,27 @@ define('js!SBIS3.CONTROLS.Data.Adapter.JsonTable', [
     * @author Мальцев Алексей
     */
 
-   var JsonTable = $ws.core.extend({}, [ITable, GenericFormatMixin, JsonFormatMixin], /** @lends SBIS3.CONTROLS.Data.Adapter.JsonTable.prototype */{
+   var JsonTable = Abstract.extend([ITable, GenericFormatMixin, JsonFormatMixin], /** @lends SBIS3.CONTROLS.Data.Adapter.JsonTable.prototype */{
       _moduleName: 'SBIS3.CONTROLS.Data.Adapter.JsonTable',
-      $protected: {
-         /**
-          * @member {Array.<Object>} Сырые данные
-          */
-         _data: []
-      },
 
-      $constructor: function (data) {
+      /**
+       * @member {Array.<Object>} Сырые данные
+       */
+      _data: null,
+
+      constructor: function (data) {
          if (!(data instanceof Array)) {
             data = [];
          }
+         JsonTable.superclass.constructor.call(this, data);
+         JsonFormatMixin.constructor.call(this, data);
          this._data = data;
       },
 
       //region SBIS3.CONTROLS.Data.Adapter.JsonFormatMixin
 
       addField: function(format, at) {
-         JsonTable.superclass.addField.call(this, format, at);
+         JsonFormatMixin.addField.call(this, format, at);
 
          var name = format.getName(),
             value = format.getDefaultValue();
@@ -46,7 +49,7 @@ define('js!SBIS3.CONTROLS.Data.Adapter.JsonTable', [
       },
 
       removeField: function(name) {
-         JsonTable.superclass.removeField.call(this, name);
+         JsonFormatMixin.removeField.call(this, name);
          var i;
          for (i = 0; i < this._data.length; i++) {
             delete this._data[i][name];

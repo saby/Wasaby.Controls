@@ -5,8 +5,8 @@ define('js!SBIS3.CONTROLS.Data.Collection.List', [
    'js!SBIS3.CONTROLS.Data.Collection.IList',
    'js!SBIS3.CONTROLS.Data.Collection.IIndexedCollection',
    'js!SBIS3.CONTROLS.Data.Entity.Abstract',
-   'js!SBIS3.CONTROLS.Data.OptionsMixin',
-   'js!SBIS3.CONTROLS.Data.ObservableMixin',
+   'js!SBIS3.CONTROLS.Data.Entity.OptionsMixin',
+   'js!SBIS3.CONTROLS.Data.Entity.ObservableMixin',
    'js!SBIS3.CONTROLS.Data.Collection.ArrayEnumerator',
    'js!SBIS3.CONTROLS.Data.Serializer',
    'js!SBIS3.CONTROLS.Data.Di',
@@ -19,8 +19,8 @@ define('js!SBIS3.CONTROLS.Data.Collection.List', [
     * Список - коллекция c доступом по порядковому индексу
     * @class SBIS3.CONTROLS.Data.Collection.List
     * @extends SBIS3.CONTROLS.Entity.Abstract
-    * @mixes SBIS3.CONTROLS.Data.OptionsMixin
-    * @mixes SBIS3.CONTROLS.Data.ObservableMixin
+    * @mixes SBIS3.CONTROLS.Data.Entity.OptionsMixin
+    * @mixes SBIS3.CONTROLS.Data.Entity.ObservableMixin
     * @mixes SBIS3.CONTROLS.Data.SerializableMixin
     * @mixes SBIS3.CONTROLS.Data.Collection.IEnumerable
     * @mixes SBIS3.CONTROLS.Data.Collection.IList

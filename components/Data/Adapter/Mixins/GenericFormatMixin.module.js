@@ -13,27 +13,25 @@ define('js!SBIS3.CONTROLS.Data.Adapter.GenericFormatMixin', [
     */
 
    var GenericFormatMixin = /** @lends SBIS3.CONTROLS.Data.Adapter.GenericFormatMixin.prototype */{
-      $protected: {
-         /**
-          * @member {Object} Сырые данные
-          */
-         _data: null,
+      /**
+       * @member {Object} Сырые данные
+       */
+      _data: null,
 
-         /**
-          * @member {SBIS3.CONTROLS.Data.Format.Format} Формат полей
-          */
-         _format: null,
+      /**
+       * @member {SBIS3.CONTROLS.Data.Format.Format} Формат полей
+       */
+      _format: null,
 
-         /**
-          * @member {Object} Формат поля, отдаваемый через getSharedFormat()
-          */
-         _sharedFieldFormat: null,
+      /**
+       * @member {Object} Формат поля, отдаваемый через getSharedFormat()
+       */
+      _sharedFieldFormat: null,
 
-         /**
-          * @member {Object} Мета данные поля, отдаваемого через getSharedFormat()
-          */
-         _sharedFieldMeta: null
-      },
+      /**
+       * @member {Object} Мета данные поля, отдаваемого через getSharedFormat()
+       */
+      _sharedFieldMeta: null,
 
       //region Public methods
 
