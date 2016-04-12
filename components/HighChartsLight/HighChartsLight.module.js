@@ -506,9 +506,9 @@ function(BaseControl, dotTpl){
          Highcharts.setOptions({
             lang: {
                numericSymbols: ['', '', '', '', '', ''],
-               months : [ 'Январь' , 'Февраль' , 'Март' , 'Апрель' , 'Май' , 'Июнь' , 'Июль' , 'Август' , 'Сентябрь' , 'Октябрь' , 'Ноябрь' , 'Декабрь'],
-               shortMonths : [ 'Янв' , 'Фев' , 'Мар' , 'Апр' , 'Май' , 'Июн' , 'Июл' , 'Авг' , 'Сен' , 'Окт' , 'Ноя' , 'Дек'],
-               weekdays: ['Понедельник', 'Вторник', 'Среда', 'Четверг', 'Пятница', 'Суббота', 'Воскресение'],
+               months : $ws._const.Date.longMonths,
+               shortMonths : $ws._const.Date.months,
+               weekdays: $ws._const.Date.longDays,
                thousandsSep : ' '
             }
          });

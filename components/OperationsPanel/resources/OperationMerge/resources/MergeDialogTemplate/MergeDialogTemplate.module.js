@@ -12,8 +12,9 @@ define('js!SBIS3.CONTROLS.MergeDialogTemplate', [
     'js!SBIS3.CONTROLS.Button',
     'js!SBIS3.CONTROLS.TreeDataGridView',
     'html!SBIS3.CONTROLS.MergeDialogTemplate/resources/cellRadioButtonTpl',
-    'html!SBIS3.CONTROLS.MergeDialogTemplate/resources/cellCommentTpl'
-], function(Control, dotTplFn, SbisServiceSource, MemorySource, SbisAdapter, RecordSet, rk) {
+    'html!SBIS3.CONTROLS.MergeDialogTemplate/resources/cellCommentTpl',
+    'i18n!!SBIS3.CONTROLS.MergeDialogTemplate'
+], function(Control, dotTplFn, SbisServiceSource, MemorySource, SbisAdapter, RecordSet) {
 
     var COMMENT_FIELD_NAME = 'Comment',
         AVAILABLE_FIELD_NAME = 'Available';
@@ -39,7 +40,7 @@ define('js!SBIS3.CONTROLS.MergeDialogTemplate', [
                  * @cfg {String} Сообщение с предупреждением
                  */
                 warning: rk('Внимание! Операция необратима'),
-                errorMessage: 'Итоги операции: "Объединения"',
+                errorMessage: rk('Итоги операции: "Объединения"'),
                 testMergeMethodName: undefined,
                 queryMethodName: undefined,
                 dataSource: undefined,
