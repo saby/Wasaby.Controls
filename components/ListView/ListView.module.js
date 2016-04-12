@@ -250,6 +250,7 @@ define('js!SBIS3.CONTROLS.ListView',
                 * Подробнее о шаблонизаторе вы можете прочитать в разделе {@link https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/core/component/xhtml/template/ Шаблонизация вёрстки компонента}.
                 *
                 * Шаблон может быть создан в отдельном XHTML-файле, когда вёрстка большая или требуется использовать его в разных компонентах.
+                * Шаблон создают в директории компонента в подпапке resources согласно правилам, описанным в разделе {@link https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/core/component/file-structure/ Файловая структура компонента}.
                 * Чтобы такой шаблон можно было использовать, нужно:
                 * <ol>
                 *    <li>Подключить шаблон в массив зависимостей компонента и импортировать его в переменную:
