@@ -1268,6 +1268,14 @@ define('js!SBIS3.CONTROLS.DSMixin', [
          //Если offset отрицательный, значит запрашивали последнюю страницу
          return offset < 0 ? false : (typeof (hasMore) !== 'boolean' ? hasMore > (offset + this._options.pageSize) : !!hasMore);
       },
+
+      scrollToItem: function(item){
+         if (item && item.getId instanceof Function){
+            var id = item.getId(item);
+            this._scrollToItem(id);
+         }
+      },
+
       _scrollToItem: function(itemId) {
          var itemContainer  = $(".controls-ListView__item[data-id='" + itemId + "']", this._getItemsContainer());
          if (itemContainer.length) {
