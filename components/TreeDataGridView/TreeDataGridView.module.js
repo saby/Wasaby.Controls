@@ -40,7 +40,7 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
          _rowTpl : rowTpl,
          _options: {
             /**
-             * @cfg {Function}
+             * @cfg {Function} Устанавливает функцию, которая будет выполнена при клике по .
              * Обработчик нажатия на стрелку у папок. Если не задан, стрелка показана не будет
              */
             arrowActivatedHandler: undefined,
