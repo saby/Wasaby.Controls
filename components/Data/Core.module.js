@@ -227,8 +227,8 @@ define('js!SBIS3.CONTROLS.Data.Core', [], function () {
        */
       _mixin: function (target, mixin) {
          if (mixin instanceof Object) {
-            if (!target._mixins) {
-               target._mixins = [];
+            if (!target.hasOwnProperty('_mixins')) {
+               target._mixins = target._mixins ? target._mixins.slice() : [];
             }
             target._mixins.push(mixin);
 
