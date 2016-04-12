@@ -9,7 +9,8 @@ define(
       'js!SBIS3.CONTROLS.Utils.DateUtil',
       'html!SBIS3.CONTROLS.Calendar/resources/CalendarTableBody',
       'html!SBIS3.CONTROLS.Calendar',
-      'js!SBIS3.CONTROLS.MonthPicker'
+      'js!SBIS3.CONTROLS.MonthPicker',
+      'i18n!SBIS3.CONTROLS.Calendar'
    ],
    function (CompoundControl, ControlHierarchyManager, DateUtil, CalendarTableBodyTpl, dotTplFn) {
 

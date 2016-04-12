@@ -2,7 +2,8 @@
  * Created by ad.chistyakova on 22.04.2015.
  */
 define('js!SBIS3.CONTROLS.Utils.DataSetToXMLSerializer', [
-         'js!SBIS3.CORE.XSLT'
+         'js!SBIS3.CORE.XSLT',
+         'i18n!SBIS3.CONTROLS.Utils.DataSetToXMLSerializer'
       ], function() {
    return $ws.core.extend({}, {
 
@@ -134,7 +135,7 @@ define('js!SBIS3.CONTROLS.Utils.DataSetToXMLSerializer', [
             tagName = this._wordsToTranslate[tagName] || tagName;
             var resultTest = cyrillicTest.test(tagName);
             if(resultTest) {
-               $ws.single.ioc.resolve('ILogger').error('XSLT', 'Внимание! Кирилический тэг без замены: ' + tagName);
+               $ws.single.ioc.resolve('ILogger').error('XSLT', rk('Внимание! Кирилический тэг без замены') + ': ' + tagName);
             }
             element = document.createElement(tagName);
             if(fieldValue instanceof Date){
