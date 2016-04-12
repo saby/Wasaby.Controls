@@ -593,7 +593,9 @@ define('js!SBIS3.CONTROLS.ListView',
                   break;
                case $ws._const.key.space:
                   newSelectedItem = this._getNextItemByDOM(selectedKey);
-                  this.toggleItemsSelection([selectedKey]);
+                  if (!this._container.hasClass('controls-ListView__hideCheckBoxes')) {
+                     this.toggleItemsSelection([selectedKey]);
+                  }
                   break;
                case $ws._const.key.o:
                   if (e.ctrlKey && e.altKey && e.shiftKey) {
