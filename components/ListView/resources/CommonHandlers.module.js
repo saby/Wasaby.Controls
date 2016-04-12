@@ -1,13 +1,13 @@
 /**
  * Created by am.gerasimov on 30.03.2015.
  */
-define('js!SBIS3.CONTROLS.CommonHandlers',[],
+define('js!SBIS3.CONTROLS.CommonHandlers',['i18n!SBIS3.CONTROLS.CommonHandlers'],
    function() {
       var CommonHandlers = {
          deleteRecords: function(idArray) {
             var
                idArray = Array.isArray(idArray) ? idArray : [idArray],
-               message = idArray.length !== 1 ? "Удалить записи?" : "Удалить текущую запись?",
+               message = idArray.length !== 1 ? rk("Удалить записи?") : rk("Удалить текущую запись?"),
                self = this;
 
             return $ws.helpers.question(message).addCallback(function(res) {
