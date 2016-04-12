@@ -43,24 +43,20 @@ define('js!SBIS3.CONTROLS.Data.Model', [
        * @example
        * <pre>
        *    var User = Model.extend({
-       *       $protected: {
-       *          _options: {
-       *             properties: {
-       *                id: {
-       *                   get: function(value) {
-       *                      return '№' + value;
-       *                   }
-       *                },
-       *                guid: {
-       *                   def: function() {
-       *                      return $ws.helpers.createGUID();
-       *                   }
-       *                },
-       *                displayName: {
-       *                   get: function() {
-       *                      return this.get('firstName') + ' a.k.a "' + this.get('login') + '" ' + this.get('lastName');
-       *                   }
-       *                }
+       *       $properties: {
+       *          id: {
+       *             get: function(value) {
+       *                return '№' + value;
+       *             }
+       *          },
+       *          guid: {
+       *             def: function() {
+       *                return $ws.helpers.createGUID();
+       *             }
+       *          },
+       *          displayName: {
+       *             get: function() {
+       *                return this.get('firstName') + ' a.k.a "' + this.get('login') + '" ' + this.get('lastName');
        *             }
        *          }
        *       }
@@ -126,10 +122,10 @@ define('js!SBIS3.CONTROLS.Data.Model', [
             Utils.logger.stack(this._moduleName + '::$constructor(): option "usingDataSetAsList" is deprecated and will be removed in 3.7.4', 1);
          }
 
-         this.$properties = {};
+         this.$properties = this.$properties || {};
          this._defaultPropertiesValues = {};
          this._nowCalculatingProperties = {};
-         Model.superclass.constructor.apply(this, arguments);
+         Model.superclass.constructor.call(this, cfg);
          if (!this.$idProperty) {
             this.$idProperty = this.getAdapter().getKeyField(this.$rawData);
          }
@@ -245,7 +241,7 @@ define('js!SBIS3.CONTROLS.Data.Model', [
        */
       isUsingDataSetAsList: function () {
          Utils.logger.stack(this._moduleName + '::isUsingDataSetAsList(): method is deprecated and will be removed in 3.7.4');
-         return true;
+         return false;
       },
 
       /**

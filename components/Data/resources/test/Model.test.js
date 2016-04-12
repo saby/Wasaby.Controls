@@ -69,10 +69,12 @@ define([
                };
             },
             getModel = function(modelData, modelProperties) {
-               return new Model({
+               var SubModel = Model.extend({
+                  $properties: modelProperties || getModelProperties()
+               });
+               return new SubModel({
                   idProperty: 'id',
-                  rawData: modelData || getModelData(),
-                  properties: modelProperties || getModelProperties()
+                  rawData: modelData || getModelData()
                });
             };
          beforeEach(function () {
@@ -558,7 +560,7 @@ define([
                assert.strictEqual(json.module, 'SBIS3.CONTROLS.Data.Model');
                assert.isNumber(json.id);
                assert.isTrue(json.id > 0);
-               assert.deepEqual(json.state._options, model._options);
+               assert.deepEqual(json.state.$options, model._getOptions());
                assert.strictEqual(json.state._hash, model.getHash());
                assert.strictEqual(json.state._isStored, model.isStored());
                assert.strictEqual(json.state._isDeleted, model.isDeleted());
