@@ -314,6 +314,11 @@ define('js!SBIS3.CONTROLS.Data.Source.Memory', [
             tableAdapter = adapter.forTable(
                adapter.forTable(data).getEmpty()
             ),
+            skipFields = {
+               'Разворот': true,
+               'ВидДерева': true,
+               usePages: true
+            },
             compare = function(given, expect) {
                if (expect instanceof Array) {
                   for (var i = 0; i < expect.length; i++) {
@@ -341,7 +346,7 @@ define('js!SBIS3.CONTROLS.Data.Source.Memory', [
                   continue;
                }
                //FIXME: избавиться от этого sbis-specified
-               if (filterField === 'Разворот' || filterField === 'ВидДерева') {
+               if (skipFields.hasOwnProperty(filterField)) {
                   continue;
                }
                filterMatch = compare(
