@@ -220,12 +220,12 @@ define('js!SBIS3.CONTROLS.MoveHandlers', ['js!SBIS3.CORE.Dialog','js!SBIS3.CONTR
 
             moveToIndex = this._items.getIndex(moveToItem);
             if(!up) {
-               moveToIndex = this._itemsProjection.getInternalBySource(moveToIndex);
+               moveToIndex = this._itemsProjection.getIndexBySourceIndex(moveToIndex);
                var projectionItem = this._itemsProjection.getNext(
                    this._itemsProjection.at(moveToIndex)
                );
                if(projectionItem) {
-                  moveToIndex = this._itemsProjection.getSourceByInternal(
+                  moveToIndex = this._itemsProjection.getSourceIndexByIndex(
                       this._itemsProjection.getIndex(projectionItem)
                   );
                } else {
