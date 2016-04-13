@@ -138,7 +138,7 @@ define('js!SBIS3.CONTROLS.Data.Core', [], function () {
        *    var myJet = new OnlyFlyingTurboJet();
        *    myJet.move();//I'm move with 2 reaction engines
        * </pre>
-       * Чтобы задействовать поведение всех примесей, необхдимо вызывать методы  каждой из них в требуемой
+       * Чтобы задействовать поведение всех примесей, необходимо вызывать методы  каждой из них в требуемой
        * последовательности и с требуемыми аргументами:
        * <pre>
        *    var Vehicle = Core.extend({

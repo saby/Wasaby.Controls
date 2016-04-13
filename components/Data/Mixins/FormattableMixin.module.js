@@ -187,8 +187,8 @@ define('js!SBIS3.CONTROLS.Data.FormattableMixin', [
 
       //region Public methods
 
-      constructor: function $FormattableMixin(cfg) {
-         if(cfg && cfg.format) {
+      constructor: function $FormattableMixin(options) {
+         if(options && options.format) {
             this._directFormat = true;
 
             this._getFormat().each(function(fieldFormat) {

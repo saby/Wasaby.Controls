@@ -80,32 +80,32 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
        */
       _indexTree: null,
 
-      constructor: function $RecordSet(cfg) {
-         cfg = cfg || {};
+      constructor: function $RecordSet(options) {
+         options = options || {};
 
-         if ('data' in cfg && !('rawData' in cfg)) {
-            this.$rawData = cfg.data;
+         if ('data' in options && !('rawData' in options)) {
+            this.$rawData = options.data;
             Utils.logger.stack('SBIS3.CONTROLS.Data.Collection.RecordSet: option "data" is deprecated and will be removed in 3.7.4. Use "rawData" instead.', 1);
          }
-         if ('strategy' in cfg && !('adapter' in cfg)) {
-            this.$adapter = cfg.strategy;
+         if ('strategy' in options && !('adapter' in options)) {
+            this.$adapter = options.strategy;
             Utils.logger.stack('SBIS3.CONTROLS.Data.Collection.RecordSet: option "strategy" is deprecated and will be removed in 3.7.4. Use "adapter" instead.', 1);
          }
-         if ('keyField' in cfg && !('idProperty' in cfg)) {
-            this.$idProperty = cfg.keyField;
+         if ('keyField' in options && !('idProperty' in options)) {
+            this.$idProperty = options.keyField;
             Utils.logger.stack('SBIS3.CONTROLS.Data.Collection.RecordSet: option "keyField" is deprecated and will be removed in 3.7.4. Use "idProperty" instead.', 1);
          }
          if (!this.$idProperty) {
             this.$idProperty = this.getAdapter().getKeyField(this.$rawData);
          }
-         if ('items' in cfg) {
+         if ('items' in options) {
             Utils.logger.stack('SBIS3.CONTROLS.Data.Collection.RecordSet: option "items" is not acceptable. Use "rawData" instead.', 1);
          }
 
          this.$meta = {};
          this._indexTree = {};
-         RecordSet.superclass.constructor.apply(this, arguments);
-         FormattableMixin.constructor.apply(this, arguments);
+         RecordSet.superclass.constructor.call(this, options);
+         FormattableMixin.constructor.call(this, options);
          if (this.$rawData) {
             this._assignRawData(this.$rawData, true);
             this._createFromRawData();
@@ -440,7 +440,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
          if(Object.isEmpty(this._indexTree)) {
             this._reindexTree(field);
          }
-         parentId = (typeof parentId != 'undefined') ? parentId : null;
+         parentId = parentId === undefined ? null : parentId;
          if (this._indexTree.hasOwnProperty(parentId)) {
             if (getFullBranch) {
                var curParent = parentId,
@@ -575,23 +575,23 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
       add: function (item, at) {
          this._checkItem(item, this.getCount() > 0);
          this._getRawDataAdapter().add(item.getRawData(), at);
-         RecordSet.superclass.add.apply(this, arguments);
+         RecordSet.superclass.add.call(this, item, at);
       },
 
       remove: function (item) {
          this._checkItem(item, false);
-         return RecordSet.superclass.remove.apply(this, arguments);
+         return RecordSet.superclass.remove.call(this, item);
       },
 
       removeAt: function (index) {
          this._getRawDataAdapter().remove(index);
-         RecordSet.superclass.removeAt.apply(this, arguments);
+         RecordSet.superclass.removeAt.call(this, index);
       },
 
       replace: function (item, at) {
          this._checkItem(item);
          this._getRawDataAdapter().replace(item.getRawData(), at);
-         RecordSet.superclass.replace.apply(this, arguments);
+         RecordSet.superclass.replace.call(this, item, at);
       },
 
       assign: function (items) {

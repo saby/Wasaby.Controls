@@ -19,7 +19,7 @@ define('js!SBIS3.CONTROLS.Data.Utils', [], function () {
       getItemPropertyValue: function (item, property) {
          property = property || '';
 
-         if (item === null || typeof item !== 'object') {
+         if (!(item instanceof Object)) {
             return undefined;
          }
 
@@ -49,7 +49,7 @@ define('js!SBIS3.CONTROLS.Data.Utils', [], function () {
       setItemPropertyValue: function (item, property, value) {
          property = property || '';
 
-         if (item === null || typeof item !== 'object') {
+         if (!(item instanceof Object)) {
             throw new TypeError('Argument item should be an instance of Object');
          }
 

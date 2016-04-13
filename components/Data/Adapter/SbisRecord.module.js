@@ -95,7 +95,7 @@ define('js!SBIS3.CONTROLS.Data.Adapter.SbisRecord', [
          key = key || 't';
          var typeSbis = meta[key],
             type;
-         if (typeof typeSbis === 'object') {
+         if (typeSbis instanceof Object) {
             return this._getType(typeSbis, value, 'n');
          }
          for (var fieldType in FIELD_TYPE) {

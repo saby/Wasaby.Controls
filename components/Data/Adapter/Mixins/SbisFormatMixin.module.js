@@ -174,7 +174,7 @@ define('js!SBIS3.CONTROLS.Data.Adapter.SbisFormatMixin', [
 
       _getFieldType: function (index) {
          var typeName = this._data.s[index].t;
-         if (typeName && typeof typeName === 'object') {
+         if (typeName && (typeName instanceof Object)) {
             typeName = typeName.n;
          }
          return this._getFieldTypeNameByInner(typeName);

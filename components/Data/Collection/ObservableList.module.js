@@ -20,9 +20,9 @@ define('js!SBIS3.CONTROLS.Data.Collection.ObservableList', [
    var ObservableList = List.extend([IBindCollection, ObservableListMixin], /** @lends SBIS3.CONTROLS.Data.Collection.ObservableList.prototype */{
       _moduleName: 'SBIS3.CONTROLS.Data.Collection.ObservableList',
 
-      constructor: function $ObservableList() {
-         ObservableList.superclass.constructor.apply(this, arguments);
-         ObservableListMixin.constructor.apply(this, arguments);
+      constructor: function $ObservableList(options) {
+         ObservableList.superclass.constructor.call(this, options);
+         ObservableListMixin.constructor.call(this, options);
       }
    });
 

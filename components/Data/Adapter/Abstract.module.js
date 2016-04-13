@@ -37,7 +37,7 @@ define('js!SBIS3.CONTROLS.Data.Adapter.Abstract', [
       },
 
       setProperty: function (data, property, value) {
-         if (!data || typeof data !== 'object') {
+         if (!data || !(data instanceof Object)) {
             return;
          }
          property = property || '';

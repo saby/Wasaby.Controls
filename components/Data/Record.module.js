@@ -66,20 +66,19 @@ define('js!SBIS3.CONTROLS.Data.Record', [
        */
       _propertiesCache: null,
 
-      constructor: function $Record(cfg) {
-         cfg = cfg || {};
-         if (cfg) {
-            if ('data' in cfg && !('rawData' in cfg)) {
-               cfg.rawData = cfg.data;
+      constructor: function $Record(options) {
+         options = options || {};
+         if (options) {
+            if ('data' in options && !('rawData' in options)) {
+               options.rawData = options.data;
                Utils.logger.stack('SBIS3.CONTROLS.Data.Record: option "data" is deprecated and will be removed in 3.7.4. Use "rawData" instead.', 1);
             }
          }
 
          this._changedFields = {};
-         this._propertiesCache = {};
-         Record.superclass.constructor.apply(this, arguments);
-         OptionsMixin.constructor.apply(this, arguments);
-         FormattableMixin.constructor.apply(this, arguments);
+         Record.superclass.constructor.call(this, options);
+         OptionsMixin.constructor.call(this, options);
+         FormattableMixin.constructor.call(this, options);
          this._publish('onPropertyChange');
          this.setRawData(this.$rawData);
       },
@@ -87,15 +86,15 @@ define('js!SBIS3.CONTROLS.Data.Record', [
       //region SBIS3.CONTROLS.Data.IPropertyAccess
 
       get: function (name) {
-         if (this._propertiesCache.hasOwnProperty(name)) {
-            return this._propertiesCache[name];
+         if (this._hasInPropertiesCache(name)) {
+            return this._getFromPropertiesCache(name);
          }
 
          var hasValue = this._getRawDataAdapter().has(name),
             value = hasValue ? this._getRawDataValue(name) : undefined;
 
          if (this._isFieldValueCacheable(value)) {
-            this._propertiesCache[name] = value;
+            this._setToPropertiesCache(name, value);
          }
 
          return value;
@@ -113,10 +112,10 @@ define('js!SBIS3.CONTROLS.Data.Record', [
                this._addRawDataField(name);
             }
             this._setChanged(name, oldValue);
-            if (name in this._propertiesCache &&
+            if (this._hasInPropertiesCache(name) &&
                value !== this._propertiesCache[name]
             ) {
-               delete this._propertiesCache[name];
+               this._unsetFromPropertiesCache(name);
             }
             this._notify('onPropertyChange', name, value);
          }
@@ -184,13 +183,13 @@ define('js!SBIS3.CONTROLS.Data.Record', [
 
       setRawData: function(rawData) {
          FormattableMixin.setRawData.call(this, rawData);
-         this._propertiesCache = {};
+         this._clearPropertiesCache();
          this._notify('onPropertyChange');
       },
 
       setAdapter: function (adapter) {
          FormattableMixin.setAdapter.call(this, adapter);
-         this._propertiesCache = {};
+         this._clearPropertiesCache();
       },
 
       addField: function(format, at, value) {
@@ -311,6 +310,65 @@ define('js!SBIS3.CONTROLS.Data.Record', [
       //region Protected methods
 
       /**
+       * Проверяет наличие закэшированного значения поля
+       * @param {String} name Название поля
+       * @return {Boolean}
+       * @protected
+       */
+      _hasInPropertiesCache: function (name) {
+         return this._propertiesCache && this._propertiesCache.hasOwnProperty(name);
+      },
+
+      /**
+       * Возвращает закэшированноое значение поля
+       * @param {String} name Название поля
+       * @return {Object}
+       * @protected
+       */
+      _getFromPropertiesCache: function (name) {
+         return this._propertiesCache[name];
+      },
+
+      /**
+       * Кэширует значение поля
+       * @param {String} name Название поля
+       * @param {Object} value Значение поля
+       * @protected
+       */
+      _setToPropertiesCache: function (name, value) {
+         if (this._propertiesCache === null) {
+            this._propertiesCache = {};
+         }
+         this._propertiesCache[name] = value;
+      },
+
+      /**
+       * Удаляет закэшированноое значение поля
+       * @param {String} name Название поля
+       * @protected
+       */
+      _unsetFromPropertiesCache: function (name) {
+         delete this._propertiesCache[name];
+      },
+
+      /**
+       * Обнуляет кэш значений полей
+       * @protected
+       */
+      _clearPropertiesCache: function () {
+         this._propertiesCache = null;
+      },
+
+      /**
+       * Возвращает признак, что значение поля кэшируемое
+       * @returns {Boolean}
+       * @protected
+       */
+      _isFieldValueCacheable: function(value) {
+         return value && value instanceof Object;
+      },
+
+      /**
        * Добавляет поле в список полей
        * @param {String} name Название поля
        * @protected
@@ -370,15 +428,6 @@ define('js!SBIS3.CONTROLS.Data.Record', [
          if (!(this.$rawData instanceof Object)) {
             this.$rawData = adapter.getData();
          }
-      },
-
-      /**
-       * Возвращает признак, что значение поля кэшируемое
-       * @returns {Boolean}
-       * @protected
-       */
-      _isFieldValueCacheable: function(value) {
-         return value && typeof value === 'object';
       },
 
       /**

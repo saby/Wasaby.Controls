@@ -116,16 +116,16 @@ define('js!SBIS3.CONTROLS.Data.Model', [
        */
       _synced: false,
 
-      constructor: function $Model(cfg) {
-         cfg = cfg || {};
-         if ('usingDataSetAsList' in cfg) {
+      constructor: function $Model(options) {
+         options = options || {};
+         if ('usingDataSetAsList' in options) {
             Utils.logger.stack(this._moduleName + '::$constructor(): option "usingDataSetAsList" is deprecated and will be removed in 3.7.4', 1);
          }
 
          this.$properties = this.$properties || {};
          this._defaultPropertiesValues = {};
          this._nowCalculatingProperties = {};
-         Model.superclass.constructor.call(this, cfg);
+         Model.superclass.constructor.call(this, options);
          if (!this.$idProperty) {
             this.$idProperty = this.getAdapter().getKeyField(this.$rawData);
          }
@@ -134,8 +134,8 @@ define('js!SBIS3.CONTROLS.Data.Model', [
       // region SBIS3.CONTROLS.Data.IPropertyAccess
 
       get: function (name) {
-         if (this._propertiesCache.hasOwnProperty(name)) {
-            return this._propertiesCache[name];
+         if (this._hasInPropertiesCache(name)) {
+            return this._getFromPropertiesCache(name);
          }
 
          var value = Model.superclass.get.call(this, name),
@@ -147,9 +147,9 @@ define('js!SBIS3.CONTROLS.Data.Model', [
             if (property.get) {
                value = this._processCalculatedValue(name, value, property, true);
                if (this._isFieldValueCacheable(value)) {
-                  this._propertiesCache[name] = value;
-               } else if (this._propertiesCache.hasOwnProperty(name)) {
-                  delete this._propertiesCache[name];
+                  this._setToPropertiesCache(name, value);
+               } else if (this._hasInPropertiesCache(name)) {
+                  this._unsetFromPropertiesCache(name);
                }
             }
          }
@@ -170,7 +170,7 @@ define('js!SBIS3.CONTROLS.Data.Model', [
       },
 
       has: function (name) {
-         return this.getProperties().hasOwnProperty(name) || Model.superclass.has.call(this, name);
+         return this.$properties.hasOwnProperty(name) || Model.superclass.has.call(this, name);
       },
 
       // endregion SBIS3.CONTROLS.Data.IPropertyAccess
@@ -262,7 +262,7 @@ define('js!SBIS3.CONTROLS.Data.Model', [
          if (!this._defaultPropertiesValues.hasOwnProperty(name)) {
             var property = this.$properties[name];
             if (property && 'def' in property) {
-               this._defaultPropertiesValues[name] = [typeof property.def === 'function' ? property.def.call(this) : property.def];
+               this._defaultPropertiesValues[name] = [property.def instanceof Function ? property.def.call(this) : property.def];
             } else {
                this._defaultPropertiesValues[name] = [];
             }
@@ -453,7 +453,7 @@ define('js!SBIS3.CONTROLS.Data.Model', [
          var adapter = this._getRawDataAdapter(),
             info = adapter.getInfo(field);
          return info && info.meta && info.meta.t ?
-            (typeof info.meta.t === 'object' ? info.meta.t.n : info.meta.t) :
+            (info.meta.t instanceof Object ? info.meta.t.n : info.meta.t) :
             (field ? 'Текст' : undefined);
       },
 

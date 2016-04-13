@@ -48,17 +48,18 @@ define('js!SBIS3.CONTROLS.Data.Collection.List', [
        */
       _hashIndex: undefined,
 
-      constructor: function $List(cfg) {
-         this.$items = [];
+      constructor: function $List(options) {
+         this.$items = this.$items || [];
 
-         cfg = cfg || {};
-         if ('items' in cfg) {
-            if (!(cfg.items instanceof Array)) {
+         options = options || {};
+         if ('items' in options) {
+            if (!(options.items instanceof Array)) {
                throw new TypeError('Option "items" should be an instance of Array');
             }
          }
-         List.superclass.constructor.apply(this, arguments);
-         OptionsMixin.constructor.apply(this, arguments);
+
+         List.superclass.constructor.call(this, options);
+         OptionsMixin.constructor.call(this, options);
       },
 
       // region SBIS3.CONTROLS.Data.SerializableMixin
@@ -318,7 +319,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.List', [
       },
 
       _getItemIndexByHash: function (hash) {
-         if (typeof this._hashIndex === 'undefined') {
+         if (this._hashIndex === undefined) {
             this._createHashIndex();
          }
          return this._hashIndex.hasOwnProperty(hash) ? this._hashIndex[hash] : -1;
