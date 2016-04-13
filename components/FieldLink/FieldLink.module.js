@@ -529,6 +529,23 @@ define('js!SBIS3.CONTROLS.FieldLink',
              this._loadAndDrawItems(keysArrLen, this._options.pageSize);
           },
 
+          _prepareItems: function() {
+             var items = FieldLink.superclass._prepareItems.apply(this, arguments),
+                 self = this;
+
+             if(items) {
+                /* Элементы, установленные из дилогов выбора / автодополнения могут иметь другой первичный ключ,
+                   отличный от поля с ключём, установленного в поле связи. Это связно с тем, что "связь" устанавливается по опеределённому полю,
+                   и не обязательному по первичному ключу у записей в списке. */
+                items.each(function(rec) {
+                   if(rec.getIdProperty() !== self._options.keyField && rec.get(self._options.keyField)) {
+                      rec.setIdProperty(self._options.keyField);
+                   }
+                })
+             }
+             return items;
+          },
+
           setListFilter: function() {
              var selectedItems =  this.getSelectedItems();
 
