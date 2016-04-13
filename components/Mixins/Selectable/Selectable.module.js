@@ -207,10 +207,6 @@ define('js!SBIS3.CONTROLS.Selectable', ['js!SBIS3.CONTROLS.Data.Utils', 'js!SBIS
        * @see onSelectedItemChange
        */
       setSelectedKey : function(id) {
-         if(this._options.selectedKey === id) {
-            return;
-         }
-
          this._options.selectedKey = id;
          if (this._itemsProjection) {
             this._prepareSelectedConfig(undefined, id);
