@@ -127,7 +127,7 @@ define('js!SBIS3.CONTROLS.Data.Model', [
          }
       },
 
-      // region SBIS3.CONTROLS.Data.IPropertyAccess
+      // region SBIS3.CONTROLS.Data.IObject
 
       get: function (name) {
          if (this._propertiesCache.hasOwnProperty(name)) {
@@ -169,7 +169,7 @@ define('js!SBIS3.CONTROLS.Data.Model', [
          return this.getProperties().hasOwnProperty(name) || Model.superclass.has.call(this, name);
       },
 
-      // endregion SBIS3.CONTROLS.Data.IPropertyAccess
+      // endregion SBIS3.CONTROLS.Data.IObject
 
       // region SBIS3.CONTROLS.Data.Collection.IEnumerable
 
