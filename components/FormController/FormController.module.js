@@ -231,6 +231,14 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
       /**
        * Подгружаем запись из источника данных по ключу
        * @param {String} key Первичный ключ записи
+       * @returns {$ws.proto.Deferred} Окончание чтения
+       * @example
+       * <pre>
+       *   control.sendCommand('read').addBoth(function(){
+       *      console.log('запись прочитана');
+       *   })
+       * </pre>
+       * @command
        */
       read: function (key) {
          var self = this;
