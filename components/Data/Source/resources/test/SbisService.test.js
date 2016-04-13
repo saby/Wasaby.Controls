@@ -997,6 +997,31 @@ define([
                      done(err);
                   });
                });
+
+               it('should generate a request with "hasMore" from given meta property', function (done) {
+                  var hasMore = 'test',
+                     query = new Query();
+                  query
+                     .offset(0)
+                     .limit(10)
+                     .meta({
+                        hasMore: hasMore
+                     });
+                  service.query(query).addCallbacks(function () {
+                     try {
+                        var args = SbisBusinessLogic.lastRequest.args;
+
+                        assert.strictEqual(args['Навигация'].d[2], hasMore);
+                        assert.strictEqual(args['Навигация'].s[2].n, 'ЕстьЕще');
+
+                        done();
+                     } catch (err) {
+                        done(err);
+                     }
+                  }, function (err) {
+                     done(err);
+                  });
+               });
             });
 
             context('when the service isn\'t exists', function () {

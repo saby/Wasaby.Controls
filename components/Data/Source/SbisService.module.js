@@ -49,6 +49,11 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
        * @property {String} [format] Имя метода для получения формата записи через {@link create}, {@link read} и {@link copy}. Метод должен быть декларативным.
        */
 
+      /**
+       * @typedef {Object} MetaConfig
+       * @property {String} [hasMore=hasMore] Свойство мета-данных, отвечающий за поле 'ЕстьЕще' параметра 'Навигация' списочного метода
+       */
+
       _moduleName: 'SBIS3.CONTROLS.Data.Source.SbisService',
       $protected: {
          _options: {
@@ -136,7 +141,14 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
              *    });
              * </pre>
              */
-            provider: 'source.provider.sbis-business-logic'
+            provider: 'source.provider.sbis-business-logic',
+
+            /**
+             * @cfg {MetaConfig} Объект, хранящий названия свойств мета-данных, в которых хранится служебная информация, необходимая для формирования некоторых аргументов методов БЛ
+             */
+            metaConfig: {
+               hasMore: 'hasMore'
+            }
          },
 
          /**
@@ -487,15 +499,23 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
             return null;
          }
          var offset = query.getOffset(),
-            limit = query.getLimit();
+            limit = query.getLimit(),
+            meta = query.getMeta(),
+            moreProp = this._options.metaConfig.hasMore,
+            hasMoreProp = meta.hasOwnProperty(moreProp),
+            more = hasMoreProp ? meta[moreProp] : offset >= 0;
 
+         if (hasMoreProp) {
+            delete meta[moreProp];
+            query.meta(meta);
+         }
          if (offset === 0 && limit === undefined) {
             return null;
          }
          return {
             'Страница': limit > 0 ? Math.floor(offset / limit) : 0,
             'РазмерСтраницы': limit,
-            'ЕстьЕще': offset >= 0
+            'ЕстьЕще': more
          };
       },
 
