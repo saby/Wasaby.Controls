@@ -172,14 +172,18 @@ define('js!SBIS3.CONTROLS.TextBoxBase',
        * @see getText
        */
       setText: function(text){
-         //null, NaN, undefined оставляем как есть, но выводим их как пустую строку
-         var newText = (text === null || text !== text || typeof text === "undefined") ? text : this._formatText(text.toString());
+         var newText = (this._isEmptyValue) ? text : this._formatText(text.toString());
          if (newText !== this._options.text) {
             this._options.text = newText;
             this._drawText(newText);
             this._notify('onTextChange', newText);
             this._notifyOnPropertyChanged('text');
          }
+      },
+
+      //Проверка на пустое значение, их нужно хранить в неизменном виде, но отображать как пустую строку
+      _isEmptyValue: function(text){
+         return text === null || text !== text || typeof text === "undefined";
       },
 
       /**
