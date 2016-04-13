@@ -1,6 +1,6 @@
 /* global define, $ws */
 define('js!SBIS3.CONTROLS.Data.Record', [
-   'js!SBIS3.CONTROLS.Data.IPropertyAccess',
+   'js!SBIS3.CONTROLS.Data.IObject',
    'js!SBIS3.CONTROLS.Data.Collection.IEnumerable',
    'js!SBIS3.CONTROLS.Data.Collection.ArrayEnumerator',
    'js!SBIS3.CONTROLS.Data.SerializableMixin',
@@ -11,14 +11,14 @@ define('js!SBIS3.CONTROLS.Data.Record', [
    'js!SBIS3.CONTROLS.Data.Factory',
    'js!SBIS3.CONTROLS.Data.Format.StringField',
    'js!SBIS3.CONTROLS.Data.ContextField.Record'
-], function (IPropertyAccess, IEnumerable, ArrayEnumerator, SerializableMixin, Serializer, FormattableMixin, Di, Utils, Factory, StringField, ContextFieldRecord) {
+], function (IObject, IEnumerable, ArrayEnumerator, SerializableMixin, Serializer, FormattableMixin, Di, Utils, Factory, StringField, ContextFieldRecord) {
    'use strict';
 
    /**
     * Запись - обертка над данными.
     * @class SBIS3.CONTROLS.Data.Record
     * @extends $ws.proto.Abstract
-    * @mixes SBIS3.CONTROLS.Data.IPropertyAccess
+    * @mixes SBIS3.CONTROLS.Data.IObject
     * @mixes SBIS3.CONTROLS.Data.Collection.IEnumerable
     * @mixes SBIS3.CONTROLS.Data.SerializableMixin
     * @mixes SBIS3.CONTROLS.Data.FormattableMixin
@@ -26,7 +26,7 @@ define('js!SBIS3.CONTROLS.Data.Record', [
     * @author Мальцев Алексей
     */
 
-   var Record = $ws.proto.Abstract.extend([IPropertyAccess, IEnumerable, SerializableMixin, FormattableMixin], /** @lends SBIS3.CONTROLS.Data.Record.prototype */{
+   var Record = $ws.proto.Abstract.extend([IObject, IEnumerable, SerializableMixin, FormattableMixin], /** @lends SBIS3.CONTROLS.Data.Record.prototype */{
       _moduleName: 'SBIS3.CONTROLS.Data.Record',
       $protected: {
          _options: {
@@ -59,7 +59,7 @@ define('js!SBIS3.CONTROLS.Data.Record', [
          this.setRawData(this._options.rawData);
       },
 
-      //region SBIS3.CONTROLS.Data.IPropertyAccess
+      //region SBIS3.CONTROLS.Data.IObject
 
       get: function (name) {
          if (this._propertiesCache.hasOwnProperty(name)) {
@@ -101,7 +101,7 @@ define('js!SBIS3.CONTROLS.Data.Record', [
          return Array.indexOf(this._getRawDataFields(), name) > -1;
       },
 
-      //endregion SBIS3.CONTROLS.Data.IPropertyAccess
+      //endregion SBIS3.CONTROLS.Data.IObject
 
       //region SBIS3.CONTROLS.Data.Collection.IEnumerable
 
