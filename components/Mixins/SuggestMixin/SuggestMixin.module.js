@@ -618,6 +618,7 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
        */
       _onListDrawItems: function () {
          if (this._picker) {
+            this._picker.getContainer().height('auto');
             this._picker.recalcPosition(true);
          }
       },
