@@ -167,7 +167,7 @@ define('js!SBIS3.CONTROLS.TextBox', ['js!SBIS3.CONTROLS.TextBoxBase','html!SBIS3
             if (self._options.trim) {
                text = String.trim(text);
             }
-            if (text !== self._options.text){
+            if (text !== self._options.text && !(text === null || text !== text || typeof text === "undefined")  && text.length){
                self.setText(text);
             }
          });
