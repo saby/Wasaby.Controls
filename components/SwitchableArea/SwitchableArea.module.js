@@ -3,7 +3,7 @@ define('js!SBIS3.CONTROLS.SwitchableArea', [
    'js!SBIS3.CORE.CompoundControl',
    'js!SBIS3.CONTROLS.SwitchableArea/SwitchableAreaItem',
    'html!SBIS3.CONTROLS.SwitchableArea',
-   'html!SBIS3.CORE.SwitchableArea/SwitchableArea_area'
+   'html!SBIS3.CONTROLS.SwitchableArea/SwitchableArea_area'
 ], function(CompoundControl, SwitchableAreaItem, dotTplFn, areaTplFn) {
 
    'use strict';
