@@ -322,7 +322,7 @@ define('js!SBIS3.CONTROLS.ComponentBinder', [], function () {
 
          function createBreadCrumb(data){
             var point = {};
-            point[breadCrumbs._options.displayField] = $ws.helpers.escapeHtml(data.title);
+            point[breadCrumbs._options.displayField] = data.title;
             point[breadCrumbs._options.keyField] = data.id;
             point[breadCrumbs._options.colorField] = data.color;
             point.data = data.data;
@@ -381,7 +381,7 @@ define('js!SBIS3.CONTROLS.ComponentBinder', [], function () {
                }
 
                breadCrumbs.setItems(self._path);
-               backButton.setCaption(self._currentRoot ? $ws.helpers.escapeHtml(self._currentRoot.title) : '');
+               backButton.setCaption(self._currentRoot ? self._currentRoot.title : '');
             }
          });
 
