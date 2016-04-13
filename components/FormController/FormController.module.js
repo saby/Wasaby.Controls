@@ -108,6 +108,10 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
              */
             initValues: null,
             /**
+             * @cfg {Boolean} Является ли запись только что созданной
+             */
+            newModel: false,
+            /**
              * @cfg {String} Текст рядом с индикатором сохранения записи
              * @example
              * <pre>
@@ -137,7 +141,7 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
          //чтобы не дергать getTopParent
          this._panel.subscribe('onBeforeClose', function(event){
             //Если попали сюда из метода _saveRecord, то this._saving = true и мы просто закрываем панель
-            if (this._saving || !(this._options.record && this._options.record.isChanged())){
+            if (this._saving || !(this._options.record && this._options.record.isChanged() || this.isNewModel())){
                this._saving = false;
                return;
             }
@@ -206,6 +210,7 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
             this._showLoadingIndicator();
             dResult.dependOn(def.addCallbacks(function (result) {
                self._notify('onSuccess', result);
+               self._options.newModel = false;
                if (closePanelAfterSubmit) {
                   self._panel.ok();
                }
@@ -289,6 +294,17 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
             this._loadingIndicator.hide();
          }
       },
+      /**
+       * Признак, является ли запись, редактируемая диалогом, только что созданной.
+       * @returns {Boolean} Возможные значения:
+       * <ol>
+       *    <li>true - диалог редактирования открыт для только что созданной записи;</li>
+       *    <li>false - диалог редактирования открыт для уже существующей записи.</li>
+       * </ol>
+       */
+      isNewModel: function(){
+         return this._options.newModel;
+      },
       _updateIndicatorZIndex: function(){
          var indicatorWindow = this._loadingIndicator && this._loadingIndicator.getWindow();
          if (indicatorWindow && this._loadingIndicator.isVisible()){
@@ -355,12 +371,14 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
          else {
             hdl = this._options.dataSource.create(this._options.initValues).addCallback(function(record){
                self.setRecord(record);
+               return record;
             });
          }
-         hdl.addBoth(function(r){
+         hdl.addBoth(function(record){
+            self._options.newModel = record.getKey() === null || self._options.newModel;
             self._hideLoadingIndicator();
             self.activateFirstControl();
-            return r;
+            return record;
          });
       }
    });
