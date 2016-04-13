@@ -167,7 +167,8 @@ define('js!SBIS3.CONTROLS.TextBox', ['js!SBIS3.CONTROLS.TextBoxBase','html!SBIS3
             if (self._options.trim) {
                text = String.trim(text);
             }
-            if (text !== self._options.text){
+            //Установим текст только если значения различны и оба не пустые
+            if (text !== self._options.text && !(self._isEmptyValue(self._options.text) && !text.length)){
                self.setText(text);
             }
          });
