@@ -333,6 +333,7 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
          });
          hdl.addBoth(function(r){
             self._hideLoadingIndicator();
+            self.activateFirstControl();
             return r;
          });
       }
