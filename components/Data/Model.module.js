@@ -397,9 +397,10 @@ define('js!SBIS3.CONTROLS.Data.Model', [
        */
       _getAllProperties: function() {
          var fields = this._getRawDataFields(),
-            props = Object.keys(this.getProperties());
+            objProps = this.getProperties(),
+            props = Object.keys(objProps);
          return props.concat($ws.helpers.filter(fields, function(field) {
-            return Array.indexOf(props, field) === -1;
+            return !objProps.hasOwnProperty(field);
          }));
       },
 
