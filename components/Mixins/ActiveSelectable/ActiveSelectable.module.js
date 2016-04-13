@@ -45,7 +45,8 @@ define('js!SBIS3.CONTROLS.ActiveSelectable', ['js!SBIS3.CONTROLS.Data.Model'], f
        * @see getSelectedItem
        */
       setSelectedItem: function(item) {
-         var isModel = item instanceof Model;
+         var isModel = item instanceof Model,
+             key;
 
 
          if(!isModel && !this._options.selectedItem) {
@@ -53,8 +54,12 @@ define('js!SBIS3.CONTROLS.ActiveSelectable', ['js!SBIS3.CONTROLS.Data.Model'], f
          }
 
          this._options.selectedItem = isModel ? item : null;
-         this.setSelectedKey(isModel ? item.getId() : null);
+
+         key = isModel ? item.getId() : null;
+         this._options.selectedKeys = key;
+
          this._notifyOnPropertyChanged('selectedItem');
+         this.setSelectedKey(key);
       },
 
       initializeSelectedItem: function() {
