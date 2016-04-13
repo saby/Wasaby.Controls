@@ -48,12 +48,12 @@ define('js!SBIS3.CONTROLS.ActiveMultiSelectable', [], function() {
        */
       setSelectedItems: function(list) {
          var selItems = this._options.selectedItems,
-             newList;
+             newList, keys;
 
          if(list) {
             list = this._prepareItems(list);
 
-            if (selItems && selItems.equals(list)) {
+            if ( (selItems && selItems.equals(list)) || (!selItems && !list.getCount()) ) {
                return;
             }
 
@@ -67,8 +67,12 @@ define('js!SBIS3.CONTROLS.ActiveMultiSelectable', [], function() {
          }
 
          this._options.selectedItems = newList;
-         this.setSelectedKeys(this._convertToKeys(this._options.selectedItems));
+
+         keys = this._convertToKeys(this._options.selectedItems);
+         this._options.selectedKeys = keys;
+
          this._notifyOnPropertyChanged('selectedItems');
+         this.setSelectedKeys(keys);
       },
 
       /**
