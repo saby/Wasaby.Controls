@@ -118,7 +118,6 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
             indicatorSavingMessage:  rk('Подождите, идёт сохранение')
          }
       },
-      
       $constructor: function() {
          this._publish('onSubmit', 'onFail', 'onSuccess');
          $ws.single.CommandDispatcher.declareCommand(this, 'submit', this.submit);
@@ -128,7 +127,10 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
          } else {
             this._setContextRecord(this._options.record);
          }
-
+         var loadingTime = new Date();
+         this.subscribe('onAfterShow', function(){
+            $ws.single.ioc.resolve('ILogger').log('FormController', 'Время загрузки ' + (new Date() - loadingTime) + 'мс');
+         });
          //Выписал задачу, чтобы при событии onBeforeClose стрелял метод у floatArea, который мы бы переопределили здесь,
          //чтобы не дергать getTopParent
          this._panel.subscribe('onBeforeClose', function(event){
