@@ -181,6 +181,7 @@ define('js!SBIS3.CONTROLS.Data.Source.Remote', [
          if (typeof this._options.provider === 'string') {
             this._options.provider = Di.resolve(this._options.provider, {
                endpoint: this._options.endpoint,
+               options: this._options.options,
                //TODO: remove pass 'service' and 'resource'
                service: this._options.endpoint.address,
                resource: this._options.endpoint.contract
