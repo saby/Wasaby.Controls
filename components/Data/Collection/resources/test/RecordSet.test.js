@@ -378,10 +378,11 @@ define([
                });
             });
             it('should add the field from the declaration for SBIS adapter', function () {
-               var rs = new RecordSet({
+               var idProperty = 'Ид',
+                  rs = new RecordSet({
                      rawData: getSbisItems(),
                      adapter: 'adapter.sbis',
-                     idProperty: 'Ид'
+                     idProperty: idProperty
                   }),
                   index = 0,
                   fieldName = 'login',
@@ -389,7 +390,7 @@ define([
 
                //Just initiate for creating lazy indexes
                rs.each(function(record) {
-                  record.getId();
+                  record.get(idProperty);
                });
                
                rs.addField({
@@ -935,22 +936,23 @@ define([
             });
 
             it('should return record by updated id', function() {
-               var source = new MemorySource({
-                     idProperty: 'Ид'
+               var idProperty = 'Ид',
+                  source = new MemorySource({
+                     idProperty: idProperty
                   }),
                   rs = new RecordSet({
-                     idProperty: 'Ид',
+                     idProperty: idProperty,
                      rawData: items.slice()
                   }),
                   rec = new Model({
-                     idProperty: 'Ид'
+                     idProperty: idProperty
                   }),
                   byKeyRec;
                rs.add(rec);
-               byKeyRec = rs.getRecordById(rec.getId());
+               byKeyRec = rs.getRecordById(rec.get(idProperty));
                rs.saveChanges(source);
                assert.strictEqual(rec, byKeyRec);
-               assert.strictEqual(rec, rs.getRecordById(rec.getId()));
+               assert.strictEqual(rec, rs.getRecordById(rec.get(idProperty)));
             });
          });
 

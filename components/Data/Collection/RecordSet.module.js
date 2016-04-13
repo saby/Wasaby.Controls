@@ -25,30 +25,31 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
        * @cfg {String|Function} Конструктор модели
        * @name SBIS3.CONTROLS.Data.Collection.RecordSet#model
        * @see getModel
+       * @see SBIS3.CONTROLS.Data.Record
        * @see SBIS3.CONTROLS.Data.Model
        * @see SBIS3.CONTROLS.Data.Di
        * @example
        * <pre>
        *    var User = Model.extend({
-             *       identify: function(login, password) {
-             *       }
-             *    });
+       *       identify: function(login, password) {
+       *       }
+       *    });
        *    Di.register('model.user', User);
        *    //...
        *    var user = new RecordSet({
-             *       model: 'model.user'
-             *    });
+       *       model: 'model.user'
+       *    });
        * </pre>
        * @example
        * <pre>
        *    var User = Model.extend({
-             *       identify: function(login, password) {
-             *       }
-             *    });
+       *       identify: function(login, password) {
+       *       }
+       *    });
        *    //...
        *    var user = new RecordSet({
-             *       model: User
-             *    });
+       *       model: User
+       *    });
        * </pre>
        */
       $model: 'model',
@@ -57,12 +58,11 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
        * @cfg {String} Поле модели, содержащее первичный ключ
        * @name SBIS3.CONTROLS.Data.Collection.RecordSet#idProperty
        * @see getIdProperty
-       * @see SBIS3.CONTROLS.Data.Model#idProperty
        * @example
        * <pre>
        *    var dataSource = new RecordSet({
-             *       idProperty: 'primaryId'
-             *    });
+       *       idProperty: 'primaryId'
+       *    });
        * </pre>
        */
       $idProperty: '',
@@ -206,18 +206,18 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
             self = this,
             position = 0,
             willRemove = [];
-         this.each(function(model) {
-            if (model.isDeleted() && !model.isSynced()) {
-               model.setSynced(true);
-               syncCompleteDef.push(dataSource.destroy(model.getId()).addCallback(function() {
-                  willRemove.push(model);
-                  return model;
+         this.each(function(record) {
+            if (record.isDeleted() && !record.isSynced()) {
+               record.setSynced(true);
+               syncCompleteDef.push(dataSource.destroy(record.get(self.$idProperty)).addCallback(function() {
+                  willRemove.push(record);
+                  return record;
                }));
-            } else if (model.isChanged() || (!model.isStored() && !model.isSynced())) {
-               syncCompleteDef.push(dataSource.update(model).addCallback(function() {
-                  model.applyChanges();
-                  model.setStored(true);
-                  return model;
+            } else if (record.isChanged() || (!record.isStored() && !record.isSynced())) {
+               syncCompleteDef.push(dataSource.update(record).addCallback(function() {
+                  record.applyChanges();
+                  record.setStored(true);
+                  return record;
                }));
             }
             position++;
@@ -235,7 +235,6 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
        * @returns {String}
        * @see setIdProperty
        * @see idProperty
-       * @see SBIS3.CONTROLS.Data.Model#idProperty
        */
       getIdProperty: function () {
          return this.$idProperty;
@@ -246,13 +245,9 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
        * @param {String} name
        * @see getIdProperty
        * @see idProperty
-       * @see SBIS3.CONTROLS.Data.Model#idProperty
        */
       setIdProperty: function (name) {
          this.$idProperty = name;
-         this.each((function(item) {
-            item.setIdProperty(this.$idProperty);
-         }).bind(this));
       },
 
       /**
@@ -374,7 +369,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
 
       getRecordKeyByIndex: function (index) {
          var item = this.at(index);
-         return item && $ws.helpers.instanceOfModule(item, 'SBIS3.CONTROLS.Data.Model') ? item.getId() : undefined;
+         return item && $ws.helpers.instanceOfModule(item, 'SBIS3.CONTROLS.Data.Record') ? item.get(this.$idProperty) : undefined;
       },
 
       getStrategy: function () {
@@ -387,7 +382,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
       },
 
       push: function (record) {
-         if (!$ws.helpers.instanceOfModule(record, 'SBIS3.CONTROLS.Data.Model')) {
+         if (!$ws.helpers.instanceOfModule(record, 'SBIS3.CONTROLS.Data.Record')) {
             record = this._getModelInstance(record);
          }
          this.add(record);
@@ -511,7 +506,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
             toReplace = {};
          var l = 0, l1 = 0;
          for (i = 0, length = records.length; i < length; i++) {
-            id = records[i].getId();
+            id = records[i].get(this.$idProperty);
             recordsMap[id] = true;
             var index = this.getIndexByValue(this.$idProperty, id);
             if (index > -1) {
@@ -533,9 +528,10 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
             this.append(toAdd);
          }
          if (options.remove) {
-            var newItems = [];
+            var self = this,
+               newItems = [];
             this.each(function (record) {
-               var key = record.getId();
+               var key = record.get(self.$idProperty);
                if (recordsMap[key]) {
                   newItems.push(record);
                }
@@ -563,7 +559,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
             if (!this._indexTree.hasOwnProperty(parentKey)) {
                this._indexTree[parentKey] = [];
             }
-            this._indexTree[parentKey].push(record.getId());
+            this._indexTree[parentKey].push(record.get(self.$idProperty));
          }, 'all');
       },
 
@@ -697,8 +693,8 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
 
       /**
        * Создает новый экземпляр модели
-       * @param {*} model Данные модели
-       * @returns {SBIS3.CONTROLS.Data.Model}
+       * @param {*} data Данные модели
+       * @returns {SBIS3.CONTROLS.Data.Record}
        * @protected
        */
       _getModelInstance: function (data) {
