@@ -156,7 +156,7 @@ define('js!SBIS3.CONTROLS.hierarchyMixin', [], function () {
       after : {
          _dataLoadedCallback: function () {
             var path = this._items.getMetaData().path,
-               hierarchy = this._hier,
+               hierarchy = $ws.core.clone(this._hier),
                item;
             if (path) {
                hierarchy = this._getHierarchy(path, this._curRoot);
