@@ -162,7 +162,8 @@ define('js!SBIS3.CONTROLS.DataGridView',
          this._publish('onDrawHead');
          this._checkColumns();
          this._decorators.add(new LadderDecorator());
-         this._tfoot = $('.controls-DataGridView__tfoot', this.getContainer());
+         this._tfoot = $('.controls-DataGridView__tfoot', this._container[0]);
+         this._tbody = $('.controls-DataGridView__tbody', this._container[0]);
       },
 
       init: function() {
@@ -176,7 +177,9 @@ define('js!SBIS3.CONTROLS.DataGridView',
       _mouseMoveHandler: function(e) {
          DataGridView.superclass._mouseMoveHandler.apply(this, arguments);
 
-         var td = $(e.target).closest('.controls-DataGridView__td', this._container[0]),
+         var td = $(e.target).closest('.controls-DataGridView__td, .controls-DataGridView__th', this._container[0]),
+             trs = [],
+             cells = [],
              index, hoveredColumn;
 
          if(td.length) {
@@ -186,9 +189,17 @@ define('js!SBIS3.CONTROLS.DataGridView',
             if (hoveredColumn.columnIndex !== index) {
                this._clearHoveredColumn();
                hoveredColumn.columnIndex = index;
-               hoveredColumn.cells = this._getItemsContainer().find('> .controls-DataGridView__tr').map(function (id, elem) {
-                  return elem.children[index];
-               }).addClass('controls-DataGridView__hoveredColumn__cell');
+               trs = $(this._tbody[0].children);
+
+               if(this._options.showHead) {
+                  trs.push(this._thead[0].children[0]);
+               }
+
+               for(var i = 0, len = trs.length; i < len; i++) {
+                  cells.push(trs[i].children[index]);
+               }
+
+               hoveredColumn.cells = $(cells).addClass('controls-DataGridView__hoveredColumn__cell');
             }
          }
       },
