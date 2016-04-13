@@ -13,24 +13,18 @@
          };
          window.WSTheme = 'wi_scheme';
       </script>
-      <script type="text/javascript" data-pack-name="contents" src="/components/contents.js"></script>
-      <script type="text/javascript" data-pack-name="ws" src="/sbis3-ws/ws/ext/jquery-min.js"></script>
-      <script type="text/javascript" data-pack-name="ws" src="/sbis3-ws/ws/ext/jquery-cookie-min.js"></script>
+      <script type="text/javascript" src="/components/contents.js"></script>
       <script type="text/javascript" src="/sbis3-ws/ws/ext/requirejs/require.js"></script>
       <script type="text/javascript" src="/sbis3-ws/ws/ext/requirejs/config.js"></script>
       <script type="text/javascript" src="/sbis3-ws/ws/lib/core.js"></script>
-      <script type="text/javascript" src="/sbis3-ws/ws/lib/Source.js"></script>
-      <script type="text/javascript" data-pack-name="ws" src="/sbis3-ws/ws/res/js/bootup.js"></script>
    </head>
-   <body>
+   <body onload="doTest()">
       <h1>RecordSet stress test</h1>
       <script type="text/javascript">
-         $ws.core.withComponents('Source').addCallback(function() {
+         function doTest() {
             require([
                'js!SBIS3.CONTROLS.Data.Collection.RecordSet'
-            ], function (
-               RecordSet
-            ) {
+            ], function (RecordSet) {
                console.time('total');
 
                var createData = function() {
@@ -62,6 +56,7 @@
                   count = recordset.getCount(),
                   i,
                   enumerator,
+                  record,
                   name,
                   value;
                for (i = 0; i < count; i++) {
@@ -76,7 +71,7 @@
 
                console.timeEnd('total');
             });
-         });
+         }
       </script>
    </body>
 </html>
