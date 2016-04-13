@@ -384,21 +384,17 @@ define('js!SBIS3.CONTROLS.Data.Record', [
        * @protected
        */
       _getRawDataValue: function(name) {
-         var adapter = this._getRawDataAdapter(),
-            rawValue = adapter.get(name),
-            format;
+         var adapter = this._getRawDataAdapter();
 
          try {
-            format = adapter.getSharedFormat(name);
+            return Factory.cast(
+               adapter.get(name),
+               adapter.getSharedFormat(name),
+               this.getAdapter()
+            );
          } catch (e) {
-            format = 'String';
+            return undefined;
          }
-
-         return Factory.cast(
-            rawValue,
-            format,
-            this.getAdapter()
-         );
       },
 
       /**
