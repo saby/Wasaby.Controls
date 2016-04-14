@@ -230,14 +230,14 @@ define('js!SBIS3.CONTROLS.Data.FormattableMixin', [
        * @see setAdapter
        */
       getAdapter: function () {
-         if (
+         /*if (
             typeof this.$adapter === 'string' &&
             FormattableMixin._getDefaultAdapter !== this._getDefaultAdapter
          ) {
             Utils.logger.info('SBIS3.CONTROLS.Data.FormattableMixin: method _getDefaultAdapter() is deprecated and will be removed in 3.7.4. Use \'adapter\' option instead.');
             this.$adapter = this._getDefaultAdapter();
-         }
-         if (typeof this.$adapter === 'string') {
+         }*/
+         if (this.$adapter && !(this.$adapter instanceof Object)) {
             this.$adapter = Di.resolve(this.$adapter);
          }
          return this.$adapter;
