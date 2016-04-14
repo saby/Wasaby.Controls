@@ -1636,7 +1636,6 @@ define('js!SBIS3.CONTROLS.ListView',
          _toggleEmptyData: function(show) {
             if(this._emptyData) {
                this._emptyData.toggleClass('ws-hidden', !show);
-               this._thead.toggleClass('ws-hidden', show);
             }
          },
          //------------------------Paging---------------------
