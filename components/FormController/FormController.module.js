@@ -117,9 +117,11 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
             indicatorSavingMessage:  rk('Подождите, идёт сохранение')
          }
       },
+
       $constructor: function() {
          this._publish('onSubmit', 'onFail', 'onSuccess');
          $ws.single.CommandDispatcher.declareCommand(this, 'submit', this.submit);
+         $ws.single.CommandDispatcher.declareCommand(this, 'read', this.read);
          this._panel = this.getTopParent();
          if (this._options.dataSource){
             this._runQuery();
@@ -226,24 +228,45 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
          }
          return dResult;
       },
-
-      _readRecord: function(key){
-         return this._options.dataSource.read(key);
+      /**
+       * Подгружаем запись из источника данных по ключу
+       * @param {String} key Первичный ключ записи
+       * @returns {$ws.proto.Deferred} Окончание чтения
+       * @example
+       * <pre>
+       *   control.sendCommand('read').addBoth(function(){
+       *      console.log('запись прочитана');
+       *   })
+       * </pre>
+       * @command
+       */
+      read: function (key) {
+         var self = this;
+         key = key || this._options.key;
+         this._showLoadingIndicator(rk('Загрузка'));
+         return this._options.dataSource.read(key).addCallback(function (record) {
+            self.setRecord(record);
+            return record;
+         }).addBoth(function (r) {
+               self._hideLoadingIndicator();
+               return r;
+            });
       },
 
       _setContextRecord: function(record){
-         this.getLinkedContext().setValue('record', record);               
+         this.getLinkedContext().setValue('record', record);
       },
       /**
        * Показывает индикатор загрузки
        */
       _showLoadingIndicator: $ws.helpers.forAliveOnly(function(message){
          var self = this;
+         message = message !== undefined ? message : this._options.indicatorSavingMessage;
          this._showedLoading = true;
          if(this._loadingIndicator && !this._loadingIndicator.isDestroyed()){
             setTimeout(function(){
                if (self._showedLoading) {
-                  self._loadingIndicator.show(self._options.indicatorSavingMessage);
+                  self._loadingIndicator.setMessage(message);
                }
             }, 750);
          } else {
@@ -251,7 +274,7 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
                parent: this._panel,
                showInWindow: true,
                modal: true,
-               message: message !== undefined ? message : this._options.indicatorSavingMessage,
+               message: message,
                name: this.getId() + '-LoadingIndicator'
             });
          }
@@ -325,14 +348,13 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
             hdl;
          this._showLoadingIndicator(rk('Загрузка'));
          if (this._options.key) {
-            hdl = this._readRecord(this._options.key);
+            hdl = this.read();
          }
          else {
-            hdl = this._options.dataSource.create(this._options.initValues);
+            hdl = this._options.dataSource.create(this._options.initValues).addCallback(function(record){
+               self.setRecord(record);
+            });
          }
-         hdl.addCallback(function(record){
-            self.setRecord(record);
-         });
          hdl.addBoth(function(r){
             self._hideLoadingIndicator();
             self.activateFirstControl();
