@@ -212,8 +212,8 @@ define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManag
             if (recalcFlag) {
                var scrollWidth = this._container.get(0).scrollWidth,
                   scrollHeight = this._container.get(0).scrollHeight,
-                  maxWidth = parseFloat(this._container.css('max-width'), 10) || 0,
-                  maxHeight = parseFloat(this._container.css('max-height'), 10) || 0,
+                  maxWidth = parseFloat(this._container.css('max-width'), 10) || scrollWidth,
+                  maxHeight = parseFloat(this._container.css('max-height'), 10) || scrollHeight,
                   border = (this._container.outerWidth() - this._container.innerWidth());
 
                this._resetToDefault();
