@@ -1,5 +1,5 @@
 define('js!SBIS3.CONTROLS.Utils.HtmlDecorators', [
-   'js!SBIS3.CONTROLS.Utils.HtmlDecorators/AbstractDecorator'
+   'js!SBIS3.CONTROLS.Utils.HtmlDecorators.AbstractDecorator'
 ], function (AbstractDecorator) {
    'use strict';
 
@@ -17,7 +17,7 @@ define('js!SBIS3.CONTROLS.Utils.HtmlDecorators', [
    var HtmlDecorators = $ws.core.extend({}, /** @lends SBIS3.CONTROLS.Utils.HtmlDecorators.prototype */{
       $protected: {
          /**
-          * @var {Object} Набор декораторов SBIS3.CONTROLS.Utils.HtmlDecorators/AbstractDecorator[]
+          * @var {Object} Набор декораторов SBIS3.CONTROLS.Utils.HtmlDecorators.AbstractDecorator[]
           */
          _decorators: {},
          /**
@@ -41,7 +41,7 @@ define('js!SBIS3.CONTROLS.Utils.HtmlDecorators', [
 
       /**
        * Добавляет декоратор
-       * @param {SBIS3.CONTROLS.Utils.HtmlDecorators/AbstractDecorator} decorator Декоратор
+       * @param {SBIS3.CONTROLS.Utils.HtmlDecorators.AbstractDecorator} decorator Декоратор
        * @param {String} [area=''] Область декорирования
        * @param {String} [kind=HtmlDecorators.AREA_KIND_TEXT] Вид области декорирования
        */
