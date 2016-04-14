@@ -25,6 +25,10 @@ define('js!SBIS3.CONTROLS.Data.Adapter.RecordSetTable', [
        */
       _data: null,
 
+      /**
+       * Конструктор
+       * @param {*} data Сырые данные
+       */
       constructor: function (data) {
          if (!data) {
             data = new RecordSet();

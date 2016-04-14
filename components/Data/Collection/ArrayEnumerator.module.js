@@ -1,8 +1,9 @@
 /* global define, $ws */
 define('js!SBIS3.CONTROLS.Data.Collection.ArrayEnumerator', [
+   'js!SBIS3.CONTROLS.Data.Core',
    'js!SBIS3.CONTROLS.Data.Collection.IEnumerator',
    'js!SBIS3.CONTROLS.Data.Collection.IndexedEnumeratorMixin'
-], function (IEnumerator, IndexedEnumeratorMixin) {
+], function (Core, IEnumerator, IndexedEnumeratorMixin) {
    'use strict';
 
    /**
@@ -14,29 +15,31 @@ define('js!SBIS3.CONTROLS.Data.Collection.ArrayEnumerator', [
     * @author Мальцев Алексей
     */
 
-   return $ws.core.extend({}, [IEnumerator, IndexedEnumeratorMixin], /** @lends SBIS3.CONTROLS.Data.Collection.ArrayEnumerator.prototype */{
+   return Core.extend([IEnumerator, IndexedEnumeratorMixin], /** @lends SBIS3.CONTROLS.Data.Collection.ArrayEnumerator.prototype */{
       _moduleName: 'SBIS3.CONTROLS.Data.Collection.ArrayEnumerator',
-      $protected: {
-         _options: {
-            /**
-             * @cfg {Array} Массив
-             */
-            items: []
-         },
+      /**
+       * @member {Array} Массив
+       */
+      _items: null,
 
-         /**
-          * @var {Number} Текущий индекс
-          */
-         _index: -1
-      },
+      /**
+       * @member {Number} Текущий индекс
+       */
+      _index: -1,
 
-      $constructor: function () {
-         if (!this._options.items) {
-            throw new Error('List is not defined');
+      /**
+       * Конструктор
+       * @param {Array} items Массив
+       */
+      constructor: function (items) {
+         if (items === undefined) {
+            items = [];
          }
-         if (!(this._options.items instanceof Array)) {
-            throw new Error('List should be instance of an Array');
+         if (!(items instanceof Array)) {
+            throw new Error('Argument items should be an instance of Array');
          }
+         this._items = items;
+         IndexedEnumeratorMixin.constructor.call(this);
       },
 
       //region SBIS3.CONTROLS.Data.Collection.IEnumerator
@@ -45,11 +48,11 @@ define('js!SBIS3.CONTROLS.Data.Collection.ArrayEnumerator', [
          if (this._index < 0) {
             return undefined;
          }
-         return this._options.items[this._index];
+         return this._items[this._index];
       },
 
       getNext: function () {
-         if (1 + this._index >= this._options.items.length) {
+         if (1 + this._index >= this._items.length) {
             return undefined;
          }
          this._index++;

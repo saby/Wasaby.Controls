@@ -20,6 +20,10 @@ define('js!SBIS3.CONTROLS.Data.Adapter.SbisRecord', [
    var SbisRecord = Abstract.extend([IRecord, SbisFormatMixin], /** @lends SBIS3.CONTROLS.Data.Adapter.SbisRecord.prototype */{
       _moduleName: 'SBIS3.CONTROLS.Data.Adapter.SbisRecord',
 
+      /**
+       * Конструктор
+       * @param {*} data Сырые данные
+       */
       constructor: function (data) {
          SbisRecord.superclass.constructor.call(this, data);
          SbisFormatMixin.constructor.call(this, data);

@@ -847,7 +847,7 @@ define([
                      adapter: 'adapter.sbis'
                   }),
                   clone = rs.clone();
-               assert.strictEqual(clone.$items, clone._getServiceEnumerator()._options.items);
+               assert.strictEqual(clone.$items, clone._getServiceEnumerator()._items);
             });
          });
 

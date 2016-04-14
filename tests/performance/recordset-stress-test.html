@@ -17,39 +17,23 @@
       <script type="text/javascript" src="/sbis3-ws/ws/ext/requirejs/require.js"></script>
       <script type="text/javascript" src="/sbis3-ws/ws/ext/requirejs/config.js"></script>
       <script type="text/javascript" src="/sbis3-ws/ws/lib/core.js"></script>
+      <script type="text/javascript" src="/tests/performance/test.js"></script>
+      <link rel="stylesheet" type="text/css" href="/tests/performance/test.css"/>
    </head>
    <body onload="doTest()">
-      <h1>RecordSet stress test</h1>
       <script type="text/javascript">
          function doTest() {
             require([
                'js!SBIS3.CONTROLS.Data.Collection.RecordSet'
             ], function (RecordSet) {
-               console.time('total');
+               test.log('RecordSet stress test');
+               test.startCounter('total');
 
-               var createData = function() {
-                     var items = [],
-                        item,
-                        i,
-                        j;
-                     for (i = 0; i < recordsCount; i++) {
-                        item = {};
-                        for (j = 0; j < fieldsCount; j++) {
-                           item['field' + j] = i +':' + j;
-                        }
-                        items.push(item);
-                     }
-                     return items;
-                  },
-                  recordsCount = 100000,
-                  fieldsCount = 25,
-                  data;
+               test.startCounter('createData');
+               var data = test.createData();
+               test.finishCounter('createData');
 
-               console.time('createData');
-               data = createData();
-               console.timeEnd('createData');
-
-               console.time('traverseData');
+               test.startCounter('traverseData');
                var recordset = new RecordSet({
                      rawData: data
                   }),
@@ -64,12 +48,12 @@
                   enumerator = record.getEnumerator();
                   while ((name = enumerator.getNext())) {
                      value = record.get(name);
-                     //console.log([name, value]);
+                     //test.log([name, value]);
                   }
                }
-               console.timeEnd('traverseData');
+               test.finishCounter('traverseData');
 
-               console.timeEnd('total');
+               test.finishCounter('total');
             });
          }
       </script>

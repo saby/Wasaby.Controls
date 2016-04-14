@@ -16,36 +16,19 @@
       <script type="text/javascript" data-pack-name="contents" src="/components/contents.js"></script>
       <script type="text/javascript" src="/sbis3-ws/ws/ext/requirejs/require.js"></script>
       <script type="text/javascript" src="/sbis3-ws/ws/ext/requirejs/config.js"></script>
-      <script type="text/javascript" src="/sbis3-ws/ws/lib/core.js"></script>
+      <script type="text/javascript" src="/tests/performance/test.js"></script>
+      <link rel="stylesheet" type="text/css" href="/tests/performance/test.css"/>
    </head>
    <body>
-      <h1>Array stress test</h1>
       <script type="text/javascript">
-         console.time('total');
+         test.log('Array stress test');
+         test.startCounter('total');
 
-         var createData = function() {
-               var items = [],
-                  item,
-                  i,
-                  j;
-               for (i = 0; i < recordsCount; i++) {
-                  item = {};
-                  for (j = 0; j < fieldsCount; j++) {
-                     item['field' + j] = i +':' + j;
-                  }
-                  items.push(item);
-               }
-               return items;
-            },
-            recordsCount = 100000,
-            fieldsCount = 25,
-            data;
+         test.startCounter('createData');
+         var data = test.createData();
+         test.finishCounter('createData');
 
-         console.time('createData');
-         data = createData();
-         console.timeEnd('createData');
-
-         console.time('traverseData');
+         test.startCounter('traverseData');
          var recordset = [].concat(data),
             count = recordset.length,
             i,
@@ -61,9 +44,9 @@
                }
             }
          }
-         console.timeEnd('traverseData');
+         test.finishCounter('traverseData');
 
-         console.timeEnd('total');
+         test.finishCounter('total');
       </script>
    </body>
 </html>

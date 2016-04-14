@@ -17,6 +17,10 @@ define('js!SBIS3.CONTROLS.Data.Adapter.SbisTable', [
    var SbisTable = Abstract.extend([ITable, SbisFormatMixin], /** @lends SBIS3.CONTROLS.Data.Adapter.SbisTable.prototype */{
       _moduleName: 'SBIS3.CONTROLS.Data.Adapter.SbisTable',
 
+      /**
+       * Конструктор
+       * @param {*} data Сырые данные
+       */
       constructor: function (data) {
          SbisTable.superclass.constructor.call(this, data);
          SbisFormatMixin.constructor.call(this, data);

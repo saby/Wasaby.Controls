@@ -11,7 +11,7 @@ define('js!SBIS3.CONTROLS.Data.Entity.OptionsMixin', function () {
 
    var OptionsMixin = /** @lends SBIS3.CONTROLS.OptionsMixin.prototype */{
       /**
-       * Конструктор объекта, принимающий набор опций
+       * Конструктор объекта, принимающий набор опций в качестве первого аргумента
        * @param {Object.<String, *>} options Значения опций
        */
       constructor: function $Options(options) {

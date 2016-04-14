@@ -12,14 +12,13 @@ define('js!SBIS3.CONTROLS.Data.Collection.IndexedEnumeratorMixin', [
     */
 
    var IndexedEnumeratorMixin = /**@lends SBIS3.CONTROLS.Data.Collection.IndexedEnumeratorMixin.prototype  */{
-      $protected: {
-         /**
-          * @var {Object} Индексы, распределенные по полям
-          */
-         _enumeratorIndexes: {}
-      },
+      /**
+       * @vevber {Object} Индексы, распределенные по полям
+       */
+      _enumeratorIndexes: null,
 
-      $constructor: function () {
+      constructor: function () {
+         this._enumeratorIndexes = {};
          this._onCollectionChange = this._onCollectionChange.bind(this);
       },
 
@@ -92,7 +91,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.IndexedEnumeratorMixin', [
        * @param {String} property Название свойства элемента.
        * @param {*} value Значение свойства элемента.
        * @returns {Array}
-       * @private
+       * @protected
        */
       _getIndexForPropertyValue: function (property, value) {
          var index;
@@ -108,7 +107,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.IndexedEnumeratorMixin', [
        * Создает индекс для указанного свойства.
        * @param {String} property Название свойства.
        * @returns {Object}
-       * @private
+       * @protected
        */
       _createIndex: function (property) {
          var index = this._enumeratorIndexes[property] = {},
@@ -118,15 +117,6 @@ define('js!SBIS3.CONTROLS.Data.Collection.IndexedEnumeratorMixin', [
          this.reset();
          while ((item = this.getNext())) {
             value = Utils.getItemPropertyValue(item, property);
-
-            //FIXME: для проекций решить проблему, кода поиск осущетвляется как по CollectionItem, так и по его contents
-            if (value === undefined &&
-               item instanceof Object &&
-               $ws.helpers.instanceOfModule(item, 'SBIS3.CONTROLS.Data.Projection.CollectionItem')
-            ) {
-               value = Utils.getItemPropertyValue(item.getContents(), property);
-            }
-
             if (!Object.prototype.hasOwnProperty.call(index, value)) {
                index[value] = [];
             }
@@ -140,7 +130,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.IndexedEnumeratorMixin', [
       /**
        * Удаляет индекс для указанного свойства.
        * @param {String} property Название свойства.
-       * @private
+       * @protected
        */
       _deleteIndex: function (property) {
          delete this._enumeratorIndexes[property];
@@ -148,7 +138,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.IndexedEnumeratorMixin', [
 
       /**
        * Удаляет индексы при изменении исходной коллекции
-       * @private
+       * @protected
        */
       _onCollectionChange: function () {
          this.reIndex();

@@ -182,9 +182,7 @@ define('js!SBIS3.CONTROLS.Data.Model', [
        * @returns {SBIS3.CONTROLS.Data.Collection.ArrayEnumerator}
        */
       getEnumerator: function () {
-         return new ArrayEnumerator({
-            items: this._getAllProperties()
-         });
+         return new ArrayEnumerator(this._getAllProperties());
       },
 
       /**

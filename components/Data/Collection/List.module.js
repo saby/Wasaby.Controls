@@ -83,9 +83,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.List', [
        * @returns {SBIS3.CONTROLS.Data.Collection.ArrayEnumerator}
        */
       getEnumerator: function () {
-         return new ArrayEnumerator({
-            items: this.$items
-         });
+         return new ArrayEnumerator(this.$items);
       },
 
       /**
@@ -295,9 +293,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.List', [
        * @returns {SBIS3.CONTROLS.Data.Collection.ArrayEnumerator}
        */
       _getServiceEnumerator: function () {
-         return this._serviceEnumerator || (this._serviceEnumerator = new ArrayEnumerator({
-            items: this.$items
-         }));
+         return this._serviceEnumerator || (this._serviceEnumerator = new ArrayEnumerator(this.$items));
       },
 
       _clearServiceEnumerator: function () {

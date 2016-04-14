@@ -134,9 +134,7 @@ define('js!SBIS3.CONTROLS.Data.Record', [
        * @returns {SBIS3.CONTROLS.Data.Collection.ArrayEnumerator}
        */
       getEnumerator: function () {
-         return new ArrayEnumerator({
-            items: this._getRawDataFields()
-         });
+         return new ArrayEnumerator(this._getRawDataFields());
       },
 
       /**

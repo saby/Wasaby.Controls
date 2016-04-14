@@ -27,6 +27,10 @@ define('js!SBIS3.CONTROLS.Data.Adapter.JsonTable', [
        */
       _data: null,
 
+      /**
+       * Конструктор
+       * @param {*} data Сырые данные
+       */
       constructor: function (data) {
          if (!(data instanceof Array)) {
             data = [];

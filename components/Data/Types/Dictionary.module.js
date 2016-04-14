@@ -49,9 +49,7 @@ define('js!SBIS3.CONTROLS.Data.Types.Dictionary', [
       },
 
       getEnumerator: function () {
-         return new ArrayEnumerator({
-            items: this._options.dictionary
-         });
+         return new ArrayEnumerator(this._options.dictionary);
       },
 
       //endregion SBIS3.CONTROLS.Data.Collection.IEnumerable

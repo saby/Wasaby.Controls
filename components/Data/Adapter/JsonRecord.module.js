@@ -26,6 +26,10 @@ define('js!SBIS3.CONTROLS.Data.Adapter.JsonRecord', [
        */
       _data: null,
 
+      /**
+       * Конструктор
+       * @param {*} data Сырые данные
+       */
       constructor: function (data) {
          if (!(data instanceof Object)) {
             data = {};
