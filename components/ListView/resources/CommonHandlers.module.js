@@ -4,12 +4,10 @@
 define('js!SBIS3.CONTROLS.CommonHandlers',['i18n!SBIS3.CONTROLS.CommonHandlers'],
    function() {
       var CommonHandlers = {
-         deleteRecords: function(idArray) {
-            var
-               idArray = Array.isArray(idArray) ? idArray : [idArray],
-               message = idArray.length !== 1 ? rk("Удалить записи?") : rk("Удалить текущую запись?"),
-               self = this;
-
+         deleteRecords: function(idArray, message) {
+            var self = this;
+            idArray = Array.isArray(idArray) ? idArray : [idArray];
+            message = message || (idArray.length !== 1 ? rk("Удалить записи?") : rk("Удалить текущую запись?"));
             return $ws.helpers.question(message).addCallback(function(res) {
                if (res) {
                   return self._dataSource.destroy(idArray).addCallback(function () {
