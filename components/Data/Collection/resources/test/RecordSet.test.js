@@ -559,6 +559,14 @@ define([
                });
             });
 
+            it('should set the records owner to itself', function() {
+               var records = [new Model(), new Model(), new Model()];
+               rs.append(records);
+               for (var i = 0; i < records.length; i++) {
+                  assert.strictEqual(records[i].getOwner(), rs);
+               }
+            });
+
             it('should throw an error', function() {
                var data4 = {id: 4},
                   data5 = {id: 5};
@@ -621,6 +629,14 @@ define([
                });
             });
 
+            it('should set the records owner to itself', function() {
+               var records = [new Model(), new Model(), new Model()];
+               rs.prepend(records);
+               for (var i = 0; i < records.length; i++) {
+                  assert.strictEqual(records[i].getOwner(), rs);
+               }
+            });
+
             it('should throw an error', function() {
                var  data4 = {id: 4},
                   data5 = {id: 5};
@@ -680,6 +696,14 @@ define([
                assert.deepEqual(rs.at(0).getRawData(), data4);
                assert.deepEqual(rs.at(1).getRawData(), data5);
                assert.strictEqual(rs.getCount(), 2);
+            });
+
+            it('should set the records owner to itself', function() {
+               var records = [new Model(), new Model(), new Model()];
+               rs.assign(records);
+               for (var i = 0; i < records.length; i++) {
+                  assert.strictEqual(records[i].getOwner(), rs);
+               }
             });
 
             it('should get format from assigning recordset', function () {
@@ -809,6 +833,13 @@ define([
          });
 
          describe('.clear()', function() {
+            it('should reset records owner', function() {
+               var records = rs.toArray();
+               rs.clear();
+               for (var i = 0; i < records.length; i++) {
+                  assert.isNull(records[i].getOwner());
+               }
+            });
             it('should change raw data', function() {
                rs.clear();
                assert.deepEqual(rs.getRawData(), []);
@@ -839,6 +870,12 @@ define([
                cloneB.at(0).set('Фамилия', 'test');
                assert.notEqual(cloneB.getRawData(), rs.getRawData());
             });
+            it('should return records owned by itself', function () {
+               var clone = rs.clone();
+               clone.each(function(record) {
+                  assert.strictEqual(clone, record.getOwner());
+               });
+            });
             it('should equals recordsets items to service enumerators items ', function(){
                var data = getSbisItems(),
                   rs = new RecordSet({
@@ -851,6 +888,11 @@ define([
          });
 
          describe('.add()', function() {
+            it('should set the record owner to itself', function() {
+               var addItem = new Model();
+               rs.add(addItem);
+               assert.strictEqual(addItem.getOwner(), rs);
+            });
             it('should change raw data', function() {
                var rd = {
                      'Ид': 502,
@@ -875,12 +917,36 @@ define([
             });
          });
 
+         describe('.remove()', function() {
+            it('should remove the record', function() {
+               var record = rs.at(0);
+               rs.remove(record);
+               assert.strictEqual(rs.getIndex(record), -1);
+            });
+            it('should change raw data', function() {
+               var record = rs.at(0);
+               rs.remove(record);
+               assert.deepEqual(rs.getRawData(), items.slice(1));
+            });
+            it('should reset the record owner', function() {
+               var record = rs.at(0);
+               assert.strictEqual(record.getOwner(), rs);
+               rs.remove(record);
+               assert.isNull(record.getOwner());
+            });
+         });
+
          describe('.removeAt()', function() {
             it('should change raw data', function() {
                rs.removeAt(0);
                assert.deepEqual(rs.getRawData(), items.slice(1));
             });
-
+            it('should reset the record owner', function() {
+               var record = rs.at(0);
+               assert.strictEqual(record.getOwner(), rs);
+               rs.removeAt(0);
+               assert.isNull(record.getOwner());
+            });
          });
 
          describe('.replace()', function() {
@@ -894,7 +960,11 @@ define([
                items[0] = rd;
                assert.deepEqual(rs.getRawData(), items);
             });
-
+            it('should set the record owner to itself', function() {
+               var record = new Model();
+               rs.replace(record, 0);
+               assert.strictEqual(record.getOwner(), rs);
+            });
             it('should throw an error', function() {
                var rd = {
                      'Ид': 50,
@@ -1097,12 +1167,12 @@ define([
          });
 
          describe('.removeRecord()', function (){
-            it('should mark record as remove', function() {
+            it('should mark record as removed', function() {
                rs.removeRecord(1);
                assert.isTrue(rs.getRecordById(1).isDeleted());
             });
 
-            it('should mark records as remove', function() {
+            it('should mark records as removed', function() {
                rs.removeRecord([1,2]);
                assert.isTrue(rs.getRecordById(1).isDeleted());
                assert.isTrue(rs.getRecordById(2).isDeleted());
