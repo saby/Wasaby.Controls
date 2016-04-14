@@ -13,9 +13,31 @@ define('js!SBIS3.CONTROLS.Data.Format.HierarchyField', [
     */
 
    var HierarchyField = Field.extend(/** @lends SBIS3.CONTROLS.Data.Format.HierarchyField.prototype */{
-      _moduleName: 'SBIS3.CONTROLS.Data.Format.HierarchyField'
-
+      _moduleName: 'SBIS3.CONTROLS.Data.Format.HierarchyField',
+      $protected: {
+         _options: {
+            /**
+             * @cfg {String} Тип элементов
+             * @see getKind
+             */
+            kind: ''
+         }
+      },
       //region Public methods
+      $constructor: function(cfg) {
+         cfg = cfg ||{};
+         if (cfg.kind === 'identity') {
+            this._options.defaultValue = [null];
+         }
+      },
+      /**
+       * Возвращает тип элементов
+       * @returns {String}
+       * @see dictionary
+       */
+      getKind: function () {
+         return this._options.kind;
+      }
 
       //endregion Public methods
 
