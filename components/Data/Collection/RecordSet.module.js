@@ -107,6 +107,16 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
          }
       },
 
+      //region SBIS3.CONTROLS.Data.SerializableMixin
+
+      _setSerializableState: function(state) {
+         return RecordSet.superclass._setSerializableState(state).callNext(function() {
+            this.each(function(record) {
+               record.setOwner(this);
+            }, this);
+         });
+      },
+
       //region SBIS3.CONTROLS.Data.FormattableMixin
 
       setRawData: function(data) {
@@ -549,6 +559,9 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
 
       clear: function () {
          this._assignRawData(this._getRawDataAdapter().getEmpty(), true);
+         for (var i = 0, count = this._items.length; i < count; i++) {
+            this._items[i].setOwner(null);
+         }
          RecordSet.superclass.clear.call(this);
       },
 
@@ -556,20 +569,27 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
          this._checkItem(item, this.getCount() > 0);
          this._getRawDataAdapter().add(item.getRawData(), at);
          RecordSet.superclass.add.apply(this, arguments);
+         item.setOwner(this);
       },
 
       remove: function (item) {
          this._checkItem(item, false);
+         item.setOwner(null);
          return RecordSet.superclass.remove.apply(this, arguments);
       },
 
       removeAt: function (index) {
          this._getRawDataAdapter().remove(index);
+         var item = this._items[index];
+         if (item) {
+            item.setOwner(null);
+         }
          RecordSet.superclass.removeAt.apply(this, arguments);
       },
 
       replace: function (item, at) {
          this._checkItem(item);
+         item.setOwner(this);
          this._getRawDataAdapter().replace(item.getRawData(), at);
          RecordSet.superclass.replace.apply(this, arguments);
       },
@@ -585,16 +605,25 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
 
          items = this._addItemsToRawData(items, undefined, true);
          RecordSet.superclass.assign.call(this, items);
+         for (var i = 0, count = items.length; i < count; i++) {
+            items[i].setOwner(this);
+         }
       },
 
       append: function (items) {
          items = this._addItemsToRawData(items);
          RecordSet.superclass.append.call(this, items);
+         for (var i = 0, count = items.length; i < count; i++) {
+            items[i].setOwner(this);
+         }
       },
 
       prepend: function (items) {
          items = this._addItemsToRawData(items, 0);
          RecordSet.superclass.prepend.call(this, items);
+         for (var i = 0, count = items.length; i < count; i++) {
+            items[i].setOwner(this);
+         }
       },
 
       //endregion SBIS3.CONTROLS.Data.Collection.List
