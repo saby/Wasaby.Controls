@@ -387,7 +387,7 @@ define([
                   service.create(filter).addBoth(function (err) {
                      var s = SbisBusinessLogic.lastRequest.args.Фильтр.s;
                      assert.strictEqual(s.length, 3);
-                     for(var i=0; i< s.length; i++) {
+                     for(var i = 0; i < s.length; i++) {
                         if (s[i].n in filter) {
                            assert.strictEqual(s[i].s, 'Иерархия');
                         }
