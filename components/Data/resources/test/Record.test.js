@@ -571,66 +571,6 @@ define([
                same.set('title', 'B');
                assert.isFalse(record.isEqual(same));
             });
-         });
-
-         describe('.clone()', function () {
-            it('should not be same as original', function () {
-               assert.notEqual(record.clone(), record);
-            });
-            it('should not be same as previous clone', function () {
-               assert.notEqual(record.clone(), record.clone());
-            });
-            it('should clone rawData', function () {
-               var clone = record.clone();
-               assert.notEqual(record.getRawData(), clone.getRawData());
-               assert.deepEqual(record.getRawData(), clone.getRawData());
-            });
-            it('should clone changed fields', function () {
-               var cloneA = record.clone();
-               assert.isFalse(cloneA.isChanged('id'));
-               assert.strictEqual(record.isChanged('id'), cloneA.isChanged('id'));
-               assert.strictEqual(record.isChanged(), cloneA.isChanged());
-               assert.isFalse(cloneA.isChanged());
-
-               record.set('a', 1);
-               var cloneB = record.clone();
-               assert.strictEqual(record.isChanged('a'), cloneB.isChanged('a'));
-               assert.isTrue(cloneB.isChanged('a'));
-               assert.strictEqual(record.isChanged('id'), cloneB.isChanged('id'));
-               assert.isFalse(cloneB.isChanged('id'));
-               assert.strictEqual(record.isChanged(), cloneB.isChanged());
-               assert.isTrue(cloneB.isChanged());
-            });
-            it('should give equal fields', function () {
-               var clone = record.clone();
-               record.each(function(name, value) {
-                  assert.strictEqual(value, clone.get(name));
-               });
-               clone.each(function(name, value) {
-                  assert.strictEqual(value, record.get(name));
-               });
-            });
-            it('should make raw data unlinked from original', function () {
-               var cloneA = record.clone();
-               assert.equal(cloneA.get('max'), record.get('max'));
-               cloneA.set('max', 1);
-               assert.notEqual(cloneA.get('max'), record.get('max'));
-
-               var cloneB = record.clone();
-               assert.equal(cloneB.get('max'), record.get('max'));
-               record.set('max', 12);
-               assert.notEqual(cloneB.get('max'), record.get('max'));
-            });
-            it('should make data unlinked between several clones', function () {
-               var cloneA = record.clone();
-               var cloneB = record.clone();
-               assert.equal(cloneA.get('max'), cloneB.get('max'));
-               cloneA.set('max', 1);
-               assert.notEqual(cloneA.get('max'), cloneB.get('max'));
-            });
-         });
-
-         describe('.isEqual()', function () {
             it('should return true with shared raw data', function () {
                var anotherRecord = getRecord();
                assert.isTrue(record.isEqual(anotherRecord));
@@ -691,6 +631,84 @@ define([
             });
          });
 
+         describe('.clone()', function () {
+            it('should not be same as original', function () {
+               assert.notEqual(record.clone(), record);
+            });
+            it('should not be same as previous clone', function () {
+               assert.notEqual(record.clone(), record.clone());
+            });
+            it('should clone rawData', function () {
+               var clone = record.clone();
+               assert.notEqual(record.getRawData(), clone.getRawData());
+               assert.deepEqual(record.getRawData(), clone.getRawData());
+            });
+            it('should clone changed fields', function () {
+               var cloneA = record.clone();
+               assert.isFalse(cloneA.isChanged('id'));
+               assert.strictEqual(record.isChanged('id'), cloneA.isChanged('id'));
+               assert.strictEqual(record.isChanged(), cloneA.isChanged());
+               assert.isFalse(cloneA.isChanged());
+
+               record.set('a', 1);
+               var cloneB = record.clone();
+               assert.strictEqual(record.isChanged('a'), cloneB.isChanged('a'));
+               assert.isTrue(cloneB.isChanged('a'));
+               assert.strictEqual(record.isChanged('id'), cloneB.isChanged('id'));
+               assert.isFalse(cloneB.isChanged('id'));
+               assert.strictEqual(record.isChanged(), cloneB.isChanged());
+               assert.isTrue(cloneB.isChanged());
+            });
+            it('should give equal fields', function () {
+               var clone = record.clone();
+               record.each(function(name, value) {
+                  assert.strictEqual(value, clone.get(name));
+               });
+               clone.each(function(name, value) {
+                  assert.strictEqual(value, record.get(name));
+               });
+            });
+            it('should make raw data unlinked from original', function () {
+               var cloneA = record.clone();
+               assert.equal(cloneA.get('max'), record.get('max'));
+               cloneA.set('max', 1);
+               assert.notEqual(cloneA.get('max'), record.get('max'));
+
+               var cloneB = record.clone();
+               assert.equal(cloneB.get('max'), record.get('max'));
+               record.set('max', 12);
+               assert.notEqual(cloneB.get('max'), record.get('max'));
+            });
+            it('should make data unlinked between several clones', function () {
+               var cloneA = record.clone();
+               var cloneB = record.clone();
+               assert.equal(cloneA.get('max'), cloneB.get('max'));
+               cloneA.set('max', 1);
+               assert.notEqual(cloneA.get('max'), cloneB.get('max'));
+            });
+         });
+
+         describe('.getOwner()', function () {
+            it('should return null by default', function () {
+               assert.isNull(record.getOwner());
+            });
+            it('should owner passed to the constructor', function () {
+               var owner = {},
+                  record = new Record({
+                  owner: owner
+               });
+               assert.strictEqual(record.getOwner(), owner);
+            });
+         });
+
+         describe('.setOwner()', function () {
+            it('should set the new owner', function () {
+               var owner = {};
+               record.setOwner(owner);
+               assert.strictEqual(record.getOwner(), owner);
+            });
+         });
+
          describe('.toJSON()', function () {
             it('should serialize a Record', function () {
                var json = record.toJSON();
@@ -715,6 +733,7 @@ define([
                assert.deepEqual(json.state._options.rawData.d, [2]);
             });
          });
+
          describe('.fromJSON()', function () {
             it('should restore type signature in rawData', function () {
                var record = new Record({
