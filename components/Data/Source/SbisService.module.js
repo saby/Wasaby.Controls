@@ -18,11 +18,13 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
     * @ignoreMethods prepareQueryParams
     * @author Мальцев Алексей
     * @example
+    * Создаем источник данных для объекта БЛ:
     * <pre>
     *    var dataSource = new SbisService({
     *       endpoint: 'СообщениеОтКлиента',
     *    });
     * </pre>
+    * Создаем источник данных для объекта БЛ с указанием своих методов для чтения записи и списка записей, а также свой формат записи:
     * <pre>
     *    var dataSource = new SbisService({
     *       endpoint: 'СообщениеОтКлиента',
@@ -39,7 +41,7 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
    var SbisService = Rpc.extend(/** @lends SBIS3.CONTROLS.Data.Source.SbisService.prototype */{
       /**
        * @typedef {Object} Binding
-       * @property {String} [create=Создать Имя метода для создания записи через {@link create}
+       * @property {String} [create=Создать] Имя метода для создания записи через {@link create}
        * @property {String} [read=Прочитать] Имя метода для чтения записи через {@link read}
        * @property {String} [update=Записать] Имя метода для обновления записи через {@link update}
        * @property {String} [destroy=Удалить] Имя метода для удаления записи через {@link destroy}
@@ -49,19 +51,28 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
        * @property {String} [format] Имя метода для получения формата записи через {@link create}, {@link read} и {@link copy}. Метод должен быть декларативным.
        */
 
+      /**
+       * @typedef {Object} MetaConfig
+       * @property {String} [hasMore=hasMore] Свойство мета-данных, отвечающий за поле 'ЕстьЕще' параметра 'Навигация' списочного метода
+       */
+
       _moduleName: 'SBIS3.CONTROLS.Data.Source.SbisService',
       $protected: {
          _options: {
             /**
              * @cfg {Endpoint|String} Конечная точка, обеспечивающая доступ клиента к функциональным возможностям источника данных
+             * @remark
+             * Можно успользовать сокращенную запись, передав значение в виде строки - в этом случае оно будет
+             * интерпретироваться как контракт (endpoint.contract)
              * @see getEndPoint
              * @example
+             * Подключаем объект БЛ 'Сотрудник', используя сокращенную запись:
              * <pre>
              *    var dataSource = new SbisService({
              *       endpoint: 'Сотрудник'
              *    });
              * </pre>
-             * @example
+             * Подключаем объект БЛ 'Сотрудник', используя отдельную точку входа:
              * <pre>
              *    var dataSource = new SbisService({
              *       endpoint: {
@@ -84,14 +95,14 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
              * @see copy
              * @see merge
              * @example
+             * Переопределяем значения по умолчанию для методов create, read и update
              * <pre>
              *    var dataSource = new SbisService({
              *       endpoint: 'Сотрудник',
              *       binding: {
              *          create: 'МойМетодСоздать',
              *          read: 'МойМетодПрочитать',
-             *          update: 'МойМетодЗаписать',
-             *          destroy: 'МойМетодУдалить'
+             *          update: 'МойМетодЗаписать'
              *       }
              *    });
              * </pre>
@@ -122,13 +133,14 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
              * @see getProvider
              * @see SBIS3.CONTROLS.Data.Di
              * @example
+             * Провайдер нотификатора, внедренный через модуль DI:
              * <pre>
              *    var dataSource = new SbisService({
              *       endpoint: 'Сотрудник',
              *       provider: 'source.provider.sbis-plugin'
              *    });
              * </pre>
-             * @example
+             * Провайдер нотификатора, внедренный в виде готового экземпляра:
              * <pre>
              *    var dataSource = new SbisService({
              *       endpoint: 'Сотрудник',
@@ -136,7 +148,14 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
              *    });
              * </pre>
              */
-            provider: 'source.provider.sbis-business-logic'
+            provider: 'source.provider.sbis-business-logic',
+
+            /**
+             * @cfg {MetaConfig} Объект, хранящий названия свойств мета-данных, в которых хранится служебная информация, необходимая для формирования некоторых аргументов методов БЛ
+             */
+            metaConfig: {
+               hasMore: 'hasMore'
+            }
          },
 
          /**
@@ -188,6 +207,7 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
        * @returns {$ws.proto.Deferred} Асинхронный результат выполнения. В колбэке придет {@link SBIS3.CONTROLS.Data.Model}.
        * @see SBIS3.CONTROLS.Data.Source.ISource#create
        * @example
+       * Получаем новую запись объекта 'Сотрудник':
        * <pre>
        *     var dataSource = new SbisService({
        *        endpoint: 'Сотрудник'
@@ -196,7 +216,7 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
        *         var name = model.get('Имя');
        *     });
        * </pre>
-       * @example
+       * Получаем новую запись объекта 'Сотрудник' с указанием формата:
        * <pre>
        *     var dataSource = new SbisService({
        *        endpoint: 'Сотрудник',
@@ -487,15 +507,23 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
             return null;
          }
          var offset = query.getOffset(),
-            limit = query.getLimit();
+            limit = query.getLimit(),
+            meta = query.getMeta(),
+            moreProp = this._options.metaConfig.hasMore,
+            hasMoreProp = meta.hasOwnProperty(moreProp),
+            more = hasMoreProp ? meta[moreProp] : offset >= 0;
 
+         if (hasMoreProp) {
+            delete meta[moreProp];
+            query.meta(meta);
+         }
          if (offset === 0 && limit === undefined) {
             return null;
          }
          return {
             'Страница': limit > 0 ? Math.floor(offset / limit) : 0,
             'РазмерСтраницы': limit,
-            'ЕстьЕще': offset >= 0
+            'ЕстьЕще': more
          };
       },
 

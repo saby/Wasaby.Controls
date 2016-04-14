@@ -314,7 +314,21 @@ define('js!SBIS3.CONTROLS.Data.Source.Memory', [
             tableAdapter = adapter.forTable(
                adapter.forTable(data).getEmpty()
             ),
+            skipFields = {
+               'Разворот': true,
+               'ВидДерева': true,
+               usePages: true
+            },
             compare = function(given, expect) {
+               if (expect instanceof Array) {
+                  for (var i = 0; i < expect.length; i++) {
+                     if (compare(given, expect[i])) {
+                        return true;
+                     }
+                  }
+                  return false;
+               }
+
                if (given && given instanceof Array) {
                   //FIXME: если в поле хранится массив, то ищем совпадение по любому из элементов (требуется для поддержки типа "Иерархия"). Возможно поможет разделение иерархии на 2 поля.
                   return $ws.helpers.reduce(given, function(prev, current) {
@@ -332,7 +346,7 @@ define('js!SBIS3.CONTROLS.Data.Source.Memory', [
                   continue;
                }
                //FIXME: избавиться от этого sbis-specified
-               if (filterField === 'Разворот' || filterField === 'ВидДерева') {
+               if (skipFields.hasOwnProperty(filterField)) {
                   continue;
                }
                filterMatch = compare(

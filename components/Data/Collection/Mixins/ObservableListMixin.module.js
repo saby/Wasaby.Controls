@@ -291,7 +291,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.ObservableListMixin', [
       _needWatchForChanges: function(item) {
          if (
             item &&
-            $ws.helpers.instanceOfMixin(item, 'SBIS3.CONTROLS.Data.IPropertyAccess')
+            $ws.helpers.instanceOfMixin(item, 'SBIS3.CONTROLS.Data.IObject')
          ) {
             return true;
          }

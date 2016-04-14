@@ -24,15 +24,15 @@ define('js!SBIS3.CONTROLS.ListView',
       'js!SBIS3.CONTROLS.EditInPlaceClickController',
       'js!SBIS3.CONTROLS.Link',
       'js!SBIS3.CONTROLS.ScrollWatcher',
-      'i18n!SBIS3.CONTROLS.ListView',
       'browser!html!SBIS3.CONTROLS.ListView/resources/ListViewGroupBy',
       'browser!html!SBIS3.CONTROLS.ListView/resources/emptyData',
-      'browser!js!SBIS3.CONTROLS.ListView/resources/SwipeHandlers'
+      'browser!js!SBIS3.CONTROLS.ListView/resources/SwipeHandlers',
+      'i18n!SBIS3.CONTROLS.ListView'
    ],
    function (CompoundControl, CompoundActiveFixMixin, DSMixin, MultiSelectable,
              Selectable, DataBindMixin, DecorableMixin, DragNDropMixin, FormWidgetMixin, ItemsToolbar, MarkupTransformer, dotTplFn,
              TemplateUtil, CommonHandlers, MoveHandlers, Pager, EditInPlaceHoverController, EditInPlaceClickController,
-             Link, ScrollWatcher, rk,  groupByTpl, emptyDataTpl) {
+             Link, ScrollWatcher,  groupByTpl, emptyDataTpl) {
 
       'use strict';
 
@@ -243,22 +243,49 @@ define('js!SBIS3.CONTROLS.ListView',
                 * @bind SBIS3.CONTROLS.ListView#multiselect
                 */
                /**
-                * @cfg {String} Шаблон отображения каждого элемента коллекции.
+                * @cfg {String} Устанавливает шаблон отображения каждого элемента коллекции.
                 * @remark
-                * !Важно: опция обязательна к заполнению!
-                * Шаблон может быть создан в отдельном XHTML-файле, когда вёрстка шаблона большая или требуется использовать его в разных компонентах.
-                * Чтобы использовать такой шаблон, он должен быть сначала подключен в массив зависимостей компонента, и после на него можно сослаться из опции.
+                * Шаблон - это пользовательская вёрстка элемента коллекции.
+                * Для доступа к полям элемента коллекции в шаблоне подразумевается использование конструкций шаблонизатора.
+                * Подробнее о шаблонизаторе вы можете прочитать в разделе {@link https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/core/component/xhtml/template/ Шаблонизация вёрстки компонента}.
                 *
-                * Для доступа к полям записи в шаблоне подразумевается использование конструкций шаблонизатора.
-                * Подробнее о шаблонизаторе вы можете прочитать в разделе {@link https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/core/component/xhtml/template/ Шаблонизация верстки компонента}.
+                * Шаблон может быть создан в отдельном XHTML-файле, когда вёрстка большая или требуется использовать его в разных компонентах.
+                * Шаблон создают в директории компонента в подпапке resources согласно правилам, описанным в разделе {@link https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/core/component/file-structure/ Файловая структура компонента}.
+                * Чтобы такой шаблон можно было использовать, нужно:
+                * <ol>
+                *    <li>Подключить шаблон в массив зависимостей компонента и импортировать его в переменную:
+                *       <pre>
+                *          define('js!SBIS3.MyArea.MyComponent',
+                *             [
+                *                ...
+                *                'html!SBIS3.MyArea.MyComponent/resources/item_template'
+                *             ],
+                *             function(..., myItemTpl) {
+                *             ...
+                *          });
+                *       </pre>
+                *    </li>
+                *    <li>Установить шаблон с помощью метода {@link setItemTemplate}:
+                *       <pre>
+                *          view = this.getChildControlByName('view');
+                *          view.setItemTemplate(myItemTpl);
+                *       </pre>
+                *    </li>
+                * </ol>
+                * Пример содержимого шаблона элемента коллекции вы можете найти в разделе "Примеры".
+                *
+                *
+                * Когда установлен пользовательский шаблон отображения элемента коллекции, то в иерархическом представлении данных иконки для раскрытия содержимого папки будут скрыты.
+                * Также будет отсутствовать отступ дочерних элементов относительно раскрытой папки, это отображение нужно реализовать в шаблоне самостоятельно.
                 * @example
-                * Далее приведён шаблон, который выводит в пользовательском HTML-контейнере значение поля title.
+                * Далее приведён шаблон, который отображает значение поля title:
                 * <pre>
                 *     <div class="listViewItem" style="height: 30px;">
                 *        {{=it.item.get("title")}}
                 *     </div>
                 * </pre>
                 * @see multiselect
+                * @see setItemTemplate
                 */
                itemTemplate: '',
                /**
@@ -403,6 +430,7 @@ define('js!SBIS3.CONTROLS.ListView',
                 * <pre>
                 *    <option name="editMode">click|toolbar</option>
                 * </pre>
+                * Подробное описание каждого режима редактирования и их демонстрационные примеры вы можете найти в разделе документации {@link https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/list-settings/records-editing/edit-in-place/ Редактирование по месту}.
                 * @example
                 * Установлен режим редактирования по клику на элемент коллекции.
                 * <pre>
@@ -410,6 +438,7 @@ define('js!SBIS3.CONTROLS.ListView',
                 * </pre>
                 * @see getEditMode
                 * @see setEditMode
+                * @see editingTemplate
                 */
                editMode: '',
                /**
@@ -428,6 +457,7 @@ define('js!SBIS3.CONTROLS.ListView',
                 *       </component>
                 *     </opt>
                 * </pre>
+                * @see editMode
                 */
                editingTemplate: undefined,
                /**
@@ -444,7 +474,7 @@ define('js!SBIS3.CONTROLS.ListView',
                /**
                 * @cfg {String} Заголовок строки итогов
                 */
-               resultsText : 'Итого',
+               resultsText : rk('Итого'),
                resultsTpl: undefined
             },
             //Флаг обозначает необходимость компенсировать подгрузку по скроллу вверх, ее нельзя делать безусловно, так как при подгрузке вверх могут добавлятся элементы и вниз тоже
@@ -563,7 +593,9 @@ define('js!SBIS3.CONTROLS.ListView',
                   break;
                case $ws._const.key.space:
                   newSelectedItem = this._getNextItemByDOM(selectedKey);
-                  this.toggleItemsSelection([selectedKey]);
+                  if (!this._container.hasClass('controls-ListView__hideCheckBoxes')) {
+                     this.toggleItemsSelection([selectedKey]);
+                  }
                   break;
                case $ws._const.key.o:
                   if (e.ctrlKey && e.altKey && e.shiftKey) {
@@ -805,13 +837,14 @@ define('js!SBIS3.CONTROLS.ListView',
             return this._options.itemTemplate;
          },
          /**
-          * Устанавливает шаблон отображения элемента
-          * @param  {String} tpl Шаблон отображения каждого элемента коллекции
+          * Устанавливает шаблон отображения элемента коллекции.
+          * @param {String|Function} tpl Шаблон отображения каждого элемента коллекции.
+          * Подробнее о подключении в компонент шаблона вы можете прочитать в опции {@link itemTemplate}.
           * @example
           * <pre>
-          *     DataGridView.setEmptyHTML('html!MyTemplate');
+          *     DataGridView.setItemTemplate(myItemTpl);
           * </pre>
-          * @see emptyHTML
+          * @see itemTemplate
           */
          setItemTemplate: function(tpl) {
             this._options.itemTemplate = tpl;
@@ -1168,6 +1201,7 @@ define('js!SBIS3.CONTROLS.ListView',
                } else {
                   this._hideItemsToolbar(true);
                }
+               e.stopPropagation();
             }
          },
 
@@ -1764,18 +1798,33 @@ define('js!SBIS3.CONTROLS.ListView',
                item = this._dataSet.getRecordByKey(id);
             this._notify('onItemActivate', {id: id, item: item});
          },
-         /**
+    /**
           * @typedef {Object} BeginEditOptions В этом типе данных сейчас определена всего одна опция. В дальнейшем набор опций может быть расширен.
-          * @property {jQuery} initiator Элемент, по которому определяется позиция добавления нового элемента коллекции в иерархическом представлении данных.
+          * @property {jQuery} initiator Инициатор вызова команды. Это элемент, по которому определяется позиция добавления нового элемента коллекции в иерархическом представлении данных.
           * Как правило, таким элементом является кнопка, инициирующая добавление нового элемента. Такую кнопку помещают в футер (см. опцию SBIS3.CONTROLS.DSMixin#footerTpl) узла иерархии.
+          * Подробный пример использования инициатора рассмотрен в разделе {@link http://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/list-settings/records-editing/edit-in-place/users/add-in-place-hierarchy/ Добавление по месту в иерархическом списке}.
           */
          /**
           * Добавляет новый элемента коллекции.
           * @remark
           * Команда применяется для создания нового элемента коллекции без использования диалога редактирования.
-          * Схожим функционалом обладает автоматическое добавление по месту представлений данных (см. {@link editMode}).
-          * @param {BeginEditOptions} [options] Инициатор создания нового элемента коллекции в иерархическом представлении данных.
-          * @param {SBIS3.CONTROLS.Data.Model} [model] Модель элемента коллекции, значения полей которой будут использованы при создании нового элемента.
+          * Схожим функционалом обладает автоматическое добавление по месту представлений данных (см. опцию {@link editMode}).
+          * @param {BeginEditOptions} [options] Инициатор создания нового элемента коллекции. Параметр используется только в иерархических списках: {@link SBIS3.CONTROLS.TreeDataGridView}, {@link SBIS3.CONTROLS.TreeCompositeView} и любых других наследниках класса {@link SBIS3.CONTROLS.HierarchyDataGridView}.
+          * По положению инициатора определяется узел иерархии, в которой будет добавлен элемент коллекции.
+          * Подробный пример использования инициатора рассмотрен в разделе {@link http://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/list-settings/records-editing/edit-in-place/users/add-in-place-hierarchy/ Добавление по месту в иерархическом списке}.
+          * @param {SBIS3.CONTROLS.Data.Model|Object} [model] Модель элемента коллекции, значения полей которой будут использованы при создании нового элемента.
+          * В упрощенном варианте можно передать объект, свойствами которого будут поля создаваемого элемента коллекции. Например, установим создание нового элемента с предопределенным значением поля 'Наименование':
+          * <pre>
+          * {
+          *    'Наименование': 'Компания "Тензор"'
+          * }
+          * </pre>
+          * @example
+          * Частный случай вызова команды для создания нового узла иерархии внутри другого узла:
+          * <pre>
+          * this.sendCommand('beginAdd', {initiator: this.getContainer()}, {'Раздел@': true});
+          * </pre>
+          * Полный пример использования команды для создания новых элементов коллекции в иерархическом списке вы можете найти {@link http://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/list-settings/records-editing/edit-in-place/users/add-in-place-hierarchy/ здесь}.
           * @returns {*|$ws.proto.Deferred} В случае ошибки, вернёт Deferred с текстом ошибки.
           * @private
           * @command beginAdd
@@ -1936,10 +1985,14 @@ define('js!SBIS3.CONTROLS.ListView',
                   target: target,
                   insertAfter: undefined
                });
-               //Предотвращаем нативное выделение текста на странице
-               if (!$ws._const.compatibility.touch) {
-                  e.preventDefault();
-               }
+               //TODO: Сейчас появилась проблема, что если к компьютеру подключен touch-телевизор он не вызывает
+               //preventDefault и при таскании элементов мышкой происходит выделение текста.
+               //Раньше тут была проверка !$ws._const.compatibility.touch и preventDefault не вызывался для touch устройств
+               //данная проверка была добавлена, потому что когда в строке были отрендерены кнопки, при нажатии на них
+               //и выполнении preventDefault впоследствии не вызывался click. Написал демку https://jsfiddle.net/9uwphct4/
+               //с воспроизведением сценария, на iPad и Android click отрабатывает. Возможно причина была ещё в какой-то
+               //ошибке. При возникновении ошибок на мобильных устройствах нужно будет добавить проверку !$ws._const.browser.isMobilePlatform.
+               e.preventDefault();
             }
          },
          _callMoveOutHandler: function() {

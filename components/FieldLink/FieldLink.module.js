@@ -13,7 +13,8 @@ define('js!SBIS3.CONTROLS.FieldLink',
        'js!SBIS3.CONTROLS.Utils.DialogOpener',
        'js!SBIS3.CONTROLS.ITextValue',
        'js!SBIS3.CONTROLS.Utils.TemplateUtil',
-       'js!SBIS3.CONTROLS.MenuIcon'
+       'js!SBIS3.CONTROLS.MenuIcon',
+       'i18n!SBIS3.CONTROLS.FieldLink'
 
     ],
     function (
@@ -61,8 +62,17 @@ define('js!SBIS3.CONTROLS.FieldLink',
         * @mixes SBIS3.CONTROLS.FormWidgetMixin
         * @mixes SBIS3.CONTROLS.SyncSelectionMixin
         * @mixes SBIS3.CONTROLS.DSMixin
-        * @demo SBIS3.CONTROLS.Demo.FieldLinkWithEditInPlace Поле связи с редактированием по месту. Данные для источника передаются в JSON-RPC формате
-        * @demo SBIS3.CONTROLS.Demo.FieldLinkDemo Разные варианты конфигураций для поля связи
+        *
+        * @demo SBIS3.CONTROLS.Demo.FieldLinkDemo Пример 1. Поле связи в режиме множественного выбора значений. Выбор можно производить как через диалог выбора, так и через автодополнение.
+        * @demo SBIS3.CONTROLS.Demo.FieldLinkSingleSelect Пример 2. Поле связи в режиме единичного выбора значений. Выбор можно производить как через диалог выбора, так и через автодополнение.
+        * @demo SBIS3.CONTROLS.Demo.FieldLinkSingleSelectContext Пример 3. Поле связи в режиме единичного выбора значения. В этом примере выбор можно производить тремя способами: через диалог выбора, через автодополнение и через два поля ввода.
+        * Поля ввода привязаны к поля контекста, по которым устанавливается ключ и отображаемый текст выбранного значения поля связи. Для наглядности, вы можете изменить поле "Название" и "Ключ", чтобы увидеть результат.
+        * @demo SBIS3.CONTROLS.Demo.SelectorButtonIcon Пример 4. Поле связи в виде иконки, поле ввода отсутствует. Вызов диалога выбора производится кликом по кнопке с иконкой. Все выбранные значения будут отображаться справа от кнопки.
+        * В режиме множественного выбора удаление выбранных значений производится массово кликом по серому крестику.
+        * @demo SBIS3.CONTROLS.Demo.SelectorButtonLink Пример 5. Поле связи в виде кнопки-ссылки, поле ввода отсутствует. Вызов диалога выбора производится кликом по ссылке. Все выбранные значения будут отображаться в качестве текста кнопки.
+        * В режиме множественного выбора удаление выбранных значений производится массово кликом по серому крестику. Для корректного отображения кнопки-ссылки используется CSS-модификатор "controls-SelectorButton__asLink".
+        * @demo SBIS3.CONTROLS.Demo.FieldLinkWithEditInPlace Пример 6. Поле связи с редактированием по месту. Комплексный пример, демонстрирующий возможности работы с данными источника в виде JSON-RPC формата.
+        *
         * @cssModifier controls-FieldLink__itemsEdited В поле связи при наведении курсора на выбранные значения применяется подчеркивание текста.
         * @cssModifier controls-FieldLink__itemsBold В поле связи для текста выбранных значений применяется полужирное начертание.
         * @control
@@ -398,7 +408,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
 
               if(selectedItems) {
                  selectedItems.each(function(rec) {
-                    displayFields.push($ws.helpers.escapeHtml(rec.get(self._options.displayField)));
+                    displayFields.push($ws.helpers.htmlToText(rec.get(self._options.displayField)));
                  });
               }
 
@@ -515,6 +525,23 @@ define('js!SBIS3.CONTROLS.FieldLink',
              }
 
              this._loadAndDrawItems(keysArrLen, this._options.pageSize);
+          },
+
+          _prepareItems: function() {
+             var items = FieldLink.superclass._prepareItems.apply(this, arguments),
+                 self = this;
+
+             if(items) {
+                /* Элементы, установленные из дилогов выбора / автодополнения могут иметь другой первичный ключ,
+                   отличный от поля с ключём, установленного в поле связи. Это связно с тем, что "связь" устанавливается по опеределённому полю,
+                   и не обязательному по первичному ключу у записей в списке. */
+                items.each(function(rec) {
+                   if(rec.getIdProperty() !== self._options.keyField && rec.get(self._options.keyField)) {
+                      rec.setIdProperty(self._options.keyField);
+                   }
+                })
+             }
+             return items;
           },
 
           setListFilter: function() {
@@ -641,7 +668,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
            * Конфигурация пикера
            */
           _setPickerConfig: function () {
-             return {
+             var cfg = {
                 corner: 'bl',
                 target: this._container,
                 opener: this,
@@ -656,6 +683,12 @@ define('js!SBIS3.CONTROLS.FieldLink',
                    side: 'left'
                 }
              };
+             // Придрот для айпада. Выезжающая клавиатура может скрывать выпадашку, так как та влезает под нее. Поэтому на айпаде всегда открываем автодополнение вверх
+             if ($ws._const.browser.isMobileIOS){
+                cfg.corner = 'tl';
+                cfg.verticalAlign.side = 'bottom';
+             }
+             return cfg;
           },
           /**
            * Обрабатывает нажатие клавиш, специфичных для поля связи

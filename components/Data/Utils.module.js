@@ -27,7 +27,7 @@ define('js!SBIS3.CONTROLS.Data.Utils', [], function () {
             return item[property];
          }
 
-         if ($ws.helpers.instanceOfMixin(item, 'SBIS3.CONTROLS.Data.IPropertyAccess') && item.has(property)) {
+         if ($ws.helpers.instanceOfMixin(item, 'SBIS3.CONTROLS.Data.IObject') && item.has(property)) {
             return item.get(property);
          }
 
@@ -57,7 +57,7 @@ define('js!SBIS3.CONTROLS.Data.Utils', [], function () {
             item[property] = value;
          }
 
-         if ($ws.helpers.instanceOfMixin(item, 'SBIS3.CONTROLS.Data.IPropertyAccess') && item.has(property)) {
+         if ($ws.helpers.instanceOfMixin(item, 'SBIS3.CONTROLS.Data.IObject') && item.has(property)) {
             return item.set(property, value);
          }
 

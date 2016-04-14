@@ -322,7 +322,7 @@ define('js!SBIS3.CONTROLS.ComponentBinder', [], function () {
 
          function createBreadCrumb(data){
             var point = {};
-            point[breadCrumbs._options.displayField] = $ws.helpers.escapeHtml(data.title);
+            point[breadCrumbs._options.displayField] = data.title;
             point[breadCrumbs._options.keyField] = data.id;
             point[breadCrumbs._options.colorField] = data.color;
             point.data = data.data;
@@ -381,7 +381,7 @@ define('js!SBIS3.CONTROLS.ComponentBinder', [], function () {
                }
 
                breadCrumbs.setItems(self._path);
-               backButton.setCaption(self._currentRoot ? $ws.helpers.escapeHtml(self._currentRoot.title) : '');
+               backButton.setCaption(self._currentRoot ? self._currentRoot.title : '');
             }
          });
 
@@ -447,29 +447,33 @@ define('js!SBIS3.CONTROLS.ComponentBinder', [], function () {
        */
       bindFilterHistory: function(filterButton, fastDataFilter, searchParam, historyId, controller, browser) {
          var view = browser.getView(),
-             historyController = new controller({
-                historyId: historyId,
-                filterButton: filterButton,
-                fastDataFilter: fastDataFilter,
-                view: view
-             }),
-             filter = historyController.getActiveFilter(), viewFilter;
+             noSaveFilters = ['Разворот', 'ВидДерева'],
+             historyController, filter;
+
+         if(searchParam) {
+            noSaveFilters.push(searchParam);
+         }
+
+         if($ws.helpers.instanceOfMixin(view, 'SBIS3.CONTROLS.hierarchyMixin')) {
+            noSaveFilters.push(view.getHierField());
+         }
+
+         historyController = new controller({
+            historyId: historyId,
+            filterButton: filterButton,
+            fastDataFilter: fastDataFilter,
+            view: view,
+            noSaveFilters: noSaveFilters
+         });
+
+         filter = historyController.getActiveFilter();
 
          filterButton.setHistoryController(historyController);
          setTimeout($ws.helpers.forAliveOnly(function() {
             if(filter) {
-               viewFilter = filter.viewFilter;
-
-               //TODO убрать работу с фильтром, всё делать через filterStructure
-               //Задача в разработку от 03.02.2016 №1172574951
-               //Убрать работу с фильтром в HistoryController'e, всё делать через filterStructure
-               //https://inside.tensor.ru/opendoc.html?guid=5f16d461-f56e-477d-a1ea-ae55751755ad
-               if(searchParam && viewFilter[searchParam]) {
-                  delete viewFilter[searchParam];
-               }
                /* Надо вмерживать структуру, полученную из истории, т.к. мы не сохраняем в историю шаблоны строки фильтров */
                filterButton._updateFilterStructure(historyController._prepareStructureElemForApply(filter.filter));
-               view.setFilter($ws.core.merge(view.getFilter(), viewFilter), true);
+               view.setFilter($ws.core.merge(view.getFilter(), historyController.prepareViewFilter(filter.viewFilter)), true);
             }
             browser._notifyOnFiltersReady();
          }, view), 0);

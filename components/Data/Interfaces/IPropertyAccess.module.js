@@ -1,57 +1,18 @@
 /* global define */
-define('js!SBIS3.CONTROLS.Data.IPropertyAccess', [], function () {
+define('js!SBIS3.CONTROLS.Data.IPropertyAccess', [
+   'js!SBIS3.CONTROLS.Data.IObject'
+], function (IObject) {
    'use strict';
 
    /**
     * Интерфейс доступа к свойствам объекта
     * @mixin SBIS3.CONTROLS.Data.IPropertyAccess
     * @public
+    * @deprecated интерфейс будет удален в 3.7.4, используйте SBIS3.CONTROLS.Data.IObject
     * @author Мальцев Алексей
     */
 
-   return /** @lends SBIS3.CONTROLS.Data.IPropertyAccess.prototype */{
-      /**
-       * @event onPropertyChange После изменения свойства
-       * @param {$ws.proto.EventObject} event Дескриптор события.
-       * @param {String} property Измененное свойство
-       * @param {*} value Значение свойства
-       * @example
-       * <pre>
-       *    user.subscribe('onPropertyChange', function(event, property){
-       *       if (property === 'gender'){
-       *          $ws.single.ioc.resolve('iFSB').alert('Transgender detected! :)', event.getTarget());
-       *       }
-       *    });
-       * </pre>
-       */
+   $ws.single.ioc.resolve('ILogger').info('SBIS3.CONTROLS.Data.IPropertyAccess', 'Interface is deprecated and will be removed in 3.7.4. Use SBIS3.CONTROLS.Data.IObject instead.');
 
-      /**
-       * Возвращает значение свойства.
-       * Если свойство не существует, возвращает undefined.
-       * @param {String} name Название свойства
-       * @returns {*}
-       */
-      get: function (name) {
-         throw new Error('Method must be implemented');
-      },
-
-      /**
-       * Устанавливает значение свойства.
-       * Если свойство только для чтения, генерирует исключение.
-       * @param {String} name Название свойства
-       * @param {*} value Значение свойства
-       */
-      set: function (name, value) {
-         throw new Error('Method must be implemented');
-      },
-
-      /**
-       * Проверяет наличие свойства у объекта.
-       * @param {String} name Название свойства
-       * @returns {Boolean}
-       */
-      has: function (name) {
-         throw new Error('Method must be implemented');
-      }
-   };
+   return IObject;
 });

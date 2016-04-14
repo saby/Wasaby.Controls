@@ -173,6 +173,23 @@ define([
             });
          });
 
+         describe('.getEnumerator()', function() {
+            it('should return records', function() {
+               var enumerator = rs.getEnumerator(),
+                  record;
+               while((record = enumerator.getNext())) {
+                  assert.isTrue($ws.helpers.instanceOfModule(record, 'SBIS3.CONTROLS.Data.Record'));
+               }
+            });
+            it('should return records owned by itself', function() {
+               var enumerator = rs.getEnumerator(),
+                  record;
+               while((record = enumerator.getNext())) {
+                  assert.strictEqual(record.getOwner(), rs);
+               }
+            });
+         });
+
          describe('.isEqual()', function () {
             it('should accept an invalid argument', function () {
                var rs = new RecordSet();
@@ -1254,28 +1271,28 @@ define([
                assert.deepEqual(rs.getChildItems(1, false, 'Раздел'), [2, 3]);
             });
          });
-      });
 
-      describe('.hasChild()', function (){
-         it('should check child', function() {
-            var rs =  new RecordSet({
-               rawData: [{
-                  'Ид': 1,
-                  'Раздел': null
-               }, {
-                  'Ид': 2,
-                  'Раздел': 1
-               }, {
-                  'Ид': 3,
-                  'Раздел': 1
-               }, {
-                  'Ид': 4,
-                  'Раздел': 2
-               }],
-               idProperty: 'Ид'
+         describe('.hasChild()', function (){
+            it('should check child', function() {
+               var rs =  new RecordSet({
+                  rawData: [{
+                     'Ид': 1,
+                     'Раздел': null
+                  }, {
+                     'Ид': 2,
+                     'Раздел': 1
+                  }, {
+                     'Ид': 3,
+                     'Раздел': 1
+                  }, {
+                     'Ид': 4,
+                     'Раздел': 2
+                  }],
+                  idProperty: 'Ид'
+               });
+               assert.isTrue(rs.hasChild(1,'Раздел'));
+               assert.isFalse(rs.hasChild(4,'Раздел'));
             });
-            assert.isTrue(rs.hasChild(1,'Раздел'));
-            assert.isFalse(rs.hasChild(4,'Раздел'));
          });
       });
    }

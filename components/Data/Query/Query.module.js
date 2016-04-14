@@ -122,6 +122,7 @@ define('js!SBIS3.CONTROLS.Data.Query.Query', [
        * @param {Object|Array|String} expression Выбираемые поля
        * @returns {SBIS3.CONTROLS.Data.Query.Query}
        * @example
+       * Выбираем все заказы с определенным набором полей:
        * <pre>
        *    var query = new Query()
        *       .select([
@@ -130,7 +131,9 @@ define('js!SBIS3.CONTROLS.Data.Query.Query', [
        *          'customerId'
        *       ])
        *       .from('Orders');
-       *
+       * </pre>
+       * Выбираем все заказы со всеми полями:
+       * <pre>
        *    var query = new Query()
        *       .select('*')
        *       .from('Orders');
@@ -164,6 +167,7 @@ define('js!SBIS3.CONTROLS.Data.Query.Query', [
        * @param {String} [as] Псеводним объекта выборки
        * @returns {SBIS3.CONTROLS.Data.Query.Query}
        * @example
+       * Выбираем заказы с указанием полей через псеводним:
        * <pre>
        *    var query = new Query()
        *       .select({
@@ -253,6 +257,7 @@ define('js!SBIS3.CONTROLS.Data.Query.Query', [
        * @param {Object} expression Условие фильтрации
        * @returns {SBIS3.CONTROLS.Data.Query.Query}
        * @example
+       * Выбираем все заказы с номером больше 10, сделанные до текущего момента:
        * <pre>
        *    var query = new Query()
        *       .select('*')
@@ -260,6 +265,18 @@ define('js!SBIS3.CONTROLS.Data.Query.Query', [
        *       .where({
        *          'id>': 10,
        *          'date<=': new Date()
+       *       });
+       * </pre>
+       * Выбираем рейсы, приземлившиеся в аэропорту "Шереметьево", прибывшие из Нью-Йорка или Лос-Анджелеса:
+       * <pre>
+       *    var query = new Query()
+       *       .select('*')
+       *       .from('AirportsTable')
+       *       .where({
+       *          iata: 'SVO',
+       *          direction: 'Arrivals',
+       *          state: 'Landed',
+       *          fromCity: ['New York', 'Los Angeles']
        *       });
        * </pre>
        */

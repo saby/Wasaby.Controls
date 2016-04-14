@@ -752,6 +752,8 @@ define(
                assert.strictEqual(-1, list.getIndex(''));
                assert.strictEqual(-1, list.getIndex(0));
                assert.strictEqual(-1, list.getIndex(false));
+               assert.strictEqual(-1, list.getIndex(null));
+               assert.strictEqual(-1, list.getIndex());
             });
 
             it('should return  an index of given hashable item', function() {

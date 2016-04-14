@@ -28,12 +28,21 @@ define('js!SBIS3.CONTROLS.Data.Source.ISource', [
        * @property {String} merge Операция объединения записей через метод {@link merge}
        */
 
+      /**
+       * @typedef {Object} Options
+       * @property {Boolean} [debug=false] Режим отладки
+       */
+
       $protected: {
          _options: {
             /**
              * @cfg {Endpoint|String} Конечная точка, обеспечивающая доступ клиента к функциональным возможностям источника данных
              * @see getEndPoint
+             * @remark
+             * Можно успользовать сокращенную запись, передав значение в виде строки - в этом случае оно будет
+             * интерпретироваться как контракт (endpoint.contract)
              * @example
+             * Подключаем пользователей через HTTP API:
              * <pre>
              *    var dataSource = new HttpSource({
              *       endpoint: {
@@ -42,13 +51,13 @@ define('js!SBIS3.CONTROLS.Data.Source.ISource', [
              *       }
              *    });
              * </pre>
-             * @example
+             * Подключаем пользователей через HTTP API с использованием сокращенной нотации:
              * <pre>
              *    var dataSource = new HttpSource({
              *       endpoint: '/users/'
              *    });
              * </pre>
-             * @example
+             * Подключаем пользователей через HTTP API с указанием адреса подключения:
              * <pre>
              *    var dataSource = new RpcSource({
              *       endpoint: {
@@ -71,6 +80,7 @@ define('js!SBIS3.CONTROLS.Data.Source.ISource', [
              * @see copy
              * @see merge
              * @example
+             * Подключаем пользователей через HTTP API:
              * <pre>
              *    var dataSource = new HttpSource({
              *       endpoint: {
@@ -86,7 +96,7 @@ define('js!SBIS3.CONTROLS.Data.Source.ISource', [
              *       }
              *    });
              * </pre>
-             * @example
+             * Подключаем пользователей через RPC:
              * <pre>
              *    var dataSource = new RpcSource({
              *       endpoint: {
@@ -120,12 +130,13 @@ define('js!SBIS3.CONTROLS.Data.Source.ISource', [
              * @see SBIS3.CONTROLS.Data.Adapter.IAdapter
              * @see SBIS3.CONTROLS.Data.Di
              * @example
+             * Адаптер формата БЛ СБИС, внедренный через модуль DI:
              * <pre>
              *    var dataSource = new MemorySource({
              *       adapter: 'adapter.sbis'
              *    });
              * </pre>
-             * @example
+             * Адаптер формата БЛ СБИС, внедренный в виде готового экземпляра:
              * <pre>
              *    var dataSource = new MemorySource({
              *       adapter: new SbisAdapter()
@@ -141,6 +152,7 @@ define('js!SBIS3.CONTROLS.Data.Source.ISource', [
              * @see SBIS3.CONTROLS.Data.Model
              * @see SBIS3.CONTROLS.Data.Di
              * @example
+             * Модель пользователя, внедренная через модуль DI:
              * <pre>
              *    var User = Model.extend({
              *       identify: function(login, password) {
@@ -152,7 +164,7 @@ define('js!SBIS3.CONTROLS.Data.Source.ISource', [
              *       model: 'model.user'
              *    });
              * </pre>
-             * @example
+             * Модель пользователя, внедренная в виде конструктора:
              * <pre>
              *    var User = Model.extend({
              *       identify: function(login, password) {
@@ -173,6 +185,7 @@ define('js!SBIS3.CONTROLS.Data.Source.ISource', [
              * @see SBIS3.CONTROLS.Data.Collection.RecordSet
              * @see SBIS3.CONTROLS.Data.Di
              * @example
+             * Модель списка пользователей, внедренная через модуль DI:
              * <pre>
              *    var Users = RecordSet.extend({
              *       getAdministrators: function() {
@@ -184,7 +197,7 @@ define('js!SBIS3.CONTROLS.Data.Source.ISource', [
              *       listModule: 'collection.recordset.users'
              *    });
              * </pre>
-             * @example
+             * Модель списка пользователей, внедренная в виде конструктора:
              * <pre>
              *    var Users = RecordSet.extend({
              *       getAdministrators: function() {
@@ -204,13 +217,21 @@ define('js!SBIS3.CONTROLS.Data.Source.ISource', [
              * @see setIdProperty
              * @see SBIS3.CONTROLS.Data.Model#idProperty
              * @example
+             * Установка свойства 'primaryId' в качестве первичного ключа:
              * <pre>
              *    var dataSource = new Source({
              *       idProperty: 'primaryId'
              *    });
              * </pre>
              */
-            idProperty: ''
+            idProperty: '',
+
+            /**
+             * @cfg {Options} Опции
+             */
+            options: {
+               debug: false
+            }
          }
       },
 
@@ -262,10 +283,11 @@ define('js!SBIS3.CONTROLS.Data.Source.ISource', [
        * @see SBIS3.CONTROLS.Data.Adapter.IAdapter
        * @see SBIS3.CONTROLS.Data.Di
        * @example
+       * Адаптер формата БЛ СБИС, внедренный через модуль DI:
        * <pre>
        *    dataSource.setAdapter('adapter.sbis');
        * </pre>
-       * @example
+       * Адаптер формата БЛ СБИС, внедренный в виде экземпляра:
        * <pre>
        *    dataSource.setAdapter(new SbisAdapter());
        * </pre>
@@ -294,10 +316,11 @@ define('js!SBIS3.CONTROLS.Data.Source.ISource', [
        * @see SBIS3.CONTROLS.Data.Model
        * @see SBIS3.CONTROLS.Data.Di
        * @example
+       * Модель, внедренная через модуль DI:
        * <pre>
        *    dataSource.setModel('app.my-module.my-model');
        * </pre>
-       * @example
+       * Модель, внедренная в виде конструктора:
        * <pre>
        *    require(['js!MyModule.Data.MyModel'], function(MyModel) {
        *       dataSource.setModel(MyModel);
@@ -361,6 +384,7 @@ define('js!SBIS3.CONTROLS.Data.Source.ISource', [
        * @returns {$ws.proto.Deferred} Асинхронный результат выполнения. В колбэке придет {@link SBIS3.CONTROLS.Data.Model}.
        * @see SBIS3.CONTROLS.Data.Model
        * @example
+       * Создаем новую статью через источник данных:
        * <pre>
        *    var dataSource = new RestSource({
        *       endpoint: '/articles/'
@@ -383,6 +407,7 @@ define('js!SBIS3.CONTROLS.Data.Source.ISource', [
        * @param {Object|SBIS3.CONTROLS.Data.Model} [meta] Дополнительные мета данные
        * @returns {$ws.proto.Deferred} Асинхронный результат выполнения. В колбэке придет {@link SBIS3.CONTROLS.Data.Model}.
        * @example
+       * Читаем статью из источника данных:
        * <pre>
        *    var dataSource = new RestSource({
        *       endpoint: '/articles/'
@@ -405,6 +430,7 @@ define('js!SBIS3.CONTROLS.Data.Source.ISource', [
        * @param {Object} [meta] Дополнительные мета данные
        * @returns {$ws.proto.Deferred} Асинхронный результат выполнения
        * @example
+       * Обновляем статью в источнике данных:
        * <pre>
        *    var dataSource = new RestSource({
        *       endpoint: '/articles/'
@@ -432,6 +458,7 @@ define('js!SBIS3.CONTROLS.Data.Source.ISource', [
        * @param {Object|SBIS3.CONTROLS.Data.Model} [meta] Дополнительные мета данные
        * @returns {$ws.proto.Deferred} Асинхронный результат выполнения
        * @example
+       * Удаляем статью в источнике данных:
        * <pre>
        *    var dataSource = new RestSource({
        *       endpoint: '/articles/'
@@ -481,6 +508,7 @@ define('js!SBIS3.CONTROLS.Data.Source.ISource', [
        * @see SBIS3.CONTROLS.Data.Query.Query
        * @see SBIS3.CONTROLS.Data.Source.DataSet
        * @example
+       * Ищем молодые таланты среди сотрудников:
        * <pre>
        *    var dataSource = new Source({
        *          endpoint: 'Employee'
@@ -503,6 +531,27 @@ define('js!SBIS3.CONTROLS.Data.Source.ISource', [
        *       }
        *    });
        * </pre>
+       * Выбираем новые книги опредленного жанра:
+       * <pre>
+       *    var dataSource = new Source({
+       *          endpoint: 'Books'
+       *       }),
+       *       query = new Query();
+       *    query.select([
+       *          'Id',
+       *          'Name',
+       *          'Author',
+       *          'Genre'
+       *       ])
+       *       .where({
+       *          'Genre': ['Thriller', 'Detective']
+       *       })
+       *       .orderBy('Date', false);
+       *    dataSource.query(query).addCallback(function(dataSet) {
+       *       var books = dataSet.getAll();
+       *       //Do something
+       *    });
+       * </pre>
        */
       query: function (query) {
          throw new Error('Method must be implemented');
@@ -515,6 +564,7 @@ define('js!SBIS3.CONTROLS.Data.Source.ISource', [
        * @returns {$ws.proto.Deferred} Асинхронный результат выполнения. В колбэке придет {@link SBIS3.CONTROLS.Data.Source.DataSet}.
        * @see SBIS3.CONTROLS.Data.Source.DataSet
        * @example
+       * Раздаем подарки сотрудникам, у которых сегодня день рождения; считаем их количество:
        * <pre>
        *    var dataSource = new Source({
        *       endpoint: 'Employee'

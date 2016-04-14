@@ -1,6 +1,6 @@
 /* global define, $ws */
 define('js!SBIS3.CONTROLS.Data.Record', [
-   'js!SBIS3.CONTROLS.Data.IPropertyAccess',
+   'js!SBIS3.CONTROLS.Data.IObject',
    'js!SBIS3.CONTROLS.Data.Collection.IEnumerable',
    'js!SBIS3.CONTROLS.Data.Entity.Abstract',
    'js!SBIS3.CONTROLS.Data.Entity.OptionsMixin',
@@ -15,7 +15,7 @@ define('js!SBIS3.CONTROLS.Data.Record', [
    'js!SBIS3.CONTROLS.Data.Format.StringField',
    'js!SBIS3.CONTROLS.Data.ContextField.Record'
 ], function (
-   IPropertyAccess,
+   IObject,
    IEnumerable,
    Abstract,
    OptionsMixin,
@@ -36,7 +36,7 @@ define('js!SBIS3.CONTROLS.Data.Record', [
     * Запись - обертка над данными.
     * @class SBIS3.CONTROLS.Data.Record
     * @extends SBIS3.CONTROLS.Entity.Abstract
-    * @mixes SBIS3.CONTROLS.Data.IPropertyAccess
+    * @mixes SBIS3.CONTROLS.Data.IObject
     * @mixes SBIS3.CONTROLS.Data.Collection.IEnumerable
     * @mixes SBIS3.CONTROLS.Data.Entity.OptionsMixin
     * @mixes SBIS3.CONTROLS.Data.Entity.ObservableMixin
@@ -46,7 +46,7 @@ define('js!SBIS3.CONTROLS.Data.Record', [
     * @author Мальцев Алексей
     */
 
-   var Record = Abstract.extend([IPropertyAccess, IEnumerable, OptionsMixin, ObservableMixin, SerializableMixin, FormattableMixin], /** @lends SBIS3.CONTROLS.Data.Record.prototype */{
+   var Record = Abstract.extend([IObject, IEnumerable, OptionsMixin, ObservableMixin, SerializableMixin, FormattableMixin], /** @lends SBIS3.CONTROLS.Data.Record.prototype */{
       _moduleName: 'SBIS3.CONTROLS.Data.Record',
 
       /**
@@ -83,7 +83,7 @@ define('js!SBIS3.CONTROLS.Data.Record', [
          this.setRawData(this.$rawData);
       },
 
-      //region SBIS3.CONTROLS.Data.IPropertyAccess
+      //region SBIS3.CONTROLS.Data.IObject
 
       get: function (name) {
          if (this._hasInPropertiesCache(name)) {
@@ -125,7 +125,7 @@ define('js!SBIS3.CONTROLS.Data.Record', [
          return Array.indexOf(this._getRawDataFields(), name) > -1;
       },
 
-      //endregion SBIS3.CONTROLS.Data.IPropertyAccess
+      //endregion SBIS3.CONTROLS.Data.IObject
 
       //region SBIS3.CONTROLS.Data.Collection.IEnumerable
 

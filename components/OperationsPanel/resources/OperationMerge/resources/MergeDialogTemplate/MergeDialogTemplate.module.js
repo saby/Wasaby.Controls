@@ -7,12 +7,14 @@ define('js!SBIS3.CONTROLS.MergeDialogTemplate', [
     'js!SBIS3.CONTROLS.Data.Source.SbisService',
     'js!SBIS3.CONTROLS.Data.Source.Memory',
     'js!SBIS3.CONTROLS.Data.Adapter.Sbis',
+    'js!SBIS3.CONTROLS.Data.Collection.RecordSet',
     'i18n!SBIS3.CONTROLS.MergeDialogTemplate',
     'js!SBIS3.CONTROLS.Button',
     'js!SBIS3.CONTROLS.TreeDataGridView',
     'html!SBIS3.CONTROLS.MergeDialogTemplate/resources/cellRadioButtonTpl',
-    'html!SBIS3.CONTROLS.MergeDialogTemplate/resources/cellCommentTpl'
-], function(Control, dotTplFn, SbisServiceSource, MemorySource, SbisAdapter, rk) {
+    'html!SBIS3.CONTROLS.MergeDialogTemplate/resources/cellCommentTpl',
+    'i18n!!SBIS3.CONTROLS.MergeDialogTemplate'
+], function(Control, dotTplFn, SbisServiceSource, MemorySource, SbisAdapter, RecordSet) {
 
     var COMMENT_FIELD_NAME = 'Comment',
         AVAILABLE_FIELD_NAME = 'Available';
@@ -38,7 +40,7 @@ define('js!SBIS3.CONTROLS.MergeDialogTemplate', [
                  * @cfg {String} Сообщение с предупреждением
                  */
                 warning: rk('Внимание! Операция необратима'),
-                errorMessage: 'Итоги операции: "Объединения"',
+                errorMessage: rk('Итоги операции: "Объединения"'),
                 testMergeMethodName: undefined,
                 queryMethodName: undefined,
                 dataSource: undefined,
@@ -114,15 +116,20 @@ define('js!SBIS3.CONTROLS.MergeDialogTemplate', [
         _showErrorDialog: function(mergeKeys, errors) {
             var
                 errorsTexts = [],
-                count = mergeKeys.length,
-                errorsRecordSet = errors.addinfo;
-            //TODO: переделать на создание recordSet
-            $ws.helpers.forEach(errorsRecordSet.d, function (item) {
-                errorsTexts.push(item[1]);
-            });
+                count = mergeKeys.length;
+            if (errors.addinfo) {
+                new RecordSet({
+                    rawData: errors.addinfo,
+                    adapter: 'adapter.sbis'
+                }).each(function(item) {
+                    errorsTexts.push(item.get('error'));
+                });
+            } else {
+                errorsTexts = [error.message];
+            }
             $ws.helpers.openErrorsReportDialog({
                 'numSelected': count,
-                'numSuccess': errorsRecordSet ? count - errorsRecordSet.d.length : 0,
+                'numSuccess': count - errorsTexts.length,
                 'errors': errorsTexts,
                 'title': this._options.errorMessage
             });

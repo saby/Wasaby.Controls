@@ -284,6 +284,19 @@ define([
                });
             });
          });
+         describe('.getNext()', function(){
+            it('should return next item', function(){
+               var item = tree.getNext(tree.at(0));
+               assert.equal(item.getContents().id, 2);
+            });
+         });
+
+         describe('.getPrevious()', function(){
+            it('should return previous item', function(){
+               var item = tree.getPrevious(tree.at(2));
+               assert.equal(item.getContents().id, 10);
+            });
+         });
 
          describe('.moveToNext()', function() {
             it('should move current through direct children of the root', function() {
@@ -316,6 +329,13 @@ define([
 
                assert.isFalse(tree.moveToNext());
                assert.strictEqual(tree.getCurrent().getContents().title, 'AC');
+            });
+
+            it('should notify onCurrentChange', function(done) {
+               tree.subscribe('onCurrentChange', function(){
+                  done();
+               });
+               tree.moveToNext();
             });
          });
 
@@ -350,6 +370,14 @@ define([
 
                assert.isFalse(tree.moveToPrevious());
                assert.strictEqual(tree.getCurrent().getContents().title, 'AA');
+            });
+
+            it('should notify onCurrentChange', function(done) {
+               tree.setCurrentPosition(3);
+               tree.subscribe('onCurrentChange', function(){
+                  done();
+               });
+               tree.moveToPrevious();
             });
          });
 

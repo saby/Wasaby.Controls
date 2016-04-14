@@ -699,6 +699,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
        */
       _getModelInstance: function (data) {
          var model = Di.resolve(this.$model, {
+            owner: this,
             adapter: this.getAdapter(),
             rawData: data,
             idProperty: this.$idProperty

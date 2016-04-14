@@ -63,7 +63,7 @@ define('js!SBIS3.CONTROLS.Data.Adapter.JsonFormatMixin', [
             throw new Error(this._moduleName + '::addField(): field "' + name + '" already exists');
          }
          if (at >= 0) {
-            Utils.logger.stack(this._moduleName + '::addField(): argument "at" is not supported and will be ignored.');
+            Utils.logger.info(this._moduleName + '::addField(): argument "at" is not supported and will be ignored.');
          }
          this._format[name] = format;
       },
