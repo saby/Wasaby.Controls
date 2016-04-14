@@ -53,7 +53,7 @@ define('js!SBIS3.CONTROLS.ListView',
        * @mixes SBIS3.CONTROLS.DataBindMixin
        * @control
        * @public
-       * @cssModifier controls-ListView__withoutMarker Убирать маркер активной строки.
+       * @cssModifier controls-ListView__orangeMarker Показывать маркер активной строки у элементов ListView. Актуально только для ListView.
        * @cssModifier controls-ListView__showCheckBoxes Чекбоксы показываются не по ховеру, а сразу все.
        * @cssModifier controls-ListView__hideCheckBoxes Скрыть все чекбоксы.
        * @cssModifier controls-ListView__bottomStyle Оформляет операции строки под строкой
