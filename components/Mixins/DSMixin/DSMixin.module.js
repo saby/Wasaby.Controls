@@ -1268,6 +1268,14 @@ define('js!SBIS3.CONTROLS.DSMixin', [
          //Если offset отрицательный, значит запрашивали последнюю страницу
          return offset < 0 ? false : (typeof (hasMore) !== 'boolean' ? hasMore > (offset + this._options.pageSize) : !!hasMore);
       },
+      _scrollToItem: function(itemId) {
+         var itemContainer  = $(".controls-ListView__item[data-id='" + itemId + "']", this._getItemsContainer());
+         if (itemContainer.length) {
+            itemContainer
+               .attr('tabindex', -1)
+               .focus();
+         }
+      },
       /**
        * Устанавливает текст, который будет отображаться при отсутствии элементов коллекции.
        * @param html Отображаемый текст.

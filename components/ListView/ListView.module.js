@@ -1441,21 +1441,17 @@ define('js!SBIS3.CONTROLS.ListView',
                this._scrollWatcher.scrollTo(this._firstScrollTop || (scrollAmount < 0) ? 'bottom' : scrollAmount);
             }
          },
-         _scrollToItem: function(itemId) {
-            var itemContainer  = $(".controls-ListView__item[data-id='" + itemId + "']", this._getItemsContainer());
-            if (itemContainer.length) {
-               itemContainer
-                  .attr('tabindex', -1)
-                  .focus();
-            }
-            //TODO: будет работать только если есть infiniteScrollContainer, нужно сделать просто scrollContainer так как подгрузки может и не быть
-            if (this._options.infiniteScrollContainer){
-               this._options.infiniteScrollContainer[0].scrollTop = itemContainer[0].offsetTop;
-            }
-         },
          scrollToItem: function(item){
             if (item.getId && item.getId instanceof Function){
                this._scrollToItem(item.getId());
+            }
+         },
+         _scrollToItem: function(itemId) {
+            ListView.superclass,_scrollToItem.call(this, itemId);
+            var itemContainer = $(".controls-ListView__item[data-id='" + itemId + "']", this._getItemsContainer());
+            //TODO: будет работать только если есть infiniteScrollContainer, нужно сделать просто scrollContainer так как подгрузки может и не быть
+            if (this._options.infiniteScrollContainer){
+               this._options.infiniteScrollContainer[0].scrollTop = itemContainer[0].offsetTop;
             }
          },
          _showLoadingIndicator: function () {
