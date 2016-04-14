@@ -15,6 +15,8 @@ define('js!SBIS3.CONTROLS.Data.Collection.List', [
 ], function (SerializableMixin, IEnumerable, IList, IIndexedCollection, Abstract, OptionsMixin, ObservableMixin, ArrayEnumerator, Serializer, Di, Utils, ContextFieldList) {
    'use strict';
 
+   var arraySplice = Array.prototype.splice;
+
    /**
     * Список - коллекция c доступом по порядковому индексу
     * @class SBIS3.CONTROLS.Data.Collection.List
@@ -44,22 +46,22 @@ define('js!SBIS3.CONTROLS.Data.Collection.List', [
       _serviceEnumerator: undefined,
 
       /**
-       * @member {SBIS3.CONTROLS.Data.Collection._hashIndex} Индекс хешей элементов
+       * @member {Object} Индекс хешей элементов
        */
       _hashIndex: undefined,
 
       constructor: function $List(options) {
-         this.$items = this.$items || [];
-
-         options = options || {};
-         if ('items' in options) {
-            if (!(options.items instanceof Array)) {
-               throw new TypeError('Option "items" should be an instance of Array');
+         if (options) {
+            if ('items' in options) {
+               if (!(options.items instanceof Array)) {
+                  throw new TypeError('Option "items" should be an instance of Array');
+               }
             }
          }
 
          List.superclass.constructor.call(this, options);
          OptionsMixin.constructor.call(this, options);
+         this.$items = this.$items || [];
       },
 
       // region SBIS3.CONTROLS.Data.SerializableMixin
@@ -344,7 +346,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.List', [
        * @private
        */
       _splice: function (items, start){
-         Array.prototype.splice.apply(this.$items,([start, 0].concat(
+         arraySplice.apply(this.$items,([start, 0].concat(
             this._itemsToArray(items)
          )));
          this._getServiceEnumerator().reIndex();

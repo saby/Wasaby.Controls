@@ -117,15 +117,16 @@ define('js!SBIS3.CONTROLS.Data.Model', [
       _synced: false,
 
       constructor: function $Model(options) {
-         options = options || {};
-         if ('usingDataSetAsList' in options) {
-            Utils.logger.stack(this._moduleName + '::$constructor(): option "usingDataSetAsList" is deprecated and will be removed in 3.7.4', 1);
+         if (options) {
+            if ('usingDataSetAsList' in options) {
+               Utils.logger.stack(this._moduleName + '::$constructor(): option "usingDataSetAsList" is deprecated and will be removed in 3.7.4', 1);
+            }
          }
 
-         this.$properties = this.$properties || {};
          this._defaultPropertiesValues = {};
          this._nowCalculatingProperties = {};
          Model.superclass.constructor.call(this, options);
+         this.$properties = this.$properties || {};
          if (!this.$idProperty) {
             this.$idProperty = this.getAdapter().getKeyField(this.$rawData);
          }

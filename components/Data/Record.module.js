@@ -67,7 +67,6 @@ define('js!SBIS3.CONTROLS.Data.Record', [
       _propertiesCache: null,
 
       constructor: function $Record(options) {
-         options = options || {};
          if (options) {
             if ('data' in options && !('rawData' in options)) {
                options.rawData = options.data;
@@ -384,15 +383,15 @@ define('js!SBIS3.CONTROLS.Data.Record', [
       _getRawDataValue: function(name) {
          var adapter = this._getRawDataAdapter();
 
-         try {
-            return Factory.cast(
-               adapter.get(name),
-               adapter.getSharedFormat(name),
-               this.getAdapter()
-            );
+         return Factory.cast(
+            adapter.get(name),
+            adapter.getSharedFormat(name),
+            this.getAdapter()
+         );
+         /*try {
          } catch (e) {
             return undefined;
-         }
+         }*/
       },
 
       /**

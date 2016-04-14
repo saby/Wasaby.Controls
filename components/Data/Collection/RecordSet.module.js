@@ -81,31 +81,31 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
       _indexTree: null,
 
       constructor: function $RecordSet(options) {
-         options = options || {};
+         if (options) {
+            if ('data' in options && !('rawData' in options)) {
+               this.$rawData = options.data;
+               Utils.logger.stack('SBIS3.CONTROLS.Data.Collection.RecordSet: option "data" is deprecated and will be removed in 3.7.4. Use "rawData" instead.', 1);
+            }
+            if ('strategy' in options && !('adapter' in options)) {
+               this.$adapter = options.strategy;
+               Utils.logger.stack('SBIS3.CONTROLS.Data.Collection.RecordSet: option "strategy" is deprecated and will be removed in 3.7.4. Use "adapter" instead.', 1);
+            }
+            if ('keyField' in options && !('idProperty' in options)) {
+               this.$idProperty = options.keyField;
+               Utils.logger.stack('SBIS3.CONTROLS.Data.Collection.RecordSet: option "keyField" is deprecated and will be removed in 3.7.4. Use "idProperty" instead.', 1);
+            }
+            if (!this.$idProperty) {
+               this.$idProperty = this.getAdapter().getKeyField(this.$rawData);
+            }
+            if ('items' in options) {
+               Utils.logger.stack('SBIS3.CONTROLS.Data.Collection.RecordSet: option "items" is not acceptable. Use "rawData" instead.', 1);
+            }
+         }
 
-         if ('data' in options && !('rawData' in options)) {
-            this.$rawData = options.data;
-            Utils.logger.stack('SBIS3.CONTROLS.Data.Collection.RecordSet: option "data" is deprecated and will be removed in 3.7.4. Use "rawData" instead.', 1);
-         }
-         if ('strategy' in options && !('adapter' in options)) {
-            this.$adapter = options.strategy;
-            Utils.logger.stack('SBIS3.CONTROLS.Data.Collection.RecordSet: option "strategy" is deprecated and will be removed in 3.7.4. Use "adapter" instead.', 1);
-         }
-         if ('keyField' in options && !('idProperty' in options)) {
-            this.$idProperty = options.keyField;
-            Utils.logger.stack('SBIS3.CONTROLS.Data.Collection.RecordSet: option "keyField" is deprecated and will be removed in 3.7.4. Use "idProperty" instead.', 1);
-         }
-         if (!this.$idProperty) {
-            this.$idProperty = this.getAdapter().getKeyField(this.$rawData);
-         }
-         if ('items' in options) {
-            Utils.logger.stack('SBIS3.CONTROLS.Data.Collection.RecordSet: option "items" is not acceptable. Use "rawData" instead.', 1);
-         }
-
-         this.$meta = {};
          this._indexTree = {};
          RecordSet.superclass.constructor.call(this, options);
          FormattableMixin.constructor.call(this, options);
+         this.$meta = this.$meta || {};
          if (this.$rawData) {
             this._assignRawData(this.$rawData, true);
             this._createFromRawData();
