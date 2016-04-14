@@ -16,9 +16,10 @@ define('js!SBIS3.CONTROLS.Data.ContextField.Record', [
       name: 'ControlsFieldTypeRecord',
 
       subscribe: function (value, fn) {
-         value.subscribe('onPropertyChange', fn);
+         var handler = fn.debounce(1);
+         value.subscribe('onPropertyChange', handler);
          return function () {
-            value.unsubscribe('onPropertyChange', fn);
+            value.unsubscribe('onPropertyChange', handler);
          };
       }
    });
