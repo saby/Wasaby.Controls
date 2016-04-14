@@ -163,16 +163,20 @@
       -ms-filter: @tab-button-overlay-ms-filter;
       opacity: @tab-button-overlay-opacity;
    }
+}
 
-   &.ws-disabled, &.ws-disabled:hover, &.ws-disabled.controls-Checked__checked {
-      border-color: @tab-button-disabled-border-color;
-      background: @tab-button-disabled-bg;
-      .controls-TabButton__inner {
-         color: @tab-button-disabled-inner-color;
-         border-color: @tab-button-disabled-border-color;
-         background: @tab-button-disabled-bg;
-         &:before {
-            display: @tab-button-disabled-inner-after-display;
+.ws-disabled{
+   &.controls-TabButton{
+      &.controls-TabButton__main-item{
+         .controls-TabButton__additionalText1, .controls-TabButton__additionalText1 > *{
+            &:hover{
+               color: @tab-button-large-firstAddText-color;
+            }
+         }
+         .controls-TabButton__additionalText2, .controls-TabButton__additionalText2 > * {
+            &:hover{
+               color: @tab-button-large-secondAddText-color;
+            }
          }
       }
    }

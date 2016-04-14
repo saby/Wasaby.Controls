@@ -111,7 +111,7 @@ define('js!SBIS3.CONTROLS.ChooserMixin', [
                }
             }, []));
             /* Если обрабатываем результат deferred'a то в функции нету контекста, проверим на это */
-            if(this && this.close) {
+            if(this && this !== window && this.close) {
                this.close();
             }
          }

@@ -1,11 +1,11 @@
 /* global define, $ws */
-/* global define, $ws */
 define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
    'js!SBIS3.CONTROLS.Data.Collection.ObservableList',
    'js!SBIS3.CONTROLS.Data.FormattableMixin',
    'js!SBIS3.CONTROLS.Data.Di',
+   'js!SBIS3.CONTROLS.Data.Utils',
    'js!SBIS3.CONTROLS.Data.Model'
-], function (ObservableList, FormattableMixin, Di) {
+], function (ObservableList, FormattableMixin, Di, Utils) {
    'use strict';
 
    /**
@@ -77,12 +77,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
          /**
           * @var {Object} индексы
           */
-         _indexTree: {},
-
-         /**
-          * @member {Array.<String>} Описание всех полей, полученных из данных в "сыром" виде
-          */
-         _fields: null
+         _indexTree: {}
       },
 
       $constructor: function (cfg) {
@@ -90,27 +85,26 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
 
          if ('data' in cfg && !('rawData' in cfg)) {
             this._options.rawData = cfg.data;
-            $ws.single.ioc.resolve('ILogger').info('SBIS3.CONTROLS.Data.Collection.RecordSet', 'option "data" is deprecated and will be removed in 3.7.4. Use "rawData" instead.');
+            Utils.logger.stack('SBIS3.CONTROLS.Data.Collection.RecordSet: option "data" is deprecated and will be removed in 3.7.4. Use "rawData" instead.', 1);
          }
          if ('strategy' in cfg && !('adapter' in cfg)) {
             this._options.adapter = cfg.strategy;
-            $ws.single.ioc.resolve('ILogger').info('SBIS3.CONTROLS.Data.Collection.RecordSet', 'option "strategy" is deprecated and will be removed in 3.7.4. Use "adapter" instead.');
+            Utils.logger.stack('SBIS3.CONTROLS.Data.Collection.RecordSet: option "strategy" is deprecated and will be removed in 3.7.4. Use "adapter" instead.', 1);
          }
          if ('keyField' in cfg && !('idProperty' in cfg)) {
             this._options.idProperty = cfg.keyField;
-            $ws.single.ioc.resolve('ILogger').info('SBIS3.CONTROLS.Data.Collection.RecordSet', 'option "keyField" is deprecated and will be removed in 3.7.4. Use "idProperty" instead.');
+            Utils.logger.stack('SBIS3.CONTROLS.Data.Collection.RecordSet: option "keyField" is deprecated and will be removed in 3.7.4. Use "idProperty" instead.', 1);
          }
          if (!this._options.idProperty) {
             this._options.idProperty = this.getAdapter().getKeyField(this._options.rawData);
          }
          if ('items' in cfg) {
-            $ws.single.ioc.resolve('ILogger').info('SBIS3.CONTROLS.Data.Collection.RecordSet', 'option "items" is not acceptable. Use "rawData" instead.');
+            Utils.logger.stack('SBIS3.CONTROLS.Data.Collection.RecordSet: option "items" is not acceptable. Use "rawData" instead.', 1);
          }
          if (this._options.rawData) {
             this._assignRawData(this._options.rawData, true);
             this._createFromRawData();
          }
-
       },
 
       //region SBIS3.CONTROLS.Data.FormattableMixin
@@ -123,34 +117,33 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
       addField: function(format, at, value) {
          format = this._buildField(format);
          RecordSet.superclass.addField.call(this, format, at);
-         this._getRawDataAdapter().addField(format, at);
-         this._fields = null;
 
-         if (value !== undefined) {
-            this.each(function(record) {
-               record.set(format.getName(), value);
-            });
-         }
+         var name = format.getName(),
+            methodName = 'addField';
+         this.each(function(record) {
+            record.notifyFormatChanged(methodName, arguments);
+            if (value !== undefined) {
+               record.set(name, value);
+            }
+         });
       },
 
       removeField: function(name) {
          RecordSet.superclass.removeField.call(this, name);
-         this._getRawDataAdapter().removeField(name);
-         this._fields = null;
+
+         var methodName = 'removeField';
+         this.each(function(record) {
+            record.notifyFormatChanged(methodName, arguments);
+         });
       },
 
       removeFieldAt: function(at) {
          RecordSet.superclass.removeFieldAt.call(this, at);
-         this._getRawDataAdapter().removeFieldAt(at);
-         this._fields = null;
-      },
 
-      _getRawDataFields: function() {
-         return this._fields || (this._fields = this._getRawDataAdapter().getFields());
-      },
-
-      _getRawDataFormat: function(name) {
-         return this._getRawDataAdapter().getFormat(name);
+         var methodName = 'removeFieldAt';
+         this.each(function(record) {
+            record.notifyFormatChanged(methodName, arguments);
+         });
       },
 
       /**
@@ -173,8 +166,6 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
          if (!keepFormat) {
             this._clearFormat();
          }
-         this._resetRawDataAdapter();
-         this._fields = null;
       },
 
       //endregion SBIS3.CONTROLS.Data.FormattableMixin
@@ -261,8 +252,8 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
       },
 
       /**
-       * Проверяет эквивалентность формата и записей другого рекордсета.
-       * @param {SBIS3.CONTROLS.Data.Record} record Рекордсет, эквивалентность которого проверяется
+       * Проверяет эквивалентность формата и записей другого рекордсета (должны совпадать данные каждой записи).
+       * @param {SBIS3.CONTROLS.Data.Collection.RecordSet} recordset Рекордсет, эквивалентность которого проверяется
        * @returns {Boolean}
        */
       isEqual: function (recordset) {
@@ -280,20 +271,6 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
             this.getRawData(),
             recordset.getRawData()
          );
-      },
-
-      /**
-       * Возвращает копию рекордсета
-       * @returns {SBIS3.CONTROLS.Data.Collection.RecordSet}
-       */
-      clone: function () {
-         //TODO: сделать через сериализатор
-         return new RecordSet({
-            adapter: this._options.adapter,
-            rawData: this._options.rawData,
-            meta: this._options.meta,
-            idProperty: this._options.idProperty
-         });
       },
 
       /**
@@ -377,7 +354,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
       },
 
       getStrategy: function () {
-         $ws.single.ioc.resolve('ILogger').info('SBIS3.CONTROLS.Data.Collection.RecordSet:getStrategy', 'method getStrategy is deprecated and will be removed in 3.7.4. Use "getAdapter" instead.');
+         Utils.logger.stack('SBIS3.CONTROLS.Data.Collection.RecordSet:getStrategy(): method is deprecated and will be removed in 3.7.4. Use "getAdapter()" instead.');
          return this.getAdapter();
       },
 
@@ -562,7 +539,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
             if (!this._indexTree.hasOwnProperty(parentKey)) {
                this._indexTree[parentKey] = [];
             }
-            this._indexTree[parentKey].push(record.getKey());
+            this._indexTree[parentKey].push(record.getId());
          }, 'all');
       },
 
@@ -571,7 +548,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
       //region SBIS3.CONTROLS.Data.Collection.List
 
       clear: function () {
-         this._assignRawData(this._getRawDataAdapter().getEmpty());
+         this._assignRawData(this._getRawDataAdapter().getEmpty(), true);
          RecordSet.superclass.clear.call(this);
       },
 
@@ -672,7 +649,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
             if (this._getFormat().isEqual(items.getFormat())) {
                return true;
             }
-            $ws.single.ioc.resolve('ILogger').log(this._moduleName, 'The outer recordset format is not equal to the recordset format.');
+            Utils.logger.info(this._moduleName +': the outer recordset format is not equal to the recordset format');
          }
          return false;
       },
@@ -690,7 +667,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
          if ((checkFormat === undefined || checkFormat === true) &&
             !this._getFormat().isEqual(item.getFormat())
          ) {
-            $ws.single.ioc.resolve('ILogger').log(this._moduleName, 'The record format is not equal to the recordset format.');
+            Utils.logger.info(this._moduleName + ': the record format is not equal to the recordset format');
          }
       },
 

@@ -12,6 +12,7 @@ define('js!SBIS3.CONTROLS.ListView',
       'js!SBIS3.CONTROLS.DataBindMixin',
       'js!SBIS3.CONTROLS.DecorableMixin',
       'js!SBIS3.CONTROLS.DragNDropMixin',
+      'js!SBIS3.CONTROLS.FormWidgetMixin',
       'js!SBIS3.CONTROLS.ItemsToolbar',
       'js!SBIS3.CORE.MarkupTransformer',
       'html!SBIS3.CONTROLS.ListView',
@@ -29,7 +30,7 @@ define('js!SBIS3.CONTROLS.ListView',
       'browser!js!SBIS3.CONTROLS.ListView/resources/SwipeHandlers'
    ],
    function (CompoundControl, CompoundActiveFixMixin, DSMixin, MultiSelectable,
-             Selectable, DataBindMixin, DecorableMixin, DragNDropMixin, ItemsToolbar, MarkupTransformer, dotTplFn,
+             Selectable, DataBindMixin, DecorableMixin, DragNDropMixin, FormWidgetMixin, ItemsToolbar, MarkupTransformer, dotTplFn,
              TemplateUtil, CommonHandlers, MoveHandlers, Pager, EditInPlaceHoverController, EditInPlaceClickController,
              Link, ScrollWatcher, rk,  groupByTpl, emptyDataTpl) {
 
@@ -62,7 +63,7 @@ define('js!SBIS3.CONTROLS.ListView',
        */
 
       /*TODO CommonHandlers MoveHandlers тут в наследовании не нужны*/
-      var ListView = CompoundControl.extend([CompoundActiveFixMixin, DSMixin, MultiSelectable, Selectable, DataBindMixin, DecorableMixin, DragNDropMixin, CommonHandlers, MoveHandlers], /** @lends SBIS3.CONTROLS.ListView.prototype */ {
+      var ListView = CompoundControl.extend([CompoundActiveFixMixin, DSMixin, FormWidgetMixin, MultiSelectable, Selectable, DataBindMixin, DecorableMixin, DragNDropMixin, CommonHandlers, MoveHandlers], /** @lends SBIS3.CONTROLS.ListView.prototype */ {
          _dotTplFn: dotTplFn,
          /**
           * @event onChangeHoveredItem При переводе курсора мыши на другую запись
@@ -429,7 +430,10 @@ define('js!SBIS3.CONTROLS.ListView',
                resultsText : 'Итого',
                resultsTpl: undefined
             },
+            //Флаг обозначает необходимость компенсировать подгрузку по скроллу вверх, ее нельзя делать безусловно, так как при подгрузке вверх могут добавлятся элементы и вниз тоже
+            _needSrollTopCompensation: false,
             _scrollWatcher : undefined,
+            _searchParamName: undefined, //todo Проверка на "searchParamName" - костыль. Убрать, когда будет адекватная перерисовка записей (до 150 версии, апрель 2016)
             _updateByReload: false //todo: Убрать в 150, когда будет правильный рендер изменившихся данных. Флаг, означающий то, что обновление происходит из-за перезагрузки данных.
          },
 
@@ -800,7 +804,7 @@ define('js!SBIS3.CONTROLS.ListView',
             return $('.controls-ListView__itemsContainer', this._container.get(0)).first();
          },
          _getItemContainer: function(parent, item) {
-            return parent.find('>[data-id="' + item.getKey() + '"]:not(".controls-editInPlace")');
+            return parent.find('>[data-id="' + item.getId() + '"]:not(".controls-editInPlace")');
          },
          _addItemAttributes: function(container) {
             container.addClass('js-controls-ListView__item');
@@ -810,19 +814,22 @@ define('js!SBIS3.CONTROLS.ListView',
          /* +++++++++++++++++++++++++++ */
 
          _elemClickHandler: function (id, data, target) {
-            var $target = $(target);
+            var $target = $(target),
+                onItemClickResult;
 
-            this.setSelectedKey(id);
             if (this._options.multiselect) {
                if ($target.hasClass('js-controls-ListView__itemCheckBox')) {
                   this._onCheckBoxClick($target);
                }
                else {
-                  this._notifyOnItemClick(id, data, target);
+                  onItemClickResult = this._notifyOnItemClick(id, data, target);
                }
             }
             else {
-               this._notifyOnItemClick(id, data, target);
+               onItemClickResult = this._notifyOnItemClick(id, data, target);
+            }
+            if (onItemClickResult !== false){
+               this.setSelectedKey(id);
             }
          },
          _onCheckBoxClick: function(target) {
@@ -846,6 +853,7 @@ define('js!SBIS3.CONTROLS.ListView',
                this._elemClickHandlerInternal(data, id, target);
                elClickHandler && elClickHandler.call(this, id, data, target);
             }
+            return res;
          },
          _elemClickHandlerInternal: function (data, id, target) {
             this._activateItem(id);
@@ -858,13 +866,8 @@ define('js!SBIS3.CONTROLS.ListView',
          },
 
          _drawSelectedItem: function (id, index) {
-            var selId;
-            if (this._itemsProjection) {
-               var selItem = this._itemsProjection.at(index);
-               if (selItem) {
-                  selId = selItem.getContents().getId();
-               }
-            }
+            //рисуем от ключа
+            var selId = id;
             $(".controls-ListView__item", this._container).removeClass('controls-ListView__item__selected');
             $(".controls-ListView__item[data-id='" + selId + "']", this._container).addClass('controls-ListView__item__selected');
          },
@@ -935,10 +938,10 @@ define('js!SBIS3.CONTROLS.ListView',
                var args = arguments;
                if (this._hasEditInPlace()) {
                   this._getEditInPlace().endEdit(true).addCallback(function() {
-                     handler.apply(this, args)
+                     return handler.apply(this, args)
                   }.bind(this));
                } else {
-                  handler.apply(this, args)
+                  return handler.apply(this, args)
                }
             }
          },
@@ -997,7 +1000,7 @@ define('js!SBIS3.CONTROLS.ListView',
 
          redrawItem: function(item) {
             ListView.superclass.redrawItem.apply(this, arguments);
-            if (this._editingItem.model && this._editingItem.model.getKey() === item.getKey()) {
+            if (this._editingItem.model && this._editingItem.model.getId() === item.getId()) {
                this._editingItem.target = this._getElementByModel(item);
             }
             //TODO: Временное решение для .100.  В .30 состояния выбранности элемента должны добавляться в шаблоне.
@@ -1077,7 +1080,7 @@ define('js!SBIS3.CONTROLS.ListView',
                            this._showItemsToolbar(this._getElementData(this._editingItem.target));
                            this._getItemsToolbar().lockToolbar();
                         }
-                        this.setSelectedKey(model.getKey());
+                        this.setSelectedKey(model.getId());
                         event.setResult(this._notify('onAfterBeginEdit', model));
                      }.bind(this),
                      onBeginAdd: function(event, options) {
@@ -1103,7 +1106,7 @@ define('js!SBIS3.CONTROLS.ListView',
          _getElementByModel: function(item) {
             // Даже не думать удалять ":not(...)". Это связано с тем, что при редактировании по месту может возникнуть задача перерисовать строку
             // DataGridView. В виду одинакового атрибута "data-id", это единственный способ отличить строку DataGridView от строки EditInPlace.
-            return this._getItemsContainer().find('.js-controls-ListView__item[data-id="' + item.getKey() + '"]:not(".controls-editInPlace")');
+            return this._getItemsContainer().find('.js-controls-ListView__item[data-id="' + item.getId() + '"]:not(".controls-editInPlace")');
          },
 
          //********************************//
@@ -1377,12 +1380,15 @@ define('js!SBIS3.CONTROLS.ListView',
                      records = dataSet.toArray();
                      if (self._options.infiniteScroll === 'up') {
                         self._containerScrollHeight = self._scrollWatcher.getScrollHeight();
+                        self._needSrollTopCompensation = true;
+                        //добавляем данные в начало или в конец в зависимости от того мы скроллим вверх или вниз
+                        self._items.prepend(records.reverse());
+                        records.reverse();
+                     } else {
+                        self._items.append(records);
                      }
-                     //TODO Провести тесты с unshift и Array.insert
-                     //сортируем пришедшие данные в обратном порядке
-                     self._items[self._options.infiniteScroll === 'up' ? 'prepend' : 'append'](records.reverse());
-                     //Но рисовать нуджно все равно по порядку сверху, поэтому перевернем обратно
-                     self._drawItems(records.reverse());
+
+                     self._drawItems(records);
                      //TODO Пытались оставить для совместимости со старыми данными, но вызывает onCollectionItemChange!!!
                      //self._dataSet.merge(dataSet, {remove: false});
                      self._dataLoadedCallback();
@@ -1409,7 +1415,7 @@ define('js!SBIS3.CONTROLS.ListView',
              * Если же высота фиксированная, то подгружать данные в этой функции будем пока высота контейнера(ту, что фиксированно задали) не станет меньше высоты таблицы(table),
              * т.е. пока не появится скролл внутри контейнера
              */
-            if (this._isLoadBeforeScrollAppears && !this._scrollWatcher.hasScroll(this.getContainer())){
+            if (this._scrollWatcher && this._isLoadBeforeScrollAppears && !this._scrollWatcher.hasScroll(this.getContainer())){
                this._nextLoad();
             } else {
                this._isLoadBeforeScrollAppears = false;
@@ -1425,8 +1431,9 @@ define('js!SBIS3.CONTROLS.ListView',
          _moveTopScroll : function(){
             var scrollAmount;
             //сюда попадем только когда уже точно есть скролл
-            if (this.isInfiniteScroll() && this._options.infiniteScroll == 'up'){
+            if (this.isInfiniteScroll() && this._options.infiniteScroll == 'up' && this._needSrollTopCompensation){
                scrollAmount = this._scrollWatcher.getScrollHeight() - this._containerScrollHeight;
+               this._needSrollTopCompensation = false;
                //Если запускаем 1ый раз, то нужно поскроллить в самый низ (ведь там "начало" данных), в остальных догрузках скроллим вниз на
                //разницы величины скролла (т.е. на сколько добавилось высоты, на столько и опустили). Получается плавно
                //Так же цчитываем то, что индикатор появляется только на время загрузки и добавляет свою высоту
@@ -1743,7 +1750,7 @@ define('js!SBIS3.CONTROLS.ListView',
           * @see commitEdit
           */
          _beginEdit: function(record) {
-            var target = this._getItemsContainer().find('.js-controls-ListView__item[data-id="' + record.getKey() + '"]:first');
+            var target = this._getItemsContainer().find('.js-controls-ListView__item[data-id="' + record.getId() + '"]:first');
             return this.showEip(target, record, { isEdit: true });
          },
          /**

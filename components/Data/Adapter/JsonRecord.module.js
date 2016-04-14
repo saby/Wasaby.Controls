@@ -1,20 +1,23 @@
 /* global define, $ws */
 define('js!SBIS3.CONTROLS.Data.Adapter.JsonRecord', [
    'js!SBIS3.CONTROLS.Data.Adapter.IRecord',
-   'js!SBIS3.CONTROLS.Data.Adapter.JsonFormatMixin'
-], function (IRecord, JsonFormatMixin) {
+   'js!SBIS3.CONTROLS.Data.Adapter.GenericFormatMixin',
+   'js!SBIS3.CONTROLS.Data.Adapter.JsonFormatMixin',
+   'js!SBIS3.CONTROLS.Data.Utils'
+], function (IRecord, GenericFormatMixin, JsonFormatMixin, Utils) {
    'use strict';
 
    /**
     * Адаптер для записи таблицы данных в формате JSON
     * @class SBIS3.CONTROLS.Data.Adapter.JsonRecord
     * @mixes SBIS3.CONTROLS.Data.Adapter.IRecord
+    * @mixes SBIS3.CONTROLS.Data.Adapter.GenericFormatMixin
     * @mixes SBIS3.CONTROLS.Data.Adapter.JsonFormatMixin
     * @public
     * @author Мальцев Алексей
     */
 
-   var JsonRecord = $ws.core.extend({}, [IRecord, JsonFormatMixin], /** @lends SBIS3.CONTROLS.Data.Adapter.JsonRecord.prototype */{
+   var JsonRecord = $ws.core.extend({}, [IRecord, GenericFormatMixin, JsonFormatMixin], /** @lends SBIS3.CONTROLS.Data.Adapter.JsonRecord.prototype */{
       _moduleName: 'SBIS3.CONTROLS.Data.Adapter.JsonRecord',
       $protected: {
          /**
@@ -63,6 +66,9 @@ define('js!SBIS3.CONTROLS.Data.Adapter.JsonRecord', [
       },
 
       set: function (name, value) {
+         if (!name) {
+            throw new ReferenceError(this._moduleName + '::set(): field name is not defined');
+         }
          this._data[name] = value;
       },
 
@@ -75,7 +81,7 @@ define('js!SBIS3.CONTROLS.Data.Adapter.JsonRecord', [
       },
 
       getInfo: function() {
-         $ws.single.ioc.resolve('ILogger').info(this._moduleName + '::getInfo()', 'Method is deprecated and will be removed in 3.7.4. Use \'getFormat\' instead.');
+         Utils.logger.stack(this._moduleName + '::getInfo(): method is deprecated and will be removed in 3.7.4. Use \'getFormat\' instead.');
          return {};
       },
 

@@ -110,6 +110,7 @@ define('js!SBIS3.CONTROLS.SwitcherBase', ['js!SBIS3.CORE.Control', 'js!SBIS3.CON
       setState: function(state) {
          if (state == 'on' || state == 'off'){
             this._options.state = state;
+            this._notifyOnPropertyChanged('state');
          }
       },
       /**

@@ -470,6 +470,32 @@ define(
             });
          });
 
+         describe('.clone()', function () {
+            it('should not be same as original', function () {
+               var list = new List({
+                  items: items
+               });
+               assert.instanceOf(list.clone(), List);
+               assert.notEqual(list.clone(), list);
+            });
+            it('should not be same as previous clone', function () {
+               var list = new List({
+                  items: items
+               });
+               assert.notEqual(list.clone(), list.clone());
+            });
+            it('should make items unlinked from original', function () {
+               var list = new List({
+                     items: items
+                  }),
+                  clone = list.clone();
+               clone.each(function(item, index) {
+                  assert.notEqual(item, list.at(index));
+                  assert.deepEqual(item, list.at(index));
+               });
+            });
+         });
+
          describe('.add()', function() {
             it('should append an item', function() {
                var list = new List({

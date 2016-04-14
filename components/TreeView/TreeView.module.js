@@ -25,7 +25,7 @@ define('js!SBIS3.CONTROLS.TreeView', ['js!SBIS3.CONTROLS.ListViewOld', 'js!SBIS3
             resContainer,
             itemWrapper = this._drawItemWrapper(item).appendTo(targetContainer);
 
-         this._addItemClasses(itemWrapper, this._items.getKey(item));
+         this._addItemClasses(itemWrapper, this._items.getId(item));
 
          resContainer = itemWrapper.hasClass('js-controls-ListView__itemContent') ? itemWrapper : $('.js-controls-ListView__itemContent', itemWrapper);
 
@@ -53,7 +53,7 @@ define('js!SBIS3.CONTROLS.TreeView', ['js!SBIS3.CONTROLS.ListViewOld', 'js!SBIS3
          if (parItem) {
             var
                curList,
-               parKey = this._items.getKey(parItem),
+               parKey = this._items.getId(parItem),
                curItem =  $(".controls-ListView__item[data-id='"+parKey+"']", this.getContainer().get(0));
             curList = $(".controls-TreeView__childContainer", curItem.get(0)).first();
             if (!curList.length) {

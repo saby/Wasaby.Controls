@@ -31,7 +31,11 @@ define('js!SBIS3.CONTROLS.FilterHistoryController',
                 /**
                  * Быстрый фильтр
                  */
-                fastDataFilter: undefined
+                fastDataFilter: undefined,
+                /**
+                 * Параметры фильтрации, которые не надо сохранять в историю
+                 */
+                noSaveFilters: []
              },
 
              _changeHistoryFnc: undefined,
@@ -121,7 +125,7 @@ define('js!SBIS3.CONTROLS.FilterHistoryController',
                   и в итоге мы можем получить не ту дату */
                 if(elem.value) {
                    if(elem.value instanceof Date) {
-                      dateFix = elem.value;
+                      dateFix = new Date(elem.value);
                       dateFix.setHours(dateFix.getHours() - dateFix.getTimezoneOffset() / 60);
                       elem.value = DateUtil.dateToIsoString(dateFix);
                    }
@@ -207,7 +211,7 @@ define('js!SBIS3.CONTROLS.FilterHistoryController',
              if(!filter.isActiveFilter) {
                 this.clearActiveFilter();
                 filter.isActiveFilter = true;
-                filter.viewFilter = this._getViewFilter();
+                filter.viewFilter = this.prepareViewFilter();
                 this.saveToUserParams();
              }
           },
@@ -234,7 +238,7 @@ define('js!SBIS3.CONTROLS.FilterHistoryController',
                 /* Если такой фильтр есть в истории, то надо его сделать активным */
                 if(equalFilter && !equalFilter.isActiveFilter) {
                    equalFilter.isActiveFilter = true;
-                   equalFilter.viewFilter = this._getViewFilter();
+                   equalFilter.viewFilter = this.prepareViewFilter();
 	               this.saveToUserParams()
                 }
                 return;
@@ -250,7 +254,7 @@ define('js!SBIS3.CONTROLS.FilterHistoryController',
              this._listHistory.add({
                 id: $ws.helpers.randomId(),
                 linkText: filterObject.linkText,
-	            viewFilter: this._getViewFilter(),
+	            viewFilter: this.prepareViewFilter(),
                 filter: filterObject.filter,
                 isActiveFilter: true,
                 isMarked: false
@@ -259,14 +263,15 @@ define('js!SBIS3.CONTROLS.FilterHistoryController',
 	          this.saveToUserParams();
           },
 
-          _getViewFilter: function() {
+          prepareViewFilter: function(filter) {
              var view = this._options.view,
-                 viewFilter = $ws.core.clone(view.getFilter());
+                 viewFilter = filter || $ws.core.clone(view.getFilter());
 
-             /* Не сохраняем раздел, т.к. одна и та же история может быть у нескольких представлений */
-             if($ws.helpers.instanceOfMixin(view, 'SBIS3.CONTROLS.hierarchyMixin')) {
-                delete viewFilter[view.getHierField()];
-             }
+             $ws.helpers.forEach(this._options.noSaveFilters, function(filter) {
+                if(viewFilter[filter]) {
+                   delete viewFilter[filter];
+                }
+             });
 
              return viewFilter;
           },

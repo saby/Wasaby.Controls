@@ -8,7 +8,7 @@ define('js!SBIS3.CONTROLS.ComponentBinder', [], function () {
     * @param backButton объект кнопки назад
     */
    /*методы для поиска*/
-   function startHierSearch(text, searchParamName, searchCrumbsTpl) {
+   function startHierSearch(text, searchParamName, searchCrumbsTpl, searchMode) {
       if (text) {
          var filter = $ws.core.merge(this._options.view.getFilter(), {
                'Разворот': 'С разворотом',
@@ -44,6 +44,10 @@ define('js!SBIS3.CONTROLS.ComponentBinder', [], function () {
          //Скрываем кнопку назад, чтобы она не наслаивалась на колонки
          if (this._options.backButton) {
             this._options.backButton.getContainer().css({'visibility': 'hidden'});
+         }
+
+         if (searchMode == 'root'){
+            filter[view.getHierField()] = undefined;
          }
 
          view.reload(filter, view.getSorting(), 0).addCallback(function(){
@@ -102,7 +106,7 @@ define('js!SBIS3.CONTROLS.ComponentBinder', [], function () {
       if (this._searchReload) {
          //Нужно поменять фильтр и загрузить нужный корень.
          //TODO менять фильтр в контексте, когда появятся data-binding'и
-         filter[view.getHierField()] = this._lastRoot;
+         filter[view.getHierField()] = this._lastRoot || null;
          //DataGridView._filter = filter;
          //DataGridView.setCurrentRoot(self._lastRoot); - плохо, потому что ВСЕ крошки на странице получат изменения
          //Релоад сделает то же самое, так как он стреляет onSetRoot даже если корень на самом деле не понменялся
@@ -211,6 +215,7 @@ define('js!SBIS3.CONTROLS.ComponentBinder', [], function () {
        * @param {String} searchParamName параметр фильтрации для поиска
        * @param {String} searchCrumbsTpl шаблон отрисовки элемента пути в поиске
        * @param {SBIS3.CONROLS.SearchForm} [searchForm] объект формы поиска, если не передан используется тот, что задан в опциях
+       * @param {String} [searchMode] В каком узле ищем, в текущем или в корне
        * @example
        * <pre>
        *     myBinder = new ComponentBinder({
@@ -220,11 +225,13 @@ define('js!SBIS3.CONTROLS.ComponentBinder', [], function () {
        *     myBinder.bindSearchGrid('СтрокаПоиска');
        * </pre>
        */
-      bindSearchGrid : function(searchParamName, searchCrumbsTpl, searchForm) {
+      bindSearchGrid : function(searchParamName, searchCrumbsTpl, searchForm, searchMode) {
          var self = this,
             view = this._options.view,
             isTree = $ws.helpers.instanceOfMixin(view, 'SBIS3.CONTROLS.TreeMixinDS');
          searchForm = searchForm || this._options.searchForm;
+         //todo Проверка на "searchParamName" - костыль. Убрать, когда будет адекватная перерисовка записей (до 150 версии, апрель 2016)
+         view._searchParamName = searchParamName;
          if (isTree){
             this._lastRoot = view.getCurrentRoot();
             view.subscribe('onBeforeSetRoot', function(ev, newRoot){
@@ -272,7 +279,7 @@ define('js!SBIS3.CONTROLS.ComponentBinder', [], function () {
 
          searchForm.subscribe('onSearch', function(event, text) {
             if (isTree) {
-               startHierSearch.call(self, text, searchParamName);
+               startHierSearch.call(self, text, searchParamName, undefined, searchMode);
             } else {
                startSearch.call(self, text, searchParamName);
             }
@@ -440,29 +447,33 @@ define('js!SBIS3.CONTROLS.ComponentBinder', [], function () {
        */
       bindFilterHistory: function(filterButton, fastDataFilter, searchParam, historyId, controller, browser) {
          var view = browser.getView(),
-             historyController = new controller({
-                historyId: historyId,
-                filterButton: filterButton,
-                fastDataFilter: fastDataFilter,
-                view: view
-             }),
-             filter = historyController.getActiveFilter(), viewFilter;
+             noSaveFilters = ['Разворот', 'ВидДерева'],
+             historyController, filter;
+
+         if(searchParam) {
+            noSaveFilters.push(searchParam);
+         }
+
+         if($ws.helpers.instanceOfMixin(view, 'SBIS3.CONTROLS.hierarchyMixin')) {
+            noSaveFilters.push(view.getHierField());
+         }
+
+         historyController = new controller({
+            historyId: historyId,
+            filterButton: filterButton,
+            fastDataFilter: fastDataFilter,
+            view: view,
+            noSaveFilters: noSaveFilters
+         });
+
+         filter = historyController.getActiveFilter();
 
          filterButton.setHistoryController(historyController);
          setTimeout($ws.helpers.forAliveOnly(function() {
             if(filter) {
-               viewFilter = filter.viewFilter;
-
-               //TODO убрать работу с фильтром, всё делать через filterStructure
-               //Задача в разработку от 03.02.2016 №1172574951
-               //Убрать работу с фильтром в HistoryController'e, всё делать через filterStructure
-               //https://inside.tensor.ru/opendoc.html?guid=5f16d461-f56e-477d-a1ea-ae55751755ad
-               if(searchParam && viewFilter[searchParam]) {
-                  delete viewFilter[searchParam];
-               }
                /* Надо вмерживать структуру, полученную из истории, т.к. мы не сохраняем в историю шаблоны строки фильтров */
                filterButton._updateFilterStructure(historyController._prepareStructureElemForApply(filter.filter));
-               view.setFilter($ws.core.merge(view.getFilter(), viewFilter), true);
+               view.setFilter($ws.core.merge(view.getFilter(), historyController.prepareViewFilter(filter.viewFilter)), true);
             }
             browser._notifyOnFiltersReady();
          }, view), 0);

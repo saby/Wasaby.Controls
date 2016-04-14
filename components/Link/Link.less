@@ -7,7 +7,9 @@
   line-height: @link-line-height;
   padding: @link-padding;
   box-sizing: border-box;
-
+  &.ws-area{
+   height: auto;
+  }
   &:hover {
     cursor: @link-cursor;
     color: @link-hover-text-color;
@@ -42,5 +44,10 @@
   &.controls-Button__ellipsis {
     &:extend(.controls-Button__ellipsis .controls-Button__text);
     vertical-align: text-bottom;
+  }
+  .controls-Link-link {
+     color: inherit;
+     text-decoration: inherit;
+     cursor: inherit;
   }
 }

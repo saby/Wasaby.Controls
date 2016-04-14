@@ -450,24 +450,25 @@ define('js!SBIS3.CONTROLS.DSMixin', [
       },
 
       _prepareConfig : function(sourceOpt, itemsOpt) {
-         var
-            keyField = this._options.keyField;
+         var keyField = this._options.keyField;
+
          if (!keyField) {
             $ws.single.ioc.resolve('ILogger').log('Option keyField is required');
          }
+
          if (sourceOpt) {
             this._dataSource = this._prepareSource(sourceOpt);
             this._items = null;
-         }
-         else if (itemsOpt) {
+         } else if (itemsOpt) {
             if ($ws.helpers.instanceOfModule(itemsOpt, 'SBIS3.CONTROLS.Data.Projection.Projection')) {
                this._itemsProjection = itemsOpt;
                this._items = this._convertItems(this._itemsProjection.getCollection());
                this._setItemsEventHandlers();
                this._notify('onItemsReady');
                this._itemsReadyCallback();
-            }
-            else if (itemsOpt instanceof Array) {
+            } else if($ws.helpers.instanceOfModule(itemsOpt, 'SBIS3.CONTROLS.Data.Collection.RecordSet')) {
+               this._processingData(itemsOpt);
+            } else if (itemsOpt instanceof Array) {
                /*TODO уменьшаем количество ошибок с key*/
                if (!this._options.keyField) {
                   var itemFirst = itemsOpt[0];
@@ -481,8 +482,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
                   data: itemsOpt,
                   idProperty: this._options.keyField
                });
-            }
-            else {
+            } else {
                this._items = itemsOpt;
                this._dataSource = null;
                this._createDefaultProjection(this._items);
@@ -670,32 +670,27 @@ define('js!SBIS3.CONTROLS.DSMixin', [
              this._container.removeClass('controls-ListView__dataLoaded');
              def = this._callQuery(this._options.filter, this.getSorting(), this._offset, this._limit)
                 .addCallback($ws.helpers.forAliveOnly(function (list) {
-                   self._toggleIndicator(false);
-                   if (self._items) {
-                      self._notify('onDataLoad', list);
-                      self._dataSet.setMetaData(list.getMetaData());
-                      self._items.assign(list);
-                      if (self._items !== self._dataSet) {
-                         self._dataSet.assign(list);
-                      }
-                      if (!this._options.autoRedraw) {
-                         this.redraw();
-                      }
-                      self._dataLoadedCallback();
-                   }
-                   else {
-                      self._notify('onDataLoad', list);
-                      self._items = list;
-                      self._dataSet = list;
-                      self._createDefaultProjection(self._items);
-                      self._setItemsEventHandlers();
-                      this._notify('onItemsReady');
-                      self._itemsReadyCallback();
-                      self._dataLoadedCallback();
-                      self.redraw();
-                   }
-                   //self._notify('onBeforeRedraw');
-                   return list;
+                    var hasItems = !!this._items;
+
+                    self._toggleIndicator(false);
+                    self._notify('onDataLoad', list);
+                    self._processingData(list);
+
+                    if(hasItems) {
+                       if(!self._options.autoRedraw) {
+                          self.redraw();
+                       }
+                    } else {
+                       self.redraw();
+                    }
+                    if (self._options.infiniteScroll === 'up'){
+                       var firstItem = self._itemsProjection.at(0);
+                       if (firstItem) {
+                           self._scrollToItem(firstItem.getContents().getId());
+                       }
+                    }
+                    //self._notify('onBeforeRedraw');
+                    return list;
                 }, self))
                 .addErrback($ws.helpers.forAliveOnly(function (error) {
                    if (!error.canceled) {
@@ -722,6 +717,27 @@ define('js!SBIS3.CONTROLS.DSMixin', [
 
          return this._loader;
       }),
+
+      _processingData: function(list) {
+         var hasItems = !!this._items;
+
+         if (hasItems) {
+            this._dataSet.setMetaData(list.getMetaData());
+            this._items.assign(list);
+            if (this._items !== this._dataSet) {
+               this._dataSet.assign(list);
+            }
+         } else {
+            this._items = list;
+            this._dataSet = list;
+            this._createDefaultProjection(this._items);
+            this._setItemsEventHandlers();
+            this._notify('onItemsReady');
+            this._itemsReadyCallback();
+         }
+
+         this._dataLoadedCallback();
+      },
 
       _callQuery: function (filter, sorting, offset, limit) {
          if (!this._dataSource) {
@@ -799,6 +815,8 @@ define('js!SBIS3.CONTROLS.DSMixin', [
          this._dropPageSave();
          if (this._dataSource && !noLoad) {
             this.reload(this._options.filter, this.getSorting(), 0, this.getPageSize());
+         } else {
+            this._notifyOnPropertyChanged('filter');
          }
       },
       /**
@@ -887,7 +905,11 @@ define('js!SBIS3.CONTROLS.DSMixin', [
          this._unsetItemsEventHandlers();
          this._items = null;
          this._prepareConfig(undefined, items);
-         this.reload();
+          if(items instanceof Array) {
+             this.reload();
+          } else {
+             this.redraw();
+          }
       },
 
       _drawItemsCallback: function () {
@@ -1017,7 +1039,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
       },
 
       _getElementByModel: function(item) {
-         return this._getItemsContainer().find('.js-controls-ListView__item[data-id="' + item.getKey() + '"]');
+         return this._getItemsContainer().find('.js-controls-ListView__item[data-id="' + item.getId() + '"]');
       },
 
       _drawItem: function (item, at, last) {
@@ -1131,7 +1153,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
       },
 
       _addItemAttributes: function (container, item) {
-         var strKey = item.getKey();
+         var strKey = item.getId();
          if (strKey == null) {
             strKey += '';
          }
@@ -1303,7 +1325,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
             if (next && !meth.call(this, next.getContents())) {
                flagAfter = true;
             }
-         };
+         }
          /**/
          item = item.getContents();
          var target = this._getTargetContainer(item),
@@ -1387,6 +1409,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
       _updateItem: function(item) {
          item = item.getContents();
          var container = this._getItemContainer(this._getTargetContainer(item), item),
+            lostFocus = document.activeElement === container.get(0),
             template = this._getItemTemplate(item);
 
          if (container.length) {
@@ -1394,12 +1417,18 @@ define('js!SBIS3.CONTROLS.DSMixin', [
             this._addItemAttributes(newItemContainer, item);
             this._clearItems(container);
             container.replaceWith(newItemContainer);
+            //если фокус ушёл на строку, которая была удалена то вернём фокус на контейнер контрола.
+            if (lostFocus) {
+               this.getContainer().focus();
+            }
             this._ladderCompare([newItemContainer.prev(), newItemContainer, newItemContainer.next()]);
-         } else if(this.getItems().getIndex(item) > -1) {
+         }
+         //TODO: код понадобится для частичной перерисовки после перемещения
+         /*else if(this.getItems().getIndex(item) > -1) {
             //todo если записи нет в доме но она есть в рекордстее  и ее кто то изменит, то она должна перерисоваться
             //todo нужно когда запись перемещается из закрытой папки
             this.redraw();
-         }
+         }*/
       },
 
       _getItemContainerByIndex: function(parent, at) {
@@ -1407,7 +1436,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
       },
 
       _getItemContainer: function(parent, item) {
-         return parent.find('>[data-id="' + item.getKey() + '"]');
+         return parent.find('>[data-id="' + item.getId() + '"]');
       }
    };
 
@@ -1451,13 +1480,14 @@ define('js!SBIS3.CONTROLS.DSMixin', [
 	               break;
 
 	            case IBindCollection.ACTION_MOVE:
-	               for (i = 0; i < newItems.length; i++) {
+                   //TODO: код понадобится для частичной перерисовки после перемещения
+	               /*for (i = 0; i < newItems.length; i++) {
 	                  this._moveItem(
 	                     newItems[i],
 	                     newItemsIndex + newItems.length - 1
 	                  );
 	               }
-	               this._reviveItems();
+	               this._reviveItems();*/
 	               break;
 
 	            case IBindCollection.ACTION_REPLACE:

@@ -290,8 +290,8 @@ define([
                rawData: {
                   d:[null],
                   s:[{
-                     "n":"arrayBool",
-                     "t":{"n":"Массив","t":"Логическое"}
+                     'n': 'arrayBool',
+                     't': {'n': 'Массив', 't': 'Логическое'}
                   }]
                }
             });
@@ -380,27 +380,66 @@ define([
                      model.set('record', record);
                      assert.deepEqual(getData(model, 3), record.toJSON());
                   });
-                  it('should throw an error if set recordset as not a recordset', function () {
+                  it('should throw an error if the record adapter is incompatible', function () {
+                     var model = getModel(type),
+                        record = new Model();
+                     assert.throw(function() {
+                        model.set('record', record);
+                     });
+                  });
+                  it('should store a recordset', function () {
+                     var model = getModel(type),
+                        recordset = new RecordSet({
+                           rawData: {
+                              d: [[0], [1], [2]],
+                              s: [{n: 'id', t: 'Число целое'}]
+                           },
+                           adapter: 'adapter.sbis'
+                        });
+                     model.set('recordSet', recordset);
+                     assert.deepEqual(getData(model, 4).d, recordset.getRawData().d);
+                     assert.deepEqual(getData(model, 4).s, recordset.getRawData().s);
+                  });
+                  it('should throw an error if the recordset adapter is incompatible', function () {
+                     var model = getModel(type),
+                        recordset = new RecordSet();
+                     assert.throw(function() {
+                        model.set('recordSet', recordset);
+                     });
+                  });
+                  it('should store a list of records', function () {
+                     var model = getModel(type),
+                        items = [
+                           getModel(type),
+                           getModel(type),
+                           getModel(type)
+                        ];
+                     model.set('recordSet', new List({
+                        items: items
+                     }));
+                     for (var i = 0; i < items.length; i++) {
+                        assert.deepEqual(getData(model, 4).d[i], items[i].getRawData().d);
+                        assert.deepEqual(getData(model, 4).s, items[i].getRawData().s);
+                     }
+                  });
+                  it('should throw an error if set recordset not as a list', function () {
                      var model = getModel(type);
                      assert.throw(function() {
                         model.set('recordSet', [{id: 502}]);
                      });
-                     assert.throw(function() {
-                        model.set('recordSet', new List());
-                     });
                   });
-                  it('should store a old record set', function () {
+                  it('should store an old recordset', function () {
                      var model = getModel(type),
                         coldef = {
-                           "keyColumnName": {
+                           'keyColumnName': {
                               index: 0,
-                              title: "key",
-                              type: "Идентификатор"
+                              title: 'key',
+                              type: 'Идентификатор'
                            },
-                           "Название": {
+                           'Название': {
                               index: 1,
-                              title: "name",
-                              type: "Строка"
+                              title: 'name',
+                              type: 'Строка'
                            }
                         },
                         recordset = new $ws.proto.RecordSetStatic({
@@ -424,7 +463,6 @@ define([
                         assert.deepEqual(getData(model, 4).s, item.getRawData().s);
                      });
                   });
-
                   it('should store dataSet', function () {
                      var model = getModel(type),
                         data = {

@@ -4,14 +4,16 @@ define('js!SBIS3.CONTROLS.Data.FormattableMixin', [
    'js!SBIS3.CONTROLS.Data.Format.FormatsFactory',
    'js!SBIS3.CONTROLS.Data.Format.FieldsFactory',
    'js!SBIS3.CONTROLS.Data.Di',
+   'js!SBIS3.CONTROLS.Data.Utils',
    'js!SBIS3.CONTROLS.Data.Adapter.Json'
-], function (Format, FormatsFactory, FieldsFactory, Di) {
+], function (Format, FormatsFactory, FieldsFactory, Di, Utils) {
    'use strict';
 
    /**
     * Миксин, предоставляющий поведение владения форматом полей
     * @mixin SBIS3.CONTROLS.Data.FormattableMixin
     * @public
+    * @ignoreMethods notifyFormatChanged
     * @author Мальцев Алексей
     */
 
@@ -22,6 +24,8 @@ define('js!SBIS3.CONTROLS.Data.FormattableMixin', [
              * @cfg {Object} Данные в "сыром" виде
              * @see getRawData
              * @see setRawData
+             * @remark
+             * Данные должны быть в формате, поддерживаемом адаптером {@link adapter}.
              * @example
              * <pre>
              *    var user = new Record({
@@ -31,8 +35,34 @@ define('js!SBIS3.CONTROLS.Data.FormattableMixin', [
              *          lastName: 'Smith'
              *       }
              *    });
-             *    user.get('id');//5
+             *    user.get('id');//1
              *    user.get('firstName');//John
+             *    user.get('lastName');//Smith
+             * </pre>
+             * @example
+             * <pre>
+             *    var characters = new RecordSet({
+             *       rawData: [{
+             *          id: 1,
+             *          firstName: 'John',
+             *          lastName: 'Connor',
+             *          role: 'Savior'
+             *       }, {
+             *          id: 2,
+             *          firstName: 'Sarah',
+             *          lastName: 'Connor'
+             *          role: 'Mother'
+             *       }, {
+             *          id: 3,
+             *          firstName: '-',
+             *          lastName: 'T-800'
+             *          role: 'Terminator'
+             *       }]
+             *    });
+             *    characters.at(0).get('firstName');//John
+             *    characters.at(0).get('lastName');//Connor
+             *    characters.at(1).get('firstName');//Sarah
+             *    characters.at(1).get('lastName');//Connor
              * </pre>
              */
             rawData: null,
@@ -43,6 +73,9 @@ define('js!SBIS3.CONTROLS.Data.FormattableMixin', [
              * @see setAdapter
              * @see SBIS3.CONTROLS.Data.Adapter.Json
              * @see SBIS3.CONTROLS.Data.Di
+             * @remark
+             * Адаптер должен быть предназначен для формата, в котором описаны сырые данные {@link rawData}.
+             * По умолчанию обрабатываются данные в формате JSON (ключ -> значение).
              * @example
              * <pre>
              *    var user = new Record({
@@ -73,6 +106,28 @@ define('js!SBIS3.CONTROLS.Data.FormattableMixin', [
              * </pre>
              * @example
              * <pre>
+             *    define('js!My.Module', [
+             *       'js!My.Format.User'
+             *    ], function (UserFormat) {
+             *       var users = new RecordSet({
+             *          format: new UserFormat
+             *       });
+             *    });
+             * </pre>
+             * @example
+             * <pre>
+             *    var user = new Record({
+             *       format: [{
+             *          name: 'id'
+             *          type: 'integer'
+             *       }, {
+             *          name: 'login'
+             *          type: 'string'
+             *       }]
+             *    });
+             * </pre>
+             * @example
+             * <pre>
              *    var users = new RecordSet({
              *       format: [{
              *          name: 'id'
@@ -91,6 +146,11 @@ define('js!SBIS3.CONTROLS.Data.FormattableMixin', [
           * @member {SBIS3.CONTROLS.Data.Adapter.ITable|SBIS3.CONTROLS.Data.Adapter.IRecord} Адаптер для cырых данных
           */
          _rawDataAdapter: null,
+
+         /**
+          * @member {Array.<String>} Описание всех полей, полученных из данных в "сыром" виде
+          */
+         _rawDataFields: null,
 
          /**
          *@member {Boolean} Формат был задан пользователем явно
@@ -156,6 +216,8 @@ define('js!SBIS3.CONTROLS.Data.FormattableMixin', [
        */
       setRawData: function(data) {
          this._options.rawData = data;
+         this._resetRawDataAdapter();
+         this._resetRawDataFields();
       },
 
       /**
@@ -169,7 +231,7 @@ define('js!SBIS3.CONTROLS.Data.FormattableMixin', [
             typeof this._options.adapter === 'string' &&
             FormattableMixin._getDefaultAdapter !== this._getDefaultAdapter
          ) {
-            $ws.single.ioc.resolve('ILogger').info('SBIS3.CONTROLS.Data.FormattableMixin', 'Method _getDefaultAdapter() is deprecated and will be removed in 3.7.4. Use \'adapter\' option instead.');
+            Utils.logger.info('SBIS3.CONTROLS.Data.FormattableMixin: method _getDefaultAdapter() is deprecated and will be removed in 3.7.4. Use \'adapter\' option instead.');
             this._options.adapter = this._getDefaultAdapter();
          }
          if (typeof this._options.adapter === 'string') {
@@ -186,6 +248,7 @@ define('js!SBIS3.CONTROLS.Data.FormattableMixin', [
        */
       setAdapter: function (adapter) {
          this._options.adapter = adapter;
+         this._resetRawDataAdapter();
       },
 
       /**
@@ -221,6 +284,8 @@ define('js!SBIS3.CONTROLS.Data.FormattableMixin', [
       addField: function(format, at) {
          format = this._buildField(format);
          this._getFormat().add(format, at);
+         this._getRawDataAdapter().addField(format, at);
+         this._resetRawDataFields();
       },
 
       /**
@@ -237,6 +302,8 @@ define('js!SBIS3.CONTROLS.Data.FormattableMixin', [
        */
       removeField: function(name) {
          this._getFormat().removeField(name);
+         this._getRawDataAdapter().removeField(name);
+         this._resetRawDataFields();
       },
 
       /**
@@ -253,6 +320,18 @@ define('js!SBIS3.CONTROLS.Data.FormattableMixin', [
        */
       removeFieldAt: function(at) {
          this._getFormat().removeAt(at);
+         this._getRawDataAdapter().removeFieldAt(at);
+         this._resetRawDataFields();
+      },
+      
+      /**
+       * Уведомляет об изменении формата при композиции/агрегации инстансов общим владельцем
+       * @param {String} methodName Имя метода, модифицировавшего формат
+       * @param {Array} args Аргументы метода, модифицировавшего формат
+       */
+      notifyFormatChanged: function (methodName, args) {
+         this._resetRawDataAdapter();
+         this._resetRawDataFields();
       },
 
       //endregion Public methods
@@ -307,7 +386,15 @@ define('js!SBIS3.CONTROLS.Data.FormattableMixin', [
        * @protected
        */
       _getRawDataFields: function() {
-         throw new Error('Method must be implemented');
+         return this._rawDataFields || (this._rawDataFields = this._getRawDataAdapter().getFields());
+      },
+      
+      /**
+       * Сбрасывает список полей записи, полученный из "сырых" данных
+       * @protected
+       */
+      _resetRawDataFields: function() {
+         this._rawDataFields = null;
       },
 
       /**
@@ -317,7 +404,7 @@ define('js!SBIS3.CONTROLS.Data.FormattableMixin', [
        * @protected
        */
       _getRawDataFormat: function(name) {
-         throw new Error('Method must be implemented');
+         return this._getRawDataAdapter().getFormat(name);
       },
 
       /**
@@ -340,7 +427,7 @@ define('js!SBIS3.CONTROLS.Data.FormattableMixin', [
        * @protected
        */
       _clearFormat: function (){
-         if (this._directFormat) {
+         if (this._isDirectFormat()) {
             throw new Error(this._moduleName + ': format can\'t be cleared because it\'s defined directly.');
          }
          this._options.format = null;

@@ -343,6 +343,11 @@ define(
          },
 
          setText: function(text){
+            var lackMaskLength = text.length - this._options.mask.length;
+            //Увеличиваем маску на допустимое кол-во символов, если того требует устанавливаемый текст
+            if (lackMaskLength){
+               this._incMask(lackMaskLength);
+            }
             text = this._getCorrectText(text);
             TimeInterval.superclass.setText.call(this, text);
          },

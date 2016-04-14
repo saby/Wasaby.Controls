@@ -3,10 +3,11 @@ define('js!SBIS3.CONTROLS.Data.Source.Base', [
    'js!SBIS3.CONTROLS.Data.Source.ISource',
    'js!SBIS3.CONTROLS.Data.Source.DataSet',
    'js!SBIS3.CONTROLS.Data.Di',
+   'js!SBIS3.CONTROLS.Data.Utils',
    'js!SBIS3.CONTROLS.Data.Model',
    'js!SBIS3.CONTROLS.Data.Collection.RecordSet',
    'js!SBIS3.CONTROLS.Data.Adapter.Json'
-], function (ISource, DataSet, Di) {
+], function (ISource, DataSet, Di, Utils) {
    'use strict';
 
    /**
@@ -33,7 +34,7 @@ define('js!SBIS3.CONTROLS.Data.Source.Base', [
          cfg = cfg || {};
          //Deprecated
          if ('resource' in cfg && !('endpoint' in cfg)) {
-            $ws.single.ioc.resolve('ILogger').info(this._moduleName + '::$constructor()', 'Option "resource" is deprecated and will be removed in 3.7.4. Use "endpoint.contract" instead.');
+            Utils.logger.stack(this._moduleName + '::$constructor(): option "resource" is deprecated and will be removed in 3.7.4. Use "endpoint.contract" instead.', 3);
             this._options.endpoint.contract = cfg.resource;
          }
 
@@ -65,7 +66,7 @@ define('js!SBIS3.CONTROLS.Data.Source.Base', [
        * @returns {String}
        */
       getResource: function () {
-         $ws.single.ioc.resolve('ILogger').info(this._moduleName + '::getResource()', 'Method is deprecated and will be removed in 3.7.4. Use "getEndpoint().contract" instead.');
+         Utils.logger.stack(this._moduleName + '::getResource(): method is deprecated and will be removed in 3.7.4. Use "getEndpoint().contract" instead.');
          return this._options.endpoint.contract || '';
       },
 
@@ -187,7 +188,7 @@ define('js!SBIS3.CONTROLS.Data.Source.Base', [
       //region SBIS3.CONTROLS.BaseSource
 
       sync: function (data) {
-         //$ws.single.ioc.resolve('ILogger').info('SBIS3.CONTROLS.Data.Source.Base', 'method sync() is deprecated and will be removed in 3.7.4. Use SBIS3.CONTROLS.Data.Model::sync() instead.');
+         //Utils.logger.stack('SBIS3.CONTROLS.Data.Source.Base: method sync() is deprecated and will be removed in 3.7.4. Use SBIS3.CONTROLS.Data.Model::sync() instead.');
 
          var result;
          if ($ws.helpers.instanceOfModule(data, 'SBIS3.CONTROLS.Data.Model')) {

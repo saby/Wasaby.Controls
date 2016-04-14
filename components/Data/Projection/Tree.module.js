@@ -308,7 +308,7 @@ define('js!SBIS3.CONTROLS.Data.Projection.Tree', [
                      children = hierIndex[parentId] || [];
 
                   if (parentsProcessing[parentId]) {
-                     $ws.single.ioc.resolve('ILogger').error(logStamp, 'Recursive traversal detected: parent with id "' + parentId + '" is already in progress.');
+                     Utils.logger.error(logStamp +': recursive traversal detected: parent with id "' + parentId + '" is already in progress.');
                   } else {
                      //FIXME: для совместимости с логикой контролов - корневые записи дерева могут вообще не иметь поля с именем parentProperty
                      if (!children.length && parentId === null && parent.isRoot()) {

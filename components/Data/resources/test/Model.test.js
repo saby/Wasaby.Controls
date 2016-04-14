@@ -60,6 +60,11 @@ define([
                      set: function (value) {
                         this._internal = value;
                      }
+                  },
+                  date: {
+                     get: function () {
+                        return new Date();
+                     }
                   }
                };
             },
@@ -134,23 +139,28 @@ define([
             it('should return the property value', function () {
                assert.strictEqual(model.get('internal'), 'internalDefault');
             });
-
-            //it('should return the property value', function () {
-            //   var model = new Model({
-            //      properties: {
-            //         rand: {
-            //            def:0,
-            //            get:function (){
-            //               return {'val': Math.random()};
-            //            }
-            //         }
-            //      }
-            //   });
-            //   assert.equal(model.get('rand'), model.get('rand'));
-            //   //assert.strictEqual(model.get('internal'), 'internalDefault');
-            //});
-
-
+            it('should return a single instance for Object', function () {
+               var value = model.get('date');
+               assert.instanceOf(value, Date);
+               assert.strictEqual(model.get('date'), value);
+               assert.strictEqual(model.get('date'), value);
+            });
+            it('should prevent caching for overridden property', function () {
+               var model = new Model({
+                  rawData: {
+                     test: {a: 1}
+                  },
+                  properties: {
+                     test: {
+                        get: function() {
+                           return 2;
+                        }
+                     }
+                  }
+               });
+               assert.strictEqual(model.get('test'), 2);
+               assert.strictEqual(model.get('test'), 2);
+            });
          });
 
          describe('.set()', function () {
@@ -285,16 +295,10 @@ define([
          describe('.each()', function () {
             it('should return equivalent values', function () {
                model.each(function(name, value) {
-                  switch (name) {
-                     case 'calc':
-                     case 'calcRead':
-                     case 'title':
-                     case 'sqMax':
-                     case 'internal':
-                        assert.strictEqual(model.get(name), value);
-                        break;
-                     default:
-                        assert.strictEqual(modelData[name], value);
+                  if (modelProperties[name] && modelProperties[name].get) {
+                     assert.strictEqual(model.get(name), value);
+                  } else {
+                     assert.strictEqual(modelData[name], value);
                   }
                });
             });
@@ -395,17 +399,25 @@ define([
                assert.strictEqual(model.getIdProperty(), clone.getIdProperty());
             });
             it('should give equal result of toObject', function () {
-               var clone = model.clone();
-               assert.notEqual(model.toObject(), clone.toObject());
-               assert.deepEqual(model.toObject(), clone.toObject());
+               var clone = model.clone(),
+                  modelObj = model.toObject(),
+                  cloneObj = clone.toObject();
+               //dates can be different
+               delete modelObj.date;
+               delete cloneObj.date;
+               assert.deepEqual(modelObj, cloneObj);
             });
-            it('should give equal fields', function () {
+            it('should give equal fields for not an Object', function () {
                var clone = model.clone();
                model.each(function(name, value) {
-                  assert.strictEqual(value, clone.get(name));
+                  if (!value instanceof Object) {
+                     assert.strictEqual(value, clone.get(name));
+                  }
                });
                clone.each(function(name, value) {
-                  assert.strictEqual(value, model.get(name));
+                  if (!value instanceof Object) {
+                     assert.strictEqual(value, model.get(name));
+                  }
                });
             });
          });

@@ -104,12 +104,21 @@ define('js!SBIS3.CONTROLS.Menu', [
       },
 
       _getItemTemplate: function(item) {
-         var options = item.toObject();
-         options.allowChangeEnable = item.get('allowChangeEnable') !== undefined ? item.get('allowChangeEnable') : this._options.allowChangeEnable;
-         options.caption = item.get(this._options.displayField);
-         delete options.id;
-         delete options.parent;
-         return '<component data-component="SBIS3.CONTROLS.MenuItem" config="' + $ws.helpers.encodeCfgAttr(options) + '"></component>';
+         var isEnabled = item.get('enabled'),
+             visible = item.get('visible');
+
+         var options = {
+               className: item.get('className'),
+               command: item.get('command'),
+               enabled: isEnabled === undefined ? true : isEnabled,
+               visible: visible === undefined ? true : visible,
+               icon: item.get('icon'),
+               tooltip: item.get('tooltip'),
+               allowChangeEnable: item.get('allowChangeEnable') !== undefined ? item.get('allowChangeEnable') : this._options.allowChangeEnable
+            };
+         return '<component data-component="SBIS3.CONTROLS.MenuItem" config="' + $ws.helpers.encodeCfgAttr(options) + '">' +
+               '<option name="caption" type="string">' + item.get(this._options.displayField) + '</option>' +
+             '</component>';
       },
 
       _itemActivatedHandler : function(id, event){

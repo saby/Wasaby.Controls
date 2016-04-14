@@ -62,6 +62,16 @@ define('js!SBIS3.CONTROLS.Browser', [
              */
             searchCrumbsTpl: undefined,
             /**
+             * @cfg {String} В каком узле осуществляем поиск
+             * @variant current в текущем узле
+             * @variant root в корне
+             * @example
+             * <pre>
+             *     <option name="searchMode">root</option>
+             * </pre>
+             */
+            searchMode: 'current',
+            /**
              * @cfg {String} Id для работы с историей фильтров
              */
             historyId : '',
@@ -111,7 +121,7 @@ define('js!SBIS3.CONTROLS.Browser', [
 
          this._searchForm = this._getSearchForm();
          if (this._searchForm) {
-            this._componentBinder.bindSearchGrid(this._options.searchParam, this._options.searchCrumbsTpl, this._searchForm);
+            this._componentBinder.bindSearchGrid(this._options.searchParam, this._options.searchCrumbsTpl, this._searchForm, this._options.searchMode);
          }
 
 

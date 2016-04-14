@@ -41,33 +41,38 @@ define('js!SBIS3.CONTROLS.TreeCompositeView', ['js!SBIS3.CONTROLS.TreeDataGridVi
       },
 
       _elemClickHandler: function (id, data, target) {
-         var $target = $(target);
+         var $target = $(target),
+             onItemClickResult;
 
          if (this._options.viewMode == 'table') {
             TreeCompositeView.superclass._elemClickHandler.call(this, id, data, target);
          }
          else {
-            this.setSelectedKey(id);
             if (this._options.multiselect) {
                if ($target.hasClass('js-controls-ListView__itemCheckBox')) {
                   this._onCheckBoxClick($target);
                }
                else {
-                  this._notifyOnItemClick(id, data, target);
+                  onItemClickResult = this._notifyOnItemClick(id, data, target);
                }
             } else {
-               this.setSelectedKeys([id]);
-               this._notifyOnItemClick(id, data, target);
+               onItemClickResult = this._notifyOnItemClick(id, data, target);
+               if (onItemClickResult !== false){
+                  this.setSelectedKeys([id]);
+               }
+            }
+            if (onItemClickResult !== false){
+               this.setSelectedKey(id);
             }
          }
       },
       _notifyOnItemClick: function(id, data, target) {
+         var res;
          if (this._options.viewMode == 'table') {
-            TreeCompositeView.superclass._notifyOnItemClick.apply(this, arguments);
+            res = TreeCompositeView.superclass._notifyOnItemClick.apply(this, arguments);
          }
          else {
-            var
-               nodeID,
+            var nodeID;
                res = this._notify('onItemClick', id, data, target);
             if (res !== false) {
                this._options.elemClickHandler && this._options.elemClickHandler.call(this, id, data, target);
@@ -81,6 +86,7 @@ define('js!SBIS3.CONTROLS.TreeCompositeView', ['js!SBIS3.CONTROLS.TreeDataGridVi
                }
             }
          }
+         return res;
       },
       _getItemTemplate: function(item) {
          var resultTpl, dotTpl;

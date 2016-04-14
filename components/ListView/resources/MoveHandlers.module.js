@@ -55,7 +55,7 @@ define('js!SBIS3.CONTROLS.MoveHandlers', ['js!SBIS3.CORE.Dialog','js!SBIS3.CONTR
          if (moveTo !== null) {
             if ($ws.helpers.instanceOfModule(moveTo, 'SBIS3.CONTROLS.Data.Model')) {
                recordTo = moveTo;
-               moveTo = recordTo.getKey();
+               moveTo = recordTo.getId();
             } else {
                recordTo = this._items.getRecordById(moveTo);
             }
@@ -89,10 +89,15 @@ define('js!SBIS3.CONTROLS.MoveHandlers', ['js!SBIS3.CORE.Dialog','js!SBIS3.CONTR
                      //в поле иерархии он сам этого не сделает
                      self._items._reindexTree(self._options.hierField);
                      self.removeItemsSelectionAll();
+                     //TODO: в .140 версии позовём redraw т.к. частичная перерисовка работает не во всех случаях
+                     //в .150 удалить redraw и сделать частичную перерисовку.
+                     self.redraw();
                   }
                }).addBoth(function() {
                   self._toggleIndicator(false);
                });
+            } else {
+               self._toggleIndicator(false);
             }
          }
       },
@@ -104,9 +109,9 @@ define('js!SBIS3.CONTROLS.MoveHandlers', ['js!SBIS3.CORE.Dialog','js!SBIS3.CONTR
             return false;
          }
          if (recordTo !== null && $ws.helpers.instanceOfMixin(this, 'SBIS3.CONTROLS.hierarchyMixin')) {
-            toMap = this._getParentsMap(recordTo.getKey());
+            toMap = this._getParentsMap(recordTo.getId());
             for (var i = 0; i < records.length; i++) {
-               key = '' + (($ws.helpers.instanceOfModule(records[i], 'SBIS3.CONTROLS.Record')||$ws.helpers.instanceOfModule(records[i], 'SBIS3.CONTROLS.Data.Model')) ? records[i].getKey() : records[i]);
+               key = '' + (($ws.helpers.instanceOfModule(records[i], 'SBIS3.CONTROLS.Record')||$ws.helpers.instanceOfModule(records[i], 'SBIS3.CONTROLS.Data.Model')) ? records[i].getId() : records[i]);
                if ($.inArray(key, toMap) !== -1) {
                   return false;
                }
@@ -137,7 +142,7 @@ define('js!SBIS3.CONTROLS.MoveHandlers', ['js!SBIS3.CORE.Dialog','js!SBIS3.CONTR
             }) : [];
          var record = dataSet.getRecordByKey(parentKey);
          while (record) {
-            parentKey = '' + record.getKey();
+            parentKey = '' + record.getId();
             if ($.inArray(parentKey, toMap) === -1) {
                toMap.push(parentKey);
             }

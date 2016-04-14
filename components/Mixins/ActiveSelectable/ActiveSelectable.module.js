@@ -2,13 +2,6 @@
  * Created by am.gerasimov on 24.11.2015.
  */
 define('js!SBIS3.CONTROLS.ActiveSelectable', ['js!SBIS3.CONTROLS.Data.Model'], function(Model) {
-
-   function propertyUpdateWrapper(func) {
-      return function() {
-         return this.runInPropertiesUpdate(func, arguments);
-      };
-   }
-
    /**
     * Миксин, добавляющий поведение хранения выбранного элемента
     * @mixin SBIS3.CONTROLS.ActiveSelectable
@@ -58,7 +51,7 @@ define('js!SBIS3.CONTROLS.ActiveSelectable', ['js!SBIS3.CONTROLS.Data.Model'], f
        * @see selectedItem
        * @see getSelectedItem
        */
-      setSelectedItem: propertyUpdateWrapper(function(item) {
+      setSelectedItem: function(item) {
          var isModel = item instanceof Model;
 
 
@@ -67,12 +60,12 @@ define('js!SBIS3.CONTROLS.ActiveSelectable', ['js!SBIS3.CONTROLS.Data.Model'], f
          }
 
          this._options.selectedItem = isModel ? item : null;
-         this._notifyOnPropertyChanged('selectedItem');
          this.setSelectedKey(isModel ? item.getId() : null);
-      }),
+         this._notifyOnPropertyChanged('selectedItem');
+      },
 
       initializeSelectedItem: function() {
-         this._options.selectedItem = new Model();
+         this._options.selectedItem = new Model({idProperty: this._options.keyField});
       },
 
       /**
@@ -126,11 +119,11 @@ define('js!SBIS3.CONTROLS.ActiveSelectable', ['js!SBIS3.CONTROLS.Data.Model'], f
          var selItem = this._options.selectedItem,
              selKey = this._options.selectedKey;
 
-         if(selKey === null) {
-            return;
-         }
-         if(selKey !== selItem.getId()) {
-            this.setSelectedItem(null);
+         /* При синхронизации запись без ключа считаем невыбранной, т.к. с помощью метода set такую запись установить нельзя,
+          т.е. она может только проинициализироваться из контекста */
+         if(selItem && selItem.getId() && (selKey === null || selKey !== selItem.getId())) {
+            this._options.selectedItem = null;
+            this._notifyOnPropertyChanged('selectedItem');
          }
       }
 

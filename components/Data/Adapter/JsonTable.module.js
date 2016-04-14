@@ -1,21 +1,23 @@
 /* global define, $ws */
 define('js!SBIS3.CONTROLS.Data.Adapter.JsonTable', [
    'js!SBIS3.CONTROLS.Data.Adapter.ITable',
+   'js!SBIS3.CONTROLS.Data.Adapter.GenericFormatMixin',
    'js!SBIS3.CONTROLS.Data.Adapter.JsonFormatMixin',
    'js!SBIS3.CONTROLS.Data.Adapter.JsonRecord'
-], function (ITable, JsonFormatMixin, JsonRecord) {
+], function (ITable, GenericFormatMixin, JsonFormatMixin, JsonRecord) {
    'use strict';
 
    /**
     * Адаптер для таблицы данных в формате JSON
     * @class SBIS3.CONTROLS.Data.Adapter.JsonTable
     * @mixes SBIS3.CONTROLS.Data.Adapter.ITable
+    * @mixes SBIS3.CONTROLS.Data.Adapter.GenericFormatMixin
     * @mixes SBIS3.CONTROLS.Data.Adapter.JsonFormatMixin
     * @public
     * @author Мальцев Алексей
     */
 
-   var JsonTable = $ws.core.extend({}, [ITable, JsonFormatMixin], /** @lends SBIS3.CONTROLS.Data.Adapter.JsonTable.prototype */{
+   var JsonTable = $ws.core.extend({}, [ITable, GenericFormatMixin, JsonFormatMixin], /** @lends SBIS3.CONTROLS.Data.Adapter.JsonTable.prototype */{
       _moduleName: 'SBIS3.CONTROLS.Data.Adapter.JsonTable',
       $protected: {
          /**

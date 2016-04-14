@@ -38,7 +38,6 @@ define([
 
          describe('.forTable()', function () {
             it('should return table adapter', function () {
-               var adapter = new SbisAdapter();
                assert.isTrue(
                   $ws.helpers.instanceOfModule(
                      adapter.forTable(),
@@ -47,8 +46,7 @@ define([
                );
             });
             it('should pass data to the table adapter', function () {
-               var data = {d: [], s: []},
-                  adapter = new SbisAdapter();
+               var data = {d: [], s: []};
                assert.strictEqual(
                   adapter.forTable(data).getData(),
                   data
@@ -58,7 +56,6 @@ define([
 
          describe('.forRecord()', function () {
             it('should return record adapter', function () {
-               var adapter = new SbisAdapter();
                assert.isTrue(
                   $ws.helpers.instanceOfModule(
                      adapter.forRecord(),
@@ -67,12 +64,28 @@ define([
                );
             });
             it('should pass data to the record adapter', function () {
-               var data = {d: [], s: []},
-                  adapter = new SbisAdapter();
+               var data = {d: [], s: []};
                assert.strictEqual(
                   adapter.forRecord(data).getData(),
                   data
                );
+            });
+         });
+
+         describe('.getKeyField()', function () {
+            it('should return first field prefixed with "@"', function () {
+               var data = {
+                  d: [
+                  ],
+                  s: [
+                     {'n': 'Ид', 't': 'Число целое'},
+                     {'n': '@Фамилия', 't': 'Строка'}
+                  ]
+               };
+               assert.equal(adapter.getKeyField(data), '@Фамилия');
+            });
+            it('should return first field', function () {
+               assert.equal(adapter.getKeyField(data), 'Ид');
             });
          });
 
@@ -213,7 +226,6 @@ define([
                         ]
                      }
                   }),
-                  adapter = new SbisAdapter(),
                   result = adapter.serialize({
                      'null': null,
                      'false': false,
@@ -288,8 +300,7 @@ define([
             });
 
             it('should serialize model', function () {
-               var adapter = new SbisAdapter(),
-                  model = new Model({
+               var model = new Model({
                      rawData: {
                         some: {deep: {object: 'here'}}
                      }
@@ -300,8 +311,7 @@ define([
             });
 
             it('should serialize RecordSet', function () {
-               var adapter = new SbisAdapter(),
-                  ds = new RecordSet({
+               var ds = new RecordSet({
                      adapter: adapter,
                      rawData: {
                         d: [], s: []

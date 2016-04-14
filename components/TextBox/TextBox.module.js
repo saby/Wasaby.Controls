@@ -237,6 +237,9 @@ define('js!SBIS3.CONTROLS.TextBox', ['js!SBIS3.CONTROLS.TextBoxBase','html!SBIS3
        */
       setPlaceholder: function(text){
          if (!$ws._const.compatibility.placeholder) {
+            if (!this._compatPlaceholder) {
+               this._createCompatPlaceholder();
+            }
             this._compatPlaceholder.text(text || '');
          }
          else {
@@ -308,6 +311,10 @@ define('js!SBIS3.CONTROLS.TextBox', ['js!SBIS3.CONTROLS.TextBoxBase','html!SBIS3
 
       _inputRegExp: function (e, regexp) {
          var keyCode = e.which || e.keyCode;
+         //Клавиши стрелок, delete, backspace и тд
+         if (!e.charCode){
+            return true;
+         }
          if (keyCode < 32 || e.ctrlKey || e.altKey) {
             return false;
          }

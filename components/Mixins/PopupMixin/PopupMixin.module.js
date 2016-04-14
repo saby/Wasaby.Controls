@@ -149,7 +149,7 @@ define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManag
 
          this._resetToDefault();
       },
-      
+
       //Подписка на изменение состояния таргета
       _subscribeTargetMove: function(){
          this._targetChanges = $ws.helpers.trackElement(this._options.target, true);
@@ -179,7 +179,7 @@ define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManag
       _onTargetChangeVisibility: function(event, visible){
          if (!visible){
            this.hide();
-         }   
+         }
       },
 
       _checkFixed: function(element){
@@ -216,8 +216,8 @@ define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManag
                   maxHeight = parseFloat(this._container.css('max-height'), 10),
                   border = (this._container.outerWidth() - this._container.innerWidth());
 
-               this._resetToDefault();   
-               
+               this._resetToDefault();
+
                this._containerSizes.originWidth = scrollWidth > maxWidth ? maxWidth : scrollWidth + border ;
                this._containerSizes.originHeight = scrollHeight > maxHeight ? maxHeight : scrollHeight + border;
             }
@@ -403,16 +403,6 @@ define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManag
                }
             }
          }
-      },
-
-      _onResizeHandler: function(){
-         this._checkFixed(this._options.target || $('body'));
-         if (this.isVisible() && !this._fixed) {
-            this.recalcPosition(false);
-         } else {
-            this._initSizes();
-         }
-         this._checkTargetPosition();
       },
 
       _checkTargetPosition: function () {
@@ -606,8 +596,8 @@ define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManag
 
       _getOffsetByWindowSize: function (offset) {
          var buf = this._targetSizes.offset,
-            scrollY = window.scrollY,
-            scrollX = window.scrollX;
+            scrollY = $(window).scrollTop(),
+            scrollX = $(window).scrollLeft();
          //Проверяем убираемся ли в экран снизу. Если позиционируем нижней стороной, не нужно менять положение если не влезаем снизу
          if (this._containerSizes.requiredOffset.top > this._windowSizes.height + scrollY && !this._isMovedV && this._options.verticalAlign.side !== 'bottom') {
             this._isMovedV = true;
@@ -793,6 +783,16 @@ define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManag
             if (this._options.isModal) {
                this._setModal(false);
             }
+         },
+
+         _onResizeHandler: function(){
+            this._checkFixed(this._options.target || $('body'));
+            if (this.isVisible() && !this._fixed) {
+               this.recalcPosition(false);
+            } else {
+               this._initSizes();
+            }
+            this._checkTargetPosition();
          }
       },
 

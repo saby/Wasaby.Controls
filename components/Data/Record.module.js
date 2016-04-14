@@ -7,10 +7,11 @@ define('js!SBIS3.CONTROLS.Data.Record', [
    'js!SBIS3.CONTROLS.Data.Serializer',
    'js!SBIS3.CONTROLS.Data.FormattableMixin',
    'js!SBIS3.CONTROLS.Data.Di',
+   'js!SBIS3.CONTROLS.Data.Utils',
    'js!SBIS3.CONTROLS.Data.Factory',
    'js!SBIS3.CONTROLS.Data.Format.StringField',
    'js!SBIS3.CONTROLS.Data.ContextField.Record'
-], function (IPropertyAccess, IEnumerable, ArrayEnumerator, SerializableMixin, Serializer, FormattableMixin, Di, Factory, StringField, ContextFieldRecord) {
+], function (IPropertyAccess, IEnumerable, ArrayEnumerator, SerializableMixin, Serializer, FormattableMixin, Di, Utils, Factory, StringField, ContextFieldRecord) {
    'use strict';
 
    /**
@@ -29,18 +30,12 @@ define('js!SBIS3.CONTROLS.Data.Record', [
       _moduleName: 'SBIS3.CONTROLS.Data.Record',
       $protected: {
          _options: {
-
             /**
              * @cfg {SBIS3.CONTROLS.Data.Collection.RecordSet} Рекордсет, которому принадлежит запись. Может не принадлежать рекордсету.
              * @see getOwner
              */
             owner: null
          },
-
-         /**
-          * @member {Array.<String>} Описание всех полей, полученных из данных в "сыром" виде
-          */
-         _fields: null,
 
          /**
           * @member {Object.<String, *>} Измененные поля и оригинальные значения
@@ -59,7 +54,7 @@ define('js!SBIS3.CONTROLS.Data.Record', [
 
          if ('data' in cfg && !('rawData' in cfg)) {
             this._options.rawData = cfg.data;
-            $ws.single.ioc.resolve('ILogger').info('SBIS3.CONTROLS.Data.Record', 'option "data" is deprecated and will be removed in 3.7.4. Use "rawData" instead.');
+            Utils.logger.stack('SBIS3.CONTROLS.Data.Record: option "data" is deprecated and will be removed in 3.7.4. Use "rawData" instead.', 1);
          }
          this.setRawData(this._options.rawData);
       },
@@ -83,7 +78,7 @@ define('js!SBIS3.CONTROLS.Data.Record', [
 
       set: function (name, value) {
          if (!name) {
-            $ws.single.ioc.resolve('ILogger').error('SBIS3.CONTROLS.Data.Record::set()', 'Property name is empty, value can\'t be setted.');
+            Utils.logger.stack('SBIS3.CONTROLS.Data.Record::set(): property name is empty, value can\'t be setted.');
          }
 
          var oldValue = this._getRawDataValue(name);
@@ -163,15 +158,12 @@ define('js!SBIS3.CONTROLS.Data.Record', [
 
       setRawData: function(rawData) {
          Record.superclass.setRawData.call(this, rawData);
-         this._resetRawDataAdapter();
          this._propertiesCache = {};
-         this._fields = null;
          this._notify('onPropertyChange');
       },
 
       setAdapter: function (adapter) {
          Record.superclass.setAdapter.call(this, adapter);
-         this._resetRawDataAdapter();
          this._propertiesCache = {};
       },
 
@@ -179,8 +171,6 @@ define('js!SBIS3.CONTROLS.Data.Record', [
          this._checkFormatIsWritable();
          format = this._buildField(format);
          Record.superclass.addField.call(this, format, at);
-         this._getRawDataAdapter().addField(format, at);
-         this._fields = null;
 
          if (value !== undefined) {
             this.set(format.getName(), value);
@@ -190,23 +180,11 @@ define('js!SBIS3.CONTROLS.Data.Record', [
       removeField: function(name) {
          this._checkFormatIsWritable();
          Record.superclass.removeField.call(this, name);
-         this._getRawDataAdapter().removeField(name);
-         this._fields = null;
       },
 
       removeFieldAt: function(at) {
          this._checkFormatIsWritable();
          Record.superclass.removeFieldAt.call(this, at);
-         this._getRawDataAdapter().removeFieldAt(at);
-         this._fields = null;
-      },
-
-      _getRawDataFields: function() {
-         return this._fields || (this._fields = this._getRawDataAdapter().getFields());
-      },
-
-      _getRawDataFormat: function(name) {
-         return this._getRawDataAdapter().getFormat(name);
       },
 
       /**

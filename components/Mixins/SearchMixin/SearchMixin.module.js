@@ -58,8 +58,8 @@ define('js!SBIS3.CONTROLS.SearchMixin', [], function() {
 
       _applySearch : function(text) {
          if (text) {
-            text = String.trim(text.replace(/[<>]/g, ''));
-            if (text.length >= this._options.startCharacter) {
+            text = text.replace(/[<>]/g, '');
+            if (String.trim(text).length >= this._options.startCharacter) {
                this._notify('onSearch', text);
             }
             this._onResetIsFired = false;

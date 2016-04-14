@@ -63,3 +63,17 @@
       }
    }
 }
+
+//Баг в мозилле плохо работает с before и float:left
+@-moz-document url-prefix() {
+   .controls-BackButton {
+      .controls-BackButton__caption {
+         margin-left: -4px;
+      }
+      &:before {
+         display: inline-block;
+         vertical-align: top;
+         float: none;
+      }
+   }
+}

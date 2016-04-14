@@ -79,13 +79,13 @@ define([
 
             it('should throw an error on invalid data', function () {
                assert.throw(function () {
-                  new SbisRecord('').set();
+                  adapter.set();
                });
                assert.throw(function () {
-                  new SbisRecord(0).set(0);
+                  adapter.set('');
                });
                assert.throw(function () {
-                  new SbisRecord().set();
+                  adapter.set(0);
                });
             });
          });

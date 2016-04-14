@@ -75,13 +75,15 @@ define([
                   data['б']
                );
             });
-
-            it('should throw an error on invalid position', function () {
+            it('should throw an error on invalid data', function () {
                assert.throw(function () {
-                  adapter.replace({}, -1);
+                  adapter.set();
                });
                assert.throw(function () {
-                  adapter.replace({}, 99);
+                  adapter.set('');
+               });
+               assert.throw(function () {
+                  adapter.set(0);
                });
             });
          });

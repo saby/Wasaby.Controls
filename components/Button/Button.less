@@ -1,6 +1,7 @@
 .button-mixin(@icon-top, @icon-left, @icon-width, @border-width, @margin-left, @margin-right) {
   left: @icon-left - @border-width;
   top: @icon-top - @border-width;
+
   & + .controls-Button__text {
     margin-right: @margin-right - @border-width;
     margin-left: @margin-left + @icon-width + @button-icon-gap - @border-width;
@@ -186,6 +187,12 @@
    &.controls-Button__filled, &.controls-Button__big.controls-Button__filled {
       background-color: #ffffff;
    }
+   &.controls-Button__withoutCaption {
+      width: 50px;
+      .controls-Button__icon{
+         left: 16px;
+      }
+   }
 }
 
 .controls-Button__ellipsis .controls-Button__text {
@@ -221,4 +228,14 @@
       }
     }
   }
+}
+
+@ie8: \0screen;
+@media @ie8 {
+   .controls-Button__icon {
+      top: 0 !important;
+      &.icon-24 {
+         top: -4px !important;
+      }
+   }
 }

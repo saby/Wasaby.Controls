@@ -4,9 +4,10 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
    'js!SBIS3.CONTROLS.Data.Source.DataSet',
    'js!SBIS3.CONTROLS.Data.Query.Query',
    'js!SBIS3.CONTROLS.Data.Di',
+   'js!SBIS3.CONTROLS.Data.Utils',
    'js!SBIS3.CONTROLS.Data.Adapter.Sbis',
    'js!SBIS3.CONTROLS.Data.Source.Provider.SbisBusinessLogic'
-], function (Rpc, DataSet, Query, Di) {
+], function (Rpc, DataSet, Query, Di, Utils) {
    'use strict';
 
    /**
@@ -139,7 +140,7 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
          },
 
          /**
-          * @var {SBIS3.CONTROLS.Data.Source.Provider.SbisBusinessLogic} Объект, который умеет ходить на бизнес-логику, для смены порядковых номеров
+          * @member {SBIS3.CONTROLS.Data.Source.Provider.SbisBusinessLogic} Объект, который умеет ходить на бизнес-логику, для смены порядковых номеров
           */
          _orderProvider: undefined
       },
@@ -149,31 +150,31 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
          //Deprecated
          if ('strategy' in cfg && !('adapter' in cfg)) {
             this._options.adapter = cfg.strategy;
-            $ws.single.ioc.resolve('ILogger').info(this._moduleName + '::$constructor()', 'option "strategy" is deprecated and will be removed in 3.7.4. Use "adapter" instead.');
+            Utils.logger.stack(this._moduleName + '::$constructor(): option "strategy" is deprecated and will be removed in 3.7.4. Use "adapter" instead.', 1);
          }
          if ('keyField' in cfg && !('idProperty' in cfg)) {
             this._options.idProperty = cfg.keyField;
-            $ws.single.ioc.resolve('ILogger').info(this._moduleName + '::$constructor()', 'option "keyField" is deprecated and will be removed in 3.7.4. Use "idProperty" instead.');
+            Utils.logger.stack(this._moduleName + '::$constructor(): option "keyField" is deprecated and will be removed in 3.7.4. Use "idProperty" instead.', 1);
          }
          if (!('endpoint' in cfg)) {
             if ('service' in cfg && typeof cfg.service === 'string' && !('resource' in cfg)) {
-               $ws.single.ioc.resolve('ILogger').info(this._moduleName + '::$constructor()', 'Option "service" is deprecated and will be removed in 3.7.4. Use "endpoint.contract" instead.');
+               Utils.logger.stack(this._moduleName + '::$constructor(): option "service" is deprecated and will be removed in 3.7.4. Use "endpoint.contract" instead.', 1);
                this._options.endpoint.contract = cfg.service;
             }
             if ('service' in cfg && typeof cfg.service === 'object') {
-               $ws.single.ioc.resolve('ILogger').info(this._moduleName + '::$constructor()', 'Option "service" is deprecated and will be removed in 3.7.4. Use "endpoint.contract" and "endpoint.address" instead.');
+               Utils.logger.stack(this._moduleName + '::$constructor(): option "service" is deprecated and will be removed in 3.7.4. Use "endpoint.contract" and "endpoint.address" instead.', 1);
                this._options.endpoint.contract = cfg.service.name || '';
                this._options.endpoint.address = cfg.service.serviceUrl || undefined;
             }
             if ('resource' in cfg && typeof cfg.resource === 'object') {
-               $ws.single.ioc.resolve('ILogger').info(this._moduleName + '::$constructor()', 'Option "resource" is deprecated and will be removed in 3.7.4. Use "endpoint.contract" and "endpoint.address" instead.');
+               Utils.logger.stack(this._moduleName + '::$constructor(): option "resource" is deprecated and will be removed in 3.7.4. Use "endpoint.contract" and "endpoint.address" instead.', 1);
                this._options.endpoint.address = cfg.resource.serviceUrl || '';
                this._options.endpoint.contract = cfg.resource.name || '';
             }
          }
          if (!('binding' in cfg)) {
             if ('formatMethodName' in cfg) {
-               $ws.single.ioc.resolve('ILogger').info(this._moduleName + '::$constructor()', 'Option "formatMethodName" is deprecated and will be removed in 3.7.4. Use "binding.format" instead.');
+               Utils.logger.stack(this._moduleName + '::$constructor(): option "formatMethodName" is deprecated and will be removed in 3.7.4. Use "binding.format" instead.', 1);
                this._options.binding.format = cfg.formatMethodName;
             }
          }

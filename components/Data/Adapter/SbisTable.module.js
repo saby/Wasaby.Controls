@@ -49,7 +49,7 @@ define('js!SBIS3.CONTROLS.Data.Adapter.SbisTable', [
          if (at === undefined) {
             this._data.d.push(record.d);
          } else {
-            this._checkRowIndex(at);
+            this._checkRowIndex(at, true);
             this._data.d.splice(at, 0, record.d);
          }
       },
@@ -101,8 +101,8 @@ define('js!SBIS3.CONTROLS.Data.Adapter.SbisTable', [
 
       //region Protected methods
 
-      _checkRowIndex: function(index) {
-         var max = this._data.d.length - 1;
+      _checkRowIndex: function(index, addMode) {
+         var max = this._data.d.length + (addMode ? 0 : -1);
          if (!(index >= 0 && index <= max)) {
             throw new RangeError(this._moduleName + ': row index ' + index + ' is out of bounds.');
          }
