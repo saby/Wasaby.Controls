@@ -17,7 +17,7 @@ define([
 
          describe('.getDefaultValue()', function() {
             it('should return 0 by default', function() {
-               assert.strictEqual(field.getDefaultValue(), 0);
+               assert.deepEqual(field.getDefaultValue(), [null]);
             });
          });
 
