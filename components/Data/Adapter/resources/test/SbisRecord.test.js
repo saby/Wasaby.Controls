@@ -515,7 +515,7 @@ define([
                      name: fieldName
                   });
                adapter.addField(field, fieldIndex);
-               assert.strictEqual(adapter.get(fieldName), 0);
+               assert.deepEqual(adapter.get(fieldName), [null]);
                assert.strictEqual(adapter.getData().s[fieldIndex].t, 'Идентификатор');
             });
             it('should add an Enum field', function () {
@@ -606,11 +606,13 @@ define([
                   fieldIndex = 0,
                   field = FieldsFactory.create({
                      type: 'hierarchy',
-                     name: fieldName
+                     name: fieldName,
+                     kind: 'identity'
                   });
                adapter.addField(field, fieldIndex);
-               assert.strictEqual(adapter.get(fieldName), null);
-               assert.strictEqual(adapter.getData().s[fieldIndex].t, 'Иерархия');
+               assert.deepEqual(adapter.get(fieldName), [null]);
+               assert.strictEqual(adapter.getData().s[fieldIndex].s, 'Иерархия');
+               assert.strictEqual(adapter.getData().s[fieldIndex].t, 'Идентификатор');
             });
             it('should add an Array field', function () {
                var fieldName = 'New',

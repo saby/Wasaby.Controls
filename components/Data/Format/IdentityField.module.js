@@ -21,7 +21,7 @@ define('js!SBIS3.CONTROLS.Data.Format.IdentityField', [
              * @see getDefaultValue
              * @see setDefaultValue
              */
-            defaultValue: 0
+            defaultValue: [null]
          }
       },
 
