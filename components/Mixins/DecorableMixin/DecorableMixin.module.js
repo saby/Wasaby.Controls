@@ -1,7 +1,7 @@
 define('js!SBIS3.CONTROLS.DecorableMixin', [
    'js!SBIS3.CONTROLS.Utils.HtmlDecorators',
-   'js!SBIS3.CONTROLS.Utils.HtmlDecorators/HighlightDecorator',
-   'js!SBIS3.CONTROLS.Utils.HtmlDecorators/ColorMarkDecorator'
+   'js!SBIS3.CONTROLS.Utils.HtmlDecorators.HighlightDecorator',
+   'js!SBIS3.CONTROLS.Utils.HtmlDecorators.ColorMarkDecorator'
 ], function (HtmlDecorators, HighlightDecorator, ColorMarkDecorator) {
    'use strict';
 

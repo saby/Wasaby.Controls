@@ -9,7 +9,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
       'js!SBIS3.CORE.MarkupTransformer',
       'js!SBIS3.CONTROLS.DragAndDropMixin',
       'browser!html!SBIS3.CONTROLS.DataGridView/resources/DataGridViewGroupBy',
-      'js!SBIS3.CONTROLS.Utils.HtmlDecorators/LadderDecorator',
+      'js!SBIS3.CONTROLS.Utils.HtmlDecorators.LadderDecorator',
       'js!SBIS3.CONTROLS.Utils.TemplateUtil'
    ],
    function(ListView, dotTplFn, rowTpl, colgroupTpl, headTpl, resultsTpl, MarkupTransformer, DragAndDropMixin, groupByTpl, LadderDecorator, TemplateUtil) {

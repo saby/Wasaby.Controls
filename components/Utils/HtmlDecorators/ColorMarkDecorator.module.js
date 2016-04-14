@@ -1,5 +1,5 @@
-define('js!SBIS3.CONTROLS.Utils.HtmlDecorators/ColorMarkDecorator', [
-   'js!SBIS3.CONTROLS.Utils.HtmlDecorators/AbstractDecorator'
+define('js!SBIS3.CONTROLS.Utils.HtmlDecorators.ColorMarkDecorator', [
+   'js!SBIS3.CONTROLS.Utils.HtmlDecorators.AbstractDecorator'
 ], function (AbstractDecorator) {
    'use strict';
 
@@ -10,11 +10,11 @@ define('js!SBIS3.CONTROLS.Utils.HtmlDecorators/ColorMarkDecorator', [
 
    /**
     * Декоратор текста, обеспечивающий отметку цветом
-    * @class SBIS3.CONTROLS.Utils.HtmlDecorators/ColorMarkDecorator
+    * @class SBIS3.CONTROLS.Utils.HtmlDecorators.ColorMarkDecorator
     * @public
     * @author Крайнов Дмитрий Олегович
     */
-   var ColorMarkDecorator = AbstractDecorator.extend(/** @lends SBIS3.CONTROLS.Utils.HtmlDecorators/ColorMarkDecorator.prototype */{
+   var ColorMarkDecorator = AbstractDecorator.extend(/** @lends SBIS3.CONTROLS.Utils.HtmlDecorators.ColorMarkDecorator.prototype */{
       $protected: {
          _name: 'colorMark',
          _options: {
