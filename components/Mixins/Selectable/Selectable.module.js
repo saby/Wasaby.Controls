@@ -111,12 +111,11 @@ define('js!SBIS3.CONTROLS.Selectable', ['js!SBIS3.CONTROLS.Data.Utils', 'js!SBIS
                this._options.selectedIndex = undefined;
             }
          }
-         if (!this._options.allowEmptySelection && (this._options.selectedIndex === null || typeof this._options.selectedIndex == 'undefined' || this._options.selectedIndex == -1)) {
+         if (!this._options.allowEmptySelection && this._isEmptyIndex()) {
             if (this._itemsProjection.getCount()) {
                this._selectMode = 'index';
                this._options.selectedIndex = 0;
-               var item = this._itemsProjection.at(this._options.selectedIndex);
-               this._options.selectedKey = item.getContents().getKey();
+               this._setKeyByIndex();
             }
          }
       },
@@ -302,18 +301,31 @@ define('js!SBIS3.CONTROLS.Selectable', ['js!SBIS3.CONTROLS.Data.Utils', 'js!SBIS
          this._notify('onSelectedItemChange', id, index);
       },
 
-      _selectInProjection: function (){
-         if ((typeof this._options.selectedIndex != 'undefined') && (this._options.selectedIndex !== null)
-            && (typeof this._itemsProjection.at(this._options.selectedIndex) != 'undefined')) {
-            this._itemsProjection.setCurrentPosition(this._options.selectedIndex);
+      _setKeyByIndex: function() {
+         if(this._hasItemByIndex()) {
+            var item = this._itemsProjection.at(this._options.selectedIndex);
+            this._options.selectedKey = item.getContents().getKey();
          }
-         else {
+      },
+
+      _hasItemByIndex: function() {
+         return (typeof this._options.selectedIndex != 'undefined') && (this._options.selectedIndex !== null) && (typeof this._itemsProjection.at(this._options.selectedIndex) != 'undefined');
+      },
+
+      _isEmptyIndex: function() {
+         return this._options.selectedIndex === null || typeof this._options.selectedIndex == 'undefined' || this._options.selectedIndex == -1;
+      },
+
+      _selectInProjection: function (){
+         if (this._hasItemByIndex()) {
+            this._itemsProjection.setCurrentPosition(this._options.selectedIndex);
+         } else {
             this._itemsProjection.setCurrentPosition(-1);
          }
       }
    };
 
-   var onCollectionChange = function (event, action, newItems, newItemsIndex, oldItems) {
+   var onCollectionChange = function (event, action) {
       switch (action) {
          case IBindCollection.ACTION_ADD:
          case IBindCollection.ACTION_REMOVE:
@@ -322,20 +334,25 @@ define('js!SBIS3.CONTROLS.Selectable', ['js!SBIS3.CONTROLS.Data.Utils', 'js!SBIS
          case IBindCollection.ACTION_RESET:
             this._resetUtilityEnumerator();
 
-            var indexByKey = this._getItemIndexByKey(this._options.selectedKey);
+            var indexByKey = this._getItemIndexByKey(this._options.selectedKey),
+                itemsProjection = this._itemsProjection,
+                count;
+
             if (indexByKey >= 0) {
                this._options.selectedIndex = indexByKey;
-            }
-            else {
-               var count = this._itemsProjection.getCount();
+            } else {
+               count = itemsProjection.getCount();
                if (count > 0) {
-                  if (this._options.selectedIndex > this._itemsProjection.getCount() - 1) {
-                     this._options.selectedIndex = (count > 0) ? 0 : -1;
-                     var item = this._itemsProjection.at(this._options.selectedIndex);
-                     this._options.selectedKey = item.getContents().getId();
+                  if(!this._isEmptyIndex()) {
+                     if (this._options.selectedIndex > this._itemsProjection.getCount() - 1) {
+                        this._options.selectedIndex = (count > 0) ? 0 : -1;
+                     }
+                     this._setKeyByIndex();
+                  } else if(!this._options.allowEmptySelection) {
+                     this._options.selectedIndex = 0;
+                     this._setKeyByIndex();
                   }
-               }
-               else {
+               } else {
                   this._options.selectedIndex = -1;
                   this._options.selectedKey = null;
                }
