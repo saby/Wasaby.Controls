@@ -140,7 +140,7 @@ define('js!SBIS3.CONTROLS.Data.Model', [
          }
 
          var value = Model.superclass.get.call(this, name),
-            property = this.getProperties()[name];
+            property = this.$properties[name];
          if (property) {
             if ('def' in property && !this._getRawDataAdapter().has(name)) {
                value = this.getDefault(name);
@@ -159,7 +159,7 @@ define('js!SBIS3.CONTROLS.Data.Model', [
       },
 
       set: function (name, value) {
-         var property = this.getProperties()[name];
+         var property = this.$properties[name];
          if (property && property.set) {
             value = this._processCalculatedValue(name, value, property, false);
             if (value === undefined) {
@@ -401,7 +401,7 @@ define('js!SBIS3.CONTROLS.Data.Model', [
        */
       _getAllProperties: function() {
          var fields = this._getRawDataFields(),
-            objProps = this.getProperties(),
+            objProps = this.$properties,
             props = Object.keys(objProps);
          return props.concat($ws.helpers.filter(fields, function(field) {
             return !objProps.hasOwnProperty(field);
