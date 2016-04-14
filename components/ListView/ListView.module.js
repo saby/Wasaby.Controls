@@ -1797,18 +1797,33 @@ define('js!SBIS3.CONTROLS.ListView',
                item = this._dataSet.getRecordByKey(id);
             this._notify('onItemActivate', {id: id, item: item});
          },
-         /**
+    /**
           * @typedef {Object} BeginEditOptions В этом типе данных сейчас определена всего одна опция. В дальнейшем набор опций может быть расширен.
-          * @property {jQuery} initiator Элемент, по которому определяется позиция добавления нового элемента коллекции в иерархическом представлении данных.
+          * @property {jQuery} initiator Инициатор вызова команды. Это элемент, по которому определяется позиция добавления нового элемента коллекции в иерархическом представлении данных.
           * Как правило, таким элементом является кнопка, инициирующая добавление нового элемента. Такую кнопку помещают в футер (см. опцию SBIS3.CONTROLS.DSMixin#footerTpl) узла иерархии.
+          * Подробный пример использования инициатора рассмотрен в разделе {@link http://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/list-settings/records-editing/edit-in-place/users/add-in-place-hierarchy/ Добавление по месту в иерархическом списке}.
           */
          /**
           * Добавляет новый элемента коллекции.
           * @remark
           * Команда применяется для создания нового элемента коллекции без использования диалога редактирования.
-          * Схожим функционалом обладает автоматическое добавление по месту представлений данных (см. {@link editMode}).
-          * @param {BeginEditOptions} [options] Инициатор создания нового элемента коллекции в иерархическом представлении данных.
-          * @param {SBIS3.CONTROLS.Data.Model} [model] Модель элемента коллекции, значения полей которой будут использованы при создании нового элемента.
+          * Схожим функционалом обладает автоматическое добавление по месту представлений данных (см. опцию {@link editMode}).
+          * @param {BeginEditOptions} [options] Инициатор создания нового элемента коллекции. Параметр используется только в иерархических списках: {@link SBIS3.CONTROLS.TreeDataGridView}, {@link SBIS3.CONTROLS.TreeCompositeView} и любых других наследниках класса {@link SBIS3.CONTROLS.HierarchyDataGridView}.
+          * По положению инициатора определяется узел иерархии, в которой будет добавлен элемент коллекции.
+          * Подробный пример использования инициатора рассмотрен в разделе {@link http://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/list-settings/records-editing/edit-in-place/users/add-in-place-hierarchy/ Добавление по месту в иерархическом списке}.
+          * @param {SBIS3.CONTROLS.Data.Model|Object} [model] Модель элемента коллекции, значения полей которой будут использованы при создании нового элемента.
+          * В упрощенном варианте можно передать объект, свойствами которого будут поля создаваемого элемента коллекции. Например, установим создание нового элемента с предопределенным значением поля 'Наименование':
+          * <pre>
+          * {
+          *    'Наименование': 'Компания "Тензор"'
+          * }
+          * </pre>
+          * @example
+          * Частный случай вызова команды для создания нового узла иерархии внутри другого узла:
+          * <pre>
+          * this.sendCommand('beginAdd', {initiator: this.getContainer()}, {'Раздел@': true});
+          * </pre>
+          * Полный пример использования команды для создания новых элементов коллекции в иерархическом списке вы можете найти {@link http://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/list-settings/records-editing/edit-in-place/users/add-in-place-hierarchy/ здесь}.
           * @returns {*|$ws.proto.Deferred} В случае ошибки, вернёт Deferred с текстом ошибки.
           * @private
           * @command beginAdd

@@ -67,6 +67,8 @@ define('js!SBIS3.CONTROLS.BreadCrumbs', [
                this._redrawDropdown();
             }
          } else if (point.length) {
+            var id = point.data(this._options.keyField);
+            id = id ? id : null;
             this._notify('onItemClick', point.data(this._options.keyField));
          }
       },
