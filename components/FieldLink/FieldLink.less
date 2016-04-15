@@ -55,6 +55,14 @@
 
    &.ws-disabled {
 
+      &.controls-TextBox {
+         border-color: @text-box-border-color;
+      }
+
+      .controls-TextBox__afterFieldWrapper {
+         display: none;
+      }
+
       .controls-TextBox__field {
          &::-webkit-input-placeholder { opacity: 0 }
          &:-moz-placeholder {  opacity: 0 }
