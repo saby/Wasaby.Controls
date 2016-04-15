@@ -383,15 +383,15 @@ define('js!SBIS3.CONTROLS.Data.Record', [
       _getRawDataValue: function(name) {
          var adapter = this._getRawDataAdapter();
 
-         return Factory.cast(
-            adapter.get(name),
-            adapter.getSharedFormat(name),
-            this.getAdapter()
-         );
-         /*try {
+         try {
+            return Factory.cast(
+               adapter.get(name),
+               adapter.getSharedFormat(name),
+               this.getAdapter()
+            );
          } catch (e) {
             return undefined;
-         }*/
+         }
       },
 
       /**
