@@ -569,8 +569,8 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
 
       clear: function () {
          this._assignRawData(this._getRawDataAdapter().getEmpty(), true);
-         for (var i = 0, count = this._items.length; i < count; i++) {
-            this._items[i].setOwner(null);
+         for (var i = 0, count = this._$items.length; i < count; i++) {
+            this._$items[i].setOwner(null);
          }
          RecordSet.superclass.clear.call(this);
       },

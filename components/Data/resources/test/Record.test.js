@@ -711,11 +711,14 @@ define([
 
          describe('.toJSON()', function () {
             it('should serialize a Record', function () {
-               var json = record.toJSON();
+               var json = record.toJSON(),
+                  options = record._getOptions();
+               delete options.owner;
+
                assert.strictEqual(json.module, 'SBIS3.CONTROLS.Data.Record');
                assert.isNumber(json.id);
                assert.isTrue(json.id > 0);
-               assert.deepEqual(json.state.$options, record._getOptions());
+               assert.deepEqual(json.state.$options, options);
                assert.deepEqual(json.state._changedFields, record._changedFields);
             });
             it('should hide type signature in rawData', function () {

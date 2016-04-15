@@ -296,7 +296,7 @@ define('js!SBIS3.CONTROLS.Data.Record', [
        * @see getOwner
        */
       setOwner: function(owner) {
-         this._options.owner = owner;
+         this._$owner = owner;
       },
 
       /**
