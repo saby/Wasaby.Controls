@@ -39,9 +39,13 @@ define('js!SBIS3.CONTROLS.Data.Adapter.JsonTable', [
          JsonTable.superclass.addField.call(this, format, at);
 
          var name = format.getName(),
-            value = format.getDefaultValue();
+            value = format.getDefaultValue(),
+            item;
          for (var i = 0; i < this._data.length; i++) {
-            this._data[i][name] = value;
+            item = this._data[i];
+            if (!item.hasOwnProperty(name)) {
+               item[name] = value;
+            }
          }
       },
 
@@ -139,8 +143,8 @@ define('js!SBIS3.CONTROLS.Data.Adapter.JsonTable', [
             item;
          for (i = 0; i < count; i++) {
             item = this.at(i);
-            if (item instanceof Object && item.hasOwnProperty(name)) {
-               has = true;
+            if (item instanceof Object) {
+               has = item.hasOwnProperty(name);
                break;
             }
          }
