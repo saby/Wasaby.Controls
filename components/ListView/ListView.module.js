@@ -1183,7 +1183,7 @@ define('js!SBIS3.CONTROLS.ListView',
 
             if (!this._itemsToolbar) {
                this._itemsToolbar = new ItemsToolbar({
-                  element: $('<div class="controls-ListView__ItemsToolbar-container"/>').appendTo(this.getContainer()),
+                  element: this.getContainer().find('> .controls-ListView__ItemsToolbar-container'),
                   parent: this,
                   visible: false,
                   touchMode: this._touchSupport,
