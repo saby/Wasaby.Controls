@@ -341,6 +341,7 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
        */
       setRecord: function(record){
          this._options.record = this._panel._record = record;
+         this._options.key = record.getKey();
          this._setContextRecord(record);
       },
 
