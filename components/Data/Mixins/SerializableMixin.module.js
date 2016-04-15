@@ -62,7 +62,7 @@ define('js!SBIS3.CONTROLS.Data.SerializableMixin', function () {
        */
       _getSerializableState: function(state) {
          state = state || {};
-         state.$options = this._getOptions ? this._getOptions() : this._options
+         state.$options = this._getOptions ? this._getOptions() : this._options;//FIXME: отказаться от устаревших _options
          return state;
       },
 

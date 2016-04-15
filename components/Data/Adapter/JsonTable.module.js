@@ -72,9 +72,6 @@ define('js!SBIS3.CONTROLS.Data.Adapter.JsonTable', [
          var count = this.getCount(),
             i,
             item;
-         if (count === 0) {
-            throw new Error(this._moduleName + ': method getFields() is not supported for empty table');
-         }
          for (i = 0; i < count; i++) {
             item = this.at(i);
             if (item instanceof Object) {

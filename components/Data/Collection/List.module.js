@@ -38,7 +38,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.List', [
        * @cfg {Array.<*>} Элементы списка
        * @name SBIS3.CONTROLS.Data.Collection.List#items
        */
-      $items: null,
+      _$items: null,
 
       /**
        * @member {SBIS3.CONTROLS.Data.Collection.ArrayEnumerator} Служебный энумератор
@@ -61,7 +61,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.List', [
 
          List.superclass.constructor.call(this, options);
          OptionsMixin.constructor.call(this, options);
-         this.$items = this.$items || [];
+         this._$items = this._$items || [];
       },
 
       // region SBIS3.CONTROLS.Data.SerializableMixin
@@ -85,7 +85,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.List', [
        * @returns {SBIS3.CONTROLS.Data.Collection.ArrayEnumerator}
        */
       getEnumerator: function () {
-         return new ArrayEnumerator(this.$items);
+         return new ArrayEnumerator(this._$items);
       },
 
       /**
@@ -96,10 +96,10 @@ define('js!SBIS3.CONTROLS.Data.Collection.List', [
        */
       each: function (callback, context) {
          //так быстрее, чем по правильному - через enumerator
-         for (var i = 0, count = this.$items.length; i < count; i++) {
+         for (var i = 0, count = this._$items.length; i < count; i++) {
             callback.call(
                context || this,
-               this.$items[i],
+               this._$items[i],
                i
             );
          }
@@ -110,7 +110,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.List', [
       //region SBIS3.CONTROLS.Data.Collection.IList
 
       assign: function (items) {
-         this.$items.length = 0;
+         this._$items.length = 0;
          this._splice(items || [], 0, 0);
          this._reindex();
       },
@@ -126,26 +126,26 @@ define('js!SBIS3.CONTROLS.Data.Collection.List', [
       },
 
       clear: function () {
-         this.$items.length = 0;
+         this._$items.length = 0;
          this._reindex();
       },
 
       add: function (item, at) {
          if (at === undefined) {
-            this.$items.push(item);
+            this._$items.push(item);
          } else {
             at = at || 0;
             if (at !== 0 && !this._isValidIndex(at, true)) {
                throw new Error('Index is out of bounds');
             }
-            this.$items.splice(at, 0, item);
+            this._$items.splice(at, 0, item);
          }
 
          this._reindex();
       },
 
       at: function (index) {
-         return this.$items[index];
+         return this._$items[index];
       },
 
       remove: function (item) {
@@ -161,7 +161,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.List', [
          if (!this._isValidIndex(index)) {
             throw new Error('Index is out of bounds');
          }
-         this.$items.splice(index, 1);
+         this._$items.splice(index, 1);
 
          this._reindex();
       },
@@ -170,7 +170,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.List', [
          if (!this._isValidIndex(at)) {
             throw new Error('Index is out of bounds');
          }
-         this.$items[at] = item;
+         this._$items[at] = item;
 
          this._reindex();
       },
@@ -180,11 +180,11 @@ define('js!SBIS3.CONTROLS.Data.Collection.List', [
             return this._getItemIndexByHash(item.getHash());
          }
 
-         return Array.indexOf(this.$items, item);
+         return Array.indexOf(this._$items, item);
       },
 
       getCount: function () {
-         return this.$items.length;
+         return this._$items.length;
       },
 
       //endregion SBIS3.CONTROLS.Data.Collection.IList
@@ -236,7 +236,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.List', [
        * @deprecated метод не рекомендуется к использованию, используйте each()
        */
       toArray: function () {
-         return this.$items.slice();
+         return this._$items.slice();
       },
 
       //endregion deprecated
@@ -295,7 +295,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.List', [
        * @returns {SBIS3.CONTROLS.Data.Collection.ArrayEnumerator}
        */
       _getServiceEnumerator: function () {
-         return this._serviceEnumerator || (this._serviceEnumerator = new ArrayEnumerator(this.$items));
+         return this._serviceEnumerator || (this._serviceEnumerator = new ArrayEnumerator(this._$items));
       },
 
       _clearServiceEnumerator: function () {
@@ -325,8 +325,8 @@ define('js!SBIS3.CONTROLS.Data.Collection.List', [
 
       _createHashIndex: function () {
          this._hashIndex = {};
-         for (var i = 0, count = this.$items.length; i < count; i++) {
-            var item = this.$items[i];
+         for (var i = 0, count = this._$items.length; i < count; i++) {
+            var item = this._$items[i];
             if ($ws.helpers.instanceOfMixin(item, 'SBIS3.CONTROLS.Data.IHashable')) {
                this._hashIndex[item.getHash()] = i;
             }
@@ -346,7 +346,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.List', [
        * @private
        */
       _splice: function (items, start){
-         arraySplice.apply(this.$items,([start, 0].concat(
+         arraySplice.apply(this._$items,([start, 0].concat(
             this._itemsToArray(items)
          )));
          this._getServiceEnumerator().reIndex();

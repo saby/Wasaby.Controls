@@ -70,7 +70,7 @@ define('js!SBIS3.CONTROLS.Data.FormattableMixin', [
        *    characters.at(1).get('lastName');//Connor
        * </pre>
        */
-      $rawData: null,
+      _$rawData: null,
 
       /**
        * @cfg {String|SBIS3.CONTROLS.Data.Adapter.IAdapter} Адаптер для работы с данными, по умолчанию {@link SBIS3.CONTROLS.Data.Adapter.Json}
@@ -95,7 +95,7 @@ define('js!SBIS3.CONTROLS.Data.FormattableMixin', [
        *    });
        * </pre>
        */
-      $adapter: 'adapter.json',
+      _$adapter: 'adapter.json',
 
       /**
        * @cfg {SBIS3.CONTROLS.Data.Format.Format|Array.<SBIS3.CONTROLS.Data.Format.FieldsFactory/FieldDeclaration.typedef>} Формат полей
@@ -146,7 +146,7 @@ define('js!SBIS3.CONTROLS.Data.FormattableMixin', [
        *    });
        * </pre>
        */
-      $format: null,
+      _$format: null,
 
       /**
        * @member {SBIS3.CONTROLS.Data.Adapter.ITable|SBIS3.CONTROLS.Data.Adapter.IRecord} Адаптер для cырых данных
@@ -178,9 +178,9 @@ define('js!SBIS3.CONTROLS.Data.FormattableMixin', [
       _setSerializableState: function(state) {
          //Restore value hidden from core reviver
          return function() {
-            if (this.$rawData && this.$rawData.$type) {
-               this.$rawData._type = this.$rawData.$type;
-               delete this.$rawData.$type;
+            if (this._$rawData && this._$rawData.$type) {
+               this._$rawData._type = this._$rawData.$type;
+               delete this._$rawData.$type;
             }
          };
       },
@@ -208,7 +208,7 @@ define('js!SBIS3.CONTROLS.Data.FormattableMixin', [
        * @see rawData
        */
       getRawData: function() {
-         return this.$rawData;
+         return this._$rawData;
       },
 
       /**
@@ -218,7 +218,7 @@ define('js!SBIS3.CONTROLS.Data.FormattableMixin', [
        * @see rawData
        */
       setRawData: function(data) {
-         this.$rawData = data;
+         this._$rawData = data;
          this._resetRawDataAdapter();
          this._resetRawDataFields();
       },
@@ -230,17 +230,18 @@ define('js!SBIS3.CONTROLS.Data.FormattableMixin', [
        * @see setAdapter
        */
       getAdapter: function () {
-         /*if (
-            typeof this.$adapter === 'string' &&
+         if (
+            !(this._$adapter instanceof Object) &&
             FormattableMixin._getDefaultAdapter !== this._getDefaultAdapter
          ) {
             Utils.logger.info('SBIS3.CONTROLS.Data.FormattableMixin: method _getDefaultAdapter() is deprecated and will be removed in 3.7.4. Use \'adapter\' option instead.');
-            this.$adapter = this._getDefaultAdapter();
-         }*/
-         if (this.$adapter && !(this.$adapter instanceof Object)) {
-            this.$adapter = Di.resolve(this.$adapter);
+            this._$adapter = this._getDefaultAdapter();
          }
-         return this.$adapter;
+
+         if (this._$adapter && !(this._$adapter instanceof Object)) {
+            this._$adapter = Di.resolve(this._$adapter);
+         }
+         return this._$adapter;
       },
 
       /**
@@ -250,7 +251,7 @@ define('js!SBIS3.CONTROLS.Data.FormattableMixin', [
        * @see getAdapter
        */
       setAdapter: function (adapter) {
-         this.$adapter = adapter;
+         this._$adapter = adapter;
          this._resetRawDataAdapter();
       },
 
@@ -358,8 +359,8 @@ define('js!SBIS3.CONTROLS.Data.FormattableMixin', [
       _getRawDataAdapter: function () {
          if (!this._rawDataAdapter) {
             this._rawDataAdapter = this._createRawDataAdapter();
-            if (this.$rawData !== this._rawDataAdapter.getData()) {
-               this.$rawData = this._rawDataAdapter.getData();
+            if (this._$rawData !== this._rawDataAdapter.getData()) {
+               this._$rawData = this._rawDataAdapter.getData();
             }
          }
 
@@ -417,12 +418,12 @@ define('js!SBIS3.CONTROLS.Data.FormattableMixin', [
        */
       _getFormat: function () {
          if (
-            !this.$format ||
-            !$ws.helpers.instanceOfModule(this.$format, 'SBIS3.CONTROLS.Data.Format.Format')
+            !this._$format ||
+            !$ws.helpers.instanceOfModule(this._$format, 'SBIS3.CONTROLS.Data.Format.Format')
          ) {
-            this.$format = this._buildFormat(this.$format);
+            this._$format = this._buildFormat(this._$format);
          }
-         return this.$format;
+         return this._$format;
       },
 
       /**
@@ -433,7 +434,7 @@ define('js!SBIS3.CONTROLS.Data.FormattableMixin', [
          if (this._isDirectFormat()) {
             throw new Error(this._moduleName + ': format can\'t be cleared because it\'s defined directly.');
          }
-         this.$format = null;
+         this._$format = null;
       },
 
       /**
@@ -453,12 +454,8 @@ define('js!SBIS3.CONTROLS.Data.FormattableMixin', [
        */
       _buildFormat: function(format) {
          if (!format) {
-            var fields = null;
-            try {
-               fields = this._getRawDataFields();
-            } catch (e) {
-            }
-            if (fields) {
+            var fields = this._getRawDataFields();
+            if (fields && fields.length) {
                var i;
                format = new Format();
                for (i = 0; i < fields.length; i++) {
@@ -487,7 +484,7 @@ define('js!SBIS3.CONTROLS.Data.FormattableMixin', [
       _buildField: function(format) {
          if (
             typeof format === 'string' ||
-            (format && !format.$constructor)
+            Object.getPrototypeOf(format) === Object.prototype
          ) {
             format = FieldsFactory.create(format);
          }

@@ -23,9 +23,9 @@ define('js!SBIS3.CONTROLS.Data.Format.Format', [
 
       constructor: function $Format(options) {
          Format.superclass.constructor.call(this, options);
-         for (var i = 0, len = this.$items.length; i < len; i++) {
-            this._checkItem(this.$items[i]);
-            this._checkName(this.$items[i], i);
+         for (var i = 0, len = this._$items.length; i < len; i++) {
+            this._checkItem(this._$items[i]);
+            this._checkName(this._$items[i], i);
          }
       },
 
@@ -55,8 +55,8 @@ define('js!SBIS3.CONTROLS.Data.Format.Format', [
             this._checkItem(items[i]);
          }
          Format.superclass.assign.call(this, items);
-         for (i = 0, len = this.$items.length; i < len; i++) {
-            this._checkName(this.$items[i], i);
+         for (i = 0, len = this._$items.length; i < len; i++) {
+            this._checkName(this._$items[i], i);
          }
       },
 

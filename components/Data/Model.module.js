@@ -43,7 +43,7 @@ define('js!SBIS3.CONTROLS.Data.Model', [
        * @example
        * <pre>
        *    var User = Model.extend({
-       *       $properties: {
+       *       _$properties: {
        *          id: {
        *             get: function(value) {
        *                return '№' + value;
@@ -79,7 +79,7 @@ define('js!SBIS3.CONTROLS.Data.Model', [
        * @see getProperties
        * @see Property
        */
-      $properties: null,
+      _$properties: null,
 
       /**
        * @cfg {String} Поле, содержащее первичный ключ
@@ -87,7 +87,7 @@ define('js!SBIS3.CONTROLS.Data.Model', [
        * @see getIdProperty
        * @see setIdProperty
        */
-      $idProperty: '',
+      _$idProperty: '',
 
       _hashPrefix: 'model-',
 
@@ -119,16 +119,16 @@ define('js!SBIS3.CONTROLS.Data.Model', [
       constructor: function $Model(options) {
          if (options) {
             if ('usingDataSetAsList' in options) {
-               Utils.logger.stack(this._moduleName + '::$constructor(): option "usingDataSetAsList" is deprecated and will be removed in 3.7.4', 1);
+               Utils.logger.stack(this._moduleName + '::constructor(): option "usingDataSetAsList" is deprecated and will be removed in 3.7.4', 1);
             }
          }
 
          this._defaultPropertiesValues = {};
          this._nowCalculatingProperties = {};
          Model.superclass.constructor.call(this, options);
-         this.$properties = this.$properties || {};
-         if (!this.$idProperty) {
-            this.$idProperty = this.getAdapter().getKeyField(this.$rawData);
+         this._$properties = this._$properties || {};
+         if (!this._$idProperty) {
+            this._$idProperty = this.getAdapter().getKeyField(this._$rawData);
          }
       },
 
@@ -140,7 +140,7 @@ define('js!SBIS3.CONTROLS.Data.Model', [
          }
 
          var value = Model.superclass.get.call(this, name),
-            property = this.$properties[name];
+            property = this._$properties[name];
          if (property) {
             if ('def' in property && !this._getRawDataAdapter().has(name)) {
                value = this.getDefault(name);
@@ -159,7 +159,7 @@ define('js!SBIS3.CONTROLS.Data.Model', [
       },
 
       set: function (name, value) {
-         var property = this.$properties[name];
+         var property = this._$properties[name];
          if (property && property.set) {
             value = this._processCalculatedValue(name, value, property, false);
             if (value === undefined) {
@@ -171,7 +171,7 @@ define('js!SBIS3.CONTROLS.Data.Model', [
       },
 
       has: function (name) {
-         return this.$properties.hasOwnProperty(name) || Model.superclass.has.call(this, name);
+         return this._$properties.hasOwnProperty(name) || Model.superclass.has.call(this, name);
       },
 
       // endregion SBIS3.CONTROLS.Data.IObject
@@ -230,7 +230,7 @@ define('js!SBIS3.CONTROLS.Data.Model', [
        * @see Property
        */
       getProperties: function () {
-         return this.$properties;
+         return this._$properties;
       },
 
       /**
@@ -259,7 +259,7 @@ define('js!SBIS3.CONTROLS.Data.Model', [
        */
       getDefault: function (name) {
          if (!this._defaultPropertiesValues.hasOwnProperty(name)) {
-            var property = this.$properties[name];
+            var property = this._$properties[name];
             if (property && 'def' in property) {
                this._defaultPropertiesValues[name] = [property.def instanceof Function ? property.def.call(this) : property.def];
             } else {
@@ -341,7 +341,7 @@ define('js!SBIS3.CONTROLS.Data.Model', [
             Utils.logger.info('SBIS3.CONTROLS.Data.Model::setIdProperty(): property "' + idProperty + '" is not defined');
             return;
          }
-         this.$idProperty = idProperty;
+         this._$idProperty = idProperty;
       },
 
       /**
@@ -388,10 +388,10 @@ define('js!SBIS3.CONTROLS.Data.Model', [
        * @protected
        */
       _getIdProperty: function () {
-         if (this.$idProperty === undefined) {
-            this.$idProperty = this._getRawDataAdapter().getKeyField() || '';
+         if (this._$idProperty === undefined) {
+            this._$idProperty = this._getRawDataAdapter().getKeyField() || '';
          }
-         return this.$idProperty;
+         return this._$idProperty;
       },
 
       /**
@@ -401,7 +401,7 @@ define('js!SBIS3.CONTROLS.Data.Model', [
        */
       _getAllProperties: function() {
          var fields = this._getRawDataFields(),
-            objProps = this.$properties,
+            objProps = this._$properties,
             props = Object.keys(objProps);
          return props.concat($ws.helpers.filter(fields, function(field) {
             return !objProps.hasOwnProperty(field);

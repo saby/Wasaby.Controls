@@ -70,7 +70,7 @@ define([
             },
             getModel = function(modelData, modelProperties) {
                var SubModel = Model.extend({
-                  $properties: modelProperties || getModelProperties()
+                  _$properties: modelProperties || getModelProperties()
                });
                return new SubModel({
                   idProperty: 'id',
@@ -84,7 +84,7 @@ define([
             model = getModel(modelData, modelProperties);
          });
 
-         describe('.$constructor()', function () {
+         describe('.constructor()', function () {
             it('should take limited time', function() {
                this.timeout(5000);
 

@@ -50,9 +50,6 @@ define('js!SBIS3.CONTROLS.Data.Di', [], function () {
        * </pre>
        * Регистрируем зависимость с переопределенными параметарми конструктора:
        * <pre>
-       *    var Logger = $ws.core.extend({
-       *       log: function() {}
-       *    });
        *    Di.register('model.crm-user', function(options) {
        *       return new User($ws.core.merge(options, {
        *          context: 'crm',

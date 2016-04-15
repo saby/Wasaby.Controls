@@ -54,7 +54,7 @@ define('js!SBIS3.CONTROLS.Data.Record', [
        * @name SBIS3.CONTROLS.Data.Record#owner
        * @see getOwner
        */
-      $owner: null,
+      _$owner: null,
 
       /**
        * @member {Object.<String, *>} Измененные поля и оригинальные значения
@@ -79,7 +79,7 @@ define('js!SBIS3.CONTROLS.Data.Record', [
          OptionsMixin.constructor.call(this, options);
          FormattableMixin.constructor.call(this, options);
          this._publish('onPropertyChange');
-         this.setRawData(this.$rawData);
+         this.setRawData(this._$rawData);
       },
 
       //region SBIS3.CONTROLS.Data.IObject
@@ -215,7 +215,7 @@ define('js!SBIS3.CONTROLS.Data.Record', [
        * @protected
        */
       _createRawDataAdapter: function () {
-         return this.getAdapter().forRecord(this.$rawData);
+         return this.getAdapter().forRecord(this._$rawData);
       },
 
       /**
@@ -223,7 +223,7 @@ define('js!SBIS3.CONTROLS.Data.Record', [
        * @protected
        */
       _checkFormatIsWritable: function() {
-         if (this.$owner) {
+         if (this._$owner) {
             throw new Error('Record format has read only access. You should change recordset format instead. See option "owner" for details.');
          }
       },
@@ -284,7 +284,7 @@ define('js!SBIS3.CONTROLS.Data.Record', [
        * @see owner
        */
       getOwner: function() {
-         return this.$owner;
+         return this._$owner;
       },
 
       /**
@@ -406,6 +406,9 @@ define('js!SBIS3.CONTROLS.Data.Record', [
          try {
             format = adapter.getSharedFormat(name);
          } catch (e) {
+            if (!(e instanceof ReferenceError)) {
+               throw e;
+            }
             format = 'String';
          }
 
@@ -418,8 +421,8 @@ define('js!SBIS3.CONTROLS.Data.Record', [
             )
          );
 
-         if (!(this.$rawData instanceof Object)) {
-            this.$rawData = adapter.getData();
+         if (!(this._$rawData instanceof Object)) {
+            this._$rawData = adapter.getData();
          }
       },
 

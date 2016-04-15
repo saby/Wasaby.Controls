@@ -76,7 +76,7 @@ define([
             items = undefined;
          });
 
-         describe('.$constructor()', function () {
+         describe('.constructor()', function () {
             it('should take limited time', function() {
                this.timeout(5000);
 
@@ -847,7 +847,7 @@ define([
                      adapter: 'adapter.sbis'
                   }),
                   clone = rs.clone();
-               assert.strictEqual(clone.$items, clone._getServiceEnumerator()._items);
+               assert.strictEqual(clone._$items, clone._getServiceEnumerator()._items);
             });
          });
 
