@@ -12,13 +12,49 @@ define('js!SBIS3.CONTROLS.Data.Core', [
    var _private = {
       contextualExtend: function(mixins, overrides) {
          //$ws.core.extend compatibility
-         if (mixins && mixins.$protected ||
-            overrides && overrides.$protected
-         ) {
-            Utils.logger.stack(Core._moduleName + '::extend(): field $protected in argument overrides is deprecated and will be removed in 3.7.4. Use direct name instead.');
-            return $ws.core.extend(this, mixins, overrides);
+         if (mixins && mixins.$protected) {
+            overrides = mixins;
+            mixins = [];
          }
-         
+         if (overrides && overrides.$protected) {
+
+            //Utils.logger.stack(Core._moduleName + '::extend(): field $protected in argument overrides is deprecated and will be removed in 3.7.4. Use direct name instead.');
+            var parent = this,
+               protected = overrides.$protected,
+               options = protected._options;
+            delete overrides.$protected;
+
+            overrides.constructor = function() {
+               parent.prototype.constructor.apply(this, arguments);
+               if (arguments[0]) {
+                  this._options = $ws.core.clone(this._options);
+                  $ws.core.propertyMerge(arguments[0], this._options);
+               }
+               if (overrides.$constructor) {
+                  overrides.$constructor.apply(this, arguments);
+               }
+            };
+
+            var child = Core.extend(this, mixins, overrides),
+               proto = child.prototype,
+               option,
+               property;
+            for (property in protected) {
+               if (protected.hasOwnProperty(property)) {
+                  proto[property] = $ws.core.merge(proto[property], protected[property]);
+               }
+            }
+            for (option in options) {
+               if (options.hasOwnProperty(option)) {
+                  property = '_$' + option;
+                  if (property in proto) {
+                     proto[property] = options[option];
+                  }
+               }
+            }
+            return child;
+         }
+
          return Core.extend(this, mixins, overrides);
       },
       mixinWrappers: {
