@@ -181,7 +181,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
          var td = $(e.target).closest('.controls-DataGridView__td, .controls-DataGridView__th', this._container[0]),
              trs = [],
              cells = [],
-             index, hoveredColumn;
+             index, hoveredColumn, cell;
 
          if(td.length) {
             index = td.index();
@@ -197,7 +197,10 @@ define('js!SBIS3.CONTROLS.DataGridView',
                }
 
                for(var i = 0, len = trs.length; i < len; i++) {
-                  cells.push(trs[i].children[index]);
+                  cell = trs[i].children[index];
+                  if(cell) {
+                     cells.push(cell);
+                  }
                }
 
                hoveredColumn.cells = $(cells).addClass('controls-DataGridView__hoveredColumn__cell');
