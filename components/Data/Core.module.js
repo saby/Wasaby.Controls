@@ -18,10 +18,10 @@ define('js!SBIS3.CONTROLS.Data.Core', [
          }
          if (overrides && overrides.$protected) {
             Utils.logger.stack(Core._moduleName + '::extend(): field $protected in argument overrides is deprecated and will be removed in 3.7.4. Use direct name instead.');
-            
+
             var parent = this,
-               protected = overrides.$protected,
-               options = protected._options;
+               protctd = overrides.$protected,
+               options = protctd._options;
             delete overrides.$protected;
 
             overrides.constructor = function() {
@@ -39,9 +39,9 @@ define('js!SBIS3.CONTROLS.Data.Core', [
                proto = child.prototype,
                option,
                property;
-            for (property in protected) {
-               if (protected.hasOwnProperty(property)) {
-                  proto[property] = $ws.core.merge(proto[property], protected[property]);
+            for (property in protctd) {
+               if (protctd.hasOwnProperty(property)) {
+                  proto[property] = $ws.core.merge(proto[property], protctd[property]);
                }
             }
             for (option in options) {
