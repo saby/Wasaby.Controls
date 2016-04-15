@@ -1,47 +1,56 @@
 /* global define, $ws */
 define('js!SBIS3.CONTROLS.Data.Format.Field', [
+   'js!SBIS3.CONTROLS.Data.Entity.Abstract',
+   'js!SBIS3.CONTROLS.Data.Entity.OptionsMixin',
    'js!SBIS3.CONTROLS.Data.SerializableMixin',
    'js!SBIS3.CONTROLS.Data.Serializer'
-], function (SerializableMixin, Serializer) {
+], function (Abstract, OptionsMixin, SerializableMixin, Serializer) {
    'use strict';
 
    /**
     * Прототип поля записи (абстрактный класс)
     * @class SBIS3.CONTROLS.Data.Format.Field
+    * @extends SBIS3.CONTROLS.Entity.Abstract
+    * @mixes SBIS3.CONTROLS.Data.Entity.OptionsMixin
     * @mixes SBIS3.CONTROLS.Data.SerializableMixin
     * @public
     * @author Мальцев Алексей
     */
 
-   var Field = $ws.core.extend({}, [SerializableMixin], /** @lends SBIS3.CONTROLS.Data.Format.Field.prototype */{
+   var Field = Abstract.extend([OptionsMixin, SerializableMixin], /** @lends SBIS3.CONTROLS.Data.Format.Field.prototype */{
       _moduleName: 'SBIS3.CONTROLS.Data.Format.Field',
-      $protected: {
-         _options: {
-            /**
-             * @cfg {String} Имя поля
-             * @see getName
-             * @see setName
-             */
-            name: '',
 
-            /**
-             * @cfg {*} Значение поля по умолчанию
-             * @see getDefaultValue
-             * @see setDefaultValue
-             */
-            defaultValue: null,
+      /**
+       * @cfg {String} Имя поля
+       * @name SBIS3.CONTROLS.Data.Format.Field#name
+       * @see getName
+       * @see setName
+       */
+      _$name: '',
 
-            /**
-             * @cfg {Boolean} Значение может быть null
-             * @see isNullable
-             * @see setNullable
-             */
-            nullable: true
-         }
-      },
+      /**
+       * @cfg {*} Значение поля по умолчанию
+       * @name SBIS3.CONTROLS.Data.Format.Field#defaultValue
+       * @see getDefaultValue
+       * @see setDefaultValue
+       */
+      _$defaultValue: null,
+
+      /**
+       * @cfg {Boolean} Значение может быть null
+       * @name SBIS3.CONTROLS.Data.Format.Field#nullable
+       * @see isNullable
+       * @see setNullable
+       */
+      _$nullable: true,
 
       //region SBIS3.CONTROLS.Data.SerializableMixin
       //endregion SBIS3.CONTROLS.Data.SerializableMixin
+
+      constructor: function $Field(options) {
+         Field.superclass.constructor.call(this, options);
+         OptionsMixin.constructor.call(this, options);
+      },
 
       //region Public methods
 
@@ -63,7 +72,7 @@ define('js!SBIS3.CONTROLS.Data.Format.Field', [
        * @see setName
        */
       getName: function () {
-         return this._options.name;
+         return this._$name;
       },
 
       /**
@@ -73,7 +82,7 @@ define('js!SBIS3.CONTROLS.Data.Format.Field', [
        * @see getName
        */
       setName: function (name) {
-         this._options.name = name;
+         this._$name = name;
       },
 
       /**
@@ -83,7 +92,7 @@ define('js!SBIS3.CONTROLS.Data.Format.Field', [
        * @see setDefaultValue
        */
       getDefaultValue: function () {
-         return this._options.defaultValue;
+         return this._$defaultValue;
       },
 
       /**
@@ -93,7 +102,7 @@ define('js!SBIS3.CONTROLS.Data.Format.Field', [
        * @see getDefaultValue
        */
       setDefaultValue: function (value) {
-         this._options.defaultValue = value;
+         this._$defaultValue = value;
       },
 
       /**
@@ -103,7 +112,7 @@ define('js!SBIS3.CONTROLS.Data.Format.Field', [
        * @see setNullable
        */
       isNullable: function () {
-         return this._options.nullable;
+         return this._$nullable;
       },
 
       /**
@@ -113,7 +122,7 @@ define('js!SBIS3.CONTROLS.Data.Format.Field', [
        * @see isNullable
        */
       setNullable: function (nullable) {
-         this._options.nullable = nullable;
+         this._$nullable = nullable;
       },
 
       /**
@@ -133,7 +142,16 @@ define('js!SBIS3.CONTROLS.Data.Format.Field', [
        * @param {SBIS3.CONTROLS.Data.Format.Field} format Формат поля, который надо скопировать
        */
       copyFrom: function (format) {
-         $ws.core.merge(this._options, format._options);
+         var options = this._getOptions(),
+            formatOptions = format._getOptions(),
+            option;
+         for (option in options) {
+            if (options.hasOwnProperty(option) &&
+               formatOptions.hasOwnProperty(option)
+            ) {
+               this['_$' + option] = formatOptions[option];
+            }
+         }
       },
 
       /**

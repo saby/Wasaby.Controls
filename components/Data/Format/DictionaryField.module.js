@@ -14,15 +14,13 @@ define('js!SBIS3.CONTROLS.Data.Format.DictionaryField', [
 
    var DictionaryField = Field.extend(/** @lends SBIS3.CONTROLS.Data.Format.DictionaryField.prototype */{
       _moduleName: 'SBIS3.CONTROLS.Data.Format.DictionaryField',
-      $protected: {
-         _options: {
-            /**
-             * @cfg {Array.<String>} Словарь возможных значений
-             * @see getDictionary
-             */
-            dictionary: null
-         }
-      },
+
+      /**
+       * @cfg {Array.<String>} Словарь возможных значений
+       * @name SBIS3.CONTROLS.Data.Format.DictionaryField#dictionary
+       * @see getDictionary
+       */
+      _$dictionary: null,
 
       //region Public methods
 
@@ -32,7 +30,7 @@ define('js!SBIS3.CONTROLS.Data.Format.DictionaryField', [
        * @see dictionary
        */
       getDictionary: function () {
-         return this._options.dictionary;
+         return this._$dictionary;
       }
 
       //endregion Public methods
