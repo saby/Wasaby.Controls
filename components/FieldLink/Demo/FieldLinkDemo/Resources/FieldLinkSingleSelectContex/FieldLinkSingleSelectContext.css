@@ -12,3 +12,7 @@
 .demo-FieldLink__note-TextBox2 {
    margin-left: 40px;
 }
+.demo-FieldLink__note ul {
+    padding-top: 10px;
+    padding-left: 40px !important;
+}
