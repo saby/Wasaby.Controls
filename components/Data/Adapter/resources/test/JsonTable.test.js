@@ -345,13 +345,11 @@ define([
                   assert.strictEqual(adapter.at(i)[fieldName], def);
                }
             });
-            it('should throw an error for already exists field', function () {
-               assert.throw(function () {
-                  adapter.addField(FieldsFactory.create({
-                     type: 'string',
-                     name: 'Ид'
-                  }));
-               });
+            it('should don\'t throw an error for already exists field', function () {
+               adapter.addField(FieldsFactory.create({
+                  type: 'string',
+                  name: 'Ид'
+               }));
             });
             it('should throw an error for not a field', function () {
                assert.throw(function () {
