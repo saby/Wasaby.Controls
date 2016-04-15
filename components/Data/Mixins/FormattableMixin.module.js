@@ -32,6 +32,7 @@ define('js!SBIS3.CONTROLS.Data.FormattableMixin', [
        * @remark
        * Данные должны быть в формате, поддерживаемом адаптером {@link adapter}.
        * @example
+       * Создадим новую запись сотрудника:
        * <pre>
        *    var user = new Record({
        *       rawData: {
@@ -44,7 +45,7 @@ define('js!SBIS3.CONTROLS.Data.FormattableMixin', [
        *    user.get('firstName');//John
        *    user.get('lastName');//Smith
        * </pre>
-       * @example
+       * Создадим рекордсет с персонажами фильма:
        * <pre>
        *    var characters = new RecordSet({
        *       rawData: [{
@@ -83,12 +84,13 @@ define('js!SBIS3.CONTROLS.Data.FormattableMixin', [
        * Адаптер должен быть предназначен для формата, в котором описаны сырые данные {@link rawData}.
        * По умолчанию обрабатываются данные в формате JSON (ключ -> значение).
        * @example
+       * Создадим запись с адаптером для данных в формате БЛ СБИС, внедренным в виде названия зарегистрированной зависимости:
        * <pre>
        *    var user = new Record({
        *       adapter: 'adapter.sbis'
        *    });
        * </pre>
-       * @example
+       * Создадим запись с адаптером для данных в формате БЛ СБИС, внедренным в виде готового экземпляра:
        * <pre>
        *    var user = new Record({
        *       adapter: new SbisAdapter()
@@ -102,6 +104,7 @@ define('js!SBIS3.CONTROLS.Data.FormattableMixin', [
        * @name SBIS3.CONTROLS.Data.FormattableMixin#format
        * @see getFormat
        * @example
+       * Создадим запись с форматом полей, внедренным в виде готового экземпляра:
        * <pre>
        *    define('js!My.Module', [
        *       'js!My.Format.User'
@@ -111,7 +114,7 @@ define('js!SBIS3.CONTROLS.Data.FormattableMixin', [
        *       });
        *    });
        * </pre>
-       * @example
+       * Создадим рекордсет с форматом полей, внедренным в виде готового экземпляра:
        * <pre>
        *    define('js!My.Module', [
        *       'js!My.Format.User'
@@ -121,7 +124,7 @@ define('js!SBIS3.CONTROLS.Data.FormattableMixin', [
        *       });
        *    });
        * </pre>
-       * @example
+       * Создадим запись с форматом полей, внедренным в декларативном виде:
        * <pre>
        *    var user = new Record({
        *       format: [{
@@ -133,7 +136,7 @@ define('js!SBIS3.CONTROLS.Data.FormattableMixin', [
        *       }]
        *    });
        * </pre>
-       * @example
+       * Создадим рекордсет с форматом полей, внедренным в декларативном виде:
        * <pre>
        *    var users = new RecordSet({
        *       format: [{
