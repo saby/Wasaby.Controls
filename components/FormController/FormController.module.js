@@ -263,28 +263,28 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
          var self = this;
          message = message !== undefined ? message : this._options.indicatorSavingMessage;
          this._showedLoading = true;
-         if(this._loadingIndicator && !this._loadingIndicator.isDestroyed()){
-            setTimeout(function(){
-               if (self._showedLoading) {
+         setTimeout(function(){
+            if (self._showedLoading) {
+               if (self._loadingIndicator && !self._loadingIndicator.isDestroyed()) {
                   self._loadingIndicator.setMessage(message);
+               } else {
+                  self._loadingIndicator = new LoadingIndicator({
+                     parent: self._panel,
+                     showInWindow: true,
+                     modal: true,
+                     message: message,
+                     name: self.getId() + '-LoadingIndicator'
+                  });
                }
-            }, 750);
-         } else {
-            this._loadingIndicator = new LoadingIndicator({
-               parent: this._panel,
-               showInWindow: true,
-               modal: true,
-               message: message,
-               name: this.getId() + '-LoadingIndicator'
-            });
-         }
+            }
+         }, 750);
       }),
       /**
        * Скрывает индикатор загрузки
        */
       _hideLoadingIndicator: $ws.helpers.forAliveOnly(function(){
+         this._showedLoading = false;
          if(this._loadingIndicator) {
-            this._showedLoading = false;
             this._loadingIndicator.hide();
          }
       }),
