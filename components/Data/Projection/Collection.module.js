@@ -25,117 +25,124 @@ define('js!SBIS3.CONTROLS.Data.Projection.Collection', [
 
    var CollectionProjection = Projection.extend([IEnumerable, IList, IBindCollectionProjection], /** @lends SBIS3.CONTROLS.Data.Projection.Collection.prototype */{
       _moduleName: 'SBIS3.CONTROLS.Data.Projection.Collection',
-      $protected: {
-         _options: {
-            /**
-             * @cfg {SBIS3.CONTROLS.Data.Collection.IEnumerable} Исходная коллекция
-             */
-            collection: null,
+      
+      /**
+       * @cfg {SBIS3.CONTROLS.Data.Collection.IEnumerable} Исходная коллекция
+       * @name SBIS3.CONTROLS.Data.Projection.Collection#collection
+       */
+      _$collection: null,
 
-            /**
-             * @cfg {Array.<String>} Названия свойств элемента коллекции, от которых зависят фильтрация и/или сортировка.
-             * @remark
-             * Изменение любого из указанных свойств элемента коллекции приведет к перерасчету фильтации и сортировки.
-             */
-            importantItemProperties: []
-         },
+      /**
+       * @cfg {Array.<String>} Названия свойств элемента коллекции, от которых зависят фильтрация и/или сортировка.
+       * @name SBIS3.CONTROLS.Data.Projection.Collection#importantItemProperties
+       * @remark
+       * Изменение любого из указанных свойств элемента коллекции приведет к перерасчету фильтации и сортировки.
+       */
+      _$importantItemProperties: null,
 
-         /**
-          * @member {String} Модуль элемента проекции
-          */
-         _itemModule: 'projection.collection-item',
+      /**
+       * @member {String} Модуль элемента проекции
+       */
+      _itemModule: 'projection.collection-item',
 
-         /**
-          * @member {Array.<SBIS3.CONTROLS.Data.Projection.CollectionItem>} Элементы проекции
-          */
-         _items: [],
+      /**
+       * @member {Array.<SBIS3.CONTROLS.Data.Projection.CollectionItem>} Элементы проекции
+       */
+      _items: [],
 
-         /**
-          * @member {Function(*, Number} Фильтр элементов проекции
-          */
-         _filter: undefined,
+      /**
+       * @member {Function(*, Number} Фильтр элементов проекции
+       */
+      _filter: undefined,
 
-         /**
-          * @member {Array.<Boolean>} Результат применения фильтра: индекс в коллекции -> прошел фильтр
-          */
-         _filterMap: [],
+      /**
+       * @member {Array.<Boolean>} Результат применения фильтра: индекс в коллекции -> прошел фильтр
+       */
+      _filterMap: [],
 
-         /**
-          * @member {Function} Метод группировки элементов проекции
-          */
-         _group: undefined,
+      /**
+       * @member {Function} Метод группировки элементов проекции
+       */
+      _group: null,
 
-         /**
-          * @member {Array.<Function>} Пользовательские методы сортировки элементов
-          */
-         _userSort: [],
+      /**
+       * @member {Array.<Function>} Пользовательские методы сортировки элементов
+       */
+      _userSort: [],
 
-         /**
-          * @member {Array.<Number>} Результат применения сортировки: индекс в проекции -> индекс в коллекции
-          */
-         _sortMap: [],
+      /**
+       * @member {Array.<Number>} Результат применения сортировки: индекс в проекции -> индекс в коллекции
+       */
+      _sortMap: [],
 
-         /**
-          * @member {Boolean|undefined} Признак, что порядок элементов отличается от исходной коллекции
-          */
-         _isSortedCache: undefined,
+      /**
+       * @member {Boolean|undefined} Признак, что порядок элементов отличается от исходной коллекции
+       */
+      _isSortedCache: undefined,
 
-         /**
-          * @member {SBIS3.CONTROLS.Data.Projection.CollectionEnumerator} Служебный энумератор проекции - для отслеживания текущего элемента и поиска по свойствам
-          */
-         _serviceEnumerator: null,
+      /**
+       * @member {SBIS3.CONTROLS.Data.Projection.CollectionEnumerator} Служебный энумератор проекции - для отслеживания текущего элемента и поиска по свойствам
+       */
+      _serviceEnumerator: null,
 
-         /**
-          * @member {SBIS3.CONTROLS.Data.Projection.CollectionEnumerator} Служебный энумератор проекции - для поиска следующего или предыдущего элемента
-          */
-         _navigationEnumerator: null,
+      /**
+       * @member {SBIS3.CONTROLS.Data.Projection.CollectionEnumerator} Служебный энумератор проекции - для поиска следующего или предыдущего элемента
+       */
+      _navigationEnumerator: null,
 
-         /**
-          * @member {Boolean} Генерация событий включена
-          */
-         _eventsEnabled: true,
+      /**
+       * @member {Boolean} Генерация событий включена
+       */
+      _eventsEnabled: true,
 
-         /**
-          * @member {Function} Обработчик события об изменении исходной коллекции
-          */
-         _onSourceCollectionChange: undefined,
+      /**
+       * @member {Function} Обработчик события об изменении исходной коллекции
+       */
+      _onSourceCollectionChange: null,
 
-         /**
-          * @member {Function} Обработчик события об изменении элемента исходной коллекции
-          */
-         _onSourceCollectionItemChange: undefined
-      },
+      /**
+       * @member {Function} Обработчик события об изменении элемента исходной коллекции
+       */
+      _onSourceCollectionItemChange: null,
 
-      $constructor: function (cfg) {
-         cfg = cfg || {};
+      constructor: function $CollectionProjection(options) {
+         this._$importantItemProperties = [];
+         this._items = [];
+         this._filterMap = [];
+         this._userSort = [];
+         this._sortMap = [];
 
-         this._publish('onCurrentChange', 'onCollectionChange', 'onCollectionItemChange');
-
-         if ('itemModule' in cfg) {
-            this._itemModule = cfg.itemModule;
+         if (options) {
+            if ('itemModule' in options) {
+               this._itemModule = options.itemModule;
+            }
+            if ('convertToItem' in options) {
+               this._convertToItem = options.convertToItem;
+            }
          }
-         if ('convertToItem' in cfg) {
-            this._convertToItem = cfg.convertToItem;
-         }
-         if (!this._options.collection) {
+
+         CollectionProjection.superclass.constructor.call(this, options);
+
+         if (!this._$collection) {
             throw new Error(this._moduleName + ': source collection is undefined');
          }
-         if (!$ws.helpers.instanceOfMixin(this._options.collection, 'SBIS3.CONTROLS.Data.Collection.IEnumerable')) {
-            throw new Error(this._moduleName + ': source collection should implement SBIS3.CONTROLS.Data.Collection.IEnumerable');
+         if (!$ws.helpers.instanceOfMixin(this._$collection, 'SBIS3.CONTROLS.Data.Collection.IEnumerable')) {
+            throw new TypeError(this._moduleName + ': source collection should implement SBIS3.CONTROLS.Data.Collection.IEnumerable');
          }
 
+         this._publish('onCurrentChange', 'onCollectionChange', 'onCollectionItemChange');
          this._init();
          this._bindHandlers();
-         if ($ws.helpers.instanceOfMixin(this._options.collection, 'SBIS3.CONTROLS.Data.Bind.ICollection')) {
-            this._options.collection.subscribe('onCollectionChange', this._onSourceCollectionChange);
-            this._options.collection.subscribe('onCollectionItemChange', this._onSourceCollectionItemChange);
+         if ($ws.helpers.instanceOfMixin(this._$collection, 'SBIS3.CONTROLS.Data.Bind.ICollection')) {
+            this._$collection.subscribe('onCollectionChange', this._onSourceCollectionChange);
+            this._$collection.subscribe('onCollectionItemChange', this._onSourceCollectionItemChange);
          }
       },
 
       destroy: function () {
-         if ($ws.helpers.instanceOfMixin(this._options.collection, 'SBIS3.CONTROLS.Data.Bind.ICollection')) {
-            this._options.collection.unsubscribe('onCollectionChange', this._onSourceCollectionChange);
-            this._options.collection.unsubscribe('onCollectionItemChange', this._onSourceCollectionItemChange);
+         if ($ws.helpers.instanceOfMixin(this._$collection, 'SBIS3.CONTROLS.Data.Bind.ICollection')) {
+            this._$collection.unsubscribe('onCollectionChange', this._onSourceCollectionChange);
+            this._$collection.unsubscribe('onCollectionItemChange', this._onSourceCollectionItemChange);
          }
 
          this._serviceEnumerator = null;
@@ -250,7 +257,7 @@ define('js!SBIS3.CONTROLS.Data.Projection.Collection', [
        * @returns {SBIS3.CONTROLS.Data.Collection.IEnumerable}
        */
       getCollection: function () {
-         return this._options.collection;
+         return this._$collection;
       },
 
       /**
@@ -662,7 +669,7 @@ define('js!SBIS3.CONTROLS.Data.Projection.Collection', [
          this._filterMap.length = 0;
          this._isSortedCache = undefined;
 
-         var enumerator = this._options.collection.getEnumerator(),
+         var enumerator = this._$collection.getEnumerator(),
             index = 0,
             item;
          while ((item = enumerator.getNext())) {
@@ -1239,9 +1246,9 @@ define('js!SBIS3.CONTROLS.Data.Projection.Collection', [
        * @protected
        */
       _setImportantProperty: function(name) {
-         var index = Array.indexOf(this._options.importantItemProperties, name);
+         var index = Array.indexOf(this._$importantItemProperties, name);
          if (index === -1) {
-            this._options.importantItemProperties.push(name);
+            this._$importantItemProperties.push(name);
          }
       },
 
@@ -1251,9 +1258,9 @@ define('js!SBIS3.CONTROLS.Data.Projection.Collection', [
        * @protected
        */
       _unsetImportantProperty: function(name) {
-         var index = Array.indexOf(this._options.importantItemProperties, name);
+         var index = Array.indexOf(this._$importantItemProperties, name);
          if (index !== -1) {
-            this._options.importantItemProperties.splice(index, 1);
+            this._$importantItemProperties.splice(index, 1);
          }
       },
 
@@ -1416,7 +1423,7 @@ define('js!SBIS3.CONTROLS.Data.Projection.Collection', [
          );
 
          //Only changes of important properties can launch analysis
-         if (Array.indexOf(this._options.importantItemProperties, property) > -1) {
+         if (Array.indexOf(this._$importantItemProperties, property) > -1) {
             this._reAnalize(index, 1);
          }
       }

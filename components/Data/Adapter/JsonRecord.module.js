@@ -11,7 +11,7 @@ define('js!SBIS3.CONTROLS.Data.Adapter.JsonRecord', [
    /**
     * Адаптер для записи таблицы данных в формате JSON
     * @class SBIS3.CONTROLS.Data.Adapter.JsonRecord
-    * @extends SBIS3.CONTROLS.Entity.Abstract
+    * @extends SBIS3.CONTROLS.Data.Entity.Abstract
     * @mixes SBIS3.CONTROLS.Data.Adapter.IRecord
     * @mixes SBIS3.CONTROLS.Data.Adapter.GenericFormatMixin
     * @mixes SBIS3.CONTROLS.Data.Adapter.JsonFormatMixin

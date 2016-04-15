@@ -35,7 +35,7 @@ define('js!SBIS3.CONTROLS.Data.Record', [
    /**
     * Запись - обертка над данными.
     * @class SBIS3.CONTROLS.Data.Record
-    * @extends SBIS3.CONTROLS.Entity.Abstract
+    * @extends SBIS3.CONTROLS.Data.Entity.Abstract
     * @mixes SBIS3.CONTROLS.Data.IObject
     * @mixes SBIS3.CONTROLS.Data.Collection.IEnumerable
     * @mixes SBIS3.CONTROLS.Data.Entity.OptionsMixin

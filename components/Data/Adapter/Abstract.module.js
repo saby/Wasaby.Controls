@@ -9,7 +9,7 @@ define('js!SBIS3.CONTROLS.Data.Adapter.Abstract', [
    /**
     * Абстрактный адаптер для данных
     * @class SBIS3.CONTROLS.Data.Adapter.Abstract
-    * @extends SBIS3.CONTROLS.Entity.Abstract
+    * @extends SBIS3.CONTROLS.Data.Entity.Abstract
     * @mixes SBIS3.CONTROLS.Data.Adapter.IAdapter
     * @mixes SBIS3.CONTROLS.Data.SerializableMixin
     * @public

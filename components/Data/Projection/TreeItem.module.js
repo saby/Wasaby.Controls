@@ -14,38 +14,36 @@ define('js!SBIS3.CONTROLS.Data.Projection.TreeItem', [
     */
    var TreeItem = CollectionItem.extend(/** @lends SBIS3.CONTROLS.Data.Projection.TreeItem.prototype */{
       _moduleName: 'SBIS3.CONTROLS.Data.Projection.TreeItem',
-      $protected: {
-         _options: {
-            /**
-             * @cfg {SBIS3.CONTROLS.Data.Projection.TreeItem} Родительский узел
-             */
-            parent: undefined,
 
-            /**
-             * @cfg {Boolean} Является узлом
-             */
-            node: false,
+      /**
+       * @cfg {SBIS3.CONTROLS.Data.Projection.TreeItem} Родительский узел
+       * @name SBIS3.CONTROLS.Data.Projection.TreeItem#parent
+       */
+      _$parent: undefined,
 
-            /**
-             * @cfg {Boolean} Развернут или свернут узел. По умолчанию свернут.
-             */
-            expanded: false,
+      /**
+       * @cfg {Boolean} Является узлом
+       * @name SBIS3.CONTROLS.Data.Projection.TreeItem#node
+       */
+      _$node: false,
 
-            /**
-             * @cfg {String} Название свойства, содержащего дочерние элементы узла. Используется для анализа на наличие дочерних элементов.
-             */
-            childrenProperty: ''
-         },
+      /**
+       * @cfg {Boolean} Развернут или свернут узел. По умолчанию свернут.
+       * @name SBIS3.CONTROLS.Data.Projection.TreeItem#expanded
+       */
+      _$expanded: false,
 
-         _hashPrefix: 'tree-item-'
-      },
+      /**
+       * @cfg {String} Название свойства, содержащего дочерние элементы узла. Используется для анализа на наличие дочерних элементов.
+       * @name SBIS3.CONTROLS.Data.Projection.TreeItem#childrenProperty
+       */
+      _$childrenProperty: '',
 
-      $constructor: function (cfg) {
-         cfg = cfg || {};
+      _hashPrefix: 'tree-item-',
 
-         if ('node' in cfg) {
-            this._options.node = !!cfg.node;
-         }
+      constructor: function $TreeItem(options) {
+         TreeItem.superclass.constructor.call(this, options);
+         this._$node = !!this._$node;
       },
 
       //region Public methods
@@ -55,7 +53,7 @@ define('js!SBIS3.CONTROLS.Data.Projection.TreeItem', [
        * @returns {SBIS3.CONTROLS.Data.Projection.TreeItem}
        */
       getParent: function () {
-         return this._options.parent;
+         return this._$parent;
       },
 
       /**
@@ -64,10 +62,10 @@ define('js!SBIS3.CONTROLS.Data.Projection.TreeItem', [
        * @param {Boolean} [silent=false] Не генерировать событие
        */
       setParent: function (parent, silent) {
-         if (this._options.parent === parent) {
+         if (this._$parent === parent) {
             return;
          }
-         this._options.parent = parent;
+         this._$parent = parent;
          if (!silent) {
             this._notifyItemChangeToOwner('parent');
          }
@@ -78,10 +76,10 @@ define('js!SBIS3.CONTROLS.Data.Projection.TreeItem', [
        * @returns {SBIS3.CONTROLS.Data.Projection.TreeItem}
        */
       getRoot: function () {
-         if (this._options.parent === this) {
+         if (this._$parent === this) {
             return;
          }
-         return this._options.parent ? this._options.parent.getRoot() : this;
+         return this._$parent ? this._$parent.getRoot() : this;
       },
 
       /**
@@ -89,7 +87,7 @@ define('js!SBIS3.CONTROLS.Data.Projection.TreeItem', [
        * @returns {Boolean}
        */
       isRoot: function () {
-         return !this._options.parent;
+         return !this._$parent;
       },
 
       /**
@@ -97,7 +95,7 @@ define('js!SBIS3.CONTROLS.Data.Projection.TreeItem', [
        * @returns {Number}
        */
       getLevel: function () {
-         return 1 + (this._options.parent ? this._options.parent.getLevel() : 0);
+         return 1 + (this._$parent ? this._$parent.getLevel() : 0);
       },
 
       /**
@@ -105,7 +103,7 @@ define('js!SBIS3.CONTROLS.Data.Projection.TreeItem', [
        * @returns {Boolean}
        */
       isNode: function () {
-         return this._options.node;
+         return this._$node;
       },
 
       /**
@@ -113,7 +111,7 @@ define('js!SBIS3.CONTROLS.Data.Projection.TreeItem', [
        * @returns {Boolean}
        */
       isExpanded: function () {
-         return this._options.expanded;
+         return this._$expanded;
       },
 
       /**
@@ -121,10 +119,10 @@ define('js!SBIS3.CONTROLS.Data.Projection.TreeItem', [
        * @param {Boolean} expanded Развернут или свернут узел
        */
       setExpanded: function (expanded) {
-         if (this._options.expanded === expanded) {
+         if (this._$expanded === expanded) {
             return;
          }
-         this._options.expanded = expanded;
+         this._$expanded = expanded;
          this._notifyItemChangeToOwner('expanded');
       },
 
@@ -140,7 +138,7 @@ define('js!SBIS3.CONTROLS.Data.Projection.TreeItem', [
        * @returns {String}
        */
       getChildrenProperty: function () {
-         return this._options.childrenProperty;
+         return this._$childrenProperty;
       },
 
       //endregion Public methods
@@ -157,7 +155,7 @@ define('js!SBIS3.CONTROLS.Data.Projection.TreeItem', [
          TreeItem.superclass._notifyItemChangeToOwner.call(this, property);
 
          var rootOwner = this.getRoot().getOwner();
-         if (rootOwner && rootOwner !== this._options.owner) {
+         if (rootOwner && rootOwner !== this._$owner) {
             rootOwner.notifyItemChange(this, property);
          }
       }

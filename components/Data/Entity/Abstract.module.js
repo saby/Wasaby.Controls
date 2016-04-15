@@ -12,7 +12,9 @@ define('js!SBIS3.CONTROLS.Data.Entity.Abstract', [
     * @author Мальцев Алексей
     */
 
-   var Abstract = Core.extend(/** @lends SBIS3.CONTROLS.Entity.Abstract.prototype */{
+   var Abstract = Core.extend(/** @lends SBIS3.CONTROLS.Data.Entity.Abstract.prototype */{
+      _moduleName: 'SBIS3.CONTROLS.Data.Entity.Abstract',
+
       /**
        * @member {Boolean} Экземпляр был разрушен
        */

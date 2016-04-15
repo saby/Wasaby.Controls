@@ -20,7 +20,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.List', [
    /**
     * Список - коллекция c доступом по порядковому индексу
     * @class SBIS3.CONTROLS.Data.Collection.List
-    * @extends SBIS3.CONTROLS.Entity.Abstract
+    * @extends SBIS3.CONTROLS.Data.Entity.Abstract
     * @mixes SBIS3.CONTROLS.Data.Entity.OptionsMixin
     * @mixes SBIS3.CONTROLS.Data.Entity.ObservableMixin
     * @mixes SBIS3.CONTROLS.Data.SerializableMixin
