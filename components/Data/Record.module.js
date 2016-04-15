@@ -70,7 +70,7 @@ define('js!SBIS3.CONTROLS.Data.Record', [
          if (options) {
             if ('data' in options && !('rawData' in options)) {
                options.rawData = options.data;
-               Utils.logger.stack('SBIS3.CONTROLS.Data.Record: option "data" is deprecated and will be removed in 3.7.4. Use "rawData" instead.', 1);
+               Utils.logger.stack(this._moduleName + '::constructor(): option "data" is deprecated and will be removed in 3.7.4. Use "rawData" instead.', 1);
             }
          }
 

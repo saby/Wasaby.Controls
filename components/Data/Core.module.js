@@ -1,5 +1,7 @@
 /* global define, $ws */
-define('js!SBIS3.CONTROLS.Data.Core', [], function () {
+define('js!SBIS3.CONTROLS.Data.Core', [
+   'js!SBIS3.CONTROLS.Data.Utils'
+], function (Utils) {
    /**
     * Ядро системы типов
     * @class SBIS3.CONTROLS.Data.Core
@@ -9,6 +11,14 @@ define('js!SBIS3.CONTROLS.Data.Core', [], function () {
 
    var _private = {
       contextualExtend: function(mixins, overrides) {
+         //$ws.core.extend compatibility
+         if (mixins && mixins.$protected ||
+            overrides && overrides.$protected
+         ) {
+            Utils.logger.stack(Core._moduleName + '::extend(): field $protected in argument overrides is deprecated and will be removed in 3.7.4. Use direct name instead.');
+            return $ws.core.extend(this, mixins, overrides);
+         }
+         
          return Core.extend(this, mixins, overrides);
       },
       mixinWrappers: {
