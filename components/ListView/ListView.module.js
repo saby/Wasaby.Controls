@@ -1454,6 +1454,18 @@ define('js!SBIS3.CONTROLS.ListView',
                this._options.infiniteScrollContainer[0].scrollTop = itemContainer[0].offsetTop;
             }
          },
+         isScrollOnBottom: function(){
+            var scrollContainer = this._options.infiniteScrollContainer;
+            if (scrollContainer && scrollContainer.length){
+               scrollContainer = scrollContainer[0];
+               return (scrollContainer.scrollHeight - (scrollContainer.scrollTop + scrollContainer.offsetHeight)) == 0;
+            }
+         },
+         isScrollOnTop: function(){
+            if (this._options.infiniteScrollContainer && this._options.infiniteScrollContainer.length){
+               return this._options.infiniteScrollContainer[0].scrollTop == 0;
+            }
+         },
          _showLoadingIndicator: function () {
             if (!this._loadingIndicator) {
                this._createLoadingIndicator();
