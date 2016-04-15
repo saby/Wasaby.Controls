@@ -1447,7 +1447,7 @@ define('js!SBIS3.CONTROLS.ListView',
             }
          },
          _scrollToItem: function(itemId) {
-            ListView.superclass,_scrollToItem.call(this, itemId);
+            ListView.superclass._scrollToItem.call(this, itemId);
             var itemContainer = $(".controls-ListView__item[data-id='" + itemId + "']", this._getItemsContainer());
             //TODO: будет работать только если есть infiniteScrollContainer, нужно сделать просто scrollContainer так как подгрузки может и не быть
             if (this._options.infiniteScrollContainer && this._options.infiniteScrollContainer.length){
