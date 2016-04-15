@@ -382,9 +382,22 @@ define([
                      done(err);
                   });
                });
+               it('should return an error', function (done) {
+                  var filter = {'Раздел':1,'Раздел@':true,'Раздел$':true};
+                  service.create(filter).addBoth(function (err) {
+                     var s = SbisBusinessLogic.lastRequest.args.Фильтр.s;
+                     assert.strictEqual(s.length, 3);
+                     for(var i = 0; i < s.length; i++) {
+                        if (s[i].n in filter) {
+                           assert.strictEqual(s[i].s, 'Иерархия');
+                        }
+                     }
+                     done();
+                  });
+               });
             });
 
-            context('when the service isn\'t exists', function () {
+             context('when the service isn\'t exists', function () {
                it('should return an error', function (done) {
                   var service = new SbisService({
                      endpoint: 'Купец'

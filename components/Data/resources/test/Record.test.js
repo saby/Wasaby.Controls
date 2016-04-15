@@ -571,6 +571,64 @@ define([
                same.set('title', 'B');
                assert.isFalse(record.isEqual(same));
             });
+            it('should return true with shared raw data', function () {
+               var anotherRecord = getRecord();
+               assert.isTrue(record.isEqual(anotherRecord));
+            });
+            it('should return true with same raw data', function () {
+               var anotherRecord = getRecord(getRecordData());
+               assert.isTrue(record.isEqual(anotherRecord));
+            });
+            it('should return false with different raw data', function () {
+               var data = getRecordData();
+               data.someField = 'someValue';
+               var anotherRecord = getRecord(data);
+               assert.isFalse(record.isEqual(anotherRecord));
+
+               data = getRecordData();
+               for (var key in data) {
+                  if (data.hasOwnProperty(key)) {
+                     delete data[key];
+                     break;
+                  }
+               }
+               anotherRecord = getRecord(data);
+               assert.isFalse(record.isEqual(anotherRecord));
+            });
+            it('should return false for changed and true for reverted back record', function () {
+               var anotherRecord = getRecord(getRecordData());
+               anotherRecord.set('max', 1 + record.get('max'));
+               assert.isFalse(record.isEqual(anotherRecord));
+
+               anotherRecord.set('max', record.get('max'));
+               assert.isTrue(record.isEqual(anotherRecord));
+            });
+            it('should return true with itself', function () {
+               assert.isTrue(record.isEqual(record));
+
+               record.set('max', 1 + record.get('max'));
+               assert.isTrue(record.isEqual(record));
+            });
+            it('should return true for same module and submodule', function () {
+               var MyRecord = Record.extend({}),
+                  recordA = new Record(),
+                  recordB = new Record(),
+                  recordC = new MyRecord();
+               assert.isTrue(recordA.isEqual(recordB));
+               assert.isTrue(recordA.isEqual(recordC));
+            });
+            it('should work fine with invalid argument', function () {
+               assert.isFalse(record.isEqual());
+               assert.isFalse(record.isEqual(null));
+               assert.isFalse(record.isEqual(false));
+               assert.isFalse(record.isEqual(true));
+               assert.isFalse(record.isEqual(0));
+               assert.isFalse(record.isEqual(1));
+               assert.isFalse(record.isEqual(''));
+               assert.isFalse(record.isEqual('a'));
+               assert.isFalse(record.isEqual([]));
+               assert.isFalse(record.isEqual({}));
+            });
          });
 
          describe('.clone()', function () {
@@ -630,64 +688,24 @@ define([
             });
          });
 
-         describe('.isEqual()', function () {
-            it('should return true with shared raw data', function () {
-               var anotherRecord = getRecord();
-               assert.isTrue(record.isEqual(anotherRecord));
+         describe('.getOwner()', function () {
+            it('should return null by default', function () {
+               assert.isNull(record.getOwner());
             });
-            it('should return true with same raw data', function () {
-               var anotherRecord = getRecord(getRecordData());
-               assert.isTrue(record.isEqual(anotherRecord));
+            it('should owner passed to the constructor', function () {
+               var owner = {},
+                  record = new Record({
+                  owner: owner
+               });
+               assert.strictEqual(record.getOwner(), owner);
             });
-            it('should return false with different raw data', function () {
-               var data = getRecordData();
-               data.someField = 'someValue';
-               var anotherRecord = getRecord(data);
-               assert.isFalse(record.isEqual(anotherRecord));
+         });
 
-               data = getRecordData();
-               for (var key in data) {
-                  if (data.hasOwnProperty(key)) {
-                     delete data[key];
-                     break;
-                  }
-               }
-               anotherRecord = getRecord(data);
-               assert.isFalse(record.isEqual(anotherRecord));
-            });
-            it('should return false for changed and true for reverted back record', function () {
-               var anotherRecord = getRecord(getRecordData());
-               anotherRecord.set('max', 1 + record.get('max'));
-               assert.isFalse(record.isEqual(anotherRecord));
-
-               anotherRecord.set('max', record.get('max'));
-               assert.isTrue(record.isEqual(anotherRecord));
-            });
-            it('should return true with itself', function () {
-               assert.isTrue(record.isEqual(record));
-
-               record.set('max', 1 + record.get('max'));
-               assert.isTrue(record.isEqual(record));
-            });
-            it('should return true for same module and submodule', function () {
-               var MyRecord = Record.extend({}),
-                  recordA = new Record(),
-                  recordB = new Record(),
-                  recordC = new MyRecord();
-               assert.isTrue(recordA.isEqual(recordB));
-               assert.isTrue(recordA.isEqual(recordC));
-            });
-            it('should work fine with invalid argument', function () {
-               assert.isFalse(record.isEqual());
-               assert.isFalse(record.isEqual(null));
-               assert.isFalse(record.isEqual(false));
-               assert.isFalse(record.isEqual(true));
-               assert.isFalse(record.isEqual(0));
-               assert.isFalse(record.isEqual(1));
-               assert.isFalse(record.isEqual(''));
-               assert.isFalse(record.isEqual('a'));
-               assert.isFalse(record.isEqual([]));
-               assert.isFalse(record.isEqual({}));
+         describe('.setOwner()', function () {
+            it('should set the new owner', function () {
+               var owner = {};
+               record.setOwner(owner);
+               assert.strictEqual(record.getOwner(), owner);
             });
          });
 

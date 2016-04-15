@@ -53,7 +53,7 @@ define('js!SBIS3.CONTROLS.ListView',
        * @mixes SBIS3.CONTROLS.DataBindMixin
        * @control
        * @public
-       * @cssModifier controls-ListView__withoutMarker Убирать маркер активной строки.
+       * @cssModifier controls-ListView__orangeMarker Показывать маркер активной строки у элементов ListView. Актуально только для ListView.
        * @cssModifier controls-ListView__showCheckBoxes Чекбоксы показываются не по ховеру, а сразу все.
        * @cssModifier controls-ListView__hideCheckBoxes Скрыть все чекбоксы.
        * @cssModifier controls-ListView__bottomStyle Оформляет операции строки под строкой
@@ -1502,16 +1502,18 @@ define('js!SBIS3.CONTROLS.ListView',
                this._scrollWatcher.scrollTo(this._firstScrollTop || (scrollAmount < 0) ? 'bottom' : scrollAmount);
             }
          },
-         /**
-          * Если высота контейнера меньше высоты экрана (т.е. нет скролла в контейнере иди в окне),
-          * то будет загружать данные, пока скролл все-таки не появится.
-          * Работает в паре с взведенной опцией infiniteScroll
-          * @remark Работает только в 3.7.3.30
-          * @see infiniteScroll
-          * @deprecated Удалено в 3.7.3.100.
-          */
-         loadDataTillScroll : function(){
-            $ws.single.ioc.resolve('ILogger').log('loadDataTillScroll', 'Метод работает только в 3.7.3.30, просьба исправить свой функционал');
+         scrollToItem: function(item){
+            if (item.getId && item.getId instanceof Function){
+               this._scrollToItem(item.getId());
+            }
+         },
+         _scrollToItem: function(itemId) {
+            ListView.superclass._scrollToItem.call(this, itemId);
+            var itemContainer = $(".controls-ListView__item[data-id='" + itemId + "']", this._getItemsContainer());
+            //TODO: будет работать только если есть infiniteScrollContainer, нужно сделать просто scrollContainer так как подгрузки может и не быть
+            if (this._options.infiniteScrollContainer && this._options.infiniteScrollContainer.length){
+               this._options.infiniteScrollContainer[0].scrollTop = itemContainer[0].offsetTop;
+            }
          },
          _showLoadingIndicator: function () {
             if (!this._loadingIndicator) {
@@ -1636,7 +1638,6 @@ define('js!SBIS3.CONTROLS.ListView',
          _toggleEmptyData: function(show) {
             if(this._emptyData) {
                this._emptyData.toggleClass('ws-hidden', !show);
-               this._thead.toggleClass('ws-hidden', show);
             }
          },
          //------------------------Paging---------------------

@@ -9,7 +9,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
       'js!SBIS3.CORE.MarkupTransformer',
       'js!SBIS3.CONTROLS.DragAndDropMixin',
       'browser!html!SBIS3.CONTROLS.DataGridView/resources/DataGridViewGroupBy',
-      'js!SBIS3.CONTROLS.Utils.HtmlDecorators/LadderDecorator',
+      'js!SBIS3.CONTROLS.Utils.HtmlDecorators.LadderDecorator',
       'js!SBIS3.CONTROLS.Utils.TemplateUtil'
    ],
    function(ListView, dotTplFn, rowTpl, colgroupTpl, headTpl, resultsTpl, MarkupTransformer, DragAndDropMixin, groupByTpl, LadderDecorator, TemplateUtil) {
@@ -36,6 +36,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
     *       </options>
     *    </options>
     * </component>
+    * @cssModifier controls-ListView__withoutMarker Убирать маркер активной строки.
     * @cssModifier controls-DataGridView__hasSeparator Включает линии разделители между строками
     * @cssModifier controls-DataGridView__td__textAlignRight Стиль задается колонке, выравнивает текст во всех ячейках этой колонки по правой стороне
     */
@@ -180,7 +181,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
          var td = $(e.target).closest('.controls-DataGridView__td, .controls-DataGridView__th', this._container[0]),
              trs = [],
              cells = [],
-             index, hoveredColumn;
+             index, hoveredColumn, cell;
 
          if(td.length) {
             index = td.index();
@@ -196,7 +197,10 @@ define('js!SBIS3.CONTROLS.DataGridView',
                }
 
                for(var i = 0, len = trs.length; i < len; i++) {
-                  cells.push(trs[i].children[index]);
+                  cell = trs[i].children[index];
+                  if(cell) {
+                     cells.push(cell);
+                  }
                }
 
                hoveredColumn.cells = $(cells).addClass('controls-DataGridView__hoveredColumn__cell');
@@ -842,7 +846,12 @@ define('js!SBIS3.CONTROLS.DataGridView',
             }
          }
       },
-
+      _toggleEmptyData: function(show) {
+         DataGridView.superclass._toggleEmptyData.apply(this, arguments);
+         if(this._emptyData) {
+            this._thead.toggleClass('ws-hidden', show);
+         }
+      },
       _showItemsToolbar: function(item) {
          if(!this.isNowScrollingPartScroll()) {
             DataGridView.superclass._showItemsToolbar.call(this, item);

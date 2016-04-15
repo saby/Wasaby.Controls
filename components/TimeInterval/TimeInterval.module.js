@@ -373,6 +373,7 @@ define(
                this._incMask(this._options.maxCharsAtLeftGroup);
                result[0] = this.formatModel.model[0].mask.replace(/[a-z]/ig, '9');
                this.timeInterval.set([result[0], '00', '00']);
+               this._notifyOnPropertyChanged('interval');
             }
             return this._getTextCorrespondingToMask(result.join(':'));
          },
@@ -436,6 +437,7 @@ define(
             }
 
             this.timeInterval.set(sectionArray);
+            this._notifyOnPropertyChanged('interval');
          },
          /**
           * Обновить текст по текущему значению timeInterval.

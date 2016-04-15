@@ -236,6 +236,13 @@ define('js!SBIS3.CONTROLS.Data.Adapter.SbisFormatMixin', [
       },
 
       _buildS: function(format) {
+         if(format.getType() === 'Hierarchy') {
+            return {
+               n: format.getName(),
+               t: this._getFieldInnerTypeNameByOuter(format.getKind()),
+               s: FIELD_TYPE[format.getType()]
+            };
+         }
          return {
             n: format.getName(),
             t: this._buildSType(format, format.getType())
@@ -260,6 +267,10 @@ define('js!SBIS3.CONTROLS.Data.Adapter.SbisFormatMixin', [
                return {
                   n: FIELD_TYPE[type],
                   t: this._getFieldInnerTypeNameByOuter(format.getKind())
+               };
+            case 'Hierarchy':
+               return {
+
                };
             default:
                return FIELD_TYPE[type];

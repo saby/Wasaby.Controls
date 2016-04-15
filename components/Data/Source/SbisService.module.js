@@ -374,7 +374,22 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
        * @returns {String|Object}
        * @protected
        */
-      _getValueType: function (val) {
+      _getValueType: function (val, name, original) {
+         if (name && original) {
+            if (name.slice(-1) in {'@':false, '$':false} && original.hasOwnProperty(name.slice(0,-1))) {
+               return {
+                  type: 'hierarchy',
+                  kind: $ws.helpers.type(val)
+               };
+            } else if (original.hasOwnProperty(name+'@') || original.hasOwnProperty(name+'$')) {
+               var type = $ws.helpers.type(val);
+               return {
+                  type: 'hierarchy',
+                  kind: 'identity'
+               };
+            }
+         }
+
          switch (typeof val) {
             case 'boolean':
                return 'boolean';
@@ -425,12 +440,13 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
          var record = this._getModelInstance(null),
             name,
             value,
-            field;
+            field,
+            hierarhyFields = {};
 
          for (name in data) {
             if (data.hasOwnProperty(name)) {
                value = data[name];
-               field = this._getValueType(value);
+               field = this._getValueType(value, name, data);
                if (!(field instanceof Object)) {
                   field = {type: field};
                }
