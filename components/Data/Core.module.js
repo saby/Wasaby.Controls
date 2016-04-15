@@ -17,8 +17,8 @@ define('js!SBIS3.CONTROLS.Data.Core', [
             mixins = [];
          }
          if (overrides && overrides.$protected) {
-
-            //Utils.logger.stack(Core._moduleName + '::extend(): field $protected in argument overrides is deprecated and will be removed in 3.7.4. Use direct name instead.');
+            Utils.logger.stack(Core._moduleName + '::extend(): field $protected in argument overrides is deprecated and will be removed in 3.7.4. Use direct name instead.');
+            
             var parent = this,
                protected = overrides.$protected,
                options = protected._options;
