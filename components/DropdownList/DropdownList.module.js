@@ -12,6 +12,7 @@ define('js!SBIS3.CONTROLS.DropdownList',
       'js!SBIS3.CONTROLS.Button',
       'js!SBIS3.CONTROLS.Link',
       'js!SBIS3.CORE.MarkupTransformer',
+      'js!SBIS3.CONTROLS.Utils.TemplateUtil',
       'html!SBIS3.CONTROLS.DropdownList',
       'html!SBIS3.CONTROLS.DropdownList/DropdownListHead',
       'html!SBIS3.CONTROLS.DropdownList/DropdownListItem',
@@ -19,7 +20,7 @@ define('js!SBIS3.CONTROLS.DropdownList',
       'i18n!SBIS3.CONTROLS.DropdownList'
    ],
 
-   function(Control, PickerMixin, DSMixin, MultiSelectable, DataBindMixin, DropdownListMixin, Button, Link, MarkupTransformer, dotTplFn, dotTplFnHead, dotTplFnForItem, dotTplFnPicker) {
+   function(Control, PickerMixin, DSMixin, MultiSelectable, DataBindMixin, DropdownListMixin, Button, Link, MarkupTransformer, TemplateUtil, dotTplFn, dotTplFnHead, dotTplFnForItem, dotTplFnPicker) {
 
       'use strict';
       /**
@@ -273,6 +274,7 @@ define('js!SBIS3.CONTROLS.DropdownList',
                self = this;
 
             this._text = this._container.find('.controls-DropdownList__text');
+            this._selectedItemContainer = this._container.find('.controls-DropdownList__selectedItem');
             this._resetButton = this._container.find('.controls-DropdownList__crossIcon');
             this._resetButton.click(function() {
                self.removeItemsSelectionAll();
@@ -347,6 +349,11 @@ define('js!SBIS3.CONTROLS.DropdownList',
                      pickerContainer.find('[data-id="' + id[0] + '"]').addClass('controls-DropdownList__item__selected');
                   }
                   self.setText(textValue.join(', '));
+                  if (!self._pickerText.length){ //Если у нас собственный headTpl
+                     var headTpl = MarkupTransformer(TemplateUtil.prepareTemplate(self._options.headTemplate.call(self, self._options)))();
+                     self._pickerHeadContainer.html(headTpl);
+                     self._selectedItemContainer.html(headTpl);
+                  }
                   self._setResetButtonVisibility(id[0] === self._defaultId);
                });
             }
