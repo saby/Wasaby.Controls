@@ -11,7 +11,7 @@ define('js!SBIS3.CONTROLS.Data.Core', [
 
    var _private = {
       contextualExtend: function(mixins, overrides) {
-         //$ws.core.extend compatibility
+         //[$ws.core.extend compatibility]
          if (mixins && mixins.$protected) {
             overrides = mixins;
             mixins = [];
@@ -54,6 +54,7 @@ define('js!SBIS3.CONTROLS.Data.Core', [
             }
             return child;
          }
+         //[/$ws.core.extend compatibility]
 
          return Core.extend(this, mixins, overrides);
       },
@@ -136,14 +137,14 @@ define('js!SBIS3.CONTROLS.Data.Core', [
        * <pre>
        *    var Vehicle = Core.extend({
        *       move: function () {
-       *          console.log('I\'m not able to move');
+       *          console.log('I\'m not able to move.');
        *       }
        *    });
        *
        *    var WheelMixin = {
        *       _wheels: 0,
        *       move: function () {
-       *          console.log('I\'m move with ' + this._wheels + ' wheels');
+       *          console.log('I\'m roll on ' + this._wheels + ' wheels.');
        *       }
        *    };
        *
@@ -152,83 +153,81 @@ define('js!SBIS3.CONTROLS.Data.Core', [
        *    });
        *
        *    var myBike = new Bike();
-       *    myBike.move();//I'm move with 2 wheels
+       *    myBike.move();//I'm roll on 2 wheels.
        * </pre>
-       * Для набора примесей свойства и методы последующих примесей перетирают свойтва и методы предыдущих:
+       * Для набора примесей свойства и методы последующих примесей перетирают свойства и методы предыдущих:
        * <pre>
        *    var Vehicle = Core.extend({
        *       move: function () {
-       *          console.log('I\'m not able to move');
+       *          console.log('I\'m not able to move.');
        *       }
        *    });
        *
        *    var WheelMixin = {
        *       _wheels: 0,
        *       move: function () {
-       *          console.log('I\'m move with ' + this._wheels + ' wheels');
+       *          console.log('I\'m roll on ' + this._wheels + ' wheels.');
        *       }
        *    };
        *
-       *    var ReactionMixin = {
-       *       _engines: 0,
+       *    var WingMixin = {
+       *       _wings: 2,
        *       move: function () {
-       *          console.log('I\'m move with ' + this._engines + ' reaction engines');
+       *          console.log('I\'m fly with ' + this._wings + ' wings.');
        *       }
        *    };
        *
-       *    var OnlyFlyingTurboJet = Vehicle.extend([WheelMixin, ReactionMixin], {
-       *       _wheels: 4,
-       *       _engines: 2
+       *    var OnlyFlyingJet = Vehicle.extend([WheelMixin, WingMixin], {
+       *       _wheels: 3
        *    });
        *
-       *    var myJet = new OnlyFlyingTurboJet();
-       *    myJet.move();//I'm move with 2 reaction engines
+       *    var myJet = new OnlyFlyingJet();
+       *    myJet.move();//I'm fly with 2 wings.
        * </pre>
        * Чтобы задействовать поведение всех примесей, необходимо вызывать методы  каждой из них в требуемой
        * последовательности и с требуемыми аргументами:
        * <pre>
        *    var Vehicle = Core.extend({
        *       move: function () {
-       *          console.log('I\'m not able to move');
+       *          console.log('I\'m not able to move.');
        *       }
        *    });
        *
        *    var WheelMixin = {
        *       _wheels: 0,
        *       move: function () {
-       *          console.log('I\'m move with ' + this._wheels + ' wheels');
+       *          console.log('I\'m roll on ' + this._wheels + ' wheels.');
        *       }
        *    };
        *
-       *    var ReactionMixin = {
-       *       _engines: 0,
+       *    var WingMixin = {
+       *       _wings: 2,
        *       move: function () {
-       *          console.log('I\'m move with ' + this._engines + ' reaction engines');
+       *          console.log('I\'m fly with ' + this._wings + ' wings.');
        *       }
        *    };
        *
-       *    var TurboJet = Vehicle.extend([WheelMixin, ReactionMixin], {
-       *       _wheels: 4
-       *       _engines: 2,
+       *    var Jet = Vehicle.extend([WheelMixin, WingMixin], {
+       *       _wheels: 3
        *       move: function () {
        *          WheelMixin.move.call(this);
-       *          ReactionMixin.move.call(this);
+       *          WingMixin.move.call(this);
        *       }
        *    });
        *
-       *    var myJet = new TurboJet();
-       *    myJet.move();//I'm move with 4 wheels, I'm move with 2 reaction engines
+       *    var myJet = new Jet();
+       *    myJet.move();//I'm roll on 3 wheels. I'm fly with 2 wings.
        * </pre>
        *
        * Известные "подводные камни":
-       * 1. Если вы объявили в прототипе свойство-объект, то оно принадлежит именно прототипу (а значит и всем потомкам
-       * вашего класса, а также всем созданным экземплярам класса и экземлпярам его потомков - т.е. считайте его
+       * 1. Если вы объявили в прототипе свойство-объект, то оно принадлежит прототипу (а значит и всем наследниками
+       * вашего класса, а также всем созданным экземплярам класса и экземлпярам его наследников - т.е. считайте его
        * статическим на уровне прототипа). А это, в свою очередь, означает, что изменив какое-то поле этого объекта, вы
-       * меняете его для всех потомков и всех экземпляров. Поэтому свойства-объекты лучше переопределять в конструкторе,
+       * меняете его для всех наследников и всех экземпляров. Поэтому свойства-объекты лучше переопределять в конструкторе,
        * чтобы разорвать связь экземпляра с прототипом. В противном случае изменение такого свойства повлияет на все
        * унаследованные классы и их экземпляры.
        * 2. Свойства-объекты не объединяются при наследовании: если вы переопределяете свойство-объект в наследнике, то
-       * вы не наследуете от него ровным счетом ничего. Если вам требуется организовать объединение свойств-объектов, то
+       * вы не наследуете от него предыдущий набор свойств. Если вам требуется организовать объединение свойств-объектов, то
        * позаботьтесь об этом сами. Причем делать это надо как при объявлении наследника, так при создании экземпляра
        * класса (если экземпляр принимает в конструкторе аргументом часть набора полей свойства-объекта).
        *
