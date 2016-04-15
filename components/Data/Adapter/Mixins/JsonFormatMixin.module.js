@@ -57,9 +57,6 @@ define('js!SBIS3.CONTROLS.Data.Adapter.JsonFormatMixin', [
          if (!name) {
             throw new Error(this._moduleName + '::addField(): field name is empty');
          }
-         if (this._has(name)) {
-            throw new Error(this._moduleName + '::addField(): field "' + name + '" already exists');
-         }
          if (at >= 0) {
             Utils.logger.info(this._moduleName + '::addField(): argument "at" is not supported and will be ignored.');
          }
