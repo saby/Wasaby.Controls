@@ -22,8 +22,14 @@
    .controls-TabButtons__leftContainer{
       float: @tab-buttons-leftItems-float;
       padding-left: @tab-buttons-items-padding;
-      .controls-TabButton:first-child .controls-TabButton__inner{
-        border-left: @tab-buttons-side-items-border;
+      .controls-TabButton:first-child {
+         border-left: none;
+         &:hover{
+            border-left: none;
+         }
+         .controls-TabButton__inner{
+            border-left: none;
+         }
       }
    }
    .controls-TabButtons__rightContainer{
