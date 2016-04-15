@@ -1458,7 +1458,7 @@ define('js!SBIS3.CONTROLS.ListView',
             var scrollContainer = this._options.infiniteScrollContainer;
             if (scrollContainer && scrollContainer.length){
                scrollContainer = scrollContainer[0];
-               return scrollContainer.scrollHeight - (scrollContainer.scrollTop - scrollContainer.offsetHeight);
+               return scrollContainer.scrollHeight - (scrollContainer.scrollTop + scrollContainer.offsetHeight);
             }
          },
          getScrollTop: function(){
