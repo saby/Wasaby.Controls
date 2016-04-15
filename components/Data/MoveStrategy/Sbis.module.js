@@ -60,9 +60,6 @@ define('js!SBIS3.CONTROLS.Data.MoveStrategy.Sbis', [
             this._options.moveContract = cfg.moveResource;
          }
 
-         if(!this._options.contract && !this._options.dataSource){
-            throw new Error('The Contract and the Data Source are not defined.');
-         }
          if (!this._options.contract) {
             this._options.contract = this._options.dataSource.getEndpoint().contract;
          }
@@ -102,18 +99,19 @@ define('js!SBIS3.CONTROLS.Data.MoveStrategy.Sbis', [
          return SbisMoveStrategy.superclass.hierarhyMove.call(this, from, to).addCallback(function(){
             if(self._options.listView) {
                var items = self._options.listView.getItems();
-               to = (items.getIndex(to) !== -1) ? to : items.getRecordById(to.getId());
+               if(items.getFormat().getIndexByValue('name', self._options.hierField + '$') !== -1) {
+                  to = (items.getIndex(to) !== -1) ? to : items.getRecordById(to.getId());
 
-               if (to && to.has(self._options.hierField + '$')) {
-                  to.set(self._options.hierField + '$', true);
-               }
-
-               $ws.helpers.forEach(oldParents, function (parentId) {
-                  if (items.getChildItems(parentId).length == 1
-                  ) {
-                     items.getRecordById(parentId).set(self._options.hierField + '$', false);
+                  if (to && to.has(self._options.hierField + '$')) {
+                     to.set(self._options.hierField + '$', true);
                   }
-               });
+
+                  $ws.helpers.forEach(oldParents, function (parentId) {
+                     if (items.getChildItems(parentId).length === 0) {
+                        items.getRecordById(parentId).set(self._options.hierField + '$', false);
+                     }
+                  });
+               }
             }
          });
       },

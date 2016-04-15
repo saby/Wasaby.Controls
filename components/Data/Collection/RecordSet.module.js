@@ -77,7 +77,11 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
          /**
           * @var {Object} индексы
           */
-         _indexTree: {}
+         _indexTree: {},
+         /**
+          * @var поле по которому построен индекс
+          */
+         _indexTreeField: undefined
       },
 
       $constructor: function (cfg) {
@@ -105,6 +109,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
             this._assignRawData(this._options.rawData, true);
             this._createFromRawData();
          }
+         this.subscribe('onCollectionItemChange', this._onCollectionItemChange);
       },
 
       //region SBIS3.CONTROLS.Data.FormattableMixin
@@ -524,8 +529,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
 
       _reindexTree: function (field) {
          this._reindex();
-
-         this._indexTree = {};
+         this._indexTreeField = field;
          var self = this,
             parentKey;
          this.each(function (record) {
@@ -703,11 +707,31 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
             RecordSet.superclass.add.call(this, record);
          }
          this._reindex();
+      },
+
+      _reindex: function() {
+         this._resetIndexTree();
+         RecordSet.superclass._reindex.call(this);
+      },
+
+      /**
+       * обработчик на изменение элементов колекции
+       */
+      _onCollectionItemChange: function(e, record, index, property) {
+         if (this._indexTreeField && property === this._indexTreeField) {
+            this._resetIndexTree();
+         }
+      },
+      /**
+       * сбрасывает индекс
+       */
+      _resetIndexTree: function(){
+         this._indexTree = {};
+         this._indexTreeField = undefined;
       }
-
       //endregion Protected methods
-
    });
+
 
    Di.register('collection.recordset', RecordSet);
 

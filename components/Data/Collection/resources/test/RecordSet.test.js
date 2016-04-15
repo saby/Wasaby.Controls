@@ -1225,6 +1225,8 @@ define([
                var index = rs.getTreeIndex('Раздел');
                assert.deepEqual(index.null, [1]);
             });
+
+
          });
 
          describe('.getChildItems()', function () {
@@ -1248,7 +1250,10 @@ define([
                assert.deepEqual(rs.getChildItems(1, true, 'Раздел'), [2, 3, 4]);
                assert.deepEqual(rs.getChildItems(4, true, 'Раздел'), []);
                assert.deepEqual(rs.getChildItems(1, false, 'Раздел'), [2, 3]);
+               rs.getRecordById(3).set('Раздел',4);
+               assert.deepEqual(rs.getChildItems(4, true, 'Раздел'), [3]);
             });
+
          });
 
          describe('.hasChild()', function (){
@@ -1273,6 +1278,8 @@ define([
                assert.isFalse(rs.hasChild(4,'Раздел'));
             });
          });
+
+
       });
    }
 );
