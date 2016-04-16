@@ -102,12 +102,16 @@ define('js!SBIS3.CONTROLS.TextArea', ['js!SBIS3.CONTROLS.TextBoxBase', 'html!SBI
       $constructor: function() {
          var self = this;
          this._inputField = $('.controls-TextArea__inputField', this._container);
+         this._inputField.bind('focus', function() {
+            $ws.single.EventBus.globalChannel().notify('MobileInputFocus');
+         });
          // При потере фокуса делаем trim, если нужно
          // TODO Переделать на платформенное событие потери фокуса
          this._inputField.bind('focusout', function () {
             if (self._options.trim) {
                self.setText(String.trim(self.getText()));
             }
+            $ws.single.EventBus.globalChannel().notify('MobileInputFocusOut');
          });
 
          this._container.bind('keyup',function(e){
