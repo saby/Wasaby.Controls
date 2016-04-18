@@ -713,7 +713,7 @@ define('js!SBIS3.CONTROLS.ListView',
           */
          _mouseMoveHandler: function (e) {
             var $target = $(e.target),
-                target, targetKey, hoveredItem, hoveredItemClone;
+                target, targetKey;
 
             target = this._findItemByElement($target);
 
@@ -1332,9 +1332,11 @@ define('js!SBIS3.CONTROLS.ListView',
           */
          setItemsActions: function (itemsActions) {
             this._options.itemsActions = itemsActions;
-            this._getItemsToolbar().setItemsActions(this._options.itemsActions);
-            if(this.getHoveredItem().container) {
-               this._notifyOnChangeHoveredItem()
+            if(this._itemsToolbar) {
+               this._itemsToolbar.setItemsActions(this._options.itemsActions);
+               if (this.getHoveredItem().container) {
+                  this._notifyOnChangeHoveredItem()
+               }
             }
          },
          //**********************************//
