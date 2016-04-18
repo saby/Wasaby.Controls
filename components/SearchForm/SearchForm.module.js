@@ -100,7 +100,6 @@ define('js!SBIS3.CONTROLS.SearchForm', [
       resetSearch: function(){
          $('.js-controls-SearchForm__reset', this.getContainer().get(0)).addClass('ws-hidden');
          this.setText('');
-         this._applySearch('');
       }
    });
 
