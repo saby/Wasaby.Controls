@@ -11,28 +11,13 @@
    }
 }
 
-.controls-FieldLink__picker,
-.controls-FieldLink {
-   &.controls-FieldLink__itemsEdited {
-      .controls-FieldLink__linkItem:hover {
-         text-decoration: @link-hover-text-decoration;
-         cursor: @link-cursor;
-      }
-   }
-   &.controls-FieldLink__itemsBold {
-      .controls-FieldLink__linkItem-caption {
-         font-weight: bold;
-      }
-   }
-
-   .controls-FieldLink__linkItem {
-      cursor: @controls-FieldLink-linkItem-cursor;
-      display: inline-block;
-      margin: @controls-FieldLink-linkItem-margin;
-      position: @controls-FieldLink-linkItem-position;
-      padding: @controls-FieldLink-linkItem-padding;
-      .text-overflow();
-   }
+.controls-FieldLink__linkItem {
+   cursor: @controls-FieldLink-linkItem-cursor;
+   display: inline-block;
+   margin: @controls-FieldLink-linkItem-margin;
+   position: @controls-FieldLink-linkItem-position;
+   padding: @controls-FieldLink-linkItem-padding;
+   .text-overflow();
 
    .controls-FieldLink__linkItem-caption {
       position: relative;
@@ -50,6 +35,21 @@
 
       &:hover {
          background: @edit-at-place-cancel-button-hover-bg;
+      }
+   }
+}
+
+.controls-FieldLink__picker,
+.controls-FieldLink {
+   &.controls-FieldLink__itemsEdited {
+      .controls-FieldLink__linkItem:hover {
+         text-decoration: @link-hover-text-decoration;
+         cursor: @link-cursor;
+      }
+   }
+   &.controls-FieldLink__itemsBold {
+      .controls-FieldLink__linkItem-caption {
+         font-weight: bold;
       }
    }
 
