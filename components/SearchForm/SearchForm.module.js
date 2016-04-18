@@ -65,7 +65,7 @@ define('js!SBIS3.CONTROLS.SearchForm', [
          });
 
          $('.js-controls-SearchForm__search', this.getContainer().get(0)).click(function() {
-            self._applySearch(self.getText());
+            self._applySearch(self.getText(), true);
          });
       },
 
@@ -76,7 +76,7 @@ define('js!SBIS3.CONTROLS.SearchForm', [
       _keyUpBind:function(event) {
          SearchForm.superclass._keyUpBind.apply(this, arguments);
          if (event.which === $ws._const.key.enter) {
-            this._applySearch(this.getText());
+            this._applySearch(this.getText(), true);
             event.stopPropagation();
          }
       },
