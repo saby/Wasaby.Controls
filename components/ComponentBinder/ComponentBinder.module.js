@@ -459,7 +459,7 @@ define('js!SBIS3.CONTROLS.ComponentBinder', [], function () {
          }
 
          if(stopList) {
-            noSaveFilters.concat(stopList);
+            noSaveFilters = noSaveFilters.concat(stopList);
          }
 
          historyController = new controller({
