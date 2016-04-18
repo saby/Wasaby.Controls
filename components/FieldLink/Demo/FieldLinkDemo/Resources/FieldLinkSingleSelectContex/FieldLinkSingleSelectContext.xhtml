@@ -7,7 +7,7 @@
       <option name="autoShow" type="boolean">true</option> <!-- Устанавливает режим работы автодополнения, в котором выводится список всех возможных значений при переходе фокуса на контрол -->
       <option name="multiselect">false</option> <!-- Устанавливаем режим единичного выбора элементов коллекции -->
       <option name="chooserMode">dialog</option> <!-- Устанавливаем режим отображения диалога выбора в отдельном окне -->
-      <options name="selectedItem" nonexistent="{}"> <!-- Настройка выбранного элемента, его название и ключ формируется из значений полей контекста -->
+      <options name="selectedItem"> <!-- Настройка выбранного элемента, его название и ключ формируется из значений полей контекста -->
          <option name="Название" bind="НазваниеПолеСвязи"></option> <!-- Отображаемое название выбранного элемента будет взято из поля контекста НазваниеПолеСвязи, значение туда прописывается из первого поля ввода -->
          <option name="Ид" bind="КлючПолеСвязи"></option> <!-- Идентификатор выбранного элемента будет взят из поля контекста КлючПолеСвязи, значение туда прописывается из второго поля ввода -->
       </options>
@@ -37,17 +37,30 @@
       </options>
    </component>
    <div class="demo-FieldLink__note">
-      <b>Примечание.</b> Чтобы изменить выбранное значение в поле связи, измените значения в полях ввода для "Ид" и "Название":
+      <b>Примечание 1.</b> Чтобы изменить выбранное значение в поле связи, измените значения в полях ввода для "Ид" и "Название":
       <br/>
       <span>Поле "Название":</span>
-      <component data-component="SBIS3.CONTROLS.TextBox" class="demo-FieldLink__note-TextBox1"> <!-- Настройка первого поля ввода -->
+      <component data-component="SBIS3.CONTROLS.TextBox" name="TextBox1" class="demo-FieldLink__note-TextBox1"> <!-- Настройка первого поля ввода -->
          <option name="text" bind="НазваниеПолеСвязи" nonexistent="undefined"></option> <!-- Связываем значения этого поля ввода с полем контекста НазваниеПолеСвязи -->
       </component>
       <br/>
       <span>Поле "Ид":</span>
-      <component data-component="SBIS3.CONTROLS.TextBox" class="demo-FieldLink__note-TextBox2"> <!-- Настройка второго поля ввода -->
+      <component data-component="SBIS3.CONTROLS.TextBox" name="TextBox2" class="demo-FieldLink__note-TextBox2"> <!-- Настройка второго поля ввода -->
          <option name="text" bind="КлючПолеСвязи" nonexistent="undefined"></option> <!-- Связываем значения этого поля ввода с полем контекста КлючПолеСвязи -->
          <option name="inputRegExp">[0-9]</option> <!-- Устанавливаем фильтр вводимых символов, допускается только цифры -->
       </component>
+   </div>
+   <br/>
+   <div class="demo-FieldLink__note">
+      <b>Примечание 2.</b>
+      Чтобы увидеть работу автодополнения, начните вводить в поле связи одно из следующих значений:
+      <ul>
+         <li>Инженер-программист</li>
+         <li>Руководитель группы</li>
+         <li>Менеджер</li>
+         <li>Тестировщик</li>
+         <li>Технолог</li>
+         <li>Бухгалтер</li>
+      </ul>
    </div>
 </div>
