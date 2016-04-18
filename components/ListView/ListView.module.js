@@ -1244,7 +1244,7 @@ define('js!SBIS3.CONTROLS.ListView',
 
             if (!this._itemsToolbar) {
                this._itemsToolbar = new ItemsToolbar({
-                  element: $('<div class="controls-ListView__ItemsToolbar-container"/>').appendTo(this.getContainer()),
+                  element: this.getContainer().find('> .controls-ListView__ItemsToolbar-container'),
                   parent: this,
                   visible: false,
                   touchMode: this._touchSupport,
@@ -1513,6 +1513,18 @@ define('js!SBIS3.CONTROLS.ListView',
             //TODO: будет работать только если есть infiniteScrollContainer, нужно сделать просто scrollContainer так как подгрузки может и не быть
             if (this._options.infiniteScrollContainer && this._options.infiniteScrollContainer.length){
                this._options.infiniteScrollContainer[0].scrollTop = itemContainer[0].offsetTop;
+            }
+         },
+         isScrollOnBottom: function(){
+            var scrollContainer = this._options.infiniteScrollContainer;
+            if (scrollContainer && scrollContainer.length){
+               scrollContainer = scrollContainer[0];
+               return (scrollContainer.scrollHeight - (scrollContainer.scrollTop + scrollContainer.offsetHeight)) == 0;
+            }
+         },
+         isScrollOnTop: function(){
+            if (this._options.infiniteScrollContainer && this._options.infiniteScrollContainer.length){
+               return this._options.infiniteScrollContainer[0].scrollTop == 0;
             }
          },
          _showLoadingIndicator: function () {

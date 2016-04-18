@@ -32,6 +32,7 @@ define('js!SBIS3.CONTROLS.Demo.FieldLinkSingleSelect', // Устанавлива
                    idProperty: 'Ид' // Устанавливаем поле первичного ключа
                 });
             this.getChildControlByName('FieldLinkSingleSelect').setDataSource(dataSource); // Устанавливаем источник данных для контрола
+            $ws.helpers.message('Поле связи в режиме единичного выбора значения. <br/>Выбор можно производить как через диалог, так и через автодополнение.');
          }
       });
       return moduleClass;

@@ -283,12 +283,12 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
       /**
        * Скрывает индикатор загрузки
        */
-      _hideLoadingIndicator: $ws.helpers.forAliveOnly(function(){
+      _hideLoadingIndicator: function(){
          this._showedLoading = false;
-         if(this._loadingIndicator) {
+         if(!this.isDestroyed() && this._loadingIndicator) {
             this._loadingIndicator.hide();
          }
-      }),
+      },
       _updateIndicatorZIndex: function(){
          var indicatorWindow = this._loadingIndicator && this._loadingIndicator.getWindow();
          if (indicatorWindow && this._loadingIndicator.isVisible()){
@@ -341,6 +341,7 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
        */
       setRecord: function(record){
          this._options.record = this._panel._record = record;
+         this._options.key = record.getKey();
          this._setContextRecord(record);
       },
 
