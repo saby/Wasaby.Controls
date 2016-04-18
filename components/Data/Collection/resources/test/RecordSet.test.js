@@ -470,7 +470,7 @@ define([
                   });
                rs.removeField(fieldName);
 
-               assert.strictEqual(rs.getFormat().getFieldndex(fieldName), -1);
+               assert.strictEqual(rs.getFormat().getFieldIndex(fieldName), -1);
                assert.strictEqual(rs.getRawData().s.length, 1);
                rs.each(function(record) {
                   assert.isFalse(record.has(fieldName));
