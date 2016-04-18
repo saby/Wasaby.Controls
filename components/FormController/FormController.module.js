@@ -124,10 +124,12 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
          $ws.single.CommandDispatcher.declareCommand(this, 'submit', this.submit);
          $ws.single.CommandDispatcher.declareCommand(this, 'read', this.read);
          this._panel = this.getTopParent();
+         //Если есть запись, то вначале диалог строится по ней, далее отправляется запрос метода "Прочитать", после ответа БЛ контексты синхронизируются
+         if (this._options.record){
+            this.setRecord(this._options.record);
+         }
          if (this._options.dataSource){
             this._runQuery();
-         } else {
-            this._setContextRecord(this._options.record);
          }
          var loadingTime = new Date();
          this.subscribe('onAfterShow', function(){
