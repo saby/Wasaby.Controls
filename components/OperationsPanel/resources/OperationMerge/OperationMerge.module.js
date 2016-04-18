@@ -27,7 +27,9 @@ define('js!SBIS3.CONTROLS.OperationMerge', [
                  */
                 linkedView: undefined,
                 /**
-                 * @cfg {String} Иконка кнопки объединения
+                 * @cfg {String} Устанавливает иконку кнопки объединения.
+                 * @remark
+                 * Список иконок вы можете найти в разделе {@link https://wi.sbis.ru/docs/3-8-0/icons/ Иконки}.
                  * @editor icon ImageEditor
                  */
                 icon: 'sprite:icon-24 icon-Unite icon-primary',
