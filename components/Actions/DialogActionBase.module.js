@@ -40,7 +40,8 @@ define('js!SBIS3.CONTROLS.DialogActionBase', ['js!SBIS3.CONTROLS.ActionBase', 'j
              * Режим отображения компонента редактирования - в диалоге или панели
              */
             mode: 'dialog'
-         }
+         },
+         _dialog: undefined
       },
 
       execute : function(meta) {
@@ -79,7 +80,13 @@ define('js!SBIS3.CONTROLS.DialogActionBase', ['js!SBIS3.CONTROLS.ActionBase', 'j
             Component = Dialog;
          }
 
-         new Component(config).subscribe('onAfterClose', function (e, meta) {
+         if (this._dialog){
+            $ws.core.merge(this._dialog._options, config);
+            this._dialog.reload();
+            return;
+         }
+
+         this._dialog = new Component(config).subscribe('onAfterClose', function (e, meta) {
             self._notifyOnExecuted(meta, this._record);
          });
       },
