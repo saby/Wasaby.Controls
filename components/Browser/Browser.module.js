@@ -75,6 +75,10 @@ define('js!SBIS3.CONTROLS.Browser', [
              * @cfg {String} Id для работы с историей фильтров
              */
             historyId : '',
+            /**
+             * @cfg {Array} historyFilterStopList Массив фильтров, которые не надо запоминать в историю.
+             */
+            historyFilterStopList: [],
             contentTpl : contentTpl
          }
       },
@@ -139,6 +143,7 @@ define('js!SBIS3.CONTROLS.Browser', [
                    this._fastDataFilter,
                    this._options.searchParam,
                    this._options.historyId,
+                   this._options.historyFilterStopList,
                    HistoryController,
                    this);
             } else {
