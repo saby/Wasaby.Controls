@@ -6,7 +6,7 @@ define('js!SBIS3.CONTROLS.Demo.FieldLinkDemoTemplate', // Устанавлива
       'js!SBIS3.CORE.CompoundControl', // Подключаем базовый класс, от которого далее будем наследоваться
       'html!SBIS3.CONTROLS.Demo.FieldLinkDemoTemplate', // Подключаем вёрстку диалога выбора
       'js!SBIS3.CONTROLS.Data.Adapter.Sbis', // Подключаем класс адаптера, который предназначен для работы с данными в формате JSON-RPC
-      'js!SBIS3.CONTROLS.Data.Source.Memory', // Подключаем класс для работы со статическим испточником данных
+      'js!SBIS3.CONTROLS.Data.Source.Memory', // Подключаем класс для работы со статическим источником данных
       'js!SBIS3.CONTROLS.DataGridView', // Подключаем класс представления данных
       'js!SBIS3.CONTROLS.Button', // Подключаем класс кнопки
       'css!SBIS3.CONTROLS.Demo.FieldLinkDemoTemplate' // Подключаем CSS-файл
@@ -21,8 +21,8 @@ define('js!SBIS3.CONTROLS.Demo.FieldLinkDemoTemplate', // Устанавлива
          _dotTplFn: dotTplFn, // Устанавливаем шаблон, по которому будет построена вёрстку диалога выбора
          init: function() { // Инициализация компонента, здесь все дочерние компоненты готовы к использованию
             moduleClass.superclass.init.call(this); // Обязательная конструкция, чтобы корректно работал указатель this
-            var self = this, // Сохраняем указатель, бедт использован в обработчике кнопки
-                dataGrid = this.getChildControlByName('Таблица'), // Получаем экземпляр класс представления данных
+            var self = this, // Сохраняем указатель, будет использован в обработчике кнопки
+                dataGrid = this.getChildControlByName('myView'), // Получаем экземпляр класс представления данных
                 dataSource = new StaticSource({ // Производим инициализацию статического источника данных
                    data: { // Устанавливаем "сырые" данные, передаём их в формате JSON-RPC
                       _type: 'recordset',
@@ -31,7 +31,7 @@ define('js!SBIS3.CONTROLS.Demo.FieldLinkDemoTemplate', // Устанавлива
                          [2, 'Руководитель группы'],
                          [3, 'Менеджер'],
                          [4, 'Тестировщик'],
-                         [5, ''],
+                         [5, 'Технолог'],
                          [6, 'Бухгалтер']
                       ],
                       s: [
