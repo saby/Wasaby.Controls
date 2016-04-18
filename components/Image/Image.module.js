@@ -325,7 +325,7 @@ define('js!SBIS3.CONTROLS.Image',
                   $ws.helpers.toggleLocalIndicator(imageInstance._container, false);
                   imageInstance._boundEvents.onErrorLoad(response.error, true);
                } else {
-                  imageInstance._notify('onEndLoad');
+                  imageInstance._notify('onEndLoad', response);
                   if (imageInstance._options.edit) {
                      imageInstance._showEditDialog('new');
                   } else {
