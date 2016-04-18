@@ -1,6 +1,9 @@
 /**
  * Created by ad.chistyakova on 08.04.2015.
  */
+//TODO: Сейчас печать и выгрузка очень напоминают старые контролы, где нет общих точек и вообще не понятно что происходит.
+//Невероятное ветвление кода, и вроде бы таки одинаковые вещи как выгрузка всех записей и выгрузка выбранных совершенно в разных ветках.
+//Нужно сделать общую точку входа, и ветвление только непосредственно перед вызовом тех или иннных функций бл.
 define('js!SBIS3.CONTROLS.PrintUnloadBase', [
    'js!SBIS3.CONTROLS.MenuLink',
    'js!SBIS3.CORE.DialogSelector'
@@ -124,9 +127,9 @@ define('js!SBIS3.CONTROLS.PrintUnloadBase', [
          if ( this._options.xsl ){
             cfg.xsl = this._options.xsl;
          }
+         this.applyOperation(cfg);
          //Снимем выделение
          this._getView().removeItemsSelectionAll();
-         this.applyOperation(cfg);
       },
       _prepareOperationColumns: function(){
          var columns = this._getView().getColumns(),
