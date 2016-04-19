@@ -51,15 +51,15 @@ define('js!SBIS3.CONTROLS.SearchMixin', [], function() {
          this._curText = text;
          window.setTimeout(function(){
             if (text == self._curText) {
-               self._applySearch(text);
+               self._applySearch(text, false);
             }
          }, this._options.searchDelay);
       },
 
-      _applySearch : function(text) {
+      _applySearch : function(text, force) {
          if (text) {
             text = text.replace(/[<>]/g, '');
-            if (String.trim(text).length >= this._options.startCharacter) {
+            if (String.trim(text).length >= this._options.startCharacter || force) {
                this._notify('onSearch', text);
             }
             this._onResetIsFired = false;
