@@ -767,7 +767,7 @@ define([
                assert.deepEqual(rs.getRawData().s, [{n: 'Фамилия', t: 'Строка'}]);
             });
 
-            it('should throw an error if format is defined directly', function() {
+            it('should don\'t throw an error if format is defined directly', function() {
                var rs = new RecordSet({
                      rawData:  {
                         d: [[7]],
@@ -784,9 +784,7 @@ define([
                      adapter: 'adapter.sbis'
                   });
                rs.addField({name: 'login', type: 'string'});
-               assert.throw(function() {
-                  rs.assign(rs2);
-               });
+               rs.assign(rs2);
             });
 
             it('should trigger an event with valid arguments', function(done) {

@@ -2,8 +2,9 @@
 define('js!SBIS3.CONTROLS.Data.Adapter.SbisFormatMixin', [
    'js!SBIS3.CONTROLS.Data.Format.FieldsFactory',
    'js!SBIS3.CONTROLS.Data.Format.UniversalField',
+   'js!SBIS3.CONTROLS.Data.Utils',
    'js!SBIS3.CONTROLS.Data.Adapter.FieldType'
-], function (FieldsFactory, UniversalField, FIELD_TYPE) {
+], function (FieldsFactory, UniversalField, Utils, FIELD_TYPE) {
    'use strict';
 
    /**
@@ -68,7 +69,13 @@ define('js!SBIS3.CONTROLS.Data.Adapter.SbisFormatMixin', [
          return fields;
       },
 
+      clear: function () {
+         this._data.d.length = 0;
+         this._data.s.length = 0;
+      },
+
       getEmpty: function () {
+         Utils.logger.stack(this._moduleName + '::getEmpty(): method is deprecated and will be removed in 3.7.4. Use clear() instead.');
          return {
             d: [],
             s: $ws.core.clone(this._data.s || [])

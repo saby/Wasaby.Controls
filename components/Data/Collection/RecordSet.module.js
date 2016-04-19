@@ -558,10 +558,10 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
       //region SBIS3.CONTROLS.Data.Collection.List
 
       clear: function () {
-         this._assignRawData(this._getRawDataAdapter().getEmpty(), true);
          for (var i = 0, count = this._items.length; i < count; i++) {
             this._items[i].setOwner(null);
          }
+         this._getRawDataAdapter().clear();
          RecordSet.superclass.clear.call(this);
       },
 
@@ -595,14 +595,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
       },
 
       assign: function (items) {
-         var adapter;
-         if (items && $ws.helpers.instanceOfModule(items, 'SBIS3.CONTROLS.Data.Collection.RecordSet')) {
-            adapter = items.getAdapter().forTable(items.getRawData());
-         } else {
-            adapter = this._getRawDataAdapter();
-         }
-         this._assignRawData(adapter.getEmpty());
-
+         this._getRawDataAdapter().clear();
          items = this._addItemsToRawData(items, undefined, true);
          RecordSet.superclass.assign.call(this, items);
          for (var i = 0, count = items.length; i < count; i++) {
