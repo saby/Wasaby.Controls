@@ -371,18 +371,19 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
       /**
        * Возвращает тип значения
        * @param {*} val Значение
+       * @param {String} name Название
+       * @param {Object} original Оригинальный объект
        * @returns {String|Object}
        * @protected
        */
       _getValueType: function (val, name, original) {
          if (name && original) {
-            if (name.slice(-1) in {'@':false, '$':false} && original.hasOwnProperty(name.slice(0,-1))) {
+            if (name.slice(-1) in {'@': false, '$': false} && original.hasOwnProperty(name.slice(0, -1))) {
                return {
                   type: 'hierarchy',
                   kind: $ws.helpers.type(val)
                };
-            } else if (original.hasOwnProperty(name+'@') || original.hasOwnProperty(name+'$')) {
-               var type = $ws.helpers.type(val);
+            } else if (original.hasOwnProperty(name + '@') || original.hasOwnProperty(name + '$')) {
                return {
                   type: 'hierarchy',
                   kind: 'identity'
@@ -415,7 +416,7 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
                      kind: this._getValueType(val[0])
                   };
                } else {
-                  return 'string';
+                  return 'object';
                }
                break;
             default:
