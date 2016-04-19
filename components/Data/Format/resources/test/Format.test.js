@@ -142,7 +142,7 @@ define([
             });
          });
 
-         describe('.getFieldndex()', function() {
+         describe('.getFieldIndex()', function() {
             it('should return exists field index', function() {
                var format = new Format({
                   items: [
@@ -150,12 +150,12 @@ define([
                      FieldsFactory.create({type: 'string', 'name': 'f2'})
                   ]
                });
-               assert.strictEqual(format.getFieldndex('f1'), 0);
-               assert.strictEqual(format.getFieldndex('f2'), 1);
+               assert.strictEqual(format.getFieldIndex('f1'), 0);
+               assert.strictEqual(format.getFieldIndex('f2'), 1);
             });
             it('should -1 if field is not exists', function() {
-               assert.strictEqual(format.getFieldndex('f1'), -1);
-               assert.strictEqual(format.getFieldndex('f2'), -1);
+               assert.strictEqual(format.getFieldIndex('f1'), -1);
+               assert.strictEqual(format.getFieldIndex('f2'), -1);
             });
          });
 
