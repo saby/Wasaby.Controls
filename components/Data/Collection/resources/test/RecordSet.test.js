@@ -934,6 +934,34 @@ define([
                rs.remove(record);
                assert.isNull(record.getOwner());
             });
+            it('should remove record from hierarchy index', function() {
+               var rs = new RecordSet({
+                  rawData: [{
+                     id: 1,
+                     parent: null
+                  }, {
+                     id: 2,
+                     parent: null
+                  }, {
+                     id: 3,
+                     parent: 1
+                  }, {
+                     id: 4,
+                     parent: 1
+                  }, {
+                     id: 5,
+                     parent: 2
+                  }],
+                  idProperty: 'id'
+               });
+               var record = rs.at(0);
+
+               var index = rs.getChildItems(null, true, 'parent');
+               assert.isTrue(Array.indexOf(index, record.getId()) > -1);
+               rs.remove(record);
+               index = rs.getChildItems(null, true, 'parent');
+               assert.strictEqual(Array.indexOf(index, record.getId()), -1);
+            });
          });
 
          describe('.removeAt()', function() {
