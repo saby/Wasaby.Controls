@@ -29,7 +29,11 @@ define('js!SBIS3.CONTROLS.Clickable', [], function() {
             /**
              * @cfg {String}  Команда
              */
-            command: ''
+            command: '',
+            /**
+             * @cfg {Array} Аргументы, которые будут переданы при вызове команды
+             */
+            commandArgs: []
          },
          _keysWeHandle: [
             $ws._const.key.enter,
@@ -71,7 +75,8 @@ define('js!SBIS3.CONTROLS.Clickable', [], function() {
       before : {
          _clickHandler: function() {
             if (!!this._options.command) {
-               this.sendCommand(this._options.command);
+               var args = [this._options.command].concat(this._options.commandArgs);
+               this.sendCommand.apply(this, args);
             }
          }
       },
