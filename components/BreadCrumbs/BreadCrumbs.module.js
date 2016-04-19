@@ -64,7 +64,10 @@ define('js!SBIS3.CONTROLS.BreadCrumbs', [
             this._notify('onItemClick', crumb.data(this._options.keyField));
          }
       },
-
+      /**
+       * Обработчик клика на многоточие
+       * вынесен отдельно для того, что бы можно было переопределить
+       */
       _dotsClickHandler: function(crumb){
          if (this._picker) {
             this._picker.setTarget(crumb);
