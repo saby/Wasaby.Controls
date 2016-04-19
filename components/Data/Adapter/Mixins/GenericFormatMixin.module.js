@@ -50,7 +50,7 @@ define('js!SBIS3.CONTROLS.Data.Adapter.GenericFormatMixin', [
       },
 
       getFormat: function (name) {
-         var index = this._format.getFieldndex(name);
+         var index = this._format.getFieldIndex(name);
          if (index === -1) {
             throw new ReferenceError(this._moduleName + '::getFormat(): field "' + name + '" is not exists');
          }
@@ -62,7 +62,7 @@ define('js!SBIS3.CONTROLS.Data.Adapter.GenericFormatMixin', [
             this._sharedFieldFormat = new UniversalField();
          }
          var fieldFormat = this._sharedFieldFormat,
-            index = this._format.getFieldndex(name);
+            index = this._format.getFieldIndex(name);
          if (index === -1) {
             throw new ReferenceError(this._moduleName + '::getFormat(): field "' + name + '" is not exists');
          }
@@ -82,7 +82,7 @@ define('js!SBIS3.CONTROLS.Data.Adapter.GenericFormatMixin', [
          if (!name) {
             throw new Error(this._moduleName + '::addField(): field name is empty');
          }
-         var index = this._format.getFieldndex(name);
+         var index = this._format.getFieldIndex(name);
          if (index > -1) {
             throw new Error(this._moduleName + '::addField(): field "' + name + '" already exists');
          }
@@ -90,7 +90,7 @@ define('js!SBIS3.CONTROLS.Data.Adapter.GenericFormatMixin', [
       },
 
       removeField: function(name) {
-         var index = this._format.getFieldndex(name);
+         var index = this._format.getFieldIndex(name);
          if (index === -1) {
             throw new ReferenceError(this._moduleName + '::removeField(): field "' + name + '" is not exists');
          }
