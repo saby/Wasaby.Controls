@@ -909,6 +909,7 @@ define([
                         enabled: true,
                         title: 'abc*',
                         path: [1, 2, 3],
+                        obj: {a: 1, b: 2},
                         rec: new Model({
                            adapter: 'adapter.sbis',
                            rawData: recData
@@ -946,15 +947,19 @@ define([
                            assert.strictEqual(args['Фильтр'].s[3].t.n, 'Массив');
                            assert.strictEqual(args['Фильтр'].s[3].t.t, 'Число целое');
 
-                           assert.deepEqual(args['Фильтр'].d[4].d, recData.d);
-                           assert.deepEqual(args['Фильтр'].d[4].s, recData.s);
-                           assert.strictEqual(args['Фильтр'].s[4].n, 'rec');
-                           assert.strictEqual(args['Фильтр'].s[4].t, 'Запись');
+                           assert.deepEqual(args['Фильтр'].d[4], {a: 1, b: 2});
+                           assert.strictEqual(args['Фильтр'].s[4].n, 'obj');
+                           assert.strictEqual(args['Фильтр'].s[4].t, 'JSON-объект');
 
-                           assert.deepEqual(args['Фильтр'].d[5].d, rsData.d);
-                           assert.deepEqual(args['Фильтр'].d[5].s, rsData.s);
-                           assert.strictEqual(args['Фильтр'].s[5].n, 'rs');
-                           assert.strictEqual(args['Фильтр'].s[5].t, 'Выборка');
+                           assert.deepEqual(args['Фильтр'].d[5].d, recData.d);
+                           assert.deepEqual(args['Фильтр'].d[5].s, recData.s);
+                           assert.strictEqual(args['Фильтр'].s[5].n, 'rec');
+                           assert.strictEqual(args['Фильтр'].s[5].t, 'Запись');
+
+                           assert.deepEqual(args['Фильтр'].d[6].d, rsData.d);
+                           assert.deepEqual(args['Фильтр'].d[6].s, rsData.s);
+                           assert.strictEqual(args['Фильтр'].s[6].n, 'rs');
+                           assert.strictEqual(args['Фильтр'].s[6].t, 'Выборка');
 
                            assert.strictEqual(args['Сортировка'].d[0][0], 'id');
                            assert.isTrue(args['Сортировка'].d[0][1]);
