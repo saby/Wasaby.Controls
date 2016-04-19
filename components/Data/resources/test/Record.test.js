@@ -449,7 +449,7 @@ define([
                var fieldName = 'title';
                record.removeField(fieldName);
 
-               assert.strictEqual(record.getFormat().getFieldndex(fieldName), -1);
+               assert.strictEqual(record.getFormat().getFieldIndex(fieldName), -1);
                assert.isFalse(record.has(fieldName));
                assert.isUndefined(record.get(fieldName));
                assert.isUndefined(record.getRawData()[fieldName]);
