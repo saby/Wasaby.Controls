@@ -13,6 +13,7 @@ define('js!SBIS3.CONTROLS.MergeDialogTemplate', [
     'js!SBIS3.CONTROLS.TreeDataGridView',
     'html!SBIS3.CONTROLS.MergeDialogTemplate/resources/cellRadioButtonTpl',
     'html!SBIS3.CONTROLS.MergeDialogTemplate/resources/cellCommentTpl',
+    'html!SBIS3.CONTROLS.MergeDialogTemplate/resources/cellTitleTpl',
     'i18n!!SBIS3.CONTROLS.MergeDialogTemplate'
 ], function(Control, dotTplFn, SbisServiceSource, MemorySource, SbisAdapter, RecordSet) {
 
