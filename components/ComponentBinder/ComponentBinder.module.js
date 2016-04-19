@@ -445,7 +445,7 @@ define('js!SBIS3.CONTROLS.ComponentBinder', [], function () {
       /**
        * Метод для связывания истории фильтров с представлением данных
        */
-      bindFilterHistory: function(filterButton, fastDataFilter, searchParam, historyId, controller, browser) {
+      bindFilterHistory: function(filterButton, fastDataFilter, searchParam, historyId, ignoreFiltersList, controller, browser) {
          var view = browser.getView(),
              noSaveFilters = ['Разворот', 'ВидДерева'],
              historyController, filter;
@@ -456,6 +456,10 @@ define('js!SBIS3.CONTROLS.ComponentBinder', [], function () {
 
          if($ws.helpers.instanceOfMixin(view, 'SBIS3.CONTROLS.hierarchyMixin')) {
             noSaveFilters.push(view.getHierField());
+         }
+
+         if(ignoreFiltersList && ignoreFiltersList.length) {
+            noSaveFilters = noSaveFilters.concat(ignoreFiltersList);
          }
 
          historyController = new controller({
