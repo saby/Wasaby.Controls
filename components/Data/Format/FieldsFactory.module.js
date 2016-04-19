@@ -20,6 +20,7 @@ define('js!SBIS3.CONTROLS.Data.Format.FieldsFactory', [
    'js!SBIS3.CONTROLS.Data.Format.UuidField',
    'js!SBIS3.CONTROLS.Data.Format.RpcFileField',
    'js!SBIS3.CONTROLS.Data.Format.HierarchyField',
+   'js!SBIS3.CONTROLS.Data.Format.ObjectField',
    'js!SBIS3.CONTROLS.Data.Format.ArrayField'
 ], function (
    BooleanField,
@@ -42,6 +43,7 @@ define('js!SBIS3.CONTROLS.Data.Format.FieldsFactory', [
    UuidField,
    RpcFileField,
    HierarchyField,
+   ObjectField,
    ArrayField
 ) {
    'use strict';
@@ -77,6 +79,7 @@ define('js!SBIS3.CONTROLS.Data.Format.FieldsFactory', [
        * @variant uuid UUID
        * @variant rpcfile Файл-RPC
        * @variant hierarchy Иерархия
+       * @variant object Объект
        * @variant array Массив
        */
 
@@ -146,6 +149,8 @@ define('js!SBIS3.CONTROLS.Data.Format.FieldsFactory', [
                return new RpcFileField(declaration);
             case 'hierarchy':
                return new HierarchyField(declaration);
+            case 'object':
+               return new ObjectField(declaration);
             case 'array':
                return new ArrayField(declaration);
             default:
