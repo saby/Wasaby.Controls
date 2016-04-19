@@ -11,8 +11,8 @@ define('js!SBIS3.CONTROLS.EditInPlace',
    ],
    function(Control, dotTplFn, CompoundActiveFixMixin, CompoundFocusMixin) {
 
-      //Высота отступа у редакторов от верхнего края редактируемого элемента
-      var EDITOR_MARGINS = 3;
+      //Высота отступа у редакторов от (верхнего + нижнего) края редактируемого элемента
+      var EDITOR_MARGINS = 6;
 
       'use strict';
 
