@@ -192,7 +192,7 @@ define('js!SBIS3.CONTROLS.ScrollWatcher', [], function() {
             return document.body.scrollHeight;
          }
          if (this._inFloatArea()) {
-            return this.getOpener().getTopParent().getContainer().parent()[0].scrollHeight;
+            return this.getOpener().getTopParent().getContainer().closest('.ws-scrolling-content')[0].scrollHeight;
          }
 
       },
@@ -208,7 +208,7 @@ define('js!SBIS3.CONTROLS.ScrollWatcher', [], function() {
             return $(window).height();
          }
          if (this._inFloatArea()) {
-            return this.getOpener().getTopParent().getContainer().parent().height();
+            return this.getOpener().getTopParent().getContainer().closest('.ws-scrolling-content').height();
          }
       },
       /**
