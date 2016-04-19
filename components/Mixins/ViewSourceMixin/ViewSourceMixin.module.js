@@ -46,11 +46,7 @@ define('js!SBIS3.CONTROLS.ViewSourceMixin', [
          }
 
          /* Подготавливаем фильтр */
-         queryFilter = $ws.core.merge(
-            filter || {},
-            historyFilter,
-            {preferSource: true}  /* Так как в метод отдают фильтр, который является основным, нельзя в нём перетирать значения фильтром из истории */
-         );
+         queryFilter = $ws.core.merge(filter || {}, historyFilter);
 
          /* Подготавливаем query */
          query.where(queryFilter)
