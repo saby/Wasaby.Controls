@@ -26,10 +26,13 @@ define('js!SBIS3.CONTROLS.EditInPlaceHoverController',
                _hoveredEip: null,
                _secondEip: undefined
             },
-            $constructor: function() {
+
+            _createEip: function() {
+               EditInPlaceHoverController.superclass._createEip.apply(this);
                this._secondEip = new EditInPlace(this._getEditInPlaceConfig());
                this._secondEip.getContainer().bind('keyup', this._eipHandlers.onKeyDown);
             },
+
             _getEditInPlaceConfig: function() {
                return $ws.core.merge(EditInPlaceHoverController.superclass._getEditInPlaceConfig.apply(this), {
                   handlers: {
@@ -113,6 +116,14 @@ define('js!SBIS3.CONTROLS.EditInPlaceHoverController',
                   editingEip = this._getEditingEip();
                if (!editingEip || editingEip.getContainer().get(0) !== target.get(0)) {
                   this.edit(this._hoveredEip.getTarget(), this._hoveredEip.getEditingRecord());
+               }
+            },
+            _destroyEip: function() {
+               EditInPlaceHoverController.superclass._destroyEip.apply(this);
+               if (this._hoveredEip) {
+                  this._hoveredEip.getContainer().unbind('keyup', this._eipHandlers.onKeyDown);
+                  this._hoveredEip.destroy();
+                  this._hoveredEip = null;
                }
             },
             destroy: function() {

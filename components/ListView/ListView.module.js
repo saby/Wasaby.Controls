@@ -1034,7 +1034,9 @@ define('js!SBIS3.CONTROLS.ListView',
           */
          setEditingTemplate: function(template) {
             this._options.editingTemplate = template;
-            this._destroyEditInPlace();
+            if (this._hasEditInPlace()) {
+               this._getEditInPlace().setEditingTemplate(template);
+            }
          },
 
          /**
