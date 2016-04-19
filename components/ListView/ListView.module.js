@@ -1026,6 +1026,26 @@ define('js!SBIS3.CONTROLS.ListView',
          getEditMode: function() {
             return this._options.editMode;
          },
+         /**
+          * Устанавливает шаблон редактирования по месту.
+          * @param {String} template Шаблон редактирования по месту. Подробнее вы можете прочитать в описании к опции {@link editingTemplate}.
+          * @see editingTemplate
+          * @see getEditingTemplate
+          */
+         setEditingTemplate: function(template) {
+            this._options.editingTemplate = template;
+            this._destroyEditInPlace();
+         },
+
+         /**
+          * Возвращает шаблон редактирования по месту.
+          * @returns {String} Шаблон редактирования по месту. Подробнее вы можете прочитать в описании к опции {@link editingTemplate}.
+          * @see editingTemplate
+          * @see setEditingTemplate
+          */
+         getEditingTemplate: function() {
+            return this._options.editingTemplate;
+         },
 
          showEip: function(target, model, options) {
             if (this._canShowEip()) {
