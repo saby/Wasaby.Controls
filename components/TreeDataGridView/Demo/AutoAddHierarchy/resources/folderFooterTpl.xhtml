@@ -1,0 +1,24 @@
+<div>
+    <component data-component="SBIS3.CONTROLS.Link" name="addItem">
+        <option name="caption">Новая запись</option>
+        <option name="command">beginAdd</option>
+        <options name="commandParam">
+           <option name="parentId">{{=it.item.getId()}}</option>
+           <options name="model">
+              <option name="Раздел@" type="null">null</option>
+           </options>
+        </options>
+        <option name="icon">sprite: icon-16 icon-NewCategory icon-primary</option>
+    </component>
+    <component data-component="SBIS3.CONTROLS.Link" name="addFolder">
+        <option name="caption">Новая папка</option>
+        <option name="command">beginAdd</option>
+        <options name="commandParam">
+           <option name="parentId">{{=it.item.getId()}}</option>
+           <options name="model">
+              <option name="Раздел@" type="boolean">true</option>
+           </options>
+        </options>
+        <option name="icon">sprite: icon-16 icon-CreateFolder icon-primary</option>
+    </component>
+</div>
