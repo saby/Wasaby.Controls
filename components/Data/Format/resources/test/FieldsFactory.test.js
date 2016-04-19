@@ -159,6 +159,12 @@ define([
                });
                assert.isTrue($ws.helpers.instanceOfModule(field, 'SBIS3.CONTROLS.Data.Format.HierarchyField'));
             });
+            it('should create object', function() {
+               var field = FieldsFactory.create({
+                  type: 'object'
+               });
+               assert.isTrue($ws.helpers.instanceOfModule(field, 'SBIS3.CONTROLS.Data.Format.ObjectField'));
+            });
             it('should create array', function() {
                var field = FieldsFactory.create({
                   type: 'array'
