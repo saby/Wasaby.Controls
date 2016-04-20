@@ -6,7 +6,7 @@ define('js!SBIS3.CONTROLS.Data.CloneableMixin', [
 
    /**
     * Миксин, позволяющий клонировать объекты.
-    * Для корректной работы требуется подмещать {@link SBIS3.CONTROLS.Data.SerializableMixin}.
+    * Для корректной работы требуется подмешать {@link SBIS3.CONTROLS.Data.SerializableMixin}.
     * @mixin SBIS3.CONTROLS.Data.CloneableMixin
     * @implements SBIS3.CONTROLS.Data.ICloneable
     * @public
