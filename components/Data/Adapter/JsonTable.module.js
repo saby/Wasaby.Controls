@@ -3,8 +3,9 @@ define('js!SBIS3.CONTROLS.Data.Adapter.JsonTable', [
    'js!SBIS3.CONTROLS.Data.Adapter.ITable',
    'js!SBIS3.CONTROLS.Data.Adapter.GenericFormatMixin',
    'js!SBIS3.CONTROLS.Data.Adapter.JsonFormatMixin',
-   'js!SBIS3.CONTROLS.Data.Adapter.JsonRecord'
-], function (ITable, GenericFormatMixin, JsonFormatMixin, JsonRecord) {
+   'js!SBIS3.CONTROLS.Data.Adapter.JsonRecord',
+   'js!SBIS3.CONTROLS.Data.Utils'
+], function (ITable, GenericFormatMixin, JsonFormatMixin, JsonRecord, Utils) {
    'use strict';
 
    /**
@@ -62,6 +63,7 @@ define('js!SBIS3.CONTROLS.Data.Adapter.JsonTable', [
       //region Public methods
 
       getEmpty: function () {
+         Utils.logger.stack(this._moduleName + '::getEmpty(): method is deprecated and will be removed in 3.7.4. Use clear() instead.');
          return [];
       },
 
@@ -130,6 +132,10 @@ define('js!SBIS3.CONTROLS.Data.Adapter.JsonTable', [
          var source = this.at(index),
             clone = $ws.core.clone(source);
          this.add(clone, index);
+      },
+
+      clear: function () {
+         this._data.length = 0;
       },
 
       //endregion Public methods

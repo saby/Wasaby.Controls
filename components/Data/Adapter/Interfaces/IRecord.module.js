@@ -39,6 +39,13 @@ define('js!SBIS3.CONTROLS.Data.Adapter.IRecord', [], function () {
       },
 
       /**
+       * Очищает запись (удаляет все поля)
+       */
+      clear: function () {
+         throw new Error('Method must be implemented');
+      },
+
+      /**
        * Возвращает данные записи в формате адаптера
        * @returns {*}
        */
@@ -49,6 +56,7 @@ define('js!SBIS3.CONTROLS.Data.Adapter.IRecord', [], function () {
       /**
        * Возвращает пустую запись
        * @returns {*}
+       * @deprecated метод будет удален в 3.7.4 используйте clear()
        */
       getEmpty: function () {
          throw new Error('Method must be implemented');
