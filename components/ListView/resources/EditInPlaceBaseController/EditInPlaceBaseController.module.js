@@ -57,10 +57,24 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                this._eipHandlers = {
                   onKeyDown: this._onKeyDown.bind(this)
                };
+               this._createEip();
+               this._savingDeferred = $ws.proto.Deferred.success();
+            },
+
+            _createEip: function() {
+               this._destroyEip();
                this._eip = new EditInPlace(this._getEditInPlaceConfig());
                //TODO: EIP Сухоручкин переделать на события
                this._eip.getContainer().bind('keyup', this._eipHandlers.onKeyDown);
-               this._savingDeferred = $ws.proto.Deferred.success();
+            },
+
+            setEditingTemplate: function(template) {
+               this._options.editingTemplate = template;
+               this._createEip();
+            },
+
+            getEditingTemplate: function() {
+               return this._options.editingTemplate;
             },
 
             _getEditInPlaceConfig: function() {
@@ -351,9 +365,16 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                    newTarget  = control.getContainer().closest('.js-controls-ListView__item');
                return currentTarget.attr('data-id') == newTarget.attr('data-id');
             },
+            _destroyEip: function() {
+               if (this._eip) {
+                  this.endEdit();
+                  this._eip.getContainer().unbind('keyup', this._eipHandlers.onKeyDown);
+                  this._eip.destroy();
+                  this._eip = null;
+               }
+            },
             destroy: function() {
-               this.endEdit();
-               this._eip.getContainer().unbind('keyup', this._eipHandlers.onKeyDown);
+               this._destroyEip();
                EditInPlaceBaseController.superclass.destroy.apply(this, arguments);
             }
          });
