@@ -198,7 +198,7 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
       },
 
       _updateRecord: function(dResult, closePanelAfterSubmit){
-         var errorMessage = rk('Некорректно заполнены обязательные для заполнения поля!'),
+         var errorMessage = rk('Некорректно заполнены обязательные поля!'),
              self = this,
              def;
          if (this.validate()) {
