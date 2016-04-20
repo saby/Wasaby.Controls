@@ -271,9 +271,7 @@ define('js!SBIS3.CONTROLS.Data.Source.Memory', [
        */
       _applyFrom: function (from) {
          from = from || '';
-         var adapter = this.getAdapter().forTable(
-            this._getTableAdapter().getEmpty()
-         );
+         var adapter = this.getAdapter().forTable();
          this._each(
             from ? _static.contracts[from] : this._options.data,
             function(item) {
@@ -311,9 +309,7 @@ define('js!SBIS3.CONTROLS.Data.Source.Memory', [
          }
 
          var adapter = this.getAdapter(),
-            tableAdapter = adapter.forTable(
-               adapter.forTable(data).getEmpty()
-            ),
+            tableAdapter = adapter.forTable(),
             skipFields = {
                'Разворот': true,
                'ВидДерева': true,
@@ -430,7 +426,7 @@ define('js!SBIS3.CONTROLS.Data.Source.Memory', [
 
          //Создаем новую таблицу по служебному массиву
          var sourceAdapter = adapter.forTable(data),
-            resultAdapter = adapter.forTable(sourceAdapter.getEmpty()),
+            resultAdapter = adapter.forTable(),
             count;
          for (i = 0, count = dataMap.length; i < count; i++) {
             resultAdapter.add(
@@ -462,9 +458,7 @@ define('js!SBIS3.CONTROLS.Data.Source.Memory', [
             limit = limit || 0;
          }
 
-         var newDataAdapter = this.getAdapter().forTable(
-               dataAdapter.getEmpty()
-            ),
+         var newDataAdapter = this.getAdapter().forTable(),
             newIndex = 0,
             beginIndex = offset,
             endIndex = Math.min(

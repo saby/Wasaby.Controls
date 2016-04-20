@@ -14,6 +14,7 @@ define('js!SBIS3.CONTROLS.Data.Adapter.ITable', [], function () {
       /**
        * Возвращает пустую таблицу
        * @returns {*}
+       * @deprecated метод будет удален в 3.7.4 используйте clear()
        */
       getEmpty: function () {
          throw new Error('Method must be implemented');
@@ -105,6 +106,13 @@ define('js!SBIS3.CONTROLS.Data.Adapter.ITable', [], function () {
        * @returns {*}
        */
       copy: function(index) {
+         throw new Error('Method must be implemented');
+      },
+
+      /**
+       * Очищает таблицу (удаляет все записи и очищает формат)
+       */
+      clear: function () {
          throw new Error('Method must be implemented');
       },
 

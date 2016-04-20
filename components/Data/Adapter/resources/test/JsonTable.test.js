@@ -305,6 +305,18 @@ define([
             });
          });
 
+         describe('.clear()', function () {
+            it('should return an empty table', function () {
+               assert.isTrue(data.length > 0);
+               adapter.clear();
+               assert.strictEqual(adapter.getData().length, 0);
+            });
+            it('should return a same instance', function () {
+               adapter.clear();
+               assert.strictEqual(data, adapter.getData());
+            });
+         });
+
          describe('.getData()', function () {
             it('should return raw data', function () {
                assert.strictEqual(adapter.getData(), data);
