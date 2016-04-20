@@ -99,6 +99,7 @@ define('js!SBIS3.CONTROLS.TabControl', [
 
       init: function() {
          TabControl.superclass.init.call(this);
+         this._publish('onSelectedItemChange');
          this._switchableArea = this.getChildControlByName('SwitchableArea');
          this._switchableArea.setActiveArea(this._options.selectedKey);
          this._tabButtons = this.getChildControlByName('TabButtons');
@@ -123,10 +124,11 @@ define('js!SBIS3.CONTROLS.TabControl', [
          return this._tabButtons.getSelectedKey();
       },
 
-      _onSelectedItemChange: function(event, id) {
+      _onSelectedItemChange: function(event, id, index) {
          this._options.selectedKey = id;
          this._switchableArea._options.defaultArea = id;
          this._switchableArea.setActiveArea(id);
+         this._notify('onSelectedItemChange', id, index);
       }
    });
 
