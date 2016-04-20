@@ -23,20 +23,24 @@
       float: @tab-buttons-leftItems-float;
       padding-left: @tab-buttons-items-padding;
       .controls-TabButton:first-child {
-         border-left: none;
+         border-left: @tab-button-side-left-border;
+         margin-left: @tab-button-side-left-margin-left;
          &:hover{
-            border-left: none;
+            border-left: @tab-button-side-left-border;
          }
          .controls-TabButton__inner{
-            border-left: none;
+            border-left: @tab-button-side-left-border;
          }
       }
    }
    .controls-TabButtons__rightContainer{
       float: @tab-buttons-rightItems-float;
       padding-right: @tab-buttons-items-padding;
-      .controls-TabButton:last-child .controls-TabButton__inner{
-        border-right: @tab-buttons-side-items-border;
+      .controls-TabButton:last-child{
+        margin-right: @tab-button-side-right-margin-right;
+        .controls-TabButton__inner{
+          border-right: @tab-buttons-side-items-border;
+        }
       }
    }
 }
