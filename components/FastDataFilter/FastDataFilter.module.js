@@ -20,7 +20,8 @@ define('js!SBIS3.CONTROLS.FastDataFilter',
        * @author Крайнов Дмитрий Олегович
        * @mixes SBIS3.CONTROLS.DSMixin
        * @mixes SBIS3.CONTROLS.FilterMixin
-       * @demo SBIS3.CONTROLS.Demo.MyFastDataFilter Работа с данными
+       * @demo SBIS3.CONTROLS.Demo.MyFastDataFilter Работа с статическими данными
+       * @demo SBIS3.CONTROLS.Demo.MyFastDataFilterDataSource Работа с DataSource данными
        * @control
        * @public
        */
@@ -103,7 +104,8 @@ define('js!SBIS3.CONTROLS.FastDataFilter',
                showSelectedInList : !!item.get('multiselect'),
                displayField: item.get('displayField'),
                className: item.get('className') || 'controls-DropdownList__linkStyle',
-               pickerClassName: (item.get('pickerClassName') + ' controls-DropdownList__picker') || 'controls-DropdownList__picker'
+               pickerClassName: (item.get('pickerClassName') + ' controls-DropdownList__picker') || 'controls-DropdownList__picker',
+               dataSource: item.get('dataSource')
             };
             return '<component data-component="SBIS3.CONTROLS.DropdownList" config="' + $ws.helpers.encodeCfgAttr(cfg) + '">' +
                         //'<opts name="selectedKeys" type="array" bind="' + cfg.filterName +'" ></opts>' + //direction="fromProperty" oneWay="true"
