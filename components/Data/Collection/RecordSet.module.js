@@ -563,6 +563,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
             this._items[i].setOwner(null);
          }
          RecordSet.superclass.clear.call(this);
+         this._indexTree = {};
       },
 
       add: function (item, at) {
@@ -570,11 +571,13 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
          this._getRawDataAdapter().add(item.getRawData(), at);
          RecordSet.superclass.add.apply(this, arguments);
          item.setOwner(this);
+         this._indexTree = {};
       },
 
       remove: function (item) {
          this._checkItem(item, false);
          item.setOwner(null);
+         this._indexTree = {};
          return RecordSet.superclass.remove.apply(this, arguments);
       },
 
@@ -585,6 +588,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
             item.setOwner(null);
          }
          RecordSet.superclass.removeAt.apply(this, arguments);
+         this._indexTree = {};
       },
 
       replace: function (item, at) {
@@ -592,6 +596,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
          item.setOwner(this);
          this._getRawDataAdapter().replace(item.getRawData(), at);
          RecordSet.superclass.replace.apply(this, arguments);
+         this._indexTree = {};
       },
 
       assign: function (items) {
@@ -608,6 +613,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
          for (var i = 0, count = items.length; i < count; i++) {
             items[i].setOwner(this);
          }
+         this._indexTree = {};
       },
 
       append: function (items) {
@@ -616,6 +622,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
          for (var i = 0, count = items.length; i < count; i++) {
             items[i].setOwner(this);
          }
+         this._indexTree = {};
       },
 
       prepend: function (items) {
@@ -624,6 +631,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
          for (var i = 0, count = items.length; i < count; i++) {
             items[i].setOwner(this);
          }
+         this._indexTree = {};
       },
 
       //endregion SBIS3.CONTROLS.Data.Collection.List
