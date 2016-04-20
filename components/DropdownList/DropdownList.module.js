@@ -407,6 +407,7 @@ define('js!SBIS3.CONTROLS.DropdownList',
             var textValues = [],
                 len = id.length,
                 self = this,
+                record,
                 pickerContainer,
                 def;
 
@@ -415,7 +416,10 @@ define('js!SBIS3.CONTROLS.DropdownList',
 
                if(this._dataSet) {
                   for(var i = 0; i < len; i++) {
-                     textValues.push(this._dataSet.getRecordByKey(id[i]).get(this._options.displayField));
+                     record = this._dataSet.getRecordByKey(id[i]);
+                     if (record){ //После установки новых данных, не все ключи останутся актуальными
+                        textValues.push(record.get(this._options.displayField));
+                     }
                   }
                   def.callback(textValues);
                } else {
