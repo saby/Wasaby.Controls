@@ -111,7 +111,7 @@ define('js!SBIS3.CONTROLS.Pager', ['js!SBIS3.CORE.CompoundControl', 'html!SBIS3.
             if (numRecords == 1) {
                pagerStr = rk('Выбрана') + ' 1 ' + rk('запись');
             } else {
-               pagerStr = ws.helpers.wordCaseByNumber(selectedCount, rk('Выбрано'), rk('Выбрана'), rk('Выбраны')) +
+               pagerStr = $ws.helpers.wordCaseByNumber(selectedCount, rk('Выбрано'), rk('Выбрана'), rk('Выбраны')) +
                ' ' + selectedCount + $ws.helpers.wordCaseByNumber(selectedCount, ' ' + rk('записей'), ' ' + rk('запись', 'множественное'), ' ' + rk('записи')) + '. ' + pagerStr;
             }
          }
