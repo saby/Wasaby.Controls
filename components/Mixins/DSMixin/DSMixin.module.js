@@ -1224,7 +1224,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
                atContainer.after(itemBuildedTpl);
             }
             else {
-               atContainer = $('.controls-ListView__item', this._getItemsContainer().get(0)).eq(at.at);
+               atContainer = $('> .controls-ListView__item', this._getItemsContainer().get(0)).eq(at.at);
                if (atContainer.length) {
                   atContainer.before(itemBuildedTpl);
                } else {
