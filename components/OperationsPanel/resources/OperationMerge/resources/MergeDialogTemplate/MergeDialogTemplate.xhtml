@@ -19,7 +19,13 @@
                 <option name="title">Наименование</option>
                 <option name="width">400</option>
                 <option name="field">{{=it.displayField}}</option>
-                <option name="cellTemplate">{{=it.titleCellTemplate}}</option>
+                <option name="cellTemplate">
+                {{?it.titleCellTemplate}}
+                    {{=it.titleCellTemplate}}
+                {{??}}
+                    html!SBIS3.CONTROLS.MergeDialogTemplate/resources/cellTitleTpl
+                {{?}}
+                </option>
                 <option name="className">controls-DataGridView-cell-overflow-ellipsis</option>
             </options>
             <options>
