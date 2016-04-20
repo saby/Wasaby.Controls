@@ -1,19 +1,22 @@
 /* global define, $ws */
 define('js!SBIS3.CONTROLS.Data.Format.Field', [
-   'js!SBIS3.CONTROLS.Data.SerializableMixin',
-   'js!SBIS3.CONTROLS.Data.Serializer'
-], function (SerializableMixin, Serializer) {
+   'js!SBIS3.CONTROLS.Data.ICloneable',
+   'js!SBIS3.CONTROLS.Data.CloneableMixin',
+   'js!SBIS3.CONTROLS.Data.SerializableMixin'
+], function (ICloneable, CloneableMixin, SerializableMixin) {
    'use strict';
 
    /**
     * Прототип поля записи (абстрактный класс)
     * @class SBIS3.CONTROLS.Data.Format.Field
+    * @mixes SBIS3.CONTROLS.Data.ICloneable
+    * @mixes SBIS3.CONTROLS.Data.CloneableMixin
     * @mixes SBIS3.CONTROLS.Data.SerializableMixin
     * @public
     * @author Мальцев Алексей
     */
 
-   var Field = $ws.core.extend({}, [SerializableMixin], /** @lends SBIS3.CONTROLS.Data.Format.Field.prototype */{
+   var Field = $ws.core.extend({}, [ICloneable, CloneableMixin, SerializableMixin], /** @lends SBIS3.CONTROLS.Data.Format.Field.prototype */{
       _moduleName: 'SBIS3.CONTROLS.Data.Format.Field',
       $protected: {
          _options: {
@@ -114,18 +117,6 @@ define('js!SBIS3.CONTROLS.Data.Format.Field', [
        */
       setNullable: function (nullable) {
          this._options.nullable = nullable;
-      },
-
-      /**
-       * Клонирует формат поля
-       * @returns {SBIS3.CONTROLS.Data.Format.Field}
-       */
-      clone: function () {
-         var serializer = new Serializer();
-         return JSON.parse(
-            JSON.stringify(this, serializer.serialize),
-            serializer.deserialize
-         );
       },
 
       /**

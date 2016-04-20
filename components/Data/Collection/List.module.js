@@ -1,30 +1,33 @@
 /* global define, $ws */
 define('js!SBIS3.CONTROLS.Data.Collection.List', [
-   'js!SBIS3.CONTROLS.Data.SerializableMixin',
+   'js!SBIS3.CONTROLS.Data.ICloneable',
    'js!SBIS3.CONTROLS.Data.Collection.IEnumerable',
    'js!SBIS3.CONTROLS.Data.Collection.IList',
    'js!SBIS3.CONTROLS.Data.Collection.IIndexedCollection',
+   'js!SBIS3.CONTROLS.Data.CloneableMixin',
+   'js!SBIS3.CONTROLS.Data.SerializableMixin',
    'js!SBIS3.CONTROLS.Data.Collection.ArrayEnumerator',
-   'js!SBIS3.CONTROLS.Data.Serializer',
    'js!SBIS3.CONTROLS.Data.Di',
    'js!SBIS3.CONTROLS.Data.Utils',
    'js!SBIS3.CONTROLS.Data.ContextField.List'
-], function (SerializableMixin, IEnumerable, IList, IIndexedCollection, ArrayEnumerator, Serializer, Di, Utils, ContextFieldList) {
+], function (ICloneable, IEnumerable, IList, IIndexedCollection, CloneableMixin, SerializableMixin, ArrayEnumerator, Di, Utils, ContextFieldList) {
    'use strict';
 
    /**
     * Список - коллекция c доступом по порядковому индексу
     * @class SBIS3.CONTROLS.Data.Collection.List
     * @extends $ws.proto.Abstract
-    * @mixes SBIS3.CONTROLS.Data.SerializableMixin
+    * @mixes SBIS3.CONTROLS.Data.ICloneable
     * @mixes SBIS3.CONTROLS.Data.Collection.IEnumerable
     * @mixes SBIS3.CONTROLS.Data.Collection.IList
     * @mixes SBIS3.CONTROLS.Data.Collection.IIndexedCollection
+    * @mixes SBIS3.CONTROLS.Data.CloneableMixin
+    * @mixes SBIS3.CONTROLS.Data.SerializableMixin
     * @public
     * @author Мальцев Алексей
     */
 
-   var List = $ws.proto.Abstract.extend([SerializableMixin, IEnumerable, IList, IIndexedCollection], /** @lends SBIS3.CONTROLS.Data.Collection.List.prototype */{
+   var List = $ws.proto.Abstract.extend([ICloneable, IEnumerable, IList, IIndexedCollection, CloneableMixin, SerializableMixin], /** @lends SBIS3.CONTROLS.Data.Collection.List.prototype */{
       _moduleName: 'SBIS3.CONTROLS.Data.Collection.List',
       $protected: {
          _options: {
@@ -246,18 +249,6 @@ define('js!SBIS3.CONTROLS.Data.Collection.List', [
       //endregion deprecated
 
       //region Public methods
-
-      /**
-       * Клонирует список
-       * @returns {SBIS3.CONTROLS.Data.Collection.List}
-       */
-      clone: function () {
-         var serializer = new Serializer();
-         return JSON.parse(
-            JSON.stringify(this, serializer.serialize),
-            serializer.deserialize
-         );
-      },
 
       equals: function (another) {
          Utils.logger.stack(this._moduleName + '::equals(): method is deprecated and will be removed in 3.7.4. Use isEqual() instead.');
