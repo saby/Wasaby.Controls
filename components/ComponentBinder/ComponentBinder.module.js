@@ -141,7 +141,7 @@ define('js!SBIS3.CONTROLS.ComponentBinder', [], function () {
       if (gridView._options.multiselect && hideCheckBoxes) {
          gridView._container.toggleClass('controls-ListView__showCheckBoxes', operationPanel.isVisible())
             .toggleClass('controls-ListView__hideCheckBoxes', !operationPanel.isVisible());
-         if (gridView.hasPartScroll()) {
+         if (this._options.startScrollColumn !== undefined) {
             gridView.updateScrollAndColumns();
          }
       }
