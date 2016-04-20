@@ -331,7 +331,7 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
        */
       setDataSource: function(source){
          this._options.dataSource = source;
-         this._runQuery();
+         return this._runQuery();
       },
       /**
        * Установаливает запись диалогу редактирования
@@ -361,6 +361,8 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
             self.activateFirstControl();
             return r;
          });
+
+         return hdl;
       }
    });
 
