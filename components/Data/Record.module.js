@@ -23,6 +23,7 @@ define('js!SBIS3.CONTROLS.Data.Record', [
     * @mixes SBIS3.CONTROLS.Data.SerializableMixin
     * @mixes SBIS3.CONTROLS.Data.FormattableMixin
     * @public
+    * @ignoreOptions owner
     * @ignoreMethods setOwner
     * @author Мальцев Алексей
     */
@@ -261,7 +262,6 @@ define('js!SBIS3.CONTROLS.Data.Record', [
       /**
        * Возвращает рекордсет, которому принадлежит запись. Может не принадлежать рекордсету.
        * @returns {SBIS3.CONTROLS.Data.Collection.RecordSet}
-       * @see owner
        */
       getOwner: function() {
          return this._options.owner;
@@ -270,7 +270,6 @@ define('js!SBIS3.CONTROLS.Data.Record', [
       /**
        * Устанавливает рекордсет, которому принадлежит запись. Данный метод может вызывать только сам рекордсет!
        * @param {SBIS3.CONTROLS.Data.Collection.RecordSet} owner Новый владелец
-       * @see owner
        * @see getOwner
        */
       setOwner: function(owner) {
