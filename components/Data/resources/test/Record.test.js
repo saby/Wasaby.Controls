@@ -718,6 +718,21 @@ define([
                assert.deepEqual(json.state._options, record._options);
                assert.deepEqual(json.state._changedFields, record._changedFields);
             });
+            it('should set subclass\'s module name', function () {
+                  var Sub = Record.extend({
+                     _moduleName: 'My.Sub'
+                  }),
+                  record = new Sub(),
+                  json = record.toJSON();
+               assert.strictEqual(json.module, 'My.Sub');
+            });
+            it('should throw an error if subclass\'s module name is not defined', function () {
+               var Sub = Record.extend({}),
+                  record = new Sub();
+               assert.throw(function() {
+                  record.toJSON();
+               });
+            });
             it('should hide type signature in rawData', function () {
                var record = new Record({
                      rawData: {

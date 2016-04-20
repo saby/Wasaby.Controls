@@ -4,7 +4,21 @@ define('js!SBIS3.CONTROLS.Data.SerializableMixin', [
    'use strict';
 
    /**
-    * Миксин, позволяющий сериализовать объекты
+    * Миксин, позволяющий сериализовать и десериализовать инастансы различных модулей.
+    * Для корректной работы необходимо определить в прототипе каждого модуля свойство _moduleName, в котором прописать
+    * имя модуля для requirejs (без плагина js!).
+    * @example
+    * <pre>
+    * define('js!My.SubModule', ['js!My.SuperModule'], function (SuperModule) {
+    *    'use strict';
+    *
+    *    var SubModule = SuperModule.extend({
+    *      _moduleName: 'My.SubModule'
+    *    });
+    *
+    *    return SubModule;
+    * });
+    * </pre>
     * @mixin SBIS3.CONTROLS.Data.SerializableMixin
     * @public
     * @author Мальцев Алексей
@@ -25,16 +39,20 @@ define('js!SBIS3.CONTROLS.Data.SerializableMixin', [
        * @returns {Object}
        */
       toJSON: function() {
+         //TODO: переделать на Object.getPrototypeOf(this), после перевода на SBIS3.CONTROLS.Data.Core::extend()
          if (!this._moduleName) {
-            throw new Error('Module name is undefined');
+            throw new ReferenceError('Module name should be defined in a prototype');
          }
-         var result = {
+         if (_protoSupported && !this.__proto__.hasOwnProperty('_moduleName')) {
+            throw new ReferenceError('Module name should be defined in a prototype of each sub module of SerializableMixin');
+         }
+
+         return {
             $serialized$: 'inst',
             module: this._moduleName,
             id: this._getInstanceId(),
             state: this._getSerializableState()
          };
-         return result;
       },
 
       /**
@@ -90,7 +108,8 @@ define('js!SBIS3.CONTROLS.Data.SerializableMixin', [
       //endregion Protected methods
    };
 
-   var _instanceCounter = 0;
+   var _instanceCounter = 0,
+      _protoSupported = typeof ({}).__proto__ === 'object';
 
    return SerializableMixin;
 });

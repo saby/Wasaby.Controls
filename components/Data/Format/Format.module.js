@@ -1,9 +1,8 @@
 /* global define, $ws */
 define('js!SBIS3.CONTROLS.Data.Format.Format', [
    'js!SBIS3.CONTROLS.Data.Collection.List',
-   'js!SBIS3.CONTROLS.Data.Serializer',
    'js!SBIS3.CONTROLS.Data.Utils'
-], function (List, Serializer, Utils) {
+], function (List, Utils) {
    'use strict';
 
    /**
@@ -136,18 +135,6 @@ define('js!SBIS3.CONTROLS.Data.Format.Format', [
        */
       getFieldName: function (at) {
          return this.at(at).getName();
-      },
-
-      /**
-       * Клонирует формат
-       * @returns {SBIS3.CONTROLS.Data.Format.Format}
-       */
-      clone: function() {
-         var serializer = new Serializer();
-         return JSON.parse(
-            JSON.stringify(this, serializer.serialize),
-            serializer.deserialize
-         );
       },
 
       /**
