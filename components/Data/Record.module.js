@@ -23,6 +23,7 @@ define('js!SBIS3.CONTROLS.Data.Record', [
     * @mixes SBIS3.CONTROLS.Data.SerializableMixin
     * @mixes SBIS3.CONTROLS.Data.FormattableMixin
     * @public
+    * @ignoreOptions owner
     * @ignoreMethods setOwner
     * @author Мальцев Алексей
     */
