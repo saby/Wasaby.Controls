@@ -1343,7 +1343,8 @@ define('js!SBIS3.CONTROLS.ListView',
          _drawItems: function(records, at){
             //Это реализовано здесь, потому что 1ый раз отрисовка вызвана не после подгрузки в
             // бесконечном скролле, а после первого получения данных!
-            if (this._options.infiniteScroll === 'up' && !at) {
+            // проверка на режим поиска для того что бы при поиске отрисовывать записи в правильном порядке
+            if (this._options.infiniteScroll === 'up' && !at && this._options.groupBy.field !== this._searchParamName) {
                at = {at : 0};
             }
             ListView.superclass._drawItems.apply(this, [records, at]);
