@@ -444,6 +444,8 @@ define('js!SBIS3.CONTROLS.ListView',
                /**
                 * @cfg {String} Шаблон строки редактирования по месту.
                 * Данная опция обладает большим приоритетом, чем заданный в колонках редактор.
+                * Данная опция может быть переопределена с помощью метода (@see setEditingTemplate). Переопределить опцию
+                * можно в любой момент до показа редакторов на строке, например: (@see onBeginEdit) или (@see onItemClick)
                 * @example
                 * <pre>
                 *     <opt name="editingTemplate">
@@ -1025,6 +1027,28 @@ define('js!SBIS3.CONTROLS.ListView',
           */
          getEditMode: function() {
             return this._options.editMode;
+         },
+         /**
+          * Устанавливает шаблон редактирования по месту.
+          * @param {String} template Шаблон редактирования по месту. Подробнее вы можете прочитать в описании к опции {@link editingTemplate}.
+          * @see editingTemplate
+          * @see getEditingTemplate
+          */
+         setEditingTemplate: function(template) {
+            this._options.editingTemplate = template;
+            if (this._hasEditInPlace()) {
+               this._getEditInPlace().setEditingTemplate(template);
+            }
+         },
+
+         /**
+          * Возвращает шаблон редактирования по месту.
+          * @returns {String} Шаблон редактирования по месту. Подробнее вы можете прочитать в описании к опции {@link editingTemplate}.
+          * @see editingTemplate
+          * @see setEditingTemplate
+          */
+         getEditingTemplate: function() {
+            return this._options.editingTemplate;
          },
 
          showEip: function(target, model, options) {
