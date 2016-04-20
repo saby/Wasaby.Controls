@@ -4,8 +4,22 @@
 define('js!SBIS3.CONTROLS.ControlsValidators', ['i18n!SBIS3.CONTROLS.ControlsValidators'],function() {
 
    'use strict';
-
-   return  {
+   /**
+    * Компонент с набором платформенных валидаторов, которые можно применять только к контролам из пространства имён SBIS3.CONTROLS.
+    * Подробнее о работе с валидаторами вы можете прочитать в разделе <a href="http://wi.sbis.ru/doc/platform/developmentapl/interfacedev/core/validation/">Валидация вводимых данных</a>.
+    * @author Красильников Андрей Сергеевич
+    * @public
+    */
+   return /** @lends SBIS3.CONTROLS.ControlsValidators.prototype */{
+      /**
+       * Проверяет наличие введённого значения.
+       * @param {String} option Название опции контрола, значение которой валидируется.
+       * @returns {Boolean|String}
+       * <ol>
+       *    <li>В случае прохождения валидации возвращает true.</li>
+       *    <li>В случае не прохождения валидации возвращает сообщение "Поле обязательно для заполнения".</li>
+       * </ol>
+       */
       required: function(option) {
          var isEmpty;
 
