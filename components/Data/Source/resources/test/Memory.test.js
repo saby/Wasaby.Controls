@@ -1,4 +1,4 @@
-/* global beforeEach, afterEach, describe, context, it */
+/* global beforeEach, afterEach, describe, context, assert, it */
 define([
       'js!SBIS3.CONTROLS.Data.Source.Memory',
       'js!SBIS3.CONTROLS.Data.Source.DataSet',
@@ -11,6 +11,7 @@ define([
 
       describe('SBIS3.CONTROLS.Data.Source.Memory', function () {
          var existsId = 5,
+            existsIdIndex = 6,
             existsPosition = 5,
             existsId2 = 6,
             existsPosition2 = 0,
@@ -96,18 +97,10 @@ define([
             it('should return an empty model', function (done) {
                source.create().addCallbacks(function (model) {
                   try {
-                     if (!(model instanceof Model)) {
-                        throw new Error('That\'s no Model');
-                     }
-                     if (model.isStored()) {
-                        throw new Error('The model should be not stored');
-                     }
-                     if (model.getId()) {
-                        throw new Error('The model has not empty id');
-                     }
-                     if (model.get('Фамилия') !== undefined) {
-                        throw new Error('The model contains wrong data');
-                     }
+                     assert.instanceOf(model, Model);
+                     assert.isFalse(model.isStored());
+                     assert.isUndefined(model.getId());
+                     assert.isUndefined(model.get('Фамилия'));
                      done();
                   } catch (err) {
                      done(err);
@@ -123,12 +116,26 @@ define([
                   b: true
                }).addCallbacks(function (model) {
                   try {
-                     if (model.get('a') !== 1) {
-                        throw new Error('The model property "a" contains wrong data');
-                     }
-                     if (model.get('b') !== true) {
-                        throw new Error('The model property "b" contains wrong data');
-                     }
+                     assert.strictEqual(model.get('a'), 1);
+                     assert.strictEqual(model.get('b'), true);
+                     done();
+                  } catch (err) {
+                     done(err);
+                  }
+               }, function (err) {
+                  done(err);
+               });
+            });
+
+            it('should return an unlinked model', function (done) {
+               var meta = {
+                  a: 1,
+                  b: true
+               };
+               source.create(meta).addCallbacks(function (model) {
+                  model.set('a', 2);
+                  try {
+                     assert.strictEqual(meta.a, 1);
                      done();
                   } catch (err) {
                      done(err);
@@ -144,21 +151,26 @@ define([
                it('should return the valid model', function (done) {
                   source.read(existsId).addCallbacks(function (model) {
                      try {
-                        if (!(model instanceof Model)) {
-                           throw new Error('That\'s no Model');
-                        }
-                        if (!model.isStored()) {
-                           throw new Error('The model should be stored');
-                        }
-                        if (!model.getId()) {
-                           throw new Error('The model has empty key');
-                        }
-                        if (model.getId() !== existsId) {
-                           throw new Error('The model has wrong key');
-                        }
-                        if (model.get('Фамилия') !== 'Баранов') {
-                           throw new Error('The model contains wrong data');
-                        }
+                        assert.instanceOf(model, Model);
+                        assert.isTrue(model.isStored());
+                        assert.isTrue(model.getId() > 0);
+                        assert.strictEqual(model.getId(), existsId);
+                        assert.strictEqual(model.get('Фамилия'), 'Баранов');
+                        done();
+                     } catch (err) {
+                        done(err);
+                     }
+                  }, function (err) {
+                     done(err);
+                  });
+               });
+
+               it('should return an unlinked model', function (done) {
+                  var oldValue = data[existsIdIndex]['Фамилия'];
+                  source.read(existsId).addCallbacks(function (model) {
+                     try {
+                        model.set('Фамилия', 'Test');
+                        assert.strictEqual(data[existsIdIndex]['Фамилия'], oldValue);
                         done();
                      } catch (err) {
                         done(err);
@@ -189,18 +201,11 @@ define([
                      model.set('Фамилия', 'Петров');
                      source.update(model).addCallbacks(function (success) {
                         try {
-                           if (!success) {
-                              throw new Error('Unsuccessful update');
-                           }
-                           if (model.isChanged()) {
-                              throw new Error('The model should become unchanged');
-                           }
+                           assert.isTrue(!!success);
+                           assert.isFalse(model.isChanged());
                            source.read(existsId).addCallbacks(function (model) {
-                              if (model.get('Фамилия') !== 'Петров') {
-                                 done(new Error('Still have an old data'));
-                              } else {
-                                 done();
-                              }
+                              assert.strictEqual(model.get('Фамилия'), 'Петров');
+                              done();
                            }, function (err) {
                               done(err);
                            });
@@ -219,27 +224,14 @@ define([
             context('when the model was not stored', function () {
                var testModel = function (success, model, length, done) {
                   try {
-                     if (!success) {
-                        throw new Error('Unsuccessful update');
-                     }
-                     if (!model.isStored()) {
-                        throw new Error('The model should become stored');
-                     }
-                     if (model.isChanged()) {
-                        throw new Error('The model should become unchanged');
-                     }
-                     if (!model.getId()) {
-                        throw new Error('The model should become having a key');
-                     }
-                     if (length !== data.length) {
-                        throw new Error('The size of raw data expect to be ' + length + ' but ' + data.length + ' detected');
-                     }
+                     assert.isTrue(!!success);
+                     assert.isTrue(model.isStored());
+                     assert.isFalse(model.isChanged());
+                     assert.isTrue(!!model.getId());
+                     assert.strictEqual(length, data.length);
                      source.read(model.getId()).addCallbacks(function (modelToo) {
-                        if (model.get('Фамилия') !== modelToo.get('Фамилия')) {
-                           done(new Error('The source still have an old data'));
-                        } else {
-                           done();
-                        }
+                        assert.strictEqual(model.get('Фамилия'), modelToo.get('Фамилия'));
+                        done();
                      }, function (err) {
                         done(err);
                      });
@@ -283,11 +275,8 @@ define([
                it('should return success', function (done) {
                   source.destroy(existsId).addCallbacks(function (success) {
                      try {
-                        if (!success) {
-                           throw new Error('Unsuccessful destroy');
-                        } else {
-                           done();
-                        }
+                        assert.isTrue(!!success);
+                        done();
                      } catch (err) {
                         done(err);
                      }
@@ -313,9 +302,7 @@ define([
                   var targetLength = data.length - 1;
                   source.destroy(existsId).addCallbacks(function () {
                      try {
-                        if (targetLength !== data.length) {
-                           throw new Error('The size of raw data expect to be ' + targetLength + ' but ' + data.length + ' detected');
-                        }
+                        assert.strictEqual(targetLength, data.length);
                         done();
                      } catch (err) {
                         done(err);
@@ -329,9 +316,7 @@ define([
                   var targetLength = data.length - 2;
                   source.destroy([existsId,existsId2]).addCallbacks(function () {
                      try {
-                        if (targetLength !== data.length) {
-                           throw new Error('The size of raw data expect to be ' + targetLength + ' but ' + data.length + ' detected');
-                        }
+                        assert.strictEqual(targetLength, data.length);
                         done();
                      } catch (err) {
                         done(err);
@@ -414,12 +399,8 @@ define([
             it('should return a valid dataset', function (done) {
                source.query(new Query()).addCallbacks(function (ds) {
                   try {
-                     if (!(ds instanceof DataSet)) {
-                        throw new Error('That\'s no dataset');
-                     }
-                     if (ds.getAll().getCount() !== data.length) {
-                        throw new Error('Wrong models count');
-                     }
+                     assert.instanceOf(ds, DataSet);
+                     assert.strictEqual(ds.getAll().getCount(), data.length);
                      done();
                   } catch (err) {
                      done(err);
@@ -432,12 +413,24 @@ define([
             it('should work with no query', function (done) {
                source.query().addCallbacks(function (ds) {
                   try {
-                     if (!(ds instanceof DataSet)) {
-                        throw new Error('That\'s no dataset');
-                     }
-                     if (ds.getAll().getCount() !== data.length) {
-                        throw new Error('Wrong models count');
-                     }
+                     assert.instanceOf(ds, DataSet);
+                     assert.strictEqual(ds.getAll().getCount(), data.length);
+                     done();
+                  } catch (err) {
+                     done(err);
+                  }
+               }, function (err) {
+                  done(err);
+               });
+            });
+
+            it('should return an unlinked collection', function (done) {
+               source.query().addCallbacks(function (ds) {
+                  try {
+                     var rec = ds.getAll().at(0),
+                        oldId = data[0]['Ид'];
+                     rec.set('Ид', 'test');
+                     assert.strictEqual(data[0]['Ид'], oldId);
                      done();
                   } catch (err) {
                      done(err);
@@ -452,9 +445,7 @@ define([
                source.setListModule(MyList);
                source.query().addCallbacks(function (ds) {
                   try {
-                     if (!(ds.getAll() instanceof MyList)) {
-                        throw new Error('Wrong list instance');
-                     }
+                     assert.instanceOf(ds.getAll(), MyList);
                      done();
                   } catch (err) {
                      done(err);
@@ -469,9 +460,7 @@ define([
                source.setModel(MyModel);
                source.query().addCallbacks(function (ds) {
                   try {
-                     if (!(ds.getAll().at(0) instanceof MyModel)) {
-                        throw new Error('Wrong model instance');
-                     }
+                     assert.instanceOf(ds.getAll().at(0), MyModel);
                      done();
                   } catch (err) {
                      done(err);
@@ -870,9 +859,7 @@ define([
                it('should return an empty model', function (done) {
                   source.create().addCallbacks(function (model) {
                      try {
-                        if (!(model instanceof Model)) {
-                           throw new Error('That\'s no Model');
-                        }
+                        assert.instanceOf(model, Model);
                         done();
                      } catch (err) {
                         done(err);
@@ -890,12 +877,8 @@ define([
                      }
                   })).addCallbacks(function (model) {
                      try {
-                        if (model.get('a') !== 1) {
-                           throw new Error('The model property "a" contains wrong data');
-                        }
-                        if (model.get('b') !== true) {
-                           throw new Error('The model property "b" contains wrong data');
-                        }
+                        assert.strictEqual(model.get('a'), 1);
+                        assert.strictEqual(model.get('b'), true);
                         done();
                      } catch (err) {
                         done(err);
@@ -911,12 +894,8 @@ define([
                   it('should return the valid model', function (done) {
                      source.read(existsId).addCallbacks(function (model) {
                         try {
-                           if (!(model instanceof Model)) {
-                              throw new Error('That\'s no Model');
-                           }
-                           if (model.getId() !== existsId) {
-                              throw new Error('The model has wrong key');
-                           }
+                           assert.instanceOf(model, Model);
+                           assert.strictEqual(model.getId(), existsId);
                            done();
                         } catch (err) {
                            done(err);
@@ -947,15 +926,10 @@ define([
                         model.set('Фамилия', 'Петров');
                         source.update(model).addCallbacks(function (success) {
                            try {
-                              if (!success) {
-                                 throw new Error('Unsuccessful update');
-                              }
+                              assert.isTrue(!!success);
                               source.read(existsId).addCallbacks(function (model) {
-                                 if (model.get('Фамилия') !== 'Петров') {
-                                    done(new Error('Still have an old data'));
-                                 } else {
-                                    done();
-                                 }
+                                 assert.equal(model.get('Фамилия'), 'Петров');
+                                 done();
                               }, function (err) {
                                  done(err);
                               });
@@ -974,18 +948,11 @@ define([
                context('when the model was not stored', function () {
                   var testModel = function (success, model, length, done) {
                      try {
-                        if (!success) {
-                           throw new Error('Unsuccessful update');
-                        }
-                        if (length !== data.getCount()) {
-                           throw new Error('The size of raw data expect to be ' + length + ' but ' + data.length + ' detected');
-                        }
+                        assert.isTrue(!!success);
+                        assert.strictEqual(length, data.getCount());
                         source.read(model.getId()).addCallbacks(function (modelToo) {
-                           if (model.get('Фамилия') !== modelToo.get('Фамилия')) {
-                              done(new Error('The source still have an old data'));
-                           } else {
-                              done();
-                           }
+                           assert.strictEqual(model.get('Фамилия'), modelToo.get('Фамилия'));
+                           done();
                         }, function (err) {
                            done(err);
                         });
@@ -1029,11 +996,8 @@ define([
                   it('should return success', function (done) {
                      source.destroy(existsId).addCallbacks(function (success) {
                         try {
-                           if (!success) {
-                              throw new Error('Unsuccessful destroy');
-                           } else {
-                              done();
-                           }
+                           assert.isTrue(!!success);
+                           done();
                         } catch (err) {
                            done(err);
                         }
@@ -1058,9 +1022,7 @@ define([
                      var targetLength = data.getCount() - 1;
                      source.destroy(existsId).addCallbacks(function () {
                         try {
-                           if (targetLength !== data.getCount()) {
-                              throw new Error('The size of raw data expect to be ' + targetLength + ' but ' + data.length + ' detected');
-                           }
+                           assert.strictEqual(targetLength, data.getCount());
                            done();
                         } catch (err) {
                            done(err);
@@ -1143,12 +1105,8 @@ define([
                it('should return a valid dataset', function (done) {
                   source.query(new Query()).addCallbacks(function (ds) {
                      try {
-                        if (!(ds instanceof DataSet)) {
-                           throw new Error('That\'s no dataset');
-                        }
-                        if (ds.getAll().getCount() !== data.getCount()) {
-                           throw new Error('Wrong models count');
-                        }
+                        assert.instanceOf(ds, DataSet);
+                        assert.strictEqual(ds.getAll().getCount(), data.getCount());
                         done();
                      } catch (err) {
                         done(err);
@@ -1161,12 +1119,8 @@ define([
                it('should work with no query', function (done) {
                   source.query().addCallbacks(function (ds) {
                      try {
-                        if (!(ds instanceof DataSet)) {
-                           throw new Error('That\'s no dataset');
-                        }
-                        if (ds.getAll().getCount() !== data.getCount()) {
-                           throw new Error('Wrong models count');
-                        }
+                        assert.instanceOf(ds, DataSet);
+                        assert.strictEqual(ds.getAll().getCount(), data.getCount());
                         done();
                      } catch (err) {
                         done(err);
@@ -1181,9 +1135,7 @@ define([
                   source.setListModule(MyList);
                   source.query().addCallbacks(function (ds) {
                      try {
-                        if (!(ds.getAll() instanceof MyList)) {
-                           throw new Error('Wrong list instance');
-                        }
+                        assert.instanceOf(ds.getAll(), MyList);
                         done();
                      } catch (err) {
                         done(err);
@@ -1198,9 +1150,7 @@ define([
                   source.setModel(MyModel);
                   source.query().addCallbacks(function (ds) {
                      try {
-                        if (!(ds.getAll().at(0) instanceof MyModel)) {
-                           throw new Error('Wrong model instance');
-                        }
+                        assert.instanceOf(ds.getAll().at(0), MyModel);
                         done();
                      } catch (err) {
                         done(err);
