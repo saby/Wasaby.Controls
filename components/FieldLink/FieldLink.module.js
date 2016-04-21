@@ -241,11 +241,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
              commandDispatcher.declareCommand(this, 'clearAllItems', this._dropAllItems);
              commandDispatcher.declareCommand(this, 'showAllItems', this._showAllItems);
 
-             /* Если не передали конфигурацию диалога всех записей для автодополнения,
-              то по-умолчанию возьмём конфигурацию первого словаря */
-             if(!Object.keys(this._options.showAllConfig).length) {
-                this._options.showAllConfig = this._options.dictionaries[0];
-             }
+             this._options.showAllConfig = this._getShowAllConfig();
 
             /* При изменении выбранных элементов в поле связи - сотрём текст.
                Достаточно отслеживать изменение массива ключей,
@@ -267,6 +263,15 @@ define('js!SBIS3.CONTROLS.FieldLink',
              FieldLink.superclass.init.apply(this, arguments);
              this.getChildControlByName('fieldLinkMenu').setItems(this._options.dictionaries);
           },
+
+           _getShowAllConfig: function(){
+               /* Если не передали конфигурацию диалога всех записей для автодополнения,
+                то по-умолчанию возьмём конфигурацию первого словаря */
+               if(!Object.isEmpty(this._options.showAllConfig)) {
+                   return this._options.dictionaries[0];
+               }
+               return this._options.showAllConfig;
+           },
 
           /**
            * Обработчик нажатия на меню(элементы меню), открывает диалог выбора с соответствующим шаблоном
