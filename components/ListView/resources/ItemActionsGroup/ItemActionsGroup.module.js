@@ -232,12 +232,27 @@ define('js!SBIS3.CONTROLS.ItemActionsGroup',
          },
 
          _getItemTemplate : function(item) {
-            this._itemActionsButtons[item.get('name')] = {
+            var action = {
                isMainAction : item.get('isMainAction'),
-               handler: item.get('onActivated'),
                isVisible: true
             };
 
+
+            /*TODO придрот, Леха сделал клонирование записей и теперь функции теряются*/
+            var
+               data = this._dataSource._options.data,
+               key = item.getId(),
+               prop = item.getIdProperty();
+
+            if (data instanceof Array) {
+               for (var i = 0; i < data.length; i++) {
+                  if (data[i] instanceof Object && data[i][prop] == key) {
+                     action.handler = data[i]['onActivated'];
+                  }
+               }
+            }
+
+            this._itemActionsButtons[item.get('name')] = action;
             return dotTplFnForItem;
          },
 
