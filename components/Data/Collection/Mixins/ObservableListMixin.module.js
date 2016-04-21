@@ -148,14 +148,16 @@ define('js!SBIS3.CONTROLS.Data.Collection.ObservableListMixin', [
          },
 
          removeAt: function (parentFnc, index) {
+            var item = this._items[index];
+            parentFnc.call(this, index);
             this.notifyCollectionChange(
                IBindCollection.ACTION_REMOVE,
                [],
                0,
-               [this._items[index]],
+               [item],
                index
             );
-            parentFnc.call(this, index);
+
          },
 
          replace: function (parentFnc, item, at) {
