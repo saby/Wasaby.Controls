@@ -93,7 +93,7 @@ define('js!SBIS3.CONTROLS.Data.Projection.Collection', [
          /**
           * @member {Boolean} Генерация событий включена
           */
-         _eventsEnabled: true,
+         _eventRaising: true,
 
          /**
           * @member {Function} Обработчик события об изменении исходной коллекции
@@ -572,7 +572,7 @@ define('js!SBIS3.CONTROLS.Data.Projection.Collection', [
        * @param {Boolean} enabled Генерация событий влючена/выключена
        */
       setEventRaising: function(enabled) {
-         this._eventsEnabled = !!enabled;
+         this._eventRaising = !!enabled;
       },
 
       /**
@@ -580,7 +580,7 @@ define('js!SBIS3.CONTROLS.Data.Projection.Collection', [
        * @returns {Boolean}
        */
       isEventRaising: function() {
-         return this._eventsEnabled;
+         return this._eventRaising;
       },
 
       //endregion SBIS3.CONTROLS.Data.Projection.ICollection
@@ -593,7 +593,7 @@ define('js!SBIS3.CONTROLS.Data.Projection.Collection', [
        * @param {String} property Изменившееся свойство
        */
       notifyItemChange: function (item, property) {
-         if (!this._eventsEnabled) {
+         if (!this._eventRaising) {
             return;
          }
          this._notify(
@@ -1204,7 +1204,7 @@ define('js!SBIS3.CONTROLS.Data.Projection.Collection', [
        * @protected
        */
       _notifyCollectionChange: function (action, newItems, newItemsIndex, oldItems, oldItemsIndex) {
-         if (!this._eventsEnabled) {
+         if (!this._eventRaising) {
             return;
          }
          if (newItems.length || oldItems.length) {
@@ -1228,7 +1228,7 @@ define('js!SBIS3.CONTROLS.Data.Projection.Collection', [
        * @protected
        */
       _notifyCurrentChange: function (newCurrent, oldCurrent, newPosition, oldPosition) {
-         if (!this._eventsEnabled) {
+         if (!this._eventRaising) {
             return;
          }
          this._notify(
@@ -1421,7 +1421,7 @@ define('js!SBIS3.CONTROLS.Data.Projection.Collection', [
        * @private
        */
       onSourceCollectionItemChange: function (event, item, index, property) {
-         if (!this._eventsEnabled) {
+         if (!this._eventRaising) {
             return;
          }
          this._notify(
