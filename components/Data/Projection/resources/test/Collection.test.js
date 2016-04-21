@@ -633,6 +633,85 @@ define([
             });
          });
 
+         describe('.setEventRaising()', function() {
+            it('should enable and disable onCurrentChange', function() {
+               var handler = function () {
+                     fired = true;
+                  },
+                  fired;
+
+               projection.subscribe('onCurrentChange', handler);
+
+               fired = false;
+               projection.setEventRaising(true);
+               projection.moveToNext();
+               assert.isTrue(fired);
+
+               fired = false;
+               projection.setEventRaising(false);
+               projection.moveToNext();
+               assert.isFalse(fired);
+
+               projection.unsubscribe('onCurrentChange', handler);
+            });
+
+            it('should enable and disable onCollectionItemChange', function() {
+               var handler = function() {
+                     fired = true;
+                  },
+                  fired;
+
+               projection.subscribe('onCollectionItemChange', handler);
+
+               fired = false;
+               projection.setEventRaising(true);
+               projection.at(0).setSelected(true);
+               assert.isTrue(fired);
+
+               fired = false;
+               projection.setEventRaising(false);
+               projection.at(1).setSelected(true);
+               assert.isFalse(fired);
+
+               projection.unsubscribe('onCollectionItemChange', handler);
+            });
+
+            it('should enable and disable onCollectionChange', function() {
+               var handler = function() {
+                     fired = true;
+                  },
+                  fired;
+
+               projection.subscribe('onCollectionChange', handler);
+
+               fired = false;
+               projection.setEventRaising(true);
+               projection.getCollection().add({id: 'testA'});
+               assert.isTrue(fired);
+
+               fired = false;
+               projection.setEventRaising(false);
+               projection.getCollection().add({id: 'testB'});
+               assert.isFalse(fired);
+
+               projection.unsubscribe('onCollectionItemChange', handler);
+            });
+         });
+
+         describe('.isEventRaising()', function() {
+            it('should return true by default', function() {
+               assert.isTrue(projection.isEventRaising());
+            });
+            it('should return true if enabled', function() {
+               projection.setEventRaising(true);
+               assert.isTrue(projection.isEventRaising());
+            });
+            it('should return false if disabled', function() {
+               projection.setEventRaising(false);
+               assert.isFalse(projection.isEventRaising());
+            });
+         });
+
          describe('.concat()', function() {
             it('should throw an error anyway', function() {
                assert.throw(function() {
