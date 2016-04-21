@@ -495,16 +495,8 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
             this.subscribeTo(this._showAllButton, 'onActivated', function() {
                var showAllConfig;
 
-               /* Если передали конфигурацию диалога, то используем его, иначе используем дефолтный */
-               if(Object.keys(self._options.showAllConfig).length) {
-                  showAllConfig = self._options.showAllConfig;
-               } else {
-                  showAllConfig = $ws.core.merge({
-                     componentOptions: {
-                        chooserMode: self._options.chooserMode
-                     }
-                  }, DEFAULT_SHOW_ALL_CONFIG);
-               }
+               showAllConfig = self._getShowAllConfig();
+
 
                //FIXME и ещё один костыль до перевода пикера на фокусную систему
                self.hidePicker();
@@ -514,6 +506,20 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
          }
 
          this._notify('onListReady', this._list);
+      },
+
+
+      _getShowAllConfig: function(){
+         /* Если передали конфигурацию диалога, то используем его, иначе используем дефолтный */
+         if(Object.isEmpty(self._options.showAllConfig)) {
+            return this._options.showAllConfig;
+         } else {
+            return $ws.core.merge({
+               componentOptions: {
+                  chooserMode: self._options.chooserMode
+               }
+            }, DEFAULT_SHOW_ALL_CONFIG);
+         }
       },
 
       /**
