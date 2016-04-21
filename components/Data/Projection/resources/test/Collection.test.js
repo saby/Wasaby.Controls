@@ -698,6 +698,20 @@ define([
             });
          });
 
+         describe('.isEventsEnabled()', function() {
+            it('should return true by default', function() {
+               assert.isTrue(projection.isEventsEnabled());
+            });
+            it('should return true if enabled', function() {
+               projection.setEventsEnabled(true);
+               assert.isTrue(projection.isEventsEnabled());
+            });
+            it('should return false if disabled', function() {
+               projection.setEventsEnabled(false);
+               assert.isFalse(projection.isEventsEnabled());
+            });
+         });
+
          describe('.concat()', function() {
             it('should throw an error anyway', function() {
                assert.throw(function() {

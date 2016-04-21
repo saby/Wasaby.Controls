@@ -580,7 +580,7 @@ define('js!SBIS3.CONTROLS.Data.Projection.Collection', [
        * @returns {Boolean}
        */
       isEventsEnabled: function() {
-         this._eventsEnabled = !!enabled;
+         return this._eventsEnabled;
       },
 
       //endregion SBIS3.CONTROLS.Data.Projection.ICollection
