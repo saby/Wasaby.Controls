@@ -633,7 +633,7 @@ define([
             });
          });
 
-         describe('.setEventsEnabled()', function() {
+         describe('.setEventRaising()', function() {
             it('should enable and disable onCurrentChange', function() {
                var handler = function () {
                      fired = true;
@@ -643,12 +643,12 @@ define([
                projection.subscribe('onCurrentChange', handler);
 
                fired = false;
-               projection.setEventsEnabled(true);
+               projection.setEventRaising(true);
                projection.moveToNext();
                assert.isTrue(fired);
 
                fired = false;
-               projection.setEventsEnabled(false);
+               projection.setEventRaising(false);
                projection.moveToNext();
                assert.isFalse(fired);
 
@@ -664,12 +664,12 @@ define([
                projection.subscribe('onCollectionItemChange', handler);
 
                fired = false;
-               projection.setEventsEnabled(true);
+               projection.setEventRaising(true);
                projection.at(0).setSelected(true);
                assert.isTrue(fired);
 
                fired = false;
-               projection.setEventsEnabled(false);
+               projection.setEventRaising(false);
                projection.at(1).setSelected(true);
                assert.isFalse(fired);
 
@@ -685,12 +685,12 @@ define([
                projection.subscribe('onCollectionChange', handler);
 
                fired = false;
-               projection.setEventsEnabled(true);
+               projection.setEventRaising(true);
                projection.getCollection().add({id: 'testA'});
                assert.isTrue(fired);
 
                fired = false;
-               projection.setEventsEnabled(false);
+               projection.setEventRaising(false);
                projection.getCollection().add({id: 'testB'});
                assert.isFalse(fired);
 
@@ -698,17 +698,17 @@ define([
             });
          });
 
-         describe('.isEventsEnabled()', function() {
+         describe('.isEventRaising()', function() {
             it('should return true by default', function() {
-               assert.isTrue(projection.isEventsEnabled());
+               assert.isTrue(projection.isEventRaising());
             });
             it('should return true if enabled', function() {
-               projection.setEventsEnabled(true);
-               assert.isTrue(projection.isEventsEnabled());
+               projection.setEventRaising(true);
+               assert.isTrue(projection.isEventRaising());
             });
             it('should return false if disabled', function() {
-               projection.setEventsEnabled(false);
-               assert.isFalse(projection.isEventsEnabled());
+               projection.setEventRaising(false);
+               assert.isFalse(projection.isEventRaising());
             });
          });
 

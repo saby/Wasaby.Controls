@@ -571,7 +571,7 @@ define('js!SBIS3.CONTROLS.Data.Projection.Collection', [
        * Включает/выключает генерацию событий об изменении проекции
        * @param {Boolean} enabled Генерация событий влючена/выключена
        */
-      setEventsEnabled: function(enabled) {
+      setEventRaising: function(enabled) {
          this._eventsEnabled = !!enabled;
       },
 
@@ -579,7 +579,7 @@ define('js!SBIS3.CONTROLS.Data.Projection.Collection', [
        * Возвращает признак, включена ли генерация событий об изменении проекции
        * @returns {Boolean}
        */
-      isEventsEnabled: function() {
+      isEventRaising: function() {
          return this._eventsEnabled;
       },
 
