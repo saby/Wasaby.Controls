@@ -434,7 +434,10 @@ define('js!SBIS3.CONTROLS.ListView',
             _needSrollTopCompensation: false,
             _scrollWatcher : undefined,
             _searchParamName: undefined, //todo Проверка на "searchParamName" - костыль. Убрать, когда будет адекватная перерисовка записей (до 150 версии, апрель 2016)
-            _updateByReload: false //todo: Убрать в 150, когда будет правильный рендер изменившихся данных. Флаг, означающий то, что обновление происходит из-за перезагрузки данных.
+            _updateByReload: false, //todo: Убрать в 150, когда будет правильный рендер изменившихся данных. Флаг, означающий то, что обновление происходит из-за перезагрузки данных.
+            _scrollOnBottom: true, // TODO: Придрот для скролла вниз при первой подгрузке. Если включена подгрузка вверх то изначально нужно проскроллить контейнер вниз, 
+            //но после загрузки могут долетать данные (картинки в docviewer например), которые будут скроллить вверх.
+            _scrollOnBottomTimer: null //TODO: см. строчкой выше  
          },
 
          $constructor: function () {
@@ -519,6 +522,13 @@ define('js!SBIS3.CONTROLS.ListView',
                }
 
                this._scrollWatcher = new ScrollWatcher(scrollWatcherCfg);
+               if (this._options.infiniteScrollContainer){
+                  var disableScrollBottom = function(){
+                     self._scrollOnBottom = false;
+                     self._options.infiniteScrollContainer.off('touchmove wheel', disableScrollBottom);
+                  }
+                  this._options.infiniteScrollContainer.on('touchmove wheel', disableScrollBottom)
+               } 
                this._scrollWatcher.subscribe('onScroll', function(event, type){
                   //top || bottom
                   self._loadChecked((type === 'top' && self._options.infiniteScroll === 'up') ||
@@ -1305,6 +1315,13 @@ define('js!SBIS3.CONTROLS.ListView',
             this._notifyOnSizeChanged(true);
             this._drawResults();
             this._needToRedraw = true;
+         },
+         // TODO: скроллим вниз при первой загрузке, если пользователь никуда не скролил
+         _onResizeHandler: function(){
+            var self = this;
+            if (this._options.infiniteScroll == 'up' && this._scrollOnBottom){
+               self._scrollWatcher.scrollTo('bottom');
+            }
          },
          _removeItem: function(item){
             ListView.superclass._removeItem.call(this, item);
