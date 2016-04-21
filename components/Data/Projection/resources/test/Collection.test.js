@@ -633,6 +633,71 @@ define([
             });
          });
 
+         describe('.setEventsEnabled()', function() {
+            it('should enable and disable onCurrentChange', function() {
+               var handler = function () {
+                     fired = true;
+                  },
+                  fired;
+
+               projection.subscribe('onCurrentChange', handler);
+
+               fired = false;
+               projection.setEventsEnabled(true);
+               projection.moveToNext();
+               assert.isTrue(fired);
+
+               fired = false;
+               projection.setEventsEnabled(false);
+               projection.moveToNext();
+               assert.isFalse(fired);
+
+               projection.unsubscribe('onCurrentChange', handler);
+            });
+
+            it('should enable and disable onCollectionItemChange', function() {
+               var handler = function() {
+                     fired = true;
+                  },
+                  fired;
+
+               projection.subscribe('onCollectionItemChange', handler);
+
+               fired = false;
+               projection.setEventsEnabled(true);
+               projection.at(0).setSelected(true);
+               assert.isTrue(fired);
+
+               fired = false;
+               projection.setEventsEnabled(false);
+               projection.at(1).setSelected(true);
+               assert.isFalse(fired);
+
+               projection.unsubscribe('onCollectionItemChange', handler);
+            });
+
+            it('should enable and disable onCollectionChange', function() {
+               var handler = function() {
+                     fired = true;
+                  },
+                  fired;
+
+               projection.subscribe('onCollectionChange', handler);
+
+               fired = false;
+               projection.setEventsEnabled(true);
+               projection.getCollection().add({id: 'testA'});
+               assert.isTrue(fired);
+
+               fired = false;
+               projection.setEventsEnabled(false);
+               projection.getCollection().add({id: 'testB'});
+               assert.isFalse(fired);
+
+               projection.unsubscribe('onCollectionItemChange', handler);
+            });
+         });
+
          describe('.concat()', function() {
             it('should throw an error anyway', function() {
                assert.throw(function() {
