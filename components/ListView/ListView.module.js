@@ -1860,7 +1860,7 @@ define('js!SBIS3.CONTROLS.ListView',
           * @example
           * Частный случай вызова команды для создания нового узла иерархии внутри другого узла:
           * <pre>
-          * this.sendCommand('beginAdd', {model: {'Раздел@': true}, parentId: 'parentBranchId'});
+          * this.sendCommand('beginAdd', {parentId: 'parentBranchId'});
           * </pre>
           * Полный пример использования команды для создания новых элементов коллекции в иерархическом списке вы можете найти {@link http://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/list-settings/records-editing/edit-in-place/users/add-in-place-hierarchy/ здесь}.
           * @returns {*|$ws.proto.Deferred} В случае ошибки, вернёт Deferred с текстом ошибки.
