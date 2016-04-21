@@ -534,8 +534,6 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
 
       _reindexTree: function (field) {
          this._reindex();
-
-         this._indexTree = {};
          var self = this,
             parentKey;
          this.each(function (record) {
@@ -733,11 +731,22 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
             RecordSet.superclass.add.call(this, record);
          }
          this._reindex();
+      },
+
+      _reindex: function() {
+         this._resetIndexTree();
+         RecordSet.superclass._reindex.call(this);
+      },
+
+      /**
+       * сбрасывает индекс
+       */
+      _resetIndexTree: function(){
+         this._indexTree = {};
       }
-
       //endregion Protected methods
-
    });
+
 
    Di.register('collection.recordset', RecordSet);
 

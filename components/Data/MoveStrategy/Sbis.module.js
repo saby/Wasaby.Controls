@@ -15,7 +15,7 @@ define('js!SBIS3.CONTROLS.Data.MoveStrategy.Sbis', [
     * @example
     */
 
-   return BaseMoveStrategy.extend([],/** @lends SBIS3.CONTROLS.Data.MoveStrategy.Sbis.prototype */{
+   var SbisMoveStrategy = BaseMoveStrategy.extend([],/** @lends SBIS3.CONTROLS.Data.MoveStrategy.Sbis.prototype */{
       _moduleName: 'SBIS3.CONTROLS.Data.MoveStrategy.Sbis',
       $protected: {
          _options:{
@@ -40,7 +40,12 @@ define('js!SBIS3.CONTROLS.Data.MoveStrategy.Sbis', [
              * @cfg {String} Имя поля, по которому по умолчанию сортируются записи выборки. По умолчанию 'ПорНомер'.
              * @see move
              */
-            moveDefaultColumn: 'ПорНомер'
+            moveDefaultColumn: 'ПорНомер',
+
+            /**
+             * @cfg {List} .
+             */
+            listView: undefined
 
          },
 
@@ -55,9 +60,6 @@ define('js!SBIS3.CONTROLS.Data.MoveStrategy.Sbis', [
             this._options.moveContract = cfg.moveResource;
          }
 
-         if(!this._options.contract && !this._options.dataSource){
-            throw new Error('The Contract and the Data Source are not defined.');
-         }
          if (!this._options.contract) {
             this._options.contract = this._options.dataSource.getEndpoint().contract;
          }
@@ -88,6 +90,31 @@ define('js!SBIS3.CONTROLS.Data.MoveStrategy.Sbis', [
          return def.done().getResult();
       },
 
+      hierarhyMove: function(from, to) {
+         var self = this,
+            oldParents = [];
+         $ws.helpers.forEach(from, function (record) {
+            oldParents.push(record.get(self._options.hierField));
+         });
+         return SbisMoveStrategy.superclass.hierarhyMove.call(this, from, to).addCallback(function(){
+            if(self._options.listView) {
+               var items = self._options.listView.getItems();
+               if(items.getFormat().getIndexByValue('name', self._options.hierField + '$') !== -1) {
+                  to = (items.getIndex(to) !== -1) ? to : items.getRecordById(to.getId());
+
+                  if (to && to.has(self._options.hierField + '$')) {
+                     to.set(self._options.hierField + '$', true);
+                  }
+
+                  $ws.helpers.forEach(oldParents, function (parentId) {
+                     if (items.getChildItems(parentId).length === 0) {
+                        items.getRecordById(parentId).set(self._options.hierField + '$', false);
+                     }
+                  });
+               }
+            }
+         });
+      },
       /**
        * Возвращает параметры перемещения записей
        * @param {String} to Значение поля, в позицию которого перемещаем (по умолчанию - значение первичного ключа)
@@ -124,4 +151,6 @@ define('js!SBIS3.CONTROLS.Data.MoveStrategy.Sbis', [
          return preparedId;
       }
    });
+
+   return SbisMoveStrategy;
 });
