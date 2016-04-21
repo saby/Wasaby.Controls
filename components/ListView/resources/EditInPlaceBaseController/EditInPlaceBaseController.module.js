@@ -43,14 +43,18 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                   dataSource: undefined,
                   dataSet: undefined,
                   itemsContainer: undefined,
-                  getEditorOffset: undefined
+                  getEditorOffset: undefined,
+                  hierField: undefined
                },
                _eip: undefined,
                // Используется для хранения Deferred при сохранении в редактировании по месту.
                // Обязательно нужен, т.к. лишь таким способом можно обработать несколько последовательных вызовов endEdit и вернуть ожидаемый результат (Deferred).
                _savingDeferred: undefined,
                _editingRecord: undefined,
-               _eipHandlers: null
+               _eipHandlers: null,
+               //TODO: Данная переменная нужна для автодобавления по enter(mode autoadd), чтобы определить в какой папке происходит добавление элемента
+               //Вариант решения проблемы не самый лучший, и добавлен как временное решение для выпуска 3.7.3.150. В версию .200 придумать нормальное решение.
+               _lastParentBranch: undefined
             },
             $constructor: function () {
                this._publish('onItemValueChanged', 'onBeginEdit', 'onAfterBeginEdit', 'onEndEdit', 'onBeginAdd', 'onAfterEndEdit', 'onInitEditInPlace');
@@ -146,7 +150,9 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                      }
                   });
                } else if (editNextRow && this._options.modeAutoAdd) {
-                  this.add();
+                  this.add({
+                     parentId: this._lastParentBranch
+                  });
                } else {
                   this.endEdit(true);
                }
@@ -161,7 +167,7 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                if (options && options.isEdit) {
                   return this.edit(target, model, options)
                } else {
-                  return this.add(model, options);
+                  return this.add(options);
                }
             },
             edit: function (target, record) {
@@ -169,6 +175,7 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                   if (preparedRecord) {
                      this._eip.edit(target, preparedRecord);
                      this._notify('onAfterBeginEdit', preparedRecord);
+                     this._lastParentBranch = preparedRecord.get(this._options.hierField);
                      return preparedRecord;
                   }
                   return preparedRecord;
@@ -293,38 +300,48 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                   this._savingDeferred.callback();
                }
             },
-            add: function(model, options) {
+            add: function(options) {
                var
+                   target,
                    self = this,
-                   target = this._createAddTarget(options);
-               model = model || this._notify('onBeginAdd');
+                   modelOptions = options.model || this._notify('onBeginAdd');
+               this._lastParentBranch = options.parentId;
                return this.endEdit(true).addCallback(function() {
-                  return self._options.dataSource.create(model).addCallback(function (record) {
-                     target.attr('data-id', '' + record.getId());
-                     self._eip.edit(target, record);
+                  return self._options.dataSource.create(modelOptions).addCallback(function (model) {
+                     model.set(self._options.hierField, options.parentId);
+                     target = self._createAddTarget(options).attr('data-id', '' + model.getId());
+                     self._eip.edit(target, model);
                      // Todo разобраться в целесообразности этого пересчёта вообще, почему на десктопе всё работает?
                      // При начале отслеживания высоты строки, один раз нужно пересчитать высоту синхронно, это нужно для добавления по месту,
                      //т.к. при добавлении создаётся новая tr у которой изначально нет высоты и опции записи не могут верно спозиционироваться.
                      self._eip.recalculateHeight();
-                     self._notify('onAfterBeginEdit', record);
-                     return record;
+                     self._notify('onAfterBeginEdit', model);
+                     return model;
                   });
                });
             },
             _createAddTarget: function(options) {
                var
-                   footer,
-                   target;
-               if (this._options.columns) {
-                  target = $('<tr><td colspan="' + (this._options.columns.length + (this._options.ignoreFirstColumn ? 1 : 0)) + '"></td></tr>');
+                   lastTarget,
+                   currentTarget,
+                   addTarget = this._options.columns ?
+                       $('<tr><td colspan="' + (this._options.columns.length + (this._options.ignoreFirstColumn ? 1 : 0)) + '"></td></tr>') :
+                       $('<div>');
+
+               addTarget.addClass("js-controls-ListView__item controls-ListView__item");
+               if (options.parentId) {
+                  currentTarget = $('.controls-ListView__item[data-id="' + options.parentId + '"]', this._options.itemsContainer.get(0));
+                  if (options.addPosition !== 'top') {
+                     while (currentTarget.length) {
+                        lastTarget = currentTarget;
+                        currentTarget = $('.controls-ListView__item[data-parent="' + currentTarget.data('id') + '"]', this._options.itemsContainer.get(0)).last();
+                     }
+                  }
+                  addTarget.insertAfter(lastTarget || currentTarget);
                } else {
-                  target = $('<div>');
+                  addTarget[options.addPosition === 'top' ? 'prependTo ': 'appendTo'](this._options.itemsContainer);
                }
-               target.addClass("js-controls-ListView__item controls-ListView__item");
-               if (options && options.initiator) {
-                  footer = options.initiator.closest('.controls-TreeDataGridView__folderFooter');
-               }
-               return footer ? target.insertBefore(footer) : target.appendTo(this._options.itemsContainer);
+               return addTarget;
             },
             /**
              * Обработчик потери фокуса областью редактирования по месту

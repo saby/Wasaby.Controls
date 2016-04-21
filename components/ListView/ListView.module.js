@@ -1838,31 +1838,29 @@ define('js!SBIS3.CONTROLS.ListView',
                item = this._dataSet.getRecordByKey(id);
             this._notify('onItemActivate', {id: id, item: item});
          },
-    /**
-          * @typedef {Object} BeginEditOptions В этом типе данных сейчас определена всего одна опция. В дальнейшем набор опций может быть расширен.
-          * @property {jQuery} initiator Инициатор вызова команды. Это элемент, по которому определяется позиция добавления нового элемента коллекции в иерархическом представлении данных.
-          * Как правило, таким элементом является кнопка, инициирующая добавление нового элемента. Такую кнопку помещают в футер (см. опцию SBIS3.CONTROLS.DSMixin#footerTpl) узла иерархии.
-          * Подробный пример использования инициатора рассмотрен в разделе {@link http://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/list-settings/records-editing/edit-in-place/users/add-in-place-hierarchy/ Добавление по месту в иерархическом списке}.
-          */
          /**
-          * Добавляет новый элемента коллекции.
-          * @remark
-          * Команда применяется для создания нового элемента коллекции без использования диалога редактирования.
-          * Схожим функционалом обладает автоматическое добавление по месту представлений данных (см. опцию {@link editMode}).
-          * @param {BeginEditOptions} [options] Инициатор создания нового элемента коллекции. Параметр используется только в иерархических списках: {@link SBIS3.CONTROLS.TreeDataGridView}, {@link SBIS3.CONTROLS.TreeCompositeView} и любых других наследниках класса {@link SBIS3.CONTROLS.HierarchyDataGridView}.
-          * По положению инициатора определяется узел иерархии, в которой будет добавлен элемент коллекции.
-          * Подробный пример использования инициатора рассмотрен в разделе {@link http://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/list-settings/records-editing/edit-in-place/users/add-in-place-hierarchy/ Добавление по месту в иерархическом списке}.
-          * @param {SBIS3.CONTROLS.Data.Model|Object} [model] Модель элемента коллекции, значения полей которой будут использованы при создании нового элемента.
+          * @typedef {Object} BeginEditOptions
+          * @property {String} [parentId] Идентификатор узла, в котором будет происходить добавление.
+          * @property {String} [addPosition = bottom] Расположение строки с добавлением по месту.
+          * Опция может принимать значение 'top' или 'bottom'.
+          * @property {SBIS3.CONTROLS.Data.Model|Object} [model] Модель элемента коллекции, значения полей которой будут использованы при создании нового элемента.
           * В упрощенном варианте можно передать объект, свойствами которого будут поля создаваемого элемента коллекции. Например, установим создание нового элемента с предопределенным значением поля 'Наименование':
           * <pre>
           * {
           *    'Наименование': 'Компания "Тензор"'
           * }
           * </pre>
+          */
+         /**
+          * Добавляет новый элемента коллекции.
+          * @remark
+          * Команда применяется для создания нового элемента коллекции без использования диалога редактирования.
+          * Схожим функционалом обладает автоматическое добавление по месту представлений данных (см. опцию {@link editMode}).
+          * @param {BeginEditOptions} [options]
           * @example
           * Частный случай вызова команды для создания нового узла иерархии внутри другого узла:
           * <pre>
-          * this.sendCommand('beginAdd', {initiator: this.getContainer()}, {'Раздел@': true});
+          * this.sendCommand('beginAdd', {model: {'Раздел@': true}, parentId: 'parentBranchId'});
           * </pre>
           * Полный пример использования команды для создания новых элементов коллекции в иерархическом списке вы можете найти {@link http://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/list-settings/records-editing/edit-in-place/users/add-in-place-hierarchy/ здесь}.
           * @returns {*|$ws.proto.Deferred} В случае ошибки, вернёт Deferred с текстом ошибки.
@@ -1874,8 +1872,8 @@ define('js!SBIS3.CONTROLS.ListView',
           * @see cancelEdit
           * @see commitEdit
           */
-         _beginAdd: function(options, model) {
-            return this.showEip(null, model, options);
+         _beginAdd: function(options) {
+            return this.showEip(null, null, options);
          },
          /**
           * Запускает редактирование по месту.
