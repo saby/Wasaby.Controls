@@ -44,15 +44,21 @@ define('js!SBIS3.CONTROLS.OperationUnload', [
                   id : 'PDF',
                   title : rk('Список в PDF'),
                   pageOrientation: 1,
-                  saveListMethodName: undefined,
-                  saveDataSetMethodName: undefined,
+                  serverSideExport : true,
+                  binding: {
+                     saveList: undefined,
+                     saveDataSet: undefined
+                  },
                   icon : 'sprite:icon-24 icon-PDF2 icon-multicolor action-hover'
                },
                {
                   id : 'Excel',
                   title : rk('Список в Excel'),
-                  saveListMethodName: undefined,
-                  saveDataSetMethodName: undefined,
+                  serverSideExport : true,
+                  binding: {
+                     saveList: undefined,
+                     saveDataSet: undefined
+                  },
                   icon : 'sprite:icon-24 icon-Excel icon-multicolor action-hover'
                }
             ]
@@ -124,7 +130,7 @@ define('js!SBIS3.CONTROLS.OperationUnload', [
          var fullFilter,
              exporter,
              pageOrient = this._getPDFPageOrient(),
-             methodName = this._getCurrentItem().get('saveListMethodName');
+             methodName = this._getCurrentItem().get('binding').saveList;
          if (this._isClientUnload()) {
             OperationUnload.superclass.processSelectedPageSize.apply(this, arguments);
             return;
@@ -176,7 +182,7 @@ define('js!SBIS3.CONTROLS.OperationUnload', [
          var
              fullFilter,
              pageOrient = this._getPDFPageOrient(),
-             methodName = this._getCurrentItem().get('saveDataSetMethodName'),
+             methodName = this._getCurrentItem().get('binding').saveDataSet,
              exporter = new Exporter(methodName ? this._prepareExporterConfig() : cfg);
 
          if (this._isClientUnload()) {
@@ -185,13 +191,13 @@ define('js!SBIS3.CONTROLS.OperationUnload', [
          } else {
             if (methodName) {
                fullFilter = exporter.getFullFilter(cfg.dataSet.getCount(), true);
+               fullFilter['MethodName'] = methodName;
                fullFilter['FileName'] = this._getUnloadFileName();
+               fullFilter['Filter']['selectedIds'] = this._getView().getSelectedKeys();
                if (this._currentItem === 'PDF') {
                   delete fullFilter.HierarchyField;
                }
-               fullFilter['Filter'].selectedIds = this._getView().getSelectedKeys();
-               fullFilter['MethodName'] = methodName;
-               exporter.exportList(this._getUnloadFileName(), this._currentItem, undefined, fullFilter, pageOrient );
+               exporter.exportList(this._getUnloadFileName(), this._currentItem, undefined, fullFilter, pageOrient);
             } else {
                exporter.exportDataSet(this._getUnloadFileName(), this._currentItem, undefined, undefined, pageOrient);
             }
@@ -206,10 +212,7 @@ define('js!SBIS3.CONTROLS.OperationUnload', [
       },
       _isClientUnload : function() {
          //Для IOS всегда будем выгружать через сервер. Android прекрасно умеет выгружать
-         return !(this._getUnloadMethodName() || $ws._const.browser.isMobileSafari);
-      },
-      _getUnloadMethodName: function() {
-         return this._getCurrentItem().get(this._isSelectedState() ? 'saveDataSetMethodName' : 'saveListMethodName');
+         return !(this._getCurrentItem().get('serverSideExport') || $ws._const.browser.isMobileSafari);
       }
    });
 
