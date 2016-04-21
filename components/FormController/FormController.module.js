@@ -49,6 +49,7 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
          _saving: false,
          _loadingIndicator: undefined,
          _panel: undefined,
+         _needDestroyRecord: false,
          _options: {
             /**
              * @cfg {DataSource} Источник данных для диалога редактирования записи
@@ -141,9 +142,12 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
          });
          //Выписал задачу, чтобы при событии onBeforeClose стрелял метод у floatArea, который мы бы переопределили здесь,
          //чтобы не дергать getTopParent
-         this._panel.subscribe('onBeforeClose', function(event){
+         this._panel.subscribe('onBeforeClose', function(event, result){
             //Если попали сюда из метода _saveRecord, то this._saving = true и мы просто закрываем панель
             if (this._saving || !(this._options.record && this._options.record.isChanged() || this.isNewModel())){
+               if (this._needDestroyRecord && (!this._saving && !this._options.record.isChanged() || result === false)){
+                  this._options.record.destroy();
+               }
                this._saving = false;
                return;
             }
@@ -360,6 +364,7 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
       setRecord: function(record){
          this._options.record = this._panel._record = record;
          this._options.key = record.getKey();
+         this._needDestroyRecord = false;
          this._setContextRecord(record);
       },
 
@@ -373,6 +378,9 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
          else {
             hdl = this._options.dataSource.create(this._options.initValues).addCallback(function(record){
                self.setRecord(record);
+               if (record.getKey()){
+                  self._needDestroyRecord = true;
+               }
                return record;
             });
          }
