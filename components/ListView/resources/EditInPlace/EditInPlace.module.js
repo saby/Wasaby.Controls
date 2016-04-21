@@ -10,10 +10,6 @@ define('js!SBIS3.CONTROLS.EditInPlace',
       'js!SBIS3.CONTROLS.CompoundFocusMixin'
    ],
    function(Control, dotTplFn, CompoundActiveFixMixin, CompoundFocusMixin) {
-
-      //Высота отступа у редакторов от (верхнего + нижнего) края редактируемого элемента
-      var EDITOR_MARGINS = 6;
-
       'use strict';
 
       /**
@@ -166,7 +162,7 @@ define('js!SBIS3.CONTROLS.EditInPlace',
                    newHeight = 0,
                    editorHeight;
                $.each(this._editors, function(id, editor) {
-                  editorHeight = $(editor).height();
+                  editorHeight = $(editor).outerHeight(true);
                   if (editorHeight > newHeight) {
                      newHeight = editorHeight;
                   }
@@ -174,7 +170,7 @@ define('js!SBIS3.CONTROLS.EditInPlace',
                if (this._lastHeight !== newHeight) {
                   this._lastHeight = newHeight;
                   this._notify('onChangeHeight');
-                  this.getEditingItem().target.height(newHeight + EDITOR_MARGINS);
+                  this.getEditingItem().target.height(newHeight);
                }
             },
             _endTrackHeight: function() {
