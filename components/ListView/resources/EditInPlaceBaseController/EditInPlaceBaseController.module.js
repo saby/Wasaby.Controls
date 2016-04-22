@@ -308,7 +308,9 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                this._lastParentBranch = options.parentId;
                return this.endEdit(true).addCallback(function() {
                   return self._options.dataSource.create(modelOptions).addCallback(function (model) {
-                     model.set(self._options.hierField, options.parentId);
+                     if (self._options.hierField) {
+                        model.set(self._options.hierField, options.parentId);
+                     }
                      target = self._createAddTarget(options).attr('data-id', '' + model.getId());
                      self._eip.edit(target, model);
                      // Todo разобраться в целесообразности этого пересчёта вообще, почему на десктопе всё работает?
