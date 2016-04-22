@@ -418,6 +418,29 @@ define([
                list.destroy();
                done();
             });
+
+            it("should trigger an event with change item and list had changed yet",function(done){
+               var list = new ObservableList({
+                     items: items
+                  }),
+                  andDone = false,
+                  oldItem,
+                  at,
+                  handler = function(event, action, newItems, newItemsIndex, oldItems, oldItemsIndex) {
+                     if(list.getIndex(oldItems[0]) === -1) {
+                        done();
+                     }
+                  };
+
+               list.subscribe('onCollectionChange', handler);
+
+               at = 1;
+               oldItem = list.at(at);
+               list.removeAt(at);
+
+
+            });
+
          });
 
          describe('.replace()', function() {
