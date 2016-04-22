@@ -1,7 +1,8 @@
 /* global define, $ws */
 define('js!SBIS3.CONTROLS.Data.Source.Local', [
-   'js!SBIS3.CONTROLS.Data.Source.Base'
-], function (Base) {
+   'js!SBIS3.CONTROLS.Data.Source.Base',
+   'js!SBIS3.CONTROLS.Data.Serializer'
+], function (Base, Serializer) {
    'use strict';
 
    /**
@@ -53,7 +54,11 @@ define('js!SBIS3.CONTROLS.Data.Source.Local', [
             if ($ws.helpers.instanceOfMixin(data, 'SBIS3.CONTROLS.Data.ICloneable')) {
                return data.clone();
             } else {
-               return JSON.parse(JSON.stringify(data));
+               var serializer = new Serializer();
+               return JSON.parse(
+                  JSON.stringify(data, serializer.serialize),
+                  serializer.deserialize
+               );
             }
          } else {
             return data;
