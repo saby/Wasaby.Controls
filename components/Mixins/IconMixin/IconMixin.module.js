@@ -12,7 +12,6 @@ define('js!SBIS3.CONTROLS.IconMixin', ['html!SBIS3.CONTROLS.IconMixin/IconTempla
 
    var IconMixin = /**@lends SBIS3.CONTROLS.IconMixin.prototype  */{
       $protected: {
-         _iconClass: '',
          _oldIcon: '',
          _iconTemplate: IconTemplate,
          _options: {
