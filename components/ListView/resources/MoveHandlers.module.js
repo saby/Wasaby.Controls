@@ -170,7 +170,8 @@ define('js!SBIS3.CONTROLS.MoveHandlers', ['js!SBIS3.CORE.Dialog','js!SBIS3.CONTR
          ) {
             return new SbisMoveStrategy({
                dataSource: this._dataSource,
-               hierField: this._options.hierField
+               hierField: this._options.hierField,
+               listView: this
             });
          } else {
             return new BaseMoveStrategy({

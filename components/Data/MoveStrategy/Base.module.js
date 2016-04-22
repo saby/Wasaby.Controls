@@ -69,11 +69,19 @@ define('js!SBIS3.CONTROLS.Data.MoveStrategy.Base', [
          }
          var def = new $ws.proto.ParallelDeferred(),
             newParent = to ? to.getId() : null,
-            self = this;
-         $ws.helpers.forEach(from, function(record){
+            self = this,
+            record;
+
+         for (var i = 0, len = from.length; i < len; i++) {
+            record = from[i];
             record.set(self._options.hierField, newParent);
             def.push(self._options.dataSource.update(record));
-         });
+         }
+
+         if (record.getOwner()) {
+            record.getOwner()._reindexTree(self._options.hierField);
+         }
+
          return def.done().getResult();
 
       }

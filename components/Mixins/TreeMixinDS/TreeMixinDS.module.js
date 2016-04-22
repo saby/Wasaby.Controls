@@ -112,7 +112,7 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', ['js!SBIS3.CORE.Control',
 
       $constructor : function() {
          var filter = this.getFilter() || {};
-         this._publish('onSearchPathClick', 'onNodeExpand');
+         this._publish('onSearchPathClick', 'onNodeExpand', 'onNodeCollapse');
 
          if (this._options.expand) {
             filter['Разворот'] = 'С разворотом';
@@ -181,7 +181,7 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', ['js!SBIS3.CORE.Control',
          this._collapseChilds(key);
          delete(this._options.openedPath[key]);
          this._nodeClosed(key);
-         this._updateItemsToolbar()
+         this._updateItemsToolbar();
          this._notify('onNodeCollapse', key);
       },
 
