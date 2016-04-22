@@ -70,7 +70,8 @@ define('js!SBIS3.CONTROLS.Data.MoveStrategy.Sbis', [
             suffix = after ? 'После':'До',
             def = new $ws.proto.ParallelDeferred(),
             method = this._options.moveMethodPrefix + suffix,
-            params = this._getMoveParams(to, after);
+            params = this._getMoveParams(to, after),
+            parent = to.get(self._options.hierField);
          if (!this._orderProvider) {
             this._orderProvider = DI.resolve(
                'source.provider.sbis-business-logic', {
@@ -82,6 +83,7 @@ define('js!SBIS3.CONTROLS.Data.MoveStrategy.Sbis', [
          }
          $ws.helpers.forEach(from, function(record) {
             params['ИдО'] = self._prepareComplexId(record.getId());
+            record.set(self._options.hierField, parent);
             def.push(self._orderProvider.call(method, params, $ws.proto.BLObject.RETURN_TYPE_ASIS).addErrback(function (error) {
                $ws.single.ioc.resolve('ILogger').log('SBIS3.CONTROLS.Data.MoveStrategy.Sbis::move()', error);
                return error;
@@ -127,7 +129,7 @@ define('js!SBIS3.CONTROLS.Data.MoveStrategy.Sbis', [
       _getMoveParams: function(to, after) {
          var params = {
                'ПорядковыйНомер': this._options.moveDefaultColumn,
-               'Иерархия': null,
+               'Иерархия': this._options.hierField || null,
                'Объект': this._options.contract
             },
             id = this._prepareComplexId(to.getId());
