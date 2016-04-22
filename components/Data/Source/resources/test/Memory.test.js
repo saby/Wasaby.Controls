@@ -440,6 +440,48 @@ define([
                });
             });
 
+            it('should return keep methods', function (done) {
+               var data = [{
+                     a: function() {}
+                  }],
+                  source = new MemorySource({
+                     data: data
+                  });
+
+               source.query().addCallbacks(function (ds) {
+                  try {
+                     var rec = ds.getAll().at(0);
+                     assert.strictEqual(rec.get('a'), data[0].a);
+                     done();
+                  } catch (err) {
+                     done(err);
+                  }
+               }, function (err) {
+                  done(err);
+               });
+            });
+
+            it('should return keep modules of cloned instances', function (done) {
+               var data = [{
+                     a: new Model()
+                  }],
+                  source = new MemorySource({
+                     data: data
+                  });
+
+               source.query().addCallbacks(function (ds) {
+                  try {
+                     var rec = ds.getAll().at(0);
+                     assert.instanceOf(rec.get('a'), Model);
+                     done();
+                  } catch (err) {
+                     done(err);
+                  }
+               }, function (err) {
+                  done(err);
+               });
+            });
+
             it('should return a list instance of injected module', function (done) {
                var MyList = List.extend({});
                source.setListModule(MyList);
