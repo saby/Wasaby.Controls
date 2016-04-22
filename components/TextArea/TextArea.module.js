@@ -261,6 +261,11 @@ define('js!SBIS3.CONTROLS.TextArea', ['js!SBIS3.CONTROLS.TextBoxBase', 'html!SBI
          }
       },
 
+      setMaxLength: function(num) {
+         TextArea.superclass.setMaxLength.call(this, num);
+         this._inputField.attr('maxlength',num);
+      },
+
       _textAreaResize : function() {
          this._notifyOnSizeChanged(this, this);
       },
