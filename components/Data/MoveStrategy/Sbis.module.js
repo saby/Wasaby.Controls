@@ -100,10 +100,12 @@ define('js!SBIS3.CONTROLS.Data.MoveStrategy.Sbis', [
             if(self._options.listView) {
                var items = self._options.listView.getItems();
                if(items.getFormat().getIndexByValue('name', self._options.hierField + '$') !== -1) {
-                  to = (items.getIndex(to) !== -1) ? to : items.getRecordById(to.getId());
+                  if (to !== null) {
+                     to = (items.getIndex(to) !== -1) ? to : items.getRecordById(to.getId());
 
-                  if (to && to.has(self._options.hierField + '$')) {
-                     to.set(self._options.hierField + '$', true);
+                     if (to && to.has(self._options.hierField + '$')) {
+                        to.set(self._options.hierField + '$', true);
+                     }
                   }
 
                   $ws.helpers.forEach(oldParents, function (parentId) {
