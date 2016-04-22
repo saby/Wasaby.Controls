@@ -53,6 +53,15 @@ define('js!SBIS3.CONTROLS.Clickable', [], function() {
          });
       },
 
+      setCommandArgs: function(commandArgs) {
+         this._options.commandArgs = commandArgs;
+         this._notifyOnPropertyChanged('commandArgs');
+      },
+
+      getCommandArgs: function() {
+         return this._options.commandArgs;
+      },
+
       _notifyOnActivated : function(originalEvent) {
          this._notify('onActivated', originalEvent);
       },
