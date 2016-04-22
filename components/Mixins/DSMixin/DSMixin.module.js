@@ -959,10 +959,10 @@ define('js!SBIS3.CONTROLS.DSMixin', [
                   curAt.at++;
                }
             }
-            this._reviveItems();
          } else {
             this._notifyOnDrawItems();
          }
+         this._reviveItems();
       },
 
       _reviveItems : function() {
