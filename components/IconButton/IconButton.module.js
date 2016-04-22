@@ -53,11 +53,12 @@ define('js!SBIS3.CONTROLS.IconButton', ['js!SBIS3.CONTROLS.ButtonBase', 'js!SBIS
          }
       },
 
-      $constructor: function() {
+      $constructor: function () {
          /*TODO оставляем добавку класса через jquery
-         * чтобы избавиться - надо убрать зависимость от icons.css
-         * в котором прописаны поведение и цвета для иконок по ховеру*/
-         if (this._container.hasClass('controls-IconButton__round-border')) {
+          * чтобы избавиться - надо убрать зависимость от icons.css
+          * в котором прописаны поведение и цвета для иконок по ховеру*/
+         var className = this._container.get(0).className;
+         if (className && className.indexOf('controls-IconButton__round-border') >= 0) {
             this._container.removeClass('action-hover');
          }
       },
