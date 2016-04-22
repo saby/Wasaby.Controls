@@ -39,6 +39,19 @@ define('js!SBIS3.CONTROLS.OperationUnload', [
             title: rk('Выгрузить'),
             linkText: rk('Выгрузить'),
             caption: rk('Выгрузить'),
+            /**
+             * @typedef {Object} Binding
+             * @property {String} saveList Списочный метод БЛ, который будет использоваться при сохранении всего списка записей.
+             * @property {String} saveDataSet Списочный метод БЛ, который будет использоваться при сохранении выбранных записей.
+             */
+            /**
+             * @typedef {Object} Items
+             * @property {Binding} binding Имена методов БЛ, которые будут использованы при сохранении.
+             * @property {Boolean} serverSideExport Использовать серверную выгрузку.
+             */
+            /**
+             * @cfg {Items[]} Набор вариантов выгрузки.
+             */
             items: [
                {
                   id : 'PDF',
