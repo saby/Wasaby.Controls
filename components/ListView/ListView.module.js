@@ -1878,7 +1878,7 @@ define('js!SBIS3.CONTROLS.ListView',
           * @see commitEdit
           */
          _beginAdd: function(options) {
-            return this.showEip(null, null, options);
+            return this.showEip(null, null, options || {});
          },
          /**
           * Запускает редактирование по месту.
