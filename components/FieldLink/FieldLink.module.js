@@ -267,7 +267,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
            _getShowAllConfig: function(){
                /* Если не передали конфигурацию диалога всех записей для автодополнения,
                 то по-умолчанию возьмём конфигурацию первого словаря */
-               if(!Object.isEmpty(this._options.showAllConfig)) {
+               if(Object.isEmpty(this._options.showAllConfig)) {
                    return this._options.dictionaries[0];
                }
                return this._options.showAllConfig;
