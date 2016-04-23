@@ -100,6 +100,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
              _showAllLink: undefined,      /* Кнопка показа всех записей в пикере */
              _linkCollection: undefined,   /* Контрол отображающий выбранные элементы */
              _checkWidth: true,
+             _lastFieldLinkWidth: null,
              _afterFieldWrapper: undefined,
              _beforeFieldWrapper: undefined,
              _options: {
@@ -442,11 +443,22 @@ define('js!SBIS3.CONTROLS.FieldLink',
 
              FieldLink.superclass._onResizeHandler.apply(this, arguments);
 
-             if(!linkCollection.isPickerVisible()) {
+             if(!linkCollection.isPickerVisible() && this._needRedrawOnResize()) {
                 /* Почему надо звать redraw: поле связи может быть скрыто, когда в него проставили выбранные записи,
                    и просто пересчётом input'a тут не обойтись. Выполняться должно быстро, т.к. перерисовывается обычно всего 2-3 записи */
                 linkCollection.redraw();
              }
+          },
+
+          _needRedrawOnResize: function () {
+             var width = this._container[0].offsetWidth;
+
+             /* В целях оптимизации запоминаем ширину, чтобы перерисовка вызывалась только если изменилась ширина поля связи */
+             if(this._lastFieldLinkWidth !== width) {
+                this._lastFieldLinkWidth = width;
+                return true;
+             }
+             return false;
           },
 
           /**
