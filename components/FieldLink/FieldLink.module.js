@@ -249,7 +249,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
                Это всё актуально для поля связи без включенной опции alwaysShowTextBox,
                если она включена, то логика стирания текста обрабатывается по-другому. */
             this.subscribe('onSelectedItemsChange', function() {
-               if(this.getText()) {
+               if(this.getText() && !this._options.alwaysShowTextBox) {
                   this.setText('');
                }
             }.bind(this));
