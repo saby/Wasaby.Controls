@@ -325,9 +325,19 @@ define('js!SBIS3.CONTROLS.FieldLink',
            * @see setDictionaries
            */
           showSelector: function(template, componentOptions) {
+             //FIXME и ещё один костыль до перевода пикера на фокусную систему
+             if(this.isPickerVisible()) {
+                this.hidePicker();
+             }
+
+             this._showChooser(template, componentOptions)
+
+          },
+
+          _getAdditionalChooserConfig: function () {
              var oldRecArray = [],
-                 selectedKeys = this._isEmptySelection() ? [] : this.getSelectedKeys(),
-                 selectedItems, oldRec;
+                selectedKeys = this._isEmptySelection() ? [] : this.getSelectedKeys(),
+                selectedItems, oldRec;
 
              if(this._options.oldViews) {
                 selectedItems = this.getSelectedItems();
@@ -342,23 +352,13 @@ define('js!SBIS3.CONTROLS.FieldLink',
                 }
              }
 
-             //FIXME и ещё один костыль до перевода пикера на фокусную систему
-             if(this.isPickerVisible()) {
-                this.hidePicker();
-             }
-
-             this._showChooser(
-                 template,
-                 componentOptions,
-                 /* Дополнительный конфиг, который нужно прокинуть в selector */
-                 {
-                    /* FIXME Для старых предствелений, удалить */
-                    currentValue: selectedKeys,
-                    currentSelectedKeys: selectedKeys,
-                    selectorFieldLink: true,
-                    multiSelect: this._options.multiselect,
-                    selectedRecords: oldRecArray
-                 });
+             return {
+                currentValue: selectedKeys,
+                currentSelectedKeys: selectedKeys,
+                selectorFieldLink: true,
+                multiSelect: this._options.multiselect,
+                selectedRecords: oldRecArray
+             };
           },
 
           _getLinkCollection: function() {
