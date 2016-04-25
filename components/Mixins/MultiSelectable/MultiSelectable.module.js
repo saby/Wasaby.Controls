@@ -144,6 +144,17 @@ define('js!SBIS3.CONTROLS.MultiSelectable', ['js!SBIS3.CONTROLS.Data.Collection.
       after : {
          init: function () {
             this._drawSelectedItems(this._options.selectedKeys);
+         },
+         reload: function(loader) {
+            var self = this;
+
+            if(loader && this._options.selectedItems) {
+               loader.addCallback($ws.helpers.forAliveOnly(function() {
+                  /* Очистим и заного поищем выделенные элементы, т.к. dataSet был перезаписан */
+                  self._options.selectedItems.clear();
+                  self._setSelectedItems();
+               }, self));
+            }
          }
       },
       /**
