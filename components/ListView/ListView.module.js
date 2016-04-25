@@ -553,6 +553,7 @@ define('js!SBIS3.CONTROLS.ListView',
             var args = ListView.superclass._buildTplArgs.apply(this, arguments);
             args.multiselect = this._options.multiselect;
             args.decorators = this._decorators;
+            args.colorField = this._options.colorField;
             return args;
          },
 
