@@ -80,7 +80,7 @@ define('js!SBIS3.CONTROLS.DialogActionBase', ['js!SBIS3.CONTROLS.ActionBase', 'j
             Component = Dialog;
          }
 
-         if (this._dialog){
+         if (this._dialog && !this._dialog.isAutoHide()){
             $ws.core.merge(this._dialog._options, config);
             this._dialog.reload();
             return;
