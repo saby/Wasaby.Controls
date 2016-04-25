@@ -1,20 +1,20 @@
 .controls-ListView {
-  & > .controls-TreeView__childContainer {
-    display: block;
-  }
+   & > .controls-TreeView__childContainer {
+      display: block;
+   }
 
-  .controls-TreeView__item {
-    overflow: hidden;
-    position: relative;
+   .controls-TreeView__item {
+      overflow: hidden;
+      position: relative;
 
 
-  }
+   }
 
-  .controls-TreeView__childContainer {
-    display: none;
-    list-style: none;
-    padding: @tree-view-child-container-padding;
-  }
+   .controls-TreeView__childContainer {
+      display: none;
+      list-style: none;
+      padding: @tree-view-child-container-padding;
+   }
 }
 
 .controls-TreeView__expand {
@@ -53,7 +53,43 @@
    & + .controls-TreeView__itemContent {
       margin: @tree-view-item-content-margin;
    }
+
+   &:after {
+      content: '\00a0';
+   }
 }
 .controls-TreeView__expand__leaf, .controls-TreeView__expand__leaf:hover {
    background: none !important;
+}
+
+.controls-TreeView {
+   .controls-ListView__item {
+      &.controls-ListView__hoveredItem {
+         background-color: transparent;
+      }
+   }
+   .controls-ListView__itemCheckBox {
+      &.controls-ListView__itemCheckBox__multi {
+         background: @check-box-icon-checked-bg !important;
+         &:hover {
+            background: @check-box-icon-checked-bg !important;
+         }
+      }
+   }
+}
+.dragdropBody {
+   .controls-TreeView {
+      .controls-ListView__item-type-node.controls-ListView__hoveredItem {
+         &:not(.controls-ListView__item__selected):not(.controls-DragNDrop__insertAfter):not(.controls-DragNDrop__insertBefore) {
+            background: @drag-and-drop-hover-bg;
+            > td {
+               background: @drag-and-drop-hover-bg;
+            }
+         }
+      }
+   }
+}
+
+.controls-TreeView__item {
+   line-height: 24px;
 }

@@ -108,8 +108,8 @@ define('js!SBIS3.CONTROLS.TreeCompositeView', ['js!SBIS3.CONTROLS.TreeDataGridVi
          }
          return res;
       },
-      _getItemTemplate: function(item) {
-         var resultTpl, dotTpl;
+      _getItemTemplate: function(itemProj) {
+         var resultTpl, dotTpl, item = itemProj.getContents();
             switch (this._options.viewMode) {
                case 'table': resultTpl = TreeCompositeView.superclass._getItemTemplate.call(this, item); break;
                case 'list': {
@@ -171,7 +171,8 @@ define('js!SBIS3.CONTROLS.TreeCompositeView', ['js!SBIS3.CONTROLS.TreeDataGridVi
             return resultTpl;
       },
 
-      _getTargetContainer: function (item) {
+      _getTargetContainer: function (itemProj) {
+         var item = itemProj.getContents();
          if (this.getViewMode() != 'table' && item.get(this._options.hierField + '@')) {
             return  $('.controls-CompositeView__foldersContainer',this._container);
          }
@@ -233,7 +234,7 @@ define('js!SBIS3.CONTROLS.TreeCompositeView', ['js!SBIS3.CONTROLS.TreeDataGridVi
                   self.redrawItem(record);
                } else { //Иначе - удаляем запись
                   currentDataSet.removeAt(currentDataSet.getIndexById(row.key));
-                  self._destroyFolderFooter([row.key]);
+                  self._destroyItemsFolderFooter([row.key]);
                   self._ladderCompare(environment);
                   row.$row.remove();
                   //Если количество записей в текущем DataSet меньше, чем в обновленном, то добавляем в него недостающую запись

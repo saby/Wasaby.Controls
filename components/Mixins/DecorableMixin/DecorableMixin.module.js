@@ -68,16 +68,16 @@ define('js!SBIS3.CONTROLS.DecorableMixin', [
          destroy: function () {
             this._decorators.destroy();
          },
-         _redraw: function () {
+         redraw: function () {
             this._decorators.update(this);
          }
       },
       after: {
          //For DSMixin
-         _buildTplArgs: function(item, prev) {
+         /*_buildTplArgs: function(item, prev) {
             prev.decorators = this._decorators;
             prev.color = this._options.colorField ? item.get(this._options.colorField) : '';
-         }
+         }*/
       },
 
       /**
