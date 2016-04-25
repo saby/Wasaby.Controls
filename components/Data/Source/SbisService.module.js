@@ -534,7 +534,11 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
             delete meta[moreProp];
             query.meta(meta);
          }
-         if (offset === 0 && limit === undefined) {
+
+         if (
+            offset === 0 &&
+            (limit === undefined || limit === null)
+         ) {
             return null;
          }
          return {
