@@ -188,7 +188,7 @@ define('js!SBIS3.CONTROLS.TextArea', ['js!SBIS3.CONTROLS.TextBoxBase', 'html!SBI
 
       _setEnabled: function(state){
          TextArea.superclass._setEnabled.call(this, state);
-         this._inputField.attr('visibility', !state)
+         this._inputField.toggleClass('ws-invisible', !state)
          this._disabledWrapper.toggleClass('ws-hidden', state);
          if (!state){
             this._inputField.attr('readonly', 'readonly')
