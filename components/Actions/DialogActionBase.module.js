@@ -126,13 +126,13 @@ define('js!SBIS3.CONTROLS.DialogActionBase', ['js!SBIS3.CONTROLS.ActionBase', 'j
          //TODO Зачем асинхронщина?
          if (notifyResult instanceof $ws.proto.Deferred){
             notifyResult.addCallback(function(result){
-               if (result !== false){
+               if (result !== OpenDialogAction.ACTION_MANUAL){
 
                }
             })
          }
 
-         if (notifyResult !== false){
+         if (notifyResult !== OpenDialogAction.ACTION_MANUAL){
             if ($ws.helpers.instanceOfMixin(collection, 'SBIS3.CONTROLS.DSMixin')){
                collection.reload();
             }
@@ -146,22 +146,22 @@ define('js!SBIS3.CONTROLS.DialogActionBase', ['js!SBIS3.CONTROLS.ActionBase', 'j
       },
 
       onRead: function(event, record){
-         var notifyResult = this._notify('onRead', record);
          this._onRead(record);
+         var notifyResult = this._notify('onRead', record);
       },
       _onRead: function(record){
       },
 
       onDestroy: function(event){
-         var notifyResult = this._notify('onDestroy');
          this._onDestroy();
+         var notifyResult = this._notify('onDestroy');
       },
       _onDestroy: function(){
       },
 
       onCreate: function(event, record){
-         var notifyResult = this._notify('onCreate', record);
          this._onCreate();
+         var notifyResult = this._notify('onCreate', record);
       },
       _onCreate: function(){
       },
@@ -170,5 +170,7 @@ define('js!SBIS3.CONTROLS.DialogActionBase', ['js!SBIS3.CONTROLS.ActionBase', 'j
          return {}
       }
    });
+   OpenDialogAction.ACTION_MANUAL = 'manual';
+   OpenDialogAction.ACTION_BASE = 'base';
    return OpenDialogAction;
 });

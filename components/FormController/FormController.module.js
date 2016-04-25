@@ -126,8 +126,11 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
 
       $constructor: function() {
          this._publish('onSubmit', 'onFail', 'onSuccess', 'onRead', 'onUpdate', 'onDestroy', 'onCreate');
-         $ws.single.CommandDispatcher.declareCommand(this, 'submit', this.submit);
+         $ws.single.CommandDispatcher.declareCommand(this, 'submit', this.update);//в будущем deprecated
          $ws.single.CommandDispatcher.declareCommand(this, 'read', this.read);
+         $ws.single.CommandDispatcher.declareCommand(this, 'update', this.update);
+         $ws.single.CommandDispatcher.declareCommand(this, 'destroy', this._destroyRecord);
+         $ws.single.CommandDispatcher.declareCommand(this, 'create', this._createRecord);
          this._panel = this.getTopParent();
          if (this._options.dataSource){
             this._runQuery();
@@ -142,8 +145,7 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
             //Если попали сюда из метода _saveRecord, то this._saving = true и мы просто закрываем панель
             if (this._saving || !(this._options.record && this._options.record.isChanged() || this.isNewModel())){
                if (this._needDestroyRecord && this._options.record && (!this._saving && !this._options.record.isChanged() || result === false)){
-                  this._options.record.destroy();
-                  this._notify('onDestroy')
+                  this._destroyRecord();
                }
                this._saving = false;
                return;
@@ -166,7 +168,7 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
        * });
        * </pre>
        */
-      submit: function(closePanelAfterSubmit){
+      update: function(closePanelAfterSubmit){
          return this._saveRecord(true, closePanelAfterSubmit);
       },
 
@@ -370,6 +372,12 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
          this._needDestroyRecord = false;
          this._setContextRecord(record);
       },
+
+      _destroyRecord: function(){
+         this._options.record.destroy();
+         this._notify('onDestroy')
+      },
+
       _runQuery: function() {
          var self = this,
             hdl;
@@ -381,7 +389,6 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
             hdl = this._options.dataSource.create(this._options.initValues).addCallback(function(record){
                self._notify('onCreate', record);
                self.setRecord(record);
-               self._options.newModel = record.getKey() === null || self._options.newModel;
                if (record.getKey()){
                   self._needDestroyRecord = true;
                }
@@ -395,6 +402,17 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
          });
 
          return hdl;
+      },
+      _createRecord: function(){
+         var self = this;
+         return this._options.dataSource.create(this._options.initValues).addCallback(function(record){
+            self._notify('onCreate', record);
+            self.setRecord(record);
+            if (record.getKey()){
+               self._needDestroyRecord = true;
+            }
+            return record;
+         });
       }
    });
 
