@@ -364,10 +364,11 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
             res = this._notify('onItemClick', id, data, target);
             if (res instanceof $ws.proto.Deferred) {
                res.addCallback(function(result) {
-                  if (!result) {
+                  if (result !== false) {
                      self._elemClickHandlerInternal(data, id, target);
                      elClickHandler && elClickHandler.call(self, id, data, target);
                   }
+                  return result;
                });
             } else if (res !== false) {
                this._elemClickHandlerInternal(data, id, target);

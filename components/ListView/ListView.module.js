@@ -867,6 +867,7 @@ define('js!SBIS3.CONTROLS.ListView',
 
          _elemClickHandler: function (id, data, target) {
             var $target = $(target),
+                self = this,
                 onItemClickResult;
 
             if (this._options.multiselect) {
@@ -880,7 +881,15 @@ define('js!SBIS3.CONTROLS.ListView',
             else {
                onItemClickResult = this._notifyOnItemClick(id, data, target);
             }
-            if (onItemClickResult !== false){
+            if (onItemClickResult instanceof $ws.proto.Deferred) {
+               onItemClickResult.addCallback(function (result) {
+                  if (result !== false) {
+                     self.setSelectedKey(id);
+                  }
+                  return result;
+               });
+            }
+            else if (onItemClickResult !== false) {
                this.setSelectedKey(id);
             }
          },
@@ -896,10 +905,11 @@ define('js!SBIS3.CONTROLS.ListView',
                 res = this._notify('onItemClick', id, data, target);
             if (res instanceof $ws.proto.Deferred) {
                res.addCallback(function(result) {
-                  if (!result) {
+                  if (result !== false) {
                      self._elemClickHandlerInternal(data, id, target);
                      elClickHandler && elClickHandler.call(self, id, data, target);
                   }
+                  return result;
                });
             } else if (res !== false) {
                this._elemClickHandlerInternal(data, id, target);
