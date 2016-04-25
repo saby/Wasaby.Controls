@@ -258,7 +258,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
             if(this._options.oldViews) {
                $ws.single.ioc.resolve('ILogger').log('FieldLink', 'В 3.8.0 будет удалена опция oldViews, а так же поддержка старых представлений данных на диалогах выбора.');
             }
-         },
+          },
 
           init: function() {
              FieldLink.superclass.init.apply(this, arguments);
@@ -379,6 +379,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
 
              if(result && result.length) {
                 isModel = $ws.helpers.instanceOfModule(result[0], 'SBIS3.CONTROLS.Data.Model');
+                this.setText('');
 
                 if(isModel) {
                    this.addSelectedItems(result)
