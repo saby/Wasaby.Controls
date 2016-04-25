@@ -511,12 +511,13 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
 
       _getShowAllConfig: function(){
          /* Если передали конфигурацию диалога, то используем его, иначе используем дефолтный */
-         if(Object.isEmpty(self._options.showAllConfig)) {
+         /* Если передали конфигурацию диалога, то используем его, иначе используем дефолтный */
+         if(!Object.isEmpty(this._options.showAllConfig)) {
             return this._options.showAllConfig;
          } else {
             return $ws.core.merge({
                componentOptions: {
-                  chooserMode: self._options.chooserMode
+                  chooserMode: this._options.chooserMode
                }
             }, DEFAULT_SHOW_ALL_CONFIG);
          }
