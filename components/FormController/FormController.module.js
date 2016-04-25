@@ -125,7 +125,7 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
       },
 
       $constructor: function() {
-         this._publish('onSubmit', 'onFail', 'onSuccess');
+         this._publish('onSubmit', 'onFail', 'onSuccess', 'onRead', 'onUpdate', 'onDestroy', 'onCreate');
          $ws.single.CommandDispatcher.declareCommand(this, 'submit', this.submit);
          $ws.single.CommandDispatcher.declareCommand(this, 'read', this.read);
          this._panel = this.getTopParent();
@@ -143,6 +143,7 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
             if (this._saving || !(this._options.record && this._options.record.isChanged() || this.isNewModel())){
                if (this._needDestroyRecord && this._options.record && (!this._saving && !this._options.record.isChanged() || result === false)){
                   this._options.record.destroy();
+                  this._notify('onDestroy')
                }
                this._saving = false;
                return;
@@ -211,7 +212,7 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
             def = this._options.dataSource.update(this._options.record);
             this._showLoadingIndicator();
             dResult.dependOn(def.addCallbacks(function (result) {
-               self._notify('onSuccess', result);
+               self._notify('onUpdate', self._options.record);
                self._options.newModel = false;
                if (closePanelAfterSubmit) {
                   self._panel.ok();
@@ -253,6 +254,7 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
          key = key || this._options.key;
          this._showLoadingIndicator(rk('Загрузка'));
          return this._options.dataSource.read(key).addCallback(function (record) {
+            self._notify('onRead', record);
             self.setRecord(record);
             return record;
          }).addBoth(function (r) {
@@ -377,7 +379,8 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
          }
          else {
             hdl = this._options.dataSource.create(this._options.initValues).addCallback(function(record){
-               self.setRecord(record, true);
+               self._notify('onCreate', record);
+               self.setRecord(record);
                self._options.newModel = record.getKey() === null || self._options.newModel;
                if (record.getKey()){
                   self._needDestroyRecord = true;

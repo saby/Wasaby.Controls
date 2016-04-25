@@ -39,9 +39,12 @@ define('js!SBIS3.CONTROLS.DialogActionBase', ['js!SBIS3.CONTROLS.ActionBase', 'j
              * @variant floatArea во всплывающей панели
              * Режим отображения компонента редактирования - в диалоге или панели
              */
-            mode: 'dialog'
+            mode: 'dialog',
+            //TODO переименовать
+            linkedObject: undefined
          },
-         _dialog: undefined
+         _dialog: undefined,
+         _formController: undefined
       },
 
       execute : function(meta) {
@@ -91,10 +94,76 @@ define('js!SBIS3.CONTROLS.DialogActionBase', ['js!SBIS3.CONTROLS.ActionBase', 'j
             return;
          }
 
-         this._dialog = new Component(config).subscribe('onAfterClose', function (e, meta) {
-            self._dialog = undefined;
-            self._notifyOnExecuted(meta, this._record);
-         });
+         config.componentOptions.handlers = this._getFormControllerHandlers();
+         config.handlers = {
+            onAfterClose: function (e, meta) {
+               self._dialog = undefined;
+               self._notifyOnExecuted(meta, this._record);
+            },
+            onBeforeShow: function () {
+               self._formController = this._getTemplateComponent();
+            }
+         };
+
+         this._dialog = new Component(config);
+      },
+
+      _getFormControllerHandlers: function(){
+         return {
+            onRead: this.onRead.bind(this),
+            onUpdate: this.onUpdate.bind(this),
+            onDestroy: this.onDestroy.bind(this),
+            onCreate: this.onCreate.bind(this)
+         }
+      },
+
+      onUpdate: function(event, record){
+         var notifyResult = this._notify('onUpdate', record),
+             collection = this._options.linkedObject;
+         if (notifyResult === undefined){
+            notifyResult = this._onUpdate(record);
+         }
+         //TODO Зачем асинхронщина?
+         if (notifyResult instanceof $ws.proto.Deferred){
+            notifyResult.addCallback(function(result){
+               if (result !== false){
+
+               }
+            })
+         }
+
+         if (notifyResult !== false){
+            if ($ws.helpers.instanceOfMixin(collection, 'SBIS3.CONTROLS.DSMixin')){
+               collection.reload();
+            }
+            else if ($ws.helpers.instanceOfMixin(collection, 'SBIS3.CONTROLS.Data.Collection.IList')){
+               //Обновляем поля из пришедшего рекорда в linkerObject
+            }
+         }
+      },
+
+      _onUpdate: function(record){
+      },
+
+      onRead: function(event, record){
+         var notifyResult = this._notify('onRead', record);
+         this._onRead(record);
+      },
+      _onRead: function(record){
+      },
+
+      onDestroy: function(event){
+         var notifyResult = this._notify('onDestroy');
+         this._onDestroy();
+      },
+      _onDestroy: function(){
+      },
+
+      onCreate: function(event, record){
+         var notifyResult = this._notify('onCreate', record);
+         this._onCreate();
+      },
+      _onCreate: function(){
       },
 
       _buildComponentConfig: function() {
