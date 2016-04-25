@@ -218,7 +218,7 @@ define('js!SBIS3.CONTROLS.OperationUnload', [
                fullFilter = exporter.getFullFilter(cfg.dataSet.getCount(), true);
                fullFilter['MethodName'] = methodName;
                fullFilter['FileName'] = this._getUnloadFileName();
-               fullFilter['Filter'] = filter.getRawData();
+               fullFilter['Filter'] = filter;
                if (this._currentItem === 'PDF') {
                   delete fullFilter.HierarchyField;
                }
