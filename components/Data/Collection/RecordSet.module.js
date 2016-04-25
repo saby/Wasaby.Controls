@@ -23,6 +23,22 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
       $protected: {
          _options: {
             /**
+             * @typedef {Object} OperationOptions
+             * @property {Boolean} [add=true] Добавлять новые записи
+             * @property {Boolean} [remove=false] Удалять отсутствующие записи
+             * @property {Boolean} [merge=true] Объединять одинаковые записи
+             */
+
+            /**
+             * @typedef {String} RecordStatus
+             * @variant actual Актуальные записи
+             * @variant all Все записи
+             * @variant created Новые записи
+             * @variant deleted Удаленные записи
+             * @variant changed Измененные записи
+             */
+
+            /**
              * @cfg {String|Function} Конструктор модели
              * @see getModel
              * @see SBIS3.CONTROLS.Data.Model
@@ -117,6 +133,8 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
          });
       },
 
+      //endregion SBIS3.CONTROLS.Data.SerializableMixin
+
       //region SBIS3.CONTROLS.Data.FormattableMixin
 
       setRawData: function(data) {
@@ -180,8 +198,57 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
 
       //endregion SBIS3.CONTROLS.Data.FormattableMixin
 
+      //region SBIS3.CONTROLS.Data.Collection.IEnumerable
+
+      /**
+       * Перебирает все записи рекордсета.
+       * @param {Function} iterateCallback Ф-я обратного вызова, аргументами будут  переданы запись и ее позиция
+       * @param {RecordStatus} [status=actual] Селектор состояния выбираемых записей
+       */
+      each: function (iterateCallback, status) {
+         var length = this.getCount();
+         for (var i = 0; i < length; i++) {
+            var record = this.at(i);
+            switch (status) {
+               case 'all':
+                  iterateCallback.call(this, record, i);
+                  break;
+               case 'created':
+                  if (record.isCreated()) {
+                     iterateCallback.call(this, record, i);
+                  }
+                  break;
+               case 'deleted':
+                  if (record.isDeleted()) {
+                     iterateCallback.call(this, record, i);
+                  }
+                  break;
+               case 'changed':
+                  if (record.isChanged()) {
+                     iterateCallback.call(this, record, i);
+                  }
+                  break;
+               default :
+                  if (!record.isDeleted()) {
+                     iterateCallback.call(this, record, i);
+                  }
+            }
+         }
+      },
+
+      //endregion SBIS3.CONTROLS.Data.Collection.IEnumerable
+
       //region Public methods
 
+      /**
+       * Синхронизирует изменения в рекордсете с источником данных следующим образом:
+       * - записи, отмеченные удаленными через removeRecord() - удаляются в источнике данных;
+       * - обновленные записи - обновляются в источнике данных;
+       * - добавленные записи - добавляются в источник данных.
+       * @param {SBIS3.CONTROLS.Data.Source.ISource} dataSource Источник данных
+       * @returns {$ws.proto.Deferred} Асинхронный результат выполнения
+       * @deprecated метод будет удален в 3.7.4.
+       */
       saveChanges: function(dataSource, added, changed, deleted) {
          //TODO: refactor after migration to SBIS3.CONTROLS.Data.Source.ISource
          added = added === undefined ? true : added;
@@ -243,18 +310,19 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
 
       /**
        * Возвращает запись по ключу
-       * @param id
-       * @returns {*}
+       * @param {String|Number} id
+       * @returns {SBIS3.CONTROLS.Data.Model}
        */
       getRecordById: function (id) {
          return this.at(
             this.getIndexByValue(this._options.idProperty, id)
          );
       },
+
       /**
        * Возвращает запись по ключу
-       * @param key
-       * @returns {*}
+       * @param {String|Number} key
+       * @returns {SBIS3.CONTROLS.Data.Model}
        * @deprecated метод будет удален в 3.7.4 используйте getRecordById
        */
       getRecordByKey: function (key) {
@@ -284,7 +352,11 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
       },
 
       /**
-       * Возвращает метаданные
+       * Возвращает метаданные.
+       * @remark
+       * Существуют два служебных поля в метаданных:
+       * - path - путь для хлебных крошек, возвращается как {@link SBIS3.CONTROLS.Data.Collection.RecordSet};
+       * - results - строка итогов, возвращается как {@link SBIS3.CONTROLS.Data.Model}.
        * @returns {Object}
        * @see meta
        * @see setMetaData
@@ -317,7 +389,11 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
 
       /**
        * Устанавливает метаданные
-       * @param meta {Object} Метаданные
+       * @remark
+       * Существуют два служебных поля в метаданных:
+       * - path - путь для хлебных крошек, устанавливается как {@link SBIS3.CONTROLS.Data.Collection.RecordSet};
+       * - results - строка итогов, устанавливается как {@link SBIS3.CONTROLS.Data.Model}.
+       * @param {Object} meta Метаданные
        * @see meta
        * @see getMetaData
        */
@@ -327,8 +403,13 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
 
       //endregion Public methods
 
-      //region SBIS3.CONTROLS.DataSet
+      //region Deprecated methods
 
+      /**
+       * Помечает запись, как удаленную (сама запись при этом не удаляется, но она не попадает в перебор в методе each().
+       * @param {String} key Первичный ключ записи
+       * @deprecated метод будет удален в 3.7.4.
+       */
       removeRecord: function (key) {
          var self = this;
          var mark = function (key) {
@@ -358,20 +439,42 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
          return this.getIndexByValue(this._options.idProperty, id);
       },
 
+      /**
+       * Возвращает ключ записи по ее порядковому номеру
+       * @param {Number} index
+       * @returns {String|Number}
+       * @deprecated метод будет удален в 3.7.4 используйте getRecordById().getId()
+       */
       getRecordKeyByIndex: function (index) {
          var item = this.at(index);
          return item && $ws.helpers.instanceOfModule(item, 'SBIS3.CONTROLS.Data.Model') ? item.getId() : undefined;
       },
 
+      /**
+       * Возвращает стратегию работы с сырыми данными
+       * @returns {SBIS3.CONTROLS.Data.Adapter.IAdapter}
+       * @deprecated метод будет удален в 3.7.4 используйте getAdapter()
+       */
       getStrategy: function () {
          Utils.logger.stack('SBIS3.CONTROLS.Data.Collection.RecordSet:getStrategy(): method is deprecated and will be removed in 3.7.4. Use "getAdapter()" instead.');
          return this.getAdapter();
       },
 
+      /**
+       * Объединяет два рекордсета
+       * @param {SBIS3.CONTROLS.Data.Collection.RecordSet} recordSetMergeFrom
+       * @param {OperationOptions} options Опции операций
+       * @deprecated метод будет удален в 3.7.4
+       */
       merge: function (recordSetMergeFrom, options) {
          this._setRecords(recordSetMergeFrom._getRecords(), options);
       },
 
+      /**
+       * Добавляет запись в рекордсет
+       * @param {SBIS3.CONTROLS.Data.Model} record
+       * @deprecated метод будет удален в 3.7.4, используйте add()
+       */
       push: function (record) {
          if (!$ws.helpers.instanceOfModule(record, 'SBIS3.CONTROLS.Data.Model')) {
             record = this._getModelInstance(record);
@@ -379,6 +482,12 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
          this.add(record);
       },
 
+      /**
+       * Вставляет запись в рекордсет. Если запись с таким ключем существует, то старая заменяется.
+       * @param {SBIS3.CONTROLS.Data.Model} record
+       * @param {Number} at Позиция вставки
+       * @deprecated метод будет удален в 3.7.4, используйте add() или replace()
+       */
       insert: function (record, at) {
          var existsAt = this.getIndex(record);
          if (existsAt === -1) {
@@ -388,38 +497,13 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
          }
       },
 
-      each: function (iterateCallback, status) {
-         var length = this.getCount();
-         for (var i = 0; i < length; i++) {
-            var record = this.at(i);
-            switch (status) {
-               case 'all':
-                  iterateCallback.call(this, record, i);
-                  break;
-               case 'created':
-                  if (record.isCreated()) {
-                     iterateCallback.call(this, record, i);
-                  }
-                  break;
-               case 'deleted':
-                  if (record.isDeleted()) {
-                     iterateCallback.call(this, record, i);
-                  }
-                  break;
-               case 'changed':
-                  if (record.isChanged()) {
-                     iterateCallback.call(this, record, i);
-                  }
-                  break;
-               default :
-                  if (!record.isDeleted()) {
-                     iterateCallback.call(this, record, i);
-                  }
-            }
-         }
-      },
-
-      // TODO: В контролах избавиться от вызова этого метода - должно быть достаточно "выбрать по индексу".
+      /**
+       * Возвращает иерархический индекс для указанного поля
+       * @param {String} field Имя поля, по которому строится иерархия
+       * @param {Boolean} [reindex=false] Принудительно переиндексировать
+       * @returns {Object.<String|Number, Array.<String|Number>>}
+       * @deprecated метод будет удален в 3.7.4 используйте SBIS3.CONTROLS.Data.Projection.Tree::getChildren()
+       */
       getTreeIndex: function(field, reindex){
          if (reindex || (Object.isEmpty(this._indexTree) && field)){
             this._reindexTree(field);
@@ -427,6 +511,14 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
          return this._indexTree;
       },
 
+      /**
+       * Возвращает набор дочерних элементов для указанного родителя
+       * @param {String|Number} parentId Идентификатор родителя
+       * @param {Boolean} getFullBranch Выбирать рекурсивно
+       * @param {String} field Имя поля, по которому строится иерархия
+       * @returns {Array.<String|Number>}
+       * @deprecated метод будет удален в 3.7.4 используйте SBIS3.CONTROLS.Data.Projection.Tree::getChildren()
+       */
       getChildItems: function (parentId, getFullBranch, field) {
          if(Object.isEmpty(this._indexTree)) {
             this._reindexTree(field);
@@ -457,6 +549,13 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
          }
       },
 
+      /**
+       * Возвращает признак наличия детей у родителя
+       * @param {String|Number} parentId Идентификатор родителя
+       * @param {String} field Имя поля, по которому строится иерархия
+       * @returns {Boolean}
+       * @deprecated метод будет удален в 3.7.4 используйте SBIS3.CONTROLS.Data.Projection.Tree::getChildren()
+       */
       hasChild: function (parentKey, field) {
          if(Object.isEmpty(this._indexTree)) {
             this._reindexTree(field);
@@ -464,10 +563,23 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
          return this._indexTree.hasOwnProperty(parentKey);
       },
 
+      /**
+       * Возвращает идентификатор родителя
+       * @param {SBIS3.CONTROLS.Data.Model} record Запись, для которой нужно получить идентфикатор родителя
+       * @param {String} field Имя поля, по которому строится иерархия
+       * @returns {String|Number}
+       * @deprecated метод будет удален в 3.7.4 используйте SBIS3.CONTROLS.Data.Projection.TreeItem::getParent()
+       */
       getParentKey: function (record, field) {
          return record.get(field);
       },
 
+      /**
+       * Возвращает отфильтрованный рекордсет
+       * @param {Function} filterCallback Функция обратного вызова, аргументом будет передана запись, для которой нужно вернуть признак true (запись прошла фильтр) или false (не прошла)
+       * @returns {SBIS3.CONTROLS.Data.Collection.RecordSet}
+       * @deprecated метод будет удален в 3.7.4
+       */
       filter: function (filterCallback) {
          var filterDataSet = new RecordSet({
             adapter: this._options.adapter,
@@ -483,13 +595,25 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
          return filterDataSet;
       },
 
+      /**
+       * Возвращает массив записей
+       * @returns {Array.<SBIS3.CONTROLS.Data.Model>}
+       * @protected
+       * @deprecated метод будет удален в 3.7.4 используйте each()
+       */
       _getRecords: function() {
          return this.toArray();
       },
 
+      /**
+       * Устанавливает новые записи
+       * @param {Array.<SBIS3.CONTROLS.Data.Model>} records Новые записи
+       * @param {OperationOptions} options Опции операций
+       * @protected
+       * @deprecated метод будет удален в 3.7.4
+       */
       _setRecords: function (records, options) {
-         options = options || {};
-         options = $ws.core.merge(options, {add: true, remove: true, merge: true}, {preferSource: true});
+         options = $ws.core.merge(options || {}, {add: true, remove: true, merge: true}, {preferSource: true});
 
          var id, i, length,
             recordsMap = {},
@@ -532,6 +656,12 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
          }
       },
 
+      /**
+       * Переиндесирует иерархию
+       * @param {String} field Имя поля, по которому строится иерархия
+       * @protected
+       * @deprecated метод будет удален в 3.7.4
+       */
       _reindexTree: function (field) {
          this._reindex();
          var self = this,
@@ -551,7 +681,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
          }, 'all');
       },
 
-      //endregion SBIS3.CONTROLS.DataSet
+      //endregion Deprecated methods
 
       //region SBIS3.CONTROLS.Data.Collection.List
 

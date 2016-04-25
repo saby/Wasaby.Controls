@@ -10,7 +10,33 @@ define('js!SBIS3.CONTROLS.Data.Model', [
    'use strict';
 
    /**
-    * Модель - обеспечивает доступ к данным объекта предметной области
+    * Абстрактная модель - обеспечивает доступ к данным объекта предметной области.
+    * @remark
+    * Для реализации конкретных объектов предментной области используется наследование от абстрактной модели:
+    * <pre>
+    *    var User = Model.extend({
+    *       _moduleName: 'My.Module.User',
+    *       authenticate: function(login, password) {
+    *          //some logic here
+    *       }
+    *    });
+    *    //...
+    *    var user = new User();
+    *    user.authenticate('i.c.wiener', 'its pizza time!');
+    * </pre>
+    * Для корректной сериализации и клонирования моделей необходимо указывать имя модуля в свойстве _moduleName каждого наследника:
+    * <pre>
+    * define('js!My.Awesome.Model', ['js!SBIS3.CONTROLS.Data.Model'], function (Model) {
+    *    'use strict';
+    *
+    *    var AwesomeModel = Model.extend({
+    *      _moduleName: 'My.Awesome.Model'
+    *      //...
+    *    });
+    *
+    *    return AwesomeModel;
+    * });
+    * </pre>
     * @class SBIS3.CONTROLS.Data.Model
     * @extends SBIS3.CONTROLS.Data.Record
     * @mixes SBIS3.CONTROLS.Data.IHashable
@@ -36,6 +62,7 @@ define('js!SBIS3.CONTROLS.Data.Model', [
              * @example
              * <pre>
              *    var User = Model.extend({
+             *       _moduleName: 'My.Module.User',
              *       $protected: {
              *          _options: {
              *             properties: {
