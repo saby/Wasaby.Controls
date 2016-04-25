@@ -125,7 +125,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
          this.setFilter(filter, true);
       },
       _projectionFilter: function(item, index, itemProj) {
-         return this._isSearchMode() || this._isVisibleItem(itemProj);
+         return this._isSearchMode() || this._isVisibleItem(itemProj, this._options.displayType == 'folders');
       },
       /**
        * Задать поле иерархии
@@ -219,7 +219,10 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
          }
          return records;
       },
-      _isVisibleItem: function(item) {
+      _isVisibleItem: function(item, onlyFolders) {
+         if (onlyFolders && (item.isNode() !== true)) {
+            return false;
+         }
          var itemParent = item.getParent();
          return itemParent ? itemParent.isExpanded() ? this._isVisibleItem(itemParent) : false : true;
       },
