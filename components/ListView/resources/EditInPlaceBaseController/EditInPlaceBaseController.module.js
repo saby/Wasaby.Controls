@@ -176,7 +176,7 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                   if (preparedRecord) {
                      this._eip.edit(target, preparedRecord);
                      this._notify('onAfterBeginEdit', preparedRecord);
-                     this._lastTargetAdding = this._itemsProjection.getItemBySourceItem(preparedRecord);
+                     this._lastTargetAdding = this._options.itemsProjection.getItemBySourceItem(preparedRecord);
                      return preparedRecord;
                   }
                   return preparedRecord;
