@@ -90,7 +90,7 @@ define('js!SBIS3.CONTROLS.ItemActionsGroup',
                },
                target = this._itemActionsMenuButton,
                 // TODO перевести на проекции
-               items = this.getItems().getRawData();
+               items = this.getItems();
 
             if (this._options.touchMode) {
                verticalAlign.offset = 0;
@@ -102,8 +102,7 @@ define('js!SBIS3.CONTROLS.ItemActionsGroup',
                element: $('> .controls-ItemActions__menu-container', this._getItemsContainer()[0]).show(),
                items: items,
                keyField: this._options.keyField,
-               //FIXME для обратной совместимости
-               displayField: items[0].title ? 'title' : 'caption',
+               displayField: 'caption',
                hierField: 'parent',
                parent: this,
                opener: this,
