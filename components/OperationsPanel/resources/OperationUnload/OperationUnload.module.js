@@ -4,8 +4,10 @@
 define('js!SBIS3.CONTROLS.OperationUnload', [
    'js!SBIS3.CONTROLS.PrintUnloadBase',
    'js!SBIS3.CONTROLS.Utils.DataProcessor',
+   'js!SBIS3.CONTROLS.Data.Record',
+   'js!SBIS3.CONTROLS.Data.Adapter.Sbis',
    'i18n!SBIS3.CONTROLS.OperationUnload'
-], function(PrintUnloadBase, Exporter, rk) {
+], function(PrintUnloadBase, Exporter, Record, SbisAdapter, rk) {
    //TODO Идея! нужно просто вызвать у view.export, он в свою очередь поднимает событие onUnload, а событие подхыватит выгрузчик. тогда в кнопке вообще только визуализация будет
    /**
     * Контрол для экспорта в Excel, PDF  подготовленных данных
@@ -193,6 +195,7 @@ define('js!SBIS3.CONTROLS.OperationUnload', [
       },
       applyOperation: function(cfg){
          var
+             filter,
              fullFilter,
              pageOrient = this._getPDFPageOrient(),
              methodName = this._getCurrentItem().get('binding').saveDataSet,
@@ -203,10 +206,19 @@ define('js!SBIS3.CONTROLS.OperationUnload', [
             exporter.exportHTML(this._getUnloadFileName(), this._currentItem, undefined, undefined, pageOrient);
          } else {
             if (methodName) {
+               filter = new Record({
+                  adapter: new SbisAdapter(),
+                  format: [{
+                     name: 'selectedIds',
+                     type: 'array',
+                     kind: 'string'
+                   }]
+               });
+               filter.set('selectedIds', this._getView().getSelectedKeys());
                fullFilter = exporter.getFullFilter(cfg.dataSet.getCount(), true);
                fullFilter['MethodName'] = methodName;
                fullFilter['FileName'] = this._getUnloadFileName();
-               fullFilter['Filter']['selectedIds'] = this._getView().getSelectedKeys();
+               fullFilter['Filter'] = filter.getRawData();
                if (this._currentItem === 'PDF') {
                   delete fullFilter.HierarchyField;
                }
