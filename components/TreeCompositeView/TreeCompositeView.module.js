@@ -30,11 +30,31 @@ define('js!SBIS3.CONTROLS.TreeCompositeView', ['js!SBIS3.CONTROLS.TreeDataGridVi
       $protected: {
          _options: {
             /**
-             * Шаблон, используемый при отрисовке папки
+             * @cfg {String} Устанавливает шаблон, который используется для отрисовки папки в режимах "Список" и "Плитка"
+             * @remark
+             * Когда опция не задана, используется стандартный шаблон. Для его работы требуется установить опцию {@link SBIS3.CONTROLS.DSMixin#displayField}.
+             * Для режима отображения "Список" можно переопределить шаблон папки с помощью опции {@link listFolderTemplate}.
+             * Кроме шаблона папки, можно установить шаблон отображения элементов коллекции с помощью опций {@link SBIS3.CONTROLS.DataGridView/Columns.typedef cellTemplate}, {@link SBIS3.CONTROLS.ListView#itemTemplate}, {@link SBIS3.CONTROLS.CompositeViewMixin#listTemplate} и {@link SBIS3.CONTROLS.CompositeViewMixin#tileTemplate}.
+             * @see listFolderTemplate
+             * SBIS3.CONTROLS.DSMixin#displayField
+             * @see SBIS3.CONTROLS.DataGridView/Columns.typedef
+             * @see SBIS3.CONTROLS.ListView#itemTemplate
+             * @see SBIS3.CONTROLS.CompositeViewMixin#listTemplate
+             * @see SBIS3.CONTROLS.CompositeViewMixin#tileTemplate
              */
             folderTemplate: undefined,
             /**
-             * Шаблон, используемый при отрисовке папки в режиме списка
+             * @cfg {String} Устанавливает шаблон, который используется для отрисовки папки в режимах "Список"
+             * @remark
+             * Когда опция не задана, используется стандартный шаблон. Для его работы требуется установить опцию {@link SBIS3.CONTROLS.DSMixin#displayField}.
+             * Для режима отображения "Плитка" можно переопределить шаблон папки с помощью опции {@link folderTemplate}.
+             * Кроме шаблона папки, можно установить шаблон отображения элементов коллекции с помощью опций {@link SBIS3.CONTROLS.DataGridView/Columns.typedef cellTemplate}, {@link SBIS3.CONTROLS.ListView#itemTemplate}, {@link SBIS3.CONTROLS.CompositeViewMixin#listTemplate} и {@link SBIS3.CONTROLS.CompositeViewMixin#tileTemplate}.
+             * @see folderTemplate
+             * SBIS3.CONTROLS.DSMixin#displayField
+             * @see SBIS3.CONTROLS.DataGridView/Columns.typedef
+             * @see SBIS3.CONTROLS.ListView#itemTemplate
+             * @see SBIS3.CONTROLS.CompositeViewMixin#listTemplate
+             * @see SBIS3.CONTROLS.CompositeViewMixin#tileTemplate
              */
             listFolderTemplate: undefined
          }
