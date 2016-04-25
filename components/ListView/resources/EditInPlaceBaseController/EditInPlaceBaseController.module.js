@@ -26,6 +26,7 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                _options: {
                   editingTemplate: undefined,
                   getCellTemplate: undefined,
+                  itemsProjection: undefined,
                   columns: undefined,
                   /**
                    * @cfg {Boolean} Режим автоматического добавления элементов
@@ -54,7 +55,7 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                _eipHandlers: null,
                //TODO: Данная переменная нужна для автодобавления по enter(mode autoadd), чтобы определить в какой папке происходит добавление элемента
                //Вариант решения проблемы не самый лучший, и добавлен как временное решение для выпуска 3.7.3.150. В версию .200 придумать нормальное решение.
-               _lastParentBranch: undefined
+               _lastTargetAdding: undefined
             },
             $constructor: function () {
                this._publish('onItemValueChanged', 'onBeginEdit', 'onAfterBeginEdit', 'onEndEdit', 'onBeginAdd', 'onAfterEndEdit', 'onInitEditInPlace');
@@ -151,7 +152,7 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                   });
                } else if (editNextRow && this._options.modeAutoAdd) {
                   this.add({
-                     parentId: this._lastParentBranch
+                     target: this._lastTargetAdding
                   });
                } else {
                   this.endEdit(true);
@@ -175,7 +176,7 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                   if (preparedRecord) {
                      this._eip.edit(target, preparedRecord);
                      this._notify('onAfterBeginEdit', preparedRecord);
-                     this._lastParentBranch = preparedRecord.get(this._options.hierField);
+                     this._lastTargetAdding = this._itemsProjection.getItemBySourceItem(preparedRecord);
                      return preparedRecord;
                   }
                   return preparedRecord;
@@ -305,11 +306,11 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                    target,
                    self = this,
                    modelOptions = options.model || this._notify('onBeginAdd');
-               this._lastParentBranch = options.parentId;
+               this._lastTargetAdding = options.target;
                return this.endEdit(true).addCallback(function() {
                   return self._options.dataSource.create(modelOptions).addCallback(function (model) {
                      if (self._options.hierField) {
-                        model.set(self._options.hierField, options.parentId);
+                        model.set(self._options.hierField, options.target ? options.target.getContents().getId() : options.target);
                      }
                      target = self._createAddTarget(options).attr('data-id', '' + model.getId());
                      self._eip.edit(target, model);
@@ -324,19 +325,20 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
             },
             _createAddTarget: function(options) {
                var
-                   lastTarget,
-                   currentTarget,
-                   addTarget = this._options.columns ?
-                       $('<tr><td colspan="' + (this._options.columns.length + (this._options.ignoreFirstColumn ? 1 : 0)) + '"></td></tr>') :
-                       $('<div>');
+                  lastTarget,
+                  currentTarget,
+                  targetHash = options.target ? options.target.getHash() : null,
+                  addTarget = this._options.columns ?
+                      $('<tr><td colspan="' + (this._options.columns.length + (this._options.ignoreFirstColumn ? 1 : 0)) + '"></td></tr>') :
+                      $('<div>');
 
                addTarget.addClass("js-controls-ListView__item controls-ListView__item");
-               if (options.parentId) {
-                  currentTarget = $('.controls-ListView__item[data-id="' + options.parentId + '"]', this._options.itemsContainer.get(0));
+               if (targetHash) {
+                  currentTarget = $('.controls-ListView__item[data-hash="' + targetHash + '"]', this._options.itemsContainer.get(0));
                   if (options.addPosition !== 'top') {
                      while (currentTarget.length) {
                         lastTarget = currentTarget;
-                        currentTarget = $('.controls-ListView__item[data-parent="' + currentTarget.data('id') + '"]', this._options.itemsContainer.get(0)).last();
+                        currentTarget = $('.controls-ListView__item[data-parent-hash="' + currentTarget.data('hash') + '"]', this._options.itemsContainer.get(0)).last();
                      }
                   }
                   addTarget.insertAfter(lastTarget || currentTarget);
