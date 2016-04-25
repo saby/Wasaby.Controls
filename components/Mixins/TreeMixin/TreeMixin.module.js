@@ -233,13 +233,6 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
          return result;
       },
       /**
-       * Метод получения проекции по ID итема
-       * todo Обязательно убрать этот метод
-       */
-      _getItemProjectionByItemId: function(id) {
-         return this._itemsProjection.getItemBySourceItem(this._items.getRecordById(id));
-      },
-      /**
        * todo ИСПРАВИТЬ. Тут правим тесты и не восстанавливаем открытые папки.
        * @private
        */

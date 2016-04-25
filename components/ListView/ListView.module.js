@@ -1166,6 +1166,7 @@ define('js!SBIS3.CONTROLS.ListView',
                   editingItem: this._editingItem,
                   ignoreFirstColumn: this._options.multiselect,
                   dataSource: this._dataSource,
+                  itemsProjection: this._itemsProjection,
                   notEndEditClassName: this._notEndEditClassName,
                   editingTemplate: this._options.editingTemplate,
                   itemsContainer: this._getItemsContainer(),
@@ -1913,7 +1914,11 @@ define('js!SBIS3.CONTROLS.ListView',
           * @see commitEdit
           */
          _beginAdd: function(options) {
-            return this.showEip(null, null, options || {});
+            if (!options) {
+               options = {};
+            }
+            options.target = this._getItemProjectionByItemId(options.parentId) || null;
+            return this.showEip(null, null, options);
          },
          /**
           * Запускает редактирование по месту.
