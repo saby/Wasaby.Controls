@@ -102,6 +102,7 @@ define('js!SBIS3.CONTROLS.TextArea', ['js!SBIS3.CONTROLS.TextBoxBase', 'html!SBI
       $constructor: function() {
          var self = this;
          this._inputField = $('.controls-TextArea__inputField', this._container);
+         this._disabledWrapper = $('.controls-TextArea__disabled-wrapper', this._container);
          this._inputField.bind('focus', function() {
             $ws.single.EventBus.globalChannel().notify('MobileInputFocus');
          });
@@ -187,11 +188,18 @@ define('js!SBIS3.CONTROLS.TextArea', ['js!SBIS3.CONTROLS.TextBoxBase', 'html!SBI
 
       _setEnabled: function(state){
          TextArea.superclass._setEnabled.call(this, state);
+         this._inputField.attr('visibility', !state)
+         this._disabledWrapper.html($ws.helpers.wrapURLs(this._options.text)).toggleClass('ws-hidden', state);
          if (!state){
             this._inputField.attr('readonly', 'readonly')
          } else {
             this._inputField.removeAttr('readonly');
          }
+      },
+
+      setText: function(text){
+         TextArea.superclass.setText.call(this, text);
+         this._disabledWrapper.html($ws.helpers.wrapURLs(this._options.text));
       },
 
       _processNewLine: function(event) {

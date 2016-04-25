@@ -1,4 +1,5 @@
 <div class="controls-TextArea{{?it.autoResize.state}} controls-TextArea__autoheight{{?}}">
+    <div class="controls-TextArea__disabled-wrapper ws-hidden"></div>
     <textarea class="controls-TextArea__inputField" {{?it.minLinesCount}}rows="{{=it.minLinesCount}}"{{?}}
     {{? it.placeholder }} placeholder="{{=it.placeholder}}"{{?}}{{? it.maxLength }} maxlength="{{=it.maxLength}}"{{?}}>{{?it.text}}{{=it.text}}{{?}}</textarea>
 </div>
