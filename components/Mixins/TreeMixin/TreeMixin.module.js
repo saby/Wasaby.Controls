@@ -312,20 +312,6 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
          return this._options.openedPath;
       },
       around : {
-         /**
-          * Добавить новый элемент
-          * @param parentFnc
-          * @param item
-          * @param at
-          * @private
-          */
-         _addItem: function (parentFnc, item, at) {
-            //TODO придрот, чтоб не отрисовывались данные в дереве при первом открытии узла
-            var parent = item.getContents().get(this._options.hierField);
-            if (this._options.openedPath[parent] || (parent == this._curRoot)) {
-               parentFnc.call(this, item, at);
-            }
-         },
          _buildTplArgs: function(parentFnc, item) {
             var
                args = parentFnc.call(this, item);
