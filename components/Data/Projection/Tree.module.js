@@ -136,7 +136,8 @@ define('js!SBIS3.CONTROLS.Data.Projection.Tree', [
          this._unsetImportantProperty(this._options.parentProperty);
          this._options.parentProperty = name;
          this._setImportantProperty(name);
-         this._childrenMap = {};
+         this._reIndex();
+         this._reAnalize();
       },
 
       /**
@@ -184,6 +185,8 @@ define('js!SBIS3.CONTROLS.Data.Projection.Tree', [
       setRoot: function (root) {
          this._options.root = root;
          this._root = null;
+         this._reIndex();
+         this._reAnalize();
       },
 
       /**
@@ -237,6 +240,11 @@ define('js!SBIS3.CONTROLS.Data.Projection.Tree', [
       //endregion Public methods
 
       //region Protected methods
+
+      _reIndex: function() {
+         TreeProjection.superclass._reIndex.call(this);
+         this._childrenMap = {};
+      },
 
       _bindHandlers: function() {
          TreeProjection.superclass._bindHandlers.call(this);
@@ -429,7 +437,7 @@ define('js!SBIS3.CONTROLS.Data.Projection.Tree', [
        * @private
        */
       onSourceCollectionChange: function (prevFn, event, action, newItems, newItemsIndex, oldItems, oldItemsIndex) {
-         this._childrenMap = {};
+         this._reIndex();
          prevFn.call(this, event, action, newItems, newItemsIndex, oldItems, oldItemsIndex);
       },
 
@@ -443,7 +451,7 @@ define('js!SBIS3.CONTROLS.Data.Projection.Tree', [
        * @private
        */
       onSourceCollectionItemChange: function (prevFn, event, item, index, property) {
-         this._childrenMap = {};
+         this._reIndex();
          prevFn.call(this, event, item, index, property);
       }
    };

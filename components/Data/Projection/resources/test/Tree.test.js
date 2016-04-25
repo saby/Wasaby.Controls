@@ -176,7 +176,6 @@ define([
             it('should bring all items to the root', function() {
                tree.setRoot(null);
                tree.setParentProperty('');
-               tree._reAnalize();
                var count = 0;
                tree.each(function(item) {
                   assert.equal(item.getContents(), tree.getCollection().at(count));
@@ -255,6 +254,32 @@ define([
                }});
                tree.setRoot(root);
                assert.strictEqual(tree.getRoot(), root);
+            });
+            it('should update count', function() {
+               assert.notEqual(tree.getCount(), 6);
+               tree.setRoot(1);
+               assert.strictEqual(tree.getCount(), 6);
+            });
+            it('should update each', function() {
+               var before = [];
+               tree.each(function(item) {
+                  before.push(item);
+               });
+               assert.notEqual(before.length, 6);
+
+               tree.setRoot(1);
+               var after = [];
+               tree.each(function(item) {
+                  after.push(item);
+               });
+               assert.strictEqual(after.length, 6);
+
+               tree.setRoot(0);
+               var revert = [];
+               tree.each(function(item) {
+                  revert.push(item);
+               });
+               assert.deepEqual(revert, before);
             });
          });
 

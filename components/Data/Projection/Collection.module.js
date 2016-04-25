@@ -236,9 +236,9 @@ define('js!SBIS3.CONTROLS.Data.Projection.Collection', [
       },
 
       getCount: function () {
-         return $ws.helpers.reduce(this._filterMap, function(prev, current) {
-            return prev + (current ? 1 : 0);
-         }, 0);
+         return $ws.helpers.reduce(this._sortMap, function(prev, current) {
+            return prev + (this._filterMap[current] ? 1 : 0);
+         }, 0, this);
       },
 
       //endregion SBIS3.CONTROLS.Data.Collection.IList
@@ -251,6 +251,14 @@ define('js!SBIS3.CONTROLS.Data.Projection.Collection', [
        */
       getCollection: function () {
          return this._options.collection;
+      },
+
+      /**
+       * Возвращает элементы проекции
+       * @returns {Array.<SBIS3.CONTROLS.Data.Projection.CollectionItem>}
+       */
+      getItems: function () {
+         return this._items.slice();
       },
 
       /**
@@ -593,6 +601,12 @@ define('js!SBIS3.CONTROLS.Data.Projection.Collection', [
        * @param {String} property Изменившееся свойство
        */
       notifyItemChange: function (item, property) {
+         var session;
+         if (this._filter) {
+            session = this._startUpdateSession();
+            this._reFilter();
+            this._finishUpdateSession(session);
+         }
          if (!this._eventRaising) {
             return;
          }
@@ -676,7 +690,7 @@ define('js!SBIS3.CONTROLS.Data.Projection.Collection', [
       _reBuild: function () {
          this._items.length = 0;
          this._filterMap.length = 0;
-         this._isSortedCache = undefined;
+         this._reIndex();
 
          var enumerator = this._options.collection.getEnumerator(),
             index = 0,
@@ -706,7 +720,7 @@ define('js!SBIS3.CONTROLS.Data.Projection.Collection', [
              oldMatch;
          for (var index = start; index < finish; index++) {
             item = this._items[index];
-            match = !this._filter || this._filter(item.getContents(), index);
+            match = !this._filter || this._filter(item.getContents(), index, item);
             oldMatch = this._filterMap[index];
 
             if (match !== oldMatch) {
@@ -732,10 +746,8 @@ define('js!SBIS3.CONTROLS.Data.Projection.Collection', [
          count = count || this._items.length - start;
 
          var session = this._startUpdateSession();
+         this._reSort();
          this._reFilter(start, count);
-         if (this._isSorted()) {
-            this._reSort();
-         }
          this._finishUpdateSession(session);
       },
 
@@ -747,7 +759,6 @@ define('js!SBIS3.CONTROLS.Data.Projection.Collection', [
          this._sortMap.length = 0;
          Array.prototype.push.apply(this._sortMap, this._buildSortMap());
 
-         this._isSortedCache = undefined;
          this._reIndex();
       },
 
@@ -1052,12 +1063,16 @@ define('js!SBIS3.CONTROLS.Data.Projection.Collection', [
        */
       _isSorted: function () {
          if (this._isSortedCache === undefined) {
-            this._isSortedCache = false;
-            for (var i = 0; i < this._sortMap.length; i++) {
-               if (i !== this._sortMap[i]) {
-                  this._isSortedCache = true;
-                  break;
+            if (this._sortMap.length === this._items.length) {
+               this._isSortedCache = false;
+               for (var i = 0; i < this._sortMap.length; i++) {
+                  if (i !== this._sortMap[i]) {
+                     this._isSortedCache = true;
+                     break;
+                  }
                }
+            } else {
+               this._isSortedCache = true;
             }
          }
          return this._isSortedCache;
@@ -1134,7 +1149,7 @@ define('js!SBIS3.CONTROLS.Data.Projection.Collection', [
             }
          }
 
-         this._isSortedCache = undefined;
+         this._reIndex();
       },
 
       /**
@@ -1247,6 +1262,7 @@ define('js!SBIS3.CONTROLS.Data.Projection.Collection', [
       _reIndex: function () {
          this._getServiceEnumerator().reIndex();
          this._getNavigationEnumerator().reIndex();
+         this._isSortedCache = undefined;
       },
 
       /**

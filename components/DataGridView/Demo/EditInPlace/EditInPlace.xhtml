@@ -1,0 +1,59 @@
+<div>
+   <component data-component="SBIS3.CONTROLS.DataGridView" name="Таблица">
+      <opt name="editMode" value="click"/>
+      <opt name="emptyHTML" value="Нет записей"/>
+      <opts name="columns" type="array">
+         <opts>
+            <opt name="title" value="№"/>
+            <opt name="width" type="string" value="100"/>
+            <opt name="field" value="id"/>
+         </opts>
+         <opts>
+            <opt name="title" value="Наименование"/>
+            <opt name="field" value="title"/>
+            <opt name="editor">
+               <component data-component="SBIS3.CONTROLS.TextBox">
+                  <opt name="text" bind="title"/>
+               </component>
+            </opt>
+         </opts>
+         <opts>
+            <opt name="title" value="Количество"/>
+            <opt name="field" value="count"/>
+            <opt name="editor">
+               <component data-component="SBIS3.CONTROLS.NumberTextBox">
+                  <opt name="text" bind="count"/>
+               </component>
+            </opt>
+         </opts>
+      </opts>
+      <opts name="items" type="array">
+         <opts>
+            <opt name="id" type="string" value="1"/>
+            <opt name="title" value="Первый"/>
+            <opt name="count" value="2"/>
+         </opts>
+         <opts>
+            <opt name="id" type="string" value="2"/>
+            <opt name="title" value="Второй"/>
+            <opt name="count" value="4"/>
+         </opts>
+         <opts>
+            <opt name="id" type="string" value="3"/>
+            <opt name="title" value="Третий"/>
+            <opt name="count" value="16"/>
+         </opts>
+         <opts>
+            <opt name="id" type="string" value="4"/>
+            <opt name="title" value="Четвертый"/>
+            <opt name="count" value="256"/>
+         </opts>
+         <opts>
+            <opt name="id" type="string" value="5"/>
+            <opt name="title" value="Пятый"/>
+            <opt name="count" value="65536"/>
+         </opts>
+      </opts>
+      <opt name="multiselect" value="true"/>
+   </component>
+</div>
