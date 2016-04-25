@@ -1,102 +1,65 @@
-define('js!SBIS3.CONTROLS.TreeView', ['js!SBIS3.CONTROLS.ListViewOld', 'js!SBIS3.CONTROLS.TreeMixin'], function(ListView, TreeMixin) {
+define('js!SBIS3.CONTROLS.TreeView', [
+   'js!SBIS3.CONTROLS.ListView',
+   'js!SBIS3.CONTROLS.TreeMixin',
+   'js!SBIS3.CONTROLS.TreeViewMixin',
+   'browser!html!SBIS3.CONTROLS.TreeView/resources/ItemTemplate',
+   'browser!html!SBIS3.CONTROLS.TreeView/resources/ItemContentTemplate',
+   'js!SBIS3.CORE.MarkupTransformer'
+], function (ListView, TreeMixin, TreeViewMixin, ItemTemplate, ItemContentTemplate, MarkupTransformer) {
    'use strict';
+
    /**
-    * Контрол, отображающий данные имеющие иерархическую структуру.
-    * Позволяет отобразить данные в произвольном виде с возможностью открыть или закрыть отдельные узлы.
+    * Контрол, отображающий данные имеющие иерархическую структуру. Позволяет отобразить данные в произвольном виде с возможностью открыть или закрыть отдельные узлы
     * @class SBIS3.CONTROLS.TreeView
-    * @extends SBIS3.CONTROLS.ListViewOld
-    * @mixes SBIS3.CONTROLS.TreeMixin
-    * @public
-    * @author Крайнов Дмитрий Олегович
     * @control
-    *
+    * @public
+    * @extends SBIS3.CONTROLS.ListView
+    * @mixes SBIS3.CONTROLS.TreeMixin
+    * @mixes SBIS3.CONTROLS.TreeViewMixin
+    * @demo SBIS3.CONTROLS.Demo.MyTreeView
+    * @author Крайнов Дмитрий Олегович
     */
 
-   var TreeView = ListView.extend([TreeMixin], /** @lends SBIS3.CONTROLS.TreeView.prototype*/ {
+   var TreeView = ListView.extend([TreeMixin, TreeViewMixin], /** @lends SBIS3.CONTROLS.TreeView.prototype*/ {
       $protected: {
-      },
-
-      $constructor: function() {
-      },
-
-      _drawItem : function(item, targetContainer) {
-         var
-            self = this,
-            resContainer,
-            itemWrapper = this._drawItemWrapper(item).appendTo(targetContainer);
-
-         this._addItemClasses(itemWrapper, this._items.getId(item));
-
-         resContainer = itemWrapper.hasClass('js-controls-ListView__itemContent') ? itemWrapper : $('.js-controls-ListView__itemContent', itemWrapper);
-
-         return this._createItemInstance(item, resContainer).addCallback(function(container){
-            if (!($('.js-controls-TreeView__expand', resContainer).length)) {
-               resContainer.before('<div class="controls-TreeView__expand js-controls-TreeView__expand"></div>');
-            }
-
-            $(".js-controls-TreeView__expand", itemWrapper).click(function(){
-               var id = $(this).closest('.controls-ListView__item').attr('data-id');
-               self.toggleNode(id)
-            });
-         });
-
-      },
-      _drawItemWrapper : function(item) {
-         return $('<div>\
-            <div class="controls-TreeView__item">\
-               <div class="controls-TreeView__itemContent js-controls-ListView__itemContent"></div>\
-            </div>\
-         </div>');
-      },
-
-      _getTargetContainer : function(item, key, parItem, lvl) {
-         if (parItem) {
-            var
-               curList,
-               parKey = this._items.getId(parItem),
-               curItem =  $(".controls-ListView__item[data-id='"+parKey+"']", this.getContainer().get(0));
-            curList = $(".controls-TreeView__childContainer", curItem.get(0)).first();
-            if (!curList.length) {
-               curList = $("<div></div>").appendTo(curItem).addClass('controls-TreeView__childContainer');
-            }
-            $('.controls-TreeView__item', curItem).first().addClass('controls-TreeView__hasChild');
+         _defaultItemTemplate: ItemTemplate,
+         _defaultItemContentTemplate: ItemContentTemplate,
+         _options: {
+            //FixME: так как приходит набор от листвью. пока он не нужен
+            itemsActions: [],
+            //TODO: Копипаст из TreeDataGridView, временное решение т.к. в TreeMixin пока разместить нельзя по причине
+            //отсутствия необходимости переносит элементы в менюшках
+            /**
+             * @cfg {String} Разрешено или нет перемещение элементов "Drag-and-Drop"
+             * @variant "" Запрещено
+             * @variant allow Разрешено
+             * @variant onlyChangeOrder Разрешено только изменение порядка
+             * @variant onlyChangeParent Разрешено только перемещение в папку
+             * @example
+             * <pre>
+             *     <option name="itemsDragNDrop">onlyChangeParent</option>
+             * </pre>
+             */
+            itemsDragNDrop: 'allow'
          }
-         else {
-            curList = this._getItemsContainer();
-         }
-         return curList;
       },
 
-      /**
-       * Раскрыть определенный узел
-       * @param {String} key Идентификатор раскрываемого узла
-       */
-      openNode: function(key) {
-         var itemCont = $(".controls-ListView__item[data-id='"+key+"']", this.getContainer().get(0));
-         $(".js-controls-TreeView__expand", itemCont).first().addClass('controls-TreeView__expand__open');
-         $(".controls-TreeView__childContainer", itemCont).first().css('display', 'block');
-      },
-      /**
-       * Закрыть определенный узел
-       * @param {String} key Идентификатор раскрываемого узла
-       */
-      closeNode: function(key) {
-         var itemCont = $(".controls-ListView__item[data-id='"+key+"']", this.getContainer().get(0));
-         $(".js-controls-TreeView__expand", itemCont).removeClass('controls-TreeView__expand__open');
-         $(".controls-TreeView__childContainer", itemCont).css('display', 'none');
+      init: function () {
+         TreeView.superclass.init.apply(this, arguments);
+         this._container.addClass('controls-TreeView');
       },
 
-      /**
-       * Закрыть или открыть определенный узел
-       * @param {String} key Идентификатор раскрываемого узла
-       */
-      toggleNode: function(key) {
-         var itemCont = $(".controls-ListView__item[data-id='"+key+"']", this.getContainer().get(0));
-         if ($(".js-controls-TreeView__expand", itemCont).hasClass('controls-TreeView__expand__open')) {
-            this.closeNode(key);
+      _drawSelectedItems : function(idArray) {
+         $('.controls-ListView__itemCheckBox__multi', this._container).removeClass('controls-ListView__itemCheckBox__multi');
+         for (var i = 0; i < idArray.length; i++) {
+            $(".controls-ListView__item[data-id='" + idArray[i] + "']", this._container).find('.js-controls-ListView__itemCheckBox').first().addClass('controls-ListView__itemCheckBox__multi');
          }
-         else {
-            this.openNode(key);
+      },
+
+      _notifyOnDragMove: function(target, insertAfter) {
+         //Если происходит изменение порядкового номера и оно разрешено или если происходит смена родителся и она разрешена, стрельнём событием
+         if (typeof insertAfter === 'boolean' && this._options.itemsDragNDrop !== 'onlyChangeParent' || insertAfter === undefined && this._options.itemsDragNDrop !== 'onlyChangeOrder') {
+            return this._notify('onDragMove', this.getCurrentElement().keys, target.data('id'), insertAfter) !== false;
          }
       }
    });

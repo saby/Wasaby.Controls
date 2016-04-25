@@ -301,7 +301,7 @@ define('js!SBIS3.CONTROLS.Selectable', ['js!SBIS3.CONTROLS.Data.Utils', 'js!SBIS
       _setKeyByIndex: function() {
          if(this._hasItemByIndex()) {
             var item = this._itemsProjection.at(this._options.selectedIndex);
-            this._options.selectedKey = item.getContents().getKey();
+            this._options.selectedKey = item.getContents().getId();
          }
       },
 

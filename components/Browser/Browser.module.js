@@ -21,7 +21,7 @@ define('js!SBIS3.CONTROLS.Browser', [
    var
       checkViewType = function(view) {
          if (view && $ws.helpers.instanceOfModule(view, 'SBIS3.CONTROLS.ListView')) {
-            return $ws.helpers.instanceOfMixin(view, 'SBIS3.CONTROLS.TreeMixinDS');
+            return $ws.helpers.instanceOfMixin(view, 'SBIS3.CONTROLS.TreeMixin');
          }
          else {
             throw new Error('Browser: Can\'t define linkedView');

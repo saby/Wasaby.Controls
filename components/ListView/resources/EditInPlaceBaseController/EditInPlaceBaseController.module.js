@@ -26,7 +26,7 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                _options: {
                   editingTemplate: undefined,
                   getCellTemplate: undefined,
-                  columns: [],
+                  columns: undefined,
                   /**
                    * @cfg {Boolean} Режим автоматического добавления элементов
                    * @remark

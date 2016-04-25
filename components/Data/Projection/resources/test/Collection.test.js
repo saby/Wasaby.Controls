@@ -732,6 +732,19 @@ define([
             });
          });
 
+         describe('.getItems()', function() {
+            it('should return array of items', function() {
+               var items = projection.getItems();
+               assert.isTrue(items.length > 0);
+               for (var i = 0; i < items.length; i++) {
+                  assert.strictEqual(
+                     items[i],
+                     projection.at(i)
+                  );
+               }
+            });
+         });
+
          describe('.getCurrent()', function() {
             it('should return undefined by default', function() {
                assert.isUndefined(projection.getCurrent());

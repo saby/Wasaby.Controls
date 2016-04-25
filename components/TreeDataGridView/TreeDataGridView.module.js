@@ -1,8 +1,10 @@
 define('js!SBIS3.CONTROLS.TreeDataGridView', [
-   'js!SBIS3.CONTROLS.HierarchyDataGridView',
-   'js!SBIS3.CONTROLS.TreeMixinDS',
-   'html!SBIS3.CONTROLS.TreeDataGridView/resources/rowTpl'
-], function(HierarchyDataGridView, TreeMixinDS, rowTpl) {
+   'js!SBIS3.CONTROLS.DataGridView',
+   'js!SBIS3.CONTROLS.TreeMixin',
+   'js!SBIS3.CONTROLS.TreeViewMixin',
+   'browser!html!SBIS3.CONTROLS.TreeDataGridView/resources/ItemTemplate',
+   'browser!html!SBIS3.CONTROLS.TreeDataGridView/resources/ItemContentTemplate'
+], function(DataGridView, TreeMixin, TreeViewMixin, ItemTemplate, ItemContentTemplate) {
 
    var HIER_WRAPPER_WIDTH = 16,
        //Число 17 это сумма padding'ов, margin'ов элементов которые составляют отступ у первого поля, по которому строится лесенка отступов в дереве
@@ -14,7 +16,7 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
     * Контрол отображающий набор данных, имеющих иерархическую структуру, в виде в таблицы с несколькими колонками.
     * @class SBIS3.CONTROLS.TreeDataGridView
     * @extends SBIS3.CONTROLS.HierarchyDataGridView
-    * @mixes SBIS3.CONTROLS.TreeMixinDS
+    * @mixes SBIS3.CONTROLS.TreeMixin
     * @public
     * @author Крайнов Дмитрий Олегович
     * @control
@@ -35,9 +37,10 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
     *
     */
 
-   var TreeDataGridView = HierarchyDataGridView.extend([TreeMixinDS], /** @lends SBIS3.CONTROLS.TreeDataGridView.prototype*/ {
+   var TreeDataGridView = DataGridView.extend([TreeMixin, TreeViewMixin], /** @lends SBIS3.CONTROLS.TreeDataGridView.prototype*/ {
       $protected: {
-         _rowTpl : rowTpl,
+         _defaultItemTemplate: ItemTemplate,
+         _defaultItemContentTemplate: ItemContentTemplate,
          _options: {
             /**
              * @cfg {Function} Устанавливает функцию, которая будет выполнена при клике по кнопке справа от названия узла (папки) или скрытого узла.
@@ -88,61 +91,17 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
              */
             itemsDragNDrop: 'allow'
          },
-         _paddingSize: 16,
          _dragStartHandler: undefined
       },
 
       $constructor: function() {
       },
-
-      _drawItemsFolder: function(records) {
-         var self = this;
-         for (var j = 0; j < records.length; j++) {
-            var record = records[j];
-            var
-               recKey = record.getId(),
-               parKey = self._dataSet.getParentKey(record, self._options.hierField),
-               childKeys = this._dataSet.getChildItems(parKey, true),
-               targetContainer = self._getTargetContainer(record);
-
-            if (!$('.controls-ListView__item[data-id="'+recKey+'"]', self._getItemsContainer().get(0)).length) {
-
-               if (targetContainer) {
-                  /*TODO пока придрот для определения позиции вставки*/
-                  var
-                     parentContainer = $('.controls-ListView__item[data-id="' + parKey + '"]', self._getItemsContainer().get(0)),
-                     allContainers = $('.controls-ListView__item', self._getItemsContainer().get(0)),
-                     startRow = 0;
-
-                  for (var i = 0; i < allContainers.length; i++) {
-                     if (allContainers[i] == parentContainer.get(0)) {
-                        startRow = i + 1;
-                     } else {
-                        //TODO сейчас ключи могут оказаться строками, а могут целыми числами, в 20 все должно быть строками и это можно выпилить
-                        if ((Array.indexOf(childKeys,$(allContainers[i]).attr('data-id')) >= 0) || (Array.indexOf(childKeys, $(allContainers[i]).data('id')) >= 0)) {
-                           startRow++;
-                        }
-                     }
-                     /*else {
-                        if ()
-                     }*/
-                  }
-                  /**/
-                  if (self._options.displayType == 'folders') {
-                     if (record.get(self._options.hierField + '@')) {
-                        self._drawAndAppendItem(record, {at : startRow});
-                     }
-
-                  }
-                  else {
-                     self._drawAndAppendItem(record, {at : startRow});
-                  }
-               }
-            }
-         }
-         self._drawItemsCallback();
+      _buildTplArgs: function(item) {
+         var
+            args = TreeDataGridView.superclass._buildTplArgs.apply(this, arguments);
+         args.arrowActivatedHandler = this._options.arrowActivatedHandler;
+         return args;
       },
-
       init: function(){
          TreeDataGridView.superclass.init.call(this);
          if (this._container.hasClass('controls-TreeDataGridView__withPhoto')){
@@ -150,11 +109,6 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
          }
       },
 
-      _drawLoadedNode : function(key, records) {
-         this._drawExpandArrow(key);
-         this._drawItemsFolder(records);
-         this._updateItemsToolbar();
-      },
       _drawItemsCallback: function() {
          var
             model,
@@ -175,10 +129,12 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
          TreeDataGridView.superclass._drawItemsCallback.apply(this, arguments);
       },
       _createFolderFooter: function(key) {
-         var container,
-             nextContainer,
-             currentContainer,
-             level = this._getTreeLevel(key);
+         var
+            container,
+            nextContainer,
+            currentContainer,
+            item = this._getItemProjectionByItemId(key),
+            level = this._getTreeLevel(key);
 
          TreeDataGridView.superclass._createFolderFooter.apply(this, arguments);
          this._foldersFooters[key].css('padding-left', level * HIER_WRAPPER_WIDTH);
@@ -188,10 +144,10 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
          container.find('td').append(this._foldersFooters[key]);
          this._foldersFooters[key] = container;
 
-         currentContainer = $('.controls-ListView__item[data-id="' + key + '"]', this._getItemsContainer().get(0));
+         currentContainer = $('.controls-ListView__item[data-hash="' + item.getHash() + '"]', this._getItemsContainer().get(0));
          while (currentContainer.length) {
             nextContainer = currentContainer;
-            currentContainer =  $('.controls-ListView__item[data-parent="' + currentContainer.data('id') + '"]', this._getItemsContainer().get(0)).last();
+            currentContainer =  $('.controls-ListView__item[data-parent-hash="' + currentContainer.data('hash') + '"]', this._getItemsContainer().get(0)).last();
          }
          this._foldersFooters[key].insertAfter(nextContainer);
 
@@ -199,7 +155,7 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
       },
       _getFolderFooterOptions: function(key) {
          return {
-            item: this.getDataSet().getRecordByKey(key),
+            item: this.getItems().getRecordByKey(key),
             more: this._folderHasMore[key],
             level: this._getTreeLevel(key)
          }
@@ -208,7 +164,7 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
       _getTreeLevel: function(key) {
          var
              level = 0,
-             dataSet = this.getDataSet(),
+             dataSet = this.getItems(),
              item = dataSet.getRecordByKey(key);
          while (key != this.getCurrentRoot()) {
             key = dataSet.getParentKey(item, this._options.hierField);
@@ -239,7 +195,7 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
       _keyboardHover: function(e) {
          var parentResult = TreeDataGridView.superclass._keyboardHover.apply(this, arguments),
              selectedKey = this.getSelectedKey(),
-             rec = this.getDataSet().getRecordById(selectedKey),
+             rec = this.getItems().getRecordById(selectedKey),
              isBranch = rec && rec.get(this._options.hierField + '@');
 
          switch(e.which) {
@@ -284,40 +240,11 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
          var itemCont = $('.controls-ListView__item[data-id="' + key + '"]', this.getContainer().get(0));
          $('.js-controls-TreeView__expand', itemCont).toggleClass('controls-TreeView__expand__open', flag);
       },
-
-      _nodeClosed : function(key) {
-         var childKeys = this._dataSet.getChildItems(key, true, this._options.hierField);
-         for (var i = 0; i < childKeys.length; i++) {
-            $('.controls-ListView__item[data-id="' + childKeys[i] + '"]', this._getItemsContainer().get(0)).remove();
-            delete(this._options.openedPath[childKeys[i]]);
-         }
-         //Уничтожим все дочерние footer'ы и footer текущего узла
-         this._destroyFolderFooter(childKeys.concat(key));
-      },
-      //TODO: код понадобится для частичной перерисовки после перемещения
-      /*_updateItem: function(item) {
+      _addItemAttributes : function(container, itemProjection) {
+         TreeDataGridView.superclass._addItemAttributes.call(this, container, itemProjection);
          var
-             isMove = item.getContents().isChanged(this._options.hierField),
-             parentKey = this._items.getParentKey(item.getContents(), this._options.hierField),
-             parentItem = this._items.getRecordById(parentKey);
-         *//*
-          Если обновление вызвано не из того, что поменялось поле иерархии (произошло перемещение), то удалять его точно не надо.
-          Если элемент переместился в закрытую папку и она не не является текущим корнем, то его нужно просто удалить из
-          DOM'а т.к. его не должно быть видно. Так же возможна ситуация когда с помощью диалога перемещения запись переместили
-          в папку, которая является открытой но её нет в текущем наборе элементов(например текущий корень где-то глубоко в
-          иерархии, а ниже по иерархии были открытые папки), то такую запись тоже нужно просто удалить. Так же проверяем на
-          наличие папки в которую перемещаем в наборе DOM элементов с помощью _getElementByModel т.к. у некоторых людей все
-          данные сразу присутствуют и проверка в наборе данных даст неверный результат.
-          *//*
-         if (isMove && (!this._options.openedPath[parentKey] || !this._getElementByModel(parentItem).length) && parentKey != this.getCurrentRoot()) {
-            this._removeItem(item)
-         } else {
-            TreeDataGridView.superclass._updateItem.apply(this, arguments);
-         }
-      },*/
-      _addItemAttributes : function(container, item) {
-         TreeDataGridView.superclass._addItemAttributes.call(this, container, item);
-         var hierType = item.get(this._options.hierField + '@'),
+            item = itemProjection.getContents(),
+            hierType = item.get(this._options.hierField + '@'),
             itemType = hierType == null ? 'leaf' : hierType == true ? 'node' : 'hidden';
          container.addClass('controls-ListView__item-type-' + itemType);
          var
