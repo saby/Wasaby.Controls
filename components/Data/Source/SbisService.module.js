@@ -377,13 +377,13 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
        * @protected
        */
       _getValueType: function (val, name, original) {
-         if (name && original) {
-            if (name.slice(-1) in {'@': false, '$': false} && original.hasOwnProperty(name.slice(0, -1))) {
+         if (this._isHierarhyField(name, original)) {
+            if (name.slice(-1) in {'@': false, '$': false}) {
                return {
                   type: 'hierarchy',
-                  kind: $ws.helpers.type(val)
+                  kind: 'boolean'
                };
-            } else if (original.hasOwnProperty(name + '@') || original.hasOwnProperty(name + '$')) {
+            } else {
                return {
                   type: 'hierarchy',
                   kind: 'identity'
@@ -613,8 +613,19 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
          };
 
          return this.getAdapter().serialize(args);
-      }
+      },
 
+      _isHierarhyField: function(name, original){
+         if(name && original) {
+            if (name.slice(-1) in {'@': false, '$': false}) {
+               name = name.slice(0, -1);
+            }
+            if (original.hasOwnProperty(name) && original.hasOwnProperty(name + '@') && original.hasOwnProperty(name + '$')) {
+               return true;
+            }
+         }
+         return false;
+      }
       //endregion Deprecated
    });
 
