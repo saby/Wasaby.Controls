@@ -138,7 +138,7 @@ define('js!SBIS3.CONTROLS.TextBox', ['js!SBIS3.CONTROLS.TextBoxBase','html!SBIS3
                         .bind('keydown', this._keyDownBind.bind(this))
                         .bind('keyup', this._keyUpBind.bind(this));
 
-         this._inputField[0].onpaste('paste', function(){
+         this._inputField.on('paste', function(){
             self._pasteProcessing++;
             window.setTimeout(function(){
                self._pasteProcessing--;
