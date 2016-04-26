@@ -279,22 +279,6 @@ define('js!SBIS3.CONTROLS.DataGridView',
          args.startScrollColumn = this._options.startScrollColumn;
 
          return args;
-         //TODO старая версия
-         var
-            args2 = DataGridView.superclass._buildTplArgs.apply(this, arguments),
-            rowData = {
-               columns: $ws.core.clone(this._options.columns),
-               decorators: this._decorators,
-               multiselect : this._options.multiselect,
-               /*isNode: item.get(this._options.hierField + '@'),
-               hasChilds: item.get(this._options.hierField + '$'),*/
-               arrowActivatedHandler: this._options.arrowActivatedHandler,
-               hierField: this._options.hierField,
-               displayType: this._options.displayType,
-               startScrollColumn: this._options.startScrollColumn
-            };
-         $ws.core.merge(args, rowData);
-         return args;
       },
 
       _prepareColumns : function(columns) {
