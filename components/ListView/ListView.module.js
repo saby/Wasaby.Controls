@@ -1543,7 +1543,7 @@ define('js!SBIS3.CONTROLS.ListView',
                      self._toggleEmptyData();
 
                      if (this._isSlowDrawing) {
-                        self._needToRedraw = false;
+                        self._needToRedraw = true;
                      }
                   }
 
