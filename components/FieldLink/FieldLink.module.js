@@ -563,11 +563,9 @@ define('js!SBIS3.CONTROLS.FieldLink',
           },
 
           setListFilter: function() {
-             var selectedItems =  this.getSelectedItems();
-
              /* Если единичный выбор в поле связи, но textBox всё равно показывается(включена опция), запрещаем работу suggest'a */
              if(!this._options.multiselect &&
-                 selectedItems && selectedItems.getCount() &&
+                 !this._isEmptySelection() &&
                  this._options.alwaysShowTextBox) {
                 return;
              }
