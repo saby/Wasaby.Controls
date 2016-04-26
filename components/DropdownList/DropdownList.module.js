@@ -190,13 +190,8 @@ define('js!SBIS3.CONTROLS.DropdownList',
                 pickerContainer = this._getPickerContainer(),
                 header = pickerContainer.find('.controls-DropdownList__header'),
                 classes = this._container.attr('class');
-            //Убираем прикладные стили с шапки
-            //В 374 выписал задачу, чтобы шапку можно было задавать без this._container.clone(), тогда и фильтровать классы не придется
-            classes = $ws.helpers.filter(classes.split(' '), function(value){
-               return value.indexOf('ws-') > -1 || value.indexOf('controls-') > -1
-            }).join(' ');
-            //смешно, но reviveComponents может найти в верстек config и другие атрибуты компонентов и тогда всё зациклится
-            header.append(this._container.clone().removeAttr('style data-component config id class').removeClass('ws-hidden').addClass(classes));
+            // Собираем header через шаблон, чтобы не тащить стили прикладников
+            header.append(dotTplFn(this._options));
             this._setVariables();
             this.reload();
             this._bindItemSelect();
@@ -233,7 +228,6 @@ define('js!SBIS3.CONTROLS.DropdownList',
             }
             DropdownList.superclass.setSelectedKeys.apply(this, arguments);
             this._updateCurrentSelection();
-
          },
          _updateCurrentSelection: function(){
             var keys;
