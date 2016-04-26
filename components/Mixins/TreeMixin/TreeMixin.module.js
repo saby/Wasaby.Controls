@@ -185,7 +185,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
       toggleNode: function(key) {
          this._getItemProjectionByItemId(key).toggleExpanded();
       },
-      /** TODO: не работает!
+      /**
        * Развернуть ветку
        * @param key
        * @returns {$ws.proto.Deferred}

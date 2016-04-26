@@ -171,8 +171,7 @@ define('js!SBIS3.CONTROLS.TreeCompositeView', ['js!SBIS3.CONTROLS.TreeDataGridVi
             return resultTpl;
       },
 
-      _getTargetContainer: function (itemProj) {
-         var item = itemProj.getContents();
+      _getTargetContainer: function (item) {
          if (this.getViewMode() != 'table' && item.get(this._options.hierField + '@')) {
             return  $('.controls-CompositeView__foldersContainer',this._container);
          }
