@@ -160,8 +160,7 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
       _getEditorOffset: function(model) {
          var
              parentKey = model.get(this._options.hierField),
-             itemProjection = this._getItemProjectionByItemId(parentKey),
-             treeLevel = itemProjection.getLevel();
+             treeLevel = this._getItemProjectionByItemId(parentKey).getLevel();
          return treeLevel * HIER_WRAPPER_WIDTH + ADDITIONAL_LEVEL_OFFSET;
       },
       _onResizeHandler: function() {
