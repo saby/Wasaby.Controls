@@ -157,11 +157,11 @@ define('js!SBIS3.CONTROLS.CompositeViewMixin', ['html!SBIS3.CONTROLS.CompositeVi
       },
 
       around : {
-         _getItemTemplate: function(parentFnc, item) {
-            var resultTpl, dotTpl;
+         _getItemTemplate: function(parentFnc, itemProj) {
+            var resultTpl, dotTpl, item = itemProj.getContents();
             switch (this._options.viewMode) {
                case 'table':
-                  resultTpl = parentFnc.call(this, item);
+                  resultTpl = parentFnc.call(this, itemProj);
                   break;
                case 'list':
                   {
