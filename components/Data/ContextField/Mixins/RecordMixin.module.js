@@ -70,7 +70,7 @@ define('js!SBIS3.CONTROLS.Data.ContextField.RecordMixin', [], function () {
                try {
                   oldValue.set(key, value);
                } catch (e) {
-                  return value;
+                  return oldValue;
                }
             }
             result = oldValue;
