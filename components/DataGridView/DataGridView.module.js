@@ -163,12 +163,10 @@ define('js!SBIS3.CONTROLS.DataGridView',
              * <pre>
              *     define('js!SBIS3.Demo.nDataGridView',
              *        [
-             *           'js!SBIS3.CORE.CompoundControl',
-             *           'html!SBIS3.Demo.nDataGridView',
-             *           'js!SBIS3.CONTROLS.DataGridView',
-             *           'css!SBIS3.Demo.nDataGridView',
+             *           ...,
              *           'html!SBIS3.Demo.nDataGridView/resources/resultTemplate'
              *        ],
+             *     );
              * </pre>
              * 2. Передаем шаблон в опцию:
              * <pre class="brush: xml">
