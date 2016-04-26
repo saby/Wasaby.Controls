@@ -1362,7 +1362,12 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
       },
 
       _changeItemProperties: function(item, property) {
-         this._redrawItem(item);
+         if (this._isSlowDrawing()) {
+            this.redrawItem(item);
+         }
+         else {
+            this._redrawItem(item);
+         }
       },
 
       _getItemContainerByIndex: function(parent, at) {
