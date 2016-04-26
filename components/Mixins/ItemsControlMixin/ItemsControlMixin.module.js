@@ -1158,10 +1158,10 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
        * Метод перерисовки определенной записи
        * @param {Object} item Запись, которую необходимо перерисовать
        */
-      redrawItem: function(item) {
+      redrawItem: function(item, projItem) {
          var
             targetElement = this._getElementByModel(item),
-            newElement = this._drawItem(item);
+            newElement = this._drawItem(projItem);
          targetElement.after(newElement).remove();
          this.reviveComponents();
       },
@@ -1367,7 +1367,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
 
       _changeItemProperties: function(item, property) {
          if (this._isSlowDrawing()) {
-            this.redrawItem(item.getContents());
+            this.redrawItem(item.getContents(), item);
          }
          else {
             this._redrawItem(item);
