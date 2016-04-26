@@ -1159,6 +1159,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
        * @param {Object} item Запись, которую необходимо перерисовать
        */
       redrawItem: function(item, projItem) {
+         projItem = projItem || this._getItemProjectionByItemId(item.getId());
          var
             targetElement = this._getElementByModel(item),
             newElement = this._drawItem(projItem);
