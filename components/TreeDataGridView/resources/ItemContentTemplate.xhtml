@@ -1,6 +1,6 @@
 {{ var padding; if (it.isSearch) {padding = (it.projItem.getLevel() == 1) ? it.originallPadding : it.originallPadding + it.paddingSize } else padding = it.paddingSize * (it.projItem.getLevel() - 1) + it.originallPadding;
    it.isNode = it.projItem.isNode(); it.hasChilds = it.projItem.getContents().get(it.hierField + '$'); }}
-{{~it.columns :column:index}}{{it.cellData['item'] = it.item;it.cellData['projItem'] = it.projItem;it.cellData['field']=column.field;it.cellData['column']=column;}}<td class="controls-DataGridView__td
+{{~it.columns :column:index}}{{it.cellData['isNode'] = it.isNode;it.cellData['item'] = it.item;it.cellData['projItem'] = it.projItem;it.cellData['field']=column.field;it.cellData['column']=column;it.cellData['included']=column.included;it.cellData['templateBinding']=column.templateBinding;it.cellData['decorators']=it.decorators;}}<td class="controls-DataGridView__td
       {{? !!column.editor}} controls-DataGridView__edited-td{{?}}
       {{?column.className}} {{=column.className}}{{?}}
       {{?it.startScrollColumn!== undefined}}{{?it.startScrollColumn <= index}} controls-DataGridView__scrolledCell{{??}} controls-DataGridView__notScrolledCell{{?}}{{?}}"
