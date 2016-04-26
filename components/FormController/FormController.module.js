@@ -378,11 +378,11 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
          this._notify('onDestroy')
       },
 
-      _runQuery: function() {
+      _runQuery: function(command) {
          var self = this,
             hdl;
          this._showLoadingIndicator(rk('Загрузка'));
-         if (this._options.key) {
+         if (this._options.key && command !== 'create') {
             hdl = this.read();
          }
          else {
@@ -404,15 +404,7 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
          return hdl;
       },
       _createRecord: function(){
-         var self = this;
-         return this._options.dataSource.create(this._options.initValues).addCallback(function(record){
-            self._notify('onCreate', record);
-            self.setRecord(record);
-            if (record.getKey()){
-               self._needDestroyRecord = true;
-            }
-            return record;
-         });
+         return this._runQuery('create');
       }
    });
 
