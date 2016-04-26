@@ -434,15 +434,16 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
          parentId = (typeof parentId != 'undefined') ? parentId : null;
          if (this._indexTree.hasOwnProperty(parentId)) {
             if (getFullBranch) {
-               var curParent = parentId,
+               var fillChildren = function (newParent) {
+                     parents.push(newParent);
+                     childs.push(newParent);
+                  },
+                  curParent = parentId,
                   parents = [],
                   childs = [];
 
                do {
-                  $ws.helpers.forEach(this._indexTree[curParent], function (newParent) {
-                     parents.push(newParent);
-                     childs.push(newParent);
-                  });
+                  $ws.helpers.forEach(this._indexTree[curParent], fillChildren);
                   if (parents.length) {
                      curParent = Array.remove(parents, 0);
                   } else {
@@ -535,7 +536,11 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
       _reindexTree: function (field) {
          this._reindex();
          var self = this,
-            parentKey;
+            parentKey,
+            childKey;
+         if (field === this.getIdProperty()) {
+            throw new Error('Hierarchy field "' + field + '" can\'t be same as primary key field.');
+         }
          this.each(function (record) {
             parentKey = null;
             if (field) {
@@ -547,7 +552,11 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
             if (!this._indexTree.hasOwnProperty(parentKey)) {
                this._indexTree[parentKey] = [];
             }
-            this._indexTree[parentKey].push(record.getId());
+            childKey = record.getId();
+            if (parentKey === childKey) {
+               throw new Error('Record with hierarchy field "' + field + '" = ' + parentKey + ' is related to itself.');
+            }
+            this._indexTree[parentKey].push(childKey);
          }, 'all');
       },
 
