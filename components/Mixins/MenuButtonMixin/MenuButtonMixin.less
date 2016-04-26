@@ -9,7 +9,7 @@
          position: relative;
          top: 1px;
          display: table-cell;
-         padding-right: 16px;
+         padding: 0 16px 0 8px;
       }
       .controls-Menu__header-icon {
          color: @primary-color !important;
@@ -17,6 +17,9 @@
          vertical-align: middle;
          padding-left: 8px;
          width: 1px;
+      }
+      .controls-Menu__header-icon + .controls-Menu__header-caption{
+         padding-left: 0;
       }
    }
    .controls-Menu__header {
