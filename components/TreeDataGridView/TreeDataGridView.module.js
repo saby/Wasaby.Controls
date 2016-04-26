@@ -3,8 +3,9 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
    'js!SBIS3.CONTROLS.TreeMixin',
    'js!SBIS3.CONTROLS.TreeViewMixin',
    'browser!html!SBIS3.CONTROLS.TreeDataGridView/resources/ItemTemplate',
-   'browser!html!SBIS3.CONTROLS.TreeDataGridView/resources/ItemContentTemplate'
-], function(DataGridView, TreeMixin, TreeViewMixin, ItemTemplate, ItemContentTemplate) {
+   'browser!html!SBIS3.CONTROLS.TreeDataGridView/resources/ItemContentTemplate',
+   'browser!html!SBIS3.CONTROLS.TreeDataGridView/resources/FolderFooterWrapperTemplate'
+], function(DataGridView, TreeMixin, TreeViewMixin, ItemTemplate, ItemContentTemplate, footerWrapperTemplate) {
 
    var HIER_WRAPPER_WIDTH = 16,
        //Число 17 это сумма padding'ов, margin'ов элементов которые составляют отступ у первого поля, по которому строится лесенка отступов в дереве
@@ -41,6 +42,7 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
       $protected: {
          _defaultItemTemplate: ItemTemplate,
          _defaultItemContentTemplate: ItemContentTemplate,
+         _footerWrapperTemplate: footerWrapperTemplate,
          _options: {
             /**
              * @cfg {Function} Устанавливает функцию, которая будет выполнена при клике по кнопке справа от названия узла (папки) или скрытого узла.
@@ -129,57 +131,38 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
          TreeDataGridView.superclass._drawItemsCallback.apply(this, arguments);
       },
       _createFolderFooter: function(key) {
-         var
-            container,
-            nextContainer,
-            currentContainer,
-            item = this._getItemProjectionByItemId(key),
-            level = this._getTreeLevel(key);
-
          TreeDataGridView.superclass._createFolderFooter.apply(this, arguments);
-         this._foldersFooters[key].css('padding-left', level * HIER_WRAPPER_WIDTH);
-         container = $('<tr class="controls-TreeDataGridView__folderFooter" data-parent="' + key + '">\
-            <td colspan="' + (this._options.columns.length + (this._options.multiselect ? 1 : 0)) + '"></td>\
-         </tr>');
-         container.find('td').append(this._foldersFooters[key]);
-         this._foldersFooters[key] = container;
+         var
+            pagerContainer,
+            lastContainer = this._getLastChildByParent(this._getItemsContainer(), this._getItemProjectionByItemId(key));
 
-         currentContainer = $('.controls-ListView__item[data-hash="' + item.getHash() + '"]', this._getItemsContainer().get(0));
-         while (currentContainer.length) {
-            nextContainer = currentContainer;
-            currentContainer =  $('.controls-ListView__item[data-parent-hash="' + currentContainer.data('hash') + '"]', this._getItemsContainer().get(0)).last();
-         }
-         this._foldersFooters[key].insertAfter(nextContainer);
+         //TODO: Сделать FolderPager отдельным контроллом и перенести создание в шаблон FolderFooterWrapperTemplate
+         pagerContainer = $('<div class="controls-TreePager-container">').appendTo(this._foldersFooters[key].find('.controls-TreeView__folderFooterContainer'));
+         this._createFolderPager(key, pagerContainer, this._folderHasMore[key]);
 
+         this._foldersFooters[key].insertAfter(lastContainer);
          this.reviveComponents();
       },
       _getFolderFooterOptions: function(key) {
          return {
+            key: key,
             item: this.getItems().getRecordByKey(key),
-            more: this._folderHasMore[key],
-            level: this._getTreeLevel(key)
+            level: this._getItemProjectionByItemId(key).getLevel(),
+            footerTpl: this._options.folderFooterTpl,
+            multiselect: this._options.multiselect,
+            colspan: this._options.columns.length,
+            levelOffsetWidth: HIER_WRAPPER_WIDTH
          }
       },
-      //Временное решение, пока не перейдём на проекции
-      _getTreeLevel: function(key) {
-         var
-             level = 0,
-             dataSet = this.getItems(),
-             item = dataSet.getRecordByKey(key);
-         while (key != this.getCurrentRoot()) {
-            key = dataSet.getParentKey(item, this._options.hierField);
-            item = dataSet.getRecordByKey(key);
-            level++;
-         }
-         return level;
+      _getFolderFooterWrapper: function() {
+         return this._footerWrapperTemplate;
       },
       _getEditorOffset: function(model) {
          var
-             offset,
              parentKey = model.get(this._options.hierField),
-             treeLevel = this._getTreeLevel(parentKey);
-         offset = treeLevel * HIER_WRAPPER_WIDTH + ADDITIONAL_LEVEL_OFFSET;
-         return offset;
+             itemProjection = this._getItemProjectionByItemId(parentKey),
+             treeLevel = itemProjection.getLevel();
+         return treeLevel * HIER_WRAPPER_WIDTH + ADDITIONAL_LEVEL_OFFSET;
       },
       _onResizeHandler: function() {
          TreeDataGridView.superclass._onResizeHandler.apply(this, arguments);

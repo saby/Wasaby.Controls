@@ -231,30 +231,20 @@ define('js!SBIS3.CONTROLS.TreeViewMixin', ['js!SBIS3.CORE.Control', 'js!SBIS3.CO
        * @private
        */
       _createFolderFooter: function(key) {
-         var
-            footerTpl = this._options.folderFooterTpl,
-            options = this._getFolderFooterOptions(key),
-            container = $('<div class="controls-TreeView__folderFooterContainer">' + (footerTpl ? footerTpl(options) : '') + '</div>');
          this._destroyItemsFolderFooter([key]);
-         this._createFolderPager(key, $('<div class="controls-TreePager-container">').appendTo(container), options.more);
-         this._foldersFooters[key] = container;
-      },
-      _getLastChildByParent: function(parent) {
-         var // Находим последний дочерний элемент с hash родителя рисуемого элемента
-            lastChild = this._getItemsContainer().find('[data-parent-hash="' + parent.getHash() + '"]:last');
-         return lastChild.length ? lastChild : null;
+         this._foldersFooters[key] = $(this._getFolderFooterWrapper()(this._getFolderFooterOptions(key)));
       },
       /**
        * Получить опции футера для ветки
-       * @param key
-       * @returns {{keys: *, more: *}}
+       * @param key {String|int} идентификатор ветки для котрой будет построен футер
+       * @returns options {Object} опции которые будут переданы в folderFooterTpl
        * @private
        */
       _getFolderFooterOptions: function(key) {
-         return {
-            keys: key,
-            more: this._folderHasMore[key]
-         };
+         /*Must be implemented!*/
+      },
+      _getFolderFooterWrapper: function() {
+         /*Must be implemented!*/
       },
       /**
        * Удалить футер для веток
@@ -263,20 +253,30 @@ define('js!SBIS3.CONTROLS.TreeViewMixin', ['js!SBIS3.CORE.Control', 'js!SBIS3.CO
        */
       _destroyItemsFolderFooter: function(keys) {
          var
-            controls,
-            self = this,
-            key;
+            key,
+            controls;
          for (var i = 0; i < keys.length; i++) {
             key = keys[i];
             if (this._foldersFooters[key]) {
                controls = this._foldersFooters[key].find('.ws-component');
-               for (var i = 0; i < controls.length; i++) {
-                  controls[i].wsControl.destroy();
+               for (var j = 0; j < controls.length; j++) {
+                  controls[j].wsControl.destroy();
                }
                this._foldersFooters[key].remove();
                delete this._foldersFooters[key];
             }
          }
+      },
+      _getLastChildByParent: function(itemsContainer, parent) {
+         var
+             lastContainer,
+             currentContainer;
+         currentContainer = $('.controls-ListView__item[data-hash="' + parent.getHash() + '"]', itemsContainer.get(0));
+         while (currentContainer.length) {
+            lastContainer = currentContainer;
+            currentContainer =  $('.controls-ListView__item[data-parent-hash="' + currentContainer.attr('data-hash') + '"]', itemsContainer.get(0)).last();
+         }
+         return lastContainer;
       },
       around: {
          _onCollectionRemove: function(parentFunc, items, notCollapsed) {
