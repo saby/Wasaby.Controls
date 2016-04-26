@@ -527,6 +527,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
             this._toggleEmptyData(this._options.emptyHTML);
          }
          this._reviveItems();
+         this._container.addClass('controls-ListView__dataLoaded');
       },
 
       _redrawItem: function(item) {
