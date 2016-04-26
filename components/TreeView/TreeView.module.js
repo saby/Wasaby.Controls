@@ -49,13 +49,6 @@ define('js!SBIS3.CONTROLS.TreeView', [
          this._container.addClass('controls-TreeView');
       },
 
-      _drawSelectedItems : function(idArray) {
-         $('.controls-ListView__itemCheckBox__multi', this._container).removeClass('controls-ListView__itemCheckBox__multi');
-         for (var i = 0; i < idArray.length; i++) {
-            $(".controls-ListView__item[data-id='" + idArray[i] + "']", this._container).find('.js-controls-ListView__itemCheckBox').first().addClass('controls-ListView__itemCheckBox__multi');
-         }
-      },
-
       _notifyOnDragMove: function(target, insertAfter) {
          //Если происходит изменение порядкового номера и оно разрешено или если происходит смена родителся и она разрешена, стрельнём событием
          if (typeof insertAfter === 'boolean' && this._options.itemsDragNDrop !== 'onlyChangeParent' || insertAfter === undefined && this._options.itemsDragNDrop !== 'onlyChangeOrder') {
