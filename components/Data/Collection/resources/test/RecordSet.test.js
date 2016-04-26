@@ -1322,7 +1322,30 @@ define([
                assert.deepEqual(index.null, [1]);
             });
 
+            it('should throw an error if pk field same as hierarchy field', function() {
+               var rs =  new RecordSet({
+                  idProperty: 'id'
+               });
+               assert.throw(function() {
+                  rs.getTreeIndex('id');
+               });
+            });
 
+            it('should throw an error for link to itself', function() {
+               var rs =  new RecordSet({
+                  rawData: [{
+                     id: 1,
+                     parent: null
+                  }, {
+                     id: 2,
+                     parent: 2
+                  }],
+                  idProperty: 'id'
+               });
+               assert.throw(function() {
+                  rs.getTreeIndex('parent');
+               });
+            });
          });
 
          describe('.getChildItems()', function () {
