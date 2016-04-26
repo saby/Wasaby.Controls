@@ -1412,7 +1412,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          var
             itemInstance = this._drawItem(item, at, last);
          if (itemInstance) {
-            this._appendItemTemplate(item, this._getTargetContainer(item), itemInstance, at);
+            this._appendItemTemplate(item, this._getTargetContainer(item.getContents()), itemInstance, at);
          }
       },
 
