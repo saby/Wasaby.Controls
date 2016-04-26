@@ -1,21 +1,23 @@
 /* global define, $ws */
 define('js!SBIS3.CONTROLS.Data.Types.Flags', [
+   'js!SBIS3.CONTROLS.Data.Types.IFlags',
    'js!SBIS3.CONTROLS.Data.Types.Dictionary',
    'js!SBIS3.CONTROLS.Data.ContextField.Flags',
    'js!SBIS3.CONTROLS.Data.Di',
    'js!SBIS3.CONTROLS.Data.Utils'
-], function (Dictionary, ContextFieldFlags, Di, Utils) {
+], function (IFlags, Dictionary, ContextFieldFlags, Di, Utils) {
    'use strict';
 
    /**
     * Тип данных набор флагов
     * @class SBIS3.CONTROLS.Data.Types.Flags
+    * @mixes SBIS3.CONTROLS.Data.Types.IFlags
     * @extends SBIS3.CONTROLS.Data.Types.Dictionary
     * @public
     * @author Ганшин Ярослав
     */
 
-   var Flags = Dictionary.extend(/** @lends SBIS3.CONTROLS.Data.Types.Flags.prototype */ {
+   var Flags = Dictionary.extend([IFlags],/** @lends SBIS3.CONTROLS.Data.Types.Flags.prototype */ {
       _moduleName: 'SBIS3.CONTROLS.Data.Types.Flags',
       $protected: {
          _options: {
@@ -123,7 +125,7 @@ define('js!SBIS3.CONTROLS.Data.Types.Flags', [
             return false;
          }
 
-         if (!Flags.superclass.equals.call(this, value)) {
+         if (!Dictionary.prototype.equals.call(this, value)) {
             return false;
          }
 

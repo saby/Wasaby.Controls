@@ -1,10 +1,11 @@
 /* global define, $ws */
 define('js!SBIS3.CONTROLS.Data.Types.Enum', [
+   'js!SBIS3.CONTROLS.Data.Types.IEnum',
    'js!SBIS3.CONTROLS.Data.Types.Dictionary',
    'js!SBIS3.CONTROLS.Data.ContextField.Enum',
    'js!SBIS3.CONTROLS.Data.Di',
    'js!SBIS3.CONTROLS.Data.Utils'
-], function (Dictionary, ContextFieldEnum, Di, Utils) {
+], function (IEnum, Dictionary, ContextFieldEnum, Di, Utils) {
    'use strict';
 
    /**
@@ -15,7 +16,7 @@ define('js!SBIS3.CONTROLS.Data.Types.Enum', [
     * @author Ганшнин Ярослав
     */
 
-   var Enum = Dictionary.extend(/** @lends SBIS3.CONTROLS.Data.Types.Enum.prototype */ {
+   var Enum = Dictionary.extend([IEnum],/** @lends SBIS3.CONTROLS.Data.Types.Enum.prototype */ {
       _moduleName: 'SBIS3.CONTROLS.Data.Types.Enum',
       $protected: {
          _options: {
@@ -113,7 +114,7 @@ define('js!SBIS3.CONTROLS.Data.Types.Enum', [
             return false;
          }
 
-         if (!Enum.superclass.equals.call(this, value)) {
+         if (!Dictionary.prototype.equals.call(this, value)) {
             return false;
          }
 
