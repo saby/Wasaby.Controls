@@ -132,9 +132,7 @@ define('js!SBIS3.CONTROLS.DialogActionBase', ['js!SBIS3.CONTROLS.ActionBase', 'j
             })
          }
 
-         if (actionResult !== OpenDialogAction.ACTION_MANUAL){
-            this._updateLinkedObject(collection, record, actionResult);
-         }
+         this._updateLinkedObject(collection, record, actionResult);
       },
 
       _updateLinkedObject: function(collection, record, result){
