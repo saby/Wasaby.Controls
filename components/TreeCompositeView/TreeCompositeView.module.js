@@ -91,7 +91,7 @@ define('js!SBIS3.CONTROLS.TreeCompositeView', ['js!SBIS3.CONTROLS.TreeDataGridVi
       _getItemTemplate: function(itemProj) {
          var resultTpl, dotTpl, item = itemProj.getContents();
             switch (this._options.viewMode) {
-               case 'table': resultTpl = TreeCompositeView.superclass._getItemTemplate.call(this, item); break;
+               case 'table': resultTpl = TreeCompositeView.superclass._getItemTemplate.call(this, itemProj); break;
                case 'list': {
                   if (item.get(this._options.hierField + '@')) {
                      dotTpl = this._options.listFolderTemplate || this._options.folderTemplate || folderTpl;
