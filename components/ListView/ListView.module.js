@@ -465,14 +465,14 @@ define('js!SBIS3.CONTROLS.ListView',
                editingTemplate: undefined,
                /**
                 * @cfg {String} Устанавливает позицию отображения строки итогов.
+                * @variant none Строка итогов не будет отображаться.
+                * @variant top Строка итогов будет расположена вверху.
+                * @variant bottom Строка итогов будет расположена внизу.
                 * @remark
                 * Отображение строки итогов конфигурируется тремя опциями: resultsPosition, {@link resultsText} и {@link resultsTpl}.
                 * Данная опция определяет расположение строки итогов, а также предоставляет возможность отображения строки в случае отсутствия записей.
                 * Список возможных значений:
                 * <ol>
-                *    <li>'none' - строка итогов не будет отображаться</li>
-                *    <li>'top' - строка итогов будет расположена вверху</li>
-                *    <li>'bottom' - строка итогов будет расположена внизу</li>
                 * </ol>
                 * С подробным описанием можно ознакомиться в статье {@link https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/list-settings/list-visual-display/results/ Строка итогов}.
                 * @example
@@ -511,12 +511,11 @@ define('js!SBIS3.CONTROLS.ListView',
                 * <pre>
                 *     define('js!SBIS3.Demo.nDataGridView',
                 *        [
-                *           'js!SBIS3.CORE.CompoundControl',
-                *           'html!SBIS3.Demo.nDataGridView',
-                *           'js!SBIS3.CONTROLS.DataGridView',
-                *           'css!SBIS3.Demo.nDataGridView',
+                *           ...,
                 *           'html!SBIS3.Demo.nDataGridView/resources/resultTemplate'
                 *        ],
+                *        ...
+                *     );
                 * </pre>
                 * 2. Передаем шаблон в опцию:
                 * <pre class="brush: xml">

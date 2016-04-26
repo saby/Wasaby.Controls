@@ -166,6 +166,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
              *           ...,
              *           'html!SBIS3.Demo.nDataGridView/resources/resultTemplate'
              *        ],
+             *        ...
              *     );
              * </pre>
              * 2. Передаем шаблон в опцию:
