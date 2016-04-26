@@ -834,7 +834,7 @@ define([
                   });
                });
 
-               it('should take idProperty for dataset  from raw data', function (done) {
+               it('should take idProperty for dataset from raw data', function (done) {
                   service.query(new Query()).addCallbacks(function (ds) {
                      try {
                         assert.strictEqual(ds.getIdProperty(), '@Ид');
@@ -1007,6 +1007,38 @@ define([
                            i++;
                         });
                         assert.strictEqual(args['ДопПоля'].length, i);
+                        done();
+                     } catch (err) {
+                        done(err);
+                     }
+                  }, function (err) {
+                     done(err);
+                  });
+               });
+
+               it('should generate a request with null navigation with undefined limit', function (done) {
+                  var query = new Query();
+                  query.limit(undefined);
+                  service.query(query).addCallbacks(function () {
+                     try {
+                        var args = SbisBusinessLogic.lastRequest.args;
+                        assert.isNull(args['Навигация']);
+                        done();
+                     } catch (err) {
+                        done(err);
+                     }
+                  }, function (err) {
+                     done(err);
+                  });
+               });
+
+               it('should generate a request with null navigation with null limit', function (done) {
+                  var query = new Query();
+                  query.limit(null);
+                  service.query(query).addCallbacks(function () {
+                     try {
+                        var args = SbisBusinessLogic.lastRequest.args;
+                        assert.isNull(args['Навигация']);
                         done();
                      } catch (err) {
                         done(err);
