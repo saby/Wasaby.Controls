@@ -189,7 +189,15 @@ define('js!SBIS3.CONTROLS.DropdownList',
             var self = this,
                 pickerContainer = this._getPickerContainer(),
                 header = pickerContainer.find('.controls-DropdownList__header'),
-                classes = this._container.attr('class');
+                cssModificators = ['controls-DropdownList__withoutArrow',
+                                   'controls-DropdownList__withoutCross',
+                                   'controls-DropdownList__linkStyle'];
+            //Заполняем опцию className навешенными css-модификаторами
+            for (var i = 0, l = cssModificators.length; i < l; i++){
+               if (this.getContainer().hasClass(cssModificators[i]) && this._options.className.indexOf(cssModificators[i]) < 0){
+                  this._options.className += ' ' + cssModificators[i];
+               }
+            }
             // Собираем header через шаблон, чтобы не тащить стили прикладников
             header.append(dotTplFn(this._options));
             this._setVariables();
