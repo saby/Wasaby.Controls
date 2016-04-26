@@ -118,30 +118,44 @@ define('js!SBIS3.CONTROLS.DialogActionBase', ['js!SBIS3.CONTROLS.ActionBase', 'j
       },
 
       onUpdate: function(event, record){
-         var notifyResult = this._notify('onUpdate', record),
-             collection = this._options.linkedObject;
-         if (notifyResult === undefined){
-            notifyResult = this._onUpdate(record);
-         }
-         //TODO Зачем асинхронщина?
-         if (notifyResult instanceof $ws.proto.Deferred){
-            notifyResult.addCallback(function(result){
-               if (result !== OpenDialogAction.ACTION_MANUAL){
+         var actionResult = this._onUpdate(record),
+             notifyResult = this._notify('onUpdate', record),
+             collection = this._options.linkedObject,
+             self = this;
 
-               }
+         if (actionResult === undefined){
+            actionResult = notifyResult;
+         }
+         if (actionResult instanceof $ws.proto.Deferred){
+            actionResult.addCallback(function(result){
+               self._updateLinkedObject(collection, record, result);
             })
          }
 
-         if (notifyResult !== OpenDialogAction.ACTION_MANUAL){
-            if ($ws.helpers.instanceOfMixin(collection, 'SBIS3.CONTROLS.DSMixin')){
-               collection.reload();
-            }
-            else if ($ws.helpers.instanceOfMixin(collection, 'SBIS3.CONTROLS.Data.Collection.IList')){
-               //Обновляем поля из пришедшего рекорда в linkerObject
-            }
+         if (actionResult !== OpenDialogAction.ACTION_MANUAL){
+            this._updateLinkedObject(collection, record, actionResult);
          }
       },
 
+      _updateLinkedObject: function(collection, record, result){
+         if (result == OpenDialogAction.ACTION_MANUAL){
+            return;
+         }
+         if ($ws.helpers.instanceOfMixin(collection, 'SBIS3.CONTROLS.Data.Collection.IList') && $ws.helpers.instanceOfMixin(collection, 'SBIS3.CONTROLS.Data.Collection.IIndexedCollection')){
+            var collectionRecord = collection.getIndexByValue('idProperty', record.getId());
+            if (!collectionRecord){
+               return;
+            }
+            collectionRecord.each(function(key, value){
+               if (record.has(key) && record.get(key) != value){
+                  this.set(key, record.get(key));
+               }
+            });
+         }
+         else if ($ws.helpers.instanceOfMixin(collection, 'SBIS3.CONTROLS.DSMixin')){
+            collection.reload();
+         }
+      },
       _onUpdate: function(record){
       },
 
