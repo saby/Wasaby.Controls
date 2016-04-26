@@ -375,7 +375,7 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
 
       _destroyRecord: function(){
          this._options.record.destroy();
-         this._notify('onDestroy')
+         this._notify('onDestroy', this._options.record)
       },
 
       _runQuery: function(command) {

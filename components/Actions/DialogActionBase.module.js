@@ -110,72 +110,88 @@ define('js!SBIS3.CONTROLS.DialogActionBase', ['js!SBIS3.CONTROLS.ActionBase', 'j
 
       _getFormControllerHandlers: function(){
          return {
-            onRead: this.onRead.bind(this),
-            onUpdate: this.onUpdate.bind(this),
-            onDestroy: this.onDestroy.bind(this),
-            onCreate: this.onCreate.bind(this)
+            onRead: this._readHandler.bind(this),
+            onUpdate: this._updateHandler.bind(this),
+            onDestroy: this._destroyHandler.bind(this),
+            onCreate: this._createHandler.bind(this)
          }
       },
 
-      onUpdate: function(event, record){
-         var actionResult = this._onUpdate(record),
-             notifyResult = this._notify('onUpdate', record),
-             collection = this._options.linkedObject,
+      _updateHandler: function(event, record){
+         var actionResult = this._getEventResult('onUpdate'),
              self = this;
 
-         if (actionResult === undefined){
-            actionResult = notifyResult;
-         }
          if (actionResult instanceof $ws.proto.Deferred){
             actionResult.addCallback(function(result){
-               self._updateLinkedObject(collection, record, result);
+               self._update(record, result);
             })
          }
-
-         this._updateLinkedObject(collection, record, actionResult);
-      },
-
-      _updateLinkedObject: function(collection, record, result){
-         if (result == OpenDialogAction.ACTION_MANUAL){
-            return;
-         }
-         if ($ws.helpers.instanceOfMixin(collection, 'SBIS3.CONTROLS.Data.Collection.IList') && $ws.helpers.instanceOfMixin(collection, 'SBIS3.CONTROLS.Data.Collection.IIndexedCollection')){
-            var collectionRecord = collection.getIndexByValue('idProperty', record.getId());
-            if (!collectionRecord){
-               return;
-            }
-            collectionRecord.each(function(key, value){
-               if (record.has(key) && record.get(key) != value){
-                  this.set(key, record.get(key));
-               }
-            });
-         }
-         else if ($ws.helpers.instanceOfMixin(collection, 'SBIS3.CONTROLS.DSMixin')){
-            collection.reload();
+         else{
+            this._update(record, actionResult);
          }
       },
       _onUpdate: function(record){
       },
 
-      onRead: function(event, record){
-         this._onRead(record);
-         var notifyResult = this._notify('onRead', record);
+      _update: function (record, result) {
+         var collectionRecord,
+             recValue;
+         collectionRecord = this._getCollectionRecord(result);
+         if (!collectionRecord) {
+            return;
+         }
+         recValue = record.get(key);
+         collectionRecord.each(function (key, value) {
+            if (record.has(key) && recValue != value) {
+               this.set(key, recValue);
+            }
+         });
+      },
+
+      _readHandler: function(event, record){
+         var actionResult = this._getEventResult('onRead', record);
       },
       _onRead: function(record){
       },
 
-      onDestroy: function(event){
-         this._onDestroy();
-         var notifyResult = this._notify('onDestroy');
+      _destroyHandler: function(event, record){
+         var actionResult = this._getEventResult('onDestroy', record),
+            collectionRecord;
+
+         collectionRecord = this._getCollectionRecord(actionResult);
+         collectionRecord && collectionRecord.destroy();
       },
       _onDestroy: function(){
       },
 
-      onCreate: function(event, record){
-         this._onCreate();
-         var notifyResult = this._notify('onCreate', record);
+      _createHandler: function(event, record){
+         var actionResult = this._getEventResult('onCreate', record);
       },
       _onCreate: function(){
+      },
+
+      _getEventResult: function(eventName, record){
+         var actionResult = this['_' + eventName](record),
+             notifyResult = this._notify(eventName, record);
+         //TODO что мы в итоге ждем в ответе, сейчас с deferred'ами отвалится
+         if (actionResult !== OpenDialogAction.ACTION_MANUAL && notifyResult !== undefined){
+            actionResult = notifyResult;
+         }
+         return actionResult;
+      },
+
+      _getCollectionRecord: function(actionResult){
+         var collection = this._options.linkedObject;
+         if (actionResult === OpenDialogAction.ACTION_MANUAL){
+            return undefined;
+         }
+         if ($ws.helpers.instanceOfMixin(collection, 'SBIS3.CONTROLS.DSMixin')) {
+            collection = this.getItems();
+         }
+         if ($ws.helpers.instanceOfMixin(collection, 'SBIS3.CONTROLS.Data.Collection.IList') && $ws.helpers.instanceOfMixin(collection, 'SBIS3.CONTROLS.Data.Collection.IIndexedCollection')) {
+            return collection.getIndexByValue(record.getIdProperty(), record.getId());
+         }
+         return undefined;
       },
 
       _buildComponentConfig: function() {
