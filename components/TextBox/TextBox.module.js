@@ -138,7 +138,7 @@ define('js!SBIS3.CONTROLS.TextBox', ['js!SBIS3.CONTROLS.TextBoxBase','html!SBIS3
                         .bind('keydown', this._keyDownBind.bind(this))
                         .bind('keyup', this._keyUpBind.bind(this));
 
-         this._inputField.bind('paste', function(){
+         this._inputField.on('paste', function(){
             self._pasteProcessing++;
             window.setTimeout(function(){
                self._pasteProcessing--;
@@ -294,7 +294,7 @@ define('js!SBIS3.CONTROLS.TextBox', ['js!SBIS3.CONTROLS.TextBoxBase','html!SBIS3
       },
 
       _keyPressBind: function(event) {
-         if (this._options.inputRegExp){
+         if (this._options.inputRegExp && !event.ctrlKey){
             return this._inputRegExp(event, new RegExp(this._options.inputRegExp));
          }
       },
