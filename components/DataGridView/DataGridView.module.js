@@ -306,6 +306,18 @@ define('js!SBIS3.CONTROLS.DataGridView',
             else {
                columnsNew[i].contentTpl = TemplateUtil.prepareTemplate(this._defaultCellTemplate);
             }
+
+            if (columnsNew[i].includedTemplates) {
+               var tpls = columnsNew[i].includedTemplates;
+               columnsNew[i].included = {};
+               for (var j in tpls) {
+                  if (tpls.hasOwnProperty(j)) {
+                     columnsNew[i].included[j] = TemplateUtil.prepareTemplate(tpls[j]);
+                  }
+               }
+            }
+
+
          }
          return columnsNew;
       },
