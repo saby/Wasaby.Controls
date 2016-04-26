@@ -305,6 +305,9 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          }
          this._bindHandlers();
          this._prepareConfig(this._options.dataSource, this._options.items);
+         if (this._options.itemTemplate || this._options.userItemAttributes) {
+            $ws.single.ioc.resolve('ILogger').log('ItemsControl', 'Контрол ' + this.getName() + ' отрисовывается по неоптимальному алгоритму. Заданы itemTemplate или userItemAttributes');
+         }
       },
 
       _prepareConfig : function(sourceOpt, itemsOpt) {
