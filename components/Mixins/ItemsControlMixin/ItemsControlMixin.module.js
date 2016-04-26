@@ -1363,7 +1363,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
 
       _changeItemProperties: function(item, property) {
          if (this._isSlowDrawing()) {
-            this.redrawItem(item);
+            this.redrawItem(item.getContents());
          }
          else {
             this._redrawItem(item);
