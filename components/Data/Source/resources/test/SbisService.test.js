@@ -382,7 +382,8 @@ define([
                      done(err);
                   });
                });
-               it('should return an error', function (done) {
+
+               it('should build hierarhy', function (done) {
                   var filter = {'Раздел':1,'Раздел@':true,'Раздел$':true};
                   service.create(filter).addBoth(function (err) {
                      var s = SbisBusinessLogic.lastRequest.args.Фильтр.s;
@@ -390,6 +391,20 @@ define([
                      for(var i = 0; i < s.length; i++) {
                         if (s[i].n in filter) {
                            assert.strictEqual(s[i].s, 'Иерархия');
+                        }
+                     }
+                     done();
+                  });
+               });
+
+               it('should not build hierarrhy', function (done) {
+                  var filter = {'Раздел':1,'Раздел@':true};
+                  service.create(filter).addBoth(function (err) {
+                     var s = SbisBusinessLogic.lastRequest.args.Фильтр.s;
+                     assert.strictEqual(s.length, 2);
+                     for(var i = 0; i < s.length; i++) {
+                        if (s[i].n in filter) {
+                           assert.notEqual(s[i].s, 'Иерархия');
                         }
                      }
                      done();
