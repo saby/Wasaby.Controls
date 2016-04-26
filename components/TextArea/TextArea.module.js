@@ -131,7 +131,7 @@ define('js!SBIS3.CONTROLS.TextArea', ['js!SBIS3.CONTROLS.TextBoxBase', 'html!SBI
             window.setTimeout(function(){
                self._pasteProcessing--;
                if (!self._pasteProcessing) {
-                  TextArea.superclass.setText.call(self, self._formatText(self._inputField.val()));
+                  self.setText.call(self, self._formatText(self._inputField.val()));
                   self._inputField.val(self._options.text);
                }
             }, 100)
@@ -210,7 +210,7 @@ define('js!SBIS3.CONTROLS.TextArea', ['js!SBIS3.CONTROLS.TextBoxBase', 'html!SBI
             newText = this._inputField.val(),
             key = event.which || event.keyCode;
          if (newText != this._options.text) {
-            TextArea.superclass.setText.call(this, newText);
+            this.setText.call(this, newText);
          }
          if (!this._processNewLine(event) && ((key === $ws._const.key.enter && !event.ctrlKey) ||
              Array.indexOf([$ws._const.key.up, $ws._const.key.down], key) >= 0)) {
