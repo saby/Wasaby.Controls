@@ -9,7 +9,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
    'use strict';
 
    /**
-    * Список записей
+    * Список записей, имеющих общий формат полей.
     * @class SBIS3.CONTROLS.Data.Collection.RecordSet
     * @extends SBIS3.CONTROLS.Data.Collection.ObservableList
     * @mixes SBIS3.CONTROLS.Data.FormattableMixin
