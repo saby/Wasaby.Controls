@@ -1519,7 +1519,10 @@ define('js!SBIS3.CONTROLS.ListView',
                   if (dataSet.getCount()) {
                      //TODO вскрылась проблема  проекциями, когда нужно рисовать какие-то определенные элементы и записи
                      //Возвращаем самостоятельную отрисовку данных, пришедших в загрузке по скроллу
-                     //TODO перевести на each
+                     if (this._isSlowDrawing) {
+                        self._needToRedraw = false;
+                     }
+
                      records = dataSet.toArray();
                      if (self._options.infiniteScroll === 'up') {
                         self._containerScrollHeight = self._scrollWatcher.getScrollHeight();
@@ -1531,10 +1534,17 @@ define('js!SBIS3.CONTROLS.ListView',
                         self._items.append(records);
                      }
 
+                     if (this._isSlowDrawing) {
+                        self._drawItems(records);
+                     }
                      //TODO Пытались оставить для совместимости со старыми данными, но вызывает onCollectionItemChange!!!
                      //self._dataSet.merge(dataSet, {remove: false});
                      self._dataLoadedCallback();
                      self._toggleEmptyData();
+
+                     if (this._isSlowDrawing) {
+                        self._needToRedraw = true;
+                     }
                   }
 
                }, self)).addErrback(function (error) {

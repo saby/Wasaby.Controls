@@ -305,6 +305,9 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          }
          this._bindHandlers();
          this._prepareConfig(this._options.dataSource, this._options.items);
+         if (this._options.itemTemplate || this._options.userItemAttributes) {
+            $ws.single.ioc.resolve('ILogger').log('ItemsControl', 'Контрол ' + this.getName() + ' отрисовывается по неоптимальному алгоритму. Заданы itemTemplate или userItemAttributes');
+         }
       },
 
       _prepareConfig : function(sourceOpt, itemsOpt) {
@@ -524,6 +527,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
             this._toggleEmptyData(this._options.emptyHTML);
          }
          this._reviveItems();
+         this._container.addClass('controls-ListView__dataLoaded');
       },
 
       _redrawItem: function(item) {
@@ -1409,7 +1413,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          var
             itemInstance = this._drawItem(item, at, last);
          if (itemInstance) {
-            this._appendItemTemplate(item, this._getTargetContainer(item), itemInstance, at);
+            this._appendItemTemplate(item, this._getTargetContainer(item.getContents()), itemInstance, at);
          }
       },
 
