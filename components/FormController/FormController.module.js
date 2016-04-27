@@ -370,7 +370,6 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
          this._needDestroyRecord = false;
          this._setContextRecord(record);
       },
-
       _runQuery: function() {
          var self = this,
             hdl;
