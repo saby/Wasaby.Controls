@@ -143,7 +143,19 @@ define('js!SBIS3.CONTROLS.TextBox', ['js!SBIS3.CONTROLS.TextBoxBase','html!SBIS3
             window.setTimeout(function(){
                self._pasteProcessing--;
                if (!self._pasteProcessing) {
-                  self.setText(self._formatText(self._inputField.val()));
+                  var text = self._inputField.val(),
+                     newText = '';
+                  if (self._options.inputRegExp){
+                     var regExp = new RegExp(self._options.inputRegExp);
+                     for (var i = 0; i < text.length; i++){
+                        if (regExp.test(text[i])){
+                           newText = newText + text[i];
+                        }
+                     }
+                     text = newText;
+                  }
+                  self._inputField.val(text);
+                  self.setText(self._formatText(text));   
                }
             }, 100);
          });
