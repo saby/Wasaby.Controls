@@ -1,6 +1,7 @@
 /* global define, $ws */
 define('js!SBIS3.CONTROLS.Data.SerializableMixin', [
-], function () {
+   'js!SBIS3.CONTROLS.Data.Utils'
+], function (Utils) {
    'use strict';
 
    /**
@@ -39,13 +40,7 @@ define('js!SBIS3.CONTROLS.Data.SerializableMixin', [
        * @returns {Object}
        */
       toJSON: function() {
-         //TODO: переделать на Object.getPrototypeOf(this), после перевода на SBIS3.CONTROLS.Data.Core::extend()
-         if (!this._moduleName) {
-            throw new ReferenceError('Module name should be defined in a prototype');
-         }
-         if (_protoSupported && !this.__proto__.hasOwnProperty('_moduleName')) {
-            throw new ReferenceError('Module name should be defined in a prototype of each sub module of SerializableMixin');
-         }
+         this._checkModuleName(true, true);
 
          return {
             $serialized$: 'inst',
@@ -76,9 +71,60 @@ define('js!SBIS3.CONTROLS.Data.SerializableMixin', [
       //region Protected methods
 
       /**
+       * Добавляет в метод extend() модуля проверку на установку значения свойства _moduleName
+       * @param {Function} module Модуль
+       * @protected
+       * @static
+       */
+      _checkExtender: function(module) {
+         module.extend = module.extend.callBefore(function() {
+            var extender = arguments[0];
+            if (extender instanceof Array) {
+               extender = arguments[1];
+            }
+            SerializableMixin._checkModuleName.call(extender || {});
+         });
+      },
+
+      /**
+       * Проверяет, что в прототипе указано имя модуля для requirejs, иначе не будет работать десериализация
+       * @param {Boolean} critical Отсутствие имени модуля критично
+       * @param {Boolean} isInstance Проверка вызвана на экземпляре класса (в противном случае - на прототипе)
+       * @protected
+       */
+      _checkModuleName: function(critical, isInstance) {
+         var proto = this;
+         //TODO: переделать на Object.getPrototypeOf(this), после перевода на SBIS3.CONTROLS.Data.Core::extend()
+         if (isInstance && _protoSupported) {
+            proto = this.__proto__;
+         }
+         if (!proto.hasOwnProperty('_moduleName')) {
+            SerializableMixin._createModuleNameError('Property "_moduleName" with module name for requirejs should be defined in a prototype of each sub module of SerializableMixin', critical);
+         }
+         if (!proto._moduleName) {
+            SerializableMixin._createModuleNameError('Property "_moduleName" with module name for requirejs is not defined in a prototype', critical);
+         }
+      },
+
+      /**
+       * Создает ошибку
+       * @param {String} str Сообщение об ошибке
+       * @param {Boolean} critical Выбросить исключение либо предупредить
+       * @protected
+       * @static
+       */
+      _createModuleNameError: function(str, critical) {
+         if (critical) {
+            throw new ReferenceError(str);
+         } else {
+            Utils.logger.stack(str, 3);
+         }
+      },
+
+      /**
        * Возвращает всё, что нужно сложить в состояние объекта при сериализации, чтобы при десериализации вернуть его в это же состояние
        * @returns {Object}
-       * @private
+       * @protected
        */
       _getSerializableState: function() {
          return {
@@ -89,7 +135,7 @@ define('js!SBIS3.CONTROLS.Data.SerializableMixin', [
       /**
        * Проверяет сериализованное состояние перед созданием инстанса. Возвращает метод, востанавливающий состояние объекта после создания инстанса.
        * @returns {Function|undefined}
-       * @private
+       * @protected
        */
       _setSerializableState: function(state) {
          state._options = state._options || {};
@@ -99,7 +145,7 @@ define('js!SBIS3.CONTROLS.Data.SerializableMixin', [
       /**
        * Возвращает уникальный номер инстанса
        * @returns {Number}
-       * @private
+       * @protected
        */
       _getInstanceId: function() {
          return this._instanceId || (this._instanceId = ++_instanceCounter);
