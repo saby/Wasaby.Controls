@@ -57,7 +57,7 @@ define('js!SBIS3.CONTROLS.FieldLinkItemsCollection', [
          _getItemTemplate: function() {
             return itemTpl;
          },
-         
+
          _setEnabled: function () {
             /* Т.к. при изменении состояния поля связи, для всех элементов появляются/исчезают крестики удаления,
                то надо вызывать перерисовку элементов, чтобы правильно проставилась ширина */
@@ -100,7 +100,7 @@ define('js!SBIS3.CONTROLS.FieldLinkItemsCollection', [
             /* Не отрисовываем элементы поля связи, если контейнер контрола скрыт,
                т.к. для поля связи нужны расчёты, а в скрытом состоянии их не сделать,
                ie8 вообще падает при расчётах */
-            if(!this.isPickerVisible() && !this.isVisibleWithParents() && this.getItems() && this.getItems().getCount()) {
+            if( (!this.isPickerVisible() && !this.isVisibleWithParents()) || (this.getItems() && !this.getItems().getCount()) ) {
                return false;
             }
             FieldLinkItemsCollection.superclass.redraw.apply(this, arguments);
