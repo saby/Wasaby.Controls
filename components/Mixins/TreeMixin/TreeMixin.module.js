@@ -193,6 +193,19 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
       expandNode: function(key) {
          this._getItemProjectionByItemId(key).setExpanded(true);
       },
+      _expandAllItems: function() {
+         var
+            enumerator = this._itemsProjection.getEnumerator(),
+            doNext = true,
+            item;
+         while (doNext && (item = enumerator.getNext())) {
+            if (item.isNode() && !item.isExpanded()) {
+               item.setExpanded(true);
+               doNext = false;
+               this._expandAllItems();
+            }
+         }
+      },
       /**
        * Получить список записей для отрисовки
        * @private
@@ -200,18 +213,13 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
       _getRecordsForRedraw: function() {
          //*Получаем только рекорды с parent = curRoot*//
          var
-            self = this,
             records = [];
-         if (this._options.expand) { //todo ИСПРАВИТЬ. При развороте всех узлов - ничего не работает!
-            this.hierIterate(this._dataSet, function (record) {
-               if (self._options.displayType == 'folders') {
-                  if (record.get(self._options.hierField + '@')) {
-                     records.push(record);
-                  }
-               }
-               else {
-                  records.push(record);
-               }
+         if (this._options.expand) {
+            this._itemsProjection.setEventRaising(false);
+            this._expandAllItems();
+            this._itemsProjection.setEventRaising(true);
+            this._itemsProjection.each(function(item) {
+               records.push(item);
             });
          }
          else {
