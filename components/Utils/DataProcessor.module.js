@@ -5,8 +5,9 @@ define('js!SBIS3.CONTROLS.Utils.DataProcessor', [
    'js!SBIS3.CONTROLS.Data.Source.SbisService',
    'js!SBIS3.CONTROLS.Utils.DataSetToXMLSerializer',
    'js!SBIS3.CORE.LoadingIndicator',
+   'js!SBIS3.CONTROLS.Data.Source.SbisService',
    'i18n!SBIS3.CONTROLS.Utils.DataProcessor'
-], function(Source, Serializer, LoadingIndicator) {
+], function(Source, Serializer, LoadingIndicator, SbisService) {
    /**
     * Обработчик данных для печати и выгрузки(экспорта) в Excel, PDF.
     * Печать осуществляется по готову xsl шаблону через xslt-преобразование
@@ -233,24 +234,11 @@ define('js!SBIS3.CONTROLS.Utils.DataProcessor', [
        */
       exportFileTransfer: function(object, methodName, cfg){
          var self = this,
-            blob = new $ws.proto.BLObject({
-               name: object
+             source = new SbisService({
+                endpoint: object
             });
-         //TODO поменять, когда рекордсеты заработают
-         //var dataSource = new Source({
-         //   endpoint: {
-         //      contract: object
-         //   }
-         //});
-         //return dataSource.call(methodName, cfg).addCallback(function(ds){
-         //   self.downloadFile(ds.getScalar());
-         //   return ds;
-         //}).addErrback(function (error){
-         //   $ws.single.ioc.resolve('ILogger').log('DataProcessor. Ошибка выгрузки данных', error.details);
-         //   return error;
-         //});
-         return blob.call(methodName, cfg, $ws.proto.BLObject.RETURN_TYPE_ASIS).addCallback(function(id){
-            self.downloadFile(id);
+         return source.call(methodName, cfg).addCallback(function(ds){
+            self.downloadFile(ds.getScalar());
          }).addErrback(function (error){
             $ws.single.ioc.resolve('ILogger').log(rk('DataProcessor. Ошибка выгрузки данных'), error.details);
             return error;
@@ -317,7 +305,7 @@ define('js!SBIS3.CONTROLS.Utils.DataProcessor', [
          }
          queryParams =  dataSource.prepareQueryParams(filter, null, this._options.offset , selectedNumRecords || this._options.dataSet.getCount(), false);
          cfg[eng ? 'MethodName': 'ИмяМетода'] = dataSource.getEndpoint().contract + '.' + dataSource.getBinding().query;
-         cfg[eng ? 'Filter' : 'Фильтр'] = queryParams['Фильтр'] || {};
+         cfg[eng ? 'Filter' : 'Фильтр'] = queryParams['Фильтр'];
          cfg[eng ? 'Sorting' : 'Сортировка'] =  queryParams['Сортировка'];
          cfg[eng ? 'Pagination' : 'Навигация'] = !selectedNumRecords ? null : queryParams['Навигация'];
          cfg[eng ? 'Fields' : 'Поля'] = fields;
