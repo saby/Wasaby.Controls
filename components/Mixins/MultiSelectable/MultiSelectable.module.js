@@ -144,17 +144,6 @@ define('js!SBIS3.CONTROLS.MultiSelectable', ['js!SBIS3.CONTROLS.Data.Collection.
       after : {
          init: function () {
             this._drawSelectedItems(this._options.selectedKeys);
-         },
-         reload: function(loader) {
-            var self = this;
-
-            if(loader && this._options.selectedItems) {
-               loader.addCallback($ws.helpers.forAliveOnly(function() {
-                  /* Очистим и заного поищем выделенные элементы, т.к. dataSet был перезаписан */
-                  self._options.selectedItems.clear();
-                  self._setSelectedItems();
-               }, self));
-            }
          }
       },
       /**
@@ -686,6 +675,7 @@ define('js!SBIS3.CONTROLS.MultiSelectable', ['js!SBIS3.CONTROLS.Data.Collection.
          if (this._checkEmptySelection()) {
             this._setFirstItemAsSelected();
          }
+         this._setSelectedItems();
       },
 
       _setFirstItemAsSelected : function() {
@@ -706,17 +696,28 @@ define('js!SBIS3.CONTROLS.MultiSelectable', ['js!SBIS3.CONTROLS.Data.Collection.
       _setSelectedItems: function() {
          var dataSet = this.getItems(),
              self = this,
-             record;
+             record, index;
 
          if (dataSet) {
             this._syncSelectedItems();
             $ws.helpers.forEach(this.getSelectedKeys(), function (key) {
                record = dataSet.getRecordById(key);
-               if (record && !self._isItemSelected(record)) {
+               if (record) {
                   if(!self._options.selectedItems) {
                      self.initializeSelectedItems();
                   }
-                  self._options.selectedItems.add(record);
+
+                  index = self._options.selectedItems.getIndexByValue(self._options.keyField, record.getId());
+
+                  /**
+                   * Запись в датасете есть - заменим в наборе выбранных записей, т.к. она могла измениться.
+                   * Если нету, то просто добавим.
+                   */
+                  if(index !== -1) {
+                     self._options.selectedItems.replace(record, index);
+                  } else {
+                     self._options.selectedItems.add(record);
+                  }
                }
             });
          }
