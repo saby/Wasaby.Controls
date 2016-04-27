@@ -153,10 +153,13 @@ define('js!SBIS3.CONTROLS.ActiveMultiSelectable', [], function() {
       },
 
       _onChangeSelectedItems: function() {
-         var keys = this._convertToKeys(this._options.selectedItems);
-         this._options.selectedKeys = keys;
+         var keys = this._convertToKeys(this._options.selectedItems),
+             oldKeys = this._options.selectedKeys;
 
+         /* Хак, чтобы починить проблемы с синхроницизронием контекста */
+         this._options.selectedKeys = keys;
          this._notifyOnPropertyChanged('selectedItems');
+         this._options.selectedKeys = oldKeys;
          this.setSelectedKeys(keys);
       }
    };
