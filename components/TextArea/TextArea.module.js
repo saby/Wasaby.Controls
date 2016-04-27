@@ -198,8 +198,9 @@ define('js!SBIS3.CONTROLS.TextArea', ['js!SBIS3.CONTROLS.TextBoxBase', 'html!SBI
       },
 
       setText: function(text){
+         var text = $ws.helpers.escapeHtml(this._options.text);
          TextArea.superclass.setText.call(this, text);
-         this._disabledWrapper.html($ws.helpers.wrapURLs(this._options.text));
+         this._disabledWrapper.html($ws.helpers.wrapURLs(text));
       },
 
       _processNewLine: function(event) {
@@ -238,7 +239,6 @@ define('js!SBIS3.CONTROLS.TextArea', ['js!SBIS3.CONTROLS.TextBoxBase', 'html!SBI
         * @see placeholder
         */
       setPlaceholder: function(text){
-         TextArea.superclass.setPlaceholder.call(this, text);
          this._inputField.attr('placeholder', text);
       },
        /**
