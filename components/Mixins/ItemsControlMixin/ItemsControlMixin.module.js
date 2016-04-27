@@ -1524,9 +1524,10 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
       _onCollectionReplace: function(items) {
          var i;
          for (i = 0; i < items.length; i++) {
-            this._redrawItem(
+            this._changeItemProperties(items[i]);
+            /*this._redrawItem(
                items[i]
-            );
+            );*/
          }
       },
       _onCollectionRemove: function(items, notCollapsed) {
