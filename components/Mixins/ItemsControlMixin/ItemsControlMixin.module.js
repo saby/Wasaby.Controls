@@ -1432,7 +1432,15 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
             curAt = at;
          if (items && items.length > 0) {
             for (var i = 0; i < items.length; i++) {
-               this._drawAndAppendItem(items[i], curAt, i === items.length - 1);
+               var projItem;
+               if (items[i].getContents) {
+                  projItem = items[i]
+               }
+               else {
+                  projItem = this._itemsProjection.getItemBySourceItem(items[i]);
+               }
+
+               this._drawAndAppendItem(projItem, curAt, i === items.length - 1);
                if (curAt && curAt.at) {
                   curAt.at++;
                }
