@@ -61,7 +61,7 @@ define('js!SBIS3.CONTROLS.MoveDialogTemplate', [
              self = this,
              rootBlock = this._container.find('tbody .controls-MoveDialog__root');
          if (!rootBlock.length) {
-            rootBlock = $('<tr class="controls-DataGridView__tr controls-ListView__item controls-ListView__folder" style="" data-id="null"><td class="controls-DataGridView__td controls-MoveDialog__root"><div class="controls-TreeView__expand js-controls-TreeView__expand has-child controls-TreeView__expand__open"></div>Корень</td></tr>');
+            rootBlock = $('<tr class="controls-DataGridView__tr controls-ListView__item controls-ListView__folder" style="" data-id="null"><td class="controls-DataGridView__td controls-MoveDialog__root"><div class="controls-TreeView__expand js-controls-TreeView__expand has-child controls-TreeView__expand__open"></div>' + rk("Корень") + '</td></tr>');
             rootBlock.bind('click', function(event) {
                self._container.find('.controls-ListView__item').toggleClass('ws-hidden');
                rootBlock.toggleClass('ws-hidden').find('.controls-TreeView__expand').toggleClass('controls-TreeView__expand__open');
