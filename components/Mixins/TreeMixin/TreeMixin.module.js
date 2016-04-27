@@ -242,11 +242,13 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
       _applyExpandToItemsProjection: function() {
          var idx, item;
          for (idx in this._options.openedPath) {
-            item = this._getItemProjectionByItemId(idx);
-            if (item && !item.isExpanded()) {
-               item.setExpanded(true);
-               this._applyExpandToItemsProjection();
-               return;
+            if (this._options.openedPath.hasOwnProperty(idx)) {
+               item = this._getItemProjectionByItemId(idx);
+               if (item && !item.isExpanded()) {
+                  item.setExpanded(true);
+                  this._applyExpandToItemsProjection();
+                  return;
+               }
             }
          }
       },
