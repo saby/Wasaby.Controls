@@ -341,6 +341,10 @@ define('js!SBIS3.CONTROLS.TextBox', ['js!SBIS3.CONTROLS.TextBoxBase','html!SBIS3
       },
 
       _inputFocusInHandler: function(e) {
+         // Хак для фф и ие, которые ставят курсор в readonly поле
+         if (!this._options.enabled){
+            this._inputField.blur()
+         }
          if (this._options.selectOnClick || this._fromTab){
             this._inputField.select();
          }
