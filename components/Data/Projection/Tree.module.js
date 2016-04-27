@@ -70,6 +70,9 @@ define('js!SBIS3.CONTROLS.Data.Projection.Tree', [
          /*if ($ws.helpers.instanceOfMixin(this._options.collection, 'SBIS3.CONTROLS.Data.Collection.ISourceLoadable')) {
             this._itemModule = 'projection.loadable-tree-item';
          }*/
+         if (!this._options.idProperty) {
+            Utils.logger.info(this._moduleName +'::constructor(): option "idProperty" is not defined - only root elements will be presented');
+         }
          if (this._options.idProperty) {
             this._setImportantProperty(this._options.idProperty);
          }
