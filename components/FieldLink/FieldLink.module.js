@@ -242,8 +242,6 @@ define('js!SBIS3.CONTROLS.FieldLink',
              commandDispatcher.declareCommand(this, 'clearAllItems', this._dropAllItems);
              commandDispatcher.declareCommand(this, 'showAllItems', this._showAllItems);
 
-             this._options.showAllConfig = this._getShowAllConfig();
-
             /* При изменении выбранных элементов в поле связи - сотрём текст.
                Достаточно отслеживать изменение массива ключей,
                т.к. это событие гарантирует изменение выбранных элементов
