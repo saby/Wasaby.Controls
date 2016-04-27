@@ -72,21 +72,11 @@ define('js!SBIS3.CONTROLS.Data.ContextField.RecordMixin', [], function () {
                   subType.set(subValue, keyPath.slice(1), value);
                }
             } else if(subValue === undefined && keyPath.length === 1) {
-               try {
-                  oldValue.set(key, value);
-               } catch (e) {
-                  /* Если поля в записи нет, пробуем его добавить */
-                  if(e instanceof ReferenceError) {
-                     oldValue.addField({name: key, type: 'string'});
-
-                     try {
-                        oldValue.set(key, value);
-                     } catch (e) {
-                        return oldValue;
-                     }
-                  }
-                  return oldValue;
+               /* Если поля в записи нет, пробуем его добавить */
+               if(!oldValue.has(key)) {
+                  oldValue.addField({name: key, type: 'string'});
                }
+               oldValue.set(key, value);
             }
             result = oldValue;
          } else {
