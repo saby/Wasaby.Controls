@@ -174,6 +174,12 @@ define([
                assert.equal(SbisBusinessLogic.lastRequest.args.ИдО[1], objectName);
             });
 
+            it('should move record form folder to root', function () {
+               moveStrategy.move([rs.at(3)], rs.at(0));
+               assert.equal(rs.at(3).get('parent'), rs.at(0).get('parent'));
+            });
+
+
             it('should return error when move method return error', function(done) {
                moveStrategy.move([rsComplex.at(0)], rsComplex.at(2), true).addErrback(function (){
                   done();
