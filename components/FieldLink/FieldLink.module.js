@@ -382,9 +382,9 @@ define('js!SBIS3.CONTROLS.FieldLink',
                 this.setText('');
 
                 if(isModel) {
-                   this.addSelectedItems(result)
+                   this.addSelectedItems(result);
                 } else {
-                   this.addItemsSelection(result)
+                   this.addItemsSelection(result);
                 }
              }
           },
