@@ -98,12 +98,12 @@ define('js!SBIS3.CONTROLS.OperationUnload', [
          var items = this._options.items,
               extraText, itemId;
          //view.deleteRecords(records);
-         extraText =  this._isSelectedState() ? ' отмеченных ' : ' ';
+         extraText =  this._isSelectedState() ? ' ' + rk('отмеченных') + ' ' : ' ';
         for (var i = 0; i < items.length; i++) {
             itemId = items[i].id;
             //Меняем текст только у платформенных пунктов меню
             if (this._controlsId[itemId]) {
-               items[i].title = 'Список'  + extraText + 'в ' + this._controlsId[itemId].objectName;
+               items[i].title = rk('Список')  + extraText + rk('в') + ' ' + this._controlsId[itemId].objectName;
                //TODO Возможно, когда-нибудь будет правильный метод для перерисовки внутренностей меню и внизу можно будет вызывать полную перерисовку picker без его уничтожения
                this._picker._container.find('>[data-id="' + itemId + '"]').find('.controls-MenuItem__text').text( items[i].title );
             }
@@ -113,7 +113,7 @@ define('js!SBIS3.CONTROLS.OperationUnload', [
       _menuItemActivated: function(event, itemId){
          this._currentItem = itemId;
          if (this._controlsId[itemId]) {
-            this._prepareOperation('Что сохранить в ' + this._controlsId[itemId].objectName);
+            this._prepareOperation(rk('Что сохранить в') + ' ' + this._controlsId[itemId].objectName);
          }
       },
       _isSelectedState: function(){
