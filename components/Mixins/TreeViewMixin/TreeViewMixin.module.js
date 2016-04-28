@@ -64,7 +64,7 @@ define('js!SBIS3.CONTROLS.TreeViewMixin', ['js!SBIS3.CORE.Control', 'js!SBIS3.CO
          var
             expandedItemContainer = this._getItemsContainer().find('[data-hash="'+ expandedItem.getHash() + '"]');
          expandedItemContainer.find('.controls-TreeView__expand').addClass('controls-TreeView__expand__open');
-         this._notify('onNodeExpand', expandedItem.getContents().getId());
+         this._notify('onNodeExpand', expandedItem.getContents().getId(), expandedItemContainer);
       },
       /**
        * Обработка загрузки ветки
@@ -80,18 +80,18 @@ define('js!SBIS3.CONTROLS.TreeViewMixin', ['js!SBIS3.CORE.Control', 'js!SBIS3.CO
       },
       /**
        * Сворачиваем элемент, а также всю его структуру
-       * @param expandedItem
+       * @param collapsedItem
        * @private
        */
-      _onCollapseItem: function(expandedItem) {
+      _onCollapseItem: function(collapsedItem) {
          var
-            itemId = expandedItem.getContents().getId();
-         //todo При переходе на Virtual DOM удалить эту строку
-         this.getContainer().find('[data-hash="'+ expandedItem.getHash() + '"] .controls-TreeView__expand').removeClass('controls-TreeView__expand__open');
+            itemId = collapsedItem.getContents().getId(),
+            collapsedItemContainer = this._getItemsContainer().find('[data-hash="'+ collapsedItem.getHash() + '"]');
+         collapsedItemContainer.find('.controls-TreeView__expand').removeClass('controls-TreeView__expand__open');
          delete this._options.openedPath[itemId];
          //Уничтожим все дочерние footer'ы и footer узла
          this._destroyItemsFolderFooter([itemId]);
-         this._notify('onNodeCollapse', itemId);
+         this._notify('onNodeCollapse', itemId, collapsedItemContainer);
       },
       /**
        * Обработка смены у item'a состояния "развернутости"
