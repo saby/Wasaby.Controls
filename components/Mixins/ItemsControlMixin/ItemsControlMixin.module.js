@@ -1027,6 +1027,8 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          this._dropPageSave();
          if (this._dataSource && !noLoad) {
             this.reload(this._options.filter, this.getSorting(), 0, this.getPageSize());
+         } else {
+            this._notifyOnPropertyChanged('filter');
          }
       },
       /**
