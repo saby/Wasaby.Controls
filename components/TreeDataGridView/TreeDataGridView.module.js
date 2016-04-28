@@ -4,8 +4,8 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
    'js!SBIS3.CONTROLS.TreeViewMixin',
    'browser!html!SBIS3.CONTROLS.TreeDataGridView/resources/ItemTemplate',
    'browser!html!SBIS3.CONTROLS.TreeDataGridView/resources/ItemContentTemplate',
-   'browser!html!SBIS3.CONTROLS.TreeDataGridView/resources/FolderFooterWrapperTemplate'
-], function(DataGridView, TreeMixin, TreeViewMixin, ItemTemplate, ItemContentTemplate, footerWrapperTemplate) {
+   'browser!html!SBIS3.CONTROLS.TreeDataGridView/resources/FooterWrapperTemplate'
+], function(DataGridView, TreeMixin, TreeViewMixin, ItemTemplate, ItemContentTemplate, FooterWrapperTemplate) {
 
    var HIER_WRAPPER_WIDTH = 16,
        //Число 17 это сумма padding'ов, margin'ов элементов которые составляют отступ у первого поля, по которому строится лесенка отступов в дереве
@@ -42,7 +42,7 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
       $protected: {
          _defaultItemTemplate: ItemTemplate,
          _defaultItemContentTemplate: ItemContentTemplate,
-         _footerWrapperTemplate: footerWrapperTemplate,
+         _footerWrapperTemplate: FooterWrapperTemplate,
          _options: {
             /**
              * @cfg {Function} Устанавливает функцию, которая будет выполнена при клике по кнопке справа от названия узла (папки) или скрытого узла.
@@ -136,7 +136,7 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
             pagerContainer,
             lastContainer = this._getLastChildByParent(this._getItemsContainer(), this._getItemProjectionByItemId(key));
 
-         //TODO: Сделать FolderPager отдельным контроллом и перенести создание в шаблон FolderFooterWrapperTemplate
+         //TODO: Сделать FolderPager отдельным контроллом и перенести создание в шаблон FolderFooterTemplate
          pagerContainer = $('<div class="controls-TreePager-container">').appendTo(this._foldersFooters[key].find('.controls-TreeView__folderFooterContainer'));
          this._createFolderPager(key, pagerContainer, this._folderHasMore[key]);
 
