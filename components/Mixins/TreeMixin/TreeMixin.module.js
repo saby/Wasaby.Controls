@@ -244,21 +244,30 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
          return result;
       },
       /**
-       * todo ИСПРАВИТЬ. Тут правим тесты и не восстанавливаем открытые папки.
+       * todo Переписать, когда будет выполнена указанная ниже задача
+       * Задача в разработку от 28.04.2016 №1172779597
+       * В деревянной проекции необходима возможность определять, какие элементы создаются развернутыми. Т...
+       * https://inside.tensor.ru/opendoc.html?guid=6f1758f0-f45d-496b-a8fe-fde7390c92c7
        * @private
        */
       _applyExpandToItemsProjection: function() {
          var idx, item;
+         this._itemsProjection.setEventRaising(false);
+         this._itemsProjection.setFilter(retTrue);
          for (idx in this._options.openedPath) {
             if (this._options.openedPath.hasOwnProperty(idx)) {
                item = this._getItemProjectionByItemId(idx);
                if (item && !item.isExpanded()) {
-                  item.setExpanded(true);
-                  this._applyExpandToItemsProjection();
-                  return;
+                  if (this._itemsProjection.getChildren(item).getCount()) {
+                     item.setExpanded(true);
+                  } else {
+                     delete this._options.openedPath[idx];
+                  }
                }
             }
          }
+         this._itemsProjection.setFilter(this._projectionFilter.bind(this));
+         this._itemsProjection.setEventRaising(true);
       },
       _getRecordsForRedrawCurFolder: function() {
          /*Получаем только рекорды с parent = curRoot*/
@@ -271,9 +280,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
             * показать все записи, а по другому их не вытащить*/
             return this._itemsProjection._items;
          } else {
-            this._itemsProjection.setEventRaising(false);
             this._applyExpandToItemsProjection();
-            this._itemsProjection.setEventRaising(true);
             this._itemsProjection.each(function(item) {
                items.push(item);
             }.bind(this));
