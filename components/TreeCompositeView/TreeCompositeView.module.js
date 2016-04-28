@@ -195,6 +195,7 @@ define('js!SBIS3.CONTROLS.TreeCompositeView', ['js!SBIS3.CONTROLS.TreeDataGridVi
             currentRecord,
             needRedraw,
             parentBranch,
+            parentBranchId,
             dependentRecords,
             recordsGroup = {},
             branchesData = {},
@@ -292,17 +293,17 @@ define('js!SBIS3.CONTROLS.TreeCompositeView', ['js!SBIS3.CONTROLS.TreeDataGridVi
             };
          $ws.helpers.toggleIndicator(true);
          if (items) {
-            currentDataSet = this.getDataSet();
+            currentDataSet = this.getItems();
             filter = $ws.core.clone(this.getFilter());
             //Группируем записи по веткам (чтобы как можно меньше запросов делать)
             $ws.helpers.forEach(items, function(item) {
-               //todo Сделать опредение родительского ключа через DataSet
-               parentBranch = container.find('[data-id="' + item + '"]').attr('data-parent') || 'null';
-               if (!recordsGroup[parentBranch]) {
-                  recordsGroup[parentBranch] = [];
+               parentBranch = this._getItemProjectionByItemId(item).getParent().getContents();
+               parentBranchId = parentBranch ? parentBranch.get(this._options.keyField) : 'null';
+               if (!recordsGroup[parentBranchId]) {
+                  recordsGroup[parentBranchId] = [];
                }
-               recordsGroup[parentBranch].push(item);
-            });
+               recordsGroup[parentBranchId].push(item);
+            }, this);
             $ws.helpers.forEach(recordsGroup, function(branch, branchId) {
                //Загружаем содержимое веток
                getBranch(branchId)
