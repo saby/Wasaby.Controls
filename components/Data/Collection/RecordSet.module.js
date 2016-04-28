@@ -1,11 +1,12 @@
 /* global define, $ws */
 define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
    'js!SBIS3.CONTROLS.Data.Collection.ObservableList',
+   'js!SBIS3.CONTROLS.Data.SerializableMixin',
    'js!SBIS3.CONTROLS.Data.FormattableMixin',
    'js!SBIS3.CONTROLS.Data.Di',
    'js!SBIS3.CONTROLS.Data.Utils',
    'js!SBIS3.CONTROLS.Data.Model'
-], function (ObservableList, FormattableMixin, Di, Utils) {
+], function (ObservableList, SerializableMixin, FormattableMixin, Di, Utils) {
    'use strict';
 
    /**
@@ -886,6 +887,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
       //endregion Protected methods
    });
 
+   SerializableMixin._checkExtender(RecordSet);
 
    Di.register('collection.recordset', RecordSet);
 
