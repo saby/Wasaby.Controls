@@ -124,44 +124,50 @@
    }
 }
 .ws-is-mobile-platform {
+
    .controls-ListView {
-      &:not(.controls-ListView__bottomStyle) {
-         .controls-ItemsToolbar:not(.controls-ItemsToolbar__vertical){
-            margin: 0;
-            .controls-ItemsToolbar__container {
-               top: 50%;
-               margin-top: -@list-view-actions-menu-touch-height / 2;
-            }
-         }
-         .controls-ItemsToolbar {
-            overflow: hidden;
-            background-color: @list-view-items-toolbar-bg;
-         }
-      }
-      .controls-ItemsToolbar,
-      .controls-ItemsToolbar.controls-ItemsToolbar__locked {
+      .controls-ItemsToolbar {
+         overflow: hidden;
+         margin: 0;
          box-shadow: none;
-         min-height: @list-view-items-toolbar-ipad-minHeight;
+         background-color: transparent;
+
          .controls-ItemsToolbar__container {
             position: relative;
+            background-color: #E7EFF8;
+            border-left: 1px solid #D0D8E0;
+            overflow: hidden;
+            height:100%;
 
-            .controls-ItemsToolbar__editActions {
-               margin-top: @list-view-actions-menu-touch-margin;
-            }
-            .controls-ItemActions .controls-ItemActions__itemsContainer {
-               & > * {
-                  margin-top: 0;
+            .controls-ItemActions {
+               height:100%;
+
+               .controls-ItemActions__itemsContainer {
+                  height:100%;
                }
             }
          }
+
+         &.controls-ItemsToolbar__vertical {
+
+            .controls-ItemActions {
+               width: auto;
+               margin: 0;
+            }
+         }
       }
-      .controls-ItemsToolbar__vertical {
-         .controls-ItemActions {
-            margin: 2px 3px 0 0;
-            .controls-ItemActions__menu-button {
-               margin-right: -10px;
+
+      &.controls-ListView__bottomStyle {
+         .controls-ItemsToolbar {
+            border-bottom: none;
+            background-color: transparent;
+
+            &:before {  content: none;  }
+            &:after {  content: none;  }
+
+            .controls-ItemsToolbar__container {
+               margin: 0;
             }
          }
       }
    }
-}
