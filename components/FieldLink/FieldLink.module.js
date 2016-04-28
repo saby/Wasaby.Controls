@@ -753,10 +753,14 @@ define('js!SBIS3.CONTROLS.FieldLink',
            * @private
            */
           _getInputWidth: function() {
-             return this._container[0].clientWidth  -
+             var width = this._container[0].clientWidth  -
                  (this._afterFieldWrapper[0].offsetWidth +
-                  this._beforeFieldWrapper[0].offsetWidth +
-                  INPUT_WRAPPER_PADDING);
+                 this._beforeFieldWrapper[0].offsetWidth +
+                 INPUT_WRAPPER_PADDING);
+
+             /* Когда поле связи скрыто, могут происходить неправильные расчёты, самый дешёвый способ этого избежать,
+                просто считать что ширина  - 0 */
+             return (width >= 0) ? width : 0;
           },
           /**
            * Обновляет ширину поля ввода

@@ -96,16 +96,6 @@ define('js!SBIS3.CONTROLS.FieldLinkItemsCollection', [
             }
          },
 
-         redraw: function() {
-            /* Не отрисовываем элементы поля связи, если контейнер контрола скрыт,
-               т.к. для поля связи нужны расчёты, а в скрытом состоянии их не сделать,
-               ie8 вообще падает при расчётах */
-            if( (!this.isPickerVisible() && !this.isVisibleWithParents()) || (this.getItems() && !this.getItems().getCount()) ) {
-               return false;
-            }
-            FieldLinkItemsCollection.superclass.redraw.apply(this, arguments);
-         },
-
          /**
           * Контрол выбранных записей не должен принимать фокус, просто переводим его на поле связи
           */
