@@ -1,12 +1,13 @@
 /* global define, $ws */
 define('js!SBIS3.CONTROLS.Data.Model', [
    'js!SBIS3.CONTROLS.Data.Record',
+   'js!SBIS3.CONTROLS.Data.SerializableMixin',
    'js!SBIS3.CONTROLS.Data.IHashable',
    'js!SBIS3.CONTROLS.Data.HashableMixin',
    'js!SBIS3.CONTROLS.Data.Di',
    'js!SBIS3.CONTROLS.Data.Utils',
    'js!SBIS3.CONTROLS.Data.Collection.ArrayEnumerator'
-], function (Record, IHashable, HashableMixin, Di, Utils, ArrayEnumerator) {
+], function (Record, SerializableMixin, IHashable, HashableMixin, Di, Utils, ArrayEnumerator) {
    'use strict';
 
    /**
@@ -520,6 +521,8 @@ define('js!SBIS3.CONTROLS.Data.Model', [
 
       //endregion SBIS3.CONTROLS.Record
    });
+
+   SerializableMixin._checkExtender(Model);
 
    Di.register('model', Model);
 

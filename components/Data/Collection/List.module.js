@@ -371,6 +371,8 @@ define('js!SBIS3.CONTROLS.Data.Collection.List', [
 
    });
 
+   SerializableMixin._checkExtender(List);
+
    Di.register('collection.list', List);
 
    //Регистрируем класс ObservableList для работы с контекстами $ws.proto.Context
