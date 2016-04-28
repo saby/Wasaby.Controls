@@ -159,8 +159,12 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
       },
       _getEditorOffset: function(model) {
          var
-            itemProj = this._itemsProjection.getItemBySourceItem(model);
-         return itemProj.getParent().getLevel() * HIER_WRAPPER_WIDTH + ADDITIONAL_LEVEL_OFFSET;
+             treeLevel = 0,
+             parentProj = this._getItemProjectionByItemId(model.get(this._options.hierField));
+         if (parentProj) {
+            treeLevel = parentProj.getLevel();
+         }
+         return treeLevel * HIER_WRAPPER_WIDTH + ADDITIONAL_LEVEL_OFFSET;
       },
       _onResizeHandler: function() {
          TreeDataGridView.superclass._onResizeHandler.apply(this, arguments);
