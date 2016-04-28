@@ -252,7 +252,6 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
          var self = this;
          key = key || this._options.key;
          this._showLoadingIndicator(rk('Загрузка'));
-         this.getLinkedContext().setValue('record', null);
          return this._options.dataSource.read(key).addCallback(function (record) {
             self.setRecord(record);
             return record;
@@ -263,6 +262,7 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
       },
 
       _setContextRecord: function(record){
+         this.getLinkedContext().setValue('record', null);
          this.getLinkedContext().setValue('record', record);
       },
       /**
@@ -375,7 +375,6 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
             hdl = this.read();
          }
          else {
-            this.getLinkedContext().setValue('record', null);
             hdl = this._options.dataSource.create(this._options.initValues).addCallback(function(record){
                self.setRecord(record, true);
                self._options.newModel = record.getKey() === null || self._options.newModel;
