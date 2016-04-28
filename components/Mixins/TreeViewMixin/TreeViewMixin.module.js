@@ -47,12 +47,16 @@ define('js!SBIS3.CONTROLS.TreeViewMixin', ['js!SBIS3.CORE.Control', 'js!SBIS3.CO
                // так как на него много всего завязано. (пользуется Янис)
                this._folderHasMore[key] = list.getMetaData().more;
                this._loadedNodes[key] = true;
+               if (this._isSlowDrawing()) {
+                  this._needToRedraw = false;
+               }
                this._items.merge(list, {remove: false});
+               if (this._isSlowDrawing()) {
+                  this._needToRedraw = true;
+                  this._dataSet.getTreeIndex(this._options.hierField, true);
+               }
                this._notify('onDataMerge', list);
                this._toggleIndicator(false);
-               if (this._isSlowDrawing()) {
-                  this._prepareDrawLoadedNode(key, list);
-               }
                this._drawExpandedItem(expandedItem);
             }.bind(this));
          } else {
@@ -65,18 +69,6 @@ define('js!SBIS3.CONTROLS.TreeViewMixin', ['js!SBIS3.CORE.Control', 'js!SBIS3.CO
             expandedItemContainer = this._getItemsContainer().find('[data-hash="'+ expandedItem.getHash() + '"]');
          expandedItemContainer.find('.controls-TreeView__expand').addClass('controls-TreeView__expand__open');
          this._notify('onNodeExpand', expandedItem.getContents().getId());
-      },
-      /**
-       * Обработка загрузки ветки
-       * @param key
-       * @param dataSet
-       * @private
-       */
-      _prepareDrawLoadedNode: function(key, dataSet) {
-         this._needToRedraw = false;
-         this._dataSet.merge(dataSet, {remove: false});
-         this._needToRedraw = true;
-         this._dataSet.getTreeIndex(this._options.hierField, true);
       },
       /**
        * Сворачиваем элемент, а также всю его структуру
