@@ -247,7 +247,7 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
                             hoveredItem.container
                         );
                      } else {
-                        self._activateItem(self.getHoveredItem().key);
+                        self._activateItem(hoveredItem.key);
                      }
                   }
                }
@@ -267,7 +267,7 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
             arrowContainer = td.find('.controls-TreeView__editArrow');
          }
 
-         /* Т.к. мы у нас в вёрстке две иконки, то позиционируем в зависимости от той, которая показывается,
+         /* Т.к. у нас в вёрстке две иконки, то позиционируем в зависимости от той, которая показывается,
             в .200 переделаем на маркер */
          if(arrowContainer.length === 2) {
             if (folderTitle[0].offsetWidth > td[0].offsetWidth) {
@@ -304,6 +304,7 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
              needShowArrow, hiContainer;
 
          hiContainer = hoveredItem.container;
+         /* Если иконку скрыли или не папка - показывать не будем */
          needShowArrow = hiContainer && hiContainer.hasClass('controls-ListView__item-type-node') && this.getEditArrow().isVisible();
 
          if(hiContainer && needShowArrow) {
