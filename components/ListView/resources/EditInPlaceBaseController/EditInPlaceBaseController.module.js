@@ -239,7 +239,6 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                //на сохранения записи. Чтобы это предотвратить добавим проверку на то, что сейчас уже идёт сохранение(this._savingDeferred.isReady())
                if (eip && this._savingDeferred.isReady()) {
                   record = eip.getEditingRecord();
-                  withSaving = withSaving && record.isChanged();
                   endEditResult = this._notify('onEndEdit', record, withSaving);
                   if (endEditResult instanceof $ws.proto.Deferred) {
                      return endEditResult.addCallback(function(result) {
@@ -275,6 +274,7 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
             },
             _afterEndEdit: function(eip, withSaving) {
                var
+                  idProperty,
                   eipRecord = eip.getEditingRecord(),
                   isAdd = !eipRecord.isStored();
                if (this._editingRecord) {
@@ -282,8 +282,12 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                   this._editingRecord = undefined;
                }
                if (withSaving) {
-                  this._options.dataSource.update(eipRecord).addCallback(function() {
-                     isAdd && this._options.dataSet.push(eipRecord);
+                  this._options.dataSource.update(eipRecord).addCallback(function(id) {
+                     if (isAdd) {
+                        idProperty = this._options.dataSource.getIdProperty();
+                        eipRecord.set(idProperty, id);
+                        this._options.dataSet.push(eipRecord);
+                     }
                   }.bind(this)).addBoth(function() {
                      this._notifyOnAfterEndEdit(eip, eipRecord, withSaving, isAdd);
                   }.bind(this));
@@ -359,9 +363,13 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
             },
             _onChildFocusOut: function (event, control) {
                var
+                  eip,
+                  withSaving,
                   endEdit = this._allowEndEdit(control) && (this._isAnotherTarget(control, this) || this._isCurrentTarget(control));
                if (endEdit) {
-                  this.endEdit(true);
+                  eip = this._getEditingEip();
+                  withSaving = eip.getEditingRecord().isChanged();
+                  this.endEdit(withSaving);
                }
             },
             _allowEndEdit: function(control) {
