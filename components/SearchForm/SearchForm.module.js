@@ -91,7 +91,7 @@ define('js!SBIS3.CONTROLS.SearchForm', [
        */
       resetSearch: function(){
          this.setText('');
-         this._applySearch();
+         this.applySearch(true);
       },
 
       /**
