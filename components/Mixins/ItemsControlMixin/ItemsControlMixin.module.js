@@ -1478,7 +1478,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          ladderDecorator && ladderDecorator.setMarkLadderColumn(true);
          var target = this._getTargetContainer(item.getContents()),
             nextSibling = at > -1 ? this._getItemContainerByIndex(target, at) : null,
-            template = this._getItemTemplate(item.getContents()),
+            template = this._getItemTemplate(item),
             newItemContainer = this._buildTplItem(item, template),
             rows;
          this._addItemAttributes(newItemContainer, item);
