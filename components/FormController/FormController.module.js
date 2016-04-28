@@ -359,15 +359,17 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
       /**
        * Установаливает запись диалогу редактирования
        * @param {SBIS3.CONTROLS.Data.Model} record
+       * @param {Boolean} updateKey
        * @see record
        */
-      setRecord: function(record){
+      setRecord: function(record, updateKey){
          this._options.record = this._panel._record = record;
-         this._options.key = record.getKey();
+         if (updateKey){
+            this._options.key = record.getKey();
+         }
          this._needDestroyRecord = false;
          this._setContextRecord(record);
       },
-
       _runQuery: function() {
          var self = this,
             hdl;
@@ -377,7 +379,8 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
          }
          else {
             hdl = this._options.dataSource.create(this._options.initValues).addCallback(function(record){
-               self.setRecord(record);
+               self.setRecord(record, true);
+               self._options.newModel = record.getKey() === null || self._options.newModel;
                if (record.getKey()){
                   self._needDestroyRecord = true;
                }
@@ -385,7 +388,6 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
             });
          }
          hdl.addBoth(function(record){
-            self._options.newModel = record.getKey() === null || self._options.newModel;
             self._hideLoadingIndicator();
             self.activateFirstControl();
             return record;
