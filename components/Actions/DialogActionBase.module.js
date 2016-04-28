@@ -40,7 +40,11 @@ define('js!SBIS3.CONTROLS.DialogActionBase', ['js!SBIS3.CONTROLS.ActionBase', 'j
              * Режим отображения компонента редактирования - в диалоге или панели
              */
             mode: 'dialog',
-            //TODO переименовать
+            /**
+             * @cfg {Object}
+             * Связный список, который надо обновлять после изменения записи
+             * Список должен быть с примесью миксинов для работы с однотипными элементами (DSMixin или IList)
+             */
             linkedObject: undefined
          },
          _dialog: undefined,
@@ -108,6 +112,9 @@ define('js!SBIS3.CONTROLS.DialogActionBase', ['js!SBIS3.CONTROLS.ActionBase', 'j
          this._dialog = new Component(config);
       },
 
+      /**
+       * Возвращает обработчики на события formController'a
+       */
       _getFormControllerHandlers: function(){
          return {
             onRead: this._readHandler.bind(this),
@@ -117,74 +124,154 @@ define('js!SBIS3.CONTROLS.DialogActionBase', ['js!SBIS3.CONTROLS.ActionBase', 'j
          }
       },
 
+      /**
+       * Обрабатываем событие onUpdate у formController'a
+       */
       _updateHandler: function(event, record){
-         var actionResult = this._getEventResult('onUpdate'),
-             self = this;
-
-         if (actionResult instanceof $ws.proto.Deferred){
-            actionResult.addCallback(function(result){
-               self._update(record, result);
-            })
-         }
-         else{
-            this._update(record, actionResult);
-         }
+         this._actionHandler('Update', record);
       },
+      /**
+       * Переопределяемый метод
+       * В случае, если все действия выполняются самостоятельноно, надо вернуть OpenDialogAction.ACTION_MANUAL, чтобы
+       * не выполнялась базовая логика
+       * @param record Запись, с которой работаем
+       * @returns {String|Deferred} Сообщаем, нужно ли выполнять базовую логику. Если не нужно, то возвращаем OpenDialogAction.ACTION_MANUAL
+       */
       _onUpdate: function(record){
+         return '';
       },
-
-      _update: function (record, result) {
+      /**
+       * Базовая логика при событии ouUpdate. Обновляем рекорд в связном списке
+       */
+      _Update: function (record, result) {
          var collectionRecord,
              recValue;
-         collectionRecord = this._getCollectionRecord(result);
+         collectionRecord = this._getCollectionRecord(record);
          if (!collectionRecord) {
             return;
          }
-         recValue = record.get(key);
+         this._mergeRecords(collectionRecord, record);
+      },
+
+      /**
+       * Обрабатываем событие onRead у formController'a
+       */
+      _readHandler: function(event, record){
+         this._actionHandler('Read', record);
+      },
+      /**
+       * Переопределяемый метод
+       * В случае, если все действия выполняются самостоятельноно, надо вернуть OpenDialogAction.ACTION_MANUAL, чтобы
+       * не выполнялась базовая логика
+       * @param record Запись, с которой работаем
+       * @returns {String|Deferred} Сообщаем, нужно ли выполнять базовую логику. Если не нужно, то возвращаем OpenDialogAction.ACTION_MANUAL
+       */
+      _onRead: function(record){
+         return '';
+      },
+
+      /**
+       * Обрабатываем событие onDestroy у formController'a
+       */
+      _destroyHandler: function(event, record){
+         this._actionHandler('Destroy', record);
+      },
+      /**
+       * Переопределяемый метод
+       * В случае, если все действия выполняются самостоятельноно, надо вернуть OpenDialogAction.ACTION_MANUAL, чтобы
+       * не выполнялась базовая логика
+       * @param record Запись, с которой работаем
+       * @returns {String|Deferred} Сообщаем, нужно ли выполнять базовую логику. Если не нужно, то возвращаем OpenDialogAction.ACTION_MANUAL
+       */
+      _onDestroy: function(record){
+         return '';
+      },
+      /**
+       * Базовая логика при событии ouDestroy. Дестроим рекорд в связном списке
+       */
+      _Destroy: function(record, result){
+         var collectionRecord = this._getCollectionRecord(record);
+         collectionRecord && collectionRecord.destroy();
+      },
+
+      /**
+       * Обрабатываем событие onCreate у formController'a
+       */
+      _createHandler: function(event, record){
+         this._actionHandler('Create', record);
+      },
+      /**
+       * Переопределяемый метод
+       * В случае, если все действия выполняются самостоятельноно, надо вернуть OpenDialogAction.ACTION_MANUAL, чтобы
+       * не выполнялась базовая логика
+       * @param record Запись, с которой работаем
+       * @returns {String|Deferred} Сообщаем, нужно ли выполнять базовую логику. Если не нужно, то возвращаем OpenDialogAction.ACTION_MANUAL
+       */
+      _onCreate: function(record){
+         return '';
+      },
+      /**
+       * Базовая логика при событии ouCreate. Добавляем рекорд в связный список
+       */
+      _Create: function(record, result){
+         var collection = this._options.linkedObject,
+            rec;
+         if ($ws.helpers.instanceOfModule(collection, 'SBIS3.CONTROLS.Data.Collection.RecordSet')) {
+            rec = new Record({
+               format: collection.getFormat()
+            });
+            this._mergeRecords(rec, record);
+         } else  {
+            rec = record.clone()
+         }
+         collection.add(rec);
+      },
+
+      /**
+       * Обработка событий formController'a. Выполнение переопределяемых методов и notify событий.
+       * Если из обработчиков событий и переопределяемых методов вернули не OpenDialogAction.ACTION_MANUAL, то выполняем базовую логику.
+       */
+      _actionHandler: function(action, record) {
+         var eventResult = this._notify('on' + action, record),
+            actionResult = this['_on' + action](record),
+            genericMethod = '_' + action,
+            self = this;
+         if (actionResult !== OpenDialogAction.ACTION_MANUAL && eventResult !== undefined) {
+            actionResult = eventResult;
+         }
+         if (actionResult === OpenDialogAction.ACTION_MANUAL || !this._options.linkedObject) {
+            return;
+         }
+         if (actionResult instanceof $ws.proto.Deferred){
+            actionResult.addCallback(function(result){
+               if (self[genericMethod]){
+                  self[genericMethod](record, result);
+               }
+            })
+         } else {
+            if (this[genericMethod]){
+               this[genericMethod](record, actionResult);
+            }
+         }
+      },
+
+      /**
+       * Мержим поля из редактируемой записи в существующие поля записи из связного списка.
+       */
+      _mergeRecords: function(collectionRecord, record){
+         var recValue;
          collectionRecord.each(function (key, value) {
+            recValue = record.get(key);
             if (record.has(key) && recValue != value) {
                this.set(key, recValue);
             }
          });
       },
-
-      _readHandler: function(event, record){
-         var actionResult = this._getEventResult('onRead', record);
-      },
-      _onRead: function(record){
-      },
-
-      _destroyHandler: function(event, record){
-         var actionResult = this._getEventResult('onDestroy', record),
-            collectionRecord;
-
-         collectionRecord = this._getCollectionRecord(actionResult);
-         collectionRecord && collectionRecord.destroy();
-      },
-      _onDestroy: function(){
-      },
-
-      _createHandler: function(event, record){
-         var actionResult = this._getEventResult('onCreate', record);
-      },
-      _onCreate: function(){
-      },
-
-      _getEventResult: function(eventName, record){
-         var actionResult = this['_' + eventName](record),
-             notifyResult = this._notify(eventName, record);
-         //TODO что мы в итоге ждем в ответе, сейчас с deferred'ами отвалится
-         if (actionResult !== OpenDialogAction.ACTION_MANUAL && notifyResult !== undefined){
-            actionResult = notifyResult;
-         }
-         return actionResult;
-      },
-
-      _getCollectionRecord: function(actionResult){
+      /**
+       * Получаем запись из связного списка по ключу редактируемой записи
+       */
+      _getCollectionRecord: function(record){
          var collection = this._options.linkedObject;
-         if (actionResult === OpenDialogAction.ACTION_MANUAL){
-            return undefined;
-         }
          if ($ws.helpers.instanceOfMixin(collection, 'SBIS3.CONTROLS.DSMixin')) {
             collection = this.getItems();
          }
