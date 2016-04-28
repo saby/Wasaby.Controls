@@ -80,7 +80,7 @@ define('js!SBIS3.CONTROLS.DialogActionBase', ['js!SBIS3.CONTROLS.ActionBase', 'j
             Component = Dialog;
          }
 
-         //для формконтроллера теперь всегда есть контекст либо с рекордом. Сделано в рамках ускорения, чтобы в случае чего
+         //для формконтроллера теперь всегда есть контекст с рекордом. Сделано в рамках ускорения, чтобы в случае чего
          //компоненты на момент инициализации могли подцепить значение из контекста
          config.context = new $ws.proto.Context({restriction: 'set'}).setPrevious(this.getLinkedContext());
          config.context.setValue('record', config.record || new Record());
