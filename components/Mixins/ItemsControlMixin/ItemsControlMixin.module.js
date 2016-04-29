@@ -1475,7 +1475,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          }
       },
 
-      _addItem: function (item, at) {
+      /*_addItem: function (item, at) {
          var ladderDecorator = this._decorators.getByName('ladder');
          ladderDecorator && ladderDecorator.setMarkLadderColumn(true);
          var target = this._getTargetContainer(item.getContents()),
@@ -1491,6 +1491,54 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
             newItemContainer.appendTo(target);
             rows = [newItemContainer.prev().prev(), newItemContainer.prev(), newItemContainer, newItemContainer.next()];
          }
+         ladderDecorator && ladderDecorator.setMarkLadderColumn(false);
+         this._ladderCompare(rows);
+      },*/
+
+      _addItem: function (projItem, at) {
+         var
+            item = projItem.getContents(),
+            ladderDecorator = this._decorators.getByName('ladder'),
+            previousGroupBy = this._previousGroupBy;//После добавления записи восстанавливаем это значение, чтобы не сломалась группировка
+         ladderDecorator && ladderDecorator.setMarkLadderColumn(true);
+         /*TODO отдельно обрабатываем случай с группировкой*/
+         var flagAfter = false;
+         if (!Object.isEmpty(this._options.groupBy)) {
+            var
+               meth = this._options.groupBy.method,
+               prev = this._itemsProjection.getPrevious(projItem),
+               next = this._itemsProjection.getNext(projItem);
+            if(prev)
+               meth.call(this, prev.getContents());
+            meth.call(this, item);
+            if (next && !meth.call(this, next.getContents())) {
+               flagAfter = true;
+            }
+         }
+         /**/
+         var target = this._getTargetContainer(projItem),
+            currentItemAt = at > 0 ? this._getItemContainerByIndex(target, at - 1) : null,
+            template = this._getItemTemplate(projItem),
+            newItemContainer = this._buildTplItem(projItem, template),
+            rows;
+         this._addItemAttributes(newItemContainer, projItem);
+         if (flagAfter) {
+            newItemContainer.insertBefore(this._getItemContainerByIndex(target, at));
+            rows = [newItemContainer.prev().prev(), newItemContainer.prev(), newItemContainer, newItemContainer.next(), newItemContainer.next().next()];
+         } else if (currentItemAt && currentItemAt.length) {
+            meth && meth.call(this, prev.getContents());
+            newItemContainer.insertAfter(currentItemAt);
+            rows = [newItemContainer.prev().prev(), newItemContainer.prev(), newItemContainer, newItemContainer.next(), newItemContainer.next().next()];
+         } else if(at === 0) {
+            this._previousGroupBy = undefined;
+            newItemContainer.prependTo(target);
+            rows = [newItemContainer, newItemContainer.next(), newItemContainer.next().next()];
+         } else {
+            newItemContainer.appendTo(target);
+            rows = [newItemContainer.prev().prev(), newItemContainer.prev(), newItemContainer, newItemContainer.next()];
+         }
+         this._group(projItem, {at: at});
+         this._previousGroupBy = previousGroupBy;
          ladderDecorator && ladderDecorator.setMarkLadderColumn(false);
          this._ladderCompare(rows);
       },
