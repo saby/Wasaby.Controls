@@ -67,6 +67,7 @@ define('js!SBIS3.CONTROLS.TreeViewMixin', ['js!SBIS3.CORE.Control', 'js!SBIS3.CO
          //todo При переходе на Virtual DOM удалить работу с expandedItemContainer
          var
             expandedItemContainer = this._getItemsContainer().find('[data-hash="'+ expandedItem.getHash() + '"]');
+         this._folderOffsets[expandedItem.getContents().getKey()] = 0;
          expandedItemContainer.find('.controls-TreeView__expand').addClass('controls-TreeView__expand__open');
          this._notify('onNodeExpand', expandedItem.getContents().getId(), expandedItemContainer);
       },
@@ -108,72 +109,6 @@ define('js!SBIS3.CONTROLS.TreeViewMixin', ['js!SBIS3.CORE.Control', 'js!SBIS3.CO
             closest = elem.closest('.js-controls-TreeView__expand');
             return closest.length ? closest : elem;
          }
-      },
-      _drawItemsFolder: function(records) {
-         var self = this;
-         for (var j = 0; j < records.length; j++) {
-            var record = records[j];
-            var projItem = this._getItemProjectionByItemId(records[j].getId());
-            var
-               recKey = record.getId(),
-               parKey = self._dataSet.getParentKey(record, self._options.hierField),
-               childKeys = this._dataSet.getChildItems(parKey, true),
-               targetContainer = self._getTargetContainer(record);
-
-            if (!$('.controls-ListView__item[data-id="'+recKey+'"]', self._getItemsContainer().get(0)).length) {
-
-               if (targetContainer) {
-                  /*TODO пока придрот для определения позиции вставки*/
-                  var
-                     parentContainer = $('.controls-ListView__item[data-id="' + parKey + '"]', self._getItemsContainer().get(0)),
-                     allContainers = $('.controls-ListView__item', self._getItemsContainer().get(0)),
-                     startRow = 0;
-
-                  for (var i = 0; i < allContainers.length; i++) {
-                     if (allContainers[i] == parentContainer.get(0)) {
-                        startRow = i + 1;
-                     } else {
-                        //TODO сейчас ключи могут оказаться строками, а могут целыми числами, в 20 все должно быть строками и это можно выпилить
-                        if ((Array.indexOf(childKeys,$(allContainers[i]).attr('data-id')) >= 0) || (Array.indexOf(childKeys, $(allContainers[i]).data('id')) >= 0)) {
-                           startRow++;
-                        }
-                     }
-                     /*else {
-                      if ()
-                      }*/
-                  }
-                  /**/
-                  if (self._options.displayType == 'folders') {
-                     if (record.get(self._options.hierField + '@')) {
-                        self._drawAndAppendItem(projItem, {at : startRow});
-                     }
-
-                  }
-                  else {
-                     self._drawAndAppendItem(projItem, {at : startRow});
-                  }
-               }
-            }
-         }
-         self._drawItemsCallback();
-      },
-      /**
-       * Отрисовывает загруженную ветку
-       * @param key
-       * @param records
-       * @private
-       */
-      _drawLoadedNode: function(key, records){
-         this._drawItemsFolder(records);
-         this._updateItemsToolbar();
-      },
-      /**
-       * Отрисовка элементов после загрузки ветки
-       * @param records
-       * @private
-       */
-      _drawItemsFolderLoad: function(records) {
-         this._drawItems(records);
       },
       /**
        * Создает постраничную навигацию в ветках
