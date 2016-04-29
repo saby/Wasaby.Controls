@@ -47,13 +47,13 @@ define('js!SBIS3.CONTROLS.Data.IObject', [], function () {
        * @example
        * Установим логин пользователя:
        * <pre>
-       *    user.set('login', 'john-snow');
+       *    user.set('login', 'jon-snow');
        * </pre>
        * Установим данные пользователя:
        * <pre>
        *    user.set({
-       *       login: 'john-snow',
-       *       name: 'John',
+       *       login: 'jon-snow',
+       *       name: 'Jon',
        *       house: 'House Stark'
        *    });
        * </pre>
