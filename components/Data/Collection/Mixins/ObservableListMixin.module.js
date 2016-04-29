@@ -27,7 +27,11 @@ define('js!SBIS3.CONTROLS.Data.Collection.ObservableListMixin', [
          /**
           * @member {Function} Обработчик изменения свойств элемента
           */
-         _onItemPropertyChangeHandler: null
+         _onItemPropertyChangeHandler: null,
+         /**
+          * @member {boolean} флаг показывает выполняется ли в данный момент событие изменения коллекции
+          */
+         _isChangingYet: false
       },
 
       $constructor: function () {
@@ -75,7 +79,8 @@ define('js!SBIS3.CONTROLS.Data.Collection.ObservableListMixin', [
             parentFnc.call(this, items);
             this._eventsEnabled = eventsWasEnabled;
 
-            this.notifyCollectionChange(
+            this._notifier(
+               this.notifyCollectionChange,
                IBindCollection.ACTION_RESET,
                this._items.slice(),
                0,
@@ -92,7 +97,8 @@ define('js!SBIS3.CONTROLS.Data.Collection.ObservableListMixin', [
             parentFnc.call(this, items);
             this._eventsEnabled = eventsWasEnabled;
 
-            this.notifyCollectionChange(
+            this._notifier(
+               this.notifyCollectionChange,
                IBindCollection.ACTION_ADD,
                this._items.slice(count, this._lenght),
                count,
@@ -109,7 +115,8 @@ define('js!SBIS3.CONTROLS.Data.Collection.ObservableListMixin', [
             parentFnc.call(this, items);
             this._eventsEnabled = eventsWasEnabled;
 
-            this.notifyCollectionChange(
+            this._notifier(
+               this.notifyCollectionChange,
                IBindCollection.ACTION_ADD,
                this._items.slice(0, this.getCount() - length),
                0,
@@ -126,7 +133,8 @@ define('js!SBIS3.CONTROLS.Data.Collection.ObservableListMixin', [
             parentFnc.call(this);
             this._eventsEnabled = eventsWasEnabled;
 
-            this.notifyCollectionChange(
+            this._notifier(
+               this.notifyCollectionChange,
                IBindCollection.ACTION_RESET,
                this._items.slice(),
                0,
@@ -138,7 +146,8 @@ define('js!SBIS3.CONTROLS.Data.Collection.ObservableListMixin', [
          add: function (parentFnc, item, at) {
             parentFnc.call(this, item, at);
             at = this._isValidIndex(at) ? at : this.getCount() - 1;
-            this.notifyCollectionChange(
+            this._notifier(
+               this.notifyCollectionChange,
                IBindCollection.ACTION_ADD,
                [this._items[at]],
                at,
@@ -150,7 +159,8 @@ define('js!SBIS3.CONTROLS.Data.Collection.ObservableListMixin', [
          removeAt: function (parentFnc, index) {
             var item = this._items[index];
             parentFnc.call(this, index);
-            this.notifyCollectionChange(
+            this._notifier(
+               this.notifyCollectionChange,
                IBindCollection.ACTION_REMOVE,
                [],
                0,
@@ -163,7 +173,8 @@ define('js!SBIS3.CONTROLS.Data.Collection.ObservableListMixin', [
          replace: function (parentFnc, item, at) {
             var oldItem = this._items[at];
             parentFnc.call(this, item, at);
-            this.notifyCollectionChange(
+            this._notifier(
+               this.notifyCollectionChange,
                IBindCollection.ACTION_REPLACE,
                [this._items[at]],
                at,
@@ -171,6 +182,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.ObservableListMixin', [
                at
             );
          }
+
 
          //endregion SBIS3.CONTROLS.Data.Collection.List
 
@@ -319,8 +331,21 @@ define('js!SBIS3.CONTROLS.Data.Collection.ObservableListMixin', [
             return true;
          }
          return false;
-      }
+      },
 
+      _notifier: function (func /*, arguments*/) {
+         var args = Array.prototype.slice.call(arguments, 1);
+         if (this._isChangingYet) {
+            var self = this;
+            setTimeout(function (){
+               func.apply(self, args);
+            }, 0);
+            return;
+         }
+         this._isChangingYet = true;
+         func.apply(this, args);
+         this._isChangingYet = false;
+      }
       //endregion Protected methods
    };
 
@@ -331,7 +356,8 @@ define('js!SBIS3.CONTROLS.Data.Collection.ObservableListMixin', [
     * @param {*} value Значение свойства
     */
    var onItemPropertyChangeHandler = function (event, property) {
-      this.notifyItemChange(
+      this._notifier(
+         this.notifyItemChange,
          event.getTarget(),
          property
       );
