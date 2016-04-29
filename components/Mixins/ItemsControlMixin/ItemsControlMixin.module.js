@@ -1371,12 +1371,29 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          //Если offset отрицательный, значит запрашивали последнюю страницу
          return offset < 0 ? false : (typeof (hasMore) !== 'boolean' ? hasMore > (offset + this._options.pageSize) : !!hasMore);
       },
+      _scrollTo: function scrollTo(target, offset, speed, container) {
+         if (isNaN(target)) {
+            if (!(target instanceof jQuery))
+               target = $(target);
+            target = parseInt(target.offset().top);
+         }
+
+         container = container || "html, body";
+         if (!(container instanceof jQuery))
+            container = $(container);
+
+         speed = speed || 500;
+         offset = offset || 0;
+
+         container.animate({
+            scrollTop: target + offset
+         }, speed);
+      },
       _scrollToItem: function(itemId) {
          var itemContainer  = $(".controls-ListView__item[data-id='" + itemId + "']", this._getItemsContainer());
          if (itemContainer.length) {
-            itemContainer
-               .attr('tabindex', -1)
-               .focus();
+            itemContainer.attr('tabindex', -1);
+            this._scrollTo(itemContainer);
          }
       },
       /**
