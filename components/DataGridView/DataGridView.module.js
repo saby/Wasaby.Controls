@@ -173,6 +173,8 @@ define('js!SBIS3.CONTROLS.DataGridView',
              * <pre class="brush: xml">
              *     <option name="resultsTpl" value="html!SBIS3.Demo.nDataGridView/resources/resultTemplate"></option>
              * </pre>
+             * @editor CloudFileChooser
+             * @editorConfig extFilter xhtml
              * @see resultsPosition
              * @see resultsText
              */
