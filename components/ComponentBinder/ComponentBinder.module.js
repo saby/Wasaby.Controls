@@ -267,13 +267,11 @@ define('js!SBIS3.CONTROLS.ComponentBinder', [], function () {
          this._lastGroup = view._options.groupBy;
          this._isInfiniteScroll = view.isInfiniteScroll();
 
-         searchForm.subscribe('onTextChange', function(event, text){
-            if (text.length < searchForm.getProperty('startCharacter')) {
-               if (isTree) {
-                  resetGroup.call(self, searchParamName);
-               } else {
-                  resetSearch.call(self, searchParamName);
-               }
+         searchForm.subscribe('onReset', function(event, text){
+            if (isTree) {
+               resetGroup.call(self, searchParamName);
+            } else {
+               resetSearch.call(self, searchParamName);
             }
          });
 
