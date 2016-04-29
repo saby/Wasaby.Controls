@@ -11,6 +11,7 @@ define('js!SBIS3.CONTROLS.FilterButton.FilterLine',
        * Умеет отображать строку по определенному шаблону. Работает исключительно через контекст.
        * @class SBIS3.CONTROLS.FilterButton.FilterLine
        * @extends $ws.proto.CompoundControl
+       * @author Крайнов Дмитрий Олегович
        * @control
        * @public
        */

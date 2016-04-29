@@ -3,6 +3,7 @@ define('js!SBIS3.CONTROLS.hierarchyMixin', [], function () {
    /**
     * только работа с иерархией + методы для отображения
     * @mixin SBIS3.CONTROLS.hierarchyMixin
+    * @author Крайнов Дмитрий Олегович
     * @public
     */
    var hierarchyMixin = /** @lends SBIS3.CONTROLS.hierarchyMixin.prototype */{
