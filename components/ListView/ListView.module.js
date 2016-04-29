@@ -801,15 +801,19 @@ define('js!SBIS3.CONTROLS.ListView',
             target = this._findItemByElement($target);
 
             if (target.length && !this._touchSupport) {
-               targetKey = target[0].getAttribute('data-id');
-               if (targetKey !== undefined && this._hoveredItem.key !== targetKey) {
-                  this._hoveredItem.container && this._hoveredItem.container.removeClass('controls-ListView__hoveredItem');
-                  target.addClass('controls-ListView__hoveredItem');
-                  this._hoveredItem = this._getElementData(target);
-                  this._notifyOnChangeHoveredItem();
-               }
+               this._changeHoveredItem(target);
             } else if (!this._isHoverControl($target)) {
                this._mouseLeaveHandler();
+            }
+         },
+
+         _changeHoveredItem: function(target) {
+            var targetKey = target[0].getAttribute('data-id');
+            if (targetKey !== undefined && this._hoveredItem.key !== targetKey) {
+               this._hoveredItem.container && this._hoveredItem.container.removeClass('controls-ListView__hoveredItem');
+               target.addClass('controls-ListView__hoveredItem');
+               this._hoveredItem = this._getElementData(target);
+               this._notifyOnChangeHoveredItem();
             }
          },
 
@@ -1309,12 +1313,11 @@ define('js!SBIS3.CONTROLS.ListView',
                return;
             }
 
-            this._hoveredItem = this._getElementData(target);
-            this._notifyOnChangeHoveredItem();
-
             if (e.direction == 'left') {
+               this._changeHoveredItem(target);
                this._onLeftSwipeHandler();
             } else {
+               this._clearHoveredItem();
                this._onRightSwipeHandler();
             }
             e.stopPropagation();

@@ -260,11 +260,17 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
          var folderTitle = hoveredItem.container.find('.controls-TreeView__folderTitle'),
              td = folderTitle.closest('.controls-DataGridView__td', hoveredItem.container),
              containerCords = this._container[0].getBoundingClientRect(),
+             /* в 3.7.3.200 сделать это публичным маркером для стрелки */
              arrowContainer = td.find('.js-controls-TreeView__editArrow'),
              arrowCords;
 
          if(!arrowContainer.length) {
             arrowContainer = td.find('.controls-TreeView__editArrow');
+         }
+
+         /* Контейнера для стрелки может не быть, тогда не показываем */
+         if(!arrowContainer.length) {
+            return false;
          }
 
          /* Т.к. у нас в вёрстке две иконки, то позиционируем в зависимости от той, которая показывается,
@@ -301,15 +307,19 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
       _showEditArrow: function() {
          var hoveredItem = this.getHoveredItem(),
              editArrowContainer = this.getEditArrow().getContainer(),
-             needShowArrow, hiContainer;
+             needShowArrow, hiContainer, editArrowPosition;
 
          hiContainer = hoveredItem.container;
          /* Если иконку скрыли или не папка - показывать не будем */
          needShowArrow = hiContainer && hiContainer.hasClass('controls-ListView__item-type-node') && this.getEditArrow().isVisible();
 
          if(hiContainer && needShowArrow) {
-            editArrowContainer.css(this._getEditArrowPosition(hoveredItem));
-            editArrowContainer.removeClass('ws-hidden');
+            editArrowPosition = this._getEditArrowPosition(hoveredItem);
+
+            if(editArrowPosition) {
+               editArrowContainer.css(editArrowPosition);
+               editArrowContainer.removeClass('ws-hidden');
+            }
          }
       },
 
