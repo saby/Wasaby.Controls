@@ -371,10 +371,9 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
             }
             //Если данные пришли, нарисуем
             if (dataSet.getCount()) {
-               var records = dataSet._getRecords();
-               self._dataSet.merge(dataSet, {remove: false});
-               self._dataSet.getTreeIndex(self._options.hierField, true);
-               self._drawItemsFolderLoad(records, id);
+               self._items.merge(dataSet, {remove: false});
+               self._items.getTreeIndex(self._options.hierField, true);
+               self._updateItemsToolbar();
                self._dataLoadedCallback();
             }
 

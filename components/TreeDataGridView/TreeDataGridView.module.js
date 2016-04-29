@@ -212,15 +212,6 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
          }
       },
 
-      _drawItemsFolderLoad: function(records, id) {
-         if (!id) {
-            this._drawItems(records);
-         }
-         else {
-            this._drawItemsFolder(records);
-         }
-      },
-
       _drawExpandArrow: function(key, flag){
          var itemCont = $('.controls-ListView__item[data-id="' + key + '"]', this.getContainer().get(0));
          $('.js-controls-TreeView__expand', itemCont).toggleClass('controls-TreeView__expand__open', flag);
