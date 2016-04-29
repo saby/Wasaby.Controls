@@ -821,19 +821,23 @@ define('js!SBIS3.CONTROLS.Data.Projection.Collection', [
 
          var groups = ['added', 'removed', 'replaced', 'moved'],
             changes,
-            startFrom;
+            maxRepeats = 65535,
+            startFrom,
+            offset;
 
          //Информируем об изменениях по группам
          for (var groupIndex = 0; groupIndex < groups.length; groupIndex++) {
             //Собираем изменения в пачки (следующие подряд наборы)
             startFrom = 0;
+            offset = 0;
             while(startFrom !== -1) {
                changes = this._getGroupChanges(
                   groups[groupIndex],
                   session.before,
                   session.after,
                   session.beforeContents,
-                  startFrom
+                  startFrom,
+                  offset
                );
                this._applyGroupChanges(
                   groups[groupIndex],
@@ -842,7 +846,14 @@ define('js!SBIS3.CONTROLS.Data.Projection.Collection', [
                   session.after,
                   session.beforeContents
                );
+               if (changes.endAt !== -1 && changes.endAt <= startFrom) {
+                  maxRepeats--;
+                  if (maxRepeats === 0) {
+                     throw new Error('Endless cycle detected.');
+                  }
+               }
                startFrom = changes.endAt;
+               offset = changes.offset;
             }
          }
       },
@@ -853,11 +864,12 @@ define('js!SBIS3.CONTROLS.Data.Projection.Collection', [
        * @param {Array.<SBIS3.CONTROLS.Data.Projection.CollectionItem>} before Элементы до изменений
        * @param {Array.<SBIS3.CONTROLS.Data.Projection.CollectionItem>} after Элементы после изменений
        * @param {Array.<*>} beforeContents Содержимое элементов до изменений
-       * @param {Naumber} [startFrom=0] Начать с элемента номер
+       * @param {Number} [startFrom=0] Начать с элемента номер
+       * @param {Number} [offset=0] Смещение элеметов в after относительно before
        * @return {Object}
        * @protected
        */
-      _getGroupChanges: function (groupName, before, after, beforeContents, startFrom) {
+      _getGroupChanges: function (groupName, before, after, beforeContents, startFrom, offset) {
          var newItems = [],
             newItemsIndex = 0,
             oldItems = [],
@@ -929,17 +941,30 @@ define('js!SBIS3.CONTROLS.Data.Projection.Collection', [
                   if (!beforeItem) {
                      continue;
                   }
+                  do {
+                     afterItem = after[index + offset];
+                     beforeIndex = Array.indexOf(before, afterItem);
+                     if (beforeIndex === -1) {
+                        offset++;
+                     } else {
+                        break;
+                     }
+                  } while(afterItem);
                   beforeIndex = index;
                   afterIndex = Array.indexOf(after, beforeItem);
-                  if (afterIndex !== -1 && beforeIndex !== afterIndex) {
+                  if (
+                     beforeIndex !== -1 &&
+                     afterIndex !== -1 &&
+                     index !== afterIndex - offset
+                  ) {
                      if (
-                        oldItems.length && beforeIndex !== oldItemsIndex + oldItems.length ||
+                        oldItems.length && index !== oldItemsIndex + oldItems.length ||
                         newItems.length && afterIndex !== newItemsIndex + newItems.length
                      ) {
                         exit = true;
                      } else {
                         oldItems.push(beforeItem);
-                        oldItemsIndex = oldItems.length === 1 ? beforeIndex : oldItemsIndex;
+                        oldItemsIndex = oldItems.length === 1 ? index : oldItemsIndex;
                         newItems.push(beforeItem);
                         newItemsIndex = newItems.length === 1 ? afterIndex : newItemsIndex;
                      }
@@ -956,7 +981,8 @@ define('js!SBIS3.CONTROLS.Data.Projection.Collection', [
             newItemsIndex: newItemsIndex,
             oldItems: oldItems,
             oldItemsIndex: oldItemsIndex,
-            endAt: exit ? index : -1
+            endAt: exit ? index : -1,
+            offset: offset
          };
       },
 
