@@ -59,16 +59,22 @@ define('js!SBIS3.CONTROLS.SearchMixin', [], function() {
       _applySearch : function(text, force) {
          if (text) {
             text = text.replace(/[<>]/g, '');
-            if (String.trim(text).length >= this._options.startCharacter || force) {
+            if ( (String.trim(text).length >= this._options.startCharacter) || force ) {
                this._notify('onSearch', text);
+               this._onResetIsFired = false;
+            } else {
+               this._notifyOnReset();
             }
-            this._onResetIsFired = false;
          }
          else {
-            if (!this._onResetIsFired) {
-               this._notify('onReset');
-               this._onResetIsFired = true;
-            }
+            this._notifyOnReset();
+         }
+      },
+
+      _notifyOnReset: function() {
+         if(!this._onResetIsFired) {
+            this._notify('onReset');
+            this._onResetIsFired = true;
          }
       }
 
