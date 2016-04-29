@@ -12,7 +12,7 @@ define('js!SBIS3.CONTROLS.Data.Projection.Projection', [
     * @author Мальцев Алексей
     */
 
-   var Projection = $ws.proto.Abstract.extend(/** @lends SBIS3.CONTROLS.Data.Projection.Projection */{
+   var Projection = $ws.proto.Abstract.extend(/** @lends SBIS3.CONTROLS.Data.Projection.Projection.prototype */{
       _moduleName: 'SBIS3.CONTROLS.Data.Projection.Projection'
    });
 
