@@ -286,6 +286,7 @@ define('js!SBIS3.CONTROLS.ListView',
                 *     </div>
                 * </pre>
                 * @editor CloudFileChooser
+                * @editorConfig extFilter xhtml
                 * @see multiselect
                 * @see setItemTemplate
                 */
