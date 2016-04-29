@@ -476,6 +476,14 @@ define('js!SBIS3.CONTROLS.DataGridView',
             this.updateScrollAndColumns();
          }
       },
+
+      _redrawItems: function() {
+         if(this._options.showHead) {
+            this._redrawHead();
+         }
+         DataGridView.superclass._redrawItems.apply(this, arguments);
+      },
+
       _canShowEip: function() {
          // Отображаем редактирование по месту и для задизабленного DataGrid, но только если хоть у одиной колонки
          // доступен редактор при текущем состоянии задизабленности DataGrid.
