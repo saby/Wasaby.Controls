@@ -255,7 +255,10 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
          return this._options.dataSource.read(key).addCallback(function (record) {
             self.setRecord(record);
             return record;
-         }).addBoth(function (r) {
+         }).addErrback(function (error) {
+               self._processError(error);
+               return error;
+            }).addBoth(function (r) {
                self._hideLoadingIndicator();
                return r;
             });
@@ -324,7 +327,11 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
                eMessage = eResult;
             }
             if(eMessage) {
-               $ws.helpers.message(eMessage);
+               $ws.helpers.message(eMessage).addCallback(function(result){
+                  if (e.httpError == 403){
+                     this._panel.close();
+                  }
+               }.bind(this));
             }
          }
          e.processed = true;
