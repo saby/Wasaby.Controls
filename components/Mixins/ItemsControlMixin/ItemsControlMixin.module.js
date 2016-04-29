@@ -703,12 +703,20 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          }
          this._itemsInstances = {};
          if (container.length){
-            var itemsContainers = $('.controls-ListView__item, .controls-GroupBy', container.get(0));
-            /*Удаляем вложенные компоненты*/
-            this._destroyControls(itemsContainers);
+            var itemsContainers;
+            //В случае, когда это полная перерисовка, надо дестроить контролы только в итемах и группировках
+            if (container.get(0) == this._getItemsContainer().get(0)) {
+               itemsContainers = $('.controls-ListView__item, .controls-GroupBy', container.get(0));
+               /*Удаляем вложенные компоненты*/
+               this._destroyControls(itemsContainers);
 
-            /*Удаляем сами items*/
-            itemsContainers.remove();
+               /*Удаляем сами items*/
+               itemsContainers.remove();
+            }
+            else {
+               this._destroyControls(container);
+            }
+
          }
       },
 
