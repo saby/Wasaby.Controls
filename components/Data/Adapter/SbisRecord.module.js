@@ -53,6 +53,11 @@ define('js!SBIS3.CONTROLS.Data.Adapter.SbisRecord', [
          this._data.d[index] = value;
       },
 
+      clear: function () {
+         SbisFormatMixin.clear.call(this);
+         this._data.s.length = 0;
+      },
+
       getInfo: function (name) {
          Utils.logger.stack(this._moduleName + '::getInfo(): method is deprecated and will be removed in 3.7.4. Use \'getFormat\' instead.');
          var index = this._getFieldIndex(name),
