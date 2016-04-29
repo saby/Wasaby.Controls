@@ -696,6 +696,38 @@ define([
 
                projection.unsubscribe('onCollectionItemChange', handler);
             });
+
+            it("should trigger event onCollectionItemChange after onCollectionChange", function(done){
+               var
+                  list = new ObservableList({
+                     items: [
+                        new Model({
+                           rawData: {max: 1}
+                        }),
+                        new Model({
+                           rawData: {max: 3}
+                        }),
+                        new Model({
+                           rawData: {max: 4}
+                        })
+                     ]
+                  });
+               list.subscribe('onCollectionChange', function(e, act, newItems, index, oldItems, oldIndex ){
+                  var item = list.at(oldIndex+1);
+                  item.set('max', 502);
+               });
+
+               var  projection = new CollectionProjection({
+                     collection: list
+                  });
+
+               projection.subscribe('onCollectionItemChange', function(e, item) {
+                  if(item.getContents().get('max') === 502){
+                     done();
+                  }
+               });
+               list.removeAt(0);
+            });
          });
 
          describe('.isEventRaising()', function() {
