@@ -120,7 +120,7 @@ define('js!SBIS3.CONTROLS.SelectorMixin', [],
                }
 
                if(multiSelectChanged) {
-                  this._linkedView._redrawItems();
+                  this._linkedView.redraw();
                }
             }
          },
