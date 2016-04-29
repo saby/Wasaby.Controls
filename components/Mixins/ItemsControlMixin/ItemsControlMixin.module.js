@@ -1475,26 +1475,6 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          }
       },
 
-      /*_addItem: function (item, at) {
-         var ladderDecorator = this._decorators.getByName('ladder');
-         ladderDecorator && ladderDecorator.setMarkLadderColumn(true);
-         var target = this._getTargetContainer(item.getContents()),
-            nextSibling = at > -1 ? this._getItemContainerByIndex(target, at) : null,
-            template = this._getItemTemplate(item),
-            newItemContainer = this._buildTplItem(item, template),
-            rows;
-         this._addItemAttributes(newItemContainer, item);
-         if (nextSibling && nextSibling.length) {
-            newItemContainer.insertBefore(nextSibling);
-            rows = [newItemContainer.prev().prev(), newItemContainer.prev(), newItemContainer, nextSibling, nextSibling.next()];
-         } else {
-            newItemContainer.appendTo(target);
-            rows = [newItemContainer.prev().prev(), newItemContainer.prev(), newItemContainer, newItemContainer.next()];
-         }
-         ladderDecorator && ladderDecorator.setMarkLadderColumn(false);
-         this._ladderCompare(rows);
-      },*/
-
       _addItem: function (projItem, at) {
          var
             item = projItem.getContents(),
