@@ -11,6 +11,7 @@ define('js!SBIS3.CONTROLS.BreadCrumbs', [
     * Пример использования - иерархические реестры
     * @class SBIS3.CONTROLS.BreadCrumbs
     * @extends $ws.proto.CompoundControl
+    * @author Крайнов Дмитрий Олегович
     * @control
     * @public
     * @initial

@@ -12,6 +12,7 @@ define('js!SBIS3.CONTROLS.Browser', [
     *
     * @class SBIS3.CONTROLS.Browser
     * @extends $ws.proto.CompoundControl
+    * @author Крайнов Дмитрий Олегович
     * @control
     * @public
     * @designTime plugin /design/DesignPlugin

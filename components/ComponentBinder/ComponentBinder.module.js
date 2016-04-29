@@ -4,8 +4,8 @@ define('js!SBIS3.CONTROLS.ComponentBinder', [], function () {
     *
     * @class SBIS3.CONTROLS.ComponentBinder
     * @extends $ws.proto.Abstract
+    * @author Крайнов Дмитрий Олегович
     * @public
-    * @param backButton объект кнопки назад
     */
    /*методы для поиска*/
    function startHierSearch(text, searchParamName, searchCrumbsTpl, searchMode) {
