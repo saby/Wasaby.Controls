@@ -1,4 +1,9 @@
-define('js!SBIS3.CONTROLS.TreeCompositeView', ['js!SBIS3.CONTROLS.TreeDataGridView', 'js!SBIS3.CONTROLS.CompositeViewMixin', 'html!SBIS3.CONTROLS.TreeCompositeView/resources/CompositeView__folderTpl'], function(TreeDataGridView, CompositeViewMixin, folderTpl) {
+define('js!SBIS3.CONTROLS.TreeCompositeView', [
+   'js!SBIS3.CONTROLS.TreeDataGridView',
+   'js!SBIS3.CONTROLS.CompositeViewMixin',
+   'html!SBIS3.CONTROLS.TreeCompositeView/resources/CompositeView__folderTpl'
+], function(TreeDataGridView, CompositeViewMixin, folderTpl) {
+
    'use strict';
 
    var TreeCompositeView = TreeDataGridView.extend([CompositeViewMixin],/** @lends SBIS3.CONTROLS.TreeCompositeView.prototype*/ {
