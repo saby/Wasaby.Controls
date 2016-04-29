@@ -31,7 +31,8 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
        *       $ws.helpers.question('Продолжить?');
        *    }
        * </pre>
-       *
+       */
+      /**
        * @event onNodeCollapse После сворачивания ветки
        * @param {$ws.proto.EventObject} eventObject Дескриптор события.
        * @param {String} key ключ разворачиваемой ветки
