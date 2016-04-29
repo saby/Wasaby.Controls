@@ -2,7 +2,7 @@
 {{var
    hierType = it.item.get(it.hierField + '@'),
    addClasses = 'controls-ListView__item-type-' + (hierType == null ? 'leaf' : hierType == true ? 'node' : 'hidden');
-   it.isNode = it.projItem.getContents().get(it.hierField + '@'); it.hasChilds = it.projItem.getContents().get(it.hierField + '$');
+   it.isNode = it.projItem.getContents().get(it.hierField + '@'); it.hasChilds = it.projItem.getContents().get(it.hierField + '$') !== false;
 }}
 <tr class="controls-DataGridView__tr controls-ListView__item js-controls-ListView__item {{=it.className}}{{?addClasses}} {{=addClasses}}{{?}}" style="{{=it.decorators.apply((it.colorField ? it.item.get(it.colorField) : ''), 'color')}}" data-parent-hash="{{?it.projItem.getParent()}}{{=it.projItem.getParent().getHash()}}{{?}}" data-hash="{{=it.projItem.getHash()}}" data-id="{{=it.item.getId()}}"
    {{for(var j in it.attributes){}}
