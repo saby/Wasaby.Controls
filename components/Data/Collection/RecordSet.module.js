@@ -738,7 +738,8 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
       },
 
       assign: function (items) {
-         this._getRawDataAdapter().clear();
+         this._resetRawDataAdapter();
+         this._options.rawData = null;
          items = this._addItemsToRawData(items, undefined, true);
          RecordSet.superclass.assign.call(this, items);
          for (var i = 0, count = items.length; i < count; i++) {

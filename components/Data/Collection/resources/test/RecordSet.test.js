@@ -709,8 +709,8 @@ define([
             it('should get format from assigning recordset', function () {
                var s = [
                      {'n': 'Ид', 't': 'Число целое'},
-                     {'n': 'Фамилия', 't': 'Строка'},
-                     {'n': 'Количество', 't': 'Число целое'}
+                     {'n': 'Количество', 't': 'Число целое'},
+                     {'n': 'Фамилия', 't': 'Строка'}
                   ],
                   rs = new RecordSet({
                      rawData:  {
@@ -727,7 +727,7 @@ define([
                   rs2 = new RecordSet({
                      rawData: {
                         d: [
-                           [7, 'Арбузнов','4']
+                           [7, 4, 'Арбузнов']
                         ],
                         s: s
                      },

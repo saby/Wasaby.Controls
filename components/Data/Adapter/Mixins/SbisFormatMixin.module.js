@@ -71,7 +71,6 @@ define('js!SBIS3.CONTROLS.Data.Adapter.SbisFormatMixin', [
 
       clear: function () {
          this._data.d.length = 0;
-         this._data.s.length = 0;
       },
 
       getEmpty: function () {

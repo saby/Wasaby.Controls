@@ -110,7 +110,7 @@ define('js!SBIS3.CONTROLS.Data.Adapter.ITable', [], function () {
       },
 
       /**
-       * Очищает таблицу (удаляет все записи и очищает формат)
+       * Очищает таблицу (удаляет все записи)
        */
       clear: function () {
          throw new Error('Method must be implemented');
