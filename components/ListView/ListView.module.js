@@ -429,6 +429,7 @@ define('js!SBIS3.CONTROLS.ListView',
                 *    <li>autoadd - режим автоматического добавления новых элементов коллекции;
                 *    Этот режим позволяет при завершении редактирования последнего элемента автоматически создавать новый.</li>
                 *    <li>toolbar - отображение панели инструментов при входе в режим редактирования записи.</li>
+                *    <li>withoutItemActions - отображение панели инструментов при входе в режим редактирования записи без операций над записью, актульно при использовании режима toolbar</li>
                 * </ul>
                 *
                 * Режимы редактирования можно группировать и получать совмещенное поведение.
@@ -490,9 +491,9 @@ define('js!SBIS3.CONTROLS.ListView',
             _scrollWatcher : undefined,
             _searchParamName: undefined, //todo Проверка на "searchParamName" - костыль. Убрать, когда будет адекватная перерисовка записей (до 150 версии, апрель 2016)
             _updateByReload: false, //todo: Убрать в 150, когда будет правильный рендер изменившихся данных. Флаг, означающий то, что обновление происходит из-за перезагрузки данных.
-            _scrollOnBottom: true, // TODO: Придрот для скролла вниз при первой подгрузке. Если включена подгрузка вверх то изначально нужно проскроллить контейнер вниз, 
+            _scrollOnBottom: true, // TODO: Придрот для скролла вниз при первой подгрузке. Если включена подгрузка вверх то изначально нужно проскроллить контейнер вниз,
             //но после загрузки могут долетать данные (картинки в docviewer например), которые будут скроллить вверх.
-            _scrollOnBottomTimer: null //TODO: см. строчкой выше  
+            _scrollOnBottomTimer: null //TODO: см. строчкой выше
          },
 
          $constructor: function () {
@@ -592,9 +593,9 @@ define('js!SBIS3.CONTROLS.ListView',
                   var disableScrollBottom = function(){
                      self._scrollOnBottom = false;
                      self._options.infiniteScrollContainer.off('touchmove wheel', disableScrollBottom);
-                  }
+                  };
                   this._options.infiniteScrollContainer.on('touchmove wheel', disableScrollBottom)
-               } 
+               }
                this._scrollWatcher.subscribe('onScroll', function(event, type){
                   //top || bottom
                   self._loadChecked((type === 'top' && self._options.infiniteScroll === 'up') ||
@@ -1200,6 +1201,9 @@ define('js!SBIS3.CONTROLS.ListView',
                            this._showItemsToolbar(this._getElementData(this._editingItem.target));
                            this._getItemsToolbar().lockToolbar();
                         }
+                        if (this._options.editMode.indexOf('withoutItemActions') !== -1) {
+                           this._getItemsToolbar().hideItemsActions();
+                        }
                         this.setSelectedKey(model.getId());
                         event.setResult(this._notify('onAfterBeginEdit', model));
                      }.bind(this),
@@ -1291,7 +1295,8 @@ define('js!SBIS3.CONTROLS.ListView',
           * @private
           */
          _showItemsToolbar: function(target) {
-            this._getItemsToolbar().show(target, this._touchSupport);
+            var needHideItemActions = this._options.editMode.indexOf('withoutItemActions') !== -1 && this._editingItem.target && this._editingItem.target[0] === target.container[0];
+            this._getItemsToolbar().show(target, this._touchSupport, needHideItemActions);
          },
          _hideItemsToolbar: function (animate) {
             if (this._itemsToolbar) {
