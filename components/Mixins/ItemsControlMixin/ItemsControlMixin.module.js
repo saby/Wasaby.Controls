@@ -1149,10 +1149,14 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
         * @see onDataLoad
         */
        setItems: function (items) {
-         this._unsetItemsEventHandlers();
-         this._items = null;
-         this._prepareConfig(undefined, items);
-         this.reload();
+          this._unsetItemsEventHandlers();
+          this._items = null;
+          this._prepareConfig(undefined, items);
+          if(items instanceof Array) {
+             this.reload();
+          } else {
+             this.redraw();
+          }
       },
 
       _drawItemsCallback: function () {
