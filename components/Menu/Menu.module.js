@@ -231,8 +231,17 @@ define('js!SBIS3.CONTROLS.Menu', [
             horizontalAlign : {
                side : 'left'
             },
+            handlers: {
+               'onShow': function(){
+                  this._notify('onNodeExpand', this._options.item.getId());
+               },
+               'onClose': function(){
+                  this._notify('onNodeCollapse', this._options.item.getId());
+               }
+            },
             closeByExternalOver: true,
-            targetPart : true
+            targetPart : true,
+            item: item
          };
          config = this._onMenuConfig(config, isFirstLevel, item);
          return config;
