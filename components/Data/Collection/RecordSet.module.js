@@ -738,17 +738,13 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
       },
 
       assign: function (items) {
-         if (items && $ws.helpers.instanceOfModule(items, 'SBIS3.CONTROLS.Data.Collection.RecordSet')) {
-            this._assignRawData(items.getRawData(), true);
-            this._createFromRawData();
-         } else {
-            RecordSet.superclass.assign.call(this, items);
-         }
-         /*this._getRawDataAdapter().clear();
+         this._resetRawDataAdapter();
+         this._options.rawData = null;
          items = this._addItemsToRawData(items, undefined, true);
+         RecordSet.superclass.assign.call(this, items);
          for (var i = 0, count = items.length; i < count; i++) {
             items[i].setOwner(this);
-         }*/
+         }
          this._indexTree = {};
       },
 
