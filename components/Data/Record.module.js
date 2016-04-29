@@ -86,19 +86,36 @@ define('js!SBIS3.CONTROLS.Data.Record', [
             Utils.logger.stack('SBIS3.CONTROLS.Data.Record::set(): property name is empty, value can\'t be setted.');
          }
 
-         var oldValue = this._getRawDataValue(name);
-         if (!this._isEqualValues(oldValue, value)) {
-            this._setRawDataValue(name, value);
-            if (!this.has(name)) {
-               this._addRawDataField(name);
+         var map = name,
+            oldValue;
+         if (!(map instanceof Object)) {
+            map = {};
+            map[name] = value;
+         }
+
+         for (name in map) {
+            if (!map.hasOwnProperty(name)) {
+               continue;
             }
-            this._setChanged(name, oldValue);
-            if (name in this._propertiesCache &&
-               value !== this._propertiesCache[name]
-            ) {
-               delete this._propertiesCache[name];
+            value = map[name];
+            oldValue = this._getRawDataValue(name);
+            if (this._isEqualValues(oldValue, value)) {
+               delete map[name];
+            } else {
+               this._setRawDataValue(name, value);
+               if (!this.has(name)) {
+                  this._addRawDataField(name);
+               }
+               this._setChanged(name, oldValue);
+               if (name in this._propertiesCache &&
+                  value !== this._propertiesCache[name]
+               ) {
+                  delete this._propertiesCache[name];
+               }
             }
-            this._notify('onPropertyChange', name, value);
+         }
+         if (!Object.isEmpty(map)) {
+            this._notify('onPropertyChange', map);
          }
       },
 

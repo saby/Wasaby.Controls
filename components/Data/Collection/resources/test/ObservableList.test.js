@@ -331,15 +331,9 @@ define([
                   addItem,
                   handler = function(event, item, index, property) {
                      try {
-                        if (addItem !== item) {
-                           throw new Error('Invalid changed item');
-                        }
-                        if (index !== 0) {
-                           throw new Error('Invalid changed item index');
-                        }
-                        if (property !== 'test') {
-                           throw new Error('Invalid changed item property');
-                        }
+                        assert.strictEqual(addItem, item);
+                        assert.strictEqual(index, 0);
+                        assert.strictEqual(property.test, 'ok');
                         done();
                      } catch (err) {
                         done(err);

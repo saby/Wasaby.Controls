@@ -94,23 +94,51 @@ define([
                record.set('max', 13);
                assert.strictEqual(record.get('max'), 13);
             });
+            it('should set values', function () {
+               record.set({
+                  max: 13,
+                  title: 'test'
+               });
+               assert.strictEqual(record.get('max'), 13);
+               assert.strictEqual(record.get('title'), 'test');
+            });
             it('should trigger onPropertyChange if value changed', function () {
                var name,
                   newV;
-               record.subscribe('onPropertyChange', function(e, field, value) {
-                  name = field;
-                  newV = value;
+               record.subscribe('onPropertyChange', function(e, properties) {
+                  for (var key in properties) {
+                     name = key;
+                     newV = properties[key];
+                  }
                });
                record.set('max', 13);
                assert.strictEqual(name, 'max');
                assert.strictEqual(newV, 13);
             });
+            it('should trigger onPropertyChange if values changed', function () {
+               var name,
+                  newV;
+               record.subscribe('onPropertyChange', function(e, properties) {
+                  for (var key in properties) {
+                     name = key;
+                     newV = properties[key];
+                  }
+               });
+               record.set({
+                  max: 13,
+                  title: 'new'
+               });
+               assert.strictEqual(name, 'title');
+               assert.strictEqual(newV, 'new');
+            });
             it('should not trigger onPropertyChange if value not changed', function () {
                var name,
                   newV;
-               record.subscribe('onPropertyChange', function(e, field, value) {
-                  name = field;
-                  newV = value;
+               record.subscribe('onPropertyChange', function(e, properties) {
+                  for (var key in properties) {
+                     name = key;
+                     newV = properties[key];
+                  }
                });
                record.set('max', record.get('max'));
                assert.isUndefined(name);
@@ -122,9 +150,11 @@ define([
                   val = new Record();
                val.set('a', 'b');
                record.set('rec', val);
-               record.subscribe('onPropertyChange', function(e, field, value) {
-                  name = field;
-                  newV = value;
+               record.subscribe('onPropertyChange', function(e, properties) {
+                  for (var key in properties) {
+                     name = key;
+                     newV = properties[key];
+                  }
                });
                val = val.clone();
                record.set('rec', val);
@@ -137,9 +167,11 @@ define([
                   val = new Record();
                val.set('a', 'b');
                record.set('rec', val);
-               record.subscribe('onPropertyChange', function(e, field, value) {
-                  name = field;
-                  newV = value;
+               record.subscribe('onPropertyChange', function(e, properties) {
+                  for (var key in properties) {
+                     name = key;
+                     newV = properties[key];
+                  }
                });
                val = val.clone();
                val.set('a', 'c');
@@ -153,9 +185,11 @@ define([
                   val1 = new Enum({dictionary: ['a', 'b', 'c']}),
                   val2 = new Enum({dictionary: ['a', 'b', 'c']});
                record.set('enum', val1);
-               record.subscribe('onPropertyChange', function(e, field, value) {
-                  name = field;
-                  newV = value;
+               record.subscribe('onPropertyChange', function(e, properties) {
+                  for (var key in properties) {
+                     name = key;
+                     newV = properties[key];
+                  }
                });
                record.set('enum', val2);
                assert.isUndefined(name);
@@ -167,9 +201,11 @@ define([
                   val1 = new Enum({dictionary: ['a', 'b']}),
                   val2 = new Enum({dictionary: ['a', 'b', 'c']});
                record.set('enum', val1);
-               record.subscribe('onPropertyChange', function(e, field, value) {
-                  name = field;
-                  newV = value;
+               record.subscribe('onPropertyChange', function(e, properties) {
+                  for (var key in properties) {
+                     name = key;
+                     newV = properties[key];
+                  }
                });
                record.set('enum', val2);
                assert.strictEqual(name, 'enum');
@@ -187,9 +223,11 @@ define([
                      values: [true, false]
                   });
                record.set('flags', val1);
-               record.subscribe('onPropertyChange', function(e, field, value) {
-                  name = field;
-                  newV = value;
+               record.subscribe('onPropertyChange', function(e, properties) {
+                  for (var key in properties) {
+                     name = key;
+                     newV = properties[key];
+                  }
                });
                record.set('flags', val2);
                assert.isUndefined(name);
@@ -207,9 +245,11 @@ define([
                      values: [true, true]
                   });
                record.set('flags', val1);
-               record.subscribe('onPropertyChange', function(e, field, value) {
-                  name = field;
-                  newV = value;
+               record.subscribe('onPropertyChange', function(e, properties) {
+                  for (var key in properties) {
+                     name = key;
+                     newV = properties[key];
+                  }
                });
                record.set('flags', val2);
                assert.strictEqual(name, 'flags');
