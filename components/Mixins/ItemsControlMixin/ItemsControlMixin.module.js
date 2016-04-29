@@ -512,16 +512,18 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
       _redrawItems : function() {
          this._groupHash = {};
          var
+            itemsContainer,
             data = this._prepareItemsData(),
             markup;
 
          data.tplData = this._prepareItemData();
 
          markup = MarkupTransformer(this._itemsTemplate(data));
+         itemsContainer = this._getItemsContainer().get(0);
          //TODO это может вызвать тормоза
-         this._clearItems(this._getItemsContainer());
+         this._destroyInnerComponents(itemsContainer);
          if (markup.length) {
-            this._getItemsContainer().append(markup);
+            itemsContainer.innerHTML = markup;
          }
          this._toggleEmptyData(!(data.items && data.items.length) && this._options.emptyHTML);
          this._reviveItems();
@@ -710,6 +712,11 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
             /*Удаляем сами items*/
             itemsContainers.remove();
          }
+      },
+
+      _destroyInnerComponents: function(container) {
+         this._destroyControls(container);
+         container.innerHTML = '';
       },
 
       _destroyControls: function(container){
