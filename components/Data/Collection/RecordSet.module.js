@@ -94,7 +94,12 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
          /**
           * @var {Object} индексы
           */
-         _indexTree: {}
+         _indexTree: {},
+         /**
+          * //TODO надо убрать в 3.7.4
+          * @var флаг  показывает проверять ли формат при изменении рекордсета
+          */
+         _doNotFormatCheck: false
       },
 
       $constructor: function (cfg) {
@@ -623,6 +628,11 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
             toReplace = {};
          var l = 0, l1 = 0;
          for (i = 0, length = records.length; i < length; i++) {
+            if (i === 0) {
+               //todo проверяем формат только первого элемента надо убрать в 3.7.4
+               this._checkItem(records[i]);
+               this._doNotFormatCheck = true;
+            }
             id = records[i].getId();
             recordsMap[id] = true;
             var index = this.getIndexByValue(this._options.idProperty, id);
@@ -637,7 +647,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
          if(options.merge) {
             for(i in toReplace){
                if (toReplace.hasOwnProperty(i)) {
-                  this.replace(toReplace[i], +i);
+                  this.replace(toReplace[i], +i, false);
                }
             }
          }
@@ -656,6 +666,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
                this.assign(newItems);
             }
          }
+         this._doNotFormatCheck = false;
       },
 
       /**
@@ -729,8 +740,8 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
          this._indexTree = {};
       },
 
-      replace: function (item, at) {
-         this._checkItem(item);
+      replace: function (item, at, checkFormat) {
+         this._checkItem(item, checkFormat);
          item.setOwner(this);
          this._getRawDataAdapter().replace(item.getRawData(), at);
          RecordSet.superclass.replace.apply(this, arguments);
@@ -833,6 +844,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
             throw new Error('Item should be an instance of SBIS3.CONTROLS.Data.Record');
          }
          if ((checkFormat === undefined || checkFormat === true) &&
+            !this._doNotFormatCheck &&
             !this._getFormat().isEqual(item.getFormat())
          ) {
             Utils.logger.info(this._moduleName + ': the record format is not equal to the recordset format');
