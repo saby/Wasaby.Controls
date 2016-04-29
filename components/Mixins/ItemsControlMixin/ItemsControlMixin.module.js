@@ -586,14 +586,21 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
             }
             else {
                var
-                  ladderDecorator = this._decorators.getByName('ladder'),
+                  ladderDecorator,
                   itemsToDraw,
                   data,
                   markup,
                   item,
-                  container, firstHash, lastHash;
+                  container, firstHash, lastHash, itemsContainer;
 
-               ladderDecorator && ladderDecorator.setMarkLadderColumn(true);
+
+               /*TODO Лесенка*/
+               if (this._options.ladder) {
+                  ladderDecorator = this._decorators.getByName('ladder');
+                  ladderDecorator && ladderDecorator.setMarkLadderColumn(true);
+               }
+               /*TODO Лесенка*/
+
 
                itemsToDraw = this._getItemsForRedrawOnAdd(newItems);
                if (itemsToDraw.length) {
@@ -604,68 +611,81 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
                   markup = MarkupTransformer(this._itemsTemplate(data));
 
 
+                  itemsContainer = this._getItemsContainer().get(0);
                   if (newItemsIndex == 0) {
 
 
                      /*TODO Лесенка*/
-                     firstHash = itemsToDraw[0].getHash();
-                     var lastElem = $('.js-controls-ListView__item', this._getItemsContainer()).first();
-                     if (lastElem.length) {
-                        lastHash = lastElem.attr('data-hash');
-                     }
-                     else {
-                        lastHash = itemsToDraw[itemsToDraw.length - 1].getHash();
+                     if (this._options.ladder) {
+                        firstHash = itemsToDraw[0].getHash();
+                        var lastElem = $('.js-controls-ListView__item', this._getItemsContainer()).first();
+                        if (lastElem.length) {
+                           lastHash = lastElem.attr('data-hash');
+                        }
+                        else {
+                           lastHash = itemsToDraw[itemsToDraw.length - 1].getHash();
+                        }
                      }
                      /*TODO Лесенка*/
 
 
-                     this._getItemsContainer().prepend(markup);
+                     itemsContainer.insertAdjacentHTML('afterBegin', markup);
 
                   }
                   else {
-                     item = this._itemsProjection.at(newItemsIndex - 1);
-                     container = this._getDomElementByItem(item);
-
-
-                     /*TODO Лесенка*/
-                     firstHash = container.attr('data-hash');
-                     var nextCont = container.next('.js-controls-ListView__item');
-                     if (nextCont.length) {
-                        lastHash = nextCont.attr('data-hash');
+                     if ((newItemsIndex) == (this._itemsProjection.getCount() - newItems.length)) {
+                        itemsContainer.insertAdjacentHTML('beforeEnd', markup);
                      }
                      else {
-                        lastHash = itemsToDraw[itemsToDraw.length - 1].getHash();
+                        item = this._itemsProjection.at(newItemsIndex - 1);
+                        container = this._getDomElementByItem(item);
+                        container.after(markup);
+                     }
+
+                     /*TODO Лесенка*/
+                     if (this._options.ladder) {
+                        firstHash = container.attr('data-hash');
+                        var nextCont = container.next('.js-controls-ListView__item');
+                        if (nextCont.length) {
+                           lastHash = nextCont.attr('data-hash');
+                        }
+                        else {
+                           lastHash = itemsToDraw[itemsToDraw.length - 1].getHash();
+                        }
                      }
                      /*TODO Лесенка*/
 
-
-                     container.after(markup);
                   }
-
 
                   /*TODO Лесенка суть - надо пробежать по только что добавленным контейнерам и вызвать для них ladderCompare*/
-                  var
-                     rows = $('.js-controls-ListView__item', this._getItemsContainer()),
-                     ladderRows = [], start = false;
+                  if (this._options.ladder) {
+                     var
+                        rows = $('.js-controls-ListView__item', this._getItemsContainer()),
+                        ladderRows = [], start = false;
 
-                  for (i = 0; i < rows.length; i++) {
-                     if ($(rows[i]).attr('data-hash') == firstHash) {
-                        start = true;
+                     for (i = 0; i < rows.length; i++) {
+                        if ($(rows[i]).attr('data-hash') == firstHash) {
+                           start = true;
+                        }
+                        if (start) {
+                           ladderRows.push($(rows[i]));
+                        }
+                        if ($(rows[i]).attr('data-hash') == lastHash) {
+                           start = false;
+                           break;
+                        }
                      }
-                     if (start) {
-                        ladderRows.push($(rows[i]));
-                     }
-                     if ($(rows[i]).attr('data-hash') == lastHash) {
-                        start = false;
-                        break;
-                     }
+                     this._ladderCompare(ladderRows);
+                     /*TODO Лесенка*/
                   }
-                  this._ladderCompare(ladderRows);
-                  /*TODO Лесенка*/
-
 
                   this._reviveItems();
-                  ladderDecorator && ladderDecorator.setMarkLadderColumn(false);
+
+                  /*TODO Лесенка*/
+                  if (this._options.ladder) {
+                     ladderDecorator && ladderDecorator.setMarkLadderColumn(false);
+                  }
+                  /*TODO Лесенка*/
                }
             }
          }
