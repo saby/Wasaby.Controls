@@ -208,24 +208,21 @@ define('js!SBIS3.CONTROLS.Data.Adapter.SbisFormatMixin', [
          var info = this._data.s[index],
             meta = singleton ? this._sharedFieldMeta : {};
 
-         try {
-            switch (type) {
-               case 'Real':
-               case 'Money':
-                  meta.precision = info.t.p;
-                  break;
-               case 'Enum':
-               case 'Flags':
-                  meta.dictionary = info.t.s;
-                  break;
-               case 'Identity':
-                  meta.separator = ',';
-                  break;
-               case 'Array':
-                  meta.kind = this._getFieldTypeNameByInner(info.t.t);
-                  break;
-            }
-         } catch (e) {
+         switch (type) {
+            case 'Real':
+            case 'Money':
+              meta.precision = info.t.p;
+               break;
+            case 'Enum':
+            case 'Flags':
+               meta.dictionary = info.t.s;
+               break;
+            case 'Identity':
+               meta.separator = ',';
+               break;
+            case 'Array':
+               meta.kind = this._getFieldTypeNameByInner(info.t.t);
+               break;
          }
 
          return meta;

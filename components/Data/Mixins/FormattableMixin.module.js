@@ -192,7 +192,7 @@ define('js!SBIS3.CONTROLS.Data.FormattableMixin', [
                try {
                   this._getRawDataAdapter().addField(fieldFormat);
                } catch (e) {
-
+                  Utils.logger.info(e.message);
                }
             }, this);
          }
@@ -454,6 +454,7 @@ define('js!SBIS3.CONTROLS.Data.FormattableMixin', [
             try {
                fields = this._getRawDataFields();
             } catch (e) {
+               Utils.logger.info(e.message);
             }
             if (fields) {
                var i;
