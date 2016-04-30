@@ -66,6 +66,10 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                this._savingDeferred = $ws.proto.Deferred.success();
             },
 
+            isEdit: function() {
+               return this._eip.isEdit();
+            },
+
             _createEip: function() {
                this._destroyEip();
                this._eip = new EditInPlace(this._getEditInPlaceConfig());

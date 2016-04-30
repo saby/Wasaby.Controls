@@ -1233,6 +1233,10 @@ define('js!SBIS3.CONTROLS.ListView',
             return this._getItemsContainer().find('.js-controls-ListView__item[data-id="' + item.getId() + '"]:not(".controls-editInPlace")');
          },
 
+         isEdit: function() {
+            return this._hasEditInPlace() && this._getEditInPlace().isEdit();
+         },
+
          //********************************//
          //   БЛОК ОПЕРАЦИЙ НАД ЗАПИСЬЮ    //
          //*******************************//
