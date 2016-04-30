@@ -36,7 +36,12 @@ define('js!SBIS3.CONTROLS.TreeViewMixin', ['js!SBIS3.CORE.Control', 'js!SBIS3.CO
        */
       _onExpandItem: function(expandedItem) {
          var
-            key = expandedItem.getContents().getId();
+            key = expandedItem.getContents().getId(),
+            ladderDecorator = this._decorators.getByName('ladder');
+         if (ladderDecorator){
+            ladderDecorator.removeNodeData(key);
+            ladderDecorator.setIgnoreEnabled(true);
+         }
          this._closeAllExpandedNode(key);
          this._options.openedPath[expandedItem.getContents().getId()] = true;
          if (!this._loadedNodes[key] && this._options.partialyReload) {
@@ -50,7 +55,9 @@ define('js!SBIS3.CONTROLS.TreeViewMixin', ['js!SBIS3.CORE.Control', 'js!SBIS3.CO
                if (this._isSlowDrawing()) {
                   this._needToRedraw = false;
                }
+               ladderDecorator && ladderDecorator.setIgnoreEnabled(true);
                this._items.merge(list, {remove: false});
+               ladderDecorator && ladderDecorator.setIgnoreEnabled(false);
                if (this._isSlowDrawing()) {
                   this._needToRedraw = true;
                   this._dataSet.getTreeIndex(this._options.hierField, true);
@@ -61,6 +68,7 @@ define('js!SBIS3.CONTROLS.TreeViewMixin', ['js!SBIS3.CORE.Control', 'js!SBIS3.CO
             }.bind(this));
          } else {
             this._drawExpandedItem(expandedItem);
+            ladderDecorator && ladderDecorator.setIgnoreEnabled(false);
          }
       },
       _drawExpandedItem: function(expandedItem) {
