@@ -44,7 +44,7 @@ define('js!SBIS3.CONTROLS.EditAtPlace',
                 */
                text: '',
                /**
-                *  @cfg {String} Текст подсказки внутри редактирования
+                * @cfg {String} Текст подсказки внутри редактирования
                 * @remark
                 * Данный текст отображается внутри поля до момента получения фокуса 
                 * и как текст по нажатию на который начнется редактирование
@@ -52,6 +52,7 @@ define('js!SBIS3.CONTROLS.EditAtPlace',
                 * <pre>
                 *     <option name="placeholder">Фамилия</option>
                 * </pre>
+                * @translatable
                 * @see setPlaceholder
                 */
                placeholder: '',
