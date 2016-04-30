@@ -1388,6 +1388,10 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
       },
 
       _ladderCompare: function(rows){
+         var ladderDecorator = this._decorators.getByName('ladder');
+         if (ladderDecorator && ladderDecorator.isIgnoreEnabled()){
+            return;
+         }
          //TODO придрот - метод нужен только для адекватной работы лесенки при перемещении элементов местами
          for (var i = 1; i < rows.length; i++){
             var upperRow = rows[i - 1].length ? $('.controls-ladder', rows[i - 1]) : undefined,
