@@ -60,6 +60,11 @@ define('js!SBIS3.CONTROLS.SearchForm', [
          });
       },
 
+      setText: function(text) {
+         SearchForm.superclass.setText.apply(this, arguments);
+         this._startSearch(text);
+      },
+
       /**
        * Обработчик поднятия клавиши
        * @private
