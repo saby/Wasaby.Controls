@@ -644,10 +644,10 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
 
                      /*TODO Лесенка*/
                      if (this._options.ladder) {
-                        firstHash = container.attr('data-hash');
-                        var nextCont = container.next('.js-controls-ListView__item');
+                        firstHash = $(container).attr('data-hash');
+                        var nextCont = $(container).next('.js-controls-ListView__item');
                         if (nextCont.length) {
-                           lastHash = nextCont.attr('data-hash');
+                           lastHash = $(nextCont).attr('data-hash');
                         }
                         else {
                            lastHash = itemsToDraw[itemsToDraw.length - 1].getHash();
