@@ -672,6 +672,10 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
                         }
                         if ($(rows[i]).attr('data-hash') == lastHash) {
                            start = false;
+                           //Над i + 1 элементом изменилась запись, для него тоже нужна лесенка
+                           if ($(rows[i + 1]).length){
+                              ladderRows.push($(rows[i + 1]));
+                           }
                            break;
                         }
                      }
@@ -1394,8 +1398,8 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          }
          //TODO придрот - метод нужен только для адекватной работы лесенки при перемещении элементов местами
          for (var i = 1; i < rows.length; i++){
-            var upperRow = rows[i - 1].length ? $('.controls-ladder', rows[i - 1]) : undefined,
-                lowerRow = rows[i].length ? $('.controls-ladder', rows[i]) : undefined,
+            var upperRow = $(rows[i - 1]).length ? $('.controls-ladder', rows[i - 1]) : undefined,
+                lowerRow = $(rows[i]).length ? $('.controls-ladder', rows[i]) : undefined,
                needHide;
             if (lowerRow) {
                for (var j = 0; j < lowerRow.length; j++) {
@@ -1644,8 +1648,16 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
 	            case IBindCollection.ACTION_REMOVE:
                case IBindCollection.ACTION_MOVE:
 	               this._onCollectionRemove(oldItems, action === IBindCollection.ACTION_MOVE);
+                  var ladderDecorator = this._decorators.getByName('ladder');
+                  //todo опять неверно вызывается ladderCompare, используем костыль, чтобы этого не было
+                  if ((action === IBindCollection.ACTION_MOVE) && ladderDecorator){
+                     ladderDecorator.setIgnoreEnabled(true);
+                  }
                   if (newItems.length) {
                      this._addItems(newItems, newItemsIndex)
+                  }
+                  if ((action === IBindCollection.ACTION_MOVE) && ladderDecorator){
+                     ladderDecorator.setIgnoreEnabled(false);
                   }
                   this._toggleEmptyData(!this._itemsProjection.getCount());
 	               //this._view.checkEmpty(); toggleEmtyData
