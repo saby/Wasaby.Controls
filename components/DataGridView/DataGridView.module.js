@@ -153,6 +153,35 @@ define('js!SBIS3.CONTROLS.DataGridView',
              * Массив имен столбцов, по которым строится лесенка
              */
             ladder: undefined,
+            /**
+             * @cfg {String} Устанавливает шаблон отображения строки итогов.
+             * @remark
+             * Отображение строки итогов конфигурируется тремя опциями: resultsTpl, {@link resultsPosition} и {@link resultsText}.
+             * В данную опцию передается имя шаблона, в котором описана конфигурация строки итогов.
+             * Чтобы шаблон можно было передать в опцию компонента, его нужно предварительно подключить в массив зависимостей.
+             * Опция позволяет пользователю выводить в строку требуемые данные и задать для нее определенное стилевое оформление.
+             * Подсчет каких-либо итоговых сумм в строке не предусмотрен. Все итоги рассчитываются на стороне источника данных.
+             * С подробным описанием можно ознакомиться в статье {@link https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/list-settings/list-visual-display/results/ Строка итогов}.
+             * @example
+             * 1. Подключаем шаблон в массив зависимостей:
+             * <pre>
+             *     define('js!SBIS3.Demo.nDataGridView',
+             *        [
+             *           ...,
+             *           'html!SBIS3.Demo.nDataGridView/resources/resultTemplate'
+             *        ],
+             *        ...
+             *     );
+             * </pre>
+             * 2. Передаем шаблон в опцию:
+             * <pre class="brush: xml">
+             *     <option name="resultsTpl" value="html!SBIS3.Demo.nDataGridView/resources/resultTemplate"></option>
+             * </pre>
+             * @editor CloudFileChooser
+             * @editorConfig extFilter xhtml
+             * @see resultsPosition
+             * @see resultsText
+             */
             resultsTpl: resultsTpl,
             /**
              * @cfg {Boolean} Производить ли преобразование колонок в шапке
