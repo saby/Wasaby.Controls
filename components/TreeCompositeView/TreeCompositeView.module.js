@@ -174,7 +174,6 @@ define('js!SBIS3.CONTROLS.TreeCompositeView', ['js!SBIS3.CONTROLS.TreeDataGridVi
             currentDataSet,
             currentRecord,
             needRedraw,
-            parentBranch,
             parentBranchId,
             dependentRecords,
             recordsGroup = {},
@@ -277,7 +276,7 @@ define('js!SBIS3.CONTROLS.TreeCompositeView', ['js!SBIS3.CONTROLS.TreeDataGridVi
             filter = $ws.core.clone(this.getFilter());
             //Группируем записи по веткам (чтобы как можно меньше запросов делать)
             $ws.helpers.forEach(items, function(item) {
-               parentBranch = this.getParentKey(undefined, this._items.getRecordById(item));
+               parentBranchId = this.getParentKey(undefined, this._items.getRecordById(item));
                if (!recordsGroup[parentBranchId]) {
                   recordsGroup[parentBranchId] = [];
                }
