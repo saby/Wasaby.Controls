@@ -133,7 +133,7 @@ define('js!SBIS3.CONTROLS.ComponentBinder', [], function () {
       this._firstSearch = !!withReload;
       //Если в строке поиска что-то есть, очистим и сбросим Фильтр
       if (searchForm.getText()) {
-         searchForm.setText('');
+         searchForm.resetSearch();
       }
    }
 
