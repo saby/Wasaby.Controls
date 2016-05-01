@@ -184,7 +184,13 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
        * @param {String} key Идентификатор раскрываемого узла
        */
       toggleNode: function(key) {
+         var ladderDecorator = this._decorators.getByName('ladder');
+         if (ladderDecorator){
+            ladderDecorator.removeNodeData(key);
+            ladderDecorator.setIgnoreEnabled(true);
+         }
          this._getItemProjectionByItemId(key).toggleExpanded();
+         ladderDecorator && ladderDecorator.setIgnoreEnabled(false);
       },
       /**
        * Развернуть ветку
