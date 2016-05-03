@@ -59,12 +59,14 @@ define('js!SBIS3.CONTROLS.SearchMixin', [], function() {
       },
 
       _applySearch : function(text, force) {
+         var hasStartCharacter = this._options.startCharacter !== null;
+
          if (text) {
             text = text.replace(/[<>]/g, '');
-            if ( (this._options.startCharacter !== null && String.trim(text).length >= this._options.startCharacter) || force ) {
+            if ( (hasStartCharacter && String.trim(text).length >= this._options.startCharacter) || force ) {
                this._notify('onSearch', text);
                this._onResetIsFired = false;
-            } else {
+            } else if (hasStartCharacter) {
                this._notifyOnReset();
             }
          }
