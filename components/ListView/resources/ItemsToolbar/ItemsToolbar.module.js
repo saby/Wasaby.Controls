@@ -264,11 +264,10 @@ define('js!SBIS3.CONTROLS.ItemsToolbar',
            * Показать тулбар, если он не зафиксирован у какого-нибудь элемента
            * @param {Object} target
            * @param {Boolean} animate
-           * @param {Boolean} hideItemActions не показывать операции над записью
            */
-          show: function(target, animate, hideItemActions) {
+          show: function(target, animate) {
              var container = this.getContainer()[0],
-                 isActionsHidden = (this._isItemsActionsHidden() || hideItemActions) && this._isEditActionsHidden(),
+                 isActionsHidden = this._isItemsActionsHidden() && this._isEditActionsHidden(),
                  hasItemsActions = this._options.itemsActions.length,
                  itemsActions, position, toolbarContent;
 
@@ -290,7 +289,7 @@ define('js!SBIS3.CONTROLS.ItemsToolbar',
                 return;
              }
              this._currentTarget = target;                  // Запоминаем таргет в качестве текущего
-             if (hasItemsActions && !hideItemActions) {     // Если имеются опции записи, то создаем их и отображаем
+             if (hasItemsActions) {       // Если имеются опции записи, то создаем их и отображаем
                 this.showItemsActions(target);
              }
              // Рассчитываем и устанавливаем позицию тулбара
