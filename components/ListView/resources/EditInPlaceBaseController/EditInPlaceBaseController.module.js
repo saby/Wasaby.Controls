@@ -51,6 +51,7 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                // Используется для хранения Deferred при сохранении в редактировании по месту.
                // Обязательно нужен, т.к. лишь таким способом можно обработать несколько последовательных вызовов endEdit и вернуть ожидаемый результат (Deferred).
                _savingDeferred: undefined,
+               _editingDeferred: undefined,
                _editingRecord: undefined,
                _eipHandlers: null,
                //TODO: Данная переменная нужна для автодобавления по enter(mode autoadd), чтобы определить в какой папке происходит добавление элемента
@@ -165,6 +166,9 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                return this._eip.getTarget();
             },
             showEip: function(target, model, options) {
+               //TODO: EIP Авраменко, Сухоручкин: сейчас сделано через pendingOperation, в будущем переделать на команды блокировки родительких компонентов
+               this._editingDeferred = new $ws.proto.Deferred();
+               this._sendLockCommand(this._editingDeferred);
                if (options && options.isEdit) {
                   return this.edit(target, model, options)
                } else {
@@ -301,6 +305,7 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                eip.endEdit();
                isAdd && target.remove();
                this._notify('onAfterEndEdit', eipRecord, target, withSaving);
+               this._editingDeferred.callback();
                if (!this._savingDeferred.isReady()) {
                   this._savingDeferred.callback();
                }
