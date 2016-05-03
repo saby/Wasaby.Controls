@@ -413,6 +413,7 @@ define('js!SBIS3.CONTROLS.ListView',
                 *    <li>В режимах отображения "Список" и "Таблица" постраничная навигация не работает, даже если опция showPaging установлена в значение true. В этих режимах отображения автоматически устанавливается режим бесконечной подгрузки по скроллу - {@link infiniteScroll}.</li>
                 *    <li>В режиме отображения "Плитка" постраничная навигация будет работать корректно.</li>
                 * </ol>
+                * Режим отображения устанавливают с помощью опции {@link SBIS3.CONTROLS.CompositeViewMixin#viewMode}.
                 * @example
                 * <pre>
                 *     <option name="showPaging">true</option>
@@ -421,7 +422,7 @@ define('js!SBIS3.CONTROLS.ListView',
                 * @see getPage
                 * @see infiniteScroll
                 * @see SBIS3.CONTROLS.DSMixin#pageSize
-                * @see viewMode
+                * @see SBIS3.CONTROLS.CompositeViewMixin#viewMode
                 * @see SBIS3.CONTROLS.TreeCompositeView
                 * @see SBIS3.CONTROLS.CompositeView
                 */
