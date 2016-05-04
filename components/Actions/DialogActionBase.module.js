@@ -165,8 +165,17 @@ define('js!SBIS3.CONTROLS.DialogActionBase', ['js!SBIS3.CONTROLS.ActionBase', 'j
        * Базовая логика при событии ouDestroy. Дестроим рекорд в связном списке
        */
       _destroy: function(record){
-         var collectionRecord = this._getCollectionRecord(record);
-         collectionRecord && collectionRecord.destroy();
+         var collectionRecord = this._getCollectionRecord(record),
+            collection = this._options.linkedObject;
+         if (!collectionRecord){
+            return;
+         }
+         if ($ws.helpers.instanceOfMixin(collection, 'SBIS3.CONTROLS.Data.Collection.IList')) {
+            collection.remove(collectionRecord);
+         }
+         else{
+            collection.getDataSource().destroy(collectionRecord.getId());
+         }
       },
 
       /**
