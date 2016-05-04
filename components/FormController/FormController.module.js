@@ -385,7 +385,7 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
        * Action: дестрой записи
        */
       _destroyRecord: function(){
-         this._options.record.destroy();
+         this._options.dataSource.destroy(this._options.record.getId());
          this._notify('onDestroy', this._options.record)
       },
 

@@ -117,19 +117,13 @@ define('js!SBIS3.CONTROLS.DialogActionBase', ['js!SBIS3.CONTROLS.ActionBase', 'j
        */
       _getFormControllerHandlers: function(){
          return {
-            onRead: this._readHandler.bind(this),
-            onUpdate: this._updateHandler.bind(this),
-            onDestroy: this._destroyHandler.bind(this),
-            onCreate: this._createHandler.bind(this)
+            onRead: this._actionHandler.bind(this, 'Read'),
+            onUpdate: this._actionHandler.bind(this, 'Update'),
+            onDestroy: this._actionHandler.bind(this, 'Destroy'),
+            onCreate: this._actionHandler.bind(this, 'Create')
          }
       },
 
-      /**
-       * Обрабатываем событие onUpdate у formController'a
-       */
-      _updateHandler: function(event, record){
-         this._actionHandler('Update', record);
-      },
       /**
        * Переопределяемый метод
        * В случае, если все действия выполняются самостоятельноно, надо вернуть OpenDialogAction.ACTION_CUSTOM, чтобы
@@ -138,7 +132,6 @@ define('js!SBIS3.CONTROLS.DialogActionBase', ['js!SBIS3.CONTROLS.ActionBase', 'j
        * @returns {String|Deferred} Сообщаем, нужно ли выполнять базовую логику. Если не нужно, то возвращаем OpenDialogAction.ACTION_CUSTOM
        */
       _onUpdate: function(record){
-         return '';
       },
       /**
        * Базовая логика при событии ouUpdate. Обновляем рекорд в связном списке
@@ -148,28 +141,17 @@ define('js!SBIS3.CONTROLS.DialogActionBase', ['js!SBIS3.CONTROLS.ActionBase', 'j
       },
 
       /**
-       * Обрабатываем событие onRead у formController'a
-       */
-      _readHandler: function(event, record){
-         this._actionHandler('Read', record);
-      },
-      /**
        * Переопределяемый метод
        * В случае, если все действия выполняются самостоятельноно, надо вернуть OpenDialogAction.ACTION_CUSTOM, чтобы
        * не выполнялась базовая логика
        * @param record Запись, с которой работаем
        * @returns {String|Deferred} Сообщаем, нужно ли выполнять базовую логику. Если не нужно, то возвращаем OpenDialogAction.ACTION_CUSTOM
        */
+      _onRead: function(record){
+      },
       _read: function(record){
-         return '';
       },
 
-      /**
-       * Обрабатываем событие onDestroy у formController'a
-       */
-      _destroyHandler: function(event, record){
-         this._actionHandler('Destroy', record);
-      },
       /**
        * Переопределяемый метод
        * В случае, если все действия выполняются самостоятельноно, надо вернуть OpenDialogAction.ACTION_CUSTOM, чтобы
@@ -178,7 +160,6 @@ define('js!SBIS3.CONTROLS.DialogActionBase', ['js!SBIS3.CONTROLS.ActionBase', 'j
        * @returns {String|Deferred} Сообщаем, нужно ли выполнять базовую логику. Если не нужно, то возвращаем OpenDialogAction.ACTION_CUSTOM
        */
       _onDestroy: function(record){
-         return '';
       },
       /**
        * Базовая логика при событии ouDestroy. Дестроим рекорд в связном списке
@@ -189,12 +170,6 @@ define('js!SBIS3.CONTROLS.DialogActionBase', ['js!SBIS3.CONTROLS.ActionBase', 'j
       },
 
       /**
-       * Обрабатываем событие onCreate у formController'a
-       */
-      _createHandler: function(event, record){
-         this._actionHandler('Create', record);
-      },
-      /**
        * Переопределяемый метод
        * В случае, если все действия выполняются самостоятельноно, надо вернуть OpenDialogAction.ACTION_CUSTOM, чтобы
        * не выполнялась базовая логика
@@ -202,7 +177,6 @@ define('js!SBIS3.CONTROLS.DialogActionBase', ['js!SBIS3.CONTROLS.ActionBase', 'j
        * @returns {String|Deferred} Сообщаем, нужно ли выполнять базовую логику. Если не нужно, то возвращаем OpenDialogAction.ACTION_CUSTOM
        */
       _onCreate: function(record){
-         return '';
       },
       /**
        * Базовая логика при событии ouCreate. Добавляем рекорд в связный список
@@ -227,11 +201,14 @@ define('js!SBIS3.CONTROLS.DialogActionBase', ['js!SBIS3.CONTROLS.ActionBase', 'j
        */
       _actionHandler: function(action, record) {
          var eventResult = this._notify('on' + action, record),
-            actionResult = this['_on' + action](record),
             genericMethod = '_' + action.toLowerCase(),
-            self = this;
-         if (actionResult !== OpenDialogAction.ACTION_CUSTOM && eventResult !== undefined) {
-            actionResult = eventResult;
+            self = this,
+            baseActions = [OpenDialogAction.ACTION_CUSTOM, OpenDialogAction.ACTION_MERGE, OpenDialogAction.ACTION_ADD, OpenDialogAction.ACTION_RELOAD, OpenDialogAction.ACTION_DELETE],
+            actionResult = eventResult,
+            methodResult;
+         if (Array.indexOf(baseActions, eventResult) == -1) {
+            methodResult  = this['_on' + action](record);
+            actionResult = methodResult;
          }
          if (actionResult === OpenDialogAction.ACTION_CUSTOM || !this._options.linkedObject) {
             return;
