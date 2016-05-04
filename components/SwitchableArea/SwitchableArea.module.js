@@ -17,6 +17,7 @@ define('js!SBIS3.CONTROLS.SwitchableArea', [
     * @author Крайнов Дмитрий Олегович
     * @mixes SBIS3.CONTROLS.CollectionMixin
     * @mixes SBIS3.CONTROLS.Selectable
+    * @public
     */
 
    var SwitchableArea = CompoundControl.extend([], /** @lends SBIS3.CONTROLS.SwitchableArea.prototype */ {
