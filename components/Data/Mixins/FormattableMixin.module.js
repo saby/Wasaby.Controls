@@ -244,6 +244,7 @@ define('js!SBIS3.CONTROLS.Data.FormattableMixin', [
        * Устанавливает адаптер для работы с данными в "сыром" виде
        * @param {String|SBIS3.CONTROLS.Data.Adapter.IAdapter} adapter
        * @see adapter
+       * @see rawData
        * @see getAdapter
        */
       setAdapter: function (adapter) {

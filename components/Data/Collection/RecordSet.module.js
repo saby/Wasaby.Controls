@@ -25,18 +25,18 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
          _options: {
             /**
              * @typedef {Object} OperationOptions
-             * @property {Boolean} [add=true] Добавлять новые записи
-             * @property {Boolean} [remove=false] Удалять отсутствующие записи
-             * @property {Boolean} [merge=true] Объединять одинаковые записи
+             * @property {Boolean} [add=true] Добавлять новые записи.
+             * @property {Boolean} [remove=false] Удалять отсутствующие записи.
+             * @property {Boolean} [merge=true] Объединять одинаковые записи.
              */
 
             /**
              * @typedef {String} RecordStatus
-             * @variant actual Актуальные записи
-             * @variant all Все записи
-             * @variant created Новые записи
-             * @variant deleted Удаленные записи
-             * @variant changed Измененные записи
+             * @variant actual В переборе функции {@link each} будут использованы только актуальные записи RecordSet'а.
+             * @variant all В переборе функции {@link each} будут использованы все записи RecordSet'а.
+             * @variant created В переборе функции {@link each} будут использованы только новые записи RecordSet'а.
+             * @variant deleted В переборе функции {@link each} будут использованы только удалённые записи RecordSet'а. Статус удалённых записей устанавливают с помощью метода {@link removeRecords}.
+             * @variant changed В переборе функции {@link each} будут использованы только изменённые записи RecordSet'а.
              */
 
             /**
@@ -208,8 +208,8 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
 
       /**
        * Перебирает все записи рекордсета.
-       * @param {Function} iterateCallback Ф-я обратного вызова, аргументами будут  переданы запись и ее позиция
-       * @param {RecordStatus} [status=actual] Селектор состояния выбираемых записей
+       * @param {Function} iterateCallback Функция обратного вызова, аргументами будут  переданы запись и ее позиция.
+       * @param {RecordStatus} [status=actual] Селектор состояния выбираемых записей.
        */
       each: function (iterateCallback, status) {
          var length = this.getCount();
@@ -247,20 +247,20 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
       //region Public methods
 
       /**
-       * Синхронизирует изменения в рекордсете с источником данных следующим образом:
-       * - записи, отмеченные удаленными через removeRecord() - удаляются в источнике данных;
-       * - обновленные записи - обновляются в источнике данных;
-       * - добавленные записи - добавляются в источник данных.
-       * @param {SBIS3.CONTROLS.Data.Source.ISource} dataSource Источник данных
-       * @returns {$ws.proto.Deferred} Асинхронный результат выполнения
-       * @deprecated метод будет удален в 3.7.4.
+       * Синхронизирует изменения в RecordSet'е с источником данных.
+       * @remark
+       * Синхронизация производится по следующим правилам:
+       * <ul>
+       * <li>Записи, отмеченные удаленными через {@link removeRecord}, будут удалены в источнике данных;</li>
+       * <li>Обновленные записи будут обновлены в источнике данных;</li>
+       * <li>Добавленные записи будут добавлены в источник данных.</li>
+       * </ul>
+       * @param {SBIS3.CONTROLS.Data.Source.ISource} dataSource Источник данных.
+       * @returns {$ws.proto.Deferred} Асинхронный результат выполнения.
+       * @deprecated Метод будет удалён в версии платформы СБИС 3.7.4.
        */
-      saveChanges: function(dataSource, added, changed, deleted) {
+      saveChanges: function(dataSource) {
          //TODO: refactor after migration to SBIS3.CONTROLS.Data.Source.ISource
-         added = added === undefined ? true : added;
-         changed = changed === undefined ? true : changed;
-         deleted = deleted === undefined ? true : deleted;
-
          var syncCompleteDef = new $ws.proto.ParallelDeferred(),
             self = this,
             position = 0,
@@ -315,8 +315,8 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
       },
 
       /**
-       * Возвращает запись по ключу
-       * @param {String|Number} id
+       * Возвращает запись по ключу.
+       * @param {String|Number} id Первичный ключ записи.
        * @returns {SBIS3.CONTROLS.Data.Model}
        */
       getRecordById: function (id) {
@@ -327,9 +327,10 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
 
       /**
        * Возвращает запись по ключу
-       * @param {String|Number} key
+       * @param {String|Number} key Первичный ключ записи.
        * @returns {SBIS3.CONTROLS.Data.Model}
-       * @deprecated метод будет удален в 3.7.4 используйте getRecordById
+       * @see getRecordById
+       * @deprecated Метод будет удалён в версии платформы СБИС 3.7.4. Используйте метод getRecordById.
        */
       getRecordByKey: function (key) {
          return this.getRecordById(key);
@@ -358,12 +359,17 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
       },
 
       /**
-       * Возвращает метаданные.
+       * Возвращает метаданные RecordSet'а.
        * @remark
-       * Существуют два служебных поля в метаданных:
-       * - path - путь для хлебных крошек, возвращается как {@link SBIS3.CONTROLS.Data.Collection.RecordSet};
-       * - results - строка итогов, возвращается как {@link SBIS3.CONTROLS.Data.Model}.
-       * @returns {Object}
+       * Метаданные - это дополнительная информация, не связанная с RecordSet'ом напрямую.
+       * Она используется механизмами списков для построения строки итогов, хлебных крошек и постраничной навигации.
+       * Существуют три служебных поля в метаданных:
+       * <ul>
+       * <li>path - путь для хлебных крошек, возвращается как {@link SBIS3.CONTROLS.Data.Collection.RecordSet};</li>
+       * <li>results - строка итогов, возвращается как {@link SBIS3.CONTROLS.Data.Model}. Подробнее о конфигурации списков для отображения строки итогов читайте в {@link https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/list-settings/list-visual-display/results/ этом разделе};</li>
+       * <li>more - Boolean - есть ли есть записи для подгрузки (используется для постраничной навигации).</li>
+       * </ul>
+       * @returns {Object} Метаданные.
        * @see meta
        * @see setMetaData
        */
@@ -394,12 +400,17 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
       },
 
       /**
-       * Устанавливает метаданные
+       * Устанавливает метаданные RecordSet'а.
        * @remark
-       * Существуют два служебных поля в метаданных:
-       * - path - путь для хлебных крошек, устанавливается как {@link SBIS3.CONTROLS.Data.Collection.RecordSet};
-       * - results - строка итогов, устанавливается как {@link SBIS3.CONTROLS.Data.Model}.
-       * @param {Object} meta Метаданные
+       * Метаданные - это дополнительная информация, не связанная с RecordSet'ом напрямую.
+       * Она используется механизмами списков для построения строки итогов, хлебных крошек и постраничной навигации.
+       * Существуют три служебных поля в метаданных:
+       * <ul>
+       * <li>path - путь для хлебных крошек, возвращается как {@link SBIS3.CONTROLS.Data.Collection.RecordSet};</li>
+       * <li>results - строка итогов, возвращается как {@link SBIS3.CONTROLS.Data.Model}. Подробнее о конфигурации списков для отображения строки итогов читайте в {@link https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/list-settings/list-visual-display/results/ этом разделе};</li>
+       * <li>more - Boolean - есть ли есть записи для подгрузки (используется для постраничной навигации).</li>
+       * </ul>
+       * @param {Object} meta Метаданные.
        * @see meta
        * @see getMetaData
        */
@@ -412,9 +423,9 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
       //region Deprecated methods
 
       /**
-       * Помечает запись, как удаленную (сама запись при этом не удаляется, но она не попадает в перебор в методе each().
-       * @param {String} key Первичный ключ записи
-       * @deprecated метод будет удален в 3.7.4.
+       * Помечает запись, как удаленную, но не производит её удаление из RecordSet. Помеченная таким образом запись не будет доступна в методе {@link each}, вызванном с аргументами по умолчанию.
+       * @param {String|Number} key Первичный ключ записи.
+       * @deprecated Метод будет удалён в версии платформы СБИС 3.7.4.
        */
       removeRecord: function (key) {
          var self = this;
@@ -446,10 +457,12 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
       },
 
       /**
-       * Возвращает ключ записи по ее порядковому номеру
-       * @param {Number} index
-       * @returns {String|Number}
-       * @deprecated метод будет удален в 3.7.4 используйте getRecordById().getId()
+       * Возвращает ключ записи по ее порядковому номеру в RecordSet'е.
+       * @param {Number} index Порядковый номер записи в RecordSet.
+       * @returns {String|Number} Первичный ключ записи.
+       * @see at
+       * @see getId
+       * @deprecated Метод будет удалён в версии платформы СБИС 3.7.4. Вместо него используйте at().getId().
        */
       getRecordKeyByIndex: function (index) {
          var item = this.at(index);
@@ -457,8 +470,10 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
       },
 
       /**
-       * Возвращает стратегию работы с сырыми данными
+       * Возвращает стратегию работы с сырыми данными.
        * @returns {SBIS3.CONTROLS.Data.Adapter.IAdapter}
+       * @see getAdapter
+       * @see rawData
        * @deprecated метод будет удален в 3.7.4 используйте getAdapter()
        */
       getStrategy: function () {
@@ -467,10 +482,13 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
       },
 
       /**
-       * Объединяет два рекордсета
+       * Объединяет два рекордсета.
        * @param {SBIS3.CONTROLS.Data.Collection.RecordSet} recordSetMergeFrom
        * @param {OperationOptions} options Опции операций
-       * @deprecated метод будет удален в 3.7.4
+       * @see add
+       * @see replace
+       * @see remove
+       * @deprecated Метод будет удален в версии платформы СБИС 3.7.4. Используйте метод add, replace, remove
        */
       merge: function (recordSetMergeFrom, options) {
          this._setRecords(recordSetMergeFrom._getRecords(), options);
@@ -489,10 +507,12 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
       },
 
       /**
-       * Вставляет запись в рекордсет. Если запись с таким ключем существует, то старая заменяется.
+       * Вставляет запись в RecordSet. Если запись с таким ключем существует, то старая будет заменена.
        * @param {SBIS3.CONTROLS.Data.Model} record
        * @param {Number} at Позиция вставки
-       * @deprecated метод будет удален в 3.7.4, используйте add() или replace()
+       * @see add
+       * @see replace
+       * @deprecated  Метод будет удален в версии платформы СБИС 3.7.4. Используйте методы add или replace.
        */
       insert: function (record, at) {
          var existsAt = this.getIndex(record);
@@ -504,11 +524,13 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
       },
 
       /**
-       * Возвращает иерархический индекс для указанного поля
+       * Возвращает иерархический индекс для указанного поля.
+       * При вызове с принудительной переиндескации будет выполнен полный обход данных для построения нового индекса.
        * @param {String} field Имя поля, по которому строится иерархия
        * @param {Boolean} [reindex=false] Принудительно переиндексировать
        * @returns {Object.<String|Number, Array.<String|Number>>}
-       * @deprecated метод будет удален в 3.7.4 используйте SBIS3.CONTROLS.Data.Projection.Tree::getChildren()
+       * @see SBIS3.CONTROLS.Data.Projection.Tree#getChildren
+       * @deprecated Метод будет удален в версии платформы СБИС 3.7.4. Используйте SBIS3.CONTROLS.Data.Projection.Tree::getChildren()
        */
       getTreeIndex: function(field, reindex){
          if (reindex || (Object.isEmpty(this._indexTree) && field)){
@@ -518,12 +540,13 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
       },
 
       /**
-       * Возвращает набор дочерних элементов для указанного родителя
-       * @param {String|Number} parentId Идентификатор родителя
-       * @param {Boolean} getFullBranch Выбирать рекурсивно
-       * @param {String} field Имя поля, по которому строится иерархия
+       * Возвращает набор дочерних элементов для указанного родителя.
+       * @param {String|Number} parentId Идентификатор родителя.
+       * @param {Boolean} getFullBranch Выбирать рекурсивно (в ответ попадут все потомки ветки дерева с указанным parentId).
+       * @param {String} field Имя поля, по которому строится иерархия.
        * @returns {Array.<String|Number>}
-       * @deprecated метод будет удален в 3.7.4 используйте SBIS3.CONTROLS.Data.Projection.Tree::getChildren()
+       * @see SBIS3.CONTROLS.Data.Projection.Tree#getChildren
+       * @deprecated Метод будет удален в версии платформы СБИС 3.7.4. Используйте SBIS3.CONTROLS.Data.Projection.Tree::getChildren()
        */
       getChildItems: function (parentId, getFullBranch, field) {
          if(Object.isEmpty(this._indexTree)) {
@@ -557,11 +580,12 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
       },
 
       /**
-       * Возвращает признак наличия детей у родителя
-       * @param {String|Number} parentId Идентификатор родителя
+       * Возвращает признак наличия дочерних записей.
+       * @param {String|Number} parentId Идентификатор записи, для которой производится проверка наличия дочерних записей.
        * @param {String} field Имя поля, по которому строится иерархия
        * @returns {Boolean}
-       * @deprecated метод будет удален в 3.7.4 используйте SBIS3.CONTROLS.Data.Projection.Tree::getChildren()
+       * @see SBIS3.CONTROLS.Data.Projection.Tree#getChildren
+       * @deprecated Метод будет удален в версии платформы СБИС 3.7.4. Используйте SBIS3.CONTROLS.Data.Projection.Tree::getChildren()
        */
       hasChild: function (parentKey, field) {
          if(Object.isEmpty(this._indexTree)) {
@@ -571,21 +595,22 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
       },
 
       /**
-       * Возвращает идентификатор родителя
+       * Возвращает идентификатор родителя.
        * @param {SBIS3.CONTROLS.Data.Model} record Запись, для которой нужно получить идентфикатор родителя
        * @param {String} field Имя поля, по которому строится иерархия
        * @returns {String|Number}
-       * @deprecated метод будет удален в 3.7.4 используйте SBIS3.CONTROLS.Data.Projection.TreeItem::getParent()
+       * @see SBIS3.CONTROLS.Data.Projection.Tree#getParent
+       * @deprecated Метод будет удален в версии платформы СБИС 3.7.4. Используйте SBIS3.CONTROLS.Data.Projection.TreeItem::getParent()
        */
       getParentKey: function (record, field) {
          return record.get(field);
       },
 
       /**
-       * Возвращает отфильтрованный рекордсет
+       * Возвращает отфильтрованный рекордсет.
        * @param {Function} filterCallback Функция обратного вызова, аргументом будет передана запись, для которой нужно вернуть признак true (запись прошла фильтр) или false (не прошла)
        * @returns {SBIS3.CONTROLS.Data.Collection.RecordSet}
-       * @deprecated метод будет удален в 3.7.4
+       * @deprecated Метод будет удален в версии платформы СБИС 3.7.4.
        */
       filter: function (filterCallback) {
          var filterDataSet = new RecordSet({
