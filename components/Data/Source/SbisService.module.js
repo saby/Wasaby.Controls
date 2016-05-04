@@ -282,7 +282,7 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
       //region SBIS3.CONTROLS.Data.Source.Base
 
       _prepareCallResult: function(data) {
-         return SbisService.superclass._prepareCallResult.call(this, data, 'n');
+         return SbisService.superclass._prepareCallResult.call(this, data, undefined, 'n');
       },
 
       //endregion SBIS3.CONTROLS.Data.Source.Base

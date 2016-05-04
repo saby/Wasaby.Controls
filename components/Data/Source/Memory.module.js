@@ -196,7 +196,7 @@ define('js!SBIS3.CONTROLS.Data.Source.Memory', [
          }
 
          return $ws.proto.Deferred.success(
-            this._prepareQueryResult( {items: items,'total': total}, 'total')
+            this._prepareQueryResult( {items: items,'total': total}, 'items', 'total')
          );
       },
 
@@ -250,14 +250,6 @@ define('js!SBIS3.CONTROLS.Data.Source.Memory', [
 
          }
          return new $ws.proto.Deferred().callback(true);
-      },
-
-      _prepareCallResult: function(data, totalProperty) {
-         return this._getDataSetInstance({
-            rawData: this._cloneData(data),
-            totalProperty: totalProperty,
-            itemsProperty: 'items'
-         });
       },
 
       /**
