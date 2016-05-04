@@ -515,16 +515,27 @@ define('js!SBIS3.CONTROLS.FieldLink',
 
           _loadAndDrawItems: function(amount) {
              var linkCollection = this._getLinkCollection(),
-                 linkCollectionContainer = linkCollection.getContainer();
+                 linkCollectionContainer = linkCollection.getContainer(),
+                 self = this;
 
              /* Нужно скрыть контрол отображающий элементы, перед загрузкой, потому что часто бл может отвечать >500мс и
               отображаемое значение в поле связи долго не меняется, особенно заметно в редактировании по месту. */
              linkCollectionContainer.addClass('ws-hidden');
              this.getSelectedItems(true, amount).addCallback(function(list){
+                self._dataLoadedCallback();
                 linkCollectionContainer.removeClass('ws-hidden');
                 linkCollection.setItems(list);
                 return list;
              });
+          },
+
+          _dataLoadedCallback: function() {
+             /* Т.к. операция загрузки записей асинхронная, то за это время поле связи может скрыться,
+                надо на это проверить */
+             if(!this.isVisibleWithParents()) {
+                this._lastFieldLinkWidth = 0;
+             }
+             FieldLink.superclass._dataLoadedCallback.apply(this, arguments);
           },
 
           _drawSelectedItems: function(keysArr) {
