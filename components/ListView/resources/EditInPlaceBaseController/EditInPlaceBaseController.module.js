@@ -105,6 +105,14 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                      onChildFocusOut: this._onChildFocusOut.bind(this),
                      onInit: function() {
                         self._notify('onInitEditInPlace', this);
+                     },
+                     //TODO: EIP Авраменко, Сухоручкин: сейчас сделано через pendingOperation, в будущем переделать на команды блокировки родительких компонентов
+                     onBeginEdit: function() {
+                        self._editingDeferred = new $ws.proto.Deferred();
+                        self._sendLockCommand(this._editingDeferred);
+                     },
+                     onEndEdit: function() {
+                        self._editingDeferred.callback();
                      }
                   }
                };
