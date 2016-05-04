@@ -142,7 +142,7 @@ define('js!SBIS3.CONTROLS.Data.Source.Remote', [
             this._options.binding.query,
             this._prepareQueryArguments(query)
          ).addCallback((function (data) {
-            return this._prepareQueryResult(data, '', 'total');
+            return this._prepareQueryResult(data, undefined, 'total');
          }).bind(this));
       },
 
