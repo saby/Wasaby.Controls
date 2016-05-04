@@ -321,18 +321,20 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                    modelOptions = options.model || this._notify('onBeginAdd');
                this._lastTargetAdding = options.target;
                return this.endEdit(true).addCallback(function() {
-                  return self._options.dataSource.create(modelOptions).addCallback(function (model) {
-                     if (self._options.hierField) {
-                        model.set(self._options.hierField, options.target ? options.target.getContents().getId() : options.target);
-                     }
-                     target = self._createAddTarget(options).attr('data-id', '' + model.getId());
-                     self._eip.edit(target, model);
-                     // Todo разобраться в целесообразности этого пересчёта вообще, почему на десктопе всё работает?
-                     // При начале отслеживания высоты строки, один раз нужно пересчитать высоту синхронно, это нужно для добавления по месту,
-                     //т.к. при добавлении создаётся новая tr у которой изначально нет высоты и опции записи не могут верно спозиционироваться.
-                     self._eip.recalculateHeight();
-                     self._notify('onAfterBeginEdit', model);
-                     return model;
+                  return self._options.dataSource.create(modelOptions).addCallback(function (createdModel) {
+                     self._prepareEdit(createdModel).addCallback(function(model) {
+                        if (self._options.hierField) {
+                           model.set(self._options.hierField, options.target ? options.target.getContents().getId() : options.target);
+                        }
+                        target = self._createAddTarget(options).attr('data-id', '' + model.getId());
+                        self._eip.edit(target, model);
+                        // Todo разобраться в целесообразности этого пересчёта вообще, почему на десктопе всё работает?
+                        // При начале отслеживания высоты строки, один раз нужно пересчитать высоту синхронно, это нужно для добавления по месту,
+                        //т.к. при добавлении создаётся новая tr у которой изначально нет высоты и опции записи не могут верно спозиционироваться.
+                        self._eip.recalculateHeight();
+                        self._notify('onAfterBeginEdit', model);
+                        return model;
+                     });
                   });
                });
             },
