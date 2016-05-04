@@ -89,6 +89,10 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
              * @noShow
              */
             partialyReload: true,
+            /**
+             * @cfg {Object}  Устанавливает набор открытых элементов иерархии.
+             * @see getOpenedPath
+             */
             openedPath : {},
             /**
              * @cfg {Boolean}
