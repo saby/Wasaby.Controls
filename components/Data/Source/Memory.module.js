@@ -183,22 +183,20 @@ define('js!SBIS3.CONTROLS.Data.Source.Memory', [
       },
 
       query: function (query) {
-         var items = this._applyFrom(query ? query.getFrom() : undefined);
+         var items = this._applyFrom(query ? query.getFrom() : undefined),
+            total;
          if (query) {
             items = this._applyJoin(items, query.getJoin());
             items = this._applyWhere(items, query.getWhere());
             items = this._applyOrderBy(items, query.getOrderBy());
-            var total = this.getAdapter().forTable(items).getCount();
+            total = this.getAdapter().forTable(items).getCount();
             items = this._applyPaging(items, query.getOffset(), query.getLimit());
-            try {
-               this.getAdapter().setProperty(items, 'total', total);
-            } catch (error) {
-               Utils.logger.log(this._moduleName + '::query(): ' + error);
-            }
+         } else {
+            total = this.getAdapter().forTable(items).getCount();
          }
 
          return $ws.proto.Deferred.success(
-            this._prepareQueryResult(items, 'total')
+            this._prepareQueryResult( {items: items,'total': total}, 'items', 'total')
          );
       },
 
