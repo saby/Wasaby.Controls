@@ -359,6 +359,22 @@ define('js!SBIS3.CONTROLS.ListView',
                 * </pre>
                 */
                itemsDragNDrop: 'allow',
+               /**
+                * @cfg {Function} Устанавливает функцию, которая будет выполнена при клике на строку.
+                * @remark
+                * Аргументы функции:
+                * <ol>
+                *    <li>id - идентификатор элемента коллекции - строки, по которой был произведён клик.</li>
+                *    <li>item - элемент коллекции, по строке отображения которого был произведён клик; экземпляр класса {@link SBIS3.CONTROLS.Data.Model} с данными выбранной записи.</li>
+                *    <li>target - контейнер визуального отображения (DOM-элемент) строки, по которой был произведён клик.</li>
+                * </ol>
+                * Установить или заменить функцию - обработчик клика на строку можно с помощью метода {@link setElemClickHandler}
+                * @example
+                * <pre class="brush: xml">
+                *     <option name="elemClickHandler" type="function">js!SBIS3.Contacts.LatestThemes:prototype.elemClickHandler</option>
+                * </pre>
+                * @see setElemClickHandler
+                */
                elemClickHandler: null,
                /**
                 * @cfg {Boolean} Разрешить выбор нескольких строк
