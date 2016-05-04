@@ -27,6 +27,10 @@ define('js!SBIS3.CONTROLS.EditInPlaceHoverController',
                _secondEip: undefined
             },
 
+            isEdit: function() {
+               return this._eip.isEdit() || this._secondEip.isEdit();
+            },
+
             _createEip: function() {
                EditInPlaceHoverController.superclass._createEip.apply(this);
                this._secondEip = new EditInPlace(this._getEditInPlaceConfig());
