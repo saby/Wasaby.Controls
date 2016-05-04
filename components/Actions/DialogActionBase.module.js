@@ -143,7 +143,7 @@ define('js!SBIS3.CONTROLS.DialogActionBase', ['js!SBIS3.CONTROLS.ActionBase', 'j
       /**
        * Базовая логика при событии ouUpdate. Обновляем рекорд в связном списке
        */
-      _Update: function (record) {
+      _update: function (record) {
          this._mergeRecords(record);
       },
 
@@ -160,7 +160,7 @@ define('js!SBIS3.CONTROLS.DialogActionBase', ['js!SBIS3.CONTROLS.ActionBase', 'j
        * @param record Запись, с которой работаем
        * @returns {String|Deferred} Сообщаем, нужно ли выполнять базовую логику. Если не нужно, то возвращаем OpenDialogAction.ACTION_CUSTOM
        */
-      _onRead: function(record){
+      _read: function(record){
          return '';
       },
 
@@ -183,7 +183,7 @@ define('js!SBIS3.CONTROLS.DialogActionBase', ['js!SBIS3.CONTROLS.ActionBase', 'j
       /**
        * Базовая логика при событии ouDestroy. Дестроим рекорд в связном списке
        */
-      _Destroy: function(record){
+      _destroy: function(record){
          var collectionRecord = this._getCollectionRecord(record);
          collectionRecord && collectionRecord.destroy();
       },
@@ -207,7 +207,7 @@ define('js!SBIS3.CONTROLS.DialogActionBase', ['js!SBIS3.CONTROLS.ActionBase', 'j
       /**
        * Базовая логика при событии ouCreate. Добавляем рекорд в связный список
        */
-      _Create: function(record){
+      _create: function(record){
          var collection = this._options.linkedObject,
             rec;
          if ($ws.helpers.instanceOfModule(collection, 'SBIS3.CONTROLS.Data.Collection.RecordSet')) {
@@ -228,7 +228,7 @@ define('js!SBIS3.CONTROLS.DialogActionBase', ['js!SBIS3.CONTROLS.ActionBase', 'j
       _actionHandler: function(action, record) {
          var eventResult = this._notify('on' + action, record),
             actionResult = this['_on' + action](record),
-            genericMethod = '_' + action,
+            genericMethod = '_' + action.toLowerCase(),
             self = this;
          if (actionResult !== OpenDialogAction.ACTION_CUSTOM && eventResult !== undefined) {
             actionResult = eventResult;
@@ -291,8 +291,8 @@ define('js!SBIS3.CONTROLS.DialogActionBase', ['js!SBIS3.CONTROLS.ActionBase', 'j
    });
    OpenDialogAction.ACTION_CUSTOM = 'custom';
    OpenDialogAction.ACTION_MERGE = '_mergeRecords';
-   OpenDialogAction.ACTION_ADD = '_Create'; //что добавляем? сделал через create
+   OpenDialogAction.ACTION_ADD = '_create'; //что добавляем? сделал через create
    OpenDialogAction.ACTION_RELOAD = '_collectionReload';
-   OpenDialogAction.ACTION_DELETE = '_Destroy';
+   OpenDialogAction.ACTION_DELETE = '_destroy';
    return OpenDialogAction;
 });
