@@ -132,10 +132,10 @@ define('js!SBIS3.CONTROLS.DialogActionBase', ['js!SBIS3.CONTROLS.ActionBase', 'j
       },
       /**
        * Переопределяемый метод
-       * В случае, если все действия выполняются самостоятельноно, надо вернуть OpenDialogAction.ACTION_MANUAL, чтобы
+       * В случае, если все действия выполняются самостоятельноно, надо вернуть OpenDialogAction.ACTION_CUSTOM, чтобы
        * не выполнялась базовая логика
        * @param record Запись, с которой работаем
-       * @returns {String|Deferred} Сообщаем, нужно ли выполнять базовую логику. Если не нужно, то возвращаем OpenDialogAction.ACTION_MANUAL
+       * @returns {String|Deferred} Сообщаем, нужно ли выполнять базовую логику. Если не нужно, то возвращаем OpenDialogAction.ACTION_CUSTOM
        */
       _onUpdate: function(record){
          return '';
@@ -143,14 +143,8 @@ define('js!SBIS3.CONTROLS.DialogActionBase', ['js!SBIS3.CONTROLS.ActionBase', 'j
       /**
        * Базовая логика при событии ouUpdate. Обновляем рекорд в связном списке
        */
-      _Update: function (record, result) {
-         var collectionRecord,
-             recValue;
-         collectionRecord = this._getCollectionRecord(record);
-         if (!collectionRecord) {
-            return;
-         }
-         this._mergeRecords(collectionRecord, record);
+      _Update: function (record) {
+         this._mergeRecords(record);
       },
 
       /**
@@ -161,10 +155,10 @@ define('js!SBIS3.CONTROLS.DialogActionBase', ['js!SBIS3.CONTROLS.ActionBase', 'j
       },
       /**
        * Переопределяемый метод
-       * В случае, если все действия выполняются самостоятельноно, надо вернуть OpenDialogAction.ACTION_MANUAL, чтобы
+       * В случае, если все действия выполняются самостоятельноно, надо вернуть OpenDialogAction.ACTION_CUSTOM, чтобы
        * не выполнялась базовая логика
        * @param record Запись, с которой работаем
-       * @returns {String|Deferred} Сообщаем, нужно ли выполнять базовую логику. Если не нужно, то возвращаем OpenDialogAction.ACTION_MANUAL
+       * @returns {String|Deferred} Сообщаем, нужно ли выполнять базовую логику. Если не нужно, то возвращаем OpenDialogAction.ACTION_CUSTOM
        */
       _onRead: function(record){
          return '';
@@ -178,10 +172,10 @@ define('js!SBIS3.CONTROLS.DialogActionBase', ['js!SBIS3.CONTROLS.ActionBase', 'j
       },
       /**
        * Переопределяемый метод
-       * В случае, если все действия выполняются самостоятельноно, надо вернуть OpenDialogAction.ACTION_MANUAL, чтобы
+       * В случае, если все действия выполняются самостоятельноно, надо вернуть OpenDialogAction.ACTION_CUSTOM, чтобы
        * не выполнялась базовая логика
        * @param record Запись, с которой работаем
-       * @returns {String|Deferred} Сообщаем, нужно ли выполнять базовую логику. Если не нужно, то возвращаем OpenDialogAction.ACTION_MANUAL
+       * @returns {String|Deferred} Сообщаем, нужно ли выполнять базовую логику. Если не нужно, то возвращаем OpenDialogAction.ACTION_CUSTOM
        */
       _onDestroy: function(record){
          return '';
@@ -189,7 +183,7 @@ define('js!SBIS3.CONTROLS.DialogActionBase', ['js!SBIS3.CONTROLS.ActionBase', 'j
       /**
        * Базовая логика при событии ouDestroy. Дестроим рекорд в связном списке
        */
-      _Destroy: function(record, result){
+      _Destroy: function(record){
          var collectionRecord = this._getCollectionRecord(record);
          collectionRecord && collectionRecord.destroy();
       },
@@ -202,10 +196,10 @@ define('js!SBIS3.CONTROLS.DialogActionBase', ['js!SBIS3.CONTROLS.ActionBase', 'j
       },
       /**
        * Переопределяемый метод
-       * В случае, если все действия выполняются самостоятельноно, надо вернуть OpenDialogAction.ACTION_MANUAL, чтобы
+       * В случае, если все действия выполняются самостоятельноно, надо вернуть OpenDialogAction.ACTION_CUSTOM, чтобы
        * не выполнялась базовая логика
        * @param record Запись, с которой работаем
-       * @returns {String|Deferred} Сообщаем, нужно ли выполнять базовую логику. Если не нужно, то возвращаем OpenDialogAction.ACTION_MANUAL
+       * @returns {String|Deferred} Сообщаем, нужно ли выполнять базовую логику. Если не нужно, то возвращаем OpenDialogAction.ACTION_CUSTOM
        */
       _onCreate: function(record){
          return '';
@@ -213,14 +207,14 @@ define('js!SBIS3.CONTROLS.DialogActionBase', ['js!SBIS3.CONTROLS.ActionBase', 'j
       /**
        * Базовая логика при событии ouCreate. Добавляем рекорд в связный список
        */
-      _Create: function(record, result){
+      _Create: function(record){
          var collection = this._options.linkedObject,
             rec;
          if ($ws.helpers.instanceOfModule(collection, 'SBIS3.CONTROLS.Data.Collection.RecordSet')) {
             rec = new Record({
                format: collection.getFormat()
             });
-            this._mergeRecords(rec, record);
+            this._mergeRecords(record, rec);
          } else  {
             rec = record.clone()
          }
@@ -229,18 +223,21 @@ define('js!SBIS3.CONTROLS.DialogActionBase', ['js!SBIS3.CONTROLS.ActionBase', 'j
 
       /**
        * Обработка событий formController'a. Выполнение переопределяемых методов и notify событий.
-       * Если из обработчиков событий и переопределяемых методов вернули не OpenDialogAction.ACTION_MANUAL, то выполняем базовую логику.
+       * Если из обработчиков событий и переопределяемых методов вернули не OpenDialogAction.ACTION_CUSTOM, то выполняем базовую логику.
        */
       _actionHandler: function(action, record) {
          var eventResult = this._notify('on' + action, record),
             actionResult = this['_on' + action](record),
             genericMethod = '_' + action,
             self = this;
-         if (actionResult !== OpenDialogAction.ACTION_MANUAL && eventResult !== undefined) {
+         if (actionResult !== OpenDialogAction.ACTION_CUSTOM && eventResult !== undefined) {
             actionResult = eventResult;
          }
-         if (actionResult === OpenDialogAction.ACTION_MANUAL || !this._options.linkedObject) {
+         if (actionResult === OpenDialogAction.ACTION_CUSTOM || !this._options.linkedObject) {
             return;
+         }
+         if (actionResult !== undefined){
+            genericMethod = actionResult;
          }
          if (actionResult instanceof $ws.proto.Deferred){
             actionResult.addCallback(function(result){
@@ -258,14 +255,21 @@ define('js!SBIS3.CONTROLS.DialogActionBase', ['js!SBIS3.CONTROLS.ActionBase', 'j
       /**
        * Мержим поля из редактируемой записи в существующие поля записи из связного списка.
        */
-      _mergeRecords: function(collectionRecord, record){
-         var recValue;
+      _mergeRecords: function(record, colRec){
+         var collectionRecord = colRec || this._getCollectionRecord(record),
+             recValue;
+         if (!collectionRecord) {
+            return;
+         }
          collectionRecord.each(function (key, value) {
             recValue = record.get(key);
             if (record.has(key) && recValue != value) {
                this.set(key, recValue);
             }
          });
+      },
+      _collectionReload: function(){
+         this._options.linkedObject.reload();
       },
       /**
        * Получаем запись из связного списка по ключу редактируемой записи
@@ -285,7 +289,10 @@ define('js!SBIS3.CONTROLS.DialogActionBase', ['js!SBIS3.CONTROLS.ActionBase', 'j
          return {}
       }
    });
-   OpenDialogAction.ACTION_MANUAL = 'manual';
-   OpenDialogAction.ACTION_BASE = 'base';
+   OpenDialogAction.ACTION_CUSTOM = 'custom';
+   OpenDialogAction.ACTION_MERGE = '_mergeRecords';
+   OpenDialogAction.ACTION_ADD = '_Create'; //что добавляем? сделал через create
+   OpenDialogAction.ACTION_RELOAD = '_collectionReload';
+   OpenDialogAction.ACTION_DELETE = '_Destroy';
    return OpenDialogAction;
 });
