@@ -1,4 +1,4 @@
-define('js!SBIS3.CONTROLS.DialogActionBase', ['js!SBIS3.CONTROLS.ActionBase', 'js!SBIS3.CORE.Dialog', 'js!SBIS3.CORE.FloatArea', 'js!SBIS3.CONTROLS.Data.Record'], function(ActionBase, Dialog, FloatArea, Record){
+define('js!SBIS3.CONTROLS.DialogActionBase', ['js!SBIS3.CONTROLS.ActionBase', 'js!SBIS3.CORE.Dialog', 'js!SBIS3.CORE.FloatArea'], function(ActionBase, Dialog, FloatArea){
    'use strict';
 
    /**
@@ -79,11 +79,6 @@ define('js!SBIS3.CONTROLS.DialogActionBase', ['js!SBIS3.CONTROLS.ActionBase', 'j
          } else if (mode == 'dialog') {
             Component = Dialog;
          }
-
-         //для формконтроллера теперь всегда есть контекст с рекордом. Сделано в рамках ускорения, чтобы в случае чего
-         //компоненты на момент инициализации могли подцепить значение из контекста
-         config.context = new $ws.proto.Context({restriction: 'set'}).setPrevious(this.getLinkedContext());
-         config.context.setValue('record', config.record || new Record());
 
          if (this._dialog && !this._dialog.isAutoHide()){
             $ws.core.merge(this._dialog._options, config);
