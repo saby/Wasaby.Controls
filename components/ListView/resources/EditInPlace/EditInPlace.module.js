@@ -45,7 +45,7 @@ define('js!SBIS3.CONTROLS.EditInPlace',
                _editingDeferred: undefined
             },
             init: function() {
-               this._publish('onItemValueChanged', 'onChangeHeight');
+               this._publish('onItemValueChanged', 'onChangeHeight', 'onBeginEdit', 'onEndEdit');
                EditInPlace.superclass.init.apply(this, arguments);
                this._container.bind('keypress keydown', this._onKeyDown);
                this.subscribe('onChildControlFocusOut', this._onChildControlFocusOut);
@@ -195,6 +195,7 @@ define('js!SBIS3.CONTROLS.EditInPlace',
                if (!this.hasActiveChildControl()) {
                   this.activateFirstControl();
                }
+               this._notify('onBeginEdit');
             },
             isEdit: function() {
                return this._editing;
@@ -205,6 +206,7 @@ define('js!SBIS3.CONTROLS.EditInPlace',
                this.getEditingItem().target.removeClass('controls-editInPlace__editing');
                this._editing = false;
                this.hide();
+               this._notify('onEndEdit');
             },
             setOffset: function(model) {
                var container = this.getContainer();
