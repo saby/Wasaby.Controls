@@ -192,7 +192,12 @@ define('js!SBIS3.CONTROLS.DialogActionBase', ['js!SBIS3.CONTROLS.ActionBase', 'j
          } else  {
             rec = record.clone()
          }
-         collection.add(rec);
+         if ($ws.helpers.instanceOfMixin(collection, 'SBIS3.CONTROLS.Data.Collection.IList')) {
+            collection.add(rec);
+         }
+         else {
+            collection.getItems().add(rec);
+         }
       },
 
       /**
