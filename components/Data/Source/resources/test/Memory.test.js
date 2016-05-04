@@ -1201,6 +1201,21 @@ define([
                      done(err);
                   });
                });
+
+               it('should keep property total', function (done) {
+                  source.query(new Query().limit(2)).addCallbacks(function (ds) {
+                     try {
+                        assert.instanceOf(ds, DataSet);
+                        assert.strictEqual(ds.getTotal(), data.getCount());
+                        done();
+                     } catch (err) {
+                        done(err);
+                     }
+                  }, function (err) {
+                     done(err);
+                  });
+               });
+
             });
          });
       });

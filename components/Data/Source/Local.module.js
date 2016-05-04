@@ -35,10 +35,11 @@ define('js!SBIS3.CONTROLS.Data.Source.Local', [
          );
       },
 
-      _prepareCallResult: function(data, totalProperty) {
+      _prepareCallResult: function(data, itemsProperty, totalProperty) {
          return Local.superclass._prepareCallResult.call(
             this,
             this._cloneData(data),
+            itemsProperty,
             totalProperty
          );
       },
