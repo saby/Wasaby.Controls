@@ -1536,9 +1536,9 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
                prev = this._itemsProjection.getPrevious(projItem),
                next = this._itemsProjection.getNext(projItem);
             if(prev)
-               meth.call(this, prev.getContents());
-            meth.call(this, item);
-            if (next && !meth.call(this, next.getContents())) {
+               meth.call(this, prev.getContents(), undefined, undefined, prev);
+            meth.call(this, item, undefined, undefined, projItem);
+            if (next && !meth.call(this, next.getContents(), undefined, undefined, next)) {
                flagAfter = true;
             }
          }
