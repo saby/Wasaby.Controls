@@ -57,19 +57,24 @@ define('js!SBIS3.CONTROLS.BreadCrumbs', [
       _onClickHandler: function(e) {
          BreadCrumbs.superclass._onClickHandler.apply(this, arguments);
          var target = $(e.target),
-            point = target.closest('.js-controls-BreadCrumbs__crumb');
-         if (point.hasClass('controls-BreadCrumbs__dots')) {
-            if (this._picker) {
-               this._picker.setTarget(point);
-            }
-            this.togglePicker();
-            if (this._picker.isVisible()) {
-               this._redrawDropdown();
-            }
-         } else if (point.length) {
-            var id = point.data(this._options.keyField);
-            id = id ? id : null;
-            this._notify('onItemClick', point.data(this._options.keyField));
+            crumb = target.closest('.js-controls-BreadCrumbs__crumb');
+         if (crumb.hasClass('controls-BreadCrumbs__dots')) {
+            this._dotsClickHandler(crumb)
+         } else if (crumb.length) {
+            this._notify('onItemClick', crumb.data(this._options.keyField));
+         }
+      },
+      /**
+       * Обработчик клика на многоточие
+       * вынесен отдельно для того, что бы можно было переопределить
+       */
+      _dotsClickHandler: function(crumb){
+         if (this._picker) {
+            this._picker.setTarget(crumb);
+         }
+         this.togglePicker();
+         if (this._picker.isVisible()) {
+            this._redrawDropdown();
          }
       },
 

@@ -63,9 +63,7 @@ define('js!SBIS3.CONTROLS.SelectorMixin', [],
             }
 
             this._changeSelectionHandler = function (event, result) {
-               if(!self._options.multiSelect) {
-                  self.close([result.item]);
-               }
+               self.close([result.item]);
             };
 
             this._dRender.addCallback(function(){
@@ -83,9 +81,10 @@ define('js!SBIS3.CONTROLS.SelectorMixin', [],
          },
 
          _toggleLinkedViewEvents: function(sub) {
-            this._options.multiSelect ?
-               this[sub ? 'subscribeOnceTo' : 'unsubscribeFrom'](this._linkedView, 'onDrawItems', this._linkedView.setSelectedKeys.bind(this._linkedView, this._options.currentSelectedKeys)) :
-               this[sub ? 'subscribeTo' : 'unsubscribeFrom'](this._linkedView, 'onItemActivate', this._changeSelectionHandler);
+            if(this._options.multiSelect) {
+               this[sub ? 'subscribeOnceTo' : 'unsubscribeFrom'](this._linkedView, 'onDrawItems', this._linkedView.setSelectedKeys.bind(this._linkedView, this._options.currentSelectedKeys))
+            }
+            this[sub ? 'subscribeTo' : 'unsubscribeFrom'](this._linkedView, 'onItemActivate', this._changeSelectionHandler);
          },
 
          /**
@@ -99,14 +98,30 @@ define('js!SBIS3.CONTROLS.SelectorMixin', [],
           * @see getLinkedView
           */
          setLinkedView: function (linkedView) {
-            this._linkedView && this._toggleLinkedViewEvents(false);
+            var multiSelectChanged;
+
+            /* Отпишемся у старой view от событий */
+            if(this._linkedView && this._linkedView !== linkedView) {
+               this._toggleLinkedViewEvents(false);
+            }
             this._linkedView = linkedView;
 
-            if (linkedView) {
+            if (linkedView){
+               multiSelectChanged = this._linkedView.getProperty('multiselect') !== this._options.multiSelect;
                this._linkedView.setProperty('multiselect', this._options.multiSelect);
-               this._linkedView.setSelectedKeys(this._options.currentSelectedKeys);
                this._toggleLinkedViewEvents(true);
-               this._linkedView.reload();
+
+               if(this._options.currentSelectedKeys.length) {
+                  if (this._options.multiSelect) {
+                     this._linkedView.setSelectedKeys(this._options.currentSelectedKeys);
+                  } else {
+                     this._linkedView.setSelectedKey(this._options.currentSelectedKeys[0]);
+                  }
+               }
+
+               if(multiSelectChanged) {
+                  this._linkedView.redraw();
+               }
             }
          },
 

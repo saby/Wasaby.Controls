@@ -95,7 +95,7 @@ define('js!SBIS3.CONTROLS.Data.Projection.TreeItem', [
        * @returns {Number}
        */
       getLevel: function () {
-         return 1 + (this._$parent ? this._$parent.getLevel() : 0);
+         return this._$parent ? this._$parent.getLevel() + 1 : 0;
       },
 
       /**

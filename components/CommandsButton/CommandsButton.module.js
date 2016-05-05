@@ -6,12 +6,11 @@ define('js!SBIS3.CONTROLS.CommandsButton', [
    'use strict';
 
    var CommandsButton = MenuIcon.extend({
-      $protected : {
-         _options: {
-            className : 'controls-Menu__hide-menu-header',
-            pickerClassName : 'controls-CommandsButton__picker controls-MenuIcon__Menu',
-            icon : 'sprite:icon-24 icon-MoreButton icon-primary'
-         }
+      _modifyOptions: function(opts) {
+         opts.className += ' controls-Menu__hide-menu-header';
+         opts.icon = 'sprite:icon-24 icon-MoreButton icon-primary';
+         opts.pickerClassName += ' controls-CommandsButton__picker controls-MenuIcon__Menu';
+         return CommandsButton.superclass._modifyOptions.call(this, opts);
       },
       _modifyPickerOptions: function(opts) {
          opts.horizontalAlign.side = 'right';

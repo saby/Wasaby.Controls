@@ -6,7 +6,7 @@ define('js!SBIS3.CONTROLS.Demo.MyTreeView',
         'html!SBIS3.CONTROLS.Demo.MyTreeView',
         'html!SBIS3.CONTROLS.Demo.MyTreeView/resources/listTpl',
         'css!SBIS3.CONTROLS.Demo.MyTreeView',
-        'js!SBIS3.CONTROLS.TreeViewDS',
+        'js!SBIS3.CONTROLS.TreeView',
         'js!SBIS3.CONTROLS.BreadCrumbs',
         'js!SBIS3.CONTROLS.BackButton'
     ], function(CompoundControl, StaticSource, ComponentBinder, dotTplFn, listTpl) {

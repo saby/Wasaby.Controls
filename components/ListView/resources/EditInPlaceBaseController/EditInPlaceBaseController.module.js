@@ -26,7 +26,8 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                _options: {
                   editingTemplate: undefined,
                   getCellTemplate: undefined,
-                  columns: [],
+                  itemsProjection: undefined,
+                  columns: undefined,
                   /**
                    * @cfg {Boolean} Режим автоматического добавления элементов
                    * @remark
@@ -43,24 +44,47 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                   dataSource: undefined,
                   dataSet: undefined,
                   itemsContainer: undefined,
-                  getEditorOffset: undefined
+                  getEditorOffset: undefined,
+                  hierField: undefined
                },
                _eip: undefined,
                // Используется для хранения Deferred при сохранении в редактировании по месту.
                // Обязательно нужен, т.к. лишь таким способом можно обработать несколько последовательных вызовов endEdit и вернуть ожидаемый результат (Deferred).
                _savingDeferred: undefined,
+               _editingDeferred: undefined,
                _editingRecord: undefined,
-               _eipHandlers: null
+               _eipHandlers: null,
+               //TODO: Данная переменная нужна для автодобавления по enter(mode autoadd), чтобы определить в какой папке происходит добавление элемента
+               //Вариант решения проблемы не самый лучший, и добавлен как временное решение для выпуска 3.7.3.150. В версию .200 придумать нормальное решение.
+               _lastTargetAdding: undefined
             },
             $constructor: function () {
                this._publish('onItemValueChanged', 'onBeginEdit', 'onAfterBeginEdit', 'onEndEdit', 'onBeginAdd', 'onAfterEndEdit', 'onInitEditInPlace');
                this._eipHandlers = {
                   onKeyDown: this._onKeyDown.bind(this)
                };
+               this._createEip();
+               this._savingDeferred = $ws.proto.Deferred.success();
+            },
+
+            isEdit: function() {
+               return this._eip.isEdit();
+            },
+
+            _createEip: function() {
+               this._destroyEip();
                this._eip = new EditInPlace(this._getEditInPlaceConfig());
                //TODO: EIP Сухоручкин переделать на события
                this._eip.getContainer().bind('keyup', this._eipHandlers.onKeyDown);
-               this._savingDeferred = $ws.proto.Deferred.success();
+            },
+
+            setEditingTemplate: function(template) {
+               this._options.editingTemplate = template;
+               this._createEip();
+            },
+
+            getEditingTemplate: function() {
+               return this._options.editingTemplate;
             },
 
             _getEditInPlaceConfig: function() {
@@ -85,6 +109,14 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                      onChildFocusOut: this._onChildFocusOut.bind(this),
                      onInit: function() {
                         self._notify('onInitEditInPlace', this);
+                     },
+                     //TODO: EIP Авраменко, Сухоручкин: сейчас сделано через pendingOperation, в будущем переделать на команды блокировки родительких компонентов
+                     onBeginEdit: function() {
+                        self._editingDeferred = new $ws.proto.Deferred();
+                        self._sendLockCommand(this._editingDeferred);
+                     },
+                     onEndEdit: function() {
+                        self._editingDeferred.callback();
                      }
                   }
                };
@@ -132,7 +164,9 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                      }
                   });
                } else if (editNextRow && this._options.modeAutoAdd) {
-                  this.add();
+                  this.add({
+                     target: this._lastTargetAdding
+                  });
                } else {
                   this.endEdit(true);
                }
@@ -147,7 +181,7 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                if (options && options.isEdit) {
                   return this.edit(target, model, options)
                } else {
-                  return this.add(model, options);
+                  return this.add(options);
                }
             },
             edit: function (target, record) {
@@ -155,6 +189,7 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                   if (preparedRecord) {
                      this._eip.edit(target, preparedRecord);
                      this._notify('onAfterBeginEdit', preparedRecord);
+                     this._lastTargetAdding = this._options.itemsProjection.getItemBySourceItem(preparedRecord);
                      return preparedRecord;
                   }
                   return preparedRecord;
@@ -217,7 +252,6 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                //на сохранения записи. Чтобы это предотвратить добавим проверку на то, что сейчас уже идёт сохранение(this._savingDeferred.isReady())
                if (eip && this._savingDeferred.isReady()) {
                   record = eip.getEditingRecord();
-                  withSaving = withSaving && record.isChanged();
                   endEditResult = this._notify('onEndEdit', record, withSaving);
                   if (endEditResult instanceof $ws.proto.Deferred) {
                      return endEditResult.addCallback(function(result) {
@@ -253,6 +287,7 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
             },
             _afterEndEdit: function(eip, withSaving) {
                var
+                  idProperty,
                   eipRecord = eip.getEditingRecord(),
                   isAdd = !eipRecord.isStored();
                if (this._editingRecord) {
@@ -260,8 +295,12 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                   this._editingRecord = undefined;
                }
                if (withSaving) {
-                  this._options.dataSource.update(eipRecord).addCallback(function() {
-                     isAdd && this._options.dataSet.push(eipRecord);
+                  this._options.dataSource.update(eipRecord).addCallback(function(id) {
+                     if (isAdd) {
+                        idProperty = this._options.dataSource.getIdProperty();
+                        eipRecord.set(idProperty, id);
+                        this._options.dataSet.push(eipRecord);
+                     }
                   }.bind(this)).addBoth(function() {
                      this._notifyOnAfterEndEdit(eip, eipRecord, withSaving, isAdd);
                   }.bind(this));
@@ -279,38 +318,51 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                   this._savingDeferred.callback();
                }
             },
-            add: function(model, options) {
+            add: function(options) {
                var
+                   target,
                    self = this,
-                   target = this._createAddTarget(options);
-               model = model || this._notify('onBeginAdd');
+                   modelOptions = options.model || this._notify('onBeginAdd');
+               this._lastTargetAdding = options.target;
                return this.endEdit(true).addCallback(function() {
-                  return self._options.dataSource.create(model).addCallback(function (record) {
-                     target.attr('data-id', '' + record.getId());
-                     self._eip.edit(target, record);
+                  return self._options.dataSource.create(modelOptions).addCallback(function (model) {
+                     if (self._options.hierField) {
+                        model.set(self._options.hierField, options.target ? options.target.getContents().getId() : options.target);
+                     }
+                     target = self._createAddTarget(options).attr('data-id', '' + model.getId());
+                     self._eip.edit(target, model);
                      // Todo разобраться в целесообразности этого пересчёта вообще, почему на десктопе всё работает?
                      // При начале отслеживания высоты строки, один раз нужно пересчитать высоту синхронно, это нужно для добавления по месту,
                      //т.к. при добавлении создаётся новая tr у которой изначально нет высоты и опции записи не могут верно спозиционироваться.
                      self._eip.recalculateHeight();
-                     self._notify('onAfterBeginEdit', record);
-                     return record;
+                     self._notify('onAfterBeginEdit', model);
+                     return model;
                   });
                });
             },
             _createAddTarget: function(options) {
                var
-                   footer,
-                   target;
-               if (this._options.columns) {
-                  target = $('<tr><td colspan="' + (this._options.columns.length + (this._options.ignoreFirstColumn ? 1 : 0)) + '"></td></tr>');
+                  lastTarget,
+                  currentTarget,
+                  targetHash = options.target ? options.target.getHash() : null,
+                  addTarget = this._options.columns ?
+                      $('<tr><td colspan="' + (this._options.columns.length + (this._options.ignoreFirstColumn ? 1 : 0)) + '"></td></tr>') :
+                      $('<div>');
+
+               addTarget.addClass("js-controls-ListView__item controls-ListView__item");
+               if (targetHash) {
+                  currentTarget = $('.controls-ListView__item[data-hash="' + targetHash + '"]', this._options.itemsContainer.get(0));
+                  if (options.addPosition !== 'top') {
+                     while (currentTarget.length) {
+                        lastTarget = currentTarget;
+                        currentTarget = $('.controls-ListView__item[data-parent-hash="' + currentTarget.data('hash') + '"]', this._options.itemsContainer.get(0)).last();
+                     }
+                  }
+                  addTarget.insertAfter(lastTarget || currentTarget);
                } else {
-                  target = $('<div>');
+                  addTarget[options.addPosition === 'top' ? 'prependTo ': 'appendTo'](this._options.itemsContainer);
                }
-               target.addClass("js-controls-ListView__item controls-ListView__item");
-               if (options && options.initiator) {
-                  footer = options.initiator.closest('.controls-TreeDataGridView__folderFooter');
-               }
-               return footer ? target.insertBefore(footer) : target.appendTo(this._options.itemsContainer);
+               return addTarget;
             },
             /**
              * Обработчик потери фокуса областью редактирования по месту
@@ -324,9 +376,13 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
             },
             _onChildFocusOut: function (event, control) {
                var
+                  eip,
+                  withSaving,
                   endEdit = this._allowEndEdit(control) && (this._isAnotherTarget(control, this) || this._isCurrentTarget(control));
                if (endEdit) {
-                  this.endEdit(true);
+                  eip = this._getEditingEip();
+                  withSaving = eip.getEditingRecord().isChanged();
+                  this.endEdit(withSaving);
                }
             },
             _allowEndEdit: function(control) {
@@ -351,9 +407,16 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                    newTarget  = control.getContainer().closest('.js-controls-ListView__item');
                return currentTarget.attr('data-id') == newTarget.attr('data-id');
             },
+            _destroyEip: function() {
+               if (this._eip) {
+                  this.endEdit();
+                  this._eip.getContainer().unbind('keyup', this._eipHandlers.onKeyDown);
+                  this._eip.destroy();
+                  this._eip = null;
+               }
+            },
             destroy: function() {
-               this.endEdit();
-               this._eip.getContainer().unbind('keyup', this._eipHandlers.onKeyDown);
+               this._destroyEip();
                EditInPlaceBaseController.superclass.destroy.apply(this, arguments);
             }
          });

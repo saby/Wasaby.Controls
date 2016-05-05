@@ -1,15 +1,15 @@
 /* global define, $ws */
 define('js!SBIS3.CONTROLS.Data.Projection.Tree', [
    'js!SBIS3.CONTROLS.Data.Projection.Collection',
-   'js!SBIS3.CONTROLS.Data.Projection.TreeChildren',
    'js!SBIS3.CONTROLS.Data.Bind.ICollectionProjection',
+   'js!SBIS3.CONTROLS.Data.Projection.TreeChildren',
    'js!SBIS3.CONTROLS.Data.Di',
    'js!SBIS3.CONTROLS.Data.Utils',
    'js!SBIS3.CONTROLS.Data.Projection.LoadableTreeItem'
 ], function (
    CollectionProjection,
-   TreeChildren,
    IBindCollectionProjection,
+   TreeChildren,
    Di,
    Utils
 ) {
@@ -25,6 +25,8 @@ define('js!SBIS3.CONTROLS.Data.Projection.Tree', [
 
    var TreeProjection = CollectionProjection.extend(/** @lends SBIS3.CONTROLS.Data.Projection.Tree.prototype */{
       _moduleName: 'SBIS3.CONTROLS.Data.Projection.Tree',
+
+      _itemModule: 'projection.tree-item',
 
       /**
        * @cfg {String} Название свойства, содержащего идентификатор узла.
@@ -56,8 +58,6 @@ define('js!SBIS3.CONTROLS.Data.Projection.Tree', [
        */
       _$root: undefined,
 
-      _itemModule: 'projection.tree-item',
-
       /**
        * @member {SBIS3.CONTROLS.Data.Projection.TreeItem} Корневой элемент дерева
        */
@@ -77,6 +77,8 @@ define('js!SBIS3.CONTROLS.Data.Projection.Tree', [
          }*/
          if (this._$idProperty) {
             this._setImportantProperty(this._$idProperty);
+         } else {
+            Utils.logger.info(this._moduleName +'::constructor(): option "idProperty" is not defined - only root elements will be presented');
          }
          if (this._$parentProperty) {
             this._setImportantProperty(this._$parentProperty);
@@ -141,7 +143,8 @@ define('js!SBIS3.CONTROLS.Data.Projection.Tree', [
          this._unsetImportantProperty(this._$parentProperty);
          this._$parentProperty = name;
          this._setImportantProperty(name);
-         this._childrenMap = {};
+         this._reIndex();
+         this._reAnalize();
       },
 
       /**
@@ -189,6 +192,8 @@ define('js!SBIS3.CONTROLS.Data.Projection.Tree', [
       setRoot: function (root) {
          this._$root = root;
          this._root = null;
+         this._reIndex();
+         this._reAnalize();
       },
 
       /**
@@ -242,6 +247,11 @@ define('js!SBIS3.CONTROLS.Data.Projection.Tree', [
       //endregion Public methods
 
       //region Protected methods
+
+      _reIndex: function() {
+         TreeProjection.superclass._reIndex.call(this);
+         this._childrenMap = {};
+      },
 
       _bindHandlers: function() {
          TreeProjection.superclass._bindHandlers.call(this);
@@ -434,7 +444,7 @@ define('js!SBIS3.CONTROLS.Data.Projection.Tree', [
        * @private
        */
       onSourceCollectionChange: function (prevFn, event, action, newItems, newItemsIndex, oldItems, oldItemsIndex) {
-         this._childrenMap = {};
+         this._reIndex();
          prevFn.call(this, event, action, newItems, newItemsIndex, oldItems, oldItemsIndex);
       },
 
@@ -448,7 +458,7 @@ define('js!SBIS3.CONTROLS.Data.Projection.Tree', [
        * @private
        */
       onSourceCollectionItemChange: function (prevFn, event, item, index, property) {
-         this._childrenMap = {};
+         this._reIndex();
          prevFn.call(this, event, item, index, property);
       }
    };

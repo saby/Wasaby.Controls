@@ -356,6 +356,20 @@ define([
             });
          });
 
+         describe('.clear()', function () {
+            it('should return an empty table', function () {
+               assert.isTrue(data.d.length > 0);
+               assert.isTrue(data.s.length > 0);
+               adapter.clear();
+               assert.strictEqual(adapter.getData().d.length, 0);
+               assert.strictEqual(adapter.getData().s, data.s);
+            });
+            it('should return a same instance', function () {
+               adapter.clear();
+               assert.strictEqual(data, adapter.getData());
+            });
+         });
+
          describe('.getData()', function () {
             it('should return raw data', function () {
                assert.strictEqual(adapter.getData(), data);

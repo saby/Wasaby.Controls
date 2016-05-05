@@ -3,8 +3,9 @@ define('js!SBIS3.CONTROLS.Data.Adapter.RecordSetRecord', [
    'js!SBIS3.CONTROLS.Data.Entity.Abstract',
    'js!SBIS3.CONTROLS.Data.Adapter.IRecord',
    'js!SBIS3.CONTROLS.Data.Adapter.GenericFormatMixin',
-   'js!SBIS3.CONTROLS.Data.Record'
-], function (Abstract, IRecord, GenericFormatMixin, Record) {
+   'js!SBIS3.CONTROLS.Data.Record',
+   'js!SBIS3.CONTROLS.Data.Utils'
+], function (Abstract, IRecord, GenericFormatMixin, Record, Utils) {
    'use strict';
 
    /**
@@ -58,7 +59,18 @@ define('js!SBIS3.CONTROLS.Data.Adapter.RecordSetRecord', [
          return this._data.set(name, value);
       },
 
+      clear: function () {
+         var fields = [];
+         this._data.each(function(field) {
+            fields.push(field);
+         });
+         for (var i = 0; i < fields.length; i++) {
+            this._data.removeField(fields[i]);
+         }
+      },
+
       getEmpty: function () {
+         Utils.logger.stack(this._moduleName + '::getEmpty(): method is deprecated and will be removed in 3.7.4. Use clear() instead.');
          var record = this._data.clone();
          record.setRawData(null);
          return record;

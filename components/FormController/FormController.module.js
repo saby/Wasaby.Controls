@@ -49,6 +49,7 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
          _saving: false,
          _loadingIndicator: undefined,
          _panel: undefined,
+         _needDestroyRecord: false,
          _options: {
             /**
              * @cfg {DataSource} Источник данных для диалога редактирования записи
@@ -108,6 +109,10 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
              */
             initValues: null,
             /**
+             * @cfg {Boolean} Является ли запись только что созданной
+             */
+            newModel: false,
+            /**
              * @cfg {String} Текст рядом с индикатором сохранения записи
              * @example
              * <pre>
@@ -126,8 +131,6 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
          this._panel = this.getTopParent();
          if (this._options.dataSource){
             this._runQuery();
-         } else {
-            this._setContextRecord(this._options.record);
          }
          var loadingTime = new Date();
          this.subscribe('onAfterShow', function(){
@@ -135,9 +138,12 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
          });
          //Выписал задачу, чтобы при событии onBeforeClose стрелял метод у floatArea, который мы бы переопределили здесь,
          //чтобы не дергать getTopParent
-         this._panel.subscribe('onBeforeClose', function(event){
+         this._panel.subscribe('onBeforeClose', function(event, result){
             //Если попали сюда из метода _saveRecord, то this._saving = true и мы просто закрываем панель
-            if (this._saving || !(this._options.record && this._options.record.isChanged())){
+            if (this._saving || !(this._options.record && this._options.record.isChanged() || this.isNewModel())){
+               if (this._needDestroyRecord && this._options.record && (!this._saving && !this._options.record.isChanged() || result === false)){
+                  this._options.record.destroy();
+               }
                this._saving = false;
                return;
             }
@@ -198,7 +204,7 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
       },
 
       _updateRecord: function(dResult, closePanelAfterSubmit){
-         var errorMessage = rk('Некорректно заполнены обязательные для заполнения поля!'),
+         var errorMessage = rk('Некорректно заполнены обязательные поля!'),
              self = this,
              def;
          if (this.validate()) {
@@ -206,6 +212,7 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
             this._showLoadingIndicator();
             dResult.dependOn(def.addCallbacks(function (result) {
                self._notify('onSuccess', result);
+               self._options.newModel = false;
                if (closePanelAfterSubmit) {
                   self._panel.ok();
                }
@@ -248,13 +255,18 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
          return this._options.dataSource.read(key).addCallback(function (record) {
             self.setRecord(record);
             return record;
-         }).addBoth(function (r) {
+         }).addErrback(function (error) {
+               self._processError(error);
+               return error;
+            }).addBoth(function (r) {
                self._hideLoadingIndicator();
                return r;
             });
       },
 
       _setContextRecord: function(record){
+         //Для того, чтобы не перекидывались поля со старого рекорда на новый, явно очистим контекст
+         this.getLinkedContext().setValue('record', null);
          this.getLinkedContext().setValue('record', record);
       },
       /**
@@ -283,12 +295,23 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
       /**
        * Скрывает индикатор загрузки
        */
-      _hideLoadingIndicator: $ws.helpers.forAliveOnly(function(){
+      _hideLoadingIndicator: function(){
          this._showedLoading = false;
-         if(this._loadingIndicator) {
+         if(!this.isDestroyed() && this._loadingIndicator) {
             this._loadingIndicator.hide();
          }
-      }),
+      },
+      /**
+       * Признак, является ли запись, редактируемая диалогом, только что созданной.
+       * @returns {Boolean} Возможные значения:
+       * <ol>
+       *    <li>true - диалог редактирования открыт для только что созданной записи;</li>
+       *    <li>false - диалог редактирования открыт для уже существующей записи.</li>
+       * </ol>
+       */
+      isNewModel: function(){
+         return this._options.newModel;
+      },
       _updateIndicatorZIndex: function(){
          var indicatorWindow = this._loadingIndicator && this._loadingIndicator.getWindow();
          if (indicatorWindow && this._loadingIndicator.isVisible()){
@@ -304,7 +327,11 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
                eMessage = eResult;
             }
             if(eMessage) {
-               $ws.helpers.message(eMessage);
+               $ws.helpers.message(eMessage).addCallback(function(result){
+                  if (e.httpError == 403){
+                     this._panel.close();
+                  }
+               }.bind(this));
             }
          }
          e.processed = true;
@@ -332,18 +359,22 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
        */
       setDataSource: function(source){
          this._options.dataSource = source;
-         this._runQuery();
+         return this._runQuery();
       },
       /**
        * Установаливает запись диалогу редактирования
        * @param {SBIS3.CONTROLS.Data.Model} record
+       * @param {Boolean} updateKey
        * @see record
        */
-      setRecord: function(record){
+      setRecord: function(record, updateKey){
          this._options.record = this._panel._record = record;
+         if (updateKey){
+            this._options.key = record.getKey();
+         }
+         this._needDestroyRecord = false;
          this._setContextRecord(record);
       },
-
       _runQuery: function() {
          var self = this,
             hdl;
@@ -353,14 +384,21 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
          }
          else {
             hdl = this._options.dataSource.create(this._options.initValues).addCallback(function(record){
-               self.setRecord(record);
+               self.setRecord(record, true);
+               self._options.newModel = record.getKey() === null || self._options.newModel;
+               if (record.getKey()){
+                  self._needDestroyRecord = true;
+               }
+               return record;
             });
          }
-         hdl.addBoth(function(r){
+         hdl.addBoth(function(record){
             self._hideLoadingIndicator();
             self.activateFirstControl();
-            return r;
+            return record;
          });
+
+         return hdl;
       }
    });
 

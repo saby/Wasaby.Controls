@@ -112,8 +112,7 @@ define('js!SBIS3.CONTROLS.TextBox', ['js!SBIS3.CONTROLS.TextBoxBase','html!SBIS3
              */
             placeholder: '',
             /**
-             * @cfg {String} Устанавливает регулярное выражение, в соответствии с которым будет осуществляться валидация
-             * вводимых символов.
+             * @cfg {String} Устанавливает регулярное выражение, в соответствии с которым будет осуществляться валидация вводимых символов.
              * @remark
              * Служит для фильтрации вводимых символов в поле ввода по условию, установленному регулярным выражением.
              * Каждый вводимый символ будет проверяться на соответствие указанному в этой опции регулярному выражению;
@@ -139,12 +138,24 @@ define('js!SBIS3.CONTROLS.TextBox', ['js!SBIS3.CONTROLS.TextBoxBase','html!SBIS3
                         .bind('keydown', this._keyDownBind.bind(this))
                         .bind('keyup', this._keyUpBind.bind(this));
 
-         this._inputField.bind('paste', function(){
+         this._inputField.on('paste', function(){
             self._pasteProcessing++;
             window.setTimeout(function(){
                self._pasteProcessing--;
                if (!self._pasteProcessing) {
-                  self.setText(self._formatText(self._inputField.val()));
+                  var text = self._inputField.val(),
+                     newText = '';
+                  if (self._options.inputRegExp){
+                     var regExp = new RegExp(self._options.inputRegExp);
+                     for (var i = 0; i < text.length; i++){
+                        if (regExp.test(text[i])){
+                           newText = newText + text[i];
+                        }
+                     }
+                     text = newText;
+                  }
+                  self._inputField.val(text);
+                  self.setText(self._formatText(text));   
                }
             }, 100);
          });
@@ -295,7 +306,7 @@ define('js!SBIS3.CONTROLS.TextBox', ['js!SBIS3.CONTROLS.TextBoxBase','html!SBIS3
       },
 
       _keyPressBind: function(event) {
-         if (this._options.inputRegExp){
+         if (this._options.inputRegExp && !event.ctrlKey){
             return this._inputRegExp(event, new RegExp(this._options.inputRegExp));
          }
       },
@@ -330,6 +341,10 @@ define('js!SBIS3.CONTROLS.TextBox', ['js!SBIS3.CONTROLS.TextBoxBase','html!SBIS3
       },
 
       _inputFocusInHandler: function(e) {
+         // Хак для фф и ие, которые ставят курсор в readonly поле
+         if (!this._options.enabled){
+            this._inputField.blur()
+         }
          if (this._options.selectOnClick || this._fromTab){
             this._inputField.select();
          }

@@ -78,7 +78,17 @@ define('js!SBIS3.CONTROLS.Data.Adapter.JsonRecord', [
          this._data[name] = value;
       },
 
+      clear: function () {
+         var keys = Object.keys(this._data),
+            count = keys.length,
+            i;
+         for (i = 0; i < count; i++) {
+            delete this._data[keys[i]];
+         }
+      },
+
       getEmpty: function () {
+         Utils.logger.stack(this._moduleName + '::getEmpty(): method is deprecated and will be removed in 3.7.4. Use clear() instead.');
          return {};
       },
 

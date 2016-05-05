@@ -10,7 +10,7 @@ define('js!SBIS3.CONTROLS.Menu', [
    'js!SBIS3.CONTROLS.FloatArea',
    'js!SBIS3.CONTROLS.MenuItem'
 
-], function(ButtonGroupBase, dot, hierarchyMixin, TreeMixinDS, FloatArea) {
+], function(ButtonGroupBase, dot, hierarchyMixin, TreeMixin, FloatArea) {
 
    'use strict';
 
@@ -24,7 +24,7 @@ define('js!SBIS3.CONTROLS.Menu', [
     * @mixes SBIS3.CONTROLS.TreeMixinDS
     */
 
-   var Menu = ButtonGroupBase.extend([hierarchyMixin, TreeMixinDS], /** @lends SBIS3.CONTROLS.Menu.prototype */ {
+   var Menu = ButtonGroupBase.extend([hierarchyMixin, TreeMixin], /** @lends SBIS3.CONTROLS.Menu.prototype */ {
       /**
        * @event onMenuItemActivate При активации пункта меню
        * @param {$ws.proto.EventObject} eventObject Дескриптор события.
@@ -155,38 +155,7 @@ define('js!SBIS3.CONTROLS.Menu', [
       },
       _drawItems : function() {
          this.destroySubObjects();
-         this._checkIcons();
          Menu.superclass._drawItems.apply(this, arguments);
-      },
-      //TODO: Придрот для выпуска 3.7.3
-      //Обходим все дерево для пунктов и проверяем наличие иконки у хотя бы одного в каждом меню
-      //При наличии таковой делаем всем пунктам в этом меню фэйковую иконку для их сдвига.
-      //По нормальному можно было бы сделать через css, но имеются три различных отступа слева у пунктов
-      //для разных меню и совершенно не ясно как это делать.
-      _checkIcons: function() {
-         var tree = this._items.getTreeIndex(this._options.hierField);
-         for (var i in tree) {
-            if (tree.hasOwnProperty(i)) {
-               var hasIcon = false,
-                  icon = '',
-                  childs = tree[i];
-               for (var j = 0; j < childs.length; j++) {
-                  icon = this._items.getRecordByKey(childs[j]).get('icon');
-                  if (icon) {
-                     if (icon.indexOf('icon-16') !== -1) { icon = 'sprite:icon-16'; } else { icon = 'sprite:icon-24'; }
-                     hasIcon = true;
-                     break;
-                  }
-               }
-               if (hasIcon) {
-                  for (var j = 0; j < childs.length; j++) {
-                     if (!this._items.getRecordByKey(childs[j]).get('icon')) {
-                        this._items.getRecordByKey(childs[j]).set('icon', icon);
-                     }
-                  }
-               }
-            }
-         }
       },
       _drawItemsCallback : function() {
          var
@@ -262,8 +231,17 @@ define('js!SBIS3.CONTROLS.Menu', [
             horizontalAlign : {
                side : 'left'
             },
+            handlers: {
+               'onShow': function(){
+                  this._notify('onNodeExpand', this._options.item.getId());
+               },
+               'onClose': function(){
+                  this._notify('onNodeCollapse', this._options.item.getId());
+               }
+            },
             closeByExternalOver: true,
-            targetPart : true
+            targetPart : true,
+            item: item
          };
          config = this._onMenuConfig(config, isFirstLevel, item);
          return config;

@@ -3,12 +3,6 @@
  */
 define('js!SBIS3.CONTROLS.ActiveMultiSelectable', [], function() {
 
-   function propertyUpdateWrapper(func) {
-      return function() {
-         return this.runInPropertiesUpdate(func, arguments);
-      };
-   }
-
    /**
     * Миксин, добавляющий поведение хранения одного или нескольких выбранных элементов
     * @mixin SBIS3.CONTROLS.ActiveMultiSelectable
@@ -67,12 +61,7 @@ define('js!SBIS3.CONTROLS.ActiveMultiSelectable', [], function() {
          }
 
          this._options.selectedItems = newList;
-
-         keys = this._convertToKeys(this._options.selectedItems);
-         this._options.selectedKeys = keys;
-
-         this._notifyOnPropertyChanged('selectedItems');
-         this.setSelectedKeys(keys);
+         this._onChangeSelectedItems();
       },
 
       /**
@@ -131,7 +120,7 @@ define('js!SBIS3.CONTROLS.ActiveMultiSelectable', [], function() {
        *    }
        * </pre>
        */
-      addSelectedItems: propertyUpdateWrapper(function(items) {
+      addSelectedItems: function(items) {
          var self = this,
              selItems = this._options.selectedItems,
              newItems = [];
@@ -159,10 +148,20 @@ define('js!SBIS3.CONTROLS.ActiveMultiSelectable', [], function() {
             } else {
                this._options.selectedItems = this._makeList(newItems);
             }
-            this.setSelectedKeys(this._convertToKeys(this._options.selectedItems));
-            this._notifyOnPropertyChanged('selectedItems');
+            this._onChangeSelectedItems();
          }
-      })
+      },
+
+      _onChangeSelectedItems: function() {
+         var keys = this._convertToKeys(this._options.selectedItems),
+             oldKeys = this._options.selectedKeys;
+
+         /* Хак, чтобы починить проблемы с синхроницизронием контекста */
+         this._options.selectedKeys = keys;
+         this._notifyOnPropertyChanged('selectedItems');
+         this._options.selectedKeys = oldKeys;
+         this.setSelectedKeys(keys);
+      }
    };
 
    return ActiveMultiSelectable;

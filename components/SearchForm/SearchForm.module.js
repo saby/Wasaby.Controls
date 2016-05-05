@@ -40,16 +40,7 @@ define('js!SBIS3.CONTROLS.SearchForm', [
              * </pre>
              * @translatable
              */
-            btnCaption: '',
-            /**
-             * @cfg {String} Подсказка в поле ввода
-             * @example
-             * <pre>
-             *     <option name="placeholder">Введите ФИО полностью</option>
-             * </pre>
-             * @translatable
-             */
-            placeholder: ''
+            btnCaption: ''
          }
       },
 
@@ -65,8 +56,13 @@ define('js!SBIS3.CONTROLS.SearchForm', [
          });
 
          $('.js-controls-SearchForm__search', this.getContainer().get(0)).click(function() {
-            self._applySearch(self.getText());
+            self.applySearch(true);
          });
+      },
+
+      setText: function(text) {
+         SearchForm.superclass.setText.apply(this, arguments);
+         this._startSearch(text);
       },
 
       /**
@@ -74,10 +70,11 @@ define('js!SBIS3.CONTROLS.SearchForm', [
        * @private
        */
       _keyUpBind:function(event) {
-         SearchForm.superclass._keyUpBind.apply(this, arguments);
          if (event.which === $ws._const.key.enter) {
-            this._applySearch(this.getText());
+            this.applySearch(true);
             event.stopPropagation();
+         } else {
+            SearchForm.superclass._keyUpBind.apply(this, arguments);
          }
       },
 
@@ -98,8 +95,17 @@ define('js!SBIS3.CONTROLS.SearchForm', [
        * @see applySearch
        */
       resetSearch: function(){
-         $('.js-controls-SearchForm__reset', this.getContainer().get(0)).addClass('ws-hidden');
          this.setText('');
+         this.applySearch(true);
+      },
+
+      /**
+       * Запустить поиск
+       * @param {boolean} force Принудительный запуск поиска, даже если кол-во символов меньше чем {@link startCharacter}.
+       * @see resetSearch
+       */
+      applySearch: function(force) {
+         this._applySearch(this.getText(), force);
       }
    });
 

@@ -36,10 +36,10 @@
 
 @link-cursor:                             pointer;
 @link-text-color:                         #05b;
-@link-disabled-text-color:                @gray-light-color;
+@link-disabled-text-color:                @gray-ccc-color;
 @link-text-decoration:                    none;
 @link-text-alignment:                     center;
-@link-line-height:                        normal;
+@link-line-height:                        24px;
 @link-padding:                            0;
 
 @link-hover-text-color:                   @primary-color;
@@ -306,6 +306,9 @@
 @tab-button-large-inner-font-size:              18px;
 @tab-button-large-inner-font-weight:            bold;
 @tab-button-large-inner-line-height:            29px;
+@tab-button-large-inner-max-width:              614px;
+@tab-button-large-inner-overflow:               hidden;
+@tab-button-large-inner-text-overflow:          ellipsis;
 
 @tab-button-large-firstAddText-color:           #0055BB;
 @tab-button-large-firstAddText-font-size:       14px;
@@ -341,6 +344,9 @@
 @tab-button-right-separator-left:               -1px;
 @tab-button-left-margin-left:                   -5px;
 @tab-button-left-separator-right:               -1px;
+@tab-button-side-left-margin-left:              -5px;
+@tab-button-side-right-margin-right:            -5px;
+@tab-button-side-left-border:                   none;
 
 @tab-button-overlay-position:                   absolute;
 @tab-button-overlay-left:                       0;
@@ -566,12 +572,12 @@
 @menu-expand-border-width:                0;
 @menu-expand-border-style:                solid;
 @menu-expand-border-color:                transparent;
-@menu-expand-bg:                          url(@menu-expand-spritesheet) 0 0 no-repeat;
+@menu-expand-bg:                          url(@menu-expand-spritesheet) 0 7px no-repeat;
 
 @menu-expand-hover-border-width:          @menu-expand-border-width;
 @menu-expand-hover-border-style:          @menu-expand-border-style;
 @menu-expand-hover-border-color:          @menu-expand-border-color;
-@menu-expand-hover-bg:                    url(@menu-expand-spritesheet) 0 0 no-repeat;
+@menu-expand-hover-bg:                    url(@menu-expand-spritesheet) 0 7px no-repeat;
 
 @menu-header-height:                      32px;
 @menu-header-box-sizing:                  border-box;
@@ -945,7 +951,7 @@
 @text-area-disabled-border-color:               transparent;
 @text-area-disabled-bg:                         @text-area-bg;
 
-@text-area-field-padding:                       2px 4px 2px 4px;
+@text-area-field-padding:                       0;
 
 
 
@@ -1257,7 +1263,9 @@
 @list-view-scroll-height:                       32px;
 @list-view-scroll-width:                        32px;
 
-  // --------- //
+@list-view-disabled-cursor:                     default;
+
+// --------- //
 // Tree view //
 // --------- //
 
@@ -1482,6 +1490,7 @@
 //      EditInPlace        //
 // ----------------------- //
 @controls-editInPlace-editor-margin-top:            3px;
+@controls-editInPlace-editor-margin-bottom:         3px;
 @controls-editInPlace-editor-padding:               0 1px;
 @controls-editInPlace-editor-bg:                    #f3f3f3 !important;
 
@@ -1532,7 +1541,7 @@
 @DropdownList-picker-list-left-border-radius: 0 0 5px 5px;
 @DropdownList-picker-menu-font-size:          15px;
 @DropdownList-picker-menu-white-space:        nowrap;
-@DropdownList-picker-menu-item-padding:       4px 8px;
+@DropdownList-picker-menu-item-padding:       4px 16px;
 @DropdownList-picker-menu-item-margin:        0;
 @DropdownList-picker-menu-item-color:         @white-color;
 @DropdownList-picker-menu-item-hover:         #F0F5FB;
@@ -1578,8 +1587,6 @@
 @controls-filterButton-area-text-margin:          0 12px 0 0;
 
 @controls-filterButton-area-content-padding:      12px;
-
-@controls-filterButton-clearButton-margin:        3px 0 0 0;
 
 //FilterButtonHistory
 @controls-filterButton-history-area-padding:      0 12px 12px 4px;

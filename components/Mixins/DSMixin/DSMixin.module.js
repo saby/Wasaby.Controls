@@ -311,8 +311,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
              * @property {SBIS3.CONTROLS.Data.Model} item Текущий элемент коллекции.
              */
             /**
-             * @cfg {UserItem} Устанавливает метод, с помощью которого можно производить манипуляции с контейнером
-             * визуального отображения элементов коллекции.
+             * @cfg {UserItem} Устанавливает метод, с помощью которого можно производить манипуляции с контейнером визуального отображения элементов коллекции.
              * @remark
              * С помощью данного метода можно изменять контейнер визуального отображения (DOM-элемент) для каждого элемента
              * коллекции. К манипуляциям над контейнером можно отнести, например, изменение CSS-классов, добавление новых
@@ -960,10 +959,10 @@ define('js!SBIS3.CONTROLS.DSMixin', [
                   curAt.at++;
                }
             }
-            this._reviveItems();
          } else {
             this._notifyOnDrawItems();
          }
+         this._reviveItems();
       },
 
       _reviveItems : function() {
@@ -1225,7 +1224,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
                atContainer.after(itemBuildedTpl);
             }
             else {
-               atContainer = $('.controls-ListView__item', this._getItemsContainer().get(0)).eq(at.at);
+               atContainer = $('> .controls-ListView__item', this._getItemsContainer().get(0)).eq(at.at);
                if (atContainer.length) {
                   atContainer.before(itemBuildedTpl);
                } else {

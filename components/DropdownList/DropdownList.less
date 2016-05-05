@@ -2,7 +2,7 @@
    display: inline-block;
    min-height: @DropdownList-min-height;
    box-sizing: @DropdownList-box-sizing;
-   & > * {
+   .controls-DropdownList__selectedItem > * {
       display: inline-block;
    }
    .controls-DropdownList__beforeCaptionWrapper {
@@ -57,11 +57,7 @@
    }
    &.ws-disabled{
       cursor: default !important;
-      .controls-DropdownList__textWrapper {
-         margin-top: 1px;
-      }
    }
-
 }
 
 .controls-DropdownList__picker {
@@ -135,7 +131,6 @@
       .controls-DropdownListFooter_hasMore {
          float: right;
          padding-right: 8px;
-         padding-top: 3px;
       }
    }
    .controls-DropdownList__multiselect {

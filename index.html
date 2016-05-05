@@ -193,6 +193,21 @@
                   <div id="presto"></div>
                </li>
             </ul>
+            <h3>Virtual DOM</h3>
+            <ul>
+               <li>
+                  <div id="VD_ListView"></div>
+               </li>
+               <li>
+                  <div id="VD_DataGridView"></div>
+               </li>
+               <li>
+                  <div id="VD_TreeView"></div>
+               </li>
+               <li>
+                  <div id="VD_TreeViewEnv"></div>
+               </li>
+            </ul>
          </td>
       </tr>
       <tr>
@@ -502,6 +517,34 @@
                element: "FilterButtonHistory",
                caption: 'FilterButtonHistory',
                href: '/pages/FilterButtonHistory.html'
+            })
+         }); 
+         require(["js!SBIS3.CONTROLS.Link"], function (r) {
+            new r({
+               element: "VD_ListView",
+               caption: 'ListView',
+               href: '/pages/VD_ListView.html'
+            })
+         });
+         require(["js!SBIS3.CONTROLS.Link"], function (r) {
+            new r({
+               element: "VD_DataGridView",
+               caption: 'DataGridView',
+               href: '/pages/VD_DataGridView.html'
+            })
+         });
+         require(["js!SBIS3.CONTROLS.Link"], function (r) {
+            new r({
+               element: "VD_TreeView",
+               caption: 'TreeView',
+               href: '/pages/VD_TreeView.html'
+            })
+         });
+         require(["js!SBIS3.CONTROLS.Link"], function (r) {
+            new r({
+               element: "VD_TreeViewEnv",
+               caption: 'TreeView - environment',
+               href: '/pages/VD_TreeViewEnv.html'
             })
          });
       })

@@ -36,8 +36,87 @@ define([
          moveStrategy;
 
       describe('SBIS3.CONTROLS.Data.MoveStrategy.Sbis', function() {
+         var  id1 = 1, id2 = 2, rs, rsComplex, objectName = 'newObj', rs$;
+
          beforeEach(function() {
-            moveStrategy = new SbisMoveStrategy({contract: 'test'});
+            rs = new RecordSet({
+               rawData:[{
+                  id: id1,
+                  name: 'Иванов',
+                  parent: null
+               }, {
+                  id: id2,
+                  name: 'Петров',
+                  parent: null
+               },{
+                  id: 11,
+                  name: 'Сидоров',
+                  parent: 1
+               },{
+                  id: 12,
+                  name: 'Козлов',
+                  parent: 1
+               }
+               ],
+               idProperty: 'id'
+            });
+
+            rsComplex = new RecordSet({
+               rawData:[{
+                  'id': id1+','+objectName,
+                  'name': 'Иванов'
+               }, {
+                  'id': id2+','+objectName,
+                  'name': 'Петров'
+               }, {
+                  'id': '3,A',
+                  'name': 'Петров'
+               }],
+               idProperty: 'id'
+            });
+
+            rs$ = new RecordSet({
+               rawData:[{
+                  id: 1,
+                  name: 'Иванов',
+                  parent: null,
+                  parent$: true
+               }, {
+                  id: 2,
+                  name: 'Петров',
+                  parent: null,
+                  parent$: false
+               }, {
+                  id: 11,
+                  name: 'Сидоров',
+                  parent: 1,
+                  parent$: false
+               },{
+                  id: 12,
+                  name: 'Козлов',
+                  parent: 1,
+                  parent$: true
+               },{
+                  id: 121,
+                  name: 'Козлов',
+                  parent: 12,
+                  parent$: false
+               }
+               ],
+               idProperty: 'id'
+            });
+
+            moveStrategy = new SbisMoveStrategy({
+               dataSource: new SbisService({
+                  endpoint: 'test'
+               }),
+               hierField: 'parent',
+               listView: {
+                  getItems: function () {
+                     return rs;
+                  }
+               }
+            });
 
             //Replace of standard with mock
             Di.register('source.provider.sbis-business-logic', SbisBusinessLogic);
@@ -68,34 +147,7 @@ define([
             });
          });
 
-         describe('move()', function() {
-            var  id1 = 1, id2 = 2, rs, rsComplex, objectName = 'newObj';
-            beforeEach(function(){
-               rs = new RecordSet({
-                  rawData:[{
-                     'id': id1,
-                     'name': 'Иванов'
-                  }, {
-                     'id': id2,
-                     'name': 'Петров'
-                  }],
-                  idProperty: 'id'
-               });
-               rsComplex = new RecordSet({
-                  rawData:[{
-                     'id': id1+','+objectName,
-                     'name': 'Иванов'
-                  }, {
-                     'id': id2+','+objectName,
-                     'name': 'Петров'
-                  }, {
-                     'id': '3,A',
-                     'name': 'Петров'
-                  }],
-                  idProperty: 'id'
-               });
-            });
-
+         describe('.move()', function() {
             it('should move record to up', function() {
                moveStrategy.move([rs.at(0)], rs.at(1), false);
                assert.equal(SbisBusinessLogic.lastRequest.args.ИдОДо[0], id2);
@@ -122,12 +174,46 @@ define([
                assert.equal(SbisBusinessLogic.lastRequest.args.ИдО[1], objectName);
             });
 
+            it('should move record form folder to root', function () {
+               moveStrategy.move([rs.at(3)], rs.at(0));
+               assert.equal(rs.at(3).get('parent'), rs.at(0).get('parent'));
+            });
+
+
             it('should return error when move method return error', function(done) {
                moveStrategy.move([rsComplex.at(0)], rsComplex.at(2), true).addErrback(function (){
                   done();
                });
             });
 
+         });
+
+         describe('.hierarhyMove()', function() {
+            it('should move record to folder', function () {
+               moveStrategy.hierarhyMove([rs.at(0)], rs.at(1));
+               assert.equal(rs.at(0).get('parent'), rs.at(1).get('id'));
+               assert.equal(rs.at(1).has('parent$'), false);
+            });
+
+            it('should change parent$ after move', function(done){
+               var moveStrategy = new SbisMoveStrategy({
+                  dataSource: new SbisService({
+                     endpoint: 'test'
+                  }),
+                  hierField: 'parent',
+                  listView: {
+                     getItems: function () {
+                        return rs$;
+                     }
+                  }
+               });
+               moveStrategy.hierarhyMove([rs$.getRecordById('121')], rs$.getRecordById('11')).addCallback(function(){
+                  assert.equal(rs$.getRecordById('121').get('parent'), 11);
+                  assert.equal(rs$.getRecordById('11').get('parent$'), true);
+                  assert.equal(rs$.getRecordById('12').get('parent$'), false);
+                  done();
+               });
+            });
          });
       });
    }

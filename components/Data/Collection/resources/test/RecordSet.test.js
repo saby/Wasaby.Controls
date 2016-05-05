@@ -471,7 +471,7 @@ define([
                   });
                rs.removeField(fieldName);
 
-               assert.strictEqual(rs.getFormat().getFieldndex(fieldName), -1);
+               assert.strictEqual(rs.getFormat().getFieldIndex(fieldName), -1);
                assert.strictEqual(rs.getRawData().s.length, 1);
                rs.each(function(record) {
                   assert.isFalse(record.has(fieldName));
@@ -710,8 +710,8 @@ define([
             it('should get format from assigning recordset', function () {
                var s = [
                      {'n': 'Ид', 't': 'Число целое'},
-                     {'n': 'Фамилия', 't': 'Строка'},
-                     {'n': 'Количество', 't': 'Число целое'}
+                     {'n': 'Количество', 't': 'Число целое'},
+                     {'n': 'Фамилия', 't': 'Строка'}
                   ],
                   rs = new RecordSet({
                      rawData:  {
@@ -728,7 +728,7 @@ define([
                   rs2 = new RecordSet({
                      rawData: {
                         d: [
-                           [7, 'Арбузнов','4']
+                           [7, 4, 'Арбузнов']
                         ],
                         s: s
                      },
@@ -768,7 +768,7 @@ define([
                assert.deepEqual(rs.getRawData().s, [{n: 'Фамилия', t: 'Строка'}]);
             });
 
-            it('should throw an error if format is defined directly', function() {
+            it('should don\'t throw an error if format is defined directly', function() {
                var rs = new RecordSet({
                      rawData:  {
                         d: [[7]],
@@ -785,9 +785,7 @@ define([
                      adapter: 'adapter.sbis'
                   });
                rs.addField({name: 'login', type: 'string'});
-               assert.throw(function() {
-                  rs.assign(rs2);
-               });
+               rs.assign(rs2);
             });
 
             it('should trigger an event with valid arguments', function(done) {
@@ -934,6 +932,34 @@ define([
                assert.strictEqual(record.getOwner(), rs);
                rs.remove(record);
                assert.isNull(record.getOwner());
+            });
+            it('should remove record from hierarchy index', function() {
+               var rs = new RecordSet({
+                  rawData: [{
+                     id: 1,
+                     parent: null
+                  }, {
+                     id: 2,
+                     parent: null
+                  }, {
+                     id: 3,
+                     parent: 1
+                  }, {
+                     id: 4,
+                     parent: 1
+                  }, {
+                     id: 5,
+                     parent: 2
+                  }],
+                  idProperty: 'id'
+               });
+               var record = rs.at(0);
+
+               var index = rs.getChildItems(null, true, 'parent');
+               assert.isTrue(Array.indexOf(index, record.getId()) > -1);
+               rs.remove(record);
+               index = rs.getChildItems(null, true, 'parent');
+               assert.strictEqual(Array.indexOf(index, record.getId()), -1);
             });
          });
 
@@ -1316,6 +1342,31 @@ define([
                var index = rs.getTreeIndex('Раздел');
                assert.deepEqual(index.null, [1]);
             });
+
+            it('should throw an error if pk field same as hierarchy field', function() {
+               var rs =  new RecordSet({
+                  idProperty: 'id'
+               });
+               assert.throw(function() {
+                  rs.getTreeIndex('id');
+               });
+            });
+
+            it('should throw an error for link to itself', function() {
+               var rs =  new RecordSet({
+                  rawData: [{
+                     id: 1,
+                     parent: null
+                  }, {
+                     id: 2,
+                     parent: 2
+                  }],
+                  idProperty: 'id'
+               });
+               assert.throw(function() {
+                  rs.getTreeIndex('parent');
+               });
+            });
          });
 
          describe('.getChildItems()', function () {
@@ -1340,6 +1391,7 @@ define([
                assert.deepEqual(rs.getChildItems(4, true, 'Раздел'), []);
                assert.deepEqual(rs.getChildItems(1, false, 'Раздел'), [2, 3]);
             });
+
          });
 
          describe('.hasChild()', function (){
@@ -1364,6 +1416,8 @@ define([
                assert.isFalse(rs.hasChild(4,'Раздел'));
             });
          });
+
+
       });
    }
 );

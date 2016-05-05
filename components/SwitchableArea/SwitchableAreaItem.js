@@ -4,7 +4,7 @@ define(['js!SBIS3.CORE.CompoundControl'],
       'use strict';
 
       /**
-       * @class SwitchableAreaItem
+       * @class SBIS3.CONTROLS.SwitchableAreaItem
        * @extends $ws.proto.CompoundControl
        * @public
        * @ignoreOptions name, allowChangeEnable, className, contextRestriction, enabled, independentContext, tabIndex

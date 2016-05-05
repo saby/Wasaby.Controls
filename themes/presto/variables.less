@@ -36,7 +36,7 @@
 
 @link-cursor:                             pointer;
 @link-text-color:                         @primary-color;
-@link-disabled-text-color:                @gray-light-color;
+@link-disabled-text-color:                @gray-ccc-color;
 @link-text-decoration:                    none;
 @link-text-alignment:                     center;
 @link-line-height:                        normal;
@@ -303,9 +303,12 @@
 @tab-button-large-inner-font-size:              18px;
 @tab-button-large-inner-font-weight:            bold;
 @tab-button-large-inner-line-height:            29px;
+@tab-button-large-inner-max-width:              614px;
+@tab-button-large-inner-overflow:               hidden;
+@tab-button-large-inner-text-overflow:          ellipsis;
 
 @tab-button-large-firstAddText-color:           #0055BB;
-@tab-button-large-firstAddText-font-size:       15px;
+@tab-button-large-firstAddText-font-size:       14px;
 @tab-button-large-firstAddText-font-weight:     normal;
 @tab-button-large-firstAddText-hover-color:     #FF7030;
 
@@ -338,6 +341,9 @@
 @tab-button-right-separator-left:               -1px;
 @tab-button-left-margin-left:                   -5px;
 @tab-button-left-separator-right:               -1px;
+@tab-button-side-left-margin-left:              -5px;
+@tab-button-side-right-margin-right:            -5px;
+@tab-button-side-left-border:                   none;
 
 @tab-button-overlay-position:                   absolute;
 @tab-button-overlay-left:                       0;
@@ -1284,6 +1290,8 @@
 @list-view-scroll-height:                       32px;
 @list-view-scroll-width:                        32px;
 
+@list-view-disabled-cursor:                     default;
+
 // --------- //
 // Tree view //
 // --------- //
@@ -1482,6 +1490,7 @@
 //      EditInPlace        //
 // ----------------------- //
 @controls-editInPlace-editor-margin-top:            3px;
+@controls-editInPlace-editor-margin-bottom:         3px;
 @controls-editInPlace-editor-padding:               0 1px;
 @controls-editInPlace-editor-bg:                    #f3f3f3 !important;
 
@@ -1558,7 +1567,7 @@
 @DropdownList-picker-list-left-border-radius: 0 0 5px 5px;
 @DropdownList-picker-menu-font-size:          15px;
 @DropdownList-picker-menu-white-space:        nowrap;
-@DropdownList-picker-menu-item-padding:       4px 8px;
+@DropdownList-picker-menu-item-padding:       4px 16px;
 @DropdownList-picker-menu-item-margin:        0;
 @DropdownList-picker-menu-item-color:         @white-color;
 @DropdownList-picker-menu-item-hover:         #F0F5FB;
@@ -1604,8 +1613,6 @@
 @controls-filterButton-area-text-margin:          0 12px 0 0;
 
 @controls-filterButton-area-content-padding:      12px;
-
-@controls-filterButton-clearButton-margin:        3px 0 0 0;
 
 //FilterButtonHistory
 @controls-filterButton-history-area-padding:      0 12px 12px 4px;

@@ -1,10 +1,11 @@
 /* global define, $ws */
 define('js!SBIS3.CONTROLS.Data.Collection.ObservableList', [
    'js!SBIS3.CONTROLS.Data.Collection.List',
+   'js!SBIS3.CONTROLS.Data.SerializableMixin',
    'js!SBIS3.CONTROLS.Data.Bind.ICollection',
    'js!SBIS3.CONTROLS.Data.Collection.ObservableListMixin',
    'js!SBIS3.CONTROLS.Data.Di'
-], function (List, IBindCollection, ObservableListMixin, Di) {
+], function (List, SerializableMixin, IBindCollection, ObservableListMixin, Di) {
    'use strict';
 
    /**
@@ -25,6 +26,8 @@ define('js!SBIS3.CONTROLS.Data.Collection.ObservableList', [
          ObservableListMixin.constructor.call(this, options);
       }
    });
+
+   SerializableMixin._checkExtender(ObservableList);
 
    Di.register('collection.observable-list', ObservableList);
 

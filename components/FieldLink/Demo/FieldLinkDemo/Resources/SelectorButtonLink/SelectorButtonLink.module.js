@@ -31,6 +31,7 @@ define('js!SBIS3.CONTROLS.Demo.SelectorButtonLink', // Устанавливае�
                    idProperty: 'Ид' // Устанавливаем поле первичного ключа
                 });
             this.getChildControlByName('FieldLinkSelectorButtonLink').setDataSource(dataSource); // Устанавливаем источник данных для контрола
+            $ws.helpers.message('Поле связи в виде кнопки с текстом. Установлен режим единичного выбора значения.');
          }
       });
       return moduleClass;

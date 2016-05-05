@@ -133,7 +133,7 @@ define('js!SBIS3.CONTROLS.ComponentBinder', [], function () {
       this._firstSearch = !!withReload;
       //Если в строке поиска что-то есть, очистим и сбросим Фильтр
       if (searchForm.getText()) {
-         searchForm.setText('');
+         searchForm.resetSearch();
       }
    }
 
@@ -141,7 +141,7 @@ define('js!SBIS3.CONTROLS.ComponentBinder', [], function () {
       if (gridView._options.multiselect && hideCheckBoxes) {
          gridView._container.toggleClass('controls-ListView__showCheckBoxes', operationPanel.isVisible())
             .toggleClass('controls-ListView__hideCheckBoxes', !operationPanel.isVisible());
-         if (gridView.hasPartScroll()) {
+         if (gridView._options.startScrollColumn !== undefined) {
             gridView.updateScrollAndColumns();
          }
       }
@@ -228,7 +228,7 @@ define('js!SBIS3.CONTROLS.ComponentBinder', [], function () {
       bindSearchGrid : function(searchParamName, searchCrumbsTpl, searchForm, searchMode) {
          var self = this,
             view = this._options.view,
-            isTree = $ws.helpers.instanceOfMixin(view, 'SBIS3.CONTROLS.TreeMixinDS');
+            isTree = $ws.helpers.instanceOfMixin(view, 'SBIS3.CONTROLS.TreeMixin');
          searchForm = searchForm || this._options.searchForm;
          //todo Проверка на "searchParamName" - костыль. Убрать, когда будет адекватная перерисовка записей (до 150 версии, апрель 2016)
          view._searchParamName = searchParamName;
@@ -267,13 +267,11 @@ define('js!SBIS3.CONTROLS.ComponentBinder', [], function () {
          this._lastGroup = view._options.groupBy;
          this._isInfiniteScroll = view.isInfiniteScroll();
 
-         searchForm.subscribe('onTextChange', function(event, text){
-            if (text.length < searchForm.getProperty('startCharacter')) {
-               if (isTree) {
-                  resetGroup.call(self, searchParamName);
-               } else {
-                  resetSearch.call(self, searchParamName);
-               }
+         searchForm.subscribe('onReset', function(event, text){
+            if (isTree) {
+               resetGroup.call(self, searchParamName);
+            } else {
+               resetSearch.call(self, searchParamName);
             }
          });
 
@@ -445,7 +443,7 @@ define('js!SBIS3.CONTROLS.ComponentBinder', [], function () {
       /**
        * Метод для связывания истории фильтров с представлением данных
        */
-      bindFilterHistory: function(filterButton, fastDataFilter, searchParam, historyId, controller, browser) {
+      bindFilterHistory: function(filterButton, fastDataFilter, searchParam, historyId, ignoreFiltersList, controller, browser) {
          var view = browser.getView(),
              noSaveFilters = ['Разворот', 'ВидДерева'],
              historyController, filter;
@@ -454,8 +452,12 @@ define('js!SBIS3.CONTROLS.ComponentBinder', [], function () {
             noSaveFilters.push(searchParam);
          }
 
-         if($ws.helpers.instanceOfMixin(view, 'SBIS3.CONTROLS.hierarchyMixin')) {
+         if($ws.helpers.instanceOfMixin(view, 'SBIS3.CONTROLS.TreeMixin')) {
             noSaveFilters.push(view.getHierField());
+         }
+
+         if(ignoreFiltersList && ignoreFiltersList.length) {
+            noSaveFilters = noSaveFilters.concat(ignoreFiltersList);
          }
 
          historyController = new controller({

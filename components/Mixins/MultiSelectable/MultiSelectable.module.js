@@ -198,12 +198,16 @@ define('js!SBIS3.CONTROLS.MultiSelectable', ['js!SBIS3.CONTROLS.Data.Collection.
                }
                else {
                   removedKeys = $ws.core.clone(this._options.selectedKeys);
-                  this._options.selectedKeys = idArray.slice(0, 1);
+                  if(idArray.length === 1) {
+                     this._options.selectedKeys = idArray;
+                  } else {
+                     this._options.selectedKeys = idArray.slice(0, 1);
+                  }
                }
             }
             else {
                removedKeys = $ws.core.clone(this._options.selectedKeys);
-               this._options.selectedKeys = [];
+               this._options.selectedKeys = idArray;
             }
 	         this._afterSelectionHandler(addedKeys, removedKeys);
          }
@@ -675,6 +679,7 @@ define('js!SBIS3.CONTROLS.MultiSelectable', ['js!SBIS3.CONTROLS.Data.Collection.
          if (this._checkEmptySelection()) {
             this._setFirstItemAsSelected();
          }
+         this._setSelectedItems();
       },
 
       _setFirstItemAsSelected : function() {
@@ -695,17 +700,28 @@ define('js!SBIS3.CONTROLS.MultiSelectable', ['js!SBIS3.CONTROLS.Data.Collection.
       _setSelectedItems: function() {
          var dataSet = this.getItems(),
              self = this,
-             record;
+             record, index;
 
          if (dataSet) {
             this._syncSelectedItems();
             $ws.helpers.forEach(this.getSelectedKeys(), function (key) {
                record = dataSet.getRecordById(key);
-               if (record && !self._isItemSelected(record)) {
+               if (record) {
                   if(!self._options.selectedItems) {
                      self.initializeSelectedItems();
                   }
-                  self._options.selectedItems.add(record);
+
+                  index = self._options.selectedItems.getIndexByValue(self._options.keyField, record.getId());
+
+                  /**
+                   * Запись в датасете есть - заменим в наборе выбранных записей, т.к. она могла измениться.
+                   * Если нету, то просто добавим.
+                   */
+                  if(index !== -1) {
+                     self._options.selectedItems.replace(record, index);
+                  } else {
+                     self._options.selectedItems.add(record);
+                  }
                }
             });
          }

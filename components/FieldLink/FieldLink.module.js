@@ -71,7 +71,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
         * В режиме множественного выбора удаление выбранных значений производится массово кликом по серому крестику.
         * @demo SBIS3.CONTROLS.Demo.SelectorButtonLink Пример 5. Поле связи в виде кнопки-ссылки, поле ввода отсутствует. Вызов диалога выбора производится кликом по ссылке. Все выбранные значения будут отображаться в качестве текста кнопки.
         * В режиме множественного выбора удаление выбранных значений производится массово кликом по серому крестику. Для корректного отображения кнопки-ссылки используется CSS-модификатор "controls-SelectorButton__asLink".
-        * @demo SBIS3.CONTROLS.Demo.FieldLinkWithEditInPlace Пример 6. Поле связи с редактированием по месту. Комплексный пример, демонстрирующий возможности работы с данными источника в виде JSON-RPC формата.
+        * @demo SBIS3.CONTROLS.Demo.FieldLinkDemoTemplate Пример 6. В первых примерах используется следующий диалог выбора записей.
         *
         * @cssModifier controls-FieldLink__itemsEdited В поле связи при наведении курсора на выбранные значения применяется подчеркивание текста.
         * @cssModifier controls-FieldLink__itemsBold В поле связи для текста выбранных значений применяется полужирное начертание.
@@ -100,6 +100,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
              _showAllLink: undefined,      /* Кнопка показа всех записей в пикере */
              _linkCollection: undefined,   /* Контрол отображающий выбранные элементы */
              _checkWidth: true,
+             _lastFieldLinkWidth: null,
              _afterFieldWrapper: undefined,
              _beforeFieldWrapper: undefined,
              _options: {
@@ -241,19 +242,13 @@ define('js!SBIS3.CONTROLS.FieldLink',
              commandDispatcher.declareCommand(this, 'clearAllItems', this._dropAllItems);
              commandDispatcher.declareCommand(this, 'showAllItems', this._showAllItems);
 
-             /* Если не передали конфигурацию диалога всех записей для автодополнения,
-              то по-умолчанию возьмём конфигурацию первого словаря */
-             if(!Object.keys(this._options.showAllConfig).length) {
-                this._options.showAllConfig = this._options.dictionaries[0];
-             }
-
             /* При изменении выбранных элементов в поле связи - сотрём текст.
                Достаточно отслеживать изменение массива ключей,
                т.к. это событие гарантирует изменение выбранных элементов
                Это всё актуально для поля связи без включенной опции alwaysShowTextBox,
                если она включена, то логика стирания текста обрабатывается по-другому. */
             this.subscribe('onSelectedItemsChange', function() {
-               if(this.getText()) {
+               if(this.getText() && !this._options.alwaysShowTextBox) {
                   this.setText('');
                }
             }.bind(this));
@@ -261,12 +256,21 @@ define('js!SBIS3.CONTROLS.FieldLink',
             if(this._options.oldViews) {
                $ws.single.ioc.resolve('ILogger').log('FieldLink', 'В 3.8.0 будет удалена опция oldViews, а так же поддержка старых представлений данных на диалогах выбора.');
             }
-         },
+          },
 
           init: function() {
              FieldLink.superclass.init.apply(this, arguments);
              this.getChildControlByName('fieldLinkMenu').setItems(this._options.dictionaries);
           },
+
+           _getShowAllConfig: function(){
+               /* Если не передали конфигурацию диалога всех записей для автодополнения,
+                то по-умолчанию возьмём конфигурацию первого словаря */
+               if(Object.isEmpty(this._options.showAllConfig)) {
+                   return this._options.dictionaries[0];
+               }
+               return this._options.showAllConfig;
+           },
 
           /**
            * Обработчик нажатия на меню(элементы меню), открывает диалог выбора с соответствующим шаблоном
@@ -320,9 +324,19 @@ define('js!SBIS3.CONTROLS.FieldLink',
            * @see setDictionaries
            */
           showSelector: function(template, componentOptions) {
+             //FIXME и ещё один костыль до перевода пикера на фокусную систему
+             if(this.isPickerVisible()) {
+                this.hidePicker();
+             }
+
+             this._showChooser(template, componentOptions)
+
+          },
+
+          _getAdditionalChooserConfig: function () {
              var oldRecArray = [],
-                 selectedKeys = this._isEmptySelection() ? [] : this.getSelectedKeys(),
-                 selectedItems, oldRec;
+                selectedKeys = this._isEmptySelection() ? [] : this.getSelectedKeys(),
+                selectedItems, oldRec;
 
              if(this._options.oldViews) {
                 selectedItems = this.getSelectedItems();
@@ -337,23 +351,13 @@ define('js!SBIS3.CONTROLS.FieldLink',
                 }
              }
 
-             //FIXME и ещё один костыль до перевода пикера на фокусную систему
-             if(this.isPickerVisible()) {
-                this.hidePicker();
-             }
-
-             this._showChooser(
-                 template,
-                 componentOptions,
-                 /* Дополнительный конфиг, который нужно прокинуть в selector */
-                 {
-                    /* FIXME Для старых предствелений, удалить */
-                    currentValue: selectedKeys,
-                    currentSelectedKeys: selectedKeys,
-                    selectorFieldLink: true,
-                    multiSelect: this._options.multiselect,
-                    selectedRecords: oldRecArray
-                 });
+             return {
+                currentValue: selectedKeys,
+                currentSelectedKeys: selectedKeys,
+                selectorFieldLink: true,
+                multiSelect: this._options.multiselect,
+                selectedRecords: oldRecArray
+             };
           },
 
           _getLinkCollection: function() {
@@ -373,11 +377,12 @@ define('js!SBIS3.CONTROLS.FieldLink',
 
              if(result && result.length) {
                 isModel = $ws.helpers.instanceOfModule(result[0], 'SBIS3.CONTROLS.Data.Model');
+                this.setText('');
 
                 if(isModel) {
-                   this.addSelectedItems(result)
+                   this.addSelectedItems(result);
                 } else {
-                   this.addItemsSelection(result)
+                   this.addItemsSelection(result);
                 }
              }
           },
@@ -437,11 +442,22 @@ define('js!SBIS3.CONTROLS.FieldLink',
 
              FieldLink.superclass._onResizeHandler.apply(this, arguments);
 
-             if(!linkCollection.isPickerVisible()) {
+             if(!linkCollection.isPickerVisible() && this._needRedrawOnResize()) {
                 /* Почему надо звать redraw: поле связи может быть скрыто, когда в него проставили выбранные записи,
                    и просто пересчётом input'a тут не обойтись. Выполняться должно быстро, т.к. перерисовывается обычно всего 2-3 записи */
                 linkCollection.redraw();
              }
+          },
+
+          _needRedrawOnResize: function () {
+             var width = this._container[0].offsetWidth;
+
+             /* В целях оптимизации запоминаем ширину, чтобы перерисовка вызывалась только если изменилась ширина поля связи */
+             if(this._lastFieldLinkWidth !== width) {
+                this._lastFieldLinkWidth = width;
+                return true;
+             }
+             return false;
           },
 
           /**
@@ -497,16 +513,27 @@ define('js!SBIS3.CONTROLS.FieldLink',
 
           _loadAndDrawItems: function(amount) {
              var linkCollection = this._getLinkCollection(),
-                 linkCollectionContainer = linkCollection.getContainer();
+                 linkCollectionContainer = linkCollection.getContainer(),
+                 self = this;
 
              /* Нужно скрыть контрол отображающий элементы, перед загрузкой, потому что часто бл может отвечать >500мс и
               отображаемое значение в поле связи долго не меняется, особенно заметно в редактировании по месту. */
              linkCollectionContainer.addClass('ws-hidden');
              this.getSelectedItems(true, amount).addCallback(function(list){
+                self._dataLoadedCallback();
                 linkCollectionContainer.removeClass('ws-hidden');
                 linkCollection.setItems(list);
                 return list;
              });
+          },
+
+          _dataLoadedCallback: function() {
+             /* Т.к. операция загрузки записей асинхронная, то за это время поле связи может скрыться,
+                надо на это проверить */
+             if(!this.isVisibleWithParents()) {
+                this._lastFieldLinkWidth = 0;
+             }
+             FieldLink.superclass._dataLoadedCallback.apply(this, arguments);
           },
 
           _drawSelectedItems: function(keysArr) {
@@ -545,11 +572,9 @@ define('js!SBIS3.CONTROLS.FieldLink',
           },
 
           setListFilter: function() {
-             var selectedItems =  this.getSelectedItems();
-
              /* Если единичный выбор в поле связи, но textBox всё равно показывается(включена опция), запрещаем работу suggest'a */
              if(!this._options.multiselect &&
-                 selectedItems && selectedItems.getCount() &&
+                 !this._isEmptySelection() &&
                  this._options.alwaysShowTextBox) {
                 return;
              }
@@ -737,10 +762,14 @@ define('js!SBIS3.CONTROLS.FieldLink',
            * @private
            */
           _getInputWidth: function() {
-             return this._container[0].clientWidth  -
+             var width = this._container[0].clientWidth  -
                  (this._afterFieldWrapper[0].offsetWidth +
-                  this._beforeFieldWrapper[0].offsetWidth +
-                  INPUT_WRAPPER_PADDING);
+                 this._beforeFieldWrapper[0].offsetWidth +
+                 INPUT_WRAPPER_PADDING);
+
+             /* Когда поле связи скрыто, могут происходить неправильные расчёты, самый дешёвый способ этого избежать,
+                просто считать что ширина  - 0 */
+             return (width >= 0) ? width : 0;
           },
           /**
            * Обновляет ширину поля ввода

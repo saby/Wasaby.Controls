@@ -3,8 +3,9 @@ define('js!SBIS3.CONTROLS.Data.Adapter.RecordSetTable', [
    'js!SBIS3.CONTROLS.Data.Entity.Abstract',
    'js!SBIS3.CONTROLS.Data.Adapter.ITable',
    'js!SBIS3.CONTROLS.Data.Adapter.GenericFormatMixin',
-   'js!SBIS3.CONTROLS.Data.Collection.RecordSet'
-], function (Abstract, ITable, GenericFormatMixin, RecordSet) {
+   'js!SBIS3.CONTROLS.Data.Collection.RecordSet',
+   'js!SBIS3.CONTROLS.Data.Utils'
+], function (Abstract, ITable, GenericFormatMixin, RecordSet, Utils) {
    'use strict';
 
    /**
@@ -44,6 +45,7 @@ define('js!SBIS3.CONTROLS.Data.Adapter.RecordSetTable', [
       //region SBIS3.CONTROLS.Data.Adapter.ITable
 
       getEmpty: function () {
+         Utils.logger.stack(this._moduleName + '::getEmpty(): method is deprecated and will be removed in 3.7.4. Use clear() instead.');
          var empty = this._data.clone();
          empty.clear();
          return empty;
@@ -89,6 +91,13 @@ define('js!SBIS3.CONTROLS.Data.Adapter.RecordSetTable', [
          var clone = this._data.at(index).clone();
          this.add(clone, 1 + index);
          return clone;
+      },
+
+      clear: function () {
+         var count = this._data.getCount();
+         for (var i = count - 1; i >= 0; i--) {
+            this._data.removeAt(i);
+         }
       },
 
       addField: function(format, at) {

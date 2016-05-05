@@ -282,7 +282,7 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
       //region SBIS3.CONTROLS.Data.Source.Base
 
       _prepareCallResult: function(data) {
-         return SbisService.superclass._prepareCallResult.call(this, data, 'n');
+         return SbisService.superclass._prepareCallResult.call(this, data, undefined, 'n');
       },
 
       //endregion SBIS3.CONTROLS.Data.Source.Base
@@ -371,18 +371,19 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
       /**
        * Возвращает тип значения
        * @param {*} val Значение
+       * @param {String} name Название
+       * @param {Object} original Оригинальный объект
        * @returns {String|Object}
        * @protected
        */
       _getValueType: function (val, name, original) {
-         if (name && original) {
-            if (name.slice(-1) in {'@':false, '$':false} && original.hasOwnProperty(name.slice(0,-1))) {
+         if (this._isHierarhyField(name, original)) {
+            if (name.slice(-1) in {'@': false, '$': false}) {
                return {
                   type: 'hierarchy',
-                  kind: $ws.helpers.type(val)
+                  kind: 'boolean'
                };
-            } else if (original.hasOwnProperty(name+'@') || original.hasOwnProperty(name+'$')) {
-               var type = $ws.helpers.type(val);
+            } else {
                return {
                   type: 'hierarchy',
                   kind: 'identity'
@@ -415,7 +416,7 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
                      kind: this._getValueType(val[0])
                   };
                } else {
-                  return 'string';
+                  return 'object';
                }
                break;
             default:
@@ -533,7 +534,11 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
             delete meta[moreProp];
             query.meta(meta);
          }
-         if (offset === 0 && limit === undefined) {
+
+         if (
+            offset === 0 &&
+            (limit === undefined || limit === null)
+         ) {
             return null;
          }
          return {
@@ -612,8 +617,19 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
          };
 
          return this.getAdapter().serialize(args);
-      }
+      },
 
+      _isHierarhyField: function(name, original){
+         if(name && original) {
+            if (name.slice(-1) in {'@': false, '$': false}) {
+               name = name.slice(0, -1);
+            }
+            if (original.hasOwnProperty(name) && original.hasOwnProperty(name + '@') && original.hasOwnProperty(name + '$')) {
+               return true;
+            }
+         }
+         return false;
+      }
       //endregion Deprecated
    });
 

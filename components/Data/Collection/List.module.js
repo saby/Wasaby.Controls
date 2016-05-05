@@ -1,18 +1,33 @@
 /* global define, $ws */
 define('js!SBIS3.CONTROLS.Data.Collection.List', [
-   'js!SBIS3.CONTROLS.Data.SerializableMixin',
    'js!SBIS3.CONTROLS.Data.Collection.IEnumerable',
    'js!SBIS3.CONTROLS.Data.Collection.IList',
    'js!SBIS3.CONTROLS.Data.Collection.IIndexedCollection',
+   'js!SBIS3.CONTROLS.Data.ICloneable',
    'js!SBIS3.CONTROLS.Data.Entity.Abstract',
    'js!SBIS3.CONTROLS.Data.Entity.OptionsMixin',
    'js!SBIS3.CONTROLS.Data.Entity.ObservableMixin',
+   'js!SBIS3.CONTROLS.Data.SerializableMixin',
+   'js!SBIS3.CONTROLS.Data.CloneableMixin',
    'js!SBIS3.CONTROLS.Data.Collection.ArrayEnumerator',
-   'js!SBIS3.CONTROLS.Data.Serializer',
    'js!SBIS3.CONTROLS.Data.Di',
    'js!SBIS3.CONTROLS.Data.Utils',
    'js!SBIS3.CONTROLS.Data.ContextField.List'
-], function (SerializableMixin, IEnumerable, IList, IIndexedCollection, Abstract, OptionsMixin, ObservableMixin, ArrayEnumerator, Serializer, Di, Utils, ContextFieldList) {
+], function (
+   IEnumerable,
+   IList,
+   IIndexedCollection,
+   ICloneable,
+   Abstract,
+   OptionsMixin,
+   ObservableMixin,
+   SerializableMixin,
+   CloneableMixin,
+   ArrayEnumerator,
+   Di,
+   Utils,
+   ContextFieldList
+) {
    'use strict';
 
    var arraySplice = Array.prototype.splice;
@@ -21,17 +36,19 @@ define('js!SBIS3.CONTROLS.Data.Collection.List', [
     * Список - коллекция c доступом по порядковому индексу
     * @class SBIS3.CONTROLS.Data.Collection.List
     * @extends SBIS3.CONTROLS.Data.Entity.Abstract
-    * @mixes SBIS3.CONTROLS.Data.Entity.OptionsMixin
-    * @mixes SBIS3.CONTROLS.Data.Entity.ObservableMixin
-    * @mixes SBIS3.CONTROLS.Data.SerializableMixin
     * @mixes SBIS3.CONTROLS.Data.Collection.IEnumerable
     * @mixes SBIS3.CONTROLS.Data.Collection.IList
     * @mixes SBIS3.CONTROLS.Data.Collection.IIndexedCollection
+    * @mixes SBIS3.CONTROLS.Data.ICloneable
+    * @mixes SBIS3.CONTROLS.Data.Entity.OptionsMixin
+    * @mixes SBIS3.CONTROLS.Data.Entity.ObservableMixin
+    * @mixes SBIS3.CONTROLS.Data.SerializableMixin
+    * @mixes SBIS3.CONTROLS.Data.CloneableMixin
     * @public
     * @author Мальцев Алексей
     */
 
-   var List = Abstract.extend([OptionsMixin, ObservableMixin, SerializableMixin, IEnumerable, IList, IIndexedCollection], /** @lends SBIS3.CONTROLS.Data.Collection.List.prototype */{
+   var List = Abstract.extend([IEnumerable, IList, IIndexedCollection, ICloneable, OptionsMixin, ObservableMixin, SerializableMixin, CloneableMixin], /** @lends SBIS3.CONTROLS.Data.Collection.List.prototype */{
       _moduleName: 'SBIS3.CONTROLS.Data.Collection.List',
 
       /**
@@ -243,18 +260,6 @@ define('js!SBIS3.CONTROLS.Data.Collection.List', [
 
       //region Public methods
 
-      /**
-       * Клонирует список
-       * @returns {SBIS3.CONTROLS.Data.Collection.List}
-       */
-      clone: function () {
-         var serializer = new Serializer();
-         return JSON.parse(
-            JSON.stringify(this, serializer.serialize),
-            serializer.deserialize
-         );
-      },
-
       equals: function (another) {
          Utils.logger.stack(this._moduleName + '::equals(): method is deprecated and will be removed in 3.7.4. Use isEqual() instead.');
          return this.isEqual(another);
@@ -373,6 +378,8 @@ define('js!SBIS3.CONTROLS.Data.Collection.List', [
       //endregion Protected methods
 
    });
+
+   SerializableMixin._checkExtender(List);
 
    Di.register('collection.list', List);
 

@@ -1,6 +1,7 @@
 .controls-TextArea {
    display: inline-block;
    vertical-align: top;
+   position: relative;
    .border-radius(@text-area-border-radius);
    border-width: @text-area-border-width;
    border-style: @text-area-border-style;
@@ -21,6 +22,8 @@
       resize: none;
       border: none;
       background: transparent;
+      padding: 0;
+      margin: 4px 6px;
       .box-sizing(border-box);
       // Internet Explorer 10+ placeholder
       .placeholder();
@@ -71,5 +74,20 @@
 
    &.controls-TextArea__autoheight {
       height: auto !important;
+   }
+   .controls-TextArea__disabled-wrapper{
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: @text-area-bg;
+      padding: 0;
+      margin: 4px 6px;
+      box-sizing: border-box;
+      width: 100%;
+      overflow: hidden;
+      white-space: pre-line;
+      text-overflow: ellipsis;
    }
 }

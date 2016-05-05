@@ -29,6 +29,9 @@
       font: @tab-button-font;
       font-size: @tab-button-large-inner-font-size;
       font-weight: @tab-button-large-inner-font-weight;
+      max-width: @tab-button-large-inner-max-width;
+      overflow:  @tab-button-large-inner-overflow;
+      text-overflow: @tab-button-large-inner-text-overflow;
    }
    &.controls-Checked__checked {
       border-top: @tab-button-checked-border-top;
@@ -85,6 +88,9 @@
             color: @black-color;
             font-size: @font-basic-size;
          }
+         .controls-EditAtPlace__fieldWrapper{
+            padding: 0;
+         }
       }
       .controls-TabButton__additionalText2, .controls-TabButton__additionalText2 > * {
          color: @tab-button-large-secondAddText-color;
@@ -115,9 +121,11 @@
          z-index: @tab-button-inner-after-z-index;
       }
       .controls-TabButton__icon {
-         margin-right: @tab-button-inner-icon-margin-left;
          position: @tab-button-icon-position;
          top: @tab-button-icon-top;
+         span {
+            margin-right: @tab-button-inner-icon-margin-left;
+         }
       }
       .controls-TabButton__caption {
          display: inline-block;
@@ -180,4 +188,10 @@
          }
       }
    }
+}
+
+@-moz-document url-prefix() {
+  .controls-TabButton.controls-TabButton__main-item .controls-TabButton__inner{
+    line-height: 27px;
+  }
 }

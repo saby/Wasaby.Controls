@@ -69,9 +69,11 @@ define('js!SBIS3.CONTROLS.SyncSelectionMixin', ['js!SBIS3.CONTROLS.Data.Model'],
                         this._options.selectedItem = null;
                         this._options.selectedKey = null;
                      }
+                     this._notify('onSelectedItemChange', this._options.selectedKey, this._options.selectedIndex);
                      break;
                   case 'selectedKeys':
                      this._options.selectedKey = propValue.length ? propValue[0] : null;
+                     this._notify('onSelectedItemChange', this._options.selectedKey, this._options.selectedIndex);
                      break;
                }
             }

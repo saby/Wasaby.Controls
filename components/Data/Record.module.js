@@ -1,13 +1,14 @@
 /* global define, $ws */
 define('js!SBIS3.CONTROLS.Data.Record', [
    'js!SBIS3.CONTROLS.Data.IObject',
+   'js!SBIS3.CONTROLS.Data.ICloneable',
    'js!SBIS3.CONTROLS.Data.Collection.IEnumerable',
    'js!SBIS3.CONTROLS.Data.Entity.Abstract',
    'js!SBIS3.CONTROLS.Data.Entity.OptionsMixin',
    'js!SBIS3.CONTROLS.Data.Entity.ObservableMixin',
    'js!SBIS3.CONTROLS.Data.SerializableMixin',
+   'js!SBIS3.CONTROLS.Data.CloneableMixin',
    'js!SBIS3.CONTROLS.Data.FormattableMixin',
-   'js!SBIS3.CONTROLS.Data.Serializer',
    'js!SBIS3.CONTROLS.Data.Collection.ArrayEnumerator',
    'js!SBIS3.CONTROLS.Data.Di',
    'js!SBIS3.CONTROLS.Data.Utils',
@@ -16,13 +17,14 @@ define('js!SBIS3.CONTROLS.Data.Record', [
    'js!SBIS3.CONTROLS.Data.ContextField.Record'
 ], function (
    IObject,
+   ICloneable,
    IEnumerable,
    Abstract,
    OptionsMixin,
    ObservableMixin,
    SerializableMixin,
+   CloneableMixin,
    FormattableMixin,
-   Serializer,
    ArrayEnumerator,
    Di,
    Utils,
@@ -37,17 +39,20 @@ define('js!SBIS3.CONTROLS.Data.Record', [
     * @class SBIS3.CONTROLS.Data.Record
     * @extends SBIS3.CONTROLS.Data.Entity.Abstract
     * @mixes SBIS3.CONTROLS.Data.IObject
+    * @mixes SBIS3.CONTROLS.Data.ICloneable
     * @mixes SBIS3.CONTROLS.Data.Collection.IEnumerable
     * @mixes SBIS3.CONTROLS.Data.Entity.OptionsMixin
     * @mixes SBIS3.CONTROLS.Data.Entity.ObservableMixin
     * @mixes SBIS3.CONTROLS.Data.SerializableMixin
+    * @mixes SBIS3.CONTROLS.Data.CloneableMixin
     * @mixes SBIS3.CONTROLS.Data.FormattableMixin
     * @public
+    * @ignoreOptions owner
     * @ignoreMethods setOwner
     * @author Мальцев Алексей
     */
 
-   var Record = Abstract.extend([IObject, IEnumerable, OptionsMixin, ObservableMixin, SerializableMixin, FormattableMixin], /** @lends SBIS3.CONTROLS.Data.Record.prototype */{
+   var Record = Abstract.extend([IObject, ICloneable, IEnumerable, OptionsMixin, ObservableMixin, SerializableMixin, CloneableMixin, FormattableMixin], /** @lends SBIS3.CONTROLS.Data.Record.prototype */{
       _moduleName: 'SBIS3.CONTROLS.Data.Record',
 
       /**
@@ -269,21 +274,8 @@ define('js!SBIS3.CONTROLS.Data.Record', [
       },
 
       /**
-       * Клонирует запись
-       * @returns {SBIS3.CONTROLS.Data.Record}
-       */
-      clone: function() {
-         var serializer = new Serializer();
-         return JSON.parse(
-            JSON.stringify(this, serializer.serialize),
-            serializer.deserialize
-         );
-      },
-
-      /**
        * Возвращает рекордсет, которому принадлежит запись. Может не принадлежать рекордсету.
        * @returns {SBIS3.CONTROLS.Data.Collection.RecordSet}
-       * @see owner
        */
       getOwner: function() {
          return this._$owner;
@@ -292,7 +284,6 @@ define('js!SBIS3.CONTROLS.Data.Record', [
       /**
        * Устанавливает рекордсет, которому принадлежит запись. Данный метод может вызывать только сам рекордсет!
        * @param {SBIS3.CONTROLS.Data.Collection.RecordSet} owner Новый владелец
-       * @see owner
        * @see getOwner
        */
       setOwner: function(owner) {
@@ -505,6 +496,8 @@ define('js!SBIS3.CONTROLS.Data.Record', [
 
       //endregion Protected methods
    });
+
+   SerializableMixin._checkExtender(Record);
 
    Di.register('record', Record);
 

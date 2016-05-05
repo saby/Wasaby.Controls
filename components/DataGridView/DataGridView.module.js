@@ -10,9 +10,13 @@ define('js!SBIS3.CONTROLS.DataGridView',
       'js!SBIS3.CONTROLS.DragAndDropMixin',
       'browser!html!SBIS3.CONTROLS.DataGridView/resources/DataGridViewGroupBy',
       'js!SBIS3.CONTROLS.Utils.HtmlDecorators.LadderDecorator',
-      'js!SBIS3.CONTROLS.Utils.TemplateUtil'
+      'js!SBIS3.CONTROLS.Utils.TemplateUtil',
+      'browser!html!SBIS3.CONTROLS.DataGridView/resources/ItemTemplate',
+      'browser!html!SBIS3.CONTROLS.DataGridView/resources/ItemContentTemplate',
+      'browser!html!SBIS3.CONTROLS.DataGridView/resources/cellTemplate',
+      'browser!html!SBIS3.CONTROLS.DataGridView/resources/GroupTemplate'
    ],
-   function(ListView, dotTplFn, rowTpl, colgroupTpl, headTpl, resultsTpl, MarkupTransformer, DragAndDropMixin, groupByTpl, LadderDecorator, TemplateUtil) {
+   function(ListView, dotTplFn, rowTpl, colgroupTpl, headTpl, resultsTpl, MarkupTransformer, DragAndDropMixin, groupByTpl, LadderDecorator, TemplateUtil, ItemTemplate, ItemContentTemplate, cellTemplate, GroupTemplate) {
    'use strict';
 
       var ANIMATION_DURATION = 500; //Продолжительность анимации скролла заголовков
@@ -39,12 +43,16 @@ define('js!SBIS3.CONTROLS.DataGridView',
     * @cssModifier controls-ListView__withoutMarker Убирать маркер активной строки.
     * @cssModifier controls-DataGridView__hasSeparator Включает линии разделители между строками
     * @cssModifier controls-DataGridView__td__textAlignRight Стиль задается колонке, выравнивает текст во всех ячейках этой колонки по правой стороне
+    * @ignoreEvents onDragStop onDragIn onDragOut onDragStart
     */
    var DataGridView = ListView.extend([DragAndDropMixin],/** @lends SBIS3.CONTROLS.DataGridView.prototype*/ {
       _dotTplFn : dotTplFn,
       $protected: {
+         _defaultItemTemplate: ItemTemplate,
+         _defaultItemContentTemplate: ItemContentTemplate,
+         _defaultGroupTemplate: GroupTemplate,
+         _defaultCellTemplate: cellTemplate,
          _rowTpl : rowTpl,
-         _headTpl : headTpl,
          _rowData : [],
          _isPartScrollVisible: false,                 //Видимость скроллбара
          _movableElements: undefined,                 //Скролируемые элементы
@@ -141,6 +149,35 @@ define('js!SBIS3.CONTROLS.DataGridView',
              * Массив имен столбцов, по которым строится лесенка
              */
             ladder: undefined,
+            /**
+             * @cfg {String} Устанавливает шаблон отображения строки итогов.
+             * @remark
+             * Отображение строки итогов конфигурируется тремя опциями: resultsTpl, {@link resultsPosition} и {@link resultsText}.
+             * В данную опцию передается имя шаблона, в котором описана конфигурация строки итогов.
+             * Чтобы шаблон можно было передать в опцию компонента, его нужно предварительно подключить в массив зависимостей.
+             * Опция позволяет пользователю выводить в строку требуемые данные и задать для нее определенное стилевое оформление.
+             * Подсчет каких-либо итоговых сумм в строке не предусмотрен. Все итоги рассчитываются на стороне источника данных.
+             * С подробным описанием можно ознакомиться в статье {@link https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/list-settings/list-visual-display/results/ Строка итогов}.
+             * @example
+             * 1. Подключаем шаблон в массив зависимостей:
+             * <pre>
+             *     define('js!SBIS3.Demo.nDataGridView',
+             *        [
+             *           ...,
+             *           'html!SBIS3.Demo.nDataGridView/resources/resultTemplate'
+             *        ],
+             *        ...
+             *     );
+             * </pre>
+             * 2. Передаем шаблон в опцию:
+             * <pre class="brush: xml">
+             *     <option name="resultsTpl" value="html!SBIS3.Demo.nDataGridView/resources/resultTemplate"></option>
+             * </pre>
+             * @editor CloudFileChooser
+             * @editorConfig extFilter xhtml
+             * @see resultsPosition
+             * @see resultsText
+             */
             resultsTpl: resultsTpl,
             /**
              * @cfg {Boolean} Производить ли преобразование колонок в шапке
@@ -155,7 +192,16 @@ define('js!SBIS3.CONTROLS.DataGridView',
              *     <option name="transformHead">true</option>
              * </pre>
              */
-            transformHead: false
+            transformHead: false,
+            /**
+             * @cfg {Boolean} Скрывать шапку, если данных нет
+             * Нужно ли скрывать шапку, если данных нет
+             * @example
+             * <pre>
+             *     <option name="allowToggleHead">false</option>
+             * </pre>
+             */
+            allowToggleHead: true
          }
       },
 
@@ -168,7 +214,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
       },
 
       init: function() {
-         this._buildHead();
+         this._redrawHead();
          DataGridView.superclass.init.call(this);
          if(this.hasPartScroll()) {
             this._initPartScroll();
@@ -203,6 +249,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
                   }
                }
 
+
                hoveredColumn.cells = $(cells).addClass('controls-DataGridView__hoveredColumn__cell');
             }
          }
@@ -227,94 +274,193 @@ define('js!SBIS3.CONTROLS.DataGridView',
          return $('.controls-DataGridView__tbody', this._container);
       },
 
-      _getItemTemplate: function(item){
-         if (!this._options.itemTemplate) {
-
-            var rowData = {
-               columns: $ws.core.clone(this._options.columns),
-               decorators: this._decorators,
-               color: this._options.colorField ? item.get(this._options.colorField) : '',
-               multiselect : this._options.multiselect,
-               isNode: item.get(this._options.hierField + '@'),
-               hasChilds: item.get(this._options.hierField + '$'),
-               arrowActivatedHandler: this._options.arrowActivatedHandler,
-               hierField: this._options.hierField,
-               displayType: this._options.displayType,
-               startScrollColumn: this._options.startScrollColumn
-            };
-
-            for (var i = 0; i < rowData.columns.length; i++) {
-               var column = rowData.columns[i];
-               column.value = this._getCellTemplate(item, column);
-               column.item = item;
+      _buildTplArgs : function() {
+         function getColumnVal(item, colName) {
+            if (!colName || !(colName.indexOf("['") == 0 && colName.indexOf("']") == (colName.length - 2))){
+               return item.get(colName);
             }
-            return this._rowTpl(rowData);
+            var colNameParts = colName.slice(2, -2).split('.'),
+               curItem = item,
+               value;
+            for (var i = 0; i < colNameParts.length; i++){
+               if (i !== colNameParts.length - 1){
+                  curItem = curItem.get(colNameParts[i]);
+               }
+               else{
+                  value = curItem.get(colNameParts[i]);
+               }
+            }
+            return value;
          }
-         else {
-            return this._options.itemTemplate(item);
-         }
+         var args = DataGridView.superclass._buildTplArgs.apply(this, arguments);
+         args.columns = this._prepareColumns(this._options.columns);
+         args.cellData = {
+            /*TODO hierField вроде тут не должно быть*/
+            hierField: this._options.hierField,
+            getColumnVal: getColumnVal,
+            decorators : args.decorators,
+            displayField : args.displayField
+         };
+         args.startScrollColumn = this._options.startScrollColumn;
+
+         return args;
       },
 
-      _getCellTemplate: function(item, column) {
-         var value = this._getColumnValue(item, column.field);
-         if (column.cellTemplate) {
-            var cellTpl = TemplateUtil.prepareTemplate(column.cellTemplate);
-            var tplOptions = {
-               item: item,
-               hierField: this._options.hierField,
-               isNode: item.get(this._options.hierField + '@'),
-               decorators: this._decorators,
-               field: column.field,
-               value: value,
-               highlight: column.highlight
-            };
-            if (column.templateBinding) {
-               tplOptions.templateBinding = column.templateBinding;
+      _prepareColumns : function(columns) {
+         var columnsNew = $ws.core.clone(columns);
+         for (var i = 0; i < columnsNew.length; i++) {
+            if (columnsNew[i].cellTemplate) {
+               columnsNew[i].contentTpl = TemplateUtil.prepareTemplate(columnsNew[i].cellTemplate);
             }
-            if (column.includedTemplates) {
-               var tpls = column.includedTemplates;
-               tplOptions.included = {};
+            else {
+               columnsNew[i].contentTpl = TemplateUtil.prepareTemplate(this._defaultCellTemplate);
+            }
+
+            if (columnsNew[i].includedTemplates) {
+               var tpls = columnsNew[i].includedTemplates;
+               columnsNew[i].included = {};
                for (var j in tpls) {
                   if (tpls.hasOwnProperty(j)) {
-                     tplOptions.included[j] = TemplateUtil.prepareTemplate(tpls[j]);
+                     columnsNew[i].included[j] = TemplateUtil.prepareTemplate(tpls[j]);
                   }
                }
             }
-            value = MarkupTransformer((cellTpl)(tplOptions));
-         } else {
-            value = this._decorators.applyOnly(
-               value === undefined || value === null ? '' : $ws.helpers.escapeHtml(value), {
-                  highlight: column.highlight,
-                  ladder: {
-                     column: column.field,
-                     parentId: item.get(this._options.hierField)
-                  }
-               }
-            );
+
+
          }
-         return value;
+         return columnsNew;
       },
 
-      _getColumnValue: function(item, colName){
-         if (!colName || !this._isCompositeRecordValue(colName)){
-            return item.get(colName);
+      _prepareHeadData: function() {
+         var
+            headData = {
+               columns: $ws.core.clone(this._options.columns),
+               multiselect : this._options.multiselect,
+               startScrollColumn: this._options.startScrollColumn,
+               showHead: this._options.showHead
+            },
+            value,
+            column,
+            headColumns = this._prepareHeadColumns2();
+         $ws.core.merge(headData, headColumns);
+         for (var i = 0; i < headData.content[0].length; i++) {
+            column = headData.content[0][i];
+
+            if (column.headTemplate) {
+               value = MarkupTransformer(TemplateUtil.prepareTemplate(column.headTemplate)({
+                  column: column
+               }));
+            } else {
+               value = '<div class="controls-DataGridView__th-content">' + ($ws.helpers.escapeHtml(column.title) || '') + '</div>';
+            }
+            column.value = value;
          }
-         var colNameParts = colName.slice(2, -2).split('.'),
-            curItem = $ws.core.clone(item),
-            value;
-         for (var i = 0; i < colNameParts.length; i++){
-            if (i !== colNameParts.length - 1){
-               curItem = curItem.get(colNameParts[i]);
+         return headData;
+      },
+
+      _prepareHeadColumns2: function(){
+         var
+            rowData = {},
+            columns = $ws.core.clone(this._options.columns),
+            supportUnion = $ws.core.clone(columns[0]),
+            supportDouble,
+            curCol,
+            nextCol,
+            curColSplitTitle,
+            nextColSplitTitle;
+
+         rowData.countRows = 1;
+         rowData.content = [[], []];
+
+         if (!this._options.transformHead){
+            rowData.content[0] = columns;
+            return rowData;
+         }
+
+         for (var i = 0, l = columns.length; i < l; i++){
+            curCol = columns[i];
+            nextCol = columns[i + 1];
+            curColSplitTitle = curCol.title.split('.');
+            nextColSplitTitle = nextCol && nextCol.title.split('.');
+
+            if (!supportDouble){
+               supportDouble = $ws.core.clone(curCol);
+            }
+            else {
+               curColSplitTitle = [supportDouble.value, curColSplitTitle];
+            }
+            if (nextCol && (curColSplitTitle.length == nextColSplitTitle.length) && (curColSplitTitle.length == 2) && (curColSplitTitle[0] == nextColSplitTitle[0])){
+               supportDouble.value = curColSplitTitle[0];
+               supportDouble.colspan = ++supportDouble.colspan || 2;
+               curCol.title = curColSplitTitle[1];
+               nextCol.title = nextColSplitTitle[1];
+               rowData.countRows = 2;
             }
             else{
-               value = curItem.get(colNameParts[i]);
+               rowData.content[1].push(supportDouble);
+               supportDouble = null;
+            }
+
+            if (!supportUnion){
+               supportUnion = $ws.core.clone(curCol);
+            }
+            if (nextCol && (supportUnion.title == nextCol.title)){
+               supportUnion.colspan = ++supportUnion.colspan || 2;
+            }
+            else{
+               rowData.content[0].push(supportUnion);
+               supportUnion = null;
             }
          }
-         return value;
+         return rowData;
       },
 
-      _isCompositeRecordValue: function(colName){
-         return colName.indexOf("['") == 0 && colName.indexOf("']") == (colName.length - 2);
+      _redrawHead : function() {
+         var
+            headData = this._prepareHeadData(),
+            headMarkup;
+
+         headData = this._prepareHeadData();
+         headMarkup = MarkupTransformer(headTpl(headData));
+         var body = $('.controls-DataGridView__tbody', this._container);
+
+         if (this._thead) {
+            this._clearItems(this._thead);
+            this._thead.remove()
+         }
+         this._thead = $(headMarkup).insertBefore(body);
+         if(this._options.showHead) {
+            this._isPartScrollVisible = false;
+         }
+         this._redrawColgroup();
+         if(this.hasPartScroll()) {
+            this._initPartScroll();
+            this.updateDragAndDrop();
+
+            /* Т.к. у таблицы стиль table-layout:fixed, то в случае,
+             когда суммарная ширина фиксированных колонок шире родительского контейнера,
+             колонка с резиновой шириной скукоживается до 0,
+             потому что table-layout:fixed игнорирует минимальную ширину колонки.
+             Поэтому мы вынуждены посчитать... и установить минимальную ширину на всю таблицу целиком.
+             В этом случае плавающая ширина скукоживаться не будет.
+             Пример можно посмотреть в реестре номенклатур. */
+            this._setColumnWidthForPartScroll();
+         }
+         this._notify('onDrawHead');
+      },
+
+      _redrawColgroup : function() {
+         var markup, data, body;
+         data = {
+            columns: this._options.columns,
+            multiselect: this._options.multiselect
+         };
+         markup = colgroupTpl(data);
+         body = $('.controls-DataGridView__tbody', this._container);
+         if(this._colgroup) {
+            this._colgroup.remove();
+         }
+         this._colgroup = $(markup).insertBefore(this._thead || body);
       },
 
       _drawItemsCallback: function () {
@@ -359,6 +505,14 @@ define('js!SBIS3.CONTROLS.DataGridView',
             this.updateScrollAndColumns();
          }
       },
+
+      _redrawItems: function() {
+         if(this._options.showHead) {
+            this._redrawHead();
+         }
+         DataGridView.superclass._redrawItems.apply(this, arguments);
+      },
+
       _canShowEip: function() {
          // Отображаем редактирование по месту и для задизабленного DataGrid, но только если хоть у одиной колонки
          // доступен редактор при текущем состоянии задизабленности DataGrid.
@@ -719,7 +873,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
           this._checkColumns();
           /* Перестроим шапку только после загрузки данных,
            чтобы таблица не прыгала, из-за того что изменилось количество и ширина колонок */
-          this.once('onDataLoad', this._buildHead.bind(this));
+          this.once('onDataLoad', this._redrawHead.bind(this));
        },
       /**
        * Проверяет настройки колонок, заданных опцией {@link columns}.
@@ -732,124 +886,11 @@ define('js!SBIS3.CONTROLS.DataGridView',
             }
          }
       },
-      _getColgroupTemplate: function() {
-         return $(colgroupTpl({
-               columns: this._options.columns,
-               multiselect: this._options.multiselect
-            }));
-      },
 
-      _buildHead: function() {
-         var body = $('.controls-DataGridView__tbody', this._container);
-
-         this._thead && this._thead.remove();
-         this._thead = $(this._getHeadTemplate()).insertBefore(body);
-         if(this._options.showHead) {
-            this._isPartScrollVisible = false;
-         }
-
-         this._colgroup && this._colgroup.remove();
-         this._colgroup = $(this._getColgroupTemplate()).insertBefore(this._thead || body);
-
-         if(this.hasPartScroll()) {
-            this._initPartScroll();
-            this.updateDragAndDrop();
-
-            /* Т.к. у таблицы стиль table-layout:fixed, то в случае,
-             когда суммарная ширина фиксированных колонок шире родительского контейнера,
-             колонка с резиновой шириной скукоживается до 0,
-             потому что table-layout:fixed игнорирует минимальную ширину колонки.
-             Поэтому мы вынуждены посчитать... и установить минимальную ширину на всю таблицу целиком.
-             В этом случае плавающая ширина скукоживаться не будет.
-             Пример можно посмотреть в реестре номенклатур. */
-            this._setColumnWidthForPartScroll();
-         }
-         this._notify('onDrawHead');
-      },
-
-      _getHeadTemplate: function(){
-         var rowData = {
-               columns: $ws.core.clone(this._options.columns),
-               multiselect : this._options.multiselect,
-               startScrollColumn: this._options.startScrollColumn,
-               showHead: this._options.showHead
-            },
-            value,
-            column;
-         this._prepareHeadColumns(rowData);
-
-         for (var i = 0; i < rowData.content[0].length; i++) {
-            column = rowData.content[0][i];
-
-            if (column.headTemplate) {
-               value = MarkupTransformer(TemplateUtil.prepareTemplate(column.headTemplate)({
-                  column: column
-               }));
-            } else {
-               value = '<div class="controls-DataGridView__th-content">' + ($ws.helpers.escapeHtml(column.title) || '') + '</div>';
-            }
-            column.value = value;
-         }
-         return this._headTpl(rowData);
-      },
-
-      _prepareHeadColumns: function(rowData){
-         var columns = $ws.core.clone(this._options.columns),
-            supportUnion = $ws.core.clone(columns[0]),
-            supportDouble,
-            curCol,
-            nextCol,
-            curColSplitTitle,
-            nextColSplitTitle;
-
-         rowData.countRows = 1;
-         rowData.content = [[], []];
-
-         if (!this._options.transformHead){
-            rowData.content[0] = columns;
-            return;
-         }
-
-         for (var i = 0, l = columns.length; i < l; i++){
-            curCol = columns[i];
-            nextCol = columns[i + 1];
-            curColSplitTitle = curCol.title.split('.');
-            nextColSplitTitle = nextCol && nextCol.title.split('.');
-
-            if (!supportDouble){
-               supportDouble = $ws.core.clone(curCol);
-            }
-            else {
-               curColSplitTitle = [supportDouble.value, curColSplitTitle];
-            }
-            if (nextCol && (curColSplitTitle.length == nextColSplitTitle.length) && (curColSplitTitle.length == 2) && (curColSplitTitle[0] == nextColSplitTitle[0])){
-               supportDouble.value = curColSplitTitle[0];
-               supportDouble.colspan = ++supportDouble.colspan || 2;
-               curCol.title = curColSplitTitle[1];
-               nextCol.title = nextColSplitTitle[1];
-               rowData.countRows = 2;
-            }
-            else{
-               rowData.content[1].push(supportDouble);
-               supportDouble = null;
-            }
-
-            if (!supportUnion){
-               supportUnion = $ws.core.clone(curCol);
-            }
-            if (nextCol && (supportUnion.title == nextCol.title)){
-               supportUnion.colspan = ++supportUnion.colspan || 2;
-            }
-            else{
-               rowData.content[0].push(supportUnion);
-               supportUnion = null;
-            }
-         }
-      },
       _toggleEmptyData: function(show) {
          DataGridView.superclass._toggleEmptyData.apply(this, arguments);
-         if(this._emptyData) {
-            this._thead.toggleClass('ws-hidden', show);
+         if(this._emptyData && this._options.allowToggleHead) {
+            this._thead.toggleClass('ws-hidden', !!show);
          }
       },
       _showItemsToolbar: function(item) {
@@ -910,6 +951,108 @@ define('js!SBIS3.CONTROLS.DataGridView',
             this._movableElems = [];
          }
          DataGridView.superclass.destroy.call(this);
+      },
+      /* ----------------------------------------------------------------------------
+       ------------------- НИЖЕ ПЕРЕХОД НА ItemsControlMixin ----------------------
+       ---------------------------------------------------------------------------- */
+      _prepareFullData: function() {
+         return {
+            items: this._getRecordsForRedraw(),
+            headData: this._prepareHeadData()
+         }
+      },
+
+      /*TODO старая отрисовка*/
+      /*_getItemTemplate: function(item){
+       if (!this._options.itemTemplate) {
+
+       var rowData = {
+       columns: $ws.core.clone(this._options.columns),
+       decorators: this._decorators,
+       color: this._options.colorField ? item.get(this._options.colorField) : '',
+       multiselect : this._options.multiselect,
+       isNode: item.get(this._options.hierField + '@'),
+       hasChilds: item.get(this._options.hierField + '$'),
+       arrowActivatedHandler: this._options.arrowActivatedHandler,
+       hierField: this._options.hierField,
+       displayType: this._options.displayType,
+       startScrollColumn: this._options.startScrollColumn
+       };
+
+       for (var i = 0; i < rowData.columns.length; i++) {
+       var column = rowData.columns[i];
+       column.value = this._getCellTemplate(item, column);
+       column.item = item;
+       }
+       return this._rowTpl(rowData);
+       }
+       else {
+       return this._options.itemTemplate(item);
+       }
+       },*/
+
+      _getCellTemplate: function(item, column) {
+         /*TODO не выпиливать. Тут хранится список параметров которые отдаются в шаблон ячейки. Важно не потерять*/
+         var value = this._getColumnValue(item, column.field);
+         if (column.cellTemplate) {
+            var cellTpl = TemplateUtil.prepareTemplate(column.cellTemplate);
+            var tplOptions = {
+               item: item,
+               hierField: this._options.hierField,
+               isNode: item.get(this._options.hierField + '@'),
+               decorators: this._decorators,
+               field: column.field,
+               value: value,
+               highlight: column.highlight
+            };
+            if (column.templateBinding) {
+               tplOptions.templateBinding = column.templateBinding;
+            }
+            if (column.includedTemplates) {
+               var tpls = column.includedTemplates;
+               tplOptions.included = {};
+               for (var j in tpls) {
+                  if (tpls.hasOwnProperty(j)) {
+                     tplOptions.included[j] = TemplateUtil.prepareTemplate(tpls[j]);
+                  }
+               }
+            }
+            value = MarkupTransformer((cellTpl)(tplOptions));
+         } else {
+            value = this._decorators.applyOnly(
+                  value === undefined || value === null ? '' : $ws.helpers.escapeHtml(value), {
+                  highlight: column.highlight,
+                  ladder: {
+                     column: column.field,
+                     parentId: item.get(this._options.hierField)
+                  }
+               }
+            );
+         }
+         return value;
+      },
+
+      _getColumnValue: function(item, colName){
+
+         if (!colName || !this._isCompositeRecordValue(colName)){
+            return item.get(colName);
+         }
+         var colNameParts = colName.slice(2, -2).split('.'),
+            curItem = $ws.core.clone(item),
+            value;
+         for (var i = 0; i < colNameParts.length; i++){
+            if (i !== colNameParts.length - 1){
+               curItem = curItem.get(colNameParts[i]);
+            }
+            else{
+               value = curItem.get(colNameParts[i]);
+            }
+         }
+         return value;
+      },
+
+      _isCompositeRecordValue: function(colName){
+         return colName.indexOf("['") == 0 && colName.indexOf("']") == (colName.length - 2);
       }
    });
 

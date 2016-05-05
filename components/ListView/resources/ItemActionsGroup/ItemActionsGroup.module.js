@@ -90,7 +90,7 @@ define('js!SBIS3.CONTROLS.ItemActionsGroup',
                },
                target = this._itemActionsMenuButton,
                 // TODO перевести на проекции
-               items = this.getItems().getRawData();
+               items = this.getItems();
 
             if (this._options.touchMode) {
                verticalAlign.offset = 0;
@@ -102,8 +102,7 @@ define('js!SBIS3.CONTROLS.ItemActionsGroup',
                element: $('> .controls-ItemActions__menu-container', this._getItemsContainer()[0]).show(),
                items: items,
                keyField: this._options.keyField,
-               //FIXME для обратной совместимости
-               displayField: items[0].title ? 'title' : 'caption',
+               displayField: 'caption',
                hierField: 'parent',
                parent: this,
                opener: this,
@@ -232,12 +231,27 @@ define('js!SBIS3.CONTROLS.ItemActionsGroup',
          },
 
          _getItemTemplate : function(item) {
-            this._itemActionsButtons[item.get('name')] = {
+            var action = {
                isMainAction : item.get('isMainAction'),
-               handler: item.get('onActivated'),
                isVisible: true
             };
 
+
+            /*TODO придрот, Леха сделал клонирование записей и теперь функции теряются*/
+            var
+               data = this._dataSource._options.data,
+               key = item.getId(),
+               prop = item.getIdProperty();
+
+            if (data instanceof Array) {
+               for (var i = 0; i < data.length; i++) {
+                  if (data[i] instanceof Object && data[i][prop] == key) {
+                     action.handler = data[i]['onActivated'];
+                  }
+               }
+            }
+
+            this._itemActionsButtons[item.get('name')] = action;
             return dotTplFnForItem;
          },
 

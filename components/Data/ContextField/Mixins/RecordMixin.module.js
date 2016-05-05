@@ -37,12 +37,17 @@ define('js!SBIS3.CONTROLS.Data.ContextField.RecordMixin', [], function () {
          if (keyPath.length !== 0) {
             key = keyPath[0];
             subValue = oldValue.get(key);
-            result = subValue !== undefined;
+
+            /* Если есть owner (recordSet), то мы не можем менять формат записи */
+            if(oldValue.getOwner && oldValue.getOwner() === null) {
+               result = subValue !== value;
+            } else {
+               result = subValue !== undefined;
+            }
+
             if (result) {
                subType = Context.getValueType(subValue);
                result = subType.setWillChange(subValue, keyPath.slice(1), value);
-            } else {
-               result = subValue !== value;
             }
          } else {
             result = oldValue !== value;
@@ -67,11 +72,11 @@ define('js!SBIS3.CONTROLS.Data.ContextField.RecordMixin', [], function () {
                   subType.set(subValue, keyPath.slice(1), value);
                }
             } else if(subValue === undefined && keyPath.length === 1) {
-               try {
-                  oldValue.set(key, value);
-               } catch (e) {
-                  return value;
+               /* Если поля в записи нет, пробуем его добавить */
+               if(!oldValue.has(key)) {
+                  oldValue.addField({name: key, type: 'string'});
                }
+               oldValue.set(key, value);
             }
             result = oldValue;
          } else {

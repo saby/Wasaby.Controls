@@ -61,8 +61,8 @@
          height: 44px;
          background: #F3F8FC;
          padding-right: 37px;
-         .controls-MenuItem__icon{
-            top: 13px;
+         .controls-MenuItem__content{
+            padding-right: 19px;
          }
       }
    }
@@ -93,6 +93,7 @@
          cursor: @list-view-actions-cursor;
          margin: @list-view-actions-margin;
          height: @list-view-actions-item-height;
+         line-height: @list-view-actions-item-height;
          padding: 0;
 
          &.controls-ItemActions__menu-button {
@@ -111,8 +112,11 @@
 
 .controls-ItemActions__menu-container {
    .controls-MenuItem {
-      padding-right: @list-view-actions-menu-item-padding-right;
       white-space: nowrap;
+
+      .control-MenuItem__child-expand {
+         padding-right: @list-view-actions-menu-item-padding-right;
+      }
    }
    .controls-PopupMixin__closeButton {
       height: @list-view-actions-menu-close-height;

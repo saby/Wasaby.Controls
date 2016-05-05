@@ -3,6 +3,7 @@ define('js!SBIS3.CONTROLS.Data.Model', [
    'js!SBIS3.CONTROLS.Data.Record',
    'js!SBIS3.CONTROLS.Data.IHashable',
    'js!SBIS3.CONTROLS.Data.HashableMixin',
+   'js!SBIS3.CONTROLS.Data.SerializableMixin',
    'js!SBIS3.CONTROLS.Data.Collection.ArrayEnumerator',
    'js!SBIS3.CONTROLS.Data.Di',
    'js!SBIS3.CONTROLS.Data.Utils'
@@ -10,6 +11,7 @@ define('js!SBIS3.CONTROLS.Data.Model', [
    Record,
    IHashable,
    HashableMixin,
+   SerializableMixin,
    ArrayEnumerator,
    Di,
    Utils
@@ -17,7 +19,33 @@ define('js!SBIS3.CONTROLS.Data.Model', [
    'use strict';
 
    /**
-    * Модель - обеспечивает доступ к данным объекта предметной области
+    * Абстрактная модель - обеспечивает доступ к данным объекта предметной области.
+    * @remark
+    * Для реализации конкретных объектов предметной области используется наследование от абстрактной модели:
+    * <pre>
+    *    var User = Model.extend({
+    *       _moduleName: 'My.Module.User',
+    *       authenticate: function(login, password) {
+    *          //some logic here
+    *       }
+    *    });
+    *    //...
+    *    var user = new User();
+    *    user.authenticate('i.c.wiener', 'its pizza time!');
+    * </pre>
+    * Для корректной сериализации и клонирования моделей необходимо указывать имя модуля в свойстве _moduleName каждого наследника:
+    * <pre>
+    * define('js!My.Awesome.Model', ['js!SBIS3.CONTROLS.Data.Model'], function (Model) {
+    *    'use strict';
+    *
+    *    var AwesomeModel = Model.extend({
+    *      _moduleName: 'My.Awesome.Model'
+    *      //...
+    *    });
+    *
+    *    return AwesomeModel;
+    * });
+    * </pre>
     * @class SBIS3.CONTROLS.Data.Model
     * @extends SBIS3.CONTROLS.Data.Record
     * @mixes SBIS3.CONTROLS.Data.IHashable
@@ -28,14 +56,16 @@ define('js!SBIS3.CONTROLS.Data.Model', [
     */
 
    var Model = Record.extend([IHashable, HashableMixin], /** @lends SBIS3.CONTROLS.Data.Model.prototype */{
-      _moduleName: 'SBIS3.CONTROLS.Data.Model',
-
       /**
        * @typedef {Object} Property
        * @property {*|Function} [def] Значение по умолчанию (используется, если свойства нет в сырых данных)
        * @property {Function} [get] Метод, возвращающий значение свойства. Первым аргументом придет значение свойства в сырых данных.
        * @property {Function} [set] Метод, устанавливающий значение свойства.
        */
+
+      _moduleName: 'SBIS3.CONTROLS.Data.Model',
+
+      _hashPrefix: 'model-',
 
       /**
        * @cfg {Object.<String, Property>} Описание свойств модели. Дополняет/уточняет свойства, уже существующие в сырых данных.
@@ -88,8 +118,6 @@ define('js!SBIS3.CONTROLS.Data.Model', [
        * @see setIdProperty
        */
       _$idProperty: '',
-
-      _hashPrefix: 'model-',
 
       /**
        * @member {Boolean} Признак, что модель существует в источнике данных
@@ -497,6 +525,8 @@ define('js!SBIS3.CONTROLS.Data.Model', [
 
       //endregion SBIS3.CONTROLS.Record
    });
+
+   SerializableMixin._checkExtender(Model);
 
    Di.register('model', Model);
 

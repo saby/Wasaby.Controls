@@ -161,6 +161,18 @@ define('js!SBIS3.CONTROLS.Selectable', ['js!SBIS3.CONTROLS.Data.Utils', 'js!SBIS
          _itemsReadyCallback: function() {
             this._prepareSelectedConfig(this._options.selectedIndex, this._options.selectedKey);
             this._selectInProjection();
+         },
+         /**
+          * todo Удалить, когда будет выполнена указанная ниже задача
+          * Задача в разработку от 28.04.2016 №1172779597
+          * В деревянной проекции необходима возможность определять, какие элементы создаются развернутыми. Т...
+          * https://inside.tensor.ru/opendoc.html?guid=6f1758f0-f45d-496b-a8fe-fde7390c92c7
+          * @private
+          */
+         redraw: function() {
+            if (this._utilityEnumerator) {
+               this._utilityEnumerator.reIndex();
+            }
          }
       },
 
@@ -301,7 +313,7 @@ define('js!SBIS3.CONTROLS.Selectable', ['js!SBIS3.CONTROLS.Data.Utils', 'js!SBIS
       _setKeyByIndex: function() {
          if(this._hasItemByIndex()) {
             var item = this._itemsProjection.at(this._options.selectedIndex);
-            this._options.selectedKey = item.getContents().getKey();
+            this._options.selectedKey = item.getContents().getId();
          }
       },
 

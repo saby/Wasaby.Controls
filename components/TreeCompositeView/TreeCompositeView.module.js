@@ -88,10 +88,10 @@ define('js!SBIS3.CONTROLS.TreeCompositeView', ['js!SBIS3.CONTROLS.TreeDataGridVi
          }
          return res;
       },
-      _getItemTemplate: function(item) {
-         var resultTpl, dotTpl;
+      _getItemTemplate: function(itemProj) {
+         var resultTpl, dotTpl, item = itemProj.getContents();
             switch (this._options.viewMode) {
-               case 'table': resultTpl = TreeCompositeView.superclass._getItemTemplate.call(this, item); break;
+               case 'table': resultTpl = TreeCompositeView.superclass._getItemTemplate.call(this, itemProj); break;
                case 'list': {
                   if (item.get(this._options.hierField + '@')) {
                      dotTpl = this._options.listFolderTemplate || this._options.folderTemplate || folderTpl;
@@ -174,7 +174,7 @@ define('js!SBIS3.CONTROLS.TreeCompositeView', ['js!SBIS3.CONTROLS.TreeDataGridVi
             currentDataSet,
             currentRecord,
             needRedraw,
-            parentBranch,
+            parentBranchId,
             dependentRecords,
             recordsGroup = {},
             branchesData = {},
@@ -213,7 +213,7 @@ define('js!SBIS3.CONTROLS.TreeCompositeView', ['js!SBIS3.CONTROLS.TreeDataGridVi
                   self.redrawItem(record);
                } else { //Иначе - удаляем запись
                   currentDataSet.removeAt(currentDataSet.getIndexById(row.key));
-                  self._destroyFolderFooter([row.key]);
+                  self._destroyItemsFolderFooter([row.key]);
                   self._ladderCompare(environment);
                   row.$row.remove();
                   //Если количество записей в текущем DataSet меньше, чем в обновленном, то добавляем в него недостающую запись
@@ -254,7 +254,7 @@ define('js!SBIS3.CONTROLS.TreeCompositeView', ['js!SBIS3.CONTROLS.TreeDataGridVi
                      })
                      .callback();
                } else {
-                  filter['Раздел'] = branchId === 'null' ? null : branchId;
+                  filter[self._options.hierField] = branchId === 'null' ? null : branchId;
                   var limit;
                   //проверяем, является ли обновляемый узел корневым, если да, обновляем записи до подгруженной записи (_infiniteScrollOffset)
                   if ( String(self._curRoot) == branchId  &&  self._infiniteScrollOffset) { // т.к. null != "null", _infiniteScrollOffset проверяем на случай, если нет подгрузки по скроллу
@@ -272,17 +272,16 @@ define('js!SBIS3.CONTROLS.TreeCompositeView', ['js!SBIS3.CONTROLS.TreeDataGridVi
             };
          $ws.helpers.toggleIndicator(true);
          if (items) {
-            currentDataSet = this.getDataSet();
+            currentDataSet = this.getItems();
             filter = $ws.core.clone(this.getFilter());
             //Группируем записи по веткам (чтобы как можно меньше запросов делать)
             $ws.helpers.forEach(items, function(item) {
-               //todo Сделать опредение родительского ключа через DataSet
-               parentBranch = container.find('[data-id="' + item + '"]').attr('data-parent') || 'null';
-               if (!recordsGroup[parentBranch]) {
-                  recordsGroup[parentBranch] = [];
+               parentBranchId = this.getParentKey(undefined, this._items.getRecordById(item));
+               if (!recordsGroup[parentBranchId]) {
+                  recordsGroup[parentBranchId] = [];
                }
-               recordsGroup[parentBranch].push(item);
-            });
+               recordsGroup[parentBranchId].push(item);
+            }, this);
             $ws.helpers.forEach(recordsGroup, function(branch, branchId) {
                //Загружаем содержимое веток
                getBranch(branchId)

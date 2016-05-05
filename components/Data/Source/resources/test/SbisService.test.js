@@ -382,7 +382,8 @@ define([
                      done(err);
                   });
                });
-               it('should return an error', function (done) {
+
+               it('should build hierarhy', function (done) {
                   var filter = {'Раздел':1,'Раздел@':true,'Раздел$':true};
                   service.create(filter).addBoth(function (err) {
                      var s = SbisBusinessLogic.lastRequest.args.Фильтр.s;
@@ -390,6 +391,20 @@ define([
                      for(var i = 0; i < s.length; i++) {
                         if (s[i].n in filter) {
                            assert.strictEqual(s[i].s, 'Иерархия');
+                        }
+                     }
+                     done();
+                  });
+               });
+
+               it('should not build hierarrhy', function (done) {
+                  var filter = {'Раздел':1,'Раздел@':true};
+                  service.create(filter).addBoth(function (err) {
+                     var s = SbisBusinessLogic.lastRequest.args.Фильтр.s;
+                     assert.strictEqual(s.length, 2);
+                     for(var i = 0; i < s.length; i++) {
+                        if (s[i].n in filter) {
+                           assert.notEqual(s[i].s, 'Иерархия');
                         }
                      }
                      done();
@@ -834,7 +849,7 @@ define([
                   });
                });
 
-               it('should take idProperty for dataset  from raw data', function (done) {
+               it('should take idProperty for dataset from raw data', function (done) {
                   service.query(new Query()).addCallbacks(function (ds) {
                      try {
                         assert.strictEqual(ds.getIdProperty(), '@Ид');
@@ -909,6 +924,7 @@ define([
                         enabled: true,
                         title: 'abc*',
                         path: [1, 2, 3],
+                        obj: {a: 1, b: 2},
                         rec: new Model({
                            adapter: 'adapter.sbis',
                            rawData: recData
@@ -946,15 +962,19 @@ define([
                            assert.strictEqual(args['Фильтр'].s[3].t.n, 'Массив');
                            assert.strictEqual(args['Фильтр'].s[3].t.t, 'Число целое');
 
-                           assert.deepEqual(args['Фильтр'].d[4].d, recData.d);
-                           assert.deepEqual(args['Фильтр'].d[4].s, recData.s);
-                           assert.strictEqual(args['Фильтр'].s[4].n, 'rec');
-                           assert.strictEqual(args['Фильтр'].s[4].t, 'Запись');
+                           assert.deepEqual(args['Фильтр'].d[4], {a: 1, b: 2});
+                           assert.strictEqual(args['Фильтр'].s[4].n, 'obj');
+                           assert.strictEqual(args['Фильтр'].s[4].t, 'JSON-объект');
 
-                           assert.deepEqual(args['Фильтр'].d[5].d, rsData.d);
-                           assert.deepEqual(args['Фильтр'].d[5].s, rsData.s);
-                           assert.strictEqual(args['Фильтр'].s[5].n, 'rs');
-                           assert.strictEqual(args['Фильтр'].s[5].t, 'Выборка');
+                           assert.deepEqual(args['Фильтр'].d[5].d, recData.d);
+                           assert.deepEqual(args['Фильтр'].d[5].s, recData.s);
+                           assert.strictEqual(args['Фильтр'].s[5].n, 'rec');
+                           assert.strictEqual(args['Фильтр'].s[5].t, 'Запись');
+
+                           assert.deepEqual(args['Фильтр'].d[6].d, rsData.d);
+                           assert.deepEqual(args['Фильтр'].d[6].s, rsData.s);
+                           assert.strictEqual(args['Фильтр'].s[6].n, 'rs');
+                           assert.strictEqual(args['Фильтр'].s[6].t, 'Выборка');
 
                            assert.strictEqual(args['Сортировка'].d[0][0], 'id');
                            assert.isTrue(args['Сортировка'].d[0][1]);
@@ -1002,6 +1022,38 @@ define([
                            i++;
                         });
                         assert.strictEqual(args['ДопПоля'].length, i);
+                        done();
+                     } catch (err) {
+                        done(err);
+                     }
+                  }, function (err) {
+                     done(err);
+                  });
+               });
+
+               it('should generate a request with null navigation with undefined limit', function (done) {
+                  var query = new Query();
+                  query.limit(undefined);
+                  service.query(query).addCallbacks(function () {
+                     try {
+                        var args = SbisBusinessLogic.lastRequest.args;
+                        assert.isNull(args['Навигация']);
+                        done();
+                     } catch (err) {
+                        done(err);
+                     }
+                  }, function (err) {
+                     done(err);
+                  });
+               });
+
+               it('should generate a request with null navigation with null limit', function (done) {
+                  var query = new Query();
+                  query.limit(null);
+                  service.query(query).addCallbacks(function () {
+                     try {
+                        var args = SbisBusinessLogic.lastRequest.args;
+                        assert.isNull(args['Навигация']);
                         done();
                      } catch (err) {
                         done(err);

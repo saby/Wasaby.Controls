@@ -430,6 +430,7 @@ define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManag
                border: (target.outerWidth() - target.innerWidth()) / 2,
                boundingClientRect: target.get(0).getBoundingClientRect()
             };
+            if (this._fixed) this._targetSizes.offset = this._targetSizes.boundingClientRect;
          }
          this._containerSizes.border = (container.outerWidth() - container.innerWidth()) / 2;
          var buff = this._getGeneralOffset(this._defaultVerticalAlignSide, this._defaultHorizontalAlignSide, this._defaultCorner, true);

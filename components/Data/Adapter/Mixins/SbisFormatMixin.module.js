@@ -2,8 +2,9 @@
 define('js!SBIS3.CONTROLS.Data.Adapter.SbisFormatMixin', [
    'js!SBIS3.CONTROLS.Data.Format.FieldsFactory',
    'js!SBIS3.CONTROLS.Data.Format.UniversalField',
+   'js!SBIS3.CONTROLS.Data.Utils',
    'js!SBIS3.CONTROLS.Data.Adapter.FieldType'
-], function (FieldsFactory, UniversalField, FIELD_TYPE) {
+], function (FieldsFactory, UniversalField, Utils, FIELD_TYPE) {
    'use strict';
 
    /**
@@ -67,7 +68,12 @@ define('js!SBIS3.CONTROLS.Data.Adapter.SbisFormatMixin', [
          return fields;
       },
 
+      clear: function () {
+         this._data.d.length = 0;
+      },
+
       getEmpty: function () {
+         Utils.logger.stack(this._moduleName + '::getEmpty(): method is deprecated and will be removed in 3.7.4. Use clear() instead.');
          return {
             d: [],
             s: $ws.core.clone(this._data.s || [])
@@ -203,7 +209,7 @@ define('js!SBIS3.CONTROLS.Data.Adapter.SbisFormatMixin', [
          switch (type) {
             case 'Real':
             case 'Money':
-               meta.precision = info.t.p;
+              meta.precision = info.t.p;
                break;
             case 'Enum':
             case 'Flags':

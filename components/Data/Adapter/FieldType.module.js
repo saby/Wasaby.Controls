@@ -22,6 +22,7 @@ define('js!SBIS3.CONTROLS.Data.Adapter.FieldType', [], function(){
       Uuid: 'UUID',
       RpcFile: 'Файл-rpc',
       Hierarchy: 'Иерархия',
+      Object: 'JSON-объект',
       Array: 'Массив'
    };
 });
