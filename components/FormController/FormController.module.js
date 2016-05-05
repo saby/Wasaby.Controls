@@ -1,5 +1,5 @@
-define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js!SBIS3.CORE.LoadingIndicator', 'i18n!SBIS3.CONTROLS.FormController'],
-   function(CompoundControl, LoadingIndicator) {
+define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js!SBIS3.CORE.LoadingIndicator', 'js!SBIS3.CONTROLS.Data.Record', 'i18n!SBIS3.CONTROLS.FormController'],
+   function(CompoundControl, LoadingIndicator, Record) {
    /**
     * Компонент, на основе которого создают диалоги редактирования записей
     *
@@ -132,6 +132,7 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
          $ws.single.CommandDispatcher.declareCommand(this, 'destroy', this._destroyRecord);
          $ws.single.CommandDispatcher.declareCommand(this, 'create', this._create);
          $ws.single.CommandDispatcher.declareCommand(this, 'notify', this._actionNotify);
+         this._setDefaultContextRecord();
          this._panel = this.getTopParent();
          if (this._options.dataSource){
             this._runQuery();
@@ -156,6 +157,11 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
          }.bind(this));
 
          this._panel.subscribe('onAfterShow', this._updateIndicatorZIndex.bind(this));
+      },
+      _setDefaultContextRecord: function(){
+         var ctx = new $ws.proto.Context({restriction: 'set'}).setPrevious(this.getLinkedContext());
+         ctx.setValue('record', this._options.record || new Record());
+         this._context = ctx;
       },
       /**
        * Сохраняет редактируемую или создаваемую запись
