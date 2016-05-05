@@ -104,7 +104,7 @@ define('js!SBIS3.CONTROLS.NumberTextBox', ['js!SBIS3.CONTROLS.TextBox', 'html!SB
              * Опция позволяет скрыть нулевую дробную часть.
              * @example
              * <pre>
-             *     <option name="hideEmtyDecimals">true</option>
+             *     <option name="hideEmptyDecimals">true</option>
              * <pre>
              * @see decimals
              */
