@@ -359,6 +359,22 @@ define('js!SBIS3.CONTROLS.ListView',
                 * </pre>
                 */
                itemsDragNDrop: 'allow',
+               /**
+                * @cfg {Function} Устанавливает функцию, которая будет выполнена при клике на строку.
+                * @remark
+                * Аргументы функции:
+                * <ol>
+                *    <li>id - идентификатор элемента коллекции - строки, по которой был произведён клик.</li>
+                *    <li>item - элемент коллекции, по строке отображения которого был произведён клик; экземпляр класса {@link SBIS3.CONTROLS.Data.Record} с данными выбранной записи.</li>
+                *    <li>target - контейнер визуального отображения (DOM-элемент) строки, по которой был произведён клик.</li>
+                * </ol>
+                * Установить или заменить функцию - обработчик клика на строку можно с помощью метода {@link setElemClickHandler}
+                * @example
+                * <pre class="brush: xml">
+                *     <option name="elemClickHandler" type="function">js!SBIS3.Contacts.LatestThemes:prototype.elemClickHandler</option>
+                * </pre>
+                * @see setElemClickHandler
+                */
                elemClickHandler: null,
                /**
                 * @cfg {Boolean} Разрешить выбор нескольких строк
@@ -391,7 +407,7 @@ define('js!SBIS3.CONTROLS.ListView',
                 */
                infiniteScroll: null,
                /**
-                * @cfg {jQuery || String} Контейнер в котором будет скролл, если представление данных ограничено по высоте.
+                * @cfg {jQuery | String} Контейнер в котором будет скролл, если представление данных ограничено по высоте.
                 * Можно передать Jquery-селектор, но поиск будет произведен от контейнера вверх.
                 * @see isInfiniteScroll
                 * @see setInfiniteScroll
@@ -1853,7 +1869,6 @@ define('js!SBIS3.CONTROLS.ListView',
           *       DataGridView.setPage(0);
           * </pre>
           * @see getPage
-          * @see paging
           */
          setPage: function (pageNumber, noLoad) {
             pageNumber = parseInt(pageNumber, 10);
@@ -1876,7 +1891,6 @@ define('js!SBIS3.CONTROLS.ListView',
           *    if(DataGridView.getPage() > 0)
           *       DataGridView.setPage(0);
           * </pre>
-          * @see paging
           * @see setPage
           * @param {Number} [offset] - если передать, то номер страницы рассчитается от него
           */

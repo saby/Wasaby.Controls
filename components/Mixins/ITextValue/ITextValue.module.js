@@ -9,7 +9,7 @@ define('js!SBIS3.CONTROLS.ITextValue', [], function () {
     * @author Крайнов Дмитрий
     */
 
-   var ITextValue = /** @lends SBIS3.CONTROLS.ITextValue */{
+   var ITextValue = /** @lends SBIS3.CONTROLS.ITextValue.prototype */{
       /**
        * Возвращает текстовое значение контрола
        * @returns {String}
