@@ -115,19 +115,21 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
          var
             model,
             dataSet = this._dataSet;
-         $ws.helpers.forEach(this._options.openedPath, function(val, key) {
-            /*TODO:
-               Не нужно создавать футер у узла, если данный узел не отображается.
-               Прежде чем создавать футер у развёрнутого узла проверим что данный узел присутствует в наборе элементов.
-               Возможна такая ситуация что списочный метод вернул сразу все данные и узел может являться развёрнутым,
-               но не отображаться, тогда для такого случая проверим необходимость создания футера путём поиска узла
-               среди текущего набора элементов в DOM.
-            */
-            model = dataSet.getRecordByKey(key);
-             if (model && this._getElementByModel(model).length) {
-                this._createFolderFooter(key);
-             }
-         }, this);
+         for (var key in this._options.openedPath) {
+            if (this._options.openedPath.hasOwnProperty(key)) {
+               /*TODO:
+                Не нужно создавать футер у узла, если данный узел не отображается.
+                Прежде чем создавать футер у развёрнутого узла проверим что данный узел присутствует в наборе элементов.
+                Возможна такая ситуация что списочный метод вернул сразу все данные и узел может являться развёрнутым,
+                но не отображаться, тогда для такого случая проверим необходимость создания футера путём поиска узла
+                среди текущего набора элементов в DOM.
+                */
+               model = dataSet.getRecordByKey(key);
+               if (model && this._getElementByModel(model).length) {
+                  this._createFolderFooter(key);
+               }
+            }
+         }
          TreeDataGridView.superclass._drawItemsCallback.apply(this, arguments);
       },
       _createFolderFooter: function(key) {
