@@ -1371,23 +1371,22 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          //Если offset отрицательный, значит запрашивали последнюю страницу
          return offset < 0 ? false : (typeof (hasMore) !== 'boolean' ? hasMore > (offset + this._options.pageSize) : !!hasMore);
       },
-      _scrollTo: function scrollTo(target, offset, speed, container) {
-         if (isNaN(target)) {
-            if (!(target instanceof jQuery))
-               target = $(target);
-            target = parseInt(target.offset().top);
+      _scrollTo: function scrollTo(target, container) {
+         var scrollContainer = container || this._getScrollContainer(),
+             scrollContainerOffset = scrollContainer.offset(),
+             targetOffset;
+
+         if (typeof target === 'string') {
+            target = $(target);
          }
 
-         container = container || "html, body";
-         if (!(container instanceof jQuery))
-            container = $(container);
+         targetOffset = target.offset();
 
-         speed = speed || 500;
-         offset = offset || 0;
-
-         container.animate({
-            scrollTop: target + offset
-         }, speed);
+         if( (targetOffset.top - scrollContainerOffset.top - scrollContainer.scrollTop()) < 0) {
+            target[0].scrollIntoView(true);
+         } else if ( (targetOffset.top + target.height() - scrollContainerOffset.top - scrollContainer.scrollTop()) > scrollContainer[0].clientHeight) {
+            target[0].scrollIntoView(false);
+         }
       },
       _scrollToItem: function(itemId) {
          var itemContainer  = $(".controls-ListView__item[data-id='" + itemId + "']", this._getItemsContainer());
@@ -1417,6 +1416,9 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          return this._dataSource;
       },
 
+      _getScrollContainer: function() {
+
+      },
       _dataLoadedCallback: function () {
 
       },

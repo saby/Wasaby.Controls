@@ -815,6 +815,19 @@ define('js!SBIS3.CONTROLS.ListView',
             }
          },
 
+         _getScrollContainer: function() {
+            var scrollWatcher = this._scrollWatcher,
+                scrollContainer;
+
+            if(scrollWatcher) {
+               scrollContainer = scrollWatcher.getScrollContainer();
+            } else {
+               scrollContainer = $ws._const.$body;
+            }
+
+            return scrollContainer;
+         },
+
          _changeHoveredItem: function(target) {
             var targetKey = target[0].getAttribute('data-id');
             if (targetKey !== undefined && this._hoveredItem.key !== targetKey) {
