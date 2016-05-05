@@ -348,10 +348,9 @@ define('js!SBIS3.CONTROLS.DropdownList',
             var item =  this._dataSet.at(0);
             if (item) {
                this._defaultId = item.getId();
-               /* Пока закомментирую, не уверена, что DataSet  сможет правильно  работать с more и так же не уверена, должно ли оно вообще зависеть от more
                if (this._buttonHasMore) {
                   this._buttonHasMore[this._hasNextPage(this._dataSet.getMetaData().more, 0) ? 'show' : 'hide']();
-               }*/
+               }
             }
          },
          _setVariables: function() {
