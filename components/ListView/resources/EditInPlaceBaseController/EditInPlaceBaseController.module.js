@@ -417,6 +417,13 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
             },
             destroy: function() {
                this._destroyEip();
+               //destroy может позваться из reload у ListView, а если в данный момент происходит сохранение, то
+               //возможно после сохранения начнётся редактирование следующей строки(если сохранение запущенно по enter),
+               //а редакторы уже уничтожены. В такой ситуации тем кто ждёт сохранение, скажем что его не нужно ждать.
+               //Сохранение при этом продолжит работать в обычном режиме.
+               if (!this._savingDeferred.isReady()) {
+                  this._savingDeferred.errback();
+               }
                EditInPlaceBaseController.superclass.destroy.apply(this, arguments);
             }
          });
