@@ -158,8 +158,10 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                   self = this,
                   nextTarget = this._getNextTarget(currentTarget, editNextRow);
                if (nextTarget.length) {
-                  this.edit(nextTarget, this._options.dataSet.getRecordByKey(nextTarget.attr('data-id'))).addErrback(function() {
-                     self._editNextTarget(nextTarget, editNextRow);
+                  this.edit(nextTarget, this._options.dataSet.getRecordByKey(nextTarget.attr('data-id'))).addCallback(function(result) {
+                     if (!result) {
+                        self._editNextTarget(nextTarget, editNextRow);
+                     }
                   });
                } else if (editNextRow && this._options.modeAutoAdd) {
                   this.add({
@@ -215,10 +217,8 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                      $ws.helpers.toggleIndicator(false);
                      return readRecord;
                   });
-               } else if (beginEditResult !== false) {
-                  return $ws.proto.Deferred.success(record);
                } else {
-                  return $ws.proto.Deferred.fail();
+                  return $ws.proto.Deferred.success(beginEditResult !== false ? record : undefined);
                }
             },
             /**
