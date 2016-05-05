@@ -15,14 +15,27 @@ define('js!SBIS3.CONTROLS.Utils.RichTextAreaUtil',[], function () {
        * @param {$object}$object - jquery элемент при копировании/вырезке из которого в буффер необходимо добавлять метку БТРа
        */
       markRichContentOnCopy: function(target){
+         target = target.get(0);
          //На ipad`e нет аозможности задать clipboardData, форматное копирование с меткой не поддерживаем
          if (!$ws._const.browser.isMobileIOS) {
-            target.on('cut copy', {target: target}, this._markingRichContent);
+            if (target.addEventListener) {
+               target.addEventListener('copy', this._markingRichContent, true);
+               target.addEventListener('cut', this._markingRichContent, true);
+            } else {
+               //on в отличие от attachEvent в приходящем событии позволяет получить таргет
+               $(target).on('cut copy', this._markingRichContent);
+            }
          }
       },
       unmarkRichContentOnCopy: function(target){
+         target = target.get(0);
          if (!$ws._const.browser.isMobileIOS) {
-            target.off('cut copy', this._markingRichContent);
+            if (target.removeEventListener) {
+               target.removeEventListener('copy', this._markingRichContent, true);
+               target.removeEventListener('cut', this._markingRichContent, true);
+            } else {
+               $(target).off('cut copy', this._markingRichContent);
+            }
          }
       },
       /**
@@ -46,7 +59,7 @@ define('js!SBIS3.CONTROLS.Utils.RichTextAreaUtil',[], function () {
             currentWindow = window,
             label = document.createComment('content=SBIS.FRE'), // по этой метке будем определять что контент вставляется из FieldRichEditor
             i = 0,
-            target = e.data.target,
+            target = $(e.currentTarget),
             canCut = event.type == 'cut' && target.is('[contenteditable="true"]'),
             _isDescendant = function(parent, child) {
                var node = child;
