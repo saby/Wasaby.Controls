@@ -127,10 +127,10 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
       $constructor: function() {
          this._publish('onSubmit', 'onFail', 'onSuccess', 'onRead', 'onUpdate', 'onDestroy', 'onCreate');
          $ws.single.CommandDispatcher.declareCommand(this, 'submit', this.submit);
-         $ws.single.CommandDispatcher.declareCommand(this, 'read', this.read);
+         $ws.single.CommandDispatcher.declareCommand(this, 'read', this._read);
          $ws.single.CommandDispatcher.declareCommand(this, 'update', this.update);
          $ws.single.CommandDispatcher.declareCommand(this, 'destroy', this._destroyRecord);
-         $ws.single.CommandDispatcher.declareCommand(this, 'create', this._createRecord);
+         $ws.single.CommandDispatcher.declareCommand(this, 'create', this._create);
          $ws.single.CommandDispatcher.declareCommand(this, 'notify', this._actionNotify);
          this._panel = this.getTopParent();
          if (this._options.dataSource){
@@ -222,7 +222,7 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
             def = this._options.dataSource.update(this._options.record);
             this._showLoadingIndicator();
             dResult.dependOn(def.addCallbacks(function (result) {
-               self._notify('onUpdate', self._options.record);
+               self._notify('onUpdate', self._options.record, self._options.newModel);
                self._options.newModel = false;
                if (closePanelAfterSubmit) {
                   self._panel.ok();
@@ -259,7 +259,7 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
        * </pre>
        * @command
        */
-      read: function (key) {
+      _read: function (key) {
          var self = this;
          key = key || this._options.key;
          this._showLoadingIndicator(rk('Загрузка'));
@@ -269,6 +269,7 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
             return record;
          }).addBoth(function (r) {
                self._hideLoadingIndicator();
+               self.activateFirstControl();
                return r;
             });
       },
@@ -389,37 +390,34 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
          this._notify('onDestroy', this._options.record)
       },
 
-      _runQuery: function(command) {
-         var self = this,
-            hdl;
-         this._showLoadingIndicator(rk('Загрузка'));
-         if (this._options.key && command !== 'create') {
-            hdl = this.read();
+      _runQuery: function() {
+         if (this._options.key) {
+            return this._read();
          }
-         else {
-            hdl = this._options.dataSource.create(this._options.initValues).addCallback(function(record){
-               self._notify('onCreate', record);
-               self.setRecord(record);
-               self._options.newModel = record.getKey() === null || self._options.newModel;
-               if (record.getKey()){
-                  self._needDestroyRecord = true;
-               }
-               return record;
-            });
-         }
-         hdl.addBoth(function(record){
-            self._hideLoadingIndicator();
-            self.activateFirstControl();
-            return record;
-         });
-
-         return hdl;
+         return this._create();
       },
       /**
        * Action: создать запись
        */
-      _createRecord: function(){
-         return this._runQuery('create');
+      _create: function(){
+         var self = this,
+            def;
+         this._showLoadingIndicator(rk('Загрузка'));
+         def = this._options.dataSource.create(this._options.initValues).addCallback(function(record){
+            self._notify('onCreate', record);
+            self.setRecord(record, true);
+            self._options.newModel = record.getKey() === null || self._options.newModel;
+            if (record.getKey()){
+               self._needDestroyRecord = true;
+            }
+            return record;
+         });
+         def.addBoth(function(record){
+            self._hideLoadingIndicator();
+            self.activateFirstControl();
+            return record;
+         });
+         return def;
       },
       /**
        * Action, который пробрасывает событие до dialogActionBase в обход базовой логики

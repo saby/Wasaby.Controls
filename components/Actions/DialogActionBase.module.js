@@ -117,10 +117,10 @@ define('js!SBIS3.CONTROLS.DialogActionBase', ['js!SBIS3.CONTROLS.ActionBase', 'j
        */
       _getFormControllerHandlers: function(){
          return {
-            onRead: this._actionHandler.bind(this, 'Read'),
-            onUpdate: this._actionHandler.bind(this, 'Update'),
-            onDestroy: this._actionHandler.bind(this, 'Destroy'),
-            onCreate: this._actionHandler.bind(this, 'Create')
+            onRead: this._actionHandler.bind(this),
+            onUpdate: this._actionHandler.bind(this),
+            onDestroy: this._actionHandler.bind(this),
+            onCreate: this._actionHandler.bind(this)
          }
       },
 
@@ -136,8 +136,13 @@ define('js!SBIS3.CONTROLS.DialogActionBase', ['js!SBIS3.CONTROLS.ActionBase', 'j
       /**
        * Базовая логика при событии ouUpdate. Обновляем рекорд в связном списке
        */
-      _update: function (record) {
-         this._mergeRecords(record);
+      _update: function (record, isNewModel) {
+         if (isNewModel){
+            this._create(record);
+         }
+         else{
+            this._mergeRecords(record);
+         }
       },
 
       /**
@@ -190,22 +195,23 @@ define('js!SBIS3.CONTROLS.DialogActionBase', ['js!SBIS3.CONTROLS.ActionBase', 'j
       /**
        * Базовая логика при событии ouCreate. Добавляем рекорд в связный список
        */
-      _create: function(record){
+      _create: function(record, at){
          var collection = this._options.linkedObject,
             rec;
-         if ($ws.helpers.instanceOfModule(collection, 'SBIS3.CONTROLS.Data.Collection.RecordSet')) {
+         at = at || 0;
+         if ($ws.helpers.instanceOfModule(collection.getDataSet(), 'SBIS3.CONTROLS.Data.Collection.RecordSet')) {
             rec = new Record({
-               format: collection.getFormat()
+               format: collection.getDataSet().getFormat()
             });
             this._mergeRecords(record, rec);
          } else  {
-            rec = record.clone()
+            rec = record.clone();
          }
          if ($ws.helpers.instanceOfMixin(collection, 'SBIS3.CONTROLS.Data.Collection.IList')) {
-            collection.add(rec);
+            collection.add(rec, at);
          }
          else {
-            collection.getItems().add(rec);
+            collection.getItems().add(rec, at);
          }
       },
 
@@ -213,16 +219,17 @@ define('js!SBIS3.CONTROLS.DialogActionBase', ['js!SBIS3.CONTROLS.ActionBase', 'j
        * Обработка событий formController'a. Выполнение переопределяемых методов и notify событий.
        * Если из обработчиков событий и переопределяемых методов вернули не OpenDialogAction.ACTION_CUSTOM, то выполняем базовую логику.
        */
-      _actionHandler: function(action, record) {
-         var eventResult = this._notify('on' + action, record),
-            genericMethod = '_' + action.toLowerCase(),
+      _actionHandler: function(event, record) {
+         var eventName = event.name,
+            eventResult = this._notify(eventName, record),
+            genericMethod = '_' + eventName.replace('on', '').toLowerCase(),
             self = this,
             baseActions = [OpenDialogAction.ACTION_CUSTOM, OpenDialogAction.ACTION_MERGE, OpenDialogAction.ACTION_ADD, OpenDialogAction.ACTION_RELOAD, OpenDialogAction.ACTION_DELETE],
             actionResult = eventResult,
             methodResult;
-         if (Array.indexOf(baseActions, eventResult) == -1) {
-            methodResult  = this['_on' + action](record);
-            actionResult = methodResult;
+         if (eventResult !== OpenDialogAction.ACTION_CUSTOM) {
+            methodResult  = this['_' + eventName](record);
+            actionResult = methodResult || eventResult;
          }
          if (actionResult === OpenDialogAction.ACTION_CUSTOM || !this._options.linkedObject) {
             return;
@@ -230,15 +237,16 @@ define('js!SBIS3.CONTROLS.DialogActionBase', ['js!SBIS3.CONTROLS.ActionBase', 'j
          if (actionResult !== undefined){
             genericMethod = actionResult;
          }
+         Array.prototype.splice.call(arguments, 0, 1);
          if (actionResult instanceof $ws.proto.Deferred){
             actionResult.addCallback(function(result){
                if (self[genericMethod]){
-                  self[genericMethod](record, result);
+                  self[genericMethod].apply(this, arguments);
                }
             })
          } else {
             if (this[genericMethod]){
-               this[genericMethod](record, actionResult);
+               this[genericMethod].apply(this, arguments);
             }
          }
       },
