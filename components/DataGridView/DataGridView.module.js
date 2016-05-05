@@ -24,6 +24,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
     * Контрол, отображающий набор данных в виде таблицы с несколькими колонками.
     * @class SBIS3.CONTROLS.DataGridView
     * @extends SBIS3.CONTROLS.ListView
+    * @author Крайнов Дмитрий Олегович
     * @control
     * @public
     * @demo SBIS3.CONTROLS.Demo.MyDataGridView

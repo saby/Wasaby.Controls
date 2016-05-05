@@ -37,7 +37,7 @@ define('js!SBIS3.CONTROLS.SwitcherDouble', ['js!SBIS3.CONTROLS.SwitcherBase', 'h
     * @ignoreEvents onDragIn onDragMove onDragOut onDragStart onDragStop onStateChanged onTooltipContentRequest onChange
     * @ignoreEvents onFocusIn onFocusOut onKeyPressed onReady
     */
-   var SwitcherDouble = SwitcherBase.extend( /** @lends SBIS3.Engine.SwitcherDouble.prototype */ {
+   var SwitcherDouble = SwitcherBase.extend( /** @lends SBIS3.CONTROLS.SwitcherDouble.prototype */ {
       _dotTplFn: dotTplFn,
       $protected: {
          _textContainer: {},

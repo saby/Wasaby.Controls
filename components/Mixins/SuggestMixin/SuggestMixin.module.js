@@ -29,9 +29,9 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
     * Для показа автодополнения при получения контролом фокуса, используется {@link autoShow}.
     *
     * В контроле, к которому подмешивается, обязательно требует миксины:
-    * @link SBIS3.CONTROLS.PickerMixin
-    * @link SBIS3.CONTROLS.DataBindMixin
-    * @link SBIS3.CONTROLS.ChooserMixin
+    * {@link SBIS3.CONTROLS.PickerMixin}
+    * {@link SBIS3.CONTROLS.DataBindMixin}
+    * {@link SBIS3.CONTROLS.ChooserMixin}
     *
     * @mixin SBIS3.CONTROLS.SuggestMixin
     * @public

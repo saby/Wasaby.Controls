@@ -43,7 +43,8 @@ define('js!SBIS3.CONTROLS.EditAtPlace',
                 * @see getText
                 */
                text: '',
-               /* @cfg {String} Текст подсказки внутри редактирования
+               /**
+                * @cfg {String} Текст подсказки внутри редактирования
                 * @remark
                 * Данный текст отображается внутри поля до момента получения фокуса 
                 * и как текст по нажатию на который начнется редактирование
@@ -51,18 +52,17 @@ define('js!SBIS3.CONTROLS.EditAtPlace',
                 * <pre>
                 *     <option name="placeholder">Фамилия</option>
                 * </pre>
+                * @translatable
                 * @see setPlaceholder
                 */
                placeholder: '',
                /**
-                * Компонент которым будет редактируется текст
-                * @type {String}
+                * @cfg {String} Устанавливает компонент, который будет использован для редактирования текста.т
                 */
                editorTpl: '<component data-component="SBIS3.CONTROLS.TextBox"></component>',
                /**
-                * Будет ли многострочным редактируемый текст
-                * Если указано, текст будет переноситься, убираясь в ширину контейнера
-                * @type {Boolean}
+                * @cfg {Boolean} Определяет, будет ли многострочным редактируемый текст.
+                * Если указано, текст будет переноситься, убираясь в ширину контейнера.
                 */
                multiline: false
             }
