@@ -1526,11 +1526,13 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          var
             item = projItem.getContents(),
             ladderDecorator = this._decorators.getByName('ladder'),
+            itemParent = projItem.getParent(),
+            itemParentIsRoot = itemParent && itemParent.isRoot(),// Флаг используется для группировки, которую нужно запускать только для элемента, у которого родитель - это корень
             previousGroupBy = this._previousGroupBy;//После добавления записи восстанавливаем это значение, чтобы не сломалась группировка
          ladderDecorator && ladderDecorator.setMarkLadderColumn(true);
          /*TODO отдельно обрабатываем случай с группировкой*/
          var flagAfter = false;
-         if (!Object.isEmpty(this._options.groupBy)) {
+         if (itemParentIsRoot && !Object.isEmpty(this._options.groupBy)) {
             var
                meth = this._options.groupBy.method,
                prev = this._itemsProjection.getPrevious(projItem),
@@ -1564,8 +1566,10 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
             newItemContainer.appendTo(target);
             rows = [newItemContainer.prev().prev(), newItemContainer.prev(), newItemContainer, newItemContainer.next()];
          }
-         this._group(projItem, {at: at});
-         this._previousGroupBy = previousGroupBy;
+         if (itemParentIsRoot) {
+            this._group(projItem, {at: at});
+            this._previousGroupBy = previousGroupBy;
+         }
          ladderDecorator && ladderDecorator.setMarkLadderColumn(false);
          this._ladderCompare(rows);
       },
