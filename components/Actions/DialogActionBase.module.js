@@ -138,7 +138,7 @@ define('js!SBIS3.CONTROLS.DialogActionBase', ['js!SBIS3.CONTROLS.ActionBase', 'j
        */
       _update: function (record, isNewModel) {
          if (isNewModel){
-            this._create(record);
+            this._createRecord(record);
          }
          else{
             this._mergeRecords(record);
@@ -193,29 +193,6 @@ define('js!SBIS3.CONTROLS.DialogActionBase', ['js!SBIS3.CONTROLS.ActionBase', 'j
       _onCreate: function(record){
       },
       /**
-       * Базовая логика при событии ouCreate. Добавляем рекорд в связный список
-       */
-      _create: function(record, at){
-         var collection = this._options.linkedObject,
-            rec;
-         at = at || 0;
-         if ($ws.helpers.instanceOfModule(collection.getDataSet(), 'SBIS3.CONTROLS.Data.Collection.RecordSet')) {
-            rec = new Record({
-               format: collection.getDataSet().getFormat()
-            });
-            this._mergeRecords(record, rec);
-         } else  {
-            rec = record.clone();
-         }
-         if ($ws.helpers.instanceOfMixin(collection, 'SBIS3.CONTROLS.Data.Collection.IList')) {
-            collection.add(rec, at);
-         }
-         else {
-            collection.getItems().add(rec, at);
-         }
-      },
-
-      /**
        * Обработка событий formController'a. Выполнение переопределяемых методов и notify событий.
        * Если из обработчиков событий и переопределяемых методов вернули не OpenDialogAction.ACTION_CUSTOM, то выполняем базовую логику.
        */
@@ -249,6 +226,27 @@ define('js!SBIS3.CONTROLS.DialogActionBase', ['js!SBIS3.CONTROLS.ActionBase', 'j
                this[genericMethod].apply(this, arguments);
             }
          }
+      },
+
+      _createRecord: function(record, at){
+         var collection = this._options.linkedObject,
+            rec;
+         at = at || 0;
+         if ($ws.helpers.instanceOfModule(collection.getDataSet(), 'SBIS3.CONTROLS.Data.Collection.RecordSet')) {
+            rec = new Record({
+               format: collection.getDataSet().getFormat()
+            });
+            this._mergeRecords(record, rec);
+         } else  {
+            rec = record.clone();
+         }
+         if ($ws.helpers.instanceOfMixin(collection, 'SBIS3.CONTROLS.Data.Collection.IList')) {
+            collection.add(rec, at);
+         }
+         else {
+            collection.getItems().add(rec, at);
+         }
+         this._collectionReload();
       },
 
       /**
@@ -290,7 +288,7 @@ define('js!SBIS3.CONTROLS.DialogActionBase', ['js!SBIS3.CONTROLS.ActionBase', 'j
    });
    OpenDialogAction.ACTION_CUSTOM = 'custom';
    OpenDialogAction.ACTION_MERGE = '_mergeRecords';
-   OpenDialogAction.ACTION_ADD = '_create'; //что добавляем? сделал через create
+   OpenDialogAction.ACTION_ADD = '_createRecord'; //что добавляем? сделал через create
    OpenDialogAction.ACTION_RELOAD = '_collectionReload';
    OpenDialogAction.ACTION_DELETE = '_destroy';
    return OpenDialogAction;
