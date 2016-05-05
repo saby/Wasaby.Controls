@@ -188,40 +188,43 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                }
             },
             edit: function (target, record) {
-               return this._prepareEdit(record).addCallback(function(preparedRecord) {
-                  if (preparedRecord) {
-                     this._eip.edit(target, preparedRecord);
-                     this._notify('onAfterBeginEdit', preparedRecord);
-                     this._lastTargetAdding = this._options.itemsProjection.getItemBySourceItem(preparedRecord);
-                     return preparedRecord;
-                  }
-                  return preparedRecord;
-               }.bind(this));
-            },
-            _prepareEdit: function(record) {
                var self = this;
                return this.endEdit(true).addCallback(function() {
-                  var
-                     loadingIndicator,
-                     beginEditResult;
-                  //Если необходимо перечитывать запись перед редактированием, то делаем это
-                  beginEditResult = self._notify('onBeginEdit', record);
-                  if (beginEditResult instanceof $ws.proto.Deferred) {
-                     loadingIndicator = setTimeout(function () {
-                        $ws.helpers.toggleIndicator(true);
-                     }, 100);
-                     return beginEditResult.addCallback(function(readRecord) {
-                        self._editingRecord = readRecord;
-                        return readRecord;
-                     }).addBoth(function (readRecord) {
-                        clearTimeout(loadingIndicator);
-                        $ws.helpers.toggleIndicator(false);
-                        return readRecord;
-                     });
-                  } else if (beginEditResult !== false) {
-                     return record;
-                  }
+                  return self._prepareEdit(record).addCallback(function(preparedRecord) {
+                     if (preparedRecord) {
+                        self._eip.edit(target, preparedRecord);
+                        self._notify('onAfterBeginEdit', preparedRecord);
+                        self._lastTargetAdding = self._options.itemsProjection.getItemBySourceItem(preparedRecord);
+                        return preparedRecord;
+                     }
+                     return preparedRecord;
+                  })
                });
+            },
+            _prepareEdit: function(record) {
+               var
+                  self = this,
+                  beginEditResult,
+                  loadingIndicator;
+               //Если необходимо перечитывать запись перед редактированием, то делаем это
+               beginEditResult = this._notify('onBeginEdit', record);
+               if (beginEditResult instanceof $ws.proto.Deferred) {
+                  loadingIndicator = setTimeout(function () {
+                     $ws.helpers.toggleIndicator(true);
+                  }, 100);
+                  return beginEditResult.addCallback(function(readRecord) {
+                     self._editingRecord = readRecord;
+                     return readRecord;
+                  }).addBoth(function (readRecord) {
+                     clearTimeout(loadingIndicator);
+                     $ws.helpers.toggleIndicator(false);
+                     return readRecord;
+                  });
+               } else if (beginEditResult !== false) {
+                  return $ws.proto.Deferred.success(record);
+               } else {
+                  return $ws.proto.Deferred.fail();
+               }
             },
             /**
              * Отправить команду блокировки
@@ -329,18 +332,20 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                    modelOptions = options.model || this._notify('onBeginAdd');
                this._lastTargetAdding = options.target;
                return this.endEdit(true).addCallback(function() {
-                  return self._options.dataSource.create(modelOptions).addCallback(function (model) {
-                     if (self._options.hierField) {
-                        model.set(self._options.hierField, options.target ? options.target.getContents().getId() : options.target);
-                     }
-                     target = self._createAddTarget(options).attr('data-id', '' + model.getId());
-                     self._eip.edit(target, model);
-                     // Todo разобраться в целесообразности этого пересчёта вообще, почему на десктопе всё работает?
-                     // При начале отслеживания высоты строки, один раз нужно пересчитать высоту синхронно, это нужно для добавления по месту,
-                     //т.к. при добавлении создаётся новая tr у которой изначально нет высоты и опции записи не могут верно спозиционироваться.
-                     self._eip.recalculateHeight();
-                     self._notify('onAfterBeginEdit', model);
-                     return model;
+                  return self._options.dataSource.create(modelOptions).addCallback(function (createdModel) {
+                     return self._prepareEdit(createdModel).addCallback(function(model) {
+                        if (self._options.hierField) {
+                           model.set(self._options.hierField, options.target ? options.target.getContents().getId() : options.target);
+                        }
+                        target = self._createAddTarget(options).attr('data-id', '' + model.getId());
+                        self._eip.edit(target, model);
+                        // Todo разобраться в целесообразности этого пересчёта вообще, почему на десктопе всё работает?
+                        // При начале отслеживания высоты строки, один раз нужно пересчитать высоту синхронно, это нужно для добавления по месту,
+                        //т.к. при добавлении создаётся новая tr у которой изначально нет высоты и опции записи не могут верно спозиционироваться.
+                        self._eip.recalculateHeight();
+                        self._notify('onAfterBeginEdit', model);
+                        return model;
+                     });
                   });
                });
             },
