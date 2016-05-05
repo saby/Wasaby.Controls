@@ -1873,7 +1873,6 @@ define('js!SBIS3.CONTROLS.ListView',
           *       DataGridView.setPage(0);
           * </pre>
           * @see getPage
-          * @see paging
           */
          setPage: function (pageNumber, noLoad) {
             pageNumber = parseInt(pageNumber, 10);
