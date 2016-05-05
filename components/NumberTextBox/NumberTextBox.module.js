@@ -72,7 +72,7 @@ define('js!SBIS3.CONTROLS.NumberTextBox', ['js!SBIS3.CONTROLS.TextBox', 'html!SB
              * </ul>
              * @example
              * <pre>
-             *     <option name="onlyIntegers">true</option>
+             *     <option name="onlyInteger">true</option>
              * </pre>
              * @see decimals
              * @see hideEmptyDecimals
