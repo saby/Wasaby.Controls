@@ -407,7 +407,7 @@ define('js!SBIS3.CONTROLS.ListView',
                 */
                infiniteScroll: null,
                /**
-                * @cfg {jQuery || String} Контейнер в котором будет скролл, если представление данных ограничено по высоте.
+                * @cfg {jQuery | String} Контейнер в котором будет скролл, если представление данных ограничено по высоте.
                 * Можно передать Jquery-селектор, но поиск будет произведен от контейнера вверх.
                 * @see isInfiniteScroll
                 * @see setInfiniteScroll
