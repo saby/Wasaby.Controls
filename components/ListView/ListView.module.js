@@ -1453,15 +1453,6 @@ define('js!SBIS3.CONTROLS.ListView',
          //**********************************//
          //КОНЕЦ БЛОКА ОПЕРАЦИЙ НАД ЗАПИСЬЮ //
          //*********************************//
-         _drawItems: function(records, at){
-            //Это реализовано здесь, потому что 1ый раз отрисовка вызвана не после подгрузки в
-            // бесконечном скролле, а после первого получения данных!
-            // проверка на режим поиска для того что бы при поиске отрисовывать записи в правильном порядке
-            if (this._options.infiniteScroll === 'up' && !at && !this._isSearchMode()) {
-               at = {at : 0};
-            }
-            ListView.superclass._drawItems.apply(this, [records, at]);
-         },
          _drawItemsCallback: function () {
             ListView.superclass._drawItemsCallback.apply(this, arguments);
             var hoveredItem = this.getHoveredItem().container;
@@ -1566,7 +1557,7 @@ define('js!SBIS3.CONTROLS.ListView',
                      if (this._isSlowDrawing()) {
                         self._needToRedraw = false;
                      }
-
+                     var at = null;
                      records = dataSet.toArray();
                      if (self._options.infiniteScroll === 'up') {
                         self._containerScrollHeight = self._scrollWatcher.getScrollHeight();
@@ -1574,12 +1565,13 @@ define('js!SBIS3.CONTROLS.ListView',
                         //добавляем данные в начало или в конец в зависимости от того мы скроллим вверх или вниз
                         self._items.prepend(records.reverse());
                         records.reverse();
+                        at = {at: 0};
                      } else {
                         self._items.append(records);
                      }
 
                      if (this._isSlowDrawing()) {
-                        self._drawItems(records);
+                        self._drawItems(records, at);
                      }
                      //TODO Пытались оставить для совместимости со старыми данными, но вызывает onCollectionItemChange!!!
                      //self._dataSet.merge(dataSet, {remove: false});
