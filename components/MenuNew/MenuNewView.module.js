@@ -196,11 +196,11 @@ define('js!SBIS3.CONTROLS.MenuNewView', [
          }
          return config;
       },
-      /*
-      * ищет контейнер по хешу в основном контейнере и подменю
-      * @params hash - хеш элемента
-      * @return {JQuery}
-      * */
+      /**
+       * ищет контейнер по хешу в основном контейнере и подменю
+       * @params hash - хеш элемента
+       * @return {JQuery}
+       */
       _getContainerByHash: function(hash) {
          var elem = $("[data-hash="+hash+"]", this.getRootNode());
          if(elem.length > 0) {

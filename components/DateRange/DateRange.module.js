@@ -13,6 +13,7 @@ define('js!SBIS3.CONTROLS.DateRange', [
     * SBIS3.CONTROLS.DateRange
     * @class SBIS3.CONTROLS.DateRange
     * @extends $ws.proto.CompoundControl
+    * @author Крайнов Дмитрий Олегович
     * @control
     * @public
     * @demo SBIS3.CONTROLS.Demo.MyDateRange

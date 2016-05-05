@@ -5,7 +5,14 @@ define('js!SBIS3.CONTROLS.MergeAction', [
     'js!SBIS3.CONTROLS.DialogActionBase',
     'js!SBIS3.CONTROLS.MergeDialogTemplate'
 ], function(OpenDialogAction) {
-    var MergeAction = OpenDialogAction.extend({
+    /**
+     * Базовый класс для действий объединения.
+     * @class SBIS3.CONTROLS.MergeAction
+     * @public
+     * @extends SBIS3.CONTROLS.OpenDialogAction
+     * @author Крайнов Дмитрий Олегович
+     */
+    var MergeAction = OpenDialogAction.extend( /** @lends SBIS3.CONTROLS.MergeAction.prototype */ {
 
         $protected: {
             _options: {

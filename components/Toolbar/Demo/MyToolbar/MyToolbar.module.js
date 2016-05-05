@@ -14,6 +14,7 @@ define('js!SBIS3.CONTROLS.Demo.MyToolbar', [
     * SBIS3.CONTROLS.Demo.MyToolbar
     * @class SBIS3.CONTROLS.Demo.MyToolbar
     * @extends $ws.proto.CompoundControl
+    * @author Крайнов Дмитрий Олегович
     * @control
     * @public
     */

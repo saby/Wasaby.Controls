@@ -20,6 +20,7 @@ define('js!SBIS3.CONTROLS.Image',
           * Контрол "Изображение". Позволяет отображать и редактировать изображение
           * @class SBIS3.CONTROLS.Image
           * @extends $ws.proto.CompoundControl
+          * @author Крайнов Дмитрий Олегович
           * @public
           * @control
           * @category Decorate
