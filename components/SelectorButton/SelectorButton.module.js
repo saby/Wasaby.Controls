@@ -34,6 +34,7 @@ define('js!SBIS3.CONTROLS.SelectorButton',
     * @mixes SBIS3.CONTROLS.ActiveSelectable
     * @mixes SBIS3.CONTROLS.SyncSelectionMixin
     * @mixes SBIS3.CONTROLS.ChooserMixin
+    * @mixes SBIS3.CONTROLS.DSMixin
     *
     * @cssModifier controls-SelectorButton__asLink Отображает текст как ссылку.
     */

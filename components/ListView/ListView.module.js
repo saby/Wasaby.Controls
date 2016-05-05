@@ -1895,7 +1895,6 @@ define('js!SBIS3.CONTROLS.ListView',
           *    if(DataGridView.getPage() > 0)
           *       DataGridView.setPage(0);
           * </pre>
-          * @see paging
           * @see setPage
           * @param {Number} [offset] - если передать, то номер страницы рассчитается от него
           */
