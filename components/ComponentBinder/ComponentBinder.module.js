@@ -32,6 +32,7 @@ define('js!SBIS3.CONTROLS.ComponentBinder', [], function () {
                this._pathDSRawData = $ws.core.clone(this._options.breadCrumbs.getItems().getRawData());
             }
          }
+         view._itemsProjection.setParentProperty(null);
          this._firstSearch = false;
          //Флаг обозначает, что ввод был произведен пользователем
          this._searchReload = true;
@@ -48,10 +49,6 @@ define('js!SBIS3.CONTROLS.ComponentBinder', [], function () {
          if (searchMode == 'root'){
             filter[view.getHierField()] = undefined;
          }
-
-         view.once('onDataLoad', function(){
-            view._itemsProjection.setParentProperty(null);
-         });
 
          view.reload(filter, view.getSorting(), 0).addCallback(function(){
             view._container.addClass('controls-GridView__searchMode');
