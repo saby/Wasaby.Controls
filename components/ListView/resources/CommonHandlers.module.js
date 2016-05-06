@@ -10,7 +10,9 @@ define('js!SBIS3.CONTROLS.CommonHandlers',['i18n!SBIS3.CONTROLS.CommonHandlers']
             message = message || (idArray.length !== 1 ? rk("Удалить записи?") : rk("Удалить текущую запись?"));
             return $ws.helpers.question(message).addCallback(function(res) {
                if (res) {
+                  self._toggleIndicator(true);
                   return self._dataSource.destroy(idArray).addCallback(function () {
+                     self._toggleIndicator(false);
                      self.removeItemsSelection(idArray);
                      if ($ws.helpers.instanceOfModule(self, 'SBIS3.CONTROLS.TreeCompositeView') && self.getViewMode() === 'table') {
                         self.partialyReload(idArray);
