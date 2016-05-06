@@ -649,5 +649,73 @@ define([
             assert.equal(model.getRaw(), model.getRawData());
          });
       });
+
+      context('when old style extend used', function () {
+         describe('$constructor', function (){
+            it('should be called', function() {
+               var Sub = Model.extend({
+                     $constructor: function() {
+                        testOk = true;
+                     }
+                  }),
+                  testOk = false;
+               var instance = new Sub();
+               assert.isTrue(testOk);
+            });
+            it('should be called on each child', function() {
+               var Sub = Model.extend({
+                     $constructor: function() {
+                        testOk++;
+                     }
+                  }),
+                  MoreSub = Sub.extend({
+                     $constructor: function() {
+                        testOk+= 2;
+                     }
+                  }),
+                  testOk = 0;
+               var instance = new MoreSub();
+               assert.equal(testOk, 3);
+            });
+         });
+         describe('extend', function (){
+            it('should merge properties', function() {
+               var Sub = Model.extend({
+                     $protected: {
+                        _options: {
+                           properties: {
+                              p1: {
+                                 get: function() {
+                                    return 'p1A';
+                                 }
+                              },
+                              p2: {
+                                 get: function() {
+                                    return 'p2A';
+                                 }
+                              }
+                           }
+                        }
+                     }
+                  }),
+                  MoreSub = Sub.extend({
+                     $protected: {
+                        _options: {
+                           properties: {
+                              p1: {
+                                 get: function() {
+                                    return 'p1B';
+                                 }
+                              }
+                           }
+                        }
+                     }
+                  });
+               var instance = new MoreSub();
+               assert.equal(instance.get('p1'), 'p1B');
+               assert.equal(instance.get('p2'), 'p2A');
+            });
+         });
+      });
    });
 });

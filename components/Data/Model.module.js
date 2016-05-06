@@ -63,6 +63,8 @@ define('js!SBIS3.CONTROLS.Data.Model', [
        * @property {Function} [set] Метод, устанавливающий значение свойства.
        */
 
+      _compatibleConstructor: true,//Чтобы в наследниках с "old style extend" звался нативный constructor()
+
       _moduleName: 'SBIS3.CONTROLS.Data.Model',
 
       _hashPrefix: 'model-',
@@ -154,7 +156,14 @@ define('js!SBIS3.CONTROLS.Data.Model', [
          this._defaultPropertiesValues = {};
          this._nowCalculatingProperties = {};
          Model.superclass.constructor.call(this, options);
+
          this._$properties = this._$properties || {};
+         //Old style extend compatibility for _$properties
+         if (this._options && this._options.properties) {
+            //Utils.logger.stack(this._moduleName + '::constructor(): usage of "$protected._options.properties" is deprecated and will be removed in 3.7.4. Use extend() syntax like "_$properties: $ws.core.merge(ParentModel.prototype._$properties, {...})" instead.');
+            this._$properties = $ws.core.merge(this._$properties, this._options.properties);
+         }
+
          if (!this._$idProperty) {
             this._$idProperty = this.getAdapter().getKeyField(this._$rawData);
          }
