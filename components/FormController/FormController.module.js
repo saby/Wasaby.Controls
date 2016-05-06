@@ -135,7 +135,7 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
          $ws.single.CommandDispatcher.declareCommand(this, 'notify', this._actionNotify);
          this._panel = this.getTopParent();
          //В рамках fc мы работаем с простым ключом. Запоминаем составной ключ, чтобы была возможность синхронизации модели со связным списком
-         this._simpleKey = this._options.key.split(',')[0];
+         this._simpleKey = this._options.key.toString().split(',')[0];
          if (this._options.dataSource){
             this._runQuery();
          }
