@@ -10,7 +10,7 @@ define('js!SBIS3.CONTROLS.Utils.Sanitizer',
    ], function(Serializer,Schema, DomParser, Tools) {
       'use strict';
       /**
-       * Утилита для очистки содержимого (string) от скриптов
+       * Утилита для очистки содержимого (string) от xss
        * @class SBIS3.CONTROLS.Utils.Sanitizer
        * @author Авраменко А.С.
        * @public
