@@ -47,8 +47,7 @@ define('js!SBIS3.CONTROLS.DialogActionBase', ['js!SBIS3.CONTROLS.ActionBase', 'j
              */
             linkedObject: undefined
          },
-         _dialog: undefined,
-         _formController: undefined
+         _dialog: undefined
       },
 
       execute : function(meta) {
@@ -98,9 +97,6 @@ define('js!SBIS3.CONTROLS.DialogActionBase', ['js!SBIS3.CONTROLS.ActionBase', 'j
             onAfterClose: function (e, meta) {
                self._dialog = undefined;
                self._notifyOnExecuted(meta, this._record);
-            },
-            onBeforeShow: function () {
-               self._formController = this._getTemplateComponent();
             }
          };
 
