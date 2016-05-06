@@ -64,7 +64,8 @@ define(['js!SBIS3.CORE.CompoundControl'],
                 *     <options>
                 * </pre>
                 */
-               visible: false
+               visible: false,
+               _validateIfHidden: true
             }
          },
          $constructor: function() {
