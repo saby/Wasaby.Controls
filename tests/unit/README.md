@@ -105,10 +105,6 @@
 
 `WEBDRIVER_remote_desiredCapabilities_version` - версия бразузера, в которой будут проводится тесты
 
-`JSCOVERAGE_params_port` - порт, на котором будет запущен jscoverage server
-
-`JSCOVERAGE_webdriver_host` - хост, на который будет обращаться webdriver за отчетом jscoverage
-
 
 ✓ Abort the build if it's stuck
 
