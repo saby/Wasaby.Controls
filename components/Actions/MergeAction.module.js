@@ -5,6 +5,7 @@ define('js!SBIS3.CONTROLS.MergeAction', [
     'js!SBIS3.CONTROLS.DialogActionBase',
     'js!SBIS3.CONTROLS.MergeDialogTemplate'
 ], function(OpenDialogAction) {
+<<<<<<< HEAD
     /**
      * Базовый класс для действий объединения.
      * @class SBIS3.CONTROLS.MergeAction
@@ -13,46 +14,84 @@ define('js!SBIS3.CONTROLS.MergeAction', [
      * @author Крайнов Дмитрий Олегович
      */
     var MergeAction = OpenDialogAction.extend( /** @lends SBIS3.CONTROLS.MergeAction.prototype */ {
+=======
+   /**
+    * Действие открытия окна, в котором производится выбор записей для их объединения.
+    * Пример использования класса можно найти в разделе {@link http://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/list-settings/records-editing/items-action/panel/basic-operations/merge/ Операция объединения записей реестра}.
+    * @class SBIS3.CONTROLS.MergeAction
+    * @public
+    * @extends SBIS3.CONTROLS.DialogActionBase
+    * @author Сухоручкин Андрей Сергеевич
+    */
+    var MergeAction = OpenDialogAction.extend(/** @lends SBIS3.CONTROLS.MergeAction.prototype */{
+>>>>>>> 3.7.3.150/docs/operations-panel-base-operations
 
         $protected: {
             _options: {
+                /**
+                 * @cfg {String} Устанавливает компонент, который будет использован для построения окна объединения записей.
+                 * @see mode
+                 * @see titleCellTemplate
+                 */
                 dialogComponent : 'js!SBIS3.CONTROLS.MergeDialogTemplate',
+                /**
+                 * @cfg {String} Устанавливаем режим открытия компонента объединения записей.
+                 * @variant dialog Компонент открывается в новом диалогом окне.
+                 * @variant floatArea Компонент открывается на всплывающей панели.
+                 * @see dialogComponent
+                 */
                 mode: 'dialog',
                 /**
-                 * @cfg {String} Cерверный метод для проверки объединения
-                 * @see SBIS3.CONTROLS.DSMixin#displayField
+                 * @cfg {String} Устанавливает поле отображения.
+                 * @remark
+                 * Опция актуальна для использования, когда источник данных имеет иерархическую структуру.
+                 * @see hierField
                  */
                 displayField: undefined,
                 /**
-                 * @cfg {String} Поле иерархии
-                 * @see SBIS3.CONTROLS.hierarchyMixin#hierField
+                 * @cfg {String} Устанавливает поле иерархии данных.
+                 * @remark
+                 * Опция актуальная для использования, когда источник данных имеет иерархическую структуру.
+                 * @see displayField
                  */
                 hierField: undefined,
                 /**
-                 * @cfg {DataSource} Набор исходных данных, по которому строится отображение
-                 * @see SBIS3.CONTROLS.DSMixin#dataSource
+                 * @cfg {DataSource|SBIS3.CONTROLS.Data.Source.ISource|Function} Устанавливает источник данных.
+                 * @see setDataSource
+                 *
                  */
                 dataSource: undefined,
                 /**
-                 * @cfg {String} Cерверный метод для проверки объединения
-                 * На вход данному методу приходит:
-                 * 1) target{String}: ключ целевой записи
-                 * 2) merged{Array.<string>}: массив ключей сливаемых записей
-                 * На выход данный метод должен отдать recordSet содержащий:
-                 * 1) {String} поле являющиеся keyField в источнике данных
-                 * 2) {String} поле являющиеся displayField в источнике данных
-                 * 3) поля иерархии
-                 * 4) {String} поле 'Comment' в котором находится резюме операции
-                 * 5) {Boolean} поле 'Available' в котором находится возможность объединения данной записи
+                 * @cfg {String} Устанавливает имя метода бизнес-логики, который будет использован для проверки возможности объединения записей.
+                 * @remark
+                 * Методу передаются параметры в следующем порядке:
+                 * <ol>
+                 *   <li>target {String}: ключ целевой записи.</li>
+                 *   <li>merged {Array.<string>}: массив ключей сливаемых записей.</li>
+                 * </ol>
+                 * Метод возвращает recordSet, который содержит следующие поля:
+                 * <ul>
+                 *   <li>{String} поле, которое является keyField в источнике данных;</li>
+                 *   <li>{String} поле, которое является displayField в источнике данных;</li>
+                 *   <li>поля иерархии;</li>
+                 *   <li>{String} поле 'Comment', в котором находится резюме операции;</li>
+                 *   <li>{Boolean} поле 'Available', которое содержит признак возможности объединения данной записи.<li>
+                 * </ul>
+                 * @see queryMethodName
                  */
                 testMergeMethodName: undefined,
                 /**
-                 * @cfg {String} Имя списочного метода, который будет вызван для получения записей,
-                 * отображаемых в диалоге объединения
+                 * @cfg {String} Устанавливает имя списочного метода, который будет использован для получения записей от источника.
+                 * @remark
+                 * Набор полученных записей будет отображен на диалоге объединения.
+                 * @see testMergeMethodName
                  */
                 queryMethodName: undefined,
                 /**
-                 * @cfg {String} Шаблон отображения ячеек с наименованием объединяемых элементов
+                 * @cfg {String} Устанавливает шаблон отображения ячеек с наименованием объединяемых записей.
+                 * @remark
+                 * Шаблон - это XHTML-файл, который создают в директории компонента в подпапке resources.
+                 * @see dialogComponent
                  */
                 titleCellTemplate: undefined
             }
@@ -61,11 +100,14 @@ define('js!SBIS3.CONTROLS.MergeAction', [
         _notifyOnExecuted: function(meta) {
             this._notify('onExecuted', meta)
         },
-
+        /**
+         * Устанавливает источник данных для окна объединения записей.
+         * @param {DataSource|SBIS3.CONTROLS.Data.Source.ISource|Function} ds Источник данных.
+         * @see dataSource
+         */
         setDataSource: function(ds) {
             this._options.dataSource = ds;
         },
-
        _buildComponentConfig: function(meta) {
           return $ws.core.merge(meta, {
              //Прокидываем необходимые опции в шаблон
