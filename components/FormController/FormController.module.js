@@ -135,7 +135,7 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
          $ws.single.CommandDispatcher.declareCommand(this, 'notify', this._actionNotify);
          this._panel = this.getTopParent();
          //В рамках fc мы работаем с простым ключом. Запоминаем составной ключ, чтобы была возможность синхронизации модели со связным списком
-         this._simpleKey = this._options.key && this._options.key.toString().split(',')[0];
+         this._simpleKey = this._getSimpleKey(this._options.key);
          if (this._options.dataSource){
             this._runQuery();
          }
@@ -355,6 +355,9 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
          e.processed = true;
          return e;
       },
+      _getSimpleKey: function(key){
+         return key && key.toString().split(',')[0];
+      },
       /**
        * Получает источник данных диалога редактирования
        */
@@ -391,7 +394,7 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
          if (updateKey){
             newKey = record.getKey();
             this._options.key = newKey;
-            this._simpleKey = newKey && newKey.toString().split(',')[0];
+            this._simpleKey = this._getSimpleKey(newKey);
          }
          this._needDestroyRecord = false;
          this._setContextRecord(record);
