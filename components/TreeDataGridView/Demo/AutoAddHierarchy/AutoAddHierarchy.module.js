@@ -1,7 +1,7 @@
 define('js!SBIS3.CONTROLS.DOCS.AutoAddHierarchy', // Устанавливаем имя, по которому будет доступен демо-компонент в других компонентах
    [ // Массив зависимостей компонента
       'js!SBIS3.CORE.CompoundControl', // Подключаем базовый компонент, от которого далее будем наследовать свой демо-компонент
-      'html!SBIS3.DOCS.AutoAddHierarchy', // Подключаем вёрстку демо-компонента
+      'html!SBIS3.CONTROLS.DOCS.AutoAddHierarchy', // Подключаем вёрстку демо-компонента
       'js!SBIS3.CONTROLS.DOCS.AutoAddHierarchy/resources/exampleSource', // Подключаем класс для работы с источником данных. Этот источник - статический, создан только для демо-примеров на wi.sbis.ru
       'js!SBIS3.CONTROLS.TreeDataGridView', // Подключаем контрол иерархического представления данных (список)
       'js!SBIS3.CONTROLS.TextBox', // Подключаем контрол, который будем использовать в качестве редактора
