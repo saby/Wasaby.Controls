@@ -5,7 +5,7 @@
 `http://localhost:666/tests/unit/via-webdriver.html`
 
 ## Команды Grunt
-- `grunt --force tests` - прогнать unit тесты и тест покрытия;
+- `grunt --force tests` - прогнать unit тесты через webdriver и тест покрытия;
 - `grunt tests-webdriver` - прогнать unit тесты через webdriver;
 - `grunt tests-isolated` - прогнать unit тесты изолированно;
 - `grunt --force tests-coverage` - прогнать тест покрытия;

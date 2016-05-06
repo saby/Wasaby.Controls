@@ -42,6 +42,7 @@ exports.run = function (config, wsConfig, rootPath) {
 
    //Подключаем ядро
    requirejs(path.join(wsConfig.wsRoot, 'lib/core.js'));
+   requirejs(path.join(wsConfig.wsRoot, 'lib/Source.js'));
 
    //Подменяем штатный логгер
    $ws.proto.TestConsoleLogger = $ws.proto.ILogger.extend({
