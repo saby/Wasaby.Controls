@@ -1,4 +1,4 @@
-define('js!SBIS3.CONTROLS.DialogActionBase', ['js!SBIS3.CONTROLS.ActionBase', 'js!SBIS3.CORE.Dialog', 'js!SBIS3.CORE.FloatArea'], function(ActionBase, Dialog, FloatArea){
+define('js!SBIS3.CONTROLS.DialogActionBase', ['js!SBIS3.CONTROLS.ActionBase', 'js!SBIS3.CORE.Dialog', 'js!SBIS3.CORE.FloatArea', 'js!SBIS3.CONTROLS.Data.Record'], function(ActionBase, Dialog, FloatArea, Record){
    'use strict';
 
    /**
@@ -267,12 +267,14 @@ define('js!SBIS3.CONTROLS.DialogActionBase', ['js!SBIS3.CONTROLS.ActionBase', 'j
        * Получаем запись из связного списка по ключу редактируемой записи
        */
       _getCollectionRecord: function(record){
-         var collection = this._options.linkedObject;
-         if ($ws.helpers.instanceOfMixin(collection, 'SBIS3.CONTROLS.DSMixin')) {
-            collection = this.getItems();
+         var collection = this._options.linkedObject,
+            index;
+         if ($ws.helpers.instanceOfMixin(collection, 'SBIS3.CONTROLS.ItemsControlMixin')) {
+            collection = collection.getItems();
          }
          if ($ws.helpers.instanceOfMixin(collection, 'SBIS3.CONTROLS.Data.Collection.IList') && $ws.helpers.instanceOfMixin(collection, 'SBIS3.CONTROLS.Data.Collection.IIndexedCollection')) {
-            return collection.getIndexByValue(record.getIdProperty(), record.getId());
+            index = collection.getIndexByValue(record.getIdProperty(), record.getId());
+            return collection.at(index);
          }
          return undefined;
       },
