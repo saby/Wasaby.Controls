@@ -512,18 +512,22 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
       _redrawItems : function() {
          this._groupHash = {};
          var
-            itemsContainer,
+            $itemsContainer = this._getItemsContainer(),
+            itemsContainer = $itemsContainer.get(0),
             data = this._prepareItemsData(),
             markup;
 
          data.tplData = this._prepareItemData();
 
          markup = MarkupTransformer(this._itemsTemplate(data));
-         itemsContainer = this._getItemsContainer().get(0);
          //TODO это может вызвать тормоза
          this._destroyInnerComponents(itemsContainer);
          if (markup.length) {
-            itemsContainer.innerHTML = markup;
+            if ($ws._const.browser.isIE8 || $ws._const.browser.isIE9) { //Для 8-9 IE при установке innerHTML теряется часть верстки и получаем невалидную верстку.
+               $itemsContainer.append(markup);
+            } else {
+               itemsContainer.innerHTML = markup;
+            }
          }
          this._toggleEmptyData(!(data.items && data.items.length) && this._options.emptyHTML);
          this._reviveItems();
