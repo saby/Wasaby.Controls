@@ -293,7 +293,6 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
             },
             _afterEndEdit: function(eip, withSaving) {
                var
-                  idProperty,
                   eipRecord = eip.getEditingRecord(),
                   isAdd = !eipRecord.isStored();
                if (this._editingRecord) {
@@ -301,10 +300,8 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                   this._editingRecord = undefined;
                }
                if (withSaving) {
-                  this._options.dataSource.update(eipRecord).addCallback(function(id) {
+                  this._options.dataSource.update(eipRecord).addCallback(function() {
                      if (isAdd) {
-                        idProperty = this._options.dataSource.getIdProperty();
-                        eipRecord.set(idProperty, id);
                         this._options.dataSet.push(eipRecord);
                      }
                   }.bind(this)).addBoth(function() {
