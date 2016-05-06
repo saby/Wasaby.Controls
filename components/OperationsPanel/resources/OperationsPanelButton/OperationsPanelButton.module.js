@@ -22,7 +22,11 @@ define('js!SBIS3.CONTROLS.OperationsPanelButton', [
     *
     * </component>
     */
+<<<<<<< HEAD
    var OperationsPanelButton = Control.Control.extend([Clickable, Checkable], /** @lends SBIS3.CONTROLS.OperationsPanelButton.prototype */ {
+=======
+   var OperationsPanelButton = Control.Control.extend([Clickable, Checkable], /** @lends SBIS3.CONTROLS.OperationsPanelButton.prototype */{
+>>>>>>> 3.7.3.150/docs/operations-panel-base-operations
       _dotTplFn: dotTplFn,
       $protected: {
          _options: {

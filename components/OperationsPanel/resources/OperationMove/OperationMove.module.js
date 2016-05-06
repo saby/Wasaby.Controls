@@ -19,7 +19,7 @@ define('js!SBIS3.CONTROLS.OperationMove', [
     *
     * </component>
     */
-   var OperationMove = Link.extend({
+   var OperationMove = Link.extend(/** @lends SBIS3.CONTROLS.OperationMove.prototype */{
 
       $protected: {
          _options: {
