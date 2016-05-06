@@ -21,7 +21,7 @@ define('js!SBIS3.CONTROLS.OperationsMark', [
     * </component>
     */
    /*TODO Пока что динамическое создание CheckBox, пока не слиты Control и CompaundControl!!!*/
-   var OperationsMark = MenuLink.extend({
+   var OperationsMark = MenuLink.extend(/** @lends SBIS3.CONTROLS.OperationsMark.prototype */{
       $protected: {
          _options: {
              /**

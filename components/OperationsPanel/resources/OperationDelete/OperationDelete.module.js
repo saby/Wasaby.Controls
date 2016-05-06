@@ -18,7 +18,7 @@ define('js!SBIS3.CONTROLS.OperationDelete', [
     *
     * </component>
     */
-   var OperationDelete = Link.extend({
+   var OperationDelete = Link.extend(/** @lends SBIS3.CONTROLS.OperationDelete.prototype */{
 
       $protected: {
          _options: {
