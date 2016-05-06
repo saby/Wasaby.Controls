@@ -221,7 +221,8 @@ define('js!SBIS3.CONTROLS.ListView',
                $ws._const.key.right,
                $ws._const.key.left,
                $ws._const.key.m,
-               $ws._const.key.o
+               $ws._const.key.o,
+               $ws._const.key.del
             ],
             _itemsToolbar: null,
             _editingItem: {
@@ -690,6 +691,9 @@ define('js!SBIS3.CONTROLS.ListView',
                   if (e.ctrlKey && e.altKey && e.shiftKey) {
                      this.sendCommand('mergeItems', this.getSelectedKeys());
                   }
+                  break;
+               case $ws._const.key.del:
+                  this.deleteRecords(this.getSelectedKey());
                   break;
             }
             if (newSelectedItem && newSelectedItem.length) {
