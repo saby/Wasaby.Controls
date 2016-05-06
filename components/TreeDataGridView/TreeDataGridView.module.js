@@ -304,6 +304,11 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
          TreeDataGridView.superclass._onChangeHoveredItem.apply(this, arguments);
       },
 
+      reload: function() {
+         this._hideEditArrow();
+         TreeDataGridView.superclass.reload.apply(this, arguments);
+      },
+
       _showEditArrow: function() {
          var hoveredItem = this.getHoveredItem(),
              editArrowContainer = this.getEditArrow().getContainer(),
@@ -324,7 +329,9 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
       },
 
       _hideEditArrow: function() {
-         this.getEditArrow().getContainer().addClass('ws-hidden');
+         if(this._editArrow) {
+            this._editArrow.getContainer().addClass('ws-hidden');
+         }
       },
 
       _onLeftSwipeHandler: function() {
