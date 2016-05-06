@@ -162,6 +162,7 @@ define('js!SBIS3.CONTROLS.ComboBox', [
             if (isArrow || target.hasClass('controls-TextBox__afterFieldWrapper') || self.isEditable() === false) {
                if (self.isEnabled()) {
                   self.togglePicker();
+                  // Что бы не открывалась клавиатура на айпаде при клике на стрелку 
                   if (isArrow) {
                      e.stopPropagation();
                   }
