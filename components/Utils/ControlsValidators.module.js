@@ -7,8 +7,9 @@ define('js!SBIS3.CONTROLS.ControlsValidators', ['i18n!SBIS3.CONTROLS.ControlsVal
    /**
     * Компонент с набором платформенных валидаторов, которые можно применять только к контролам из пространства имён SBIS3.CONTROLS.
     * Подробнее о работе с валидаторами вы можете прочитать в разделе <a href="http://wi.sbis.ru/doc/platform/developmentapl/interfacedev/core/validation/">Валидация вводимых данных</a>.
-    * @author Красильников Андрей Сергеевич
+    * @class SBIS3.CONTROLS.ControlsValidators
     * @public
+    * @author Красильников Андрей Сергеевич
     */
    return /** @lends SBIS3.CONTROLS.ControlsValidators.prototype */{
       /**
