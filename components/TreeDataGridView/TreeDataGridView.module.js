@@ -35,7 +35,9 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
     * </component>
     *
     * @demo SBIS3.CONTROLS.Demo.MyTreeDataGridView
-    *
+    * @demo SBIS3.CONTROLS.Demo.AutoAddHierarchy Пример 2. Автодобавление записей в иерархическом представлении данных.
+    * Инициировать добавление можно как по нажатию кнопок в футерах, так и по кнопке Enter из режима редактирования последней записи.
+    * Подробное описание конфигурации компонента и футеров вы можете найти в разделе {@link http://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/list-settings/records-editing/edit-in-place/users/add-in-place-hierarchy/ Добавление по месту в иерархическом списке}.
     */
 
    var TreeDataGridView = DataGridView.extend([TreeMixin, TreeViewMixin], /** @lends SBIS3.CONTROLS.TreeDataGridView.prototype*/ {
