@@ -112,10 +112,10 @@ define('js!SBIS3.CONTROLS.DialogActionBase', ['js!SBIS3.CONTROLS.ActionBase', 'j
        */
       _getFormControllerHandlers: function(){
          return {
-            onRead: this._actionHandler.bind(this),
-            onUpdate: this._actionHandler.bind(this),
-            onDestroy: this._actionHandler.bind(this),
-            onCreate: this._actionHandler.bind(this)
+            onReadModel: this._actionHandler.bind(this),
+            onUpdateModel: this._actionHandler.bind(this),
+            onDestroyModel: this._actionHandler.bind(this),
+            onCreateModel: this._actionHandler.bind(this)
          }
       },
 
@@ -126,17 +126,17 @@ define('js!SBIS3.CONTROLS.DialogActionBase', ['js!SBIS3.CONTROLS.ActionBase', 'j
        * @param record Запись, с которой работаем
        * @returns {String|Deferred} Сообщаем, нужно ли выполнять базовую логику. Если не нужно, то возвращаем OpenDialogAction.ACTION_CUSTOM
        */
-      _onUpdate: function(record){
+      _onUpdateModel: function(record){
       },
       /**
        * Базовая логика при событии ouUpdate. Обновляем рекорд в связном списке
        */
-      _update: function (record, isNewModel) {
+      _updateModel: function (record, recordKey, isNewModel) {
          if (isNewModel){
             this._createRecord(record);
          }
          else{
-            this._mergeRecords(record);
+            this._mergeRecords(record, undefined, recordKey);
          }
       },
 
@@ -147,9 +147,9 @@ define('js!SBIS3.CONTROLS.DialogActionBase', ['js!SBIS3.CONTROLS.ActionBase', 'j
        * @param record Запись, с которой работаем
        * @returns {String|Deferred} Сообщаем, нужно ли выполнять базовую логику. Если не нужно, то возвращаем OpenDialogAction.ACTION_CUSTOM
        */
-      _onRead: function(record){
+      _onReadModel: function(record){
       },
-      _read: function(record){
+      _readModel: function(record){
       },
 
       /**
@@ -159,12 +159,12 @@ define('js!SBIS3.CONTROLS.DialogActionBase', ['js!SBIS3.CONTROLS.ActionBase', 'j
        * @param record Запись, с которой работаем
        * @returns {String|Deferred} Сообщаем, нужно ли выполнять базовую логику. Если не нужно, то возвращаем OpenDialogAction.ACTION_CUSTOM
        */
-      _onDestroy: function(record){
+      _onDestroyModel: function(record){
       },
       /**
        * Базовая логика при событии ouDestroy. Дестроим рекорд в связном списке
        */
-      _destroy: function(record){
+      _destroyModel: function(record){
          var collectionRecord = this._getCollectionRecord(record),
             collection = this._options.linkedObject;
          if (!collectionRecord){
@@ -185,7 +185,7 @@ define('js!SBIS3.CONTROLS.DialogActionBase', ['js!SBIS3.CONTROLS.ActionBase', 'j
        * @param record Запись, с которой работаем
        * @returns {String|Deferred} Сообщаем, нужно ли выполнять базовую логику. Если не нужно, то возвращаем OpenDialogAction.ACTION_CUSTOM
        */
-      _onCreate: function(record){
+      _onCreateModel: function(record){
       },
       /**
        * Обработка событий formController'a. Выполнение переопределяемых методов и notify событий.
@@ -194,11 +194,11 @@ define('js!SBIS3.CONTROLS.DialogActionBase', ['js!SBIS3.CONTROLS.ActionBase', 'j
       _actionHandler: function(event, record) {
          var eventName = event.name,
             eventResult = this._notify(eventName, record),
-            genericMethod = '_' + eventName.replace('on', '').toLowerCase(),
+            genericMethod = '_' + eventName.replace('on', ''),
             self = this,
-            baseActions = [OpenDialogAction.ACTION_CUSTOM, OpenDialogAction.ACTION_MERGE, OpenDialogAction.ACTION_ADD, OpenDialogAction.ACTION_RELOAD, OpenDialogAction.ACTION_DELETE],
             actionResult = eventResult,
             methodResult;
+         genericMethod = genericMethod.slice(0, 2).toLowerCase() + genericMethod.slice(2);//первую букву от события переводим в нижний регистр
          if (eventResult !== OpenDialogAction.ACTION_CUSTOM) {
             methodResult  = this['_' + eventName](record);
             actionResult = methodResult || eventResult;
@@ -247,8 +247,8 @@ define('js!SBIS3.CONTROLS.DialogActionBase', ['js!SBIS3.CONTROLS.ActionBase', 'j
       /**
        * Мержим поля из редактируемой записи в существующие поля записи из связного списка.
        */
-      _mergeRecords: function(record, colRec){
-         var collectionRecord = colRec || this._getCollectionRecord(record),
+      _mergeRecords: function(record, colRec, recordKey){
+         var collectionRecord = colRec || this._getCollectionRecord(record, recordKey),
              recValue;
          if (!collectionRecord) {
             return;
@@ -256,7 +256,14 @@ define('js!SBIS3.CONTROLS.DialogActionBase', ['js!SBIS3.CONTROLS.ActionBase', 'j
          collectionRecord.each(function (key, value) {
             recValue = record.get(key);
             if (record.has(key) && recValue != value) {
-               this.set(key, recValue);
+               //Нет возможности узнать отсюда, есть ли у свойства сеттер или нет
+               try {
+                  this.set(key, recValue);
+               } catch (e) {
+                  if (!(e instanceof ReferenceError)) {
+                     throw e;
+                  }
+               }
             }
          });
       },
@@ -266,14 +273,14 @@ define('js!SBIS3.CONTROLS.DialogActionBase', ['js!SBIS3.CONTROLS.ActionBase', 'j
       /**
        * Получаем запись из связного списка по ключу редактируемой записи
        */
-      _getCollectionRecord: function(record){
+      _getCollectionRecord: function(record, recordKey){
          var collection = this._options.linkedObject,
             index;
          if ($ws.helpers.instanceOfMixin(collection, 'SBIS3.CONTROLS.ItemsControlMixin')) {
             collection = collection.getItems();
          }
          if ($ws.helpers.instanceOfMixin(collection, 'SBIS3.CONTROLS.Data.Collection.IList') && $ws.helpers.instanceOfMixin(collection, 'SBIS3.CONTROLS.Data.Collection.IIndexedCollection')) {
-            index = collection.getIndexByValue(record.getIdProperty(), record.getId());
+            index = collection.getIndexByValue(record.getIdProperty(), recordKey || record.getId());
             return collection.at(index);
          }
          return undefined;
@@ -287,6 +294,6 @@ define('js!SBIS3.CONTROLS.DialogActionBase', ['js!SBIS3.CONTROLS.ActionBase', 'j
    OpenDialogAction.ACTION_MERGE = '_mergeRecords';
    OpenDialogAction.ACTION_ADD = '_createRecord'; //что добавляем? сделал через create
    OpenDialogAction.ACTION_RELOAD = '_collectionReload';
-   OpenDialogAction.ACTION_DELETE = '_destroy';
+   OpenDialogAction.ACTION_DELETE = '_destroyModel';
    return OpenDialogAction;
 });
