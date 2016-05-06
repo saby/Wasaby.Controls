@@ -220,10 +220,8 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                      $ws.helpers.toggleIndicator(false);
                      return readRecord;
                   });
-               } else if (beginEditResult !== false) {
-                  return $ws.proto.Deferred.success(record);
                } else {
-                  return $ws.proto.Deferred.fail();
+                  return $ws.proto.Deferred.success(beginEditResult !== false ? record : undefined);
                }
             },
             /**
