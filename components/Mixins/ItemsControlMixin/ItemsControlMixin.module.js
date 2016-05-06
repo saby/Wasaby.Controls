@@ -1005,13 +1005,19 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
                dataSet.setIdProperty(this._options.keyField);
             }
             var recordSet = dataSet.getAll();
-            recordSet.setMetaData({
-               results: dataSet.getProperty('r'),
-               more: dataSet.getTotal(),
-               path: dataSet.getProperty('p')
-            });
+            recordSet.setMetaData(this._prepareMetaData(dataSet));
             return recordSet;
          }).bind(this));
+      },
+
+      _prepareMetaData: function(dataSet) {
+         var meta = dataSet.getRow('m').toObject();
+
+         meta.results = dataSet.getProperty('r');
+         meta.more = dataSet.getTotal();
+         meta.path = dataSet.getProperty('p');
+
+         return meta;
       },
 
       _toggleIndicator:function(){
