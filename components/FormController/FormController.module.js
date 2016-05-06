@@ -217,13 +217,15 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
       _updateRecord: function(dResult, closePanelAfterSubmit){
          var errorMessage = rk('Некорректно заполнены обязательные поля!'),
              self = this,
+             isNewModel,
              def;
          if (this.validate()) {
             def = this._options.dataSource.update(this._options.record);
             this._showLoadingIndicator();
             dResult.dependOn(def.addCallbacks(function (result) {
-               self._notify('onUpdate', self._options.record, self._options.newModel);
+               isNewModel = self._options.newModel;
                self._options.newModel = false;
+               self._notify('onUpdate', self._options.record, isNewModel);
                if (closePanelAfterSubmit) {
                   self._panel.ok();
                }
