@@ -260,7 +260,7 @@ define('js!SBIS3.CONTROLS.DialogActionBase', ['js!SBIS3.CONTROLS.ActionBase', 'j
          }
          collectionRecord.each(function (key, value) {
             recValue = model.get(key);
-            if (model.has(key) && recValue != value) {
+            if (model.has(key) && recValue != value && key !== model.getIdProperty()) {
                //Нет возможности узнать отсюда, есть ли у свойства сеттер или нет
                try {
                   this.set(key, recValue);
