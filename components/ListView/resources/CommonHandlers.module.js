@@ -12,7 +12,6 @@ define('js!SBIS3.CONTROLS.CommonHandlers',['i18n!SBIS3.CONTROLS.CommonHandlers']
                if (res) {
                   self._toggleIndicator(true);
                   return self._dataSource.destroy(idArray).addCallback(function () {
-                     self._toggleIndicator(false);
                      self.removeItemsSelection(idArray);
                      if ($ws.helpers.instanceOfModule(self, 'SBIS3.CONTROLS.TreeCompositeView') && self.getViewMode() === 'table') {
                         self.partialyReload(idArray);
@@ -21,6 +20,8 @@ define('js!SBIS3.CONTROLS.CommonHandlers',['i18n!SBIS3.CONTROLS.CommonHandlers']
                      }
                   }).addErrback(function(result) {
                      $ws.helpers.alert(result)
+                  }).addBoth(function() {
+                     self._toggleIndicator(false);
                   });
                }
             });
