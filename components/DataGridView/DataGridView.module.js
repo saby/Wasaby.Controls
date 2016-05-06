@@ -95,7 +95,6 @@ define('js!SBIS3.CONTROLS.DataGridView',
              *    <li>isNode - является ли узлом</li>
              *    <li>decorators - объект декораторов</li>
              *    <li>field - имя поля</li>
-             *    <li>value - значение</li>
              *    <li>highlight - есть ли подсветка</li>
              * </ol>
              * Необходимо указать настройки декораторов разметки, если требуется
