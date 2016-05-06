@@ -48,11 +48,11 @@ define('js!SBIS3.CONTROLS.Data.Collection.LoadableListMixin', [
       //region SBIS3.CONTROLS.Data.Collection.ISourceLoadable
 
       getSource: function () {
-         return this._options.source;
+         return this._$source;
       },
 
       setSource: function (source) {
-         this._options.source = source;
+         this._$source = source;
       },
 
       isLoaded: function () {

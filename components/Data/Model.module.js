@@ -69,7 +69,7 @@ define('js!SBIS3.CONTROLS.Data.Model', [
 
       /**
        * @cfg {Object.<String, Property>} Описание свойств модели. Дополняет/уточняет свойства, уже существующие в сырых данных.
-       * @name SBIS3.CONTROLS.Data.Mode#properties
+       * @name SBIS3.CONTROLS.Data.Model#properties
        * @example
        * <pre>
        *    var User = Model.extend({
@@ -113,7 +113,7 @@ define('js!SBIS3.CONTROLS.Data.Model', [
 
       /**
        * @cfg {String} Поле, содержащее первичный ключ
-       * @name SBIS3.CONTROLS.Data.Mode#idProperty
+       * @name SBIS3.CONTROLS.Data.Model#idProperty
        * @see getIdProperty
        * @see setIdProperty
        */
@@ -462,10 +462,13 @@ define('js!SBIS3.CONTROLS.Data.Model', [
          }
 
          this._nowCalculatingProperties[checkKey] = true;
-         value = isReading ?
-            property.get.call(this, value) :
-            property.set.call(this, value);
-         delete this._nowCalculatingProperties[checkKey];
+         try {
+            value = isReading ?
+               property.get.call(this, value) :
+               property.set.call(this, value);
+         } finally {
+            delete this._nowCalculatingProperties[checkKey];
+         }
 
          return value;
       },

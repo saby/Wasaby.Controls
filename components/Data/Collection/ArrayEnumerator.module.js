@@ -1,9 +1,8 @@
 /* global define, $ws */
 define('js!SBIS3.CONTROLS.Data.Collection.ArrayEnumerator', [
-   'js!SBIS3.CONTROLS.Data.Core',
    'js!SBIS3.CONTROLS.Data.Collection.IEnumerator',
    'js!SBIS3.CONTROLS.Data.Collection.IndexedEnumeratorMixin'
-], function (Core, IEnumerator, IndexedEnumeratorMixin) {
+], function (IEnumerator, IndexedEnumeratorMixin) {
    'use strict';
 
    /**
@@ -15,7 +14,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.ArrayEnumerator', [
     * @author Мальцев Алексей
     */
 
-   return Core.extend([IEnumerator, IndexedEnumeratorMixin], /** @lends SBIS3.CONTROLS.Data.Collection.ArrayEnumerator.prototype */{
+   return $ws.core.extend([IEnumerator, IndexedEnumeratorMixin], /** @lends SBIS3.CONTROLS.Data.Collection.ArrayEnumerator.prototype */{
       _moduleName: 'SBIS3.CONTROLS.Data.Collection.ArrayEnumerator',
       /**
        * @member {Array} Массив

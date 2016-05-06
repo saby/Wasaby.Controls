@@ -69,12 +69,10 @@ define([
             };
          },
          getModel = function(modelData, modelProperties) {
-            var SubModel = Model.extend({
-               _$properties: modelProperties || getModelProperties()
-            });
-            return new SubModel({
+            return new Model({
                idProperty: 'id',
-               rawData: modelData || getModelData()
+               rawData: modelData || getModelData(),
+               properties: modelProperties || getModelProperties()
             });
          };
       beforeEach(function () {

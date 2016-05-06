@@ -1,8 +1,7 @@
 /* global define, $ws */
 define('js!SBIS3.CONTROLS.Data.Entity.Abstract', [
-   'js!SBIS3.CONTROLS.Data.Core',
    'js!SBIS3.CONTROLS.Data.Di'
-], function (Core, Di) {
+], function (Di) {
    'use strict';
 
    /**
@@ -12,7 +11,7 @@ define('js!SBIS3.CONTROLS.Data.Entity.Abstract', [
     * @author Мальцев Алексей
     */
 
-   var Abstract = Core.extend(/** @lends SBIS3.CONTROLS.Data.Entity.Abstract.prototype */{
+   var Abstract = $ws.core.extend(/** @lends SBIS3.CONTROLS.Data.Entity.Abstract.prototype */{
       _moduleName: 'SBIS3.CONTROLS.Data.Entity.Abstract',
 
       /**
@@ -25,6 +24,14 @@ define('js!SBIS3.CONTROLS.Data.Entity.Abstract', [
        */
       destroy: function() {
          this._destroyed = true;
+      },
+
+      /**
+       * Возвращает признак, что экземпляр разрушен
+       * @returns {Boolean}
+       */
+      isDestroyed: function() {
+         return this._destroyed;
       }
    });
 

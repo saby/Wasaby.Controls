@@ -918,7 +918,7 @@ define(
                assert.strictEqual(json.module, 'SBIS3.CONTROLS.Data.Collection.List');
                assert.isNumber(json.id);
                assert.isTrue(json.id > 0);
-               assert.deepEqual(json.state._options, list._options);
+               assert.deepEqual(json.state.$options, list._getOptions());
                assert.deepEqual(json.state._items, list._items);
             });
          });

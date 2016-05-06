@@ -95,7 +95,7 @@ define('js!SBIS3.CONTROLS.Data.SerializableMixin', [
          if (!proto._moduleName) {
             SerializableMixin._createModuleNameError('Property "_moduleName" with module name for requirejs is not defined in a prototype', critical);
          }
-         //TODO: переделать на Object.getPrototypeOf(this), после перевода на SBIS3.CONTROLS.Data.Core::extend()
+         //TODO: переделать на Object.getPrototypeOf(this), после перевода на $ws.single.simpleExtender::extend()
          if (isInstance) {
             if (!_protoSupported) {
                return;
