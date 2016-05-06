@@ -50,6 +50,7 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
          _loadingIndicator: undefined,
          _panel: undefined,
          _needDestroyRecord: false,
+         _simpleKey: undefined,
          _options: {
             /**
              * @cfg {DataSource} Источник данных для диалога редактирования записи
@@ -125,14 +126,16 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
       },
 
       $constructor: function() {
-         this._publish('onSubmit', 'onFail', 'onSuccess', 'onRead', 'onUpdate', 'onDestroy', 'onCreate');
+         this._publish('onSubmit', 'onFail', 'onSuccess', 'onReadModel', 'onUpdateModel', 'onDestroyModel', 'onCreateModel');
          $ws.single.CommandDispatcher.declareCommand(this, 'submit', this.submit);
          $ws.single.CommandDispatcher.declareCommand(this, 'read', this._read);
          $ws.single.CommandDispatcher.declareCommand(this, 'update', this.update);
-         $ws.single.CommandDispatcher.declareCommand(this, 'destroy', this._destroyRecord);
+         $ws.single.CommandDispatcher.declareCommand(this, 'destroy', this._destroyModel);
          $ws.single.CommandDispatcher.declareCommand(this, 'create', this._create);
          $ws.single.CommandDispatcher.declareCommand(this, 'notify', this._actionNotify);
          this._panel = this.getTopParent();
+         //В рамках fc мы работаем с простым ключом. Запоминаем составной ключ, чтобы была возможность синхронизации модели со связным списком
+         this._simpleKey = this._options.key.toString().split(',')[0];
          if (this._options.dataSource){
             this._runQuery();
          }
@@ -146,7 +149,7 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
             //Если попали сюда из метода _saveRecord, то this._saving = true и мы просто закрываем панель
             if (this._saving || !(this._options.record && this._options.record.isChanged() || this.isNewModel())){
                if (this._needDestroyRecord && this._options.record && (!this._saving && !this._options.record.isChanged() || result === false)){
-                  this._destroyRecord();
+                  this._destroyModel();
                }
                this._saving = false;
                return;
@@ -225,7 +228,7 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
             dResult.dependOn(def.addCallbacks(function (result) {
                isNewModel = self._options.newModel;
                self._options.newModel = false;
-               self._notify('onUpdate', self._options.record, isNewModel);
+               self._notify('onUpdateModel', self._options.record, self._options.key, isNewModel);
                if (closePanelAfterSubmit) {
                   self._panel.ok();
                }
@@ -263,10 +266,10 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
        */
       _read: function (key) {
          var self = this;
-         key = key || this._options.key;
+         key = key || this._simpleKey;
          this._showLoadingIndicator(rk('Загрузка'));
          return this._options.dataSource.read(key).addCallback(function (record) {
-            self._notify('onRead', record);
+            self._notify('onReadModel', record);
             self.setRecord(record);
             return record;
          }).addErrback(function (error) {
@@ -386,6 +389,7 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
          this._options.record = this._panel._record = record;
          if (updateKey){
             this._options.key = record.getKey();
+            this._simpleKey = record.getKey().split(',')[0];
          }
          this._needDestroyRecord = false;
          this._setContextRecord(record);
@@ -394,13 +398,13 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
       /**
        * Action: дестрой записи
        */
-      _destroyRecord: function(){
+      _destroyModel: function(){
          this._options.dataSource.destroy(this._options.record.getId());
-         this._notify('onDestroy', this._options.record)
+         this._notify('onDestroyModel', this._options.record)
       },
 
       _runQuery: function() {
-         if (this._options.key) {
+         if (this._simpleKey) {
             return this._read();
          }
          return this._create();
@@ -413,7 +417,7 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
             def;
          this._showLoadingIndicator(rk('Загрузка'));
          def = this._options.dataSource.create(this._options.initValues).addCallback(function(record){
-            self._notify('onCreate', record);
+            self._notify('onCreateModel', record);
             self.setRecord(record, true);
             self._options.newModel = record.getKey() === null || self._options.newModel;
             if (record.getKey()){
