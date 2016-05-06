@@ -5,16 +5,6 @@ define('js!SBIS3.CONTROLS.MergeAction', [
     'js!SBIS3.CONTROLS.DialogActionBase',
     'js!SBIS3.CONTROLS.MergeDialogTemplate'
 ], function(OpenDialogAction) {
-<<<<<<< HEAD
-    /**
-     * Базовый класс для действий объединения.
-     * @class SBIS3.CONTROLS.MergeAction
-     * @public
-     * @extends SBIS3.CONTROLS.OpenDialogAction
-     * @author Крайнов Дмитрий Олегович
-     */
-    var MergeAction = OpenDialogAction.extend( /** @lends SBIS3.CONTROLS.MergeAction.prototype */ {
-=======
    /**
     * Действие открытия окна, в котором производится выбор записей для их объединения.
     * Пример использования класса можно найти в разделе {@link http://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/list-settings/records-editing/items-action/panel/basic-operations/merge/ Операция объединения записей реестра}.
@@ -24,8 +14,6 @@ define('js!SBIS3.CONTROLS.MergeAction', [
     * @author Сухоручкин Андрей Сергеевич
     */
     var MergeAction = OpenDialogAction.extend(/** @lends SBIS3.CONTROLS.MergeAction.prototype */{
->>>>>>> 3.7.3.150/docs/operations-panel-base-operations
-
         $protected: {
             _options: {
                 /**
