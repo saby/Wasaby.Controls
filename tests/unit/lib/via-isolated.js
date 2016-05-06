@@ -51,7 +51,7 @@ exports.run = function (config, wsConfig, rootPath) {
       error: function(tag, message, exception) {
          console.error(tag + ': ' + message + (exception ? exception.toString() : ''));
       },
-      info: function(){
+      info: function(tag, message) {
          console.info(tag + ': ' + message);
       }
    });
