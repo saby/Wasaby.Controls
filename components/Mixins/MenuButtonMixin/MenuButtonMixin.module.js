@@ -38,6 +38,36 @@ define('js!SBIS3.CONTROLS.MenuButtonMixin', ['js!SBIS3.CONTROLS.ContextMenu'], f
          }
       },
 
+      //TODO: Можно будет выпилить когда меню будет сделано через таблицу
+      //3.7.3.10: придрот для отсупа в пунктах меню, если ни в одном пункте нет иконки а у кнопки есть
+      _checkItemsIcons: function(items){
+         var icon = 'sprite:';
+         if (this._options.icon && items && !this._container.hasClass('controls-Menu__hide-menu-header')){
+            if (this._options.icon.indexOf('icon-16') !== -1){
+               icon += 'icon-16';
+            } else if (this._options.icon.indexOf('icon-24') !== -1){
+               icon += 'icon-24';
+            }
+            var field = {name: 'icon', type: 'string'},
+               owner,
+               item,
+               i;
+            for (i = 0; i < items.length; i++){
+               item = items[i];
+               //отступы нужны только в основном меню, но не в сабменю
+               if (!item.has('icon')) {
+                  owner = item.getOwner();
+                  if (owner) {
+                     owner.addField(field);
+                  } else {
+                     item.addField(field);
+                  }
+               }
+               if (!item.get('icon') && !item.get(this._options.hierField)) { item.set('icon', icon);}
+            }
+         }
+      },
+
       _createPicker: function(targetElement){
          var menuconfig = {
             parent: this.getParent(),
@@ -130,6 +160,9 @@ define('js!SBIS3.CONTROLS.MenuButtonMixin', ['js!SBIS3.CONTROLS.ContextMenu'], f
          //Установить ширину меню
       },
       after : {
+         redraw: function(){
+            this.getItems() && this._checkItemsIcons(this.getItems().toArray());
+         },
 
          _initializePicker : function() {
             var self = this;
