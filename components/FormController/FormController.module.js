@@ -1,48 +1,74 @@
 define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js!SBIS3.CORE.LoadingIndicator', 'i18n!SBIS3.CONTROLS.FormController'],
    function(CompoundControl, LoadingIndicator) {
    /**
-    * Компонент, на основе которого создают диалоги редактирования записей
-    *
-    * Он позволяет решить задачу открытия диалога редактирования в новой вкладке веб-браузера.
-    * Ранее задача решалась крайне сложным образом, что требовало создания нового подхода.
-    * Теперь для диалога редактирования можно указать источник, который будет соответствовать источнику представления данных.
-    * Поэтому теперь для открытия в новой вкладке требуется передать всего лишь идентификатор записи, которая будет подгружена из источника.
+    * Компонент, на основе которого создают диалоги редактирования записей.
+    * Подробнее о создании диалогов вы можете прочитать в разделе документации <a href="https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/list-settings/records-editing/editing-dialog/">Диалоги редактирования</a>.
     *
     * @class SBIS3.CONTROLS.FormController
     * @extends $ws.proto.CompoundControl
     * @control
     * @public
-    * @author Крайнов Дмитрий Олегович
+    * @author Красильников Андрей Сергеевич
     */
    'use strict';
 
    var FormController = CompoundControl.extend([], /** @lends SBIS3.CONTROLS.FormController.prototype */ {
       /**
-       * @event onFail При неудачном сохранении записи
-       * Событие, происходящее в случае неудачного сохранения записи.
+       * @event onFail Происходит в случае ошибки при сохранении или чтении записи из источника данных.
        * @param {$ws.proto.EventObject} eventObject Дескриптор события.
-       * @param {Object} error Ошибка.
-       * @example
-       * <pre>
-       *    //btn - кнопка на диалоге редактирования
-       *    btn.getTopParent().subscribe('onFail', function(event, error){
-       *       $ws.core.alert('Все сломалось потому, что ' + error.message);
-       *    });
-       * </pre>
+       * @param {Object} error Объект с описанием ошибки. В свойстве message хранится текст ошибки, например для вывода в пользовательский интерфейс.
+       * @see submit
+       * @see update
+       * @see read
+       * @see onCreateModel
+       * @see onUpdateModel
+       * @see onDestroyModel
        */
       /**
-       * @event onSuccess При успешном сохранении записи
-       * Событие в случае успешного сохранения записи.
+       * @event onReadModel Происходит при чтении записи из источника данных диалога редактирования.
        * @param {$ws.proto.EventObject} eventObject Дескриптор события.
-       * @param {Boolean} result Результат выполнения операции.
-       * @example
-       * <pre>
-       *    //btn - кнопка на диалоге редактирования
-       *    btn.getTopParent().subscribe('onSuccess', function(event, result){
-       *      if (result)
-       *        $ws.core.message('Все хорошо!');
-       *    });
-       * </pre>
+       * @param {SBIS3.CONTROLS.Data.Record} record Запись, прочитанная из источника данных (см. {@link dataSource}).
+       * @see read
+       * @see dataSource
+       * @see onCreateModel
+       * @see onUpdateModel
+       * @see onDestroyModel
+       * @see onFail
+       */
+      /**
+       * @event onUpdateModel Происходит при сохранении записи в источнике данных диалога редактирования.
+       * @param {$ws.proto.EventObject} eventObject Дескриптор события.
+       * @param {SBIS3.CONTROLS.Data.Record} record Сохраняемая запись.
+       * @param {String} key Первичный ключ сохраняемой записи.
+       * @param {Boolean} isNewModel признак редактируемой на диалоге записи (см. {@link newModel}).
+       * @see submit
+       * @see update
+       * @see onCreateModel
+       * @see onDestroyModel
+       * @see onReadModel
+       * @see onFail
+       */
+      /**
+       * @event onDestroyModel Происходит при удалении записи из источника данных диалога редактирования.
+       * @param {$ws.proto.EventObject} eventObject Дескриптор события.
+       * @param {SBIS3.CONTROLS.Data.Record} record Запись, которая была удалена из источника данных (см. {@link dataSource}).
+       * @see destroy
+       * @see dataSource
+       * @see onCreateModel
+       * @see onUpdateModel
+       * @see onReadModel
+       * @see onFail
+       */
+      /**
+       * @event onCreateModel Происходит при создании записи в источнике данных диалога редактирования.
+       * @param {$ws.proto.EventObject} eventObject Дескриптор события.
+       * @param {SBIS3.CONTROLS.Data.Record} record Запись, которая была создана в источнике данных.
+       * При создании часть полей может быть предустановлена с помощью опции {@link initValues}.
+       * @see create
+       * @see onDestroyModel
+       * @see onUpdateModel
+       * @see onReadModel
+       * @see onFail
        */
       $protected: {
          _record: null,
@@ -53,45 +79,58 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
          _simpleKey: undefined,
          _options: {
             /**
-             * @cfg {DataSource} Источник данных для диалога редактирования записи
-             * Его нужно настроить так же, как и источник представления данных.
-             * Из него по первичному ключу, переданному в опции {@link key}, подгружается запись при редактировании.
-             * Имеет приоритет над записью, переданной в опции {@link record}.
-             * Если источник не задан, то диалог сможет отобразить только запись из опции {@link record}.
+             * @cfg {DataSource} Устанавливает источник данных для диалога редактирования записи.
+             * @remark
+             * Как правило, источник диалога редактирования устанавливают таким же, как источник списка, из которого производят вызов диалога.
+             * <br/>
+             * Источник может быть установлен с помощью метода {@link setDataSource} или через инициализирующие данные, переданные при вызове диалога через {@link SBIS3.CONTROLS.DialogActionBase}.
+             * Подробнее об этом вы можете прочитать в разделе документации <a href="https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/list-settings/records-editing/editing-dialog/component-control/">DialogAction</a>.
+             * <br/>
+             * При инициализации из источника данных производится чтение записи по первичному ключу, установленному в опции {@link key}.
+             * Если первичный ключ не установлен, то запись будет прочитана из опции {@link record}.
+             * Если для диалога установлены и {@link key}, и {@link record}, то запись будет установлена по первичному ключу из источника.
              * @example
-             * Зазадим в качестве источника данных БЛ:
+             * Установим источник данных для диалога редактирования:
              * <pre>
-             *    // инициализируем источник данных БЛ
-             *    var dataSource = new SbisService ({
-             *       endpoint: 'Товар'
+             *    var dataSource = new SbisService ({ // Инициализация источника данных
+             *       endpoint: 'Товар' // Устанавливаем объект бизнес-логики
              *    });
-             *    this.setDataSource(dataSource); // устанавливаем источник данных
+             *    this.setDataSource(dataSource); // Устанавливаем источник данных
              * </pre>
              * @see setDataSource
+             * @see getDataSource
+             * @see key
+             * @see record
              */
             dataSource: null,
             /**
-             * @cfg {String} Первичный ключ редактируемой записи
-             * По данному ключу будет подгружена запись из источника данных, который задан опцией {@link dataSource}.
+             * @cfg {String} Устанавливает первичный ключ записи, редактируемой на диалоге.
+             * @remark
+             * По данному ключу будет подгружена запись из источника данных, установленного опцией {@link dataSource}.
              * Если ключ не передан (null), то этот сценарий означает создание новой записи.
-             * Передать ключ можно, например, в обработчике события onItemActivate при запуске редактирования записи:
-             * <pre>
-             * myView.subscrive('onItemActivate', function(eventObject, meta) {
-             *    myOpener.execute(meta); // это opener, который управляет открытием диалога редактирования
-             *    // meta - это объект, в котором присутствует id редактируемой записи
-             * });
+             * Ключ устанавливается при вызове диалога редактирования через {@link SBIS3.CONTROLS.DialogActionBase}.
+             * Подробнее об этом вы можете прочитать в разделе документации <a href="https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/list-settings/records-editing/editing-dialog/component-control/">DialogAction</a>.
              * </pre>
-             *
+             * @see record
+             * @see dataSource
              */
             key: null,
             /**
-             * @cfg {SBIS3.CONTROLS.Data.Model} Редактируемая запись
-             * Используется в случае, когда не задан источник данных в опции {@link dataSource}.
+             * @cfg {SBIS3.CONTROLS.Data.Record} Устанавливает запись, редактируемую на диалоге.
+             * @remark
+             * Опция используется в том случае, когда не установлен источник данных диалога в опции {@link dataSource}.
+             * Чтобы установить запись, используют метод {@link setRecord}.
+             * @see setRecord
+             * @see key
+             * @see dataSource
              */
             record: null,
             /**
-             * @cfg {Object} Ассоциативный массив, который используют только при создании новой записи для инициализации её начальными значениями.
+             * @cfg {Object} Устанавливает ассоциативный массив, который используют только при создании новой записи для инициализации её начальными значениями.
+             * @remark
              * При редактировании существующей записи (первичный ключ не задан) опция будет проигнорирована.
+             * Данные для инициализации могут быть переданы со стороны {@link SBIS3.CONTROLS.DialogActionBase} при вызове диалога редактирования.
+             * Подробнее об этом вы можете прочитать в разделе документации <a href="https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/list-settings/records-editing/editing-dialog/component-control/">DialogAction</a>.
              * @example
              * Дополним создаваемую карточку товаров информация, что это новинка:
              * <pre>
@@ -110,16 +149,25 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
              */
             initValues: null,
             /**
-             * @cfg {Boolean} Является ли запись только что созданной
+             * @cfg {Boolean} Устанавливает признак редактируемой на диалоге записи.
+             * @remark
+             * Возможные значения:
+             * <ol>
+             *    <li>true - запись не существует в источнике данных.</li>
+             *    <li>false - запись существует в источнике данных.</li>
+             * </ol>
+             * Чтобы проверить признак записи, используют метод {@link isNewModel}.
+             * @see isNewModel
              */
             newModel: false,
             /**
-             * @cfg {String} Текст рядом с индикатором сохранения записи
-             * @example
-             * <pre>
-             *     <option name="indicatorSavingMessage">Занят важным делом - сохраняю ваши данные.</option>
-             * </pre>
+             * @cfg {String} Устанавливает текст, отображаемый рядом с индикатором при сохранении записи.
+             * @remark
+             * Опция актуальна для события {@link onUpdateModel}.
              * @translatable
+             * @see update
+             * @see submit
+             * @see onUpdateModel
              */
             indicatorSavingMessage:  rk('Подождите, идёт сохранение')
          }
@@ -161,23 +209,65 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
          this._panel.subscribe('onAfterShow', this._updateIndicatorZIndex.bind(this));
       },
       /**
-       * Сохраняет редактируемую или создаваемую запись
-       * Чтобы в связанном представлении отобразить сохраненную запись, нужно его перезагрузить с помощью метода {@link SBIS3.CONTROLS.ListView#reload}.
-       * @command
+       * Сохранить запись в источнике данных диалога редактирования.
+       * @remark
+       * При сохранении записи происходит проверка всех валидаторов диалога редактирования.
+       * Если на одном из полей ввода валидация будет не пройдена, то сохранение записи отменяется, и пользователь увидит сообщение "Некорректно заполнены обязательные поля!".
+       * Подробнее о настройке валидаторов для полей ввода диалога редактирования вы можете прочитать в разделе <a href="https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/core/validation/">Валидация вводимых данных</a>.
+       * <br/>
+       * Если процесс сохранения записи происходит длительное время, то в пользовательском интерфейсе будет выведено сообщение "Подождите, идёт сохранение". Текст сообщения можно конфигурировать с помощью опции {@link indicatorSavingMessage}.
+       * <br/>
+       * При успешном сохранении записи происходит событие {@link onUpdateModel}, а в случае ошибки - {@link onFail}.
+       * @param {Boolean} [closePanelAfterSubmit=false] Признак, по которому устанавливают закрытие диалога редактирования после сохранения записи в источнике данных. В значении true диалог редактирования будет закрыт.
        * @example
-       * Сохранение записи по нажатию кнопки:
+       * В следующем примере организовано сохранение редактируемой записи по нажатию на кнопку:
        * <pre>
-       * this.getChildControlByName('Сохранить').subscribe('onActivated', function() {
-       *    this.sendCommand('submit');
+       * this.getChildControlByName('Сохранить').subscribe('onActivated', function() { // Создаём обработчик нажатися на кнопку сохранения на кнопку
+       *    this.sendCommand('submit'); // Отправляем команду для сохранения диалога редактирования
        * });
        * </pre>
+       * @command
+       * @see update
+       * @see read
+       * @see destroy
+       * @see create
+       * @see notify
+       * @see onUpdateModel
+       * @see onFail
+       * @deprecated Команда устарела и будет удалена в начиная с версии Платформы СБИС 3.7.4. Вместо неё используйте команду {@link update}.
        */
       submit: function(closePanelAfterSubmit){
         $ws.single.ioc.resolve('ILogger').info('FormController', 'Command "submit" is deprecated and will be removed in 3.7.4. Use sendCommand("update")');
         return this.update(closePanelAfterSubmit);
       },
       /**
-       * Action: сохранение записи
+       * Сохранить запись в источнике данных диалога редактирования.
+       * @remark
+       * При сохранении записи происходит проверка всех валидаторов диалога редактирования.
+       * Если на одном из полей ввода валидация будет не пройдена, то сохранение записи отменяется, и пользователь увидит сообщение "Некорректно заполнены обязательные поля!".
+       * Подробнее о настройке валидаторов для полей ввода диалога редактирования вы можете прочитать в разделе <a href="https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/core/validation/">Валидация вводимых данных</a>.
+       * <br/>
+       * Если процесс сохранения записи происходит длительное время, то в пользовательском интерфейсе будет выведено сообщение "Подождите, идёт сохранение". Текст сообщения можно конфигурировать с помощью опции {@link indicatorSavingMessage}.
+       * <br/>
+       * При успешном сохранении записи происходит событие {@link onUpdateModel}, а в случае ошибки - {@link onFail}.
+       * <br/>
+       * Источник данных для диалога редактирования устанавливают с помощью опции {@link dataSource}.
+       * @param {Boolean} [closePanelAfterSubmit=false] Признак, по которому устанавливают закрытие диалога редактирования после сохранения записи в источнике данных. В значении true диалог редактирования будет закрыт.
+       * @example
+       * В следующем примере организовано сохранение редактируемой записи по нажатию на кнопку:
+       * <pre>
+       * this.getChildControlByName('Сохранить').subscribe('onActivated', function() { // Создаём обработчик нажатися на кнопку сохранения на кнопку
+       *    this.sendCommand('update'); // Отправляем команду для сохранения диалога редактирования
+       * });
+       * </pre>
+       * @command
+       * @see read
+       * @see destroy
+       * @see create
+       * @see notify
+       * @see onUpdateModel
+       * @see onFail
+       * @see dataSource
        */
       update: function(closePanelAfterSubmit){
          return this._saveRecord(true, closePanelAfterSubmit);
@@ -195,7 +285,7 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
          };
          this._saving = true;
 
-         //Если пришли из submit'a
+         //Если пришли из submit или update
          if (hideQuestion){
             return this._updateRecord(dResult, closePanelAfterSubmit);
          }
@@ -253,16 +343,23 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
          return dResult;
       },
       /**
-       * Action: Подгружаем запись из источника данных по ключу
-       * @param {String} key Первичный ключ записи
-       * @returns {$ws.proto.Deferred} Окончание чтения
-       * @example
-       * <pre>
-       *   control.sendCommand('read').addBoth(function(){
-       *      console.log('запись прочитана');
-       *   })
-       * </pre>
+       * Прочитать запись по первичному ключу из источника данных диалога редактирования.
+       * @remark
+       * В случае успешного чтения записи из источника происходит событие {@link onReadModel}, а в случае ошибки - {@link onFail}. Прочитанная запись устанавливается в контекст диалога редактирования.
+       * <br/>
+       * Вне зависимости от результата прочтения записи из источника, фокус будет установлен на первый дочерний контрол диалога редактирования.
+       * <br/>
+       * Источник данных для диалога редактирования устанавливают с помощью опции {@link dataSource}.
+       * @param {String} key Первичный ключ записи, которую нужно прочитать из источника данных.
+       * @returns {$ws.proto.Deferred} Объект deferred, который возвращает результат чтения записи из источника.
        * @command
+       * @see update
+       * @see destroy
+       * @see create
+       * @see notify
+       * @see onReadModel
+       * @see onFail
+       * @see dataSource
        */
       _read: function (key) {
          var self = this;
@@ -320,12 +417,13 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
          }
       },
       /**
-       * Признак, является ли запись, редактируемая диалогом, только что созданной.
+       * Вовзращает признак, по которому устанавливает тип записи: редактируется новая или существующая в источнике данных запись.
        * @returns {Boolean} Возможные значения:
        * <ol>
-       *    <li>true - диалог редактирования открыт для только что созданной записи;</li>
-       *    <li>false - диалог редактирования открыт для уже существующей записи.</li>
+       *    <li>true - на диалоге редактирования открыта запись, которой ещё нет в источнике данных.</li>
+       *    <li>false - на диалоге редактирования открыта запись, которая уже существует в источнике данных.</li>
        * </ol>
+       * @see newModel
        */
       isNewModel: function(){
          return this._options.newModel;
@@ -359,34 +457,51 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
          return key && key.toString().split(',')[0];
       },
       /**
-       * Получает источник данных диалога редактирования
+       * Возвращает источник данных диалога редактирования.
+       * @remark
+       * Чтобы установить источник данных, используют метод {@link setDataSource}.
+       * Также для диалога редактирования может быть по умолчанию установлен источник данных. Это происходит при его вызове через {@link SBIS3.CONTROLS.DialogActionBase}.
+       * @example
+       * В примере продемонстрирована задача изменения списочного метода источника данных
+       * <pre>
+       * var dataSource = this.getDataSource(); // Получаем объект источника данных
+       * dataSource.setBindings({ // Устанавливаем метод чтения записи
+       *    read: 'ПрочитатьКарточкуСотрудника'
+       * });
+       * @see dataSource
+       * @see getDataSource
        */
       getDataSource: function(){
          return this._options.dataSource;
       },
       /**
-       * Устанавливает источник данных диалогу редактирования
-       * @param {DataSource} source Источник данных
-       * @see dataSource
+       * Устанавливает источник данных диалогу редактирования.
+       * @remark
+       * Для диалога редактирования может быть по умолчанию установлен источник данных. Это происходит при вызове диалога через {@link SBIS3.CONTROLS.DialogActionBase}.
+       * Чтобы получить объект источника данных, используют метод {@link getDataSource}.
+       * @param {DataSource} source Источник данных.
        * @example
-       * Зазадим в качестве источника данных БЛ:
        * <pre>
-       *    // инициализируем источник данных БЛ
-       *    var dataSource = new SbisService ({
-       *       endpoint: 'Товар'
+       *    var dataSource = new SbisService({ // Инициализация источника данных
+       *       endpoint: 'Товар' // Устанавливаем объект бизнес-логики
        *    });
-       *    this.setDataSource(dataSource); // устанавливаем источник данных
+       *    this.setDataSource(dataSource); // Устанавливаем источник данных диалогу редактирования
        * </pre>
+       * @see dataSource
+       * @see getDataSource
        */
       setDataSource: function(source){
          this._options.dataSource = source;
          return this._runQuery();
       },
       /**
-       * Установаливает запись диалогу редактирования
-       * @param {SBIS3.CONTROLS.Data.Model} record
-       * @param {Boolean} updateKey
+       * Устанавливает запись диалогу редактирования.
+       * @remark
+       * Новая запись будет добавление в контекст диалога редактирования в свойство "record".
+       * @param {SBIS3.CONTROLS.Data.Model} record Запись источника данных.
+       * @param {Boolean} [updateKey=false] Признак, по которому устанавливают необходимость обновления значения опции {@link key}.
        * @see record
+       * @see key
        */
       setRecord: function(record, updateKey){
          var newKey;
@@ -399,9 +514,19 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
          this._needDestroyRecord = false;
          this._setContextRecord(record);
       },
-
       /**
-       * Action: дестрой записи
+       * Удалить запись из источника данных диалога редактирования.
+       * @remark
+       * При удалении происходит событие {@link onDestroyModel}.
+       * <br/>
+       * Источник данных для диалога редактирования устанавливают с помощью опции {@link dataSource}.
+       * @command
+       * @see update
+       * @see read
+       * @see create
+       * @see notify
+       * @see onDestroyModel
+       * @see dataSource
        */
       _destroyModel: function(){
          this._options.dataSource.destroy(this._options.record.getId());
@@ -415,7 +540,24 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
          return this._create();
       },
       /**
-       * Action: создать запись
+       * Создать новую запись в источнике данных диалога редактирования.
+       * @remark
+       * В новой записи часть полей может быть предустановлена с помощью опции {@link initValues}.
+       * <br/>
+       * В случае успешного создания записи в источнике данных происходит событие {@link onCreateModel}. Созданная запись устанавливается в контекст диалога редактирования.
+       * <br/>
+       * После создания новой записи фокус будет установлен на первый дочерний контрол диалога редактирования.
+       * <br/>
+       * Источник данных для диалога редактирования устанавливают с помощью опции {@link dataSource}.
+       * @returns {SBIS3.CONTROLS.Data.Record|$ws.proto.Deferred} Созданная запись либо результат выполнения команды.
+       * @command
+       * @see read
+       * @see update
+       * @see destroy
+       * @see notify
+       * @see onCreateModel
+       * @see onFail
+       * @see dataSource
        */
       _create: function(){
          var self = this,
@@ -438,7 +580,15 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
          return def;
       },
       /**
-       * Action, который пробрасывает событие до dialogActionBase в обход базовой логики
+       * Инициировать событие без выполнения базовой логики диалога редактирования.
+       * @remark
+       * Команда применяется для того, чтобы логика обработки события производилась на стороне {@link SBIS3.CONTROLS.DialogActionBase}.
+       * @param {String} eventName Имя события, о котором нужно оповестить {@link SBIS3.CONTROLS.DialogActionBase}.
+       * @command
+       * @see read
+       * @see create
+       * @see update
+       * @see destroy
        */
       _actionNotify: function(eventName){
          this._notify(eventName, this._options.record);
