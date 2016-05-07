@@ -416,11 +416,20 @@ define('js!SBIS3.CONTROLS.ListView',
                /**
                 * @cfg {Boolean} Устанавливает режим постраничной навигации.
                 * @remark
-                * При частичной постраничной навигации заранее неизвестно общее количество страниц, режим пейджинга будет определн по параметру n из dataSource
-                * Если пришел boolean, значит частичная постраничная навигация
-                * Важно! В SBIS3.CONTROLS.TreeCompositeView особый режим навигации - в плоском списке и таблице автоматически работает
-                * бесконечная подгрузка по скроллу (@see infiniteScroll), а вот в режиме плитки (tile) будет работать постраничная навигация
-                * (при условии showPaging = true)
+                * Постраничная навигация списка может работать в двух состояниях:
+                * <ol>
+                *    <li>Полная. Пользователь видит номера первых страниц, затем многоточие и номер последней страницы.</li>
+                *    <li>Частичная. Пользователь видит только номера текущей страницы, следующей и предыдущей. Общее количество страниц неизвестно.</li>
+                * </ol>
+                * Состояние постраничной навигации устанавливается по параметру n из dataSource (набора данных). Параметр по умолчанию поддерживается декларативным методом бизнес-логики.
+                * Если для получения набора данных используется другой списочный метод, то разработчик должен самостоятельно устанавливать параметр n: если Boolean, то значит частичная постраничная навигация.
+                * <br/>
+                * Для контролов {@link SBIS3.CONTROLS.CompositeView} и {@link SBIS3.CONTROLS.TreeCompositeView} режим постраничной навигации имеет свои особенности работы:
+                * <ol>
+                *    <li>В режимах отображения "Список" и "Таблица" постраничная навигация не работает, даже если опция showPaging установлена в значение true. В этих режимах отображения автоматически устанавливается режим бесконечной подгрузки по скроллу - {@link infiniteScroll}.</li>
+                *    <li>В режиме отображения "Плитка" постраничная навигация будет работать корректно.</li>
+                * </ol>
+                * Режим отображения устанавливают с помощью опции {@link SBIS3.CONTROLS.CompositeViewMixin#viewMode}.
                 * @example
                 * <pre>
                 *     <option name="showPaging">true</option>
@@ -428,7 +437,10 @@ define('js!SBIS3.CONTROLS.ListView',
                 * @see setPage
                 * @see getPage
                 * @see infiniteScroll
+                * @see SBIS3.CONTROLS.DSMixin#pageSize
+                * @see SBIS3.CONTROLS.CompositeViewMixin#viewMode
                 * @see SBIS3.CONTROLS.TreeCompositeView
+                * @see SBIS3.CONTROLS.CompositeView
                 */
                showPaging: false,
                /**
@@ -456,24 +468,19 @@ define('js!SBIS3.CONTROLS.ListView',
                 */
                editMode: '',
                /**
-                * @cfg {String} Шаблон строки редактирования по месту.
-                * Данная опция обладает большим приоритетом, чем заданный в колонках редактор.
-                * Данная опция может быть переопределена с помощью метода (@see setEditingTemplate). Переопределить опцию
-                * можно в любой момент до показа редакторов на строке, например: (@see onBeginEdit) или (@see onItemClick)
+                * @cfg {String} Устанавливает шаблон строки редактирования по месту.
+                * Шаблон строки редактирования по месту используется для удобного представления редактируемой записи.
+                * Такой шаблон отрисовывается поверх редактируемой строки с прозрачным фоном.
+                * Это поведение считается нормальным в целях решения прикладных задач.
+                * Чтобы отображать только шаблон строки без прозрачного фона, нужно установить для него свойство background-color.
+                * Данная опция обладает большим приоритетом, чем установленный в колонках редактор (см. {@link SBIS3.CONTROLS.DataGridView#columns}).
+                * Данная опция может быть переопределена с помощью метода (@see setEditingTemplate).
+                * Переопределить опцию можно в любой момент до показа редакторов на строке, например: (@see onBeginEdit) или (@see onItemClick).
                 * @example
-                * <pre>
-                *     <opt name="editingTemplate">
-                *       <component data-component="SBIS3.CONTROLS.TextBox" style="vertical-align: middle; display: inline-block; width: 100%;">
-                *          <opt name="text" bind="TextValue"></opt>
-                *          <opts name="validators" type="array">
-                *             <opts>
-                *                <opt name="validator" type="function">js!SBIS3.CORE.CoreValidators:required</opt>
-                *             </opts>
-                *          </opts>
-                *       </component>
-                *     </opt>
-                * </pre>
+                * Пример шаблона вы можете найти в разделе <a href="https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/list-settings/records-editing/edit-in-place/template/">Шаблон строки редактирования по месту</a>.
                 * @see editMode
+                * @see setEditingTemplate
+                * @see getEditingTemplate
                 */
                editingTemplate: undefined,
                /**
@@ -484,13 +491,10 @@ define('js!SBIS3.CONTROLS.ListView',
                 * @remark
                 * Отображение строки итогов конфигурируется тремя опциями: resultsPosition, {@link resultsText} и {@link resultsTpl}.
                 * Данная опция определяет расположение строки итогов, а также предоставляет возможность отображения строки в случае отсутствия записей.
-                * Список возможных значений:
-                * <ol>
-                * </ol>
                 * С подробным описанием можно ознакомиться в статье {@link https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/list-settings/list-visual-display/results/ Строка итогов}.
                 * @example
                 * <pre class="brush: xml">
-                *     <option name="resultsPosition">bottom</option><!-- строка итогов будет отображена под всеми элементами коллекции -->
+                *     <option name="resultsPosition">bottom</option> <!-- Строка итогов будет отображена под всеми элементами коллекции -->
                 * </pre>
                 * @see resultsText
                 * @see resultsTpl
@@ -1119,7 +1123,7 @@ define('js!SBIS3.CONTROLS.ListView',
             return this._options.editMode;
          },
          /**
-          * Устанавливает шаблон редактирования по месту.
+          * Устанавливает шаблон строки редактирования по месту.
           * @param {String} template Шаблон редактирования по месту. Подробнее вы можете прочитать в описании к опции {@link editingTemplate}.
           * @see editingTemplate
           * @see getEditingTemplate

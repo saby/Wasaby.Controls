@@ -35,10 +35,35 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
     * </component>
     *
     * @demo SBIS3.CONTROLS.Demo.MyTreeDataGridView
-    *
+    * @demo SBIS3.CONTROLS.Demo.AutoAddHierarchy Пример 2. Автодобавление записей в иерархическом представлении данных.
+    * Инициировать добавление можно как по нажатию кнопок в футерах, так и по кнопке Enter из режима редактирования последней записи.
+    * Подробное описание конфигурации компонента и футеров вы можете найти в разделе {@link http://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/list-settings/records-editing/edit-in-place/users/add-in-place-hierarchy/ Добавление по месту в иерархическом списке}.
     */
 
    var TreeDataGridView = DataGridView.extend([TreeMixin, TreeViewMixin], /** @lends SBIS3.CONTROLS.TreeDataGridView.prototype*/ {
+       /**
+        * @event onDragMove Происходит при перемещении записей.
+        * @remark
+        * <ul>
+        *   <li>В режиме единичного выбора значения (опция {@link multiselect} установлена в значение false) возможно перемещать только одну запись.</li>
+        *   <li>В режиме множественного выбора значений (опция {@link multiselect} установлена в значение true) возможно перемещать несколько записей.</li>
+        * </ul>
+        * Перемещение производится через удержание ЛКМ на выделенных записях и перемещение их в нужный элемент списка.
+        * Событие будет происходить каждый раз, когда под курсором изменяется целевая запись списка, а удержание выделенных записей продолжается.
+        * @param {$ws.proto.EventObject} eventObject Дескриптор события.
+        * @param {Array.<Number|String>} key Массив идентификаторов перемещаемых записей.
+        * <ul>
+        *   <li>В режиме единичного выбора параметр возвращает либо строку, либо число.</li>
+        *   <li>В режиме множественного выбора параметр возвращает массив строки или чисел.</li>
+        * </ul>
+        * @param {Number|String} id Идентификатор целевой записи, куда производится перемещение.
+        * @param {Boolean|undefined} insertAfter Признак: куда были перемещены записи.
+        * <ul>
+        *   <li>undefined - перемещение произвели в папку;</li>
+        *   <li>false - перемещаемые записи были вставлены перед целевой записью;</li>
+        *   <li>true - перемещаемые записи были вставлены после целевой записи.</li>
+        * </ul>
+        */
       $protected: {
          _defaultItemTemplate: ItemTemplate,
          _defaultItemContentTemplate: ItemContentTemplate,
