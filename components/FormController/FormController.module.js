@@ -84,7 +84,7 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
              * Как правило, источник диалога редактирования устанавливают таким же, как источник списка, из которого производят вызов диалога.
              * <br/>
              * Источник может быть установлен с помощью метода {@link setDataSource} или через инициализирующие данные, переданные при вызове диалога через {@link SBIS3.CONTROLS.DialogActionBase}.
-             * Подробнее об этом вы можете прочитать в разделе документации <a href="https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/list-settings/records-editing/editing-dialog/component-control/">DialogAction</a>.
+             * Подробнее об этом вы можете прочитать в разделе документации <a href="https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/list-settings/records-editing/editing-dialog/component-control/">Управление диалогом редактирования списка</a>.
              * <br/>
              * При инициализации из источника данных производится чтение записи по первичному ключу, установленному в опции {@link key}.
              * Если первичный ключ не установлен, то запись будет прочитана из опции {@link record}.
@@ -109,7 +109,7 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
              * По данному ключу будет подгружена запись из источника данных, установленного опцией {@link dataSource}.
              * Если ключ не передан (null), то этот сценарий означает создание новой записи.
              * Ключ устанавливается при вызове диалога редактирования через {@link SBIS3.CONTROLS.DialogActionBase}.
-             * Подробнее об этом вы можете прочитать в разделе документации <a href="https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/list-settings/records-editing/editing-dialog/component-control/">DialogAction</a>.
+             * Подробнее об этом вы можете прочитать в разделе документации <a href="https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/list-settings/records-editing/editing-dialog/component-control/">Управление диалогом редактирования списка</a>.
              * </pre>
              * @see record
              * @see dataSource
@@ -130,7 +130,7 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
              * @remark
              * При редактировании существующей записи (первичный ключ не задан) опция будет проигнорирована.
              * Данные для инициализации могут быть переданы со стороны {@link SBIS3.CONTROLS.DialogActionBase} при вызове диалога редактирования.
-             * Подробнее об этом вы можете прочитать в разделе документации <a href="https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/list-settings/records-editing/editing-dialog/component-control/">DialogAction</a>.
+             * Подробнее об этом вы можете прочитать в разделе документации <a href="https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/list-settings/records-editing/editing-dialog/component-control/">Управление диалогом редактирования списка</a>.
              * @example
              * Дополним создаваемую карточку товаров информация, что это новинка:
              * <pre>
