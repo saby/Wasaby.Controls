@@ -199,9 +199,9 @@ define('js!SBIS3.CONTROLS.PickerMixin', ['js!SBIS3.CONTROLS.FloatArea'], functio
       },
 
       around : {
-         _getScrollContainer: function() {
+         _getScrollContainer: function(parentFunc) {
             if(!this._picker) {
-               return false;
+               return parentFunc.call(this);
             }
             return this._picker.getContainer();
          }

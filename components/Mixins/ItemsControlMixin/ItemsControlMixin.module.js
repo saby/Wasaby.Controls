@@ -1391,7 +1391,6 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
       _scrollToItem: function(itemId) {
          var itemContainer  = $(".controls-ListView__item[data-id='" + itemId + "']", this._getItemsContainer());
          if (itemContainer.length) {
-            itemContainer.attr('tabindex', -1);
             this._scrollTo(itemContainer);
          }
       },
