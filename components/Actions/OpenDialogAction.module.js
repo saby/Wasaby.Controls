@@ -1,4 +1,4 @@
-define('js!SBIS3.CONTROLS.OpenDialogAction', ['js!SBIS3.CONTROLS.DialogActionBase', 'js!SBIS3.CONTROLS.Data.Record'], function(DialogActionBase, Record){
+define('js!SBIS3.CONTROLS.OpenDialogAction', ['js!SBIS3.CONTROLS.DialogActionBase'], function(DialogActionBase){
    'use strict';
 
    /**
@@ -28,19 +28,14 @@ define('js!SBIS3.CONTROLS.OpenDialogAction', ['js!SBIS3.CONTROLS.DialogActionBas
    var OpenDialogAction = DialogActionBase.extend(/** @lends SBIS3.CONTROLS.OpenDialogAction.prototype */{
       _buildComponentConfig: function(meta) {
          //Если запись в meta-информации отсутствует, то передаем null. Это нужно для правильной работы DataBoundMixin с контекстом и привязкой значений по имени компонента
-         var record = ($ws.helpers.instanceOfModule(meta.item, 'SBIS3.CONTROLS.Data.Record') ? meta.item.clone() : meta.item) || null,
-             ctx = new $ws.proto.Context({restriction: 'set'}).setPrevious(this.getLinkedContext());
+         var record = ($ws.helpers.instanceOfModule(meta.item, 'SBIS3.CONTROLS.Data.Record') ? meta.item.clone() : meta.item) || null;
 
-         //для формконтроллера теперь всегда есть контекст с рекордом. Сделано в рамках ускорения, чтобы в случае чего
-         //компоненты на момент инициализации могли подцепить значение из контекста
-         ctx.setValue('record', record || new Record());
          return {
             dataSource: meta.dataSource,
             key : meta.id,
             newModel: meta.newModel,
             initValues : meta.filter,
-            record: record,
-            context: ctx
+            record: record
          }
       }
    });
