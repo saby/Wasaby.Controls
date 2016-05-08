@@ -2140,13 +2140,19 @@ define('js!SBIS3.CONTROLS.ListView',
                 target;
             if (this._canDragStart(e)) {
                target = this._findItemByElement($(e.target));
-               id = target.data('id');
-               this.setCurrentElement(e, {
-                  keys: this._getDragItems(id),
-                  targetId: id,
-                  target: target,
-                  insertAfter: undefined
-               });
+               //TODO: данный метод выполняется по селектору '.js-controls-ListView__item', но не всегда если запись есть в вёрстке
+               //она есть в _items(например при добавлении или фейковый корень). Метод _findItemByElement в данном случае вернёт
+               //пустой массив. В .150 править этот метод опасно, потому что он много где используется. В .200 переписать метод
+               //_findItemByElement, без завязки на _items.
+               if (target.length) {
+                  id = target.data('id');
+                  this.setCurrentElement(e, {
+                     keys: this._getDragItems(id),
+                     targetId: id,
+                     target: target,
+                     insertAfter: undefined
+                  });
+               }
                //TODO: Сейчас появилась проблема, что если к компьютеру подключен touch-телевизор он не вызывает
                //preventDefault и при таскании элементов мышкой происходит выделение текста.
                //Раньше тут была проверка !$ws._const.compatibility.touch и preventDefault не вызывался для touch устройств
