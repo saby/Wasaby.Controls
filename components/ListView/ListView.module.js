@@ -551,9 +551,9 @@ define('js!SBIS3.CONTROLS.ListView',
             _scrollWatcher : undefined,
             _searchParamName: undefined, //todo Проверка на "searchParamName" - костыль. Убрать, когда будет адекватная перерисовка записей (до 150 версии, апрель 2016)
             _updateByReload: false, //todo: Убрать в 150, когда будет правильный рендер изменившихся данных. Флаг, означающий то, что обновление происходит из-за перезагрузки данных.
-            _scrollOnBottom: true, // TODO: Придрот для скролла вниз при первой подгрузке. Если включена подгрузка вверх то изначально нужно проскроллить контейнер вниз, 
+            _scrollOnBottom: true, // TODO: Придрот для скролла вниз при первой подгрузке. Если включена подгрузка вверх то изначально нужно проскроллить контейнер вниз,
             //но после загрузки могут долетать данные (картинки в docviewer например), которые будут скроллить вверх.
-            _scrollOnBottomTimer: null //TODO: см. строчкой выше  
+            _scrollOnBottomTimer: null //TODO: см. строчкой выше
          },
 
          $constructor: function () {
@@ -561,8 +561,15 @@ define('js!SBIS3.CONTROLS.ListView',
             //TODO временно смотрим на TopParent, чтобы понять, где скролл. С внедрением ScrallWatcher этот функционал уберем
             var topParent = this.getTopParent();
             this._publish('onChangeHoveredItem', 'onItemClick', 'onItemActivate', 'onDataMerge', 'onItemValueChanged', 'onBeginEdit', 'onAfterBeginEdit', 'onEndEdit', 'onBeginAdd', 'onAfterEndEdit', 'onPrepareFilterOnMove');
-            this._container.on('mousemove', this._mouseMoveHandler.bind(this))
-                           .on('mouseleave', this._mouseLeaveHandler.bind(this));
+
+            if(this._touchSupport) {
+               this._container.on('swipe', this._swipeHandler.bind(this))
+                              .on('tap', this._tapHandler.bind(this))
+                              .on('touchmove',this._mouseMoveHandler.bind(this));
+            } else {
+               this._container.on('mousemove', this._mouseMoveHandler.bind(this))
+                              .on('mouseleave', this._mouseLeaveHandler.bind(this));
+            }
 
             this.initEditInPlace();
             this.setItemsDragNDrop(this._options.itemsDragNDrop);
@@ -584,15 +591,6 @@ define('js!SBIS3.CONTROLS.ListView',
             this._prepareInfiniteScroll();
             ListView.superclass.init.call(this);
             this.reload();
-            if (this._touchSupport){
-               /* События нужно вешать на контейнер контрола,
-                  т.к. getItemsContainer возвращает текущий активный контейнер,
-                  а в случае плиточного реестра их два, поэтому в одном из режимов могут не работать обработчики */
-               this._container
-                  .bind('swipe', this._swipeHandler.bind(this))
-                  .bind('tap', this._tapHandler.bind(this))
-                  .bind('touchmove',this._mouseMoveHandler.bind(this));
-            }
          },
          _modifyOptions : function(opts){
             var lvOpts = ListView.superclass._modifyOptions.apply(this, arguments);
@@ -653,9 +651,9 @@ define('js!SBIS3.CONTROLS.ListView',
                   var disableScrollBottom = function(){
                      self._scrollOnBottom = false;
                      self._options.infiniteScrollContainer.off('touchmove wheel', disableScrollBottom);
-                  }
+                  };
                   this._options.infiniteScrollContainer.on('touchmove wheel', disableScrollBottom)
-               } 
+               }
                this._scrollWatcher.subscribe('onScroll', function(event, type){
                   //top || bottom
                   self._loadChecked((type === 'top' && self._options.infiniteScroll === 'up') ||
@@ -810,16 +808,20 @@ define('js!SBIS3.CONTROLS.ListView',
 
             target = this._findItemByElement($target);
 
-            if (target.length) {
-               targetKey = target[0].getAttribute('data-id');
-               if (targetKey !== undefined && this._hoveredItem.key !== targetKey) {
-                  this._hoveredItem.container && this._hoveredItem.container.removeClass('controls-ListView__hoveredItem');
-                  target.addClass('controls-ListView__hoveredItem');
-                  this._hoveredItem = this._getElementData(target);
-                  this._notifyOnChangeHoveredItem();
-               }
+            if (target.length && !this._touchSupport) {
+               this._changeHoveredItem(target);
             } else if (!this._isHoverControl($target)) {
                this._mouseLeaveHandler();
+            }
+         },
+
+         _changeHoveredItem: function(target) {
+            var targetKey = target[0].getAttribute('data-id');
+            if (targetKey !== undefined && this._hoveredItem.key !== targetKey) {
+               this._hoveredItem.container && this._hoveredItem.container.removeClass('controls-ListView__hoveredItem');
+               target.addClass('controls-ListView__hoveredItem');
+               this._hoveredItem = this._getElementData(target);
+               this._notifyOnChangeHoveredItem();
             }
          },
 
@@ -891,8 +893,8 @@ define('js!SBIS3.CONTROLS.ListView',
           * @private
           */
          _onChangeHoveredItem: function (target) {
-            if (this._isSupportedItemsToolbar()) {
-         		if (target.container && !this._touchSupport){
+            if (this._isSupportedItemsToolbar() && !this._touchSupport) {
+         		if (target.container){
                   this._showItemsToolbar(target);
                } else {
                   this._hideItemsToolbar();
@@ -1313,22 +1315,36 @@ define('js!SBIS3.CONTROLS.ListView',
          },
 
          _swipeHandler: function(e){
-            var target = this._findItemByElement($(e.target)),
-                item;
+            var target = this._findItemByElement($(e.target));
 
             if(!target.length) {
                return;
             }
 
+            if (e.direction == 'left') {
+               this._changeHoveredItem(target);
+               this._onLeftSwipeHandler();
+            } else {
+               this._clearHoveredItem();
+               this._onRightSwipeHandler();
+            }
+            e.stopPropagation();
+         },
+
+         _onLeftSwipeHandler: function() {
             if (this._isSupportedItemsToolbar()) {
-               item = this._getElementData(target);
-               if (e.direction == 'left') {
-                  item.container ? this._showItemsToolbar(item) : this._hideItemsToolbar();
-                  this._hoveredItem = item;
+               if (this._hoveredItem.key) {
+                  this._showItemsToolbar(this._hoveredItem);
+                  this.setSelectedKey(this._hoveredItem.key);
                } else {
-                  this._hideItemsToolbar(true);
+                  this._hideItemsToolbar();
                }
-               e.stopPropagation();
+            }
+         },
+
+         _onRightSwipeHandler: function() {
+            if (this._isSupportedItemsToolbar()) {
+               this._hideItemsToolbar(true);
             }
          },
 
