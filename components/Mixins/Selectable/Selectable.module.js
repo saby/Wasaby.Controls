@@ -103,6 +103,7 @@ define('js!SBIS3.CONTROLS.Selectable', ['js!SBIS3.CONTROLS.Data.Utils', 'js!SBIS
             this._selectMode = 'index';
             if (this._itemsProjection.getCount()) {
                this._options.selectedIndex = index;
+               this._setKeyByIndex();
             }
             else {
                this._options.selectedIndex = undefined;
