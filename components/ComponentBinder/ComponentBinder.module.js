@@ -274,6 +274,13 @@ define('js!SBIS3.CONTROLS.ComponentBinder', [], function () {
                resetSearch.call(self, searchParamName);
             }
          });
+         searchForm.subscribe('onKeyPressed', function(eventObject, event){
+            // переводим фокус на view и устанавливаем активным первый элемент, если поле пустое, либо курсор стоит в конце поля ввода
+            if (event.which == $ws._const.key.down && (this.getText() === '' || this.getText().length === this._inputField[0].selectionStart)){
+               view.setSelectedIndex(0);
+               view.setActive(true);
+            }
+         });
 
          searchForm.subscribe('onSearch', function(event, text) {
             if (isTree) {
