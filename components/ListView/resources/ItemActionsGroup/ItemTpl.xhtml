@@ -5,7 +5,7 @@
       cssClass = it.item.get('cssClass'),
       allowChangeEnable = it.item.get('allowChangeEnable'); }}
 
-<component data-component="{{? icon }}SBIS3.CONTROLS.IconButton{{??}}SBIS3.CONTROLS.Link{{?}}" {{? cssClass !== undefined }}class="{{= cssClass }}"{{?}}>
+<component data-component="{{? icon }}SBIS3.CONTROLS.IconButton{{??}}SBIS3.CONTROLS.Link{{?}}" class="controls-ItemActions__item {{? cssClass !== undefined }}{{= cssClass }}{{?}}">
     {{? allowChangeEnable !== undefined }}<option name="allowChangeEnable" type="boolean">{{= allowChangeEnable }}</option>{{?}}
     {{? visible !== undefined }}<option name="visible" type="boolean">{{= visible }}</option>{{?}}
     {{? icon}}<option name="icon">{{= icon }}</option>{{??}}<option name="caption">{{= caption }}</option>{{?}}
