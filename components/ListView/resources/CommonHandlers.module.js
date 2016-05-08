@@ -10,6 +10,7 @@ define('js!SBIS3.CONTROLS.CommonHandlers',['i18n!SBIS3.CONTROLS.CommonHandlers']
             message = message || (idArray.length !== 1 ? rk("Удалить записи?") : rk("Удалить текущую запись?"));
             return $ws.helpers.question(message).addCallback(function(res) {
                if (res) {
+                  self._toggleIndicator(true);
                   return self._dataSource.destroy(idArray).addCallback(function () {
                      self.removeItemsSelection(idArray);
                      if ($ws.helpers.instanceOfModule(self, 'SBIS3.CONTROLS.TreeCompositeView') && self.getViewMode() === 'table') {
@@ -19,6 +20,8 @@ define('js!SBIS3.CONTROLS.CommonHandlers',['i18n!SBIS3.CONTROLS.CommonHandlers']
                      }
                   }).addErrback(function(result) {
                      $ws.helpers.alert(result)
+                  }).addBoth(function() {
+                     self._toggleIndicator(false);
                   });
                }
             });
