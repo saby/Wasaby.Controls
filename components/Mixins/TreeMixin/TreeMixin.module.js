@@ -352,7 +352,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
       getOpenedPath: function(){
          return this._options.openedPath;
       },
-      around : {
+      around: {
          _buildTplArgs: function(parentFnc, item) {
             var
                args = parentFnc.call(this, item);
@@ -362,6 +362,11 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
             args.originallPadding = this._originallPadding;
             args.isSearch = (!Object.isEmpty(this._options.groupBy) && this._options.groupBy.field === this._searchParamName)
             return args;
+         },
+         _canApplyGrouping: function(parentFn, projItem) {
+            var
+               itemParent = projItem.getParent();
+            return parentFn.call(this, projItem) && itemParent && itemParent.isRoot();
          }
       },
       /**
