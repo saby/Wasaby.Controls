@@ -2,8 +2,9 @@ define('js!SBIS3.CONTROLS.SuggestTextBox', [
    'js!SBIS3.CONTROLS.TextBox',
    'js!SBIS3.CONTROLS.PickerMixin',
    'js!SBIS3.CONTROLS.SuggestMixin',
-   'js!SBIS3.CONTROLS.ChooserMixin'
-], function (TextBox, PickerMixin, SuggestMixin, ChooserMixin) {
+   'js!SBIS3.CONTROLS.ChooserMixin',
+   'js!SBIS3.CONTROLS.Utils.KbLayoutRevertUtil'
+], function (TextBox, PickerMixin, SuggestMixin, ChooserMixin, KbLayoutRevertUtil) {
    'use strict';
 
    function stopEvent(e) {
@@ -29,8 +30,20 @@ define('js!SBIS3.CONTROLS.SuggestTextBox', [
          _changedByKeyboard: false  /* {Boolean} Флаг, обозначающий, что изменения были вызваны действиями с клавиатуры */
       },
       $constructor: function () {
+         var self = this;
+
          this._options.observableControls.unshift(this);
          this.getContainer().addClass('controls-SuggestTextBox');
+
+         /* Проверяем на изменение раскладки */
+         this.once('onListReady', function(e, list) {
+            self.subscribeTo(list, 'onDataLoad', function(event, data) {
+               if(data.getMetaData()['Switched']) {
+                  self.setText(KbLayoutRevertUtil.process(self.getText()));
+               }
+            });
+         });
+
       },
 
       _getLoadingContainer : function() {
