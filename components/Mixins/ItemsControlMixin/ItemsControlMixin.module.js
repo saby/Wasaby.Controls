@@ -250,6 +250,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
              * </pre>
              * @remark
              * Опция задаёт текст, отображаемый как при абсолютном отсутствии данных, так и в результате {@link groupBy фильтрации}.
+             * @translatable
              * @see items
              * @see setDataSource
              * @see groupBy
