@@ -389,7 +389,7 @@ define('js!SBIS3.CONTROLS.FormWidgetMixin', ['js!SBIS3.CORE.Infobox'], function 
        * @param {Array} validators Массив объектов, описывающих функции валидации.
        * @param {Object} [validators.object] Объект с конфигурацией валидатора.
        * @param {Function} [validators.object.validator] Функция валидации.
-       * @param {String} [validators.object.option] Название опции контрола, зачение которой требуется проверить валидатором.
+       * @param {String} [validators.object.option] Название опции контрола, значение которой требуется проверить валидатором.
        * @param {String} [validators.object.errorMessage] Текст сообщения об ошибке валидации. Если свойство не определено, то в качестве текста будет использовано значение, возвращаемое функцией валидации.
        * @param {Boolean} [validators.object.noFailOnError] Нежесткая валидация. В случае не прохождения валидации контрол будет только отмечен как непрошедший проверку, но валидация будет считаться пройденной.
        * @example
