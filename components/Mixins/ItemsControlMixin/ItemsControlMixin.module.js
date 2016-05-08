@@ -554,6 +554,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
 
             targetElement.after(markup).remove();
             this._reviveItems();
+            this._notifyOnDrawItems();
          }
       },
 
@@ -580,8 +581,10 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
                for (i = 0; i < newItems.length; i++) {
                   this._addItem(
                      newItems[i],
-                     newItemsIndex + i
+                     newItemsIndex + i,
+                     true
                   );
+                  this._notifyOnDrawItems();
                }
             }
             else {
@@ -691,6 +694,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
                   }
                   /*TODO Лесенка*/
                }
+               this._notifyOnDrawItems();
             }
          }
       },
@@ -1208,6 +1212,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
             newElement = this._drawItem(projItem);
          targetElement.after(newElement).remove();
          this.reviveComponents();
+         this._notifyOnDrawItems();
       },
 
       _getElementByModel: function(item) {
@@ -1522,17 +1527,20 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          }
       },
 
-      _addItem: function (projItem, at) {
+      _canApplyGrouping: function(projItem) {
+         return !Object.isEmpty(this._options.groupBy);
+      },
+
+      _addItem: function (projItem, at, withoutNotify) {
          var
             item = projItem.getContents(),
             ladderDecorator = this._decorators.getByName('ladder'),
-            itemParent = projItem.getParent(),
-            itemParentIsRoot = itemParent && itemParent.isRoot(),// Флаг используется для группировки, которую нужно запускать только для элемента, у которого родитель - это корень
+            canApplyGrouping = this._canApplyGrouping(projItem),
             previousGroupBy = this._previousGroupBy;//После добавления записи восстанавливаем это значение, чтобы не сломалась группировка
          ladderDecorator && ladderDecorator.setMarkLadderColumn(true);
          /*TODO отдельно обрабатываем случай с группировкой*/
          var flagAfter = false;
-         if (itemParentIsRoot && !Object.isEmpty(this._options.groupBy)) {
+         if (canApplyGrouping) {
             var
                meth = this._options.groupBy.method,
                prev = this._itemsProjection.getPrevious(projItem),
@@ -1566,12 +1574,15 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
             newItemContainer.appendTo(target);
             rows = [newItemContainer.prev().prev(), newItemContainer.prev(), newItemContainer, newItemContainer.next()];
          }
-         if (itemParentIsRoot) {
+         if (canApplyGrouping) {
             this._group(projItem, {at: at});
             this._previousGroupBy = previousGroupBy;
          }
          ladderDecorator && ladderDecorator.setMarkLadderColumn(false);
          this._ladderCompare(rows);
+         if (!withoutNotify) {
+            this._notifyOnDrawItems();
+         }
       },
 
       _addItemAttributes: function (container, item) {
