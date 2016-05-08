@@ -533,7 +533,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
 
 
           setDataSource: function(ds, noLoad) {
-             this.once('onListReady', function(list) {
+             this.once('onListReady', function(event, list) {
                 if(!list.getDataSource()) {
                    list.setDataSource(ds, noLoad);
                 }
