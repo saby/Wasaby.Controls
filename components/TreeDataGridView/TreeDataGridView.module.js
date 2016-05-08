@@ -331,7 +331,7 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
 
       reload: function() {
          this._hideEditArrow();
-         TreeDataGridView.superclass.reload.apply(this, arguments);
+         return TreeDataGridView.superclass.reload.apply(this, arguments);
       },
 
       _showEditArrow: function() {
