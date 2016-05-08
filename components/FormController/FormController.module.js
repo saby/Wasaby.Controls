@@ -283,8 +283,6 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
       },
 
       _setContextRecord: function(record){
-         //Для того, чтобы не перекидывались поля со старого рекорда на новый, явно очистим контекст
-         this.getLinkedContext().setValue('record', null);
          this.getLinkedContext().setValue('record', record);
       },
       /**
