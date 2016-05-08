@@ -2295,6 +2295,7 @@ define('js!SBIS3.CONTROLS.ListView',
                drawnResults.remove();
             }
             $(container)[position](resultRow);
+            this.reviveComponents();
          }
       });
 
