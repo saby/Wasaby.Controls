@@ -8,6 +8,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
        'js!SBIS3.CONTROLS.ActiveSelectable',
        'js!SBIS3.CONTROLS.SyncSelectionMixin',
        'js!SBIS3.CONTROLS.FieldLinkItemsCollection',
+       'js!SBIS3.CONTROLS.Data.Collection.RecordSet',
        'html!SBIS3.CONTROLS.FieldLink/afterFieldWrapper',
        'html!SBIS3.CONTROLS.FieldLink/beforeFieldWrapper',
        'js!SBIS3.CONTROLS.Utils.DialogOpener',
@@ -33,8 +34,12 @@ define('js!SBIS3.CONTROLS.FieldLink',
 
         SyncSelectionMixin,
         FieldLinkItemsCollection,
+        RecordSet,
+
+        /* Служебные шаблоны поля связи */
         afterFieldWrapper,
         beforeFieldWrapper,
+        /********************************************/
         DialogOpener,
         ITextValue,
         TemplateUtil
@@ -43,7 +48,6 @@ define('js!SBIS3.CONTROLS.FieldLink',
        'use strict';
 
        var INPUT_WRAPPER_PADDING = 11;
-       var SHOW_ALL_LINK_WIDTH = 11;
        var INPUT_MIN_WIDTH = 100;
 
        /**
@@ -283,7 +287,8 @@ define('js!SBIS3.CONTROLS.FieldLink',
 
           init: function() {
              FieldLink.superclass.init.apply(this, arguments);
-             this.getChildControlByName('fieldLinkMenu').setItems(this._options.dictionaries);
+             /* Надо задавать элементы для меню рекордсетом, чтобы не портились хэндлеры сериализатором */
+             this.getChildControlByName('fieldLinkMenu').setItems(new RecordSet({rawData: this._options.dictionaries}));
           },
 
            _getShowAllConfig: function(){
