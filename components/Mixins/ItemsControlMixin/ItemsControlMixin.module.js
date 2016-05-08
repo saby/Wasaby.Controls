@@ -1569,7 +1569,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
             newItemContainer.insertBefore(this._getItemContainerByIndex(target, at));
             rows = [newItemContainer.prev().prev(), newItemContainer.prev(), newItemContainer, newItemContainer.next(), newItemContainer.next().next()];
          } else if (currentItemAt && currentItemAt.length) {
-            meth && meth.call(this, prev.getContents());
+            meth && meth.call(this, prev.getContents(), undefined, undefined, prev);
             newItemContainer.insertAfter(currentItemAt);
             rows = [newItemContainer.prev().prev(), newItemContainer.prev(), newItemContainer, newItemContainer.next(), newItemContainer.next().next()];
          } else if(at === 0) {
