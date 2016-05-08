@@ -139,6 +139,8 @@ define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManag
          if (this._options.closeButton) {
             container.append('<div class="controls-PopupMixin__closeButton" ></div>');
             $('.controls-PopupMixin__closeButton', this.getContainer().get(0)).click(function() {
+               //Нужно вызвать активироваться перед hide, чтобы закрылись плав. панели, у которых опенером был этот контрол
+               self.setActive(true);
                self.hide();
             });
          }
