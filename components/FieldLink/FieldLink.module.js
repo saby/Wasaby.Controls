@@ -288,7 +288,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
           init: function() {
              FieldLink.superclass.init.apply(this, arguments);
              /* Надо задавать элементы для меню рекордсетом, чтобы не портились хэндлеры сериализатором */
-             this.getChildControlByName('fieldLinkMenu').setItems(new RecordSet({rawData: this._options.dictionaries}));
+             this.getChildControlByName('fieldLinkMenu').setItems(this._prepareFieldLinkMenuItems(this._options.dictionaries));
           },
 
            _getShowAllConfig: function(){
@@ -326,7 +326,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
            */
           setDictionaries: function(dictionaries) {
              this._options.dictionaries = dictionaries;
-             this.getChildControlByName('fieldLinkMenu').setItems(dictionaries);
+             this.getChildControlByName('fieldLinkMenu').setItems(this._prepareFieldLinkMenuItems(dictionaries));
              this._notifyOnPropertyChanged('dictionaries');
           },
 
@@ -393,6 +393,13 @@ define('js!SBIS3.CONTROLS.FieldLink',
                 return this._drawFieldLinkItemsCollection();
              }
              return this._linkCollection;
+          },
+
+          _prepareFieldLinkMenuItems: function (items) {
+             return new RecordSet({
+                rawData : items,
+                idProperty : 'caption'
+             })
           },
 
           /**
