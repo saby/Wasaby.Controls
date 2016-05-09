@@ -198,8 +198,8 @@ define('js!SBIS3.CONTROLS.TextArea', ['js!SBIS3.CONTROLS.TextBoxBase', 'html!SBI
       },
 
       setText: function(text){
+         TextArea.superclass.setText.call(this, text);
          var newText = $ws.helpers.escapeHtml(text);
-         TextArea.superclass.setText.call(this, newText);
          this._disabledWrapper.html($ws.helpers.wrapURLs(newText));
       },
 
