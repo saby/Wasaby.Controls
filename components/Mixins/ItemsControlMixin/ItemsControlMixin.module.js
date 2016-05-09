@@ -636,8 +636,9 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
                      }
                      /*TODO Лесенка*/
 
-
-                     itemsContainer.insertAdjacentHTML('afterBegin', markup);
+                     // TODO. Костыль для редактирования по месту. Написан тут, т.к. необходимо его убрать (решение не универсальное).
+                     // https://inside.tensor.ru/opendoc.html?guid=8fe37872-c08b-4a7b-9c9f-d04f531cc45b
+                     itemsContainer.insertAdjacentHTML(this._items.getCount() > 1 ? 'afterBegin' : 'beforeEnd', markup);
 
                   }
                   else {
