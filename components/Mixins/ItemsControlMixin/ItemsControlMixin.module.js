@@ -1020,7 +1020,8 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
       },
 
       _prepareMetaData: function(dataSet) {
-         var meta = dataSet.getRow('m').toObject();
+         //todo ножно придумать как изменить конструктор модели для метаданных
+         var meta = dataSet.hasProperty('m') ?  dataSet.getRow('m').toObject() : {};
 
          meta.results = dataSet.getProperty('r');
          meta.more = dataSet.getTotal();
