@@ -103,7 +103,8 @@ define('js!SBIS3.CONTROLS.FastDataFilter',
                displayField: item.get('displayField'),
                className: item.get('className') || 'controls-DropdownList__linkStyle',
                pickerClassName: (item.get('pickerClassName') + ' controls-DropdownList__picker') || 'controls-DropdownList__picker',
-               dataSource: item.get('dataSource')
+               dataSource: item.get('dataSource'),
+               filter: item.get('filter')
             };
             return '<component data-component="SBIS3.CONTROLS.DropdownList" config="' + $ws.helpers.encodeCfgAttr(cfg) + '">' +
                         //'<opts name="selectedKeys" type="array" bind="' + cfg.filterName +'" ></opts>' + //direction="fromProperty" oneWay="true"
