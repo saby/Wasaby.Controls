@@ -1607,7 +1607,15 @@ define('js!SBIS3.CONTROLS.ListView',
                         records.reverse();
                         at = {at: 0};
                      } else {
+                        //TODO новый миксин не задействует декоратор лесенки в принципе при любых действиях, кроме первичной отрисовки
+                        //это неправильно, т.к. лесенка умеет рисовать и дорисовывать данные, если они добавляются последовательно
+                        //здесь мы говорим, чтобы лесенка отработала при отрисовке данных
+                        var ladder = this._decorators.getByName('ladder');
+                        if (ladder && records.length){
+                           ladder.setIgnoreEnabled(true);
+                        }
                         self._items.append(records);
+                        ladder && ladder.setIgnoreEnabled(false);
                      }
 
                      if (this._isSlowDrawing()) {
