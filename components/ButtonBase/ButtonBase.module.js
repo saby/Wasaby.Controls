@@ -3,7 +3,7 @@
  *
  * @description
  */
-define('js!SBIS3.CONTROLS.ButtonBase', ['js!SBIS3.CORE.CompoundControl', 'js!SBIS3.CONTROLS.Clickable', 'js!SBIS3.CONTROLS.FormWidgetMixin', 'js!SBIS3.CONTROLS.DataBindMixin', 'js!SBIS3.CONTROLS.IconMixin'], function(Control, Clickable, FormWidgetMixin, DataBindMixin, IconMixin) {
+define('js!SBIS3.CONTROLS.ButtonBase', ['js!SBIS3.CORE.CompoundControl', 'js!SBIS3.CONTROLS.Clickable', 'js!SBIS3.CONTROLS.FormWidgetMixin', 'js!SBIS3.CONTROLS.DataBindMixin', 'js!SBIS3.CONTROLS.IconMixin', 'js!SBIS3.CONTROLS.Utils.Sanitizer'], function(Control, Clickable, FormWidgetMixin, DataBindMixin, IconMixin, Sanitizer) {
 
    'use strict';
 
@@ -67,6 +67,7 @@ define('js!SBIS3.CONTROLS.ButtonBase', ['js!SBIS3.CORE.CompoundControl', 'js!SBI
 
       init : function() {
          ButtonBase.superclass.init.call(this);
+         this._sanitizer = new Sanitizer();
          /*TODO хак чтоб не срабатывал клик на кнопку при нажатии на дочерние компоненты*/
          $('[data-component]', this._container.get(0)).mousedown(function(e){
             e.stopPropagation();
@@ -86,7 +87,7 @@ define('js!SBIS3.CONTROLS.ButtonBase', ['js!SBIS3.CORE.CompoundControl', 'js!SBI
        * @see getCaption
        */
       setCaption: function(caption) {
-         caption = $ws.helpers.escapeHtml(caption);
+         caption = this._sanitizer.clearContent(caption);
          this._options.caption = caption || '';
       },
 
