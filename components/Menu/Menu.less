@@ -1,5 +1,5 @@
 .controls-Menu__Popup {
-   font: @font-popup-size @font-basic-name;
+   font:  @font-popup-size @font-basic-name;
    padding: @menu-padding;
    margin: @menu-margin;
    border-width: @menu-border-width;
@@ -7,15 +7,14 @@
    border-color: @menu-border-color;
    background-color: @white-color;
 
-   display: table;
-   
-
    .border-radius(@menu-border-radius);
    .box-shadow(@menu-shadow);
    .box-sizing(border-box);
    .controls-Menu__hasChild {
-      .control-MenuItem__child-expand {
-         display: table-cell;
+      &:after {
+         position: absolute;
+         top: @menu-expand-top-offset;
+         right: @menu-expand-right-offset;
          width: @menu-expand-width;
          height: @menu-expand-height;
          content: " ";
@@ -25,29 +24,35 @@
          background: @menu-expand-bg;
          .box-sizing(border-box);
       }
-      .control-MenuItem__child-expand:hover {
+      &:hover:after {
          border-width: @menu-expand-hover-border-width;
          border-style: @menu-expand-hover-border-style;
          border-color: @menu-expand-hover-border-color;
          background: @menu-expand-hover-bg;
       }
-      &.controls-MenuItem {
+      &.controls-MenuItem{
          padding-right: @menu-item-expand-padding-right;
       }
    }
    .controls-Menu__submenu {
       display: block;
    }
-   .controls-Menu__header {
+   .controls-Menu__header{
       box-sizing: @menu-header-box-sizing;
-      display: table-row;
+      padding: @menu-header-padding;
+      .icon-16, .icon-24{
+         padding-right: 6px;
+      }
+   }
+   .controls-MenuItem {
+      height: @menu-item-height;
+      padding: @menu-item-default-padding;
    }
 }
 
 .controls-Menu__submenu {
    display: none;
 }
-
 .controls-Menu__SubMenuPopup {
    margin: @menu-subpopup-margin;
 }
