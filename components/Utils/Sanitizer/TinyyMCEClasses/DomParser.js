@@ -332,16 +332,18 @@ define('js!SBIS3.CONTROLS.Utils.Sanitizer/TinyyMCEClasses/DomParser', [
          }
          if (!args.invalid) {
             for (name in matchedNodes) {
-               list = nodeFilters[name];
-               nodes = matchedNodes[name];
-               fi = nodes.length;
-               while (fi--) {
-                  if (!nodes[fi].parent) {
-                     nodes.splice(fi, 1);
+               if (matchedNodes.hasOwnProperty(name)) {
+                  list = nodeFilters[name];
+                  nodes = matchedNodes[name];
+                  fi = nodes.length;
+                  while (fi--) {
+                     if (!nodes[fi].parent) {
+                        nodes.splice(fi, 1);
+                     }
                   }
-               }
-               for (i = 0, l = list.length; i < l; i++) {
-                  list[i](nodes, name, args);
+                  for (i = 0, l = list.length; i < l; i++) {
+                     list[i](nodes, name, args);
+                  }
                }
             }
             for (i = 0, l = attributeFilters.length; i < l; i++) {
