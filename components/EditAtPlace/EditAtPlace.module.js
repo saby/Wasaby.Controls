@@ -57,7 +57,7 @@ define('js!SBIS3.CONTROLS.EditAtPlace',
                 */
                placeholder: '',
                /**
-                * @cfg {String} Устанавливает компонент, который будет использован для редактирования текста.т
+                * @cfg {Content} Устанавливает компонент, который будет использован для редактирования текста.т
                 */
                editorTpl: '<component data-component="SBIS3.CONTROLS.TextBox"></component>',
                /**
