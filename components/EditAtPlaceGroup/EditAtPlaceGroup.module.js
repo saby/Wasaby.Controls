@@ -32,7 +32,7 @@ define('js!SBIS3.CONTROLS.EditAtPlaceGroup',
             _requireDialog: false,
             _options: {
                /**
-                * @cfg {String} шаблон
+                * @cfg {Content} шаблон
                 */
                template: null
             }
