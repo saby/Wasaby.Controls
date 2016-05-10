@@ -1,5 +1,5 @@
 define('js!SBIS3.CONTROLS.Utils.Sanitizer/TinyyMCEClasses/Writer', [
-   'js!SBIS3.CONTROLS.Utils.Sanitizer/TinyyMCEClasses/Entities',
+   'js!SBIS3.CONTROLS.Utils.Sanitizer/TinyyMCEClasses/Entities'
 ], function(Entities) {
    return function() {
       var html = [], encode;
