@@ -110,7 +110,7 @@ define('js!SBIS3.CONTROLS.TextArea', ['js!SBIS3.CONTROLS.TextBoxBase', 'html!SBI
          // TODO Переделать на платформенное событие потери фокуса
          this._inputField.bind('focusout', function () {
             if (self._options.trim) {
-               self.setText(String.trim(self.getText()));
+               self.setText(String.trim(self.getText() || ''));
             }
             $ws.single.EventBus.globalChannel().notify('MobileInputFocusOut');
          });
