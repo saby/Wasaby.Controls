@@ -30,20 +30,6 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
        *    });
        * </pre>
        */
-      /**
-       * @event onSuccess При успешном сохранении записи
-       * Событие в случае успешного сохранения записи.
-       * @param {$ws.proto.EventObject} eventObject Дескриптор события.
-       * @param {Boolean} result Результат выполнения операции.
-       * @example
-       * <pre>
-       *    //btn - кнопка на диалоге редактирования
-       *    btn.getTopParent().subscribe('onSuccess', function(event, result){
-       *      if (result)
-       *        $ws.core.message('Все хорошо!');
-       *    });
-       * </pre>
-       */
       $protected: {
          _record: null,
          _saving: false,
@@ -51,6 +37,7 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
          _panel: undefined,
          _needDestroyRecord: false,
          _simpleKey: undefined,
+         _activateChildControlDeferred: undefined,
          _options: {
             /**
              * @cfg {DataSource} Источник данных для диалога редактирования записи
@@ -126,13 +113,14 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
       },
 
       $constructor: function() {
-         this._publish('onSubmit', 'onFail', 'onSuccess', 'onReadModel', 'onUpdateModel', 'onDestroyModel', 'onCreateModel');
+         this._publish('onFail', 'onReadModel', 'onUpdateModel', 'onDestroyModel', 'onCreateModel');
          $ws.single.CommandDispatcher.declareCommand(this, 'submit', this.submit);
          $ws.single.CommandDispatcher.declareCommand(this, 'read', this._read);
          $ws.single.CommandDispatcher.declareCommand(this, 'update', this.update);
          $ws.single.CommandDispatcher.declareCommand(this, 'destroy', this._destroyModel);
          $ws.single.CommandDispatcher.declareCommand(this, 'create', this._create);
          $ws.single.CommandDispatcher.declareCommand(this, 'notify', this._actionNotify);
+         $ws.single.CommandDispatcher.declareCommand(this, 'activateChildControl', this._createChildControlActivatedDeferred);
          this._setDefaultContextRecord();
          this._panel = this.getTopParent();
          //В рамках fc мы работаем с простым ключом. Запоминаем составной ключ, чтобы была возможность синхронизации модели со связным списком
@@ -283,7 +271,7 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
                return error;
             }).addBoth(function (r) {
                self._hideLoadingIndicator();
-               self.activateFirstControl();
+               self._activateChildControlAfterLoad();
                return r;
             });
       },
@@ -436,7 +424,7 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
          });
          def.addBoth(function(record){
             self._hideLoadingIndicator();
-            self.activateFirstControl();
+            self._activateChildControlAfterLoad();
             return record;
          });
          return def;
@@ -446,6 +434,25 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
        */
       _actionNotify: function(eventName){
          this._notify(eventName, this._options.record);
+      },
+      /**
+       * Action, который позволяет выставить активность дочернего контрола после загрузки
+       * @returns {$ws.proto.Deferred} Окончание чтения/создания модели
+       */
+      _createChildControlActivatedDeferred: function(){
+         this._activateChildControlDeferred = (new $ws.proto.Deferred()).addCallback(function(){
+            this.activateFirstControl();
+         }.bind(this));
+         return this._activateChildControlDeferred;
+      },
+      _activateChildControlAfterLoad: function(){
+         if (this._activateChildControlDeferred instanceof $ws.proto.Deferred){
+            this._activateChildControlDeferred.callback();
+            this._activateChildControlDeferred = undefined;
+         }
+         else{
+            this.activateFirstControl();
+         }
       }
    });
 
