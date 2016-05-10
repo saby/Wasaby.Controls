@@ -313,7 +313,9 @@ define('js!SBIS3.CONTROLS.Utils.Sanitizer/TinyyMCEClasses/Schema', [
                   }
                   if (globalAttributes) {
                      for (key in globalAttributes) {
-                        attributes[key] = globalAttributes[key];
+                        if (globalAttributes.hasOwnProperty(key)) {
+                           attributes[key] = globalAttributes[key];
+                        }
                      }
                      attributesOrder.push.apply(attributesOrder, globalAttributesOrder);
                   }
