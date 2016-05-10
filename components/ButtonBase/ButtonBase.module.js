@@ -3,7 +3,7 @@
  *
  * @description
  */
-define('js!SBIS3.CONTROLS.ButtonBase', ['js!SBIS3.CORE.CompoundControl', 'js!SBIS3.CONTROLS.Clickable', 'js!SBIS3.CONTROLS.FormWidgetMixin', 'js!SBIS3.CONTROLS.DataBindMixin', 'js!SBIS3.CONTROLS.IconMixin', 'js!SBIS3.CONTROLS.Utils.Sanitizer'], function(Control, Clickable, FormWidgetMixin, DataBindMixin, IconMixin, Sanitizer) {
+define('js!SBIS3.CONTROLS.ButtonBase', ['js!SBIS3.CORE.CompoundControl', 'js!SBIS3.CONTROLS.Clickable', 'js!SBIS3.CONTROLS.FormWidgetMixin', 'js!SBIS3.CONTROLS.DataBindMixin', 'js!SBIS3.CONTROLS.IconMixin', 'browser!js!SBIS3.CONTROLS.Utils.Sanitizer'], function(Control, Clickable, FormWidgetMixin, DataBindMixin, IconMixin, Sanitizer) {
 
    'use strict';
 
@@ -37,6 +37,11 @@ define('js!SBIS3.CONTROLS.ButtonBase', ['js!SBIS3.CORE.CompoundControl', 'js!SBI
     * @ignoreEvents onActivate onAfterLoad onAfterShow onBeforeControlsLoad onBeforeLoad onBeforeShow onChange onClick
     * @ignoreEvents onFocusIn onFocusOut onKeyPressed onReady onResize onStateChanged onTooltipContentRequest
     */
+   
+   var sanitizer = null;
+   if (typeof window !== undefined){
+      sanitizer = new Sanitizer();
+   }
 
    var ButtonBase = Control.extend([Clickable, FormWidgetMixin, DataBindMixin, IconMixin],/** @lends SBIS3.CONTROLS.ButtonBase.prototype*/ {
 
@@ -67,7 +72,6 @@ define('js!SBIS3.CONTROLS.ButtonBase', ['js!SBIS3.CORE.CompoundControl', 'js!SBI
 
       init : function() {
          ButtonBase.superclass.init.call(this);
-         this._sanitizer = new Sanitizer();
          /*TODO хак чтоб не срабатывал клик на кнопку при нажатии на дочерние компоненты*/
          $('[data-component]', this._container.get(0)).mousedown(function(e){
             e.stopPropagation();
@@ -87,7 +91,9 @@ define('js!SBIS3.CONTROLS.ButtonBase', ['js!SBIS3.CORE.CompoundControl', 'js!SBI
        * @see getCaption
        */
       setCaption: function(caption) {
-         caption = this._sanitizer.clearContent(caption);
+         if (sanitizer){
+            caption = sanitizer.clearContent(caption);
+         }
          this._options.caption = caption || '';
       },
 
