@@ -76,7 +76,6 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
          _loadingIndicator: undefined,
          _panel: undefined,
          _needDestroyRecord: false,
-         _simpleKey: undefined,
          _activateChildControlDeferred: undefined,
          _options: {
             /**
@@ -185,8 +184,6 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
          $ws.single.CommandDispatcher.declareCommand(this, 'activateChildControl', this._createChildControlActivatedDeferred);
          this._setDefaultContextRecord();
          this._panel = this.getTopParent();
-         //В рамках fc мы работаем с простым ключом. Запоминаем составной ключ, чтобы была возможность синхронизации модели со связным списком
-         this._simpleKey = this._getSimpleKey(this._options.key);
          if (this._options.dataSource){
             this._runQuery();
          }
@@ -326,7 +323,7 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
             dResult.dependOn(def.addCallbacks(function (result) {
                isNewModel = self._options.newModel;
                self._options.newModel = false;
-               self._notify('onUpdateModel', self._options.record, self._options.key, isNewModel);
+               self._notify('onUpdateModel', self._options.record, isNewModel);
                if (closePanelAfterSubmit) {
                   self._panel.ok();
                }
@@ -371,7 +368,7 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
        */
       _read: function (key) {
          var self = this;
-         key = key || this._simpleKey;
+         key = key || this._options.key;
          this._showLoadingIndicator(rk('Загрузка'));
          return this._options.dataSource.read(key).addCallback(function (record) {
             self._notify('onReadModel', record);
@@ -459,9 +456,6 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
          e.processed = true;
          return e;
       },
-      _getSimpleKey: function(key){
-         return key && key.toString().split(',')[0];
-      },
       /**
        * Возвращает источник данных диалога редактирования.
        * @remark
@@ -515,7 +509,6 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
          if (updateKey){
             newKey = record.getKey();
             this._options.key = newKey;
-            this._simpleKey = this._getSimpleKey(newKey);
          }
          this._needDestroyRecord = false;
          this._setContextRecord(record);
@@ -540,7 +533,7 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
       },
 
       _runQuery: function() {
-         if (this._simpleKey) {
+         if (this._options.key) {
             return this._read();
          }
          return this._create();
