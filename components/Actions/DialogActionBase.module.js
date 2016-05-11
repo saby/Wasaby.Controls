@@ -2,13 +2,14 @@ define('js!SBIS3.CONTROLS.DialogActionBase', ['js!SBIS3.CONTROLS.ActionBase', 'j
    'use strict';
 
    /**
-    * Действие открытия окна с заданным шаблоном
+    * Класс, который описывает действие открытия окна с заданным шаблоном.
     * @class SBIS3.CONTROLS.DialogActionBase
     * @public
     * @extends SBIS3.CONTROLS.ActionBase
     * @author Крайнов Дмитрий Олегович
     *
     * @ignoreOptions validators independentContext contextRestriction extendedTooltip
+    * @ignoreOptions visible tooltip tabindex enabled className alwaysShowExtendedTooltip allowChangeEnable
     *
     * @ignoreMethods activateFirstControl activateLastControl addPendingOperation applyEmptyState applyState clearMark
     * @ignoreMethods changeControlTabIndex destroyChild detectNextActiveChildControl disableActiveCtrl findParent
@@ -21,35 +22,69 @@ define('js!SBIS3.CONTROLS.DialogActionBase', ['js!SBIS3.CONTROLS.ActionBase', 'j
     * @ignoreMethods sendCommand setActive setChildActive setClassName setExtendedTooltip setOpener setStateKey activate
     * @ignoreMethods setTabindex setTooltip setUserData setValidators setValue storeActiveChild subscribe unregisterChildControl
     * @ignoreMethods unregisterDefaultButton unsubscribe validate waitAllPendingOperations waitChildControlById waitChildControlByName
+    * @ignoreMethods setVisible toggle show isVisible hide getTooltip isAllowChangeEnable isEnabled isVisibleWithParents
     *
     * @ignoreEvents onActivate onAfterLoad onAfterShow onBeforeControlsLoad onBeforeLoad onBeforeShow onChange onClick
     * @ignoreEvents onFocusIn onFocusOut onKeyPressed onReady onResize onStateChanged onTooltipContentRequest
+    * @ignoreEvents onDragIn onDragMove onDragOut onDragStart onDragStop
     */
    var OpenDialogAction = ActionBase.extend(/** @lends SBIS3.CONTROLS.DialogActionBase.prototype */{
       $protected : {
          _options : {
             /**
-             * @cfg {String}
-             * Компонент который будет отображен
+             * @cfg {String} Устанавливает компонент, который будет использован в качестве диалога редактирования записи.
+             * @remark
+             * Компонент должен быть наследником класса {@link SBIS3.CONTROLS.FormController}.
+             * Подробнее о создании таких компонентов вы можете прочитать в разделе <a href="https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/list-settings/records-editing/editing-dialog/component/">Создание компонента для диалога редактирования</a>.
+             * Режим отображения диалога редактирования устанавливают с помощью опции {@link mode}.
+             * @see mode
              */
             dialogComponent : '',
             /**
-             * @cfg {String}
-             * @variant dialog в новом диалоге
-             * @variant floatArea во всплывающей панели
-             * Режим отображения компонента редактирования - в диалоге или панели
+             * @cfg {String} Устанавливает режим открытия диалога редактирования компонента.
+             * @variant dialog Открытие производится в новом диалоговом окне.
+             * @variant floatArea Открытие производится на всплывающей панели.
+             * @remark
+             * Диалог редактирования устанавливают с помощью опции {@link dialogComponent}.
+             * @see dialogComponent
              */
             mode: 'dialog',
             /**
-             * @cfg {Object}
-             * Связный список, который надо обновлять после изменения записи
-             * Список должен быть с примесью миксинов для работы с однотипными элементами (DSMixin или IList)
+             * @cfg {*} Устанавливает связанный список, для которого будет открываться диалог редактирования записей.
+             * @remark
+             * Список должен быть с примесью миксинов ({@link SBIS3.CONTROLS.DSMixin} или {@link SBIS3.CONTROLS.Data.Collection.IList}) для работы с однотипными элементами.
+             * Подробнее о базовых платформенных списках вы можете прочитать в разделе <a href="https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/list-settings/list-types/">Виды списков</a>.
              */
             linkedObject: undefined
          },
          _dialog: undefined
       },
-
+      /**
+       * @typedef {Object} ExecuteMetaConfig
+       * @property {DataSource} dataSource Источник данных, который будет установлен для диалога редактирования.
+       * @property {String|Number} id Первичный ключ записи, которую нужно открыть на диалоге редактирования. Если свойство не задано, то нужно передать запись свойством record.
+       * @property {Boolean} newModel Признак: true - в диалоге редактирования открыта новая запись, которой не существует в источнике данных.
+       * @property {Object} filter Объект, данные которого будут использованы в качестве инициализирующих данных при создании новой записи.
+       * Название свойства - это название поля записи, а значение свойства - это значение для инициализации.
+       * @property {SBIS3.CONTROLS.Data.Record} record Редактируемая запись. Если передаётся ключ свойством key, то запись передавать необязательно.
+       * @property {$ws.proto.Context} ctx Контекст, который нужно установить для диалога редактирования записи.
+       */
+      /**
+       * Открывает диалог редактирования записи.
+       * @param {ExecuteMetaConfig} meta Параметры, которые будут использованы для конфигурации диалога редактирования.
+       * @example
+       * Произведём открытие диалога с предустановленными полями для создаваемой папки:
+       * <pre>
+       * myAddFolderButton.subscribe('onActivated', function() { // Создаём обработчик нажатия кнопки
+       *    myDialogAction.execute({ // Инициируем вызов диалога для создания новой папки
+       *       filter: {
+       *          'Раздел': null, // Поле иерархии, папка создаётся в корне иерархической структуры
+       *          'Раздел@': true // Признак папки в иерархической структуре
+       *       }
+       *    });
+       * });
+       *
+      */
       execute : function(meta) {
          this._opendEditComponent(meta, this._options.dialogComponent);
       },
