@@ -344,9 +344,6 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
          e.processed = true;
          return e;
       },
-      _getSimpleKey: function(key){
-         return key && key.toString().split(',')[0];
-      },
       /**
        * Получает источник данных диалога редактирования
        */
