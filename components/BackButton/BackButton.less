@@ -67,7 +67,7 @@
 }
 
 //Баг в мозилле плохо работает с before и float:left
-@-moz-document url-prefix() {
+@-moz-document url-prefix(), .ws-is-ie{
    .controls-BackButton {
       .controls-BackButton__caption {
          margin-left: -4px;
