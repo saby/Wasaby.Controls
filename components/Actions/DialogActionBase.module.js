@@ -48,6 +48,10 @@ define('js!SBIS3.CONTROLS.DialogActionBase', ['js!SBIS3.CONTROLS.ActionBase', 'j
             linkedObject: undefined
          },
          _dialog: undefined,
+         /**
+          * Ключ модели из связного списка
+          * Отдельно храним ключ для модели из связного списка, т.к. он может не совпадать с ключом редактируемой модели
+          */
          _linkedModelKey: undefined
       },
 
