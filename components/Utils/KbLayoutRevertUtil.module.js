@@ -66,20 +66,22 @@ define('js!SBIS3.CONTROLS.Utils.KbLayoutRevertUtil',
           _figureLayout : function(text) {
 
              var result = { matches : 0, layoutId: null };
-             for(var layoutId in this._layouts) {
+             for (var layoutId in this._layouts) {
+                if (this._layouts.hasOwnProperty(layoutId)) {
 
-                var layoutObj = this._getLayoutObject(layoutId),
-                    matches = 0;
+                   var layoutObj = this._getLayoutObject(layoutId),
+                      matches = 0;
 
-                for(var i = 0; i < text.length; ++i) {
+                   for (var i = 0; i < text.length; ++i) {
 
-                   if(layoutObj.hasOwnProperty(text[i])) {
-                      ++matches;
+                      if (layoutObj.hasOwnProperty(text[i])) {
+                         ++matches;
+                      }
                    }
-                }
 
-                if(!result || result.matches < matches) {
-                   result = { matches : matches, layoutId : layoutId };
+                   if (!result || result.matches < matches) {
+                      result = {matches: matches, layoutId: layoutId};
+                   }
                 }
              }
 

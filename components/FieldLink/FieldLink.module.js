@@ -75,13 +75,13 @@ define('js!SBIS3.CONTROLS.FieldLink',
         *       <b>Через контекст контрола.</b>
         *       Этот способ основан работе с <a href="https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/core/context/">контекстом</a> контрола. Пример № 3 из описания класса поля связи демонстрирует возможности установки значения через контекст.
         *    </li>
-        * </li>
+        * </ol>
         * <br/>
         * Возможность выбора одного или нескольких значений устанавливается опцией {@link multiselect}. В режиме единичного выбора значений с помощью опции {@link alwaysShowTextBox} можно разрешить установку комментариев в поле ввода после того, как для поля связи выбрано значение.
         * <br/>
         * Чтобы добавить внутрь поля ввода подсказку, используйте опцию {@link placeholder}.
         * <br/>
-        * Для корректного отображения поля связи рекомендуется установить компоненту фиксированную или минимальную ширину с помощью CSS-класса width.
+        * Для корректного отображения поля связи рекомендуется установить компоненту фиксированную или минимальную ширину с помощью CSS-свойства width.
         *
         * @class SBIS3.CONTROLS.FieldLink
         * @extends SBIS3.CONTROLS.SuggestTextBox
@@ -111,8 +111,8 @@ define('js!SBIS3.CONTROLS.FieldLink',
         * @public
         * @author Крайнов Дмитрий Олегович
         * @ignoreOptions tooltip alwaysShowExtendedTooltip loadingContainer observableControls pageSize usePicker filter saveFocusOnSelect
-        * @ignoreOptions allowEmptySelection allowEmptyMultiSelection templateBinding includedTemplates resultBindings showAllConfig footerTpl
-        * @ignoreMethods getTooltip setTooltip getExtendedTooltip setExtendedTooltip
+        * @ignoreOptions allowEmptySelection allowEmptyMultiSelection templateBinding includedTemplates resultBindings showAllConfig footerTpl emptyHTML groupBy
+        * @ignoreMethods getTooltip setTooltip getExtendedTooltip setExtendedTooltip setEmptyHTML setGroupBy
         *
         * ignoreEvents onDataLoad onDataLoadError onBeforeDataLoad onDrawItems
         */
@@ -288,7 +288,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
           init: function() {
              FieldLink.superclass.init.apply(this, arguments);
              /* Надо задавать элементы для меню рекордсетом, чтобы не портились хэндлеры сериализатором */
-             this.getChildControlByName('fieldLinkMenu').setItems(new RecordSet({rawData: this._options.dictionaries}));
+             this.getChildControlByName('fieldLinkMenu').setItems(this._prepareFieldLinkMenuItems(this._options.dictionaries));
           },
 
            _getShowAllConfig: function(){
@@ -326,7 +326,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
            */
           setDictionaries: function(dictionaries) {
              this._options.dictionaries = dictionaries;
-             this.getChildControlByName('fieldLinkMenu').setItems(dictionaries);
+             this.getChildControlByName('fieldLinkMenu').setItems(this._prepareFieldLinkMenuItems(dictionaries));
              this._notifyOnPropertyChanged('dictionaries');
           },
 
@@ -393,6 +393,13 @@ define('js!SBIS3.CONTROLS.FieldLink',
                 return this._drawFieldLinkItemsCollection();
              }
              return this._linkCollection;
+          },
+
+          _prepareFieldLinkMenuItems: function (items) {
+             return new RecordSet({
+                rawData : items,
+                idProperty : 'caption'
+             })
           },
 
           /**
@@ -533,7 +540,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
 
 
           setDataSource: function(ds, noLoad) {
-             this.once('onListReady', function(list) {
+             this.once('onListReady', function(event, list) {
                 if(!list.getDataSource()) {
                    list.setDataSource(ds, noLoad);
                 }

@@ -815,6 +815,19 @@ define('js!SBIS3.CONTROLS.ListView',
             }
          },
 
+         _getScrollContainer: function() {
+            var scrollWatcher = this._scrollWatcher,
+                scrollContainer;
+
+            if(scrollWatcher) {
+               scrollContainer = scrollWatcher.getScrollContainer();
+            } else {
+               scrollContainer = $ws._const.$body;
+            }
+
+            return scrollContainer;
+         },
+
          _changeHoveredItem: function(target) {
             var targetKey = target[0].getAttribute('data-id');
             if (targetKey !== undefined && this._hoveredItem.key !== targetKey) {
@@ -1152,11 +1165,7 @@ define('js!SBIS3.CONTROLS.ListView',
          },
 
          showEip: function(target, model, options) {
-            if (this._canShowEip()) {
-               return this._getEditInPlace().showEip(target, model, options);
-            } else {
-               return $ws.proto.Deferred.fail();
-            }
+            return this._canShowEip() ? this._getEditInPlace().showEip(target, model, options) : $ws.proto.Deferred.fail();
          },
 
          _canShowEip: function() {
@@ -1170,8 +1179,7 @@ define('js!SBIS3.CONTROLS.ListView',
          },
 
          _onItemClickHandler: function(event, id, record, target) {
-            var result = this.showEip($(target).closest('.js-controls-ListView__item'), record, { isEdit: true });
-            event.setResult(result);
+            event.setResult(this.showEip($(target).closest('.js-controls-ListView__item'), record, { isEdit: true }));
          },
 
          _onChangeHoveredItemHandler: function(event, hoveredItem) {
@@ -1607,7 +1615,15 @@ define('js!SBIS3.CONTROLS.ListView',
                         records.reverse();
                         at = {at: 0};
                      } else {
+                        //TODO новый миксин не задействует декоратор лесенки в принципе при любых действиях, кроме первичной отрисовки
+                        //это неправильно, т.к. лесенка умеет рисовать и дорисовывать данные, если они добавляются последовательно
+                        //здесь мы говорим, чтобы лесенка отработала при отрисовке данных
+                        var ladder = this._decorators.getByName('ladder');
+                        if (ladder && records.length){
+                           ladder.setIgnoreEnabled(true);
+                        }
                         self._items.append(records);
+                        ladder && ladder.setIgnoreEnabled(false);
                      }
 
                      if (this._isSlowDrawing()) {

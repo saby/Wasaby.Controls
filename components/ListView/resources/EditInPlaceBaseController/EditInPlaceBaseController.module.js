@@ -213,17 +213,17 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                   return beginEditResult.addCallback(function(readRecord) {
                      self._editingRecord = readRecord;
                      return readRecord;
-                  }).addBoth(function (readRecord) {
+                  }).addBoth(function (result) {
                      clearTimeout(loadingIndicator);
                      $ws.helpers.toggleIndicator(false);
-                     return readRecord;
+                     return result;
                   });
                } else {
                   //Запрет на редактирование может быть только у существующих элементов. Если происходит добавление по месту,
                   //то не логично запрещать его. Например почти все кто использует редактирование, запрещают редактирование папок,
                   //но не нужно запрещать редактирование только что добавленных папок.
                   allowEdit = !record.isStored() || beginEditResult !== false;
-                  return $ws.proto.Deferred.success(allowEdit ? record : undefined);
+                  return $ws.proto.Deferred.success(allowEdit ? record : false);
                }
             },
             /**

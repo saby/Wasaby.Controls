@@ -1,12 +1,13 @@
 define('js!SBIS3.CONTROLS.TreeDataGridView', [
    'js!SBIS3.CONTROLS.DataGridView',
+   'html!SBIS3.CONTROLS.TreeDataGridView',
    'js!SBIS3.CONTROLS.TreeMixin',
    'js!SBIS3.CONTROLS.TreeViewMixin',
    'js!SBIS3.CONTROLS.IconButton',
    'browser!html!SBIS3.CONTROLS.TreeDataGridView/resources/ItemTemplate',
    'browser!html!SBIS3.CONTROLS.TreeDataGridView/resources/ItemContentTemplate',
    'browser!html!SBIS3.CONTROLS.TreeDataGridView/resources/FooterWrapperTemplate'
-], function(DataGridView, TreeMixin, TreeViewMixin, IconButton, ItemTemplate, ItemContentTemplate, FooterWrapperTemplate) {
+], function(DataGridView, dotTplFn, TreeMixin, TreeViewMixin, IconButton, ItemTemplate, ItemContentTemplate, FooterWrapperTemplate) {
 
    var HIER_WRAPPER_WIDTH = 16,
        //Число 17 это сумма padding'ов, margin'ов элементов которые составляют отступ у первого поля, по которому строится лесенка отступов в дереве
@@ -42,6 +43,7 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
     */
 
    var TreeDataGridView = DataGridView.extend([TreeMixin, TreeViewMixin], /** @lends SBIS3.CONTROLS.TreeDataGridView.prototype*/ {
+      _dotTplFn : dotTplFn,
        /**
         * @event onDragMove Происходит при перемещении записей.
         * @remark
@@ -331,7 +333,7 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
 
       reload: function() {
          this._hideEditArrow();
-         TreeDataGridView.superclass.reload.apply(this, arguments);
+         return TreeDataGridView.superclass.reload.apply(this, arguments);
       },
 
       _showEditArrow: function() {
@@ -350,6 +352,8 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
                editArrowContainer.css(editArrowPosition);
                editArrowContainer.removeClass('ws-hidden');
             }
+         } else {
+            this._hideEditArrow();
          }
       },
 

@@ -48,7 +48,9 @@ define('js!SBIS3.CONTROLS.Utils.Sanitizer/TinyyMCEClasses/Node', [], function() 
          var self = this, attrs, i, undef;
          if (typeof name !== "string") {
             for (i in name) {
-               self.attr(i, name[i]);
+               if (name.hasOwnProperty(i)) {
+                  self.attr(i, name[i]);
+               }
             }
 
             return self;
@@ -239,7 +241,9 @@ define('js!SBIS3.CONTROLS.Utils.Sanitizer/TinyyMCEClasses/Node', [], function() 
       node = new Node(name, typeLookup[name] || 1);
       if (attrs) {
          for (attrName in attrs) {
-            node.attr(attrName, attrs[attrName]);
+            if (attrs.hasOwnProperty(attrName)) {
+               node.attr(attrName, attrs[attrName]);
+            }
          }
       }
       return node;

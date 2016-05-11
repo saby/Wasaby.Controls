@@ -515,19 +515,46 @@ define('js!SBIS3.CONTROLS.DataGridView',
          }
          DataGridView.superclass._redrawItems.apply(this, arguments);
       },
-
-      _canShowEip: function() {
-         // Отображаем редактирование по месту и для задизабленного DataGrid, но только если хоть у одиной колонки
-         // доступен редактор при текущем состоянии задизабленности DataGrid.
+      _onItemClickHandler: function(event, id, record, target) {
          var
-            col = 0,
-            canShow = DataGridView.superclass._canShowEip.apply(this, arguments);
-         while (!canShow && col < this._options.columns.length) {
-            if (this._options.columns[col].allowChangeEnable === false) {
-               canShow = true;
-            } else {
-               col++;
+            targetColumn,
+            targetColumnIndex;
+         if (!this._options.editingTemplate) {
+            targetColumn = $(target).closest('.controls-DataGridView__td');
+            if (targetColumn.length) {
+               targetColumnIndex = targetColumn.index();
             }
+         }
+         event.setResult(this.showEip($(target).closest('.js-controls-ListView__item'), record, { isEdit: true }, targetColumnIndex)
+            .addCallback(function(result) {
+               return !result;
+            })
+            .addErrback(function() {
+               return true;
+            }));
+      },
+      showEip: function(target, model, options, targetColumnIndex) {
+         return this._canShowEip(targetColumnIndex) ? this._getEditInPlace().showEip(target, model, options) : $ws.proto.Deferred.fail();
+      },
+      _canShowEip: function(targetColumnIndex) {
+         var
+            column = 0,
+            canShow = this.isEnabled();
+         if (this._options.editingTemplate || targetColumnIndex === undefined) {
+            // Отображаем редактирование по месту и для задизабленного DataGrid, но только если хоть у одиной колонки
+            // доступен редактор при текущем состоянии задизабленности DataGrid.
+            while (!canShow && column < this._options.columns.length) {
+               if (this._options.columns[column].allowChangeEnable === false) {
+                  canShow = true;
+               } else {
+                  column++;
+               }
+            }
+         } else {
+            if (this._options.multiselect) {
+               targetColumnIndex -= 1;
+            }
+            canShow = !!this._options.columns[targetColumnIndex].editor && (canShow || this._options.columns[targetColumnIndex].allowChangeEnable === false);
          }
          return canShow;
       },
@@ -659,7 +686,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
       },
 
       _arrowClickHandler: function(isRightArrow) {
-         var shift = (this._getScrollContainer()[0].offsetWidth/100)*5;
+         var shift = (this._getPartScrollContainer()[0].offsetWidth/100)*5;
          this._moveThumbAndColumns({left: (parseInt(this._thumb[0].style.left) || 0) + (isRightArrow ?  -shift : shift)});
       },
 
@@ -715,7 +742,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
          return this._thead.find('.controls-DataGridView__PartScroll__thumb, .controls-DataGridView__scrolledCell');
       },
 
-      _getScrollContainer: function() {
+      _getPartScrollContainer: function() {
          return this._thead.find('.controls-DataGridView__PartScroll__container');
       },
 
@@ -754,7 +781,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
 
       _updatePartScrollWidth: function() {
          var containerWidth = this._container[0].offsetWidth,
-             scrollContainer = this._getScrollContainer(),
+             scrollContainer = this._getPartScrollContainer(),
              thumbWidth = this._thumb[0].offsetWidth,
              correctMargin = 0,
              notScrolledCells;

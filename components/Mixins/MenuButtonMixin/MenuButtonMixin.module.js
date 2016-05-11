@@ -38,6 +38,25 @@ define('js!SBIS3.CONTROLS.MenuButtonMixin', ['js!SBIS3.CONTROLS.ContextMenu'], f
          }
       },
 
+      //TODO: Постараться придумать что то получше
+      // Вешаем на пункты меню отступы слева в соответствии с иконкой у самой кнопки
+      _checkItemsIcons: function(items){
+         var padding = 'controls-MenuItem__';
+         if (this._options.icon && items && !this._container.hasClass('controls-Menu__hide-menu-header')){
+            if (this._options.icon.indexOf('icon-16') !== -1){
+               padding += 'padding-16';
+            } else if (this._options.icon.indexOf('icon-24') !== -1){
+               padding += 'padding-24';
+            }
+         }
+         $('.controls-MenuItem', this._picker.getContainer()).each(function(){
+            var $this = $(this);
+            if (!$this.find('.controls-MenuItem__icon').length) {
+               $this.addClass(padding);
+            }
+         });
+      },
+
       _createPicker: function(targetElement){
          var menuconfig = {
             parent: this.getParent(),
@@ -82,18 +101,16 @@ define('js!SBIS3.CONTROLS.MenuButtonMixin', ['js!SBIS3.CONTROLS.ContextMenu'], f
          header.bind('click', function(){
             self._onHeaderClick();
          });
+         this._checkItemsIcons(this._picker.getItems().toArray());
          this._picker.getContainer().prepend(header);
       },
 
       _getHeader: function(){
-         var header = $('<tr class="controls-Menu__header">');
-         var colspan = '';
+         var header = $('<div class="controls-Menu__header">');
          if (this._options.icon) {
-            header.append('<td class="controls-Menu__header-icon ' + this._iconTemplate(this._options) + '"></td>');
-         } else {
-            colspan='colspan="3"';
+            header.append('<i class="controls-Menu__header-icon ' + this._iconTemplate(this._options) + '"></i>');
          }
-         header.append('<td class="controls-Menu__header-caption"' + colspan + '>' + (this._options.caption || '')  + '</td>');
+         header.append('<span class="controls-Menu__header-caption">' + (this._options.caption || '')  + '</span>');
          return header;
       },
 
@@ -130,7 +147,6 @@ define('js!SBIS3.CONTROLS.MenuButtonMixin', ['js!SBIS3.CONTROLS.ContextMenu'], f
          //Установить ширину меню
       },
       after : {
-
          _initializePicker : function() {
             var self = this;
             this._picker.subscribe('onMenuItemActivate', function(e, id, mEvent) {
