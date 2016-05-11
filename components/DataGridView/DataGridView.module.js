@@ -515,48 +515,19 @@ define('js!SBIS3.CONTROLS.DataGridView',
          }
          DataGridView.superclass._redrawItems.apply(this, arguments);
       },
-      _onItemClickHandler: function(event, id, record, target) {
+
+      _canShowEip: function() {
+         // Отображаем редактирование по месту и для задизабленного DataGrid, но только если хоть у одиной колонки
+         // доступен редактор при текущем состоянии задизабленности DataGrid.
          var
-            targetColumn,
-            targetColumnIndex,
-            resultDeferred = new $ws.proto.Deferred();
-         if (!this._options.editingTemplate) {
-            targetColumn = $(target).closest('.controls-DataGridView__td');
-            if (targetColumn.length) {
-               targetColumnIndex = targetColumn.index();
+            col = 0,
+            canShow = DataGridView.superclass._canShowEip.apply(this, arguments);
+         while (!canShow && col < this._options.columns.length) {
+            if (this._options.columns[col].allowChangeEnable === false) {
+               canShow = true;
+            } else {
+               col++;
             }
-         }
-         this.showEip($(target).closest('.js-controls-ListView__item'), record, { isEdit: true }, targetColumnIndex)
-            .addCallback(function() {
-               resultDeferred.errback();
-            }).
-            addErrback(function() {
-               resultDeferred.callback(true);
-            });
-         event.setResult(resultDeferred);
-      },
-      showEip: function(target, model, options, targetColumnIndex) {
-         return this._canShowEip(targetColumnIndex) ? this._getEditInPlace().showEip(target, model, options) : $ws.proto.Deferred.fail();
-      },
-      _canShowEip: function(targetColumnIndex) {
-         var
-            column = 0,
-            canShow = this.isEnabled();
-         if (this._options.editingTemplate || targetColumnIndex === undefined) {
-            // Отображаем редактирование по месту и для задизабленного DataGrid, но только если хоть у одиной колонки
-            // доступен редактор при текущем состоянии задизабленности DataGrid.
-            while (!canShow && column < this._options.columns.length) {
-               if (this._options.columns[column].allowChangeEnable === false) {
-                  canShow = true;
-               } else {
-                  column++;
-               }
-            }
-         } else {
-            if (this._options.multiselect) {
-               targetColumnIndex -= 1;
-            }
-            canShow = !!this._options.columns[targetColumnIndex].editor && (canShow || this._options.columns[targetColumnIndex].allowChangeEnable === false);
          }
          return canShow;
       },

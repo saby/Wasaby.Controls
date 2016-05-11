@@ -1152,7 +1152,11 @@ define('js!SBIS3.CONTROLS.ListView',
          },
 
          showEip: function(target, model, options) {
-            return this._canShowEip() ? this._getEditInPlace().showEip(target, model, options) : $ws.proto.Deferred.fail();
+            if (this._canShowEip()) {
+               return this._getEditInPlace().showEip(target, model, options);
+            } else {
+               return $ws.proto.Deferred.fail();
+            }
          },
 
          _canShowEip: function() {
@@ -1166,7 +1170,8 @@ define('js!SBIS3.CONTROLS.ListView',
          },
 
          _onItemClickHandler: function(event, id, record, target) {
-            event.setResult(this.showEip($(target).closest('.js-controls-ListView__item'), record, { isEdit: true }));
+            var result = this.showEip($(target).closest('.js-controls-ListView__item'), record, { isEdit: true });
+            event.setResult(result);
          },
 
          _onChangeHoveredItemHandler: function(event, hoveredItem) {
