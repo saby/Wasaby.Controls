@@ -189,7 +189,7 @@ define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManag
       _checkFixed: function(element){
          element = $(element);
          while (element.parent().length){
-            if (element.css('position') == 'fixed' && !element.hasClass('interface-no-scroll')){
+            if (element.css('position') == 'fixed'){
                $(this._container).css({position : 'fixed'});
                this._fixed = true;
                return;
