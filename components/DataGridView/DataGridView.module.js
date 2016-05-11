@@ -522,22 +522,20 @@ define('js!SBIS3.CONTROLS.DataGridView',
       _onItemClickHandler: function(event, id, record, target) {
          var
             targetColumn,
-            targetColumnIndex,
-            resultDeferred = new $ws.proto.Deferred();
+            targetColumnIndex;
          if (!this._options.editingTemplate) {
             targetColumn = $(target).closest('.controls-DataGridView__td');
             if (targetColumn.length) {
                targetColumnIndex = targetColumn.index();
             }
          }
-         this.showEip($(target).closest('.js-controls-ListView__item'), record, { isEdit: true }, targetColumnIndex)
-            .addCallback(function() {
-               resultDeferred.errback();
-            }).
-            addErrback(function() {
-               resultDeferred.callback(true);
-            });
-         event.setResult(resultDeferred);
+         event.setResult(this.showEip($(target).closest('.js-controls-ListView__item'), record, { isEdit: true }, targetColumnIndex)
+            .addCallback(function(result) {
+               return !result;
+            })
+            .addErrback(function() {
+               return true;
+            }));
       },
       showEip: function(target, model, options, targetColumnIndex) {
          return this._canShowEip(targetColumnIndex) ? this._getEditInPlace().showEip(target, model, options) : $ws.proto.Deferred.fail();
