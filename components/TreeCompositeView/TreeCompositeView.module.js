@@ -199,6 +199,7 @@ define('js!SBIS3.CONTROLS.TreeCompositeView', [
             currentDataSet,
             currentRecord,
             needRedraw,
+            item,
             parentBranchId,
             dependentRecords,
             recordsGroup = {},
@@ -300,29 +301,36 @@ define('js!SBIS3.CONTROLS.TreeCompositeView', [
             currentDataSet = this.getItems();
             filter = $ws.core.clone(this.getFilter());
             //Группируем записи по веткам (чтобы как можно меньше запросов делать)
-            $ws.helpers.forEach(items, function(item) {
-               parentBranchId = this.getParentKey(undefined, this._items.getRecordById(item));
-               if (!recordsGroup[parentBranchId]) {
-                  recordsGroup[parentBranchId] = [];
+            $ws.helpers.forEach(items, function(id) {
+               item = this._items.getRecordById(id);
+               if (item) {
+                  parentBranchId = this.getParentKey(undefined, this._items.getRecordById(id));
+                  if (!recordsGroup[parentBranchId]) {
+                     recordsGroup[parentBranchId] = [];
+                  }
+                  recordsGroup[parentBranchId].push(id);
                }
-               recordsGroup[parentBranchId].push(item);
             }, this);
-            $ws.helpers.forEach(recordsGroup, function(branch, branchId) {
-               //Загружаем содержимое веток
-               getBranch(branchId)
-                  .addCallback(function(branchDataSet) {
-                     $ws.helpers.forEach(branch, function(record, idx) {
-                        currentRecord = currentDataSet.getRecordByKey(record);
-                        dependentRecords = findDependentRecords(record, branchId);
-                        needRedraw = !!branchDataSet.getRecordByKey(record);
-                        //Удаляем то, что надо удалить и перерисовываем то, что надо перерисовать
-                        removeAndRedraw(dependentRecords, branch.length - idx);
+            if (Object.isEmpty(recordsGroup)) {
+               $ws.helpers.toggleIndicator(false);
+            } else {
+               $ws.helpers.forEach(recordsGroup, function(branch, branchId) {
+                  //Загружаем содержимое веток
+                  getBranch(branchId)
+                     .addCallback(function(branchDataSet) {
+                        $ws.helpers.forEach(branch, function(record, idx) {
+                           currentRecord = currentDataSet.getRecordByKey(record);
+                           dependentRecords = findDependentRecords(record, branchId);
+                           needRedraw = !!branchDataSet.getRecordByKey(record);
+                           //Удаляем то, что надо удалить и перерисовываем то, что надо перерисовать
+                           removeAndRedraw(dependentRecords, branch.length - idx);
+                        })
                      })
-                  })
-                  .addBoth(function() {
-                     $ws.helpers.toggleIndicator(false);
-                  });
-            });
+                     .addBoth(function() {
+                        $ws.helpers.toggleIndicator(false);
+                     });
+               });
+            }
          }
       },
       //Переопределим метод определения направления изменения порядкового номера, так как если элементы отображаются в плиточном режиме,
