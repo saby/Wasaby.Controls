@@ -217,6 +217,7 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
       /**
        * Используйте команду update
        * @command
+       * @see update
        * @deprecated
        */
       submit: function(closePanelAfterSubmit){
