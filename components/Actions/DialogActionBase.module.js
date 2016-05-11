@@ -47,8 +47,7 @@ define('js!SBIS3.CONTROLS.DialogActionBase', ['js!SBIS3.CONTROLS.ActionBase', 'j
              */
             linkedObject: undefined
          },
-         _dialog: undefined,
-         _linkedObjectModelKey: undefined //Если ключ модели для fc не совпадает с ключом в связном списке, то отдельно храним ключ для связного списка
+         _dialog: undefined
       },
 
       execute : function(meta) {
@@ -102,7 +101,6 @@ define('js!SBIS3.CONTROLS.DialogActionBase', ['js!SBIS3.CONTROLS.ActionBase', 'j
          };
 
          this._dialog = new Component(config);
-         this._linkedObjectModelKey = meta.linkedObjectModelKey;
       },
 
       /**
@@ -279,9 +277,6 @@ define('js!SBIS3.CONTROLS.DialogActionBase', ['js!SBIS3.CONTROLS.ActionBase', 'j
       _getCollectionRecord: function(model, modelKey){
          var collection = this._options.linkedObject,
             index;
-         if (this._linkedObjectModelKey){
-            modelKey = this._linkedObjectModelKey;
-         }
          if ($ws.helpers.instanceOfMixin(collection, 'SBIS3.CONTROLS.ItemsControlMixin')) {
             collection = collection.getItems();
          }
