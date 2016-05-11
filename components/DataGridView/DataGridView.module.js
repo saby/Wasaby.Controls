@@ -692,7 +692,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
       },
 
       _arrowClickHandler: function(isRightArrow) {
-         var shift = (this._getScrollContainer()[0].offsetWidth/100)*5;
+         var shift = (this._getPartScrollContainer()[0].offsetWidth/100)*5;
          this._moveThumbAndColumns({left: (parseInt(this._thumb[0].style.left) || 0) + (isRightArrow ?  -shift : shift)});
       },
 
@@ -748,7 +748,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
          return this._thead.find('.controls-DataGridView__PartScroll__thumb, .controls-DataGridView__scrolledCell');
       },
 
-      _getScrollContainer: function() {
+      _getPartScrollContainer: function() {
          return this._thead.find('.controls-DataGridView__PartScroll__container');
       },
 
@@ -787,7 +787,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
 
       _updatePartScrollWidth: function() {
          var containerWidth = this._container[0].offsetWidth,
-             scrollContainer = this._getScrollContainer(),
+             scrollContainer = this._getPartScrollContainer(),
              thumbWidth = this._thumb[0].offsetWidth,
              correctMargin = 0,
              notScrolledCells;
