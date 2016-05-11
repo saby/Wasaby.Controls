@@ -603,7 +603,7 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
             }
             self._hideLoadingIndicator();
             self._activateChildControlAfterLoad();
-            return record;
+            return r;
          });
          return def;
       },
