@@ -9,6 +9,7 @@ define('js!SBIS3.CONTROLS.ActionBase', ['js!SBIS3.CORE.Control'], function(Contr
     * @author Крайнов Дмитрий Олегович
     *
     * @ignoreOptions validators independentContext contextRestriction extendedTooltip
+    * @ignoreOptions visible tooltip tabindex enabled className alwaysShowExtendedTooltip allowChangeEnable
     *
     * @ignoreMethods activateFirstControl activateLastControl addPendingOperation applyEmptyState applyState clearMark
     * @ignoreMethods changeControlTabIndex destroyChild detectNextActiveChildControl disableActiveCtrl findParent
@@ -21,21 +22,22 @@ define('js!SBIS3.CONTROLS.ActionBase', ['js!SBIS3.CORE.Control'], function(Contr
     * @ignoreMethods sendCommand setActive setChildActive setClassName setExtendedTooltip setOpener setStateKey activate
     * @ignoreMethods setTabindex setTooltip setUserData setValidators setValue storeActiveChild subscribe unregisterChildControl
     * @ignoreMethods unregisterDefaultButton unsubscribe validate waitAllPendingOperations waitChildControlById waitChildControlByName
+    * @ignoreMethods setVisible toggle show isVisible hide getTooltip isAllowChangeEnable isEnabled isVisibleWithParents
     *
     * @ignoreEvents onActivate onAfterLoad onAfterShow onBeforeControlsLoad onBeforeLoad onBeforeShow onChange onClick
     * @ignoreEvents onFocusIn onFocusOut onKeyPressed onReady onResize onStateChanged onTooltipContentRequest
+    * @ignoreEvents onDragIn onDragMove onDragOut onDragStart onDragStop
     */
    //TODO наследуемся от контрола, чтоб можно было размещать в xhtml
    var ActionBase = Control.Control.extend(/** @lends SBIS3.CONTROLS.ActionBase.prototype */{
       /**
-       * @event onExecuted После завершения работы действия
+       * @event onExecuted Происходит после завершения работы действия.
        * @param {$ws.proto.EventObject} eventObject Дескриптор события.
-       * @param {Boolean|Object} meta Результат работы
-       * @param {SBIS3.CONTROLS.Data.Model} record Редактируемая запись
-       * @example
+       * @param {Boolean|Object} meta Результат работы.
+       * @param {SBIS3.CONTROLS.Data.Record} record Редактируемая запись.
        */
       /**
-       * Метод запускающий выполнение Action
+       * Запускает выполнение действия.
        */
       execute: function() {
          this._notifyOnExecuted();
