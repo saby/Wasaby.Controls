@@ -379,7 +379,7 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
 
             /* Если фокус уходит на список - вернём его обратно в контрол, с которого фокус ушёл */
             this.subscribeTo(control, 'onFocusOut', function(e, destroyed, focusedControl) {
-               if(this._list && this._list === focusedControl) {
+               if(self._list && self._list === focusedControl) {
                   focusedControl.setActive(false, false, false, this);
                   this.setActive(true);
                }
