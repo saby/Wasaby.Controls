@@ -214,6 +214,11 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
          this._context = ctx;
       },
 
+      /**
+       * Используйте команду update
+       * @command
+       * @deprecated
+       */
       submit: function(closePanelAfterSubmit){
         $ws.single.ioc.resolve('ILogger').info('FormController', 'Command "submit" is deprecated and will be removed in 3.7.4. Use sendCommand("update")');
         return this.update(closePanelAfterSubmit);
@@ -277,7 +282,7 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
          };
          this._saving = true;
 
-         //Если пришли из submit'a
+         //Если пришли из update
          if (hideQuestion){
             return this._updateRecord(dResult, closePanelAfterSubmit);
          }
