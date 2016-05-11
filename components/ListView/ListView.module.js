@@ -1204,6 +1204,13 @@ define('js!SBIS3.CONTROLS.ListView',
             ListView.superclass.redraw.apply(this, arguments);
             this._checkScroll(); //todo Убрать в 150, когда будет правильный рендер изменившихся данных
          },
+
+         _getRecordsForRedraw: function(){
+            var records = ListView.superclass._getRecordsForRedraw.call(this);
+            if (this._options.infiniteScroll === 'up' && !this._isSearchMode()) {
+               return records.reverse();
+            }
+         },
          /**
           * todo Убрать в 150, когда будет правильный рендер изменившихся данных
           */
