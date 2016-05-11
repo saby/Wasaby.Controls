@@ -47,7 +47,8 @@ define('js!SBIS3.CONTROLS.DialogActionBase', ['js!SBIS3.CONTROLS.ActionBase', 'j
              */
             linkedObject: undefined
          },
-         _dialog: undefined
+         _dialog: undefined,
+         _linkedModelKey: undefined
       },
 
       execute : function(meta) {
@@ -63,6 +64,9 @@ define('js!SBIS3.CONTROLS.DialogActionBase', ['js!SBIS3.CONTROLS.ActionBase', 'j
       },
 
       _opendEditComponent: function(meta, dialogComponent, mode){
+         this._linkedModelKey = meta.id;
+         meta.id = this._getEditKey(meta.item) || meta.id;
+
          var self = this,
             config, Component,
 
@@ -104,6 +108,12 @@ define('js!SBIS3.CONTROLS.DialogActionBase', ['js!SBIS3.CONTROLS.ActionBase', 'j
       },
 
       /**
+       * Должен вернуть ключ записи, которую редактируем в диалоге
+       */
+      _getEditKey: function(item){
+      },
+
+      /**
        * Возвращает обработчики на события formController'a
        */
       _getFormControllerHandlers: function(){
@@ -127,12 +137,12 @@ define('js!SBIS3.CONTROLS.DialogActionBase', ['js!SBIS3.CONTROLS.ActionBase', 'j
       /**
        * Базовая логика при событии ouUpdate. Обновляем рекорд в связном списке
        */
-      _updateModel: function (model, modelKey, isNewModel) {
+      _updateModel: function (model, isNewModel) {
          if (isNewModel){
             this._createRecord(model);
          }
          else{
-            this._mergeRecords(model, undefined, modelKey);
+            this._mergeRecords(model, undefined);
          }
       },
 
@@ -248,8 +258,8 @@ define('js!SBIS3.CONTROLS.DialogActionBase', ['js!SBIS3.CONTROLS.ActionBase', 'j
       /**
        * Мержим поля из редактируемой записи в существующие поля записи из связного списка.
        */
-      _mergeRecords: function(model, colRec, modelKey){
-         var collectionRecord = colRec || this._getCollectionRecord(model, modelKey),
+      _mergeRecords: function(model, colRec){
+         var collectionRecord = colRec || this._getCollectionRecord(model),
              recValue;
          if (!collectionRecord) {
             return;
@@ -274,14 +284,14 @@ define('js!SBIS3.CONTROLS.DialogActionBase', ['js!SBIS3.CONTROLS.ActionBase', 'j
       /**
        * Получаем запись из связного списка по ключу редактируемой записи
        */
-      _getCollectionRecord: function(model, modelKey){
+      _getCollectionRecord: function(model){
          var collection = this._options.linkedObject,
             index;
          if ($ws.helpers.instanceOfMixin(collection, 'SBIS3.CONTROLS.ItemsControlMixin')) {
             collection = collection.getItems();
          }
          if ($ws.helpers.instanceOfMixin(collection, 'SBIS3.CONTROLS.Data.Collection.IList') && $ws.helpers.instanceOfMixin(collection, 'SBIS3.CONTROLS.Data.Collection.IIndexedCollection')) {
-            index = collection.getIndexByValue(model.getIdProperty(), modelKey || model.getId());
+            index = collection.getIndexByValue(model.getIdProperty(), this._linkedModelKey || model.getId());
             return collection.at(index);
          }
          return undefined;
