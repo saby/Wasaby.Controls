@@ -12,7 +12,6 @@ define('js!SBIS3.CONTROLS.EditAtPlaceGroup',
    function (CompoundControl, PickerMixin, EditAtPlace, Dialog, EditAtPlaceMixin, CompoundActiveFixMixin, dotTplFn) {
       'use strict';
       /**
-       * @noShow
        * @class SBIS3.CONTROLS.EditAtPlaceGroup
        * @extends $ws.proto.CompoundControl
        * @control
@@ -33,7 +32,7 @@ define('js!SBIS3.CONTROLS.EditAtPlaceGroup',
             _requireDialog: false,
             _options: {
                /**
-                * @cfg {String} шаблон
+                * @cfg {Content} шаблон
                 */
                template: null
             }

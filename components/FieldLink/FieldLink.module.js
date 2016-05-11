@@ -8,6 +8,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
        'js!SBIS3.CONTROLS.ActiveSelectable',
        'js!SBIS3.CONTROLS.SyncSelectionMixin',
        'js!SBIS3.CONTROLS.FieldLinkItemsCollection',
+       'js!SBIS3.CONTROLS.Data.Collection.RecordSet',
        'html!SBIS3.CONTROLS.FieldLink/afterFieldWrapper',
        'html!SBIS3.CONTROLS.FieldLink/beforeFieldWrapper',
        'js!SBIS3.CONTROLS.Utils.DialogOpener',
@@ -33,8 +34,12 @@ define('js!SBIS3.CONTROLS.FieldLink',
 
         SyncSelectionMixin,
         FieldLinkItemsCollection,
+        RecordSet,
+
+        /* Служебные шаблоны поля связи */
         afterFieldWrapper,
         beforeFieldWrapper,
+        /********************************************/
         DialogOpener,
         ITextValue,
         TemplateUtil
@@ -43,14 +48,41 @@ define('js!SBIS3.CONTROLS.FieldLink',
        'use strict';
 
        var INPUT_WRAPPER_PADDING = 11;
-       var SHOW_ALL_LINK_WIDTH = 11;
        var INPUT_MIN_WIDTH = 100;
 
        /**
         * Поле связи - это базовый контрол веб-фреймворка WS, который предназначен для выбора нескольких значений.
-        * Выбор значений можно производить из справочников, подробнее о которых вы можете прочитать в описании к опции {@link dictionaries}.
-        * Другой способ выбора значений - это использование автодополнения, подробнее о котором вы можете прочитать в опции {@link list}.
-        * Для корректного отображения поля связи требуется задавать компоненту фиксированную или минимальную ширину.
+        * Контрол состоит из поля ввода и кнопки-меню для выбора справочника. Допускается конфигурация контрола, при которой будет использована только кнопка-меню.
+        * Интерактивные демонстрационные примеры типовых конфигураций поля связи смотрите в описании к классу.
+        * <br/>
+        * Выбор значения для поля связи можно производить следующими способами:
+        * <ol>
+        *    <li>
+        *       <b>Через справочник.</b>
+        *       Справочник - это диалог выбора значений. Диалог строится на основе пользовательского компонента.
+        *       Подробнее о правилах создания компонента для справочника поля связи вы можете прочитать в разделе <a href="http://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/textbox/field-link/">Поле связи</a>.
+        *       Набор справочников устанавливают с помощью опции {@link dictionaries}, а режим отображения открытого справочника - с помощью опции {@link chooserMode}.
+        *    </li>
+        *    <li>
+        *       <b>Через автодополнение.</b>
+        *       Автодополнение - это функционал отображения возможных результатов поиска по введенным символам. По умолчанию для поля связи автодополнение отключено.
+        *       Чтобы при печати в поле ввода отображались релевантные для выбора значения, нужно для поля связи установить конфигурацию автодополнения в опциях {@link list}, {@link listFilter} и {@link text}.
+        *       Чтобы установить временную задержку перед началом поиска релевантного значения, используют опцию {@link delay}.
+        *       Чтобы отображать полный список значений автодополнения при переходе фокуса на контрол, используют опцию {@link autoShow}.
+        *       Демонстрацию работы автодополнения с полем связи вы можете найти в блоке интерактивных примеров в описании к классу.
+        *    </li>
+        *    <li>
+        *       <b>Через контекст контрола.</b>
+        *       Этот способ основан работе с <a href="https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/core/context/">контекстом</a> контрола. Пример № 3 из описания класса поля связи демонстрирует возможности установки значения через контекст.
+        *    </li>
+        * </li>
+        * <br/>
+        * Возможность выбора одного или нескольких значений устанавливается опцией {@link multiselect}. В режиме единичного выбора значений с помощью опции {@link alwaysShowTextBox} можно разрешить установку комментариев в поле ввода после того, как для поля связи выбрано значение.
+        * <br/>
+        * Чтобы добавить внутрь поля ввода подсказку, используйте опцию {@link placeholder}.
+        * <br/>
+        * Для корректного отображения поля связи рекомендуется установить компоненту фиксированную или минимальную ширину с помощью CSS-класса width.
+        *
         * @class SBIS3.CONTROLS.FieldLink
         * @extends SBIS3.CONTROLS.SuggestTextBox
         * @category Inputs
@@ -63,15 +95,15 @@ define('js!SBIS3.CONTROLS.FieldLink',
         * @mixes SBIS3.CONTROLS.SyncSelectionMixin
         * @mixes SBIS3.CONTROLS.DSMixin
         *
-        * @demo SBIS3.CONTROLS.Demo.FieldLinkDemo Пример 1. Поле связи в режиме множественного выбора значений. Выбор можно производить как через диалог выбора, так и через автодополнение.
-        * @demo SBIS3.CONTROLS.Demo.FieldLinkSingleSelect Пример 2. Поле связи в режиме единичного выбора значений. Выбор можно производить как через диалог выбора, так и через автодополнение.
-        * @demo SBIS3.CONTROLS.Demo.FieldLinkSingleSelectContext Пример 3. Поле связи в режиме единичного выбора значения. В этом примере выбор можно производить тремя способами: через диалог выбора, через автодополнение и через два поля ввода.
+        * @demo SBIS3.CONTROLS.Demo.FieldLinkDemo Пример 1. Поле связи в режиме множественного выбора значений. Выбор можно производить как через справочник, так и через автодополнение.
+        * @demo SBIS3.CONTROLS.Demo.FieldLinkSingleSelect Пример 2. Поле связи в режиме единичного выбора значений. Выбор можно производить как через справочник, так и через автодополнение.
+        * @demo SBIS3.CONTROLS.Demo.FieldLinkSingleSelectContext Пример 3. Поле связи в режиме единичного выбора значения. В этом примере выбор можно производить тремя способами: через справочник, через автодополнение и через два поля ввода.
         * Поля ввода привязаны к поля контекста, по которым устанавливается ключ и отображаемый текст выбранного значения поля связи. Для наглядности, вы можете изменить поле "Название" и "Ключ", чтобы увидеть результат.
-        * @demo SBIS3.CONTROLS.Demo.SelectorButtonIcon Пример 4. Поле связи в виде иконки, поле ввода отсутствует. Вызов диалога выбора производится кликом по кнопке с иконкой. Все выбранные значения будут отображаться справа от кнопки.
+        * @demo SBIS3.CONTROLS.Demo.SelectorButtonIcon Пример 4. Поле связи в виде иконки, поле ввода отсутствует. Вызов справочника производится кликом по кнопке с иконкой. Все выбранные значения будут отображаться справа от кнопки.
         * В режиме множественного выбора удаление выбранных значений производится массово кликом по серому крестику.
-        * @demo SBIS3.CONTROLS.Demo.SelectorButtonLink Пример 5. Поле связи в виде кнопки-ссылки, поле ввода отсутствует. Вызов диалога выбора производится кликом по ссылке. Все выбранные значения будут отображаться в качестве текста кнопки.
+        * @demo SBIS3.CONTROLS.Demo.SelectorButtonLink Пример 5. Поле связи в виде кнопки-ссылки, поле ввода отсутствует. Вызов справочника производится кликом по ссылке. Все выбранные значения будут отображаться в качестве текста кнопки.
         * В режиме множественного выбора удаление выбранных значений производится массово кликом по серому крестику. Для корректного отображения кнопки-ссылки используется CSS-модификатор "controls-SelectorButton__asLink".
-        * @demo SBIS3.CONTROLS.Demo.FieldLinkDemoTemplate Пример 6. В первых примерах используется следующий диалог выбора записей.
+        * @demo SBIS3.CONTROLS.Demo.FieldLinkDemoTemplate Пример 6. В первых примерах используется один справочник для выбора значений. В следующем демонстрационном примеры вы можете посмотреть настройку компонента справочника. Подробнее о создании справочника можно прочитать в разделе документации <a href="http://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/textbox/field-link/">Поле связи</a>.
         *
         * @cssModifier controls-FieldLink__itemsEdited В поле связи при наведении курсора на выбранные значения применяется подчеркивание текста.
         * @cssModifier controls-FieldLink__itemsBold В поле связи для текста выбранных значений применяется полужирное начертание.
@@ -80,7 +112,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
         * @author Крайнов Дмитрий Олегович
         * @ignoreOptions tooltip alwaysShowExtendedTooltip loadingContainer observableControls pageSize usePicker filter saveFocusOnSelect
         * @ignoreOptions allowEmptySelection allowEmptyMultiSelection templateBinding includedTemplates resultBindings showAllConfig footerTpl
-        * @ignoreMehtods getTooltip setTooltip getExtendedTooltip setExtendedTooltip
+        * @ignoreMethods getTooltip setTooltip getExtendedTooltip setExtendedTooltip
         *
         * ignoreEvents onDataLoad onDataLoadError onBeforeDataLoad onDrawItems
         */
@@ -116,25 +148,22 @@ define('js!SBIS3.CONTROLS.FieldLink',
                    }
                 },
                 /**
-                 * @typedef {Object} Dictionaries Группа опций, описывающая настройку одного или нескольких справочников для поля связи.
-                 * Справочник - это диалог выбора значений. Список значений диалога строится на основе любого компонента, который можно
-                 * использовать для {@link https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/ отображения данных в списках}.
+                 * @typedef {Object} Dictionaries
                  * @property {String} caption Текст в меню выбора справочников. Опция актуальна, когда для поля связи установлено несколько справочников.
                  * Открыть справочник можно через меню выбора справочников или с помощью метода {@link showSelector}.
                  * Меню выбора справочников - это кнопка, которая расположена внутри поля связи с правого края:
                  * ![](/FieldLink03.png)
-                 * Изменять положение этой кнопки нельзя. Когда для поля связи установлен только один справочник,
-                 * клик по кнопке меню производит его открытие. Когда для поля связи установлено несколько справочников,
-                 * клик по меню открывает подменю для выбора нужного справочника. Опция caption определяет название
-                 * справочника в этом подменю:
+                 * Изменять положение этой кнопки нельзя. Когда для поля связи установлен только один справочник, клик по кнопке меню производит его открытие.
+                 * Когда для поля связи установлено несколько справочников, клик по меню открывает подменю для выбора нужного справочника.
+                 * Опция caption определяет название справочника в этом подменю:
                  * ![](/FieldLink02.png)
                  * @property {String} template Компонент, на основе которого организован справочник.
-                 * Список значений справочника строится на основе любого компонента, который можно использовать
-                 * для {@link https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/ отображения данных в списках}:
+                 * Список значений справочника строится на основе любого компонента, который можно использовать для {@link https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/ отображения данных в списках}:
                  * - использование компонента {@link SBIS3.CONTROLS.DataGridView}:
                  * ![](/FieldLink00.png)
                  * - использование компонента {@link SBIS3.CONTROLS.TreeDataGridView}:
                  * ![](/FieldLink01.png)
+                 * Подробнее о правилах создания компонента для справочника поля связи вы можете прочитать в разделе <a href="http://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/textbox/field-link/">Поле связи</a>.
                  * @property {Object} componentOptions
                  * Группа опций, которые передаются в секцию _options компонента из опции template. На его основе строится справочник.
                  * Значения переданных опций можно использовать в дочерних компонентах справочника через инструкции шаблонизатора.
@@ -146,11 +175,9 @@ define('js!SBIS3.CONTROLS.FieldLink',
                  *        <option name="myPageSizeConfig" type="number">5</option>
                  *     </options>
                  * </pre>
-                 * При построении справочника на основе SBIS3.MyArea.MyDatGridView значения опций myShowHeadConfig и myPageSizeConfig
-                 * будут переданы в его секцию _options.
+                 * При построении справочника на основе компонента SBIS3.MyArea.MyComponent значения опций myShowHeadConfig и myPageSizeConfig будут переданы в его секцию _options.
                  * Они переопределят уже установленные значения опций, если такие есть.
-                 * Чтобы использовать значений опций в дочерних контролах компонента SBIS3.MyArea.MyDatGridView,
-                 * нужно использовать инструкции шаблонизатора в вёрстке компонента:
+                 * Чтобы использовать значений опций в дочерних контролах компонента SBIS3.MyArea.MyDatGridView, нужно использовать инструкции шаблонизатора в вёрстке компонента:
                  * <pre class="brush: xml">
                  *     <component data-component="SBIS3.CONTROLS.TreeCompositeView" name="browserView">
                  *        <option name="showHead">{{=it.myShowHeadConfig}}</option>
@@ -260,7 +287,8 @@ define('js!SBIS3.CONTROLS.FieldLink',
 
           init: function() {
              FieldLink.superclass.init.apply(this, arguments);
-             this.getChildControlByName('fieldLinkMenu').setItems(this._options.dictionaries);
+             /* Надо задавать элементы для меню рекордсетом, чтобы не портились хэндлеры сериализатором */
+             this.getChildControlByName('fieldLinkMenu').setItems(this._prepareFieldLinkMenuItems(this._options.dictionaries));
           },
 
            _getShowAllConfig: function(){
@@ -298,7 +326,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
            */
           setDictionaries: function(dictionaries) {
              this._options.dictionaries = dictionaries;
-             this.getChildControlByName('fieldLinkMenu').setItems(dictionaries);
+             this.getChildControlByName('fieldLinkMenu').setItems(this._prepareFieldLinkMenuItems(dictionaries));
              this._notifyOnPropertyChanged('dictionaries');
           },
 
@@ -365,6 +393,13 @@ define('js!SBIS3.CONTROLS.FieldLink',
                 return this._drawFieldLinkItemsCollection();
              }
              return this._linkCollection;
+          },
+
+          _prepareFieldLinkMenuItems: function (items) {
+             return new RecordSet({
+                rawData : items,
+                idProperty : 'caption'
+             })
           },
 
           /**
@@ -505,8 +540,10 @@ define('js!SBIS3.CONTROLS.FieldLink',
 
 
           setDataSource: function(ds, noLoad) {
-             this.once('onListReady', function() {
-                this.getList().setDataSource(ds, noLoad);
+             this.once('onListReady', function(event, list) {
+                if(!list.getDataSource()) {
+                   list.setDataSource(ds, noLoad);
+                }
              });
              FieldLink.superclass.setDataSource.apply(this, arguments);
           },

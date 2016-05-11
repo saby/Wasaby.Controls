@@ -168,7 +168,7 @@ define('js!SBIS3.CONTROLS.SwitchableArea', [
             };
             this._options.items[i] = areaItem;
             //построим разметку
-            $ws.helpers.replaceContainer(areaItem.getContainer(), this._buildMarkup(areaTplFn, { outer: this._options, item: itemObj, index: this._getItemIndexById(areaId) }));
+            $ws.helpers.replaceContainer(areaItem.getContainer(), this._buildMarkup(areaTplFn, { enabled: this._options.enabled, visible: this._options.visible, outer: this._options, item: itemObj, index: this._getItemIndexById(areaId) }));
             // делаем видимой только дефолтную область
             if (isVisible || this._options.loadType === 'all') {
                areaItem.loadChildControls();

@@ -1,31 +1,36 @@
-define('js!SBIS3.CONTROLS.TreeCompositeView', ['js!SBIS3.CONTROLS.TreeDataGridView', 'js!SBIS3.CONTROLS.CompositeViewMixin', 'html!SBIS3.CONTROLS.TreeCompositeView/resources/CompositeView__folderTpl'], function(TreeDataGridView, CompositeViewMixin, folderTpl) {
+define('js!SBIS3.CONTROLS.TreeCompositeView', [
+   'js!SBIS3.CONTROLS.TreeDataGridView',
+   'js!SBIS3.CONTROLS.CompositeViewMixin',
+   'html!SBIS3.CONTROLS.TreeCompositeView/resources/CompositeView__folderTpl'
+], function(TreeDataGridView, CompositeViewMixin, folderTpl) {
+
    'use strict';
 
+   /**
+    * Контрол отображающий набор данных, имеющих иерархическую структуру, в виде таблицы, плитки или списка
+    * @class SBIS3.CONTROLS.TreeCompositeView
+    * @extends SBIS3.CONTROLS.TreeDataGridView
+    * @mixes SBIS3.CONTROLS.CompositeViewMixin
+    * @public
+    * @author Крайнов Дмитрий Олегович
+    * @control
+    * @initial
+    * <component data-component='SBIS3.CONTROLS.TreeCompositeView'>
+    *    <options name="columns" type="array">
+    *       <options>
+    *          <option name="title">Поле 1</option>
+    *          <option name="width">100</option>
+    *       </options>
+    *       <options>
+    *          <option name="title">Поле 2</option>
+    *       </options>
+    *    </options>
+    * </component>
+    *
+    * @demo SBIS3.CONTROLS.Demo.MyTreeCompositeView
+    */
+
    var TreeCompositeView = TreeDataGridView.extend([CompositeViewMixin],/** @lends SBIS3.CONTROLS.TreeCompositeView.prototype*/ {
-      /**
-       * Контрол отображающий набор данных, имеющих иерархическую структуру, в виде таблицы, плитки или списка
-       * @class SBIS3.CONTROLS.TreeCompositeView
-       * @extends SBIS3.CONTROLS.TreeDataGridView
-       * @mixes SBIS3.CONTROLS.CompositeViewMixin
-       * @public
-       * @author Крайнов Дмитрий Олегович
-       * @control
-       * @initial
-       * <component data-component='SBIS3.CONTROLS.TreeCompositeView'>
-       *    <options name="columns" type="array">
-       *       <options>
-       *          <option name="title">Поле 1</option>
-       *          <option name="width">100</option>
-       *       </options>
-       *       <options>
-       *          <option name="title">Поле 2</option>
-       *       </options>
-       *    </options>
-       * </component>
-       *
-       * @demo SBIS3.CONTROLS.Demo.MyTreeCompositeView
-       *
-       */
 
       $protected: {
          _options: {

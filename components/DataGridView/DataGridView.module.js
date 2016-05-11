@@ -24,6 +24,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
     * Контрол, отображающий набор данных в виде таблицы с несколькими колонками.
     * @class SBIS3.CONTROLS.DataGridView
     * @extends SBIS3.CONTROLS.ListView
+    * @author Крайнов Дмитрий Олегович
     * @control
     * @public
     * @demo SBIS3.CONTROLS.Demo.MyDataGridView
@@ -84,17 +85,19 @@ define('js!SBIS3.CONTROLS.DataGridView',
              * @property {String} className Имя класса, который будет применён к каждой ячейке столбца
              * @property {String} headTemplate Шаблон отображения шапки колонки
              * @property {String} headTooltip Всплывающая подсказка шапки колонки
-             * @property {String} editor Редактор колонки для режима редактирования по месту
+             * @property {String} editor Устанавливает редактор колонки для режима редактирования по месту.
+             * Редактор отрисовывается поверх редактируемой строки с прозрачным фоном. Это поведение считается нормальным в целях решения прикладных задач.
+             * Чтобы отображать только редактор строки без прозрачного фона, нужно установить для него свойство background-color.
+             * Пример использования опции вы можете найти в разделе <a href="https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/list-settings/records-editing/edit-in-place/simple-edit-in-place/">Редактирование записи по клику</a>.
              * @property {Boolean} allowChangeEnable Доступность установки сотояния активности редактирования колонки в зависимости от состояния табличного представления
              * @property {String} cellTemplate Шаблон отображения ячейки
              * Данные, которые передаются в cellTemplate:
              * <ol>
-             *    <li>item</li>
+             *    <li>item - отрисовываемая запись {@link SBIS3.CONTROLS.Data.Record}</li>
              *    <li>hierField - поле иерархии</li>
              *    <li>isNode - является ли узлом</li>
              *    <li>decorators - объект декораторов</li>
              *    <li>field - имя поля</li>
-             *    <li>value - значение</li>
              *    <li>highlight - есть ли подсветка</li>
              * </ol>
              * Необходимо указать настройки декораторов разметки, если требуется
@@ -512,19 +515,48 @@ define('js!SBIS3.CONTROLS.DataGridView',
          }
          DataGridView.superclass._redrawItems.apply(this, arguments);
       },
-
-      _canShowEip: function() {
-         // Отображаем редактирование по месту и для задизабленного DataGrid, но только если хоть у одиной колонки
-         // доступен редактор при текущем состоянии задизабленности DataGrid.
+      _onItemClickHandler: function(event, id, record, target) {
          var
-            col = 0,
-            canShow = DataGridView.superclass._canShowEip.apply(this, arguments);
-         while (!canShow && col < this._options.columns.length) {
-            if (this._options.columns[col].allowChangeEnable === false) {
-               canShow = true;
-            } else {
-               col++;
+            targetColumn,
+            targetColumnIndex,
+            resultDeferred = new $ws.proto.Deferred();
+         if (!this._options.editingTemplate) {
+            targetColumn = $(target).closest('.controls-DataGridView__td');
+            if (targetColumn.length) {
+               targetColumnIndex = targetColumn.index();
             }
+         }
+         this.showEip($(target).closest('.js-controls-ListView__item'), record, { isEdit: true }, targetColumnIndex)
+            .addCallback(function() {
+               resultDeferred.errback();
+            }).
+            addErrback(function() {
+               resultDeferred.callback(true);
+            });
+         event.setResult(resultDeferred);
+      },
+      showEip: function(target, model, options, targetColumnIndex) {
+         return this._canShowEip(targetColumnIndex) ? this._getEditInPlace().showEip(target, model, options) : $ws.proto.Deferred.fail();
+      },
+      _canShowEip: function(targetColumnIndex) {
+         var
+            column = 0,
+            canShow = this.isEnabled();
+         if (this._options.editingTemplate || targetColumnIndex === undefined) {
+            // Отображаем редактирование по месту и для задизабленного DataGrid, но только если хоть у одиной колонки
+            // доступен редактор при текущем состоянии задизабленности DataGrid.
+            while (!canShow && column < this._options.columns.length) {
+               if (this._options.columns[column].allowChangeEnable === false) {
+                  canShow = true;
+               } else {
+                  column++;
+               }
+            }
+         } else {
+            if (this._options.multiselect) {
+               targetColumnIndex -= 1;
+            }
+            canShow = !!this._options.columns[targetColumnIndex].editor && (canShow || this._options.columns[targetColumnIndex].allowChangeEnable === false);
          }
          return canShow;
       },

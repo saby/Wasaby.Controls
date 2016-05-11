@@ -221,7 +221,8 @@ define('js!SBIS3.CONTROLS.ListView',
                $ws._const.key.right,
                $ws._const.key.left,
                $ws._const.key.m,
-               $ws._const.key.o
+               $ws._const.key.o,
+               $ws._const.key.del
             ],
             _itemsToolbar: null,
             _editingItem: {
@@ -359,6 +360,22 @@ define('js!SBIS3.CONTROLS.ListView',
                 * </pre>
                 */
                itemsDragNDrop: 'allow',
+               /**
+                * @cfg {Function} Устанавливает функцию, которая будет выполнена при клике на строку.
+                * @remark
+                * Аргументы функции:
+                * <ol>
+                *    <li>id - идентификатор элемента коллекции - строки, по которой был произведён клик.</li>
+                *    <li>item - элемент коллекции, по строке отображения которого был произведён клик; экземпляр класса {@link SBIS3.CONTROLS.Data.Record} с данными выбранной записи.</li>
+                *    <li>target - контейнер визуального отображения (DOM-элемент) строки, по которой был произведён клик.</li>
+                * </ol>
+                * Установить или заменить функцию - обработчик клика на строку можно с помощью метода {@link setElemClickHandler}
+                * @example
+                * <pre class="brush: xml">
+                *     <option name="elemClickHandler" type="function">js!SBIS3.Contacts.LatestThemes:prototype.elemClickHandler</option>
+                * </pre>
+                * @see setElemClickHandler
+                */
                elemClickHandler: null,
                /**
                 * @cfg {Boolean} Разрешить выбор нескольких строк
@@ -391,7 +408,7 @@ define('js!SBIS3.CONTROLS.ListView',
                 */
                infiniteScroll: null,
                /**
-                * @cfg {jQuery || String} Контейнер в котором будет скролл, если представление данных ограничено по высоте.
+                * @cfg {jQuery | String} Контейнер в котором будет скролл, если представление данных ограничено по высоте.
                 * Можно передать Jquery-селектор, но поиск будет произведен от контейнера вверх.
                 * @see isInfiniteScroll
                 * @see setInfiniteScroll
@@ -400,11 +417,20 @@ define('js!SBIS3.CONTROLS.ListView',
                /**
                 * @cfg {Boolean} Устанавливает режим постраничной навигации.
                 * @remark
-                * При частичной постраничной навигации заранее неизвестно общее количество страниц, режим пейджинга будет определн по параметру n из dataSource
-                * Если пришел boolean, значит частичная постраничная навигация
-                * Важно! В SBIS3.CONTROLS.TreeCompositeView особый режим навигации - в плоском списке и таблице автоматически работает
-                * бесконечная подгрузка по скроллу (@see infiniteScroll), а вот в режиме плитки (tile) будет работать постраничная навигация
-                * (при условии showPaging = true)
+                * Постраничная навигация списка может работать в двух состояниях:
+                * <ol>
+                *    <li>Полная. Пользователь видит номера первых страниц, затем многоточие и номер последней страницы.</li>
+                *    <li>Частичная. Пользователь видит только номера текущей страницы, следующей и предыдущей. Общее количество страниц неизвестно.</li>
+                * </ol>
+                * Состояние постраничной навигации устанавливается по параметру n из dataSource (набора данных). Параметр по умолчанию поддерживается декларативным методом бизнес-логики.
+                * Если для получения набора данных используется другой списочный метод, то разработчик должен самостоятельно устанавливать параметр n: если Boolean, то значит частичная постраничная навигация.
+                * <br/>
+                * Для контролов {@link SBIS3.CONTROLS.CompositeView} и {@link SBIS3.CONTROLS.TreeCompositeView} режим постраничной навигации имеет свои особенности работы:
+                * <ol>
+                *    <li>В режимах отображения "Список" и "Таблица" постраничная навигация не работает, даже если опция showPaging установлена в значение true. В этих режимах отображения автоматически устанавливается режим бесконечной подгрузки по скроллу - {@link infiniteScroll}.</li>
+                *    <li>В режиме отображения "Плитка" постраничная навигация будет работать корректно.</li>
+                * </ol>
+                * Режим отображения устанавливают с помощью опции {@link SBIS3.CONTROLS.CompositeViewMixin#viewMode}.
                 * @example
                 * <pre>
                 *     <option name="showPaging">true</option>
@@ -412,7 +438,10 @@ define('js!SBIS3.CONTROLS.ListView',
                 * @see setPage
                 * @see getPage
                 * @see infiniteScroll
+                * @see SBIS3.CONTROLS.DSMixin#pageSize
+                * @see SBIS3.CONTROLS.CompositeViewMixin#viewMode
                 * @see SBIS3.CONTROLS.TreeCompositeView
+                * @see SBIS3.CONTROLS.CompositeView
                 */
                showPaging: false,
                /**
@@ -440,24 +469,19 @@ define('js!SBIS3.CONTROLS.ListView',
                 */
                editMode: '',
                /**
-                * @cfg {String} Шаблон строки редактирования по месту.
-                * Данная опция обладает большим приоритетом, чем заданный в колонках редактор.
-                * Данная опция может быть переопределена с помощью метода (@see setEditingTemplate). Переопределить опцию
-                * можно в любой момент до показа редакторов на строке, например: (@see onBeginEdit) или (@see onItemClick)
+                * @cfg {String} Устанавливает шаблон строки редактирования по месту.
+                * Шаблон строки редактирования по месту используется для удобного представления редактируемой записи.
+                * Такой шаблон отрисовывается поверх редактируемой строки с прозрачным фоном.
+                * Это поведение считается нормальным в целях решения прикладных задач.
+                * Чтобы отображать только шаблон строки без прозрачного фона, нужно установить для него свойство background-color.
+                * Данная опция обладает большим приоритетом, чем установленный в колонках редактор (см. {@link SBIS3.CONTROLS.DataGridView#columns}).
+                * Данная опция может быть переопределена с помощью метода (@see setEditingTemplate).
+                * Переопределить опцию можно в любой момент до показа редакторов на строке, например: (@see onBeginEdit) или (@see onItemClick).
                 * @example
-                * <pre>
-                *     <opt name="editingTemplate">
-                *       <component data-component="SBIS3.CONTROLS.TextBox" style="vertical-align: middle; display: inline-block; width: 100%;">
-                *          <opt name="text" bind="TextValue"></opt>
-                *          <opts name="validators" type="array">
-                *             <opts>
-                *                <opt name="validator" type="function">js!SBIS3.CORE.CoreValidators:required</opt>
-                *             </opts>
-                *          </opts>
-                *       </component>
-                *     </opt>
-                * </pre>
+                * Пример шаблона вы можете найти в разделе <a href="https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/list-settings/records-editing/edit-in-place/template/">Шаблон строки редактирования по месту</a>.
                 * @see editMode
+                * @see setEditingTemplate
+                * @see getEditingTemplate
                 */
                editingTemplate: undefined,
                /**
@@ -468,13 +492,10 @@ define('js!SBIS3.CONTROLS.ListView',
                 * @remark
                 * Отображение строки итогов конфигурируется тремя опциями: resultsPosition, {@link resultsText} и {@link resultsTpl}.
                 * Данная опция определяет расположение строки итогов, а также предоставляет возможность отображения строки в случае отсутствия записей.
-                * Список возможных значений:
-                * <ol>
-                * </ol>
                 * С подробным описанием можно ознакомиться в статье {@link https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/list-settings/list-visual-display/results/ Строка итогов}.
                 * @example
                 * <pre class="brush: xml">
-                *     <option name="resultsPosition">bottom</option><!-- строка итогов будет отображена под всеми элементами коллекции -->
+                *     <option name="resultsPosition">bottom</option> <!-- Строка итогов будет отображена под всеми элементами коллекции -->
                 * </pre>
                 * @see resultsText
                 * @see resultsTpl
@@ -530,9 +551,9 @@ define('js!SBIS3.CONTROLS.ListView',
             _scrollWatcher : undefined,
             _searchParamName: undefined, //todo Проверка на "searchParamName" - костыль. Убрать, когда будет адекватная перерисовка записей (до 150 версии, апрель 2016)
             _updateByReload: false, //todo: Убрать в 150, когда будет правильный рендер изменившихся данных. Флаг, означающий то, что обновление происходит из-за перезагрузки данных.
-            _scrollOnBottom: true, // TODO: Придрот для скролла вниз при первой подгрузке. Если включена подгрузка вверх то изначально нужно проскроллить контейнер вниз, 
+            _scrollOnBottom: true, // TODO: Придрот для скролла вниз при первой подгрузке. Если включена подгрузка вверх то изначально нужно проскроллить контейнер вниз,
             //но после загрузки могут долетать данные (картинки в docviewer например), которые будут скроллить вверх.
-            _scrollOnBottomTimer: null //TODO: см. строчкой выше  
+            _scrollOnBottomTimer: null //TODO: см. строчкой выше
          },
 
          $constructor: function () {
@@ -540,8 +561,15 @@ define('js!SBIS3.CONTROLS.ListView',
             //TODO временно смотрим на TopParent, чтобы понять, где скролл. С внедрением ScrallWatcher этот функционал уберем
             var topParent = this.getTopParent();
             this._publish('onChangeHoveredItem', 'onItemClick', 'onItemActivate', 'onDataMerge', 'onItemValueChanged', 'onBeginEdit', 'onAfterBeginEdit', 'onEndEdit', 'onBeginAdd', 'onAfterEndEdit', 'onPrepareFilterOnMove');
-            this._container.on('mousemove', this._mouseMoveHandler.bind(this))
-                           .on('mouseleave', this._mouseLeaveHandler.bind(this));
+
+            if(this._touchSupport) {
+               this._container.on('swipe', this._swipeHandler.bind(this))
+                              .on('tap', this._tapHandler.bind(this))
+                              .on('touchmove',this._mouseMoveHandler.bind(this));
+            } else {
+               this._container.on('mousemove', this._mouseMoveHandler.bind(this))
+                              .on('mouseleave', this._mouseLeaveHandler.bind(this));
+            }
 
             this.initEditInPlace();
             this.setItemsDragNDrop(this._options.itemsDragNDrop);
@@ -563,15 +591,6 @@ define('js!SBIS3.CONTROLS.ListView',
             this._prepareInfiniteScroll();
             ListView.superclass.init.call(this);
             this.reload();
-            if (this._touchSupport){
-               /* События нужно вешать на контейнер контрола,
-                  т.к. getItemsContainer возвращает текущий активный контейнер,
-                  а в случае плиточного реестра их два, поэтому в одном из режимов могут не работать обработчики */
-               this._container
-                  .bind('swipe', this._swipeHandler.bind(this))
-                  .bind('tap', this._tapHandler.bind(this))
-                  .bind('touchmove',this._mouseMoveHandler.bind(this));
-            }
          },
          _modifyOptions : function(opts){
             var lvOpts = ListView.superclass._modifyOptions.apply(this, arguments);
@@ -632,9 +651,9 @@ define('js!SBIS3.CONTROLS.ListView',
                   var disableScrollBottom = function(){
                      self._scrollOnBottom = false;
                      self._options.infiniteScrollContainer.off('touchmove wheel', disableScrollBottom);
-                  }
+                  };
                   this._options.infiniteScrollContainer.on('touchmove wheel', disableScrollBottom)
-               } 
+               }
                this._scrollWatcher.subscribe('onScroll', function(event, type){
                   //top || bottom
                   self._loadChecked((type === 'top' && self._options.infiniteScroll === 'up') ||
@@ -670,6 +689,9 @@ define('js!SBIS3.CONTROLS.ListView',
                   if (e.ctrlKey && e.altKey && e.shiftKey) {
                      this.sendCommand('mergeItems', this.getSelectedKeys());
                   }
+                  break;
+               case $ws._const.key.del:
+                  this.deleteRecords(this.getSelectedKey());
                   break;
             }
             if (newSelectedItem && newSelectedItem.length) {
@@ -786,16 +808,20 @@ define('js!SBIS3.CONTROLS.ListView',
 
             target = this._findItemByElement($target);
 
-            if (target.length) {
-               targetKey = target[0].getAttribute('data-id');
-               if (targetKey !== undefined && this._hoveredItem.key !== targetKey) {
-                  this._hoveredItem.container && this._hoveredItem.container.removeClass('controls-ListView__hoveredItem');
-                  target.addClass('controls-ListView__hoveredItem');
-                  this._hoveredItem = this._getElementData(target);
-                  this._notifyOnChangeHoveredItem();
-               }
+            if (target.length && !this._touchSupport) {
+               this._changeHoveredItem(target);
             } else if (!this._isHoverControl($target)) {
                this._mouseLeaveHandler();
+            }
+         },
+
+         _changeHoveredItem: function(target) {
+            var targetKey = target[0].getAttribute('data-id');
+            if (targetKey !== undefined && this._hoveredItem.key !== targetKey) {
+               this._hoveredItem.container && this._hoveredItem.container.removeClass('controls-ListView__hoveredItem');
+               target.addClass('controls-ListView__hoveredItem');
+               this._hoveredItem = this._getElementData(target);
+               this._notifyOnChangeHoveredItem();
             }
          },
 
@@ -867,8 +893,8 @@ define('js!SBIS3.CONTROLS.ListView',
           * @private
           */
          _onChangeHoveredItem: function (target) {
-            if (this._isSupportedItemsToolbar()) {
-         		if (target.container && !this._touchSupport){
+            if (this._isSupportedItemsToolbar() && !this._touchSupport) {
+         		if (target.container){
                   this._showItemsToolbar(target);
                } else {
                   this._hideItemsToolbar();
@@ -1103,7 +1129,7 @@ define('js!SBIS3.CONTROLS.ListView',
             return this._options.editMode;
          },
          /**
-          * Устанавливает шаблон редактирования по месту.
+          * Устанавливает шаблон строки редактирования по месту.
           * @param {String} template Шаблон редактирования по месту. Подробнее вы можете прочитать в описании к опции {@link editingTemplate}.
           * @see editingTemplate
           * @see getEditingTemplate
@@ -1126,11 +1152,7 @@ define('js!SBIS3.CONTROLS.ListView',
          },
 
          showEip: function(target, model, options) {
-            if (this._canShowEip()) {
-               return this._getEditInPlace().showEip(target, model, options);
-            } else {
-               return $ws.proto.Deferred.fail();
-            }
+            return this._canShowEip() ? this._getEditInPlace().showEip(target, model, options) : $ws.proto.Deferred.fail();
          },
 
          _canShowEip: function() {
@@ -1144,8 +1166,7 @@ define('js!SBIS3.CONTROLS.ListView',
          },
 
          _onItemClickHandler: function(event, id, record, target) {
-            var result = this.showEip($(target).closest('.js-controls-ListView__item'), record, { isEdit: true });
-            event.setResult(result);
+            event.setResult(this.showEip($(target).closest('.js-controls-ListView__item'), record, { isEdit: true }));
          },
 
          _onChangeHoveredItemHandler: function(event, hoveredItem) {
@@ -1289,22 +1310,36 @@ define('js!SBIS3.CONTROLS.ListView',
          },
 
          _swipeHandler: function(e){
-            var target = this._findItemByElement($(e.target)),
-                item;
+            var target = this._findItemByElement($(e.target));
 
             if(!target.length) {
                return;
             }
 
+            if (e.direction == 'left') {
+               this._changeHoveredItem(target);
+               this._onLeftSwipeHandler();
+            } else {
+               this._clearHoveredItem();
+               this._onRightSwipeHandler();
+            }
+            e.stopPropagation();
+         },
+
+         _onLeftSwipeHandler: function() {
             if (this._isSupportedItemsToolbar()) {
-               item = this._getElementData(target);
-               if (e.direction == 'left') {
-                  item.container ? this._showItemsToolbar(item) : this._hideItemsToolbar();
-                  this._hoveredItem = item;
+               if (this._hoveredItem.key) {
+                  this._showItemsToolbar(this._hoveredItem);
+                  this.setSelectedKey(this._hoveredItem.key);
                } else {
-                  this._hideItemsToolbar(true);
+                  this._hideItemsToolbar();
                }
-               e.stopPropagation();
+            }
+         },
+
+         _onRightSwipeHandler: function() {
+            if (this._isSupportedItemsToolbar()) {
+               this._hideItemsToolbar(true);
             }
          },
 
@@ -1453,15 +1488,6 @@ define('js!SBIS3.CONTROLS.ListView',
          //**********************************//
          //КОНЕЦ БЛОКА ОПЕРАЦИЙ НАД ЗАПИСЬЮ //
          //*********************************//
-         _drawItems: function(records, at){
-            //Это реализовано здесь, потому что 1ый раз отрисовка вызвана не после подгрузки в
-            // бесконечном скролле, а после первого получения данных!
-            // проверка на режим поиска для того что бы при поиске отрисовывать записи в правильном порядке
-            if (this._options.infiniteScroll === 'up' && !at && !this._isSearchMode()) {
-               at = {at : 0};
-            }
-            ListView.superclass._drawItems.apply(this, [records, at]);
-         },
          _drawItemsCallback: function () {
             ListView.superclass._drawItemsCallback.apply(this, arguments);
             var hoveredItem = this.getHoveredItem().container;
@@ -1566,7 +1592,7 @@ define('js!SBIS3.CONTROLS.ListView',
                      if (this._isSlowDrawing()) {
                         self._needToRedraw = false;
                      }
-
+                     var at = null;
                      records = dataSet.toArray();
                      if (self._options.infiniteScroll === 'up') {
                         self._containerScrollHeight = self._scrollWatcher.getScrollHeight();
@@ -1574,12 +1600,21 @@ define('js!SBIS3.CONTROLS.ListView',
                         //добавляем данные в начало или в конец в зависимости от того мы скроллим вверх или вниз
                         self._items.prepend(records.reverse());
                         records.reverse();
+                        at = {at: 0};
                      } else {
+                        //TODO новый миксин не задействует декоратор лесенки в принципе при любых действиях, кроме первичной отрисовки
+                        //это неправильно, т.к. лесенка умеет рисовать и дорисовывать данные, если они добавляются последовательно
+                        //здесь мы говорим, чтобы лесенка отработала при отрисовке данных
+                        var ladder = this._decorators.getByName('ladder');
+                        if (ladder && records.length){
+                           ladder.setIgnoreEnabled(true);
+                        }
                         self._items.append(records);
+                        ladder && ladder.setIgnoreEnabled(false);
                      }
 
                      if (this._isSlowDrawing()) {
-                        self._drawItems(records);
+                        self._drawItems(records, at);
                      }
                      //TODO Пытались оставить для совместимости со старыми данными, но вызывает onCollectionItemChange!!!
                      //self._dataSet.merge(dataSet, {remove: false});
@@ -1861,7 +1896,6 @@ define('js!SBIS3.CONTROLS.ListView',
           *       DataGridView.setPage(0);
           * </pre>
           * @see getPage
-          * @see paging
           */
          setPage: function (pageNumber, noLoad) {
             pageNumber = parseInt(pageNumber, 10);
@@ -1884,7 +1918,6 @@ define('js!SBIS3.CONTROLS.ListView',
           *    if(DataGridView.getPage() > 0)
           *       DataGridView.setPage(0);
           * </pre>
-          * @see paging
           * @see setPage
           * @param {Number} [offset] - если передать, то номер страницы рассчитается от него
           */
@@ -2126,13 +2159,19 @@ define('js!SBIS3.CONTROLS.ListView',
                 target;
             if (this._canDragStart(e)) {
                target = this._findItemByElement($(e.target));
-               id = target.data('id');
-               this.setCurrentElement(e, {
-                  keys: this._getDragItems(id),
-                  targetId: id,
-                  target: target,
-                  insertAfter: undefined
-               });
+               //TODO: данный метод выполняется по селектору '.js-controls-ListView__item', но не всегда если запись есть в вёрстке
+               //она есть в _items(например при добавлении или фейковый корень). Метод _findItemByElement в данном случае вернёт
+               //пустой массив. В .150 править этот метод опасно, потому что он много где используется. В .200 переписать метод
+               //_findItemByElement, без завязки на _items.
+               if (target.length) {
+                  id = target.data('id');
+                  this.setCurrentElement(e, {
+                     keys: this._getDragItems(id),
+                     targetId: id,
+                     target: target,
+                     insertAfter: undefined
+                  });
+               }
                //TODO: Сейчас появилась проблема, что если к компьютеру подключен touch-телевизор он не вызывает
                //preventDefault и при таскании элементов мышкой происходит выделение текста.
                //Раньше тут была проверка !$ws._const.compatibility.touch и preventDefault не вызывался для touch устройств
@@ -2285,6 +2324,7 @@ define('js!SBIS3.CONTROLS.ListView',
                drawnResults.remove();
             }
             $(container)[position](resultRow);
+            this.reviveComponents();
          }
       });
 

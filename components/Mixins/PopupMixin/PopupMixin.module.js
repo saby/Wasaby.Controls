@@ -139,6 +139,10 @@ define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManag
          if (this._options.closeButton) {
             container.append('<div class="controls-PopupMixin__closeButton" ></div>');
             $('.controls-PopupMixin__closeButton', this.getContainer().get(0)).click(function() {
+               //Нужно вызвать активироваться перед hide, чтобы закрылись плав. панели, у которых опенером был этот контрол
+               //TODO: унифицировать код закрытия с SBIS3.CORE.FloatArea: хранить коллекцию дочерних панелей, и закрывать их тут
+               //(не делая активацию)
+               self.setActive(true);
                self.hide();
             });
          }
@@ -185,7 +189,7 @@ define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManag
       _checkFixed: function(element){
          element = $(element);
          while (element.parent().length){
-            if (element.css('position') == 'fixed'){
+            if (element.css('position') == 'fixed' && !element.hasClass('interface-no-scroll')){
                $(this._container).css({position : 'fixed'});
                this._fixed = true;
                return;

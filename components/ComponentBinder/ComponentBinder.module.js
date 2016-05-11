@@ -4,8 +4,8 @@ define('js!SBIS3.CONTROLS.ComponentBinder', [], function () {
     *
     * @class SBIS3.CONTROLS.ComponentBinder
     * @extends $ws.proto.Abstract
+    * @author Крайнов Дмитрий Олегович
     * @public
-    * @param backButton объект кнопки назад
     */
    /*методы для поиска*/
    function startHierSearch(text, searchParamName, searchCrumbsTpl, searchMode) {
@@ -272,6 +272,13 @@ define('js!SBIS3.CONTROLS.ComponentBinder', [], function () {
                resetGroup.call(self, searchParamName);
             } else {
                resetSearch.call(self, searchParamName);
+            }
+         });
+         searchForm.subscribe('onKeyPressed', function(eventObject, event){
+            // переводим фокус на view и устанавливаем активным первый элемент, если поле пустое, либо курсор стоит в конце поля ввода
+            if (event.which == $ws._const.key.down && (this.getText() === '' || this.getText().length === this._inputField[0].selectionStart)){
+               view.setSelectedIndex(0);
+               view.setActive(true);
             }
          });
 

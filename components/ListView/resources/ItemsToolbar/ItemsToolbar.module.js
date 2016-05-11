@@ -334,6 +334,7 @@ define('js!SBIS3.CONTROLS.ItemsToolbar',
                 }
 
                 if (this._options.touchMode && animate) {
+                   this._itemsActions && this._itemsActions.applyItemActions();
                    toolbarContent = this._getToolbarContent();
                    toolbarContent.animate({right: -container.width()}, {
                       duration: 350,

@@ -1,11 +1,13 @@
 define('js!SBIS3.CONTROLS.TreeDataGridView', [
    'js!SBIS3.CONTROLS.DataGridView',
+   'html!SBIS3.CONTROLS.TreeDataGridView',
    'js!SBIS3.CONTROLS.TreeMixin',
    'js!SBIS3.CONTROLS.TreeViewMixin',
+   'js!SBIS3.CONTROLS.IconButton',
    'browser!html!SBIS3.CONTROLS.TreeDataGridView/resources/ItemTemplate',
    'browser!html!SBIS3.CONTROLS.TreeDataGridView/resources/ItemContentTemplate',
    'browser!html!SBIS3.CONTROLS.TreeDataGridView/resources/FooterWrapperTemplate'
-], function(DataGridView, TreeMixin, TreeViewMixin, ItemTemplate, ItemContentTemplate, FooterWrapperTemplate) {
+], function(DataGridView, dotTplFn, TreeMixin, TreeViewMixin, IconButton, ItemTemplate, ItemContentTemplate, FooterWrapperTemplate) {
 
    var HIER_WRAPPER_WIDTH = 16,
        //Число 17 это сумма padding'ов, margin'ов элементов которые составляют отступ у первого поля, по которому строится лесенка отступов в дереве
@@ -16,7 +18,7 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
    /**
     * Контрол отображающий набор данных, имеющих иерархическую структуру, в виде в таблицы с несколькими колонками.
     * @class SBIS3.CONTROLS.TreeDataGridView
-    * @extends SBIS3.CONTROLS.HierarchyDataGridView
+    * @extends SBIS3.CONTROLS.DataGridView
     * @mixes SBIS3.CONTROLS.TreeMixin
     * @public
     * @author Крайнов Дмитрий Олегович
@@ -35,10 +37,36 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
     * </component>
     *
     * @demo SBIS3.CONTROLS.Demo.MyTreeDataGridView
-    *
+    * @demo SBIS3.CONTROLS.Demo.AutoAddHierarchy Пример 2. Автодобавление записей в иерархическом представлении данных.
+    * Инициировать добавление можно как по нажатию кнопок в футерах, так и по кнопке Enter из режима редактирования последней записи.
+    * Подробное описание конфигурации компонента и футеров вы можете найти в разделе {@link http://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/list-settings/records-editing/edit-in-place/users/add-in-place-hierarchy/ Добавление по месту в иерархическом списке}.
     */
 
    var TreeDataGridView = DataGridView.extend([TreeMixin, TreeViewMixin], /** @lends SBIS3.CONTROLS.TreeDataGridView.prototype*/ {
+      _dotTplFn : dotTplFn,
+       /**
+        * @event onDragMove Происходит при перемещении записей.
+        * @remark
+        * <ul>
+        *   <li>В режиме единичного выбора значения (опция {@link multiselect} установлена в значение false) возможно перемещать только одну запись.</li>
+        *   <li>В режиме множественного выбора значений (опция {@link multiselect} установлена в значение true) возможно перемещать несколько записей.</li>
+        * </ul>
+        * Перемещение производится через удержание ЛКМ на выделенных записях и перемещение их в нужный элемент списка.
+        * Событие будет происходить каждый раз, когда под курсором изменяется целевая запись списка, а удержание выделенных записей продолжается.
+        * @param {$ws.proto.EventObject} eventObject Дескриптор события.
+        * @param {Array.<Number|String>} key Массив идентификаторов перемещаемых записей.
+        * <ul>
+        *   <li>В режиме единичного выбора параметр возвращает либо строку, либо число.</li>
+        *   <li>В режиме множественного выбора параметр возвращает массив строки или чисел.</li>
+        * </ul>
+        * @param {Number|String} id Идентификатор целевой записи, куда производится перемещение.
+        * @param {Boolean|undefined} insertAfter Признак: куда были перемещены записи.
+        * <ul>
+        *   <li>undefined - перемещение произвели в папку;</li>
+        *   <li>false - перемещаемые записи были вставлены перед целевой записью;</li>
+        *   <li>true - перемещаемые записи были вставлены после целевой записи.</li>
+        * </ul>
+        */
       $protected: {
          _defaultItemTemplate: ItemTemplate,
          _defaultItemContentTemplate: ItemContentTemplate,
@@ -81,6 +109,14 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
              */
             arrowActivatedHandler: undefined,
             /**
+             * @cfg {String} Отображать кнопку редактирования папки или нет ( >> рядом с названием папки ).
+             * @example
+             * <pre>
+             *     <option name="editArrow" type="boolean">false</option>
+             * </pre>
+             */
+            editArrow: true,
+            /**
              * @cfg {String} Разрешено или нет перемещение элементов "Drag-and-Drop"
              * @variant "" Запрещено
              * @variant allow Разрешено
@@ -93,7 +129,8 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
              */
             itemsDragNDrop: 'allow'
          },
-         _dragStartHandler: undefined
+         _dragStartHandler: undefined,
+         _editArrow: undefined
       },
 
       $constructor: function() {
@@ -115,19 +152,21 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
          var
             model,
             dataSet = this._dataSet;
-         $ws.helpers.forEach(this._options.openedPath, function(val, key) {
-            /*TODO:
-               Не нужно создавать футер у узла, если данный узел не отображается.
-               Прежде чем создавать футер у развёрнутого узла проверим что данный узел присутствует в наборе элементов.
-               Возможна такая ситуация что списочный метод вернул сразу все данные и узел может являться развёрнутым,
-               но не отображаться, тогда для такого случая проверим необходимость создания футера путём поиска узла
-               среди текущего набора элементов в DOM.
-            */
-            model = dataSet.getRecordByKey(key);
-             if (model && this._getElementByModel(model).length) {
-                this._createFolderFooter(key);
-             }
-         }, this);
+         for (var key in this._options.openedPath) {
+            if (this._options.openedPath.hasOwnProperty(key)) {
+               /*TODO:
+                Не нужно создавать футер у узла, если данный узел не отображается.
+                Прежде чем создавать футер у развёрнутого узла проверим что данный узел присутствует в наборе элементов.
+                Возможна такая ситуация что списочный метод вернул сразу все данные и узел может являться развёрнутым,
+                но не отображаться, тогда для такого случая проверим необходимость создания футера путём поиска узла
+                среди текущего набора элементов в DOM.
+                */
+               model = dataSet.getRecordByKey(key);
+               if (model && this._getElementByModel(model).length) {
+                  this._createFolderFooter(key);
+               }
+            }
+         }
          TreeDataGridView.superclass._drawItemsCallback.apply(this, arguments);
       },
       _createFolderFooter: function(key) {
@@ -212,6 +251,141 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
          }
       },
 
+      /**
+       * Возвращает стрелку редактирования папки
+       * @returns {IconButton|undefined}
+       */
+      getEditArrow: function() {
+         var self = this;
+         if(!this._editArrow && this._options.editArrow) {
+            this._editArrow = new IconButton({
+               element: this._container.find('> .controls-TreeView__editArrow-container'),
+               icon: 'icon-16 icon-View icon-primary action-hover',
+               parent: this,
+               handlers: {
+                  onActivated: function () {
+                     var hoveredItem = self.getHoveredItem();
+
+                     // TODO для обратной совместимости - удалить позже
+                     if(self._options.arrowActivatedHandler) {
+                        self._options.arrowActivatedHandler.call(this,
+                            hoveredItem.record,
+                            hoveredItem.key,
+                            hoveredItem.container
+                        );
+                     } else {
+                        self._activateItem(hoveredItem.key);
+                     }
+                  }
+               }
+            });
+         }
+         return this._editArrow;
+      },
+
+      _getEditArrowPosition: function(hoveredItem) {
+         var folderTitle = hoveredItem.container.find('.controls-TreeView__folderTitle'),
+             td = folderTitle.closest('.controls-DataGridView__td', hoveredItem.container),
+             containerCords = this._container[0].getBoundingClientRect(),
+             /* в 3.7.3.200 сделать это публичным маркером для стрелки */
+             arrowContainer = td.find('.js-controls-TreeView__editArrow'),
+             arrowCords;
+
+         if(!arrowContainer.length) {
+            arrowContainer = td.find('.controls-TreeView__editArrow');
+         }
+
+         /* Контейнера для стрелки может не быть, тогда не показываем */
+         if(!arrowContainer.length) {
+            return false;
+         }
+
+         /* Т.к. у нас в вёрстке две иконки, то позиционируем в зависимости от той, которая показывается,
+            в .200 переделаем на маркер */
+         if(arrowContainer.length === 2) {
+            if (folderTitle[0].offsetWidth > td[0].offsetWidth) {
+               arrowContainer = arrowContainer[1];
+            } else {
+               arrowContainer = arrowContainer[0];
+            }
+         } else {
+            arrowContainer = arrowContainer[0];
+         }
+
+         arrowCords = arrowContainer.getBoundingClientRect();
+
+         return {
+            top: arrowCords.top - containerCords.top + this._container[0].scrollTop,
+            left: arrowCords.left - containerCords.left
+         }
+      },
+
+      _onChangeHoveredItem: function() {
+         if(this._options.editArrow && !this._touchSupport) {
+            if(this.getHoveredItem().container) {
+               this._showEditArrow();
+            } else {
+               this._hideEditArrow();
+            }
+         }
+         TreeDataGridView.superclass._onChangeHoveredItem.apply(this, arguments);
+      },
+
+      reload: function() {
+         this._hideEditArrow();
+         return TreeDataGridView.superclass.reload.apply(this, arguments);
+      },
+
+      _showEditArrow: function() {
+         var hoveredItem = this.getHoveredItem(),
+             editArrowContainer = this.getEditArrow().getContainer(),
+             needShowArrow, hiContainer, editArrowPosition;
+
+         hiContainer = hoveredItem.container;
+         /* Если иконку скрыли или не папка - показывать не будем */
+         needShowArrow = hiContainer && hiContainer.hasClass('controls-ListView__item-type-node') && this.getEditArrow().isVisible();
+
+         if(hiContainer && needShowArrow) {
+            editArrowPosition = this._getEditArrowPosition(hoveredItem);
+
+            if(editArrowPosition) {
+               editArrowContainer.css(editArrowPosition);
+               editArrowContainer.removeClass('ws-hidden');
+            }
+         } else {
+            this._hideEditArrow();
+         }
+      },
+
+      _hideEditArrow: function() {
+         if(this._editArrow) {
+            this._editArrow.getContainer().addClass('ws-hidden');
+         }
+      },
+
+      _onLeftSwipeHandler: function() {
+         if(this._options.editArrow) {
+            this._showEditArrow();
+         }
+         TreeDataGridView.superclass._onLeftSwipeHandler.apply(this, arguments);
+      },
+
+      _onRightSwipeHandler: function() {
+         if(this._options.editArrow) {
+            this._hideEditArrow();
+         }
+         TreeDataGridView.superclass._onRightSwipeHandler.apply(this, arguments);
+      },
+
+      _isHoverControl: function(target) {
+         var res = TreeDataGridView.superclass._isHoverControl.apply(this, arguments);
+
+         if(!res && this._options.editArrow) {
+            return this.getEditArrow().getContainer()[0] === target[0];
+         }
+         return res;
+      },
+
       _drawExpandArrow: function(key, flag){
          var itemCont = $('.controls-ListView__item[data-id="' + key + '"]', this.getContainer().get(0));
          $('.js-controls-TreeView__expand', itemCont).toggleClass('controls-TreeView__expand__open', flag);
@@ -284,16 +458,7 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
          var nodeID = $(target).closest('.controls-ListView__item').data('id');
          if (this._options.allowEnterToFolder){
             if ($(target).hasClass('js-controls-TreeView__editArrow')) {
-               if (this._options.arrowActivatedHandler) {
 
-                  //TODO оставляем для совеместимости с номенклатурой
-                  if (this._options.arrowActivatedHandler instanceof Function) {
-                     this._options.arrowActivatedHandler.apply(this, arguments);
-                  }
-                  else {
-                     this._activateItem(id);
-                  }
-               }
             } else if (data.get(this._options.hierField + '@')) {
                this.setCurrentRoot(nodeID);
                this.reload();

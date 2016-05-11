@@ -712,6 +712,10 @@ define(
                }
             }, 100);
          });
+
+         this.subscribe('onFocusOut', function(){
+            this.validate();
+         });
       },
 
       init: function(){

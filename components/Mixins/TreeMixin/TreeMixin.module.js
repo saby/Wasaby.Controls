@@ -72,6 +72,23 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
              * @cfg {String} Поле иерархии
              */
             hierField: null,
+            /**
+             * @cfg {String} Устанавливает режим отображения данных, имеющих иерархическую структуру.
+             * @remark
+             * Для набора данных, имеющих иерархическую структуру, опция определяет режим их отображения. Она позволяет пользователю отображать данные в виде развернутого или свернутого списка.
+             * В режиме развернутого списка будут отображены узлы группировки данных (папки) и данные, сгруппированные по этим узлам.
+             * В режиме свернутого списка будет отображен только список узлов (папок).
+             * Возможные значения опции:
+             * * folders - будут отображаться только узлы (папки),
+             * * all - будут отображаться узлы (папки) и их содержимое - элементы коллекции, сгруппированные по этим узлам.
+             *
+             * Подробное описание иерархической структуры приведено в документе {@link https://wi.sbis.ru/doc/platform/developmentapl/workdata/structure/vocabl/tabl/relations/#hierarchy "Типы отношений в таблицах БД"}
+             * @example
+             * Устанавливаем режим полного отображения данных: будут отображены элементы коллекции и папки, по которым сгруппированы эти элементы.
+             * <pre class="brush:xml">
+             *     <option name="displayType">all</option>
+             * </pre>
+             */
             displayType : 'all',
             /**
              * @cfg {Boolean} При открытия узла закрывать другие
@@ -89,6 +106,10 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
              * @noShow
              */
             partialyReload: true,
+            /**
+             * @cfg {Object}  Устанавливает набор открытых элементов иерархии.
+             * @see getOpenedPath
+             */
             openedPath : {},
             /**
              * @cfg {Boolean}
@@ -331,7 +352,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
       getOpenedPath: function(){
          return this._options.openedPath;
       },
-      around : {
+      around: {
          _buildTplArgs: function(parentFnc, item) {
             var
                args = parentFnc.call(this, item);
@@ -341,6 +362,11 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
             args.originallPadding = this._originallPadding;
             args.isSearch = (!Object.isEmpty(this._options.groupBy) && this._options.groupBy.field === this._searchParamName)
             return args;
+         },
+         _canApplyGrouping: function(parentFn, projItem) {
+            var
+               itemParent = projItem.getParent();
+            return parentFn.call(this, projItem) && itemParent && itemParent.isRoot();
          }
       },
       /**

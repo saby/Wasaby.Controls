@@ -26,7 +26,9 @@ define('js!SBIS3.CONTROLS.SearchMixin', [], function() {
          _onResetIsFired: true,
          _options: {
             /**
-             * @cfg {Number} количество символов, которые нужно ввести, чтоб начать поиск
+             * @cfg {Number|null} количество символов, которые нужно ввести, чтоб начать поиск.
+             * @remark
+             * Если установить опцию в null, то поиск не будет запускаться автоматически.
              */
             startCharacter : 3,
             /**
@@ -57,12 +59,14 @@ define('js!SBIS3.CONTROLS.SearchMixin', [], function() {
       },
 
       _applySearch : function(text, force) {
+         var hasStartCharacter = this._options.startCharacter !== null;
+
          if (text) {
             text = text.replace(/[<>]/g, '');
-            if ( (String.trim(text).length >= this._options.startCharacter) || force ) {
+            if ( (hasStartCharacter && String.trim(text).length >= this._options.startCharacter) || force ) {
                this._notify('onSearch', text);
                this._onResetIsFired = false;
-            } else {
+            } else if (hasStartCharacter) {
                this._notifyOnReset();
             }
          }
