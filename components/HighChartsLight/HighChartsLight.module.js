@@ -573,10 +573,18 @@ function(BaseControl, dotTpl){
       },
 
       init : function() {
+         var self = this;
          HighChartsLight.superclass.init.call(this);
          if (this._options.firstLoad !== false) {
             this._drawHighChart();
          }
+         //перерисовываем график, если он стал видимым. без этого график не занимает всю ширину контейнера, если был скрыт
+         var trg = $ws.helpers.trackElement(this._container, true);
+         trg.subscribe('onVisible', function (event, visible) {
+            if (self._chartObj && visible) {
+               self._chartObj.reflow();
+            }
+         });
       },
 
       canAcceptFocus : function() {
@@ -586,15 +594,9 @@ function(BaseControl, dotTpl){
       _drawHighChart : function() {
          var self = this;
          this._options.highChartOptions.chart.events = this._options.highChartOptions.chart.events || {};
-         this._options.highChartOptions.chart.events.redraw = function () {
-            window.setTimeout(function(){
-               self.staggerDataLabels(self._chartObj.series);
-            }, 435);
-         };
 
          this.getContainer().highcharts(this._options.highChartOptions);
          this._chartObj = this.getContainer().highcharts();
-         this.staggerDataLabels(this._chartObj.series);
       },
 
       setConfig : function(config) {
@@ -609,70 +611,7 @@ function(BaseControl, dotTpl){
 
       getConfig : function() {
          return this._options.highChartOptions;
-      },
-
-      //TODO в Highcharts JS v4.1.6 есть проверка на пересечение, возможно, этот метод можно будет убрать после обновления
-      staggerDataLabels: function (series) {
-         //compares two datalabels and returns true if they overlap
-         function isLabelOnLabel(a, b) {
-            var al = a.x - (a.width / 2);
-            var ar = a.x + (a.width / 2);
-            var bl = b.x - (b.width / 2);
-            var br = b.x + (b.width / 2);
-
-            var at = a.y;
-            var ab = a.y + a.height;
-            var bt = b.y;
-            var bb = b.y + b.height;
-
-            if (bl > ar || br < al) {
-               return false;
-            } //overlap not possible
-            if (bt > ab || bb < at) {
-               return false;
-            } //overlap not possible
-            if (bl >= al && bl <= ar) {
-               return true;
-            }
-            if (br >= al && br <= ar) {
-               return true;
-            }
-
-            if (bt >= at && bt <= ab) {
-               return true;
-            }
-            if (bb >= at && bb <= ab) {
-               return true;
-            }
-
-            return false;
-         }
-
-
-         var sc = series.length;
-         if (sc < 2) return;
-
-         for (var s = 1; s < sc; s++) {
-            var
-               s1 = series[s - 1].points,
-               s2 = series[s].points,
-               l = s1.length,
-               diff, h;
-
-            for (var i = 0; i < l; i++) {
-               if (s1[i].dataLabel && s2[i] && s2[i].dataLabel) {
-                  diff = s1[i].dataLabel.y - s2[i].dataLabel.y;
-                  h = s1[i].dataLabel.height + 2;
-
-                  if (isLabelOnLabel(s1[i].dataLabel, s2[i].dataLabel)) {
-                     if (diff < 0) s1[i].dataLabel.translate(s1[i].dataLabel.translateX, s1[i].dataLabel.translateY - (h + diff));
-                     else s2[i].dataLabel.translate(s2[i].dataLabel.translateX, s2[i].dataLabel.translateY - (h - diff));
-                  }
-               }
-            }
-         }
       }
-
    });
    return HighChartsLight;
 });
