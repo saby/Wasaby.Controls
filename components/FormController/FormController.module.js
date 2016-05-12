@@ -182,6 +182,7 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
          $ws.single.CommandDispatcher.declareCommand(this, 'create', this._create);
          $ws.single.CommandDispatcher.declareCommand(this, 'notify', this._actionNotify);
          $ws.single.CommandDispatcher.declareCommand(this, 'activateChildControl', this._createChildControlActivatedDeferred);
+         this._updateDocumentTitle();
          this._setDefaultContextRecord();
          this._panel = this.getTopParent();
          if (this._options.dataSource){
@@ -212,6 +213,14 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
          var ctx = new $ws.proto.Context({restriction: 'set'}).setPrevious(this.getLinkedContext());
          ctx.setValue('record', this._options.record || new Record());
          this._context = ctx;
+      },
+
+      _updateDocumentTitle: function () {
+         var record = this._options.record,
+            title = record && record.get('title');
+         if (title) {
+            document.title = title;
+         }
       },
 
       /**
@@ -529,6 +538,7 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
             this._options.key = newKey;
          }
          this._needDestroyRecord = false;
+         this._updateDocumentTitle();
          this._setContextRecord(record);
       },
       /**
