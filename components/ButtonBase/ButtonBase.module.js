@@ -39,7 +39,7 @@ define('js!SBIS3.CONTROLS.ButtonBase', ['js!SBIS3.CORE.CompoundControl', 'js!SBI
     */
    
    var sanitizer = null;
-   if (typeof window !== undefined){
+   if (typeof window !== 'undefined'){
       sanitizer = new Sanitizer();
    }
 
