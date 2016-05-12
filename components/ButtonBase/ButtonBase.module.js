@@ -57,7 +57,8 @@ define('js!SBIS3.CONTROLS.ButtonBase', ['js!SBIS3.CORE.CompoundControl', 'js!SBI
              * @see setCaption
              * @see getCaption
              */
-            caption: undefined
+            caption: undefined,
+            escapeCaptionHtml: true
          }
       },
 
@@ -86,7 +87,9 @@ define('js!SBIS3.CONTROLS.ButtonBase', ['js!SBIS3.CORE.CompoundControl', 'js!SBI
        * @see getCaption
        */
       setCaption: function(caption) {
-         caption = $ws.helpers.escapeHtml(caption);
+         if (this._options.escapeCaptionHtml){
+            caption = $ws.helpers.escapeHtml(caption);
+         }
          this._options.caption = caption || '';
       },
 
