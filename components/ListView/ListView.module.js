@@ -1608,7 +1608,7 @@ define('js!SBIS3.CONTROLS.ListView',
                         //это неправильно, т.к. лесенка умеет рисовать и дорисовывать данные, если они добавляются последовательно
                         //здесь мы говорим, чтобы лесенка отработала при отрисовке данных
                         var ladder = this._decorators.getByName('ladder');
-                        if (ladder && dataSet.getCount()){
+                        if (ladder){
                            ladder.setIgnoreEnabled(true);
                         }
                         //Achtung! Добавляем именно dataSet, чтобы не проверялся формат каждой записи - это экономит кучу времени
