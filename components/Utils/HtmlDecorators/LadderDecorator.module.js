@@ -79,6 +79,10 @@ define('js!SBIS3.CONTROLS.Utils.HtmlDecorators.LadderDecorator', [
          this._ladderLastWords = {};
       },
 
+      reset: function(){
+         this._ladderLastWords = {}
+      },
+
       removeNodeData: function(key){
          this._ladderLastWords[key] = {};
       },
