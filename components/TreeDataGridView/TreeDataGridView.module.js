@@ -322,6 +322,8 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
       },
 
       _onChangeHoveredItem: function() {
+         /* Т.к. механизм отображения стрелки и операций над записью на ipad'e релизован с помощью свайпов,
+            а на PC через mousemove, то и скрывать/показывать их надо по-разному */
          if(!this._touchSupport) {
             this._updateEditArrow();
          }
