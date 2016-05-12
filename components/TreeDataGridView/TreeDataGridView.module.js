@@ -167,6 +167,7 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
                }
             }
          }
+         this._updateEditArrow();
          TreeDataGridView.superclass._drawItemsCallback.apply(this, arguments);
       },
       _createFolderFooter: function(key) {
@@ -321,14 +322,20 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
       },
 
       _onChangeHoveredItem: function() {
-         if(this._options.editArrow && !this._touchSupport) {
+         if(!this._touchSupport) {
+            this._updateEditArrow();
+         }
+         TreeDataGridView.superclass._onChangeHoveredItem.apply(this, arguments);
+      },
+
+      _updateEditArrow: function() {
+         if(this._options.editArrow) {
             if(this.getHoveredItem().container) {
                this._showEditArrow();
             } else {
                this._hideEditArrow();
             }
          }
-         TreeDataGridView.superclass._onChangeHoveredItem.apply(this, arguments);
       },
 
       reload: function() {
