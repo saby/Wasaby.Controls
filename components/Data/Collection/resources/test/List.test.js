@@ -801,6 +801,101 @@ define(
             });
          });
 
+         describe('.getIndexByValue', function (){
+            var getItems = function() {
+               return [
+                  {id: 1},
+                  {id: 2},
+                  {id: 3},
+                  {id: 4}
+               ];
+            };
+
+            it('should return initial indexes', function() {
+               var list = new List({
+                  items: getItems()
+               });
+               assert.equal(list.getIndexByValue('id', 1), 0);
+               assert.equal(list.getIndexByValue('id', 2), 1);
+               assert.equal(list.getIndexByValue('id', 3), 2);
+               assert.equal(list.getIndexByValue('id', 4), 3);
+            });
+
+            it('should shift indexes after add', function() {
+               var list = new List({
+                  items: getItems()
+               });
+               assert.equal(list.getIndexByValue('id', 1), 0);
+               list.add({id: 5}, 1);
+               assert.equal(list.getIndexByValue('id', 1), 0);
+               assert.equal(list.getIndexByValue('id', 5), 1);
+               assert.equal(list.getIndexByValue('id', 2), 2);
+               assert.equal(list.getIndexByValue('id', 3), 3);
+            });
+
+            it('should shift indexes after append', function() {
+               var list = new List({
+                  items: getItems()
+               });
+               assert.equal(list.getIndexByValue('id', 1), 0);
+               list.append([{id: 5}, {id: 6}]);
+               assert.equal(list.getIndexByValue('id', 1), 0);
+               assert.equal(list.getIndexByValue('id', 3), 2);
+               assert.equal(list.getIndexByValue('id', 4), 3);
+               assert.equal(list.getIndexByValue('id', 5), 4);
+               assert.equal(list.getIndexByValue('id', 6), 5);
+            });
+
+            it('should shift indexes after prepend', function() {
+               var list = new List({
+                  items: getItems()
+               });
+               assert.equal(list.getIndexByValue('id', 1), 0);
+               list.prepend([{id: 5}, {id: 6}]);
+               assert.equal(list.getIndexByValue('id', 5), 0);
+               assert.equal(list.getIndexByValue('id', 6), 1);
+               assert.equal(list.getIndexByValue('id', 1), 2);
+               assert.equal(list.getIndexByValue('id', 2), 3);
+            });
+
+            it('should shift indexes after removeAt', function() {
+               var list = new List({
+                  items: getItems()
+               });
+               assert.equal(list.getIndexByValue('id', 1), 0);
+               list.removeAt(1);
+               assert.equal(list.getIndexByValue('id', 1), 0);
+               assert.equal(list.getIndexByValue('id', 2), -1);
+               assert.equal(list.getIndexByValue('id', 3), 1);
+               assert.equal(list.getIndexByValue('id', 4), 2);
+            });
+
+            it('should shift indexes after replace', function() {
+               var list = new List({
+                  items: getItems()
+               });
+               assert.equal(list.getIndexByValue('id', 1), 0);
+               list.replace({id: 5}, 1);
+               assert.equal(list.getIndexByValue('id', 1), 0);
+               assert.equal(list.getIndexByValue('id', 2), -1);
+               assert.equal(list.getIndexByValue('id', 3), 2);
+               assert.equal(list.getIndexByValue('id', 4), 3);
+               assert.equal(list.getIndexByValue('id', 5), 1);
+            });
+
+            it('should return -1 indexes after clear', function() {
+               var list = new List({
+                  items: getItems()
+               });
+               assert.equal(list.getIndexByValue('id', 1), 0);
+               list.clear();
+               assert.equal(list.getIndexByValue('id', 1), -1);
+               assert.equal(list.getIndexByValue('id', 2), -1);
+               assert.equal(list.getIndexByValue('id', 3), -1);
+               assert.equal(list.getIndexByValue('id', 4), -1);
+            });
+         });
+
          describe('.getIndicesByValue', function (){
             it('should return indices by value', function() {
 
