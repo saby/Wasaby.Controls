@@ -28,7 +28,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.IndexedEnumeratorMixin', [
 
       /**
        * Переиндексирует энумератор
-       * @param {SBIS3.CONTROLS.Data.Bind.ICollection.typedefs/ChangeAction.typedef[]} [action] Действие, приведшее к изменению.
+       * @param {SBIS3.CONTROLS.Data.Bind.ICollection/ChangeAction.typedef[]} [action] Действие, приведшее к изменению.
        * @param {Number} [start=0] С какой позиции переиндексировать
        * @param {Number} [count=0] Число переиндексируемых элементов
        */

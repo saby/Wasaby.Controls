@@ -344,7 +344,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.List', [
 
       /**
        * Переиндексирует список
-       * @param {SBIS3.CONTROLS.Data.Bind.ICollection.typedefs/ChangeAction.typedef[]} action Действие, приведшее к изменению.
+       * @param {SBIS3.CONTROLS.Data.Bind.ICollection/ChangeAction.typedef[]} action Действие, приведшее к изменению.
        * @param {Number} [start=0] С какой позиции переиндексировать
        * @param {Number} [count=0] Число переиндексируемых элементов
        * @protected
@@ -358,7 +358,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.List', [
        * Вызывает метод splice
        * @param {SBIS3.CONTROLS.Data.Collection.IEnumerable|Array} items Коллекция с элементами для замены
        * @param {Number} start Индекс в массиве, с которого начинать добавление.
-       * @param {SBIS3.CONTROLS.Data.Bind.ICollection.typedefs/ChangeAction.typedef[]} action Действие, приведшее к изменению.
+       * @param {SBIS3.CONTROLS.Data.Bind.ICollection/ChangeAction.typedef[]} action Действие, приведшее к изменению.
        * @private
        */
       _splice: function (items, start, action) {
