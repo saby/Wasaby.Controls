@@ -302,7 +302,7 @@ define('js!SBIS3.CONTROLS.Data.Query.Query', [
 
       /**
        * Устанавливает порядок сортировки выборки
-       * @param {String|Object[]|Object} selector Поле сортировки или набор полей
+       * @param {String|Array.<Object.<String, Boolean>>|Object.<String, Boolean>} selector Поле сортировки или набор полей
        * @param {Boolean} [order=true] Порядок сортировки
        * @returns {SBIS3.CONTROLS.Data.Query.Query}
        * @example

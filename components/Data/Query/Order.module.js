@@ -10,7 +10,7 @@ define('js!SBIS3.CONTROLS.Data.Query.Order', [
     * @author Мальцев Алексей
     */
 
-   return $ws.core.extend({}, /** @lends SBIS3.CONTROLS.Data.Query.Order.prototype */{
+   var Order = $ws.core.extend({}, /** @lends SBIS3.CONTROLS.Data.Query.Order.prototype */{
       _moduleName: 'SBIS3.CONTROLS.Data.Query.Order',
       $protected: {
          _options: {
@@ -27,7 +27,14 @@ define('js!SBIS3.CONTROLS.Data.Query.Order', [
       },
 
       $constructor: function () {
-         this._options.order = this._options.order ? true : false;
+         switch (this._options.order) {
+            case Order.SORT_DESC:
+            case Order.SORT_DESC_STR:
+               this._options.order = Order.SORT_DESC;
+               break;
+            default:
+               this._options.order = Order.SORT_ASC;
+         }
       },
 
       /**
@@ -46,4 +53,26 @@ define('js!SBIS3.CONTROLS.Data.Query.Order', [
          return this._options.order;
       }
    });
+
+   /**
+    * @const {Boolean} Сортировка по возрастанию
+    */
+   Order.SORT_ASC = true;
+
+   /**
+    * @const {Boolean} Сортировка по убыванию
+    */
+   Order.SORT_DESC = false;
+
+   /**
+    * @const {String} Сортировка по возрастанию (для строки)
+    */
+   Order.SORT_ASC_STR = 'ASC';
+
+   /**
+    * @const {String} Сортировка по убыванию (для строки)
+    */
+   Order.SORT_DESC_STR = 'DESC';
+
+   return Order;
 });
