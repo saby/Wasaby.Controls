@@ -40,6 +40,7 @@ define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManag
          _defaultVerticalAlignSide: '',
          _margins: null,
          _marginsInited: false,
+         _originsInited: false,
          _zIndex: null,
          _currentAlignment: {},
          _options: {
@@ -214,6 +215,7 @@ define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManag
             };
             // Пересчитать оригинальные размеры, флаг true если размеры контейнера поменялись
             if (recalcFlag) {
+               this._originsInited = true;
                var scrollWidth = this._container.get(0).scrollWidth,
                   scrollHeight = this._container.get(0).scrollHeight,
                   maxWidth = parseFloat(this._container.css('max-width'), 10) || scrollWidth,
@@ -226,6 +228,10 @@ define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManag
                this._containerSizes.originHeight = scrollHeight > maxHeight ? maxHeight : scrollHeight + border;
             }
             this._initSizes();
+            // Если получилось так, что еще инициализированы не оригинальные размеры то не нужно ничего считать, так как все равно расчеты будут не верны 
+            if (!this._originsInited){
+               return;
+            }
             if (this._fixed === undefined){
                this._checkFixed(this._options.target);
             }
