@@ -1,4 +1,4 @@
-define('js!SBIS3.CONTROLS.DialogActionBase', ['js!SBIS3.CONTROLS.ActionBase', 'js!SBIS3.CORE.Dialog', 'js!SBIS3.CORE.FloatArea', 'js!SBIS3.CONTROLS.Data.Record'], function(ActionBase, Dialog, FloatArea, Record){
+define('js!SBIS3.CONTROLS.DialogActionBase', ['js!SBIS3.CONTROLS.ActionBase', 'js!SBIS3.CORE.Dialog', 'js!SBIS3.CORE.FloatArea', 'js!SBIS3.CONTROLS.Data.Model'], function(ActionBase, Dialog, FloatArea, Model){
    'use strict';
 
    /**
@@ -279,8 +279,10 @@ define('js!SBIS3.CONTROLS.DialogActionBase', ['js!SBIS3.CONTROLS.ActionBase', 'j
             rec;
          at = at || 0;
          if ($ws.helpers.instanceOfModule(collection.getDataSet(), 'SBIS3.CONTROLS.Data.Collection.RecordSet')) {
-            rec = new Record({
-               format: collection.getDataSet().getFormat()
+            //Создаем новую модель, т.к. Record не знает, что такое первичный ключ - это добавляется на модели.
+            rec = new Model({
+               format: collection.getDataSet().getFormat(),
+               idProperty: model.getIdProperty()
             });
             this._mergeRecords(model, rec);
          } else  {
