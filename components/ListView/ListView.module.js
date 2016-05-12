@@ -1196,7 +1196,8 @@ define('js!SBIS3.CONTROLS.ListView',
             var records = ListView.superclass._getRecordsForRedraw.call(this);
             if (this._options.infiniteScroll === 'up' && !this._isSearchMode()) {
                return records.reverse();
-            }
+            } 
+            return records;
          },
          /**
           * todo Убрать в 150, когда будет правильный рендер изменившихся данных
