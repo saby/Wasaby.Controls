@@ -76,7 +76,6 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
          _loadingIndicator: undefined,
          _panel: undefined,
          _needDestroyRecord: false,
-         _simpleKey: undefined,
          _activateChildControlDeferred: undefined,
          _options: {
             /**
@@ -185,8 +184,6 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
          $ws.single.CommandDispatcher.declareCommand(this, 'activateChildControl', this._createChildControlActivatedDeferred);
          this._setDefaultContextRecord();
          this._panel = this.getTopParent();
-         //В рамках fc мы работаем с простым ключом. Запоминаем составной ключ, чтобы была возможность синхронизации модели со связным списком
-         this._simpleKey = this._getSimpleKey(this._options.key);
          if (this._options.dataSource){
             this._runQuery();
          }
@@ -206,7 +203,7 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
                return;
             }
             event.setResult(false);
-            this._saveRecord();
+            this._saveRecord({});
          }.bind(this));
 
          this._panel.subscribe('onAfterShow', this._updateIndicatorZIndex.bind(this));
@@ -216,33 +213,12 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
          ctx.setValue('record', this._options.record || new Record());
          this._context = ctx;
       },
+
       /**
-       * Сохранить запись в источнике данных диалога редактирования.
-       * @remark
-       * При сохранении записи происходит проверка всех валидаторов диалога редактирования.
-       * Если на одном из полей ввода валидация будет не пройдена, то сохранение записи отменяется, и пользователь увидит сообщение "Некорректно заполнены обязательные поля!".
-       * Подробнее о настройке валидаторов для полей ввода диалога редактирования вы можете прочитать в разделе <a href="https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/core/validation/">Валидация вводимых данных</a>.
-       * <br/>
-       * Если процесс сохранения записи происходит длительное время, то в пользовательском интерфейсе будет выведено сообщение "Подождите, идёт сохранение". Текст сообщения можно конфигурировать с помощью опции {@link indicatorSavingMessage}.
-       * <br/>
-       * При успешном сохранении записи происходит событие {@link onUpdateModel}, а в случае ошибки - {@link onFail}.
-       * @param {Boolean} [closePanelAfterSubmit=false] Признак, по которому устанавливают закрытие диалога редактирования после сохранения записи в источнике данных. В значении true диалог редактирования будет закрыт.
-       * @example
-       * В следующем примере организовано сохранение редактируемой записи по нажатию на кнопку:
-       * <pre>
-       * this.getChildControlByName('Сохранить').subscribe('onActivated', function() { // Создаём обработчик нажатися на кнопку сохранения на кнопку
-       *    this.sendCommand('submit'); // Отправляем команду для сохранения диалога редактирования
-       * });
-       * </pre>
+       * Используйте команду update
        * @command
        * @see update
-       * @see read
-       * @see destroy
-       * @see create
-       * @see notify
-       * @see onUpdateModel
-       * @see onFail
-       * @deprecated Команда устарела и будет удалена в начиная с версии Платформы СБИС 3.7.4. Вместо неё используйте команду {@link update}.
+       * @deprecated
        */
       submit: function(closePanelAfterSubmit){
         $ws.single.ioc.resolve('ILogger').info('FormController', 'Command "submit" is deprecated and will be removed in 3.7.4. Use sendCommand("update")');
@@ -250,6 +226,13 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
       },
       /**
        * Сохранить запись в источнике данных диалога редактирования.
+       * @param {Object} config
+       *    Структура конфига:
+       *    {
+       *      closePanelAfterSubmit: Boolean,      //Закрывать панель после сохранения
+       *      hideErrorDialog: Boolean,            //Не показывать сообещние при ошибке
+       *      hideIndicator: Boolean               //Не показывать индикатор
+       *     }
        * @remark
        * При сохранении записи происходит проверка всех валидаторов диалога редактирования.
        * Если на одном из полей ввода валидация будет не пройдена, то сохранение записи отменяется, и пользователь увидит сообщение "Некорректно заполнены обязательные поля!".
@@ -277,11 +260,18 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
        * @see onFail
        * @see dataSource
        */
-      update: function(closePanelAfterSubmit){
-         return this._saveRecord(true, closePanelAfterSubmit);
+      update: function(config){
+         if (typeof(config) !== 'object'){
+            config = {
+               closePanelAfterSubmit: config
+            };
+            $ws.single.ioc.resolve('ILogger').log('FormController', 'команда update в качестве аргумента принимает объект');
+         }
+         config.hideQuestion = true;
+         return this._saveRecord(config);
       },
 
-      _saveRecord: function(hideQuestion, closePanelAfterSubmit){
+      _saveRecord: function(config){
          var self = this,
              dResult = new $ws.proto.Deferred(),
              questionConfig;
@@ -293,7 +283,7 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
          };
          this._saving = true;
 
-         //Если пришли из submit или update
+         //Если пришли из update
          if (hideQuestion){
             return this._updateRecord(dResult, closePanelAfterSubmit);
          }
@@ -304,7 +294,8 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
                   return;
                }
                if (result){
-                  self._updateRecord(dResult, true);
+                  config.closePanelAfterSubmit = true;
+                  self._updateRecord(dResult, config);
                }
                else{
                   dResult.callback();
@@ -315,18 +306,20 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
          return dResult;
       },
 
-      _updateRecord: function(dResult, closePanelAfterSubmit){
+      _updateRecord: function(dResult, config){
          var errorMessage = rk('Некорректно заполнены обязательные поля!'),
              self = this,
              isNewModel,
              def;
          if (this.validate()) {
             def = this._options.dataSource.update(this._options.record);
-            this._showLoadingIndicator();
+            if (!config.hideIndicator){
+               this._showLoadingIndicator();
+            }
             dResult.dependOn(def.addCallbacks(function (result) {
                isNewModel = self._options.newModel;
                self._options.newModel = false;
-               self._notify('onUpdateModel', self._options.record, self._options.key, isNewModel);
+               self._notify('onUpdateModel', self._options.record, isNewModel);
                if (closePanelAfterSubmit) {
                   self._panel.ok();
                }
@@ -335,7 +328,9 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
                }
                return result;
             }, function (error) {
-               self._processError(error);
+               if (!config.hideErrorDialog){
+                  self._processError(error);
+               }
                self._saving = false;
                return error;
             }));
@@ -352,6 +347,13 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
       },
       /**
        * Прочитать запись по первичному ключу из источника данных диалога редактирования.
+       * @param {Object} config
+       *    Структура конфига:
+       *    {
+       *      key: String,                         //Ключ записи
+       *      hideErrorDialog: Boolean,            //Не показывать сообещние при ошибке
+       *      hideIndicator: Boolean               //Не показывать индикатор
+       *     }
        * @remark
        * В случае успешного чтения записи из источника происходит событие {@link onReadModel}, а в случае ошибки - {@link onFail}. Прочитанная запись устанавливается в контекст диалога редактирования.
        * <br/>
@@ -369,16 +371,29 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
        * @see onFail
        * @see dataSource
        */
-      _read: function (key) {
-         var self = this;
-         key = key || this._simpleKey;
-         this._showLoadingIndicator(rk('Загрузка'));
+      _read: function (config) {
+         var self = this,
+             key;
+         if (typeof(config) !== 'object'){
+            key = config;
+            config = {};
+            $ws.single.ioc.resolve('ILogger').log('FormController', 'команда read в качестве аргумента принимает объект');
+         }
+         else {
+            key = config.key;
+         }
+         key = key || this._options.key;
+         if (!config.hideIndicator){
+            this._showLoadingIndicator(rk('Загрузка'));
+         }
          return this._options.dataSource.read(key).addCallback(function (record) {
             self._notify('onReadModel', record);
             self.setRecord(record);
             return record;
          }).addErrback(function (error) {
-               self._processError(error);
+               if (!config.hideErrorDialog){
+                  self._processError(error);
+               }
                return error;
             }).addBoth(function (r) {
                self._hideLoadingIndicator();
@@ -459,9 +474,6 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
          e.processed = true;
          return e;
       },
-      _getSimpleKey: function(key){
-         return key && key.toString().split(',')[0];
-      },
       /**
        * Возвращает источник данных диалога редактирования.
        * @remark
@@ -515,7 +527,6 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
          if (updateKey){
             newKey = record.getKey();
             this._options.key = newKey;
-            this._simpleKey = this._getSimpleKey(newKey);
          }
          this._needDestroyRecord = false;
          this._setContextRecord(record);
@@ -540,13 +551,19 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
       },
 
       _runQuery: function() {
-         if (this._simpleKey) {
+         if (this._options.key) {
             return this._read();
          }
          return this._create();
       },
       /**
        * Создать новую запись в источнике данных диалога редактирования.
+       * @param {Object} config
+       *    Структура конфига:
+       *    {
+       *      hideErrorDialog: Boolean,            //Не показывать сообещние при ошибке
+       *      hideIndicator: Boolean               //Не показывать индикатор
+       *     }
        * @remark
        * В новой записи часть полей может быть предустановлена с помощью опции {@link initValues}.
        * <br/>
@@ -565,10 +582,13 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
        * @see onFail
        * @see dataSource
        */
-      _create: function(){
+      _create: function(config){
          var self = this,
             def;
-         this._showLoadingIndicator(rk('Загрузка'));
+         config = config || {};
+         if (!config.hideIndicator){
+            this._showLoadingIndicator(rk('Загрузка'));
+         }
          def = this._options.dataSource.create(this._options.initValues).addCallback(function(record){
             self._notify('onCreateModel', record);
             self.setRecord(record, true);
@@ -578,10 +598,13 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
             }
             return record;
          });
-         def.addBoth(function(record){
+         def.addBoth(function(r){
+            if (!config.hideErrorDialog && (r instanceof Error)){
+               self._processError()
+            }
             self._hideLoadingIndicator();
             self._activateChildControlAfterLoad();
-            return record;
+            return r;
          });
          return def;
       },
