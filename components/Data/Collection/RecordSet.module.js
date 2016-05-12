@@ -815,7 +815,8 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
        * @protected
        */
       _addItemsToRawData: function (items, at, replace) {
-         var isEqualFormat = this._isEqualItemsFormat(items, replace),
+         var isRecordSet  = items && $ws.helpers.instanceOfModule(items, 'SBIS3.CONTROLS.Data.Collection.RecordSet'),
+            isEqualFormat = this._isEqualItemsFormat(items, replace),
             hasItems = replace ? false : this.getCount() > 0,
             adapter = this._getRawDataAdapter(),
             item;
@@ -823,7 +824,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
          items = this._itemsToArray(items);
          for (var i = 0, len = items.length; i < len; i++) {
             item = items[i];
-            if (!isEqualFormat) {
+            if (!isRecordSet && !isEqualFormat) {
                this._checkItem(
                   item,
                   hasItems || i > 0
@@ -908,7 +909,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.RecordSet', [
             record = this._getModelInstance(adapter.at(i));
             RecordSet.superclass.add.call(this, record);
          }
-         this._reindex();
+         this._resetIndexTree();
       },
 
       _reindex: function() {

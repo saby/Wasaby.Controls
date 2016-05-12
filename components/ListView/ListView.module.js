@@ -1209,7 +1209,8 @@ define('js!SBIS3.CONTROLS.ListView',
             var records = ListView.superclass._getRecordsForRedraw.call(this);
             if (this._options.infiniteScroll === 'up' && !this._isSearchMode()) {
                return records.reverse();
-            }
+            } 
+            return records;
          },
          /**
           * todo Убрать в 150, когда будет правильный рендер изменившихся данных
@@ -1583,8 +1584,7 @@ define('js!SBIS3.CONTROLS.ListView',
          },
          _nextLoad: function () {
             var self = this,
-               loadAllowed  = this._isAllowInfiniteScroll(),
-               records = [];
+               loadAllowed  = this._isAllowInfiniteScroll();
             //Если в догруженных данных в датасете пришел n = false, то больше не грузим.
             if (loadAllowed && $ws.helpers.isElementVisible(this.getContainer()) &&
                   this._hasNextPage(this._dataSet.getMetaData().more, this._infiniteScrollOffset) && this._hasScrollMore && !this._isLoading()) {
@@ -1613,28 +1613,27 @@ define('js!SBIS3.CONTROLS.ListView',
                         self._needToRedraw = false;
                      }
                      var at = null;
-                     records = dataSet.toArray();
                      if (self._options.infiniteScroll === 'up') {
                         self._containerScrollHeight = self._scrollWatcher.getScrollHeight();
                         self._needSrollTopCompensation = true;
                         //добавляем данные в начало или в конец в зависимости от того мы скроллим вверх или вниз
-                        self._items.prepend(records.reverse());
-                        records.reverse();
+                        self._items.prepend(dataSet.toArray().reverse());
                         at = {at: 0};
                      } else {
                         //TODO новый миксин не задействует декоратор лесенки в принципе при любых действиях, кроме первичной отрисовки
                         //это неправильно, т.к. лесенка умеет рисовать и дорисовывать данные, если они добавляются последовательно
                         //здесь мы говорим, чтобы лесенка отработала при отрисовке данных
                         var ladder = this._decorators.getByName('ladder');
-                        if (ladder && records.length){
+                        if (ladder){
                            ladder.setIgnoreEnabled(true);
                         }
-                        self._items.append(records);
+                        //Achtung! Добавляем именно dataSet, чтобы не проверялся формат каждой записи - это экономит кучу времени
+                        self._items.append(dataSet);
                         ladder && ladder.setIgnoreEnabled(false);
                      }
 
                      if (this._isSlowDrawing()) {
-                        self._drawItems(records, at);
+                        self._drawItems(dataSet.toArray(), at);
                      }
                      //TODO Пытались оставить для совместимости со старыми данными, но вызывает onCollectionItemChange!!!
                      //self._dataSet.merge(dataSet, {remove: false});

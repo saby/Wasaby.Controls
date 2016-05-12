@@ -148,7 +148,13 @@ define('js!SBIS3.CONTROLS.SwitchableArea', [
                   id: areaItem.getId(),
                   content: areaItem.getContent()
                };
-            $ws.helpers.replaceContainer(areaItem.getContainer(), this._buildMarkup(areaTplFn, { outer: this._options, item: itemObj, index: this._getItemIndexById(areaId) }));
+            $ws.helpers.replaceContainer(areaItem.getContainer(), this._buildMarkup(areaTplFn, {
+               enabled: this._options.enabled,
+               visible: this._options.visible,
+               outer: this._options,
+               item: itemObj,
+               index: this._getItemIndexById(areaId)
+            }));
             if (this._options.loadType === 'all' || areaId === this._currentAreaId){
                areaItem.loadChildControls();
             }
@@ -168,7 +174,13 @@ define('js!SBIS3.CONTROLS.SwitchableArea', [
             };
             this._options.items[i] = areaItem;
             //построим разметку
-            $ws.helpers.replaceContainer(areaItem.getContainer(), this._buildMarkup(areaTplFn, { enabled: this._options.enabled, visible: this._options.visible, outer: this._options, item: itemObj, index: this._getItemIndexById(areaId) }));
+            $ws.helpers.replaceContainer(areaItem.getContainer(), this._buildMarkup(areaTplFn, {
+               enabled: this._options.enabled,
+               visible: this._options.visible,
+               outer: this._options,
+               item: itemObj,
+               index: this._getItemIndexById(areaId)
+            }));
             // делаем видимой только дефолтную область
             if (isVisible || this._options.loadType === 'all') {
                areaItem.loadChildControls();
@@ -292,7 +304,13 @@ define('js!SBIS3.CONTROLS.SwitchableArea', [
          if (!(itemObj instanceof SwitchableAreaItem)){
             var newItem = this._createSwitchableAreaItem(itemObj);
             newItem.setVisible(false);
-            $ws.helpers.replaceContainer(newItem.getContainer(), this._buildMarkup(areaTplFn, { outer: this._options, item: itemObj, index: newIndex }));
+            $ws.helpers.replaceContainer(newItem.getContainer(), this._buildMarkup(areaTplFn, {
+               enabled: this._options.enabled,
+               visible: this._options.visible,
+               outer: this._options,
+               item: itemObj,
+               index: newIndex
+            }));
             // если у области не было Id, то он сгенерировался внутри шаблона doT-ом и надо его передать в newItem
             if (newItem.getId() !== itemObj.id){
                newItem.setId(itemObj.id);
@@ -368,7 +386,13 @@ define('js!SBIS3.CONTROLS.SwitchableArea', [
                id: areaItem.getId(),
                content: areaItem.getContent()
             };
-            $ws.helpers.replaceContainer(areaItem.getContainer(), this._buildMarkup(areaTplFn, { outer: this._options, item: itemObj, index: i }));
+            $ws.helpers.replaceContainer(areaItem.getContainer(), this._buildMarkup(areaTplFn, {
+               enabled: this._options.enabled,
+               visible: this._options.visible,
+               outer: this._options,
+               item: itemObj,
+               index: i
+            }));
          }
          if (this._options.loadType === 'all'){
             for (i = 0; i < itemsLen; i++){
