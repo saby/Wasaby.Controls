@@ -29,8 +29,6 @@
       font: @tab-button-font;
       font-size: @tab-button-large-inner-font-size;
       font-weight: @tab-button-large-inner-font-weight;
-      max-width: @tab-button-large-inner-max-width;
-      overflow:  @tab-button-large-inner-overflow;
       text-overflow: @tab-button-large-inner-text-overflow;
    }
    &.controls-Checked__checked {
@@ -57,6 +55,8 @@
          border-left: @tab-button-checked-inner-border-left;
          border-right: @tab-button-checked-inner-border-right;
          background: @tab-button-checked-inner-bg;
+         max-width: @tab-button-large-inner-max-width;
+         overflow:  @tab-button-large-inner-overflow;
          &:before{
             display: @tab-button-checked-inner-after-display;
          }
