@@ -1614,6 +1614,7 @@ define('js!SBIS3.CONTROLS.ListView',
                         if (ladder && records.length){
                            ladder.setIgnoreEnabled(true);
                         }
+                        //Achtung! Добавляем именно dataSet, чтобы не проверялся формат каждой записи - это экономит кучу времени
                         self._items.append(dataSet);
                         ladder && ladder.setIgnoreEnabled(false);
                      }
