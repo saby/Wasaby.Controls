@@ -1614,7 +1614,7 @@ define('js!SBIS3.CONTROLS.ListView',
                         if (ladder && records.length){
                            ladder.setIgnoreEnabled(true);
                         }
-                        self._items.append(records);
+                        self._items.append(dataSet);
                         ladder && ladder.setIgnoreEnabled(false);
                      }
 
