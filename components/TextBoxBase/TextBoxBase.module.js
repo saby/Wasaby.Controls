@@ -167,7 +167,7 @@ define('js!SBIS3.CONTROLS.TextBoxBase',
        * @see getText
        */
       setText: function(text){
-         var newText = (this._isEmptyValue) ? text : this._formatText(text.toString());
+         var newText = (this._isEmptyValue(text)) ? text : this._formatText(text.toString());
          if (newText !== this._options.text) {
             this._options.text = newText;
             this._drawText(newText);
