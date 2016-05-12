@@ -85,6 +85,18 @@ define('js!SBIS3.CONTROLS.DateRange', [
          this._options.endDate   = DateUtil.valueToDate(this._options.endDate);
          this._setStartDate(this._options.startDate);
          this._setEndDate(this._options.endDate);
+
+         this._addDefaultValidator();
+      },
+
+      _addDefaultValidator: function() {
+         //Добавляем к прикладным валидаторам стандартный, который проверяет что дата начала периода меньше даты конца.
+         this._options.validators.push({
+            validator: function() {
+               return !(this._options.startDate && this._options.endDate && this._options.endDate <= this._options.startDate);
+            }.bind(this),
+            errorMessage: 'Дата начала периода не может быть больше даты окончания'
+         });
       },
 
       _setDate: function(newDate, datePicker, currentDate, type, useSetDate) {
