@@ -611,6 +611,11 @@ function(BaseControl, dotTpl){
 
       getConfig : function() {
          return this._options.highChartOptions;
+      },
+
+      destroy: function() {
+         $ws.helpers.trackElement(this._container, false);
+         HighChartsLight.superclass.destroy.call(this);
       }
    });
    return HighChartsLight;
