@@ -518,22 +518,20 @@ define('js!SBIS3.CONTROLS.DataGridView',
       _onItemClickHandler: function(event, id, record, target) {
          var
             targetColumn,
-            targetColumnIndex,
-            resultDeferred = new $ws.proto.Deferred();
+            targetColumnIndex;
          if (!this._options.editingTemplate) {
             targetColumn = $(target).closest('.controls-DataGridView__td');
             if (targetColumn.length) {
                targetColumnIndex = targetColumn.index();
             }
          }
-         this.showEip($(target).closest('.js-controls-ListView__item'), record, { isEdit: true }, targetColumnIndex)
-            .addCallback(function() {
-               resultDeferred.errback();
-            }).
-            addErrback(function() {
-               resultDeferred.callback(true);
-            });
-         event.setResult(resultDeferred);
+         event.setResult(this.showEip($(target).closest('.js-controls-ListView__item'), record, { isEdit: true }, targetColumnIndex)
+            .addCallback(function(result) {
+               return !result;
+            })
+            .addErrback(function() {
+               return true;
+            }));
       },
       showEip: function(target, model, options, targetColumnIndex) {
          return this._canShowEip(targetColumnIndex) ? this._getEditInPlace().showEip(target, model, options) : $ws.proto.Deferred.fail();
@@ -688,7 +686,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
       },
 
       _arrowClickHandler: function(isRightArrow) {
-         var shift = (this._getScrollContainer()[0].offsetWidth/100)*5;
+         var shift = (this._getPartScrollContainer()[0].offsetWidth/100)*5;
          this._moveThumbAndColumns({left: (parseInt(this._thumb[0].style.left) || 0) + (isRightArrow ?  -shift : shift)});
       },
 
@@ -744,7 +742,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
          return this._thead.find('.controls-DataGridView__PartScroll__thumb, .controls-DataGridView__scrolledCell');
       },
 
-      _getScrollContainer: function() {
+      _getPartScrollContainer: function() {
          return this._thead.find('.controls-DataGridView__PartScroll__container');
       },
 
@@ -783,7 +781,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
 
       _updatePartScrollWidth: function() {
          var containerWidth = this._container[0].offsetWidth,
-             scrollContainer = this._getScrollContainer(),
+             scrollContainer = this._getPartScrollContainer(),
              thumbWidth = this._thumb[0].offsetWidth,
              correctMargin = 0,
              notScrolledCells;

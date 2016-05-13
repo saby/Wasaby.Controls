@@ -3,7 +3,7 @@
  *
  * @description
  */
-define('js!SBIS3.CONTROLS.ButtonBase', ['js!SBIS3.CORE.CompoundControl', 'js!SBIS3.CONTROLS.Clickable', 'js!SBIS3.CONTROLS.FormWidgetMixin', 'js!SBIS3.CONTROLS.DataBindMixin', 'js!SBIS3.CONTROLS.IconMixin', 'browser!js!SBIS3.CONTROLS.Utils.Sanitizer'], function(Control, Clickable, FormWidgetMixin, DataBindMixin, IconMixin, Sanitizer) {
+define('js!SBIS3.CONTROLS.ButtonBase', ['js!SBIS3.CORE.CompoundControl', 'js!SBIS3.CONTROLS.Clickable', 'js!SBIS3.CONTROLS.FormWidgetMixin', 'js!SBIS3.CONTROLS.DataBindMixin', 'js!SBIS3.CONTROLS.IconMixin'], function(Control, Clickable, FormWidgetMixin, DataBindMixin, IconMixin) {
 
    'use strict';
 
@@ -37,11 +37,6 @@ define('js!SBIS3.CONTROLS.ButtonBase', ['js!SBIS3.CORE.CompoundControl', 'js!SBI
     * @ignoreEvents onActivate onAfterLoad onAfterShow onBeforeControlsLoad onBeforeLoad onBeforeShow onChange onClick
     * @ignoreEvents onFocusIn onFocusOut onKeyPressed onReady onResize onStateChanged onTooltipContentRequest
     */
-   
-   var sanitizer = null;
-   if (typeof window !== undefined){
-      sanitizer = new Sanitizer();
-   }
 
    var ButtonBase = Control.extend([Clickable, FormWidgetMixin, DataBindMixin, IconMixin],/** @lends SBIS3.CONTROLS.ButtonBase.prototype*/ {
 
@@ -62,7 +57,8 @@ define('js!SBIS3.CONTROLS.ButtonBase', ['js!SBIS3.CORE.CompoundControl', 'js!SBI
              * @see setCaption
              * @see getCaption
              */
-            caption: undefined
+            caption: undefined,
+            escapeCaptionHtml: true
          }
       },
 
@@ -91,8 +87,8 @@ define('js!SBIS3.CONTROLS.ButtonBase', ['js!SBIS3.CORE.CompoundControl', 'js!SBI
        * @see getCaption
        */
       setCaption: function(caption) {
-         if (sanitizer){
-            caption = sanitizer.clearContent(caption);
+         if (this._options.escapeCaptionHtml){
+            caption = $ws.helpers.escapeHtml(caption);
          }
          this._options.caption = caption || '';
       },

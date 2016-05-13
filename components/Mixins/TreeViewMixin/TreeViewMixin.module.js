@@ -48,14 +48,10 @@ define('js!SBIS3.CONTROLS.TreeViewMixin', ['js!SBIS3.CORE.Control', 'js!SBIS3.CO
                // так как на него много всего завязано. (пользуется Янис)
                this._folderHasMore[key] = list.getMetaData().more;
                this._loadedNodes[key] = true;
-               if (this._isSlowDrawing()) {
-                  this._needToRedraw = false;
-               }
                ladderDecorator && ladderDecorator.setIgnoreEnabled(true);
                this._items.merge(list, {remove: false});
                ladderDecorator && ladderDecorator.setIgnoreEnabled(false);
                if (this._isSlowDrawing()) {
-                  this._needToRedraw = true;
                   this._dataSet.getTreeIndex(this._options.hierField, true);
                }
                this._notify('onDataMerge', list);

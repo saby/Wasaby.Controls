@@ -43,7 +43,7 @@
                   }
                }
 
-               &.controls-IconButton:before, {
+               &.controls-IconButton:before{
                   top: 50%;
                   margin-top: -@list-view-actions-item-height / 2;
                   position: absolute;
@@ -68,7 +68,7 @@
       }
    }
    .controls-ItemActions__menu-container {
-      .control-MenuItem__child-expand {
+      .controls-MenuItem {
          padding-right: 42px;
       }
       .controls-PopupMixin__closeButton {
@@ -116,10 +116,7 @@
 .controls-ItemActions__menu-container {
    .controls-MenuItem {
       white-space: nowrap;
-
-      .control-MenuItem__child-expand {
-         padding-right: @list-view-actions-menu-item-padding-right;
-      }
+      padding-right: @list-view-actions-menu-item-padding-right;
    }
    .controls-PopupMixin__closeButton {
       height: @list-view-actions-menu-close-height;

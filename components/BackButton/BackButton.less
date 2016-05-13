@@ -66,8 +66,7 @@
    }
 }
 
-//Баг в мозилле плохо работает с before и float:left
-@-moz-document url-prefix() {
+.back-button-before-fix(){
    .controls-BackButton {
       .controls-BackButton__caption {
          margin-left: -4px;
@@ -78,4 +77,13 @@
          float: none;
       }
    }
+}
+
+//Баг в мозилле плохо работает с before и float:left
+@-moz-document url-prefix(){
+   .back-button-before-fix();
+}
+
+.ws-is-ie{
+   .back-button-before-fix();
 }

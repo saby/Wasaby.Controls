@@ -522,9 +522,9 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
 
          markup = MarkupTransformer(this._itemsTemplate(data));
          //TODO это может вызвать тормоза
-         this._destroyInnerComponents(itemsContainer);
+         this._destroyInnerComponents($itemsContainer);
          if (markup.length) {
-            if ($ws._const.browser.isIE8 || $ws._const.browser.isIE9) { //Для 8-9 IE при установке innerHTML теряется часть верстки и получаем невалидную верстку.
+            if ($ws._const.browser.isIE8 || $ws._const.browser.isIE9) { // Для IE8-9 у tbody innerHTML - readOnly свойство (https://msdn.microsoft.com/en-us/library/ms533897(VS.85).aspx)
                $itemsContainer.append(markup);
             } else {
                itemsContainer.innerHTML = markup;
@@ -578,6 +578,14 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          return items;
       },
 
+      _optimizedInsertMarkup: function(container, markup, prepend) {
+         if ($ws._const.browser.isIE8 || $ws._const.browser.isIE9) { // В IE8-9 insertAdjacentHTML ломает верстку при вставке
+            container[prepend ? 'prepend' : 'append'](markup);
+         } else {
+            container.get(0).insertAdjacentHTML(prepend ? 'afterBegin' : 'beforeEnd', markup);
+         }
+      },
+
       _addItems: function(newItems, newItemsIndex) {
          this._itemData = null;
          var i;
@@ -601,14 +609,12 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
                   item,
                   container, firstHash, lastHash, itemsContainer;
 
-
                /*TODO Лесенка*/
                if (this._options.ladder) {
                   ladderDecorator = this._decorators.getByName('ladder');
                   ladderDecorator && ladderDecorator.setMarkLadderColumn(true);
                }
                /*TODO Лесенка*/
-
 
                itemsToDraw = this._getItemsForRedrawOnAdd(newItems);
                if (itemsToDraw.length) {
@@ -618,15 +624,13 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
                   };
                   markup = MarkupTransformer(this._itemsTemplate(data));
 
-
-                  itemsContainer = this._getItemsContainer().get(0);
+                  itemsContainer = this._getItemsContainer();
                   if (newItemsIndex == 0) {
-
 
                      /*TODO Лесенка*/
                      if (this._options.ladder) {
                         firstHash = itemsToDraw[0].getHash();
-                        var lastElem = $('.js-controls-ListView__item', this._getItemsContainer()).first();
+                        var lastElem = $('.js-controls-ListView__item', itemsContainer).first();
                         if (lastElem.length) {
                            lastHash = lastElem.attr('data-hash');
                         }
@@ -638,12 +642,11 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
 
                      // TODO. Костыль для редактирования по месту. Написан тут, т.к. необходимо его убрать (решение не универсальное).
                      // https://inside.tensor.ru/opendoc.html?guid=8fe37872-c08b-4a7b-9c9f-d04f531cc45b
-                     itemsContainer.insertAdjacentHTML(this._items.getCount() > 1 ? 'afterBegin' : 'beforeEnd', markup);
-
+                     this._optimizedInsertMarkup(itemsContainer, markup, this._items.getCount() > 1);
                   }
                   else {
                      if ((newItemsIndex) == (this._itemsProjection.getCount() - newItems.length)) {
-                        itemsContainer.insertAdjacentHTML('beforeEnd', markup);
+                        this._optimizedInsertMarkup(itemsContainer, markup, false);
                      }
                      else {
                         item = this._itemsProjection.at(newItemsIndex - 1);
@@ -669,7 +672,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
                   /*TODO Лесенка суть - надо пробежать по только что добавленным контейнерам и вызвать для них ladderCompare*/
                   if (this._options.ladder) {
                      var
-                        rows = $('.js-controls-ListView__item', this._getItemsContainer()),
+                        rows = $('.js-controls-ListView__item', itemsContainer),
                         ladderRows = [], start = false;
 
                      for (i = 0; i < rows.length; i++) {
@@ -758,7 +761,11 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
 
       _destroyInnerComponents: function(container) {
          this._destroyControls(container);
-         container.innerHTML = '';
+         if ($ws._const.browser.isIE8 || $ws._const.browser.isIE9) { // Для IE8-9 у tbody innerHTML - readOnly свойство (https://msdn.microsoft.com/en-us/library/ms533897(VS.85).aspx)
+            container.empty();
+         } else {
+            container.get(0).innerHTML = '';
+         }
       },
 
       _destroyControls: function(container){
@@ -1373,12 +1380,27 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          //Если offset отрицательный, значит запрашивали последнюю страницу
          return offset < 0 ? false : (typeof (hasMore) !== 'boolean' ? hasMore > (offset + this._options.pageSize) : !!hasMore);
       },
+      _scrollTo: function scrollTo(target, container) {
+         var scrollContainer = container || this._getScrollContainer(),
+             scrollContainerOffset = scrollContainer.offset(),
+             targetOffset;
+
+         if (typeof target === 'string') {
+            target = $(target);
+         }
+
+         targetOffset = target.offset();
+
+         if( (targetOffset.top - scrollContainerOffset.top - scrollContainer.scrollTop()) < 0) {
+            target[0].scrollIntoView(true);
+         } else if ( (targetOffset.top + target.height() - scrollContainerOffset.top - scrollContainer.scrollTop()) > scrollContainer[0].clientHeight) {
+            target[0].scrollIntoView(false);
+         }
+      },
       _scrollToItem: function(itemId) {
          var itemContainer  = $(".controls-ListView__item[data-id='" + itemId + "']", this._getItemsContainer());
          if (itemContainer.length) {
-            itemContainer
-               .attr('tabindex', -1)
-               .focus();
+            this._scrollTo(itemContainer);
          }
       },
       /**
@@ -1402,6 +1424,9 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          return this._dataSource;
       },
 
+      _getScrollContainer: function() {
+
+      },
       _dataLoadedCallback: function () {
 
       },
