@@ -46,7 +46,7 @@ define('js!SBIS3.CONTROLS.Data.Query.Order', [
       },
 
       /**
-       * Возвращает порядок сортировки (true - по возрастанию)
+       * Возвращает порядок сортировки (true - по возрастанию, false - по убыванию)
        * @returns {Boolean}
        */
       getOrder: function () {
