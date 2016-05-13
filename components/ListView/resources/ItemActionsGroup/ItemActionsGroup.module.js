@@ -40,10 +40,6 @@ define('js!SBIS3.CONTROLS.ItemActionsGroup',
             this.once('onInit', function() {
                this._itemActionsMenuButton = this._container.find('.controls-ItemActions__menu-button');
             }.bind(this));
-
-            if(this._options.items.length && this._options.items[0].title) {
-               $ws.single.ioc.resolve('ILogger').log('title', 'C 3.7.3.140 свойство операции над записью title перестанет работать. Используйте свойство caption');
-            }
          },
          /**
           * Изменяет операции над строкой до нужного состояния - скрывает / показывает кнопки
@@ -51,13 +47,19 @@ define('js!SBIS3.CONTROLS.ItemActionsGroup',
          applyItemActions: function() {
             var onlyMain = true,
                 itemsInstances = this.getItemsInstances(),
-                isActionVisible,
-                isMain;
+                action, isActionVisible, isMain;
 
             for(var i in itemsInstances) {
                if(itemsInstances.hasOwnProperty(i)) {
                   isMain = this._itemActionsButtons[i]['isMainAction'];
-                  isActionVisible = itemsInstances[i].isVisible();
+                  action = itemsInstances[i];
+                  isActionVisible = action.isVisible();
+
+                  /* Не отображаем выключенные операции */
+                  if(!action.isEnabled() && isActionVisible) {
+                     action.hide();
+                     isActionVisible = false;
+                  }
 
                   /* Проверка, надо ли показывать иконку меню */
                   if (onlyMain && isActionVisible && !isMain) {
@@ -65,7 +67,7 @@ define('js!SBIS3.CONTROLS.ItemActionsGroup',
                   }
                   /* Скрываем на строке все неглавные опции */
                   if(!isMain && isActionVisible) {
-                     itemsInstances[i].getContainer().addClass('ws-hidden');
+                     action.getContainer().addClass('ws-hidden');
                   }
                }
             }
@@ -88,9 +90,7 @@ define('js!SBIS3.CONTROLS.ItemActionsGroup',
                   side: 'right',
                   offset: HORIZONTAL_OFFSET
                },
-               target = this._itemActionsMenuButton,
-                // TODO перевести на проекции
-               items = this.getItems();
+               target = this._itemActionsMenuButton;
 
             if (this._options.touchMode) {
                verticalAlign.offset = 0;
@@ -100,7 +100,7 @@ define('js!SBIS3.CONTROLS.ItemActionsGroup',
 
             this._itemActionsMenu = new ContextMenu({
                element: $('> .controls-ItemActions__menu-container', this._getItemsContainer()[0]).show(),
-               items: items,
+               items: this.getItems(),
                keyField: this._options.keyField,
                displayField: 'caption',
                hierField: 'parent',
