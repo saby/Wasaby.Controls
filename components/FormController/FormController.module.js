@@ -202,7 +202,7 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
                   this._destroyModel();
                }
                this._saving = false;
-               this._updateDocumentTitle(this._previousDocumentTitle);
+               this._resetTitle();
                return;
             }
             event.setResult(false);
@@ -217,12 +217,18 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
          this._context = ctx;
       },
 
-      _updateDocumentTitle: function (title) {
+      _updateDocumentTitle: function () {
          var record = this._options.record,
-             newTitle = title || (record && record.get('title'));
+             newTitle = record && record.get('title');
          if (newTitle) {
             this._previousDocumentTitle = document.title;
             document.title = newTitle;
+         }
+      },
+
+      _resetTitle: function(){
+         if (this._previousDocumentTitle){
+            document.title = this._previousDocumentTitle;
          }
       },
 
