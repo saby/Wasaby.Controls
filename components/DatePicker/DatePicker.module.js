@@ -586,7 +586,7 @@ define(
                   break;
             }
          }
-         return isValid;
+         return !!isValid;
       }
    });
 
