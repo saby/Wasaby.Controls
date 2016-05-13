@@ -40,7 +40,8 @@ define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManag
          _defaultVerticalAlignSide: '',
          _margins: null,
          _marginsInited: false,
-         _originsInited: false,
+         _originsInited: false, // Обозначает, что были инициализированы размеры. _onResizeHandler срабатывает до show, и при этом еще нельзя получить правильные размеры -
+                                // и соответсвенно провести правильные рассчеты, поэтому пропустим первое его срабатывание.
          _zIndex: null,
          _currentAlignment: {},
          _options: {
@@ -228,7 +229,6 @@ define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManag
                this._containerSizes.originHeight = scrollHeight > maxHeight ? maxHeight : scrollHeight + border;
             }
             this._initSizes();
-            // Если получилось так, что еще инициализированы не оригинальные размеры то не нужно ничего считать, так как все равно расчеты будут не верны 
             if (!this._originsInited){
                return;
             }
