@@ -313,6 +313,13 @@ define('js!SBIS3.CONTROLS.Data.Query.Query', [
        *       .from('Orders')
        *       .orderBy('id');
        * </pre>
+       * Отсортируем заказы по полю id по убыванию:
+       * <pre>
+       *    var query = new Query()
+       *       .select('*')
+       *       .from('Orders')
+       *       .orderBy('id', false);
+       * </pre>
        * Отсортируем заказы сначала по полю customerId по возрастанию, затем по полю date по убыванию:
        * <pre>
        *    var query = new Query()
