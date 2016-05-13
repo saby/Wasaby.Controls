@@ -431,9 +431,11 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
             });
          }
          else {
-            this._itemsProjection.each(function (item) {
-               records.push(item);
-            });
+            if (this._itemsProjection) {     //У таблицы могут позвать перерисовку, когда данных еще нет
+               this._itemsProjection.each(function (item) {
+                  records.push(item);
+               });
+            }
          }
          return records;
       },
