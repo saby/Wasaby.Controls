@@ -1111,6 +1111,7 @@ function(BaseControl, dotTpl){
             this.getLinkedContext().unsubscribe('onFieldChange', this._ctxFieldChangeHandler);
             this.getLinkedContext().unsubscribe('onDataBind', this._ctxDataBindHandler);
          }
+         $ws.helpers.trackElement(this._container, false);
          HighCharts.superclass.destroy.call(this);
       }
 
