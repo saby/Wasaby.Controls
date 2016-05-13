@@ -410,6 +410,19 @@ define([
                      done();
                   });
                });
+
+               it('should sort fields in filter', function (done) {
+                  var filter = {'Раздел':1,'Тип':3,'Раздел@':true,'Демо':true,'Раздел$':true};
+                  service.create(filter).addBoth(function () {
+                     var s = SbisBusinessLogic.lastRequest.args.Фильтр.s,
+                        sortNames = ['Демо','Раздел','Раздел$','Раздел@','Тип'];
+                     for(var i = 0; i < sortNames.length; i++) {
+                        assert.strictEqual(s[i].n, sortNames[i]);
+                     }
+                     done();
+                  });
+               });
+
             });
 
              context('when the service isn\'t exists', function () {
@@ -945,57 +958,57 @@ define([
                         try {
                            var args = SbisBusinessLogic.lastRequest.args;
 
-                           assert.strictEqual(args['Фильтр'].d[0], 5);
-                           assert.strictEqual(args['Фильтр'].s[0].n, 'id');
-                           assert.strictEqual(args['Фильтр'].s[0].t, 'Число целое');
+                           assert.strictEqual(args['Фильтр'].d[1], 5);
+                           assert.strictEqual(args['Фильтр'].s[1].n, 'id');
+                           assert.strictEqual(args['Фильтр'].s[1].t, 'Число целое');
 
-                           assert.isTrue(args['Фильтр'].d[1]);
-                           assert.strictEqual(args['Фильтр'].s[1].n, 'enabled');
-                           assert.strictEqual(args['Фильтр'].s[1].t, 'Логическое');
+                           assert.isTrue(args['Фильтр'].d[0]);
+                           assert.strictEqual(args['Фильтр'].s[0].n, 'enabled');
+                           assert.strictEqual(args['Фильтр'].s[0].t, 'Логическое');
 
-                           assert.strictEqual(args['Фильтр'].d[2], 'abc*');
-                           assert.strictEqual(args['Фильтр'].s[2].n, 'title');
-                           assert.strictEqual(args['Фильтр'].s[2].t, 'Строка');
+                           assert.strictEqual(args['Фильтр'].d[6], 'abc*');
+                           assert.strictEqual(args['Фильтр'].s[6].n, 'title');
+                           assert.strictEqual(args['Фильтр'].s[6].t, 'Строка');
 
                            assert.deepEqual(args['Фильтр'].d[3], [1, 2, 3]);
                            assert.strictEqual(args['Фильтр'].s[3].n, 'path');
                            assert.strictEqual(args['Фильтр'].s[3].t.n, 'Массив');
                            assert.strictEqual(args['Фильтр'].s[3].t.t, 'Число целое');
 
-                           assert.deepEqual(args['Фильтр'].d[4], {a: 1, b: 2});
-                           assert.strictEqual(args['Фильтр'].s[4].n, 'obj');
-                           assert.strictEqual(args['Фильтр'].s[4].t, 'JSON-объект');
+                           assert.deepEqual(args['Фильтр'].d[2], {a: 1, b: 2});
+                           assert.strictEqual(args['Фильтр'].s[2].n, 'obj');
+                           assert.strictEqual(args['Фильтр'].s[2].t, 'JSON-объект');
 
-                           assert.deepEqual(args['Фильтр'].d[5].d, recData.d);
-                           assert.deepEqual(args['Фильтр'].d[5].s, recData.s);
-                           assert.strictEqual(args['Фильтр'].s[5].n, 'rec');
-                           assert.strictEqual(args['Фильтр'].s[5].t, 'Запись');
+                           assert.deepEqual(args['Фильтр'].d[4].d, recData.d);
+                           assert.deepEqual(args['Фильтр'].d[4].s, recData.s);
+                           assert.strictEqual(args['Фильтр'].s[4].n, 'rec');
+                           assert.strictEqual(args['Фильтр'].s[4].t, 'Запись');
 
-                           assert.deepEqual(args['Фильтр'].d[6].d, rsData.d);
-                           assert.deepEqual(args['Фильтр'].d[6].s, rsData.s);
-                           assert.strictEqual(args['Фильтр'].s[6].n, 'rs');
-                           assert.strictEqual(args['Фильтр'].s[6].t, 'Выборка');
+                           assert.deepEqual(args['Фильтр'].d[5].d, rsData.d);
+                           assert.deepEqual(args['Фильтр'].d[5].s, rsData.s);
+                           assert.strictEqual(args['Фильтр'].s[5].n, 'rs');
+                           assert.strictEqual(args['Фильтр'].s[5].t, 'Выборка');
 
-                           assert.strictEqual(args['Сортировка'].d[0][0], 'id');
-                           assert.isTrue(args['Сортировка'].d[0][1]);
-                           assert.isFalse(args['Сортировка'].d[0][2]);
+                           assert.strictEqual(args['Сортировка'].d[0][1], 'id');
+                           assert.isTrue(args['Сортировка'].d[0][2]);
+                           assert.isFalse(args['Сортировка'].d[0][0]);
 
-                           assert.strictEqual(args['Сортировка'].d[1][0], 'enabled');
-                           assert.isFalse(args['Сортировка'].d[1][1]);
-                           assert.isTrue(args['Сортировка'].d[1][2]);
+                           assert.strictEqual(args['Сортировка'].d[1][1], 'enabled');
+                           assert.isFalse(args['Сортировка'].d[1][2]);
+                           assert.isTrue(args['Сортировка'].d[1][0]);
 
-                           assert.strictEqual(args['Сортировка'].s[0].n, 'n');
-                           assert.strictEqual(args['Сортировка'].s[1].n, 'o');
-                           assert.strictEqual(args['Сортировка'].s[2].n, 'l');
+                           assert.strictEqual(args['Сортировка'].s[0].n, 'l');
+                           assert.strictEqual(args['Сортировка'].s[1].n, 'n');
+                           assert.strictEqual(args['Сортировка'].s[2].n, 'o');
 
-                           assert.strictEqual(args['Навигация'].d[0], 3);
-                           assert.strictEqual(args['Навигация'].s[0].n, 'Страница');
+                           assert.strictEqual(args['Навигация'].d[2], 3);
+                           assert.strictEqual(args['Навигация'].s[2].n, 'Страница');
 
                            assert.strictEqual(args['Навигация'].d[1], 33);
                            assert.strictEqual(args['Навигация'].s[1].n, 'РазмерСтраницы');
 
-                           assert.isTrue(args['Навигация'].d[2]);
-                           assert.strictEqual(args['Навигация'].s[2].n, 'ЕстьЕще');
+                           assert.isTrue(args['Навигация'].d[0]);
+                           assert.strictEqual(args['Навигация'].s[0].n, 'ЕстьЕще');
 
                            assert.strictEqual(args['ДопПоля'].length, 0);
 
@@ -1076,8 +1089,8 @@ define([
                      try {
                         var args = SbisBusinessLogic.lastRequest.args;
 
-                        assert.strictEqual(args['Навигация'].d[2], hasMore);
-                        assert.strictEqual(args['Навигация'].s[2].n, 'ЕстьЕще');
+                        assert.strictEqual(args['Навигация'].d[0], hasMore);
+                        assert.strictEqual(args['Навигация'].s[0].n, 'ЕстьЕще');
 
                         done();
                      } catch (err) {
@@ -1225,43 +1238,43 @@ define([
                   33
                );
 
-               assert.strictEqual(args['Фильтр'].d[0], 5);
-               assert.strictEqual(args['Фильтр'].s[0].n, 'id');
-               assert.strictEqual(args['Фильтр'].s[0].t, 'Число целое');
+               assert.strictEqual(args['Фильтр'].d[1], 5);
+               assert.strictEqual(args['Фильтр'].s[1].n, 'id');
+               assert.strictEqual(args['Фильтр'].s[1].t, 'Число целое');
 
-               assert.isTrue(args['Фильтр'].d[1]);
-               assert.strictEqual(args['Фильтр'].s[1].n, 'enabled');
-               assert.strictEqual(args['Фильтр'].s[1].t, 'Логическое');
+               assert.isTrue(args['Фильтр'].d[0]);
+               assert.strictEqual(args['Фильтр'].s[0].n, 'enabled');
+               assert.strictEqual(args['Фильтр'].s[0].t, 'Логическое');
 
-               assert.strictEqual(args['Фильтр'].d[2], 'abc*');
-               assert.strictEqual(args['Фильтр'].s[2].n, 'title');
-               assert.strictEqual(args['Фильтр'].s[2].t, 'Строка');
+               assert.strictEqual(args['Фильтр'].d[3], 'abc*');
+               assert.strictEqual(args['Фильтр'].s[3].n, 'title');
+               assert.strictEqual(args['Фильтр'].s[3].t, 'Строка');
 
-               assert.deepEqual(args['Фильтр'].d[3], [1, 2, 3]);
-               assert.strictEqual(args['Фильтр'].s[3].n, 'path');
-               assert.strictEqual(args['Фильтр'].s[3].t.n, 'Массив');
-               assert.strictEqual(args['Фильтр'].s[3].t.t, 'Число целое');
+               assert.deepEqual(args['Фильтр'].d[2], [1, 2, 3]);
+               assert.strictEqual(args['Фильтр'].s[2].n, 'path');
+               assert.strictEqual(args['Фильтр'].s[2].t.n, 'Массив');
+               assert.strictEqual(args['Фильтр'].s[2].t.t, 'Число целое');
 
-               assert.strictEqual(args['Сортировка'].d[0][0], 'id');
-               assert.isTrue(args['Сортировка'].d[0][1]);
-               assert.isFalse(args['Сортировка'].d[0][2]);
+               assert.strictEqual(args['Сортировка'].d[0][1], 'id');
+               assert.isTrue(args['Сортировка'].d[0][2]);
+               assert.isFalse(args['Сортировка'].d[0][0]);
 
-               assert.strictEqual(args['Сортировка'].d[1][0], 'enabled');
-               assert.isFalse(args['Сортировка'].d[1][1]);
-               assert.isTrue(args['Сортировка'].d[1][2]);
+               assert.strictEqual(args['Сортировка'].d[1][1], 'enabled');
+               assert.isFalse(args['Сортировка'].d[1][2]);
+               assert.isTrue(args['Сортировка'].d[1][0]);
 
-               assert.strictEqual(args['Сортировка'].s[0].n, 'n');
-               assert.strictEqual(args['Сортировка'].s[1].n, 'o');
-               assert.strictEqual(args['Сортировка'].s[2].n, 'l');
+               assert.strictEqual(args['Сортировка'].s[0].n, 'l');
+               assert.strictEqual(args['Сортировка'].s[1].n, 'n');
+               assert.strictEqual(args['Сортировка'].s[2].n, 'o');
 
-               assert.strictEqual(args['Навигация'].d[0], 3);
-               assert.strictEqual(args['Навигация'].s[0].n, 'Страница');
+               assert.strictEqual(args['Навигация'].d[2], 3);
+               assert.strictEqual(args['Навигация'].s[2].n, 'Страница');
 
                assert.strictEqual(args['Навигация'].d[1], 33);
                assert.strictEqual(args['Навигация'].s[1].n, 'РазмерСтраницы');
 
-               assert.isTrue(args['Навигация'].d[2]);
-               assert.strictEqual(args['Навигация'].s[2].n, 'ЕстьЕще');
+               assert.isTrue(args['Навигация'].d[0]);
+               assert.strictEqual(args['Навигация'].s[0].n, 'ЕстьЕще');
 
                assert.strictEqual(args['ДопПоля'].length, 0);
             });
