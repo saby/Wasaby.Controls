@@ -221,7 +221,9 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
          var record = this._options.record,
              newTitle = record && record.get('title');
          if (newTitle) {
-            this._previousDocumentTitle = document.title;
+            if (!this._previousDocumentTitle){
+               this._previousDocumentTitle = document.title;
+            }
             document.title = newTitle;
          }
       },
