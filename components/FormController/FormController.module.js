@@ -285,7 +285,7 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
 
          //Если пришли из update
          if (config.hideQuestion){
-            return this._updateRecord(dResult, closePanelAfterSubmit);
+            return this._updateRecord(dResult, config.closePanelAfterSubmit);
          }
          else{
             $ws.helpers.question(rk('Сохранить изменения?'), questionConfig, this).addCallback(function(result){
@@ -320,7 +320,7 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
                isNewModel = self._options.newModel;
                self._options.newModel = false;
                self._notify('onUpdateModel', self._options.record, isNewModel);
-               if (closePanelAfterSubmit) {
+               if (config.closePanelAfterSubmit) {
                   self._panel.ok();
                }
                else {
