@@ -284,7 +284,7 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
          this._saving = true;
 
          //Если пришли из update
-         if (hideQuestion){
+         if (config.hideQuestion){
             return this._updateRecord(dResult, closePanelAfterSubmit);
          }
          else{
