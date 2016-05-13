@@ -4,7 +4,6 @@ define('js!SBIS3.CONTROLS.Data.Collection.List', [
    'js!SBIS3.CONTROLS.Data.Collection.IList',
    'js!SBIS3.CONTROLS.Data.Collection.IIndexedCollection',
    'js!SBIS3.CONTROLS.Data.Bind.ICollection',
-
    'js!SBIS3.CONTROLS.Data.ICloneable',
    'js!SBIS3.CONTROLS.Data.Entity.Abstract',
    'js!SBIS3.CONTROLS.Data.Entity.OptionsMixin',
@@ -361,7 +360,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.List', [
        */
       _splice: function (items, start, action) {
          items = this._itemsToArray(items);
-         Array.prototype.splice.apply(
+         arraySplice.apply(
             this._$items,
             [start, 0].concat(items)
          );
