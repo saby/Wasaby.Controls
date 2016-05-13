@@ -134,7 +134,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
       $constructor : function() {
          var
             filter = this.getFilter() || {};
-         this._publish('onSearchPathClick', 'onNodeExpand', 'onSetRoot', 'onBeforeSetRoot');
+         this._publish('onSearchPathClick', 'onNodeExpand', 'onNodeCollapse', 'onSetRoot', 'onBeforeSetRoot');
          if (typeof this._options.root != 'undefined') {
             this._curRoot = this._options.root;
             filter[this._options.hierField] = this._options.root;
