@@ -9,7 +9,8 @@ define(
       'js!SBIS3.CONTROLS.Utils.DateUtil',
       'js!SBIS3.CONTROLS.Calendar',
       'html!SBIS3.CONTROLS.DatePicker',
-      'js!SBIS3.CONTROLS.FormWidgetMixin'
+      'js!SBIS3.CONTROLS.FormWidgetMixin',
+      'i18n!SBIS3.CONTROLS.DatePicker'
    ],
    function (FormattedTextBoxBase, PickerMixin, DateUtil, Calendar, dotTplFn, FormWidgetMixin) {
 
@@ -230,7 +231,7 @@ define(
             validator: function() {
                return this._dateIsValid();
             }.bind(this),
-            errorMessage: 'Дата заполнена некорректно'
+            errorMessage: rk('Дата заполнена некорректно')
          });
       },
 
