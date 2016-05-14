@@ -1,9 +1,21 @@
 /**
  * Created by am.gerasimov on 01.02.2016.
  */
-define('js!SBIS3.CONTROLS.ControlsValidators', ['i18n!SBIS3.CONTROLS.ControlsValidators'],function() {
+define('js!SBIS3.CONTROLS.ControlsValidators', ['js!SBIS3.CORE.CoreValidators', 'i18n!SBIS3.CONTROLS.ControlsValidators'],function(CoreValidators) {
 
    'use strict';
+
+   function checkInn(innLen, value) {
+      var obj = {
+         getValue: function() {
+            return value;
+         }
+      };
+
+      return CoreValidators.inn.call(obj, innLen);
+   }
+
+
    /**
     * Компонент с набором платформенных валидаторов, которые можно применять только к контролам из пространства имён SBIS3.CONTROLS.
     * Подробнее о работе с валидаторами вы можете прочитать в разделе <a href="http://wi.sbis.ru/doc/platform/developmentapl/interfacedev/core/validation/">Валидация вводимых данных</a>.
@@ -55,6 +67,39 @@ define('js!SBIS3.CONTROLS.ControlsValidators', ['i18n!SBIS3.CONTROLS.ControlsVal
          return isEmpty ?
              rk('Поле обязательно для заполнения') :
              true;
-      }
+      },
+
+      /**
+       * Проверяет ИНН (допустимая длина ИНН - 10 или 12 символов).
+       * @param {String} value Значение валидируемой опции.
+       * @returns {Boolean|String}
+       * <ol>
+       *    <li>В случае прохождения валидации возвращает true.</li>
+       *    <li>В случае не прохождения валидации возвращает сообщение "Поле обязательно для заполнения".</li>
+       * </ol>
+       */
+      inn: checkInn.bind(undefined, undefined),
+
+      /**
+       * Проверяет ИНН (допустимая длина ИНН - 10 символов).
+       * @param {String} value Значение валидируемой опции.
+       * @returns {Boolean|String}
+       * <ol>
+       *    <li>В случае прохождения валидации возвращает true.</li>
+       *    <li>В случае не прохождения валидации возвращает сообщение "Поле обязательно для заполнения".</li>
+       * </ol>
+       */
+      inn10: checkInn.bind(undefined, 10),
+
+      /**
+       * Проверяет ИНН (допустимая длина ИНН - 12 символов).
+       * @param {String} value Значение валидируемой опции.
+       * @returns {Boolean|String}
+       * <ol>
+       *    <li>В случае прохождения валидации возвращает true.</li>
+       *    <li>В случае не прохождения валидации возвращает сообщение "Поле обязательно для заполнения".</li>
+       * </ol>
+       */
+      inn12: checkInn.bind(undefined, 12)
    };
 });
