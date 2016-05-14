@@ -285,7 +285,7 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
 
          //Если пришли из update
          if (config.hideQuestion){
-            return this._updateRecord(dResult, config.closePanelAfterSubmit);
+            return this._updateRecord(dResult, config);
          }
          else{
             $ws.helpers.question(rk('Сохранить изменения?'), questionConfig, this).addCallback(function(result){
