@@ -1224,7 +1224,7 @@ define('js!SBIS3.CONTROLS.ListView',
           * todo Убрать в 150, когда будет правильный рендер изменившихся данных
           */
          _checkScroll: function() {
-            //Если перерисовка случилась из-за reload, то прроверяем наличие скролла и догружаем ещё одну страницу если скролл есть
+            //Если перерисовка случилась из-за reload, то прроверяем наличие скролла и догружаем ещё одну страницу если скролла нет
             if (this._updateByReload) {
                this._updateByReload = false;
                if (this._scrollWatcher && !this._scrollWatcher.hasScroll(this.getContainer())) {
@@ -1650,6 +1650,11 @@ define('js!SBIS3.CONTROLS.ListView',
 
                      if (this._isSlowDrawing()) {
                         self._needToRedraw = true;
+                     }
+                  } else {
+                     // Если пришла пустая страница, но есть еще данные - догрузим их
+                     if (self._hasNextPage(dataSet.getMetaData().more, self._infiniteScrollOffset)){
+                        self._preScrollLoading();
                      }
                   }
 
