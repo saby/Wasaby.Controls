@@ -909,6 +909,16 @@ define('js!SBIS3.CONTROLS.DataGridView',
            чтобы таблица не прыгала, из-за того что изменилось количество и ширина колонок */
           this.once('onDataLoad', this._redrawHead.bind(this));
        },
+
+      setMultiselect: function() {
+         DataGridView.superclass.setMultiselect.apply(this, arguments);
+
+         if(this.getItems()) {
+            this.redraw();
+         } else if(this._options.showHead) {
+            this._redrawHead();
+         }
+      },
       /**
        * Проверяет настройки колонок, заданных опцией {@link columns}.
        */
