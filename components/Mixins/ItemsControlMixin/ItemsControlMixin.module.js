@@ -572,6 +572,18 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
             /*TODO С этим отдельно разобраться*/
 
             this._ladderCompare([targetElement.prev(), targetElement.next()]);
+
+            /*TODO Особое поведение при группировке*/
+            if (!Object.isEmpty(this._options.groupBy)) {
+               var prev = targetElement.prev();
+               if (prev.length && prev.hasClass('controls-GroupBy')) {
+                  var next = targetElement.next();
+                  if (!next.length || next.hasClass('controls-GroupBy')) {
+                     prev.remove();
+                  }
+               }
+            }
+
             targetElement.remove();
          }
       },
