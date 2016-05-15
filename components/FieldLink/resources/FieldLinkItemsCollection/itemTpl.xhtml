@@ -1,7 +1,7 @@
 <div class="controls-FieldLink__linkItem">
     <span class="controls-FieldLink__linkItem-caption">
         {{? it.itemTpl}}
-            {{=it.itemTpl(it.item)}}
+            {{=it.itemTpl(it.item, it.displayField)}}
         {{??}}
             {{= $ws.helpers.escapeHtml(it.item.get(it.displayField))}}
         {{?}}
