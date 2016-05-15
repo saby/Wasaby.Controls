@@ -30,50 +30,65 @@ define([
       });
 
       describe('SBIS3.CONTROLS.Data.Types.Flags', function () {
-         describe('.$create()', function () {
+         describe('.constructor()', function () {
             it('should create Flags', function () {
                assert.isTrue($ws.helpers.instanceOfModule(testFlags, 'SBIS3.CONTROLS.Data.Types.Flags'));
             });
          });
 
+         describe('.getEnumerator', function (){
+            it('should return the enumerator', function (){
+               assert.isTrue($ws.helpers.instanceOfModule(
+                  testFlags.getEnumerator(),
+                  'SBIS3.CONTROLS.Data.Collection.ArrayEnumerator')
+               );
+            });
+         });
+
          describe('.get()', function () {
-            it('should return flags value', function () {
-               assert.strictEqual(testFlags.get('one'), true);
-               assert.strictEqual(testFlags.get('two'), false);
-               assert.strictEqual(testFlags.get('three'), null);
+            it('should return value for the each flag', function () {
+               assert.isTrue(testFlags.get('one'));
+               assert.isFalse(testFlags.get('two'));
+               assert.isNull(testFlags.get('three'));
             });
          });
 
          describe('.set()', function () {
-            it('should change a flags value', function () {
-               testFlags.set('two',true);
-               assert.strictEqual(testFlags.get('two'), true);
-               testFlags.set('two',null);
-               assert.strictEqual(testFlags.get('two'), null);
+            it('should change the flags value', function () {
+               testFlags.set('two', true);
+               assert.isTrue(testFlags.get('two'));
+               assert.isTrue(testFlags.getByIndex(1));
+
+               testFlags.set('two', null);
+               assert.isNull(testFlags.get('two'));
+               assert.isNull(testFlags.getByIndex(1));
             });
-            it('should return an error', function () {
+            it('should throw an error for undefined value', function () {
                assert.throw(function () {
-                  testFlags.set('dev',true);
+                  testFlags.set('dev', true);
                });
             });
          });
 
          describe('.getByIndex()', function () {
             it('should return flags value by index', function () {
-               assert.strictEqual(testFlags.getByIndex(0), true);
-               assert.strictEqual(testFlags.getByIndex(1), false);
-               assert.strictEqual(testFlags.getByIndex(2), null);
+               assert.isTrue(testFlags.getByIndex(0));
+               assert.isFalse(testFlags.getByIndex(1));
+               assert.isNull(testFlags.getByIndex(2));
             });
          });
 
          describe('.setByIndex()', function () {
-            it('should change a flags value by index', function () {
+            it('should change the flags value by index', function () {
                testFlags.setByIndex(1, null);
-               assert.strictEqual(testFlags.get('two'), null);
+               assert.isNull(testFlags.get('two'));
+               assert.isNull(testFlags.getByIndex(1));
+
                testFlags.setByIndex(2, true);
-               assert.strictEqual(testFlags.get('three'), true);
+               assert.isTrue(testFlags.get('three'));
+               assert.isTrue(testFlags.getByIndex(2));
             });
-            it('should return an error', function () {
+            it('should throw an error for undefined index', function () {
                assert.throw(function () {
                   testFlags.setByIndex(400, true);
                });
@@ -84,65 +99,71 @@ define([
             it('should set false to all flags', function () {
                testFlags.setFalseAll();
                testFlags.each(function (name){
-                  assert.strictEqual(testFlags.get(name), false);
+                  assert.isFalse(testFlags.get(name));
                });
             });
             it('should set true to all flags', function () {
                testFlags.setTrueAll();
                testFlags.each(function (name){
-                  assert.strictEqual(testFlags.get(name), true);
+                  assert.isTrue(testFlags.get(name));
                });
             });
             it('should set null to all flags', function () {
                testFlags.setNullAll();
                testFlags.each(function (name){
-                  assert.strictEqual(testFlags.get(name), null);
+                  assert.isNull(testFlags.get(name));
                });
             });
          });
 
-         describe('.equals()', function () {
-            it('should equals to shared data', function () {
+         describe('.isEqual()', function () {
+            it('should return true for the same dictionary and values', function () {
                var e = new Flags({
                   dictionary: dict,
                   values: values
                });
-               assert.isTrue(testFlags.equals(e));
+               assert.isTrue(testFlags.isEqual(e));
             });
-            it('should equals to equal data', function () {
+            it('should return true for the equal dictionary and values', function () {
                var e = new Flags({
                   dictionary: getDict(),
                   values: getValues()
                });
-               assert.isTrue(testFlags.equals(e));
+               assert.isTrue(testFlags.isEqual(e));
             });
-            it('should not equals if dictionary is different', function () {
+            it('should return false for the different dictionary', function () {
                var dict = getDict();
                dict[0] = 'uno';
                var e = new Flags({
                   dictionary: dict,
                   values: values
                });
-               assert.isFalse(testFlags.equals(e));
+               assert.isFalse(testFlags.isEqual(e));
             });
-            it('should not equals if values is different', function () {
+            it('should return false for the different values', function () {
                var values = getValues();
                values[1] = null;
                var e = new Flags({
                   dictionary: dict,
                   values: values
                });
-               assert.isFalse(testFlags.equals(e));
+               assert.isFalse(testFlags.isEqual(e));
             });
-            it('should not equals when not flags', function () {
-               assert.isFalse(testFlags.equals());
-               assert.isFalse(testFlags.equals(null));
-               assert.isFalse(testFlags.equals(false));
-               assert.isFalse(testFlags.equals(true));
-               assert.isFalse(testFlags.equals(0));
-               assert.isFalse(testFlags.equals(1));
-               assert.isFalse(testFlags.equals({}));
-               assert.isFalse(testFlags.equals([]));
+            it('should return false for not an Flags', function () {
+               assert.isFalse(testFlags.isEqual());
+               assert.isFalse(testFlags.isEqual(null));
+               assert.isFalse(testFlags.isEqual(false));
+               assert.isFalse(testFlags.isEqual(true));
+               assert.isFalse(testFlags.isEqual(0));
+               assert.isFalse(testFlags.isEqual(1));
+               assert.isFalse(testFlags.isEqual({}));
+               assert.isFalse(testFlags.isEqual([]));
+            });
+         });
+
+         describe('.toString()', function () {
+            it('should return the default signature', function () {
+               assert.equal(testFlags + '', '[true,false,null]');
             });
          });
       });
