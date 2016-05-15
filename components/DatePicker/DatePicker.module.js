@@ -8,9 +8,11 @@ define(
       'js!SBIS3.CONTROLS.PickerMixin',
       'js!SBIS3.CONTROLS.Utils.DateUtil',
       'js!SBIS3.CONTROLS.Calendar',
-      'html!SBIS3.CONTROLS.DatePicker'
+      'html!SBIS3.CONTROLS.DatePicker',
+      'js!SBIS3.CONTROLS.FormWidgetMixin',
+      'i18n!SBIS3.CONTROLS.DatePicker'
    ],
-   function (FormattedTextBoxBase, PickerMixin, DateUtil, Calendar, dotTplFn) {
+   function (FormattedTextBoxBase, PickerMixin, DateUtil, Calendar, dotTplFn, FormWidgetMixin) {
 
    'use strict';
 
@@ -33,7 +35,7 @@ define(
     * @demo SBIS3.CONTROLS.Demo.MyDatePicker
     */
 
-   var DatePicker = FormattedTextBoxBase.extend([PickerMixin], /** @lends SBIS3.CONTROLS.DatePicker.prototype */{
+   var DatePicker = FormattedTextBoxBase.extend([PickerMixin, FormWidgetMixin], /** @lends SBIS3.CONTROLS.DatePicker.prototype */{
        /**
         * @event onDateChange Происходит при изменении даты.
         * @remark
@@ -215,12 +217,22 @@ define(
          }
 
          this._calendarInit();
-
+         this._addDefaultValidator();
       },
 
       _modifyOptions : function(options) {
          this._checkTypeOfMask(options);
          return DatePicker.superclass._modifyOptions.apply(this, arguments);
+      },
+
+      _addDefaultValidator: function() {
+         //Добавляем к прикладным валидаторам стандартный, который проверяет что дата заполнена корректно.
+         this._options.validators.push({
+            validator: function() {
+               return this._dateIsValid();
+            }.bind(this),
+            errorMessage: rk('Дата заполнена некорректно')
+         });
       },
 
       /**
@@ -452,7 +464,7 @@ define(
        */
       _getDateByText: function(text, oldDate) {
          //не разбираем дату, если вся не заполнена
-         if ( ! this.formatModel.isFilled()) {
+         if (!this.formatModel.isFilled() || !this.validate()) {
             return null;
          }
          var
@@ -540,6 +552,42 @@ define(
          }
 
          return text;
+      },
+
+      _dateIsValid: function() {
+         var
+             item,
+             value,
+             isValid = true;
+         for (var i = 0; i < this.formatModel.model.length; i++) {
+            item = this.formatModel.model[i];
+            if (!item.isGroup) {
+               continue;
+            }
+            value = '';
+            for (var j = 0; j < item.mask.length; j++) {
+               value += item.value[j];
+            }
+
+            value = Number(value);
+
+            switch (item.mask) {
+               case 'MM' :
+                  isValid &= value <= 12;
+                  break;
+               case 'DD' :
+                  isValid &= value <= 31;
+                  break;
+               case 'HH' :
+                  isValid &= value <= 24;
+                  break;
+               case 'II' :
+               case 'SS' :
+                  isValid &= value <= 60;
+                  break;
+            }
+         }
+         return !!isValid;
       }
    });
 
