@@ -193,6 +193,7 @@ define('js!SBIS3.CONTROLS.ScrollWatcher', [], function() {
                if (scrollable.length) {
                   return scrollable[0].scrollHeight;
                }
+               return element[0].scrollHeight;
             }
             return document.body.scrollHeight;
          }
