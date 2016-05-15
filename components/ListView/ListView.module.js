@@ -691,7 +691,10 @@ define('js!SBIS3.CONTROLS.ListView',
                   }
                   break;
                case $ws._const.key.del:
-                  this.deleteRecords(this.getSelectedKey());
+                  var key = this.getSelectedKey();
+                   if (key && this._allowDelete()) {
+                      this.deleteRecords(key);
+                   }
                   break;
             }
             if (newSelectedItem && newSelectedItem.length) {
@@ -700,6 +703,11 @@ define('js!SBIS3.CONTROLS.ListView',
                this._scrollToItem(newSelectedKey);
             }
             return false;
+         },
+         //TODO: Придрот для .150, чтобы хоткей del отрабатывал только если есть соответствующая операция над записью.
+         _allowDelete: function() {
+            var itemActions = this.getItemsActions();
+            return this.isEnabled() && !!itemActions && !!itemActions.getItemInstance('delete');
          },
          /**
           * Возвращает следующий элемент
