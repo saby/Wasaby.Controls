@@ -32,6 +32,7 @@ define('js!SBIS3.CONTROLS.EditAtPlace',
                decorator: null,
                mask: 'DD.MM.YY'
             },
+            _isEditInGroup: false, //Находится ли редактирование в группе
             _options: {
                /**
                 * @cfg {String} Текст в поле ввода
@@ -95,9 +96,33 @@ define('js!SBIS3.CONTROLS.EditAtPlace',
                $(this._container.children()[0]).addClass('controls-EditAtPlace__textAreaWrapper');
             }
 
-            $('.js-controls-EditAtPlace__editor', this._container.get(0)).bind('keydown', function (e) {
+            var editor = $('.js-controls-EditAtPlace__editor', this._container.get(0));
+
+            editor.bind('keydown', function (e) {
                self._keyPressHandler(e);
             });
+            editor.bind('focusout', function(){
+               self._editorFocusOutHandler();
+            });
+         },
+
+         /**
+          * При потере полем редактирования фокуса вызываем завершение редактирования
+          * @private
+          */
+         _editorFocusOutHandler: function(){
+            if (!this._isEditInGroup){
+               this._applyEdit();
+            }
+         },
+
+         /**
+          * Устанавливаем флаг, указывающий на то, что редактирование находится в группе
+          * Используется EditAtPlaceGroup
+          * @private
+          */
+         _setEditInGroup: function(){
+            this._isEditInGroup = true;
          },
 
          _saveOldText: function () {
