@@ -333,7 +333,7 @@ define('js!SBIS3.CONTROLS.DialogActionBase', ['js!SBIS3.CONTROLS.ActionBase', 'j
             collection = collection.getItems();
          }
          if ($ws.helpers.instanceOfMixin(collection, 'SBIS3.CONTROLS.Data.Collection.IList') && $ws.helpers.instanceOfMixin(collection, 'SBIS3.CONTROLS.Data.Collection.IIndexedCollection')) {
-            index = collection.getIndexByValue(model.getIdProperty(), this._linkedModelKey || model.getId());
+            index = collection.getIndexByValue(collection.getIdProperty(), this._linkedModelKey || model.getId());
             return collection.at(index);
          }
          return undefined;
