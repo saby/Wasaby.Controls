@@ -53,6 +53,7 @@ define('js!SBIS3.CONTROLS.EditAtPlaceGroup',
                this._iterateChildEditAtPlaces(function(child){
                   child._setClickHandler(self._clickHandler.bind(self));
                   child._setKeyPressHandler(self._keyPressHandler.bind(self));
+                  child._setEditInGroup();
                   if ($(child._options.editorTpl).attr('data-component') == 'SBIS3.CONTROLS.TextArea'){
                      $(child._container.children()[0]).addClass('controls-EditAtPlace__textAreaWrapper');
                   }
