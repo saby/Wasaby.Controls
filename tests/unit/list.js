@@ -34,6 +34,7 @@ define([
 '../../components/Data/Projection/resources/test/Projection.test',
 '../../components/Data/Projection/resources/test/Tree.test',
 '../../components/Data/Query/resources/test/Join.test',
+'../../components/Data/Query/resources/test/Order.test',
 '../../components/Data/Query/resources/test/Query.test',
 '../../components/Data/resources/test/Di.test',
 '../../components/Data/resources/test/Factory.test',
