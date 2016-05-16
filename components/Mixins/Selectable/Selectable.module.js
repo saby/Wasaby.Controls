@@ -346,6 +346,8 @@ define('js!SBIS3.CONTROLS.Selectable', ['js!SBIS3.CONTROLS.Data.Utils', 'js!SBIS
 
             var indexByKey = this._getItemIndexByKey(this._options.selectedKey),
                 itemsProjection = this._itemsProjection,
+                oldIndex = this._options.selectedIndex,
+                oldKey = this._options.selectedKey,
                 count;
 
             if (indexByKey >= 0) {
@@ -353,12 +355,12 @@ define('js!SBIS3.CONTROLS.Selectable', ['js!SBIS3.CONTROLS.Data.Utils', 'js!SBIS
             } else {
                count = itemsProjection.getCount();
                if (count > 0) {
-                  if(!this._isEmptyIndex()) {
-                     if (this._options.selectedIndex > this._itemsProjection.getCount() - 1) {
-                        this._options.selectedIndex = (count > 0) ? 0 : -1;
+                  if (!this._isEmptyIndex(this._options.selectedIndex)) {
+                     if (this._options.selectedIndex > count - 1) {
+                        this._options.selectedIndex = 0;
                      }
                      this._setKeyByIndex();
-                  } else if(!this._options.allowEmptySelection) {
+                  } else if (!this._options.allowEmptySelection) {
                      this._options.selectedIndex = 0;
                      this._setKeyByIndex();
                   }
@@ -367,7 +369,7 @@ define('js!SBIS3.CONTROLS.Selectable', ['js!SBIS3.CONTROLS.Data.Utils', 'js!SBIS
                   this._options.selectedKey = null;
                }
             }
-            if (action !== IBindCollection.ACTION_REPLACE){
+            if (action !== IBindCollection.ACTION_REPLACE && (this._options.selectedIndex !== oldIndex || this._options.selectedKey !== oldKey)) {
                this._setSelectedIndex(this._options.selectedIndex, this._options.selectedKey);
             }
       }
