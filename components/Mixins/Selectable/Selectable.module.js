@@ -355,7 +355,7 @@ define('js!SBIS3.CONTROLS.Selectable', ['js!SBIS3.CONTROLS.Data.Utils', 'js!SBIS
             } else {
                count = itemsProjection.getCount();
                if (count > 0) {
-                  if (!this._isEmptyIndex(this._options.selectedIndex)) {
+                  if (!this._isEmptyIndex()) {
                      if (this._options.selectedIndex > count - 1) {
                         this._options.selectedIndex = 0;
                      }
