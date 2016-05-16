@@ -816,8 +816,10 @@ define('js!SBIS3.CONTROLS.ListView',
 
             target = this._findItemByElement($target);
 
-            if (target.length && !this._touchSupport) {
-               this._changeHoveredItem(target);
+            if (target.length) {
+               if(!this._touchSupport) {
+                  this._changeHoveredItem(target);
+               }
             } else if (!this._isHoverControl($target)) {
                this._mouseLeaveHandler();
             }
@@ -1217,7 +1219,7 @@ define('js!SBIS3.CONTROLS.ListView',
             var records = ListView.superclass._getRecordsForRedraw.call(this);
             if (this._options.infiniteScroll === 'up' && !this._isSearchMode()) {
                return records.reverse();
-            } 
+            }
             return records;
          },
          /**
