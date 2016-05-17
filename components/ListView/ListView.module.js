@@ -15,6 +15,7 @@ define('js!SBIS3.CONTROLS.ListView',
       'js!SBIS3.CONTROLS.DecorableMixin',
       'js!SBIS3.CONTROLS.DragNDropMixin',
       'js!SBIS3.CONTROLS.FormWidgetMixin',
+      'js!SBIS3.CONTROLS.BreakClickBySelectMixin',
       'js!SBIS3.CONTROLS.ItemsToolbar',
       'js!SBIS3.CORE.MarkupTransformer',
       'tmpl!SBIS3.CONTROLS.ListView',
@@ -2804,5 +2805,5 @@ define('js!SBIS3.CONTROLS.ListView',
          }
       });
 
-      return ListView;
+      return ListView.mixin([BreakClickBySelect]);
    });
