@@ -25,6 +25,21 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
       };
    }
 
+   var convertItems = function(items) {
+      items = items || [];
+      if (items instanceof Array) {
+         items = new ObservableList({
+            items: items
+         });
+      }
+
+      if (!$ws.helpers.instanceOfMixin(items, 'SBIS3.CONTROLS.Data.Collection.IEnumerable')) {
+         throw new Error('Items should implement SBIS3.CONTROLS.Data.Collection.IEnumerable');
+      }
+
+      return items;
+   };
+
    var ItemsControlMixin = /**@lends SBIS3.CONTROLS.ItemsControlMixin.prototype  */{
        /**
         * @event onDrawItems После отрисовки всех элементов коллекции
@@ -305,13 +320,18 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
             this._options.pageSize = this._options.pageSize * 1;
          }
          this._bindHandlers();
-         this._prepareConfig(this._options.dataSource, this._options.items);
-         if (this._options.itemTemplate || this._options.userItemAttributes) {
-            $ws.single.ioc.resolve('ILogger').log('ItemsControl', 'Контрол ' + this.getName() + ' отрисовывается по неоптимальному алгоритму. Заданы itemTemplate или userItemAttributes');
+         this._prepareSourceConfig(this._options.dataSource, this._options.items);
+         if (this._options.itemTemplate) {
+            $ws.single.ioc.resolve('ILogger').log('Deprecated option', 'Опция itemTemplate будет удалена в 3.7.4 используйте itemContentTpl, itemTpl');
+            $ws.single.ioc.resolve('ILogger').log('ItemsControl', 'Контрол ' + this.getName() + ' отрисовывается по неоптимальному алгоритму. Задан itemTemplate');
+         }
+         if (this._options.userItemAttributes) {
+            $ws.single.ioc.resolve('ILogger').log('Deprecated option', 'Опция userItemAttributes будет удалена в 3.7.4 используйте itemTpl');
+            $ws.single.ioc.resolve('ILogger').log('ItemsControl', 'Контрол ' + this.getName() + ' отрисовывается по неоптимальному алгоритму. Задан userItemAttributes');
          }
       },
 
-      _prepareConfig : function(sourceOpt, itemsOpt) {
+      _prepareSourceConfig : function(cfg, sourceOpt, itemsOpt) {
          var keyField = this._options.keyField;
 
          if (!keyField) {
@@ -321,15 +341,29 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          if (sourceOpt) {
             this._dataSource = this._prepareSource(sourceOpt);
             this._items = null;
+            /*TODO пихаем в конфиги с подчеркиванием, чтоб не запороть начальные значения*/
+            cfg._dataSource = this._prepareSource(sourceOpt);
+            cfg._items = null;
          } else if (itemsOpt) {
             if ($ws.helpers.instanceOfModule(itemsOpt, 'SBIS3.CONTROLS.Data.Projection.Projection')) {
                this._itemsProjection = itemsOpt;
-               this._items = this._convertItems(this._itemsProjection.getCollection());
+
+               this._items = convertItems(this._itemsProjection.getCollection());
+               cfg._itemsProjection = itemsOpt;
+               cfg._items = this._items;
+
                this._setItemsEventHandlers();
                this._notify('onItemsReady');
                this._itemsReadyCallback();
+
+
             } else if($ws.helpers.instanceOfModule(itemsOpt, 'SBIS3.CONTROLS.Data.Collection.RecordSet')) {
-               this._processingData(itemsOpt);
+               this._items = itemsOpt;
+               cfg._items = this._items;
+               this._itemsProjection = this._createDefaultProjection(this._items);
+               this._setItemsEventHandlers();
+               this._notify('onItemsReady');
+               this._itemsReadyCallback();
             } else if (itemsOpt instanceof Array) {
                /*TODO уменьшаем количество ошибок с key*/
                if (!this._options.keyField) {
@@ -818,22 +852,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
       },
 
       _createDefaultProjection: function(items) {
-         this._itemsProjection = Projection.getDefaultProjection(items);
-      },
-
-      _convertItems: function (items) {
-         items = items || [];
-         if (items instanceof Array) {
-            items = new ObservableList({
-               items: items
-            });
-         }
-
-         if (!$ws.helpers.instanceOfMixin(items, 'SBIS3.CONTROLS.Data.Collection.IEnumerable')) {
-            throw new Error('Items should implement SBIS3.CONTROLS.Data.Collection.IEnumerable');
-         }
-
-         return items;
+         return Projection.getDefaultProjection(items);
       },
 
       _prepareSource: function(sourceOpt) {
@@ -918,7 +937,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
         */
       setDataSource: function (source, noLoad) {
           this._unsetItemsEventHandlers();
-          this._prepareConfig(source);
+          this._prepareSourceConfig(source);
           if (!noLoad) {
              return this.reload();
           }
@@ -1202,7 +1221,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
        setItems: function (items) {
           this._unsetItemsEventHandlers();
           this._items = null;
-          this._prepareConfig(undefined, items);
+          this._prepareSourceConfig(undefined, items);
           if(items instanceof Array) {
              this.reload();
           } else {

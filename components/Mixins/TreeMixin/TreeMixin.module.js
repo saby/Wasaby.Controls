@@ -186,6 +186,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
             root: root
          });
          this._itemsProjection.setFilter(this._projectionFilter.bind(this));
+         return this._itemsProjection;
       },
       /**
        * Закрывает узел (папку) по переданному идентификатору
