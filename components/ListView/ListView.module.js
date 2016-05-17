@@ -708,7 +708,11 @@ define('js!SBIS3.CONTROLS.ListView',
           */
          getNextItemById: function (id) {
             return this._getHtmlItemByProjectionItem(
-               this._getProjectionItem(id, true)
+               this._itemsProjection.getNext(
+                  this._itemsProjection.getItemBySourceItem(
+                     this.getItems().getRecordById(id)
+                  )
+               )
             );
          },
          /**
@@ -718,7 +722,11 @@ define('js!SBIS3.CONTROLS.ListView',
           */
          getPrevItemById: function (id) {
             return this._getHtmlItemByProjectionItem(
-               this._getProjectionItem(id, false)
+               this._itemsProjection.getPrevious(
+                  this._itemsProjection.getItemBySourceItem(
+                     this.getItems().getRecordById(id)
+                  )
+               )
             );
          },
 
@@ -728,14 +736,6 @@ define('js!SBIS3.CONTROLS.ListView',
 
          _getPrevItemByDOM: function(id) {
             return this._getHtmlItemByDOM(id, false);
-         },
-
-         _getProjectionItem: function(id, isNext) {
-            var enumerator = this._itemsProjection.getEnumerator(),
-               index = enumerator.getIndexByValue(this._options.keyField, id),
-               item = enumerator.at(index);
-
-            return this._itemsProjection[isNext ? 'getNext' : 'getPrevious'](item);
          },
 
          _getHtmlItemByProjectionItem: function (item) {
