@@ -745,7 +745,7 @@
 // -------- //
 
 @text-box-height:                         40px;
-@text-box-wrapper-padding:                0 5px;
+@text-box-wrapper-padding:                0 4px;
 @text-box-border-radius:                  0;
 
 @text-box-field-font:                     inherit;
@@ -769,6 +769,8 @@
 @text-box-border-style:                   solid;
 @text-box-border-color:                   transparent transparent @gray-dark-color transparent;
 @text-box-bg:                             transparent;
+@text-box-editor-bg:                      #f3f3f3;
+@text-box-editor-text-color:              #999999;
 
 @text-box-focus-border-width:             @text-box-border-width;
 @text-box-focus-border-style:             @text-box-border-style;
@@ -1249,11 +1251,11 @@
 @list-view-items-toolbar-margin-right:               3px;
 @list-view-items-toolbar-zindex:                     10;
 @list-view-items-toolbar-box-shadow:                 -2px -2px 5px @data-grid-row-hover-bg;
-@list-view-items-toolbar-locked-box-shadow:          -2px -2px 5px @default-itemSelected-color;
+@list-view-items-toolbar-locked-box-shadow:          -2px -2px 5px @data-grid-row-hover-bg;
 @list-view-items-toolbar-vertical-box-shadow:        -2px  2px 5px @data-grid-row-hover-bg;
-@list-view-items-toolbar-vertical-locked-box-shadow: -2px  2px 5px @default-itemSelected-color;
+@list-view-items-toolbar-vertical-locked-box-shadow: -2px  2px 5px @data-grid-row-hover-bg;
 @list-view-items-toolbar-bg:                         @data-grid-row-hover-bg;
-@list-view-items-toolbar-locked-bg:                  @default-itemSelected-color;
+@list-view-items-toolbar-locked-bg:                  @controls-editInPlace-editor-bg;
 @list-view-items-toolbar-margin-bottom:              2px;
 @list-view-items-toolbar-elements-margin:            0 4px;
 @list-view-items-toolbar-float:                      right;
