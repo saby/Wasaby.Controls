@@ -96,6 +96,25 @@ define('js!SBIS3.CONTROLS.SuggestTextBox', [
          this._observableControlFocusHandler();
       },
 
+      /* Метод для проверки, куда ушёл фокус, т.к. попап до сих пор
+         отслеживает клики, и, если фокус ушёл например по tab, то саггест не закроется +
+         надо, чтобы правильно запускалась валидация */
+      // FIXME костыль до перехода на пикера по фокусную систему
+      _focusOutHandler: function(event, isDestroyed, focusedControl) {
+         var isChildControl = false;
+
+         if(this._list) {
+            isChildControl = this._list === focusedControl || this._list.getChildControls(false, true, function(ctrl) {
+               return focusedControl === ctrl;
+            }).length;
+         }
+
+         if(!isChildControl) {
+            this.hidePicker();
+            SuggestTextBox.superclass._focusOutHandler.apply(this, arguments);
+         }
+      },
+
       _keyDownBind: function(e) {
          SuggestTextBox.superclass._keyDownBind.apply(this, arguments);
 
