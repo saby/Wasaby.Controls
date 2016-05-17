@@ -153,9 +153,7 @@ define('js!SBIS3.CONTROLS.TextBoxBase',
          this._container.removeClass('ws-area');
          this._options.text = (this._options.text) ? this._options.text.toString() : '';
 
-         this.subscribe('onFocusOut', function(){
-            this.validate();
-         });
+         this.subscribe('onFocusOut', this._focusOutHandler.bind(this));
       },
 
       /**
@@ -225,6 +223,10 @@ define('js!SBIS3.CONTROLS.TextBoxBase',
 
       _drawText: function() {
 
+      },
+
+      _focusOutHandler: function() {
+         this.validate();
       },
 
       _keyboardHover: function(event){
