@@ -422,6 +422,10 @@ define('js!SBIS3.CONTROLS.Image',
                            event.setResult(self._notify('onEndSave', result));
                            self._toggleSaveIndicator(false);
                            self.reload();
+                        },
+                        onOpenError: function(event){
+                           $ws.helpers.toggleLocalIndicator(self._container, false);
+                           self._boundEvents.onErrorLoad(event, true);
                         }
                      }
                   }, this._options.editConfig),
