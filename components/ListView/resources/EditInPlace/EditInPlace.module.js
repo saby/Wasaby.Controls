@@ -169,8 +169,8 @@ define('js!SBIS3.CONTROLS.EditInPlace',
                }.bind(this));
                if (this._lastHeight !== newHeight) {
                   this._lastHeight = newHeight;
-                  this._notify('onChangeHeight');
                   this.getEditingItem().target.height(newHeight);
+                  this._notify('onChangeHeight');
                }
             },
             _endTrackHeight: function() {
