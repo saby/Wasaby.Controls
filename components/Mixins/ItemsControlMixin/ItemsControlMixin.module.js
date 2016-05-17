@@ -520,8 +520,13 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
             markup;
 
          data.tplData = this._prepareItemData();
-
+         //TODO опять же, перед полной перерисовкой данные лесенки достаточно сбросить, чтобы она правильно отработала
+         //Отключаем придрот, который включается при добавлении записи в список, который здесь нам не нужен
+         var ladder = this._decorators.getByName('ladder');
+         ladder && ladder.setIgnoreEnabled(true);
+         ladder && ladder.reset();
          markup = MarkupTransformer(this._itemsTemplate(data));
+         ladder && ladder.setIgnoreEnabled(false);
          //TODO это может вызвать тормоза
          this._destroyInnerComponents($itemsContainer);
          if (markup.length) {
@@ -540,6 +545,8 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          var
             markup,
             targetElement = this._getDomElementByItem(item),
+            rows = [],
+            prevTargetElement = targetElement.prev(),
             data;
          if (targetElement.length) {
             data = this._prepareItemData();
@@ -553,12 +560,14 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
                dot = data.defaultItemTpl;
             }
             markup = dot(data);
+            rows.push(prevTargetElement, targetElement.next());
             /*TODO посмотреть не вызывает ли это тормоза*/
             this._clearItems(targetElement);
             /*TODO С этим отдельно разобраться*/
-            this._ladderCompare([targetElement.prev(), targetElement, targetElement.next()]);
 
             targetElement.after(markup).remove();
+            rows.splice(1, 0, prevTargetElement.next()); //Добавляем только что отрисованную строку
+            this._ladderCompare(rows);
             this._reviveItems();
             this._notifyOnDrawItems();
          }
@@ -1230,7 +1239,8 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          projItem = projItem || this._getItemProjectionByItemId(item.getId());
          var
             targetElement = this._getElementByModel(item),
-            newElement = this._drawItem(projItem);
+            newElement = this._createItemInstance(projItem);/*раньше здесь звался _drawItem, но он звал лишнюю группировку, а при перерисовке одного итема она не нужна*/
+         this._addItemAttributes(newElement, projItem);
          targetElement.after(newElement).remove();
          this.reviveComponents();
          this._notifyOnDrawItems();

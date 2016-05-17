@@ -152,6 +152,8 @@ define('js!SBIS3.CONTROLS.TextBoxBase',
          this._publish('onTextChange');
          this._container.removeClass('ws-area');
          this._options.text = (this._options.text) ? this._options.text.toString() : '';
+
+         this.subscribe('onFocusOut', this._focusOutHandler.bind(this));
       },
 
       /**
@@ -167,7 +169,7 @@ define('js!SBIS3.CONTROLS.TextBoxBase',
        * @see getText
        */
       setText: function(text){
-         var newText = (this._isEmptyValue) ? text : this._formatText(text.toString());
+         var newText = (this._isEmptyValue(text)) ? text : this._formatText(text.toString());
          if (newText !== this._options.text) {
             this._options.text = newText;
             this._drawText(newText);
@@ -221,6 +223,10 @@ define('js!SBIS3.CONTROLS.TextBoxBase',
 
       _drawText: function() {
 
+      },
+
+      _focusOutHandler: function() {
+         this.validate();
       },
 
       _keyboardHover: function(event){

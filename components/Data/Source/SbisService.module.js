@@ -442,18 +442,25 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
             name,
             value,
             field,
-            hierarhyFields = {};
+            hierarhyFields = {},
+            sortNames = [];
 
          for (name in data) {
             if (data.hasOwnProperty(name)) {
-               value = data[name];
-               field = this._getValueType(value, name, data);
-               if (!(field instanceof Object)) {
-                  field = {type: field};
-               }
-               field.name = name;
-               record.addField(field, undefined, value);
+               sortNames.push(name);
             }
+         }
+         sortNames = sortNames.sort();
+
+         for (var i = 0, len = sortNames.length; i < len; i++) {
+            name = sortNames[i];
+            value = data[name];
+            field = this._getValueType(value, name, data);
+            if (!(field instanceof Object)) {
+               field = {type: field};
+            }
+            field.name = name;
+            record.addField(field, undefined, value);
          }
 
          return record;

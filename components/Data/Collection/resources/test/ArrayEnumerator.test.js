@@ -160,6 +160,16 @@ define([
                   enumerator.getIndexByValue('Ид', 0)
                );
             });
+            it('should return -1 for not a property name', function() {
+               var enumerator = new ArrayEnumerator({
+                  items: items
+               });
+               assert.strictEqual(-1, enumerator.getIndexByValue());
+               assert.strictEqual(-1, enumerator.getIndexByValue(null));
+               assert.strictEqual(-1, enumerator.getIndexByValue(false));
+               assert.strictEqual(-1, enumerator.getIndexByValue(0));
+               assert.strictEqual(-1, enumerator.getIndexByValue(''));
+            });
             it('should work fine with names from Object.prototype', function() {
                var items = [{
                      'constructor': 'a'
