@@ -34,17 +34,20 @@ define('js!SBIS3.CONTROLS.FieldLinkItemsCollection', [
             this._publish('onCrossClick', 'onItemActivate', 'onShowPicker', 'onClosePicker');
             /* Запомним контейнер поля связи */
             this._flContainer = this.getParent().getContainer();
+            /* Сделаем подкиску на клик,
+               Clickable нам не подходит, т.к. не сигналит кликом, когда контрол задизейблен */
+            this.subscribe('onClick', this._clickHandler);
+         },
 
-            this.subscribe('onClick', function(event, e) {
-               var $target = $(e.target),
-                   itemContainer;
+         _clickHandler: function(event, e) {
+            var $target = $((e || event).target),
+                itemContainer;
 
-               itemContainer = $target.closest('.controls-ListView__item', this._container[0]);
+            itemContainer = $target.closest('.controls-ListView__item', this._container[0]);
 
-               if(itemContainer.length) {
-                  this._notify($target.hasClass('controls-FieldLink__linkItem-cross') ? 'onCrossClick' : 'onItemActivate', itemContainer.data('id'));
-               }
-            });
+            if(itemContainer.length) {
+               this._notify($target.hasClass('controls-FieldLink__linkItem-cross') ? 'onCrossClick' : 'onItemActivate', itemContainer.data('id'));
+            }
          },
 
          /**
