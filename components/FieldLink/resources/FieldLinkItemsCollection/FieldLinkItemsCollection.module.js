@@ -4,11 +4,10 @@
 define('js!SBIS3.CONTROLS.FieldLinkItemsCollection', [
       'js!SBIS3.CORE.CompoundControl',
       'js!SBIS3.CONTROLS.DSMixin',
-      'js!SBIS3.CONTROLS.Clickable',
       'js!SBIS3.CONTROLS.PickerMixin',
       'html!SBIS3.CONTROLS.FieldLinkItemsCollection/itemTpl'
    ],
-   function(CompoundControl, DSMixin, Clickable, PickerMixin, itemTpl) {
+   function(CompoundControl, DSMixin, PickerMixin, itemTpl) {
 
       var PICKER_BORDER_WIDTH = 2;
 
@@ -20,7 +19,7 @@ define('js!SBIS3.CONTROLS.FieldLinkItemsCollection', [
        * @extends SBIS3.CORE.CompoundControl
        */
 
-      var FieldLinkItemsCollection =  CompoundControl.extend([DSMixin, Clickable, PickerMixin], {
+      var FieldLinkItemsCollection =  CompoundControl.extend([DSMixin, PickerMixin], {
          $protected: {
             _options: {
                /**
@@ -35,12 +34,20 @@ define('js!SBIS3.CONTROLS.FieldLinkItemsCollection', [
             this._publish('onCrossClick', 'onItemActivate', 'onShowPicker', 'onClosePicker');
             /* Запомним контейнер поля связи */
             this._flContainer = this.getParent().getContainer();
+            /* Сделаем подкиску на клик,
+               Clickable нам не подходит, т.к. не сигналит кликом, когда контрол задизейблен */
+            this.subscribe('onClick', this._clickHandler);
          },
 
-         init: function() {
-            FieldLinkItemsCollection.superclass.init.apply(this, arguments);
-            /* Проинициализируем DataSet */
-            this.reload();
+         _clickHandler: function(event, e) {
+            var $target = $((e || event).target),
+                itemContainer;
+
+            itemContainer = $target.closest('.controls-ListView__item', this._container[0]);
+
+            if(itemContainer.length) {
+               this._notify($target.hasClass('controls-FieldLink__linkItem-cross') ? 'onCrossClick' : 'onItemActivate', itemContainer.data('id'));
+            }
          },
 
          /**
@@ -107,21 +114,6 @@ define('js!SBIS3.CONTROLS.FieldLinkItemsCollection', [
 
          canAcceptFocus: function() {
             return false;
-         },
-         /**
-          * Обработчик клика на крестик
-          * @param e
-          * @private
-          */
-         _clickHandler: function(e) {
-            var $target = $(e.target),
-                itemContainer;
-
-            itemContainer = $target.closest('.controls-ListView__item', this._container[0]);
-
-            if(itemContainer.length) {
-               this._notify($target.hasClass('controls-FieldLink__linkItem-cross') ? 'onCrossClick' : 'onItemActivate', itemContainer.data('id'));
-            }
          },
 
          _drawItemsCallback: function() {
