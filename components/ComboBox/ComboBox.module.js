@@ -483,9 +483,6 @@ define('js!SBIS3.CONTROLS.ComboBox', [
       _redraw: function () {
          if (this._picker) {
             ComboBox.superclass._redraw.call(this);
-            // Сделано для того, что бы в при уменьшении колчества пунктов при поиске нормально усеньшались размеры пикера
-            // В 3.7.3.200 сделано нормально на уровне попапа
-            this._picker.getContainer().css('height', '');
             this._picker.recalcPosition();
          }
          else {
