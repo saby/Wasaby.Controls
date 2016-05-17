@@ -40,7 +40,7 @@ define('js!SBIS3.CONTROLS.TreeView', [
              *     <option name="itemsDragNDrop">onlyChangeParent</option>
              * </pre>
              */
-            itemsDragNDrop: 'allow'
+            itemsDragNDrop: false
          }
       },
 
