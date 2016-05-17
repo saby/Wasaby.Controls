@@ -149,6 +149,16 @@ define('js!SBIS3.CONTROLS.ComponentBinder', [], function () {
          }
       }
    }
+   function drawItemsCallback(operationPanel, view) {
+      //TODO: После перехода на экшены, кнопки ни чего знать о view не будут, и этот костыль уйдёт.
+      $ws.helpers.forEach(operationPanel.getItemsInstances(), function(instance) {
+         if ($ws.helpers.instanceOfModule(instance, 'SBIS3.CONTROLS.OperationsMark')) {
+            instance.setLinkedView(view);
+         } else {
+            instance._options.linkedView = view;
+         }
+      }, this)
+   }
    /**
     * Контроллер, позволяющий связывать компоненты осуществляя базовое взаимодейтсие между ними
     * @author Крайнов Дмитрий
@@ -434,14 +444,10 @@ define('js!SBIS3.CONTROLS.ComponentBinder', [], function () {
       bindOperationPanel: function(hideCheckBoxes, operationPanel) {
          var view = this._options.view;
          operationPanel = operationPanel || this._options.operationPanel;
-         //TODO: После перехода на новую идеалогию, кнопки ни чего знать о view не будут, и этот костыль уйдёт.
-         operationPanel.addItemOptions = function(instance) {
-            if ($ws.helpers.instanceOfModule(instance, 'SBIS3.CONTROLS.OperationsMark')) {
-               instance.setLinkedView(view);
-            } else {
-               instance._options.linkedView = view;
-            }
-         };
+         operationPanel.subscribe('onDrawItems', function() {
+            drawItemsCallback(operationPanel, view);
+         });
+         drawItemsCallback(operationPanel, view);
          toggleCheckBoxes(operationPanel, view, hideCheckBoxes);
          view.subscribe('onSelectedItemsChange', function(event, idArray) {
             operationPanel.onSelectedItemsChange(idArray);
