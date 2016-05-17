@@ -486,7 +486,7 @@ define('js!SBIS3.CONTROLS.ComboBox', [
             // Сделано для того, что бы в при уменьшении колчества пунктов при поиске нормально усеньшались размеры пикера
             // В 3.7.3.200 сделано нормально на уровне попапа
             this._picker.getContainer().css('height', '');
-            this._picker.recalcPosition();
+            this._picker.recalcPosition(true);
          }
          else {
             this._drawSelectedItem(this._options.selectedKey, this._options.selectedIndex);
