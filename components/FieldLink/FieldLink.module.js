@@ -758,24 +758,28 @@ define('js!SBIS3.CONTROLS.FieldLink',
           _keyUpBind: function(e) {
              FieldLink.superclass._keyUpBind.apply(this, arguments);
              switch (e.which) {
-                /* Нажатие на клавишу delete удаляет все выбранные элементы в поле связи */
-                case $ws._const.key.del:
-                   this.removeItemsSelectionAll();
-                   break;
-
                 /* ESC закрывает все пикеры у поля связи(если они открыты) */
                 case $ws._const.key.esc:
-                   if(this.isPickerVisible() || this._linkCollection.isPickerVisible()) {
+                   var linkCollection =  this._getLinkCollection();
+
+                   if(this.isPickerVisible() || linkCollection.isPickerVisible()) {
                       this.hidePicker();
-                      this._linkCollection.hidePicker();
+                      linkCollection.hidePicker();
                       e.stopPropagation();
                    }
                    break;
              }
           },
+
           _keyDownBind: function(e) {
              FieldLink.superclass._keyDownBind.apply(this, arguments);
              switch (e.which) {
+                case $ws._const.key.del:
+                   if(this.getText() && $ws.helpers.getTextSelection()) {
+                      break;
+                   }
+                   this.removeItemsSelectionAll();
+                   break;
                 /* Нажатие на backspace должно удалять последние значение, если нет набранного текста */
                 case $ws._const.key.backspace:
                    if(!this.getText() && !this._isEmptySelection()) {
