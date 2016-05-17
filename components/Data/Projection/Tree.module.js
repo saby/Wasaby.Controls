@@ -50,7 +50,11 @@ define('js!SBIS3.CONTROLS.Data.Projection.Tree', [
             /**
              * @cfg {SBIS3.CONTROLS.Data.Projection.TreeItem|*} Корневой узел или его содержимое
              */
-            root: undefined
+            root: undefined,
+            /**
+             * @cfg {Boolean} если true  проекция сортирует свои элементы сначала узлы потом листья
+             */
+            sortNodeFirst: false
          },
 
          _itemModule: 'projection.tree-item',
@@ -257,9 +261,24 @@ define('js!SBIS3.CONTROLS.Data.Projection.Tree', [
       },
 
       _buildSortMap: function () {
+         var sortMap = TreeProjection.superclass._buildSortMap.call(this);
+         if (!this._options.sortNodeFirst) {
+            sortMap = sortMap.sort((function(a, b){
+               var
+                  isNode1 = this._items[a].isNode(),
+                  isNode2 = this._items[b].isNode();
+               if( isNode1 === isNode2) {
+                  return 0;
+               }  else if( isNode1 ) {
+                  return -1;
+               } else if( isNode2) {
+                  return 1;
+               }
+            }).bind(this));
+         }
          return _private.sorters.tree(
             this._items,
-            TreeProjection.superclass._buildSortMap.call(this),
+            sortMap,
             {
                idProperty: this._options.idProperty,
                parentProperty: this._options.parentProperty,
@@ -366,7 +385,6 @@ define('js!SBIS3.CONTROLS.Data.Projection.Tree', [
           * @private
           */
          tree: function (items, currentMap, options) {
-            //TODO: enumeration with currentMap order
             var push = Array.prototype.push,
                logStamp = 'SBIS3.CONTROLS.Data.Projection.Tree::sorters.tree',
                idProperty = options.idProperty,
@@ -413,9 +431,9 @@ define('js!SBIS3.CONTROLS.Data.Projection.Tree', [
                };
 
             var index, count, parentId;
-            for (index = 0, count = items.length; index < count; index++) {
+            for (index = 0, count = currentMap.length; index < count; index++) {
                parentId = Utils.getItemPropertyValue(
-                  items[index].getContents(),
+                  items[currentMap[index]].getContents(),
                   parentProperty
                );
                if (!hierIndex.hasOwnProperty(parentId)) {
