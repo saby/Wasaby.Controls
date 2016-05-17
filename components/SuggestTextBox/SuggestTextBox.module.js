@@ -87,18 +87,9 @@ define('js!SBIS3.CONTROLS.SuggestTextBox', [
       },
 
       _setPickerConfig: function(){
-         return {
-            corner: 'bl',
-            verticalAlign: {
-               side: 'top'
-            },
-            horizontalAlign: {
-               side: 'left'
-            },
-            closeByExternalClick: true,
-            /* Чтобы пикер не участвовал в обходе по табу */
-            tabindex: 0
-         };
+         var parentConfig = SuggestTextBox.superclass._setPickerConfig.call(this);
+         parentConfig.tabindex = 0;
+         return parentConfig;
       },
 
       setListFilter: function(filter) {
