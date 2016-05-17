@@ -164,7 +164,7 @@ define('js!SBIS3.CONTROLS.ComboBox', [
                   self.togglePicker();
                   // Что бы не открывалась клавиатура на айпаде при клике на стрелку 
                   if (isArrow) {
-                     e.stopPropagation();
+                     e.preventDefault();
                   }
                }
             }
