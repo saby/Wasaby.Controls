@@ -109,8 +109,13 @@ define('js!SBIS3.CONTROLS.TextArea', ['js!SBIS3.CONTROLS.TextBoxBase', 'html!SBI
          // При потере фокуса делаем trim, если нужно
          // TODO Переделать на платформенное событие потери фокуса
          this._inputField.bind('focusout', function () {
+            var text = self._inputField.val();
             if (self._options.trim) {
-               self.setText(String.trim(self.getText() || ''));
+               text = String.trim(text);
+            }
+            //Установим текст только если значения различны и оба не пустые
+            if (text !== self._options.text && !(self._isEmptyValue(self._options.text) && !text.length)){
+               self.setText(text);
             }
             $ws.single.EventBus.globalChannel().notify('MobileInputFocusOut');
          });

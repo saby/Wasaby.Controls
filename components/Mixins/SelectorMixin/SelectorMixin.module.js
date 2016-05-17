@@ -107,9 +107,12 @@ define('js!SBIS3.CONTROLS.SelectorMixin', [],
             this._linkedView = linkedView;
 
             if (linkedView){
-               multiSelectChanged = this._linkedView.getProperty('multiselect') !== this._options.multiSelect;
-               this._linkedView.setProperty('multiselect', this._options.multiSelect);
+               multiSelectChanged = this._linkedView.getMultiselect() !== this._options.multiSelect;
                this._toggleLinkedViewEvents(true);
+
+               if(multiSelectChanged) {
+                  this._linkedView.setMultiselect(this._options.multiSelect);
+               }
 
                if(this._options.currentSelectedKeys.length) {
                   if (this._options.multiSelect) {
@@ -117,10 +120,6 @@ define('js!SBIS3.CONTROLS.SelectorMixin', [],
                   } else {
                      this._linkedView.setSelectedKey(this._options.currentSelectedKeys[0]);
                   }
-               }
-
-               if(multiSelectChanged) {
-                  this._linkedView.redraw();
                }
             }
          },

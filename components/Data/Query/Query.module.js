@@ -294,7 +294,7 @@ define('js!SBIS3.CONTROLS.Data.Query.Query', [
 
       /**
        * Возвращает способы сортировки
-       * @returns {SBIS3.CONTROLS.Data.Query.Order[]}
+       * @returns {Array.<SBIS3.CONTROLS.Data.Query.Order>}
        */
       getOrderBy: function () {
          return this._orderBy;
@@ -302,23 +302,33 @@ define('js!SBIS3.CONTROLS.Data.Query.Query', [
 
       /**
        * Устанавливает порядок сортировки выборки
-       * @param {String|Object[]|Object} selector Поле сортировки или набор полей
-       * @param {Boolean} [order=true] Порядок сортировки
+       * @param {String|Array.<Object.<String, Boolean>>} selector Название поле сортировки или набор полей и направление сортировки в каждом
+       * @param {Boolean} [order=true] Порядок сортировки (true - по возрастанию, false - по убыванию)
        * @returns {SBIS3.CONTROLS.Data.Query.Query}
        * @example
+       * Отсортируем заказы по полю id по возрастанию:
        * <pre>
        *    var query = new Query()
        *       .select('*')
        *       .from('Orders')
        *       .orderBy('id');
-       *
+       * </pre>
+       * Отсортируем заказы по полю id по убыванию:
+       * <pre>
        *    var query = new Query()
        *       .select('*')
        *       .from('Orders')
-       *       .orderBy({
-       *          customerId: true,
-       *          date: false
-       *       });
+       *       .orderBy('id', false);
+       * </pre>
+       * Отсортируем заказы сначала по полю customerId по возрастанию, затем по полю date по убыванию:
+       * <pre>
+       *    var query = new Query()
+       *       .select('*')
+       *       .from('Orders')
+       *       .orderBy([
+       *          {customerId: true},
+       *          {date: false}
+       *       ]);
        * </pre>
        */
       orderBy: function (selector, order) {

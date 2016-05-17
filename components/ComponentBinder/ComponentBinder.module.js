@@ -51,6 +51,8 @@ define('js!SBIS3.CONTROLS.ComponentBinder', [], function () {
 
          view.once('onDataLoad', function(){
             view._itemsProjection.setParentProperty(null);
+            //Сбрасываю именно через проекцию, т.к. view.setCurrentRoot приводит к отрисовке не пойми чего и пропадает крестик в строке поиска
+            view._itemsProjection.setRoot(null);
          });
 
          view.reload(filter, view.getSorting(), 0).addCallback(function(){
@@ -85,15 +87,18 @@ define('js!SBIS3.CONTROLS.ComponentBinder', [], function () {
    }
 
    function resetGroup(searchParamName) {
-      var view = this._options.view,
-            filter = $ws.core.merge(view.getFilter(), {
-               'Разворот' : 'Без разворота'
-            });
+      var
+         view = this._options.view,
+         filter = $ws.core.merge(view.getFilter(), {
+            'Разворот' : 'Без разворота'
+         }),
+         self = this;
       delete (filter[searchParamName]);
       //При сбрасывании группировки в иерархии нужно снять класс-можификатор, но сделать это можно
       //только после релоада, иначе визуально будут прыжки и дерганья (класс меняет паддинги)
       view.once('onDataLoad', function(){
          view._container.removeClass('controls-GridView__searchMode');
+         view._itemsProjection.setRoot(self._lastRoot || null);
       });
       this._searchMode = false;
       //Если мы ничего не искали, то и сбрасывать нечего
