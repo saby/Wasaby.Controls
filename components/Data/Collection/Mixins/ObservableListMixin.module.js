@@ -100,7 +100,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.ObservableListMixin', [
             this._notifier(
                this.notifyCollectionChange,
                IBindCollection.ACTION_ADD,
-               this._items.slice(count, this._lenght),
+               this._items.slice(count),
                count,
                [],
                0
