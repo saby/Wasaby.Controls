@@ -77,6 +77,7 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
          _panel: undefined,
          _needDestroyRecord: false,
          _activateChildControlDeferred: undefined,
+         _previousDocumentTitle: undefined,
          _options: {
             /**
              * @cfg {DataSource} Устанавливает источник данных для диалога редактирования записи.
@@ -182,6 +183,7 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
          $ws.single.CommandDispatcher.declareCommand(this, 'create', this._create);
          $ws.single.CommandDispatcher.declareCommand(this, 'notify', this._actionNotify);
          $ws.single.CommandDispatcher.declareCommand(this, 'activateChildControl', this._createChildControlActivatedDeferred);
+         this._updateDocumentTitle();
          this._setDefaultContextRecord();
          this._panel = this.getTopParent();
          if (this._options.dataSource){
@@ -200,6 +202,7 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
                   this._destroyModel();
                }
                this._saving = false;
+               this._resetTitle();
                return;
             }
             event.setResult(false);
@@ -212,6 +215,23 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
          var ctx = new $ws.proto.Context({restriction: 'set'}).setPrevious(this.getLinkedContext());
          ctx.setValue('record', this._options.record || new Record());
          this._context = ctx;
+      },
+
+      _updateDocumentTitle: function () {
+         var record = this._options.record,
+             newTitle = record && record.get('title');
+         if (newTitle) {
+            if (!this._previousDocumentTitle){
+               this._previousDocumentTitle = document.title;
+            }
+            document.title = newTitle;
+         }
+      },
+
+      _resetTitle: function(){
+         if (this._previousDocumentTitle){
+            document.title = this._previousDocumentTitle;
+         }
       },
 
       /**
@@ -284,8 +304,8 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
          this._saving = true;
 
          //Если пришли из update
-         if (hideQuestion){
-            return this._updateRecord(dResult, closePanelAfterSubmit);
+         if (config.hideQuestion){
+            return this._updateRecord(dResult, config);
          }
          else{
             $ws.helpers.question(rk('Сохранить изменения?'), questionConfig, this).addCallback(function(result){
@@ -320,7 +340,7 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
                isNewModel = self._options.newModel;
                self._options.newModel = false;
                self._notify('onUpdateModel', self._options.record, isNewModel);
-               if (closePanelAfterSubmit) {
+               if (config.closePanelAfterSubmit) {
                   self._panel.ok();
                }
                else {
@@ -529,6 +549,7 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
             this._options.key = newKey;
          }
          this._needDestroyRecord = false;
+         this._updateDocumentTitle();
          this._setContextRecord(record);
       },
       /**
