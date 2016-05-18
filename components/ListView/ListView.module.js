@@ -1656,7 +1656,7 @@ define('js!SBIS3.CONTROLS.ListView',
                   } else {
                      // Если пришла пустая страница, но есть еще данные - догрузим их
                      if (self._hasNextPage(dataSet.getMetaData().more, self._infiniteScrollOffset)){
-                        self._preScrollLoading();
+                        self._nextLoad();
                      }
                   }
 
