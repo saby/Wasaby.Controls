@@ -652,16 +652,15 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
          return this._curRoot;
       },
       /**
-       * Раскрыть определенный узел
+       * Зайти в определенный узел
        * @param {String} key Идентификатор раскрываемого узла
        */
       setCurrentRoot: function(key) {
          var
             filter = this.getFilter() || {};
-         if (key) {
+         if (key !== undefined) {
             filter[this._options.hierField] = key;
-         }
-         else {
+         } else {
             if (this._options.root){
                filter[this._options.hierField] = this._options.root;
             } else {
