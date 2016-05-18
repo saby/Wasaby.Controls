@@ -50,6 +50,8 @@ define('js!SBIS3.CONTROLS.ComponentBinder', [], function () {
          }
 
          view.once('onDataLoad', function(){
+            //setParentProperty null ведет к пострению тяжелого индекса, который ни кому не нужен, потомучто поск не проекции работает
+            //включаем режим тишины чтоб не было тормозов
             this._itemsProjection.setEventRaising(false);
             view._itemsProjection.setParentProperty(null);
             //Сбрасываю именно через проекцию, т.к. view.setCurrentRoot приводит к отрисовке не пойми чего и пропадает крестик в строке поиска
