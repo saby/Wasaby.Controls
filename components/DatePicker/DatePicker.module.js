@@ -559,32 +559,35 @@ define(
              item,
              value,
              isValid = true;
-         for (var i = 0; i < this.formatModel.model.length; i++) {
-            item = this.formatModel.model[i];
-            if (!item.isGroup) {
-               continue;
-            }
-            value = '';
-            for (var j = 0; j < item.mask.length; j++) {
-               value += item.value[j];
-            }
+         //Если дата не заполена то проверять её на валидность не нужно
+         if (this.formatModel.isFilled()) {
+            for (var i = 0; i < this.formatModel.model.length; i++) {
+               item = this.formatModel.model[i];
+               if (!item.isGroup) {
+                  continue;
+               }
+               value = '';
+               for (var j = 0; j < item.mask.length; j++) {
+                  value += item.value[j];
+               }
 
-            value = Number(value);
+               value = Number(value);
 
-            switch (item.mask) {
-               case 'MM' :
-                  isValid &= value <= 12;
-                  break;
-               case 'DD' :
-                  isValid &= value <= 31;
-                  break;
-               case 'HH' :
-                  isValid &= value <= 24;
-                  break;
-               case 'II' :
-               case 'SS' :
-                  isValid &= value <= 60;
-                  break;
+               switch (item.mask) {
+                  case 'MM' :
+                     isValid &= value <= 12;
+                     break;
+                  case 'DD' :
+                     isValid &= value <= 31;
+                     break;
+                  case 'HH' :
+                     isValid &= value <= 24;
+                     break;
+                  case 'II' :
+                  case 'SS' :
+                     isValid &= value <= 60;
+                     break;
+               }
             }
          }
          return !!isValid;
