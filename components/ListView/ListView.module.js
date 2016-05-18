@@ -558,8 +558,7 @@ define('js!SBIS3.CONTROLS.ListView',
 
          $constructor: function () {
             this._touchSupport = $ws._const.browser.isMobilePlatform;
-            //TODO временно смотрим на TopParent, чтобы понять, где скролл. С внедрением ScrallWatcher этот функционал уберем
-            var topParent = this.getTopParent();
+
             this._publish('onChangeHoveredItem', 'onItemClick', 'onItemActivate', 'onDataMerge', 'onItemValueChanged', 'onBeginEdit', 'onAfterBeginEdit', 'onEndEdit', 'onBeginAdd', 'onAfterEndEdit', 'onPrepareFilterOnMove');
 
             if(this._touchSupport) {
@@ -1275,6 +1274,7 @@ define('js!SBIS3.CONTROLS.ListView',
                   itemsContainer: this._getItemsContainer(),
                   element: $('<div>'),
                   opener: this,
+                  endEditByFocusOut: this._options.editMode.indexOf('toolbar') === -1,
                   modeAutoAdd: this._options.editMode.indexOf('autoadd') !== -1,
                   handlers: {
                      onItemValueChanged: function(event, difference, model) {
