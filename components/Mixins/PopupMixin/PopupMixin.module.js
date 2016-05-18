@@ -800,7 +800,7 @@ define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManag
 
          _onResizeHandler: function(){
             this._checkFixed(this._options.target || $('body'));
-            if (this.isVisible() && !this._fixed) {
+            if (this.isVisible()/* && !this._fixed*/) {// для fixed-таргета тоже нужно пересчитывать позицию.
                this.recalcPosition(false);
             } else {
                this._initSizes();
