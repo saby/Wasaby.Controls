@@ -10,6 +10,7 @@ define('js!SBIS3.CONTROLS.DropdownList',
       'js!SBIS3.CONTROLS.DataBindMixin',
       'js!SBIS3.CONTROLS.DropdownListMixin',
       'js!SBIS3.CONTROLS.Button',
+      'js!SBIS3.CONTROLS.IconButton',
       'js!SBIS3.CONTROLS.Link',
       'js!SBIS3.CORE.MarkupTransformer',
       'js!SBIS3.CONTROLS.Utils.TemplateUtil',
@@ -20,7 +21,7 @@ define('js!SBIS3.CONTROLS.DropdownList',
       'i18n!SBIS3.CONTROLS.DropdownList'
    ],
 
-   function(Control, PickerMixin, DSMixin, MultiSelectable, DataBindMixin, DropdownListMixin, Button, Link, MarkupTransformer, TemplateUtil, dotTplFn, dotTplFnHead, dotTplFnForItem, dotTplFnPicker) {
+   function(Control, PickerMixin, DSMixin, MultiSelectable, DataBindMixin, DropdownListMixin, Button, IconButton, Link, MarkupTransformer, TemplateUtil, dotTplFn, dotTplFnHead, dotTplFnForItem, dotTplFnPicker) {
 
       'use strict';
       /**
