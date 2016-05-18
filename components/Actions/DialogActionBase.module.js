@@ -216,12 +216,10 @@ define('js!SBIS3.CONTROLS.DialogActionBase', ['js!SBIS3.CONTROLS.ActionBase', 'j
          if (!collectionRecord){
             return;
          }
-         if ($ws.helpers.instanceOfMixin(collection, 'SBIS3.CONTROLS.Data.Collection.IList')) {
-            collection.remove(collectionRecord);
+         if ($ws.helpers.instanceOfModule(collection.getDataSet && collection.getDataSet(), 'SBIS3.CONTROLS.Data.Collection.RecordSet')) {
+            collection = collection.getDataSet();
          }
-         else{
-            collection.getDataSource().destroy(collectionRecord.getId());
-         }
+         collection.remove(collectionRecord);
       },
 
       /**
