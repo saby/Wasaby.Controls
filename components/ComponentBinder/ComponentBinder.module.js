@@ -50,9 +50,12 @@ define('js!SBIS3.CONTROLS.ComponentBinder', [], function () {
          }
 
          view.once('onDataLoad', function(){
+            //setParentProperty и setRoot приводят к перерисовке а она должна происходить только при мерже
+            this._itemsProjection.setEventRaising(false);
             view._itemsProjection.setParentProperty(null);
             //Сбрасываю именно через проекцию, т.к. view.setCurrentRoot приводит к отрисовке не пойми чего и пропадает крестик в строке поиска
             view._itemsProjection.setRoot(null);
+            this._itemsProjection.setEventRaising(true);
          });
 
          view.reload(filter, view.getSorting(), 0).addCallback(function(){
