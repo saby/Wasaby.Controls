@@ -86,6 +86,12 @@ define('js!SBIS3.CONTROLS.SuggestTextBox', [
          }
       },
 
+      _setPickerConfig: function(){
+         var parentConfig = SuggestTextBox.superclass._setPickerConfig.call(this);
+         parentConfig.tabindex = 0;
+         return parentConfig;
+      },
+
       setListFilter: function(filter) {
          SuggestTextBox.superclass.setListFilter.call(this, filter, !this._changedByKeyboard);
       },
