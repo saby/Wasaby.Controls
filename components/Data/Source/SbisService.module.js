@@ -415,10 +415,8 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
                      type: 'array',
                      kind: this._getValueType(val[0])
                   };
-               } else {
-                  return 'object';
                }
-               break;
+               return 'object';
             default:
                return 'string';
          }
