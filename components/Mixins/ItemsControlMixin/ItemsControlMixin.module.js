@@ -526,6 +526,34 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          return this._options._itemsProjection.getItemBySourceItem(this._options._items.getRecordById(id));
       },
 
+      /**
+       * Метод получения проекции по hash итема
+       */
+      _getItemProjectionByHash: function(hash) {
+         return this._itemsProjection.getByHash(hash);
+      },
+
+      _processingData: function(list) {
+         var hasItems = !!this._items;
+
+         if (hasItems) {
+            this._dataSet.setMetaData(list.getMetaData());
+            this._items.assign(list);
+            if (this._items !== this._dataSet) {
+               this._dataSet.assign(list);
+            }
+         } else {
+            this._items = list;
+            this._dataSet = list;
+            this._createDefaultProjection(this._items);
+            this._setItemsEventHandlers();
+            this._notify('onItemsReady');
+            this._itemsReadyCallback();
+         }
+
+         this._dataLoadedCallback();
+      },
+
       /*переписанные методы для однопроходной отрисовки begin*/
       /*данные для отрисовки итемов через шаблон*/
 
