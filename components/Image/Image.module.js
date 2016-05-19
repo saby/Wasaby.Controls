@@ -305,10 +305,8 @@ define('js!SBIS3.CONTROLS.Image',
             _bindToolbarEvents: function(){
                this._boundEvents.onImageMouseEnter = this._onImageMouseEnter.bind(this);
                this._boundEvents.onImageMouseLeave = this._onImageMouseLeave.bind(this);
-               this._boundEvents.onImageBarMouseLeave = this._onImageBarMouseLeave.bind(this);
-               this._image.mouseenter(this._boundEvents.onImageMouseEnter);
-               this._image.mouseleave(this._boundEvents.onImageMouseLeave);
-               this._imageBar.mouseleave(this._boundEvents.onImageBarMouseLeave);
+               this._container.mouseenter(this._boundEvents.onImageMouseEnter);
+               this._container.mouseleave(this._boundEvents.onImageMouseLeave);
             },
             _onBeginLoad: function(event) {
                var
@@ -363,13 +361,8 @@ define('js!SBIS3.CONTROLS.Image',
                   this._imageBar.fadeIn(ANIMATION_DURATION);
                }
             },
-            _onImageMouseLeave: function(event) {
-               if (this._canDisplayImageBar() && event.relatedTarget !== this._imageBar[0] && !$.contains(this._imageBar[0], event.relatedTarget)) {
-                  this._imageBar.hide();
-               }
-            },
-            _onImageBarMouseLeave: function(event) {
-               if (this._canDisplayImageBar() && event.relatedTarget !== this._image[0]) {
+            _onImageMouseLeave: function() {
+               if (this._canDisplayImageBar()) {
                   this._imageBar.hide();
                }
             },
