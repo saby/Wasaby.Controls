@@ -1240,6 +1240,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
             targetElement = this._getElementByModel(item),
             newElement = this._createItemInstance(projItem);/*раньше здесь звался _drawItem, но он звал лишнюю группировку, а при перерисовке одного итема она не нужна*/
          this._addItemAttributes(newElement, projItem);
+         this._clearItems(targetElement);
          targetElement.after(newElement).remove();
          this.reviveComponents();
          this._notifyOnDrawItems();
