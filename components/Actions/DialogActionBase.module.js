@@ -290,7 +290,19 @@ define('js!SBIS3.CONTROLS.DialogActionBase', ['js!SBIS3.CONTROLS.ActionBase', 'j
             collection.add(rec, at);
          }
          else {
-            collection.getItems().add(rec, at);
+            if (collection.getItems()){
+               collection.getItems().add(rec, at);
+            }
+            else{
+               if (collection._isLoading()){
+                  collection.once('onItemsReady', function(){
+                     this.getItems().add(rec, at);
+                  });
+               }
+               else{
+                  collection.setItems([rec]);
+               }
+            }
          }
       },
 
@@ -333,7 +345,7 @@ define('js!SBIS3.CONTROLS.DialogActionBase', ['js!SBIS3.CONTROLS.ActionBase', 'j
          var collectionData = this._getCollectionData(),
             index;
 
-         if ($ws.helpers.instanceOfMixin(collectionData, 'SBIS3.CONTROLS.Data.Collection.IList') && $ws.helpers.instanceOfMixin(collectionData, 'SBIS3.CONTROLS.Data.Collection.IIndexedCollection')) {
+         if (collectionData && $ws.helpers.instanceOfMixin(collectionData, 'SBIS3.CONTROLS.Data.Collection.IList') && $ws.helpers.instanceOfMixin(collectionData, 'SBIS3.CONTROLS.Data.Collection.IIndexedCollection')) {
             index = collectionData.getIndexByValue(collectionData.getIdProperty(), this._linkedModelKey || model.getId());
             return collectionData.at(index);
          }
