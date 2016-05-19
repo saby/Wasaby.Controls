@@ -52,9 +52,9 @@ define('js!SBIS3.CONTROLS.Data.Projection.Tree', [
              */
             root: undefined,
             /**
-             * @cfg {Boolean} если true  проекция сортирует свои элементы сначала узлы потом листья
+             * @cfg {Boolean} если true то элементы отсортируются в таком порядке сначала узлы потом листья
              */
-            sortNodeFirst: false
+            isNodeOnTop: false
          },
 
          _itemModule: 'projection.tree-item',
@@ -262,7 +262,7 @@ define('js!SBIS3.CONTROLS.Data.Projection.Tree', [
 
       _buildSortMap: function () {
          var sortMap = TreeProjection.superclass._buildSortMap.call(this);
-         if (!this._options.sortNodeFirst) {
+         if (this._options.isNodeOnTop) {
             sortMap = sortMap.sort((function(a, b){
                var
                   isNode1 = this._items[a].isNode(),
@@ -439,7 +439,7 @@ define('js!SBIS3.CONTROLS.Data.Projection.Tree', [
                if (!hierIndex.hasOwnProperty(parentId)) {
                   hierIndex[parentId] = [];
                }
-               hierIndex[parentId].push(index);
+               hierIndex[parentId].push(currentMap[index]);
             }
 
             return buildHierarchy(options.root);

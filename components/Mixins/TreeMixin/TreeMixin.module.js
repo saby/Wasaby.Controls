@@ -116,7 +116,12 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
              * Разрешить проваливаться в папки
              * Если выключено, то папки можно открывать только в виде дерева, проваливаться в них нельзя
              */
-            allowEnterToFolder: true
+            allowEnterToFolder: true,
+
+            /**
+             * @cfg {Boolean} если true то папку будут отображаться сверху
+             */
+            isFolderOnTop: false
          },
          _foldersFooters: {},
          _breadCrumbs : [],
@@ -183,6 +188,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
             idProperty: this._options.keyField || (this._dataSource ? this._dataSource.getIdProperty() : ''),
             parentProperty: this._options.hierField,
             nodeProperty: this._options.hierField + '@',
+            isNodeOnTop: this._options.isFolderOnTop,
             root: root
          });
          this._itemsProjection.setFilter(this._projectionFilter.bind(this));
