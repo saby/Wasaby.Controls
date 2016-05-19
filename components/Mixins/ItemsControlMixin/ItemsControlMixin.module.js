@@ -563,7 +563,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
             /*TODO С этим отдельно разобраться*/
 
             targetElement.after(markup).remove();
-            itemContainer = this.getContainer().find('[data-hash="' + item.getHash() + '"]');
+            itemContainer = this._getDomElementByItem(item);
             this._ladderCompare([itemContainer.prev(), itemContainer, itemContainer.next()]);
             this._reviveItems();
             this._notifyOnDrawItems();
