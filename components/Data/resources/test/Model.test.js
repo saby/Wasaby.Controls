@@ -203,6 +203,68 @@ define([
                assert.strictEqual(model.get('internal'), 'testInternal');
                assert.isUndefined(model.getRawData().internal);
             });
+            context('if has properties dependency', function () {
+               var MyModel = Model.extend({
+                     $protected: {
+                        _options: {
+                           properties: {
+                              p1: {
+                                 get: function() {
+                                    return {
+                                       p2: this.get('p2'),
+                                       p3: this.get('p3')
+                                    };
+                                 }
+                              },
+                              p3: {
+                                 get: function() {
+                                    return {
+                                       p4: this.get('p4'),
+                                       p5: this.get('p5')
+                                    };
+                                 }
+                              }
+                           }
+                        }
+                     }
+                  }),
+                  getMyModel = function() {
+                     return new MyModel({
+                        rawData: {
+                           p2: 'v2',
+                           p4: 'v4',
+                           p5: 'v5'
+                        }
+                     });
+                  };
+
+               it('should reset the value on direct dependency', function () {
+                  var model = getMyModel(),
+                     v3old = model.get('p3');
+                  model.set('p4', 'v4new');
+                  var v3new = model.get('p3');
+                  assert.notEqual(v3old, v3new);
+                  assert.equal(v3old.p4, 'v4');
+                  assert.equal(v3new.p4, 'v4new');
+               });
+               it('should reset the value on indirect dependency', function () {
+                  var model = getMyModel(),
+                     v1old = model.get('p1');
+                  model.set('p5', 'v5new');
+                  var v1new = model.get('p1');
+                  assert.notEqual(v1old, v1new);
+                  assert.equal(v1old.p3.p5, 'v5');
+                  assert.equal(v1new.p3.p5, 'v5new');
+               });
+               it('should leave the independent value', function () {
+                  var model = getMyModel(),
+                     v3old = model.get('p3');
+                  model.set('p2', 'v2new');
+                  var v3new = model.get('p3');
+                  assert.strictEqual(v3old, v3new);
+               });
+            });
+
             context('if adapter doesn\'t support dynamic properties define', function () {
                var getData = function() {
                  return {

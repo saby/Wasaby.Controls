@@ -42,20 +42,12 @@ define('js!SBIS3.CONTROLS.Data.Types.Enum', [
          }
       },
 
-      //region Public methods
+      //region SBIS3.CONTROLS.Data.Types.IEnum
 
-      /**
-       * Возвращает текущее значение
-       * @returns {Number|Null}
-       */
       get: function () {
          return this._options.currentValue;
       },
 
-      /**
-       * Устанаваливает текущее значение
-       * @param {Number|Null} index Индекс значения в словаре
-       */
       set: function (index) {
          if (index === null || this._options.dictionary[index] !== undefined) {
             this._options.currentValue = index;
@@ -74,10 +66,10 @@ define('js!SBIS3.CONTROLS.Data.Types.Enum', [
          return this.get();
       },
 
-      /**
-       * Устанаваливает элемент текущим по значению
-       * @param value {String}
-       */
+      getAsValue: function() {
+         return this._getKeByIndex(this._options.currentValue);
+      },
+
       setByValue: function (value) {
          if (value === null) {
             this._options.currentValue = value;
@@ -108,17 +100,31 @@ define('js!SBIS3.CONTROLS.Data.Types.Enum', [
        * Сравнивает с дргуим экземпляром перечисляемого - должен полностью совпадать словарь и текущее значение
        * @param {SBIS3.CONTROLS.Data.Types.Enum} value
        * @returns {boolean}
+       * @deprecated Будет удалено с 3.7.4 Используйте {@link isEqual}
        */
       equals: function (value) {
-         if (!(value instanceof Enum)) {
+         Utils.logger.stack(this._moduleName + '::equals(): method is deprecated and will be removed in 3.7.4. Use isEqual() instead.');
+         return this.isEqual(value);
+      },
+
+      isEqual: function(to) {
+         if (!(to instanceof Enum)) {
             return false;
          }
 
-         if (!Dictionary.prototype.equals.call(this, value)) {
+         if (!Dictionary.prototype.isEqual.call(this, to)) {
             return false;
          }
 
-         return this.get() === value.get();
+         return this.get() === to.get();
+      },
+
+      //endregion SBIS3.CONTROLS.Data.Types.IEnum
+
+      //region Public methods
+
+      toString: function() {
+         return this.getAsValue();
       }
 
       //endregion Public methods

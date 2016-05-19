@@ -3,7 +3,8 @@ define('js!SBIS3.CONTROLS.Data.Types.IFlags', [], function () {
    'use strict';
 
    /**
-    * Интерфейс флагов
+    * Интерфейс типа флаги.
+    * Работает на основе словаря, хранящего соотвествие индексов и их значений.
     * @mixin SBIS3.CONTROLS.Data.Types.IFlags
     * @public
     * @author Ганшин Ярослав
@@ -11,61 +12,68 @@ define('js!SBIS3.CONTROLS.Data.Types.IFlags', [], function () {
 
    return /** @lends SBIS3.CONTROLS.Data.Types.IFlags.prototype */{
       /**
-       * Возвращает значение флага по названию
-       * @param name {String} Название флага
+       * Возвращает состояние флага с именем. Если имя недопустимо, кидает исключение.
+       * @param {String} name Название флага
        * @returns {Boolean|Null}
        */
       get: function (name) {
          throw new Error('Method must be implemented');
       },
+
       /**
-       * Устанавливает значение флага по названию
-       * @param name {String} Название флага
-       * @param value {Boolean|Null} Значение
+       * Устанавливает состояние флага с именем. Если имя недопустимо, кидает исключение.
+       * @param {String} name Название флага
+       * @param {Boolean|Null} value Значение флага
        */
       set: function (name, value) {
          throw new Error('Method must be implemented');
       },
+
       /**
-       * Сравнивает с флагами
-       * @param obj {IFlags} - Объект реализущий интерфейс IFlags
-       * returns {Boolean}
-       */
-      equals: function(obj) {
-         throw new Error('Method must be implemented');
-      },
-      /**
-       * Возвращает значение флага по индексу
-       * @param index {Number} Индекс флага
+       * Возвращает состояние флага по индексу. Если индекс недопустим, кидает исключение.
+       * @param {Number} index Индекс флага
        * returns {Boolean|Null}
        */
       getByIndex: function(index) {
          throw new Error('Method must be implemented');
       },
+
       /**
-       * Устанавливает значение флага по индексу
-       * @param index {Number} - индекс флага
-       * @param value {Boolean|Null} - значение флага
+       * Устанавливает состояние флага по индексу. Если индекс недопустим, кидает исключение.
+       * @param {Number} index Индекс флага
+       * @param {Boolean|Null} value Значение флага
        */
       setByIndex: function(index, value) {
          throw new Error('Method must be implemented');
       },
+
       /**
-       * Установить всем флагам false
+       * Устанавливает все флаги в состояние false
        */
       setFalseAll: function() {
          throw new Error('Method must be implemented');
       },
+
       /**
-       * Установить всем флагам true
+       * Устанавливает все флаги в состояние true
        */
       setTrueAll: function() {
          throw new Error('Method must be implemented');
       },
+
       /**
-       * Установить всем флагам null
+       * Устанавливает все флаги в состояние null
        */
       setNullAll: function() {
+         throw new Error('Method must be implemented');
+      },
+
+      /**
+       * Сопоставляет два Flags по совпадению состояния всех флагов. Также проверяется совпадение словарей.
+       * @param {IFlags} to Объект, реализующий интерфейс IFlags
+       * @returns {Boolean}
+       */
+      isEqual: function(to) {
          throw new Error('Method must be implemented');
       }
    };

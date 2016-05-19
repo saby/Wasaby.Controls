@@ -1,4 +1,4 @@
-define('js!SBIS3.CONTROLS.DialogActionBase', ['js!SBIS3.CONTROLS.ActionBase', 'js!SBIS3.CORE.Dialog', 'js!SBIS3.CORE.FloatArea', 'js!SBIS3.CONTROLS.Data.Record'], function(ActionBase, Dialog, FloatArea, Record){
+define('js!SBIS3.CONTROLS.DialogActionBase', ['js!SBIS3.CONTROLS.ActionBase', 'js!SBIS3.CORE.Dialog', 'js!SBIS3.CORE.FloatArea', 'js!SBIS3.CONTROLS.Data.Model'], function(ActionBase, Dialog, FloatArea, Model){
    'use strict';
 
    /**
@@ -182,7 +182,7 @@ define('js!SBIS3.CONTROLS.DialogActionBase', ['js!SBIS3.CONTROLS.ActionBase', 'j
             this._createRecord(model);
          }
          else{
-            this._mergeRecords(model, undefined);
+            this._mergeRecords(model);
          }
       },
 
@@ -216,12 +216,10 @@ define('js!SBIS3.CONTROLS.DialogActionBase', ['js!SBIS3.CONTROLS.ActionBase', 'j
          if (!collectionRecord){
             return;
          }
-         if ($ws.helpers.instanceOfMixin(collection, 'SBIS3.CONTROLS.Data.Collection.IList')) {
-            collection.remove(collectionRecord);
+         if ($ws.helpers.instanceOfModule(collection.getDataSet && collection.getDataSet(), 'SBIS3.CONTROLS.Data.Collection.RecordSet')) {
+            collection = collection.getDataSet();
          }
-         else{
-            collection.getDataSource().destroy(collectionRecord.getId());
-         }
+         collection.remove(collectionRecord);
       },
 
       /**
@@ -279,10 +277,12 @@ define('js!SBIS3.CONTROLS.DialogActionBase', ['js!SBIS3.CONTROLS.ActionBase', 'j
             rec;
          at = at || 0;
          if ($ws.helpers.instanceOfModule(collection.getDataSet(), 'SBIS3.CONTROLS.Data.Collection.RecordSet')) {
-            rec = new Record({
-               format: collection.getDataSet().getFormat()
+            //Создаем новую модель, т.к. Record не знает, что такое первичный ключ - это добавляется на модели.
+            rec = new Model({
+               format: collection.getDataSet().getFormat(),
+               idProperty: model.getIdProperty()
             });
-            this._mergeRecords(model, rec);
+            this._mergeRecords(model, rec, true);
          } else  {
             rec = model.clone();
          }
@@ -292,18 +292,23 @@ define('js!SBIS3.CONTROLS.DialogActionBase', ['js!SBIS3.CONTROLS.ActionBase', 'j
          else {
             collection.getItems().add(rec, at);
          }
-         this._collectionReload();
       },
 
       /**
        * Мержим поля из редактируемой записи в существующие поля записи из связного списка.
        */
-      _mergeRecords: function(model, colRec){
+      _mergeRecords: function(model, colRec, newModel){
          var collectionRecord = colRec || this._getCollectionRecord(model),
+             collectionData = this._getCollectionData(),
              recValue;
          if (!collectionRecord) {
             return;
          }
+
+         if (newModel){
+            collectionRecord.set(collectionData.getIdProperty(), model.getKey().toString());
+         }
+
          collectionRecord.each(function (key, value) {
             recValue = model.get(key);
             if (model.has(key) && recValue != value && key !== model.getIdProperty()) {
@@ -325,16 +330,22 @@ define('js!SBIS3.CONTROLS.DialogActionBase', ['js!SBIS3.CONTROLS.ActionBase', 'j
        * Получаем запись из связного списка по ключу редактируемой записи
        */
       _getCollectionRecord: function(model){
-         var collection = this._options.linkedObject,
+         var collectionData = this._getCollectionData(),
             index;
+
+         if ($ws.helpers.instanceOfMixin(collectionData, 'SBIS3.CONTROLS.Data.Collection.IList') && $ws.helpers.instanceOfMixin(collectionData, 'SBIS3.CONTROLS.Data.Collection.IIndexedCollection')) {
+            index = collectionData.getIndexByValue(collectionData.getIdProperty(), this._linkedModelKey || model.getId());
+            return collectionData.at(index);
+         }
+         return undefined;
+      },
+
+      _getCollectionData:function(){
+         var collection = this._options.linkedObject;
          if ($ws.helpers.instanceOfMixin(collection, 'SBIS3.CONTROLS.ItemsControlMixin')) {
             collection = collection.getItems();
          }
-         if ($ws.helpers.instanceOfMixin(collection, 'SBIS3.CONTROLS.Data.Collection.IList') && $ws.helpers.instanceOfMixin(collection, 'SBIS3.CONTROLS.Data.Collection.IIndexedCollection')) {
-            index = collection.getIndexByValue(model.getIdProperty(), this._linkedModelKey || model.getId());
-            return collection.at(index);
-         }
-         return undefined;
+         return collection;
       },
 
       _buildComponentConfig: function() {
