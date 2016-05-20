@@ -119,7 +119,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
             allowEnterToFolder: true,
 
             /**
-             * @cfg {Boolean} если true то папку будут отображаться сверху
+             * @cfg {Boolean} если true то папки будут отображаться сверху
              */
             isFolderOnTop: false
          },
