@@ -398,8 +398,8 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
             this._showLoadingIndicator(rk('Загрузка'));
          }
          return this._options.dataSource.read(key).addCallback(function (record) {
-            self._notify('onReadModel', record);
             self.setRecord(record);
+            self._notify('onReadModel', record);
             self._newRecord = false;
             return record;
          }).addErrback(function (error) {
