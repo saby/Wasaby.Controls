@@ -640,6 +640,7 @@ define(
             //упрощенная модель для вставки в xhtml-шаблон
             modelForMaskTpl: []
          },
+         _pasteProcessing: 0,
 
          /**
           * Модель форматного поля
@@ -697,16 +698,18 @@ define(
                event.preventDefault();//предотвращаем вырезание Ctrl+X
             }
          });
-         this._inputField.bind('paste', function() {
+         this._inputField.bind('paste', function(e) {
+            var
+                prevText,
+                pasteValue = $ws.helpers.escapeUnicode(e.originalEvent.clipboardData ? e.originalEvent.clipboardData.getData('text') : window.clipboardData.getData('text'));
             //TODO возможно стоит сделать проверку до вставки, чтобы не портить данные и вставлять уже по факту после проверки
             self._pasteProcessing++;
             //TODO перенести в TextBoxBase и вместо этого вызвать метод для вставки
             window.setTimeout(function() {
                self._pasteProcessing--;
                if (!self._pasteProcessing) {
-                  inputValue = self._inputField.text();
-                  var prevText = self.formatModel.getText(self._maskReplacer);
-                  if ( !self.formatModel.setText(inputValue, self._maskReplacer)) {
+                  prevText = self.formatModel.getText(self._maskReplacer);
+                  if ( !self.formatModel.setText(pasteValue, self._maskReplacer)) {
                      //Устанавливаемое значение не удовлетворяет маске данного контролла - вернуть предыдущее значение
                      self.setText(prevText);
                   } else {
