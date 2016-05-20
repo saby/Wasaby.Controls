@@ -995,6 +995,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
                       self._toggleIndicator(false);
                       if (self._notify('onDataLoadError', error) !== true) {
                          $ws.helpers.message(error.message.toString().replace('Error: ', ''));
+                         error.processed = true;
                       }
                    }
                    return error;
