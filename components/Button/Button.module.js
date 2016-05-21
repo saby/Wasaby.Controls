@@ -196,8 +196,12 @@ define('js!SBIS3.CONTROLS.Button', ['js!SBIS3.CONTROLS.ButtonBase', 'html!SBIS3.
              isDefault = true;
 
 
-          if (isDefault) this._registerDefaultButton();
-          else this._unregisterDefaultButton();
+          if (isDefault) {
+             this._registerDefaultButton();
+          }
+          else {
+             this._unregisterDefaultButton();
+          }
 
           this.setPrimary(isDefault);
       }
