@@ -716,7 +716,11 @@ define('js!SBIS3.CONTROLS.ListView',
           */
          getNextItemById: function (id) {
             return this._getHtmlItemByProjectionItem(
-               this._getProjectionItem(id, true)
+               this._itemsProjection.getNext(
+                  this._itemsProjection.getItemBySourceItem(
+                     this.getItems().getRecordById(id)
+                  )
+               )
             );
          },
          /**
@@ -726,7 +730,11 @@ define('js!SBIS3.CONTROLS.ListView',
           */
          getPrevItemById: function (id) {
             return this._getHtmlItemByProjectionItem(
-               this._getProjectionItem(id, false)
+               this._itemsProjection.getPrevious(
+                  this._itemsProjection.getItemBySourceItem(
+                     this.getItems().getRecordById(id)
+                  )
+               )
             );
          },
 
@@ -736,14 +744,6 @@ define('js!SBIS3.CONTROLS.ListView',
 
          _getPrevItemByDOM: function(id) {
             return this._getHtmlItemByDOM(id, false);
-         },
-
-         _getProjectionItem: function(id, isNext) {
-            var enumerator = this._itemsProjection.getEnumerator(),
-               index = enumerator.getIndexByValue(this._options.keyField, id),
-               item = enumerator.at(index);
-
-            return this._itemsProjection[isNext ? 'getNext' : 'getPrevious'](item);
          },
 
          _getHtmlItemByProjectionItem: function (item) {
@@ -816,8 +816,10 @@ define('js!SBIS3.CONTROLS.ListView',
 
             target = this._findItemByElement($target);
 
-            if (target.length && !this._touchSupport) {
-               this._changeHoveredItem(target);
+            if (target.length) {
+               if(!this._touchSupport) {
+                  this._changeHoveredItem(target);
+               }
             } else if (!this._isHoverControl($target)) {
                this._mouseLeaveHandler();
             }
@@ -1217,7 +1219,7 @@ define('js!SBIS3.CONTROLS.ListView',
             var records = ListView.superclass._getRecordsForRedraw.call(this);
             if (this._options.infiniteScroll === 'up' && !this._isSearchMode()) {
                return records.reverse();
-            } 
+            }
             return records;
          },
          /**
@@ -1654,7 +1656,7 @@ define('js!SBIS3.CONTROLS.ListView',
                   } else {
                      // Если пришла пустая страница, но есть еще данные - догрузим их
                      if (self._hasNextPage(dataSet.getMetaData().more, self._infiniteScrollOffset)){
-                        self._preScrollLoading();
+                        self._nextLoad();
                      }
                   }
 

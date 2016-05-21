@@ -178,9 +178,6 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                return this._eip.getTarget();
             },
             showEip: function(target, model, options) {
-               //TODO: EIP Авраменко, Сухоручкин: сейчас сделано через pendingOperation, в будущем переделать на команды блокировки родительких компонентов
-               this._editingDeferred = new $ws.proto.Deferred();
-               this._sendLockCommand(this._editingDeferred);
                if (options && options.isEdit) {
                   return this.edit(target, model, options)
                } else {
@@ -320,7 +317,6 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                eip.endEdit();
                isAdd && target.remove();
                this._notify('onAfterEndEdit', eipRecord, target, withSaving);
-               this._editingDeferred.callback();
                if (!this._savingDeferred.isReady()) {
                   this._savingDeferred.callback();
                }

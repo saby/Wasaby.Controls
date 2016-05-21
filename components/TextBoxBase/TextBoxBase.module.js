@@ -57,6 +57,10 @@ define('js!SBIS3.CONTROLS.TextBoxBase',
             $ws._const.key.m,
             $ws._const.key.o
          ],
+         /* Флаг, по которому смотрим, надо ли запускать валидацию по уходу фокуса,
+            выставляется он методе setText. Если опция забиндена на контекст, то компонент должен создаваться уже проставленой опцией,
+            поэтому в методе setText опция должна меняться. */
+         _textChanged: false,
          _options: {
             /**
              * @cfg {String} Устанавливает текстовое значение в поле ввода.
@@ -153,9 +157,7 @@ define('js!SBIS3.CONTROLS.TextBoxBase',
          this._container.removeClass('ws-area');
          this._options.text = (this._options.text) ? this._options.text.toString() : '';
 
-         this.subscribe('onFocusOut', function(){
-            this.validate();
-         });
+         this.subscribe('onFocusOut', this._focusOutHandler.bind(this));
       },
 
       /**
@@ -171,8 +173,13 @@ define('js!SBIS3.CONTROLS.TextBoxBase',
        * @see getText
        */
       setText: function(text){
-         var newText = (this._isEmptyValue) ? text : this._formatText(text.toString());
+         var newTextIsEmpty = this._isEmptyValue(text),
+             newText = newTextIsEmpty ? text : this._formatText(text.toString());
+
          if (newText !== this._options.text) {
+            if(!this._textChanged && !(newTextIsEmpty && this._isEmptyValue(this._options.text))) {
+               this._textChanged = true;
+            }
             this._options.text = newText;
             this._drawText(newText);
             //снимаем выделение валидатора на время ввода
@@ -184,7 +191,7 @@ define('js!SBIS3.CONTROLS.TextBoxBase',
 
       //Проверка на пустое значение, их нужно хранить в неизменном виде, но отображать как пустую строку
       _isEmptyValue: function(text){
-         return text === null || text !== text || typeof text === "undefined";
+         return text === null || text === "" || typeof text === "undefined";
       },
 
       /**
@@ -225,6 +232,12 @@ define('js!SBIS3.CONTROLS.TextBoxBase',
 
       _drawText: function() {
 
+      },
+
+      _focusOutHandler: function() {
+         if(this._textChanged) {
+            this.validate();
+         }
       },
 
       _keyboardHover: function(event){
