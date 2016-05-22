@@ -21,9 +21,9 @@ define('js!SBIS3.CONTROLS.SearchMixin', [], function() {
        * @param {$ws.proto.EventObject} eventObject Дескриптор события.
        */
       $protected: {
-         _curText: '',
          //Чтобы событие onReset не отправлялось непрерывно
          _onResetIsFired: true,
+         _searchDelay: null,
          _options: {
             /**
              * @cfg {Number|null} количество символов, которые нужно ввести, чтоб начать поиск.
@@ -49,18 +49,23 @@ define('js!SBIS3.CONTROLS.SearchMixin', [], function() {
       },
 
       _startSearch: function(text) {
-         var self = this;
-         this._curText = text;
-         window.setTimeout(function(){
-            if (text == self._curText) {
-               self._applySearch(text, false);
-            }
-         }, this._options.searchDelay);
+         this._searchDelay = setTimeout($ws.helpers.forAliveOnly(function () {
+            this._applySearch(text);
+         }, this), this._options.searchDelay);
+      },
+
+      _clearSearchDelay: function () {
+        if(this._searchDelay) {
+           clearTimeout(this._searchDelay);
+           this._searchDelay = null;
+        }
       },
 
       _applySearch : function(text, force) {
          var hasStartCharacter = this._options.startCharacter !== null;
 
+         /* Если поиск запущен, то надо отменить поиск с задержкой */
+         this._clearSearchDelay();
          if (text) {
             text = text.replace(/[<>]/g, '');
             if ( (hasStartCharacter && String.trim(text).length >= this._options.startCharacter) || force ) {
