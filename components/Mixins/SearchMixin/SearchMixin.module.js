@@ -45,6 +45,9 @@ define('js!SBIS3.CONTROLS.SearchMixin', [], function() {
       after : {
          _setTextByKeyboard : function(text) {
             this._startSearch(text);
+         },
+         destroy : function() {
+            this._clearSearchDelay();
          }
       },
 
