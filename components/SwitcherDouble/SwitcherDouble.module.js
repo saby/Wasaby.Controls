@@ -42,19 +42,6 @@ define('js!SBIS3.CONTROLS.SwitcherDouble', ['js!SBIS3.CORE.Control', 'html!SBIS3
       $protected: {
          _textContainer: {},
          _options: {
-            /**
-             * @cfg {String} Начальное состояние переключателя
-             * Опция задаёт состояние переключателя, с которым построится контрол.
-             * @example
-             * <pre>
-             *     <option name="state">on</option>
-             * </pre>
-             * @variant on Включен.
-             * @variant off Выключен.
-             * @see setState
-             * @see setStateOff
-             * @see setStateOn
-             */
             state: 'off',
             /**
              * @cfg {String} Текст при включенном состоянии
@@ -83,6 +70,24 @@ define('js!SBIS3.CONTROLS.SwitcherDouble', ['js!SBIS3.CORE.Control', 'html!SBIS3
              */
             stateOff: '',
             disposition: 'horizontal'
+         }
+      },
+
+      _modifyOptions : function() {
+         var opts = SwitcherDouble.superclass._modifyOptions.apply(this, arguments);
+         /*пока кто-то затачивается на state будем поддерживать и checked и state вместе*/
+         this._syncOptions(opts);
+         return opts;
+      },
+
+      _syncOptions: function(opts) {
+         /*Если checked true это значит его осознанно поставили + считаем checked главнее*/
+         if (opts.checked) {
+            opts.state = 'on';
+         }
+         /*а эта ситуация, если выставляют включенность через state*/
+         else if (opts.state == 'on') {
+            opts.checked = true;
          }
       },
 
@@ -146,12 +151,12 @@ define('js!SBIS3.CONTROLS.SwitcherDouble', ['js!SBIS3.CORE.Control', 'html!SBIS3
       },
 
       setStateOff: function(text){
-         SwitcherDouble.superclass.setStateOff.call(this,text);
+         this._options.stateOff = text;
          this._textContainer['off'].html(text);
       },
 
       setStateOn: function(text){
-         SwitcherDouble.superclass.setStateOn.call(this,text);
+         this._options.stateOn = text;
          this._textContainer['on'].html(text);
       }
    });
