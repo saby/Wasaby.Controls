@@ -544,8 +544,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          var
             markup,
             targetElement = this._getDomElementByItem(item),
-            rows = [],
-            prevTargetElement = targetElement.prev(),
+            itemContainer,
             data;
          if (targetElement.length) {
             data = this._prepareItemData();
@@ -559,14 +558,13 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
                dot = data.defaultItemTpl;
             }
             markup = dot(data);
-            rows.push(prevTargetElement, targetElement.next());
             /*TODO посмотреть не вызывает ли это тормоза*/
             this._clearItems(targetElement);
             /*TODO С этим отдельно разобраться*/
 
             targetElement.after(markup).remove();
-            rows.splice(1, 0, prevTargetElement.next()); //Добавляем только что отрисованную строку
-            this._ladderCompare(rows);
+            itemContainer = this._getDomElementByItem(item);
+            this._ladderCompare([itemContainer.prev(), itemContainer, itemContainer.next()]);
             this._reviveItems();
             this._notifyOnDrawItems();
          }
