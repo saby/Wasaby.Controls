@@ -63,6 +63,11 @@ define('js!SBIS3.CONTROLS.SelectorMixin', [],
             }
 
             this._changeSelectionHandler = function (event, result) {
+               var linkedView = self.getLinkedView();
+
+               if(linkedView.getSelectedKeys().length) {
+                  return;
+               }
                self.close([result.item]);
             };
 
