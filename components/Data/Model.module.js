@@ -132,14 +132,24 @@ define('js!SBIS3.CONTROLS.Data.Model', [
       _isDeleted: false,
 
       /**
-       * @member {Object.<String, *>} Объект содержащий вычисленные значения свойств по умолчанию
+       * @member {Object.<String, *>} Объект, содержащий вычисленные значения свойств по умолчанию
        */
-      _defaultPropertiesValues: null,
+      _defaultPropertiesValues: {},
 
       /**
-       * @member {Object.<String, Boolean>} Объект содержащий названия свойств, для которых сейчас выполняется вычисление значения
+       * @member {Object.<String, Array.<Sting>>} Зависимости свойств: название свойства -> массив названий свойств, которые от него зависят
        */
-      _nowCalculatingProperties: null,
+      _propertiesDependency: {},
+
+      /**
+       * @member {String} Имя свойства, для которого сейчас осуществляется сбор зависимостей
+       */
+      _propertiesDependencyGathering: '',
+
+      /**
+       * @member {Object.<String, Boolean>} Объект, содержащий названия свойств, для которых сейчас выполняется вычисление значения
+       */
+      _nowCalculatingProperties: {},
 
       /**
        * @member {Object} Флаг показывающий была ли модель синхронизирована
@@ -176,6 +186,13 @@ define('js!SBIS3.CONTROLS.Data.Model', [
             return this._getFromPropertiesCache(name);
          }
 
+         if (this._propertiesDependencyGathering) {
+            if (!this._propertiesDependency.hasOwnProperty(name)) {
+               this._propertiesDependency[name] = [];
+            }
+            this._propertiesDependency[name].push(this._propertiesDependencyGathering);
+         }
+
          var value = Model.superclass.get.call(this, name),
             property = this._$properties[name];
          if (property) {
@@ -196,6 +213,8 @@ define('js!SBIS3.CONTROLS.Data.Model', [
       },
 
       set: function (name, value) {
+         this._deleteDependencyCache(name);
+
          var property = this._$properties[name];
          if (property && property.set) {
             value = this._processCalculatedValue(name, value, property, false);
@@ -205,6 +224,16 @@ define('js!SBIS3.CONTROLS.Data.Model', [
          }
 
          Model.superclass.set.call(this, name, value);
+      },
+
+      _deleteDependencyCache: function (name) {
+         if (this._propertiesDependency.hasOwnProperty(name)) {
+            var dependency = this._propertiesDependency[name];
+            for (var i = 0; i < dependency.length; i++) {
+               delete this._propertiesCache[dependency[i]];
+               this._deleteDependencyCache(dependency[i]);
+            }
+         }
       },
 
       has: function (name) {
@@ -465,11 +494,16 @@ define('js!SBIS3.CONTROLS.Data.Model', [
        */
       _processCalculatedValue: function (name, value, property, isReading) {
          //TODO: отследить зависимости от других свойств (например, отлеживая вызов get() внутри _processCalculatedValue), и сбрасывать кэш для зависимых полей при set()
-         var checkKey = name + '|' + isReading;
+         var checkKey = name + '|' + isReading,
+            prevGathering;
          if (this._nowCalculatingProperties.hasOwnProperty(checkKey)) {
             throw new Error('Recursive value ' +  (isReading ? 'reading' : 'writing') + ' detected for property ' + name);
          }
 
+         if (isReading) {
+            prevGathering = this._propertiesDependencyGathering;
+            this._propertiesDependencyGathering = name;
+         }
          this._nowCalculatingProperties[checkKey] = true;
          try {
             value = isReading ?
@@ -477,6 +511,9 @@ define('js!SBIS3.CONTROLS.Data.Model', [
                property.set.call(this, value);
          } finally {
             delete this._nowCalculatingProperties[checkKey];
+         }
+         if (isReading) {
+            this._propertiesDependencyGathering = prevGathering;
          }
 
          return value;

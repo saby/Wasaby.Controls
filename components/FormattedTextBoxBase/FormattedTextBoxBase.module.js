@@ -82,7 +82,11 @@ define(
             rng.select();
          } else {
             var selection = window.getSelection();
-            selection.collapse(container, position);
+            //Оборачиваем вызов selection.collapse в try из за нативной баги FireFox(https://bugzilla.mozilla.org/show_bug.cgi?id=773137)
+            try {
+               selection.collapse(container, position);
+            } catch (e) {
+            }
          }
       },
       /**
@@ -711,10 +715,6 @@ define(
                   }
                }
             }, 100);
-         });
-
-         this.subscribe('onFocusOut', function(){
-            this.validate();
          });
       },
 

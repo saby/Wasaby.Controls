@@ -40,7 +40,6 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
        * @param {$ws.proto.EventObject} eventObject Дескриптор события.
        * @param {SBIS3.CONTROLS.Data.Record} record Сохраняемая запись.
        * @param {String} key Первичный ключ сохраняемой записи.
-       * @param {Boolean} isNewModel признак редактируемой на диалоге записи (см. {@link newModel}).
        * @see submit
        * @see update
        * @see onCreateModel
@@ -75,8 +74,9 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
          _saving: false,
          _loadingIndicator: undefined,
          _panel: undefined,
-         _needDestroyRecord: false,
+         _newRecord: false, //true - если запись создана, но еще не сохранена
          _activateChildControlDeferred: undefined,
+         _previousDocumentTitle: undefined,
          _options: {
             /**
              * @cfg {DataSource} Устанавливает источник данных для диалога редактирования записи.
@@ -148,19 +148,7 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
              * </pre>
              */
             initValues: null,
-            /**
-             * @cfg {Boolean} Устанавливает признак редактируемой на диалоге записи.
-             * @remark
-             * Возможные значения:
-             * <ol>
-             *    <li>true - запись не существует в источнике данных.</li>
-             *    <li>false - запись существует в источнике данных.</li>
-             * </ol>
-             * Чтобы проверить признак записи, используют метод {@link isNewModel}.
-             * @see isNewModel
-             */
-            newModel: false,
-            /**
+             /**
              * @cfg {String} Устанавливает текст, отображаемый рядом с индикатором при сохранении записи.
              * @remark
              * Опция актуальна для события {@link onUpdateModel}.
@@ -182,6 +170,7 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
          $ws.single.CommandDispatcher.declareCommand(this, 'create', this._create);
          $ws.single.CommandDispatcher.declareCommand(this, 'notify', this._actionNotify);
          $ws.single.CommandDispatcher.declareCommand(this, 'activateChildControl', this._createChildControlActivatedDeferred);
+         this._updateDocumentTitle();
          this._setDefaultContextRecord();
          this._panel = this.getTopParent();
          if (this._options.dataSource){
@@ -194,12 +183,18 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
          //Выписал задачу, чтобы при событии onBeforeClose стрелял метод у floatArea, который мы бы переопределили здесь,
          //чтобы не дергать getTopParent
          this._panel.subscribe('onBeforeClose', function(event, result){
+            var record = this._options.record;
             //Если попали сюда из метода _saveRecord, то this._saving = true и мы просто закрываем панель
-            if (this._saving || !(this._options.record && this._options.record.isChanged() || this.isNewModel())){
-               if (this._needDestroyRecord && this._options.record && (!this._saving && !this._options.record.isChanged() || result === false)){
+            if (this._saving || !(record && record.isChanged())){
+               //Дестроим запись, когда выполнены три условия
+               //1. если это было создание
+               //2. если есть ключ (метод создать его вернул)
+               //3. ничего не поменяли в рекорде, но закрывают либо поменяли, но нажали нет
+               if (this._newRecord && record.getKey() && (!this._saving && !record.isChanged() || result === false)){
                   this._destroyModel();
                }
                this._saving = false;
+               this._resetTitle();
                return;
             }
             event.setResult(false);
@@ -212,6 +207,23 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
          var ctx = new $ws.proto.Context({restriction: 'set'}).setPrevious(this.getLinkedContext());
          ctx.setValue('record', this._options.record || new Record());
          this._context = ctx;
+      },
+
+      _updateDocumentTitle: function () {
+         var record = this._options.record,
+             newTitle = record && record.get('title');
+         if (newTitle) {
+            if (!this._previousDocumentTitle){
+               this._previousDocumentTitle = document.title;
+            }
+            document.title = newTitle;
+         }
+      },
+
+      _resetTitle: function(){
+         if (this._previousDocumentTitle){
+            document.title = this._previousDocumentTitle;
+         }
       },
 
       /**
@@ -284,8 +296,8 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
          this._saving = true;
 
          //Если пришли из update
-         if (hideQuestion){
-            return this._updateRecord(dResult, closePanelAfterSubmit);
+         if (config.hideQuestion){
+            return this._updateRecord(dResult, config);
          }
          else{
             $ws.helpers.question(rk('Сохранить изменения?'), questionConfig, this).addCallback(function(result){
@@ -317,10 +329,9 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
                this._showLoadingIndicator();
             }
             dResult.dependOn(def.addCallbacks(function (result) {
-               isNewModel = self._options.newModel;
-               self._options.newModel = false;
-               self._notify('onUpdateModel', self._options.record, isNewModel);
-               if (closePanelAfterSubmit) {
+               self._notify('onUpdateModel', self._options.record, self._newRecord);
+               self._newRecord = false;
+               if (config.closePanelAfterSubmit) {
                   self._panel.ok();
                }
                else {
@@ -387,8 +398,9 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
             this._showLoadingIndicator(rk('Загрузка'));
          }
          return this._options.dataSource.read(key).addCallback(function (record) {
-            self._notify('onReadModel', record);
             self.setRecord(record);
+            self._notify('onReadModel', record);
+            self._newRecord = false;
             return record;
          }).addErrback(function (error) {
                if (!config.hideErrorDialog){
@@ -436,18 +448,6 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
          if(!this.isDestroyed() && this._loadingIndicator) {
             this._loadingIndicator.hide();
          }
-      },
-      /**
-       * Вовзращает признак, по которому устанавливает тип записи: редактируется новая или существующая в источнике данных запись.
-       * @returns {Boolean} Возможные значения:
-       * <ol>
-       *    <li>true - на диалоге редактирования открыта запись, которой ещё нет в источнике данных.</li>
-       *    <li>false - на диалоге редактирования открыта запись, которая уже существует в источнике данных.</li>
-       * </ol>
-       * @see newModel
-       */
-      isNewModel: function(){
-         return this._options.newModel;
       },
       _updateIndicatorZIndex: function(){
          var indicatorWindow = this._loadingIndicator && this._loadingIndicator.getWindow();
@@ -528,7 +528,7 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
             newKey = record.getKey();
             this._options.key = newKey;
          }
-         this._needDestroyRecord = false;
+         this._updateDocumentTitle();
          this._setContextRecord(record);
       },
       /**
@@ -592,10 +592,7 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
          def = this._options.dataSource.create(this._options.initValues).addCallback(function(record){
             self._notify('onCreateModel', record);
             self.setRecord(record, true);
-            self._options.newModel = record.getKey() === null || self._options.newModel;
-            if (record.getKey()){
-               self._needDestroyRecord = true;
-            }
+            self._newRecord = true;
             return record;
          });
          def.addBoth(function(r){

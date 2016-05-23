@@ -1,7 +1,7 @@
 /**
  * Created by am.gerasimov on 26.10.2015.
  */
-define('js!SBIS3.CONTROLS.ActiveMultiSelectable', [], function() {
+define('js!SBIS3.CONTROLS.ActiveMultiSelectable', ['js!SBIS3.CONTROLS.Data.Model'], function(Model) {
 
    /**
     * Миксин, добавляющий поведение хранения одного или нескольких выбранных элементов
@@ -87,10 +87,16 @@ define('js!SBIS3.CONTROLS.ActiveMultiSelectable', [], function() {
 
 
       _prepareItems: function(items) {
-         var preparedItems;
+         var preparedItems, selectedItems;
 
          if(items instanceof Array) {
-            preparedItems = this._makeList(items);
+            selectedItems = this.getSelectedItems();
+
+            if($ws.helpers.instanceOfModule(selectedItems, 'SBIS3.CONTROLS.Data.Collection.RecordSet')) {
+               preparedItems = this._makeList(this._convertRecordsFormat(items, selectedItems));
+            } else {
+               preparedItems = this._makeList(items);
+            }
          } else if (items === null) {
             preparedItems = this._makeList();
          } else if(!$ws.helpers.instanceOfModule(items, 'SBIS3.CONTROLS.Data.Collection.List')) {
@@ -100,6 +106,55 @@ define('js!SBIS3.CONTROLS.ActiveMultiSelectable', [], function() {
          }
 
          return preparedItems;
+      },
+
+      //TODO Лёхе Мальцеву выписана задача, чтобы он реализовал это на уровне данных, этого здесь быть не должно
+      /**
+       * Из переданных записей создаёт новые по формату переданного рекордсета
+       */
+      _convertRecordsFormat: function(items, recordSet) {
+         var newRecords = [];
+
+         for(var i = 0, len = items.length; i < len; i++) {
+            newRecords.push(this._createModelByRecordSetFormat(items[i], recordSet));
+         }
+
+         return newRecords;
+      },
+
+      /**
+       * Создаёт модель по формату рекордсета
+       * Заполняет данными по переданной модели
+       * Если формат совпадает, то вернёт исходную модель
+       */
+      _createModelByRecordSetFormat: function(model, recordset) {
+         var format = recordset.getFormat(),
+             createdModel;
+
+         if(format.isEqual(model.getFormat())) {
+            return model;
+         }
+
+         /* Создаём модель с форматом рекордсета */
+         createdModel = new Model({
+            adapter: recordset.getAdapter(),
+            format: recordset.getFormat()
+         });
+
+         /* Заполняем данными */
+         format.each(function(item) {
+            var field = item.getName(),
+                value = model.get(field);
+
+            if(value) {
+               createdModel.set(field, value);
+            }
+         });
+
+         if(this._options.keyField) {
+            createdModel.set(recordset.getIdProperty(), model.get(this._options.keyField));
+         }
+         return createdModel
       },
 
       /**
@@ -144,7 +199,7 @@ define('js!SBIS3.CONTROLS.ActiveMultiSelectable', [], function() {
 
          if(newItems.length) {
             if(selItems) {
-               selItems.concat(newItems);
+               selItems.append(newItems);
             } else {
                this._options.selectedItems = this._makeList(newItems);
             }

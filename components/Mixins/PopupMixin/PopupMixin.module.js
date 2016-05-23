@@ -40,6 +40,8 @@ define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManag
          _defaultVerticalAlignSide: '',
          _margins: null,
          _marginsInited: false,
+         _originsInited: false, // Обозначает, что были инициализированы размеры. _onResizeHandler срабатывает до show, и при этом еще нельзя получить правильные размеры -
+                                // и соответсвенно провести правильные рассчеты, поэтому пропустим первое его срабатывание.
          _zIndex: null,
          _currentAlignment: {},
          _options: {
@@ -189,7 +191,7 @@ define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManag
       _checkFixed: function(element){
          element = $(element);
          while (element.parent().length){
-            if (element.css('position') == 'fixed' && !element.hasClass('interface-no-scroll')){
+            if (element.css('position') == 'fixed'){
                $(this._container).css({position : 'fixed'});
                this._fixed = true;
                return;
@@ -214,6 +216,9 @@ define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManag
             };
             // Пересчитать оригинальные размеры, флаг true если размеры контейнера поменялись
             if (recalcFlag) {
+               this._originsInited = true;
+               this._container.css('height', '');
+               this._container.css('width', '');
                var scrollWidth = this._container.get(0).scrollWidth,
                   scrollHeight = this._container.get(0).scrollHeight,
                   maxWidth = parseFloat(this._container.css('max-width'), 10) || scrollWidth,
@@ -226,6 +231,9 @@ define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManag
                this._containerSizes.originHeight = scrollHeight > maxHeight ? maxHeight : scrollHeight + border;
             }
             this._initSizes();
+            if (!this._originsInited){
+               return;
+            }
             if (this._fixed === undefined){
                this._checkFixed(this._options.target);
             }
@@ -601,8 +609,8 @@ define('js!SBIS3.CONTROLS.PopupMixin', ['js!SBIS3.CONTROLS.ControlHierarchyManag
 
       _getOffsetByWindowSize: function (offset) {
          var buf = this._targetSizes.offset,
-            scrollY = $(window).scrollTop(),
-            scrollX = $(window).scrollLeft();
+            scrollY = this._fixed ? 0 : $(window).scrollTop(),
+            scrollX = this._fixed ? 0 : $(window).scrollLeft();
          //Проверяем убираемся ли в экран снизу. Если позиционируем нижней стороной, не нужно менять положение если не влезаем снизу
          if (this._containerSizes.requiredOffset.top > this._windowSizes.height + scrollY && !this._isMovedV && this._options.verticalAlign.side !== 'bottom') {
             this._isMovedV = true;

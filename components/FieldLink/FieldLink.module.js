@@ -691,7 +691,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
                    Ширина добавляемого элемента + минимальная ширина поля ввода (для мултивыбора) не должны быть больше ширины контейнера контрола */
                 needDrawItem = (newItemWidth + inputMinWidth) < (inputWidth + INPUT_WRAPPER_PADDING);
 
-                if(!needDrawItem) {
+                if(!needDrawItem && inputWidth) {
                    /* Если в поле связи не отрисовано ни одного элемента, то уменьшаем ширину добавляемого,
                       т.к. хотя бы один элемент должен быть отрисован (стандарт) */
                    if(!linkCollection.getContainer().find('.controls-FieldLink__linkItem').length) {

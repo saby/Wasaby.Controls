@@ -101,7 +101,7 @@ define('js!SBIS3.CONTROLS.MenuButtonMixin', ['js!SBIS3.CONTROLS.ContextMenu'], f
          header.bind('click', function(){
             self._onHeaderClick();
          });
-         this._checkItemsIcons(this._picker.getItems().toArray());
+         this._picker.getItems() && this._checkItemsIcons(this._picker.getItems().toArray());
          this._picker.getContainer().prepend(header);
       },
 

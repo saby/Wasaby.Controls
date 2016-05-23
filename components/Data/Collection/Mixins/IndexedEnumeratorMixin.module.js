@@ -111,7 +111,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.IndexedEnumeratorMixin', [
        */
       _getIndexForPropertyValue: function (property, value) {
          var index = this._getIndex(property);
-         return index[value] || [];
+         return (index && index[value]) || [];
       },
 
       /**
@@ -134,7 +134,7 @@ define('js!SBIS3.CONTROLS.Data.Collection.IndexedEnumeratorMixin', [
        * @protected
        */
       _getIndex: function (property) {
-         if (!this._hasIndex(property)) {
+         if (property && !this._hasIndex(property)) {
             this._createIndex(property);
          }
          return this._enumeratorIndexes[property];

@@ -492,6 +492,40 @@ define('js!SBIS3.CONTROLS.MultiSelectable', ['js!SBIS3.CONTROLS.Data.Collection.
             this.toggleItemsSelection(items);
          }
       },
+
+      /**
+       * @param {Boolean} multiselect Устанавливает режим множественного выбора элементов коллекции.
+       * true Режим множественного выбора элементов коллекции установлен.
+       * false Режим множественного выбора элементов коллекции отменен.
+       * @see selectedKeys
+       * @see multiselect
+       */
+      setMultiselect: function(multiselect) {
+         /* Из контекста может прийти null или undefined */
+         var newMultiselect = Boolean(multiselect),
+             selectedKeys;
+
+         if(this._options.multiselect !== newMultiselect) {
+            this._options.multiselect = newMultiselect;
+
+            selectedKeys = this.getSelectedKeys();
+
+            /* Если multiselect выключили, а ключей у нас больше чем > 1, надо их отфильтровать */
+            if(newMultiselect === false && selectedKeys.length > 1) {
+               this.setSelectedKeys(selectedKeys);
+            }
+         }
+      },
+
+      /**
+       * @returns {Boolean} multiselect Возвращает режим множественного выбора элементов коллекции.
+       * @see selectedKeys
+       * @see multiselect
+       */
+      getMultiselect: function() {
+         return this._options.multiselect;
+      },
+
       /**
        * Возвращает набор выбранных элементов коллекции контрола в режиме множественного выбора.
        * @param {Boolean} loadItems Необходимость загрузки элементов коллекции, если их нет в текущем наборе выбранных элементов
@@ -683,8 +717,9 @@ define('js!SBIS3.CONTROLS.MultiSelectable', ['js!SBIS3.CONTROLS.Data.Collection.
       },
 
       _setFirstItemAsSelected : function() {
-         if (this._dataSet) {
-            this._options.selectedKeys = [this._dataSet.at(0).getId()];
+         var item = this._dataSet && this._dataSet.at(0);
+         if (item) {
+            this._options.selectedKeys = [item.getId()];
          }
       },
 

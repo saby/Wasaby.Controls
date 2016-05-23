@@ -431,9 +431,11 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
             });
          }
          else {
-            this._itemsProjection.each(function (item) {
-               records.push(item);
-            });
+            if (this._itemsProjection) {     //У таблицы могут позвать перерисовку, когда данных еще нет
+               this._itemsProjection.each(function (item) {
+                  records.push(item);
+               });
+            }
          }
          return records;
       },
@@ -519,8 +521,13 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
             markup;
 
          data.tplData = this._prepareItemData();
-
+         //TODO опять же, перед полной перерисовкой данные лесенки достаточно сбросить, чтобы она правильно отработала
+         //Отключаем придрот, который включается при добавлении записи в список, который здесь нам не нужен
+         var ladder = this._decorators.getByName('ladder');
+         ladder && ladder.setIgnoreEnabled(true);
+         ladder && ladder.reset();
          markup = MarkupTransformer(this._itemsTemplate(data));
+         ladder && ladder.setIgnoreEnabled(false);
          //TODO это может вызвать тормоза
          this._destroyInnerComponents($itemsContainer);
          if (markup.length) {
@@ -539,6 +546,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          var
             markup,
             targetElement = this._getDomElementByItem(item),
+            itemContainer,
             data;
          if (targetElement.length) {
             data = this._prepareItemData();
@@ -555,9 +563,10 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
             /*TODO посмотреть не вызывает ли это тормоза*/
             this._clearItems(targetElement);
             /*TODO С этим отдельно разобраться*/
-            this._ladderCompare([targetElement.prev(), targetElement, targetElement.next()]);
 
             targetElement.after(markup).remove();
+            itemContainer = this._getDomElementByItem(item);
+            this._ladderCompare([itemContainer.prev(), itemContainer, itemContainer.next()]);
             this._reviveItems();
             this._notifyOnDrawItems();
          }
@@ -570,6 +579,18 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
             /*TODO С этим отдельно разобраться*/
 
             this._ladderCompare([targetElement.prev(), targetElement.next()]);
+
+            /*TODO Особое поведение при группировке*/
+            if (!Object.isEmpty(this._options.groupBy)) {
+               var prev = targetElement.prev();
+               if (prev.length && prev.hasClass('controls-GroupBy')) {
+                  var next = targetElement.next();
+                  if (!next.length || next.hasClass('controls-GroupBy')) {
+                     prev.remove();
+                  }
+               }
+            }
+
             targetElement.remove();
          }
       },
@@ -986,6 +1007,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
                       self._toggleIndicator(false);
                       if (self._notify('onDataLoadError', error) !== true) {
                          $ws.helpers.message(error.message.toString().replace('Error: ', ''));
+                         error.processed = true;
                       }
                    }
                    return error;
@@ -1229,7 +1251,9 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          projItem = projItem || this._getItemProjectionByItemId(item.getId());
          var
             targetElement = this._getElementByModel(item),
-            newElement = this._drawItem(projItem);
+            newElement = this._createItemInstance(projItem);/*раньше здесь звался _drawItem, но он звал лишнюю группировку, а при перерисовке одного итема она не нужна*/
+         this._addItemAttributes(newElement, projItem);
+         this._clearItems(targetElement);
          targetElement.after(newElement).remove();
          this.reviveComponents();
          this._notifyOnDrawItems();

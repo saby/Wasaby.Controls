@@ -691,7 +691,10 @@ define('js!SBIS3.CONTROLS.ListView',
                   }
                   break;
                case $ws._const.key.del:
-                  this.deleteRecords(this.getSelectedKey());
+                  var key = this.getSelectedKey();
+                   if (key && this._allowDelete()) {
+                      this.deleteRecords(key);
+                   }
                   break;
             }
             if (newSelectedItem && newSelectedItem.length) {
@@ -701,6 +704,11 @@ define('js!SBIS3.CONTROLS.ListView',
             }
             return false;
          },
+         //TODO: Придрот для .150, чтобы хоткей del отрабатывал только если есть соответствующая операция над записью.
+         _allowDelete: function() {
+            var itemActions = this.getItemsActions();
+            return this.isEnabled() && !!itemActions && !!itemActions.getItemInstance('delete');
+         },
          /**
           * Возвращает следующий элемент
           * @param id
@@ -708,7 +716,11 @@ define('js!SBIS3.CONTROLS.ListView',
           */
          getNextItemById: function (id) {
             return this._getHtmlItemByProjectionItem(
-               this._getProjectionItem(id, true)
+               this._itemsProjection.getNext(
+                  this._itemsProjection.getItemBySourceItem(
+                     this.getItems().getRecordById(id)
+                  )
+               )
             );
          },
          /**
@@ -718,7 +730,11 @@ define('js!SBIS3.CONTROLS.ListView',
           */
          getPrevItemById: function (id) {
             return this._getHtmlItemByProjectionItem(
-               this._getProjectionItem(id, false)
+               this._itemsProjection.getPrevious(
+                  this._itemsProjection.getItemBySourceItem(
+                     this.getItems().getRecordById(id)
+                  )
+               )
             );
          },
 
@@ -728,14 +744,6 @@ define('js!SBIS3.CONTROLS.ListView',
 
          _getPrevItemByDOM: function(id) {
             return this._getHtmlItemByDOM(id, false);
-         },
-
-         _getProjectionItem: function(id, isNext) {
-            var enumerator = this._itemsProjection.getEnumerator(),
-               index = enumerator.getIndexByValue(this._options.keyField, id),
-               item = enumerator.at(index);
-
-            return this._itemsProjection[isNext ? 'getNext' : 'getPrevious'](item);
          },
 
          _getHtmlItemByProjectionItem: function (item) {
@@ -808,8 +816,10 @@ define('js!SBIS3.CONTROLS.ListView',
 
             target = this._findItemByElement($target);
 
-            if (target.length && !this._touchSupport) {
-               this._changeHoveredItem(target);
+            if (target.length) {
+               if(!this._touchSupport) {
+                  this._changeHoveredItem(target);
+               }
             } else if (!this._isHoverControl($target)) {
                this._mouseLeaveHandler();
             }
@@ -1209,14 +1219,14 @@ define('js!SBIS3.CONTROLS.ListView',
             var records = ListView.superclass._getRecordsForRedraw.call(this);
             if (this._options.infiniteScroll === 'up' && !this._isSearchMode()) {
                return records.reverse();
-            } 
+            }
             return records;
          },
          /**
           * todo Убрать в 150, когда будет правильный рендер изменившихся данных
           */
          _checkScroll: function() {
-            //Если перерисовка случилась из-за reload, то прроверяем наличие скролла и догружаем ещё одну страницу если скролл есть
+            //Если перерисовка случилась из-за reload, то прроверяем наличие скролла и догружаем ещё одну страницу если скролла нет
             if (this._updateByReload) {
                this._updateByReload = false;
                if (this._scrollWatcher && !this._scrollWatcher.hasScroll(this.getContainer())) {
@@ -1642,6 +1652,11 @@ define('js!SBIS3.CONTROLS.ListView',
 
                      if (this._isSlowDrawing()) {
                         self._needToRedraw = true;
+                     }
+                  } else {
+                     // Если пришла пустая страница, но есть еще данные - догрузим их
+                     if (self._hasNextPage(dataSet.getMetaData().more, self._infiniteScrollOffset)){
+                        self._nextLoad();
                      }
                   }
 
