@@ -277,7 +277,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
          return $('.controls-DataGridView__tbody', this._container);
       },
 
-      _buildTplArgs : function() {
+      _buildTplArgs : function(cfg) {
          function getColumnVal(item, colName) {
             if (!colName || !(colName.indexOf("['") == 0 && colName.indexOf("']") == (colName.length - 2))){
                return item.get(colName);
@@ -296,15 +296,15 @@ define('js!SBIS3.CONTROLS.DataGridView',
             return value;
          }
          var args = DataGridView.superclass._buildTplArgs.apply(this, arguments);
-         args.columns = this._prepareColumns(this._options.columns);
+         args.columns = this._prepareColumns(cfg.columns);
          args.cellData = {
             /*TODO hierField вроде тут не должно быть*/
-            hierField: this._options.hierField,
+            hierField: cfg.hierField,
             getColumnVal: getColumnVal,
             decorators : args.decorators,
             displayField : args.displayField
          };
-         args.startScrollColumn = this._options.startScrollColumn;
+         args.startScrollColumn = cfg.startScrollColumn;
 
          return args;
       },

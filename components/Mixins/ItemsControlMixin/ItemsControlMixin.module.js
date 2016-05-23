@@ -108,7 +108,6 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          _defaultItemContentTemplate: '',
          _defaultGroupTemplate: '',
          _groupHash: {},
-         _itemsTemplate: ItemsTemplate,
          _itemsProjection: null,
          _items : null,
          _itemsInstances: {},
@@ -299,6 +298,23 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          _loader: null
       },
 
+      around: {
+         _modifyOptions : function(parentFnc, cfg) {
+            cfg._itemsTemplate = ItemsTemplate;
+            var newCfg = parentFnc.call(cfg);
+            if (cfg.items) {
+               if (!(cfg.items instanceof Array)) {
+                  cfg._items = cfg.items;
+                  cfg._itemsProjection = ItemsControlMixin._createDefaultProjection(cfg.items);
+                  cfg._records = ItemsControlMixin._getRecordsForRedraw(cfg._itemsProjection);
+                  cfg._itemData = ItemsControlMixin._buildTplArgs(cfg);
+
+               }
+            }
+            return newCfg;
+         }
+      },
+
       $constructor: function () {
          this._publish('onDrawItems', 'onDataLoad', 'onDataLoadError', 'onBeforeDataLoad', 'onItemsReady');
          if (typeof this._options.pageSize === 'string') {
@@ -347,7 +363,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
             } else {
                this._items = itemsOpt;
                this._dataSource = null;
-               this._createDefaultProjection(this._items);
+               this._itemsProjection = this._createDefaultProjection(this._items);
                this._itemsReadyCallback();
                this._notify('onItemsReady');
             }
@@ -373,7 +389,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          } else {
             this._items = list;
             this._dataSet = list;
-            this._createDefaultProjection(this._items);
+            this._itemsProjection = this._createDefaultProjection(this._items);
             this._setItemsEventHandlers();
             this._notify('onItemsReady');
             this._itemsReadyCallback();
@@ -392,57 +408,20 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          return curField != prevField;
       },
 
-      _getRecordsForRedraw : function() {
+      _getRecordsForRedraw : function(projection) {
          var
             records = [];
-         if (!Object.isEmpty(this._options.groupBy) && !this._isSlowDrawing()) {
-            var
-               fieldValue,
-               self = this,
-               prevGroupItem;
-            this._itemsProjection.each(function (item, index) {
-               if (index == 0) {
-                  fieldValue = item.getContents().get(self._options.groupBy.field);
-                  records.push({
-                     group: fieldValue
-                  });
-                  self._groupHash[item.getHash()] = fieldValue;
-                  prevGroupItem = item;
-               }
-               else {
-                  var groupByMethod;
-                  if (self._options.groupBy.method && (self._options.groupBy.method instanceof Function)) {
-                     groupByMethod = self._options.groupBy.method;
-                  }
-                  else {
-                     groupByMethod = self._groupByDefaultMethod;
-                  }
-                  var res = groupByMethod.call(self, prevGroupItem.getContents(), item.getContents(), self._options.groupBy.field);
-                  if (res) {
-                     fieldValue = item.getContents().get(self._options.groupBy.field);
-                     records.push({
-                        group: fieldValue
-                     });
-                     self._groupHash[item.getHash()] = fieldValue;
-                     prevGroupItem = item;
-                  }
-               }
+         if (projection) {     //У таблицы могут позвать перерисовку, когда данных еще нет
+            projection.each(function (item) {
                records.push(item);
             });
-         }
-         else {
-            if (this._itemsProjection) {     //У таблицы могут позвать перерисовку, когда данных еще нет
-               this._itemsProjection.each(function (item) {
-                  records.push(item);
-               });
-            }
          }
          return records;
       },
 
       _prepareItemsData : function() {
          return {
-            items : this._getRecordsForRedraw()
+            records : this._getRecordsForRedraw(this._itemsProjection)
          }
       },
 
@@ -453,40 +432,40 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
             itemTpl = this._getItemTemplate();
 
          data = {
-            items : this._getRecordsForRedraw()
+            items : this._getRecordsForRedraw(this._itemsProjection)
          };
 
          data.itemTemplate = TemplateUtil.prepareTemplate(itemTpl);
-         data.itemsTemplate = this._itemsTemplate;
+         data.itemsTemplate = this._options._itemsTemplate;
          return data;
       },
 
       _prepareItemData: function() {
          if (!this._itemData) {
-            this._itemData = $ws.core.clone(this._buildTplArgs());
+            this._itemData = $ws.core.clone(this._buildTplArgs(this._options));
          }
          return this._itemData;
       },
 
-      _buildTplArgs: function() {
+      _buildTplArgs: function(cfg) {
          var
             tplOptions = {},
             itemContentTpl,
             itemTpl;
 
-         if (this._options.itemContentTpl) {
-            itemContentTpl = this._options.itemContentTpl;
+         if (cfg.itemContentTpl) {
+            itemContentTpl = cfg.itemContentTpl;
          }
          else {
             itemContentTpl = this._defaultItemContentTemplate;
          }
-         if (this._options.itemTpl) {
-            tplOptions.itemTpl = TemplateUtil.prepareTemplate(this._options.itemTpl);
+         if (cfg.itemTpl) {
+            tplOptions.itemTpl = TemplateUtil.prepareTemplate(cfg.itemTpl);
          }
-         if (!Object.isEmpty(this._options.groupBy)) {
+         if (!Object.isEmpty(cfg.groupBy)) {
             tplOptions.groupTemplate = TemplateUtil.prepareTemplate(this._defaultGroupTemplate);
-            if (this._options.groupBy.contentTpl) {
-               tplOptions.groupContentTemplate = TemplateUtil.prepareTemplate(this._options.groupBy.contentTpl)
+            if (cfg.groupBy.contentTpl) {
+               tplOptions.groupContentTemplate = TemplateUtil.prepareTemplate(cfg.groupBy.contentTpl)
             }
             else {
                tplOptions.groupContentTemplate = TemplateUtil.prepareTemplate('<div>{{=it.item.group}}</div>')
@@ -496,12 +475,12 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          tplOptions.defaultItemTpl = TemplateUtil.prepareTemplate(this._defaultItemTemplate);
          tplOptions.itemContent = TemplateUtil.prepareTemplate(itemContentTpl);
 
-         tplOptions.displayField = this._options.displayField;
-         tplOptions.templateBinding = this._options.templateBinding;
+         tplOptions.displayField = cfg.displayField;
+         tplOptions.templateBinding = cfg.templateBinding;
 
 
-         if (this._options.includedTemplates) {
-            var tpls = this._options.includedTemplates;
+         if (cfg.includedTemplates) {
+            var tpls = cfg.includedTemplates;
             tplOptions.included = {};
             for (var j in tpls) {
                if (tpls.hasOwnProperty(j)) {
@@ -526,7 +505,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          var ladder = this._decorators.getByName('ladder');
          ladder && ladder.setIgnoreEnabled(true);
          ladder && ladder.reset();
-         markup = MarkupTransformer(this._itemsTemplate(data));
+         markup = MarkupTransformer(this._options._itemsTemplate(data));
          ladder && ladder.setIgnoreEnabled(false);
          //TODO это может вызвать тормоза
          this._destroyInnerComponents($itemsContainer);
@@ -643,7 +622,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
                      items: itemsToDraw,
                      tplData: this._prepareItemData()
                   };
-                  markup = MarkupTransformer(this._itemsTemplate(data));
+                  markup = MarkupTransformer(this._options._itemsTemplate(data));
 
                   itemsContainer = this._getItemsContainer();
                   if (newItemsIndex == 0) {
@@ -816,7 +795,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
       },
 
       _createDefaultProjection: function(items) {
-         this._itemsProjection = Projection.getDefaultProjection(items);
+         return Projection.getDefaultProjection(items);
       },
 
       _convertItems: function (items) {
@@ -1507,7 +1486,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          if (this._items) {
             this._clearItems();
             this._needToRedraw = false;
-            records = this._getRecordsForRedraw();
+            records = this._getRecordsForRedraw(this._itemsProjection);
             this._toggleEmptyData(!records.length && this._options.emptyHTML);
             this._drawItems(records);
          }

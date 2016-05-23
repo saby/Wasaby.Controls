@@ -1216,7 +1216,7 @@ define('js!SBIS3.CONTROLS.ListView',
          },
 
          _getRecordsForRedraw: function(){
-            var records = ListView.superclass._getRecordsForRedraw.call(this);
+            var records = ListView.superclass._getRecordsForRedraw.apply(this, arguments);
             if (this._options.infiniteScroll === 'up' && !this._isSearchMode()) {
                return records.reverse();
             }

@@ -1,4 +1,4 @@
-{{~it.items :item:index}}
+{{~it.records :item:index}}
    {{?!item.getContents}}
       {{it.tplData['item'] = item;}}
       {{=it.tplData.groupTemplate(it.tplData)}}
