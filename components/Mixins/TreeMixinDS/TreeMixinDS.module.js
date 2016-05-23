@@ -118,7 +118,7 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', ['js!SBIS3.CORE.Control',
 
          if (this._options.expand) {
             filter['Разворот'] = 'С разворотом';
-            filter['ВидДерева'] = 'Узлы и листья';
+            filter['ВидДерева'] = 'С узлами и листьями';
          }
          this.setFilter(filter, true);
       },
