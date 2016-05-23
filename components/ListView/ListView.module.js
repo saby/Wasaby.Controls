@@ -1068,6 +1068,26 @@ define('js!SBIS3.CONTROLS.ListView',
             this._destroyEditInPlace();
             return ListView.superclass.reload.apply(this, arguments);
          },
+
+         setFilter: function(){
+            this._resetScrollMark();
+            ListView.superclass.setFilter.apply(this, arguments);
+         },
+
+         setOffset: function(){
+            this._resetScrollMark();
+            ListView.superclass.setOffset.apply(this, arguments);
+         },
+
+         setSorting: function(){
+            this._resetScrollMark();
+            ListView.superclass.setSorting.apply(this, arguments);
+         },
+
+         _resetScrollMark: function(){
+            this._scrollOnBottom = true;
+         },
+
          _reloadInfiniteScrollParams : function(){
             if (this.isInfiniteScroll() || this._isAllowInfiniteScroll()) {
                this._hasScrollMore = true;
