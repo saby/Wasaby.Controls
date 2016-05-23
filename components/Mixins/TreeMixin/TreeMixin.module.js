@@ -141,7 +141,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
          }
          if (this._options.expand) {
             filter['Разворот'] = 'С разворотом';
-            filter['ВидДерева'] = 'Узлы и листья';
+            filter['ВидДерева'] = 'С узлами и листьями';
          }
          this._previousRoot = this._curRoot;
          this.setFilter(filter, true);
