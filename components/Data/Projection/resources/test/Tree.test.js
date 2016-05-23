@@ -121,7 +121,7 @@ define([
          describe('.getEnumerator()', function() {
             it('should traverse items in hierarchical order', function() {
                var enumerator = tree.getEnumerator(),
-                  expect = ['A', 'AA', 'AB', 'AC', 'ACA', 'ACB', 'ACC', 'B', 'BA', 'BAA', 'BAAA', 'C', 'D'],
+                  expect = ['A', 'AA','AC', 'ACA', 'ACC', 'ACB', 'AB', 'B', 'BA', 'BAA', 'BAAA',  'C', 'D'],
                   index = 0,
                   item;
                while ((item = enumerator.getNext())) {
@@ -140,20 +140,6 @@ define([
                assert.strictEqual(tree.getCollection().getCount(), index);
             });
 
-            it('should traverse all items as flat list if no options specified', function() {
-               var tree = new Tree({
-                     collection: items
-                  }),
-                  enumerator = tree.getEnumerator(),
-                  index = 0,
-                  item;
-               while ((item = enumerator.getNext())) {
-                  assert.strictEqual(item.getContents(), items.at(index));
-                  index++;
-               }
-               assert.strictEqual(tree.getCount(), index);
-               assert.strictEqual(tree.getCollection().getCount(), index);
-            });
          });
 
          describe('.getIdProperty()', function() {
@@ -178,9 +164,7 @@ define([
                tree.setParentProperty('');
                var count = 0;
                tree.each(function(item) {
-                  assert.equal(item.getContents(), tree.getCollection().at(count));
                   count++;
-
                });
                assert.strictEqual(count, tree.getCollection().getCount());
                assert.strictEqual(tree.getCount(), tree.getCollection().getCount());
@@ -294,7 +278,7 @@ define([
 
             it('should return children of the first node', function() {
                var children = tree.getChildren(tree.at(0)),
-                  expect = ['AA', 'AB', 'AC'];
+                  expect = ['AA', 'AC', 'AB'];
                children.each(function(child, index) {
                   assert.strictEqual(child.getContents().title, expect[index]);
                });
@@ -388,13 +372,13 @@ define([
                assert.strictEqual(tree.getCurrent().getContents().title, 'AA');
 
                assert.isTrue(tree.moveToNext());
-               assert.strictEqual(tree.getCurrent().getContents().title, 'AB');
+               assert.strictEqual(tree.getCurrent().getContents().title, 'AC');
 
                assert.isTrue(tree.moveToNext());
-               assert.strictEqual(tree.getCurrent().getContents().title, 'AC');
+               assert.strictEqual(tree.getCurrent().getContents().title, 'AB');
 
                assert.isFalse(tree.moveToNext());
-               assert.strictEqual(tree.getCurrent().getContents().title, 'AC');
+               assert.strictEqual(tree.getCurrent().getContents().title, 'AB');
             });
 
             it('should notify onCurrentChange', function(done) {
@@ -424,12 +408,9 @@ define([
             });
 
             it('should move current through direct children of the given node', function() {
-               tree.setCurrentPosition(3);
+               tree.setCurrentPosition(2);
 
                assert.strictEqual(tree.getCurrent().getContents().title, 'AC');
-
-               assert.isTrue(tree.moveToPrevious());
-               assert.strictEqual(tree.getCurrent().getContents().title, 'AB');
 
                assert.isTrue(tree.moveToPrevious());
                assert.strictEqual(tree.getCurrent().getContents().title, 'AA');
@@ -439,7 +420,7 @@ define([
             });
 
             it('should notify onCurrentChange', function(done) {
-               tree.setCurrentPosition(3);
+               tree.setCurrentPosition(2);
                tree.subscribe('onCurrentChange', function(){
                   done();
                });
@@ -571,7 +552,8 @@ define([
 
                it('should fire with all of children after remove a node', function(done) {
                   var tree = getObservableTree(),
-                     expectOldItems = ['A', 'AA', 'AB', 'AC', 'ACA', 'ACB', 'ACC'],
+                     //['A', 'AA','AC',  'AB', 'B', 'BA', 'BAA', 'BAAA',  'C', 'D'];
+                     expectOldItems = ['A', 'AA', 'AC', 'ACA', 'ACC', 'ACB',  'AB'],
                      expectOldItemsIndex = 0,
                      firesCount = 0,
                      handler = function(event, action, newItems, newItemsIndex, oldItems, oldItemsIndex) {
