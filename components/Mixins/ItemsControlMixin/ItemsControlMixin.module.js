@@ -9,8 +9,9 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
    'js!SBIS3.CONTROLS.Data.Bind.ICollection',
    'js!SBIS3.CONTROLS.Data.Projection.Collection',
    'js!SBIS3.CONTROLS.Utils.TemplateUtil',
-   'html!SBIS3.CONTROLS.ItemsControlMixin/resources/ItemsTemplate'
-], function (MemorySource, SbisService, RecordSet, Query, MarkupTransformer, ObservableList, Projection, IBindCollection, Collection, TemplateUtil, ItemsTemplate) {
+   'html!SBIS3.CONTROLS.ItemsControlMixin/resources/ItemsTemplate',
+   'js!SBIS3.CONTROLS.Data.Utils'
+], function (MemorySource, SbisService, RecordSet, Query, MarkupTransformer, ObservableList, Projection, IBindCollection, Collection, TemplateUtil, ItemsTemplate, Utils) {
 
    /**
     * Миксин, задающий любому контролу поведение работы с набором однотипных элементов.
@@ -940,7 +941,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
       /*TODO поддержка старого API*/
       getDataSet: function(compatibilityMode) {
          if(!compatibilityMode) {
-            $ws.single.ioc.resolve('ILogger').log('Получение DataSet явялется устаревшим функционалом используйте getItems()');
+            Utils.logger.stack('SBIS3.CONTROLS.ItemsControlMixin Получение DataSet явялется устаревшим функционалом используйте getItems()', 1);
          }
          return this._dataSet;
       },
