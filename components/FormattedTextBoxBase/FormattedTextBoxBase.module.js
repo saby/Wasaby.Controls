@@ -651,7 +651,6 @@ define(
 
       $constructor: function () {
          var
-            inputValue,
             self = this,
             key;
          this._publish('onInputFinished','onTextChange');
