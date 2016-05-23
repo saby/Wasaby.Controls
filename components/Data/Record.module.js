@@ -118,7 +118,7 @@ define('js!SBIS3.CONTROLS.Data.Record', [
             }
             this._setChanged(name, oldValue);
             if (this._hasInPropertiesCache(name) &&
-               value !== this._propertiesCache[name]
+               value !== this._getFromPropertiesCache(name)
             ) {
                this._unsetFromPropertiesCache(name);
             }
@@ -326,7 +326,7 @@ define('js!SBIS3.CONTROLS.Data.Record', [
        * @protected
        */
       _getFromPropertiesCache: function (name) {
-         return this._propertiesCache[name];
+         return this._propertiesCache ? this._propertiesCache[name] : undefined;
       },
 
       /**
@@ -348,7 +348,9 @@ define('js!SBIS3.CONTROLS.Data.Record', [
        * @protected
        */
       _unsetFromPropertiesCache: function (name) {
-         delete this._propertiesCache[name];
+         if (this._propertiesCache) {
+            delete this._propertiesCache[name];
+         }
       },
 
       /**

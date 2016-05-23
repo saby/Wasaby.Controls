@@ -230,7 +230,7 @@ define('js!SBIS3.CONTROLS.Data.Model', [
          if (this._propertiesDependency.hasOwnProperty(name)) {
             var dependency = this._propertiesDependency[name];
             for (var i = 0; i < dependency.length; i++) {
-               delete this._propertiesCache[dependency[i]];
+               this._unsetFromPropertiesCache(dependency[i]);
                this._deleteDependencyCache(dependency[i]);
             }
          }

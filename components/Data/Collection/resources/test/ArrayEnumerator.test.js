@@ -141,9 +141,7 @@ define([
                );
             });
             it('should return -1 for not a property name', function() {
-               var enumerator = new ArrayEnumerator({
-                  items: items
-               });
+               var enumerator = new ArrayEnumerator(items);
                assert.strictEqual(-1, enumerator.getIndexByValue());
                assert.strictEqual(-1, enumerator.getIndexByValue(null));
                assert.strictEqual(-1, enumerator.getIndexByValue(false));
