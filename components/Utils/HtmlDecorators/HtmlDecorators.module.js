@@ -1,6 +1,7 @@
 define('js!SBIS3.CONTROLS.Utils.HtmlDecorators', [
-   'js!SBIS3.CONTROLS.Utils.HtmlDecorators.AbstractDecorator'
-], function (AbstractDecorator) {
+   'js!SBIS3.CONTROLS.Utils.HtmlDecorators.AbstractDecorator',
+   'js!SBIS3.CONTROLS.Data.Utils'
+], function (AbstractDecorator, Utils) {
    'use strict';
 
    /** @constant {Object} Вид области декорирования: текст*/
@@ -89,7 +90,7 @@ define('js!SBIS3.CONTROLS.Utils.HtmlDecorators', [
        * @deprecated Опция не поддерживается с 3.7.3.100, вместо нее используйте {@link applyOnly}
        */
       applyIf: function (value, condition, area) {
-         $ws.single.ioc.resolve('ILogger').log('HtmlDecorators', 'Опция applyIf не поддерживается с 3.7.3.100, вместо нее используйте applyOnly');
+         Utils.logger.stack('SBIS3.CONTROLS.Utils.HtmlDecorators Опция applyIf не поддерживается с 3.7.3.100, вместо нее используйте applyOnly', 1);
          return this.applyOnly.apply(this, arguments);
       },
       /**
