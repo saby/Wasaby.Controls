@@ -311,7 +311,7 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
                }
                else{
                   dResult.callback();
-                  self._panel.cancel();
+                  self._closePanel(false);
                }
             });
          }
@@ -332,7 +332,7 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
                self._notify('onUpdateModel', self._options.record, self._newRecord);
                self._newRecord = false;
                if (config.closePanelAfterSubmit) {
-                  self._panel.ok();
+                  self._closePanel(true);
                }
                else {
                   self._saving = false;
@@ -466,13 +466,25 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
             if(eMessage) {
                $ws.helpers.message(eMessage).addCallback(function(result){
                   if (e.httpError == 403){
-                     this._panel.close();
+                     this._closePanel();
                   }
                }.bind(this));
             }
          }
          e.processed = true;
          return e;
+      },
+
+      /**
+       * Закрываем панель, в которой лежит formController
+       * @param {*} result "Результат" закрытия панели - передаётся в соответствующее событие (onBeforeClose, onAfterClose).
+       * @private
+       */
+      _closePanel: function(result){
+         //Если задача открыта в новом окне, то FormController лежит не во floatArea => нет панели, которую нуэжно закрывать
+         if (this._panel.close){
+            this._panel.close(result);
+         }
       },
       /**
        * Возвращает источник данных диалога редактирования.
