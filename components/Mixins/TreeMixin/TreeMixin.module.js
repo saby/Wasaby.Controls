@@ -116,8 +116,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
              * Разрешить проваливаться в папки
              * Если выключено, то папки можно открывать только в виде дерева, проваливаться в них нельзя
              */
-            allowEnterToFolder: true,
-
+            allowEnterToFolder: true
          },
          _foldersFooters: {},
          _breadCrumbs : [],
