@@ -498,6 +498,12 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
        * Для диалога редактирования может быть по умолчанию установлен источник данных. Это происходит при вызове диалога через {@link SBIS3.CONTROLS.DialogActionBase}.
        * Чтобы получить объект источника данных, используют метод {@link getDataSource}.
        * @param {DataSource} source Источник данных.
+       * @param {Object} config
+       *    Структура конфига:
+       *    {
+       *      hideErrorDialog: Boolean,            //Не показывать сообещние при ошибке
+       *      hideIndicator: Boolean               //Не показывать индикатор
+       *    }
        * @example
        * <pre>
        *    var dataSource = new SbisService({ // Инициализация источника данных
@@ -508,9 +514,9 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
        * @see dataSource
        * @see getDataSource
        */
-      setDataSource: function(source){
+      setDataSource: function(source, config){
          this._options.dataSource = source;
-         return this._runQuery();
+         return this._runQuery(config);
       },
       /**
        * Устанавливает запись диалогу редактирования.
@@ -550,11 +556,11 @@ define('js!SBIS3.CONTROLS.FormController', ['js!SBIS3.CORE.CompoundControl', 'js
          this._notify('onDestroyModel', this._options.record)
       },
 
-      _runQuery: function() {
+      _runQuery: function(config) {
          if (this._options.key) {
-            return this._read();
+            return this._read(config);
          }
-         return this._create();
+         return this._create(config);
       },
       /**
        * Создать новую запись в источнике данных диалога редактирования.
