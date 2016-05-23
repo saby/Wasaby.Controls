@@ -158,7 +158,6 @@ define('js!SBIS3.CONTROLS.DropdownList',
                 * @cfg {boolean} Отображать Все элементы  в выпадающем списке (включая выбранный)
                 */
                showSelectedInList : false,
-               pickerClassName: 'controls-DropdownList__picker',
                allowEmptyMultiSelection: false
             },
             _dotTplFn: dotTplFn,
@@ -185,6 +184,10 @@ define('js!SBIS3.CONTROLS.DropdownList',
             if (!this._picker) {
                this._initializePicker();
             }
+         },
+         _modifyOptions: function(opts) {
+            opts.pickerClassName += ' controls-DropdownList__picker';
+            return DropdownList.superclass._modifyOptions.call(this, opts);
          },
          _setPickerContent : function () {
             var self = this,
