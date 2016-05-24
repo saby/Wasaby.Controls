@@ -148,6 +148,14 @@ define('js!SBIS3.CONTROLS.DialogActionBase', ['js!SBIS3.CONTROLS.ActionBase', 'j
       },
 
       /**
+       * Устанавливает связанный список, для которого будет открываться диалог редактирования записей.
+       * @param linkedObject связанный список
+       */
+      setLinkedObject: function(linkedObject){
+        this._options.linkedObject = linkedObject;
+      },
+
+      /**
        * Должен вернуть ключ записи, которую редактируем в диалоге
        */
       _getEditKey: function(item){
