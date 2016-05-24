@@ -102,6 +102,9 @@ define('js!SBIS3.CONTROLS.BreadCrumbs', [
             this._dotsClickHandler(crumb)
          } else if (crumb.length) {
             this._notify('onItemClick', crumb.data(this._options.keyField));
+            if (this._picker.isVisible()){
+               this._picker.hide();
+            }
          }
       },
       /**
