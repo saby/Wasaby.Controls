@@ -1444,6 +1444,9 @@ define('js!SBIS3.CONTROLS.ListView',
                      },
                      onItemActionActivated: function(e, key) {
                         self.setSelectedKey(key);
+                        if(self._touchSupport) {
+                           self._clearHoveredItem();
+                        }
                      }
 
                   }
