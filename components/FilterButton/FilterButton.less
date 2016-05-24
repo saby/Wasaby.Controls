@@ -257,7 +257,14 @@
 
 // ФИКС ДЛЯ ФФ
 @-moz-document url-prefix() {
-   .controls__filterButton .controls__filterButton__filterLine {
+   .controls__filterButton .controls__filterButton__filterLine{
       margin: 8px 32px 8px 0;
+   }
+   .controls__filterButton .controls__filterButton__filterLine .controls__filterButton__filterLine-table {
+      display: inline-block;
+      float: none;
+   }
+   .controls__filterButton .controls__filterButton__filterLine .controls__filterButton__filterLine-copyCross {
+      top: -25px;
    }
 }
