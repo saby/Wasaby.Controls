@@ -551,13 +551,14 @@ define('js!SBIS3.CONTROLS.MultiSelectable', ['js!SBIS3.CONTROLS.Data.Collection.
        * @see toggleItemsSelectionAll
        */
       getSelectedItems: function(loadItems, count) {
+         /* Сначала запускаем синхронизацию, чтобы работать уже с поправленными переменными */
+         this._syncSelectedItems();
+
          var self = this,
              selKeys = this._options.selectedKeys,
              selItems = this._options.selectedItems,
              loadKeysArr = [],
              dMultiResult, item, loadKeysAmount, itemsKeysArr;
-
-         this._syncSelectedItems();
 
          if(!loadItems) {
             return selItems;
@@ -628,7 +629,10 @@ define('js!SBIS3.CONTROLS.MultiSelectable', ['js!SBIS3.CONTROLS.Data.Collection.
          /* Выбранных ключей нет - очистим IList */
          if(this._isEmptySelection()) {
             if(selItems.getCount()) {
-               selItems.clear();
+               /* Чтобы порвать ссылку на контекст делаем клон,
+                  т.к. при любом изменении св-ва надо порвать ссылку на контекст */
+               this._options.selectedItems = selItems.clone();
+               this._options.selectedItems.clear();
                this._notifyOnPropertyChanged('selectedItems');
             }
             return;
@@ -642,8 +646,9 @@ define('js!SBIS3.CONTROLS.MultiSelectable', ['js!SBIS3.CONTROLS.Data.Collection.
          });
 
          if(delItems.length) {
+            this._options.selectedItems = selItems.clone();
             for(var i = 0, len = delItems.length; i < len; i++) {
-               selItems.remove(delItems[i]);
+               this._options.selectedItems.remove(delItems[i]);
             }
             this._notifyOnPropertyChanged('selectedItems');
          }
