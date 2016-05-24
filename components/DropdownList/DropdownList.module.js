@@ -174,7 +174,8 @@ define('js!SBIS3.CONTROLS.DropdownList',
             _buttonChoose : null,
             _buttonHasMore: null,
             _currentSelection: {},
-            _hideAllowed : true
+            _hideAllowed : true,
+            _changedSelectedKeys: [] //Массив ключей, которые были выбраны, но еще не сохранены в выпадающем списке
          },
          $constructor: function() {
             this._container.bind(this._options.mode === 'hover' ? 'mouseenter' : 'mouseup', this.showPicker.bind(this));
@@ -278,7 +279,14 @@ define('js!SBIS3.CONTROLS.DropdownList',
                //Если множественный выбор, то после клика скрыть менюшку можно только по кнопке отобрать
                this._hideAllowed = !this._options.multiselect;
                if (this._options.multiselect && !$(e.target).hasClass('controls-ListView__defaultItem') /* && $(e.target).hasClass('js-controls-DropdownList__itemCheckBox')*/) {
-                  this._buttonChoose.getContainer().removeClass('ws-invisible');
+                  var changedSelectionIndex = Array.indexOf(this._changedSelectedKeys, row.data('id'));
+                  if (changedSelectionIndex < 0){
+                     this._changedSelectedKeys.push(row.data('id'));
+                  }
+                  else{
+                     this._changedSelectedKeys.splice(changedSelectionIndex, 1);
+                  }
+                  this._buttonChoose.getContainer().toggleClass('ws-invisible', !this._changedSelectedKeys.length);
                   selected =  !row.hasClass('controls-DropdownList__item__selected');
                   row.toggleClass('controls-DropdownList__item__selected', selected);
                   this._currentSelection[row.data('id')] = selected;
@@ -309,6 +317,7 @@ define('js!SBIS3.CONTROLS.DropdownList',
                var items = this._getPickerContainer().find('.controls-DropdownList__item');
                this._updateCurrentSelection();
                this._hideAllowed = true;
+               this._changedSelectedKeys = [];
                //Восстановим выделение по элементам
                for (var i = 0 ; i < items.length; i++) {
                   $(items[i]).toggleClass('controls-DropdownList__item__selected', !!this._currentSelection[$(items[i]).data('id')]);
