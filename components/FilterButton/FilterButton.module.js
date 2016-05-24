@@ -130,6 +130,9 @@ define('js!SBIS3.CONTROLS.FilterButton',
                  showPicker = FilterButton.superclass.showPicker.bind(this),
                  template = this._options.template;
 
+             /* Не показываем кнопку фильтров, если она выключена */
+             if(!this.isEnabled()) return;
+
              /* Если шаблон указали как имя компонента (строки которые начинаются с SBIS3 или js!SBIS3),
                 то перед отображением панели фильтров сначала загрузим компонент. */
              if(!this._picker && /^(js!)?SBIS3.*/.test(template)) {
