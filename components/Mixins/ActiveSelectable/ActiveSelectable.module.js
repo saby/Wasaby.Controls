@@ -56,7 +56,7 @@ define('js!SBIS3.CONTROLS.ActiveSelectable', ['js!SBIS3.CONTROLS.Data.Model'], f
          this._options.selectedItem = isModel ? item : null;
 
          key = isModel ? item.getId() : null;
-         this._options.selectedKeys = key;
+         this._options.selectedKey = key;
 
          this._notifyOnPropertyChanged('selectedItem');
          this.setSelectedKey(key);

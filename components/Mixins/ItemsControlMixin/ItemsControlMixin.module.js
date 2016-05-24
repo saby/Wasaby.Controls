@@ -9,8 +9,9 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
    'js!SBIS3.CONTROLS.Data.Bind.ICollection',
    'js!SBIS3.CONTROLS.Data.Projection.Collection',
    'js!SBIS3.CONTROLS.Utils.TemplateUtil',
-   'html!SBIS3.CONTROLS.ItemsControlMixin/resources/ItemsTemplate'
-], function (MemorySource, SbisService, RecordSet, Query, MarkupTransformer, ObservableList, Projection, IBindCollection, Collection, TemplateUtil, ItemsTemplate) {
+   'html!SBIS3.CONTROLS.ItemsControlMixin/resources/ItemsTemplate',
+   'js!SBIS3.CONTROLS.Data.Utils'
+], function (MemorySource, SbisService, RecordSet, Query, MarkupTransformer, ObservableList, Projection, IBindCollection, Collection, TemplateUtil, ItemsTemplate, Utils) {
 
    /**
     * Миксин, задающий любому контролу поведение работы с набором однотипных элементов.
@@ -544,8 +545,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          var
             markup,
             targetElement = this._getDomElementByItem(item),
-            rows = [],
-            prevTargetElement = targetElement.prev(),
+            itemContainer,
             data;
          if (targetElement.length) {
             data = this._prepareItemData();
@@ -559,14 +559,13 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
                dot = data.defaultItemTpl;
             }
             markup = dot(data);
-            rows.push(prevTargetElement, targetElement.next());
             /*TODO посмотреть не вызывает ли это тормоза*/
             this._clearItems(targetElement);
             /*TODO С этим отдельно разобраться*/
 
             targetElement.after(markup).remove();
-            rows.splice(1, 0, prevTargetElement.next()); //Добавляем только что отрисованную строку
-            this._ladderCompare(rows);
+            itemContainer = this._getDomElementByItem(item);
+            this._ladderCompare([itemContainer.prev(), itemContainer, itemContainer.next()]);
             this._reviveItems();
             this._notifyOnDrawItems();
          }
@@ -928,7 +927,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
       /*TODO поддержка старого API*/
       getDataSet: function(compatibilityMode) {
          if(!compatibilityMode) {
-            $ws.single.ioc.resolve('ILogger').log('Получение DataSet явялется устаревшим функционалом используйте getItems()');
+            Utils.logger.stack('SBIS3.CONTROLS.ItemsControlMixin Получение DataSet явялется устаревшим функционалом используйте getItems()', 1);
          }
          return this._dataSet;
       },
@@ -995,6 +994,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
                       self._toggleIndicator(false);
                       if (self._notify('onDataLoadError', error) !== true) {
                          $ws.helpers.message(error.message.toString().replace('Error: ', ''));
+                         error.processed = true;
                       }
                    }
                    return error;
