@@ -110,9 +110,13 @@ define('js!SBIS3.CONTROLS.SuggestTextBox', [
          var isChildControl = false;
 
          if(this._list) {
-            isChildControl = this._list === focusedControl || this._list.getChildControls(false, true, function(ctrl) {
-               return focusedControl === ctrl;
-            }).length;
+            isChildControl = (this._list === focusedControl) || (focusedControl.getOpener && this._list === focusedControl.getOpener());
+
+            if(!isChildControl) {
+               isChildControl = this._list.getChildControls(false, true, function(ctrl) {
+                  return focusedControl === ctrl;
+               }).length;
+            }
          }
 
          if(!isChildControl) {
