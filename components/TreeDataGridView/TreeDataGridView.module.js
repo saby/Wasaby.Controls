@@ -250,7 +250,7 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
          if(!this._editArrow && this._options.editArrow) {
             this._editArrow = new IconButton({
                element: this._container.find('> .controls-TreeView__editArrow-container'),
-               icon: 'icon-16 icon-View icon-primary action-hover',
+               icon: 'icon-16 icon-View icon-primary action-hover icon-size',
                parent: this,
                allowChangeEnable: false,
                handlers: {
