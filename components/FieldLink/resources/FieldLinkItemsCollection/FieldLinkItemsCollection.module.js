@@ -129,7 +129,7 @@ define('js!SBIS3.CONTROLS.FieldLinkItemsCollection', [
          _setPickerContent: function () {
             var pickerContainer = this._picker.getContainer(),
                 flWidth = this._flContainer[0].offsetWidth - PICKER_BORDER_WIDTH;
-            pickerContainer.on('click', '.controls-ListView__item', this._clickHandler.bind(this));
+            pickerContainer.on('click', '.controls-ListView__item', this._onClickHandler.bind(this));
             /* Не очень правильное решение, пикер может сам менять ширину, поэтому устанавливаю минимальну и максимальную */
             pickerContainer[0].style.maxWidth = flWidth + 'px';
             pickerContainer[0].style.minWidth = flWidth + 'px';
