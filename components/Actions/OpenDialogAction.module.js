@@ -37,7 +37,7 @@ define('js!SBIS3.CONTROLS.OpenDialogAction', ['js!SBIS3.CONTROLS.DialogActionBas
          return {
             dataSource: meta.dataSource,
             key : meta.id,
-            newModel: meta.newModel,
+            sourceOptions: meta.sourceOptions,
             initValues : meta.filter,
             record: record
          }

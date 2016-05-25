@@ -63,7 +63,8 @@ define('js!SBIS3.CONTROLS.DialogActionBase', ['js!SBIS3.CONTROLS.ActionBase', 'j
           * Отдельно храним ключ для модели из связного списка, т.к. он может не совпадать с ключом редактируемой модели
           * К примеру в реестре задач ключ записи в реестре и ключ редактируемой записи различается, т.к. одна и та же задача может находиться в нескольких различных фазах
           */
-         _linkedModelKey: undefined
+         _linkedModelKey: undefined,
+         _templateComponent: undefined
       },
       /**
        * @typedef {Object} ExecuteMetaConfig
@@ -108,32 +109,15 @@ define('js!SBIS3.CONTROLS.DialogActionBase', ['js!SBIS3.CONTROLS.ActionBase', 'j
          meta.id = this._getEditKey(meta.item) || meta.id;
 
          var self = this,
-            config, Component,
-
-         compOptions = this._buildComponentConfig(meta);
-         config = {
+            config,
+            compOptions = this._buildComponentConfig(meta);
+            config = {
             opener: this,
             template: dialogComponent,
             componentOptions: compOptions
          };
          if (meta.title) {
             config.title = meta.title;
-         }
-
-         mode = mode || this._options.mode;
-         if (mode == 'floatArea'){
-            Component = FloatArea;
-            config.isStack = meta.isStack !== undefined ? meta.isStack : true;
-            config.autoHide = meta.autoHide !== undefined ? meta.autoHide : true;
-            config.autoCloseOnHide = meta.autoCloseOnHide !== undefined ? meta.autoCloseOnHide : true;
-         } else if (mode == 'dialog') {
-            Component = Dialog;
-         }
-
-         if (this._dialog && !this._dialog.isAutoHide()){
-            $ws.core.merge(this._dialog._options, config);
-            this._dialog.reload();
-            return;
          }
 
          config.componentOptions.handlers = this._getFormControllerHandlers();
@@ -144,7 +128,54 @@ define('js!SBIS3.CONTROLS.DialogActionBase', ['js!SBIS3.CONTROLS.ActionBase', 'j
             }
          };
 
-         this._dialog = new Component(config);
+         if (meta.preloadRecord !== false){
+            if (!this._templateComponent){
+               require([dialogComponent], this._initTemplateComponentCallback.bind(this, undefined, config, meta, mode));
+            }
+            else{
+               this._initTemplateComponentCallback(this._templateComponent, config, meta, mode);
+            }
+         }
+         else{
+            this._showDialog(config, meta, mode);
+         }
+      },
+
+      _initTemplateComponentCallback: function (templateComponent, config, meta, mode) {
+         var self = this;
+         this._templateComponent = templateComponent;
+         templateComponent.prototype.getRecordFromSource(config.componentOptions).addCallback(function (record) {
+            var dialog = self._dialog;
+            config.componentOptions.record = record;
+            if (dialog.isInitialized()) {
+               self._showDialog(config, meta, mode);
+            }
+            else {
+               dialog.once('onAfterLoad', function () {
+                  self._showDialog(config, meta, mode);
+               });
+            }
+         });
+      },
+
+      _showDialog: function(config, meta, mode){
+         var Component;
+         mode = mode || this._options.mode;
+         if (mode == 'floatArea'){
+            Component = FloatArea;
+            config.isStack = meta.isStack !== undefined ? meta.isStack : true;
+            config.autoHide = meta.autoHide !== undefined ? meta.autoHide : true;
+            config.autoCloseOnHide = meta.autoCloseOnHide !== undefined ? meta.autoCloseOnHide : true;
+         } else if (mode == 'dialog') {
+            Component = Dialog;
+         }
+         if (this._dialog && !this._dialog.isAutoHide()){
+            $ws.core.merge(this._dialog._options, config);
+            this._dialog.reload();
+         }
+         else{
+            this._dialog = new Component(config);
+         }
       },
 
       /**
