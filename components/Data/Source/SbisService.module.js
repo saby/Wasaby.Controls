@@ -524,7 +524,7 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
        * @returns {Object|null}
        * @protected
        */
-      _getPagingParams: function (query, hasMore) {
+      _getPagingParams: function (query) {
          if (!query) {
             return null;
          }
@@ -533,7 +533,7 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
             meta = query.getMeta(),
             moreProp = this._options.metaConfig.hasMore,
             hasMoreProp = meta.hasOwnProperty(moreProp),
-            more = hasMore === undefined ? (hasMoreProp ? meta[moreProp] : offset >= 0) : hasMore;
+            more = hasMoreProp ? meta[moreProp] : offset >= 0;
 
          if (hasMoreProp) {
             delete meta[moreProp];
@@ -612,12 +612,13 @@ define('js!SBIS3.CONTROLS.Data.Source.SbisService', [
          query.where(filter)
             .offset(hasMore === undefined ? offset : hasMore)
             .limit(limit)
-            .orderBy(sorting);
+            .orderBy(sorting)
+            .meta(hasMore === undefined ? {} : {hasMore: hasMore});
 
          args = {
             'Фильтр': this._buildRecord(query ? query.getWhere() : null),
             'Сортировка': this._buildRecordSet(this._getSortingParams(query)),
-            'Навигация': this._buildRecord(this._getPagingParams(query, hasMore)),
+            'Навигация': this._buildRecord(this._getPagingParams(query)),
             'ДопПоля': this._getAdditionalParams(query)
          };
 
