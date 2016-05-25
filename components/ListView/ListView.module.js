@@ -648,11 +648,9 @@ define('js!SBIS3.CONTROLS.ListView',
 
                this._scrollWatcher = new ScrollWatcher(scrollWatcherCfg);
                if (this._options.infiniteScrollContainer){
-                  var disableScrollBottom = function(){
+                  this._options.infiniteScrollContainer.on('touchmove wheel', function(){
                      self._scrollOnBottom = false;
-                     self._options.infiniteScrollContainer.off('touchmove wheel', disableScrollBottom);
-                  };
-                  this._options.infiniteScrollContainer.on('touchmove wheel', disableScrollBottom)
+                  });
                }
                this._scrollWatcher.subscribe('onScroll', function(event, type){
                   //top || bottom
@@ -1068,6 +1066,20 @@ define('js!SBIS3.CONTROLS.ListView',
             this._destroyEditInPlace();
             return ListView.superclass.reload.apply(this, arguments);
          },
+
+         setFilter: function(filter, noLoad){
+            if (!noLoad) {
+               this._resetScrollMark();
+            }
+            ListView.superclass.setFilter.apply(this, arguments);
+         },
+
+         _resetScrollMark: function(){
+            if (this._options.infiniteScroll == 'up'){
+               this._scrollOnBottom = true;
+            }
+         },
+
          _reloadInfiniteScrollParams : function(){
             if (this.isInfiniteScroll() || this._isAllowInfiniteScroll()) {
                this._hasScrollMore = true;
@@ -1432,6 +1444,9 @@ define('js!SBIS3.CONTROLS.ListView',
                      },
                      onItemActionActivated: function(e, key) {
                         self.setSelectedKey(key);
+                        if(self._touchSupport) {
+                           self._clearHoveredItem();
+                        }
                      }
 
                   }

@@ -52,6 +52,7 @@ define('js!SBIS3.CONTROLS.SearchMixin', [], function() {
       },
 
       _startSearch: function(text) {
+         this._clearSearchDelay();
          this._searchDelay = setTimeout($ws.helpers.forAliveOnly(function () {
             this._applySearch(text);
          }, this), this._options.searchDelay);

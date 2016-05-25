@@ -25,7 +25,8 @@ define('js!SBIS3.CONTROLS.FieldLinkItemsCollection', [
                /**
                 * Метод, который проверяет, нужно ли отрисовывать элемент коллекции
                 */
-               itemCheckFunc: undefined
+               itemCheckFunc: undefined,
+               tabindex: 0
             },
             flContainer: undefined
          },
@@ -34,16 +35,16 @@ define('js!SBIS3.CONTROLS.FieldLinkItemsCollection', [
             this._publish('onCrossClick', 'onItemActivate', 'onShowPicker', 'onClosePicker');
             /* Запомним контейнер поля связи */
             this._flContainer = this.getParent().getContainer();
-            /* Сделаем подкиску на клик,
-               Clickable нам не подходит, т.к. не сигналит кликом, когда контрол задизейблен */
-            this.subscribe('onClick', this._clickHandler);
          },
 
-         _clickHandler: function(event, e) {
-            var $target = $((e || event).target),
+         _onClickHandler: function(e) {
+            var $target = $(e.target),
                 itemContainer;
 
             itemContainer = $target.closest('.controls-ListView__item', this._container[0]);
+
+            /* Переводим фокус на поле связи */
+            this.getParent().setActive(true);
 
             if(itemContainer.length) {
                this._notify($target.hasClass('controls-FieldLink__linkItem-cross') ? 'onCrossClick' : 'onItemActivate', itemContainer.data('id'));
@@ -103,18 +104,9 @@ define('js!SBIS3.CONTROLS.FieldLinkItemsCollection', [
             }
          },
 
-         /**
-          * Контрол выбранных записей не должен принимать фокус, просто переводим его на поле связи
-          */
-         setActive: function() {
-            var fieldLink = this.getParent();
-            fieldLink.setActive.apply(fieldLink, arguments);
-         },
-
-
-         canAcceptFocus: function() {
-            return false;
-         },
+         /* Контрол не должен принимать фокус ни по клику, ни по табу */
+         _initFocusCatch: $ws.helpers.nop,
+         canAcceptFocus: $ws.helpers.nop,
 
          _drawItemsCallback: function() {
             if(this.isPickerVisible() && !this.getItems().getCount()) {
@@ -137,7 +129,7 @@ define('js!SBIS3.CONTROLS.FieldLinkItemsCollection', [
          _setPickerContent: function () {
             var pickerContainer = this._picker.getContainer(),
                 flWidth = this._flContainer[0].offsetWidth - PICKER_BORDER_WIDTH;
-            pickerContainer.on('click', '.controls-ListView__item', this._clickHandler.bind(this));
+            pickerContainer.on('click', '.controls-ListView__item', this._onClickHandler.bind(this));
             /* Не очень правильное решение, пикер может сам менять ширину, поэтому устанавливаю минимальну и максимальную */
             pickerContainer[0].style.maxWidth = flWidth + 'px';
             pickerContainer[0].style.minWidth = flWidth + 'px';

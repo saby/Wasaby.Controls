@@ -761,7 +761,8 @@
 @text-box-disabled-border-width:          @text-box-border-width;
 @text-box-disabled-border-style:          @text-box-border-style;
 @text-box-disabled-border-color:          transparent;
-@text-box-disabled-bg:                    @text-box-bg;
+@text-box-disabled-bg:                    transparent;
+@text-box-disabled-border-bottom:         1px solid #ccc;
 
 @text-box-after-width:                    16px;
 @text-box-after-min-height:               @text-box-field-min-height;
@@ -769,7 +770,7 @@
 
 @text-box-placeholder-color:              @gray-ccc-color !important;
 @text-box-compat-placeholder-font:        inherit;
-@text-box-compat-placeholder-padding:     3px 0 0;
+@text-box-compat-placeholder-padding:     1px 0 0;
 @text-box-compat-placeholder-alignment:   inherit;
 
 @text-box-overflow:                       ellipsis;
@@ -1681,8 +1682,9 @@
 @drag-and-drop-border:                             1px solid @drag-and-drop-border-color;
 
 //FieldLink
-@controls-FieldLink-picker-show-border:            1px solid;
-@controls-FieldLink-picker-show-border-color:      #eaeaea #eaeaea #e4e4e4;
+@controls-FieldLink-border-color:                  @text-area-border-color @text-area-border-color @gray-ccc-color @text-area-border-color;
+@controls-FieldLink-border-color-focus-hover:      @gray-ccc-color @gray-ccc-color @gray-ccc-color @gray-ccc-color;
+@controls-FieldLink-border:                        1px solid;
 @controls-FieldLink-picker-show-color:             @white-color;
 
 @controls-FieldLink-fieldWrapper-margin:           0 !important;

@@ -141,7 +141,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
          }
          if (this._options.expand) {
             filter['Разворот'] = 'С разворотом';
-            filter['ВидДерева'] = 'Узлы и листья';
+            filter['ВидДерева'] = 'С узлами и листьями';
          }
          this._previousRoot = this._curRoot;
          this.setFilter(filter, true);
@@ -479,6 +479,38 @@ define('js!SBIS3.CONTROLS.TreeMixin', ['js!SBIS3.CONTROLS.BreadCrumbs',
             template : groupByTpl,
             method : this._searchMethod.bind(this),
             render : this._searchRender.bind(this)
+         }
+      },
+
+      /**
+       * Метод разврачивает узлы дерева до нужной записи
+       * @param {String} key ключ записи
+       */
+      expandToItem: function(key){
+         var items = this.getItems(),
+            projection = this._itemsProjection,
+            recordKey = key,
+            nodes = [],
+            hasItemInProjection,
+            record;
+
+         while(!hasItemInProjection && recordKey){
+            record = items.getRecordByKey(recordKey);
+            hasItemInProjection = projection.getItemBySourceItem(record);
+            //если hasItemInProjection = true - это значит что мы нашли запись, которая находится в раскрытом узле
+            if (!hasItemInProjection){
+               if (record){
+                  recordKey = record.get(this._options.hierField);
+                  nodes.push(recordKey);
+               }
+               else{
+                  recordKey = undefined;
+               }
+            }
+         }
+
+         for (var i = nodes.length - 1, l = 0; i >= l; i--){
+            this.expandNode(nodes[i]);
          }
       },
       //----------------- defaultSearch group
