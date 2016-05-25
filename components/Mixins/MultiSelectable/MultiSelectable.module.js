@@ -161,59 +161,68 @@ define('js!SBIS3.CONTROLS.MultiSelectable', ['js!SBIS3.CONTROLS.Data.Collection.
        * @see getSelectedKeys
        */
       setSelectedKeys : function(idArray) {
+         var difference;
 
-         function ArrayDifference(arr1,arr2){
-            var idx = 0, arr3 = [];
-            for (var i = 0; i < arr1.length; i++){
-               var
-                  findElem = arr1[i],
-                  result = true;
-               idx = arr2.indexOf(arr1[i]);
-               if (idx < 0) {
-                  findElem = (typeof findElem === 'string') ? findElem - 0 : findElem + '';
-                  idx = arr2.indexOf(findElem);
-                  if (idx >= 0) {
-                     result = false;
-                  }
-               }
-               else {
-                  result = false;
-               }
-               if (result) {
-                  arr3.push(arr1[i]);
-               }
-            }
-            return arr3;
-         }
-
-
-         var addedKeys = [], removedKeys = [];
          if (Array.isArray(idArray)) {
+            difference = this._getArrayDifference(this._options.selectedKeys, idArray);
 
-            if (idArray.length) {
-               if (this._options.multiselect) {
-                  removedKeys = ArrayDifference(this._options.selectedKeys, idArray);
-                  this._removeItemsSelection(removedKeys);
-                  addedKeys = this._addItemsSelection(idArray);
-               }
-               else {
-                  removedKeys = $ws.core.clone(this._options.selectedKeys);
-                  if(idArray.length === 1) {
+               if (this._options.multiselect || !idArray.length) {
+                  this._options.selectedKeys = idArray;
+               } else {
+                  if (idArray.length === 1) {
                      this._options.selectedKeys = idArray;
                   } else {
                      this._options.selectedKeys = idArray.slice(0, 1);
                   }
                }
-            }
-            else {
-               removedKeys = $ws.core.clone(this._options.selectedKeys);
-               this._options.selectedKeys = idArray;
-            }
-	         this._afterSelectionHandler(addedKeys, removedKeys);
-         }
-         else {
+            this._afterSelectionHandler(difference.added, difference.removed);
+         } else {
             throw new Error('Argument must be instance of Array');
          }
+      },
+      /**
+       * Сравнивает два массива, возвращает разницу между ними
+       * @param arrayOne
+       * @param arrayTwo
+       * @returns {{added: Array, removed: Array}}
+       * @private
+       */
+      _getArrayDifference : function(arrayOne, arrayTwo) {
+         var result = {
+                added: [],
+                removed: []
+             },
+             index, currElem;
+
+         function hasInArray(array, elem) {
+            index = Array.indexOf(array, elem);
+
+            if(index < 0) {
+               elem = (typeof elem === 'string') ? Number(elem) : String(elem);
+
+               index = Array.indexOf(array, elem);
+
+               if(index < 0) {
+                  return false;
+               }
+            }
+
+            return true;
+         }
+
+         /* Найдём удаленные */
+         result.removed = $ws.helpers.filter(arrayOne, function(item) {
+            currElem = item;
+            return !hasInArray(arrayTwo, currElem);
+         });
+
+         /* Найдём добавленные */
+         result.added = $ws.helpers.filter(arrayTwo, function(item) {
+            currElem = item;
+            return !hasInArray(arrayOne, currElem);
+         });
+
+         return result;
       },
 
       /**
@@ -295,22 +304,24 @@ define('js!SBIS3.CONTROLS.MultiSelectable', ['js!SBIS3.CONTROLS.Data.Collection.
          this._afterSelectionHandler(addedKeys, []);
       },
       _addItemsSelection : function(idArray) {
-         var addedKeys = [];
+         var resultArray = [],
+             addedKeys = [];
+
          if (Array.isArray(idArray)) {
             if (idArray.length) {
                if (this._options.multiselect) {
-                  this._options.selectedKeys = Array.clone(this._options.selectedKeys);
+                  resultArray = Array.clone(this._options.selectedKeys);
                   for (var i = 0; i < idArray.length; i++) {
                      if (!this._isItemSelected(idArray[i])) {
-                        this._options.selectedKeys.push(idArray[i]);
-                        addedKeys.push(idArray[i])
+                        resultArray.push(idArray[i]);
                      }
                   }
-               }
-               else {
-                  this._options.selectedKeys = idArray.slice(0, 1);
+               } else {
+                  resultArray = idArray.slice(0, 1);
                }
             }
+            addedKeys = this._getArrayDifference(this._options.selectedKeys, resultArray).added;
+            this._options.selectedKeys = resultArray;
             return addedKeys;
          }
          else {
@@ -348,16 +359,18 @@ define('js!SBIS3.CONTROLS.MultiSelectable', ['js!SBIS3.CONTROLS.Data.Collection.
       },
 
       _removeItemsSelection : function(idArray) {
-         var removedKeys = [];
+         var resultArray = [],
+             removedKeys = [];
 
          if (Array.isArray(idArray)) {
-            this._options.selectedKeys = Array.clone(this._options.selectedKeys);
+            resultArray = Array.clone(this._options.selectedKeys);
             for (var i = idArray.length - 1; i >= 0; i--) {
                if (this._isItemSelected(idArray[i])) {
-                  Array.remove(this._options.selectedKeys, this._getSelectedIndex(idArray[i]));
-                  removedKeys.push(idArray[i]);
+                  Array.remove(resultArray, this._getSelectedIndex(idArray[i]));
                }
             }
+            removedKeys = this._getArrayDifference(this._options.selectedKeys, resultArray).removed;
+            this._options.selectedKeys = resultArray;
             return removedKeys;
          }
          else {
